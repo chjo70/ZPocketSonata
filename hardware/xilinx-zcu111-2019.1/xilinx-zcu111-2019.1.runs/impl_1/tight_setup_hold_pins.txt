@@ -1,0 +1,10 @@
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|       Launch Clock       |      Capture Clock       |                                                 Pin                                                      |
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+| clk_out2_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                                design_1_i/stats/inst/top_CNTRL_s_axi_U/int_ap_start_reg/D|
+| clk_out2_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                                  design_1_i/stats/inst/top_CNTRL_s_axi_U/int_isr_reg[1]/D|
+| clk_out2_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                                  design_1_i/stats/inst/top_CNTRL_s_axi_U/int_isr_reg[0]/D|
+| clk_out3_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                                 design_1_i/stats/inst/top_CNTRL_s_axi_U/ap_done_ext_reg/D|
+| clk_out2_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                                 design_1_i/stats/inst/top_CNTRL_s_axi_U/int_ap_done_reg/D|
+| clk_out3_design_1_clk_wiz_0 |clk_out2_design_1_clk_wiz_0 |                                            design_1_i/stats/inst/top_CNTRL_s_axi_U/int_auto_restart_reg/D|
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
