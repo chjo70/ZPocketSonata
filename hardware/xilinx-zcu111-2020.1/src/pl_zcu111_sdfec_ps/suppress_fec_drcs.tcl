@@ -1,0 +1,5 @@
+set_property IS_ENABLED FALSE [get_drc_checks FECPL-1]
+set_property IS_ENABLED FALSE [get_drc_checks FECPL-2]
+set_property IS_ENABLED FALSE [get_drc_checks FECPL-3]
+set_property SEVERITY {Warning} [get_drc_checks NSTD-1]
+set_property SEVERITY {Warning} [get_drc_checks UCIO-1]

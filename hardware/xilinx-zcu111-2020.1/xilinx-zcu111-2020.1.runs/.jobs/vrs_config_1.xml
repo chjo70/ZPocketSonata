@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="project_1_auto_cc_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_auto_cc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_xbar_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_xbar_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_chan_ctrl_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_chan_ctrl_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_chan_ctrl_reg_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_chan_ctrl_reg_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_clk_wiz_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_clk_wiz_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dac_source_i_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_data_source_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_data_source_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_add_keep_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_add_keep_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_add_keep_trim_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_add_keep_trim_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_ctrl_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_ctrl_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_ctrl_reg_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_ctrl_reg_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_ctrl_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_ctrl_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_data_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_data_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_ip_mon_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_ip_mon_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_ip_probe_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_ip_probe_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_keep_ctrl_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_keep_ctrl_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_auto_ds_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_auto_ds_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_auto_pc_1_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_auto_pc_1_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_auto_ds_1_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_auto_ds_1_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_dec_op_mon_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_op_mon_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_mon_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_dec_op_probe_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_op_probe_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_probe_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_dec_stat_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dec_stat_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_demod_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_demod_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_enc_add_keep_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_add_keep_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_add_keep_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_enc_add_keep_trim_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_add_keep_trim_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_enc_ctrl_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_ctrl_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_enc_data_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_data_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_enc_data_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_data_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_enc_ip_mon_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_ip_mon_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_mon_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_enc_ip_probe_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_ip_probe_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_probe_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_enc_keep_ctrl_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_keep_ctrl_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_keep_ctrl_fifo_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_enc_op_mon_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_op_mon_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_mon_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_enc_op_probe_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_enc_op_probe_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_dec_ip_probe_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_gpio_reset_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_gpio_reset_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_auto_pc_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_auto_pc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_hard_chan_data_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_hard_chan_data_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_hard_data_reg_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_hard_data_reg_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_llr_reinterpret_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_llr_reinterpret_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_llr_reshape_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_llr_reshape_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_mod_and_chan_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_rst_clk_wiz_100M_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_rst_clk_wiz_100M_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_rst_clk_wiz_300M_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_rst_clk_wiz_300M_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_rst_PS_0_99M_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_rst_PS_0_99M_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_rtc_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_rtc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_sd_fec_dec_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_sd_fec_dec_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_sd_fec_enc_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_sd_fec_enc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_src_data_broadcast_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_src_data_broadcast_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_src_data_fifo_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_src_data_fifo_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_stats_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_stats_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_xbar_1_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_xbar_1_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_usp_rf_data_converter_0_i_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_usp_rf_data_converter_0_i_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_axi_intc_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_axi_intc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_axi_gpio_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_axi_gpio_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_adc_sink_i_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_adc_sink_i_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_PS_0_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_PS_0_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m00_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m00_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m01_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m01_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m02_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m02_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m03_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m03_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m02_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_m04_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m04_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m01_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_m05_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m05_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m06_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m06_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="project_1_m07_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m07_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m02_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_m08_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m08_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m02_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_m09_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m09_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m06_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="project_1_m10_regslice_0_synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_m10_regslice_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado" IsOrderedIPRun="true">
+		<Parent Id="project_1_m06_regslice_0_synth_1"/>
+	</Run>
+	<Run Id="synth_1" LaunchDir="/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado">
+		<Parent Id="project_1_auto_cc_0_synth_1"/>
+		<Parent Id="project_1_xbar_0_synth_1"/>
+		<Parent Id="project_1_chan_ctrl_fifo_0_synth_1"/>
+		<Parent Id="project_1_chan_ctrl_reg_0_synth_1"/>
+		<Parent Id="project_1_clk_wiz_0_synth_1"/>
+		<Parent Id="project_1_dac_source_i_0_synth_1"/>
+		<Parent Id="project_1_data_source_0_synth_1"/>
+		<Parent Id="project_1_dec_add_keep_0_synth_1"/>
+		<Parent Id="project_1_dec_add_keep_trim_0_synth_1"/>
+		<Parent Id="project_1_dec_ctrl_fifo_0_synth_1"/>
+		<Parent Id="project_1_dec_ctrl_reg_0_synth_1"/>
+		<Parent Id="project_1_dec_ctrl_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_dec_data_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_dec_ip_mon_0_synth_1"/>
+		<Parent Id="project_1_dec_ip_probe_0_synth_1"/>
+		<Parent Id="project_1_dec_keep_ctrl_fifo_0_synth_1"/>
+		<Parent Id="project_1_auto_ds_0_synth_1"/>
+		<Parent Id="project_1_auto_pc_1_synth_1"/>
+		<Parent Id="project_1_auto_ds_1_synth_1"/>
+		<Parent Id="project_1_dec_op_mon_0_synth_1"/>
+		<Parent Id="project_1_dec_op_probe_0_synth_1"/>
+		<Parent Id="project_1_dec_stat_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_demod_0_synth_1"/>
+		<Parent Id="project_1_enc_add_keep_0_synth_1"/>
+		<Parent Id="project_1_enc_add_keep_trim_0_synth_1"/>
+		<Parent Id="project_1_enc_ctrl_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_enc_data_fifo_0_synth_1"/>
+		<Parent Id="project_1_enc_data_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_enc_ip_mon_0_synth_1"/>
+		<Parent Id="project_1_enc_ip_probe_0_synth_1"/>
+		<Parent Id="project_1_enc_keep_ctrl_fifo_0_synth_1"/>
+		<Parent Id="project_1_enc_op_mon_0_synth_1"/>
+		<Parent Id="project_1_enc_op_probe_0_synth_1"/>
+		<Parent Id="project_1_gpio_reset_0_synth_1"/>
+		<Parent Id="project_1_auto_pc_0_synth_1"/>
+		<Parent Id="project_1_hard_chan_data_fifo_0_synth_1"/>
+		<Parent Id="project_1_hard_data_reg_0_synth_1"/>
+		<Parent Id="project_1_llr_reinterpret_0_synth_1"/>
+		<Parent Id="project_1_llr_reshape_0_synth_1"/>
+		<Parent Id="project_1_mod_and_chan_0_synth_1"/>
+		<Parent Id="project_1_rst_clk_wiz_100M_0_synth_1"/>
+		<Parent Id="project_1_rst_clk_wiz_300M_0_synth_1"/>
+		<Parent Id="project_1_rst_PS_0_99M_0_synth_1"/>
+		<Parent Id="project_1_rtc_0_synth_1"/>
+		<Parent Id="project_1_sd_fec_dec_0_synth_1"/>
+		<Parent Id="project_1_sd_fec_enc_0_synth_1"/>
+		<Parent Id="project_1_src_data_broadcast_0_synth_1"/>
+		<Parent Id="project_1_src_data_fifo_0_synth_1"/>
+		<Parent Id="project_1_stats_0_synth_1"/>
+		<Parent Id="project_1_xbar_1_synth_1"/>
+		<Parent Id="project_1_usp_rf_data_converter_0_i_0_synth_1"/>
+		<Parent Id="project_1_axi_intc_0_synth_1"/>
+		<Parent Id="project_1_axi_gpio_0_synth_1"/>
+		<Parent Id="project_1_adc_sink_i_0_synth_1"/>
+		<Parent Id="project_1_PS_0_0_synth_1"/>
+		<Parent Id="project_1_m00_regslice_0_synth_1"/>
+		<Parent Id="project_1_m01_regslice_0_synth_1"/>
+		<Parent Id="project_1_m02_regslice_0_synth_1"/>
+		<Parent Id="project_1_m03_regslice_0_synth_1"/>
+		<Parent Id="project_1_m04_regslice_0_synth_1"/>
+		<Parent Id="project_1_m05_regslice_0_synth_1"/>
+		<Parent Id="project_1_m06_regslice_0_synth_1"/>
+		<Parent Id="project_1_m07_regslice_0_synth_1"/>
+		<Parent Id="project_1_m08_regslice_0_synth_1"/>
+		<Parent Id="project_1_m09_regslice_0_synth_1"/>
+		<Parent Id="project_1_m10_regslice_0_synth_1"/>
+	</Run>
+	<Parameters>
+		<Parameter Name="runs.monitorLSFJobs" Val="true" Type="bool"/>
+		<Parameter Name="runs.enableClusterConf" Val="true" Type="bool"/>
+	</Parameters>
+</Runs>
+

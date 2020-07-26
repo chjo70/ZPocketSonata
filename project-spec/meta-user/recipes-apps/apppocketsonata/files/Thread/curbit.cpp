@@ -1,0 +1,107 @@
+/*
+ * 자체점검 Process : 자체점검을 처리하는 쓰레드 입니다.
+ *
+ * */
+
+
+#include "curbit.h"
+#include "../Utils/clog.h"
+
+
+#define _DEBUG_
+
+
+// 클래스 내의 정적 멤버변수 값 정의
+CUrBit* CUrBit::pInstance = nullptr;
+
+/**
+ * @brief CUrBit::CUrBit
+ * @param iKeyId
+ */
+CUrBit::CUrBit( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+{
+    LOGENTRY;
+
+    Init();
+
+}
+
+/**
+ * @brief CUrBit::~CUrBit
+ */
+CUrBit::~CUrBit(void)
+{
+}
+
+/**
+ * @brief CUrBit::ReleaseInstance
+ */
+void CUrBit::ReleaseInstance()
+{
+    if(pInstance)
+    {
+        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+
+        delete pInstance;
+        pInstance = NULL;
+    }
+}
+
+/**
+ * @brief CUrBit::Run
+ */
+void CUrBit::Run()
+{
+    LOGENTRY;
+
+    CThread::Run();
+
+}
+
+/**
+ * @brief CUrBit::_routine
+ */
+void CUrBit::_routine()
+{
+    LOGENTRY;
+    UNI_LAN_DATA *pLanData;
+
+    m_pMsg = GetDataMessage();
+
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->szMessage[0];
+
+    while( true ) {
+        if( QMsgRcv() == -1 ) {
+            perror( "error ");
+        }
+
+        switch( m_pMsg->opCode ) {
+            case enREQ_URBIT :
+                LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
+
+                while( true ) {
+                    puts( "." );
+                }
+                //m_theGPIO.SetDirection( 309, 1, char *direction)
+                break;
+
+            default:
+                //Log( enNormal, "AAA" );
+                break;
+        }
+    }
+
+}
+
+/**
+ * @brief CUrBit::Init
+ */
+void CUrBit::Init()
+{
+
+    // 멤버 클래스 초기화
+    m_theGPIO.OpenChannel( 309 );
+
+    //GetBoardID();
+
+}

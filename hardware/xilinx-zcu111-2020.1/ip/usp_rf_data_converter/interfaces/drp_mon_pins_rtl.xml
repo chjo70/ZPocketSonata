@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:abstractionDefinition xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>xilinx.com</spirit:vendor>
+  <spirit:library>display_usp_rf_data_converter</spirit:library>
+  <spirit:name>drp_mon_pins_rtl</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:busType spirit:vendor="xilinx.com" spirit:library="display_usp_rf_data_converter" spirit:name="drp_mon_pins" spirit:version="1.0"/>
+<spirit:ports>
+  <spirit:port>
+    <spirit:logicalName>DEN_MON</spirit:logicalName>
+    <spirit:description>DRP Enable Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DADDR_MON</spirit:logicalName>
+    <spirit:description>DRP Address Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DI_MON</spirit:logicalName>
+    <spirit:description>DRP Data In Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DO_MON</spirit:logicalName>
+    <spirit:description>DRP Data Out Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DRDY_MON</spirit:logicalName>
+    <spirit:description>DRP Ready Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DWE_MON</spirit:logicalName>
+    <spirit:description>DRP Write Enable Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>DREQ_MON</spirit:logicalName>
+    <spirit:description>DRP Request Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port> 
+  <spirit:port>
+    <spirit:logicalName>DGNT_MON</spirit:logicalName>
+    <spirit:description>DRP Grant Monitor</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>   
+</spirit:ports>
+</spirit:abstractionDefinition>

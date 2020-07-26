@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="synth_1" LaunchPart="xczu28dr-ffvg1517-2-e" LaunchTime="1590673428">
+  <File Type="VDS-TIMING-PB" Name="project_1_wrapper_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="project_1_wrapper_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="project_1_wrapper.dcp"/>
+  <File Type="REPORTS-TCL" Name="project_1_wrapper_reports.tcl"/>
+  <File Type="PA-TCL" Name="project_1_wrapper.tcl"/>
+  <File Type="RDS-RDS" Name="project_1_wrapper.vds"/>
+  <File Type="RDS-PROPCONSTRS" Name="project_1_wrapper_drc_synth.rpt"/>
+  <File Type="RDS-UTIL" Name="project_1_wrapper_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="project_1_wrapper_utilization_synth.pb"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfadc_ctrl.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfadc_ctrl.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfadc_data_sink.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/exdes_rfadc_data_sink.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_sine_wave_lut.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/exdes_rfdac_sine_wave_lut.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_src.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/exdes_rfdac_src.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/bd/project_1/project_1.bd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/hdl/project_1_wrapper.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PSRCDIR/sources_1/bd/project_1/hdl/project_1_wrapper.v"/>
+        <Attr Name="ImportTime" Val="1590673351"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfadc_tile_sink.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/exdes_rfadc_tile_sink.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0_example_design.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/usp_rf_data_converter_0_example_design.v"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/pl_zcu111_sdfec_ps/all_code_def.txt">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/src/pl_zcu111_sdfec_ps/all_code_def.txt"/>
+        <Attr Name="ImportTime" Val="1590672914"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="project_1_wrapper"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PSRCDIR/constrs_1/imports/xdc/zcu111_sdfec.xdc">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/xdc/zcu111_sdfec.xdc"/>
+        <Attr Name="ImportTime" Val="1590672916"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/constrs_1/imports/xdc/default.xdc">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/xdc/default.xdc"/>
+        <Attr Name="ImportTime" Val="1590672916"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2020">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m08_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m07_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m06_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m05_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m01_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_PS_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_adc_sink_i_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_axi_intc_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m09_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_usp_rf_data_converter_0_i_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_xbar_1"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_stats_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_src_data_broadcast_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_sd_fec_dec_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_rst_clk_wiz_300M_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_llr_reshape_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_llr_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_hard_data_reg_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_ip_probe_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_op_mon_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_ctrl_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_ctrl_reg_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_stat_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_ip_mon_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_auto_pc_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_add_keep_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_xbar_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m02_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_data_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_src_data_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_auto_ds_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m03_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_op_probe_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_add_keep_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_data_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_chan_ctrl_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_data_source_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_chan_ctrl_reg_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m10_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_clk_wiz_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_axi_gpio_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dac_source_i_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_rst_clk_wiz_100M_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_mod_and_chan_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_auto_pc_1"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m04_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_gpio_reset_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_auto_ds_1"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_keep_ctrl_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_ctrl_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_op_mon_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_demod_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_rtc_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_keep_ctrl_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_dec_add_keep_trim_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_add_keep_trim_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_ip_mon_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_rst_PS_0_99M_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_auto_cc_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_ctrl_reinterpret_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_data_fifo_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_ip_probe_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_enc_op_probe_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_m00_regslice_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_sd_fec_enc_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="project_1_hard_chan_data_fifo_0"/>
+</GenRun>

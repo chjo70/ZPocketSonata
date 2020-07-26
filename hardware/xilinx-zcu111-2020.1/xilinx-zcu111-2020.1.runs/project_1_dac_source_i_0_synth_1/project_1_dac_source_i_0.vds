@@ -1,0 +1,429 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Thu May 28 07:43:51 2020
+# Process ID: 89630
+# Current directory: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1
+# Command line: vivado -log project_1_dac_source_i_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source project_1_dac_source_i_0.tcl
+# Log file: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1/project_1_dac_source_i_0.vds
+# Journal file: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1/vivado.jou
+#-----------------------------------------------------------
+Sourcing tcl script '/home/xbrbbot/.Xilinx/Vivado/Vivado_init.tcl'
+162 Beta devices matching pattern found, 162 enabled.
+enable_beta_device: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2248.367 ; gain = 4.023 ; free physical = 14253 ; free virtual = 506758
+source project_1_dac_source_i_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip'.
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:drp_mon_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/drp_mon_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/drp_mon_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:rts_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/rts_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/rts_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:user:hsams_data_source_ctrl:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/hsams_data_source_ctrl.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/hsams_data_source_ctrl.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:user:hsams_data_sink_ctrl:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/hsams_data_sink_ctrl.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/hsams_data_sink_ctrl.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:cal_freeze_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/cal_freeze_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/cal_freeze_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:diff_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/diff_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/diff_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:debug_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/debug_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/debug_pins.xml'
+update_ip_catalog: Time (s): cpu = 00:00:02 ; elapsed = 00:00:06 . Memory (MB): peak = 2248.367 ; gain = 0.000 ; free physical = 13645 ; free virtual = 506150
+Command: synth_design -top project_1_dac_source_i_0 -part xczu28dr-ffvg1517-2-e -mode out_of_context
+Starting synth_design
+WARNING: [IP_Flow 19-3571] IP 'project_1_dac_source_i_0' is restricted:
+* Module reference is stale and needs refreshing.
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu28dr'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu28dr'
+INFO: [Device 21-403] Loading part xczu28dr-ffvg1517-2-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 93361
+load diablo GTM unisim library
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 2803.832 ; gain = 150.715 ; free physical = 9715 ; free virtual = 467764
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'project_1_dac_source_i_0' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_dac_source_i_0/synth/project_1_dac_source_i_0.v:58]
+INFO: [Synth 8-6157] synthesizing module 'exdes_rfdac_src' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_src.v:51]
+	Parameter enable_override bound to: 1'b1 
+	Parameter default_signal_type bound to: 4'b0100 
+	Parameter initial_interword_offset bound to: 1 - type: integer 
+	Parameter p_useable_w bound to: 16 - type: integer 
+	Parameter p_increment_w bound to: 7 - type: integer 
+	Parameter p_data_inc_val_init bound to: 1 - type: integer 
+	Parameter p_data_type_width bound to: 4 - type: integer 
+	Parameter p_init_incval bound to: 8 - type: integer 
+	Parameter p_con_w bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'dg_slice' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:51]
+	Parameter p_cons bound to: 16 - type: integer 
+	Parameter p_con_w bound to: 16 - type: integer 
+	Parameter p_useable_w bound to: 16 - type: integer 
+	Parameter p_increment_w bound to: 7 - type: integer 
+	Parameter p_data_type_w bound to: 4 - type: integer 
+	Parameter p_lut_addr_w bound to: 7 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'dg_cell' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:119]
+	Parameter p_con_w bound to: 16 - type: integer 
+	Parameter p_useable_w bound to: 16 - type: integer 
+	Parameter p_increment_w bound to: 7 - type: integer 
+	Parameter p_data_type_w bound to: 4 - type: integer 
+	Parameter p_lut_addr_w bound to: 7 - type: integer 
+	Parameter p_value_one bound to: 1 - type: integer 
+	Parameter p_msb_stuff bound to: 0 - type: integer 
+	Parameter p_inc_stuff bound to: 9 - type: integer 
+	Parameter p_inc_default_type bound to: 1 - type: integer 
+	Parameter p_data_default_type bound to: 0 - type: integer 
+	Parameter p_cnt_msb bound to: 15 - type: integer 
+	Parameter p_halfValue bound to: 32768 - type: integer 
+	Parameter p_pause_w bound to: 3 - type: integer 
+	Parameter DGTYPE_TRGL bound to: 0 - type: integer 
+	Parameter DGTYPE_TRGL_S bound to: 1 - type: integer 
+	Parameter DGTYPE_RAMPUP bound to: 2 - type: integer 
+	Parameter DGTYPE_RAMPDOWN bound to: 3 - type: integer 
+	Parameter DGTYPE_SINEM bound to: 4 - type: integer 
+	Parameter DGTYPE_SINEL bound to: 5 - type: integer 
+	Parameter DGTYPE_SQR bound to: 6 - type: integer 
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:261]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:262]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:263]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:265]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:267]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:268]
+INFO: [Synth 8-6157] synthesizing module 'exdes_rfdac_sine_wave_lut' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_sine_wave_lut.v:40]
+	Parameter bitwidth bound to: 16 - type: integer 
+	Parameter addresswidth bound to: 7 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'exdes_rfdac_sine_wave_lut' (1#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_sine_wave_lut.v:40]
+INFO: [Synth 8-6155] done synthesizing module 'dg_cell' (2#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:119]
+INFO: [Synth 8-6155] done synthesizing module 'dg_slice' (3#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_tile_source.v:51]
+INFO: [Synth 8-6157] synthesizing module 'xpm_cdc_single' [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:153]
+	Parameter DEST_SYNC_FF bound to: 5 - type: integer 
+	Parameter INIT_SYNC_FF bound to: 0 - type: integer 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter SRC_INPUT_REG bound to: 0 - type: integer 
+	Parameter VERSION bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_cdc_single' (4#1) [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:153]
+INFO: [Synth 8-6157] synthesizing module 'rfdac_exdes_ctrl' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:4264]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 18 - type: integer 
+	Parameter BANK_DECODE_HIGH_BIT bound to: 17 - type: integer 
+	Parameter BANK_DECODE_HIGH_LOW bound to: 12 - type: integer 
+	Parameter C_S_TIMEOUT_WIDTH bound to: 12 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'rfdac_exdes_ctrl_axi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:5667]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 18 - type: integer 
+	Parameter BANK_DECODE_HIGH_BIT bound to: 17 - type: integer 
+	Parameter BANK_DECODE_HIGH_LOW bound to: 12 - type: integer 
+	Parameter C_S_TIMEOUT_WIDTH bound to: 12 - type: integer 
+	Parameter DAC_DG_BANK_SEL bound to: 0 - type: integer 
+	Parameter DAC0BANK_SEL bound to: 1 - type: integer 
+	Parameter DAC1BANK_SEL bound to: 2 - type: integer 
+	Parameter DAC2BANK_SEL bound to: 3 - type: integer 
+	Parameter DAC3BANK_SEL bound to: 4 - type: integer 
+	Parameter BANK_DECODE bound to: 5 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'rfdac_exdes_ctrl_axi' (5#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:5667]
+INFO: [Synth 8-6157] synthesizing module 'dac_exdes_cfg' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:59]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter C_INT_ADDRWIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:111]
+INFO: [Synth 8-6155] done synthesizing module 'dac_exdes_cfg' (6#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:59]
+INFO: [Synth 8-6157] synthesizing module 'dac0_rfdac_exdes_ctrl_axi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:216]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter C_INT_ADDRWIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'rfdac_exdes_ctrl_hshk_pls_gen' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:6377]
+INFO: [Synth 8-6157] synthesizing module 'rfdac_exdes_ctrl_sync' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:6532]
+	Parameter INITIALISE bound to: 1'b0 
+INFO: [Synth 8-6155] done synthesizing module 'rfdac_exdes_ctrl_sync' (7#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:6532]
+INFO: [Synth 8-6155] done synthesizing module 'rfdac_exdes_ctrl_hshk_pls_gen' (8#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:6377]
+INFO: [Synth 8-155] case statement is not full and has no default [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:569]
+INFO: [Synth 8-6155] done synthesizing module 'dac0_rfdac_exdes_ctrl_axi' (9#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:216]
+INFO: [Synth 8-6157] synthesizing module 'dac1_rfdac_exdes_ctrl_axi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:1228]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter C_INT_ADDRWIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:1581]
+INFO: [Synth 8-6155] done synthesizing module 'dac1_rfdac_exdes_ctrl_axi' (10#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:1228]
+INFO: [Synth 8-6157] synthesizing module 'dac2_rfdac_exdes_ctrl_axi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:2240]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter C_INT_ADDRWIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:2593]
+INFO: [Synth 8-6155] done synthesizing module 'dac2_rfdac_exdes_ctrl_axi' (11#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:2240]
+INFO: [Synth 8-6157] synthesizing module 'dac3_rfdac_exdes_ctrl_axi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:3252]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter C_INT_ADDRWIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:3605]
+INFO: [Synth 8-6155] done synthesizing module 'dac3_rfdac_exdes_ctrl_axi' (12#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:3252]
+INFO: [Synth 8-6155] done synthesizing module 'rfdac_exdes_ctrl' (13#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/usp_rf_data_converter_0exdes_rfdac_ctrl.v:4264]
+INFO: [Synth 8-6155] done synthesizing module 'exdes_rfdac_src' (14#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/imports/pl_zcu111_sdfec_ps/exdes_rfdac_src.v:51]
+INFO: [Synth 8-6155] done synthesizing module 'project_1_dac_source_i_0' (15#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_dac_source_i_0/synth/project_1_dac_source_i_0.v:58]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:13 . Memory (MB): peak = 2949.742 ; gain = 296.625 ; free physical = 13201 ; free virtual = 471275
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:15 . Memory (MB): peak = 2968.551 ; gain = 315.434 ; free physical = 13159 ; free virtual = 471236
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:15 . Memory (MB): peak = 2968.551 ; gain = 315.434 ; free physical = 13159 ; free virtual = 471236
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.12 ; elapsed = 00:00:00.12 . Memory (MB): peak = 2968.551 ; gain = 0.000 ; free physical = 13175 ; free virtual = 471260
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/cdc_arstn_0i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/cdc_arstn_0i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i'
+Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+Finished Sourcing Tcl File [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl] for cell 'inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i'
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_single.tcl]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/project_1_dac_source_i_0_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/project_1_dac_source_i_0_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3099.238 ; gain = 0.000 ; free physical = 12618 ; free virtual = 470708
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.32 ; elapsed = 00:00:00.13 . Memory (MB): peak = 3099.242 ; gain = 0.004 ; free physical = 12765 ; free virtual = 470858
+load diablo GTM unisim library
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:18 ; elapsed = 00:00:28 . Memory (MB): peak = 3099.242 ; gain = 446.125 ; free physical = 12575 ; free virtual = 470713
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xczu28dr-ffvg1517-2-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:18 ; elapsed = 00:00:28 . Memory (MB): peak = 3099.242 ; gain = 446.125 ; free physical = 12573 ; free virtual = 470711
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for inst/cdc_arstn_0i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac0_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac1_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac2_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/axi_2_drp_valid_i/cdc_i. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for inst/rfdac_exdes_ctrl_i/dac3_rfdac_exdes_ctrl_axi_i/clk2clk_handshake_pulse_gen_i/drp_2_axi_in_progress_i/cdc_i. (constraint file  auto generated constraint, line ).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:18 ; elapsed = 00:00:28 . Memory (MB): peak = 3099.242 ; gain = 446.125 ; free physical = 12553 ; free virtual = 470691
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:28 ; elapsed = 00:00:40 . Memory (MB): peak = 3099.242 ; gain = 446.125 ; free physical = 10923 ; free virtual = 469109
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   17 Bit       Adders := 32    
+	   2 Input   13 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 9     
+	               17 Bit    Registers := 32    
+	               16 Bit    Registers := 337   
+	               13 Bit    Registers := 1     
+	               12 Bit    Registers := 1     
+	               10 Bit    Registers := 1     
+	                8 Bit    Registers := 16    
+	                7 Bit    Registers := 32    
+	                6 Bit    Registers := 1     
+	                5 Bit    Registers := 9     
+	                4 Bit    Registers := 48    
+	                3 Bit    Registers := 32    
+	                2 Bit    Registers := 2     
+	                1 Bit    Registers := 98    
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 6     
+	   4 Input   32 Bit        Muxes := 1     
+	  93 Input   32 Bit        Muxes := 4     
+	   2 Input   17 Bit        Muxes := 32    
+	   2 Input   16 Bit        Muxes := 48    
+	   2 Input   13 Bit        Muxes := 1     
+	   2 Input   10 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 16    
+	   2 Input    7 Bit        Muxes := 16    
+	   2 Input    6 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 16    
+	   2 Input    3 Bit        Muxes := 16    
+	   2 Input    2 Bit        Muxes := 2     
+	   2 Input    1 Bit        Muxes := 620   
+	   4 Input    1 Bit        Muxes := 35    
+	  97 Input    1 Bit        Muxes := 384   
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 4272 (col length:192)
+BRAMs: 2160 (col length: RAMB18 192 RAMB36 96)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register counter_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:49 ; elapsed = 00:01:04 . Memory (MB): peak = 3099.242 ; gain = 446.125 ; free physical = 7281 ; free virtual = 465513
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping	Report
++--------------------------+-----------------------------+---------------+----------------+
+|Module Name               | RTL Object                  | Depth x Width | Implemented As | 
++--------------------------+-----------------------------+---------------+----------------+
+|exdes_rfdac_sine_wave_lut | sine_lut128_16bit           | 128x16        | LUT            | 
+|dg_cell                   | sine0_lut/sine_lut128_16bit | 128x16        | LUT            | 
+|dg_cell                   | sine0_lut/sine_lut128_16bit | 128x16        | LUT            | 
++--------------------------+-----------------------------+---------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:14 ; elapsed = 00:02:13 . Memory (MB): peak = 3392.148 ; gain = 739.031 ; free physical = 30937 ; free virtual = 491533
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:16 ; elapsed = 00:02:15 . Memory (MB): peak = 3400.148 ; gain = 747.031 ; free physical = 31268 ; free virtual = 491877
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:22 ; elapsed = 00:02:21 . Memory (MB): peak = 3444.211 ; gain = 791.094 ; free physical = 28825 ; free virtual = 489516
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:24 ; elapsed = 00:02:23 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 29412 ; free virtual = 490134
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:24 ; elapsed = 00:02:23 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 29395 ; free virtual = 490118
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 28503 ; free virtual = 489228
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 28451 ; free virtual = 489177
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 28674 ; free virtual = 489403
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 28701 ; free virtual = 489430
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |CARRY8 |    80|
+|2     |LUT1   |    73|
+|3     |LUT2   |   377|
+|4     |LUT3   |   376|
+|5     |LUT4   |   360|
+|6     |LUT5   |   381|
+|7     |LUT6   |  2868|
+|8     |MUXF7  |   784|
+|9     |MUXF8  |   272|
+|10    |FDRE   |  6524|
+|11    |FDSE   |     1|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.215 ; gain = 791.098 ; free physical = 28706 ; free virtual = 489436
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 16 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:20 ; elapsed = 00:02:16 . Memory (MB): peak = 3444.215 ; gain = 660.406 ; free physical = 28802 ; free virtual = 489533
+Synthesis Optimization Complete : Time (s): cpu = 00:01:25 ; elapsed = 00:02:24 . Memory (MB): peak = 3444.219 ; gain = 791.098 ; free physical = 28806 ; free virtual = 489537
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.10 ; elapsed = 00:00:00.10 . Memory (MB): peak = 3455.184 ; gain = 0.000 ; free physical = 28177 ; free virtual = 488926
+INFO: [Netlist 29-17] Analyzing 1136 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3458.156 ; gain = 0.000 ; free physical = 30802 ; free virtual = 491568
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+54 Infos, 30 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:46 ; elapsed = 00:02:59 . Memory (MB): peak = 3458.156 ; gain = 1209.789 ; free physical = 30804 ; free virtual = 491573
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1/project_1_dac_source_i_0.dcp' has been generated.
+WARNING: [Common 17-576] 'use_project_ipc' is deprecated. This option is deprecated and no longer used.
+INFO: [Coretcl 2-1174] Renamed 62 cell refs.
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_dac_source_i_0_synth_1/project_1_dac_source_i_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file project_1_dac_source_i_0_utilization_synth.rpt -pb project_1_dac_source_i_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu May 28 07:47:20 2020...

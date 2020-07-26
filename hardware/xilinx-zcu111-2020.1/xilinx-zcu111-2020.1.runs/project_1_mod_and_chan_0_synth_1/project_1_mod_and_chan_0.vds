@@ -1,0 +1,1061 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Thu May 28 07:43:51 2020
+# Process ID: 89659
+# Current directory: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1
+# Command line: vivado -log project_1_mod_and_chan_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source project_1_mod_and_chan_0.tcl
+# Log file: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/project_1_mod_and_chan_0.vds
+# Journal file: /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/vivado.jou
+#-----------------------------------------------------------
+Sourcing tcl script '/home/xbrbbot/.Xilinx/Vivado/Vivado_init.tcl'
+162 Beta devices matching pattern found, 162 enabled.
+enable_beta_device: Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2245.398 ; gain = 4.023 ; free physical = 14342 ; free virtual = 506847
+source project_1_mod_and_chan_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip'.
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:drp_mon_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/drp_mon_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/drp_mon_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:rts_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/rts_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/rts_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:user:hsams_data_source_ctrl:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/hsams_data_source_ctrl.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/hsams_data_source_ctrl.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:user:hsams_data_sink_ctrl:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/hsams_data_sink_ctrl.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/hsams_data_sink_ctrl.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:cal_freeze_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/cal_freeze_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/cal_freeze_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:diff_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/diff_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/diff_pins.xml'
+WARNING: [IP_Flow 19-4830] Duplicate Interface found for 'xilinx.com:display_usp_rf_data_converter:debug_pins:1.0'. The one found in location '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/ip/usp_rf_data_converter/interfaces/debug_pins.xml' will take precedence over the same Interface in location '/proj/xbuilds/SWIP/2020.1_0527_1802/installs/lin64/Vivado/2020.1/data/ip/xilinx/usp_rf_data_converter_v2_3/interfaces/debug_pins.xml'
+update_ip_catalog: Time (s): cpu = 00:00:02 ; elapsed = 00:00:06 . Memory (MB): peak = 2245.398 ; gain = 0.000 ; free physical = 13947 ; free virtual = 506452
+Command: synth_design -top project_1_mod_and_chan_0 -part xczu28dr-ffvg1517-2-e -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu28dr'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu28dr'
+INFO: [Device 21-403] Loading part xczu28dr-ffvg1517-2-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 93727
+load diablo GTM unisim library
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 2803.895 ; gain = 153.715 ; free physical = 10741 ; free virtual = 468791
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'project_1_mod_and_chan_0' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_mod_and_chan_0/synth/project_1_mod_and_chan_0.v:58]
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x.v:12]
+	Parameter ap_ST_fsm_state1 bound to: 5'b00001 
+	Parameter ap_ST_fsm_state2 bound to: 5'b00010 
+	Parameter ap_ST_fsm_state3 bound to: 5'b00100 
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 5'b01000 
+	Parameter ap_ST_fsm_state22 bound to: 5'b10000 
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_coarseg8j' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:84]
+	Parameter DataWidth bound to: 17 - type: integer 
+	Parameter AddressRange bound to: 512 - type: integer 
+	Parameter AddressWidth bound to: 9 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_coarseg8j_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:9]
+	Parameter DWIDTH bound to: 17 - type: integer 
+	Parameter AWIDTH bound to: 9 - type: integer 
+	Parameter MEM_SIZE bound to: 512 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './awgn_real1_coarseg8j_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:34]
+INFO: [Synth 8-3876] $readmem data file './awgn_real1_coarseg8j_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:35]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_coarseg8j_rom' (1#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_coarseg8j' (2#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_coarseg8j.v:84]
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_gradiehbi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:84]
+	Parameter DataWidth bound to: 13 - type: integer 
+	Parameter AddressRange bound to: 512 - type: integer 
+	Parameter AddressWidth bound to: 9 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_gradiehbi_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:9]
+	Parameter DWIDTH bound to: 13 - type: integer 
+	Parameter AWIDTH bound to: 9 - type: integer 
+	Parameter MEM_SIZE bound to: 512 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './awgn_real1_gradiehbi_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:34]
+INFO: [Synth 8-3876] $readmem data file './awgn_real1_gradiehbi_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:35]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_gradiehbi_rom' (3#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_gradiehbi' (4#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_gradiehbi.v:84]
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_scaleLibs' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_scaleLibs.v:43]
+	Parameter DataWidth bound to: 17 - type: integer 
+	Parameter AddressRange bound to: 256 - type: integer 
+	Parameter AddressWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'awgn_real1_scaleLibs_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_scaleLibs.v:9]
+	Parameter DWIDTH bound to: 17 - type: integer 
+	Parameter AWIDTH bound to: 8 - type: integer 
+	Parameter MEM_SIZE bound to: 256 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './awgn_real1_scaleLibs_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_scaleLibs.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_scaleLibs_rom' (5#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_scaleLibs.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1_scaleLibs' (6#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1_scaleLibs.v:43]
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mjbC' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mjbC.v:41]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 6 - type: integer 
+	Parameter din0_WIDTH bound to: 31 - type: integer 
+	Parameter din1_WIDTH bound to: 17 - type: integer 
+	Parameter dout_WIDTH bound to: 48 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mjbC_MulnS_0' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mjbC.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mjbC_MulnS_0' (7#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mjbC.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mjbC' (8#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mjbC.v:41]
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mkbM' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mkbM.v:26]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 2 - type: integer 
+	Parameter din0_WIDTH bound to: 13 - type: integer 
+	Parameter din1_WIDTH bound to: 10 - type: integer 
+	Parameter dout_WIDTH bound to: 23 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mkbM_DSP48_0' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mkbM.v:4]
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mkbM_DSP48_0' (9#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mkbM.v:4]
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mkbM' (10#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mkbM.v:26]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1022]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1024]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1026]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1028]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1030]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1032]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1034]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1036]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1038]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1040]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1042]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1044]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1046]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1048]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1050]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1052]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1054]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1120]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1122]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1124]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1126]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1128]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1130]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1132]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1134]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1136]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1138]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1140]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1142]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1210]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1238]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1258]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1276]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1294]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1336]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1342]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1348]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:1354]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real1' (11#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real1.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_imag1' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1022]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1024]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1026]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1028]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1030]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1032]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1034]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1036]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1038]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1040]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1042]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1044]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1046]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1048]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1050]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1052]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1054]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1120]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1122]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1124]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1126]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1128]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1130]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1132]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1134]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1136]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1138]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1140]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1142]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1210]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1260]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1280]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1298]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1316]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1358]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1364]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1370]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:1376]
+INFO: [Synth 8-6155] done synthesizing module 'awgn_imag1' (12#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag1.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_real2' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1022]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1024]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1026]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1028]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1030]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1032]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1034]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1036]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1038]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1040]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1042]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1044]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1046]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1048]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1050]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1052]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1054]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1120]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1122]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1124]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1126]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1128]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1130]
+WARNING: [Synth 8-589] replacing case/wildcard equality operator === with logical equality operator == [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:1132]
+INFO: [Common 17-14] Message 'Synth 8-589' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real2' (13#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real2.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_imag2' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag2.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'awgn_imag2' (14#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag2.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_real3' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real3.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real3' (15#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real3.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_imag3' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag3.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'awgn_imag3' (16#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag3.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_real4' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real4.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'awgn_real4' (17#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_real4.v:10]
+INFO: [Synth 8-6157] synthesizing module 'awgn_imag4' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag4.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'awgn_imag4' (18#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/awgn_imag4.v:10]
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits.v:10]
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 1'b1 
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMbkb' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMbkb.v:43]
+	Parameter DataWidth bound to: 15 - type: integer 
+	Parameter AddressRange bound to: 16 - type: integer 
+	Parameter AddressWidth bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMbkb_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMbkb.v:9]
+	Parameter DWIDTH bound to: 15 - type: integer 
+	Parameter AWIDTH bound to: 4 - type: integer 
+	Parameter MEM_SIZE bound to: 16 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './modulate_bits_QAMbkb_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMbkb.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMbkb_rom' (19#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMbkb.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMbkb' (20#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMbkb.v:43]
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMcud' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMcud.v:43]
+	Parameter DataWidth bound to: 15 - type: integer 
+	Parameter AddressRange bound to: 16 - type: integer 
+	Parameter AddressWidth bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMcud_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMcud.v:9]
+	Parameter DWIDTH bound to: 15 - type: integer 
+	Parameter AWIDTH bound to: 4 - type: integer 
+	Parameter MEM_SIZE bound to: 16 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './modulate_bits_QAMcud_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMcud.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMcud_rom' (21#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMcud.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMcud' (22#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMcud.v:43]
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMdEe' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMdEe.v:43]
+	Parameter DataWidth bound to: 16 - type: integer 
+	Parameter AddressRange bound to: 64 - type: integer 
+	Parameter AddressWidth bound to: 6 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMdEe_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMdEe.v:9]
+	Parameter DWIDTH bound to: 16 - type: integer 
+	Parameter AWIDTH bound to: 6 - type: integer 
+	Parameter MEM_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './modulate_bits_QAMdEe_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMdEe.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMdEe_rom' (23#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMdEe.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMdEe' (24#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMdEe.v:43]
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMeOg' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMeOg.v:43]
+	Parameter DataWidth bound to: 16 - type: integer 
+	Parameter AddressRange bound to: 64 - type: integer 
+	Parameter AddressWidth bound to: 6 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'modulate_bits_QAMeOg_rom' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMeOg.v:9]
+	Parameter DWIDTH bound to: 16 - type: integer 
+	Parameter AWIDTH bound to: 6 - type: integer 
+	Parameter MEM_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-3876] $readmem data file './modulate_bits_QAMeOg_rom.dat' is read successfully [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMeOg.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMeOg_rom' (25#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMeOg.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits_QAMeOg' (26#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits_QAMeOg.v:43]
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mfYi' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mfYi.v:11]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 16 - type: integer 
+	Parameter din2_WIDTH bound to: 16 - type: integer 
+	Parameter din3_WIDTH bound to: 16 - type: integer 
+	Parameter din4_WIDTH bound to: 2 - type: integer 
+	Parameter dout_WIDTH bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mfYi' (27#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mfYi.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'modulate_bits' (28#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/modulate_bits.v:10]
+INFO: [Synth 8-6157] synthesizing module 'mod_and_chan_4x_mGfk' [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mGfk.v:11]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 6 - type: integer 
+	Parameter din1_WIDTH bound to: 6 - type: integer 
+	Parameter din2_WIDTH bound to: 6 - type: integer 
+	Parameter din3_WIDTH bound to: 6 - type: integer 
+	Parameter din4_WIDTH bound to: 6 - type: integer 
+	Parameter din5_WIDTH bound to: 6 - type: integer 
+	Parameter din6_WIDTH bound to: 6 - type: integer 
+	Parameter din7_WIDTH bound to: 6 - type: integer 
+	Parameter din8_WIDTH bound to: 3 - type: integer 
+	Parameter dout_WIDTH bound to: 6 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x_mGfk' (29#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x_mGfk.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'mod_and_chan_4x' (30#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ipshared/b3b6/hdl/verilog/mod_and_chan_4x.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'project_1_mod_and_chan_0' (31#1) [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_mod_and_chan_0/synth/project_1_mod_and_chan_0.v:58]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:14 . Memory (MB): peak = 2905.773 ; gain = 255.594 ; free physical = 13209 ; free virtual = 471277
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:15 . Memory (MB): peak = 2923.582 ; gain = 273.402 ; free physical = 13133 ; free virtual = 471224
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:15 . Memory (MB): peak = 2923.582 ; gain = 273.402 ; free physical = 13133 ; free virtual = 471224
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.20 ; elapsed = 00:00:00.20 . Memory (MB): peak = 2923.582 ; gain = 0.000 ; free physical = 12807 ; free virtual = 470884
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_mod_and_chan_0/constraints/mod_and_chan_4x_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.srcs/sources_1/bd/project_1/ip/project_1_mod_and_chan_0/constraints/mod_and_chan_4x_ooc.xdc] for cell 'inst'
+Parsing XDC File [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3073.082 ; gain = 0.000 ; free physical = 12494 ; free virtual = 470636
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.76 ; elapsed = 00:00:00.28 . Memory (MB): peak = 3079.020 ; gain = 5.938 ; free physical = 12499 ; free virtual = 470649
+load diablo GTM unisim library
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:25 ; elapsed = 00:00:35 . Memory (MB): peak = 3079.023 ; gain = 428.844 ; free physical = 11873 ; free virtual = 470041
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xczu28dr-ffvg1517-2-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:25 ; elapsed = 00:00:35 . Memory (MB): peak = 3079.023 ; gain = 428.844 ; free physical = 11869 ; free virtual = 470037
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for inst. (constraint file  /tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:25 ; elapsed = 00:00:35 . Memory (MB): peak = 3079.023 ; gain = 428.844 ; free physical = 11872 ; free virtual = 470040
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4490] FSM extraction disabled for register 'ap_CS_fsm_reg' through user attribute
+INFO: [Synth 8-4490] FSM extraction disabled for register 'ap_CS_fsm_reg' through user attribute
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:28 ; elapsed = 00:00:39 . Memory (MB): peak = 3079.023 ; gain = 428.844 ; free physical = 11014 ; free virtual = 469187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   48 Bit       Adders := 8     
+	   2 Input   31 Bit       Adders := 8     
+	   2 Input   30 Bit       Adders := 16    
+	   3 Input   29 Bit       Adders := 32    
+	   2 Input   19 Bit       Adders := 8     
+	   3 Input   17 Bit       Adders := 1     
+	   2 Input   14 Bit       Adders := 1     
+	   3 Input    8 Bit       Adders := 1     
+	   2 Input    8 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 1     
++---XORs : 
+	   2 Input     64 Bit         XORs := 48    
+	   2 Input      1 Bit         XORs := 4     
++---Registers : 
+	              128 Bit    Registers := 56    
+	               96 Bit    Registers := 6     
+	               90 Bit    Registers := 1     
+	               58 Bit    Registers := 4     
+	               48 Bit    Registers := 40    
+	               45 Bit    Registers := 8     
+	               40 Bit    Registers := 8     
+	               31 Bit    Registers := 16    
+	               30 Bit    Registers := 16    
+	               23 Bit    Registers := 32    
+	               17 Bit    Registers := 152   
+	               16 Bit    Registers := 9     
+	               15 Bit    Registers := 41    
+	               14 Bit    Registers := 2     
+	               13 Bit    Registers := 64    
+	               10 Bit    Registers := 128   
+	                8 Bit    Registers := 59    
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 53    
+	                5 Bit    Registers := 65    
+	                4 Bit    Registers := 32    
+	                3 Bit    Registers := 5     
+	                2 Bit    Registers := 15    
+	                1 Bit    Registers := 291   
++---Multipliers : 
+	              18x31  Multipliers := 8     
++---ROMs : 
+	                    ROMs := 72    
++---Muxes : 
+	   2 Input   96 Bit        Muxes := 24    
+	   2 Input   64 Bit        Muxes := 1     
+	   2 Input   58 Bit        Muxes := 1     
+	   2 Input   40 Bit        Muxes := 4     
+	   2 Input   29 Bit        Muxes := 32    
+	   2 Input   19 Bit        Muxes := 8     
+	   2 Input   18 Bit        Muxes := 16    
+	   2 Input   16 Bit        Muxes := 52    
+	   3 Input   16 Bit        Muxes := 1     
+	   2 Input   15 Bit        Muxes := 64    
+	   2 Input   14 Bit        Muxes := 1     
+	   2 Input    9 Bit        Muxes := 32    
+	   3 Input    9 Bit        Muxes := 32    
+	   2 Input    8 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 32    
+	   2 Input    6 Bit        Muxes := 59    
+	   3 Input    5 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 8     
+	   4 Input    2 Bit        Muxes := 7     
+	   2 Input    1 Bit        Muxes := 183   
+	   3 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 4272 (col length:192)
+BRAMs: 2160 (col length: RAMB18 192 RAMB36 96)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U12/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U12/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U12/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U12/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U12/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U13/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U13/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U13/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U13/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U13/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U14/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U14/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U14/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U14/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U14/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U15/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U15/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U15/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U15/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U15/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U11/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U23/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U23/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U23/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U23/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U23/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U24/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U24/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U24/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U24/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U24/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U25/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U25/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U25/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U25/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U25/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U26/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U26/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U26/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U26/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U26/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U22/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U29/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U29/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U29/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U29/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U29/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U30/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U30/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U30/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U30/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U30/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U31/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U31/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U31/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U31/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U31/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U32/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U32/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U32/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U32/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U32/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U28/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U35/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U35/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U35/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U35/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U35/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U36/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U36/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U36/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U36/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U36/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U37/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U37/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U37/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U37/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U37/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U38/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U38/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U38/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U38/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U38/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U34/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U41/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U41/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U41/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U41/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U41/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U42/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U42/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U42/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U42/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U42/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U43/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U43/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U43/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U43/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U43/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U44/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U44/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U44/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U44/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U44/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U40/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U47/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U47/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U47/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U47/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U47/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U48/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U48/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U48/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U48/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U48/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U49/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U49/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U49/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U49/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U49/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U50/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U50/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U50/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U50/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U50/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U46/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U53/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U53/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U53/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U53/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U53/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U54/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U54/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U54/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U54/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U54/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U55/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U55/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U55/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U55/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U55/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U56/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U56/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U56/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U56/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U56/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U52/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U59/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U59/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U59/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U59/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U59/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U60/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U60/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U60/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U60/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U60/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U61/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U61/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U61/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U61/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U61/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mkbM_U62/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg, operation Mode is: (A*B)'.
+DSP Report: register mod_and_chan_4x_mkbM_U62/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg is absorbed into DSP mod_and_chan_4x_mkbM_U62/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: operator mod_and_chan_4x_mkbM_U62/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg0 is absorbed into DSP mod_and_chan_4x_mkbM_U62/mod_and_chan_4x_mkbM_DSP48_0_U/p_reg_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg, operation Mode is: (A''*B'')'.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg.
+DSP Report: Generating DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg, operation Mode is: (C+(A''*B'')')'.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff0_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff1_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: register mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff2_reg is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+DSP Report: operator mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/tmp_product is absorbed into DSP mod_and_chan_4x_mjbC_U58/mod_and_chan_4x_mjbC_MulnS_0_U/buff3_reg.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:46 ; elapsed = 00:00:58 . Memory (MB): peak = 3079.023 ; gain = 428.844 ; free physical = 7170 ; free virtual = 465401
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping	Report
++-------------------------+---------------------------------------+---------------+----------------+
+|Module Name              | RTL Object                            | Depth x Width | Implemented As | 
++-------------------------+---------------------------------------+---------------+----------------+
+|modulate_bits_QAMbkb_rom | p_0_out                               | 16x15         | LUT            | 
+|modulate_bits_QAMcud_rom | p_0_out                               | 16x15         | LUT            | 
+|modulate_bits_QAMdEe_rom | p_0_out                               | 64x8          | LUT            | 
+|modulate_bits_QAMeOg_rom | p_0_out                               | 64x8          | LUT            | 
+|awgn_real1               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag1               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real2               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag2               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real3               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag3               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real4               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag4               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|modulate_bits            | p_0_out                               | 64x8          | LUT            | 
+|modulate_bits            | p_0_out                               | 64x8          | LUT            | 
+|modulate_bits            | p_0_out                               | 64x8          | LUT            | 
+|modulate_bits            | p_0_out                               | 64x8          | LUT            | 
+|awgn_real1               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_real1               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_real1               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_real1               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_real1               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_real1               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_real1               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_real1               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_real1               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag1               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_imag1               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_imag1               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_imag1               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_imag1               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_imag1               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_imag1               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_imag1               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_imag1               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real2               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_real2               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_real2               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_real2               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_real2               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_real2               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_real2               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_real2               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_real2               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag2               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_imag2               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_imag2               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_imag2               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_imag2               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_imag2               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_imag2               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_imag2               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_imag2               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real3               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_real3               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_real3               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_real3               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_real3               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_real3               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_real3               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_real3               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_real3               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag3               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_imag3               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_imag3               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_imag3               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_imag3               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_imag3               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_imag3               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_imag3               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_imag3               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_real4               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_real4               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_real4               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_real4               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_real4               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_real4               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_real4               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_real4               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_real4               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
+|awgn_imag4               | q0_reg                                | 512x17        | Block RAM      | 
+|awgn_imag4               | q1_reg                                | 512x17        | Block RAM      | 
+|awgn_imag4               | q2_reg                                | 512x17        | Block RAM      | 
+|awgn_imag4               | q3_reg                                | 512x17        | Block RAM      | 
+|awgn_imag4               | q0_reg                                | 512x13        | Block RAM      | 
+|awgn_imag4               | q1_reg                                | 512x13        | Block RAM      | 
+|awgn_imag4               | q2_reg                                | 512x13        | Block RAM      | 
+|awgn_imag4               | q3_reg                                | 512x13        | Block RAM      | 
+|awgn_imag4               | snr_V_read_reg_1651_pp0_iter5_reg_reg | 256x17        | Block RAM      | 
++-------------------------+---------------------------------------+---------------+----------------+
+
+
+DSP: Preliminary Mapping	Report (see note below)
++-----------------------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name                  | DSP Mapping     | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++-----------------------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_real1                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_real1                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_imag1                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_imag1                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_real2                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_real2                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_imag2                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_imag2                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_real3                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_real3                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_imag3                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_imag3                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_real4                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_real4                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|mod_and_chan_4x_mkbM_DSP48_0 | (A*B)'          | 14     | 10     | -      | -      | 24     | 0    | 0    | -    | -    | -     | 1    | 0    | 
+|awgn_imag4                   | (A''*B'')'      | 27     | 18     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|awgn_imag4                   | (C+(A''*B'')')' | 18     | 5      | 48     | -      | 48     | 2    | 2    | 0    | -    | -     | 1    | 1    | 
++-----------------------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:13 ; elapsed = 00:02:08 . Memory (MB): peak = 3416.684 ; gain = 766.504 ; free physical = 34401 ; free virtual = 494346
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:22 ; elapsed = 00:02:17 . Memory (MB): peak = 3503.859 ; gain = 853.680 ; free physical = 30992 ; free virtual = 491637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_real4_fu_390/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_imag4_fu_403/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_real3_fu_364/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_imag3_fu_377/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_real2_fu_338/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_imag2_fu_351/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-223] decloning instance 'inst/grp_awgn_imag1_fu_325/snr_V_read_reg_1651_pp0_iter5_reg_reg' (RAMB18E2_2) to 'inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg'
+INFO: [Synth 8-7052] The timing for the instance inst/grp_awgn_real1_fu_312/snr_V_read_reg_1651_pp0_iter5_reg_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:31 ; elapsed = 00:02:26 . Memory (MB): peak = 3527.883 ; gain = 877.703 ; free physical = 28016 ; free virtual = 488771
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:35 ; elapsed = 00:02:30 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 28928 ; free virtual = 489701
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:35 ; elapsed = 00:02:30 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 28801 ; free virtual = 489574
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:36 ; elapsed = 00:02:31 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 27754 ; free virtual = 488546
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:36 ; elapsed = 00:02:31 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 27747 ; free virtual = 488542
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:36 ; elapsed = 00:02:32 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 27610 ; free virtual = 488408
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:36 ; elapsed = 00:02:32 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 27652 ; free virtual = 488450
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Static Shift Register Report:
++----------------+----------------------------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|Module Name     | RTL Name                                                       | Length | Width | Reset Signal | Pull out first Reg | Pull out last Reg | SRL16E | SRLC32E | 
++----------------+----------------------------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|mod_and_chan_4x | grp_awgn_real1_fu_312/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_real1_fu_312/tmp_236_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real1_fu_312/tmp_236_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real1_fu_312/tmp_236_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real1_fu_312/tmp_180_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/tmp_452_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/tmp_452_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/tmp_452_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/tmp_348_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real2_fu_338/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_real2_fu_338/tmp_182_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real2_fu_338/tmp_182_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real2_fu_338/tmp_182_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real2_fu_338/tmp_138_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag2_fu_351/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_imag2_fu_351/tmp_398_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag2_fu_351/tmp_398_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag2_fu_351/tmp_398_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag2_fu_351/tmp_306_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real3_fu_364/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_real3_fu_364/tmp_128_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real3_fu_364/tmp_128_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real3_fu_364/tmp_128_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real3_fu_364/tmp_96_reg_1687_pp0_iter3_reg_reg[0]     | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag3_fu_377/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_imag3_fu_377/tmp_344_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag3_fu_377/tmp_344_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag3_fu_377/tmp_344_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag3_fu_377/tmp_264_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real4_fu_390/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_real4_fu_390/tmp_74_2_reg_1743_pp0_iter3_reg_reg[0]   | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real4_fu_390/tmp_74_3_reg_1771_pp0_iter3_reg_reg[0]   | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real4_fu_390/tmp_74_1_reg_1715_pp0_iter3_reg_reg[0]   | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_real4_fu_390/tmp_51_reg_1687_pp0_iter3_reg_reg[0]     | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag4_fu_403/p_Val2_s_reg_1656_pp0_iter5_reg_reg[127] | 6      | 4     | NO           | NO                 | YES               | 4      | 0       | 
+|mod_and_chan_4x | grp_awgn_imag4_fu_403/tmp_290_2_reg_1743_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag4_fu_403/tmp_290_3_reg_1771_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag4_fu_403/tmp_290_1_reg_1715_pp0_iter3_reg_reg[0]  | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | grp_awgn_imag4_fu_403/tmp_222_reg_1687_pp0_iter3_reg_reg[0]    | 4      | 10    | NO           | NO                 | YES               | 10     | 0       | 
+|mod_and_chan_4x | symbol_1_V_4_reg_1571_pp0_iter13_reg_reg[5]                    | 11     | 6     | NO           | NO                 | YES               | 6      | 0       | 
+|mod_and_chan_4x | symbol_2_V_7_reg_1576_pp0_iter13_reg_reg[5]                    | 11     | 6     | NO           | NO                 | YES               | 6      | 0       | 
+|mod_and_chan_4x | symbol_3_V_5_reg_1581_pp0_iter13_reg_reg[5]                    | 11     | 6     | NO           | NO                 | YES               | 6      | 0       | 
+|mod_and_chan_4x | p_7_reg_1586_pp0_iter13_reg_reg[5]                             | 11     | 6     | NO           | NO                 | YES               | 6      | 0       | 
+|mod_and_chan_4x | grp_awgn_imag1_fu_325/snr_V_read_reg_1651_pp0_iter4_reg_reg[0] | 5      | 8     | NO           | NO                 | YES               | 8      | 0       | 
++----------------+----------------------------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------------+------+
+|      |Cell            |Count |
++------+----------------+------+
+|1     |CARRY8          |   295|
+|2     |DSP_ALU         |    48|
+|4     |DSP_A_B_DATA    |    48|
+|6     |DSP_C_DATA      |    48|
+|8     |DSP_MULTIPLIER  |    48|
+|9     |DSP_M_DATA      |    48|
+|11    |DSP_OUTPUT      |    48|
+|12    |DSP_PREADD      |    48|
+|13    |DSP_PREADD_DATA |    48|
+|14    |LUT1            |   138|
+|15    |LUT2            |  1494|
+|16    |LUT3            |   883|
+|17    |LUT4            |  1029|
+|18    |LUT5            |  1008|
+|19    |LUT6            |  1017|
+|20    |RAMB18E2        |    33|
+|23    |SRL16E          |   384|
+|24    |FDRE            |  6365|
+|25    |FDSE            |   567|
++------+----------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:36 ; elapsed = 00:02:32 . Memory (MB): peak = 3531.855 ; gain = 881.676 ; free physical = 27649 ; free virtual = 488448
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:25 ; elapsed = 00:02:18 . Memory (MB): peak = 3531.855 ; gain = 726.234 ; free physical = 27656 ; free virtual = 488456
+Synthesis Optimization Complete : Time (s): cpu = 00:01:36 ; elapsed = 00:02:32 . Memory (MB): peak = 3531.859 ; gain = 881.676 ; free physical = 27656 ; free virtual = 488456
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.16 ; elapsed = 00:00:00.16 . Memory (MB): peak = 3543.824 ; gain = 0.000 ; free physical = 28359 ; free virtual = 489193
+INFO: [Netlist 29-17] Analyzing 343 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag1_fu_325/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag1_fu_325/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag1_fu_325/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag1_fu_325/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag2_fu_351/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag2_fu_351/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag2_fu_351/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag2_fu_351/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag3_fu_377/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag3_fu_377/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag3_fu_377/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag3_fu_377/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag4_fu_403/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag4_fu_403/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag4_fu_403/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_imag4_fu_403/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real1_fu_312/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real1_fu_312/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real1_fu_312/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real1_fu_312/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real2_fu_338/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real2_fu_338/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real2_fu_338/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real2_fu_338/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real3_fu_364/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real3_fu_364/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real3_fu_364/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real3_fu_364/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real4_fu_390/q0_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real4_fu_390/q0_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real4_fu_390/q2_reg has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell inst/grp_awgn_real4_fu_390/q2_reg__0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3554.730 ; gain = 0.000 ; free physical = 26795 ; free virtual = 487624
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 48 instances were transformed.
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 48 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+132 Infos, 107 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:02:00 ; elapsed = 00:03:09 . Memory (MB): peak = 3554.730 ; gain = 1309.332 ; free physical = 27903 ; free virtual = 488729
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/project_1_mod_and_chan_0.dcp' has been generated.
+WARNING: [Common 17-576] 'use_project_ipc' is deprecated. This option is deprecated and no longer used.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP project_1_mod_and_chan_0, cache-ID = 0f81bc90d4c66b6b
+INFO: [Coretcl 2-1174] Renamed 141 cell refs.
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.rETG9Rbw1g/temp/hwflow/hwflow_project_1/project_1.runs/project_1_mod_and_chan_0_synth_1/project_1_mod_and_chan_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file project_1_mod_and_chan_0_utilization_synth.rpt -pb project_1_mod_and_chan_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu May 28 07:47:32 2020...

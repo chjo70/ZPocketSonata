@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:abstractionDefinition xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>xilinx.com</spirit:vendor>
+  <spirit:library>display_usp_rf_data_converter</spirit:library>
+  <spirit:name>debug_pins_rtl</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:busType spirit:vendor="xilinx.com" spirit:library="display_usp_rf_data_converter" spirit:name="debug_pins" spirit:version="1.0"/>
+<spirit:ports>
+  <spirit:port>
+    <spirit:logicalName>CMN_CONTROL</spirit:logicalName>
+    <spirit:description>Common Control Output</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>CONVERTER0_STATUS</spirit:logicalName>
+    <spirit:description>Status Port for Converter 0</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>CONVERTER1_STATUS</spirit:logicalName>
+    <spirit:description>Status Port for Converter 1</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>CONVERTER2_STATUS</spirit:logicalName>
+    <spirit:description>Status Port for Converter 2</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>CONVERTER3_STATUS</spirit:logicalName>
+    <spirit:description>Status Port for Converter 3</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>PLL_DMON</spirit:logicalName>
+    <spirit:description>PLL DMON Port</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>
+  <spirit:port>
+    <spirit:logicalName>PLL_LOCK</spirit:logicalName>
+    <spirit:description>PLL LOCK Port</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>  
+  <spirit:port>
+    <spirit:logicalName>FSM_STATUS</spirit:logicalName>
+    <spirit:description>FSM STATUS Port</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>  
+  <spirit:port>
+    <spirit:logicalName>FSM_DONE</spirit:logicalName>
+    <spirit:description>FSM DONE Port</spirit:description>
+    <spirit:wire>
+      <spirit:qualifier>
+        <spirit:isData>true</spirit:isData>
+      </spirit:qualifier>
+    </spirit:wire>
+  </spirit:port>   
+</spirit:ports>
+</spirit:abstractionDefinition>
