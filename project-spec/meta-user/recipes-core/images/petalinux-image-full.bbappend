@@ -7,3 +7,5 @@ IMAGE_INSTALL_append = " rfdc-read-write"
 IMAGE_INSTALL_append = " rfdc-selftest"
 IMAGE_INSTALL_append = " libsdfecusrintf"
 IMAGE_INSTALL_append = " sdfec-demo"
+
+IMAGE_INSTALL_append = " boost"
