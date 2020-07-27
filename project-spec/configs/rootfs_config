@@ -2165,9 +2165,9 @@ CONFIG_run-postinsts=y
 #
 # readline 
 #
-# CONFIG_readline is not set
-# CONFIG_readline-dev is not set
-# CONFIG_readline-dbg is not set
+CONFIG_readline=y
+CONFIG_readline-dev=y
+CONFIG_readline-dbg=y
 
 #
 # sbc 
@@ -2200,10 +2200,10 @@ CONFIG_run-postinsts=y
 #
 # sqlite3 
 #
-# CONFIG_sqlite3 is not set
-# CONFIG_libsqlite3 is not set
-# CONFIG_libsqlite3-dev is not set
-# CONFIG_sqlite3-dbg is not set
+CONFIG_sqlite3=y
+CONFIG_libsqlite3=y
+CONFIG_libsqlite3-dev=y
+CONFIG_sqlite3-dbg=y
 
 #
 # startup-notification 
