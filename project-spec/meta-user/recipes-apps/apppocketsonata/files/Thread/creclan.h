@@ -1,8 +1,8 @@
 #ifndef CRECLAN_H
 #define CRECLAN_H
 
-#include "./Include/sysmsg.h"
-#include "./Utils/cthread.h"
+#include "../Include/sysmsg.h"
+#include "../Utils/cthread.h"
 
 class CRecLan : public CThread
 {

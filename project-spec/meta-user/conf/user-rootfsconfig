@@ -8,3 +8,4 @@ CONFIG_rfdc-read-write
 CONFIG_rfdc-selftest
 CONFIG_sdfec
 CONFIG_apppocketsonata
+CONFIG_boost

@@ -5,9 +5,9 @@
 #include <netinet/in.h>
 
 
-#include "./Include/system.h"
+#include "../Include/system.h"
 
-#include "./Utils/cthread.h"
+#include "../Utils/cthread.h"
 
 #define MAX_LAN_DATA    (1024)
 

@@ -2,10 +2,11 @@
 #include <arpa/inet.h>
 
 #include "csingleserver.h"
-#include "./Utils/clog.h"
-
 
 #include "./Thread/creclan.h"
+#include "./Thread/ctaskmngr.h"
+#include "./Utils/clog.h"
+
 
 /**
  * @brief CSingleServer::CSingleServer
@@ -58,6 +59,8 @@ void CSingleServer::_routine()
     char *pLanData;
 
     struct sockaddr_in sockAddress;
+
+    m_pMsg = GetDataMessage();
 
     //set of socket descriptors
     fd_set readfds;
@@ -226,6 +229,8 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
     if( pClientSocket != NULL ) {
         *pClientSocket = 0;
     }
+
+    //QMsgSnd( TMNGR->GetKeyId(), enTHREAD_MODE, enREADY_MODE, sizeof(int) );
 
 }
 

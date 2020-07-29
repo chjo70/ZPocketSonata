@@ -64,7 +64,7 @@ CONFIG_system-zynqmp=y
 # CONFIG_busybox-dbg is not set
 # CONFIG_busybox-syslog is not set
 # CONFIG_busybox-hwclock is not set
-# CONFIG_busybox-httpd is not set
+CONFIG_busybox-httpd=y
 # CONFIG_busybox-dev is not set
 # CONFIG_busybox-udhcpc is not set
 # CONFIG_busybox-udhcpd is not set
@@ -157,15 +157,15 @@ CONFIG_system-zynqmp=y
 #
 # haveged 
 #
-# CONFIG_haveged is not set
+CONFIG_haveged=y
 
 #
 # i2c-tools 
 #
-# CONFIG_i2c-tools is not set
-# CONFIG_i2c-tools-dev is not set
-# CONFIG_i2c-tools-misc is not set
-# CONFIG_i2c-tools-dbg is not set
+CONFIG_i2c-tools=y
+CONFIG_i2c-tools-dev=y
+CONFIG_i2c-tools-misc=y
+CONFIG_i2c-tools-dbg=y
 
 #
 # init-ifupdown 
@@ -2254,7 +2254,7 @@ CONFIG_sqlite3-dbg=y
 #
 # alsa-state 
 #
-# CONFIG_alsa-state is not set
+CONFIG_alsa-state=y
 # CONFIG_alsa-state-dev is not set
 # CONFIG_alsa-states is not set
 # CONFIG_alsa-state-dbg is not set
@@ -4220,13 +4220,14 @@ CONFIG_imagefeature-hwcodecs=y
 #
 # apps 
 #
-# CONFIG_apppocketsonata is not set
+CONFIG_apppocketsonata=y
 # CONFIG_gpio-demo is not set
 # CONFIG_peekpoke is not set
 
 #
 # user packages 
 #
+CONFIG_boost=y
 CONFIG_rfdc=y
 CONFIG_rfdc-read-write=y
 CONFIG_rfdc-selftest=y

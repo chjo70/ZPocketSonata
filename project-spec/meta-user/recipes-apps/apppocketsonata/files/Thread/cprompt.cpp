@@ -10,10 +10,15 @@
 #include "ctaskmngr.h"
 
 #ifdef _READLINE_
-#include <curses.h>
-#include <term.h>
-#include<readline/readline.h>
-#include<readline/history.h>
+//#include <curses.h>
+//#include <term.h>
+//#include <readline/readline.h>
+//#include <readline/history.h>
+
+#include <readline/readline.h>
+#include <readline/history.h>
+#else
+
 #endif
 
 #define _DEBUG_

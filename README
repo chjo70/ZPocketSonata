@@ -25,6 +25,7 @@ I. Main Contents of Prebuilt
 | | | |-- image.ub			# FIT image including the kernel, DTB and rootfs
 | | | |-- Image				# FIT image including the kernel
 | | | |-- u-boot.elf			# U-boot ELF
+| | | |-- u-boot.bin                    # U-boot bin
 | | | |-- BOOT.BIN			# ZynqMP boot BIN file
 | | | |-- bl31.elf			# Arm trusted firmware ELF file
 | | | |-- bl31.bin			# Arm trusted firmware BIN file
@@ -39,6 +40,14 @@ I. Main Contents of Prebuilt
 | | | |-- vmlinux			# Statically linked kernel executable file used for kernel debugging
 | | | |-- xen.dtb			# Xen device-tree blob file
 | | | |-- xen-Image			# Xen kernel image
+| | | |-- xen-openamp.dtb               # Xen openamp device-tree blob file
+| | | |-- xen-qemu.dtb                  # Xen qemu device-tree blob file
+| | | |-- xen-rootfs.cpio.gz.u-boot     # Xen rootfs CPIO image
+| | | |-- xen.ub                        # Xen FIT image
+| | | |-- openamp.dtb                   # Openamp device-tree blob file
+| | | |-- zynqmp-qemu-arm.dtb           # qemu device-tree blob file for single arch
+| | | |-- zynqmp-qemu-multiarch-arm.dtb # qemu device-tree blob file for multi arch and it has information of a53 and other devices
+| | | |-- zynqmp-qemu-multiarch-pmu.dtb # qemu device-tree blob file for multi arch and it has information of microblaze nodes
 | | |-- implementation/
 | | | |-- download.bit			# FPGA bitstream
 
@@ -88,12 +97,10 @@ Note:	While building bsps, we use some openAMP, Xen and QEMU files from internal
 			$ petalinux-config -c rootfs
 				Select following packages and save it
 					libmali-xlnx
-			$ petalinux-config --silentconfig
-				Add below lines in build/conf/local.conf
-					EXTRA_IMAGE_FEATURES += "package-management"
+					package-management
 
 		2.zcu106 and zcu104 boards
-			$ echo 'IMAGE_INSTALL_append = " gstreamer-vcu-examples"' >> <project root>/project-spec/meta-user/recipes-core/images/petalinux-image.bbappend
+			$ echo 'CONFIG_gstreamer-vcu-examples' >> <project root>/project-spec/meta-user/conf/user-rootfsconfig
 			$ petalinux-config --silentconfig
 			$ petalinux-config -c rootfs
 				Select following packages and save it
@@ -105,9 +112,7 @@ Note:	While building bsps, we use some openAMP, Xen and QEMU files from internal
 					libdrm-tests
 					gstreamer-vcu-examples
 					libmali-xlnx
-			$ petalinux-config --silentconfig
-				Add below lines in build/conf/local.conf
-					EXTRA_IMAGE_FEATURES += "package-management"
+					package-management
 
 			$ petalinux-config
 				Add xilinx_zynqmp_zcu106_revA_defconfig to SUBSYSTEM_UBOOT_CONFIG_TARGET for zcu106 boards
@@ -118,22 +123,22 @@ Note:	While building bsps, we use some openAMP, Xen and QEMU files from internal
 				Enter zcu104-revc for MACHINE_NAME option for zcu104 board ( ZCU104 DTG board parameter)
 				Enter zcu104-zynqmp for YOCTO_MACHINE_NAME option for zcu104 board
 		3. ultra96 board
-			$ cat >>  project-spec/meta-user/recipes-core/images/petalinux-image-full.bbappend <<EOF
-IMAGE_INSTALL_append = " peekpoke"
-IMAGE_INSTALL_append = " gpio-demo"
-IMAGE_INSTALL_append = " packagegroup-base-extended"
-IMAGE_INSTALL_append = " cmake"
-IMAGE_INSTALL_append = " lmsensors-sensorsdetect"
-IMAGE_INSTALL_append = " python-pyserial"
-IMAGE_INSTALL_append = " libftdi"
-IMAGE_INSTALL_append = " python3-pip"
-IMAGE_INSTALL_append = " iperf3"
-IMAGE_INSTALL_append = " packagegroup-petalinux-ultra96-webapp"
-IMAGE_INSTALL_append = " packagegroup-petalinux-v4lutils"
-IMAGE_INSTALL_append = " packagegroup-petalinux-96boards-sensors"
-IMAGE_INSTALL_append = " packagegroup-petalinux-x11"
-IMAGE_INSTALL_append = " packagegroup-petalinux-matchbox"
-IMAGE_INSTALL_append = " ultra96-ap-setup"
+			$ cat >>  project-spec/meta-user/conf/user-rootfsconfig <<EOF
+CONFIG_peekpoke
+CONFIG_gpio-demo
+CONFIG_packagegroup-base-extended
+CONFIG_cmake
+CONFIG_lmsensors-sensorsdetect
+CONFIG_python-pyserial
+CONFIG_libftdi
+CONFIG_python3-pip
+CONFIG_iperf3
+CONFIG_packagegroup-petalinux-ultra96-webapp
+CONFIG_packagegroup-petalinux-v4lutils
+CONFIG_packagegroup-petalinux-96boards-sensors
+CONFIG_packagegroup-petalinux-x11
+CONFIG_packagegroup-petalinux-matchbox
+CONFIG_ultra96-ap-setup
 EOF
 
 			$ petalinux-config -c rootfs
@@ -155,9 +160,10 @@ EOF
 				packagegroup-petalinux-matchbox
 				ultra96-ap-setup
 				libmali-xlnx
+				package-management
 			$petalinux-config
 				Select CONFIG_SUBSYSTEM_SERIAL_PSU_UART_1_SELECT
-				Select CONFIG_SUBSYSTEM_ROOTFS_SD
+				Select CONFIG_SUBSYSTEM_ROOTFS_EXT
 				Enter avnet_ultra96_rev1_defconfig to SUBSYSTEM_UBOOT_CONFIG_TARGET for ultra96 boards
 				Enter avnet-ultra96-rev1 for MACHINE_NAME option  ( Ultra96 DTG board parameter)
 				Enter "ultra96-zynqmp" for YOCTO_MACHINE_NAME option.
@@ -171,19 +177,16 @@ EOF
 				CONFIG_CMD_DHCP
 				CONFIG_CMD_TFTPPUT
 				CONFIG_CMD_NFS
-			$ petalinux-config --silentconfig
-				Add below lines in build/conf/local.conf
-					EXTRA_IMAGE_FEATURES += "package-management"
 
 		4.zcu111 board
-			$ cat >> project-spec/meta-user/recipes-core/images/petalinux-image-full.bbappend << EOF
-IMAGE_INSTALL_append = " peekpoke"
-IMAGE_INSTALL_append = " gpio-demo"
-IMAGE_INSTALL_append = " rfdc"
-IMAGE_INSTALL_append = " rfdc-read-write"
-IMAGE_INSTALL_append = " rfdc-selftest"
-IMAGE_INSTALL_append = " libsdfecusrintf"
-IMAGE_INSTALL_append = " sdfec-demo"
+			$ cat >> project-spec/meta-user/conf/user-rootfsconfig << EOF
+CONFIG_peekpoke
+CONFIG_gpio-demo
+CONFIG_rfdc
+CONFIG_rfdc-read-write
+CONFIG_rfdc-selftest
+CONFIG_libsdfecusrintf
+CONFIG_sdfec-demo
 EOF
 			$ petalinux-config -c rootfs
                                 Select following packages and save it
@@ -198,12 +201,12 @@ EOF
                                 Enter "zcu111-zynqmp" for YOCTO_MACHINE_NAME option.
 
 		5.zcu1275 and zc1285 boards
-			$ cat >> project-spec/meta-user/recipes-core/images/petalinux-image-full.bbappend << EOF
-IMAGE_INSTALL_append = " peekpoke"
-IMAGE_INSTALL_append = " gpio-demo"
-IMAGE_INSTALL_append = " rfdc"
-IMAGE_INSTALL_append = " rfdc-read-write"
-IMAGE_INSTALL_append = " rfdc-selftest"
+			$ cat >> project-spec/meta-user/conf/user-rootfsconfig << EOF
+CONFIG_peekpoke
+CONFIG_gpio-demo
+CONFIG_rfdc
+CONFIG_rfdc-read-write
+CONFIG_rfdc-selftest
 EOF
                         $ petalinux-config -c rootfs
                                 Select following packages and save it
@@ -316,5 +319,5 @@ IV. Hardware Images
 
 V. Software Projects
 ================================================================================
- * fsbl, pmufw, device-tree
+ * device-tree
    DTG xsct software components can be found at "components/plnx_workspace/" directory

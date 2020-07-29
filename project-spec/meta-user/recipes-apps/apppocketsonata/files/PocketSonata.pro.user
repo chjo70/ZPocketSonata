@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.1, 2020-07-23T14:52:15. -->
+<!-- Written by QtCreator 4.11.1, 2020-07-29T13:44:32. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -285,9 +285,9 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/chjo70/Lab/Xilinx/ZPocketSonata2/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketSonata.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/chjo70/Lab/Xilinx/ZPocketSonata2/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketSonata.pro</value>
-    <value type="QString" key="RunConfiguration.Arguments">3</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/chjo70/Lab/Xilinx/ZPocketSonata3/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketSonata.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/chjo70/Lab/Xilinx/ZPocketSonata3/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketSonata.pro</value>
+    <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
@@ -296,9 +296,8 @@
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/chjo70/Lab/Xilinx/ZPocketSonata2/project-spec/meta-user/recipes-apps/apppocketsonata/build</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

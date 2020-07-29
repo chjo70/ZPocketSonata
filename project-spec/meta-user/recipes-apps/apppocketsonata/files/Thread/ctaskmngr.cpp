@@ -9,12 +9,13 @@
 #include "cjamtech.h"
 #include "cpulsetrk.h"
 #include "csignalcollect.h"
+#include "cdetectanalysis.h"
 #include "curbit.h"
 #include "cprompt.h"
 #include "creclan.h"
 
 #include "../Utils/clog.h"
-#include "./System/csysconfig.h"
+#include "../System/csysconfig.h"
 
 
 
@@ -162,7 +163,6 @@ void CTaskMngr::_routine()
         switch( m_pMsg->opCode ) {
             case enTHREAD_MODE :
                 SetMode();
-
                 break;
 
             case enTHREAD_ANAL_START :
@@ -231,13 +231,16 @@ void CTaskMngr::AnalysisStart()
  */
 void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 {
+    LOGMSG1( enDebug, "분석 관련 쓰레드를 삭제하고 재구동하여 분석을 준비한다[%d].", bCreate );
 
-    // 먼저 삭제를 하고
+    // 1. 먼저 관련 분석 쓰레드를 삭제한다.
     SIGCOL->ReleaseInstance();
+    DETANL->ReleaseInstance();
 
     // 플레그에 따라서 생성한다.
     if( bCreate == true ) {
         SIGCOL->Run();
+        DETANL->Run();
     }
 
 }

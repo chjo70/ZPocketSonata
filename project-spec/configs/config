@@ -226,8 +226,8 @@ CONFIG_SUBSYSTEM_TFTPBOOT_DIR="/tftpboot"
 #
 # Firmware Version Configuration
 #
-CONFIG_SUBSYSTEM_HOSTNAME="xilinx-zcu111-2019_1"
-CONFIG_SUBSYSTEM_PRODUCT="xilinx-zcu111-2019.1"
+CONFIG_SUBSYSTEM_HOSTNAME="xilinx-zcu111-2019_2"
+CONFIG_SUBSYSTEM_PRODUCT="xilinx-zcu111-2019.2"
 CONFIG_SUBSYSTEM_FW_VERSION="1.00"
 
 #
@@ -251,7 +251,7 @@ CONFIG_YOCTO_PARALLEL_MAKE=""
 #
 # Add pre-mirror url 
 #
-CONFIG_PRE_MIRROR_URL="http://petalinux.xilinx.com/sswreleases/rel-v${PETALINUX_VER%%.*}/downloads"
+CONFIG_PRE_MIRROR_URL="file:///opt/petalinux/downloads_2019.2/downloads"
 
 #
 # Local sstate feeds settings
@@ -260,8 +260,8 @@ CONFIG_PRE_MIRROR_URL="http://petalinux.xilinx.com/sswreleases/rel-v${PETALINUX_
 #
 # Default sstate feeds ${PETALINUX}/components/yocto always added
 #
-CONFIG_YOCTO_LOCAL_SSTATE_FEEDS_URL=""
-# CONFIG_YOCTO_ENABLE_DEBUG_TWEAKS is not set
+CONFIG_YOCTO_LOCAL_SSTATE_FEEDS_URL="/opt/petalinux/sstate_aarch64_2019.2/aarch64"
+CONFIG_YOCTO_ENABLE_DEBUG_TWEAKS=y
 CONFIG_YOCTO_NETWORK_SSTATE_FEEDS=y
 
 #

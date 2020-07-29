@@ -2,8 +2,8 @@
 #define CPULSETRK_H
 
 
-#include "./Include/system.h"
-#include "./Utils/cthread.h"
+#include "../Include/system.h"
+#include "../Utils/cthread.h"
 
 class CPulseTrk : public CThread
 {
@@ -14,7 +14,7 @@ public:
 
 public:
     CPulseTrk( int iKeyId, char *pClassName=NULL );
-    ~CPulseTrk();
+    virtual ~CPulseTrk();
 
     void Run();
     void ReleaseInstance();

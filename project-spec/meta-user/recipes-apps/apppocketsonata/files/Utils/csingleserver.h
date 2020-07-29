@@ -5,9 +5,9 @@
 #include <netinet/in.h>
 
 
-#include "./Include/system.h"
+#include "../Include/system.h"
 
-#include "./Utils/cthread.h"
+#include "../Utils/cthread.h"
 
 
 class CSingleServer : public CThread
@@ -15,6 +15,8 @@ class CSingleServer : public CThread
 private:
     int m_iPort;
     int m_iSocket;
+
+    STR_MessageData *m_pMsg;
 
 public:
     CSingleServer( int iKeyId, char *pClassName, int iPort );

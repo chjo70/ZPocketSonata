@@ -2,8 +2,8 @@
 #define CSIGNALCOLLECT_H
 
 
-#include "./Include/system.h"
-#include "./Utils/cthread.h"
+#include "../Include/system.h"
+#include "../Utils/cthread.h"
 
 #include "../Collect/ccollectbank/ccollectbank.h"
 

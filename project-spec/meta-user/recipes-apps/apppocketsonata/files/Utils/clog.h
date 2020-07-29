@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <semaphore.h>
 
-#include "./Include/system.h"
+#include "../Include/system.h"
 
 
 

@@ -1,7 +1,7 @@
 #ifndef CSYSCONFIG_H
 #define CSYSCONFIG_H
 
-#include "./Include/system.h"
+#include "../Include/system.h"
 
 
 /**

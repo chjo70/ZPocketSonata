@@ -2,6 +2,7 @@
 #ifndef MEMORYPAGE_H
 #define MEMORYPAGE_H
 
+//#include "sqlite/sqlite3.h"
 #include <boost/thread/mutex.hpp>
 
 class MemoryPage

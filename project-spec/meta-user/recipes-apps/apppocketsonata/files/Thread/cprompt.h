@@ -1,8 +1,8 @@
 #ifndef CPROMPT_H
 #define CPROMPT_H
 
-#include "./Include/system.h"
-#include "./Utils/cthread.h"
+#include "../Include/system.h"
+#include "../Utils/cthread.h"
 
 #define NOOFOWNCMDS             (8)
 
@@ -42,7 +42,7 @@ private:
 
 public:
     CPrompt( int iKeyId, char *pClassName=NULL );
-    ~CPrompt();
+    virtual ~CPrompt();
 
     void ReleaseInstance();
 

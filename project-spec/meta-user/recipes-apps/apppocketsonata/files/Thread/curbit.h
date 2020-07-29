@@ -2,12 +2,12 @@
 #define CURBIT_H
 
 
-#include "./Include/sysmsg.h"
-#include "./Utils/cthread.h"
+#include "../Include/sysmsg.h"
+#include "../Utils/cthread.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // 아래는 이 쓰레드에서 사용하는 클래스를 정의합니다.
-#include "./Utils/cgpio.h"
+#include "../Utils/cgpio.h"
 
 /**
  * @brief 자체점검 쓰레드 입니다.
@@ -29,7 +29,7 @@ private:
 
 public:
     CUrBit( int iKeyId, char *pClassName=NULL );
-    ~CUrBit();
+    virtual ~CUrBit();
 
     void Run();
     void ReleaseInstance();

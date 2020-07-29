@@ -1,8 +1,8 @@
 #ifndef CJAMTECH_H
 #define CJAMTECH_H
 
-#include "./Include/system.h"
-#include "./Utils/cthread.h"
+#include "../Include/system.h"
+#include "../Utils/cthread.h"
 
 
 class CJamTech : public CThread

@@ -3,10 +3,10 @@
 
 using namespace std;
 
-#include "./Include/sysmsg.h"
-#include "./Utils/cthread.h"
+#include "../Include/sysmsg.h"
+#include "../Utils/cthread.h"
 
-#include "./MinIni/minIni.h"
+#include "../MinIni/minIni.h"
 
 
 // INI 파일 정의

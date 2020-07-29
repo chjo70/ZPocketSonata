@@ -1,10 +1,10 @@
 #ifndef CDETECTANALYSIS_H
 #define CDETECTANALYSIS_H
 
-#include "./Utils/clog.h"
+#include "../Utils/clog.h"
 
-#include "./Include/system.h"
-#include "./Utils/cthread.h"
+#include "../Include/system.h"
+#include "../Utils/cthread.h"
 
 class CDetectAnalysis : public CThread
 {
@@ -42,5 +42,7 @@ public:
     }
 
 };
+
+#define DETANL     CDetectAnalysis::GetInstance()
 
 #endif // CDETECTANALYSIS_H
