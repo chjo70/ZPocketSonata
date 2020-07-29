@@ -67,9 +67,10 @@ SRC_URI = "file://cmain.cpp \
 		   "
 
 S = "${WORKDIR}"
+T = "${TMPDIR}"
 
 do_compile() {
-	     oe_runmake INCLUDE=${S}/usr/include
+	     oe_runmake TMPDIR=${T}
 }
 
 do_install() {

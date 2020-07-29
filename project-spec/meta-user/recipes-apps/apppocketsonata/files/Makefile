@@ -26,10 +26,17 @@ APP_OBJS += Utils/cgpio.o
 APP_OBJS += cmain.o
 
 INCLUDES = -I$(TMPDIR)/sysroots-components/aarch64/readline/usr/include
+INCLUDES += -I$(TMPDIR)/sysroots-components/aarch64/ncurses/usr/include
+INCLUDES += -I$(TMPDIR)/sysroots-components/aarch64/boost/usr/include
+
+LIBS = -L$(TMPDIR)/sysroots-components/aarch64/readline/usr/lib
+#LIBS += -L$(TMPDIR)/sysroots-components/aarch64/ncurses/usr/lib
+LIBS += -L$(TMPDIR)/sysroots-components/aarch64/ncurses/lib
+LIBS += -L$(TMPDIR)/sysroots-components/aarch64/boost/usr/lib
 
 SRCS = $(APP_OBJS:.o=.cpp)
 
-LDLIBS = -pthread -lreadline
+LDLIBS = -pthread -lreadline -lncurses
 # -lreadline
 
 
@@ -38,14 +45,11 @@ all: build
 build: $(APP)
 
 $(APP): $(APP_OBJS)
-	$(CXX) $(LDFLAGS)  -o $@ $(APP_OBJS) $(LDLIBS)  
+	$(CXX) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) $(LIBS)
 	
 %.o: %.cpp
-	echo $(TMPDIR)
 	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 	
-	
-
 
 clean:
 	$(RM) $(APP_OBJS) $(APP)
