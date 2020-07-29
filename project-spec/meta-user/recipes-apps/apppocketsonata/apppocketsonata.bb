@@ -53,7 +53,7 @@ SRC_URI = "file://cmain.cpp \
 		   file://Thread/curbit.h \
 		   file://System/csysconfig.cpp \
 		   file://System/csysconfig.h \
-		   file://MinIni/minIni.c \
+		   file://MinIni/minIni.cpp \
 		   file://MinIni/minIni.h \
 		   file://MinIni/minGlue.h \
 		   file://Include/system.h \

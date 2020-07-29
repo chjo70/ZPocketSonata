@@ -2,11 +2,10 @@
 #include <arpa/inet.h>
 
 #include "csingleserver.h"
+#include "../Utils/clog.h"
 
-#include "./Thread/creclan.h"
-#include "./Thread/ctaskmngr.h"
-#include "./Utils/clog.h"
 
+#include "../Thread/creclan.h"
 
 /**
  * @brief CSingleServer::CSingleServer
@@ -60,8 +59,6 @@ void CSingleServer::_routine()
 
     struct sockaddr_in sockAddress;
 
-    m_pMsg = GetDataMessage();
-
     //set of socket descriptors
     fd_set readfds;
 
@@ -110,25 +107,22 @@ void CSingleServer::_routine()
         FD_SET( iMasterSocket, &readfds);
         iMaxSocket = iMasterSocket;
 
-        //add child sockets to set
-        {
-            //socket descriptor
-            m_iSocket = iClientSocket;
+        //socket descriptor
+        m_iSocket = iClientSocket;
 
-            //if valid socket descriptor then add to read list
-            if( m_iSocket > 0) {
-                FD_SET( m_iSocket , &readfds);
-            }
+        //if valid socket descriptor then add to read list
+        if( m_iSocket > 0) {
+            FD_SET( m_iSocket , &readfds);
+        }
 
-            //highest file descriptor number, need it for the select function
-            if(m_iSocket > iMaxSocket) {
-                iMaxSocket = m_iSocket;
-            }
+        //highest file descriptor number, need it for the select function
+        if(m_iSocket > iMaxSocket) {
+            //iMaxSocket = m_iSocket;
         }
 
         //wait for an activity on one of the sockets , timeout is NULL ,
         //so wait indefinitely
-        iActivity = select( iMaxSocket + 1 , &readfds , NULL , NULL , NULL);
+        iActivity = select( m_iSocket + 1 , &readfds , NULL , NULL , NULL);
 
         if ((iActivity < 0) && (errno!=EINTR) ) {
             perror( "select 에러" );
@@ -229,8 +223,6 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
     if( pClientSocket != NULL ) {
         *pClientSocket = 0;
     }
-
-    //QMsgSnd( TMNGR->GetKeyId(), enTHREAD_MODE, enREADY_MODE, sizeof(int) );
 
 }
 

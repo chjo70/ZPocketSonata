@@ -2,10 +2,10 @@
 #include <arpa/inet.h>
 
 #include "cmultiserver.h"
-#include "./Utils/clog.h"
+#include "../Utils/clog.h"
 
 
-#include "./Thread/creclan.h"
+#include "../Thread/creclan.h"
 
 /**
  * @brief CMultiServer::CMultiServer
