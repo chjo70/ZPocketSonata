@@ -25,10 +25,13 @@ APP_OBJS += Utils/cthread.o
 APP_OBJS += Utils/cgpio.o
 APP_OBJS += cmain.o
 
-INCLUDES = -I$(TMPDIR)/sysroots-components/aarch64/readline/usr/include
+LDFLAGS += -I$(TMPDIR)/sysroots-components/aarch64/readline/usr/include
 
 LIBSOURCES_CPP = Collect/ccollectbank/ccollectbank.cpp
 LIBSOURCES_C = MinIni/minIni.c
+
+SRCS = $(wildcard ./Thread/*.cpp) $(wildcard ./Thread/*.c)
+SRCS += $(wildcard ./Utils/*.cpp) $(wildcard ./Utils/*.c)
 
 
 LDLIBS = -pthread -lreadline
@@ -40,7 +43,12 @@ all: build
 build: $(APP)
 
 $(APP): $(APP_OBJS)
-	$(CXX) $(LDFLAGS) $(INCLUDES) -o $@ $(APP_OBJS) $(LDLIBS)  
+	$(CXX) $(LDFLAGS)  -o $@ $(APP_OBJS) $(LDLIBS)  
+	
+%.o: %.c*
+	echo $(SRCS)
+	$(CXX) $(CFLAGS) -c -fPIC $(LIBSOURCES)	
+	
 	
 
 
