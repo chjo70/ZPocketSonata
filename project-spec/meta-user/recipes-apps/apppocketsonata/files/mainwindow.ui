@@ -20,7 +20,7 @@
       <x>10</x>
       <y>0</y>
       <width>925</width>
-      <height>141</height>
+      <height>146</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -140,9 +140,9 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>190</y>
+      <y>200</y>
       <width>351</width>
-      <height>91</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="title">
@@ -155,7 +155,7 @@
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>40</y>
+       <y>30</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -164,11 +164,11 @@
       <string>모드 설정</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>30</y>
        <width>250</width>
        <height>31</height>
       </rect>
@@ -210,7 +210,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>480</x>
       <y>220</y>
       <width>71</width>
       <height>51</height>
@@ -226,7 +226,7 @@
       <x>20</x>
       <y>210</y>
       <width>81</width>
-      <height>31</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -237,6 +237,94 @@
     </property>
     <property name="text">
      <string>연결</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>290</y>
+      <width>351</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>자체 점검</string>
+    </property>
+    <widget class="QPushButton" name="BITTEST">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>30</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>자체 점검</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>273</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="radioButton_IBIT">
+        <property name="text">
+         <string>초기자체</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_URBIT">
+        <property name="text">
+         <string>사용자요구</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_CBIT">
+        <property name="text">
+         <string>연속</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_SimPDW">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>81</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>81</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>PDW
+모의 발생</string>
     </property>
    </widget>
   </widget>

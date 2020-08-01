@@ -4220,6 +4220,7 @@ CONFIG_imagefeature-hwcodecs=y
 #
 # apps 
 #
+# CONFIG_apphtml is not set
 CONFIG_apppocketsonata=y
 # CONFIG_gpio-demo is not set
 # CONFIG_peekpoke is not set

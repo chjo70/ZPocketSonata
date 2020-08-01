@@ -10,6 +10,9 @@
 #include "cpulsetrk.h"
 #include "csignalcollect.h"
 #include "cdetectanalysis.h"
+#include "ctrackanalysis.h"
+#include "cscananalysis.h"
+
 #include "curbit.h"
 #include "cprompt.h"
 #include "creclan.h"
@@ -19,15 +22,17 @@
 
 
 
-#include "../Utils/csingleserver.h"
-#include "../Utils/cmultiserver.h"
+//#include "../Utils/csingleserver.h"
+//#include "../Utils/cmultiserver.h"
+
+#include "../Utils/ccommonutils.h"
 
 
 #define _DEBUG_
 
 
-extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
+//extern CMultiServer *g_pTheZYNQSocket;
+//extern CSingleServer *g_pTheCCUSocket;
 
 
 
@@ -198,13 +203,14 @@ void CTaskMngr::SetMode()
         case enEW_MODE :
             break;
         case enREADY_MODE :
-            //g_theCCUSocket.CloseSocket();
+            CreateAllAnalysisThread( false );
+            ProcessSummary();
             break;
     }
 
     GP_SYSCFG->SetMode( enMode );
 
-    SendLan( enRES_MODE, sizeof(int), & enMode );
+    CCommonUtils::SendLan( enRES_MODE, sizeof(int), & enMode );
 
 }
 
@@ -236,11 +242,15 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
     // 1. 먼저 관련 분석 쓰레드를 삭제한다.
     SIGCOL->ReleaseInstance();
     DETANL->ReleaseInstance();
+    TRKANL->ReleaseInstance();
+    SCANANL->ReleaseInstance();
 
     // 플레그에 따라서 생성한다.
     if( bCreate == true ) {
         SIGCOL->Run();
         DETANL->Run();
+        TRKANL->Run();
+        SCANANL->Run();
     }
 
 }
@@ -306,18 +316,11 @@ void CTaskMngr::Shutdown()
 }
 
 /**
- * @brief CTaskMngr::SendLan
+ * @brief 시스템의 자원과 운용 소프트웨어 상에서 자원 정보를 출력한다.
  */
-void CTaskMngr::SendLan( UINT uiOpCode, UINT uiLength, void *pData )
+void CTaskMngr::ProcessSummary()
 {
-
-    // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
-    if( g_enBoardId == enMaster ) {
-        g_pTheCCUSocket->SendLan( uiOpCode, uiLength, pData );
-    }
-    // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
-    else {
-        g_pTheZYNQSocket->SendLan( uiOpCode, uiLength, pData );
-    }
-
+    LOGMSG( enDebug, "--------------------------------------------------------" );
+    LOGMSG2( enDebug, "  총 타스크 개수 : %d\t   총 메시지 큐 개수 : %d" , GetCoThread(), GetCoThread() );
+    LOGMSG( enDebug, "--------------------------------------------------------" );
 }

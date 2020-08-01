@@ -23,6 +23,7 @@ private:
     void EnableControl( bool bEnable );
 
     int SendRSA( STR_LAN_HEADER *pstrLanHeader, void *pData, int iLength );
+    void MessageBox( char *pText );
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -53,9 +54,9 @@ private slots:
 
     void on_MODE_clicked();
 
-    void on_radioButton_3_clicked();
+    void on_BITTEST_clicked();
 
-    void on_radioButton_ESMode_clicked();
+    void on_pushButton_SimPDW_clicked();
 
 private:
     Ui::MainWindow *ui;

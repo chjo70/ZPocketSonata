@@ -4,8 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        Collect/DataFile/DataFile.cpp \
         Collect/ccollectbank/ccollectbank.cpp \
-        MinIni/minIni.c \
+        MinIni/minIni.cpp \
         NetMem/client/ClientMemoryPage.cpp \
         NetMem/client/NetworkMemory.cpp \
         NetMem/server/ClientSocket.cpp \
@@ -14,13 +15,17 @@ SOURCES += \
         NetMem/utils/ApiNetMem.cpp \
         System/csysconfig.cpp \
         Thread/cdetectanalysis.cpp \
+        Thread/cemittermerge.cpp \
         Thread/cjamtech.cpp \
         Thread/cprompt.cpp \
         Thread/cpulsetrk.cpp \
+        Thread/cscananalysis.cpp \
         Thread/csignalcollect.cpp \
         Thread/ctaskmngr.cpp \
+        Thread/ctrackanalysis.cpp \
         Thread/curbit.cpp \
         Thread/creclan.cpp \
+        Utils/ccommonutils.cpp \
         Utils/clog.cpp \
         Utils/cmultiserver.cpp \
         Utils/csingleserver.cpp \
@@ -29,6 +34,11 @@ SOURCES += \
         cmain.cpp
 
 HEADERS += \
+    Collect/DataFile/CRWRCommonVariables.h \
+    Collect/DataFile/DataFile.h \
+    Collect/DataFile/_iq.h \
+    Collect/DataFile/_macro.h \
+    Collect/DataFile/_pdw.h \
     Collect/ccollectbank/ccollectbank.h \
     Include/defines.h \
     Include/global.h \
@@ -58,13 +68,17 @@ HEADERS += \
     System/csysconfig.h \
     Thread/ccollectbank/ccollectbank.h \
     Thread/cdetectanalysis.h \
+    Thread/cemittermerge.h \
     Thread/cjamtech.h \
     Thread/cprompt.h \
     Thread/cpulsetrk.h \
     Thread/creclan.h \
+    Thread/cscananalysis.h \
     Thread/csignalcollect.h \
     Thread/ctaskmngr.h \
+    Thread/ctrackanalysis.h \
     Thread/curbit.h \
+    Utils/ccommonutils.h \
     Utils/cgpio.h \
     Utils/clog.h \
     Utils/cmultiserver.h \

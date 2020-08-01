@@ -151,7 +151,11 @@ void signalHandler( int signo )
 
 }
 
-
+/**
+ * @brief ParsingArgument
+ * @param iArgc
+ * @param iArgv
+ */
 void ParsingArgument( int iArgc, char *iArgv[] )
 {
 
@@ -162,6 +166,16 @@ void ParsingArgument( int iArgc, char *iArgv[] )
             g_enBoardId = (ENUM_BoardID) atoi( *iArgv );
             // cout << *iArgv++ << endl;
         }
+        if( g_enBoardId == enMaster ) {
+            LOGMSG1( enDebug, "마스터[%d]로 설정합니다." , g_enBoardId );
+        }
+        else {
+            LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다." , g_enBoardId );
+        }
+    }
+    else {
+        LOGMSG( enDebug, "프로그램 아큐먼트가 입력되지 않아서 기본 마스터로 설정합니다." );
+        g_enBoardId = enMaster;
     }
 }
 

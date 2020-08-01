@@ -34,9 +34,15 @@ SRC_URI = "file://cmain.cpp \
 		   file://Utils/csingleserver.h \
 		   file://Utils/cmultiserver.cpp \
 		   file://Utils/cmultiserver.h \		   
+		   file://Utils/ccommonutils.cpp \
+		   file://Utils/ccommonutils.h \		   
 		   file://Utils/cqueue.h \		   		   
 		   file://Thread/cdetectanalysis.cpp \
 		   file://Thread/cdetectanalysis.h \
+		   file://Thread/ctrackanalysis.cpp \
+		   file://Thread/ctrackanalysis.h \
+		   file://Thread/cscananalysis.cpp \
+		   file://Thread/cscananalysis.h \
 		   file://Thread/cprompt.cpp \
 		   file://Thread/cprompt.h \
 		   file://Thread/cpulsetrk.cpp \
@@ -64,6 +70,8 @@ SRC_URI = "file://cmain.cpp \
 		   file://Include/global.h \
 		   file://Include/SONATAPIP/_sysmsg.h \
            file://Makefile \
+		   file://.profile \
+		   file://Web/web.tar.gz;unpack=0 \
 		   "
 
 S = "${WORKDIR}"
@@ -76,6 +84,25 @@ do_compile() {
 do_install() {
 	     install -d ${D}${bindir}
 	     install -m 0755 apppocketsonata ${D}${bindir}
+		 
+		 install -d ${D}/home/root
+		 install -m 0644 ${S}/.profile ${D}/home/root/.profile
+		 
+		 install -d ${D}/srv/www
+		 #install -d ${D}/srv/www/cgi-bin
+		 #install -d ${D}/srv/www/graphics
+		 #install -m 0666 ${S}/Web/* ${D}/srv/www
+		 #cp --preserve=mode,timestamps -R ${S}/Web ${D}/srv/www
+		 #install -m 0755 ${S}/Web/* ${D}/srv/www
+		 #chmod 0666 -R ${S}/Web ${D}/srv/www
+		 install -m 0666 ${S}/Web/web.tar.gz ${D}/srv/www/web.tar.gz
+		 #tar xvf ${S}/Web/web.tar.gz -C ${D}/srv/www
 }
 
+#do_unpack() {
+#		 tar xvf ${D}/srv/www/web.tar.gz -C ${D}/srv/www		
+#}
+
+FILES_${PN} += "srv/www/*"
+FILES_${PN} += "home/*"
 

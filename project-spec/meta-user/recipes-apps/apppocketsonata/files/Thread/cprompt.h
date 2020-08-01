@@ -1,6 +1,8 @@
 #ifndef CPROMPT_H
 #define CPROMPT_H
 
+#include "../Utils/clog.h"
+
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
@@ -44,8 +46,6 @@ public:
     CPrompt( int iKeyId, char *pClassName=NULL );
     virtual ~CPrompt();
 
-    void ReleaseInstance();
-
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
 
@@ -57,6 +57,19 @@ public:
         return pInstance;
     }
 
+    /**
+     * @brief CPrompt::ReleaseInstance
+     */
+    void ReleaseInstance()
+    {
+        if(pInstance)
+        {
+            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+
+            delete pInstance;
+            pInstance = NULL;
+        }
+    }
 
 };
 

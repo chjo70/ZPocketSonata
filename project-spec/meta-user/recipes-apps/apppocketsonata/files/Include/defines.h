@@ -12,7 +12,7 @@
 #define PROGRAM_VERSION     "Ver 0.1a"
 
 // 실행 파일이 있는 위치에서 로그 디렉토리
-#define LOG_DIRECTORY       ("/LOG")
+#define LOG_DIRECTORY       ("/var/log/LOG")
 
 ////////////////////////////////////////////////////////////////////////////////
 // 아래는 프로그램 설정과 관련된 정의를 나열합니다.
@@ -35,6 +35,10 @@
 
 // 변수 타입을 정의합니다.
 typedef unsigned int UINT;
+typedef unsigned char UCHAR;
+
+// MFC에서 정의된 define 문을 아래에 정의한다.
+#define MAX_PATH        (256)
 
 
 // 포토 를 정의합니다.

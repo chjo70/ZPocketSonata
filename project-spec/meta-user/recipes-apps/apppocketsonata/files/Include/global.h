@@ -22,9 +22,6 @@ bool g_Loop=true;
 char g_szCollectBank[enUserCollectBank+1][10] = { "탐지", "추적", "스캔", "사용자" } ;
 
 
-
-
-
 #else
 extern int g_iKeyId;
 extern int g_iMode;

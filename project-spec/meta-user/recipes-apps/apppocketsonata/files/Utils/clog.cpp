@@ -51,8 +51,8 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     strcpy( m_szLogDir, m_szPresentDirectory );
     strcat( m_szLogDir, LOG_DIRECTORY );
 #else
-    strcpy( m_szLogDir, getenv( "HOME" ) );
-    strcat( m_szLogDir, LOG_DIRECTORY );
+    //strcpy( m_szLogDir, getenv( "HOME" ) );
+    strcpy( m_szLogDir, LOG_DIRECTORY );
 
 #endif
 

@@ -40,6 +40,9 @@ private:
     key_t m_MsgKeyID;
     STR_MessageData m_Msg;
 
+    static int m_iCoThread;
+    static int m_iCoMsgQueue;
+
 protected:
     char m_szClassName[LENGTH_OF_CLASSNAME];
 
@@ -58,6 +61,8 @@ public:
     inline key_t GetKeyId() { return m_MsgKeyID; }
 
     inline STR_MessageData *GetDataMessage() { return & m_Msg; }
+    inline int GetCoThread() { return m_iCoThread; }
+    inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
 
     static void *CallBack( void *pArg );
 

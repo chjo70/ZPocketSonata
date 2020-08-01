@@ -1,6 +1,10 @@
 #include "csignalcollect.h"
 #include "../Utils/clog.h"
 
+#include "cdetectanalysis.h"
+#include "ctrackanalysis.h"
+#include "cscananalysis.h"
+
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
 
@@ -180,12 +184,23 @@ void CSignalCollect::AnalysisStart()
         // 탐지 채널 버퍼 체크
         iCh = CheckCollectBank( enDetectCollectBank );
         if( iCh >= 0 ) {
-            // QMsgSnd( );
+            QMsgSnd( DETANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
         }
 
+        // 추적 채널 버퍼 체크
+        iCh = CheckCollectBank( enTrackCollectBank );
+        if( iCh >= 0 ) {
+            QMsgSnd( TRKANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+        }
+
+        // 스캔 채널 버퍼 체크
+        iCh = CheckCollectBank( enScanCollectBank );
+        if( iCh >= 0 ) {
+            QMsgSnd( SCANANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+        }
 
         // 사용자 채널 버퍼 체크
-        iCh = CheckCollectBank( enDetectCollectBank );
+        iCh = CheckCollectBank( enUserCollectBank );
         if( iCh >= 0 ) {
             g_pTheCCUSocket->SendLan( enREQ_MODE, 0, NULL );
         }

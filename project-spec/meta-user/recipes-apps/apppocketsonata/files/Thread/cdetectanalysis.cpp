@@ -1,5 +1,4 @@
 #include "cdetectanalysis.h"
-#include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"

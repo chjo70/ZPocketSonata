@@ -6,23 +6,21 @@
 #define S_DEFFILEMODE   (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
 #endif
 
+// 클래스 내의 정적 멤버변수 값 정의
+int CThread::m_iCoThread = 0;
+int CThread::m_iCoMsgQueue = 0;
+
 CThread::CThread( int iMsgKey, char *pClassName )
 {
     m_MainThread = 0;
+    m_MsgKeyID = 0;
 
     // 메시지큐 생성
     memset( & m_Msg, 0, sizeof(STR_MessageData) );
 
     strcpy( m_szClassName, pClassName );
 
-    m_MsgKeyID = msgget( IPC_PRIVATE, 0666 | IPC_CREAT);
-    if (m_MsgKeyID == -1 ) {
-        perror("msgget error : ");
-        exit(0);
-    }
-    else {
-        LOGMSG1( enDebug, "\t 큐 ID[%d]를 생성합니다." , m_MsgKeyID );
-    }
+
 }
 
 /**
@@ -32,16 +30,19 @@ CThread::~CThread()
 {
 
     if( m_MainThread != 0 ) {
+        -- m_iCoThread;
+
         pthread_cancel( m_MainThread );
         LOGMSG1( enDebug, "\t[%s]를 종료 처리합니다." , m_szClassName );
     }
 
 
-    if (m_MsgKeyID != -1 ) {
+    if (m_MsgKeyID > 0 ) {
         if( msgctl( m_MsgKeyID, IPC_RMID, 0 ) == -1 ) {
             perror( "msgctl 실패" );
         }
         else {
+            -- m_iCoMsgQueue;
             LOGMSG1( enDebug, "\t 큐 ID[%d]를 종료 처리합니다." , m_MsgKeyID );
         }
     }
@@ -56,6 +57,17 @@ void CThread::Run( void *(*Func)(void*) )
 {
     LOGMSG( enNormal, "\n Running thread..." );
 
+    ++ m_iCoMsgQueue;
+    m_MsgKeyID = msgget( IPC_PRIVATE, 0666 | IPC_CREAT);
+    if (m_MsgKeyID == -1 ) {
+        perror("msgget error : ");
+        exit(0);
+    }
+    else {
+        LOGMSG1( enDebug, "\t 큐 ID[%d]를 생성합니다." , m_MsgKeyID );
+    }
+
+    ++ m_iCoThread;
     pthread_create( & m_MainThread, NULL, Func, this );
 
 }
@@ -66,8 +78,19 @@ void CThread::Run( void *(*Func)(void*) )
 void CThread::Run()
 {
     //LOGMSG1( enNormal, " Running thread...%s", ChildClassName() );
-    LOGMSG1( enDebug, "[%s] 를 생성 합니다...", ChildClassName() );
+    LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", ChildClassName() );
 
+    ++ m_iCoMsgQueue;
+    m_MsgKeyID = msgget( IPC_PRIVATE, 0666 | IPC_CREAT);
+    if (m_MsgKeyID == -1 ) {
+        perror("msgget error : ");
+        exit(0);
+    }
+    else {
+        LOGMSG1( enDebug, "\t 큐 ID[%d]를 생성합니다." , m_MsgKeyID );
+    }
+
+    ++ m_iCoThread;
     pthread_create( & m_MainThread, NULL, CallBack, this );
 
 }

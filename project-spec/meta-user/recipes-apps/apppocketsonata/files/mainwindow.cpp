@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMessageBox>
+#include <QFileDialog>
+
 #include "./Include/defines.h"
 #include "./Include/sysmsg.h"
 
@@ -86,6 +89,8 @@ void MainWindow::EnableControl( bool bEnable )
     //ui->ESMode->setEnabled( bEnable );
     //ui->EWMode->setEnabled( bEnable );
     ui->MODE->setEnabled( bEnable );
+    ui->BITTEST->setEnabled( bEnable );
+
     ui->AnalStart->setEnabled( bEnable );
 
 }
@@ -99,6 +104,8 @@ void MainWindow::connectionClosedByServer()
     m_bConnect = false;
 
     m_bHeader = true;
+
+    EnableControl( false );
 }
 
 
@@ -175,7 +182,18 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
 
     switch( pstLanHeader->opCode ) {
     case enRES_MODE :
+        {
+            UINT uiMode;
 
+            ui->MODE->setEnabled( true );
+
+            uiMode = (UINT) *pByteData;
+
+            // 클라이언트 랜 소켓 닫는다.
+            if( uiMode == enREADY_MODE ) {
+                m_theTcpSocket.close();
+            }
+        }
         break;
 
     case enRES_DUMP_LIST :
@@ -232,7 +250,7 @@ int MainWindow::SendRSA( STR_LAN_HEADER *pstrLanHeader, void *pData, int iLength
 
     iRet = m_theTcpSocket.write( (char *) pstrLanHeader, sizeof(STR_LAN_HEADER) );
 
-    if( iRet > 0 ) {
+    if( pData != NULL && iRet > 0 ) {
         iRet = m_theTcpSocket.write( (char *) pData, iLength );
     }
     else {
@@ -330,8 +348,6 @@ void MainWindow::on_ReadyMode_clicked()
  */
 void MainWindow::on_AnalStart_clicked()
 {
-    int iRet;
-
     STR_LAN_HEADER strLanHeader;
     time_t tiNow;
 
@@ -340,23 +356,90 @@ void MainWindow::on_AnalStart_clicked()
 
     tiNow = time(NULL);
 
-    iRet = SendRSA( & strLanHeader, & tiNow, strLanHeader.uiLength );
+    SendRSA( & strLanHeader, & tiNow, strLanHeader.uiLength );
 }
 
+/**
+ * @brief MainWindow::on_MODE_clicked
+ */
 void MainWindow::on_MODE_clicked()
 {
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+    UINT uiMode;
+
+    ui->MODE->setEnabled( false );
+
+    strLanHeader.opCode = enREQ_MODE;
+    strLanHeader.uiLength = sizeof( int );
+
+    if( ui->radioButton_ESMode->isChecked() ) {
+        uiMode = enES_MODE;
+    }
+    if( ui->radioButton_EWMode->isChecked() ) {
+        uiMode = enEW_MODE;
+    }
+    if( ui->radioButton_ReadyMode->isChecked() ) {
+        uiMode = enREADY_MODE;
+    }
+
+    iRet = SendRSA( & strLanHeader, & uiMode, strLanHeader.uiLength );
+
+}
+
+
+void MainWindow::MessageBox( char *pText )
+{
+    QMessageBox::information( this, "AAAA", "BBBB" );
 
 }
 
 /**
- * @brief MainWindow::on_radioButton_3_clicked
+ * @brief MainWindow::on_BITTEST_clicked
  */
-void MainWindow::on_radioButton_3_clicked()
+void MainWindow::on_BITTEST_clicked()
 {
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+
+    ui->BITTEST->setEnabled( false );
+
+
+    strLanHeader.uiLength = 0;
+
+    if( ui->radioButton_IBIT->isChecked() ) {
+        strLanHeader.opCode = enREQ_IBIT;
+    }
+    else if( ui->radioButton_URBIT->isChecked() ) {
+        strLanHeader.opCode = enREQ_UBIT;
+    }
+    else {
+        strLanHeader.opCode = enREQ_CBIT;
+    }
+
+    iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
 
 }
 
-void MainWindow::on_radioButton_ESMode_clicked()
+/**
+ * @brief MainWindow::on_pushButton_SimPDW_clicked
+ */
+void MainWindow::on_pushButton_SimPDW_clicked()
 {
-    // g_enMode = enESMode
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+
+    ui->BITTEST->setEnabled( false );
+
+    strLanHeader.uiLength = 0;
+
+    QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "", "전부(*)" );
+
+    fileName.toUpper();
+
+    //iRet = SendRSA( & strLanHeader, & uiMode, strLanHeader.uiLength );
+
 }

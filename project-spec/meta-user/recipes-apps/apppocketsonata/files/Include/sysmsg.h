@@ -38,6 +38,9 @@ enum enREQ_MESSAGE {
     // 기존 SONATA 체계 명령어
     enREQ_MODE = Msys_SetMode,
     enREQ_ANAL_START = Msys_Start,
+    enREQ_IBIT = Mbit_ReqIbit,
+    enREQ_UBIT = Mbit_ReqUbit,
+    enREQ_CBIT = Mbit_ReqCbit,
 
     // 디버깅 용
     enREQ_DUMP_LIST = 0xF000,
@@ -63,6 +66,9 @@ enum enRES_MESSAGE {
 
     // 기존 SONATA 체계 명령어
     enRES_MODE = Esys_SetMode,
+    enRES_IBIT = Mbit_ResultEsIbit,
+    enRES_UBIT = Mbit_ResultEsUbit,
+    enRES_CBIT = Mbit_ResultEsCbit,
 
 
 } ;

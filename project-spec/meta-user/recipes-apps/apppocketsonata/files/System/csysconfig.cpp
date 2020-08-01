@@ -11,10 +11,17 @@ CSysConfig::CSysConfig(void)
 
 }
 
+/**
+ * @brief CSysConfig::~CSysConfig
+ */
 CSysConfig::~CSysConfig(void)
 {
 }
 
+/**
+ * @brief CSysConfig::getInstance
+ * @return
+ */
 CSysConfig* CSysConfig::getInstance()
 {
     if(!m_pInstance)

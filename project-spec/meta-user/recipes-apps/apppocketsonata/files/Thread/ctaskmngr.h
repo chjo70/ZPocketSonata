@@ -28,8 +28,14 @@ private:
     // 명령어 처리에 대한 각각의 함수이다.
     void SetMode();
     void AnalysisStart();
-    void CreateAllAnalysisThread( bool bCreate );
 
+
+    // 명령어 처리에 대한 하부 함수 목록 입니다.
+    void CreateAllAnalysisThread( bool bCreate );
+    void ProcessSummary();
+
+
+    // 인터페이스 관련 함수 모음 입니다.
     void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
 
 public:
