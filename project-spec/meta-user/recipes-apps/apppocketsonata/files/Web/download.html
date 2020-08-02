@@ -1,0 +1,28 @@
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=euc-kr">
+<title>다운로드</title>
+<meta name="author" content="조철희">
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+<ul>
+    <h1><img src="graphics/download.gif" width="115" height="87" border="0" alt="로그, PDW 수집한 파일을 다운로드하기 위한 그림"> 
+    다운로드</h1>
+</ul>
+<hr color="#CC99FF">
+<form method="get" action="cgi-bin/download.cgi">
+  <input type="radio" name="formradio" value="PDW" checked> PDW 파일
+  
+  <input name="formradio" type="radio" value="UDF"> IPL(라이브러리)&nbsp;<input name="formradio" type="radio" value="LOG"> 시스템로그
+  
+    <input name="formradio" type="radio" value="DUMP"> 현재 화면덤프&nbsp;<input name="formradio" type="radio" value="OFF_DUMP"> 이전 
+    화면덤프&nbsp;<input name="formradio" type="radio" value="INI"> INI 파일<p>
+  <input type="submit" value="다운로드">
+    </p>
+</form>
+<p>&nbsp;</p>
+</body>
+
+</html>

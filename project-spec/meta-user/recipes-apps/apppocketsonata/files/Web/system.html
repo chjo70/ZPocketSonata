@@ -1,0 +1,37 @@
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=euc-kr">
+<title>시스템 변수</title>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+<ul>
+    <h1><a href="http://sbc/cgi-bin/system.cgi"><img src="graphics/img2.gif" width="115" height="87" border="0" alt="img2.gif"></a> 
+    시스템 변수</h1>
+</ul>
+<hr color="#CC99FF">
+<form method="get" action="fetch.cgi">
+  
+    <h2>플레폼 및 버젼정보</h2>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;플레폼: <input type="text" name="query_platform" value="" size="4"> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;버전:  <input type="text" name="query_version" size="7"></p>
+    <p>&nbsp;</p>
+    <h2>
+채프/플레어</h2> 
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;채프 수: <input type="text" name="query_platform" value="" size="4"> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;플레어 수:  <input type="text" name="query_version" size="7"></p>
+    <p><input type="checkbox" name="formcheckbox1">록,</p>
+    <h2>
+    대역별 임계값</h2> 
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;CD밴드(0.5∼2 ㎓): <input type="text" name="query_cd" value="" size="7">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;저대역(2∼6 ㎓): <input type="text" name="query_26" size="7">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;고대역1(6∼10 ㎓): <input type="text" name="query_610" value="" size="7">㏈, 
+    고대역2(10∼14 ㎓):&nbsp;<input type="text" name="query_1014" value="" size="7">㏈, 
+    고대역3(14∼18 ㎓):&nbsp;<input type="text" name="query_1418" value="" size="7">㏈</p>
+    
+    <h2 align="left"><input type="submit" value="변경" name="send"></h2>
+</form>
+</body>
+
+</html>
