@@ -7,6 +7,7 @@
 #include "../Utils/clog.h"
 
 #include "ctaskmngr.h"
+#include "csignalcollect.h"
 
 #define _DEBUG_
 
@@ -84,6 +85,10 @@ void CRecLan::_routine()
                 break;
 
             // 추가 명령어
+            case enREQ_SIM_PDWDATA :
+                QMsgSnd( SIGCOL->GetKeyId(), m_pMsg );
+                break;
+
             case enREQ_DUMP_LIST :
                 DumpList();
                 break;

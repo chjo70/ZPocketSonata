@@ -25,8 +25,11 @@ enum enTHREAD_REQ_MESSAGE {
 
 
     // 기존 소나타의 타스크간 메시지 정의
-    enTHREAD_MODE, //= Msys_SetMode,
-    enTHREAD_ANAL_START, // = Msys_Start,
+    enTHREAD_MODE = enREQ_MODE,
+    enTHREAD_ANAL_START = enREQ_ANAL_START, // = Msys_Start,
+
+    //
+    enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,
 
 
 } ;
