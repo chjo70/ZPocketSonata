@@ -11,8 +11,8 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 // 아래는 장치, 쓰레드 간의 명령어 OPCODE 시작 주소를 의미한다.
-#define _START_OPCODE_OF_MESSAGE_               (0xA100)
-#define _START_OPCODE_OF_THREAD_MESSAGE_        (0xA000)
+#define _START_OPCODE_OF_MESSAGE_               (0x00)  // (0xA100)
+#define _START_OPCODE_OF_THREAD_MESSAGE_        (0x80)  //(0xA000)
 
 
 

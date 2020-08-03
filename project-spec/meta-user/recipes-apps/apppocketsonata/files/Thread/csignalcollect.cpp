@@ -123,6 +123,9 @@ void CSignalCollect::_routine()
                 LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
                 break;
 
+            case enTHREAD_REQ_SIM_PDWDATA :
+                break;
+
             default:
                 LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;

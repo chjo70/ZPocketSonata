@@ -441,7 +441,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 
     ui->BITTEST->setEnabled( false );
 
-    strLanHeader.ucOpCode = enREQ_URBIT;
+    strLanHeader.ucOpCode = enREQ_SIM_PDWDATA;
     strLanHeader.uiLength = uiFilelength;
 
     QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );

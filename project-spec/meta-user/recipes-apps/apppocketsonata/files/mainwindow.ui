@@ -244,7 +244,7 @@
      <rect>
       <x>120</x>
       <y>290</y>
-      <width>351</width>
+      <width>431</width>
       <height>71</height>
      </rect>
     </property>
@@ -257,7 +257,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>350</x>
        <y>30</y>
        <width>71</width>
        <height>31</height>
@@ -272,7 +272,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>273</width>
+       <width>315</width>
        <height>31</height>
       </rect>
      </property>
@@ -304,6 +304,16 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_CBIT_2">
+        <property name="text">
+         <string>시스템</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </widget>
@@ -329,6 +339,38 @@
      <string>PDW
 모의 발생</string>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>531</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>장비 시험</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>81</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>81</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>시험 1</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
