@@ -1,9 +1,14 @@
 ﻿#pragma once
 
+#include <stdio.h>
+
+#include "../../Include/system.h"
 
 #include "_iq.h"
 #include "_pdw.h"
 #include "_macro.h"
+
+#include "../../Utils/cfile.h"
 
 //#include "../FFTW/fftw3.h"
 
@@ -279,9 +284,7 @@ public:
 class CDataFile
 {
 private:
-#ifdef _Windows
 	CFile m_RawDataFile;
-#endif
 
 	STR_RAWDATA m_RawData;
 	CData *m_pData;
@@ -290,8 +293,8 @@ public:
 	CDataFile(void);
 	virtual ~CDataFile(void);
 
-	void ReadDataFile( CString & strPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
-	void SaveDataFile( CString & strPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
+    void ReadDataFile( const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
+    void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();
 	void *GetData();

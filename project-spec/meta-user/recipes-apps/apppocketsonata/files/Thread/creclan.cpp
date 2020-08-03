@@ -72,7 +72,7 @@ void CRecLan::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             // 기존 SONATA 체계 명령어
             case enREQ_MODE :
             case enREQ_ANAL_START :
@@ -90,7 +90,7 @@ void CRecLan::_routine()
 
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->opCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
         }
     }
@@ -120,7 +120,7 @@ void CRecLan::DumpList()
 #endif
 
     // 랜 헤더 송신
-    strLanHeader.opCode = enRES_DUMP_LIST;
+    strLanHeader.ucOpCode = enRES_DUMP_LIST;
     strLanHeader.uiLength = DUMP_DATA_SIZE;
 
     iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
@@ -129,7 +129,7 @@ void CRecLan::DumpList()
     memcpy( & uniLanData.strResDumpList.strReqDumpList, pData, sizeof(STR_REQ_DUMP_LIST) );
     memcpy( uniLanData.strResDumpList.cData, pBuffer, DUMP_DATA_SIZE );
 
-    iRet = send( m_pMsg->iSocket, (char *) & uniLanData, strLanHeader.uiLength, MSG_DONTWAIT );
+    iRet = send( m_pMsg->iSocket, (char *) & uniLanData, (int) strLanHeader.uiLength, MSG_DONTWAIT );
 
 #ifdef _DEBUG_
     free( pBuffer );

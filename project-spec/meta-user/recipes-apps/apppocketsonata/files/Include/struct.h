@@ -119,11 +119,11 @@ struct STR_WINDOWCELL {
 struct STR_PDW {
     UINT uiCoPDW;
 
-    UINT uiSigType[MAX_PDW];
-    UINT uiAOA[MAX_PDW];
-    UINT uiFreq[MAX_PDW];
-    UINT uiPW[MAX_PDW];
-    UINT uiPA[MAX_PDW];
+    UINT uiSigType[_MAX_PDW];
+    UINT uiAOA[_MAX_PDW];
+    UINT uiFreq[_MAX_PDW];
+    UINT uiPW[_MAX_PDW];
+    UINT uiPA[_MAX_PDW];
 
 };
 

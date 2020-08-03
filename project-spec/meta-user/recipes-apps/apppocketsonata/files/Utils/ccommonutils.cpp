@@ -20,15 +20,25 @@ CCommonUtils::CCommonUtils()
  * @param uiLength
  * @param pData
  */
-void CCommonUtils::SendLan( UINT uiOpCode, UINT uiLength, void *pData )
+void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
     // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
     if( g_enBoardId == enMaster ) {
-        g_pTheCCUSocket->SendLan( uiOpCode, uiLength, pData );
+        if( g_pTheCCUSocket != NULL ) {
+            g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
+        }
+        else {
+
+        }
     }
     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
     else {
-        g_pTheZYNQSocket->SendLan( uiOpCode, uiLength, pData );
+        if( g_pTheZYNQSocket != NULL ) {
+            g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
+        }
+        else {
+
+        }
     }
 
 }

@@ -17,11 +17,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Collect/DataFile/DataFile.cpp \
+    Utils/cfile.cpp \
     chexspinbox.cpp \
     mainView.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    Collect/DataFile/DataFile.h \
     chexspinbox.h \
     mainwindow.h
 

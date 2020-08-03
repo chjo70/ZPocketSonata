@@ -19,13 +19,16 @@
 struct STR_MessageData {
     long mtype;
 
+    // Src/Dest
+    unsigned char ucSrcDest;
+
     // Opcode
-    unsigned int opCode;
+    unsigned char ucOpCode;
     //랜 송신시 이 값이 0 이 아니면 이 소켓 값으로 데이터를 전송한다.
     int iSocket;
 
     // 데이터
-    int iLength;
+    unsigned short usLength;
     char szMessage[256];
 
 } ;

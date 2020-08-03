@@ -57,7 +57,7 @@ void CDetectAnalysis::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             case enTHREAD_ANAL_START :
                 break;
 
@@ -71,7 +71,7 @@ void CDetectAnalysis::_routine()
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->opCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
         }
     }

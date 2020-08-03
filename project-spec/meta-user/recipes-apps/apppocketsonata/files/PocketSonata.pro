@@ -26,6 +26,7 @@ SOURCES += \
         Thread/curbit.cpp \
         Thread/creclan.cpp \
         Utils/ccommonutils.cpp \
+        Utils/cfile.cpp \
         Utils/clog.cpp \
         Utils/cmultiserver.cpp \
         Utils/csingleserver.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     Thread/ctrackanalysis.h \
     Thread/curbit.h \
     Utils/ccommonutils.h \
+    Utils/cfile.h \
     Utils/cgpio.h \
     Utils/clog.h \
     Utils/cmultiserver.h \

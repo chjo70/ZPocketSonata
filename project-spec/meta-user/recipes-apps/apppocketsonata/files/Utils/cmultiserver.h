@@ -30,7 +30,7 @@ private:
     void CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket );
 
 public:
-    int SendLan( UINT uiOpCode, UINT uiLength, void *pData );
+    int SendLan( UINT uiOpCode, void *pData, UINT uiLength );
 
 
 };

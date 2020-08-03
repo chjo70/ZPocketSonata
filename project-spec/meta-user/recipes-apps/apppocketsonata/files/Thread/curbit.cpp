@@ -75,7 +75,7 @@ void CUrBit::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             case enREQ_URBIT :
                 LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
 

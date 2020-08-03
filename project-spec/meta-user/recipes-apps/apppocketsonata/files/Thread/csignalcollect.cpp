@@ -7,11 +7,9 @@
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
+#include "../Utils/ccommonutils.h"
 
 #define _DEBUG_
-
-extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
 
 
 // 클래스 내의 정적 멤버변수 값 정의
@@ -111,7 +109,7 @@ void CSignalCollect::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             case enTHREAD_ANAL_START :
                 AnalysisStart();
                 break;
@@ -126,7 +124,7 @@ void CSignalCollect::_routine()
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->opCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
         }
     }
@@ -134,7 +132,7 @@ void CSignalCollect::_routine()
 }
 
 /**
- * @brief 초기화 합니다.
+ * @brief 객체를 초기화 합니다.
  */
 void CSignalCollect::Init()
 {
@@ -149,7 +147,7 @@ void CSignalCollect::Init()
 }
 
 /**
- * @brief CSignalCollect::CloseTrackWindowCell
+ * @brief 추적 윈도우셀을 닫는다.
  */
 void CSignalCollect::CloseTrackCollectBank()
 {
@@ -160,6 +158,9 @@ void CSignalCollect::CloseTrackCollectBank()
     }
 }
 
+/**
+ * @brief 스캔 윈도우셀을 닫는다.
+ */
 void CSignalCollect::CloseScanCollectBank()
 {
     int i;
@@ -202,7 +203,7 @@ void CSignalCollect::AnalysisStart()
         // 사용자 채널 버퍼 체크
         iCh = CheckCollectBank( enUserCollectBank );
         if( iCh >= 0 ) {
-            g_pTheCCUSocket->SendLan( enREQ_MODE, 0, NULL );
+            CCommonUtils::SendLan( enREQ_MODE, & iCh, sizeof(int) );
         }
 
         sleep( 1 );

@@ -10,7 +10,7 @@ public:
     CCommonUtils();
 
 public:
-    static void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
+    static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
 
 };
 

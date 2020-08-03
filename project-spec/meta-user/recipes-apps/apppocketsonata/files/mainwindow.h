@@ -9,6 +9,8 @@
 
 #include "./Include/sysmsg.h"
 
+#include "./Collect/DataFile/DataFile.h"
+
 #define MAX_LAN_DATA            (1000)
 
 QT_BEGIN_NAMESPACE
@@ -65,6 +67,8 @@ private:
     bool m_bConnect;
 
     bool m_bHeader;
+
+    CDataFile m_theDataFile;
 
     QTcpSocket m_theTcpSocket;   //socket
     //QTcpServer *pServer;

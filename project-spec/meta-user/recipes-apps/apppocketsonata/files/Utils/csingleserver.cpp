@@ -184,9 +184,9 @@ void CSingleServer::_routine()
                             uiTotalRead = 0;
 
                             sndMsg.mtype = 1;
-                            sndMsg.opCode = strLanHeader.opCode;
+                            sndMsg.ucOpCode = strLanHeader.ucOpCode;
                             sndMsg.iSocket = m_iSocket;
-                            sndMsg.iLength = strLanHeader.uiLength;
+                            sndMsg.usLength = strLanHeader.uiLength;
 
                             memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader.uiLength );
 
@@ -238,13 +238,13 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
 /**
  * @brief CRecLan::SendQMessage
  */
-int CSingleServer::SendLan( UINT uiOpCode, UINT uiLength, void *pData )
+int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
     int iRet1, iRet2;
     STR_LAN_HEADER strLanHeader;
 
     // 랜 헤더 송신
-    strLanHeader.opCode = uiOpCode;
+    strLanHeader.ucOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );

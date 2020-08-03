@@ -170,7 +170,7 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     STR_MessageData sndMsg;
 
     sndMsg.mtype = 1;
-    sndMsg.opCode = uiOpCode;
+    sndMsg.ucOpCode = uiOpCode;
     sndMsg.iSocket = 0;
 
     memcpy( & sndMsg.szMessage[0], pData, sizeof(char) * iByte );
@@ -194,10 +194,10 @@ void CThread::QMsgSnd( key_t iKeyId, STR_MessageData *pMessageData )
     STR_MessageData sndMsg;
 
     sndMsg.mtype = 1;
-    sndMsg.opCode = pMessageData->opCode;
+    sndMsg.ucOpCode = pMessageData->ucOpCode;
     sndMsg.iSocket = 0;
 
-    memcpy( & sndMsg.szMessage[0], & pMessageData->szMessage[0], pMessageData->iLength );
+    memcpy( & sndMsg.szMessage[0], & pMessageData->szMessage[0], pMessageData->usLength );
 
     if( msgsnd( iKeyId, (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );

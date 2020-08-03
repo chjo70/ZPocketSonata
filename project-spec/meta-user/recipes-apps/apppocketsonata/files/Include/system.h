@@ -6,7 +6,7 @@
 #define _SYSTEM_H
 
 
-#define MAX_PDW         (1024)
+#define _MAX_PDW         (1024)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@
 #include "thrmsg.h"
 #include "global.h"
 
-
+//#include "../Utils/stdstring.h"
 
 
 

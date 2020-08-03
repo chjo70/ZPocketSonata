@@ -67,7 +67,7 @@ void CPulseTrk::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
                 bWhile = false;

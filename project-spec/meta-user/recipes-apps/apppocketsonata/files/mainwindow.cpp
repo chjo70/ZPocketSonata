@@ -92,6 +92,9 @@ void MainWindow::EnableControl( bool bEnable )
     ui->BITTEST->setEnabled( bEnable );
 
     ui->AnalStart->setEnabled( bEnable );
+    ui->pushButton_SimPDW->setEnabled( bEnable );
+
+
 
 }
 
@@ -180,7 +183,7 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
 
     QString qBuffer;
 
-    switch( pstLanHeader->opCode ) {
+    switch( pstLanHeader->ucOpCode ) {
     case enRES_MODE :
         {
             UINT uiMode;
@@ -272,7 +275,7 @@ void MainWindow::on_MemoryDump_clicked()
     STR_LAN_HEADER strLanHeader;
     STR_REQ_DUMP_LIST strReqDumpList;
 
-    strLanHeader.opCode = enREQ_DUMP_LIST;
+    strLanHeader.ucOpCode = enREQ_DUMP_LIST;
     strLanHeader.uiLength = sizeof( STR_REQ_DUMP_LIST );
 
     strReqDumpList.uiAddress = ui->spinBoxStartAddress->value();
@@ -293,7 +296,7 @@ void MainWindow::on_ESMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.opCode = enREQ_MODE;
+    strLanHeader.ucOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enES_MODE;
@@ -312,7 +315,7 @@ void MainWindow::on_EWMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.opCode = enREQ_MODE;
+    strLanHeader.ucOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enEW_MODE;
@@ -330,7 +333,7 @@ void MainWindow::on_ReadyMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.opCode = enREQ_MODE;
+    strLanHeader.ucOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enREADY_MODE;
@@ -351,7 +354,7 @@ void MainWindow::on_AnalStart_clicked()
     STR_LAN_HEADER strLanHeader;
     time_t tiNow;
 
-    strLanHeader.opCode = enREQ_ANAL_START;
+    strLanHeader.ucOpCode = enREQ_ANAL_START;
     strLanHeader.uiLength = sizeof( time_t );
 
     tiNow = time(NULL);
@@ -371,7 +374,7 @@ void MainWindow::on_MODE_clicked()
 
     ui->MODE->setEnabled( false );
 
-    strLanHeader.opCode = enREQ_MODE;
+    strLanHeader.ucOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     if( ui->radioButton_ESMode->isChecked() ) {
@@ -391,7 +394,7 @@ void MainWindow::on_MODE_clicked()
 
 void MainWindow::MessageBox( char *pText )
 {
-    QMessageBox::information( this, "AAAA", "BBBB" );
+    QMessageBox::information( this, "파일 로딩", pText );
 
 }
 
@@ -410,13 +413,13 @@ void MainWindow::on_BITTEST_clicked()
     strLanHeader.uiLength = 0;
 
     if( ui->radioButton_IBIT->isChecked() ) {
-        strLanHeader.opCode = enREQ_IBIT;
+        strLanHeader.ucOpCode = enREQ_IBIT;
     }
     else if( ui->radioButton_URBIT->isChecked() ) {
-        strLanHeader.opCode = enREQ_UBIT;
+        strLanHeader.ucOpCode = enREQ_UBIT;
     }
     else {
-        strLanHeader.opCode = enREQ_CBIT;
+        strLanHeader.ucOpCode = enREQ_CBIT;
     }
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
@@ -430,16 +433,40 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 {
     int iRet;
 
+    CFile theRawDataFile;
     STR_LAN_HEADER strLanHeader;
+
+    UINT uiFilelength;
+    char *pRawDataBuffer;
 
     ui->BITTEST->setEnabled( false );
 
-    strLanHeader.uiLength = 0;
+    strLanHeader.ucOpCode = enREQ_URBIT;
+    strLanHeader.uiLength = uiFilelength;
 
-    QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "", "전부(*)" );
+    QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );
 
-    fileName.toUpper();
+    if (theRawDataFile.Open( fileName.toStdString().c_str(), CFile::shareDenyNone | CFile::typeBinary) == TRUE) {
+        uiFilelength = theRawDataFile.GetFileLength();
+        strLanHeader.uiLength = uiFilelength;
 
-    //iRet = SendRSA( & strLanHeader, & uiMode, strLanHeader.uiLength );
+        pRawDataBuffer = ( char * ) malloc( sizeof(char) * uiFilelength );
+
+        if( pRawDataBuffer != NULL ) {
+            theRawDataFile.Read( pRawDataBuffer, MAX_RAWDATA_SIZE );
+
+            iRet = SendRSA( & strLanHeader, pRawDataBuffer, strLanHeader.uiLength );
+
+            free( pRawDataBuffer );
+            theRawDataFile.Close();
+
+        }
+        else {
+
+        }
+    }
+    else {
+        MessageBox( "모의 발생할 파일이 존재하지 않습니다.!" );
+    }
 
 }

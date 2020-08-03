@@ -20,19 +20,11 @@
 #include "../Utils/clog.h"
 #include "../System/csysconfig.h"
 
-
-
-//#include "../Utils/csingleserver.h"
-//#include "../Utils/cmultiserver.h"
-
 #include "../Utils/ccommonutils.h"
 
 
 #define _DEBUG_
 
-
-//extern CMultiServer *g_pTheZYNQSocket;
-//extern CSingleServer *g_pTheCCUSocket;
 
 
 
@@ -165,7 +157,7 @@ void CTaskMngr::_routine()
             perror( "QMsgRcv() 에러");
         }
 
-        switch( m_pMsg->opCode ) {
+        switch( m_pMsg->ucOpCode ) {
             case enTHREAD_MODE :
                 SetMode();
                 break;
@@ -179,7 +171,7 @@ void CTaskMngr::_routine()
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->opCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
         }
     }
@@ -210,7 +202,7 @@ void CTaskMngr::SetMode()
 
     GP_SYSCFG->SetMode( enMode );
 
-    CCommonUtils::SendLan( enRES_MODE, sizeof(int), & enMode );
+    CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
 
 }
 

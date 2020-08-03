@@ -189,9 +189,9 @@ void CMultiServer::_routine()
                             uiTotalRead[i] = 0;
 
                             sndMsg.mtype = 1;
-                            sndMsg.opCode = strLanHeader[i].opCode;
+                            sndMsg.ucOpCode = strLanHeader[i].ucOpCode;
                             sndMsg.iSocket = iSocket;
-                            sndMsg.iLength = strLanHeader[i].uiLength;
+                            sndMsg.usLength = strLanHeader[i].uiLength;
 
                             memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader[i].uiLength );
 
@@ -243,13 +243,13 @@ void CMultiServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *
  * @param pData
  * @return
  */
-int CMultiServer::SendLan( UINT uiOpCode, UINT uiLength, void *pData )
+int CMultiServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
     int iRet1, iRet2=0;
     STR_LAN_HEADER strLanHeader;
 
     // 랜 헤더 송신
-    strLanHeader.opCode = uiOpCode;
+    strLanHeader.ucOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );

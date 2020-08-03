@@ -57,5 +57,21 @@ typedef unsigned char UCHAR;
 #define TOTAL_CHANNELS  (DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL+USER_CHANNEL)
 
 
+/////////////////////////////////////////////////////////////////////////////////
+#ifdef LINUX
+//#define CString QString
+
+#else
+//#define CString QString
+#define _MBCS
+#define _T(A)           (A)
+
+#define TRUE            (true)
+#define FALSE           (false)
+#define bool            bool
+
+#endif
+
+
 
 #endif // _DEFINES_H
