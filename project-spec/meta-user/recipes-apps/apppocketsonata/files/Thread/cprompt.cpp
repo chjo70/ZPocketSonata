@@ -451,7 +451,7 @@ void CPrompt::URBit( UINT uiData )
     UINT *puiUnit;
     STR_MessageData sndMsg;
 
-    puiUnit = (UINT *) & sndMsg.szMessage[0];
+    puiUnit = (UINT *) & sndMsg.x.szData[0];
 
     sndMsg.mtype = 1;
     sndMsg.ucOpCode = enREQ_URBIT;

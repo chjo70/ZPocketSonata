@@ -13,7 +13,7 @@ private:
 
     bool m_bArrayLanData;
 
-    void *m_pszArray[SIZE_OF_MSGDATA_ARRAY];
+    char *m_pszArray[SIZE_OF_MSGDATA_ARRAY];
 
 public:
     CArrayMsgData( bool bArrayLanData );

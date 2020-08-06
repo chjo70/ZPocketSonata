@@ -90,7 +90,7 @@ void CSignalCollect::_routine()
 
     m_pMsg = GetDataMessage();
 
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->szMessage[0];
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( bWhile ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
@@ -233,10 +233,9 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
             for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
                 if( true == m_pTheDetectCollectBank[i]->IsCompleteCollect() ) {
                     m_pTheDetectCollectBank[i]->SetCollectMode( enCollecting );
-
                     iCh = m_pTheDetectCollectBank[i]->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료히었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
+                    LOGMSG3( enDebug, "%s 뱅크[%d]에서 [%d] 채널에서 수집 완료히었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
                     break;
                 }
             }
@@ -291,11 +290,11 @@ void CSignalCollect::SimPDWData()
     STR_ARRAY_PDW *pstrArrayPDW;
 
     // 랜 데이터를 갖고온다.
-    PopLanData( m_uniLanData.strPDW, m_pMsg->iArrayIndex, m_pMsg->uiLength );
+    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
     // 데이터를 지정하여 지정한 행렬에 저장한다.
     pstrArrayPDW = m_pTheDetectCollectBank[0]->GetPDW();
-    m_theDataFile.ReadDataMemory( pstrArrayPDW, (const char *) m_uniLanData.strPDW, ".kpdw" );
+    m_theDataFile.ReadDataMemory( pstrArrayPDW, (const char *) m_uniLanData.szFile, ".kpdw" );
 
     // 모의 PDW 데이터를 수집 버퍼에 추가한다.
     m_pTheDetectCollectBank[0]->PushPDWData( pstrArrayPDW );

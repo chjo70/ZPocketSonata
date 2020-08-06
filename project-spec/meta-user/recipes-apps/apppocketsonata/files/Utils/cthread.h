@@ -16,7 +16,7 @@
 
 #include "../Utils/carraymsgdata.h"
 
-#define LENGTH_OF_CLASSNAME (20)
+#define LENGTH_OF_CLASSNAME (30)
 
 #pragma pack(push, 1)
 
@@ -36,12 +36,19 @@ struct STR_MessageData {
     int iSocket;
 
     // 데이터 길이
-    unsigned int uiLength;
+    unsigned int uiDataLength;
+
+    // 데이터 영역 이다.
+    union xData {
+        unsigned int uiData;
+        time_t tiNow;
+
+        char szData[32];
+    } x;
 
     // CArrayData 클래스 사용시 인덱스 값을 의미함. 0 보다 작은 값은 CArrayData 를 사용하지 않은 것이다.
     int iArrayIndex;
-
-    char szMessage[128];
+    unsigned int uiArrayLength;
 
 } ;
 
@@ -72,7 +79,7 @@ public:
     int Pend();
     void Stop();
     int QMsgRcv( int iFlag=0 );
-    void QMsgSnd( UINT uiOpCode, void *pData, int iByte );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0 );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
 

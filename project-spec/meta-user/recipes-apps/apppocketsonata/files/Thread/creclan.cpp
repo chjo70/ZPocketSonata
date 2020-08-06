@@ -120,7 +120,7 @@ void CRecLan::DumpList()
     STR_LAN_HEADER strLanHeader;
     UNI_LAN_DATA uniLanData;
 
-    STR_REQ_DUMP_LIST *pData= ( STR_REQ_DUMP_LIST * ) m_pMsg->szMessage;
+    STR_REQ_DUMP_LIST *pData= ( STR_REQ_DUMP_LIST * ) m_pMsg->x.szData;
 
     int iRet;
     char *pAddress;

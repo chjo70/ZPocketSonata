@@ -66,7 +66,7 @@ void CJamTech::_routine()
 
     m_pMsg = GetDataMessage();
 
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->szMessage[0];
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {

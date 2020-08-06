@@ -219,14 +219,17 @@ void CSingleServer::_routine()
                             sndMsg.mtype = 1;
                             sndMsg.ucOpCode = strLanHeader.ucOpCode;
                             sndMsg.iSocket = m_iSocket;
-                            sndMsg.uiLength = strLanHeader.uiLength;
                             sndMsg.iArrayIndex = -1;
+                            sndMsg.uiArrayLength = 0;
+                            sndMsg.uiDataLength = 0;
 
                             if( sndMsg.ucOpCode == enREQ_SIM_PDWDATA ) {
-                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, strLanHeader.uiLength );
+                                sndMsg.uiArrayLength = strLanHeader.uiLength;
+                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
                             }
                             else {
-                                memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader.uiLength );
+                                sndMsg.uiDataLength = strLanHeader.uiLength;
+                                memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
                             }
 
                             if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
@@ -234,6 +237,7 @@ void CSingleServer::_routine()
                             }
                             else {
                                 // DisplayMsg( & sndMsg );
+
 
                             }
 

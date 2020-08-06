@@ -167,7 +167,7 @@ int CThread::QMsgRcv( int iFlag )
     int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
 
     if( iMsgRcv > 0 ) {
-        LOGMSG4( enDebug, "[%s]에서 Op[0x%02X], Len[%d], Idx[%d] 수신" , m_szClassName, m_Msg.ucOpCode, m_Msg.uiLength, m_Msg.iArrayIndex );
+        LOGMSG4( enDebug, "[%s]에서 Op[0x%02X], Len[%d], Idx[%d] 수신" , m_szClassName, m_Msg.ucOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
     }
 
     return iMsgRcv;
@@ -190,7 +190,7 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     sndMsg.iSocket = 0;
     sndMsg.iArrayIndex = -1;
 
-    memcpy( & sndMsg.szMessage[0], pData, sizeof(char) * iByte );
+    memcpy( & sndMsg.x.szData[0], pData, sizeof(char) * iByte );
 
     if( msgsnd( iKeyId, (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
@@ -201,20 +201,38 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     }
 }
 
-void CThread::QMsgSnd( UINT uiOpCode, void *pData, int iByte )
+/**
+ * @brief CThread::QMsgSnd
+ * @param uiOpCode
+ * @param pArrayMsgData
+ * @param uiLength
+ */
+void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength )
 {
     STR_MessageData sndMsg;
 
     sndMsg.mtype = 1;
     sndMsg.ucOpCode = uiOpCode;
     sndMsg.iSocket = 0;
-    sndMsg.iArrayIndex = -1;
 
-    if( pArrayMsgData != NULL ) {
-        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiLength );
+    if( pData != NULL ) {
+        sndMsg.uiDataLength = uiDataLength;
+        memcpy( sndMsg.x.szData, pData, sizeof(char)*sndMsg.uiDataLength );
+    }
+    else {
+        sndMsg.uiDataLength = 0;
     }
 
-    if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+    if( pArrayMsgData != NULL ) {
+        sndMsg.uiArrayLength = uiArrayLength;
+        sndMsg.iArrayIndex = PushLanData( pArrayMsgData, sndMsg.uiArrayLength );
+    }
+    else {
+        sndMsg.uiArrayLength = 0;
+        sndMsg.iArrayIndex = -1;
+    }
+
+    if( msgsnd( m_MsgKeyID, (void *) & sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
     else {
@@ -231,7 +249,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData )
 {
 
     if( pArrayMsgData != NULL ) {
-        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiLength );
+        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiArrayLength );
     }
 
     if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {

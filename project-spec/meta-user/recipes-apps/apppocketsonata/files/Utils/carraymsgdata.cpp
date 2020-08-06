@@ -43,7 +43,7 @@ void CArrayMsgData::Alloc()
 
     if( m_bArrayLanData == true ) {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            m_pszArray[i] = ( void * ) malloc( sizeof(char) * _MAX_LANDATA );
+            m_pszArray[i] = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
         }
     }
     else {

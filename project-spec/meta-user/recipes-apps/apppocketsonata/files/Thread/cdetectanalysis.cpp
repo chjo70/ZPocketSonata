@@ -50,7 +50,7 @@ void CDetectAnalysis::_routine()
 
     m_pMsg = GetDataMessage();
 
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->szMessage[0];
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
@@ -59,6 +59,8 @@ void CDetectAnalysis::_routine()
 
         switch( m_pMsg->ucOpCode ) {
             case enTHREAD_ANAL_START :
+                LOGMSG1( enDebug, "탐지 분석: %d개의 PDW 분석을 시작합니다." , m_pMsg->iArrayIndex );
+
                 break;
 
             case enTHREAD_REQ_SHUTDOWN :

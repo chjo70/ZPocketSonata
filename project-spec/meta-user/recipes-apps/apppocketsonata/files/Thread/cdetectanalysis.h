@@ -25,7 +25,7 @@ public:
     static CDetectAnalysis* GetInstance()
     { // 게으른 초기화
         if(pInstance == NULL) {
-            pInstance = new CDetectAnalysis( g_iKeyId++, (char*)"CDetectAnalysis" );
+            pInstance = new CDetectAnalysis( g_iKeyId++, (char*)"CDetectAnalysis", true );
         }
         return pInstance;
     }

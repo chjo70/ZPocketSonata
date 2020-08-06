@@ -186,7 +186,7 @@ void CTaskMngr::SetMode()
 {
     ENUM_MODE enMode;
 
-    enMode = (ENUM_MODE) m_pMsg->szMessage[0];
+    enMode = (ENUM_MODE) m_pMsg->x.szData[0];
 
     LOGMSG1( enDebug, "모드(%d)를 설정합니다.", enMode );
 
@@ -218,7 +218,7 @@ void CTaskMngr::AnalysisStart()
     CreateAllAnalysisThread( true );
 
     // 시간 정보로 설정한 후에 시작 명령을
-    tiNow = (time_t) m_pMsg->szMessage[0];
+    tiNow = (time_t) m_pMsg->x.szData[0];
 
     SIGCOL->QMsgSnd( m_pMsg );
 

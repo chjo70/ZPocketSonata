@@ -229,9 +229,9 @@ void CMultiServer::_routine()
                             sndMsg.mtype = 1;
                             sndMsg.ucOpCode = strLanHeader[i].ucOpCode;
                             sndMsg.iSocket = iSocket;
-                            sndMsg.uiLength = strLanHeader[i].uiLength;
+                            sndMsg.uiDataLength = strLanHeader[i].uiLength;
 
-                            memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader[i].uiLength );
+                            memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
 
                             if( msgsnd( RECZYNQ->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                 perror( "msgsnd 실패" );
