@@ -14,7 +14,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CDetectAnalysis( int iKeyId, char *pClassName );
+    CDetectAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CDetectAnalysis(void);
 
     void Run();

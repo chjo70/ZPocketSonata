@@ -9,7 +9,7 @@
 
 #include "../Utils/cthread.h"
 
-#define MAX_LAN_DATA    (1024)
+//#define MAX_LAN_DATA    (1024)
 
 
 class CMultiServer : public CThread
@@ -17,6 +17,8 @@ class CMultiServer : public CThread
 private:
     int m_iPort;
     int m_iSocket;
+
+    char *m_pszLanData[MAX_CLIENTS];
 
 public:
     CMultiServer( int iKeyId, char *pClassName, int iPort );
@@ -27,6 +29,9 @@ public:
     virtual const char *ChildClassName() { return m_szClassName; }
 
 private:
+    void Init();
+    void Alloc();
+    void Free();
     void CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket );
 
 public:

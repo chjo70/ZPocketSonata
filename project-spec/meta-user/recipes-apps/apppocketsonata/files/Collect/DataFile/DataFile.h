@@ -39,16 +39,16 @@ typedef union {
 
 } UNI_SONATA_DATA;
 
-typedef struct {
+struct STR_SONATA_DATA {
 	UINT uiItem;
 	ENUM_DataType enDataType;
 
 	UNI_SONATA_DATA unRawData;
 
-} STR_SONATA_DATA;
+} ;
 
 
-typedef struct {
+struct STR_RAWDATA {
 	UINT uiByte;
 	void *pDataBuffer;
 
@@ -57,11 +57,11 @@ typedef struct {
 	ENUM_UnitType enUnitType;
 	char szFileName[MAX_PATH];
 
-} STR_RAWDATA ;
+} ;
 
 typedef unsigned long long int _TOA;
 
-typedef struct {
+struct STR_PDW_DATA {
 	float *pfFreq;			// [KHz]
 	float *pfPW;			// [ns]
 	float *pfAOA;			// [degree]
@@ -79,18 +79,18 @@ typedef struct {
 	float *pfPh3;
 	float *pfPh4;
 
-} STR_PDW_DATA ;
+}  ;
 
-typedef struct {
+struct STR_IQ_DATA {
 	float *pfI;
 	float *pfQ;
 	float *pfPA;
 	float *pfIP;
 	float *pfFFT;
 
-} STR_IQ_DATA ;
+} ;
 
-typedef struct {
+struct STR_FILTER_SETUP {
 	double dToaMin;
 	double dToaMax;
 	double dAoaMin;
@@ -100,7 +100,7 @@ typedef struct {
 	double dPaMin;
 	double dPaMax;
 
-} STR_FILTER_SETUP;
+} ;
 
 static char *gstpRawDataBuffer;
 
@@ -135,7 +135,7 @@ public:
 
 	virtual void Alloc()=0;
 	virtual void Free()=0;
-	virtual void ConvertArray() = 0;
+    virtual void ConvertArray( STR_ARRAY_PDW *pPDW=NULL ) = 0;
 	virtual void *GetData() = 0;
 };
 
@@ -150,7 +150,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
 	void *GetData();
 
 };
@@ -167,7 +167,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
 	void *GetData();
 
 };
@@ -184,7 +184,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
 	void *GetData();
 
 };
@@ -201,7 +201,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
 	void *GetData();
 
 };
@@ -218,7 +218,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pArrayPDW=NULL );
 	void *GetData();
 
 public:
@@ -275,7 +275,7 @@ public:
 
 	void Alloc();
 	void Free();
-	void ConvertArray();
+    void ConvertArray( STR_ARRAY_PDW *pArrayPDW );
 	void ConvertArrayForELINT() { }
 	void *GetData();
 
@@ -293,6 +293,7 @@ public:
 	CDataFile(void);
 	virtual ~CDataFile(void);
 
+    void ReadDataMemory( STR_ARRAY_PDW *pPDW, const char *pstData, const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
     void ReadDataFile( const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();

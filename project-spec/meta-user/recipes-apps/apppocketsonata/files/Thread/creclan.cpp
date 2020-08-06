@@ -9,6 +9,8 @@
 #include "ctaskmngr.h"
 #include "csignalcollect.h"
 
+#include "../Utils/ccommonutils.h"
+
 #define _DEBUG_
 
 
@@ -20,7 +22,7 @@ CRecLan* CRecLan::pInstance[2] = { nullptr, nullptr } ;
  * @brief CRecLan::CRecLan
  * @param iKeyId
  */
-CRecLan::CRecLan( int iKeyId, int iIndex, char *pClassName ) : CThread( iKeyId, pClassName )
+CRecLan::CRecLan( int iKeyId, int iIndex, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
    LOGENTRY;
 
@@ -41,10 +43,13 @@ void CRecLan::ReleaseInstance()
 {
     if(pInstance[m_iIndex])
     {
+        int iIndex;
+
         LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
 
-        delete pInstance[m_iIndex];
-        pInstance[m_iIndex] = NULL;
+        iIndex = m_iIndex;
+        delete pInstance[iIndex];
+        pInstance[iIndex] = NULL;
     }
 }
 
@@ -73,30 +78,33 @@ void CRecLan::_routine()
             perror( "error ");
         }
 
-        switch( m_pMsg->ucOpCode ) {
-            // 기존 SONATA 체계 명령어
-            case enREQ_MODE :
-            case enREQ_ANAL_START :
-                QMsgSnd( TMNGR->GetKeyId(), m_pMsg );
-                break;
+        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+            switch( m_pMsg->ucOpCode ) {
+                // 기존 SONATA 체계 명령어
+                case enREQ_MODE :
+                case enREQ_ANAL_START :
+                    TMNGR->QMsgSnd( m_pMsg );
+                    break;
 
-            case enREQ_URBIT :
-                //SendQMessage();
-                break;
+                case enREQ_URBIT :
+                    //SendQMessage();
+                    break;
 
-            // 추가 명령어
-            case enREQ_SIM_PDWDATA :
-                QMsgSnd( SIGCOL->GetKeyId(), m_pMsg );
-                break;
+                // 추가 명령어
+                case enREQ_SIM_PDWDATA :
+                    //QMsgSnd( SIGCOL->GetKeyId(), m_pMsg );
+                    SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
+                    break;
 
-            case enREQ_DUMP_LIST :
-                DumpList();
-                break;
+                case enREQ_DUMP_LIST :
+                    DumpList();
+                    break;
 
 
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
+            }
         }
     }
 

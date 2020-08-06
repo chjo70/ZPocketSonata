@@ -59,7 +59,7 @@ enum enCommand {
 //char CPrompt::m_szClassName[LENGTH_OF_CLASSNAME] = { "CPrompt" };
 CPrompt* CPrompt::pInstance = nullptr;
 
-CPrompt::CPrompt( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CPrompt::CPrompt( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
    LOGENTRY;
 

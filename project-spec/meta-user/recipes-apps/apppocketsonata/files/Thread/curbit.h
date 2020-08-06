@@ -2,7 +2,7 @@
 #define CURBIT_H
 
 
-#include "../Include/sysmsg.h"
+#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ private:
     void Init();
 
 public:
-    CUrBit( int iKeyId, char *pClassName=NULL );
+    CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUrBit();
 
     void Run();

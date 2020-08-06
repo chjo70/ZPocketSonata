@@ -18,6 +18,8 @@ private:
 
     STR_MessageData *m_pMsg;
 
+    char *m_pszLanData;
+
 public:
     CSingleServer( int iKeyId, char *pClassName, int iPort );
     virtual ~CSingleServer();
@@ -26,7 +28,12 @@ public:
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
 
+private:
+    void Alloc();
+    void Free();
+
 public:
+    void Init();
     int SendLan( UINT uiOpCode, void *pData, UINT uiLength );
     void CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket );
 

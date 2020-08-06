@@ -16,7 +16,7 @@ CJamTech* CJamTech::pInstance = nullptr;
  * @param iKeyId
  * @param pClassName
  */
-CJamTech::CJamTech( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CJamTech::CJamTech( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 
 }

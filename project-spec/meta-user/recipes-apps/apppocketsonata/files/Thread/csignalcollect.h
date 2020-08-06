@@ -6,6 +6,7 @@
 #include "../Utils/cthread.h"
 
 #include "../Collect/ccollectbank/ccollectbank.h"
+#include "../Collect/DataFile/DataFile.h"
 
 
 
@@ -15,6 +16,10 @@
 class CSignalCollect : public CThread
 {
 private:
+    CDataFile m_theDataFile;
+
+    UNI_LAN_DATA m_uniLanData;
+
     CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
     CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
     CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
@@ -36,12 +41,13 @@ private:
 
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
 
+    void SimPDWData();
+
 public:
-    CSignalCollect( int iKeyId, char *pClassName=NULL );
+    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CSignalCollect(void);
 
     void Run();
-    void ReleaseInstance();
 
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
@@ -49,10 +55,22 @@ public:
     static CSignalCollect* GetInstance()
     { // 게으른 초기화
         if(pInstance == NULL) {
-            pInstance = new CSignalCollect( g_iKeyId++, (char*)"CSignalCollect" );
+            pInstance = new CSignalCollect( g_iKeyId++, (char*)"CSignalCollect", true );
         }
         return pInstance;
     }
+
+    void ReleaseInstance()
+    {
+        if(pInstance)
+        {
+            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+
+            delete pInstance;
+            pInstance = NULL;
+        }
+    }
+
 };
 
 #define SIGCOL     CSignalCollect::GetInstance()

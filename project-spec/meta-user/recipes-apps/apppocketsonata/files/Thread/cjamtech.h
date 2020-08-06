@@ -13,7 +13,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CJamTech( int iKeyId, char *pClassName=NULL );
+    CJamTech( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     ~CJamTech();
 
     void Run();

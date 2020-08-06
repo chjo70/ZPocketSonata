@@ -25,6 +25,7 @@ enum LogType {
 #define LOGMSG1( A, B, C )          LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )
 #define LOGMSG2( A, B, C, D )       LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D )
 #define LOGMSG3( A, B, C, D, E )    LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E )
+#define LOGMSG4( A, B, C, D, E, F ) LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
 
 
 #define LOGENTRY                    LOG->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )

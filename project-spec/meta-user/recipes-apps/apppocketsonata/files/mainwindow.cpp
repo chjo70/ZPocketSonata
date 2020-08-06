@@ -409,7 +409,6 @@ void MainWindow::on_BITTEST_clicked()
 
     ui->BITTEST->setEnabled( false );
 
-
     strLanHeader.uiLength = 0;
 
     if( ui->radioButton_IBIT->isChecked() ) {
@@ -442,7 +441,6 @@ void MainWindow::on_pushButton_SimPDW_clicked()
     ui->BITTEST->setEnabled( false );
 
     strLanHeader.ucOpCode = enREQ_SIM_PDWDATA;
-    strLanHeader.uiLength = uiFilelength;
 
     QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );
 
@@ -469,4 +467,19 @@ void MainWindow::on_pushButton_SimPDW_clicked()
         MessageBox( "모의 발생할 파일이 존재하지 않습니다.!" );
     }
 
+}
+
+/**
+ * @brief MainWindow::on_pushButton_2_clicked
+ */
+void MainWindow::on_pushButton_2_clicked()
+{
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+
+    strLanHeader.ucOpCode = enREQ_TEST1;
+    strLanHeader.uiLength = 0;
+
+    iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
 }

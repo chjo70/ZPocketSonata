@@ -9,6 +9,12 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 SRC_URI = "file://cmain.cpp \
 		   file://cmain.h \
+		   file://Collect/DataFile/CRWRCommonVariables.h \
+		   file://Collect/DataFile/DataFile.cpp \
+		   file://Collect/DataFile/DataFile.h \
+		   file://Collect/DataFile/_iq.h \
+		   file://Collect/DataFile/_macro.h \
+		   file://Collect/DataFile/_pdw.h \
 		   file://Collect/ccollectbank/ccollectbank.cpp \
 		   file://Collect/ccollectbank/ccollectbank.h \
 		   file://NetMem/client/ClientMemoryPage.cpp \
@@ -24,6 +30,10 @@ SRC_URI = "file://cmain.cpp \
            file://NetMem/utils/ApiNetMem.cpp \
 		   file://NetMem/utils/ApiNetMem.h \
 		   file://NetMem/utils/PortableSocket.h \
+		   file://Utils/cfile.cpp \
+		   file://Utils/cfile.h \
+		   file://Utils/carraymsgdata.cpp \
+		   file://Utils/carraymsgdata.h \
 		   file://Utils/cthread.cpp \
 		   file://Utils/cthread.h \
 		   file://Utils/cgpio.cpp \		   
@@ -39,6 +49,8 @@ SRC_URI = "file://cmain.cpp \
 		   file://Utils/cqueue.h \		   		   
 		   file://Thread/cdetectanalysis.cpp \
 		   file://Thread/cdetectanalysis.h \
+		   file://Thread/cemittermerge.cpp \
+		   file://Thread/cemittermerge.h \
 		   file://Thread/ctrackanalysis.cpp \
 		   file://Thread/ctrackanalysis.h \
 		   file://Thread/cscananalysis.cpp \

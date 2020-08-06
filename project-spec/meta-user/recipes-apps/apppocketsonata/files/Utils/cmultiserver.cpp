@@ -12,9 +12,11 @@
  * @param iKeyId
  * @param pClassName
  */
-CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread( iKeyId, pClassName )
+CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread( iKeyId, pClassName, false )
 {
     m_iPort = iPort;
+
+    Init();
 }
 
 /**
@@ -23,6 +25,43 @@ CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread(
 CMultiServer::~CMultiServer()
 {
     LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+
+    Free();
+}
+
+/**
+ * @brief CMultiServer::Init
+ */
+void CMultiServer::Init()
+{
+    Alloc();
+
+}
+
+/**
+ * @brief CMultiServer::Alloc
+ */
+void CMultiServer::Alloc()
+{
+    int i;
+
+    for( i=0 ; i < MAX_CLIENTS ; ++i ) {
+        m_pszLanData[i] = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+    }
+
+}
+
+/**
+ * @brief CMultiServer::Free
+ */
+void CMultiServer::Free()
+{
+    int i;
+
+    for( i=0 ; i < MAX_CLIENTS ; ++i ) {
+        free( m_pszLanData[i] );
+    }
+
 }
 
 /**
@@ -49,7 +88,6 @@ void CMultiServer::_routine()
     UINT uiTotalRead[MAX_CLIENTS];
 
     STR_LAN_HEADER strLanHeader[MAX_CLIENTS];
-    char szLanData[MAX_CLIENTS][MAX_LAN_DATA];
 
     int opt = true, addrlen, i, iActivity, iRead;
     int iClientSocket[MAX_CLIENTS];
@@ -178,7 +216,7 @@ void CMultiServer::_routine()
                     }
                 }
                 else {
-                    pLanData = (char *) & szLanData[i];
+                    pLanData = (char *) & m_pszLanData[i];
                     if (( iRead = recv( iSocket , & pLanData[uiTotalRead[i]], strLanHeader[i].uiLength-uiTotalRead[i], MSG_DONTWAIT ) ) == 0 ) {
                         CloseSocket( iSocket, & address, & iClientSocket[i] );
                     }
@@ -191,7 +229,7 @@ void CMultiServer::_routine()
                             sndMsg.mtype = 1;
                             sndMsg.ucOpCode = strLanHeader[i].ucOpCode;
                             sndMsg.iSocket = iSocket;
-                            sndMsg.usLength = strLanHeader[i].uiLength;
+                            sndMsg.uiLength = strLanHeader[i].uiLength;
 
                             memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader[i].uiLength );
 

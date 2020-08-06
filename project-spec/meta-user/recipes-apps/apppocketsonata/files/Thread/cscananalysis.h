@@ -15,7 +15,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CScanAnalysis( int iKeyId, char *pClassName );
+    CScanAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CScanAnalysis(void);
 
     void Run();

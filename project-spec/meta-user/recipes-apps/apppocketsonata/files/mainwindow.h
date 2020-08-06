@@ -7,7 +7,7 @@
 
 #include "chexspinbox.h"
 
-#include "./Include/sysmsg.h"
+#include "./Include/system.h"
 
 #include "./Collect/DataFile/DataFile.h"
 
@@ -59,6 +59,8 @@ private slots:
     void on_BITTEST_clicked();
 
     void on_pushButton_SimPDW_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -1,7 +1,7 @@
 #ifndef CRECLAN_H
 #define CRECLAN_H
 
-#include "../Include/sysmsg.h"
+#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 class CRecLan : public CThread
@@ -16,7 +16,7 @@ private:
 
 
 public:
-    CRecLan( int iKeyId, int iIndex, char *pClassName=NULL );
+    CRecLan( int iKeyId, int iIndex, char *pClassName=NULL, bool bArrayLanData=false );
     ~CRecLan();
 
     void Run();
@@ -32,7 +32,7 @@ public:
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화
         if(pInstance[iIndex] == NULL) {
-            pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*)"CRecLan" );
+            pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*)"CRecLan", true );
         }
         return pInstance[iIndex];
     }

@@ -11,7 +11,7 @@
 // 클래스 내의 정적 멤버변수 값 정의
 CPulseTrk* CPulseTrk::pInstance = nullptr;
 
-CPulseTrk::CPulseTrk( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CPulseTrk::CPulseTrk( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 }

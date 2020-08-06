@@ -14,7 +14,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CTrackAnalysis( int iKeyId, char *pClassName );
+    CTrackAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CTrackAnalysis(void);
 
     void Run();

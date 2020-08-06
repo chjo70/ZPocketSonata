@@ -25,6 +25,7 @@ SOURCES += \
         Thread/ctrackanalysis.cpp \
         Thread/curbit.cpp \
         Thread/creclan.cpp \
+        Utils/carraymsgdata.cpp \
         Utils/ccommonutils.cpp \
         Utils/cfile.cpp \
         Utils/clog.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     Thread/ctaskmngr.h \
     Thread/ctrackanalysis.h \
     Thread/curbit.h \
+    Utils/carraymsgdata.h \
     Utils/ccommonutils.h \
     Utils/cfile.h \
     Utils/cgpio.h \

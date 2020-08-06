@@ -18,20 +18,20 @@
 #define	FREQ_MAX			(18000)
 
 
-typedef struct {
+struct FREQ_RESOL {
 	// frequency band code를 위한 구조체 
 	UINT min;       // min frequency
 	UINT max;       // max frequency
 	float res;			// 각 구간에 따른 resolution
-} FREQ_RESOL ;
+}  ;
 
-typedef struct {
+struct PA_RESOL {
 	// frequency band code를 위한 구조체 
 	UINT min;       // min frequency
 	UINT max;       // max frequency
 	float offset;      // max frequency
 	float res;			// 각 구간에 따른 resolution
-} PA_RESOL ;
+}  ;
 
 
 #ifdef _MAIN_

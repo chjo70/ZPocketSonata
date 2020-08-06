@@ -18,6 +18,7 @@ public:
 
     bool Open( const char *pstPathname, int iMode );
     int Read( void *pstBuffer, int iLength );
+    int Write( void *pstBuffer, int iLength );
     void Close();
     unsigned int GetFileLength();
 };

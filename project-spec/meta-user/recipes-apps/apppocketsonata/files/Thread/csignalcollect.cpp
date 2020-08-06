@@ -20,7 +20,7 @@ CSignalCollect* CSignalCollect::pInstance = nullptr;
  * @param iKeyId
  * @param pClassName
  */
-CSignalCollect::CSignalCollect( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     int i;
 
@@ -65,19 +65,6 @@ CSignalCollect::~CSignalCollect(void)
 
 }
 
-/**
- * @brief CSignalCollect::ReleaseInstance
- */
-void CSignalCollect::ReleaseInstance()
-{
-    if(pInstance)
-    {
-        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-        delete pInstance;
-        pInstance = NULL;
-    }
-}
 
 
 /**
@@ -97,7 +84,8 @@ void CSignalCollect::Run()
 void CSignalCollect::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
+    bool bWhile=true, bRunCollecting=false;
+
     UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
@@ -105,30 +93,37 @@ void CSignalCollect::_routine()
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->szMessage[0];
 
     while( bWhile ) {
-        if( QMsgRcv() == -1 ) {
-            perror( "error ");
+        if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
+            switch( m_pMsg->ucOpCode ) {
+                case enTHREAD_ANAL_START :
+                    // 수집하기 위한 초기 설정을 수행함.
+                    Init();
+                    bRunCollecting = true;
+                    break;
+
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+                    bWhile = false;
+                    break;
+
+                case enTHREAD_REQ_SETWINDOWCELL :
+                    LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
+                    break;
+
+                case enTHREAD_REQ_SIM_PDWDATA :
+                    SimPDWData();
+                    break;
+
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    break;
+            }
         }
-
-        switch( m_pMsg->ucOpCode ) {
-            case enTHREAD_ANAL_START :
+        else {
+            // 신호 수집은 여기서 수행한다.
+            if( bRunCollecting == true ) {
                 AnalysisStart();
-                break;
-
-            case enTHREAD_REQ_SHUTDOWN :
-                LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-                bWhile = false;
-                break;
-
-            case enTHREAD_REQ_SETWINDOWCELL :
-                LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
-                break;
-
-            case enTHREAD_REQ_SIM_PDWDATA :
-                break;
-
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                break;
+            }
         }
     }
 
@@ -181,36 +176,44 @@ void CSignalCollect::AnalysisStart()
     LOGENTRY;
 
     int iCh;
-
-    Init();
+    bool bIsOut = true;
 
     while( true ) {
+        bIsOut = true;
+
         // 탐지 채널 버퍼 체크
         iCh = CheckCollectBank( enDetectCollectBank );
         if( iCh >= 0 ) {
             QMsgSnd( DETANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+            bIsOut = false;
         }
 
         // 추적 채널 버퍼 체크
         iCh = CheckCollectBank( enTrackCollectBank );
         if( iCh >= 0 ) {
             QMsgSnd( TRKANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+            bIsOut = false;
         }
 
         // 스캔 채널 버퍼 체크
         iCh = CheckCollectBank( enScanCollectBank );
         if( iCh >= 0 ) {
             QMsgSnd( SCANANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+            bIsOut = false;
         }
 
         // 사용자 채널 버퍼 체크
         iCh = CheckCollectBank( enUserCollectBank );
         if( iCh >= 0 ) {
             CCommonUtils::SendLan( enREQ_MODE, & iCh, sizeof(int) );
+            bIsOut = false;
         }
 
         sleep( 1 );
         printf( "." );
+        if( bIsOut == true ) {
+            break;
+        }
     }
 
 }
@@ -275,4 +278,23 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
     }
 
     return iCh;
+}
+
+/**
+ * @brief CSignalCollect::SimPDWData
+ */
+void CSignalCollect::SimPDWData()
+{
+    STR_ARRAY_PDW *pstrArrayPDW;
+
+    // 랜 데이터를 갖고온다.
+    PopLanData( m_uniLanData.strPDW, m_pMsg->iArrayIndex, m_pMsg->uiLength );
+
+    // 데이터를 지정하여 지정한 행렬에 저장한다.
+    pstrArrayPDW = m_pTheDetectCollectBank[0]->GetPDW();
+    m_theDataFile.ReadDataMemory( pstrArrayPDW, (const char *) m_uniLanData.strPDW, ".kpdw" );
+
+    // 모의 PDW 데이터를 수집 버퍼에 추가한다.
+    m_pTheDetectCollectBank[0]->PushPDWData( pstrArrayPDW );
+
 }

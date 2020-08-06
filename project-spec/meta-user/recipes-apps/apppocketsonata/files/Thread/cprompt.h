@@ -43,7 +43,7 @@ private:
     void URBit( UINT uiData );
 
 public:
-    CPrompt( int iKeyId, char *pClassName=NULL );
+    CPrompt( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CPrompt();
 
     virtual void _routine();

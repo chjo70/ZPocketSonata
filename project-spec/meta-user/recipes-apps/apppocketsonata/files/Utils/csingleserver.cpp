@@ -8,6 +8,8 @@
 #include "../Utils/clog.h"
 
 
+#include "../Utils/ccommonutils.h"
+
 /**
  * @brief CSingleServer::CSingleServer
  * @param iKeyId
@@ -17,6 +19,8 @@
 CSingleServer::CSingleServer( int iKeyId, char *pClassName, int iPort ) : CThread( iKeyId, pClassName )
 {
     m_iPort = iPort;
+
+    Init();
 }
 
 
@@ -26,6 +30,36 @@ CSingleServer::CSingleServer( int iKeyId, char *pClassName, int iPort ) : CThrea
 CSingleServer::~CSingleServer()
 {
     LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+
+    Free();
+}
+
+/**
+ * @brief CSingleServer::Init
+ */
+void CSingleServer::Init()
+{
+    Alloc();
+
+}
+
+/**
+ * @brief CSingleServer::Alloc
+ */
+void CSingleServer::Alloc()
+{
+    m_pszLanData = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+
+}
+
+/**
+ * @brief CMultiServer::Free
+ */
+void CSingleServer::Free()
+{
+
+    free( m_pszLanData );
+
 }
 
 /**
@@ -50,7 +84,6 @@ void CSingleServer::_routine()
     UINT uiTotalRead;
 
     STR_LAN_HEADER strLanHeader;
-    char szLanData;
 
     int opt = true, addrlen, iActivity, iRead;
     int iClientSocket;
@@ -173,7 +206,7 @@ void CSingleServer::_routine()
                     }
                 }
                 else {
-                    pLanData = (char *) & szLanData;
+                    pLanData = (char *) & m_pszLanData[0];
                     if (( iRead = recv( m_iSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
                         CloseSocket( m_iSocket, & sockAddress, & iClientSocket );
                     }
@@ -186,9 +219,15 @@ void CSingleServer::_routine()
                             sndMsg.mtype = 1;
                             sndMsg.ucOpCode = strLanHeader.ucOpCode;
                             sndMsg.iSocket = m_iSocket;
-                            sndMsg.usLength = strLanHeader.uiLength;
+                            sndMsg.uiLength = strLanHeader.uiLength;
+                            sndMsg.iArrayIndex = -1;
 
-                            memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader.uiLength );
+                            if( sndMsg.ucOpCode == enREQ_SIM_PDWDATA ) {
+                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, strLanHeader.uiLength );
+                            }
+                            else {
+                                memcpy( & sndMsg.szMessage[0], pLanData, strLanHeader.uiLength );
+                            }
 
                             if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                 perror( "msgsnd 실패" );
@@ -240,7 +279,7 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
  */
 int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
-    int iRet1, iRet2;
+    int iRet1, iRet2=0;
     STR_LAN_HEADER strLanHeader;
 
     // 랜 헤더 송신

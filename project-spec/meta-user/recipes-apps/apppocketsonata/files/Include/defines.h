@@ -37,6 +37,13 @@
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 
+typedef unsigned long long int _TOA;
+
+/////////////////////////////////////////////////////////////////////////////////
+//#define max(a,b)               ( ( (int)(a) > (int)(b) ) ? (a) : (b) )
+//#define min(a,b)               ( ( (int)(a) < (int)(b) ) ? (a) : (b) )
+
+
 // MFC에서 정의된 define 문을 아래에 정의한다.
 #define MAX_PATH        (256)
 

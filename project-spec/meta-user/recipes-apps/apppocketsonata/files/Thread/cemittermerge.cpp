@@ -6,7 +6,7 @@
 // 클래스 내의 정적 멤버변수 값 정의
 CEmitterMerge* CEmitterMerge::pInstance = nullptr;
 
-CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
    LOGENTRY;
 
@@ -21,8 +21,6 @@ CEmitterMerge::~CEmitterMerge()
 {
 
 }
-
-
 
 /**
  * @brief CEmitterMerge::Run

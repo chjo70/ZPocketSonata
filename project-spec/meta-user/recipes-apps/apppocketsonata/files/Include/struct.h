@@ -6,8 +6,8 @@
 #ifndef _STRUCT_H
 #define _STRUCT_H
 
-#include "defines.h"
-#include "system.h"
+//#include "defines.h"
+//#include "system.h"
 
 /**
  * @brief ZYNQ 보드의 번호를 정의함.
@@ -71,7 +71,7 @@ struct STR_WINDOWCELL {
      */
     bool bUse;
 
-    UINT uiMode;
+    unsigned int uiMode;
 
     /**
      * @brief 채널 정보를 나타낸다. 유일한 채널이다.
@@ -84,10 +84,15 @@ struct STR_WINDOWCELL {
     bool bComplete;
 
     /**
+     * @brief 저장된 PDW 개수
+     */
+    unsigned int uiTotalPDW;
+
+    /**
     * @brief 최대 수집 게수
     */
-    UINT uiMaxCoPDW;
-    UINT uiMaxCollectTime;          // 최대 수집 시간 [ms]
+    unsigned int uiMaxCoPDW;
+    unsigned int uiMaxCollectTime;          // 최대 수집 시간 [ms]
 
     STR_LOWHIGH strAoa;
     STR_LOWHIGH strFreq;
@@ -97,33 +102,35 @@ struct STR_WINDOWCELL {
     /**
      * @brief 빔 번호
      */
-    UINT uiBeam;
+    unsigned int uiBeam;
 
     /**
      * @brief 누적 PDW 개수
      */
-    UINT uiAccumulatedCoPDW;
+    unsigned int uiAccumulatedCoPDW;
 
     /**
      * @brief 누적 시간 [ms]
      */
-    UINT uiAccumulatedTime;
+    unsigned int uiAccumulatedTime;
 
     /**
-     * @brief 채널 사용 횟수
+     * @brief 누적 사용 채널 횟수
      */
-    UINT uiAccumulatedCoUse;
+    unsigned int uiAccumulatedCoUsed;
 
 };
 
-struct STR_PDW {
-    UINT uiCoPDW;
+struct STR_ARRAY_PDW {
+    unsigned int uiTotalPDW;
 
-    UINT uiSigType[_MAX_PDW];
-    UINT uiAOA[_MAX_PDW];
-    UINT uiFreq[_MAX_PDW];
-    UINT uiPW[_MAX_PDW];
-    UINT uiPA[_MAX_PDW];
+    unsigned int uiSigType[_MAX_COL_PDW];
+    unsigned int uiAOA[_MAX_COL_PDW];
+    unsigned int uiFreq[_MAX_COL_PDW];
+    unsigned int uiPW[_MAX_COL_PDW];
+    unsigned int uiPA[_MAX_COL_PDW];
+
+    _TOA llToa[_MAX_COL_PDW];
 
 };
 

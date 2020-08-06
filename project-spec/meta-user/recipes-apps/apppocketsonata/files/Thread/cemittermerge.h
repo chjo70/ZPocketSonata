@@ -14,7 +14,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CEmitterMerge( int iKeyId, char *pClassName );
+    CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData );
     virtual ~CEmitterMerge(void);
 
     void Run();
@@ -25,7 +25,7 @@ public:
     static CEmitterMerge* GetInstance()
     { // 게으른 초기화
         if(pInstance == NULL) {
-            pInstance = new CEmitterMerge( g_iKeyId++, (char*)"CDetectAnalysis" );
+            pInstance = new CEmitterMerge( g_iKeyId++, (char*)"CDetectAnalysis", true );
         }
         return pInstance;
     }

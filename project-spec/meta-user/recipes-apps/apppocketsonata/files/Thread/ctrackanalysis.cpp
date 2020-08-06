@@ -17,7 +17,7 @@ CTrackAnalysis* CTrackAnalysis::pInstance = nullptr;
  * @param iKeyId
  * @param pClassName
  */
-CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 
 }

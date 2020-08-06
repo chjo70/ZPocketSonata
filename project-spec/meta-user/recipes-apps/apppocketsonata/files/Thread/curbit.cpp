@@ -18,7 +18,7 @@ CUrBit* CUrBit::pInstance = nullptr;
  * @brief CUrBit::CUrBit
  * @param iKeyId
  */
-CUrBit::CUrBit( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CUrBit::CUrBit( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 

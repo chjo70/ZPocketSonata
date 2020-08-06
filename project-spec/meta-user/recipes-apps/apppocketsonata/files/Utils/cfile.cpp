@@ -38,7 +38,7 @@ bool CFile::Open( const char *pstPathname, int iMode )
 {
     bool bRet=true;
 
-    m_iFile = open( pstPathname, O_RDONLY );
+    m_iFile = open( pstPathname, iMode );
 
     if( m_iFile < 0 ) {
         bRet = false;
@@ -59,6 +59,21 @@ int CFile::Read( void *pstBuffer, int iLength )
     int iRead;
 
     iRead = read( m_iFile, pstBuffer, iLength );
+    return iRead;
+
+}
+
+/**
+ * @brief CFile::Write
+ * @param pstBuffer
+ * @param iLength
+ * @return
+ */
+int CFile::Write( void *pstBuffer, int iLength )
+{
+    int iRead;
+
+    iRead = write( m_iFile, pstBuffer, iLength );
     return iRead;
 
 }

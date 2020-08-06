@@ -13,7 +13,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CPulseTrk( int iKeyId, char *pClassName=NULL );
+    CPulseTrk( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CPulseTrk();
 
     void Run();

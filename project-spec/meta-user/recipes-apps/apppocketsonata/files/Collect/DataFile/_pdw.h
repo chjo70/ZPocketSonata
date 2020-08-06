@@ -146,7 +146,7 @@ typedef union
 #define WIDE_BAND_IN_SAMPLINGTIME		( 1. / SAMPLING_HZ_IN_WIDE_BAND )
 
 // 수퍼헷 수신장치 개발한 것의 PDW 포멧
-typedef struct  
+struct TNEW_SPDW
 {
 	float Freq ;
 	float PA ;
@@ -154,7 +154,7 @@ typedef struct
 	unsigned int TOA ;
 	int Ref_Phase3 ;
 
-} TNEW_SPDW;
+} ;
 
 // 인천공항 PDW
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
@@ -227,7 +227,7 @@ typedef struct {
 
 } SRxPDWHeader;
 
-typedef struct {
+struct SRXPDWDataRGroup {
 	unsigned long long int	llTOA;
 	int	iSignalType;
 	int	iPolFlag;
@@ -248,7 +248,7 @@ typedef struct {
 	int	iPW;
 	UINT uiPDWID;
 
-} SRXPDWDataRGroup;
+} ;
 
 #pragma pack(pop)
 

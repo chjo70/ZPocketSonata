@@ -6,7 +6,13 @@
 #define _SYSTEM_H
 
 
-#define _MAX_PDW         (1024)
+// PDW 최대 크기 정의함. 랜 송수신 데이터 및 분석하기 위한 최대 PDW 개수 정의
+#define _MAX_COL_PDW        (1024)
+
+
+// 랜 데이터 최대 크기
+#define _MAX_LANDATA        (1024*256)
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -17,13 +23,15 @@
 
 
 
-
 #include "defines.h"
 
 #include "struct.h"
 #include "sysmsg.h"
 #include "thrmsg.h"
 #include "global.h"
+
+
+//#include "../Utils/ccommonutils.h"
 
 //#include "../Utils/stdstring.h"
 

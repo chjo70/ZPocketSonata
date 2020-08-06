@@ -19,10 +19,10 @@
 #ifndef _IQ_H_
 #define _IQ_H_
 
-typedef struct {
+struct TNEW_IQ {
 	short sI;
 	short sQ;
-} TNEW_IQ ;
+}  ;
 
 
 

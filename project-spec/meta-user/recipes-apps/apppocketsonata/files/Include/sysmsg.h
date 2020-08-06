@@ -6,14 +6,13 @@
 #ifndef _SYSMSG_H
 #define _SYSMSG_H
 
-#include "system.h"
-#include "struct.h"
-#include "thrmsg.h"
-#include "global.h"
 
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
 
+#include "../Collect/DataFile/CRWRCommonVariables.h"
+
+#pragma pack(push, 1)
 
 struct STR_LAN_HEADER {
     unsigned char ucSrcDest;
@@ -48,6 +47,7 @@ enum enREQ_MESSAGE {
 
     // 디버깅 용
     enREQ_SIM_PDWDATA,  // PDW 데이터 모의
+    enREQ_TEST1,
     enREQ_DUMP_LIST = 0xF0,
 
 } ;
@@ -70,10 +70,10 @@ enum enRES_MESSAGE {
     enRES_DUMP_LIST = enREQ_DUMP_LIST,
 
     // 기존 SONATA 체계 명령어
-    enRES_MODE = Esys_SetMode,
-    enRES_IBIT = Mbit_ResultEsIbit,
-    enRES_UBIT = Mbit_ResultEsUbit,
-    enRES_CBIT = Mbit_ResultEsCbit,
+    enRES_MODE = enREQ_MODE,
+    enRES_IBIT = enREQ_IBIT,
+    enRES_UBIT = enREQ_UBIT,
+    enRES_CBIT = enREQ_CBIT,
 
 
 } ;
@@ -96,6 +96,7 @@ union UNI_LAN_DATA {
     // 수신 메시지 구조체 정의
     STR_REQ_DUMP_LIST strReqDumpList;
     UINT uiUnit;
+    UDRCPDW strPDW[_MAX_LANDATA];
 
     // 송신 메시지 구조체 정의
     STR_RES_DUMP_LIST strResDumpList;
@@ -105,7 +106,7 @@ union UNI_LAN_DATA {
 
 };
 
-
+#pragma pack(pop)
 
 #endif // _SYSMSG_H
 

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "../Include/sysmsg.h"
+#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../MinIni/minIni.h"

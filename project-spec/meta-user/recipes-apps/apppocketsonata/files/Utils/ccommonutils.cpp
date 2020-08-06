@@ -1,5 +1,7 @@
 #include "ccommonutils.h"
 
+#include "../System/csysconfig.h"
+
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
 
@@ -41,4 +43,31 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         }
     }
 
+}
+
+/**
+ * @brief CCommonUtils::IsValid
+ * @param pMsg
+ * @return
+ */
+bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
+{
+    bool bRet=true;
+    ENUM_MODE enMode;
+
+    enMode = GP_SYSCFG->GetMode();
+    switch( pMsg->ucOpCode ) {
+        case enREQ_MODE :
+            break;
+        case enREQ_SIM_PDWDATA :
+            if( enMode == enREADY_MODE ) {
+                bRet = false;
+            }
+            break;
+        default:
+            break;
+
+    }
+
+    return bRet;
 }

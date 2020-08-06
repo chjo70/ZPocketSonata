@@ -14,7 +14,7 @@ CDetectAnalysis* CDetectAnalysis::pInstance = nullptr;
 /**
  * @brief CDetectAnalysis::CDetectAnalysis
  */
-CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 
 }

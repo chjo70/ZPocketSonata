@@ -10,3 +10,4 @@ CONFIG_sdfec
 CONFIG_apppocketsonata
 CONFIG_boost
 CONFIG_apphtml
+CONFIG_bootscript

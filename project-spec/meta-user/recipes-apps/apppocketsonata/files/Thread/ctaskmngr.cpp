@@ -23,6 +23,7 @@
 #include "../Utils/ccommonutils.h"
 
 
+
 #define _DEBUG_
 
 
@@ -219,7 +220,7 @@ void CTaskMngr::AnalysisStart()
     // 시간 정보로 설정한 후에 시작 명령을
     tiNow = (time_t) m_pMsg->szMessage[0];
 
-    QMsgSnd( SIGCOL->GetKeyId(), m_pMsg );
+    SIGCOL->QMsgSnd( m_pMsg );
 
 }
 

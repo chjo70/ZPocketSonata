@@ -1,5 +1,6 @@
 #include "cthread.h"
 #include <errno.h>
+
 #include "../Utils/clog.h"
 
 #ifndef S_DEFFILEMODE
@@ -10,7 +11,13 @@
 int CThread::m_iCoThread = 0;
 int CThread::m_iCoMsgQueue = 0;
 
-CThread::CThread( int iMsgKey, char *pClassName )
+/**
+ * @brief CThread::CThread
+ * @param iMsgKey
+ * @param pClassName
+ * @param bArrayLanData
+ */
+CThread::CThread( int iMsgKey, char *pClassName, bool bArrayLanData ) : CArrayMsgData( bArrayLanData )
 {
     m_MainThread = 0;
     m_MsgKeyID = 0;
@@ -58,7 +65,7 @@ void CThread::Run( void *(*Func)(void*) )
     LOGMSG( enNormal, "\n Running thread..." );
 
     ++ m_iCoMsgQueue;
-    m_MsgKeyID = msgget( IPC_PRIVATE, 0666 | IPC_CREAT);
+    m_MsgKeyID = msgget( IPC_PRIVATE, S_DEFFILEMODE | IPC_CREAT ); // 0666 | IPC_CREAT );
     if (m_MsgKeyID == -1 ) {
         perror("msgget error : ");
         exit(0);
@@ -134,6 +141,11 @@ void CThread::Stop()
 
 }
 
+/**
+ * @brief CThread::CallBack
+ * @param pArg
+ * @return
+ */
 void *CThread::CallBack( void *pArg )
 {
     CThread *pThhread = static_cast<CThread*> (pArg);
@@ -148,11 +160,15 @@ void *CThread::CallBack( void *pArg )
  * @brief CThread::QMsgRcv
  * @return
  */
-int CThread::QMsgRcv()
+int CThread::QMsgRcv( int iFlag )
 {
     //LOGENTRY;
 
-    int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), (1 >> 1), 0);
+    int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
+
+    if( iMsgRcv > 0 ) {
+        LOGMSG4( enDebug, "[%s]에서 Op[0x%02X], Len[%d], Idx[%d] 수신" , m_szClassName, m_Msg.ucOpCode, m_Msg.uiLength, m_Msg.iArrayIndex );
+    }
 
     return iMsgRcv;
 
@@ -172,6 +188,7 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     sndMsg.mtype = 1;
     sndMsg.ucOpCode = uiOpCode;
     sndMsg.iSocket = 0;
+    sndMsg.iArrayIndex = -1;
 
     memcpy( & sndMsg.szMessage[0], pData, sizeof(char) * iByte );
 
@@ -186,20 +203,16 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
 
 /**
  * @brief CThread::QMsgSnd
- * @param iKeyId
  * @param pMessageData
  */
-void CThread::QMsgSnd( key_t iKeyId, STR_MessageData *pMessageData )
+void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData )
 {
-    STR_MessageData sndMsg;
 
-    sndMsg.mtype = 1;
-    sndMsg.ucOpCode = pMessageData->ucOpCode;
-    sndMsg.iSocket = 0;
+    if( pArrayMsgData != NULL ) {
+        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiLength );
+    }
 
-    memcpy( & sndMsg.szMessage[0], & pMessageData->szMessage[0], pMessageData->usLength );
-
-    if( msgsnd( iKeyId, (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+    if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
     else {
@@ -207,3 +220,4 @@ void CThread::QMsgSnd( key_t iKeyId, STR_MessageData *pMessageData )
 
     }
 }
+
