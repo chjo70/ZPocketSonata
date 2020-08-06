@@ -7,7 +7,7 @@
 #include "./Include/defines.h"
 #include "./Include/sysmsg.h"
 
-
+#include <fcntl.h>
 
 
 
@@ -444,7 +444,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 
     QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );
 
-    if (theRawDataFile.Open( fileName.toStdString().c_str(), CFile::shareDenyNone | CFile::typeBinary) == TRUE) {
+    if (theRawDataFile.Open( fileName.toStdString().c_str(), O_RDONLY ) == TRUE) {
         uiFilelength = theRawDataFile.GetFileLength();
         strLanHeader.uiLength = uiFilelength;
 

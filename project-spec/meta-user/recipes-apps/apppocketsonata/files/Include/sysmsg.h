@@ -96,7 +96,8 @@ union UNI_LAN_DATA {
     // 수신 메시지 구조체 정의
     STR_REQ_DUMP_LIST strReqDumpList;
     UINT uiUnit;
-    UDRCPDW strPDW[_MAX_LANDATA];
+    UDRCPDW strPDW[_MAX_COL_PDW];
+    unsigned char szFile[_MAX_LANDATA];
 
     // 송신 메시지 구조체 정의
     STR_RES_DUMP_LIST strResDumpList;
