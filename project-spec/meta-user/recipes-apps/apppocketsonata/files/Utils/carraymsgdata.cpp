@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -44,6 +45,8 @@ void CArrayMsgData::Alloc()
     if( m_bArrayLanData == true ) {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
             m_pszArray[i] = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+
+            SetMark( i );
         }
     }
     else {
@@ -70,11 +73,25 @@ void CArrayMsgData::Free()
 }
 
 /**
+ * @brief CArrayMsgData::SetMark
+ * @param iIndex
+ */
+void CArrayMsgData::SetMark( int iIndex )
+{
+    m_pszArray[iIndex][0] = ARARAY_MARK_UPPER;
+    m_pszArray[iIndex][1] = ARARAY_MARK_LOWER;
+}
+
+/**
  * @brief CArrayMsgData::PushLanData
  */
 int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
     ++ m_ucPushIndex;
+
+    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_LOWER ) {
+        printf( "\n Array 데이터가 안전하지 않습니다 !!" );
+    }
 
     memcpy( m_pszArray[m_ucPushIndex], pData, uiLength );
     return m_ucPushIndex;
@@ -90,5 +107,8 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 {
 
     memcpy( pData, m_pszArray[iIndex], uiLength );
+
+    SetMark( iIndex );
+
     return;
 }

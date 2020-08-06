@@ -5,6 +5,9 @@
 
 #define SIZE_OF_MSGDATA_ARRAY         (256)
 
+#define ARARAY_MARK_UPPER              (0x4F)
+#define ARARAY_MARK_LOWER              (0xF4)
+
 class CArrayMsgData
 {
 private:
@@ -27,6 +30,7 @@ public:
 private:
     void Alloc();
     void Free();
+    void SetMark( int iIndex );
 
 public:
     void Init();

@@ -32,7 +32,6 @@ public:
     virtual ~CUrBit();
 
     void Run();
-    void ReleaseInstance();
 
     //
 
@@ -45,6 +44,15 @@ public:
             pInstance = new CUrBit( g_iKeyId++, (char*)"CUrBit" );
         }
         return pInstance;
+    }
+
+    void ReleaseInstance()
+    {
+        if(pInstance)
+        {
+            delete pInstance;
+            pInstance = NULL;
+        }
     }
 };
 

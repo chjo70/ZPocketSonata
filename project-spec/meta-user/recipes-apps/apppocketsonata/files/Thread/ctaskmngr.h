@@ -43,7 +43,6 @@ public:
     virtual ~CTaskMngr(void);
 
     void Run();
-    void ReleaseInstance();
 
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
@@ -55,6 +54,16 @@ public:
         }
         return pInstance;
     }
+
+    void ReleaseInstance()
+    {
+       if(pInstance)
+       {
+           delete pInstance;
+           pInstance = NULL;
+       }
+    }
+
 
 public:
     void Shutdown();

@@ -64,8 +64,6 @@ public:
     {
         if(pInstance)
         {
-            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
             delete pInstance;
             pInstance = NULL;
         }

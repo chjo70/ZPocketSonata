@@ -40,7 +40,7 @@ CThread::~CThread()
         -- m_iCoThread;
 
         pthread_cancel( m_MainThread );
-        LOGMSG1( enDebug, "\t[%s]를 종료 처리합니다." , m_szClassName );
+        LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szClassName );
     }
 
 
