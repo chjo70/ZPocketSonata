@@ -82,12 +82,23 @@ SRC_URI = "file://cmain.cpp \
 		   file://Include/global.h \
 		   file://Include/SONATAPIP/_sysmsg.h \
            file://Makefile \
+		   file://bootscript \
 		   file://.profile \
-		   file://Web/web.tar.gz;unpack=0 \
+		   file://Web \
 		   "
+		   
+#inherit update-rc.d		   
 
 S = "${WORKDIR}"
 T = "${TMPDIR}"
+
+inherit update-rc.d
+#inherit autotools update-rc.d
+
+RDEPENDS_${PN} += "readline boost-system"
+
+INITSCRIPT_NAME = "bootscript"
+INITSCRIPT_PARAMS = "start S 99 ."
 
 do_compile() {
 	     oe_runmake TMPDIR=${T}
@@ -101,20 +112,26 @@ do_install() {
 		 install -m 0644 ${S}/.profile ${D}/home/root/.profile
 		 
 		 install -d ${D}/srv/www
+		 install -m 0666 ${S}/Web/web.tar.gz ${D}/srv/www/web.tar.gz
+		 
 		 #install -d ${D}/srv/www/cgi-bin
 		 #install -d ${D}/srv/www/graphics
 		 #install -m 0666 ${S}/Web/* ${D}/srv/www
 		 #cp --preserve=mode,timestamps -R ${S}/Web ${D}/srv/www
 		 #install -m 0755 ${S}/Web/* ${D}/srv/www
-		 #chmod 0666 -R ${S}/Web ${D}/srv/www
-		 install -m 0666 ${S}/Web/web.tar.gz ${D}/srv/www/web.tar.gz
+		 #chmod 0666 -R ${S}/Web ${D}/srv/www		 
 		 #tar xvf ${S}/Web/web.tar.gz -C ${D}/srv/www
+		 
+		 install -d ${D}${sysconfdir}/init.d
+		 install -m 0755 ${S}/bootscript ${D}${sysconfdir}/init.d/bootscript
 }
 
 #do_unpack() {
 #		 tar xvf ${D}/srv/www/web.tar.gz -C ${D}/srv/www		
 #}
 
+
 FILES_${PN} += "srv/www/*"
 FILES_${PN} += "home/*"
+FILES_${PN} += "${sysconfdir}/*"
 

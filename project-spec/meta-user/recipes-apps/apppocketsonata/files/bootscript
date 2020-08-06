@@ -1,2 +1,3 @@
 #!/bin/sh
-echo "AAAAAAAAAAAAAAAAAAAA"
+echo "extract the web page from tar.gz"
+tar xvf /src/www/web.tar.gz
