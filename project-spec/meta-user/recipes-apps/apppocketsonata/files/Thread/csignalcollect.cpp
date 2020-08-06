@@ -184,7 +184,11 @@ void CSignalCollect::AnalysisStart()
         // 탐지 채널 버퍼 체크
         iCh = CheckCollectBank( enDetectCollectBank );
         if( iCh >= 0 ) {
-            DETANL->QMsgSnd( enTHREAD_ANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_ARRAY_PDW) );
+            STR_COLLECTINFO strCollectInfo;
+
+            strCollectInfo.uiCh = iCh;
+            strCollectInfo.uiTotalPDW = m_pTheDetectCollectBank[0]->GetTotalPDW();
+            DETANL->QMsgSnd( enTHREAD_ANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_ARRAY_PDW), & strCollectInfo, sizeof(STR_COLLECTINFO) );
 
             bIsOut = false;
         }

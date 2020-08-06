@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "clog.h"
+
 #include "carraymsgdata.h"
 
 /**
@@ -90,7 +92,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
     ++ m_ucPushIndex;
 
     if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_LOWER ) {
-        printf( "\n Array 데이터가 안전하지 않습니다 !!" );
+        LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
     }
 
     memcpy( m_pszArray[m_ucPushIndex], pData, uiLength );
@@ -106,9 +108,13 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 {
 
-    memcpy( pData, m_pszArray[iIndex], uiLength );
-
-    SetMark( iIndex );
+    if( iIndex >= 0 && iIndex < SIZE_OF_MSGDATA_ARRAY ) {
+        memcpy( pData, m_pszArray[iIndex], uiLength );
+        SetMark( iIndex );
+    }
+    else {
+        LOGMSG1( enError, "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
+    }
 
     return;
 }

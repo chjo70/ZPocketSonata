@@ -15,6 +15,7 @@ enum LogType {
     enDebug=0,
     enNormal,
     enLineFeed,
+    enWarning,
     enError,
     enEnd,
 };

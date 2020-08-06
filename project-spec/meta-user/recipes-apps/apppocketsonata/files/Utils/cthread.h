@@ -20,6 +20,28 @@
 
 #pragma pack(push, 1)
 
+
+/**
+ * @brief 수집 쓰레드 정보
+ */
+struct STR_COLLECTINFO {
+    unsigned int uiCh;
+    unsigned int uiTotalPDW;
+} ;
+
+
+/**
+ * @brief 메시지 데이터 구조체
+ */
+union UNI_MSG_DATA {
+    unsigned int uiData;
+    time_t tiNow;
+
+    STR_COLLECTINFO strCollectInfo;
+
+    char szData[32];
+} ;
+
 /**
  * @brief 쓰레드간의 메시지 데이터 구조체 정의
  */
@@ -39,12 +61,7 @@ struct STR_MessageData {
     unsigned int uiDataLength;
 
     // 데이터 영역 이다.
-    union xData {
-        unsigned int uiData;
-        time_t tiNow;
-
-        char szData[32];
-    } x;
+    UNI_MSG_DATA x;
 
     // CArrayData 클래스 사용시 인덱스 값을 의미함. 0 보다 작은 값은 CArrayData 를 사용하지 않은 것이다.
     int iArrayIndex;

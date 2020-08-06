@@ -1,4 +1,5 @@
 #include "cdetectanalysis.h"
+#include "cemittermerge.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
@@ -59,8 +60,7 @@ void CDetectAnalysis::_routine()
 
         switch( m_pMsg->ucOpCode ) {
             case enTHREAD_ANAL_START :
-                LOGMSG1( enDebug, "탐지 분석: %d개의 PDW 분석을 시작합니다." , m_pMsg->iArrayIndex );
-
+                AnalysisStart();
                 break;
 
             case enTHREAD_REQ_SHUTDOWN :
@@ -77,5 +77,22 @@ void CDetectAnalysis::_routine()
                 break;
         }
     }
+
+}
+
+/**
+ * @brief PDW 데이터를 Fetch 해서 탐지 신호 분석을 수행한다. 분석 결과(LOB)를 병합/식별 쓰레드로 전달한다.
+ */
+void CDetectAnalysis::AnalysisStart()
+{
+    LOGENTRY;
+
+    LOGMSG2( enDebug, "탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiTotalPDW );
+
+    // PDW 데이터를 갖고온다.
+    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+
+    // 분석 결과를 병합/식별 쓰레드에 전달한다.
+    //EMTMRG->QMsgSnd( enTHREAD_ANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_ARRAY_PDW) );
 
 }

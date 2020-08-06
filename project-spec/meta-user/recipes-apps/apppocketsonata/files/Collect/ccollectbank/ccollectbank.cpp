@@ -41,10 +41,18 @@ CCollectBank::~CCollectBank()
  */
 void CCollectBank::Init()
 {
-    memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
-
     memset( & m_strPDW, 0, sizeof(STR_ARRAY_PDW) );
 
+    InitWindowCell();
+
+}
+
+/**
+ * @brief 윈도우셀을 초기화한다.
+ */
+void CCollectBank::InitWindowCell()
+{
+    memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     // 큐가 생성되지 않았으면 한번 수행하여 ID를 저장한다.
     if( m_theQueueWindowCellID.Count() == 0 && m_iTotalChannels >= 2 ) {
         m_theQueueWindowCellID.Init( m_iTotalChannels );
@@ -56,7 +64,6 @@ void CCollectBank::Init()
     m_theQueueWindowCellID.Pop( & m_iID );
 
     m_strWindowCell.iChannelNo = m_iChannelNo;
-
 }
 
 /**
@@ -95,9 +102,11 @@ void CCollectBank::PushPDWData( STR_ARRAY_PDW *pstrArrayPDW )
     iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pstrArrayPDW->uiTotalPDW ) );
     if( iTo > 0 ) {
         iTo = pstrArrayPDW->uiTotalPDW;
+        m_strPDW.uiTotalPDW = iTo;
     }
     else {
         iTo = (int) ( _MAX_COL_PDW - m_strWindowCell.uiTotalPDW );
+        m_strPDW.uiTotalPDW = _MAX_COL_PDW;
     }
 
     // PDW 정보 복사
@@ -105,9 +114,32 @@ void CCollectBank::PushPDWData( STR_ARRAY_PDW *pstrArrayPDW )
     memcpy( & m_strPDW.uiAOA[m_strPDW.uiTotalPDW], pstrArrayPDW->uiAOA, iTo * sizeof(UINT) );
     memcpy( & m_strPDW.uiPW[m_strPDW.uiTotalPDW], pstrArrayPDW->uiPW, iTo * sizeof(UINT) );
     memcpy( & m_strPDW.uiPA[m_strPDW.uiTotalPDW], pstrArrayPDW->uiPA, iTo * sizeof(UINT) );
+    memcpy( & m_strPDW.llToa[m_strPDW.uiTotalPDW], pstrArrayPDW->llToa, iTo * sizeof(_TOA) );
 
-    m_strPDW.uiTotalPDW += iTo;
+    // 추적 윈도우 셀 정보 업데이트
+    UpdateWindowCell();
 
+    //m_strWindowCell.uiCollectTime = DecodeTOA( m_strPDW.llToa[m_strPDW.uiTotalPDW-1] - m_strPDW.llToa[0] );
+
+    // 수집 완료 마킹함.
     m_strWindowCell.enCollectMode = enCompleteCollection;
+
+}
+
+/**
+ * @brief 윈도우셀을 수집 종료 후에 업데이트 한다.
+ */
+void CCollectBank::UpdateWindowCell()
+{
+    // 수집한 PDW 개수 업데이트
+    m_strWindowCell.uiTotalPDW = m_strPDW.uiTotalPDW;
+
+    m_strWindowCell.uiAccumulatedTime += m_strWindowCell.uiCollectTime;
+
+    // 누적 수집 PDW 개수 업데이트
+    m_strWindowCell.uiAccumulatedCoPDW += m_strWindowCell.uiTotalPDW;
+
+    // 누적 사용 채널 횟수 업데이트
+    m_strWindowCell.uiAccumulatedCoUsed += 1;
 
 }

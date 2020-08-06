@@ -108,6 +108,11 @@ struct STR_WINDOWCELL {
     STR_LOWHIGH strPW;
 
     /**
+     * @brief 실제 수집 시간 정보 [ms]
+     */
+    unsigned int uiCollectTime;
+
+    /**
      * @brief 빔 번호
      */
     unsigned int uiBeam;

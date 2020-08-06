@@ -42,4 +42,6 @@ public:
     }
 };
 
+#define EMTMRG  CEmitterMerge::GetInstance()
+
 #endif // CEMITTERMERGE_H

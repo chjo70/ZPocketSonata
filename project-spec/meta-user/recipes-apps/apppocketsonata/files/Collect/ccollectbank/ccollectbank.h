@@ -26,6 +26,9 @@ public:
 private:
     void Init();
 
+    void InitWindowCell();
+    void UpdateWindowCell();
+
 public:
     void CloseCollectBank();
 
@@ -37,6 +40,7 @@ public:
     inline bool IsCompleteCollect() { return m_strWindowCell.enCollectMode == enCompleteCollection; }
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
+    inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
     inline STR_ARRAY_PDW *GetPDW() { return & m_strPDW; }
 };
 

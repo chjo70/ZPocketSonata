@@ -8,6 +8,9 @@
 
 class CDetectAnalysis : public CThread
 {
+private:
+    UNI_LAN_DATA m_uniLanData;
+
 public:
     static CDetectAnalysis *pInstance;
 
@@ -38,6 +41,9 @@ public:
             pInstance = NULL;
         }
     }
+
+private:
+    void AnalysisStart();
 
 };
 
