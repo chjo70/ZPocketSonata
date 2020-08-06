@@ -201,6 +201,28 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     }
 }
 
+void CThread::QMsgSnd( UINT uiOpCode, void *pData, int iByte )
+{
+    STR_MessageData sndMsg;
+
+    sndMsg.mtype = 1;
+    sndMsg.ucOpCode = uiOpCode;
+    sndMsg.iSocket = 0;
+    sndMsg.iArrayIndex = -1;
+
+    if( pArrayMsgData != NULL ) {
+        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiLength );
+    }
+
+    if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+        perror( "msgsnd 실패" );
+    }
+    else {
+        // DisplayMsg( & sndMsg );
+
+    }
+}
+
 /**
  * @brief CThread::QMsgSnd
  * @param pMessageData

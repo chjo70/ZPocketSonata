@@ -34,7 +34,8 @@ public:
     void CopyPDW();
     void PushPDWData( STR_ARRAY_PDW *pstrArrayPDW );
 
-    inline bool IsCompleteCollect() { return m_strWindowCell.bComplete; }
+    inline bool IsCompleteCollect() { return m_strWindowCell.enCollectMode == enCompleteCollection; }
+    inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
     inline STR_ARRAY_PDW *GetPDW() { return & m_strPDW; }
 };

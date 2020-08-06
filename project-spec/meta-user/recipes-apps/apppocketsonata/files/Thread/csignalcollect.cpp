@@ -184,7 +184,8 @@ void CSignalCollect::AnalysisStart()
         // 탐지 채널 버퍼 체크
         iCh = CheckCollectBank( enDetectCollectBank );
         if( iCh >= 0 ) {
-            QMsgSnd( DETANL->GetKeyId(), enTHREAD_ANAL_START, & iCh, sizeof(int) );
+            DETANL->QMsgSnd( enTHREAD_ANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_ARRAY_PDW) );
+
             bIsOut = false;
         }
 
@@ -231,6 +232,8 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
         case enDetectCollectBank :
             for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
                 if( true == m_pTheDetectCollectBank[i]->IsCompleteCollect() ) {
+                    m_pTheDetectCollectBank[i]->SetCollectMode( enCollecting );
+
                     iCh = m_pTheDetectCollectBank[i]->GetChannelNo();
 
                     LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료히었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );

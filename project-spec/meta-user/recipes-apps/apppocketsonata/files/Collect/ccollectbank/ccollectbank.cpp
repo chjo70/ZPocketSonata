@@ -108,6 +108,6 @@ void CCollectBank::PushPDWData( STR_ARRAY_PDW *pstrArrayPDW )
 
     m_strPDW.uiTotalPDW += iTo;
 
-    m_strWindowCell.bComplete = true;
+    m_strWindowCell.enCollectMode = enCompleteCollection;
 
 }
