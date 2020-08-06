@@ -72,6 +72,7 @@ public:
     int Pend();
     void Stop();
     int QMsgRcv( int iFlag=0 );
+    void QMsgSnd( UINT uiOpCode, void *pData, int iByte );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
 

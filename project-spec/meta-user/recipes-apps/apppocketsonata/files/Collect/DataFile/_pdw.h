@@ -162,7 +162,7 @@ struct TNEW_SPDW
 
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
-typedef struct {
+struct _PDW {
 	long long int llTOA;
 
 	int iFreq;
@@ -177,7 +177,7 @@ typedef struct {
 	float fPh3;
 	float fPh4;
 
-} _PDW;
+} ;
 
 
 #endif
@@ -193,7 +193,7 @@ typedef enum {
 
 #ifndef _STR_PDWDATA
 #define _STR_PDWDATA
-typedef struct {
+struct STR_PDWDATA {
 	unsigned char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int iIsStorePDW;
 	int iCollectorID;
@@ -202,7 +202,7 @@ typedef struct {
 	UINT count;
 	_PDW stPDW[MAX_PDW];
 
-} STR_PDWDATA ;
+}  ;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ typedef struct {
 
 #pragma pack(push, 1)
 
-typedef struct {
+struct SRxPDWHeader {
 	unsigned int uiAcqTime;
 	unsigned int uiAcqTimeMilSec;
 	int iPDWSetID;
@@ -225,7 +225,7 @@ typedef struct {
 	int	iLOBID;
 	int	iNumOfPDW;
 
-} SRxPDWHeader;
+} ;
 
 struct SRXPDWDataRGroup {
 	unsigned long long int	llTOA;
@@ -253,12 +253,12 @@ struct SRXPDWDataRGroup {
 #pragma pack(pop)
 
 
-typedef struct {
+struct STR_PDWFILE_HEADER {
 	unsigned int uiSearchBandNo;
 	unsigned int uiSignalDeletingStatus;
 	unsigned int uiSignalCount;
 
-} STR_PDWFILE_HEADER;
+} ;
 
 
 

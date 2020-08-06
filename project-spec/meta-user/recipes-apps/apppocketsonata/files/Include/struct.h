@@ -26,6 +26,14 @@ enum ENUM_BoardID {
 
 };
 
+enum ENUM_COLLECT_MODE {
+    enUnused=0,
+
+    enCollecting,
+    enCompleteCollection,
+    enAnalysing,
+};
+
 /////////////////////////////////////////////////////////////////////////////////
 // 아래는 변수 관련 구조체 내용 입니다.
 
@@ -81,7 +89,7 @@ struct STR_WINDOWCELL {
     /**
      * @brief 수집 완료 상태를 나타낸다.
      */
-    bool bComplete;
+    ENUM_COLLECT_MODE enCollectMode;
 
     /**
      * @brief 저장된 PDW 개수
