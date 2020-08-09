@@ -4,6 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        Anal/NewSigAnal/NewSigAnal.cpp \
+        Anal/SigAnal/AnalPRI.cpp \
+        Anal/SigAnal/Group.cpp \
+        Anal/SigAnal/MakeAET.cpp \
+        Anal/SigAnal/PulExt.cpp \
+        Anal/SigAnal/SysPara.cpp \
         Collect/DataFile/DataFile.cpp \
         Collect/ccollectbank/ccollectbank.cpp \
         MinIni/minIni.cpp \
@@ -36,6 +42,21 @@ SOURCES += \
         cmain.cpp
 
 HEADERS += \
+    Anal/NewSigAnal/NAnalPRI.h \
+    Anal/NewSigAnal/NGroup.h \
+    Anal/NewSigAnal/NMakeAET.h \
+    Anal/NewSigAnal/NPulExt.h \
+    Anal/NewSigAnal/NewSigAnal.h \
+    Anal/SigAnal/AnalPRI.h \
+    Anal/SigAnal/Group.h \
+    Anal/SigAnal/MakeAET.h \
+    Anal/SigAnal/PulExt.h \
+    Anal/SigAnal/SysPara.h \
+    Anal/SigAnal/_Define.h \
+    Anal/SigAnal/_SigAnal.h \
+    Anal/SigAnal/_Struct.h \
+    Anal/SigAnal/_macro.h \
+    Anal/SigAnal/_type.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     Collect/DataFile/_iq.h \

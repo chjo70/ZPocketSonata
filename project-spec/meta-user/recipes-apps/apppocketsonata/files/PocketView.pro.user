@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.12.2, 2020-08-04T19:46:11. -->
+<!-- Written by QtCreator 4.11.1, 2020-08-07T15:25:38. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
-  <value type="QByteArray">{5bfb04e1-22bf-4ca3-9ca6-0ee756b64378}</value>
+  <value type="QByteArray">{dde2a93f-d62a-4ea7-8f58-bc315106766f}</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -69,7 +69,7 @@
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/chjo70/Lab/Xilinx/ZPocketSonata2/project-spec/meta-user/recipes-apps/apppocketsonata/build</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/chjo70/Lab/Qt/build-PocketView-Desktop_Qt_5_14_2_GCC_64bit-Debug</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -285,8 +285,8 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/chjo70/Lab/Xilinx/ZPocketSonata3/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketView.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/chjo70/Lab/Xilinx/ZPocketSonata3/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketView.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/chjo70/Lab/Xilinx/ZPocketSonata/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketView.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/chjo70/Lab/Xilinx/ZPocketSonata/project-spec/meta-user/recipes-apps/apppocketsonata/files/PocketView.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -297,7 +297,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/chjo70/Lab/Xilinx/ZPocketSonata2/project-spec/meta-user/recipes-apps/apppocketsonata/build</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/chjo70/Lab/Qt/build-PocketView-Desktop_Qt_5_14_2_GCC_64bit-Debug</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

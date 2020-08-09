@@ -1,0 +1,864 @@
+// NewSigAnal.cpp: implementation of the CNewSigAnal class.
+//
+//////////////////////////////////////////////////////////////////////
+
+//#include "stdafx.h"
+
+#ifdef _USRDLL
+
+#else
+//#include "MainFrm.h"
+//#include "ELINTOPDoc.h"
+//#include "ELINTOPDoc.h"
+
+#endif
+
+#define _MAIN_
+#define _MAIN_GLOBALS_
+
+//#include "../OFP_Main.h"
+
+#include <string.h>
+
+#include "NewSigAnal.h"
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
+#endif
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+BOOL CreateDir( char *pPath );
+
+CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
+{
+    //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
+
+    srand( (UINT) time(NULL) );
+
+    // MSSQL 연결
+    //CMSSQL::Init();
+
+    //m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
+
+    m_bSaveFile = true;
+
+    m_theGroup = new CNGroup( this, coMaxPdw );
+    m_thePulExt = new CNPulExt( this, coMaxPdw );
+    m_theAnalPRI = new CNAnalPRI( this, coMaxPdw );
+    m_theMakeAET = new CNMakeAET( this, coMaxPdw );
+
+    // 클래스 관련 초기화
+    m_nMaxPdw = coMaxPdw;
+
+    m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+    m_pSeg = GetPulseSeg();
+
+    m_CoPdw = 0;
+
+    // 분석 시뮬레이션 데이터 초기화
+    //InitSimul();
+
+    // 그룹화 초기화
+    m_theGroup->CNGroup::Init();
+
+    // 펄스열 추출 초기화
+    m_thePulExt->CNPulExt::Init();
+
+    // PRI 분석 초기화
+    m_theAnalPRI->CNAnalPRI::Init();
+
+    // AET 생성 초기화
+    m_theMakeAET->CNMakeAET::Init();
+
+    SWInit();
+
+}
+
+/**
+ * @brief CNewSigAnal::~CNewSigAnal
+ */
+CNewSigAnal::~CNewSigAnal()
+{
+    //delete m_pIdentifyAlg;
+
+    delete m_theGroup;
+    delete m_thePulExt;
+    delete m_theAnalPRI;
+    delete m_theMakeAET;
+}
+
+/**
+ * @brief CNewSigAnal::SetSaveFile
+ * @param bEnable
+ */
+void CNewSigAnal::SetSaveFile( bool bEnable )
+{
+    m_bSaveFile = bEnable;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::InitVar
+        \author   조철희
+        \param    analMode 인자형태 enum ANALYSIS_MODE
+        \return   void
+        \version  0.0.52
+        \date     2008-10-25 15:59:00
+        \warning
+*/
+void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
+{
+    m_nStep = 0;
+    m_AnalMode = analMode;
+
+}
+
+void CNewSigAnal::SWInit()
+{
+    m_pIdentifyAlg->LoadCEDLibrary2();
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::Init
+        \author   조철희
+        \param    pPDWData 인자형태 STR_PDWDATA *
+        \return   void
+        \version  0.0.1
+        \date     2008-01-04 09:07:28
+        \warning
+*/
+void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
+{
+    m_enBandWidth = pPDWData->enBandWidth;
+
+    _spOneSec = FDIV( 1000000000, _toaRes[m_enBandWidth] );
+    _spOneMilli = FDIV( 1000000, _toaRes[m_enBandWidth] );
+    _spOneMicrosec = FDIV( 1000, _toaRes[m_enBandWidth] );
+    _spOneNanosec = FDIV( 1, _toaRes[m_enBandWidth] );
+
+    _spAOAres = (float) 0.01;
+    _spAMPres = (float) (0.25);
+    _spPWres = _spOneMicrosec;
+
+    m_CoGroup = 0;
+
+    m_iIsStorePDW = pPDWData->iIsStorePDW;
+    m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->iCollectorID;
+
+    // 수집 버퍼 정의
+    m_pPDWData = pPDWData;
+
+    // 신호 수집 개수 정의
+    if( pPDWData != NULL ) {
+        m_CoPdw = m_pPDWData->count;
+    }
+    else {
+        m_CoPdw = 0;
+    }
+
+    // 그룹화 초기화
+    m_theGroup->CNGroup::Init();
+
+    // 펄스열 추출 초기화
+    m_thePulExt->CNPulExt::Init();
+
+    // PRI 분석 초기화
+    m_theAnalPRI->CNAnalPRI::Init();
+
+    // AET 생성 초기화
+    m_theMakeAET->CNMakeAET::Init();
+
+
+
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::Start
+        \author   조철희
+        \param    pPDWData 인자형태 STR_PDWDATA *
+        \return   void
+        \version  0.0.1
+        \date     2007-12-28 11:53:42
+        \warning
+*/
+void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
+{
+    Log( enLineFeed, "" );
+
+    PrintFunction;
+
+#ifdef _ELINT_
+    Printf( "\n\n ==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_nStep, pPDWData->count );
+    Log( enNormal, "==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_nStep, pPDWData->count );
+#else
+    Printf( "\n\n ==== Start of New Signal Analysis[%dth Band:%d, Co:%d] ====" , m_nStep, pPDWData->stPDW[0].item.band, pPDWData->count );
+#endif
+
+    ++ m_nStep;
+
+    // 신호 분석 관련 초기화.
+    Init( pPDWData );
+
+    if( pPDWData->count <= RPC || pPDWData->count > MAX_PDW ) {
+        //Printf( "PDW 개수(%d)가 %d 이하 이거나 너무 초과되어 분석을 수행하지 않습니다. !!" , pPDWData->count, RPC );
+        Log( enNormal, "PDW 개수(%d)가 %d 이하 이거나 너무 초과되어 분석을 수행하지 않습니다. !!" , pPDWData->count, RPC );
+        return;
+    }
+
+    if( pPDWData->aucTaskID[0] == NULL ) {
+        //Printf( "\n PDW 데이터에 과제 정보가 없습니다. !!"  );
+        Log( enError, "PDW 데이터에 과제 정보가 없습니다. !!"  );
+        return;
+    }
+
+    if( !(pPDWData->iCollectorID >= RADARCOL_1 && pPDWData->iCollectorID <= RADARCOL_3) ) {
+        Log( enError, "수집소 ID[%d]가 잘못됐습니다." , pPDWData->iCollectorID );
+        return;
+    }
+
+    if( ( pPDWData->enBandWidth != en5MHZ_BW && pPDWData->enBandWidth != en50MHZ_BW ) ) {
+        Log( enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!" , pPDWData->enBandWidth );
+        return;
+    }
+
+    // 수집한 PDW 파일 만들기...
+    SaveAllPdwFile();
+
+    if( pPDWData->iIsStorePDW == 1 || true ) {
+        // PDW 수집 상태 체크를 함.
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->count ) ) {
+            printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
+            Log( enError, "[%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
+        }
+        else {
+
+            // 라이브러리 기반 펄스열 추출
+            if( TRUE == m_theGroup->MakeGroup() ) {
+                CheckKnownByAnalysis();
+
+                // 그룹화 만들기
+                while( ! m_theGroup->IsLastGroup() ) {
+                    // 협대역 주파수 그룹화
+                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+                    m_theGroup->MakeGrIndex();
+
+                    SaveGroupPdwFile( m_CoGroup+1 );
+
+                    // 규칙성 및 불규칙성 펄스열 추출
+                    m_thePulExt->PulseExtract( m_uiCoKnownRadarMode, & m_pRadarMode[0] );
+
+                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+                    // m_thePulExt->UnknownExtract();
+
+                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+                    memset( & MARK, 0, sizeof( MARK ) );
+
+                    // PRI 분석
+                    m_theAnalPRI->Analysis();
+
+                    // 에미터 분석
+                    m_theMakeAET->MakeAET();
+
+                    // 그룹화 생성 개수 증가
+                    ++ m_CoGroup;
+
+                }
+            }
+        }
+
+        m_theMakeAET->PrintAllEmitter();
+
+        // Printf( "\n ==== End of New Signal Analysis ====\n" );
+
+        // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
+        SaveRemainedPdwFile();
+    }
+
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::SaveAllPdwFile
+        \author   조철희
+        \return   void
+        \version  0.0.1
+        \date     2008-01-03 16:02:57
+        \warning
+*/
+void CNewSigAnal::SaveAllPdwFile()
+{
+    char szDirectory[100];
+
+    if( ! m_bSaveFile ) {
+
+#ifdef _ELINT_
+        CFile cFile;
+        BOOL bRet;
+
+        enPosition enPos = GetPosition();
+
+        if( enPos == enBuiltIn )
+            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+        else
+            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+
+        bRet = CreateDir( szDirectory );
+
+        struct tm stTime;
+        char buffer[100];
+        __time32_t tiNow;
+
+        tiNow = _time32(NULL);
+
+        _localtime32_s( &stTime, & tiNow );
+        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+
+        wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
+
+        cFile.Open( m_szPDWFilename, CFile::modeCreate | CFile::modeReadWrite );
+        int nSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - m_pPDWData->count ) * sizeof(_PDW) );
+
+        cFile.Write( m_pPDWData, nSize );
+        cFile.Close();
+
+        Log( enNormal, "신호 수집 EPDW : %s" , m_szPDWFilename );
+
+#else
+        CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
+        CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
+
+        UINT i;
+        FILE *pdwfile;
+        TNEW_PDW *pPDW;
+
+        CString strFilename=pView->GetFileTitle();
+
+        LPTSTR p = strFilename.GetBuffer( 100 );
+
+        sprintf( filename, "c:\\temp\\%03d_col_%s.pdw", m_nStep, p );
+        pdwfile = fopen( filename, "wb" );
+        for( i=0 ; i < m_pPDWData->count ; ++i ) {
+            pPDW = & m_pPDWData->pPdw[ i ];
+
+#ifdef _A50_RWR
+            TNEW_PDW pdw;
+
+            pdw.word[0] = ntohl( pPDW->word[0] );
+            pdw.word[1] = ntohl( pPDW->word[1] );
+            pdw.word[2] = ntohl( pPDW->word[2] );
+            pdw.word[3] = ntohl( pPDW->word[3] );
+
+            fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
+#else
+            fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
+#endif
+        }
+
+        fclose( pdwfile );
+
+        strFilename.ReleaseBuffer();
+
+#endif
+
+    }
+    else {
+        m_szPDWFilename[0] = NULL;
+    }
+
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::MarkToPdwIndex
+        \author   조철희
+        \param    pPdwIndex 인자형태 PDWINDEX *
+        \param    count 인자형태 int
+        \param    mark_type 인자형태 int
+        \return   void
+        \version  0.0.1
+        \date     2008-01-03 16:40:48
+        \warning
+*/
+void CNewSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type)
+{
+    register int i;
+
+    for( i=0 ; i < count ; ++i )
+        MARK[ *pPdwIndex++ ] = mark_type;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::SaveEmitterPdwFile
+        \author   조철희
+        \param    pEmitter 인자형태 STR_EMITTER *
+        \param    index 인자형태 int
+        \return   void
+        \version  0.0.1
+        \date     2008-01-03 17:15:04
+        \warning
+*/
+void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index)
+{
+    if( m_bSaveFile == true ) {
+
+#ifdef _ELINT_
+        UINT uiSize;
+        char filename[100];
+        char szDirectory[100];
+
+        int i;
+        CFile cFile;
+        BOOL bRet;
+        PDWINDEX *pPdwIndex;
+        _PDW *pPDW;
+
+        STR_PDWDATA stPDWData;
+
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+
+        bRet = CreateDir( szDirectory );
+
+        struct tm stTime;
+        char buffer[100];
+        __time32_t tiNow;
+
+        tiNow = _time32(NULL);
+
+        _localtime32_s( &stTime, & tiNow );
+        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+
+        if( index > 1000 ) {
+            wsprintf( filename, _T("%s/_COL%d_EMT_DEBUG_%02d.%s"), szDirectory, m_pPDWData->iCollectorID, index, PDW_EXT );
+        }
+        else {
+            wsprintf( filename, _T("%s/_COL%d_LOB_%02d.%s"), szDirectory, m_pPDWData->iCollectorID, index, PDW_EXT );
+        }
+
+        cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
+
+        uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
+        memcpy( & stPDWData, m_pPDWData, uiSize );
+        stPDWData.iIsStorePDW = 0;
+        stPDWData.count = pEmitter->pdw.count;
+        //cFile.Write( m_pPDWData, uiHeaderSize );
+
+        pPdwIndex = pEmitter->pdw.pIndex;
+        for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
+            pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
+            memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
+
+        }
+
+        uiSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - stPDWData.count ) * sizeof(_PDW) );
+        cFile.Write( & stPDWData, uiSize );
+
+        cFile.Close();
+
+#else
+
+#ifdef _DEBUG_MAKEPDW_NO
+        int i;
+        // int total_count;
+        FILE *pdwfile;
+        TNEW_PDW *pPDW;
+        PDWINDEX *pPdwIndex;
+        char filename[100];
+
+        CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
+        CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
+
+        CString strFilename=pView->GetFileTitle();
+
+        LPTSTR p = strFilename.GetBuffer( 100 );
+
+        sprintf( filename, "c:\\temp\\%03d_%03d_%s.new_emt.pdw", m_nStep, index, p );
+        pdwfile = fopen( filename, "wb" );
+
+        pPdwIndex = pEmitter->pdw.pIndex;
+        for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
+            pPDW = & m_pPDWData->pPdw[ *pPdwIndex++ ];
+#ifdef _A50_RWR
+            TNEW_PDW pdw;
+
+            pdw.word[0] = ntohl( pPDW->word[0] );
+            pdw.word[1] = ntohl( pPDW->word[1] );
+            pdw.word[2] = ntohl( pPDW->word[2] );
+            pdw.word[3] = ntohl( pPDW->word[3] );
+
+            fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
+#else
+            fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
+#endif
+
+        }
+
+        fclose( pdwfile );
+
+        strFilename.ReleaseBuffer();
+
+#endif
+
+#endif
+    }
+
+}
+
+void CNewSigAnal::SaveGroupPdwFile( int index )
+{
+    if( m_bSaveFile == true ) {
+#ifdef _ELINT_
+        UINT uiSize;
+        char filename[100];
+        char szDirectory[100];
+
+        int i;
+        CFile cFile;
+        BOOL bRet;
+        PDWINDEX *pPdwIndex;
+        _PDW *pPDW;
+
+        STR_PDWDATA stPDWData;
+
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+
+        bRet = CreateDir( szDirectory );
+
+        struct tm stTime;
+        char buffer[100];
+        __time32_t tiNow;
+
+        tiNow = _time32(NULL);
+
+        _localtime32_s( &stTime, & tiNow );
+        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+
+        wsprintf( filename, _T("%s/_COL%d_GR_%02d.%s"), szDirectory, m_pPDWData->iCollectorID, index, PDW_EXT );
+
+        cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
+
+        uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
+        memcpy( & stPDWData, m_pPDWData, uiSize );
+        stPDWData.iIsStorePDW = 0;
+        stPDWData.count = m_pGrPdwIndex->count;
+
+        pPdwIndex = m_pGrPdwIndex->pIndex;
+        for( i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
+            pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
+            memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
+
+        }
+
+        uiSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - stPDWData.count ) * sizeof(_PDW) );
+        cFile.Write( & stPDWData, uiSize );
+
+        cFile.Close();
+
+#else
+
+#endif
+
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::InitAllVar
+        \author   조철희
+        \return   void
+        \version  0.0.1
+        \date     2008-01-04 09:51:51
+        \warning
+*/
+void CNewSigAnal::InitAllVar()
+{
+    m_nStep = 0;
+
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::SaveRemainedPdwFile
+        \author   조철희
+        \return   void
+        \version  0.0.1
+        \date     2008-01-22 12:40:25
+        \warning
+*/
+void CNewSigAnal::SaveRemainedPdwFile()
+{
+#ifdef _DEBUG_MAKEPDW_NO
+    CMainFrame *pFrame = (CMainFrame*) AfxGetApp()->m_pMainWnd;
+    CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
+
+    UINT i;
+    FILE *pdwfile;
+    TNEW_PDW *pPDW;
+    char filename[100];
+
+    CString strFilename=pView->GetFileTitle();
+
+    LPTSTR p = strFilename.GetBuffer( 100 );
+
+    m_theMakeAET->MarkAllAetToPdwIndex();
+
+    sprintf( filename, "c:\\temp\\%03d_rem_%s.pdw", m_nStep, p );
+    pdwfile = fopen( filename, "wb" );
+    for( i=0 ; i < m_pPDWData->count ; ++i ) {
+        if( MARK[i] == EXTRACT_MARK )
+            continue;
+
+        pPDW = & m_pPDWData->pPdw[ i ];
+#ifdef _A50_RWR
+        TNEW_PDW pdw;
+
+        pdw.word[0] = ntohl( pPDW->word[0] );
+        pdw.word[1] = ntohl( pPDW->word[1] );
+        pdw.word[2] = ntohl( pPDW->word[2] );
+        pdw.word[3] = ntohl( pPDW->word[3] );
+
+        fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
+#else
+        fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
+#endif
+
+    }
+
+    fclose( pdwfile );
+
+    strFilename.ReleaseBuffer();
+
+#endif
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::RunSimul
+        \author   조철희
+        \param    band 인자형태 enum BAND_INFO
+        \return   void
+        \version  0.1.114
+        \date     2009-11-16 13:03:55
+        \warning
+*/
+void CNewSigAnal::RunSimul( enum BAND_INFO band )
+{
+// 	int i;
+// 	int coAet;
+// 	LOBDATA *pSimulAet, *pNewAet;
+//
+// 	pSimulAet = & m_theSimulAET[0];
+// 	for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+// 		if( pSimulAet->ext.coAlive != 0 ) {
+// 			++ coAet;
+// 		}
+//
+// 	}
+//
+// 	// 모두 삭제될 때 데이터를 새로이 생성함.
+// 	if( coAet == 0 ) {
+// 		pSimulAet = & m_theSimulAET[0];
+// 		for( i=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+// 			if( pSimulAet->ext.coAlive == 0 ) {
+// 				// 에미터 변화를 줄 값을 변경함.
+// 				pSimulAet->aet.aoa = rand() % ( 2 << 8 );
+//
+// 				pSimulAet->ext.coAlive = 100 + ( rand() % 30 );
+// 			}
+// 		}
+//
+// 		pNewAet = GetAet();
+// 		pSimulAet = & m_theSimulAET[0];
+// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+// 			if( pSimulAet->aet.frq.band == band+1 ) {
+// 				memcpy( pNewAet, pSimulAet, sizeof( STR_NEWAET ) );
+// 				++ coAet;
+// 				++ pNewAet;
+// 			}
+//
+// 		}
+//
+// 		SetCoAet( coAet );
+// 	}
+// 	else {
+// 		pSimulAet = & m_theSimulAET[0];
+// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+// 			if( pSimulAet->aet.frq.band == band+1 ) {
+// 				if( pSimulAet->ext.coAlive > 0 ) {
+// 					-- pSimulAet->ext.coAlive;
+// 					if( rand() % 2 ) {
+// 						pSimulAet->aet.aoa = ( ( 2 << 8 ) + pSimulAet->aet.aoa + 5 ) % ( 2 << 8 );
+//
+// 						pSimulAet->ext.aoa.low = ( pSimulAet->aet.aoa - 10 + ( 2 << 8 ) ) % ( 2 << 8 );
+// 						pSimulAet->ext.aoa.hgh = ( pSimulAet->aet.aoa + 10 + ( 2 << 8 ) ) % ( 2 << 8 );
+// 					}
+//
+// 				}
+//
+// 			}
+//
+// 		}
+//
+// 		pNewAet = GetAet();
+// 		pSimulAet = & m_theSimulAET[0];
+// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+// 			if( pSimulAet->aet.frq.band == band+1 && pSimulAet->ext.coAlive > 0 ) {
+// 				memcpy( pNewAet, pSimulAet, sizeof( STR_NEWAET ) );
+// 				++ coAet;
+// 				++ pNewAet;
+// 			}
+//
+// 			if( coAet >= _SIMUL_AVAIL_ANAL_ )
+// 				break;
+//
+// 		}
+//
+// 		SetCoAet( coAet );
+//
+// 	}
+
+}
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::InitSimul
+        \author   조철희
+        \return   void
+        \version  0.1.114
+        \date     2009-11-13 18:35:08
+        \warning
+*/
+void CNewSigAnal::InitSimul()
+{
+    int i;
+    STR_NEWAET *pSimulAet;
+
+    pSimulAet = & m_theSimulAET[0];
+    for( i=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
+        memset( pSimulAet, 0, sizeof( STR_NEWAET ) );
+
+        pSimulAet->aet.noEMT = 0;
+        pSimulAet->aet.aoa = rand() % ( 2 << 8 );
+        pSimulAet->aet.sigType = ST_NORMAL_PULSE;
+
+        pSimulAet->aet.frq.type = _FIXED;
+        pSimulAet->aet.frq.swtLev = 0;
+        pSimulAet->aet.frq.mean = ( i+1 ) * 500;
+        pSimulAet->aet.frq.min = pSimulAet->aet.frq.mean - 5;
+        pSimulAet->aet.frq.max = pSimulAet->aet.frq.mean + 5;
+        pSimulAet->aet.frq.band = GetBand( pSimulAet->aet.frq.mean ) + 1;
+        pSimulAet->aet.frq.patPrd = 0;
+
+        pSimulAet->aet.pri.type = _STABLE;
+        pSimulAet->aet.pri.swtLev = 0;
+        pSimulAet->aet.pri.mean = ITOAusCNV( 100 );	//_spOneMicrosec * 100;
+        pSimulAet->aet.pri.min = pSimulAet->aet.pri.mean - 20;
+        pSimulAet->aet.pri.max = pSimulAet->aet.pri.mean + 20;
+        pSimulAet->aet.pri.jtrPer = (float) 0;
+
+        pSimulAet->aet.pw.mean = ITOAusCNV( 1 );		// _spOneNanosec * 1000;
+        pSimulAet->aet.pw.min = pSimulAet->aet.pw.mean - 10;
+        pSimulAet->aet.pw.max = pSimulAet->aet.pw.mean + 10;
+
+        pSimulAet->aet.pa.mean = ( rand() % ( 2 << 5 ) ) + 0x80;
+        pSimulAet->aet.pa.min = pSimulAet->aet.pa.mean - 10;
+        pSimulAet->aet.pa.max = pSimulAet->aet.pa.mean + 10;
+
+        pSimulAet->aet.as.stat = SELF_SUCCESS;		// SELF_SUCCESS
+        pSimulAet->aet.as.prd = 0;
+        pSimulAet->aet.as.type = STEADY;
+
+        // 기타 추가 정보 저장
+        pSimulAet->ext.noCol = pSimulAet->ext.noExt = 100;
+        pSimulAet->ext.aoa.low = ( pSimulAet->aet.aoa - 10 + ( 2 << 8 ) ) % ( 2 << 8 );
+        pSimulAet->ext.aoa.hgh = ( pSimulAet->aet.aoa + 10 + ( 2 << 8 ) ) % ( 2 << 8 );
+
+        pSimulAet->ext.pt_stat = PDW_NORMAL;
+
+        pSimulAet->ext.bOverId = FALSE;
+
+        pSimulAet->ext.coAlive = 0; // 20 + rand() % 10;
+        pSimulAet->ext.noMergeEMT = -1;
+
+        pSimulAet->ext.frq.low = pSimulAet->aet.frq.min;
+        pSimulAet->ext.frq.hgh = pSimulAet->aet.frq.max;
+
+        pSimulAet->ext.idxEmitter = -1;
+        pSimulAet->ext.mark = NORMAL_AET;
+
+    }
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::GetBand
+        \author   조철희
+        \param    freq 인자형태 int
+        \return   enum FREQ_BAND
+        \version  0.1.114
+        \date     2009-11-16 11:33:14
+        \warning
+*/
+enum FREQ_BAND CNewSigAnal::GetBand( int freq )
+{
+    if( freq >= 2000 && freq < 6000 )
+        return BAND1;
+    else if( freq >= 6000 && freq < 10000 )
+        return BAND2;
+    else if( freq >= 10000 && freq < 14000 )
+        return BAND3;
+    else if( freq >= 14000 && freq <= 19000 )
+        return BAND4;
+    return BAND5;
+
+}
+
+bool CNewSigAnal::CheckKnownByAnalysis()
+{
+    UINT i;
+    UINT uiFreqMax, uiFreqMin;
+    bool bRet;
+
+    m_uiCoKnownRadarMode = 0;
+    if( m_theGroup->GetPulseStat() == STAT_CW ) {
+        bRet = false;
+    }
+    else {
+        uiFreqMax = 0;
+        uiFreqMin = 0x7FFFFFFF;
+        for( i=0 ; i < m_pPDWData->count ; ++i ) {
+            uiFreqMax = max( FREQ[i], uiFreqMax );
+            uiFreqMin = min( FREQ[i], uiFreqMin );
+        }
+
+        bRet = m_pIdentifyAlg->IsThereFreqRange( & m_uiCoKnownRadarMode, & m_pRadarMode[0], uiFreqMin, uiFreqMax );
+    }
+
+    return bRet;
+}
+
+char *CNewSigAnal::GetTaskID()
+{
+    return NULL;
+}
+
+BOOL CreateDir( char *pPath )
+{
+    BOOL bRet;
+    char dirName[256];
+    char *p=pPath;
+    char *q=dirName;
+
+    while( *p ) {
+        if( ('\\' == *p) || ('/'==*p)) {
+            if( ':' != *(p-1) ) {
+                CreateDirectory( dirName, NULL );
+            }
+        }
+
+        *q++ = *p++;
+        *q = '\0';
+    }
+    bRet = CreateDirectory( dirName, NULL );
+
+    return bRet;
+}
