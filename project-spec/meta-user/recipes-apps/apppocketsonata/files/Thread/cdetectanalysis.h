@@ -6,6 +6,7 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
+#include "../Anal/SigAnal/SysPara.h"
 #include "../Anal/NewSigAnal/NewSigAnal.h"
 
 class CDetectAnalysis : public CThread
@@ -13,6 +14,7 @@ class CDetectAnalysis : public CThread
 private:
     UNI_LAN_DATA m_uniLanData;
 
+    CSysPara *m_pTheSysPara;
     CNewSigAnal *m_pTheNewSigAnal;
 
 public:

@@ -386,7 +386,6 @@ BOOL CGroup::MakeGroup()
 //
 void CGroup::PrintAllGroup()
 {
-#ifdef _WIN32
     int IdxFrqAoaPw=0;
 
     STR_AOA_GROUP *pAoaGroup;
@@ -415,14 +414,18 @@ void CGroup::PrintAllGroup()
         // 방위 그룹화 출력
         if( pFrqGr->narrow_wide == FALSE ) {
             printf( "\n\t [%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-            Log( enNormal, "\t[%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+            Log( enNormal, "\t[%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[ns](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
         }
         else {
             printf( "\n\t [%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-            Log( enNormal, "\t[%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+            Log( enNormal, "\t[%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[ns](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
         }
 
-#ifndef _ELINT_
+#ifdef _ELINT_
+
+#elif defined(_POCKETSONATA_)
+        printf( "주파수[MHz](%4d-%4d), " , FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ) );
+#else
         if( nBand == BAND2 || nBand == BAND3 ) {
             printf( "주파수[MHz](%4d-%4d), " , FRQMhzCNV( nBand, pFrqGr->to_frq ), FRQMhzCNV( nBand, pFrqGr->from_frq ) );
         }
@@ -433,7 +436,7 @@ void CGroup::PrintAllGroup()
 
         ++ IdxFrqAoaPw;
     }
-#endif
+
 }
 
 /**
@@ -1153,10 +1156,10 @@ int CGroup::GetFreqShift( int band, int freq )
         power *= 2;
     }
 #elif defined(_POCKETSONATA_)
-    float freq_res = gFreqRes[band+1].res;
+    //float freq_res = gFreqRes[band+1].res;
     //freq_res = freq_res > 0 ? freq_res : -freq_res;
     for( i=1 ; i <= 30 ; ++i ) {
-        if( UMUL( power, freq_res ) >= (UINT) freq ) {
+        if( power >= freq ) {
             break;
         }
         power *= 2;
@@ -1408,13 +1411,15 @@ void CGroup::MakeHist( STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FR
     pIndex = & pAoaGroup->pIndex[0];
     // 대상 index의 파라메터에 대한 히스토그램 만들기
     for( i=0 ; i < pAoaGroup->count; ++i ) {
+        // 고속 계산을 하기 위해서 나누기 대신에 Shift 연산으로 변경
         index = ( *( pPdw + *pIndex++ ) ) >> nShift;
         if( index >= pHist->bin_count ) {
             printf( "\n [W] 방위 히스토그램 생성에서 에러 발생함 !" );
             WhereIs;
         }
-        else
+        else {
             ++ pHist->hist[index];
+        }
     }
 }
 
@@ -1744,7 +1749,7 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
     UINT max_freq_diff;
 
     // 1 GHz 주파수 값
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_POCKETSONATA_)
     max_freq_diff = IFRQMhzCNV( 0, MAX_FREQ_DIFF );
 #else
     max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].res ) );

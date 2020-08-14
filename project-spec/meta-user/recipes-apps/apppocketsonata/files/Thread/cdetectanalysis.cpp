@@ -21,6 +21,12 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
     if( m_pTheNewSigAnal == NULL ) {
         LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
     }
+
+    m_pTheSysPara = new CSysPara();
+    if( m_pTheSysPara == NULL ) {
+        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
+    }
+
 }
 
 /**
@@ -29,6 +35,8 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
 CDetectAnalysis::~CDetectAnalysis(void)
 {
     delete m_pTheNewSigAnal;
+
+    delete m_pTheSysPara;
 }
 
 

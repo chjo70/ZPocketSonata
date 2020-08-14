@@ -138,6 +138,11 @@ HEADERS += \
     NetMem/server/ServerSocket.h \
     NetMem/utils/ApiNetMem.h \
     NetMem/utils/PortableSocket.h \
+    SQLite/AbstractDatabase.h \
+    SQLite/AbstractRecordset.h \
+    SQLite/SQLiteDatabase.h \
+    SQLite/SQLiteRecordset.h \
+    SQLite/UnicodeTools.h \
     System/csysconfig.h \
     Thread/ccollectbank/ccollectbank.h \
     Thread/cdetectanalysis.h \
@@ -190,4 +195,6 @@ DISTFILES += \
     NetMem/CMakeLists.txt \
     NetMem/client/CMakeLists.txt \
     NetMem/server/CMakeLists.txt \
-    NetMem/utils/CMakeLists.txt
+    NetMem/utils/CMakeLists.txt \
+    SQLite/pocketsonata.sqbpro \
+    SQLite/pocketsonata.sqlite3

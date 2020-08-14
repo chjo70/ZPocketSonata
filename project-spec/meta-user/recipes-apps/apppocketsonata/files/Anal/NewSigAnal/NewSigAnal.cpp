@@ -152,10 +152,10 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     _spPWres = _spOneMicrosec;
 
 #elif defined(_POCKETSONATA_)
-    _spOneSec = 20000000.;
-    _spOneMilli = FDIV( _spOneSec, 1000. );
-    _spOneMicrosec = FDIV( _spOneMilli, 1000. );
-    _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
+    _spOneSec = FDIV( 1000000000, 6.48824007 );
+    _spOneMilli = FDIV( 1000000, 6.48824007 );
+    _spOneMicrosec = FDIV( 1000, 6.48824007 );
+    _spOneNanosec = FDIV( 1, 6.48824007 );
 
     _spAOAres = (float) ( 0.351562 );
     _spAMPres = (float) (0.351562);
@@ -875,6 +875,10 @@ enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 
 }
 
+/**
+ * @brief 위협 라이브러리 기반 신호 분석 플레그를 반환한다.
+ * @return
+ */
 bool CNewSigAnal::CheckKnownByAnalysis()
 {
     UINT i;
@@ -894,7 +898,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
         }
 
         //bRet = m_pIdentifyAlg->IsThereFreqRange( & m_uiCoKnownRadarMode, & m_pRadarMode[0], uiFreqMin, uiFreqMax );
-        bRet = true;
+        bRet = false;
     }
 
     return bRet;

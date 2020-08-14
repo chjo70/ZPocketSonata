@@ -128,7 +128,7 @@ T _diffabs( T x, T y)
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
-#define PWCNV( A )				IDIV( (A*1000.), _spOneMicrosec )
+#define PWCNV( A )				IDIV( A, _spOneNanosec )
 #define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
 #define AOACNV( A )             IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )

@@ -47,7 +47,7 @@ typedef string CString;
 
 #define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
 
-#define sprintf_s               sscanf
+#define sprintf_s               sprintf
 #define wsprintf                sprintf
 
 #define _time32(A)              time(A)

@@ -150,7 +150,7 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 
 #elif defined(_POCKETSONATA_)
 #define MAX_AOA       			(36000)                 // 최대 방위값 360 도
-#define MAX_FREQ      			IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
+#define MAX_FREQ      			IFRQMhzCNV( 0, 4000)		// 최대 주파수sms 5000 MHz로 함.
 #define	FREQ_NARR_MHZ			IFRQMhzCNV( 0, 20 )			// 20 MHz
 #define	FREQ_WIDE_MHZ			IFRQMhzCNV( 0, 100 )		// 100 MHz
 
@@ -188,8 +188,8 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define	PW_GROUP_DIFF				(500)
 
 #define	NARROW_FREQ_GROUP		0
-#define WIDE_FREQ_GROUP			1000 	// 1GHz 최대 주파수 그룹 범위
-#define	MAX_FREQ_DIFF				1000
+#define WIDE_FREQ_GROUP             1000 	// 1GHz 최대 주파수 그룹 범위
+#define	MAX_FREQ_DIFF				1000        // 1000 [MHz] 주파수 폭 설정
 
 #define MIN_CONTI_THRESHOLD_AOA	(1)
 

@@ -116,7 +116,7 @@ void usrAppStart()
 #endif
 
     while( g_Loop ) {
-        sleep(1000);
+        sleep(1);
     }
     //pause();
 
