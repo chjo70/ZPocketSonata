@@ -1,4 +1,4 @@
-// MakeAET.h: interface for the CMakeAET class.
+﻿// MakeAET.h: interface for the CMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 

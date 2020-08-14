@@ -1,4 +1,4 @@
-// Macros.h: interface for the macro definetion
+ï»¿// Macros.h: interface for the macro definetion
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@
 #endif
 
 #ifndef WhereIs
-#define WhereIs									Printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#define WhereIs									printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
 #endif
 
 
@@ -25,20 +25,20 @@
 
 #define DPrintf(A)							theLogDebug->DebugPrintf(A)
 
-// ¼ö½Ä ¿¬»ê Á¤ÀÇ
+// ìˆ˜ì‹ ì—°ì‚° ì •ì˜
 #define FMUL( A, B )            ( (float) (A) * (float) (B) )
 #define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
 #define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 
 #define _TOADIV( A, B )         (_TOA) ( (double) (A) / (double) (B) + 0.5 )
 
-// º¯È¯ ¼ö½Ä Á¤ÀÇ
+// ë³€í™˜ ìˆ˜ì‹ ì •ì˜
 #define DB(A)										UDIV( 256 * ( (float) A + 74.6875 ), 80 )
 #define CD_DB(A)								UDIV( ((float) A * 31.654) + 1713.77, 7.8125 )
 #define FMOP(A)									UDIV( A, 1.25 )
 #define CW(A)										UDIV( A, 0.2 )
 
-// ÀÌÁø Å¸ÀÌ¸Ó ¼ö½Ä
+// ì´ì§„ íƒ€ì´ë¨¸ ìˆ˜ì‹
 #define	BINARY_TIMER( A, N )		( ( A % (2*N) ) / N )
 
 

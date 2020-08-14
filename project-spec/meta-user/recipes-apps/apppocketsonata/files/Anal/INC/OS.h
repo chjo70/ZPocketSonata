@@ -1,4 +1,4 @@
-// TaskMsg.h: interface for the Å¸½ºÅ© °£ÀÇ ¸Þ½ÃÁö Á¤ÀÇ
+ï»¿// TaskMsg.h: interface for the íƒ€ìŠ¤í¬ ê°„ì˜ ë©”ì‹œì§€ ì •ì˜
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,12 +9,15 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#ifndef _WIN32
-#include <types/vxTypesOld.h>
+#ifdef _WIN32
 
-#include "prjParams.h"
+#elif __linux__
+
 
 #else
+#include <types/vxTypesOld.h>
+#include "prjParams.h"
+
 #define RING_ID					UINT
 #define SEM_ID					UINT
 #define IMPORT					extern

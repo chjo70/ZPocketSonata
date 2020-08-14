@@ -6,6 +6,7 @@
 #ifndef _THRMSG_H
 #define _THRMSG_H
 
+#include "system.h"
 #include "./SONATAPIP/_sysmsg.h"
 
 

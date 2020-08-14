@@ -1,4 +1,4 @@
-// _SigAnal.h: interface for the е╫аЖ╨п╪╝ ╪ргаф╝©Ч╬Нюг гЛ╢Уфдюо
+О╩©// _SigAnal.h: interface for the М┐░Л╖─К╤└Л└² Л├▄М■└М┼╦Л⌡╗Л√╢Л²≤ М≈╓К█■М▄▄Л²╪
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,8 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "_type.h"
-#include "_macro.h"
+#include "_Type.h"
+#include "_Macro.h"
 
 #include "_Define.h"
 #include "_Struct.h"
@@ -19,14 +19,14 @@
 // #include "../../AdvSigAnal/Dummy/Dummy.h"
 #endif
 
-#include "../INC/System.h"
+#include "../INC/system.h"
 #include "../ScanSigAnal/SDefine.h"
 #include "../ScanSigAnal/SStruct.h"
 
 
 //////////////////////////////////////////////////////////////////////////
-// printf()╧╝ю╩ ╢Кц╪го╠Б ю╖гя ╪╠╬П.
-// Printf() ╟Э╥ц гт╪Ж╢б е╦ ╪р╫╨©║╪╜ юл╦╕ ╪╠╬Пгь╪╜ юЕ╨Я©║ ф╞╪╨©║ ╦б╟т ╠╦гЖгт.
+// printf()К╛╦Л²└ К▄─Л╡╢М∙≤Й╦╟ Л°└М∙° Л└═Л√╦.
+// Printf() Й╢─К═╗ М∙╗Л┬≤К┼■ М┐─ Л├▄Л┼╓Л≈░Л└° Л²╢К╔╪ Л└═Л√╦М∙╢Л└° Л·╔К╧└Л≈░ М┼╧Л└╠Л≈░ К╖·Й╡▄ Й╣╛М≤└М∙╗.
 
 // #define printf printf
 
@@ -49,24 +49,28 @@ extern "C" {
 
 #ifdef _MAIN_
 
-_TOA TOA[MAX_PDW];					// PDW TOA фд╤С╦чем
-UINT AOA[MAX_PDW];					// PDW AOA фд╤С╦чем
-UINT FREQ[MAX_PDW];					// PDW FREQUENCY фд╤С╦чем
-UINT PW[MAX_PDW];						// PDW PULSE WIDTH фд╤С╦чем
-int PA[MAX_PDW];						// PDW PULSE AMPLITUDE фд╤С╦чем
-UCHAR PMOP[MAX_PDW];				// PDW PMOP фд╤С╦чем
-UCHAR FMOP[MAX_PDW];				// PDW FMOP фд╤С╦чем
+_TOA TOA[MAX_PDW];					// PDW TOA М▄▄К²╪К╘■М└╟
+UINT AOA[MAX_PDW];					// PDW AOA М▄▄К²╪К╘■М└╟
+UINT FREQ[MAX_PDW];					// PDW FREQUENCY М▄▄К²╪К╘■М└╟
+UINT PW[MAX_PDW];						// PDW PULSE WIDTH М▄▄К²╪К╘■М└╟
+int PA[MAX_PDW];						// PDW PULSE AMPLITUDE М▄▄К²╪К╘■М└╟
+UCHAR PMOP[MAX_PDW];				// PDW PMOP М▄▄К²╪К╘■М└╟
+UCHAR FMOP[MAX_PDW];				// PDW FMOP М▄▄К²╪К╘■М└╟
 USHORT MARK[MAX_PDW];				// PDW MARK ; selected pdw
-UCHAR BAND[MAX_PDW];				// ажфд╪Ж ╧Й╣Е
+UCHAR BAND[MAX_PDW];				// Лё╪М▄▄Л┬≤ К╟╢К⌠°
 UCHAR STAT[MAX_PDW];				// PDW STATUS(Notmal, CW, PMOP, Chirp Up/Dn)
-USHORT BKMK[MAX_PDW];				// MARK ╧И╬В©К, ╫╨еб╟е ╨п╪╝╫ц©║ ╩Г©Кгт.
-USHORT RSMK[MAX_PDW];				// MARK ╧И╬В©К, ╫╨еб╟е ╨п╪╝╫ц©║ ╩Г©Кгт.
-UCHAR MAXCHANNEL[MAX_PDW];	// PDWюг MaxChannel
+USHORT BKMK[MAX_PDW];				// MARK К╟╠Л≈┘Л ╘, Л┼╓М┐°Й╠╟ К╤└Л└²Л▀°Л≈░ Л┌╛Л ╘М∙╗.
+USHORT RSMK[MAX_PDW];				// MARK К╟╠Л≈┘Л ╘, Л┼╓М┐°Й╠╟ К╤└Л└²Л▀°Л≈░ Л┌╛Л ╘М∙╗.
+UCHAR MAXCHANNEL[MAX_PDW];	// PDWЛ²≤ MaxChannel
 
-// ажфд╪Ж гь╩С╣╣ ╟Х╩Й©К
+// Лё╪М▄▄Л┬≤ М∙╢Л┐│К▐└ ЙЁ└Л┌╟Л ╘
 
 // HARMONIC MARGIN
 #ifdef _ELINT_
+UINT stSigma1Aoa[5] = { KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
+UINT stSigma1Frq[5] = { KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
+
+#elif defined(_POCKETSONATA_)
 UINT stSigma1Aoa[5] = { KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
 UINT stSigma1Frq[5] = { KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
 
@@ -84,19 +88,19 @@ UINT stOffPdw;
 
 #else
 
-extern _TOA TOA[MAX_PDW];			// PDW TOA фд╤С╦чем
-extern UINT AOA[MAX_PDW];			// PDW AOA фд╤С╦чем
-extern UINT FREQ[MAX_PDW];		// PDW FREQUENCY фд╤С╦чем
-extern UINT PW[MAX_PDW];			// PDW PULSE WIDTH фд╤С╦чем
-extern int PA[MAX_PDW];			// PDW PULSE AMPLITUDE фд╤С╦чем
-extern UCHAR PMOP[MAX_PDW];		// PDW PMOP фд╤С╦чем
-extern UCHAR FMOP[MAX_PDW];		// PDW FMOP фд╤С╦чем
+extern _TOA TOA[MAX_PDW];			// PDW TOA М▄▄К²╪К╘■М└╟
+extern UINT AOA[MAX_PDW];			// PDW AOA М▄▄К²╪К╘■М└╟
+extern UINT FREQ[MAX_PDW];		// PDW FREQUENCY М▄▄К²╪К╘■М└╟
+extern UINT PW[MAX_PDW];			// PDW PULSE WIDTH М▄▄К²╪К╘■М└╟
+extern int PA[MAX_PDW];			// PDW PULSE AMPLITUDE М▄▄К²╪К╘■М└╟
+extern UCHAR PMOP[MAX_PDW];		// PDW PMOP М▄▄К²╪К╘■М└╟
+extern UCHAR FMOP[MAX_PDW];		// PDW FMOP М▄▄К²╪К╘■М└╟
 extern USHORT MARK[MAX_PDW];	// PDW MARK ; selected pdw
-extern UCHAR BAND[MAX_PDW];		// ажфд╪Ж ╧Й╣Е
-extern UCHAR STAT[MAX_PDW];		// ажфд╪Ж ╧Й╣Е
-extern USHORT BKMK[MAX_PDW];		// Mark фч╫╨©╜юг ╧И╬В©К
-extern USHORT RSMK[MAX_PDW];	// MARK ╧И╬В©К, ╫╨еб╟е ╨п╪╝╫ц©║ ╩Г©Кгт.
-extern UCHAR MAXCHANNEL[MAX_PDW];	// PDWюг MaxChannel
+extern UCHAR BAND[MAX_PDW];		// Лё╪М▄▄Л┬≤ К╟╢К⌠°
+extern UCHAR STAT[MAX_PDW];		// Лё╪М▄▄Л┬≤ К╟╢К⌠°
+extern USHORT BKMK[MAX_PDW];		// Mark М▌└Л┼╓Л≈╢Л²≤ К╟╠Л≈┘Л ╘
+extern USHORT RSMK[MAX_PDW];	// MARK К╟╠Л≈┘Л ╘, Л┼╓М┐°Й╠╟ К╤└Л└²Л▀°Л≈░ Л┌╛Л ╘М∙╗.
+extern UCHAR MAXCHANNEL[MAX_PDW];	// PDWЛ²≤ MaxChannel
 
 #ifdef _A50_RWR
 extern UINT stSigma1Aoa[5];

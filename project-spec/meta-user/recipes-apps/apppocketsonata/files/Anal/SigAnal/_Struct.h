@@ -1,4 +1,4 @@
-// Struct.h: interface for the Å½ÁöºÐ¼®ÆÇ ¼ÒÇÁÆ®¿þ¾îÀÇ ±¸Á¶Ã¼
+ï»¿// Struct.h: interface for the íƒì§€ë¶„ì„íŒ ì†Œí”„íŠ¸ì›¨ì–´ì˜ êµ¬ì¡°ì²´
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,47 +9,38 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../INC/_pdw.h"
-#include "../INC/_aetipl.h"
+#include "../INC/PDW.h"
+#include "../INC/AetIPL.h"
 
 //#define BIT_MERGE(high,low)     ( ( ((UINT)high) << 8 ) | low )
 
-// PDW  ÆÞ½º¿­ ÇÃ·¹±×
+// PDW  íŽ„ìŠ¤ì—´ í”Œë ˆê·¸
 //##ModelId=452B0C5402BC
 enum PULSE_EXTRACT_MARK { UnMark=0, STABLE_MARK, REFSTB_MARK, JITTER_MARK, DWELL_MARK, UNKNOWN_MARK, EXTRACT_MARK, Discard } ;
 
 //##ModelId=452B0C5402D0
 typedef USHORT PDWINDEX;
 
-// #ifndef _STR_PDWData
-// #define _STR_PDWData
-// typedef struct {
-// 	UINT count;
-// 	_PDW *pPdw;
-// 
-// } STR_PDWDATA ;
-// #endif
-
-// Å½Áö PDW Index
+// íƒì§€ PDW Index
 //##ModelId=452B0C5402E5
-typedef struct {
-  PDWINDEX *pIndex;
-  int count;
+struct STR_PDWINDEX {
+    PDWINDEX *pIndex;
+    int count;
 
-} STR_PDWINDEX ;
+}  ;
 
-// È÷½ºÅä±×·¥ 
+// ížˆìŠ¤í† ê·¸ëž¨ 
 //##ModelId=452B0C5402F8
-typedef struct {
+struct STR_FRQAOAPWHISTOGRAM {
 	PDWINDEX hist[ TOTAL_FRQAOAPWBIN ];
 	int bin_count;
 
-} STR_FRQAOAPWHISTOGRAM ;
+} ;
 
 
-// DTOA È÷½ºÅä±×·¥ ±¸Á¶Ã¼
+// DTOA ížˆìŠ¤í† ê·¸ëž¨ êµ¬ì¡°ì²´
 //##ModelId=452B0C540302
-typedef struct {
+struct STR_DTOA_HISTOGRAM {
 	int bin_count;
 	PDWINDEX hist[ DTOA_BIN ];
 
@@ -59,80 +50,80 @@ typedef struct {
 	UINT bin_peak[ MAX_PEAK_DTOAHISTOGRAM+1 ];
 
 	int dtoa_peak_count;
-	_TOA dtoa_peak[ MAX_PEAK_DTOAHISTOGRAM+1 ];	// Dwell ½ºÅÜÀ» ºÐ¼®ÇÏ±â À§ÇÑ º¯¼ö
+	_TOA dtoa_peak[ MAX_PEAK_DTOAHISTOGRAM+1 ];	// Dwell ìŠ¤í…ì„ ë¶„ì„í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 
-} STR_DTOA_HISTOGRAM ;
+} ;
 
-// ¹æÀ§(AOA) ±×·ì 
+// ë°©ìœ„(AOA) ê·¸ë£¹ 
 //##ModelId=452B0C540317
-typedef struct {
+struct STR_AOA_GROUP {
 	UINT band;
-  UINT stat;
-  PDWINDEX *pIndex;
-  int count;
-  UINT bOverAoa;
-  UINT from_aoa;
-  UINT to_aoa;
-  UINT from_bin;
-  UINT to_bin;
+    UINT stat;
+    PDWINDEX *pIndex;
+    int count;
+    UINT bOverAoa;
+    UINT from_aoa;
+    UINT to_aoa;
+    UINT from_bin;
+    UINT to_bin;
 
-} STR_AOA_GROUP ;
+}  ;
 
-// ¹æÀ§ ±×·ìÈ­ ±¸Á¶Ã¼
+// ë°©ìœ„ ê·¸ë£¹í™” êµ¬ì¡°ì²´
 //##ModelId=452B0C54032A
-typedef struct {
+struct STR_AOA_GROUPS {
   STR_AOA_GROUP aoa[ MAX_AGRT ];
   int count;
 	int coAnal;
 
-} STR_AOA_GROUPS ;
+}  ;
 
-// ÁÖÆÄ¼ö ±×·ì¹üÀ§ Å×ÀÌºí  
+// ì£¼íŒŒìˆ˜ ê·¸ë£¹ë²”ìœ„ í…Œì´ë¸”  
 //##ModelId=452B0C540335
-typedef struct {
-	int	aoa_idx;			// ¹æÀ§ ±×·ìÈ­ ÀÎµ¦½º
+struct STR_FRQ_GROUP {
+	int	aoa_idx;			// ë°©ìœ„ ê·¸ë£¹í™” ì¸ë±ìŠ¤
 
 	UINT from_frq;
 	UINT to_frq;
-  UINT from_bin;
-  UINT to_bin;
+    UINT from_bin;
+    UINT to_bin;
 	char narrow_wide;
 	char end_of_aoagroup;
 
-} STR_FRQ_GROUP ;
+}  ;
 
-// ÁÖÆÄ¼ö ±×·ì¹üÀ§ Å×ÀÌºí  
+// ì£¼íŒŒìˆ˜ ê·¸ë£¹ë²”ìœ„ í…Œì´ë¸”  
 //##ModelId=452B0C540348
-typedef struct {
+struct STR_FRQ_GROUPS {
 	STR_FRQ_GROUP frq[ MAX_FGRT ];
 	int count;
 	int coAnal;
 
-} STR_FRQ_GROUPS ;
+}  ;
 
 //##ModelId=452B0C54035C
-typedef struct {
-	int	frq_idx;			// ÁÖÆÄ¼ö ±×·ìÈ­ ÀÎµ¦½º
+struct STR_PW_GROUP {
+    int	frq_idx;			// ì£¼íŒŒìˆ˜ ê·¸ë£¹í™” ì¸ë±ìŠ¤
 
-	UINT from_pw;
-	UINT to_pw;
-  UINT from_bin;
-  UINT to_bin;
+    UINT from_pw;
+    UINT to_pw;
+    UINT from_bin;
+    UINT to_bin;
 
-} STR_PW_GROUP ;
+}  ;
 
-// ÁÖÆÄ¼ö ±×·ì¹üÀ§ Å×ÀÌºí  
+// ì£¼íŒŒìˆ˜ ê·¸ë£¹ë²”ìœ„ í…Œì´ë¸”  
 //##ModelId=452B0C540366
-typedef struct {
+struct STR_PW_GROUPS {
 	STR_PW_GROUP pw[ MAX_PGRT ];
 	int count;
 	int coAnal;
 
-} STR_PW_GROUPS ;
+}  ;
 
-// ISODATA Å¬·¯½ºÅÍ¸µ Å×ÀÌºí
+// ISODATA í´ëŸ¬ìŠ¤í„°ë§ í…Œì´ë¸”
 //##ModelId=452B0C540371
-typedef struct {
+struct STR_CLUSTER {
 	int count;
 	PDWINDEX index[SAP_MAX_PDW];
 	int center;
@@ -140,11 +131,11 @@ typedef struct {
 	float distance;
 	STR_LOWHIGH aoa;
 
-} STR_CLUSTER ;
+}  ;
 
-// Å½ÁöÀÇ ÆÞ½º¿­ÀÌ Á¸ÀçÇÔ¿¡µµ ºÐ¼®ÀÌ µÇÁö ¾Ê´Â ¹®Á¦
+// íƒì§€ì˜ íŽ„ìŠ¤ì—´ì´ ì¡´ìž¬í•¨ì—ë„ ë¶„ì„ì´ ë˜ì§€ ì•ŠëŠ” ë¬¸ì œ
 //##ModelId=452B0C54038E
-typedef struct {
+struct STR_FIRST_FRQAOA_PEAK {
 	STR_LOWHIGH	aoa; 
 	STR_LOWHIGH	frq;
 	UINT band;
@@ -152,110 +143,110 @@ typedef struct {
 	UINT count;
 	UINT enable;
 
-} STR_FIRST_FRQAOA_PEAK ;
+}  ;
 
-// ÆÞ½º¿­ ´Ü Á¤º¸
+// íŽ„ìŠ¤ì—´ ë‹¨ ì •ë³´
 //##ModelId=452B0C540398
-typedef struct {
-	STR_PDWINDEX pdw;				// ÆÞ½º¿­ ÀÎµ¦½º, ÀÌ ±¸Á¶Ã¼´Â Á¦ÀÏ ¾Õ¿¡ ÀÖ¾î¾ß ÇÔ.
+struct STR_PULSE_TRAIN_SEG {
+	STR_PDWINDEX pdw;				// íŽ„ìŠ¤ì—´ ì¸ë±ìŠ¤, ì´ êµ¬ì¡°ì²´ëŠ” ì œì¼ ì•žì— ìžˆì–´ì•¼ í•¨.
 
-	UINT miss;							// missing °³¼ö, <- ÀÌ ¾Õ¿¡ º¯¼ö¸¦ »ðÀÔÇÏÁö ¸»¾Æ¾ßÇÔ. CPulExt::MemcpySeg() ¶§¹®ÀÓ.
-	UINT pri_band;					// ÆÞ½º¿­ ÃßÃâÇÒ ¶§ÀÇ PRI ¹êµå
-	UINT extract_step;			// ±âÁØ ÆÞ½º¿­, STABLE, Jitter PRI
-	PDWINDEX gr_ref_idx;				// ±âÁØÆÞ½º, ±âÁØÆÞ½º¿­ ÃÖÃÊ ÆÞ½º
-	PDWINDEX first_idx;			// ÆÞ½º¿­ ÃÖÃÊ ÆÞ½º ÀÎµ¦½º, pdw.pIndexÀÇ ÀÎµ¦½º¸¦ °¡¸®Å²´Ù.
-	PDWINDEX last_idx;			// ÆÞ½º¿­ ÃÖÈÄ ÆÞ½º, pdw.pIndexÀÇ ÀÎµ¦½º¸¦ °¡¸®Å²´Ù.
-	_TOA first_toa;					// ÆÞ½º¿­ Ã¹¹øÂ° TOA
-	_TOA last_toa;					// ÆÞ½º¿­ ¸¶Áö¸· TOA
-	UINT stat;							// PDW »óÅÂ
-	UINT freq_type;					// ÁÖÆÄ¼ö Å¸ÀÔ
-	STR_MINMAX aoa;					// ¹æÀ§ Á¦¿ø 
-	STR_MINMAX_MEDIAN freq;				// ÁÖÆÄ¼ö Á¦¿ø 
-	STR_MINMAX pa;					// ½ÅÈ£¼¼±â Á¦¿ø 
-	STR_MINMAX pw;					// ÆÞ½ºÆø Á¦¿ø 
-	UINT pri_type;					// PRI Å¸ÀÔ
-	STR_MINMAX_TOA pri;					// PRI Á¦¿ø
-	UINT min_dtoa;					// DTOA °£°Ý Áß¿¡¼­ ÃÖ¼Ò°¡ µÇ´Â °ª
-	float jitter_p;					// ÁöÅÍÀ²
-	UINT continuity;				// ÆÞ½º¿­ ¿¬¼Ó¼º(%)
-	UINT band;							// ÁÖÆÄ¼ö Band Code
-	UINT peak_idx;					// peak PAÀÇ ÆÞ½º index
+	UINT miss;							// missing ê°œìˆ˜, <- ì´ ì•žì— ë³€ìˆ˜ë¥¼ ì‚½ìž…í•˜ì§€ ë§ì•„ì•¼í•¨. CPulExt::MemcpySeg() ë•Œë¬¸ìž„.
+	UINT pri_band;					// íŽ„ìŠ¤ì—´ ì¶”ì¶œí•  ë•Œì˜ PRI ë°´ë“œ
+	UINT extract_step;			// ê¸°ì¤€ íŽ„ìŠ¤ì—´, STABLE, Jitter PRI
+	PDWINDEX gr_ref_idx;				// ê¸°ì¤€íŽ„ìŠ¤, ê¸°ì¤€íŽ„ìŠ¤ì—´ ìµœì´ˆ íŽ„ìŠ¤
+	PDWINDEX first_idx;			// íŽ„ìŠ¤ì—´ ìµœì´ˆ íŽ„ìŠ¤ ì¸ë±ìŠ¤, pdw.pIndexì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ë¦¬í‚¨ë‹¤.
+	PDWINDEX last_idx;			// íŽ„ìŠ¤ì—´ ìµœí›„ íŽ„ìŠ¤, pdw.pIndexì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ë¦¬í‚¨ë‹¤.
+	_TOA first_toa;					// íŽ„ìŠ¤ì—´ ì²«ë²ˆì§¸ TOA
+	_TOA last_toa;					// íŽ„ìŠ¤ì—´ ë§ˆì§€ë§‰ TOA
+	UINT stat;							// PDW ìƒíƒœ
+	UINT freq_type;					// ì£¼íŒŒìˆ˜ íƒ€ìž…
+	STR_MINMAX aoa;					// ë°©ìœ„ ì œì› 
+	STR_MINMAX_MEDIAN freq;				// ì£¼íŒŒìˆ˜ ì œì› 
+	STR_MINMAX pa;					// ì‹ í˜¸ì„¸ê¸° ì œì› 
+	STR_MINMAX pw;					// íŽ„ìŠ¤í­ ì œì› 
+	UINT pri_type;					// PRI íƒ€ìž…
+	STR_MINMAX_TOA pri;					// PRI ì œì›
+	UINT min_dtoa;					// DTOA ê°„ê²© ì¤‘ì—ì„œ ìµœì†Œê°€ ë˜ëŠ” ê°’
+	float jitter_p;					// ì§€í„°ìœ¨
+	UINT continuity;				// íŽ„ìŠ¤ì—´ ì—°ì†ì„±(%)
+	UINT band;							// ì£¼íŒŒìˆ˜ Band Code
+	UINT peak_idx;					// peak PAì˜ íŽ„ìŠ¤ index
 	//UINT cd;								// Correct Detection
-	//UINT steady;						// steady ½ºÄµÆ¯¼º
-	SEG_MARK mark;							// ÆÞ½º¿­ÀÇ »óÅÂ Ç¥½Ã 
-													// »èÁ¦=0, Á¤»ó»óÅÂ=1, ¿¡¹ÌÅÍ·Î Ã¼Å©µÈ »óÅÂ=2
-	UINT pri_pat_period;		// PRI  ÆÐÅÏ ÁÖ±â
-	UINT freq_pat_period;		// FREQ ÆÐÅÏ ÁÖ±â
+	//UINT steady;						// steady ìŠ¤ìº”íŠ¹ì„±
+	SEG_MARK mark;							// íŽ„ìŠ¤ì—´ì˜ ìƒíƒœ í‘œì‹œ 
+													// ì‚­ì œ=0, ì •ìƒìƒíƒœ=1, ì—ë¯¸í„°ë¡œ ì²´í¬ëœ ìƒíƒœ=2
+	UINT pri_pat_period;		// PRI  íŒ¨í„´ ì£¼ê¸°
+	UINT freq_pat_period;		// FREQ íŒ¨í„´ ì£¼ê¸°
 	
-} STR_PULSE_TRAIN_SEG ;
+}  ;
 
 // Freq resolution struct
 //##ModelId=452B0C5403A3
 /*
-typedef struct {    // frequency band code¸¦ À§ÇÑ ±¸Á¶Ã¼
+typedef struct {    // frequency band codeë¥¼ ìœ„í•œ êµ¬ì¡°ì²´
   UINT min;					// min frequency
   UINT max;					// max frequency
-  float res;				// °¢ ±¸°£¿¡ µû¸¥ resolution
+  float res;				// ê° êµ¬ê°„ì— ë”°ë¥¸ resolution
 
 } STR_FREQ_RESOL ;
 */
 
 // PRI Table 
 //##ModelId=452B0C5403B6
-typedef struct {
-	_TOA min_pri;		// ÇÏÇÑ ¹üÀ§ 
-	_TOA max_pri;		// »óÇÑ ¹üÀ§ 
+struct STR_PRI_RANGE_TABLE {
+	_TOA min_pri;		// í•˜í•œ ë²”ìœ„ 
+	_TOA max_pri;		// ìƒí•œ ë²”ìœ„ 
 
-} STR_PRI_RANGE_TABLE ;
+}  ;
 
-// ¿¡¹ÌÅÍ Á¤º¸
+// ì—ë¯¸í„° ì •ë³´
 //##ModelId=452B0C5403CA
-typedef struct {
-	STR_PDWINDEX pdw;						// PDW ¹öÆÛ
-	UINT seg_idx[ MAX_PT ];			// ÆÞ½º¿­ index, ÆÄ¶ó¸ÞÅÍ ÀúÀå 
-	int seg_count;							// seg[] ¼ö, ÆÞ½º¿­ ¼ö
+struct STR_EMITTER {
+	STR_PDWINDEX pdw;						// PDW ë²„í¼
+	UINT seg_idx[ MAX_PT ];			// íŽ„ìŠ¤ì—´ index, íŒŒë¼ë©”í„° ì €ìž¥ 
+	int seg_count;							// seg[] ìˆ˜, íŽ„ìŠ¤ì—´ ìˆ˜
 
-	PRI_TYPE pri_type;							// PRI ÇüÅÂ
-	_TOA framePri;								// ½ºÅÂ°ÅÀÏ ¶§ÀÇ frmae PRI °ª
-	STR_MINMAX_TOA pri;							// ¿¡¹ÌÅÍ ÆÞ½º¿­ÀÇ PRI ¹üÀ§
+	PRI_TYPE pri_type;							// PRI í˜•íƒœ
+	_TOA framePri;								// ìŠ¤íƒœê±°ì¼ ë•Œì˜ frmae PRI ê°’
+	STR_MINMAX_TOA pri;							// ì—ë¯¸í„° íŽ„ìŠ¤ì—´ì˜ PRI ë²”ìœ„
 	UINT pri_patterntype;
 	float priPeriod;
 
-	int stag_dwell_element_cnt;					// stagger level ¼ö 
+	int stag_dwell_element_cnt;					// stagger level ìˆ˜ 
 	_TOA stag_dwell_element[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
 
-	int stag_dwell_level_cnt;					// stagger level ¼ö 
+	int stag_dwell_level_cnt;					// stagger level ìˆ˜ 
 	_TOA stag_dwell_level[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
 
 	int hop_level[ MAX_HOP_LEVEL_ELEMENT ];					// Hopping level
-	int hop_level_cnt;					// Hop level ¼ö 
+	int hop_level_cnt;					// Hop level ìˆ˜ 
 
 	SIGNAL_TYPE signal_type;	
 
 	FREQ_TYPE freq_type;
 	UINT freq_patterntype;
-	STR_TYPEMINMAX freq;				// ¿¡¹ÌÅÍ °£ÀÇ º´ÇÕ½Ã¿¡ ÆÇ´ÜÇÒ ÁÖÆÄ¼ö Åë°è·®
+	STR_TYPEMINMAX freq;				// ì—ë¯¸í„° ê°„ì˜ ë³‘í•©ì‹œì— íŒë‹¨í•  ì£¼íŒŒìˆ˜ í†µê³„ëŸ‰
 	float freqPeriod;
 
-	STR_MINMAX pw;							// ¿¡¹ÌÅÍ ÆÞ½º¿­ÀÇ PRI ¹üÀ§
+	STR_MINMAX pw;							// ì—ë¯¸í„° íŽ„ìŠ¤ì—´ì˜ PRI ë²”ìœ„
 
-	UINT main_seg;							// ºÐ¼®¿¡ ¼º°øÇÑ seg index
-	EMITTER_MARK mark;									// »èÁ¦ ¿©ºÎ 
+	UINT main_seg;							// ë¶„ì„ì— ì„±ê³µí•œ seg index
+	EMITTER_MARK mark;									// ì‚­ì œ ì—¬ë¶€ 
 
 	int iDIRatio;
 
-} STR_EMITTER ;
+} ;
 
-// ÆÞ½º¿­ÀÇ Á¦¿øÀ» °Ô»êÇÏ±â À§ÇÑ º¯¼ö
+// íŽ„ìŠ¤ì—´ì˜ ì œì›ì„ ê²Œì‚°í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 //##ModelId=452B0C5403D5
-typedef struct {
+struct STR_PDWPARAM {
 	_TOA *pTOAParam;
 	UINT *puiParam;
 	int *piParam;
 
 	int count;
 
-} STR_PDWPARAM ;
+} ;
 
 
 
@@ -267,25 +258,22 @@ typedef struct {
 //  system parameter data structure
 //
 //##ModelId=452B0C4E030E
-typedef struct
-{
+struct STR_CT {
   UINT mode;
-} STR_CT ;
+}  ;
 
 //##ModelId=452B0C4E032C
-typedef struct
-{
+struct STR_SP {
   UINT aoadiff[ ALL_BAND+1 ];
   UINT frqdiff[ ALL_BAND+1 ];
-} STR_SP;
+} ;
 
 //##ModelId=452B0C4E0354
-typedef struct
-{
-	// ÁÖÆÄ¼ö °íÁ¤ ÀÓ°è°ª
+struct STR_ID {
+	// ì£¼íŒŒìˆ˜ ê³ ì • ìž„ê³„ê°’
   UINT fixfrq[ ALL_BAND+1 ];
 
-	// ÁÖÆÄ¼ö º¯°æ ÀÓ°è°ª
+	// ì£¼íŒŒìˆ˜ ë³€ê²½ ìž„ê³„ê°’
   UINT agifrq[ ALL_BAND+1 ];
   UINT pri;     // pri tol.
   UINT prd;     // scan tol.
@@ -293,11 +281,10 @@ typedef struct
   UINT frqPrd;      // When Pattern Agile, comparative period val.
   UINT priPrd;      // When PRI Pattern, comparative period val.
 
-} STR_ID ;
+}  ;
 
 //##ModelId=452B0C4E035F
-typedef struct
-{
+struct STR_MG {
   //  UINT  mode;
   UINT aoa[ ALL_BAND+1 ];
 
@@ -326,11 +313,10 @@ typedef struct
   UINT pw;        // PRI jitter %
 
   UINT mdyMethod;   // Method of modify parameter, debug, 00-08-31 10:19:35
-} STR_MG ;
+}  ;
 
 //##ModelId=452B0C4E0373
-typedef struct
-{
+struct STR_FT {
   UINT aoa[ ALL_BAND+1 ];
 
   UINT fixfrq[ ALL_BAND+1 ];
@@ -357,103 +343,100 @@ typedef struct
 
   UINT scto[ _spMaxTryScan + 1 ];
 
-} STR_FT ;
+}  ;
 
 //#ModelId=452B0C4E037D
-typedef struct
-{
+struct STR_FG {
   STR_LOWHIGH frq[ ALL_BAND+1 ];
 
-} STR_FG ;
+}  ;
 
 //##ModelId=452B0C4E039A
-typedef struct
-{
-  UINT Pdw_Max;            // ¼öÁý PDW ÃÖ´ë¼ö
-  UINT Aoa_Shift_Cnt;      // ¹æÀ§ È÷½ºÅä BIN Å©±â = 2^N
-  UINT Aoa_Peak_Thr;       // ¹æÀ§ È÷½ºÅä±×·¥ PEAK ÀÓ°è°ª  // 00.02.09
-  UINT Aoa_Hist_Thr;       // ¹æÀ§ È÷½ºÅä±×·¥ ¹üÀ§ ÀÓ°è°ª  // 00.02.09
-  UINT Aoa_Range_Margin;   // ¹æÀ§ ±×·ì ¹üÀ§ margin
+struct STR_NP {
+  UINT Pdw_Max;            // ìˆ˜ì§‘ PDW ìµœëŒ€ìˆ˜
+  UINT Aoa_Shift_Cnt;      // ë°©ìœ„ ížˆìŠ¤í†  BIN í¬ê¸° = 2^N
+  UINT Aoa_Peak_Thr;       // ë°©ìœ„ ížˆìŠ¤í† ê·¸ëž¨ PEAK ìž„ê³„ê°’  // 00.02.09
+  UINT Aoa_Hist_Thr;       // ë°©ìœ„ ížˆìŠ¤í† ê·¸ëž¨ ë²”ìœ„ ìž„ê³„ê°’  // 00.02.09
+  UINT Aoa_Range_Margin;   // ë°©ìœ„ ê·¸ë£¹ ë²”ìœ„ margin
 
-  UINT Freq_Shift_Cnt;     // ÁÖÆÄ¼ö È÷½ºÅä BIN Å©±â = 2^N
-  UINT Freq_Peak_Thr;      // ÁÖÆÄ¼ö È÷½ºÅä±×·¥ PEAK ÀÓ°è°ª    // 00.02.09
-  UINT Freq_Hist_Thr;      // ÁÖÆÄ¼ö È÷½ºÅä±×·¥ ¹üÀ§ ÀÓ°è°ª    // 00.02.09
-  UINT Freq_Range_Margin;  // ÁÖÆÄ¼ö ±×·ì ¹üÀ§ margin
+  UINT Freq_Shift_Cnt;     // ì£¼íŒŒìˆ˜ ížˆìŠ¤í†  BIN í¬ê¸° = 2^N
+  UINT Freq_Peak_Thr;      // ì£¼íŒŒìˆ˜ ížˆìŠ¤í† ê·¸ëž¨ PEAK ìž„ê³„ê°’    // 00.02.09
+  UINT Freq_Hist_Thr;      // ì£¼íŒŒìˆ˜ ížˆìŠ¤í† ê·¸ëž¨ ë²”ìœ„ ìž„ê³„ê°’    // 00.02.09
+  UINT Freq_Range_Margin;  // ì£¼íŒŒìˆ˜ ê·¸ë£¹ ë²”ìœ„ margin
 
-  UINT Rpt_Aet_Cnt;    // Å½Áö; ÇÏ³ªÀÇ ±×·ì¿¡¼­ REPORTµÉ AETÀÇ °³¼ö¸¦ ¼±¾ð
-} STR_NP ;
+  UINT Rpt_Aet_Cnt;    // íƒì§€; í•˜ë‚˜ì˜ ê·¸ë£¹ì—ì„œ REPORTë  AETì˜ ê°œìˆ˜ë¥¼ ì„ ì–¸
+}  ;
 
 //##ModelId=452B0C4E03AE
-typedef struct
-{
-  UINT Pdw_Max;            // ¼öÁý PDW ÃÖ´ë¼ö
-  /*  UINT    Aoa_Shift_Cnt;      // ¹æÀ§ È÷½ºÅä BIN Å©±â = 2^N
-      UINT    Aoa_Peak_Thr;       // ¹æÀ§ È÷½ºÅä±×·¥ PEAK ÀÓ°è°ª  // 00.02.09
-      UINT    Aoa_Hist_Thr;       // ¹æÀ§ È÷½ºÅä±×·¥ ¹üÀ§ ÀÓ°è°ª  // 00.02.09
-      UINT    Aoa_Range_Margin;   // ¹æÀ§ ±×·ì ¹üÀ§ margin
+struct STR_KP {
+  UINT Pdw_Max;            // ìˆ˜ì§‘ PDW ìµœëŒ€ìˆ˜
+  /*  UINT    Aoa_Shift_Cnt;      // ë°©ìœ„ ížˆìŠ¤í†  BIN í¬ê¸° = 2^N
+      UINT    Aoa_Peak_Thr;       // ë°©ìœ„ ížˆìŠ¤í† ê·¸ëž¨ PEAK ìž„ê³„ê°’  // 00.02.09
+      UINT    Aoa_Hist_Thr;       // ë°©ìœ„ ížˆìŠ¤í† ê·¸ëž¨ ë²”ìœ„ ìž„ê³„ê°’  // 00.02.09
+      UINT    Aoa_Range_Margin;   // ë°©ìœ„ ê·¸ë£¹ ë²”ìœ„ margin
    
-      UINT    Freq_Shift_Cnt;     // ÁÖÆÄ¼ö È÷½ºÅä BIN Å©±â = 2^N
-      UINT    Freq_Peak_Thr;      // ÁÖÆÄ¼ö È÷½ºÅä±×·¥ PEAK ÀÓ°è°ª    // 00.02.09
-      UINT    Freq_Hist_Thr;      // ÁÖÆÄ¼ö È÷½ºÅä±×·¥ ¹üÀ§ ÀÓ°è°ª    // 00.02.09
-      UINT    Freq_Range_Margin;  // ÁÖÆÄ¼ö ±×·ì ¹üÀ§ margin
+      UINT    Freq_Shift_Cnt;     // ì£¼íŒŒìˆ˜ ížˆìŠ¤í†  BIN í¬ê¸° = 2^N
+      UINT    Freq_Peak_Thr;      // ì£¼íŒŒìˆ˜ ížˆìŠ¤í† ê·¸ëž¨ PEAK ìž„ê³„ê°’    // 00.02.09
+      UINT    Freq_Hist_Thr;      // ì£¼íŒŒìˆ˜ ížˆìŠ¤í† ê·¸ëž¨ ë²”ìœ„ ìž„ê³„ê°’    // 00.02.09
+      UINT    Freq_Range_Margin;  // ì£¼íŒŒìˆ˜ ê·¸ë£¹ ë²”ìœ„ margin
   */
 
-  UINT Rpt_Aet_Cnt;    // ÃßÀû; ÇÏ³ªÀÇ ±×·ì¿¡¼­ REPORTµÉ AETÀÇ °³¼ö¸¦ ¼±¾ð
-} STR_KP ;
+  UINT Rpt_Aet_Cnt;    // ì¶”ì ; í•˜ë‚˜ì˜ ê·¸ë£¹ì—ì„œ REPORTë  AETì˜ ê°œìˆ˜ë¥¼ ì„ ì–¸
+}  ;
 
 //##ModelId=452B0C4E03B9
-typedef struct
+struct STR_CM
 {
-  UINT Cw_Min_Cnt;         // CW½ÅÈ£¸¦ ºÐ¼®ÇÏ±â À§ÇÑ ÃÖ¼Ò CW°³¼ö
+  UINT Cw_Min_Cnt;         // CWì‹ í˜¸ë¥¼ ë¶„ì„í•˜ê¸° ìœ„í•œ ìµœì†Œ CWê°œìˆ˜
 
-  UINT Mpc;                //000223 // Stable ÆÞ½º¿­ÀÇ ÃÖ¼Ò ÆÞ½º¼ö (Min. Pulse Count)
-  UINT Mjpc;               //000223 // Jitter ÆÞ½º¿­ÀÇ ÃÖ¼Ò ÆÞ½º¼ö (Min. Jitter Pulse Count)
-  UINT Rpc;                // ±âÁØ ÆÞ½º¿­ÀÇ ÆÞ½º¼ö (Reference Pule Count)
-  UINT Rjgpc;              // 000404  Jitter Stagger ±âÁØÆÞ½º¿­ÀÇ ÃÖ¼Ò ÆÞ½º¼ö (Min. Jitter Stagger Pulse Count)
+  UINT Mpc;                //000223 // Stable íŽ„ìŠ¤ì—´ì˜ ìµœì†Œ íŽ„ìŠ¤ìˆ˜ (Min. Pulse Count)
+  UINT Mjpc;               //000223 // Jitter íŽ„ìŠ¤ì—´ì˜ ìµœì†Œ íŽ„ìŠ¤ìˆ˜ (Min. Jitter Pulse Count)
+  UINT Rpc;                // ê¸°ì¤€ íŽ„ìŠ¤ì—´ì˜ íŽ„ìŠ¤ìˆ˜ (Reference Pule Count)
+  UINT Rjgpc;              // 000404  Jitter Stagger ê¸°ì¤€íŽ„ìŠ¤ì—´ì˜ ìµœì†Œ íŽ„ìŠ¤ìˆ˜ (Min. Jitter Stagger Pulse Count)
 
-  UINT Stb_Max_Miss;       // ÃÖ´ë Çã¿ë STABLE MISS °³¼ö
-  UINT Jit_Max_Miss;       // ÃÖ´ë Çã¿ë JITTER MISS °³¼ö
+  UINT Stb_Max_Miss;       // ìµœëŒ€ í—ˆìš© STABLE MISS ê°œìˆ˜
+  UINT Jit_Max_Miss;       // ìµœëŒ€ í—ˆìš© JITTER MISS ê°œìˆ˜
 
-  UINT Reflex_Zone;        // ¹Ý»çÆÄ Ã³¸® ±¸°£
-  UINT Hprf_First_Pri;     // ¹Ý»çÆÄÃ³¸® ÀÌÀü¿¡ High PRFºÎÅÍ Ã³¸®
+  UINT Reflex_Zone;        // ë°˜ì‚¬íŒŒ ì²˜ë¦¬ êµ¬ê°„
+  UINT Hprf_First_Pri;     // ë°˜ì‚¬íŒŒì²˜ë¦¬ ì´ì „ì— High PRFë¶€í„° ì²˜ë¦¬
 
-  UINT Jitter_P;           // ÃÖ´ë Å½Áö jitter %  990226
+  UINT Jitter_P;           // ìµœëŒ€ íƒì§€ jitter %  990226
 
   UINT Dtoa_Sd;            // 500ns / (50 ns) MEAN ERROR
   UINT Freq_Sd;            // low : 1.5 / (0.5MHz), mid : 3.75 / (1.25MHz), High : 4.5 / (1.5MHz)
 
 
-  UINT Jstg_Pt_P;          // Jitter StaggerºÐ¼®¿¡¼­ Stagger·Î ÃßÃâµÈ ÆÞ½º¼öÀÇ ºñÀ² °æ°è, ÀÌ»óÀÌ~¸é Stagger·Î ÆÇÁ¤
-  UINT Jit_Merge_Miss_Cnt; // ÃÖ´ë Çã¿ë º´ÇÕ JITTER MISS °³¼ö
+  UINT Jstg_Pt_P;          // Jitter Staggerë¶„ì„ì—ì„œ Staggerë¡œ ì¶”ì¶œëœ íŽ„ìŠ¤ìˆ˜ì˜ ë¹„ìœ¨ ê²½ê³„, ì´ìƒì´~ë©´ Staggerë¡œ íŒì •
+  UINT Jit_Merge_Miss_Cnt; // ìµœëŒ€ í—ˆìš© ë³‘í•© JITTER MISS ê°œìˆ˜
 
-  // ÆÐÅÏ ºÐ¼®
-  UINT Pat_Min_Cnt;        // ÆÐÅÏ ºÐ¼®¿¡ ÇÊ¿äÇÑ ÃÖ¼Ò ÆÞ½º¼ö
-  UINT Lhp;                // Least Half Period ÃÖ¼Ò ¹ÝÁÖ±â ÆÞ½º¼ö
-  UINT Cross_Over;         // ÆÐÅÏ¿¡¼­ LHPµ¿¾È Æò±ÕÀ» °¡·ÎÁö¸£´Â ÃÖ´ë È¸¼ö
-  UINT Lhp_Thresh;         // ÆÐÅÏ È®ÀÎ¿¡ »ç¿ëµÇ´Â ÃÖ¼Ò¹ÝÁÖ±âÀÇ È¸¼ö
-  UINT Bad_Max;            // ÆÐÅÏ È®ÀÎ¿¡¼­ ÃÖ´ë bad È¸¼ö
-  UINT Filt_Fac;           // Filtering Factor ÆÐÅÏ ÆÄ¶ó¸ÞÅÍ Æò±Õ¹è¿­(filt[])À» ¸¸µé¶§ Æò±ÕÀ» Ãë~ÇÏ´Â ½ÅÈ£¼ö
-  UINT Maxparam_Min;       // Æò±Õ¹è¿­(filt[])ÀÇ ÃÖ´ë°ªÀÇ ÃÖ¼ÒÇÑÀÇ ¼ö
-  UINT Pp_Max_Margin_P;    // ÆÐÅÏÁÖ±â °ËÁõ¿¡¼­ »ç¿ëµÇ´Â ÃÖ´ë°ªÀÇ margin %
-  UINT Pp_Match_P;         // ÆÐÅÏÁÖ±â ±¸ÇÏ±â¿¡¼­ ÆÐÅÏºñ±³¿¡¼­ ¼º°øºñÀ²
+  // íŒ¨í„´ ë¶„ì„
+  UINT Pat_Min_Cnt;        // íŒ¨í„´ ë¶„ì„ì— í•„ìš”í•œ ìµœì†Œ íŽ„ìŠ¤ìˆ˜
+  UINT Lhp;                // Least Half Period ìµœì†Œ ë°˜ì£¼ê¸° íŽ„ìŠ¤ìˆ˜
+  UINT Cross_Over;         // íŒ¨í„´ì—ì„œ LHPë™ì•ˆ í‰ê· ì„ ê°€ë¡œì§€ë¥´ëŠ” ìµœëŒ€ íšŒìˆ˜
+  UINT Lhp_Thresh;         // íŒ¨í„´ í™•ì¸ì— ì‚¬ìš©ë˜ëŠ” ìµœì†Œë°˜ì£¼ê¸°ì˜ íšŒìˆ˜
+  UINT Bad_Max;            // íŒ¨í„´ í™•ì¸ì—ì„œ ìµœëŒ€ bad íšŒìˆ˜
+  UINT Filt_Fac;           // Filtering Factor íŒ¨í„´ íŒŒë¼ë©”í„° í‰ê· ë°°ì—´(filt[])ì„ ë§Œë“¤ë•Œ í‰ê· ì„ ì·¨~í•˜ëŠ” ì‹ í˜¸ìˆ˜
+  UINT Maxparam_Min;       // í‰ê· ë°°ì—´(filt[])ì˜ ìµœëŒ€ê°’ì˜ ìµœì†Œí•œì˜ ìˆ˜
+  UINT Pp_Max_Margin_P;    // íŒ¨í„´ì£¼ê¸° ê²€ì¦ì—ì„œ ì‚¬ìš©ë˜ëŠ” ìµœëŒ€ê°’ì˜ margin %
+  UINT Pp_Match_P;         // íŒ¨í„´ì£¼ê¸° êµ¬í•˜ê¸°ì—ì„œ íŒ¨í„´ë¹„êµì—ì„œ ì„±ê³µë¹„ìœ¨
 
   // MAKE AET
-  UINT Conti_Thr;          // ¿¬¼Ó¼º ÃÖ´ë Áö¼ö
-  UINT Rpt_Pul_Cnt;        // ÀÌ °ª ÀÌ»óÀÇ ÆÞ½º¼öÀÇ AET´Â ¹«Á¶°Ç REPORT ´ë»ó
-} STR_CM ;
+  UINT Conti_Thr;          // ì—°ì†ì„± ìµœëŒ€ ì§€ìˆ˜
+  UINT Rpt_Pul_Cnt;        // ì´ ê°’ ì´ìƒì˜ íŽ„ìŠ¤ìˆ˜ì˜ AETëŠ” ë¬´ì¡°ê±´ REPORT ëŒ€ìƒ
+} ;
 
 //##ModelId=452B0C4E03CC
-typedef struct
+struct STR_SC
 {
-  UINT Pdw_Max;            // ¼öÁý PDW ÃÖ´ë¼ö
+  UINT Pdw_Max;            // ìˆ˜ì§‘ PDW ìµœëŒ€ìˆ˜
   UINT st[ _spMaxTryScan ];
   UINT offst[ _spMaxTryScan ];
 
   UINT thtrkprd;
-} STR_SC;
+} ;
 
 //##ModelId=452B0C4E03D6
-typedef struct
+struct STR_SYS
 {
   UINT mode;
 
@@ -471,38 +454,44 @@ typedef struct
   STR_MG mg;
   STR_FT ft;
 
-  // Å½Áö system parameters
+  // íƒì§€ system parameters
   STR_NP np;
 
-  // ÃßÀû system parameters
+  // ì¶”ì  system parameters
   STR_KP kp;
 
-  // °øÅë(Common) system parameters
+  // ê³µí†µ(Common) system parameters
   STR_CM cm;
 
-  // ½ºÄµ(SAP) system parameters
+  // ìŠ¤ìº”(SAP) system parameters
   STR_SC sc;
-} STR_SYS ;
+} ;
 
-/**	\brief	±¸Á¶Ã¼¸í FREQ_RESOL 
+#ifndef _FREQ_RESOL_
+#define _FREQ_RESOL_
+/**	\brief	êµ¬ì¡°ì²´ëª… FREQ_RESOL 
 */
-typedef struct {
-  // frequency band code¸¦ À§ÇÑ ±¸Á¶Ã¼ 
-  UINT min;       // min frequency
-  UINT max;       // max frequency
+struct FREQ_RESOL {
+    // frequency band codeë¥¼ ìœ„í•œ êµ¬ì¡°ì²´
+    UINT min;       // min frequency
+    UINT max;       // max frequency
 	int offset;       // max frequency
-  float res;			// °¢ ±¸°£¿¡ µû¸¥ resolution
-} FREQ_RESOL ;
+    float res;			// ê° êµ¬ê°„ì— ë”°ë¥¸ resolution
+} ;
+#endif
 
-typedef struct {
-  // frequency band code¸¦ À§ÇÑ ±¸Á¶Ã¼ 
-  UINT min;       // min frequency
-  UINT max;       // max frequency
+#ifndef _PA_RESOL_
+#define _PA_RESOL_
+struct PA_RESOL {
+    // frequency band codeë¥¼ ìœ„í•œ êµ¬ì¡°ì²´
+    UINT min;       // min frequency
+    UINT max;       // max frequency
 	float offset;      // max frequency
-  float res;			// °¢ ±¸°£¿¡ µû¸¥ resolution
-} PA_RESOL ;
+    float res;			// ê° êµ¬ê°„ì— ë”°ë¥¸ resolution
+} ;
+#endif
 
-typedef struct {
+struct STR_DWELL_LEVEL {
 	int iPulseCount1;
 	_TOA dtoa1;
 	int iPulseCount2;
@@ -510,24 +499,24 @@ typedef struct {
 
 	bool bUsed;
 
-} STR_DWELL_LEVEL;
+} ;
 
 #ifdef __cplusplus
-extern "C"
-{
+//extern "C"
+//{
 #endif
 
 #ifdef _MAIN_
   STR_SYS _sp;
 
-  // ÁÖÆÄ¼ö ¹êµåº° ¿É¼Â°ª°ú resolution
+  // ì£¼íŒŒìˆ˜ ë°´ë“œë³„ ì˜µì…‹ê°’ê³¼ resolution
   // Update AOA threshold
   UINT _sprfaoa[ 6 ] =
   {
     0, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa
   } ;
 
-  // ¿¡¹ÌÅÍ·Î ÀÎÁöÇÏ´Â °ª 
+  // ì—ë¯¸í„°ë¡œ ì¸ì§€í•˜ëŠ” ê°’ 
   UINT _spdiffaoa[ 6 ] =
   {
     0, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa
@@ -536,51 +525,68 @@ extern "C"
 
 #define DFD_FREQ_OFFSET		(1900)
 
+#ifdef _ELINT_
+
+#elif defined(_POCKETSONATA_)
+#define _AOARes                 ( (float) (360./512.) )
 FREQ_RESOL gFreqRes[ 6 ] =
 {	// min, max, offset, res
-  {     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
-	{  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* Àú´ë¿ª		*/
-	{  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* °í´ë¿ª1	*/
-	{ 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* °í´ë¿ª2	*/
-	{ 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* °í´ë¿ª3	*/
-	{     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
+    {     0,     0, 0, 0.0131072 },
+    {  2000,  6000, 0, 0.0131072 },		/* ì €ëŒ€ì—­		*/
+    {  5500, 10000, 0, 0.0131072 },		/* ê³ ëŒ€ì—­1	*/
+    { 10000, 14000, 0, 0.0131072 },		/* ê³ ëŒ€ì—­2	*/
+    { 14000, 18000, 0, 0.0131072 },		/* ê³ ëŒ€ì—­3	*/
+    {     0,  5000, 0, 0.0131072 }		/* C/D			*/
 } ;
+
 
 PA_RESOL gPaRes[ 6 ] =
 {	// min, max, offset, res
-  {     0,     0,  (float) _spPAoffset, _spAMPres }, 
-	{  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* Àú´ë¿ª		*/
-	{  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* °í´ë¿ª1	*/
-	{ 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* °í´ë¿ª2	*/
-	{ 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* °í´ë¿ª3	*/
-	{     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+  {     0,     0,  (float) _spPAoffset, _spAMPres },
+    {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* ì €ëŒ€ì—­		*/
+    {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* ê³ ëŒ€ì—­1	*/
+    { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* ê³ ëŒ€ì—­2	*/
+    { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* ê³ ëŒ€ì—­3	*/
+    {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
 } ;
 
 #else
-	extern float _toaRes[en50MHZ_BW+1];
 
-  extern STR_SYS _sp;
+#endif
+
+#else
+    //extern float _toaRes[en50MHZ_BW+1];
+
+    extern STR_SYS _sp;
 
 #ifdef _ELINT_
-  extern UINT _sprfaoa[ 6 ];
-  extern UINT _spdiffaoa[ 6 ];
-	extern FREQ_RESOL gFreqRes[ 6 ];
-	extern PA_RESOL gPaRes[ 6 ];
+    //extern UINT _sprfaoa[ 6 ];
+    extern UINT _spdiffaoa[ 6 ];
+    extern FREQ_RESOL gFreqRes[ 4 ];
+    extern PA_RESOL gPaRes[ 6 ];
+
+#elif defined(_POCKETSONATA_)
+#define _AOARes                 ( (float) (360./512.) )
+    //extern UINT _sprfaoa[ 6 ];
+    extern UINT _spdiffaoa[ 6 ];
+    extern FREQ_RESOL gFreqRes[ 6 ];
+    extern PA_RESOL gPaRes[ 6 ];
+
 #else
-  extern UINT _sprfaoa[ 4 ];
-  extern UINT _spdiffaoa[ 4 ];
+    extern UINT _sprfaoa[ 4 ];
+    extern UINT _spdiffaoa[ 4 ];
 	extern FREQ_RESOL gFreqRes[ 4 ];
 #endif
 
 #endif
 
 
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 
 
-// qsort ÇÔ¼ö ¼±¾ð
+// qsort í•¨ìˆ˜ ì„ ì–¸
 int pdwindexCompare( const void *arg1, const void *arg2 );
 
 #endif // !defined(AFX_NSTRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

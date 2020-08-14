@@ -5,6 +5,8 @@
 
 #include "../../Utils/cqueue.h"
 
+#include "../../Anal/INC/PDW.h"
+
 class CCollectBank
 {
 private:
@@ -15,7 +17,7 @@ private:
 
     STR_WINDOWCELL m_strWindowCell;
 
-    STR_ARRAY_PDW m_strPDW;
+    STR_PDWDATA m_strPDW;
 
     static Queue<int> m_theQueueWindowCellID;
 
@@ -35,13 +37,13 @@ public:
     void SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL );
 
     void CopyPDW();
-    void PushPDWData( STR_ARRAY_PDW *pstrArrayPDW );
+    void PushPDWData( STR_PDWDATA *pstrArrayPDW );
 
     inline bool IsCompleteCollect() { return m_strWindowCell.enCollectMode == enCompleteCollection; }
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
-    inline STR_ARRAY_PDW *GetPDW() { return & m_strPDW; }
+    inline STR_PDWDATA *GetPDW() { return & m_strPDW; }
 };
 
 

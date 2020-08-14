@@ -1,8 +1,8 @@
-// Group.cpp: implementation of the CGroup class.
+﻿// Group.cpp: implementation of the CGroup class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -12,6 +12,13 @@
 
 #ifdef _ELINT_
 #include "../OFP_Main.h"
+
+#elif _POCKETSONATA_
+
+
+#else
+#error "컴파일러에 DEFINE 을 추가해야 합니다."
+
 #endif
 
 #include <math.h>
@@ -40,7 +47,7 @@ CGroup::CGroup( int coMaxPdw /*=NSP_MAX_PDW*/ )
 
     m_nMaxPdw = coMaxPdw;
 
-    for( i=0 ; i < ALL_BAND ; ++i ) {
+    for( i=0 ; i < TOTAL_BAND ; ++i ) {
         m_Band[i].pIndex = ( PDWINDEX * ) malloc( m_nMaxPdw * sizeof( PDWINDEX ) );
         if( m_Band[i].pIndex == NULL ) {
             bRet = FALSE;
@@ -103,13 +110,15 @@ CGroup::~CGroup()
     for( i=0 ; i < MAX_STAT ; ++i )
         free( m_GrStat[i].pIndex );
 
-    for( i=0 ; i < MAX_AGRT ; ++i )
+    for( i=0 ; i < MAX_AGRT ; ++i ) {
         free( m_AoaGroups.aoa[i].pIndex );
+    }
 
     free( m_FrqAoaPwIdx.pIndex );
 
-    for( i=0 ; i < ALL_BAND ; ++i )
+    for( i=0 ; i < TOTAL_BAND ; ++i ) {
         free( m_Band[i].pIndex );
+    }
 
     free( m_pCluster );
 }
@@ -147,7 +156,7 @@ void CGroup::Init()
 //
 // 함 수 이 름  : CGroup::MakePDWArray
 // 반환되는 형  : void
-// 함 수 인 자  : TNEW_PDW *pdw
+// 함 수 인 자  : _PDW *pdw
 // 함 수 인 자  : int count
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-11-01 15:02:38
@@ -195,12 +204,12 @@ void CGroup::MakePDWArray( _PDW *pdw, int count )
     }
 }
 
-#elif defined(_ELINT_)
+#elif defined(_ELINT_) || defined(_POCKETSONATA_)
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CGroup::MakePDWArray
 // 반환되는 형  : void
-// 함 수 인 자  : TNEW_PDW *pdw
+// 함 수 인 자  : _PDW *pdw
 // 함 수 인 자  : int count
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-11-01 15:02:38
@@ -269,70 +278,6 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
     return bRet;
 }
 #else
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup::MakePDWArray
-// 반환되는 형  : void
-// 함 수 인 자  : TNEW_PDW *pdw
-// 함 수 인 자  : int count
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-11-01 15:02:38
-//
-void CGroup::MakePDWArray( _PDW *pdw, int count )
-{
-    int i;
-    _PDW temp;
-
-    // UINT firstToa;
-
-    BOOL flagBand[3];
-
-    UINT firstToaBand[3];
-
-    UINT *pToa, *pPa, *pAoa, *pPw, *pFreq;
-
-    UCHAR *pStat, *pBand, *pPmop, *pFmop, *pMaxChannel;
-    USHORT *pMark;
-
-    pToa = & TOA[0];
-    pStat = & STAT[0];
-    pPa = & PA[0];
-    pPmop = & PMOP[0];
-    pFmop = & FMOP[0];
-    pAoa = & AOA[0];
-    pPw = & PW[0];
-    pFreq = & FREQ[0];
-    pMark = & MARK[0];
-    pBand = & BAND[0];
-    pMaxChannel = &MAXCHANNEL[0];
-
-    // 첫번째 TOA 얻기
-    temp.word[0] = pdw->item.toa;
-
-    flagBand[0] = flagBand[1] = flagBand[2] = FALSE;
-
-    for( i=0 ; i < count ; ++i, ++pdw )	{
-        temp.word[0] = pdw->item.toa;
-
-        if( flagBand[pdw->item.band] == FALSE ) {
-            flagBand[ pdw->item.band ] = TRUE;
-            firstToaBand[ pdw->item.band ] = temp.word[0];
-        }
-
-        *pToa++ = temp.word[0] - firstToaBand[ pdw->item.band ];
-
-        *pStat++ = pdw->item.stat;
-        *pPa++   = pdw->item.amplitude;
-        //*pPmop++ = pdw->item.pmop;
-        //*pFmop++ = pdw->item.fdiff;
-        *pAoa++ = pdw->item.aoa;
-        *pPw++ = pdw->item.pw;
-        *pFreq++ = pdw->item.freq;
-        *pMark++ = UnMark;
-        *pBand++ = pdw->item.band;
-        *pMaxChannel ++ = pdw->item.max_channel;
-    }
-}
 
 #endif
 
@@ -491,6 +436,9 @@ void CGroup::PrintAllGroup()
 #endif
 }
 
+/**
+ * @brief CGroup::PrintGroup
+ */
 void CGroup::PrintGroup()
 {
     STR_AOA_GROUP *pAoaGroup;
@@ -503,8 +451,8 @@ void CGroup::PrintGroup()
 
     printf( "\n\n ----------------------------------------------------------------------------------" );
     Log( enNormal, "----------------------------------------------------------------------------------" );
-    printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-    Log( enNormal, " [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+    printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+    Log( enNormal, " [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
 
 }
 
@@ -561,8 +509,9 @@ void CGroup::MakeBandGroup()
     UCHAR *pBand;
 
     // 밴드 그룹화 초기화
-    for( i=0 ; i < TOTAL_BAND ; ++i )
+    for( i=0 ; i < TOTAL_BAND ; ++i ) {
         m_Band[i].count = 0;
+    }
 
     // 밴드 그룹화
     pBand = & BAND[0];
@@ -601,6 +550,10 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     pShortPdwIndex = m_GrStat[STAT_SHORTP].pIndex;
     pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
 
+#elif defined(_POCKETSONATA_)
+    pNormalPdwIndex = m_GrStat[STAT_NORMAL].pIndex;
+    pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
+
 #else
     pNormalPdwIndex = m_GrStat[STAT_NORMAL].pIndex;
     pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
@@ -609,8 +562,9 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     pBitPdwIndex = m_GrStat[STAT_BIT].pIndex;
 #endif
 
-    for( i=0 ; i < MAX_STAT ; ++i )
+    for( i=0 ; i < MAX_STAT ; ++i ) {
         m_GrStat[i].count = 0;
+    }
 
     pPdwIndex = pBand->pIndex;
 
@@ -637,6 +591,9 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
                 *pShortPdwIndex++ = *pPdwIndex;
                 ++ m_GrStat[STAT_SHORTP].count;
                 break;
+
+#elif defined(_POCKETSONATA_)
+
 #else
             case PDW_CHIRPDN :
                 *pChirpDnPdwIndex++ = *pPdwIndex;
@@ -888,8 +845,8 @@ void CGroup::MakePWGroup( int frqidx, bool bForce1Group )
         pPwGroup->from_pw = PW[ *pIndex ];
         pPwGroup->to_pw = PW[ *pIndex ];
         for( i=0 ; i < pAoaGroup->count ; ++i ) {
-            pPwGroup->from_pw = min( pPwGroup->from_pw, PW[ *pIndex ] );
-            pPwGroup->to_pw = max( pPwGroup->to_pw, PW[ *pIndex ] );
+            pPwGroup->from_pw = _min( pPwGroup->from_pw, PW[ *pIndex ] );
+            pPwGroup->to_pw = _max( pPwGroup->to_pw, PW[ *pIndex ] );
 
             ++ pIndex;
         }
@@ -1081,8 +1038,8 @@ UINT CGroup::MakeFreqGroup( int door, int aoaidx, int frqidx, bool bForce1Group 
         pFrqGroup->from_frq = FREQ[ *pIndex ];
         pFrqGroup->to_frq = FREQ[ *pIndex ];
         for( i=0 ; i < pAoaGroup->count ; ++i ) {
-            pFrqGroup->from_frq = min( pFrqGroup->from_frq, FREQ[ *pIndex ] );
-            pFrqGroup->to_frq = max( pFrqGroup->to_frq, FREQ[ *pIndex ] );
+            pFrqGroup->from_frq = _min( pFrqGroup->from_frq, FREQ[ *pIndex ] );
+            pFrqGroup->to_frq = _max( pFrqGroup->to_frq, FREQ[ *pIndex ] );
 
             ++ pIndex;
         }
@@ -1187,7 +1144,7 @@ int CGroup::GetFreqShift( int band, int freq )
     int i;
     int power=1;
 
-#ifdef _SONATA_
+#ifdef _ELINT_
     float freq_res = gFreqRes[band+1].res;
     freq_res = freq_res > 0 ? freq_res : -freq_res;
     for( i=1 ; i <= 30 ; ++i ) {
@@ -1195,6 +1152,16 @@ int CGroup::GetFreqShift( int band, int freq )
             break;
         power *= 2;
     }
+#elif defined(_POCKETSONATA_)
+    float freq_res = gFreqRes[band+1].res;
+    //freq_res = freq_res > 0 ? freq_res : -freq_res;
+    for( i=1 ; i <= 30 ; ++i ) {
+        if( UMUL( power, freq_res ) >= (UINT) freq ) {
+            break;
+        }
+        power *= 2;
+    }
+
 #else
 
     for( i=1 ; i <= 30 ; ++i ) {
@@ -2192,6 +2159,10 @@ void CGroup::MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex )
 #define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoa )		// 대역중에서 가장 큰 방위 오차
 #define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoa )		// 클러스터 사이간의 최대 길이
 
+#elif defined(_POCKETSONATA_)
+#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoa )		// 대역중에서 가장 큰 방위 오차
+#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoa )		// 클러스터 사이간의 최대 길이
+
 #else
 #define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoaLow )		// 대역중에서 가장 큰 방위 오차
 #define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoaLow )		// 클러스터 사이간의 최대 길이
@@ -2216,7 +2187,7 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
 
     // 초기화
     m_pPdwParam = pPdw;
-    m_nClusters = 1;
+    m_nClusters = _spOne;
     pCluster = & m_pCluster[0];
     pCluster->count = pSrcIndex->count;
     memcpy( pCluster->index, pSrcIndex->pIndex, sizeof(PDWINDEX)*pCluster->count );

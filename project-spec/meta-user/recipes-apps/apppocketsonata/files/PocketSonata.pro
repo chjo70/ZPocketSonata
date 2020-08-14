@@ -4,12 +4,18 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        Anal/Identify/ELUtil.cpp \
+        Anal/NewSigAnal/NAnalPRI.cpp \
+        Anal/NewSigAnal/NGroup.cpp \
+        Anal/NewSigAnal/NMakeAET.cpp \
+        Anal/NewSigAnal/NPulExt.cpp \
         Anal/NewSigAnal/NewSigAnal.cpp \
         Anal/SigAnal/AnalPRI.cpp \
         Anal/SigAnal/Group.cpp \
         Anal/SigAnal/MakeAET.cpp \
         Anal/SigAnal/PulExt.cpp \
         Anal/SigAnal/SysPara.cpp \
+        Anal/SigAnal/stdafx.cpp \
         Collect/DataFile/DataFile.cpp \
         Collect/ccollectbank/ccollectbank.cpp \
         MinIni/minIni.cpp \
@@ -42,21 +48,65 @@ SOURCES += \
         cmain.cpp
 
 HEADERS += \
+    Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.h \
+    Anal/EmitterMerge/ELEmitterDataType.h \
+    Anal/EmitterMerge/ELEnvironVariableMngr.h \
+    Anal/EmitterMerge/ELGMIMsgDefn.h \
+    Anal/EmitterMerge/ELMsgDefn.h \
+    Anal/EmitterMerge/ELOperationCtrlDataType.h \
+    Anal/EmitterMerge/ELPosEstDataType.h \
+    Anal/EmitterMerge/ELThreat.h \
+    Anal/EmitterMerge/ElintRsltDataTypedb.h \
+    Anal/EmitterMerge/ElintTaskDataTypedb.h \
+    Anal/EmitterMerge/GeoCoordConv.h \
+    Anal/EmitterMerge/LinearLS/LinearLS.h \
+    Anal/EmitterMerge/Matrix/Matrix.h \
+    Anal/EmitterMerge/NonlinearLS/NonLinearLS.h \
+    Anal/EmitterMerge/PositionEstimation.h \
+    Anal/EmitterMerge/PositionEstimationAlg.h \
+    Anal/EmitterMerge/Quadratic/Quadratic.h \
+    Anal/EmitterMerge/Stack.h \
+    Anal/INC/AetIPL.h \
+    Anal/INC/ErrorMsg.h \
+    Anal/INC/Globals.h \
+    Anal/INC/Macros.h \
+    Anal/INC/OS.h \
+    Anal/INC/PDW.h \
+    Anal/INC/Stack.h \
+    Anal/INC/TaskMsg.h \
+    Anal/INC/defines.h \
+    Anal/INC/structs.h \
+    Anal/INC/system.h \
+    Anal/Identify/ELCEDLibDataType.h \
+    Anal/Identify/ELCEDLibDataType2.h \
+    Anal/Identify/ELCEDLibMngr2.h \
+    Anal/Identify/ELUtil.h \
+    Anal/Identify/Identify.h \
+    Anal/Identify/define.h \
+    Anal/Identify/structs.h \
     Anal/NewSigAnal/NAnalPRI.h \
     Anal/NewSigAnal/NGroup.h \
     Anal/NewSigAnal/NMakeAET.h \
     Anal/NewSigAnal/NPulExt.h \
     Anal/NewSigAnal/NewSigAnal.h \
+    Anal/NewSigAnal/NewSigAnal.hh \
+    Anal/OFP_Main.h \
+    Anal/ScanSigAnal/SAnalScan.h \
+    Anal/ScanSigAnal/SDefine.h \
+    Anal/ScanSigAnal/SGroup.h \
+    Anal/ScanSigAnal/SPulExt.h \
+    Anal/ScanSigAnal/SStruct.h \
+    Anal/ScanSigAnal/ScanSigAnal.h \
     Anal/SigAnal/AnalPRI.h \
     Anal/SigAnal/Group.h \
     Anal/SigAnal/MakeAET.h \
     Anal/SigAnal/PulExt.h \
     Anal/SigAnal/SysPara.h \
     Anal/SigAnal/_Define.h \
+    Anal/SigAnal/_Macro.h \
     Anal/SigAnal/_SigAnal.h \
     Anal/SigAnal/_Struct.h \
-    Anal/SigAnal/_macro.h \
-    Anal/SigAnal/_type.h \
+    Anal/SigAnal/_Type.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     Collect/DataFile/_iq.h \
@@ -132,6 +182,9 @@ LIBS += -lreadline
 LIBS += -lboost_thread
 
 INCLUDEPATH += /usr/local/boost
+
+DEFINES += _POCKETSONATA_
+DEFINES += NEX7410
 
 DISTFILES += \
     NetMem/CMakeLists.txt \

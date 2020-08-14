@@ -1,8 +1,8 @@
-// MakeAET.cpp: implementation of the CMakeAET class.
+﻿// MakeAET.cpp: implementation of the CMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -12,6 +12,12 @@
 
 #ifdef _ELINT_
 #include "../OFP_Main.h"
+
+#elif _POCKETSONATA_
+#include "../Identify/ELUtil.h"
+#include "../EmitterMerge/ELMsgDefn.h"
+
+#else
 #endif
 
 #include <stdio.h>
@@ -234,8 +240,6 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             pFrq->mean = CalcFreqMedian( pSeg );
             pFrq->min = pEmitter->freq.min;
             pFrq->max = pEmitter->freq.max;
-
-
             break;
 
         case _PATTERN_AGILE :
@@ -278,7 +282,7 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 
             // 호핑 레벨값을 산출한다.
             pFrq->swtLev = pEmitter->hop_level_cnt;
-            memcpy( pFrq->swtVal, pEmitter->hop_level, min( _spMaxSwtLev, pFrq->swtLev )*sizeof(int) );
+            memcpy( pFrq->swtVal, pEmitter->hop_level, _min( _spMaxSwtLev, pFrq->swtLev )*sizeof(int) );
             break;
 
     }

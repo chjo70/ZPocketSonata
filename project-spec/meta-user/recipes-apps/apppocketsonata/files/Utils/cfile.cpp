@@ -5,9 +5,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-int CFile::shareDenyNone=4;
-int CFile::typeBinary=1;
-int CFile::modeRead=8;
+unsigned int CFile::shareDenyNone=0;
+unsigned int CFile::typeBinary=0;
+unsigned int CFile::modeReadWrite=0;
+unsigned int CFile::modeRead=O_RDONLY;
+unsigned int CFile::modeCreate=O_CREAT;
 
 /**
  * @brief CFile::CFile

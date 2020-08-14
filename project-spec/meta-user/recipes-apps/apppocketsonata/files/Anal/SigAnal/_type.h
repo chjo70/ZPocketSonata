@@ -1,4 +1,4 @@
-/****************************************************************************************
+﻿/****************************************************************************************
  파 일 명 : _type.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
@@ -21,9 +21,55 @@
 
 #include <stddef.h>
 
-#ifndef _WIN32
-//#include <types/vxTypesOld.h>
+#ifdef _WIN32
+
+#elif __linux__
+#include <vector>
+#include <list>
+#include <map>
+
+using namespace std;
+
+#include <time.h>
+#include <sys/timeb.h>
+//#include <sys/timeb.h>
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// 리눅스용 컴파일 추가
+typedef bool BOOL;
+typedef unsigned int UINT;
+typedef unsigned char UCHAR;
+typedef unsigned short USHORT;
+typedef time_t __time32_t;
+typedef string CString;
+
+#define _T(A)                   (A)
+
+#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
+
+#define sprintf_s               sscanf
+#define wsprintf                sprintf
+
+#define _time32(A)              time(A)
+#define __time32_t              time_t
+#define __timeb32               timeb
+#define _ftime32_s              ftime
+#define _localtime32_s(A,B)     localtime_r(B,A)
+
+
+#define TRACE                   printf
+
+#define FLT_MIN         1.175494351e-38F        /* min positive value */
+
+#include "../../Utils/cfile.h"
+
+
+#else
+#include <types/vxTypesOld.h>
+
 #endif
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  레이더 징표분석기용 형 선언
@@ -31,10 +77,12 @@
 
 #define TASK  void
 
-#define TRUE 1
-#define FALSE 0
+#define TRUE (true)
+#define FALSE (false)
 
-typedef long long int _TOA;
+#ifndef _TOA
+typedef unsigned long long int _TOA;
+#endif
 
 #define DINT  int
 

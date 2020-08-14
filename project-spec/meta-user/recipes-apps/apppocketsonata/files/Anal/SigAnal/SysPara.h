@@ -1,4 +1,4 @@
-// SysPara.h: interface for the CSysPara class.
+﻿// SysPara.h: interface for the CSysPara class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,15 +9,15 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "_type.h"
-#include "_macro.h"
+#include "_Type.h"
+#include "_Macro.h"
 
 #include "../INC/structs.h"
 
 #include "_Define.h"
 #include "_Struct.h"
 
-
+#include "_SigAnal.h"
 
 #ifdef __cplusplus
 

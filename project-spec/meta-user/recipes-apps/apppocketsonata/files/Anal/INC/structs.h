@@ -1,6 +1,6 @@
-/*!
+ï»¿/*!
   \file     Structs.h
-  \brief    interface for the ±¸Á¶Ã¼
+  \brief    interface for the êµ¬ì¡°ì²´
 	\version  0.0.1
 */
 //////////////////////////////////////////////////////////////////////
@@ -12,72 +12,74 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "System.h"
+#include "system.h"
+#include "defines.h"
+#include "PDW.h"
 #include "../SigAnal/_Define.h"
 #include "../EmitterMerge/ELMsgDefn.h"
 
-#include "_pdw.h"
-#include "_aetipl.h"
+#include "PDW.h"
+#include "AetIPL.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ÃÊ±âÈ­ ÆÄÀÏ ±¸Á¶Ã¼
-typedef struct {
+// ì´ˆê¸°í™” íŒŒì¼ êµ¬ì¡°ì²´
+struct STR_KEY {
 	unsigned	 search : 1;
 	unsigned		 hand : 1;
 	unsigned		 open : 1;
 	unsigned		  low : 1;
 	unsigned			sep	: 1;
 	unsigned			unk : 1;
-	unsigned					: 26;
+    unsigned			: 26;
 
-} STR_KEY ;
+} ;
 
-typedef union {
+union UNI_KEY {
 	STR_KEY x;
 	UINT word;
 
-} UNI_KEY ;
+} ;
 
-typedef struct {
-	// È¯°æ Á¤º¸
+struct STR_INI_DATA {
+	// í™˜ê²½ ì •ë³´
 	char serverIP[20];
 
-	// Å° °ª
+	// í‚¤ ê°’
 	UNI_KEY key;
 
-} STR_INI_DATA ;
+} ;
 
 //////////////////////////////////////////////////////////////////////////
 //
 
 
-// Ã¤³Î º¸Á¤ µ¥ÀÌÅÍ
-typedef struct {
+// ì±„ë„ ë³´ì • ë°ì´í„°
+struct STR_CHANNEL_COMPSATION {
 	UINT from_address;
 	UINT to_address;
 
 	UINT count;
-	UINT *pChannelCompensation;		// ÃÖ´ë Å©±â´Â 16MB ÀÓ. ÇÏµå¿ş¾î ÆÀ°ú ÇùÀÇÇØ¼­ ÃÖ´ë Å©±â¸¦ °áÁ¤ÇØ¾ß ÇÔ.
+	UINT *pChannelCompensation;		// ìµœëŒ€ í¬ê¸°ëŠ” 16MB ì„. í•˜ë“œì›¨ì–´ íŒ€ê³¼ í˜‘ì˜í•´ì„œ ìµœëŒ€ í¬ê¸°ë¥¼ ê²°ì •í•´ì•¼ í•¨.
 
-} STR_CHANNEL_COMPSATION ;
+} ;
 
 
-// ÃÊ´Ü¼ö½Å±â ¸Ş½ÃÁö ±¸Á¶Ã¼ 
-typedef struct {
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸° ë©”ì‹œì§€ êµ¬ì¡°ì²´ 
+struct STR_HF_CHANNEL_ADDRESS {
 	unsigned  address : 24;
 	//unsigned  low   : 8;
 	//unsigned  mid   : 8;
 	//unsigned  hgh   : 8;
 	unsigned   count  : 8;
 
-} STR_HF_CHANNEL_ADDRESS ;
+} ;
 
-typedef struct {
+struct STR_HF_TEMPERATURE {
 	unsigned sign			   :  1;
 	unsigned temperature : 10;
 	unsigned             : 21;
 
-} STR_HF_TEMPERATURE ;
+} ;
 
 // typedef struct {
 // 	USHORT year;
@@ -113,7 +115,7 @@ typedef struct {
 // 
 // } STR_HF_RECEIVER ;
 
-// ÃÊ´Ü¼ö½Å±âÀÇ ÇÏµå¿ş¾î ¿¬µ¿ »óÅÂ
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ í•˜ë“œì›¨ì–´ ì—°ë™ ìƒíƒœ
 // typedef struct {
 // 	UCHAR hf_recver[TOTAL_RECEIVER];
 // 
@@ -121,43 +123,43 @@ typedef struct {
 
 
 //////////////////////////////////////////////////////////////////////////
-// Ç×°ø±âÁ¢¼ÓÆÇÀÇ ±¸Á¶Ã¼ Á¤ÀÇ
+// í•­ê³µê¸°ì ‘ì†íŒì˜ êµ¬ì¡°ì²´ ì •ì˜
 
-// ÀÚÃ¼Á¡°Ë ±¸Á¶Ã¼
-typedef struct {
-	unsigned							: 7;	
-	unsigned power_module : 1;		// Àü¿ø ¸ğµâ
-	unsigned							: 4;
-	unsigned				audio : 1;		// ¿Àµğ¿À
-	unsigned				flare : 1;		// ÇÃ·¹¾î ¿¬µµ
-	unsigned				chaff : 1;		// Ã¤ÇÁ ¿¬µ¿
-	unsigned		 cpu_stat : 1;		// CPU »óÅÂ
-	unsigned							: 16;
+// ìì²´ì ê²€ êµ¬ì¡°ì²´
+struct STR_LA_BIT {
+    unsigned : 7;
+	unsigned power_module : 1;		// ì „ì› ëª¨ë“ˆ
+    unsigned : 4;
+    unsigned audio : 1;		// ì˜¤ë””ì˜¤
+    unsigned flare : 1;		// í”Œë ˆì–´ ì—°ë„
+    unsigned chaff : 1;		// ì±„í”„ ì—°ë™
+    unsigned cpu_stat : 1;		// CPU ìƒíƒœ
+    unsigned : 16;
 
-} STR_LA_BIT ;
+}  ;
 
-typedef union {
+union UNI_LA_BIT {
 	STR_LA_BIT x;
 	UINT word;
 
-} UNI_LA_BIT ;
+}  ;
 
-// º¸µåID ±¸Á¶Ã¼
-typedef struct {
-	UCHAR reserver1: 8;		// Æß¿ş¾î Á¤º¸
-	UCHAR reserver2: 8;		// Á¦Á¶ÀÏ·Ã¹øÈ£
-	USHORT id: 8;					// º¸µåID: 0xA136
+// ë³´ë“œID êµ¬ì¡°ì²´
+struct STR_LA_BOARD_ID {
+	UCHAR reserver1: 8;		// íŒì›¨ì–´ ì •ë³´
+	UCHAR reserver2: 8;		// ì œì¡°ì¼ë ¨ë²ˆí˜¸
+	USHORT id: 8;					// ë³´ë“œID: 0xA136
 
-} STR_LA_BOARD_ID ;
+} ;
 
-typedef union {
+union UNI_LA_BOARD_ID {
 	STR_LA_BOARD_ID x;
 	UINT word;
 
-} UNI_LA_BOARD_ID ;
+} ;
 
-// ¿Àµğ¿À ¼³Á¤ ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ì˜¤ë””ì˜¤ ì„¤ì • êµ¬ì¡°ì²´ ì •ì˜
+struct STR_LA_AUDIO_CONFIG {
 	unsigned									 : 13;
 	unsigned					req_tone : 2;
 	unsigned req_audio_control : 1;
@@ -165,16 +167,16 @@ typedef struct {
 	unsigned					set_tone : 2;
 	unsigned set_audio_control : 1;
 
-} STR_LA_AUDIO_CONFIG ;
+} ;
 
-typedef union {
+union UNI_LA_AUDIO_CONFIG {
 	STR_LA_AUDIO_CONFIG x;
 	UINT word;
 
-} UNI_LA_AUDIO_CONFIG ;
+}  ;
 
-// Blanking Mask ¼³Á¤
-typedef struct {
+// Blanking Mask ì„¤ì •
+struct STR_LA_BLANK_MASK {
 	unsigned						: 24;
 	unsigned			 blk7 : 1;
 	unsigned			 blk6 : 1;
@@ -185,15 +187,15 @@ typedef struct {
 	unsigned			 blk1 : 1;
 	unsigned blk_on_off : 1;
 
-} STR_LA_BLANK_MASK ;
+}  ;
 
-typedef union {
+union UNI_LA_BLANK_MASK {
 	STR_LA_BLANK_MASK x;
 	UINT word;
 
-} UNI_LA_BLANK_MASK ;
+}  ;
 
-typedef struct {
+struct STR_LA_CMDS {
 	unsigned chaff_error : 2;
 	unsigned		arm_stat : 1;
 	unsigned	power_stat : 1;
@@ -210,69 +212,69 @@ typedef struct {
 	unsigned		set_semi : 1;
 	unsigned	set_manual : 1;
 
-} STR_LA_CMDS ;
+}  ;
 
-typedef union {
+union UNI_LA_CMDS {
 	STR_LA_CMDS x;
 	UINT word;
 
-} UNI_LA_CMDS ;
+}  ;
 
-// C/F ¹ß»ç Á¤º¸ ¼³Á¤
-typedef struct {
+// C/F ë°œì‚¬ ì •ë³´ ì„¤ì •
+struct STR_LA_CFINFO {
 	unsigned						: 16;
 	unsigned			 type : 4;
 	unsigned start_flag : 2;
 	unsigned			 time : 10;
 
-} STR_LA_CFINFO ;
+}  ;
 
-typedef union {
+union UNI_LA_CFINFO {
 	STR_LA_CFINFO x;
 	UINT word;
 
-} UNI_LA_CFINFO ;
+}  ;
 
-// C/F ¹ß»ç Á¦¾î ¿ä±¸
-typedef struct {
+// C/F ë°œì‚¬ ì œì–´ ìš”êµ¬
+struct STR_LA_REQ_FIRE {
 	unsigned					 : 22;
 	unsigned stop_flag : 2;
 	unsigned					 : 6;
 	unsigned fire_ctrl : 2;
 
-} STR_LA_REQ_FIRE ;
+}  ;
 
-typedef union {
+union UNI_LA_REQ_FIRE {
 	STR_LA_REQ_FIRE x;
 	UINT word;
 
-} UNI_LA_REQ_FIRE ;
+}  ;
 
-typedef struct {
+struct STR_LA_CFREMAIN {
 	unsigned				: 16;
 	unsigned				: 1;
 	unsigned _flare : 7;
 	unsigned				: 1;
 	unsigned _chaff : 7;
 
-} STR_LA_CFREMAIN ;
+}  ;
 
-typedef union {
+union UNI_LA_CFREMAIN {
 	STR_LA_CFREMAIN x;
 	UINT word;
 
-} UNI_LA_CFREMAIN ;
+}  ;
 
 
 
 //////////////////////////////////////////////////////////////////////////
-// ÆŞ½ºÁ¤º¸»ı¼ºÆÇÀÇ ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
-	UCHAR reserver1 : 8;		// Æß¿ş¾î Á¤º¸
-	UCHAR reserver2 : 8;		// Á¦Á¶ÀÏ·Ã¹øÈ£
-	USHORT			 id : 8;					// º¸µåID: 0xA137
+// í„ìŠ¤ì •ë³´ìƒì„±íŒì˜ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_PG_BOARD_ID {
+	UCHAR reserver1 : 8;		// íŒì›¨ì–´ ì •ë³´
+	UCHAR reserver2 : 8;		// ì œì¡°ì¼ë ¨ë²ˆí˜¸
+	USHORT			 id : 8;					// ë³´ë“œID: 0xA137
 
-} STR_PG_BOARD_ID ;
+}  ;
 
 typedef union {
 	STR_PG_BOARD_ID x;
@@ -281,59 +283,59 @@ typedef union {
 } UNI_PG_BOARD_ID ;
 
 
-typedef struct {
+struct STR_PG_BIT {
 	unsigned					: 11;		
-	unsigned flash_mem: 1;		// °ËÃâ °á°ú
-	unsigned sram     : 1;		// ¹ß»ı °á°ú
-	unsigned lo_6_3		: 1;		// ÀúÀå °á°ú
+	unsigned flash_mem: 1;		// ê²€ì¶œ ê²°ê³¼
+	unsigned sram     : 1;		// ë°œìƒ ê²°ê³¼
+	unsigned lo_6_3		: 1;		// ì €ì¥ ê²°ê³¼
 	unsigned lo_16		: 1;
-	unsigned lo_12    : 1;		// ¹æÀ§ Á¤»ó
+	unsigned lo_12    : 1;		// ë°©ìœ„ ì •ìƒ
 	unsigned board_id : 16;
 
-} STR_PG_BIT ;
+}  ;
 
-typedef union {
+union UNI_PG_BIT {
 	STR_PG_BIT x;
 	UINT word;
 
-} UNI_PG_BIT ;
+}  ;
 
-// ¿Âµµ ¼³Á¤°ª ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ì˜¨ë„ ì„¤ì •ê°’ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_PG_TEMPERATURE {
 	unsigned			 : 3;
-	unsigned temp4 : 5;		// ÃÊ´Ü¼ö½Å±â4ÀÇ ¼³Á¤ ¿Âµµ.
+	unsigned temp4 : 5;		// ì´ˆë‹¨ìˆ˜ì‹ ê¸°4ì˜ ì„¤ì • ì˜¨ë„.
 	unsigned			 : 3;
-	unsigned temp3 : 5;		// ÃÊ´Ü¼ö½Å±â3ÀÇ ¼³Á¤ ¿Âµµ.
+	unsigned temp3 : 5;		// ì´ˆë‹¨ìˆ˜ì‹ ê¸°3ì˜ ì„¤ì • ì˜¨ë„.
 	unsigned			 : 3;
-	unsigned temp2 : 5;		// ÃÊ´Ü¼ö½Å±â2ÀÇ ¼³Á¤ ¿Âµµ.
+	unsigned temp2 : 5;		// ì´ˆë‹¨ìˆ˜ì‹ ê¸°2ì˜ ì„¤ì • ì˜¨ë„.
 	unsigned			 : 3;
-	unsigned temp1 : 5;		// ÃÊ´Ü¼ö½Å±â1ÀÇ ¼³Á¤ ¿Âµµ.
+	unsigned temp1 : 5;		// ì´ˆë‹¨ìˆ˜ì‹ ê¸°1ì˜ ì„¤ì • ì˜¨ë„.
 
-} STR_PG_TEMPERATURE ;
+}  ;
 
-typedef union {
+union UNI_PG_TEMPERATURE {
 	STR_PG_TEMPERATURE x;
 	UINT word;
 
-} UNI_PG_TEMPERATURE ;
+}  ;
 
-// ÀÓ°è°ª ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
-	unsigned pa_threshold			 : 8;			// PA ¼ö½Å ÀÓ°è°ª
+// ì„ê³„ê°’ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_PG_THRESHOLD {
+	unsigned pa_threshold			 : 8;			// PA ìˆ˜ì‹  ì„ê³„ê°’
 	unsigned cw_chopping_count : 8;			// CW Chopping Count
-	unsigned fmop_threshold		 : 6;			// FMOP ÀÓ°è°ª
-	unsigned cw_pulsewidth		 : 10;		// CW ÆÇÁ¤ ÆŞ½ºÆø
+	unsigned fmop_threshold		 : 6;			// FMOP ì„ê³„ê°’
+	unsigned cw_pulsewidth		 : 10;		// CW íŒì • í„ìŠ¤í­
 
-} STR_PG_THRESHOLD ;
+}  ;
 
-typedef union {
+union UNI_PG_THRESHOLD {
 	STR_PG_THRESHOLD x;
 	UINT word;
 
-} UNI_PG_THRESHOLD ;
+} ;
 
-// ÇÊÅÍ Á¤º¸ ±¸Á¶Ã¼
-typedef struct { 
+// í•„í„° ì •ë³´ êµ¬ì¡°ì²´
+struct STR_PG_FILTER_FUNCTION {
 	unsigned								: 16;
 	unsigned filter1_pass		: 1;
 	unsigned filter1_reject : 1;
@@ -352,18 +354,18 @@ typedef struct {
 	unsigned filter8_pass		: 1;
 	unsigned filter8_reject : 1;
 
-} STR_PG_FILTER_FUNCTION ;
+}  ;
 
-// ½ÅÈ£ÇüÅÂ º¯¼ö ¼³Á¤ ±¸Á¶Ã¼
-typedef struct {
+// ì‹ í˜¸í˜•íƒœ ë³€ìˆ˜ ì„¤ì • êµ¬ì¡°ì²´
+struct STR_PG_FILTER_SIGTYPE {
 	unsigned noFilter : 3;
 	unsigned				  : 25;
 	unsigned sigType  : 4;
 
-} STR_PG_FILTER_SIGTYPE ;
+}  ;
 
-// ÁÖÆÄ¼ö º¯¼ö ¼³Á¤ ±¸Á¶Ã¼
-typedef union {
+// ì£¼íŒŒìˆ˜ ë³€ìˆ˜ ì„¤ì • êµ¬ì¡°ì²´
+union UNI_PG_FILTER_FREQ_RANGE {
 	UINT word;
 	struct {
 		unsigned noFilter : 3;
@@ -373,10 +375,10 @@ typedef union {
 		unsigned low			: 12;
 	} x ;
 
-} UNI_PG_FILTER_FREQ_RANGE ;
+}  ;
 
-// ¹æÀ§°¢ º¯¼ö ¼³Á¤ ±¸Á¶Ã¼
-typedef union {
+// ë°©ìœ„ê° ë³€ìˆ˜ ì„¤ì • êµ¬ì¡°ì²´
+union STR_PG_FILTER_AOA_RANGE {
 	UINT word;
 	struct {
 		unsigned noFilter : 3;
@@ -387,10 +389,10 @@ typedef union {
 		unsigned low			: 9;
 	} x ;
 
-} STR_PG_FILTER_AOA_RANGE ;
+}  ;
 
-// ÆŞ½ºÆø º¯¼ö ¼³Á¤ ±¸Á¶Ã¼
-typedef union {
+// í„ìŠ¤í­ ë³€ìˆ˜ ì„¤ì • êµ¬ì¡°ì²´
+union STR_PG_FILTER_PULSEWIDTH_RANGE {
 	UINT word;
 	struct {
 		unsigned noFilter : 3;
@@ -399,10 +401,10 @@ typedef union {
 		unsigned low			: 13;
 	} x ;
 
-} STR_PG_FILTER_PULSEWIDTH_RANGE ;
+}  ;
 
-// ½ÅÈ£¼¼±â º¯¼ö ¼³Á¤ ±¸Á¶Ã¼
-typedef union {
+// ì‹ í˜¸ì„¸ê¸° ë³€ìˆ˜ ì„¤ì • êµ¬ì¡°ì²´
+union STR_PG_FILTER_SA_RANGE {
 	UINT word;
 	struct {
 		unsigned noFilter : 3;
@@ -412,45 +414,45 @@ typedef union {
 		unsigned low			: 8;
 	} x ;
 
-} STR_PG_FILTER_SA_RANGE;
+} ;
 
-// ¼öÁı °³¼ö ¼³Á¤
+// ìˆ˜ì§‘ ê°œìˆ˜ ì„¤ì •
 typedef union {
 	UINT word;
 	struct {
 		unsigned					 : 14;
-		unsigned coCollect : 18;		// ¼öÁı °³¼ö
+		unsigned coCollect : 18;		// ìˆ˜ì§‘ ê°œìˆ˜
 	} x ;
 
 } STR_PG_COLLECT_COUNT;
 
-// ÆŞ½ºÁ¤º¸»ı¼ºÆÇÀÇ ÇÊÃ³ Á¤º¸ ¼³Á¤ ±¸Á¶Ã¼
-typedef struct {
+// í„ìŠ¤ì •ë³´ìƒì„±íŒì˜ í•„ì²˜ ì •ë³´ ì„¤ì • êµ¬ì¡°ì²´
+struct STR_PG_FILTER_INFO {
 	STR_PG_FILTER_FUNCTION ff;
 	STR_PG_FILTER_SIGTYPE fs;
 	UNI_PG_FILTER_FREQ_RANGE ffr;
-	STR_PG_FILTER_AOA_RANGE far_;						// ÇÊÅÍ ¹æÀ§¿µ¿ª ¼³Á¤
-	STR_PG_FILTER_PULSEWIDTH_RANGE fpr;			// ÇÊÅÍ ÆŞ½ºÆø ¼³Á¤
-	STR_PG_FILTER_SA_RANGE fsr;							// ÇÊÅÍ ½ÅÈ£¼¼±â ¼³Á¤
-	STR_PG_COLLECT_COUNT cc;								// ¼öÁı °³¼ö ¼³Á¤
-	UINT ct;																// ¼öÁı ½Ã°£ ¼³Á¤
+	STR_PG_FILTER_AOA_RANGE far_;						// í•„í„° ë°©ìœ„ì˜ì—­ ì„¤ì •
+	STR_PG_FILTER_PULSEWIDTH_RANGE fpr;			// í•„í„° í„ìŠ¤í­ ì„¤ì •
+	STR_PG_FILTER_SA_RANGE fsr;							// í•„í„° ì‹ í˜¸ì„¸ê¸° ì„¤ì •
+	STR_PG_COLLECT_COUNT cc;								// ìˆ˜ì§‘ ê°œìˆ˜ ì„¤ì •
+	UINT ct;																// ìˆ˜ì§‘ ì‹œê°„ ì„¤ì •
 
-} STR_PG_FILTER_INFO ;
+}  ;
 
 
-typedef union {
+union UNI_PG_COUNT_COLLECT_STOP {
 	unsigned word;
 	struct {
-		unsigned count_high : 10;		// ¼öÁı ¿Ï·á/ÁßÁöÇßÀ» ¶§ÀÇ »óÀ§ ¼öÁı °³¼ö
+		unsigned count_high : 10;		// ìˆ˜ì§‘ ì™„ë£Œ/ì¤‘ì§€í–ˆì„ ë•Œì˜ ìƒìœ„ ìˆ˜ì§‘ ê°œìˆ˜
 		unsigned						: 4;
-		unsigned bank				: 2;		// ¹ğÅ© ¹øÈ£, 0x1Àº ¹ğÅ©1ÀÌ¸ç 0x2´Â ¹ğÅ©2ÀÌ´Ù.
-		unsigned count_low  : 8;		// ¼öÁı ¿Ï·á/ÁßÁöÇßÀ» ¶§ÀÇ ÇÏÀ§ ¼öÁı °³¼ö
+		unsigned bank				: 2;		// ë±…í¬ ë²ˆí˜¸, 0x1ì€ ë±…í¬1ì´ë©° 0x2ëŠ” ë±…í¬2ì´ë‹¤.
+		unsigned count_low  : 8;		// ìˆ˜ì§‘ ì™„ë£Œ/ì¤‘ì§€í–ˆì„ ë•Œì˜ í•˜ìœ„ ìˆ˜ì§‘ ê°œìˆ˜
 		unsigned						: 8;
 	} x ;
 
-} UNI_PG_COUNT_COLLECT_STOP ;
+}  ;
 
-typedef union {
+union UNI_PG_LO_STAT {
 	UINT word;
 	struct {
 		unsigned				: 29;
@@ -459,80 +461,80 @@ typedef union {
 		unsigned	lo_12 : 1;
 	} x ;
 
-} UNI_PG_LO_STAT ;
+} ;
 
 
 //////////////////////////////////////////////////////////////////////////
-// Ã¤³Î ¹æÅ½ º¸Á¤ °ü·Ã ±¸Á¶Ã¼ Á¤ÀÇ
+// ì±„ë„ ë°©íƒ ë³´ì • ê´€ë ¨ êµ¬ì¡°ì²´ ì •ì˜
 
-// ÀÓ°è°ª ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
-	unsigned pa_threshold			 : 8;			// PA ¼ö½Å ÀÓ°è°ª
+// ì„ê³„ê°’ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_PGC_THRESHOLD {
+	unsigned pa_threshold			 : 8;			// PA ìˆ˜ì‹  ì„ê³„ê°’
 	unsigned									 : 24;
 
-} STR_PGC_THRESHOLD ;
+} ;
 
-typedef union {
+union UNI_PGC_THRESHOLD {
 	STR_PGC_THRESHOLD x;
 	UINT word;
 
-} UNI_PGC_THRESHOLD ;
+} ;
 
 
-// ÀÓ°è°ª ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ì„ê³„ê°’ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_PGC_ADDRESS {
 	unsigned						 : 10;
 	unsigned		 channel : 2;
 	unsigned temperature : 5;
 	unsigned	 frequency : 9;
 	unsigned					pa : 6;
 
-} STR_PGC_ADDRESS ;
+} ;
 
-typedef union {
+union UNI_PGC_ADDRESS {
 	STR_PGC_ADDRESS x;
 	UINT word;
 
-} UNI_PGC_ADDRESS ;
+} ;
 
 
-// PDW ±¸Á¶Ã¼
-// PDW ±¸Á¶Ã¼´Â _pdw.h ÆÄÀÏ¿¡ ÀÖÀ½
+// PDW êµ¬ì¡°ì²´
+// PDW êµ¬ì¡°ì²´ëŠ” _pdw.h íŒŒì¼ì— ìˆìŒ
 
 
 //////////////////////////////////////////////////////////////////////////
-// ±×·¡ÇÈÃ³¸®ÆÇÀÇ ±¸Á¶Ã¼ Á¤ÀÇ
+// ê·¸ë˜í”½ì²˜ë¦¬íŒì˜ êµ¬ì¡°ì²´ ì •ì˜
 
-// ÀÚÃ¼Á¡°Ë ±¸Á¶Ã¼
-typedef struct {
+// ìì²´ì ê²€ êµ¬ì¡°ì²´
+struct STR_GP_BIT {
 	unsigned				 : 13;
-	unsigned control : 1;		// Á¦¾î±â »óÅÂ
-	unsigned display : 1;		// ½ÃÇö±â »óÅÂ
-	unsigned		 cpu : 1;		// CPU »óÅÂ
+	unsigned control : 1;		// ì œì–´ê¸° ìƒíƒœ
+	unsigned display : 1;		// ì‹œí˜„ê¸° ìƒíƒœ
+	unsigned		 cpu : 1;		// CPU ìƒíƒœ
 	unsigned				 : 16;
-} STR_GP_BIT ;
+} ;
 
-typedef union {
+union UNI_GP_BIT {
 	STR_GP_BIT x;
 	UINT word;
 
-} UNI_GP_BIT ;
+} ;
 
-// º¸µåID ±¸Á¶Ã¼
-typedef struct {
-	unsigned reserver1: 8;		// Æß¿ş¾î Á¤º¸
-	unsigned reserver2: 8;		// Á¦Á¶ÀÏ·Ã¹øÈ£
-	unsigned id : 16;					// º¸µåID: 0xA138
+// ë³´ë“œID êµ¬ì¡°ì²´
+struct STR_GP_BOARD_ID {
+	unsigned reserver1: 8;		// íŒì›¨ì–´ ì •ë³´
+	unsigned reserver2: 8;		// ì œì¡°ì¼ë ¨ë²ˆí˜¸
+	unsigned id : 16;					// ë³´ë“œID: 0xA138
 
-} STR_GP_BOARD_ID ;
+} ;
 
-typedef union {
+union UNI_GP_BOARD_ID {
 	STR_GP_BOARD_ID x;
 	UINT word;
 
-} UNI_GP_BOARD_ID ;
+}  ;
 
-typedef struct {
+struct STR_GP_STAT {
 	unsigned								: 16;
 	unsigned fault_category : 2;
 	unsigned								: 2;
@@ -543,17 +545,17 @@ typedef struct {
 	unsigned								: 3;
 	unsigned			disp_mode : 1;
 
-} STR_GP_STAT ;
+} ;
 
-typedef union {
+union UNI_GP_STAT {
 	STR_GP_STAT x;
 	USHORT byte16[2];
 	UINT word;
 
-} UNI_GP_STAT ;
+}  ;
 
-// Á¦¾î±â ¹öÆ° 1 - ¹öÆ°¿¡ ±ÛÂ¥°¡ º¸ÀÌ´Â °Í.
-// ¾Æ·¡ ±¸Á¶Ã¼´Â Á¦¾î±âÀÇ ·¥ÇÁ¸¦ Ç¥½ÃÇÏ±â À§ÇÑ ±¸Á¶Ã¼ ÀÔ´Ï´Ù.
+// ì œì–´ê¸° ë²„íŠ¼ 1 - ë²„íŠ¼ì— ê¸€ì§œê°€ ë³´ì´ëŠ” ê²ƒ.
+// ì•„ë˜ êµ¬ì¡°ì²´ëŠ” ì œì–´ê¸°ì˜ ë¨í”„ë¥¼ í‘œì‹œí•˜ê¸° ìœ„í•œ êµ¬ì¡°ì²´ ì…ë‹ˆë‹¤.
 // #ifdef _CONTROL1_
 // typedef struct {
 // 	unsigned					: 7;
@@ -603,27 +605,27 @@ typedef union {
 // } STR_CTRL_LAMPINFO ;
 // 
 // #else
-// #pragma message( "Á¦¾î±â ¹öÁ¯À» Á¤ÀÇÇØ¾ß ÇÕ´Ï´Ù." )
+// #pragma message( "ì œì–´ê¸° ë²„ì ¼ì„ ì •ì˜í•´ì•¼ í•©ë‹ˆë‹¤." )
 // 
 // #endif
 
-// ¼öÁıÇÑ PDWÀÇ Á¦¿ø Á¤º¸ ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ìˆ˜ì§‘í•œ PDWì˜ ì œì› ì •ë³´ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_ONE_PDW {
 	UINT toa;
 	int freq;
 	int pw;
 	UINT bt;
 	UINT stat;			// status
-	UINT mc;				// ÃÖ´ë Ã¤³Î
+	UINT mc;				// ìµœëŒ€ ì±„ë„
 	UINT dv;
 	int aoa;
 	int pa;
 	UINT band;
 
-} STR_ONE_PDW ;
+} ;
 
-#ifndef ENUM_BANDWIDTH_ENUM
-#define ENUM_BANDWIDTH_ENUM
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
 typedef enum {
 	en5MHZ_BW=0,
 	en50MHZ_BW,
@@ -631,72 +633,57 @@ typedef enum {
 } ENUM_BANDWIDTH ;
 #endif
 
-#ifndef _STR_PDWDATA
-#define _STR_PDWDATA
-typedef struct {
-	char	aucTaskID[LENGTH_OF_TASK_ID];
-	unsigned int iIsStorePDW;
-	int iCollectorID;
-	ENUM_BANDWIDTH enBandWidth;
 
-	UINT count;
-	_PDW stPDW[MAX_PDW];
-
-} STR_PDWDATA ;
-#endif
-
-
-
-typedef struct {
+struct STR_CHANNEL_SELECTION {
 	enum CHANNEL_SELECTION channel_selection;
 	int noEMT;
 
-} STR_CHANNEL_SELECTION ;
+}  ;
 
-typedef struct {
+struct STR_CW_CONTROL {
 	int cw_threshold;
 	int cw_init_threshold;
 	int noEMT;
 	BOOL bCWCtrl;
 
-} STR_CW_CONTROL ;
+} ;
 
 
-// Å½Áö¿ë PDW ¼öÁı ±¸Á¶Ã¼ Á¤ÀÇ
+// íƒì§€ìš© PDW ìˆ˜ì§‘ êµ¬ì¡°ì²´ ì •ì˜
 typedef STR_PDWDATA STR_NEW_COLLECT_PDW;
 
-// ÃßÀû¿ë PDW ¼öÁı ±¸Á¶Ã¼ Á¤ÀÇ
+// ì¶”ì ìš© PDW ìˆ˜ì§‘ êµ¬ì¡°ì²´ ì •ì˜
 typedef STR_PDWDATA STR_KWN_COLLECT_PDW;
 
-// ½ºÄµ¿ë PDW ¼öÁı ±¸Á¶Ã¼ Á¤ÀÇ
+// ìŠ¤ìº”ìš© PDW ìˆ˜ì§‘ êµ¬ì¡°ì²´ ì •ì˜
 typedef STR_PDWDATA STR_SCN_COLLECT_PDW;
 
 
-typedef struct {
+struct STR_NEW_COLLECT_BANK {
 	UINT nBank;
 	enum FILTER_STAT nStat[NEW_NO_BANK];
 
-} STR_NEW_COLLECT_BANK ;
+} ;
 
 //////////////////////////////////////////////////////////////////////////
-// ¿¡¹ÌÅÍ ½Äº° ±¸Á¶Ã¼
+// ì—ë¯¸í„° ì‹ë³„ êµ¬ì¡°ì²´
 
 typedef unsigned int UDFINDEX;
 
 //////////////////////////////////////////////////////////////////////////
-// ½Ã½ºÅÛ ·Î±× °ü·Ã ±¸Á¶Ã¼ Á¤ÀÇ
+// ì‹œìŠ¤í…œ ë¡œê·¸ ê´€ë ¨ êµ¬ì¡°ì²´ ì •ì˜
 #define LOG_HEADER						(sizeof(time_t)+2*sizeof(UINT))
 #define MAX_LOG_PDW						400
 
-// ¿¡¹ÌÅÍ »ó¼¼Á¤º¸ ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ì—ë¯¸í„° ìƒì„¸ì •ë³´ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_AET_DETAIL {
 	STR_NEWAET aet;
 	_PDW pdw[MAX_LOG_PDW];
 
-} STR_AET_DETAIL ;
+} ;
 
-// ½Ã½ºÅÛ ·Î±× ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// ì‹œìŠ¤í…œ ë¡œê·¸ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_LOGMSG {
 	UINT opCode;
 	UINT dSize;
 
@@ -716,45 +703,45 @@ typedef struct {
 		//STR_POWER_ON_CBIT cbit;
 	} u ;
 
-} STR_LOGMSG ;
+} ;
 
 
 //////////////////////////////////////////////////////////////////////////
-// ±âº»ÀûÀÎ Å¥ ¸Ş½ÃÁö ±¸Á¶Ã¼ 
-typedef struct {
+// ê¸°ë³¸ì ì¸ í ë©”ì‹œì§€ êµ¬ì¡°ì²´ 
+struct STR_QUEUE_MESSAGE {
 	USHORT opCode;
 	UCHAR address1;
 	UCHAR address2;
 	UINT opData;
 
-} STR_QUEUE_MESSAGE ;
+} ;
 
-//PC¿Í ·£ Åë½ÅÀ» À§ÇÑ Å¥ ¸Ş½ÃÁö ±¸Á¶Ã¼ 
-typedef struct {
+//PCì™€ ëœ í†µì‹ ì„ ìœ„í•œ í ë©”ì‹œì§€ êµ¬ì¡°ì²´ 
+struct STR_QUEUE_AET_MESSAGE {
 	USHORT opCode;
 	UCHAR address1;
 	UCHAR address2;
 	UINT opData;
 
 	SRxLOBData stLOB;
-} STR_QUEUE_AET_MESSAGE ;
+} ;
 
-// ½Ã½ºÅÛ ·Î±× °ü·Ã Å¥ ¸Ş½ÃÁö ±¸Á¶Ã¼ 
-typedef struct {
+// ì‹œìŠ¤í…œ ë¡œê·¸ ê´€ë ¨ í ë©”ì‹œì§€ êµ¬ì¡°ì²´ 
+struct STR_QUEUE_LOG_MESSAGE {
 	USHORT opCode;
 	UCHAR address1;
 	UCHAR address2;
 	UINT opData;
 
 	STR_LOGMSG log;
-} STR_QUEUE_LOG_MESSAGE ;
+} ;
 
 
 //////////////////////////////////////////////////////////////////////////
-// Chaff/Flare ¹ß»ç ¸í·É Á¤ÀÇ
+// Chaff/Flare ë°œì‚¬ ëª…ë ¹ ì •ì˜
 
-// Chaff ¹ß»ç Á¤º¸
-typedef struct {
+// Chaff ë°œì‚¬ ì •ë³´
+struct STR_CHAFF_FLARE_ORDER {
 	USHORT startDelay;					// res. ms
 	USHORT endDelay;
 	USHORT payloadCount;
@@ -764,26 +751,26 @@ typedef struct {
 	USHORT salvoCount;
 	USHORT salvoInterval;
 
-} STR_CHAFF_FLARE_ORDER ;
+} ;
 
-// C/F ¹ß»ç Á¤º¸ ¼ø¼­¸¦ ¸¸µé±â À§ÇÑ ±¸Á¶Ã¼ Á¤ÀÇ
-typedef struct {
+// C/F ë°œì‚¬ ì •ë³´ ìˆœì„œë¥¼ ë§Œë“¤ê¸° ìœ„í•œ êµ¬ì¡°ì²´ ì •ì˜
+struct STR_FIRE_INFO {
 	UINT fire_time;
 	UINT chaff_flare;
 
-} STR_FIRE_INFO;
+} ;
 
 //////////////////////////////////////////////////////////////////////////
-// ·Î±× µ¥ÀÌÅÍ ±¸Á¶Ã¼
+// ë¡œê·¸ ë°ì´í„° êµ¬ì¡°ì²´
 
-// ·Î±× µ¥ÀÌÅÍ ±¸Á¶Ã¼
-typedef struct {
+// ë¡œê·¸ ë°ì´í„° êµ¬ì¡°ì²´
+struct STR_SYSTEMLOG {
 	unsigned long size;
 	unsigned char *pLogBuffer;
 
-} STR_SYSTEMLOG ;
+}  ;
 
-// ÆĞÅ¶ Çì´õ Á¤º¸
+// íŒ¨í‚· í—¤ë” ì •ë³´
 #ifdef _WIN32
 typedef struct { 
 	unsigned short c_size;
@@ -793,19 +780,19 @@ typedef struct {
 } STR_LOGPACKET_HEADER ;
 
 #else
-typedef struct { 
+struct STR_LOGPACKET_HEADER {
 	unsigned char packet_number;
 	unsigned char check_sum;
 	unsigned short c_size;
 
-} STR_LOGPACKET_HEADER ;
+}  ;
 #endif
 
-typedef union {
+union UNI_LOGPACKET_HEADER {
 	UINT word;
 	STR_LOGPACKET_HEADER x;
 
-} UNI_LOGPACKET_HEADER ;
+}  ;
 
 
 

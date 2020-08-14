@@ -1,4 +1,4 @@
-/*!
+﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
 	\version  0.0.1
@@ -6,6 +6,8 @@
 
 #ifndef  _MACRO_H
 #define  _MACRO_H
+
+#include "../INC/PDW.h"
 
 #ifdef _MAIN_GLOBALS_
 float _spOneSec;
@@ -18,7 +20,7 @@ float _spAOAres;
 float _spTOAres;
 float _spPWres;
 
-float _toaRes[2] = { (float) 65.104167, (float) 8.138021 } ;
+float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
 float _frqRes[2] = { (float) 0.117, (float) 65.104167 } ;
 
 #else
@@ -32,7 +34,7 @@ extern float _spAOAres;
 extern float _spTOAres;
 extern float _spPWres;
 
-extern float _toaRes[2];
+extern float _toaRes[en50MHZ_BW+1];
 extern float _frqRes[2];
 
 #endif
@@ -98,15 +100,36 @@ T _diffabs( T x, T y)
 #define Low( A )                ( A & 0x00ff )
 
 #ifdef _ELINT_
-#define FRQMhzCNV( A, B )				IMUL( (B), ( 0.001) )
-#define IFRQMhzCNV( A, B )			IDIV( (B), ( 0.001) )
+#define FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
+#define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
-#define ITOAusCNV( A )					IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define IFTOAusCNV( A )					FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITTOAusCNV( A )					TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
-#define PWCNV( A )							IDIV( (A*1000.), _spOneMicrosec )
-#define IPWCNV( A )							IMUL( (A), _spOneMicrosec )
+#define PWCNV( A )				IDIV( (A*1000.), _spOneMicrosec )
+#define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
+#define AOACNV( A )             IMUL( (A), _spAOAres )
+#define IAOACNV( A )            IDIV( (A), _spAOAres )
+
+#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
+#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+//#define FRQRESCNV( A, B )		(UINT) ( abs( (int) IMUL( gFreqRes[(A)].res, (B) ) ) )
+#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
+
+#define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
+#define IPACNV( A )				FDIV( (A), _spAMPres )
+
+#elif defined(_POCKETSONATA_)
+#define FRQMhzCNV( A, B )		IMUL( (B), ( gFreqRes[(A)].res ) )
+#define IFRQMhzCNV( A, B )		IDIV( (B), ( gFreqRes[(A)].res ) )
+#define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+
+#define PWCNV( A )				IDIV( (A*1000.), _spOneMicrosec )
+#define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
 #define AOACNV( A )             IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
 
@@ -164,7 +187,11 @@ T _diffabs( T x, T y)
 //#define FFRQCNV( A, B )         (float) ( ( (float) B * gFreqRes[A].res) + gFreqRes[A].offset )
 #endif
 
-#define PrintFunction					{ printf( "\n%s" , __FUNCTION__ ); Log( enNormal, "%s", __FUNCTION__ ); }
+#ifdef _WIN32
+#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); Log( enNormal, "%s", __FUNCTION__ ); }
+#else
+#define PrintFunction { }
+#endif
 
 #if defined(_WIN32)
 #define printf                  Printf

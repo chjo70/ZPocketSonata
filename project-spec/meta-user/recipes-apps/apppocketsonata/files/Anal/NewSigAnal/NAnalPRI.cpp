@@ -1,8 +1,8 @@
-// NAnalPRI.cpp: implementation of the NAnalPRI class.
+﻿// NAnalPRI.cpp: implementation of the NAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
 
 
 
@@ -13,9 +13,9 @@
 
 #include <stdio.h>
 
-#include "../INC/_pdw.h"
+#include "../INC/PDW.h"
 
-#include "../SigAnal/_macro.h"
+#include "../SigAnal/_Macro.h"
 
 #include "NAnalPRI.h"
 #include "NewSigAnal.h"

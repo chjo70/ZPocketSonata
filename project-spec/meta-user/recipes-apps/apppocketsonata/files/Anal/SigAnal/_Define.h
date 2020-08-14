@@ -1,4 +1,4 @@
-// _Define.h: interface for the 분석 소프트웨어의 정의
+﻿// _Define.h: interface for the 분석 소프트웨어의 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -46,6 +46,9 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define _spTimeNsRes						(25)
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
+#elif defined(_POCKETSONATA_)
+#define _spTimeNsRes						(25)
+#define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
 #else
 #define ONE_SEC									(20000000)					// 1 sec  / 25 ns */
@@ -77,6 +80,10 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 //#define   _spAMPres       (0.25)					// dB */
 //#define   _spTOAres       (0.000000025)		// SEC(25 ns) */
 //#define   _spPWres        (25.)						// pw res.
+
+#elif defined(_POCKETSONATA_)
+#define _spAOAmax           0x1FF
+#define _spAmpmax           0xFF
 
 #else
 #define   _spAOAmax       0x3FF   // 359.6484375 Degree
@@ -138,8 +145,14 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #ifdef _ELINT_
 #define MAX_AOA       			(36000)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ      			IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
-#define	FREQ_NARR_MHZ				IFRQMhzCNV( 0, 20 )			// 20 MHz
-#define	FREQ_WIDE_MHZ				IFRQMhzCNV( 0, 100 )		// 100 MHz
+#define	FREQ_NARR_MHZ			IFRQMhzCNV( 0, 20 )			// 20 MHz
+#define	FREQ_WIDE_MHZ			IFRQMhzCNV( 0, 100 )		// 100 MHz
+
+#elif defined(_POCKETSONATA_)
+#define MAX_AOA       			(36000)                 // 최대 방위값 360 도
+#define MAX_FREQ      			IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
+#define	FREQ_NARR_MHZ			IFRQMhzCNV( 0, 20 )			// 20 MHz
+#define	FREQ_WIDE_MHZ			IFRQMhzCNV( 0, 100 )		// 100 MHz
 
 #else
 #define MAX_AOA       			1024    // 최대 방위값 2^10 (360도/1023)
@@ -217,7 +230,10 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 
 // 방위 HARMONIC MARGIN
 #ifdef _ELINT_
+#define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
 
+#elif defined(_POCKETSONATA_)
 #define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
 #define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
 
@@ -263,6 +279,11 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 
 // 그룹화 히스트그램 최대 개수
 #ifdef _ELINT_
+#define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
+// DTOA 히스트그램 최대 개수
+#define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+
+#elif defined(_POCKETSONATA_)
 #define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
 #define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )

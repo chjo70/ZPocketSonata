@@ -5,7 +5,7 @@
 #include "../../Include/system.h"
 
 #include "_iq.h"
-#include "_pdw.h"
+#include "../../Anal/INC/PDW.h"
 #include "_macro.h"
 
 #include "../../Utils/cfile.h"
@@ -28,7 +28,8 @@ typedef enum {
 	en_SONATA,
 	en_ELINT,
 	en_701,
-	en_KFX
+    en_KFX,
+    enPOCKETSONATA
 
 } ENUM_UnitType;
 
@@ -135,7 +136,7 @@ public:
 
 	virtual void Alloc()=0;
 	virtual void Free()=0;
-    virtual void ConvertArray( STR_ARRAY_PDW *pPDW=NULL ) = 0;
+    virtual void ConvertArray( STR_PDWDATA *pPDWData=NULL ) = 0;
 	virtual void *GetData() = 0;
 };
 
@@ -150,7 +151,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 };
@@ -167,7 +168,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 };
@@ -184,7 +185,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 };
@@ -201,7 +202,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pPDW=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 };
@@ -218,7 +219,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pArrayPDW=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 public:
@@ -264,6 +265,64 @@ public:
 
 };
 
+// CPOCKETSONATAPDW PDW
+class CPOCKETSONATAPDW : public CData
+{
+private:
+    STR_PDW_DATA m_PDWData;
+
+public:
+    CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+    virtual ~CPOCKETSONATAPDW();
+
+    void Alloc();
+    void Free();
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
+    void *GetData();
+
+public:
+    float DecodeDOA(int iDOA  )
+    {
+        float fDOA;
+
+        fDOA = (float) ( (float) iDOA * (float) 360. ) / (float) 512;
+        return fDOA;	/* [degree] */
+    } ;
+
+    float DecodePA(int iPA )
+    {
+        float fPA;
+
+        fPA = (float) ( (float) iPA * (float) 0.25 ) - (float) 110.0;
+        return fPA;		/* [dBm] */
+    } ;
+
+    float DecodeFREQ( int iFreq )
+    {
+        float fFREQ;
+
+        fFREQ = (float) ( (float) iFreq * (float) 13.1072 ) / (float) 1000.0;
+        return fFREQ;	/* [MHz] */
+    } ;
+
+    float DecodePW( int iPW )
+    {
+        float fPW;
+
+        fPW = (float) ( (float) iPW * (float) 6.48824007 / (float) 1.0 );
+        return fPW;		/* [ns] */
+    } ;
+
+    float DecodeTOA( _TOA iTOA  )
+    {
+        float fTOA;
+
+        fTOA = (float) ( (float) iTOA * (float) 6.48824007 / (float) 1000.0 );
+        return fTOA;	/* [ns] */
+    } ;
+
+};
+
 class CIQ : public CData
 {
 private:
@@ -275,8 +334,7 @@ public:
 
 	void Alloc();
 	void Free();
-    void ConvertArray( STR_ARRAY_PDW *pArrayPDW );
-	void ConvertArrayForELINT() { }
+    void ConvertArray( STR_PDWDATA *pPDWData=NULL );
 	void *GetData();
 
 };
@@ -293,7 +351,7 @@ public:
 	CDataFile(void);
 	virtual ~CDataFile(void);
 
-    void ReadDataMemory( STR_ARRAY_PDW *pPDW, const char *pstData, const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
+    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
     void ReadDataFile( const char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();

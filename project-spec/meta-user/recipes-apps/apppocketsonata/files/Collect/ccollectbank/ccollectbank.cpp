@@ -41,7 +41,7 @@ CCollectBank::~CCollectBank()
  */
 void CCollectBank::Init()
 {
-    memset( & m_strPDW, 0, sizeof(STR_ARRAY_PDW) );
+    memset( & m_strPDW, 0, sizeof(STR_PDWDATA) );
 
     InitWindowCell();
 
@@ -64,6 +64,7 @@ void CCollectBank::InitWindowCell()
     m_theQueueWindowCellID.Pop( & m_iID );
 
     m_strWindowCell.iChannelNo = m_iChannelNo;
+
 }
 
 /**
@@ -94,14 +95,14 @@ void CCollectBank::CloseCollectBank()
  * @brief CCollectBank::PushPDWData
  * @param pstrArrayPDW
  */
-void CCollectBank::PushPDWData( STR_ARRAY_PDW *pstrArrayPDW )
+void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
 {
     unsigned int i;
     int iTo;
 
-    iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pstrArrayPDW->uiTotalPDW ) );
+    iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pPDWData->uiTotalPDW ) );
     if( iTo > 0 ) {
-        iTo = pstrArrayPDW->uiTotalPDW;
+        iTo = pPDWData->uiTotalPDW;
         m_strPDW.uiTotalPDW = iTo;
     }
     else {
@@ -110,11 +111,8 @@ void CCollectBank::PushPDWData( STR_ARRAY_PDW *pstrArrayPDW )
     }
 
     // PDW 정보 복사
-    memcpy( & m_strPDW.uiFreq[m_strPDW.uiTotalPDW], pstrArrayPDW->uiFreq, iTo * sizeof(UINT) );
-    memcpy( & m_strPDW.uiAOA[m_strPDW.uiTotalPDW], pstrArrayPDW->uiAOA, iTo * sizeof(UINT) );
-    memcpy( & m_strPDW.uiPW[m_strPDW.uiTotalPDW], pstrArrayPDW->uiPW, iTo * sizeof(UINT) );
-    memcpy( & m_strPDW.uiPA[m_strPDW.uiTotalPDW], pstrArrayPDW->uiPA, iTo * sizeof(UINT) );
-    memcpy( & m_strPDW.llToa[m_strPDW.uiTotalPDW], pstrArrayPDW->llToa, iTo * sizeof(_TOA) );
+    memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], iTo * sizeof(_PDW) );
+
 
     // 추적 윈도우 셀 정보 업데이트
     UpdateWindowCell();

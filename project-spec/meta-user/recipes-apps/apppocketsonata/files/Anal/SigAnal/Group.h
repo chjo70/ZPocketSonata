@@ -1,4 +1,4 @@
-// Group.h: interface for the CGroup class.
+﻿// Group.h: interface for the CGroup class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -121,7 +121,7 @@ public:
 	//##ModelId=452B0C5601E5
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
 	//##ModelId=452B0C5601F7
-	bool MakePDWArray( _PDW *pdw, int count );
+    bool MakePDWArray( _PDW *pdw, int count );
 	//##ModelId=452B0C560201
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	//##ModelId=452B0C560203

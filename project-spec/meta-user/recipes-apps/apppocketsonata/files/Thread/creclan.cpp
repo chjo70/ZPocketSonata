@@ -92,7 +92,6 @@ void CRecLan::_routine()
 
                 // 추가 명령어
                 case enREQ_SIM_PDWDATA :
-                    //QMsgSnd( SIGCOL->GetKeyId(), m_pMsg );
                     SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
                     break;
 

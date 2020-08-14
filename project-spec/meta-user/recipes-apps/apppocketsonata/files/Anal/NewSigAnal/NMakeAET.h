@@ -1,4 +1,4 @@
-// NMakeAET.h: interface for the NMakeAET class.
+﻿// NMakeAET.h: interface for the NMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 

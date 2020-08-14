@@ -1,4 +1,4 @@
-// NAnalPRI.h: interface for the NAnalPRI class.
+﻿// NAnalPRI.h: interface for the NAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,4 @@
-// NewSigAnal.h: interface for the CNewSigAnal class.
+﻿// NewSigAnal.h: interface for the CNewSigAnal class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,8 @@
 //#include "../../ELINTOP/ODBC/mssql.h"
 //#include "../../ELINTOP/ODBC/odbccore.h"
 
-//#include "../Identify/Identify.h"
+#include "../INC/defines.h"
+#include "../Identify/Identify.h"
 
 #include "NGroup.h"
 #include "NPulExt.h"
@@ -43,7 +44,9 @@ private:
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
     int m_iIsStorePDW;
+#ifdef _ELINT_
     EN_RADARCOLLECTORID m_enCollectorID;
+#endif
 
     ENUM_BANDWIDTH m_enBandWidth;
 
@@ -51,7 +54,7 @@ private:
 
     UINT m_uiCoKnownRadarMode;
     SRadarMode *m_pRadarMode[ MAX_ELINT_LIBRARY ];
-    CODBCDatabase m_theMyODBC;
+    //CODBCDatabase m_theMyODBC;
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
 private:
@@ -80,7 +83,9 @@ public:
     inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
     inline int IsStorePDW() { return m_iIsStorePDW; }
     inline int GetColPdw() { return m_CoPdw; }
+#ifdef _ELINT_
     inline EN_RADARCOLLECTORID GetCollectorID() { return m_enCollectorID; }
+#endif
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
@@ -130,11 +135,12 @@ public:
     void SaveAllPdwFile();
     void SaveGroupPdwFile( int index );
     char *GetTaskID();
+    bool CheckValidData( STR_PDWDATA *pPDWData );
 
     inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }
 
     // 분석 관련 함수
-    void Start(STR_PDWDATA *pPDWData = NULL );
+    void Start(STR_PDWDATA *pPDWData );
     bool CheckKnownByAnalysis();
 
     // 분석 제어 관련 함수

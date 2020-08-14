@@ -7,12 +7,11 @@
 
 
 // PDW 최대 크기 정의함. 랜 송수신 데이터 및 분석하기 위한 최대 PDW 개수 정의
-#define _MAX_COL_PDW        (1024)
+#define _MAX_COL_PDW        (100)
 
 
 // 랜 데이터 최대 크기
 #define _MAX_LANDATA        (1024*256)
-
 
 
 

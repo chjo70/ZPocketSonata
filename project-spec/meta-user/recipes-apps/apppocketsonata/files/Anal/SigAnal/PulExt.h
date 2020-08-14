@@ -1,4 +1,4 @@
-// PulExt.h: interface for the CPulExt class.
+﻿// PulExt.h: interface for the CPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 

@@ -22,8 +22,11 @@ INITSCRIPT_PARAMS = "start 99 S ."
 #}
 
 do_install() {
-	     #install -d ${D}${sysconfdir}/init.d
-	     install -m 0755 bootscript ${D}${sysconfdir}/init.d/bootscript
+		 install -d ${D}${bindir}
+		 install -m 0755 bootscript ${D}${bindir}
+#		 install -d ${D}${sysconfdir}/init.d
+#	     install -m 0755 bootscript ${D}${sysconfdir}/init.d/bootscript
 }
 
-FILES_${PN} += "${sysconfdir}/*"
+#FILES_${PN} += "${sysconfdir}/*"
+RDEPENDS_${PN} = " bootscript"

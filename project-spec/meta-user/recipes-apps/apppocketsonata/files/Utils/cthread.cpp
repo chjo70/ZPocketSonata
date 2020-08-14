@@ -189,6 +189,8 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
     sndMsg.ucOpCode = uiOpCode;
     sndMsg.iSocket = 0;
     sndMsg.iArrayIndex = -1;
+    sndMsg.uiArrayLength = 0;
+    sndMsg.uiDataLength = iByte;
 
     memcpy( & sndMsg.x.szData[0], pData, sizeof(char) * iByte );
 

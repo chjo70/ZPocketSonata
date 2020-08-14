@@ -17,43 +17,51 @@
 #define	FREQ_MIN			(500)			// 최소 주파수
 #define	FREQ_MAX			(18000)
 
-
+#ifndef _FREQ_RESOL_
+#define _FREQ_RESOL_
 struct FREQ_RESOL {
 	// frequency band code를 위한 구조체 
-	UINT min;       // min frequency
-	UINT max;       // max frequency
-	float res;			// 각 구간에 따른 resolution
+    unsigned int min;       // min frequency
+    unsigned int max;       // max frequency
+    int offset;       // max frequency
+    float res;			// 각 구간에 따른 resolution
 }  ;
+#endif
 
+#ifndef _PA_RESOL_
+#define _PA_RESOL_
 struct PA_RESOL {
 	// frequency band code를 위한 구조체 
-	UINT min;       // min frequency
-	UINT max;       // max frequency
+    unsigned int min;       // min frequency
+    unsigned int max;       // max frequency
 	float offset;      // max frequency
 	float res;			// 각 구간에 따른 resolution
 }  ;
-
+#endif
 
 #ifdef _MAIN_
 
 // SONATA 변환식
-FREQ_RESOL gFreqRes[ 4 ] =
-{
-	{    0,     0, 0     }, 
-	{    0,  2560, 0.625 },   /* LOW  FREQUENCY */
-	{ 1280,  6400, 1.25  },   /* MID  FREQUENCY */
-	{ 5866, 18740, 1.5   } } ;
+FREQ_RESOL gFreqRes[ 6 ] =
+{	// min, max, offset, res
+  {     0,     0,				 DFD_FREQ_OFFSET,  1.25 },
+    {  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
+    {  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
+    { 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
+    { 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* 고대역3	*/
+    {     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
+} ;
 
-PA_RESOL gPaRes[ 6 ] = { {     0,     0,  (float) _spSONATAPAoffset, _spSONATAAMPres }, 
-												{  2000,  6000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 저대역		*/
-												{  5500, 10000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역1	*/
-												{ 10000, 14000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역2	*/
-												{ 14000, 18000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역3	*/
-												{     0,  5000,  (float) -54.14071, (float) 0.24681 } };		/* C/D			*/
+
+PA_RESOL gPaRes[ 6 ] = { {     0,     0,  (float) _spSONATAPAoffset, _spSONATAAMPres },
+                                                {  2000,  6000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 저대역		*/
+                                                {  5500, 10000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역1	*/
+                                                { 10000, 14000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역2	*/
+                                                { 14000, 18000,  (float) _spSONATAPAoffset, _spSONATAAMPres },		/* 고대역3	*/
+                                                {     0,  5000,  (float) -54.14071, (float) 0.24681 } };		/* C/D			*/
 
 // 인천공항 ELINT
 float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
-//float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
 float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
 
 float _spAMPres;
@@ -74,7 +82,7 @@ float _spFreqMax;
 // #define   _spPWres        (25.)				// pw res.
 
 #else
-extern FREQ_RESOL gFreqRes[ 4 ];
+extern FREQ_RESOL gFreqRes[ 6 ];
 extern PA_RESOL gPaRes[ 6 ];
 
 extern float _toaRes[en50MHZ_BW+1];
@@ -82,6 +90,7 @@ extern float _frqRes[en50MHZ_BW+1];
 
 extern float _spFreqMin;
 extern float _spFreqMax;
+extern float _spOneMicrosec;
 
 #endif
 

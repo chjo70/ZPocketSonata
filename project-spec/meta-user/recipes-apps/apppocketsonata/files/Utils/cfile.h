@@ -1,6 +1,8 @@
 #ifndef CFILE_H
 #define CFILE_H
 
+#include <fcntl.h>
+
 
 class CFile
 {
@@ -8,9 +10,11 @@ private:
     int m_iFile;
 
 public:
-    static int shareDenyNone;
-    static int typeBinary;
-    static int modeRead;
+    static unsigned int shareDenyNone;
+    static unsigned int typeBinary;
+    static unsigned int modeRead;
+    static unsigned int modeReadWrite;
+    static unsigned int modeCreate;
 
 public:
     CFile();

@@ -238,7 +238,6 @@ void CSingleServer::_routine()
                             else {
                                 // DisplayMsg( & sndMsg );
 
-
                             }
 
                         }

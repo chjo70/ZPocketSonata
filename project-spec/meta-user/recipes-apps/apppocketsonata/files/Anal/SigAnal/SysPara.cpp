@@ -1,6 +1,7 @@
-// SysPara.cpp: implementation of the CSysPara class.
+﻿// SysPara.cpp: implementation of the CSysPara class.
 //
 //////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 
@@ -49,10 +50,16 @@ void CSysPara::LoadDefaultSysParameter()
   _sp.mg.aoa[4] = _spMgAoaEJ;
   _sp.mg.aoa[5] = _spMgAoaCD;
 
+#elif defined(_POCKETSONATA_)
+    _sp.mg.aoa[1] = _spMgAoaEJ;
+    _sp.mg.aoa[2] = _spMgAoaEJ;
+    _sp.mg.aoa[3] = _spMgAoaEJ;
+    _sp.mg.aoa[4] = _spMgAoaEJ;
+    _sp.mg.aoa[5] = _spMgAoaCD;
+
 #else
-  _sp.mg.aoa[1] = _spMgAoaLow;
-  _sp.mg.aoa[2] = _spMgAoaMid;
-  _sp.mg.aoa[3] = _spMgAoaHgh;
+#error "컴파일러에 DEFINE 을 추가해야 합니다."
+
 #endif
 
 	// 규칙성 PRI 일 경우의 에러 범위

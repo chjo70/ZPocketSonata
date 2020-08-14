@@ -1,4 +1,4 @@
-// AnalPRI.h: interface for the CAnalPRI class.
+﻿// AnalPRI.h: interface for the CAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 

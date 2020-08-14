@@ -1,8 +1,8 @@
-// NMakeAET.cpp: implementation of the NMakeAET class.
+﻿// NMakeAET.cpp: implementation of the NMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -10,10 +10,7 @@
 
 #endif
 
-#ifdef _ELINT_
 #include "../OFP_Main.h"
-
-#endif
 
 #include <sys/timeb.h>
 #include <stdio.h>
@@ -320,9 +317,16 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->uiAETID = 0;
 
     // 시간 정보
+#ifdef _WIN32
     _ftime32_s( & timeBuffer );
     pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
     pLOBData->tiContactTimems = timeBuffer.millitm;
+#else
+    _ftime32_s( & timeBuffer );
+    pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
+    pLOBData->tiContactTimems = timeBuffer.millitm;
+
+#endif
 
     // 신호 형태
     pLOBData->iSignalType = pEmitter->signal_type;
@@ -394,9 +398,12 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 기타 정보 저장
     pLOBData->iIsStorePDW = m_pNewSigAnal->IsStorePDW();
     pLOBData->iNumOfPDW = pEmitter->pdw.count;
+#ifdef _ELINT_
     pLOBData->iCollectorID = m_pNewSigAnal->GetCollectorID();
+#endif
 
     // 수집소 위치 정보 저장
+#ifdef _ELINT_
     if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
         pLOBData->dRadarCollectionLatitude = dRCLatitude[pLOBData->iCollectorID];
         pLOBData->dRadarCollectionLongitude = dRCLongitude[pLOBData->iCollectorID];
@@ -405,6 +412,9 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
         pLOBData->dRadarCollectionLatitude = 0.0;
         pLOBData->dRadarCollectionLongitude = 0.0;
     }
+#else
+
+#endif
 
     memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
     pLOBData->iRadarModeIndex = _spZero;
@@ -413,7 +423,14 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->uiSeqNum = 0;
 
     STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
+
+#ifdef _ELINT_
     memcpy( pLOBData->aucTaskID, pPDWData->aucTaskID, sizeof(pPDWData->aucTaskID) );
+#elif defined(_POCKETSONATA_)
+
+#else
+
+#endif
 
     DISP_FineAet( pLOBData );
 
@@ -445,15 +462,15 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 
     // 신호 정보
     int iCnt=0;
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "%s", aet_signal_type[pLOB->iSignalType]);
+    iCnt += sprintf_s( & buffer[iCnt], "%s", aet_signal_type[pLOB->iSignalType]);
 
     // 방위
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %4.1f(%4.1f,%4.1f)" , pLOB->fMeanDOA, pLOB->fMinDOA, pLOB->fMaxDOA );
+    iCnt += sprintf_s( & buffer[iCnt], " %4.1f(%4.1f,%4.1f)" , pLOB->fMeanDOA, pLOB->fMinDOA, pLOB->fMaxDOA );
 
     // 주파수
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %s" , aet_freq_type[pLOB->iFreqType] );
+    iCnt += sprintf_s( & buffer[iCnt], " %s" , aet_freq_type[pLOB->iFreqType] );
 // 	temp = abs( pManAet->aet.frq.max - pManAet->aet.frq.min );
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %.3f[%.3f, %.3f]" , pLOB->fMeanFreq, pLOB->fMinFreq, pLOB->fMaxFreq );
+    iCnt += sprintf_s( & buffer[iCnt], " %.3f[%.3f, %.3f]" , pLOB->fMeanFreq, pLOB->fMinFreq, pLOB->fMaxFreq );
     //sprintf_s( buff1, "%.3f" , pLOB->fMeanFreq );
     //sprintf_s( buff2, "%.3f" , F_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.min ) );
     //sprintf_s( buff3, "%5d" , C_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.max ) );
@@ -467,19 +484,19 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     }
 
     // PRI
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %s    " , aet_pri_type[pLOB->iPRIType] );
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "%0.1f(%.1f,%.1f), %2d" , pLOB->fMeanPRI, pLOB->fMinPRI, pLOB->fMaxPRI, pLOB->iPRIPositionCount );
+    iCnt += sprintf_s( & buffer[iCnt], " %s    " , aet_pri_type[pLOB->iPRIType] );
+    iCnt += sprintf_s( & buffer[iCnt], "%0.1f(%.1f,%.1f), %2d" , pLOB->fMeanPRI, pLOB->fMinPRI, pLOB->fMaxPRI, pLOB->iPRIPositionCount );
 
     // PW
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %.2f(%.2f,%.2f)" , pLOB->fMeanPW, pLOB->fMinPW, pLOB->fMaxPW );
+    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fMeanPW, pLOB->fMinPW, pLOB->fMaxPW );
 
     // PA
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " %.2f(%.2f,%.2f)" , pLOB->fMeanPA, pLOB->fMinPA, pLOB->fMaxPA );
+    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fMeanPA, pLOB->fMinPA, pLOB->fMaxPA );
 
     // ID
 // 	printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
 
-    iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, " [%3d]" , pLOB->iNumOfPDW );
+    iCnt += sprintf_s( & buffer[iCnt], " [%3d]" , pLOB->iNumOfPDW );
 
     printf( "\n%s", buffer );
     Log( enNormal, "\t%s", buffer );

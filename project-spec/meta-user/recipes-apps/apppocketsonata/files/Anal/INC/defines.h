@@ -1,4 +1,4 @@
-// Defines.h: interface for the Definition
+ï»¿// Defines.h: interface for the Definition
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,45 +9,47 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "System.h"
+
+#include "system.h"
 
 #define PROJECT_NAME								"Self-Dev. RWR"
 
 
-// Àåºñ Á¤»ó/ºñÁ¤»ó Á¤ÀÇ °ª.
+// ìž¥ë¹„ ì •ìƒ/ë¹„ì •ìƒ ì •ì˜ ê°’.
 #define _spPass											(0)
 #define _spFail											(UINT) (-1)
 
 
 //////////////////////////////////////////////////////////////////////////
-// Å¸½ºÅ© Priority
-enum { tPRI_MANTSK=110,
-			 tPRI_ALIVEMARK,
+// íƒ€ìŠ¤í¬ Priority
+enum ENUM_TASK_PRIORITY {
+    tPRI_MANTSK=110,
+    tPRI_ALIVEMARK,
 
-			 tPRI_RECVSERIAL,
-			 tPRI_SENDSERIAL,
+    tPRI_RECVSERIAL,
+    tPRI_SENDSERIAL,
 
-			 tPRI_RT1553,
-			 tPRI_CTRLCMDS,
-			 tPRI_RUNBIT,
+    tPRI_RT1553,
+    tPRI_CTRLCMDS,
+    tPRI_RUNBIT,
 
-			 //tPRI_RECVSERIAL,
-			 //tPRI_SENDSERIAL,
+    //tPRI_RECVSERIAL,
+    //tPRI_SENDSERIAL,
 
-			 tPRI_POLLKEY,
-			 tPRI_GRDISP,
-			 tPRI_GETPDW,
-			 tPRI_MANAET,
-			 tPRI_SIGANAL,
-			 tPRI_LOGDEBUG,
-			 tPRI_TCPSRV } ;
+    tPRI_POLLKEY,
+    tPRI_GRDISP,
+    tPRI_GETPDW,
+    tPRI_MANAET,
+    tPRI_SIGANAL,
+    tPRI_LOGDEBUG,
+    tPRI_TCPSRV } ;
 
 //////////////////////////////////////////////////////////////////////////
-// OS °ü·Ã Á¤ÀÇ¹®
+// OS ê´€ë ¨ ì •ì˜ë¬¸
 #define MAX_LEN_MSGQ								(256)
 #define SIZE_OF_MESSAGE							( sizeof( STR_QUEUE_MESSAGE ) )
 
-// tick count ¿¡ µû¸¥ Á¤ÀÇ¹®
+// tick count ì— ë”°ë¥¸ ì •ì˜ë¬¸
 #define TICK_COUNT									(100)
 #define OS_ONE_SEC									(100)
 #define OS_TEN_MILLISEC							(1)
@@ -55,53 +57,53 @@ enum { tPRI_MANTSK=110,
 
 //////////////////////////////////////////////////////////////////////////
 //
-#define BOOTING_TIME								(60)	// ºÎÆÃ ½Ã°£
+#define BOOTING_TIME								(60)	// ë¶€íŒ… ì‹œê°„
 
 
 //////////////////////////////////////////////////////////////////////////
-// ÇÏµå¿þ¾î Á¤ÀÇ¹®
+// í•˜ë“œì›¨ì–´ ì •ì˜ë¬¸
 
-// IRQ* ÀÎÅÍ·´Æ® Á¤ÀÇ
-#define	IRQ_NUM_OVER_HEAT						(4)		// LO/°ú¿­ Á¤º¸
-#define	IRQ_CONTROLLER							(1)		// Á¦¾î±â ÀÎÅÍ·´Æ®
-#define	IRQ_NUM_MAN_CMDS						(6)		// Á¶Á¾»ç Trigger In(CMDS semi-auto)
+// IRQ* ì¸í„°ëŸ½íŠ¸ ì •ì˜
+#define	IRQ_NUM_OVER_HEAT						(4)		// LO/ê³¼ì—´ ì •ë³´
+#define	IRQ_CONTROLLER							(1)		// ì œì–´ê¸° ì¸í„°ëŸ½íŠ¸
+#define	IRQ_NUM_MAN_CMDS						(6)		// ì¡°ì¢…ì‚¬ Trigger In(CMDS semi-auto)
 #define	IRQ_NUM_COLLECT							(7)
 
-// º¤ÅÍ Á¤ÀÇ
+// ë²¡í„° ì •ì˜
 #define VEC_NUM_COLLECT							(135)
 #define VEC_NUM_CONTROLLER					(129)
 
 
 //////////////////////////////////////////////////////////////////////////
-// ÃÊ´Ü¼ö½Å±â ¸Þ½ÃÁö Á¤ÀÇ
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸° ë©”ì‹œì§€ ì •ì˜
 
-// ÃÊ´Ü¼ö½Å±âÀÇ ´ë¿ª °³¼ö
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ ëŒ€ì—­ ê°œìˆ˜
 #define TOTAL_RECEIVER							(4)
 
-// ÃÊ´Ü¼ö½Å±â ¾çÈ£ ºñÆ® °á°ú °ª Á¤ÀÇ
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸° ì–‘í˜¸ ë¹„íŠ¸ ê²°ê³¼ ê°’ ì •ì˜
 #define HF_BIT_OK										(1)
 #define HF_PP_BIT_OK								(0x0FFFFFFF)
 
 
-// ÃÊ´Ü¼ö½Å±â °ü·Ã ¸Þ½ÃÁö Á¤ÀÇ
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸° ê´€ë ¨ ë©”ì‹œì§€ ì •ì˜
 #define	HEADER_VH_RECEIVER_MESSAGE	( sizeof(UCHAR)*4 )
 #define	TAIL_VH_RECEIVER_MESSAGE		( sizeof(UCHAR)*2 )
 
 #define DEFAULT_VH_RECEIVER_MESSAGE	( HEADER_VH_RECEIVER_MESSAGE+TAIL_VH_RECEIVER_MESSAGE )
 
-// ÃÊ´Ü¼ö½Å±âÀÇ ÃÖ´ë ¸Þ½ÃÁö ±æÀÌ
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ ìµœëŒ€ ë©”ì‹œì§€ ê¸¸ì´
 #define MAX_DATA_MESSAGE						(64)
 
-// ÃÊ´Ü¼ö½Å±âÀÇ Ã¤³Î º¸Á¤ µ¥ÀÌÅÍ ÃÖ´ë Å©±â
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ ì±„ë„ ë³´ì • ë°ì´í„° ìµœëŒ€ í¬ê¸°
 #define MAX_SIZE_CHNNELCOMPENSATION	(0x400000)
 
-// ÃÊ´Ü¼ö½Å±âÀÇ ¸í·É Ã³¸®¿¡ ´ëÇÑ ÃÖ´ë ¼Ò¿ä ½Ã°£
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ ëª…ë ¹ ì²˜ë¦¬ì— ëŒ€í•œ ìµœëŒ€ ì†Œìš” ì‹œê°„
 #define MAX_TO_HF_PROCESS						(int) ( 100 * OS_ONE_MILLISEC )
 
-// ÃÊ´Ü¼ö½Å±âÀÇ Å¸ÀÓ¾Æ¿ô
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ íƒ€ìž„ì•„ì›ƒ
 #define MAX_TO_HF_COMM							(int) ( 100 * OS_ONE_MILLISEC )		// ( 1*OS_ONE_SEC )
 
-// ÃÊ´Ü¼ö±ä±â Åë½Å ¸Þ½ÃÁö Á¤ÀÇ
+// ì´ˆë‹¨ìˆ˜ê¸´ê¸° í†µì‹  ë©”ì‹œì§€ ì •ì˜
 #define VH_REQ_INIT									(0x01)
 #define VH_RES_INIT									(0x02)
 #define VH_REQ_IBIT									(0x03)
@@ -137,35 +139,35 @@ enum { tPRI_MANTSK=110,
 
 
 //////////////////////////////////////////////////////////////////////////
-// ÆÞ½ºÁ¤º¸»ý¼ºÆÇ Á¤ÀÇ
+// íŽ„ìŠ¤ì •ë³´ìƒì„±íŒ ì •ì˜
 
-// ¿Âµµ res.
+// ì˜¨ë„ res.
 #define PG_TEMP_RES										(5)		
 
-// ÆÞ½ºÁ¤º¸»ý¼ºÆÇÀÇ ¸í·É Ã³¸®¿¡ ´ëÇÑ ÃÖ´ë ¼Ò¿ä ½Ã°£
+// íŽ„ìŠ¤ì •ë³´ìƒì„±íŒì˜ ëª…ë ¹ ì²˜ë¦¬ì— ëŒ€í•œ ìµœëŒ€ ì†Œìš” ì‹œê°„
 #define MAX_TO_PG_PROCESS							(int) ( 100*OS_ONE_MILLISEC )
 
-// ÆÞ½ºÁ¤º¸»ý¼ºÆÇÀÇ ÇÊÅÍ °³¼ö
+// íŽ„ìŠ¤ì •ë³´ìƒì„±íŒì˜ í•„í„° ê°œìˆ˜
 #define MAX_NO_FILTER									(8)
 
 #define PG_ONE_SEC										(50000000)
 #define PG_ONE_MILLISEC								(PG_ONE_SEC/1000)
 #define PG_ONE_MICROSEC								(PG_ONE_MILLISEC/1000)
 
-#define PG_BIT_OK											(0xa137)			// »óÀ§ 16ºñÆ®´Â ÀÐÀ» ¶§¸¶´Ù º¯°æµÊ.
+#define PG_BIT_OK											(0xa137)			// ìƒìœ„ 16ë¹„íŠ¸ëŠ” ì½ì„ ë•Œë§ˆë‹¤ ë³€ê²½ë¨.
 #define PG_INIT_OK										(0x1234a137)
 
-// ÇÊÅÍ Ã¤³Î 1¹øÀº ¼öÁý¿ëÀ¸·Î ÇÑ´Ù. ±×¸®°í ³ª¸ÓÁö 7°³ Ã¤³Î¿¡ ´ëÇØ¼­´Â Á¦¾î¿ëÀ¸·Î »ç¿ëÇÑ´Ù.
+// í•„í„° ì±„ë„ 1ë²ˆì€ ìˆ˜ì§‘ìš©ìœ¼ë¡œ í•œë‹¤. ê·¸ë¦¬ê³  ë‚˜ë¨¸ì§€ 7ê°œ ì±„ë„ì— ëŒ€í•´ì„œëŠ” ì œì–´ìš©ìœ¼ë¡œ ì‚¬ìš©í•œë‹¤.
 enum { NO_FILTER_FOR_COLLECTING=0, NO_FILTER_FOR_BIT } ;
 
 
-// ÆÞ½ºÁ¤º¸»ý¼ºÆÇÀÇ ÇÊÅÍÆÇ ¼³Á¤ Á¤º¸
+// íŽ„ìŠ¤ì •ë³´ìƒì„±íŒì˜ í•„í„°íŒ ì„¤ì • ì •ë³´
 enum CHANNEL_MODE { FORCED_MODE=1, NORMAL_MODE=2 } ;
 enum CHANNEL_COMPENSATION { USE_CHANNEL_COMPENSATION=1, NOTUSE_CHANNEL_COMPENSATION } ;
 enum CHANNEL_SELECTION { CHANNEL_1=0xE, CHANNEL_2=0xD, CHANNEL_3=0xB, CHANNEL_4=0x7, NOT_USE_CHANNEL=0x0 } ;
 enum BLANKING_MODE { NOTUSE_BLANKING_MODE=0, USE_BLANKING_MODE } ;
 enum RX_THRESHOLD_MODE { MANUAL_RX_MODE=0, AUTO_RX_MODE, VME_ERROR } ;
-//enum BAND_INFO { F_BAND1=0, F_BAND2, F_BAND3, F_BAND4, CD_BAND, BIT_OFFSET } ;
+enum BAND_INFO { F_BAND1=0, F_BAND2, F_BAND3, F_BAND4, CD_BAND, BIT_OFFSET } ;
 enum FUNCTION { REJECT_FILTER=0x01, PASS_FILTER } ;
 //enum MEMORY_BANK { BANK1=0, BANK2, ALL_BANK } ;
 enum DIRECTION_VALID { DV_DISABLE=0, DV_ENABLE } ;
@@ -173,7 +175,7 @@ enum PULSE_TYPE { NORMAL_PULSE=1, CW_PULSE=2, FMOP_PULSE=4, SHORT_PULSE=7, ALL_P
 enum DIRECTION_MODE { EMISSION_MODE=0x1, INJECTION_MODE=0x2 } ;
 enum ERASE_MEMORYCHANNEL { ERASE_CHANNEL_1=1, ERASE_CHANNEL_2=2, ERASE_CHANNEL_3=4, ERASE_CHANNEL_4=8 } ;
 
-// ÆÞ½ºÁ¤º¸»ý¼ºÆÇ ¸í·É¾î
+// íŽ„ìŠ¤ì •ë³´ìƒì„±íŒ ëª…ë ¹ì–´
 #define	PG_REQ_INIT										(VME_A24_MSTR_LOCAL+0x400000)
 #define	PG_GET_BOARD_ID								(VME_A24_MSTR_LOCAL+0x400004)
 #define PG_REQ_BIT										(VME_A24_MSTR_LOCAL+0x400008)
@@ -220,7 +222,7 @@ enum ERASE_MEMORYCHANNEL { ERASE_CHANNEL_1=1, ERASE_CHANNEL_2=2, ERASE_CHANNEL_3
 #define PG_GET_PDW_PHASE3							(VME_A24_MSTR_LOCAL+0x4000A8)
 #define PG_GET_LO_STAT								(VME_A24_MSTR_LOCAL+0x4000C0)
 
-// ¹æÅ½ º¸Á¤ °ü·Ã Á¤ÀÇ
+// ë°©íƒ ë³´ì • ê´€ë ¨ ì •ì˜
 #define	PGC_REQ_INIT									(VME_A24_MSTR_LOCAL+0xCA0000)
 #define PGC_SET_THRESHOLD							(VME_A24_MSTR_LOCAL+0xCA0020)
 #define PGC_GET_THRESHOLD							(VME_A24_MSTR_LOCAL+0xCA0020)
@@ -234,23 +236,23 @@ enum ERASE_MEMORYCHANNEL { ERASE_CHANNEL_1=1, ERASE_CHANNEL_2=2, ERASE_CHANNEL_3
 #define GP_MAX_THREAT									(16)
 #define	GP_MAX_SYMBOL									(32)
 
-#define OFFSET_X											(40)			// ÃÖ¼Ò ½É¹ú ±æÀÌ-XÃà
-#define OFFSET_Y											(40)			// ÃÖ¼Ò ½É¹ú ±æÀÌ-YÃà
+#define OFFSET_X											(40)			// ìµœì†Œ ì‹¬ë²Œ ê¸¸ì´-Xì¶•
+#define OFFSET_Y											(40)			// ìµœì†Œ ì‹¬ë²Œ ê¸¸ì´-Yì¶•
 
-#define GP_MONITOR_LEFT								(20)			// ÃÖ¼Ò ÁÂÃà ½É¹ú Àý´ë À§Ä¡
-#define GP_MONITOR_RIGHT							(236)			// ÃÖ´ë ¿ìÃà ½É¹ú Àý´ë À§Ä¡
-#define GP_MONITOR_TOP								(20)			// ÃÖ¼Ò »óÃø ½É¹ú Àý´ë À§Ä¡
-#define GP_MONITOR_BOTTOM							(236)			// ÃÖ¼Ò ÇÏÃø ½É¹ú Àý´ë À§Ä¡
+#define GP_MONITOR_LEFT								(20)			// ìµœì†Œ ì¢Œì¶• ì‹¬ë²Œ ì ˆëŒ€ ìœ„ì¹˜
+#define GP_MONITOR_RIGHT							(236)			// ìµœëŒ€ ìš°ì¶• ì‹¬ë²Œ ì ˆëŒ€ ìœ„ì¹˜
+#define GP_MONITOR_TOP								(20)			// ìµœì†Œ ìƒì¸¡ ì‹¬ë²Œ ì ˆëŒ€ ìœ„ì¹˜
+#define GP_MONITOR_BOTTOM							(236)			// ìµœì†Œ í•˜ì¸¡ ì‹¬ë²Œ ì ˆëŒ€ ìœ„ì¹˜
 
 #define GP_WIDTH_LEFT									(GP_MONITOR_RIGHT-GP_CENTER_X)
 #define GP_WIDTH_RIGHT								(GP_CENTER_X-GP_MONITOR_LEFT)
 #define GP_HEIGHT_BOTTOM							(GP_MONITOR_BOTTOM-GP_CENTER_Y)
 #define GP_HEIGHT_TOP									(GP_CENTER_Y-GP_MONITOR_TOP)
 
-#define	GP_CENTER_X										(128)			// ½É¹ú Áß¾Ó Àý´ë À§Ä¡-XÃà
-#define	GP_CENTER_Y										(128)			// ½É¹ú Áß¾Ó Àý´ë À§Ä¡-YÃà
+#define	GP_CENTER_X										(128)			// ì‹¬ë²Œ ì¤‘ì•™ ì ˆëŒ€ ìœ„ì¹˜-Xì¶•
+#define	GP_CENTER_Y										(128)			// ì‹¬ë²Œ ì¤‘ì•™ ì ˆëŒ€ ìœ„ì¹˜-Yì¶•
 
-// ½É¹ú Á¤ÀÇ
+// ì‹¬ë²Œ ì •ì˜
 #define ENEMY_SYMBOL									0x16
 #define FRIEND_SYMBOL									0x10
 #define GROUND_SYMBOL									0x00
@@ -262,22 +264,22 @@ enum ERASE_MEMORYCHANNEL { ERASE_CHANNEL_1=1, ERASE_CHANNEL_2=2, ERASE_CHANNEL_3
 #define	MISSILE_LAUNCHER2							0x0C
 #define	MISSILE_LAUNCHER3							0x0E
 
-// ½É¹ú Å©±â ¹× ¼¾ÅÍ À§Ä¡
+// ì‹¬ë²Œ í¬ê¸° ë° ì„¼í„° ìœ„ì¹˜
 #define TEXT_WIDTH_M									(10)
 #define TEXT_WIDTH_S									(10)
 #define TEXT_WIDTH_L									(10)
 #define	TEXT_INTERVAL									(2)
 
-// ÇÏ³ªÀÇ TARGET SEPERATE °ü·Ã Á¤ÀÇ
+// í•˜ë‚˜ì˜ TARGET SEPERATE ê´€ë ¨ ì •ì˜
 #define	MAX_SYMBOLS_IN_CLUSTER				(3)
 
 
-enum FAULT_CATEGORY { FAULT_CLEAR=0, SYSTEM_OK=0, OVERHEAT, FATAL, DEGRADED } ;
-enum CMDS_MODE { CMDS_CLEAR=0, CHAFF_FLARE_LINK_OFF=0, CMDS_MANUAL, CMDS_SEMI_AUTO, CMDS_AUTO, CMDS_UPDATE } ;
-enum OP_MODE { ESM_MODE=0, RWR_MODE, AUTO_MODE };
-enum UDF_NUMBER { UDF_CLEAR=0, UDF_1=1, UDF_2, UDF_3 } ;
-enum LOG_STAT { LOG_CLEAR=0, LOG_NOTSAVE=0, LOG_SAVE } ;
-enum CTRL_LAMP_INFO { ALL_OFF=0, MISSILE_LAUNCH, LOG, MANUAL_, CMDS, FAULT, BIT, CBIT, TARGET_SEP, TARGET_UNKNOWN, HANDOFF, PRIORITY, OPEN, OPMODE, ER2, ALTITUDE, ALT, ER1, UDF, ALL_ON } ;
+//enum FAULT_CATEGORY { FAULT_CLEAR=0, SYSTEM_OK=0, OVERHEAT, FATAL, DEGRADED } ;
+//enum CMDS_MODE { CMDS_CLEAR=0, CHAFF_FLARE_LINK_OFF=0, CMDS_MANUAL, CMDS_SEMI_AUTO, CMDS_AUTO, CMDS_UPDATE } ;
+//enum OP_MODE { ESM_MODE=0, RWR_MODE, AUTO_MODE };
+//enum UDF_NUMBER { UDF_CLEAR=0, UDF_1=1, UDF_2, UDF_3 } ;
+//enum LOG_STAT { LOG_CLEAR=0, LOG_NOTSAVE=0, LOG_SAVE } ;
+//enum CTRL_LAMP_INFO { ALL_OFF=0, MISSILE_LAUNCH, LOG, MANUAL_, CMDS, FAULT, BIT, CBIT, TARGET_SEP, TARGET_UNKNOWN, HANDOFF, PRIORITY, OPEN, OPMODE, ER2, ALTITUDE, ALT, ER1, UDF, ALL_ON } ;
 
 #define	MAX_CMDS_THREAT								(1)
 
@@ -288,45 +290,45 @@ enum CTRL_LAMP_INFO { ALL_OFF=0, MISSILE_LAUNCH, LOG, MANUAL_, CMDS, FAULT, BIT,
 
 
 //////////////////////////////////////////////////////////////////////////
-// ½ÅÈ£ºÐ¼® °ü·Ã Á¤ÀÇ¹®
+// ì‹ í˜¸ë¶„ì„ ê´€ë ¨ ì •ì˜ë¬¸
 #define MAX_TO_AP_PROCESS							(1*OS_ONE_SEC)
 
-// ¼öÁýÁßÀÎ ¹öÆÛ°¡ ¼öÁýÁßÀÏ ¶§ ¼öÁý ´ë¿ªÀ» ¼³Á¤ÇÒ ¶§ Àç½Ãµµ È¸¼ö¸¦ ÀÇ¹ÌÇÑ´Ù.
+// ìˆ˜ì§‘ì¤‘ì¸ ë²„í¼ê°€ ìˆ˜ì§‘ì¤‘ì¼ ë•Œ ìˆ˜ì§‘ ëŒ€ì—­ì„ ì„¤ì •í•  ë•Œ ìž¬ì‹œë„ íšŒìˆ˜ë¥¼ ì˜ë¯¸í•œë‹¤.
 #define MAX_COLLECTING_SUSPEND				(20)
 
-// ÇÊÅÍÆÇ »óÅÂ
+// í•„í„°íŒ ìƒíƒœ
 enum FILTER_STAT { ON_COLLECTING=1, COLLECTING_END, ON_ANALYSIS, ANALYSIS_END } ;
 
 // 
 enum ANAL { NEW_ANAL=0, KWN_ANAL, SCN_ANAL } ;
 
-// ¸ðµå »óÅÂ
+// ëª¨ë“œ ìƒíƒœ
 enum COLLECT_MODE { NORMAL_COLLECT_MODE=0, BIT_MODE, TEST_MODE, CLOSE_MODE } ;
 
 
 //////////////////////////////////////////////////////////////////////////
-// ¿¡¹ÌÅÍ ½Äº°
+// ì—ë¯¸í„° ì‹ë³„
 #define	MAX_EID												(4000)
 
 
 //////////////////////////////////////////////////////////////////////////
-// ÁÖÆÄ¼ö ÇÏ¸ð´Ð Á¤ÀÇ
+// ì£¼íŒŒìˆ˜ í•˜ëª¨ë‹‰ ì •ì˜
 #define FIX_FREQ_HARMONIC_MARGIN			(10)
 
 
 
 //////////////////////////////////////////////////////////////////////////
-// ºÐ¼® ¸ðµå(Normal,Simul)
+// ë¶„ì„ ëª¨ë“œ(Normal,Simul)
 enum ANALYSIS_MODE { NORMAL_MDOE=0, SIMUL_MODE };
 
 
-// Priority ¼ø¼­ Á¤ÀÇ
+// Priority ìˆœì„œ ì •ì˜
 enum KEY_PRIORITY_THREAT { KEY_PRIORITY_NORMAL=0, KEY_PRIORITY_UNKNOWN, KEY_PRIORITY_KNOWN, KEY_PRIORITY_LOWALT } ;
 enum COMPARE_PRIORITY { _NEXT_COMPARE=0 /* equal */ , _HIGH_PRIORITY /* break */ , _LOW_PRIORITY /* continue, next threat compare */ } ;
 
-// ½Ã½ºÅÛ ·Î±×
+// ì‹œìŠ¤í…œ ë¡œê·¸
 
-// ½Ã½ºÅÛ·Î±× ÆÄÀÏÀÌ Ç×°ø±âÁ¢¼ÓÆÇ¿¡ ÀÖÀ» °æ¿ì¿¡´Â ¾Æ·¡ Á¤ÀÇ¸¦ undefine À¸·Î ÇÔ.
+// ì‹œìŠ¤í…œë¡œê·¸ íŒŒì¼ì´ í•­ê³µê¸°ì ‘ì†íŒì— ìžˆì„ ê²½ìš°ì—ëŠ” ì•„ëž˜ ì •ì˜ë¥¼ undefine ìœ¼ë¡œ í•¨.
 #define _SYSTEMLOG_FILESYSTEM_
 
 #define	KILO_BYTE													(1024)
@@ -346,12 +348,12 @@ enum COMPARE_PRIORITY { _NEXT_COMPARE=0 /* equal */ , _HIGH_PRIORITY /* break */
 #endif
 
 
-// 1553 RT Á¤ÀÇ
+// 1553 RT ì •ì˜
 #define XML_FOLDER												"xml"
 
 #define SCREEN_BUFFER_LOG_FILENAME				"PRGDISK:/screenbuffer.log"
 
-// Á¦¾î±â ¹öÆ° Á¤ÀÇ
+// ì œì–´ê¸° ë²„íŠ¼ ì •ì˜
 #define _CONTROL1_
 
 

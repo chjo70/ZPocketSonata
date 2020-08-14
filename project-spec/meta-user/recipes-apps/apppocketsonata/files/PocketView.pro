@@ -24,7 +24,9 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
+    Collect/DataFile/_macro.h \
     chexspinbox.h \
     mainwindow.h
 
@@ -33,6 +35,10 @@ FORMS += \
 
 TRANSLATIONS += \
     PocketView_ko_KR.ts
+
+DEFINES += _POCKETSONATA_
+DEFINES += _GUI_
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

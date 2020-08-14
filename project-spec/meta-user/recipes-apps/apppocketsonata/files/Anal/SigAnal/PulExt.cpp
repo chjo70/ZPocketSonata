@@ -1,4 +1,4 @@
-// PulExt.cpp: implementation of the CPulExt class.
+﻿// PulExt.cpp: implementation of the CPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,6 +12,12 @@
 
 #ifdef _ELINT_
 #include "../OFP_Main.h"
+
+#elif _POCKETSONATA_
+#include "../OFP_Main.h"
+#include "../INC/Macros.h"
+#include "../Identify/ELUtil.h"
+
 #endif
 
 #include <stdio.h>
@@ -1834,8 +1840,8 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
 		preToa = toa;
 		if( CompMarginDiff<_TOA>( dtoa, dtoa_range.low, dtoa_range.hgh, 0 ) == TRUE ) {
 			priMean += dtoa;
-			pSeg->pri.max = max( pSeg->pri.max, dtoa );
-			pSeg->pri.min = min( pSeg->pri.min, dtoa );
+            pSeg->pri.max = _max( pSeg->pri.max, dtoa );
+            pSeg->pri.min = _min( pSeg->pri.min, dtoa );
 
 			++ dtoa_count;
 		}
@@ -2278,15 +2284,15 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
 			//memcpy( & pDwlSeg->pdw.pIndex[count], m_RefSeg.pdw.pIndex, m_RefSeg.pdw.count * sizeof(PDWINDEX) );
 			//count += m_RefSeg.pdw.count;
 
-			pDwlSeg->gr_ref_idx = min( pDwlSeg->gr_ref_idx, ref_idx );
+            pDwlSeg->gr_ref_idx = _min( pDwlSeg->gr_ref_idx, ref_idx );
 
 			// PRT 최대 최소 값 저장
-			pDwlSeg->pri.min = min( pDwlSeg->pri.min, m_RefSeg.pri.min );
-			pDwlSeg->pri.max = max( pDwlSeg->pri.max, m_RefSeg.pri.max );
+            pDwlSeg->pri.min = _min( pDwlSeg->pri.min, m_RefSeg.pri.min );
+            pDwlSeg->pri.max = _max( pDwlSeg->pri.max, m_RefSeg.pri.max );
 
 			// 펄스열의 최초시간 및 마지막 시간 설정
-			pDwlSeg->last_idx = max( pDwlSeg->last_idx, m_RefSeg.last_idx );
-			pDwlSeg->first_idx = min( pDwlSeg->first_idx, m_RefSeg.first_idx );
+            pDwlSeg->last_idx = _max( pDwlSeg->last_idx, m_RefSeg.last_idx );
+            pDwlSeg->first_idx = _min( pDwlSeg->first_idx, m_RefSeg.first_idx );
 		}
 		else {
 			++ ref_idx;
@@ -4188,13 +4194,21 @@ void CPulExt::PrintAllSeg()
 #endif
 }
 
+/**
+ * @brief CPulExt::PrintAllSegPDW
+ * @param pSeg
+ */
 void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
 {
 	int i, iCnt=0;
 	char szBuffer[500];
 
 	for( i=1 ; i < pSeg->pdw.count && i < 15 ; ++i ) {
+#ifdef _WIN32
 		iCnt += sprintf_s( & szBuffer[iCnt], sizeof(szBuffer)-iCnt, ",%3d" , pSeg->pdw.pIndex[i] );
+#else
+        iCnt += sprintf( & szBuffer[iCnt], ",%3d" , pSeg->pdw.pIndex[i] );
+#endif
 	}
 
 	printf( "\n\t\t(%3d: %3d%s)", pSeg->pdw.count, pSeg->pdw.pIndex[0], szBuffer );

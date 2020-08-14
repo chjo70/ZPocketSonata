@@ -65,10 +65,13 @@ enum ENUM_SocketMode {
 /**
  * @brief 최소/최대 값 구조체 정의
  */
+#ifndef _STR_LOWHIGH
+#define _STR_LOWHIGH
 struct STR_LOWHIGH {
-    UINT uiLow;
-    UINT uiHigh;
+    unsigned int uiLow;
+    unsigned int uiHigh;
 };
+#endif
 
 /**
  * @brief 윈도우 셀 구조체 정의
@@ -131,19 +134,6 @@ struct STR_WINDOWCELL {
      * @brief 누적 사용 채널 횟수
      */
     unsigned int uiAccumulatedCoUsed;
-
-};
-
-struct STR_ARRAY_PDW {
-    unsigned int uiTotalPDW;
-
-    unsigned int uiSigType[_MAX_COL_PDW];
-    unsigned int uiAOA[_MAX_COL_PDW];
-    unsigned int uiFreq[_MAX_COL_PDW];
-    unsigned int uiPW[_MAX_COL_PDW];
-    unsigned int uiPA[_MAX_COL_PDW];
-
-    _TOA llToa[_MAX_COL_PDW];
 
 };
 

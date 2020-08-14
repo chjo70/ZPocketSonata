@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect( & m_theTcpSocket, SIGNAL(connected()), this, SLOT(onConnectServer()) );
     connect( & m_theTcpSocket, SIGNAL(disconnected()), this, SLOT(connectionClosedByServer()));
     connect( & m_theTcpSocket, SIGNAL(readyRead()), this, SLOT(onReadMessage()));
+    connect( & m_theTcpSocket, SIGNAL(error()), this, SLOT(onError()));
+
 
 
 }
@@ -46,6 +48,11 @@ void MainWindow::onSocketStateChanged(QAbstractSocket::SocketState socketState)
 {
 }
 
+void MainWindow::onError(QAbstractSocket::SocketState socketState)
+{
+    printf( "\nssss" );
+}
+
 void MainWindow::onReadyRead()
 {
 }
@@ -55,10 +62,17 @@ void MainWindow::onReadyRead()
  */
 void MainWindow::on_pushButton_clicked()
 {
+    bool bConnected;
     nextBlockSize = 0;
 
     if( m_bConnect == false ) {
         m_theTcpSocket.connectToHost(QHostAddress::LocalHost, CCU_PORT );
+        bConnected = m_theTcpSocket.waitForConnected();
+
+        if( bConnected == false ) {
+            m_theTcpSocket.connectToHost( "zcu111.com", CCU_PORT );
+        }
+
 
     }
     else {

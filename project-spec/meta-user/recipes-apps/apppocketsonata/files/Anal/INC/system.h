@@ -1,6 +1,6 @@
-/*!
+ï»¿/*!
   \file     System.h
-  \brief    interface for the ½Ã½ºÅÛ °ü·Ã Á¤ÀÇ¹®
+  \brief    interface for the ì‹œìŠ¤í…œ ê´€ë ¨ ì •ì˜ë¬¸
 	\version  0.0.1
 */
 //////////////////////////////////////////////////////////////////////
@@ -29,11 +29,11 @@
 #define WARM_UP_MESSAGE_X							CENTER_WIDTH
 #define WARM_UP_MESSAGE_Y							(70)
 
-// Handoff ¸Þ½ÃÁö À§Ä¡
+// Handoff ë©”ì‹œì§€ ìœ„ì¹˜
 #define	HANDOFF_MESSAGE_X							CENTER_WIDTH
 #define	HANDOFF_MESSAGE_Y							(8)
 
-// System Text ¸Þ½ÃÁö À§Ä¡
+// System Text ë©”ì‹œì§€ ìœ„ì¹˜
 #define	SYSTEST_X											(90)
 #define	SYSTEST_Y											(190)
 
@@ -81,163 +81,163 @@
 
 //////////////////////////////////////////////////////////////////////////
 //
-// ½ÅÈ£ÃøÁ¤ ¹ß»ýÆÇ ÃÊ±âÈ­ °ü·Ã ¼³Á¤°ª
-#define INIT_CHANNEL_MODE						(NORMAL_MODE)	// Á¤»ó ¸ðµå·Î ¼³Á¤ÇÔ.
-#define INIT_CHANNEL_COMPENSATION		(USE_CHANNEL_COMPENSATION)			// Ã¤³Î º¸Á¤ »ç¿ë ¿©ºÎ¸¦ Á¤ÇÔ.
-#define	INIT_PA_THRESHOLD_BAND1			(-65) //(-67.0)				// ´ÜÀ§´Â dB, -74.6875 ºÎÅÍ +5 ÀÌ¾î¾ß ÇÔ.
-#define	INIT_PA_THRESHOLD_BAND2			(-60) //(-67.0)				// ´ÜÀ§´Â dB, -74.6875 ºÎÅÍ +5 ÀÌ¾î¾ß ÇÔ.
-#define	INIT_PA_THRESHOLD_BAND3			(-60) //(-67.0)				// ´ÜÀ§´Â dB, -74.6875 ºÎÅÍ +5 ÀÌ¾î¾ß ÇÔ.
-#define	INIT_PA_THRESHOLD_BAND4			(-60) //(-67.0)				// ´ÜÀ§´Â dB, -74.6875 ºÎÅÍ +5 ÀÌ¾î¾ß ÇÔ.
-#define	INIT_PA_THRESHOLD_CD_BAND		(-50) //(-67.0)				// ´ÜÀ§´Â dB, -74.6875 ºÎÅÍ +5 ÀÌ¾î¾ß ÇÔ.
-#define INIT_CW_CHOPPING_COUNT			(30)	// (18)					// ´ÜÀ§´Â °³¼ö, 0 °³ ºÎÅÍ 255 °³
-#define INIT_FMOP_THRESHOLD_CD_BAND	(5.0)									// ´ÜÀ§´Â MHz, 0 MHz ºÎÅÍ 78.75 MHz
-#define INIT_FMOP_THRESHOLD					(10.0)								// ´ÜÀ§´Â MHz, 0 MHz ºÎÅÍ 78.75 MHz
-#define INIT_CW_PULSEWIDTH					(130.0)								// ´ÜÀ§´Â usec, 0 us ºÎÅÍ 204.6 us
-#define INIT_BLANKING_MODE					(NOTUSE_BLANKING_MODE)// ºí·©Å· »ç¿ëÇÔ.
-#define INIT_AUTO_RX_THRESHOLD_MODE	(MANUAL_RX_MODE)			// ÀÚµ¿ ¼ö½Å ÀÓ°è°ª ¸ðµå ¼³Á¤ÇÔ.
+// ì‹ í˜¸ì¸¡ì • ë°œìƒíŒ ì´ˆê¸°í™” ê´€ë ¨ ì„¤ì •ê°’
+#define INIT_CHANNEL_MODE						(NORMAL_MODE)	// ì •ìƒ ëª¨ë“œë¡œ ì„¤ì •í•¨.
+#define INIT_CHANNEL_COMPENSATION		(USE_CHANNEL_COMPENSATION)			// ì±„ë„ ë³´ì • ì‚¬ìš© ì—¬ë¶€ë¥¼ ì •í•¨.
+#define	INIT_PA_THRESHOLD_BAND1			(-65) //(-67.0)				// ë‹¨ìœ„ëŠ” dB, -74.6875 ë¶€í„° +5 ì´ì–´ì•¼ í•¨.
+#define	INIT_PA_THRESHOLD_BAND2			(-60) //(-67.0)				// ë‹¨ìœ„ëŠ” dB, -74.6875 ë¶€í„° +5 ì´ì–´ì•¼ í•¨.
+#define	INIT_PA_THRESHOLD_BAND3			(-60) //(-67.0)				// ë‹¨ìœ„ëŠ” dB, -74.6875 ë¶€í„° +5 ì´ì–´ì•¼ í•¨.
+#define	INIT_PA_THRESHOLD_BAND4			(-60) //(-67.0)				// ë‹¨ìœ„ëŠ” dB, -74.6875 ë¶€í„° +5 ì´ì–´ì•¼ í•¨.
+#define	INIT_PA_THRESHOLD_CD_BAND		(-50) //(-67.0)				// ë‹¨ìœ„ëŠ” dB, -74.6875 ë¶€í„° +5 ì´ì–´ì•¼ í•¨.
+#define INIT_CW_CHOPPING_COUNT			(30)	// (18)					// ë‹¨ìœ„ëŠ” ê°œìˆ˜, 0 ê°œ ë¶€í„° 255 ê°œ
+#define INIT_FMOP_THRESHOLD_CD_BAND	(5.0)									// ë‹¨ìœ„ëŠ” MHz, 0 MHz ë¶€í„° 78.75 MHz
+#define INIT_FMOP_THRESHOLD					(10.0)								// ë‹¨ìœ„ëŠ” MHz, 0 MHz ë¶€í„° 78.75 MHz
+#define INIT_CW_PULSEWIDTH					(130.0)								// ë‹¨ìœ„ëŠ” usec, 0 us ë¶€í„° 204.6 us
+#define INIT_BLANKING_MODE					(NOTUSE_BLANKING_MODE)// ë¸”ëž­í‚¹ ì‚¬ìš©í•¨.
+#define INIT_AUTO_RX_THRESHOLD_MODE	(MANUAL_RX_MODE)			// ìžë™ ìˆ˜ì‹  ìž„ê³„ê°’ ëª¨ë“œ ì„¤ì •í•¨.
 
 
 //////////////////////////////////////////////////////////////////////////
 //
-// ºñÆ® ¼öÇà½Ã°£ Á¤ÀÇ
-#define CBIT_RUN_PERIOD							(30)			// ´ÜÀ§´Â ÃÊ.
+// ë¹„íŠ¸ ìˆ˜í–‰ì‹œê°„ ì •ì˜
+#define CBIT_RUN_PERIOD							(30)			// ë‹¨ìœ„ëŠ” ì´ˆ.
 
 
 //////////////////////////////////////////////////////////////////////////
-// ½ÅÈ£ºÐ¼® °ü·Ã ÃÊ±âÈ­ °ü·Ã ¼³Á¤°ª
+// ì‹ í˜¸ë¶„ì„ ê´€ë ¨ ì´ˆê¸°í™” ê´€ë ¨ ì„¤ì •ê°’
 
-// ºñÆ® ¼öÇà½ÃÀÇ ÆÞ½º °³¼ö ¹× ½Ã°£ Á¤ÀÇ
+// ë¹„íŠ¸ ìˆ˜í–‰ì‹œì˜ íŽ„ìŠ¤ ê°œìˆ˜ ë° ì‹œê°„ ì •ì˜
 #define BIT_PDW_COUNT									(10)
 #define BIT_PDW_COLLECT_TIMEOUT				(200 * PG_ONE_MILLISEC)
 
-// ºñÆ® ¼öÇà½ÃÀÇ PDW Á¦¿ø Á¤º¸
+// ë¹„íŠ¸ ìˆ˜í–‰ì‹œì˜ PDW ì œì› ì •ë³´
 #define BIT_AOA												(0x1111)
 #define BIT_FREQ											(0x1111)
 #define BIT_PA												(0x1111)
 #define BIT_PW												(0x1111)
 
-// ºñÆ® ¼öÇà½ÃÀÇ ¿©À¯ ¹üÀ§
+// ë¹„íŠ¸ ìˆ˜í–‰ì‹œì˜ ì—¬ìœ  ë²”ìœ„
 #define BIT_AOA_MARGIN								(0x11)
 #define BIT_FREQ_MARGIN								(0x11)
 #define BIT_PA_MARGIN									(0x11)
 #define BIT_PW_MARGIN									(0x11)
 
-// ÃßÀû ºÐ¼®ÆÇ ¼³Á¤½ÃÀÇ ÆÞ½º °³¼ö Á¤ÀÇ
-// CW ½ÅÈ£¿¡ ´ëÇÑ ÆÞ½º °³¼ö Á¤ÀÇ
-#define CW_PULSECOUNT									(50)				// CW ÀÏ¶§ÀÇ ½ÅÈ£ ¼öÁý °³¼ö
+// ì¶”ì  ë¶„ì„íŒ ì„¤ì •ì‹œì˜ íŽ„ìŠ¤ ê°œìˆ˜ ì •ì˜
+// CW ì‹ í˜¸ì— ëŒ€í•œ íŽ„ìŠ¤ ê°œìˆ˜ ì •ì˜
+#define CW_PULSECOUNT									(50)				// CW ì¼ë•Œì˜ ì‹ í˜¸ ìˆ˜ì§‘ ê°œìˆ˜
 
-// ÆÞ½ºÁ¤º¸ »ý¼ºÆÇÀÇ ½ÅÈ£¿¡ µû¸¥ ¼³Á¤°ª Á¤ÀÇ
+// íŽ„ìŠ¤ì •ë³´ ìƒì„±íŒì˜ ì‹ í˜¸ì— ë”°ë¥¸ ì„¤ì •ê°’ ì •ì˜
 #define DEFAULT_COLLECTION_TIME				(200*PG_ONE_MILLISEC)
 #define DEFAULT_CO_COLLECTION					(200)
 #define SCAN_CO_COLLEC
 
-// ½ºÄµ ºÐ¼®À» ÇÏ±â À§ÇÑ ÆÞ½º °³¼ö Á¤ÀÇ
+// ìŠ¤ìº” ë¶„ì„ì„ í•˜ê¸° ìœ„í•œ íŽ„ìŠ¤ ê°œìˆ˜ ì •ì˜
 #define SCN_NORM_PULSE_COUNT					(1024)
 
-// ½ºÄµ ½ÅÈ£¿¡ ´ëÇÑ ÆÞ½º °³¼ö Á¤ÀÇ
-#define KWN_NORM_PULSE_COUNT					(100)				// ½ºÄµ ½ÇÆÐÀÏ ¶§ÀÇ ÆÞ½º °³¼ö
-#define KWN_NO_SCAN_PULSE_COUNT				(200)				// ½ºÄµ ºÐ¼® ÁßÀÏ ¶§ÀÇ ÆÞ½º °³¼ö
-#define KWN_CIRCULAR_PULSE_COUNT			(100)				// ¿øÇü ½ºÄµÀÎ °æ¿ìÀÇ ÆÞ½º °³¼ö
-#define KWN_STEADY_PULSE_COUNT				(50)				// °íÁ¤ ¶Ç´Â ¿øÃßÇüÀÏ¶§ÀÇ ÆÞ½º °³¼ö
+// ìŠ¤ìº” ì‹ í˜¸ì— ëŒ€í•œ íŽ„ìŠ¤ ê°œìˆ˜ ì •ì˜
+#define KWN_NORM_PULSE_COUNT					(100)				// ìŠ¤ìº” ì‹¤íŒ¨ì¼ ë•Œì˜ íŽ„ìŠ¤ ê°œìˆ˜
+#define KWN_NO_SCAN_PULSE_COUNT				(200)				// ìŠ¤ìº” ë¶„ì„ ì¤‘ì¼ ë•Œì˜ íŽ„ìŠ¤ ê°œìˆ˜
+#define KWN_CIRCULAR_PULSE_COUNT			(100)				// ì›í˜• ìŠ¤ìº”ì¸ ê²½ìš°ì˜ íŽ„ìŠ¤ ê°œìˆ˜
+#define KWN_STEADY_PULSE_COUNT				(50)				// ê³ ì • ë˜ëŠ” ì›ì¶”í˜•ì¼ë•Œì˜ íŽ„ìŠ¤ ê°œìˆ˜
 
-#define MAX_EMITTER_NO								(256)				// ÃÖ´ë ¿¡¹ÌÅÍ °³¼ö
+#define MAX_EMITTER_NO								(256)				// ìµœëŒ€ ì—ë¯¸í„° ê°œìˆ˜
 
-#define MAX_THREAT_NO									(256)				// ÃÖ´ë À§Çù °³¼ö
-
-
-// ÃßÀûÇÊÅÍÆÇÀ» »ç¿ëÇÏÁö ¾ÊÀº ¿¡¹ÌÅÍ °ü¸® ÁÖ±â
-#define MANAET_RUN_PERIOD							(1)					// ´ÜÀ§´Â ÃÊ.
+#define MAX_THREAT_NO									(256)				// ìµœëŒ€ ìœ„í˜‘ ê°œìˆ˜
 
 
-// ¼öÁý¿ë ÆÞ½º °³¼ö
-#define NEW_COLLECT_PDW								(4096)			// Å½Áö ºÐ¼®¿ë ÃÖ´ë ¼öÁý °³¼ö
-#define KWN_COLLECT_PDW								(200)				// ÃßÀû ºÐ¼®¿ë ÃÖ´ë ¼öÁý °³¼ö
-#define SCN_COLLECT_PDW								(2000)			// ½ºÄµ ºÐ¼®¿ë ÃÖ´ë ¼öÁý °³¼ö
+// ì¶”ì í•„í„°íŒì„ ì‚¬ìš©í•˜ì§€ ì•Šì€ ì—ë¯¸í„° ê´€ë¦¬ ì£¼ê¸°
+#define MANAET_RUN_PERIOD							(1)					// ë‹¨ìœ„ëŠ” ì´ˆ.
 
 
-// ÇÑ¹ø¿¡ ¼öÁýÇÑ ÃÖ´ë °³¼ö
-#define PDW_ONE_BLOCK_SIZE						(256)			// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW Áß¿¡¼­ °¡Àå Å«°Í
+// ìˆ˜ì§‘ìš© íŽ„ìŠ¤ ê°œìˆ˜
+#define NEW_COLLECT_PDW								(4096)			// íƒì§€ ë¶„ì„ìš© ìµœëŒ€ ìˆ˜ì§‘ ê°œìˆ˜
+#define KWN_COLLECT_PDW								(200)				// ì¶”ì  ë¶„ì„ìš© ìµœëŒ€ ìˆ˜ì§‘ ê°œìˆ˜
+#define SCN_COLLECT_PDW								(2000)			// ìŠ¤ìº” ë¶„ì„ìš© ìµœëŒ€ ìˆ˜ì§‘ ê°œìˆ˜
 
-// ºñÆ® ¼öÁý¿ë ¹öÆÛ Å©±â
-#define MAX_BIT_COLLECT_COUNT					(20)				// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW Áß¿¡¼­ °¡Àå Å«°Í
 
-// ¼ÒÇÁÆ®¿þ¾î ÇÊÅÍ °³¼ö
+// í•œë²ˆì— ìˆ˜ì§‘í•œ ìµœëŒ€ ê°œìˆ˜
+#define PDW_ONE_BLOCK_SIZE						(256)			// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW ì¤‘ì—ì„œ ê°€ìž¥ í°ê²ƒ
+
+// ë¹„íŠ¸ ìˆ˜ì§‘ìš© ë²„í¼ í¬ê¸°
+#define MAX_BIT_COLLECT_COUNT					(20)				// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW ì¤‘ì—ì„œ ê°€ìž¥ í°ê²ƒ
+
+// ì†Œí”„íŠ¸ì›¨ì–´ í•„í„° ê°œìˆ˜
 #define	NEW_NO_BANK										(5)
 #define KNOWN_NO_FILTER								(32)
 #define SCAN_NO_FILTER								(32)
 
 #define	MAX_FIRE_INFO_ITEM						(200)
 
-// ¼ÒÇÁÆ®¿þ¾î ÇÊÅÍ ½Ã°£ ´ÜÀ§
-#define	FILTER_ONE_SEC								(1000)				// ´ÜÀ§´Â ms
+// ì†Œí”„íŠ¸ì›¨ì–´ í•„í„° ì‹œê°„ ë‹¨ìœ„
+#define	FILTER_ONE_SEC								(1000)				// ë‹¨ìœ„ëŠ” ms
 
 //
 #define KWN_TIMEOUT_NORMAL						(20*FILTER_ONE_SEC)
 #define KWN_TIMEOUT_STEADY						(3*FILTER_ONE_SEC)
-#define DEFAULT_DELETE_AET_TIME				(2*FILTER_ONE_SEC)		// ±âº» ¿¡¹ÌÅÍ »èÁ¦ ½Ã°£
-#define DEFAULT_DELETE_CW_AET_TIME		(10*FILTER_ONE_SEC)		// CW ¿¡¹ÌÅÍ »èÁ¦ ½Ã°£
+#define DEFAULT_DELETE_AET_TIME				(2*FILTER_ONE_SEC)		// ê¸°ë³¸ ì—ë¯¸í„° ì‚­ì œ ì‹œê°„
+#define DEFAULT_DELETE_CW_AET_TIME		(10*FILTER_ONE_SEC)		// CW ì—ë¯¸í„° ì‚­ì œ ì‹œê°„
 
 
-// ½ÅÈ£ ½Äº° ¹êµå ±×·ìÈ­ Á¤ÀÇ
-#define	MAX_FREQ_HZ										18398750			//!< ÁÖÆÄ¼ö ÃÖ´ë °ª, Hz
-#define MIN_FREQ_HZ 									500						//!< ÁÖÆÄ¼ö ÃÖ¼Ò °ª
+// ì‹ í˜¸ ì‹ë³„ ë°´ë“œ ê·¸ë£¹í™” ì •ì˜
+#define	MAX_FREQ_HZ										18398750			//!< ì£¼íŒŒìˆ˜ ìµœëŒ€ ê°’, Hz
+#define MIN_FREQ_HZ 									500						//!< ì£¼íŒŒìˆ˜ ìµœì†Œ ê°’
 
-#define	NO_FEID_BAND									32						// ÁÖÆÄ¼ö ¹êµå °³¼ö
-#define FEID_FREQ_RES_HZ							90000					// 90 KHz ÀÇ Histogram res.
+#define	NO_FEID_BAND									32						// ì£¼íŒŒìˆ˜ ë°´ë“œ ê°œìˆ˜
+#define FEID_FREQ_RES_HZ							90000					// 90 KHz ì˜ Histogram res.
 
 
 
-// Jitter ¿Í Jitter ½Äº°½ÃÀÇ ÁöÅÍÀ² °í·ÁÇÑ ½Äº°
+// Jitter ì™€ Jitter ì‹ë³„ì‹œì˜ ì§€í„°ìœ¨ ê³ ë ¤í•œ ì‹ë³„
 #define _spUDFMaxJitPerOver						(5)
 
 
-// ½Äº° Å×ÀÌºíÀ» À§ÇÑ ½Äº° ÃÖ´ë Á¾·ù °³¼ö Á¤ÀÇ
+// ì‹ë³„ í…Œì´ë¸”ì„ ìœ„í•œ ì‹ë³„ ìµœëŒ€ ì¢…ë¥˜ ê°œìˆ˜ ì •ì˜
 #define MAX_HOWTO_ID									(20)
 
 
-// Priority Mode ÀÏ¶§ÀÇ ½É¹ú °³¼ö
+// Priority Mode ì¼ë•Œì˜ ì‹¬ë²Œ ê°œìˆ˜
 #define MAX_SYMBOL_IN_PRIORITY_MODE		(5)
 
 
-// °Å¸® ÃßÁ¤ °ü·Ã Á¤ÀÇ
+// ê±°ë¦¬ ì¶”ì • ê´€ë ¨ ì •ì˜
 #define	MIN_ESTIMATED_DISTANCE				(0)
 #define	MAX_ESTIMATED_DISTANCE				(129640)		// km
 
 
-// ÃÖ´ë ·Î±× Å©±â
-// ÃÖ¼Ò Å©±â´Â STR_QUEUE_LOG_MESSAGE Å©±â(3568¹ÙÀÌÆ®) º¸´Ù Ä¿¾ß ÇÑ´Ù.
-#define MAX_LOGBUFFER_SIZE						sizeof(STR_QUEUE_LOG_MESSAGE)		// 10KB¾¿ ·Î±× µ¥ÀÌÅÍ¸¦ ¾ÐÃàÇØ¼­ ÀúÀåÇÑ´Ù.
+// ìµœëŒ€ ë¡œê·¸ í¬ê¸°
+// ìµœì†Œ í¬ê¸°ëŠ” STR_QUEUE_LOG_MESSAGE í¬ê¸°(3568ë°”ì´íŠ¸) ë³´ë‹¤ ì»¤ì•¼ í•œë‹¤.
+#define MAX_LOGBUFFER_SIZE						sizeof(STR_QUEUE_LOG_MESSAGE)		// 10KBì”© ë¡œê·¸ ë°ì´í„°ë¥¼ ì••ì¶•í•´ì„œ ì €ìž¥í•œë‹¤.
 
 
 //
-// ´ë¿ªº° ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// ëŒ€ì—­ë³„ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 
-// CD ´ë¿ªÀÇ ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// CD ëŒ€ì—­ì˜ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 #define FREQ_BORDER_BAND5_1_LOW					(500)
 #define FREQ_BORDER_BAND5_1_HGH					(600)
 
-// ´ë¿ª1ÀÇ ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// ëŒ€ì—­1ì˜ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 #define FREQ_BORDER_BAND1_2_LOW					(500)
 #define FREQ_BORDER_BAND1_2_HGH					(600)
 
 #define FREQ_BORDER_BAND1_5_LOW					(500)
 #define FREQ_BORDER_BAND1_5_HGH					(600)
 
-// ´ë¿ª2ÀÇ ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// ëŒ€ì—­2ì˜ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 #define FREQ_BORDER_BAND2_1_LOW					(500)
 #define FREQ_BORDER_BAND2_1_HGH					(600)
 
 #define FREQ_BORDER_BAND2_3_LOW					(9800)
 #define FREQ_BORDER_BAND2_3_HGH					(10000)
 
-// ´ë¿ª3ÀÇ ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// ëŒ€ì—­3ì˜ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 #define FREQ_BORDER_BAND3_2_LOW					(500)
 #define FREQ_BORDER_BAND3_2_HGH					(600)
 
 #define FREQ_BORDER_BAND3_4_LOW					(500)
 #define FREQ_BORDER_BAND3_4_HGH					(600)
 
-// ´ë¿ª4ÀÇ ÁÖÆÄ¼ö °æ°è°ª Á¤ÀÇ
+// ëŒ€ì—­4ì˜ ì£¼íŒŒìˆ˜ ê²½ê³„ê°’ ì •ì˜
 #define FREQ_BORDER_BAND4_3_LOW					(500)
 #define FREQ_BORDER_BAND4_3_HGH					(600)
 
@@ -289,8 +289,12 @@
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz, 
 
+#elif defined(_POCKETSONATA_)
+#define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
 #else
+
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfAoaMid     (UDIV( 5., _spAOAres ))     // 9 ( 5 deg. )
 #define   _spRxdfAoaHgh     (UDIV( 3.5, _spAOAres ))    // 6 ( 3.5 deg. )
@@ -326,7 +330,7 @@
 #define   _spIdPri              10    // PRI tolerance of Id.
 #define   _spIplMaxJitPer       15    // Jitter PRI tolerance of Id.
 
-#define   _spIplMaxHopJitPer		20      // HoppingÀÏ¶§ ÃÖ´ë Jitter À² Çã¿ë°ª
+#define   _spIplMaxHopJitPer		20      // Hoppingì¼ë•Œ ìµœëŒ€ Jitter ìœ¨ í—ˆìš©ê°’
 
 //  Identify for scan period
 #define   _spIdScnPrd       0     // Scan period tolerance of Id.
@@ -336,23 +340,24 @@
 //  Merge for direction
 //  debug, 1 -> 3, 00-09-20 09:43:31
 #ifdef _ELINT_
-#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15µµ
-#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30µµ
+#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15ë„
+#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30ë„
 #define   _spMgFixFrqEJ				IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqCD				IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
+#elif defined(_POCKETSONATA_)
+#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15ë„
+#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30ë„
+#define   _spMgFixFrqEJ				IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqCD				IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #else
-#define   _spMgAoaLow					(3*_spRxdfAoaLow) // 4.922 deg.
-#define   _spMgAoaMid					(3*_spRxdfAoaMid) // 3.164 deg.
-#define   _spMgAoaHgh					(3*_spRxdfAoaHgh) // 2.109 deg.
+#error "ì»´íŒŒì¼ëŸ¬ì— DEFINE ì„ ì¶”ê°€í•´ì•¼ í•©ë‹ˆë‹¤."
 
-//  Merge for Fixed freq.
-#define   _spMgFixFrqLow      (3*_spRxdfFrqLow) // 1.25 MHz
-#define   _spMgFixFrqMid      (3*_spRxdfFrqMid) // 2.5 MHz
-#define   _spMgFixFrqHgh      (3*_spRxdfFrqHgh) // 3.0 Mhz
 
 #endif
 
@@ -384,7 +389,7 @@
 //  Merge for Pattern Period
 #define   _spMgJtrPer       4     // not use, from 99-07-23 13:37:55
 
-// ÆÞ½ºÆø º´ÇÕ ¹üÀ§
+// íŽ„ìŠ¤í­ ë³‘í•© ë²”ìœ„
 #ifdef _ELINT_
 #define   _spMgPW						ITOAusCNV( 100 )			//(100*_spOneMicrosec)
 #else
@@ -398,9 +403,9 @@
 //  for tracking Info
 //
 // debug, 00-08-30 14:02:57
-#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05³â ÀÌÀü °ªÀº 4·Î ÇÔ. 
-#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // ¿¬Æòµµ¿¡¼­ Stable, Jitter ¿î¿ëÇÏ´Â ÇÔÁ¤ ¶§¹®¿¡ 
-#define   _spFtFixFrqHgh      (2*_spRxdfFrqHgh)   // 4 -> 2·Î ¼öÁ¤ÇÔ.
+#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05ë…„ ì´ì „ ê°’ì€ 4ë¡œ í•¨. 
+#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // ì—°í‰ë„ì—ì„œ Stable, Jitter ìš´ìš©í•˜ëŠ” í•¨ì • ë•Œë¬¸ì— 
+#define   _spFtFixFrqHgh      (2*_spRxdfFrqHgh)   // 4 -> 2ë¡œ ìˆ˜ì •í•¨.
 
 #define   _spFtAgiFrqLow      (3*_spRxdfFrqLow)   // debug, 00-01-31 16:13:18
 #define   _spFtAgiFrqMid      (3*_spRxdfFrqMid)   // debug, 00-01-31 16:13:18
@@ -449,7 +454,7 @@
 //#define   _spScToStep3      7000    // 
 //#define   _spScToStep4      7000    // 
 
-#define   _spScMinTimeOutiOfPrd (3.5)   // 3.5 ¹èÀÇ ½ºÄµÁÖ±â Å¸ÀÓ ¾Æ¿ô
+#define   _spScMinTimeOutiOfPrd (3.5)   // 3.5 ë°°ì˜ ìŠ¤ìº”ì£¼ê¸° íƒ€ìž„ ì•„ì›ƒ
 
 #define   _spPdwPWLow       0x0000
 #define   _spPdwPWHgh       0x07ff
@@ -503,13 +508,13 @@
 #define   _spIncThr             UDIV( 8, _spAMPres )    // 02-08-11
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// ÆÞ½º¿­ ÃßÃâ Á¤ÀÇ
+// íŽ„ìŠ¤ì—´ ì¶”ì¶œ ì •ì˜
 #define     _spAnalMinPulseCount              (6)
 #define     _spContiThresholdMinPulseCount    10
 
-// Stable ¿¡¹ÌÅÍ ÃÖ¼Ò ÆÞ½º °³¼ö(´©¶ô ¹× ½ºÄµ ½ÅÈ£¸¦ °í·ÁÇÑ)
-/*! \bug  20 °³¿¡¼­ 10°³·Î ¼öÁ¤ÇÔ.
-    \date 2006-07-27 09:28:10, Á¶Ã¶Èñ
+// Stable ì—ë¯¸í„° ìµœì†Œ íŽ„ìŠ¤ ê°œìˆ˜(ëˆ„ë½ ë° ìŠ¤ìº” ì‹ í˜¸ë¥¼ ê³ ë ¤í•œ)
+/*! \bug  20 ê°œì—ì„œ 10ê°œë¡œ ìˆ˜ì •í•¨.
+    \date 2006-07-27 09:28:10, ì¡°ì² í¬
 */
 #define     _spAnalMinPulseStableEmitter      10    
 #define     _spAnalMinPulseJitterEmitter      20
@@ -517,14 +522,14 @@
 #define     _spMaxAoaQueueSize                4
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// Dwell ´Ü °£ÀÇ °£°ÝÀº ÀÌ¿ôÇÑ PRI ÇÕÀÇ ¹è¼ö·Î ¼³Á¤ÇÑ´Ù.
-// date : 2013-12-04 14:25:01, Á¶Ã¶Èñ
+// Dwell ë‹¨ ê°„ì˜ ê°„ê²©ì€ ì´ì›ƒí•œ PRI í•©ì˜ ë°°ìˆ˜ë¡œ ì„¤ì •í•œë‹¤.
+// date : 2013-12-04 14:25:01, ì¡°ì² í¬
 #define			DWELL_PRI_MARGIN									(1.5)
 
-// ¼ö½Å±â °³¼ö
+// ìˆ˜ì‹ ê¸° ê°œìˆ˜
 #define			ALL_BAND													5
 
-// ¿¡¹ÌÅÍ ±¸Á¶Ã¼ Á¤ÀÇ
+// ì—ë¯¸í„° êµ¬ì¡°ì²´ ì •ì˜
 #define	_spOverlapCoEMT     _spMaxEMTNum
 #define _spMaxCoRsaAmbi     (30)
 #define	_spMaxTryScan				(5)

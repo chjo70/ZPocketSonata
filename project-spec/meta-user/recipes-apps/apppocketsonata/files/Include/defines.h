@@ -37,7 +37,9 @@
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 
+#ifndef _TOA_
 typedef unsigned long long int _TOA;
+#endif
 
 /////////////////////////////////////////////////////////////////////////////////
 //#define max(a,b)               ( ( (int)(a) > (int)(b) ) ? (a) : (b) )

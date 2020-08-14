@@ -1,8 +1,8 @@
-// AnalPRI.cpp: implementation of the CAnalPRI class.
+﻿// AnalPRI.cpp: implementation of the CAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -12,6 +12,13 @@
 
 #ifdef _ELINT_
 #include "../OFP_Main.h"
+#elif _POCKETSONATA_
+//#include "../OFP_Main.h"
+#include "../INC/Macros.h"
+#include "../Identify/ELUtil.h"
+
+#else
+#error "컴파일러에 DEFINE 을 추가해야 합니다."
 #endif
 
 #include <math.h>
@@ -1832,11 +1839,15 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
             ratio = UDIV( co_dec * 100, m_CoSample-1 );
             if( ratio > THRESHOLD_SAW_PATTERN ) {
                 int band=GetBand();
-
+#ifdef _ELINT_
+#elif defined(_POCKETSONATA_)
+                *pSawPatternType = SAW_INC;
+#else
                 if( band == BAND1 || band == BAND4 )
                     *pSawPatternType = SAW_DEC;
                 else
                     *pSawPatternType = SAW_INC;
+#endif
             }
             else
                 return FALSE;
@@ -1846,10 +1857,15 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
             if( ratio > THRESHOLD_SAW_PATTERN ) {
                 int band=GetBand();
 
+#ifdef _ELINT_
+#elif defined(_POCKETSONATA_)
+                *pSawPatternType = SAW_DEC;
+#else
                 if( band == BAND1 || band == BAND4 )
                     *pSawPatternType = SAW_INC;
                 else
                     *pSawPatternType = SAW_DEC;
+#endif
             }
             else
                 return FALSE;
@@ -2403,6 +2419,8 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
         if( mean <= MIN_PRI ) {
 #ifdef _ELINT_
             return ST_NORMAL_PULSE;
+#elif defined(_POCKETSONATA_)
+            return ST_NORMAL_PULSE;
 #else
             return ST_HIGHPRF;
 #endif
@@ -2424,7 +2442,9 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
         return ST_CW;
     }
 
-#ifndef _ELINT_
+#ifdef _ELINT_
+#elif defined(_POCKETSONATA_)
+#else
     else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
         for( i=0 ; i < pEmitter->seg_count ; ++i ) {
             STR_PULSE_TRAIN_SEG *pSeg;
@@ -2571,7 +2591,11 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     // 주파수 형태를 기록한다.
     switch( STAT[ first_pdw_index ] ) {
 #ifdef _ELINT_
-    case 100:
+        case 100:
+
+#elif defined(_POCKETSONATA_)
+
+        case 100:
 #else
         case PDW_CHIRPUP :
         case PDW_CHIRPUP :
@@ -2677,7 +2701,7 @@ void CAnalPRI::MergePdwIndexInSeg(STR_EMITTER *pEmitter)
         /*! \bug  아래 비교 범위를 max() 값으로 찾아내서 비교 건수를 줄임.
             \date 2008-11-19 10:40:46, 조철희
         */
-        max_count_compare = max( max_count_compare, index );
+        max_count_compare = _max( max_count_compare, index );
     }
 
     pEmitterPdwIndex = pEmitter->pdw.pIndex;
@@ -4398,7 +4422,9 @@ UINT CAnalPRI::CompFreqLevel( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 )
         return NOT_MATCH;
     else if( pEmitter1->freq.type == _PATTERN_AGILE && ( pEmitter2->freq.type != _RANDOM_AGILE || pEmitter2->freq.type != _PATTERN_AGILE ) )
         return NOT_MATCH;
-#ifndef _ELINT_
+#ifdef _ELINT_
+#elif defined(_POCKETSONATA_)
+#else
     else if( pEmitter1->freq.type == _PMOP && pEmitter2->freq.type != _PMOP )
         return NOT_MATCH;
     else if( pEmitter1->freq.type == _CHIRP_UP && pEmitter2->freq.type != _CHIRP_UP )
@@ -4566,8 +4592,8 @@ void CAnalPRI::MergeEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter, 
 
         MergePdwIndexInSeg( pDstEmitter );
 
-        pDstEmitter->pri.min = min( pDstEmitter->pri.min, pSrcEmitter->pri.min );
-        pDstEmitter->pri.max = max( pDstEmitter->pri.max, pSrcEmitter->pri.max );
+        pDstEmitter->pri.min = _min( pDstEmitter->pri.min, pSrcEmitter->pri.min );
+        pDstEmitter->pri.max = _max( pDstEmitter->pri.max, pSrcEmitter->pri.max );
         pDstEmitter->pri.mean = _TOADIV( pDstEmitter->pri.mean+pSrcEmitter->pri.mean, 2. );
     }
 }

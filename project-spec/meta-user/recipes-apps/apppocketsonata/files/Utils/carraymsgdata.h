@@ -16,7 +16,7 @@ private:
 
     bool m_bArrayLanData;
 
-    char *m_pszArray[SIZE_OF_MSGDATA_ARRAY];
+    unsigned char *m_pszArray[SIZE_OF_MSGDATA_ARRAY];
 
 public:
     CArrayMsgData( bool bArrayLanData );

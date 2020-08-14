@@ -1,4 +1,4 @@
-// Globals.h: interface for the Àü¿ª ¼±¾ğ
+ï»¿// Globals.h: interface for the ì „ì—­ ì„ ì–¸
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -7,7 +7,9 @@
 
 #pragma once
 
-#ifndef _WIN32
+#ifdef _WIN32
+#elif __linux__
+#else
 #include <bootLib.h>
 #endif
 
@@ -15,12 +17,12 @@
 
 
 //////////////////////////////////////////////////////////////////////////
-// Àü¿ª Á¤ÀÇ¹®
+// ì „ì—­ ì •ì˜ë¬¸
 
 #ifdef _MAIN_GLOBALS_
 
 //////////////////////////////////////////////////////////////////////////
-// Àü¿ª ÇÔ¼ö
+// ì „ì—­ í•¨ìˆ˜
 //
 
 #ifdef __cplusplus
@@ -44,22 +46,22 @@ CIni *theIni;
 
 #endif
 
-// ÃÊ±âÈ­ °ü·Ã °á°ú Á¤º¸¸¦ ÀúÀåÇÑ´Ù.
+// ì´ˆê¸°í™” ê´€ë ¨ ê²°ê³¼ ì •ë³´ë¥¼ ì €ì¥í•œë‹¤.
 //STR_POWER_ON_INIT stPowerOnInit;
 
-// Àü¿ø ÀÎ°¡ÈÄÀÇ IBIT °á°ú°¡ ÀúÀåµÇ´Â º¯¼ö
+// ì „ì› ì¸ê°€í›„ì˜ IBIT ê²°ê³¼ê°€ ì €ì¥ë˜ëŠ” ë³€ìˆ˜
 //STR_POWER_ON_IBIT stPowerOnIbit;
 //STR_POWER_ON_PBIT stPowerOnPbit;
 //STR_POWER_ON_CBIT stPowerOnCbit;
 
-// ÃÊ´Ü¼ö½Å±âÀÇ ¿¬°á »óÅÂ¸¦ È®ÀÎÇÑ´Ù.
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ ì—°ê²° ìƒíƒœë¥¼ í™•ì¸í•œë‹¤.
 //STR_VH_RECIVER_CON_STAT stVhReceiverConStat;
 
-// ½Ã¸®¾ó µğ¹ÙÀÌ½º
+// ì‹œë¦¬ì–¼ ë””ë°”ì´ìŠ¤
 //int CComSerial::fdSerial=-1;
 
 //////////////////////////////////////////////////////////////////////////
-// ·¹ÀÌ´õ ¼öÁı±¹ÀÇ À§/°æµµ ÁÂÇ¥
+// ë ˆì´ë” ìˆ˜ì§‘êµ­ì˜ ìœ„/ê²½ë„ ì¢Œí‘œ
 double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
 double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
@@ -68,7 +70,7 @@ double dRCDOA[RADARCOL_MAX] = { 10, 300, 70 } ;
 #else
 
 //////////////////////////////////////////////////////////////////////////
-// ¿ÜºÎ º¯¼ö
+// ì™¸ë¶€ ë³€ìˆ˜
 #ifdef __cplusplus
 
 // IMPORT CManTsk *theManTsk;
@@ -85,7 +87,9 @@ IMPORT CIni *theIni;
 
 #endif
 
-#ifndef _WIN32
+#ifdef _WIN32
+#elif __linux__
+#else
 IMPORT BOOT_PARAMS stBootParams;
 
 #endif

@@ -36,6 +36,7 @@ public:
 private slots:
     void newConnection();
     void onSocketStateChanged(QAbstractSocket::SocketState socketState);
+    void onError(QAbstractSocket::SocketState socketState);
     void onReadyRead();
 
     void onConnectServer();

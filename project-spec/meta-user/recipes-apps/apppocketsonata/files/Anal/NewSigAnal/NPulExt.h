@@ -1,4 +1,4 @@
-// NPulExt.h: interface for the NPulExt class.
+﻿// NPulExt.h: interface for the NPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ public:
 	void Init();
 	//##ModelId=452B0C550023
 	//void PulseExtract();
-	void PulseExtract(  UINT uiCoKnownRadarMode, SRadarMode **pRadarMode );
+    void PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode );
 	//##ModelId=452B0C550029
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	//##ModelId=452B0C55002A

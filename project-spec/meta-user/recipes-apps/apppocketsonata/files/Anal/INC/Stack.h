@@ -1,4 +1,4 @@
-/*!
+ï»¿/*!
   \file     stack.h
   \brief    
 	\version  0.0.1
@@ -10,7 +10,7 @@
 #ifdef __cplusplus
 
 //////////////////////////////////////////////////////////////////////////
-// ½ºÅÃ 
+// ìŠ¤íƒ 
 
 template <class T>
 class Stack
@@ -188,7 +188,7 @@ Stack<T>& Stack<T> ::operator=( const Stack<T> &s )
 
 
 //////////////////////////////////////////////////////////////////////////
-// Å¥
+// í
 
 template <class T>
 class Queue
@@ -298,7 +298,7 @@ void Queue<T>::Print()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// ¿øÇü Å¥
+// ì›í˜• í
 
 template <typename T>
 class CCircularQueue 
@@ -338,8 +338,8 @@ CCircularQueue<T>::CCircularQueue( T init, unsigned int size, T *pBuffer )
 
 	initValue = init;
 
-	// »çÀü¿¡ ÀúÀåµÈ Å©±â°¡ ´Ş¸®µÇ¾î ÀÖÀ» ¶§,
-	// Áï, Ã³À½ ÀÛ¾÷À» ÇÒ ¶§¸¸ ±â·ÏÇÑ´Ù.
+	// ì‚¬ì „ì— ì €ì¥ëœ í¬ê¸°ê°€ ë‹¬ë¦¬ë˜ì–´ ìˆì„ ë•Œ,
+	// ì¦‰, ì²˜ìŒ ì‘ì—…ì„ í•  ë•Œë§Œ ê¸°ë¡í•œë‹¤.
 	if( *pNQueueCount != (int) size ) {
 		*pFront = 0;
 		*pRear  = 0;
@@ -395,7 +395,7 @@ void CCircularQueue<T>::SetFool( bool state )
 template <typename T>
 bool CCircularQueue<T>::EnQueueList( T Enlist )
 {
-	//Å¥°¡ ´Ù Âù »óÅÂ¸é, false¸¦ ¸®ÅÏ
+	//íê°€ ë‹¤ ì°¬ ìƒíƒœë©´, falseë¥¼ ë¦¬í„´
 	if( IsFool() == false ) {
 		pQueueDataList[*pFront] = Enlist;
 		++ (*pFront);

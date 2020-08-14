@@ -1,4 +1,4 @@
-// TaskMsg.h: interface for the Å¸½ºÅ© °£ÀÇ ¸Þ½ÃÁö Á¤ÀÇ
+ï»¿// TaskMsg.h: interface for the íƒ€ìŠ¤í¬ ê°„ì˜ ë©”ì‹œì§€ ì •ì˜
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,14 +12,14 @@
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-// ¿ÜºÎ ÀåÄ¡ °£ÀÇ ¸Þ½ÃÁö
+// ì™¸ë¶€ ìž¥ì¹˜ ê°„ì˜ ë©”ì‹œì§€
 
-// ÃÊ´Ü¼ö½Å±âÀÇ Å¸½ºÅ© ¸Þ½ÃÁö Á¤ÀÇ
-// ½Ã½ºÅÛÁ¦¾îÆÇ -> ÃÊ´Ü¼ö½Å±â
+// ì´ˆë‹¨ìˆ˜ì‹ ê¸°ì˜ íƒ€ìŠ¤í¬ ë©”ì‹œì§€ ì •ì˜
+// ì‹œìŠ¤í…œì œì–´íŒ -> ì´ˆë‹¨ìˆ˜ì‹ ê¸°
 #define	VH_REQINITMSG				0x0101
 #define	VH_REQIBITMSG				0x0102
 
-//  ÃÊ´Ü¼ö½Å±â -> ½Ã½ºÅÛÁ¦¾îÆÇ
+//  ì´ˆë‹¨ìˆ˜ì‹ ê¸° -> ì‹œìŠ¤í…œì œì–´íŒ
 #define	VH_RESINITMSG				0x1101
 #define	VH_RESIBITMSG				0x1102
 
@@ -30,14 +30,14 @@
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-// ³»ºÎ ¸Þ½ÃÁö
+// ë‚´ë¶€ ë©”ì‹œì§€
 
 
 //////////////////////////////////////////////////////////////////////////
 //
-// ³»ºÎ Å¸½ºÅ©°£ÀÇ ¸Þ½ÃÁö
+// ë‚´ë¶€ íƒ€ìŠ¤í¬ê°„ì˜ ë©”ì‹œì§€
 enum INTER_TASK_MSG {	
-								// Àåºñ Á¡°Ë
+								// ìž¥ë¹„ ì ê²€
 								REQ_INITBIT=0x01,
 								Req_SWVersion,
 								Req_PBIT,
@@ -51,7 +51,7 @@ enum INTER_TASK_MSG {
 								RX_PDWDATA,
 
 
-								// ½Ã½ºÅÛ °ü·Ã ¸Þ½ÃÁö ÄÚµå°ª Á¤ÀÇ
+								// ì‹œìŠ¤í…œ ê´€ë ¨ ë©”ì‹œì§€ ì½”ë“œê°’ ì •ì˜
 								REQ_POWER_ON_INIT=0xA1,
 								REQ_POWER_ON_IBIT, 
 								REQ_USER_PBIT, 
@@ -68,7 +68,7 @@ enum INTER_TASK_MSG {
 								REQ_RELOAD_UDF,
 								REQ_OP_MODE,
 
-								// ½ÅÈ£ ¼öÁý °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// ì‹ í˜¸ ìˆ˜ì§‘ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_START_COLLECT=0xC1,
 								REQ_START_ANAL,
 								REQ_STEP_ANAL,						
@@ -83,7 +83,7 @@ enum INTER_TASK_MSG {
 								REQ_PDW_DATA,
 								REF_SOFT_RESET,
 
-								// ¿¡¹ÌÅÍ °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// ì—ë¯¸í„° ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_NEW_AET=0xD1,
 								REQ_UPD_AET,
 								REQ_LST_AET,
@@ -92,7 +92,7 @@ enum INTER_TASK_MSG {
 								REQ_UPD_SCN,
 								REQ_REFLESH,
 
-								// CRT È­¸é Á¦¾î °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// CRT í™”ë©´ ì œì–´ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								DISPLAY_CU_INFO=0xE1,
 								DISP_PFM,
 								REQ_CONTROLLER,
@@ -103,30 +103,30 @@ enum INTER_TASK_MSG {
 								DISP_ALIVE,
 								REQ_MARK,
 
-								// ½Ã½ºÅÛ ·Î±× °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// ì‹œìŠ¤í…œ ë¡œê·¸ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_ADD_SYSTEMLOG=0xF1,
 								REQ_DOWNLOAD_ALL_SYSTEMLOG,
 
-								// ¿¡·¯ ¸Þ½ÃÁö °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// ì—ëŸ¬ ë©”ì‹œì§€ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_COLLECTING_ERROR=0x91,
 
-								// MFD ¸ðÀÇ±â¿¡¼­ À§ÇùÀ» Àü½Ã/»èÁ¦ ÇÏ´Â ÄÚµå°ª Á¤ÀÇ
+								// MFD ëª¨ì˜ê¸°ì—ì„œ ìœ„í˜‘ì„ ì „ì‹œ/ì‚­ì œ í•˜ëŠ” ì½”ë“œê°’ ì •ì˜
 								REQ_ALL_THREAT=0x81,
 
-								// ½Ã½ºÅÛ ·Î±× °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// ì‹œìŠ¤í…œ ë¡œê·¸ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_NEW_THREAT=0x61,
 								REQ_UPD_THREAT,
 								REQ_DEL_THREAT,
 								REQ_AET_DETAIL,
 
-								// LOB °ü¸® °ü·Ã ÄÚµå°ª Á¤ÀÇ
+								// LOB ê´€ë¦¬ ê´€ë ¨ ì½”ë“œê°’ ì •ì˜
 								REQ_LOBDATA,		
 								REQ_USERMSG,
 
 
 								} ;
 
-// ³»ºÎ Å¸½ºÅ©°£ÀÇ ¸Þ½ÃÁö
+// ë‚´ë¶€ íƒ€ìŠ¤í¬ê°„ì˜ ë©”ì‹œì§€
 enum {	REQ_START_SERVER=0xB001, REQ_LISTEN_LAN, REQ_ACCEPT_LAN, REQ_CHECK_LAN } ;
 
 

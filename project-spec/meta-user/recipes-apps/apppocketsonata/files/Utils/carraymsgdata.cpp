@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,7 +46,7 @@ void CArrayMsgData::Alloc()
 
     if( m_bArrayLanData == true ) {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            m_pszArray[i] = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+            m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );
 
             SetMark( i );
         }
@@ -91,7 +91,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
     ++ m_ucPushIndex;
 
-    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_LOWER ) {
+    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
     }
 
@@ -109,7 +109,7 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 {
 
     if( iIndex >= 0 && iIndex < SIZE_OF_MSGDATA_ARRAY ) {
-        memcpy( pData, m_pszArray[iIndex], uiLength );
+    memcpy( pData, m_pszArray[iIndex], uiLength );
         SetMark( iIndex );
     }
     else {

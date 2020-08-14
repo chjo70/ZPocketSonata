@@ -1,7 +1,19 @@
 APP = apppocketsonata
 
 # Add any other object files to this list below
-APP_OBJS = Collect/ccollectbank/ccollectbank.o
+
+APP_OBJS = Anal/SigAnal/Group.o
+APP_OBJS += Anal/SigAnal/PulExt.o
+APP_OBJS += Anal/SigAnal/AnalPRI.o
+APP_OBJS += Anal/SigAnal/MakeAET.o
+APP_OBJS += Anal/SigAnal/SysPara.o
+APP_OBJS += Anal/SigAnal/stdafx.o
+APP_OBJS += Anal/NewSigAnal/NGroup.o
+APP_OBJS += Anal/NewSigAnal/NPulExt.o
+APP_OBJS += Anal/NewSigAnal/NAnalPRI.o
+APP_OBJS += Anal/NewSigAnal/NMakeAET.o
+APP_OBJS += Anal/NewSigAnal/NewSigAnal.o
+APP_OBJS += Collect/ccollectbank/ccollectbank.o
 APP_OBJS += Collect/DataFile/DataFile.o
 APP_OBJS += MinIni/minIni.o
 APP_OBJS += NetMem/client/ClientMemoryPage.o
@@ -42,10 +54,14 @@ LIBS = -L$(TMPDIR)/sysroots-components/aarch64/readline/usr/lib
 LIBS += -L$(TMPDIR)/sysroots-components/aarch64/ncurses/lib
 LIBS += -L$(TMPDIR)/sysroots-components/aarch64/ncurses/usr/lib
 LIBS += -L$(TMPDIR)/sysroots-components/aarch64/boost/usr/lib
+LIBS += -L$(TMPDIR)/sysroots-components/aarch64/sqlite3/usr/lib
 
 SRCS = $(APP_OBJS:.o=.cpp)
 
-LDLIBS = -pthread -lreadline -lncurses -lboost_thread -lboost_system
+LDLIBS = -pthread -lreadline -lncurses -lboost_thread -lboost_system -lsqlite3
+
+DEFINES += -D_POCKETSONATA_
+DEFINES += -DNEX7410
 
 
 all: build
@@ -56,7 +72,7 @@ $(APP): $(APP_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES)
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES) $(DEFINES) 
 
 
 clean:

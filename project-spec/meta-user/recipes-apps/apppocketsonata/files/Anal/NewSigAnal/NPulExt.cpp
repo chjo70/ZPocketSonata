@@ -1,8 +1,8 @@
-// NPulExt.cpp: implementation of the NPulExt class.
+﻿// NPulExt.cpp: implementation of the NPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -10,15 +10,13 @@
 
 #endif
 
-#ifdef _ELINT_
 #include "../OFP_Main.h"
-#endif
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-
+#include "NewSigAnal.h"
 #include "NPulExt.h"
 #include "NewSigAnal.h"
 
