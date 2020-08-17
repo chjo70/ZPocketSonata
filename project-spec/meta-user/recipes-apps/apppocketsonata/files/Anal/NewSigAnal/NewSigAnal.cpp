@@ -195,8 +195,6 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     // AET 생성 초기화
     m_theMakeAET->CNMakeAET::Init();
 
-
-
 }
 
 //////////////////////////////////////////////////////////////////////////

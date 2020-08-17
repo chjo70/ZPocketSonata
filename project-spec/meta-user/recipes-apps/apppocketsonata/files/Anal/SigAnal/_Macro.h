@@ -1,7 +1,7 @@
 ﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
-	\version  0.0.1
+    \version  0.0.1
 */
 
 #ifndef  _MACRO_H
@@ -84,12 +84,12 @@ template <typename T>
 T _diffabs( T x, T y)
 {
 
-	if (x > y) {
-		return x - y;
-	}
-	else {
-		return y - x;
-	}
+    if (x > y) {
+        return x - y;
+    }
+    else {
+        return y - x;
+    }
 
 }
 
@@ -135,11 +135,12 @@ T _diffabs( T x, T y)
 
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
-//#define FRQRESCNV( A, B )				(UINT) ( abs( (int) IMUL( gFreqRes[(A)].res, (B) ) ) )
 #define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
 #define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 #define IPACNV( A )				FDIV( (A), _spAMPres )
+
+#define FFRQCNV( A )			( FMUL( gFreqRes[0].res, (A) ) + gFreqRes[0].offset )
 
 #else
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
