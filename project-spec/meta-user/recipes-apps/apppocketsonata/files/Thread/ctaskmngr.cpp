@@ -12,6 +12,7 @@
 #include "cdetectanalysis.h"
 #include "ctrackanalysis.h"
 #include "cscananalysis.h"
+#include "cemittermerge.h"
 
 #include "curbit.h"
 #include "cprompt.h"
@@ -220,6 +221,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
     DETANL->ReleaseInstance();
     TRKANL->ReleaseInstance();
     SCANANL->ReleaseInstance();
+    EMTMRG->ReleaseInstance();
 
     // 플레그에 따라서 생성한다.
     if( bCreate == true ) {
@@ -227,6 +229,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         DETANL->Run();
         TRKANL->Run();
         SCANANL->Run();
+        EMTMRG->Run();
     }
 
 }

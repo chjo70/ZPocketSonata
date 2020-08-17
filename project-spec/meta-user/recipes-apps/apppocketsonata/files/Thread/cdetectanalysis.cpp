@@ -107,6 +107,14 @@ void CDetectAnalysis::AnalysisStart()
     m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    //EMTMRG->QMsgSnd( enTHREAD_ANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_ARRAY_PDW) );
+    unsigned int uiTotalLOB=m_pTheNewSigAnal->GetCoLOB();
+
+    if( uiTotalLOB >= _spOne ) {
+        STR_ANALINFO strAnalInfo;
+
+        strAnalInfo.uiTotalLOB = uiTotalLOB;
+        EMTMRG->QMsgSnd( enTHREAD_ANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+    }
+
 
 }

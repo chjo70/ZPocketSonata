@@ -29,6 +29,11 @@ struct STR_COLLECTINFO {
     unsigned int uiTotalPDW;
 } ;
 
+struct STR_ANALINFO {
+    unsigned int uiBand;
+    unsigned int uiTotalLOB;
+} ;
+
 
 /**
  * @brief 메시지 데이터 구조체
@@ -38,6 +43,7 @@ union UNI_MSG_DATA {
     time_t tiNow;
 
     STR_COLLECTINFO strCollectInfo;
+    STR_ANALINFO strAnalInfo;
 
     char szData[32];
 } ;

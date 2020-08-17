@@ -8,6 +8,9 @@
 
 class CEmitterMerge : public CThread
 {
+private:
+    UNI_LAN_DATA m_uniLanData;
+
 public:
     static CEmitterMerge *pInstance;
 
@@ -40,6 +43,10 @@ public:
             pInstance = NULL;
         }
     }
+
+private:
+    void MergeEmitter();
+
 };
 
 #define EMTMRG  CEmitterMerge::GetInstance()
