@@ -10,8 +10,8 @@
  */
 #pragma once
 
-#include <SQLiteCpp/Exception.h>
-#include <SQLiteCpp/Utils.h> // SQLITECPP_PURE_FUNC
+#include "Exception.h"
+#include "Utils.h" // SQLITECPP_PURE_FUNC
 
 #include <string>
 #include <map>
@@ -651,7 +651,7 @@ public:
      *  SQLite stores data types dynamically for each value and not per column.
      *
      * @param[in] aIndex    Index of the column in the range [0, getColumnCount()).
-     * 
+     *
      *  Throw an exception if the type can't be determined because:
      *  - the specified index is out of the [0, getColumnCount()) range
      *  - the statement is not a SELECT query

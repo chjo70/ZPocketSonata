@@ -10,9 +10,12 @@
  */
 #pragma once
 
-#include <SQLiteCpp/Column.h>
 #include <memory>
 #include <string.h>
+
+#include "Column.h"
+
+
 
 // Forward declarations to avoid inclusion of <sqlite3.h> in a header
 struct sqlite3;
@@ -438,7 +441,7 @@ public:
     *  This function reads the first 100 bytes of a SQLite database file
     *  and reconstructs groups of individual bytes into the associated fields
     *  in a Header object.
-    *  
+    *
     * @param[in] aFilename path/uri to a file
     *
     * @return Header object containing file data

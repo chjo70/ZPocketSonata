@@ -9,9 +9,9 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#include <SQLiteCpp/Backup.h>
+#include "Backup.h"
 
-#include <SQLiteCpp/Exception.h>
+#include "Exception.h"
 
 #include <sqlite3.h>
 

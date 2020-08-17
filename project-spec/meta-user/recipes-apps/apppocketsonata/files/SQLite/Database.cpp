@@ -8,12 +8,12 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#include <SQLiteCpp/Database.h>
+#include "Database.h"
 
-#include <SQLiteCpp/Assertion.h>
-#include <SQLiteCpp/Backup.h>
-#include <SQLiteCpp/Exception.h>
-#include <SQLiteCpp/Statement.h>
+#include "Assertion.h"
+#include "Backup.h"
+#include "Exception.h"
+#include "Statement.h"
 
 #include <sqlite3.h>
 #include <fstream>
