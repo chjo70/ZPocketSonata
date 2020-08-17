@@ -25,6 +25,12 @@ SOURCES += \
         NetMem/server/MemoryPage.cpp \
         NetMem/server/ServerSocket.cpp \
         NetMem/utils/ApiNetMem.cpp \
+        SQLite/Backup.cpp \
+        SQLite/Column.cpp \
+        SQLite/Database.cpp \
+        SQLite/Exception.cpp \
+        SQLite/Statement.cpp \
+        SQLite/Transaction.cpp \
         System/csysconfig.cpp \
         Thread/cdetectanalysis.cpp \
         Thread/cemittermerge.cpp \
@@ -185,8 +191,10 @@ LIBS += -L/usr/local/lib
 LIBS += -pthread
 LIBS += -lreadline
 LIBS += -lboost_thread
+LIBS += -lsqlite3
 
 INCLUDEPATH += /usr/local/boost
+INCLUDEPATH += /usr/local/include
 
 DEFINES += _POCKETSONATA_
 DEFINES += NEX7410
