@@ -4,8 +4,8 @@
 	\version  0.0.1
 */
 
-#ifndef  _MACRO_H
-#define  _MACRO_H
+#ifndef  _MACRO_H_
+#define  _MACRO_H_
 
 #define DFD_FREQ_OFFSET		(1900)
 
@@ -130,7 +130,7 @@ extern float _spOneMicrosec;
 #define HalfThreeOverTen( A )   ( UINT ) ( ( ( ( A ) * 3 ) + 10 ) / 20 )
 #define _max(a,b)               ( ( (int)(a) > (int)(b) ) ? (a) : (b) )
 #define _min(a,b)               ( ( (int)(a) < (int)(b) ) ? (a) : (b) )
-#define _diffabs(a, b)          ( (a) > (b) ? (a)-(b) : (b)-(a) )
+
 #define _abs(a)                 ( (a) >= 0 ? (a) : -(a) )
 #define High( A )               ( (int) A >> 8 ) & 0x00ff
 #define Low( A )                ( A & 0x00ff )

@@ -13,3 +13,5 @@ project-spec/meta-plnx-generated/
 PocketSonata.pro.user.*
 *.bak
 *.autosave
+build-PocketView*/
+build-PocketSonata*/

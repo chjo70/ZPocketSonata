@@ -11,6 +11,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
    LOGENTRY;
 
    //Init();
+   m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( true, EMITTER_SQLITE_FILENAME );
 
 }
 
@@ -19,7 +20,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
  */
 CEmitterMerge::~CEmitterMerge()
 {
-
+    delete m_pTheEmitterMergeMngr;
 }
 
 /**
@@ -68,8 +69,8 @@ void CEmitterMerge::_routine()
         default:
             LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
             break;
-        }
     }
+}
 }
 
 /**
@@ -85,6 +86,7 @@ void CEmitterMerge::MergeEmitter()
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
     // 2. 위협 관리를 호출한다.
+    //m_pTheEmitterMergeMngr->ManageThreat();
     //m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
 
 }

@@ -7,7 +7,7 @@
  * @warning
  */
 
-#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
 
 #include <math.h>
 #include <float.h>
@@ -15,7 +15,7 @@
 // #include "Eigen/Dense"
 
 #include "./IsNumber.h"
-#include "../OFP/SigAnal/_Define.h"
+#include "../SigAnal/_Define.h"
 #include "./PositionEstimationAlg.h"
 
 //#include "./Matrix/Matrix.h"

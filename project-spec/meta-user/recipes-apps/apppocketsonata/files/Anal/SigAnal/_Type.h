@@ -27,9 +27,11 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
+#include <math.h>
 #include <time.h>
 #include <sys/timeb.h>
 //#include <sys/timeb.h>
@@ -39,9 +41,11 @@ using namespace std;
 typedef bool BOOL;
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
+typedef char TCHAR;
 typedef unsigned short USHORT;
 typedef time_t __time32_t;
 typedef string CString;
+typedef unsigned int INT32;
 
 #define _T(A)                   (A)
 
@@ -50,16 +54,26 @@ typedef string CString;
 #define sprintf_s               sprintf
 #define wsprintf                sprintf
 
+#define strcpy_s                strcpy
+
+#define _finite                 finite
+
 #define _time32(A)              time(A)
 #define __time32_t              time_t
 #define __timeb32               timeb
 #define _ftime32_s              ftime
 #define _localtime32_s(A,B)     localtime_r(B,A)
 
+#define AfxMessageBox           printf
+
 
 #define TRACE                   printf
+#define TRACE0                  printf
+#define TRACE1                  printf
 
-#define FLT_MIN         1.175494351e-38F        /* min positive value */
+#define FLT_MIN                 1.175494351e-38F        /* min positive value */
+
+#define _MAX_PATH               1024
 
 #include "../../Utils/cfile.h"
 

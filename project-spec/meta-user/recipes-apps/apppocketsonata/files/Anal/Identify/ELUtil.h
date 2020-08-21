@@ -11,6 +11,7 @@
 
 //#include "../InterSignal/INC/_type.h"
 #include "../SigAnal/_Macro.h"
+
 //#include "../InterSignal/INC/_Define.h"
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
@@ -25,7 +26,7 @@ BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int th
 BOOL CompMarginDiffFFF( float x, float fy1, float fy2, float thresh );
 BOOL CompAoaDiff( float x, float y, float fthresh );
 float AoaDiff( float x, float y);
-void LogPrint( char *format, ... );
+void LogPrint( const char *format, ... );
 
 bool Is_FZero( const float &value );
 bool Is_DZero( const double &dvalue );
@@ -34,6 +35,7 @@ bool Is_DNotZero( const double &dvalue );
 
 int CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 );
 float CalOverlapSpaceF( float hgh1, float low1, float hgh2, float low2 );
+
 
 template <typename T>
 BOOL CompMeanDiff( T x, T y, T thresh )

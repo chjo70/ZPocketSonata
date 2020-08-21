@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
 
 #include "GeoCoordConv.h"
 #include <math.h>

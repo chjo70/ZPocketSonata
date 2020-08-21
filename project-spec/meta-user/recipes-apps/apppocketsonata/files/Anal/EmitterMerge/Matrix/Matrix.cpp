@@ -7,7 +7,7 @@
  * @warning   
  */
 
-#include "stdafx.h"
+#include "../../SigAnal/stdafx.h"
 #include "Matrix.h"
 
 CMatrix::CMatrix()

@@ -531,48 +531,49 @@ struct SCEDEmitterData	//에미터정보
 struct SCEDBeamData	//빔정보
 {
 	//EnumLibType			eLibType;		//라이브러리 타입
-	UINT				nThreatID;		//위협번호 (* ID)
-	UINT				nEmitterID;		//에미터번호 (* ID)
-	UINT				nBeamID;		//빔번호 (* ID)
-
-	CString					strBeamName;	//빔명
-	UINT						nBPriority;		//B 우선순위
-	EnumCEDSignalType			eSignalType;	//신호형태
-	EnumFreqType			eFreqType;		//주파수형태
-	float						fMinRF;			//RF최소
-	float						fMaxRF;			//RF최대
+    UINT nThreatID;		//위협번호 (* ID)
+    UINT nEmitterID;		//에미터번호 (* ID)
+    UINT nBeamID;		//빔번호 (* ID)
+    CString strBeamName;	//빔명
+    UINT nBPriority;		//B 우선순위
+    EnumCEDSignalType eSignalType;	//신호형태
+    EnumFreqType eFreqType;		//주파수형태
+    float fMinRF;			//RF최소
+    float fMaxRF;			//RF최대
 	EnumFreqPatternType	eFreqPatternType;	//주파수 패턴형태
-	UINT						nRFBandWidth;	//RF변경폭
-	float						fMinRFChangePeriod;	//최소RF변경주기
-	float						fMaxRFChangePeriod;	//최대RF변경주기
-	EnumPRIType			ePRIType;		//PRI형태
-	float						fMinPRI;		//최소PRI
-	float						fMaxPRI;		//최대PRI
-	float						fJitterRate;	//PRI지터율
-	EnumPRIPatternType		ePRIPatternType;	//PRI 패턴형태
-	UINT						nMinPRIPatternPeriod;	//최소 PRI 패턴주기
-	UINT						nMaxPRIPatternPeriod;	//최대 PRI 패턴주기
-	float						fMinPW;			//최소PW
-	float						fMaxPW;			//최대PW
-	EnumMOPType			eMOPType;		//MOP형식
-	EnumCEDScanType			eScanType;		//스캔형태	
-	UINT						nMinScanPeriod;	//최소스캔주기
-	UINT						nMaxScanPeriod;	//최대스캔주기	
-	EnumPolizationType		ePolization;	//극성
-	float						fBeamWidth;		//빔폭
+    UINT nRFBandWidth;	//RF변경폭
+    float fMinRFChangePeriod;	//최소RF변경주기
+    float fMaxRFChangePeriod;	//최대RF변경주기
+
+    EnumPRIType	ePRIType;		//PRI형태
+    float fMinPRI;		//최소PRI
+    float fMaxPRI;		//최대PRI
+    float fJitterRate;	//PRI지터율
+    EnumPRIPatternType ePRIPatternType;	//PRI 패턴형태
+    UINT nMinPRIPatternPeriod;	//최소 PRI 패턴주기
+    UINT nMaxPRIPatternPeriod;	//최대 PRI 패턴주기
+    float fMinPW;			//최소PW
+    float fMaxPW;			//최대PW
+
+    EnumMOPType	eMOPType;		//MOP형식
+    EnumCEDScanType eScanType;		//스캔형태
+    UINT nMinScanPeriod;	//최소스캔주기
+    UINT nMaxScanPeriod;	//최대스캔주기
+    EnumPolizationType ePolization;	//극성
+    float fBeamWidth;		//빔폭
 	
-	UINT				nNumOfHOP;			//호핑 단수
-	UINT				nNumOfSTG;			//스태거 및 D&S 단수
+    UINT nNumOfHOP;			//호핑 단수
+    UINT nNumOfSTG;			//스태거 및 D&S 단수
 	vector<SCEDHOPElimentData>	vecHOPEliment;	//호핑엘리먼트
 	vector<SCEDSTGElimentData>	vecSTGEliment;	//스태거엘리먼트
 
-	bool				bIsBeacon;	//Beacon여부 (추가됨*)
-	UINT				nPulsePerGroup;	//Group당 펄스 수 (추가됨*)
-	UINT				nPRIPerGroup;	//Group당 PRI (ns) (추가됨*)
-	UINT				nPRIInGroup;	//Group내 PRI (ns) (추가됨*)
-	vector<float>		vecPWInGroup;	//Group내 PW (추가됨)
-	vector<float>		vecPAInGroup;	//Group내 PA (추가됨)
-	vector<float>		vecFreqInGroup;	//Group내 주파수 (추가됨)
+    bool bIsBeacon;	//Beacon여부 (추가됨*)
+    UINT nPulsePerGroup;	//Group당 펄스 수 (추가됨*)
+    UINT nPRIPerGroup;	//Group당 PRI (ns) (추가됨*)
+    UINT nPRIInGroup;	//Group내 PRI (ns) (추가됨*)
+    vector<float> vecPWInGroup;	//Group내 PW (추가됨)
+    vector<float> vecPAInGroup;	//Group내 PA (추가됨)
+    vector<float> vecFreqInGroup;	//Group내 주파수 (추가됨)
 
 	SCEDBeamData():
 		nThreatID(0),
@@ -582,30 +583,32 @@ struct SCEDBeamData	//빔정보
 		nBPriority(0),
 		eSignalType(E_EL_SIG_NORMAL_PULSE),
 		eFreqType(E_EL_FREQ_FIXED),
+        fMinRF(0),
+        fMaxRF(0),
+        eFreqPatternType(E_EL_FPT_UNKNOWN),	//주파수 패턴형태
+        nRFBandWidth(0),
+        fMinRFChangePeriod(0),
+        fMaxRFChangePeriod(0),
 		ePRIType(E_EL_PRI_STABLE),
+        fMinPRI(0),
+        fMaxPRI(0),
+        fJitterRate(0),
+        ePRIPatternType(E_EL_PPT_UNKNOWN),	//PRI 패턴형태
+        nMinPRIPatternPeriod(0),		//최소 PRI 패턴주기
+        nMaxPRIPatternPeriod(0),	//최대 PRI 패턴주기
+        fMinPW(0),
+        fMaxPW(0),
+        eMOPType(E_EL_MOP_UNKNOWN),
 		eScanType(E_EL_SC_UNKNOWN),
-		fJitterRate(0),
-		nRFBandWidth(0),
-		eMOPType(E_EL_MOP_UNKNOWN),
+        nMinScanPeriod(0),
 		nMaxScanPeriod(0),
-		nMinScanPeriod(0),
-		fMaxRF(0),
-		fMinRF(0),
-		fMaxRFChangePeriod(0),
-		fMinRFChangePeriod(0),
-		fMinPRI(0),
-		fMaxPRI(0),
-		fMinPW(0),
-		fMaxPW(0),
 		ePolization(E_EL_PZ_V),
 		fBeamWidth(0),
+
 		//eLibType(E_EL_LIB_TYPE_NORMAL),
-		nNumOfSTG(0),
-		nNumOfHOP(0),
-		eFreqPatternType(E_EL_FPT_UNKNOWN),	//주파수 패턴형태
-		ePRIPatternType(E_EL_PPT_UNKNOWN),	//PRI 패턴형태
-		nMaxPRIPatternPeriod(0),	//최대 PRI 패턴주기
-		nMinPRIPatternPeriod(0),		//최소 PRI 패턴주기
+        nNumOfHOP(0),
+        nNumOfSTG(0),
+
 		bIsBeacon(false),	//Group여부 (추가됨*)
 		nPulsePerGroup(0),	//Group당 펄스 수 (추가됨*)
 		nPRIPerGroup(0),	//Group당 PRI (ns) (추가됨*)

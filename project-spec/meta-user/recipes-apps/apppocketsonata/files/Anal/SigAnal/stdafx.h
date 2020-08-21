@@ -43,7 +43,8 @@ extern CCriticalSection g_criticalLog;
 extern CCriticalSection g_criticalDbg;
 extern CCriticalSection g_criticalExe;
 
-#else
+#elif defined(__linux__)
+#include "_Type.h"
 #define HWND    unsigned int
 
 

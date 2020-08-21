@@ -7,7 +7,7 @@
  * @warning   
  */
 
-#include "StdAfx.h"
+#include "../SigAnal/stdafx.h"
 
 using namespace std;
 
@@ -289,7 +289,7 @@ bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
 	m_nLOB = m_pQueLOBData->Count();
 
 	if( m_nLOB >= (int) GP_ENVI_VAR->GetEmmgNumOfMinLobToBeam() && m_nLOB < MAX_LOB_FOR_CLUSTERING ) {
-		DWORD dwTime = GetTickCount();	
+        //DWORD dwTime = GetTickCount();
 
 		// 0. LOB 클러스터링을 계산하기 위한 사전 데이터 할당
 		m_nMaxOfIntersection = CalcIntersectionPoints( m_nLOB );
@@ -309,7 +309,7 @@ bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 		++ m_nCheckClustering;
 
-		LogPrint("\n========================================== LOBClustering 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
+        //LogPrint("\n========================================== LOBClustering 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
 
 	}
 

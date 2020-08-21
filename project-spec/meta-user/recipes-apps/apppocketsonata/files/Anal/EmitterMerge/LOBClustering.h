@@ -11,7 +11,7 @@
 
 #include "Stack.h"
 
-#include "../../OFP/EmitterMerge/PositionEstimationAlg.h"
+#include "PositionEstimationAlg.h"
 #include "ELEmitterDataType.h"
 
 #include "../Identify/Identify.h"

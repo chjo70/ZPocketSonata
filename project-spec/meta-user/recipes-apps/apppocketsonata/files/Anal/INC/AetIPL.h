@@ -26,8 +26,8 @@
 
 // #include "Structs.h"
 
-#define   Unknown   0
-#define   UNKNOWN   Unknown
+//#define   Unknown   0
+//#define   UNKNOWN   Unknown
 
 
 
@@ -154,7 +154,7 @@ enum PATTERN_TYPE
 } ;   // same with PRI pattern type
 
 enum { FP_UNKNOWN=0, FP_FIXED, FP_ } ;
-enum { FT_FIXED=0 } ;
+enum ENUM_FREQ_TYPE { FT_FIXED=0 } ;
 
 // 에미터 목록 정의
 enum { CAT_MIX=0x80, CAT_UNKNOWN=0, CAT_UNK, CAT_AIR, CAT_SHP, CAT_SMR, CAT_GRD, CAT_BASE, CAT_MSL, CAT_MSS, CAT_MAX } ;

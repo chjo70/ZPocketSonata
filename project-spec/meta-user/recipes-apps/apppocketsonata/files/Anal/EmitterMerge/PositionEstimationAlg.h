@@ -9,7 +9,7 @@
 
 #pragma once
 
-using namespace std;
+//using namespace std;
 #include <vector>
 
 using namespace std;

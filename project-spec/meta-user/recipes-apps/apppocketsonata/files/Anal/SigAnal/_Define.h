@@ -188,7 +188,7 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define	PW_GROUP_DIFF				(500)
 
 #define	NARROW_FREQ_GROUP		0
-#define WIDE_FREQ_GROUP             1000 	// 1GHz 최대 주파수 그룹 범위
+#define WIDE_FREQ_GROUP			1000 	// 1GHz 최대 주파수 그룹 범위
 #define	MAX_FREQ_DIFF				1000        // 1000 [MHz] 주파수 폭 설정
 
 #define MIN_CONTI_THRESHOLD_AOA	(1)

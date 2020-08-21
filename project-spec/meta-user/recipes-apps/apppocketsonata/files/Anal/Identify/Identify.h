@@ -14,8 +14,8 @@
 //using namespace SELTASKDB;
 
 //#include "../SigAnal/_define.h"
-#include "./define.h"
-#include "./structs.h"
+#include "define.h"
+#include "structs.h"
 #include "../SigAnal/_Macro.h"
 //#include "../EmitterMerge/_common.h"
 
@@ -113,12 +113,17 @@ struct STR_H000 {
 #define MAX_THREAT				(500)
 
 
-//#include "../../ELINTOP/ODBC/mssql.h"
-//#include "../../ELINTOP/ODBC/odbccore.h"
+#ifdef _SQLITE_
+#include "../../SQLite/SQLiteCpp.h"
+
+#else
+#include "../../ELINTOP/ODBC/mssql.h"
+#include "../../ELINTOP/ODBC/odbccore.h"
+#endif
 
 #define MAX_FRQ_MHZ						(6000)
 #define MIN_FRQ_MHZ						(500)
-#define FLIB_FREQ_RES_MHZ			(10)
+#define FLIB_FREQ_RES_MHZ               (10)
 
 
 /**
@@ -138,7 +143,7 @@ struct STR_H000 {
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
-class CELSignalIdentifyAlg //: public CMSSQL
+class CELSignalIdentifyAlg : public SQLite::Database
 {
  protected:
  	static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그
@@ -171,8 +176,6 @@ class CELSignalIdentifyAlg //: public CMSSQL
 	static SThreat *m_pThreat;															///< 위협 구조체
 
 private:
-// 	char m_H0000[10];																///< 미식별 번호
- 
  	// EOB 식별 결과 저장소
  	int m_nCoIdEOB;																	///< EOB 개수
  	STR_EOB_RESULT *m_pEOBResult;										///< EOB 식별 결과를 저장하기 위한 임시 저장소
@@ -185,12 +188,12 @@ private:
  	int m_nCoCEDEOB;																///< CED/EOB 메칭 갯수
  	STR_CEDEOB_RESULT *m_pCEDEOBResult;							///< CED/EOB 식별 결과
  
-// 	// 최종 CED/EOB 식별 결과
+    // 최종 CED/EOB 식별 결과
  	STR_CEDEOB_FINAL_RESULT m_CEDEOBResult;					///< 최종 CED/EOB 식별 결과
-// 
+
  	UINT m_fromLib;																	///< 식별시 시작 인덱스
  	UINT m_toLib;																		///< 식별시 종료 인덱스
-// 
+
 // 	SELIDENTIFICATIONOPTION_PARAMETER m_optParameter;
 // 
 // 	EnumLibType m_eCEDLibType;											///< CED 기본형 또는 실무형 상태
@@ -209,16 +212,10 @@ private:
 // 	STR_NEWAET m_IdAet;															///< 수동 분석한 에미터를 식별하기 위한 저장소
 // 
  public:
-		void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, BOOL bMakeH0000 );
-// 	void Identify( SELABTDATA *pABTData, SELLOBDATA_EXT *pLOBDataExt, int nLinkNum, BOOL bMakeH0000, EnumLibType eCEDLibType, EnumLibType eEOBLibType, bool bIDExecute=false );
+    void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, BOOL bMakeH0000 );
  	void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true );
-// 	void IdentifyAET( SELAETDATA *pAETData, SELAETDATA_EXT *pAETDataExt, int nLinkNum, EnumLibType eCEDLibType, EnumLibType eEOBLibType, SELABTDATA *pABTData=NULL );
-// 	void SetOptionParameter( SRxLOBDataGroup *pLOBDataGroup );
-// 	void SetOptionParameter( SELABTDATA *pABTData );
-// 	void SetOptionParameterByEnvVarIdnf();
-// 	void CommonSetOptionParameter();
 
-// 	void IdentifyPW();
+    // 식별 함수 정의
  	void PIdentifyPRI( SRxLOBData *pLOBData );
 	void PIdentifyPatPat( SRxLOBData *pLOBData );
 	void PIdentifyJitPat( SRxLOBData *pLOBData );
@@ -230,7 +227,6 @@ private:
 	void PIdentifyStbStb( SRxLOBData *pLOBData );
 	void FIdentifyAgiPat( SRxLOBData *pLOBData );
 	void FIdentifyPatPat( SRxLOBData *pLOBData );
-	//bool CompSwitchLevel( int *series, int coSeries, int low, int high );
 	void ConvertToIdentifyAet( SRxLOBData *pLOBData );
 	void FIdentifyHopHop( SRxLOBData *pLOBData );
 	void FIdentifyFixPat( SRxLOBData *pLOBData );
@@ -257,8 +253,6 @@ private:
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
-// 	void Identify( STR_NEWAET *pNewAet, EnumLibType eCEDLibType, EnumLibType eEOBLibType );
-// 	void LoadCEDEOBLibrary( EnumLibType eCEDLibType, EnumLibType eEOBLibType );
 
  	bool LoadCEDLibrary2();
  	bool LoadEOBLibrary2();
@@ -279,6 +273,38 @@ private:
  	//BOOL CompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 
 	bool IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMode **pMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
+
+    template <typename T>
+    T _diffabs( T x, T y)
+    {
+
+        if (x > y) {
+            return x - y;
+        }
+        else {
+            return y - x;
+        }
+
+    }
+
+
+    template <typename T>
+    BOOL CompMeanDiff( T x, T y, T thresh )
+    {
+        T diff;
+        BOOL bRet;
+
+        diff = _diffabs<T>( x, y );
+
+        if( diff <= thresh ) {
+            bRet = TRUE;
+        }
+        else {
+            bRet = FALSE;
+        }
+
+        return bRet;
+    }
 
 	template <typename T>
 	BOOL CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
@@ -356,12 +382,8 @@ private:
 	}
 
 
-// 	void MakeH0000( bool bMakeH0000=FALSE );
-// 	void MakeH0000( bool bMakeH0000, int nAETID );
  	int IdentifyPosition( SRxABTData *pABTData );
  
-// 	void SetSystemVariable( int i_nLinkNo, SOCSystemVariable &i_stData );
-// 
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	inline void ClearH000() { m_vecH000.clear(); }
 // 
@@ -400,9 +422,13 @@ private:
 // 	void SortRadarIndex( int *pCount, int *pIndex, int nMax=100 );
 // 	void RemoveDuplicateIndex( int *pCount, int *pIndex, int nMax );
 
+#ifdef _SQLITE_
+    CELSignalIdentifyAlg( const char *pFileName );
+#else
+    CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );
+#endif
 
-    //CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );
-    CELSignalIdentifyAlg( );
+    CELSignalIdentifyAlg();
 	virtual ~CELSignalIdentifyAlg();
 
 protected:
@@ -412,6 +438,10 @@ protected:
 	BOOL CheckFreqType( FREQ_TYPE frqType, SRadarMode *pRadarMode );
 
 	void InitRadarModeData();
+
+    bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
+    bool LoadRadarMode_PRISequence( vector<SRadarMode_PRISequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode );
+    bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
 
 
 };

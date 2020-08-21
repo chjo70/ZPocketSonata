@@ -13,88 +13,14 @@
 #endif // _MSC_VER > 1000
 
 
-
-//////////////////////////////////////////////////////////////////////////
-#define VERSION_LOGO									"09.00"
-#define VERSION_LOGO_MESSAGE_X				CENTER_WIDTH
-#define VERSION_LOGO_MESSAGE_Y				(124)
-
-
-#define AIRCRAFT_TYPE									"A50"
-#define AIRCRAFT_TYPE_MESSAGE_X				CENTER_WIDTH
-#define AIRCRAFT_TYPE_MESSAGE_Y				(180)
-
-
-#define SYSTEM_WARM_UP								"LIGNEX1"
-#define WARM_UP_MESSAGE_X							CENTER_WIDTH
-#define WARM_UP_MESSAGE_Y							(70)
-
-// Handoff 메시지 위치
-#define	HANDOFF_MESSAGE_X							CENTER_WIDTH
-#define	HANDOFF_MESSAGE_Y							(8)
-
-// System Text 메시지 위치
-#define	SYSTEST_X											(90)
-#define	SYSTEST_Y											(190)
-
-// TARGET_SEPERATE_SYMBOL_INDEX
-#define	TARGET_SEPERATE_X							(0xfd)
-#define	TARGET_SEPERATE_Y							(0x88)
-
-// UNKNOWN_SYMBOL_INDEX
-#define	UNKNOWN_X											(0xf5)
-#define	UNKNOWN_Y											(0x88)
-
-// OPEN_PRIORITY_INDEX
-#define	OPEN_PRIORITY_X								(0xed)
-#define	OPEN_PRIORITY_Y								(0x88)
-
-// ALTITUDE_INDEX
-#define	ALTITUDE_X										(0xfd)
-#define	ALTITUDE_Y										(0x78)
-
-// ACTVITY_INDEX
-#define	ACTVITY_X											(0xf5)
-#define	ACTVITY_Y											(0x78)
-
-// HANDOFF_INDEX
-#define	HANDOFF_X											(0xed)
-#define	HANDOFF_Y											(0x78)
-
-// SYSTEST_INDEX
-#define	STYTEST_X											(0x04)
-#define	STYTEST_Y											(0x88)
-
-// CBIT_INDEX
-#define	CBIT_X												(0x04)
-#define	CBIT_Y												(0x78)
-
-// MISSILE_INDEX
-#define	MISSILE_X											(0x12)
-#define	MISSILE_Y											(0x88)
-
-// OP_MODE_INDEX
-#define	OP_MODE_X											(0x12)
-#define	OP_MODE_Y											(0x78)
+#define CEDEOB_SQLITE_FILENAME      "cedeob.sqlite3"
+#define EMITTER_SQLITE_FILENAME     "emitter.sqlite3"
 
 
 
-//////////////////////////////////////////////////////////////////////////
-//
-// 신호측정 발생판 초기화 관련 설정값
-#define INIT_CHANNEL_MODE						(NORMAL_MODE)	// 정상 모드로 설정함.
-#define INIT_CHANNEL_COMPENSATION		(USE_CHANNEL_COMPENSATION)			// 채널 보정 사용 여부를 정함.
-#define	INIT_PA_THRESHOLD_BAND1			(-65) //(-67.0)				// 단위는 dB, -74.6875 부터 +5 이어야 함.
-#define	INIT_PA_THRESHOLD_BAND2			(-60) //(-67.0)				// 단위는 dB, -74.6875 부터 +5 이어야 함.
-#define	INIT_PA_THRESHOLD_BAND3			(-60) //(-67.0)				// 단위는 dB, -74.6875 부터 +5 이어야 함.
-#define	INIT_PA_THRESHOLD_BAND4			(-60) //(-67.0)				// 단위는 dB, -74.6875 부터 +5 이어야 함.
-#define	INIT_PA_THRESHOLD_CD_BAND		(-50) //(-67.0)				// 단위는 dB, -74.6875 부터 +5 이어야 함.
-#define INIT_CW_CHOPPING_COUNT			(30)	// (18)					// 단위는 개수, 0 개 부터 255 개
-#define INIT_FMOP_THRESHOLD_CD_BAND	(5.0)									// 단위는 MHz, 0 MHz 부터 78.75 MHz
-#define INIT_FMOP_THRESHOLD					(10.0)								// 단위는 MHz, 0 MHz 부터 78.75 MHz
-#define INIT_CW_PULSEWIDTH					(130.0)								// 단위는 usec, 0 us 부터 204.6 us
-#define INIT_BLANKING_MODE					(NOTUSE_BLANKING_MODE)// 블랭킹 사용함.
-#define INIT_AUTO_RX_THRESHOLD_MODE	(MANUAL_RX_MODE)			// 자동 수신 임계값 모드 설정함.
+
+#define INIT_CW_PULSEWIDTH					(130.0)
+
 
 
 //////////////////////////////////////////////////////////////////////////

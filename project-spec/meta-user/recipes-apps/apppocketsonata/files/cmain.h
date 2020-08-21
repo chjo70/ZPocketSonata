@@ -6,7 +6,7 @@ using namespace std;
 #include "./Include/system.h"
 #include "./Utils/cthread.h"
 
-#include "./MinIni/minIni.h"
+//#include "./MinIni/minIni.h"
 
 void ParsingArgument( int iArgc, char *iArgv[] );
 

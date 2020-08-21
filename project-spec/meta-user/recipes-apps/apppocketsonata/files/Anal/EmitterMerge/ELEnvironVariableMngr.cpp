@@ -1,4 +1,8 @@
-﻿#include <StdAfx.h>
+﻿#include "../SigAnal/stdafx.h"
+
+
+//#include <StdAfx.h>
+#include <memory.h>
 
 #include "ELEnvironVariableMngr.h"
 

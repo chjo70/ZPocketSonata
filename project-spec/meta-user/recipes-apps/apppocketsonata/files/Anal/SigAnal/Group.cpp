@@ -1419,8 +1419,8 @@ void CGroup::MakeHist( STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FR
         }
         else {
             ++ pHist->hist[index];
-        }
     }
+}
 }
 
 //////////////////////////////////////////////////////////////////////

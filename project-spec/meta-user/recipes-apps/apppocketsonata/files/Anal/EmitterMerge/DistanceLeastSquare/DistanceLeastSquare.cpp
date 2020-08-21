@@ -7,14 +7,14 @@
  * @warning   
  */
 
-#include "StdAfx.h"
+#include "../../SigAnal/stdafx.h"
 
 #define _USE_MATH_DEFINES
 
 #include <math.h>
 
-#include "../../SigAnal/_macro.h"
-#include "../../SigAnal/_define.h"
+#include "../../SigAnal/_Macro.h"
+#include "../../SigAnal/_Define.h"
 
 #include "DistanceLeastSquare.h"
 #include "../LOBClustering.h"

@@ -115,7 +115,7 @@ BOOL CompAoaDiff( float x, float y, float fthresh )
 	float fDiff;
 	BOOL bRet;
 
-	fDiff = _diffabs( x, y );
+    fDiff = _diffabs<float>( x, y );
 
 	if( ( fDiff < fthresh ) || ( ( 360. - fDiff ) < fthresh ) ) {
 		bRet = TRUE;
@@ -132,7 +132,7 @@ float AoaDiff( float x, float y)
 {
 	float fDiff;
 
-	fDiff = _diffabs( x, y );
+    fDiff = _diffabs<float>( x, y );
 
 	if( fDiff > 180 ) {
 		fDiff = (float) ( 360.0 ) - fDiff;
@@ -153,7 +153,7 @@ float AoaDiff( float x, float y)
  * @date      2014-09-02 오후 3:56 
  * @warning   
  */
-void LogPrint( char *format, ... )
+void LogPrint( const char *format, ... )
 {
 
 #ifdef _DEBUG

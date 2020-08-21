@@ -7,7 +7,8 @@
  * @warning
  */
 
-#include "StdAfx.h"
+#include "../SigAnal/stdafx.h"
+
 #include "ELThreat.h"
 
 Queue<int> CELThreat::m_QueIndex;

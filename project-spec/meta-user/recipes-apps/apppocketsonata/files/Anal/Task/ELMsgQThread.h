@@ -2,7 +2,13 @@
 #include "LIGThread.h"
 #include "LIGCondition.h"
 #include "LIGCondition.h"
+
+#ifdef _WIN32
 #include "Task.h"
+#else
+#include "../../Utils/cthread.h"
+#endif
+
 #include <queue>
 using namespace std;
 

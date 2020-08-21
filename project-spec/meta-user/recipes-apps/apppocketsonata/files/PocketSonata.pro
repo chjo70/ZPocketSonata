@@ -4,12 +4,25 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        Anal/EmitterMerge/CInverseMethod.cpp \
+        Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.cpp \
+        Anal/EmitterMerge/ELEmitterMergeMngr.cpp \
+        Anal/EmitterMerge/ELEnvironVariableMngr.cpp \
+        Anal/EmitterMerge/ELThreat.cpp \
+        Anal/EmitterMerge/GeoCoordConv.cpp \
+        Anal/EmitterMerge/LOBClustering.cpp \
+        Anal/EmitterMerge/Matrix/Matrix.cpp \
+        Anal/EmitterMerge/PositionEstimationAlg.cpp \
+        Anal/EmitterMerge/Quadratic/Quadratic.cpp \
+        Anal/EmitterMerge/UTM.cpp \
         Anal/Identify/ELUtil.cpp \
+        Anal/Identify/Identify.cpp \
         Anal/NewSigAnal/NAnalPRI.cpp \
         Anal/NewSigAnal/NGroup.cpp \
         Anal/NewSigAnal/NMakeAET.cpp \
         Anal/NewSigAnal/NPulExt.cpp \
         Anal/NewSigAnal/NewSigAnal.cpp \
+        Anal/ParamMngr.cpp \
         Anal/SigAnal/AnalPRI.cpp \
         Anal/SigAnal/Group.cpp \
         Anal/SigAnal/MakeAET.cpp \
@@ -84,11 +97,18 @@ HEADERS += \
     Anal/INC/structs.h \
     Anal/INC/system.h \
     Anal/Identify/ELCEDLibDataType.h \
+    Anal/Identify/ELCEDLibDataType.h \
+    Anal/Identify/ELCEDLibDataType2.h \
     Anal/Identify/ELCEDLibDataType2.h \
     Anal/Identify/ELCEDLibMngr2.h \
+    Anal/Identify/ELCEDLibMngr2.h \
+    Anal/Identify/ELUtil.h \
     Anal/Identify/ELUtil.h \
     Anal/Identify/Identify.h \
+    Anal/Identify/Identify.h \
     Anal/Identify/define.h \
+    Anal/Identify/define.h \
+    Anal/Identify/structs.h \
     Anal/Identify/structs.h \
     Anal/NewSigAnal/NAnalPRI.h \
     Anal/NewSigAnal/NGroup.h \
@@ -144,11 +164,12 @@ HEADERS += \
     NetMem/server/ServerSocket.h \
     NetMem/utils/ApiNetMem.h \
     NetMem/utils/PortableSocket.h \
-    SQLite/AbstractDatabase.h \
-    SQLite/AbstractRecordset.h \
-    SQLite/SQLiteDatabase.h \
-    SQLite/SQLiteRecordset.h \
-    SQLite/UnicodeTools.h \
+    SQLite/Column.h \
+    SQLite/Database.h \
+    SQLite/SQLiteCpp.h \
+    SQLite/Transaction.h \
+    SQLite/Utils.h \
+    SQLite/VariadicBind.h \
     System/csysconfig.h \
     Thread/ccollectbank/ccollectbank.h \
     Thread/cdetectanalysis.h \
@@ -198,6 +219,7 @@ INCLUDEPATH += /usr/local/include
 
 DEFINES += _POCKETSONATA_
 DEFINES += NEX7410
+DEFINES += _SQLITE_
 
 DISTFILES += \
     NetMem/CMakeLists.txt \

@@ -6,10 +6,13 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
+#include "../Anal/EmitterMerge/ELEmitterMergeMngr.h"
+
 class CEmitterMerge : public CThread
 {
 private:
     UNI_LAN_DATA m_uniLanData;
+    CELEmitterMergeMngr *m_pTheEmitterMergeMngr;
 
 public:
     static CEmitterMerge *pInstance;

@@ -7,7 +7,8 @@
  * @warning
  */
 
-#include "stdafx.h"
+#include "../SigAnal/stdafx.h"
+
 #include "CInverseMethod.h"
 
 //#include "../Geo2UTM/Geo2UTM.h"

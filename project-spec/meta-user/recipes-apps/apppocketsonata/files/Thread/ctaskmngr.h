@@ -6,11 +6,9 @@ using namespace std;
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
-#include "../MinIni/minIni.h"
+//#include "../MinIni/minIni.h"
 
 
-// INI 파일 정의
-#define INI_FILE    "packetSonata.ini"
 
 class CTaskMngr : public CThread
 {
