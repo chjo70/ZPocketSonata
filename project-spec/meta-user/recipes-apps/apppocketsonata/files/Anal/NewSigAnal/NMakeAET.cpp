@@ -358,9 +358,9 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iFreqType = stFrq.type;
     pLOBData->iFreqPatternType = stFrq.patType;
     pLOBData->fFreqPatternPeriod = FTOAsCNV( stFrq.patPrd );
-    pLOBData->fMeanFreq = FFRQCNV( stFrq.mean );
-    pLOBData->fMaxFreq = FFRQCNV( stFrq.max );
-    pLOBData->fMinFreq = FFRQCNV( stFrq.min );
+    pLOBData->fMeanFreq = FFRQCNV( 0, stFrq.mean );
+    pLOBData->fMaxFreq = FFRQCNV( 0, stFrq.max );
+    pLOBData->fMinFreq = FFRQCNV( 0, stFrq.min );
     pLOBData->iFreqPositionCount = stFrq.swtLev;
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
     for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {

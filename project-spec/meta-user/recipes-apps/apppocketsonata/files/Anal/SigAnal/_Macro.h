@@ -1,7 +1,7 @@
 ﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
-	\version  0.0.1
+    \version  0.0.1
 */
 
 #ifndef  _MACRO_H
@@ -83,12 +83,12 @@ template <typename T>
 T _diffabs( T x, T y)
 {
 
-	if (x > y) {
-		return x - y;
-	}
-	else {
-		return y - x;
-	}
+    if (x > y) {
+        return x - y;
+    }
+    else {
+        return y - x;
+    }
 
 }
 
@@ -120,6 +120,7 @@ T _diffabs( T x, T y)
 #define IPACNV( A )				FDIV( (A), _spAMPres )
 
 #elif defined(_POCKETSONATA_)
+#define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
 #define FRQMhzCNV( A, B )		IMUL( (B), ( gFreqRes[(A)].res ) )
 #define IFRQMhzCNV( A, B )		IDIV( (B), ( gFreqRes[(A)].res ) )
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
@@ -129,8 +130,11 @@ T _diffabs( T x, T y)
 
 #define PWCNV( A )				IDIV( A, _spOneNanosec )
 #define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
+#define FPWCNV( A )             FMUL( (A), _spOneMicrosec )
+
 #define AOACNV( A )             IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
+#define FAOACNV( A )            (float) ( (float) A * _spAOAres )
 
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
@@ -138,8 +142,11 @@ T _diffabs( T x, T y)
 
 #define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 #define IPACNV( A )				FDIV( (A), _spAMPres )
+#define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
-#define FFRQCNV( A )			( FMUL( gFreqRes[0].res, (A) ) + gFreqRes[0].offset )
+#define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
+
+
 
 #else
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )

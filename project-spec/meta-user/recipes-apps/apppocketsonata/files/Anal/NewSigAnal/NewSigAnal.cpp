@@ -14,7 +14,7 @@
 #endif
 
 #define _MAIN_
-#define _MAIN_GLOBALS_
+//#define _MAIN_GLOBALS_
 
 #ifdef __linux__
 #include <sys/types.h>

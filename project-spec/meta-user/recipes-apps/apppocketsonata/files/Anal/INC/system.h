@@ -1,7 +1,7 @@
 ﻿/*!
   \file     System.h
   \brief    interface for the 시스템 관련 정의문
-	\version  0.0.1
+    \version  0.0.1
 */
 //////////////////////////////////////////////////////////////////////
 
@@ -12,9 +12,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
-#define CEDEOB_SQLITE_FILENAME      "cedeob.sqlite3"
-#define EMITTER_SQLITE_FILENAME     "emitter.sqlite3"
+#define CEDEOB_SQLITE_FILENAME      "/SQLite3.DB/cedeob.sqlite3"
+#define EMITTER_SQLITE_FILENAME     "/SQLite3.DB/emitter.sqlite3"
 
 
 
@@ -209,11 +208,11 @@
 #define   _spBd3BandEn      0x1
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  
+//
 //  RXDF Direction & Freq Error
 #ifdef _ELINT_
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
-#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz, 
+#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
 #elif defined(_POCKETSONATA_)
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
@@ -232,7 +231,7 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  
+//
 //  Stable Toa Tolerance
 #define   _spSpriTol        10      // 500 ns
 
@@ -240,9 +239,9 @@
 //  for Identify, system parameter definition
 //  Identify for Freq.
 // debug, 99-12-09 19:44:46
-#define     _spIdFixFrqLow	_spRxdfFrqLow 
-#define     _spIdFixFrqMid  _spRxdfFrqMid 
-#define     _spIdFixFrqHgh  _spRxdfFrqHgh 
+#define     _spIdFixFrqLow	_spRxdfFrqLow
+#define     _spIdFixFrqMid  _spRxdfFrqMid
+#define     _spIdFixFrqHgh  _spRxdfFrqHgh
 
 #define     _spIdAgileFrqLow    100     /* 0 dB */
 #define     _spIdAgileFrqMid    100     /* 0 dB */
@@ -302,12 +301,12 @@
 
 //  Merge for PRI
 #define   _spMgFixPri					(4*_spSpriTol)  // each Stable PRIs, merge, 1->4, debug, 00-09-20 09:43:31
-#define   _spMgAgilePriMean   50      // 10% of (mean-mean) -> 50, debug 
+#define   _spMgAgilePriMean   50      // 10% of (mean-mean) -> 50, debug
 #define   _spMgAgilePriIn     20      // 20% of (min-min)
 #define   _spMgAgilePriOut    10      // 10% of (max-max)
 #define   _spMgAgilePriPat    (4*_spSpriTol)  // 10% of freq. low
 
-//  Merge for Period each Freq, PRI, and scan 
+//  Merge for Period each Freq, PRI, and scan
 #define   _spMgFrqPrd						5     // 5% of period
 #define   _spMgPriPrd						5     // 5% of period
 #define   _spMgScnPrd						5     // 5% of period
@@ -329,8 +328,8 @@
 //  for tracking Info
 //
 // debug, 00-08-30 14:02:57
-#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05년 이전 값은 4로 함. 
-#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // 연평도에서 Stable, Jitter 운용하는 함정 때문에 
+#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05년 이전 값은 4로 함.
+#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // 연평도에서 Stable, Jitter 운용하는 함정 때문에
 #define   _spFtFixFrqHgh      (2*_spRxdfFrqHgh)   // 4 -> 2로 수정함.
 
 #define   _spFtAgiFrqLow      (3*_spRxdfFrqLow)   // debug, 00-01-31 16:13:18
@@ -375,10 +374,10 @@
 #define   _spScToStep4      7000    // 70 sec
 #define   _spScToStep5      _spMaxVal32   // 70 sec
 
-//#define   _spScToStep1      70      // 
-//#define   _spScToStep2      700     // 
-//#define   _spScToStep3      7000    // 
-//#define   _spScToStep4      7000    // 
+//#define   _spScToStep1      70      //
+//#define   _spScToStep2      700     //
+//#define   _spScToStep3      7000    //
+//#define   _spScToStep4      7000    //
 
 #define   _spScMinTimeOutiOfPrd (3.5)   // 3.5 배의 스캔주기 타임 아웃
 
@@ -442,7 +441,7 @@
 /*! \bug  20 개에서 10개로 수정함.
     \date 2006-07-27 09:28:10, 조철희
 */
-#define     _spAnalMinPulseStableEmitter      10    
+#define     _spAnalMinPulseStableEmitter      10
 #define     _spAnalMinPulseJitterEmitter      20
 
 #define     _spMaxAoaQueueSize                4
