@@ -7874,8 +7874,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
     printf( "\n InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
     Log( enNormal, "InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
-/*
-    if( GetLocal() == false ) {
+    if( /* GetLocal() == false */ true && i_bIsFilteredLOB == false ) {
         if( m_bDBThread == false ) {
             // PRI 레벨값 저장
             if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
@@ -7886,15 +7885,14 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
             InsertToDB_LOB( m_pLOBData, pExt, true );
         }
         else {
-            m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
-            m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
-            memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
-            memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
+            //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
+            //m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
+            //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
+            //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
 
-            GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
+            //GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
         }
     }
-*/
 
     // LOB 저장소에 추가 한다.
     PushLOBLANData( m_pLOBData );
@@ -10283,4 +10281,10 @@ long CELEmitterMergeMngr::GetLONGData( char *pSQLString )
     */
 
     return lValue;
+}
+
+
+void InsertToDB_Position()
+{
+
 }

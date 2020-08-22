@@ -341,7 +341,7 @@ public:
 // 	// DB 관련 함수
     void InsertAET( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_nSeqNum, UINT uiAETID=0, bool bDirectDB=false );
     void InsertABT( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_nSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL );
-    void InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB );
+    void InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB=false );
 // 	void GetPolizationFromLOB( int *pPolization, int nLinkNum, int nAETID, int nABTID );
 // 	//void CalStatisticsFromABT( SRxABTData *pABTData );
 //

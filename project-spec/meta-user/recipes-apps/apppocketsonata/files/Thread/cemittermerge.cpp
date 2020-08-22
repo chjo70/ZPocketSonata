@@ -8,10 +8,16 @@ CEmitterMerge* CEmitterMerge::pInstance = nullptr;
 
 CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-   LOGENTRY;
+    LOGENTRY;
 
-   //Init();
-   m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( true, EMITTER_SQLITE_FILENAME );
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
+
+    strcpy( szSQLiteFileName, getenv("HOME") );
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+    //Init();
+    m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, szSQLiteFileName );
 
 }
 
@@ -58,7 +64,7 @@ void CEmitterMerge::_routine()
             break;
 
         case enTHREAD_REQ_SHUTDOWN :
-            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+            LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
             bWhile = false;
             break;
 
@@ -80,13 +86,16 @@ void CEmitterMerge::MergeEmitter()
 {
     LOGENTRY;
 
+    SRxLOBHeader strLOBHeader;
+
     LOGMSG2( enDebug, "%d 대역에서 LOB : %d 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiTotalLOB );
 
     // 1. LOB 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
     // 2. 위협 관리를 호출한다.
-    //m_pTheEmitterMergeMngr->ManageThreat();
+    strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
+    m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, ( SRxLOBData *) m_uniLanData.szFile );
     //m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
 
 }

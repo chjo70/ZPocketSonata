@@ -220,6 +220,6 @@ int main(int argc, char *argv[])
 
     usrAppStart();
 
-	return 0;
+    return 0;
 }
 
