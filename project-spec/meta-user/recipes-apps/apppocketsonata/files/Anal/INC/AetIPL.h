@@ -44,15 +44,15 @@
 enum FREQ_BAND
 {
     BAND0=0,
-	//##ModelId=452B0C510038
+    //##ModelId=452B0C510038
     BAND1,
-	//##ModelId=452B0C510041
+    //##ModelId=452B0C510041
     BAND2,
-	//##ModelId=452B0C51004B
+    //##ModelId=452B0C51004B
     BAND3,
-	//##ModelId=452B0C51005F
-	BAND4,
-	BAND5,
+    //##ModelId=452B0C51005F
+    BAND4,
+    BAND5,
     TOTAL_BAND
 };
 
@@ -79,13 +79,13 @@ enum FREQ_BAND
 enum FREQ_BAND
 {
     BAND0=0,
-	//##ModelId=452B0C510038
+    //##ModelId=452B0C510038
     BAND1         = 0,
-	//##ModelId=452B0C510041
+    //##ModelId=452B0C510041
     BAND2,
-	//##ModelId=452B0C51004B
+    //##ModelId=452B0C51004B
     BAND3,
-	//##ModelId=452B0C51005F
+    //##ModelId=452B0C51005F
     TOTAL_BAND
 };
 #endif
@@ -96,11 +96,11 @@ enum SIGNAL_TYPE
     ST_NORMAL_PULSE = 0,
     ST_CW= 1,
     ST_DOPPLER,
-	ST_FMOP,
-	ST_CW_FMOP,
-	ST_SHORT,
-	ST_ALL,
-	ST_MAX
+    ST_FMOP,
+    ST_CW_FMOP,
+    ST_SHORT,
+    ST_ALL,
+    ST_MAX
 } ;
 
 //##ModelId=452B0C5100B9
@@ -111,9 +111,9 @@ enum FREQ_TYPE
     _RANDOM_AGILE,
     _PATTERN_AGILE,
 
-	_UNKNOWN_FT,
+    _UNKNOWN_FT,
 
-	_IGNORE_FREQ,
+    _IGNORE_FREQ,
 
     MAX_FRQTYPE
 } ;
@@ -122,12 +122,12 @@ enum FREQ_TYPE
 enum PRI_TYPE
 {
   _STABLE               = 0,
-	_JITTER_RANDOM,
-	_DWELL,
+    _JITTER_RANDOM,
+    _DWELL,
   _STAGGER,
   _JITTER_PATTERN,
 
-	_IGNORE_PRI,
+    _IGNORE_PRI,
 
   MAX_PRITYPE,
 
@@ -140,16 +140,16 @@ enum PRI_TYPE
 //##ModelId=452B0C5101C7
 enum PATTERN_TYPE
 {
-	//##ModelId=452B0C5101DC
+    //##ModelId=452B0C5101DC
   UNK         = 1,
-	//##ModelId=452B0C5101EF
+    //##ModelId=452B0C5101EF
   SINE,
-	//##ModelId=452B0C5101F9
+    //##ModelId=452B0C5101F9
   SAW_INC,
-	//##ModelId=452B0C51020D
+    //##ModelId=452B0C51020D
   SAW_DEC,
-	TRI,
-	//##ModelId=452B0C510221
+    TRI,
+    //##ModelId=452B0C510221
   MAX_FRQPATTYPE
 } ;   // same with PRI pattern type
 
@@ -190,41 +190,41 @@ enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, F
 //##ModelId=452B0C51022C
 enum SCAN_TYPE
 {
-	//##ModelId=452B0C510241
+    //##ModelId=452B0C510241
   CIRCULAR            = 1,
-	//##ModelId=452B0C51024A
+    //##ModelId=452B0C51024A
   UNI_DIRECTIONAL,
-	//##ModelId=452B0C510254
+    //##ModelId=452B0C510254
   BI_DIRECTIONAL,
-	//##ModelId=452B0C51025E
+    //##ModelId=452B0C51025E
   CONICAL,
-	//##ModelId=452B0C510268
+    //##ModelId=452B0C510268
   STEADY,
-	//##ModelId=452B0C510286
+    //##ModelId=452B0C510286
   UFO,
-	MAX_SCANTYPE,
-	//##ModelId=452B0C510287
+    MAX_SCANTYPE,
+    //##ModelId=452B0C510287
   DetType,
-	//##ModelId=452B0C510290
+    //##ModelId=452B0C510290
   TYPE_UNKNOWN,
 } ;
 
 //##ModelId=452B0C5102A4
 enum SCAN_STAT
 {
-	//##ModelId=452B0C5102B9
+    //##ModelId=452B0C5102B9
   NO_PROCESS        = 0,
-	//##ModelId=452B0C5102C2
+    //##ModelId=452B0C5102C2
   SELF_SUCCESS,
-	//##ModelId=452B0C5102CC
+    //##ModelId=452B0C5102CC
   SELF_FAIL,
-	//##ModelId=452B0C5102D6
+    //##ModelId=452B0C5102D6
   REQ_SUCCESS,
-	//##ModelId=452B0C5102EA
+    //##ModelId=452B0C5102EA
   REQ_FAIL,
-	//##ModelId=452B0C5102F4
+    //##ModelId=452B0C5102F4
   All_Sucess        = 1,
-	//##ModelId=452B0C5102FE
+    //##ModelId=452B0C5102FE
   All_Fail          = 6
 } ;
 
@@ -254,8 +254,8 @@ struct STR_LOWHIGH
 #define _STR_LOWHIGH_TOA
 struct STR_LOWHIGH_TOA
 {
-	_TOA low;
-	_TOA hgh;
+    _TOA low;
+    _TOA hgh;
 } ;
 #endif
 
@@ -274,22 +274,22 @@ struct STR_MINMAX {
 } ;
 
 struct STR_MINMAX_MEDIAN {
-	int mean;
-	int min;
-	int max;
-	int median;
+    int mean;
+    int min;
+    int max;
+    int median;
 } ;
 
 struct STR_MINMAX_TOA {
-	_TOA mean;
-	_TOA min;
-	_TOA max;
+    _TOA mean;
+    _TOA min;
+    _TOA max;
 } ;
 
 struct STR_F_MINMAX {
-	float fmean;
-	float fmin;
-	float fmax;
+    float fmean;
+    float fmin;
+    float fmax;
 } ;
 
 //##ModelId=452B0C51034F
@@ -379,40 +379,40 @@ struct STR_AET {
 
 
 struct stEmitterNo {
-	unsigned char	Class;						// 구분(N/U/D, 적아)
-	unsigned char	AETNo;						// AET 번호
-	unsigned short BeamNo;					// 빔 번호(EID)
+    unsigned char	Class;						// 구분(N/U/D, 적아)
+    unsigned char	AETNo;						// AET 번호
+    unsigned short BeamNo;					// 빔 번호(EID)
 
 } ;
 
 // 접촉 시간
 struct stContactTime {
-	unsigned int	FirstSeenTime	: 17;			// 최초 접촉 시간
-	unsigned int	LastSeenTime	: 15;			// 최근 접촉 시간
+    unsigned int	FirstSeenTime	: 17;			// 최초 접촉 시간
+    unsigned int	LastSeenTime	: 15;			// 최근 접촉 시간
 
 } ;
 
 struct STR_CVIAET {
-	stEmitterNo EmitterNo;								// 에미터 번호
-	unsigned short SigType		: 7 ;				// 신호 형태
-	unsigned short Brg				: 9 ;				// 방위 - 0.703125
-	unsigned short Level			: 5 ;				// 레벨
-	unsigned short PW					: 11;				// PW - 1ns
-	unsigned char	PA;											// 신호 세기 - 0.3125
-	unsigned char	FreqType;								// 주파수 형태
-	unsigned short Freq;									// 주파수 - 1MHz
-	unsigned char	PRIType;								// PRI 형태
-	unsigned char	JitterRate;							// 지터율 - 0.1%
-	unsigned short PRI;										// PRI - 10ns
-	unsigned short ScanRate;							// 스캔 주기 - 1ms
-	unsigned char ScanType;								// 스캔 형태
-	unsigned char	Platform;								// Platform
-	unsigned short Prt;										// 우선순위
-	unsigned char	Range;									// 개략거리
-	char ELNote[SZ_MAX_ELNOTE];						// ELNOTE
-	char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
-	char ThreatName[SZ_MAX_THREATNAME];		// 위협명
-	stContactTime	ContactTime;						// 접촉 시간
+    stEmitterNo EmitterNo;								// 에미터 번호
+    unsigned short SigType		: 7 ;				// 신호 형태
+    unsigned short Brg				: 9 ;				// 방위 - 0.703125
+    unsigned short Level			: 5 ;				// 레벨
+    unsigned short PW					: 11;				// PW - 1ns
+    unsigned char	PA;											// 신호 세기 - 0.3125
+    unsigned char	FreqType;								// 주파수 형태
+    unsigned short Freq;									// 주파수 - 1MHz
+    unsigned char	PRIType;								// PRI 형태
+    unsigned char	JitterRate;							// 지터율 - 0.1%
+    unsigned short PRI;										// PRI - 10ns
+    unsigned short ScanRate;							// 스캔 주기 - 1ms
+    unsigned char ScanType;								// 스캔 형태
+    unsigned char	Platform;								// Platform
+    unsigned short Prt;										// 우선순위
+    unsigned char	Range;									// 개략거리
+    char ELNote[SZ_MAX_ELNOTE];						// ELNOTE
+    char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
+    char ThreatName[SZ_MAX_THREATNAME];		// 위협명
+    stContactTime	ContactTime;						// 접촉 시간
 
 } ;
 
@@ -501,12 +501,12 @@ struct STR_RSAID {
 } ;
 
 struct STR_ID_INFO {
-	UINT nFoF;
-	int iThreatRange;
-	UINT iThreatLevel;
-	UINT nPlatform;
-	int nNoThreat;
-	int iDistance;
+    UINT nFoF;
+    int iThreatRange;
+    UINT iThreatLevel;
+    UINT nPlatform;
+    int nNoThreat;
+    int iDistance;
 
 } ;
 
@@ -640,30 +640,30 @@ struct STR_AETFLT
 
 // 수집 관련 구조체 정의
 struct STR_PDWFILTER_INFO {
-	BOOL bUse;												// FALSE 이면 사용안함. TRUE 이면 사용함.
-	UINT coCollect;										// 수집 개수
-	UINT nCollectTime;								// 수집 시간, ms
-	BOOL bComplete;										// 수집 완료 플레그
+    BOOL bUse;												// FALSE 이면 사용안함. TRUE 이면 사용함.
+    UINT coCollect;										// 수집 개수
+    UINT nCollectTime;								// 수집 시간, ms
+    BOOL bComplete;										// 수집 완료 플레그
 
-	int noFilter;											// 소프트웨어 필터판으로 사용할 때 정보
-	int noEMT;
-	time_t tSettingSec;								// 필터판 설정 시간, 단위 초.
-	long tSettingNanoSec;							// 필터판 설정 시간, 단위 nano sec.
+    int noFilter;											// 소프트웨어 필터판으로 사용할 때 정보
+    int noEMT;
+    time_t tSettingSec;								// 필터판 설정 시간, 단위 초.
+    long tSettingNanoSec;							// 필터판 설정 시간, 단위 nano sec.
 
-	int nBand;												// 대역 정보, 대역1은 0x0, 대역2는 0x1, 대역3는 0x2, 대역4는 0x3
-	int nPulseType;										// 펄스 형태, 8이면, All; 4이면 FMOP, 2이면 CW, 1이면 Pulse, 7이면 Short Pulse
-	int nDV;													// 방위 정보 유효 플레그, 0이면 valid, 1이면 invalid
+    int nBand;												// 대역 정보, 대역1은 0x0, 대역2는 0x1, 대역3는 0x2, 대역4는 0x3
+    int nPulseType;										// 펄스 형태, 8이면, All; 4이면 FMOP, 2이면 CW, 1이면 Pulse, 7이면 Short Pulse
+    int nDV;													// 방위 정보 유효 플레그, 0이면 valid, 1이면 invalid
 
-	STR_LOWHIGH frq;									// 주파수 범위
-	STR_LOWHIGH aoa;									// 방위 범위
-	STR_LOWHIGH pw;										// 펄스폭 범위
-	STR_LOWHIGH sa;										// 신호세기 범위
+    STR_LOWHIGH frq;									// 주파수 범위
+    STR_LOWHIGH aoa;									// 방위 범위
+    STR_LOWHIGH pw;										// 펄스폭 범위
+    STR_LOWHIGH sa;										// 신호세기 범위
 
-	// 수집 시간 확인을 위한 저장소-이전 TOA, 지속시간 등.
-	UINT preToa;											// 이전 펄스의 TOA
-	UINT duration;										// 지속 시간
+    // 수집 시간 확인을 위한 저장소-이전 TOA, 지속시간 등.
+    UINT preToa;											// 이전 펄스의 TOA
+    UINT duration;										// 지속 시간
 
-	UINT nCount;
+    UINT nCount;
 
 } ;
 
@@ -671,26 +671,26 @@ enum EMITTER_STATUS { NEW_EMITTER_STAT=0x0, UPDATE_EMITTER_STAT, MERGE_EMITTER_S
 enum SCAN_MODE { NO_SCAN=0, READY_SCAN, ON_SCAN, OUT_SCAN } ;
 
 struct STR_LOC {
-	UINT coUpd;
+    UINT coUpd;
 
-	UINT aoaIndex;
-	int aoa[_spMaxAoaQueue];
+    UINT aoaIndex;
+    int aoa[_spMaxAoaQueue];
 
-	UINT stat;	// 에미터 상태 정보
-	enum SCAN_MODE scanMode;
+    UINT stat;	// 에미터 상태 정보
+    enum SCAN_MODE scanMode;
 
-	STR_PDWFILTER_INFO trackFI;
-	STR_PDWFILTER_INFO scanFI;
+    STR_PDWFILTER_INFO trackFI;
+    STR_PDWFILTER_INFO scanFI;
 
-	int noThreat;
-	int nNoGp;
+    int noThreat;
+    int nNoGp;
 
 }  ;
 
 struct STR_MANAET {
   STR_AET aet;
   STR_EXT ext;
-	STR_LOC loc;
+    STR_LOC loc;
 
 } ;
 
@@ -749,7 +749,7 @@ struct STR_MANAET {
 #define ahwCMF_SYSBase    (FLASH_BASE_ADRS + 0x7F0000)
 
 #else
-#error "Progaramming to suatble sbc board"
+//#error "Progaramming to suatble sbc board"
 
 #endif
 

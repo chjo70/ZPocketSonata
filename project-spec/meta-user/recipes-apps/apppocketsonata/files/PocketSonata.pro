@@ -115,7 +115,6 @@ HEADERS += \
     Anal/NewSigAnal/NMakeAET.h \
     Anal/NewSigAnal/NPulExt.h \
     Anal/NewSigAnal/NewSigAnal.h \
-    Anal/NewSigAnal/NewSigAnal.hh \
     Anal/OFP_Main.h \
     Anal/ScanSigAnal/SAnalScan.h \
     Anal/ScanSigAnal/SDefine.h \
@@ -136,7 +135,6 @@ HEADERS += \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     Collect/DataFile/_iq.h \
-    Collect/DataFile/_macro.h \
     Collect/DataFile/_pdw.h \
     Collect/ccollectbank/ccollectbank.h \
     Include/defines.h \

@@ -26,7 +26,6 @@ SOURCES += \
 HEADERS += \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
-    Collect/DataFile/_macro.h \
     chexspinbox.h \
     mainwindow.h
 

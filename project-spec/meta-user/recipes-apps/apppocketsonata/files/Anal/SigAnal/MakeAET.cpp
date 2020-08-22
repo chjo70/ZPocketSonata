@@ -822,11 +822,11 @@ void CMakeAET::PrintAllEmitter()
     SRxLOBData *pLOB;
 
     if( m_CoAet == 0 ) {
-        printf( "\n\n\t LOB 개수 : None." );
+        printf( "\n\n LOB 개수 : None." );
         Log( enNormal, "LOB 개수 : None." );
     }
     else {
-        printf( "\n\n\t LOB 개수 : %d\n", m_CoAet );
+        printf( "\n\n LOB 개수 : %d", m_CoAet );
         Log( enNormal, "LOB 개수 : %d", m_CoAet );
         pLOB = GetLOBData();		//& m_LOBData[0];
 
@@ -834,9 +834,11 @@ void CMakeAET::PrintAllEmitter()
     //printf( "\n### AOA      Freq(MHz)                PRI(us)                PA(dB)        PW(ns)         AS(s)       SeenTime    IPL   T FSP    PPP");
     //printf( "\n              T       Mean   Min   Max T       Mean  Min  Max Mean Min Max  Mean  Min  Max T    Prd    First Last  C Am    (us)   (us)");
     //printf( "\n------------------------------------------------------------------------------------------------------------------------------------" );
+
         for( i=0 ; i < m_CoAet ; ++i ) {
             //printf("\n\t\t[%02d]" , i+1 );
             DISP_FineAet( pLOB );
+            printf("\n");
             ++ pLOB;
         }
     }
