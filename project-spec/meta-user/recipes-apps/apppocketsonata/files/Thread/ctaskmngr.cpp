@@ -131,13 +131,14 @@ void CTaskMngr::Run()
 void CTaskMngr::_routine()
 {
     LOGENTRY;
+    bool bWhile=true;
     //UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
 
     //pLanData = ( UNI_LAN_DATA * ) & m_pMsg->msg[0];
 
-    while( true ) {
+    while( bWhile ) {
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv() 에러");
         }
@@ -153,6 +154,7 @@ void CTaskMngr::_routine()
 
             case enTHREAD_REQ_SHUTDOWN :
                 Shutdown();
+                bWhile = false;
                 break;
 
             default:
@@ -287,9 +289,12 @@ void CTaskMngr::Shutdown()
 
     //ReleaseInstance();
 
-    //QMsgSnd( JAMTEC->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
-    //QMsgSnd( PULTRK->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
-    //QMsgSnd( SIGCOL->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+    QMsgSnd( JAMTEC->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+    QMsgSnd( URBIT->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+    QMsgSnd( PULTRK->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+    QMsgSnd( SIGCOL->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+    QMsgSnd( RECCCU->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+
     g_Loop = false;
 
 }

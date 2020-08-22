@@ -3,7 +3,6 @@
  * */
 
 #include "cjamtech.h"
-#include "../Utils/clog.h"
 
 #define _DEBUG_
 
@@ -27,22 +26,6 @@ CJamTech::CJamTech( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread
 CJamTech::~CJamTech(void)
 {
 }
-
-/**
- * @brief CSysConfig::ReleaseInstance
- */
-void CJamTech::ReleaseInstance()
-{
-    if(pInstance)
-    {
-        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-        delete pInstance;
-        pInstance = NULL;
-    }
-}
-
-
 
 /**
  * @brief CJamTech::Run

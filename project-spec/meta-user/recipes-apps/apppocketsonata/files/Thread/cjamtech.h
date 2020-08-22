@@ -4,6 +4,8 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
+#include "../Utils/clog.h"
+
 
 class CJamTech : public CThread
 {
@@ -17,7 +19,6 @@ public:
     ~CJamTech();
 
     void Run();
-    void ReleaseInstance();
 
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
@@ -28,6 +29,17 @@ public:
             pInstance = new CJamTech( g_iKeyId++, (char*)"CJamTech" );
         }
         return pInstance;
+    }
+
+    void ReleaseInstance()
+    {
+        if(pInstance)
+        {
+            LOGMSG1( enDebug, "[%s]를 종료 처리 합니다...", ChildClassName() );
+
+            delete pInstance;
+            pInstance = NULL;
+        }
     }
 };
 

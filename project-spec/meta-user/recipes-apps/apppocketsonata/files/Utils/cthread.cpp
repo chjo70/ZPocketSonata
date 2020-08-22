@@ -36,6 +36,7 @@ CThread::CThread( int iMsgKey, char *pClassName, bool bArrayLanData ) : CArrayMs
 CThread::~CThread()
 {
 
+    // 1. 쓰레드를 죽인다.
     if( m_MainThread != 0 ) {
         -- m_iCoThread;
 
@@ -43,7 +44,7 @@ CThread::~CThread()
         LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szClassName );
     }
 
-
+    // 2. 큐 메시지를 죽인다.
     if (m_MsgKeyID > 0 ) {
         if( msgctl( m_MsgKeyID, IPC_RMID, 0 ) == -1 ) {
             perror( "msgctl 실패" );
@@ -149,6 +150,9 @@ void CThread::Stop()
 void *CThread::CallBack( void *pArg )
 {
     CThread *pThhread = static_cast<CThread*> (pArg);
+
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
     pThhread->_routine();
 

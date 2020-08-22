@@ -52,13 +52,14 @@ void CUrBit::Run()
 void CUrBit::_routine()
 {
     LOGENTRY;
+    bool bWhile=true;
     UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( true ) {
+    while( bWhile ) {
         if( QMsgRcv() == -1 ) {
             perror( "error ");
         }
@@ -71,6 +72,11 @@ void CUrBit::_routine()
                     puts( "." );
                 }
                 //m_theGPIO.SetDirection( 309, 1, char *direction)
+                break;
+
+            case enTHREAD_REQ_SHUTDOWN :
+                LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                bWhile = false;
                 break;
 
             default:

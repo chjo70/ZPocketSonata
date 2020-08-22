@@ -71,9 +71,10 @@ void CRecLan::Run()
 void CRecLan::_routine()
 {
     LOGENTRY;
+    bool bWhile=true;
     m_pMsg = GetDataMessage();
 
-    while( true ) {
+    while( bWhile ) {
         if( QMsgRcv() == -1 ) {
             perror( "error ");
         }
@@ -99,6 +100,10 @@ void CRecLan::_routine()
                     DumpList();
                     break;
 
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                    bWhile = false;
+                    break;
 
                 default:
                     LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
