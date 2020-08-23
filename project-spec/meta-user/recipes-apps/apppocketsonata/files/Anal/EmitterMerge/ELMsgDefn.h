@@ -50,9 +50,8 @@ struct SRxLOBHeader
  * @date      2016-02-16 오후 12:06
  */
 #define MAX_RADARNAME						(9+1)
-#define MAX_FREQ_PRI_STEP                   (16)
-//#define MAX_PRI_PER_GROUP				(32)
-//#define MAX_PADIFF_PER_GROUP		(32)
+#define MAX_FREQ_PRI_STEP                   (16*2)
+
 
 #ifndef SRxLOBData_STRUCT
 #define SRxLOBData_STRUCT

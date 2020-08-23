@@ -7881,7 +7881,7 @@ CELThreat *CELEmitterMergeMngr::GetHeaderThreat( CELThreat *pThreatAET )
 void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB )
 {
 
-    printf( "\n InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+    printf( "InsertLOB[A%d][B%d][L%d]\n" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
     Log( enNormal, "InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
     if( /* GetLocal() == false */ true && i_bIsFilteredLOB == false ) {
@@ -7931,8 +7931,7 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
             printf( "\n InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
             Log( enNormal, "InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
-/*
-            if( GetLocal() == false ) {
+            if( /* GetLocal() == false */ true ) {
                 if( m_bDBThread == false ) {
                     // PRI 레벨값 저장
                     if( pABTData->iPRIPositionCount != 0 ) {
@@ -7944,18 +7943,16 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
                     InsertToDB_ABT( pABTData, pABTExtData, true );
                 }
                 else {
-                    m_sqMsg.uiOpcode = CMDCODE_INSERTDB_ABTDATA_;
-                    m_sqMsg.usSize = sizeof(STR_ABTDATAEXT);
-                    memcpy( & m_sqMsg.x.stABTDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
-                    memcpy( & m_sqMsg.x.stABTDataExt.stABTData, pABTData, sizeof(SRxABTData) );
-                    memcpy( & m_sqMsg.x.stABTDataExt.stABTDataExt, pABTExtData, sizeof(SELABTDATA_EXT) );
+                    //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_ABTDATA_;
+                    //m_sqMsg.usSize = sizeof(STR_ABTDATAEXT);
+                    //memcpy( & m_sqMsg.x.stABTDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
+                    //memcpy( & m_sqMsg.x.stABTDataExt.stABTData, pABTData, sizeof(SRxABTData) );
+                    //memcpy( & m_sqMsg.x.stABTDataExt.stABTDataExt, pABTExtData, sizeof(SELABTDATA_EXT) );
 
-                    GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
+                    //GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
                 }
             }
-*/
-
-            PushABTLANData( pABTData );
+            //PushABTLANData( pABTData );
         }
 
     }
@@ -8042,22 +8039,22 @@ void CELEmitterMergeMngr::PushABTLANData( SRxABTData *pABTData )
  */
 void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool bEnable, UINT nSeqNum, UINT uiAETID, bool bDirectDB )
 {
-// 	int iLatitude=0, iLongitude=0;
-// 	int nIndex;
-//
-// 	char *pChar;
-// 	CString strMsg;
-// 	SELEXTDB extDB=SELEXTDB();
-//
-// 	UELTHREAT *pUniThreat;
-// 	SELAETDATA *pAETData;
-// 	SELAETDATA_EXT *pAETExtData;
-//
-// 	STR_CEDEOBID_INFO *pIDInfo;
-//
-// 	SRadarMode *pRadarMode, *pRadarMode1, *pRadarMode2;
-//
-// 	if( pTheThreat != NULL && bEnable == true ) {
+    int iLatitude=0, iLongitude=0;
+    int nIndex;
+
+    char *pChar;
+    CString strMsg;
+    SELEXTDB extDB=SELEXTDB();
+
+    UELTHREAT *pUniThreat;
+    SELAETDATA *pAETData;
+    SELAETDATA_EXT *pAETExtData;
+
+    STR_CEDEOBID_INFO *pIDInfo;
+
+    SRadarMode *pRadarMode, *pRadarMode1, *pRadarMode2;
+
+    if( pTheThreat != NULL && bEnable == true ) {
 // 		nIndex = pTheThreat->m_nIndex;
 // 		pUniThreat = m_pUniThreat + nIndex;
 //
@@ -8265,7 +8262,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 // 			SendInsertDBThread( CMDCODE_INSERTDB_EMITTERDATA_, m_pLOBData, pAETData, pAETExtData, & extDB );
 // 		}
 //
-// 	}
+    }
 
 }
 
@@ -10293,7 +10290,6 @@ long CELEmitterMergeMngr::GetLONGData( char *pSQLString )
     return lValue;
 }
 
-
 /**
  * @brief CELEmitterMergeMngr::InsertToDB_Position
  * @param pLOBData
@@ -10302,6 +10298,37 @@ long CELEmitterMergeMngr::GetLONGData( char *pSQLString )
 void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt )
 {
 
+#ifdef _SQLITE_
+    sprintf_s( m_pszSQLString, "INSERT INTO LOB_POSITION (LOBID, ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
+              pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount, \
+              pLOBData->fPRISeq[0], pLOBData->fPRISeq[1], pLOBData->fPRISeq[2], pLOBData->fPRISeq[3], pLOBData->fPRISeq[4], \
+              pLOBData->fPRISeq[5], pLOBData->fPRISeq[6], pLOBData->fPRISeq[7], pLOBData->fPRISeq[8], pLOBData->fPRISeq[9], \
+              pLOBData->fPRISeq[10], pLOBData->fPRISeq[11], pLOBData->fPRISeq[12], pLOBData->fPRISeq[13], pLOBData->fPRISeq[14], \
+              pLOBData->fPRISeq[15], pLOBData->fPRISeq[16], pLOBData->fPRISeq[17], pLOBData->fPRISeq[18], pLOBData->fPRISeq[19], \
+              pLOBData->fPRISeq[20], pLOBData->fPRISeq[21], pLOBData->fPRISeq[22], pLOBData->fPRISeq[23], pLOBData->fPRISeq[24], \
+              pLOBData->fPRISeq[25], pLOBData->fPRISeq[26], pLOBData->fPRISeq[27], pLOBData->fPRISeq[28], pLOBData->fPRISeq[29], \
+              pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
+
+    exec( m_pszSQLString );
+
+#else
+    DECLARE_BEGIN_CHECKODBC
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOB_POSITION (OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%d', '%s', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
+        pExt->aetData.uiOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, pLOBData->iPRIPositionCount,
+              pLOBData->fPRISeq[0], pLOBData->fPRISeq[1], pLOBData->fPRISeq[2], pLOBData->fPRISeq[3], pLOBData->fPRISeq[4],
+              pLOBData->fPRISeq[5], pLOBData->fPRISeq[6], pLOBData->fPRISeq[7], pLOBData->fPRISeq[8], pLOBData->fPRISeq[9],
+              pLOBData->fPRISeq[10], pLOBData->fPRISeq[11], pLOBData->fPRISeq[12], pLOBData->fPRISeq[13], pLOBData->fPRISeq[14],
+              pLOBData->fPRISeq[15], pLOBData->fPRISeq[16] );
+
+    theRS.Open( m_pszSQLString );
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+    DECLARE_RETURN
+#endif
 
 }
 
@@ -10391,5 +10418,135 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
 
+#endif
+}
+
+/**
+ * @brief CELEmitterMergeMngr::InsertToDB_Position
+ * @param pLOBData
+ * @param pABTData
+ * @param pABTExtData
+ */
+void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
+{
+#ifdef _SQLITE_
+    sprintf_s( m_pszSQLString, "INSERT INTO ABT_POSITION ( ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
+              pABTData->uiABTID, pABTData->uiAETID, pABTData->iPRIPositionCount, \
+              pABTData->fPRISeq[0], pABTData->fPRISeq[1], pABTData->fPRISeq[2], pABTData->fPRISeq[3], pABTData->fPRISeq[4], \
+              pABTData->fPRISeq[5], pABTData->fPRISeq[6], pABTData->fPRISeq[7], pABTData->fPRISeq[8], pABTData->fPRISeq[9], \
+              pABTData->fPRISeq[10], pABTData->fPRISeq[11], pABTData->fPRISeq[12], pABTData->fPRISeq[13], pABTData->fPRISeq[14], \
+              pABTData->fPRISeq[15], pABTData->fPRISeq[16], pABTData->fPRISeq[17], pABTData->fPRISeq[18], pABTData->fPRISeq[19], \
+              pABTData->fPRISeq[20], pABTData->fPRISeq[21], pABTData->fPRISeq[22], pABTData->fPRISeq[23], pABTData->fPRISeq[24], \
+              pABTData->fPRISeq[25], pABTData->fPRISeq[26], pABTData->fPRISeq[27], pABTData->fPRISeq[28], pABTData->fPRISeq[29], \
+              pABTData->fPRISeq[30], pABTData->fPRISeq[31] );
+
+    exec( m_pszSQLString );
+
+#else
+    DECLARE_BEGIN_CHECKODBC
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABT_POSITION ( OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_08, SEQ_07, SEQ_09, SEQ_10, SEQ_11, SEQ_13, SEQ_12, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%d', '%s', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
+        pABTExtData->uiOpInitID, pLOBData->uiLOBID, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iPRIPositionCount,
+              pABTData->fPRISeq[0], pABTData->fPRISeq[1], pABTData->fPRISeq[2], pABTData->fPRISeq[3], pABTData->fPRISeq[4],
+              pABTData->fPRISeq[5], pABTData->fPRISeq[6], pABTData->fPRISeq[7], pABTData->fPRISeq[8], pABTData->fPRISeq[9],
+              pABTData->fPRISeq[10], pABTData->fPRISeq[11], pABTData->fPRISeq[12], pABTData->fPRISeq[13], pABTData->fPRISeq[14],
+              pABTData->fPRISeq[15], pABTData->fPRISeq[16] );
+
+    theRS.Open( m_pszSQLString );
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+    DECLARE_RETURN
+#endif
+
+
+}
+
+/**
+ * @brief 빔 레코드 추가
+ * @param pABTData
+ * @param pABTExtData
+ * @param bUpdateThreat
+ */
+void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat )
+{
+#ifdef _SQLITE_
+    struct tm stTime;
+    char buffer1[100], buffer2[100], buffer3[100];
+
+    _localtime32_s(& stTime, & pABTData->tiFirstSeenTime );
+    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    _localtime32_s(&stTime, & pABTData->tiLastSeenTime );
+    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
+    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    sprintf_s( m_pszSQLString, "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, ALARM_TIME, STAT ) VALUES ( %d, %d, \"%s\", \"%s\", %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %f, %f, %f, %f, %f, %f, %d, \"%s\", %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, \"%s\", %d )", \
+                                pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+                                pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
+                                pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fMeanFreq, pABTData->fMinFreq, pABTData->fMaxFreq, pABTData->iFreqPositionCount, \
+                                pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fMeanPRI, pABTData->fMinPRI, pABTData->fMaxPRI, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
+                                pABTData->fMeanPW, pABTData->fMinPW, pABTData->fMaxPW, pABTData->fMeanPA, pABTData->fMinPA, pABTData->fMaxPA, \
+                                pABTData->uiTotalOfPDW, pABTData->aucRadarName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
+                                pABTData->iPEValid, pABTData->dLatitude, pABTData->dLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
+                                buffer3, pABTData->iStat );
+
+    exec( m_pszSQLString );
+
+    if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
+        __time32_t nowTime=_time32(NULL);
+
+        _localtime32_s( & stTime, & nowTime );
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+        exec( m_pszSQLString );
+    }
+
+#else
+    DECLARE_BEGIN_CHECKODBC
+
+    struct tm stTime;
+    char buffer1[100], buffer2[100], buffer3[100];
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    _localtime32_s(& stTime, & pABTData->tiFirstSeenTime );
+    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    _localtime32_s(&stTime, & pABTData->tiLastSeenTime );
+    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
+    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, ALARM_TIME, STAT ) values( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%s', '%d' )", \
+                                                pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+                                                pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
+                                                pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fMeanFreq, pABTData->fMinFreq, pABTData->fMaxFreq, pABTData->iFreqPositionCount, \
+                                                pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fMeanPRI, pABTData->fMinPRI, pABTData->fMaxPRI, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
+                                                pABTData->fMeanPW, pABTData->fMinPW, pABTData->fMaxPW, pABTData->fMeanPA, pABTData->fMinPA, pABTData->fMaxPA, \
+                                                pABTData->uiTotalOfPDW, pABTData->aucRadarName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
+                                                pABTData->iPEValid, pABTData->dLatitude, pABTData->dLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
+                                                buffer3, pABTData->iStat );
+
+
+    theRS.Open( m_pszSQLString );
+
+    if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
+        __time32_t nowTime=_time32(NULL);
+
+        _localtime32_s( & stTime, & nowTime );
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+        theRS.Open( m_pszSQLString );
+    }
+
+    theRS.Close();
+
+    // 아래에서 다운이 되면 SQL 버퍼수를 늘히면 됩니다.
+    DECLARE_END_CHECKODBC
+    DECLARE_RETURN
 #endif
 }

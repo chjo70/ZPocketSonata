@@ -552,6 +552,8 @@ public:
     long GetLONGData( char *pSQLString );
     void InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt );
     void InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
+    void InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
+    void InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
 
 };
 
