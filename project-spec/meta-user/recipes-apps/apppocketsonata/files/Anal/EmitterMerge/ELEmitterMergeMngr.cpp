@@ -153,6 +153,9 @@ void CELEmitterMergeMngr::AllocMemory()
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
+
+    m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
+
 #else
     m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
 #endif
@@ -186,6 +189,11 @@ void CELEmitterMergeMngr::AllocMemory()
  */
 void CELEmitterMergeMngr::FreeMemory()
 {
+#ifdef _SQLITE_
+    free( m_pszSQLString );
+
+#endif
+
     delete m_pIdentifyAlg;
 
     if( m_pUniThreat != nullptr )
@@ -972,9 +980,9 @@ void CELEmitterMergeMngr::LOBPreSetting()
     m_LOBDataExt.aetAnal.tiAcqTime = m_pLOBData->tiContactTime;
     m_LOBDataExt.aetAnal.tiContactTimems = m_pLOBData->tiContactTimems;
 
-    m_LOBDataExt.aetData.uiOpInitID = m_uiOpInitID;
 
-#ifndef _POCKETSONATA_
+#ifdef _ELINT_
+    m_LOBDataExt.aetData.uiOpInitID = m_uiOpInitID;
     memcpy( m_LOBDataExt.aetData.aucTaskID, m_pLOBData->aucTaskID, sizeof(m_pLOBData->aucTaskID) );
 #endif
 
@@ -4949,7 +4957,9 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
 
     m_pABTExtData->uiSeqNum = m_nSeqNum;
 
+#ifdef _ELINT_
     m_pABTExtData->uiOpInitID = m_uiOpInitID;
+#endif
 
     //memset( & pABTExtData->peInfo, 0, sizeof( STR_POSITION_ESTIMATION ) );
 
@@ -9973,7 +9983,7 @@ bool CELEmitterMergeMngr::CheckValidityByAllLOB( std::vector<STR_LOBS> *pVecLOBs
     bool bRet=false;
     int iCoCheckIn1=0, iCoCheckIn2=0;
 
-    float fSumTheta=0.0, fDiff;
+    float fDiff;
 
     float fTheta;
     std::vector<STR_LOBS>::pointer pLOBs;
@@ -10284,7 +10294,102 @@ long CELEmitterMergeMngr::GetLONGData( char *pSQLString )
 }
 
 
-void InsertToDB_Position()
+/**
+ * @brief CELEmitterMergeMngr::InsertToDB_Position
+ * @param pLOBData
+ * @param pExt
+ */
+void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt )
 {
 
+
+}
+
+/**
+ * @brief CELEmitterMergeMngr::InsertToDB_LOB
+ * @param pLOBData
+ * @param pExt
+ * @param bUpdateRadarMode
+ */
+void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode )
+{
+    struct tm stTime;
+    char buffer[100];
+
+#ifdef _SQLITE_
+    _localtime32_s( &stTime, & pLOBData->tiContactTime );
+    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+    sprintf_s( m_pszSQLString, "INSERT INTO LOBDATA ( LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX ) VALUES ( %d, %d, %d, \"%s\", %d, %d, %f, %f, %f, %d, %d, %d, %f, %f, %f, %f, %d, %d, %d, %f, %f, %f, %f, %f, %d, %f, %f, %f, %f, %f, %f, %d, %d, %d, %f, %f, \"%s\", %d, %d )", \
+         pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+         pLOBData->fMeanDOA, pLOBData->fMinDOA, pLOBData->fMaxDOA, pLOBData->iDIRatio, \
+         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fMeanFreq, pLOBData->fMinFreq, pLOBData->fMaxFreq, pLOBData->iFreqPositionCount, \
+         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fMeanPRI, pLOBData->fMinPRI, pLOBData->fMaxPRI, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+         pLOBData->fMeanPW, pLOBData->fMinPW, pLOBData->fMaxPW, pLOBData->fMeanPA, pLOBData->fMinPA, pLOBData->fMaxPA, \
+         pLOBData->iIsStorePDW, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
+         pLOBData->dRadarCollectionLatitude, pLOBData->dRadarCollectionLongitude, \
+         pLOBData->aucRadarName, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex );
+
+              // pExt->aetData.uiOpInitID,
+
+    exec( m_pszSQLString );
+
+    if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
+        __time32_t nowTime=_time32(NULL);
+
+        _localtime32_s( & stTime, & nowTime );
+        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+        exec( m_pszSQLString );
+
+        // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+        exec( m_pszSQLString );
+
+    }
+#else
+    DECLARE_BEGIN_CHECKODBC
+
+    struct tm stTime;
+    char buffer[100];
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    _localtime32_s( &stTime, & pLOBData->tiContactTime );
+    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d', '%d' )", \
+        pExt->aetData.uiOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+        pLOBData->fMeanDOA, pLOBData->fMinDOA, pLOBData->fMaxDOA, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fMeanFreq, pLOBData->fMinFreq, pLOBData->fMaxFreq, pLOBData->iFreqPositionCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fMeanPRI, pLOBData->fMinPRI, pLOBData->fMaxPRI, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+        pLOBData->fMeanPW, pLOBData->fMinPW, pLOBData->fMaxPW, pLOBData->fMeanPA, pLOBData->fMinPA, pLOBData->fMaxPA, \
+        pLOBData->iIsStorePDW, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
+        pLOBData->dRadarCollectionLatitude, pLOBData->dRadarCollectionLongitude, \
+        pLOBData->aucRadarName, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex );
+
+    theRS.Open( m_pszSQLString );
+
+    if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
+        __time32_t nowTime=_time32(NULL);
+
+        _localtime32_s( & stTime, & nowTime );
+        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+        theRS.Open( m_pszSQLString );
+
+        // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+        //theRS.Open( m_pszSQLString );
+
+    }
+
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+    DECLARE_RETURN
+
+#endif
 }

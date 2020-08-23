@@ -27,40 +27,42 @@
 #endif
 
 // 최대 후보 갯수
-#define MAX_MERGE_CANDIDATE_LEVEL											(100)
+#define MAX_MERGE_CANDIDATE_LEVEL						(100)
 
 // 유사도 임계값 정의
-#define	THRESHOLD_OF_MIN_CANDIDATE_LEVEL							(200000)
-#define	PE_CANDIDATE_LEVEL														(float) (50000.)
+#define	THRESHOLD_OF_MIN_CANDIDATE_LEVEL				(200000)
+#define	PE_CANDIDATE_LEVEL								(float) (50000.)
 
-#define H0000_SIZE																		(10)
+#define H0000_SIZE										(10)
 
-#define TOTAL_UNDEF_ID_NUMBER													(100000)			// 미식별 총 갯수
+#define TOTAL_UNDEF_ID_NUMBER							(100000)			// 미식별 총 갯수
 
 // 위치 산출 에러
-#define	PE_EFFECTIVE_DOA															(float) (0.5)					// UDIV(0.5, DEF_OF_RES_AOA)	// 0.5도
-#define	PE_EFFECTIVE_LATLONG													(float) (0.0002)			//(2)												// 2초
+#define	PE_EFFECTIVE_DOA								(float) (0.5)					// UDIV(0.5, DEF_OF_RES_AOA)	// 0.5도
+#define	PE_EFFECTIVE_LATLONG							(float) (0.0002)			//(2)												// 2초
 
 // GetEffectiveDOADiff1() 유효 백분율
-#define DOADIFF_RATIO1																(60)		// 단위: 백분율
+#define DOADIFF_RATIO1									(60)		// 단위: 백분율
 
 // GetEffectiveDOADiff2() 유효 백분율
-#define DOADIFF_RATIO2																(90)		// 단위: 백분율
+#define DOADIFF_RATIO2									(90)		// 단위: 백분율
 
-#define DOADIFF_RATIO1_BY_RATIO2											( FDIV( ( DOADIFF_RATIO1 * DOADIFF_RATIO2 ), 10000. ) )
+#define DOADIFF_RATIO1_BY_RATIO2						( FDIV( ( DOADIFF_RATIO1 * DOADIFF_RATIO2 ), 10000. ) )
 
 // 위치 산출하기 위한 비행 자세 정보
-#define LOW_ROLLANGLE																	(-10)		// 단위 : 도
-#define HIGH_ROLLANGLE																(10)		// 단위 : 도
-#define LOW_PITCHANGLE																(-3)		// 단위 : 도
-#define HIGH_PITCHANGLE																(6)			// 단위 : 도
+#define LOW_ROLLANGLE									(-10)		// 단위 : 도
+#define HIGH_ROLLANGLE									(10)		// 단위 : 도
+#define LOW_PITCHANGLE									(-3)		// 단위 : 도
+#define HIGH_PITCHANGLE									(6)			// 단위 : 도
 
 // LOB 제원 검증 (IsValidLOB)
-#define VALID_MEANPRI																	(100000.0)		// 100 ms
-#define VALID_JITTERRATION														(55.0)
+#define VALID_MEANPRI									(100000.0)		// 100 ms
+#define VALID_JITTERRATION								(55.0)
 
 //
-#define MAX_LOB_FOR_INHIBIT_PE												(20)
+#define MAX_LOB_FOR_INHIBIT_PE                          (20)
+
+#define MAX_SQL_SIZE                                    (1024)
 
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 
@@ -108,6 +110,7 @@ class CELEmitterMergeMngr : public CLOBClustering, public SQLite::Database
 private:
     bool m_bDBThread;
 #ifdef _SQLITE_
+    char *m_pszSQLString;
 #else
     CODBCDatabase m_theMyODBC;
 #endif
@@ -545,8 +548,10 @@ public:
     void PushABTLANData( SRxABTData *pABTData );
 
 
-        // 쿠리 수행 함수
-        long GetLONGData( char *pSQLString );
+    // 쿠리 수행 함수
+    long GetLONGData( char *pSQLString );
+    void InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt );
+    void InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
 
 };
 
