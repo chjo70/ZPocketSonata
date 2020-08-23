@@ -179,6 +179,30 @@ void ParsingArgument( int iArgc, char *iArgv[] )
     }
 }
 
+void cleanup_handler(void *arg )
+{
+    printf("cleanup \n");
+    // close your socket
+}
+
+void *execute_on_thread(void *arg)
+{
+    pthread_cleanup_push(cleanup_handler, NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+
+    while(1)
+    {
+        //sleep(1);
+        printf("Running\n");
+        //thread stuff
+    }
+
+    pthread_cleanup_pop(1);
+
+    return (void *) 0;
+}
+
+
 /**
  * @brief main
  * @param argc
@@ -219,7 +243,22 @@ int main(int argc, char *argv[])
 #endif
 
     usrAppStart();
+/*
+    pthread_t tid;
+    pthread_create(&tid,NULL,execute_on_thread,NULL);
 
+    sleep(10);
+
+    if (!pthread_cancel(tid))
+    {
+        pthread_join(tid, NULL);
+    }
+    else
+    {
+        perror("pthread_cancel");
+    }
+*/
     return 0;
 }
+
 

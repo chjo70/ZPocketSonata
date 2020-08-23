@@ -1542,8 +1542,8 @@ void CELEmitterMergeMngr::AddThreatInfo( SELLOBValidity *pSELLOiValidity, E_EMIT
 void CELEmitterMergeMngr::AddThreatInfo( E_EMITTER_OPCODE enOpcode, int uiCoLOB, bool bIsFISINTTask, UINT uiSeqNum, bool bApplySearchFilter )
 {
     SThreatFamilyInfo stThreatFamilyInfo;
-//
-// 	if( pSELEmitterEdited == NULL ) { // DT10 예외 처리가 아님.
+
+//	if( pSELEmitterEdited == NULL ) { // DT10 예외 처리가 아님.
 // 		if( m_bReplay == true ) {
 // 			stThreatFamilyInfo.enOpcode = enOpcode;
 // 			stThreatFamilyInfo.enEmitterStat = m_LOBDataExt.aetAnal.enEmitterStat;			// ( m_LOBDataExt.aetAnal.uiLOBID == 1 ? E_MR_NEW : E_MR_UPDATE );
@@ -8055,36 +8055,40 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
     SRadarMode *pRadarMode, *pRadarMode1, *pRadarMode2;
 
     if( pTheThreat != NULL && bEnable == true ) {
-// 		nIndex = pTheThreat->m_nIndex;
-// 		pUniThreat = m_pUniThreat + nIndex;
-//
-// 		pAETData = GetAETData( pTheThreat->m_nIndex );
-// 		pAETExtData = GetAETExtData( pTheThreat->m_nIndex );
-//
-// 		pIDInfo = & pAETData->idInfo;
-//
-// 		// LOB 클러스터링으로 고정 ID 로 저장
-// 		if( uiAETID != 0 ) {
-// 			extDB.uiAETID = uiAETID;
-// 		}
-// 		else {
-// 			// extDB.uiAETID = 0;
-// 			// extDB.uiABTID = 0;
-// 		}
-//
-// 		// 추가 자료 만들기
-// 		// 임무 정보
-// 		memcpy( extDB.acMissionID, GetMissionID(m_nLinkNum), sizeof(char) * DEF_MISSION_ID_LENGTH );
-// 		memcpy( extDB.acMissionName, GetMissionName(m_nLinkNum), sizeof(char) * DEF_MISSION_NAME_LENGTH );
-//
-// 		// 연동기 번호 즉 링크 번호 추가
-// 		extDB.iLinkNum = m_nLinkNum;
-//
-// 		// 식별 정보
-// 		strcpy_s( extDB.szIdInfo, MAX_SIZE_OF_IDINFO, & strIdResult[ pIDInfo->eIdResult ][0] );
-//
-// 		// 수동 위치 변경시 변경
-// 		if( m_pLOBOtherInfo->bUpdate == false ) {
+        nIndex = pTheThreat->m_nIndex;
+        pUniThreat = m_pUniThreat + nIndex;
+
+        pAETData = GetAETData( pTheThreat->m_nIndex );
+        pAETExtData = GetAETExtData( pTheThreat->m_nIndex );
+
+        pIDInfo = & pAETData->idInfo;
+
+        // LOB 클러스터링으로 고정 ID 로 저장
+        if( uiAETID != 0 ) {
+            extDB.uiAETID = uiAETID;
+        }
+        else {
+            // extDB.uiAETID = 0;
+            // extDB.uiABTID = 0;
+        }
+
+#ifdef _POCKETSONATA_
+#elif defined(_ELINT)
+#else
+        // 추가 자료 만들기
+        // 임무 정보
+        memcpy( extDB.acMissionID, GetMissionID(m_nLinkNum), sizeof(char) * DEF_MISSION_ID_LENGTH );
+        memcpy( extDB.acMissionName, GetMissionName(m_nLinkNum), sizeof(char) * DEF_MISSION_NAME_LENGTH );
+
+        // 연동기 번호 즉 링크 번호 추가
+        extDB.iLinkNum = m_nLinkNum;
+
+        // 식별 정보
+        strcpy_s( extDB.szIdInfo, MAX_SIZE_OF_IDINFO, & strIdResult[ pIDInfo->eIdResult ][0] );
+#endif
+
+        // 수동 위치 변경시 변경
+//      if( m_pLOBOtherInfo->bUpdate == false ) {
 // 			pRadarMode = GP_MNGR_CED_LIB2->RTGetRadarModeDataFromMemory( pIDInfo->nRadarModeIndex[0], m_pSEnvironVariable->eCEDDefaultLibType );
 // 			pRadarMode1 = GP_MNGR_CED_LIB2->RTGetRadarModeDataFromMemory( pIDInfo->nRadarModeIndex[1], m_pSEnvironVariable->eCEDDefaultLibType );
 // 			pRadarMode2 = GP_MNGR_CED_LIB2->RTGetRadarModeDataFromMemory( pIDInfo->nRadarModeIndex[2], m_pSEnvironVariable->eCEDDefaultLibType );
@@ -8253,15 +8257,15 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 // 			_CALL_DB( UpdateToDB( strTableName, & listFieldInfo, nullptr, strCondition.GetBuffer(), NULL, false, true ) )
 //
 // 		}
-//
-// 		// 방사체 레코드 추가
-// 		if( GP_MGR_PARAM->IsPSS() == true || bDirectDB == true ) {
-// 			_CALL_DB( InsertToDB_AET( m_pLOBData, pAETData, pAETExtData, & extDB ) )
-// 		}
-// 		else {
-// 			SendInsertDBThread( CMDCODE_INSERTDB_EMITTERDATA_, m_pLOBData, pAETData, pAETExtData, & extDB );
-// 		}
-//
+
+        // 방사체 레코드 추가
+        //if( GP_MGR_PARAM->IsPSS() == true || bDirectDB == true ) {
+        //    _CALL_DB( InsertToDB_AET( m_pLOBData, pAETData, pAETExtData, & extDB ) )
+        //}
+        //else {
+        //    SendInsertDBThread( CMDCODE_INSERTDB_EMITTERDATA_, m_pLOBData, pAETData, pAETExtData, & extDB );
+        //}
+
     }
 
 }

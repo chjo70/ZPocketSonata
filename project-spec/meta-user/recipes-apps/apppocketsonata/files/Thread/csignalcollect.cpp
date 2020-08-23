@@ -52,15 +52,19 @@ CSignalCollect::~CSignalCollect(void)
 
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
         delete m_pTheDetectCollectBank[i];
+        m_pTheDetectCollectBank[i] = 0;
     }
     for( i=0 ; i < TRACK_CHANNEL ; ++i ) {
         delete m_pTheTrackCollectBank[i];
+        m_pTheTrackCollectBank[i] = 0;
     }
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
         delete m_pTheScanCollectBank[i];
+        m_pTheScanCollectBank[i] = 0;
     }
     for( i=0 ; i < USER_CHANNEL ; ++i ) {
         delete m_pTheUserCollectBank[i];
+        m_pTheUserCollectBank[i] = 0;
     }
 
 }
@@ -214,8 +218,8 @@ void CSignalCollect::AnalysisStart()
             bIsOut = false;
         }
 
-        sleep( 1 );
-        printf( "." );
+        //sleep( 1 );
+        //printf( "." );
         if( bIsOut == true ) {
             break;
         }
