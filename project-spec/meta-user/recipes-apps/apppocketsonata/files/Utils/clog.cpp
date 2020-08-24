@@ -18,10 +18,15 @@ CLog* CLog::pInstance = nullptr;
  */
 CLog::CLog()
 {
-    if( sem_init( & mutex, 1, 1 ) < 0 ) {
+    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
         perror( "세마포어 실패" );
     }
 
+}
+
+CLog::~CLog()
+{
+    printf( "\nsss" );
 }
 
 /**
@@ -41,9 +46,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     va_list args;
 
-    int nLength;
+    int nLength, nLengthTime;
 
-    sem_wait( & mutex );
+    sem_wait( & m_mutex );
 
 #ifdef _LOG_RELATIVE_PATH_
     getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
@@ -71,6 +76,8 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
         fid = open(m_szLogDir, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
         if( fid != 0 ) {
             sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+
+            nLengthTime = strlen(m_szLog);
 
             switch( nType ) {
             case enNormal :
@@ -104,6 +111,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 if( nType == enDebug ) {
                     puts( & m_szLog[nLength] );
                 }
+                else if( nType == enError ) {
+                    puts( & m_szLog[nLengthTime] );
+                }
                 //strcat( & m_szLog[nLength], pMsg );
 
 #ifdef _LOG_WHERE
@@ -131,7 +141,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
         }
     }
 
-    sem_post( & mutex );
+    sem_post( & m_mutex );
 
 }
 

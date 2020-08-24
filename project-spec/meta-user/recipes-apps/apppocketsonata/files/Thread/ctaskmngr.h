@@ -29,7 +29,7 @@ private:
 
 
     // 명령어 처리에 대한 하부 함수 목록 입니다.
-    void CreateAllAnalysisThread( bool bCreate );
+    void CreateAllAnalysisThread( bool bCreate=true );
     void ProcessSummary();
 
 

@@ -4,8 +4,8 @@
 #include <time.h>
 
 //#include "ELDataType.h"
-//#include "ELEmitterDataType.h"
-//#include "../../COMMON/DBIF/ElintRsltDataTypedb.h"
+#include "ELEmitterDataType.h"
+#include "ElintRsltDataTypedb.h"
 
 
 /*---------------------------------------------------------------------------------
@@ -206,43 +206,42 @@ enum {
 
 //////////////////////////////////////////////////////////////////////////
 // 1번 PAYLOAD 메시지 정의 :
-// struct SELEmitterEdited
-// {
-// 	char szMissionId[LENGTH_OF_MISSION_ID];
-// 	int	 nAETId;
-// 	int  nABTId;
-// 	int  nLOBId;
-// 
-// 	// 수정 그룹 비티맵
-// 	UELMANUALVAL userManual;
-// 
-// 	// 방사체 정보 데이터
-// 	SELAETDATA aetData;
-// 
-// 	// 위치 정보 우선 정보 (자동 또는 수동 위치 산출)
-// 	bool bManualPosEstPreferred;
-// 
-// 	unsigned int uiSeqNum;
-// 
-// 	// PIN #
-// 	int iPinNumber;
-// 	char szELNOT[_MAX_ELNOT_STRING_SIZE_];
-// 
-// 	// 경보 및 보고서 최초/최종 보고 시각
-// 	time_t ti_FirstTime;									// 최초 시각
-// 	time_t ti_FinalTime;									// 최종 시각
-// 
-// 	E_BEAM_EMITTER_STAT enEmitterStat;
-// 
-// 	unsigned int iChangedAETID;							// AET #
-// 	unsigned int iChangedABTID;							// ABT #
-// 
-// 	SELEmitterEdited::SELEmitterEdited() : enEmitterStat(E_ES_NOT_AVAILABLE)
-// 	{
-// 
-// 	}
-// 
-// };
+struct SELEmitterEdited
+{
+    //char szMissionId[LENGTH_OF_MISSION_ID];
+    int	 nAETId;
+    int  nABTId;
+    int  nLOBId;
+
+    // 수정 그룹 비티맵
+    UELMANUALVAL userManual;
+
+    // 방사체 정보 데이터
+    SELAETDATA aetData;
+
+    // 위치 정보 우선 정보 (자동 또는 수동 위치 산출)
+    bool bManualPosEstPreferred;
+
+    unsigned int uiSeqNum;
+
+    // PIN #
+    int iPinNumber;
+    char szELNOT[_MAX_ELNOT_STRING_SIZE_];
+
+    // 경보 및 보고서 최초/최종 보고 시각
+    time_t ti_FirstTime;									// 최초 시각
+    time_t ti_FinalTime;									// 최종 시각
+
+    E_BEAM_EMITTER_STAT enEmitterStat;
+
+    unsigned int iChangedAETID;							// AET #
+    unsigned int iChangedABTID;							// ABT #
+
+//    SELEmitterEdited::SELEmitterEdited() : enEmitterStat(E_ES_NOT_AVAILABLE)
+//    {
+//    }
+
+};
 
 struct SELLOBValidity
 {

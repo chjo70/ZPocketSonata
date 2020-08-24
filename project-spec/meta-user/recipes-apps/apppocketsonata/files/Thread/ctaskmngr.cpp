@@ -143,23 +143,29 @@ void CTaskMngr::_routine()
             perror( "QMsgRcv() 에러");
         }
 
-        switch( m_pMsg->ucOpCode ) {
-            case enTHREAD_MODE :
-                SetMode();
-                break;
+        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+            switch( m_pMsg->ucOpCode ) {
+                case enTHREAD_MODE :
+                    SetMode();
+                    break;
 
-            case enTHREAD_ANAL_START :
-                AnalysisStart();
-                break;
+                case enTHREAD_ANAL_START :
+                    AnalysisStart();
+                    break;
 
-            case enTHREAD_REQ_SHUTDOWN :
-                Shutdown();
-                bWhile = false;
-                break;
+                case enTHREAD_REQ_SHUTDOWN :
+                    Shutdown();
+                    bWhile = false;
+                    break;
 
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                break;
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    break;
+            }
+        }
+        else {
+            // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
+            //LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
         }
     }
 
@@ -185,6 +191,9 @@ void CTaskMngr::SetMode()
             CreateAllAnalysisThread( false );
             ProcessSummary();
             break;
+
+        default :
+            break;
     }
 
     GP_SYSCFG->SetMode( enMode );
@@ -201,7 +210,9 @@ void CTaskMngr::AnalysisStart()
     time_t tiNow;
 
     // 분석 관련 쓰레드를 삭제한다.
-    CreateAllAnalysisThread( true );
+    CreateAllAnalysisThread();
+
+    GP_SYSCFG->SetMode( enANAL_Mode );
 
     // 시간 정보로 설정한 후에 시작 명령을
     tiNow = (time_t) m_pMsg->x.szData[0];
@@ -216,22 +227,30 @@ void CTaskMngr::AnalysisStart()
  */
 void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 {
-    LOGMSG1( enDebug, "분석 관련 쓰레드를 삭제하고 재구동하여 분석을 준비한다[%d].", bCreate );
 
-    // 1. 먼저 관련 분석 쓰레드를 삭제한다.
-    SIGCOL->ReleaseInstance();
-    DETANL->ReleaseInstance();
-    TRKANL->ReleaseInstance();
-    SCANANL->ReleaseInstance();
-    EMTMRG->ReleaseInstance();
-
-    // 플레그에 따라서 생성한다.
     if( bCreate == true ) {
+        LOGMSG1( enDebug, "분석 관련 쓰레드를 구동하여 분석을 준비한다[%d].", bCreate );
+
+        g_AnalLoop = true;
+
         SIGCOL->Run();
         DETANL->Run();
         TRKANL->Run();
         SCANANL->Run();
         EMTMRG->Run();
+    }
+    else {
+        LOGMSG1( enDebug, "분석 관련 쓰레드를 삭제한다[%d].", bCreate );
+
+        g_AnalLoop = false;
+
+        // 1. 먼저 관련 분석 쓰레드를 삭제한다.
+        SIGCOL_RELEASE;
+        DETANL_RELEASE;
+        TRKANL_RELEASE;
+        SCANANL_RELEASE;
+        EMTMRG_RELEASE;
+
     }
 
 }

@@ -26,33 +26,14 @@ public:
     CDetectAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CDetectAnalysis(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CDetectAnalysis* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CDetectAnalysis( g_iKeyId++, (char*)"CDetectAnalysis", true );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CDetectAnalysis )
 
 private:
     void AnalysisStart();
 
 };
 
-#define DETANL     CDetectAnalysis::GetInstance()
+#define DETANL          CDetectAnalysis::GetInstance()
+#define DETANL_RELEASE  CDetectAnalysis::ReleaseInstance()
 
 #endif // CDETECTANALYSIS_H

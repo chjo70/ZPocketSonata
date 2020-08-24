@@ -273,7 +273,7 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
     }
 
     UINT uiMode=enREADY_MODE;
-    QMsgSnd( TMNGR->GetKeyId(), enTHREAD_MODE, & uiMode, sizeof(int) );
+    QMsgSnd( TMNGR->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
 
 }
 

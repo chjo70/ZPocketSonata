@@ -18,6 +18,25 @@
 
 #define LENGTH_OF_CLASSNAME (30)
 
+#define THREAD_STANDARD_FUNCTION(A)    \
+void Run(); \
+virtual void _routine();    \
+virtual const char *ChildClassName() { return m_szClassName; } \
+static A* GetInstance() { \
+    if(pInstance == NULL) { \
+        pInstance = new A( g_iKeyId++, (char*) #A, true ); \
+    } \
+    return pInstance; } \
+static void ReleaseInstance() { \
+    if(pInstance) { \
+        delete pInstance; \
+        pInstance = NULL; \
+    } \
+}
+
+// 스레드 정지
+//pInstance->Stop();
+
 #pragma pack(push, 1)
 
 
@@ -101,10 +120,12 @@ public:
     void Run( void *(*Func)(void*) );
     int Pend();
     void Stop();
+    void Stop2();
     int QMsgRcv( int iFlag=0 );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0 );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
+
 
     inline key_t GetKeyId() { return m_MsgKeyID; }
 
@@ -112,6 +133,7 @@ public:
     inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
 
+    static void TCleanUpHandler(void *arg );
     static void *CallBack( void *pArg );
 
     virtual void _routine() { }

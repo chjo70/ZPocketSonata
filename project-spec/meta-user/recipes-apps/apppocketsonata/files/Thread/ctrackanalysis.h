@@ -17,29 +17,10 @@ public:
     CTrackAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CTrackAnalysis(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CTrackAnalysis* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CTrackAnalysis( g_iKeyId++, (char*)"CTrackAnalysis" );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CTrackAnalysis )
 };
 
-#define TRKANL     CTrackAnalysis::GetInstance()
+#define TRKANL          CTrackAnalysis::GetInstance()
+#define TRKANL_RELEASE  CTrackAnalysis::ReleaseInstance()
 
 #endif // CTRACKANALYSIS_H

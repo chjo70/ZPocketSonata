@@ -37,6 +37,7 @@ public:
     ENUM_MODE GetMode() { return m_enMode; };
     void SetMode(ENUM_MODE enMode) { m_enMode = enMode; };
 
+
 };
 
 #define GP_SYSCFG CSysConfig::getInstance()

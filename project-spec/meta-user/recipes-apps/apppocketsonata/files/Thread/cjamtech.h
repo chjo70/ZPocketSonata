@@ -18,29 +18,7 @@ public:
     CJamTech( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     ~CJamTech();
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CJamTech* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CJamTech( g_iKeyId++, (char*)"CJamTech" );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            LOGMSG1( enDebug, "[%s]를 종료 처리 합니다...", ChildClassName() );
-
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CJamTech )
 };
 
 #define JAMTEC     CJamTech::GetInstance()

@@ -24,7 +24,7 @@ using namespace std;
 * @brief 방사체 목록창에서 View/Logic 간 발생하는 인터페이스 data 정의
 * @author 이정남
 * @date 2013.5.25
-*
+*   
 * [개정이력]
 *  2013.5.25. 신규작성
 *  2013.6.18. std::string strIsFisintTask 데이터 추가
@@ -52,31 +52,31 @@ using namespace std;
 // 사용안함.
 typedef struct stEmitterInfoDisp
 {
-    string strEmitterNum;
-    string strDirection;
-    string strTaskId;
-    string strIsFisintTask; // 2013.6.18. 추가
-    string strFrqTypeRange;
-    string strPRITypeRange;
-    string strSJ;
-    string strPwRange;
-    string strPaRange;
-    string strScanTypePeriod;
-    string strElintNoteAir;
-    string strPrimFuncAir;
-    string strPlatformAir;
-    string strIdNumberAir;
-    string strConsistRateAir;
-    string strElintNoteGnd;
-    string strPrimFuncGnd;
-    string strPlatformGnd;
-    string strIdNumberGnd;
-    string strConsisitRateGnd;
-    string strEstimated;
-    string strRptStat;
-    string strSOI;
-    string strPosEstimated;
-    string strActivatedOrNot;
+	string strEmitterNum;
+	string strDirection;
+	string strTaskId;
+	string strIsFisintTask; // 2013.6.18. 추가
+	string strFrqTypeRange;
+	string strPRITypeRange;
+	string strSJ;
+	string strPwRange;
+	string strPaRange;
+	string strScanTypePeriod;
+	string strElintNoteAir;
+	string strPrimFuncAir;
+	string strPlatformAir;
+	string strIdNumberAir;
+	string strConsistRateAir;
+	string strElintNoteGnd;
+	string strPrimFuncGnd;
+	string strPlatformGnd;
+	string strIdNumberGnd;
+	string strConsisitRateGnd;
+	string strEstimated;
+	string strRptStat;
+	string strSOI;
+	string strPosEstimated;
+	string strActivatedOrNot;
 }_EMITTER_INFO;
 
 // MAX_COLUMN 값은 현재 70개 이며 이상이 될때 이 값도 같이 증가시켜야 한다. , 조철희
@@ -85,302 +85,302 @@ typedef struct stEmitterInfoDisp
 #define NUM_OF_EMITTER_FIELD_NAME 90
 static const char* strEmitterFieldName[] =
 {
-    "순번",
-    //"SDF ID",
-    "AET번호",
-    "신호일련번호",
-    "과제 운용사",
+	"순번",
+	//"SDF ID",
+	"AET번호",
+	"신호일련번호",
+	"과제 운용사",
 
-    "[G]PIN NR",
-    "[G]기능부호",
-    "[G]장비명",
-    "[A]E-NOT",
-    "[G]E-NOT",
-    "[G]식별정보",
-    "LOB#",
-    "일자/시간",
-    "식별코드",
+	"[G]PIN NR",
+	"[G]기능부호",
+	"[G]장비명",
+	"[A]E-NOT",
+	"[G]E-NOT",
+	"[G]식별정보",
+	"LOB#",
+	"일자/시간",
+	"식별코드",
 
-    "신호형태",
-    "방위[도]",
-    "최소 방위[도]",
-    "최대 방위[도]",
-    "FISINT과제",
-    "주파수형태",
-    "주파수[MHz]",
-    "최소 주파수[MHz]",
-    "최대 주파수[MHz]",
-    "주파수패턴/주기[ms]",
-    "PRI형태",
-    "PRI[us]",
-    "PRI 최소[us]",
-    "PRI 최대[us]",
+	"신호형태",
+	"방위[도]",
+	"최소 방위[도]",
+	"최대 방위[도]",
+	"FISINT과제",
+	"주파수형태",
+	"주파수[MHz]",
+	"최소 주파수[MHz]",
+	"최대 주파수[MHz]",
+	"주파수패턴/주기[ms]",
+	"PRI형태",
+	"PRI[us]",
+	"PRI 최소[us]",
+	"PRI 최대[us]",
 
-    "PRI패턴/주기[ms]",
-    "S/J",
+	"PRI패턴/주기[ms]",
+	"S/J",
 
-    "PW[us]",
-    "PW 최소[us]",
-    "PW 최대[us]",
-    "PA[dBm]",
-    "PA 최소[dBm]",
-    "PA 최대[dBm]",
-    "스캔형태/주기[ms]",
-    "극성/신뢰도",
-    "우선순위",
-    "변조형태",
-    "펄스수/그룹",
+	"PW[us]",
+	"PW 최소[us]",
+	"PW 최대[us]",
+	"PA[dBm]",
+	"PA 최소[dBm]",
+	"PA 최대[dBm]",
+	"스캔형태/주기[ms]",
+	"극성/신뢰도",
+	"우선순위",
+	"변조형태",
+	"펄스수/그룹",
 
-    "과제ID",
-    "과제명",
-    "탐색대역번호",
-    "방위편차[도]",
-    "주파수편차[MHz]",
-    "PRF [PPS]",
-    "최소 PRF[PPS]",
-    "최대 PRF[PPS]",
+	"과제ID",
+	"과제명",
+	"탐색대역번호",
+	"방위편차[도]",
+	"주파수편차[MHz]",
+	"PRF [PPS]",
+	"최소 PRF[PPS]",
+	"최대 PRF[PPS]",
 
-    //"[A]PIN NR",
-    "[A]기능부호",
-    "[A]장비명",
-    "[A]위협",
-    "[A]장비번호",
-    "[A]일치율[%]",
-    "[A]일치도[%]",
-    "[A]지리좌표",
-    "[A]고도[km]",
-    "[A]신뢰구간[m]",
-    "[A]CEP[km]",
-    "[A]장축[km]",
-    "[A]단축[km]",
-    "[A]장축방위[도]",
+	//"[A]PIN NR",
+	"[A]기능부호",
+	"[A]장비명",
+	"[A]위협",
+	"[A]장비번호",
+	"[A]일치율[%]",
+	"[A]일치도[%]",
+	"[A]지리좌표",
+	"[A]고도[km]",
+	"[A]신뢰구간[m]",
+	"[A]CEP[km]",
+	"[A]장축[km]",
+	"[A]단축[km]",
+	"[A]장축방위[도]",
 
-    "[G]위협",
-    "[G]장비번호",
-    "[G]일치율[%]",
-    "[G]일치도[%]",
-    "[G]지리좌표(위도)",
-    "[G]지리좌표(경도)",
-    "[G]신뢰구간[m]",
-    "[G]CEP[km]",
-    "[G]장축[km]",
-    "[G]단축[km]",
-    "[G]장축방위[도]",
-    "[G]기지명",
-    "[G]식별후보",
-    "[G]거리 오차[km]",
-    "[G]거리 오차[nm]",
-    "[G]EOB ID",
-    "최종보고",
-    "최종경보",
-    "산출여부",
-    "관심신호",
-    "PDW 저장여부",
-    "수집개수[PDW/IQ]",
-    "모호성",
-    "PDW 세트",
-    "활동여부",
+	"[G]위협",
+	"[G]장비번호",
+	"[G]일치율[%]",
+	"[G]일치도[%]",
+	"[G]지리좌표(위도)",
+	"[G]지리좌표(경도)",
+	"[G]신뢰구간[m]",
+	"[G]CEP[km]",
+	"[G]장축[km]",
+	"[G]단축[km]",
+	"[G]장축방위[도]",
+	"[G]기지명",
+	"[G]식별후보",
+	"[G]거리 오차[km]",
+	"[G]거리 오차[nm]",
+	"[G]EOB ID",
+	"최종보고",
+	"최종경보",
+	"산출여부",
+	"관심신호",
+	"PDW 저장여부",
+	"수집개수[PDW/IQ]",
+	"모호성",
+	"PDW 세트",
+	"활동여부",
 
-    "신호ID",
+	"신호ID",
 
-    "임무명",
-    "모드부호",
-    "LINK번호", // 2015.1.5. SDF ID 대신에  LINK 번호 필드로 바꿈. 필드 이름은 그냥 두었음 !!
-
+	"임무명",
+	"모드부호",
+	"LINK번호", // 2015.1.5. SDF ID 대신에  LINK 번호 필드로 바꿈. 필드 이름은 그냥 두었음 !!
+	
 };
 //
 typedef struct stEmitterInfo
 {
-    CString strLinkNum;	 //#FA_Q_2502_T1						// "SDF ID";
-    CString strEmitterNum;					// "방사체번호",
-    CString strSignalNum;						// "신호일련번호",
-    CString strMissionId;						// "임무명",
-    CString strTaskId;							// "과제ID",
-    CString strTaskName;						// "과제명",
-    CString strSrchBandId;					// "탐색대역 id"
-    CString strDirection;						// "방위[도]",
-    CString strMinDirection;				// "최소 방위[도]",
-    CString strMaxDirection;				// "최대 방위[도]",
-    CString strDirectionDev;				// "방위편차[도]",
-    CString strFisintTask;					// "FISINT과제",
-    CString strFrqType;							// "주파수형태",
-    CString strFrq;									// "주파수[Hz]",
-    CString strMinFrq;							// "최소 주파수[Hz]",
-    CString strMaxFrq;							// "최대 주파수[Hz]",
-    CString strFrqPatternRange;			// "주파수패턴형태/범위[ms]",
-    CString strFrqRangeDev;					// "주파수편차[Hz]",
-    CString strPriority;						// "우선순위",
-    CString strTime;								// "일자/시간",
-    CString strModType;							// "변조형태",
-    CString strSigType;		//#FA_Q_2502_T1					// "신호형태",
-    CString strPw;									// "PW[ns]",
-    CString strMinPw;								// "최소 PW[ns]",
-    CString strMaxPw;								// "최대 PW[ns]",
-    CString strPa;									// "PA[dB]",
-    CString strMinPa;								// "최소 PA[dBm]",
-    CString strMaxPa;								// "최대 PA[dBm]",
-    CString strPriType;							// "PRI형태",
-    CString strPri;									// "PRI[ns]",
-    CString strMinPri;							// "최소 PRI",
-    CString strMaxPri;							// "최대 PRI",
-    CString strPRIPatternRange;			// "PRI패턴형태/범위[ns]",
-    CString strPrf;									// "PRF범위[PPS]",
-    CString strMinPrf;							// "PRF범위[PPS]",
-    CString strMaxPrf;							// "PRF범위[PPS]",
-    CString strPulsePerGrp;					// "펄스수/그룹",
-    CString strSJ;									// "S/J",
-    CString strScanTypePeroid;			// "스캔형태/주기",
-    CString strAirElintNotation;		// "[A]E-NOT",
-    CString strAirFunc;							// "[A]기능부호",
-    CString strAirSiteFunc;					// "[A]사이트기능",
-    CString strAirThreat;						// "[A]위협",
-    CString strAirEqupNo;						// "[A]장비번호",
-    CString strAirConsistancyRatio;	// "[A]일치율[%]",
-    CString strAirConsistancy;			// "[A]일치도",
-    CString strAirGeoCoord;					// "[A]지리좌표",
-    CString strAirAlt;							// "[A]고도[m]",
-    CString strAirConfIterval;			// "[A]신뢰구간[m]",
-    CString strAirCep;							// "[A]CEP[m]",
-    CString strAirMajorAxis;				// "[A]장축[m]",
-    CString strAirMinorAxis;				// "[A]단축(m)",
-    CString strAirMajorAxisAzimuth; // "[A]장축방위[도]",
-    CString strGndElintNotation;		// "[G]E-NOT",
-    CString strGndPinNr;						// "[G]PIN NR",
-    CString strGndFunc;							// "[G]기능부호",
-    CString strGndSiteFunc;					// "[G]사이트기능",
-    CString strGndThreat;						// "[G]위협",
-    CString strGndEqupNo;						// "[G]장비번호",
-    CString strGndConsistancyRatio;	// "[G]일치율[%]",
-    CString strGndConsistancy;			// "[G]일치도",
-    CString strGndGeoLongitude;			// "[G]지리좌표(경도)",
-    CString strGndGeoLatitude;			// "[G]지리좌표(위도)",
-    CString strGndAlt;							// "[G]고도[m]",
-    CString strGndConfIterval;			// "[G]신뢰구간[m]",
-    CString strGndCep;							// "[G]CEP[m]",
-    CString strGndMajorAxis;				// "[G]장축[m]",
-    CString strGndMinorAxis;				// "[G]단축(m)",
-    CString strGndMajorAxisAzimuth; // "[G]장축방위[도]",
-    CString strGndBaseName;					// "[G]기지명",
-    CString strGndIdInfo;						// "[G]식별정보",
-    CString strGndCandidate;				// "[G]식별 후보 목록",
-    CString strGndDistError;				// "[G]거리 오차[km]",
-    CString strGndDistErrorToNM;		// "[G]거리 오차[nm]",
-    CString strGndEOBId;						// "[G] EOB ID",
-    CString strFinalReport;					// "최종보고",
-    CString strFinalAlarm;					// "최종경보",							",
-    CString strPosEstimation;				// "산출여부",
-    CString strSOI;									// "관심신호"
-    CString strIsStorePDW;					// "PDW 저장여부"
-    CString strNumOfCol;						// "수집개수[PDW/IQ]"
-    CString strNumOfAmbigiousBeam;	// "모호성",
-    CString strNumOfPDWSet;					// "PDW 세트"
-    CString strActivatedOrNot;			// "활동여부"
-    CString strLobId;								// "LOB #" . 2014.10.8. 추가. 이정남
-    CString strDtctId;							// "Dtct ID" . 2015.3.3. 추가. 이정남
-    CString strIdCode;							// "식별 코드" . 2015.3.31. 추가. 조철희
-    CString strPolization;					// "극성" . 2015.4.1. 추가. 조철희
-    CString strTaskOperator;				// "과제 운용사", 2015.4.7. 추가. 조철희
-    CString strGndModeSymbol;					// 모드 부호
+	CString strLinkNum;	 //#FA_Q_2502_T1						// "SDF ID";
+	CString strEmitterNum;					// "방사체번호",
+	CString strSignalNum;						// "신호일련번호",
+	CString strMissionId;						// "임무명",
+	CString strTaskId;							// "과제ID",
+	CString strTaskName;						// "과제명",
+	CString strSrchBandId;					// "탐색대역 id"
+	CString strDirection;						// "방위[도]",
+	CString strMinDirection;				// "최소 방위[도]",
+	CString strMaxDirection;				// "최대 방위[도]",
+	CString strDirectionDev;				// "방위편차[도]",
+	CString strFisintTask;					// "FISINT과제",
+	CString strFrqType;							// "주파수형태",
+	CString strFrq;									// "주파수[Hz]",
+	CString strMinFrq;							// "최소 주파수[Hz]",
+	CString strMaxFrq;							// "최대 주파수[Hz]",
+	CString strFrqPatternRange;			// "주파수패턴형태/범위[ms]",
+	CString strFrqRangeDev;					// "주파수편차[Hz]",
+	CString strPriority;						// "우선순위",
+	CString strTime;								// "일자/시간",
+	CString strModType;							// "변조형태",
+	CString strSigType;		//#FA_Q_2502_T1					// "신호형태",
+	CString strPw;									// "PW[ns]",
+	CString strMinPw;								// "최소 PW[ns]",
+	CString strMaxPw;								// "최대 PW[ns]",
+	CString strPa;									// "PA[dB]",
+	CString strMinPa;								// "최소 PA[dBm]",
+	CString strMaxPa;								// "최대 PA[dBm]",
+	CString strPriType;							// "PRI형태",
+	CString strPri;									// "PRI[ns]",
+	CString strMinPri;							// "최소 PRI",
+	CString strMaxPri;							// "최대 PRI",
+	CString strPRIPatternRange;			// "PRI패턴형태/범위[ns]",
+	CString strPrf;									// "PRF범위[PPS]",
+	CString strMinPrf;							// "PRF범위[PPS]",
+	CString strMaxPrf;							// "PRF범위[PPS]",
+	CString strPulsePerGrp;					// "펄스수/그룹",
+	CString strSJ;									// "S/J",
+	CString strScanTypePeroid;			// "스캔형태/주기",
+	CString strAirElintNotation;		// "[A]E-NOT",
+	CString strAirFunc;							// "[A]기능부호",
+	CString strAirSiteFunc;					// "[A]사이트기능",
+	CString strAirThreat;						// "[A]위협",
+	CString strAirEqupNo;						// "[A]장비번호",
+	CString strAirConsistancyRatio;	// "[A]일치율[%]",
+	CString strAirConsistancy;			// "[A]일치도",
+	CString strAirGeoCoord;					// "[A]지리좌표",
+	CString strAirAlt;							// "[A]고도[m]",
+	CString strAirConfIterval;			// "[A]신뢰구간[m]",
+	CString strAirCep;							// "[A]CEP[m]",
+	CString strAirMajorAxis;				// "[A]장축[m]",
+	CString strAirMinorAxis;				// "[A]단축(m)",
+	CString strAirMajorAxisAzimuth; // "[A]장축방위[도]",
+	CString strGndElintNotation;		// "[G]E-NOT",
+	CString strGndPinNr;						// "[G]PIN NR",
+	CString strGndFunc;							// "[G]기능부호",
+	CString strGndSiteFunc;					// "[G]사이트기능",
+	CString strGndThreat;						// "[G]위협",
+	CString strGndEqupNo;						// "[G]장비번호",
+	CString strGndConsistancyRatio;	// "[G]일치율[%]",
+	CString strGndConsistancy;			// "[G]일치도",
+	CString strGndGeoLongitude;			// "[G]지리좌표(경도)",
+	CString strGndGeoLatitude;			// "[G]지리좌표(위도)",
+	CString strGndAlt;							// "[G]고도[m]",
+	CString strGndConfIterval;			// "[G]신뢰구간[m]",
+	CString strGndCep;							// "[G]CEP[m]",
+	CString strGndMajorAxis;				// "[G]장축[m]",
+	CString strGndMinorAxis;				// "[G]단축(m)",
+	CString strGndMajorAxisAzimuth; // "[G]장축방위[도]",												
+	CString strGndBaseName;					// "[G]기지명",
+	CString strGndIdInfo;						// "[G]식별정보",
+	CString strGndCandidate;				// "[G]식별 후보 목록",
+	CString strGndDistError;				// "[G]거리 오차[km]",
+	CString strGndDistErrorToNM;		// "[G]거리 오차[nm]",
+	CString strGndEOBId;						// "[G] EOB ID",
+	CString strFinalReport;					// "최종보고",							
+	CString strFinalAlarm;					// "최종경보",							",
+	CString strPosEstimation;				// "산출여부",							
+	CString strSOI;									// "관심신호"							
+	CString strIsStorePDW;					// "PDW 저장여부"
+	CString strNumOfCol;						// "수집개수[PDW/IQ]"
+	CString strNumOfAmbigiousBeam;	// "모호성",
+	CString strNumOfPDWSet;					// "PDW 세트"
+	CString strActivatedOrNot;			// "활동여부"
+	CString strLobId;								// "LOB #" . 2014.10.8. 추가. 이정남
+	CString strDtctId;							// "Dtct ID" . 2015.3.3. 추가. 이정남
+	CString strIdCode;							// "식별 코드" . 2015.3.31. 추가. 조철희
+	CString strPolization;					// "극성" . 2015.4.1. 추가. 조철희
+	CString strTaskOperator;				// "과제 운용사", 2015.4.7. 추가. 조철희
+	CString strGndModeSymbol;					// 모드 부호
 
-    stEmitterInfo()
-    {
-        strLinkNum="";
-        strEmitterNum="";
-        strSignalNum="";
-        strMissionId="";
-        strTaskId="";
-        strTaskName="";
-        strSrchBandId="";
-        strDirection="";
-        strMinDirection="";				//
-        strMaxDirection="";
-        strDirectionDev="";
-        strFisintTask="";					//
-        strFrqType="";
-        strFrq="";
-        strMinFrq="";
-        strMaxFrq="";
-        strFrqPatternRange="";
-        strFrqRangeDev="";
-        strPriority="";						//
-        strTime="";
-        strModType="";
-        strSigType="";
-        strPw="";
-        strMinPw="";
-        strMaxPw="";
-        strPa="";
-        strMinPa="";
-        strMaxPa="";
-        strPriType="";
-        strPri="";
-        strMinPri="";
-        strMaxPri="";
-        strPRIPatternRange="";
-        strPrf="";
-        strMinPrf="";
-        strMaxPrf="";
-        strPulsePerGrp="";
-        strSJ="";
-        strScanTypePeroid="";
-        strAirElintNotation="";		// "[A
-        strAirFunc="";
-        strAirSiteFunc="";
-        strAirThreat="";
-        strAirEqupNo="";
-        strAirConsistancyRatio="";	//
-        strAirConsistancy="";			//
-        strAirGeoCoord="";
-        strAirAlt="";
-        strAirConfIterval="";			//
-        strAirCep="";
-        strAirMajorAxis="";				//
-        strAirMinorAxis="";				//
-        strAirMajorAxisAzimuth=""; //
-        strGndElintNotation="";		//
-        strGndPinNr="";
-        strGndFunc="";
-        strGndSiteFunc="";
-        strGndThreat="";
-        strGndEqupNo="";
-        strGndConsistancyRatio="";
-        strGndConsistancy="";
-        strGndGeoLongitude="";
-        strGndGeoLatitude="";
-        strGndAlt="";
-        strGndConfIterval="";			//
-        strGndCep="";
-        strGndMajorAxis="";
-        strGndMinorAxis="";
-        strGndMajorAxisAzimuth="";
-            strGndBaseName="";
-        strGndIdInfo="";
-        strGndCandidate="";
-        strGndDistError="";
-        strGndDistErrorToNM="";
-        strGndEOBId="";
-        strFinalReport="";
-        strFinalAlarm="";
-        strPosEstimation="";
-        strSOI="";
-        strIsStorePDW="";
-        strNumOfCol="";
-        strNumOfAmbigiousBeam="";
-        strNumOfPDWSet="";
-        strActivatedOrNot="";
-        strLobId="";
-        strDtctId="";
-        strIdCode="";
-        strPolization="";					//
-        strTaskOperator="";
-        strGndModeSymbol="";
-    };
+	stEmitterInfo()
+	{
+		strLinkNum="";						
+		strEmitterNum="";					
+		strSignalNum="";					
+		strMissionId="";						
+		strTaskId="";							
+		strTaskName="";					
+		strSrchBandId="";					
+		strDirection="";						
+		strMinDirection="";				// 
+		strMaxDirection="";				
+		strDirectionDev="";				
+		strFisintTask="";					// 
+		strFrqType="";						
+		strFrq="";								
+		strMinFrq="";							
+		strMaxFrq="";						
+		strFrqPatternRange="";			
+		strFrqRangeDev="";				
+		strPriority="";						// 
+		strTime="";							
+		strModType="";						
+		strSigType="";						
+		strPw="";								
+		strMinPw="";							
+		strMaxPw="";							
+		strPa="";								
+		strMinPa="";							
+		strMaxPa="";							
+		strPriType="";						
+		strPri="";								
+		strMinPri="";							
+		strMaxPri="";							
+		strPRIPatternRange="";			
+		strPrf="";								
+		strMinPrf="";							
+		strMaxPrf="";							
+		strPulsePerGrp="";					
+		strSJ="";								
+		strScanTypePeroid="";			
+		strAirElintNotation="";		// "[A
+		strAirFunc="";						
+		strAirSiteFunc="";					
+		strAirThreat="";						
+		strAirEqupNo="";					
+		strAirConsistancyRatio="";	// 
+		strAirConsistancy="";			// 
+		strAirGeoCoord="";				
+		strAirAlt="";							
+		strAirConfIterval="";			// 
+		strAirCep="";							
+		strAirMajorAxis="";				// 
+		strAirMinorAxis="";				// 
+		strAirMajorAxisAzimuth=""; //
+		strGndElintNotation="";		// 
+		strGndPinNr="";						
+		strGndFunc="";						
+		strGndSiteFunc="";					
+		strGndThreat="";					
+		strGndEqupNo="";					
+		strGndConsistancyRatio="";	
+		strGndConsistancy="";			
+		strGndGeoLongitude="";			
+		strGndGeoLatitude="";			
+		strGndAlt="";							
+		strGndConfIterval="";			// 
+		strGndCep="";						
+		strGndMajorAxis="";				
+		strGndMinorAxis="";				
+		strGndMajorAxisAzimuth=""; 
+			strGndBaseName="";				
+		strGndIdInfo="";						
+		strGndCandidate="";				
+		strGndDistError="";				
+		strGndDistErrorToNM="";		
+		strGndEOBId="";					
+		strFinalReport="";					
+		strFinalAlarm="";					
+		strPosEstimation="";				
+		strSOI="";								
+		strIsStorePDW="";					
+		strNumOfCol="";					
+		strNumOfAmbigiousBeam="";	
+		strNumOfPDWSet="";				
+		strActivatedOrNot="";			
+		strLobId="";							
+		strDtctId="";							
+		strIdCode="";							
+		strPolization="";					// 
+		strTaskOperator="";				
+		strGndModeSymbol="";			
+	};
 
 //	void stEmitterInfo::SetInterCommInfo(BYTE *i_pbyInData)
 //	{
 //		int nCount=0;
 //		USHORT nSize=0;
-//
+//		
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
 //		strLinkNum.SetString((const char*)&i_pbyInData[nCount], nSize) ;								// "SDF ID";
@@ -703,12 +703,12 @@ typedef struct stEmitterInfo
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		strGndMajorAxisAzimuth.SetString((const char*)&i_pbyInData[nCount], nSize); //"[G]장축방위[도]",
+//		strGndMajorAxisAzimuth.SetString((const char*)&i_pbyInData[nCount], nSize); //"[G]장축방위[도]",			
 //		nCount+=nSize;
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		strFinalReport.SetString((const char*)&i_pbyInData[nCount], nSize);					// "최종보고",
+//		strFinalReport.SetString((const char*)&i_pbyInData[nCount], nSize);					// "최종보고",			
 //		nCount+=nSize;
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
@@ -718,12 +718,12 @@ typedef struct stEmitterInfo
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		strPosEstimation.SetString((const char*)&i_pbyInData[nCount], nSize);				// "산출여부",
+//		strPosEstimation.SetString((const char*)&i_pbyInData[nCount], nSize);				// "산출여부",							
 //		nCount+=nSize;
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		strSOI.SetString((const char*)&i_pbyInData[nCount], nSize);									// "관심신호"
+//		strSOI.SetString((const char*)&i_pbyInData[nCount], nSize);									// "관심신호"	
 //		nCount+=nSize;
 //
 //		memcpy(&nSize, &i_pbyInData[nCount], sizeof(USHORT));
@@ -766,13 +766,13 @@ typedef struct stEmitterInfo
 //	{
 //		int nCount=0;
 //		USHORT nSize=0;
-//
+//		
 //		nSize=strLinkNum.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
 //		memcpy(&i_pbyOutData[nCount], strLinkNum.GetBuffer(), nSize);								// "SDF ID";
 //		nCount+=nSize;
-//
+//		
 //		nSize=strEmitterNum.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
@@ -1154,15 +1154,15 @@ typedef struct stEmitterInfo
 //		nSize=strGndMajorAxisAzimuth.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		memcpy(&i_pbyOutData[nCount], strGndMajorAxisAzimuth.GetBuffer(), nSize); //"[G]장축방위[도]",
+//		memcpy(&i_pbyOutData[nCount], strGndMajorAxisAzimuth.GetBuffer(), nSize); //"[G]장축방위[도]",			
 //		nCount+=nSize;
 //
 //		nSize=strFinalReport.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		memcpy(&i_pbyOutData[nCount], strFinalReport.GetBuffer(), nSize);					// "최종보고",
+//		memcpy(&i_pbyOutData[nCount], strFinalReport.GetBuffer(), nSize);					// "최종보고",			
 //		nCount+=nSize;
-//
+//		
 //		nSize=strFinalAlarm.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
@@ -1172,15 +1172,15 @@ typedef struct stEmitterInfo
 //		nSize=strPosEstimation.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		memcpy(&i_pbyOutData[nCount], strPosEstimation.GetBuffer(), nSize);				// "산출여부",
+//		memcpy(&i_pbyOutData[nCount], strPosEstimation.GetBuffer(), nSize);				// "산출여부",							
 //		nCount+=nSize;
 //
 //		nSize=strSOI.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
-//		memcpy(&i_pbyOutData[nCount], strSOI.GetBuffer(), nSize);									// "관심신호"
+//		memcpy(&i_pbyOutData[nCount], strSOI.GetBuffer(), nSize);									// "관심신호"	
 //		nCount+=nSize;
-//
+//						
 //		nSize=strIsStorePDW.GetLength();
 //		memcpy(&i_pbyOutData[nCount], &nSize, sizeof(USHORT));
 //		nCount+=sizeof(USHORT);
@@ -1243,293 +1243,293 @@ typedef struct stEmitterInfo
 //
 //		return nCount;
 //	}
-} I_EMITTER_STR;
+} I_EMITTER_STR;		
 
 #define NUM_OF_LOB_LIST_FIELD_NAME 45
 static const char* strLobListFieldName [] =
 {
-    "순번",
-    "LINK번호", // 2015.1.5. 이정남 추가
-    "E-NOT",
-    "식별코드",
-    "과제 운용사",
-    "일자/시간",
-    "LOB#",
-    "AET번호",
-    "인트라펄스 변조형태",
-    "주파수형태",
-    "주파수[MHz]",
-    "최소 주파수[MHz]",
-    "최대 주파수[MHz]",
-    "PW[us]",
-    "PRI[us]",
-    "PRF[KHz]",
-    "그룹당펄스수",
-    "PIT",
-    "포지션수",
-    "AMP",
-    "RF Dev[MHz]",
-    "DOA",
-    "AOA",
-    "AzStdDev",
-    "AMB",
-    "Sid",
-    "BL",
-    "FOV",
-    "AC#",
-    "AC위치",
-    "AC Alt",
-    "AC FOM",
-    "Hdg",
-    "Pitch",
-    "Roll",
-    "품질",
-    "PDW 개수",
-    "스캔형태/주기[ms]",
-    "PRI변조형태",
-    "PRI지터율",
-    "최종보고",
-    "과제ID",
-    "신호ID",
-    "분극",
-    "펄스수 그룹"
+	"순번",
+	"LINK번호", // 2015.1.5. 이정남 추가
+	"E-NOT",
+	"식별코드",
+	"과제 운용사",
+	"일자/시간",
+	"LOB#",
+	"AET번호",
+	"인트라펄스 변조형태",
+	"주파수형태",
+	"주파수[MHz]",
+	"최소 주파수[MHz]",
+	"최대 주파수[MHz]",
+	"PW[us]",
+	"PRI[us]",
+	"PRF[KHz]",
+	"그룹당펄스수",
+	"PIT",
+	"포지션수",
+	"AMP",
+	"RF Dev[MHz]",
+	"DOA",
+	"AOA",
+	"AzStdDev",
+	"AMB",
+	"Sid",
+	"BL",
+	"FOV",
+	"AC#",
+	"AC위치",
+	"AC Alt",
+	"AC FOM",
+	"Hdg",
+	"Pitch",
+	"Roll",
+	"품질",
+	"PDW 개수",
+	"스캔형태/주기[ms]",
+	"PRI변조형태",
+	"PRI지터율",
+	"최종보고",
+	"과제ID",
+	"신호ID",
+	"분극",
+	"펄스수 그룹"
 };
 
 typedef struct stLOBInfoDisp
 {
-    bool bIsSelected;
-    CString strElintNotation;	// "ELINT Notation"
-    CString strLinkNum;	   //#FA_Q_2502_T1		// Link 번호, 2015.1.5. 이정남 추가
-    CString strSrchTime;			// 	"일자/시간"
-    CString strLobNum;			// "LOB#"
-    CString strEmitterNum;		// "Emitter#"
-    CString strModType;			// "변조형태"
-    CString strFrqType;			// "주파수형태",
-    CString strFrq;					// "주파수[Hz]",
-    CString strMinFrq;				// "최소 주파수[Hz]",
-    CString strMaxFrq;			// "최대 주파수[Hz]",
-    CString strPW;					// "PW",
-    CString strPRI;					// "PRI",
-    CString strPRF;					// "PRF",
-    CString strMinPRF;			// "최소 PRF[PPS]",
-    CString strMaxPRF;			// "최대 PRF[PPS]",
-    CString strPulsePerGrp;		// "그룹당펄스수",
-    CString strPIT;					// "PIT",
-    CString strNumOfPos;		// "포지션수",
-    CString strAmp;				// "AMP",
-    CString strRfDev;				// "RF Dev.",
-    CString strDoa;				// "DOA",
-    CString strAoa;				// "AOA",
-    CString strAzStdDev;		// "AzStdDev",
-    CString strAmb	;				// "AMB",
-    CString strSid;					// "Sid",
-    CString strBL;					// "BL",
-    CString strFov;				// "FOV",
-    CString strACNum;			// "AC#",
-    CString strACPos;				// "AC위치",
-    CString strACAlt;				//"AC Alt",
-    CString strAcFom;			// "AC FOM",
-    CString strHdg;				// "Hdg",
-    CString strPitch;				// "Pitch",
-    CString strRoll;					// "Roll",
-    CString strQuality;			// "품질",
-    CString strNumOfPdw;		// "PDW 개수",
-    CString strScanTypePeriod;// "스캔형태/주기",
-    CString strPriModType;		// "PRI변조형태",
-    CString strPriJitterRate;		//"PRI지터율"
-    CString strFinalReport;		// "최종보고"
-    CString strTaskId;				// "과제ID" 2014.10.08 추가. 이정남.
-    CString strTaskName;			// "과제명" 2015.06.03 추가. 조철희
-    CString strDtctId;				// DTCT ID . 2015.3.3. 이정남 추가
-    CString strIdCode;				// 식별 코드, 2015.4.2. 조철희 추가
-    CString strTaskOperator;	// 과제 운용자, 2015.4.7. 조철희 추가
-    CString strPolization;	// 극성. 2015.7.15. 이정남 추가
-    CString strPPG;	// 펄스수 그룹. 2015.7.15. 이정남 추가
+	bool bIsSelected;
+	CString strElintNotation;	// "ELINT Notation"
+	CString strLinkNum;	   //#FA_Q_2502_T1		// Link 번호, 2015.1.5. 이정남 추가
+	CString strSrchTime;			// 	"일자/시간"
+	CString strLobNum;			// "LOB#"
+	CString strEmitterNum;		// "Emitter#"
+	CString strModType;			// "변조형태"
+	CString strFrqType;			// "주파수형태",
+	CString strFrq;					// "주파수[Hz]",
+	CString strMinFrq;				// "최소 주파수[Hz]",
+	CString strMaxFrq;			// "최대 주파수[Hz]",
+	CString strPW;					// "PW",
+	CString strPRI;					// "PRI",
+	CString strPRF;					// "PRF",
+	CString strMinPRF;			// "최소 PRF[PPS]",
+	CString strMaxPRF;			// "최대 PRF[PPS]",
+	CString strPulsePerGrp;		// "그룹당펄스수",
+	CString strPIT;					// "PIT",
+	CString strNumOfPos;		// "포지션수",
+	CString strAmp;				// "AMP",
+	CString strRfDev;				// "RF Dev.",
+	CString strDoa;				// "DOA",
+	CString strAoa;				// "AOA",
+	CString strAzStdDev;		// "AzStdDev",
+	CString strAmb	;				// "AMB",
+	CString strSid;					// "Sid",
+	CString strBL;					// "BL",
+	CString strFov;				// "FOV",
+	CString strACNum;			// "AC#",
+	CString strACPos;				// "AC위치",
+	CString strACAlt;				//"AC Alt",
+	CString strAcFom;			// "AC FOM",
+	CString strHdg;				// "Hdg",
+	CString strPitch;				// "Pitch",
+	CString strRoll;					// "Roll",
+	CString strQuality;			// "품질",
+	CString strNumOfPdw;		// "PDW 개수",
+	CString strScanTypePeriod;// "스캔형태/주기",
+	CString strPriModType;		// "PRI변조형태",
+	CString strPriJitterRate;		//"PRI지터율"
+	CString strFinalReport;		// "최종보고"
+	CString strTaskId;				// "과제ID" 2014.10.08 추가. 이정남.
+	CString strTaskName;			// "과제명" 2015.06.03 추가. 조철희
+	CString strDtctId;				// DTCT ID . 2015.3.3. 이정남 추가
+	CString strIdCode;				// 식별 코드, 2015.4.2. 조철희 추가
+	CString strTaskOperator;	// 과제 운용자, 2015.4.7. 조철희 추가
+	CString strPolization;	// 극성. 2015.7.15. 이정남 추가
+	CString strPPG;	// 펄스수 그룹. 2015.7.15. 이정남 추가
 
         stLOBInfoDisp()
-        :bIsSelected(false)
-    {
-        strElintNotation="";
-        strLinkNum="";
-        strSrchTime="";
-        strLobNum="";
-        strEmitterNum="";
-        strModType="";
-        strFrqType="";
-        strFrq="";
-        strMinFrq="";
-        strMaxFrq="";
-        strPW="";
-        strPRI="";
-        strPRF="";
-        strMinPRF="";
-        strMaxPRF="";
-        strPulsePerGrp="";
-        strPIT="";
-        strNumOfPos="";
-        strAmp="";
-        strRfDev="";
-        strDoa="";
-        strAoa="";
-        strAzStdDev="";
-        strAmb="";
-        strSid="";
-        strBL="";
-        strFov="";
-        strACNum="";
-        strACPos="";
-        strACAlt="";
-        strAcFom="";
-        strHdg="";
-        strPitch="";
-        strRoll="";
-        strQuality="";
-        strNumOfPdw="";
-        strScanTypePeriod="";
-        strPriModType="";
-        strPriJitterRate="";
-        strFinalReport="";
-        strTaskId="";
-        strTaskName="";
-        strDtctId="";
-        strIdCode="";
-        strTaskOperator="";
-        strPolization="";
-        strPPG="";
-    };
-}I_LOB_STR;
+		:bIsSelected(false)
+	{
+		strElintNotation="";
+		strLinkNum="";			
+		strSrchTime="";			
+		strLobNum="";			
+		strEmitterNum="";		
+		strModType="";			
+		strFrqType="";					
+		strFrq="";							
+		strMinFrq="";						
+		strMaxFrq="";					
+		strPW="";					
+		strPRI="";					
+		strPRF="";				
+		strMinPRF="";			
+		strMaxPRF="";			
+		strPulsePerGrp="";		
+		strPIT="";					
+		strNumOfPos="";		
+		strAmp="";				
+		strRfDev="";				
+		strDoa="";				
+		strAoa="";				
+		strAzStdDev="";		
+		strAmb="";				
+		strSid="";					
+		strBL="";					
+		strFov="";				
+		strACNum="";			
+		strACPos="";				
+		strACAlt="";				
+		strAcFom="";			
+		strHdg="";				
+		strPitch="";				
+		strRoll="";					
+		strQuality="";			
+		strNumOfPdw="";		
+		strScanTypePeriod="";
+		strPriModType="";		
+		strPriJitterRate="";		
+		strFinalReport="";		
+		strTaskId="";				
+		strTaskName="";		
+		strDtctId="";				
+		strIdCode="";			
+		strTaskOperator="";	
+		strPolization="";
+		strPPG="";
+	};
+}I_LOB_STR;	
 
 // RAW DATA : PDW 데이터 타입
 #define NUM_OF_PDW_HEAD_FIELD_NAME 9
 static const char *strPdwHeadFieldName[] = {
-    "순번",
-    "번호",
-    /*"PDW Set ID",*/
-    "LINK번호",
-    "과제 ID",
-    "탐색대역번호",
-    /*"방사체 번호",*/
-    /*"빔 번호",*/
-    "LOB 번호",
-    "샘플개수",
-    "연관 펄스 번호",
-    "형태"
+	"순번",
+	"번호",
+	/*"PDW Set ID",*/
+	"LINK번호",
+	"과제 ID",
+	"탐색대역번호",
+	/*"방사체 번호",*/
+	/*"빔 번호",*/
+	"LOB 번호",
+	"샘플개수",
+	"연관 펄스 번호",
+	"형태"
 };
 
 #define NUM_OF_PDW_BODY_FIELD_NAME 19
 static const char *strPdwBodyFieldName[] = {
-    "수집시작시간",
-    "평균 DTOA[us]",
-    "신호형태",
-    "극성 유효성[%]",
-    /*"FMOP[%]",
-    "PMOP[%]",*/
-    "Blanking[%]",
-    //"채널변경여부",
-    /*"BLK[%]",*/
-    "DV[%]",
-    "FOV(IN)[%]",
-    "Ch#",
-    "평균 세기[dBm]",
-    "평균 주파수[MHz]",
-    "평균 방향[도]",
-    "극성[%]",
-    "PPF",
-    "평균 펄스폭[ns]",
-    //"I 데이터",
-    //"Q 데이터",
-    "PRF ID",
-    "Spectrum ID",
-    //"DtctId",
-    //"과제 운용사",
-    "파일명",
-    "과제명",
-    "부 파일명"
+	"수집시작시간",
+	"평균 DTOA[us]",
+	"신호형태",
+	"극성 유효성[%]",
+	/*"FMOP[%]",
+	"PMOP[%]",*/
+	"Blanking[%]",
+	//"채널변경여부",
+	/*"BLK[%]",*/
+	"DV[%]",
+	"FOV(IN)[%]",
+	"Ch#",
+	"평균 세기[dBm]",
+	"평균 주파수[MHz]",
+	"평균 방향[도]",
+	"극성[%]",
+	"PPF",
+	"평균 펄스폭[ns]",
+	//"I 데이터",
+	//"Q 데이터",
+	"PRF ID",
+	"Spectrum ID",
+	//"DtctId",
+	//"과제 운용사",
+	"파일명",
+	"과제명",
+	"부 파일명"
 };
 
 struct I_PDWIQIF_STR
 {
-    CString strPdwSetId; // "PDW Set ID",
-    CString strLinkNum; //#FA_Q_2502_T1     // "Link 번호",
-    CString strTaskId; // "과제 ID",
-    CString strSrchBandId; // "탐색대역번호",
-    CString strAetNum; // "AET 번호"
-    CString strAbtNum; //"ABT 번호". 2016.6.8. 이정남 추가
-    CString strLobNum; // "LOB번호",
-    CString strPdwCount; // "PDW개수/IQ개수",
-    CString strPdwId; // PDW ID, PDW 연관 번호
-    CString strDataType; // "형식", : PDW, IQ, IF
-    CString strTime; // "수집시작시간",
-    CString strToa; // "TOA",
-    CString strSignalType; // "신호형태",
-    //CString strBitFlag; //"BIT Flag",
-    CString strPolFlag; //"극성 유효성",
-    CString strFmopFlag; // "FMOP Flag",
-    CString strPmopFlag; // "PMOP Flag",
-    CString strBlankingTag; // "Blanking Tag",
-    CString strChannelChangePOP; // "채널변경여부",
-    CString strBLK; // "채널변경방향",
-    CString strDI; //"DI",
-    CString strFovFlag; // "FOV Flag",
-    CString strChannelNum; // "Ch#",
-    CString strPa; // "신호세기",
-    CString strFrq; // "측정주파수",
-    CString strSigDirection; // "신호방향",
-    CString strPolarization; // "신호극성",
-    CString strPPFTag; // "PPF Tag",
-    CString strPw; // "펄스폭",
-    CString strIData; // "I데이터"
-    CString strQData; // "Q데이터",
-    CString strFilename;		// 파일명CString strDtctId; // DTCT ID
-    CString strTaskName;
-    CString strFatherFilename;
-    CString strDtctId; // "DTCT ID", 2015.3.3. 이정남 추가
+	CString strPdwSetId; // "PDW Set ID",
+	CString strLinkNum; //#FA_Q_2502_T1     // "Link 번호",
+	CString strTaskId; // "과제 ID",
+	CString strSrchBandId; // "탐색대역번호",
+	CString strAetNum; // "AET 번호"
+	CString strAbtNum; //"ABT 번호". 2016.6.8. 이정남 추가
+	CString strLobNum; // "LOB번호",
+	CString strPdwCount; // "PDW개수/IQ개수",
+	CString strPdwId; // PDW ID, PDW 연관 번호
+	CString strDataType; // "형식", : PDW, IQ, IF
+	CString strTime; // "수집시작시간",
+	CString strToa; // "TOA",
+	CString strSignalType; // "신호형태",
+	//CString strBitFlag; //"BIT Flag",
+	CString strPolFlag; //"극성 유효성",
+	CString strFmopFlag; // "FMOP Flag",
+	CString strPmopFlag; // "PMOP Flag",
+	CString strBlankingTag; // "Blanking Tag",
+	CString strChannelChangePOP; // "채널변경여부",
+	CString strBLK; // "채널변경방향",
+	CString strDI; //"DI",
+	CString strFovFlag; // "FOV Flag",
+	CString strChannelNum; // "Ch#",
+	CString strPa; // "신호세기",
+	CString strFrq; // "측정주파수",
+	CString strSigDirection; // "신호방향",
+	CString strPolarization; // "신호극성",
+	CString strPPFTag; // "PPF Tag",
+	CString strPw; // "펄스폭",
+	CString strIData; // "I데이터"
+	CString strQData; // "Q데이터",	
+	CString strFilename;		// 파일명CString strDtctId; // DTCT ID
+	CString strTaskName;
+	CString strFatherFilename;
+	CString strDtctId; // "DTCT ID", 2015.3.3. 이정남 추가
+		
+	UINT nPRFDBSetID;	//화면표시안됨, PRF 목록-DB의 식별 ID로만 사용
+	UINT nSpectrumDBSetID;	//화면표시안됨, Spectrum 목록-DB의 식별 ID로만 사용
+	
+	//@start_WJH
+	I_PDWIQIF_STR()
+	{	
+	//	strPdwSetId= _T("");
+	//	strLinkNum=_T("");// "Link 번호",
+	//	strTaskId=_T("");		 // "과제 ID",
+	//	strSrchBandId=_T(""); // "탐색대역번호",
+	//	strAetNum=_T(""); // "AET 번호"
+	//	strAbtNum=_T(""); // "ABT 번호". 2016.6.8. 이정남 추가
+	//	strLobNum=_T(""); // "LOB번호",
+	//	strPdwCount=_T(""); // "PDW개수/IQ개수",
+	//	strPdwId=_T(""); // PDW ID, PDW 연관 번호
+	//	strDataType=_T(""); // "형식", : PDW, IQ, IF
+	//	strTime=_T(""); // "수집시작시간",
+	//	strToa=_T(""); // "TOA",
+	//	strSignalType=_T(""); // "신호형태",
+	//	strBitFlag=_T(""); //"BIT Flag",
+	//	strFmopFlag=_T(""); // "FMOP Flag",
+	//	strPmopFlag=_T(""); // "PMOP Flag",
+	//	strBlankingTag=_T(""); // "Blanking Tag",
+	//	strChannelChangePOP=_T(""); // "채널변경여부",
+	//	strBLK=_T(""); // "채널변경방향",
+	//	strDI=_T(""); //"DI",
+	//	strFovFlag=_T(""); // "FOV Flag",
+	//	strChannelNum=_T(""); // "Ch#",
+	//	strPa=_T(""); // "신호세기",
+	//	strFrq=_T(""); // "측정주파수",
+	//	strSigDirection=_T(""); // "신호방향",
+	//	strPolarization=_T(""); // "신호극성",
+	//	strPPFTag=_T(""); // "PPF Tag",
+	//	strPw=_T(""); // "펄스폭",
+	//	strIData=_T(""); // "I데이터"
+	//	strQData=_T(""); // "Q데이터",	
+	//	strFilename=_T("");		// 파일명		
+	//	strTaskName=_T(""); // DTCT ID				
+	//	strFatherFilename=_T("");
+		strDtctId=_T(""); // DTCT ID		
 
-    UINT nPRFDBSetID;	//화면표시안됨, PRF 목록-DB의 식별 ID로만 사용
-    UINT nSpectrumDBSetID;	//화면표시안됨, Spectrum 목록-DB의 식별 ID로만 사용
-
-    //@start_WJH
-    I_PDWIQIF_STR()
-    {
-    //	strPdwSetId= _T("");
-    //	strLinkNum=_T("");// "Link 번호",
-    //	strTaskId=_T("");		 // "과제 ID",
-    //	strSrchBandId=_T(""); // "탐색대역번호",
-    //	strAetNum=_T(""); // "AET 번호"
-    //	strAbtNum=_T(""); // "ABT 번호". 2016.6.8. 이정남 추가
-    //	strLobNum=_T(""); // "LOB번호",
-    //	strPdwCount=_T(""); // "PDW개수/IQ개수",
-    //	strPdwId=_T(""); // PDW ID, PDW 연관 번호
-    //	strDataType=_T(""); // "형식", : PDW, IQ, IF
-    //	strTime=_T(""); // "수집시작시간",
-    //	strToa=_T(""); // "TOA",
-    //	strSignalType=_T(""); // "신호형태",
-    //	strBitFlag=_T(""); //"BIT Flag",
-    //	strFmopFlag=_T(""); // "FMOP Flag",
-    //	strPmopFlag=_T(""); // "PMOP Flag",
-    //	strBlankingTag=_T(""); // "Blanking Tag",
-    //	strChannelChangePOP=_T(""); // "채널변경여부",
-    //	strBLK=_T(""); // "채널변경방향",
-    //	strDI=_T(""); //"DI",
-    //	strFovFlag=_T(""); // "FOV Flag",
-    //	strChannelNum=_T(""); // "Ch#",
-    //	strPa=_T(""); // "신호세기",
-    //	strFrq=_T(""); // "측정주파수",
-    //	strSigDirection=_T(""); // "신호방향",
-    //	strPolarization=_T(""); // "신호극성",
-    //	strPPFTag=_T(""); // "PPF Tag",
-    //	strPw=_T(""); // "펄스폭",
-    //	strIData=_T(""); // "I데이터"
-    //	strQData=_T(""); // "Q데이터",
-    //	strFilename=_T("");		// 파일명
-    //	strTaskName=_T(""); // DTCT ID
-    //	strFatherFilename=_T("");
-        strDtctId=_T(""); // DTCT ID
-
-        nPRFDBSetID = 0;
-        nSpectrumDBSetID = 0;
-    }
-    //@end_WJH
+		nPRFDBSetID = 0;
+		nSpectrumDBSetID = 0;	
+	}	  
+	//@end_WJH
 } ;
 
 
@@ -1539,118 +1539,118 @@ struct I_PDWIQIF_STR
 //
 #define NUM_OF_IDRESULT_BODY_FIELD_NAME			28
 static const char *strIdResultBodyFieldName[] = {
-    "순번",
-    "식별 대상",
-    "식별 후보(CED)",
-    "ELNOT",
-    "Primary Function"
-    "위협명",
-    "T 우선순위",
-    "위협번호",
-    "적아구분",
-    "에미터명",
-    "최대위협반경[km]",
-    "E 우선순위",
-    "에미터번호",
-    "플랫폼",
-    "빔명",
-    "B 우선순위",
-    "신호형태",
-    "MOP형식",
-    "주파수 형태 및 범위",
-    "PRI 형태 및 범위",
-    "펄스폭 범위",
-    "스캔 형태/범위",
-    "극성",
-    "빔폭",
-    "빔번호",
-    "ELIMENT 데이터/수",
-    "식별 후보(EOB)",
-    "EOB"
+	"순번",
+	"식별 대상",
+	"식별 후보(CED)",
+	"ELNOT",
+	"Primary Function"
+	"위협명",
+	"T 우선순위",
+	"위협번호",
+	"적아구분",
+	"에미터명",
+	"최대위협반경[km]",
+	"E 우선순위",
+	"에미터번호",
+	"플랫폼",
+	"빔명",
+	"B 우선순위",
+	"신호형태",
+	"MOP형식",
+	"주파수 형태 및 범위",
+	"PRI 형태 및 범위",
+	"펄스폭 범위",
+	"스캔 형태/범위",
+	"극성",
+	"빔폭",
+	"빔번호",
+	"ELIMENT 데이터/수",
+	"식별 후보(EOB)",
+	"EOB"
 };
 
 typedef struct stIdResultInfoStr
 {
-    int iBeamId;										// "순번",
-    int nLinkNo;										// 링크 번호
-    CString strCreateTime;					// 수집 시간
-    CString strIdRatio;							//"일치율"
-    CString strIdObject;						// "식별 대상",
-    CString strIdCandidate;					// "식별 후보 번호",
-    CString strElNot;								// "ELNOT",
-    CString strPriFunc;							// "Primary Function",
-    CString strThreatName;					// "위협명",
-    CString strPriority;						// "T 우선순위",
-    CString strThreatNum;						// "위협번호",
-    CString strFriendOrFoe;					// "적아구분",
-    CString strEmitterName;					//"에미터명",
-    CString strMaxRadius;						//"최대위협반경",
-    CString strEPriority;						//"E 우선순위",
-    CString strEmitterNum;					//"에미터번호",
-    CString strPlatform;						//"플렛폼",
-    CString strBeamName;						//"빔명",
-    CString strBPriority;						//"B 우선순위",
-    CString strSigType;		//#FA_Q_2502_T1					//"신호형태",
-    CString strMopType;							//"MOP형식",
-    CString strFreqGroup;						//"RF 형태/최대",
-    CString strPRIGroup;						//"PRI 형태/범위",
-    CString strPWGroup;							//"펄스폭 범위",
-    CString strASPGroup;						//"스캔 형태/범위",
-    CString strPolarity;						//"극성",
-    CString strBeamWidth;						//"빔폭",
-    CString strEtc;									//"기타",
-    short sEOBId;										//"식별 (EOB)"
-    float fEOBErrorDistance;				//"거리 오차",
-    unsigned int uiEOBPinNumber;		//"PIN #"
-    CString strEOBBaseName;					//"지명",
-    CString strFunctionCode;				//"구분",
-    CString strFacilityName;				//"시설이름",
-    CString strSiteStatus;					//"Site상태",
-    CString strLongitude;						//"경도[도]",
-    CString strLatitude;						//"위도[도]",
-    float fElivation;								//"고도[km]",
-    CString strADA;									//"방공구역",
-    CString strBENumber;						//"BE #",
-    CString strCategory;						//"카테고리",
-    CString strPrimaryFunction;			//"PF(EOB)",
-    CString strNomenclature;				//"명명법",
-    CString strElintNotation;				//"ELNOT(EOB)",
-    CString strEquipStatus;							//"장비상태",
+	int iBeamId;										// "순번",
+	int nLinkNo;										// 링크 번호
+	CString strCreateTime;					// 수집 시간
+	CString strIdRatio;							//"일치율"
+	CString strIdObject;						// "식별 대상",
+	CString strIdCandidate;					// "식별 후보 번호",
+	CString strElNot;								// "ELNOT",
+	CString strPriFunc;							// "Primary Function",
+	CString strThreatName;					// "위협명",
+	CString strPriority;						// "T 우선순위",
+	CString strThreatNum;						// "위협번호",
+	CString strFriendOrFoe;					// "적아구분",
+	CString strEmitterName;					//"에미터명",
+	CString strMaxRadius;						//"최대위협반경",
+	CString strEPriority;						//"E 우선순위",
+	CString strEmitterNum;					//"에미터번호",
+	CString strPlatform;						//"플렛폼",
+	CString strBeamName;						//"빔명",
+	CString strBPriority;						//"B 우선순위",
+	CString strSigType;		//#FA_Q_2502_T1					//"신호형태",
+	CString strMopType;							//"MOP형식",
+	CString strFreqGroup;						//"RF 형태/최대",
+	CString strPRIGroup;						//"PRI 형태/범위",
+	CString strPWGroup;							//"펄스폭 범위",		
+	CString strASPGroup;						//"스캔 형태/범위",
+	CString strPolarity;						//"극성",
+	CString strBeamWidth;						//"빔폭",
+	CString strEtc;									//"기타",
+	short sEOBId;										//"식별 (EOB)"
+	float fEOBErrorDistance;				//"거리 오차",
+	unsigned int uiEOBPinNumber;		//"PIN #"
+	CString strEOBBaseName;					//"지명",
+	CString strFunctionCode;				//"구분",
+	CString strFacilityName;				//"시설이름",
+	CString strSiteStatus;					//"Site상태",
+	CString strLongitude;						//"경도[도]",
+	CString strLatitude;						//"위도[도]",
+	float fElivation;								//"고도[km]",
+	CString strADA;									//"방공구역",
+	CString strBENumber;						//"BE #",
+	CString strCategory;						//"카테고리",
+	CString strPrimaryFunction;			//"PF(EOB)",
+	CString strNomenclature;				//"명명법",
+	CString strElintNotation;				//"ELNOT(EOB)",
+	CString strEquipStatus;							//"장비상태",
 
-    stIdResultInfoStr() :	iBeamId(0), sEOBId(0), uiEOBPinNumber(0)
-    {}
+	stIdResultInfoStr() :	iBeamId(0), sEOBId(0), uiEOBPinNumber(0)
+	{}
 } I_IDRESULT_STR;
 
 
 //=======> 이하 사용안할 예정
+						  
+											
+struct I_THREAT_DATA {
+	unsigned short usSdfId;
+	unsigned char szTaskId[LENGTH_OF_TASK_ID];
+	unsigned short usSearchBandId;
+	unsigned short usSerialNum;
+	unsigned char ucAnalysisStatus;
+    I_THREAT_DATA(){
+		usSdfId=0;
+		memset(&szTaskId, 0, LENGTH_OF_TASK_ID);
+		usSearchBandId=0;
+		usSerialNum=0;
+		ucAnalysisStatus=0;
+	}
+};
 
-
-typedef struct STempThreatData
-{
-    unsigned short usSdfId;
-    unsigned char szTaskId[LENGTH_OF_TASK_ID];
-    unsigned short usSearchBandId;
-    unsigned short usSerialNum;
-    unsigned char ucAnalysisStatus;
-    STempThreatData(){
-        usSdfId=0;
-        memset(&szTaskId, 0, LENGTH_OF_TASK_ID);
-        usSearchBandId=0;
-        usSerialNum=0;
-        ucAnalysisStatus=0;
-    }
-}I_THREAT_DATA;
-static const I_THREAT_DATA stInitThreatData;
+//static const I_THREAT_DATA stInitThreatData;
 
 struct I_AET_DATA {
-    unsigned short usAetId;
-    unsigned short usThreatId;
-    unsigned short usEmitterId;
-    unsigned short usBeamId;
+	unsigned short usAetId;
+ 	unsigned short usThreatId;
+ 	unsigned short usEmitterId;
+ 	unsigned short usBeamId;
 
 #ifdef _ELINT_
-    unsigned int uiOpInitID;
-unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+	unsigned int uiOpInitID;
+	unsigned char	aucTaskID[LENGTH_OF_TASK_ID];
 #endif
 
 };
@@ -1658,35 +1658,35 @@ unsigned char aucTaskID[LENGTH_OF_TASK_ID];
 //static const I_AET_DATA g_stInitAETData;
 
 
-static const char* strIdResult[] =
+static const char* strIdResult[] = 
 {
-    "-",
-    "기성",
-    "신출",
-    "불명"
+	"-",
+	"기성",
+	"신출",
+	"불명"
 };
 enum EnumIdResult
 {
-    E_EL_PE_UNK_ID=0,
-    E_EL_OLD_ID=1,						// 기성
-    E_EL_NEW_ID,							// 신출
-    E_EL_UNK_ID								// 불명
+	E_EL_PE_UNK_ID=0,
+	E_EL_OLD_ID=1,						// 기성
+	E_EL_NEW_ID,							// 신출
+	E_EL_UNK_ID								// 불명
 };
 
 struct STR_CEDEOBID_INFO {
-    EnumIdResult eIdResult;					// 0=기성, 1=신출, 2=불명
+	EnumIdResult eIdResult;					// 0=기성, 1=신출, 2=불명
 
-    // CED의 레이더 모드 인덱스
-    int nCoRadarModeIndex;
-    int nRadarModeIndex[MAX_IDCANDIDATE];
+	// CED의 레이더 모드 인덱스
+	int nCoRadarModeIndex;
+	int nRadarModeIndex[MAX_IDCANDIDATE];
 
-    // CED의 레이더 인덱스
-    //int nCoRadarIndex;
-    //int nRadarIndex[MAX_IDCANDIDATE];
+	// CED의 레이더 인덱스
+	//int nCoRadarIndex;
+	//int nRadarIndex[MAX_IDCANDIDATE];
 
-    // EOB의 위협/장치 인덱스
-    int nThreatIndex;
-    int nDeviceIndex;
+	// EOB의 위협/장치 인덱스
+	int nThreatIndex;
+	int nDeviceIndex;
 
 // 	STR_CEDEOBID_INFO::STR_CEDEOBID_INFO() : eIdResult(E_EL_OLD_ID), nCoRadarModeIndex(0), nCoRadarIndex(0), nThreatIndex(0), nDeviceIndex(0)
 // 	{
@@ -1698,13 +1698,13 @@ struct STR_CEDEOBID_INFO {
 
 // 위치 산출 하기 위한 구조체 정의
 struct STR_LOBS {
-    float fDoa;
-    float fLatitude;
-    float fLongitude;
+	float fDoa;
+	float fLatitude;
+	float fLongitude;
 
-    int iCollectorID;
+	int iCollectorID;
 
-    unsigned int uiLOBID;				// 클러스터링 하면서 구분을 하기 위한 변수 추가
+	unsigned int uiLOBID;				// 클러스터링 하면서 구분을 하기 위한 변수 추가
 
 } ;
 
@@ -1715,53 +1715,53 @@ struct STR_LOBS {
  */
 enum E_BEAM_CODE
 {
-    E_UNKNOWN_CODE=0,
-    E_CREATE_FREQ_TYPE_CODE=1,
-    E_CREATE_PRI_TYPE_CODE,
-    E_CREATE_INTRA_TYPE_CODE,
-    E_CREATE_SIGNAL_TYPE_CODE,
+	E_UNKNOWN_CODE=0,
+	E_CREATE_FREQ_TYPE_CODE=1,
+	E_CREATE_PRI_TYPE_CODE,
+	E_CREATE_INTRA_TYPE_CODE,
+	E_CREATE_SIGNAL_TYPE_CODE,
 
-    E_CREATE_DIST_CODE,
+	E_CREATE_DIST_CODE,
 
 };
 
 // LOB를 업데이트하기 위한 구조체 정의
 struct STR_UPDATE_LOB_ABT_AET {
-    unsigned int uiAETID;
-    unsigned int uiABTID;
-    unsigned int uiLOBID;
-    string strAcqTime;
+	unsigned int uiAETID;
+	unsigned int uiABTID;
+	unsigned int uiLOBID;
+	string strAcqTime;
 
-    unsigned int uiSeqNum;
+	unsigned int uiSeqNum;
 
 }  ;
 
 enum ENUM_PE_STAT {
-    E_EL_PESTAT_FAIL=0,					// 위치 산출 후 에러가 난 상태
-    E_EL_PESTAT_SUCCESS,				// 위치 산출 결과가 성공인 상태
-    E_EL_PESTAT_NOT_YET,				// LOB가 적어서 위치 산출 수행 이전 상태
-    E_EL_PESTAT_IMPOSSIBILITY		// 항공기가 고정 위치로 산출하기 어려운 상태
+	E_EL_PESTAT_FAIL=0,					// 위치 산출 후 에러가 난 상태
+	E_EL_PESTAT_SUCCESS,				// 위치 산출 결과가 성공인 상태
+	E_EL_PESTAT_NOT_YET,				// LOB가 적어서 위치 산출 수행 이전 상태
+	E_EL_PESTAT_IMPOSSIBILITY		// 항공기가 고정 위치로 산출하기 어려운 상태
 };
 
 struct STR_POSITION_ESTIMATION {
-    ENUM_PE_STAT enValid;
-    float fLongitude;							// [deg]
-    float fLatitude;							// [deg]
-    //int iAltidude;							// [m]
-    float fCEP;										// [m]
-    float fMajorAxis;							// [m]
-    float fMinorAxis;							// [m]
-    float fTheta;									// [0.1도]
-    float fDistanceErrorOfThreat;	// [m]
+	ENUM_PE_STAT enValid;
+	float fLongitude;							// [deg]
+	float fLatitude;							// [deg]
+        float fAltidude;							// [m]
+	float fCEP;										// [m]
+	float fMajorAxis;							// [m]
+	float fMinorAxis;							// [m]
+	float fTheta;									// [0.1도]
+	float fDistanceErrorOfThreat;	// [m]
 
-    //int iManualLongitude;				// [deg], MANUAL_POS_EST_LONG
-    //int iManualLatitude;				// [deg], MANUAL_POS_EST_LAT
+    int iManualLongitude;				// [deg], MANUAL_POS_EST_LONG
+    int iManualLatitude;				// [deg], MANUAL_POS_EST_LAT
 
-    bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
+	bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
 
 // 	STR_POSITION_ESTIMATION::STR_POSITION_ESTIMATION() : enValid(E_EL_PESTAT_FAIL), fLongitude(0.0), fLatitude(0.0), fCEP(0), fMajorAxis(0), fMinorAxis(0), fTheta(0), fDistanceErrorOfThreat(0), bApplayOfLOBClustering(false)
 // 	{
-//
+// 
 // 	}
 
 } ;
@@ -1769,10 +1769,10 @@ struct STR_POSITION_ESTIMATION {
 
 typedef struct STempAmbiBeam
 {
-    unsigned short usAmbiguousBeamId;
-    STempAmbiBeam(){
-        usAmbiguousBeamId=0;
-    }
+	unsigned short usAmbiguousBeamId;
+	STempAmbiBeam(){
+		usAmbiguousBeamId=0;
+	}
 }I_AmbiBeam;
 
 
@@ -1781,139 +1781,139 @@ typedef struct STempAmbiBeam
 *--------------------------------------------------------------------------------*/
 /*! Beam 또는 Emitter 상태를 정의한 enum
  * @enum      E_BEAM_EMITTER_STAT
- * @brief
+ * @brief 
  * @author    이정남 (jeongnam.lee@lignex1.com)
  * @date      2016-02-13 오전 8:27
  */
 enum E_BEAM_EMITTER_STAT
 {
-    E_ES_NOT_AVAILABLE = 0,			// 객체가 생성되지 않은 경우 (필요성에 대해서는 논의 필요)
+	E_ES_NOT_AVAILABLE = 0,			// 객체가 생성되지 않은 경우 (필요성에 대해서는 논의 필요)
 
-    // 내부적으로 위협 상태 정보 값 : 전시할 필요가 없음.
-    E_ES_NEW,										// 신규 처리 (상태정보로 활용함, 전시), 활동
-    E_ES_UPDATE,								// 활동
-    E_ES_DELETE,								// 미활동 처리
-    E_ES_DEACTIVATED,						// 활동 중지
-    E_ES_REACTIVATED,						// 활동 재개
+	// 내부적으로 위협 상태 정보 값 : 전시할 필요가 없음.
+	E_ES_NEW,										// 신규 처리 (상태정보로 활용함, 전시), 활동
+	E_ES_UPDATE,								// 활동
+	E_ES_DELETE,								// 미활동 처리
+	E_ES_DEACTIVATED,						// 활동 중지 
+	E_ES_REACTIVATED,						// 활동 재개
 
 };
 
-static const char* strBeamEmitterStat[] =
+static const char* strBeamEmitterStat[] = 
 {
-    "-",
+	"-",
 
-    "활동(신규)",
-    "활동",
-    "미활동",
-    "중지",
-    "활동(재개)",
+	"활동(신규)",
+	"활동",
+	"미활동",
+	"중지",
+	"활동(재개)",
 
 };
 
 // 연동기와 지상 POSN간의 OPCODE 정보
 enum E_EMITTER_OPCODE
 {
-    E_EO_NOT_AVAILABLE = 0,					// 객체가 생성되지 않은 경우 (필요성에 대해서는 논의 필요)
+	E_EO_NOT_AVAILABLE = 0,					// 객체가 생성되지 않은 경우 (필요성에 대해서는 논의 필요)
 
-    // 아래 코드들은 해당 방사체/빔 목록창에 전시해야 함.
-    E_MR_UPDATE_INFO,								// 변경 처리 (ELNOT, 위치 산출 등 변경), 방사체/빔 테이블에 데이터(ELNOT, 위치 산출 정보) 추가
-    E_MR_REMOVE_AETABT,							// 방사체/빔 목록창에서 제거
-    E_MR_REMOVE_LOB,								// LOB 목록창에서 제거
+	// 아래 코드들은 해당 방사체/빔 목록창에 전시해야 함.
+	E_MR_UPDATE_INFO,								// 변경 처리 (ELNOT, 위치 산출 등 변경), 방사체/빔 테이블에 데이터(ELNOT, 위치 산출 정보) 추가
+	E_MR_REMOVE_AETABT,							// 방사체/빔 목록창에서 제거
+	E_MR_REMOVE_LOB,								// LOB 목록창에서 제거
 
-    // 아래 코드들은 해당 LOB 목록창에 전시해야 함.
-    E_MR_CHANGE,										// (방사체/)빔/LOB 번호 변경
+	// 아래 코드들은 해당 LOB 목록창에 전시해야 함.
+	E_MR_CHANGE,										// (방사체/)빔/LOB 번호 변경
 
-    //////////////////////////////////////////////////////////////////////////
-    E_MR_UPDATE_STAT,								// 위협 상태 정보, (활동, 미활동 등)
+	//////////////////////////////////////////////////////////////////////////
+	E_MR_UPDATE_STAT,								// 위협 상태 정보, (활동, 미활동 등)
 
-    E_MR_ALERT_UPDATE,							// 경보 처리
-    E_MR_REPORT_UPDATE,							// 보고서 처리
+	E_MR_ALERT_UPDATE,							// 경보 처리
+	E_MR_REPORT_UPDATE,							// 보고서 처리
 
-    E_MR_REMOVE_AET									// 방사체에서 해당 항목 제거
+	E_MR_REMOVE_AET									// 방사체에서 해당 항목 제거
 
 };
 
-static const char* strBeamEmitterOpcode[] =
+static const char* strBeamEmitterOpcode[] = 
 {
-    "객제생성안됨",
+ 	"객제생성안됨",
 
-    "갱신 ",
-    "삭제(E/B)",
-    "삭제(L) ",
+	"갱신 ",
+	"삭제(E/B)",
+	"삭제(L) ",
 
-    "변경 ",
-    //////////////////////////////////////////////////////////////////////////
-    "상태 ",
+	"변경 ",
+	//////////////////////////////////////////////////////////////////////////
+	"상태 ",
 
-    "경보 ",
-    "보고서",
+	"경보 ",
+	"보고서",
 
-    "삭제(E)",
+	"삭제(E)",
 
-    "상태 변동없음(NoChange)"
+	"상태 변동없음(NoChange)"
 };
 
 
 struct I_AET_ANAL {
-    int uiSeqNum;
+	int uiSeqNum;
 
-    //////////////////////////////////////////////////////////////////////////
-    // LOB 관리에 필요한 변수
-    int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
+	//////////////////////////////////////////////////////////////////////////
+	// LOB 관리에 필요한 변수
+	int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
 
-    bool isFiltered;																						// 수집 필터 여부
-    bool isManualEdited;																				// 수동 편집 여부
+	bool isFiltered;																						// 수집 필터 여부
+	bool isManualEdited;																				// 수동 편집 여부
 
-    unsigned int uiAETID;
-    unsigned int uiABTID;
-    unsigned int uiLOBID;
+	unsigned int uiAETID;
+	unsigned int uiABTID;
+	unsigned int uiLOBID;
 
-    __time32_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
-    int tiContactTimems;																				// 항공에서 분석 시간
+	__time32_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
+	int tiContactTimems;																				// 항공에서 분석 시간
 
-    E_BEAM_EMITTER_STAT enEmitterStat;													// LOB 상태
+	E_BEAM_EMITTER_STAT enEmitterStat;													// LOB 상태
 
-    int iTaskType;																							// 과제 형태 종류
+	int iTaskType;																							// 과제 형태 종류
 
-    unsigned int uiCoLOB;																				// LOB 개수
+	unsigned int uiCoLOB;																				// LOB 개수
 
-    int iBeamValidity;
+	int iBeamValidity;
 
-    //////////////////////////////////////////////////////////////////////////
-    // 식별 추가 정보
-    //
-    // 식별 후보 정보
-    bool bOverCount;
-    //int usCoCandidate;
-    int usThreatId[MAX_IDCANDIDATE];
+	//////////////////////////////////////////////////////////////////////////
+	// 식별 추가 정보
+	//
+	// 식별 후보 정보
+	bool bOverCount;
+	//int usCoCandidate;
+	int usThreatId[MAX_IDCANDIDATE];
 
-    // 위협 레벨
-    //unsigned short usPriorityLevel;
+	// 위협 레벨
+	//unsigned short usPriorityLevel;
 
-    // 일치율
-    int iIdRatio[MAX_IDCANDIDATE];
+	// 일치율
+	int iIdRatio[MAX_IDCANDIDATE];
 
-    // 신규 CED 및 EOB로 식별한 정보
-    STR_CEDEOBID_INFO idInfo;
+	// 신규 CED 및 EOB로 식별한 정보
+	STR_CEDEOBID_INFO idInfo;
 
-    // 위치 산출 정보
-    STR_POSITION_ESTIMATION peInfo;
+	// 위치 산출 정보
+	STR_POSITION_ESTIMATION peInfo;
 
-    //char chELNOT[_MAX_ELNOT_STRING_SIZE_];					// MAX_SIZE_OF_ELNOT
+	//char chELNOT[_MAX_ELNOT_STRING_SIZE_];					// MAX_SIZE_OF_ELNOT
 
-    // EOB 거리 오차 [km]
-    double dEOBErrorDistance;
+	// EOB 거리 오차 [km]
+	double dEOBErrorDistance;
 
-    // 식별 대상
-    //EnumLibType sIdObject;
+	// 식별 대상
+	//EnumLibType sIdObject;
 
-    // 변조 코드
-    //char modCode[MAX_SIZE_OF_MODULATIONCODE];
+	// 변조 코드
+	//char modCode[MAX_SIZE_OF_MODULATIONCODE];
 
-    E_BEAM_CODE eBeamCode;
+	E_BEAM_CODE eBeamCode;
 
-    bool bCompFreq;
-    bool bCompPRI;
+	bool bCompFreq;
+	bool bCompPRI;
 
 } ;
 
@@ -1925,18 +1925,18 @@ struct I_AET_ANAL {
 
 typedef struct STempAET
 {
-    I_THREAT_DATA stThreat;
-    I_AET_DATA stAet;
-    I_AET_ANAL stAnal;
-    STempAET(){
-        //memset(&stThreat, 0, sizeof(I_THREAT_DATA));
-        //memset(&stAet, 0, sizeof(I_AET_DATA));
-        //memset(&stAnal, 0, sizeof(I_AET_ANAL));
+	I_THREAT_DATA stThreat;
+	I_AET_DATA stAet;
+	I_AET_ANAL stAnal;
+	STempAET(){
+		//memset(&stThreat, 0, sizeof(I_THREAT_DATA));
+		//memset(&stAet, 0, sizeof(I_AET_DATA));
+		//memset(&stAnal, 0, sizeof(I_AET_ANAL));
 
-    /*	g_stInitThreatData;
-        g_stInitAETData;
-        g_stInitAETAnal;*/
-    }
+	/*	g_stInitThreatData;
+		g_stInitAETData;
+		g_stInitAETAnal;*/
+	}
 }I_AET;
 static const I_AET g_stInitAET;
 
@@ -1946,26 +1946,51 @@ static const I_AET g_stInitAET;
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
 struct SELLOBDATA_EXT {
-    I_AET_ANAL aetAnal;
-    I_AET_DATA aetData;
+	I_AET_ANAL aetAnal;
+	I_AET_DATA aetData;
 
 } ;
 
 
 struct STR_LOBDATAEXT {
-    SRxLOBData stLOBData;
-    SELLOBDATA_EXT stLOBDataExt;
+	SRxLOBData stLOBData;
+	SELLOBDATA_EXT stLOBDataExt;
 
 }  ;
 
 struct STR_ID_TYPE {
-    int iSignalType;
-    int iFrqType;
-    int iPRIType;
-    //int iScanType;
-    //int iMOPType;
+	int iSignalType;
+	int iFrqType;
+	int iPRIType;
+	//int iScanType;
+	//int iMOPType;
 
 } ;
+
+struct SELMANUALVAL {
+    unsigned int doaInfo : 1;
+    unsigned int freqInfo : 1;
+    unsigned int priInfo : 1;
+    unsigned int pwInfo : 1;
+    unsigned int paInfo : 1;
+    unsigned int idInfo : 1;
+    unsigned int peInfo : 1;
+
+    unsigned int _dummy : 25;
+
+} ;
+
+
+/**
+ * @typedef   UELMANUALVAL
+ * @brief     수동 편집 여부를 결정하기 위한 플레그 구조체
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ */
+union UELMANUALVAL {
+    SELMANUALVAL x;
+    unsigned int val32;
+
+}  ;
 
 /**
  * @typedef   SELABTDATA_EXT
@@ -1973,113 +1998,113 @@ struct STR_ID_TYPE {
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
 struct SELABTDATA_EXT {
-    // 누적된 전체 PDW 개수
-    //int nCoTotalPdw;
-    //int nCoTotalIQ;
+	// 누적된 전체 PDW 개수
+	//int nCoTotalPdw;
+	//int nCoTotalIQ;
 
-    // 인트라 변조 유무
-    //bool bIntraMop;
+	// 인트라 변조 유무
+	//bool bIntraMop;
 
-    // 위치 산출 정보-Covariace 값
-    double dPECoVar[4];
+	// 위치 산출 정보-Covariace 값
+	double dPECoVar[4];
 
-    float fLastAOA;
-    double dRadarCollectionLatitude;
-    double dRadarCollectionLongitude;
+	float fLastAOA;
+	double dRadarCollectionLatitude;
+	double dRadarCollectionLongitude;
 
-    // 수동 편집 여부
-    //bool bIsManualEdited;
+	// 수동 편집 여부
+	//bool bIsManualEdited;
 
-    // 방사체의 활동 상태를 저장
-    enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
+	// 방사체의 활동 상태를 저장
+	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
 
-    // 빔 유효성 갯수
-    int nCoBeamValidity;
+	// 빔 유효성 갯수
+	int nCoBeamValidity;
 
-    // 수동 편집 여부 플레그
-    //UELMANUALVAL xManualEdited;
+	// 수동 편집 여부 플레그
+	//UELMANUALVAL xManualEdited;
 
 #ifdef _ELINT_
-    // FISINT용 과제
-    //bool bIsFISINTTask;
-    UINT uiOpInitID;
+	// FISINT용 과제
+	//bool bIsFISINTTask;
+	UINT uiOpInitID;
 #endif
 
-    // 수동/자동 위치 결과 정보 여부
-    //bool bManualPosEstPreferred;
-    unsigned int uiSeqNum;
+	// 수동/자동 위치 결과 정보 여부
+	//bool bManualPosEstPreferred;
+	unsigned int uiSeqNum;
 
-    //SLOBOtherInfo stLOBOtherInfo;
+	//SLOBOtherInfo stLOBOtherInfo;
 
-    int iLOBPoolIndex;
+	int iLOBPoolIndex;
 
-    STR_ID_TYPE stIDType;
+	STR_ID_TYPE stIDType;
 
-    enTHREAT_PLATFORM enPlatform;
+	enTHREAT_PLATFORM enPlatform;
 
-    int nCoIdEOB;
-    //STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
+	int nCoIdEOB;
+	//STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
 
-    // 빔 병합 정보
-    bool bCompFreq;
-    bool bCompPRI;
+	// 빔 병합 정보
+	bool bCompFreq;
+	bool bCompPRI;
 
-    // 신규 CED 및 EOB로 식별한 정보
-    STR_CEDEOBID_INFO idInfo;
+	// 신규 CED 및 EOB로 식별한 정보
+	STR_CEDEOBID_INFO idInfo;
 
-    ENUM_PE_STAT enValid;
-    bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
+	ENUM_PE_STAT enValid;
+	bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
 
-    UINT uiPE;
-    bool bFullOfPE;
-    double dLatitude[MAX_OF_LOBS_PE];
-    double dLongitude[MAX_OF_LOBS_PE];
-    double dEasting[MAX_OF_LOBS_PE];
-    double dNorthing[MAX_OF_LOBS_PE];
+	UINT uiPE;
+	bool bFullOfPE;
+	double dLatitude[MAX_OF_LOBS_PE];
+	double dLongitude[MAX_OF_LOBS_PE];
+	double dEasting[MAX_OF_LOBS_PE];
+	double dNorthing[MAX_OF_LOBS_PE];
 
 } ;
 
 struct SELAETDATA_EXT {
-    // 누적된 전체 PDW 개수
-    int nCoTotalPdw;
-    //int nCoTotalIQ;
+	// 누적된 전체 PDW 개수
+	int nCoTotalPdw;
+	//int nCoTotalIQ;
 
-    // 인트라 변조 유무
-    // bool bIntraMop;
+	// 인트라 변조 유무
+	// bool bIntraMop;
+	
+	// 방사체 간의 식별을 위한 정보
+	//char szEOBELNOT[_MAX_ELNOT_STRING_SIZE_];					// EOB 상의 ELNOT
 
-    // 방사체 간의 식별을 위한 정보
-    //char szEOBELNOT[_MAX_ELNOT_STRING_SIZE_];					// EOB 상의 ELNOT
+	// 방사체의 활동 상태를 저장
+	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
 
-    // 방사체의 활동 상태를 저장
-    enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
+	// 수동 편집 여부 플레그
+	bool bIsManualEdited;
 
-    // 수동 편집 여부 플레그
-    bool bIsManualEdited;
+	bool bIsFISINTTask;
 
-    bool bIsFISINTTask;
+	// 수동 편집 정보
+    UELMANUALVAL xMannualEdited;
 
-    // 수동 편집 정보
-    //UELMANUALVAL xMannualEdited;
+	int iPinNumber;
+	//char szELNOT[_MAX_ELNOT_STRING_SIZE_];
 
-    int iPinNumber;
-    //char szELNOT[_MAX_ELNOT_STRING_SIZE_];
+	//int iTaskType;		// 과제 형태
 
-    //int iTaskType;		// 과제 형태
+	// 여러개의 미식별 빔 중에서 대표 ABT 번호
+	unsigned int nUnIDABTID;
 
-    // 여러개의 미식별 빔 중에서 대표 ABT 번호
-    unsigned int nUnIDABTID;
-
-    // 수동/자동 위치 결과 정보 여부
-    bool bManualPosEstPreferred;
-    unsigned int uiSeqNum;
+	// 수동/자동 위치 결과 정보 여부
+	bool bManualPosEstPreferred;
+	unsigned int uiSeqNum;
 
 
 } ;
 
 struct STR_ABTDATAEXT {
-    SRxLOBData stLOBData;
-    SRxABTData stABTData;
-    SELABTDATA_EXT stABTDataExt;
+	SRxLOBData stLOBData;
+	SRxABTData stABTData;
+	SELABTDATA_EXT stABTDataExt;
 
 } ;
 
@@ -2088,53 +2113,53 @@ struct STR_ABTDATAEXT {
  * @typedef   SELIDENTIFICATION_INFO
  * @brief     신호 식별 옵션 창에 대한 구조체 정의 (GMI 병합 처리용 구조체)
  * @author    이정남(jeongnam.lee@lignex1.com)
- * @date      2016-02-13
+ * @date      2016-02-13 
  */
 // typedef struct {
 // 	SRxThreatData				stMsgData;		// 항공에서 수신된 메시지의 Data (Header) 정보
 // 	SRxThreatDataGroup		stMsgDataGrp;	// 항공에서 수신된 메시지의 DataGrp 정보
 // 	SPosEstData stPosEst;							// 지상에서 위치 산출한 정보
 // 	I_AET stCDFAet;									// 신호 식별 입력 및 결과 정보
-//
+// 
 // } SELIDENTIFICATION_INFO_MR;
 
 /*! Beam (ABT) 정보를 담고 있는 구조체
  * @struct     SBeamInfoFamily
- * @brief
+ * @brief 
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:28
+ * @date      2016-02-13 오전 8:28 
  */
 #define LENGTH_OF_GMI_CHAR 64
 struct SThreatFamilyInfo
 {
-    E_EMITTER_OPCODE enOpcode;						// 연동기와 POSN간의 명령 값
+	E_EMITTER_OPCODE enOpcode;						// 연동기와 POSN간의 명령 값
 
-    unsigned int nSeqNum;									// DB 테이블의 SEQ_NUM
+	unsigned int nSeqNum;									// DB 테이블의 SEQ_NUM
 
-    unsigned int iAETID;									// 방사체 #
-    unsigned int iABTID;									// ABT #
-    unsigned int iLOBID;									// LOB #
+	unsigned int iAETID;									// 방사체 #
+	unsigned int iABTID;									// ABT #
+	unsigned int iLOBID;									// LOB #
 
-    bool bApplySearchFilter;							// ApplySearchFilterToAlarmAndMapDisplay() 함수 수행 여부
+	bool bApplySearchFilter;							// ApplySearchFilterToAlarmAndMapDisplay() 함수 수행 여부
 
-    bool bIsFISINTTask;										// FISINT용 과제
+	bool bIsFISINTTask;										// FISINT용 과제
 
-    // 경보 및 보고서 최초/최종 보고 시각
-    time_t ti_FirstTime;									// 최초 시각
-    time_t ti_FinalTime;								// 최종 시각(경보)
+	// 경보 및 보고서 최초/최종 보고 시각
+	time_t ti_FirstTime;									// 최초 시각
+	time_t ti_FinalTime;								// 최종 시각(경보)
 
-    E_BEAM_CODE eBeamCode;								// 빔 상태 전송, 디버깅을 위한 코드
+	E_BEAM_CODE eBeamCode;								// 빔 상태 전송, 디버깅을 위한 코드
 
-    E_BEAM_EMITTER_STAT enEmitterStat;					// 위협 상태 정보
+	E_BEAM_EMITTER_STAT enEmitterStat;					// 위협 상태 정보
 
-    unsigned int iChangedAETID;							// AET #
-    unsigned int iChangedABTID;							// ABT #
+	unsigned int iChangedAETID;							// AET #
+	unsigned int iChangedABTID;							// ABT #
 
         SThreatFamilyInfo() : enOpcode(E_EO_NOT_AVAILABLE), nSeqNum(0), iAETID(0), iABTID(0), iLOBID(0),
             bApplySearchFilter(false), bIsFISINTTask(false), ti_FirstTime(0), ti_FinalTime(0), eBeamCode(E_UNKNOWN_CODE), enEmitterStat(E_ES_NOT_AVAILABLE), iChangedAETID(0), iChangedABTID(0)
-    {
+	{
 
-    }
+	}
 
 } ;
 
@@ -2142,27 +2167,27 @@ struct SThreatFamilyInfo
 
 typedef struct SEmitterFilter
 {
-    bool bFrqUse;
-    float fFrqMin;
-    float fFrqMax;
-    bool bPriUse;
-    float fPriMin;
-    float fPriMax;
-    bool bPwUse;
-    float fPwMin;
-    float fPwMax;
+	bool bFrqUse;
+	float fFrqMin;
+	float fFrqMax;
+	bool bPriUse;
+	float fPriMin;
+	float fPriMax;
+	bool bPwUse;
+	float fPwMin;
+	float fPwMax;
         SEmitterFilter()
-        :bFrqUse(false)
+		:bFrqUse(false)
                 ,fFrqMin(0.0)
                 ,fFrqMax(0.0)
-        ,bPriUse(false)
+		,bPriUse(false)
                 ,fPriMin(0.0)
                 ,fPriMax(0.0)
-        ,bPwUse(false)
-        ,fPwMin(0.0)
-        ,fPwMax(0.0)
-    {
-    }
+		,bPwUse(false)
+		,fPwMin(0.0)
+		,fPwMax(0.0)
+	{
+	}
 }I_EMITTER_FILTER;
 
 // typedef struct STempPDW
@@ -2198,66 +2223,66 @@ typedef struct SEmitterFilter
 
 struct SEmitterActivationInfo
 {
-    int nDetectYear; //초출 년도
-    int nDetectMon; // 초출 월
-    int nDetectDay; // 추촐 일
-    int nDetectTimeHour;	// 초출 시각 (시)
-    int nDetectTimeMin;		// 초출 시각 (분)
-    int nDetectTimeSec;		// 초출 시각 (초)
-    int nRecentUpdateTimeHour;  // 갱신 시각 (시)
-    int nRecentUpdateTimeMin;	 // 갱신 시각 (분)
-    int nRecentUpdateTimeSec;	 // 갱신 시각 (초)
-    int nTotalActTimeHour;			// 총 활동 시간 (시)
-    int nTotalActTimeMin;			 // 총 활동 시간 (분)
-    int nTotalActTimeSec;			// 총 활동 시간 (초)
-    bool bDeactivatedNow;			// 활동종료 여부
-    int nDeactivatedTimeHour;			// 활동종료 시간 (시)
-    int nDeactivatedTimeMin;			 // 활동종료 시간 (분)
-    int nDeactivatedTimeSec;			// 활동종료 시간 (초)
-    bool bTimeOfConvergenceIsValid; //
-    int nTimeOfConvergenceHour;
-    int nTimeOfConvergenceMin;
-    int nTimeOfConvergenceSec;
-    int nTimeOfConvergenceLobNum;
-    int nNumOfDetectionToday;
-    int nNumOfTotalLob;
-    int nNumOfLobUsedToPosEst;
-    int nNumOfTotalPdw;
-    bool bIsSoi; // 관심신호인지. 2015.3.30. 이정남. 관심신호는 경보/연관과제 설정 신호인지의 의미임.
-    int nFinalAircraftLatitude;
-    int nFinalAircraftLongitude;
-    int nFinalAircraftDoa;
-    SEmitterActivationInfo()
-        :nDetectYear(0),
-         nDetectMon(0),
-         nDetectDay(0),
-         nDetectTimeHour(0),
-         nDetectTimeMin(0),
-         nDetectTimeSec(0),
-         nRecentUpdateTimeHour(0),
-         nRecentUpdateTimeMin(0),
-         nRecentUpdateTimeSec(0),
-         nTotalActTimeHour(0),
-         nTotalActTimeMin(0),
-         nTotalActTimeSec(0),
-         bDeactivatedNow(false),
-         nDeactivatedTimeHour(0),
-         nDeactivatedTimeMin(0),
-         nDeactivatedTimeSec(0),
-         bTimeOfConvergenceIsValid(false),
-         nTimeOfConvergenceHour(0),
-         nTimeOfConvergenceMin(0),
-         nTimeOfConvergenceSec(0),
-         nTimeOfConvergenceLobNum(0),
-         nNumOfDetectionToday(0),
-         nNumOfTotalLob(0),
-         nNumOfLobUsedToPosEst(0),
-         nNumOfTotalPdw(0),
-         bIsSoi(false),
-         nFinalAircraftLatitude(0),
-         nFinalAircraftLongitude(0),
+	int nDetectYear; //초출 년도
+	int nDetectMon; // 초출 월
+	int nDetectDay; // 추촐 일
+	int nDetectTimeHour;	// 초출 시각 (시)
+	int nDetectTimeMin;		// 초출 시각 (분)
+	int nDetectTimeSec;		// 초출 시각 (초)
+	int nRecentUpdateTimeHour;  // 갱신 시각 (시)
+	int nRecentUpdateTimeMin;	 // 갱신 시각 (분)
+	int nRecentUpdateTimeSec;	 // 갱신 시각 (초)
+	int nTotalActTimeHour;			// 총 활동 시간 (시)
+	int nTotalActTimeMin;			 // 총 활동 시간 (분)
+	int nTotalActTimeSec;			// 총 활동 시간 (초)
+	bool bDeactivatedNow;			// 활동종료 여부
+	int nDeactivatedTimeHour;			// 활동종료 시간 (시)
+	int nDeactivatedTimeMin;			 // 활동종료 시간 (분)
+	int nDeactivatedTimeSec;			// 활동종료 시간 (초)
+	bool bTimeOfConvergenceIsValid; // 
+	int nTimeOfConvergenceHour;
+	int nTimeOfConvergenceMin;
+	int nTimeOfConvergenceSec;
+	int nTimeOfConvergenceLobNum;
+	int nNumOfDetectionToday;
+	int nNumOfTotalLob;
+	int nNumOfLobUsedToPosEst;
+	int nNumOfTotalPdw;
+	bool bIsSoi; // 관심신호인지. 2015.3.30. 이정남. 관심신호는 경보/연관과제 설정 신호인지의 의미임.
+	int nFinalAircraftLatitude;
+	int nFinalAircraftLongitude;
+	int nFinalAircraftDoa;
+	SEmitterActivationInfo()
+		:nDetectYear(0),
+		 nDetectMon(0),
+	     nDetectDay(0),
+		 nDetectTimeHour(0),
+		 nDetectTimeMin(0),
+		 nDetectTimeSec(0),
+		 nRecentUpdateTimeHour(0),
+		 nRecentUpdateTimeMin(0),
+		 nRecentUpdateTimeSec(0),
+		 nTotalActTimeHour(0),
+		 nTotalActTimeMin(0),
+		 nTotalActTimeSec(0),
+		 bDeactivatedNow(false),
+		 nDeactivatedTimeHour(0),
+		 nDeactivatedTimeMin(0),
+		 nDeactivatedTimeSec(0),
+		 bTimeOfConvergenceIsValid(false),
+		 nTimeOfConvergenceHour(0),
+		 nTimeOfConvergenceMin(0),
+		 nTimeOfConvergenceSec(0),
+		 nTimeOfConvergenceLobNum(0),
+		 nNumOfDetectionToday(0),
+		 nNumOfTotalLob(0),
+		 nNumOfLobUsedToPosEst(0),
+		 nNumOfTotalPdw(0),
+		 bIsSoi(false),
+		 nFinalAircraftLatitude(0),
+		 nFinalAircraftLongitude(0),
          nFinalAircraftDoa(0)
-    {};
+	{};
 };
 
 typedef struct stIdntfyReslt
@@ -2265,12 +2290,12 @@ typedef struct stIdntfyReslt
     string strIdnfyRsltID;				// "0" 은 자동으로 DB에서 Unique 수로 할당
     string strDtctSigID;						// 단위 : 없음.
     string strIdnfyTime;					// 단위 : 시:분:초
-    int	nRadarModeIndex;							// nRadarModeIndex
-    int	nThreatIndex;
-    int	nDeviceIndex;
-    unsigned int uiBeamID;
-    int uiLobID;
-    int uiAetID;
+	int	nRadarModeIndex;							// nRadarModeIndex
+	int	nThreatIndex;	
+	int	nDeviceIndex;
+	unsigned int uiBeamID;
+	int uiLobID;
+	int uiAetID;
     unsigned int uiCandidateNum;
     string strMsgAetID;
     string strElnotAir;
@@ -2284,14 +2309,14 @@ typedef struct stIdntfyReslt
         ,nThreatIndex(0)
         ,nDeviceIndex(0)
         ,uiBeamID(0)
-        ,uiLobID(0)
-        ,uiAetID(0)
+		,uiLobID(0)
+		,uiAetID(0)
         ,uiCandidateNum(0)
-        ,strMsgAetID("")
-        ,strElnotAir("")
-        ,strElnotGnd("")
-    {
-    };
+		,strMsgAetID("")	
+		,strElnotAir("")
+		,strElnotGnd("")
+	{		
+	};
 }SELIdentify;
 
 /**
@@ -2301,12 +2326,12 @@ typedef struct stIdntfyReslt
  */
 typedef struct SPDWIQData
 {
-    bool bPDW;
-    bool bIQ;
-    SPDWIQData(){
-        bIQ = false;
-        bPDW = false;
-    }
+	bool bPDW;
+	bool bIQ;
+	SPDWIQData(){
+		bIQ = false;
+		bPDW = false;
+	}
 } I_PDW_IQ_DATA;
 
 // 방사체/빔/LOB 상태 정의
@@ -2317,17 +2342,17 @@ typedef struct SPDWIQData
 
 /*! Emitter 정보를 담고 있는 구조체
  * @struct     SEmitterInfoFamily
- * @brief
+ * @brief 
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:28
+ * @date      2016-02-13 오전 8:28 
  */
 // struct SEmitterInfoFamily
 // {
-// 	E_BEAM_EMITTER_STAT eStat;					// Emitter Status
+// 	E_BEAM_EMITTER_STAT eStat;					// Emitter Status 
 // 	char szEmitterIdGnd[LENGTH_OF_GMI_CHAR];							// 지상에서 정의한 Emitter Unique ID
 // 	char szPastEmitterIdGnd[LENGTH_OF_GMI_CHAR];					// Emitter Status가 E_MR_NEW_BY_DEMERGE 인 경우, 이전 Emitter ID를 기입.
-// 	SELIDENTIFICATION_INFO_MR stEmitter;	// 식별, 위치산출, 제원 등 Emitter 정보
-//
+// 	SELIDENTIFICATION_INFO_MR stEmitter;	// 식별, 위치산출, 제원 등 Emitter 정보	
+// 	
 // 	SEmitterInfoFamily(){
 // 		memset(szEmitterIdGnd, 0, LENGTH_OF_GMI_CHAR);
 // 		memset(szPastEmitterIdGnd, 0, LENGTH_OF_GMI_CHAR);
@@ -2336,25 +2361,25 @@ typedef struct SPDWIQData
 
 /*! Emitter 또는 Beam이 Merge로 인하여 Delete 대상이 생긴 경우, ID를 기록하기 위한 구조체
  * @struct     SDeleteID
- * @brief
+ * @brief 
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:40
+ * @date      2016-02-13 오전 8:40 
  */
 struct SDeleteID
 {
-    char szIdGnd[LENGTH_OF_GMI_CHAR];					// 삭제 대상인 ID. (Emitter  Unique ID 또는 Beam Unique ID)
-
-    SDeleteID(){
-        memset(szIdGnd, 0, LENGTH_OF_GMI_CHAR);
-    }
+	char szIdGnd[LENGTH_OF_GMI_CHAR];					// 삭제 대상인 ID. (Emitter  Unique ID 또는 Beam Unique ID)
+	
+	SDeleteID(){
+		memset(szIdGnd, 0, LENGTH_OF_GMI_CHAR);	
+	}
 } ;
 
 // VER.3 목록창용 구조체 && ENUM 타입
-enum E_GMI_PROC_MSG_INFO_TYPE
-{
-    E_GMI_LOB = 0,
-    E_GMI_ABT,
-    E_GMI_AET,
+enum E_GMI_PROC_MSG_INFO_TYPE 
+{	
+	E_GMI_LOB = 0,
+	E_GMI_ABT,
+	E_GMI_AET,
 };
 
 // #define LENGTH_OF_SHORT_CHAR 64
@@ -2390,7 +2415,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int iRatioOfPOL;
 // 	//int iIsFISINTTask;
 // 	char szIsFISINTTask[LENGTH_OF_SHORT_CHAR];
-//
+// 	
 // 	int nNumOfPPG;
 // 	int nNumOfPulse;
 // 	char szTimeInfo[LENGTH_OF_SHORT_CHAR];
@@ -2414,7 +2439,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nFrqMin;
 // 	int nFrqDev;
 // 	int arrFrqSeq[MAX_FREQ_PRI_STEP];
-// 	char szFrqSeq[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];
+// 	char szFrqSeq[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];	
 // 	char szPriType[LENGTH_OF_SHORT_CHAR];
 // 	char szPriPatternType[LENGTH_OF_SHORT_CHAR];
 // 	char szHasPriPeriod[LENGTH_OF_SHORT_CHAR];
@@ -2473,13 +2498,13 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	unsigned int uiNewAbtId;
 // 	unsigned int uiNewAetId;
 // 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
-//
+// 
 // 	// 조철희, 시간 순으로 정렬하기 위해 추가된 함수
-// 	bool operator<(const SLobInfoToWnd & other )
+// 	bool operator<(const SLobInfoToWnd & other ) 
 // 	{
 // 		return strcmp( this->szTimeInfo, other.szTimeInfo ) < 0;
 // 	}
-//
+// 
 // 	SLobInfoToWnd()
 // 		:ullSeqNum(0),
 // 		nSearchBandId(0),
@@ -2581,7 +2606,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szIsPDWRestored, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(szIsIQRestored, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(szFirstReportTime, 0,LENGTH_OF_SHORT_CHAR);
-// 		memset(szFinalReportTime, 0,LENGTH_OF_SHORT_CHAR);
+// 		memset(szFinalReportTime, 0,LENGTH_OF_SHORT_CHAR);	
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(arrFrqSeq, 0, MAX_FREQ_PRI_STEP*sizeof(int));
 // 		memset(arrPRISeq, 0, MAX_FREQ_PRI_STEP*sizeof(int));
@@ -2592,10 +2617,10 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szFrqSeq, 0, LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR);
 // 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szRxPath, 0, LENGTH_OF_SHORT_CHAR);//LDRA추가
-//
+// 
 // 	}
 // };
-//
+// 
 // struct SAbtInfoToWnd
 // {
 // 	unsigned long long ullSeqNum;
@@ -2640,7 +2665,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nFrqMin;
 // 	int nFrqDev;
 // 	int arrFrqElement[64];
-// 	char szFrqElement[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];
+// 	char szFrqElement[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];		
 // 	char szPriType[LENGTH_OF_SHORT_CHAR];
 // 	char szPriPatternType[LENGTH_OF_SHORT_CHAR];
 // 	char szHasPriPeriod[LENGTH_OF_SHORT_CHAR];
@@ -2689,13 +2714,13 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
 // 	unsigned int uiNewAetId;
 // 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
-//
+// 
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalAlarmTime[LENGTH_OF_SHORT_CHAR];
 // 	char szPolarization[LENGTH_OF_SHORT_CHAR];
 // 	char szStat[LENGTH_OF_SHORT_CHAR];
-//
+// 
 // 	SAbtInfoToWnd()
 // 		:ullSeqNum(0),
 // 	uiAbtId(0),
@@ -2704,7 +2729,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	iThreatIndex(0),//LDRA추가
 // 	nRadarModePriority(0),
 // 	fDistanceErrFromThreat(0.0),
-// 	nRadarPriority(0),
+// 	nRadarPriority(0),	
 // 	nNumOfPPG(0),
 // 	nNumOfLOB(0),
 // 	iDoaMean(0), // 해상도 0.1 deg
@@ -2720,7 +2745,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	nFrqMean(0), // 해상도 10khz
 // 	nFrqMax(0),
 // 	nFrqMin(0),
-// 	nFrqDev(0),
+// 	nFrqDev(0),	
 // 	nPriPeriodMean(0), // us
 // 	nPriPeriodMax(0), // us
 // 	nPriPeriodMin(0), // us
@@ -2730,7 +2755,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	nPriMax(0),
 // 	nPriMin(0),
 // 	nPriDev(0),
-// 	iPriJitterRatio(0),
+// 	iPriJitterRatio(0),	
 // 	nPwMean(0),
 // 	nPwMax(0),
 // 	nPwMin(0),
@@ -2785,19 +2810,19 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(arrPriElement,0, 64);
 // 		memset(szPriElement, 0, LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR);
 // 		memset(szScanType, 0,LENGTH_OF_SHORT_CHAR);
-// 		memset(szHasIntraModulation, 0,LENGTH_OF_SHORT_CHAR);
+// 		memset(szHasIntraModulation, 0,LENGTH_OF_SHORT_CHAR);		
 // 		memset(arrPriPerGroup, 0, sizeof(int)*MAX_PRI_PER_GROUP);
 // 		memset(arrPaDiffPerGroup, 0, sizeof(int)*MAX_PADIFF_PER_GROUP);
 // 		memset(szFirstReportTime,0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalReportTime,0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalAlarmTime,0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);
+// 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);		
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szPlaceNameKor, 0, LENGTH_OF_SHORT_CHAR);
 // 		//@end_이시온
 // 	}
 // };
-//
+// 
 // struct SAetInfoToWnd
 // {
 // 	unsigned long long ullSeqNum;
@@ -2805,7 +2830,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	char szMissionName[SIZE_OF_TASK_NAME];
 // 	char szTaskType[LENGTH_OF_SHORT_CHAR];
 // 	unsigned int uiAetId;
-//
+// 
 // 	//CED 관련 정보
 // 	int iRadarIndex;
 // 	int iThreatIndex;
@@ -2814,7 +2839,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	char szNickName[LENGTH_OF_SHORT_CHAR];
 // 	char szPriFuncCode[LENGTH_OF_SHORT_CHAR];
 // 	int nRadarPriority;
-//
+// 	
 // 	//EOB 관련
 // 	unsigned int uiPinNum;
 // 	char szThreatName[LENGTH_OF_SHORT_CHAR];
@@ -2824,7 +2849,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	float fDistanceErrFromThreat; // Nautical Mile
 // 	int iEquipNumber;
 // 	//char szEquipNumber[LENGTH_OF_SHORT_CHAR];
-//
+// 
 // 	int nNumOfLOB;
 // 	int nNumOfBeam;
 // 	char szFirstDetectTimeInfo[LENGTH_OF_SHORT_CHAR];
@@ -2857,7 +2882,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nPosEstLat; // 자동으로 갱신되는 위치 산출값
 // 	int nPosEstLong; // 자동으로 갱신되는 위치 산출값
 // 	int nManualPosEstLat; // 고정된 수동위치 산출값
-// 	int nManualPosEstLong; // 고정된 수동위치 산출값
+// 	int nManualPosEstLong; // 고정된 수동위치 산출값	
 // 	int nRepresentPosEstLat; // 대표 위치 위도
 // 	int nRepresentPosEstLong; // 대표 위치 경도
 // 	int nAltitude; // meter
@@ -2866,15 +2891,15 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nLengthOfMinorAxis;
 // 	int nEEPTiltAngle; // 0.1도 해상도
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
-//
+// 
 // 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
 // 	char szManualPosEstPreferred[LENGTH_OF_SHORT_CHAR];
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalAlarmTime[LENGTH_OF_SHORT_CHAR];
-//
+// 
 // 	char szStat[LENGTH_OF_SHORT_CHAR];
-//
+// 
 // 	SAetInfoToWnd()
 // 	:ullSeqNum(0)
 // 	 ,uiAetId(0)
@@ -2931,23 +2956,23 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szElnotPri, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szIdResult, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szNickName, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szPriFuncCode, 0, LENGTH_OF_SHORT_CHAR);
+// 		memset(szPriFuncCode, 0, LENGTH_OF_SHORT_CHAR);		
 // 		memset(szThreatName, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szBENumber, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szThreatFuncCode, 0, LENGTH_OF_SHORT_CHAR);
-// 		//memset(szEquipNumber, 0, LENGTH_OF_SHORT_CHAR);
+// 		memset(szThreatFuncCode, 0, LENGTH_OF_SHORT_CHAR);	
+// 		//memset(szEquipNumber, 0, LENGTH_OF_SHORT_CHAR);	
 // 		memset(szFirstDetectTimeInfo, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalDetectTimeInfo, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szValidity, 0, LENGTH_OF_SHORT_CHAR);
+// 		memset(szValidity, 0, LENGTH_OF_SHORT_CHAR);	
 // 		memset(szPosEstValidity, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szManualPosEstPreferred, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFirstReportTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalReportTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalAlarmTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
-//
+// 
 // 		//@end_이시온
-//
+// 		
 // 	}
 // };
 
@@ -3009,24 +3034,24 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 
 struct SFLTMData
 {
-    int nFrqType;
-    int nPriType;
-    int nMeanFrq;
-    int nMeanPri;
-    int nMeanPw;
-    int nMeanPa;
-    int nMeanDoa;
-    int nAntDir;
+	int nFrqType;
+	int nPriType;
+	int nMeanFrq;
+	int nMeanPri;
+	int nMeanPw;
+	int nMeanPa;
+	int nMeanDoa;
+	int nAntDir;
         SFLTMData()
-        :nFrqType(0)
-        ,nPriType(0)
-        ,nMeanFrq(0)
-        ,nMeanPri(0)
-        ,nMeanPw(0)
-        ,nMeanPa(0)
-        ,nMeanDoa(0)
-        ,nAntDir(0)
-    {};
+		:nFrqType(0)
+		,nPriType(0)
+		,nMeanFrq(0)
+		,nMeanPri(0)
+		,nMeanPw(0)
+		,nMeanPa(0)
+		,nMeanDoa(0)
+		,nAntDir(0)
+	{};
 };
 
 
@@ -3035,36 +3060,36 @@ struct SFLTMData
 // typedef struct {
 // 	SRadar stSRadar;
 // 	EnumLibType enLibType;
-//
+// 
 // } SELCALLCEDLIB;
 
 // CED 생성시 참조되는 인자
 // typedef struct {
 // 	int nAETId;
 // 	int nABTId;
-//
+// 
 // 	char szMissionId[LENGTH_OF_MISSION_ID+2];
-//
+// 
 // } SELCEDCREATE ;
 
 
 struct SELCHECKRANGE {
-    bool bCheckBox;
-    float low;
-    float high;
+	bool bCheckBox;
+	float low;
+	float high;
 } ;
 
 enum EnumRangeSearchRef {
-    enumIncludeAllInput=0,						// 입력범위를 모두포함
-    enumOverlapWithInnerInput,				// 입력 범위 내부에 중첩
-    enumOverlapWithInput							// 입력 범위와 중첩
+	enumIncludeAllInput=0,						// 입력범위를 모두포함
+	enumOverlapWithInnerInput,				// 입력 범위 내부에 중첩
+	enumOverlapWithInput							// 입력 범위와 중첩
 
 } ;
 
 
 // typedef struct {
 // 	//EnumLibType enLibType;	// 기본형 또는 실무형
-//
+// 
 // 	CString strELNOT;
 // 	CString strNickName;
 // 	int iPin;
@@ -3072,22 +3097,22 @@ enum EnumRangeSearchRef {
 // 	EnumRadarStatus eStatus;									// 상태
 // 	CString strAssocWeapSys;									// 연관 무기 체계
 // 	CString strAssocPlatform;									// 연관 플레폼
-//
+// 
 // 	EnumRangeSearchRef eRangeSearchRef;			// 범위 검색 기준
-//
+// 
 // 	SELCHECKRANGE stFreq;											// 주파수 범위
 // 	SELCHECKRANGE stPRI;											// PRI 범위
 // } SELRADARLIST_SEARCH_FILTER;
 
 
 struct SELRANGE {
-    int low;
-    int high;
+	int low;
+	int high;
 } ;
 
 // typedef struct stSELRADARMODELIST_SEARCH_FILTER{
 // 	EnumLibType enLibType;	// 기본형 또는 실무형
-//
+// 
 // 	// 방사체
 // 	CString strELNOT;
 // 	CString strNickName;
@@ -3095,7 +3120,7 @@ struct SELRANGE {
 // 	EnumRadarStatus eStatus;									// 상태
 // 	CString strAssocWeapSys;									// 연관 무기 체계
 // 	CString strAssocPlatform;									// 연관 플레폼
-//
+// 
 // 	// 모드제원
 // 	PlatformCode::EnumPlatformCode ePlatform;
 // 	EnumValidationCode eValidation;
@@ -3113,14 +3138,14 @@ struct SELRANGE {
 // 	float fScanPrimaryTypicalMax;											//주 스캔 주기값의 TYPICAL (SEC) 최대
 // 	float fPD_TypicalMin;													//PD TYPICAL 값 (USEC) 최소
 // 	float fPD_TypicalMax;													//PD TYPICAL 값 (USEC) 최대
-//
+// 
 // 	// 주파수
 // 	ContinuityCode::EnumContinuityCode eRF_Continuity;						//주파수 값분포연속성: RF 변화의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode eRF_Pattern;								//RF 변화의 패턴 여부 (PATTERN_CODE 참조)
 // 	EnumRF_LagacyTypeCode eRF_LagacyType;									//RF_LEGACY_TYPE_CODE 참조
 // 	SELRANGE stRF_NumElements;													//NUMBER	PRI ELEMENT 수
 // 	SELRANGE stRF_NumPositions;													//NUMBER	PRI POSITION 수
-//
+// 
 // 	// PD
 // 	ContinuityCode::EnumContinuityCode ePD_Continuity;						//PD값의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode ePD_Pattern;								//PD값의 패턴여부 (PATTERN_CODE 참조)
@@ -3128,7 +3153,7 @@ struct SELRANGE {
 // 	SELRANGE stPD_NumPositions;													//PD Positon 수
 // 	float fPD_PatternPeriodMin;												//PD 패턴주기 (USEC) 최소
 // 	float fPD_PatternPeriodMax;												//PD 패턴주기 (USEC) 최대
-//
+// 
 // 	// PRI
 // 	ContinuityCode::EnumContinuityCode ePRI_Continuity;						//PRI 변화의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode ePRI_Pattern;								//NUMBER PRI변화의 패턴여부	(PATTERN_CODE 참조)
@@ -3141,15 +3166,15 @@ struct SELRANGE {
 // 	float fPRI_SubframePeriodMax;											//PRI SUBFRAME 주기 (USEC) 최대
 // 	float fPRI_PPG_Min;														//Pulse Per Group 최소
 // 	float fPRI_PPG_Max;														//Pulse Per Group 최대
-//
+// 
 // 	// 펄스내 변조
 // 	MOP_CW_ModulationType::EnumMOP_CW_ModulationType eMOP_CW_ModulationType;	//펄스 내 또는 CW 변조형태 (MOP_CW_MOD_TYPE_CODE 참조)
 // 	EnumMOP_CW_LegacyType eMOP_CW_LegacyType;					//변조형태의 LEGACY TERM (MOP_CW_LEGACY_TYPE_CODE)
-//
+// 
 // 	stSELRADARMODELIST_SEARCH_FILTER()
 // 	{
 // 		enLibType = E_EL_LIB_TYPE_NORMAL;	// 기본형 또는 실무형
-//
+// 
 // 		// 방사체
 // 		strELNOT="";
 // 		strNickName="";
@@ -3157,7 +3182,7 @@ struct SELRANGE {
 // 		eStatus = enumUndefinedRadarStatus;									// 상태
 // 		strAssocWeapSys="";									// 연관 무기 체계
 // 		strAssocPlatform="";									// 연관 플레폼
-//
+// 
 // 		// 모드제원
 // 		ePlatform = PlatformCode::enumUndefinedPlatformCode;
 // 		eValidation=enumUndefinedValidationCode;
@@ -3175,14 +3200,14 @@ struct SELRANGE {
 // 		fScanPrimaryTypicalMax=0.0f;											//주 스캔 주기값의 TYPICAL (SEC) 최대
 // 		fPD_TypicalMin=0.0f;													//PD TYPICAL 값 (USEC) 최소
 // 		fPD_TypicalMax=0.0f;													//PD TYPICAL 값 (USEC) 최대
-//
+// 
 // 		// 주파수
 // 		eRF_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//주파수 값분포연속성: RF 변화의 연속성 (CONTINUITY_CODE 참조)
 // 		eRF_Pattern=PatternCode::enumUndefinedPatternCode;								//RF 변화의 패턴 여부 (PATTERN_CODE 참조)
 // 		eRF_LagacyType=enumUndefinedRF_LagacyType;									//RF_LEGACY_TYPE_CODE 참조
 // 		stRF_NumElements = SELRANGE();													//NUMBER	PRI ELEMENT 수
 // 		stRF_NumPositions = SELRANGE();													//NUMBER	PRI POSITION 수
-//
+// 
 // 		// PD
 // 		ePD_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//PD값의 연속성 (CONTINUITY_CODE 참조)
 // 		ePD_Pattern=PatternCode::enumUndefinedPatternCode;								//PD값의 패턴여부 (PATTERN_CODE 참조)
@@ -3190,7 +3215,7 @@ struct SELRANGE {
 // 		stPD_NumPositions = SELRANGE();													//PD Positon 수
 // 		fPD_PatternPeriodMin=0.0f;												//PD 패턴주기 (USEC) 최소
 // 		fPD_PatternPeriodMax=0.0f;												//PD 패턴주기 (USEC) 최대
-//
+// 
 // 		// PRI
 // 		ePRI_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//PRI 변화의 연속성 (CONTINUITY_CODE 참조)
 // 		ePRI_Pattern=PatternCode::enumUndefinedPatternCode;								//NUMBER PRI변화의 패턴여부	(PATTERN_CODE 참조)
@@ -3203,33 +3228,33 @@ struct SELRANGE {
 // 		fPRI_SubframePeriodMax=0.0f;											//PRI SUBFRAME 주기 (USEC) 최대
 // 		fPRI_PPG_Min=0.0f;														//Pulse Per Group 최소
 // 		fPRI_PPG_Max=0.0f;														//Pulse Per Group 최대
-//
+// 
 // 		// 펄스내 변조
 // 		eMOP_CW_ModulationType=MOP_CW_ModulationType::enumUndefinedMOP_CW_ModulationType;	//펄스 내 또는 CW 변조형태 (MOP_CW_MOD_TYPE_CODE 참조)
 // 		eMOP_CW_LegacyType=enumUndefinedMOP_CW_LegacyType;					//변조형태의 LEGACY TERM (MOP_CW_LEGACY_TYPE_CODE)
 // 	}
-//
+// 
 // } SELRADARMODELIST_SEARCH_FILTER;
 
 // typedef struct {
 // 	EnumLibType enLibType;	// 기본형 또는 실무형
-//
+// 
 // 	int iPin;
 // 	CString strBE_Number;
 // 	CString strFacilityName;											//기지명칭 (위협명)
-//
+// 
 // 	EnumFunctionCodes ePrimaryFunction_ForGUI;		//주기능코드
 // 	FriendOrFOE::EnumFriendOrFOE eFriendOrFOE;		//적아구분 enum값
-//
+// 
 // 	CString strPlaceNameKor;										//한글지명 (50)
 // 	CString strPlaceNameEng;										//영문지명 (50)
-//
+// 
 // 	CString strCategory;												//자체 구분 카테고리 (99999 형식)(5)
 // 	CString strADA;														//대공방공구역 (ADA) (AA123 형식) (5)
-//
+// 
 // 	CountryCode::EnumCountryCode eUserCountry;	//사용국가를 enum으로 표현
 // 	PlatformCode::EnumPlatformCode ePlatform;			//탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
-//
+// 
 // } SELTHREATLIST_SEARCH_FILTER;
 
 #endif

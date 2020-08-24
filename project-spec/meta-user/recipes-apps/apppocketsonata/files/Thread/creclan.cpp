@@ -110,6 +110,9 @@ void CRecLan::_routine()
                 break;
             }
         }
+        else {
+            LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+        }
     }
 
 }

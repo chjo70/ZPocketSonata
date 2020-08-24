@@ -243,7 +243,8 @@ int main(int argc, char *argv[])
 #endif
 
     usrAppStart();
-/*
+
+    /*
     pthread_t tid;
     pthread_create(&tid,NULL,execute_on_thread,NULL);
 
@@ -257,8 +258,8 @@ int main(int argc, char *argv[])
     {
         perror("pthread_cancel");
     }
-*/
-    return 0;
-}
+    */
 
+	return 0;
+}
 

@@ -14,6 +14,8 @@ private:
     UNI_LAN_DATA m_uniLanData;
     CELEmitterMergeMngr *m_pTheEmitterMergeMngr;
 
+    SLOBOtherInfo m_sLOBOtherInfo;				///< 타체계연동 변수
+
 public:
     static CEmitterMerge *pInstance;
 
@@ -23,35 +25,15 @@ public:
     CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData );
     virtual ~CEmitterMerge(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CEmitterMerge* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CEmitterMerge( g_iKeyId++, (char*)"CDetectAnalysis", true );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CEmitterMerge )
 
 private:
+    void InitData();
     void MergeEmitter();
 
 };
 
-#define EMTMRG  CEmitterMerge::GetInstance()
+#define EMTMRG          CEmitterMerge::GetInstance()
+#define EMTMRG_RELEASE  CEmitterMerge::ReleaseInstance()
 
 #endif // CEMITTERMERGE_H

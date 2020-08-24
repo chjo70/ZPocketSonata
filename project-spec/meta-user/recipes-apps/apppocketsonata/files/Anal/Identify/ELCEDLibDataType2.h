@@ -25,40 +25,48 @@ enum EnumNullValueType
 };
 
 // 진행바 스텝수
-#define _PROGRESS_STEP																(80)
+#define _PROGRESS_STEP												(80)
 
 // 문자열 크기 정의
-#define _NULL_CHAR_																		(1)
+#define _NULL_CHAR_													(1)
 
-#define _MAX_STRING_SIZE_															(50)
+#define _MAX_STRING_SIZE_											(50)
 
-#define _MAX_RADARMODE_NAME_SIZE											(10)
-#define _MAX_THREAT_NAME_SIZE													(10)
-#define _MAX_SITE_NAME_SIZE														(10)
+#define _MAX_SIZE_OF_MODECODE                                       (4)
+#define _MAX_SIZE_OF_FUNCTIONCODE                                   (4)
+#define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
 
-#define _MAX_MODECODE_STRING_SIZE_										(2+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_										(30+_NULL_CHAR_)
+
+#define _MAX_RADARMODE_NAME_SIZE									(10)
+#define _MAX_THREAT_NAME_SIZE										(10)
+#define _MAX_SITE_NAME_SIZE											(10)
+#define _MAX_SIZE_OF_IDINFO                                         (10)
+#define _MAX_SIZE_OF_BENUMBER                                       (30)
+
+#define _MAX_MODECODE_STRING_SIZE_									(2+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_									(30+_NULL_CHAR_)
 #define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
+
 #define _MAX_FUNCTIONCODE_STRING_SIZE_								(10+_NULL_CHAR_)
-#define _MAX_STATUS_STRING_SIZE_											(20+_NULL_CHAR_)
+#define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
 
-#define _MAX_BE_NUMBER_STRING_SIZE_										(12+_NULL_CHAR_)
+#define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
 #define _MAX_USER_COUNTRY_STRING_SIZE_								(4+_NULL_CHAR_)
-#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_						(4+_NULL_CHAR_)
+#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_                          (4+_NULL_CHAR_)
 #define _MAX_FRIEND_OR_FOE_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_ADA_STRING_SIZE_													(8+_NULL_CHAR_)
-#define _MAX_DATETIME_STRING_SIZE_										(40+_NULL_CHAR_)
-#define _MAX_DISTINCTION_STRING_SIZE_									(12+_NULL_CHAR_)
-#define _MAX_SYMBOLCODE_STRING_SIZE_									(20+_NULL_CHAR_)
-#define _MAX_LATITUDE_STRING_SIZE_										(15+_NULL_CHAR_)
-#define _MAX_LONGITUDE_STRING_SIZE_										(15+_NULL_CHAR_)
-#define _MAX_ELNOT_STRING_SIZE_												(10+_NULL_CHAR_)
-#define _MAX_WEAPON_STRING_SIZE_											(40+_NULL_CHAR_)
-#define _MAX_PLATFORM_STRING_SIZE_										(40+_NULL_CHAR_)
+#define _MAX_ADA_STRING_SIZE_										(8+_NULL_CHAR_)
+#define _MAX_DATETIME_STRING_SIZE_									(40+_NULL_CHAR_)
+#define _MAX_DISTINCTION_STRING_SIZE_								(12+_NULL_CHAR_)
+#define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
+#define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
+#define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
+#define _MAX_ELNOT_STRING_SIZE_										(10+_NULL_CHAR_)
+#define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
+#define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 
-#define _MAX_SIZE_OF_THREATNAME_											(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_KOREASITENAME_										(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_FACILITYNAME_										(72+_NULL_CHAR_)
+#define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
+#define _MAX_SIZE_OF_KOREASITENAME_									(70+_NULL_CHAR_)
+#define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
 template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_Q_2502_T5
 {

@@ -96,7 +96,9 @@ void CSignalCollect::_routine()
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( bWhile ) {
+    pthread_cleanup_push( TCleanUpHandler, NULL);
+
+    while( g_AnalLoop ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
             switch( m_pMsg->ucOpCode ) {
                 case enTHREAD_ANAL_START :
@@ -130,6 +132,8 @@ void CSignalCollect::_routine()
             }
         }
     }
+
+    pthread_cleanup_pop( 1 );
 
 }
 
@@ -182,7 +186,7 @@ void CSignalCollect::AnalysisStart()
     int iCh;
     bool bIsOut = true;
 
-    while( true ) {
+    while( g_AnalLoop ) {
         bIsOut = true;
 
         // 탐지 채널 버퍼 체크

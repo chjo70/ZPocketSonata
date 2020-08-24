@@ -47,30 +47,11 @@ public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CSignalCollect(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CSignalCollect* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CSignalCollect( g_iKeyId++, (char*)"CSignalCollect", true );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CSignalCollect )
 
 };
 
-#define SIGCOL     CSignalCollect::GetInstance()
+#define SIGCOL          CSignalCollect::GetInstance()
+#define SIGCOL_RELEASE  CSignalCollect::ReleaseInstance()
 
 #endif // CSIGNALCOLLECT_H

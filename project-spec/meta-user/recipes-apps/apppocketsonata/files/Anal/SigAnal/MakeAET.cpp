@@ -834,7 +834,6 @@ void CMakeAET::PrintAllEmitter()
     //printf( "\n### AOA      Freq(MHz)                PRI(us)                PA(dB)        PW(ns)         AS(s)       SeenTime    IPL   T FSP    PPP");
     //printf( "\n              T       Mean   Min   Max T       Mean  Min  Max Mean Min Max  Mean  Min  Max T    Prd    First Last  C Am    (us)   (us)");
     //printf( "\n------------------------------------------------------------------------------------------------------------------------------------" );
-
         for( i=0 ; i < m_CoAet ; ++i ) {
             //printf("\n\t\t[%02d]" , i+1 );
             DISP_FineAet( pLOB );

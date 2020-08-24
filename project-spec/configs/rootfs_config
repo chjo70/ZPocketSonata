@@ -515,11 +515,11 @@ CONFIG_canutils=y
 #
 # nfs-utils 
 #
-# CONFIG_nfs-utils is not set
-# CONFIG_nfs-utils-stats is not set
-# CONFIG_nfs-utils-dbg is not set
-# CONFIG_nfs-utils-dev is not set
-# CONFIG_nfs-utils-client is not set
+CONFIG_nfs-utils=y
+CONFIG_nfs-utils-stats=y
+CONFIG_nfs-utils-dbg=y
+CONFIG_nfs-utils-dev=y
+CONFIG_nfs-utils-client=y
 
 #
 # openssh 

@@ -35,8 +35,10 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
 CDetectAnalysis::~CDetectAnalysis(void)
 {
     delete m_pTheNewSigAnal;
+    m_pTheNewSigAnal = NULL;
 
     delete m_pTheSysPara;
+    m_pTheSysPara = NULL;
 }
 
 
@@ -64,7 +66,7 @@ void CDetectAnalysis::_routine()
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( bWhile ) {
+    while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
             perror( "error ");
         }

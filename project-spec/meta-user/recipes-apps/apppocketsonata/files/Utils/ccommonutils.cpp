@@ -53,12 +53,25 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
 {
     bool bRet=true;
-    ENUM_MODE enMode;
+    ENUM_MODE enMode, enModeOfMessage;
 
     enMode = GP_SYSCFG->GetMode();
     switch( pMsg->ucOpCode ) {
         case enREQ_MODE :
+            enModeOfMessage = (ENUM_MODE) pMsg->x.szData[0];
+
+            if( enMode == enREADY_MODE && enMode == enModeOfMessage  ) {
+                bRet = false;
+            }
             break;
+        case enREQ_ANAL_START :
+            if( enMode == enES_MODE || enMode == enEW_MODE  ) {
+            }
+            else {
+                bRet = false;
+            }
+            break;
+
         case enREQ_SIM_PDWDATA :
             if( enMode == enREADY_MODE ) {
                 bRet = false;

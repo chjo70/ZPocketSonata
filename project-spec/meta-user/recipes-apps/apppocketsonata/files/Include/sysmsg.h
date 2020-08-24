@@ -28,7 +28,9 @@ struct STR_LAN_HEADER {
 enum ENUM_MODE {
     enES_MODE=0,
     enEW_MODE,
-    enREADY_MODE
+    enREADY_MODE,
+
+    enANAL_Mode
 };
 
 

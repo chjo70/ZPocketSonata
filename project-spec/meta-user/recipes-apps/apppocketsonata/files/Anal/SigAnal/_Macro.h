@@ -1,7 +1,7 @@
 ﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
-    \version  0.0.1
+	\version  0.0.1
 */
 
 #ifndef  _MACRO_H
@@ -83,12 +83,12 @@ template <typename T>
 T _diffabs( T x, T y)
 {
 
-    if (x > y) {
-        return x - y;
-    }
-    else {
-        return y - x;
-    }
+	if (x > y) {
+		return x - y;
+	}
+	else {
+		return y - x;
+	}
 
 }
 

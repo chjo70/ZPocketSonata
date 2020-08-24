@@ -69,6 +69,7 @@ SOURCES += \
 HEADERS += \
     Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.h \
     Anal/EmitterMerge/ELEmitterDataType.h \
+    Anal/EmitterMerge/ELEmitterMergeMngr.h \
     Anal/EmitterMerge/ELEnvironVariableMngr.h \
     Anal/EmitterMerge/ELGMIMsgDefn.h \
     Anal/EmitterMerge/ELMsgDefn.h \

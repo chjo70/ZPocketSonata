@@ -266,6 +266,25 @@ typedef struct stUniformC
 // 	};
 // }SELDBReportAddressee;
 
+typedef struct {
+    char szElnotPri[_MAX_ELNOT_STRING_SIZE_];
+    char szModeCodePri[_MAX_SIZE_OF_MODECODE];
+    char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szPriFuncCode[_MAX_SIZE_OF_FUNCTIONCODE];
+    char szElnotSec[_MAX_ELNOT_STRING_SIZE_];
+    char szModeCodeSec[_MAX_SIZE_OF_MODECODE];
+    char szElnotTert[_MAX_ELNOT_STRING_SIZE_];
+    char szModeCodeTert[_MAX_SIZE_OF_MODECODE];
+
+    // 빔/방사차에서 공용으로 사용하기 위해서 연동기에 넘겨주기 위한 변수 정의
+    int iRadarPriority;
+    int iRadarModePriority;
+
+    bool bUpdate;			// 연동기에서 사용함. POSN 에서는 사용하지 않음
+
+} SLOBOtherInfo;
+
 /**
  * @typedef   SELEXTDB
  * @brief     DB에 데이터를 기록하기 위한 데이터 모음
@@ -284,22 +303,22 @@ struct SELEXTDB {
 
 	//////////////////////////////////////////////////////////////////////////
 	// 식별 정보 (CED)
-	int iRadarModeIndex;																				// 레이더 모드 인덱스
+    int iRadarModeIndex;																				// 레이더 모드 인덱스
 
-//   char szIdInfo[MAX_SIZE_OF_IDINFO];													// 식별 정보(기출, 신출, 불명)
-// 
-// 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-// 	char szPrimaryModeCode[MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
-// 
-// 	char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-// 	char szSecondaryModeCode[MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
-// 
-// 	char szThirdELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-// 	char szThirdModeCode[MAX_SIZE_OF_MODECODE];
-// 
-// 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];											// Nickname 명
-// 	char szModulationCode[MAX_SIZE_OF_MODULATIONCODE];					// Modulation Code
-// 	char szFunctioncode[MAX_SIZE_OF_FUNCTIONCODE];							// 기능 코드명
+    char szIdInfo[_MAX_SIZE_OF_IDINFO];													// 식별 정보(기출, 신출, 불명)
+
+    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+
+    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
+
+    char szThirdELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+    char szThirdModeCode[_MAX_SIZE_OF_MODECODE];
+
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];											// Nickname 명
+    char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];					// Modulation Code
+    char szFunctioncode[_MAX_SIZE_OF_FUNCTIONCODE];							// 기능 코드명
 
  	//int iPlatform;																							// 플랫폼
 	//char szPlatformCode[MAX_SIZE_OF_PLATFORMCODE];							// 플랫폼 코드
@@ -310,9 +329,9 @@ struct SELEXTDB {
 	// 식별 정보 (EOB)
 	int iThreatIndex;																						// 위협 인덱스
 	int iPinNumber;																							// PIN Number
-	//char szKoreaSiteName[_MAX_SIZE_OF_KOREASITENAME_];								// 위협명
-	//char szBENumber[MAX_SIZE_OF_BENUMBER];											// BENumber
-	//char szThreatFunctionCode[MAX_SIZE_OF_FUNCTIONCODE];				// 위협 기능 코드
+    char szKoreaSiteName[_MAX_SIZE_OF_KOREASITENAME_];								// 위협명
+    char szBENumber[_MAX_SIZE_OF_BENUMBER];											// BENumber
+    char szThreatFunctionCode[_MAX_SIZE_OF_FUNCTIONCODE];				// 위협 기능 코드
 	int iThreatPriority;																				// 위협 우선 순위
 	int iThreatDistance;																				// 위협 간의 거리 오차 [nm]
 	int iEquipNumber;																						// 장비 번호
@@ -430,34 +449,31 @@ struct STR_DOA_INFO {
 } ;
 
 struct SELAETDATA {
-	// 기초 정보
-	unsigned int uiAETID;
+    // 기초 정보
+    unsigned int uiAETID;
 
-	unsigned int uiCoLOB;
-	unsigned int uiCoABT;
+    unsigned int uiCoLOB;
+    unsigned int uiCoABT;
 
-	time_t tiFirstSeenTime;
-	//UINT firstSeenMillisec;
-	time_t tiLastSeenTime;
-	//UINT lastSeenMillisec;
+    time_t tiFirstSeenTime;
+    //UINT firstSeenMillisec;
+    time_t tiLastSeenTime;
+    //UINT lastSeenMillisec;
 
-	int iValidity;
+    int iValidity;
 
-	STR_FREQ_PRI_PW_PA_INFO freqInfo;
-	STR_FREQ_PRI_PW_PA_INFO priInfo;
-	STR_FREQ_PRI_PW_PA_INFO pwInfo;
-	STR_FREQ_PRI_PW_PA_INFO paInfo;
+    STR_FREQ_PRI_PW_PA_INFO freqInfo;
+    STR_FREQ_PRI_PW_PA_INFO priInfo;
+    STR_FREQ_PRI_PW_PA_INFO pwInfo;
+    STR_FREQ_PRI_PW_PA_INFO paInfo;
 
-	// CED/EOB 식별 정보
-	STR_CEDEOBID_INFO idInfo;
+    // CED/EOB 식별 정보
+    STR_CEDEOBID_INFO idInfo;
 
-	// 위치 산출 정보
-	STR_POSITION_ESTIMATION peInfo;
+    // 위치 산출 정보
+    STR_POSITION_ESTIMATION peInfo;
 
-	// 보고서 정보
-	//time_t firstReportedTime;
-	//time_t finalReportedTime;
-	time_t finalAlarmTime;
+    time_t tiFinalAlarmTime;
 
 }  ;
 
@@ -689,7 +705,7 @@ struct SELABT {
 } ;
 
 struct SELAET {
-	SELAETDATA stAETData;
+        SRxAETData stAETData;
 	SELAETDATA_EXT stAETExtData;
 
 } ;

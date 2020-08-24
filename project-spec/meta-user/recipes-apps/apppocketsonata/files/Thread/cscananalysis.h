@@ -18,31 +18,10 @@ public:
     CScanAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CScanAnalysis(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CScanAnalysis* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CScanAnalysis( g_iKeyId++, (char*)"CScanAnalysis" );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CScanAnalysis )
 };
 
-#define SCANANL     CScanAnalysis::GetInstance()
+#define SCANANL             CScanAnalysis::GetInstance()
+#define SCANANL_RELEASE     CScanAnalysis::ReleaseInstance()
 
 #endif // CSCANANALYSIS_H
