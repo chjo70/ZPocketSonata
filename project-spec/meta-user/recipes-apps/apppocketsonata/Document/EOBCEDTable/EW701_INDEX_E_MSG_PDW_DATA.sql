@@ -1,0 +1,7 @@
+set timing on
+
+drop index IDX_E_MSG_PDW_DATA;
+drop index IDX_E_MSG_PDW_DATA2;
+
+create index IDX_E_MSG_PDW_DATA on E_MSG_PDW_DATA(AET_ID, LOB_ID, MISSION_ID, SEARCH_BAND_ID, TASK_ID );
+create index IDX_E_MSG_PDW_DATA2 on E_MSG_PDW_DATA(FILE_NAME);

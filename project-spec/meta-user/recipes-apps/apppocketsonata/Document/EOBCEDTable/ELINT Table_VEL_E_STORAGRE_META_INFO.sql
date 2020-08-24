@@ -1,0 +1,69 @@
+DROP VIEW EW701.VEL_E_STORAGE_META_INFO;
+
+CREATE VIEW EW701.VEL_E_STORAGE_META_INFO
+(
+  META_DATA_ID,
+  MISSION_ID,
+  TASK_ID,
+  SEARCH_BAND_ID,
+  RECEIVER_TYPE,
+  STOR_DATA_TYPE,
+  CENTER_FREQ,
+  RX_LIMIT_PA,
+  FILEPATH,
+  FILENAME,
+  ACQ_START_TIME,
+  ACQ_TIME,
+  ENDIAN,
+  SAMPLE_RATE,
+  BYTE_UNIT_SIZE,
+  BANDWIDTH,
+  FILESIZE,
+  SZFILESIZE,
+  NUM_OF_DATA,
+  ACQ_END_TIME,
+  NUM_OF_FILE,
+  OPERATION_MODE,
+  LINK_NO,
+  DOWNLOAD_STATUS,
+  CONVERT_STATUS,
+  
+  TASK_NAME,
+  MISSION_NAME
+)
+AS
+   SELECT A.META_DATA_ID,
+          A.MISSION_ID,
+          A.TASK_ID,
+          A.SEARCH_BAND_ID,
+          A.RECEIVER_TYPE,
+          A.STOR_DATA_TYPE,
+          A.CENTER_FREQ,
+          A.RX_LIMIT_PA,
+          A.FILEPATH,
+          A.FILENAME,
+          A.ACQ_START_TIME,
+          A.ACQ_TIME,
+          A.ENDIAN,
+          A.SAMPLE_RATE,
+          A.BYTE_UNIT_SIZE,
+          A.BANDWIDTH,
+          A.FILESIZE,
+          A.SZFILESIZE,
+          A.NUM_OF_DATA,
+          A.ACQ_END_TIME,
+          A.NUM_OF_FILE,
+          A.OPERATION_MODE,
+          A.LINK_NO,
+          A.DOWNLOAD_STATUS,
+          A.CONVERT_STATUS,
+                  
+          B.TASK_NAME,
+          C.MISSION_NAME
+          
+     FROM E_STORAGE_META_INFO A,
+          E_TASK_MNGR B,
+          CEF_MISSION_LIST C
+          
+    WHERE  A.TASK_ID = B.TASK_ID(+) 
+       AND A.MISSION_ID = C.MISSION_ID(+)

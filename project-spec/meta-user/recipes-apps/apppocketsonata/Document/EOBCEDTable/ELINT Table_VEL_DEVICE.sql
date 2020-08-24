@@ -1,0 +1,88 @@
+DROP VIEW EW701.VEL_DEVICE;
+
+/* Formatted on 2018/04/13 10:14:25 (QP5 v5.269.14213.34769) */
+CREATE OR REPLACE FORCE VIEW EW701.VEL_DEVICE
+(
+   THREAT_INDEX,
+   LATITUDE,
+   LONGITUDE,
+   DEVICE_INDEX,
+   ELEVATION,
+   IDENTIFICATION_RANGE,
+   DEVICE_NAME,
+   STATUS,
+   ELNOT,
+   LATITUDE_NUM,
+   LONGITUDE_NUM,
+   PIN,
+   BE_NUMBER,
+   PLATFORM,
+   FACILITY_NAME,
+   PLACE_NAME_KOR,
+   PLACE_NAME_ENG,
+   USER_COUNTRY,
+   PRIMARY_FUNCTION,
+   FRIEND_OR_FOE,
+   PRIORITY,
+   ADA,
+   CATEGORY,
+   DISTINCTION,
+   T_STATUS,
+   DTC,
+   DTLI,
+   DTFI,
+   SYMBOL_CODE,
+   RADAR_INDEX,
+   FUNCTION_CODE,
+   RF_TYPICAL_MIN,
+   RF_TYPICAL_MAX,
+   PRI_TYPICAL_MIN,
+   PRI_TYPICAL_MAX
+)
+AS
+   SELECT A.THREAT_INDEX,
+          A.LATITUDE,
+          A.LONGITUDE,
+          A.DEVICE_INDEX,
+          A.ELEVATION,
+          A.IDENTIFICATION_RANGE,
+          A.DEVICE_NAME,
+          A.STATUS,
+          A.ELNOT,
+          A.LATITUDE_NUM,
+          A.LONGITUDE_NUM,
+          B.PIN,
+          B.BE_NUMBER,
+          B.PLATFORM,
+          B.FACILITY_NAME,
+          B.PLACE_NAME_KOR,
+          B.PLACE_NAME_ENG,
+          B.USER_COUNTRY,
+          B.PRIMARY_FUNCTION,
+          B.FRIEND_OR_FOE,
+          B.PRIORITY,
+          B.ADA,
+          B.CATEGORY,
+          B.DISTINCTION,
+          B.STATUS,
+          B.DTC,
+          B.DTLI,
+          B.DTFI,
+          B.SYMBOL_CODE,
+		  
+          C.RADAR_INDEX,
+          C.FUNCTION_CODE,
+		  
+          E.RF_TYPICAL_MIN,
+          E.RF_TYPICAL_MAX,
+          E.PRI_TYPICAL_MIN,
+          E.PRI_TYPICAL_MAX
+     FROM DEVICE A,
+          THREAT B,
+          RADAR C,
+          RADAR_MODE_LIFECYCLE D,
+          RADAR_MODE E
+    WHERE     A.ELNOT = C.ELNOT(+)
+          AND A.THREAT_INDEX = B.THREAT_INDEX(+)
+          AND C.RADAR_INDEX = D.RADAR_INDEX(+)
+          AND D.RADAR_MODE_INDEX = E.RADAR_MODE_INDEX(+);

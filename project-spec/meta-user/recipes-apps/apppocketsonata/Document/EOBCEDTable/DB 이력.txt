@@ -1,0 +1,25 @@
+2017-12-30	.방사체/빔 필드에 STAT 추가
+		.VIEW 테이블에 DEVICE 필드에 SYMBOL_CODE 추가
+
+2017-01-10	.레이더 모드에서 주파수/PRI 형태 추가
+
+2017-01-16	.방사체/빔/LOB에 인덱스 추가
+
+2017-01-31	.RADAR_P 에 필드 순서 변경( TIME_INACTIVATED	필드를 맨 끝으로 이동)
+
+		.RADAR_P 에 INDEX 생성 (UPDATE 를 고속 처리를 위해서)
+
+2017-02-19	.THREAT_STATUS_CODE 필드에 'A' 필드 추가
+		.방사체 필드에 STAT 필드 추가
+		.빔 필드에 한글지명, STAT 필드 추가
+
+2017-02-21	.방사체/빔/LOB에 AUTO Seq 생성
+
+2017-02-22	.방사체/빔/LOB에 AUTO Seq 원복 (기본 안 대로 소프트웨어 SEQ_NUM 증가)
+
+2017-02-23	.LOB LIN2 Element 테이블 추가
+		.LOB LINK2 Auto Seq 생성
+
+2017-02-27	.VEL_RADAR_LIST_1/2/3/4 테이블에 TIME_INACTIVATED 필드 추가
+
+2017-07-16	.PDW_LIST 에 인덱스 필드 추가
