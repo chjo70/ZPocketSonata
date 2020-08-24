@@ -11,6 +11,12 @@
 int CThread::m_iCoThread = 0;
 int CThread::m_iCoMsgQueue = 0;
 
+void cleanup_handler2(void *arg )
+{
+    printf("cleanup \n");
+    // close your socket
+}
+
 /**
  * @brief CThread::CThread
  * @param iMsgKey
@@ -41,6 +47,8 @@ CThread::~CThread()
         -- m_iCoThread;
 
         pthread_cancel( m_MainThread );
+        Pend();
+
         LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szClassName );
     }
 
@@ -116,13 +124,13 @@ void CThread::Run()
  */
 int CThread::Pend()
 {
-    void *pStatus;
+    //void *pStatus;
     //int iStatus[100];
     int iStatus;
 
-    pStatus = ( void *) malloc( 100 );
+    //pStatus = ( void *) malloc( 100 );
     iStatus = pthread_join( m_MainThread, /* (void **) & iStatus[0] */ NULL );
-    free( pStatus );
+    //free( pStatus );
 
     return iStatus;
 }
@@ -151,10 +159,14 @@ void *CThread::CallBack( void *pArg )
 {
     CThread *pThhread = static_cast<CThread*> (pArg);
 
+    pthread_cleanup_push(cleanup_handler2, NULL);
+
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
     pThhread->_routine();
+
+    pthread_cleanup_pop(1);
 
     return NULL;
 }

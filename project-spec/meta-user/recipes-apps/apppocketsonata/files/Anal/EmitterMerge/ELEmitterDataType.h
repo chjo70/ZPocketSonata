@@ -1648,10 +1648,9 @@ struct I_AET_DATA {
     unsigned short usEmitterId;
     unsigned short usBeamId;
 
+#ifdef _ELINT_
     unsigned int uiOpInitID;
-
-#ifndef _POCKETSONATA_
-    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+unsigned char aucTaskID[LENGTH_OF_TASK_ID];
 #endif
 
 };
@@ -2000,9 +1999,11 @@ struct SELABTDATA_EXT {
     // 수동 편집 여부 플레그
     //UELMANUALVAL xManualEdited;
 
+#ifdef _ELINT_
     // FISINT용 과제
     //bool bIsFISINTTask;
     UINT uiOpInitID;
+#endif
 
     // 수동/자동 위치 결과 정보 여부
     //bool bManualPosEstPreferred;
