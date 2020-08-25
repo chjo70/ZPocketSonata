@@ -55,28 +55,29 @@ void CEmitterMerge::_routine()
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( bWhile ) {
+    while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            perror( "QMsgRcv : ");
         }
+        else {
+            switch( m_pMsg->ucOpCode ) {
+                case enTHREAD_ANAL_START :
+                    MergeEmitter();
+                    break;
 
-        switch( m_pMsg->ucOpCode ) {
-            case enTHREAD_ANAL_START :
-                MergeEmitter();
-                break;
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                    bWhile = false;
+                    break;
 
-            case enTHREAD_REQ_SHUTDOWN :
-                LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
-                bWhile = false;
-                break;
+                case enTHREAD_REQ_SETWINDOWCELL :
+                    LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
+                    break;
 
-            case enTHREAD_REQ_SETWINDOWCELL :
-                LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
-                break;
-
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                break;
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    break;
+            }
         }
     }
 }

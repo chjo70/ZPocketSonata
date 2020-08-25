@@ -142,30 +142,31 @@ void CTaskMngr::_routine()
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv() 에러");
         }
-
-        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->ucOpCode ) {
-                case enTHREAD_MODE :
-                    SetMode();
-                    break;
-
-                case enTHREAD_ANAL_START :
-                    AnalysisStart();
-                    break;
-
-                case enTHREAD_REQ_SHUTDOWN :
-                    Shutdown();
-                    bWhile = false;
-                    break;
-
-                default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                    break;
-            }
-        }
         else {
-            // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
-            //LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+                switch( m_pMsg->ucOpCode ) {
+                    case enTHREAD_MODE :
+                        SetMode();
+                        break;
+
+                    case enTHREAD_ANAL_START :
+                        AnalysisStart();
+                        break;
+
+                    case enTHREAD_REQ_SHUTDOWN :
+                        Shutdown();
+                        bWhile = false;
+                        break;
+
+                    default:
+                        LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                        break;
+                }
+            }
+            else {
+                // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
+                //LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            }
         }
     }
 
