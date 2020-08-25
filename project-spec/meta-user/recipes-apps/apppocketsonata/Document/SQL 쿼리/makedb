@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "에미터 테이블을 생성합니다.===================================="
 echo "LOB 테이블을 생성합니다..."
 sqlite3 emitter.sqlite3 ".read LOBDATA.sql"
 sqlite3 emitter.sqlite3 ".read LOB_POSITION.sql"
@@ -14,3 +15,13 @@ sqlite3 emitter.sqlite3 ".read AETDATA.sql"
 echo "생성한 DB 를 복사합니다..."
 cp emitter.sqlite3 ../../files/SQLite3.DB/.
 cp emitter.sqlite3 ~/SQLite3.DB/.
+
+echo "CED/EOB 테이블을 생성합니다.===================================="
+echo "CED 관련 테이블을 생성합니다..."
+sqlite3 cedeob.sqlite3 ".read ced.sql"
+
+echo "EOB 관련 테이블을 생성합니다..."
+sqlite3 cedeob.sqlite3 ".read eob.sql"
+
+cp cedeob.sqlite3 ../../files/SQLite3.DB/.
+cp cedeob.sqlite3 ~/SQLite3.DB/.

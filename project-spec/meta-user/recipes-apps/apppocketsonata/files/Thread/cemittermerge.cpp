@@ -57,7 +57,7 @@ void CEmitterMerge::_routine()
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv : ");
+            perror( "QMsgRcv" );
         }
         else {
             switch( m_pMsg->ucOpCode ) {
