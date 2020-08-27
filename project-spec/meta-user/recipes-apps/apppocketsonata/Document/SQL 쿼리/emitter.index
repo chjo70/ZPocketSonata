@@ -1,0 +1,15 @@
+drop index if exists lob_index;
+drop index if exists lob_position_index;
+
+drop index if exists abt_index;
+drop index if exists abt_position_index;
+
+drop index if exists aet_index;
+
+create index lob_index on lobdata (lobid);
+create index lob_position_index on lob_position (lobid);
+
+create index abt_index on abtdata (abtid);
+create index abt_position_index on abt_position (abtid);
+
+create index aet_index on aetdata (aetid);

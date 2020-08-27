@@ -76,42 +76,45 @@ void CRecLan::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
-        }
-
-        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->ucOpCode ) {
-                // 기존 SONATA 체계 명령어
-                case enREQ_MODE :
-                case enREQ_ANAL_START :
-                    TMNGR->QMsgSnd( m_pMsg );
-                    break;
-
-                case enREQ_URBIT :
-                    //SendQMessage();
-                    break;
-
-                // 추가 명령어
-                case enREQ_SIM_PDWDATA :
-                    SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
-                    break;
-
-                case enREQ_DUMP_LIST :
-                    DumpList();
-                    break;
-
-                case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
-                    bWhile = false;
-                    break;
-
-                default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                break;
-            }
+            break;
+            perror( "QMsgRcv");
+            break;
         }
         else {
-            LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+                switch( m_pMsg->ucOpCode ) {
+                    // 기존 SONATA 체계 명령어
+                    case enREQ_MODE :
+                    case enREQ_ANAL_START :
+                        TMNGR->QMsgSnd( m_pMsg );
+                        break;
+
+                    case enREQ_URBIT :
+                        //SendQMessage();
+                        break;
+
+                    // 추가 명령어
+                    case enREQ_SIM_PDWDATA :
+                        SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
+                        break;
+
+                    case enREQ_DUMP_LIST :
+                        DumpList();
+                        break;
+
+                    case enTHREAD_REQ_SHUTDOWN :
+                        LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                        bWhile = false;
+                        break;
+
+                    default:
+                        LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    break;
+                }
+            }
+            else {
+                LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            }
         }
     }
 

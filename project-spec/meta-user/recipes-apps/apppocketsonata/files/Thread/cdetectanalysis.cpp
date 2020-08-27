@@ -59,7 +59,7 @@ void CDetectAnalysis::Run()
 void CDetectAnalysis::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
+
     UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
@@ -68,6 +68,7 @@ void CDetectAnalysis::_routine()
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
+            break;
             perror( "QMsgRcv" );
         }
         else {
@@ -78,7 +79,6 @@ void CDetectAnalysis::_routine()
 
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
-                bWhile = false;
                 break;
 
             case enTHREAD_REQ_SETWINDOWCELL :
