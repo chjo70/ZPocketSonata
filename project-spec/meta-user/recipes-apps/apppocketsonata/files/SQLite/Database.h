@@ -483,6 +483,8 @@ public:
         }
     }
 
+    inline Database *GetDatabase() { return this; }
+
 private:
     // TODO: perhaps switch to having Statement sharing a pointer to the Connexion
     std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
