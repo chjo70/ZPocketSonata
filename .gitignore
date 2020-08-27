@@ -10,8 +10,11 @@ pre-built/linux/
 *.log
 project-spec/meta-plnx-generated/
 /components/plnx_workspace
+
 PocketSonata.pro.user.*
 *.bak
 *.autosave
 build-PocketView*/
 build-PocketSonata*/
+*.sqlite3
+*.swp
