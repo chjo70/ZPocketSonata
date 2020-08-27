@@ -5601,15 +5601,21 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
     pDatabase = GetDatabase();
 
-    sprintf( m_pszSQLString, "SELECT RADAR_MODE_INDEX, FUNCTION_CODE FROM RADAR_MODE ORDER BY RADAR_MODE_INDEX" );
+    sprintf( m_pszSQLString, "SELECT RADAR_MODE_INDEX, FUNCTION_CODE, DATE_CREATED FROM RADAR_MODE ORDER BY RADAR_MODE_INDEX" );
     SQLite::Statement query( *pDatabase, m_pszSQLString );
     //const string query="SELECT id as test_id, value as test_val, weight as test_weight FROM test WHERE weight > ?";
     //exec( query );
 
     while( query.executeStep() ) {
+        char buffer[100];
+
         i = 0;
 
         pRadarMode->iRadarModeIndex = query.getColumn(i++).getInt();
+        strcpy( pRadarMode->szPrimaryFunction, query.getColumn(i++).getText() );
+
+        strcpy( buffer, query.getColumn(i++).getText() );
+        pRadarMode->tiCreated, query.getColumn(i++).getText() );
         //pRadarMode-> query.getColumn(i++).getInt();
         //std::cout << "row (" << query.getColumn(0) << ", \"" << query.getColumn(1) << "\")\n";
 
