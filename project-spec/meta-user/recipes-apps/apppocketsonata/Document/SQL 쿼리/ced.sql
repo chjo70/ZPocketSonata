@@ -1,4 +1,7 @@
-﻿drop table if exists "RADAR";
+# 2020-08-26 오후 3:22:26
+
+# CED 관련 테이블을 삭제합니다.
+drop table if exists "RADAR";
 drop table if exists "RADAR_P";
 drop table if exists "RADAR_CONTENTS";
 drop table if exists "RADAR_CONTENTS_P";
@@ -59,6 +62,8 @@ drop table if exists "RADAR_MOP_CW_SEQUENCE_P";
 drop table if exists "RADAR_MODE_PA_DIFF_IN_GROUP";
 drop table if exists "RADAR_MODE_PA_DIFF_IN_GROUP_P";
 
+
+# CED 관련 테이블을 생성합니다.
 CREATE TABLE "RADAR" (
   RADAR_INDEX                 INTEGER           DEFAULT -1       				NOT NULL,
   SECLAB                      INTEGER           DEFAULT -1							NOT NULL,

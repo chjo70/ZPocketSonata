@@ -166,7 +166,7 @@ void CELEmitterMergeMngr::AllocMemory()
 
 	m_pVecLOBs = new std::vector<STR_LOBS> [TOTAL_ITEMS_OF_THREAT_NODE];
 
-	m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
+    //m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
 
 	m_pTheThreatRoot = new CELThreat;
 
@@ -197,17 +197,15 @@ void CELEmitterMergeMngr::FreeMemory()
 
 	delete m_pIdentifyAlg;
 
-	if( m_pUniThreat != nullptr )
-	{
+    if( m_pUniThreat != nullptr ) {
 		free( m_pUniThreat );
 	}
 
-	if( m_pABTtoH000 != nullptr )
-	{
+    if( m_pABTtoH000 != nullptr ) {
 		free( m_pABTtoH000 );
 	}
 
-	free( m_piCandidate );
+    //free( m_piCandidate );
 
 	delete [] m_pVecLOBs;
 
@@ -937,7 +935,7 @@ void CELEmitterMergeMngr::IdentifyLOB( SRxLOBData *pLOBData )
         strcpy_s( pLOBData->aucRadarName, pRadarName );
 	}
 	else {
-		pLOBData->aucRadarName[0] = NULL;
+        pLOBData->aucRadarName[0] = 0;
 	}
 	//pLOBData->iThreatIndex = 0;
 

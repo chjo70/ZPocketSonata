@@ -1,8 +1,12 @@
-﻿drop table if exists "THREAT";
+# 2020-08-26 오후 3:22:26
+
+# EOB 관련 테이블을 삭제합니다.
+drop table if exists "THREAT";
 drop table if exists "THREAT_P";
 drop table if exists "DEVICE";
 drop table if exists "DEVICE_P";
 
+# EOB 관련 테이블을 생성합니다.
 CREATE TABLE THREAT
 (
   THREAT_INDEX      NUMBER                      NOT NULL,
