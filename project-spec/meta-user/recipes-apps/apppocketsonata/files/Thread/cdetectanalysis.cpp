@@ -68,9 +68,9 @@ void CDetectAnalysis::_routine()
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            perror( "QMsgRcv" );
         }
-
+        else {
         switch( m_pMsg->ucOpCode ) {
             case enTHREAD_ANAL_START :
                 AnalysisStart();
@@ -88,6 +88,7 @@ void CDetectAnalysis::_routine()
             default:
                 LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                 break;
+            }
         }
     }
 

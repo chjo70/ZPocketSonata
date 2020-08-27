@@ -53,9 +53,9 @@ void CJamTech::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            perror( "QMsgRcv" );
         }
-
+        else {
         switch( m_pMsg->ucOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
@@ -65,6 +65,7 @@ void CJamTech::_routine()
             default:
                 //Log( enNormal, "AAA" );
                 break;
+            }
         }
     }
 

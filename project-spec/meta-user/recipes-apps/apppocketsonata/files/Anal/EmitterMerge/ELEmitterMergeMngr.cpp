@@ -383,7 +383,6 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 		);
 #endif
 
-
 	// 내부 클래스에서 내부 변수로 초기화 함.
 	m_pLOBHeader = pLOBHeader;
 	m_pLOBData = pLOBData;

@@ -64,9 +64,9 @@ void CPulseTrk::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            perror( "QMsgRcv" );
         }
-
+        else {
         switch( m_pMsg->ucOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
@@ -76,6 +76,7 @@ void CPulseTrk::_routine()
             default:
                 //Log( enNormal, "AAA" );
                 break;
+            }
         }
     }
 

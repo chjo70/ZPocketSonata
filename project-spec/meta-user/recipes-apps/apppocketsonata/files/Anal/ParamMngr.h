@@ -61,7 +61,7 @@ private:
     bool m_bIsEmitterMerge;
     bool m_bIsIdentifyFreqBasedTask;
     bool m_bIsLOBClustering;
-    int m_nLink;
+    //int m_nLink;
     int m_nPOSN2GMI_LINK;
     int m_iDistanceForBeamMerge;
     int m_nLOBNum;
@@ -95,7 +95,6 @@ private:
     float m_fEffectiveDOADiff2;
     float m_fEffectiveDOADiff3;
     float m_fEffectiveDistOfEOB;
-
     int m_iEffectiveDist;
 
     int m_iDeleteThreatWhenCoLOB;
@@ -246,7 +245,7 @@ public:
 	* @brief       링크번호 획득 함수
 	* @return      int   링크번호
 	*/
-	inline int GetLinkNum(){ return m_nLink;}
+        //inline int GetLinkNum(){ return m_nLink;}
 	
 	/**
 	* @brief       POSN2GMI_LINK 사용여부 확인 함수
