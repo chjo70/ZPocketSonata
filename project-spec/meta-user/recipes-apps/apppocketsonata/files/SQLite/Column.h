@@ -91,6 +91,9 @@ public:
      *          thus you must copy it before using it beyond its scope (to a std::string for instance).
      */
     const char* getText(const char* apDefaultValue = "") const noexcept;
+
+    const time_t getDate(const time_t apDefaultValue = 0 ) const noexcept;
+
     /**
      * @brief Return a pointer to the binary blob value of the column.
      *

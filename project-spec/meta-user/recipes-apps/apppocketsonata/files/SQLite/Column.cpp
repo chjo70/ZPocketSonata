@@ -77,6 +77,24 @@ const char* Column::getText(const char* apDefaultValue /* = "" */) const noexcep
     return (pText?pText:apDefaultValue);
 }
 
+// 날짜 정보를 해석하여 리턴한다.
+const time_t Column::getDate(const time_t apDefaultValue /* = "" */) const noexcept
+{
+    time_t tiNow=0;
+    struct tm tTm;
+    int msec;
+    const char* pText = reinterpret_cast<const char*>(sqlite3_column_text(mStmtPtr, mIndex));
+
+    if( pText != NULL ) {
+        sscanf( pText, "%d/%d/%d %d:%d:%d.%d", & tTm.tm_year, & tTm.tm_mon, & tTm.tm_mday, & tTm.tm_hour, & tTm.tm_min, & tTm.tm_sec, & msec );
+        tTm.tm_year -= 1900;
+        tTm.tm_mon --;
+        tiNow = mktime( & tTm );
+    }
+
+    return (pText?tiNow:apDefaultValue);
+}
+
 // Return a pointer to the blob value (*not* NULL terminated) of the column specified by its index starting at 0
 const void* Column::getBlob() const noexcept
 {

@@ -76,9 +76,11 @@ void CRecLan::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            break;
+            perror( "QMsgRcv");
+            break;
         }
-
+        else {
         if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
             switch( m_pMsg->ucOpCode ) {
                 // 기존 SONATA 체계 명령어
@@ -112,6 +114,7 @@ void CRecLan::_routine()
         }
         else {
             LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            }
         }
     }
 

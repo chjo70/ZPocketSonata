@@ -121,9 +121,18 @@ struct STR_H000 {
 #include "../../ELINTOP/ODBC/odbccore.h"
 #endif
 
+#ifdef _ELINT_
 #define MAX_FRQ_MHZ						(6000)
 #define MIN_FRQ_MHZ						(500)
+
 #define FLIB_FREQ_RES_MHZ               (10)
+#elif defined(_POCKETSONATA_)
+#define FLIB_FREQ_RES_MHZ               (1.0)
+
+#define MAX_FRQ_MHZ						(18100)
+#define MIN_FRQ_MHZ						(490)
+
+#endif
 
 
 /**
@@ -146,6 +155,10 @@ struct STR_H000 {
 class CELSignalIdentifyAlg : public SQLite::Database
 {
  protected:
+#ifdef _SQLITE_
+    char *m_pszSQLString;
+
+#endif
  	static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그
 
  	static STR_HOWTO_IDENTIFY m_HowToId[MAX_FRQTYPE][MAX_PRITYPE];		///< 식별 함수 테이블
@@ -208,7 +221,7 @@ private:
  		UINT m_total_eob;																///< EOB의 위협 총 갯수
 
 		SRxLOBData *m_pLOBData;
-// 
+
 // 	STR_NEWAET m_IdAet;															///< 수동 분석한 에미터를 식별하기 위한 저장소
 // 
  public:
@@ -256,7 +269,7 @@ private:
 
  	bool LoadCEDLibrary2();
  	bool LoadEOBLibrary2();
-	void MakeRadarMode( vector<SRadarMode_PRISequence_Values*> *pVecRadarMode_PRISequence_Values );
+    void MakeRadarMode( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
 
 	char *GetRadarName( int iRadarModeIndex );
 
@@ -267,9 +280,9 @@ private:
  	void Destory();
  	BOOL CompSwitchLevel( int *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries );
  	BOOL CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
- 	BOOL CompSwitchLevel( float fVal, vector <SRadarMode_PRISequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
- 	BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_PRISequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
-	BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_PRISequence_Values> *pvecRadarPRI_Values );
+    BOOL CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
+    BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
+    BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
  	//BOOL CompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 
 	bool IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMode **pMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
@@ -439,10 +452,23 @@ protected:
 
 	void InitRadarModeData();
 
-    bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
-    bool LoadRadarMode_PRISequence( vector<SRadarMode_PRISequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode );
+    void LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
+    void LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_RFSequence, int nMaxRadarMode );
+    void LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode );
     bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
 
+    // 변환 코드
+    EnumFunctionCodes GetFunctionCodes( char *pData );
+    SignalType::EnumSignalType GetSignalType( char *pData );
+    PolizationCode::EnumPolizationCode GetPolarizationCodes( int iPolization );
+    PlatformCode::EnumPlatformCode GetPlatformCode( int iPlatform );
+    PatternCode::EnumPatternCode GetPatternCode( int iPattern );
+    RadarModeFreqType::EnumRadarModeFreqType GetFreqType( int iFreqType );
+    RadarModePRIType::EnumRadarModePRIType GetPRIType( int iPRIType );
+    ScanType::EnumScanType GetScanType( int iScanType );
+    EnumValidationCode GetValidationCode( int iValidation );
+
+    char *GetPlatformCode(PlatformCode::EnumPlatformCode ePlatform);
 
 };
 

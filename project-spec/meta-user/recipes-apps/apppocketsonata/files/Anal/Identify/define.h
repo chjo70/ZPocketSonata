@@ -22,5 +22,9 @@
 #define	NO_FLIB_BAND				(32)
 
 
+// 쿼리문 길이
+#define MAX_SQL_SIZE                                    (1024*2)
+
+
 
 #endif // !defined(AFX_NDEFINE_H__454E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

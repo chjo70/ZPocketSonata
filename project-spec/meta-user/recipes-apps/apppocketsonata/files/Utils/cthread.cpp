@@ -180,7 +180,7 @@ int CThread::QMsgRcv( int iFlag )
     int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
 
     if( iMsgRcv > 0 ) {
-        LOGMSG4( enDebug, " 메시지 수신: [%s]에서 Op[0x%02X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.ucOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+        LOGMSG4( enDebug, "*수신: [%s]에서 Op[0x%02X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.ucOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
     }
 
     return iMsgRcv;

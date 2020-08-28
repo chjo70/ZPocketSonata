@@ -250,11 +250,11 @@ void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode *
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    vector <SRadarMode_PRISequence_Values>::pointer pVecPRISequenceValues;
+    vector <SRadarMode_Sequence_Values>::pointer pVecPRISequenceValues;
 
     pSeg = GetPulseSeg();
     for( i=0 ; i < uiCoKnownRadarMode ; ++i ) {
-        switch( (*pRadarMode)->ePRIType ) {
+        switch( (*pRadarMode)->ePRI_Type ) {
             case RadarModePRIType::enumStable :
                 extRange.min_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMin );
                 extRange.max_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMax );
@@ -264,8 +264,8 @@ void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode *
             case RadarModePRIType::enumDwellSWITCH :
                 pVecPRISequenceValues = (*pRadarMode)->vecRadarMode_PRISequenceValues.data();
                 for( j=0 ; j < (*pRadarMode)->nPRI_NumPositions ; ++j ) {
-                    extRange.min_pri = ITOAusCNV( pVecPRISequenceValues->fPRI_Min );
-                    extRange.max_pri = ITOAusCNV( pVecPRISequenceValues->fPRI_Max );
+                    extRange.min_pri = ITOAusCNV( pVecPRISequenceValues->f_Min );
+                    extRange.max_pri = ITOAusCNV( pVecPRISequenceValues->f_Max );
                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
                         ++ m_CoSeg;
 

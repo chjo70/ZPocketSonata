@@ -205,39 +205,3 @@ bool Is_DNotZero( const double &dvalue )
 	return ( dvalue > 0 || dvalue < 0 );
 }
 
-
-
-// 
-// int CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 )
-// {
-// 	int iRet;
-// 
-// 	if( hgh1 == low2 || hgh2 == low1 ) {			// debug, 99-12-22 09:36:19
-// 		iRet = _spOne;
-// 	}
-// 
-//   else if( low1 >= low2 &&	hgh1 <= hgh2 ) { 			//          |--------|
-//     iRet = hgh1 - low1 + 1;											//    |------------------|
-// 	}
-// 
-// 	else if( low1 <= low2 && hgh1 >= hgh2 ) {				//    |------------------|
-// 		iRet = hgh2 - low2 + 1;			 								//          |--------|
-// 	}
-// 
-//   else if( low1 <= hgh2 && low2 <= low1 ) {				//          |------------|
-// 		iRet = ( hgh2 - low1 + 1);     						//    |-----------|
-// 	}
-// 
-// 	/*! \debug  항상 true 이기 때문에 제거함
-// 			\author 조철희 (churlhee.jo@lignex1.com)
-// 			\date 	2015-12-24 12:41:27
-// 	*/
-//   else if( hgh1 >= low2 && hgh1 <= hgh2 ) {				//    |-----------|
-// 		iRet = ( hgh1 - low2 + 1 );									//          |------------|
-// 	}
-// 	else {
-// 		iRet = 0;
-// 	}
-// 
-// 	return iRet;
-// }

@@ -62,8 +62,6 @@
 //
 #define MAX_LOB_FOR_INHIBIT_PE												(20)
 
-#define MAX_SQL_SIZE                                    (1024*2)
-
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 
 

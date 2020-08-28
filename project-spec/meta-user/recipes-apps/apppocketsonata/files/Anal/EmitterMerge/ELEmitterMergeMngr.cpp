@@ -340,7 +340,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     //DWORD dwTime = GetTickCount();
 
 #ifdef _POCKETSONATA_
-    printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
+    printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
            pLOBData->fMeanDOA,
            aet_freq_type[pLOBData->iFreqType], pLOBData->fMinFreq, pLOBData->fMaxFreq,
@@ -359,7 +359,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
         pLOBData->iNumOfPDW
         );
 #else
-	printf( "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" , 
+    printf( "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
 		pLOBData->aucTaskID, 
 		pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType], 
 		pLOBData->fMeanDOA, 
@@ -7933,7 +7933,7 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
  			pABTData = GetABTData( pTheThreat->m_nIndex );
  			pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
 
-			printf( "\n InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
+            printf( "InsertABT[A%d][B%d]\n" , pABTData->uiAETID, pABTData->uiABTID );
 			Log( enNormal, "InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
             if( m_bDBThread == false ) {
@@ -10621,7 +10621,7 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
     strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
     _localtime32_s(&stTime, & pAETData->tiFinalAlarmTime );
     strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    sprintf_s( m_pszSQLString, "INSERT INTO AETDATA (AET_ID, RADARMODE_INDEX, THREAT_INDEX, IDINFO, ELNOT_PRIM, MODE_CODE_PRIM, NICK_NAME, PRIM_FUNC_CODE, RADAR_PRIORITY, PIN_NUM, SITE_NAME, BE_NUM, THREAT_FUNC_CODE, THREAT_PRIORITY, DISTANCE_ERR_FROM_THREAT, EQUIP_NUM, NUM_OF_LOBS, NUM_OF_BEAMS, RECORD_TIME_STA, RECORD_TIME_FIN, VALIDITY, FRQ_MEAN, FRQ_MAX, FRQ_MIN, FRQ_DEV, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_DEV, PW_MEAN, PW_MAX, PW_MIN, PW_DEV, PA_MEAN, PA_MAX, PA_MIN, PA_DEV, POS_EST_VALID, POS_EST_LAT, POS_EST_LONG, POS_EST_HEIGHT, POS_EST_CEP, POS_EST_MAJOR_AXIS, POS_EST_MINOR_AXIS, EEP_MAJOR_TILT_ANGLE, FINAL_ALARM_TIME, IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG, STAT ) VALUES \
+    sprintf_s( m_pszSQLString, "INSERT INTO AETDATA (AETID, RADARMODE_INDEX, THREAT_INDEX, IDINFO, ELNOT_PRIM, MODE_CODE_PRIM, NICK_NAME, PRIM_FUNC_CODE, RADAR_PRIORITY, PIN_NUM, SITE_NAME, BE_NUM, THREAT_FUNC_CODE, THREAT_PRIORITY, DISTANCE_ERR_FROM_THREAT, EQUIP_NUM, NUM_OF_LOBS, NUM_OF_BEAMS, RECORD_TIME_STA, RECORD_TIME_FIN, VALIDITY, FRQ_MEAN, FRQ_MAX, FRQ_MIN, FRQ_DEV, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_DEV, PW_MEAN, PW_MAX, PW_MIN, PW_DEV, PA_MEAN, PA_MAX, PA_MIN, PA_DEV, POS_EST_VALID, POS_EST_LAT, POS_EST_LONG, POS_EST_HEIGHT, POS_EST_CEP, POS_EST_MAJOR_AXIS, POS_EST_MINOR_AXIS, EEP_MAJOR_TILT_ANGLE, FINAL_ALARM_TIME, IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG, STAT ) VALUES \
                                 ( %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \"%s\", \"%s\", \"%s\", %d, %d, %d, %d, %d, \"%s\", \"%s\", %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %d, %f, %f, %f, %f, %f, %f, %f, \"%s\", %d, %d, %d, %d, %d )" , \
                                 pAETData->uiAETID, pExtDB->iRadarModeIndex, pExtDB->iThreatIndex, pExtDB->szIdInfo, pExtDB->szPrimaryELNOT, pExtDB->szPrimaryModeCode, pExtDB->szNickName, pExtDB->szFunctioncode, pExtDB->iRadarPriority, \
                                 pExtDB->iPinNumber, pExtDB->szKoreaSiteName, pExtDB->szBENumber, pExtDB->szThreatFunctionCode, pExtDB->iThreatPriority, pExtDB->iThreatDistance, pExtDB->iEquipNumber, pAETData->uiCoLOB, pAETData->uiCoABT, buffer1, buffer2, pAETData->iValidity, \
