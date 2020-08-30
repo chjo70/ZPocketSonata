@@ -6142,7 +6142,11 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
     exec( m_pszSQLString );
 
     // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+#ifdef _SQLITE_
+    sprintf_s( m_pszSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
+#else
     sprintf_s( m_pszSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+#endif
     exec( m_pszSQLString );
 
 }

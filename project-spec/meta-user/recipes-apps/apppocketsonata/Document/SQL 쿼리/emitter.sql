@@ -16,40 +16,88 @@ CREATE TABLE "LOBDATA" (
 	"AETID"	int NOT NULL,
 	"CONTACT_TIME"	datetime,
 	"CONTACT_TIME_MS"	int,
+
+    "ELNOT_PRIM" VARCHAR2(12),
+    "MODE_CODE_PRIM" VARCHAR2(12),
+    "ELNOT_SECON" VARCHAR2(12),
+    "MODE_CODE_SECON" VARCHAR2(12),
+    "ELNOT_TERT" VARCHAR2(12),
+    "MODE_CODE_TERT" VARCHAR2(12),
+    "MODULATION_CODE" VARCHAR2(12),
+    "NICK_NAME" VARCHAR2(64),
+    "PRIM_FUNC_CODE" VARCHAR2(12),
+
+    "POLIZATION" int,
+    "RATIOOFPOL" int,
+
 	"SIGNAL_TYPE"	tinyint,
 	"DOA_MEAN"	float,
 	"DOA_MIN"	float,
 	"DOA_MAX"	float,
-	"DI_RATIO"	int,
+	"DOA_DEV"	float,
+	"DOA_STD"	float,
+	"DI_RATIO"	float,
+
 	"FREQ_TYPE"	tinyint,
 	"FREQ_PATTERN_TYPE"	tinyint,
 	"FREQ_PATTERN_PERIOD"	float,
 	"FREQ_MEAN"	float,
 	"FREQ_MIN"	float,
 	"FREQ_MAX"	float,
+	"FREQ_DEV"	float,
 	"FREQ_POSITION_COUNT"	tinyint,
+	"FREQ_ELEMENT_COUNT"	tinyint,
+
 	"PRI_TYPE"	tinyint,
 	"PRI_PATTERN_TYPE"	tinyint,
 	"PRI_PATTERN_PERIOD"	float,
 	"PRI_MEAN"	float,
 	"PRI_MIN"	float,
 	"PRI_MAX"	float,
+	"PRI_DEV"	float,
 	"PRI_JITTER_RATIO"	float,
 	"PRI_POSITION_COUNT"	tinyint,
+	"PRI_ELEMENT_COUNT"	tinyint,
+
 	"PW_MEAN"	float,
 	"PW_MIN"	float,
 	"PW_MAX"	float,
+	"PW_DEV"	float,
+
 	"PA_MEAN"	float,
 	"PA_MIN"	float,
 	"PA_MAX"	float,
-	"IS_STORED_PDW"	tinyint,
+	"PA_DEV"	float,
+
+    "SCAN_TYPE" int,
+    "SCAN_TYPE_DETAIL" int
+    "SCAN_PRD" float,
+
+    "INTRA_TYPE" integer
+    "INTRA_TYPE_DETAIL" integer
+    "INTRA_FRQ_MEAN" float,
+    "INTRA_FRQ_MIN" float,
+    "INTRA_FRQ_MAX" float,
+    "INTRA_FRQ_DEVIATION" float,
+
+    "SHIP_LAT" float,
+    "SHIP_LONG" float,
+    "SHIP_PITCH" float,
+    "SHIP_ROLL" float,
+    "SHIP_HEADING" float,
+    "SHIP_ALT" float,
+
+    "IS_PDW_RESTORE" integer,
+    "IS_IQ_RESTORE" integer,
+    "IS_FILTERED" integer,
+    "IS_VALIDITY" integer,
+
 	"NUM_PDW"	smallint,
-	"COLLECTOR_ID"	tinyint,
 	"RADAR_LATITUDE"	float,
 	"RADAR_LONGGITUDE"	float,
-	"RADAR_NAME"	varchar(20),
 	"RADARMODE_INDEX"	smallint,
 	"THREAT_INDEX"	smallint
+
 );
 
 CREATE TABLE "LOB_POSITION" (
