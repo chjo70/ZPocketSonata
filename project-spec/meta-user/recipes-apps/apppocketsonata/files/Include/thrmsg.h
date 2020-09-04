@@ -7,7 +7,7 @@
 #define _THRMSG_H
 
 #include "system.h"
-#include "./SONATAPIP/_sysmsg.h"
+//#include "./SONATAPIP/_sysmsg.h"
 
 
 //////////////////////////////////////////////////////////////
@@ -25,9 +25,10 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_SETWINDOWCELL,
 
 
-    // 기존 소나타의 타스크간 메시지 정의
+    // 제어 메시지
     enTHREAD_MODE = enREQ_MODE,
-    enTHREAD_ANAL_START = enREQ_ANAL_START, // = Msys_Start,
+    enTHREAD_ANAL_START = enREQ_ANAL_START,
+
 
     //
     enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,

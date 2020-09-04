@@ -24,6 +24,9 @@
 
 #include "../SigAnal/_Type.h"
 
+#include "system.h"
+#include "../EmitterMerge/ELMsgDefn.h"
+
 // #include "Structs.h"
 
 //#define   Unknown   0
@@ -121,40 +124,40 @@ enum FREQ_TYPE
 //##ModelId=452B0C510131
 enum PRI_TYPE
 {
-  _STABLE               = 0,
-	_JITTER_RANDOM,
-	_DWELL,
-  _STAGGER,
-  _JITTER_PATTERN,
+    _STABLE               = 0,
+    _JITTER_RANDOM,
+    _DWELL,
+    _STAGGER,
+    _JITTER_PATTERN,
 
-	_IGNORE_PRI,
+    _IGNORE_PRI,
 
-  MAX_PRITYPE,
+    MAX_PRITYPE,
 
-  _REFSTABLE,
+    _REFSTABLE,
 
-  _STAGGER_DWELL,
+    _STAGGER_DWELL,
 
 
 } ; // Id...
 //##ModelId=452B0C5101C7
 enum PATTERN_TYPE
 {
-	//##ModelId=452B0C5101DC
-  UNK         = 1,
-	//##ModelId=452B0C5101EF
-  SINE,
-	//##ModelId=452B0C5101F9
-  SAW_INC,
-	//##ModelId=452B0C51020D
-  SAW_DEC,
-	TRI,
-	//##ModelId=452B0C510221
-  MAX_FRQPATTYPE
+    //##ModelId=452B0C5101DC
+    UNK         = 1,
+    //##ModelId=452B0C5101EF
+    SINE,
+    //##ModelId=452B0C5101F9
+    SAW_INC,
+    //##ModelId=452B0C51020D
+    SAW_DEC,
+    TRI,
+    //##ModelId=452B0C510221
+    MAX_FRQPATTYPE
 } ;   // same with PRI pattern type
 
-enum { FP_UNKNOWN=0, FP_FIXED, FP_ } ;
-enum ENUM_FREQ_TYPE { FT_FIXED=0 } ;
+//enum EBUM_FREQ_TYPE { FP_UNKNOWN=0, FP_FIXED, FP_ } ;
+//enum ENUM_FREQ_TYPE { FT_FIXED=0 } ;
 
 // 에미터 목록 정의
 enum { CAT_MIX=0x80, CAT_UNKNOWN=0, CAT_UNK, CAT_AIR, CAT_SHP, CAT_SMR, CAT_GRD, CAT_BASE, CAT_MSL, CAT_MSS, CAT_MAX } ;
@@ -245,8 +248,8 @@ enum SCAN_STAT
 #define _STR_LOWHIGH
 struct STR_LOWHIGH
 {
-  int low;
-  int hgh;
+  int iLow;
+  int iHgh;
 } ;
 #endif
 
@@ -254,8 +257,8 @@ struct STR_LOWHIGH
 #define _STR_LOWHIGH_TOA
 struct STR_LOWHIGH_TOA
 {
-	_TOA low;
-	_TOA hgh;
+    _TOA iLow;
+    _TOA iHgh;
 } ;
 #endif
 
@@ -271,6 +274,15 @@ struct STR_MINMAX {
   int mean;
   int min;
   int max;
+  int sdev;
+} ;
+
+struct STR_MINMAX_SDEV {
+  int mean;
+  int min;
+  int max;
+
+  float fsdev;
 } ;
 
 struct STR_MINMAX_MEDIAN {
@@ -591,15 +603,20 @@ struct STR_LOST {
 }  ;
 
 
+#ifdef _ELINT_
 //##ModelId=452B0C5200D8
 struct STR_NEWAET {
     // New AET structure
     // 위협 데이터 구조는 메시지의 최소 데이터 구조로 정의한다.
+
     STR_AET aet;    // original AET
-    //SRxLOBData lob;
+
 
     STR_EXT ext;    // exteded infomation of AET
 }  ;
+#elif defined(_POCKETSONATA_)
+typedef struct SRxLOBData STR_NEWAET;
+#endif
 
 //##ModelId=452B0C5200E3
 struct STR_TRKAET {
@@ -671,26 +688,32 @@ enum EMITTER_STATUS { NEW_EMITTER_STAT=0x0, UPDATE_EMITTER_STAT, MERGE_EMITTER_S
 enum SCAN_MODE { NO_SCAN=0, READY_SCAN, ON_SCAN, OUT_SCAN } ;
 
 struct STR_LOC {
-	UINT coUpd;
+    UINT coUpd;
 
-	UINT aoaIndex;
-	int aoa[_spMaxAoaQueue];
+    UINT aoaIndex;
+    int aoa[_spMaxAoaQueue];
 
-	UINT stat;	// 에미터 상태 정보
-	enum SCAN_MODE scanMode;
+    UINT stat;	// 에미터 상태 정보
+    enum SCAN_MODE scanMode;
 
-	STR_PDWFILTER_INFO trackFI;
-	STR_PDWFILTER_INFO scanFI;
+    STR_PDWFILTER_INFO trackFI;
+    STR_PDWFILTER_INFO scanFI;
 
-	int noThreat;
-	int nNoGp;
+    int noThreat;
+    int nNoGp;
 
 }  ;
 
 struct STR_MANAET {
-  STR_AET aet;
-  STR_EXT ext;
-	STR_LOC loc;
+#ifdef _ELINT_
+    STR_AET aet;
+#elif defined(_POCKETSONATA_)
+    SRxLOBData aet;
+#else
+
+#endif
+    STR_EXT ext;
+    STR_LOC loc;
 
 } ;
 
@@ -749,7 +772,7 @@ struct STR_MANAET {
 #define ahwCMF_SYSBase    (FLASH_BASE_ADRS + 0x7F0000)
 
 #else
-//#error "Progaramming to suatble sbc board"
+
 
 #endif
 

@@ -13,6 +13,10 @@
 
 #ifdef __cplusplus
 
+#include <typeinfo>
+
+using namespace std;
+
 /**	\brief	클래스명 CPulExt;
 						주파수,방위,펄스폭 그룹화 단계를 거친 후에 입력된 신호를 근거로 펄스열 추출을 한다.
 						펄스열 추출은 크게 기본 규칙성 펄스열단계에서 STABLE PRI를 먼저 찾는다. 이 과정에서
@@ -112,7 +116,37 @@ public:
 	//##ModelId=452B0C5303DD
 	virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
 	virtual int GetCoPdw()=0;
-	virtual UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )=0;
+
+    template <typename T=_TOA>
+    UINT CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+        T harmonic;
+        T max_mean, min_mean;
+
+        if( priMean1 > priMean2 ) {
+            max_mean = priMean1;
+            min_mean = priMean2;
+        }
+        else {
+            max_mean = priMean2;
+            min_mean = priMean1;
+        }
+
+        if( strcmp( typeid(T).name(), "float" ) == 0 )
+            harmonic = fmod( max_mean, min_mean );
+        else
+            harmonic = max_mean % min_mean;
+
+        // 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+        T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+
+        // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+        if( harmonic <= tThreshold+margin_th )
+            return _TOADIV( max_mean, min_mean );
+        if( min_mean-harmonic <= tThreshold+margin_th )
+            return _TOADIV( max_mean, min_mean );
+
+        return 0;
+    }
 
 	void MakeCWPulseTrain();
 	void ResetJitterSeg();
@@ -180,12 +214,18 @@ public:
 	void ExtractJitter( int type );
 	//##ModelId=452B0C54012B
 	void FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
+
+
+
 	//##ModelId=452B0C540135
-  _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
+    _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
+
+
+
 	//##ModelId=452B0C540141
 	void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, int iMark=STABLE_MARK );
 	//##ModelId=452B0C540168
-		void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
+    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
 	//##ModelId=452B0C54017E
 	void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
 	//##ModelId=452B0C540191
@@ -195,13 +235,13 @@ public:
 	//##ModelId=452B0C5401A5
 	UINT CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter );
 	//##ModelId=452B0C5401B8
-	_TOA CheckHarmonic( _TOA priMean1, _TOA priMean2 );
+
 	//##ModelId=452B0C5401C3
-  _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
+    _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
 	//##ModelId=452B0C5401D6
 	int ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
 	//##ModelId=452B0C5401EB
-	UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, UINT framePri);
+    UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
 	//##ModelId=452B0C5401F5
 	UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count );
 	//##ModelId=452B0C540201

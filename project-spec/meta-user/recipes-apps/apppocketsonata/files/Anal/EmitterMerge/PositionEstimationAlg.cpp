@@ -222,8 +222,8 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	memset( & stABTData, 0, sizeof(STR_POSITION_ESTIMATION) );
 	//pPEInfo->enValid = stABTData.iPEValid;
 
-	pPEInfo->fLatitude = (float) stABTData.dLatitude;
-	pPEInfo->fLongitude = (float) stABTData.dLongitude;
+    pPEInfo->fLatitude = stABTData.fLatitude;
+    pPEInfo->fLongitude = stABTData.fLongitude;
 
 	pPEInfo->fCEP = stABTData.fCEP;
 	pPEInfo->fMajorAxis = stABTData.fMajorAxis;
@@ -263,7 +263,7 @@ void CPositionEstimationAlg::VerifyOfLOB( SRxABTData *pABTData )
 		pLatitude = & m_Sensor.pLatitude[0];
 		pLongitude = & m_Sensor.pLongitude[0];
 		for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
-			ST_IMA->VincentyInverse( & distlob, *pLatitude, *pLongitude, pABTData->dLatitude, pABTData->dLongitude );
+            ST_IMA->VincentyInverse( & distlob, *pLatitude, *pLongitude, pABTData->fLatitude, pABTData->fLongitude );
 
 			fDistLob = (float) ( distlob.fwdlob - *pLob + 0.5 );
 			if( fDistLob < 0 ) {
@@ -290,8 +290,8 @@ void CPositionEstimationAlg::VerifyOfLOB( SRxABTData *pABTData )
 			pABTData->iPEValid = _spZero;
 			pABTData->fCEP = -1.0;
 
-			pABTData->dLatitude = 0.;
-			pABTData->dLongitude = 0.;
+            pABTData->fLatitude = 0.;
+            pABTData->fLongitude = 0.;
 
 			pABTData->fMajorAxis = (float) 0.;
 			pABTData->fMinorAxis = (float) 0.;

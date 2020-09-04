@@ -16,11 +16,10 @@
 #define _MAIN_
 //#define _MAIN_GLOBALS_
 
-#ifdef __linux__
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#endif
+
 
 #include "../OFP_Main.h"
 
@@ -217,10 +216,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 #ifdef _ELINT_
     Printf( "\n\n ==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_nStep, pPDWData->count );
     Log( enNormal, "==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_nStep, pPDWData->count );
-#elif __linux__
-
 #else
-    Printf( "\n\n ==== Start of New Signal Analysis[%dth Band:%d, Co:%d] ====" , m_nStep, pPDWData->stPDW[0].item.band, pPDWData->count );
+    //Printf( "\n\n ==== Start of New Signal Analysis[%dth Band:%d, Co:%d] ====" , m_nStep, pPDWData->stPDW[0].item.band, pPDWData->count );
 #endif
 
     ++ m_nStep;
@@ -794,7 +791,8 @@ void CNewSigAnal::InitSimul()
     int i;
     STR_NEWAET *pSimulAet;
 
-    pSimulAet = & m_theSimulAET[0];
+/*
+ *  pSimulAet = & m_theSimulAET[0];
     for( i=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
         memset( pSimulAet, 0, sizeof( STR_NEWAET ) );
 
@@ -847,7 +845,7 @@ void CNewSigAnal::InitSimul()
         pSimulAet->ext.idxEmitter = -1;
         pSimulAet->ext.mark = NORMAL_AET;
 
-    }
+    }       */
 
 }
 
@@ -933,7 +931,7 @@ BOOL CreateDir( char *pPath )
 #ifdef _WIN32
     bRet = CreateDirectory( dirName, NULL );
 #else
-    mkdir( dirName, 0666 );
+    bRet = mkdir( dirName, 0666 ) != -1;
 #endif
 
     return bRet;

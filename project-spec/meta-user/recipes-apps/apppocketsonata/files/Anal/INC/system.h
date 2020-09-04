@@ -275,10 +275,10 @@
 #elif defined(_POCKETSONATA_)
 #define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
 #define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
-#define   _spMgFixFrqEJ				IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqCD				IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqEJ                 IFRQMhzCNV( 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqCD				IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #else
 #error "컴파일러에 DEFINE 을 추가해야 합니다."

@@ -68,8 +68,8 @@ enum ENUM_SocketMode {
 #ifndef _STR_LOWHIGH
 #define _STR_LOWHIGH
 struct STR_LOWHIGH {
-    unsigned int uiLow;
-    unsigned int uiHigh;
+    int iLow;
+    int iHigh;
 };
 #endif
 
@@ -100,7 +100,7 @@ struct STR_WINDOWCELL {
     unsigned int uiTotalPDW;
 
     /**
-    * @brief 최대 수집 게수
+    * @brief 최대 수집 게수 및 수집 시간
     */
     unsigned int uiMaxCoPDW;
     unsigned int uiMaxCollectTime;          // 최대 수집 시간 [ms]
@@ -142,7 +142,9 @@ enum ENUM_COLLECTBANK {
     enDetectCollectBank=0,
     enTrackCollectBank,
     enScanCollectBank,
-    enUserCollectBank
+    enUserCollectBank,
+
+    enUnknownCollectBank
 
 };
 

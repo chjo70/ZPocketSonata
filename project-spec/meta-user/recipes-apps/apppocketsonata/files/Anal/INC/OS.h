@@ -5,16 +5,7 @@
 #if !defined(AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)
 #define AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
-#ifdef _WIN32
-
-#elif __linux__
-
-
-#else
+#ifdef _VXWORKS_
 #include <types/vxTypesOld.h>
 #include "prjParams.h"
 
@@ -31,6 +22,7 @@
 
 //#define UDF_RAMDISK_FILENAME	"c:\\tftpboot\\udf_1.udf"
 #define UDF_RAMDISK_FILENAME	"C:\\LMS\\EidFiles\\udf_1.udf"
+#else
 
 #endif
 

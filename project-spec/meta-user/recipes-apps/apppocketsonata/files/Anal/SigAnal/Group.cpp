@@ -698,10 +698,10 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
             pAoaGroup->bOverAoa = FALSE;
 
             // 방위 그룹화의 방위 영역 설정
-            pAoaGroup->from_aoa = pCluster->aoa.low;
-            pAoaGroup->to_aoa = pCluster->aoa.hgh;
-            pAoaGroup->from_bin = pCluster->aoa.low >> _sp.np.Aoa_Shift_Cnt;
-            pAoaGroup->to_bin = pCluster->aoa.hgh >> _sp.np.Aoa_Shift_Cnt;
+            pAoaGroup->from_aoa = pCluster->aoa.iLow;
+            pAoaGroup->to_aoa = pCluster->aoa.iHgh;
+            pAoaGroup->from_bin = pCluster->aoa.iLow >> _sp.np.Aoa_Shift_Cnt;
+            pAoaGroup->to_bin = pCluster->aoa.iHgh >> _sp.np.Aoa_Shift_Cnt;
 
             memcpy( pAoaGroup->pIndex, pCluster->index, sizeof(PDWINDEX)*pCluster->count );
             pAoaGroup->count = pCluster->count;
@@ -1749,8 +1749,10 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
     UINT max_freq_diff;
 
     // 1 GHz 주파수 값
-#if defined(_ELINT_) || defined(_POCKETSONATA_)
+#if defined(_ELINT_)
     max_freq_diff = IFRQMhzCNV( 0, MAX_FREQ_DIFF );
+#elif defined(_POCKETSONATA_)
+    max_freq_diff = IFRQMhzCNV( MAX_FREQ_DIFF );
 #else
     max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].res ) );
 #endif
@@ -2071,10 +2073,10 @@ BOOL CGroup::IsLastGroup( int index )
 void CGroup::SaveFrqAoaPeak()
 {
     if( m_FrqAoaPeak.enable == FALSE ) {
-        m_FrqAoaPeak.aoa.low = m_AoaGroups.aoa[0].from_aoa;
-        m_FrqAoaPeak.aoa.hgh = m_AoaGroups.aoa[0].to_aoa;
-        m_FrqAoaPeak.frq.low = m_FrqGroups.frq[0].from_frq;
-        m_FrqAoaPeak.frq.hgh = m_FrqGroups.frq[0].to_frq;
+        m_FrqAoaPeak.aoa.iLow = m_AoaGroups.aoa[0].from_aoa;
+        m_FrqAoaPeak.aoa.iHgh = m_AoaGroups.aoa[0].to_aoa;
+        m_FrqAoaPeak.frq.iLow = m_FrqGroups.frq[0].from_frq;
+        m_FrqAoaPeak.frq.iHgh = m_FrqGroups.frq[0].to_frq;
         m_FrqAoaPeak.band	= m_nBand;
         m_FrqAoaPeak.tot_cnt = m_nCoPdw;
         m_FrqAoaPeak.count = m_FrqAoaPwIdx.count;
@@ -2345,8 +2347,8 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
     PDWINDEX *pCIndex;
 
     // 방위 평균 계산
-    pCluster->aoa.hgh = -9999999;
-    pCluster->aoa.low = 0xffffff;
+    pCluster->aoa.iHgh = -9999999;
+    pCluster->aoa.iLow = 0xffffff;
 
     meanVal = 0;
     pCIndex = & pCluster->index[0];
@@ -2363,11 +2365,11 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
 
         meanVal += diffVal;
 
-        pCluster->aoa.hgh = _max( pCluster->aoa.hgh, diffVal );
-        pCluster->aoa.low = _min( pCluster->aoa.low, diffVal );
+        pCluster->aoa.iHgh = _max( pCluster->aoa.iHgh, diffVal );
+        pCluster->aoa.iLow = _min( pCluster->aoa.iLow, diffVal );
     }
-    pCluster->aoa.hgh = ( MAX_AOA + pCluster->aoa.hgh + frstVal ) % MAX_AOA;
-    pCluster->aoa.low = ( MAX_AOA + pCluster->aoa.low + frstVal ) % MAX_AOA;
+    pCluster->aoa.iHgh = ( MAX_AOA + pCluster->aoa.iHgh + frstVal ) % MAX_AOA;
+    pCluster->aoa.iLow = ( MAX_AOA + pCluster->aoa.iLow + frstVal ) % MAX_AOA;
     pCluster->center = ( MAX_AOA + IDIV( meanVal, pCluster->count ) + frstVal ) % MAX_AOA;
 
     // 방위 거리 계산

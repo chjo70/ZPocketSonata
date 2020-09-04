@@ -13,7 +13,7 @@ using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////
 
-Queue<int> CCollectBank::m_theQueueWindowCellID;
+Queue<unsigned int> CCollectBank::m_theQueueWindowCellID;
 
 /**
  * @brief CCollectBank::CCollectBank
@@ -61,7 +61,7 @@ void CCollectBank::InitWindowCell()
         }
     }
 
-    m_theQueueWindowCellID.Pop( & m_iID );
+    m_theQueueWindowCellID.Pop( & m_uiID );
 
     m_strWindowCell.iChannelNo = m_iChannelNo;
 
@@ -97,7 +97,6 @@ void CCollectBank::CloseCollectBank()
  */
 void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
 {
-    unsigned int i;
     int iTo;
 
     iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pPDWData->uiTotalPDW ) );

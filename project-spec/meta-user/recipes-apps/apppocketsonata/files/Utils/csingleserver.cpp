@@ -295,7 +295,8 @@ int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         iRet2 = send( m_iSocket, (char *) pData, strLanHeader.uiLength, MSG_DONTWAIT );
     }
     else {
-        perror( "send() 에러");
+        // TaskMngr () Send Error 발생시 Lock 이 됨.
+        //perror( "send() 에러");
     }
 
     return iRet1 + iRet2;

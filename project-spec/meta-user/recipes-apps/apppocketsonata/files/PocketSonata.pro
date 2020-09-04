@@ -17,6 +17,11 @@ SOURCES += \
         Anal/EmitterMerge/UTM.cpp \
         Anal/Identify/ELUtil.cpp \
         Anal/Identify/Identify.cpp \
+        Anal/KnownSigAnal/KAnalPRI.cpp \
+        Anal/KnownSigAnal/KGroup.cpp \
+        Anal/KnownSigAnal/KMakeAET.cpp \
+        Anal/KnownSigAnal/KPulExt.cpp \
+        Anal/KnownSigAnal/KnownSigAnal.cpp \
         Anal/NewSigAnal/NAnalPRI.cpp \
         Anal/NewSigAnal/NGroup.cpp \
         Anal/NewSigAnal/NMakeAET.cpp \
@@ -111,6 +116,11 @@ HEADERS += \
     Anal/Identify/define.h \
     Anal/Identify/structs.h \
     Anal/Identify/structs.h \
+    Anal/KnownSigAnal/KAnalPRI.h \
+    Anal/KnownSigAnal/KGroup.h \
+    Anal/KnownSigAnal/KMakeAET.h \
+    Anal/KnownSigAnal/KPulExt.h \
+    Anal/KnownSigAnal/KnownSigAnal.h \
     Anal/NewSigAnal/NAnalPRI.h \
     Anal/NewSigAnal/NGroup.h \
     Anal/NewSigAnal/NMakeAET.h \
@@ -133,6 +143,10 @@ HEADERS += \
     Anal/SigAnal/_SigAnal.h \
     Anal/SigAnal/_Struct.h \
     Anal/SigAnal/_Type.h \
+    Anal/TrackSigAnal/KGroup.h \
+    Anal/TrackSigAnal/KMakeAET.h \
+    Anal/TrackSigAnal/KPulExt.h \
+    Anal/TrackSigAnal/KnownSigAnal.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     Collect/DataFile/_iq.h \
@@ -217,7 +231,6 @@ INCLUDEPATH += /usr/local/boost
 INCLUDEPATH += /usr/local/include
 
 DEFINES += _POCKETSONATA_
-DEFINES += NEX7410
 DEFINES += _SQLITE_
 
 DISTFILES += \

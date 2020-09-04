@@ -38,6 +38,7 @@ enum EnumNullValueType
 
 
 #define _MAX_RADARMODE_NAME_SIZE									(10)
+#define _MAX_PLATFORM_NAME_SIZE                                     (10)
 #define _MAX_THREAT_NAME_SIZE										(10)
 #define _MAX_SITE_NAME_SIZE											(10)
 #define _MAX_SIZE_OF_IDINFO                                         (10)
@@ -47,7 +48,7 @@ enum EnumNullValueType
 #define _MAX_NICKNAME_STRING_SIZE_									(30+_NULL_CHAR_)
 #define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
 
-#define _MAX_FUNCTIONCODE_STRING_SIZE_								(10+_NULL_CHAR_)
+#define _MAX_FUNCTIONCODE_STRING_SIZE_								(4+_NULL_CHAR_)
 #define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
 
 #define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
@@ -213,7 +214,7 @@ static char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] =
 	"SEA", 
 	"LAND_SEA_AND_AIR", 
 	"COASTAL", 
-	"AIR"
+    "AIR"
 };
 
 enum EnumFunctionCodes
@@ -1330,9 +1331,9 @@ struct SDeviceBase
 
 };
 
-// struct SThreatBase	//위협 (EOB 기반임)
-// {
-// 	int nPin;																											//PIN
+struct SThreatBase	//위협 (EOB 기반임)
+{
+                                                                                                                //PIN
 // 	char szBE_Number[_MAX_BE_NUMBER_STRING_SIZE_];								//위협의 BE Number (10)
 // 	char szFacilityName[_MAX_SIZE_OF_FACILITYNAME_];							//기지명칭 (위협명) (50)
 // 	char szPlaceNameKor[_MAX_STRING_SIZE_];												//한글지명 (50)
@@ -1352,15 +1353,15 @@ struct SDeviceBase
 // 	char szDTFI[_MAX_DATETIME_STRING_SIZE_];						//DATE TIME FIRST INFO (최초 반영시간)
 // 	char szDistinction[_MAX_DISTINCTION_STRING_SIZE_];	//구분(자체적으로 만들어 사용하는 코드)
 // 
-// 	PlatformCode::EnumPlatformCode ePlatform;						//탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
-// 
+    PlatformCode::EnumPlatformCode ePlatform;						//탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
+
 // 	char szSymbolCode[_MAX_SYMBOLCODE_STRING_SIZE_];		//2525B 심볼코드
 // 	char szThreatLatitude[_MAX_LATITUDE_STRING_SIZE_];				//위도
 // 	char szThreatLongitude[_MAX_LONGITUDE_STRING_SIZE_];			//경도
 // 	
-// 	SThreatBase()
-// 	{
-// 		nPin = 0;																		//PIN
+    SThreatBase() {
+        //iPinNum = 0;																		//PIN
+
 // 		eUserCountry=CountryCode::enumUndefinedCountry;	//사용국가를 enum으로 표현
 // 		ePrimaryFunction_ForGUI=enumUndefinedFunctionCode;	//주기능코드
 // 		szBE_Number[0] = NULL;
@@ -1381,9 +1382,9 @@ struct SDeviceBase
 // 		szSymbolCode[0] = NULL;										//2525B 심볼코드
 // 		szThreatLatitude[0] = NULL;									//위도
 // 		szThreatLongitude[0] = NULL;								//경도
-// 	}
-// };
-// 
+        }
+};
+
 // struct SDevice : public SThreatAndDeviceBase, SThreatBase, SDeviceBase, SDeviceInfoFromRadar	//장비 (EOB 기반)
 // {
 // 	time_t tiDBUpdateTime;												// DB에서 갖고온 업데이트 시간
@@ -1409,12 +1410,14 @@ typedef enum {
 } enTHREAT_PLATFORM;
 
 
-struct SThreat //: public SThreatBase, SThreatAndDeviceBase//위협 (EOB 기반임)
+struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반임)
 {
 	//vector <SDevice> vecDevice;	//장비
+    int iPinNum;
 	int iThreatIndex;
-	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    int iPriority;
 
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 	char szThreatName[_MAX_THREAT_NAME_SIZE];
 
 	float fLatitude;
@@ -1424,7 +1427,10 @@ struct SThreat //: public SThreatBase, SThreatAndDeviceBase//위협 (EOB 기반�
 
 	float fIdRange;
 
-	char szSiteName[_MAX_SITE_NAME_SIZE];
+    char szPlaceNameKor[_MAX_SITE_NAME_SIZE];
+    char szPlaceNameEng[_MAX_SITE_NAME_SIZE];
+
+    char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
 
 	SThreat() //: tiDBUpdateTime(0), nDBThreatIndex(0)
 	{
@@ -1991,71 +1997,78 @@ struct SRadarModeLifeCycle
 struct SRadarMode_Sequence_Values
 {
 	int iRadarModeIndex;	//레이더 모드 인덱스
-        int i_Index;	//레이더 모드 안에서의 PRI 인덱스
+    int i_Index;	//레이더 모드 안에서의 PRI 인덱스
 
-        float f_Min;	//PRI 최소(USEC)
-        float f_Max;	//PRI 최대(USEC)
+    float f_Min;	//PRI 최소(USEC)
+    float f_Max;	//PRI 최대(USEC)
 
-        SRadarMode_Sequence_Values():
-		iRadarModeIndex(0),
-                i_Index(0),
-                f_Min(0.0),
-                f_Max(0.0)
+    SRadarMode_Sequence_Values():
+    iRadarModeIndex(0),
+            i_Index(0),
+            f_Min(0.0),
+            f_Max(0.0)
 	{
 	}
 };
 
 struct SRadarInfo
 {
-        int nRadarIndex;								// 레이더 인덱스
+    int iRadarIndex;								// 레이더 인덱스
 
-        char szDeviceELNOT[_MAX_ELNOT_STRING_SIZE_];
-        char szELNOT[_MAX_ELNOT_STRING_SIZE_];						//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
-        int nPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
-        EnumRadarStatus eStatus;				//*상태 enum값
-        char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szELNOT[_MAX_ELNOT_STRING_SIZE_];						//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
+    int iRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
+    EnumRadarStatus eStatus;				//*상태 enum값
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+    char szWeaponSys[_MAX_WEAPON_STRING_SIZE_];
+    char szPlatform[_MAX_PLATFORM_STRING_SIZE_];
 
-        char szWeaponSys[_MAX_WEAPON_STRING_SIZE_];
-        char szPlatform[_MAX_PLATFORM_STRING_SIZE_];
+    int nUnknownEmitterTime_ForGUI;	//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
 
-        int nUnknownEmitterTime_ForGUI;	//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
+    int iTimeInactivated;
 
-        int nThreatIndex;								// ELNOT과 동일한 위협 번호
-        int nDeviceIndex;								// ELNOT과 동일한 장비 번호
+    int iThreatIndex;								// ELNOT과 동일한 위협 번호
+    int iDeviceIndex;								// ELNOT과 동일한 장비 번호
+    char szDeviceELNOT[_MAX_ELNOT_STRING_SIZE_];
 
-        SRadarInfo()
-        {
-            szDeviceELNOT[0] = 0;
-            szELNOT[0] = 0;
-            szNickName[0] = 0;
-            szWeaponSys[0] = 0;
-            szPlatform[0] = 0;
-            //szModeCode[0] = NULL;
+    SRadarInfo()
+    {
+        iRadarIndex =0;
+        szDeviceELNOT[0] = 0;
+        szELNOT[0] = 0;
+        szNickName[0] = 0;
+        szWeaponSys[0] = 0;
+        szPlatform[0] = 0;
+        //szModeCode[0] = NULL;
 
-            nPriority=0;
-            eStatus=enumActive;
-            nUnknownEmitterTime_ForGUI=0;
-            nRadarIndex = 0;
-            nThreatIndex = 0;
-            nDeviceIndex = 0;
-        }
+        iRadarPriority=0;
+        eStatus=enumActive;
+        nUnknownEmitterTime_ForGUI=0;
+        iRadarIndex = 0;
+        iThreatIndex = 0;
+        iDeviceIndex = 0;
+    }
 };
 
 struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (옛날 Beam의 개념)
 {
-	int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
+    int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
-	//* 일반정보
-	//* 전정부호, 우선순위는 SRadarInfo에 있음 (상속)
-	//* 모드명, 모드부호는 SRadarModeLifeCycle에 있음
-	//* 연관관계는 SParamSetAssociations에 있음 (상속)
+    //* 일반정보
+    //* 전정부호, 우선순위는 SRadarInfo에 있음 (상속)
+    //* 모드명, 모드부호는 SRadarModeLifeCycle에 있음
+    //* 연관관계는 SParamSetAssociations에 있음 (상속)
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)
     int iRadarModePriority;                                                 // 우선순위
     bool bIgnoreFreqType;                                                   // 주파수 세부 관계없이 동일 빔으로 관리
     bool bIgnorePRIType;                                                    // PRI 세부 관계없이 동일 빔으로 관리
 
-	char szRadarName[_MAX_RADARMODE_NAME_SIZE];
+    char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];
+
+    char szModeCode[_MAX_MODECODE_STRING_SIZE_];
+    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+
 
     //__time32_t tiCreated;
     //__time32_t tiLastUpdated;
@@ -2073,7 +2086,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     RadarModeFreqType::EnumRadarModeFreqType eRF_Type;			// 주파수형태 (Pulsed, CW, EA) enum형태
     //ContinuityCode::EnumContinuityCode eRF_Continuity;
     float fRF_TypicalMin;										//주관측범위: 주파수 Typical 최소(MHz)
-	float fRF_TypicalMax;																		//주관측범위: 주파수 Typical 최대(MHz)
+    float fRF_TypicalMax;																		//주관측범위: 주파수 Typical 최대(MHz)
     PatternCode::EnumPatternCode eRF_Pattern;                   // RF 변화의 패턴 여부 (PATTERN_CODE 참조)
     int nRF_NumPositions;                                       // RF POSITION 수
     int nRF_NumElements;                                        // RF 엘트리먼트 수
@@ -2081,147 +2094,151 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     float fRF_PatternPeriodMax;                                 // RF 패턴 주기 (USEC) 최대
     float fRF_MeanMin;                                          // RF 평균 최소
     float fRF_MeanMax;                                          // RF 평균 최대
+    float fRF_RangeMin;                                         // 주파수 필터링 정보
+    float fRF_RangeMax;
 
-	// PRI
-        RadarModePRIType::EnumRadarModePRIType ePRI_Type;			// PRI 형태 (Pulsed, CW, EA) enum형태
-        float fPRI_TypicalMin;							// PRI TYPICAL (USEC) 최소
-        float fPRI_TypicalMax;							// PRI TYPICAL (USEC) 최대
-        PatternCode::EnumPatternCode ePRI_Pattern;				// PRI 변화의 패턴 여부 (PATTERN_CODE 참조)
-        int nPRI_NumPositions;							// PRI POSITION 수
-        int nPRI_NumElements;                                                   // PRI 엘트리먼트 수
-        float fPRI_PatternPeriodMin;						// PRI 패턴주기 MIN (USEC)
-        float fPRI_PatternPeriodMax;						// PRI 패턴주기 MAX (USEC)
-        float fPRI_MeanMin;                                                     // PRI 평균 최소
-        float fPRI_MeanMax;                                                     // PRI 평균 최대
+    // PRI
+    RadarModePRIType::EnumRadarModePRIType ePRI_Type;			// PRI 형태 (Pulsed, CW, EA) enum형태
+    float fPRI_TypicalMin;                                      // PRI TYPICAL (USEC) 최소
+    float fPRI_TypicalMax;                                      // PRI TYPICAL (USEC) 최대
+    PatternCode::EnumPatternCode ePRI_Pattern;                  // PRI 변화의 패턴 여부 (PATTERN_CODE 참조)
+    int nPRI_NumPositions;                                      // PRI POSITION 수
+    int nPRI_NumElements;                                       // PRI 엘트리먼트 수
+    float fPRI_PatternPeriodMin;                                // PRI 패턴주기 MIN (USEC)
+    float fPRI_PatternPeriodMax;                                // PRI 패턴주기 MAX (USEC)
+    float fPRI_MeanMin;                                         // PRI 평균 최소
+    float fPRI_MeanMax;                                         // PRI 평균 최대
 
-        // 펄스폭
-        float fPD_TypicalMin;							// PD TYPICAL 값 (USEC) 최소
-        float fPD_TypicalMax;							// PD TYPICAL 값 (USEC) 최대
+    // 펄스폭
+    float fPD_TypicalMin;                                       // PD TYPICAL 값 (USEC) 최소
+    float fPD_TypicalMax;                                       // PD TYPICAL 값 (USEC) 최대
+    float fPD_RangeMin;                                         // 펄스폭 필터링 정보
+    float fPD_RangeMax;
 
-        //* 스캔
-        ScanType::EnumScanType eScanPrimaryType;				// 주 스캔타입 코드(SCAN_TYPE_CODE참조)
-        float fScanPrimaryTypicalMin;						// 주 스캔 주기값의 TYPICAL (SEC) 최소
-        float fScanPrimaryTypicalMax;						// 주 스캔 주기값의 TYPICAL (SEC) 최대
-        ScanType::EnumScanType eScanSecondaryType;				// 부 스캔타입 코드(SCAN_TYPE_CODE참조)
-        float fScanSecondaryTypicalMin;						// 부 스캔 주기값의 TYPICAL (SEC)
-        float fScanSecondaryTypicalMax;						// 부 스캔 주기값의 TYPICAL (SEC)
+    //* 스캔
+    ScanType::EnumScanType eScanPrimaryType;				// 주 스캔타입 코드(SCAN_TYPE_CODE참조)
+    float fScanPrimaryTypicalMin;						// 주 스캔 주기값의 TYPICAL (SEC) 최소
+    float fScanPrimaryTypicalMax;						// 주 스캔 주기값의 TYPICAL (SEC) 최대
+    ScanType::EnumScanType eScanSecondaryType;				// 부 스캔타입 코드(SCAN_TYPE_CODE참조)
+    float fScanSecondaryTypicalMin;						// 부 스캔 주기값의 TYPICAL (SEC)
+    float fScanSecondaryTypicalMax;						// 부 스캔 주기값의 TYPICAL (SEC)
 
-	//* 펄스반복주기 세부정보
-        vector <SRadarPRI_SpotValues> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
-	//map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
-        vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
-	//vector <SRadarPRI_GroupSpacing> vecRadarPRI_GroupSpacing;				//그룹 펄스 안의 펄스간 간격에 올 수 있는 값들
+    //* 펄스반복주기 세부정보
+    vector <SRadarPRI_SpotValues> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
+    //map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
+    vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
+    //vector <SRadarPRI_GroupSpacing> vecRadarPRI_GroupSpacing;				//그룹 펄스 안의 펄스간 간격에 올 수 있는 값들
 
-	//* 주파수 세부정보
-	//map <int /*nRF_Seq_ID*/, SRadarRF_Sequence> mapRadarRF_Sequence;		//레이더 모드 안에서 RF 시퀀스의 일련번호들 (구조체 내의 nRF_Index값으로 아래의 엘리먼트 목록에서 최소/최대 주파수를 가져온다)
-	vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
-        vector <SRadarMode_Sequence_Values> vecRadarMode_RFSequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
-        vector <SRadarRF_SpotValues> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
+    //* 주파수 세부정보
+    //map <int /*nRF_Seq_ID*/, SRadarRF_Sequence> mapRadarRF_Sequence;		//레이더 모드 안에서 RF 시퀀스의 일련번호들 (구조체 내의 nRF_Index값으로 아래의 엘리먼트 목록에서 최소/최대 주파수를 가져온다)
+    vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
+    vector <SRadarMode_Sequence_Values> vecRadarMode_RFSequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
+    vector <SRadarRF_SpotValues> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
 
-	SRadarMode()
-	{
-        szRadarName[0] = 0;
-		//nRadarModenPriority = INVALID_INT_VALUE;
-		eSignalType=SignalType::enumPulsed;
-                eRF_Type=RadarModeFreqType::enumFIXED;
-                ePRI_Type=RadarModePRIType::enumStable;
-		iRadarModeIndex=0;
-                eFunctionCode=enumUndefinedFunctionCode;
-		//fERP_TypicalMin=FLT_MIN;
-		//fERP_TypicalMax=FLT_MIN;
-		ePlatform=PlatformCode::enumUnKnown;
-		//ePolarization=PolizationCode::enumUndefinedPolization;
-		//ePOL_RotationDirection=enumUndefinedRotationDir;
-		fRF_TypicalMin=FLT_MIN;
-		fRF_TypicalMax=FLT_MIN;
-		//fRF_ChannelSpacingMin=FLT_MIN;
-		//fRF_ChannelSpacingMax=FLT_MIN;
-		//eRF_Continuity=ContinuityCode::enumUnknown;
-		//eRF_Pattern=PatternCode::enumUnknown;
-		//nRF_NumElements=INVALID_INT_VALUE;
-		nRF_NumPositions=INVALID_INT_VALUE;
-		fRF_PatternPeriodMin=FLT_MIN;
-		fRF_PatternPeriodMax=FLT_MIN;
-		//fRF_RangeMin=FLT_MIN;
-		//fRF_RangeMax=FLT_MIN;
-		//fRF_RateMin=FLT_MIN;
-		//fRF_RateMax=FLT_MIN;
-		//eRF_Coherency=CohencyCode::enumUnknown;
-		//ePRI_Continuity=ContinuityCode::enumUnknown;
-		//fPRI_FramePeriodMin=FLT_MIN;
-		//fPRI_FramePeriodMax=FLT_MIN;
-		//nPRI_NumElements=INVALID_INT_VALUE;
-		//nPRI_NumPositions=INVALID_INT_VALUE;
-		//ePRI_Pattern=PatternCode::enumUnknown;
-		fPRI_PatternPeriodMin=FLT_MIN;
-		fPRI_PatternPeriodMax=FLT_MIN;
-		//fPRI_PPG_Min=FLT_MIN;
-		//fPRI_PPG_Max=FLT_MIN;
-		//fPRI_RangeMin=FLT_MIN;
-		//fPRI_RangeMax=FLT_MIN;
-		//fPRI_RateMin=FLT_MIN;
-		//fPRI_RateMax=FLT_MIN;
-		//fPRI_SubframePeriodMin=FLT_MIN;
-		//fPRI_SubframePeriodMax=FLT_MIN;
-		fPRI_TypicalMin=FLT_MIN;
-		fPRI_TypicalMax=FLT_MIN;
-		//ePD_Continuity=ContinuityCode::enumUnknown;
-		fPD_TypicalMin=FLT_MIN;
-		fPD_TypicalMax=FLT_MIN;
-		//nPD_NumElements=INVALID_INT_VALUE;
-		//nPD_NumPositions=INVALID_INT_VALUE;
-		//ePD_Pattern=PatternCode::enumUnknown;
-		//fPD_PatternPeriodMin=FLT_MIN;
-		//fPD_PatternPeriodMax=FLT_MIN;
-		//fScanPrimaryTypicalMin=FLT_MIN;
-		//fScanPrimaryTypicalMax=FLT_MIN;
-		//eScanSecondaryType=ScanType::enumUndefinedScanType;
-		//fScanSecondaryTypicalMin=FLT_MIN;
-		//fScanSecondaryTypicalMax=FLT_MIN;
-		eValidation=enumUnvalidated;
-		//eRF_LagacyType=enumUndefinedRF_LagacyType;
-		//ePRI_LagacyType=enumUndefinedPRI_LegacyType;
-		//eScanPrimaryType=ScanType::enumUndefinedScanType;
+    SRadarMode()
+    {
+        szRadarModeName[0] = 0;
+        //nRadarModenPriority = INVALID_INT_VALUE;
+        eSignalType=SignalType::enumPulsed;
+        eRF_Type=RadarModeFreqType::enumFIXED;
+        ePRI_Type=RadarModePRIType::enumStable;
+        iRadarModeIndex=0;
+        eFunctionCode=enumUndefinedFunctionCode;
+        //fERP_TypicalMin=FLT_MIN;
+        //fERP_TypicalMax=FLT_MIN;
+        ePlatform=PlatformCode::enumUnKnown;
+        //ePolarization=PolizationCode::enumUndefinedPolization;
+        //ePOL_RotationDirection=enumUndefinedRotationDir;
+        fRF_TypicalMin=FLT_MIN;
+        fRF_TypicalMax=FLT_MIN;
+        //fRF_ChannelSpacingMin=FLT_MIN;
+        //fRF_ChannelSpacingMax=FLT_MIN;
+        //eRF_Continuity=ContinuityCode::enumUnknown;
+        //eRF_Pattern=PatternCode::enumUnknown;
+        //nRF_NumElements=INVALID_INT_VALUE;
+        nRF_NumPositions=INVALID_INT_VALUE;
+        fRF_PatternPeriodMin=FLT_MIN;
+        fRF_PatternPeriodMax=FLT_MIN;
+        //fRF_RangeMin=FLT_MIN;
+        //fRF_RangeMax=FLT_MIN;
+        //fRF_RateMin=FLT_MIN;
+        //fRF_RateMax=FLT_MIN;
+        //eRF_Coherency=CohencyCode::enumUnknown;
+        //ePRI_Continuity=ContinuityCode::enumUnknown;
+        //fPRI_FramePeriodMin=FLT_MIN;
+        //fPRI_FramePeriodMax=FLT_MIN;
+        //nPRI_NumElements=INVALID_INT_VALUE;
+        //nPRI_NumPositions=INVALID_INT_VALUE;
+        //ePRI_Pattern=PatternCode::enumUnknown;
+        fPRI_PatternPeriodMin=FLT_MIN;
+        fPRI_PatternPeriodMax=FLT_MIN;
+        //fPRI_PPG_Min=FLT_MIN;
+        //fPRI_PPG_Max=FLT_MIN;
+        //fPRI_RangeMin=FLT_MIN;
+        //fPRI_RangeMax=FLT_MIN;
+        //fPRI_RateMin=FLT_MIN;
+        //fPRI_RateMax=FLT_MIN;
+        //fPRI_SubframePeriodMin=FLT_MIN;
+        //fPRI_SubframePeriodMax=FLT_MIN;
+        fPRI_TypicalMin=FLT_MIN;
+        fPRI_TypicalMax=FLT_MIN;
+        //ePD_Continuity=ContinuityCode::enumUnknown;
+        fPD_TypicalMin=FLT_MIN;
+        fPD_TypicalMax=FLT_MIN;
+        //nPD_NumElements=INVALID_INT_VALUE;
+        //nPD_NumPositions=INVALID_INT_VALUE;
+        //ePD_Pattern=PatternCode::enumUnknown;
+        //fPD_PatternPeriodMin=FLT_MIN;
+        //fPD_PatternPeriodMax=FLT_MIN;
+        //fScanPrimaryTypicalMin=FLT_MIN;
+        //fScanPrimaryTypicalMax=FLT_MIN;
+        //eScanSecondaryType=ScanType::enumUndefinedScanType;
+        //fScanSecondaryTypicalMin=FLT_MIN;
+        //fScanSecondaryTypicalMax=FLT_MIN;
+        eValidation=enumUnvalidated;
+        //eRF_LagacyType=enumUndefinedRF_LagacyType;
+        //ePRI_LagacyType=enumUndefinedPRI_LegacyType;
+        //eScanPrimaryType=ScanType::enumUndefinedScanType;
 
-		//strModulationCode = _T("");
+        //strModulationCode = _T("");
 
-		//stRadarModeLifeCycle = SRadarModeLifeCycle();
+        //stRadarModeLifeCycle = SRadarModeLifeCycle();
 
-		vecRadarRF_Values = vector <SRadarRF_Values>();
-		//vecRadarRF_SpotValues = vector <SRadarRF_SpotValues>();
-		//vecRadarPRI_SpotValues = vector <SRadarPRI_SpotValues>();
+        vecRadarRF_Values = vector <SRadarRF_Values>();
+        //vecRadarRF_SpotValues = vector <SRadarRF_SpotValues>();
+        //vecRadarPRI_SpotValues = vector <SRadarPRI_SpotValues>();
                 vecRadarMode_PRISequenceValues = vector <SRadarMode_Sequence_Values>();
-		//vecRadarPRI_GroupSpacing = vector <SRadarPRI_GroupSpacing>();
-		//vecRadarPD_Values = vector <SRadarPD_Values>();
-		//vecRadarPD_SpotValues = vector <SRadarPD_SpotValues>();
-		//vecRadarPA_Diff_InGroup = vector<SRadarPA_Diff_InGroup>();
-		//vecRadarModeComments = vector <SRadarModeComments>();
+        //vecRadarPRI_GroupSpacing = vector <SRadarPRI_GroupSpacing>();
+        //vecRadarPD_Values = vector <SRadarPD_Values>();
+        //vecRadarPD_SpotValues = vector <SRadarPD_SpotValues>();
+        //vecRadarPA_Diff_InGroup = vector<SRadarPA_Diff_InGroup>();
+        //vecRadarModeComments = vector <SRadarModeComments>();
 
                 vecRadarMode_RFSequenceValues = vector <SRadarMode_Sequence_Values>();
-		//mapRadarPRI_Sequence = map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence>();
-		//mapRadarPD_Sequence = map <int /*nPD_Seq_ID*/, SRadarPD_Sequence>();
-		//mapRadarMOP_CW = map<int /*nMOP_CW_Index*/, SRadarMOP_CW>();
-		//mapRadarRF_Sequence = map <int /*nRF_Seq_ID*/, SRadarRF_Sequence>();
-	}
+        //mapRadarPRI_Sequence = map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence>();
+        //mapRadarPD_Sequence = map <int /*nPD_Seq_ID*/, SRadarPD_Sequence>();
+        //mapRadarMOP_CW = map<int /*nMOP_CW_Index*/, SRadarMOP_CW>();
+        //mapRadarRF_Sequence = map <int /*nRF_Seq_ID*/, SRadarRF_Sequence>();
+    }
 
-	void Init() {
+    void Init() {
                 vecRadarMode_RFSequenceValues.clear();
-		//vecRadarModeComments.clear();
-		//vecRadarPRI_SpotValues.clear();
-		//mapRadarPRI_Sequence.clear();
-		vecRadarMode_PRISequenceValues.clear();
-		//vecRadarPRI_GroupSpacing.clear();
-		//mapRadarPD_Sequence.clear();
-		//vecRadarPD_Values.clear();
-		//vecRadarPD_SpotValues.clear();
-		//mapRadarMOP_CW.clear();
+        //vecRadarModeComments.clear();
+        //vecRadarPRI_SpotValues.clear();
+        //mapRadarPRI_Sequence.clear();
+        vecRadarMode_PRISequenceValues.clear();
+        //vecRadarPRI_GroupSpacing.clear();
+        //mapRadarPD_Sequence.clear();
+        //vecRadarPD_Values.clear();
+        //vecRadarPD_SpotValues.clear();
+        //mapRadarMOP_CW.clear();
 
-		//mapRadarRF_Sequence.clear();
-		vecRadarRF_Values.clear();
-		//vecRadarRF_SpotValues.clear();
+        //mapRadarRF_Sequence.clear();
+        vecRadarRF_Values.clear();
+        //vecRadarRF_SpotValues.clear();
 
-		//vecRadarPA_Diff_InGroup.clear();
-	}
+        //vecRadarPA_Diff_InGroup.clear();
+    }
 };
 
 

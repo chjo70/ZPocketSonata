@@ -15,11 +15,15 @@
 #include "_Define.h"
 #include "_Struct.h"
 
-#ifdef _WIN32
-// #include "../../AdvSigAnal/Dummy/Dummy.h"
+#ifdef _MSC_VER
+#include "../../AdvSigAnal/Dummy/Dummy.h"
 #endif
 
 #include "../INC/system.h"
+
+#include "../KnownSigAnal/KDefine.h"
+
+
 #include "../ScanSigAnal/SDefine.h"
 #include "../ScanSigAnal/SStruct.h"
 
@@ -106,6 +110,10 @@ extern UCHAR MAXCHANNEL[MAX_PDW];	// PDW의 MaxChannel
 extern UINT stSigma1Aoa[5];
 extern UINT stSigma1Frq[5];
 
+extern STR_MANAET stTrkAet;
+extern STR_SCNAET stScnAet;
+extern STR_SCANPT stScanPt;
+
 #else
 extern UINT stSigma1Aoa[3];
 extern UINT stSigma1Frq[3];
@@ -113,9 +121,7 @@ extern UINT stSigma1Frq[3];
 #endif
 
 
-extern STR_MANAET stTrkAet;
-extern STR_SCNAET stScnAet;
-extern STR_SCANPT stScanPt;
+
 
 extern UINT stOffPdw;
 

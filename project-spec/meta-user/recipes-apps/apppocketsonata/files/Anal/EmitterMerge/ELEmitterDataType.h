@@ -1680,6 +1680,8 @@ struct STR_CEDEOBID_INFO {
 	int nCoRadarModeIndex;
 	int nRadarModeIndex[MAX_IDCANDIDATE];
 
+    int n3LevelRadarModeIndex[THREE_LEVEL_IDCANDIDATE];
+
 	// CED의 레이더 인덱스
 	//int nCoRadarIndex;
 	//int nRadarIndex[MAX_IDCANDIDATE];
@@ -1859,7 +1861,7 @@ struct I_AET_ANAL {
 
 	//////////////////////////////////////////////////////////////////////////
 	// LOB 관리에 필요한 변수
-	int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
+        //int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
 
 	bool isFiltered;																						// 수집 필터 여부
 	bool isManualEdited;																				// 수동 편집 여부
@@ -1873,7 +1875,7 @@ struct I_AET_ANAL {
 
 	E_BEAM_EMITTER_STAT enEmitterStat;													// LOB 상태
 
-	int iTaskType;																							// 과제 형태 종류
+        //int iTaskType;																							// 과제 형태 종류
 
 	unsigned int uiCoLOB;																				// LOB 개수
 
@@ -2009,11 +2011,11 @@ struct SELABTDATA_EXT {
 	double dPECoVar[4];
 
 	float fLastAOA;
-	double dRadarCollectionLatitude;
-	double dRadarCollectionLongitude;
+        float fRadarLatitude;
+        float fRadarLongitude;
 
 	// 수동 편집 여부
-	//bool bIsManualEdited;
+        bool bIsManualEdited;
 
 	// 방사체의 활동 상태를 저장
 	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
@@ -2028,11 +2030,16 @@ struct SELABTDATA_EXT {
 	// FISINT용 과제
 	//bool bIsFISINTTask;
 	UINT uiOpInitID;
+
+        unsigned int uiSeqNum;
 #endif
 
 	// 수동/자동 위치 결과 정보 여부
-	//bool bManualPosEstPreferred;
-	unsigned int uiSeqNum;
+    bool bManualPosEstPreferred;
+    float fManualLatitude;
+    float fManualLongitude;
+
+
 
 	//SLOBOtherInfo stLOBOtherInfo;
 
@@ -2057,8 +2064,8 @@ struct SELABTDATA_EXT {
 
 	UINT uiPE;
 	bool bFullOfPE;
-	double dLatitude[MAX_OF_LOBS_PE];
-	double dLongitude[MAX_OF_LOBS_PE];
+        double dLatitude[MAX_OF_LOBS_PE];
+        double dLongitude[MAX_OF_LOBS_PE];
 	double dEasting[MAX_OF_LOBS_PE];
 	double dNorthing[MAX_OF_LOBS_PE];
 
@@ -2096,6 +2103,13 @@ struct SELAETDATA_EXT {
 
 	// 수동/자동 위치 결과 정보 여부
 	bool bManualPosEstPreferred;
+
+    float fManualLatitude;
+    float fManualLongitude;
+
+    STR_CEDEOBID_INFO idInfo;
+
+
 	unsigned int uiSeqNum;
 
 

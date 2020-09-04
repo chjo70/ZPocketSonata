@@ -146,8 +146,6 @@ public:
     // 분석 제어 관련 함수
     void SetSaveFile( bool bEnable );
 
-
-
     CNewSigAnal( int coMaxPdw );
     virtual ~CNewSigAnal();
 

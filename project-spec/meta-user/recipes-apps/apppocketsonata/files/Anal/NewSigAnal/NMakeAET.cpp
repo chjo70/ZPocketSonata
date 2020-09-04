@@ -301,6 +301,7 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 {
     int i;
     STR_MINMAX stVal;
+    STR_MINMAX_SDEV stVal2;
     SRxLOBData *pLOBData;
 
     struct __timeb32 timeBuffer;
@@ -309,6 +310,8 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_PRI stPri;
 
     pLOBData = & m_LOBData[m_CoAet];
+
+    memset( pLOBData, 0, sizeof(SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -332,10 +335,12 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iSignalType = pEmitter->signal_type;
 
     // 방위
-    MakeAOAInfoInSeg( & stVal, pEmitter );
-    pLOBData->fMeanDOA = FMUL( stVal.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
-    pLOBData->fMaxDOA = FMUL( stVal.max, _spAOAres );				//FTOAsCNV( stVal.min );
-    pLOBData->fMinDOA = FMUL( stVal.min, _spAOAres );				//FTOAsCNV( stVal.max );
+    MakeAOAInfoInSeg( & stVal2, pEmitter );
+    pLOBData->fMeanDOA = FMUL( stVal2.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
+    pLOBData->fMaxDOA = FMUL( stVal2.max, _spAOAres );				//FTOAsCNV( stVal.min );
+    pLOBData->fMinDOA = FMUL( stVal2.min, _spAOAres );				//FTOAsCNV( stVal.max );
+    pLOBData->fDeviationDOA = pLOBData->fMaxDOA - pLOBData->fMinDOA;
+    pLOBData->fSDeviationDOA = stVal2.fsdev;
 
 // 	if( RADARCOL_1 == m_pNewSigAnal->GetCollectorID() ) {
 // 		pLOBData->fMeanDOA = 180.0;
@@ -361,6 +366,7 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->fMeanFreq = FFRQCNV( 0, stFrq.mean );
     pLOBData->fMaxFreq = FFRQCNV( 0, stFrq.max );
     pLOBData->fMinFreq = FFRQCNV( 0, stFrq.min );
+    pLOBData->fFreqDeviation = FFRQCNV( 0, stFrq.max-stFrq.min );
     pLOBData->iFreqPositionCount = stFrq.swtLev;
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
     for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
@@ -376,6 +382,7 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->fMeanPRI = FDIV( stPri.mean, _spOneMicrosec );
     pLOBData->fMaxPRI = FDIV( stPri.max, _spOneMicrosec );
     pLOBData->fMinPRI = FDIV( stPri.min, _spOneMicrosec );
+    pLOBData->fPRIDeviation = FDIV( (stPri.max-stPri.min), _spOneMicrosec );
     pLOBData->fPRIJitterRatio = stPri.jtrPer;
     pLOBData->iPRIPositionCount = stPri.swtLev;
     memset( pLOBData->fPRISeq, 0, sizeof(pLOBData->fPRISeq) );
@@ -388,15 +395,17 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->fMeanPW = FDIV( stVal.mean*1000., _spOneMicrosec );			//, _spOneMicrosec );
     pLOBData->fMaxPW = FDIV( stVal.max*1000., _spOneMicrosec );				//, _spOneMicrosec );
     pLOBData->fMinPW = FDIV( stVal.min*1000., _spOneMicrosec );				//, _spOneMicrosec );
+    pLOBData->fPWDeviation = FDIV( 1000*(stVal.max-stVal.min), _spOneMicrosec );
 
     // 신호 세기 생성
     MakePAInfoInSeg( & stVal, pEmitter );
     pLOBData->fMeanPA = PACNV( stVal.mean );			//FPACNV( stVal.mean );
     pLOBData->fMaxPA = PACNV( stVal.max );				//FPACNV( stVal.max );
     pLOBData->fMinPA = PACNV( stVal.min );				//FPACNV( stVal.min );
+    pLOBData->fPADeviation = PACNV( stVal.max-stVal.min );				//FPACNV( stVal.min );
 
     // 기타 정보 저장
-    pLOBData->iIsStorePDW = m_pNewSigAnal->IsStorePDW();
+    pLOBData->iIsStoreData = m_pNewSigAnal->IsStorePDW();
     pLOBData->iNumOfPDW = pEmitter->pdw.count;
 #ifdef _ELINT_
     pLOBData->iCollectorID = m_pNewSigAnal->GetCollectorID();
@@ -416,11 +425,11 @@ void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
 #endif
 
-    memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
+    //memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
     pLOBData->iRadarModeIndex = _spZero;
     pLOBData->iThreatIndex = _spZero;
 
-    pLOBData->uiSeqNum = 0;
+    //pLOBData->uiSeqNum = 0;
 
     STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
 

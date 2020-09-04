@@ -17,20 +17,24 @@ CREATE TABLE "LOBDATA" (
 	"CONTACT_TIME"	datetime,
 	"CONTACT_TIME_MS"	int,
 
-    "ELNOT_PRIM" VARCHAR2(12),
-    "MODE_CODE_PRIM" VARCHAR2(12),
-    "ELNOT_SECON" VARCHAR2(12),
-    "MODE_CODE_SECON" VARCHAR2(12),
-    "ELNOT_TERT" VARCHAR2(12),
-    "MODE_CODE_TERT" VARCHAR2(12),
+    "PRIMARY_ELNOT" VARCHAR2(12),
+    "PRIMARY_MODECODE" VARCHAR2(12),
+    "SECONDARY_ELNOT" VARCHAR2(12),
+    "SECONDARY_MODECODE" VARCHAR2(12),
+    "TERTIARY_ELNOT" VARCHAR2(12),
+    "TERTIARY_MODECODE" VARCHAR2(12),
     "MODULATION_CODE" VARCHAR2(12),
+    "RADARMODE_NAME" VARCHAR2(64),
     "NICK_NAME" VARCHAR2(64),
-    "PRIM_FUNC_CODE" VARCHAR2(12),
+    "FUNC_CODE" VARCHAR2(12),
+	"RADARMODE_INDEX"	smallint,
+	"THREAT_INDEX"	smallint,    
 
     "POLIZATION" int,
     "RATIOOFPOL" int,
 
 	"SIGNAL_TYPE"	tinyint,
+    
 	"DOA_MEAN"	float,
 	"DOA_MIN"	float,
 	"DOA_MAX"	float,
@@ -70,11 +74,10 @@ CREATE TABLE "LOBDATA" (
 	"PA_DEV"	float,
 
     "SCAN_TYPE" int,
-    "SCAN_TYPE_DETAIL" int
     "SCAN_PRD" float,
 
-    "INTRA_TYPE" integer
-    "INTRA_TYPE_DETAIL" integer
+    "INTRA_TYPE" integer,
+    "INTRA_TYPE_DETAIL" integer,
     "INTRA_FRQ_MEAN" float,
     "INTRA_FRQ_MIN" float,
     "INTRA_FRQ_MAX" float,
@@ -86,17 +89,14 @@ CREATE TABLE "LOBDATA" (
     "SHIP_ROLL" float,
     "SHIP_HEADING" float,
     "SHIP_ALT" float,
-
-    "IS_PDW_RESTORE" integer,
-    "IS_IQ_RESTORE" integer,
-    "IS_FILTERED" integer,
+    
     "IS_VALIDITY" integer,
 
+    "IS_DATA_STORE" integer,
+    "IS_FILTERED" integer,
+
 	"NUM_PDW"	smallint,
-	"RADAR_LATITUDE"	float,
-	"RADAR_LONGGITUDE"	float,
-	"RADARMODE_INDEX"	smallint,
-	"THREAT_INDEX"	smallint
+    "NUM_IQ"	smallint
 
 );
 
@@ -141,15 +141,32 @@ CREATE TABLE "LOB_POSITION" (
 	"SEQ_32"	float	
 );
 
+
 CREATE TABLE "ABTDATA" (
 	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
 	"ABTID"	int NOT NULL,
-	"AETID"	int NOT NULL,
-	"FIRST_TIME"	datetime,
+	"AETID"	int NOT NULL,   
+	"FIRST_TIME" datetime,
 	"LAST_TIME"	datetime,
+    
+    "PRIMARY_ELNOT" VARCHAR2(12),
+    "PRIMARY_MODECODE" VARCHAR2(12),
+    "MODULATION_CODE" VARCHAR2(12),
+    "RADARMODE_NAME" VARCHAR2(64),
+    "PLACENAME_KOR" VARCHAR2(64),
+    "NICK_NAME" VARCHAR2(64),
+    "FUNC_CODE" VARCHAR2(12),
+    "PLATFORM_TYPE" VARCHAR2(25),
+    "RADAR_MODE_PRIORITY" NUMBER(5),
+    "RADAR_PRIORITY" NUMBER(5),    
+    
+	"RADARMODE_INDEX"	smallint,
+	"THREAT_INDEX"	smallint,        
+    
+    "POLIZATION" NUMBER(1),
+        
 	"SIGNAL_TYPE"	tinyint,
-	"NUM_LOB"	int,
-	"BEAM_VALIDITY"	int,
+    
 	"FREQ_TYPE"	tinyint,
 	"FREQ_PATTERN_TYPE"	tinyint,
 	"FREQ_PATTERN_PERIOD_MEAN"	float,
@@ -158,7 +175,10 @@ CREATE TABLE "ABTDATA" (
 	"FREQ_MEAN"	float,
 	"FREQ_MIN"	float,
 	"FREQ_MAX"	float,
+	"FREQ_DEV"	float,
 	"FREQ_POSITION_COUNT"	tinyint,
+	"FREQ_ELEMENT_COUNT"	tinyint,    
+    
 	"PRI_TYPE"	tinyint,
 	"PRI_PATTERN_TYPE"	tinyint,
 	"PRI_PATTERN_PERIOD_MEAN"	float,
@@ -167,28 +187,55 @@ CREATE TABLE "ABTDATA" (
 	"PRI_MEAN"	float,
 	"PRI_MIN"	float,
 	"PRI_MAX"	float,
+    "PRI_DEV" float,
 	"PRI_JITTER_RATIO"	float,
 	"PRI_POSITION_COUNT"	tinyint,
+    "PRI_ELEMENT_COUNT"	tinyint,
+    
 	"PW_MEAN"	float,
 	"PW_MIN"	float,
 	"PW_MAX"	float,
+    "PW_DEV" float,
+    
 	"PA_MEAN"	float,
 	"PA_MIN"	float,
 	"PA_MAX"	float,
-	"TOTAL_PDW"	int,
-	"RADAR_NAME"	varchar(20),
-	"RADARMODE_INDEX"	smallint,
-	"THREAT_INDEX"	smallint,
+    "PA_DEV" float,
+    
+    "SCAN_TYPE" NUMBER(1)                 NOT NULL,
+	"SCAN_PRD_MEAN_SEC" float                    NOT NULL,  
+	"SCAN_PRD_MIN_SEC" float                    NOT NULL,
+    "SCAN_PRD_MAX_SEC" float                    NOT NULL,  
+  
+    "HAS_INTRA_MOD" NUMBER(1)                 NOT NULL,
+    "INTRA_FRQ_CHNG_WID_MAX"  float                    NOT NULL,
+    "INTRA_FRQ_CHNG_WID_MIN"  float                    NOT NULL,      
+    
 	"PE_VALID"	smallint,
 	"PE_LATITUDE"	float,
 	"PE_LONGGITUDE"	float,
+    "PE_HEIGHT"	float,
 	"PE_CEP"	float,
 	"PE_MAJOR_AXIS"	float,
 	"PE_MINOR_AXIS"	float,
 	"PE_THETA"	float,
 	"PE_DISTANCE"	float,
+    
+    "IS_VALIDITY"	int,            
+    
+	"TOTAL_PDW"	int,
+    "NUM_LOB"	int,    
+    
 	"ALARM_TIME"	datetime,
-	"STAT"	tinyint
+	"STAT"	tinyint,
+
+    "IS_MANUAL_INPUT"         NUMBER(1)                 NOT NULL,
+
+    "MANUALPOSESTPREFERRED"   NUMBER(2)                 NOT NULL,
+  
+    "MANUAL_POS_EST_LAT"      NUMBER,
+    "MANUAL_POS_EST_LONG"     NUMBER
+
 );
 
 CREATE TABLE "ABT_POSITION" (
@@ -233,57 +280,77 @@ CREATE TABLE "ABT_POSITION" (
 );
 
 CREATE TABLE "AETDATA" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
+	"SEQ_NUM"	integer,
 	"AETID"	NUMBER NOT NULL,
-	"RADARMODE_INDEX"	NUMBER NOT NULL,
-	"THREAT_INDEX"	NUMBER NOT NULL,
-	"IDINFO"	VARCHAR2(12),
-	"ELNOT_PRIM"	VARCHAR2(12),
-	"MODE_CODE_PRIM"	VARCHAR2(12),
-	"NICK_NAME"	VARCHAR2(64),
-	"PRIM_FUNC_CODE"	VARCHAR2(12),
-	"RADAR_PRIORITY"	NUMBER,
+	"FIRST_TIME" datetime,
+	"LAST_TIME"	datetime,		
+
+	"PRIMARY_ELNOT" VARCHAR2(12),
+    "PRIMARY_MODECODE" VARCHAR2(12),
+    "RADARMODE_NAME" VARCHAR2(64),
+	"NICK_NAME" VARCHAR2(64),
+    "FUNC_CODE" VARCHAR2(12),
+    "PLATFORM_TYPE" VARCHAR2(25),
+    "RADAR_MODE_PRIORITY" NUMBER(5),
+    "RADAR_PRIORITY" NUMBER(5),    
 	"PIN_NUM"	NUMBER,
-	"SITE_NAME"	VARCHAR2(64),
-	"BE_NUM"	VARCHAR2(64),
+    "PLACENAME_KOR" VARCHAR2(64),
 	"THREAT_FUNC_CODE"	VARCHAR2(64),
 	"THREAT_PRIORITY"	NUMBER,
-	"DISTANCE_ERR_FROM_THREAT"	NUMBER,
-	"EQUIP_NUM"	NUMBER,
+    
+	"RADARMODE_INDEX"	smallint,
+	"THREAT_INDEX"	smallint,   
+
+	"VALIDITY"	NUMBER(1) NOT NULL,
+	
+	"DOA_MEAN"	float,
+	"DOA_MIN"	float,
+	"DOA_MAX"	float,
+	"DOA_DEV"	float,
+	
+	"FRQ_MEAN"	float,
+	"FRQ_MIN"	float,
+	"FRQ_MAX"	float,
+	"FRQ_DEV"	float,
+	
+	"PRI_MEAN"	float,
+	"PRI_MIN"	float,
+	"PRI_MAX"	float,
+	"PRI_DEV"	float,
+	
+	"PW_MEAN"	float,
+	"PW_MIN"	float,
+	"PW_MAX"	float,
+	"PW_DEV"	float,
+	
+	"PA_MEAN"	float,
+	"PA_MIN"	float,
+	"PA_MAX"	float,
+	"PA_DEV"	float,
+	
+	"PE_VALID"	smallint,
+	"PE_LATITUDE"	float,
+	"PE_LONGGITUDE"	float,
+    "PE_HEIGHT"	float,
+	"PE_CEP"	float,
+	"PE_MAJOR_AXIS"	float,
+	"PE_MINOR_AXIS"	float,
+	"PE_THETA"	float,
+	"PE_DISTANCE"	float,	
+	
+	"IDINFO"	VARCHAR2(12),
+	
 	"NUM_OF_LOBS"	NUMBER NOT NULL,
 	"NUM_OF_BEAMS"	NUMBER NOT NULL,
-	"RECORD_TIME_STA"	TIMESTAMP(9) NOT NULL,
-	"RECORD_TIME_FIN"	TIMESTAMP(9) NOT NULL,
-	"VALIDITY"	NUMBER(1) NOT NULL,
-	"FRQ_MEAN"	NUMBER(8) NOT NULL,
-	"FRQ_MAX"	NUMBER(8) NOT NULL,
-	"FRQ_MIN"	NUMBER(8) NOT NULL,
-	"FRQ_DEV"	NUMBER(8) NOT NULL,
-	"PRI_MEAN"	NUMBER NOT NULL,
-	"PRI_MAX"	NUMBER NOT NULL,
-	"PRI_MIN"	NUMBER NOT NULL,
-	"PRI_DEV"	NUMBER NOT NULL,
-	"PW_MEAN"	NUMBER NOT NULL,
-	"PW_MAX"	NUMBER NOT NULL,
-	"PW_MIN"	NUMBER NOT NULL,
-	"PW_DEV"	NUMBER NOT NULL,
-	"PA_MEAN"	NUMBER NOT NULL,
-	"PA_MAX"	NUMBER NOT NULL,
-	"PA_MIN"	NUMBER NOT NULL,
-	"PA_DEV"	NUMBER NOT NULL,
-	"POS_EST_VALID"	NUMBER(2) NOT NULL,
-	"POS_EST_LAT"	NUMBER NOT NULL,
-	"POS_EST_LONG"	NUMBER NOT NULL,
-	"POS_EST_HEIGHT"	NUMBER NOT NULL,
-	"POS_EST_CEP"	NUMBER NOT NULL,
-	"POS_EST_MAJOR_AXIS"	NUMBER NOT NULL,
-	"POS_EST_MINOR_AXIS"	NUMBER NOT NULL,
-	"EEP_MAJOR_TILT_ANGLE"	NUMBER NOT NULL,
+	
 	"FINAL_ALARM_TIME"	TIMESTAMP(9),
+	
 	"IS_MANUAL_INPUT"	NUMBER(2) NOT NULL,
 	"MANUALPOSESTPREFERRED"	NUMBER(2) NOT NULL,
-	"MANUAL_POS_EST_LAT"	NUMBER,
-	"MANUAL_POS_EST_LONG"	NUMBER,
-	"STAT"	NUMBER
+	
+	"MANUAL_POS_EST_LAT"	float,
+	"MANUAL_POS_EST_LONG"	float,
+	"STAT"	NUMBER,
+	PRIMARY KEY("SEQ_NUM" AUTOINCREMENT)
 );
 

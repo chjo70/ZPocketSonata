@@ -10,7 +10,7 @@
 class CCollectBank
 {
 private:
-    int m_iID;
+    unsigned int m_uiID;
 
     int m_iTotalChannels;
     int m_iChannelNo;
@@ -19,7 +19,7 @@ private:
 
     STR_PDWDATA m_strPDW;
 
-    static Queue<int> m_theQueueWindowCellID;
+    static Queue<unsigned int> m_theQueueWindowCellID;
 
 public:
     CCollectBank( int iTotalChannels, int iChannelNo );
@@ -43,6 +43,7 @@ public:
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
+    inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
     inline STR_PDWDATA *GetPDW() { return & m_strPDW; }
 };
 

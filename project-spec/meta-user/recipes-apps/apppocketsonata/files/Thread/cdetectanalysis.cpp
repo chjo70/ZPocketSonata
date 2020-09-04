@@ -116,8 +116,8 @@ void CDetectAnalysis::AnalysisStart()
         STR_ANALINFO strAnalInfo;
 
         strAnalInfo.uiTotalLOB = uiTotalLOB;
+        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
         EMTMRG->QMsgSnd( enTHREAD_ANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
     }
-
 
 }

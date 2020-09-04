@@ -34,8 +34,6 @@ static void ReleaseInstance() { \
     } \
 }
 
-// 스레드 정지
-//pInstance->Stop();
 
 #pragma pack(push, 1)
 
@@ -48,9 +46,13 @@ struct STR_COLLECTINFO {
     unsigned int uiTotalPDW;
 } ;
 
+// 수집한 데이터에서 분석한 LOB 헤더 정보
 struct STR_ANALINFO {
     unsigned int uiBand;
     unsigned int uiTotalLOB;
+
+    // 수집한 채널 정보
+    unsigned int uiCh;
 } ;
 
 
@@ -93,8 +95,6 @@ struct STR_MessageData {
     unsigned int uiArrayLength;
 
 } ;
-
-#pragma pack(pop)
 
 /**
  * @brief The CThread class
@@ -141,5 +141,7 @@ public:
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
 };
+
+#pragma pack(pop)
 
 #endif // CTHREAD_H

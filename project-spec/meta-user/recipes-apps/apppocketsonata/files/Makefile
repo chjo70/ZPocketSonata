@@ -14,6 +14,11 @@ APP_OBJS += Anal/EmitterMerge/Quadratic/Quadratic.o
 APP_OBJS += Anal/EmitterMerge/UTM.o
 APP_OBJS += Anal/Identify/ELUtil.o
 APP_OBJS += Anal/Identify/Identify.o
+APP_OBJS += Anal/KnownSigAnal/KAnalPRI.o
+APP_OBJS += Anal/KnownSigAnal/KGroup.o
+APP_OBJS += Anal/KnownSigAnal/KMakeAET.o
+APP_OBJS += Anal/KnownSigAnal/KPulExt.o
+APP_OBJS += Anal/KnownSigAnal/KnownSigAnal.o
 APP_OBJS += Anal/NewSigAnal/NGroup.o
 APP_OBJS += Anal/NewSigAnal/NPulExt.o
 APP_OBJS += Anal/NewSigAnal/NAnalPRI.o
@@ -81,7 +86,6 @@ SRCS = $(APP_OBJS:.o=.cpp)
 LDLIBS = -pthread -lreadline -lncurses -lboost_thread -lboost_system -lsqlite3
 
 DEFINES += -D_POCKETSONATA_
-DEFINES += -DNEX7410
 DEFINES += -D_SQLITE_
 
 

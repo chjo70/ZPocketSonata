@@ -34,20 +34,20 @@ struct STR_KEY {
 
 } ;
 
-union UNI_KEY {
-	STR_KEY x;
-	UINT word;
+//union UNI_KEY {
+//	STR_KEY x;
+//	UINT word;
+//
+//} ;
 
-} ;
-
-struct STR_INI_DATA {
+//struct STR_INI_DATA {
 	// 환경 정보
-	char serverIP[20];
+//	char serverIP[20];
 
 	// 키 값
-	UNI_KEY key;
-
-} ;
+    //UNI_KEY key;
+//
+//} ;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -770,29 +770,7 @@ struct STR_SYSTEMLOG {
 
 }  ;
 
-// 패킷 헤더 정보
-#ifdef _WIN32
-typedef struct { 
-	unsigned short c_size;
-	unsigned char check_sum;
-	unsigned char packet_number;
 
-} STR_LOGPACKET_HEADER ;
-
-#else
-struct STR_LOGPACKET_HEADER {
-	unsigned char packet_number;
-	unsigned char check_sum;
-	unsigned short c_size;
-
-}  ;
-#endif
-
-union UNI_LOGPACKET_HEADER {
-	UINT word;
-	STR_LOGPACKET_HEADER x;
-
-}  ;
 
 
 

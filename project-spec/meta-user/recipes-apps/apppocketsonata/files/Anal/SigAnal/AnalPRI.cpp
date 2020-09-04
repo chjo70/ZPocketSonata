@@ -911,15 +911,15 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
     PDWINDEX *pIndex;
 
     if( count <= 1 ) {
-        m_DtoaHist.bin_range.low = m_DtoaHist.bin_range.hgh = 0;
+        m_DtoaHist.bin_range.iLow = m_DtoaHist.bin_range.iHgh = 0;
         return;
     }
 
     // 메모리 초기화
     memset( & m_DtoaHist, 0, sizeof( m_DtoaHist) );
 
-    m_DtoaHist.bin_range.hgh = -1;
-    m_DtoaHist.bin_range.low = 0xfffffff;
+    m_DtoaHist.bin_range.iHgh = -1;
+    m_DtoaHist.bin_range.iLow = 0xfffffff;
 
     pIndex = pPdwIndex;
     pre_toa = TOA[ *pIndex++ ];
@@ -938,8 +938,8 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
         // DTOA_BIN 이내에 든 것만 히스토그램을 작성한다.
         if( DTOA_BIN > dtoa_index ) {
             ++ m_DtoaHist.hist[ dtoa_index ];
-            m_DtoaHist.bin_range.hgh = _max( m_DtoaHist.bin_range.hgh, dtoa_index );
-            m_DtoaHist.bin_range.low = _min( m_DtoaHist.bin_range.low, dtoa_index );
+            m_DtoaHist.bin_range.iHgh = _max( m_DtoaHist.bin_range.iHgh, dtoa_index );
+            m_DtoaHist.bin_range.iLow = _min( m_DtoaHist.bin_range.iLow, dtoa_index );
         }
     }
 
@@ -995,9 +995,9 @@ BOOL CAnalPRI::FindDwellLevel()
     m_DtoaHist.bin_peak_count = 0;
 
     pPeak = & m_DtoaHist.bin_peak[ 0 ];
-    pBin = & m_DtoaHist.hist[ m_DtoaHist.bin_range.low ];
+    pBin = & m_DtoaHist.hist[ m_DtoaHist.bin_range.iLow ];
 
-    for( i=m_DtoaHist.bin_range.low ; i <= m_DtoaHist.bin_range.hgh ; ++i ) {
+    for( i=m_DtoaHist.bin_range.iLow ; i <= m_DtoaHist.bin_range.iHgh ; ++i ) {
         if( *pBin++ >= _spAnalMinPulseCount ) {
             *pPeak = ( i + 1 ) * DTOA_RES;
             if( FindBin( *pPeak ) == FALSE ) {
@@ -1621,9 +1621,9 @@ void CAnalPRI::PatternAnalysis()
             pPdwIndex = & m_pSeg[ pEmitter->main_seg ].pdw.pIndex[1];
             m_CoData = m_pSeg[ pEmitter->main_seg ].pdw.count - 1;
 
-            pri.low = m_pSeg[ pEmitter->main_seg ].pri.min;
-            pri.hgh = m_pSeg[ pEmitter->main_seg ].pri.max;
-            threshold = UDIV( pri.hgh - pri.low, 2 );
+            pri.iLow = m_pSeg[ pEmitter->main_seg ].pri.min;
+            pri.iHgh = m_pSeg[ pEmitter->main_seg ].pri.max;
+            threshold = UDIV( pri.iHgh - pri.iLow, 2 );
 
             for( j=0 ; j < m_CoData ; ++j ) {
                 _TOA dtoa;
@@ -1634,7 +1634,7 @@ void CAnalPRI::PatternAnalysis()
                     \date 2006-07-25 12:14:32, 조철희
                 */
                 dtoa = TOA[ *pPdwIndex ] - TOA[ *(pPdwIndex-1) ];
-                if( TRUE == CompMarginDiff<_TOA>( dtoa, pri.low, pri.hgh, threshold ) )
+                if( TRUE == CompMarginDiff<_TOA>( dtoa, pri.iLow, pri.iHgh, threshold ) )
                     m_DataY[j] = dtoa;
                 else {
                     if( j != 0 )
@@ -4898,7 +4898,7 @@ void CAnalPRI::RemoveNoiseDtoa( UINT count )
     /*! \bug  DTOA 히스토그램의 overflow로 인해서 제거를 수행하지 않게 함.
         \date 2006-08-16 11:09:19, 조철희
     */
-    if( m_DtoaHist.bin_range.low == 0xfffffff || m_DtoaHist.bin_range.hgh == -1 )
+    if( m_DtoaHist.bin_range.iLow == 0xfffffff || m_DtoaHist.bin_range.iHgh == -1 )
         return;
 
     // 히스트그램에서 짜를 BIN 개수는 총 펄스개수의 10% 로 한다.
@@ -4906,7 +4906,7 @@ void CAnalPRI::RemoveNoiseDtoa( UINT count )
 
     // 좌측부터 우측방향으로 가면서 짜른다.
     pEndHistIndex = & m_DtoaHist.hist[DTOA_BIN-1];
-    start = m_DtoaHist.bin_range.low;
+    start = m_DtoaHist.bin_range.iLow;
     pHistIndex = & m_DtoaHist.hist[start];
     for( i=start ; i < start+unpass_count ; ++i ) {
         if( *pHistIndex == 0 ) {
@@ -4921,7 +4921,7 @@ void CAnalPRI::RemoveNoiseDtoa( UINT count )
 
     // 우측부터 좌측방향으로 가면서 짜른다.
     pEndHistIndex = & m_DtoaHist.hist[0];
-    start = m_DtoaHist.bin_range.hgh;
+    start = m_DtoaHist.bin_range.iHgh;
     pHistIndex = & m_DtoaHist.hist[start];
     for( i=start ; i > start-unpass_count ; --i ) {
         if( *pHistIndex == 0 ) {
@@ -4958,8 +4958,8 @@ void CAnalPRI::CalDtoaMeanMinMax( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange
 
     PDWINDEX *pIndex;
 
-    m_DtoaHist.bin_range.hgh = 0;
-    m_DtoaHist.bin_range.low = 0xfffffff;
+    m_DtoaHist.bin_range.iHgh = 0;
+    m_DtoaHist.bin_range.iLow = 0xfffffff;
 
     pSeg->pri.max = 0;
     pSeg->pri.min = 0xffffff;
@@ -4975,7 +4975,7 @@ void CAnalPRI::CalDtoaMeanMinMax( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange
         index = F_UDIV( dtoa, DTOA_RES );
 
         // DTOA_BIN 이내에 든 것만 히스토그램을 작성한다.
-        if( pRange->low <= index && pRange->hgh >= index ) {
+        if( pRange->iLow <= index && pRange->iHgh >= index ) {
             pSeg->pri.max =_max( pSeg->pri.max, dtoa );
             pSeg->pri.min =_min( pSeg->pri.min, dtoa );
 
@@ -5010,17 +5010,17 @@ BOOL CAnalPRI::GetDtoaRange( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange )
     /*! \bug  DTOA 히스토그램의 overflow로 인해서 제거를 수행하지 않게 함.
         \date 2006-08-16 11:09:19, 조철희
     */
-    if( m_DtoaHist.bin_range.low == 0xfffffff || m_DtoaHist.bin_range.hgh == -1 )
+    if( m_DtoaHist.bin_range.iLow == 0xfffffff || m_DtoaHist.bin_range.iHgh == -1 )
         return FALSE;
 
-    pRange->low = pRange->hgh = -1;
+    pRange->iLow = pRange->iHgh = -1;
 
-    start = m_DtoaHist.bin_range.low;
-    end = m_DtoaHist.bin_range.hgh;
+    start = m_DtoaHist.bin_range.iLow;
+    end = m_DtoaHist.bin_range.iHgh;
     pHistIndex = & m_DtoaHist.hist[start];
     for( i=start ; i <= end ; ++i ) {
         if( *pHistIndex++ != 0 ) {
-            pRange->low = i;
+            pRange->iLow = i;
             break;
         }
     }
@@ -5028,12 +5028,12 @@ BOOL CAnalPRI::GetDtoaRange( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange )
     pHistIndex = & m_DtoaHist.hist[end];
     for( i=end ; i >= start ; --i ) {
         if( *pHistIndex-- != 0 ) {
-            pRange->hgh = i;
+            pRange->iHgh = i;
             break;
         }
     }
 
-    if( pRange->low == -1 || pRange->hgh == -1 )
+    if( pRange->iLow == -1 || pRange->iHgh == -1 )
         return FALSE;
 
     return TRUE;
@@ -5054,7 +5054,7 @@ BOOL CAnalPRI::GetDtoaRange( int peak_index, STR_LOWHIGH *pRange )
 {
     int i;
 
-    pRange->low = pRange->hgh = 0;
+    pRange->iLow = pRange->iHgh = 0;
 
     //////////////////////////////////////////////////////////////////////
     // peak부터 좌로 범위를 설정
@@ -5062,7 +5062,7 @@ BOOL CAnalPRI::GetDtoaRange( int peak_index, STR_LOWHIGH *pRange )
     for( i=peak_index-1 ; i >= 0 ; --i ) {
         // 경계 조건
         if( m_DtoaHist.hist[i] <= 2 ) {
-            pRange->low = i + 1;
+            pRange->iLow = i + 1;
             break;
         }
     }
@@ -5072,17 +5072,17 @@ BOOL CAnalPRI::GetDtoaRange( int peak_index, STR_LOWHIGH *pRange )
     for( i=peak_index+1 ; i < (int) m_DtoaHist.bin_count ; ++i ) {
         // 경계 조건
         if( m_DtoaHist.hist[i] <= 2 ) {
-            pRange->hgh = i - 1;
+            pRange->iHgh = i - 1;
             break;
         }
     }
 
-    if( pRange->hgh == 0 )
+    if( pRange->iHgh == 0 )
         return FALSE;
     else {
         int diff, ratio;
 
-        diff = ( pRange->hgh - pRange->low ) + 1;
+        diff = ( pRange->iHgh - pRange->iLow ) + 1;
         ratio = UDIV( diff*100, peak_index );
         if( ratio > MAX_JITTER_P ) {
             printf( "\n [W] PRI를 계산하는 데 있어서 지터율을 초과했습니다." );
@@ -5378,3 +5378,4 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
         ++ pHopLevel;
     }
 }
+

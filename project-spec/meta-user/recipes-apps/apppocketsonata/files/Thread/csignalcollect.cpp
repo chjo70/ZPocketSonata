@@ -1,3 +1,9 @@
+// 신호 수집 및 관리한다.
+// 신규 데이터를 수집하기위한 수집 제어와 분석된 데이터를 기반으로 추적 수집 채널을 할당해서 추적 채널을 관리한다.
+// 또한, 스캔 채널을 할당하여 스캔 수집을 하게 한다.
+
+#include "../Anal/OFP_Main.h"
+
 #include "csignalcollect.h"
 #include "../Utils/clog.h"
 
@@ -22,23 +28,31 @@ CSignalCollect* CSignalCollect::pInstance = nullptr;
  */
 CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    int i;
+    int i, iCh;
 
+    iCh = 0;
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
-        m_pTheDetectCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, i );
+        m_pTheDetectCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
 
+    m_theTrackChannel.Init( TRACK_CHANNEL );
     for( i=0 ; i < TRACK_CHANNEL ; ++i ) {
-        m_pTheTrackCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, i );
+        if( false == m_theTrackChannel.Push( iCh ) ) {
+            printf( " Push error...\n" );
+        }
+
+        m_pTheTrackCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
 
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
-        m_pTheScanCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, i );
+        m_pTheScanCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
 
     for( i=0 ; i < USER_CHANNEL ; ++i ) {
-        m_pTheUserCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, i );
+        m_pTheUserCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
+
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( "" );
 
 }
 
@@ -67,6 +81,8 @@ CSignalCollect::~CSignalCollect(void)
         m_pTheUserCollectBank[i] = 0;
     }
 
+    delete m_pIdentifyAlg;
+
 }
 
 
@@ -88,13 +104,13 @@ void CSignalCollect::Run()
 void CSignalCollect::_routine()
 {
     LOGENTRY;
-    bool bWhile=true, bRunCollecting=false;
+    bool bRunCollecting=false;
 
-    UNI_LAN_DATA *pLanData;
+    //UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
 
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
+    //pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     pthread_cleanup_push( TCleanUpHandler, NULL);
 
@@ -102,20 +118,20 @@ void CSignalCollect::_routine()
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
             switch( m_pMsg->ucOpCode ) {
                 case enTHREAD_ANAL_START :
-                    // 수집하기 위한 초기 설정을 수행함.
                     Init();
                     bRunCollecting = true;
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
                     LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-                    bWhile = false;
                     break;
 
                 case enTHREAD_REQ_SETWINDOWCELL :
-                    LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
+                    ReqSetWindowCell();
+
                     break;
 
+                // 모의 명령 처리
                 case enTHREAD_REQ_SIM_PDWDATA :
                     SimPDWData();
                     break;
@@ -293,6 +309,98 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
     }
 
     return iCh;
+}
+
+/**
+ * @brief CSignalCollect::ReqSetWindowCell
+ */
+void CSignalCollect::ReqSetWindowCell()
+{
+    SRxABTData *pABTData = ( SRxABTData *) m_uniLanData.szFile;
+
+    // 랜 데이터를 갖고온다.
+    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+
+    LOGMSG3( enDebug, "%d 대역, %d 채널에서 분석된 %d 빔 정보를 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, pABTData->uiABTID );
+
+    // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
+    ReqSetWindowCell( pABTData, m_pMsg->x.strAnalInfo.uiCh );
+
+}
+
+/**
+ * @brief CSignalCollect::ReqSetWindowCell
+ * @param pABTData
+ * @param uiCh
+ */
+void CSignalCollect::ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh )
+{
+    //ENUM_COLLECTBANK enCollectBank;
+
+    //enCollectBank = GetCollectBank( uiCellID );
+
+    // 신규이어서 추적 채널로 생성
+    if( uiCh == _spZero ) {
+        NewTrackWindowCell( pABTData );
+    }
+    else {
+
+    }
+
+}
+
+/**
+ * @brief CSignalCollect::NewTrackWindowCell
+ * @param pABTData
+ */
+void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
+{
+    unsigned int uiCh;
+
+    STR_WINDOWCELL *pStrWindowCell;
+    CCollectBank *pTheTrackCollectBank;
+
+    SRadarMode *pRadarMode;
+
+    float fMinCollectTime=0;
+
+    if( m_theTrackChannel.Pop( & uiCh ) == true ) {
+        pTheTrackCollectBank = GetCollectBank( uiCh );
+        pStrWindowCell = pTheTrackCollectBank->GetWindowCell();
+
+        pRadarMode = m_pIdentifyAlg->GetRadarMode( pABTData->iRadarModeIndex );
+
+        memset( pStrWindowCell, 0, sizeof(STR_WINDOWCELL) );
+
+        pStrWindowCell->uiABTID = pABTData->uiABTID;
+
+        // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
+        if( pRadarMode != NULL ) {
+            pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_RangeMin );
+            pStrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_RangeMax );
+
+            pStrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_RangeMin );
+            pStrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_RangeMax );
+
+            fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
+        }
+        else {
+            pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMaxFreq );
+            pStrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fMaxFreq );
+
+            pStrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMaxPW );
+            pStrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMinPW );
+
+            fMinCollectTime = pABTData->fMaxScanPeriod;
+        }
+
+        pStrWindowCell->strAoa.iLow = pABTData->fMinDOA;
+        pStrWindowCell->strAoa.iHgh = pABTData->fMaxDOA;
+
+        pStrWindowCell->uiMaxCoPDW = 100;
+        pStrWindowCell->uiMaxCollectTime = 500 + fMinCollectTime;
+    }
+
 }
 
 /**

@@ -237,6 +237,11 @@ void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
 
 }
 
+/**
+ * @brief CNPulExt::ExtractPulseTrainByLibrary
+ * @param uiCoKnownRadarMode
+ * @param pRadarMode
+ */
 void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
 {
     UINT i;

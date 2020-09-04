@@ -9,11 +9,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 SRC_URI =	"file://cmain.cpp \
 			file://cmain.h \
-			file://Collect/DataFile/CRWRCommonVariables.h \
-			file://Collect/DataFile/DataFile.cpp \
-			file://Collect/DataFile/DataFile.h \
-			file://Collect/DataFile/_iq.h \
-			file://Collect/DataFile/_macro.h \
+			file://Collect/DataFile \
 			file://Collect/ccollectbank/ccollectbank.cpp \
 			file://Collect/ccollectbank/ccollectbank.h \
 			file://NetMem/client/ClientMemoryPage.cpp \

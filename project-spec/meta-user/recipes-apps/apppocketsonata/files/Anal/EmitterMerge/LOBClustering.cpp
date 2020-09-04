@@ -266,8 +266,8 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
 		//pLOBData->iPitchAngle = pSRxLOBDataGroup->iPitchAngle;
 		//pLOBData->iHeadingAngle = pSRxLOBDataGroup->iHeadingAngle;
 		//pLOBData->iAltitude = pSRxLOBDataGroup->iAltitude;	
-		pLOBData->dRadarCollectionLatitude = pSRxLOBData->dRadarCollectionLatitude;
-		pLOBData->dRadarCollectionLongitude = pSRxLOBData->dRadarCollectionLongitude;	
+        pLOBData->fRadarLatitude = pSRxLOBData->fRadarLatitude;
+        pLOBData->fRadarLongitude = pSRxLOBData->fRadarLongitude;
 	}
 
 }
@@ -597,7 +597,7 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
 		// fDist = CalDistance( pRefInterSect, pIntersect );
-		fTheta = (float) ST_IMA->GCAzimuth( (double) pLOBData->dRadarCollectionLatitude, (double) pLOBData->dRadarCollectionLongitude, pRefInterSect->fLatitude, pRefInterSect->fLongitude );
+        fTheta = (float) ST_IMA->GCAzimuth( (double) pLOBData->fRadarLatitude, (double) pLOBData->fRadarLongitude, pRefInterSect->fLatitude, pRefInterSect->fLongitude );
 		fDiff = _abs( (float) fTheta - pLOBData->fMeanDOA );
 
 		//LogPrint( "D-DOA[%d, %.3f] " , pLOBData->iLOBID, fDiff/10. );
@@ -683,7 +683,7 @@ void CLOBClustering::FilteredIntersectionPoints()
 	int i;
 
 	float fDiff, fDiff2, fMaxDist=0, fThresholdDist;
-	float fAircraftLatitude, fAircraftLongitude;
+    float fLatitude, fLongitude;
 
 	SELLOBDATA_MINIMIZE *pLOBData;
 	SELINTERSECTION *pIntersect;
@@ -693,12 +693,12 @@ void CLOBClustering::FilteredIntersectionPoints()
 	// 첫번째 항공기에서 교차점 간의 거리가 가장 큰 거리의 일정 값 이하는 모든 교차점은 제거한다.
 	pLOBData = m_pQueLOBData->GetPointerByIndex( pIntersect->nQueueIndex1 );
 
-	fAircraftLatitude = (float) pLOBData->dRadarCollectionLatitude;
-	fAircraftLongitude = (float) pLOBData->dRadarCollectionLongitude;
+    fLatitude = pLOBData->fRadarLatitude;
+    fLongitude = pLOBData->fRadarLongitude;
 	for( i=0 ; i < n_nTotalOfIntersection ; ++i ) {
-		fDiff = fAircraftLatitude - pIntersect->fLatitude;
+        fDiff = fLatitude - pIntersect->fLatitude;
 		fDiff2 = fDiff * fDiff;
-		fDiff = fAircraftLongitude - pIntersect->fLongitude;
+        fDiff = fLongitude - pIntersect->fLongitude;
 		fDiff2 += ( fDiff * fDiff );
 
 		pIntersect->fDist = sqrt( fDiff2 );
@@ -758,17 +758,17 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
 	fBearingOf2 = ( deg2rad * pLOBData2->fMeanDOA ); // ALGLE2MATH( pLOBData2->iMeanDOA );
 
 	// 두 지점간의 각도 거리 계산
-	fDistAircraftLongitude = deg2rad * ( pLOBData2->dRadarCollectionLongitude - pLOBData1->dRadarCollectionLongitude ) / 2.;
-	fDistAircraftLatitude = deg2rad * ( pLOBData2->dRadarCollectionLatitude - pLOBData1->dRadarCollectionLatitude ) / 2.;
+    fDistAircraftLongitude = deg2rad * ( pLOBData2->fRadarLongitude - pLOBData1->fRadarLongitude ) / 2.;
+    fDistAircraftLatitude = deg2rad * ( pLOBData2->fRadarLatitude - pLOBData1->fRadarLatitude ) / 2.;
 	fSinLat = sin( fDistAircraftLatitude );
 	fSquareOfSinLat = ( fSinLat * fSinLat );
 	fSinLong = sin( fDistAircraftLongitude );
 	fSquareOfSinLong = ( fSinLong * fSinLong );
-	fDistAngular12 = 2. * asin( sqrt( ( fSquareOfSinLat + cos( deg2rad * pLOBData1->dRadarCollectionLatitude ) * cos( deg2rad * pLOBData2->dRadarCollectionLatitude ) * fSquareOfSinLong ) ) );
+    fDistAngular12 = 2. * asin( sqrt( ( fSquareOfSinLat + cos( deg2rad * pLOBData1->fRadarLatitude ) * cos( deg2rad * pLOBData2->fRadarLatitude ) * fSquareOfSinLong ) ) );
 	if( Is_FZero( (float) fDistAngular12 ) == false ) {
 		// 두 지점간의 초기 방위각 계산
-		fBearingOf12 = acos( ( sin( deg2rad * pLOBData2->dRadarCollectionLatitude ) - sin( deg2rad * pLOBData1->dRadarCollectionLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData1->dRadarCollectionLatitude ) ) );
-		fBearingOf21 = acos( ( sin( deg2rad * pLOBData1->dRadarCollectionLatitude ) - sin( deg2rad * pLOBData2->dRadarCollectionLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData2->dRadarCollectionLatitude ) ) );
+        fBearingOf12 = acos( ( sin( deg2rad * pLOBData2->fRadarLatitude ) - sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData1->fRadarLatitude ) ) );
+        fBearingOf21 = acos( ( sin( deg2rad * pLOBData1->fRadarLatitude ) - sin( deg2rad * pLOBData2->fRadarLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData2->fRadarLatitude ) ) );
 
 		if( sin( fDistAircraftLongitude ) > 0 ) {
 			fBearingOf21 = 2. * M_PI - fBearingOf21; 
@@ -795,9 +795,9 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
 
 			// 교차점 계산
 			double dLatitude, dLongitude;
-			dLatitude = asin( sin( deg2rad * pLOBData1->dRadarCollectionLatitude ) * cos( fDistAngular3 ) + cos( deg2rad * pLOBData1->dRadarCollectionLatitude ) * sin( fDistAngular3 ) * cos( fBearingOf1 ) );
-			fDiffLong = atan2( sin( fBearingOf1 ) * sin( fDistAngular3 ) * cos( deg2rad * pLOBData1->dRadarCollectionLatitude ), cos( fDistAngular3 ) - ( sin( deg2rad * pLOBData1->dRadarCollectionLatitude ) * sin( dLatitude ) ) );
-			dLongitude = ( pLOBData1->dRadarCollectionLongitude + ( fDiffLong * rad2deg ) );
+            dLatitude = asin( sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( fDistAngular3 ) + cos( deg2rad * pLOBData1->fRadarLatitude ) * sin( fDistAngular3 ) * cos( fBearingOf1 ) );
+            fDiffLong = atan2( sin( fBearingOf1 ) * sin( fDistAngular3 ) * cos( deg2rad * pLOBData1->fRadarLatitude ), cos( fDistAngular3 ) - ( sin( deg2rad * pLOBData1->fRadarLatitude ) * sin( dLatitude ) ) );
+            dLongitude = ( pLOBData1->fRadarLongitude + ( fDiffLong * rad2deg ) );
 			dLatitude = ( rad2deg * dLatitude );
 
 			pRes->fLatitude = (float) dLatitude;
@@ -809,8 +809,8 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
 
 			//LogPrint( "\n [%d, %d]의 교차점 위/경도 : %.4f, %.4f" , pLOBData1->iLOBID, pLOBData2->iLOBID, pRes->fLatitude, pRes->fLongitude );
 			// 대략적인 거리 산출
-			dx = ( pRes->fLongitude - pLOBData1->dRadarCollectionLongitude ) * KM_PER_DEGREE_FOR_LONGITUDE;
-			dy = ( pRes->fLatitude - pLOBData1->dRadarCollectionLatitude ) * KM_PER_DEGREE_FOR_LATITUDE;
+            dx = ( pRes->fLongitude - pLOBData1->fRadarLongitude ) * KM_PER_DEGREE_FOR_LONGITUDE;
+            dy = ( pRes->fLatitude - pLOBData1->fRadarLatitude ) * KM_PER_DEGREE_FOR_LATITUDE;
 
 			dDist = sqrt( dx*dx + dy*dy );
 
@@ -1004,8 +1004,8 @@ void CLOBClustering::AddPEData( SELLOBDATA_MINIMIZE *pLOBData )
 	STR_LOBS stLOBs;
 
 	stLOBs.fDoa = pLOBData->fMeanDOA;
-	stLOBs.fLatitude = (float) pLOBData->dRadarCollectionLatitude;
-	stLOBs.fLongitude = (float) pLOBData->dRadarCollectionLongitude;
+    stLOBs.fLatitude = (float) pLOBData->fRadarLatitude;
+    stLOBs.fLongitude = (float) pLOBData->fRadarLongitude;
 	stLOBs.uiLOBID = pLOBData->uiLOBID;
 	m_VecLOBs.push_back( stLOBs );
 
@@ -1104,7 +1104,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 	for( i=0 ; i < m_pQueLOBData->Count() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
-		fTheta = (float) ST_IMA->GCAzimuth( pLOBData->dRadarCollectionLatitude, pLOBData->dRadarCollectionLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
+        fTheta = (float) ST_IMA->GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
 		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, GP_MGR_PARAM->GetEffectiveDOADiff2() ) ) {
 			AddOptimalLOBID( pLOBData->uiLOBID );
 

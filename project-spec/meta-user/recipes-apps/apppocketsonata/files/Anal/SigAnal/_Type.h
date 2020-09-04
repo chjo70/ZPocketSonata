@@ -21,9 +21,6 @@
 
 #include <stddef.h>
 
-#ifdef _WIN32
-
-#elif __linux__
 #include <vector>
 #include <list>
 #include <map>
@@ -35,6 +32,13 @@ using namespace std;
 #include <time.h>
 #include <sys/timeb.h>
 //#include <sys/timeb.h>
+
+#ifdef _MSC_VER
+
+#elif defined(_VXWORKS_)
+#include <types/vxTypesOld.h>
+
+#else
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 리눅스용 컴파일 추가
@@ -78,8 +82,6 @@ typedef unsigned int INT32;
 #include "../../Utils/cfile.h"
 
 
-#else
-#include <types/vxTypesOld.h>
 
 #endif
 
@@ -105,11 +107,11 @@ typedef unsigned long long int _TOA;
 #define WORD08  unsigned char
 
 #ifdef _WIN32
-#define RET_OK    1
-#define BOOL  int
-#define UINT  unsigned int
-#define UCHAR unsigned char
-#define USHORT  unsigned short
+//#define RET_OK    1
+//#define BOOL  int
+//#define UINT  unsigned int
+//#define UCHAR unsigned char
+//#define USHORT  unsigned short
 
 #endif
 

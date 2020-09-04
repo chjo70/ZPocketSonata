@@ -191,8 +191,8 @@ void CMakeAET::MakeAET()
 // 	// 방위 부분 저장
 // 	MakeAOAInfoInSeg( & aoa, pEmitter );
 // 	pNewAet->aet.aoa = aoa.mean;
-// 	pNewAet->ext.aoa.low = aoa.min;
-// 	pNewAet->ext.aoa.hgh = aoa.max;
+// 	pNewAet->ext.aoa.iLow = aoa.min;
+// 	pNewAet->ext.aoa.iHgh = aoa.max;
 //
 // 	// 접촉시간 부분 저장
 // 	pNewAet->aet.seen.frst = pNewAet->aet.seen.last = 0;
@@ -609,7 +609,7 @@ int CMakeAET::MakeDIInfoInSeg( STR_EMITTER *pEmitter)
 // 최 종 변 경  : 조철희, 2005-05-13 14:57:56
 //
 //##ModelId=428832A2006F
-void CMakeAET::MakeAOAInfoInSeg(STR_MINMAX *pAoa, STR_EMITTER *pEmitter)
+void CMakeAET::MakeAOAInfoInSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
 {
     int i;
     int diffAoa, overAoa, frstAoaMax, frstAoaMin;
@@ -690,6 +690,17 @@ void CMakeAET::MakeAOAInfoInSeg(STR_MINMAX *pAoa, STR_EMITTER *pEmitter)
     pAoa->mean = pSeg->aoa.mean;
 #endif
 
+    // 표준 편차 계산
+    int iDiff;
+    unsigned int uiSum;
+    PDWINDEX *pPdwIndex = pEmitter->pdw.pIndex;
+    for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
+        iDiff = pAoa->mean - AOA[ *pPdwIndex++ ];
+        uiSum = iDiff * iDiff;
+
+    }
+    pAoa->fsdev = sqrt( uiSum / pEmitter->pdw.count );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -737,8 +748,8 @@ void CMakeAET::MakeExtInfoInSeg( STR_EXT *pExt, STR_EMITTER *pEmitter )
     pExt->noMergeEMT = -1;
 
     // band = BAND[ pSeg->pdw.pIndex[0] ];
-    pExt->frq.low = pEmitter->freq.min;
-    pExt->frq.hgh = pEmitter->freq.max;
+    pExt->frq.iLow = pEmitter->freq.min;
+    pExt->frq.iHgh = pEmitter->freq.max;
 
     pExt->idxEmitter = -1;
 
@@ -784,28 +795,28 @@ void CMakeAET::MakeExtInfoInSeg( STR_EXT *pExt, STR_EMITTER *pEmitter )
         \date     2008-07-10 11:44:56
         \warning
 */
-UINT CMakeAET::CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 )
-{
-    if( hgh1 < low2 || hgh2 < low1 )			// |-------|		|--------|
-        return _spZero;											//			 |---|
-
-    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
-        return _spOne;
-
-  if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-    return hgh1 - low1 + 1;								//    |------------------|
-
-    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
-        return hgh2 - low2 + 1;			 					//          |--------|
-
-  if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-     return ( hgh2 - low1 + 1);     			//    |-----------|
-
-  if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        return ( hgh1 - low2 + 1 );						//          |------------|
-
-    return 0;
-}
+//UINT CMakeAET::CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 )
+//{
+//    if( hgh1 < low2 || hgh2 < low1 )			// |-------|		|--------|
+//        return _spZero;											//			 |---|
+//
+//    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
+//        return _spOne;
+//
+//  if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
+//    return hgh1 - low1 + 1;								//    |------------------|
+//
+//    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
+//        return hgh2 - low2 + 1;			 					//          |--------|
+//
+//  if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
+//     return ( hgh2 - low1 + 1);     			//    |-----------|
+//
+//  if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
+//        return ( hgh1 - low2 + 1 );						//          |------------|
+//
+//    return 0;
+//}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CMakeAET::PrintAllEmitter
@@ -991,7 +1002,7 @@ char *CMakeAET::Comma( char *pString )
 // 			printf( "%1c--" , aet_stat[pManAet->loc.stat] );
 // 	}
 // 	printf( "%3d " , pManAet->aet.noEMT );
-// 	printf( "%03d(%03d,%03d)" , AOACNV( pManAet->aet.aoa ), F_AOACNV( pManAet->ext.aoa.low ), C_AOACNV( pManAet->ext.aoa.hgh ) );
+// 	printf( "%03d(%03d,%03d)" , AOACNV( pManAet->aet.aoa ), F_AOACNV( pManAet->ext.aoa.iLow ), C_AOACNV( pManAet->ext.aoa.iHgh ) );
 //
 // 	// 주파수
 // 	printf( " %s" , aet_signal_type[pManAet->aet.sigType] );
@@ -1061,7 +1072,7 @@ char *CMakeAET::Comma( char *pString )
 //
 // 	printf( "\n" );
 // 	printf( "%3x " , pNewAet->aet.noEMT );
-// 	printf( "%03x(%03x,%03x)" , pNewAet->aet.aoa, pNewAet->ext.aoa.low, pNewAet->ext.aoa.hgh );
+// 	printf( "%03x(%03x,%03x)" , pNewAet->aet.aoa, pNewAet->ext.aoa.iLow, pNewAet->ext.aoa.iHgh );
 //
 // 	// 주파수
 // 	printf( " %s" , aet_signal_type[pNewAet->aet.sigType] );
@@ -1162,18 +1173,18 @@ int CMakeAET::CalMaxChannel( STR_PDWINDEX *pPdw )
         \date     2008-11-13 16:05:22
         \warning
 */
-void CMakeAET::SetCWParameter( STR_NEWAET *pNewAet )
-{
-    // CW 신호 이면 PRI 및 PW 를 강제 설정한다.
-    if( pNewAet->aet.sigType == ST_CW || pNewAet->aet.sigType == ST_CW_FMOP ) {
-        pNewAet->aet.pri.type = _STABLE;
-        pNewAet->aet.pri.mean = pNewAet->aet.pri.min = pNewAet->aet.pri.max = UMUL( 140, _spOneMicrosec );
-        pNewAet->aet.pw.mean = pNewAet->aet.pw.min = pNewAet->aet.pw.max = UMUL( INIT_CW_PULSEWIDTH, _spOneMicrosec );
-
-    }
-
-
-}
+//void CMakeAET::SetCWParameter( STR_NEWAET *pNewAet )
+//{
+//    // CW 신호 이면 PRI 및 PW 를 강제 설정한다.
+//    if( pNewAet->aet.sigType == ST_CW || pNewAet->aet.sigType == ST_CW_FMOP ) {
+//        pNewAet->aet.pri.type = _STABLE;
+//        pNewAet->aet.pri.mean = pNewAet->aet.pri.min = pNewAet->aet.pri.max = UMUL( 140, _spOneMicrosec );
+//        pNewAet->aet.pw.mean = pNewAet->aet.pw.min = pNewAet->aet.pw.max = UMUL( INIT_CW_PULSEWIDTH, _spOneMicrosec );
+//
+//    }
+//
+//
+//}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CMakeAET::DiscardEmitter

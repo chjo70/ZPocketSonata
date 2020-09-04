@@ -41,18 +41,20 @@ extern float _frqRes[2];
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
-#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
-#define NDIV( A, B )            (UINT) ( (float) (A) / (float) (B) - 0.5 )
+#define UDIV( A, B )            (int) ( (float) (A) / (float) (B) + 0.5 )
+#define NDIV( A, B )            (int) ( (float) (A) / (float) (B) - 0.5 )
 
 #define F_NDIV( A, B )          (UINT) ( (float) (A) / (float) (B) - 0.5 )
 #define C_NDIV( A, B )          (UINT) ( (float) (A) / (float) (B) + 0.5 )
 #define FDIV( A, B )            (float) ( (float) (A) / (float) (B) )
-#define F_UDIV( A, B )          (UINT) ( (float) (A) / (float) (B) - 0.5 )
-#define C_UDIV( A, B )          (UINT) ( (float) (A) / (float) (B) + 0.5 )
+#define F_UDIV( A, B )          (int) ( (float) (A) / (float) (B) - 0.5 )
+#define C_UDIV( A, B )          (int) ( (float) (A) / (float) (B) + 0.5 )
 #define IDIV( A, B )            ( ( (A) > 0 ) ? UDIV(A,B) : NDIV(A,B) )
 #define F_IDIV( A, B )          ( ( (A) > 0 ) ? F_UDIV(A,B) : F_NDIV(A,B) )
 #define C_IDIV( A, B )          ( ( (A) > 0 ) ? C_UDIV(A,B) : C_NDIV(A,B) )
 #define IMUL( A, B )            ( ( (A) > 0 ) ? UMUL(A,B) : NMUL(A,B) )
+#define F_MUL( A, B )           (int) ( ( (float) (A) * (float) (B) ) - 0.5 )
+#define C_MUL( A, B )           (int) ( ( (float) (A) * (float) (B) ) + 0.5 )
 #define UADD( A, B )            (UINT) ( (float) (A) + (float) (B) + 0.5 )
 #define FADD( A, B )            (float) ( (float) (A) + (float) (B) )
 #define FMUL( A, B )            ( (float) (A) * (float) (B) )
@@ -60,8 +62,7 @@ extern float _frqRes[2];
 #define TDIV( A, B )            (_TOA) ( (_TOA) (A) / (_TOA) (B) + 0.5 )
 #define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 #define NMUL( A, B )            (UINT) ( (float) (A) * (float) (B) - 0.5 )
-#define F_MUL( A, B )           (UINT) ( ( (float) (A) * (float) (B) ) - 0.5 )
-#define C_MUL( A, B )           (UINT) ( ( (float) (A) * (float) (B) ) + 0.999 )
+
 #define WeightedVal( A,B,C,D)   UDIV( (A*C) + (B*D), C+D)
 #define WeightedAdvVal(A,B,C)   UDIV( FADD(FMUL( A, B ), C), FADD( 1, A ) )
 #define ThreeOverTen( A )       ( UINT ) ( ( ( ( A ) * 3 ) + 5 ) / 10 )
@@ -122,7 +123,11 @@ T _diffabs( T x, T y)
 #elif defined(_POCKETSONATA_)
 #define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
 #define FRQMhzCNV( A, B )		IMUL( (B), ( gFreqRes[(A)].res ) )
-#define IFRQMhzCNV( A, B )		IDIV( (B), ( gFreqRes[(A)].res ) )
+#define IFRQMhzCNV( A )         IDIV( (A), ( gFreqRes[0].res ) )
+
+#define IFRQMhzLOW( A )         F_IDIV( (A), ( gFreqRes[0].res ) )
+#define IFRQMhzHGH( A )         C_IDIV( (A), ( gFreqRes[0].res ) )
+
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
@@ -131,6 +136,9 @@ T _diffabs( T x, T y)
 #define PWCNV( A )				IDIV( A, _spOneNanosec )
 #define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
 #define FPWCNV( A )             FMUL( (A), _spOneMicrosec )
+
+#define IPWCNVLOW( A )			F_MUL( (A), _spOneMicrosec )
+#define IPWCNVHGH( A )			C_MUL( (A), _spOneMicrosec )
 
 #define AOACNV( A )             IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )

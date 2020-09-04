@@ -234,11 +234,12 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 
         g_AnalLoop = true;
 
+        EMTMRG->Run();
         SIGCOL->Run();
         DETANL->Run();
         TRKANL->Run();
         SCANANL->Run();
-        EMTMRG->Run();
+
     }
     else {
         LOGMSG1( enDebug, "분석 관련 쓰레드를 삭제한다[%d].", bCreate );
@@ -246,11 +247,12 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         g_AnalLoop = false;
 
         // 1. 먼저 관련 분석 쓰레드를 삭제한다.
+        EMTMRG_RELEASE;
         SIGCOL_RELEASE;
         DETANL_RELEASE;
         TRKANL_RELEASE;
         SCANANL_RELEASE;
-        EMTMRG_RELEASE;
+
 
     }
 

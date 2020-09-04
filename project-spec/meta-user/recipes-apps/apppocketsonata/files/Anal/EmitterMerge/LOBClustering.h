@@ -87,8 +87,8 @@ typedef struct  {
 	float	fMeanDOA;			// [1.0 도]
 	unsigned int uiLOBID;
 
-	double dRadarCollectionLatitude;
-	double dRadarCollectionLongitude;	
+        float fRadarLatitude;
+        float fRadarLongitude;
 
 } SELLOBDATA_MINIMIZE ;
 

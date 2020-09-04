@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define	M_PI									(3.1415926535)
 #endif
 

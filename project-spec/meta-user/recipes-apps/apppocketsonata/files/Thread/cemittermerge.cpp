@@ -1,5 +1,7 @@
 #include "cemittermerge.h"
 
+#include "csignalcollect.h"
+
 #define _DEBUG_
 
 
@@ -88,7 +90,7 @@ void CEmitterMerge::_routine()
  */
 void CEmitterMerge::InitData()
 {
-    m_sLOBOtherInfo.bUpdate = true;
+    m_sLOBOtherInfo.bUpdate = false;
 }
 
 /**
@@ -97,13 +99,16 @@ void CEmitterMerge::InitData()
 void CEmitterMerge::MergeEmitter()
 {
     LOGENTRY;
-    int i;
 
+    int i;
+    bool bMerge;
+
+    STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
 
     SRxLOBData *pLOBData;
 
-    LOGMSG2( enDebug, "%d 대역에서 LOB : %d 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiTotalLOB );
+    LOGMSG3( enDebug, "%d 대역, %d 채널에서 %d 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiTotalLOB );
 
     // 1. LOB 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
@@ -114,7 +119,13 @@ void CEmitterMerge::MergeEmitter()
     strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
     pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
-        m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo );
+
+        // 2.1 분석된 LOB 데이터를 병합 관리한다.
+        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo );
+
+        // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
+        strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
+        SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         ++ pLOBData;
     }

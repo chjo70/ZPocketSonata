@@ -291,59 +291,59 @@ typedef struct {
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
 struct SELEXTDB {
-	unsigned int uiSeqNum;
-	unsigned int uiAETID;
-	unsigned int uiABTID;
-	unsigned int uiLOBID;
+    unsigned int uiSeqNum;
+    unsigned int uiAETID;
+    unsigned int uiABTID;
+    unsigned int uiLOBID;
 
-	//char acTaskName[SIZE_OF_TASK_NAME];
+    //char acTaskName[SIZE_OF_TASK_NAME];
 
-	int iLatitude;
-	int iLongitude;
+    //int iLatitude;
+    //int iLongitude;
 
-	//////////////////////////////////////////////////////////////////////////
-	// 식별 정보 (CED)
+    //////////////////////////////////////////////////////////////////////////
+    // 식별 정보 (CED)
     int iRadarModeIndex;																				// 레이더 모드 인덱스
 
-    char szIdInfo[_MAX_SIZE_OF_IDINFO];													// 식별 정보(기출, 신출, 불명)
+    //char szIdInfo[_MAX_SIZE_OF_IDINFO];													// 식별 정보(기출, 신출, 불명)
 
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+    //char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    //char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
+    //char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    //char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
 
-    char szThirdELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-    char szThirdModeCode[_MAX_SIZE_OF_MODECODE];
+    //char szThirdELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+    //char szThirdModeCode[_MAX_SIZE_OF_MODECODE];
 
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];											// Nickname 명
-    char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];					// Modulation Code
-    char szFunctioncode[_MAX_SIZE_OF_FUNCTIONCODE];							// 기능 코드명
+    //char szNickName[_MAX_NICKNAME_STRING_SIZE_];											// Nickname 명
+    //char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];					// Modulation Code
+    //char szFunctioncode[_MAX_SIZE_OF_FUNCTIONCODE];							// 기능 코드명
 
- 	//int iPlatform;																							// 플랫폼
-	//char szPlatformCode[MAX_SIZE_OF_PLATFORMCODE];							// 플랫폼 코드
-	int iRadarPriority;																					// 레이더 모드 우선순위
- 	int iRadarModePriority;																			// 레이더 우선순위
+    //int iPlatform;																							// 플랫폼
+    //char szPlatformCode[MAX_SIZE_OF_PLATFORMCODE];							// 플랫폼 코드
+    int iRadarPriority;																					// 레이더 모드 우선순위
+    int iRadarModePriority;																			// 레이더 우선순위
 
-	//////////////////////////////////////////////////////////////////////////
-	// 식별 정보 (EOB)
-	int iThreatIndex;																						// 위협 인덱스
-	int iPinNumber;																							// PIN Number
-    char szKoreaSiteName[_MAX_SIZE_OF_KOREASITENAME_];								// 위협명
+    //////////////////////////////////////////////////////////////////////////
+    // 식별 정보 (EOB)
+    int iThreatIndex;																						// 위협 인덱스
+    int iPinNumber;																							// PIN Number
+    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];								// 위협명
     char szBENumber[_MAX_SIZE_OF_BENUMBER];											// BENumber
     char szThreatFunctionCode[_MAX_SIZE_OF_FUNCTIONCODE];				// 위협 기능 코드
-	int iThreatPriority;																				// 위협 우선 순위
-	int iThreatDistance;																				// 위협 간의 거리 오차 [nm]
-	int iEquipNumber;																						// 장비 번호
+    int iThreatPriority;																				// 위협 우선 순위
+    int iThreatDistance;																				// 위협 간의 거리 오차 [nm]
+    int iEquipNumber;																						// 장비 번호
 
-	// 보고서 정보
-	time_t tiFinalRpt;																					// 최종 보고서 생성 시간
-	time_t tiFirstRpt;																					// 최초 보고서 생성 시간
+    // 보고서 정보
+    time_t tiFinalRpt;																					// 최종 보고서 생성 시간
+    time_t tiFirstRpt;																					// 최초 보고서 생성 시간
 
-	// 수동 편집 여브
-	bool bIsManualEdited;
+    // 수동 편집 여브
+    bool bIsManualEdited;
 
-	int iDOADiff;
+    int iDOADiff;
 
 }  ;
 
@@ -882,7 +882,7 @@ struct SELMERGE_CANDIDATE {
 // 	char szNickName[MAX_SIZE_OF_ARRAY_INSERT][_MAX_NICKNAME_STRING_SIZE_];
 // 	char szFunctioncode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_FUNCTIONCODE];
 // 	char szPlatformCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_PLATFORMCODE];
-// 	char szKoreaSiteName[MAX_SIZE_OF_ARRAY_INSERT][_MAX_SIZE_OF_THREATNAME_];
+// 	char szPlaceNameKor[MAX_SIZE_OF_ARRAY_INSERT][_MAX_SIZE_OF_THREATNAME_];
 // 	int iRadarModePriority[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iRadarPriority[MAX_SIZE_OF_ARRAY_INSERT];
 // 
@@ -1068,7 +1068,7 @@ struct SELMERGE_CANDIDATE {
 // 	char szFunctioncode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_FUNCTIONCODE];
 // 	int iRadarPriority[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPinNumber[MAX_SIZE_OF_ARRAY_INSERT];
-// 	char szKoreaSiteName[MAX_SIZE_OF_ARRAY_INSERT][_MAX_SIZE_OF_KOREASITENAME_];
+// 	char szPlaceNameKor[MAX_SIZE_OF_ARRAY_INSERT][_MAX_SIZE_OF_KOREASITENAME_];
 // 	char szBENumber[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_BENUMBER];
 // 	char szThreatFunctionCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_FUNCTIONCODE];
 // 	int iThreatPriority[MAX_SIZE_OF_ARRAY_INSERT];

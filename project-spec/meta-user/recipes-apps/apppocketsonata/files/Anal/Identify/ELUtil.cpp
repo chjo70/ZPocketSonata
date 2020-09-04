@@ -51,7 +51,7 @@ BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int th
 	BOOL bRet;
     long long int diff;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     diff = _abs64( (long long int) ( x - y ) );
 #else
     diff = llabs( (long long int) ( x - y ) );

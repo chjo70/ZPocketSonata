@@ -8,7 +8,7 @@
 #include "../Collect/ccollectbank/ccollectbank.h"
 #include "../Collect/DataFile/DataFile.h"
 
-
+#include "../Anal/Identify/Identify.h"
 
 /**
  * @brief The CSignalCollect class
@@ -24,6 +24,10 @@ private:
     CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
     CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
     CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
+
+    Queue<unsigned int> m_theTrackChannel;
+
+    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
 public:
     static CSignalCollect *pInstance;
@@ -41,7 +45,44 @@ private:
 
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
 
+
+    void ReqSetWindowCell();
+    void ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh );
+    void NewTrackWindowCell( SRxABTData *pABTData );
+
+
     void SimPDWData();
+
+    ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
+        ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
+
+        if( uiCh < DETECT_CHANNEL )
+            enCollectBank = enDetectCollectBank;
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+            enCollectBank = enDetectCollectBank;
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+            enCollectBank = enDetectCollectBank;
+        else
+            enCollectBank = enUserCollectBank;
+
+        return enCollectBank;
+    }
+
+    CCollectBank *GetCollectBank( unsigned int uiCh ) {
+        CCollectBank *pCCollectBank=NULL;
+
+        if( uiCh < DETECT_CHANNEL )
+            pCCollectBank = m_pTheDetectCollectBank[uiCh];
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+            pCCollectBank = m_pTheTrackCollectBank[uiCh-DETECT_CHANNEL];
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+            pCCollectBank = m_pTheScanCollectBank[uiCh-DETECT_CHANNEL-TRACK_CHANNEL];
+        else
+            pCCollectBank = m_pTheUserCollectBank[uiCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL];
+
+        return pCCollectBank;
+
+    }
 
 public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );

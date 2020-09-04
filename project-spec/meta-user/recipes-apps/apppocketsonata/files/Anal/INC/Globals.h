@@ -7,10 +7,9 @@
 
 #pragma once
 
-#ifdef _WIN32
-#elif __linux__
-#else
+#ifdef _VXWORKS_
 #include <bootLib.h>
+#else
 #endif
 
 
@@ -87,9 +86,7 @@ IMPORT CIni *theIni;
 
 #endif
 
-#ifdef _WIN32
-#elif __linux__
-#else
+#ifdef _VXWORKS_
 IMPORT BOOT_PARAMS stBootParams;
 
 #endif

@@ -132,6 +132,9 @@ public:
 	_TOA CalOverlapSpace64( _TOA hgh1, _TOA low1, _TOA hgh2, _TOA low2 );
 	float MeanInArray( UINT *series, UINT co );
 	float IMeanInArray( int *series, UINT co );
+
+    inline void PrintAllSeg() { }
+
 	//##ModelId=452B0C57016C
 	inline void SetAnalSeg( int nSeg ) { m_nAnalSeg=nSeg; }
 	//##ModelId=452B0C57016E
@@ -158,7 +161,6 @@ public:
 	virtual BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )=0;
 	//##ModelId=452B0C5701A8
 	virtual void DeleteAllSeg( STR_EMITTER *pEmitter )=0;
-	virtual void PrintAllSeg()=0;
 	//##ModelId=452B0C5701AB
 	virtual void ExtractRefStable()=0;
 	//##ModelId=452B0C5701B2
