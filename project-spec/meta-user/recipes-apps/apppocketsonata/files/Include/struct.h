@@ -118,7 +118,7 @@ struct STR_WINDOWCELL {
     /**
      * @brief 빔 번호
      */
-    unsigned int uiBeam;
+    unsigned int uiABTID;
 
     /**
      * @brief 누적 PDW 개수
