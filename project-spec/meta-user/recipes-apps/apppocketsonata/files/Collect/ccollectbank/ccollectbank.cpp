@@ -112,7 +112,6 @@ void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
     // PDW 정보 복사
     memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], iTo * sizeof(_PDW) );
 
-
     // 추적 윈도우 셀 정보 업데이트
     UpdateWindowCell();
 

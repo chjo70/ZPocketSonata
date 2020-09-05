@@ -64,7 +64,6 @@ public:
 
     char * Comma( char *pString );
     void PrintAllEmitter();
-    //UINT CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 );
     //BOOL CompMeanDiff(int x, int y, int thresh);
     //BOOL CompMeanDiff64(_TOA x, _TOA y, _TOA thresh);
     //##ModelId=452B0C5503E0

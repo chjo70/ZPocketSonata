@@ -29,6 +29,9 @@ private:
 
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
+    STR_WINDOWCELL *m_pStrWindowCell;
+    CCollectBank *m_pTheCollectBank;
+
 public:
     static CSignalCollect *pInstance;
 
@@ -45,13 +48,18 @@ private:
 
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
 
-
     void ReqSetWindowCell();
     void ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh );
     void NewTrackWindowCell( SRxABTData *pABTData );
+    void StartTrackWindowCell();
+    void CalTrackWindowCell( SRxABTData *pABTData );
+    void UpdateTrackWindowCell( SRxABTData *pABTData );
+    bool IsValidChannle();
 
 
     void SimPDWData();
+    unsigned int SimFilter( STR_PDWDATA *pPDWData );
+    bool IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell );
 
     ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
         ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;

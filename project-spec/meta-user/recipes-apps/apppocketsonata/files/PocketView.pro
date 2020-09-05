@@ -38,6 +38,8 @@ TRANSLATIONS += \
 DEFINES += _POCKETSONATA_
 DEFINES += _GUI_
 
+QMAKE_LFLAGS += -no-pie
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

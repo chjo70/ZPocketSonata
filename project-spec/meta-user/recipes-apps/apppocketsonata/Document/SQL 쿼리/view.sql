@@ -169,14 +169,14 @@ CREATE VIEW VEL_RADAR_RF_SEQENCE AS
 # =========================================================================
 CREATE VIEW VEL_RADAR_PRI_SEQENCE AS
     SELECT 	A.RADAR_MODE_INDEX,
-            A.RF_SEQ_ID,
-            A.RF_INDEX,
+            A.PRI_SEQ_ID,
+            A.PRI_INDEX,
 
-            B.RF_MIN,
-            B.RF_MAX
+            B.PRI_MIN,
+            B.PRI_MAX
 
-    FROM RADAR_RF_SEQUENCE AS A, RADAR_RF_VALUES AS B
+    FROM RADAR_PRI_SEQUENCE AS A, RADAR_PRI_VALUES AS B
     WHERE 		A.RADAR_MODE_INDEX = B.RADAR_MODE_INDEX
-            AND A.RF_INDEX = B.RF_INDEX
+            AND A.PRI_INDEX = B.PRI_INDEX
 
 

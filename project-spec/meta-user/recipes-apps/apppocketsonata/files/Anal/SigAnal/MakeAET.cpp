@@ -759,65 +759,6 @@ void CMakeAET::MakeExtInfoInSeg( STR_EXT *pExt, STR_EMITTER *pEmitter )
 
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CMakeAET::CompMeanDiff
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-01-03 17:23:06
-        \warning
-*/
-// BOOL CMakeAET::CompMeanDiff( int x, int y, int thresh )
-// {
-//   int diff;
-//
-//   diff = _diffabs( x, y );
-//
-//   if( diff <= thresh )
-//     return TRUE;
-//   else
-// 		return FALSE;
-// }
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CMakeAET::CalOverlapSpace
-        \author   조철희
-        \param    hgh1 인자형태 int
-        \param    low1 인자형태 int
-        \param    hgh2 인자형태 int
-        \param    low2 인자형태 int
-        \return   UINT
-        \version  0.0.29
-        \date     2008-07-10 11:44:56
-        \warning
-*/
-//UINT CMakeAET::CalOverlapSpace( int hgh1, int low1, int hgh2, int low2 )
-//{
-//    if( hgh1 < low2 || hgh2 < low1 )			// |-------|		|--------|
-//        return _spZero;											//			 |---|
-//
-//    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
-//        return _spOne;
-//
-//  if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-//    return hgh1 - low1 + 1;								//    |------------------|
-//
-//    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
-//        return hgh2 - low2 + 1;			 					//          |--------|
-//
-//  if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-//     return ( hgh2 - low1 + 1);     			//    |-----------|
-//
-//  if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-//        return ( hgh1 - low2 + 1 );						//          |------------|
-//
-//    return 0;
-//}
-
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CMakeAET::PrintAllEmitter
         \author   조철희
