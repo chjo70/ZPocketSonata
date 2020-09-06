@@ -38,6 +38,11 @@ public:
 
     void CopyPDW();
     void PushPDWData( STR_PDWDATA *pstrArrayPDW );
+    void PushPDWData( _PDW *pstPDW );
+
+    ///
+    void SimCollectMode();
+
 
     inline bool IsCompleteCollect() { return m_strWindowCell.enCollectMode == enCompleteCollection; }
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }

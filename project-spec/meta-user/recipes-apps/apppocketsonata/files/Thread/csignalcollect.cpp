@@ -33,6 +33,7 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
     iCh = 0;
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
         m_pTheDetectCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
+
     }
 
     m_theTrackChannel.Init( TRACK_CHANNEL );
@@ -159,37 +160,66 @@ void CSignalCollect::_routine()
  */
 void CSignalCollect::Init()
 {
-    // 추적 윈도우 셀을 닫는다.
-    CloseTrackCollectBank();
-
-    // 스캔 윈도우 셀을 닫는다.
-    CloseScanCollectBank();
+    // 탐지/추적/스캔 윈도우 셀을 닫는다.
+    CloseCollectBank();
 
     // 탐지 분석판을
     //m_pTheDetectCollectBank[0]->SetWindowCell( );
+    SetupDetectCollectBank();
+
+}
+
+/**
+ * @brief CSignalCollect::SetupDetectCollectBank
+ */
+void CSignalCollect::SetupDetectCollectBank()
+{
+    STR_WINDOWCELL *pWindowCell;
+
+    pWindowCell = m_pTheDetectCollectBank[0]->GetWindowCell();
+
+    pWindowCell->bUse = true;
+
+    pWindowCell->uiMaxCoPDW = 250;
+    pWindowCell->uiMaxCollectTimems = 500;
+
+    pWindowCell->strAoa.iLow = IAOACNV( 0 );
+    pWindowCell->strAoa.iHgh = IAOACNV( 360. );
+
+    pWindowCell->strFreq.iLow = IFRQMhzLOW( 450.0 );
+    pWindowCell->strFreq.iHgh = IFRQMhzLOW( 18050 );
+
+    pWindowCell->strPA.iLow = 0;
+    pWindowCell->strPA.iHgh = 360;
+
+    pWindowCell->strPW.iLow = IPWCNVLOW( 0.0 );
+    pWindowCell->strPW.iHgh = IPWCNVLOW( 1000000.0 );
+
+    clock_gettime( CLOCK_REALTIME, & pWindowCell->tsCollectStart );
+
 }
 
 /**
  * @brief 추적 윈도우셀을 닫는다.
  */
-void CSignalCollect::CloseTrackCollectBank()
+void CSignalCollect::CloseCollectBank()
 {
     int i;
+
+    for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
+        m_pTheDetectCollectBank[i]->CloseCollectBank();
+    }
 
     for( i=0 ; i < TRACK_CHANNEL ; ++i ) {
         m_pTheTrackCollectBank[i]->CloseCollectBank();
     }
-}
-
-/**
- * @brief 스캔 윈도우셀을 닫는다.
- */
-void CSignalCollect::CloseScanCollectBank()
-{
-    int i;
 
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
         m_pTheScanCollectBank[i]->CloseCollectBank();
+    }
+
+    for( i=0 ; i < USER_CHANNEL ; ++i ) {
+        m_pTheUserCollectBank[i]->CloseCollectBank();
     }
 }
 
@@ -467,7 +497,7 @@ void CSignalCollect::CalTrackWindowCell( SRxABTData *pABTData )
         m_pStrWindowCell->strAoa.iHgh = pABTData->fMaxDOA;
 
         m_pStrWindowCell->uiMaxCoPDW = 100;
-        m_pStrWindowCell->uiMaxCollectTime = 500 + fMinCollectTime;
+        m_pStrWindowCell->uiMaxCollectTimems = 500 + fMinCollectTime;
     }
     else {
 
@@ -479,23 +509,23 @@ void CSignalCollect::CalTrackWindowCell( SRxABTData *pABTData )
  */
 void CSignalCollect::SimPDWData()
 {
-    STR_PDWDATA *pPDWData;
-    CCollectBank *pCollectBank;
+    STR_PDWDATA stPDWData;
+    //CCollectBank *pCollectBank;
     unsigned int uiCh;
 
     // 랜 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
     // 데이터를 지정하여 지정한 행렬에 저장한다.
-    pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
-    m_theDataFile.ReadDataMemory( pPDWData, (const char *) m_uniLanData.szFile, ".ppdw" );
+    //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, ".ppdw" );
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
-    uiCh = SimFilter( pPDWData );
+    uiCh = SimFilter( & stPDWData );
 
     // 모의 PDW 데이터를 수집 버퍼에 추가한다.
-    pCollectBank = GetCollectBank( uiCh );
-    pCollectBank->PushPDWData( pPDWData );
+    //pCollectBank = GetCollectBank( uiCh );
+    //pCollectBank->PushPDWData( pPDWData );
 
 }
 
@@ -506,7 +536,7 @@ void CSignalCollect::SimPDWData()
 unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 {
     unsigned int ui, uj;
-    unsigned int uiTrackCh=0, uiScanCh=0;
+    unsigned int uiTrackCh=0, uiScanCh=0, uiDetectCh=(unsigned int) -1;
 
     _PDW *pstPDW;
 
@@ -523,6 +553,20 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
                 pCollectBank->PushPDWData( pstPDW );
                 uiTrackCh = uj + DETECT_CHANNEL;
             }
+        }
+
+        // 추적 채널에 속하지 않은 PDW는 탐지 채널에 저장한다.
+        if( uiTrackCh == 0 ) {
+            for( uj=0 ; uj < DETECT_CHANNEL ; ++uj ) {
+                pCollectBank = m_pTheDetectCollectBank[uj];
+                pWindowCell = pCollectBank->GetWindowCell();
+                if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
+                    pCollectBank->PushPDWData( pstPDW );
+                    uiDetectCh = uj;
+
+                    //pCollectBank->SimCollectMode();
+                }
+            }
 
         }
 
@@ -530,11 +574,14 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         for( uj=0 ; uj < SCAN_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheScanCollectBank[uj];
             pWindowCell = pCollectBank->GetWindowCell();
-            if( pWindowCell->bUse == true ) {
+            if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
+                pCollectBank->PushPDWData( pstPDW );
                 uiScanCh = uj + ( DETECT_CHANNEL + TRACK_CHANNEL );
             }
 
         }
+
+        // 사용자 채널 설정
 
         ++pstPDW;
     }

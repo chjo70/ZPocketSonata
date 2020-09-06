@@ -9,6 +9,8 @@
 //#include "defines.h"
 //#include "system.h"
 
+#include <time.h>
+
 /**
  * @brief ZYNQ 보드의 번호를 정의함.
  */
@@ -103,12 +105,14 @@ struct STR_WINDOWCELL {
     * @brief 최대 수집 게수 및 수집 시간
     */
     unsigned int uiMaxCoPDW;
-    unsigned int uiMaxCollectTime;          // 최대 수집 시간 [ms]
+    unsigned int uiMaxCollectTimems;          // 최대 수집 시간 [ms]
 
     STR_LOWHIGH strAoa;
     STR_LOWHIGH strFreq;
     STR_LOWHIGH strPA;
     STR_LOWHIGH strPW;
+
+    struct timespec tsCollectStart;
 
     /**
      * @brief 실제 수집 시간 정보 [ms]
