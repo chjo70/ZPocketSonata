@@ -45,6 +45,7 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
     }
 
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
+
         m_pTheScanCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
 
@@ -453,11 +454,11 @@ void CSignalCollect::CalTrackWindowCell( SRxABTData *pABTData )
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            m_pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMaxFreq );
+            m_pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMinFreq );
             m_pStrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fMaxFreq );
 
-            m_pStrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMaxPW );
-            m_pStrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMinPW );
+            m_pStrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMinPW );
+            m_pStrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMaxPW );
 
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
@@ -515,25 +516,24 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
     pstPDW = & pPDWData->stPDW[0];
     for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
         // 추적 채널 설정
-        pCollectBank = m_pTheTrackCollectBank[0];
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
+            pCollectBank = m_pTheTrackCollectBank[uj];
             pWindowCell = pCollectBank->GetWindowCell();
             if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
+                pCollectBank->PushPDWData( pstPDW );
                 uiTrackCh = uj + DETECT_CHANNEL;
             }
 
-            ++ pCollectBank;
         }
 
         // 스캔 채널 설정
-        pCollectBank = m_pTheScanCollectBank[0];
         for( uj=0 ; uj < SCAN_CHANNEL ; ++uj ) {
+            pCollectBank = m_pTheScanCollectBank[uj];
             pWindowCell = pCollectBank->GetWindowCell();
             if( pWindowCell->bUse == true ) {
                 uiScanCh = uj + ( DETECT_CHANNEL + TRACK_CHANNEL );
             }
 
-            ++ pCollectBank;
         }
 
         ++pstPDW;
@@ -543,12 +543,18 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 
 }
 
+/**
+ * @brief CSignalCollect::IsFiltered
+ * @param pstPDW
+ * @param pWindowCell
+ * @return
+ */
 bool CSignalCollect::IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell )
 {
     bool bRet;
 
-    Overlap
-    bRet = pWindowCell->strAoa.iLow
+    bRet = CompMarginDiff<int>( pstPDW->iFreq, pWindowCell->strFreq.iLow, pWindowCell->strFreq.iHgh, 10 ) && \
+           CompMarginDiff<int>( pstPDW->iPW, pWindowCell->strPW.iLow, pWindowCell->strPW.iHgh, 10 );
 
     return bRet;
 }

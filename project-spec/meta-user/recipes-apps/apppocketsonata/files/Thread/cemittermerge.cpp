@@ -125,7 +125,7 @@ void CEmitterMerge::MergeEmitter()
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
         strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
-        SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         ++ pLOBData;
     }

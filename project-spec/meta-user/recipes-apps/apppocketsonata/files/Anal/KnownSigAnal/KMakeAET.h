@@ -18,7 +18,7 @@
 class CKnownSigAnal;
 
 //##ModelId=452B0C5203C8
-class CKMakeAET : public CMakeAET  
+class CKMakeAET : public CMakeAET
 {
 private :
     SRxLOBData m_LOBData[ MAX_AET+1 ];
@@ -38,7 +38,7 @@ protected :
     //SRxLOBData *m_pAet;
     //##ModelId=452B0C530009
     STR_EMITTER *m_pEmitter;
-	
+
 public:
     void UpdatePRI( SRxLOBData *pUpdAetPri );
     void UpdateFreq( SRxLOBData *pUpdAetFrq );
@@ -292,14 +292,14 @@ public:
         else if( pAet1->pri.type == _JITTER && pAet2->pri.type == _PATTERN ) {
         nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
 
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
                         return 0;
                 return nHarmonic;
         }
         else if( pAet1->pri.type == _PATTERN && pAet2->pri.type == _JITTER ) {
         nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
 
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
                         return 0;
                 return nHarmonic;
         }

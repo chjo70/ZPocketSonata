@@ -2761,7 +2761,7 @@ UINT CAnalPRI::CheckHarmonicPW( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 )
 //
 BOOL CAnalPRI::CheckPW( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 )
 {
-    if( 0 != CalOverlapSpace( pEmitter1->pw.max, pEmitter1->pw.min, pEmitter2->pw.max, pEmitter2->pw.min ) )
+    if( 0 != CalOverlapSpace<_TOA>( pEmitter1->pw.max, pEmitter1->pw.min, pEmitter2->pw.max, pEmitter2->pw.min ) )
         return TRUE;
     else
         return FALSE;
@@ -3369,7 +3369,7 @@ void CAnalPRI::SelectMainSeg(STR_EMITTER *pEmitter)
         for( i=0 ; i < pEmitter->seg_count ; ++i ) {
             pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
 
-            if( CalOverlapSpace64( pri.max, pri.min, pSeg->pri.max, pSeg->pri.min ) != 0 ) {
+            if( CalOverlapSpace<_TOA>( pri.max, pri.min, pSeg->pri.max, pSeg->pri.min ) != 0 ) {
                 if( max_count < pSeg->pdw.count ) {
                     pEmitter->main_seg = pEmitter->seg_idx[i];
                     max_count = pSeg->pdw.count;
@@ -4652,7 +4652,7 @@ BOOL CAnalPRI::SelectMainEmitter(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2,
         pSegPri1 = & m_pSeg[ pEmitter1->main_seg ].pri;
         pSegPri2 = & m_pSeg[ pEmitter2->main_seg ].pri;
 
-        if( 0 != CalOverlapSpace64( pSegPri1->max, pSegPri1->min, pSegPri2->max, pSegPri2->min ) ) {
+        if( 0 != CalOverlapSpace<_TOA>( pSegPri1->max, pSegPri1->min, pSegPri2->max, pSegPri2->min ) ) {
             if( pEmitter1->pdw.count > pEmitter2->pdw.count ) {
                 return TRUE;
             }
@@ -5111,7 +5111,7 @@ BOOL CAnalPRI::OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *p
 
     // 겹쳐진 영역중에서 누락 펄스열이 많이 존재하면 겹쳐지지 않은 것으로 해야 한다.
     //-- 조철희 2006-02-06 14:34:59 --//
-    if( 0 != CalOverlapSpace( pSeg1->last_idx, pSeg1->first_idx, pSeg2->last_idx, pSeg2->first_idx ) ) {
+    if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->last_idx, pSeg1->first_idx, pSeg2->last_idx, pSeg2->first_idx ) ) {
         if( pSeg1->last_idx < pSeg2->last_idx )
             overlapToa = pSeg1->last_toa - pSeg2->first_toa;
         else
@@ -5132,69 +5132,6 @@ BOOL CAnalPRI::OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *p
 
     return FALSE;
 }
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CAnalPRI::CompMeanDiff
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-01-03 17:19:58
-        \warning
-*/
-// BOOL CAnalPRI::CompMeanDiff(int x, int y, int thresh)
-// {
-//   int diff;
-//
-//   diff = _diffabs( x, y );
-//
-//   if( diff <= thresh )
-//     return TRUE;
-//   else
-// 		return FALSE;
-// }
-
-// BOOL CAnalPRI::CompMeanDiff64(_TOA x, _TOA y, _TOA thresh)
-// {
-// 	_TOA diff;
-//
-// 	diff = _diffabs( x, y );
-//
-// 	if( diff <= thresh )
-// 		return TRUE;
-// 	else
-// 		return FALSE;
-// }
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CAnalPRI::CompMarginDiff
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y1 인자형태 int
-        \param    y2 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-01-03 17:20:26
-        \warning
-*/
-// BOOL CAnalPRI::CompMarginDiff(int x, int y1, int y2, int thresh)
-// {
-//   if( x >= y1-thresh && x <= y2+thresh )
-// 		return TRUE;
-//   else
-//     return FALSE;
-// }
-
-// BOOL CAnalPRI::CompMarginDiff64(_TOA x, _TOA y1, _TOA y2, _TOA thresh)
-// {
-// 	if( x >= y1-thresh && x <= y2+thresh )
-// 		return TRUE;
-// 	else
-// 		return FALSE;
-// }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CAnalPRI::IMeanInArray
@@ -5240,64 +5177,6 @@ float CAnalPRI::MeanInArray(UINT *series, UINT co)
     }
 
     return ( (float) sum / (float) co );
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CAnalPRI::CalOverlapSpace
-        \author   조철희
-        \param    hgh1 인자형태 int
-        \param    low1 인자형태 int
-        \param    hgh2 인자형태 int
-        \param    low2 인자형태 int
-        \return   UINT
-        \version  0.0.1
-        \date     2008-01-03 17:22:14
-        \warning
-*/
-UINT CAnalPRI::CalOverlapSpace(int hgh1, int low1, int hgh2, int low2)
-{
-    if( hgh1 < low2 || hgh2 < low1 )				// |-------|		|--------|
-        return 0;															//			 |---|
-
-    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
-        return 1;
-
-  if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-    return hgh1 - low1 + 1;								//    |------------------|
-
-    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
-        return hgh2 - low2 + 1;			 					//          |--------|
-
-  if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-     return ( hgh2 - low1 + 1);     			//    |-----------|
-
-  if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        return ( hgh1 - low2 + 1 );						//          |------------|
-
-    return 0;
-}
-
-_TOA CAnalPRI::CalOverlapSpace64(_TOA hgh1, _TOA low1, _TOA hgh2, _TOA low2)
-{
-    if( hgh1 < low2 || hgh2 < low1 )				// |-------|		|--------|
-        return 0;															//			 |---|
-
-    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
-        return 1;
-
-    if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-        return hgh1 - low1 + 1;								//    |------------------|
-
-    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
-        return hgh2 - low2 + 1;			 					//          |--------|
-
-    if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-        return ( hgh2 - low1 + 1);     			//    |-----------|
-
-    if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        return ( hgh1 - low2 + 1 );						//          |------------|
-
-    return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////

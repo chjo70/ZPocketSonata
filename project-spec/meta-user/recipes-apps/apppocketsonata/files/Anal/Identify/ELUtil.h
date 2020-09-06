@@ -23,7 +23,6 @@
 
 BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );
-BOOL CompMarginDiffFFF( float x, float fy1, float fy2, float thresh );
 BOOL CompAoaDiff( float x, float y, float fthresh );
 float AoaDiff( float x, float y);
 void LogPrint( const char *format, ... );

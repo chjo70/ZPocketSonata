@@ -24,6 +24,8 @@
 #include "./SigAnal/_Macro.h"
 #include "./SigAnal/_Struct.h"
 
+#include "./Identify/ELUtil.h"
+
 
 // 기본 클래스 헤더 파일 추가함.
 //#include "./TASK/ManTsk.h"

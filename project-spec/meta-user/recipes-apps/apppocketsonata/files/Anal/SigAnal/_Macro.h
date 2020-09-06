@@ -1,7 +1,7 @@
 ﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
-	\version  0.0.1
+    \version  0.0.1
 */
 
 #ifndef  _MACRO_H
@@ -84,12 +84,12 @@ template <typename T>
 T _diffabs( T x, T y)
 {
 
-	if (x > y) {
-		return x - y;
-	}
-	else {
-		return y - x;
-	}
+    if (x > y) {
+        return x - y;
+    }
+    else {
+        return y - x;
+    }
 
 }
 
@@ -134,11 +134,11 @@ T _diffabs( T x, T y)
 #define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
 #define PWCNV( A )				IDIV( A, _spOneNanosec )
-#define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
-#define FPWCNV( A )             FMUL( (A), _spOneMicrosec )
+#define IPWCNV( A )				IMUL( (A), _spOneNanosec )
+#define FPWCNV( A )             FMUL( (A), _spOneNanosec )
 
-#define IPWCNVLOW( A )			F_MUL( (A), _spOneMicrosec )
-#define IPWCNVHGH( A )			C_MUL( (A), _spOneMicrosec )
+#define IPWCNVLOW( A )			F_MUL( (A), _spOneNanosec )
+#define IPWCNVHGH( A )			C_MUL( (A), _spOneNanosec )
 
 #define AOACNV( A )             IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
