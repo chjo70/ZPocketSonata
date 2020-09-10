@@ -41,12 +41,11 @@ private:
     void Init();
     void AnalysisStart();
 
-    void CloseDetectCollectBank();
-    void CloseTrackCollectBank();
-    void CloseScanCollectBank();
-    void CloseUserCollectBank();
+    void CloseCollectBank();
+    void SetupDetectCollectBank();
 
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
+
 
     void ReqSetWindowCell();
     void ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh );

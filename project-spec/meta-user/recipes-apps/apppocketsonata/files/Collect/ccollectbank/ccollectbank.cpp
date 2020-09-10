@@ -1,4 +1,8 @@
+
+
 #include <string.h>
+
+#include "../../Anal/OFP_Main.h"
 
 using namespace std;
 
@@ -6,8 +10,6 @@ using namespace std;
 
 #include "ccollectbank.h"
 #include "../../Utils/clog.h"
-
-
 
 //
 
@@ -53,6 +55,7 @@ void CCollectBank::Init()
 void CCollectBank::InitWindowCell()
 {
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
+
     // 큐가 생성되지 않았으면 한번 수행하여 ID를 저장한다.
     if( m_theQueueWindowCellID.Count() == 0 && m_iTotalChannels >= 2 ) {
         m_theQueueWindowCellID.Init( m_iTotalChannels );
@@ -88,6 +91,9 @@ void CCollectBank::CloseCollectBank()
     // 구조체 초기화 한다.
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
+    m_strWindowCell.enCollectMode = enCollecting;
+
+    m_strPDW.uiTotalPDW = 0;
 
 }
 
@@ -119,6 +125,60 @@ void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
 
     // 수집 완료 마킹함.
     m_strWindowCell.enCollectMode = enCompleteCollection;
+
+}
+
+/**
+ * @brief CCollectBank::SimCollectMode
+ */
+void CCollectBank::SimCollectMode()
+{
+    unsigned int uiMaxCollectTimeSec, uiMaxCollectTimeMSec;
+    struct timespec tsNow;
+
+    switch( m_strWindowCell.enCollectMode ) {
+        case enUnused:
+            break;
+
+        case enCollecting :
+            uiMaxCollectTimeSec = F_UDIV( m_strWindowCell.uiMaxCollectTimems, 1000 ) + 1;
+            uiMaxCollectTimeMSec = m_strWindowCell.uiMaxCollectTimems - ( uiMaxCollectTimeSec - 1 ) * 1000;
+            clock_gettime( CLOCK_REALTIME, & tsNow );
+            if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW || \
+                difftime( tsNow.tv_sec, m_strWindowCell.tsCollectStart.tv_sec ) >= uiMaxCollectTimeSec || \
+                round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
+                printf( "[%ld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
+
+                m_strWindowCell.enCollectMode = enCompleteCollection;
+            }
+            break;
+
+        case enCompleteCollection :
+            break;
+
+        case enAnalysing :
+            break;
+    }
+
+}
+
+/**
+ * @brief CCollectBank::PushPDWData
+ * @param pstPDW
+ */
+void CCollectBank::PushPDWData( _PDW *pstPDW )
+{
+
+    if( m_strPDW.uiTotalPDW+1 < _MAX_PDW ) {
+        memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], pstPDW, sizeof(_PDW) );
+
+        ++ m_strPDW.uiTotalPDW;
+    }
+    else {
+        printf( "PDW 데이터가 꽉 참 !!" );
+    }
+
+    SimCollectMode();
 
 }
 
