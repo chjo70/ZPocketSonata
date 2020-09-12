@@ -133,6 +133,7 @@ void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
  */
 void CCollectBank::SimCollectMode()
 {
+    _TOA msDTOA=0;
     unsigned int uiMaxCollectTimeSec, uiMaxCollectTimeMSec;
     struct timespec tsNow;
 
@@ -144,19 +145,33 @@ void CCollectBank::SimCollectMode()
             uiMaxCollectTimeSec = F_UDIV( m_strWindowCell.uiMaxCollectTimems, 1000 ) + 1;
             uiMaxCollectTimeMSec = m_strWindowCell.uiMaxCollectTimems - ( uiMaxCollectTimeSec - 1 ) * 1000;
             clock_gettime( CLOCK_REALTIME, & tsNow );
-            if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW || \
-                difftime( tsNow.tv_sec, m_strWindowCell.tsCollectStart.tv_sec ) >= uiMaxCollectTimeSec || \
-                round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
-                printf( "[%ld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
+            if( m_strPDW.uiTotalPDW >= _spTwo ) {
+                msDTOA = m_strPDW.stPDW[m_strPDW.uiTotalPDW-1].llTOA - m_strPDW.stPDW[0].llTOA;
+            }
 
+            if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
+            else if( msDTOA >= ITOAmsCNV( m_strWindowCell.uiMaxCollectTimems ) ) {
+                m_strWindowCell.enCollectMode = enCompleteCollection;
+            }
+            else if( difftime( tsNow.tv_sec, m_strWindowCell.tsCollectStart.tv_sec ) >= 60 ) {
+                m_strWindowCell.enCollectMode = enCompleteCollection;
+            }
+
+            //round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
+            //printf( "[%ld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
+
+            //m_strWindowCell.enCollectMode = enCompleteCollection;
             break;
 
         case enCompleteCollection :
             break;
 
         case enAnalysing :
+            break;
+
+        default :
             break;
     }
 

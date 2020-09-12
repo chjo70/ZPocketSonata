@@ -549,7 +549,7 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheTrackCollectBank[uj];
             pWindowCell = pCollectBank->GetWindowCell();
-            if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
+            if( IsFiltered(pstPDW, pWindowCell ) == true ) {
                 pCollectBank->PushPDWData( pstPDW );
                 uiTrackCh = uj + DETECT_CHANNEL;
             }
@@ -560,11 +560,11 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
             for( uj=0 ; uj < DETECT_CHANNEL ; ++uj ) {
                 pCollectBank = m_pTheDetectCollectBank[uj];
                 pWindowCell = pCollectBank->GetWindowCell();
-                if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
+                if( IsFiltered(pstPDW, pWindowCell ) == true ) {
                     pCollectBank->PushPDWData( pstPDW );
                     uiDetectCh = uj;
 
-                    //pCollectBank->SimCollectMode();
+                    pCollectBank->SimCollectMode();
                 }
             }
 
@@ -598,10 +598,12 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
  */
 bool CSignalCollect::IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell )
 {
-    bool bRet;
+    bool bRet=false;
 
-    bRet = CompMarginDiff<int>( pstPDW->iFreq, pWindowCell->strFreq.iLow, pWindowCell->strFreq.iHgh, 10 ) && \
-           CompMarginDiff<int>( pstPDW->iPW, pWindowCell->strPW.iLow, pWindowCell->strPW.iHgh, 10 );
+    if( pWindowCell->bUse == true && pWindowCell->enCollectMode == enCollecting ) {
+        bRet = CompMarginDiff<int>( pstPDW->iFreq, pWindowCell->strFreq.iLow, pWindowCell->strFreq.iHgh, 10 ) && \
+               CompMarginDiff<int>( pstPDW->iPW, pWindowCell->strPW.iLow, pWindowCell->strPW.iHgh, 10 );
+    }
 
     return bRet;
 }

@@ -4163,9 +4163,9 @@ void CPulExt::PrintAllSeg()
 void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
 {
     int i, iCnt=0;
-    char szBuffer[500];
+    char szBuffer[5000];
 
-    for( i=1 ; i < pSeg->pdw.count && i < 300 ; ++i ) {
+    for( i=1 ; i < pSeg->pdw.count && i < m_nMaxPdw ; ++i ) {
 #ifdef _WIN32
         iCnt += sprintf_s( & szBuffer[iCnt], sizeof(szBuffer)-iCnt, ",%3d" , pSeg->pdw.pIndex[i] );
 #else

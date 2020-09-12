@@ -70,16 +70,15 @@ extern float _frqRes[2];
 
 
 
-#define _max(a,b)               ( ( (int)(a) > (int)(b) ) ? (a) : (b) )
-#define _min(a,b)               ( ( (int)(a) < (int)(b) ) ? (a) : (b) )
-
-
-
+#define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
+#define _min(a,b)               ( ( (a) < (b) ) ? (a) : (b) )
 
 
 #define BIT_MERGE(high,low)     ( ( ((UINT)high) << 8 ) | low )
 
-//#define _diffabs(a, b)          ( (a) > (b) ? (a)-(b) : (b)-(a) )
+
+
+
 template <typename T>
 T _diffabs( T x, T y)
 {
@@ -130,6 +129,7 @@ T _diffabs( T x, T y)
 
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
