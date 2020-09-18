@@ -27,12 +27,11 @@ public:
 
 private:
     void Init();
-
     void InitWindowCell();
-    void UpdateWindowCell();
 
 public:
     void CloseCollectBank();
+    void UpdateWindowCell();
 
     void SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL );
 

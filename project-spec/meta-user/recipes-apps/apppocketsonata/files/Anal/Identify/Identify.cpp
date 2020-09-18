@@ -2238,8 +2238,7 @@ void CELSignalIdentifyAlg::CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIA
         //pIAetAnal->usPriorityLevel = 0;
 
     }
-    else {
-        int i, j;
+    else {        int i, j;
         SRadarMode* pRadarMode;
         //STR_CEDEOB_RESULT *pCEDEOBResult;
 

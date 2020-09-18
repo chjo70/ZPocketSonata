@@ -42,11 +42,13 @@ private:
     void AnalysisStart();
 
     void CloseCollectBank();
-    void SetupDetectCollectBank();
+    void SetupDetectCollectBank( int iCh );
 
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
 
+    void SendEndCollect();
 
+    // 윈도우셀 모의
     void ReqSetWindowCell();
     void ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh );
     void NewTrackWindowCell( SRxABTData *pABTData );

@@ -217,7 +217,7 @@ void CGroup::MakePDWArray( _PDW *pdw, int count )
 bool CGroup::MakePDWArray( _PDW *pdw, int count )
 {
     int i;
-    _PDW temp, prev;
+    _TOA templlTOA, prevllTOA;
 
     BOOL flagBand;
 
@@ -245,25 +245,25 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
     pMaxChannel = &MAXCHANNEL[0];
 
     // 첫번째 TOA 얻기
-    prev.llTOA = temp.llTOA = pdw->llTOA;
+    prevllTOA = templlTOA = pdw->llTOA;
 
     flagBand = FALSE;
 
     for( i=0 ; i < count ; ++i, ++pdw )	{
-        temp.llTOA = pdw->llTOA;
+        templlTOA = pdw->llTOA;
 
         if( flagBand == FALSE ) {
             flagBand = TRUE;
-            firstToaBand = temp.llTOA;
+            firstToaBand = templlTOA;
         }
 
-        if( temp.llTOA < prev.llTOA ) {
+        if( templlTOA < prevllTOA ) {
             bRet = false;
             continue;
         }
-        prev.llTOA = temp.llTOA;
+        prevllTOA = templlTOA;
 
-        *pToa++ = temp.llTOA - firstToaBand;
+        *pToa++ = templlTOA - firstToaBand;
 
         *pStat++ = pdw->iPulseType;
         *pPa++   = pdw->iPA;

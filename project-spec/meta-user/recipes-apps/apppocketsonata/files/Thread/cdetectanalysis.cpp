@@ -1,5 +1,6 @@
 #include "cdetectanalysis.h"
 #include "cemittermerge.h"
+#include "csignalcollect.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
@@ -73,7 +74,11 @@ void CDetectAnalysis::_routine()
         }
         else {
         switch( m_pMsg->ucOpCode ) {
-            case enTHREAD_ANAL_START :
+            case enTHREAD_DETECTANAL_START :
+                AnalysisStart();
+                break;
+
+            case enTHREAD_KNOWNANAL_START :
                 AnalysisStart();
                 break;
 
@@ -108,6 +113,7 @@ void CDetectAnalysis::AnalysisStart()
 
     // 2. 탐지 신호 분석을 호출한다.
     m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
+    SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=m_pTheNewSigAnal->GetCoLOB();
@@ -117,7 +123,7 @@ void CDetectAnalysis::AnalysisStart()
 
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
-        EMTMRG->QMsgSnd( enTHREAD_ANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
     }
 
 }

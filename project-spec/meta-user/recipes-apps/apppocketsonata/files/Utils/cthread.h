@@ -125,7 +125,8 @@ public:
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0 );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
-
+    void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
+    void QMsgSnd( unsigned int uiOpCode );
 
     inline key_t GetKeyId() { return m_MsgKeyID; }
 

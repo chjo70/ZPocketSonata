@@ -149,7 +149,7 @@ void CTaskMngr::_routine()
                     SetMode();
                     break;
 
-                case enTHREAD_ANAL_START :
+                case enTHREAD_DETECTANAL_START :
                     AnalysisStart();
                     break;
 

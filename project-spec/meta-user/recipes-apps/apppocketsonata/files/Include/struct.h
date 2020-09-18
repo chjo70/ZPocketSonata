@@ -105,6 +105,7 @@ struct STR_WINDOWCELL {
     * @brief 최대 수집 게수 및 수집 시간
     */
     unsigned int uiMaxCoPDW;
+    unsigned int uiMaxCollectTimesec;         // 최대 수집 시간 [s]
     unsigned int uiMaxCollectTimems;          // 최대 수집 시간 [ms]
 
     STR_LOWHIGH strAoa;

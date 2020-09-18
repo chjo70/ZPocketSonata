@@ -84,3 +84,32 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
 
     return bRet;
 }
+
+/**
+ * @brief CCommonUtils::timespec_diff
+ * @param result
+ * @param start
+ * @param stop
+ */
+void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop )
+{
+    struct timespec tsNow;
+
+    if( stop != NULL ) {
+        tsNow.tv_sec = stop->tv_sec;
+        tsNow.tv_nsec = stop->tv_nsec;
+    }
+    else {
+        clock_gettime( CLOCK_REALTIME, & tsNow );
+    }
+
+    if ((tsNow.tv_nsec - start->tv_nsec) < 0) {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
+        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
+    } else {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec;
+        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec;
+    }
+
+    return;
+}

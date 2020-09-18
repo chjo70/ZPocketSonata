@@ -13,6 +13,7 @@ public:
     static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
     static bool IsValidLanData( STR_MessageData *pMsg );
     static bool IsValidThread( STR_MessageData *pMsg );
+    static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
 };
 

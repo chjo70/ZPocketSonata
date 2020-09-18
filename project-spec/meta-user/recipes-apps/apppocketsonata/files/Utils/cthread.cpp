@@ -219,6 +219,28 @@ void CThread::QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData, int iByte )
 /**
  * @brief CThread::QMsgSnd
  * @param uiOpCode
+ * @param pData
+ * @param uiDataLength
+ */
+void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength )
+{
+
+    QMsgSnd( uiOpCode, NULL, 0, pData, uiDataLength );
+}
+
+/**
+ * @brief CThread::QMsgSnd
+ * @param uiOpCode
+ */
+void CThread::QMsgSnd( unsigned int uiOpCode )
+{
+
+    QMsgSnd( uiOpCode, NULL, 0, NULL, 0 );
+}
+
+/**
+ * @brief CThread::QMsgSnd
+ * @param uiOpCode
  * @param pArrayMsgData
  * @param uiLength
  */

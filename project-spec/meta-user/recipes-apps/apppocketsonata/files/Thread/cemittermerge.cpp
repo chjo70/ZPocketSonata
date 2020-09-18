@@ -63,7 +63,7 @@ void CEmitterMerge::_routine()
         }
         else {
             switch( m_pMsg->ucOpCode ) {
-                case enTHREAD_ANAL_START :
+                case enTHREAD_DETECTANAL_START :
                     MergeEmitter();
                     break;
 

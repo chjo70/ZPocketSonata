@@ -128,6 +128,7 @@ T _diffabs( T x, T y)
 #define IFRQMhzHGH( A )         C_IDIV( (A), ( gFreqRes[0].res ) )
 
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
+#define TOAmsCNV( A )           IDIV( (A), _spOneMilli )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
