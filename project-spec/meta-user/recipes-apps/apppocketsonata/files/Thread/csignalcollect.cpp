@@ -8,6 +8,7 @@
 #include "../Utils/clog.h"
 
 #include "cdetectanalysis.h"
+#include "cemittermerge.h"
 #include "ctrackanalysis.h"
 #include "cscananalysis.h"
 
@@ -130,6 +131,7 @@ void CSignalCollect::_routine()
 
                 case enTHREAD_REQ_SETWINDOWCELL :
                     ReqSetWindowCell();
+
                     break;
 
                 // 모의 명령 처리
@@ -146,7 +148,6 @@ void CSignalCollect::_routine()
             // 신호 수집은 여기서 수행한다.
             if( bRunCollecting == true ) {
                 AnalysisStart();
-                SendEndCollect();
             }
         }
     }
@@ -160,7 +161,12 @@ void CSignalCollect::_routine()
  */
 void CSignalCollect::SendEndCollect()
 {
-    //DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+    if( m_bSendEnd == false ) {
+        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END );
+
+        m_bSendEnd = true;
+    }
+
 }
 
 /**
@@ -250,17 +256,18 @@ void CSignalCollect::AnalysisStart()
             STR_COLLECTINFO strCollectInfo;
 
             strCollectInfo.uiTotalPDW = m_pTheDetectCollectBank[0]->GetTotalPDW();
-            if( strCollectInfo.uiTotalPDW < (7) ) {
+            if( strCollectInfo.uiTotalPDW >= (7) ) {
                 strCollectInfo.uiCh = iCh;
                 DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             }
+
             bIsOut = false;
         }
 
         // 추적 채널 버퍼 체크
         iCh = CheckCollectBank( enTrackCollectBank );
         if( iCh >= 0 ) {
-            QMsgSnd( TRKANL->GetKeyId(), enTHREAD_DETECTANAL_START, & iCh, sizeof(int) );
+            QMsgSnd( TRKANL->GetKeyId(), enTHREAD_KNOWNANAL_START, & iCh, sizeof(int) );
             bIsOut = false;
         }
 
@@ -295,32 +302,34 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
 {
     int i, iCh=-1;
 
-    struct timespec tsDiff;
-
     CCollectBank *pCollectBank;
     STR_WINDOWCELL *pWindowCell;
 
     // 채널을 랜덤 또는 증가/감소 교대로 번갈아 가며 체크한다.
     switch( enCollectBank ) {
         case enDetectCollectBank :
+            ClearEndCollect();
+
             for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
                 pCollectBank = m_pTheDetectCollectBank[i];
                 if( true == pCollectBank->IsCompleteCollect() ) {
-                    pCollectBank->SetCollectMode( enCompleteCollection );
-                    iCh = pCollectBank->GetChannelNo();
+                    pWindowCell = pCollectBank->GetWindowCell();
+                    iCh = pWindowCell->iChannelNo;
+                    LOGMSG4( enDebug, "%s [%2d]뱅크/[%2d]채널 에서 수집 완료되었습니다 [%d]." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiAccumulatedCoUsed );
 
-                    LOGMSG3( enDebug, "%s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
+                    pCollectBank->SetCollectMode( enCompleteCollection );
+
+                    SendEndCollect();
                     break;
                 }
                 else {
                     // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
-                    pWindowCell = pCollectBank->GetWindowCell();
+                    //pWindowCell = pCollectBank->GetWindowCell();
 
-                    CCommonUtils::DiffTimespec( & tsDiff, & pWindowCell->tsCollectStart );
+                    //pCollectBank->UpdateWindowCell();
 
-                    if( tsDiff.tv_sec >= ( pWindowCell->uiMaxCollectTimesec+1) || tsDiff.tv_nsec >= pWindowCell->uiMaxCollectTimems * 1000000 ) {
-                        pCollectBank->UpdateWindowCell();
-                    }
+                    //SendEndCollect();
+
                 }
 
             }
@@ -334,7 +343,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
+                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh );
                     break;
                 }
             }
@@ -345,7 +354,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == m_pTheScanCollectBank[i]->IsCompleteCollect() ) {
                     iCh = m_pTheScanCollectBank[i]->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
+                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enScanCollectBank], i, iCh );
                     break;
                 }
             }

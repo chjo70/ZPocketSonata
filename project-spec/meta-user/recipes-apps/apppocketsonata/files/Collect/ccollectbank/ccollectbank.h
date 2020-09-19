@@ -27,13 +27,16 @@ public:
 
 private:
     void Init();
+
     void InitWindowCell();
 
 public:
     void CloseCollectBank();
     void UpdateWindowCell();
+    bool IsCompleteCollect();
 
     void SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL );
+
 
     void CopyPDW();
     void PushPDWData( STR_PDWDATA *pstrArrayPDW );
@@ -42,8 +45,6 @@ public:
     ///
     void SimCollectMode();
 
-
-    inline bool IsCompleteCollect() { return m_strWindowCell.enCollectMode == enCompleteCollection; }
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }

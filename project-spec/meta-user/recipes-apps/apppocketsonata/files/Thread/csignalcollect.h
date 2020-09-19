@@ -32,6 +32,8 @@ private:
     STR_WINDOWCELL *m_pStrWindowCell;
     CCollectBank *m_pTheCollectBank;
 
+    bool m_bSendEnd;
+
 public:
     static CSignalCollect *pInstance;
 
@@ -61,6 +63,8 @@ private:
     void SimPDWData();
     unsigned int SimFilter( STR_PDWDATA *pPDWData );
     bool IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell );
+
+    inline void ClearEndCollect() { m_bSendEnd = false; }
 
     ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
         ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;

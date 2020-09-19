@@ -11,6 +11,8 @@ using namespace std;
 #include "ccollectbank.h"
 #include "../../Utils/clog.h"
 
+#include "../../Utils/ccommonutils.h"
+
 //
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -212,5 +214,28 @@ void CCollectBank::UpdateWindowCell()
 
     // 누적 사용 채널 횟수 업데이트
     m_strWindowCell.uiAccumulatedCoUsed += 1;
+
+    clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
+
+}
+
+/**
+ * @brief CCollectBank::IsCompleteCollect
+ * @return
+ */
+bool CCollectBank::IsCompleteCollect()
+{
+    bool bRet=false;
+    struct timespec tsDiff;
+
+    if( m_strWindowCell.bUse == true && m_strWindowCell.enCollectMode == enCollecting ) {
+        CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
+
+        if( tsDiff.tv_sec >= ( m_strWindowCell.uiMaxCollectTimesec+1) || tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) {
+            bRet = true;
+        }
+    }
+
+    return bRet;   //m_strWindowCell.enCollectMode == enCompleteCollection;
 
 }

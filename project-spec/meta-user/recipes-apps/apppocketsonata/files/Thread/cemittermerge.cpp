@@ -76,6 +76,10 @@ void CEmitterMerge::_routine()
                     LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
                     break;
 
+                case enTHREAD_DETECTANAL_END :
+                    LOGMSG( enDebug, "수집 쓰레드로부터 탐지 필터판 수집 완료를 수신했습니다." );
+                    break;
+
                 default:
                     LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
                     break;
