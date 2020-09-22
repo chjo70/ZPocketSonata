@@ -29,7 +29,6 @@ private:
 
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
-    STR_WINDOWCELL *m_pStrWindowCell;
     CCollectBank *m_pTheCollectBank;
 
     bool m_bSendEnd;
@@ -52,13 +51,11 @@ private:
 
     // 윈도우셀 모의
     void ReqSetWindowCell();
-    void ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh );
     void NewTrackWindowCell( SRxABTData *pABTData );
     void StartTrackWindowCell();
-    void CalTrackWindowCell( SRxABTData *pABTData );
+    void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
     void UpdateTrackWindowCell( SRxABTData *pABTData );
     bool IsValidChannle();
-
 
     void SimPDWData();
     unsigned int SimFilter( STR_PDWDATA *pPDWData );

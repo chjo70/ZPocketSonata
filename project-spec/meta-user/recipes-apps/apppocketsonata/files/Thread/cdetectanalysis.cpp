@@ -113,7 +113,7 @@ void CDetectAnalysis::AnalysisStart()
 
     // 2. 탐지 신호 분석을 호출한다.
     m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
-    SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
+    //SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=m_pTheNewSigAnal->GetCoLOB();

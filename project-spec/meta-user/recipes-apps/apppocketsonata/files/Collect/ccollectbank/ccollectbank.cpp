@@ -10,6 +10,7 @@ using namespace std;
 
 #include "ccollectbank.h"
 #include "../../Utils/clog.h"
+#include "../../Utils/ccommonutils.h"
 
 #include "../../Utils/ccommonutils.h"
 
@@ -136,28 +137,29 @@ void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
 void CCollectBank::SimCollectMode()
 {
     _TOA msDTOA=0;
-    unsigned int uiMaxCollectTimeSec, uiMaxCollectTimeMSec;
-    struct timespec tsNow;
+
+    struct timespec tsDiff;
 
     switch( m_strWindowCell.enCollectMode ) {
         case enUnused:
             break;
 
         case enCollecting :
-            uiMaxCollectTimeSec = F_UDIV( m_strWindowCell.uiMaxCollectTimems, 1000 ) + 1;
-            uiMaxCollectTimeMSec = m_strWindowCell.uiMaxCollectTimems - ( uiMaxCollectTimeSec - 1 ) * 1000;
-            clock_gettime( CLOCK_REALTIME, & tsNow );
+            CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
+
             if( m_strPDW.uiTotalPDW >= _spTwo ) {
                 msDTOA = m_strPDW.stPDW[m_strPDW.uiTotalPDW-1].llTOA - m_strPDW.stPDW[0].llTOA;
             }
 
+            // 개수 비교
             if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
-            else if( msDTOA >= ITOAmsCNV( m_strWindowCell.uiMaxCollectTimems ) ) {
+            // 시간 비교
+            else if( TOAmsCNV( msDTOA ) >= m_strWindowCell.uiMaxCollectTimems + ( m_strWindowCell.uiMaxCollectTimesec * 1000 ) ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
-            else if( difftime( tsNow.tv_sec, m_strWindowCell.tsCollectStart.tv_sec ) >= 60 ) {
+            else if( tsDiff.tv_sec >= 60 ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
 
@@ -190,6 +192,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
         memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], pstPDW, sizeof(_PDW) );
 
         ++ m_strPDW.uiTotalPDW;
+        ++ m_strWindowCell.uiTotalPDW;
     }
     else {
         printf( "PDW 데이터가 꽉 참 !!" );
@@ -215,6 +218,9 @@ void CCollectBank::UpdateWindowCell()
     // 누적 사용 채널 횟수 업데이트
     m_strWindowCell.uiAccumulatedCoUsed += 1;
 
+    m_strWindowCell.enCollectMode = enCollecting;
+
+    // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
 }

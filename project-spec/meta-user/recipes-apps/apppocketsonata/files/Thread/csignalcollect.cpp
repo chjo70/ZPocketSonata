@@ -161,7 +161,7 @@ void CSignalCollect::_routine()
  */
 void CSignalCollect::SendEndCollect()
 {
-    if( m_bSendEnd == false ) {
+    if( m_bSendEnd == false || true ) {
         EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END );
 
         m_bSendEnd = true;
@@ -247,34 +247,51 @@ void CSignalCollect::AnalysisStart()
     int iCh;
     bool bIsOut = true;
 
+    STR_COLLECTINFO strCollectInfo;
+
+    CCollectBank *pCollectBank;
+
     while( g_AnalLoop ) {
         bIsOut = true;
 
         // 탐지 채널 버퍼 체크
         iCh = CheckCollectBank( enDetectCollectBank );
+        pCollectBank = m_pTheDetectCollectBank[iCh];
         if( iCh >= 0 ) {
-            STR_COLLECTINFO strCollectInfo;
-
-            strCollectInfo.uiTotalPDW = m_pTheDetectCollectBank[0]->GetTotalPDW();
+            strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
             if( strCollectInfo.uiTotalPDW >= (7) ) {
                 strCollectInfo.uiCh = iCh;
-                DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheDetectCollectBank[0]->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+                DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             }
+
+            // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
+            pCollectBank->UpdateWindowCell();
+
+            SendEndCollect();
 
             bIsOut = false;
         }
 
         // 추적 채널 버퍼 체크
         iCh = CheckCollectBank( enTrackCollectBank );
+        pCollectBank = m_pTheTrackCollectBank[iCh];
         if( iCh >= 0 ) {
-            QMsgSnd( TRKANL->GetKeyId(), enTHREAD_KNOWNANAL_START, & iCh, sizeof(int) );
+            strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
+            if( strCollectInfo.uiTotalPDW >= (7) ) {
+                strCollectInfo.uiCh = iCh;
+                TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+            }
+
+            // 아래는 추적 윈도우셀을 자동 재설정하도록 한다.
+            pCollectBank->UpdateWindowCell();
+
             bIsOut = false;
         }
 
         // 스캔 채널 버퍼 체크
         iCh = CheckCollectBank( enScanCollectBank );
         if( iCh >= 0 ) {
-            QMsgSnd( SCANANL->GetKeyId(), enTHREAD_DETECTANAL_START, & iCh, sizeof(int) );
+            //QMsgSnd( SCANANL->GetKeyId(), enTHREAD_DETECTANAL_START, & pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             bIsOut = false;
         }
 
@@ -308,8 +325,6 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
     // 채널을 랜덤 또는 증가/감소 교대로 번갈아 가며 체크한다.
     switch( enCollectBank ) {
         case enDetectCollectBank :
-            ClearEndCollect();
-
             for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
                 pCollectBank = m_pTheDetectCollectBank[i];
                 if( true == pCollectBank->IsCompleteCollect() ) {
@@ -319,7 +334,6 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
 
-                    SendEndCollect();
                     break;
                 }
                 else {
@@ -340,10 +354,12 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 pCollectBank = m_pTheTrackCollectBank[i];
 
                 if( true == pCollectBank->IsCompleteCollect() ) {
-                    pCollectBank->SetCollectMode( enCompleteCollection );
-                    iCh = pCollectBank->GetChannelNo();
+                    pWindowCell = pCollectBank->GetWindowCell();
+                    iCh = pWindowCell->iChannelNo;
 
                     LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh );
+
+                    pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
                 }
             }
@@ -392,33 +408,16 @@ void CSignalCollect::ReqSetWindowCell()
     LOGMSG3( enDebug, "%d 대역, %d 채널에서 분석된 %d 빔 정보를 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, pABTData->uiABTID );
 
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
-    ReqSetWindowCell( pABTData, m_pMsg->x.strAnalInfo.uiCh );
-
-}
-
-/**
- * @brief CSignalCollect::ReqSetWindowCell
- * @param pABTData
- * @param uiCh
- */
-void CSignalCollect::ReqSetWindowCell( SRxABTData *pABTData, UINT uiCh )
-{
-    //ENUM_COLLECTBANK enCollectBank;
-
-    //enCollectBank = GetCollectBank( uiCellID );
-
-    // 신규이어서 추적 채널로 생성
-    if( uiCh == _spZero ) {
+    if(  m_pMsg->x.strAnalInfo.uiCh == 0 ) {
         NewTrackWindowCell( pABTData );
 
-        StartTrackWindowCell();
+        UpdateTrackWindowCell();
     }
     // 추적 채널 업데이트한다.
     else {
         UpdateTrackWindowCell( pABTData );
 
     }
-
 }
 
 /**
@@ -434,7 +433,7 @@ void CSignalCollect::UpdateTrackWindowCell( SRxABTData *pABTData )
 /**
  * @brief CSignalCollect::StartTrackWindowCell
  */
-void CSignalCollect::StartTrackWindowCell()
+void CSignalCollect::UpdateTrackWindowCell()
 {
     m_pStrWindowCell->bUse = true;
 
@@ -481,7 +480,19 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 {
     unsigned int uiCh;
 
+    STR_WINDOWCELL strWindowCell;
+
     if( m_theTrackChannel.Pop( & uiCh ) == true ) {
+        m_pTheCollectBank = GetCollectBank( uiCh );
+
+        CalTrackWindowCell( & strWindowCell, pABTData );
+    }
+    else {
+        LOGMSG( enDebug, "추적 채널이 없습니다 !!"  );
+    }
+
+/*
+ *
         m_pTheCollectBank = GetCollectBank( uiCh );
         m_pStrWindowCell = m_pTheCollectBank->GetWindowCell();
 
@@ -489,8 +500,9 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 
     }
     else {
-        printf( "추적 채널이 없습니다 !!\n" );
+
     }
+*/
 
 }
 
@@ -498,44 +510,50 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
  * @brief CSignalCollect::CalTrackWindowCell
  * @param pABTData
  */
-void CSignalCollect::CalTrackWindowCell( SRxABTData *pABTData )
+void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData )
 {
+    UINT uiCollectTime;
+
     SRadarMode *pRadarMode;
 
     float fMinCollectTime=0;
 
-    if( m_pStrWindowCell != NULL ) {
+    if( pstrWindowCell != NULL ) {
         pRadarMode = m_pIdentifyAlg->GetRadarMode( pABTData->iRadarModeIndex );
 
-        memset( m_pStrWindowCell, 0, sizeof(STR_WINDOWCELL) );
+        memset( pstrWindowCell, 0, sizeof(STR_WINDOWCELL) );
 
-        m_pStrWindowCell->uiABTID = pABTData->uiABTID;
+        pstrWindowCell->uiABTID = pABTData->uiABTID;
 
         // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
         if( pRadarMode != NULL ) {
-            m_pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_RangeMin );
-            m_pStrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_RangeMax );
+            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_RangeMin );
+            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_RangeMax );
 
-            m_pStrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_RangeMin );
-            m_pStrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_RangeMax );
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_RangeMin );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_RangeMax );
 
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            m_pStrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMinFreq );
-            m_pStrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fMaxFreq );
+            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMinFreq );
+            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fMaxFreq );
 
-            m_pStrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMinPW );
-            m_pStrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMaxPW );
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMinPW );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMaxPW );
 
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
 
-        m_pStrWindowCell->strAoa.iLow = pABTData->fMinDOA;
-        m_pStrWindowCell->strAoa.iHgh = pABTData->fMaxDOA;
+        pstrWindowCell->strAoa.iLow = pABTData->fMinDOA;
+        pstrWindowCell->strAoa.iHgh = pABTData->fMaxDOA;
 
-        m_pStrWindowCell->uiMaxCoPDW = 100;
-        m_pStrWindowCell->uiMaxCollectTimems = 500 + fMinCollectTime;
+        pstrWindowCell->uiMaxCoPDW = 100;
+
+        uiCollectTime = UADD( 5000, fMinCollectTime );
+        pstrWindowCell->uiMaxCollectTimesec = UDIV( uiCollectTime, 1000 );
+        pstrWindowCell->uiMaxCollectTimems = uiCollectTime % 1000;
+
     }
     else {
 

@@ -114,6 +114,8 @@ void CEmitterMerge::MergeEmitter()
 
     LOGMSG3( enDebug, "%d 대역, %d 채널에서 %d 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiTotalLOB );
 
+    memcpy( & strAnalInfo, & m_pMsg->x.strAnalInfo, sizeof(STR_ANALINFO) );
+
     // 1. LOB 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
@@ -129,6 +131,7 @@ void CEmitterMerge::MergeEmitter()
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
         strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
+        strAnalInfo.uiTotalLOB = _spOne;
         SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         ++ pLOBData;
