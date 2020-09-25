@@ -87,11 +87,6 @@ struct STR_WINDOWCELL {
     unsigned int uiMode;
 
     /**
-     * @brief 채널 정보를 나타낸다. 유일한 채널이다.
-     */
-    int iChannelNo;
-
-    /**
      * @brief 수집 완료 상태를 나타낸다.
      */
     ENUM_COLLECT_MODE enCollectMode;

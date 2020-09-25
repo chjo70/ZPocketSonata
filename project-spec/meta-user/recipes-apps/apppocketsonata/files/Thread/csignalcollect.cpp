@@ -274,15 +274,20 @@ void CSignalCollect::AnalysisStart()
 
         // 추적 채널 버퍼 체크
         iCh = CheckCollectBank( enTrackCollectBank );
-        pCollectBank = m_pTheTrackCollectBank[iCh];
+        pCollectBank = m_pTheTrackCollectBank[iCh-DETECT_CHANNEL];
         if( iCh >= 0 ) {
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
+            strCollectInfo.uiCh = iCh;
+
             if( strCollectInfo.uiTotalPDW >= (7) ) {
-                strCollectInfo.uiCh = iCh;
                 TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             }
+            else {
+                // 수집 실패로 추적 LOST 메시지 전송
+                //TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+            }
 
-            // 아래는 추적 윈도우셀을 자동 재설정하도록 한다.
+            // 추적 윈도우셀을 자동 재설정 한다.
             pCollectBank->UpdateWindowCell();
 
             bIsOut = false;
@@ -329,7 +334,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 pCollectBank = m_pTheDetectCollectBank[i];
                 if( true == pCollectBank->IsCompleteCollect() ) {
                     pWindowCell = pCollectBank->GetWindowCell();
-                    iCh = pWindowCell->iChannelNo;
+                    iCh = pCollectBank->GetChannelNo();
                     LOGMSG4( enDebug, "%s [%2d]뱅크/[%2d]채널 에서 수집 완료되었습니다 [%d]." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiAccumulatedCoUsed );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
@@ -354,10 +359,9 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 pCollectBank = m_pTheTrackCollectBank[i];
 
                 if( true == pCollectBank->IsCompleteCollect() ) {
-                    pWindowCell = pCollectBank->GetWindowCell();
-                    iCh = pWindowCell->iChannelNo;
+                    iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh );
+                    LOGMSG3( enDebug, "%s 뱅크[%d]의 [%d]채널에서 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -410,14 +414,13 @@ void CSignalCollect::ReqSetWindowCell()
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
     if(  m_pMsg->x.strAnalInfo.uiCh == 0 ) {
         NewTrackWindowCell( pABTData );
-
-        UpdateTrackWindowCell();
     }
     // 추적 채널 업데이트한다.
     else {
         UpdateTrackWindowCell( pABTData );
 
     }
+
 }
 
 /**
@@ -427,48 +430,6 @@ void CSignalCollect::ReqSetWindowCell()
 void CSignalCollect::UpdateTrackWindowCell( SRxABTData *pABTData )
 {
     // 정보 업데이트
-
-}
-
-/**
- * @brief CSignalCollect::StartTrackWindowCell
- */
-void CSignalCollect::UpdateTrackWindowCell()
-{
-    m_pStrWindowCell->bUse = true;
-
-    if( IsValidChannle() == true ) {
-        m_pStrWindowCell->enCollectMode = enCollecting;
-
-    }
-
-}
-
-/**
- * @brief CSignalCollect::IsValidChannle
- */
-bool CSignalCollect::IsValidChannle()
-{
-    bool bRet=true;
-
-    switch( m_pStrWindowCell->enCollectMode ) {
-        case enUnused:
-            break;
-        case enCollecting:
-            bRet = false;
-            break;
-        case enCompleteCollection:
-            break;
-
-        default :
-            break;
-   }
-
-   if( bRet == false ) {
-       printf( "IsValidChannle\n" );
-   }
-
-   return bRet;
 
 }
 
@@ -486,23 +447,15 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
         m_pTheCollectBank = GetCollectBank( uiCh );
 
         CalTrackWindowCell( & strWindowCell, pABTData );
+
+        m_pTheCollectBank->UpdateTrackWindowCell( & strWindowCell );
+
+        LOGMSG1( enDebug, "추적 [%d]채널을 설정 합니다." , uiCh );
     }
     else {
         LOGMSG( enDebug, "추적 채널이 없습니다 !!"  );
     }
 
-/*
- *
-        m_pTheCollectBank = GetCollectBank( uiCh );
-        m_pStrWindowCell = m_pTheCollectBank->GetWindowCell();
-
-        CalTrackWindowCell( pABTData );
-
-    }
-    else {
-
-    }
-*/
 
 }
 

@@ -55,7 +55,7 @@ private:
     void StartTrackWindowCell();
     void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
     void UpdateTrackWindowCell( SRxABTData *pABTData );
-    bool IsValidChannle();
+
 
     void SimPDWData();
     unsigned int SimFilter( STR_PDWDATA *pPDWData );

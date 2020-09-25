@@ -69,8 +69,6 @@ void CCollectBank::InitWindowCell()
 
     m_theQueueWindowCellID.Pop( & m_uiID );
 
-    m_strWindowCell.iChannelNo = m_iChannelNo;
-
 }
 
 /**
@@ -97,6 +95,49 @@ void CCollectBank::CloseCollectBank()
     m_strWindowCell.enCollectMode = enCollecting;
 
     m_strPDW.uiTotalPDW = 0;
+
+}
+
+/**
+ * @brief CCollectBank::UpdateTrackWindowCell
+ */
+void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
+{
+    memcpy( & m_strWindowCell, pstrWindowCell, sizeof(STR_WINDOWCELL) );
+
+    m_strWindowCell.bUse = true;
+
+    if( IsValidChannel() == true ) {
+        m_strWindowCell.enCollectMode = enCollecting;
+
+    }
+}
+
+/**
+ * @brief CSignalCollect::IsValidChannle
+ */
+bool CCollectBank::IsValidChannel()
+{
+    bool bRet=true;
+
+    switch( m_strWindowCell.enCollectMode ) {
+        case enUnused:
+            break;
+        case enCollecting:
+            bRet = false;
+            break;
+        case enCompleteCollection:
+            break;
+
+        default :
+            break;
+   }
+
+   if( bRet == false ) {
+       printf( "IsValidChannle\n" );
+   }
+
+   return bRet;
 
 }
 
@@ -220,6 +261,9 @@ void CCollectBank::UpdateWindowCell()
 
     m_strWindowCell.enCollectMode = enCollecting;
 
+    // PDW 정보 클리어
+    m_strPDW.uiTotalPDW = 0;
+
     // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
@@ -237,7 +281,8 @@ bool CCollectBank::IsCompleteCollect()
     if( m_strWindowCell.bUse == true && m_strWindowCell.enCollectMode == enCollecting ) {
         CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
-        if( tsDiff.tv_sec >= ( m_strWindowCell.uiMaxCollectTimesec+1) || tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) {
+        if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
+            ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
             bRet = true;
         }
     }

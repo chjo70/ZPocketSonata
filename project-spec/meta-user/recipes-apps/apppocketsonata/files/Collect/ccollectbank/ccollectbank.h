@@ -29,6 +29,7 @@ private:
     void Init();
 
     void InitWindowCell();
+    bool IsValidChannel();
 
 public:
     void CloseCollectBank();
@@ -41,12 +42,13 @@ public:
     void CopyPDW();
     void PushPDWData( STR_PDWDATA *pstrArrayPDW );
     void PushPDWData( _PDW *pstPDW );
+    void UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell );
 
     ///
     void SimCollectMode();
 
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
-    inline int GetChannelNo() { return m_strWindowCell.iChannelNo; }
+    inline int GetChannelNo() { return m_iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
     inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
     inline STR_PDWDATA *GetPDW() { return & m_strPDW; }
