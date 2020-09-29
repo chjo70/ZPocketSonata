@@ -36,6 +36,7 @@
 CKPulExt::CKPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -63,6 +64,8 @@ CKPulExt::~CKPulExt()
 void CKPulExt::Init()
 {
 	m_nAnalSeg = m_CoSeg;
+
+    m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 
 	/*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
 	    \date 2008-07-30 13:29:53, 조철희
@@ -183,8 +186,8 @@ void CKPulExt::KnownPulseExtract()
     //pPri = & SRxABTDatapri;
     switch( m_pTrkAet->iPRIType ) {
 		case _STABLE :
-            extRange.min_pri = m_pTrkAet->fMinPRI - STABLE_MARGIN;
-            extRange.max_pri = m_pTrkAet->fMaxPRI + STABLE_MARGIN;
+            extRange.min_pri = ITOAusCNV( m_pTrkAet->fMinPRI ) - STABLE_MARGIN;
+            extRange.max_pri = ITOAusCNV( m_pTrkAet->fMaxPRI ) + STABLE_MARGIN;
 			ExtractStablePT( & extRange, TRUE );
 			break;
 

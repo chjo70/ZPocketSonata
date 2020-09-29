@@ -215,6 +215,7 @@ struct STR_PDWDATA {
 #endif
 
     UINT uiTotalPDW;
+
     _PDW stPDW[_MAX_PDW];
 
 }  ;

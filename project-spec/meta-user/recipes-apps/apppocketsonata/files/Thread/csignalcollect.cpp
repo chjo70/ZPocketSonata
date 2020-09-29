@@ -131,7 +131,6 @@ void CSignalCollect::_routine()
 
                 case enTHREAD_REQ_SETWINDOWCELL :
                     ReqSetWindowCell();
-
                     break;
 
                 // 모의 명령 처리
@@ -278,17 +277,13 @@ void CSignalCollect::AnalysisStart()
         if( iCh >= 0 ) {
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
             strCollectInfo.uiCh = iCh;
+            strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL].uiAETID;
+            strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL].uiABTID;
 
-            if( strCollectInfo.uiTotalPDW >= (7) ) {
-                TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
-            }
-            else {
-                // 수집 실패로 추적 LOST 메시지 전송
-                //TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
-            }
+            memcpy( & m_theTrkPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
+            memcpy( & m_theTrkPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
-            // 추적 윈도우셀을 자동 재설정 한다.
-            pCollectBank->UpdateWindowCell();
+            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkPDW, sizeof(STR_TRKPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
 
             bIsOut = false;
         }
@@ -335,10 +330,12 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == pCollectBank->IsCompleteCollect() ) {
                     pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
-                    LOGMSG4( enDebug, "%s [%2d]뱅크/[%2d]채널 에서 수집 완료되었습니다 [%d]." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiAccumulatedCoUsed );
+
+                    if( pWindowCell->uiTotalPDW != _spZero ) {
+                        LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiTotalPDW );
+                    }
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
-
                     break;
                 }
                 else {
@@ -359,9 +356,10 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 pCollectBank = m_pTheTrackCollectBank[i];
 
                 if( true == pCollectBank->IsCompleteCollect() ) {
+                    pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG3( enDebug, "%s 뱅크[%d]의 [%d]채널에서 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh );
+                    LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiTotalPDW );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -409,7 +407,7 @@ void CSignalCollect::ReqSetWindowCell()
     // 랜 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
-    LOGMSG3( enDebug, "%d 대역, %d 채널에서 분석된 %d 빔 정보를 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, pABTData->uiABTID );
+    LOGMSG3( enDebug, " [%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
     if(  m_pMsg->x.strAnalInfo.uiCh == 0 ) {
@@ -429,7 +427,12 @@ void CSignalCollect::ReqSetWindowCell()
  */
 void CSignalCollect::UpdateTrackWindowCell( SRxABTData *pABTData )
 {
+    STR_WINDOWCELL strWindowCell;
+
     // 정보 업데이트
+    CalTrackWindowCell( & strWindowCell, pABTData );
+
+    m_pTheCollectBank->UpdateTrackWindowCell( & strWindowCell );
 
 }
 
@@ -444,13 +447,15 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
     STR_WINDOWCELL strWindowCell;
 
     if( m_theTrackChannel.Pop( & uiCh ) == true ) {
+        memcpy( & m_ABTData[uiCh-DETECT_CHANNEL], pABTData, sizeof(SRxABTData) );
+
         m_pTheCollectBank = GetCollectBank( uiCh );
 
         CalTrackWindowCell( & strWindowCell, pABTData );
 
         m_pTheCollectBank->UpdateTrackWindowCell( & strWindowCell );
 
-        LOGMSG1( enDebug, "추적 [%d]채널을 설정 합니다." , uiCh );
+        LOGMSG2( enDebug, " 빔 번호[%d]를 추적 [%d]채널에 설정 합니다." , pABTData->uiABTID, uiCh );
     }
     else {
         LOGMSG( enDebug, "추적 채널이 없습니다 !!"  );
@@ -498,10 +503,10 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
 
-        pstrWindowCell->strAoa.iLow = pABTData->fMinDOA;
-        pstrWindowCell->strAoa.iHgh = pABTData->fMaxDOA;
+        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fMinDOA-10 ) + _spAOAmax ) % _spAOAmax;
+        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fMaxDOA+10 ) + _spAOAmax ) % _spAOAmax;
 
-        pstrWindowCell->uiMaxCoPDW = 100;
+        pstrWindowCell->uiMaxCoPDW = KWN_COLLECT_PDW;
 
         uiCollectTime = UADD( 5000, fMinCollectTime );
         pstrWindowCell->uiMaxCollectTimesec = UDIV( uiCollectTime, 1000 );
@@ -542,7 +547,7 @@ void CSignalCollect::SimPDWData()
  * @brief CSignalCollect::SimFilter
  * @param pPDWData
  */
-unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
+void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 {
     unsigned int ui, uj;
     unsigned int uiTrackCh=0, uiScanCh=0, uiDetectCh=(unsigned int) -1;
@@ -550,16 +555,16 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
     _PDW *pstPDW;
 
     CCollectBank *pCollectBank;
-    STR_WINDOWCELL *pWindowCell;
 
     pstPDW = & pPDWData->stPDW[0];
     for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
         // 추적 채널 설정
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheTrackCollectBank[uj];
-            pWindowCell = pCollectBank->GetWindowCell();
-            if( IsFiltered(pstPDW, pWindowCell ) == true ) {
-                pCollectBank->PushPDWData( pstPDW );
+            if( pCollectBank->IsFiltered( pstPDW ) == true ) {
+                if( pCollectBank->IsSave() == true ) {
+                    pCollectBank->PushPDWData( pstPDW );
+                }
                 uiTrackCh = uj + DETECT_CHANNEL;
             }
         }
@@ -568,12 +573,11 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         if( uiTrackCh == 0 ) {
             for( uj=0 ; uj < DETECT_CHANNEL ; ++uj ) {
                 pCollectBank = m_pTheDetectCollectBank[uj];
-                pWindowCell = pCollectBank->GetWindowCell();
-                if( IsFiltered(pstPDW, pWindowCell ) == true ) {
+                if( pCollectBank->IsFiltered( pstPDW ) == true ) {
                     pCollectBank->PushPDWData( pstPDW );
                     uiDetectCh = uj;
 
-                    pCollectBank->SimCollectMode();
+                    //pCollectBank->SimCollectMode();
                 }
             }
 
@@ -582,11 +586,7 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         // 스캔 채널 설정
         for( uj=0 ; uj < SCAN_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheScanCollectBank[uj];
-            pWindowCell = pCollectBank->GetWindowCell();
-            if( pWindowCell->bUse == true && IsFiltered(pstPDW, pWindowCell ) == true ) {
-                pCollectBank->PushPDWData( pstPDW );
-                uiScanCh = uj + ( DETECT_CHANNEL + TRACK_CHANNEL );
-            }
+
 
         }
 
@@ -595,24 +595,8 @@ unsigned int CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         ++pstPDW;
     }
 
-    return uiTrackCh;
+    return;
 
 }
 
-/**
- * @brief CSignalCollect::IsFiltered
- * @param pstPDW
- * @param pWindowCell
- * @return
- */
-bool CSignalCollect::IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell )
-{
-    bool bRet=false;
 
-    if( pWindowCell->bUse == true && pWindowCell->enCollectMode == enCollecting ) {
-        bRet = CompMarginDiff<int>( pstPDW->iFreq, pWindowCell->strFreq.iLow, pWindowCell->strFreq.iHgh, 10 ) && \
-               CompMarginDiff<int>( pstPDW->iPW, pWindowCell->strPW.iLow, pWindowCell->strPW.iHgh, 10 );
-    }
-
-    return bRet;
-}

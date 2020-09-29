@@ -103,6 +103,7 @@ void CCollectBank::CloseCollectBank()
  */
 void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
 {
+
     memcpy( & m_strWindowCell, pstrWindowCell, sizeof(STR_WINDOWCELL) );
 
     m_strWindowCell.bUse = true;
@@ -111,6 +112,8 @@ void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
         m_strWindowCell.enCollectMode = enCollecting;
 
     }
+
+    UpdateWindowCell();
 }
 
 /**
@@ -239,7 +242,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
         printf( "PDW 데이터가 꽉 참 !!" );
     }
 
-    SimCollectMode();
+    //SimCollectMode();
 
 }
 
@@ -249,7 +252,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
 void CCollectBank::UpdateWindowCell()
 {
     // 수집한 PDW 개수 업데이트
-    m_strWindowCell.uiTotalPDW = m_strPDW.uiTotalPDW;
+    m_strWindowCell.uiTotalPDW = 0;
 
     m_strWindowCell.uiAccumulatedTime += m_strWindowCell.uiCollectTime;
 
@@ -281,12 +284,36 @@ bool CCollectBank::IsCompleteCollect()
     if( m_strWindowCell.bUse == true && m_strWindowCell.enCollectMode == enCollecting ) {
         CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
+        // 수집 시간 확인
         if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
             ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
+            bRet = true;
+        }
+
+        // 수집 개수 확인
+        if( m_strPDW.uiTotalPDW > m_strWindowCell.uiMaxCoPDW ) {
             bRet = true;
         }
     }
 
     return bRet;   //m_strWindowCell.enCollectMode == enCompleteCollection;
 
+}
+
+/**
+ * @brief CSignalCollect::IsFiltered
+ * @param pstPDW
+ * @param pWindowCell
+ * @return
+ */
+bool CCollectBank::IsFiltered( _PDW *pstPDW )
+{
+    bool bRet=false;
+
+    if( m_strWindowCell.bUse == true ) {
+        bRet = CompMarginDiff<int>( pstPDW->iFreq, m_strWindowCell.strFreq.iLow, m_strWindowCell.strFreq.iHgh, 10 ) && \
+               CompMarginDiff<int>( pstPDW->iPW, m_strWindowCell.strPW.iLow, m_strWindowCell.strPW.iHgh, 10 );
+    }
+
+    return bRet;
 }

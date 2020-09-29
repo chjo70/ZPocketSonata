@@ -541,6 +541,10 @@ public:
     void PrintAllABTData();
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
+    inline unsigned int GetABTID() { return m_uiABTID; }
+    inline unsigned int GetAETID() { return m_uiAETID; }
+
+    SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
 
 
 };

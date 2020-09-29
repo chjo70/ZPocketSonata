@@ -27,7 +27,7 @@
 
 // 수식 연산 정의
 #define FMUL( A, B )            ( (float) (A) * (float) (B) )
-#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
+//#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
 #define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 
 #define _TOADIV( A, B )         (_TOA) ( (double) (A) / (double) (B) + 0.5 )

@@ -1,13 +1,11 @@
 ﻿
-
-#ifndef _H_EL_MSG_DEFN
-#define _H_EL_MSG_DEFN
-
 #pragma once
 
 
 #include <vector>
 using namespace std;
+
+#include "../INC/PDW.h"
 
 #include "../Identify/ELCEDLibDataType2.h"
 
@@ -428,5 +426,11 @@ struct SCollectingList
 	SCollectingData stCollectingData[MAX_COLLECTING_LIST];
 };
 
+struct STR_TRKPDWDATA {
+    STR_PDWDATA strPDW;
 
-#endif
+    SRxABTData strABTData;
+
+}  ;
+
+

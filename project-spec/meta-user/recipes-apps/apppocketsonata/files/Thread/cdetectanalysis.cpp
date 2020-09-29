@@ -78,10 +78,6 @@ void CDetectAnalysis::_routine()
                 AnalysisStart();
                 break;
 
-            case enTHREAD_KNOWNANAL_START :
-                AnalysisStart();
-                break;
-
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                 break;
@@ -106,7 +102,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, "탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, " 탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     // 1. PDW 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
@@ -123,6 +119,7 @@ void CDetectAnalysis::AnalysisStart()
 
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+
         EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
     }
 

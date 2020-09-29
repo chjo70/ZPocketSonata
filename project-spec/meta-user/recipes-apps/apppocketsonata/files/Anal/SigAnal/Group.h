@@ -14,7 +14,7 @@
 //##ModelId=452B0C560084
 enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, MAX_STAT=16 } ;
 
-const int stStat2GrStat[16] = { 0, STAT_NORMAL, STAT_CW, 0, STAT_FMOP, 0, \
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_FMOP, 0, \
 																0, STAT_SHORTP, 0, 0, 0, 0, 0, 0, 0, \
 																0 };
 

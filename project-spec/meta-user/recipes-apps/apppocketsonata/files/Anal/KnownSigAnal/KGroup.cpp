@@ -81,7 +81,8 @@ BOOL CKGroup::MakeGroup()
 	m_nStat = stStat2GrStat[ STAT[0] ];
 #endif
 
-	MakeStatGroup( & m_Band[m_nBand] );
+
+    MakeStatGroup( & m_Band[m_nBand] );
 	CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] );
 
 	return m_AoaGroups.count != 0;	

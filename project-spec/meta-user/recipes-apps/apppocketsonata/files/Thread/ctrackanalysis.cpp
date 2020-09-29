@@ -1,4 +1,5 @@
 #include "ctrackanalysis.h"
+#include "cemittermerge.h"
 #include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
@@ -19,7 +20,15 @@ CTrackAnalysis* CTrackAnalysis::pInstance = nullptr;
  */
 CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
+    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW );
+    if( m_pTheKnownSigAnal == NULL ) {
+        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
+    }
 
+    m_pTheSysPara = new CSysPara();
+    if( m_pTheSysPara == NULL ) {
+        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
+    }
 }
 
 
@@ -28,7 +37,11 @@ CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData
  */
 CTrackAnalysis::~CTrackAnalysis(void)
 {
+    delete m_pTheKnownSigAnal;
+    m_pTheKnownSigAnal = NULL;
 
+    delete m_pTheSysPara;
+    m_pTheSysPara = NULL;
 }
 
 
@@ -62,6 +75,11 @@ void CTrackAnalysis::_routine()
         }
         else {
             switch( m_pMsg->ucOpCode ) {
+
+            case enTHREAD_KNOWNANAL_START :
+                AnalysisStart();
+                break;
+
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                 bWhile = false;
@@ -73,4 +91,37 @@ void CTrackAnalysis::_routine()
             }
         }
     }
+}
+
+/**
+ * @brief CTrackAnalysis::AnalysisStart
+ */
+void CTrackAnalysis::AnalysisStart()
+{
+    LOGENTRY;
+    unsigned int uiTotalLOB;
+
+    STR_TRKPDWDATA *pTrkPDWData;
+
+    LOGMSG3( enDebug, " 추적 분석: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
+
+    // 1. PDW 데이터를 갖고온다.
+    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+
+    // 2. 탐지 신호 분석을 호출한다.
+
+    pTrkPDWData = ( STR_TRKPDWDATA *) m_uniLanData.szFile;
+    m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData );
+
+    // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
+    STR_ANALINFO strAnalInfo;
+
+    uiTotalLOB = m_pTheKnownSigAnal->GetCoLOB();
+
+    strAnalInfo.uiTotalLOB = uiTotalLOB;
+    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+    strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
+    strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
+    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+
 }

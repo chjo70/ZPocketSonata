@@ -84,6 +84,8 @@ void CKMakeAET::Init()
 {
 	m_CoNewAet = 0;
 
+    m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
+
 	CMakeAET::Init();
 
 }
@@ -585,7 +587,7 @@ int CKMakeAET::GetCoSeg()
 //
 int CKMakeAET::GetCoEmitter()
 {
-	return m_pKnownSigAnal->GetCoEmitter();
+    return m_pKnownSigAnal->GetCoLOB();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -611,7 +613,7 @@ STR_PULSE_TRAIN_SEG *CKMakeAET::GetPulseSeg()
 //
 STR_EMITTER *CKMakeAET::GetEmitter()
 {
-	return m_pKnownSigAnal->GetEmitter();
+    return m_pKnownSigAnal->GetEmitter();
 }
 
 //////////////////////////////////////////////////////////////////////

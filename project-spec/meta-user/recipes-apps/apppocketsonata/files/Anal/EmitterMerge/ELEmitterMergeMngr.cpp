@@ -493,27 +493,6 @@ void CELEmitterMergeMngr::InitLOB()
  */
 void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fMinFreq, float fMaxFreq )
 {
-// #ifdef _LOAD_CED_LIBRARY_
-// 	if( GP_MGR_PARAM->IsIdentifyFreqBasedTask() == false ) {
-// 		m_theIdentifyAlg.LoadCEDLibrary( fMinFreq, fMaxFreq, eCEDLibType, eEOBLibType, false );
-// 	}
-// 	else {
-// 		if( strncmp( m_aucTaskID, (char *) aucTaskID, LENGTH_OF_TASK_ID ) != 0 ) {
-// 			int iStartFreq=0, iEndFreq=0;
-//
-// 			_CALL_DB( GetFreqRangeTaskDetail( & iStartFreq, & iEndFreq, (char *) aucTaskID ) );
-// 			if( iStartFreq == 0 || iEndFreq == 0 ) { //DTEC_Else
-// 				m_theIdentifyAlg.LoadCEDLibrary( fMinFreq, fMaxFreq, eCEDLibType, eEOBLibType, false );
-// 			}
-// 			else {
-// 				m_theIdentifyAlg.LoadCEDLibrary( iStartFreq, iEndFreq, eCEDLibType, eEOBLibType, true );
-//
-// 				strcpy( (char *) m_aucTaskID, (char *) aucTaskID );
-// 			}
-//
-// 		}
-// 	}
-// #else
     /*! \todo   아래를 쓰레드로 해야 함.
         \author 조철희 (churlhee.jo@lignex1.com)
         \date 	2017-08-22 22:42:45
@@ -526,8 +505,6 @@ void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fMinFreq, float
 
         DisableToLoadCEDEOBLibrary();
     }
-
-//#endif
 
 }
 
@@ -7905,8 +7882,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     SELEXTDB extDB=SELEXTDB();
 
-    printf( "InsertLOB[A%d][B%d][L%d]\n" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
-    Log( enNormal, "InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+    Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
     // 식별 정보
     if( m_pLOBOtherInfo->bUpdate == false ) {
@@ -8075,8 +8051,7 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
             pABTData = GetABTData( pTheThreat->m_nIndex );
             pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
 
-            printf( "InsertABT[A%d][B%d]\n" , pABTData->uiAETID, pABTData->uiABTID );
-            Log( enNormal, "InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
+            Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
             iIndex = pABTData->iRadarModeIndex;
             if( iIndex != 0 ) {
@@ -8266,8 +8241,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
         pAETData = GetAETData( pTheThreat->m_nIndex );
         pAETExtData = GetAETExtData( pTheThreat->m_nIndex );
 
-        printf( "InsertAET[A%d]\n" , pAETData->uiAETID );
-        Log( enNormal, "InsertAET[A%d]" , pAETData->uiAETID );
+        Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
 
         //pIDInfo = & pAETData->idInfo;
 
@@ -10916,4 +10890,18 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 #else
 
 #endif
+}
+
+/**
+ * @brief CELEmitterMergeMngr::GetABTData
+ * @param uiAETID
+ * @param uiABTID
+ * @return
+ */
+SRxABTData *CELEmitterMergeMngr::GetABTData( unsigned int uiAETID, unsigned int uiABTID )
+{
+    CELThreat *pABTTheThreat;
+
+    pABTTheThreat = m_pTheThreatRoot->Find( uiAETID, uiABTID );
+    return GetABTData( pABTTheThreat->m_nIndex );
 }

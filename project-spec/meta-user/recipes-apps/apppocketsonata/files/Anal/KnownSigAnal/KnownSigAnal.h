@@ -26,7 +26,7 @@
 class CKnownSigAnal
 {
 private:
-    SRxABTData *m_pTrkAet;
+    static SRxABTData *m_pTrkAet;
 
 public:
     //##ModelId=452B0C52024B
@@ -65,6 +65,7 @@ protected:
 public:
     void RunSimul();
     void Simul();
+
     inline int GetCoPdw() { return m_CoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetNoABTID() { return m_uiABTID; }
@@ -134,6 +135,9 @@ public:
     //##ModelId=452B0C52035B
     inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
 
+    inline STR_EMITTER *GetLOB() { return m_theMakeAET->GetEmitter(); }
+    //##ModelId=452B0C52035B
+    inline int GetCoLOB() { return m_theMakeAET->GetCoEmitter(); }
     //##ModelId=452B0C52035C
     inline int GetCoNewAet() { return m_CoNewAet; }
     //##ModelId=452B0C520363
@@ -143,6 +147,7 @@ public:
     //##ModelId=452B0C520365
     inline void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoInSeg( pPri, pEmitter ); }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdAet(); }
+    inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
     void InitVar();
     //##ModelId=452B0C52036E

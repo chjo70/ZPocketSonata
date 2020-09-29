@@ -26,7 +26,7 @@ CLog::CLog()
 
 CLog::~CLog()
 {
-    printf( "\nsss" );
+    printf( "CLOG 소멸 !!\n" );
 }
 
 /**
@@ -42,7 +42,10 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     int fid;
 
     char szDate[LOG_DIR_SIZE];
+
+#ifdef _LOG_WHERE
     char szFileLine[LOG_DIR_SIZE];
+#endif
 
     va_list args;
 

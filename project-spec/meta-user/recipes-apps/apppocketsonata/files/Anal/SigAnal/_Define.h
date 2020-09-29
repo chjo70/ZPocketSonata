@@ -82,7 +82,7 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 //#define   _spPWres        (25.)						// pw res.
 
 #elif defined(_POCKETSONATA_)
-#define _spAOAmax           0x1FF
+#define _spAOAmax           0x400
 #define _spAmpmax           0xFF
 
 #else

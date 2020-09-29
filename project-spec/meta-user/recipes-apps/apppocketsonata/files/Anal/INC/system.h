@@ -67,31 +67,31 @@
 
 #define MAX_EMITTER_NO								(256)				// 최대 에미터 개수
 
-#define MAX_THREAT_NO									(256)				// 최대 위협 개수
+#define MAX_THREAT_NO								(256)			// 최대 위협 개수
 
 
 // 추적필터판을 사용하지 않은 에미터 관리 주기
-#define MANAET_RUN_PERIOD							(1)					// 단위는 초.
+#define MANAET_RUN_PERIOD							(1)				// 단위는 초.
 
 
 // 수집용 펄스 개수
 #define NEW_COLLECT_PDW								(4096)			// 탐지 분석용 최대 수집 개수
-#define KWN_COLLECT_PDW								(200)				// 추적 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW								(4096)			// 추적 분석용 최대 수집 개수
 #define SCN_COLLECT_PDW								(2000)			// 스캔 분석용 최대 수집 개수
 
 
 // 한번에 수집한 최대 개수
-#define PDW_ONE_BLOCK_SIZE						(256)			// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
+#define PDW_ONE_BLOCK_SIZE                          (256)           // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
 
 // 비트 수집용 버퍼 크기
-#define MAX_BIT_COLLECT_COUNT					(20)				// NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
+#define MAX_BIT_COLLECT_COUNT                       (20)            // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
 
 // 소프트웨어 필터 개수
-#define	NEW_NO_BANK										(5)
+#define	NEW_NO_BANK									(5)
 #define KNOWN_NO_FILTER								(32)
 #define SCAN_NO_FILTER								(32)
 
-#define	MAX_FIRE_INFO_ITEM						(200)
+#define	MAX_FIRE_INFO_ITEM                          (200)
 
 // 소프트웨어 필터 시간 단위
 #define	FILTER_ONE_SEC								(1000)				// 단위는 ms

@@ -18,6 +18,8 @@
 
 #include "KnownSigAnal.h"
 
+SRxABTData *CKnownSigAnal::m_pTrkAet;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -100,8 +102,6 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 #else
 #endif
 
-    m_uiABTID = pTrkAet->uiABTID;
-
 	// 신호 분석 관련 초기화.
     Init( pPDWData );
 
@@ -116,75 +116,74 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 	m_theGroup->MakeGroup();
 
 	// 그룹화 만들기
-	if( FALSE == m_theGroup->MakeGrIndex() )
-		return;
+    if( TRUE == m_theGroup->MakeGrIndex() ) {
+        // 펄스열 추출
+        m_thePulExt->KnownPulseExtract();
 
-	// 펄스열 추출
-	m_thePulExt->KnownPulseExtract();
+        // PRI 분석
+        m_theAnalPRI->KnownAnalysis();
 
-	// PRI 분석
-	m_theAnalPRI->KnownAnalysis();
+        // 에미터 분석
+        bRet = m_theMakeAET->KnownMakeAET();
 
-	// 에미터 분석
-	bRet = m_theMakeAET->KnownMakeAET();
+        //////////////////////////////////////////////////////////////////////////
+        // printf( "\n 새로운 에미터 분석 시작" );
 
-	//////////////////////////////////////////////////////////////////////////
-	// printf( "\n 새로운 에미터 분석 시작" );
+        // 추적 추출이 성공이면 나머지 잔여 펄스들에 대해서 펄스열 추출해서 에미터를 분석한다.
+        if( bRet == TRUE ) {
+            // 그룹화 만들기
+            m_theGroup->MakeFreqAoaPwGroup();
+            m_theGroup->MakeGrIndex();
+        }
+        else {
+            /*! \bug  추적이 실패가 되면 수집된 펄스열로부터 새로운 탐지 분석을 하게 한다.
+                \date 2006-06-27 12:19:01, 조철희
+            */
 
-	// 추적 추출이 성공이면 나머지 잔여 펄스들에 대해서 펄스열 추출해서 에미터를 분석한다.
-	if( bRet == TRUE ) {
-		// 그룹화 만들기
-		m_theGroup->MakeFreqAoaPwGroup();
-		m_theGroup->MakeGrIndex();
-	}
-	else {
-		/*! \bug  추적이 실패가 되면 수집된 펄스열로부터 새로운 탐지 분석을 하게 한다.
-		    \date 2006-06-27 12:19:01, 조철희
-		*/
+            memset( MARK, 0, sizeof( MARK ) );
 
-		memset( MARK, 0, sizeof( MARK ) );
+            // 펄스열 추출 초기화
+            m_thePulExt->CPulExt::Init();
 
-		// 펄스열 추출 초기화
-		m_thePulExt->CPulExt::Init();
+            // PRI 분석 초기화
+            m_theAnalPRI->CAnalPRI::Init();
 
-		// PRI 분석 초기화
-		m_theAnalPRI->CAnalPRI::Init();
+            // AET 생성 초기화
+            m_theMakeAET->CMakeAET::Init();
+        }
 
-		// AET 생성 초기화
-		m_theMakeAET->CMakeAET::Init();
-	}
+        ////////////////////////////////////////////////////////////////////
+        // 새로운 에미터 분석
 
-	////////////////////////////////////////////////////////////////////
-	// 새로운 에미터 분석
+        ////////////////////////////////////////////////////////////////////
+        // 잔여 펄스들에 대해서 새로운 에미터 분석
+        // 1) 처음부터 다시 새로운 에미터 분석 ?
+        // 2) 추출한 펄스열은 제거한 상태에서 분석 ?
+        m_thePulExt->PulseExtract();
 
-	////////////////////////////////////////////////////////////////////
-	// 잔여 펄스들에 대해서 새로운 에미터 분석
-	// 1) 처음부터 다시 새로운 에미터 분석 ?
-	// 2) 추출한 펄스열은 제거한 상태에서 분석 ?
-	m_thePulExt->PulseExtract();
+        // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+        // m_thePulExt->CPulExt::UnknownExtract();
 
-	// 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-	// m_thePulExt->CPulExt::UnknownExtract();
+        // PRI 분석을 실시한다.
+        m_theAnalPRI->Analysis();
 
-	// PRI 분석을 실시한다.
-	m_theAnalPRI->Analysis();
+        // 상속클래스의 에미터 분석
+        m_theMakeAET->MakeAET();
 
-	// 상속클래스의 에미터 분석
-	m_theMakeAET->MakeAET();
+        // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
+        //m_theMakeAET->MakeUpAET();
 
-	// 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
-	m_theMakeAET->MakeUpAET();
+        // 그룹화된 펄스열 저장하기
+        // SaveGroupPdwFile();
 
-	// 그룹화된 펄스열 저장하기
-	// SaveGroupPdwFile();
+        // 수집 개수 초기화
+        // 에미터 전송 전에 수집 버퍼 초기화를 한다.
+        // ClearColBuffer();
 
-	// 수집 개수 초기화
-	// 에미터 전송 전에 수집 버퍼 초기화를 한다.
-	// ClearColBuffer();
+        //SendAllAet();
 
-	SendAllAet();
-
-	// printf( "\n !!!! End of Known Signal Analysis !!!!" );
+        // printf( "\n !!!! End of Known Signal Analysis !!!!" );
+    }
 
 }
 
@@ -240,6 +239,8 @@ void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
 
 	// 신호 수집 개수 정의
     m_CoPdw = m_pPDWData->uiTotalPDW;
+
+    m_uiABTID = m_pTrkAet->uiABTID;
 
 	/*! \bug  클래스별 클리어를 하게 한다.
 	    \date 2008-07-30 13:22:13, 조철희

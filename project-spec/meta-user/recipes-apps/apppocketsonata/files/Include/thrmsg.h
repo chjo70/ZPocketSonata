@@ -21,7 +21,7 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_SHUTDOWN = _START_OPCODE_OF_THREAD_MESSAGE_,
 
     // 2. 신호 수집 쓰레드 에서 수신 메시지 정의
-    // 수집 신호 설정 메시지
+    // 추적 수집 신호 설정 메시지
     enTHREAD_REQ_SETWINDOWCELL,
 
 

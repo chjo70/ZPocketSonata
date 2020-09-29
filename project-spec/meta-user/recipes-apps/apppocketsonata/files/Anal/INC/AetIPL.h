@@ -109,14 +109,14 @@ enum SIGNAL_TYPE
 //##ModelId=452B0C5100B9
 enum FREQ_TYPE
 {
-     _FIXED              = 1,
+     _FIXED              = 0,
      _HOPPING,
     _RANDOM_AGILE,
     _PATTERN_AGILE,
 
-	_UNKNOWN_FT,
+    _UNKNOWN_FT,
 
-	_IGNORE_FREQ,
+    _IGNORE_FREQ,
 
     MAX_FRQTYPE
 } ;

@@ -44,6 +44,13 @@ static void ReleaseInstance() { \
 struct STR_COLLECTINFO {
     unsigned int uiCh;
     unsigned int uiTotalPDW;
+
+    // 방사체 번호
+    unsigned int uiAETID;
+    // 빔 번호
+    unsigned int uiABTID;
+
+
 } ;
 
 // 수집한 데이터에서 분석한 LOB 헤더 정보
@@ -53,6 +60,12 @@ struct STR_ANALINFO {
 
     // 수집한 채널 정보
     unsigned int uiCh;
+
+    // 방사체 번호
+    unsigned int uiAETID;
+    // 빔 번호
+    unsigned int uiABTID;
+
 } ;
 
 

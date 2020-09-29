@@ -66,6 +66,8 @@ void CKAnalPRI::Init()
 	m_nAnalSeg = GetAnalSeg();
 
 	m_nAnalEmitter = GetCoEmitter();
+
+    m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 	
 	/*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
     \date 2008-07-30 13:35:49, 조철희

@@ -20,6 +20,8 @@ private:
 
     UNI_LAN_DATA m_uniLanData;
 
+    SRxABTData m_ABTData[TRACK_CHANNEL];
+
     CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
     CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
     CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
@@ -32,6 +34,8 @@ private:
     CCollectBank *m_pTheCollectBank;
 
     bool m_bSendEnd;
+
+    STR_TRKPDWDATA m_theTrkPDW;
 
 public:
     static CSignalCollect *pInstance;
@@ -58,25 +62,10 @@ private:
 
 
     void SimPDWData();
-    unsigned int SimFilter( STR_PDWDATA *pPDWData );
-    bool IsFiltered( _PDW *pstPDW, STR_WINDOWCELL *pWindowCell );
+    void SimFilter( STR_PDWDATA *pPDWData );
 
+    inline SRxABTData *GetABTData( int iIndex ) { return & m_ABTData[iIndex]; }
     inline void ClearEndCollect() { m_bSendEnd = false; }
-
-    ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
-        ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
-
-        if( uiCh < DETECT_CHANNEL )
-            enCollectBank = enDetectCollectBank;
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
-            enCollectBank = enDetectCollectBank;
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
-            enCollectBank = enDetectCollectBank;
-        else
-            enCollectBank = enUserCollectBank;
-
-        return enCollectBank;
-    }
 
     CCollectBank *GetCollectBank( unsigned int uiCh ) {
         CCollectBank *pCCollectBank=NULL;
@@ -97,6 +86,21 @@ private:
 public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CSignalCollect(void);
+
+    ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
+        ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
+
+        if( uiCh < DETECT_CHANNEL )
+            enCollectBank = enDetectCollectBank;
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+            enCollectBank = enTrackCollectBank;
+        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+            enCollectBank = enScanCollectBank;
+        else
+            enCollectBank = enUserCollectBank;
+
+        return enCollectBank;
+    }
 
     THREAD_STANDARD_FUNCTION( CSignalCollect )
 

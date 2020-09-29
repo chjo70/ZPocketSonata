@@ -46,12 +46,16 @@ public:
 
     ///
     void SimCollectMode();
+    bool IsFiltered( _PDW *pstPDW );
 
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
     inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
     inline STR_PDWDATA *GetPDW() { return & m_strPDW; }
+
+    ///
+    inline bool IsSave() { return m_strWindowCell.enCollectMode == enCollecting; }
 };
 
 

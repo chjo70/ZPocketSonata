@@ -28,8 +28,8 @@ const char aet_stat[MAX_EMITTER_STAT] = { 'N', 'U', 'M', 'L', 'D' } ;
 
 #else
 const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-const char aet_freq_type[8][3] = { "UK" , "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
-const char aet_pri_type[6][3] = { "UK" , "ST" , "SG" , "JT" , "PT", "DW" } ;
+const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
+const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
 const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 
 #endif
