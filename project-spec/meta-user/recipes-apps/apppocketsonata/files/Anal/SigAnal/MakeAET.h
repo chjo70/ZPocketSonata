@@ -33,7 +33,7 @@ public:
     //##ModelId=452B0C55039C
     int m_nAnalEmitter;
     //##ModelId=452B0C5503A4
-    int m_CoAet;
+    int m_CoLOB;
     //##ModelId=452B0C5503A5
     int m_CoMakeAet;
 
@@ -75,8 +75,8 @@ public:
     inline int GetCoAnalPdw() { return m_CoAnalPdw; }
     inline void SetCoAnalPdw(UINT coAnalPdw ) { m_CoAnalPdw=coAnalPdw; }
     //##ModelId=452B0C560003
-    inline int GetCoAet() { return m_CoAet; }
-    inline void SetCoAet( UINT coAet ) { m_CoAet = coAet; }
+    inline int GetCoAet() { return m_CoLOB; }
+    inline void SetCoAet( UINT coLOB ) { m_CoLOB = coLOB; }
 
     //##ModelId=452B0C560004
     virtual int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )=0;

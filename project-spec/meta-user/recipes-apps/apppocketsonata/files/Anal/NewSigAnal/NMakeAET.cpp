@@ -282,7 +282,7 @@ void CNMakeAET::MarkAllAetToPdwIndex()
     int i;
     //STR_PDWINDEX *pPdwIndex;
 
-    for( i=0 ; i < m_CoAet ; ++i ) {
+    for( i=0 ; i < m_CoLOB ; ++i ) {
         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
     }

@@ -41,8 +41,9 @@ public:
     //##ModelId=452B0C53000D
     inline void SetCoNewAet( int count ) { m_CoNewAet=count; }
     //##ModelId=452B0C53000F
-    inline void ClearCoAet() { m_CoAet=0; }
+    inline void ClearCoAet() { m_CoLOB=0; }
     inline SRxLOBData *GetLOBData() { return & m_LOBData[0]; }
+    inline int GetCoLOB() { return m_CoLOB; }
     //##ModelId=452B0C530012
     //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }
     // inline STR_EMITTER *GetEmitter() { return CMakeAET::GetEmitter(); }
@@ -52,8 +53,6 @@ public:
     void Init();
     //##ModelId=452B0C530014
     void MakeAET();
-
-
 
     //##ModelId=452B0C53001D
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
@@ -89,7 +88,6 @@ public:
     int GetCoNewAet();
     //##ModelId=452B0C530065
     UINT CheckHarmonic(UINT mean1, float jitter_p1, UINT mean2, float jitter_p2);
-
 
     template <typename T>
     UINT CheckHarmonic(T mean1, T mean2, T priThreshold ) {
@@ -307,7 +305,6 @@ public:
     }
 
     void DISP_FineAet( SRxLOBData *pLOB );
-
     unsigned int IsStorePDW();
 
     //##ModelId=452B0C530078

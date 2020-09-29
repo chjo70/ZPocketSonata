@@ -106,7 +106,7 @@ void CKMakeAET::MakeAET()
     SRxLOBData *pNewAet;
 
     // 시작 에미터 번호 위치 백업.
-    nStartAet = m_CoAet;
+    nStartAet = m_CoLOB;
 
     CMakeAET::MakeAET();
 
@@ -114,10 +114,10 @@ void CKMakeAET::MakeAET()
         \date 2008-10-29 21:39:09, 조철희
     */
     // 에미터 추출 개수를 저장
-    m_CoMakeAet = m_CoAet;
+    m_CoMakeAet = m_CoLOB;
 
     pNewAet = & m_LOBData[nStartAet];
-    for( i=0 ; i < m_CoAet ; ++i ) {
+    for( i=0 ; i < m_CoLOB ; ++i ) {
         if( pNewAet->iPRIType == _DWELL ) {
             STR_PRI *pNewPri, *pTrkPri;
 
@@ -160,11 +160,11 @@ BOOL CKMakeAET::KnownMakeAET()
 
     // 추적 성공인지를 체크한다.
     // 추출된 펄스열로 에미터가 1개 만들어 지면 추
-    if( m_CoAet >= 1 ) {
+    if( m_CoLOB >= 1 ) {
         // 추적에서 2개 이상의 추적 변경에미터 분석될 때는 가장 많은 펄스열로 분석된것만 추적 Update 로 인정하고
         // 나머지 다른 에미터들은 펄스열 마킹만한다.
         maxPulse = 0;
-        for( i=0 ; i < m_CoAet ; ++i ) {
+        for( i=0 ; i < m_CoLOB ; ++i ) {
             // 추적할 PRI 값과 추적한 PRI 값이 같아야 추적 성공으로 한다.
             //-- 조철희 2006-01-25 14:00:31 --//
             if( CompPRI( & m_LOBData[i], m_pTrkAet ) == TRUE ) {
@@ -172,7 +172,7 @@ BOOL CKMakeAET::KnownMakeAET()
 
                 //if( maxPulse < m_pAet[i].ext.noExt ) {
                 //	maxPulse = m_pAet[i].ext.noExt;
-                //	m_IdxUpdAet = i;
+                m_IdxUpdAet = i;
                 //}
 
                 UpdateFreq( & m_LOBData[i] );
@@ -197,7 +197,7 @@ BOOL CKMakeAET::KnownMakeAET()
 
     }
 
-    return m_IdxUpdAet >= 0;
+    return m_IdxUpdAet >= _spZero;
 
 }
 
@@ -434,7 +434,7 @@ SRxLOBData *CKMakeAET::GetNewAet()
 {
     SRxLOBData *pLOBData=NULL;
 
-    for( int i=0 ; i < m_CoAet ; ++i ) {
+    for( int i=0 ; i < m_CoLOB ; ++i ) {
         if( m_LOBData[i].uiABTID == 0 ) {
             pLOBData = & m_LOBData[i];
         }
@@ -455,7 +455,7 @@ int CKMakeAET::GetIndexNewAet()
 {
     int iIndex=-1, i;
 
-    for( i=0 ; i < m_CoAet ; ++i ) {
+    for( i=0 ; i < m_CoLOB ; ++i ) {
         if( m_LOBData[i].uiABTID == 0 ) {
             iIndex = i;
             break;

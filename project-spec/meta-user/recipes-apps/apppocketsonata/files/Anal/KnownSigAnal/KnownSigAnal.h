@@ -137,9 +137,9 @@ public:
     //##ModelId=452B0C52035B
     inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
 
-    inline STR_EMITTER *GetLOB() { return m_theMakeAET->GetEmitter(); }
+    inline SRxLOBData *GetLOBData() { return m_theMakeAET->GetLOBData(); }
     //##ModelId=452B0C52035B
-    inline int GetCoLOB() { return m_theMakeAET->GetCoEmitter(); }
+    inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
     //##ModelId=452B0C52035C
     inline int GetCoNewAet() { return m_CoNewAet; }
     //##ModelId=452B0C520363

@@ -89,7 +89,7 @@ void CMakeAET::Init()
     // 펄스 수집 개수
     m_nCoPdw = GetColPdw();
 
-    m_CoAet = 0;
+    m_CoLOB = 0;
     m_nAnalEmitter = 0;
     m_pEmitter = GetEmitter();
     m_pSeg = GetPulseSeg();
@@ -119,7 +119,7 @@ void CMakeAET::MakeAET()
     m_CoEmitter = GetCoEmitter();
 
     // 에미터 추출 개수를 저장
-    m_CoMakeAet = m_CoAet;
+    m_CoMakeAet = m_CoLOB;
 
     pEmitter = & m_pEmitter[m_nAnalEmitter];
     for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++pEmitter ) {
@@ -130,9 +130,9 @@ void CMakeAET::MakeAET()
             // CW 에미터인 경우, PRI, 펄스폭을 강제 설정한다.
             // SetCWParameter( pNewAet );
 
-            SaveEmitterPdwFile( pEmitter, m_CoAet+1 );
+            SaveEmitterPdwFile( pEmitter, m_CoLOB+1 );
 
-            ++ m_CoAet;
+            ++ m_CoLOB;
         }
     }
 
@@ -143,7 +143,7 @@ void CMakeAET::MakeAET()
     //ReMakeEmitter();
 
     // 한번의 에미터 생성후에 만들어진 에미터 생성 개수
-    m_CoMakeAet = m_CoAet - m_CoMakeAet;
+    m_CoMakeAet = m_CoLOB - m_CoMakeAet;
 
     m_nAnalEmitter = m_CoEmitter;
 
@@ -773,20 +773,20 @@ void CMakeAET::PrintAllEmitter()
 
     SRxLOBData *pLOB;
 
-    if( m_CoAet == 0 ) {
+    if( m_CoLOB == 0 ) {
         printf( "\n\n LOB 개수 : None." );
         Log( enNormal, "LOB 개수 : None." );
     }
     else {
-        printf( "\n\n LOB 개수 : %d", m_CoAet );
-        Log( enNormal, "LOB 개수 : %d", m_CoAet );
+        printf( "\n\n LOB 개수 : %d", m_CoLOB );
+        Log( enNormal, "LOB 개수 : %d", m_CoLOB );
         pLOB = GetLOBData();		//& m_LOBData[0];
 
     // printf( "\n---- PAET[%3d] -----------------------------------------------------------------------------------------------------------" , m_CoMakeAet );
     //printf( "\n### AOA      Freq(MHz)                PRI(us)                PA(dB)        PW(ns)         AS(s)       SeenTime    IPL   T FSP    PPP");
     //printf( "\n              T       Mean   Min   Max T       Mean  Min  Max Mean Min Max  Mean  Min  Max T    Prd    First Last  C Am    (us)   (us)");
     //printf( "\n------------------------------------------------------------------------------------------------------------------------------------" );
-        for( i=0 ; i < m_CoAet ; ++i ) {
+        for( i=0 ; i < m_CoLOB ; ++i ) {
             //printf("\n\t\t[%02d]" , i+1 );
             DISP_FineAet( pLOB );
             printf("\n");
@@ -1282,13 +1282,13 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_FRQ stFrq;
     STR_PRI stPri;
 
-    pLOBData = & m_LOBData[m_CoAet];
+    pLOBData = & m_LOBData[m_CoLOB];
 
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
 
-    pLOBData->uiLOBID = m_CoAet + 1;
+    pLOBData->uiLOBID = m_CoLOB + 1;
     pLOBData->uiABTID = 0;
     pLOBData->uiAETID = 0;
 
