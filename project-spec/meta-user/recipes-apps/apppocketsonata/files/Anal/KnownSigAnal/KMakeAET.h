@@ -21,8 +21,6 @@ class CKnownSigAnal;
 class CKMakeAET : public CMakeAET
 {
 private :
-    SRxLOBData m_LOBData[ MAX_AET+1 ];
-
     SRxABTData *m_pTrkAet;
 
 protected :
@@ -34,8 +32,6 @@ protected :
     //##ModelId=452B0C5203DD
     int m_IdxUpdAet;
 
-    //##ModelId=452B0C5203E7
-    //SRxLOBData *m_pAet;
     //##ModelId=452B0C530009
     STR_EMITTER *m_pEmitter;
 
@@ -93,7 +89,6 @@ public:
     int GetCoNewAet();
     //##ModelId=452B0C530065
     UINT CheckHarmonic(UINT mean1, float jitter_p1, UINT mean2, float jitter_p2);
-
 
 
     template <typename T>
@@ -311,9 +306,9 @@ public:
 
     }
 
-    void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter ) { }
     void DISP_FineAet( SRxLOBData *pLOB );
 
+    unsigned int IsStorePDW();
 
     //##ModelId=452B0C530078
     BOOL IsUpdateAet();

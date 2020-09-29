@@ -24,6 +24,8 @@ private:
     char m_Comma[50];
 
 public:
+    SRxLOBData m_LOBData[ MAX_AET+1 ];
+
     //##ModelId=452B0C55039A
     UINT *m_pParam;
     //##ModelId=452B0C55039B
@@ -119,7 +121,7 @@ public:
     //##ModelId=452B0C560060
     void MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     int MakeDIInfoInSeg( STR_EMITTER *pEmitter);
-
+    void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
 
     //##ModelId=452B0C560071
     void MakeAET();
@@ -134,7 +136,8 @@ public:
     //SRxLOBData m_Aet[MAX_AET+1];
 
     //##ModelId=452B0C560068
-    virtual void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )=0;
+    //virtual void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )=0;
+    virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
     virtual SRxLOBData *GetLOBData()=0;
 

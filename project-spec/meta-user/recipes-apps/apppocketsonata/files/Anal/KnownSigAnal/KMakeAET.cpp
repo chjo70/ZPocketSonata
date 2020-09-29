@@ -43,26 +43,26 @@
 // 함 수 이 름  : CMakeAET
 // 반환되는 형  : CKMakeAET::CKMakeAET() :
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:48
 //
 //##ModelId=42E98F300031
 CKMakeAET::CKMakeAET( void *pParent, int coMaxPdw ) : CMakeAET( coMaxPdw )
 {
-	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
-	 
-	// 초기에 한번만 초기화한다.
-	m_CoNewAet = 0;
+    m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
+
+    // 초기에 한번만 초기화한다.
+    m_CoNewAet = 0;
 
     //m_pAet = NULL;  //GetAet();
-	m_pEmitter = GetEmitter();
+    m_pEmitter = GetEmitter();
 }
 
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKMakeAET::~CKMakeAET
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 18:14:06
 //
 //##ModelId=42E98F300032
@@ -82,11 +82,11 @@ CKMakeAET::~CKMakeAET()
 //
 void CKMakeAET::Init()
 {
-	m_CoNewAet = 0;
+    m_CoNewAet = 0;
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 
-	CMakeAET::Init();
+    CMakeAET::Init();
 
 }
 
@@ -101,37 +101,37 @@ void CKMakeAET::Init()
 //
 void CKMakeAET::MakeAET()
 {
-	int i;
-	int nStartAet;
+    int i;
+    int nStartAet;
     SRxLOBData *pNewAet;
 
-	// 시작 에미터 번호 위치 백업. 
-	nStartAet = m_CoAet;
+    // 시작 에미터 번호 위치 백업.
+    nStartAet = m_CoAet;
 
-	CMakeAET::MakeAET();
+    CMakeAET::MakeAET();
 
-	/*! \bug  Dwell 인 경우에는 추적할 에미터 제원으로 업데이트 하도록 한다.
-	    \date 2008-10-29 21:39:09, 조철희
-	*/
-	// 에미터 추출 개수를 저장
-	m_CoMakeAet = m_CoAet;
+    /*! \bug  Dwell 인 경우에는 추적할 에미터 제원으로 업데이트 하도록 한다.
+        \date 2008-10-29 21:39:09, 조철희
+    */
+    // 에미터 추출 개수를 저장
+    m_CoMakeAet = m_CoAet;
 
     pNewAet = & m_LOBData[nStartAet];
-	for( i=0 ; i < m_CoAet ; ++i ) {
+    for( i=0 ; i < m_CoAet ; ++i ) {
         if( pNewAet->iPRIType == _DWELL ) {
-			STR_PRI *pNewPri, *pTrkPri;
+            STR_PRI *pNewPri, *pTrkPri;
 
             //pNewPri = & pNewAet->aet.pri;
             //pTrkPri = & stTrkAet.aet.pri;
-			//pNewPri->min = pTrkPri->min;
-			//pNewPri->max = pTrkPri->max;
-			//pNewPri->swtLev = pTrkPri->swtLev;
-			// memcpy( pNewPri->swtVal, pTrkPri->swtVal, sizeof(int)*pNewPri->swtLev );
-			// qsort( pNewPri->swtVal, (size_t) pNewPri->swtLev, sizeof( UINT ), intparamCompare );
-			
-		}
-		++ pNewAet;
-	}
+            //pNewPri->min = pTrkPri->min;
+            //pNewPri->max = pTrkPri->max;
+            //pNewPri->swtLev = pTrkPri->swtLev;
+            // memcpy( pNewPri->swtVal, pTrkPri->swtVal, sizeof(int)*pNewPri->swtLev );
+            // qsort( pNewPri->swtVal, (size_t) pNewPri->swtLev, sizeof( UINT ), intparamCompare );
+
+        }
+        ++ pNewAet;
+    }
 
 }
 
@@ -140,33 +140,33 @@ void CKMakeAET::MakeAET()
 // 함 수 이 름  : CKMakeAET::KnownMakeAET
 // 반환되는 형  : BOOL
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 18:47:54
 //
 //##ModelId=42E98F300030
 BOOL CKMakeAET::KnownMakeAET()
 {
-	int i;
-	UINT maxPulse;
-	int idxEmitter;
-	STR_EMITTER *pEmitter;
+    int i;
+    UINT maxPulse;
+    int idxEmitter;
+    STR_EMITTER *pEmitter;
 
-	MakeAET();
+    MakeAET();
 
-	/*! \bug  m_IdxUpdAet 초기화
-	    \date 2006-06-26 13:43:57, 조철희
-	*/
-	m_IdxUpdAet = -1;
+    /*! \bug  m_IdxUpdAet 초기화
+        \date 2006-06-26 13:43:57, 조철희
+    */
+    m_IdxUpdAet = -1;
 
-	// 추적 성공인지를 체크한다.
-	// 추출된 펄스열로 에미터가 1개 만들어 지면 추
-	if( m_CoAet >= 1 ) {
-		// 추적에서 2개 이상의 추적 변경에미터 분석될 때는 가장 많은 펄스열로 분석된것만 추적 Update 로 인정하고
-		// 나머지 다른 에미터들은 펄스열 마킹만한다.
-		maxPulse = 0;
-		for( i=0 ; i < m_CoAet ; ++i ) {
-			// 추적할 PRI 값과 추적한 PRI 값이 같아야 추적 성공으로 한다.
-			//-- 조철희 2006-01-25 14:00:31 --//
+    // 추적 성공인지를 체크한다.
+    // 추출된 펄스열로 에미터가 1개 만들어 지면 추
+    if( m_CoAet >= 1 ) {
+        // 추적에서 2개 이상의 추적 변경에미터 분석될 때는 가장 많은 펄스열로 분석된것만 추적 Update 로 인정하고
+        // 나머지 다른 에미터들은 펄스열 마킹만한다.
+        maxPulse = 0;
+        for( i=0 ; i < m_CoAet ; ++i ) {
+            // 추적할 PRI 값과 추적한 PRI 값이 같아야 추적 성공으로 한다.
+            //-- 조철희 2006-01-25 14:00:31 --//
             if( CompPRI( & m_LOBData[i], m_pTrkAet ) == TRUE ) {
                 m_LOBData[i].uiABTID = m_pTrkAet->uiABTID;
 
@@ -179,25 +179,25 @@ BOOL CKMakeAET::KnownMakeAET()
 
                 UpdatePRI( & m_LOBData[i] );
 
-			}
+            }
 
-			/*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
-			    \date 2006-06-29 13:53:26, 조철희
-			*/
-			// 추출된 펄스 Marking
+            /*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
+                \date 2006-06-29 13:53:26, 조철희
+            */
+            // 추출된 펄스 Marking
             //idxEmitter = m_pAet[i].ext.idxEmitter;
             //pEmitter = & m_pEmitter[idxEmitter];
             //MarkToEmitterPdwIndex( pEmitter, EXTRACT_MARK );
-		}
+        }
 
-		// 추출한 펄스열들은 EXTRACT_MARK 을 해서 재 분석을 안 하도록 한다.
-		//for( i=0 ; i < m_CoSeg ; ++i ) {
-			//MarkToPdwIndex( m_pSeg[i].pdw.pIndex, m_pSeg[i].pdw.count, EXTRACT_MARK );
-		//}
+        // 추출한 펄스열들은 EXTRACT_MARK 을 해서 재 분석을 안 하도록 한다.
+        //for( i=0 ; i < m_CoSeg ; ++i ) {
+            //MarkToPdwIndex( m_pSeg[i].pdw.pIndex, m_pSeg[i].pdw.count, EXTRACT_MARK );
+        //}
 
-	}
+    }
 
-	return m_IdxUpdAet >= 0;
+    return m_IdxUpdAet >= 0;
 
 }
 
@@ -207,89 +207,89 @@ BOOL CKMakeAET::KnownMakeAET()
 // 반환되는 형  : BOOL
 // 함 수 인 자  : STR_PRI *pNewPri
 // 함 수 인 자  : STR_PRI *pTrkPri
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-25 14:03:44
 //
 BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 {
-	int i;
-	int pri_margin;
+    int i;
+    int pri_margin;
 
     switch( pNewPri->iPRIType ) {
-		case _STABLE :
-			return TRUE;
+        case _STABLE :
+            return TRUE;
 
-		case _STAGGER :
+        case _STAGGER :
             if( pTrkPri->iPRIType == _JITTER_RANDOM )
-				return TRUE;
+                return TRUE;
             else if( pTrkPri->iPRIType == _STAGGER ) {
                 if( pNewPri->iPRIElementCount == pTrkPri->iPRIElementCount ) {
                     for( i=0 ; i < pNewPri->iPRIElementCount ; ++i ) {
                         if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], 2*STABLE_MARGIN ) == FALSE ) {
-	  					return FALSE;
-						}
-					}
-				}
-				else {
-					return FALSE;
-				}
-			}
-			break;
+                        return FALSE;
+                        }
+                    }
+                }
+                else {
+                    return FALSE;
+                }
+            }
+            break;
 
-		case _JITTER_PATTERN :
-			return TRUE;
+        case _JITTER_PATTERN :
+            return TRUE;
 
-		case _DWELL :
-			return TRUE;
+        case _DWELL :
+            return TRUE;
 
-		case _JITTER_RANDOM :
-			// 스태거 추적 신호를 추적분석을 해서
-			// 지터로 분석하게 되면 범위를 체크해서 새로운 에미터 생성 또는
-			// 추적 실패 여부를 결정한다.
-			//-- 조철희 2006-05-09 16:19:35 --//
-			/*! \bug  변화폭을 5 usdptj 20 us로 수정함. 
-			    \date 2006-09-04 10:47:24, 조철희
-			*/
+        case _JITTER_RANDOM :
+            // 스태거 추적 신호를 추적분석을 해서
+            // 지터로 분석하게 되면 범위를 체크해서 새로운 에미터 생성 또는
+            // 추적 실패 여부를 결정한다.
+            //-- 조철희 2006-05-09 16:19:35 --//
+            /*! \bug  변화폭을 5 usdptj 20 us로 수정함.
+                \date 2006-09-04 10:47:24, 조철희
+            */
             pri_margin = 20 * _spOneMicrosec;
             if( pTrkPri->iPRIType == _STAGGER ) {
                 if( _spFalse == CompMeanDiff<float>( pTrkPri->fMinPRI, pNewPri->fMinPRI, pri_margin ) )
-					return FALSE;
+                    return FALSE;
                 if( _spFalse == CompMeanDiff<float>( pTrkPri->fMaxPRI, pNewPri->fMaxPRI, pri_margin ) )
-					return FALSE;
+                    return FALSE;
 
-				return TRUE;
-			}
-			else {
-				return TRUE;
-			}
+                return TRUE;
+            }
+            else {
+                return TRUE;
+            }
 
-	}
+    }
 /*
-	diff = _spZero;
-	b1ret = _spFalse;
-	for( i=0 ; i < pNewAet->aet.pri.swtLev ; ++i ) {
-		b2ret = _spFalse;
-		priMean = pNewAet->aet.pri.swtVal[i];
+    diff = _spZero;
+    b1ret = _spFalse;
+    for( i=0 ; i < pNewAet->aet.pri.swtLev ; ++i ) {
+        b2ret = _spFalse;
+        priMean = pNewAet->aet.pri.swtVal[i];
 
-		for( j=0 ; j < pNewAet->aet.pri.swtLev ; ++j ) {
-			b2ret = CompMeanDiff( priMean, pAet->pri.swtVal[j], _sp.mg.fixpri );
+        for( j=0 ; j < pNewAet->aet.pri.swtLev ; ++j ) {
+            b2ret = CompMeanDiff( priMean, pAet->pri.swtVal[j], _sp.mg.fixpri );
 
-			if( b2ret == _spTrue ) {
-	  		diff += _abs( (int) ( pAet->pri.swtVal[j] - priMean ) );		// Call Cal...
-				break;
-			}
-		}
+            if( b2ret == _spTrue ) {
+            diff += _abs( (int) ( pAet->pri.swtVal[j] - priMean ) );		// Call Cal...
+                break;
+            }
+        }
 
-		if( b2ret == _spFalse ) {
-    		return _spMaxVal32;
-		}
-		else
-			b1ret = _spTrue;
+        if( b2ret == _spFalse ) {
+            return _spMaxVal32;
+        }
+        else
+            b1ret = _spTrue;
 
-	}		*/
+    }		*/
 
-	return TRUE;
-	
+    return TRUE;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -297,28 +297,28 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 // 함 수 이 름  : CKMakeAET::MakeUpAET
 // 반환되는 형  : void
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : SONATA, 2005-09-07 15:04:06
 //
 void CKMakeAET::MakeUpAET()
 {
-	int count;
-	int coUpdAet;
+    int count;
+    int coUpdAet;
     SRxLOBData *pNewAet;
     SRxLOBData *pUpdAet;
-	
-	count = GetCoAet();
-	pNewAet = GetNewAet();
-	pUpdAet = GetUpdAet();
 
-	coUpdAet = 0;
+    count = GetCoAet();
+    pNewAet = GetNewAet();
+    pUpdAet = GetUpdAet();
 
-	// 추적 성공일때...
-	// 새로운 에미터와 추적 에미터와의 하모닉 체크해서 새로운 에미터를 제거하도록 한다.
-	//-- 조철희 2005-10-24 11:33:36 --//
-	if( pUpdAet != NULL ) {
-		// 추적 성공 에미터와 추적할 에미터 제원과 비교해서 하모닉 체크해서 유사 에미터로 판정한다.
-		//-- 조철희 2005-12-07 19:16:44 --//
+    coUpdAet = 0;
+
+    // 추적 성공일때...
+    // 새로운 에미터와 추적 에미터와의 하모닉 체크해서 새로운 에미터를 제거하도록 한다.
+    //-- 조철희 2005-10-24 11:33:36 --//
+    if( pUpdAet != NULL ) {
+        // 추적 성공 에미터와 추적할 에미터 제원과 비교해서 하모닉 체크해서 유사 에미터로 판정한다.
+        //-- 조철희 2005-12-07 19:16:44 --//
         if( CheckHarmonic( m_pTrkAet, pUpdAet ) >= 2 ) {
             pUpdAet->iPRIType = m_pTrkAet->iPRIType;
             pUpdAet->iPRIPatternType = m_pTrkAet->iPRIPatternType;
@@ -332,31 +332,31 @@ void CKMakeAET::MakeUpAET()
             pUpdAet->iPRIElementCount = m_pTrkAet->iPRIElementCount;
 
             memcpy( & pUpdAet->fPRISeq, & m_pTrkAet->fPRISeq, sizeof( m_pTrkAet->fPRISeq ) );
-		}
+        }
 
-		for( int i=0 ; i < count ; ++i ) {
+        for( int i=0 ; i < count ; ++i ) {
             if( m_LOBData[i].uiABTID != _spZero ) {
                 pUpdAet->iScanType = m_pTrkAet->iScanType;
                 pUpdAet->fScanPeriod = m_pTrkAet->fMeanScanPeriod;
-				++ coUpdAet;
-			}
-		}
-	}
-	// 추적 에미터가 발견되지 않을 때는 새로운 에미터 제원으로 추적 업데이트한다.
-	else if( count >= 1 ) {
+                ++ coUpdAet;
+            }
+        }
+    }
+    // 추적 에미터가 발견되지 않을 때는 새로운 에미터 제원으로 추적 업데이트한다.
+    else if( count >= 1 ) {
         SRxLOBData *pDummyAet;
 
-		// ART 제원을 SWAP 하기 위한 버퍼
+        // ART 제원을 SWAP 하기 위한 버퍼
         pDummyAet = & m_LOBData[ MAX_AET ];
 
-		for( int i=0 ; i < count ; ++i ) {
+        for( int i=0 ; i < count ; ++i ) {
             if( CheckHarmonic<SRxABTData>( m_pTrkAet, pNewAet ) == TRUE ) {
-				// 하모닉 관계 에미터 제원 값을 수정한다.
-				// 추적 성공임을 표시한다.
+                // 하모닉 관계 에미터 제원 값을 수정한다.
+                // 추적 성공임을 표시한다.
                 pNewAet->uiABTID = m_pTrkAet->uiABTID;
 
-				// 방위 정보는 최근 정보로 한다.
-				// PRI  값은 하모닉 관계로 추적 에미터 제원으로 한다.
+                // 방위 정보는 최근 정보로 한다.
+                // PRI  값은 하모닉 관계로 추적 에미터 제원으로 한다.
                 //memcpy( & pNewAet->aet.pri, & stTrkAet.aet.pri, sizeof( STR_PRI ) );
                 pNewAet->iPRIType = m_pTrkAet->iPRIType;
                 pNewAet->iPRIPatternType = m_pTrkAet->iPRIPatternType;
@@ -371,27 +371,27 @@ void CKMakeAET::MakeUpAET()
 
                 memcpy( & pNewAet->fPRISeq, & m_pTrkAet->fPRISeq, sizeof( m_pTrkAet->fPRISeq ) );
 
-				// 유사 에미터를 결정한 에미터를 예비 버퍼에 복사한다.
+                // 유사 에미터를 결정한 에미터를 예비 버퍼에 복사한다.
                 memcpy( pDummyAet, pNewAet, sizeof( SRxLOBData ) );
 
-				// 유사 에미터 까지 에미터를 이동한다.
-				for( int j=i-1 ; j >= 0 ; --j ) {
+                // 유사 에미터 까지 에미터를 이동한다.
+                for( int j=i-1 ; j >= 0 ; --j ) {
                     memcpy( & m_LOBData[j+1], & m_LOBData[j], sizeof( SRxLOBData ) );
-				}
+                }
                 memcpy( & m_LOBData[0], pDummyAet, sizeof( SRxLOBData ) );
 
-				m_IdxUpdAet = 0;
+                m_IdxUpdAet = 0;
 
-				coUpdAet = 1;
+                coUpdAet = 1;
 
-				break;
-			}
+                break;
+            }
 
-			++ pNewAet;
-		}
-	}
+            ++ pNewAet;
+        }
+    }
 
-	m_CoNewAet = count - coUpdAet;
+    m_CoNewAet = count - coUpdAet;
 
 }
 
@@ -400,12 +400,12 @@ void CKMakeAET::MakeUpAET()
 // 함 수 이 름  : CKMakeAET::IsUpdateAet
 // 반환되는 형  : BOOL
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-09-08 10:14:57
 //
 BOOL CKMakeAET::IsUpdateAet()
 {
-	// 추적 성공 또는 실패인지를 검사한다.
+    // 추적 성공 또는 실패인지를 검사한다.
     return m_LOBData[0].uiABTID != 0;
 }
 
@@ -414,12 +414,12 @@ BOOL CKMakeAET::IsUpdateAet()
 // 함 수 이 름  : CKMakeAET::GetCoNewAet
 // 반환되는 형  : int
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-10-24 13:57:54
 //
 int CKMakeAET::GetCoNewAet()
 {
-	return m_CoNewAet;
+    return m_CoNewAet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -427,19 +427,19 @@ int CKMakeAET::GetCoNewAet()
 // 함 수 이 름  : *CKMakeAET::GetNewAet
 // 반환되는 형  : STR_NEWAET
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-10-24 11:41:29
 //
 SRxLOBData *CKMakeAET::GetNewAet()
 {
     SRxLOBData *pLOBData=NULL;
 
-	for( int i=0 ; i < m_CoAet ; ++i ) {
+    for( int i=0 ; i < m_CoAet ; ++i ) {
         if( m_LOBData[i].uiABTID == 0 ) {
             pLOBData = & m_LOBData[i];
         }
-	}
-	
+    }
+
     return pLOBData;
 }
 
@@ -448,7 +448,7 @@ SRxLOBData *CKMakeAET::GetNewAet()
 // 함 수 이 름  : CKMakeAET::GetIndexNewAet
 // 반환되는 형  : int
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-26 11:02:51
 //
 int CKMakeAET::GetIndexNewAet()
@@ -460,8 +460,8 @@ int CKMakeAET::GetIndexNewAet()
             iIndex = i;
             break;
         }
-	}
-	
+    }
+
     return iIndex;
 }
 
@@ -470,15 +470,15 @@ int CKMakeAET::GetIndexNewAet()
 // 함 수 이 름  : *GetUpdAet
 // 반환되는 형  : STR_UPDAET
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-10-24 11:42:24
 //
 SRxLOBData *CKMakeAET::GetUpdAet()
 {
-	if( m_IdxUpdAet >= 0 )
+    if( m_IdxUpdAet >= 0 )
         return & m_LOBData[m_IdxUpdAet];
-	else
-		return NULL;
+    else
+        return NULL;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -486,12 +486,12 @@ SRxLOBData *CKMakeAET::GetUpdAet()
 // 함 수 이 름  : CKMakeAET::CalcAoaMeanByHistAoa
 // 반환되는 형  : int
 // 함 수 인 자  : STR_PDWINDEX *pSrcIndex
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:23
 //
 int CKMakeAET::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
 {
-	return m_pKnownSigAnal->CalcAoaMeanByHistAoa( pSrcIndex );
+    return m_pKnownSigAnal->CalcAoaMeanByHistAoa( pSrcIndex );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -499,12 +499,12 @@ int CKMakeAET::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
 // 함 수 이 름  : CKMakeAET::GetColPdw
 // 반환되는 형  : int
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:27
 //
 int CKMakeAET::GetColPdw()
 {
-	return m_pKnownSigAnal->GetColPdw();
+    return m_pKnownSigAnal->GetColPdw();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -513,12 +513,12 @@ int CKMakeAET::GetColPdw()
 // 반환되는 형  : int
 // 함 수 인 자  : PDWINDEX *pPdwIndex
 // 함 수 인 자  : int count
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:30
 //
 int CKMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
 {
-	return m_pKnownSigAnal->CalcPAMean( pPdwIndex, count );
+    return m_pKnownSigAnal->CalcPAMean( pPdwIndex, count );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -527,12 +527,12 @@ int CKMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
 // 반환되는 형  : int
 // 함 수 인 자  : PDWINDEX *pPdwIndex
 // 함 수 인 자  : int count
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:32
 //
 int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
 {
-	return m_pKnownSigAnal->VerifyPW( pPdwIndex, count );
+    return m_pKnownSigAnal->VerifyPW( pPdwIndex, count );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -542,12 +542,12 @@ int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
 // 함 수 인 자  : PDWINDEX *pPdwIndex
 // 함 수 인 자  : int count
 // 함 수 인 자  : int mark_type
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:35
 //
 void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
 {
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+    m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -556,12 +556,12 @@ void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 인 자  : int index
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
 void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 {
-	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, index );
+    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, index );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -569,12 +569,12 @@ void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 // 함 수 이 름  : CKMakeAET::GetCoSeg
 // 반환되는 형  : int
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:39
 //
 int CKMakeAET::GetCoSeg()
 {
-	return m_pKnownSigAnal->GetCoSeg();
+    return m_pKnownSigAnal->GetCoSeg();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -582,12 +582,12 @@ int CKMakeAET::GetCoSeg()
 // 함 수 이 름  : CKMakeAET::GetCoEmitter
 // 반환되는 형  : int
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:42
 //
 int CKMakeAET::GetCoEmitter()
 {
-    return m_pKnownSigAnal->GetCoLOB();
+    return m_pKnownSigAnal->GetCoEmitter();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -595,12 +595,12 @@ int CKMakeAET::GetCoEmitter()
 // 함 수 이 름  : *CKMakeAET::GetPulseSeg
 // 반환되는 형  : STR_PULSE_TRAIN_SEG
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:44
 //
 STR_PULSE_TRAIN_SEG *CKMakeAET::GetPulseSeg()
 {
-	return m_pKnownSigAnal->GetPulseSeg();
+    return m_pKnownSigAnal->GetPulseSeg();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -608,7 +608,7 @@ STR_PULSE_TRAIN_SEG *CKMakeAET::GetPulseSeg()
 // 함 수 이 름  : *CKMakeAET::GetEmitter
 // 반환되는 형  : STR_EMITTER
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:47
 //
 STR_EMITTER *CKMakeAET::GetEmitter()
@@ -629,17 +629,17 @@ STR_EMITTER *CKMakeAET::GetEmitter()
 //
 UINT CKMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
+    return m_pKnownSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CKMakeAET::UpdateFreq
-		\author   조철희
-		\param    pUpdAetFrq 인자형태 STR_FRQ *
-		\return   void
-		\version  0.0.53
-		\date     2008-11-03 11:25:01
-		\warning
+        \author   조철희
+        \param    pUpdAetFrq 인자형태 STR_FRQ *
+        \return   void
+        \version  0.0.53
+        \date     2008-11-03 11:25:01
+        \warning
 */
 void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
 {
@@ -660,30 +660,30 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
                 pUpdAetFrq->iFreqElementCount = m_pTrkAet->iFreqElementCount;
                 memcpy( pUpdAetFrq->fFreqSeq, m_pTrkAet->fFreqSeq, sizeof( m_pTrkAet->fFreqSeq ) );
 
-				break;
+                break;
 
-			case _RANDOM_AGILE :
+            case _RANDOM_AGILE :
                 pUpdAetFrq->iFreqType = m_pTrkAet->iFreqType;
-				break;
+                break;
 
-			case _PATTERN_AGILE :
+            case _PATTERN_AGILE :
                 pUpdAetFrq->iFreqType = _PATTERN_AGILE;
                 pUpdAetFrq->fFreqPatternPeriod = m_pTrkAet->fFreqPatternPeriodMean;
                 pUpdAetFrq->iFreqPatternType = m_pTrkAet->iFreqPatternType;
-				break;
-		}
-	}
+                break;
+        }
+    }
 
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CKMakeAET::UpdatePRI
-		\author   조철희
-		\param    pUpdAetPri 인자형태 STR_PRI *
-		\return   void
-		\version  0.0.53
-		\date     2008-11-03 12:40:25
-		\warning
+        \author   조철희
+        \param    pUpdAetPri 인자형태 STR_PRI *
+        \return   void
+        \version  0.0.53
+        \date     2008-11-03 12:40:25
+        \warning
 */
 void CKMakeAET::UpdatePRI( SRxLOBData *pUpdAetPri )
 {
@@ -692,28 +692,28 @@ void CKMakeAET::UpdatePRI( SRxLOBData *pUpdAetPri )
     //pTrkAetPri = & m_pTrkAet.aet.pri;
     if( m_pTrkAet->iPRIType != pUpdAetPri->iPRIType ) {
         switch( m_pTrkAet->iPRIType ) {
-			case _STAGGER :
+            case _STAGGER :
                 //memcpy( pUpdAetPri, pTrkAetPri, sizeof( STR_PRI ) );
-				break;
+                break;
 
             default :
                 break;
-		}
-	}
+        }
+    }
 
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CKMakeAET::GetPdwParam
-		\author   조철희
-		\return   STR_PDWPARAM*
-		\version  0.0.59
-		\date     2008-11-19 12:03:58
-		\warning
+        \author   조철희
+        \return   STR_PDWPARAM*
+        \version  0.0.59
+        \date     2008-11-19 12:03:58
+        \warning
 */
 STR_PDWPARAM* CKMakeAET::GetPdwParam()
 {
-	return m_pKnownSigAnal->GetPdwParam();
+    return m_pKnownSigAnal->GetPdwParam();
 }
 
 
@@ -725,4 +725,13 @@ void CKMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
 
 
+}
+
+/**
+ * @brief CKMakeAET::IsStorePDW
+ * @return
+ */
+unsigned int CKMakeAET::IsStorePDW()
+{
+    return m_pKnownSigAnal->IsStorePDW();
 }

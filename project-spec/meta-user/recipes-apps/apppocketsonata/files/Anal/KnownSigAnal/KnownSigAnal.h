@@ -26,7 +26,9 @@
 class CKnownSigAnal
 {
 private:
-    static SRxABTData *m_pTrkAet;
+    SRxABTData *m_pTrkAet;
+
+    int m_iIsStorePDW;
 
 public:
     //##ModelId=452B0C52024B
@@ -85,7 +87,7 @@ public:
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     //##ModelId=452B0C5202BB
     inline int FindPeakInHist( int count, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( count, pPdwIndex ); }
-	
+
     //##ModelId=452B0C5202CE
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     //##ModelId=452B0C5202CF
@@ -149,6 +151,8 @@ public:
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdAet(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
+    inline int IsStorePDW() { return m_iIsStorePDW; }
+
     void InitVar();
     //##ModelId=452B0C52036E
     void ClearColBuffer();
@@ -181,15 +185,15 @@ public:
 
 /*
 extern "C" {
-	void CreateKnownSigAnalClass();
-	void DeleteKnownSigAnalClass();
+    void CreateKnownSigAnalClass();
+    void DeleteKnownSigAnalClass();
 
-	int KnownSigAnal( int noSbc, int noCh );
-	void SendKSPNewAet( STR_NEWAET *pAet, UINT inEMT );
-	void SendKSPUpdAet( STR_UPDAET *pUpdAet );
-	void SendKSPLostAet( STR_TRKAET *pAet, int stat );
-	
-	extern CKnownSigAnal *theKnownSigAnal;
+    int KnownSigAnal( int noSbc, int noCh );
+    void SendKSPNewAet( STR_NEWAET *pAet, UINT inEMT );
+    void SendKSPUpdAet( STR_UPDAET *pUpdAet );
+    void SendKSPLostAet( STR_TRKAET *pAet, int stat );
+
+    extern CKnownSigAnal *theKnownSigAnal;
 
 }
 */
