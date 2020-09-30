@@ -1053,7 +1053,7 @@ void CELSignalIdentifyAlg::Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBD
     //IdentifyScan();
 
     // 7. 우선 순위 식별
-    IdentifyPriority();
+    //IdentifyPriority();
 
     // 8. 일치율 식별
     IdentifyMatchRatio();
@@ -2443,75 +2443,75 @@ void CELSignalIdentifyAlg::CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIA
 */
 void CELSignalIdentifyAlg::SortThreatLevel()
 {
-    //UINT i, j;
+    UINT i, j;
     //UINT temp;
-    //SRadarMode *pTempRadarMode;
+    SRadarMode *pTempRadarMode;
 
-    //bool sorted;
+    bool sorted;
 
     // 위협 후보 식별을 정렬한다.
     m_nCoIdResult = (int) m_toLib;
-// 	for( i=m_toLib ; i > 0 ; --i ) {
-// 		sorted = true;
-//
-// 		for( j=0 ; j < m_toLib-1 ; ++j ) {
-// 			SRadarMode* pRadarModeRef, *pRadarModeNxt;
-//
-// 			pRadarModeRef = m_pIdResult[j].pIdxRadarMode;
-// 			if( pRadarModeRef == NULL ) { //DTEC_NullPointCheck
-// 				continue;
-// 			}
-//
-// 			pRadarModeNxt = m_pIdResult[j+1].pIdxRadarMode;
-// 			if( pRadarModeNxt == NULL ) { //DTEC_NullPointCheck
-// 				continue;
-// 			}
-//
-// 			if( m_pIdResult[j].uRatio == m_pIdResult[j+1].uRatio ) {
-// 				// 1 순위 : 레이더 우선순위
-// 				if( pRadarModeRef->nPriority < pRadarModeNxt->nPriority /* && ( pRadarModeRef->nPriority > 0 && pRadarModeNxt->nPriority > 0 ) */ ) {
-// 					pTempRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-// 					m_pIdResult[j+1].pIdxRadarMode = m_pIdResult[j].pIdxRadarMode;
-// 					m_pIdResult[j].pIdxRadarMode = pTempRadarMode;
-//
-// 					sorted = false;
-//
-// 				}
-// 				// 2 순위 : 레이더모드 우선순위
-// 				else if( pRadarModeRef->nPriority == pRadarModeNxt->nPriority /* || pRadarModeNxt->nPriority <= 0 || pRadarModeNxt->nPriority */ ) {
-// 					if( pRadarModeRef->nRadarModenPriority < pRadarModeNxt->nRadarModenPriority /* && ( pRadarModeNxt->nRadarModenPriority > 0 && pRadarModeRef->nRadarModenPriority > 0 ) */ ) {
-// 						pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
-// 						m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-// 						m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
-//
-// 						sorted = false;
-// 					}
-// 					else if( pRadarModeRef->nRadarModenPriority == pRadarModeNxt->nRadarModenPriority /* || pRadarModeNxt->nRadarModenPriority <= 0 || pRadarModeNxt->nRadarModenPriority */ ) {
-// 						// 레이더 모드 인데스에서 ELNOT 순으로 정렬
-// 						if( IsSortELNOT( pRadarModeRef, pRadarModeNxt ) == true ) {
-// 						//if( pRadarModeRef->nRadarModeIndex > pRadarModeNxt->nRadarModeIndex ) {
-// 							pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
-// 							m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-// 							m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
-//
-// 							sorted = false;
-// 						}
-// 					}
-// 					else { //DTEC_ELSE
-//
-// 					}
-// 				}
-// 				else { //DTEC_ELSE
-//
-// 				}
-// 			}
-//
-// 		}
-//
-// 	}
+    for( i=m_toLib ; i > 0 ; --i ) {
+        sorted = true;
+
+        for( j=0 ; j < m_toLib-1 ; ++j ) {
+            SRadarMode* pRadarModeRef, *pRadarModeNxt;
+
+            pRadarModeRef = m_pIdResult[j].pIdxRadarMode;
+            if( pRadarModeRef == NULL ) { //DTEC_NullPointCheck
+                continue;
+            }
+
+            pRadarModeNxt = m_pIdResult[j+1].pIdxRadarMode;
+            if( pRadarModeNxt == NULL ) { //DTEC_NullPointCheck
+                continue;
+            }
+
+            if( m_pIdResult[j].uRatio == m_pIdResult[j+1].uRatio ) {
+                // 1 순위 : 레이더 우선순위
+                if( pRadarModeRef->iRadarPriority < pRadarModeNxt->iRadarPriority /* && ( pRadarModeRef->nPriority > 0 && pRadarModeNxt->nPriority > 0 ) */ ) {
+                    pTempRadarMode = m_pIdResult[j+1].pIdxRadarMode;
+                    m_pIdResult[j+1].pIdxRadarMode = m_pIdResult[j].pIdxRadarMode;
+                    m_pIdResult[j].pIdxRadarMode = pTempRadarMode;
+
+                    sorted = false;
+
+                }
+                // 2 순위 : 레이더모드 우선순위
+                else if( pRadarModeRef->iRadarPriority == pRadarModeNxt->iRadarPriority /* || pRadarModeNxt->nPriority <= 0 || pRadarModeNxt->nPriority */ ) {
+                    if( pRadarModeRef->iRadarModePriority < pRadarModeNxt->iRadarModePriority /* && ( pRadarModeNxt->nRadarModenPriority > 0 && pRadarModeRef->nRadarModenPriority > 0 ) */ ) {
+                        pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
+                        m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
+                        m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
+
+                        sorted = false;
+                    }
+                    else if( pRadarModeRef->iRadarModePriority == pRadarModeNxt->iRadarModePriority /* || pRadarModeNxt->nRadarModenPriority <= 0 || pRadarModeNxt->nRadarModenPriority */ ) {
+                        // 레이더 모드 인데스에서 ELNOT 순으로 정렬
+                        if( IsSortELNOT( pRadarModeRef, pRadarModeNxt ) == true ) {
+                        //if( pRadarModeRef->nRadarModeIndex > pRadarModeNxt->nRadarModeIndex ) {
+                            pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
+                            m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
+                            m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
+
+                            sorted = false;
+                        }
+                    }
+                    else { //DTEC_ELSE
+
+                    }
+                }
+                else { //DTEC_ELSE
+
+                }
+            }
+
+        }
+
+    }
 
 }
-//
+
 // //////////////////////////////////////////////////////////////////////////
 // /*! \brief    주파수 및 PRI 식별을 수행한다.
 // 		\author   조철희
