@@ -118,10 +118,11 @@ void CTrackAnalysis::AnalysisStart()
 
     uiTotalLOB = m_pTheKnownSigAnal->GetCoLOB();
 
+    strAnalInfo.uiBand = 0;
     strAnalInfo.uiTotalLOB = uiTotalLOB;
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
-    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
 
 }

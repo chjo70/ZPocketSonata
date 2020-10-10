@@ -246,7 +246,7 @@ CREATE TABLE PARAM_SET_ASSOCIATIONS_P
 CREATE TABLE RADAR_MODE
 (
   RADAR_MODE_INDEX                INTEGER       NOT NULL,
-  SECLAB                          INTEGER       NOT NULL,
+  SECLAB                          INTEGER       DEFAULT 0,
   FUNCTION_CODE                   VARCHAR2(2 ),
   DATE_CREATED                    TIMESTAMP(6)                   DEFAULT '2020/08/28 12:34:56.123',
   DATE_LAST_UPDATED               TIMESTAMP(6)                   DEFAULT '1970/01/01 0:00:00.000',
@@ -311,8 +311,8 @@ CREATE TABLE RADAR_MODE
   PLATFORM                        INTEGER                        DEFAULT -1,
   RF_EXTREME_MIN                  FLOAT(52)                      DEFAULT -1,
   RF_EXTREME_MAX                  FLOAT(52)                      DEFAULT -1,
-  RF_TYPICAL_MIN                  FLOAT(52)                      DEFAULT -1,
-  RF_TYPICAL_MAX                  FLOAT(52)                      DEFAULT -1,
+  RF_TYPICAL_MIN                  FLOAT(52)                      DEFAULT 480,
+  RF_TYPICAL_MAX                  FLOAT(52)                      DEFAULT 18000,
   BANDWIDTH_OPER_MIN              FLOAT(52)                      DEFAULT -1,
   BANDWIDTH_OPER_MAX              FLOAT(52)                      DEFAULT -1,
   RF_CHANNEL_SPACING_MIN          FLOAT(52)                      DEFAULT -1,
@@ -384,8 +384,8 @@ CREATE TABLE RADAR_MODE
   PRI_STEP_MAX                    FLOAT(52)                      DEFAULT -1,
   PRI_SUBFRAME_PERIOD_MIN         FLOAT(52)                      DEFAULT -1,
   PRI_SUBFRAME_PERIOD_MAX         FLOAT(52)                      DEFAULT -1,
-  PRI_TYPICAL_MIN                 FLOAT(52)                      DEFAULT -1,
-  PRI_TYPICAL_MAX                 FLOAT(52)                      DEFAULT -1,
+  PRI_TYPICAL_MIN                 FLOAT(52)                      DEFAULT 2,
+  PRI_TYPICAL_MAX                 FLOAT(52)                      DEFAULT 2000,
   PRI_XTAL_MIN                    FLOAT(52)                      DEFAULT -1,
   PRI_XTAL_MAX                    FLOAT(52)                      DEFAULT -1,
   PRI_XTAL_COUNT_MIN              INTEGER                        DEFAULT -1,
@@ -560,8 +560,8 @@ CREATE TABLE RADAR_MODE
   SECURITY_REVIEW_DATE            TIMESTAMP(6)                   DEFAULT '1970/01/01 0:00:00.000',
   ASSOC_INDEX                     INTEGER                        DEFAULT -1,
   MODULATION_CODE                 VARCHAR2(2 )               DEFAULT 'ZZ',
-  PRIORITY                        INTEGER                        DEFAULT -1,
-  RF_TYPE                         INTEGER DEFAULT 1,
+  PRIORITY                        INTEGER                        DEFAULT 0,
+  RF_TYPE                         INTEGER DEFAULT 0,
   PRI_TYPE                        INTEGER DEFAULT 0,
   PRIMARY KEY (RADAR_MODE_INDEX)
 );
@@ -920,10 +920,10 @@ CREATE TABLE RADAR_MODE_COMMENTS_P
 CREATE TABLE RADAR_MODE_LIFECYCLE
 (
   RADAR_INDEX       INTEGER                     NOT NULL,
-  RADAR_MODE_INDEX  INTEGER                     NOT NULL,
-  RADAR_MODE_NAME   VARCHAR2(30 )           NOT NULL,
-  MODE_CODE         VARCHAR2(5 )            NOT NULL,
-  SECLAB            INTEGER                     DEFAULT NULL                  NOT NULL,
+  RADAR_MODE_INDEX  INTEGER                     DEFAULT 1,
+  RADAR_MODE_NAME   VARCHAR2(30 )           DEFAULT 'TEST',
+  MODE_CODE         VARCHAR2(5 )            DEFAULT 'ZZ',
+  SECLAB            INTEGER                     DEFAULT 0                  NOT NULL,
   PRIMARY KEY (RADAR_INDEX, RADAR_MODE_INDEX)
 );
 CREATE TABLE RADAR_MODE_LIFECYCLE_P

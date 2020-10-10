@@ -282,7 +282,7 @@ void CNMakeAET::MarkAllAetToPdwIndex()
     int i;
     //STR_PDWINDEX *pPdwIndex;
 
-    for( i=0 ; i < m_CoAet ; ++i ) {
+    for( i=0 ; i < m_CoLOB ; ++i ) {
         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
     }
@@ -290,161 +290,9 @@ void CNMakeAET::MarkAllAetToPdwIndex()
 }
 
 /**
-  * @brief
-  * @param		STR_EMITTER * pEmitter
-  * @param		int idxEmitter
-  * @return 	void
-  * @return		성공시 true, 실패시 false
-  * @date			2019/04/03
-*/
-void CNMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
-{
-    int i;
-    STR_MINMAX stVal;
-    STR_MINMAX_SDEV stVal2;
-    SRxLOBData *pLOBData;
-
-    struct __timeb32 timeBuffer;
-
-    STR_FRQ stFrq;
-    STR_PRI stPri;
-
-    pLOBData = & m_LOBData[m_CoAet];
-
-    memset( pLOBData, 0, sizeof(SRxLOBData) );
-
-    //////////////////////////////////////////////////////////////////////////
-
-    pLOBData->uiLOBID = m_CoAet + 1;
-    pLOBData->uiABTID = 0;
-    pLOBData->uiAETID = 0;
-
-    // 시간 정보
-#ifdef _WIN32
-    _ftime32_s( & timeBuffer );
-    pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
-    pLOBData->tiContactTimems = timeBuffer.millitm;
-#else
-    _ftime32_s( & timeBuffer );
-    pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
-    pLOBData->tiContactTimems = timeBuffer.millitm;
-
-#endif
-
-    // 신호 형태
-    pLOBData->iSignalType = pEmitter->signal_type;
-
-    // 방위
-    MakeAOAInfoInSeg( & stVal2, pEmitter );
-    pLOBData->fMeanDOA = FMUL( stVal2.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
-    pLOBData->fMaxDOA = FMUL( stVal2.max, _spAOAres );				//FTOAsCNV( stVal.min );
-    pLOBData->fMinDOA = FMUL( stVal2.min, _spAOAres );				//FTOAsCNV( stVal.max );
-    pLOBData->fDeviationDOA = pLOBData->fMaxDOA - pLOBData->fMinDOA;
-    pLOBData->fSDeviationDOA = stVal2.fsdev;
-
-// 	if( RADARCOL_1 == m_pNewSigAnal->GetCollectorID() ) {
-// 		pLOBData->fMeanDOA = 180.0;
-// 		pLOBData->fMaxDOA = 180.0;
-// 		pLOBData->fMinDOA = 180.0;
-// 	}
-// 	else {
-// 		pLOBData->fMeanDOA = 270.0;
-// 		pLOBData->fMaxDOA = 270.0;
-// 		pLOBData->fMinDOA = 270.0;
-// 	}
-
-
-    // DI 율
-    pLOBData->iDIRatio = MakeDIInfoInSeg( pEmitter );							// [0.1%]
-
-    // 주파수 정보 생성
-    MakeFrqInfoInSeg( & stFrq, pEmitter );
-
-    pLOBData->iFreqType = stFrq.type;
-    pLOBData->iFreqPatternType = stFrq.patType;
-    pLOBData->fFreqPatternPeriod = FTOAsCNV( stFrq.patPrd );
-    pLOBData->fMeanFreq = FFRQCNV( 0, stFrq.mean );
-    pLOBData->fMaxFreq = FFRQCNV( 0, stFrq.max );
-    pLOBData->fMinFreq = FFRQCNV( 0, stFrq.min );
-    pLOBData->fFreqDeviation = FFRQCNV( 0, stFrq.max-stFrq.min );
-    pLOBData->iFreqPositionCount = stFrq.swtLev;
-    memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
-    for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
-        pLOBData->fFreqSeq[i] = FMUL( stFrq.swtVal[i], (0.001) );		// FFRQCNV( stFrq.swtVal[i] );
-    }
-
-    // PRI 정보 생성
-    MakePRIInfoInSeg( & stPri, pEmitter );
-
-    pLOBData->iPRIType = stPri.type;
-    pLOBData->iPRIPatternType = stPri.patType;
-    pLOBData->fPRIPatternPeriod = FTOAsCNV( stPri.patPrd );
-    pLOBData->fMeanPRI = FDIV( stPri.mean, _spOneMicrosec );
-    pLOBData->fMaxPRI = FDIV( stPri.max, _spOneMicrosec );
-    pLOBData->fMinPRI = FDIV( stPri.min, _spOneMicrosec );
-    pLOBData->fPRIDeviation = FDIV( (stPri.max-stPri.min), _spOneMicrosec );
-    pLOBData->fPRIJitterRatio = stPri.jtrPer;
-    pLOBData->iPRIPositionCount = stPri.swtLev;
-    memset( pLOBData->fPRISeq, 0, sizeof(pLOBData->fPRISeq) );
-    for( i=0 ; i < pLOBData->iPRIPositionCount ; ++i ) {
-        pLOBData->fPRISeq[i] = FDIV( stPri.swtVal[i], _spOneMicrosec );
-    }
-
-    // 펄스폭 생성
-    MakePWInfoInSeg( & stVal, pEmitter );
-    pLOBData->fMeanPW = FDIV( stVal.mean*1000., _spOneMicrosec );			//, _spOneMicrosec );
-    pLOBData->fMaxPW = FDIV( stVal.max*1000., _spOneMicrosec );				//, _spOneMicrosec );
-    pLOBData->fMinPW = FDIV( stVal.min*1000., _spOneMicrosec );				//, _spOneMicrosec );
-    pLOBData->fPWDeviation = FDIV( 1000*(stVal.max-stVal.min), _spOneMicrosec );
-
-    // 신호 세기 생성
-    MakePAInfoInSeg( & stVal, pEmitter );
-    pLOBData->fMeanPA = PACNV( stVal.mean );			//FPACNV( stVal.mean );
-    pLOBData->fMaxPA = PACNV( stVal.max );				//FPACNV( stVal.max );
-    pLOBData->fMinPA = PACNV( stVal.min );				//FPACNV( stVal.min );
-    pLOBData->fPADeviation = PACNV( stVal.max-stVal.min );				//FPACNV( stVal.min );
-
-    // 기타 정보 저장
-    pLOBData->iIsStoreData = m_pNewSigAnal->IsStorePDW();
-    pLOBData->iNumOfPDW = pEmitter->pdw.count;
-#ifdef _ELINT_
-    pLOBData->iCollectorID = m_pNewSigAnal->GetCollectorID();
-#endif
-
-    // 수집소 위치 정보 저장
-#ifdef _ELINT_
-    if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
-        pLOBData->dRadarCollectionLatitude = dRCLatitude[pLOBData->iCollectorID];
-        pLOBData->dRadarCollectionLongitude = dRCLongitude[pLOBData->iCollectorID];
-    }
-    else {
-        pLOBData->dRadarCollectionLatitude = 0.0;
-        pLOBData->dRadarCollectionLongitude = 0.0;
-    }
-#else
-
-#endif
-
-    //memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
-    pLOBData->iRadarModeIndex = _spZero;
-    pLOBData->iThreatIndex = _spZero;
-
-    //pLOBData->uiSeqNum = 0;
-
-    STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
-
-#ifdef _ELINT_
-    memcpy( pLOBData->aucTaskID, pPDWData->aucTaskID, sizeof(pPDWData->aucTaskID) );
-#elif defined(_POCKETSONATA_)
-
-#else
-
-#endif
-
-    DISP_FineAet( pLOBData );
-
-}
-
+ * @brief CNMakeAET::DISP_FineAet
+ * @param pLOB
+ */
 void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
     char buffer[500];
@@ -510,4 +358,13 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     printf( "\n%s", buffer );
     Log( enNormal, "\t%s", buffer );
 
+}
+
+/**
+ * @brief CNMakeAET::IsStorePDW
+ * @return
+ */
+unsigned int CNMakeAET::IsStorePDW()
+{
+    return m_pNewSigAnal->IsStorePDW();
 }
