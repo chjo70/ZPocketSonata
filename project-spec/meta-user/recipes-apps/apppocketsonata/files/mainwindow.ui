@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>924</width>
+    <width>1042</width>
     <height>577</height>
    </rect>
   </property>
@@ -242,10 +242,10 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>290</y>
-      <width>431</width>
-      <height>71</height>
+      <x>580</x>
+      <y>200</y>
+      <width>341</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -257,8 +257,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>350</x>
-       <y>30</y>
+       <x>10</x>
+       <y>70</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -324,7 +324,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>300</y>
+      <y>290</y>
       <width>81</width>
       <height>61</height>
      </rect>
@@ -372,13 +372,36 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="pushButton_ReloadLibrary">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>290</y>
+      <width>121</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>81</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>위협 라이브러리
+재로딩</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>924</width>
+     <width>1042</width>
      <height>22</height>
     </rect>
    </property>

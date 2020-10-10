@@ -106,9 +106,9 @@ void MainWindow::EnableControl( bool bEnable )
     ui->BITTEST->setEnabled( bEnable );
 
     ui->AnalStart->setEnabled( bEnable );
+
+    ui->pushButton_ReloadLibrary->setEnabled( bEnable );
     ui->pushButton_SimPDW->setEnabled( bEnable );
-
-
 
 }
 
@@ -193,7 +193,7 @@ void MainWindow::onReadMessage()
  */
 void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData )
 {
-    int i, j;
+    unsigned int i, j;
 
     QString qBuffer;
 
@@ -496,4 +496,20 @@ void MainWindow::on_pushButton_2_clicked()
     strLanHeader.uiLength = 0;
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
+}
+
+/**
+ * @brief MainWindow::on_pushButton_ReloadLibrary_clicked
+ */
+void MainWindow::on_pushButton_ReloadLibrary_clicked()
+{
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+
+    strLanHeader.ucOpCode = enREQ_RELOAD_LIBRARY;
+    strLanHeader.uiLength = 0;
+
+    iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
+
 }
