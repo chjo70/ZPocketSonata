@@ -1,0 +1,34 @@
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=euc-kr">
+<title>시스템 변수</title>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+<ul>
+    <h1><a href="http://sbc/cgi-bin/system.cgi"><img src="graphics/bit.jpg" width="103" height="78" border="0" alt="자체 점검을 수행 합니다."></a> 
+    자체 점검</h1>
+</ul>
+<hr color="#CC99FF">
+<form method="get" action="fetch.cgi">
+  
+    <h2>자체 점검</h2>
+    <ul>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;SBC  </li>
+        <li>&nbsp;</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>
+    대역별 임계값</h2> 
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;CD밴드(0.5∼2 ㎓): <input type="text" name="query_cd" value="" size="7">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;저대역(2∼6 ㎓): <input type="text" name="query_26" size="7">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;고대역1(6∼10 ㎓): <input type="text" name="query_610" value="" size="7">㏈, 
+    고대역2(10∼14 ㎓):&nbsp;<input type="text" name="query_1014" value="" size="7">㏈, 
+    고대역3(14∼18 ㎓):&nbsp;<input type="text" name="query_1418" value="" size="7">㏈</p>
+    
+    <h2 align="left"><input type="submit" value="변경" name="send"></h2>
+</form>
+</body>
+
+</html>
