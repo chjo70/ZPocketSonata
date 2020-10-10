@@ -65,8 +65,6 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 {
     m_CoInstance = 0;
 
-    m_uiOpInitID = 0;
-
     m_bDBThread = bDBThread;
 
 #ifdef _SQLITE_
@@ -344,41 +342,41 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 #ifdef _POCKETSONATA_
     printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-           pLOBData->fMeanDOA,
-           aet_freq_type[pLOBData->iFreqType], pLOBData->fMinFreq, pLOBData->fMaxFreq,
-           aet_pri_type[pLOBData->iPRIType], pLOBData->fMinPRI, pLOBData->fMaxPRI,
-           pLOBData->fMinPW, pLOBData->fMaxPW,
-           pLOBData->fMinPA, pLOBData->fMaxPA,
+           pLOBData->fDOAMean,
+           aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+           aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+           pLOBData->fPWMin, pLOBData->fPWMax,
+           pLOBData->fPAMin, pLOBData->fPAMax,
            pLOBData->iNumOfPDW
            );
     Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
         pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-        pLOBData->fMeanDOA,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fMinFreq, pLOBData->fMaxFreq,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fMinPRI, pLOBData->fMaxPRI,
-        pLOBData->fMinPW, pLOBData->fMaxPW,
-        pLOBData->fMinPA, pLOBData->fMaxPA,
+        pLOBData->fDOAMean,
+        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+        pLOBData->fPWMin, pLOBData->fPWMax,
+        pLOBData->fPAMin, pLOBData->fPAMax,
         pLOBData->iNumOfPDW
         );
 #else
     printf( "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
         pLOBData->aucTaskID,
         pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-        pLOBData->fMeanDOA,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fMinFreq, pLOBData->fMaxFreq,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fMinPRI, pLOBData->fMaxPRI,
-        pLOBData->fMinPW, pLOBData->fMaxPW,
-        pLOBData->fMinPA, pLOBData->fMaxPA,
+        pLOBData->fDOAMean,
+        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+        pLOBData->fPWMin, pLOBData->fPWMax,
+        pLOBData->fPAMin, pLOBData->fPAMax,
         pLOBData->iNumOfPDW
         );
     Log( enNormal, "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
         pLOBData->aucTaskID,
         pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-        pLOBData->fMeanDOA,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fMinFreq, pLOBData->fMaxFreq,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fMinPRI, pLOBData->fMaxPRI,
-        pLOBData->fMinPW, pLOBData->fMaxPW,
-        pLOBData->fMinPA, pLOBData->fMaxPA,
+        pLOBData->fDOAMean,
+        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+        pLOBData->fPWMin, pLOBData->fPWMax,
+        pLOBData->fPAMin, pLOBData->fPAMax,
         pLOBData->iNumOfPDW
         );
 #endif
@@ -396,7 +394,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     LOBPreSetting( pLOBHeader, pLOBData, pLOBOtherInfo );
 
     // 0. 위협 라이브러러리 로딩
-    LoadCEDLibrary( szTaskID, pLOBData->fMinFreq, pLOBData->fMaxFreq );
+    LoadCEDLibrary( szTaskID, pLOBData->fFreqMin, pLOBData->fFreqMax );
 
     // 위협 처리
     // 항공으로 수신한 위협 데이터 개수 만큼 로드하여 위협 관리를 처리한다. -> 의미가 없음. -> 없앰.
@@ -449,10 +447,10 @@ void CELEmitterMergeMngr::PrintAllABTData()
         Log( enNormal, "[%4d-%4d] %s [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [R%2d/T%2d], [%.4f/%.4f/%.1f/%.1f/%.1f/%.1f/%.1f]" ,
             pSRxABTData->uiAETID, pSRxABTData->uiABTID,
             aet_signal_type[pSRxABTData->iSignalType],
-            aet_freq_type[pSRxABTData->iFreqType], pSRxABTData->fMinFreq, pSRxABTData->fMaxFreq,
-            aet_pri_type[pSRxABTData->iPRIType], pSRxABTData->fMinPRI, pSRxABTData->fMaxPRI,
-            pSRxABTData->fMinPW, pSRxABTData->fMaxPW,
-            pSRxABTData->fMinPA, pSRxABTData->fMaxPA,
+            aet_freq_type[pSRxABTData->iFreqType], pSRxABTData->fFreqMin, pSRxABTData->fFreqMax,
+            aet_pri_type[pSRxABTData->iPRIType], pSRxABTData->fPRIMin, pSRxABTData->fPRIMax,
+            pSRxABTData->fPWMin, pSRxABTData->fPWMax,
+            pSRxABTData->fPAMin, pSRxABTData->fPAMax,
             pSRxABTData->iRadarModeIndex, pSRxABTData->iThreatIndex,
             pSRxABTData->fLatitude, pSRxABTData->fLongitude, pSRxABTData->fCEP, pSRxABTData->fMajorAxis, pSRxABTData->fMinorAxis, pSRxABTData->fTheta, pSRxABTData->fDistanceErrorOfThreat
             );
@@ -480,8 +478,8 @@ void CELEmitterMergeMngr::InitLOB()
 /**
  * @brief     LoadCEDLibrary
  * @param     unsigned char * aucTaskID
- * @param     int fMinFreq
- * @param     int fMaxFreq
+ * @param     int fFreqMin
+ * @param     int fFreqMax
  * @param     EnumLibType eCEDLibType
  * @param     EnumLibType eEOBLibType
  * @return    void
@@ -491,7 +489,7 @@ void CELEmitterMergeMngr::InitLOB()
  * @date      2017-02-21, 오후 1:28
  * @warning
  */
-void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fMinFreq, float fMaxFreq )
+void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fFreqMin, float fFreqMax )
 {
     /*! \todo   아래를 쓰레드로 해야 함.
         \author 조철희 (churlhee.jo@lignex1.com)
@@ -2077,6 +2075,9 @@ void CELEmitterMergeMngr::UpdateAET( CELThreat *pTheAETThreat, CELThreat *pTheAB
             // 시간 정보
             UpdateSeenTime( pAETData, pAETExtData, pABTData, pABTExtData);
 
+            // 방위 정보
+            UpdateDOAInfo( pAETData, pAETExtData, pABTData, pABTExtData);
+
             // 주파수 정보
             UpdateFreqInfo( pAETData, pAETExtData, pABTData, pABTExtData );
 
@@ -2648,7 +2649,7 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
     UpdateSeenTime( m_pABTData, m_pABTExtData );
 
     // 방위 정보
-    //UpdateDOAInfo( pABTData, pABTExtData );
+    UpdateDOAInfo( m_pABTData, m_pABTExtData );
 
     // 펄스 정보
     //UpdatePulseInfo( pABTData, pABTExtData );
@@ -2703,7 +2704,7 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
     m_pABTExtData->enBeamEmitterStat = E_ES_UPDATE;
 
     // 방사체간의 병합을 위해서 정보를 저장
-    m_pABTExtData->fLastAOA = m_pLOBData->fMeanDOA;
+    m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
     m_pABTExtData->fRadarLatitude = m_pLOBData->fRadarLatitude;
     m_pABTExtData->fRadarLongitude = m_pLOBData->fRadarLongitude;
 
@@ -3827,7 +3828,7 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
         }
 
         // 자신의 방위/위/경도 값 추가
-        stLOB.fDoa = m_pLOBData->fMeanDOA;
+        stLOB.fDoa = m_pLOBData->fDOAMean;
         stLOB.fLatitude = (float) m_pLOBData->fRadarLatitude;
         stLOB.fLongitude = (float) m_pLOBData->fRadarLongitude;
         stLOB.uiLOBID = (int) m_pLOBData->uiLOBID;
@@ -3871,7 +3872,7 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
         }
 
         // 자신의 방위/위/경도 값 추가
-        stLOB.fDoa = m_pLOBData->fMeanDOA;
+        stLOB.fDoa = m_pLOBData->fDOAMean;
         stLOB.fLatitude = (float) m_pLOBData->fRadarLatitude;
         stLOB.fLongitude = (float) m_pLOBData->fRadarLongitude;
         stLOB.uiLOBID = (int) m_pLOBData->uiLOBID;
@@ -3959,22 +3960,22 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 // 		if( pABTData->intraInfo.iType == E_AET_MOP_UNK ) {
 // 			pIntraInfo->iType = m_pLOBData->iMOPType;
 // 			pIntraInfo->iDetailType = m_pLOBData->iDetailMOPType;
-// 			pIntraInfo->fMaxFreq = m_pLOBData->iMOPMaxFreq;
-// 			pIntraInfo->fMinFreq = m_pLOBData->iMOPMinFreq;
-// 			pIntraInfo->fMeanFreq = m_pLOBData->iMOPMeanFreq;
-// 			pIntraInfo->fMaxFreqDeviation = m_pLOBData->iMOPFreqDeviation;
-// 			pIntraInfo->fMinFreqDeviation = m_pLOBData->iMOPFreqDeviation;
-// 			pIntraInfo->fMeanFreqDeviation = m_pLOBData->iMOPFreqDeviation;
+// 			pIntraInfo->fFreqMax = m_pLOBData->iMOPMaxFreq;
+// 			pIntraInfo->fFreqMin = m_pLOBData->iMOPMinFreq;
+// 			pIntraInfo->fFreqMean = m_pLOBData->iMOPMeanFreq;
+// 			pIntraInfo->fFreqMaxDeviation = m_pLOBData->iMOPFreqDeviation;
+// 			pIntraInfo->fFreqMinDeviation = m_pLOBData->iMOPFreqDeviation;
+// 			pIntraInfo->fFreqMeanDeviation = m_pLOBData->iMOPFreqDeviation;
 // 		}
 // 		else {
 // 			pIntraInfo->iType = m_pLOBData->iMOPType;
 // 			pIntraInfo->iDetailType = m_pLOBData->iDetailMOPType;
-// 			pIntraInfo->fMaxFreq = _max( m_pLOBData->iMOPMaxFreq, pIntraInfo->fMaxFreq );
-// 			pIntraInfo->fMinFreq = _min( m_pLOBData->iMOPMinFreq, pIntraInfo->fMinFreq );
-// 			pIntraInfo->fMeanFreq = IMUL( 1000000., CalcMean( (float) (m_pLOBData->iMOPMeanFreq/1000000.), m_pLOBData->iNumOfIQ, (float) (pIntraInfo->fMeanFreq/1000000.), pABTExtData->nCoTotalIQ ) );
-// 			pIntraInfo->fMaxFreqDeviation = _max( pIntraInfo->fMaxFreqDeviation, m_pLOBData->iMOPFreqDeviation );
-// 			pIntraInfo->fMinFreqDeviation = _min( pIntraInfo->fMinFreqDeviation, m_pLOBData->iMOPFreqDeviation );
-// 			pIntraInfo->fMeanFreqDeviation = IMUL( 1000000., CalcMean( (float) (m_pLOBData->iMOPFreqDeviation/1000000.), m_pLOBData->iNumOfIQ, (float) (pIntraInfo->fMeanFreqDeviation/1000000.), pABTExtData->nCoTotalIQ ) );
+// 			pIntraInfo->fFreqMax = _max( m_pLOBData->iMOPMaxFreq, pIntraInfo->fFreqMax );
+// 			pIntraInfo->fFreqMin = _min( m_pLOBData->iMOPMinFreq, pIntraInfo->fFreqMin );
+// 			pIntraInfo->fFreqMean = IMUL( 1000000., CalcMean( (float) (m_pLOBData->iMOPMeanFreq/1000000.), m_pLOBData->iNumOfIQ, (float) (pIntraInfo->fFreqMean/1000000.), pABTExtData->nCoTotalIQ ) );
+// 			pIntraInfo->fFreqMaxDeviation = _max( pIntraInfo->fFreqMaxDeviation, m_pLOBData->iMOPFreqDeviation );
+// 			pIntraInfo->fFreqMinDeviation = _min( pIntraInfo->fFreqMinDeviation, m_pLOBData->iMOPFreqDeviation );
+// 			pIntraInfo->fFreqMeanDeviation = IMUL( 1000000., CalcMean( (float) (m_pLOBData->iMOPFreqDeviation/1000000.), m_pLOBData->iNumOfIQ, (float) (pIntraInfo->fFreqMeanDeviation/1000000.), pABTExtData->nCoTotalIQ ) );
 // 		}
 // 		break;
 //
@@ -4083,17 +4084,17 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 void CELEmitterMergeMngr::UpdatePAInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
     if( pABTExtData != NULL ) {
-        pAETData->fMaxPA = _max( pAETData->fMaxPA, pABTData->fMaxPA );
-        pAETData->fMinPA = _min( pAETData->fMinPA, pABTData->fMinPA );
+        pAETData->fPAMax = _max( pAETData->fPAMax, pABTData->fPAMax );
+        pAETData->fPAMin = _min( pAETData->fPAMin, pABTData->fPAMin );
         if( pAETData->uiCoABT == _spOne ) {
-            pAETData->fMeanPA = pABTData->fMeanPA;
+            pAETData->fPAMean = pABTData->fPAMean;
         }
         else {
-            pAETData->fMeanPA = CalcMean( pAETData->fMeanPA, pAETExtData->nCoTotalPdw, pABTData->fMeanPA, pABTData->uiTotalOfPDW );
+            pAETData->fPAMean = CalcMean( pAETData->fPAMean, pAETExtData->nCoTotalPdw, pABTData->fPAMean, pABTData->uiTotalOfPDW );
         }
 
-        //pAETData->paInfo.fDeviation = CalcDeviation( pAETData->paInfo.fDeviation, pAETExtData->nCoTotalPdw, pABTData->paInfo.fDeviation, pABTExtData->nCoTotalPdw );
-        //pAETData->paInfo.fDeviation = pAETData->paInfo.fMax - pAETData->paInfo.fMin;
+        //pAETData->fPADeviation = CalcDeviation( pAETData->paInfo.fDeviation, pAETExtData->nCoTotalPdw, pABTData->paInfo.fDeviation, pABTExtData->nCoTotalPdw );
+        pAETData->fPADeviation = pAETData->fPAMax - pAETData->fPAMin;
 
     }
 
@@ -4115,11 +4116,12 @@ void CELEmitterMergeMngr::UpdatePAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 
     //pPAInfo = & pABTData->paInfo;
 
-    pABTData->fMaxPA = _max( pABTData->fMaxPA, m_pLOBData->fMaxPA );
-    pABTData->fMinPA = _min( pABTData->fMinPA, m_pLOBData->fMinPA );
-    pABTData->fMeanPA = CalcMean( pABTData->fMeanPA, pABTData->uiTotalOfPDW, m_pLOBData->fMeanPA, m_pLOBData->iNumOfPDW );
+    pABTData->fPAMax = _max( pABTData->fPAMax, m_pLOBData->fPAMax );
+    pABTData->fPAMin = _min( pABTData->fPAMin, m_pLOBData->fPAMin );
+    pABTData->fPAMean = CalcMean( pABTData->fPAMean, pABTData->uiTotalOfPDW, m_pLOBData->fPAMean, m_pLOBData->iNumOfPDW );
     //pPAInfo->fDeviation = CalcDeviation( pPAInfo->fDeviation, pABTExtData->nCoTotalPdw, m_pLOBData->iPWDeviation, m_pLOBData->iNumOfPDW );
-    //pPAInfo->fDeviation = pPAInfo->fMax - pPAInfo->fMin;
+
+    pABTData->fPADeviation = pABTData->fPAMax - pABTData->fPAMin;
 
 }
 
@@ -4139,16 +4141,16 @@ void CELEmitterMergeMngr::UpdatePAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 void CELEmitterMergeMngr::UpdatePWInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
     if( pABTExtData != NULL ) {
-        pAETData->fMaxPW = _max( pAETData->fMaxPW, pABTData->fMaxPA );
-        pAETData->fMinPW = _min( pAETData->fMinPW, pABTData->fMinPA );
+        pAETData->fPWMax = _max( pAETData->fPWMax, pABTData->fPWMax );
+        pAETData->fPWMin = _min( pAETData->fPWMin, pABTData->fPWMin );
         if( pAETData->uiCoABT == _spOne ) {
-            pAETData->fMeanPW = pABTData->fMeanPA;
+            pAETData->fPWMean = pABTData->fPWMean;
         }
         else {
-            pAETData->fMeanPW = CalcMean( pAETData->fMeanPW, pABTData->uiTotalOfPDW, pABTData->fMeanPA, pABTData->uiTotalOfPDW );
+            pAETData->fPWMean = CalcMean( pAETData->fPWMean, pABTData->uiTotalOfPDW, pABTData->fPWMean, pABTData->uiTotalOfPDW );
         }
 
-        //pAETData->pwInfo.fDeviation = pAETData->pwInfo.fMax - pAETData->pwInfo.fMin;
+        pAETData->fPWDeviation = pAETData->fPWMax - pAETData->fPWMin;
     }
 
 }
@@ -4169,10 +4171,11 @@ void CELEmitterMergeMngr::UpdatePWInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 
     //pPWInfo = & pABTData->pwInfo;
 
-    pABTData->fMaxPW = _max( pABTData->fMaxPW, m_pLOBData->fMaxPW );
-    pABTData->fMinPW = _min( pABTData->fMinPW, m_pLOBData->fMinPW );
-    pABTData->fMeanPW = CalcMean( pABTData->fMeanPW, pABTData->uiTotalOfPDW, m_pLOBData->fMeanPW, m_pLOBData->iNumOfPDW );
-    //pPWInfo->fDeviation = pPWInfo->fMax - pPWInfo->fMin;
+    pABTData->fPWMax = _max( pABTData->fPWMax, m_pLOBData->fPWMax );
+    pABTData->fPWMin = _min( pABTData->fPWMin, m_pLOBData->fPWMin );
+    pABTData->fPWMean = CalcMean( pABTData->fPWMean, pABTData->uiTotalOfPDW, m_pLOBData->fPWMean, m_pLOBData->iNumOfPDW );
+
+    pABTData->fPWDeviation = pABTData->fPWMax - pABTData->fPWMin;
 
 }
 
@@ -4192,16 +4195,16 @@ void CELEmitterMergeMngr::UpdatePWInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 void CELEmitterMergeMngr::UpdatePRIInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
     if( pABTExtData != NULL ) {
-        pAETData->fMaxPRI = _max( pAETData->fMaxPRI, pABTData->fMaxPRI );
-        pAETData->fMinPRI = _min( pAETData->fMinPRI, pABTData->fMinPRI );
+        pAETData->fPRIMax = _max( pAETData->fPRIMax, pABTData->fPRIMax );
+        pAETData->fPRIMin = _min( pAETData->fPRIMin, pABTData->fPRIMin );
         if( pAETData->uiCoABT == _spOne ) {
-            pAETData->fMeanPRI = pABTData->fMeanPRI;
+            pAETData->fPRIMean = pABTData->fPRIMean;
         }
         else {
-            pAETData->fMeanPRI = CalcMean( pAETData->fMeanPRI, pAETExtData->nCoTotalPdw, pABTData->fMeanPRI, pABTData->uiTotalOfPDW );
+            pAETData->fPRIMean = CalcMean( pAETData->fPRIMean, pAETExtData->nCoTotalPdw, pABTData->fPRIMean, pABTData->uiTotalOfPDW );
         }
         //pAETData->priInfo.fDeviation = CalcDeviation( pAETData->priInfo.fDeviation, pAETExtData->nCoTotalPdw, pABTData->priInfo.fDeviation, pABTExtData->nCoTotalPdw );
-        pAETData->fDeviationPRI = pAETData->fMaxPRI - pAETData->fMinPRI;
+        pAETData->fPRIDeviation = pAETData->fPRIMax - pAETData->fPRIMin;
     }
 }
 
@@ -4360,11 +4363,11 @@ void CELEmitterMergeMngr::UpdatePRIInfo( SRxABTData *pABTData, SELABTDATA_EXT *p
     }
 
     // PRI 통계 정보
-    pABTData->fMaxPRI = _max( pABTData->fMaxPRI, m_pLOBData->fMaxPRI );
-    pABTData->fMinPRI = _min( pABTData->fMinPRI, m_pLOBData->fMinPRI );
-    pABTData->fMeanPRI = CalcMean( pABTData->fMeanPRI, pABTData->uiTotalOfPDW, m_pLOBData->fMeanPRI, m_pLOBData->iNumOfPDW );
+    pABTData->fPRIMax = _max( pABTData->fPRIMax, m_pLOBData->fPRIMax );
+    pABTData->fPRIMin = _min( pABTData->fPRIMin, m_pLOBData->fPRIMin );
+    pABTData->fPRIMean = CalcMean( pABTData->fPRIMean, pABTData->uiTotalOfPDW, m_pLOBData->fPRIMean, m_pLOBData->iNumOfPDW );
     //pPRIInfo->fDeviation = CalcDeviation( pPRIInfo->fDeviation, pABTExtData->nCoTotalPdw, m_pLOBData->iPRfDeviation, m_pLOBData->iNumOfPDW );
-    //pABTData->fDeviation = pPRIInfo->fMax - pPRIInfo->fMin;
+    pABTData->fPRIDeviation = pABTData->fPRIMax - pABTData->fPRIMin;
 
     pABTData->fPRIJitterRatio = CalcJitterRatio( pABTData, pABTExtData );
 
@@ -4386,14 +4389,60 @@ float CELEmitterMergeMngr::CalcJitterRatio( SRxABTData *pABTData, SELABTDATA_EXT
     float fRet;
     float fJitterRatio;
 
-    fJitterRatio = (float) ( 50. * ( m_pLOBData->fMaxPRI - m_pLOBData->fMinPRI ) );
-    if( m_pLOBData->fMeanPRI == 0 || ! ( fJitterRatio > 0 || fJitterRatio < 0 ) ) { //DTEC_Else
+    fJitterRatio = (float) ( 50. * ( pABTData->fPRIMax - pABTData->fPRIMin ) );
+    if( pABTData->fPRIMean == 0 || ! ( fJitterRatio > 0 || fJitterRatio < 0 ) ) { //DTEC_Else
         fRet = 0;
     }
     else {
-        fRet = FDIV( fJitterRatio, m_pLOBData->fMeanPRI );
+        fRet = FDIV( fJitterRatio, pABTData->fPRIMean );
     }
     return fRet;
+}
+
+void CELEmitterMergeMngr::UpdateDOAInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
+{
+// 	//STR_DOA_INFO *pDOAInfo;
+//
+// 	//pDOAInfo = & pABTData->doaInfo;
+//
+#ifdef _DOA_LOW_HIGH_
+// 	int iDOALow, iDOAHigh, iDOADiff, iDOAOffset;
+    // 수동으로 변경했으면 정보 유지
+    if( pABTExtData->xManualEdited.x.peInfo == true && false ) {
+        return;
+    }
+
+// 	// 수신한 방위 범위를 체크해서 방위 LOW, HIGH 를 계산함.
+// 	iDOADiff = SubAOA( m_pLOBData->fDOAMax, m_pLOBData->fDOAMin );
+// 	if( iDOADiff > ( MAX_AOA / 2 ) ) {
+// 		iDOALow = m_pLOBData->fDOAMax;
+// 		iDOAHigh = m_pLOBData->fDOAMin;
+// 	}
+// 	else {
+// 		iDOALow = m_pLOBData->fDOAMin;
+// 		iDOAHigh = m_pLOBData->fDOAMax;
+// 	}
+//
+// 	// 방위 업데이트
+// 	iDOAOffset = - iDOALow;
+// 	iDOALow = 0;
+// 	iDOAHigh = AddAOA( iDOAHigh, iDOAOffset );
+//
+// 	pDOAInfo->fMin = _min( iDOALow, m_pLOBData->fDOAMin );
+// 	pDOAInfo->fMin = AddAOA( pDOAInfo->fMin, iDOAOffset );
+// 	pDOAInfo->fMax = _max( iDOAHigh, m_pLOBData->fDOAMax );
+// 	pDOAInfo->fMax = AddAOA( pDOAInfo->fMax, iDOAOffset );
+// 	pDOAInfo->iMean = CalcMean( pDOAInfo->iMean, pABTExtData->nCoTotalPdw, m_pLOBData->iMeanDOA, m_pLOBData->iNumOfPDW );
+// 	pDOAInfo->fDeviation = CalcDeviation( pDOAInfo->iMean, pABTExtData->nCoTotalPdw, m_pLOBData->iDOADeviation, m_pLOBData->iNumOfPDW );
+// 	pDOAInfo->iSDeviation = 0;
+#else
+    pAETData->fDOAMin = pABTData->fDOAMin;
+    pAETData->fDOAMax = pABTData->fDOAMax;
+    pAETData->fDOAMean = pABTData->fDOAMean;
+    pAETData->fDOADeviation = pABTData->fDOADeviation;
+
+#endif
+
 }
 
 /**
@@ -4418,21 +4467,21 @@ void CELEmitterMergeMngr::UpdateFreqInfo( SRxAETData *pAETData, SELAETDATA_EXT *
 // 	else {
 
         if( pABTExtData != NULL ) {
-            pAETData->fMaxFreq = _max( pAETData->fMaxFreq, pABTData->fMaxFreq );
-            pAETData->fMinFreq = _min( pAETData->fMinFreq, pABTData->fMinFreq );
+            pAETData->fFreqMax = _max( pAETData->fFreqMax, pABTData->fFreqMax );
+            pAETData->fFreqMin = _min( pAETData->fFreqMin, pABTData->fFreqMin );
 
             if( pAETData->uiCoABT == _spOne ) {
-                pAETData->fMeanFreq = pABTData->fMeanFreq;
+                pAETData->fFreqMean = pABTData->fFreqMean;
             }
             else {
-                pAETData->fMeanFreq = CalcMean( pAETData->fMeanFreq, pAETExtData->nCoTotalPdw, pABTData->fMeanFreq, pABTData->uiTotalOfPDW );
+                pAETData->fFreqMean = CalcMean( pAETData->fFreqMean, pAETExtData->nCoTotalPdw, pABTData->fFreqMean, pABTData->uiTotalOfPDW );
             }
         }
         else {
 
         }
         //pAETData->freqInfo.fDeviation = CalcDeviation( pAETData->freqInfo.fDeviation, pAETExtData->nCoTotalPdw, pABTData->freqInfo.fDeviation, pABTExtData->nCoTotalPdw );
-        pAETData->fDeviationFreq = pAETData->fMaxFreq- pAETData->fMinFreq;
+        pAETData->fFreqDeviation = pAETData->fFreqMax- pAETData->fFreqMin;
 /*	}*/
 
 }
@@ -4491,7 +4540,7 @@ void CELEmitterMergeMngr::UpdateFreqInfo( SRxABTData *pABTData, SELABTDATA_EXT *
             pABTData->iFreqPatternType = m_pLOBData->iFreqPatternType;
             //pABTData->fChangePeriodMin = min( pFreqDInfo->fChangePeriodMin, m_pLOBData->fFreqChangePeriod );
             //pABTData->fChangePeriodMax = max( pFreqDInfo->fChangePeriodMax, m_pLOBData->fFreqChangePeriod );
-            //pABTData->fChangePeriodMean = CalcMean( pFreqDInfo->fChangePeriodMean, pABTExtData->nCoTotalPdw, m_pLOBData->fMeanFreq, m_pLOBData->iNumOfPDW );
+            //pABTData->fChangePeriodMean = CalcMean( pFreqDInfo->fChangePeriodMean, pABTExtData->nCoTotalPdw, m_pLOBData->fFreqMean, m_pLOBData->iNumOfPDW );
             pABTData->iFreqPositionCount = 0;
             //pABTData->iElementCount = 0;
         }
@@ -4537,9 +4586,9 @@ void CELEmitterMergeMngr::UpdateFreqInfo( SRxABTData *pABTData, SELABTDATA_EXT *
     }
 
     // 주파수 통계 정보
-    pABTData->fMaxFreq = _max( pABTData->fMaxFreq, m_pLOBData->fMaxFreq );
-    pABTData->fMinFreq = _min( pABTData->fMinFreq, m_pLOBData->fMinFreq );
-    pABTData->fMeanFreq = CalcMean( pABTData->fMeanFreq, pABTData->uiTotalOfPDW, m_pLOBData->fMeanFreq, m_pLOBData->iNumOfPDW );
+    pABTData->fFreqMax = _max( pABTData->fFreqMax, m_pLOBData->fFreqMax );
+    pABTData->fFreqMin = _min( pABTData->fFreqMin, m_pLOBData->fFreqMin );
+    pABTData->fFreqMean = CalcMean( pABTData->fFreqMean, pABTData->uiTotalOfPDW, m_pLOBData->fFreqMean, m_pLOBData->iNumOfPDW );
     //pABTData->freqInfo.fDeviation = CalcDeviation( pABTData->freqInfo.fDeviation, pABTExtData->nCoTotalPdw, m_pLOBData->iFreqDeviation, m_pLOBData->iNumOfPDW );
     //pABTData->freqInfo.fDeviation = pABTData->freqInfo.fMax - pABTData->freqInfo.fMin;
 
@@ -4624,28 +4673,28 @@ void CELEmitterMergeMngr::UpdateSignalInfo( SRxABTData *pABTData, SELABTDATA_EXT
  * @date      2016-03-11, 오전 11:08
  * @warning
  */
-// void CELEmitterMergeMngr::UpdateDOAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
-// {
+void CELEmitterMergeMngr::UpdateDOAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
+{
 // 	//STR_DOA_INFO *pDOAInfo;
 //
 // 	//pDOAInfo = & pABTData->doaInfo;
 //
-// #ifdef _DOA_LOW_HIGH_
+#ifdef _DOA_LOW_HIGH_
 // 	int iDOALow, iDOAHigh, iDOADiff, iDOAOffset;
-// 	// 수동으로 변경했으면 정보 유지
-// 	if( pABTExtData->xManualEdited.x.peInfo == true && false ) {
-// 		return;
-// 	}
-//
+    // 수동으로 변경했으면 정보 유지
+    if( pABTExtData->xManualEdited.x.peInfo == true && false ) {
+        return;
+    }
+
 // 	// 수신한 방위 범위를 체크해서 방위 LOW, HIGH 를 계산함.
-// 	iDOADiff = SubAOA( m_pLOBData->fMaxDOA, m_pLOBData->fMinDOA );
+// 	iDOADiff = SubAOA( m_pLOBData->fDOAMax, m_pLOBData->fDOAMin );
 // 	if( iDOADiff > ( MAX_AOA / 2 ) ) {
-// 		iDOALow = m_pLOBData->fMaxDOA;
-// 		iDOAHigh = m_pLOBData->fMinDOA;
+// 		iDOALow = m_pLOBData->fDOAMax;
+// 		iDOAHigh = m_pLOBData->fDOAMin;
 // 	}
 // 	else {
-// 		iDOALow = m_pLOBData->fMinDOA;
-// 		iDOAHigh = m_pLOBData->fMaxDOA;
+// 		iDOALow = m_pLOBData->fDOAMin;
+// 		iDOAHigh = m_pLOBData->fDOAMax;
 // 	}
 //
 // 	// 방위 업데이트
@@ -4653,23 +4702,23 @@ void CELEmitterMergeMngr::UpdateSignalInfo( SRxABTData *pABTData, SELABTDATA_EXT
 // 	iDOALow = 0;
 // 	iDOAHigh = AddAOA( iDOAHigh, iDOAOffset );
 //
-// 	pDOAInfo->fMin = _min( iDOALow, m_pLOBData->fMinDOA );
+// 	pDOAInfo->fMin = _min( iDOALow, m_pLOBData->fDOAMin );
 // 	pDOAInfo->fMin = AddAOA( pDOAInfo->fMin, iDOAOffset );
-// 	pDOAInfo->fMax = _max( iDOAHigh, m_pLOBData->fMaxDOA );
+// 	pDOAInfo->fMax = _max( iDOAHigh, m_pLOBData->fDOAMax );
 // 	pDOAInfo->fMax = AddAOA( pDOAInfo->fMax, iDOAOffset );
 // 	pDOAInfo->iMean = CalcMean( pDOAInfo->iMean, pABTExtData->nCoTotalPdw, m_pLOBData->iMeanDOA, m_pLOBData->iNumOfPDW );
 // 	pDOAInfo->fDeviation = CalcDeviation( pDOAInfo->iMean, pABTExtData->nCoTotalPdw, m_pLOBData->iDOADeviation, m_pLOBData->iNumOfPDW );
 // 	pDOAInfo->iSDeviation = 0;
-// #else
-// 	//pDOAInfo->fMin = m_pLOBData->fMinDOA;
-// 	//pDOAInfo->fMax = m_pLOBData->fMaxDOA;
-// 	//pDOAInfo->fMean = m_pLOBData->fMeanDOA;
-// 	//pDOAInfo->fDeviation = m_pLOBData->iDOADeviation;
-// 	//pDOAInfo->iSDeviation = 0;
-//
-// #endif
-//
-// }
+#else
+    pABTData->fDOAMin = m_pLOBData->fDOAMin;
+    pABTData->fDOAMax = m_pLOBData->fDOAMax;
+    pABTData->fDOAMean = m_pLOBData->fDOAMean;
+    pABTData->fDOADeviation = m_pLOBData->fDOADeviation;
+
+
+#endif
+
+}
 
 /**
  * @brief     LOB 데이터에 AET, ABT, LOB 번호를 저장한다.
@@ -4742,25 +4791,30 @@ void CELEmitterMergeMngr::CreateAETThreat( CELThreat *pAETThreat, CELThreat *pAB
 
     pAETData->iValidity = false;
 
-    pAETData->fMeanFreq = pLOBData->fMeanFreq;
-    pAETData->fMaxFreq = pLOBData->fMaxFreq;
-    pAETData->fMinFreq = pLOBData->fMinFreq;
-    pAETData->fDeviationFreq = pAETData->fMaxFreq - pAETData->fMinFreq;
+    pAETData->fDOAMean = pLOBData->fDOAMean;
+    pAETData->fDOAMax = pLOBData->fDOAMax;
+    pAETData->fDOAMin = pLOBData->fDOAMin;
+    pAETData->fDOADeviation = pLOBData->fDOADeviation;
 
-    pAETData->fMeanPRI = pLOBData->fMeanPRI;
-    pAETData->fMaxPRI = pLOBData->fMaxPRI;
-    pAETData->fMinPRI = pLOBData->fMinPRI;
-    pAETData->fDeviationPRI = pAETData->fMaxPRI - pAETData->fMinPRI;
+    pAETData->fFreqMean = pLOBData->fFreqMean;
+    pAETData->fFreqMax = pLOBData->fFreqMax;
+    pAETData->fFreqMin = pLOBData->fFreqMin;
+    pAETData->fFreqDeviation = pAETData->fFreqMax - pAETData->fFreqMin;
 
-    pAETData->fMeanPW = pLOBData->fMeanPW;
-    pAETData->fMaxPW = pLOBData->fMaxPW;
-    pAETData->fMinPW = pLOBData->fMinPW;
-    pAETData->fDeviationPW = pAETData->fMaxPW - pAETData->fMinPW;
+    pAETData->fPRIMean = pLOBData->fPRIMean;
+    pAETData->fPRIMax = pLOBData->fPRIMax;
+    pAETData->fPRIMin = pLOBData->fPRIMin;
+    pAETData->fPRIDeviation = pAETData->fPRIMax - pAETData->fPRIMin;
 
-    pAETData->fMeanPA = pLOBData->fMeanPA;
-    pAETData->fMaxPA = pLOBData->fMaxPA;
-    pAETData->fMinPA = pLOBData->fMinPA;
-    pAETData->fDeviationPA = pAETData->fMaxPA - pAETData->fMinPA;
+    pAETData->fPWMean = pLOBData->fPWMean;
+    pAETData->fPWMax = pLOBData->fPWMax;
+    pAETData->fPWMin = pLOBData->fPWMin;
+    pAETData->fPWDeviation = pAETData->fPWMax - pAETData->fPWMin;
+
+    pAETData->fPAMean = pLOBData->fPAMean;
+    pAETData->fPAMax = pLOBData->fPAMax;
+    pAETData->fPAMin = pLOBData->fPAMin;
+    pAETData->fPADeviation = pAETData->fPAMax - pAETData->fPAMin;
 
     // CED/EOB 식별 정보
     pAETData->iRadarModeIndex = pLOBData->iRadarModeIndex;
@@ -4870,11 +4924,10 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
 
     m_pABTData->iValidity = false;
 
-    m_pABTData->fMeanDOA = pLOBData->fMeanDOA;
-    m_pABTData->fMaxDOA = pLOBData->fMaxDOA;
-    m_pABTData->fMinDOA = pLOBData->fMinDOA;
-    m_pABTData->fDeviationDOA = pLOBData->fDeviationDOA;
-    m_pABTData->fSDeviationDOA = pLOBData->fSDeviationDOA;
+    m_pABTData->fDOAMean = pLOBData->fDOAMean;
+    m_pABTData->fDOAMax = pLOBData->fDOAMax;
+    m_pABTData->fDOAMin = pLOBData->fDOAMin;
+    m_pABTData->fDOADeviation = pLOBData->fDOADeviation;
 
     m_pABTData->iFreqType = pLOBData->iFreqType;
     m_pABTData->iFreqPatternType = pLOBData->iFreqPatternType;
@@ -4883,9 +4936,9 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
     m_pABTData->fFreqPatternPeriodMax = pLOBData->fFreqPatternPeriod;
     m_pABTData->iFreqPositionCount = pLOBData->iFreqPositionCount;
     m_pABTData->iFreqElementCount = pLOBData->iFreqElementCount;
-    m_pABTData->fMeanFreq = pLOBData->fMeanFreq;
-    m_pABTData->fMaxFreq = pLOBData->fMaxFreq;
-    m_pABTData->fMinFreq = pLOBData->fMinFreq;
+    m_pABTData->fFreqMean = pLOBData->fFreqMean;
+    m_pABTData->fFreqMax = pLOBData->fFreqMax;
+    m_pABTData->fFreqMin = pLOBData->fFreqMin;
     m_pABTData->fFreqDeviation = pLOBData->fFreqDeviation;
     memcpy( m_pABTData->fFreqSeq, pLOBData->fFreqSeq, sizeof( m_pABTData->fFreqSeq ) );
 
@@ -4896,25 +4949,26 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
     m_pABTData->fPRIPatternPeriodMax = pLOBData->fPRIPatternPeriod;
     m_pABTData->fPRIPatternPeriodMean = pLOBData->fPRIPatternPeriod;
     m_pABTData->iPRIPositionCount = pLOBData->iPRIPositionCount;
-    m_pABTData->iPRIElementCount = pLOBData->iPRIElementCount;
-    m_pABTData->fPRIJitterRatio = CalcJitterRatio( m_pABTData, m_pABTExtData );
+    m_pABTData->iPRIElementCount = pLOBData->iPRIElementCount;    
     memcpy( m_pABTData->fPRISeq, pLOBData->fPRISeq, sizeof( m_pABTData->fPRISeq ) );
-    m_pABTData->fMeanPRI = pLOBData->fMeanPRI;
-    m_pABTData->fMaxPRI = pLOBData->fMaxPRI;
-    m_pABTData->fMinPRI = pLOBData->fMinPRI;
+    m_pABTData->fPRIMean = pLOBData->fPRIMean;
+    m_pABTData->fPRIMax = pLOBData->fPRIMax;
+    m_pABTData->fPRIMin = pLOBData->fPRIMin;
+    m_pABTData->fPRIJitterRatio = CalcJitterRatio( m_pABTData, m_pABTExtData );
     m_pABTData->fPRIDeviation = pLOBData->fPRIDeviation;
 
     //pABTData->priInfo.fDeviation = pABTData->priInfo.fMax - pABTData->priInfo.fMin;
 
-    m_pABTData->fMeanPW = pLOBData->fMeanPW;
-    m_pABTData->fMaxPW = pLOBData->fMaxPW;
-    m_pABTData->fMinPW = pLOBData->fMinPW;
+    m_pABTData->fPWMean = pLOBData->fPWMean;
+    m_pABTData->fPWMax = pLOBData->fPWMax;
+    m_pABTData->fPWMin = pLOBData->fPWMin;
     m_pABTData->fPWDeviation = pLOBData->fPWDeviation;
 
 
-    m_pABTData->fMeanPA = pLOBData->fMeanPA;
-    m_pABTData->fMaxPA = pLOBData->fMaxPA;
-    m_pABTData->fMinPA = pLOBData->fMinPA;
+    m_pABTData->fPAMean = pLOBData->fPAMean;
+    m_pABTData->fPAMax = pLOBData->fPAMax;
+    m_pABTData->fPAMin = pLOBData->fPAMin;
+    m_pABTData->fPADeviation = pLOBData->fPADeviation;
     //pABTData->paInfo.fDeviation = pABTData->paInfo.fMax - pABTData->paInfo.fMin;
 
     m_pABTData->uiTotalOfPDW = pLOBData->iNumOfPDW;
@@ -5023,7 +5077,7 @@ bool CELEmitterMergeMngr::CompMergeLOB( SELMERGE_CANDIDATE *pMergeCandidate, CEL
     pABTData = GetABTData( pThreatABT->m_nIndex );
     pABTExtData = GetABTExtData( pThreatABT->m_nIndex );
 
-    //m_nFreqBand = CalcFreqBand( m_pLOBData->fMinFreq );
+    //m_nFreqBand = CalcFreqBand( m_pLOBData->fFreqMin );
 
     pMergeCandidate->fLevel = 0;
 
@@ -5145,8 +5199,8 @@ bool CELEmitterMergeMngr::CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTEx
             */
             if( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) {
                 fTheta = (float) ST_IMA->GCAzimuth( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
-                if( TRUE == CompAoaDiff( fTheta,  m_pLOBData->fMeanDOA, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2()*/ ) ) {
-                    fDiff = AoaDiff( fTheta, m_pLOBData->fMeanDOA );
+                if( TRUE == CompAoaDiff( fTheta,  m_pLOBData->fDOAMean, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2()*/ ) ) {
+                    fDiff = AoaDiff( fTheta, m_pLOBData->fDOAMean );
                     fDistance = (float) sin( DEGREE2RADIAN( fDiff ) ) * (float) ST_IMA->EllipsoidDistance( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
                     if( fDistance < m_pSEnvironVariable->fEobIndfRangeMeters ) {
                         // LOB와 점사이의 거리를 계산하여 LOB 검증을 비교한다.
@@ -5592,18 +5646,18 @@ int CELEmitterMergeMngr::CompFreqRange( SRxABTData *pABTData, SELABTDATA_EXT *pA
         switch( pABTData->iFreqType ) {
         case E_AET_FRQ_FIXED :
             // 주파수 변조폭인 경우에는 인트라 변화폭을 참조하여 병합
-            bRet = CompMeanDiff<float>( pABTData->fMeanFreq, m_pLOBData->fMeanFreq, m_pSEnvironVariable->fMarginFrqError );
+            bRet = CompMeanDiff<float>( pABTData->fFreqMean, m_pLOBData->fFreqMean, m_pSEnvironVariable->fMarginFrqError );
 
             if( bRet == _spFalse ) {
                 return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
             }
 
-            fDifferenceLevel = _diffabs<float>( pABTData->fMeanFreq, m_pLOBData->fMeanFreq );
+            fDifferenceLevel = _diffabs<float>( pABTData->fFreqMean, m_pLOBData->fFreqMean );
             break;
 
         case E_AET_FRQ_AGILE :
         case E_AET_FRQ_PATTERN :
-            fDifferenceLevel = _min( _abs( pABTData->fMaxFreq - pABTData->fMinFreq ), _abs( m_pLOBData->fMaxFreq - m_pLOBData->fMinFreq ) );
+            fDifferenceLevel = _min( _abs( pABTData->fFreqMax - pABTData->fFreqMin ), _abs( m_pLOBData->fFreqMax - m_pLOBData->fFreqMin ) );
 
 // 			agiFrqIn = _max( UDIV( (int)_sp.mg.agifrqin*iDifferenceLevel, 100), (UINT) _sp.mg.fixfrq[m_nFreqBand] );
 // 			agiFrqOut = _max( UDIV( (int)_sp.mg.agifrqout*iDifferenceLevel, 100), (UINT) _sp.mg.fixfrq[m_nFreqBand] );
@@ -5626,12 +5680,12 @@ int CELEmitterMergeMngr::CompFreqRange( SRxABTData *pABTData, SELABTDATA_EXT *pA
 // 				}
             }
             else {
-// 				bRet = CompInOutDiff( pInfo->fMin, m_pLOBData->fMinFreq, (int) agiFrqIn, (int) agiFrqOut );
+// 				bRet = CompInOutDiff( pInfo->fMin, m_pLOBData->fFreqMin, (int) agiFrqIn, (int) agiFrqOut );
 // 				if( bRet == _spFalse ) {
 // 					return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 				}
 //
-// 				bRet = CompInOutDiff( pInfo->fMax, m_pLOBData->fMaxFreq, (int) agiFrqIn, (int) agiFrqOut );
+// 				bRet = CompInOutDiff( pInfo->fMax, m_pLOBData->fFreqMax, (int) agiFrqIn, (int) agiFrqOut );
 // 				if( bRet == _spFalse ) {
 // 					return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 				}
@@ -5879,12 +5933,12 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
     if( pABTExtData->bCompPRI == true ) {
         switch( pABTData->iPRIType ) {
         case E_AET_PRI_FIXED :
-            bRet = CompMeanDiff<float>( pABTData->fMeanPRI, m_pLOBData->fMeanPRI, m_pSEnvironVariable->fMarginPriError );
+            bRet = CompMeanDiff<float>( pABTData->fPRIMean, m_pLOBData->fPRIMean, m_pSEnvironVariable->fMarginPriError );
             if( bRet == _spFalse ) {
                 return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
             }
 
-            fDifferenceLevel = _diffabs<float>( pABTData->fMeanPRI, m_pLOBData->fMeanPRI );
+            fDifferenceLevel = _diffabs<float>( pABTData->fPRIMean, m_pLOBData->fPRIMean );
             break;
 
         case E_AET_PRI_JITTER :
@@ -5903,53 +5957,53 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
                         \author 조철희 (churlhee.jo@lignex1.com)
                         \date 	2016-07-18 20:26:07
                 */
-    // 					bRet = IsOverlapSpace( pDInfo->fMin, m_optParameter.pri.fMax, m_pLOBData->fMinPRI, m_pLOBData->fMaxPRI, m_optParameter.pri.iOverlapRatio );
+    // 					bRet = IsOverlapSpace( pDInfo->fMin, m_optParameter.pri.fMax, m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, m_optParameter.pri.iOverlapRatio );
     // 					if( bret == _spFalse ) {
     // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
     // 					}
     // 					break;
-                if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fMinPRI, m_pLOBData->fMaxPRI, pABTData->fMinPRI, pABTData->fMaxPRI, (float) 0 ) ) {
+                if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) 0 ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
                 else {
-                    fOverlapSpace = CalOverlapSpace<float>( m_pLOBData->fMaxPRI, m_pLOBData->fMinPRI, pABTData->fMaxPRI, pABTData->fMinPRI );
-                    fTotalRange = min( m_pLOBData->fMaxPRI-m_pLOBData->fMinPRI, pABTData->fMaxPRI-pABTData->fMinPRI );
+                    fOverlapSpace = CalOverlapSpace<float>( m_pLOBData->fPRIMax, m_pLOBData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIMin );
+                    fTotalRange = min( m_pLOBData->fPRIMax-m_pLOBData->fPRIMin, pABTData->fPRIMax-pABTData->fPRIMin );
                     fOverlapSpaceRatio = FDIV( fOverlapSpace * 100, fTotalRange );
 
                     if( fOverlapSpaceRatio < m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio ) {
                         return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                     }
 
-// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fMaxPRI - pABTData->fMinPRI ), 100 );
-// 					if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fMinPRI, m_pLOBData->fMaxPRI, pABTData->fMinPRI, pABTData->fMaxPRI, (float) iOverlapValue ) ) {
+// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fPRIMax - pABTData->fPRIMin ), 100 );
+// 					if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) iOverlapValue ) ) {
 // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 					}
 //
-// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( m_pLOBData->fMaxPRI - m_pLOBData->fMinPRI ), 100 );
-// 					if( false == m_pIdentifyAlg->IsOverlapSpace( pABTData->fMinPRI, pABTData->fMaxPRI, m_pLOBData->fMinPRI, m_pLOBData->fMaxPRI, (float) iOverlapValue ) ) {
+// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( m_pLOBData->fPRIMax - m_pLOBData->fPRIMin ), 100 );
+// 					if( false == m_pIdentifyAlg->IsOverlapSpace( pABTData->fPRIMin, pABTData->fPRIMax, m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, (float) iOverlapValue ) ) {
 // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 					}
                 }
 
-                //iDifferenceLevel = CalOverlapSpace( m_pLOBData->fMaxPRI, m_pLOBData->fMinPRI, (int) pInfo->fMax, (int) pInfo->fMin );
-                //iDifferenceLevel = _diffabs( pInfo->iMean, m_pLOBData->fMeanPRI );
+                //iDifferenceLevel = CalOverlapSpace( m_pLOBData->fPRIMax, m_pLOBData->fPRIMin, (int) pInfo->fMax, (int) pInfo->fMin );
+                //iDifferenceLevel = _diffabs( pInfo->iMean, m_pLOBData->fPRIMean );
                 //iDifferenceLevel = 0;
                 break;
 
             case E_AET_PRI_STAGGER :
             case E_AET_PRI_PATTERN :
-                fDifferenceLevel = _min( pABTData->fMeanPRI, m_pLOBData->fMeanPRI );
+                fDifferenceLevel = _min( pABTData->fPRIMean, m_pLOBData->fPRIMean );
 
                 fAgiPri = _max( pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio );
                 fAgiPri = _max( FDIV( fAgiPri * fDifferenceLevel, 100.), m_pSEnvironVariable->fMarginFrqError );
-                if( _spFalse == CompMeanDiff( pABTData->fMinPRI, m_pLOBData->fMinPRI, fAgiPri ) ) {
+                if( _spFalse == CompMeanDiff( pABTData->fPRIMin, m_pLOBData->fPRIMin, fAgiPri ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
-                if( _spFalse == CompMeanDiff( pABTData->fMaxPRI, m_pLOBData->fMaxPRI, fAgiPri ) ) {
+                if( _spFalse == CompMeanDiff( pABTData->fPRIMax, m_pLOBData->fPRIMax, fAgiPri ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
 
-                fDifferenceLevel = _abs( pABTData->fMinPRI - m_pLOBData->fMinPRI ) + _abs( pABTData->fMaxPRI - m_pLOBData->fMaxPRI );
+                fDifferenceLevel = _abs( pABTData->fPRIMin - m_pLOBData->fPRIMin ) + _abs( pABTData->fPRIMax - m_pLOBData->fPRIMax );
                 break;
 
             default :
@@ -5995,13 +6049,13 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
             else if( m_pLOBData->iPRIType == E_AET_PRI_JITTER ) {
                 fAgiPri = _max( pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio );
                 fAgiPri = _max( FDIV( fAgiPri * fDifferenceLevel, 100. ), m_pSEnvironVariable->fMarginFrqError );
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fMinPRI, pABTData->fMinPRI, pABTData->fMaxPRI, fAgiPri ) ) {
+                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fMaxPRI, pABTData->fMinPRI, pABTData->fMaxPRI, fAgiPri ) ) {
+                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
-                fDifferenceLevel = _abs( m_pLOBData->fMinPRI - pABTData->fMinPRI ) + _abs( m_pLOBData->fMaxPRI - pABTData->fMaxPRI );
+                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
                 return (int) ( fDifferenceLevel + 0.5 );
             }
             else {
@@ -6017,25 +6071,25 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
 
-                fAgiPri = _min( _abs( pABTData->fMaxPRI - pABTData->fMinPRI ), _abs( m_pLOBData->fMaxPRI - m_pLOBData->fMinPRI ) );
+                fAgiPri = _min( _abs( pABTData->fPRIMax - pABTData->fPRIMin ), _abs( m_pLOBData->fPRIMax - m_pLOBData->fPRIMin ) );
                 fAgiPri = _max( FDIV( m_pSEnvironVariable->fMarginPriModPeriodErrorRatio*fAgiPri, 100), (float) m_pSEnvironVariable->fMarginPriError );
-                bRet = CompMeanDiff( pABTData->fMeanPRI, m_pLOBData->fMeanPRI, fAgiPri );
+                bRet = CompMeanDiff( pABTData->fPRIMean, m_pLOBData->fPRIMean, fAgiPri );
                 if( bRet == _spFalse ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
 
-                fDifferenceLevel = _abs( m_pLOBData->fMinPRI - pABTData->fMinPRI ) + _abs( m_pLOBData->fMaxPRI - pABTData->fMaxPRI );
+                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
 
             }
             else if( m_pLOBData->iPRIType == E_AET_PRI_JITTER ) {
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fMinPRI, pABTData->fMinPRI, pABTData->fMaxPRI, m_pSEnvironVariable->fMarginFrqError ) ) {
+                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fMaxPRI, pABTData->fMinPRI, pABTData->fMaxPRI, m_pSEnvironVariable->fMarginFrqError ) ) {
+                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
 
-                fDifferenceLevel = _abs( m_pLOBData->fMinPRI - pABTData->fMinPRI ) + _abs( m_pLOBData->fMaxPRI - pABTData->fMaxPRI );
+                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
                 return (int) ( fDifferenceLevel + 0.5 );
             }
             else {
@@ -6050,14 +6104,14 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
 // 							\author 조철희 (churlhee.jo@lignex1.com)
 // 							\date 	2016-03-8 16:49:02
 // 					*/
-// 					if( _spFalse == CompMarginDiff( m_pLOBData->fMinPRI, pInfo->fMin, pInfo->fMax, (int) m_pSEnvironVariable->fMarginFrqError ) ) {
+// 					if( _spFalse == CompMarginDiff( m_pLOBData->fPRIMin, pInfo->fMin, pInfo->fMax, (int) m_pSEnvironVariable->fMarginFrqError ) ) {
 // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 					}
-// 					if( _spFalse == CompMarginDiff( m_pLOBData->fMaxPRI, pInfo->fMin, pInfo->fMax, (int) m_pSEnvironVariable->fMarginFrqError ) ) {
+// 					if( _spFalse == CompMarginDiff( m_pLOBData->fPRIMax, pInfo->fMin, pInfo->fMax, (int) m_pSEnvironVariable->fMarginFrqError ) ) {
 // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 					}
 //
-// 					iDifferenceLevel = _abs( m_pLOBData->fMinPRI - pInfo->fMin ) + _abs( m_pLOBData->fMaxPRI - pInfo->fMax );
+// 					iDifferenceLevel = _abs( m_pLOBData->fPRIMin - pInfo->fMin ) + _abs( m_pLOBData->fPRIMax - pInfo->fMax );
 // 					return iDifferenceLevel;
 // 				}
 // 			}
@@ -6083,14 +6137,14 @@ int CELEmitterMergeMngr::CompPWRange( SRxABTData *pABTData )
     // BOOL bRet;
     int iDifferenceLevel=0;
 
-// 	bRet = CompMeanDiff( pABTData->pwInfo.fMin, m_pLOBData->fMinPW, _sp.mg.pw );
+// 	bRet = CompMeanDiff( pABTData->pwInfo.fMin, m_pLOBData->fPWMin, _sp.mg.pw );
 // 	if( bRet == _spFalse )
 // 		return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-// 	bRet = CompMeanDiff( pABTData->pwInfo.fMax, m_pLOBData->fMaxPW, _sp.mg.pw );
+// 	bRet = CompMeanDiff( pABTData->pwInfo.fMax, m_pLOBData->fPWMax, _sp.mg.pw );
 // 	if( bRet == _spFalse )
 // 		return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 //
-// 	iDifferenceLevel = _abs( m_pLOBData->fMinPW - pABTData->pwInfo.fMin ) + _abs( m_pLOBData->fMaxPW - pABTData->pwInfo.fMax );
+// 	iDifferenceLevel = _abs( m_pLOBData->fPWMin - pABTData->pwInfo.fMin ) + _abs( m_pLOBData->fPWMax - pABTData->pwInfo.fMax );
     return iDifferenceLevel;
 }
 
@@ -8110,11 +8164,11 @@ void CELEmitterMergeMngr::PushLOBLANData( SRxLOBData *pLOBData )
 // 	Log( enNormal, "\t[%8d/%8d/%8d] %s %5.1f [%s] %7.1f [%s] %7.1f %7.1f %5.1f R[%3d] T[%3d]" ,
 // 		pLOBData->uiAETID, pLOBData->uiABTID, pLOBData->uiLOBID,
 // 		aet_signal_type[pLOBData->iSignalType],
-// 		pLOBData->fMeanDOA,
-// 		aet_freq_type[pLOBData->iFreqType], pLOBData->fMeanFreq,
-// 		aet_pri_type[pLOBData->iPRIType], pLOBData->fMeanPRI,
-// 		pLOBData->fMeanPW,
-// 		pLOBData->fMeanPA,
+// 		pLOBData->fDOAMean,
+// 		aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMean,
+// 		aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMean,
+// 		pLOBData->fPWMean,
+// 		pLOBData->fPAMean,
 // 		pLOBData->iRadarModeIndex,
 // 		pLOBData->iThreatIndex
 // 		);
@@ -8165,10 +8219,10 @@ void CELEmitterMergeMngr::PushABTLANData( SRxABTData *pABTData )
 // 	Log( enNormal, "\t[%8d/%8d] %s [%s] %7.1f [%s] %7.1f %7.1f %5.1f[dBm] R[%3d] T[%3d]" ,
 // 		pABTData->uiAETID, pABTData->uiABTID,
 // 		aet_signal_type[pABTData->iSignalType],
-// 		aet_freq_type[pABTData->iFreqType], pABTData->fMeanFreq,
-// 		aet_pri_type[pABTData->iPRIType], pABTData->fMeanPRI,
-// 		pABTData->fMeanPW,
-// 		pABTData->fMeanPA,
+// 		aet_freq_type[pABTData->iFreqType], pABTData->fFreqMean,
+// 		aet_pri_type[pABTData->iPRIType], pABTData->fPRIMean,
+// 		pABTData->fPWMean,
+// 		pABTData->fPAMean,
 // 		pABTData->iRadarModeIndex,
 // 		pABTData->iThreatIndex
 // 		);
@@ -8200,10 +8254,10 @@ void CELEmitterMergeMngr::PushAETLANData( SRxAETData *pAETData )
 // 	Log( enNormal, "\t[%8d/%8d] %s [%s] %7.1f [%s] %7.1f %7.1f %5.1f[dBm] R[%3d] T[%3d]" ,
 // 		pABTData->uiAETID, pABTData->uiABTID,
 // 		aet_signal_type[pABTData->iSignalType],
-// 		aet_freq_type[pABTData->iFreqType], pABTData->fMeanFreq,
-// 		aet_pri_type[pABTData->iPRIType], pABTData->fMeanPRI,
-// 		pABTData->fMeanPW,
-// 		pABTData->fMeanPA,
+// 		aet_freq_type[pABTData->iFreqType], pABTData->fFreqMean,
+// 		aet_pri_type[pABTData->iPRIType], pABTData->fPRIMean,
+// 		pABTData->fPWMean,
+// 		pABTData->fPAMean,
 // 		pABTData->iRadarModeIndex,
 // 		pABTData->iThreatIndex
 // 		);
@@ -8569,40 +8623,14 @@ void CELEmitterMergeMngr::InitDataFromDB()
 {
     char buffer[400];
 
+    //////////////////////////////////////////////////////////////////////////
+    // 하나의 임무에서 Unique한 방사체 번호 얻기
 #ifdef _WIN32
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
+    sprintf_s( buffer, sizeof(buffer), "select max(AETID) from ABTDATA" );
 #else
-    sprintf_s( buffer, "select max(OP_INIT_ID) from LOBDATA" );
+    sprintf_s( buffer, "select max(AETID) from ABTDATA" );
 #endif
-
-    if( m_uiOpInitID == 0 ) {
-        m_uiOpInitID = GetLONGData( buffer );
-        if( m_uiOpInitID == (UINT) (-1) ) {
-            m_uiOpInitID = 0;
-        }
-
-        // 함수가 돌아가지 않도록 수행하기 위함.
-        if( m_uiOpInitID == 0 ) {
-            m_uiOpInitID = 1;
-        }
-    }
-    else {
-        m_uiOpInitID = GetLONGData( buffer ) + 1;
-
-        if( m_uiOpInitID == 0 ) {
-            Log( enError, "OP_INIT_ID를 한바퀴 돌았습니다. DB에 있는 LOB 데이터를 정리해야 합니다. 이 메시지를 담당자에게 문의하세요." );
-            AfxMessageBox( "OP_INIT_ID를 한바퀴 돌았습니다. DB에 있는 LOB 데이터를 정리해야 합니다. 이 메시지를 담당자에게 문의하세요." );
-        }
-    }
-
-// 	//////////////////////////////////////////////////////////////////////////
-// 	// 하나의 임무에서 Unique한 방사체 번호 얻기
-#ifdef _WIN32
-    sprintf_s( buffer, sizeof(buffer), "select max(AETID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
-#else
-    sprintf_s( buffer, "select max(AETID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
-#endif
-    m_uiAETID = GetLONGData( buffer ) + 1;
+    m_uiAETID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiAETID == 0 ) {
         m_uiAETID = _spOne;
     }
@@ -8616,9 +8644,9 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #ifdef _WIN32
     sprintf_s( buffer, sizeof(buffer), "select max(LOBID) from LOBDATA where OP_INIT_ID=%d" , m_uiOpInitID );
 #else
-    sprintf_s( buffer, "select max(LOBID) from LOBDATA where OP_INIT_ID=%d" , m_uiOpInitID );
+    sprintf_s( buffer, "select max(LOBID) from LOBDATA" );
 #endif
-    m_uiLOBID = GetLONGData( buffer ) + 1;
+    m_uiLOBID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiLOBID == 0 ) {
         m_uiLOBID = _spOne;
     }
@@ -8663,9 +8691,9 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #ifdef _WIN32
     sprintf_s( buffer, sizeof(buffer), "select max(ABTID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
 #else
-    sprintf_s( buffer, "select max(ABTID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
+    sprintf_s( buffer, "select max(ABTID) from ABTDATA" );
 #endif
-    m_uiABTID = GetLONGData( buffer ) + 1;
+    m_uiABTID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiABTID == 0 ) {
         m_uiABTID = _spOne;
     }
@@ -8750,7 +8778,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 
         */
 
-    Log( enNormal, "OP_INIT_ID[%d] : LOB[%d], ABT[%d], AET[%d]로 번호를 시작합니다." , m_uiOpInitID, m_uiLOBID, m_uiABTID, m_uiAETID );
+    Log( enNormal, " LOB[%d], ABT[%d], AET[%d]로 번호를 시작합니다." , m_uiLOBID, m_uiABTID, m_uiAETID );
 
 }
 
@@ -10264,7 +10292,7 @@ bool CELEmitterMergeMngr::IsValidLOB()
     if( /* GP_MGR_PARAM->IsValidLOB() == */ true ) {
         // 드웰, 스태거, 지터 신호 중에서 평균 PRI가 100ms 인 것은 버림.
         if( m_pLOBData->iPRIType == E_AET_PRI_DWELL_SWITCH || m_pLOBData->iPRIType == E_AET_PRI_STAGGER || m_pLOBData->iPRIType == E_AET_PRI_JITTER ) {
-            if( m_pLOBData->fMeanPRI > VALID_MEANPRI ) {
+            if( m_pLOBData->fPRIMean > VALID_MEANPRI ) {
                 bRet = false;
             }
         }
@@ -10490,34 +10518,43 @@ void CELEmitterMergeMngr::ResetABT()
 
 }
 
+/**
+ * @brief CELEmitterMergeMngr::UpdateCEDEOBLibrary
+ */
 void CELEmitterMergeMngr::UpdateCEDEOBLibrary()
 {
     ++ m_nLoadCEDEOBLibrary;
 
 }
 
-long CELEmitterMergeMngr::GetLONGData( char *pSQLString )
+/**
+ * @brief CELEmitterMergeMngr::GetINTData
+ * @param pSQLString
+ * @return
+ */
+int CELEmitterMergeMngr::GetINTData( char *pSQLString )
 {
-    long lValue=-1;
+#ifdef _SQLITE_
+    int i, iValue=-1;
 
-/*
- * 	LONG lValue=-1;
+    Database *pDatabase;
 
-    DECLARE_BEGIN_CHECKODBC
+    pDatabase = GetDatabase();
 
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+    SQLite::Statement query( *pDatabase, pSQLString );
 
-    theRS.Open( pSQLString );
-    if( ! theRS.IsEof() ) {
-        theRS.GetFieldValue( 0, & lValue );
+    if( query.executeStep() ) {
+        i = 0;
+        iValue = query.getColumn(i++).getInt();
     }
 
-    theRS.Close();
+    return iValue;
 
-    DECLARE_END_CHECKODBC
-    */
+#else
 
-    return lValue;
+
+#endif
+
 }
 
 /**
@@ -10598,11 +10635,11 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
                 %f, %f, %f, %f, %f, %f, %d, \
                 %d, %d, %d, %d )" , \
          pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
-         pLOBData->iSignalType, pLOBData->fMeanDOA, pLOBData->fMinDOA, pLOBData->fMaxDOA, pLOBData->fDeviationDOA, pLOBData->fSDeviationDOA, pLOBData->iDIRatio, \
-         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fMeanFreq, pLOBData->fMinFreq, pLOBData->fMaxFreq, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
-         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fMeanPRI, pLOBData->fMinPRI, pLOBData->fMaxPRI, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
-         pLOBData->fMeanPW, pLOBData->fMinPW, pLOBData->fMaxPW, pLOBData->fPWDeviation, \
-         pLOBData->fMeanPA, pLOBData->fMinPA, pLOBData->fMaxPA, pLOBData->fPWDeviation, \
+         pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+         pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+         pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
          pLOBData->iScanType, pLOBData->fScanPeriod, \
          pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
          pLOBData->fShipLatitude, pLOBData->fShipLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
@@ -10628,10 +10665,10 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d', '%d' )", \
         pExt->aetData.uiOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
-        pLOBData->fMeanDOA, pLOBData->fMinDOA, pLOBData->fMaxDOA, pLOBData->iDIRatio, \
-        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fMeanFreq, pLOBData->fMinFreq, pLOBData->fMaxFreq, pLOBData->iFreqPositionCount, \
-        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fMeanPRI, pLOBData->fMinPRI, pLOBData->fMaxPRI, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
-        pLOBData->fMeanPW, pLOBData->fMinPW, pLOBData->fMaxPW, pLOBData->fMeanPA, pLOBData->fMinPA, pLOBData->fMaxPA, \
+        pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
         pLOBData->iIsStorePDW, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
         pLOBData->dRadarCollectionLatitude, pLOBData->dRadarCollectionLongitude, \
         pLOBData->aucRadarName, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex );
@@ -10728,7 +10765,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
          PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
          RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
-         SIGNAL_TYPE, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+         SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+         FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
          PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
          PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
          PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
@@ -10740,7 +10778,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
          ( %d, %d, \"%s\", \"%s\", \
          \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
          %d, %d, %d, \
-         %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+         %d, %f, %f, %f, %f, \
+         %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
          %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
          %f, %f, %f, %f, \
          %f, %f, %f, %f, \
@@ -10752,10 +10791,11 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
         pABTData->szPrimaryELNOT, pABTData->szPrimaryModeCode, pABTData->szModulationCode, pABTData->szRadarModeName, pABTData->szPlaceNameKor, pABTData->szNickName, pABTData->szFuncCode, pABTData->szPlatform, pABTData->iRadarModePriority, pABTData->iRadarPriority, \
         pABTData->iRadarModeIndex, pABTData->iThreatIndex, pABTData->iPolarization, \
-        pABTData->iSignalType, pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fMeanFreq, pABTData->fMinFreq, pABTData->fMaxFreq, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
-        pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fMeanPRI, pABTData->fMinPRI, pABTData->fMaxPRI, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
-        pABTData->fMeanPW, pABTData->fMinPW, pABTData->fMaxPW, pABTData->fPWDeviation, \
-        pABTData->fMeanPA, pABTData->fMinPA, pABTData->fMaxPA, pABTData->fPADeviation, \
+        pABTData->iSignalType, pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax, pABTData->fDOADeviation, \
+        pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
+        pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
+        pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPWDeviation, \
+        pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, pABTData->fPADeviation, \
         pABTData->iScanType, pABTData->fMeanScanPeriod, pABTData->fMinScanPeriod, pABTData->fMaxScanPeriod, \
         pABTData->iHasIntraMod, pABTData->fMaxIntraMod, pABTData->fMinIntraMod, \
         pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fHeight, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
@@ -10793,9 +10833,9 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, ALARM_TIME, STAT ) values( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%s', '%d' )", \
                                                 pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
                                                 pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
-                                                pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fMeanFreq, pABTData->fMinFreq, pABTData->fMaxFreq, pABTData->iFreqPositionCount, \
-                                                pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fMeanPRI, pABTData->fMinPRI, pABTData->fMaxPRI, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
-                                                pABTData->fMeanPW, pABTData->fMinPW, pABTData->fMaxPW, pABTData->fMeanPA, pABTData->fMinPA, pABTData->fMaxPA, \
+                                                pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->iFreqPositionCount, \
+                                                pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
+                                                pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, \
                                                 pABTData->uiTotalOfPDW, pABTData->aucRadarName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
                                                 pABTData->iPEValid, pABTData->dLatitude, pABTData->dLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
                                                 buffer3, pABTData->iStat );
@@ -10864,11 +10904,11 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
         pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
         pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
-        pAETData->iValidity, pAETData->fMeanDOA, pAETData->fMinDOA, pAETData->fMaxDOA, pAETData->fDeviationDOA, \
-        pAETData->fMeanFreq, pAETData->fMinFreq, pAETData->fMaxFreq, pAETData->fDeviationFreq, \
-        pAETData->fMeanPRI, pAETData->fMinPRI, pAETData->fMaxPRI, pAETData->fDeviationPRI, \
-        pAETData->fMeanPW, pAETData->fMinPW, pAETData->fMaxPW, pAETData->fDeviationPW, \
-        pAETData->fMeanPA, pAETData->fMinPA, pAETData->fMaxPA, pAETData->fDeviationPA, \
+        pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
+        pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
+        pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
+        pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
+        pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
         pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
         pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
 

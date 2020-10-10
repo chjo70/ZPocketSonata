@@ -46,6 +46,8 @@ enum enREQ_MESSAGE {
     enREQ_UBIT,         // = Mbit_ReqUbit,
     enREQ_CBIT,         // = Mbit_ReqCbit,
 
+    enREQ_RELOAD_LIBRARY,
+
 
     // 디버깅 용
     enREQ_SIM_PDWDATA,  // PDW 데이터 모의

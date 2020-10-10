@@ -292,7 +292,7 @@ void CNMakeAET::MarkAllAetToPdwIndex()
 /**
  * @brief CNMakeAET::DISP_FineAet
  * @param pLOB
- */
+*/
 void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
     char buffer[500];
@@ -322,13 +322,13 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     iCnt += sprintf_s( & buffer[iCnt], "%s", aet_signal_type[pLOB->iSignalType]);
 
     // 방위
-    iCnt += sprintf_s( & buffer[iCnt], " %4.1f(%4.1f,%4.1f)" , pLOB->fMeanDOA, pLOB->fMinDOA, pLOB->fMaxDOA );
+    iCnt += sprintf_s( & buffer[iCnt], " %4.1f(%4.1f,%4.1f)" , pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax );
 
     // 주파수
     iCnt += sprintf_s( & buffer[iCnt], " %s" , aet_freq_type[pLOB->iFreqType] );
 // 	temp = abs( pManAet->aet.frq.max - pManAet->aet.frq.min );
-    iCnt += sprintf_s( & buffer[iCnt], " %.3f[%.3f, %.3f]" , pLOB->fMeanFreq, pLOB->fMinFreq, pLOB->fMaxFreq );
-    //sprintf_s( buff1, "%.3f" , pLOB->fMeanFreq );
+    iCnt += sprintf_s( & buffer[iCnt], " %.3f[%.3f, %.3f]" , pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax );
+    //sprintf_s( buff1, "%.3f" , pLOB->fFreqMean );
     //sprintf_s( buff2, "%.3f" , F_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.min ) );
     //sprintf_s( buff3, "%5d" , C_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.max ) );
     //sprintf_s( buff4, "%3d" , TOAmsCNV( pManAet->aet.frq.patPrd ) );
@@ -342,13 +342,13 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 
     // PRI
     iCnt += sprintf_s( & buffer[iCnt], " %s    " , aet_pri_type[pLOB->iPRIType] );
-    iCnt += sprintf_s( & buffer[iCnt], "%0.1f(%.1f,%.1f), %2d" , pLOB->fMeanPRI, pLOB->fMinPRI, pLOB->fMaxPRI, pLOB->iPRIPositionCount );
+    iCnt += sprintf_s( & buffer[iCnt], "%0.1f(%.1f,%.1f), %2d" , pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount );
 
     // PW
-    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fMeanPW, pLOB->fMinPW, pLOB->fMaxPW );
+    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax );
 
     // PA
-    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fMeanPA, pLOB->fMinPA, pLOB->fMaxPA );
+    iCnt += sprintf_s( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax );
 
     // ID
 // 	printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );

@@ -127,8 +127,6 @@ private:
     UINT m_uiAETID;														///< 방사체 번호
     UINT m_uiABTID;														///< 빔 번호
 
-    UINT m_uiOpInitID;
-
     CGeoCoordConv m_theGeoCoordConv;
 
     // 위협 관리 관련 멤버 변수
@@ -324,7 +322,7 @@ private:
 
 // 	// 업데이트 처리 관련 함수 (ABT)
     bool UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDataExt, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
-    //void UpdateDOAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    void UpdateDOAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePulseInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateFreqInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePRIInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -345,6 +343,7 @@ private:
 //
 // 	// 업데이트 처리 관련 함수 (AET)
     void UpdateAET( CELThreat *pTheAETThreat, CELThreat *pTheABTThreat, bool bGenNewEmitter=false, bool bMergeABT=false );
+    void UpdateDOAInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateFreqInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePRIInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePWInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -475,7 +474,7 @@ private:
 
 
     // 쿠리 수행 함수
-    long GetLONGData( char *pSQLString );
+    int GetINTData( char *pSQLString );
     void InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt );
     void InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
     void InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
@@ -509,8 +508,6 @@ public:
 
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
-
-    inline UINT GetOpInitID() { return m_uiOpInitID; }
 
 // 
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }

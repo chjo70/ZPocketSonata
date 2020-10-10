@@ -5,11 +5,13 @@
 #include "../Anal/SigAnal/_Macro.h"
 
 CSysConfig* CSysConfig::m_pInstance = NULL;
+CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
 CSysConfig::CSysConfig(void)
-    :m_enBoardID(enMaster),
-     m_enMode(enREADY_MODE)
 {
+    m_strConfig.enBoardID = enMaster;
+    m_strConfig.enMode = enREADY_MODE;
+
     _spOneSec = 20000000.;
     _spOneMilli = FDIV( _spOneSec, 1000. );
     _spOneMicrosec = FDIV( _spOneMilli, 1000. );
@@ -18,6 +20,11 @@ CSysConfig::CSysConfig(void)
     _spAOAres = (float) ( 0.351562 );
     _spAMPres = (float) (0.351562);
     _spPWres = _spOneMicrosec;
+
+
+    // 공유 메모리 설정
+    m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
+
 }
 
 /**
@@ -25,6 +32,8 @@ CSysConfig::CSysConfig(void)
  */
 CSysConfig::~CSysConfig(void)
 {
+    m_pSharedMemory->close();
+    delete m_pSharedMemory;
 }
 
 /**

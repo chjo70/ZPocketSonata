@@ -54,6 +54,8 @@ public:
     //##ModelId=452B0C530014
     void MakeAET();
 
+
+
     //##ModelId=452B0C53001D
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C53001F
@@ -89,6 +91,8 @@ public:
     //##ModelId=452B0C530065
     UINT CheckHarmonic(UINT mean1, float jitter_p1, UINT mean2, float jitter_p2);
 
+
+
     template <typename T>
     UINT CheckHarmonic(T mean1, T mean2, T priThreshold ) {
         return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
@@ -105,16 +109,16 @@ public:
 
         //STR_PRI *pMaxPri, *pMinPri;
 
-        if( pPri1->fMeanPRI > pPri2->fMeanPRI ) {
-            fdiv_jitter_ratio = FDIV( pPri1->fMeanPRI, pPri2->fMeanPRI );
-            exp_pri_min = UMUL( fdiv_jitter_ratio, pPri2->fMinPRI );
-            exp_pri_max = UMUL( fdiv_jitter_ratio, pPri2->fMaxPRI );
+        if( pPri1->fPRIMean > pPri2->fPRIMean ) {
+            fdiv_jitter_ratio = FDIV( pPri1->fPRIMean, pPri2->fPRIMean );
+            exp_pri_min = UMUL( fdiv_jitter_ratio, pPri2->fPRIMin );
+            exp_pri_max = UMUL( fdiv_jitter_ratio, pPri2->fPRIMax );
 
-            overlap_space = CalOverlapSpace<float>( pPri1->fMaxPRI, pPri1->fMinPRI, exp_pri_max, exp_pri_min );
+            overlap_space = CalOverlapSpace<float>( pPri1->fPRIMax, pPri1->fPRIMin, exp_pri_max, exp_pri_min );
             if( overlap_space != 0 ) {
-                overlap_ratio = UDIV( overlap_space * 100 , pPri1->fMaxPRI - pPri1->fMinPRI );
+                overlap_ratio = UDIV( overlap_space * 100 , pPri1->fPRIMax - pPri1->fPRIMin );
                 if( overlap_ratio < 80 ) {
-                    overlap_ratio = UDIV( ( pPri1->fMaxPRI - pPri1->fMinPRI ) * 100 , overlap_space );
+                    overlap_ratio = UDIV( ( pPri1->fPRIMax - pPri1->fPRIMin ) * 100 , overlap_space );
                     if( overlap_ratio >= 80 ) {
                         return (int) ( fdiv_jitter_ratio + 0.5 );
                     }
@@ -126,9 +130,9 @@ public:
 
         }
         else {
-            fdiv_jitter_ratio = FDIV( pPri1->fMeanPRI, pPri2->fMeanPRI );
-            exp_pri_min = UMUL( fdiv_jitter_ratio, pPri1->fMinPRI );
-            exp_pri_max = UMUL( fdiv_jitter_ratio, pPri1->fMaxPRI );
+            fdiv_jitter_ratio = FDIV( pPri1->fPRIMean, pPri2->fPRIMean );
+            exp_pri_min = UMUL( fdiv_jitter_ratio, pPri1->fPRIMin );
+            exp_pri_max = UMUL( fdiv_jitter_ratio, pPri1->fPRIMax );
         }
 
 
@@ -169,8 +173,8 @@ public:
 
         // 추적할 것이 STAGGER 일때 새로운 에미터가 Jitter라고 하면 새로운 에미터를 송신하지 않는다.
         if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _JITTER_RANDOM ) {
-            if( TRUE == CompMeanDiff<float>( pAet2->fMinPRI, pAet1->fMinPRI, STABLE_MARGIN ) &&
-                TRUE == CompMeanDiff<float>( pAet2->fMaxPRI, pAet1->fMaxPRI, STABLE_MARGIN ) ) {
+            if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, STABLE_MARGIN ) &&
+                TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, STABLE_MARGIN ) ) {
                 return 1;
             }
 
@@ -213,7 +217,7 @@ public:
         }
         else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _JITTER_RANDOM ) {
             nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
-            if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fMaxPW, pAet1->fMinPW, pAet2->fMaxPW, pAet2->fMinPW ) ) {
+            if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMax, pAet1->fPWMin, pAet2->fPWMax, pAet2->fPWMin ) ) {
                 return 0;
             }
             return nHarmonic;
@@ -235,7 +239,7 @@ public:
         else if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _STABLE ) {
             int framePri;
 
-            if( CompMeanDiff<float>( pAet1->fMeanPRI, pAet2->fMeanPRI, STABLE_MARGIN ) ) {
+            if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
                 return 1;
             }
 
@@ -244,12 +248,12 @@ public:
                 framePri += pAet1->fPRISeq[i];
             }
 
-            return CheckHarmonic<float>( (float) framePri, pAet2->fMeanPRI, 2*_spOneMicrosec );
+            return CheckHarmonic<float>( (float) framePri, pAet2->fPRIMean, 2*_spOneMicrosec );
         }
         else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STAGGER ) {
             int framePri;
 
-            if( CompMeanDiff<float>( pAet1->fMeanPRI, pAet2->fMeanPRI, STABLE_MARGIN ) ) {
+            if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
                 return 1;
             }
             else {
@@ -258,18 +262,18 @@ public:
                     framePri += pAet1->fPRISeq[i];
                 }
 
-                return CheckHarmonic<float>( framePri, pAet1->fMeanPRI, 2*_spOneMicrosec );
+                return CheckHarmonic<float>( framePri, pAet1->fPRIMean, 2*_spOneMicrosec );
             }
         }
         //-- 조철희 2005-10-25 19:01:09 --//
         else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STABLE ) {
-            return CheckHarmonic<float>( pAet1->fMeanPRI, pAet2->fMeanPRI, 2*_spOneMicrosec );
+            return CheckHarmonic<float>( pAet1->fPRIMean, pAet2->fPRIMean, 2*_spOneMicrosec );
         }
         else if( pAet1->iPRIType == _DWELL && pAet2->iPRIType == _STABLE ) {
             for( i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
                 BOOL bRet;
 
-                bRet = CheckHarmonic<float>( pAet1->fPRISeq[i], pAet2->fMinPRI, 2*_spOneMicrosec );
+                bRet = CheckHarmonic<float>( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
                 if( bRet != 0 ) {
                     return bRet;
                 }

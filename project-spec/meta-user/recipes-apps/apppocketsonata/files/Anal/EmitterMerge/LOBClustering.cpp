@@ -257,7 +257,7 @@ SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( int index, SRxLOBData *pSRxL
 void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBData, SRxLOBData *pSRxLOBData, UINT uiLOBID )
 {
 	if( pLOBData != NULL ) {
-		pLOBData->fMeanDOA = pSRxLOBData->fMeanDOA;
+        pLOBData->fMeanDOA = pSRxLOBData->fDOAMean;
 
 		pLOBData->uiLOBID = uiLOBID;
 

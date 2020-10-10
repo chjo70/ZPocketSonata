@@ -692,14 +692,14 @@ void CMakeAET::MakeAOAInfoInSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
 
     // 표준 편차 계산
     int iDiff;
-    unsigned int uiSum;
+    unsigned int uiSum=0;
     PDWINDEX *pPdwIndex = pEmitter->pdw.pIndex;
     for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
         iDiff = pAoa->mean - AOA[ *pPdwIndex++ ];
-        uiSum = iDiff * iDiff;
+        uiSum += ( iDiff * iDiff );
 
     }
-    pAoa->fsdev = sqrt( uiSum / pEmitter->pdw.count );
+    pAoa->fsdev = sqrt( FDIV( uiSum, pEmitter->pdw.count ) );
 
 }
 
@@ -1309,11 +1309,11 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     // 방위
     MakeAOAInfoInSeg( & stVal2, pEmitter );
-    pLOBData->fMeanDOA = FMUL( stVal2.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
-    pLOBData->fMaxDOA = FMUL( stVal2.max, _spAOAres );				//FTOAsCNV( stVal.min );
-    pLOBData->fMinDOA = FMUL( stVal2.min, _spAOAres );				//FTOAsCNV( stVal.max );
-    pLOBData->fDeviationDOA = pLOBData->fMaxDOA - pLOBData->fMinDOA;
-    pLOBData->fSDeviationDOA = stVal2.fsdev;
+    pLOBData->fDOAMean = FMUL( stVal2.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
+    pLOBData->fDOAMax = FMUL( stVal2.max, _spAOAres );				//FTOAsCNV( stVal.min );
+    pLOBData->fDOAMin = FMUL( stVal2.min, _spAOAres );				//FTOAsCNV( stVal.max );
+    pLOBData->fDOADeviation = pLOBData->fDOAMax - pLOBData->fDOAMin;
+    pLOBData->fDOASDeviation = stVal2.fsdev;
 
     // 	if( RADARCOL_1 == m_pNewSigAnal->GetCollectorID() ) {
     // 		pLOBData->fMeanDOA = 180.0;
@@ -1336,9 +1336,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iFreqType = stFrq.type;
     pLOBData->iFreqPatternType = stFrq.patType;
     pLOBData->fFreqPatternPeriod = FTOAsCNV( stFrq.patPrd );
-    pLOBData->fMeanFreq = FFRQCNV( 0, stFrq.mean );
-    pLOBData->fMaxFreq = FFRQCNV( 0, stFrq.max );
-    pLOBData->fMinFreq = FFRQCNV( 0, stFrq.min );
+    pLOBData->fFreqMean = FFRQCNV( 0, stFrq.mean );
+    pLOBData->fFreqMax = FFRQCNV( 0, stFrq.max );
+    pLOBData->fFreqMin = FFRQCNV( 0, stFrq.min );
     pLOBData->fFreqDeviation = FFRQCNV( 0, stFrq.max-stFrq.min );
     pLOBData->iFreqPositionCount = stFrq.swtLev;
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
@@ -1352,9 +1352,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iPRIType = stPri.type;
     pLOBData->iPRIPatternType = stPri.patType;
     pLOBData->fPRIPatternPeriod = FTOAsCNV( stPri.patPrd );
-    pLOBData->fMeanPRI = FDIV( stPri.mean, _spOneMicrosec );
-    pLOBData->fMaxPRI = FDIV( stPri.max, _spOneMicrosec );
-    pLOBData->fMinPRI = FDIV( stPri.min, _spOneMicrosec );
+    pLOBData->fPRIMean = FDIV( stPri.mean, _spOneMicrosec );
+    pLOBData->fPRIMax = FDIV( stPri.max, _spOneMicrosec );
+    pLOBData->fPRIMin = FDIV( stPri.min, _spOneMicrosec );
     pLOBData->fPRIDeviation = FDIV( (stPri.max-stPri.min), _spOneMicrosec );
     pLOBData->fPRIJitterRatio = stPri.jtrPer;
     pLOBData->iPRIPositionCount = stPri.swtLev;
@@ -1365,17 +1365,17 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     // 펄스폭 생성
     MakePWInfoInSeg( & stVal, pEmitter );
-    pLOBData->fMeanPW = FDIV( stVal.mean*1000., _spOneMicrosec );			//, _spOneMicrosec );
-    pLOBData->fMaxPW = FDIV( stVal.max*1000., _spOneMicrosec );				//, _spOneMicrosec );
-    pLOBData->fMinPW = FDIV( stVal.min*1000., _spOneMicrosec );				//, _spOneMicrosec );
+    pLOBData->fPWMean = FDIV( stVal.mean*1000., _spOneMicrosec );			//, _spOneMicrosec );
+    pLOBData->fPWMax = FDIV( stVal.max*1000., _spOneMicrosec );				//, _spOneMicrosec );
+    pLOBData->fPWMin = FDIV( stVal.min*1000., _spOneMicrosec );				//, _spOneMicrosec );
     pLOBData->fPWDeviation = FDIV( 1000*(stVal.max-stVal.min), _spOneMicrosec );
 
     // 신호 세기 생성
     MakePAInfoInSeg( & stVal, pEmitter );
-    pLOBData->fMeanPA = PACNV( stVal.mean );			//FPACNV( stVal.mean );
-    pLOBData->fMaxPA = PACNV( stVal.max );				//FPACNV( stVal.max );
-    pLOBData->fMinPA = PACNV( stVal.min );				//FPACNV( stVal.min );
-    pLOBData->fPADeviation = PACNV( stVal.max-stVal.min );				//FPACNV( stVal.min );
+    pLOBData->fPAMean = PACNV( stVal.mean );			//FPACNV( stVal.mean );
+    pLOBData->fPAMax = PACNV( stVal.max );				//FPACNV( stVal.max );
+    pLOBData->fPAMin = PACNV( stVal.min );				//FPACNV( stVal.min );
+    pLOBData->fPADeviation = pLOBData->fPAMax - pLOBData->fPAMin;
 
     // 기타 정보 저장
     pLOBData->iIsStoreData = IsStorePDW();

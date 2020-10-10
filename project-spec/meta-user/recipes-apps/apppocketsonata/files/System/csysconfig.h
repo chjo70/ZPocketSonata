@@ -3,6 +3,20 @@
 
 #include "../Include/system.h"
 
+#include "csharedmemory.h"
+
+struct STR_SYSCONFIG {
+    /**
+     * @brief 보드 ID
+     */
+    ENUM_BoardID enBoardID;
+
+    /**
+     * @brief 장비 모드 상태
+     */
+    ENUM_MODE enMode;
+} ;
+
 
 /**
  * @brief 시스템 설정 관련 클래스 임.
@@ -11,6 +25,9 @@ class CSysConfig
 {
 private:
     static CSysConfig* m_pInstance;
+    static CSharedMemroy* m_pSharedMemory;
+
+    STR_SYSCONFIG m_strConfig;
 
 public:
     CSysConfig(void);
@@ -20,22 +37,21 @@ public:
     static void ReleaseInstance();
 
 private:
-    /**
-     * @brief 보드 ID
-     */
-    ENUM_BoardID m_enBoardID;
-
-    /**
-     * @brief 장비 모드 상태
-     */
-    ENUM_MODE m_enMode;
 
 public:
-    ENUM_BoardID GetBoardID() { return m_enBoardID; };
-    void SetBoardID(ENUM_BoardID enBoardID) { m_enBoardID = enBoardID; };
+    ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };
+    void SetBoardID(ENUM_BoardID enBoardID) {
+        m_strConfig.enBoardID = enBoardID;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
-    ENUM_MODE GetMode() { return m_enMode; };
-    void SetMode(ENUM_MODE enMode) { m_enMode = enMode; };
+    };
+
+    ENUM_MODE GetMode() { return m_strConfig.enMode; };
+    void SetMode(ENUM_MODE enMode) {
+        m_strConfig.enMode = enMode;
+
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    };
 
 
 };

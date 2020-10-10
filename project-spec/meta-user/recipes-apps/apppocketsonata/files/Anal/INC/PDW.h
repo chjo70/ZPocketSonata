@@ -183,10 +183,12 @@ struct _PDW {
     int iPFTag;
     int iAOA;
 
+#ifndef _POCKETSONATA_
     float fPh1;
     float fPh2;
     float fPh3;
     float fPh4;
+#endif
 
 } ;
 #endif

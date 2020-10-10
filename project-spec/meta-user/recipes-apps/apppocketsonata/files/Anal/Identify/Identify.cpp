@@ -34,6 +34,8 @@
 
 #define DEFAULT_SYMBOL_CODE		"SFPP-----------"
 
+#define SWAP( A, B, C ) { A = B; B = C; C = A; }
+
 // 정적 초기화
 int  CELSignalIdentifyAlg::m_CoInstance = 0;
 
@@ -1711,7 +1713,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
 
                     }
                     else {
-                        TRACE( "\n:::::" );
+                        TRACE( "\n [W] 잘못된 레이더 모드[%d]" , pRadarMode->iRadarModeIndex );
                     }
 
                     preRadarModeIndex = pRadarMode->iRadarModeIndex;
@@ -2259,7 +2261,7 @@ void CELSignalIdentifyAlg::CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIA
             pLOBDataIdInfo->nRadarModeIndex[i] = m_pIdResult[i].pIdxRadarMode->iRadarModeIndex;
         }
 
-        // 식별 후버 정보
+        // 식별 후보 정보
         memset( szELNOT, 0, sizeof(szELNOT) );
         memset( pLOBDataIdInfo->n3LevelRadarModeIndex, 0, sizeof(pLOBDataIdInfo->n3LevelRadarModeIndex) );
         for( i=j=0 ; i < m_nCoIdResult ; ++i ) {
@@ -2470,19 +2472,14 @@ void CELSignalIdentifyAlg::SortThreatLevel()
             if( m_pIdResult[j].uRatio == m_pIdResult[j+1].uRatio ) {
                 // 1 순위 : 레이더 우선순위
                 if( pRadarModeRef->iRadarPriority < pRadarModeNxt->iRadarPriority /* && ( pRadarModeRef->nPriority > 0 && pRadarModeNxt->nPriority > 0 ) */ ) {
-                    pTempRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-                    m_pIdResult[j+1].pIdxRadarMode = m_pIdResult[j].pIdxRadarMode;
-                    m_pIdResult[j].pIdxRadarMode = pTempRadarMode;
+                    SWAP( pTempRadarMode, m_pIdResult[j+1].pIdxRadarMode, m_pIdResult[j].pIdxRadarMode );
 
                     sorted = false;
-
                 }
                 // 2 순위 : 레이더모드 우선순위
                 else if( pRadarModeRef->iRadarPriority == pRadarModeNxt->iRadarPriority /* || pRadarModeNxt->nPriority <= 0 || pRadarModeNxt->nPriority */ ) {
                     if( pRadarModeRef->iRadarModePriority < pRadarModeNxt->iRadarModePriority /* && ( pRadarModeNxt->nRadarModenPriority > 0 && pRadarModeRef->nRadarModenPriority > 0 ) */ ) {
-                        pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
-                        m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-                        m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
+                        SWAP( pTempRadarMode, m_pIdResult[j+1].pIdxRadarMode, m_pIdResult[j].pIdxRadarMode );
 
                         sorted = false;
                     }
@@ -2490,9 +2487,7 @@ void CELSignalIdentifyAlg::SortThreatLevel()
                         // 레이더 모드 인데스에서 ELNOT 순으로 정렬
                         if( IsSortELNOT( pRadarModeRef, pRadarModeNxt ) == true ) {
                         //if( pRadarModeRef->nRadarModeIndex > pRadarModeNxt->nRadarModeIndex ) {
-                            pTempRadarMode = m_pIdResult[j].pIdxRadarMode;
-                            m_pIdResult[j].pIdxRadarMode = m_pIdResult[j+1].pIdxRadarMode;
-                            m_pIdResult[j+1].pIdxRadarMode = pTempRadarMode;
+                            SWAP( pTempRadarMode, m_pIdResult[j+1].pIdxRadarMode, m_pIdResult[j].pIdxRadarMode );
 
                             sorted = false;
                         }
@@ -2619,8 +2614,8 @@ void CELSignalIdentifyAlg::IdentifyFreqPRI( SRxLOBData *pLOBData )
     int *pFrqType = NULL;
     int *pPriType = NULL;
 
-    band.ilow = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) F_UDIV( pLOBData->fMinFreq, 1 ) );
-    band.ihgh = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) C_UDIV( pLOBData->fMaxFreq, 1 ) );
+    band.ilow = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) F_UDIV( pLOBData->fFreqMin, 1 ) );
+    band.ihgh = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) C_UDIV( pLOBData->fFreqMax, 1 ) );
 
     // 주파수 및 PRI 형태 식별 여부
     if( ( pLOBData->iFreqType > 0 && pLOBData->iFreqType > MAX_FRQTYPE ) ||
@@ -3067,8 +3062,8 @@ void CELSignalIdentifyAlg::FIdentifyFreq( SRxLOBData *pLOBData )
                     \author 조철희 (churlhee.jo@lignex1.com)
                     \date 	2015-10-20 02:08:45
             */
-            if( CompMarginDiff<float>( pLOBData->fMinFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ||
-                CompMarginDiff<float>( pLOBData->fMaxFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
+            if( CompMarginDiff<float>( pLOBData->fFreqMin, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ||
+                CompMarginDiff<float>( pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
                 ; //bret = true;
             }
             else {
@@ -3109,8 +3104,8 @@ void CELSignalIdentifyAlg::FIdentifyFixFix( SRxLOBData *pLOBData )
                 \author 조철희 (churlhee.jo@lignex1.com)
                 \date 	2015-10-20 02:08:45
         */
-        if( CompMarginDiff<float>( pLOBData->fMeanFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ||
-                CompMarginDiff<float>( pLOBData->fMeanFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
+        if( CompMarginDiff<float>( pLOBData->fFreqMean, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ||
+                CompMarginDiff<float>( pLOBData->fFreqMean, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
             ; //bret = true;
         }
         else {
@@ -3162,11 +3157,11 @@ void CELSignalIdentifyAlg::FIdentifyFixHop( SRxLOBData *pLOBData )
 // 			pvecRF_NumIndex = & pstSRadarRF_Sequence->vecRF_NumIndex;
 // 			pRF_SequenceNumIndex = & pvecRF_NumIndex->at(0);
 //
-// 			bret = CompSwitchLevel( pLOBData->fMinFreq, & pRadarMode->vecRadarRF_Values, pRF_SequenceNumIndex, pvecRF_NumIndex->size(), pRadarMode );
+// 			bret = CompSwitchLevel( pLOBData->fFreqMin, & pRadarMode->vecRadarRF_Values, pRF_SequenceNumIndex, pvecRF_NumIndex->size(), pRadarMode );
 // 			if( bret == FALSE ) {
 // 				continue;
 // 			}
-// 			bret = CompSwitchLevel( pLOBData->fMaxFreq, & pRadarMode->vecRadarRF_Values, pRF_SequenceNumIndex, pvecRF_NumIndex->size(), pRadarMode );
+// 			bret = CompSwitchLevel( pLOBData->fFreqMax, & pRadarMode->vecRadarRF_Values, pRF_SequenceNumIndex, pvecRF_NumIndex->size(), pRadarMode );
 // 			if( bret == FALSE ) {
 // 				continue;
 // 			}
@@ -3572,18 +3567,18 @@ void CELSignalIdentifyAlg::FIdentifyPatPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginFrqModPeriodErrorRatio * ( pRadarMode->fRF_TypicalMax - pRadarMode->fRF_TypicalMin ), 100.0 );
-        bret = IsOverlapSpace( pLOBData->fMinFreq, pLOBData->fMaxFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
+        bret = IsOverlapSpace( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
         if( bret == _spFalse ) {
             continue;
         }
 
         // 주파수 범위 체크
-        bret = CompMarginDiff<float>( pLOBData->fMinFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
+        bret = CompMarginDiff<float>( pLOBData->fFreqMin, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
         if( bret == _spFalse ) {
             continue;
         }
 
-        bret = CompMarginDiff<float>( pLOBData->fMaxFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
+        bret = CompMarginDiff<float>( pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
         if( bret == _spFalse ) {
             continue;
         }
@@ -3632,17 +3627,17 @@ void CELSignalIdentifyAlg::FIdentifyAgiPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdFrqRangeNestedRatio * ( pRadarMode->fRF_TypicalMax - pRadarMode->fRF_TypicalMin ), 100.0 );
-        bret = IsOverlapSpace( pLOBData->fMinFreq, pLOBData->fMaxFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
+        bret = IsOverlapSpace( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
         if( bret == _spFalse ) {
             continue;
         }
 
-        bret = CompMarginDiff<float>( pLOBData->fMinFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
+        bret = CompMarginDiff<float>( pLOBData->fFreqMin, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
         if( bret == _spFalse ) {
             continue;
         }
 
-        bret = CompMarginDiff<float>( pLOBData->fMaxFreq, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
+        bret = CompMarginDiff<float>( pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, 0 );
         if( bret == _spFalse ) {
             continue;
         }
@@ -3724,8 +3719,8 @@ void CELSignalIdentifyAlg::PIdentifyPRI( SRxLOBData *pLOBData )
         }
 
         if( ( pRadarMode->fPRI_TypicalMin > 0 || pRadarMode->fPRI_TypicalMin < 0 ) || ( pRadarMode->fPRI_TypicalMax > 0 || pRadarMode->fPRI_TypicalMax < 0 ) ) {
-            bret = ( CompMarginDiff<float>( pLOBData->fMinPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
-                             CompMarginDiff<float>( pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
+            bret = ( CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
+                             CompMarginDiff<float>( pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
 
             if( bret == _spFalse ) {
                 continue;
@@ -3774,13 +3769,16 @@ void CELSignalIdentifyAlg::PIdentifyStbStb( SRxLOBData *pLOBData )
             continue;
         }
 
-        if( ( pRadarMode->fPRI_TypicalMin > 0 || pRadarMode->fPRI_TypicalMin < 0 ) || ( pRadarMode->fPRI_TypicalMax > 0 || pRadarMode->fPRI_TypicalMax < 0 ) ) {
-            bret = ( CompMarginDiff<float>( pLOBData->fMinPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
-                             CompMarginDiff<float>( pLOBData->fMinPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
+        if( ( pRadarMode->fPRI_TypicalMin > 0 /* || pRadarMode->fPRI_TypicalMin < 0 */ ) || ( pRadarMode->fPRI_TypicalMax > 0 /* || pRadarMode->fPRI_TypicalMax < 0 */ ) ) {
+            bret = ( CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
+                             CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
 
             if( bret == _spFalse ) {
                 continue;
             }
+        }
+        else {
+            continue;
         }
 
         m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
@@ -3826,11 +3824,11 @@ void CELSignalIdentifyAlg::PIdentifyStbDwl( SRxLOBData *pLOBData )
 // 			pvecPRI_NumIndex = & pstSRadarPRI_Sequence->vecPRI_NumIndex;
 // 			pPRI_SequenceNumIndex = & pvecPRI_NumIndex->at(0);
 //
-// 			bret = CompSwitchLevel( pLOBData->fMinPRI, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
+// 			bret = CompSwitchLevel( pLOBData->fPRIMin, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
 // 			if( bret == FALSE ) {
 // 				continue;
 // 			}
-// 			bret = CompSwitchLevel( pLOBData->fMaxPRI, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
+// 			bret = CompSwitchLevel( pLOBData->fPRIMax, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
 // 			if( bret == FALSE ) {
 // 				continue;
 // 			}
@@ -3979,7 +3977,7 @@ void CELSignalIdentifyAlg::PIdentifyJitStg( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pRadarMode->fPRI_TypicalMax - pRadarMode->fPRI_TypicalMin ), 100.0 );
-        if( false == IsOverlapSpace( pLOBData->fMinPRI, pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
+        if( false == IsOverlapSpace( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
             continue;
         }
 
@@ -4018,11 +4016,11 @@ void CELSignalIdentifyAlg::PIdentifyJitJit( SRxLOBData *pLOBData )
             continue;
         }
 
-        bret = CompMarginDiff<float>( pLOBData->fMinPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError );
+        bret = CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError );
         if( bret == FALSE ) {
             continue;
         }
-        bret = CompMarginDiff<float>( pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError );
+        bret = CompMarginDiff<float>( pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError );
         if( bret == FALSE ) {
             continue;
         }
@@ -4062,7 +4060,7 @@ void CELSignalIdentifyAlg::PIdentifyJitPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pRadarMode->fPRI_TypicalMax - pRadarMode->fPRI_TypicalMin ), 100.0 );
-        if( false == IsOverlapSpace( pLOBData->fMinPRI, pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
+        if( false == IsOverlapSpace( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
             continue;
         }
 
@@ -4134,9 +4132,9 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
         return FALSE;
     }
 
-    if( _spFalse == IsOverlapSpace( m_pLOBData->fMinPRI, m_pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
-            _spFalse == CompMarginDiff<float>( m_pLOBData->fMinPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ||
-        _spFalse == CompMarginDiff<float>( m_pLOBData->fMaxPRI, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ) {
+    if( _spFalse == IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
+            _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ||
+        _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ) {
         return FALSE;
     }
 
@@ -5309,7 +5307,7 @@ float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarM
             // 펄스폭 범위
             case _PW_MATCHRATIO_ :
                 if( Is_FNotZero( pRadarMode->fPD_TypicalMin ) == true && Is_FNotZero( pRadarMode->fPD_TypicalMax ) == true ) {
-                    if( CompMarginDiff<float>( m_pLOBData->fMeanPW, pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax, 0 ) == _spTrue ) {
+                    if( CompMarginDiff<float>( m_pLOBData->fPWMean, pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax, 0 ) == _spTrue ) {
                         frate = (float) _DEFAULT_PW_RANGE_RATE;
                     }
                 }

@@ -84,20 +84,20 @@ struct SRxLOBData {
 
     int iSignalType;
 
-    float fMeanDOA;                                 // [0.1도]
-    float fMaxDOA;
-    float fMinDOA;
-    float fDeviationDOA;				// [0.1도]
-    float fSDeviationDOA;
+    float fDOAMean;                                 // [0.1도]
+    float fDOAMax;
+    float fDOAMin;
+    float fDOADeviation;				// [0.1도]
+    float fDOASDeviation;
 
     int iDIRatio;					// [1 %]
 
     int iFreqType;
     int iFreqPatternType;
     float fFreqPatternPeriod;                       // [us]
-    float fMeanFreq;				// [10KHz]
-    float fMaxFreq;
-    float fMinFreq;
+    float fFreqMean;				// [10KHz]
+    float fFreqMax;
+    float fFreqMin;
     float fFreqDeviation;                           //
     int iFreqPositionCount;
     int iFreqElementCount;
@@ -106,23 +106,23 @@ struct SRxLOBData {
     int iPRIType;
     int iPRIPatternType;
     float fPRIPatternPeriod;		// [us]
-    float fMeanPRI;				// [1ns]
-    float fMaxPRI;
-    float fMinPRI;
+    float fPRIMean;				// [1ns]
+    float fPRIMax;
+    float fPRIMin;
     float fPRIDeviation;			// [1ns]
     float fPRIJitterRatio;			// [%]
     int iPRIPositionCount;
     int iPRIElementCount;
     float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fMeanPW;				// 1ns
-    float fMaxPW;
-    float fMinPW;
+    float fPWMean;				// 1ns
+    float fPWMax;
+    float fPWMin;
     float fPWDeviation;
 
-    float fMeanPA;				// 기존대로
-    float fMaxPA;
-    float fMinPA;
+    float fPAMean;				// 기존대로
+    float fPAMax;
+    float fPAMin;
     float fPADeviation;			// 기존대로
 
     int iScanType;
@@ -199,11 +199,10 @@ struct SRxABTData {
     int iPolarization;
 
 #ifdef _POCKETSONATA_
-    float fMeanDOA;                                 // [0.1도]
-    float fMaxDOA;
-    float fMinDOA;
-    float fDeviationDOA;				// [0.1도]
-    float fSDeviationDOA;
+    float fDOAMean;                                 // [0.1도]
+    float fDOAMax;
+    float fDOAMin;
+    float fDOADeviation;				// [0.1도]
 #endif
 
     int iFreqType;
@@ -211,9 +210,9 @@ struct SRxABTData {
     float fFreqPatternPeriodMean;	  // [us]
     float fFreqPatternPeriodMin;	  // [us]
     float fFreqPatternPeriodMax;	  // [us]
-    float fMeanFreq;										// [10KHz]
-    float fMaxFreq;
-    float fMinFreq;
+    float fFreqMean;										// [10KHz]
+    float fFreqMax;
+    float fFreqMin;
     float fFreqDeviation;
     int iFreqPositionCount;
     int iFreqElementCount;
@@ -224,23 +223,23 @@ struct SRxABTData {
     float fPRIPatternPeriodMean;							// [us]
     float fPRIPatternPeriodMin;							// [us]
     float fPRIPatternPeriodMax;							// [us]
-    float fMeanPRI;											// [1ns]
-    float fMaxPRI;
-    float fMinPRI;
+    float fPRIMean;											// [1ns]
+    float fPRIMax;
+    float fPRIMin;
     float fPRIDeviation;			// [1ns]
     float fPRIJitterRatio;							// [%]
     int iPRIPositionCount;
     int iPRIElementCount;
     float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fMeanPW;											// 1ns
-    float fMaxPW;
-    float fMinPW;
+    float fPWMean;											// 1ns
+    float fPWMax;
+    float fPWMin;
     float fPWDeviation;
 
-    float fMeanPA;											// 기존대로
-    float fMaxPA;
-    float fMinPA;
+    float fPAMean;											// 기존대로
+    float fPAMax;
+    float fPAMin;
     float fPADeviation;
 
     int iScanType;
@@ -309,10 +308,10 @@ struct SRxAETData {
     int iValidity;
 
 #ifdef _POCKETSONATA_
-    float fMeanDOA;                                 // [0.1도]
-    float fMaxDOA;
-    float fMinDOA;
-    float fDeviationDOA;				// [0.1도]
+    float fDOAMean;                                 // [0.1도]
+    float fDOAMax;
+    float fDOAMin;
+    float fDOADeviation;				// [0.1도]
 #endif
 
     int iFreqType;
@@ -321,32 +320,32 @@ struct SRxAETData {
     float fFreqPatternPeriodMin;	  // [us]
     float fFreqPatternPeriodMax;	  // [us]
     int iFreqPositionCount;
-    float fMeanFreq;										// [10KHz]
-    float fMaxFreq;
-    float fMinFreq;
-    float fDeviationFreq;
+    float fFreqMean;
+    float fFreqMax;
+    float fFreqMin;
+    float fFreqDeviation;
 
     int iPRIType;
     int iPRIPatternType;
     float fPRIPatternPeriodMean;							// [us]
     float fPRIPatternPeriodMin;							// [us]
     float fPRIPatternPeriodMax;							// [us]
-    float fMeanPRI;											// [1ns]
-    float fMaxPRI;
-    float fMinPRI;
+    float fPRIMean;											// [1ns]
+    float fPRIMax;
+    float fPRIMin;
     float fPRIJitterRatio;
-    float fDeviationPRI;// [%]
+    float fPRIDeviation;// [%]
     int iPRIPositionCount;
 
-    float fMeanPW;											// 1ns
-    float fMaxPW;
-    float fMinPW;
-    float fDeviationPW;
+    float fPWMean;											// 1ns
+    float fPWMax;
+    float fPWMin;
+    float fPWDeviation;
 
-    float fMeanPA;											// 기존대로
-    float fMaxPA;
-    float fMinPA;
-    float fDeviationPA;
+    float fPAMean;											// 기존대로
+    float fPAMax;
+    float fPAMin;
+    float fPADeviation;
 
     int iRadarModeIndex;
     int iThreatIndex;

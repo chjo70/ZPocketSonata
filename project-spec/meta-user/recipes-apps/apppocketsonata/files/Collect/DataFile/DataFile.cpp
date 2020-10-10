@@ -328,10 +328,12 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData )
 		*pcDV = PDW_DV;
 
 		if( m_bPhaseData == true ) {
+#ifndef _POCKETSONATA_
 			*pfPh1 = pPDW->fPh1;
 			*pfPh2 = pPDW->fPh2;
 			*pfPh3 = pPDW->fPh3;
 			*pfPh4 = pPDW->fPh4;
+#endif
 		}
 
 		printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[kHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );

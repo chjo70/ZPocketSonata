@@ -1534,7 +1534,7 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
 
     pre_toa = TOA[ pColPdwIndex->pIndex[pSeg->last_idx] ];
     //for( i=pSeg->last_idx+1 ; i < pColPdwIndex->count ; ++i ) {
-    while( pGrPdwIndex != & pColPdwIndex->pIndex[pColPdwIndex->count-1] ) {
+    while( pGrPdwIndex != & pColPdwIndex->pIndex[pColPdwIndex->count] ) {
         index = *pGrPdwIndex++;
         if( MARK[index] != 0 )
             continue;
