@@ -17,7 +17,7 @@ private:
     SLOBOtherInfo m_sLOBOtherInfo;				///< 타체계연동 변수
 
 public:
-    static CEmitterMerge *pInstance;
+    static CEmitterMerge *m_pInstance;
 
     STR_MessageData *m_pMsg;
 
@@ -31,9 +31,12 @@ private:
     void InitData();
     void MergeEmitter();
 
+    void ReloadLibrary();
+
 };
 
 #define EMTMRG          CEmitterMerge::GetInstance()
 #define EMTMRG_RELEASE  CEmitterMerge::ReleaseInstance()
+#define EMTMRG_IS       CEmitterMerge::IsThereInstance()
 
 #endif // CEMITTERMERGE_H

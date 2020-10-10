@@ -13,7 +13,7 @@
 class CPrompt : public CThread
 {
 private:
-    static CPrompt *pInstance;
+    static CPrompt *m_pInstance;
     //static char m_szClassName[LENGTH_OF_CLASSNAME];
     bool m_bWhileFlag;
 
@@ -46,30 +46,7 @@ public:
     CPrompt( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CPrompt();
 
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CPrompt* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CPrompt( g_iKeyId++, (char *)"CPrompt" );
-        }
-        return pInstance;
-    }
-
-    /**
-     * @brief CPrompt::ReleaseInstance
-     */
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CPrompt )
 
 };
 

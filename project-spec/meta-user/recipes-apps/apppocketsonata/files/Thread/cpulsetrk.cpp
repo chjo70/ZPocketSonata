@@ -9,7 +9,7 @@
 #define _DEBUG_
 
 // 클래스 내의 정적 멤버변수 값 정의
-CPulseTrk* CPulseTrk::pInstance = nullptr;
+CPulseTrk* CPulseTrk::m_pInstance = nullptr;
 
 CPulseTrk::CPulseTrk( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -22,20 +22,6 @@ CPulseTrk::CPulseTrk( int iKeyId, char *pClassName, bool bArrayLanData ) : CThre
  */
 CPulseTrk::~CPulseTrk(void)
 {
-}
-
-/**
- * @brief CPulseTrk::ReleaseInstance
- */
-void CPulseTrk::ReleaseInstance()
-{
-    if(pInstance)
-    {
-        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
-
-        delete pInstance;
-        pInstance = NULL;
-    }
 }
 
 /**

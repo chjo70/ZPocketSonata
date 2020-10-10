@@ -20,7 +20,7 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-CSignalCollect* CSignalCollect::pInstance = nullptr;
+CSignalCollect* CSignalCollect::m_pInstance = nullptr;
 
 /**
  * @brief CSignalCollect::CSignalCollect
@@ -494,17 +494,17 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fMinFreq );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fMaxFreq );
+            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fFreqMin );
+            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fFreqMax );
 
-            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fMinPW );
-            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fMaxPW );
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
 
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
 
-        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fMinDOA-10 ) + _spAOAmax ) % _spAOAmax;
-        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fMaxDOA+10 ) + _spAOAmax ) % _spAOAmax;
+        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + _spAOAmax ) % _spAOAmax;
+        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + _spAOAmax ) % _spAOAmax;
 
         pstrWindowCell->uiMaxCoPDW = KWN_COLLECT_PDW;
 
@@ -558,6 +558,13 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 
     pstPDW = & pPDWData->stPDW[0];
     for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
+        // 모의
+        pstPDW->iAOA = pstPDW->iAOA + ( ( rand() % 10 ) - 5 );
+        pstPDW->iFreq = pstPDW->iFreq + ( ( rand() % 20 ) - 10 );
+        pstPDW->iPW = pstPDW->iPW + ( ( rand() % 20 ) - 10 );
+        pstPDW->iPA = pstPDW->iPA + ( ( rand() % 20 ) - 10 );
+
+
         // 추적 채널 설정
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheTrackCollectBank[uj];

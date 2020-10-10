@@ -8,7 +8,7 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-CJamTech* CJamTech::pInstance = nullptr;
+CJamTech* CJamTech::m_pInstance = nullptr;
 
 /**
  * @brief CJamTech::CJamTech

@@ -57,7 +57,7 @@ enum enCommand {
 
 // 클래스 내의 정적 멤버변수 값 정의
 //char CPrompt::m_szClassName[LENGTH_OF_CLASSNAME] = { "CPrompt" };
-CPrompt* CPrompt::pInstance = nullptr;
+CPrompt* CPrompt::m_pInstance = nullptr;
 
 CPrompt::CPrompt( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -71,6 +71,11 @@ CPrompt::CPrompt( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( 
  * @brief CPrompt::~CPrompt
  */
 CPrompt::~CPrompt()
+{
+
+}
+
+void CPrompt::Run()
 {
 
 }

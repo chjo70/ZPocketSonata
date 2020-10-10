@@ -6,7 +6,7 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-CEmitterMerge* CEmitterMerge::pInstance = nullptr;
+CEmitterMerge* CEmitterMerge::m_pInstance = nullptr;
 
 CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -80,6 +80,10 @@ void CEmitterMerge::_routine()
                     LOGMSG( enDebug, " 탐지 수집/분석 완료를 수신했습니다." );
 
                     // 탐지 분석 완료로 이 시그널을 이용하여 위협 사이클 관리를 수행하고...
+                    break;
+
+                case enTHREAD_RELOAD_LIBRARY :
+                    ReloadLibrary();
                     break;
 
                 default:
@@ -163,4 +167,12 @@ void CEmitterMerge::MergeEmitter()
         SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
     }
 
+}
+
+/**
+ * @brief CEmitterMerge::ReloadLibrary
+ */
+void CEmitterMerge::ReloadLibrary()
+{
+    m_pTheEmitterMergeMngr->UpdateCEDEOBLibrary();
 }

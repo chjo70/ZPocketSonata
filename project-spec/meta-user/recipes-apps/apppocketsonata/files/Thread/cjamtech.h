@@ -10,7 +10,7 @@
 class CJamTech : public CThread
 {
 public:
-    static CJamTech *pInstance;
+    static CJamTech *m_pInstance;
 
     STR_MessageData *m_pMsg;
 

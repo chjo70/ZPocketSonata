@@ -10,7 +10,7 @@
 class CScanAnalysis : public CThread
 {
 public:
-    static CScanAnalysis *pInstance;
+    static CScanAnalysis *m_pInstance;
 
     STR_MessageData *m_pMsg;
 

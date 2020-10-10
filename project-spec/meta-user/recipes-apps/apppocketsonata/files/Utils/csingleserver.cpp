@@ -200,8 +200,29 @@ void CSingleServer::_routine()
                     else {
                         uiTotalRead += iRead;
                         if( uiTotalRead == sizeof(STR_LAN_HEADER) ) {
-                            bHeader = false;
-                            uiTotalRead = 0;
+                            if( strLanHeader.uiLength == 0 ) {
+                                bHeader = true;
+                                uiTotalRead = 0;
+
+                                sndMsg.mtype = 1;
+                                sndMsg.ucOpCode = strLanHeader.ucOpCode;
+                                sndMsg.iSocket = m_iSocket;
+                                sndMsg.iArrayIndex = -1;
+                                sndMsg.uiArrayLength = 0;
+                                sndMsg.uiDataLength = 0;
+
+                                if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+                                    perror( "msgsnd 실패" );
+                                }
+                                else {
+                                    // DisplayMsg( & sndMsg );
+                                }
+
+                            }
+                            else {
+                                bHeader = false;
+                                uiTotalRead = 0;
+                            }
                         }
                     }
                 }

@@ -7,7 +7,7 @@
 class CRecLan : public CThread
 {
 private:
-    static CRecLan *pInstance[2];
+    static CRecLan *m_pInstance[2];
 
     STR_MessageData *m_pMsg;
     int m_iIndex;
@@ -31,10 +31,10 @@ public:
 
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화
-        if(pInstance[iIndex] == NULL) {
-            pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*)"CRecLan", true );
+        if(m_pInstance[iIndex] == NULL) {
+            m_pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*)"CRecLan", true );
         }
-        return pInstance[iIndex];
+        return m_pInstance[iIndex];
     }
 
 public:

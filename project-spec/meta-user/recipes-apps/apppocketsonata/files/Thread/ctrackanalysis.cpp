@@ -11,7 +11,7 @@ extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleServer *g_pTheCCUSocket;
 
 // 클래스 내의 정적 멤버변수 값 정의
-CTrackAnalysis* CTrackAnalysis::pInstance = nullptr;
+CTrackAnalysis* CTrackAnalysis::m_pInstance = nullptr;
 
 /**
  * @brief CTrackAnalysis::CTrackAnalysis

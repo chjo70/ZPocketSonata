@@ -18,7 +18,7 @@ private:
     CKnownSigAnal *m_pTheKnownSigAnal;
 
 public:
-    static CTrackAnalysis *pInstance;
+    static CTrackAnalysis *m_pInstance;
 
     STR_MessageData *m_pMsg;
 

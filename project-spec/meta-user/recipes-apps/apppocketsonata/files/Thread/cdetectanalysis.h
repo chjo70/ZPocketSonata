@@ -18,7 +18,7 @@ private:
     CNewSigAnal *m_pTheNewSigAnal;
 
 public:
-    static CDetectAnalysis *pInstance;
+    static CDetectAnalysis *m_pInstance;
 
     STR_MessageData *m_pMsg;
 

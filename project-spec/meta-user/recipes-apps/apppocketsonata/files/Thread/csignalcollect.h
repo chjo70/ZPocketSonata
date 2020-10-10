@@ -38,7 +38,7 @@ private:
     STR_TRKPDWDATA m_theTrkPDW;
 
 public:
-    static CSignalCollect *pInstance;
+    static CSignalCollect *m_pInstance;
 
     STR_MessageData *m_pMsg;
 

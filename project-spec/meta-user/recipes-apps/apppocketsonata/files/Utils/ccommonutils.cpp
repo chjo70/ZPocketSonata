@@ -77,6 +77,10 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
                 bRet = false;
             }
             break;
+
+        case enREQ_RELOAD_LIBRARY :
+            break;
+
         default:
             break;
 

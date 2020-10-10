@@ -23,17 +23,22 @@ void Run(); \
 virtual void _routine();    \
 virtual const char *ChildClassName() { return m_szClassName; } \
 static A* GetInstance() { \
-    if(pInstance == NULL) { \
-        pInstance = new A( g_iKeyId++, (char*) #A, true ); \
+    if(m_pInstance == NULL) { \
+        m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
     } \
-    return pInstance; } \
+    return m_pInstance; } \
 static void ReleaseInstance() { \
-    if(pInstance) { \
-        delete pInstance; \
-        pInstance = NULL; \
+    if(m_pInstance) { \
+        delete m_pInstance; \
+        m_pInstance = NULL; \
+    } } \
+static bool IsThereInstance() { \
+    bool bRet = true; \
+    if(m_pInstance == NULL) { \
+        bRet = false; \
     } \
+    return bRet; \
 }
-
 
 #pragma pack(push, 1)
 

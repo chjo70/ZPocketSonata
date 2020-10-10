@@ -13,7 +13,7 @@ using namespace std;
 class CTaskMngr : public CThread
 {
 private:
-    static CTaskMngr *pInstance;
+    static CTaskMngr *m_pInstance;
 
     STR_MessageData *m_pMsg;
 
@@ -37,31 +37,10 @@ private:
     void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
 
 public:
-    CTaskMngr( int iKeyId, char *pClassName=NULL );
+    CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CTaskMngr(void);
 
-    void Run();
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CTaskMngr* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CTaskMngr( g_iKeyId++, (char *)"CTaskMngr" );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-       if(pInstance)
-       {
-           delete pInstance;
-           pInstance = NULL;
-       }
-    }
-
+    THREAD_STANDARD_FUNCTION( CTaskMngr )
 
 public:
     void Shutdown();

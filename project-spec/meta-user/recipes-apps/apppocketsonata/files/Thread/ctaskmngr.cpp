@@ -31,12 +31,12 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-CTaskMngr* CTaskMngr::pInstance = nullptr;
+CTaskMngr* CTaskMngr::m_pInstance = nullptr;
 
 /**
  * @brief CTaskMngr::CTaskMngr
  */
-CTaskMngr::CTaskMngr( int iKeyId, char *pClassName ) : CThread( iKeyId, pClassName )
+CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName )
 {
     LOGENTRY;
 

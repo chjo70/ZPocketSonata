@@ -8,6 +8,8 @@
 
 #include "ctaskmngr.h"
 #include "csignalcollect.h"
+#include "cemittermerge.h"
+
 
 #include "../Utils/ccommonutils.h"
 
@@ -15,7 +17,7 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-CRecLan* CRecLan::pInstance[2] = { nullptr, nullptr } ;
+CRecLan* CRecLan::m_pInstance[2] = { nullptr, nullptr } ;
 
 
 /**
@@ -41,15 +43,15 @@ CRecLan::~CRecLan(void)
  */
 void CRecLan::ReleaseInstance()
 {
-    if(pInstance[m_iIndex])
+    if(m_pInstance[m_iIndex])
     {
         int iIndex;
 
         LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
 
         iIndex = m_iIndex;
-        delete pInstance[iIndex];
-        pInstance[iIndex] = NULL;
+        delete m_pInstance[iIndex];
+        m_pInstance[iIndex] = NULL;
     }
 }
 
@@ -93,6 +95,12 @@ void CRecLan::_routine()
                     //SendQMessage();
                     break;
 
+                case enREQ_RELOAD_LIBRARY :
+                    if( EMTMRG_IS ) {
+                        EMTMRG->QMsgSnd( m_pMsg );
+                    }
+                    break;
+
                 // 추가 명령어
                 case enREQ_SIM_PDWDATA :
                     SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
@@ -100,11 +108,6 @@ void CRecLan::_routine()
 
                 case enREQ_DUMP_LIST :
                     DumpList();
-                    break;
-
-                case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
-                    bWhile = false;
                     break;
 
                 default:
