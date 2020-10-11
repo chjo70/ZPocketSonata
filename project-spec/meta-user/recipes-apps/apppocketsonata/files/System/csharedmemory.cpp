@@ -45,12 +45,16 @@ void CSharedMemroy::setupSharedMemory( int iSize )
 {
    // Setup shared memory, 11 is the size
 
-    if ( ( m_shmid = shmget(m_key, iSize , IPC_CREAT | 0666 )) < 0 )
-    {
-        if ( ( m_shmid = shmget(m_key, 0 , 0)) < 0 ) {
+   if( iSize == 0 ) {
+       if ( ( m_shmid = shmget( m_key, 0 , 0)) < 0 ) {
+           perror( "Error getting shared memory id" );
+       }
+   }
+   else {
+        if ( ( m_shmid = shmget(m_key, iSize , IPC_CREAT | 0600 )) < 0 ) {
             perror( "Error getting shared memory id" );
         }
-    }
+   }
 
     m_iSize = iSize;
 }

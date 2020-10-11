@@ -20,3 +20,5 @@ Build-PocketView*/
 Build-PocketSonata*/
 *.sqlite3
 *.swp
+
+project-spec/meta-user/recipes-apps/apppocketsonata/files/Web/cgi-bin/system_cgi/system_cgi

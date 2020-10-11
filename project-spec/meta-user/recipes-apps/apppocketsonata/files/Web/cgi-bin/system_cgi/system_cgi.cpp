@@ -49,13 +49,6 @@ int main(int argc, char *argv[])
     printf( "고대역3(14∼18 ㎓):&nbsp;<input type=\"text\" name=\"query_1418\" value=\"\" size=\"7\">㏈</p>" );
 
 
-/*
- *     printf( "<p>&nbsp;&nbsp;&nbsp;&nbsp;플레폼: <input type=\"text\" name=\"query_platform\" value=\"%s\" size=\"4\">" , theGrDisp->GetAircraftType() );
-    printf( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;버전: <input type=\"text\" name=\"query_version\" value=\"%s\" size=\"7\">" , theGrDisp->GetVersion() );
-    printf( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;초기 문구: <input type=\"text\" name=\"query_warmup_message\" value=\"%s\" size=\"7\"></p>" , theGrDisp->GetWarmUpMessage() );
-
-  */
-
     printf( "<h2 align=\"left\"><input type=\"submit\" value=\"변경\" name=\"send\"></h2>" );
 
     printf( "</form>" );
