@@ -93,7 +93,7 @@ CSignalCollect::~CSignalCollect(void)
 /**
  * @brief CSignalCollect::Run
  */
-void CSignalCollect::Run()
+void CSignalCollect::Run(key_t key)
 {
     LOGENTRY;
 
@@ -119,7 +119,7 @@ void CSignalCollect::_routine()
 
     while( g_AnalLoop ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
-            switch( m_pMsg->ucOpCode ) {
+            switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     Init();
                     bRunCollecting = true;
@@ -139,7 +139,7 @@ void CSignalCollect::_routine()
                     break;
 
                 default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
         }

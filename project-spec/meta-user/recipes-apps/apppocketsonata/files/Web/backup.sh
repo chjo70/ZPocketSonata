@@ -27,7 +27,7 @@ if [[ "$present_directory" =~ "smb-share" ]] ; then
 
 	echo ""
 	echo "모든 데이터 파일을 복사 완료 했습니다.============================="
-
+	
 elif [[ "$present_directory" =~ "Web" ]] ; then
 	echo ""
 	echo "1단계: 모든 데이터 파일을 " [$present_directory] "폴더에 압축 합니다."
@@ -39,8 +39,7 @@ elif [[ "$present_directory" =~ "Web" ]] ; then
 	sudo mkdir -p $web_directory	
 	sudo cp $backup_directory/web.tar.gz $web_directory
 	sudo tar xf $web_directory/web.tar.gz -C $web_directory
-	sudo chmod 777 -R $web_directory	
-	
+	sudo chmod 777 -R $web_directory		
 	
 else
 	echo "[주의] 이 작업은 호스트컴을 공유한 폴더를 리눅스 서버에서 SMB로 연결하여 실행 파일을 실행해야 합니다."

@@ -22,8 +22,9 @@
 
 //#define UDF_RAMDISK_FILENAME	"c:\\tftpboot\\udf_1.udf"
 #define UDF_RAMDISK_FILENAME	"C:\\LMS\\EidFiles\\udf_1.udf"
-#else
 
+#elif defined(_GNUCC__)
+#define WAIT_FOREVER		0
 #endif
 
 #endif // !defined(AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)

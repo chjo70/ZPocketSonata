@@ -20,8 +20,8 @@ using namespace std;
 #include "./ThreadLib/LIGLock.h"
 
 #include "../INC/OS.h"
-#include "../../OFP/EmitterMerge/PositionEstimationAlg.h"
-#include "../../OFP/EmitterMerge/ELEmitterDataType.h"
+#include "../EmitterMerge/PositionEstimationAlg.h"
+#include "../EmitterMerge/ELEmitterDataType.h"
 #include "../INC/structs.h"
 //#include "../OFP_Main.h"
 #define MSG_Q_ID				UINT

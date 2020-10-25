@@ -1,12 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <!-------------------------------------------------------------->
 <!-- The qDecoder Project             http://www.qDecoder.org -->
-<!--                                   ftp://ftp.qDecoder.org -->
 <!--                                                          -->
-<!--         Copyright (C) 2001 The qDecoder Project.         -->
-<!--         Copyright (C) 1999 Hongik Internet, Inc.         -->
-<!--         Copyright (C) 1998 Nobreak Technologies, Inc.    -->
-<!--         Copyright (C) 1996,1997 Seung-young Kim          -->
+<!--           Copyright (C) 2007 Seung-young Kim             -->
 <!-------------------------------------------------------------->
 
 <html>
@@ -15,18 +11,18 @@
   <style type="text/css">
     td {font-size: 9pt}
     .ellips {overflow:hidden; text-overflow:ellipsis; }
-    .
   </style>
   <script language="JavaScript">
     var iMaxBarWidth = 300;
 
     var iStartTime = new Date().getTime();
     var iLastCsize = 0;
-    function Q_setProgress(iTsize, iCsize, sCname) {
+    function qSetProgress(iTsize, iCsize, sCname) {
       var iPercent, iBarWidth, iKbPerSec, iEstablishedSec, iTimeleftSec;
-
+	  
       // connection closed by user
       if(iTsize == 0 && iCsize == 0) {
+        alert('connection closed.');
         window.close();
         return;
       }
@@ -64,12 +60,14 @@
       if(iCsize > iLastCsize) oTxtTitle.innerHTML = "<b>Uploading...</b> ("+Math.round(iCsize/1024)+"/"+Math.round(iTsize/1024)+" KB)";
       else oTxtTitle.innerHTML = "<b>Waiting...</b> ("+Math.round(iCsize/1024)+"/"+Math.round(iTsize/1024)+" KB)";
 
-      oTxtTimeleft.innerHTML = sTimeleft;
+      document.getElementByID("oTxtTimeleft").innerHTML = sTimeleft;
 
       oProgBar.width = iBarWidth;
+	  
+	  document.getElementByID("oTxtPercent").innerHTML = iPercent;
       oTxtPercent.innerHTML = iPercent;
 
-      oTxtFilename.innerHTML = sCname;
+   	  document.getElementByID("oTxtFilename").innerHTML = sCname;
       oTxtKbpersec.innerHTML = iKbPerSec;
 
       iLastCsize = iCsize;
@@ -87,15 +85,17 @@
       </td></tr></table>
 
       <table border="0" width="360" cellpadding="2" cellspacing="0" style="table-layout: fixed">
+        <tr height="0">
+        	<td width="230"></td>
+        	<td width="90"></td>
+        	<td width="40"></td>
+        </td>
         <tr>
-          <td width="220">
+          <td>
             <font id="oTxtTitle"><b>Connecting...</b></font>
           </td>
-          <td width="80" align="right">
-            Time Left :
-          </td>
-          <td width="60">
-            <font id="oTxtTimeleft"></font>
+          <td colspan="2" align="right">
+            Time Left : <font id="oTxtTimeleft"></font>
           </td>
         </tr>
         <tr>
@@ -116,11 +116,8 @@
           <td class="ellips">
             <nobr>File:&nbsp;<font id="oTxtFilename"></font></nobr>
           </td>
-          <td align="right">
-            Avg Speed :
-          </td>
-          <td>
-            <font id="oTxtKbpersec">0</font> KB/s
+          <td colspan="2" align="right">
+            Avg Speed : <font id="oTxtKbpersec">0</font> KB/s
           </td>
         </tr>
         <tr>

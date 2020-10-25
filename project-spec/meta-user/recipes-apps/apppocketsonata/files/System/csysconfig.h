@@ -12,6 +12,21 @@ struct STR_SYSCONFIG {
     ENUM_BoardID enBoardID;
 
     /**
+     * @brief 프로그램 버젼 정보
+     */
+    char szProgramVersion[10];
+
+    /**
+     * @brief 최소 분석 개수
+     */
+    int iMinAnalPulse;
+
+    /**
+     * @brief 대역별 임계값
+     */
+    float fRxThreshold[5];
+
+    /**
      * @brief 장비 모드 상태
      */
     ENUM_MODE enMode;
@@ -37,6 +52,7 @@ public:
     static void ReleaseInstance();
 
 private:
+    void InitVar();
 
 public:
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };
@@ -44,6 +60,26 @@ public:
         m_strConfig.enBoardID = enBoardID;
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
+    };
+
+    char *GetProgramVersion() { return m_strConfig.szProgramVersion; };
+    void SetProgramVersion(char *pProgramVersion ) {
+        strcpy( m_strConfig.szProgramVersion, pProgramVersion );
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
+    int GetMinAnalPulse() { return m_strConfig.iMinAnalPulse; };
+    void SetMinAnalPulse(int iMinAnalPulse ) {
+        m_strConfig.iMinAnalPulse = iMinAnalPulse;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
+    float *GetRxThreshold() { return & m_strConfig.fRxThreshold[0]; };
+    void SetRxThreshold( float *fRxThreshold ) {
+        memcpy( m_strConfig.fRxThreshold, fRxThreshold, sizeof(m_strConfig.fRxThreshold) );
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     };
 
     ENUM_MODE GetMode() { return m_strConfig.enMode; };

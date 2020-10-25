@@ -39,6 +39,7 @@ CLog::~CLog()
  */
 void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
 {
+#ifndef _CGI_
     int fid;
 
     char szDate[LOG_DIR_SIZE];
@@ -145,6 +146,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     }
 
     sem_post( & m_mutex );
+#endif
 
 }
 

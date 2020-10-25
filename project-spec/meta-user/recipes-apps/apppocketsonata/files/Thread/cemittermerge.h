@@ -33,6 +33,8 @@ private:
 
     void ReloadLibrary();
 
+    void SendNewUpd();
+
 };
 
 #define EMTMRG          CEmitterMerge::GetInstance()

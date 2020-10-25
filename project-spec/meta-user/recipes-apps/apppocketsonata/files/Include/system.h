@@ -35,6 +35,30 @@
 
 //#include "../Utils/stdstring.h"
 
+// 쓰레드에 대한 큐메시지 키 값 정의
+
+#define _SHM_MEMORY_KEY             (333)
+
+enum ENUM_THREAD_KEY {
+    _MSG_TMNGR_KEY = (_SHM_MEMORY_KEY) + 1,
+    _MSG_URBIT_KEY,
+    _MSG_PULTRK_KEY,
+    _MSG_JAMTEC_KEY,
+    _MSG_RECZYNQ_KEY,
+    _MSG_RECCCU_KEY,
+    _MSG_ZYNQ_KEY,
+    _MSG_CCU_KEY,
+    _MSG_PMC_KEY,
+    _MSG_ZCGI_KEY,
+
+    _MSG_CGI_KEY,
+
+    _MSG_PROMPT_KEY,
+
+};
+
+
+
 
 
 

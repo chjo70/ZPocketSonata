@@ -166,6 +166,11 @@ CREATE TABLE "ABTDATA" (
     "POLIZATION" NUMBER(1),
         
 	"SIGNAL_TYPE"	tinyint,
+	
+	"DOA_MEAN"	float,
+	"DOA_MIN"	float,
+	"DOA_MAX"	float,
+	"DOA_DEV"	float,
     
 	"FREQ_TYPE"	tinyint,
 	"FREQ_PATTERN_TYPE"	tinyint,

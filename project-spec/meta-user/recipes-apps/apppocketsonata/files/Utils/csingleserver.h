@@ -24,7 +24,7 @@ public:
     CSingleServer( int iKeyId, char *pClassName, int iPort );
     virtual ~CSingleServer();
 
-    void Run();
+    void Run( key_t key );
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
 

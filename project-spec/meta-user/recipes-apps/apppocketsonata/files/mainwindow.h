@@ -17,6 +17,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+struct STR_LIST_TABLE {
+    unsigned int uiABTID;
+
+    int iIndexOfTable;
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -26,6 +32,13 @@ private:
 
     int SendRSA( STR_LAN_HEADER *pstrLanHeader, void *pData, int iLength );
     void MessageBox( char *pText );
+
+    void ShowIBitResult( void *pData );
+    void ShowCBitResult( void *pData );
+
+    void InsertTable( void *pByteData );
+    void UpdateTable( void *pByteData );
+    void DeleteTable( void *pByteData );
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -78,5 +91,8 @@ private:
     QTcpSocket m_theTcpSocket;   //socket
     //QTcpServer *pServer;
     //QList<QTcpSocket*> _sockets;
+
+    vector<STR_LIST_TABLE> vTable;
+
 };
 #endif // MAINWINDOW_H

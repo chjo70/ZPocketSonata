@@ -117,11 +117,11 @@ void CTaskMngr::InitVar()
 /**
  * @brief CMain::Run
  */
-void CTaskMngr::Run()
+void CTaskMngr::Run( key_t key )
 {
     LOGENTRY;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -144,7 +144,7 @@ void CTaskMngr::_routine()
         }
         else {
         if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->ucOpCode ) {
+            switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_MODE :
                     SetMode();
                     break;
@@ -159,7 +159,7 @@ void CTaskMngr::_routine()
                     break;
 
                 default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
         }

@@ -1,102 +1,102 @@
-/****************************************************************************************
- ÆÄ ÀÏ ¸í : _sysmsg.h
+ï»¿/****************************************************************************************
+ íŒŒ ì¼ ëª… : _sysmsg.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- ¸ñ    Àû : Á¦¾îÁ¶Á¾ ¹× Àç¹Ö½ÅÈ£°ü¸®±â¿ÍÀÇ ÀÎÅÍÆäÀÌ½º ¸Ş½ÃÁö ¹× ±¸Á¶ Á¤ÀÇ
- °¡    Á¤ :
- Àú ÀÚ ¸í : Jo Churl-hee
- º¯ °æ ÀÚ :
- º¯°æ³»¿ë : (¸ñÀû)
- º¯°æÀÏ½Ã : 99-05-03 10:05¿ÀÈÄ
+ ëª©    ì  : ì œì–´ì¡°ì¢… ë° ì¬ë°ì‹ í˜¸ê´€ë¦¬ê¸°ì™€ì˜ ì¸í„°í˜ì´ìŠ¤ ë©”ì‹œì§€ ë° êµ¬ì¡° ì •ì˜
+ ê°€    ì • :
+ ì € ì ëª… : Jo Churl-hee
+ ë³€ ê²½ ì :
+ ë³€ê²½ë‚´ìš© : (ëª©ì )
+ ë³€ê²½ì¼ì‹œ : 99-05-03 10:05ì˜¤í›„
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- ÀÔ·ÂÁ¤ÀÇ :
- Ãâ·ÂÁ¤ÀÇ :
- °ü·Ã¸ğµâ :
- ÀÚ·á±¸Á¶ : (Àü¿ªº¯¼ö)
- ¿¡·¯Ã³¸®/º¹±Í¼ø¼­:
- ÄÄÆÄÀÏ ÀÏ½Ã :
+ ì…ë ¥ì •ì˜ :
+ ì¶œë ¥ì •ì˜ :
+ ê´€ë ¨ëª¨ë“ˆ :
+ ìë£Œêµ¬ì¡° : (ì „ì—­ë³€ìˆ˜)
+ ì—ëŸ¬ì²˜ë¦¬/ë³µê·€ìˆœì„œ:
+ ì»´íŒŒì¼ ì¼ì‹œ :
 *****************************************************************************************/
 
 #ifndef _SYSMSG_H_
 #define _SYSMSG_H_
 
 /*----------------------------------------------------------------------------------------
-    ÀÎÅÍÆäÀÌ½º ¸Ş½ÃÁö OPCODE ±¸Á¶
-  ÀÚ¸® ¼ö : 4 ÀÚ¸® - X X X X
+    ì¸í„°í˜ì´ìŠ¤ ë©”ì‹œì§€ OPCODE êµ¬ì¡°
+  ìë¦¬ ìˆ˜ : 4 ìë¦¬ - X X X X
              1 2 3 4
-    1 ÀÚ¸® : ÀåÄ¡°£ ÀÎÅÍÆäÀÌ½º Á¾·ù
+    1 ìë¦¬ : ì¥ì¹˜ê°„ ì¸í„°í˜ì´ìŠ¤ ì¢…ë¥˜
        1 X X X : CCU    -> RSA, JSM
            2 X X X : CCU,JSM  -> RSA
            3 X X X : CCU    -> RSA
            4 X X X : RSA    -> CCU, JSM
            5 X X X : RSA    -> JSM
            6 X X X : JSM    -> CCU
-    2 ÀÚ¸® : ¸Ş½ÃÁöÀÇ Á¾·ù
-       X 0 X X : ¿¡·¯ ¸Ş½ÃÁö
-       X 1 X X : ½Ã½ºÅÛ ¿î¿ë °ü·Ã ¸Ş½ÃÁö
-       X 2 X X : ºñÆ® °ü·Ã ¸Ş½ÃÁö
-       X 3 X X : ½Ã½ºÅÛ °¢Á¾ ¿î¿ë º¯¼ö ¼³Á¤ °ü·ÃµÈ ¸Ş½ÃÁö
-       X 4 X X : ¶óÀÌºê·¯¸® °ü·Ã ¸Ş½ÃÁö(IPL, JPL)
-       X 5 X X : À§Çù°ü·Ã ¸Ş½ÃÁö(AET, JAM)
+    2 ìë¦¬ : ë©”ì‹œì§€ì˜ ì¢…ë¥˜
+       X 0 X X : ì—ëŸ¬ ë©”ì‹œì§€
+       X 1 X X : ì‹œìŠ¤í…œ ìš´ìš© ê´€ë ¨ ë©”ì‹œì§€
+       X 2 X X : ë¹„íŠ¸ ê´€ë ¨ ë©”ì‹œì§€
+       X 3 X X : ì‹œìŠ¤í…œ ê°ì¢… ìš´ìš© ë³€ìˆ˜ ì„¤ì • ê´€ë ¨ëœ ë©”ì‹œì§€
+       X 4 X X : ë¼ì´ë¸ŒëŸ¬ë¦¬ ê´€ë ¨ ë©”ì‹œì§€(IPL, JPL)
+       X 5 X X : ìœ„í˜‘ê´€ë ¨ ë©”ì‹œì§€(AET, JAM)
 ----------------------------------------------------------------------------------------*/
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  ·¹ÀÌ´õ Â¡Ç¥ºĞ¼®±â ¿ÜºÎ ¸Ş½ÃÁö Á¤ÀÇ : CCU->RSA
+//  ë ˆì´ë” ì§•í‘œë¶„ì„ê¸° ì™¸ë¶€ ë©”ì‹œì§€ ì •ì˜ : CCU->RSA
 //
-//  OPÄÚµå + SIZE : Default 8 Bytes
+//  OPì½”ë“œ + SIZE : Default 8 Bytes
 //
 
-/* ¿î¿ë ¸Ş½ÃÁö  */
+/* ìš´ìš© ë©”ì‹œì§€  */
 #define   Msys_Error        1001  /* (  0) */
-#define   Msys_SetMode      1101  /* (  4)½Ã½ºÅÛ¸ğµå(1:ES,2:EW,3:ºñ»ó) */
+#define   Msys_SetMode      1101  /* (  4)ì‹œìŠ¤í…œëª¨ë“œ(1:ES,2:EW,3:ë¹„ìƒ) */
 #define   Msys_Start        1102  /* (  0) */
 
-/* BIT ¸Ş½ÃÁö  */
-#define   Mbit_ReqIbit      1201  /* (  4)ÀåÄ¡ÄÚµå */
-/* 1:ESÀüÃ¼, 2:RSA,
-             3:´ë¿ª1 Àü¹æÇâ ¼ö½ÅÀåÄ¡, 4:´ë¿ª1 ¼ö½Å¹æÅ½ Ã³¸®±â,
-             5:´ë¿ª1 ÁÂÇö¹æÇâÅ½ÁöÀåÄ¡, 6:´ë¿ª1 ¿ìÇö¹æÇâÅ½ÁöÀåÄ¡,
-             7:´ë¿ª1 ½ÅÈ£ºĞ¹è±â,
-             8:´ë¿ª2 Àü¹æÇâ ¼ö½ÅÀåÄ¡, 9:´ë¿ª2 ¼ö½Å¹æÅ½ Ã³¸®±â,
-             10:´ë¿ª2 ÁÂÇö¹æÇâÅ½ÁöÀåÄ¡, 11:´ë¿ª2 ¿ìÇö¹æÇâÅ½ÁöÀåÄ¡,
-             12:´ë¿ª2 ½ÅÈ£ºĞ¹è±â,
-             13:´ë¿ª3 Àü¹æÇâ ¼ö½ÅÀåÄ¡, 14:´ë¿ª3 ¼ö½Å¹æÅ½ Ã³¸®±â,
-             15:´ë¿ª3 ÁÂÇö¹æÇâÅ½ÁöÀåÄ¡, 16:´ë¿ª3 ¿ìÇö¹æÇâÅ½ÁöÀåÄ¡,
-             17:´ë¿ª3 ½ÅÈ£ºĞ¹è±â */
-#define   Mbit_StartSbit    1202  /* (  8)¹êµå (1:Low,2:Mid,3:Hgh) + ¹æÀ§
-                                  ( 0xF1:1»çºĞ¸é(45µµ),  0xF2:2»çºĞ¸é(135µµ),
-                                  0xF3:3»çºĞ¸é(225µµ), 0xF4:4»çºĞ¸é(315µµ) ) */
-#define   Mbit_StopSbit     1203  /* (  8)¹êµå (1:Low,2:Mid,3:Hgh) + ¹æÀ§   `98.9.2
-                                  ( 0xF1:1»çºĞ¸é(45µµ),  0xF2:2»çºĞ¸é(135µµ),
-                                  0xF3:3»çºĞ¸é(225µµ), 0xF4:4»çºĞ¸é(315µµ) ) */
+/* BIT ë©”ì‹œì§€  */
+#define   Mbit_ReqIbit      1201  /* (  4)ì¥ì¹˜ì½”ë“œ */
+/* 1:ESì „ì²´, 2:RSA,
+             3:ëŒ€ì—­1 ì „ë°©í–¥ ìˆ˜ì‹ ì¥ì¹˜, 4:ëŒ€ì—­1 ìˆ˜ì‹ ë°©íƒ ì²˜ë¦¬ê¸°,
+             5:ëŒ€ì—­1 ì¢Œí˜„ë°©í–¥íƒì§€ì¥ì¹˜, 6:ëŒ€ì—­1 ìš°í˜„ë°©í–¥íƒì§€ì¥ì¹˜,
+             7:ëŒ€ì—­1 ì‹ í˜¸ë¶„ë°°ê¸°,
+             8:ëŒ€ì—­2 ì „ë°©í–¥ ìˆ˜ì‹ ì¥ì¹˜, 9:ëŒ€ì—­2 ìˆ˜ì‹ ë°©íƒ ì²˜ë¦¬ê¸°,
+             10:ëŒ€ì—­2 ì¢Œí˜„ë°©í–¥íƒì§€ì¥ì¹˜, 11:ëŒ€ì—­2 ìš°í˜„ë°©í–¥íƒì§€ì¥ì¹˜,
+             12:ëŒ€ì—­2 ì‹ í˜¸ë¶„ë°°ê¸°,
+             13:ëŒ€ì—­3 ì „ë°©í–¥ ìˆ˜ì‹ ì¥ì¹˜, 14:ëŒ€ì—­3 ìˆ˜ì‹ ë°©íƒ ì²˜ë¦¬ê¸°,
+             15:ëŒ€ì—­3 ì¢Œí˜„ë°©í–¥íƒì§€ì¥ì¹˜, 16:ëŒ€ì—­3 ìš°í˜„ë°©í–¥íƒì§€ì¥ì¹˜,
+             17:ëŒ€ì—­3 ì‹ í˜¸ë¶„ë°°ê¸° */
+#define   Mbit_StartSbit    1202  /* (  8)ë°´ë“œ (1:Low,2:Mid,3:Hgh) + ë°©ìœ„
+                                  ( 0xF1:1ì‚¬ë¶„ë©´(45ë„),  0xF2:2ì‚¬ë¶„ë©´(135ë„),
+                                  0xF3:3ì‚¬ë¶„ë©´(225ë„), 0xF4:4ì‚¬ë¶„ë©´(315ë„) ) */
+#define   Mbit_StopSbit     1203  /* (  8)ë°´ë“œ (1:Low,2:Mid,3:Hgh) + ë°©ìœ„   `98.9.2
+                                  ( 0xF1:1ì‚¬ë¶„ë©´(45ë„),  0xF2:2ì‚¬ë¶„ë©´(135ë„),
+                                  0xF3:3ì‚¬ë¶„ë©´(225ë„), 0xF4:4ì‚¬ë¶„ë©´(315ë„) ) */
 #define   Mbit_ReqCbit      1204  /* (  0)  */  //  `98.9.2
 #define   Mbit_ReqUbit      1205  /* (  0)  */  //  `99.05.04
 #define   Mbit_StartSbit_V3 1206  // for SONATA Ver 3, debug 01-06-01 13:08:09
 
-/*! \bug  ·£ »óÅÂ ¿ä±¸ ¸Ş½ÃÁö
-    \date 2007-03-29 10:16:23, Á¶Ã¶Èñ
+/*! \bug  ëœ ìƒíƒœ ìš”êµ¬ ë©”ì‹œì§€
+    \date 2007-03-29 10:16:23, ì¡°ì² í¬
 */
 #define		Mbit_ReqLanStatus	1207
 
 #define   Mbit_ReqUbitTEST  1210  /* (  0)  */  //  `98.9.2
 
-/* ½Ã½ºÅÛ º¯¼ö ¸Ş½ÃÁö */
-#define   Mcnf_Audio        3301  /* (  4)µ¿ÀÛÄÚµå(0:Disable, 1:Enable) */
+/* ì‹œìŠ¤í…œ ë³€ìˆ˜ ë©”ì‹œì§€ */
+#define   Mcnf_Audio        3301  /* (  4)ë™ì‘ì½”ë“œ(0:Disable, 1:Enable) */
 #define   Mcnf_AudioParam   3302  /* ( 24)LAN_AUD_PAR   `98.9.2
                                         Band Low + High,
                                         Frq. Low + High,
                                         AOA  Low + High */
 
-#define   Mcnf_ScanLevel    3303  /* (  4)À§Çù·¹º§(0:³·À½ ~ 9:³ôÀ½) */
+#define   Mcnf_ScanLevel    3303  /* (  4)ìœ„í˜‘ë ˆë²¨(0:ë‚®ìŒ ~ 9:ë†’ìŒ) */
 #define   Mcnf_InhibitAoa   3304  /* (108)LAN_IHB_AOA[9]
                                        (Flag(0:Clear,1:Set)+fromAOA+toAOA) * 9 */
 #define   Mcnf_InhibitFreq  3305  /* (144)LAN_IHB_FRQ[9]
                                        (Flag(0:Clear,1:Set)+Band+lowFrq+highFrq) * 9 */
 
-#define   Mcnf_BandEnable     3306  /* (  8)¹êµå+µ¿ÀÛÄÚµå(0:Disable,1:Enable) */
-#define   Mcnf_NotchFilter    3307  /* (  8)¹êµå+ÁÖÆÄ¼ö */
-#define   Mcnf_FmopThreshold  3308  /* (  8)¹êµå+Threshold */
-#define   Mcnf_Dca            3309  /* (  8)¹êµå(1:Low, 2:Mid, 3:High)+°¨¼â±â ·¹º§ */
-#define   Mcnf_RxThreshold    3310  /* (  8)¹êµå+Threshold */
+#define   Mcnf_BandEnable     3306  /* (  8)ë°´ë“œ+ë™ì‘ì½”ë“œ(0:Disable,1:Enable) */
+#define   Mcnf_NotchFilter    3307  /* (  8)ë°´ë“œ+ì£¼íŒŒìˆ˜ */
+#define   Mcnf_FmopThreshold  3308  /* (  8)ë°´ë“œ+Threshold */
+#define   Mcnf_Dca            3309  /* (  8)ë°´ë“œ(1:Low, 2:Mid, 3:High)+ê°ì‡„ê¸° ë ˆë²¨ */
+#define   Mcnf_RxThreshold    3310  /* (  8)ë°´ë“œ+Threshold */
 #define   Mcnf_PMOPThreshold  3311  //
 #define   Mcnf_RxAntOffset    3312  //
 #define   Mcnf_EABlankingAttn 3313  //
@@ -107,25 +107,25 @@
 #define   Mcnf_AutoLevel      3318  // 03-07-25
 #define   Mcnf_DV             3350  // debug, 01-01-16
 
-// ¿Àµğ¿À ½ÃÇèÀ» ÇÏ±â À§ÇÑ OPÄÚµå Ãß°¡
+// ì˜¤ë””ì˜¤ ì‹œí—˜ì„ í•˜ê¸° ìœ„í•œ OPì½”ë“œ ì¶”ê°€
 #define		Mcnf_AudioWideFrq		3390
 #define		Mcnf_AudioWideAoa		3391
 
-// ¿­ÀâÀ½ °£¼· ¾ïÁ¦±â¼ú ¼öÁ¤»çÇ×À» À§ÇÑ Ãß°¡
+// ì—´ì¡ìŒ ê°„ì„­ ì–µì œê¸°ìˆ  ìˆ˜ì •ì‚¬í•­ì„ ìœ„í•œ ì¶”ê°€
 #define   Mcnf_RxThreshold_AutoMode		3320
 #define   Mcnf_RxThreshold_AutoLvlThr	4320
 
-/* IPL ¸Ş½ÃÁö */
+/* IPL ë©”ì‹œì§€ */
 #define   Mipl_ReqVersion     3401  /* (  0) */
-#define   Mipl_Start          3402  /* (  8)°³¼ö+¹öÁ¯¹øÈ£(³â+¿ù+¹øÈ£) */
+#define   Mipl_Start          3402  /* (  8)ê°œìˆ˜+ë²„ì ¼ë²ˆí˜¸(ë…„+ì›”+ë²ˆí˜¸) */
 #define   Mipl_Download       3403  /* (516)(STR_IPL) (TBD ? CheckSum) */
 #define   Mipl_End            3404  /* (  0) */
 
-/* ¿¡¹ÌÅÍ ¸Ş½ÃÁö */
-#define   Maet_ReqScan        3501  /* (  4)AET ¹øÈ£ */
-#define   Maet_Clear          3502  /* (  4)AET ¹øÈ£ */
-#define   Maet_SigHide        3504  /* (  4)AET ¹øÈ£ */
-#define   Maet_SigShow        3505  /* (  4)AET ¹øÈ£ */
+/* ì—ë¯¸í„° ë©”ì‹œì§€ */
+#define   Maet_ReqScan        3501  /* (  4)AET ë²ˆí˜¸ */
+#define   Maet_Clear          3502  /* (  4)AET ë²ˆí˜¸ */
+#define   Maet_SigHide        3504  /* (  4)AET ë²ˆí˜¸ */
+#define   Maet_SigShow        3505  /* (  4)AET ë²ˆí˜¸ */
 
 #define   Maet_AddJamming     3511  // 03-07-25
 #define   Maet_DelJamming     3512  // 03-07-25
@@ -137,38 +137,38 @@
 #define		Mreq_RawData				(9405)
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  ·¹ÀÌ´õ Â¡Ç¥ºĞ¼®±â ¿ÜºÎ ¸Ş½ÃÁö Á¤ÀÇ : RSA->CCU
+//  ë ˆì´ë” ì§•í‘œë¶„ì„ê¸° ì™¸ë¶€ ë©”ì‹œì§€ ì •ì˜ : RSA->CCU
 //
-/* ¿î¿ë ¸Ş½ÃÁö  */
+/* ìš´ìš© ë©”ì‹œì§€  */
 #define   Esys_SetMode        2101  /* (  0) */
 
-/* BIT ¸Ş½ÃÁö  */
+/* BIT ë©”ì‹œì§€  */
 #define   Mbit_ResultEsIbit   4201  /* ( 68)LAN_BIT(17 * 4Byte)
-                                         ESÁ¾ÇÕ,RSA,
-                                         ¼ö½Å±â´ë¿ª1(5W), ´ë¿ª2(5W), ´ë¿ª3(5W) */
-#define   Mbit_ResultEsSbit   4202  /* (312)STR_AET */  // Àç»ç¿ë `98.9.3
-#define   Mbit_Aet            4203  /* (312)STR_AET */  // Àç»ç¿ë `98.9.3
-#define   Mbit_ResultEsCbit   4204  /* (  8)RSA(0:Á¤»ó, 1:ºñÁ¤»ó) +
-                                          RXDF(0:Á¤»ó, 1:ºñÁ¤»ó)
-                                          Band1:D5(Åë½Å), D4(±â´É)
-                                          Band1:D3(Åë½Å), D2(±â´É)
-                                          Band1:D1(Åë½Å), D0(±â´É) */
-#define   Mbit_ResultEsUbit   4205  /* (  8)RSA(0:Á¤»ó, 1:ºñÁ¤»ó) +   */
-#define		Mbit_ResultLanStatus	4206	/* (  8)RSA(0:Á¤»ó, 1:ºñÁ¤»ó) + 	*/
+                                         ESì¢…í•©,RSA,
+                                         ìˆ˜ì‹ ê¸°ëŒ€ì—­1(5W), ëŒ€ì—­2(5W), ëŒ€ì—­3(5W) */
+#define   Mbit_ResultEsSbit   4202  /* (312)STR_AET */  // ì¬ì‚¬ìš© `98.9.3
+#define   Mbit_Aet            4203  /* (312)STR_AET */  // ì¬ì‚¬ìš© `98.9.3
+#define   Mbit_ResultEsCbit   4204  /* (  8)RSA(0:ì •ìƒ, 1:ë¹„ì •ìƒ) +
+                                          RXDF(0:ì •ìƒ, 1:ë¹„ì •ìƒ)
+                                          Band1:D5(í†µì‹ ), D4(ê¸°ëŠ¥)
+                                          Band1:D3(í†µì‹ ), D2(ê¸°ëŠ¥)
+                                          Band1:D1(í†µì‹ ), D0(ê¸°ëŠ¥) */
+#define   Mbit_ResultEsUbit   4205  /* (  8)RSA(0:ì •ìƒ, 1:ë¹„ì •ìƒ) +   */
+#define		Mbit_ResultLanStatus	4206	/* (  8)RSA(0:ì •ìƒ, 1:ë¹„ì •ìƒ) + 	*/
 
-/* IPL ¸Ş½ÃÁö */
-#define   Mipl_Version        4401  /* (  4)¹öÁ¯¹øÈ£(³â+¿ù+¹øÈ£) */
-#define   Mipl_WriteStatus    4402  /* (  4)WritingÇÏ°í ÀÖ´Â ÆÛ¼¾Æ®(IPL°³¼ö¿¡ ´ëÇÑ) */
-#define   Mipl_SetAnalysisMode	3410  /* CCU¿¡¼­ RSA·Î ±âº»/°³·« ½Äº° ¸ğµå ¼³Á¤ */
-#define   Mipl_AnalysisMode		4410  /* RSA¿¡¼­ CCU·Î ¼³Á¤µÈ ½Äº°¸ğµå °ª Àü¼Û */
-#define   Mipl_SetFSDetectMode	3411  /* CCU¿¡¼­ RSA·Î ¼Ò½ÅÈ£Å½Áö¸ğµå ¼³Á¤ */
-#define   Mipl_FSDetectMode		4411  /* RSA¿¡¼­ CCU·Î ¼³Á¤µÈ ¼Ò½ÅÈ£Å½Áö¸ğµå °ª Àü¼Û */
+/* IPL ë©”ì‹œì§€ */
+#define   Mipl_Version        4401  /* (  4)ë²„ì ¼ë²ˆí˜¸(ë…„+ì›”+ë²ˆí˜¸) */
+#define   Mipl_WriteStatus    4402  /* (  4)Writingí•˜ê³  ìˆëŠ” í¼ì„¼íŠ¸(IPLê°œìˆ˜ì— ëŒ€í•œ) */
+#define   Mipl_SetAnalysisMode	3410  /* CCUì—ì„œ RSAë¡œ ê¸°ë³¸/ê°œëµ ì‹ë³„ ëª¨ë“œ ì„¤ì • */
+#define   Mipl_AnalysisMode		4410  /* RSAì—ì„œ CCUë¡œ ì„¤ì •ëœ ì‹ë³„ëª¨ë“œ ê°’ ì „ì†¡ */
+#define   Mipl_SetFSDetectMode	3411  /* CCUì—ì„œ RSAë¡œ ì†Œì‹ í˜¸íƒì§€ëª¨ë“œ ì„¤ì • */
+#define   Mipl_FSDetectMode		4411  /* RSAì—ì„œ CCUë¡œ ì„¤ì •ëœ ì†Œì‹ í˜¸íƒì§€ëª¨ë“œ ê°’ ì „ì†¡ */
 
-/* ¿¡¹ÌÅÍ ¸Ş½ÃÁö */
+/* ì—ë¯¸í„° ë©”ì‹œì§€ */
 #define   Maet_New_Ccu        4501    /* (312)STR_AET */
 #define   Maet_Update_Ccu     4502    /* (312)STR_AET */
-#define   Maet_Lost_Ccu       4503    /* (  4)AET ¹øÈ£ */
-#define   Maet_Delete_Ccu     4504    /* (  4)AET ¹øÈ£ */
+#define   Maet_Lost_Ccu       4503    /* (  4)AET ë²ˆí˜¸ */
+#define   Maet_Delete_Ccu     4504    /* (  4)AET ë²ˆí˜¸ */
 #define   Maet_AllSend_Ccu    4505
 
 // added 01-01-16
@@ -177,7 +177,7 @@
 // debug, 00-05-12 14:52:34
 #define   Msys_Modify         4609
 
-// DEBUG¿ë LAN ¸Ş½ÃÁö
+// DEBUGìš© LAN ë©”ì‹œì§€
 #define   Msys_Reboot         4700
 #define   Mdebug_Get_Pdw      0x1ff0
 #define   Mdebug_Snd_Pdw      0x1ff1
@@ -208,19 +208,19 @@
 #define   RXDFError           0x02
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  ·¹ÀÌ´õ Â¡Ç¥ºĞ¼®±â ¼ö½Å±İÁö¿µ¿ª °³¼ö Á¤ÀÇ
+//  ë ˆì´ë” ì§•í‘œë¶„ì„ê¸° ìˆ˜ì‹ ê¸ˆì§€ì˜ì—­ ê°œìˆ˜ ì •ì˜
 //
 #define   _spMaxUsrIhbSize    9
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  LAN Åë½Å Send Size Offset Á¤ÀÇ   `98.9.8a
+//  LAN í†µì‹  Send Size Offset ì •ì˜   `98.9.8a
 //  appended def. for the variable LAN structure, 99.05.06
 //
 #define   _spSndSizeOffset    (2*sizeof(UINT))  // OpCode + Size
 #define   _spRecSizeOffset    (2*sizeof(UINT))  // OpCode + Size
 #define   _spCoMsys_Error     (2*sizeof(UINT))  // request opcdeo + error code
 
-/* LAN ±âº» µ¥ÀÌÅÍ */
+/* LAN ê¸°ë³¸ ë°ì´í„° */
 //##ModelId=452B0C4E03E1
 typedef struct
 {
@@ -228,13 +228,13 @@ typedef struct
   UINT d2;            // operand
 } LAN_DATA;
 
-/* RSA CNF ¹æÀ§ INHIBIT µ¥ÀÌÅÍ */
+/* RSA CNF ë°©ìœ„ INHIBIT ë°ì´í„° */
 //##ModelId=452B0C4F000D
 //typedef hwLAN_IHB_AOA LAN_IHB_AOA;      // in hw_str.h
 //##ModelId=452B0C4F0034
 //typedef hwLAN_IHB_FRQ LAN_IHB_FRQ;
 
-/* RSA CNF ¿Àµğ¿À ¼³Á¤ µ¥ÀÌÅÍ */
+/* RSA CNF ì˜¤ë””ì˜¤ ì„¤ì • ë°ì´í„° */
 //##ModelId=452B0C4F003F
 //typedef AUD_RANGE LAN_AUDIO;        // in hw_str.h
 
@@ -248,7 +248,7 @@ typedef struct
   UINT coEcho;
 } STR_PRCSBIT ;
 
-/* RSA IBIT Á¾ÇÕ µ¥ÀÌÅÍ */
+/* RSA IBIT ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F0067
 typedef union
 {
@@ -256,36 +256,36 @@ typedef union
   struct
   {
     UINT dummy : 8;  /* bit22-31 Reserved */
-    UINT cip : 1; /* bit0  Á¦¾î½Äº°ÇÁ·Î¼¼¼­ÆÇ */
+    UINT cip : 1; /* bit0  ì œì–´ì‹ë³„í”„ë¡œì„¸ì„œíŒ */
     UINT gen : 1; /* general bit */
 
-    UINT kdm4 : 1;  /* bit21 ÃßÀûµ¥ÀÌÅÍÀúÀåÆÇ4 */
-    UINT kdm3 : 1;  /* bit18 ÃßÀûµ¥ÀÌÅÍÀúÀåÆÇ3 */
-    UINT kdm2 : 1;  /* bit15 ÃßÀûµ¥ÀÌÅÍÀúÀåÆÇ2 */
-    UINT kdm1 : 1;  /* bit12 ÃßÀûµ¥ÀÌÅÍÀúÀåÆÇ1 */
-    UINT ndm : 1; /* bit9  Å½Áöµ¥ÀÌÅÍÀúÀåÆÇ */
-    UINT sdm : 1; /* bit4  ½ºÄµµ¥ÀÌÅÍÀúÀåÆÇ */
+    UINT kdm4 : 1;  /* bit21 ì¶”ì ë°ì´í„°ì €ì¥íŒ4 */
+    UINT kdm3 : 1;  /* bit18 ì¶”ì ë°ì´í„°ì €ì¥íŒ3 */
+    UINT kdm2 : 1;  /* bit15 ì¶”ì ë°ì´í„°ì €ì¥íŒ2 */
+    UINT kdm1 : 1;  /* bit12 ì¶”ì ë°ì´í„°ì €ì¥íŒ1 */
+    UINT ndm : 1; /* bit9  íƒì§€ë°ì´í„°ì €ì¥íŒ */
+    UINT sdm : 1; /* bit4  ìŠ¤ìº”ë°ì´í„°ì €ì¥íŒ */
 
-    UINT sap : 1; /* bit3  ½ºÄµÇÁ·Î¼¼¼­ÆÇ */
-    UINT nsp : 1; /* bit8  Å½ÁöÇÁ·Î¼¼¼­ÆÇ */
-    UINT ksp1 : 1;  /* bit11 ÃßÀûÇÁ·Î¼¼¼­ÆÇ1 */
-    UINT ksp2 : 1;  /* bit14 ÃßÀûÇÁ·Î¼¼¼­ÆÇ2 */
-    UINT ksp3 : 1;  /* bit17 ÃßÀûÇÁ·Î¼¼¼­ÆÇ3 */
-    UINT ksp4 : 1;  /* bit20 ÃßÀûÇÁ·Î¼¼¼­ÆÇ4 */
-    UINT saf : 1; /* bit5  ½ºÄµºĞ¼®ÇÊÅÍÆÇ */
-    UINT nsf : 1; /* bit10 Å½ÁöÇÊÅÍÆÇ */
-    UINT ksf1 : 1;  /* bit13 ÃßÀûÇÊÅÍÆÇ1 */
-    UINT ksf2 : 1;  /* bit16 ÃßÀûÇÊÅÍÆÇ2 */
-    UINT ksf3 : 1;  /* bit19 ÃßÀûÇÊÅÍÆÇ3 */
-    UINT ksf4 : 1;  /* bit22 ÃßÀûÇÊÅÍÆÇ4 */
-    UINT aud : 1; /* bit6  ¿Àµğ¿À¹ß»ıÆÇ */
-    UINT rcv : 1; /* bit7  PDW ¼ö½ÅÆÇ */
-    UINT pdw : 1; /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
-    UINT cmm : 1; /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
+    UINT sap : 1; /* bit3  ìŠ¤ìº”í”„ë¡œì„¸ì„œíŒ */
+    UINT nsp : 1; /* bit8  íƒì§€í”„ë¡œì„¸ì„œíŒ */
+    UINT ksp1 : 1;  /* bit11 ì¶”ì í”„ë¡œì„¸ì„œíŒ1 */
+    UINT ksp2 : 1;  /* bit14 ì¶”ì í”„ë¡œì„¸ì„œíŒ2 */
+    UINT ksp3 : 1;  /* bit17 ì¶”ì í”„ë¡œì„¸ì„œíŒ3 */
+    UINT ksp4 : 1;  /* bit20 ì¶”ì í”„ë¡œì„¸ì„œíŒ4 */
+    UINT saf : 1; /* bit5  ìŠ¤ìº”ë¶„ì„í•„í„°íŒ */
+    UINT nsf : 1; /* bit10 íƒì§€í•„í„°íŒ */
+    UINT ksf1 : 1;  /* bit13 ì¶”ì í•„í„°íŒ1 */
+    UINT ksf2 : 1;  /* bit16 ì¶”ì í•„í„°íŒ2 */
+    UINT ksf3 : 1;  /* bit19 ì¶”ì í•„í„°íŒ3 */
+    UINT ksf4 : 1;  /* bit22 ì¶”ì í•„í„°íŒ4 */
+    UINT aud : 1; /* bit6  ì˜¤ë””ì˜¤ë°œìƒíŒ */
+    UINT rcv : 1; /* bit7  PDW ìˆ˜ì‹ íŒ */
+    UINT pdw : 1; /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
+    UINT cmm : 1; /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
   } bits;
 } LAN_RSA_IBIT;
 
-/* RXDF I/R BIT Á¾ÇÕ µ¥ÀÌÅÍ */
+/* RXDF I/R BIT ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F007A
 typedef union
 {
@@ -293,9 +293,9 @@ typedef union
   struct
   {
   UINT        : 29;
-    UINT Power : 1; /* Àü¿ø°ø±Ş±â */
-    UINT PreAmp : 1;  /* °íÁÖÆÄÀü´ÜÁõÆø±â */
-    UINT Total : 1; /* Àü¹æÇâ¼ö½Å±â Á¾ÇÕ */
+    UINT Power : 1; /* ì „ì›ê³µê¸‰ê¸° */
+    UINT PreAmp : 1;  /* ê³ ì£¼íŒŒì „ë‹¨ì¦í­ê¸° */
+    UINT Total : 1; /* ì „ë°©í–¥ìˆ˜ì‹ ê¸° ì¢…í•© */
   } bits;
 } RBIT_OMNI;
 
@@ -306,25 +306,25 @@ typedef union
   struct
   {
   UINT    : 13;
-    UINT d18 : 1; /* SIO Åë½Å */    // `98.9.2
+    UINT d18 : 1; /* SIO í†µì‹  */    // `98.9.2
     UINT d17 : 1; /* DFD */
-    UINT d16 : 1; /* ¼ö½ÅÁ¦¾îÆÇ */
-    UINT d15 : 1; /* ÁÖÆÄ¼öÁ¤º¸Ã³¸®ÆÇ */
-    UINT d14 : 1; /* ½ÅÈ£ÃøÁ¤Á¦¾îÆÇ */
-    UINT d13 : 1; /* ½ÅÈ£Á¦¿øÇÕ¼ºÆÇ */
-    UINT d12 : 1; /* ¼ö½ÅÁ¦¾îÁ¢¼ÓÆÇ */
-    UINT d11 : 1; /* Àü¹æÇâ°íÁÖÆÄÁ¶¸³Ã¼ */
-    UINT d10 : 1; /* ¹æÅ½Á¦¾îÁ¢¼ÓÆÇ */
-    UINT d9 : 1;  /* ¹æÀ§Ãâ·ÂÁ¦¾îÆÇ */
-    UINT d8 : 1;  /* À§»ó¹æÀ§¿¬»êÆÇ */
-    UINT d7 : 1;  /* À§»óÃøÁ¤º¸Á¤ÆÇ */
-    UINT d6 : 1;  /* ÁøÆø¹æÀ§¿¬»êÆÇ */
-    UINT d5 : 1;  /* ÁøÆø±¸°£¹æÀ§¿¬»êÆÇ */
-    UINT d4 : 1;  /* ÁøÆø¹æÀ§º¸Á¤ÆÇ */
-    UINT d3 : 1;  /* ÁøÆøÃøÁ¤ÆÇ2 */
-    UINT d2 : 1;  /* ÁøÆøÃøÁ¤ÆÇ1 */
-    UINT d1 : 1;  /* ÁøÆøÁ¤º¸Ã³¸®ÆÇ */
-    UINT d0 : 1;  /* ¼ö½Å¹æÅ½Ã³¸®ÀåÄ¡ Á¾ÇÕ */
+    UINT d16 : 1; /* ìˆ˜ì‹ ì œì–´íŒ */
+    UINT d15 : 1; /* ì£¼íŒŒìˆ˜ì •ë³´ì²˜ë¦¬íŒ */
+    UINT d14 : 1; /* ì‹ í˜¸ì¸¡ì •ì œì–´íŒ */
+    UINT d13 : 1; /* ì‹ í˜¸ì œì›í•©ì„±íŒ */
+    UINT d12 : 1; /* ìˆ˜ì‹ ì œì–´ì ‘ì†íŒ */
+    UINT d11 : 1; /* ì „ë°©í–¥ê³ ì£¼íŒŒì¡°ë¦½ì²´ */
+    UINT d10 : 1; /* ë°©íƒì œì–´ì ‘ì†íŒ */
+    UINT d9 : 1;  /* ë°©ìœ„ì¶œë ¥ì œì–´íŒ */
+    UINT d8 : 1;  /* ìœ„ìƒë°©ìœ„ì—°ì‚°íŒ */
+    UINT d7 : 1;  /* ìœ„ìƒì¸¡ì •ë³´ì •íŒ */
+    UINT d6 : 1;  /* ì§„í­ë°©ìœ„ì—°ì‚°íŒ */
+    UINT d5 : 1;  /* ì§„í­êµ¬ê°„ë°©ìœ„ì—°ì‚°íŒ */
+    UINT d4 : 1;  /* ì§„í­ë°©ìœ„ë³´ì •íŒ */
+    UINT d3 : 1;  /* ì§„í­ì¸¡ì •íŒ2 */
+    UINT d2 : 1;  /* ì§„í­ì¸¡ì •íŒ1 */
+    UINT d1 : 1;  /* ì§„í­ì •ë³´ì²˜ë¦¬íŒ */
+    UINT d0 : 1;  /* ìˆ˜ì‹ ë°©íƒì²˜ë¦¬ì¥ì¹˜ ì¢…í•© */
   } bits;
 } RBIT_CTRL;
 
@@ -335,11 +335,11 @@ typedef union
   struct
   {
   UINT        : 27;
-    UINT Power : 1; /* Àü¿ø°ø±Ş±â, ´ë¿ª 3 */
-    UINT Video : 1; /* ºñµ¥¿ÀÃ³¸®ÆÇ */
-    UINT Phase : 1; /* À§»ó°ËÃâÁ¶¸³Ã¼ */
-    UINT AmpDet : 1;  /* ÁøÆø°ËÃâÁ¶¸³Ã¼ */
-    UINT Total : 1; /* ¹æÅ½¼ö½Å±â(ÁÂ) Á¾ÇÕ */
+    UINT Power : 1; /* ì „ì›ê³µê¸‰ê¸°, ëŒ€ì—­ 3 */
+    UINT Video : 1; /* ë¹„ë°ì˜¤ì²˜ë¦¬íŒ */
+    UINT Phase : 1; /* ìœ„ìƒê²€ì¶œì¡°ë¦½ì²´ */
+    UINT AmpDet : 1;  /* ì§„í­ê²€ì¶œì¡°ë¦½ì²´ */
+    UINT Total : 1; /* ë°©íƒìˆ˜ì‹ ê¸°(ì¢Œ) ì¢…í•© */
   } bits;
 } RBIT_LEFT;
 
@@ -350,11 +350,11 @@ typedef union
   struct
   {
   UINT        : 27;
-    UINT Power : 1; /* Àü¿ø°ø±Ş±â, ´ë¿ª 3 */
-    UINT Video : 1; /* ºñµ¥¿ÀÃ³¸®ÆÇ */
-    UINT Phase : 1; /* À§»ó°ËÃâÁ¶¸³Ã¼ */
-    UINT AmpDet : 1;  /* ÁøÆø°ËÃâÁ¶¸³Ã¼ */
-    UINT Total : 1; /* ¹æÅ½¼ö½Å±â(¿ì) Á¾ÇÕ */
+    UINT Power : 1; /* ì „ì›ê³µê¸‰ê¸°, ëŒ€ì—­ 3 */
+    UINT Video : 1; /* ë¹„ë°ì˜¤ì²˜ë¦¬íŒ */
+    UINT Phase : 1; /* ìœ„ìƒê²€ì¶œì¡°ë¦½ì²´ */
+    UINT AmpDet : 1;  /* ì§„í­ê²€ì¶œì¡°ë¦½ì²´ */
+    UINT Total : 1; /* ë°©íƒìˆ˜ì‹ ê¸°(ìš°) ì¢…í•© */
   } bits;
 } RBIT_RIGHT;
 
@@ -365,7 +365,7 @@ typedef union
   struct
   {
   UINT         : 31;
-    UINT total : 1; /* ½ÅÈ£ºĞ¹èÀåÄ¡ Á¾ÇÕ */
+    UINT total : 1; /* ì‹ í˜¸ë¶„ë°°ì¥ì¹˜ ì¢…í•© */
   } bits;
 } RBIT_SHARE;
 
@@ -389,7 +389,7 @@ typedef union
     UINT lpf : 1;
     UINT laf : 1;
 
-    UINT omni : 1;    bit18 ·¹ÀÌ´õÂ¡Ç¥ºĞ¼®±â Á¾ÇÕ 
+    UINT omni : 1;    bit18 ë ˆì´ë”ì§•í‘œë¶„ì„ê¸° ì¢…í•© 
 
   UINT    : 16;
 
@@ -422,7 +422,7 @@ typedef union
     UINT lpf : 1;
     UINT laf : 1;
 
-    UINT omni : 1;     bit18 ·¹ÀÌ´õÂ¡Ç¥ºĞ¼®±â Á¾ÇÕ 
+    UINT omni : 1;     bit18 ë ˆì´ë”ì§•í‘œë¶„ì„ê¸° ì¢…í•© 
 
   UINT      : 16;  reserved
 
@@ -444,7 +444,7 @@ typedef union
 } RDF_UBIT5;    5 Words
 */
 
-/* ES (RSA + RXDF) BIT °á°ú Á¾ÇÕ µ¥ÀÌÅÍ */
+/* ES (RSA + RXDF) BIT ê²°ê³¼ ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F00DF
 typedef union
 {
@@ -455,25 +455,25 @@ typedef union
   UINT      : 15;     // truth table
     UINT bCip : 1;
 
-    UINT bSap : 1;    /* bit3  ½ºÄµÇÁ·Î¼¼¼­ÆÇ */
-    UINT bNsp : 1;    /* bit8  Å½ÁöÇÁ·Î¼¼¼­ÆÇ */
-    UINT bKsp1 : 1;    /* bit11 ÃßÀûÇÁ·Î¼¼¼­ÆÇ1 */
-    UINT bKsp2 : 1;    /* bit14 ÃßÀûÇÁ·Î¼¼¼­ÆÇ2 */
+    UINT bSap : 1;    /* bit3  ìŠ¤ìº”í”„ë¡œì„¸ì„œíŒ */
+    UINT bNsp : 1;    /* bit8  íƒì§€í”„ë¡œì„¸ì„œíŒ */
+    UINT bKsp1 : 1;    /* bit11 ì¶”ì í”„ë¡œì„¸ì„œíŒ1 */
+    UINT bKsp2 : 1;    /* bit14 ì¶”ì í”„ë¡œì„¸ì„œíŒ2 */
 
-    UINT bKsp3 : 1;    /* bit17 ÃßÀûÇÁ·Î¼¼¼­ÆÇ3 */
-    UINT bKsp4 : 1;    /* bit20 ÃßÀûÇÁ·Î¼¼¼­ÆÇ4 */
-    UINT bSaf : 1;    /* bit5  ½ºÄµºĞ¼®ÇÊÅÍÆÇ */
-    UINT bNsf : 1;    /* bit10 Å½ÁöÇÊÅÍÆÇ */
+    UINT bKsp3 : 1;    /* bit17 ì¶”ì í”„ë¡œì„¸ì„œíŒ3 */
+    UINT bKsp4 : 1;    /* bit20 ì¶”ì í”„ë¡œì„¸ì„œíŒ4 */
+    UINT bSaf : 1;    /* bit5  ìŠ¤ìº”ë¶„ì„í•„í„°íŒ */
+    UINT bNsf : 1;    /* bit10 íƒì§€í•„í„°íŒ */
 
-    UINT bKsf1 : 1;    /* bit13 ÃßÀûÇÊÅÍÆÇ1 */
-    UINT bKsf2 : 1;    /* bit16 ÃßÀûÇÊÅÍÆÇ2 */
-    UINT bKsf3 : 1;    /* bit19 ÃßÀûÇÊÅÍÆÇ3 */
-    UINT bKsf4 : 1;    /* bit22 ÃßÀûÇÊÅÍÆÇ4 */
+    UINT bKsf1 : 1;    /* bit13 ì¶”ì í•„í„°íŒ1 */
+    UINT bKsf2 : 1;    /* bit16 ì¶”ì í•„í„°íŒ2 */
+    UINT bKsf3 : 1;    /* bit19 ì¶”ì í•„í„°íŒ3 */
+    UINT bKsf4 : 1;    /* bit22 ì¶”ì í•„í„°íŒ4 */
 
-    UINT bAud : 1;    /* bit6  ¿Àµğ¿À¹ß»ıÆÇ */
-    int bRcv : 1;    /* bit7  PDW ¼ö½ÅÆÇ */
-    int bPdw : 1;    /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
-    UINT bCmm : 1;    /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
+    UINT bAud : 1;    /* bit6  ì˜¤ë””ì˜¤ë°œìƒíŒ */
+    int bRcv : 1;    /* bit7  PDW ìˆ˜ì‹ íŒ */
+    int bPdw : 1;    /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
+    UINT bCmm : 1;    /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
   } rsa ;
 } RSA_UBIT ;
 
@@ -552,19 +552,19 @@ typedef union
   struct
   {
   UINT    : 26;
-    UINT b1cm : 1;  /* bit5 Band1 SIO Åë½Å */
-    UINT b1fn : 1;  /* bit4 Band1 ±â´É */
-    UINT b2cm : 1;  /* bit3 Band2 SIO Åë½Å */
-    UINT b2fn : 1;  /* bit2 Band2 ±â´É */
-    UINT b3cm : 1;  /* bit1 Band3 SIO Åë½Å */
-    UINT b3fn : 1;  /* bit0 Band3 ±â´É */
+    UINT b1cm : 1;  /* bit5 Band1 SIO í†µì‹  */
+    UINT b1fn : 1;  /* bit4 Band1 ê¸°ëŠ¥ */
+    UINT b2cm : 1;  /* bit3 Band2 SIO í†µì‹  */
+    UINT b2fn : 1;  /* bit2 Band2 ê¸°ëŠ¥ */
+    UINT b3cm : 1;  /* bit1 Band3 SIO í†µì‹  */
+    UINT b3fn : 1;  /* bit0 Band3 ê¸°ëŠ¥ */
   } bits;
 } LAN_RDF_CBIT;
 
 //##ModelId=452B0C4F0125
 typedef LAN_RSA_IBIT LAN_RSA_CBIT;
 
-/* ES (RSA + RXDF) BIT Á¾ÇÕ µ¥ÀÌÅÍ */
+/* ES (RSA + RXDF) BIT ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F0138
 typedef union
 {
@@ -591,7 +591,7 @@ typedef union
 } ES_IBIT;    // edited `98.9.2, modified `99.05.17
 
 ////////////////////////////////////////////////////////////////////
-/* ES (RSA + RXDF) BIT Á¾ÇÕ µ¥ÀÌÅÍ */
+/* ES (RSA + RXDF) BIT ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F0142
 typedef union
 {
@@ -618,8 +618,8 @@ typedef union
   struct
   {
   UINT      : 28;
-    UINT baet : 1;    // AET À¯¹«
-    UINT bB3pdw : 1;    // PDW ¼ö Check
+    UINT baet : 1;    // AET ìœ ë¬´
+    UINT bB3pdw : 1;    // PDW ìˆ˜ Check
     UINT bB2pdw : 1;
     UINT bB1pdw : 1;
   } rsa ;
@@ -634,7 +634,7 @@ typedef struct
 } ES_SBIT ;
 
 ////////////////////////////////////////////////////////////////////
-/* ES (RSA + RXDF) CBIT Á¾ÇÕ µ¥ÀÌÅÍ */
+/* ES (RSA + RXDF) CBIT ì¢…í•© ë°ì´í„° */
 //##ModelId=452B0C4F017E
 typedef union
 {
@@ -661,27 +661,27 @@ typedef union
   {
   UINT         : 15;    /* bit22-31 Reserved */
 
-    UINT bCip : 1;    /* bit0  Á¦¾î½Äº°ÇÁ·Î¼¼¼­ÆÇ */
+    UINT bCip : 1;    /* bit0  ì œì–´ì‹ë³„í”„ë¡œì„¸ì„œíŒ */
 
-    UINT bSap : 1;    /* bit3  ½ºÄµÇÁ·Î¼¼¼­ÆÇ */
-    UINT bNsp : 1;    /* bit8  Å½ÁöÇÁ·Î¼¼¼­ÆÇ */
-    UINT bKsp1 : 1;    /* bit11 ÃßÀûÇÁ·Î¼¼¼­ÆÇ1 */
-    UINT bKsp2 : 1;    /* bit14 ÃßÀûÇÁ·Î¼¼¼­ÆÇ2 */
+    UINT bSap : 1;    /* bit3  ìŠ¤ìº”í”„ë¡œì„¸ì„œíŒ */
+    UINT bNsp : 1;    /* bit8  íƒì§€í”„ë¡œì„¸ì„œíŒ */
+    UINT bKsp1 : 1;    /* bit11 ì¶”ì í”„ë¡œì„¸ì„œíŒ1 */
+    UINT bKsp2 : 1;    /* bit14 ì¶”ì í”„ë¡œì„¸ì„œíŒ2 */
 
-    UINT bKsp3 : 1;    /* bit17 ÃßÀûÇÁ·Î¼¼¼­ÆÇ3 */
-    UINT bKsp4 : 1;    /* bit20 ÃßÀûÇÁ·Î¼¼¼­ÆÇ4 */
-    UINT bSaf : 1;    /* bit5  ½ºÄµºĞ¼®ÇÊÅÍÆÇ */
-    UINT bNsf : 1;    /* bit10 Å½ÁöÇÊÅÍÆÇ */
+    UINT bKsp3 : 1;    /* bit17 ì¶”ì í”„ë¡œì„¸ì„œíŒ3 */
+    UINT bKsp4 : 1;    /* bit20 ì¶”ì í”„ë¡œì„¸ì„œíŒ4 */
+    UINT bSaf : 1;    /* bit5  ìŠ¤ìº”ë¶„ì„í•„í„°íŒ */
+    UINT bNsf : 1;    /* bit10 íƒì§€í•„í„°íŒ */
 
-    UINT bKsf1 : 1;    /* bit13 ÃßÀûÇÊÅÍÆÇ1 */
-    UINT bKsf2 : 1;    /* bit16 ÃßÀûÇÊÅÍÆÇ2 */
-    UINT bKsf3 : 1;    /* bit19 ÃßÀûÇÊÅÍÆÇ3 */
-    UINT bKsf4 : 1;    /* bit22 ÃßÀûÇÊÅÍÆÇ4 */
+    UINT bKsf1 : 1;    /* bit13 ì¶”ì í•„í„°íŒ1 */
+    UINT bKsf2 : 1;    /* bit16 ì¶”ì í•„í„°íŒ2 */
+    UINT bKsf3 : 1;    /* bit19 ì¶”ì í•„í„°íŒ3 */
+    UINT bKsf4 : 1;    /* bit22 ì¶”ì í•„í„°íŒ4 */
 
-    UINT bAud : 1;    /* bit6  ¿Àµğ¿À¹ß»ıÆÇ */
-    int bRcv : 1;    /* bit7  PDW ¼ö½ÅÆÇ */
-    int bPdw : 1;    /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
-    UINT bCmm : 1;    /* bit2  °ø¿ë¸Ş¸ğ¸®ÆÇ */
+    UINT bAud : 1;    /* bit6  ì˜¤ë””ì˜¤ë°œìƒíŒ */
+    int bRcv : 1;    /* bit7  PDW ìˆ˜ì‹ íŒ */
+    int bPdw : 1;    /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
+    UINT bCmm : 1;    /* bit2  ê³µìš©ë©”ëª¨ë¦¬íŒ */
   } rsa ;
 } RSA_CBIT ;
 
@@ -695,28 +695,28 @@ typedef struct
 //##ModelId=452B0C4F01A6
 typedef struct
 {
-  // ¼ö½Å±â ¹êµåº° ¹æÅ½ ¿ÀÂ÷(¥äA)
+  // ìˆ˜ì‹ ê¸° ë°´ë“œë³„ ë°©íƒ ì˜¤ì°¨(Î´A)
   UINT spaoadiff[ 3 ];
 
-  // ¼ö½Å±â¹êµåº° ÁÖÆÄ¼ö ¿ÀÂ÷(¥äF)
+  // ìˆ˜ì‹ ê¸°ë°´ë“œë³„ ì£¼íŒŒìˆ˜ ì˜¤ì°¨(Î´F)
   UINT spfrqdiff[ 3 ];
 
-  // ÃßÀû À©µµ¿ì¼¿
+  // ì¶”ì  ìœˆë„ìš°ì…€
   UINT sptrkaoa;
   UINT sptrkfixfrq;
   UINT sptrkagifrq;
 
-  // ¿¡¹ÌÅÍ º´ÇÕ
+  // ì—ë¯¸í„° ë³‘í•©
   UINT spmrgaoa;
   UINT spmrgfrq;
 
-  // ÃÖ¼ÒÆŞ½º¿­¼ö
+  // ìµœì†Œí„ìŠ¤ì—´ìˆ˜
   UINT spminstb;
   UINT spminjit;
   UINT spminrefpri;
   UINT spminagipri;
 
-  // ±×·ìÈ­
+  // ê·¸ë£¹í™”
   UINT spshiftaoa;
   UINT spshiftfrq;
 } STR_CNFSYS ;
@@ -748,7 +748,7 @@ typedef struct {
 
 } STR_RES_PDW_DATA;
 
-// PDW ¼ö½ÅÆÇ °ü·Ã Á¤ÀÇ
+// PDW ìˆ˜ì‹ íŒ ê´€ë ¨ ì •ì˜
 #define	PDW_RCV_PDW			(1000)
 #define	PDW_BLOCK				(30)
 

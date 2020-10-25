@@ -48,8 +48,6 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
     // MSSQL 연결
     //CMSSQL::Init();
 
-    //m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
-
     m_bSaveFile = true;
 
     m_theGroup = new CNGroup( this, coMaxPdw );
@@ -89,8 +87,6 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
  */
 CNewSigAnal::~CNewSigAnal()
 {
-    //delete m_pIdentifyAlg;
-
     delete m_theGroup;
     delete m_thePulExt;
     delete m_theAnalPRI;
@@ -124,7 +120,7 @@ void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
 
 void CNewSigAnal::SWInit()
 {
-    //m_pIdentifyAlg->LoadCEDLibrary2();
+
 }
 
 //////////////////////////////////////////////////////////////////////////

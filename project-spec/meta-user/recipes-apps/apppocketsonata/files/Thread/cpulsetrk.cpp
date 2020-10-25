@@ -27,11 +27,11 @@ CPulseTrk::~CPulseTrk(void)
 /**
  * @brief CUrBit::Run
  */
-void CPulseTrk::Run()
+void CPulseTrk::Run(key_t key)
 {
     LOGENTRY;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -53,7 +53,7 @@ void CPulseTrk::_routine()
             perror( "QMsgRcv" );
         }
         else {
-        switch( m_pMsg->ucOpCode ) {
+        switch( m_pMsg->uiOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                 bWhile = false;

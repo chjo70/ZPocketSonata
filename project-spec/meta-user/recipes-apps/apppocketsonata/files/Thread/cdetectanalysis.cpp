@@ -46,7 +46,7 @@ CDetectAnalysis::~CDetectAnalysis(void)
 /**
  * @brief CDetectAnalysis::Run
  */
-void CDetectAnalysis::Run()
+void CDetectAnalysis::Run(key_t key)
 {
     LOGENTRY;
 
@@ -73,7 +73,7 @@ void CDetectAnalysis::_routine()
             perror( "QMsgRcv" );
         }
         else {
-        switch( m_pMsg->ucOpCode ) {
+        switch( m_pMsg->uiOpCode ) {
             case enTHREAD_DETECTANAL_START :
                 AnalysisStart();
                 break;
@@ -87,7 +87,7 @@ void CDetectAnalysis::_routine()
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                 break;
             }
         }

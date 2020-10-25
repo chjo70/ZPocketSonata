@@ -1,34 +1,30 @@
 <html>
 
 <head>
-<meta http-equiv="content-type" content="text/html; charset=euc-kr">
-<title>½Ã½ºÅÛ º¯¼ö</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>ï¿½&yacute;ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</title>
 </head>
 
 <body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
 <ul>
-    <h1><a href="http://sbc/cgi-bin/system.cgi"><img src="graphics/bit.jpg" width="103" height="78" border="0" alt="ÀÚÃ¼ Á¡°ËÀ» ¼öÇà ÇÕ´Ï´Ù."></a> 
-    ÀÚÃ¼ Á¡°Ë</h1>
+    <h1><a href="http://sbc/cgi-bin/system.cgi"><img src="graphics/bit.jpg" width="103" height="78" border="0" ></a> 
+    ìžì²´ì ê²€ ê²°ê³¼</h1>
 </ul>
 <hr color="#CC99FF">
-<form method="get" action="fetch.cgi">
-  
-    <h2>ÀÚÃ¼ Á¡°Ë</h2>
-    <ul>
-        <li>&nbsp;&nbsp;&nbsp;&nbsp;SBC  </li>
-        <li>&nbsp;</li>
-    </ul>
+<script language="JavaScript" src="qDecoder-bit/qDecoder-bit.js"></script>
+<form method="post" action="cgi-bin/bit.cgi" onSubmit="return qBit(this);">
+  <input type="hidden" name="Q_UPLOAD_ID" value="">
+  <input type="radio" name="formradio" value="IBIT" checked> ì´ˆê¸° ìžì²´ì ê²€
+  <p><input name="formradio" type="radio" value="CBIT"> ì—°ì† ìžì²´ì ê²€</p>
+  <p><input name="formradio" type="radio" value="SBIT"> ì‹œìŠ¤í…œ ìžì²´ì ê²€</p>
+  <p><input name="formradio" type="radio" value="UBIT"> ì‚¬ìš©ìž ìžì²´ì ê²€</p>
     <p>&nbsp;</p>
-    <h2>
-    ´ë¿ªº° ÀÓ°è°ª</h2> 
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;CD¹êµå(0.5¡­2 §×): <input type="text" name="query_cd" value="" size="7">§¼</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;Àú´ë¿ª(2¡­6 §×): <input type="text" name="query_26" size="7">§¼</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;°í´ë¿ª1(6¡­10 §×): <input type="text" name="query_610" value="" size="7">§¼, 
-    °í´ë¿ª2(10¡­14 §×):&nbsp;<input type="text" name="query_1014" value="" size="7">§¼, 
-    °í´ë¿ª3(14¡­18 §×):&nbsp;<input type="text" name="query_1418" value="" size="7">§¼</p>
-    
-    <h2 align="left"><input type="submit" value="º¯°æ" name="send"></h2>
+    <p>&nbsp;</p>
+<p>
+  <input type="submit" value="ìžì²´ì ê²€ ìˆ˜í–‰">
+    </p>
 </form>
+<p>&nbsp;</p>
 </body>
 
 </html>

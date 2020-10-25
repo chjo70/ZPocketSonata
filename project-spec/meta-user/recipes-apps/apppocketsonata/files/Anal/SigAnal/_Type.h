@@ -47,7 +47,10 @@ typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 typedef char TCHAR;
 typedef unsigned short USHORT;
+#ifndef _WIN32
 typedef time_t __time32_t;
+#endif
+
 typedef string CString;
 typedef unsigned int INT32;
 
@@ -77,7 +80,9 @@ typedef unsigned int INT32;
 
 #define FLT_MIN                 1.175494351e-38F        /* min positive value */
 
+#ifndef _WIN32
 #define _MAX_PATH               1024
+#endif
 
 #include "../../Utils/cfile.h"
 

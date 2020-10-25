@@ -23,6 +23,8 @@ float _spPWres;
 float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
 float _frqRes[2] = { (float) 0.117, (float) 65.104167 } ;
 
+int _spAnalMinPulseCount;
+
 #else
 extern float _spOneSec;
 extern float _spOneMilli;
@@ -36,6 +38,8 @@ extern float _spPWres;
 
 extern float _toaRes[en50MHZ_BW+1];
 extern float _frqRes[2];
+
+extern int _spAnalMinPulseCount;
 
 #endif
 
@@ -210,7 +214,7 @@ T _diffabs( T x, T y)
 #endif
 
 #if defined(_WIN32)
-#define printf                  Printf
+//#define printf                  Printf
 
 #ifdef __cplusplus
 extern "C"

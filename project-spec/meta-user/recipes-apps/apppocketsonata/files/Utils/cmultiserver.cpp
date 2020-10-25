@@ -68,12 +68,12 @@ void CMultiServer::Free()
  * @brief CMultiServer::Run
  * @param enSocketMode
  */
-void CMultiServer::Run()
+void CMultiServer::Run( key_t key )
 {
     // 소켓 모드 설정
     //m_enSocketMode = enSocketMode;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -227,7 +227,7 @@ void CMultiServer::_routine()
                             uiTotalRead[i] = 0;
 
                             sndMsg.mtype = 1;
-                            sndMsg.ucOpCode = strLanHeader[i].ucOpCode;
+                            sndMsg.uiOpCode = strLanHeader[i].uiOpCode;
                             sndMsg.iSocket = iSocket;
                             sndMsg.uiDataLength = strLanHeader[i].uiLength;
 
@@ -287,7 +287,7 @@ int CMultiServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     STR_LAN_HEADER strLanHeader;
 
     // 랜 헤더 송신
-    strLanHeader.ucOpCode = uiOpCode;
+    strLanHeader.uiOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );

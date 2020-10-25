@@ -9,6 +9,7 @@
 #include "ctaskmngr.h"
 #include "csignalcollect.h"
 #include "cemittermerge.h"
+#include "curbit.h"
 
 
 #include "../Utils/ccommonutils.h"
@@ -59,11 +60,11 @@ void CRecLan::ReleaseInstance()
 /**
  * @brief CRecLan::Run
  */
-void CRecLan::Run()
+void CRecLan::Run( key_t key )
 {
     LOGENTRY;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -84,15 +85,18 @@ void CRecLan::_routine()
         }
         else {
         if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->ucOpCode ) {
+            switch( m_pMsg->uiOpCode ) {
                 // 기존 SONATA 체계 명령어
                 case enREQ_MODE :
                 case enREQ_ANAL_START :
                     TMNGR->QMsgSnd( m_pMsg );
                     break;
 
-                case enREQ_URBIT :
-                    //SendQMessage();
+                case enREQ_IBIT :
+                case enREQ_UBIT :
+                case enREQ_CBIT :
+                case enREQ_SBIT :
+                    URBIT->QMsgSnd( m_pMsg );
                     break;
 
                 case enREQ_RELOAD_LIBRARY :
@@ -111,12 +115,12 @@ void CRecLan::_routine()
                     break;
 
                 default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
-                break;
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    break;
             }
         }
         else {
-            LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->ucOpCode );
+            LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
             }
         }
     }
@@ -146,7 +150,7 @@ void CRecLan::DumpList()
 #endif
 
     // 랜 헤더 송신
-    strLanHeader.ucOpCode = enRES_DUMP_LIST;
+    strLanHeader.uiOpCode = enRES_DUMP_LIST;
     strLanHeader.uiLength = DUMP_DATA_SIZE;
 
     iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );

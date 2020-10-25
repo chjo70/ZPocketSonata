@@ -3281,7 +3281,7 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
         pa.min = _min( pSeg->pa.min, pa.min );
     }
 
-    if( (unsigned int) (pa.max - pa.min) >= UDIV( 6, _spAMPres ) ) {
+    if( (int) (pa.max - pa.min) >= UDIV( 6, _spAMPres ) ) {
         cline_threshold = 1;
         pa_threshold = 6;
     }
@@ -3304,9 +3304,10 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
     }
 
     flag = FALSE;
-    if( diffPa >= 0 )
+        if( diffPa >= 0 ) {
       flag = TRUE;
   }
+    }
 
   // 신호 세기의 감소 개수를 카운드
   flag = TRUE;
@@ -3333,7 +3334,7 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
     //-- 조철희 2005-09-27 17:28:45 --//
     // 증가/감소 개수가 0 이상일 때만 로브 조건 추가.
     if( ( ratio_total >= 0.6 ) && ( incline_count != 0 && decline_count != 0 ) &&
-            ( (UINT) ( pa.max - pa.min ) >= UDIV( pa_threshold, _spAMPres ) ) )
+            ( (int) ( pa.max - pa.min ) >= UDIV( pa_threshold, _spAMPres ) ) )
     return TRUE;
     else
         return FALSE;

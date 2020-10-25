@@ -11,7 +11,6 @@ pre-built/linux/
 project-spec/meta-plnx-generated/
 /components/plnx_workspace
 
-PocketSonata.pro.user.*
 *.bak
 *.autosave
 build-PocketView*/
@@ -20,3 +19,8 @@ Build-PocketView*/
 Build-PocketSonata*/
 *.sqlite3
 *.swp
+
+*_cgi
+*.pro.user
+
+

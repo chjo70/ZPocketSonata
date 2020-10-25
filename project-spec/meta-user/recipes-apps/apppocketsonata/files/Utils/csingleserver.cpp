@@ -66,12 +66,12 @@ void CSingleServer::Free()
  * @brief CMultiServer::Run
  * @param enSocketMode
  */
-void CSingleServer::Run()
+void CSingleServer::Run( key_t key )
 {
     // 소켓 모드 설정
     //m_enSocketMode = enSocketMode;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -205,7 +205,7 @@ void CSingleServer::_routine()
                                 uiTotalRead = 0;
 
                                 sndMsg.mtype = 1;
-                                sndMsg.ucOpCode = strLanHeader.ucOpCode;
+                                sndMsg.uiOpCode = strLanHeader.uiOpCode;
                                 sndMsg.iSocket = m_iSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
@@ -238,13 +238,13 @@ void CSingleServer::_routine()
                             uiTotalRead = 0;
 
                             sndMsg.mtype = 1;
-                            sndMsg.ucOpCode = strLanHeader.ucOpCode;
+                            sndMsg.uiOpCode = strLanHeader.uiOpCode;
                             sndMsg.iSocket = m_iSocket;
                             sndMsg.iArrayIndex = -1;
                             sndMsg.uiArrayLength = 0;
                             sndMsg.uiDataLength = 0;
 
-                            if( sndMsg.ucOpCode == enREQ_SIM_PDWDATA ) {
+                            if( sndMsg.uiOpCode == enREQ_SIM_PDWDATA ) {
                                 sndMsg.uiArrayLength = strLanHeader.uiLength;
                                 sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
                             }
@@ -307,7 +307,7 @@ int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     STR_LAN_HEADER strLanHeader;
 
     // 랜 헤더 송신
-    strLanHeader.ucOpCode = uiOpCode;
+    strLanHeader.uiOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );

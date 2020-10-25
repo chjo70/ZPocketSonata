@@ -37,6 +37,19 @@ extern char g_szCollectBank[enUserCollectBank+1][10];
 #endif
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+extern void _ShowProgramTitle( void );
+extern char *_GetProgramVersion();
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 
 #endif // _SYSTEM_H

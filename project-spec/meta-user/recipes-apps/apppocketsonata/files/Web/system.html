@@ -14,18 +14,18 @@
 <form method="get" action="fetch.cgi">
   
     <h2>보드ID 및 소프트웨어 버젼정보</h2>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;보드ID: <input type="text" name="query_boardid" value="" size="4"> 
-    &nbsp;&nbsp;&nbsp;버전:  <input type="text" name="query_version" size="7">&nbsp;</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;보드ID: <input type="text" name="query_boardid" value="" size="4" maxlength="0" style="background-color:yellow;"> 
+    &nbsp;&nbsp;&nbsp;버전:  <input type="text" name="query_version" size="7" maxlength="0" style="background-color:yellow;">&nbsp;</p>
     <h2>
 신호 분석</h2> 
     <p>&nbsp;&nbsp;&nbsp;&nbsp;최소 펄스 수: <input type="text" name="query_minpulse" value="" size="4">&nbsp;</p>
     <h2>
     대역별 임계값</h2> 
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;CD밴드(0.5∼2 ㎓): <input type="text" name="query_cd" value="" size="7">㏈</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;저대역(2∼6 ㎓): <input type="text" name="query_26" size="7">㏈</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;고대역1(6∼10 ㎓): <input type="text" name="query_610" value="" size="7">㏈, 
-    고대역2(10∼14 ㎓):&nbsp;<input type="text" name="query_1014" value="" size="7">㏈, 
-    고대역3(14∼18 ㎓):&nbsp;<input type="text" name="query_1418" value="" size="7">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;CD밴드(0.5∼2 ㎓): <input type="text" name="query_cd" value="" size="6">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;저대역(2∼6 ㎓): <input type="text" name="query_26" size="6">㏈</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;고대역1(6∼10 ㎓): <input type="text" name="query_610" value="" size="6">㏈, 
+    고대역2(10∼14 ㎓):&nbsp;<input type="text" name="query_1014" value="" size="6">㏈, 
+    고대역3(14∼18 ㎓):&nbsp;<input type="text" name="query_1418" value="" size="6">㏈</p>
     
     <h2 align="left"><input type="submit" value="변경" name="send"></h2>
 </form>

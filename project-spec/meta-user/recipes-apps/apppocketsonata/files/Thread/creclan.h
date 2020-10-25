@@ -19,7 +19,7 @@ public:
     CRecLan( int iKeyId, int iIndex, char *pClassName=NULL, bool bArrayLanData=false );
     ~CRecLan();
 
-    void Run();
+    void Run( key_t key );
     void ReleaseInstance();
 
     // 명령에 대한 처리 함수 정의

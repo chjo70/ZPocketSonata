@@ -19,41 +19,27 @@ private:
 
     CGPIO m_theGPIO;
 
+    UNI_ES_IBIT m_stESIbit;
+    STR_ES_CBIT m_stESCbit;
+
 public:
-    static CUrBit *pInstance;
+    static CUrBit *m_pInstance;
 
     STR_MessageData *m_pMsg;
 
 private:
     void Init();
 
+    void RunIBit( bool bCGIRunning );
+    void RunCBit( bool bCGIRunning );
+    void RunUBit( bool bCGIRunning );
+    void InitIBit();
+
 public:
     CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUrBit();
 
-    void Run();
-
-    //
-
-    virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
-
-    static CUrBit* GetInstance()
-    { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CUrBit( g_iKeyId++, (char*)"CUrBit" );
-        }
-        return pInstance;
-    }
-
-    void ReleaseInstance()
-    {
-        if(pInstance)
-        {
-            delete pInstance;
-            pInstance = NULL;
-        }
-    }
+    THREAD_STANDARD_FUNCTION( CUrBit )
 };
 
 #define URBIT     CUrBit::GetInstance()

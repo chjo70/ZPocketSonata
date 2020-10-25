@@ -7,6 +7,7 @@
 
 extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleServer *g_pTheCCUSocket;
+extern CSingleServer *g_pThePMCSocket;
 
 /**
  * @brief 생성자를 수행합니다.
@@ -29,9 +30,12 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         if( g_pTheCCUSocket != NULL ) {
             g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
         }
-        else {
+
+        // EA 경우에 AET 관련 메세지를 전달한다.
+        if( g_pThePMCSocket != NULL && ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
 
         }
+
     }
     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
     else {
@@ -56,7 +60,7 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
     ENUM_MODE enMode, enModeOfMessage;
 
     enMode = GP_SYSCFG->GetMode();
-    switch( pMsg->ucOpCode ) {
+    switch( pMsg->uiOpCode ) {
         case enREQ_MODE :
             enModeOfMessage = (ENUM_MODE) pMsg->x.szData[0];
 
@@ -65,6 +69,19 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             }
             break;
         case enREQ_ANAL_START :
+            if( enMode == enES_MODE || enMode == enEW_MODE  ) {
+            }
+            else {
+                bRet = false;
+            }
+            break;
+
+        case enREQ_IBIT :
+        case enREQ_UBIT :
+        case enREQ_CBIT :
+            break;
+
+        case enREQ_SBIT :
             if( enMode == enES_MODE || enMode == enEW_MODE  ) {
             }
             else {

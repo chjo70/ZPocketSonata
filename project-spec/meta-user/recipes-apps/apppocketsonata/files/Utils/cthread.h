@@ -19,7 +19,7 @@
 #define LENGTH_OF_CLASSNAME (30)
 
 #define THREAD_STANDARD_FUNCTION(A)    \
-void Run(); \
+void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
 virtual const char *ChildClassName() { return m_szClassName; } \
 static A* GetInstance() { \
@@ -37,7 +37,7 @@ static bool IsThereInstance() { \
     if(m_pInstance == NULL) { \
         bRet = false; \
     } \
-    return bRet; \
+    return bRet; \    
 }
 
 #pragma pack(push, 1)
@@ -94,7 +94,7 @@ struct STR_MessageData {
     long mtype;
 
     // Opcode
-    unsigned char ucOpCode;
+    unsigned int uiOpCode;
 
     // Src/Dest
     unsigned char ucSrcDest;
@@ -134,8 +134,8 @@ public:
     CThread( int iMsgKey, char *pClassName, bool bArrayLanData=false );
     ~CThread();
 
-    void Run();
-    void Run( void *(*Func)(void*) );
+    void Run( key_t key=IPC_PRIVATE );
+    void Run( void *(*Func)(void*), key_t key=IPC_PRIVATE );
     int Pend();
     void Stop();
     void Stop2();

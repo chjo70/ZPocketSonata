@@ -15,11 +15,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../Qdecoder/internal.c \
-    ../Qdecoder/qcgireq.c \
-    ../Qdecoder/qcgires.c \
-    ../Qdecoder/qcgisess.c \
-    ../Qdecoder/qentry.c \
+    ../Qdecoder/md5/md5c.c \
+    ../Qdecoder/mkstemp.c \
+    ../Qdecoder/qArg.c \
+    ../Qdecoder/qAwk.c \
+    ../Qdecoder/qCount.c \
+    ../Qdecoder/qDecoder.c \
+    ../Qdecoder/qDownload.c \
+    ../Qdecoder/qEncode.c \
+    ../Qdecoder/qEnv.c \
+    ../Qdecoder/qError.c \
+    ../Qdecoder/qFile.c \
+    ../Qdecoder/qHttpHeader.c \
+    ../Qdecoder/qInternalCommon.c \
+    ../Qdecoder/qInternalEntry.c \
+    ../Qdecoder/qMisc.c \
+    ../Qdecoder/qSed.c \
+    ../Qdecoder/qSession.c \
+    ../Qdecoder/qString.c \
+    ../Qdecoder/qTime.c \
+    ../Qdecoder/qValid.c \
+    ../Qdecoder/qfDecoder.c \
+    ../Qdecoder/qsDecoder.c \
+    ../Qdecoder/snprintf.c \
+    ../Qdecoder/strcasecmp.c \
+    ../Qdecoder/strptime.c \
+    ../Qdecoder/timegm.c \
     download_cgi.cpp
 
 # Default rules for deployment.
@@ -31,4 +52,13 @@ DEFINES += _POCKETSONATA_
 
 HEADERS += \
     ../Qdecoder/internal.h \
-    ../Qdecoder/qdecoder.h
+    ../Qdecoder/md5/md5.h \
+    ../Qdecoder/md5/md5_global.h \
+    ../Qdecoder/mkstemp.h \
+    ../Qdecoder/qDecoder.h \
+    ../Qdecoder/qInternal.h \
+    ../Qdecoder/qdecoder.h \
+    ../Qdecoder/snprintf.h \
+    ../Qdecoder/strcasecmp.h \
+    ../Qdecoder/strptime.h \
+    ../Qdecoder/timegm.h

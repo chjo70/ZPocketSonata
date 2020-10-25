@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 아래는 문자열에 관련된 정의를 나열합니다.
 #define PROGRAM_NAME        "PocketSonata"
-#define PROGRAM_VERSION     "Ver 0.1a"
+#define PROGRAM_VERSION     "0.1a"
 
 // 실행 파일이 있는 위치에서 로그 디렉토리
 #define LOG_DIRECTORY       ("/var/log/LOG")

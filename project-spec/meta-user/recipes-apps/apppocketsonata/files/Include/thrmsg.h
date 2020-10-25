@@ -39,6 +39,17 @@ enum enTHREAD_REQ_MESSAGE {
     // 라이브러리 관련 메시지
     enTHREAD_RELOAD_LIBRARY = enREQ_RELOAD_LIBRARY,
 
+    // 자체점검 관련 메시지
+    enTHREAD_REQ_IBIT = enREQ_IBIT,
+    enTHREAD_REQ_UBIT = enREQ_UBIT,
+    enTHREAD_REQ_CBIT = enREQ_CBIT,
+    enTHREAD_REQ_SBIT = enREQ_SBIT,
+
+    enCGI_REQ_IBIT = enREQ_IBIT + 50,
+    enCGI_REQ_UBIT = enREQ_UBIT + 50,
+    enCGI_REQ_CBIT = enREQ_CBIT + 50,
+    enCGI_REQ_SBIT = enREQ_SBIT + 50,
+
 
     //
     enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,

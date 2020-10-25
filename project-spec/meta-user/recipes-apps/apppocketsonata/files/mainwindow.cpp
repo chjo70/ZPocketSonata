@@ -1,3 +1,4 @@
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -8,6 +9,12 @@
 #include "./Include/sysmsg.h"
 
 #include <fcntl.h>
+
+enum enTableHeader {
+    enNo=0,
+    enNoAET,
+    enAOA,
+} ;
 
 
 
@@ -30,7 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect( & m_theTcpSocket, SIGNAL(readyRead()), this, SLOT(onReadMessage()));
     connect( & m_theTcpSocket, SIGNAL(error()), this, SLOT(onError()));
 
+    QStringList aettableHeader;
+    aettableHeader << "번호" << "AET#" << "방위";
+    ui->aettableWidget->setColumnCount( 100 );
+    ui->aettableWidget->setHorizontalHeaderLabels( aettableHeader );
 
+    vTable.clear();
 
 }
 
@@ -66,8 +78,11 @@ void MainWindow::on_pushButton_clicked()
     nextBlockSize = 0;
 
     if( m_bConnect == false ) {
+        // 자신의 IP 에서 연결 요구하고 연결 실패되면 직접 다이렉트로 연결을 시도한다.
         m_theTcpSocket.connectToHost(QHostAddress::LocalHost, CCU_PORT );
         bConnected = m_theTcpSocket.waitForConnected();
+
+        ui->aettableWidget->clear();
 
         if( bConnected == false ) {
             m_theTcpSocket.connectToHost( "zcu111.com", CCU_PORT );
@@ -79,6 +94,8 @@ void MainWindow::on_pushButton_clicked()
         m_theTcpSocket.close();
 
         EnableControl( false );
+
+        vTable.clear();
     }
 
 }
@@ -97,6 +114,10 @@ void MainWindow::onConnectServer()
 
 }
 
+/**
+ * @brief MainWindow::EnableControl
+ * @param bEnable
+ */
 void MainWindow::EnableControl( bool bEnable )
 {
     ui->MemoryDump->setEnabled( bEnable );
@@ -109,6 +130,8 @@ void MainWindow::EnableControl( bool bEnable )
 
     ui->pushButton_ReloadLibrary->setEnabled( bEnable );
     ui->pushButton_SimPDW->setEnabled( bEnable );
+
+    ui->bit_result->setText( "" );
 
 }
 
@@ -197,7 +220,7 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
 
     QString qBuffer;
 
-    switch( pstLanHeader->ucOpCode ) {
+    switch( pstLanHeader->uiOpCode ) {
     case enRES_MODE :
         {
             UINT uiMode;
@@ -246,11 +269,107 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
         }
         break;
 
+    case enRES_IBIT :
+        ShowIBitResult( pByteData );
+
+        ui->BITTEST->setEnabled( true );
+        break;
+
+    case enRES_CBIT :
+        ShowCBitResult( pByteData );
+
+        ui->BITTEST->setEnabled( true );
+        break;
+
+    case esAET_NEW_CCU :
+        InsertTable( pByteData );
+        break;
+
+    case esAET_UPD_CCU :
+        UpdateTable( pByteData );
+        break;
+
+    case esAET_DEL_CCU :
+        DeleteTable( pByteData );
+        break;
+
     default :
         break;
     }
 
     //ui->memoryDump->moveCursor( QTextCursor::start);
+
+}
+
+/**
+ * @brief MainWindow::InsertTable
+ * @param pByteData
+ */
+void MainWindow::InsertTable( void *pByteData )
+{
+    STR_AET *pAET;
+    STR_LIST_TABLE stListTable;
+
+    QString qTemp;
+
+    pAET = ( STR_AET *) pByteData;
+
+    stListTable.uiABTID = pAET->noEMT;
+
+    ui->aettableWidget->insertRow( ui->aettableWidget->rowCount() );
+
+    stListTable.iIndexOfTable = ui->aettableWidget->rowCount() - 1;
+
+    qTemp.sprintf( "1" );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
+
+    vTable.push_back( stListTable );
+
+}
+
+/**
+ * @brief MainWindow::UpdateTable
+ * @param pByteData
+ */
+void MainWindow::UpdateTable( void *pByteData )
+{
+
+}
+
+/**
+ * @brief MainWindow::DeleteTable
+ * @param pByteData
+ */
+void MainWindow::DeleteTable( void *pByteData )
+{
+
+}
+
+/**
+ * @brief MainWindow::ShowIBitResult
+ * @param pData
+ */
+void MainWindow::ShowIBitResult( void *pData )
+{
+    UNI_ES_IBIT *pESIBit;
+    QString qBitResult;
+
+    pESIBit = ( UNI_ES_IBIT * ) pData;
+    qBitResult.sprintf( "0x%x", pESIBit->w32 );
+    ui->bit_result->setText( qBitResult );
+
+}
+
+void MainWindow::ShowCBitResult( void *pData )
+{
+    STR_ES_CBIT *pESCBit;
+    QString qBitResult;
+
+    pESCBit = ( STR_ES_CBIT * ) pData;
+    qBitResult.sprintf( "0x%x/0x%x/0x%x, 0x%x", pESCBit->sp[0].w32, pESCBit->sp[1].w32, pESCBit->sp[2].w32, pESCBit->rsa.w32 );
+    ui->bit_result->setText( qBitResult );
 
 }
 
@@ -289,7 +408,7 @@ void MainWindow::on_MemoryDump_clicked()
     STR_LAN_HEADER strLanHeader;
     STR_REQ_DUMP_LIST strReqDumpList;
 
-    strLanHeader.ucOpCode = enREQ_DUMP_LIST;
+    strLanHeader.uiOpCode = enREQ_DUMP_LIST;
     strLanHeader.uiLength = sizeof( STR_REQ_DUMP_LIST );
 
     strReqDumpList.uiAddress = ui->spinBoxStartAddress->value();
@@ -310,7 +429,7 @@ void MainWindow::on_ESMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.ucOpCode = enREQ_MODE;
+    strLanHeader.uiOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enES_MODE;
@@ -329,7 +448,7 @@ void MainWindow::on_EWMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.ucOpCode = enREQ_MODE;
+    strLanHeader.uiOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enEW_MODE;
@@ -347,7 +466,7 @@ void MainWindow::on_ReadyMode_clicked()
     STR_LAN_HEADER strLanHeader;
     UINT uiMode;
 
-    strLanHeader.ucOpCode = enREQ_MODE;
+    strLanHeader.uiOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     uiMode = enREADY_MODE;
@@ -368,7 +487,7 @@ void MainWindow::on_AnalStart_clicked()
     STR_LAN_HEADER strLanHeader;
     time_t tiNow;
 
-    strLanHeader.ucOpCode = enREQ_ANAL_START;
+    strLanHeader.uiOpCode = enREQ_ANAL_START;
     strLanHeader.uiLength = sizeof( time_t );
 
     tiNow = time(NULL);
@@ -388,7 +507,7 @@ void MainWindow::on_MODE_clicked()
 
     ui->MODE->setEnabled( false );
 
-    strLanHeader.ucOpCode = enREQ_MODE;
+    strLanHeader.uiOpCode = enREQ_MODE;
     strLanHeader.uiLength = sizeof( int );
 
     if( ui->radioButton_ESMode->isChecked() ) {
@@ -405,7 +524,10 @@ void MainWindow::on_MODE_clicked()
 
 }
 
-
+/**
+ * @brief MainWindow::MessageBox
+ * @param pText
+ */
 void MainWindow::MessageBox( char *pText )
 {
     QMessageBox::information( this, "파일 로딩", pText );
@@ -426,13 +548,16 @@ void MainWindow::on_BITTEST_clicked()
     strLanHeader.uiLength = 0;
 
     if( ui->radioButton_IBIT->isChecked() ) {
-        strLanHeader.ucOpCode = enREQ_IBIT;
+        strLanHeader.uiOpCode = enREQ_IBIT;
     }
     else if( ui->radioButton_URBIT->isChecked() ) {
-        strLanHeader.ucOpCode = enREQ_UBIT;
+        strLanHeader.uiOpCode = enREQ_UBIT;
+    }
+    else if( ui->radioButton_SYSTEM->isChecked() ) {
+        strLanHeader.uiOpCode = enREQ_SBIT;
     }
     else {
-        strLanHeader.ucOpCode = enREQ_CBIT;
+        strLanHeader.uiOpCode = enREQ_CBIT;
     }
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
@@ -454,7 +579,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 
     ui->BITTEST->setEnabled( false );
 
-    strLanHeader.ucOpCode = enREQ_SIM_PDWDATA;
+    strLanHeader.uiOpCode = enREQ_SIM_PDWDATA;
 
     QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );
 
@@ -492,7 +617,7 @@ void MainWindow::on_pushButton_2_clicked()
 
     STR_LAN_HEADER strLanHeader;
 
-    strLanHeader.ucOpCode = enREQ_TEST1;
+    strLanHeader.uiOpCode = enREQ_TEST1;
     strLanHeader.uiLength = 0;
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
@@ -507,7 +632,7 @@ void MainWindow::on_pushButton_ReloadLibrary_clicked()
 
     STR_LAN_HEADER strLanHeader;
 
-    strLanHeader.ucOpCode = enREQ_RELOAD_LIBRARY;
+    strLanHeader.uiOpCode = enREQ_RELOAD_LIBRARY;
     strLanHeader.uiLength = 0;
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );

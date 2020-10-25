@@ -51,6 +51,7 @@ using namespace std;
 #include "./Thread/cpulsetrk.h"
 #include "./Thread/csignalcollect.h"
 #include "./Thread/cjamtech.h"
+#include "./Thread/ccgi.h"
 
 #include "./System/csysconfig.h"
 
@@ -67,6 +68,7 @@ void signalHandler(int signo);
 
 CMultiServer *g_pTheZYNQSocket;
 CSingleServer *g_pTheCCUSocket;
+CSingleServer *g_pThePMCSocket;
 
 
 
@@ -79,7 +81,7 @@ void usrAppStart()
     LOGMSG( enNormal, "----------------------------------------------------------" );
 
     LOGENTRY;
-    LOGMSG2( enDebug, "[%s:%s] 프로그램을 구동합니다.", PROGRAM_NAME, PROGRAM_VERSION );
+    _ShowProgramTitle();
 
     signal( SIGINT, signalHandler);
     signal( SIGABRT, signalHandler);
@@ -88,31 +90,36 @@ void usrAppStart()
     signal( SIGSTOP, signalHandler);
 
     // 1. 쓰레드 관리 쓰레드를 호출한다.
-    TMNGR->Run();
+    TMNGR->Run( _MSG_TMNGR_KEY );
 
     // 2. 운용 관련 쓰레드를 호출한다.
-    URBIT->Run();
+    URBIT->Run( _MSG_URBIT_KEY );
 
     // 3. 분석 및 재밍 관련 쓰레드를 호출한다.
-    PULTRK->Run();
-    JAMTEC->Run();
+    PULTRK->Run( _MSG_PULTRK_KEY );
+    JAMTEC->Run( _MSG_JAMTEC_KEY );
 
     // 3.1 ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
-    RECZYNQ->Run();
-    RECCCU->Run();
+    RECZYNQ->Run( _MSG_RECZYNQ_KEY );
+    RECCCU->Run( _MSG_RECCCU_KEY );
+
+    CGI->Run( _MSG_ZCGI_KEY );
 
     // 4. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
     g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
-    g_pTheZYNQSocket->Run();
+    g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
 
     if( GP_SYSCFG->GetBoardID() == enMaster ) {
         g_pTheCCUSocket = new CSingleServer( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT );
-        g_pTheCCUSocket->Run();
+        g_pTheCCUSocket->Run( _MSG_CCU_KEY );
+
+        g_pThePMCSocket = new CSingleServer( g_iKeyId++, (char *)"CPMCSocket", CCU_PORT );
+        g_pThePMCSocket->Run( _MSG_CCU_KEY );
     }
 
     // 5. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
-    PROMPT->Run();
+    PROMPT->Run( _MSG_PROMPT_KEY );
 #endif
 
     while( g_Loop ) {
@@ -128,6 +135,7 @@ void usrAppStart()
     PROMPT->ReleaseInstance();
     RECZYNQ->ReleaseInstance();
     RECCCU->ReleaseInstance();
+    CGI->ReleaseInstance();
     //MYSOCK->ReleaseInstance();
 
     // 분석 관련 쓰레드를 종료 한다.
@@ -138,6 +146,7 @@ void usrAppStart()
 
     delete g_pTheZYNQSocket;
     delete g_pTheCCUSocket;
+    delete g_pThePMCSocket;
 
     LOGMSG( enDebug, "[usrAppStart] 를 종료 처리 합니다..." );
 

@@ -15,6 +15,9 @@
 #define CEDEOB_SQLITE_FILENAME      "/SQLite3.DB/cedeob.sqlite3"
 #define EMITTER_SQLITE_FILENAME     "/SQLite3.DB/emitter.sqlite3"
 
+#define QDECODER_LOG_FOLDER         "/var/log/LOG"
+#define QDECODER_LOG_FILENAME       "/qDecoder.log"
+
 
 
 
@@ -434,7 +437,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 펄스열 추출 정의
-#define     _spAnalMinPulseCount              (6)
+//#define     _spAnalMinPulseCount              (6)
 #define     _spContiThresholdMinPulseCount    10
 
 // Stable 에미터 최소 펄스 개수(누락 및 스캔 신호를 고려한)

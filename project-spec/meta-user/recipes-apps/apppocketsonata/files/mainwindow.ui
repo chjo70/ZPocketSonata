@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1042</width>
-    <height>577</height>
+    <width>944</width>
+    <height>666</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -140,7 +140,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>200</y>
+      <y>160</y>
       <width>351</width>
       <height>71</height>
      </rect>
@@ -210,10 +210,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>220</y>
-      <width>71</width>
-      <height>51</height>
+      <x>20</x>
+      <y>250</y>
+      <width>81</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -224,7 +224,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>210</y>
+      <y>170</y>
       <width>81</width>
       <height>61</height>
      </rect>
@@ -242,9 +242,9 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>200</y>
-      <width>341</width>
+      <x>120</x>
+      <y>230</y>
+      <width>351</width>
       <height>111</height>
      </rect>
     </property>
@@ -257,7 +257,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>250</x>
        <y>70</y>
        <width>71</width>
        <height>31</height>
@@ -305,7 +305,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_CBIT_2">
+       <widget class="QRadioButton" name="radioButton_SYSTEM">
         <property name="text">
          <string>시스템</string>
         </property>
@@ -316,47 +316,69 @@
       </item>
      </layout>
     </widget>
+    <widget class="QLabel" name="bit_result">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>IBeamCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_SimPDW">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
+   <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>290</y>
-      <width>81</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>81</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>PDW
-모의 발생</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_3">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>380</y>
-      <width>531</width>
-      <height>131</height>
+      <x>480</x>
+      <y>230</y>
+      <width>451</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
-     <string>장비 시험</string>
+     <string>장치 시험 및 분석 모의</string>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="pushButton_SimPDW">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
+       <y>30</y>
+       <width>81</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>81</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>PDW
+모의 발생</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
        <width>81</width>
        <height>61</height>
       </rect>
@@ -372,27 +394,62 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_ReloadLibrary">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
+   <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>290</y>
-      <width>121</width>
-      <height>61</height>
+      <x>480</x>
+      <y>160</y>
+      <width>451</width>
+      <height>71</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>81</width>
-      <height>0</height>
-     </size>
+    <property name="title">
+     <string>위협 라이브러리</string>
     </property>
-    <property name="text">
-     <string>위협 라이브러리
-재로딩</string>
+    <widget class="QPushButton" name="pushButton_ReloadLibrary">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>30</y>
+       <width>201</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>81</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>위협 라이브러리 재로딩</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QDialogButtonBox" name="buttonBox">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>590</y>
+      <width>166</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="standardButtons">
+     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="aettableWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>350</y>
+      <width>911</width>
+      <height>231</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -401,7 +458,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1042</width>
+     <width>944</width>
      <height>22</height>
     </rect>
    </property>

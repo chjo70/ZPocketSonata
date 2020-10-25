@@ -15,9 +15,10 @@
 #pragma pack(push, 1)
 
 struct STR_LAN_HEADER {
-    unsigned char ucSrcDest;
-    unsigned char ucOpCode;
+    //unsigned char ucSrcDest;
+    //unsigned char ucOpCode;
 
+    unsigned int uiOpCode;
     unsigned int uiLength;
 
 } ;
@@ -39,12 +40,13 @@ enum enREQ_MESSAGE {
     enREQ_URBIT = _START_OPCODE_OF_MESSAGE_,
 
     // 기존 SONATA 체계 명령어
-    enREQ_MODE,         // Msys_SetMode,
-    enREQ_ANAL_START,   // = Msys_Start,
+    enREQ_MODE = Msys_SetMode,
+    enREQ_ANAL_START = Msys_Start,
 
-    enREQ_IBIT,         // = Mbit_ReqIbit,
-    enREQ_UBIT,         // = Mbit_ReqUbit,
-    enREQ_CBIT,         // = Mbit_ReqCbit,
+    enREQ_IBIT = Mbit_ReqIbit,
+    enREQ_UBIT = Mbit_ReqUbit,
+    enREQ_CBIT = Mbit_ReqCbit,
+    enREQ_SBIT = Mbit_StartSbit_V3,
 
     enREQ_RELOAD_LIBRARY,
 
@@ -58,9 +60,9 @@ enum enREQ_MESSAGE {
 
 // 각각의 명령어에 대한 데이터 구조체 정의
 struct STR_REQ_DUMP_LIST {
-    UINT uiAddress;
-    UINT uiDataSize;
-    UINT uiDataLength;
+    unsigned int uiAddress;
+    unsigned int uiDataSize;
+    unsigned int uiDataLength;
 };
 
 
@@ -75,12 +77,93 @@ enum enRES_MESSAGE {
 
     // 기존 SONATA 체계 명령어
     enRES_MODE = enREQ_MODE,
-    enRES_IBIT = enREQ_IBIT,
-    enRES_UBIT = enREQ_UBIT,
-    enRES_CBIT = enREQ_CBIT,
+
+    enRES_IBIT = Mbit_ResultEsIbit,
+    enRES_UBIT = Mbit_ResultEsUbit,
+    enRES_CBIT = Mbit_ResultEsCbit,
+    enRES_SBIT = Mbit_ResultEsSbit,
+
+    esAET_NEW_CCU = Maet_New_Ccu,
+    esAET_UPD_CCU = Maet_Update_Ccu,
+    esAET_LST_CCU = Maet_Lost_Ccu,
+    esAET_DEL_CCU = Maet_Delete_Ccu,
 
 
 } ;
+
+union UNI_ES_IBIT {
+    unsigned int w32;
+
+    struct {
+      unsigned int : 21;
+
+      unsigned int b3Comu : 1;  // Band 3 communication bit
+      unsigned int b2Comu : 1;  // Band 2 communication bit
+      unsigned int b1Comu : 1;  // Band 1 communication bit
+
+      unsigned int bRsa : 1;		// RSA General Set IBIT
+      unsigned int b3Sp : 1;		// Each Unit IBIT
+      unsigned int b2Sp : 1;
+      unsigned int b1Sp : 1;
+
+      unsigned int bTsd : 1;
+      unsigned int bSdfu : 1;
+      unsigned int bPdfu : 1;
+      unsigned int bOru : 1;
+    } x ;
+
+} ;
+
+union UNI_RXDF_CBIT {
+  unsigned int w32;
+
+  struct {
+    unsigned int : 26;
+
+    unsigned int bSpin : 1;
+    unsigned int bSpout : 1;
+
+    unsigned int bSdfuTp : 1; // SDFU Temperature
+    unsigned int bPdfuTp : 1;
+    unsigned int bOruSw : 1;  // Oru Switch
+    unsigned int bOruTp : 1;  // Oru Temperature
+  } x ;
+}  ;
+
+union UNI_RSA_CBIT {
+  unsigned int w32;
+  struct {
+    unsigned int : 15;    /* bit22-31 Reserved */
+
+    unsigned int bCip : 1;    /* bit0  제어식별프로세서판 */
+
+    unsigned int bSap : 1;    /* bit3  스캔프로세서판 */
+    unsigned int bNsp : 1;    /* bit8  탐지프로세서판 */
+    unsigned int bKsp1 : 1;    /* bit11 추적프로세서판1 */
+    unsigned int bKsp2 : 1;    /* bit14 추적프로세서판2 */
+
+    unsigned int bKsp3 : 1;    /* bit17 추적프로세서판3 */
+    unsigned int bKsp4 : 1;    /* bit20 추적프로세서판4 */
+    unsigned int bSaf : 1;    /* bit5  스캔분석필터판 */
+    unsigned int bNsf : 1;    /* bit10 탐지필터판 */
+
+    unsigned int bKsf1 : 1;    /* bit13 추적필터판1 */
+    unsigned int bKsf2 : 1;    /* bit16 추적필터판2 */
+    unsigned int bKsf3 : 1;    /* bit19 추적필터판3 */
+    unsigned int bKsf4 : 1;    /* bit22 추적필터판4 */
+
+    unsigned int bAud : 1;    /* bit6  오디오발생판 */
+    unsigned int bRcv : 1;    /* bit7  PDW 수신판 */
+    unsigned int bPdw : 1;    /* bit2  공용메모리판 */
+    unsigned int bCmm : 1;    /* bit2  공용메모리판 */
+  } x ;
+}  ;
+
+struct STR_ES_CBIT {
+    UNI_RXDF_CBIT sp[ 3 ];
+    UNI_RSA_CBIT rsa;
+} ;
+
 
 /**
  * @brief The STR_RES_DUMP_LIST struct
@@ -107,8 +190,9 @@ union UNI_LAN_DATA {
     // 기존 SONATA 체계 데이터 구조체 정의
     UINT uiMode;
 
+    UNI_ES_IBIT stESIBit;
+
     // 모의 데이터 및 장치 시험용
-    //UDRCPDW strPDW[_MAX_COL_PDW];
     unsigned char szFile[_MAX_LANDATA];
 
 };

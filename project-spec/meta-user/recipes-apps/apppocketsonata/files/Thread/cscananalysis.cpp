@@ -35,7 +35,7 @@ CScanAnalysis::~CScanAnalysis(void)
 /**
  * @brief CScanAnalysis::Run
  */
-void CScanAnalysis::Run()
+void CScanAnalysis::Run(key_t msgQ)
 {
     LOGENTRY;
 
@@ -61,14 +61,14 @@ void CScanAnalysis::_routine()
             perror( "QMsgRcv" );
         }
         else {
-            switch( m_pMsg->ucOpCode ) {
+            switch( m_pMsg->uiOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                 bWhile = false;
                 break;
 
              default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                 break;
             }
         }

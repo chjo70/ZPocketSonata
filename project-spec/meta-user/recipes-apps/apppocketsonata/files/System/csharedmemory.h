@@ -11,9 +11,11 @@
 #include <unistd.h>
 #include <string>
 
+#include "../Include/system.h"
+
 using namespace std;
 
-#define _SHM_MEMORY_KEY         (333)
+
 
 class CSharedMemroy
 {

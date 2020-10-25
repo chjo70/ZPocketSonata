@@ -263,16 +263,16 @@ struct SRxABTData {
 
     int iValidity;
 
-	unsigned int uiTotalOfPDW;
+    unsigned int uiTotalOfPDW;
 
-	int iRadarModeIndex;
-	int iThreatIndex;
+    int iRadarModeIndex;
+    int iThreatIndex;
 
     int iIsManualInput;
 
-	__time32_t tiFinalAlarmTime;
+    __time32_t tiFinalAlarmTime;
 
-	int iStat;
+    int iStat;
 
 }  ;
 #endif

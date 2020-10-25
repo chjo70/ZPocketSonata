@@ -2,6 +2,8 @@
 
 #include "csignalcollect.h"
 
+#include "../Utils/ccommonutils.h"
+
 #define _DEBUG_
 
 
@@ -36,7 +38,7 @@ CEmitterMerge::~CEmitterMerge()
 /**
  * @brief CEmitterMerge::Run
  */
-void CEmitterMerge::Run()
+void CEmitterMerge::Run(key_t key)
 {
     LOGENTRY;
 
@@ -62,7 +64,7 @@ void CEmitterMerge::_routine()
             perror( "QMsgRcv" );
         }
         else {
-            switch( m_pMsg->ucOpCode ) {
+            switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     MergeEmitter();
                     break;
@@ -87,7 +89,7 @@ void CEmitterMerge::_routine()
                     break;
 
                 default:
-                    LOGMSG1( enError, " 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->ucOpCode );
+                    LOGMSG1( enError, " 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
         }
@@ -144,6 +146,11 @@ void CEmitterMerge::MergeEmitter()
         strAnalInfo.uiABTID = m_pTheEmitterMergeMngr->GetABTID();
         SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
+        // 2.3 빔 정보를 제어조종장치에게 전송한다.
+        SendNewUpd();
+
+
+        //
         if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != 0 ) {
             bTrkLOB = true;
         }
@@ -166,6 +173,32 @@ void CEmitterMerge::MergeEmitter()
 
         SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
     }
+
+}
+
+/**
+ * @brief CEmitterMerge::SendAnalResult
+ */
+void CEmitterMerge::SendNewUpd()
+{
+#ifdef _PREBUILD_
+        //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+#else
+    STR_AET stAET;
+    SRxABTData *pSRxABTData;
+
+    pSRxABTData = m_pTheEmitterMergeMngr->GetABTData();
+
+    stAET.aoa = pSRxABTData->fDOAMean;
+
+    if( pSRxABTData->uiCoLOB == _spOne ) {
+        CCommonUtils::SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET) );
+    }
+    else {
+        CCommonUtils::SendLan( esAET_UPD_CCU, & stAET, sizeof(stAET) );
+    }
+
+#endif
 
 }
 

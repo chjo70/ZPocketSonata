@@ -24,7 +24,7 @@ public:
     CMultiServer( int iKeyId, char *pClassName, int iPort );
     virtual ~CMultiServer();
 
-    void Run();
+    void Run( key_t key );
     virtual void _routine();
     virtual const char *ChildClassName() { return m_szClassName; }
 

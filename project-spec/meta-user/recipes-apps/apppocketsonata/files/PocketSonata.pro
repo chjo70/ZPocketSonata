@@ -49,7 +49,9 @@ SOURCES += \
         SQLite/Exception.cpp \
         SQLite/Statement.cpp \
         SQLite/Transaction.cpp \
+        System/csharedmemory.cpp \
         System/csysconfig.cpp \
+        Thread/ccgi.cpp \
         Thread/cdetectanalysis.cpp \
         Thread/cemittermerge.cpp \
         Thread/cjamtech.cpp \
@@ -69,6 +71,7 @@ SOURCES += \
         Utils/csingleserver.cpp \
         Utils/cthread.cpp \
         Utils/cgpio.cpp \
+        Utils/programrev.cpp \
         cmain.cpp
 
 HEADERS += \
@@ -183,7 +186,9 @@ HEADERS += \
     SQLite/Transaction.h \
     SQLite/Utils.h \
     SQLite/VariadicBind.h \
+    System/csharedmemory.h \
     System/csysconfig.h \
+    Thread/ccgi.h \
     Thread/ccollectbank/ccollectbank.h \
     Thread/cdetectanalysis.h \
     Thread/cemittermerge.h \

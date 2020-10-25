@@ -30,11 +30,11 @@ CJamTech::~CJamTech(void)
 /**
  * @brief CJamTech::Run
  */
-void CJamTech::Run()
+void CJamTech::Run(key_t key)
 {
     LOGENTRY;
 
-    CThread::Run();
+    CThread::Run( key );
 
 }
 
@@ -56,7 +56,7 @@ void CJamTech::_routine()
             perror( "QMsgRcv" );
         }
         else {
-        switch( m_pMsg->ucOpCode ) {
+        switch( m_pMsg->uiOpCode ) {
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
                 bWhile = false;
