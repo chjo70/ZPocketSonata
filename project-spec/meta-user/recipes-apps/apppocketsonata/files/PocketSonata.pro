@@ -33,6 +33,7 @@ SOURCES += \
         Anal/SigAnal/MakeAET.cpp \
         Anal/SigAnal/PulExt.cpp \
         Anal/SigAnal/SysPara.cpp \
+        Anal/SigAnal/cencdec.cpp \
         Anal/SigAnal/stdafx.cpp \
         Collect/DataFile/DataFile.cpp \
         Collect/ccollectbank/ccollectbank.cpp \
@@ -96,7 +97,6 @@ HEADERS += \
     Anal/EmitterMerge/Stack.h \
     Anal/INC/AetIPL.h \
     Anal/INC/ErrorMsg.h \
-    Anal/INC/Globals.h \
     Anal/INC/Macros.h \
     Anal/INC/OS.h \
     Anal/INC/PDW.h \
@@ -146,6 +146,7 @@ HEADERS += \
     Anal/SigAnal/_SigAnal.h \
     Anal/SigAnal/_Struct.h \
     Anal/SigAnal/_Type.h \
+    Anal/SigAnal/cencdec.h \
     Anal/TrackSigAnal/KGroup.h \
     Anal/TrackSigAnal/KMakeAET.h \
     Anal/TrackSigAnal/KPulExt.h \

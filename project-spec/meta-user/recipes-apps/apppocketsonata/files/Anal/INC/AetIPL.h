@@ -106,6 +106,16 @@ enum SIGNAL_TYPE
 	ST_MAX
 } ;
 
+
+#ifdef _ELINT_
+const char aet_signal_type[7][3] = { "NP" , "CW" , "DP" , "FM" , "CF", "SH", "AL" };
+#elif defined(_POCKETSONATA_)
+static const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+#else
+static const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+#endif
+
+
 //##ModelId=452B0C5100B9
 enum FREQ_TYPE
 {
@@ -120,6 +130,16 @@ enum FREQ_TYPE
 
     MAX_FRQTYPE
 } ;
+
+#ifdef _ELINT_
+const char aet_freq_type[6][3] = { "--", "F_" , "HP" , "RA" , "PA", "UK" };
+#elif defined(_POCKETSONATA_)
+static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
+#elif defined(_SONATA_)
+static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
+#else
+static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
+#endif
 
 //##ModelId=452B0C510131
 enum PRI_TYPE
@@ -140,6 +160,16 @@ enum PRI_TYPE
 
 
 } ; // Id...
+#ifdef _ELINT_
+const char aet_pri_type[6][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
+#elif defined(_POCKETSONATA_)
+static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
+#elif defined(_SONATA_)
+static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
+#else
+static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
+#endif
+
 //##ModelId=452B0C5101C7
 enum PATTERN_TYPE
 {
@@ -155,6 +185,8 @@ enum PATTERN_TYPE
     //##ModelId=452B0C510221
     MAX_FRQPATTYPE
 } ;   // same with PRI pattern type
+
+
 
 //enum EBUM_FREQ_TYPE { FP_UNKNOWN=0, FP_FIXED, FP_ } ;
 //enum ENUM_FREQ_TYPE { FT_FIXED=0 } ;
@@ -212,6 +244,17 @@ enum SCAN_TYPE
   TYPE_UNKNOWN,
 } ;
 
+#ifdef _ELINT_
+const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
+
+#elif defined(_POCKETSONATA_)
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#elif defined(_SONATA_)
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#else
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#endif
+
 //##ModelId=452B0C5102A4
 enum SCAN_STAT
 {
@@ -230,6 +273,16 @@ enum SCAN_STAT
 	//##ModelId=452B0C5102FE
   All_Fail          = 6
 } ;
+
+#ifdef _ELINT_
+//const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
+#elif defined(_POCKETSONATA_)
+//static const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#elif defined(_SONATA_)
+static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+#else
+static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+#endif
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 기본 AET 구조
@@ -274,7 +327,7 @@ struct STR_MINMAX {
   int mean;
   int min;
   int max;
-  int sdev;
+  // int sdev;
 } ;
 
 struct STR_MINMAX_SDEV {
@@ -362,6 +415,11 @@ struct STR_SYSID {
   UINT noIPL[ _spMaxCoSysAmbi ];
 } ;
 
+#define SZ_MAX_ELNOT			8		// Elint notation 길이
+#define SZ_MAX_EMITTERNAME		8		// 에미터명 길이
+#define SZ_MAX_THREATNAME		8		// 위협명 길이
+
+
 /* AET */
 //##ModelId=452B0C5103E4
 struct STR_AET {
@@ -377,18 +435,13 @@ struct STR_AET {
     UINT priLev;     // 위협 레벨
     STR_SYSID id;         // 식별 결과
     UINT autoWarn;   //
-    UCHAR elintNotation[ 8 ]; //
-    UCHAR emitterName[ 8 ];
-    UCHAR threatName[ 8];
+    UCHAR elintNotation[ SZ_MAX_ELNOT ]; //
+    UCHAR emitterName[ SZ_MAX_EMITTERNAME ];
+    UCHAR threatName[ SZ_MAX_THREATNAME];
     UINT cat;
     UINT fof;
 
 } ;
-
-#define SZ_MAX_ELNOTE			5		// Elint notation 길이
-#define SZ_MAX_EMITTERNAME		8		// 에미터명 길이
-#define SZ_MAX_THREATNAME		8		// 위협명 길이
-
 
 struct stEmitterNo {
 	unsigned char	Class;						// 구분(N/U/D, 적아)
@@ -421,7 +474,7 @@ struct STR_CVIAET {
 	unsigned char	Platform;								// Platform
 	unsigned short Prt;										// 우선순위
 	unsigned char	Range;									// 개략거리
-	char ELNote[SZ_MAX_ELNOTE];						// ELNOTE
+        char ELNote[SZ_MAX_ELNOT];						// ELNOTE
 	char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
 	char ThreatName[SZ_MAX_THREATNAME];		// 위협명
 	stContactTime	ContactTime;						// 접촉 시간
@@ -616,6 +669,9 @@ struct STR_NEWAET {
 }  ;
 #elif defined(_POCKETSONATA_)
 typedef struct SRxLOBData STR_NEWAET;
+#elif defined(_SONATA_)
+typedef struct SRxLOBData STR_NEWAET;
+
 #endif
 
 //##ModelId=452B0C5200E3

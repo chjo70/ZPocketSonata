@@ -17,7 +17,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
-    strcpy( szSQLiteFileName, getenv("HOME") );
+    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
     //Init();
@@ -184,12 +184,62 @@ void CEmitterMerge::SendNewUpd()
 #ifdef _PREBUILD_
         //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
 #else
+    int i;
     STR_AET stAET;
     SRxABTData *pSRxABTData;
+    SELABTDATA_EXT *m_pABTExtData;
 
     pSRxABTData = m_pTheEmitterMergeMngr->GetABTData();
+    m_pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
 
-    stAET.aoa = pSRxABTData->fDOAMean;
+    // AET로 변환
+    memset( & stAET, 0, sizeof(stAET) );
+
+    stAET.aoa = SONATA::ENCODE::DOA( pSRxABTData->fDOAMean );
+    stAET.noEMT = pSRxABTData->uiABTID;
+    stAET.sigType = pSRxABTData->iSignalType;
+
+    stAET.frq.band = 0;
+    stAET.frq.type = pSRxABTData->iFreqType;
+    stAET.frq.mean = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMean );
+    stAET.frq.min = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMin );
+    stAET.frq.max = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMax );
+    stAET.frq.patType = pSRxABTData->iFreqPatternType;
+    stAET.frq.patPrd = SONATA::ENCODE::TOA( pSRxABTData->fFreqPatternPeriodMean );
+    stAET.frq.swtLev = pSRxABTData->iFreqPositionCount;
+    for( i=0 ; i < stAET.frq.swtLev; ++i ) {
+        stAET.frq.swtVal[i] = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqSeq[i] );
+    }
+
+    stAET.pri.type = pSRxABTData->iPRIType;
+    stAET.pri.mean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
+    stAET.pri.min = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
+    stAET.pri.max = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
+    stAET.pri.patType = pSRxABTData->iPRIPatternType;
+    stAET.pri.jtrPer = pSRxABTData->fPRIJitterRatio;
+    stAET.pri.swtLev = pSRxABTData->iPRIPositionCount;
+    for( i=0 ; i < stAET.pri.swtLev; ++i ) {
+        stAET.pri.swtVal[i] = SONATA::ENCODE::TOA( pSRxABTData->fPRISeq[i] );
+    }
+
+    stAET.pw.mean = SONATA::ENCODE::PW( pSRxABTData->fPWMean );
+    stAET.pw.min = SONATA::ENCODE::PW( pSRxABTData->fPWMin );
+    stAET.pw.max = SONATA::ENCODE::PW( pSRxABTData->fPWMax );
+
+    stAET.pa.mean = SONATA::ENCODE::PA( pSRxABTData->fPAMean );
+    stAET.pa.min = SONATA::ENCODE::PA( pSRxABTData->fPAMin );
+    stAET.pa.max = SONATA::ENCODE::PA( pSRxABTData->fPAMax );
+
+    stAET.seen.frst = pSRxABTData->tiFirstSeenTime;
+    stAET.seen.last = pSRxABTData->tiLastSeenTime;
+
+    stAET.priLev = pSRxABTData->iRadarModePriority;
+    strncpy( (char *) stAET.elintNotation, m_pTheEmitterMergeMngr->GetELNOT( pSRxABTData->iRadarModeIndex ), sizeof(stAET.elintNotation) );
+    strncpy( (char *) stAET.emitterName, m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex ), sizeof(stAET.emitterName) );
+    strncpy( (char *) stAET.threatName, m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex ), sizeof(stAET.threatName) );
+
+    stAET.id.coAmbi = min( m_pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
+    memcpy( stAET.id.noIPL, m_pABTExtData->idInfo.nRadarModeIndex, sizeof(int) * stAET.id.coAmbi );
 
     if( pSRxABTData->uiCoLOB == _spOne ) {
         CCommonUtils::SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET) );

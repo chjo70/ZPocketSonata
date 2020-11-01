@@ -52,7 +52,6 @@ CParamMngr::CParamMngr(void)
 	,m_uiNumOfPDWPerFetch(80)
 	,m_uiNumOfLOBPerFetch_Supervisor(50)
 	,m_uiNumOfPDWPerFetch_Supervisor(50)
-
     ,m_bIsValidLOB(false)
 
 {
@@ -64,11 +63,11 @@ CParamMngr::CParamMngr(void)
 
 void CParamMngr::LoadParameter()
 {
-	char readBuf[100] = {0};
+    //char readBuf[100] = {0};
 
-	char envini_path[100] = "RadarAnl.ini";
-	CString	strTemp = _T("");
-	int iPort = 0;
+    //char envini_path[100] = "RadarAnl.ini";
+    //CString	strTemp = _T("");
+    //int iPort = 0;
 
 
 }
@@ -97,8 +96,8 @@ void CParamMngr::ReleaseInstance()
 
 int CParamMngr::GetPdwRawDataSendParam()
 {
-	char readBuf[100] = {0};
-	char *envini_path = (".\\..\\COMMON\\TestConfig.ini");
+    //char readBuf[100] = {0};
+    //char *envini_path = (".\\..\\COMMON\\TestConfig.ini");
 		
     //GetPrivateProfileString(("ELINT_PDW_RAW_DATA_SEND"), ("PDW_RAW_DATA_SEND"), NULL, readBuf, _countof(readBuf), envini_path);
     //m_nRawPdwSend = _ttoi(readBuf);
@@ -108,8 +107,8 @@ int CParamMngr::GetPdwRawDataSendParam()
 
 int CParamMngr::GetNumOfPdwProcessing()
 {
-	char readBuf[100] = {0};
-	char *envini_path = (".\\..\\COMMON\\TestConfig.ini");
+    //char readBuf[100] = {0};
+    //char *envini_path = (".\\..\\COMMON\\TestConfig.ini");
 
     //GetPrivateProfileString(("NUM_OF_PDW_PROCESSING"), ("NUM_OF_PDW"), NULL, readBuf, _countof(readBuf), envini_path);
     //m_nNumOfPdwProcessing = _ttoi(readBuf);

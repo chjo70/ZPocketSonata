@@ -849,7 +849,7 @@ bool CLOBClustering::CalOptimalCluster( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 	STR_LOBCLUSTER *pCluster=NULL;
 	m_nOptimalCluster = 0;
-	memset( m_pOptimalCluster, NULL, sizeof(m_pOptimalCluster) );
+    memset( m_pOptimalCluster, 0, sizeof(m_pOptimalCluster) );
 
 	if( m_nClusters >= _spOne ) {
 		pCluster = m_pCluster;

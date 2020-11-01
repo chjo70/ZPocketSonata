@@ -148,22 +148,13 @@ private:
     SELLOBDATA_EXT m_LOBDataExt;							///< LOB 추가 정보
     SELLOBDATA_EXT m_ABTDataExt;							///< 빔 추가 정보
 
-
-// 	SELLOBDATA_EXT m_AETDataExt;							///< 방사체 추가 정보
-// 
-// 	CSysPara m_theSysPara;										///< 병합 관련 시스템 변수
-// 
-// 	int m_nFreqBand;													///< 주파수 대역
-// 
     // 미식별 관련 ELNOT 만들기
     char m_szH0000[H0000_SIZE];								///< 미식별 ELNOT 정보
-// 	char m_szELNOT[H0000_SIZE];								///< 미식별된 에미터의 대체 ELNOT명 저장
 
     int m_iH000;															///< 미식별 번호
     unsigned short *m_pABTtoH000;								///< 미 식별 번호 테이블
-// 	unsigned int m_nABTOffset;								///< 0으로 만들기 위한 ABT 옵셑 값
-// 
-// 	// 방사체/빔 병합처리 멤버 변수 정의
+
+    // 방사체/빔 병합처리 멤버 변수 정의
     CELThreat *m_pMergeThreatAET;								///< 변경할 방사체 위협
     CELThreat *m_pMergeThreatABT;							///< 변경할 빔 위협
     CELThreat *m_pDeleteThreatAET;							///< 삭제할 방사체 위협
@@ -509,6 +500,9 @@ public:
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
+    char *GetELNOT( int iRadarModeIndex );
+    char *GetRadarModeName( int iRadarModeIndex );
+
 // 
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }
 // 	inline char *GetELNOTFromGenNewEmitter() { return m_szELNOTFromGenNewEmitter; }
@@ -531,6 +525,9 @@ public:
 // 	int GetEquipNumber( STR_CEDEOBID_INFO *pCEDEOBInfo );
 // 
 // 	void EnableToLoadCEDEOBLibrary() { ++ m_nLoadCEDEOBLibrary; }
+
+
+
     void ResetToLoadCEDEOBLibrary() { m_nLoadCEDEOBLibrary=_spOne; }
     void DisableToLoadCEDEOBLibrary();
 
@@ -538,6 +535,7 @@ public:
     void PrintAllABTData();
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
+    inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
 

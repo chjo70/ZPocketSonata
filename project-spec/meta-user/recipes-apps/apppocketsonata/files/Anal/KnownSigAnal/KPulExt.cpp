@@ -390,8 +390,15 @@ int CKPulExt::GetCoPdw()
 }
 
 
+/**
+ * @brief CKPulExt::CheckHarmonic
+ * @param priMean1
+ * @param priMean2
+ * @param uiThreshold
+ * @return
+ */
 UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {
     return m_pKnownSigAnal->CheckHarmonic( priMean1, priMean2, uiThreshold );
-
 }
+

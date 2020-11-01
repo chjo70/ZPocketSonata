@@ -358,7 +358,7 @@ void CNPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_c
 //! \author   조철희
 //! \param	  pPdwIndex	인자형태 PDWINDEX *
 //! \param	  count	인자형태 int
-//! \param	  pRange	인자형태 STR_MINMAX *
+//! \param	  pRange	인자형태 STR_MINMAX_TOA *
 //! \return   void
 //! \version  1.37
 //! \date     2006-07-27 17:16:36

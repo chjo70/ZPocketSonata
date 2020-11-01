@@ -1,8 +1,9 @@
 #ifndef CSYSCONFIG_H
 #define CSYSCONFIG_H
 
-#include "../Include/system.h"
+#include "../Anal/INC/system.h"
 
+#include "../MinIni/minIni.h"
 #include "csharedmemory.h"
 
 struct STR_SYSCONFIG {
@@ -44,6 +45,8 @@ private:
 
     STR_SYSCONFIG m_strConfig;
 
+    minIni m_theMinIni;
+
 public:
     CSysConfig(void);
     virtual ~CSysConfig(void);
@@ -53,6 +56,7 @@ public:
 
 private:
     void InitVar();
+    void LoadINI();
 
 public:
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };

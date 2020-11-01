@@ -23,24 +23,36 @@ CSharedMemroy::CSharedMemroy( key_t key )
 
 }
 
+/**
+ * @brief CSharedMemroy::~CSharedMemroy
+ */
 CSharedMemroy::~CSharedMemroy()
 {
 
 }
 
-
+/**
+ * @brief CSharedMemroy::setShmId
+ * @param id
+ */
 void CSharedMemroy::setShmId( int id )
 {
     m_shmid = id;
 }
 
-
+/**
+ * @brief CSharedMemroy::setKey
+ * @param key
+ */
 void CSharedMemroy::setKey( key_t key )
 {
     m_key = key;
 }
 
-
+/**
+ * @brief CSharedMemroy::setupSharedMemory
+ * @param iSize
+ */
 void CSharedMemroy::setupSharedMemory( int iSize )
 {
    // Setup shared memory, 11 is the size

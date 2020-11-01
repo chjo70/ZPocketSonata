@@ -550,6 +550,17 @@ PA_RESOL gPaRes[ 6 ] =
     {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
 } ;
 
+#elif defined(_SONATA_)
+#define _AOARes                 ( (float) (360./512.) )
+  FREQ_RESOL gFreqRes[ 3 ] =
+  {
+      {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+      { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+      { 5866, 18740, 5866, 1.5   }
+  } ;
+
+
+
 #else
 
 #endif

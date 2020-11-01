@@ -113,7 +113,7 @@ void usrAppStart()
         g_pTheCCUSocket = new CSingleServer( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT );
         g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 
-        g_pThePMCSocket = new CSingleServer( g_iKeyId++, (char *)"CPMCSocket", CCU_PORT );
+        g_pThePMCSocket = new CSingleServer( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT );
         g_pThePMCSocket->Run( _MSG_CCU_KEY );
     }
 

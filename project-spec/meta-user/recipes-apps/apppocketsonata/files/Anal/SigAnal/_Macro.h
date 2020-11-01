@@ -9,43 +9,9 @@
 
 #include "../INC/PDW.h"
 
-#ifdef _MAIN_GLOBALS_
-float _spOneSec;
-float _spOneMilli;
-float _spOneMicrosec;
-float _spOneNanosec;
-
-float _spAMPres;
-float _spAOAres;
-float _spTOAres;
-float _spPWres;
-
-float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
-float _frqRes[2] = { (float) 0.117, (float) 65.104167 } ;
-
-int _spAnalMinPulseCount;
-
-#else
-extern float _spOneSec;
-extern float _spOneMilli;
-extern float _spOneMicrosec;
-extern float _spOneNanosec;
-
-extern float _spAMPres;
-extern float _spAOAres;
-extern float _spTOAres;
-extern float _spPWres;
-
-extern float _toaRes[en50MHZ_BW+1];
-extern float _frqRes[2];
-
-extern int _spAnalMinPulseCount;
-
-#endif
-
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
-#define UDIV( A, B )            (int) ( (float) (A) / (float) (B) + 0.5 )
+#define UDIV( A, B )            (unsigned int) ( (float) (A) / (float) (B) + 0.5 )
 #define NDIV( A, B )            (int) ( (float) (A) / (float) (B) - 0.5 )
 
 #define F_NDIV( A, B )          (UINT) ( (float) (A) / (float) (B) - 0.5 )
@@ -127,6 +93,7 @@ T _diffabs( T x, T y)
 #define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
 #define FRQMhzCNV( A, B )		IMUL( (B), ( gFreqRes[(A)].res ) )
 #define IFRQMhzCNV( A )         IDIV( (A), ( gFreqRes[0].res ) )
+#define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].res ) )
 
 #define IFRQMhzLOW( A )         F_IDIV( (A), ( gFreqRes[0].res ) )
 #define IFRQMhzHGH( A )         C_IDIV( (A), ( gFreqRes[0].res ) )
@@ -145,7 +112,7 @@ T _diffabs( T x, T y)
 #define IPWCNVLOW( A )			F_MUL( (A), _spOneNanosec )
 #define IPWCNVHGH( A )			C_MUL( (A), _spOneNanosec )
 
-#define AOACNV( A )             IMUL( (A), _spAOAres )
+#define AOACNV( A )             FMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
 #define FAOACNV( A )            (float) ( (float) A * _spAOAres )
 
@@ -159,6 +126,44 @@ T _diffabs( T x, T y)
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 
+#elif defined(_SONATA_)
+#define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
+#define F_FRQCNV( A, B )            (UINT) ( F_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
+#define C_FRQCNV( A, B )            (UINT) ( C_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
+#define FRQMhzCNV( A, B )           IMUL( (B), ( gFreqRes[(A)].res ) )
+#define IFRQMhzCNV( A )             IDIV( (A), ( gFreqRes[0].res ) )
+#define IFRQCNV( A, B )             IDIV( (A), ( gFreqRes[0].res ) )
+
+#define IFRQMhzLOW( A )             F_IDIV( (A), ( gFreqRes[0].res ) )
+#define IFRQMhzHGH( A )             C_IDIV( (A), ( gFreqRes[0].res ) )
+
+#define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
+#define TOAmsCNV( A )           IDIV( (A), _spOneMilli )
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+
+#define PWCNV( A )				IDIV( A, _spOneNanosec )
+#define IPWCNV( A )				IMUL( (A), _spOneNanosec )
+#define FPWCNV( A )             FMUL( (A), _spOneNanosec )
+
+#define IPWCNVLOW( A )			F_MUL( (A), _spOneNanosec )
+#define IPWCNVHGH( A )			C_MUL( (A), _spOneNanosec )
+
+#define AOACNV( A )             FMUL( (A), _spAOAres )
+#define IAOACNV( A )            IDIV( (A), _spAOAres )
+#define FAOACNV( A )            (float) ( (float) A * _spAOAres )
+
+#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
+#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
+
+#define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
+#define IPACNV( A )				FDIV( (A), _spAMPres )
+#define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
+
+#define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 
 
 #else
@@ -263,6 +268,80 @@ extern "C"
 #endif
 
 #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
+
+#endif
+
+
+void _InitResolution();
+
+#ifdef _MAIN_GLOBALS_
+float _spOneSec;
+float _spOneMilli;
+float _spOneMicrosec;
+float _spOneNanosec;
+
+float _spAMPres;
+float _spAOAres;
+float _spTOAres;
+float _spPWres;
+
+float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+float _frqRes[2] = { (float) 0.117, (float) 65.104167 } ;
+
+int _spAnalMinPulseCount;
+
+void _InitResolution()
+{
+#ifdef _ELINT_
+    m_enBandWidth = pPDWData->enBandWidth;
+
+    _spOneSec = FDIV( 1000000000, _toaRes[m_enBandWidth] );
+    _spOneMilli = FDIV( 1000000, _toaRes[m_enBandWidth] );
+    _spOneMicrosec = FDIV( 1000, _toaRes[m_enBandWidth] );
+    _spOneNanosec = FDIV( 1, _toaRes[m_enBandWidth] );
+
+    _spAOAres = (float) 0.01;
+    _spAMPres = (float) (0.25);
+    _spPWres = _spOneMicrosec;
+
+#elif defined(_POCKETSONATA_)
+    _spOneSec = FDIV( 1000000000, 6.48824007 );
+    _spOneMilli = FDIV( 1000000, 6.48824007 );
+    _spOneMicrosec = FDIV( 1000, 6.48824007 );
+    _spOneNanosec = FDIV( 1, 6.48824007 );
+
+    _spAOAres = (float) ( 0.351562 );
+    _spAMPres = (float) (0.351562);
+    _spPWres = _spOneMicrosec;
+
+#elif defined(_SONATA_)
+    _spOneSec = 20000000.;
+    _spOneMilli = FDIV( _spOneSec, 1000. );
+    _spOneMicrosec = FDIV( _spOneMilli, 1000. );
+    _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
+
+    _spAOAres = (float) ( 0.351562 );
+    _spAMPres = (float) (0.351562);
+    _spPWres = (float) ( 50 );
+
+#endif
+}
+
+#else
+extern float _spOneSec;
+extern float _spOneMilli;
+extern float _spOneMicrosec;
+extern float _spOneNanosec;
+
+extern float _spAMPres;
+extern float _spAOAres;
+extern float _spTOAres;
+extern float _spPWres;
+
+extern float _toaRes[en50MHZ_BW+1];
+extern float _frqRes[2];
+
+extern int _spAnalMinPulseCount;
 
 #endif
 

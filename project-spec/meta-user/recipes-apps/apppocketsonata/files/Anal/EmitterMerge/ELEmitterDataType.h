@@ -2011,8 +2011,8 @@ struct SELABTDATA_EXT {
 	double dPECoVar[4];
 
 	float fLastAOA;
-        float fRadarLatitude;
-        float fRadarLongitude;
+    float fRadarLatitude;
+    float fRadarLongitude;
 
 	// 수동 편집 여부
         bool bIsManualEdited;
@@ -2039,8 +2039,6 @@ struct SELABTDATA_EXT {
     float fManualLatitude;
     float fManualLongitude;
 
-
-
 	//SLOBOtherInfo stLOBOtherInfo;
 
 	int iLOBPoolIndex;
@@ -2064,8 +2062,8 @@ struct SELABTDATA_EXT {
 
 	UINT uiPE;
 	bool bFullOfPE;
-        double dLatitude[MAX_OF_LOBS_PE];
-        double dLongitude[MAX_OF_LOBS_PE];
+    double dLatitude[MAX_OF_LOBS_PE];
+    double dLongitude[MAX_OF_LOBS_PE];
 	double dEasting[MAX_OF_LOBS_PE];
 	double dNorthing[MAX_OF_LOBS_PE];
 

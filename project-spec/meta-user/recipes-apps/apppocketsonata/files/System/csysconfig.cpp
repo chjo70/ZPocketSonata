@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "csysconfig.h"
 
@@ -20,17 +21,15 @@ extern void ProgramRevision( void );
 
 CSysConfig::CSysConfig(void)
 {
+
     // 공유 메모리 설정
     m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
 
     InitVar();
 
-    SetMinAnalPulse( _spAnalMinPulseCount );
-    SetProgramVersion( _GetProgramVersion() );
+    LoadINI();
 
-    float fRxThreshold[5] = { -60, -55, -55, -60, -70 };
 
-    SetRxThreshold( fRxThreshold );
 
 }
 
@@ -66,6 +65,47 @@ void CSysConfig::ReleaseInstance()
         delete m_pInstance;
         m_pInstance = NULL;
     }
+}
+
+/**
+ * @brief CSysConfig::LoadINI
+ */
+void CSysConfig::LoadINI()
+{
+    int i;
+    string strValue;
+    char szHomeDirectory[100];
+
+    float fRxThreshold[5];
+
+    // INI 파일 로딩하기
+    strcpy( szHomeDirectory, getenv("HOME") );
+    strcat( szHomeDirectory, INI_FILENAME );
+
+    m_theMinIni.setfilename( szHomeDirectory );
+    //m_theMinIni.put( "RXTHRESHOLD" , "Band1" , "-70.0" );
+
+    // RX Threshold 값 로딩
+    i = 0;
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band1" , "-60.0" );
+    fRxThreshold[i++] = atof( strValue.c_str() );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band2" , "-65.0" );
+    fRxThreshold[i++] = atof( strValue.c_str() );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band3" , "-65.0" );
+    fRxThreshold[i++] = atof( strValue.c_str() );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band4" , "-64.0" );
+    fRxThreshold[i++] = atof( strValue.c_str() );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band5" , "-60.0" );
+    fRxThreshold[i++] = atof( strValue.c_str() );
+
+    SetRxThreshold( fRxThreshold );
+
+    // 최소 펄스 개수
+    strValue = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _spAnalMinPulseCount );
+    SetMinAnalPulse( _spAnalMinPulseCount );
+
+    // 프로그램 버젼 정보
+    SetProgramVersion( _GetProgramVersion() );
 }
 
 /**

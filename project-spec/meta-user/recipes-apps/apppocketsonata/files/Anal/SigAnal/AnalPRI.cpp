@@ -4694,7 +4694,7 @@ _TOA CAnalPRI::CheckFramePRI(STR_EMITTER *pEmitter)
     for( i=0 ; i < m_nRefFramePri ; ++i ) {
         // coPdw = m_pNewSigAnal->ExtractFramePri( & m_pSeg[ pEmitter->main_seg ].pdw, m_RefFramePri[i] );
         coPdw = ExtractFramePri( & pEmitter->pdw, m_pRefFramePri[i] );
-        printf( "[%d, %d]" , m_pRefFramePri[i], coPdw );
+        printf( "[%lld, %d]" , m_pRefFramePri[i], coPdw );
         if( max <= coPdw ) {
             max_index = i;
             max = coPdw;

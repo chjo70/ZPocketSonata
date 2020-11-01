@@ -20,7 +20,6 @@ Build-PocketSonata*/
 *.sqlite3
 *.swp
 
-*_cgi
 *.pro.user
 
 

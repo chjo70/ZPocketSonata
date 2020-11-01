@@ -30,7 +30,6 @@
 #include "thrmsg.h"
 #include "global.h"
 
-
 //#include "../Utils/ccommonutils.h"
 
 //#include "../Utils/stdstring.h"

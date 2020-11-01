@@ -50,6 +50,10 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define _spTimeNsRes						(25)
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
+#elif defined(_SONATA_)
+#define _spTimeNsRes						(25)
+#define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
+
 #else
 #define ONE_SEC									(20000000)					// 1 sec  / 25 ns */
 #define _spTimeres              (20000000)					// 1 sec / 50 ns */
@@ -82,6 +86,10 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 //#define   _spPWres        (25.)						// pw res.
 
 #elif defined(_POCKETSONATA_)
+#define _spAOAmax           0x400
+#define _spAmpmax           0xFF
+
+#elif defined(_SONATA_)
 #define _spAOAmax           0x400
 #define _spAmpmax           0xFF
 

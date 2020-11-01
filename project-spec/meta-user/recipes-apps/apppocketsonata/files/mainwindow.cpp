@@ -1,4 +1,6 @@
 
+#include <stdlib.h>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -13,9 +15,28 @@
 enum enTableHeader {
     enNo=0,
     enNoAET,
+    enFirstSeen,
+    enLastSeen,
+    enPriority,
+    enELNOT,
+
+    enSIGTYPE,
     enAOA,
+    enFREQ,
+    enPRI,
+    enPW,
+    enPA,
+    enSCAN,
+    enEMITTER,
+    enTHREAT,
+    enID,
+
+    enMax
 } ;
 
+char szTableHeader[enMax][30] = { "번호", "#", "최초접촉", "최근접촉", "위협도", "ELNOT", "신호형태", "방위[도]", "주파수[MHz]", "PRI[us]", "펄스폭[ns]", "신호세기[dBm]", "스캔", "에미터명", "위협명", "식별" } ;
+
+void _InitResolution();
 
 
 
@@ -27,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    int i;
+
     ui->setupUi(this);
 
     ui->spinBoxStartAddress->setRange(UINT_MAX);
@@ -38,11 +61,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect( & m_theTcpSocket, SIGNAL(error()), this, SLOT(onError()));
 
     QStringList aettableHeader;
-    aettableHeader << "번호" << "AET#" << "방위";
-    ui->aettableWidget->setColumnCount( 100 );
+
+    for( i=0 ; i < enMax ; ++i ) {
+        aettableHeader << szTableHeader[i];
+    }
+
+    ui->aettableWidget->setColumnCount( enMax );
     ui->aettableWidget->setHorizontalHeaderLabels( aettableHeader );
 
+    ui->aettableWidget->horizontalHeader()->setStyleSheet( "QHeaderView::section {background-color:#404040;color:#FFFFFF;}" );
+
     vTable.clear();
+
+    _InitResolution();
+
+    m_nCoList = 0;
 
 }
 
@@ -75,6 +108,8 @@ void MainWindow::onReadyRead()
 void MainWindow::on_pushButton_clicked()
 {
     bool bConnected;
+    int iTotalRow, iRow;
+
     nextBlockSize = 0;
 
     if( m_bConnect == false ) {
@@ -82,13 +117,17 @@ void MainWindow::on_pushButton_clicked()
         m_theTcpSocket.connectToHost(QHostAddress::LocalHost, CCU_PORT );
         bConnected = m_theTcpSocket.waitForConnected();
 
-        ui->aettableWidget->clear();
+        //ui->aettableWidget->clear();
+        iTotalRow = ui->aettableWidget->rowCount();
+        for( iRow=0 ; iRow < iTotalRow ; ++iRow ) {
+            ui->aettableWidget->removeRow( iRow );
+        }
 
         if( bConnected == false ) {
             m_theTcpSocket.connectToHost( "zcu111.com", CCU_PORT );
         }
 
-
+        m_nCoList = 0;
     }
     else {
         m_theTcpSocket.close();
@@ -282,15 +321,15 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
         break;
 
     case esAET_NEW_CCU :
-        InsertTable( pByteData );
+        InsertAETTable( pByteData );
         break;
 
     case esAET_UPD_CCU :
-        UpdateTable( pByteData );
+        UpdateAETTable( pByteData );
         break;
 
     case esAET_DEL_CCU :
-        DeleteTable( pByteData );
+        DeleteAETTable( pByteData );
         break;
 
     default :
@@ -305,12 +344,10 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
  * @brief MainWindow::InsertTable
  * @param pByteData
  */
-void MainWindow::InsertTable( void *pByteData )
+void MainWindow::InsertAETTable( void *pByteData )
 {
     STR_AET *pAET;
     STR_LIST_TABLE stListTable;
-
-    QString qTemp;
 
     pAET = ( STR_AET *) pByteData;
 
@@ -320,31 +357,126 @@ void MainWindow::InsertTable( void *pByteData )
 
     stListTable.iIndexOfTable = ui->aettableWidget->rowCount() - 1;
 
-    qTemp.sprintf( "1" );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
+    ++ m_nCoList;
+
+    UpdateRow( ui->aettableWidget, );
 
     vTable.push_back( stListTable );
 
+}
+
+void MainWindow::UpdateRow()
+{
+    QString qTemp;
+
+    struct tm *pTm;
+
+
+    qTemp.sprintf( "%d", m_nCoList );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
+    qTemp.sprintf( "%d", pAET->noEMT );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
+    qTemp.sprintf( "%s", aet_signal_type[pAET->sigType] );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enSIGTYPE, new QTableWidgetItem(qTemp) );
+    qTemp.sprintf( "%.1f", SONATA::DECODE::DOA( pAET->aoa ) );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
+    if( pAET->frq.type == _PATTERN_AGILE ) {
+        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::TOA(pAET->frq.patPrd), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
+    }
+    else {
+        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
+    }
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enFREQ, new QTableWidgetItem(qTemp) );
+
+    if( pAET->pri.type == _JITTER_PATTERN ) {
+        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA(pAET->pri.patPrd), SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA(pAET->pri.min), SONATA::DECODE::TOA(pAET->pri.max) );
+    }
+    else {
+        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA( pAET->pri.min ), SONATA::DECODE::TOA( pAET->pri.max ) );
+    }
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPRI, new QTableWidgetItem(qTemp) );
+
+    qTemp.sprintf( "%7.0f(%.0f,%.0f)", SONATA::DECODE::PW( pAET->pw.mean ), SONATA::DECODE::PW(pAET->pw.min), SONATA::DECODE::PW(pAET->pw.max) );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPW, new QTableWidgetItem(qTemp) );
+
+    qTemp.sprintf( "%7.1f(%.1f,%.1f)", SONATA::DECODE::PA( pAET->pa.mean ), SONATA::DECODE::PA(pAET->pa.min), SONATA::DECODE::PA(pAET->pa.max) );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPA, new QTableWidgetItem(qTemp) );
+
+    if( pAET->as.type == CONICAL ) {
+        qTemp.sprintf( "%s %s%7.1f", aet_asp_stat_ch[pAET->as.stat], aet_asp_type_ch[pAET->as.type], SONATA::DECODE::TOA(pAET->as.prd) );
+    }
+    else {
+        qTemp.sprintf( "%s %s%7.1f", aet_asp_stat_ch[pAET->as.stat], aet_asp_type_ch[pAET->as.type], SONATA::DECODE::TOA(pAET->as.prd) );
+    }
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enSCAN, new QTableWidgetItem(qTemp) );
+
+    pTm = localtime( & pAET->seen.frst );
+    qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enFirstSeen, new QTableWidgetItem(qTemp) );
+
+    pTm = localtime( & pAET->seen.last );
+    qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enLastSeen, new QTableWidgetItem(qTemp) );
+
+    qTemp.sprintf( "%d", pAET->priLev );
+    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPriority, new QTableWidgetItem(qTemp) );
+
+    if( pAET->id.coAmbi != 0 ) {
+        qTemp.sprintf( "%s", pAET->elintNotation );
+        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enELNOT, new QTableWidgetItem(qTemp) );
+
+        qTemp.sprintf( "%s", pAET->emitterName );
+        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enEMITTER, new QTableWidgetItem(qTemp) );
+
+        qTemp.sprintf( "%s", pAET->threatName );
+        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enTHREAT, new QTableWidgetItem(qTemp) );
+
+        qTemp.sprintf( "%d(%d,%d,%d)", pAET->id.coAmbi, pAET->id.noIPL[0], pAET->id.noIPL[1], pAET->id.noIPL[2] );
+        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enID, new QTableWidgetItem(qTemp) );
+    }
+    else {
+
+    }
+
+    ui->aettableWidget->resizeColumnsToContents();
 }
 
 /**
  * @brief MainWindow::UpdateTable
  * @param pByteData
  */
-void MainWindow::UpdateTable( void *pByteData )
+void MainWindow::UpdateAETTable( void *pByteData )
 {
+    int i;
+    int iTotalRowCount = ui->aettableWidget->rowCount();
 
+    STR_AET *pAET;
+
+    QString qStrNoAET;
+
+    pAET = ( STR_AET *) pByteData;
+
+    qStrNoAET.sprintf( "%d", pAET->noEMT );
+
+    for( i=0 ; i < iTotalRowCount ; ++i ) {
+        QString qString;
+
+        qString = ui->aettableWidget->item(i, enNoAET )->text();
+
+        if( qString == qStrNoAET ) {
+
+        }
+
+    }
 }
 
 /**
  * @brief MainWindow::DeleteTable
  * @param pByteData
  */
-void MainWindow::DeleteTable( void *pByteData )
+void MainWindow::DeleteAETTable( void *pByteData )
 {
-
+    -- m_nCoList;
 }
 
 /**

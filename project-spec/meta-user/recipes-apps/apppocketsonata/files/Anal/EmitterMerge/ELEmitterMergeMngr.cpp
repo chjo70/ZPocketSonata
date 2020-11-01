@@ -147,7 +147,7 @@ void CELEmitterMergeMngr::AllocMemory()
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
-    strcpy( szSQLiteFileName, getenv("HOME") );
+    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
@@ -2801,7 +2801,7 @@ void CELEmitterMergeMngr::IdentifyABT( SRxABTData *pABTData, SELABTDATA_EXT *pAB
 {
 
     //m_ABTDataExt.aetAnal.iTaskType = m_pLOBData->iTaskType;
-    m_pIdentifyAlg->Identify( pABTData, pABTExtData, & m_ABTDataExt, false );
+    m_pIdentifyAlg->Identify( pABTData, pABTExtData, & m_LOBDataExt, false );
 
     /*
     if( m_pLOBData->aucRadarName[0] != 0 ) {
@@ -10944,4 +10944,48 @@ SRxABTData *CELEmitterMergeMngr::GetABTData( unsigned int uiAETID, unsigned int 
 
     pABTTheThreat = m_pTheThreatRoot->Find( uiAETID, uiABTID );
     return GetABTData( pABTTheThreat->m_nIndex );
+}
+
+/**
+ * @brief CELEmitterMergeMngr::GetELNOT
+ * @param iRadarModeIndex
+ * @return
+ */
+char *CELEmitterMergeMngr::GetELNOT( int iRadarModeIndex )
+{
+    char *pszELNOT;
+    SRadarMode *pSRadarMode;
+
+    pSRadarMode = m_pIdentifyAlg->GetRadarMode( iRadarModeIndex );
+
+    if( pSRadarMode != NULL ) {
+        pszELNOT = pSRadarMode->szELNOT;
+    }
+    else {
+        pszELNOT = NULL;
+    }
+
+    return pszELNOT;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::GetRadarModeName
+ * @param iRadarModeIndex
+ * @return
+ */
+char *CELEmitterMergeMngr::GetRadarModeName( int iRadarModeIndex )
+{
+    char *pszELNOT;
+    SRadarMode *pSRadarMode;
+
+    pSRadarMode = m_pIdentifyAlg->GetRadarMode( iRadarModeIndex );
+
+    if( pSRadarMode != NULL ) {
+        pszELNOT = pSRadarMode->szRadarModeName;
+    }
+    else {
+        pszELNOT = NULL;
+    }
+
+    return pszELNOT;
 }

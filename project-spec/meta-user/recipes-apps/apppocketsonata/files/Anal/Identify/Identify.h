@@ -17,24 +17,15 @@
 #include "define.h"
 #include "structs.h"
 #include "../SigAnal/_Macro.h"
-//#include "../EmitterMerge/_common.h"
 
-//#include "../EmitterMerge/RawFile.h"
-// #include "../../DEFINE/ELStringDefn.h"
 
 #include "../EmitterMerge/PositionEstimationAlg.h"
  
 #include "../EmitterMerge/ELGMIMsgDefn.h"
 #include "../EmitterMerge/ELEmitterDataType.h"
 #include "../EmitterMerge/ELPosEstDataType.h"
-//#include "../EmitterMerge/ELSignalIdentificationOptionDataType.h"
-//#include "../EmitterMerge/ELCEDLibDataType.h"
-//#include "../EmitterMerge/ELCEDLibDataType2.h"
-//#include "../EmitterMerge/ELEOBLibDataType.h"
 #include "../EmitterMerge/ELOperationCtrlDataType.h"
 #include "../EmitterMerge/ElintTaskDataTypedb.h"
-//#include "../../../COMMON/DBIF/ElintRsltDataTypedb.h"
-//#include "../../../COMMON/DBIF/ElintTaskDataTypedb.h"
 #include "../EmitterMerge/ElintRsltDataTypedb.h"
  
 #include "../EmitterMerge/ELEnvironVariableMngr.h"
@@ -406,7 +397,7 @@ private:
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	inline void ClearH000() { m_vecH000.clear(); }
 
-    inline SRadarMode * GetRadarMode( int iIndex ) { return iIndex==0 ? NULL : & m_pRadarMode[iIndex-1]; }
+    inline SRadarMode * GetRadarMode( int iRadarModeIndex ) { return iRadarModeIndex==0 ? NULL : & m_pRadarMode[iRadarModeIndex-1]; }
     inline SThreat * GetThreat( int iIndex ) { return iIndex==0 ? NULL : & m_pThreat[iIndex-1]; }
 
 // 

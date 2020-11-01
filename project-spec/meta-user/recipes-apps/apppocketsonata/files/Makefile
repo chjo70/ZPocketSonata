@@ -47,6 +47,8 @@ APP_OBJS += SQLite/Exception.o
 APP_OBJS += SQLite/Statement.o
 APP_OBJS += SQLite/Transaction.o
 APP_OBJS += System/csysconfig.o
+APP_OBJS += System/csharedmemory.o
+APP_OBJS += Thread/ccgi.o
 APP_OBJS += Thread/cdetectanalysis.o
 APP_OBJS += Thread/cemittermerge.o
 APP_OBJS += Thread/cjamtech.o
@@ -66,6 +68,7 @@ APP_OBJS += Utils/cmultiserver.o
 APP_OBJS += Utils/csingleserver.o
 APP_OBJS += Utils/cthread.o
 APP_OBJS += Utils/cgpio.o
+APP_OBJS += Utils/programrev.o
 APP_OBJS += cmain.o
 		
 

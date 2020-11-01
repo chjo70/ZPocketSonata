@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Anal/SigAnal/cencdec.cpp \
     Collect/DataFile/DataFile.cpp \
     Utils/cfile.cpp \
     chexspinbox.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    Anal/SigAnal/cencdec.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     chexspinbox.h \
@@ -35,7 +37,7 @@ FORMS += \
 TRANSLATIONS += \
     PocketView_ko_KR.ts
 
-DEFINES += _POCKETSONATA_
+DEFINES += _SONATA_
 DEFINES += _GUI_
 
 QMAKE_LFLAGS += -no-pie
@@ -49,4 +51,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RC_FILE = icon.rc
 
 
-DEFINES += _POCKETSONATA_

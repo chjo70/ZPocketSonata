@@ -12,12 +12,15 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define CEDEOB_SQLITE_FILENAME      "/SQLite3.DB/cedeob.sqlite3"
-#define EMITTER_SQLITE_FILENAME     "/SQLite3.DB/emitter.sqlite3"
+#define CEDEOB_SQLITE_FOLDER        "/var/log/LOG"
+#define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
+#define EMITTER_SQLITE_FILENAME     "/emitter.sqlite3"
 
 #define QDECODER_LOG_FOLDER         "/var/log/LOG"
 #define QDECODER_LOG_FILENAME       "/qDecoder.log"
 
+#define INI_FOLDER                  "/var/log/LOG"
+#define INI_FILENAME                "/sysconfig.ini"
 
 
 
@@ -221,6 +224,10 @@
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
+#elif defined(_SONATA_)
+#define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
+
 #else
 
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
@@ -282,6 +289,14 @@
 #define   _spMgFixFrqCD				IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqBoundCD	IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+
+#elif defined(_SONATA_)
+#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
+#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
+#define   _spMgFixFrqEJ                 IFRQMhzCNV( 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqCD				IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
 
 #else
 #error "컴파일러에 DEFINE 을 추가해야 합니다."

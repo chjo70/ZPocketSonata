@@ -10,29 +10,13 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI =	"file://cmain.cpp \
 			file://cmain.h \
 			file://Collect/DataFile \
-			file://Collect/ccollectbank/ccollectbank.cpp \
-			file://Collect/ccollectbank/ccollectbank.h \
-			file://NetMem/client/ClientMemoryPage.cpp \
-			file://NetMem/client/ClientMemoryPage.h \		   
-			file://NetMem/client/NetworkMemory.cpp \
-			file://NetMem/client/NetworkMemory.h \
-			file://NetMem/server/ClientSocket.cpp \
-			file://NetMem/server/ClientSocket.h \
-			file://NetMem/server/MemoryPage.cpp \
-			file://NetMem/server/MemoryPage.h \
-			file://NetMem/server/ServerSocket.cpp \
-			file://NetMem/server/ServerSocket.h \
-			file://NetMem/utils/ApiNetMem.cpp \
-			file://NetMem/utils/ApiNetMem.h \
-			file://NetMem/utils/PortableSocket.h \
+			file://Collect/ccollectbank \
+			file://NetMem \
 			file://Utils \
 			file://Thread \
-			file://SQLite/ \
-			file://System/csysconfig.cpp \
-			file://System/csysconfig.h \
-			file://MinIni/minIni.cpp \
-			file://MinIni/minIni.h \
-			file://MinIni/minGlue.h \
+			file://SQLite \
+			file://System \
+			file://MinIni \
 			file://Include \
 			file://Anal \
 			file://Makefile \
@@ -40,6 +24,7 @@ SRC_URI =	"file://cmain.cpp \
 			file://.profile \
 			file://Web \
 			file://SQLite3.DB \
+			file://sysconfig.ini \
 			"
 
 

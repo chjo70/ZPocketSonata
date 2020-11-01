@@ -1119,6 +1119,8 @@ void CELSignalIdentifyAlg::Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTE
     }
     else {
         pABTData->iRadarModeIndex = m_pLOBData->iRadarModeIndex;
+
+        memcpy( & pABTExtData->idInfo, & pLOBDataExt->aetAnal.idInfo, sizeof(STR_CEDEOBID_INFO) );
     }
 
     // 10. 위치 산출의 신호 식별
@@ -1146,8 +1148,11 @@ void CELSignalIdentifyAlg::Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTE
     // 11. CED 식별한 정보와 비교하여 위치 산출한다.
     //IdentifyCEDEOB();
 
-    // 12. 신호 정보 저장
-    CopyAmbiguity( & pLOBDataExt->aetAnal, & pLOBDataExt->aetData, bMakeH0000 );
+    if( bIDExecute == true ) {
+        // 12. 신호 정보 저장
+        CopyAmbiguity( & pLOBDataExt->aetAnal, & pLOBDataExt->aetData, bMakeH0000 );
+        //CopyAmbiguity( & pABTExtData->aetAnal, & pLOBDataExt->aetData, bMakeH0000 );
+    }
 
 }
 

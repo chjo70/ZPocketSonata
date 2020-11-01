@@ -63,9 +63,6 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
 
     m_CoPdw = 0;
 
-    // 분석 시뮬레이션 데이터 초기화
-    //InitSimul();
-
     // 그룹화 초기화
     m_theGroup->CNGroup::Init();
 
@@ -134,29 +131,9 @@ void CNewSigAnal::SWInit()
 */
 void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 {
-#ifdef _ELINT_
-    m_enBandWidth = pPDWData->enBandWidth;
 
-    _spOneSec = FDIV( 1000000000, _toaRes[m_enBandWidth] );
-    _spOneMilli = FDIV( 1000000, _toaRes[m_enBandWidth] );
-    _spOneMicrosec = FDIV( 1000, _toaRes[m_enBandWidth] );
-    _spOneNanosec = FDIV( 1, _toaRes[m_enBandWidth] );
+    _InitResolution();
 
-    _spAOAres = (float) 0.01;
-    _spAMPres = (float) (0.25);
-    _spPWres = _spOneMicrosec;
-
-#elif defined(_POCKETSONATA_)
-    _spOneSec = FDIV( 1000000000, 6.48824007 );
-    _spOneMilli = FDIV( 1000000, 6.48824007 );
-    _spOneMicrosec = FDIV( 1000, 6.48824007 );
-    _spOneNanosec = FDIV( 1, 6.48824007 );
-
-    _spAOAres = (float) ( 0.351562 );
-    _spAMPres = (float) (0.351562);
-    _spPWres = _spOneMicrosec;
-
-#endif
 
     m_CoGroup = 0;
 
@@ -685,166 +662,6 @@ void CNewSigAnal::SaveRemainedPdwFile()
 
 #endif
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::RunSimul
-        \author   조철희
-        \param    band 인자형태 enum BAND_INFO
-        \return   void
-        \version  0.1.114
-        \date     2009-11-16 13:03:55
-        \warning
-*/
-void CNewSigAnal::RunSimul( enum BAND_INFO band )
-{
-// 	int i;
-// 	int coAet;
-// 	LOBDATA *pSimulAet, *pNewAet;
-//
-// 	pSimulAet = & m_theSimulAET[0];
-// 	for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-// 		if( pSimulAet->ext.coAlive != 0 ) {
-// 			++ coAet;
-// 		}
-//
-// 	}
-//
-// 	// 모두 삭제될 때 데이터를 새로이 생성함.
-// 	if( coAet == 0 ) {
-// 		pSimulAet = & m_theSimulAET[0];
-// 		for( i=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-// 			if( pSimulAet->ext.coAlive == 0 ) {
-// 				// 에미터 변화를 줄 값을 변경함.
-// 				pSimulAet->aet.aoa = rand() % ( 2 << 8 );
-//
-// 				pSimulAet->ext.coAlive = 100 + ( rand() % 30 );
-// 			}
-// 		}
-//
-// 		pNewAet = GetAet();
-// 		pSimulAet = & m_theSimulAET[0];
-// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-// 			if( pSimulAet->aet.frq.band == band+1 ) {
-// 				memcpy( pNewAet, pSimulAet, sizeof( STR_NEWAET ) );
-// 				++ coAet;
-// 				++ pNewAet;
-// 			}
-//
-// 		}
-//
-// 		SetCoAet( coAet );
-// 	}
-// 	else {
-// 		pSimulAet = & m_theSimulAET[0];
-// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-// 			if( pSimulAet->aet.frq.band == band+1 ) {
-// 				if( pSimulAet->ext.coAlive > 0 ) {
-// 					-- pSimulAet->ext.coAlive;
-// 					if( rand() % 2 ) {
-// 						pSimulAet->aet.aoa = ( ( 2 << 8 ) + pSimulAet->aet.aoa + 5 ) % ( 2 << 8 );
-//
-// 						pSimulAet->ext.aoa.low = ( pSimulAet->aet.aoa - 10 + ( 2 << 8 ) ) % ( 2 << 8 );
-// 						pSimulAet->ext.aoa.hgh = ( pSimulAet->aet.aoa + 10 + ( 2 << 8 ) ) % ( 2 << 8 );
-// 					}
-//
-// 				}
-//
-// 			}
-//
-// 		}
-//
-// 		pNewAet = GetAet();
-// 		pSimulAet = & m_theSimulAET[0];
-// 		for( i=coAet=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-// 			if( pSimulAet->aet.frq.band == band+1 && pSimulAet->ext.coAlive > 0 ) {
-// 				memcpy( pNewAet, pSimulAet, sizeof( STR_NEWAET ) );
-// 				++ coAet;
-// 				++ pNewAet;
-// 			}
-//
-// 			if( coAet >= _SIMUL_AVAIL_ANAL_ )
-// 				break;
-//
-// 		}
-//
-// 		SetCoAet( coAet );
-//
-// 	}
-
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::InitSimul
-        \author   조철희
-        \return   void
-        \version  0.1.114
-        \date     2009-11-13 18:35:08
-        \warning
-*/
-void CNewSigAnal::InitSimul()
-{
-    int i;
-    STR_NEWAET *pSimulAet;
-
-/*
- *  pSimulAet = & m_theSimulAET[0];
-    for( i=0 ; i < _SIMUL_CO_ANAL_ ; ++i, ++pSimulAet ) {
-        memset( pSimulAet, 0, sizeof( STR_NEWAET ) );
-
-        pSimulAet->aet.noEMT = 0;
-        pSimulAet->aet.aoa = rand() % ( 2 << 8 );
-        pSimulAet->aet.sigType = ST_NORMAL_PULSE;
-
-        pSimulAet->aet.frq.type = _FIXED;
-        pSimulAet->aet.frq.swtLev = 0;
-        pSimulAet->aet.frq.mean = ( i+1 ) * 500;
-        pSimulAet->aet.frq.min = pSimulAet->aet.frq.mean - 5;
-        pSimulAet->aet.frq.max = pSimulAet->aet.frq.mean + 5;
-        pSimulAet->aet.frq.band = GetBand( pSimulAet->aet.frq.mean ) + 1;
-        pSimulAet->aet.frq.patPrd = 0;
-
-        pSimulAet->aet.pri.type = _STABLE;
-        pSimulAet->aet.pri.swtLev = 0;
-        pSimulAet->aet.pri.mean = ITOAusCNV( 100 );	//_spOneMicrosec * 100;
-        pSimulAet->aet.pri.min = pSimulAet->aet.pri.mean - 20;
-        pSimulAet->aet.pri.max = pSimulAet->aet.pri.mean + 20;
-        pSimulAet->aet.pri.jtrPer = (float) 0;
-
-        pSimulAet->aet.pw.mean = ITOAusCNV( 1 );		// _spOneNanosec * 1000;
-        pSimulAet->aet.pw.min = pSimulAet->aet.pw.mean - 10;
-        pSimulAet->aet.pw.max = pSimulAet->aet.pw.mean + 10;
-
-        pSimulAet->aet.pa.mean = ( rand() % ( 2 << 5 ) ) + 0x80;
-        pSimulAet->aet.pa.min = pSimulAet->aet.pa.mean - 10;
-        pSimulAet->aet.pa.max = pSimulAet->aet.pa.mean + 10;
-
-        pSimulAet->aet.as.stat = SELF_SUCCESS;		// SELF_SUCCESS
-        pSimulAet->aet.as.prd = 0;
-        pSimulAet->aet.as.type = STEADY;
-
-        // 기타 추가 정보 저장
-        pSimulAet->ext.noCol = pSimulAet->ext.noExt = 100;
-        pSimulAet->ext.aoa.low = ( pSimulAet->aet.aoa - 10 + ( 2 << 8 ) ) % ( 2 << 8 );
-        pSimulAet->ext.aoa.hgh = ( pSimulAet->aet.aoa + 10 + ( 2 << 8 ) ) % ( 2 << 8 );
-
-        pSimulAet->ext.pt_stat = PDW_NORMAL;
-
-        pSimulAet->ext.bOverId = FALSE;
-
-        pSimulAet->ext.coAlive = 0; // 20 + rand() % 10;
-        pSimulAet->ext.noMergeEMT = -1;
-
-        pSimulAet->ext.frq.low = pSimulAet->aet.frq.min;
-        pSimulAet->ext.frq.hgh = pSimulAet->aet.frq.max;
-
-        pSimulAet->ext.idxEmitter = -1;
-        pSimulAet->ext.mark = NORMAL_AET;
-
-    }       */
-
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::GetBand

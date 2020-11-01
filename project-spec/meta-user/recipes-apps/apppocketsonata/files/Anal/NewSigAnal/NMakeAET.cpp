@@ -19,21 +19,6 @@
 #include "NewSigAnal.h"
 
 
-#ifdef _ELINT_
-const char aet_signal_type[ST_MAX][3] = { "NP" , "CW" , "DP" , "FM" , "CF", "SH", "AL" };
-const char aet_freq_type[MAX_FRQTYPE][3] = { "--", "F_" , "HP" , "RA" , "PA", "UK" };
-const char aet_pri_type[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
-const char aet_asp_type_ch[MAX_SCANTYPE][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
-const char aet_stat[MAX_EMITTER_STAT] = { 'N', 'U', 'M', 'L', 'D' } ;
-
-#else
-const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
-const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
-const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-
-#endif
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

@@ -62,8 +62,6 @@ private:
 
 public:
     enum FREQ_BAND GetBand( int freq );
-    void RunSimul( enum BAND_INFO band );
-    void InitSimul();
     void Simul();
 
     // 인라인 외부 연결 함수

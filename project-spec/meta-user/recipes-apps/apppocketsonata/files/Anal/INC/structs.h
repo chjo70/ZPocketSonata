@@ -634,12 +634,6 @@ typedef enum {
 #endif
 
 
-struct STR_CHANNEL_SELECTION {
-	enum CHANNEL_SELECTION channel_selection;
-	int noEMT;
-
-}  ;
-
 struct STR_CW_CONTROL {
 	int cw_threshold;
 	int cw_init_threshold;

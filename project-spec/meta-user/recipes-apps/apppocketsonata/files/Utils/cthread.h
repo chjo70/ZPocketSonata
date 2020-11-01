@@ -37,8 +37,8 @@ static bool IsThereInstance() { \
     if(m_pInstance == NULL) { \
         bRet = false; \
     } \
-    return bRet; \    
-}
+    return bRet; }
+
 
 #pragma pack(push, 1)
 

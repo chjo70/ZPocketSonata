@@ -214,6 +214,11 @@ struct STR_PDWDATA {
 #elif defined(_POCKETSONATA_)
     unsigned int uiBand;
     unsigned int iIsStorePDW;
+#elif defined(_SONATA_)
+    unsigned int uiBand;
+    unsigned int iIsStorePDW;
+#else
+
 #endif
 
     UINT uiTotalPDW;
@@ -232,7 +237,95 @@ typedef enum {
 } ENUM_BANDWIDTH ;
 #endif
 
+#elif defined(_SONATA_)
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+// 수퍼헷 수신장치 개발한 것의 PDW 포멧
+struct TNEW_SPDW
+{
+    float Freq ;
+    float PA ;
+    float PW ;
+    unsigned int TOA ;
+    int Ref_Phase3 ;
+
+} ;
+
+#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+
+#define _MAX_PDW					(4096)
+
+#ifndef _PDW_STRUCT
+#define _PDW_STRUCT
+struct _PDW {
+    long long int llTOA;
+
+    int iFreq;
+    int iPulseType;
+    int iPA;
+    int iPW;
+    int iPFTag;
+    int iAOA;
+
+    float fPh1;
+    float fPh2;
+    float fPh3;
+    float fPh4;
+
+} ;
+#endif
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+#ifndef _STR_PDWDATA
+#define _STR_PDWDATA
+struct STR_PDWDATA {
+#ifdef _ELINT_
+    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+    unsigned int iIsStorePDW;
+    int iCollectorID;
+    ENUM_BANDWIDTH enBandWidth;
+
+#elif defined(_POCKETSONATA_)
+    unsigned int uiBand;
+    unsigned int iIsStorePDW;
+#elif defined(_SONATA_)
+    unsigned int uiBand;
+    unsigned int iIsStorePDW;
 #else
+
+#endif
+
+    UINT uiTotalPDW;
+
+    _PDW stPDW[_MAX_PDW];
+
+}  ;
+#endif
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
 
 
 #endif
@@ -316,7 +409,12 @@ typedef enum {
 
 } ;
 */
+#elif defined(_SONATA_)
 
+#define PDW_NORMAL          (0)
+#define PDW_CW              (1)
+
+#define PDW_DV				(1)
 
 #else
 

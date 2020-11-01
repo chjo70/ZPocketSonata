@@ -36,9 +36,9 @@ private:
     void ShowIBitResult( void *pData );
     void ShowCBitResult( void *pData );
 
-    void InsertTable( void *pByteData );
-    void UpdateTable( void *pByteData );
-    void DeleteTable( void *pByteData );
+    void InsertAETTable( void *pByteData );
+    void UpdateAETTable( void *pByteData );
+    void DeleteAETTable( void *pByteData );
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -93,6 +93,8 @@ private:
     //QList<QTcpSocket*> _sockets;
 
     vector<STR_LIST_TABLE> vTable;
+
+    int m_nCoList;
 
 };
 #endif // MAINWINDOW_H
