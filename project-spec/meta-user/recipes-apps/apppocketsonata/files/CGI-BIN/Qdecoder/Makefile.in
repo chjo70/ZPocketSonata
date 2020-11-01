@@ -1,0 +1,126 @@
+##
+## Copyright 2008 The qDecoder Project. All rights reserved.
+##
+## Redistribution and use in source and binary forms, with or without
+## modification, are permitted provided that the following conditions
+## are met:
+##
+## 1. Redistributions of source code must retain the above copyright
+##    notice, this list of conditions and the following disclaimer.
+## 2. Redistributions in binary form must reproduce the above copyright
+##    notice, this list of conditions and the following disclaimer in the
+##    documentation and/or other materials provided with the distribution.
+##
+## THIS SOFTWARE IS PROVIDED BY THE QDECODER PROJECT ``AS IS'' AND ANY
+## EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+## WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+## DISCLAIMED. IN NO EVENT SHALL THE QDECODER PROJECT BE LIABLE FOR ANY
+## DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+## (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+## LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+## ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+## (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+## THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+##
+
+prefix		= @prefix@
+exec_prefix	= ${prefix}
+
+## Name
+PRGNAME		= qDecoder
+
+## Static Library Name
+LIBNAME		= lib${PRGNAME}.a
+
+## Shared Library Name
+SLIBVERSION	= 7
+SLIBNAME	= lib${PRGNAME}.so
+SLIBREALNAME	= ${SLIBNAME}.${SLIBVERSION}
+
+## System library directory
+LIBDIR		= @libdir@
+HEADERDIR	= @includedir@
+
+## Which compiler & options for release
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+DEFS		= @DEFS@ @OPT_DEFS@
+INCLUDE		= -I./ @OPT_INCS@
+
+## Utilities
+AR		= @AR@
+ARFLAGS		= -rc
+CHMOD		= @CHMOD@
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+LN_S		= @LN_S@
+RANLIB		= @RANLIB@
+RM		= @RM@
+
+## Objects List
+OBJ		= qCgiRequest.o		\
+		qCgiResponse.o		\
+		qSession.o		\
+		qHtml.o			\
+					\
+		qSocket.o		\
+		qSem.o			\
+		qShm.o			\
+		qDatabase.o		\
+					\
+		qEntry.o		\
+		qHashtbl.o		\
+		qHasharr.o		\
+		qQueue.o		\
+		qObstack.o		\
+					\
+		qConfig.o		\
+		qLog.o			\
+		qHttpClient.o		\
+					\
+		qString.o		\
+		qFile.o			\
+		qEncode.o		\
+		qHash.o			\
+		qSed.o			\
+		qCount.o		\
+		qTime.o			\
+		qSystem.o		\
+					\
+		qInternalCommon.o	\
+		md5/md5c.o
+
+## Make Library
+all: qdecoder
+
+qdecoder: ${OBJ}
+	${AR} ${ARFLAGS} ${LIBNAME} ${OBJ}
+	${RANLIB} ${LIBNAME}
+	${CC} -shared -Wl,-soname,${SLIBREALNAME} -o ${SLIBREALNAME} ${OBJ}
+	${LN_S} -f ${SLIBREALNAME} ${SLIBNAME}
+
+install: all
+	${INSTALL_DATA} qDecoder.h ${HEADERDIR}/qDecoder.h
+	${INSTALL_DATA} ${LIBNAME} ${LIBDIR}/${LIBNAME}
+	${INSTALL_DATA} ${SLIBREALNAME} ${LIBDIR}/${SLIBREALNAME}
+	${LN_S} -f ${LIBDIR}/${SLIBREALNAME} ${LIBDIR}/${SLIBNAME}
+
+deinstall: uninstall
+uninstall:
+	${RM} -f ${HEADERDIR}/qDecoder.h
+	${RM} -f ${LIBDIR}/${LIBNAME}
+	${RM} -f ${LIBDIR}/${SLIBREALNAME}
+	${RM} -f ${LIBDIR}/${SLIBNAME}
+
+doc:
+	doxygen doxygen.conf
+
+cleandoc:
+	${RM} -rf ../doc/html ../doc/man
+
+clean:
+	${RM} -f ${OBJ} ${LIBNAME} ${SLIBREALNAME} ${SLIBNAME}
+
+## Compile
+.c.o:
+	${CC} ${CFLAGS} ${DEFS} ${INCLUDE} -c -o $@ $<
