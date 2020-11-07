@@ -23,6 +23,11 @@ struct STR_SYSCONFIG {
     int iMinAnalPulse;
 
     /**
+     * @brief 기본 삭제 시간 [초]
+     */
+    int iEmitterDeleteTime;
+
+    /**
      * @brief 대역별 임계값
      */
     float fRxThreshold[5];
@@ -80,6 +85,13 @@ public:
 
     };
 
+    int GetEmmgEmitterDeleteTimeSec() { return m_strConfig.iEmitterDeleteTime; };
+    void SetEmmgEmitterDeleteTimeSec(int iDeleteTime  ) {
+        m_strConfig.iEmitterDeleteTime = iDeleteTime;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
     float *GetRxThreshold() { return & m_strConfig.fRxThreshold[0]; };
     void SetRxThreshold( float *fRxThreshold ) {
         memcpy( m_strConfig.fRxThreshold, fRxThreshold, sizeof(m_strConfig.fRxThreshold) );
@@ -88,7 +100,12 @@ public:
 
     ENUM_MODE GetMode() { return m_strConfig.enMode; };
     void SetMode(ENUM_MODE enMode) {
-        m_strConfig.enMode = enMode;
+        if( enMode == enANAL_Mode ) {
+            m_strConfig.enMode = ( ENUM_MODE ) ( m_strConfig.enMode | enANAL_Mode );
+        }
+        else {
+            m_strConfig.enMode = enMode;
+        }
 
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     };

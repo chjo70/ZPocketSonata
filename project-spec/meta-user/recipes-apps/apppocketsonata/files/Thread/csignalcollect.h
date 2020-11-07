@@ -55,10 +55,12 @@ private:
 
     // 윈도우셀 모의
     void ReqSetWindowCell();
+    void CloseSetWindowCell();
     void NewTrackWindowCell( SRxABTData *pABTData );
     void StartTrackWindowCell();
     void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
     void UpdateTrackWindowCell( SRxABTData *pABTData );
+    void CloseTrackWindowCell( SRxABTData *pABTData );
 
 
     void SimPDWData();

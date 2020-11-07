@@ -34,6 +34,8 @@
 
 #include "./ELStringDefn.h"
 
+#include "../../System/csysconfig.h"
+
 #include "UTM.h"
 
 #ifdef _DEBUG
@@ -152,7 +154,7 @@ void CELEmitterMergeMngr::AllocMemory()
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
 
-    m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
+    //m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
 
 #elif defined(_MSSQL_)
     m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
@@ -310,6 +312,12 @@ void CELEmitterMergeMngr::Start()
     m_VecLOBData.clear();
     m_VecABTData.clear();
     m_VecAETData.clear();
+
+    m_pAETThreat = NULL;
+    m_pABTThreat = NULL;
+
+    m_pUpdateAETThreat = NULL;
+    m_pUpdateABTThreat = NULL;
 
 }
 
@@ -1149,7 +1157,8 @@ void CELEmitterMergeMngr::UpdateEmitterBeamStatus( CELThreat *pThreatAET, E_BEAM
     pAETData = GetAETData( pThreatAET->m_nIndex );
     pAETExtData = GetAETExtData( pThreatAET->m_nIndex );
 
-    pAETExtData->enBeamEmitterStat = enEmitterStat;
+    //pAETExtData->enBeamEmitterStat = enEmitterStat;
+    pAETExtData->enBeamEmitterStat = UpdateEmitterStat( pAETExtData->enBeamEmitterStat, enEmitterStat );
 
     // 방사체 DB의 상태 정보 업데이트
     UpdateEmitterStatusToEmitterDB( pAETData, pAETExtData );
@@ -1159,7 +1168,8 @@ void CELEmitterMergeMngr::UpdateEmitterBeamStatus( CELThreat *pThreatAET, E_BEAM
         pABTData = GetABTData( pThreatABT->m_nIndex );
         pABTExtData = GetABTExtData( pThreatABT->m_nIndex );
 
-        pABTExtData->enBeamEmitterStat = enEmitterStat;
+        //pABTExtData->enBeamEmitterStat = enEmitterStat;
+        pABTExtData->enBeamEmitterStat = UpdateEmitterStat( pABTExtData->enBeamEmitterStat, enEmitterStat );
 
         UpdateBeamStatusToEmitterDB( pABTData, pABTExtData );
 
@@ -1397,8 +1407,8 @@ bool CELEmitterMergeMngr::WhichOfOldThreat( CELThreat *pTheThreat1, CELThreat *p
 }
 
 #define DEFAULT_DELETE_TIME			(3600*100)						// 100 시간 이상이면 위협 삭제 처리
-#define DEFAULT_REF_TIME				(20)
-#define MIN_EMITTER_DELETE_TIME	(180)
+#define DEFAULT_REF_TIME            (20)
+//#define MIN_EMITTER_DELETE_TIME     (180)
 /**
  * @brief     삭제할 위협인지를 알려준다.
  * @param     *pTheThreat 위협할 위협 포인터
@@ -1442,7 +1452,7 @@ E_BEAM_EMITTER_STAT CELEmitterMergeMngr::IsDeleteThreat( CELThreat *pTheThreat )
 
             // 미식별일 때는 시스템 변수로 비교 판단
             if( pAETData->iRadarModeIndex == 0 ) {
-                refTime = (int) GP_ENVI_VAR->GetEmmgEmitterDeleteTimeSec();
+                refTime = (int) GP_SYSCFG->GetEmmgEmitterDeleteTimeSec();
             }
             // 식별일 때는 CED 기반으로 비교 판단
             else {
@@ -1451,19 +1461,20 @@ E_BEAM_EMITTER_STAT CELEmitterMergeMngr::IsDeleteThreat( CELThreat *pTheThreat )
 
             // 삭제 시간 기준 값이 0 이면 미식별 삭제 시간으로 설정한다.
             if( refTime <= 0 ) {
-                refTime = (int) GP_ENVI_VAR->GetEmmgEmitterDeleteTimeSec();
+                refTime = (int) GP_SYSCFG->GetEmmgEmitterDeleteTimeSec();
             }
             refTime = max( refTime, MIN_EMITTER_DELETE_TIME );
 
+            bBeamEmitterStat = pAETExtData->enBeamEmitterStat;
             if( (int) duration > refTime ) {
                 if( pAETExtData->enBeamEmitterStat == E_ES_NEW || pAETExtData->enBeamEmitterStat == E_ES_UPDATE || pAETExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-                    bBeamEmitterStat = E_ES_DELETE;							// 미활동
+                    bBeamEmitterStat = E_ES_DEACTIVATED;					// 미활동
                 }
-                else if( pAETExtData->enBeamEmitterStat == E_ES_DEACTIVATED ) {
-                    bBeamEmitterStat = E_ES_NOT_AVAILABLE;
+                else if( pAETExtData->enBeamEmitterStat == E_ES_DEACTIVATED  ) {
+                    bBeamEmitterStat = E_ES_DELETE;							// 삭제 처리
                 }
                 else {
-
+                    // bBeamEmitterStat = pAETExtData->enBeamEmitterStat;
                 }
             }
             // 		if( (int) duration > DEFAULT_DELETE_TIME ) {
@@ -1473,6 +1484,52 @@ E_BEAM_EMITTER_STAT CELEmitterMergeMngr::IsDeleteThreat( CELThreat *pTheThreat )
     }
 
     return bBeamEmitterStat;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::IsDeleteAET
+ * @param uiAETID
+ * @return
+ */
+bool CELEmitterMergeMngr::IsDeleteAET( unsigned int uiAETID )
+{
+    bool bRet=false;
+
+    CELThreat *pThreatAET;
+
+    E_BEAM_EMITTER_STAT enEmitterStat;
+
+    if( m_pUpdateABTThreat == NULL ) {
+        pThreatAET = m_pTheThreatRoot->Find( uiAETID );
+    }
+    else {
+        pThreatAET = m_pUpdateAETThreat;
+    }
+
+    enEmitterStat = IsDeleteThreat( pThreatAET );
+    // 삭제 또는 비활동 상태에만 업데이트를 한다.
+    if( enEmitterStat == E_ES_DELETE || enEmitterStat == E_ES_DEACTIVATED ) {
+        UpdateEmitterBeamStatus( pThreatAET, enEmitterStat, true );
+    }
+
+    switch( enEmitterStat ) {
+        // 미활동 및 활동 중지 처리
+        case E_ES_DELETE :
+        case E_ES_DEACTIVATED :
+            bRet = true;
+            break;
+
+        case E_ES_REACTIVATED :
+            bRet = false;
+            break;
+
+        default :
+            {	// DT10 예외 처리가 아님.
+            }
+            break;
+    }
+
+    return bRet;
 }
 
 /**
@@ -2384,12 +2441,17 @@ void CELEmitterMergeMngr::UpdateAETStat( SELAETDATA_EXT *pAETExtData, bool bGenN
 {
     // 신규 생성일 때는 Update 처리시 상태 정보를 무시한다.
     if( bGenNewEmitter == false ) {
+        pAETExtData->enBeamEmitterStat = UpdateEmitterStat( pAETExtData->enBeamEmitterStat, E_ES_UPDATE );
+/*
         if( pAETExtData->enBeamEmitterStat == E_ES_DEACTIVATED ) {
+            pAETExtData->enBeamEmitterStat = E_ES_REACTIVATED;
+        }
+        else if( pAETExtData->enBeamEmitterStat == E_ES_DELETE ) {
             pAETExtData->enBeamEmitterStat = E_ES_REACTIVATED;
         }
         else {
             pAETExtData->enBeamEmitterStat = E_ES_UPDATE;
-        }
+        }           */
     }
 
 }
@@ -2701,7 +2763,7 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
 
     //pABTExtData->iTaskType = m_pLOBData->iTaskType / 2;
 
-    m_pABTExtData->enBeamEmitterStat = E_ES_UPDATE;
+    m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
 
     // 방사체간의 병합을 위해서 정보를 저장
     m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
@@ -2718,6 +2780,34 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
     //LogPrint("\n========================================== UpdateABT 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
 
     return bEnable;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::UpdateEmitterStat
+ * @param enBeamEmitterStat
+ * @param enUpdatedStat
+ * @return
+ */
+E_BEAM_EMITTER_STAT CELEmitterMergeMngr::UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat )
+{
+    E_BEAM_EMITTER_STAT enReturn=E_ES_NOT_AVAILABLE;
+
+    if( enUpdatedStat == E_ES_NEW || enUpdatedStat == E_ES_DELETE || enUpdatedStat == E_ES_DEACTIVATED ) {
+        enReturn = enUpdatedStat;
+    }
+    else if( enUpdatedStat == E_ES_UPDATE ){
+        if( enBeamEmitterStat == E_ES_DEACTIVATED ) {
+            enReturn = E_ES_REACTIVATED;
+        }
+        else if( enBeamEmitterStat == E_ES_REACTIVATED ) {
+            enReturn = E_ES_UPDATE;
+        }
+        else {
+            enReturn = enUpdatedStat;
+        }
+    }
+
+    return enReturn;
 }
 
 /**
@@ -4859,8 +4949,9 @@ void CELEmitterMergeMngr::CreateAETThreat( CELThreat *pAETThreat, CELThreat *pAB
 
     // pAETExtData->bIntraMop = ( pAETData->intraInfo.iType != E_AET_MOP_UNK ? true : false );
 
-    pAETExtData->enBeamEmitterStat = E_ES_NEW;
-    pAETExtData->enBeamEmitterStat = IsDeleteThreat( pAETThreat );
+    pAETExtData->enBeamEmitterStat = UpdateEmitterStat( pAETExtData->enBeamEmitterStat, E_ES_NEW );
+
+    //pAETExtData->enBeamEmitterStat = IsDeleteThreat( pAETThreat );
 
     //pAETExtData->bIsFISINTTask = ( m_pLOBData->iIsFISINTTask > 0 );
 
@@ -5015,6 +5106,8 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
 #endif
 
     memcpy( & m_ABTDataExt, & m_LOBDataExt, sizeof(SELLOBDATA_EXT) );
+
+    m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_NEW );
 
     m_pABTExtData->iLOBPoolIndex = nIndex;
 
@@ -10988,4 +11081,29 @@ char *CELEmitterMergeMngr::GetRadarModeName( int iRadarModeIndex )
     }
 
     return pszELNOT;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::GetThreatModeName
+ * @param iRadarModeIndex
+ * @return
+ */
+char *CELEmitterMergeMngr::GetThreatName( int iRadarModeIndex )
+{
+    char *pszThreat;
+
+    SThreat *pSThreat;
+    SRadarMode *pSRadarMode;
+
+    pSRadarMode = m_pIdentifyAlg->GetRadarMode( iRadarModeIndex );
+
+    if( pSRadarMode != NULL ) {
+        pSThreat = m_pIdentifyAlg->GetThreat( pSRadarMode->iThreatIndex );
+        pszThreat = pSThreat->szThreatName;
+    }
+    else {
+        pszThreat = NULL;
+    }
+
+    return pszThreat;
 }

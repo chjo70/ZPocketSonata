@@ -72,40 +72,47 @@ void CSysConfig::ReleaseInstance()
  */
 void CSysConfig::LoadINI()
 {
-    int i;
+    int i, iValue;
     string strValue;
     char szHomeDirectory[100];
 
     float fRxThreshold[5];
 
     // INI 파일 로딩하기
-    strcpy( szHomeDirectory, getenv("HOME") );
+    strcpy( szHomeDirectory, INI_FOLDER /* getenv("HOME") */ );
     strcat( szHomeDirectory, INI_FILENAME );
 
     m_theMinIni.setfilename( szHomeDirectory );
-    //m_theMinIni.put( "RXTHRESHOLD" , "Band1" , "-70.0" );
 
+    ///////////////////////////////////////////////////////////////////////////////
     // RX Threshold 값 로딩
     i = 0;
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band1" , "-60.0" );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band1" , _RXTHRESHOLD_BAND1_ );
     fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band2" , "-65.0" );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band2" , _RXTHRESHOLD_BAND2_ );
     fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band3" , "-65.0" );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band3" , _RXTHRESHOLD_BAND3_ );
     fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band4" , "-64.0" );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band4" , _RXTHRESHOLD_BAND4_ );
     fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band5" , "-60.0" );
+    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band5" , _RXTHRESHOLD_BAND5_ );
     fRxThreshold[i++] = atof( strValue.c_str() );
 
     SetRxThreshold( fRxThreshold );
 
+    ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    strValue = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _spAnalMinPulseCount );
+    //m_theMinIni.put( "ANAL" , "MIN_ANALPULSE" , 6 );
+    strValue = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
+
+    // 신호 삭제 시간
+    iValue = m_theMinIni.geti( "ANAL" , "DEFAULT_DELETE_TIMESEC" , _DEFAULT_DELETETIME_ );
+    SetEmmgEmitterDeleteTimeSec( iValue );
 
     // 프로그램 버젼 정보
     SetProgramVersion( _GetProgramVersion() );
+
 }
 
 /**

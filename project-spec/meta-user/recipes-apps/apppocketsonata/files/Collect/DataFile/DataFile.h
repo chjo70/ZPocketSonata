@@ -118,7 +118,7 @@ public:
 
 	bool m_bPhaseData;
 
-	STR_FILTER_SETUP m_stFilterSetup;
+    STR_FILTER_SETUP m_strFilterSetup;
 
     float _spOneSec;
     float _spOneMilli;

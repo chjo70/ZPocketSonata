@@ -180,7 +180,7 @@ CEPDW::CEPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData(p
 	}
 
 	if( pstFilterSetup != NULL ) {
-		memcpy( & m_stFilterSetup, pstFilterSetup, sizeof(STR_FILTER_SETUP) );
+        memcpy( & m_strFilterSetup, pstFilterSetup, sizeof(STR_FILTER_SETUP) );
 	}
 
 }
@@ -338,8 +338,8 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData )
 
 		printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[kHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );
 
-		if( ( (double) *pfAOA >= m_stFilterSetup.dAoaMin && (double) *pfAOA <= m_stFilterSetup.dAoaMax ) &&
-			( (double) *pfFreq >= m_stFilterSetup.dFrqMin && (double) *pfFreq <= m_stFilterSetup.dFrqMax ) ) {
+        if( ( (double) *pfAOA >= m_strFilterSetup.dAoaMin && (double) *pfAOA <= m_strFilterSetup.dAoaMax ) &&
+            ( (double) *pfFreq >= m_strFilterSetup.dFrqMin && (double) *pfFreq <= m_strFilterSetup.dFrqMax ) ) {
 			++pfFreq;
 			++pfAOA;
 			++pfPW;
@@ -1150,14 +1150,14 @@ CData::CData( STR_RAWDATA *pRawData )
 
 	m_bPhaseData = true;
 
-	m_stFilterSetup.dToaMin = -1.;
-	m_stFilterSetup.dToaMax = -1.;
-	m_stFilterSetup.dAoaMin = -360.;
-	m_stFilterSetup.dAoaMax = 360.;
-	m_stFilterSetup.dFrqMin = 500.;
-	m_stFilterSetup.dFrqMax = 18000.;
-	m_stFilterSetup.dPaMin = -100.;
-	m_stFilterSetup.dPaMax = 10.;
+    m_strFilterSetup.dToaMin = -1.;
+    m_strFilterSetup.dToaMax = -1.;
+    m_strFilterSetup.dAoaMin = -360.;
+    m_strFilterSetup.dAoaMax = 360.;
+    m_strFilterSetup.dFrqMin = 500.;
+    m_strFilterSetup.dFrqMax = 18000.;
+    m_strFilterSetup.dPaMin = -100.;
+    m_strFilterSetup.dPaMax = 10.;
 }
 
 /**

@@ -79,7 +79,6 @@ void CRecLan::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            break;
             perror( "QMsgRcv");
             break;
         }
@@ -100,9 +99,21 @@ void CRecLan::_routine()
                     break;
 
                 case enREQ_RELOAD_LIBRARY :
-                    if( EMTMRG_IS ) {
-                        EMTMRG->QMsgSnd( m_pMsg );
-                    }
+                    if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+                    break;
+
+                case enREQ_IPL_VERSION :
+                    TMNGR->QMsgSnd( m_pMsg );
+                    break;
+
+                case enREQ_IPL_START :
+                case enREQ_IPL_END :
+                    TMNGR->QMsgSnd( m_pMsg );
+                    break;
+
+                case enREQ_IPL_DOWNLOAD :
+                    //TMNGR->QMsgSnd( m_pMsg, TMNGR->GetArrayMsgData(m_pMsg->iArrayIndex) );
+                    TMNGR->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
                     break;
 
                 // 추가 명령어

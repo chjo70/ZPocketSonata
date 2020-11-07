@@ -83,12 +83,6 @@ private:
 	
 private:
 	static CELEnvironVariable* m_pInstance;
-	//CELEnvironVariableImpl* m_pImpl;
-// 	class Cleanup //#FA_Q_2502_T3
-// 	{
-// 		public:
-// 			~Cleanup();
-// 	};
 
 	SEnvironVariable m_stEnvironVariable;
 	

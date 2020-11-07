@@ -31,8 +31,6 @@ CELEnvironVariable::CELEnvironVariable(void)
 	//:m_pImpl(nullptr)
 {
 	bool bRtn = false;
-	//m_pImpl = new CELEnvironVariableImpl;
-	//m_pImpl->LoadEnvVarFromDB();
 
 	// 기본 설정 값
 	m_stEnvironVariable.iDVRatio = 60;							// [%]

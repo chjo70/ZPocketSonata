@@ -147,7 +147,7 @@ class CELSignalIdentifyAlg : public SQLite::Database
 {
  protected:
 #ifdef _SQLITE_
-    static char *m_pszSQLString;
+    //static char *m_pszSQLString;
 
 #endif
     static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그

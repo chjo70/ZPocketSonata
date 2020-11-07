@@ -12,7 +12,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define CEDEOB_SQLITE_FOLDER        "/var/log/LOG"
+//#define CEDEOB_SQLITE_FOLDER        "/var/log/LOG"
+#define CEDEOB_SQLITE_FOLDER        "/home/chjo70"
 #define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
 #define EMITTER_SQLITE_FILENAME     "/emitter.sqlite3"
 
@@ -21,6 +22,8 @@
 
 #define INI_FOLDER                  "/var/log/LOG"
 #define INI_FILENAME                "/sysconfig.ini"
+
+#define PROGRAM_LOG_FOLDER          "/var/log/LOG"
 
 
 

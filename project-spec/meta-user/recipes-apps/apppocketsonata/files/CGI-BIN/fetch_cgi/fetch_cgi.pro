@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ../../MinIni/minIni.cpp \
         ../Qdecoder/md5/md5c.c \
         ../Qdecoder/mkstemp.c \
         ../Qdecoder/qArg.c \
@@ -54,6 +55,15 @@ DISTFILES += \
     ../Qdecoder/doxygen_tailer.html
 
 HEADERS += \
+    ../../MinIni/minGlue-FatFs.h \
+    ../../MinIni/minGlue-ccs.h \
+    ../../MinIni/minGlue-efsl.h \
+    ../../MinIni/minGlue-ffs.h \
+    ../../MinIni/minGlue-mdd.h \
+    ../../MinIni/minGlue-stdio.h \
+    ../../MinIni/minGlue.h \
+    ../../MinIni/minIni.h \
+    ../../MinIni/wxMinIni.h \
     ../Qdecoder/md5/md5.h \
     ../Qdecoder/md5/md5_global.h \
     ../Qdecoder/mkstemp.h \

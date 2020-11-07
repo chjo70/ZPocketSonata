@@ -1,11 +1,14 @@
-
+#include <time.h>
+#include <sys/time.h>
 #include <stdlib.h>
-
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <unistd.h>
 
 #include <QMessageBox>
 #include <QFileDialog>
+
+#include "ui_mainwindow.h"
+#include "mainwindow.h"
+
 
 #include "./Include/defines.h"
 #include "./Include/sysmsg.h"
@@ -70,8 +73,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->aettableWidget->setHorizontalHeaderLabels( aettableHeader );
 
     ui->aettableWidget->horizontalHeader()->setStyleSheet( "QHeaderView::section {background-color:#404040;color:#FFFFFF;}" );
+    ui->aettableWidget->setAlternatingRowColors( true );
 
-    vTable.clear();
+    ui->progressBar_IPL->setValue( 0 );
 
     _InitResolution();
 
@@ -120,8 +124,10 @@ void MainWindow::on_pushButton_clicked()
         //ui->aettableWidget->clear();
         iTotalRow = ui->aettableWidget->rowCount();
         for( iRow=0 ; iRow < iTotalRow ; ++iRow ) {
-            ui->aettableWidget->removeRow( iRow );
+            ui->aettableWidget->removeRow( 0 );
         }
+
+        ui->progressBar_IPL->setValue( 0 );
 
         if( bConnected == false ) {
             m_theTcpSocket.connectToHost( "zcu111.com", CCU_PORT );
@@ -134,7 +140,6 @@ void MainWindow::on_pushButton_clicked()
 
         EnableControl( false );
 
-        vTable.clear();
     }
 
 }
@@ -168,6 +173,8 @@ void MainWindow::EnableControl( bool bEnable )
     ui->AnalStart->setEnabled( bEnable );
 
     ui->pushButton_ReloadLibrary->setEnabled( bEnable );
+    ui->pushButton_IPLVersion->setEnabled( bEnable );
+    ui->pushButton_DownloadIPL->setEnabled( bEnable );
     ui->pushButton_SimPDW->setEnabled( bEnable );
 
     ui->bit_result->setText( "" );
@@ -320,12 +327,23 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
         ui->BITTEST->setEnabled( true );
         break;
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    case esIPL_VERSION :
+        ShowIPLVersion( pByteData );
+        break;
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
     case esAET_NEW_CCU :
         InsertAETTable( pByteData );
         break;
 
     case esAET_UPD_CCU :
         UpdateAETTable( pByteData );
+        break;
+
+    case esAET_LST_CCU :
+        LostAETTable( pByteData );
         break;
 
     case esAET_DEL_CCU :
@@ -347,46 +365,49 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
 void MainWindow::InsertAETTable( void *pByteData )
 {
     STR_AET *pAET;
-    STR_LIST_TABLE stListTable;
+    int iIndexOfTable;
 
     pAET = ( STR_AET *) pByteData;
 
-    stListTable.uiABTID = pAET->noEMT;
-
     ui->aettableWidget->insertRow( ui->aettableWidget->rowCount() );
 
-    stListTable.iIndexOfTable = ui->aettableWidget->rowCount() - 1;
+    iIndexOfTable = ui->aettableWidget->rowCount() - 1;
 
     ++ m_nCoList;
 
-    UpdateRow( ui->aettableWidget, );
+    UpdateRow( ui->aettableWidget, pAET, iIndexOfTable );
 
-    vTable.push_back( stListTable );
+    UpdateColor( iIndexOfTable, pAET, Maet_New_Ccu );
 
 }
 
-void MainWindow::UpdateRow()
+/**
+ * @brief MainWindow::UpdateRow
+ * @param pQTableWidget
+ * @param pAET
+ * @param iIndexOfTable
+ */
+void MainWindow::UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iIndexOfTable )
 {
     QString qTemp;
 
     struct tm *pTm;
 
-
     qTemp.sprintf( "%d", m_nCoList );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
     qTemp.sprintf( "%d", pAET->noEMT );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
     qTemp.sprintf( "%s", aet_signal_type[pAET->sigType] );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enSIGTYPE, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enSIGTYPE, new QTableWidgetItem(qTemp) );
     qTemp.sprintf( "%.1f", SONATA::DECODE::DOA( pAET->aoa ) );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
     if( pAET->frq.type == _PATTERN_AGILE ) {
         qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::TOA(pAET->frq.patPrd), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
     }
     else {
         qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
     }
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enFREQ, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enFREQ, new QTableWidgetItem(qTemp) );
 
     if( pAET->pri.type == _JITTER_PATTERN ) {
         qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA(pAET->pri.patPrd), SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA(pAET->pri.min), SONATA::DECODE::TOA(pAET->pri.max) );
@@ -394,13 +415,13 @@ void MainWindow::UpdateRow()
     else {
         qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA( pAET->pri.min ), SONATA::DECODE::TOA( pAET->pri.max ) );
     }
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPRI, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enPRI, new QTableWidgetItem(qTemp) );
 
     qTemp.sprintf( "%7.0f(%.0f,%.0f)", SONATA::DECODE::PW( pAET->pw.mean ), SONATA::DECODE::PW(pAET->pw.min), SONATA::DECODE::PW(pAET->pw.max) );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPW, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enPW, new QTableWidgetItem(qTemp) );
 
     qTemp.sprintf( "%7.1f(%.1f,%.1f)", SONATA::DECODE::PA( pAET->pa.mean ), SONATA::DECODE::PA(pAET->pa.min), SONATA::DECODE::PA(pAET->pa.max) );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPA, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enPA, new QTableWidgetItem(qTemp) );
 
     if( pAET->as.type == CONICAL ) {
         qTemp.sprintf( "%s %s%7.1f", aet_asp_stat_ch[pAET->as.stat], aet_asp_type_ch[pAET->as.type], SONATA::DECODE::TOA(pAET->as.prd) );
@@ -408,37 +429,64 @@ void MainWindow::UpdateRow()
     else {
         qTemp.sprintf( "%s %s%7.1f", aet_asp_stat_ch[pAET->as.stat], aet_asp_type_ch[pAET->as.type], SONATA::DECODE::TOA(pAET->as.prd) );
     }
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enSCAN, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enSCAN, new QTableWidgetItem(qTemp) );
 
     pTm = localtime( & pAET->seen.frst );
     qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enFirstSeen, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enFirstSeen, new QTableWidgetItem(qTemp) );
 
     pTm = localtime( & pAET->seen.last );
     qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enLastSeen, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enLastSeen, new QTableWidgetItem(qTemp) );
 
     qTemp.sprintf( "%d", pAET->priLev );
-    ui->aettableWidget->setItem( stListTable.iIndexOfTable, enPriority, new QTableWidgetItem(qTemp) );
+    pQTableWidget->setItem( iIndexOfTable, enPriority, new QTableWidgetItem(qTemp) );
 
     if( pAET->id.coAmbi != 0 ) {
         qTemp.sprintf( "%s", pAET->elintNotation );
-        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enELNOT, new QTableWidgetItem(qTemp) );
+        pQTableWidget->setItem( iIndexOfTable, enELNOT, new QTableWidgetItem(qTemp) );
 
         qTemp.sprintf( "%s", pAET->emitterName );
-        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enEMITTER, new QTableWidgetItem(qTemp) );
+        pQTableWidget->setItem( iIndexOfTable, enEMITTER, new QTableWidgetItem(qTemp) );
 
         qTemp.sprintf( "%s", pAET->threatName );
-        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enTHREAT, new QTableWidgetItem(qTemp) );
+        pQTableWidget->setItem( iIndexOfTable, enTHREAT, new QTableWidgetItem(qTemp) );
 
         qTemp.sprintf( "%d(%d,%d,%d)", pAET->id.coAmbi, pAET->id.noIPL[0], pAET->id.noIPL[1], pAET->id.noIPL[2] );
-        ui->aettableWidget->setItem( stListTable.iIndexOfTable, enID, new QTableWidgetItem(qTemp) );
+        pQTableWidget->setItem( iIndexOfTable, enID, new QTableWidgetItem(qTemp) );
     }
     else {
 
     }
 
-    ui->aettableWidget->resizeColumnsToContents();
+    pQTableWidget->resizeColumnsToContents();
+}
+
+/**
+ * @brief MainWindow::GetIndexOfAETTable
+ * @param uiAETID
+ * @return
+ */
+int MainWindow::GetIndexOfAETTable( unsigned int uiAETID )
+{
+    int i, iTotalRowCount = ui->aettableWidget->rowCount();
+
+    QString qStrNoAET;
+
+    qStrNoAET.sprintf( "%d", uiAETID );
+    for( i=0 ; i < iTotalRowCount ; ++i ) {
+        QString qString;
+
+        qString = ui->aettableWidget->item(i, enNoAET )->text();
+
+        if( qString == qStrNoAET ) {
+            break;
+        }
+
+    }
+
+    return i;
+
 }
 
 /**
@@ -447,27 +495,58 @@ void MainWindow::UpdateRow()
  */
 void MainWindow::UpdateAETTable( void *pByteData )
 {
-    int i;
-    int iTotalRowCount = ui->aettableWidget->rowCount();
-
+    int iIndexOfTable;
     STR_AET *pAET;
-
-    QString qStrNoAET;
 
     pAET = ( STR_AET *) pByteData;
 
-    qStrNoAET.sprintf( "%d", pAET->noEMT );
+    iIndexOfTable = GetIndexOfAETTable( pAET->noEMT );
 
-    for( i=0 ; i < iTotalRowCount ; ++i ) {
-        QString qString;
+    UpdateRow( ui->aettableWidget, pAET, iIndexOfTable );
 
-        qString = ui->aettableWidget->item(i, enNoAET )->text();
+    UpdateColor( iIndexOfTable, pAET, Maet_Update_Ccu );
 
-        if( qString == qStrNoAET ) {
+}
 
-        }
-
+/**
+ * @brief MainWindow::UpdateColor
+ * @param iIndex
+ * @param pAET
+ */
+void MainWindow::UpdateColor( int iIndex, STR_AET *pAET, unsigned int opCode )
+{
+    // 위협도
+    if( pAET->priLev >= 6 ) {
+        ui->aettableWidget->item( iIndex, 0 )->setBackgroundColor( Qt::red );
     }
+
+    if( opCode == esAET_NEW_CCU ) {
+        ui->aettableWidget->item( iIndex, 0 )->setBackgroundColor( Qt::white );
+    }
+    else if( opCode == esAET_LST_CCU ) {
+        ui->aettableWidget->item( iIndex, 0 )->setBackgroundColor( Qt::yellow );
+    }
+    else {
+        ui->aettableWidget->item( iIndex, 0 )->setBackgroundColor( qRgb(255,0,0) );
+    }
+
+}
+
+/**
+ * @brief MainWindow::LostAETTable
+ * @param pByteData
+ */
+void MainWindow::LostAETTable( void *pByteData )
+{
+    int iIndexOfTable;
+    STR_AET *pAET;
+
+    pAET = ( STR_AET *) pByteData;
+
+    iIndexOfTable = GetIndexOfAETTable( pAET->noEMT );
+
+    UpdateColor( iIndexOfTable, pAET, Maet_Lost_Ccu );
+
 }
 
 /**
@@ -476,7 +555,15 @@ void MainWindow::UpdateAETTable( void *pByteData )
  */
 void MainWindow::DeleteAETTable( void *pByteData )
 {
+    int iIndexOfTable;
+    STR_AET *pAET;
+
+    pAET = ( STR_AET *) pByteData;
+
     -- m_nCoList;
+
+    iIndexOfTable = GetIndexOfAETTable( pAET->noEMT );
+    ui->aettableWidget->removeRow( iIndexOfTable );
 }
 
 /**
@@ -494,6 +581,10 @@ void MainWindow::ShowIBitResult( void *pData )
 
 }
 
+/**
+ * @brief MainWindow::ShowCBitResult
+ * @param pData
+ */
 void MainWindow::ShowCBitResult( void *pData )
 {
     STR_ES_CBIT *pESCBit;
@@ -502,6 +593,21 @@ void MainWindow::ShowCBitResult( void *pData )
     pESCBit = ( STR_ES_CBIT * ) pData;
     qBitResult.sprintf( "0x%x/0x%x/0x%x, 0x%x", pESCBit->sp[0].w32, pESCBit->sp[1].w32, pESCBit->sp[2].w32, pESCBit->rsa.w32 );
     ui->bit_result->setText( qBitResult );
+
+}
+
+/**
+ * @brief MainWindow::ShowIPLVersion
+ * @param pData
+ */
+void MainWindow::ShowIPLVersion( void *pData )
+{
+    STR_IPL_VERSION *pIPLVersion;
+    QString qStrTitle;
+
+    pIPLVersion = ( STR_IPL_VERSION * ) pData;
+    qStrTitle.sprintf( "PocketSonata - IPL[%0X]" , pIPLVersion->uiIPLVersion );
+    setWindowTitle( qStrTitle );
 
 }
 
@@ -768,5 +874,209 @@ void MainWindow::on_pushButton_ReloadLibrary_clicked()
     strLanHeader.uiLength = 0;
 
     iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
+
+}
+
+/**
+ * @brief MainWindow::on_pushButton_IPLVersion_clicked
+ */
+void MainWindow::on_pushButton_IPLVersion_clicked()
+{
+    int iRet;
+
+    STR_LAN_HEADER strLanHeader;
+
+    strLanHeader.uiOpCode = enREQ_IPL_VERSION;
+    strLanHeader.uiLength = 0;
+
+    iRet = SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
+}
+
+/**
+ * @brief MainWindow::on_pushButton_DownloadIPL_clicked
+ */
+void MainWindow::on_pushButton_DownloadIPL_clicked()
+{
+    int i, iRet;
+
+    time_t timer;
+    struct tm* t;
+
+    STR_LAN_HEADER strLanHeader;
+    STR_IPL_START strIPLStart;
+
+    ui->progressBar_IPL->setValue( 0 );
+
+    timer = time( NULL );
+    t = localtime(&timer);
+
+    ReadIPLFIle();
+
+    strLanHeader.uiOpCode = enREQ_IPL_START;
+    strLanHeader.uiLength = sizeof(STR_IPL_START);
+    strIPLStart.uiCountOfIPL = m_coLoadIPL;
+    strIPLStart.uiIPLVersion = ( ( t->tm_year - 100 ) << 16 ) | ( ( t->tm_mon + 1 ) << 8 ) | t->tm_mday;;
+
+    iRet = SendRSA( & strLanHeader, & strIPLStart, strLanHeader.uiLength );
+
+    if( iRet == (int) strLanHeader.uiLength ) {
+        for( i=1 ; i <= m_coLoadIPL ; ++i ) {
+            strLanHeader.uiOpCode = enREQ_IPL_DOWNLOAD;
+            strLanHeader.uiLength = sizeof( STR_IPL );
+            iRet = SendRSA( & strLanHeader, & m_strIpl[i], strLanHeader.uiLength );
+
+
+            if( iRet == (int) strLanHeader.uiLength ) {
+                ui->progressBar_IPL->setValue( (int) ( 0.5 + (float) ( ( (float) i * 100. ) / (float) m_coLoadIPL ) ) );
+            }
+
+            usleep( 100000 );
+        }
+    }
+
+    strLanHeader.uiOpCode = enREQ_IPL_END;
+    strLanHeader.uiLength = 0;
+    SendRSA( & strLanHeader, NULL, strLanHeader.uiLength );
+
+}
+
+/**
+ * @brief MainWindow::ReadIPLFIle
+ */
+void MainWindow::ReadIPLFIle()
+{
+    FILE *iplfile;
+
+    STR_IPL *ptmp;
+
+    UINT i;
+
+    char da[1500];
+    char str[100];
+
+    iplfile = fopen( "ipl.txt" , "rt" );          /* open the IPL file    */
+    if( iplfile != NULL ) {
+        fgets( da, 1500, iplfile );                  /* skip the header of IPL   */
+        fgets( da, 1500, iplfile );
+
+        ptmp = & m_strIpl[1];
+        m_coLoadIPL = 0;
+
+        while( ! feof( iplfile ) ) {
+            /* Signal Type	*/
+            fscanf( iplfile, "%d", &ptmp->sigType );	// dummy ipl #
+
+            fscanf( iplfile, "%d", &ptmp->sigType );
+
+            if( feof( iplfile ) ) {
+                break;
+            }
+
+            ptmp->noIPL = m_coLoadIPL + 1;
+
+            /* Frequency   */
+            fscanf( iplfile, "%d", &ptmp->frq.type );
+            fscanf( iplfile, "%s", str );
+            ptmp->frq.low = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->frq.hgh = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->frq.bw = ( UINT ) ( ( double ) atof( str ) );
+
+            fscanf( iplfile, "%d", &ptmp->frq.patType );			// Pattern Type
+            fscanf( iplfile, "%d", &ptmp->frq.swtLev );			// Pattern Type
+            for( i=0 ; i < _spMaxSwtLev ; ++i ) {
+                fscanf( iplfile, "%s", str );
+                ptmp->frq.dwLow[i] = ( UINT ) ( ( double ) atof( str ) );
+                fscanf( iplfile, "%s", str );
+                ptmp->frq.dwHgh[i] = ( UINT ) ( ( double ) atof( str ) );
+            }
+
+            fscanf( iplfile, "%s", str );
+            ptmp->frq.ppLow = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->frq.ppHgh = ( UINT ) ( ( double ) atof( str ) );
+
+            /*  PRI  */
+            fscanf( iplfile, "%d", &ptmp->pri.type );
+            fscanf( iplfile, "%s", str );
+            ptmp->pri.low = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->pri.hgh = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%d", &ptmp->pri.patType );
+            fscanf( iplfile, "%d", &ptmp->pri.jtrPer );
+            fscanf( iplfile, "%d", &ptmp->pri.swtLev );
+            for( i=0 ; i < _spMaxSwtLev ; ++i )  {
+                fscanf( iplfile, "%s", str );
+                ptmp->pri.swtValLow[i] = ( UINT ) ( ( double ) atof( str ) );
+                fscanf( iplfile, "%s", str );
+                ptmp->pri.swtValHgh[i] = ( UINT ) ( ( double ) atof( str ) );
+            }
+            fscanf( iplfile, "%d", &ptmp->pri.ppLow );
+            fscanf( iplfile, "%d", &ptmp->pri.ppHgh );
+
+            /*	Pulsewidth	*/
+            fscanf( iplfile, "%s", str );
+            ptmp->pw.low = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->pw.hgh = ( UINT ) ( ( double ) atof( str ) );
+
+            /*  Antenna Scan Period */
+            fscanf( iplfile, "%d", &ptmp->as.type );
+            fscanf( iplfile, "%s", str );
+            ptmp->as.prdLow = ( UINT ) ( ( double ) atof( str ) );
+            fscanf( iplfile, "%s", str );
+            ptmp->as.prdHgh = ( UINT ) ( ( double ) atof( str ) );
+
+            /* Delete Time		*/
+            fscanf( iplfile, "%d", &ptmp->tmoDel );
+
+            /* Threat Level */
+            fscanf( iplfile, "%d", &ptmp->thrLev );
+
+            /* AutoWarning */
+            fscanf( iplfile, "%d", &ptmp->autoWarn );
+
+            /* Elint Notation */
+            fscanf( iplfile, "%s", ptmp->elintNot );
+
+            /* Elint Name */
+            fscanf( iplfile, "%s", ptmp->elintName );
+
+            /* Category */
+            fscanf( iplfile, "%d", &ptmp->cat );
+
+            /* Threat ERP */
+            fscanf( iplfile, "%d", &ptmp->thrERP );
+
+            /* Platform name */
+            fscanf( iplfile, "%d", &ptmp->platform[0].noplat );
+            fscanf( iplfile, "%s", ptmp->platform[0].platName );
+
+            fscanf( iplfile, "%d", &ptmp->platform[1].noplat );
+            fscanf( iplfile, "%s", ptmp->platform[1].platName );
+
+            fscanf( iplfile, "%d", &ptmp->platform[2].noplat );
+            fscanf( iplfile, "%s", ptmp->platform[2].platName );
+
+            fscanf( iplfile, "%d", &ptmp->platform[3].noplat );
+            fscanf( iplfile, "%s", ptmp->platform[3].platName );
+
+            fscanf( iplfile, "%d", &ptmp->platform[4].noplat );
+            fscanf( iplfile, "%s", ptmp->platform[4].platName );
+
+#ifdef ID_DEBUG
+          fprintf( stderr, "#" );
+#endif
+
+//          DISP_FineIPL( ptmp );
+            ++ m_coLoadIPL;
+            ++ ptmp;
+
+        }
+
+        fclose( iplfile );
+
+    }
 
 }

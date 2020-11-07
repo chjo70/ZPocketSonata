@@ -412,9 +412,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>280</x>
        <y>30</y>
-       <width>201</width>
+       <width>161</width>
        <height>30</height>
       </rect>
      </property>
@@ -426,6 +426,63 @@
      </property>
      <property name="text">
       <string>위협 라이브러리 재로딩</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_IPLVersion">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>81</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>81</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>버젼</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_DownloadIPL">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>25</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>81</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>다운로드</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressBar_IPL">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>50</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </widget>

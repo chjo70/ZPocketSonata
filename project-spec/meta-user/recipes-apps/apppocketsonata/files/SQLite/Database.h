@@ -13,6 +13,9 @@
 #include <memory>
 #include <string.h>
 
+#include <time.h>
+#include <sys/time.h>
+
 #include "Column.h"
 
 
@@ -485,10 +488,23 @@ public:
 
     inline Database *GetDatabase() { return this; }
 
+
+    void getStringPresentTime( char *pString ) {
+        struct tm stTime;
+        time_t nowTime=time(NULL);
+
+        localtime_r( & nowTime, & stTime );
+        strftime( pString, 100, "%Y-%m-%d %H:%M:%S", & stTime );
+    }
+
 private:
     // TODO: perhaps switch to having Statement sharing a pointer to the Connexion
     std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
     std::string mFilename;                          ///< UTF-8 filename used to open the database
+
+protected:
+    char m_szSQLString[4000];
+
 };
 
 

@@ -109,7 +109,7 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 {
 
     if( iIndex >= 0 && iIndex < SIZE_OF_MSGDATA_ARRAY ) {
-    memcpy( pData, m_pszArray[iIndex], uiLength );
+        memcpy( pData, m_pszArray[iIndex], uiLength );
         SetMark( iIndex );
     }
     else {

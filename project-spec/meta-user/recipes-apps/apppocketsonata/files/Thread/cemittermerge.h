@@ -34,6 +34,8 @@ private:
     void ReloadLibrary();
 
     void SendNewUpd();
+    void SendLost( unsigned int uiAETID );
+    void SendDelete( unsigned int uiAETID );
 
 };
 

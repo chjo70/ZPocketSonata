@@ -96,9 +96,11 @@ enum FREQ_BAND
 // 신호 형태 정의값
 enum SIGNAL_TYPE
 {
-    ST_NORMAL_PULSE = 0,
-    ST_CW= 1,
+    ST_NORMAL_PULSE = 1,
+    ST_CW,
     ST_DOPPLER,
+    ST_HIGHPRF,
+
 	ST_FMOP,
 	ST_CW_FMOP,
 	ST_SHORT,
@@ -110,7 +112,7 @@ enum SIGNAL_TYPE
 #ifdef _ELINT_
 const char aet_signal_type[7][3] = { "NP" , "CW" , "DP" , "FM" , "CF", "SH", "AL" };
 #elif defined(_POCKETSONATA_)
-static const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+static const char aet_signal_type[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
 #else
 static const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
 #endif
@@ -977,6 +979,8 @@ struct STR_IPL {
   UINT thrERP;
   IPL_PLAT platform[ 5 ];    // Modified `98.8.25
 } ;
+
+static const char ipl_signal_type[ST_MAX][10] = { "UK" , "Pulsed" , "CW" };
 
 #endif
 

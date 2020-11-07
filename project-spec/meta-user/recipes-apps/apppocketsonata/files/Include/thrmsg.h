@@ -23,6 +23,7 @@ enum enTHREAD_REQ_MESSAGE {
     // 2. 신호 수집 쓰레드 에서 수신 메시지 정의
     // 추적 수집 신호 설정 메시지
     enTHREAD_REQ_SETWINDOWCELL,
+    enTHREAD_REQ_CLOSEWINDOWCELL,
 
 
     // 제어 메시지
@@ -38,6 +39,12 @@ enum enTHREAD_REQ_MESSAGE {
 
     // 라이브러리 관련 메시지
     enTHREAD_RELOAD_LIBRARY = enREQ_RELOAD_LIBRARY,
+    enTHREAD_IPLVERSION = esIPL_VERSION,
+    enTHREAD_REQ_IPLVERSION = enREQ_IPL_VERSION,
+
+    enTHREAD_IPL_START = enREQ_IPL_START,
+    enTHREAD_IPL_DOWNLOAD = enREQ_IPL_DOWNLOAD,
+    enTHREAD_IPL_END = enREQ_IPL_END,
 
     // 자체점검 관련 메시지
     enTHREAD_REQ_IBIT = enREQ_IBIT,
@@ -45,10 +52,11 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_CBIT = enREQ_CBIT,
     enTHREAD_REQ_SBIT = enREQ_SBIT,
 
-    enCGI_REQ_IBIT = enREQ_IBIT + 50,
-    enCGI_REQ_UBIT = enREQ_UBIT + 50,
-    enCGI_REQ_CBIT = enREQ_CBIT + 50,
-    enCGI_REQ_SBIT = enREQ_SBIT + 50,
+    enCGI_REQ_IBIT = 0xF000,
+    enCGI_REQ_UBIT,
+    enCGI_REQ_CBIT,
+    enCGI_REQ_SBIT,
+    enCGI_FETCH,
 
 
     //

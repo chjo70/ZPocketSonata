@@ -79,6 +79,11 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
         case enREQ_IBIT :
         case enREQ_UBIT :
         case enREQ_CBIT :
+            if( enMode == enES_MODE || enMode == enEW_MODE  ) {
+            }
+            else {
+                bRet = false;
+            }
             break;
 
         case enREQ_SBIT :
@@ -95,7 +100,18 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             }
             break;
 
+        case enREQ_IPL_START :
+        case enREQ_IPL_DOWNLOAD :
+        case enREQ_IPL_END :
+            if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
+            }
+            else {
+                bRet = false;
+            }
+            break;
+
         case enREQ_RELOAD_LIBRARY :
+        case enREQ_IPL_VERSION :
             break;
 
         default:

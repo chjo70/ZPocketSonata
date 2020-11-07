@@ -10,6 +10,8 @@
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
 
+#include "../Anal/INC/AetIPL.h"
+
 #include "../Collect/DataFile/CRWRCommonVariables.h"
 
 #pragma pack(push, 1)
@@ -31,7 +33,10 @@ enum ENUM_MODE {
     enEW_MODE,
     enREADY_MODE,
 
-    enANAL_Mode
+    enANAL_ES_MODE=0x80,
+    enANAL_EW_MODE=0x81,
+
+    enANAL_Mode=0x80,
 };
 
 
@@ -48,6 +53,10 @@ enum enREQ_MESSAGE {
     enREQ_CBIT = Mbit_ReqCbit,
     enREQ_SBIT = Mbit_StartSbit_V3,
 
+    enREQ_IPL_VERSION = Mipl_ReqVersion,
+    enREQ_IPL_START = Mipl_Start,
+    enREQ_IPL_DOWNLOAD = Mipl_Download,
+    enREQ_IPL_END = Mipl_End,
     enREQ_RELOAD_LIBRARY,
 
 
@@ -87,6 +96,9 @@ enum enRES_MESSAGE {
     esAET_UPD_CCU = Maet_Update_Ccu,
     esAET_LST_CCU = Maet_Lost_Ccu,
     esAET_DEL_CCU = Maet_Delete_Ccu,
+
+    esIPL_VERSION = Mipl_Version,
+    esIPL_WRITESTATUS = Mipl_WriteStatus,
 
 
 } ;
@@ -164,6 +176,16 @@ struct STR_ES_CBIT {
     UNI_RSA_CBIT rsa;
 } ;
 
+struct STR_IPL_VERSION {
+    unsigned int uiIPLVersion;
+    unsigned int uiStatus;
+};
+
+struct STR_IPL_START {
+    unsigned int uiIPLVersion;
+    unsigned int uiCountOfIPL;
+};
+
 
 /**
  * @brief The STR_RES_DUMP_LIST struct
@@ -178,19 +200,23 @@ struct STR_RES_DUMP_LIST {
  * @brief 랜 메시지 구조체
  */
 union UNI_LAN_DATA {
-    UINT uiResult;
+    unsigned int uiResult;
 
     // 수신 메시지 구조체 정의
     STR_REQ_DUMP_LIST strReqDumpList;
-    UINT uiUnit;
+    unsigned int uiUnit;
 
     // 송신 메시지 구조체 정의
     STR_RES_DUMP_LIST strResDumpList;
 
     // 기존 SONATA 체계 데이터 구조체 정의
-    UINT uiMode;
+    unsigned int uiMode;
 
     UNI_ES_IBIT stESIBit;
+
+    STR_IPL_START strIPLStart;
+
+    STR_IPL strIPL;
 
     // 모의 데이터 및 장치 시험용
     unsigned char szFile[_MAX_LANDATA];

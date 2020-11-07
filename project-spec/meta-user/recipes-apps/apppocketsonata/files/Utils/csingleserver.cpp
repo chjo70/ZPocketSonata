@@ -248,9 +248,18 @@ void CSingleServer::_routine()
                                 sndMsg.uiArrayLength = strLanHeader.uiLength;
                                 sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
                             }
+                            else if( sndMsg.uiOpCode == enREQ_IPL_DOWNLOAD ) {
+                                sndMsg.uiArrayLength = strLanHeader.uiLength;
+                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
+                            }
                             else {
-                                sndMsg.uiDataLength = strLanHeader.uiLength;
-                                memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
+                                if( strLanHeader.uiLength < sizeof(UNI_MSG_DATA) ) {
+                                    sndMsg.uiDataLength = strLanHeader.uiLength;
+                                    memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
+                                }
+                                else {
+                                    LOGMSG1( enError, "랜 수신 데이터(0x%x)를 초과했습니다. PushLanData()를 이용해서 저장해야 합니다. !!", m_pMsg->uiOpCode );
+                                }
                             }
 
                             if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {

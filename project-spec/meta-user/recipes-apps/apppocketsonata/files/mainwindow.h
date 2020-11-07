@@ -11,17 +11,13 @@
 
 #include "./Collect/DataFile/DataFile.h"
 
+#include <QtWidgets/QTableWidget>
+
 #define MAX_LAN_DATA            (1000)
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
-struct STR_LIST_TABLE {
-    unsigned int uiABTID;
-
-    int iIndexOfTable;
-};
 
 class MainWindow : public QMainWindow
 {
@@ -36,9 +32,17 @@ private:
     void ShowIBitResult( void *pData );
     void ShowCBitResult( void *pData );
 
+    void ShowIPLVersion( void *pData );
+
+    void ReadIPLFIle();
+
     void InsertAETTable( void *pByteData );
     void UpdateAETTable( void *pByteData );
     void DeleteAETTable( void *pByteData );
+    void LostAETTable( void *pByteData );
+    void UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iIndexOfTable );
+    int GetIndexOfAETTable( unsigned int uiAETID );
+    void UpdateColor( int iIndex, STR_AET *pAET, unsigned int opCode );
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -78,6 +82,10 @@ private slots:
 
     void on_pushButton_ReloadLibrary_clicked();
 
+    void on_pushButton_IPLVersion_clicked();
+
+    void on_pushButton_DownloadIPL_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -92,9 +100,10 @@ private:
     //QTcpServer *pServer;
     //QList<QTcpSocket*> _sockets;
 
-    vector<STR_LIST_TABLE> vTable;
-
     int m_nCoList;
+
+    int m_coLoadIPL;
+    STR_IPL m_strIpl[2000];
 
 };
 #endif // MAINWINDOW_H

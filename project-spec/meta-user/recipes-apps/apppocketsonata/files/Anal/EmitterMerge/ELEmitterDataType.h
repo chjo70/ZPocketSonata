@@ -1792,11 +1792,11 @@ enum E_BEAM_EMITTER_STAT
 	E_ES_NOT_AVAILABLE = 0,			// 객체가 생성되지 않은 경우 (필요성에 대해서는 논의 필요)
 
 	// 내부적으로 위협 상태 정보 값 : 전시할 필요가 없음.
-	E_ES_NEW,										// 신규 처리 (상태정보로 활용함, 전시), 활동
+    E_ES_NEW,									// 신규 처리 (상태정보로 활용함, 전시), 활동
 	E_ES_UPDATE,								// 활동
 	E_ES_DELETE,								// 미활동 처리
-	E_ES_DEACTIVATED,						// 활동 중지 
-	E_ES_REACTIVATED,						// 활동 재개
+    E_ES_DEACTIVATED,                           // 활동 중지
+    E_ES_REACTIVATED,                           // 활동 재개
 
 };
 

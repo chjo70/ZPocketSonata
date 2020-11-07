@@ -13,6 +13,7 @@
 #include <regex.h>
 
 #include "../Include/system.h"
+#include "../Anal/INC/system.h"
 
 #include "../Utils/carraymsgdata.h"
 
@@ -25,6 +26,31 @@ virtual const char *ChildClassName() { return m_szClassName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
+    } \
+    return m_pInstance; } \
+static void ReleaseInstance() { \
+    if(m_pInstance) { \
+        delete m_pInstance; \
+        m_pInstance = NULL; \
+    } } \
+static bool IsThereInstance() { \
+    bool bRet = true; \
+    if(m_pInstance == NULL) { \
+        bRet = false; \
+    } \
+    return bRet; }
+
+// 오직 CTaskMngr 에서만 사용하는 정의문 입니다.
+#define THREAD_STANDARD_FUNCTION_2(A )    \
+void Run( key_t key=IPC_PRIVATE ); \
+virtual void _routine();    \
+virtual const char *ChildClassName() { return m_szClassName; } \
+static A* GetInstance() { \
+    if(m_pInstance == NULL) { \
+        char szSQLiteFileName[100]; \
+        strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER ); \
+        strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME ); \
+        m_pInstance = new A( g_iKeyId++, (char*) #A, true, (char*) szSQLiteFileName ); \
     } \
     return m_pInstance; } \
 static void ReleaseInstance() { \

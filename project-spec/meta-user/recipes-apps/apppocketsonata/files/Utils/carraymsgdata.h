@@ -3,7 +3,7 @@
 
 #include "../Include/system.h"
 
-#define SIZE_OF_MSGDATA_ARRAY         (256)
+#define SIZE_OF_MSGDATA_ARRAY           (256)
 
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)

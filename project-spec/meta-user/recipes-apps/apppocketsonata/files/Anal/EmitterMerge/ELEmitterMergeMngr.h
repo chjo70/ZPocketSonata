@@ -502,6 +502,9 @@ public:
 
     char *GetELNOT( int iRadarModeIndex );
     char *GetRadarModeName( int iRadarModeIndex );
+    char *GetThreatName( int iRadarModeIndex );
+
+    bool IsDeleteAET( unsigned int uiAETID );
 
 // 
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }
@@ -541,6 +544,6 @@ public:
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
 
-
+    E_BEAM_EMITTER_STAT UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat );
 };
 

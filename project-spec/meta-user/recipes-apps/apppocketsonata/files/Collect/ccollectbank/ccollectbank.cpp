@@ -117,6 +117,17 @@ void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
 }
 
 /**
+ * @brief CCollectBank::CloseTrackWindowCell
+ * @param pstrWindowCell
+ */
+void CCollectBank::CloseTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
+{
+    m_strWindowCell.bUse = false;
+
+    m_strWindowCell.enCollectMode = enUnused;
+}
+
+/**
  * @brief CSignalCollect::IsValidChannle
  */
 bool CCollectBank::IsValidChannel()

@@ -1,5 +1,7 @@
-﻿#include <string.h>
+﻿#include <time.h>
+#include <string.h>
 #include <memory.h>
+#include <sys/time.h>
 
 #ifdef ENABLE_FASTCGI
 #include "fcgi_stdio.h"
@@ -55,6 +57,9 @@ void DownloadFile( int iSwitch )
 {
     char szSQLiteFileName[100];
 
+    time_t timer;
+    struct tm* t;
+
     qErrorPrint( "DownloadFile[%d]" , iSwitch );
     switch( (EN_DOWNLOAD_CASE) iSwitch ) {
         case enCEDEOB :
@@ -68,6 +73,16 @@ void DownloadFile( int iSwitch )
         case enAET :
             strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
             strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+            qErrorPrint( "DownloadFile[%s]" , szSQLiteFileName );
+            qDownload( szSQLiteFileName );
+            break;
+
+        case enLOG :
+            strcpy( szSQLiteFileName, PROGRAM_LOG_FOLDER );
+            timer = time( NULL );
+            t = localtime(&timer);
+            sprintf( & szSQLiteFileName[strlen(PROGRAM_LOG_FOLDER)], "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
 
             qErrorPrint( "DownloadFile[%s]" , szSQLiteFileName );
             qDownload( szSQLiteFileName );

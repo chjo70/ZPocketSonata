@@ -36,7 +36,7 @@ CTaskMngr* CTaskMngr::m_pInstance = nullptr;
 /**
  * @brief CTaskMngr::CTaskMngr
  */
-CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName )
+CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData ), Database( pFileName, SQLite::OPEN_READWRITE )
 {
     LOGENTRY;
 
@@ -108,7 +108,6 @@ void CTaskMngr::Init()
  */
 void CTaskMngr::InitVar()
 {
-
     // 보드 ID를 설정한다.
     GP_SYSCFG->SetBoardID( GetBoardID() );
 
@@ -156,6 +155,16 @@ void CTaskMngr::_routine()
                 case enTHREAD_REQ_SHUTDOWN :
                     Shutdown();
                     bWhile = false;
+                    break;
+
+                case enTHREAD_REQ_IPLVERSION :
+                    ReqIPLVersion();
+                    break;
+
+                case enREQ_IPL_START :
+                case enREQ_IPL_DOWNLOAD :
+                case enREQ_IPL_END :
+                    IPLDownload();
                     break;
 
                 default:
@@ -215,8 +224,10 @@ void CTaskMngr::AnalysisStart()
 
     GP_SYSCFG->SetMode( enANAL_Mode );
 
-    // 시간 정보로 설정한 후에 시작 명령을
+    // 시간 정보로 설정한 후에 시작 명령을 처리한다.
     tiNow = (time_t) m_pMsg->x.szData[0];
+    // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
+    //stime( & tiNow );
 
     SIGCOL->QMsgSnd( m_pMsg );
 
@@ -330,3 +341,110 @@ void CTaskMngr::ProcessSummary()
     LOGMSG2( enDebug, "  총 타스크 개수 : %d\t   총 메시지 큐 개수 : %d" , GetCoThread(), GetCoThread() );
     LOGMSG( enDebug, "--------------------------------------------------------" );
 }
+
+/**
+ * @brief CTaskMngr::IPLVersion
+ */
+void CTaskMngr::ReqIPLVersion()
+{
+    STR_IPL_VERSION strIPLVersion;
+
+    strIPLVersion.uiIPLVersion = (m_theIPL.getIPLStart())->uiIPLVersion;
+    strIPLVersion.uiStatus = strIPLVersion.uiIPLVersion != _spZero ? _spPass : _spFail;
+    CCommonUtils::SendLan( esIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
+}
+
+/**
+ * @brief CTaskMngr::IPLDownload
+ */
+void CTaskMngr::IPLDownload()
+{
+    int iWriteStatus;
+    UNI_LAN_DATA *pLanData;
+
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
+
+    switch( m_pMsg->uiOpCode ) {
+        case enREQ_IPL_START :
+            m_theIPL.setIPLStart( & pLanData->strIPLStart );
+            DeleteIPL();
+            break;
+
+        case enREQ_IPL_DOWNLOAD :
+            m_theIPL.setIPL( (STR_IPL *) GetArrayMsgData(m_pMsg->iArrayIndex) );
+            InsertIPL( m_iTotalIPL );
+            ++ m_iTotalIPL;
+
+            CCommonUtils::SendLan( esIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
+            break;
+
+        case enREQ_IPL_END :
+            if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+            break;
+
+        default :
+            break;
+
+    }
+}
+
+/**
+ * @brief CTaskMngr::DeleteIPL
+ */
+void CTaskMngr::DeleteIPL()
+{
+
+    // 레이더
+    sprintf( m_szSQLString, "DELETE FROM RADAR" );
+    exec( m_szSQLString );
+
+    // 레이더 모드
+    sprintf( m_szSQLString, "DELETE FROM RADAR_MODE" );
+    exec( m_szSQLString );
+
+    // 레이더 & 레이더 모드 관계
+    sprintf( m_szSQLString, "DELETE FROM RADAR_MODELIFECYCLE" );
+    //exec( m_szSQLString );
+
+    m_iTotalIPL = 0;
+
+}
+
+/**
+ * @brief CTaskMngr::InsertIPL
+ */
+void CTaskMngr::InsertIPL( int iIndex )
+{
+    STR_IPL *pstrIPL;
+    char szDate[100];
+
+    pstrIPL = m_theIPL.getIPL( iIndex );
+
+    // 레이더
+    sprintf( m_szSQLString, "INSERT INTO RADAR ( RADAR_INDEX, ELNOT, NICKNAME, FUNCTION_CODE, PRIORITY ) VALUES \
+                             ( %d, '%s', 'NICK%d', 'ZZ', %d )" , \
+                             pstrIPL->noIPL, pstrIPL->elintNot, pstrIPL->noIPL, pstrIPL->thrLev );
+    exec( m_szSQLString );
+
+    // 레이더 모드
+    getStringPresentTime( szDate );
+    sprintf( m_szSQLString, "INSERT INTO RADAR_MODE ( RADAR_MODE_INDEX, FUNCTION_CODE, SIGNAL_TYPE, \
+DATE_CREATED, \
+RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
+PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
+PRIORITY, RF_TYPE, PRI_TYPE ) VALUES \
+( %d, 'ZZ', '%s', \
+'%s', \
+%d, %d, %d, %d, %d, \
+%d, %d, %d, %d, %d, \
+%d, 1, 1 )" , \
+    pstrIPL->noIPL, ipl_signal_type[pstrIPL->sigType], \
+    szDate, \
+    pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
+    pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
+    pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type );
+
+    exec( m_szSQLString );
+
+}
+

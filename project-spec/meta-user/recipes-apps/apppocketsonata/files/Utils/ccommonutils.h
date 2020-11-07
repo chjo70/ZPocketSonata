@@ -6,6 +6,9 @@
 
 class CCommonUtils
 {
+private:
+    ENUM_MODE m_enMode;
+
 public:
     CCommonUtils();
 

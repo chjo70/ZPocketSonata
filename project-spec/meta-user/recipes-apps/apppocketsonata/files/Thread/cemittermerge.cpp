@@ -115,10 +115,13 @@ void CEmitterMerge::MergeEmitter()
     int i;
     bool bMerge, bTrkLOB=false;
 
+    CELThreat *pThreatAET;
+
     STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
 
     SRxLOBData *pLOBData;
+    SRxABTData *pABTData;
 
     LOGMSG4( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
 
@@ -146,11 +149,11 @@ void CEmitterMerge::MergeEmitter()
         strAnalInfo.uiABTID = m_pTheEmitterMergeMngr->GetABTID();
         SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
-        // 2.3 빔 정보를 제어조종장치에게 전송한다.
+        // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
         SendNewUpd();
 
 
-        //
+        // 2.4 추적 업데이트 성공 여부 플레그 업데이트
         if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != 0 ) {
             bTrkLOB = true;
         }
@@ -169,9 +172,23 @@ void CEmitterMerge::MergeEmitter()
         strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
         strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
 
-        SRxABTData *pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
+        pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
 
-        SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        // 3.1 추적 채널 업데이트 수행
+        if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
+            SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+
+            // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
+            SendLost( strAnalInfo.uiAETID );
+        }
+        else {
+            SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSEWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+
+            // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
+            SendDelete( strAnalInfo.uiAETID );
+        }
+
+
     }
 
 }
@@ -185,12 +202,15 @@ void CEmitterMerge::SendNewUpd()
         //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
 #else
     int i;
+
+    char *pString;
+
     STR_AET stAET;
     SRxABTData *pSRxABTData;
-    SELABTDATA_EXT *m_pABTExtData;
+    SELABTDATA_EXT *pABTExtData;
 
     pSRxABTData = m_pTheEmitterMergeMngr->GetABTData();
-    m_pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
+    pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
 
     // AET로 변환
     memset( & stAET, 0, sizeof(stAET) );
@@ -234,14 +254,17 @@ void CEmitterMerge::SendNewUpd()
     stAET.seen.last = pSRxABTData->tiLastSeenTime;
 
     stAET.priLev = pSRxABTData->iRadarModePriority;
-    strncpy( (char *) stAET.elintNotation, m_pTheEmitterMergeMngr->GetELNOT( pSRxABTData->iRadarModeIndex ), sizeof(stAET.elintNotation) );
-    strncpy( (char *) stAET.emitterName, m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex ), sizeof(stAET.emitterName) );
-    strncpy( (char *) stAET.threatName, m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex ), sizeof(stAET.threatName) );
+    pString = m_pTheEmitterMergeMngr->GetELNOT( pSRxABTData->iRadarModeIndex );
+    if( pString ) { strncpy( (char *) stAET.elintNotation, pString, sizeof(stAET.elintNotation) ); }
+    pString = m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex );
+    if( pString ) { strncpy( (char *) stAET.emitterName, pString, sizeof(stAET.emitterName) ); }
+    pString = m_pTheEmitterMergeMngr->GetThreatName( pSRxABTData->iRadarModeIndex );
+    if( pString ) { strncpy( (char *) stAET.threatName, pString, sizeof(stAET.threatName) ); }
 
-    stAET.id.coAmbi = min( m_pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
-    memcpy( stAET.id.noIPL, m_pABTExtData->idInfo.nRadarModeIndex, sizeof(int) * stAET.id.coAmbi );
+    stAET.id.coAmbi = min( pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
+    memcpy( stAET.id.noIPL, pABTExtData->idInfo.nRadarModeIndex, sizeof(int) * stAET.id.coAmbi );
 
-    if( pSRxABTData->uiCoLOB == _spOne ) {
+    if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
         CCommonUtils::SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET) );
     }
     else {
@@ -250,6 +273,23 @@ void CEmitterMerge::SendNewUpd()
 
 #endif
 
+}
+
+/**
+ * @brief CEmitterMerge::SendLost
+ */
+void CEmitterMerge::SendLost( unsigned int uiAETID )
+{
+    CCommonUtils::SendLan( esAET_LST_CCU, & uiAETID, sizeof(uiAETID) );
+}
+
+
+/**
+ * @brief CEmitterMerge::SendDelete
+ */
+void CEmitterMerge::SendDelete( unsigned int uiAETID )
+{
+    CCommonUtils::SendLan( esAET_DEL_CCU, & uiAETID, sizeof(uiAETID) );
 }
 
 /**

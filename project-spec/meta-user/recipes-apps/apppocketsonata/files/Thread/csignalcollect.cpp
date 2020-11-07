@@ -133,6 +133,10 @@ void CSignalCollect::_routine()
                     ReqSetWindowCell();
                     break;
 
+                case enTHREAD_REQ_CLOSEWINDOWCELL :
+                    CloseSetWindowCell();
+                    break;
+
                 // 모의 명령 처리
                 case enTHREAD_REQ_SIM_PDWDATA :
                     SimPDWData();
@@ -420,6 +424,45 @@ void CSignalCollect::ReqSetWindowCell()
     }
 
 }
+
+/**
+ * @brief CSignalCollect::CloseSetWindowCell
+ */
+void CSignalCollect::CloseSetWindowCell()
+{
+    SRxABTData *pABTData = ( SRxABTData *) m_uniLanData.szFile;
+
+    // 랜 데이터를 갖고온다.
+    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+
+    LOGMSG3( enDebug, " [%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+
+     m_theTrackChannel.Push( m_pMsg->x.strAnalInfo.uiCh );
+
+    // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
+    //CloseTrackWindowCell( pABTData );
+
+     STR_WINDOWCELL strWindowCell;
+    m_pTheCollectBank->CloseTrackWindowCell( & strWindowCell );
+
+}
+
+/**
+ * @brief CSignalCollect::CloseTrackWindowCell
+ * @param pABTData
+ */
+/*
+void CSignalCollect::CloseTrackWindowCell( SRxABTData *pABTData )
+{
+    STR_WINDOWCELL strWindowCell;
+
+    // 정보 업데이트
+    CalTrackWindowCell( & strWindowCell, pABTData );
+
+    m_pTheCollectBank->CloseTrackWindowCell( & strWindowCell );
+
+}
+*/
 
 /**
  * @brief CSignalCollect::UpdateTrackWindowCell

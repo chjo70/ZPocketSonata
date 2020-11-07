@@ -17,6 +17,7 @@ SOURCES += \
         Anal/EmitterMerge/UTM.cpp \
         Anal/Identify/ELUtil.cpp \
         Anal/Identify/Identify.cpp \
+        Anal/Identify/cipl.cpp \
         Anal/KnownSigAnal/KAnalPRI.cpp \
         Anal/KnownSigAnal/KGroup.cpp \
         Anal/KnownSigAnal/KMakeAET.cpp \
@@ -115,6 +116,7 @@ HEADERS += \
     Anal/Identify/ELUtil.h \
     Anal/Identify/Identify.h \
     Anal/Identify/Identify.h \
+    Anal/Identify/cipl.h \
     Anal/Identify/define.h \
     Anal/Identify/define.h \
     Anal/Identify/structs.h \

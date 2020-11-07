@@ -68,6 +68,13 @@ void CThread::Run( void *(*Func)(void*), key_t key )
     LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", ChildClassName() );
 
     ++ m_iCoMsgQueue;
+
+    // 기존의 메시지 큐를 삭제하고 재 생성한다.
+    m_MsgKeyID = msgget( key, S_DEFFILEMODE | IPC_CREAT );
+    if (m_MsgKeyID != -1 ) {
+        msgctl( m_MsgKeyID, IPC_RMID, 0 );
+    }
+
     m_MsgKeyID = msgget( key, S_DEFFILEMODE | IPC_CREAT );
     if (m_MsgKeyID == -1 ) {
         perror("msgget error : ");
@@ -180,7 +187,7 @@ int CThread::QMsgRcv( int iFlag )
     int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
 
     if( iMsgRcv > 0 ) {
-        LOGMSG4( enDebug, "*수신: [%s]에서 Op[0x%02X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+        LOGMSG4( enDebug, "*수신: [%12s]에서 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
     }
 
     return iMsgRcv;

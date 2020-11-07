@@ -68,7 +68,7 @@ STR_EOB_RESULT *CELSignalIdentifyAlg::m_pEOBResult;			///< EOB 식별 결과를 
 STR_LIB_IDRESULT *CELSignalIdentifyAlg::m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
 STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 결과
 
-char *CELSignalIdentifyAlg::m_pszSQLString;
+//char *CELSignalIdentifyAlg::m_pszSQLString;
 
 //vector<SDeviceData> CELSignalIdentifyAlg::m_vecDeviceData;
 
@@ -86,7 +86,7 @@ char *CELSignalIdentifyAlg::m_pszSQLString;
  * @date      2016-07-19, 오후 5:10
  * @warning
  */
-CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
+CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( pFileName, SQLite::OPEN_READONLY )
 {
     //m_pMyODBC = pMyODBC;
 
@@ -410,9 +410,11 @@ void CELSignalIdentifyAlg::MallocBuffer()
         m_pCEDEOBResult = ( STR_CEDEOB_RESULT * ) malloc( sizeof( STR_CEDEOB_RESULT ) * MAX_IDCANDIDATE );
     }
 
+    /*
     if( m_pszSQLString == NULL ) {
         m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
     }
+    */
 
 }
 
@@ -5694,7 +5696,7 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
     pDatabase = GetDatabase();
 
-    sprintf( m_pszSQLString, "SELECT RM_RADAR_MODE_INDEX, RM_FUNCTION_CODE, RM_SIGNAL_TYPE, RM_POLARIZATION, RM_PLATFORM, RM_VALIDATION, \
+    sprintf( m_szSQLString, "SELECT RM_RADAR_MODE_INDEX, RM_FUNCTION_CODE, RM_SIGNAL_TYPE, RM_POLARIZATION, RM_PLATFORM, RM_VALIDATION, \
                              RM_RF_TYPE, RM_RF_TYPICAL_MIN, RM_RF_TYPICAL_MAX, RM_RF_PATTERN, RM_RF_NUM_ELEMENTS, RM_RF_NUM_POSITIONS, RM_RF_PATTERN_PERIOD_MIN, RM_RF_PATTERN_PERIOD_MAX, RM_RF_MEAN_MIN, RM_RF_MEAN_MAX, \
                              RM_PRI_TYPE, RM_PRI_TYPICAL_MIN, RM_PRI_TYPICAL_MAX, RM_PRI_PATTERN, RM_PRI_NUM_ELEMENTS, RM_PRI_NUM_POSITIONS, RM_PRI_PATTERN_PERIOD_MIN, RM_PRI_PATTERN_PERIOD_MAX, RM_PRI_MEAN_MIN, RM_PRI_MEAN_MAX, \
                              RM_PD_TYPICAL_MIN, RM_PD_TYPICAL_MAX, \
@@ -5703,7 +5705,7 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
                              R_PRIORITY, R_ELNOT, R_NICKNAME, R_TIME_INACTIVATED, \
                              D_THREAT_INDEX, D_DEVICE_INDEX, D_ELNOT \
                              FROM VEL_RADARMODE_LIST ORDER BY RM_RADAR_MODE_INDEX" );
-    SQLite::Statement query( *pDatabase, m_pszSQLString );
+    SQLite::Statement query( *pDatabase, m_szSQLString );
 
     while( query.executeStep() ) {
         int iValue;
@@ -5887,8 +5889,8 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
 
     pDatabase = GetDatabase();
 
-    sprintf( m_pszSQLString, "SELECT RADAR_MODE_INDEX, RF_INDEX, RF_MIN, RF_MAX FROM VEL_RADAR_RF_SEQENCE ORDER BY RADAR_MODE_INDEX, RF_SEQ_ID" );
-    SQLite::Statement query( *pDatabase, m_pszSQLString );
+    sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, RF_INDEX, RF_MIN, RF_MAX FROM VEL_RADAR_RF_SEQENCE ORDER BY RADAR_MODE_INDEX, RF_SEQ_ID" );
+    SQLite::Statement query( *pDatabase, m_szSQLString );
 
     pVecRadarMode_RFSequence->clear();
     pVecRadarMode_RFSequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
@@ -5962,8 +5964,8 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 
     pDatabase = GetDatabase();
 
-    sprintf( m_pszSQLString, "SELECT RADAR_MODE_INDEX, PRI_INDEX, PRI_MIN, PRI_MAX FROM VEL_RADAR_PRI_SEQENCE ORDER BY RADAR_MODE_INDEX, PRI_SEQ_ID" );
-    SQLite::Statement query( *pDatabase, m_pszSQLString );
+    sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, PRI_INDEX, PRI_MIN, PRI_MAX FROM VEL_RADAR_PRI_SEQENCE ORDER BY RADAR_MODE_INDEX, PRI_SEQ_ID" );
+    SQLite::Statement query( *pDatabase, m_szSQLString );
 
     pVecRadarMode_PRISequence->clear();
     pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
@@ -6235,15 +6237,15 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
     strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 
     // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-    sprintf_s( m_pszSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-    exec( m_pszSQLString );
+    sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+    exec( m_szSQLString );
 
     // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
 #ifdef _SQLITE_
-    sprintf_s( m_pszSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
+    sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
 #else
-    sprintf_s( m_pszSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+    sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
 #endif
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
 }

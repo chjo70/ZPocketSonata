@@ -1,7 +1,7 @@
 ﻿
 #include <stdio.h>
 
-#include "../../../System/csysconfig.h"
+#include "../../System/csysconfig.h"
 
 int main(int argc, char *argv[])
 {
