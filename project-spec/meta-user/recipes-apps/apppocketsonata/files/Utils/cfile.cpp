@@ -40,7 +40,7 @@ bool CFile::Open( const char *pstPathname, int iMode )
 {
     bool bRet=true;
 
-    m_iFile = open( pstPathname, iMode );
+    m_iFile = open( pstPathname, iMode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
 
     if( m_iFile < 0 ) {
         bRet = false;

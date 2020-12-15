@@ -8,7 +8,7 @@
 #include "../../Anal/INC/PDW.h"
 
 #include "../../Anal/OFP_Main.h"
-//#include "../../Anal/SigAnal/_Macro.h"
+
 
 
 
@@ -107,7 +107,7 @@ struct STR_FILTER_SETUP {
 
 } ;
 
-static char *gstpRawDataBuffer;
+
 
 class CData
 {
@@ -270,10 +270,24 @@ public:
 };
 
 // CPOCKETSONATAPDW PDW
+namespace _ZPOCKETSONATA_ {
+    #define PH_WIDTH_FREQ		128000
+    #define L_PH_MIN_FREQ		64000
+    #define H_PH_MIN_FREQ		192000 //kHz
+
+    #define PDW_TIME_RES		7.8125
+    #define PDW_FREQ_RES		(1.953125)
+    #define PDW_AOA_RES			0.087890625
+
+    static const float m_fCenterFreq[enPRC6] = { 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
+}
+
 class CPOCKETSONATAPDW : public CData
 {
 private:
     STR_PDW_DATA m_PDWData;
+
+    //static ENUM_BoardID m_enBoardID;
 
 public:
     CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -285,43 +299,217 @@ public:
     void *GetData();
 
 public:
-    float DecodeDOA(int iDOA  )
+    /**
+     * @brief DecodeDOA
+     * @param iDOA
+     * @return
+     */
+    static float DecodeDOA(int iDOA )
     {
         float fDOA;
 
-        fDOA = (float) ( (float) iDOA * (float) 360. ) / (float) 512;
+        fDOA = (float) ( (float) iDOA * (float) 360. ) / (float) ( 4.*1024. );
         return fDOA;	/* [degree] */
     } ;
 
-    float DecodePA(int iPA )
+    static int EncodeDOA( float fDOA )
+    {
+        int iDOA;
+
+        iDOA = (int) ( ( fDOA * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 );
+        return iDOA;
+    } ;
+
+    /**
+     * @brief DecodePA
+     * @param iPA
+     * @return
+     */
+    static float DecodePA(int iPA )
     {
         float fPA;
 
-        fPA = (float) ( (float) iPA * (float) 0.25 ) - (float) 110.0;
+        fPA = (float) iPA;
         return fPA;		/* [dBm] */
     } ;
 
-    float DecodeFREQ( int iFreq )
+    /**
+     * @brief DecodeFREQ
+     * @param iFreq
+     * @param iCh
+     * @param iBoardID
+     * @return
+     */
+    static float DecodeFREQ( int iFreq, int iCh, int iBoardID )
     {
         float fFREQ;
 
-        fFREQ = (float) ( (float) iFreq * (float) 13.1072 ) / (float) 1000.0;
-        return fFREQ;	/* [MHz] */
+        if( iCh < 7 ) {
+            fFREQ = (( _ZPOCKETSONATA_::m_fCenterFreq[iBoardID] - (float) L_PH_MIN_FREQ) + ( PH_WIDTH_FREQ * iCh ) + ( (float) iFreq * (float) PDW_FREQ_RES) );
+        }
+        else {
+            iCh = 15 - iCh;
+            fFREQ = ( ( _ZPOCKETSONATA_::m_fCenterFreq[iBoardID] - H_PH_MIN_FREQ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * (float) PDW_FREQ_RES ) );
+        }
+
+        return fFREQ / (float) 1000.;	/* [MHz] */
     } ;
 
-    float DecodePW( int iPW )
+    /**
+     * @brief DecodeFREQMHz
+     * @param iFreqHz
+     * @return
+     */
+    static float DecodeFREQMHz( int iFreq )
+    {
+        float fFreq;
+
+        fFreq = ( (float) iFreq * (float) PDW_FREQ_RES / (float) 1000. );
+        return fFreq;	/* [MHz] */
+    } ;
+
+    static int EncodeFREQMHzFloor( float fFreq )
+    {
+        float fRetFreq;
+
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        return (int) fRetFreq;	/* [MHz] */
+    } ;
+
+    static int EncodeFREQMHzCeiling( float fFreq )
+    {
+        float fRetFreq;
+
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        return (int) ( fRetFreq + 0.5 );	/* [MHz] */
+    } ;
+
+
+    static int DecodeFREQ( int iFreq )
+    {
+        float fFreq;
+
+        fFreq = (float) iFreq * (float) PDW_FREQ_RES;
+        return (int) ( fFreq + 0.5 );	/* [kHz] */
+    } ;
+
+    /**
+     * @brief DecodePW
+     * @param iPW
+     * @return
+     */
+    static float DecodePW( int iPW )
     {
         float fPW;
 
-        fPW = (float) ( (float) iPW * (float) 6.48824007 / (float) 1.0 );
+        fPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1.0 );
         return fPW;		/* [ns] */
     } ;
 
-    float DecodeTOA( _TOA iTOA  )
+    /**
+     * @brief DecodePWus
+     * @param iPW
+     * @return
+     */
+    static int DecodePWus( int iPW )
+    {
+        int iretPW;
+
+        iretPW = (int) ( (float) iPW * (float) PDW_TIME_RES / (float) 1000. + 0.5 );
+        return iretPW;
+    } ;
+
+    static int EncodePWFloor( float fPW )
+    {
+        float iretPW;
+
+        iretPW = (int) ( (float) fPW * (float) 1. / (float) PDW_TIME_RES );
+        return (int) iretPW;
+    } ;
+
+    static int EncodePWCeiling( float fPW )
+    {
+        float iretPW;
+
+        iretPW = (int) ( (float) fPW * (float) 1. / (float) PDW_TIME_RES );
+        return (int) ( iretPW + 0.5 );
+    } ;
+
+    /**
+     * @brief DecodeTOA
+     * @param iTOA
+     * @return
+     */
+    static float DecodeTOA( _TOA iTOA  )
     {
         float fTOA;
 
-        fTOA = (float) ( (float) iTOA * (float) 6.48824007 / (float) 1000.0 );
+        fTOA = (float) ( (float) iTOA * (float) PDW_TIME_RES / (float) 1.0 );
+        return fTOA;	/* [ns] */
+    } ;
+
+    /**
+     * @brief DecodeTOAus
+     * @param iTOA
+     * @return
+     */
+    static float DecodeTOAus( _TOA iTOA  )
+    {
+        float fretTOA;
+
+        fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000. );
+        return fretTOA;	/* [us] */
+    } ;
+
+    /**
+     * @brief DecodeTOAms
+     * @param iTOA
+     * @return
+     */
+    static float DecodeTOAms( _TOA iTOA  )
+    {
+        float fretTOA;
+
+        fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000000. );
+        return fretTOA;	/* [ms] */
+    } ;
+
+    /**
+     * @brief EncodeTOAus
+     * @param iTOA
+     * @return
+     */
+    static int EncodeTOAus( _TOA iTOA  )
+    {
+        int iretTOA;
+
+        iretTOA = (int) ( ( ( (float) iTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
+        return iretTOA;	/* [ns] */
+    } ;
+
+    /**
+     * @brief DecodeTOAs
+     * @param iTOA
+     * @return
+     */
+    static int DecodeTOAs( _TOA iTOA  )
+    {
+        int iretTOA;
+
+        iretTOA = (int) ( ( (float) iTOA * (float) 1000000. * (float) PDW_TIME_RES ) + 0.5 );
+        return iretTOA;	/* [ns] */
+    } ;
+
+    /**
+     * @brief DecodeTOA
+     * @param ffTOA
+     * @return
+     */
+    static float DecodeTOA( float ffTOA )
+    {
+        float fTOA;
+
+        fTOA = (float) ( (float) ffTOA * (float) PDW_TIME_RES / (float) 1000.0 );
         return fTOA;	/* [ns] */
     } ;
 

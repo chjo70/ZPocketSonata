@@ -27,6 +27,7 @@ class CNMakeAET : public CMakeAET
 protected:
 	//##ModelId=452B0C55005C
 	CNewSigAnal *m_pNewSigAnal;
+
 	ENUM_BANDWIDTH m_enBandWidth;
 	
 public:

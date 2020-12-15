@@ -67,6 +67,7 @@ enum ENUM_THREAD_KEY {
     _MSG_CCU_KEY,
     _MSG_PMC_KEY,
     _MSG_ZCGI_KEY,
+    _MSG_USERCOL_KEY,
 
     _MSG_CGI_KEY,
 

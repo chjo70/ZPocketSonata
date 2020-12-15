@@ -38,6 +38,8 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define _spTrue									(1)
 #define _spFalse								(0)
 
+static const char on_off[2][4] = { "OFF" , "ON" } ;
+
 #define	_spMaxEMTNum						(256)								// Before value is 256
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,35 +76,6 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 //
 
 
-
-// System Resolution Definition
-#ifdef _ELINT_
-#define   _spAOAmax       0x1FF
-#define		_spAmpmax				0xFF
-
-//#define   _spAOAres       (2*0.351562)		// Degree */
-//#define   _spAMPres       (0.25)					// dB */
-//#define   _spTOAres       (0.000000025)		// SEC(25 ns) */
-//#define   _spPWres        (25.)						// pw res.
-
-#elif defined(_POCKETSONATA_)
-#define _spAOAmax           0x400
-#define _spAmpmax           0xFF
-
-#elif defined(_SONATA_)
-#define _spAOAmax           0x400
-#define _spAmpmax           0xFF
-
-#else
-#define   _spAOAmax       0x3FF   // 359.6484375 Degree
-#define		_spAmpmax				0xFF
-
-//#define   _spAOAres       0.351562  // Degree */
-#define   _spAOAres       (0.01)		//0.351562  // Degree */
-#define   _spAMPres       0.3125    // dB */
-#define   _spTOAres       0.000000050 // SEC(50 ns) */
-#define   _spPWres        50.         // pw res.
-#endif
 
 #ifdef _ELINT_
 #define   _spPAoffset       (-75)	// amplitude initial value */
@@ -148,25 +121,114 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define	MAX_PT      				(UINT)( NSP_MAX_PDW )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
 #define	MAX_AET     				(100)		// 최대 AET 수, 04-04-12 -> 50
 
+
+// 그룹화 히스트그램 최대 개수
+
+
 //////////////////////////////////////////////////////////////////////////
 // 방위/주파수/펄스폭 그룹화
 #ifdef _ELINT_
+#define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
+
+#define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
+
+#define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
+
+// DTOA 히스트그램 최대 개수
+#define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+
 #define MAX_AOA       			(36000)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ      			IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
 #define	FREQ_NARR_MHZ			IFRQMhzCNV( 0, 20 )			// 20 MHz
 #define	FREQ_WIDE_MHZ			IFRQMhzCNV( 0, 100 )		// 100 MHz
 
+#define	MAX_FREQ_DEVIATION		(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+#define   _spAOAmax       0x1FF
+#define		_spAmpmax				0xFF
+
+//#define   _spAOAres       (2*0.351562)		// Degree */
+//#define   _spAMPres       (0.25)					// dB */
+//#define   _spTOAres       (0.000000025)		// SEC(25 ns) */
+//#define   _spPWres        (25.)						// pw res.
+
+#define STABLE_MARGIN				ITOAusCNV( 8 ) // ( 1 * _spOneMicrosec )	// 1 us
+
+#define	MAX_PW							(1024*16)
+
 #elif defined(_POCKETSONATA_)
-#define MAX_AOA       			(36000)                 // 최대 방위값 360 도
-#define MAX_FREQ      			IFRQMhzCNV( 4000)		// 최대 주파수sms 5000 MHz로 함.
-#define	FREQ_NARR_MHZ			IFRQMhzCNV( 20 )		// 20 MHz
-#define	FREQ_WIDE_MHZ			IFRQMhzCNV( 100 )		// 100 MHz
+#define KHARM_AOA_MAR           (int) ( ( 8 * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 )     // 하모닉 방위 마진
+#define KHARM_FRQ_MAR           (int) ( ((10.*1000.)/1.953125)+0.5)                  // 하모닉 주파수 마진 (Band1)
+
+#define TOTAL_FRQAOAPWBIN       (91000)			//(1024*4)											// 전체 히스토그램 BIN수
+// DTOA 히스트그램 최대 개수
+#define	DTOA_RES                ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+
+#define MAX_FREQ      			((18000.*1000.)*1.953125)   // 최대 주파수sms 5000 MHz로 함.
+#define	FREQ_NARR_MHZ			((20.*1000.)/1.953125)		// 20 MHz
+#define	FREQ_WIDE_MHZ			((100*1000.)/1.953125)		// 100 MHz
+
+#define	MAX_FREQ_DEVIATION		((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+
+#define STABLE_MARGIN			ITOAusCNV(1)
+
+#define MAX_AOA       			(0x1000)
+#define	MAX_PW					(0x1000000)
+
+
+
+#elif defined(_SONATA_)
+#define _spAOAmax           0x400
+#define _spAmpmax           0xFF
+
+#define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
 #else
 #define MAX_AOA       			1024    // 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ      			8192    // 최대 주파수값 2^13 (?/8191)
 #define	FREQ_NARR_MHZ				20			// 20 MHz
 #define	FREQ_WIDE_MHZ				80			// 100 MHz
+
+#define	MAX_FREQ_DEVIATION				(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+#define   _spAOAmax       0x3FF   // 359.6484375 Degree
+#define		_spAmpmax				0xFF
+//#define   _spAOAres       0.351562  // Degree */
+#define   _spAOAres       (0.01)		//0.351562  // Degree */
+#define   _spAMPres       0.3125    // dB */
+#define   _spTOAres       0.000000050 // SEC(50 ns) */
+#define   _spPWres        50.         // pw res.
+
+#define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
+// DTOA 히스트그램 최대 개수
+#define	DTOA_RES									( 10 * _spOneMicrosec )
+
+#define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfAoaMid     (UDIV( 5., _spAOAres ))     // 9 ( 5 deg. )
+#define   _spRxdfAoaHgh     (UDIV( 3.5, _spAOAres ))    // 6 ( 3.5 deg. )
+
+#define   _spRxdfFrqLow     2     // about 1.25(2*0.625)MHz
+#define   _spRxdfFrqMid     2     // about 2.5(2*1.25)MHz
+#define   _spRxdfFrqHgh     2     // 3(2*1.5) MHz
+
+// 주파수 방위 마진
+#define KHARM_AOA_MAR_LOW					(_spRxdfAoaLow)		// 하모닉 방위 마진 (Band1)
+#define KHARM_AOA_MAR_MID					(_spRxdfAoaMid)		// 하모닉 방위 마진 (Band2)
+#define KHARM_AOA_MAR_HGH					(_spRxdfAoaHgh)		// 하모닉 방위 마진 (Band3)
+
+// 주파수 HARMONIC MARGIN
+#define KHARM_FRQ_MAR_LOW					14			// 하모닉 주파수 마진 (Band1)
+#define KHARM_FRQ_MAR_MID					14			// 하모닉 주파수 마진 (Band2)
+#define KHARM_FRQ_MAR_HGH					14			// 하모닉 주파수 마진 (Band3)
+
+
+#define STABLE_MARGIN				( 1 * _spOneMicrosec )	// 1 us
+
+#define	MAX_PW							(1024*2)
 
 #endif
 
@@ -180,9 +242,9 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define MAX_PGRT      			( 40 )	// 최대 펄스폭 그룹 범위 개수(겹침고려 2배)
 
 #ifdef _ELINT_
-#define	MAX_PW							(1024*16)
+
 #else
-#define	MAX_PW							(1024*2)
+
 #endif
 
 /*! \bug  소청도에서의 강경리 신호가 펄스폭으로 분리되기 때문에 이를 1에서 2로 설정해서 하나의 그룹으로 만들기 위함.
@@ -216,11 +278,7 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 #define REFLEX_ZONE     		( 10 * _spOneMicrosec ) // 반사파 처리 구간
 #define HPRF_FIRST_PRI  		( 80 * _spOneMicrosec ) // 반사파처리 이전에 High PRF부터 처리
 
-#ifdef _ELINT_
-#define STABLE_MARGIN				ITOAusCNV( 8 ) // ( 1 * _spOneMicrosec )	// 1 us
-#else
-#define STABLE_MARGIN				( 1 * _spOneMicrosec )	// 1 us
-#endif
+
 
 #define	OVERLAP_SEG_THRESHOLD			(60)	// 펄스열 겹쳐지는 정도, 이전 값은 80
 
@@ -236,29 +294,9 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 // 상세 신호 분석
 #define THRESHOLD_PDWCOUNT_FINE_SIGANAL	50
 
-// 방위 HARMONIC MARGIN
-#ifdef _ELINT_
-#define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
-
-#elif defined(_POCKETSONATA_)
-#define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
-
-#else
-
-// 주파수 방위 마진
-#define KHARM_AOA_MAR_LOW					(_spRxdfAoaLow)		// 하모닉 방위 마진 (Band1)
-#define KHARM_AOA_MAR_MID					(_spRxdfAoaMid)		// 하모닉 방위 마진 (Band2)
-#define KHARM_AOA_MAR_HGH					(_spRxdfAoaHgh)		// 하모닉 방위 마진 (Band3)
-
-// 주파수 HARMONIC MARGIN
-#define KHARM_FRQ_MAR_LOW					14			// 하모닉 주파수 마진 (Band1)
-#define KHARM_FRQ_MAR_MID					14			// 하모닉 주파수 마진 (Band2)
-#define KHARM_FRQ_MAR_HGH					14			// 하모닉 주파수 마진 (Band3)
 
 
-#endif
+
 
 // 주파수 고정, 변경 범위
 #define FIXED_FREQ_THRESHOLD			8				// 5에서 8로 변경함.
@@ -282,25 +320,10 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 
 #define MIN_PRI										( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
-#define FIXED_FREQ_MARGIN							2
+#define FIXED_FREQ_MARGIN				2
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
 
-// 그룹화 히스트그램 최대 개수
-#ifdef _ELINT_
-#define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
-// DTOA 히스트그램 최대 개수
-#define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#elif defined(_POCKETSONATA_)
-#define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
-// DTOA 히스트그램 최대 개수
-#define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
-
-#else
-#define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
-// DTOA 히스트그램 최대 개수
-#define	DTOA_RES									( 10 * _spOneMicrosec )
-#endif
 
 
 //#define DTOA_BIN									( ( 50 * _spOneMilli ) / DTOA_RES )	// 최대 수집 개수
@@ -318,8 +341,6 @@ enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 // 에미터 생성 기준
 #define CONTI_THR_LOW_PULSE					86		// 연속성 최대 지수, SPS-64의 LONG MODE인경우를 고려. 8개 중에 7개 허용.
 #define CONTI_THR_HIGH_PULSE				60
-
-#define	MAX_FREQ_DEVIATION					(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
 #define	THRESHOLD_OVERLAP						80		// Overlap 율 ( 중첩된 DTOA / 펄스열 총시간 )
 

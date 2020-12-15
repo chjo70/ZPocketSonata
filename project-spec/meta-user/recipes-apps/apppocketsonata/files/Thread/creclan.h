@@ -4,6 +4,8 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
+static char gszClassName[2][10] = { "RECZYNQ", "RECCCU" };
+
 class CRecLan : public CThread
 {
 private:
@@ -32,7 +34,7 @@ public:
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화
         if(m_pInstance[iIndex] == NULL) {
-            m_pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*)"CRecLan", true );
+            m_pInstance[iIndex] = new CRecLan( g_iKeyId++, iIndex, (char*) gszClassName[iIndex], true );
         }
         return m_pInstance[iIndex];
     }

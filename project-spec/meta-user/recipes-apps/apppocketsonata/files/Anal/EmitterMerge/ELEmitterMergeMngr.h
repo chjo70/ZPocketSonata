@@ -181,7 +181,7 @@ private:
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
 #ifdef _SQLITE_
-    char *m_pszSQLString;
+    //char *m_pszSQLString;
 #elif defined(_MSSQL_)
     CODBCDatabase m_theMyODBC;
 #else

@@ -9,6 +9,8 @@
 
 #include "../Utils/cthread.h"
 
+#include "../Thread/creclan.h"
+
 //#define MAX_LAN_DATA    (1024)
 
 
@@ -19,6 +21,8 @@ private:
     int m_iSocket;
 
     char *m_pszLanData[MAX_CLIENTS];
+
+    CRecLan *m_ptheRecLan;
 
 public:
     CMultiServer( int iKeyId, char *pClassName, int iPort );

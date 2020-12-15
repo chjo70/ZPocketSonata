@@ -1,10 +1,18 @@
 ﻿#include "csharedmemory.h"
 
+/**
+ * @brief CSharedMemroy::CSharedMemroy
+ */
 CSharedMemroy::CSharedMemroy()
 {
 
 }
 
+/**
+ * @brief CSharedMemroy::CSharedMemroy
+ * @param key
+ * @param iSize
+ */
 CSharedMemroy::CSharedMemroy( key_t key, int iSize )
 {
     setKey( key );

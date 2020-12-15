@@ -113,7 +113,7 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
         SetMark( iIndex );
     }
     else {
-        LOGMSG1( enError, "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
+        // LOGMSG1( enError, "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
     }
 
     return;

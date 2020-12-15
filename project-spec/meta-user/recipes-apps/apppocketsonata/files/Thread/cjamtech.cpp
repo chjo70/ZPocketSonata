@@ -53,7 +53,8 @@ void CJamTech::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv" );
+            //perror( "QMsgRcv() 에러");
+            break;
         }
         else {
         switch( m_pMsg->uiOpCode ) {

@@ -20,6 +20,8 @@
 #include "KAnalPRI.h"
 #include "KMakeAET.h"
 
+#include "../MIDAS/Midas.h"
+
 #ifdef __cplusplus
 
 //##ModelId=452B0C520241
@@ -37,6 +39,8 @@ public:
     int m_CoUpdAet;
     //##ModelId=452B0C520256
     STR_PDWINDEX *m_pGrPdwIndex;
+
+    DEFINE_ANAL_VAR_
 
 protected:
     //##ModelId=452B0C520260
@@ -64,9 +68,15 @@ protected:
 
     int m_uiABTID;
 
+private:
+    UINT m_uiStep;
+    CMIDASBlueFileFormat *m_pMidasBlue;
+
 public:
     void RunSimul();
     void Simul();
+
+    void Init();
 
     inline int GetCoPdw() { return m_CoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }

@@ -13,6 +13,8 @@
 
 CLog* CLog::pInstance = nullptr;
 
+sem_t CLog::m_mutex;
+
 /**
  * @brief CLog::CLog
  */
@@ -112,6 +114,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 va_end( args );
 
                 if( nType == enDebug ) {
+                    puts( & m_szLog[nLength] );
+                }
+                else if( nType == enNormal ) {
                     puts( & m_szLog[nLength] );
                 }
                 else if( nType == enError ) {

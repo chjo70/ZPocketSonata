@@ -922,10 +922,10 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
     m_DtoaHist.bin_range.iLow = 0xfffffff;
 
     pIndex = pPdwIndex;
-    pre_toa = TOA[ *pIndex++ ];
+    pre_toa = m_pTOA[ *pIndex++ ];
     //i = DTOA_BIN;
     for( i=1 ; i < count ; ++i ) {
-        toa = TOA[ *pIndex++ ];
+        toa = m_pTOA[ *pIndex++ ];
         dtoa = toa - pre_toa;
         dtoa_index = F_UDIV( dtoa, DTOA_RES );
 
@@ -1185,9 +1185,9 @@ BOOL CAnalPRI::CalcPRILevel( STR_EMITTER *pEmitter )
     count = pEmitter->pdw.count;
     pEmitter->pdw.pIndex[count] = 0;
     pPdwIndex = pEmitter->pdw.pIndex;
-    firstToa = TOA[ *pPdwIndex++ ];
+    firstToa = m_pTOA[ *pPdwIndex++ ];
     while( *pPdwIndex > 0 ) {
-        refToa = TOA[ *pPdwIndex++ ] - firstToa;
+        refToa = m_pTOA[ *pPdwIndex++ ] - firstToa;
         refDtoa = ( refToa - preTOA );
         preTOA = refToa;
 
@@ -1198,7 +1198,7 @@ BOOL CAnalPRI::CalcPRILevel( STR_EMITTER *pEmitter )
         // Step 1 : 첫번째 펄스열을 찾는다.
         stDwellLevel.iPulseCount1 = 0;
         do {
-            refToa = TOA[ *pPdwIndex++ ] - firstToa;
+            refToa = m_pTOA[ *pPdwIndex++ ] - firstToa;
             dTOA = ( refToa - preTOA );
 
             preTOA = refToa;
@@ -1213,7 +1213,7 @@ BOOL CAnalPRI::CalcPRILevel( STR_EMITTER *pEmitter )
             stDwellLevel.dtoa2 = refDtoa = dTOA;
             stDwellLevel.iPulseCount2 = 0;
             do {
-                refToa = TOA[ *pPdwIndex++ ] - firstToa;
+                refToa = m_pTOA[ *pPdwIndex++ ] - firstToa;
                 dTOA = ( refToa - preTOA );
 
                 preTOA = refToa;
@@ -1228,7 +1228,7 @@ BOOL CAnalPRI::CalcPRILevel( STR_EMITTER *pEmitter )
         }
 
         -- pPdwIndex;
-        preTOA = TOA[ *(pPdwIndex-1) ] - firstToa;
+        preTOA = m_pTOA[ *(pPdwIndex-1) ] - firstToa;
 
     }
 
@@ -1456,7 +1456,7 @@ BOOL CAnalPRI::CheckContiStable( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 
                 pIndex = & pSeg1->pdw.pIndex[pSeg1->pdw.count];
                 for( k=0 ; k < pSeg1->pdw.count ; ++k ) {
                     -- pIndex;
-                    last_toa = TOA[*pIndex];
+                    last_toa = m_pTOA[*pIndex];
 
                     if( last_toa <= pSeg2->first_toa ) {
                         break;
@@ -1597,8 +1597,8 @@ void CAnalPRI::PatternAnalysis()
             pPdwIndex = m_pSeg[ pEmitter->main_seg ].pdw.pIndex;
             m_CoData = m_pSeg[ pEmitter->main_seg ].pdw.count;
             for( j=0 ; j < m_CoData ; ++j ) {
-                m_DataX[j] = TOA[ *pPdwIndex ];
-                m_DataY[j] = FREQ[ *pPdwIndex ];
+                m_DataX[j] = m_pTOA[ *pPdwIndex ];
+                m_DataY[j] = m_pFREQ[ *pPdwIndex ];
                 ++ pPdwIndex;
             }
 
@@ -1628,12 +1628,12 @@ void CAnalPRI::PatternAnalysis()
             for( j=0 ; j < m_CoData ; ++j ) {
                 _TOA dtoa;
 
-                m_DataX[j] = TOA[ *pPdwIndex ];
+                m_DataX[j] = m_pTOA[ *pPdwIndex ];
 
                 /*! \bug  DTOA 값을 계산해서 누락이 된다면 이전 값으로 한다.
                     \date 2006-07-25 12:14:32, 조철희
                 */
-                dtoa = TOA[ *pPdwIndex ] - TOA[ *(pPdwIndex-1) ];
+                dtoa = m_pTOA[ *pPdwIndex ] - m_pTOA[ *(pPdwIndex-1) ];
                 if( TRUE == CompMarginDiff<_TOA>( dtoa, pri.iLow, pri.iHgh, threshold ) )
                     m_DataY[j] = dtoa;
                 else {
@@ -1674,7 +1674,7 @@ void CAnalPRI::CalcSamplingTime( STR_EMITTER *pEmitter )
 
     STR_PRI pri;
 
-    spanTime = TOA[ pEmitter->pdw.pIndex[ pEmitter->pdw.count-1 ] ] - TOA[ *pEmitter->pdw.pIndex ];
+    spanTime = m_pTOA[ pEmitter->pdw.pIndex[ pEmitter->pdw.count-1 ] ] - m_pTOA[ *pEmitter->pdw.pIndex ];
 
     // 샘플링 타임 계산
     sampleTimeByPulse = UDIV( spanTime, MAX_SAMPLING_DATA );
@@ -2406,7 +2406,7 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
     }
 
     pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
-    if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_NORMAL ) {
+    if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_NORMAL ) {
         _TOA mean=0;
         for( i=0 ; i < pEmitter->seg_count ; ++i ) {
             STR_PULSE_TRAIN_SEG *pSeg;
@@ -2429,12 +2429,12 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
             return ST_NORMAL_PULSE;
         }
     }
-    else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_CW ) {
+    else if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_CW ) {
         for( i=1 ; i < pEmitter->seg_count ; ++i ) {
             STR_PULSE_TRAIN_SEG *pSeg;
 
             pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_CW ) {
+            if( m_pSTAT[ pSeg->pdw.pIndex[0] ] != PDW_CW ) {
                 printf( "\n Invalid Pulse type[%d] !" , i );
                 WhereIs;
             }
@@ -2545,7 +2545,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     first_pdw_index = pSeg->pdw.pIndex[0];
 
     // +-5 MHz 이하인 PDW개수가 전체 수집 개수의 95% 이하이면, 주파수 고정으로 결정한다.
-    band = BAND[ first_pdw_index ];
+    band = m_pBAND[ first_pdw_index ];
 #ifdef _ELINT_
     threshold = IFRQMhzCNV( 0, 5 );
 #else
@@ -2559,7 +2559,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     for( i=coOkPdw=0 ; i < count ; ++i ) {
         int freq;
 
-        freq = FREQ[ *pPdwIndex++ ];
+        freq = m_pFREQ[ *pPdwIndex++ ];
         if( CompMeanDiff( freqCenter, freq, threshold ) == TRUE ) {
             ++ coOkPdw;
         }
@@ -2589,7 +2589,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     // printf( "\n pEmitter->freq.type[%d]" , pEmitter->freq.type );
 
     // 주파수 형태를 기록한다.
-    switch( STAT[ first_pdw_index ] ) {
+    switch( m_pSTAT[ first_pdw_index ] ) {
 #ifdef _ELINT_
         case 100:
 
@@ -3144,16 +3144,18 @@ BOOL CAnalPRI::CheckFreqHopping( STR_EMITTER *pEmitter )
     int count;
     PDWINDEX *pPdwIndex;
 
+    BOOL bRet=TRUE;
+
     count = pEmitter->pdw.count;
     pPdwIndex = pEmitter->pdw.pIndex;
 
-    band = BAND[ *pPdwIndex ];
-    pre_freq = FREQ[ *pPdwIndex++ ];
+    band = m_pBAND[ *pPdwIndex ];
+    pre_freq = m_pFREQ[ *pPdwIndex++ ];
     max_freq_diff = 0;
     for( i=1 ; i < count ; ++i ) {
-        freq_diff = _abs( (int) FREQ[ *pPdwIndex ] - pre_freq );
+        freq_diff = _abs( (int) m_pFREQ[ *pPdwIndex ] - pre_freq );
         max_freq_diff = _max( freq_diff, max_freq_diff );
-        pre_freq = FREQ[ *pPdwIndex++ ];
+        pre_freq = m_pFREQ[ *pPdwIndex++ ];
     }
 
     /*! \bug  주파수 편차 계산
@@ -3166,9 +3168,10 @@ BOOL CAnalPRI::CheckFreqHopping( STR_EMITTER *pEmitter )
     /*! \bug  anlfrq_6.pdw의 주파수 최대 편차는 약 500 MMz 가 된다.
         \date 2006-08-16 10:27:18, 조철희
     */
-    if( freq >= MAX_FREQ_DEVIATION )
-        return FALSE;
-    return TRUE;
+    if( freq >= MAX_FREQ_DEVIATION ) {
+        bRet = FALSE;
+    }
+    return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3297,7 +3300,7 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
     pPdwIndex = pEmitter->pdw.pIndex;
   for( i=0 ; i < count-1 ; ++i ) {
     index = *pPdwIndex++;
-    diffPa = PA[*pPdwIndex] - PA[index];
+    diffPa = m_pPA[*pPdwIndex] - m_pPA[index];
     if( flag && diffPa >= cline_threshold ) {
       flag = TRUE;
       ++ incline_count;
@@ -3315,7 +3318,7 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
     pPdwIndex = pEmitter->pdw.pIndex;
   for( i=0 ; i < count-1 ; ++i ) {
     index = *pPdwIndex++;
-    diffPa = PA[*pPdwIndex] - PA[index];
+    diffPa = m_pPA[*pPdwIndex] - m_pPA[index];
         //-- 조철희 2005-09-27 17:27:32 --//
         // 등호는 감소개수 비교에서는 제외시켜서 카운트 한다.
     if( flag && diffPa < cline_threshold ) {
@@ -3705,9 +3708,9 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
     // TOA 첫번째 값으로 정렬
     pToa1 = & m_pPulseToa[0];
     pPdwIndex = m_pSeg[pEmitter->main_seg].pdw.pIndex;
-    firstToa = TOA[ *pPdwIndex ];
+    firstToa = m_pTOA[ *pPdwIndex ];
     for( i=0 ; i < count ; ++i ) {
-        *pToa1++ = TOA[ *pPdwIndex++ ] - firstToa;
+        *pToa1++ = m_pTOA[ *pPdwIndex++ ] - firstToa;
     }
 
     // Step : 2
@@ -3813,7 +3816,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
     // 각 레벨을 찾는다.
     BOOL bStaggerConfidelity;
     pPdwIndex = & pStaggerEmitter->pdw.pIndex[0];
-    preToa = TOA[ *pPdwIndex++ ];
+    preToa = m_pTOA[ *pPdwIndex++ ];
     count = pStaggerEmitter->pdw.count;
 
 #ifdef _STAGGER_LEVEL_FIND_METHOD_
@@ -3862,7 +3865,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
     pStaggerEmitter->stag_dwell_level_cnt = 0;
     pPulseDtoa = & m_pPulseDtoa[0];
     for( i=1 ; i < count ; ++i, ++pPdwIndex ) {
-        firstToa = TOA[ *pPdwIndex ];
+        firstToa = m_pTOA[ *pPdwIndex ];
         dtoa = firstToa - preToa;
         preToa = firstToa;
 
@@ -4182,7 +4185,7 @@ BOOL CAnalPRI::CheckStaggerLevel( STR_EMITTER *pOrgEmitter, STR_EMITTER *pStagge
     level_count = 0;
 
     // 펄스열의 시간 차이를 구한다.
-    duration = TOA[ pStaggerEmitter->pdw.pIndex[pStaggerEmitter->pdw.count-1] ] - TOA[ pStaggerEmitter->pdw.pIndex[0] ];
+    duration = m_pTOA[ pStaggerEmitter->pdw.pIndex[pStaggerEmitter->pdw.count-1] ] - m_pTOA[ pStaggerEmitter->pdw.pIndex[0] ];
 
     // 역방향으로 스태거 레벨을 검사한다.
     level_index = stag_dwell_level_cnt - 1;
@@ -4484,11 +4487,11 @@ void CAnalPRI::CalcEmitterPW( STR_EMITTER *pEmitter )
     pPdwIndex = pEmitter->pdw.pIndex;
     count = pEmitter->pdw.count;
     pPw = & pEmitter->pw;
-    pPw->min = pPw->max = pPw->mean = PW[ *pPdwIndex++ ];
+    pPw->min = pPw->max = pPw->mean = m_pPW[ *pPdwIndex++ ];
     for( i=1 ; i < count ; ++i ) {
         int pw;
 
-        pw = PW[ *pPdwIndex++ ];
+        pw = m_pPW[ *pPdwIndex++ ];
 
         pPw->min = _min( pPw->min, pw );
         pPw->max = _max( pPw->max, pw );
@@ -4517,11 +4520,11 @@ void CAnalPRI::CalcEmitterFrq( STR_EMITTER *pEmitter )
     pPdwIndex = pEmitter->pdw.pIndex;
     count = pEmitter->pdw.count;
     pFrq = & pEmitter->freq;
-    pFrq->min = pFrq->max = pFrq->mean = FREQ[ *pPdwIndex++ ];
+    pFrq->min = pFrq->max = pFrq->mean = m_pFREQ[ *pPdwIndex++ ];
     for( i=1 ; i < count ; ++i ) {
         int freq;
 
-        freq = FREQ[ *pPdwIndex++ ];
+        freq = m_pFREQ[ *pPdwIndex++ ];
 
         pFrq->min = _min( pFrq->min, freq );
         pFrq->max = _max( pFrq->max, freq );
@@ -4968,10 +4971,10 @@ void CAnalPRI::CalDtoaMeanMinMax( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange
     dtoa_count = 0;
     sum_dtoa = 0;
     pIndex = pSeg->pdw.pIndex;
-    pre_toa = TOA[ *pIndex++ ];
+    pre_toa = m_pTOA[ *pIndex++ ];
     count = pSeg->pdw.count;
     for( i=1 ; i < count ; ++i ) {
-        toa = TOA[ *pIndex++ ];
+        toa = m_pTOA[ *pIndex++ ];
         dtoa = toa - pre_toa;
         index = F_UDIV( dtoa, DTOA_RES );
 
@@ -5197,7 +5200,7 @@ BOOL CAnalPRI::CompAoaDiff(int x, int y, int thresh)
 
     diff = abs( x - y );
 
-    if( diff <= thresh || (_spAOAmax - diff)  <= thresh )
+    if( diff <= thresh || (MAX_AOA - diff)  <= thresh )
         return TRUE;
     else
         return FALSE;
@@ -5228,7 +5231,7 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
     for( i=0 ; i < count ; ++i ) {
         int freq;
 
-        freq = FREQ[ *pPdwIndex++ ];
+        freq = m_pFREQ[ *pPdwIndex++ ];
 
         bMatch = FALSE;
         pHopLevel = & pEmitter->hop_level[0];
@@ -5252,7 +5255,7 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
     // 주파수 호핑 레벨값을 변환 값으로 저장한다.
     pHopLevel = & pEmitter->hop_level[0];
     pEmitter->hop_level_cnt = hop_count;
-    band = BAND[ pEmitter->pdw.pIndex[0] ] + 1;
+    band = m_pBAND[ pEmitter->pdw.pIndex[0] ] + 1;
     for( i=0 ; i < hop_count ; ++i ) {
         *pHopLevel = FRQMhzCNV( band, *pHopLevel );
         ++ pHopLevel;

@@ -86,7 +86,7 @@ STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 
  * @date      2016-07-19, 오후 5:10
  * @warning
  */
-CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( pFileName, SQLite::OPEN_READONLY )
+CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
 {
     //m_pMyODBC = pMyODBC;
 
@@ -2801,18 +2801,19 @@ void CELSignalIdentifyAlg::IdentifySigType( int iSignalType )
         }
 
         switch( iSignalType ) {
-            case SignalType::enumPulsed :
+            case SIGNAL_TYPE::ST_NORMAL_PULSE :
                 if( pRadarMode->eSignalType != SignalType::enumPulsed )
                     continue;
                 break;
 
-            case SignalType::enumCW :
+            case SIGNAL_TYPE::ST_CW :
                 if( pRadarMode->eSignalType != SignalType::enumCW )
                     continue;
                 break;
 
             default:
                 { //DTEC_Else
+                    continue;
                 }
                 break;
         }
@@ -6234,7 +6235,7 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
     __time32_t nowTime=_time32(NULL);
 
     _localtime32_s( & stTime, & nowTime );
-    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+    strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", & stTime);
 
     // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );

@@ -279,7 +279,7 @@ enum SCAN_STAT
 #ifdef _ELINT_
 //const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
 #elif defined(_POCKETSONATA_)
-//static const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #elif defined(_SONATA_)
 static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #else
@@ -406,8 +406,8 @@ struct STR_AS {
 /* AET용 SEEN TIME 구조체 */
 //##ModelId=452B0C5103A8
 struct STR_SEEN_TIME {
-  time_t frst;
-  time_t last;
+  unsigned int frst;
+  unsigned int last;
 } ;
 
 /* AET용 식별 구조체 */
@@ -884,8 +884,8 @@ struct IPL_FRQ {
   UINT bw;
   UINT patType;
   int swtLev;
-  int dwLow[ _spMaxSwtLev ];
-  int dwHgh[ _spMaxSwtLev ];
+  int swtValLow[ _spMaxSwtLev ];
+  int swtValHgh[ _spMaxSwtLev ];
   UINT ppLow;
   UINT ppHgh;
 } ;
@@ -981,6 +981,46 @@ struct STR_IPL {
 } ;
 
 static const char ipl_signal_type[ST_MAX][10] = { "UK" , "Pulsed" , "CW" };
+
+enum IPL_FREQ_TYPE
+{
+    //##ModelId=452B0C5100CE
+  IPL_FIXED              = 1,
+    //##ModelId=452B0C5100D7
+  IPL_RANDOM_AGILE,
+    //##ModelId=452B0C5100E1
+  IPL_PATTERN_AGILE,
+    //##ModelId=452B0C5100EB
+  IPL_HOPPING,
+    //##ModelId=452B0C5100F5
+  IPL_CHIRP_UP,
+    //##ModelId=452B0C5100FF
+  IPL_CHIRP_DN,
+    //##ModelId=452B0C510109
+  IPL_PMOP,
+    //##ModelId=452B0C51011D
+  IPL_MaxFRQ
+} ;
+
+enum IPL_PRI_TYPE
+{
+    //##ModelId=452B0C510146
+  IPL_STABLE               = 1,
+    //##ModelId=452B0C510159
+  IPL_STAGGER,
+    //##ModelId=452B0C510163
+  IPL_JITTER,
+    //##ModelId=452B0C51016D
+  IPL_PATTERN,
+    //##ModelId=452B0C510177
+  IPL_DWELL,
+
+  IPL_MaxPRI
+} ; // Id...
+
+//static const char ipl_freq_type[ST_MAX][10] = { "UK" , "Pulsed" , "CW" };
+
+//static const char ipl_pri_type[IPL_MaxFRQ][10] = { "UK" , "FX" , "RA", "PA", "HP" };
 
 #endif
 

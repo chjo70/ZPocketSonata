@@ -24,7 +24,7 @@
 //#define _AUTO_ID_
 
 // readline 라이브러리를 이용하여 쉘 입력을 처리한다.
-#define _READLINE_
+//#define _READLINE_
 
 // LOG 디렉토리에서 실행 파일의 경로를 기준으로 LOG_DIRECTORY 경로를 생성한다.
 //#define _LOG_RELATIVE_PATH_
@@ -53,9 +53,29 @@ typedef unsigned long long int _TOA;
 // 포토 를 정의합니다.
 #define MAX_CLIENTS     (30)
 #define PORT            (8888)
+
+// 제어조종장치 서버
+#ifdef __linux__
+#define CCU_SERVER      (char *) ( "127.0.0.1" )
+#define HOST_SERVER     (char *) ( "192.168.1.245" )
+#define DEV_SERVER      (char *) ( "192.168.1.11" )
+#define DEV2_SERVER     (char *) ( "192.168.1.12" )
+#else
+#define CCU_SERVER      (char *) ( "192.168.1.245" )
+#endif
+
+#ifdef __ZYNQ_BOARD__
 #define CCU_PORT        (13030)
+#else
+#define CCU_PORT        (13030)
+#endif
+
+// 재밍신호관리장치 서버
+#define PMC_SERVER      (char *) ( "192.168.1.245" )
 #define PMC_PORT        (13040)
 
+
+#define TEST_PORT       (13090)
 
 /////////////////////////////////////////////////////////////////////////////////
 

@@ -37,6 +37,8 @@ CKPulExt::CKPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
+    INIT_ANAL_VAR_(m_pKnownSigAnal)
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -109,7 +111,8 @@ void CKPulExt::PulseExtract()
 	// 규칙성 펄스열을 찾은 펄스열 인덱스
 	SetRefEndSeg();
 	
-	memset( MARK, 0, sizeof( MARK ) );
+    ClearAllMark();
+    //memset( m_pMARK, 0, sizeof( m_pKnownSigAnal->MARK ) );
 
 	//////////////////////////////////////////////////////////////////////////
 	// 불규칙성 펄스열 찾기
@@ -276,7 +279,8 @@ void CKPulExt::DiscardStablePT()
 	STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
 	pSeg = GetPulseSeg();
-	memset( MARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
+    ClearAllMark();
+    //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
 
 	// 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
 	if( m_CoSeg == 1 ) {
@@ -402,3 +406,8 @@ UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
     return m_pKnownSigAnal->CheckHarmonic( priMean1, priMean2, uiThreshold );
 }
 
+
+void CKPulExt::ClearAllMark()
+{
+    memset( & m_pMARK[0], 0, sizeof( m_pKnownSigAnal->MARK ) );
+}

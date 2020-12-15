@@ -155,17 +155,12 @@ CONFIG_busybox-httpd=y
 # CONFIG_formfactor-dev is not set
 
 #
-# haveged 
-#
-CONFIG_haveged=y
-
-#
 # i2c-tools 
 #
-CONFIG_i2c-tools=y
-CONFIG_i2c-tools-dev=y
-CONFIG_i2c-tools-misc=y
-CONFIG_i2c-tools-dbg=y
+# CONFIG_i2c-tools is not set
+# CONFIG_i2c-tools-dev is not set
+# CONFIG_i2c-tools-misc is not set
+# CONFIG_i2c-tools-dbg is not set
 
 #
 # init-ifupdown 
@@ -515,10 +510,10 @@ CONFIG_canutils=y
 #
 # nfs-utils 
 #
-CONFIG_nfs-utils=y
-CONFIG_nfs-utils-stats=y
-CONFIG_nfs-utils-dbg=y
-CONFIG_nfs-utils-dev=y
+# CONFIG_nfs-utils is not set
+# CONFIG_nfs-utils-stats is not set
+# CONFIG_nfs-utils-dbg is not set
+# CONFIG_nfs-utils-dev is not set
 CONFIG_nfs-utils-client=y
 
 #
@@ -1545,13 +1540,6 @@ CONFIG_run-postinsts=y
 # CONFIG_libgcrypt-dev is not set
 
 #
-# libgcc 
-#
-# CONFIG_libgcc is not set
-# CONFIG_libgcc-dbg is not set
-# CONFIG_libgcc-dev is not set
-
-#
 # libgpg-error 
 #
 # CONFIG_libgpg-error is not set
@@ -2165,9 +2153,9 @@ CONFIG_run-postinsts=y
 #
 # readline 
 #
-CONFIG_readline=y
+# CONFIG_readline is not set
 CONFIG_readline-dev=y
-CONFIG_readline-dbg=y
+# CONFIG_readline-dbg is not set
 
 #
 # sbc 
@@ -2202,8 +2190,8 @@ CONFIG_readline-dbg=y
 #
 CONFIG_sqlite3=y
 CONFIG_libsqlite3=y
-CONFIG_libsqlite3-dev=y
-CONFIG_sqlite3-dbg=y
+# CONFIG_libsqlite3-dev is not set
+# CONFIG_sqlite3-dbg is not set
 
 #
 # startup-notification 
@@ -2227,20 +2215,6 @@ CONFIG_sqlite3-dbg=y
 # CONFIG_which-dbg is not set
 
 #
-# xrt
-#
-# CONFIG_xrt is not set
-# CONFIG_xrt-dev is not set
-# CONFIG_xrt-dbg is not set
-
-#
-# zocl
-#
-# CONFIG_zocl is not set
-# CONFIG_zocl-dev is not set
-# CONFIG_zocl-dbg is not set
-
-#
 # zlib 
 #
 # CONFIG_zlib is not set
@@ -2254,7 +2228,7 @@ CONFIG_sqlite3-dbg=y
 #
 # alsa-state 
 #
-CONFIG_alsa-state=y
+# CONFIG_alsa-state is not set
 # CONFIG_alsa-state-dev is not set
 # CONFIG_alsa-states is not set
 # CONFIG_alsa-state-dbg is not set
@@ -3093,6 +3067,7 @@ CONFIG_packagegroup-core-ssh-dropbear=y
 # CONFIG_qtsensors-mkspecs is not set
 # CONFIG_qtsensors-plugins is not set
 # CONFIG_qtsensors-dbg is not set
+# CONFIG_qtsensors-examples-dev is not set
 # CONFIG_qtsensors-dev is not set
 
 #
@@ -3141,6 +3116,7 @@ CONFIG_packagegroup-core-ssh-dropbear=y
 #
 # CONFIG_qttranslations is not set
 # CONFIG_qttranslations-qtwebengine is not set
+# CONFIG_qttranslations-qtquick1 is not set
 # CONFIG_qttranslations-qthelp is not set
 # CONFIG_qttranslations-qtbase is not set
 # CONFIG_qttranslations-dbg is not set
@@ -3152,6 +3128,7 @@ CONFIG_packagegroup-core-ssh-dropbear=y
 # CONFIG_qttranslations-linguist is not set
 # CONFIG_qttranslations-qtserialport is not set
 # CONFIG_qttranslations-qtmultimedia is not set
+# CONFIG_qttranslations-qt is not set
 # CONFIG_qttranslations-qtconnectivity is not set
 # CONFIG_qttranslations-qtlocation is not set
 # CONFIG_qttranslations-qtxmlpatterns is not set
@@ -3880,6 +3857,7 @@ CONFIG_hellopm=y
 #
 # libpthread-stubs 
 #
+# CONFIG_libpthread-stubs is not set
 # CONFIG_libpthread-stubs-dbg is not set
 # CONFIG_libpthread-stubs-dev is not set
 
@@ -4188,13 +4166,6 @@ CONFIG_hellopm=y
 # CONFIG_packagegroup-petalinux-v4lutils-dev is not set
 
 #
-# packagegroup-petalinux-weston 
-#
-# CONFIG_packagegroup-petalinux-weston is not set
-# CONFIG_packagegroup-petalinux-weston-dbg is not set
-# CONFIG_packagegroup-petalinux-weston-dev is not set
-
-#
 # packagegroup-petalinux-x11 
 #
 # CONFIG_packagegroup-petalinux-x11 is not set
@@ -4215,28 +4186,20 @@ CONFIG_imagefeature-ssh-server-dropbear=y
 # CONFIG_imagefeature-ssh-server-openssh is not set
 CONFIG_imagefeature-hwcodecs=y
 # CONFIG_imagefeature-package-management is not set
-# CONFIG_imagefeature-debug-tweaks is not set
+CONFIG_imagefeature-debug-tweaks=y
 
 #
 # apps 
 #
-# CONFIG_apphtml is not set
 CONFIG_apppocketsonata=y
-CONFIG_bootscript=y
 # CONFIG_gpio-demo is not set
 # CONFIG_peekpoke is not set
 
 #
 # user packages 
 #
-CONFIG_boost=y
-CONFIG_rfdc=y
-CONFIG_rfdc-read-write=y
-CONFIG_rfdc-selftest=y
-# CONFIG_sdfec is not set
 
 #
 # PetaLinux RootFS Settings
 #
 CONFIG_ROOTFS_ROOT_PASSWD="root"
-CONFIG_ADD_EXTRA_USERS=""

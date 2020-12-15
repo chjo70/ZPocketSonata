@@ -90,37 +90,36 @@ T _diffabs( T x, T y)
 #define IPACNV( A )				FDIV( (A), _spAMPres )
 
 #elif defined(_POCKETSONATA_)
-#define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
-#define FRQMhzCNV( A, B )		IMUL( (B), ( gFreqRes[(A)].res ) )
-#define IFRQMhzCNV( A )         IDIV( (A), ( gFreqRes[0].res ) )
+#define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define FRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define IFRQMhzCNV( A, B )      CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
 #define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].res ) )
 
-#define IFRQMhzLOW( A )         F_IDIV( (A), ( gFreqRes[0].res ) )
-#define IFRQMhzHGH( A )         C_IDIV( (A), ( gFreqRes[0].res ) )
+#define IFRQMhzLOW( A )         CPOCKETSONATAPDW::EncodeFREQMHzFloor( A )
+#define IFRQMhzHGH( A )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
 
-#define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
-#define TOAmsCNV( A )           IDIV( (A), _spOneMilli )
-#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
-#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define TOAusCNV( A )           CPOCKETSONATAPDW::DecodeTOAus( A )
+#define TOAmsCNV( A )           CPOCKETSONATAPDW::DecodeTOAms( A )
+#define FTOAsCNV( A )			CPOCKETSONATAPDW::DecodeTOAs( A )
+#define ITOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
+#define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
-#define PWCNV( A )				IDIV( A, _spOneNanosec )
+#define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
 #define IPWCNV( A )				IMUL( (A), _spOneNanosec )
 #define FPWCNV( A )             FMUL( (A), _spOneNanosec )
 
-#define IPWCNVLOW( A )			F_MUL( (A), _spOneNanosec )
-#define IPWCNVHGH( A )			C_MUL( (A), _spOneNanosec )
+#define IPWCNVLOW( A )			CPOCKETSONATAPDW::EncodePWFloor( A )
+#define IPWCNVHGH( A )			CPOCKETSONATAPDW::EncodePWCeiling( A )
 
-#define AOACNV( A )             FMUL( (A), _spAOAres )
-#define IAOACNV( A )            IDIV( (A), _spAOAres )
-#define FAOACNV( A )            (float) ( (float) A * _spAOAres )
+#define AOACNV( A )             CPOCKETSONATAPDW::DecodeDOA( A )
+#define IAOACNV( A )            CPOCKETSONATAPDW::EncodeDOA( A )
+#define FAOACNV( A )            CPOCKETSONATAPDW::DecodeDOA( A )
 
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
-#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
-#define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
+
+#define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
 #define IPACNV( A )				FDIV( (A), _spAMPres )
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 

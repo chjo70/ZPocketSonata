@@ -36,6 +36,9 @@
 CNAnalPRI::CNAnalPRI( void *pParent, int coMaxPdw ) : CAnalPRI( coMaxPdw )
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
+
+    INIT_ANAL_VAR_(m_pNewSigAnal)
+
 }
 
 //////////////////////////////////////////////////////////////////////

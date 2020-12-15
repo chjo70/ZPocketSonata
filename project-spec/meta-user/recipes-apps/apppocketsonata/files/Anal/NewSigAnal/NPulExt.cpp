@@ -38,6 +38,8 @@ CNPulExt::CNPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
     m_CoPulseTrains = 0;
+
+    INIT_ANAL_VAR_(m_pNewSigAnal)
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -251,7 +253,8 @@ void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode *
 
     Init();
 
-    memset( MARK, 0, sizeof( MARK ) );
+    ClearAllMark();
+    //memset( m_pMARK, 0, sizeof( m_pNewSigAnal->MARK ) );
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
@@ -400,4 +403,9 @@ int CNPulExt::GetCoPdw()
 int CNPulExt::GetPulseStat()
 {
     return m_pNewSigAnal->GetPulseStat();
+}
+
+void CNPulExt::ClearAllMark()
+{
+    memset( & m_pMARK[0], 0, sizeof( m_pNewSigAnal->MARK ) );
 }

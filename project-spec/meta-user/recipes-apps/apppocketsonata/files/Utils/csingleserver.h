@@ -9,6 +9,7 @@
 
 #include "../Utils/cthread.h"
 
+#include "../Thread/creclan.h"
 
 class CSingleServer : public CThread
 {
@@ -19,6 +20,8 @@ private:
     STR_MessageData *m_pMsg;
 
     char *m_pszLanData;
+
+    CRecLan *m_ptheRecLan;
 
 public:
     CSingleServer( int iKeyId, char *pClassName, int iPort );

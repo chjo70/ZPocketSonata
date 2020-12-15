@@ -25,7 +25,7 @@ CPulseTrk::~CPulseTrk(void)
 }
 
 /**
- * @brief CUrBit::Run
+ * @brief CPulseTrk::Run
  */
 void CPulseTrk::Run(key_t key)
 {
@@ -36,7 +36,7 @@ void CPulseTrk::Run(key_t key)
 }
 
 /**
- * @brief CUrBit::_routine
+ * @brief CPulseTrk::_routine
  */
 void CPulseTrk::_routine()
 {
@@ -50,7 +50,8 @@ void CPulseTrk::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv" );
+            //perror( "QMsgRcv() 에러");
+            break;
         }
         else {
         switch( m_pMsg->uiOpCode ) {

@@ -5,6 +5,8 @@
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
 
+#include "../Utils/ccommonutils.h"
+
 #define _DEBUG_
 
 extern CMultiServer *g_pTheZYNQSocket;
@@ -104,11 +106,10 @@ void CDetectAnalysis::AnalysisStart()
 
     LOGMSG2( enDebug, " 탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
-    // 1. PDW 데이터를 갖고온다.
-    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
-    // 2. 탐지 신호 분석을 호출한다.
-    m_pTheNewSigAnal->Start( ( STR_PDWDATA *) m_uniLanData.szFile );
+    // 1. 탐지 신호 분석을 호출한다.
+    m_pTheNewSigAnal->Start( ( STR_PDWDATA *) GetRecvData() );
     //SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
@@ -117,8 +118,9 @@ void CDetectAnalysis::AnalysisStart()
     if( uiTotalLOB >= _spOne ) {
         STR_ANALINFO strAnalInfo;
 
+        memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
         strAnalInfo.uiTotalLOB = uiTotalLOB;
-        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;        
 
         EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOB(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
     }

@@ -32,6 +32,8 @@ struct STR_SYSCONFIG {
      */
     float fRxThreshold[5];
 
+    char szPrimeServer[30];
+
     /**
      * @brief 장비 모드 상태
      */
@@ -96,6 +98,11 @@ public:
     void SetRxThreshold( float *fRxThreshold ) {
         memcpy( m_strConfig.fRxThreshold, fRxThreshold, sizeof(m_strConfig.fRxThreshold) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    };
+
+    char *GetPrimeServerOfNetwork() { return & m_strConfig.szPrimeServer[0]; };
+    void SetPrimeServerOfNetwork( const char *pPrimeServer ) {
+        strcpy( m_strConfig.szPrimeServer, pPrimeServer );
     };
 
     ENUM_MODE GetMode() { return m_strConfig.enMode; };

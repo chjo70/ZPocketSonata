@@ -36,6 +36,8 @@ CNMakeAET::CNMakeAET( void *pParent, int coMaxPdw ) : CMakeAET( coMaxPdw )
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
+    INIT_ANAL_VAR_(m_pNewSigAnal)
+
 }
 
 //////////////////////////////////////////////////////////////////////

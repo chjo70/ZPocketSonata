@@ -17,7 +17,6 @@
 #ifdef _ELINT_
 #include "../OFP_Main.h"
 #elif _POCKETSONATA_
-//#include "../OFP_Main.h"
 #include "../INC/Macros.h"
 #include "../Identify/ELUtil.h"
 
@@ -50,12 +49,15 @@
 CKMakeAET::CKMakeAET( void *pParent, int coMaxPdw ) : CMakeAET( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
+
+    INIT_ANAL_VAR_(m_pKnownSigAnal)
 	 
 	// 초기에 한번만 초기화한다.
 	m_CoNewAet = 0;
 
     //m_pAet = NULL;  //GetAet();
-	m_pEmitter = GetEmitter();
+    m_pEmitter = GetEmitter();
+
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -9,6 +9,8 @@
 // 아래는 이 쓰레드에서 사용하는 클래스를 정의합니다.
 #include "../Utils/cgpio.h"
 
+#define _AXI_DATATEST_          (0xAABBEEF0)
+
 /**
  * @brief 자체점검 쓰레드 입니다.
  */
@@ -29,11 +31,15 @@ public:
 
 private:
     void Init();
+    void InitHW();
 
     void RunIBit( bool bCGIRunning );
     void RunCBit( bool bCGIRunning );
     void RunUBit( bool bCGIRunning );
     void InitIBit();
+
+    // 모듈 자체점검 함수
+    bool RunAXIBusBIT();
 
 public:
     CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );

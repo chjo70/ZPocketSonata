@@ -10,7 +10,7 @@
 #include "csignalcollect.h"
 #include "cemittermerge.h"
 #include "curbit.h"
-
+#include "cusercollect.h"
 
 #include "../Utils/ccommonutils.h"
 
@@ -79,61 +79,89 @@ void CRecLan::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv");
+            //perror( "QMsgRcv");
             break;
         }
-        else {
-        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->uiOpCode ) {
-                // 기존 SONATA 체계 명령어
-                case enREQ_MODE :
-                case enREQ_ANAL_START :
-                    TMNGR->QMsgSnd( m_pMsg );
-                    break;
+        else {            
 
-                case enREQ_IBIT :
-                case enREQ_UBIT :
-                case enREQ_CBIT :
-                case enREQ_SBIT :
-                    URBIT->QMsgSnd( m_pMsg );
-                    break;
+            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+                switch( m_pMsg->uiOpCode ) {
+                    // 기존 SONATA 체계 명령어
+                    case enREQ_MODE :
+                    case enREQ_ANAL_START :
+                        TMNGR->QMsgSnd( m_pMsg );
+                        break;
 
-                case enREQ_RELOAD_LIBRARY :
-                    if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
-                    break;
+                    case enREQ_IBIT :
+                    case enREQ_UBIT :
+                    case enREQ_CBIT :
+                    case enREQ_SBIT :
+                        URBIT->QMsgSnd( m_pMsg );
+                        break;
 
-                case enREQ_IPL_VERSION :
-                    TMNGR->QMsgSnd( m_pMsg );
-                    break;
+                    case enREQ_RELOAD_LIBRARY :
+                        if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+                        break;
 
-                case enREQ_IPL_START :
-                case enREQ_IPL_END :
-                    TMNGR->QMsgSnd( m_pMsg );
-                    break;
+                    case enREQ_IPL_VERSION :
+                        TMNGR->QMsgSnd( m_pMsg );
+                        break;
 
-                case enREQ_IPL_DOWNLOAD :
-                    //TMNGR->QMsgSnd( m_pMsg, TMNGR->GetArrayMsgData(m_pMsg->iArrayIndex) );
-                    TMNGR->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
-                    break;
+                    case enREQ_IPL_START :
+                    case enREQ_IPL_END :
+                        TMNGR->QMsgSnd( m_pMsg );
+                        break;
 
-                // 추가 명령어
-                case enREQ_SIM_PDWDATA :
-                    SIGCOL->QMsgSnd( m_pMsg, GetArrayMsgData(m_pMsg->iArrayIndex) );
-                    break;
+                    case enREQ_IPL_DOWNLOAD :
+                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
 
-                case enREQ_DUMP_LIST :
-                    DumpList();
-                    break;
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    // 수집 제어 관련 메시지
+                    case enREQ_INIT :
+                    case enREQ_SET_CONFIG :
+                    case enREQ_COL_START :
+                    case enREQ_RAWDATA :
+                        UCOL->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
 
-                default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
-                    break;
+                    case enREQ_STOP :
+                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
+
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    // 오디오 제어 관련 메시지
+                    case enREQ_AUDIO :
+                    case enREQ_AUDIO_PARAM :
+                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
+
+                    // 수신기 설정 관련 메시지
+                    case enREQ_Band_Enable :
+                    case enREQ_FMOP_Threshold :
+                    case enREQ_PMOP_Threshold :
+                    case enREQ_RX_Threshold :
+                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
+
+                    // 추가 명령어
+                    case enREQ_SIM_PDWDATA :
+                        SIGCOL->QMsgSnd( m_pMsg, GetRecvData() );
+                        break;
+
+                    case enREQ_DUMP_LIST :
+                        DumpList();
+                        break;
+
+                    default:
+                        LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                        break;
+                }
             }
-        }
-        else {
-            LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+            else {
+                LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+                }
             }
-        }
     }
 
 }

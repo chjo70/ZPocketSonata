@@ -16,8 +16,7 @@
 #include <fcntl.h>
 
 enum enTableHeader {
-    enNo=0,
-    enNoAET,
+    enNoAET=0,
     enFirstSeen,
     enLastSeen,
     enPriority,
@@ -37,7 +36,7 @@ enum enTableHeader {
     enMax
 } ;
 
-char szTableHeader[enMax][30] = { "번호", "#", "최초접촉", "최근접촉", "위협도", "ELNOT", "신호형태", "방위[도]", "주파수[MHz]", "PRI[us]", "펄스폭[ns]", "신호세기[dBm]", "스캔", "에미터명", "위협명", "식별" } ;
+char szTableHeader[enMax][30] = { "#", "최초접촉", "최근접촉", "위협도", "ELNOT", "신호형태", "방위[도]", "주파수[MHz]", "PRI[us]", "펄스폭[ns]", "신호세기[dBm]", "스캔", "에미터명", "위협명", "식별" } ;
 
 void _InitResolution();
 
@@ -58,10 +57,38 @@ MainWindow::MainWindow(QWidget *parent)
     ui->spinBoxStartAddress->setRange(UINT_MAX);
     ui->spinBoxStartAddress->setPrefix("0x");
 
-    connect( & m_theTcpSocket, SIGNAL(connected()), this, SLOT(onConnectServer()) );
-    connect( & m_theTcpSocket, SIGNAL(disconnected()), this, SLOT(connectionClosedByServer()));
-    connect( & m_theTcpSocket, SIGNAL(readyRead()), this, SLOT(onReadMessage()));
-    connect( & m_theTcpSocket, SIGNAL(error()), this, SLOT(onError()));
+    // 스픽 박스 설정
+    ui->spinBox_fmopthreshold->setMinimum( 0 );
+    ui->spinBox_fmopthreshold->setMaximum( 255 );
+    ui->spinBox_fmopthreshold->setValue( 55 );
+
+    ui->spinBox_pmopthreshold->setMinimum( 0 );
+    ui->spinBox_pmopthreshold->setMaximum( 255 );
+    ui->spinBox_pmopthreshold->setValue( 155 );
+
+    ui->spinBox_rxthreshold->setMinimum( 0 );
+    ui->spinBox_rxthreshold->setMaximum( 65536 );
+    ui->spinBox_rxthreshold->setValue( 9000 );
+
+    ui->spinBox_rxthreshold->setMinimum( 0 );
+    ui->spinBox_rxthreshold->setMaximum( 65536 );
+    ui->spinBox_rxthreshold->setValue( 85 );
+
+    ui->spinBox_corrthreshold->setMinimum( 0 );
+    ui->spinBox_corrthreshold->setMaximum( 65536 );
+    ui->spinBox_corrthreshold->setValue( 2065 );
+
+
+    m_ptheTcpServer = new QTcpServer(this);
+    if( ! m_ptheTcpServer->listen( QHostAddress::Any, 13030 ) ) {
+        perror( "서버" );
+    }
+
+    connect( m_ptheTcpServer, SIGNAL(newConnection()), this, SLOT(newConnection()));
+    //connect( & m_theTcpSocket, SIGNAL(connected()), this, SLOT(onConnectServer()) );
+    //connect( m_ptheTcpServer, SIGNAL(disconnected()), this, SLOT(connectionClosedByServer()));
+    //connect( & m_theTcpSocket, SIGNAL(readyRead()), this, SLOT(onReadMessage()));
+    //connect( & m_theTcpSocket, SIGNAL(error()), this, SLOT(onError()));
 
     QStringList aettableHeader;
 
@@ -79,18 +106,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     _InitResolution();
 
-    m_nCoList = 0;
-
 }
 
+/**
+ * @brief MainWindow::~MainWindow
+ */
 MainWindow::~MainWindow()
 {
+    disConnected();
+
     delete ui;
-}
-
-void MainWindow::newConnection()
-{
-
 }
 
 void MainWindow::onSocketStateChanged(QAbstractSocket::SocketState socketState)
@@ -111,38 +136,114 @@ void MainWindow::onReadyRead()
  */
 void MainWindow::on_pushButton_clicked()
 {
-    bool bConnected;
-    int iTotalRow, iRow;
 
-    nextBlockSize = 0;
+    disConnected();
 
-    if( m_bConnect == false ) {
-        // 자신의 IP 에서 연결 요구하고 연결 실패되면 직접 다이렉트로 연결을 시도한다.
-        m_theTcpSocket.connectToHost(QHostAddress::LocalHost, CCU_PORT );
-        bConnected = m_theTcpSocket.waitForConnected();
+}
 
-        //ui->aettableWidget->clear();
-        iTotalRow = ui->aettableWidget->rowCount();
-        for( iRow=0 ; iRow < iTotalRow ; ++iRow ) {
-            ui->aettableWidget->removeRow( 0 );
+/**
+ * @brief MainWindow::newConnection
+ */
+void MainWindow::newConnection()
+{
+    printf( "***클라이언트와 연결이 되었습니다.\n" );
+
+    ui->pushButton->setText( tr("연결 해지") );
+    m_bConnect = true;
+
+    m_bHeader = true;
+    m_uiTotalRead = 0;
+
+    EnableControl( true );
+
+    ui->progressBar_IPL->setValue( 0 );
+    ui->progressBar_IPL_WriteStatus->setValue( 0 );
+
+    // 수집된 센서 데이터 송신
+    m_ptheClient = m_ptheTcpServer->nextPendingConnection();
+
+    connect( m_ptheClient,SIGNAL(readyRead()),this,SLOT(readData()));
+    connect( m_ptheClient,SIGNAL(disconnected()),this,SLOT(disConnected()));
+    disconnect( m_ptheTcpServer, SIGNAL(newConnection()),this,SLOT(newConnection()));
+
+}
+
+void MainWindow::readData()
+{
+    //if(m_ptheClient->bytesAvailable() >= 0 )
+    //{
+    //    QByteArray data = client->readAll();
+    //}
+
+    int iRead;
+
+    //UINT uiTotalRead=0;
+    char *pLanData;
+
+    QTextCharFormat format;
+
+    pLanData = (char *) & m_szLanData[m_uiTotalRead];
+
+    while( true ) {
+         //nextBlcokSize 가 0 이면 아직 데이터를 못받은것
+        if( m_bHeader == true ) {
+            printf( "*read header" );
+            if (( iRead = m_ptheClient->read( & m_szLanData[m_uiTotalRead], sizeof(STR_LAN_HEADER) ) ) == 0 ) {
+                printf( "rd[%d]\n" , iRead );
+                break;
+                // m_theTcpSocket.disconnectFromHost();
+                //CloseSocket( iSocket, & address, & iClientSocket[i] );
+            }
+            else {
+                printf( "rd[%d]\n" , iRead );
+                m_uiTotalRead += iRead;
+                if( m_uiTotalRead == sizeof(STR_LAN_HEADER) ) {
+                    AllSwapData32( & m_szLanData[0], sizeof(STR_LAN_HEADER) );
+                    m_bHeader = false;
+                }
+                else {
+                    iRead = 0;
+                }
+            }
         }
+        else {
+            STR_LAN_HEADER *pLanHeader;
 
-        ui->progressBar_IPL->setValue( 0 );
+            pLanHeader = ( STR_LAN_HEADER * ) & m_szLanData[0];
+            printf( "*read data [%d]" , pLanHeader->uiLength );
+            if (( iRead = m_ptheClient->read( & m_szLanData[m_uiTotalRead], pLanHeader->uiLength ) ) == 0 ) {
+                printf( "rd[%d]\n" , iRead );
+                break;
+            }
+            else {
+                printf( "rd[%d]\n" , iRead );
+                m_uiTotalRead += iRead;
+                if( m_uiTotalRead-sizeof(STR_LAN_HEADER) >= pLanHeader->uiLength ) {
+                    AllSwapData32( & m_szLanData[sizeof(STR_LAN_HEADER)], pLanHeader->uiLength );
 
-        if( bConnected == false ) {
-            m_theTcpSocket.connectToHost( "zcu111.com", CCU_PORT );
+                    m_bHeader = true;
+                    m_uiTotalRead = 0;
+
+                    //데이터를 표시
+                    ParseAndDisplay( pLanHeader, & m_szLanData[sizeof(STR_LAN_HEADER)] );
+
+                    format.setForeground(QColor(0x6F,0x77,0x97));
+                    QTextCursor cursor = ui->memoryDump->textCursor();
+                    cursor.select(QTextCursor::Document);
+                    cursor.mergeCharFormat(format);
+
+                    memset( pLanHeader, 0, sizeof(STR_LAN_HEADER)+pLanHeader->uiLength );
+                }
+                else {
+                    iRead = 0;
+                }
+            }
         }
-
-        m_nCoList = 0;
-    }
-    else {
-        m_theTcpSocket.close();
-
-        EnableControl( false );
 
     }
 
 }
+
 
 /**
  * @brief MainWindow::onConnectServer
@@ -157,6 +258,35 @@ void MainWindow::onConnectServer()
     EnableControl( true );
 
 }
+
+/**
+ * @brief MainWindow::disConnected
+ */
+void MainWindow::disConnected()
+{
+    printf( "***클라이언트와 연결 해지 되었습니다.\n" );
+
+    if( m_ptheClient != NULL ) {
+        m_ptheClient->close();
+    }
+
+    ui->pushButton->setText( tr("연결") );
+    m_bConnect = false;
+
+    m_bHeader = true;
+
+    EnableControl( false );
+
+    if( ! m_ptheTcpServer->listen( QHostAddress::Any, 13030 ) ) {
+        perror( "서버" );
+    }
+
+    // 수집된 센서 데이터 송신
+    connect(m_ptheTcpServer,SIGNAL(newConnection()),this,SLOT(newConnection()));
+
+    ClearTable();
+
+} // 소켓 연결 해제
 
 /**
  * @brief MainWindow::EnableControl
@@ -176,6 +306,14 @@ void MainWindow::EnableControl( bool bEnable )
     ui->pushButton_IPLVersion->setEnabled( bEnable );
     ui->pushButton_DownloadIPL->setEnabled( bEnable );
     ui->pushButton_SimPDW->setEnabled( bEnable );
+
+    ui->pushButton_audio->setEnabled( bEnable );
+    ui->pushButton_audiosetup->setEnabled( bEnable );
+
+    ui->pushButton_bandenable->setEnabled( bEnable );
+    ui->pushButton_fmopthreshold->setEnabled( bEnable );
+    ui->pushButton_pmopthreshold->setEnabled( bEnable );
+    ui->pushButton_rx->setEnabled( bEnable );
 
     ui->bit_result->setText( "" );
 
@@ -212,26 +350,28 @@ void MainWindow::onReadMessage()
          //nextBlcokSize 가 0 이면 아직 데이터를 못받은것
         if( m_bHeader == true ) {
             pLanData = (char *) & strLanHeader;
-            if (( iRead = m_theTcpSocket.read( & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead ) ) == 0 ) {
-                break;
+            //if (( iRead = m_theTcpServer.read( & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead ) ) == 0 ) {
+            //    break;
                 // m_theTcpSocket.disconnectFromHost();
                 //CloseSocket( iSocket, & address, & iClientSocket[i] );
-            }
-            else {
+            //}
+            //else {
                 uiTotalRead += iRead;
                 if( uiTotalRead == sizeof(STR_LAN_HEADER) ) {
                     m_bHeader = false;
                     uiTotalRead = 0;
                 }
-            }
+            //}
         }
         else {
             pLanData = (char *) & szLanData;
-            if (( iRead = m_theTcpSocket.read( & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead ) ) == 0 ) {
-                break;
+
+            //if (( iRead = m_theTcpSocket.read( & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead ) ) == 0 ) {
+            //    break;
                 //m_theTcpSocket.disconnectFromHost();
-            }
-            else {
+            //}
+            //else
+            {
                 uiTotalRead += iRead;
                 if( uiTotalRead == strLanHeader.uiLength ) {
                     m_bHeader = true;
@@ -277,7 +417,7 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
 
             // 클라이언트 랜 소켓 닫는다.
             if( uiMode == enREADY_MODE ) {
-                m_theTcpSocket.close();
+                m_ptheTcpServer->close();
             }
         }
         break;
@@ -333,6 +473,10 @@ void MainWindow::ParseAndDisplay( STR_LAN_HEADER *pstLanHeader, char *pByteData 
         ShowIPLVersion( pByteData );
         break;
 
+    case esIPL_WRITESTATUS :
+        ShowIPLWriteStatus( pByteData );
+        break;
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     case esAET_NEW_CCU :
         InsertAETTable( pByteData );
@@ -373,8 +517,6 @@ void MainWindow::InsertAETTable( void *pByteData )
 
     iIndexOfTable = ui->aettableWidget->rowCount() - 1;
 
-    ++ m_nCoList;
-
     UpdateRow( ui->aettableWidget, pAET, iIndexOfTable );
 
     UpdateColor( iIndexOfTable, pAET, Maet_New_Ccu );
@@ -393,9 +535,9 @@ void MainWindow::UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iInd
 
     struct tm *pTm;
 
-    qTemp.sprintf( "%d", m_nCoList );
-    pQTableWidget->setItem( iIndexOfTable, enNo, new QTableWidgetItem(qTemp) );
-    qTemp.sprintf( "%d", pAET->noEMT );
+    time_t time64;
+
+    qTemp.sprintf( (char *) "%d", pAET->noEMT );
     pQTableWidget->setItem( iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
     qTemp.sprintf( "%s", aet_signal_type[pAET->sigType] );
     pQTableWidget->setItem( iIndexOfTable, enSIGTYPE, new QTableWidgetItem(qTemp) );
@@ -431,11 +573,13 @@ void MainWindow::UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iInd
     }
     pQTableWidget->setItem( iIndexOfTable, enSCAN, new QTableWidgetItem(qTemp) );
 
-    pTm = localtime( & pAET->seen.frst );
+    time64 = (time_t) pAET->seen.frst;
+    pTm = localtime( & time64 );
     qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
     pQTableWidget->setItem( iIndexOfTable, enFirstSeen, new QTableWidgetItem(qTemp) );
 
-    pTm = localtime( & pAET->seen.last );
+    time64 = (time_t) pAET->seen.last;
+    pTm = localtime( & time64 );
     qTemp.sprintf( "%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec );
     pQTableWidget->setItem( iIndexOfTable, enLastSeen, new QTableWidgetItem(qTemp) );
 
@@ -560,8 +704,6 @@ void MainWindow::DeleteAETTable( void *pByteData )
 
     pAET = ( STR_AET *) pByteData;
 
-    -- m_nCoList;
-
     iIndexOfTable = GetIndexOfAETTable( pAET->noEMT );
     ui->aettableWidget->removeRow( iIndexOfTable );
 }
@@ -612,6 +754,19 @@ void MainWindow::ShowIPLVersion( void *pData )
 }
 
 /**
+ * @brief MainWindow::ShowIPLWriteStatus
+ * @param pData
+ */
+void MainWindow::ShowIPLWriteStatus( void *pData )
+{
+    unsigned int *puiWriteStatus;
+
+    puiWriteStatus = ( unsigned int * ) pData;
+    printf( "WriteStatus[%d]\n" , *puiWriteStatus );
+    ui->progressBar_IPL_WriteStatus->setValue( *puiWriteStatus );
+}
+
+/**
  * @brief MainWindow::SendRSA
  * @param pstrLanHeader
  * @param pData
@@ -620,20 +775,57 @@ void MainWindow::ShowIPLVersion( void *pData )
  */
 int MainWindow::SendRSA( STR_LAN_HEADER *pstrLanHeader, void *pData, int iLength )
 {
-    int iRet;
+    int iRet=-1;
 
-    iRet = m_theTcpSocket.write( (char *) pstrLanHeader, sizeof(STR_LAN_HEADER) );
+    AllSwapData32( (char *) pstrLanHeader, sizeof(STR_LAN_HEADER) );
+    if( m_ptheClient != NULL ) {
+        iRet = m_ptheClient->write( (char *) pstrLanHeader, sizeof(STR_LAN_HEADER) );
 
-    if( pData != NULL && iRet > 0 ) {
-        iRet = m_theTcpSocket.write( (char *) pData, iLength );
-    }
-    else {
-        //LOGMSG( enWarning, )
+        if( pData != NULL && iRet > 0 ) {
+            AllSwapData32( (char *) pData, iLength );
+            iRet = m_ptheClient->write( (char *) pData, iLength );
+        }
+        else {
+            //LOGMSG( enWarning, )
+        }
     }
 
     return iRet;
 
 }
+
+/**
+ * @brief MainWindow::AllSwapData32
+ * @param pData
+ * @param iLength
+ */
+void MainWindow::AllSwapData32( void *pData, int iLength )
+{
+    int i;
+    UINT *pWord;
+
+    printf( " AllSwapData32 : %d\n" , iLength );
+
+    pWord = (UINT *) pData;
+    for( i=0 ; i < iLength ; i+=sizeof(int) ) {
+        swapByteOrder( *pWord );
+        ++ pWord;
+    }
+
+}
+
+/**
+ * @brief MainWindow::swapByteOrder
+ * @param ui
+ */
+void MainWindow::swapByteOrder(unsigned int& ui)
+{
+    ui = (ui >> 24) |
+        ((ui<<8) & 0x00FF0000) |
+        ((ui>>8) & 0x0000FF00) |
+        (ui << 24);
+}
+
 
 
 /**
@@ -712,9 +904,15 @@ void MainWindow::on_ReadyMode_clicked()
     iRet = SendRSA( & strLanHeader, & uiMode, strLanHeader.uiLength );
 
     // 클라이언트 랜 소켓 닫는다.
-    m_theTcpSocket.close();
+    m_ptheTcpServer->close();
+
+    ui->pushButton->setText( tr("연결") );
+    m_bConnect = false;
+
+    m_bHeader = true;
 
     EnableControl( false );
+
 }
 
 /**
@@ -819,7 +1017,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 
     strLanHeader.uiOpCode = enREQ_SIM_PDWDATA;
 
-    QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.kpdw)" );
+    QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.zpdw)" );
 
     if (theRawDataFile.Open( fileName.toStdString().c_str(), O_RDONLY ) == TRUE) {
         uiFilelength = theRawDataFile.GetFileLength();
@@ -841,7 +1039,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
         }
     }
     else {
-        MessageBox( "모의 발생할 파일이 존재하지 않습니다.!" );
+        MessageBox( (char *) "모의 발생할 파일이 존재하지 않습니다.!" );
     }
 
 }
@@ -883,8 +1081,12 @@ void MainWindow::on_pushButton_ReloadLibrary_clicked()
 void MainWindow::on_pushButton_IPLVersion_clicked()
 {
     int iRet;
+    QString qStrTitle;
 
     STR_LAN_HEADER strLanHeader;
+
+    qStrTitle.sprintf( "PocketSonata - IPL" );
+    setWindowTitle( qStrTitle );
 
     strLanHeader.uiOpCode = enREQ_IPL_VERSION;
     strLanHeader.uiLength = 0;
@@ -906,6 +1108,7 @@ void MainWindow::on_pushButton_DownloadIPL_clicked()
     STR_IPL_START strIPLStart;
 
     ui->progressBar_IPL->setValue( 0 );
+    ui->progressBar_IPL_WriteStatus->setValue( 0 );
 
     timer = time( NULL );
     t = localtime(&timer);
@@ -919,14 +1122,13 @@ void MainWindow::on_pushButton_DownloadIPL_clicked()
 
     iRet = SendRSA( & strLanHeader, & strIPLStart, strLanHeader.uiLength );
 
-    if( iRet == (int) strLanHeader.uiLength ) {
+    if( iRet == sizeof(STR_IPL_START) ) {
         for( i=1 ; i <= m_coLoadIPL ; ++i ) {
             strLanHeader.uiOpCode = enREQ_IPL_DOWNLOAD;
             strLanHeader.uiLength = sizeof( STR_IPL );
-            iRet = SendRSA( & strLanHeader, & m_strIpl[i], strLanHeader.uiLength );
+            iRet = SendRSA( & strLanHeader, & m_strIpl[i], sizeof( STR_IPL ) );
 
-
-            if( iRet == (int) strLanHeader.uiLength ) {
+            if( iRet == sizeof( STR_IPL ) ) {
                 ui->progressBar_IPL->setValue( (int) ( 0.5 + (float) ( ( (float) i * 100. ) / (float) m_coLoadIPL ) ) );
             }
 
@@ -987,9 +1189,9 @@ void MainWindow::ReadIPLFIle()
             fscanf( iplfile, "%d", &ptmp->frq.swtLev );			// Pattern Type
             for( i=0 ; i < _spMaxSwtLev ; ++i ) {
                 fscanf( iplfile, "%s", str );
-                ptmp->frq.dwLow[i] = ( UINT ) ( ( double ) atof( str ) );
+                ptmp->frq.swtValLow[i] = ( UINT ) ( ( double ) atof( str ) );
                 fscanf( iplfile, "%s", str );
-                ptmp->frq.dwHgh[i] = ( UINT ) ( ( double ) atof( str ) );
+                ptmp->frq.swtValHgh[i] = ( UINT ) ( ( double ) atof( str ) );
             }
 
             fscanf( iplfile, "%s", str );
@@ -1079,4 +1281,191 @@ void MainWindow::ReadIPLFIle()
 
     }
 
+}
+
+/**
+ * @brief MainWindow::on_pushButton_audio_clicked
+ */
+void MainWindow::on_pushButton_audio_clicked()
+{
+    UINT uiSwitch;
+    QString qText;
+
+    STR_LAN_HEADER strLanHeader;
+
+    qText = ui->pushButton_audio->text();
+
+    if( qText.compare( "ON" ) == 0 ) {
+        ui->pushButton_audio->setText( tr("OFF") );
+
+        strLanHeader.uiOpCode = enREQ_AUDIO;
+        strLanHeader.uiLength = sizeof( int );
+
+        uiSwitch = _spFalse;
+
+    }
+    else {
+        ui->pushButton_audio->setText( tr("ON") );
+
+        strLanHeader.uiOpCode = enREQ_AUDIO;
+        strLanHeader.uiLength = sizeof( int );
+
+        uiSwitch = _spTrue;
+
+    }
+
+    SendRSA( & strLanHeader, & uiSwitch, sizeof( int ) );
+
+}
+
+/**
+ * @brief MainWindow::on_pushButton_audiosetup_clicked
+ */
+void MainWindow::on_pushButton_audiosetup_clicked()
+{
+    STR_LAN_HEADER strLanHeader;
+    STR_AUDIO_PARAM strAudioParam;
+
+    strLanHeader.uiOpCode = enREQ_AUDIO_PARAM;
+    strLanHeader.uiLength = sizeof( STR_AUDIO_PARAM );
+
+    strAudioParam.iLowerBC = 0;
+    strAudioParam.iUpperBC = 0;
+    strAudioParam.iLowerFrq = 500;
+    strAudioParam.iUpperFrq = 18000;
+    strAudioParam.iFromAoa = 0;
+    strAudioParam.iToAoa = 360;
+    strAudioParam.iFromPa = 0;
+    strAudioParam.iToPa = 18000;
+
+    SendRSA( & strLanHeader, & strAudioParam, sizeof( STR_AUDIO_PARAM ) );
+
+}
+
+int MainWindow::GetUIBand()
+{
+    int iRet=0;
+
+    if( ui->checkBox_band1->checkState() == Qt::CheckState::Checked ) {
+        iRet |= 0x1;
+    }
+    if( ui->checkBox_band2->checkState() == Qt::CheckState::Checked ) {
+        iRet |= 0x2;
+    }
+    if( ui->checkBox_band3->checkState() == Qt::CheckState::Checked ) {
+        iRet |= 0x4;
+    }
+    if( ui->checkBox_band4->checkState() == Qt::CheckState::Checked ) {
+        iRet |= 0x8;
+    }
+    if( ui->checkBox_band5->checkState() == Qt::CheckState::Checked ) {
+        iRet |= 0x10;
+    }
+
+    return iRet;
+}
+
+/**
+ * @brief MainWindow::on_pushButton_bandenable_clicked
+ */
+void MainWindow::on_pushButton_bandenable_clicked()
+{
+    QString qText;
+    STR_LAN_HEADER strLanHeader;
+    STR_BAND_ENABLE strBandEnable;
+
+    strLanHeader.uiOpCode = enREQ_Band_Enable;
+    strLanHeader.uiLength = sizeof( STR_BAND_ENABLE );
+
+    strBandEnable.iBand = GetUIBand();
+
+    qText = ui->pushButton_bandenable->text();
+    if( qText.compare( "대역 설정 ON" ) == 0 ) {
+        ui->pushButton_bandenable->setText( tr("대역 설정 OFF") );
+
+        strBandEnable.iOnOff = 0;
+
+    }
+    else {
+        ui->pushButton_bandenable->setText( tr("대역 설정 ON") );
+
+        strBandEnable.iOnOff = 0xff;
+    }
+
+    SendRSA( & strLanHeader, & strBandEnable, sizeof( STR_BAND_ENABLE ) );
+
+}
+
+/**
+ * @brief MainWindow::on_pushButton_fmopthreshold_clicked
+ */
+void MainWindow::on_pushButton_fmopthreshold_clicked()
+{
+    QString qText;
+    STR_LAN_HEADER strLanHeader;
+    STR_FMOP_THRESHOLD strFMOPThreshold;
+
+    strLanHeader.uiOpCode = enREQ_FMOP_Threshold;
+    strLanHeader.uiLength = sizeof( STR_FMOP_THRESHOLD );
+
+    strFMOPThreshold.iBand = GetUIBand();
+
+    strFMOPThreshold.iThreshold = ui->spinBox_fmopthreshold->value();
+
+    qText = ui->pushButton_bandenable->text();
+
+    SendRSA( & strLanHeader, & strFMOPThreshold, sizeof( STR_FMOP_THRESHOLD ) );
+}
+
+/**
+ * @brief MainWindow::on_pushButton_pmopthreshold_clicked
+ */
+void MainWindow::on_pushButton_pmopthreshold_clicked()
+{
+    QString qText;
+    STR_LAN_HEADER strLanHeader;
+    STR_PMOP_THRESHOLD strPMOPThreshold;
+
+    strLanHeader.uiOpCode = enREQ_PMOP_Threshold;
+    strLanHeader.uiLength = sizeof( STR_PMOP_THRESHOLD );
+
+    strPMOPThreshold.iBand = GetUIBand();
+
+    strPMOPThreshold.iThreshold = ui->spinBox_pmopthreshold->value();
+
+    qText = ui->pushButton_bandenable->text();
+
+    SendRSA( & strLanHeader, & strPMOPThreshold, sizeof( STR_PMOP_THRESHOLD ) );
+}
+
+/**
+ * @brief MainWindow::on_pushButton_rx_clicked
+ */
+void MainWindow::on_pushButton_rx_clicked()
+{
+    QString qText;
+    STR_LAN_HEADER strLanHeader;
+    STR_RX_THRESHOLD strRXThreshold;
+
+    strLanHeader.uiOpCode = enREQ_RX_Threshold;
+    strLanHeader.uiLength = sizeof( STR_RX_THRESHOLD );
+
+    strRXThreshold.iBand = GetUIBand();
+
+    strRXThreshold.uiMagThreshold = ui->spinBox_rxthreshold->value();
+
+    qText = ui->pushButton_bandenable->text();
+
+    SendRSA( & strLanHeader, & strRXThreshold, sizeof( STR_RX_THRESHOLD ) );
+}
+
+void MainWindow::ClearTable()
+{
+    int i, iCount;
+
+    iCount = ui->aettableWidget->rowCount();
+
+    for( i=iCount ; i >= 0 ; --i ) {
+        ui->aettableWidget->removeRow( i );
+    }
 }

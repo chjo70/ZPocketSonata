@@ -41,6 +41,9 @@
 CNGroup::CNGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
+
+    INIT_ANAL_VAR_(m_pNewSigAnal)
+
 }
 
 //////////////////////////////////////////////////////////////////////

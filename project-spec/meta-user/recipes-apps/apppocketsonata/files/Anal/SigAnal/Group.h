@@ -29,6 +29,8 @@ const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_FMOP, 0, \
 class CGroup
 {
 protected:
+    DEFINE_ANAL_PVAR_(0)
+
 	//##ModelId=452B0C5600B6
 	UINT *m_pPdwParam;
 	//##ModelId=452B0C5600CA

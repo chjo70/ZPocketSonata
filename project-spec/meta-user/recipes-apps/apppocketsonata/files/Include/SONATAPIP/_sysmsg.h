@@ -188,6 +188,7 @@
 #define		Mres_SetConfig			(9302)
 #define		Mres_ColStart				(9404)
 #define		Mres_RawData_PDW		(9506)
+#define		Mres_RawData_ZPDW		(9508)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //   A sort of Msys_Error's Error
@@ -236,7 +237,6 @@ typedef struct
 
 /* RSA CNF 오디오 설정 데이터 */
 //##ModelId=452B0C4F003F
-//typedef AUD_RANGE LAN_AUDIO;        // in hw_str.h
 
 //##ModelId=452B0C4F0053
 typedef struct
@@ -721,6 +721,7 @@ typedef struct
   UINT spshiftfrq;
 } STR_CNFSYS ;
 
+/*
 typedef struct {
 	float fAOALow, fAOAHgh;
 	float fFreqLow, fFreqHgh;
@@ -747,6 +748,7 @@ typedef struct {
 	UINT uiIndex;
 
 } STR_RES_PDW_DATA;
+*/
 
 // PDW 수신판 관련 정의
 #define	PDW_RCV_PDW			(1000)

@@ -22,6 +22,8 @@ CThread::CThread( int iMsgKey, char *pClassName, bool bArrayLanData ) : CArrayMs
     m_MainThread = 0;
     m_MsgKeyID = 0;
 
+    m_pszRecvData = NULL;
+
     // 메시지큐 생성
     memset( & m_Msg, 0, sizeof(STR_MessageData) );
 
@@ -132,9 +134,11 @@ void CThread::Stop2()
 {
 
     if( m_MainThread != 0 ) {
-        if (!pthread_cancel(m_MainThread))
-        {
+        if (!pthread_cancel(m_MainThread)) {
             pthread_join(m_MainThread, NULL);
+
+            -- m_iCoMsgQueue;
+            -- m_iCoThread;
         }
         else
         {
@@ -187,7 +191,15 @@ int CThread::QMsgRcv( int iFlag )
     int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
 
     if( iMsgRcv > 0 ) {
-        LOGMSG4( enDebug, "*수신: [%12s]에서 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+        DisplayMsg( false );
+
+        if( m_Msg.iArrayIndex != -1 ) {
+            m_pszRecvData = m_szRecvData;
+            PopLanData( m_szRecvData, m_Msg.iArrayIndex, m_Msg.uiArrayLength );
+        }
+        else {
+            m_pszRecvData = NULL;
+        }
     }
 
     return iMsgRcv;
@@ -281,6 +293,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     }
     else {
         // DisplayMsg( & sndMsg );
+        //LOGMSG4( enDebug, "*송신: [?]에서 [%12s] 으로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, uiOpCode, uiDataLength, m_Msg.iArrayIndex );
 
     }
 }
@@ -305,3 +318,108 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData )
     }
 }
 
+/**
+ * @brief CThread::DisplayMsg
+ */
+void CThread::DisplayMsg( bool bSend )
+{
+    bool bRet=true;
+    char szOpcode[50];
+    char buffer[200];
+
+    // opcode 에 따른 명령어 파싱
+    switch( m_Msg.uiOpCode ) {
+        case enREQ_MODE :
+            strcpy( szOpcode, "모드 설정" );
+            break;
+
+        case enREQ_ANAL_START :
+            strcpy( szOpcode, "분석 시작" );
+            break;
+
+        case enREQ_IBIT :
+            strcpy( szOpcode, "IBIT" );
+            break;
+
+        case enREQ_UBIT :
+            strcpy( szOpcode, "UBIT" );
+            break;
+
+        case enREQ_CBIT :
+            strcpy( szOpcode, "CBIT" );
+            break;
+
+        case enREQ_SBIT :
+            strcpy( szOpcode, "SBIT" );
+            break;
+
+        case enREQ_COL_START :
+            strcpy( szOpcode, "탐지 시작" );
+            break;
+
+        case enTHREAD_DETECTANAL_END :
+            strcpy( szOpcode, "탐지 종료" );
+            bRet = false;
+            break;
+
+        case enTHREAD_KNOWNANAL_START :
+            strcpy( szOpcode, "추적 시작" );
+            break;
+
+        case enTHREAD_KNOWNANAL_END :
+            strcpy( szOpcode, "추적 종료" );
+            break;
+
+        case enTHREAD_SCANANAL_START :
+            strcpy( szOpcode, "스캔 시작" );
+            break;
+
+        case enTHREAD_SCANANAL_END :
+            strcpy( szOpcode, "스캔 종료" );
+            break;
+
+        case enREQ_STOP :
+            strcpy( szOpcode, "수집 종료" );
+            break;
+
+        case enREQ_SET_CONFIG :
+            strcpy( szOpcode, "수집 설정" );
+            break;
+
+        case enTHREAD_REQ_SIM_PDWDATA :
+            strcpy( szOpcode, "모의PDW" );
+            break;
+
+        case enTHREAD_REQ_SETWINDOWCELL :
+            strcpy( szOpcode, "채널 요청" );
+            break;
+
+        case enREQ_IPL_START :
+            strcpy( szOpcode, "IPL시작" );
+            break;
+
+        case enREQ_IPL_DOWNLOAD :
+            strcpy( szOpcode, "IPL 레코드" );
+            break;
+
+        case enREQ_IPL_END :
+            strcpy( szOpcode, "IPL 종료" );
+            break;
+
+        default :
+            strcpy( szOpcode, "이름 없음" );
+            break;
+    }
+
+    if( bRet == true ) {
+        if( bSend == false ) {
+            sprintf( buffer, "*수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szClassName, szOpcode, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+        }
+        else {
+            sprintf( buffer, "*송신: [%12s]로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+        }
+
+        LOGMSG1( enDebug, "%s" , buffer );
+    }
+
+}

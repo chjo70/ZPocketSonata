@@ -100,10 +100,15 @@ void CSysConfig::LoadINI()
 
     SetRxThreshold( fRxThreshold );
 
+    // 네크워크 환경 설정
+    strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , "192.168.1.12" );
+    SetPrimeServerOfNetwork( strValue.c_str() );
+
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
     //m_theMinIni.put( "ANAL" , "MIN_ANALPULSE" , 6 );
     strValue = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
+    _spAnalMinPulseCount = atoi( strValue.c_str() );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간

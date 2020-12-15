@@ -15,6 +15,7 @@
 
 class CNewSigAnal;
 
+
 //##ModelId=452B0C55000A
 //////////////////////////////////////////////////////////////////////
 /*!	\brief	클래스명 CNPulExt
@@ -31,6 +32,7 @@ public:
 protected:
 	//##ModelId=452B0C550015
 	CNewSigAnal *m_pNewSigAnal;			///< 최상위 분석 클래스의 포인터
+
 	ENUM_BANDWIDTH m_enBandWidth;
 
 public:
@@ -65,7 +67,8 @@ public:
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
 	void ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode );
-	int GetPulseStat();
+    int GetPulseStat();
+    void ClearAllMark();
 
 	//##ModelId=452B0C550041
 	CNPulExt( void *pParent, int coMaxPdw=NSP_MAX_PDW );

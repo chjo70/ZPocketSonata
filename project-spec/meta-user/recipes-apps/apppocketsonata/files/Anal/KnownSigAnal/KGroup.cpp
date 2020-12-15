@@ -33,6 +33,8 @@
 CKGroup::CKGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
+
+    INIT_ANAL_VAR_(m_pKnownSigAnal)
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ BOOL CKGroup::MakeGroup()
 	MakeBandGroup();
 
 	// 수집한 펄스에서 특정 밴드, 상태별 그룹화
-	m_nBand = BAND[0];
+    m_nBand = m_pBAND[0];
 #ifdef _A50_RWR
 	if( STAT[0] == PDW_CW || STAT[0] == PDW_CW_FMOP )
 		m_nStat = STAT_CW;
@@ -78,11 +80,11 @@ BOOL CKGroup::MakeGroup()
 		m_nStat = STAT[0];
 
 #else
-	m_nStat = stStat2GrStat[ STAT[0] ];
+    m_nStat = stStat2GrStat[ m_pSTAT[0] ];
 #endif
 
-
     MakeStatGroup( & m_Band[m_nBand] );
+
 	CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] );
 
 	return m_AoaGroups.count != 0;	

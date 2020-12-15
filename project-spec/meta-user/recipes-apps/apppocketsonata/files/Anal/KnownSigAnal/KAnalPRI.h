@@ -13,16 +13,18 @@
 
 #ifdef __cplusplus
 
+class CKnownSigAnal;
+
 //##ModelId=452B0C5300E4
 class CKAnalPRI : public CAnalPRI
 {
 private:
     SRxABTData *m_pTrkAet;
 
-public:
+protected:
     //##ModelId=452B0C5300EF
     CKnownSigAnal *m_pKnownSigAnal;
-	
+
 public:
     //##ModelId=452B0C5300F8
     inline void SetAnalSeg( int coSeg ) { CAnalPRI::SetAnalSeg( coSeg ); }

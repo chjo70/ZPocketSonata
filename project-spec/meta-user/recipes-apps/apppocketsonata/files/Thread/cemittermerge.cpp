@@ -17,7 +17,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
-    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
+    strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
     //Init();
@@ -79,7 +79,7 @@ void CEmitterMerge::_routine()
                     break;
 
                 case enTHREAD_DETECTANAL_END :
-                    LOGMSG( enDebug, " 탐지 수집/분석 완료를 수신했습니다." );
+                    //LOGMSG( enDebug, " 탐지 수집/분석 완료를 수신했습니다." );
 
                     // 탐지 분석 완료로 이 시그널을 이용하여 위협 사이클 관리를 수행하고...
                     break;
@@ -131,30 +131,31 @@ void CEmitterMerge::MergeEmitter()
     m_pTheEmitterMergeMngr->Start();
 
     // 1. LOB 데이터를 갖고온다.
-    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    //PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     // 2. 위협 관리를 호출한다.
     strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
     pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
-
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo );
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        strAnalInfo.uiBand = 0;
-        strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
-        strAnalInfo.uiTotalLOB = _spOne;
-        strAnalInfo.uiAETID = m_pTheEmitterMergeMngr->GetAETID();
-        strAnalInfo.uiABTID = m_pTheEmitterMergeMngr->GetABTID();
-        SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        if( bMerge != true || strAnalInfo.uiAETID != _spZero ) {
+            strAnalInfo.uiBand = 0;
+            strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
+            strAnalInfo.uiTotalLOB = _spOne;
+            strAnalInfo.uiAETID = pLOBData->uiAETID;
+            strAnalInfo.uiABTID = pLOBData->uiABTID;
+            SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        }
 
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
         SendNewUpd();
 
-
         // 2.4 추적 업데이트 성공 여부 플레그 업데이트
-        if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != 0 ) {
+        if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != _spZero ) {
             bTrkLOB = true;
         }
 
@@ -163,7 +164,7 @@ void CEmitterMerge::MergeEmitter()
 
     // 3. 추적 채널 경우에는 재시도 또는 추적 채널을 닫는다.
     ENUM_COLLECTBANK enCollectBank;
-    enCollectBank = SIGCOL->GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
+    enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
 
     if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
         strAnalInfo.uiBand = 0;

@@ -150,11 +150,17 @@ private:
     key_t m_MsgKeyID;
     STR_MessageData m_Msg;
 
+    char *m_pszRecvData;
+    char m_szRecvData[_MAX_LANDATA];
+
     static int m_iCoThread;
     static int m_iCoMsgQueue;
 
 protected:
     char m_szClassName[LENGTH_OF_CLASSNAME];
+
+private:
+    void DisplayMsg( bool bSend );
 
 public:
     CThread( int iMsgKey, char *pClassName, bool bArrayLanData=false );
@@ -177,6 +183,7 @@ public:
     inline STR_MessageData *GetDataMessage() { return & m_Msg; }
     inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
+    inline void *GetRecvData() { return m_pszRecvData; }
 
     static void TCleanUpHandler(void *arg );
     static void *CallBack( void *pArg );

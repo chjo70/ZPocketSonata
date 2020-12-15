@@ -23,6 +23,9 @@ enum { MERGE=0, NO_MERGE } ;
 //##ModelId=452B0C5603CD
 class CAnalPRI
 {
+protected:
+    DEFINE_ANAL_PVAR_(0)
+
 public:
     //##ModelId=452B0C5603D7
     int m_nAnalEmitter;

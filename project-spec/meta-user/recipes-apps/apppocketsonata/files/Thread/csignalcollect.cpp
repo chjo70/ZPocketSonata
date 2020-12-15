@@ -11,6 +11,7 @@
 #include "cemittermerge.h"
 #include "ctrackanalysis.h"
 #include "cscananalysis.h"
+#include "cusercollect.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
@@ -109,13 +110,12 @@ void CSignalCollect::_routine()
     LOGENTRY;
     bool bRunCollecting=false;
 
-    //UNI_LAN_DATA *pLanData;
-
     m_pMsg = GetDataMessage();
 
-    //pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
-
     pthread_cleanup_push( TCleanUpHandler, NULL);
+
+    // 사용자 수집 함수로 시작
+    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART );
 
     while( g_AnalLoop ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
@@ -203,14 +203,14 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     pWindowCell->strAoa.iLow = IAOACNV( 0 );
     pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
 
-    pWindowCell->strFreq.iLow = IFRQMhzLOW( 450.0 );
-    pWindowCell->strFreq.iHgh = IFRQMhzLOW( 18050 );
+    pWindowCell->strFreq.iLow = 0;
+    pWindowCell->strFreq.iHgh = 0xFFFFFF;
 
     pWindowCell->strPA.iLow = 0;
     pWindowCell->strPA.iHgh = 360;
 
-    pWindowCell->strPW.iLow = IPWCNVLOW( 0.0 );
-    pWindowCell->strPW.iHgh = IPWCNVLOW( 1000000.0 );
+    pWindowCell->strPW.iLow = 0;
+    pWindowCell->strPW.iHgh = 0xFFFFFF;
 
     clock_gettime( CLOCK_REALTIME, & pWindowCell->tsCollectStart );
 
@@ -363,7 +363,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiTotalPDW );
+                    LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh, pWindowCell->uiTotalPDW );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -409,7 +409,8 @@ void CSignalCollect::ReqSetWindowCell()
     SRxABTData *pABTData = ( SRxABTData *) m_uniLanData.szFile;
 
     // 랜 데이터를 갖고온다.
-    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    //PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     LOGMSG3( enDebug, " [%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
@@ -527,12 +528,12 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
         pstrWindowCell->uiABTID = pABTData->uiABTID;
 
         // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
-        if( pRadarMode != NULL ) {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_RangeMin );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_RangeMax );
+        if( pRadarMode != NULL && false ) {
+            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_TypicalMin );
+            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_TypicalMax );
 
-            pstrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_RangeMin );
-            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_RangeMax );
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
 
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
@@ -546,10 +547,10 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
 
-        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + _spAOAmax ) % _spAOAmax;
-        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + _spAOAmax ) % _spAOAmax;
+        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA;
+        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA;
 
-        pstrWindowCell->uiMaxCoPDW = KWN_COLLECT_PDW;
+        pstrWindowCell->uiMaxCoPDW = 100;
 
         uiCollectTime = UADD( 5000, fMinCollectTime );
         pstrWindowCell->uiMaxCollectTimesec = UDIV( uiCollectTime, 1000 );
@@ -571,11 +572,12 @@ void CSignalCollect::SimPDWData()
     //unsigned int uiCh;
 
     // 랜 데이터를 갖고온다.
-    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    //PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     // 데이터를 지정하여 지정한 행렬에 저장한다.
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, ".ppdw" );
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, ".zpdw" );
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
     SimFilter( & stPDWData );
@@ -603,9 +605,14 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
     for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
         // 모의
         pstPDW->iAOA = pstPDW->iAOA + ( ( rand() % 10 ) - 5 );
-        pstPDW->iFreq = pstPDW->iFreq + ( ( rand() % 20 ) - 10 );
-        pstPDW->iPW = pstPDW->iPW + ( ( rand() % 20 ) - 10 );
-        pstPDW->iPA = pstPDW->iPA + ( ( rand() % 20 ) - 10 );
+        if( pstPDW->iAOA < 0 ) {
+            pstPDW->iAOA += MAX_AOA;
+        }
+        pstPDW->iAOA = pstPDW->iAOA % MAX_AOA;
+
+        pstPDW->iFreq = pstPDW->iFreq; // + ( ( rand() % 20 ) - 10 );
+        pstPDW->iPW = pstPDW->iPW; // + ( ( rand() % 20 ) - 10 );
+        pstPDW->iPA = pstPDW->iPA; // + ( ( rand() % 20 ) - 10 );
 
 
         // 추적 채널 설정
@@ -636,8 +643,6 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
         // 스캔 채널 설정
         for( uj=0 ; uj < SCAN_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheScanCollectBank[uj];
-
-
         }
 
         // 사용자 채널 설정

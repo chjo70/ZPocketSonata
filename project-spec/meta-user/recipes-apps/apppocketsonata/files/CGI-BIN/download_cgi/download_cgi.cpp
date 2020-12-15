@@ -60,7 +60,7 @@ void DownloadFile( int iSwitch )
     time_t timer;
     struct tm* t;
 
-    qErrorPrint( "DownloadFile[%d]" , iSwitch );
+    qErrorPrint( "DownloadFile Value[%d]" , iSwitch );
     switch( (EN_DOWNLOAD_CASE) iSwitch ) {
         case enCEDEOB :
             strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );

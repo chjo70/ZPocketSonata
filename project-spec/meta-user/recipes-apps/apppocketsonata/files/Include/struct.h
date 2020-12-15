@@ -21,7 +21,6 @@ enum ENUM_BoardID {
     enPRC3,
     enPRC4,
     enPRC5,
-
     enPRC6,
 
     enMaster=enPRC3
@@ -147,6 +146,8 @@ enum ENUM_COLLECTBANK {
     enUnknownCollectBank
 
 };
+
+//static char g_szCollectbank[enUnknownCollectBank][10] = { "NP", "KP", "SP", "UP" } ;
 
 
 #endif // _STRUCT_H

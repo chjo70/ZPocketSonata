@@ -38,6 +38,8 @@ SOURCES += \
         Anal/SigAnal/stdafx.cpp \
         Collect/DataFile/DataFile.cpp \
         Collect/ccollectbank/ccollectbank.cpp \
+        Anal/MIDAS/Midas.cpp \
+        Anal/MIDAS/RawFile.cpp \
         MinIni/minIni.cpp \
         NetMem/client/ClientMemoryPage.cpp \
         NetMem/client/NetworkMemory.cpp \
@@ -65,15 +67,19 @@ SOURCES += \
         Thread/ctrackanalysis.cpp \
         Thread/curbit.cpp \
         Thread/creclan.cpp \
+        Thread/cusercollect.cpp \
         Utils/carraymsgdata.cpp \
         Utils/ccommonutils.cpp \
         Utils/cfile.cpp \
         Utils/clog.cpp \
         Utils/cmultiserver.cpp \
+        Utils/csingleclient.cpp \
         Utils/csingleserver.cpp \
         Utils/cthread.cpp \
         Utils/cgpio.cpp \
         Utils/programrev.cpp \
+        Utils/chwio.cpp \
+        Utils/DMA/dma.cpp \
         cmain.cpp
 
 HEADERS += \
@@ -122,6 +128,7 @@ HEADERS += \
     Anal/Identify/structs.h \
     Anal/Identify/structs.h \
     Anal/KnownSigAnal/KAnalPRI.h \
+    Anal/KnownSigAnal/KDefine.h \
     Anal/KnownSigAnal/KGroup.h \
     Anal/KnownSigAnal/KMakeAET.h \
     Anal/KnownSigAnal/KPulExt.h \
@@ -158,12 +165,18 @@ HEADERS += \
     Collect/DataFile/_iq.h \
     Collect/DataFile/_pdw.h \
     Collect/ccollectbank/ccollectbank.h \
+    Include/SONATAPIP/ShuICD.h \
+    Include/SONATAPIP/_sysmsg.h \
     Include/defines.h \
     Include/global.h \
     Include/struct.h \
     Include/sysmsg.h \
     Include/system.h \
     Include/thrmsg.h \
+    Include/SONATAPIP\_sysmsg.h \
+    Include/SONATAPIP\ShuICD.h \
+    Anal/MIDAS/Midas.h \
+    Anal/MIDAS/RawFile.h \
     MinIni/minGlue-FatFs.h \
     MinIni/minGlue-ccs.h \
     MinIni/minGlue-efsl.h \
@@ -183,9 +196,14 @@ HEADERS += \
     NetMem/server/ServerSocket.h \
     NetMem/utils/ApiNetMem.h \
     NetMem/utils/PortableSocket.h \
+    SQLite/Assertion.h \
+    SQLite/Backup.h \
     SQLite/Column.h \
     SQLite/Database.h \
+    SQLite/Exception.h \
+    SQLite/ExecuteMany.h \
     SQLite/SQLiteCpp.h \
+    SQLite/Statement.h \
     SQLite/Transaction.h \
     SQLite/Utils.h \
     SQLite/VariadicBind.h \
@@ -204,6 +222,8 @@ HEADERS += \
     Thread/ctaskmngr.h \
     Thread/ctrackanalysis.h \
     Thread/curbit.h \
+    Thread/cusercollect.h \
+    Utils/DMA/dma.h \
     Utils/carraymsgdata.h \
     Utils/ccommonutils.h \
     Utils/cfile.h \
@@ -211,8 +231,11 @@ HEADERS += \
     Utils/clog.h \
     Utils/cmultiserver.h \
     Utils/cqueue.h \
+    Utils/csingleclient.h \
     Utils/csingleserver.h \
     Utils/cthread.h \
+    Utils/chwio.h \
+    Utils/DMA/dma.h \
     _sysmsg.h \
     _system.h \
     cjamtech.h \

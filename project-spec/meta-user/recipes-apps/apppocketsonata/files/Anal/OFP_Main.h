@@ -48,10 +48,17 @@
 #define PDW_EXT									"EPDW"
 
 #elif defined(_POCKETSONATA_)
-#define LOCAL_DATA_DIRECTORY                    "/var/log/PPDW"
+#ifdef __ZYNQ_BOARD__
+#define LOCAL_DATA_DIRECTORY                    "/var/rawdata"
+#else
+#define LOCAL_DATA_DIRECTORY                    "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+#endif
+
 #define LOCAL_DATA_DIRECTORY_2                  "/var/log/PPDW"
 
-#define PDW_EXT									"ppdw"
+#define PDW_EXT									"zpdw"
+
+#define MIDAS_EXT								"midas"
 
 #else
 #define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"

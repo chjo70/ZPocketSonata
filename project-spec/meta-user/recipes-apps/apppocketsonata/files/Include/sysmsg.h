@@ -9,6 +9,7 @@
 
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
+#include "./SONATAPIP/ShuICD.h"
 
 #include "../Anal/INC/AetIPL.h"
 
@@ -17,9 +18,6 @@
 #pragma pack(push, 1)
 
 struct STR_LAN_HEADER {
-    //unsigned char ucSrcDest;
-    //unsigned char ucOpCode;
-
     unsigned int uiOpCode;
     unsigned int uiLength;
 
@@ -33,10 +31,12 @@ enum ENUM_MODE {
     enEW_MODE,
     enREADY_MODE,
 
-    enANAL_ES_MODE=0x80,
-    enANAL_EW_MODE=0x81,
-
     enANAL_Mode=0x80,
+
+    enANAL_ES_MODE=enANAL_Mode | enES_MODE,
+    enANAL_EW_MODE=enANAL_Mode | enEW_MODE,
+
+
 };
 
 
@@ -58,6 +58,23 @@ enum enREQ_MESSAGE {
     enREQ_IPL_DOWNLOAD = Mipl_Download,
     enREQ_IPL_END = Mipl_End,
     enREQ_RELOAD_LIBRARY,
+
+    // 오디오 설정 메시지
+    enREQ_AUDIO = Mcnf_Audio,
+    enREQ_AUDIO_PARAM = Mcnf_AudioParam,
+
+    // 수신기 설정 메시지
+    enREQ_Band_Enable = Mcnf_BandEnable,
+    enREQ_FMOP_Threshold = Mcnf_FmopThreshold,
+    enREQ_PMOP_Threshold = Mcnf_PMOPThreshold,
+    enREQ_RX_Threshold = Mcnf_RxThreshold,
+
+    // 신호 수집 제어
+    enREQ_INIT = REQ_INIT,
+    enREQ_SET_CONFIG = REQ_SET_CONFIG,
+    enREQ_STOP = REQ_STOP,
+    enREQ_COL_START = REQ_COL_START,
+    enREQ_RAWDATA = REQ_RAWDATA,
 
 
     // 디버깅 용
@@ -100,6 +117,9 @@ enum enRES_MESSAGE {
     esIPL_VERSION = Mipl_Version,
     esIPL_WRITESTATUS = Mipl_WriteStatus,
 
+    esRES_SETCONFIG = Mres_SetConfig,
+    enRES_COLSTART = Mres_ColStart,
+    enRES_RAWDATA = Mres_RawData_ZPDW,
 
 } ;
 
@@ -196,10 +216,41 @@ struct STR_RES_DUMP_LIST {
     char cData[500];
 } ;
 
+struct STR_AUDIO_PARAM {
+    int iLowerBC;    // 1:Band1, 2:Band2, 3:Band3
+    int iUpperBC;    // 1:Band1, 2:Band2, 3:Band3
+    int iLowerFrq;
+    int iUpperFrq;
+    int iFromAoa;
+    int iToAoa;
+    int	iFromPa;
+    int	iToPa;
+
+} ;
+
+struct STR_BAND_ENABLE {
+    int iBand;
+    int iOnOff;
+};
+
+struct STR_FMOP_THRESHOLD {
+    int iBand;
+    int iThreshold;
+};
+
+struct STR_RX_THRESHOLD {
+    int iBand;
+    unsigned int uiMagThreshold;
+    unsigned int uiCorThreshold;
+};
+
+typedef struct STR_FMOP_THRESHOLD STR_PMOP_THRESHOLD;
+
 /**
  * @brief 랜 메시지 구조체
  */
 union UNI_LAN_DATA {
+    bool bAudioSW;
     unsigned int uiResult;
 
     // 수신 메시지 구조체 정의
@@ -212,11 +263,24 @@ union UNI_LAN_DATA {
     // 기존 SONATA 체계 데이터 구조체 정의
     unsigned int uiMode;
 
-    UNI_ES_IBIT stESIBit;
+    // 자체점검
+    UNI_ES_IBIT strESIBit;
+    UNI_RSA_CBIT strRSACBit;
 
+    // 오디오
+    STR_AUDIO_PARAM strAudioParam;
+
+    // CEDEOB
     STR_IPL_START strIPLStart;
-
     STR_IPL strIPL;
+
+    // 수신기 설정
+    STR_BAND_ENABLE strBandEnable;
+    STR_FMOP_THRESHOLD strFMOPThreshold;
+    STR_PMOP_THRESHOLD strPMOPThreshold;
+
+    // 수집 제어 관련 메시지
+    STR_REQ_SETMODE_RSA strReqSetMode;
 
     // 모의 데이터 및 장치 시험용
     unsigned char szFile[_MAX_LANDATA];

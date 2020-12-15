@@ -1,6 +1,6 @@
 /******************************************************************************
 *
-* Copyright (C) 2010-2019 <Xilinx Inc.>
+* Copyright (C) 2018 Xilinx, Inc.  All rights reserved.
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -78,15 +78,15 @@ unsigned long psu_pll_init_data(void)
     *  PSU_CRL_APB_RPLL_CFG_LFHF                                   0x3
 
     * Lock circuit counter setting
-    *  PSU_CRL_APB_RPLL_CFG_LOCK_CNT                               0x339
+    *  PSU_CRL_APB_RPLL_CFG_LOCK_CNT                               0x307
 
     * Lock circuit configuration settings for lock windowsize
     *  PSU_CRL_APB_RPLL_CFG_LOCK_DLY                               0x3f
 
     * Helper data. Values are to be looked up in a table from Data Sheet
-    * (OFFSET, MASK, VALUE)      (0XFF5E0034, 0xFE7FEDEFU ,0x7E672C6CU)
+    * (OFFSET, MASK, VALUE)      (0XFF5E0034, 0xFE7FEDEFU ,0x7E60EC6CU)
     */
-	PSU_Mask_Write(CRL_APB_RPLL_CFG_OFFSET, 0xFE7FEDEFU, 0x7E672C6CU);
+	PSU_Mask_Write(CRL_APB_RPLL_CFG_OFFSET, 0xFE7FEDEFU, 0x7E60EC6CU);
 /*##################################################################### */
 
     /*
@@ -101,16 +101,16 @@ unsigned long psu_pll_init_data(void)
     *  PSU_CRL_APB_RPLL_CTRL_PRE_SRC                               0x0
 
     * The integer portion of the feedback divider to the PLL
-    *  PSU_CRL_APB_RPLL_CTRL_FBDIV                                 0x2d
+    *  PSU_CRL_APB_RPLL_CTRL_FBDIV                                 0x30
 
     * This turns on the divide by 2 that is inside of the PLL. This does not c
     * hange the VCO frequency, just the output frequency
     *  PSU_CRL_APB_RPLL_CTRL_DIV2                                  0x1
 
     * PLL Basic Control
-    * (OFFSET, MASK, VALUE)      (0XFF5E0030, 0x00717F00U ,0x00012D00U)
+    * (OFFSET, MASK, VALUE)      (0XFF5E0030, 0x00717F00U ,0x00013000U)
     */
-	PSU_Mask_Write(CRL_APB_RPLL_CTRL_OFFSET, 0x00717F00U, 0x00012D00U);
+	PSU_Mask_Write(CRL_APB_RPLL_CTRL_OFFSET, 0x00717F00U, 0x00013000U);
 /*##################################################################### */
 
     /*
@@ -212,6 +212,24 @@ unsigned long psu_pll_init_data(void)
     /*
     * RPLL FRAC CFG
     */
+    /*
+    * Register : RPLL_FRAC_CFG @ 0XFF5E0038
+
+    * Fractional SDM bypass control. When 0, PLL is in integer mode and it ign
+    * ores all fractional data. When 1, PLL is in fractional mode and uses DAT
+    * A of this register for the fractional portion of the feedback divider.
+    *  PSU_CRL_APB_RPLL_FRAC_CFG_ENABLED                           0x0
+
+    * Fractional value for the Feedback value.
+    *  PSU_CRL_APB_RPLL_FRAC_CFG_DATA                              0x0
+
+    * Fractional control for the PLL
+    * (OFFSET, MASK, VALUE)      (0XFF5E0038, 0x8000FFFFU ,0x00000000U)
+    */
+	PSU_Mask_Write(CRL_APB_RPLL_FRAC_CFG_OFFSET,
+		0x8000FFFFU, 0x00000000U);
+/*##################################################################### */
+
     /*
     * SYSMON CLOCK PRESET TO RPLL AGAIN TO AVOID GLITCH WHEN NEXT IOPLL WILL B
     * E PUT IN BYPASS MODE
@@ -391,6 +409,24 @@ unsigned long psu_pll_init_data(void)
     * IOPLL FRAC CFG
     */
     /*
+    * Register : IOPLL_FRAC_CFG @ 0XFF5E0028
+
+    * Fractional SDM bypass control. When 0, PLL is in integer mode and it ign
+    * ores all fractional data. When 1, PLL is in fractional mode and uses DAT
+    * A of this register for the fractional portion of the feedback divider.
+    *  PSU_CRL_APB_IOPLL_FRAC_CFG_ENABLED                          0x0
+
+    * Fractional value for the Feedback value.
+    *  PSU_CRL_APB_IOPLL_FRAC_CFG_DATA                             0x0
+
+    * Fractional control for the PLL
+    * (OFFSET, MASK, VALUE)      (0XFF5E0028, 0x8000FFFFU ,0x00000000U)
+    */
+	PSU_Mask_Write(CRL_APB_IOPLL_FRAC_CFG_OFFSET,
+		0x8000FFFFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
     * APU_PLL INIT
     */
     /*
@@ -540,6 +576,24 @@ unsigned long psu_pll_init_data(void)
     /*
     * APLL FRAC CFG
     */
+    /*
+    * Register : APLL_FRAC_CFG @ 0XFD1A0028
+
+    * Fractional SDM bypass control. When 0, PLL is in integer mode and it ign
+    * ores all fractional data. When 1, PLL is in fractional mode and uses DAT
+    * A of this register for the fractional portion of the feedback divider.
+    *  PSU_CRF_APB_APLL_FRAC_CFG_ENABLED                           0x0
+
+    * Fractional value for the Feedback value.
+    *  PSU_CRF_APB_APLL_FRAC_CFG_DATA                              0x0
+
+    * Fractional control for the PLL
+    * (OFFSET, MASK, VALUE)      (0XFD1A0028, 0x8000FFFFU ,0x00000000U)
+    */
+	PSU_Mask_Write(CRF_APB_APLL_FRAC_CFG_OFFSET,
+		0x8000FFFFU, 0x00000000U);
+/*##################################################################### */
+
     /*
     * DDR_PLL INIT
     */
@@ -691,6 +745,24 @@ unsigned long psu_pll_init_data(void)
     * DPLL FRAC CFG
     */
     /*
+    * Register : DPLL_FRAC_CFG @ 0XFD1A0034
+
+    * Fractional SDM bypass control. When 0, PLL is in integer mode and it ign
+    * ores all fractional data. When 1, PLL is in fractional mode and uses DAT
+    * A of this register for the fractional portion of the feedback divider.
+    *  PSU_CRF_APB_DPLL_FRAC_CFG_ENABLED                           0x0
+
+    * Fractional value for the Feedback value.
+    *  PSU_CRF_APB_DPLL_FRAC_CFG_DATA                              0x0
+
+    * Fractional control for the PLL
+    * (OFFSET, MASK, VALUE)      (0XFD1A0034, 0x8000FFFFU ,0x00000000U)
+    */
+	PSU_Mask_Write(CRF_APB_DPLL_FRAC_CFG_OFFSET,
+		0x8000FFFFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
     * VIDEO_PLL INIT
     */
     /*
@@ -840,6 +912,24 @@ unsigned long psu_pll_init_data(void)
     /*
     * VIDEO FRAC CFG
     */
+    /*
+    * Register : VPLL_FRAC_CFG @ 0XFD1A0040
+
+    * Fractional SDM bypass control. When 0, PLL is in integer mode and it ign
+    * ores all fractional data. When 1, PLL is in fractional mode and uses DAT
+    * A of this register for the fractional portion of the feedback divider.
+    *  PSU_CRF_APB_VPLL_FRAC_CFG_ENABLED                           0x0
+
+    * Fractional value for the Feedback value.
+    *  PSU_CRF_APB_VPLL_FRAC_CFG_DATA                              0x0
+
+    * Fractional control for the PLL
+    * (OFFSET, MASK, VALUE)      (0XFD1A0040, 0x8000FFFFU ,0x00000000U)
+    */
+	PSU_Mask_Write(CRF_APB_VPLL_FRAC_CFG_OFFSET,
+		0x8000FFFFU, 0x00000000U);
+/*##################################################################### */
+
 
 	return 1;
 }
@@ -1337,101 +1427,6 @@ unsigned long psu_clock_init_data(void)
 /*##################################################################### */
 
     /*
-    * Register : SATA_REF_CTRL @ 0XFD1A00A0
-
-    * 000 = IOPLL_TO_FPD; 010 = APLL; 011 = DPLL; (This signal may only be tog
-    * gled after 4 cycles of the old clock and 4 cycles of the new clock. This
-    *  is not usually an issue, but designers must be aware.)
-    *  PSU_CRF_APB_SATA_REF_CTRL_SRCSEL                            0x0
-
-    * Clock active signal. Switch to 0 to disable the clock
-    *  PSU_CRF_APB_SATA_REF_CTRL_CLKACT                            0x1
-
-    * 6 bit divider
-    *  PSU_CRF_APB_SATA_REF_CTRL_DIVISOR0                          0x2
-
-    * This register controls this reference clock
-    * (OFFSET, MASK, VALUE)      (0XFD1A00A0, 0x01003F07U ,0x01000200U)
-    */
-	PSU_Mask_Write(CRF_APB_SATA_REF_CTRL_OFFSET,
-		0x01003F07U, 0x01000200U);
-/*##################################################################### */
-
-    /*
-    * Register : DP_VIDEO_REF_CTRL @ 0XFD1A0070
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_VIDEO_REF_CTRL_DIVISOR1                      0x1
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_VIDEO_REF_CTRL_DIVISOR0                      0x5
-
-    * 000 = VPLL; 010 = DPLL; 011 = RPLL_TO_FPD - might be using extra mux; (T
-    * his signal may only be toggled after 4 cycles of the old clock and 4 cyc
-    * les of the new clock. This is not usually an issue, but designers must b
-    * e aware.)
-    *  PSU_CRF_APB_DP_VIDEO_REF_CTRL_SRCSEL                        0x0
-
-    * Clock active signal. Switch to 0 to disable the clock
-    *  PSU_CRF_APB_DP_VIDEO_REF_CTRL_CLKACT                        0x1
-
-    * This register controls this reference clock
-    * (OFFSET, MASK, VALUE)      (0XFD1A0070, 0x013F3F07U ,0x01010500U)
-    */
-	PSU_Mask_Write(CRF_APB_DP_VIDEO_REF_CTRL_OFFSET,
-		0x013F3F07U, 0x01010500U);
-/*##################################################################### */
-
-    /*
-    * Register : DP_AUDIO_REF_CTRL @ 0XFD1A0074
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_AUDIO_REF_CTRL_DIVISOR1                      0x1
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_AUDIO_REF_CTRL_DIVISOR0                      0xf
-
-    * 000 = VPLL; 010 = DPLL; 011 = RPLL_TO_FPD - might be using extra mux; (T
-    * his signal may only be toggled after 4 cycles of the old clock and 4 cyc
-    * les of the new clock. This is not usually an issue, but designers must b
-    * e aware.)
-    *  PSU_CRF_APB_DP_AUDIO_REF_CTRL_SRCSEL                        0x3
-
-    * Clock active signal. Switch to 0 to disable the clock
-    *  PSU_CRF_APB_DP_AUDIO_REF_CTRL_CLKACT                        0x1
-
-    * This register controls this reference clock
-    * (OFFSET, MASK, VALUE)      (0XFD1A0074, 0x013F3F07U ,0x01010F03U)
-    */
-	PSU_Mask_Write(CRF_APB_DP_AUDIO_REF_CTRL_OFFSET,
-		0x013F3F07U, 0x01010F03U);
-/*##################################################################### */
-
-    /*
-    * Register : DP_STC_REF_CTRL @ 0XFD1A007C
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_STC_REF_CTRL_DIVISOR1                        0x1
-
-    * 6 bit divider
-    *  PSU_CRF_APB_DP_STC_REF_CTRL_DIVISOR0                        0xe
-
-    * 000 = VPLL; 010 = DPLL; 011 = RPLL_TO_FPD; (This signal may only be togg
-    * led after 4 cycles of the old clock and 4 cycles of the new clock. This
-    * is not usually an issue, but designers must be aware.)
-    *  PSU_CRF_APB_DP_STC_REF_CTRL_SRCSEL                          0x3
-
-    * Clock active signal. Switch to 0 to disable the clock
-    *  PSU_CRF_APB_DP_STC_REF_CTRL_CLKACT                          0x1
-
-    * This register controls this reference clock
-    * (OFFSET, MASK, VALUE)      (0XFD1A007C, 0x013F3F07U ,0x01010E03U)
-    */
-	PSU_Mask_Write(CRF_APB_DP_STC_REF_CTRL_OFFSET,
-		0x013F3F07U, 0x01010E03U);
-/*##################################################################### */
-
-    /*
     * Register : ACPU_CTRL @ 0XFD1A0060
 
     * 6 bit divider
@@ -1481,7 +1476,7 @@ unsigned long psu_clock_init_data(void)
     * Register : DDR_CTRL @ 0XFD1A0080
 
     * 6 bit divider
-    *  PSU_CRF_APB_DDR_CTRL_DIVISOR0                               0x2
+    *  PSU_CRF_APB_DDR_CTRL_DIVISOR0                               0x4
 
     * 000 = DPLL; 001 = VPLL; (This signal may only be toggled after 4 cycles
     * of the old clock and 4 cycles of the new clock. This is not usually an i
@@ -1489,9 +1484,9 @@ unsigned long psu_clock_init_data(void)
     *  PSU_CRF_APB_DDR_CTRL_SRCSEL                                 0x0
 
     * This register controls this reference clock
-    * (OFFSET, MASK, VALUE)      (0XFD1A0080, 0x00003F07U ,0x00000200U)
+    * (OFFSET, MASK, VALUE)      (0XFD1A0080, 0x00003F07U ,0x00000400U)
     */
-	PSU_Mask_Write(CRF_APB_DDR_CTRL_OFFSET, 0x00003F07U, 0x00000200U);
+	PSU_Mask_Write(CRF_APB_DDR_CTRL_OFFSET, 0x00003F07U, 0x00000400U);
 /*##################################################################### */
 
     /*
@@ -1696,7 +1691,7 @@ unsigned long psu_ddr_init_data(void)
 
     * Indicates the configuration of the device used in the system. - 00 - x4
     * device - 01 - x8 device - 10 - x16 device - 11 - x32 device
-    *  PSU_DDRC_MSTR_DEVICE_CONFIG                                 0x2
+    *  PSU_DDRC_MSTR_DEVICE_CONFIG                                 0x3
 
     * Choose which registers are used. - 0 - Original registers - 1 - Shadow r
     * egisters
@@ -1734,7 +1729,7 @@ unsigned long psu_ddr_init_data(void)
     *  bus width mode is only supported when the SDRAM bus width is a multiple
     *  of 32 and the configuration parameter MEMC_QBUS_SUPPORT is set. Bus wid
     * th refers to DQ bus width (excluding any ECC width).
-    *  PSU_DDRC_MSTR_DATA_BUS_WIDTH                                0x0
+    *  PSU_DDRC_MSTR_DATA_BUS_WIDTH                                0x1
 
     * 1 indicates put the DRAM in geardown mode (2N) and 0 indicates put the D
     * RAM in normal mode (1N). This register can be changed, only when the Con
@@ -1766,11 +1761,11 @@ unsigned long psu_ddr_init_data(void)
 
     * Select DDR4 SDRAM - 1 - DDR4 SDRAM device in use. - 0 - non-DDR4 device
     * in use Present only in designs configured to support DDR4.
-    *  PSU_DDRC_MSTR_DDR4                                          0x1
+    *  PSU_DDRC_MSTR_DDR4                                          0x0
 
     * Select LPDDR3 SDRAM - 1 - LPDDR3 SDRAM device in use. - 0 - non-LPDDR3 d
     * evice in use Present only in designs configured to support LPDDR3.
-    *  PSU_DDRC_MSTR_LPDDR3                                        0x0
+    *  PSU_DDRC_MSTR_LPDDR3                                        0x1
 
     * Select LPDDR2 SDRAM - 1 - LPDDR2 SDRAM device in use. - 0 - non-LPDDR2 d
     * evice in use Present only in designs configured to support LPDDR2.
@@ -1781,9 +1776,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_MSTR_DDR3                                          0x0
 
     * Master Register
-    * (OFFSET, MASK, VALUE)      (0XFD070000, 0xE30FBE3DU ,0x81040010U)
+    * (OFFSET, MASK, VALUE)      (0XFD070000, 0xE30FBE3DU ,0xC1041008U)
     */
-	PSU_Mask_Write(DDRC_MSTR_OFFSET, 0xE30FBE3DU, 0x81040010U);
+	PSU_Mask_Write(DDRC_MSTR_OFFSET, 0xE30FBE3DU, 0xC1041008U);
 /*##################################################################### */
 
     /*
@@ -1856,7 +1851,7 @@ unsigned long psu_ddr_init_data(void)
     * esigns configured to support LPDDR4. The required number of cycles for d
     * erating can be determined by dividing 3.75ns by the core_ddrc_core_clk p
     * eriod, and rounding up the next integer.
-    *  PSU_DDRC_DERATEEN_RC_DERATE_VALUE                           0x2
+    *  PSU_DDRC_DERATEEN_RC_DERATE_VALUE                           0x1
 
     * Derate byte Present only in designs configured to support LPDDR2/LPDDR3/
     * LPDDR4 Indicates which byte of the MRR data is used for derating. The ma
@@ -1868,7 +1863,7 @@ unsigned long psu_ddr_init_data(void)
     *  LPDDR2 speed grades as derating value of +1.875 ns is less than a core_
     * ddrc_core_clk period. Can be 0 or 1 for LPDDR3/LPDDR4, depending if +1.8
     * 75 ns is less than a core_ddrc_core_clk period or not.
-    *  PSU_DDRC_DERATEEN_DERATE_VALUE                              0x0
+    *  PSU_DDRC_DERATEEN_DERATE_VALUE                              0x1
 
     * Enables derating - 0 - Timing parameter derating is disabled - 1 - Timin
     * g parameter derating is enabled using MR4 read value. Present only in de
@@ -1877,9 +1872,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_DERATEEN_DERATE_ENABLE                             0x0
 
     * Temperature Derate Enable Register
-    * (OFFSET, MASK, VALUE)      (0XFD070020, 0x000003F3U ,0x00000200U)
+    * (OFFSET, MASK, VALUE)      (0XFD070020, 0x000003F3U ,0x00000102U)
     */
-	PSU_Mask_Write(DDRC_DERATEEN_OFFSET, 0x000003F3U, 0x00000200U);
+	PSU_Mask_Write(DDRC_DERATEEN_OFFSET, 0x000003F3U, 0x00000102U);
 /*##################################################################### */
 
     /*
@@ -1888,12 +1883,12 @@ unsigned long psu_ddr_init_data(void)
     * Interval between two MR4 reads, used to derate the timing parameters. Pr
     * esent only in designs configured to support LPDDR2/LPDDR3/LPDDR4. This r
     * egister must not be set to zero
-    *  PSU_DDRC_DERATEINT_MR4_READ_INTERVAL                        0x800000
+    *  PSU_DDRC_DERATEINT_MR4_READ_INTERVAL                        0x28b090
 
     * Temperature Derate Interval Register
-    * (OFFSET, MASK, VALUE)      (0XFD070024, 0xFFFFFFFFU ,0x00800000U)
+    * (OFFSET, MASK, VALUE)      (0XFD070024, 0xFFFFFFFFU ,0x0028B090U)
     */
-	PSU_Mask_Write(DDRC_DERATEINT_OFFSET, 0xFFFFFFFFU, 0x00800000U);
+	PSU_Mask_Write(DDRC_DERATEINT_OFFSET, 0xFFFFFFFFU, 0x0028B090U);
 /*##################################################################### */
 
     /*
@@ -1972,7 +1967,7 @@ unsigned long psu_ddr_init_data(void)
     * C specification is 500us. Unit: Multiples of 4096 clocks. Present only i
     * n designs configured to support mDDR, LPDDR2 or LPDDR3. FOR PERFORMANCE
     * ONLY.
-    *  PSU_DDRC_PWRTMG_T_DPD_X4096                                 0x84
+    *  PSU_DDRC_PWRTMG_T_DPD_X4096                                 0x43
 
     * After this many clocks of NOP or deselect the uMCTL2 automatically puts
     * the SDRAM into power-down. This must be enabled in the PWRCTL.powerdown_
@@ -1980,9 +1975,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_PWRTMG_POWERDOWN_TO_X32                            0x10
 
     * Low Power Timing Register
-    * (OFFSET, MASK, VALUE)      (0XFD070034, 0x00FFFF1FU ,0x00408410U)
+    * (OFFSET, MASK, VALUE)      (0XFD070034, 0x00FFFF1FU ,0x00404310U)
     */
-	PSU_Mask_Write(DDRC_PWRTMG_OFFSET, 0x00FFFF1FU, 0x00408410U);
+	PSU_Mask_Write(DDRC_PWRTMG_OFFSET, 0x00FFFF1FU, 0x00404310U);
 /*##################################################################### */
 
     /*
@@ -2113,7 +2108,7 @@ unsigned long psu_ddr_init_data(void)
     * refresh mode register. Note that RFSHTMG.t_rfc_nom_x32 * 32 must be grea
     * ter than RFSHTMG.t_rfc_min, and RFSHTMG.t_rfc_nom_x32 must be greater th
     * an 0x1. Unit: Multiples of 32 clocks.
-    *  PSU_DDRC_RFSHTMG_T_RFC_NOM_X32                              0x81
+    *  PSU_DDRC_RFSHTMG_T_RFC_NOM_X32                              0x20
 
     * Used only when LPDDR3 memory type is connected. Should only be changed w
     * hen uMCTL2 is in reset. Specifies whether to use the tREFBW parameter (r
@@ -2133,12 +2128,12 @@ unsigned long psu_ddr_init_data(void)
     * d the device density. The user should program the appropriate value from
     *  the spec based on the 'refresh_mode' and the device density that is use
     * d. Unit: Clocks.
-    *  PSU_DDRC_RFSHTMG_T_RFC_MIN                                  0xbb
+    *  PSU_DDRC_RFSHTMG_T_RFC_MIN                                  0x23
 
     * Refresh Timing Register
-    * (OFFSET, MASK, VALUE)      (0XFD070064, 0x0FFF83FFU ,0x008180BBU)
+    * (OFFSET, MASK, VALUE)      (0XFD070064, 0x0FFF83FFU ,0x00208023U)
     */
-	PSU_Mask_Write(DDRC_RFSHTMG_OFFSET, 0x0FFF83FFU, 0x008180BBU);
+	PSU_Mask_Write(DDRC_RFSHTMG_OFFSET, 0x0FFF83FFU, 0x00208023U);
 /*##################################################################### */
 
     /*
@@ -2249,7 +2244,7 @@ unsigned long psu_ddr_init_data(void)
     * AX For configurations with MEMC_FREQ_RATIO=2, program this to tPAR_ALERT
     * _PW.MAX/2 and round up to next integer value. Values of 0, 1 and 2 are i
     * llegal. This value must be greater than CRCPARCTL2.t_crc_alert_pw_max.
-    *  PSU_DDRC_CRCPARCTL2_T_PAR_ALERT_PW_MAX                      0x40
+    *  PSU_DDRC_CRCPARCTL2_T_PAR_ALERT_PW_MAX                      0x30
 
     * Value from the DRAM spec indicating the maximum width of the dfi_alert_n
     *  pulse when a CRC error occurs. Recommended values: - tCRC_ALERT_PW.MAX
@@ -2294,9 +2289,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_CRCPARCTL2_RETRY_FIFO_MAX_HOLD_TIMER_X4            0x1f
 
     * CRC Parity Control Register2
-    * (OFFSET, MASK, VALUE)      (0XFD0700C8, 0x01FF1F3FU ,0x0040051FU)
+    * (OFFSET, MASK, VALUE)      (0XFD0700C8, 0x01FF1F3FU ,0x0030051FU)
     */
-	PSU_Mask_Write(DDRC_CRCPARCTL2_OFFSET, 0x01FF1F3FU, 0x0040051FU);
+	PSU_Mask_Write(DDRC_CRCPARCTL2_OFFSET, 0x01FF1F3FU, 0x0030051FU);
 /*##################################################################### */
 
     /*
@@ -2319,7 +2314,7 @@ unsigned long psu_ddr_init_data(void)
     * 4 typically requires this to be programmed for a delay of 2 us. For conf
     * igurations with MEMC_FREQ_RATIO=2, program this to JEDEC spec value divi
     * ded by 2, and round it up to next integer value.
-    *  PSU_DDRC_INIT0_POST_CKE_X1024                               0x2
+    *  PSU_DDRC_INIT0_POST_CKE_X1024                               0x36
 
     * Cycles to wait after reset before driving CKE high to start the SDRAM in
     * itialization sequence. Unit: 1024 clock cycles. DDR2 specifications typi
@@ -2327,12 +2322,12 @@ unsigned long psu_ddr_init_data(void)
     * DR3: tINIT1 of 100 ns (min) LPDDR4: tINIT3 of 2 ms (min) For configurati
     * ons with MEMC_FREQ_RATIO=2, program this to JEDEC spec value divided by
     * 2, and round it up to next integer value.
-    *  PSU_DDRC_INIT0_PRE_CKE_X1024                                0x106
+    *  PSU_DDRC_INIT0_PRE_CKE_X1024                                0x2
 
     * SDRAM Initialization Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD0700D0, 0xC3FF0FFFU ,0x00020106U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700D0, 0xC3FF0FFFU ,0x00360002U)
     */
-	PSU_Mask_Write(DDRC_INIT0_OFFSET, 0xC3FF0FFFU, 0x00020106U);
+	PSU_Mask_Write(DDRC_INIT0_OFFSET, 0xC3FF0FFFU, 0x00360002U);
 /*##################################################################### */
 
     /*
@@ -2341,7 +2336,7 @@ unsigned long psu_ddr_init_data(void)
     * Number of cycles to assert SDRAM reset signal during init sequence. This
     *  is only present for designs supporting DDR3, DDR4 or LPDDR4 devices. Fo
     * r use with a DDR PHY, this should be set to a minimum of 1
-    *  PSU_DDRC_INIT1_DRAM_RSTN_X1024                              0x2
+    *  PSU_DDRC_INIT1_DRAM_RSTN_X1024                              0x0
 
     * Cycles to wait after completing the SDRAM initialization sequence before
     *  starting the dynamic scheduler. Unit: Counts of a global timer that pul
@@ -2355,9 +2350,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_INIT1_PRE_OCD_X32                                  0x0
 
     * SDRAM Initialization Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD0700D4, 0x01FF7F0FU ,0x00020000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700D4, 0x01FF7F0FU ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_INIT1_OFFSET, 0x01FF7F0FU, 0x00020000U);
+	PSU_Mask_Write(DDRC_INIT1_OFFSET, 0x01FF7F0FU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -2365,7 +2360,7 @@ unsigned long psu_ddr_init_data(void)
 
     * Idle time after the reset command, tINIT4. Present only in designs confi
     * gured to support LPDDR2. Unit: 32 clock cycles.
-    *  PSU_DDRC_INIT2_IDLE_AFTER_RESET_X32                         0x23
+    *  PSU_DDRC_INIT2_IDLE_AFTER_RESET_X32                         0x12
 
     * Time to wait after the first CKE high, tINIT2. Present only in designs c
     * onfigured to support LPDDR2/LPDDR3. Unit: 1 clock cycle. LPDDR2/LPDDR3 t
@@ -2373,9 +2368,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_INIT2_MIN_STABLE_CLOCK_X1                          0x5
 
     * SDRAM Initialization Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD0700D8, 0x0000FF0FU ,0x00002305U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700D8, 0x0000FF0FU ,0x00001205U)
     */
-	PSU_Mask_Write(DDRC_INIT2_OFFSET, 0x0000FF0FU, 0x00002305U);
+	PSU_Mask_Write(DDRC_INIT2_OFFSET, 0x0000FF0FU, 0x00001205U);
 /*##################################################################### */
 
     /*
@@ -2385,7 +2380,7 @@ unsigned long psu_ddr_init_data(void)
     * re is ignored. The uMCTL2 sets this bit appropriately. DDR3/DDR4: Value
     * loaded into MR0 register. mDDR: Value to write to MR register. LPDDR2/LP
     * DDR3/LPDDR4 - Value to write to MR1 register
-    *  PSU_DDRC_INIT3_MR                                           0x730
+    *  PSU_DDRC_INIT3_MR                                           0xc3
 
     * DDR2: Value to write to EMR register. Bits 9:7 are for OCD and the setti
     * ng in this register is ignored. The uMCTL2 sets those bits appropriately
@@ -2393,12 +2388,12 @@ unsigned long psu_ddr_init_data(void)
     * ation mode training is enabled, this bit is set appropriately by the uMC
     * TL2 during write leveling. mDDR: Value to write to EMR register. LPDDR2/
     * LPDDR3/LPDDR4 - Value to write to MR2 register
-    *  PSU_DDRC_INIT3_EMR                                          0x301
+    *  PSU_DDRC_INIT3_EMR                                          0x47
 
     * SDRAM Initialization Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD0700DC, 0xFFFFFFFFU ,0x07300301U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700DC, 0xFFFFFFFFU ,0x00C30047U)
     */
-	PSU_Mask_Write(DDRC_INIT3_OFFSET, 0xFFFFFFFFU, 0x07300301U);
+	PSU_Mask_Write(DDRC_INIT3_OFFSET, 0xFFFFFFFFU, 0x00C30047U);
 /*##################################################################### */
 
     /*
@@ -2407,17 +2402,17 @@ unsigned long psu_ddr_init_data(void)
     * DDR2: Value to write to EMR2 register. DDR3/DDR4: Value to write to MR2
     * register LPDDR2/LPDDR3/LPDDR4: Value to write to MR3 register mDDR: Unus
     * ed
-    *  PSU_DDRC_INIT4_EMR2                                         0x20
+    *  PSU_DDRC_INIT4_EMR2                                         0x1
 
     * DDR2: Value to write to EMR3 register. DDR3/DDR4: Value to write to MR3
     * register mDDR/LPDDR2/LPDDR3: Unused LPDDR4: Value to write to MR13 regis
     * ter
-    *  PSU_DDRC_INIT4_EMR3                                         0x200
+    *  PSU_DDRC_INIT4_EMR3                                         0x0
 
     * SDRAM Initialization Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD0700E0, 0xFFFFFFFFU ,0x00200200U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700E0, 0xFFFFFFFFU ,0x00010000U)
     */
-	PSU_Mask_Write(DDRC_INIT4_OFFSET, 0xFFFFFFFFU, 0x00200200U);
+	PSU_Mask_Write(DDRC_INIT4_OFFSET, 0xFFFFFFFFU, 0x00010000U);
 /*##################################################################### */
 
     /*
@@ -2427,17 +2422,17 @@ unsigned long psu_ddr_init_data(void)
     * upport DDR3 or DDR4 or LPDDR2/LPDDR3. Unit: 32 clock cycles. DDR3 typica
     * lly requires 512 clocks. DDR4 requires 1024 clocks. LPDDR2/LPDDR3 requir
     * es 1 us.
-    *  PSU_DDRC_INIT5_DEV_ZQINIT_X32                               0x21
+    *  PSU_DDRC_INIT5_DEV_ZQINIT_X32                               0x12
 
     * Maximum duration of the auto initialization, tINIT5. Present only in des
     * igns configured to support LPDDR2/LPDDR3. LPDDR2/LPDDR3 typically requir
     * es 10 us.
-    *  PSU_DDRC_INIT5_MAX_AUTO_INIT_X1024                          0x4
+    *  PSU_DDRC_INIT5_MAX_AUTO_INIT_X1024                          0x7
 
     * SDRAM Initialization Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD0700E4, 0x00FF03FFU ,0x00210004U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700E4, 0x00FF03FFU ,0x00120007U)
     */
-	PSU_Mask_Write(DDRC_INIT5_OFFSET, 0x00FF03FFU, 0x00210004U);
+	PSU_Mask_Write(DDRC_INIT5_OFFSET, 0x00FF03FFU, 0x00120007U);
 /*##################################################################### */
 
     /*
@@ -2449,12 +2444,12 @@ unsigned long psu_ddr_init_data(void)
 
     * DDR4- Value to be loaded into SDRAM MR5 registers. Used in DDR4 designs
     * only.
-    *  PSU_DDRC_INIT6_MR5                                          0x6c0
+    *  PSU_DDRC_INIT6_MR5                                          0x0
 
     * SDRAM Initialization Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD0700E8, 0xFFFFFFFFU ,0x000006C0U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700E8, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_INIT6_OFFSET, 0xFFFFFFFFU, 0x000006C0U);
+	PSU_Mask_Write(DDRC_INIT6_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -2462,12 +2457,12 @@ unsigned long psu_ddr_init_data(void)
 
     * DDR4- Value to be loaded into SDRAM MR6 registers. Used in DDR4 designs
     * only.
-    *  PSU_DDRC_INIT7_MR6                                          0x819
+    *  PSU_DDRC_INIT7_MR6                                          0x0
 
     * SDRAM Initialization Register 7
-    * (OFFSET, MASK, VALUE)      (0XFD0700EC, 0xFFFF0000U ,0x08190000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0700EC, 0xFFFF0000U ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_INIT7_OFFSET, 0xFFFF0000U, 0x08190000U);
+	PSU_Mask_Write(DDRC_INIT7_OFFSET, 0xFFFF0000U, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -2623,7 +2618,7 @@ unsigned long psu_ddr_init_data(void)
     *  above value by 2. No rounding up. For configurations with MEMC_FREQ_RAT
     * IO=2, 2T mode or LPDDR4 mode, divide the above value by 2 and round it u
     * p to the next integer value.
-    *  PSU_DDRC_DRAMTMG0_WR2PRE                                    0x11
+    *  PSU_DDRC_DRAMTMG0_WR2PRE                                    0x9
 
     * tFAW Valid only when 8 or more banks(or banks x bank groups) are present
     * . In 8-bank design, at most 4 banks must be activated in a rolling windo
@@ -2638,19 +2633,19 @@ unsigned long psu_ddr_init_data(void)
     *  register is 1. Zero is invalid. For configurations with MEMC_FREQ_RATIO
     * =2, program this to (tRAS(max)-1)/2. No rounding up. Unit: Multiples of
     * 1024 clocks.
-    *  PSU_DDRC_DRAMTMG0_T_RAS_MAX                                 0x24
+    *  PSU_DDRC_DRAMTMG0_T_RAS_MAX                                 0x8
 
     * tRAS(min): Minimum time between activate and precharge to the same bank.
     *  For configurations with MEMC_FREQ_RATIO=2, 1T mode, program this to tRA
     * S(min)/2. No rounding up. For configurations with MEMC_FREQ_RATIO=2, 2T
     * mode or LPDDR4 mode, program this to (tRAS(min)/2) and round it up to th
     * e next integer value. Unit: Clocks
-    *  PSU_DDRC_DRAMTMG0_T_RAS_MIN                                 0x12
+    *  PSU_DDRC_DRAMTMG0_T_RAS_MIN                                 0xb
 
     * SDRAM Timing Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD070100, 0x7F3F7F3FU ,0x11102412U)
+    * (OFFSET, MASK, VALUE)      (0XFD070100, 0x7F3F7F3FU ,0x0910080BU)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG0_OFFSET, 0x7F3F7F3FU, 0x11102412U);
+	PSU_Mask_Write(DDRC_DRAMTMG0_OFFSET, 0x7F3F7F3FU, 0x0910080BU);
 /*##################################################################### */
 
     /*
@@ -2661,7 +2656,7 @@ unsigned long psu_ddr_init_data(void)
     * 0[12]. If C/A parity for DDR4 is used, set to (tXP+PL) instead. For conf
     * igurations with MEMC_FREQ_RATIO=2, program this to (tXP/2) and round it
     * up to the next integer value. Units: Clocks
-    *  PSU_DDRC_DRAMTMG1_T_XP                                      0x4
+    *  PSU_DDRC_DRAMTMG1_T_XP                                      0x2
 
     * tRTP: Minimum time from read to precharge of same bank. - DDR2: tAL + BL
     * /2 + max(tRTP, 2) - 2 - DDR3: tAL + max (tRTP, 4) - DDR4: Max of followi
@@ -2672,17 +2667,17 @@ unsigned long psu_ddr_init_data(void)
     * RATIO=2, 1T mode, divide the above value by 2. No rounding up. For confi
     * gurations with MEMC_FREQ_RATIO=2, 2T mode or LPDDR4 mode, divide the abo
     * ve value by 2 and round it up to the next integer value. Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG1_RD2PRE                                    0x4
+    *  PSU_DDRC_DRAMTMG1_RD2PRE                                    0x2
 
     * tRC: Minimum time between activates to same bank. For configurations wit
     * h MEMC_FREQ_RATIO=2, program this to (tRC/2) and round up to next intege
     * r value. Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG1_T_RC                                      0x1a
+    *  PSU_DDRC_DRAMTMG1_T_RC                                      0x12
 
     * SDRAM Timing Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD070104, 0x001F1F7FU ,0x0004041AU)
+    * (OFFSET, MASK, VALUE)      (0XFD070104, 0x001F1F7FU ,0x00020212U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG1_OFFSET, 0x001F1F7FU, 0x0004041AU);
+	PSU_Mask_Write(DDRC_DRAMTMG1_OFFSET, 0x001F1F7FU, 0x00020212U);
 /*##################################################################### */
 
     /*
@@ -2697,7 +2692,7 @@ unsigned long psu_ddr_init_data(void)
     * egister field is not required for DDR2 and DDR3 (except if MEMC_TRAINING
     *  is set), as the DFI read and write latencies defined in DFITMG0 and DFI
     * TMG1 are sufficient for those protocols Unit: clocks
-    *  PSU_DDRC_DRAMTMG2_WRITE_LATENCY                             0x7
+    *  PSU_DDRC_DRAMTMG2_WRITE_LATENCY                             0x3
 
     * Set to RL Time from read command to read data on SDRAM interface. This m
     * ust be set to RL. Note that, depending on the PHY, if using RDIMM, it ma
@@ -2708,7 +2703,7 @@ unsigned long psu_ddr_init_data(void)
     * DR3 (except if MEMC_TRAINING is set), as the DFI read and write latencie
     * s defined in DFITMG0 and DFITMG1 are sufficient for those protocols Unit
     * : clocks
-    *  PSU_DDRC_DRAMTMG2_READ_LATENCY                              0x8
+    *  PSU_DDRC_DRAMTMG2_READ_LATENCY                              0x5
 
     * DDR2/3/mDDR: RL + BL/2 + 2 - WL DDR4: RL + BL/2 + 1 + WR_PREAMBLE - WL L
     * PDDR2/LPDDR3: RL + BL/2 + RU(tDQSCKmax/tCK) + 1 - WL LPDDR4(DQ ODT is Di
@@ -2724,7 +2719,7 @@ unsigned long psu_ddr_init_data(void)
     * erating is enabled (DERATEEN.derate_enable=1), derated tDQSCKmax should
     * be used. For configurations with MEMC_FREQ_RATIO=2, divide the value cal
     * culated using the above equation by 2, and round it up to next integer.
-    *  PSU_DDRC_DRAMTMG2_RD2WR                                     0x6
+    *  PSU_DDRC_DRAMTMG2_RD2WR                                     0x8
 
     * DDR4: CWL + PL + BL/2 + tWTR_L Others: CWL + BL/2 + tWTR In DDR4, minimu
     * m time from write command to read command for same bank group. In others
@@ -2739,12 +2734,12 @@ unsigned long psu_ddr_init_data(void)
     * PDDR3/LPDDR4 operation. For configurations with MEMC_FREQ_RATIO=2, divid
     * e the value calculated using the above equation by 2, and round it up to
     *  next integer.
-    *  PSU_DDRC_DRAMTMG2_WR2RD                                     0xd
+    *  PSU_DDRC_DRAMTMG2_WR2RD                                     0x7
 
     * SDRAM Timing Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD070108, 0x3F3F3F3FU ,0x0708060DU)
+    * (OFFSET, MASK, VALUE)      (0XFD070108, 0x3F3F3F3FU ,0x03050807U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG2_OFFSET, 0x3F3F3F3FU, 0x0708060DU);
+	PSU_Mask_Write(DDRC_DRAMTMG2_OFFSET, 0x3F3F3F3FU, 0x03050807U);
 /*##################################################################### */
 
     /*
@@ -2756,7 +2751,7 @@ unsigned long psu_ddr_init_data(void)
     * R4: Set this to the larger of tMRW and tMRWCKEL. For LPDDR2, this regist
     * er is used for the time from a MRW/MRR to all other commands. For LDPDR3
     * , this register is used for the time from a MRW/MRR to a MRW/MRR.
-    *  PSU_DDRC_DRAMTMG3_T_MRW                                     0x5
+    *  PSU_DDRC_DRAMTMG3_T_MRW                                     0xa
 
     * tMRD: Cycles to wait after a mode register write or read. Depending on t
     * he connected SDRAM, tMRD represents: DDR2/mDDR: Time from MRS to any com
@@ -2764,7 +2759,7 @@ unsigned long psu_ddr_init_data(void)
     * e from MRS to non-MRS command For configurations with MEMC_FREQ_RATIO=2,
     *  program this to (tMRD/2) and round it up to the next integer value. If
     * C/A parity for DDR4 is used, set to tMRD_PAR(tMOD+PL) instead.
-    *  PSU_DDRC_DRAMTMG3_T_MRD                                     0x4
+    *  PSU_DDRC_DRAMTMG3_T_MRD                                     0x5
 
     * tMOD: Parameter used only in DDR3 and DDR4. Cycles between load mode com
     * mand and following non-load mode command. If C/A parity for DDR4 is used
@@ -2773,12 +2768,12 @@ unsigned long psu_ddr_init_data(void)
     * using RDIMM, depending on the PHY, it may be necessary to use a value of
     *  tMOD + 1 or (tMOD + 1)/2 to compensate for the extra cycle of latency a
     * pplied to mode register writes by the RDIMM chip.
-    *  PSU_DDRC_DRAMTMG3_T_MOD                                     0xc
+    *  PSU_DDRC_DRAMTMG3_T_MOD                                     0x0
 
     * SDRAM Timing Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD07010C, 0x3FF3F3FFU ,0x0050400CU)
+    * (OFFSET, MASK, VALUE)      (0XFD07010C, 0x3FF3F3FFU ,0x00A05000U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG3_OFFSET, 0x3FF3F3FFU, 0x0050400CU);
+	PSU_Mask_Write(DDRC_DRAMTMG3_OFFSET, 0x3FF3F3FFU, 0x00A05000U);
 /*##################################################################### */
 
     /*
@@ -2789,33 +2784,33 @@ unsigned long psu_ddr_init_data(void)
     * - tAL)/2) and round it up to the next integer value. Minimum value allow
     * ed for this register is 1, which implies minimum (tRCD - tAL) value to b
     * e 2 in configurations with MEMC_FREQ_RATIO=2. Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG4_T_RCD                                     0x8
+    *  PSU_DDRC_DRAMTMG4_T_RCD                                     0x6
 
     * DDR4: tCCD_L: This is the minimum time between two reads or two writes f
     * or same bank group. Others: tCCD: This is the minimum time between two r
     * eads or two writes. For configurations with MEMC_FREQ_RATIO=2, program t
     * his to (tCCD_L/2 or tCCD/2) and round it up to the next integer value. U
     * nit: clocks.
-    *  PSU_DDRC_DRAMTMG4_T_CCD                                     0x3
+    *  PSU_DDRC_DRAMTMG4_T_CCD                                     0x2
 
     * DDR4: tRRD_L: Minimum time between activates from bank 'a' to bank 'b' f
     * or same bank group. Others: tRRD: Minimum time between activates from ba
     * nk 'a' to bank 'b'For configurations with MEMC_FREQ_RATIO=2, program thi
     * s to (tRRD_L/2 or tRRD/2) and round it up to the next integer value. Uni
     * t: Clocks.
-    *  PSU_DDRC_DRAMTMG4_T_RRD                                     0x4
+    *  PSU_DDRC_DRAMTMG4_T_RRD                                     0x3
 
     * tRP: Minimum time from precharge to activate of same bank. For MEMC_FREQ
     * _RATIO=1 configurations, t_rp should be set to RoundUp(tRP/tCK). For MEM
     * C_FREQ_RATIO=2 configurations, t_rp should be set to RoundDown(RoundUp(t
     * RP/tCK)/2) + 1. For MEMC_FREQ_RATIO=2 configurations in LPDDR4, t_rp sho
     * uld be set to RoundUp(RoundUp(tRP/tCK)/2). Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG4_T_RP                                      0x9
+    *  PSU_DDRC_DRAMTMG4_T_RP                                      0x7
 
     * SDRAM Timing Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD070110, 0x1F0F0F1FU ,0x08030409U)
+    * (OFFSET, MASK, VALUE)      (0XFD070110, 0x1F0F0F1FU ,0x06020307U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG4_OFFSET, 0x1F0F0F1FU, 0x08030409U);
+	PSU_Mask_Write(DDRC_DRAMTMG4_OFFSET, 0x1F0F0F1FU, 0x06020307U);
 /*##################################################################### */
 
     /*
@@ -2827,7 +2822,7 @@ unsigned long psu_ddr_init_data(void)
     * EH - DDR2: 1 - DDR3: tCKSRX - DDR4: tCKSRX For configurations with MEMC_
     * FREQ_RATIO=2, program this to recommended value divided by two and round
     *  it up to next integer.
-    *  PSU_DDRC_DRAMTMG5_T_CKSRX                                   0x6
+    *  PSU_DDRC_DRAMTMG5_T_CKSRX                                   0x1
 
     * This is the time after Self Refresh Down Entry that CK is maintained as
     * a valid clock. Specifies the clock disable delay after SRE. Recommended
@@ -2835,7 +2830,7 @@ unsigned long psu_ddr_init_data(void)
     * - DDR3: max (10 ns, 5 tCK) - DDR4: max (10 ns, 5 tCK) For configurations
     *  with MEMC_FREQ_RATIO=2, program this to recommended value divided by tw
     * o and round it up to next integer.
-    *  PSU_DDRC_DRAMTMG5_T_CKSRE                                   0x6
+    *  PSU_DDRC_DRAMTMG5_T_CKSRE                                   0x1
 
     * Minimum CKE low width for Self refresh or Self refresh power down entry
     * to exit timing in memory clock cycles. Recommended settings: - mDDR: tRF
@@ -2851,12 +2846,12 @@ unsigned long psu_ddr_init_data(void)
     * non-LPDDR3/non-LPDDR4 designs: Set this to tCKE value. For configuration
     * s with MEMC_FREQ_RATIO=2, program this to (value described above)/2 and
     * round it up to the next integer value. Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG5_T_CKE                                     0x3
+    *  PSU_DDRC_DRAMTMG5_T_CKE                                     0x4
 
     * SDRAM Timing Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD070114, 0x0F0F3F1FU ,0x06060403U)
+    * (OFFSET, MASK, VALUE)      (0XFD070114, 0x0F0F3F1FU ,0x01010404U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG5_OFFSET, 0x0F0F3F1FU, 0x06060403U);
+	PSU_Mask_Write(DDRC_DRAMTMG5_OFFSET, 0x0F0F3F1FU, 0x01010404U);
 /*##################################################################### */
 
     /*
@@ -2885,12 +2880,12 @@ unsigned long psu_ddr_init_data(void)
     * ns with MEMC_FREQ_RATIO=2, program this to recommended value divided by
     * two and round it up to next integer. This is only present for designs su
     * pporting mDDR or LPDDR2/LPDDR3/LPDDR4 devices.
-    *  PSU_DDRC_DRAMTMG6_T_CKCSX                                   0x4
+    *  PSU_DDRC_DRAMTMG6_T_CKCSX                                   0x5
 
     * SDRAM Timing Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD070118, 0x0F0F000FU ,0x01010004U)
+    * (OFFSET, MASK, VALUE)      (0XFD070118, 0x0F0F000FU ,0x01010005U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG6_OFFSET, 0x0F0F000FU, 0x01010004U);
+	PSU_Mask_Write(DDRC_DRAMTMG6_OFFSET, 0x0F0F000FU, 0x01010005U);
 /*##################################################################### */
 
     /*
@@ -2902,7 +2897,7 @@ unsigned long psu_ddr_init_data(void)
     * s with MEMC_FREQ_RATIO=2, program this to recommended value divided by t
     * wo and round it up to next integer. This is only present for designs sup
     * porting mDDR or LPDDR2/LPDDR3/LPDDR4 devices.
-    *  PSU_DDRC_DRAMTMG7_T_CKPDE                                   0x6
+    *  PSU_DDRC_DRAMTMG7_T_CKPDE                                   0x1
 
     * This is the time before Power Down Exit that CK is maintained as a valid
     *  clock before issuing PDX. Specifies the clock stable time before PDX. R
@@ -2910,12 +2905,12 @@ unsigned long psu_ddr_init_data(void)
     * onfigurations with MEMC_FREQ_RATIO=2, program this to recommended value
     * divided by two and round it up to next integer. This is only present for
     *  designs supporting mDDR or LPDDR2/LPDDR3/LPDDR4 devices.
-    *  PSU_DDRC_DRAMTMG7_T_CKPDX                                   0x6
+    *  PSU_DDRC_DRAMTMG7_T_CKPDX                                   0x1
 
     * SDRAM Timing Register 7
-    * (OFFSET, MASK, VALUE)      (0XFD07011C, 0x00000F0FU ,0x00000606U)
+    * (OFFSET, MASK, VALUE)      (0XFD07011C, 0x00000F0FU ,0x00000101U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG7_OFFSET, 0x00000F0FU, 0x00000606U);
+	PSU_Mask_Write(DDRC_DRAMTMG7_OFFSET, 0x00000F0FU, 0x00000101U);
 /*##################################################################### */
 
     /*
@@ -2926,31 +2921,31 @@ unsigned long psu_ddr_init_data(void)
     * to the above value divided by 2 and round up to next integer value. Unit
     * : Multiples of 32 clocks. Note: This is applicable to only ZQCL/ZQCS com
     * mands. Note: Ensure this is less than or equal to t_xs_x32.
-    *  PSU_DDRC_DRAMTMG8_T_XS_FAST_X32                             0x4
+    *  PSU_DDRC_DRAMTMG8_T_XS_FAST_X32                             0x2
 
     * tXS_ABORT: Exit Self Refresh to commands not requiring a locked DLL in S
     * elf Refresh Abort. For configurations with MEMC_FREQ_RATIO=2, program th
     * is to the above value divided by 2 and round up to next integer value. U
     * nit: Multiples of 32 clocks. Note: Ensure this is less than or equal to
     * t_xs_x32.
-    *  PSU_DDRC_DRAMTMG8_T_XS_ABORT_X32                            0x4
+    *  PSU_DDRC_DRAMTMG8_T_XS_ABORT_X32                            0x2
 
     * tXSDLL: Exit Self Refresh to commands requiring a locked DLL. For config
     * urations with MEMC_FREQ_RATIO=2, program this to the above value divided
     *  by 2 and round up to next integer value. Unit: Multiples of 32 clocks.
     * Note: Used only for DDR2, DDR3 and DDR4 SDRAMs.
-    *  PSU_DDRC_DRAMTMG8_T_XS_DLL_X32                              0xd
+    *  PSU_DDRC_DRAMTMG8_T_XS_DLL_X32                              0x3
 
     * tXS: Exit Self Refresh to commands not requiring a locked DLL. For confi
     * gurations with MEMC_FREQ_RATIO=2, program this to the above value divide
     * d by 2 and round up to next integer value. Unit: Multiples of 32 clocks.
     *  Note: Used only for DDR2, DDR3 and DDR4 SDRAMs.
-    *  PSU_DDRC_DRAMTMG8_T_XS_X32                                  0x7
+    *  PSU_DDRC_DRAMTMG8_T_XS_X32                                  0x3
 
     * SDRAM Timing Register 8
-    * (OFFSET, MASK, VALUE)      (0XFD070120, 0x7F7F7F7FU ,0x04040D07U)
+    * (OFFSET, MASK, VALUE)      (0XFD070120, 0x7F7F7F7FU ,0x02020303U)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG8_OFFSET, 0x7F7F7F7FU, 0x04040D07U);
+	PSU_Mask_Write(DDRC_DRAMTMG8_OFFSET, 0x7F7F7F7FU, 0x02020303U);
 /*##################################################################### */
 
     /*
@@ -2965,13 +2960,13 @@ unsigned long psu_ddr_init_data(void)
     * inimum time is this value + 1. For configurations with MEMC_FREQ_RATIO=2
     * , program this to (tCCD_S/2) and round it up to the next integer value.
     * Present only in designs configured to support DDR4. Unit: clocks.
-    *  PSU_DDRC_DRAMTMG9_T_CCD_S                                   0x2
+    *  PSU_DDRC_DRAMTMG9_T_CCD_S                                   0x4
 
     * tRRD_S: Minimum time between activates from bank 'a' to bank 'b' for dif
     * ferent bank group. For configurations with MEMC_FREQ_RATIO=2, program th
     * is to (tRRD_S/2) and round it up to the next integer value. Present only
     *  in designs configured to support DDR4. Unit: Clocks.
-    *  PSU_DDRC_DRAMTMG9_T_RRD_S                                   0x3
+    *  PSU_DDRC_DRAMTMG9_T_RRD_S                                   0x4
 
     * CWL + PL + BL/2 + tWTR_S Minimum time from write command to read command
     *  for different bank group. Includes time for bus turnaround, recovery ti
@@ -2983,12 +2978,12 @@ unsigned long psu_ddr_init_data(void)
     * is comes directly from the SDRAM specification. For configurations with
     * MEMC_FREQ_RATIO=2, divide the value calculated using the above equation
     * by 2, and round it up to next integer.
-    *  PSU_DDRC_DRAMTMG9_WR2RD_S                                   0xb
+    *  PSU_DDRC_DRAMTMG9_WR2RD_S                                   0xd
 
     * SDRAM Timing Register 9
-    * (OFFSET, MASK, VALUE)      (0XFD070124, 0x40070F3FU ,0x0002030BU)
+    * (OFFSET, MASK, VALUE)      (0XFD070124, 0x40070F3FU ,0x0004040DU)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG9_OFFSET, 0x40070F3FU, 0x0002030BU);
+	PSU_Mask_Write(DDRC_DRAMTMG9_OFFSET, 0x40070F3FU, 0x0004040DU);
 /*##################################################################### */
 
     /*
@@ -2998,12 +2993,12 @@ unsigned long psu_ddr_init_data(void)
     * L. For configurations with MEMC_FREQ_RATIO=2, program this to (tXMPDLL/2
     * ) and round it up to the next integer value. Present only in designs con
     * figured to support DDR4. Unit: Multiples of 32 clocks.
-    *  PSU_DDRC_DRAMTMG11_POST_MPSM_GAP_X32                        0x12
+    *  PSU_DDRC_DRAMTMG11_POST_MPSM_GAP_X32                        0x44
 
     * tMPX_LH: This is the minimum CS_n Low hold time to CKE rising edge. For
     * configurations with MEMC_FREQ_RATIO=2, program this to RoundUp(tMPX_LH/2
     * )+1. Present only in designs configured to support DDR4. Unit: clocks.
-    *  PSU_DDRC_DRAMTMG11_T_MPX_LH                                 0x7
+    *  PSU_DDRC_DRAMTMG11_T_MPX_LH                                 0xc
 
     * tMPX_S: Minimum time CS setup time to CKE. For configurations with MEMC_
     * FREQ_RATIO=2, program this to (tMPX_S/2) and round it up to the next int
@@ -3015,12 +3010,12 @@ unsigned long psu_ddr_init_data(void)
     * n designs configured to support DDR4. Unit: Clocks. For configurations w
     * ith MEMC_FREQ_RATIO=2, divide the value calculated using the above equat
     * ion by 2, and round it up to next integer.
-    *  PSU_DDRC_DRAMTMG11_T_CKMPE                                  0xe
+    *  PSU_DDRC_DRAMTMG11_T_CKMPE                                  0x1c
 
     * SDRAM Timing Register 11
-    * (OFFSET, MASK, VALUE)      (0XFD07012C, 0x7F1F031FU ,0x1207010EU)
+    * (OFFSET, MASK, VALUE)      (0XFD07012C, 0x7F1F031FU ,0x440C011CU)
     */
-	PSU_Mask_Write(DDRC_DRAMTMG11_OFFSET, 0x7F1F031FU, 0x1207010EU);
+	PSU_Mask_Write(DDRC_DRAMTMG11_OFFSET, 0x7F1F031FU, 0x440C011CU);
 /*##################################################################### */
 
     /*
@@ -3088,7 +3083,7 @@ unsigned long psu_ddr_init_data(void)
     * e next integer value. LPDDR4: program this to tZQCAL/2 and round it up t
     * o the next integer value. Unit: Clock cycles. This is only present for d
     * esigns supporting DDR3/DDR4 or LPDDR2/LPDDR3/LPDDR4 devices.
-    *  PSU_DDRC_ZQCTL0_T_ZQ_LONG_NOP                               0x100
+    *  PSU_DDRC_ZQCTL0_T_ZQ_LONG_NOP                               0x60
 
     * tZQCS for DDR3/DD4/LPDDR2/LPDDR3, tZQLAT for LPDDR4: Number of cycles of
     *  NOP required after a ZQCS (ZQ calibration short)/MPC(ZQ Latch) command
@@ -3096,12 +3091,12 @@ unsigned long psu_ddr_init_data(void)
     * his to tZQCS/2 and round it up to the next integer value. Unit: Clock cy
     * cles. This is only present for designs supporting DDR3/DDR4 or LPDDR2/LP
     * DDR3/LPDDR4 devices.
-    *  PSU_DDRC_ZQCTL0_T_ZQ_SHORT_NOP                              0x40
+    *  PSU_DDRC_ZQCTL0_T_ZQ_SHORT_NOP                              0x18
 
     * ZQ Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD070180, 0xF7FF03FFU ,0x81000040U)
+    * (OFFSET, MASK, VALUE)      (0XFD070180, 0xF7FF03FFU ,0x80600018U)
     */
-	PSU_Mask_Write(DDRC_ZQCTL0_OFFSET, 0xF7FF03FFU, 0x81000040U);
+	PSU_Mask_Write(DDRC_ZQCTL0_OFFSET, 0xF7FF03FFU, 0x80600018U);
 /*##################################################################### */
 
     /*
@@ -3112,19 +3107,19 @@ unsigned long psu_ddr_init_data(void)
     * RATIO=2, program this to tZQReset/2 and round it up to the next integer
     * value. Unit: Clock cycles. This is only present for designs supporting L
     * PDDR2/LPDDR3/LPDDR4 devices.
-    *  PSU_DDRC_ZQCTL1_T_ZQ_RESET_NOP                              0x20
+    *  PSU_DDRC_ZQCTL1_T_ZQ_RESET_NOP                              0xe
 
     * Average interval to wait between automatically issuing ZQCS (ZQ calibrat
     * ion short)/MPC(ZQ calibration) commands to DDR3/DDR4/LPDDR2/LPDDR3/LPDDR
     * 4 devices. Meaningless, if ZQCTL0.dis_auto_zq=1. Unit: 1024 clock cycles
     * . This is only present for designs supporting DDR3/DDR4 or LPDDR2/LPDDR3
     * /LPDDR4 devices.
-    *  PSU_DDRC_ZQCTL1_T_ZQ_SHORT_INTERVAL_X1024                   0x196e5
+    *  PSU_DDRC_ZQCTL1_T_ZQ_SHORT_INTERVAL_X1024                   0x32dcb
 
     * ZQ Control Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD070184, 0x3FFFFFFFU ,0x020196E5U)
+    * (OFFSET, MASK, VALUE)      (0XFD070184, 0x3FFFFFFFU ,0x00E32DCBU)
     */
-	PSU_Mask_Write(DDRC_ZQCTL1_OFFSET, 0x3FFFFFFFU, 0x020196E5U);
+	PSU_Mask_Write(DDRC_ZQCTL1_OFFSET, 0x3FFFFFFFU, 0x00E32DCBU);
 /*##################################################################### */
 
     /*
@@ -3152,7 +3147,7 @@ unsigned long psu_ddr_init_data(void)
     * depending on the PHY, if using RDIMM, it may be necessary to use the val
     * ue (CL + 1) in the calculation of trddata_en. This is to compensate for
     * the extra cycle of latency through the RDIMM. Unit: Clocks
-    *  PSU_DDRC_DFITMG0_DFI_T_RDDATA_EN                            0xb
+    *  PSU_DDRC_DFITMG0_DFI_T_RDDATA_EN                            0x5
 
     * Defines whether dfi_wrdata_en/dfi_wrdata/dfi_wrdata_mask is generated us
     * ing HDR or SDR values Selects whether value in DFITMG0.dfi_tphy_wrlat is
@@ -3175,12 +3170,12 @@ unsigned long psu_ddr_init_data(void)
     * n the PHY, if using RDIMM, it may be necessary to use the value (CL + 1)
     *  in the calculation of tphy_wrlat. This is to compensate for the extra c
     * ycle of latency through the RDIMM.
-    *  PSU_DDRC_DFITMG0_DFI_TPHY_WRLAT                             0xb
+    *  PSU_DDRC_DFITMG0_DFI_TPHY_WRLAT                             0x3
 
     * DFI Timing Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD070190, 0x1FBFBF3FU ,0x048B820BU)
+    * (OFFSET, MASK, VALUE)      (0XFD070190, 0x1FBFBF3FU ,0x04858203U)
     */
-	PSU_Mask_Write(DDRC_DFITMG0_OFFSET, 0x1FBFBF3FU, 0x048B820BU);
+	PSU_Mask_Write(DDRC_DFITMG0_OFFSET, 0x1FBFBF3FU, 0x04858203U);
 /*##################################################################### */
 
     /*
@@ -3206,7 +3201,7 @@ unsigned long psu_ddr_init_data(void)
     * lue to be programmed is in terms of DFI clocks, not PHY clocks. In FREQ_
     * RATIO=2, divide PHY's value by 2 and round up to next integer. If using
     * DFITMG0.dfi_wrdata_use_sdr=1, add 1 to the value. Unit: Clocks
-    *  PSU_DDRC_DFITMG1_DFI_T_WRDATA_DELAY                         0x3
+    *  PSU_DDRC_DFITMG1_DFI_T_WRDATA_DELAY                         0x2
 
     * Specifies the number of DFI clock cycles from the assertion of the dfi_d
     * ram_clk_disable signal on the DFI until the clock to the DRAM memory dev
@@ -3223,9 +3218,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_DFITMG1_DFI_T_DRAM_CLK_ENABLE                      0x4
 
     * DFI Timing Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD070194, 0xF31F0F0FU ,0x00030304U)
+    * (OFFSET, MASK, VALUE)      (0XFD070194, 0xF31F0F0FU ,0x00020304U)
     */
-	PSU_Mask_Write(DDRC_DFITMG1_OFFSET, 0xF31F0F0FU, 0x00030304U);
+	PSU_Mask_Write(DDRC_DFITMG1_OFFSET, 0xF31F0F0FU, 0x00020304U);
 /*##################################################################### */
 
     /*
@@ -3393,18 +3388,18 @@ unsigned long psu_ddr_init_data(void)
     *  interface and when the associated dfi_rddata_cs signal is asserted. Thi
     * s corresponds to the DFI timing parameter tphy_rdcslat. Refer to PHY spe
     * cification for correct value.
-    *  PSU_DDRC_DFITMG2_DFI_TPHY_RDCSLAT                           0x9
+    *  PSU_DDRC_DFITMG2_DFI_TPHY_RDCSLAT                           0x3
 
     * Number of clocks between when a write command is sent on the DFI control
     *  interface and when the associated dfi_wrdata_cs signal is asserted. Thi
     * s corresponds to the DFI timing parameter tphy_wrcslat. Refer to PHY spe
     * cification for correct value.
-    *  PSU_DDRC_DFITMG2_DFI_TPHY_WRCSLAT                           0x9
+    *  PSU_DDRC_DFITMG2_DFI_TPHY_WRCSLAT                           0x1
 
     * DFI Timing Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD0701B4, 0x00003F3FU ,0x00000909U)
+    * (OFFSET, MASK, VALUE)      (0XFD0701B4, 0x00003F3FU ,0x00000301U)
     */
-	PSU_Mask_Write(DDRC_DFITMG2_OFFSET, 0x00003F3FU, 0x00000909U);
+	PSU_Mask_Write(DDRC_DFITMG2_OFFSET, 0x00003F3FU, 0x00000301U);
 /*##################################################################### */
 
     /*
@@ -3427,12 +3422,12 @@ unsigned long psu_ddr_init_data(void)
     * DR4: Set this to same value as MR5 bit A10. When x4 devices are used, th
     * is signal must be set to 0. - LPDDR4: Set this to inverted value of MR13
     * [5] which is opposite polarity from this signal
-    *  PSU_DDRC_DBICTL_DM_EN                                       0x1
+    *  PSU_DDRC_DBICTL_DM_EN                                       0x0
 
     * DM/DBI Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD0701C0, 0x00000007U ,0x00000001U)
+    * (OFFSET, MASK, VALUE)      (0XFD0701C0, 0x00000007U ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_DBICTL_OFFSET, 0x00000007U, 0x00000001U);
+	PSU_Mask_Write(DDRC_DBICTL_OFFSET, 0x00000007U, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -3457,24 +3452,24 @@ unsigned long psu_ddr_init_data(void)
     * o 29 and 31 Internal Base: 4 The selected HIF address bit is determined
     * by adding the internal base to the value of this field. If set to 31, ba
     * nk address bit 2 is set to 0.
-    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B2                           0x1f
+    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B2                           0x7
 
     * Selects the HIF address bits used as bank address bit 1. Valid Range: 0
     * to 30 Internal Base: 3 The selected HIF address bit for each of the bank
     *  address bits is determined by adding the internal base to the value of
     * this field.
-    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B1                           0x9
+    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B1                           0x7
 
     * Selects the HIF address bits used as bank address bit 0. Valid Range: 0
     * to 30 Internal Base: 2 The selected HIF address bit for each of the bank
     *  address bits is determined by adding the internal base to the value of
     * this field.
-    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B0                           0x9
+    *  PSU_DDRC_ADDRMAP1_ADDRMAP_BANK_B0                           0x7
 
     * Address Map Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD070204, 0x001F1F1FU ,0x001F0909U)
+    * (OFFSET, MASK, VALUE)      (0XFD070204, 0x001F1F1FU ,0x00070707U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP1_OFFSET, 0x001F1F1FU, 0x001F0909U);
+	PSU_Mask_Write(DDRC_ADDRMAP1_OFFSET, 0x001F1F1FU, 0x00070707U);
 /*##################################################################### */
 
     /*
@@ -3487,7 +3482,7 @@ unsigned long psu_ddr_init_data(void)
     * : 5 The selected HIF address bit is determined by adding the internal ba
     * se to the value of this field. If set to 15, this column address bit is
     * set to 0.
-    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B5                            0x1
+    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B5                            0x0
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 4. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3496,7 +3491,7 @@ unsigned long psu_ddr_init_data(void)
     *  4 The selected HIF address bit is determined by adding the internal bas
     * e to the value of this field. If set to 15, this column address bit is s
     * et to 0.
-    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B4                            0x1
+    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B4                            0x0
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 3. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3506,7 +3501,7 @@ unsigned long psu_ddr_init_data(void)
     *  value of this field. Note, if UMCTL2_INCL_ARB=1 and MEMC_BURST_LENGTH=1
     * 6, it is required to program this to 0, hence register does not exist in
     *  this case.
-    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B3                            0x1
+    *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B3                            0x0
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 2. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3518,9 +3513,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDRC_ADDRMAP2_ADDRMAP_COL_B2                            0x0
 
     * Address Map Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD070208, 0x0F0F0F0FU ,0x01010100U)
+    * (OFFSET, MASK, VALUE)      (0XFD070208, 0x0F0F0F0FU ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP2_OFFSET, 0x0F0F0F0FU, 0x01010100U);
+	PSU_Mask_Write(DDRC_ADDRMAP2_OFFSET, 0x0F0F0F0FU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -3537,7 +3532,7 @@ unsigned long psu_ddr_init_data(void)
     * r indicating auto-precharge, and hence no source address bit can be mapp
     * ed to column address bit 10. In LPDDR2/LPDDR3, there is a dedicated bit
     * for auto-precharge in the CA bus and hence column bit 10 is used.
-    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B9                            0x1
+    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B9                            0xf
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 8. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3550,7 +3545,7 @@ unsigned long psu_ddr_init_data(void)
     *  and hence no source address bit can be mapped to column address bit 10.
     *  In LPDDR2/LPDDR3, there is a dedicated bit for auto-precharge in the CA
     *  bus and hence column bit 10 is used.
-    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B8                            0x1
+    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B8                            0x0
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 7. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3559,7 +3554,7 @@ unsigned long psu_ddr_init_data(void)
     *  7 The selected HIF address bit is determined by adding the internal bas
     * e to the value of this field. If set to 15, this column address bit is s
     * et to 0.
-    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B7                            0x1
+    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B7                            0x0
 
     * - Full bus width mode: Selects the HIF address bit used as column addres
     * s bit 6. - Half bus width mode: Selects the HIF address bit used as colu
@@ -3568,12 +3563,12 @@ unsigned long psu_ddr_init_data(void)
     *  6 The selected HIF address bit is determined by adding the internal bas
     * e to the value of this field. If set to 15, this column address bit is s
     * et to 0.
-    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B6                            0x1
+    *  PSU_DDRC_ADDRMAP3_ADDRMAP_COL_B6                            0x0
 
     * Address Map Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD07020C, 0x0F0F0F0FU ,0x01010101U)
+    * (OFFSET, MASK, VALUE)      (0XFD07020C, 0x0F0F0F0FU ,0x0F000000U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP3_OFFSET, 0x0F0F0F0FU, 0x01010101U);
+	PSU_Mask_Write(DDRC_ADDRMAP3_OFFSET, 0x0F0F0F0FU, 0x0F000000U);
 /*##################################################################### */
 
     /*
@@ -3618,7 +3613,7 @@ unsigned long psu_ddr_init_data(void)
     * o 11, and 15 Internal Base: 17 The selected HIF address bit is determine
     * d by adding the internal base to the value of this field. If set to 15,
     * row address bit 11 is set to 0.
-    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B11                           0x7
+    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B11                           0x6
 
     * Selects the HIF address bits used as row address bits 2 to 10. Valid Ran
     * ge: 0 to 11, and 15 Internal Base: 8 (for row address bit 2), 9 (for row
@@ -3633,18 +3628,18 @@ unsigned long psu_ddr_init_data(void)
     * o 11 Internal Base: 7 The selected HIF address bit for each of the row a
     * ddress bits is determined by adding the internal base to the value of th
     * is field.
-    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B1                            0x7
+    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B1                            0x6
 
     * Selects the HIF address bits used as row address bit 0. Valid Range: 0 t
     * o 11 Internal Base: 6 The selected HIF address bit for each of the row a
     * ddress bits is determined by adding the internal base to the value of th
     * is field.
-    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B0                            0x7
+    *  PSU_DDRC_ADDRMAP5_ADDRMAP_ROW_B0                            0x6
 
     * Address Map Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD070214, 0x0F0F0F0FU ,0x070F0707U)
+    * (OFFSET, MASK, VALUE)      (0XFD070214, 0x0F0F0F0FU ,0x060F0606U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP5_OFFSET, 0x0F0F0F0FU, 0x070F0707U);
+	PSU_Mask_Write(DDRC_ADDRMAP5_OFFSET, 0x0F0F0F0FU, 0x060F0606U);
 /*##################################################################### */
 
     /*
@@ -3661,30 +3656,30 @@ unsigned long psu_ddr_init_data(void)
     * o 11, and 15 Internal Base: 21 The selected HIF address bit is determine
     * d by adding the internal base to the value of this field. If set to 15,
     * row address bit 15 is set to 0.
-    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B15                           0x7
+    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B15                           0xf
 
     * Selects the HIF address bit used as row address bit 14. Valid Range: 0 t
     * o 11, and 15 Internal Base: 20 The selected HIF address bit is determine
     * d by adding the internal base to the value of this field. If set to 15,
     * row address bit 14 is set to 0.
-    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B14                           0x7
+    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B14                           0xf
 
     * Selects the HIF address bit used as row address bit 13. Valid Range: 0 t
     * o 11, and 15 Internal Base: 19 The selected HIF address bit is determine
     * d by adding the internal base to the value of this field. If set to 15,
     * row address bit 13 is set to 0.
-    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B13                           0x7
+    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B13                           0x6
 
     * Selects the HIF address bit used as row address bit 12. Valid Range: 0 t
     * o 11, and 15 Internal Base: 18 The selected HIF address bit is determine
     * d by adding the internal base to the value of this field. If set to 15,
     * row address bit 12 is set to 0.
-    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B12                           0x7
+    *  PSU_DDRC_ADDRMAP6_ADDRMAP_ROW_B12                           0x6
 
     * Address Map Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD070218, 0x8F0F0F0FU ,0x07070707U)
+    * (OFFSET, MASK, VALUE)      (0XFD070218, 0x8F0F0F0FU ,0x0F0F0606U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP6_OFFSET, 0x8F0F0F0FU, 0x07070707U);
+	PSU_Mask_Write(DDRC_ADDRMAP6_OFFSET, 0x8F0F0F0FU, 0x0F0F0606U);
 /*##################################################################### */
 
     /*
@@ -3716,18 +3711,18 @@ unsigned long psu_ddr_init_data(void)
     * ch of the bank group address bits is determined by adding the internal b
     * ase to the value of this field. If set to 31, bank group address bit 1 i
     * s set to 0.
-    *  PSU_DDRC_ADDRMAP8_ADDRMAP_BG_B1                             0x1f
+    *  PSU_DDRC_ADDRMAP8_ADDRMAP_BG_B1                             0x0
 
     * Selects the HIF address bits used as bank group address bit 0. Valid Ran
     * ge: 0 to 30 Internal Base: 2 The selected HIF address bit for each of th
     * e bank group address bits is determined by adding the internal base to t
     * he value of this field.
-    *  PSU_DDRC_ADDRMAP8_ADDRMAP_BG_B0                             0x1
+    *  PSU_DDRC_ADDRMAP8_ADDRMAP_BG_B0                             0x0
 
     * Address Map Register 8
-    * (OFFSET, MASK, VALUE)      (0XFD070220, 0x00001F1FU ,0x00001F01U)
+    * (OFFSET, MASK, VALUE)      (0XFD070220, 0x00001F1FU ,0x00000000U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP8_OFFSET, 0x00001F1FU, 0x00001F01U);
+	PSU_Mask_Write(DDRC_ADDRMAP8_OFFSET, 0x00001F1FU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -3738,33 +3733,33 @@ unsigned long psu_ddr_init_data(void)
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B5                            0x7
+    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B5                            0x6
 
     * Selects the HIF address bits used as row address bit 4. Valid Range: 0 t
     * o 11 Internal Base: 10 The selected HIF address bit for each of the row
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B4                            0x7
+    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B4                            0x6
 
     * Selects the HIF address bits used as row address bit 3. Valid Range: 0 t
     * o 11 Internal Base: 9 The selected HIF address bit for each of the row a
     * ddress bits is determined by adding the internal base to the value of th
     * is field. This register field is used only when ADDRMAP5.addrmap_row_b2_
     * 10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B3                            0x7
+    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B3                            0x6
 
     * Selects the HIF address bits used as row address bit 2. Valid Range: 0 t
     * o 11 Internal Base: 8 The selected HIF address bit for each of the row a
     * ddress bits is determined by adding the internal base to the value of th
     * is field. This register field is used only when ADDRMAP5.addrmap_row_b2_
     * 10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B2                            0x7
+    *  PSU_DDRC_ADDRMAP9_ADDRMAP_ROW_B2                            0x6
 
     * Address Map Register 9
-    * (OFFSET, MASK, VALUE)      (0XFD070224, 0x0F0F0F0FU ,0x07070707U)
+    * (OFFSET, MASK, VALUE)      (0XFD070224, 0x0F0F0F0FU ,0x06060606U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP9_OFFSET, 0x0F0F0F0FU, 0x07070707U);
+	PSU_Mask_Write(DDRC_ADDRMAP9_OFFSET, 0x0F0F0F0FU, 0x06060606U);
 /*##################################################################### */
 
     /*
@@ -3775,33 +3770,33 @@ unsigned long psu_ddr_init_data(void)
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B9                           0x7
+    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B9                           0x6
 
     * Selects the HIF address bits used as row address bit 8. Valid Range: 0 t
     * o 11 Internal Base: 14 The selected HIF address bit for each of the row
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B8                           0x7
+    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B8                           0x6
 
     * Selects the HIF address bits used as row address bit 7. Valid Range: 0 t
     * o 11 Internal Base: 13 The selected HIF address bit for each of the row
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B7                           0x7
+    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B7                           0x6
 
     * Selects the HIF address bits used as row address bit 6. Valid Range: 0 t
     * o 11 Internal Base: 12 The selected HIF address bit for each of the row
     * address bits is determined by adding the internal base to the value of t
     * his field. This register field is used only when ADDRMAP5.addrmap_row_b2
     * _10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B6                           0x7
+    *  PSU_DDRC_ADDRMAP10_ADDRMAP_ROW_B6                           0x6
 
     * Address Map Register 10
-    * (OFFSET, MASK, VALUE)      (0XFD070228, 0x0F0F0F0FU ,0x07070707U)
+    * (OFFSET, MASK, VALUE)      (0XFD070228, 0x0F0F0F0FU ,0x06060606U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP10_OFFSET, 0x0F0F0F0FU, 0x07070707U);
+	PSU_Mask_Write(DDRC_ADDRMAP10_OFFSET, 0x0F0F0F0FU, 0x06060606U);
 /*##################################################################### */
 
     /*
@@ -3812,12 +3807,12 @@ unsigned long psu_ddr_init_data(void)
     *  address bits is determined by adding the internal base to the value of
     * this field. This register field is used only when ADDRMAP5.addrmap_row_b
     * 2_10 is set to value 15.
-    *  PSU_DDRC_ADDRMAP11_ADDRMAP_ROW_B10                          0x7
+    *  PSU_DDRC_ADDRMAP11_ADDRMAP_ROW_B10                          0x6
 
     * Address Map Register 11
-    * (OFFSET, MASK, VALUE)      (0XFD07022C, 0x0000000FU ,0x00000007U)
+    * (OFFSET, MASK, VALUE)      (0XFD07022C, 0x0000000FU ,0x00000006U)
     */
-	PSU_Mask_Write(DDRC_ADDRMAP11_OFFSET, 0x0000000FU, 0x00000007U);
+	PSU_Mask_Write(DDRC_ADDRMAP11_OFFSET, 0x0000000FU, 0x00000006U);
 /*##################################################################### */
 
     /*
@@ -3829,7 +3824,7 @@ unsigned long psu_ddr_init_data(void)
     * DR2-1066) DDR3: - BL8: 0x6 DDR4: - BL8: 5 + WR_PREAMBLE + CRC_MODE WR_PR
     * EAMBLE = 1 (1tCK write preamble), 2 (2tCK write preamble) CRC_MODE = 0 (
     * not CRC mode), 1 (CRC mode) LPDDR3: - BL8: 7 + RU(tODTon(max)/tCK)
-    *  PSU_DDRC_ODTCFG_WR_ODT_HOLD                                 0x6
+    *  PSU_DDRC_ODTCFG_WR_ODT_HOLD                                 0xb
 
     * The delay, in clock cycles, from issuing a write command to setting ODT
     * values associated with that command. ODT setting must remain constant fo
@@ -3846,7 +3841,7 @@ unsigned long psu_ddr_init_data(void)
     * : 5 + RD_PREAMBLE RD_PREAMBLE = 1 (1tCK write preamble), 2 (2tCK write p
     * reamble) LPDDR3: - BL8: 5 + RU(tDQSCK(max)/tCK) - RD(tDQSCK(min)/tCK) +
     * RU(tODTon(max)/tCK)
-    *  PSU_DDRC_ODTCFG_RD_ODT_HOLD                                 0x6
+    *  PSU_DDRC_ODTCFG_RD_ODT_HOLD                                 0x8
 
     * The delay, in clock cycles, from issuing a read command to setting ODT v
     * alues associated with that command. ODT setting must remain constant for
@@ -3859,12 +3854,12 @@ unsigned long psu_ddr_init_data(void)
     * amble) If (CL - CWL - RD_PREAMBLE + WR_PREAMBLE) < 0, uMCTL2 does not su
     * pport ODT for read operation. LPDDR3: - RL + RD(tDQSCK(min)/tCK) - 1 - R
     * U(tODTon(max)/tCK)
-    *  PSU_DDRC_ODTCFG_RD_ODT_DELAY                                0x0
+    *  PSU_DDRC_ODTCFG_RD_ODT_DELAY                                0x7
 
     * ODT Configuration Register
-    * (OFFSET, MASK, VALUE)      (0XFD070240, 0x0F1F0F7CU ,0x06000600U)
+    * (OFFSET, MASK, VALUE)      (0XFD070240, 0x0F1F0F7CU ,0x0B00081CU)
     */
-	PSU_Mask_Write(DDRC_ODTCFG_OFFSET, 0x0F1F0F7CU, 0x06000600U);
+	PSU_Mask_Write(DDRC_ODTCFG_OFFSET, 0x0F1F0F7CU, 0x0B00081CU);
 /*##################################################################### */
 
     /*
@@ -5457,7 +5452,7 @@ unsigned long psu_ddr_init_data(void)
     * Register : PGCR0 @ 0XFD080010
 
     * Address Copy
-    *  PSU_DDR_PHY_PGCR0_ADCP                                      0x0
+    *  PSU_DDR_PHY_PGCR0_ADCP                                      0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_PGCR0_RESERVED_30_27                            0x0
@@ -5487,9 +5482,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_PGCR0_RESERVED_7_0                              0x0
 
     * PHY General Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080010, 0xFFFFFFFFU ,0x07001E00U)
+    * (OFFSET, MASK, VALUE)      (0XFD080010, 0xFFFFFFFFU ,0x87001E00U)
     */
-	PSU_Mask_Write(DDR_PHY_PGCR0_OFFSET, 0xFFFFFFFFU, 0x07001E00U);
+	PSU_Mask_Write(DDR_PHY_PGCR0_OFFSET, 0xFFFFFFFFU, 0x87001E00U);
 /*##################################################################### */
 
     /*
@@ -5517,12 +5512,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_PGCR2_PLLFSMBYP                                 0x0
 
     * Refresh Period
-    *  PSU_DDR_PHY_PGCR2_TREFPRD                                   0x10010
+    *  PSU_DDR_PHY_PGCR2_TREFPRD                                   0x3d10
 
     * PHY General Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080018, 0xFFFFFFFFU ,0x00F10010U)
+    * (OFFSET, MASK, VALUE)      (0XFD080018, 0xFFFFFFFFU ,0x00F03D10U)
     */
-	PSU_Mask_Write(DDR_PHY_PGCR2_OFFSET, 0xFFFFFFFFU, 0x00F10010U);
+	PSU_Mask_Write(DDR_PHY_PGCR2_OFFSET, 0xFFFFFFFFU, 0x00F03D10U);
 /*##################################################################### */
 
     /*
@@ -5607,36 +5602,36 @@ unsigned long psu_ddr_init_data(void)
     * Register : PTR0 @ 0XFD080040
 
     * PLL Power-Down Time
-    *  PSU_DDR_PHY_PTR0_TPLLPD                                     0x216
+    *  PSU_DDR_PHY_PTR0_TPLLPD                                     0x10b
 
     * PLL Gear Shift Time
-    *  PSU_DDR_PHY_PTR0_TPLLGS                                     0x856
+    *  PSU_DDR_PHY_PTR0_TPLLGS                                     0x42b
 
     * PHY Reset Time
     *  PSU_DDR_PHY_PTR0_TPHYRST                                    0x10
 
     * PHY Timing Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080040, 0xFFFFFFFFU ,0x42C21590U)
+    * (OFFSET, MASK, VALUE)      (0XFD080040, 0xFFFFFFFFU ,0x21610AD0U)
     */
-	PSU_Mask_Write(DDR_PHY_PTR0_OFFSET, 0xFFFFFFFFU, 0x42C21590U);
+	PSU_Mask_Write(DDR_PHY_PTR0_OFFSET, 0xFFFFFFFFU, 0x21610AD0U);
 /*##################################################################### */
 
     /*
     * Register : PTR1 @ 0XFD080044
 
     * PLL Lock Time
-    *  PSU_DDR_PHY_PTR1_TPLLLOCK                                   0xd055
+    *  PSU_DDR_PHY_PTR1_TPLLLOCK                                   0x682b
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_PTR1_RESERVED_15_13                             0x0
 
     * PLL Reset Time
-    *  PSU_DDR_PHY_PTR1_TPLLRST                                    0x12c0
+    *  PSU_DDR_PHY_PTR1_TPLLRST                                    0x960
 
     * PHY Timing Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080044, 0xFFFFFFFFU ,0xD05512C0U)
+    * (OFFSET, MASK, VALUE)      (0XFD080044, 0xFFFFFFFFU ,0x682B0960U)
     */
-	PSU_Mask_Write(DDR_PHY_PTR1_OFFSET, 0xFFFFFFFFU, 0xD05512C0U);
+	PSU_Mask_Write(DDR_PHY_PTR1_OFFSET, 0xFFFFFFFFU, 0x682B0960U);
 /*##################################################################### */
 
     /*
@@ -5655,7 +5650,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_PLLCR0_RSTOPM                                   0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_PLLCR0_FRQSEL                                   0x1
+    *  PSU_DDR_PHY_PLLCR0_FRQSEL                                   0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_PLLCR0_RLOCKM                                   0x0
@@ -5664,7 +5659,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_PLLCR0_CPPC                                     0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_PLLCR0_CPIC                                     0x0
+    *  PSU_DDR_PHY_PLLCR0_CPIC                                     0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_PLLCR0_GSHIFT                                   0x0
@@ -5682,9 +5677,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_PLLCR0_DTC                                      0x0
 
     * PLL Control Register 0 (Type B PLL Only)
-    * (OFFSET, MASK, VALUE)      (0XFD080068, 0xFFFFFFFFU ,0x01100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080068, 0xFFFFFFFFU ,0x05102000U)
     */
-	PSU_Mask_Write(DDR_PHY_PLLCR0_OFFSET, 0xFFFFFFFFU, 0x01100000U);
+	PSU_Mask_Write(DDR_PHY_PLLCR0_OFFSET, 0xFFFFFFFFU, 0x05102000U);
 /*##################################################################### */
 
     /*
@@ -5735,7 +5730,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DSGCR_DTOODT                                    0x0
 
     * PHY Update Acknowledge Delay
-    *  PSU_DDR_PHY_DSGCR_PUAD                                      0x5
+    *  PSU_DDR_PHY_DSGCR_PUAD                                      0x2
 
     * Controller Update Acknowledge Enable
     *  PSU_DDR_PHY_DSGCR_CUAEN                                     0x1
@@ -5753,9 +5748,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DSGCR_PUREN                                     0x1
 
     * DDR System General Configuration Register
-    * (OFFSET, MASK, VALUE)      (0XFD080090, 0xFFFFFFFFU ,0x02A04161U)
+    * (OFFSET, MASK, VALUE)      (0XFD080090, 0xFFFFFFFFU ,0x02A040A1U)
     */
-	PSU_Mask_Write(DDR_PHY_DSGCR_OFFSET, 0xFFFFFFFFU, 0x02A04161U);
+	PSU_Mask_Write(DDR_PHY_DSGCR_OFFSET, 0xFFFFFFFFU, 0x02A040A1U);
 /*##################################################################### */
 
     /*
@@ -5774,12 +5769,12 @@ unsigned long psu_ddr_init_data(void)
     * Register : GPR1 @ 0XFD0800C4
 
     * General Purpose Register 1
-    *  PSU_DDR_PHY_GPR1_GPR1                                       0xe0
+    *  PSU_DDR_PHY_GPR1_GPR1                                       0xde
 
     * General Purpose Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD0800C4, 0xFFFFFFFFU ,0x000000E0U)
+    * (OFFSET, MASK, VALUE)      (0XFD0800C4, 0xFFFFFFFFU ,0x000000DEU)
     */
-	PSU_Mask_Write(DDR_PHY_GPR1_OFFSET, 0xFFFFFFFFU, 0x000000E0U);
+	PSU_Mask_Write(DDR_PHY_GPR1_OFFSET, 0xFFFFFFFFU, 0x000000DEU);
 /*##################################################################### */
 
     /*
@@ -5819,12 +5814,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DCR_DDR8BNK                                     0x1
 
     * DDR Mode
-    *  PSU_DDR_PHY_DCR_DDRMD                                       0x4
+    *  PSU_DDR_PHY_DCR_DDRMD                                       0x1
 
     * DRAM Configuration Register
-    * (OFFSET, MASK, VALUE)      (0XFD080100, 0xFFFFFFFFU ,0x0800040CU)
+    * (OFFSET, MASK, VALUE)      (0XFD080100, 0xFFFFFFFFU ,0x08000409U)
     */
-	PSU_Mask_Write(DDR_PHY_DCR_OFFSET, 0xFFFFFFFFU, 0x0800040CU);
+	PSU_Mask_Write(DDR_PHY_DCR_OFFSET, 0xFFFFFFFFU, 0x08000409U);
 /*##################################################################### */
 
     /*
@@ -5834,30 +5829,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR0_RESERVED_31_29                            0x0
 
     * Activate to activate command delay (different banks)
-    *  PSU_DDR_PHY_DTPR0_TRRD                                      0x7
+    *  PSU_DDR_PHY_DTPR0_TRRD                                      0x6
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR0_RESERVED_23                               0x0
 
     * Activate to precharge command delay
-    *  PSU_DDR_PHY_DTPR0_TRAS                                      0x24
+    *  PSU_DDR_PHY_DTPR0_TRAS                                      0x16
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR0_RESERVED_15                               0x0
 
     * Precharge command period
-    *  PSU_DDR_PHY_DTPR0_TRP                                       0xf
+    *  PSU_DDR_PHY_DTPR0_TRP                                       0xc
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR0_RESERVED_7_5                              0x0
 
     * Internal read to precharge command delay
-    *  PSU_DDR_PHY_DTPR0_TRTP                                      0x8
+    *  PSU_DDR_PHY_DTPR0_TRTP                                      0x4
 
     * DRAM Timing Parameters Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080110, 0xFFFFFFFFU ,0x07240F08U)
+    * (OFFSET, MASK, VALUE)      (0XFD080110, 0xFFFFFFFFU ,0x06160C04U)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR0_OFFSET, 0xFFFFFFFFU, 0x07240F08U);
+	PSU_Mask_Write(DDR_PHY_DTPR0_OFFSET, 0xFFFFFFFFU, 0x06160C04U);
 /*##################################################################### */
 
     /*
@@ -5880,18 +5875,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR1_RESERVED_15_11                            0x0
 
     * Load mode update delay (DDR4 and DDR3 only)
-    *  PSU_DDR_PHY_DTPR1_TMOD                                      0x0
+    *  PSU_DDR_PHY_DTPR1_TMOD                                      0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR1_RESERVED_7_5                              0x0
 
     * Load mode cycle time
-    *  PSU_DDR_PHY_DTPR1_TMRD                                      0x8
+    *  PSU_DDR_PHY_DTPR1_TMRD                                      0xa
 
     * DRAM Timing Parameters Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080114, 0xFFFFFFFFU ,0x28200008U)
+    * (OFFSET, MASK, VALUE)      (0XFD080114, 0xFFFFFFFFU ,0x2820040AU)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR1_OFFSET, 0xFFFFFFFFU, 0x28200008U);
+	PSU_Mask_Write(DDR_PHY_DTPR1_OFFSET, 0xFFFFFFFFU, 0x2820040AU);
 /*##################################################################### */
 
     /*
@@ -5919,12 +5914,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR2_RESERVED_15_10                            0x0
 
     * Self refresh exit delay
-    *  PSU_DDR_PHY_DTPR2_TXS                                       0x300
+    *  PSU_DDR_PHY_DTPR2_TXS                                       0x4b
 
     * DRAM Timing Parameters Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080118, 0xFFFFFFFFU ,0x000F0300U)
+    * (OFFSET, MASK, VALUE)      (0XFD080118, 0xFFFFFFFFU ,0x000F004BU)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR2_OFFSET, 0xFFFFFFFFU, 0x000F0300U);
+	PSU_Mask_Write(DDR_PHY_DTPR2_OFFSET, 0xFFFFFFFFU, 0x000F004BU);
 /*##################################################################### */
 
     /*
@@ -5937,13 +5932,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR3_TCCD                                      0x0
 
     * DLL locking time
-    *  PSU_DDR_PHY_DTPR3_TDLLK                                     0x300
+    *  PSU_DDR_PHY_DTPR3_TDLLK                                     0x200
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR3_RESERVED_15_12                            0x0
 
     * Maximum DQS output access time from CK/CK# (LPDDR2/3 only)
-    *  PSU_DDR_PHY_DTPR3_TDQSCKMAX                                 0x8
+    *  PSU_DDR_PHY_DTPR3_TDQSCKMAX                                 0x5
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR3_RESERVED_7_3                              0x0
@@ -5952,9 +5947,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR3_TDQSCK                                    0x0
 
     * DRAM Timing Parameters Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD08011C, 0xFFFFFFFFU ,0x83000800U)
+    * (OFFSET, MASK, VALUE)      (0XFD08011C, 0xFFFFFFFFU ,0x82000500U)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR3_OFFSET, 0xFFFFFFFFU, 0x83000800U);
+	PSU_Mask_Write(DDR_PHY_DTPR3_OFFSET, 0xFFFFFFFFU, 0x82000500U);
 /*##################################################################### */
 
     /*
@@ -5970,7 +5965,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR4_RESERVED_27_26                            0x0
 
     * Refresh-to-Refresh
-    *  PSU_DDR_PHY_DTPR4_TRFC                                      0x176
+    *  PSU_DDR_PHY_DTPR4_TRFC                                      0x46
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR4_RESERVED_15_14                            0x0
@@ -5982,12 +5977,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR4_RESERVED_7_5                              0x0
 
     * Power down exit delay
-    *  PSU_DDR_PHY_DTPR4_TXP                                       0x7
+    *  PSU_DDR_PHY_DTPR4_TXP                                       0x4
 
     * DRAM Timing Parameters Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080120, 0xFFFFFFFFU ,0x01762B07U)
+    * (OFFSET, MASK, VALUE)      (0XFD080120, 0xFFFFFFFFU ,0x00462B04U)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR4_OFFSET, 0xFFFFFFFFU, 0x01762B07U);
+	PSU_Mask_Write(DDR_PHY_DTPR4_OFFSET, 0xFFFFFFFFU, 0x00462B04U);
 /*##################################################################### */
 
     /*
@@ -5997,24 +5992,24 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR5_RESERVED_31_24                            0x0
 
     * Activate to activate command delay (same bank)
-    *  PSU_DDR_PHY_DTPR5_TRC                                       0x33
+    *  PSU_DDR_PHY_DTPR5_TRC                                       0x23
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR5_RESERVED_15                               0x0
 
     * Activate to read or write delay
-    *  PSU_DDR_PHY_DTPR5_TRCD                                      0xf
+    *  PSU_DDR_PHY_DTPR5_TRCD                                      0xc
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR5_RESERVED_7_5                              0x0
 
     * Internal write to read command delay
-    *  PSU_DDR_PHY_DTPR5_TWTR                                      0x8
+    *  PSU_DDR_PHY_DTPR5_TWTR                                      0x4
 
     * DRAM Timing Parameters Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080124, 0xFFFFFFFFU ,0x00330F08U)
+    * (OFFSET, MASK, VALUE)      (0XFD080124, 0xFFFFFFFFU ,0x00230C04U)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR5_OFFSET, 0xFFFFFFFFU, 0x00330F08U);
+	PSU_Mask_Write(DDR_PHY_DTPR5_OFFSET, 0xFFFFFFFFU, 0x00230C04U);
 /*##################################################################### */
 
     /*
@@ -6030,18 +6025,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DTPR6_RESERVED_29_14                            0x0
 
     * Write Latency
-    *  PSU_DDR_PHY_DTPR6_PUBWL                                     0xe
+    *  PSU_DDR_PHY_DTPR6_PUBWL                                     0x5
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DTPR6_RESERVED_7_6                              0x0
 
     * Read Latency
-    *  PSU_DDR_PHY_DTPR6_PUBRL                                     0xf
+    *  PSU_DDR_PHY_DTPR6_PUBRL                                     0x9
 
     * DRAM Timing Parameters Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD080128, 0xFFFFFFFFU ,0x00000E0FU)
+    * (OFFSET, MASK, VALUE)      (0XFD080128, 0xFFFFFFFFU ,0x00000509U)
     */
-	PSU_Mask_Write(DDR_PHY_DTPR6_OFFSET, 0xFFFFFFFFU, 0x00000E0FU);
+	PSU_Mask_Write(DDR_PHY_DTPR6_OFFSET, 0xFFFFFFFFU, 0x00000509U);
 /*##################################################################### */
 
     /*
@@ -6207,7 +6202,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_RDIMMCR1_RC11                                   0x0
 
     * DDR4/DDR3 Control Word 10 (RDIMM Operating Speed Control Word)
-    *  PSU_DDR_PHY_RDIMMCR1_RC10                                   0x2
+    *  PSU_DDR_PHY_RDIMMCR1_RC10                                   0x0
 
     * DDR4/DDR3 Control Word 9 (Power Saving Settings Control Word)
     *  PSU_DDR_PHY_RDIMMCR1_RC9                                    0x0
@@ -6217,48 +6212,48 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_RDIMMCR1_RC8                                    0x0
 
     * RDIMM Control Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080154, 0xFFFFFFFFU ,0x00000200U)
+    * (OFFSET, MASK, VALUE)      (0XFD080154, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_RDIMMCR1_OFFSET, 0xFFFFFFFFU, 0x00000200U);
+	PSU_Mask_Write(DDR_PHY_RDIMMCR1_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
     * Register : MR0 @ 0XFD080180
 
     * Reserved. Return zeroes on reads.
-    *  PSU_DDR_PHY_MR0_RESERVED_31_8                               0x6
+    *  PSU_DDR_PHY_MR0_RESERVED_31_8                               0x0
 
     * CA Terminating Rank
     *  PSU_DDR_PHY_MR0_CATR                                        0x0
 
     * Reserved. These are JEDEC reserved bits and are recommended by JEDEC to
     * be programmed to 0x0.
-    *  PSU_DDR_PHY_MR0_RSVD_6_5                                    0x1
+    *  PSU_DDR_PHY_MR0_RSVD_6_5                                    0x0
 
     * Built-in Self-Test for RZQ
-    *  PSU_DDR_PHY_MR0_RZQI                                        0x2
+    *  PSU_DDR_PHY_MR0_RZQI                                        0x0
 
     * Reserved. These are JEDEC reserved bits and are recommended by JEDEC to
     * be programmed to 0x0.
     *  PSU_DDR_PHY_MR0_RSVD_2_0                                    0x0
 
     * LPDDR4 Mode Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080180, 0xFFFFFFFFU ,0x00000630U)
+    * (OFFSET, MASK, VALUE)      (0XFD080180, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_MR0_OFFSET, 0xFFFFFFFFU, 0x00000630U);
+	PSU_Mask_Write(DDR_PHY_MR0_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
     * Register : MR1 @ 0XFD080184
 
     * Reserved. Return zeroes on reads.
-    *  PSU_DDR_PHY_MR1_RESERVED_31_8                               0x3
+    *  PSU_DDR_PHY_MR1_RESERVED_31_8                               0x0
 
     * Read Postamble Length
-    *  PSU_DDR_PHY_MR1_RDPST                                       0x0
+    *  PSU_DDR_PHY_MR1_RDPST                                       0x1
 
     * Write-recovery for auto-precharge command
-    *  PSU_DDR_PHY_MR1_NWR                                         0x0
+    *  PSU_DDR_PHY_MR1_NWR                                         0x4
 
     * Read Preamble Length
     *  PSU_DDR_PHY_MR1_RDPRE                                       0x0
@@ -6267,12 +6262,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR1_WRPRE                                       0x0
 
     * Burst Length
-    *  PSU_DDR_PHY_MR1_BL                                          0x1
+    *  PSU_DDR_PHY_MR1_BL                                          0x3
 
     * LPDDR4 Mode Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080184, 0xFFFFFFFFU ,0x00000301U)
+    * (OFFSET, MASK, VALUE)      (0XFD080184, 0xFFFFFFFFU ,0x000000C3U)
     */
-	PSU_Mask_Write(DDR_PHY_MR1_OFFSET, 0xFFFFFFFFU, 0x00000301U);
+	PSU_Mask_Write(DDR_PHY_MR1_OFFSET, 0xFFFFFFFFU, 0x000000C3U);
 /*##################################################################### */
 
     /*
@@ -6285,25 +6280,25 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR2_WRL                                         0x0
 
     * Write Latency Set
-    *  PSU_DDR_PHY_MR2_WLS                                         0x0
+    *  PSU_DDR_PHY_MR2_WLS                                         0x1
 
     * Write Latency
-    *  PSU_DDR_PHY_MR2_WL                                          0x4
+    *  PSU_DDR_PHY_MR2_WL                                          0x0
 
     * Read Latency
-    *  PSU_DDR_PHY_MR2_RL                                          0x0
+    *  PSU_DDR_PHY_MR2_RL                                          0x7
 
     * LPDDR4 Mode Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080188, 0xFFFFFFFFU ,0x00000020U)
+    * (OFFSET, MASK, VALUE)      (0XFD080188, 0xFFFFFFFFU ,0x00000047U)
     */
-	PSU_Mask_Write(DDR_PHY_MR2_OFFSET, 0xFFFFFFFFU, 0x00000020U);
+	PSU_Mask_Write(DDR_PHY_MR2_OFFSET, 0xFFFFFFFFU, 0x00000047U);
 /*##################################################################### */
 
     /*
     * Register : MR3 @ 0XFD08018C
 
     * Reserved. Return zeroes on reads.
-    *  PSU_DDR_PHY_MR3_RESERVED_31_8                               0x2
+    *  PSU_DDR_PHY_MR3_RESERVED_31_8                               0x0
 
     * DBI-Write Enable
     *  PSU_DDR_PHY_MR3_DBIWR                                       0x0
@@ -6322,12 +6317,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR3_WRPST                                       0x0
 
     * Pull-up Calibration Point
-    *  PSU_DDR_PHY_MR3_PUCAL                                       0x0
+    *  PSU_DDR_PHY_MR3_PUCAL                                       0x1
 
     * LPDDR4 Mode Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD08018C, 0xFFFFFFFFU ,0x00000200U)
+    * (OFFSET, MASK, VALUE)      (0XFD08018C, 0xFFFFFFFFU ,0x00000001U)
     */
-	PSU_Mask_Write(DDR_PHY_MR3_OFFSET, 0xFFFFFFFFU, 0x00000200U);
+	PSU_Mask_Write(DDR_PHY_MR3_OFFSET, 0xFFFFFFFFU, 0x00000001U);
 /*##################################################################### */
 
     /*
@@ -6398,13 +6393,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR5_WDBI                                        0x0
 
     * Data Mask
-    *  PSU_DDR_PHY_MR5_DM                                          0x1
+    *  PSU_DDR_PHY_MR5_DM                                          0x0
 
     * CA Parity Persistent Error
-    *  PSU_DDR_PHY_MR5_CAPPE                                       0x1
+    *  PSU_DDR_PHY_MR5_CAPPE                                       0x0
 
     * RTT_PARK
-    *  PSU_DDR_PHY_MR5_RTTPARK                                     0x3
+    *  PSU_DDR_PHY_MR5_RTTPARK                                     0x0
 
     * ODT Input Buffer during Power Down mode
     *  PSU_DDR_PHY_MR5_ODTIBPD                                     0x0
@@ -6419,9 +6414,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR5_CAPM                                        0x0
 
     * DDR4 Mode Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080194, 0xFFFFFFFFU ,0x000006C0U)
+    * (OFFSET, MASK, VALUE)      (0XFD080194, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_MR5_OFFSET, 0xFFFFFFFFU, 0x000006C0U);
+	PSU_Mask_Write(DDR_PHY_MR5_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -6435,7 +6430,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR6_RSVD_15_13                                  0x0
 
     * CAS_n to CAS_n command delay for same bank group (tCCD_L)
-    *  PSU_DDR_PHY_MR6_TCCDL                                       0x2
+    *  PSU_DDR_PHY_MR6_TCCDL                                       0x0
 
     * These are JEDEC reserved bits and are recommended by JEDEC to be program
     * med to 0x0.
@@ -6448,12 +6443,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR6_VDQTRG                                      0x0
 
     * VrefDQ Training Values
-    *  PSU_DDR_PHY_MR6_VDQTVAL                                     0x19
+    *  PSU_DDR_PHY_MR6_VDQTVAL                                     0x0
 
     * DDR4 Mode Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD080198, 0xFFFFFFFFU ,0x00000819U)
+    * (OFFSET, MASK, VALUE)      (0XFD080198, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_MR6_OFFSET, 0xFFFFFFFFU, 0x00000819U);
+	PSU_Mask_Write(DDR_PHY_MR6_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -6470,12 +6465,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_MR11_PDCTL                                      0x0
 
     * DQ Bus Receiver On-Die-Termination
-    *  PSU_DDR_PHY_MR11_DQODT                                      0x0
+    *  PSU_DDR_PHY_MR11_DQODT                                      0x2
 
     * LPDDR4 Mode Register 11
-    * (OFFSET, MASK, VALUE)      (0XFD0801AC, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0801AC, 0xFFFFFFFFU ,0x00000002U)
     */
-	PSU_Mask_Write(DDR_PHY_MR11_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_MR11_OFFSET, 0xFFFFFFFFU, 0x00000002U);
 /*##################################################################### */
 
     /*
@@ -6768,12 +6763,12 @@ unsigned long psu_ddr_init_data(void)
     * Register : BISTLSR @ 0XFD080414
 
     * LFSR seed for pseudo-random BIST patterns
-    *  PSU_DDR_PHY_BISTLSR_SEED                                    0x12341000
+    *  PSU_DDR_PHY_BISTLSR_SEED                                    0x12340200
 
     * BIST LFSR Seed Register
-    * (OFFSET, MASK, VALUE)      (0XFD080414, 0xFFFFFFFFU ,0x12341000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080414, 0xFFFFFFFFU ,0x12340200U)
     */
-	PSU_Mask_Write(DDR_PHY_BISTLSR_OFFSET, 0xFFFFFFFFU, 0x12341000U);
+	PSU_Mask_Write(DDR_PHY_BISTLSR_OFFSET, 0xFFFFFFFFU, 0x12340200U);
 /*##################################################################### */
 
     /*
@@ -6853,18 +6848,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACIOCR2_ACTECLKGATE0                            0x0
 
     * Clock gating for CK# D slices [1:0]
-    *  PSU_DDR_PHY_ACIOCR2_CKNCLKGATE0                             0x2
+    *  PSU_DDR_PHY_ACIOCR2_CKNCLKGATE0                             0x0
 
     * Clock gating for CK D slices [1:0]
-    *  PSU_DDR_PHY_ACIOCR2_CKCLKGATE0                              0x2
+    *  PSU_DDR_PHY_ACIOCR2_CKCLKGATE0                              0x0
 
     * Clock gating for AC D slices [23:0]
     *  PSU_DDR_PHY_ACIOCR2_ACCLKGATE0                              0x0
 
     * AC I/O Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080508, 0xFFFFFFFFU ,0x0A000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080508, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_ACIOCR2_OFFSET, 0xFFFFFFFFU, 0x0A000000U);
+	PSU_Mask_Write(DDR_PHY_ACIOCR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -6895,12 +6890,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACIOCR3_CKOEMODE_RSVD                           0x0
 
     * SDRAM CK Output Enable (OE) Mode Selection.
-    *  PSU_DDR_PHY_ACIOCR3_CKOEMODE                                0x9
+    *  PSU_DDR_PHY_ACIOCR3_CKOEMODE                                0x5
 
     * AC I/O Configuration Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD08050C, 0xFFFFFFFFU ,0x00000009U)
+    * (OFFSET, MASK, VALUE)      (0XFD08050C, 0xFFFFFFFFU ,0x00000005U)
     */
-	PSU_Mask_Write(DDR_PHY_ACIOCR3_OFFSET, 0xFFFFFFFFU, 0x00000009U);
+	PSU_Mask_Write(DDR_PHY_ACIOCR3_OFFSET, 0xFFFFFFFFU, 0x00000005U);
 /*##################################################################### */
 
     /*
@@ -6919,18 +6914,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACIOCR4_ACTECLKGATE1                            0x0
 
     * Clock gating for CK# D slices [3:2]
-    *  PSU_DDR_PHY_ACIOCR4_CKNCLKGATE1                             0x2
+    *  PSU_DDR_PHY_ACIOCR4_CKNCLKGATE1                             0x0
 
     * Clock gating for CK D slices [3:2]
-    *  PSU_DDR_PHY_ACIOCR4_CKCLKGATE1                              0x2
+    *  PSU_DDR_PHY_ACIOCR4_CKCLKGATE1                              0x0
 
     * Clock gating for AC D slices [47:24]
     *  PSU_DDR_PHY_ACIOCR4_ACCLKGATE1                              0x0
 
     * AC I/O Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080510, 0xFFFFFFFFU ,0x0A000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080510, 0xFFFFFFFFU ,0x00000000U)
     */
-	PSU_Mask_Write(DDR_PHY_ACIOCR4_OFFSET, 0xFFFFFFFFU, 0x0A000000U);
+	PSU_Mask_Write(DDR_PHY_ACIOCR4_OFFSET, 0xFFFFFFFFU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -6967,12 +6962,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_IOVCR0_ACVREFISELRANGE                          0x1
 
     * REFSEL Control for internal AC IOs
-    *  PSU_DDR_PHY_IOVCR0_ACVREFISEL                               0x4e
+    *  PSU_DDR_PHY_IOVCR0_ACVREFISEL                               0x30
 
     * IO VREF Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080520, 0xFFFFFFFFU ,0x0300B0CEU)
+    * (OFFSET, MASK, VALUE)      (0XFD080520, 0xFFFFFFFFU ,0x0300B0B0U)
     */
-	PSU_Mask_Write(DDR_PHY_IOVCR0_OFFSET, 0xFFFFFFFFU, 0x0300B0CEU);
+	PSU_Mask_Write(DDR_PHY_IOVCR0_OFFSET, 0xFFFFFFFFU, 0x0300B0B0U);
 /*##################################################################### */
 
     /*
@@ -6986,7 +6981,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_VTCR0_DVEN                                      0x1
 
     * Per Device Addressability Enable
-    *  PSU_DDR_PHY_VTCR0_PDAEN                                     0x1
+    *  PSU_DDR_PHY_VTCR0_PDAEN                                     0x0
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_VTCR0_RESERVED_26                               0x0
@@ -7007,9 +7002,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_VTCR0_DVINIT                                    0x19
 
     * VREF Training Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080528, 0xFFFFFFFFU ,0xF9032019U)
+    * (OFFSET, MASK, VALUE)      (0XFD080528, 0xFFFFFFFFU ,0xF1032019U)
     */
-	PSU_Mask_Write(DDR_PHY_VTCR0_OFFSET, 0xFFFFFFFFU, 0xF9032019U);
+	PSU_Mask_Write(DDR_PHY_VTCR0_OFFSET, 0xFFFFFFFFU, 0xF1032019U);
 /*##################################################################### */
 
     /*
@@ -7089,12 +7084,12 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR1_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on ACTN.
-    *  PSU_DDR_PHY_ACBDLR1_ACTBD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR1_ACTBD                                   0x4
 
     * AC Bit Delay Line Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080544, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080544, 0xFFFFFFFFU ,0x00000004U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR1_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR1_OFFSET, 0xFFFFFFFFU, 0x00000004U);
 /*##################################################################### */
 
     /*
@@ -7104,30 +7099,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR2_RESERVED_31_30                          0x0
 
     * Delay select for the BDL on BG[1].
-    *  PSU_DDR_PHY_ACBDLR2_BG1BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR2_BG1BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR2_RESERVED_23_22                          0x0
 
     * Delay select for the BDL on BG[0].
-    *  PSU_DDR_PHY_ACBDLR2_BG0BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR2_BG0BD                                   0x4
 
     * Reser.ved Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR2_RESERVED_15_14                          0x0
 
     * Delay select for the BDL on BA[1].
-    *  PSU_DDR_PHY_ACBDLR2_BA1BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR2_BA1BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR2_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on BA[0].
-    *  PSU_DDR_PHY_ACBDLR2_BA0BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR2_BA0BD                                   0x4
 
     * AC Bit Delay Line Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080548, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080548, 0xFFFFFFFFU ,0x04040404U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR2_OFFSET, 0xFFFFFFFFU, 0x04040404U);
 /*##################################################################### */
 
     /*
@@ -7137,30 +7132,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR6_RESERVED_31_30                          0x0
 
     * Delay select for the BDL on Address A[3].
-    *  PSU_DDR_PHY_ACBDLR6_A03BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR6_A03BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR6_RESERVED_23_22                          0x0
 
     * Delay select for the BDL on Address A[2].
-    *  PSU_DDR_PHY_ACBDLR6_A02BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR6_A02BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR6_RESERVED_15_14                          0x0
 
     * Delay select for the BDL on Address A[1].
-    *  PSU_DDR_PHY_ACBDLR6_A01BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR6_A01BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR6_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on Address A[0].
-    *  PSU_DDR_PHY_ACBDLR6_A00BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR6_A00BD                                   0x4
 
     * AC Bit Delay Line Register 6
-    * (OFFSET, MASK, VALUE)      (0XFD080558, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080558, 0xFFFFFFFFU ,0x04040404U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR6_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR6_OFFSET, 0xFFFFFFFFU, 0x04040404U);
 /*##################################################################### */
 
     /*
@@ -7170,30 +7165,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR7_RESERVED_31_30                          0x0
 
     * Delay select for the BDL on Address A[7].
-    *  PSU_DDR_PHY_ACBDLR7_A07BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR7_A07BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR7_RESERVED_23_22                          0x0
 
     * Delay select for the BDL on Address A[6].
-    *  PSU_DDR_PHY_ACBDLR7_A06BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR7_A06BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR7_RESERVED_15_14                          0x0
 
     * Delay select for the BDL on Address A[5].
-    *  PSU_DDR_PHY_ACBDLR7_A05BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR7_A05BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR7_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on Address A[4].
-    *  PSU_DDR_PHY_ACBDLR7_A04BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR7_A04BD                                   0x4
 
     * AC Bit Delay Line Register 7
-    * (OFFSET, MASK, VALUE)      (0XFD08055C, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD08055C, 0xFFFFFFFFU ,0x04040404U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR7_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR7_OFFSET, 0xFFFFFFFFU, 0x04040404U);
 /*##################################################################### */
 
     /*
@@ -7203,30 +7198,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR8_RESERVED_31_30                          0x0
 
     * Delay select for the BDL on Address A[11].
-    *  PSU_DDR_PHY_ACBDLR8_A11BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR8_A11BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR8_RESERVED_23_22                          0x0
 
     * Delay select for the BDL on Address A[10].
-    *  PSU_DDR_PHY_ACBDLR8_A10BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR8_A10BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR8_RESERVED_15_14                          0x0
 
     * Delay select for the BDL on Address A[9].
-    *  PSU_DDR_PHY_ACBDLR8_A09BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR8_A09BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR8_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on Address A[8].
-    *  PSU_DDR_PHY_ACBDLR8_A08BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR8_A08BD                                   0x4
 
     * AC Bit Delay Line Register 8
-    * (OFFSET, MASK, VALUE)      (0XFD080560, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080560, 0xFFFFFFFFU ,0x04040404U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR8_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR8_OFFSET, 0xFFFFFFFFU, 0x04040404U);
 /*##################################################################### */
 
     /*
@@ -7236,30 +7231,30 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ACBDLR9_RESERVED_31_30                          0x0
 
     * Delay select for the BDL on Address A[15].
-    *  PSU_DDR_PHY_ACBDLR9_A15BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR9_A15BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR9_RESERVED_23_22                          0x0
 
     * Delay select for the BDL on Address A[14].
-    *  PSU_DDR_PHY_ACBDLR9_A14BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR9_A14BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR9_RESERVED_15_14                          0x0
 
     * Delay select for the BDL on Address A[13].
-    *  PSU_DDR_PHY_ACBDLR9_A13BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR9_A13BD                                   0x4
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_ACBDLR9_RESERVED_7_6                            0x0
 
     * Delay select for the BDL on Address A[12].
-    *  PSU_DDR_PHY_ACBDLR9_A12BD                                   0x0
+    *  PSU_DDR_PHY_ACBDLR9_A12BD                                   0x4
 
     * AC Bit Delay Line Register 9
-    * (OFFSET, MASK, VALUE)      (0XFD080564, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080564, 0xFFFFFFFFU ,0x04040404U)
     */
-	PSU_Mask_Write(DDR_PHY_ACBDLR9_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_ACBDLR9_OFFSET, 0xFFFFFFFFU, 0x04040404U);
 /*##################################################################### */
 
     /*
@@ -7275,7 +7270,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ZQCR_PGWAIT_FRQB                                0x11
 
     * Programmable Wait for Frequency A
-    *  PSU_DDR_PHY_ZQCR_PGWAIT_FRQA                                0x15
+    *  PSU_DDR_PHY_ZQCR_PGWAIT_FRQA                                0xa
 
     * ZQ VREF Pad Enable
     *  PSU_DDR_PHY_ZQCR_ZQREFPEN                                   0x0
@@ -7305,9 +7300,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ZQCR_ZQPD                                       0x0
 
     * ZQ Impedance Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD080680, 0xFFFFFFFFU ,0x008AAA58U)
+    * (OFFSET, MASK, VALUE)      (0XFD080680, 0xFFFFFFFFU ,0x00894A58U)
     */
-	PSU_Mask_Write(DDR_PHY_ZQCR_OFFSET, 0xFFFFFFFFU, 0x008AAA58U);
+	PSU_Mask_Write(DDR_PHY_ZQCR_OFFSET, 0xFFFFFFFFU, 0x00894A58U);
 /*##################################################################### */
 
     /*
@@ -7345,20 +7340,20 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ZQ0PR0_ZPROG_DRAM_ODT                           0x7
 
     * HOST Impedance Divide Ratio
-    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_HOST_ODT                           0x9
+    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_HOST_ODT                           0x7
 
     * Impedance Divide Ratio (pulldown drive calibration during asymmetric dri
     * ve strength calibration)
-    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_ASYM_DRV_PD                        0xd
+    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_ASYM_DRV_PD                        0xb
 
     * Impedance Divide Ratio (pullup drive calibration during asymmetric drive
     *  strength calibration)
-    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_ASYM_DRV_PU                        0xd
+    *  PSU_DDR_PHY_ZQ0PR0_ZPROG_ASYM_DRV_PU                        0xb
 
     * ZQ n Impedance Control Program Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080684, 0xFFFFFFFFU ,0x000079DDU)
+    * (OFFSET, MASK, VALUE)      (0XFD080684, 0xFFFFFFFFU ,0x000077BBU)
     */
-	PSU_Mask_Write(DDR_PHY_ZQ0PR0_OFFSET, 0xFFFFFFFFU, 0x000079DDU);
+	PSU_Mask_Write(DDR_PHY_ZQ0PR0_OFFSET, 0xFFFFFFFFU, 0x000077BBU);
 /*##################################################################### */
 
     /*
@@ -7429,7 +7424,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ZQ1PR0_ODT_ADJUST                               0x0
 
     * Pulldown drive strength adjustment
-    *  PSU_DDR_PHY_ZQ1PR0_PD_DRV_ADJUST                            0x1
+    *  PSU_DDR_PHY_ZQ1PR0_PD_DRV_ADJUST                            0x0
 
     * Pullup drive strength adjustment
     *  PSU_DDR_PHY_ZQ1PR0_PU_DRV_ADJUST                            0x0
@@ -7438,20 +7433,20 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_ZQ1PR0_ZPROG_DRAM_ODT                           0x7
 
     * HOST Impedance Divide Ratio
-    *  PSU_DDR_PHY_ZQ1PR0_ZPROG_HOST_ODT                           0xb
+    *  PSU_DDR_PHY_ZQ1PR0_ZPROG_HOST_ODT                           0x3
 
     * Impedance Divide Ratio (pulldown drive calibration during asymmetric dri
     * ve strength calibration)
-    *  PSU_DDR_PHY_ZQ1PR0_ZPROG_ASYM_DRV_PD                        0xd
+    *  PSU_DDR_PHY_ZQ1PR0_ZPROG_ASYM_DRV_PD                        0xb
 
     * Impedance Divide Ratio (pullup drive calibration during asymmetric drive
     *  strength calibration)
     *  PSU_DDR_PHY_ZQ1PR0_ZPROG_ASYM_DRV_PU                        0xb
 
     * ZQ n Impedance Control Program Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD0806A4, 0xFFFFFFFFU ,0x00087BDBU)
+    * (OFFSET, MASK, VALUE)      (0XFD0806A4, 0xFFFFFFFFU ,0x000073BBU)
     */
-	PSU_Mask_Write(DDR_PHY_ZQ1PR0_OFFSET, 0xFFFFFFFFU, 0x00087BDBU);
+	PSU_Mask_Write(DDR_PHY_ZQ1PR0_OFFSET, 0xFFFFFFFFU, 0x000073BBU);
 /*##################################################################### */
 
     /*
@@ -7654,15 +7649,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX0GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX0GCR4_DXREFIEN                                0xf
+    *  PSU_DDR_PHY_DX0GCR4_DXREFIEN                                0x3
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX0GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080710, 0xFFFFFFFFU ,0x0E00B03CU)
+    * (OFFSET, MASK, VALUE)      (0XFD080710, 0xFFFFFFFFU ,0x0E00B00CU)
     */
-	PSU_Mask_Write(DDR_PHY_DX0GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B03CU);
+	PSU_Mask_Write(DDR_PHY_DX0GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B00CU);
 /*##################################################################### */
 
     /*
@@ -7684,18 +7679,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX0GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX0GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX0GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX0GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX0GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX0GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080714, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080714, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX0GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX0GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -7931,15 +7926,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX1GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX1GCR4_DXREFIEN                                0xf
+    *  PSU_DDR_PHY_DX1GCR4_DXREFIEN                                0x3
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX1GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080810, 0xFFFFFFFFU ,0x0E00B03CU)
+    * (OFFSET, MASK, VALUE)      (0XFD080810, 0xFFFFFFFFU ,0x0E00B00CU)
     */
-	PSU_Mask_Write(DDR_PHY_DX1GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B03CU);
+	PSU_Mask_Write(DDR_PHY_DX1GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B00CU);
 /*##################################################################### */
 
     /*
@@ -7961,18 +7956,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX1GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX1GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX1GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX1GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX1GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX1GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080814, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080814, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX1GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX1GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -8208,15 +8203,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX2GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX2GCR4_DXREFIEN                                0x1
+    *  PSU_DDR_PHY_DX2GCR4_DXREFIEN                                0x3
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX2GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080910, 0xFFFFFFFFU ,0x0E00B004U)
+    * (OFFSET, MASK, VALUE)      (0XFD080910, 0xFFFFFFFFU ,0x0E00B00CU)
     */
-	PSU_Mask_Write(DDR_PHY_DX2GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B004U);
+	PSU_Mask_Write(DDR_PHY_DX2GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B00CU);
 /*##################################################################### */
 
     /*
@@ -8238,18 +8233,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX2GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX2GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX2GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX2GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX2GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX2GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080914, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080914, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX2GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX2GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -8485,15 +8480,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX3GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX3GCR4_DXREFIEN                                0x1
+    *  PSU_DDR_PHY_DX3GCR4_DXREFIEN                                0x3
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX3GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080A10, 0xFFFFFFFFU ,0x0E00B004U)
+    * (OFFSET, MASK, VALUE)      (0XFD080A10, 0xFFFFFFFFU ,0x0E00B00CU)
     */
-	PSU_Mask_Write(DDR_PHY_DX3GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B004U);
+	PSU_Mask_Write(DDR_PHY_DX3GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B00CU);
 /*##################################################################### */
 
     /*
@@ -8515,18 +8510,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX3GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX3GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX3GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX3GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX3GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX3GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080A14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080A14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX3GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX3GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -8566,10 +8561,10 @@ unsigned long psu_ddr_init_data(void)
     * Register : DX4GCR0 @ 0XFD080B00
 
     * Calibration Bypass
-    *  PSU_DDR_PHY_DX4GCR0_CALBYP                                  0x0
+    *  PSU_DDR_PHY_DX4GCR0_CALBYP                                  0x1
 
     * Master Delay Line Enable
-    *  PSU_DDR_PHY_DX4GCR0_MDLEN                                   0x1
+    *  PSU_DDR_PHY_DX4GCR0_MDLEN                                   0x0
 
     * Configurable ODT(TE) Phase Shift
     *  PSU_DDR_PHY_DX4GCR0_CODTSHFT                                0x0
@@ -8585,10 +8580,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR0_RESERVED_19_14                          0x0
 
     * DQSNSE Power Down Receiver
-    *  PSU_DDR_PHY_DX4GCR0_DQSNSEPDR                               0x0
+    *  PSU_DDR_PHY_DX4GCR0_DQSNSEPDR                               0x1
 
     * DQSSE Power Down Receiver
-    *  PSU_DDR_PHY_DX4GCR0_DQSSEPDR                                0x0
+    *  PSU_DDR_PHY_DX4GCR0_DQSSEPDR                                0x1
 
     * RTT On Additive Latency
     *  PSU_DDR_PHY_DX4GCR0_RTTOAL                                  0x0
@@ -8600,10 +8595,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR0_CPDRSHFT                                0x0
 
     * DQSR Power Down
-    *  PSU_DDR_PHY_DX4GCR0_DQSRPD                                  0x0
+    *  PSU_DDR_PHY_DX4GCR0_DQSRPD                                  0x1
 
     * DQSG Power Down Receiver
-    *  PSU_DDR_PHY_DX4GCR0_DQSGPDR                                 0x0
+    *  PSU_DDR_PHY_DX4GCR0_DQSGPDR                                 0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX4GCR0_RESERVED_4                              0x0
@@ -8612,22 +8607,22 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR0_DQSGODT                                 0x0
 
     * DQSG Output Enable
-    *  PSU_DDR_PHY_DX4GCR0_DQSGOE                                  0x1
+    *  PSU_DDR_PHY_DX4GCR0_DQSGOE                                  0x0
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX4GCR0_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080B00, 0xFFFFFFFFU ,0x40800604U)
+    * (OFFSET, MASK, VALUE)      (0XFD080B00, 0xFFFFFFFFU ,0x80803660U)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR0_OFFSET, 0xFFFFFFFFU, 0x40800604U);
+	PSU_Mask_Write(DDR_PHY_DX4GCR0_OFFSET, 0xFFFFFFFFU, 0x80803660U);
 /*##################################################################### */
 
     /*
     * Register : DX4GCR1 @ 0XFD080B04
 
     * Enables the PDR mode for DQ[7:0]
-    *  PSU_DDR_PHY_DX4GCR1_DXPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX4GCR1_DXPDRMODE                               0x5555
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX4GCR1_RESERVED_15                             0x0
@@ -8639,42 +8634,42 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR1_QSSEL                                   0x1
 
     * Enables Read Data Strobe in a byte lane
-    *  PSU_DDR_PHY_DX4GCR1_OEEN                                    0x1
+    *  PSU_DDR_PHY_DX4GCR1_OEEN                                    0x0
 
     * Enables PDR in a byte lane
-    *  PSU_DDR_PHY_DX4GCR1_PDREN                                   0x1
+    *  PSU_DDR_PHY_DX4GCR1_PDREN                                   0x0
 
     * Enables ODT/TE in a byte lane
-    *  PSU_DDR_PHY_DX4GCR1_TEEN                                    0x1
+    *  PSU_DDR_PHY_DX4GCR1_TEEN                                    0x0
 
     * Enables Write Data strobe in a byte lane
-    *  PSU_DDR_PHY_DX4GCR1_DSEN                                    0x1
+    *  PSU_DDR_PHY_DX4GCR1_DSEN                                    0x0
 
     * Enables DM pin in a byte lane
-    *  PSU_DDR_PHY_DX4GCR1_DMEN                                    0x1
+    *  PSU_DDR_PHY_DX4GCR1_DMEN                                    0x0
 
     * Enables DQ corresponding to each bit in a byte
-    *  PSU_DDR_PHY_DX4GCR1_DQEN                                    0xff
+    *  PSU_DDR_PHY_DX4GCR1_DQEN                                    0x0
 
     * DATX8 n General Configuration Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080B04, 0xFFFFFFFFU ,0x00007FFFU)
+    * (OFFSET, MASK, VALUE)      (0XFD080B04, 0xFFFFFFFFU ,0x55556000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR1_OFFSET, 0xFFFFFFFFU, 0x00007FFFU);
+	PSU_Mask_Write(DDR_PHY_DX4GCR1_OFFSET, 0xFFFFFFFFU, 0x55556000U);
 /*##################################################################### */
 
     /*
     * Register : DX4GCR2 @ 0XFD080B08
 
     * Enables the OE mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX4GCR2_DXOEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR2_DXOEMODE                                0xaaaa
 
     * Enables the TE (ODT) mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX4GCR2_DXTEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR2_DXTEMODE                                0xaaaa
 
     * DATX8 n General Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080B08, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080B08, 0xFFFFFFFFU ,0xAAAAAAAAU)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_DX4GCR2_OFFSET, 0xFFFFFFFFU, 0xAAAAAAAAU);
 /*##################################################################### */
 
     /*
@@ -8684,19 +8679,19 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR3_RESERVED_31_30                          0x0
 
     * Read Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX4GCR3_RDBVT                                   0x1
+    *  PSU_DDR_PHY_DX4GCR3_RDBVT                                   0x0
 
     * Write Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX4GCR3_WDBVT                                   0x1
+    *  PSU_DDR_PHY_DX4GCR3_WDBVT                                   0x0
 
     * Read DQS Gating LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX4GCR3_RGLVT                                   0x1
+    *  PSU_DDR_PHY_DX4GCR3_RGLVT                                   0x0
 
     * Read DQS LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX4GCR3_RDLVT                                   0x1
+    *  PSU_DDR_PHY_DX4GCR3_RDLVT                                   0x0
 
     * Write DQ LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX4GCR3_WDLVT                                   0x1
+    *  PSU_DDR_PHY_DX4GCR3_WDLVT                                   0x0
 
     * Write Leveling LCDL Delay VT Compensation
     *  PSU_DDR_PHY_DX4GCR3_WLLVT                                   0x1
@@ -8705,42 +8700,42 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR3_RESERVED_23_22                          0x0
 
     * Enables the OE mode for DQs
-    *  PSU_DDR_PHY_DX4GCR3_DSNOEMODE                               0x0
+    *  PSU_DDR_PHY_DX4GCR3_DSNOEMODE                               0x2
 
     * Enables the TE mode for DQS
-    *  PSU_DDR_PHY_DX4GCR3_DSNTEMODE                               0x0
+    *  PSU_DDR_PHY_DX4GCR3_DSNTEMODE                               0x2
 
     * Enables the PDR mode for DQS
-    *  PSU_DDR_PHY_DX4GCR3_DSNPDRMODE                              0x0
+    *  PSU_DDR_PHY_DX4GCR3_DSNPDRMODE                              0x1
 
     * Enables the OE mode values for DM.
-    *  PSU_DDR_PHY_DX4GCR3_DMOEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR3_DMOEMODE                                0x2
 
     * Enables the TE mode values for DM.
-    *  PSU_DDR_PHY_DX4GCR3_DMTEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR3_DMTEMODE                                0x2
 
     * Enables the PDR mode values for DM.
-    *  PSU_DDR_PHY_DX4GCR3_DMPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX4GCR3_DMPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX4GCR3_RESERVED_9_8                            0x0
 
     * Enables the OE mode values for DQS.
-    *  PSU_DDR_PHY_DX4GCR3_DSOEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR3_DSOEMODE                                0x2
 
     * Enables the TE mode values for DQS.
-    *  PSU_DDR_PHY_DX4GCR3_DSTEMODE                                0x0
+    *  PSU_DDR_PHY_DX4GCR3_DSTEMODE                                0x2
 
     * Enables the PDR mode values for DQS.
-    *  PSU_DDR_PHY_DX4GCR3_DSPDRMODE                               0x2
+    *  PSU_DDR_PHY_DX4GCR3_DSPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX4GCR3_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD080B0C, 0xFFFFFFFFU ,0x3F000008U)
+    * (OFFSET, MASK, VALUE)      (0XFD080B0C, 0xFFFFFFFFU ,0x0129A4A4U)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR3_OFFSET, 0xFFFFFFFFU, 0x3F000008U);
+	PSU_Mask_Write(DDR_PHY_DX4GCR3_OFFSET, 0xFFFFFFFFU, 0x0129A4A4U);
 /*##################################################################### */
 
     /*
@@ -8756,7 +8751,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR4_DXREFEEN                                0x3
 
     * Byte Lane Single-End VREF Enable
-    *  PSU_DDR_PHY_DX4GCR4_DXREFSEN                                0x1
+    *  PSU_DDR_PHY_DX4GCR4_DXREFSEN                                0x0
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX4GCR4_RESERVED_24                             0x0
@@ -8777,15 +8772,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX4GCR4_DXREFIEN                                0x1
+    *  PSU_DDR_PHY_DX4GCR4_DXREFIEN                                0x0
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX4GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080B10, 0xFFFFFFFFU ,0x0E00B004U)
+    * (OFFSET, MASK, VALUE)      (0XFD080B10, 0xFFFFFFFFU ,0x0C00B000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B004U);
+	PSU_Mask_Write(DDR_PHY_DX4GCR4_OFFSET, 0xFFFFFFFFU, 0x0C00B000U);
 /*##################################################################### */
 
     /*
@@ -8807,18 +8802,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX4GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX4GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX4GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX4GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX4GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX4GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080B14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080B14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX4GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX4GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -8858,10 +8853,10 @@ unsigned long psu_ddr_init_data(void)
     * Register : DX5GCR0 @ 0XFD080C00
 
     * Calibration Bypass
-    *  PSU_DDR_PHY_DX5GCR0_CALBYP                                  0x0
+    *  PSU_DDR_PHY_DX5GCR0_CALBYP                                  0x1
 
     * Master Delay Line Enable
-    *  PSU_DDR_PHY_DX5GCR0_MDLEN                                   0x1
+    *  PSU_DDR_PHY_DX5GCR0_MDLEN                                   0x0
 
     * Configurable ODT(TE) Phase Shift
     *  PSU_DDR_PHY_DX5GCR0_CODTSHFT                                0x0
@@ -8877,10 +8872,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR0_RESERVED_19_14                          0x0
 
     * DQSNSE Power Down Receiver
-    *  PSU_DDR_PHY_DX5GCR0_DQSNSEPDR                               0x0
+    *  PSU_DDR_PHY_DX5GCR0_DQSNSEPDR                               0x1
 
     * DQSSE Power Down Receiver
-    *  PSU_DDR_PHY_DX5GCR0_DQSSEPDR                                0x0
+    *  PSU_DDR_PHY_DX5GCR0_DQSSEPDR                                0x1
 
     * RTT On Additive Latency
     *  PSU_DDR_PHY_DX5GCR0_RTTOAL                                  0x0
@@ -8892,10 +8887,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR0_CPDRSHFT                                0x0
 
     * DQSR Power Down
-    *  PSU_DDR_PHY_DX5GCR0_DQSRPD                                  0x0
+    *  PSU_DDR_PHY_DX5GCR0_DQSRPD                                  0x1
 
     * DQSG Power Down Receiver
-    *  PSU_DDR_PHY_DX5GCR0_DQSGPDR                                 0x0
+    *  PSU_DDR_PHY_DX5GCR0_DQSGPDR                                 0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR0_RESERVED_4                              0x0
@@ -8904,22 +8899,22 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR0_DQSGODT                                 0x0
 
     * DQSG Output Enable
-    *  PSU_DDR_PHY_DX5GCR0_DQSGOE                                  0x1
+    *  PSU_DDR_PHY_DX5GCR0_DQSGOE                                  0x0
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR0_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080C00, 0xFFFFFFFFU ,0x40800604U)
+    * (OFFSET, MASK, VALUE)      (0XFD080C00, 0xFFFFFFFFU ,0x80803660U)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR0_OFFSET, 0xFFFFFFFFU, 0x40800604U);
+	PSU_Mask_Write(DDR_PHY_DX5GCR0_OFFSET, 0xFFFFFFFFU, 0x80803660U);
 /*##################################################################### */
 
     /*
     * Register : DX5GCR1 @ 0XFD080C04
 
     * Enables the PDR mode for DQ[7:0]
-    *  PSU_DDR_PHY_DX5GCR1_DXPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX5GCR1_DXPDRMODE                               0x5555
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR1_RESERVED_15                             0x0
@@ -8931,42 +8926,42 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR1_QSSEL                                   0x1
 
     * Enables Read Data Strobe in a byte lane
-    *  PSU_DDR_PHY_DX5GCR1_OEEN                                    0x1
+    *  PSU_DDR_PHY_DX5GCR1_OEEN                                    0x0
 
     * Enables PDR in a byte lane
-    *  PSU_DDR_PHY_DX5GCR1_PDREN                                   0x1
+    *  PSU_DDR_PHY_DX5GCR1_PDREN                                   0x0
 
     * Enables ODT/TE in a byte lane
-    *  PSU_DDR_PHY_DX5GCR1_TEEN                                    0x1
+    *  PSU_DDR_PHY_DX5GCR1_TEEN                                    0x0
 
     * Enables Write Data strobe in a byte lane
-    *  PSU_DDR_PHY_DX5GCR1_DSEN                                    0x1
+    *  PSU_DDR_PHY_DX5GCR1_DSEN                                    0x0
 
     * Enables DM pin in a byte lane
-    *  PSU_DDR_PHY_DX5GCR1_DMEN                                    0x1
+    *  PSU_DDR_PHY_DX5GCR1_DMEN                                    0x0
 
     * Enables DQ corresponding to each bit in a byte
-    *  PSU_DDR_PHY_DX5GCR1_DQEN                                    0xff
+    *  PSU_DDR_PHY_DX5GCR1_DQEN                                    0x0
 
     * DATX8 n General Configuration Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080C04, 0xFFFFFFFFU ,0x00007FFFU)
+    * (OFFSET, MASK, VALUE)      (0XFD080C04, 0xFFFFFFFFU ,0x55556000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR1_OFFSET, 0xFFFFFFFFU, 0x00007FFFU);
+	PSU_Mask_Write(DDR_PHY_DX5GCR1_OFFSET, 0xFFFFFFFFU, 0x55556000U);
 /*##################################################################### */
 
     /*
     * Register : DX5GCR2 @ 0XFD080C08
 
     * Enables the OE mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX5GCR2_DXOEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR2_DXOEMODE                                0xaaaa
 
     * Enables the TE (ODT) mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX5GCR2_DXTEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR2_DXTEMODE                                0xaaaa
 
     * DATX8 n General Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080C08, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080C08, 0xFFFFFFFFU ,0xAAAAAAAAU)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_DX5GCR2_OFFSET, 0xFFFFFFFFU, 0xAAAAAAAAU);
 /*##################################################################### */
 
     /*
@@ -8976,63 +8971,63 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR3_RESERVED_31_30                          0x0
 
     * Read Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_RDBVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_RDBVT                                   0x0
 
     * Write Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_WDBVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_WDBVT                                   0x0
 
     * Read DQS Gating LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_RGLVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_RGLVT                                   0x0
 
     * Read DQS LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_RDLVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_RDLVT                                   0x0
 
     * Write DQ LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_WDLVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_WDLVT                                   0x0
 
     * Write Leveling LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX5GCR3_WLLVT                                   0x1
+    *  PSU_DDR_PHY_DX5GCR3_WLLVT                                   0x0
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR3_RESERVED_23_22                          0x0
 
     * Enables the OE mode for DQs
-    *  PSU_DDR_PHY_DX5GCR3_DSNOEMODE                               0x0
+    *  PSU_DDR_PHY_DX5GCR3_DSNOEMODE                               0x2
 
     * Enables the TE mode for DQS
-    *  PSU_DDR_PHY_DX5GCR3_DSNTEMODE                               0x0
+    *  PSU_DDR_PHY_DX5GCR3_DSNTEMODE                               0x2
 
     * Enables the PDR mode for DQS
-    *  PSU_DDR_PHY_DX5GCR3_DSNPDRMODE                              0x0
+    *  PSU_DDR_PHY_DX5GCR3_DSNPDRMODE                              0x1
 
     * Enables the OE mode values for DM.
-    *  PSU_DDR_PHY_DX5GCR3_DMOEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR3_DMOEMODE                                0x2
 
     * Enables the TE mode values for DM.
-    *  PSU_DDR_PHY_DX5GCR3_DMTEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR3_DMTEMODE                                0x2
 
     * Enables the PDR mode values for DM.
-    *  PSU_DDR_PHY_DX5GCR3_DMPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX5GCR3_DMPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR3_RESERVED_9_8                            0x0
 
     * Enables the OE mode values for DQS.
-    *  PSU_DDR_PHY_DX5GCR3_DSOEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR3_DSOEMODE                                0x2
 
     * Enables the TE mode values for DQS.
-    *  PSU_DDR_PHY_DX5GCR3_DSTEMODE                                0x0
+    *  PSU_DDR_PHY_DX5GCR3_DSTEMODE                                0x2
 
     * Enables the PDR mode values for DQS.
-    *  PSU_DDR_PHY_DX5GCR3_DSPDRMODE                               0x2
+    *  PSU_DDR_PHY_DX5GCR3_DSPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX5GCR3_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD080C0C, 0xFFFFFFFFU ,0x3F000008U)
+    * (OFFSET, MASK, VALUE)      (0XFD080C0C, 0xFFFFFFFFU ,0x0029A4A4U)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR3_OFFSET, 0xFFFFFFFFU, 0x3F000008U);
+	PSU_Mask_Write(DDR_PHY_DX5GCR3_OFFSET, 0xFFFFFFFFU, 0x0029A4A4U);
 /*##################################################################### */
 
     /*
@@ -9048,7 +9043,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR4_DXREFEEN                                0x3
 
     * Byte Lane Single-End VREF Enable
-    *  PSU_DDR_PHY_DX5GCR4_DXREFSEN                                0x1
+    *  PSU_DDR_PHY_DX5GCR4_DXREFSEN                                0x0
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX5GCR4_RESERVED_24                             0x0
@@ -9069,15 +9064,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX5GCR4_DXREFIEN                                0xf
+    *  PSU_DDR_PHY_DX5GCR4_DXREFIEN                                0x0
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX5GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080C10, 0xFFFFFFFFU ,0x0E00B03CU)
+    * (OFFSET, MASK, VALUE)      (0XFD080C10, 0xFFFFFFFFU ,0x0C00B000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B03CU);
+	PSU_Mask_Write(DDR_PHY_DX5GCR4_OFFSET, 0xFFFFFFFFU, 0x0C00B000U);
 /*##################################################################### */
 
     /*
@@ -9099,18 +9094,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX5GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX5GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX5GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX5GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX5GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX5GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080C14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080C14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX5GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX5GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -9150,10 +9145,10 @@ unsigned long psu_ddr_init_data(void)
     * Register : DX6GCR0 @ 0XFD080D00
 
     * Calibration Bypass
-    *  PSU_DDR_PHY_DX6GCR0_CALBYP                                  0x0
+    *  PSU_DDR_PHY_DX6GCR0_CALBYP                                  0x1
 
     * Master Delay Line Enable
-    *  PSU_DDR_PHY_DX6GCR0_MDLEN                                   0x1
+    *  PSU_DDR_PHY_DX6GCR0_MDLEN                                   0x0
 
     * Configurable ODT(TE) Phase Shift
     *  PSU_DDR_PHY_DX6GCR0_CODTSHFT                                0x0
@@ -9169,10 +9164,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR0_RESERVED_19_14                          0x0
 
     * DQSNSE Power Down Receiver
-    *  PSU_DDR_PHY_DX6GCR0_DQSNSEPDR                               0x0
+    *  PSU_DDR_PHY_DX6GCR0_DQSNSEPDR                               0x1
 
     * DQSSE Power Down Receiver
-    *  PSU_DDR_PHY_DX6GCR0_DQSSEPDR                                0x0
+    *  PSU_DDR_PHY_DX6GCR0_DQSSEPDR                                0x1
 
     * RTT On Additive Latency
     *  PSU_DDR_PHY_DX6GCR0_RTTOAL                                  0x0
@@ -9184,10 +9179,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR0_CPDRSHFT                                0x0
 
     * DQSR Power Down
-    *  PSU_DDR_PHY_DX6GCR0_DQSRPD                                  0x0
+    *  PSU_DDR_PHY_DX6GCR0_DQSRPD                                  0x1
 
     * DQSG Power Down Receiver
-    *  PSU_DDR_PHY_DX6GCR0_DQSGPDR                                 0x0
+    *  PSU_DDR_PHY_DX6GCR0_DQSGPDR                                 0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR0_RESERVED_4                              0x0
@@ -9196,22 +9191,22 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR0_DQSGODT                                 0x0
 
     * DQSG Output Enable
-    *  PSU_DDR_PHY_DX6GCR0_DQSGOE                                  0x1
+    *  PSU_DDR_PHY_DX6GCR0_DQSGOE                                  0x0
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR0_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080D00, 0xFFFFFFFFU ,0x40800604U)
+    * (OFFSET, MASK, VALUE)      (0XFD080D00, 0xFFFFFFFFU ,0x80803660U)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR0_OFFSET, 0xFFFFFFFFU, 0x40800604U);
+	PSU_Mask_Write(DDR_PHY_DX6GCR0_OFFSET, 0xFFFFFFFFU, 0x80803660U);
 /*##################################################################### */
 
     /*
     * Register : DX6GCR1 @ 0XFD080D04
 
     * Enables the PDR mode for DQ[7:0]
-    *  PSU_DDR_PHY_DX6GCR1_DXPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX6GCR1_DXPDRMODE                               0x5555
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR1_RESERVED_15                             0x0
@@ -9223,42 +9218,42 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR1_QSSEL                                   0x1
 
     * Enables Read Data Strobe in a byte lane
-    *  PSU_DDR_PHY_DX6GCR1_OEEN                                    0x1
+    *  PSU_DDR_PHY_DX6GCR1_OEEN                                    0x0
 
     * Enables PDR in a byte lane
-    *  PSU_DDR_PHY_DX6GCR1_PDREN                                   0x1
+    *  PSU_DDR_PHY_DX6GCR1_PDREN                                   0x0
 
     * Enables ODT/TE in a byte lane
-    *  PSU_DDR_PHY_DX6GCR1_TEEN                                    0x1
+    *  PSU_DDR_PHY_DX6GCR1_TEEN                                    0x0
 
     * Enables Write Data strobe in a byte lane
-    *  PSU_DDR_PHY_DX6GCR1_DSEN                                    0x1
+    *  PSU_DDR_PHY_DX6GCR1_DSEN                                    0x0
 
     * Enables DM pin in a byte lane
-    *  PSU_DDR_PHY_DX6GCR1_DMEN                                    0x1
+    *  PSU_DDR_PHY_DX6GCR1_DMEN                                    0x0
 
     * Enables DQ corresponding to each bit in a byte
-    *  PSU_DDR_PHY_DX6GCR1_DQEN                                    0xff
+    *  PSU_DDR_PHY_DX6GCR1_DQEN                                    0x0
 
     * DATX8 n General Configuration Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080D04, 0xFFFFFFFFU ,0x00007FFFU)
+    * (OFFSET, MASK, VALUE)      (0XFD080D04, 0xFFFFFFFFU ,0x55556000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR1_OFFSET, 0xFFFFFFFFU, 0x00007FFFU);
+	PSU_Mask_Write(DDR_PHY_DX6GCR1_OFFSET, 0xFFFFFFFFU, 0x55556000U);
 /*##################################################################### */
 
     /*
     * Register : DX6GCR2 @ 0XFD080D08
 
     * Enables the OE mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX6GCR2_DXOEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR2_DXOEMODE                                0xaaaa
 
     * Enables the TE (ODT) mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX6GCR2_DXTEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR2_DXTEMODE                                0xaaaa
 
     * DATX8 n General Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080D08, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080D08, 0xFFFFFFFFU ,0xAAAAAAAAU)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_DX6GCR2_OFFSET, 0xFFFFFFFFU, 0xAAAAAAAAU);
 /*##################################################################### */
 
     /*
@@ -9268,63 +9263,63 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR3_RESERVED_31_30                          0x0
 
     * Read Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_RDBVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_RDBVT                                   0x0
 
     * Write Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_WDBVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_WDBVT                                   0x0
 
     * Read DQS Gating LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_RGLVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_RGLVT                                   0x0
 
     * Read DQS LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_RDLVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_RDLVT                                   0x0
 
     * Write DQ LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_WDLVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_WDLVT                                   0x0
 
     * Write Leveling LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX6GCR3_WLLVT                                   0x1
+    *  PSU_DDR_PHY_DX6GCR3_WLLVT                                   0x0
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR3_RESERVED_23_22                          0x0
 
     * Enables the OE mode for DQs
-    *  PSU_DDR_PHY_DX6GCR3_DSNOEMODE                               0x0
+    *  PSU_DDR_PHY_DX6GCR3_DSNOEMODE                               0x2
 
     * Enables the TE mode for DQS
-    *  PSU_DDR_PHY_DX6GCR3_DSNTEMODE                               0x0
+    *  PSU_DDR_PHY_DX6GCR3_DSNTEMODE                               0x2
 
     * Enables the PDR mode for DQS
-    *  PSU_DDR_PHY_DX6GCR3_DSNPDRMODE                              0x0
+    *  PSU_DDR_PHY_DX6GCR3_DSNPDRMODE                              0x1
 
     * Enables the OE mode values for DM.
-    *  PSU_DDR_PHY_DX6GCR3_DMOEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR3_DMOEMODE                                0x2
 
     * Enables the TE mode values for DM.
-    *  PSU_DDR_PHY_DX6GCR3_DMTEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR3_DMTEMODE                                0x2
 
     * Enables the PDR mode values for DM.
-    *  PSU_DDR_PHY_DX6GCR3_DMPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX6GCR3_DMPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR3_RESERVED_9_8                            0x0
 
     * Enables the OE mode values for DQS.
-    *  PSU_DDR_PHY_DX6GCR3_DSOEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR3_DSOEMODE                                0x2
 
     * Enables the TE mode values for DQS.
-    *  PSU_DDR_PHY_DX6GCR3_DSTEMODE                                0x0
+    *  PSU_DDR_PHY_DX6GCR3_DSTEMODE                                0x2
 
     * Enables the PDR mode values for DQS.
-    *  PSU_DDR_PHY_DX6GCR3_DSPDRMODE                               0x2
+    *  PSU_DDR_PHY_DX6GCR3_DSPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX6GCR3_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD080D0C, 0xFFFFFFFFU ,0x3F000008U)
+    * (OFFSET, MASK, VALUE)      (0XFD080D0C, 0xFFFFFFFFU ,0x0029A4A4U)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR3_OFFSET, 0xFFFFFFFFU, 0x3F000008U);
+	PSU_Mask_Write(DDR_PHY_DX6GCR3_OFFSET, 0xFFFFFFFFU, 0x0029A4A4U);
 /*##################################################################### */
 
     /*
@@ -9340,7 +9335,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR4_DXREFEEN                                0x3
 
     * Byte Lane Single-End VREF Enable
-    *  PSU_DDR_PHY_DX6GCR4_DXREFSEN                                0x1
+    *  PSU_DDR_PHY_DX6GCR4_DXREFSEN                                0x0
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX6GCR4_RESERVED_24                             0x0
@@ -9361,15 +9356,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX6GCR4_DXREFIEN                                0x1
+    *  PSU_DDR_PHY_DX6GCR4_DXREFIEN                                0x0
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX6GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080D10, 0xFFFFFFFFU ,0x0E00B004U)
+    * (OFFSET, MASK, VALUE)      (0XFD080D10, 0xFFFFFFFFU ,0x0C00B000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B004U);
+	PSU_Mask_Write(DDR_PHY_DX6GCR4_OFFSET, 0xFFFFFFFFU, 0x0C00B000U);
 /*##################################################################### */
 
     /*
@@ -9391,18 +9386,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX6GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX6GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX6GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX6GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX6GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX6GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080D14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080D14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX6GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX6GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -9442,10 +9437,10 @@ unsigned long psu_ddr_init_data(void)
     * Register : DX7GCR0 @ 0XFD080E00
 
     * Calibration Bypass
-    *  PSU_DDR_PHY_DX7GCR0_CALBYP                                  0x0
+    *  PSU_DDR_PHY_DX7GCR0_CALBYP                                  0x1
 
     * Master Delay Line Enable
-    *  PSU_DDR_PHY_DX7GCR0_MDLEN                                   0x1
+    *  PSU_DDR_PHY_DX7GCR0_MDLEN                                   0x0
 
     * Configurable ODT(TE) Phase Shift
     *  PSU_DDR_PHY_DX7GCR0_CODTSHFT                                0x0
@@ -9461,10 +9456,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR0_RESERVED_19_14                          0x0
 
     * DQSNSE Power Down Receiver
-    *  PSU_DDR_PHY_DX7GCR0_DQSNSEPDR                               0x0
+    *  PSU_DDR_PHY_DX7GCR0_DQSNSEPDR                               0x1
 
     * DQSSE Power Down Receiver
-    *  PSU_DDR_PHY_DX7GCR0_DQSSEPDR                                0x0
+    *  PSU_DDR_PHY_DX7GCR0_DQSSEPDR                                0x1
 
     * RTT On Additive Latency
     *  PSU_DDR_PHY_DX7GCR0_RTTOAL                                  0x0
@@ -9476,10 +9471,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR0_CPDRSHFT                                0x0
 
     * DQSR Power Down
-    *  PSU_DDR_PHY_DX7GCR0_DQSRPD                                  0x0
+    *  PSU_DDR_PHY_DX7GCR0_DQSRPD                                  0x1
 
     * DQSG Power Down Receiver
-    *  PSU_DDR_PHY_DX7GCR0_DQSGPDR                                 0x0
+    *  PSU_DDR_PHY_DX7GCR0_DQSGPDR                                 0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR0_RESERVED_4                              0x0
@@ -9488,22 +9483,22 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR0_DQSGODT                                 0x0
 
     * DQSG Output Enable
-    *  PSU_DDR_PHY_DX7GCR0_DQSGOE                                  0x1
+    *  PSU_DDR_PHY_DX7GCR0_DQSGOE                                  0x0
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR0_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD080E00, 0xFFFFFFFFU ,0x40800604U)
+    * (OFFSET, MASK, VALUE)      (0XFD080E00, 0xFFFFFFFFU ,0x80803660U)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR0_OFFSET, 0xFFFFFFFFU, 0x40800604U);
+	PSU_Mask_Write(DDR_PHY_DX7GCR0_OFFSET, 0xFFFFFFFFU, 0x80803660U);
 /*##################################################################### */
 
     /*
     * Register : DX7GCR1 @ 0XFD080E04
 
     * Enables the PDR mode for DQ[7:0]
-    *  PSU_DDR_PHY_DX7GCR1_DXPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX7GCR1_DXPDRMODE                               0x5555
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR1_RESERVED_15                             0x0
@@ -9515,42 +9510,42 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR1_QSSEL                                   0x1
 
     * Enables Read Data Strobe in a byte lane
-    *  PSU_DDR_PHY_DX7GCR1_OEEN                                    0x1
+    *  PSU_DDR_PHY_DX7GCR1_OEEN                                    0x0
 
     * Enables PDR in a byte lane
-    *  PSU_DDR_PHY_DX7GCR1_PDREN                                   0x1
+    *  PSU_DDR_PHY_DX7GCR1_PDREN                                   0x0
 
     * Enables ODT/TE in a byte lane
-    *  PSU_DDR_PHY_DX7GCR1_TEEN                                    0x1
+    *  PSU_DDR_PHY_DX7GCR1_TEEN                                    0x0
 
     * Enables Write Data strobe in a byte lane
-    *  PSU_DDR_PHY_DX7GCR1_DSEN                                    0x1
+    *  PSU_DDR_PHY_DX7GCR1_DSEN                                    0x0
 
     * Enables DM pin in a byte lane
-    *  PSU_DDR_PHY_DX7GCR1_DMEN                                    0x1
+    *  PSU_DDR_PHY_DX7GCR1_DMEN                                    0x0
 
     * Enables DQ corresponding to each bit in a byte
-    *  PSU_DDR_PHY_DX7GCR1_DQEN                                    0xff
+    *  PSU_DDR_PHY_DX7GCR1_DQEN                                    0x0
 
     * DATX8 n General Configuration Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD080E04, 0xFFFFFFFFU ,0x00007FFFU)
+    * (OFFSET, MASK, VALUE)      (0XFD080E04, 0xFFFFFFFFU ,0x55556000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR1_OFFSET, 0xFFFFFFFFU, 0x00007FFFU);
+	PSU_Mask_Write(DDR_PHY_DX7GCR1_OFFSET, 0xFFFFFFFFU, 0x55556000U);
 /*##################################################################### */
 
     /*
     * Register : DX7GCR2 @ 0XFD080E08
 
     * Enables the OE mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX7GCR2_DXOEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR2_DXOEMODE                                0xaaaa
 
     * Enables the TE (ODT) mode values for DQ[7:0]
-    *  PSU_DDR_PHY_DX7GCR2_DXTEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR2_DXTEMODE                                0xaaaa
 
     * DATX8 n General Configuration Register 2
-    * (OFFSET, MASK, VALUE)      (0XFD080E08, 0xFFFFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD080E08, 0xFFFFFFFFU ,0xAAAAAAAAU)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR2_OFFSET, 0xFFFFFFFFU, 0x00000000U);
+	PSU_Mask_Write(DDR_PHY_DX7GCR2_OFFSET, 0xFFFFFFFFU, 0xAAAAAAAAU);
 /*##################################################################### */
 
     /*
@@ -9560,63 +9555,63 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR3_RESERVED_31_30                          0x0
 
     * Read Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_RDBVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_RDBVT                                   0x0
 
     * Write Data BDL VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_WDBVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_WDBVT                                   0x0
 
     * Read DQS Gating LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_RGLVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_RGLVT                                   0x0
 
     * Read DQS LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_RDLVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_RDLVT                                   0x0
 
     * Write DQ LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_WDLVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_WDLVT                                   0x0
 
     * Write Leveling LCDL Delay VT Compensation
-    *  PSU_DDR_PHY_DX7GCR3_WLLVT                                   0x1
+    *  PSU_DDR_PHY_DX7GCR3_WLLVT                                   0x0
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR3_RESERVED_23_22                          0x0
 
     * Enables the OE mode for DQs
-    *  PSU_DDR_PHY_DX7GCR3_DSNOEMODE                               0x0
+    *  PSU_DDR_PHY_DX7GCR3_DSNOEMODE                               0x2
 
     * Enables the TE mode for DQS
-    *  PSU_DDR_PHY_DX7GCR3_DSNTEMODE                               0x0
+    *  PSU_DDR_PHY_DX7GCR3_DSNTEMODE                               0x2
 
     * Enables the PDR mode for DQS
-    *  PSU_DDR_PHY_DX7GCR3_DSNPDRMODE                              0x0
+    *  PSU_DDR_PHY_DX7GCR3_DSNPDRMODE                              0x1
 
     * Enables the OE mode values for DM.
-    *  PSU_DDR_PHY_DX7GCR3_DMOEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR3_DMOEMODE                                0x2
 
     * Enables the TE mode values for DM.
-    *  PSU_DDR_PHY_DX7GCR3_DMTEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR3_DMTEMODE                                0x2
 
     * Enables the PDR mode values for DM.
-    *  PSU_DDR_PHY_DX7GCR3_DMPDRMODE                               0x0
+    *  PSU_DDR_PHY_DX7GCR3_DMPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR3_RESERVED_9_8                            0x0
 
     * Enables the OE mode values for DQS.
-    *  PSU_DDR_PHY_DX7GCR3_DSOEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR3_DSOEMODE                                0x2
 
     * Enables the TE mode values for DQS.
-    *  PSU_DDR_PHY_DX7GCR3_DSTEMODE                                0x0
+    *  PSU_DDR_PHY_DX7GCR3_DSTEMODE                                0x2
 
     * Enables the PDR mode values for DQS.
-    *  PSU_DDR_PHY_DX7GCR3_DSPDRMODE                               0x2
+    *  PSU_DDR_PHY_DX7GCR3_DSPDRMODE                               0x1
 
     * Reserved. Returns zeroes on reads.
     *  PSU_DDR_PHY_DX7GCR3_RESERVED_1_0                            0x0
 
     * DATX8 n General Configuration Register 3
-    * (OFFSET, MASK, VALUE)      (0XFD080E0C, 0xFFFFFFFFU ,0x3F000008U)
+    * (OFFSET, MASK, VALUE)      (0XFD080E0C, 0xFFFFFFFFU ,0x0029A4A4U)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR3_OFFSET, 0xFFFFFFFFU, 0x3F000008U);
+	PSU_Mask_Write(DDR_PHY_DX7GCR3_OFFSET, 0xFFFFFFFFU, 0x0029A4A4U);
 /*##################################################################### */
 
     /*
@@ -9632,7 +9627,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR4_DXREFEEN                                0x3
 
     * Byte Lane Single-End VREF Enable
-    *  PSU_DDR_PHY_DX7GCR4_DXREFSEN                                0x1
+    *  PSU_DDR_PHY_DX7GCR4_DXREFSEN                                0x0
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX7GCR4_RESERVED_24                             0x0
@@ -9653,15 +9648,15 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR4_RESERVED_7_6                            0x0
 
     * VREF Enable control for DQ IO (Single Ended) buffers of a byte lane.
-    *  PSU_DDR_PHY_DX7GCR4_DXREFIEN                                0xf
+    *  PSU_DDR_PHY_DX7GCR4_DXREFIEN                                0x0
 
     * VRMON control for DQ IO (Single Ended) buffers of a byte lane.
     *  PSU_DDR_PHY_DX7GCR4_DXREFIMON                               0x0
 
     * DATX8 n General Configuration Register 4
-    * (OFFSET, MASK, VALUE)      (0XFD080E10, 0xFFFFFFFFU ,0x0E00B03CU)
+    * (OFFSET, MASK, VALUE)      (0XFD080E10, 0xFFFFFFFFU ,0x0C00B000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR4_OFFSET, 0xFFFFFFFFU, 0x0E00B03CU);
+	PSU_Mask_Write(DDR_PHY_DX7GCR4_OFFSET, 0xFFFFFFFFU, 0x0C00B000U);
 /*##################################################################### */
 
     /*
@@ -9683,18 +9678,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX7GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX7GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX7GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX7GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX7GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX7GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080E14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080E14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX7GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX7GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -9975,18 +9970,18 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8GCR5_RESERVED_15                             0x0
 
     * Byte Lane internal VREF Select for Rank 1
-    *  PSU_DDR_PHY_DX8GCR5_DXREFISELR1                             0x55
+    *  PSU_DDR_PHY_DX8GCR5_DXREFISELR1                             0x3f
 
     * Reserved. Returns zeros on reads.
     *  PSU_DDR_PHY_DX8GCR5_RESERVED_7                              0x0
 
     * Byte Lane internal VREF Select for Rank 0
-    *  PSU_DDR_PHY_DX8GCR5_DXREFISELR0                             0x55
+    *  PSU_DDR_PHY_DX8GCR5_DXREFISELR0                             0x3f
 
     * DATX8 n General Configuration Register 5
-    * (OFFSET, MASK, VALUE)      (0XFD080F14, 0xFFFFFFFFU ,0x09095555U)
+    * (OFFSET, MASK, VALUE)      (0XFD080F14, 0xFFFFFFFFU ,0x09093F3FU)
     */
-	PSU_Mask_Write(DDR_PHY_DX8GCR5_OFFSET, 0xFFFFFFFFU, 0x09095555U);
+	PSU_Mask_Write(DDR_PHY_DX8GCR5_OFFSET, 0xFFFFFFFFU, 0x09093F3FU);
 /*##################################################################### */
 
     /*
@@ -10106,7 +10101,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL0PLLCR0_RSTOPM                             0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_DX8SL0PLLCR0_FRQSEL                             0x1
+    *  PSU_DDR_PHY_DX8SL0PLLCR0_FRQSEL                             0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_DX8SL0PLLCR0_RLOCKM                             0x0
@@ -10115,7 +10110,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL0PLLCR0_CPPC                               0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_DX8SL0PLLCR0_CPIC                               0x0
+    *  PSU_DDR_PHY_DX8SL0PLLCR0_CPIC                               0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_DX8SL0PLLCR0_GSHIFT                             0x0
@@ -10133,10 +10128,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL0PLLCR0_DTC                                0x0
 
     * DAXT8 0-1 PLL Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD081404, 0xFFFFFFFFU ,0x01100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD081404, 0xFFFFFFFFU ,0x05102000U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL0PLLCR0_OFFSET,
-		0xFFFFFFFFU, 0x01100000U);
+		0xFFFFFFFFU, 0x05102000U);
 /*##################################################################### */
 
     /*
@@ -10360,7 +10355,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL1PLLCR0_RSTOPM                             0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_DX8SL1PLLCR0_FRQSEL                             0x1
+    *  PSU_DDR_PHY_DX8SL1PLLCR0_FRQSEL                             0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_DX8SL1PLLCR0_RLOCKM                             0x0
@@ -10369,7 +10364,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL1PLLCR0_CPPC                               0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_DX8SL1PLLCR0_CPIC                               0x0
+    *  PSU_DDR_PHY_DX8SL1PLLCR0_CPIC                               0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_DX8SL1PLLCR0_GSHIFT                             0x0
@@ -10387,10 +10382,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL1PLLCR0_DTC                                0x0
 
     * DAXT8 0-1 PLL Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD081444, 0xFFFFFFFFU ,0x01100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD081444, 0xFFFFFFFFU ,0x05102000U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL1PLLCR0_OFFSET,
-		0xFFFFFFFFU, 0x01100000U);
+		0xFFFFFFFFU, 0x05102000U);
 /*##################################################################### */
 
     /*
@@ -10537,13 +10532,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2OSC_RESERVED_31_30                        0x0
 
     * Enable Clock Gating for DX ddr_clk
-    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXRDCLK                           0x2
+    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXRDCLK                           0x1
 
     * Enable Clock Gating for DX ctl_rd_clk
-    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXDDRCLK                          0x2
+    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXDDRCLK                          0x1
 
     * Enable Clock Gating for DX ctl_clk
-    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXCTLCLK                          0x2
+    *  PSU_DDR_PHY_DX8SL2OSC_GATEDXCTLCLK                          0x1
 
     * Selects the level to which clocks will be stalled when clock gating is e
     * nabled.
@@ -10593,9 +10588,9 @@ unsigned long psu_ddr_init_data(void)
 
     * DATX8 0-1 Oscillator, Delay Line Test, PHY FIFO and High Speed Reset, Lo
     * opback, and Gated Clock Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD081480, 0xFFFFFFFFU ,0x2A019FFEU)
+    * (OFFSET, MASK, VALUE)      (0XFD081480, 0xFFFFFFFFU ,0x15019FFEU)
     */
-	PSU_Mask_Write(DDR_PHY_DX8SL2OSC_OFFSET, 0xFFFFFFFFU, 0x2A019FFEU);
+	PSU_Mask_Write(DDR_PHY_DX8SL2OSC_OFFSET, 0xFFFFFFFFU, 0x15019FFEU);
 /*##################################################################### */
 
     /*
@@ -10608,13 +10603,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2PLLCR0_PLLRST                             0x0
 
     * PLL Power Down
-    *  PSU_DDR_PHY_DX8SL2PLLCR0_PLLPD                              0x0
+    *  PSU_DDR_PHY_DX8SL2PLLCR0_PLLPD                              0x1
 
     * Reference Stop Mode
     *  PSU_DDR_PHY_DX8SL2PLLCR0_RSTOPM                             0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_DX8SL2PLLCR0_FRQSEL                             0x1
+    *  PSU_DDR_PHY_DX8SL2PLLCR0_FRQSEL                             0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_DX8SL2PLLCR0_RLOCKM                             0x0
@@ -10623,7 +10618,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2PLLCR0_CPPC                               0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_DX8SL2PLLCR0_CPIC                               0x0
+    *  PSU_DDR_PHY_DX8SL2PLLCR0_CPIC                               0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_DX8SL2PLLCR0_GSHIFT                             0x0
@@ -10641,10 +10636,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2PLLCR0_DTC                                0x0
 
     * DAXT8 0-1 PLL Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD081484, 0xFFFFFFFFU ,0x01100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD081484, 0xFFFFFFFFU ,0x25102000U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL2PLLCR0_OFFSET,
-		0xFFFFFFFFU, 0x01100000U);
+		0xFFFFFFFFU, 0x25102000U);
 /*##################################################################### */
 
     /*
@@ -10678,7 +10673,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2DQSCTL_QSCNTEN                            0x1
 
     * Unused DQ I/O Mode
-    *  PSU_DDR_PHY_DX8SL2DQSCTL_UDQIOM                             0x0
+    *  PSU_DDR_PHY_DX8SL2DQSCTL_UDQIOM                             0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX8SL2DQSCTL_RESERVED_12_10                     0x0
@@ -10693,10 +10688,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2DQSCTL_DQSRES                             0x0
 
     * DATX8 0-1 DQS Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD08149C, 0xFFFFFFFFU ,0x01264300U)
+    * (OFFSET, MASK, VALUE)      (0XFD08149C, 0xFFFFFFFFU ,0x01266300U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL2DQSCTL_OFFSET,
-		0xFFFFFFFFU, 0x01264300U);
+		0xFFFFFFFFU, 0x01266300U);
 /*##################################################################### */
 
     /*
@@ -10770,7 +10765,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2IOCR_DXVREFIOM                            0x0
 
     * DX IO Mode
-    *  PSU_DDR_PHY_DX8SL2IOCR_DXIOM                                0x2
+    *  PSU_DDR_PHY_DX8SL2IOCR_DXIOM                                0x1
 
     * DX IO Transmitter Mode
     *  PSU_DDR_PHY_DX8SL2IOCR_DXTXM                                0x0
@@ -10779,9 +10774,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL2IOCR_DXRXM                                0x0
 
     * DATX8 0-1 I/O Configuration Register
-    * (OFFSET, MASK, VALUE)      (0XFD0814B0, 0xFFFFFFFFU ,0x70800000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0814B0, 0xFFFFFFFFU ,0x70400000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX8SL2IOCR_OFFSET, 0xFFFFFFFFU, 0x70800000U);
+	PSU_Mask_Write(DDR_PHY_DX8SL2IOCR_OFFSET, 0xFFFFFFFFU, 0x70400000U);
 /*##################################################################### */
 
     /*
@@ -10791,13 +10786,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3OSC_RESERVED_31_30                        0x0
 
     * Enable Clock Gating for DX ddr_clk
-    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXRDCLK                           0x2
+    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXRDCLK                           0x1
 
     * Enable Clock Gating for DX ctl_rd_clk
-    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXDDRCLK                          0x2
+    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXDDRCLK                          0x1
 
     * Enable Clock Gating for DX ctl_clk
-    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXCTLCLK                          0x2
+    *  PSU_DDR_PHY_DX8SL3OSC_GATEDXCTLCLK                          0x1
 
     * Selects the level to which clocks will be stalled when clock gating is e
     * nabled.
@@ -10847,9 +10842,9 @@ unsigned long psu_ddr_init_data(void)
 
     * DATX8 0-1 Oscillator, Delay Line Test, PHY FIFO and High Speed Reset, Lo
     * opback, and Gated Clock Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD0814C0, 0xFFFFFFFFU ,0x2A019FFEU)
+    * (OFFSET, MASK, VALUE)      (0XFD0814C0, 0xFFFFFFFFU ,0x15019FFEU)
     */
-	PSU_Mask_Write(DDR_PHY_DX8SL3OSC_OFFSET, 0xFFFFFFFFU, 0x2A019FFEU);
+	PSU_Mask_Write(DDR_PHY_DX8SL3OSC_OFFSET, 0xFFFFFFFFU, 0x15019FFEU);
 /*##################################################################### */
 
     /*
@@ -10862,13 +10857,13 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3PLLCR0_PLLRST                             0x0
 
     * PLL Power Down
-    *  PSU_DDR_PHY_DX8SL3PLLCR0_PLLPD                              0x0
+    *  PSU_DDR_PHY_DX8SL3PLLCR0_PLLPD                              0x1
 
     * Reference Stop Mode
     *  PSU_DDR_PHY_DX8SL3PLLCR0_RSTOPM                             0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_DX8SL3PLLCR0_FRQSEL                             0x1
+    *  PSU_DDR_PHY_DX8SL3PLLCR0_FRQSEL                             0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_DX8SL3PLLCR0_RLOCKM                             0x0
@@ -10877,7 +10872,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3PLLCR0_CPPC                               0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_DX8SL3PLLCR0_CPIC                               0x0
+    *  PSU_DDR_PHY_DX8SL3PLLCR0_CPIC                               0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_DX8SL3PLLCR0_GSHIFT                             0x0
@@ -10895,10 +10890,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3PLLCR0_DTC                                0x0
 
     * DAXT8 0-1 PLL Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD0814C4, 0xFFFFFFFFU ,0x01100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0814C4, 0xFFFFFFFFU ,0x25102000U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL3PLLCR0_OFFSET,
-		0xFFFFFFFFU, 0x01100000U);
+		0xFFFFFFFFU, 0x25102000U);
 /*##################################################################### */
 
     /*
@@ -10932,7 +10927,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3DQSCTL_QSCNTEN                            0x1
 
     * Unused DQ I/O Mode
-    *  PSU_DDR_PHY_DX8SL3DQSCTL_UDQIOM                             0x0
+    *  PSU_DDR_PHY_DX8SL3DQSCTL_UDQIOM                             0x1
 
     * Reserved. Return zeroes on reads.
     *  PSU_DDR_PHY_DX8SL3DQSCTL_RESERVED_12_10                     0x0
@@ -10947,10 +10942,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3DQSCTL_DQSRES                             0x0
 
     * DATX8 0-1 DQS Control Register
-    * (OFFSET, MASK, VALUE)      (0XFD0814DC, 0xFFFFFFFFU ,0x01264300U)
+    * (OFFSET, MASK, VALUE)      (0XFD0814DC, 0xFFFFFFFFU ,0x01266300U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL3DQSCTL_OFFSET,
-		0xFFFFFFFFU, 0x01264300U);
+		0xFFFFFFFFU, 0x01266300U);
 /*##################################################################### */
 
     /*
@@ -11024,7 +11019,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3IOCR_DXVREFIOM                            0x0
 
     * DX IO Mode
-    *  PSU_DDR_PHY_DX8SL3IOCR_DXIOM                                0x2
+    *  PSU_DDR_PHY_DX8SL3IOCR_DXIOM                                0x1
 
     * DX IO Transmitter Mode
     *  PSU_DDR_PHY_DX8SL3IOCR_DXTXM                                0x0
@@ -11033,9 +11028,9 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL3IOCR_DXRXM                                0x0
 
     * DATX8 0-1 I/O Configuration Register
-    * (OFFSET, MASK, VALUE)      (0XFD0814F0, 0xFFFFFFFFU ,0x70800000U)
+    * (OFFSET, MASK, VALUE)      (0XFD0814F0, 0xFFFFFFFFU ,0x70400000U)
     */
-	PSU_Mask_Write(DDR_PHY_DX8SL3IOCR_OFFSET, 0xFFFFFFFFU, 0x70800000U);
+	PSU_Mask_Write(DDR_PHY_DX8SL3IOCR_OFFSET, 0xFFFFFFFFU, 0x70400000U);
 /*##################################################################### */
 
     /*
@@ -11122,7 +11117,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL4PLLCR0_RSTOPM                             0x0
 
     * PLL Frequency Select
-    *  PSU_DDR_PHY_DX8SL4PLLCR0_FRQSEL                             0x1
+    *  PSU_DDR_PHY_DX8SL4PLLCR0_FRQSEL                             0x5
 
     * Relock Mode
     *  PSU_DDR_PHY_DX8SL4PLLCR0_RLOCKM                             0x0
@@ -11131,7 +11126,7 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL4PLLCR0_CPPC                               0x8
 
     * Charge Pump Integrating Current Control
-    *  PSU_DDR_PHY_DX8SL4PLLCR0_CPIC                               0x0
+    *  PSU_DDR_PHY_DX8SL4PLLCR0_CPIC                               0x1
 
     * Gear Shift
     *  PSU_DDR_PHY_DX8SL4PLLCR0_GSHIFT                             0x0
@@ -11149,10 +11144,10 @@ unsigned long psu_ddr_init_data(void)
     *  PSU_DDR_PHY_DX8SL4PLLCR0_DTC                                0x0
 
     * DAXT8 0-1 PLL Control Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD081504, 0xFFFFFFFFU ,0x21100000U)
+    * (OFFSET, MASK, VALUE)      (0XFD081504, 0xFFFFFFFFU ,0x25102000U)
     */
 	PSU_Mask_Write(DDR_PHY_DX8SL4PLLCR0_OFFSET,
-		0xFFFFFFFFU, 0x21100000U);
+		0xFFFFFFFFU, 0x25102000U);
 /*##################################################################### */
 
     /*
@@ -11293,6 +11288,55 @@ unsigned long psu_ddr_init_data(void)
 /*##################################################################### */
 
     /*
+    * Register : DX8SLbPLLCR0 @ 0XFD0817C4
+
+    * PLL Bypass
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_PLLBYP                             0x0
+
+    * PLL Reset
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_PLLRST                             0x0
+
+    * PLL Power Down
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_PLLPD                              0x0
+
+    * Reference Stop Mode
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_RSTOPM                             0x0
+
+    * PLL Frequency Select
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_FRQSEL                             0x5
+
+    * Relock Mode
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_RLOCKM                             0x0
+
+    * Charge Pump Proportional Current Control
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_CPPC                               0x8
+
+    * Charge Pump Integrating Current Control
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_CPIC                               0x1
+
+    * Gear Shift
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_GSHIFT                             0x0
+
+    * Reserved. Return zeroes on reads.
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_RESERVED_11_9                      0x0
+
+    * Analog Test Enable (ATOEN)
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_ATOEN                              0x0
+
+    * Analog Test Control
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_ATC                                0x0
+
+    * Digital Test Control
+    *  PSU_DDR_PHY_DX8SLBPLLCR0_DTC                                0x0
+
+    * DAXT8 0-8 PLL Control Register 0
+    * (OFFSET, MASK, VALUE)      (0XFD0817C4, 0xFFFFFFFFU ,0x05102000U)
+    */
+	PSU_Mask_Write(DDR_PHY_DX8SLBPLLCR0_OFFSET,
+		0xFFFFFFFFU, 0x05102000U);
+/*##################################################################### */
+
+    /*
     * Register : DX8SLbDQSCTL @ 0XFD0817DC
 
     * Reserved. Return zeroes on reads.
@@ -11349,191 +11393,6 @@ unsigned long psu_ddr_init_data(void)
 }
 unsigned long psu_ddr_qos_init_data(void)
 {
-    /*
-    * AFI INTERCONNECT QOS CONFIGURATION
-    */
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD360008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM0_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD360008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM0_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD36001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM0_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD36001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM0_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD370008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM1_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD370008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM1_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD37001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM1_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD37001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM1_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD380008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM2_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD380008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM2_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD38001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM2_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD38001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM2_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD390008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM3_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD390008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM3_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD39001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM3_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD39001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM3_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD3A0008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM4_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD3A0008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM4_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD3A001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM4_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD3A001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM4_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFD3B0008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM5_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD3B0008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM5_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFD3B001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM5_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFD3B001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM5_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_RDQoS @ 0XFF9B0008
-
-    * Sets the level of the QoS field to be used for the read channel 4'b0000:
-    *  Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM6_AFIFM_RDQOS_VALUE                                0
-
-    * QoS Read Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFF9B0008, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM6_AFIFM_RDQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : AFIFM_WRQoS @ 0XFF9B001C
-
-    * Sets the level of the QoS field to be used for the write channel 4'b0000
-    * : Lowest Priority' ' '4'b1111: Highest Priority
-    *  PSU_AFIFM6_AFIFM_WRQOS_VALUE                                0
-
-    * QoS Write Channel Register
-    * (OFFSET, MASK, VALUE)      (0XFF9B001C, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(AFIFM6_AFIFM_WRQOS_OFFSET, 0x0000000FU, 0x00000000U);
-/*##################################################################### */
-
 
 	return 1;
 }
@@ -12415,7 +12274,7 @@ unsigned long psu_mio_init_data(void)
     *  GPI) 2= test_scan, Input, test_scan_in[27]- (Test Scan Port) = test_sca
     * n, Output, test_scan_out[27]- (Test Scan Port) 3= dpaux, Input, dp_aux_d
     * ata_in- (Dp Aux Data) = dpaux, Output, dp_aux_data_out- (Dp Aux Data)
-    *  PSU_IOU_SLCR_MIO_PIN_27_L2_SEL                              3
+    *  PSU_IOU_SLCR_MIO_PIN_27_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[1]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[1]- (GPIO bank 1) 1= can0, Output, can0_phy
@@ -12428,9 +12287,9 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_27_L3_SEL                              0
 
     * Configures MIO Pin 27 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF18006C, 0x000000FEU ,0x00000018U)
+    * (OFFSET, MASK, VALUE)      (0XFF18006C, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_27_OFFSET, 0x000000FEU, 0x00000018U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_27_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -12448,7 +12307,7 @@ unsigned long psu_mio_init_data(void)
     *  GPI) 2= test_scan, Input, test_scan_in[28]- (Test Scan Port) = test_sca
     * n, Output, test_scan_out[28]- (Test Scan Port) 3= dpaux, Input, dp_hot_p
     * lug_detect- (Dp Aux Hot Plug)
-    *  PSU_IOU_SLCR_MIO_PIN_28_L2_SEL                              3
+    *  PSU_IOU_SLCR_MIO_PIN_28_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[2]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[2]- (GPIO bank 1) 1= can1, Output, can1_phy
@@ -12460,9 +12319,9 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_28_L3_SEL                              0
 
     * Configures MIO Pin 28 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF180070, 0x000000FEU ,0x00000018U)
+    * (OFFSET, MASK, VALUE)      (0XFF180070, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_28_OFFSET, 0x000000FEU, 0x00000018U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_28_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -12480,7 +12339,7 @@ unsigned long psu_mio_init_data(void)
     *  GPI) 2= test_scan, Input, test_scan_in[29]- (Test Scan Port) = test_sca
     * n, Output, test_scan_out[29]- (Test Scan Port) 3= dpaux, Input, dp_aux_d
     * ata_in- (Dp Aux Data) = dpaux, Output, dp_aux_data_out- (Dp Aux Data)
-    *  PSU_IOU_SLCR_MIO_PIN_29_L2_SEL                              3
+    *  PSU_IOU_SLCR_MIO_PIN_29_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[3]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[3]- (GPIO bank 1) 1= can1, Input, can1_phy_
@@ -12493,9 +12352,9 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_29_L3_SEL                              0
 
     * Configures MIO Pin 29 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF180074, 0x000000FEU ,0x00000018U)
+    * (OFFSET, MASK, VALUE)      (0XFF180074, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_29_OFFSET, 0x000000FEU, 0x00000018U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_29_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -12513,7 +12372,7 @@ unsigned long psu_mio_init_data(void)
     *  GPI) 2= test_scan, Input, test_scan_in[30]- (Test Scan Port) = test_sca
     * n, Output, test_scan_out[30]- (Test Scan Port) 3= dpaux, Input, dp_hot_p
     * lug_detect- (Dp Aux Hot Plug)
-    *  PSU_IOU_SLCR_MIO_PIN_30_L2_SEL                              3
+    *  PSU_IOU_SLCR_MIO_PIN_30_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[4]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[4]- (GPIO bank 1) 1= can0, Input, can0_phy_
@@ -12526,9 +12385,9 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_30_L3_SEL                              0
 
     * Configures MIO Pin 30 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF180078, 0x000000FEU ,0x00000018U)
+    * (OFFSET, MASK, VALUE)      (0XFF180078, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_30_OFFSET, 0x000000FEU, 0x00000018U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_30_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -12579,7 +12438,7 @@ unsigned long psu_mio_init_data(void)
     * U GPI) 2= test_scan, Input, test_scan_in[32]- (Test Scan Port) = test_sc
     * an, Output, test_scan_out[32]- (Test Scan Port) 3= csu, Input, csu_ext_t
     * amper- (CSU Ext Tamper)
-    *  PSU_IOU_SLCR_MIO_PIN_32_L2_SEL                              1
+    *  PSU_IOU_SLCR_MIO_PIN_32_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[6]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[6]- (GPIO bank 1) 1= can1, Output, can1_phy
@@ -12592,9 +12451,9 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_32_L3_SEL                              0
 
     * Configures MIO Pin 32 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF180080, 0x000000FEU ,0x00000008U)
+    * (OFFSET, MASK, VALUE)      (0XFF180080, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_32_OFFSET, 0x000000FEU, 0x00000008U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_32_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -12612,7 +12471,7 @@ unsigned long psu_mio_init_data(void)
     * U GPI) 2= test_scan, Input, test_scan_in[33]- (Test Scan Port) = test_sc
     * an, Output, test_scan_out[33]- (Test Scan Port) 3= csu, Input, csu_ext_t
     * amper- (CSU Ext Tamper)
-    *  PSU_IOU_SLCR_MIO_PIN_33_L2_SEL                              1
+    *  PSU_IOU_SLCR_MIO_PIN_33_L2_SEL                              0
 
     * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[7]- (GPIO bank 1) 0= g
     * pio1, Output, gpio_1_pin_out[7]- (GPIO bank 1) 1= can1, Input, can1_phy_
@@ -12625,9 +12484,142 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_PIN_33_L3_SEL                              0
 
     * Configures MIO Pin 33 peripheral interface mapping
-    * (OFFSET, MASK, VALUE)      (0XFF180084, 0x000000FEU ,0x00000008U)
+    * (OFFSET, MASK, VALUE)      (0XFF180084, 0x000000FEU ,0x00000000U)
     */
-	PSU_Mask_Write(IOU_SLCR_MIO_PIN_33_OFFSET, 0x000000FEU, 0x00000008U);
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_33_OFFSET, 0x000000FEU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : MIO_PIN_34 @ 0XFF180088
+
+    * Level 0 Mux Select 0= Level 1 Mux Output 1= gem0, Input, gem0_rgmii_rxd[
+    * 1]- (RX RGMII data)
+    *  PSU_IOU_SLCR_MIO_PIN_34_L0_SEL                              0
+
+    * Level 1 Mux Select 0= Level 2 Mux Output 1= pcie, Input, pcie_reset_n- (
+    * PCIE Reset signal)
+    *  PSU_IOU_SLCR_MIO_PIN_34_L1_SEL                              0
+
+    * Level 2 Mux Select 0= Level 3 Mux Output 1= pmu, Output, pmu_gpo[2]- (PM
+    * U GPI) 2= test_scan, Input, test_scan_in[34]- (Test Scan Port) = test_sc
+    * an, Output, test_scan_out[34]- (Test Scan Port) 3= dpaux, Input, dp_aux_
+    * data_in- (Dp Aux Data) = dpaux, Output, dp_aux_data_out- (Dp Aux Data)
+    *  PSU_IOU_SLCR_MIO_PIN_34_L2_SEL                              0
+
+    * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[8]- (GPIO bank 1) 0= g
+    * pio1, Output, gpio_1_pin_out[8]- (GPIO bank 1) 1= can0, Input, can0_phy_
+    * rx- (Can RX signal) 2= i2c0, Input, i2c0_scl_input- (SCL signal) 2= i2c0
+    * , Output, i2c0_scl_out- (SCL signal) 3= swdt0, Input, swdt0_clk_in- (Wat
+    * ch Dog Timer Input clock) 4= spi1, Output, spi1_n_ss_out[1]- (SPI Master
+    *  Selects) 5= ttc2, Input, ttc2_clk_in- (TTC Clock) 6= ua0, Input, ua0_rx
+    * d- (UART receiver serial input) 7= trace, Output, tracedq[12]- (Trace Po
+    * rt Databus)
+    *  PSU_IOU_SLCR_MIO_PIN_34_L3_SEL                              0
+
+    * Configures MIO Pin 34 peripheral interface mapping
+    * (OFFSET, MASK, VALUE)      (0XFF180088, 0x000000FEU ,0x00000000U)
+    */
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_34_OFFSET, 0x000000FEU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : MIO_PIN_35 @ 0XFF18008C
+
+    * Level 0 Mux Select 0= Level 1 Mux Output 1= gem0, Input, gem0_rgmii_rxd[
+    * 2]- (RX RGMII data)
+    *  PSU_IOU_SLCR_MIO_PIN_35_L0_SEL                              0
+
+    * Level 1 Mux Select 0= Level 2 Mux Output 1= pcie, Input, pcie_reset_n- (
+    * PCIE Reset signal)
+    *  PSU_IOU_SLCR_MIO_PIN_35_L1_SEL                              0
+
+    * Level 2 Mux Select 0= Level 3 Mux Output 1= pmu, Output, pmu_gpo[3]- (PM
+    * U GPI) 2= test_scan, Input, test_scan_in[35]- (Test Scan Port) = test_sc
+    * an, Output, test_scan_out[35]- (Test Scan Port) 3= dpaux, Input, dp_hot_
+    * plug_detect- (Dp Aux Hot Plug)
+    *  PSU_IOU_SLCR_MIO_PIN_35_L2_SEL                              0
+
+    * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[9]- (GPIO bank 1) 0= g
+    * pio1, Output, gpio_1_pin_out[9]- (GPIO bank 1) 1= can0, Output, can0_phy
+    * _tx- (Can TX signal) 2= i2c0, Input, i2c0_sda_input- (SDA signal) 2= i2c
+    * 0, Output, i2c0_sda_out- (SDA signal) 3= swdt0, Output, swdt0_rst_out- (
+    * Watch Dog Timer Output clock) 4= spi1, Input, spi1_n_ss_in- (SPI Master
+    * Selects) 4= spi1, Output, spi1_n_ss_out[0]- (SPI Master Selects) 5= ttc2
+    * , Output, ttc2_wave_out- (TTC Waveform Clock) 6= ua0, Output, ua0_txd- (
+    * UART transmitter serial output) 7= trace, Output, tracedq[13]- (Trace Po
+    * rt Databus)
+    *  PSU_IOU_SLCR_MIO_PIN_35_L3_SEL                              0
+
+    * Configures MIO Pin 35 peripheral interface mapping
+    * (OFFSET, MASK, VALUE)      (0XFF18008C, 0x000000FEU ,0x00000000U)
+    */
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_35_OFFSET, 0x000000FEU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : MIO_PIN_36 @ 0XFF180090
+
+    * Level 0 Mux Select 0= Level 1 Mux Output 1= gem0, Input, gem0_rgmii_rxd[
+    * 3]- (RX RGMII data)
+    *  PSU_IOU_SLCR_MIO_PIN_36_L0_SEL                              0
+
+    * Level 1 Mux Select 0= Level 2 Mux Output 1= pcie, Input, pcie_reset_n- (
+    * PCIE Reset signal)
+    *  PSU_IOU_SLCR_MIO_PIN_36_L1_SEL                              0
+
+    * Level 2 Mux Select 0= Level 3 Mux Output 1= pmu, Output, pmu_gpo[4]- (PM
+    * U GPI) 2= test_scan, Input, test_scan_in[36]- (Test Scan Port) = test_sc
+    * an, Output, test_scan_out[36]- (Test Scan Port) 3= dpaux, Input, dp_aux_
+    * data_in- (Dp Aux Data) = dpaux, Output, dp_aux_data_out- (Dp Aux Data)
+    *  PSU_IOU_SLCR_MIO_PIN_36_L2_SEL                              0
+
+    * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[10]- (GPIO bank 1) 0=
+    * gpio1, Output, gpio_1_pin_out[10]- (GPIO bank 1) 1= can1, Output, can1_p
+    * hy_tx- (Can TX signal) 2= i2c1, Input, i2c1_scl_input- (SCL signal) 2= i
+    * 2c1, Output, i2c1_scl_out- (SCL signal) 3= swdt1, Input, swdt1_clk_in- (
+    * Watch Dog Timer Input clock) 4= spi1, Input, spi1_mi- (MISO signal) 4= s
+    * pi1, Output, spi1_so- (MISO signal) 5= ttc1, Input, ttc1_clk_in- (TTC Cl
+    * ock) 6= ua1, Output, ua1_txd- (UART transmitter serial output) 7= trace,
+    *  Output, tracedq[14]- (Trace Port Databus)
+    *  PSU_IOU_SLCR_MIO_PIN_36_L3_SEL                              0
+
+    * Configures MIO Pin 36 peripheral interface mapping
+    * (OFFSET, MASK, VALUE)      (0XFF180090, 0x000000FEU ,0x00000000U)
+    */
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_36_OFFSET, 0x000000FEU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : MIO_PIN_37 @ 0XFF180094
+
+    * Level 0 Mux Select 0= Level 1 Mux Output 1= gem0, Input, gem0_rgmii_rx_c
+    * tl- (RX RGMII control )
+    *  PSU_IOU_SLCR_MIO_PIN_37_L0_SEL                              0
+
+    * Level 1 Mux Select 0= Level 2 Mux Output 1= pcie, Input, pcie_reset_n- (
+    * PCIE Reset signal)
+    *  PSU_IOU_SLCR_MIO_PIN_37_L1_SEL                              0
+
+    * Level 2 Mux Select 0= Level 3 Mux Output 1= pmu, Output, pmu_gpo[5]- (PM
+    * U GPI) 2= test_scan, Input, test_scan_in[37]- (Test Scan Port) = test_sc
+    * an, Output, test_scan_out[37]- (Test Scan Port) 3= dpaux, Input, dp_hot_
+    * plug_detect- (Dp Aux Hot Plug)
+    *  PSU_IOU_SLCR_MIO_PIN_37_L2_SEL                              0
+
+    * Level 3 Mux Select 0= gpio1, Input, gpio_1_pin_in[11]- (GPIO bank 1) 0=
+    * gpio1, Output, gpio_1_pin_out[11]- (GPIO bank 1) 1= can1, Input, can1_ph
+    * y_rx- (Can RX signal) 2= i2c1, Input, i2c1_sda_input- (SDA signal) 2= i2
+    * c1, Output, i2c1_sda_out- (SDA signal) 3= swdt1, Output, swdt1_rst_out-
+    * (Watch Dog Timer Output clock) 4= spi1, Output, spi1_mo- (MOSI signal) 4
+    * = spi1, Input, spi1_si- (MOSI signal) 5= ttc1, Output, ttc1_wave_out- (T
+    * TC Waveform Clock) 6= ua1, Input, ua1_rxd- (UART receiver serial input)
+    * 7= trace, Output, tracedq[15]- (Trace Port Databus)
+    *  PSU_IOU_SLCR_MIO_PIN_37_L3_SEL                              0
+
+    * Configures MIO Pin 37 peripheral interface mapping
+    * (OFFSET, MASK, VALUE)      (0XFF180094, 0x000000FEU ,0x00000000U)
+    */
+	PSU_Mask_Write(IOU_SLCR_MIO_PIN_37_OFFSET, 0x000000FEU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -13978,22 +13970,22 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_27_TRI                        0
 
     * Master Tri-state Enable for pin 28, active high
-    *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_28_TRI                        1
+    *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_28_TRI                        0
 
     * Master Tri-state Enable for pin 29, active high
     *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_29_TRI                        0
 
     * Master Tri-state Enable for pin 30, active high
-    *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_30_TRI                        1
+    *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_30_TRI                        0
 
     * Master Tri-state Enable for pin 31, active high
     *  PSU_IOU_SLCR_MIO_MST_TRI0_PIN_31_TRI                        0
 
     * MIO pin Tri-state Enables, 31:0
-    * (OFFSET, MASK, VALUE)      (0XFF180204, 0xFFFFFFFFU ,0x50040000U)
+    * (OFFSET, MASK, VALUE)      (0XFF180204, 0xFFFFFFFFU ,0x00040000U)
     */
 	PSU_Mask_Write(IOU_SLCR_MIO_MST_TRI0_OFFSET,
-		0xFFFFFFFFU, 0x50040000U);
+		0xFFFFFFFFU, 0x00040000U);
 /*##################################################################### */
 
     /*
@@ -14337,16 +14329,16 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_0               0
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_1               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_1               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_2               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_2               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_3               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_3               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_4               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_4               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
     *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_5               0
@@ -14358,64 +14350,64 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_7               0
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_8               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_8               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_9               0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_9               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_10              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_10              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_11              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_11              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
     *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_12              0
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_13              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_13              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_14              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_14              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_15              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_15              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_16              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_16              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_17              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_17              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_18              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_18              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
     *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_19              0
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_20              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_20              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_21              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_21              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_22              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_22              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_23              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_23              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_24              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_24              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_25              0
+    *  PSU_IOU_SLCR_BANK0_CTRL3_SCHMITT_CMOS_N_BIT_25              1
 
     * Selects either Schmitt or CMOS input for MIO Bank 0 - control MIO[25:0]
-    * (OFFSET, MASK, VALUE)      (0XFF180140, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF180140, 0x03FFFFFFU ,0x03F7EF1EU)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK0_CTRL3_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x03F7EF1EU);
 /*##################################################################### */
 
     /*
@@ -14600,88 +14592,88 @@ unsigned long psu_mio_init_data(void)
     * Register : bank0_ctrl6 @ 0XFF18014C
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_0             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_0             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_1             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_1             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_2             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_2             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_3             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_3             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_4             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_4             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_5             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_5             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_6             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_6             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_7             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_7             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_8             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_8             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_9             0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_9             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_10            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_10            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_11            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_11            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_12            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_12            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_13            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_13            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_14            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_14            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_15            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_15            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_16            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_16            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_17            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_17            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
     *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_18            0
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_19            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_19            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_20            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_20            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_21            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_21            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_22            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_22            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_23            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_23            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_24            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_24            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[0].
-    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_25            0
+    *  PSU_IOU_SLCR_BANK0_CTRL6_SLOW_FAST_SLEW_N_BIT_25            1
 
     * Slew rate control to MIO Bank 0 - control MIO[25:0]
-    * (OFFSET, MASK, VALUE)      (0XFF18014C, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF18014C, 0x03FFFFFFU ,0x03FBFFFFU)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK0_CTRL6_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x03FBFFFFU);
 /*##################################################################### */
 
     /*
@@ -14864,88 +14856,88 @@ unsigned long psu_mio_init_data(void)
     * Register : bank1_ctrl3 @ 0XFF18015C
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_0               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_0               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_1               0
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_2               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_2               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_3               0
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_4               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_4               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_5               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_5               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_6               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_6               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_7               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_7               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_8               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_8               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_9               0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_9               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_10              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_10              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_11              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_11              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_12              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_12              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_13              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_13              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_14              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_14              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_15              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_15              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_16              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_16              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_17              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_17              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_18              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_18              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_19              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_19              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_20              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_20              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_21              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_21              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_22              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_22              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_23              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_23              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_24              0
+    *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_24              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL3_SCHMITT_CMOS_N_BIT_25              0
 
     * Selects either Schmitt or CMOS input for MIO Bank 1 - control MIO[51:26]
-    * (OFFSET, MASK, VALUE)      (0XFF18015C, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF18015C, 0x03FFFFFFU ,0x01FFFFF5U)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK1_CTRL3_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x01FFFFF5U);
 /*##################################################################### */
 
     /*
@@ -15130,88 +15122,88 @@ unsigned long psu_mio_init_data(void)
     * Register : bank1_ctrl6 @ 0XFF180168
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_0             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_0             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_1             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_1             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_2             0
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_3             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_3             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_4             0
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_5             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_5             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_6             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_6             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_7             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_7             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_8             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_8             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_9             0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_9             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_10            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_10            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_11            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_11            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_12            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_12            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_13            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_13            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_14            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_14            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_15            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_15            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_16            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_16            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_17            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_17            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_18            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_18            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
     *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_19            0
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_20            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_20            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_21            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_21            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_22            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_22            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_23            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_23            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_24            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_24            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[26].
-    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_25            0
+    *  PSU_IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_25            1
 
     * Slew rate control to MIO Bank 1 - control MIO[51:26]
-    * (OFFSET, MASK, VALUE)      (0XFF180168, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF180168, 0x03FFFFFFU ,0x03F7FFEBU)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK1_CTRL6_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x03F7FFEBU);
 /*##################################################################### */
 
     /*
@@ -15394,40 +15386,40 @@ unsigned long psu_mio_init_data(void)
     * Register : bank2_ctrl3 @ 0XFF180178
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_0               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_0               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_1               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_1               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_2               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_2               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_3               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_3               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_4               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_4               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_5               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_5               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
     *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_6               0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_7               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_7               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_8               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_8               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_9               0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_9               1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_10              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_10              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_11              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_11              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
     *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_12              0
@@ -15448,34 +15440,34 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_17              0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_18              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_18              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_19              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_19              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_20              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_20              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_21              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_21              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_22              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_22              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_23              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_23              1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
     *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_24              0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_25              0
+    *  PSU_IOU_SLCR_BANK2_CTRL3_SCHMITT_CMOS_N_BIT_25              1
 
     * Selects either Schmitt or CMOS input for MIO Bank 2 - control MIO[77:52]
-    * (OFFSET, MASK, VALUE)      (0XFF180178, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF180178, 0x03FFFFFFU ,0x02FC0FBFU)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK2_CTRL3_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x02FC0FBFU);
 /*##################################################################### */
 
     /*
@@ -15666,52 +15658,52 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_1             0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_2             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_2             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
     *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_3             0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_4             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_4             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_5             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_5             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_6             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_6             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_7             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_7             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_8             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_8             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_9             0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_9             1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_10            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_10            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_11            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_11            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_12            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_12            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_13            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_13            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_14            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_14            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_15            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_15            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_16            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_16            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_17            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_17            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
     *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_18            0
@@ -15732,16 +15724,16 @@ unsigned long psu_mio_init_data(void)
     *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_23            0
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_24            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_24            1
 
     * Each bit applies to a single IO. Bit 0 for MIO[52].
-    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_25            0
+    *  PSU_IOU_SLCR_BANK2_CTRL6_SLOW_FAST_SLEW_N_BIT_25            1
 
     * Slew rate control to MIO Bank 2 - control MIO[77:52]
-    * (OFFSET, MASK, VALUE)      (0XFF180184, 0x03FFFFFFU ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFF180184, 0x03FFFFFFU ,0x0303FFF4U)
     */
 	PSU_Mask_Write(IOU_SLCR_BANK2_CTRL6_OFFSET,
-		0x03FFFFFFU, 0x00000000U);
+		0x03FFFFFFU, 0x0303FFF4U);
 /*##################################################################### */
 
     /*
@@ -15841,9 +15833,6 @@ unsigned long psu_peripherals_init_data(void)
     /*
     * Register : RST_FPD_TOP @ 0XFD1A0100
 
-    * Display Port block level reset (includes DPDMA)
-    *  PSU_CRF_APB_RST_FPD_TOP_DP_RESET                            0
-
     * FPD WDT reset
     *  PSU_CRF_APB_RST_FPD_TOP_SWDT_RESET                          0
 
@@ -15853,13 +15842,10 @@ unsigned long psu_peripherals_init_data(void)
     * GT block level reset
     *  PSU_CRF_APB_RST_FPD_TOP_GT_RESET                            0
 
-    * Sata block level reset
-    *  PSU_CRF_APB_RST_FPD_TOP_SATA_RESET                          0
-
     * FPD Block level software controlled reset
-    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00018046U ,0x00000000U)
+    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00008044U ,0x00000000U)
     */
-	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00018046U, 0x00000000U);
+	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00008044U, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -16717,6 +16703,186 @@ unsigned long psu_lpd_xppu_data(void)
     * MASTER ID LIST
     */
     /*
+    * Register : MASTER_ID00 @ 0XFF980100
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID00_MIDR                           1
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID00_MIDM                           960
+
+    * Predefined Master ID for PMU
+    *  PSU_LPD_XPPU_CFG_MASTER_ID00_MID                            128
+
+    * Master ID 00 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980100, 0x43FF03FFU ,0x43C00080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID00_OFFSET,
+		0x43FF03FFU, 0x43C00080U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID01 @ 0XFF980104
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID01_MIDR                           1
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID01_MIDM                           1023
+
+    * Predefined Master ID for RPU0
+    *  PSU_LPD_XPPU_CFG_MASTER_ID01_MID                            64
+
+    * Master ID 01 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980104, 0x43FF03FFU ,0x43FF0040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID01_OFFSET,
+		0x43FF03FFU, 0x43FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID02 @ 0XFF980108
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID02_MIDR                           1
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID02_MIDM                           1008
+
+    * Predefined Master ID for RPU1
+    *  PSU_LPD_XPPU_CFG_MASTER_ID02_MID                            0
+
+    * Master ID 02 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980108, 0x43FF03FFU ,0x43F00000U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID02_OFFSET,
+		0x43FF03FFU, 0x43F00000U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID03 @ 0XFF98010C
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID03_MIDR                           1
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID03_MIDM                           1008
+
+    * Predefined Master ID for APU
+    *  PSU_LPD_XPPU_CFG_MASTER_ID03_MID                            16
+
+    * Master ID 03 Register
+    * (OFFSET, MASK, VALUE)      (0XFF98010C, 0x43FF03FFU ,0x43F00010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID03_OFFSET,
+		0x43FF03FFU, 0x43F00010U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID04 @ 0XFF980110
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID04_MIDR                           0
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID04_MIDM                           960
+
+    * Predefined Master ID for A53 Core 0
+    *  PSU_LPD_XPPU_CFG_MASTER_ID04_MID                            128
+
+    * Master ID 04 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980110, 0x43FF03FFU ,0x03C00080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID04_OFFSET,
+		0x43FF03FFU, 0x03C00080U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID05 @ 0XFF980114
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID05_MIDR                           0
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID05_MIDM                           1023
+
+    * Predefined Master ID for A53 Core 1
+    *  PSU_LPD_XPPU_CFG_MASTER_ID05_MID                            64
+
+    * Master ID 05 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980114, 0x43FF03FFU ,0x03FF0040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID05_OFFSET,
+		0x43FF03FFU, 0x03FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID06 @ 0XFF980118
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID06_MIDR                           0
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID06_MIDM                           1008
+
+    * Predefined Master ID for A53 Core 2
+    *  PSU_LPD_XPPU_CFG_MASTER_ID06_MID                            0
+
+    * Master ID 06 Register
+    * (OFFSET, MASK, VALUE)      (0XFF980118, 0x43FF03FFU ,0x03F00000U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID06_OFFSET,
+		0x43FF03FFU, 0x03F00000U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID07 @ 0XFF98011C
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID07_MIDR                           0
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID07_MIDM                           1008
+
+    * Predefined Master ID for A53 Core 3
+    *  PSU_LPD_XPPU_CFG_MASTER_ID07_MID                            16
+
+    * Master ID 07 Register
+    * (OFFSET, MASK, VALUE)      (0XFF98011C, 0x43FF03FFU ,0x03F00010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID07_OFFSET,
+		0x43FF03FFU, 0x03F00010U);
+/*##################################################################### */
+
+    /*
+    * Register : MASTER_ID19 @ 0XFF98014C
+
+    * If set, only read transactions are allowed for the masters matching this
+    *  register
+    *  PSU_LPD_XPPU_CFG_MASTER_ID19_MIDR                           0
+
+    * Mask to be applied before comparing
+    *  PSU_LPD_XPPU_CFG_MASTER_ID19_MIDM                           0
+
+    * Programmable Master ID
+    *  PSU_LPD_XPPU_CFG_MASTER_ID19_MID                            0
+
+    * Master ID 19 Register
+    * (OFFSET, MASK, VALUE)      (0XFF98014C, 0x43FF03FFU ,0x00000000U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_MASTER_ID19_OFFSET,
+		0x43FF03FFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
     * APERTURE PERMISIION LIST
     */
     /*
@@ -16797,38 +16963,326 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
-    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    * Register : APERPERM_024 @ 0XFF981060
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_024_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_024_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_024_PARITY                        0x0
+
+    * Entry 024 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00180000
+    * (OFFSET, MASK, VALUE)      (0XFF981060, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_024_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
-    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    * Register : APERPERM_025 @ 0XFF981064
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_025_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_025_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_025_PARITY                        0x0
+
+    * Entry 025 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00190000
+    * (OFFSET, MASK, VALUE)      (0XFF981064, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_025_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
-    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    * Register : APERPERM_026 @ 0XFF981068
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_026_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_026_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_026_PARITY                        0x0
+
+    * Entry 026 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001A0000
+    * (OFFSET, MASK, VALUE)      (0XFF981068, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_026_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
-    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    * Register : APERPERM_027 @ 0XFF98106C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_027_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_027_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_027_PARITY                        0x0
+
+    * Entry 027 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001B0000
+    * (OFFSET, MASK, VALUE)      (0XFF98106C, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_027_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
-    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    * Register : APERPERM_028 @ 0XFF981070
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_028_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_028_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_028_PARITY                        0x0
+
+    * Entry 028 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001C0000
+    * (OFFSET, MASK, VALUE)      (0XFF981070, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_028_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
     /*
+    * Register : APERPERM_029 @ 0XFF981074
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_029_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_029_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_029_PARITY                        0x0
+
+    * Entry 029 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001D0000
+    * (OFFSET, MASK, VALUE)      (0XFF981074, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_029_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
     */
+    /*
+    * Register : APERPERM_030 @ 0XFF981078
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_030_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_030_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_030_PARITY                        0x0
+
+    * Entry 030 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001E0000
+    * (OFFSET, MASK, VALUE)      (0XFF981078, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_030_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    */
+    /*
+    * Register : APERPERM_031 @ 0XFF98107C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_031_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_031_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_031_PARITY                        0x0
+
+    * Entry 031 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x001F0000
+    * (OFFSET, MASK, VALUE)      (0XFF98107C, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_031_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    */
+    /*
+    * Register : APERPERM_032 @ 0XFF981080
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_032_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_032_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_032_PARITY                        0x0
+
+    * Entry 032 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00200000
+    * (OFFSET, MASK, VALUE)      (0XFF981080, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_032_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    */
+    /*
+    * Register : APERPERM_033 @ 0XFF981084
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_033_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_033_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_033_PARITY                        0x0
+
+    * Entry 033 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00210000
+    * (OFFSET, MASK, VALUE)      (0XFF981084, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_033_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    */
+    /*
+    * Register : APERPERM_034 @ 0XFF981088
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_034_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_034_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_034_PARITY                        0x0
+
+    * Entry 034 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00220000
+    * (OFFSET, MASK, VALUE)      (0XFF981088, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_034_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IOU_SLCR, START ADDRESS: FF180000, END ADDRESS: FF23FFFF
+    */
+    /*
+    * Register : APERPERM_035 @ 0XFF98108C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_035_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_035_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_035_PARITY                        0x0
+
+    * Entry 035 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00230000
+    * (OFFSET, MASK, VALUE)      (0XFF98108C, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_035_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_SECURE_SLCR, START ADDRESS: FF240000, END ADDRESS: FF
     * 24FFFF
@@ -16880,14 +17334,110 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
+    * Register : APERPERM_048 @ 0XFF9810C0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_048_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_048_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_048_PARITY                        0x0
+
+    * Entry 048 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00300000
+    * (OFFSET, MASK, VALUE)      (0XFF9810C0, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_048_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
+    /*
+    * Register : APERPERM_049 @ 0XFF9810C4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_049_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_049_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_049_PARITY                        0x0
+
+    * Entry 049 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00310000
+    * (OFFSET, MASK, VALUE)      (0XFF9810C4, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_049_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
+    * Register : APERPERM_050 @ 0XFF9810C8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_050_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_050_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_050_PARITY                        0x0
+
+    * Entry 050 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00320000
+    * (OFFSET, MASK, VALUE)      (0XFF9810C8, 0xF80FFFFFU ,0x08000080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_050_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
+    /*
+    * Register : APERPERM_051 @ 0XFF9810CC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_051_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_051_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_051_PARITY                        0x0
+
+    * Entry 051 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00330000
+    * (OFFSET, MASK, VALUE)      (0XFF9810CC, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_051_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
     */
@@ -16932,32 +17482,272 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
     /*
-    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    * Register : APERPERM_065 @ 0XFF981104
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_065_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_065_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_065_PARITY                        0x0
+
+    * Entry 065 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00410000
+    * (OFFSET, MASK, VALUE)      (0XFF981104, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_065_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
     /*
-    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    * Register : APERPERM_066 @ 0XFF981108
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_066_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_066_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_066_PARITY                        0x0
+
+    * Entry 066 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00420000
+    * (OFFSET, MASK, VALUE)      (0XFF981108, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_066_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
     /*
-    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    * Register : APERPERM_067 @ 0XFF98110C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_067_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_067_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_067_PARITY                        0x0
+
+    * Entry 067 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00430000
+    * (OFFSET, MASK, VALUE)      (0XFF98110C, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_067_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
     /*
-    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    * Register : APERPERM_068 @ 0XFF981110
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_068_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_068_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_068_PARITY                        0x0
+
+    * Entry 068 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00440000
+    * (OFFSET, MASK, VALUE)      (0XFF981110, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_068_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
     /*
+    * Register : APERPERM_069 @ 0XFF981114
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_069_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_069_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_069_PARITY                        0x0
+
+    * Entry 069 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00450000
+    * (OFFSET, MASK, VALUE)      (0XFF981114, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_069_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
     */
+    /*
+    * Register : APERPERM_070 @ 0XFF981118
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_070_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_070_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_070_PARITY                        0x0
+
+    * Entry 070 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00460000
+    * (OFFSET, MASK, VALUE)      (0XFF981118, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_070_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    */
+    /*
+    * Register : APERPERM_071 @ 0XFF98111C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_071_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_071_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_071_PARITY                        0x0
+
+    * Entry 071 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00470000
+    * (OFFSET, MASK, VALUE)      (0XFF98111C, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_071_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    */
+    /*
+    * Register : APERPERM_072 @ 0XFF981120
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_072_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_072_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_072_PARITY                        0x0
+
+    * Entry 072 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00480000
+    * (OFFSET, MASK, VALUE)      (0XFF981120, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_072_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    */
+    /*
+    * Register : APERPERM_073 @ 0XFF981124
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_073_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_073_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_073_PARITY                        0x0
+
+    * Entry 073 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00490000
+    * (OFFSET, MASK, VALUE)      (0XFF981124, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_073_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: LPD_SLCR, START ADDRESS: FF410000, END ADDRESS: FF4AFFFF
+    */
+    /*
+    * Register : APERPERM_074 @ 0XFF981128
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_074_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_074_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_074_PARITY                        0x0
+
+    * Entry 074 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x004A0000
+    * (OFFSET, MASK, VALUE)      (0XFF981128, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_074_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_SLCR_SECURE, START ADDRESS: FF4B0000, END ADDRESS: FF
     * 4DFFFF
@@ -17038,122 +17828,1082 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_094 @ 0XFF981178
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_094_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_094_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_094_PARITY                        0x0
+
+    * Entry 094 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x005E0000
+    * (OFFSET, MASK, VALUE)      (0XFF981178, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_094_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_095 @ 0XFF98117C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_095_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_095_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_095_PARITY                        0x0
+
+    * Entry 095 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x005F0000
+    * (OFFSET, MASK, VALUE)      (0XFF98117C, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_095_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_096 @ 0XFF981180
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_096_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_096_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_096_PARITY                        0x0
+
+    * Entry 096 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00600000
+    * (OFFSET, MASK, VALUE)      (0XFF981180, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_096_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_097 @ 0XFF981184
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_097_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_097_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_097_PARITY                        0x0
+
+    * Entry 097 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00610000
+    * (OFFSET, MASK, VALUE)      (0XFF981184, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_097_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_098 @ 0XFF981188
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_098_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_098_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_098_PARITY                        0x0
+
+    * Entry 098 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00620000
+    * (OFFSET, MASK, VALUE)      (0XFF981188, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_098_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_099 @ 0XFF98118C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_099_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_099_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_099_PARITY                        0x0
+
+    * Entry 099 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00630000
+    * (OFFSET, MASK, VALUE)      (0XFF98118C, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_099_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_100 @ 0XFF981190
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_100_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_100_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_100_PARITY                        0x0
+
+    * Entry 100 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00640000
+    * (OFFSET, MASK, VALUE)      (0XFF981190, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_100_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_101 @ 0XFF981194
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_101_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_101_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_101_PARITY                        0x0
+
+    * Entry 101 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00650000
+    * (OFFSET, MASK, VALUE)      (0XFF981194, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_101_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_102 @ 0XFF981198
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_102_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_102_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_102_PARITY                        0x0
+
+    * Entry 102 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00660000
+    * (OFFSET, MASK, VALUE)      (0XFF981198, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_102_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_103 @ 0XFF98119C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_103_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_103_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_103_PARITY                        0x0
+
+    * Entry 103 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00670000
+    * (OFFSET, MASK, VALUE)      (0XFF98119C, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_103_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_104 @ 0XFF9811A0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_104_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_104_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_104_PARITY                        0x0
+
+    * Entry 104 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00680000
+    * (OFFSET, MASK, VALUE)      (0XFF9811A0, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_104_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_105 @ 0XFF9811A4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_105_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_105_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_105_PARITY                        0x0
+
+    * Entry 105 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00690000
+    * (OFFSET, MASK, VALUE)      (0XFF9811A4, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_105_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_106 @ 0XFF9811A8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_106_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_106_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_106_PARITY                        0x0
+
+    * Entry 106 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006A0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811A8, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_106_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_107 @ 0XFF9811AC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_107_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_107_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_107_PARITY                        0x0
+
+    * Entry 107 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006B0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811AC, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_107_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_108 @ 0XFF9811B0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_108_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_108_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_108_PARITY                        0x0
+
+    * Entry 108 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006C0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811B0, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_108_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_109 @ 0XFF9811B4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_109_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_109_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_109_PARITY                        0x0
+
+    * Entry 109 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006D0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811B4, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_109_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_110 @ 0XFF9811B8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_110_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_110_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_110_PARITY                        0x0
+
+    * Entry 110 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006E0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811B8, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_110_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_111 @ 0XFF9811BC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_111_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_111_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_111_PARITY                        0x0
+
+    * Entry 111 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x006F0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811BC, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_111_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
-    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    * Register : APERPERM_112 @ 0XFF9811C0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_112_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_112_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_112_PARITY                        0x0
+
+    * Entry 112 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00700000
+    * (OFFSET, MASK, VALUE)      (0XFF9811C0, 0xF80FFFFFU ,0x00000020U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_112_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
     /*
+    * Register : APERPERM_113 @ 0XFF9811C4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_113_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_113_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_113_PARITY                        0x0
+
+    * Entry 113 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00710000
+    * (OFFSET, MASK, VALUE)      (0XFF9811C4, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_113_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
     */
+    /*
+    * Register : APERPERM_114 @ 0XFF9811C8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_114_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_114_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_114_PARITY                        0x0
+
+    * Entry 114 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00720000
+    * (OFFSET, MASK, VALUE)      (0XFF9811C8, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_114_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_115 @ 0XFF9811CC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_115_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_115_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_115_PARITY                        0x0
+
+    * Entry 115 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00730000
+    * (OFFSET, MASK, VALUE)      (0XFF9811CC, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_115_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_116 @ 0XFF9811D0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_116_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_116_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_116_PARITY                        0x0
+
+    * Entry 116 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00740000
+    * (OFFSET, MASK, VALUE)      (0XFF9811D0, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_116_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_117 @ 0XFF9811D4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_117_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_117_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_117_PARITY                        0x0
+
+    * Entry 117 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00750000
+    * (OFFSET, MASK, VALUE)      (0XFF9811D4, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_117_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_118 @ 0XFF9811D8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_118_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_118_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_118_PARITY                        0x0
+
+    * Entry 118 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00760000
+    * (OFFSET, MASK, VALUE)      (0XFF9811D8, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_118_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_119 @ 0XFF9811DC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_119_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_119_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_119_PARITY                        0x0
+
+    * Entry 119 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00770000
+    * (OFFSET, MASK, VALUE)      (0XFF9811DC, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_119_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_120 @ 0XFF9811E0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_120_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_120_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_120_PARITY                        0x0
+
+    * Entry 120 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00780000
+    * (OFFSET, MASK, VALUE)      (0XFF9811E0, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_120_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_121 @ 0XFF9811E4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_121_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_121_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_121_PARITY                        0x0
+
+    * Entry 121 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00790000
+    * (OFFSET, MASK, VALUE)      (0XFF9811E4, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_121_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_122 @ 0XFF9811E8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_122_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_122_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_122_PARITY                        0x0
+
+    * Entry 122 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007A0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811E8, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_122_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_123 @ 0XFF9811EC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_123_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_123_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_123_PARITY                        0x0
+
+    * Entry 123 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007B0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811EC, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_123_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_124 @ 0XFF9811F0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_124_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_124_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_124_PARITY                        0x0
+
+    * Entry 124 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007C0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811F0, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_124_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_125 @ 0XFF9811F4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_125_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_125_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_125_PARITY                        0x0
+
+    * Entry 125 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007D0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811F4, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_125_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_126 @ 0XFF9811F8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_126_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_126_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_126_PARITY                        0x0
+
+    * Entry 126 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007E0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811F8, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_126_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_127 @ 0XFF9811FC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_127_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_127_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_127_PARITY                        0x0
+
+    * Entry 127 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x007F0000
+    * (OFFSET, MASK, VALUE)      (0XFF9811FC, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_127_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_128 @ 0XFF981200
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_128_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_128_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_128_PARITY                        0x0
+
+    * Entry 128 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00800000
+    * (OFFSET, MASK, VALUE)      (0XFF981200, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_128_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_129 @ 0XFF981204
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_129_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_129_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_129_PARITY                        0x0
+
+    * Entry 129 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00810000
+    * (OFFSET, MASK, VALUE)      (0XFF981204, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_129_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_130 @ 0XFF981208
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_130_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_130_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_130_PARITY                        0x0
+
+    * Entry 130 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00820000
+    * (OFFSET, MASK, VALUE)      (0XFF981208, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_130_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_131 @ 0XFF98120C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_131_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_131_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_131_PARITY                        0x0
+
+    * Entry 131 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00830000
+    * (OFFSET, MASK, VALUE)      (0XFF98120C, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_131_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_132 @ 0XFF981210
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_132_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_132_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_132_PARITY                        0x0
+
+    * Entry 132 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00840000
+    * (OFFSET, MASK, VALUE)      (0XFF981210, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_132_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: CRL_APB, START ADDRESS: FF5E0000, END ADDRESS: FF85FFFF
+    */
+    /*
+    * Register : APERPERM_133 @ 0XFF981214
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_133_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_133_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_133_PARITY                        0x0
+
+    * Entry 133 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00850000
+    * (OFFSET, MASK, VALUE)      (0XFF981214, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_133_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: LPD_UNUSED_3, START ADDRESS: FF860000, END ADDRESS: FF95F
     * FFF
@@ -17232,6 +18982,30 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: RPU, START ADDRESS: FF9A0000, END ADDRESS: FF9AFFFF
     */
     /*
+    * Register : APERPERM_154 @ 0XFF981268
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_154_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_154_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_154_PARITY                        0x0
+
+    * Entry 154 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x009A0000
+    * (OFFSET, MASK, VALUE)      (0XFF981268, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_154_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: AFIFM6, START ADDRESS: FF9B0000, END ADDRESS: FF9BFFFF
     */
     /*
@@ -17276,6 +19050,30 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: OCM_XMPU_CFG, START ADDRESS: FFA70000, END ADDRESS: FFA7F
     * FFF
     */
+    /*
+    * Register : APERPERM_167 @ 0XFF98129C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_167_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_167_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_167_PARITY                        0x0
+
+    * Entry 167 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00A70000
+    * (OFFSET, MASK, VALUE)      (0XFF98129C, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_167_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: ADMA_0, START ADDRESS: FFA80000, END ADDRESS: FFA8FFFF
     */
@@ -17405,6 +19203,30 @@ unsigned long psu_lpd_xppu_data(void)
     /*
     * APERTURE NAME: EFUSE, START ADDRESS: FFCC0000, END ADDRESS: FFCCFFFF
     */
+    /*
+    * Register : APERPERM_204 @ 0XFF981330
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_204_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_204_TRUSTZONE                     0x0
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_204_PARITY                        0x0
+
+    * Entry 204 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00CC0000
+    * (OFFSET, MASK, VALUE)      (0XFF981330, 0xF80FFFFFU ,0x00000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_204_OFFSET,
+		0xF80FFFFFU, 0x00000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: BBRAM, START ADDRESS: FFCD0000, END ADDRESS: FFCDFFFF
     */
@@ -17598,146 +19420,1460 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_256 @ 0XFF981400
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_256_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_256_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_256_PARITY                        0x0
+
+    * Entry 256 of the Aperture Permission List, for 32-byte IPI buffer 000 at
+    *  BASE_32B + 0x00000000
+    * (OFFSET, MASK, VALUE)      (0XFF981400, 0xF80FFFFFU ,0x08000040U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_256_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_257 @ 0XFF981404
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_257_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_257_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_257_PARITY                        0x0
+
+    * Entry 257 of the Aperture Permission List, for 32-byte IPI buffer 001 at
+    *  BASE_32B + 0x00000020
+    * (OFFSET, MASK, VALUE)      (0XFF981404, 0xF80FFFFFU ,0x08000040U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_257_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_258 @ 0XFF981408
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_258_PERMISSION                    0x48
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_258_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_258_PARITY                        0x0
+
+    * Entry 258 of the Aperture Permission List, for 32-byte IPI buffer 002 at
+    *  BASE_32B + 0x00000040
+    * (OFFSET, MASK, VALUE)      (0XFF981408, 0xF80FFFFFU ,0x08000048U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_258_OFFSET,
+		0xF80FFFFFU, 0x08000048U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_259 @ 0XFF98140C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_259_PERMISSION                    0x84
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_259_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_259_PARITY                        0x0
+
+    * Entry 259 of the Aperture Permission List, for 32-byte IPI buffer 003 at
+    *  BASE_32B + 0x00000060
+    * (OFFSET, MASK, VALUE)      (0XFF98140C, 0xF80FFFFFU ,0x08000084U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_259_OFFSET,
+		0xF80FFFFFU, 0x08000084U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_260 @ 0XFF981410
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_260_PERMISSION                    0x41
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_260_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_260_PARITY                        0x0
+
+    * Entry 260 of the Aperture Permission List, for 32-byte IPI buffer 004 at
+    *  BASE_32B + 0x00000080
+    * (OFFSET, MASK, VALUE)      (0XFF981410, 0xF80FFFFFU ,0x08000041U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_260_OFFSET,
+		0xF80FFFFFU, 0x08000041U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_261 @ 0XFF981414
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_261_PERMISSION                    0x14
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_261_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_261_PARITY                        0x0
+
+    * Entry 261 of the Aperture Permission List, for 32-byte IPI buffer 005 at
+    *  BASE_32B + 0x000000A0
+    * (OFFSET, MASK, VALUE)      (0XFF981414, 0xF80FFFFFU ,0x08000014U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_261_OFFSET,
+		0xF80FFFFFU, 0x08000014U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    * Register : APERPERM_262 @ 0XFF981418
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_262_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_262_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_262_PARITY                        0x0
+
+    * Entry 262 of the Aperture Permission List, for 32-byte IPI buffer 006 at
+    *  BASE_32B + 0x000000C0
+    * (OFFSET, MASK, VALUE)      (0XFF981418, 0xF80FFFFFU ,0x08000040U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_262_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
+    * Register : APERPERM_263 @ 0XFF98141C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_263_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_263_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_263_PARITY                        0x0
+
+    * Entry 263 of the Aperture Permission List, for 32-byte IPI buffer 007 at
+    *  BASE_32B + 0x000000E0
+    * (OFFSET, MASK, VALUE)      (0XFF98141C, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_263_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_264 @ 0XFF981420
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_264_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_264_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_264_PARITY                        0x0
+
+    * Entry 264 of the Aperture Permission List, for 32-byte IPI buffer 008 at
+    *  BASE_32B + 0x00000100
+    * (OFFSET, MASK, VALUE)      (0XFF981420, 0xF80FFFFFU ,0x08000040U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_264_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_265 @ 0XFF981424
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_265_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_265_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_265_PARITY                        0x0
+
+    * Entry 265 of the Aperture Permission List, for 32-byte IPI buffer 009 at
+    *  BASE_32B + 0x00000120
+    * (OFFSET, MASK, VALUE)      (0XFF981424, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_265_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_266 @ 0XFF981428
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_266_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_266_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_266_PARITY                        0x0
+
+    * Entry 266 of the Aperture Permission List, for 32-byte IPI buffer 010 at
+    *  BASE_32B + 0x00000140
+    * (OFFSET, MASK, VALUE)      (0XFF981428, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_266_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_267 @ 0XFF98142C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_267_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_267_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_267_PARITY                        0x0
+
+    * Entry 267 of the Aperture Permission List, for 32-byte IPI buffer 011 at
+    *  BASE_32B + 0x00000160
+    * (OFFSET, MASK, VALUE)      (0XFF98142C, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_267_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_268 @ 0XFF981430
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_268_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_268_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_268_PARITY                        0x0
+
+    * Entry 268 of the Aperture Permission List, for 32-byte IPI buffer 012 at
+    *  BASE_32B + 0x00000180
+    * (OFFSET, MASK, VALUE)      (0XFF981430, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_268_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_269 @ 0XFF981434
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_269_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_269_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_269_PARITY                        0x0
+
+    * Entry 269 of the Aperture Permission List, for 32-byte IPI buffer 013 at
+    *  BASE_32B + 0x000001A0
+    * (OFFSET, MASK, VALUE)      (0XFF981434, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_269_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_270 @ 0XFF981438
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_270_PERMISSION                    0x42
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_270_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_270_PARITY                        0x0
+
+    * Entry 270 of the Aperture Permission List, for 32-byte IPI buffer 014 at
+    *  BASE_32B + 0x000001C0
+    * (OFFSET, MASK, VALUE)      (0XFF981438, 0xF80FFFFFU ,0x08000042U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_270_OFFSET,
+		0xF80FFFFFU, 0x08000042U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_1, START ADDRESS: FF310000, END ADDRESS: FF31FFFF
+    */
+    /*
+    * Register : APERPERM_271 @ 0XFF98143C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_271_PERMISSION                    0x24
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_271_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_271_PARITY                        0x0
+
+    * Entry 271 of the Aperture Permission List, for 32-byte IPI buffer 015 at
+    *  BASE_32B + 0x000001E0
+    * (OFFSET, MASK, VALUE)      (0XFF98143C, 0xF80FFFFFU ,0x08000024U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_271_OFFSET,
+		0xF80FFFFFU, 0x08000024U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_272 @ 0XFF981440
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_272_PERMISSION                    0x84
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_272_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_272_PARITY                        0x0
+
+    * Entry 272 of the Aperture Permission List, for 32-byte IPI buffer 016 at
+    *  BASE_32B + 0x00000200
+    * (OFFSET, MASK, VALUE)      (0XFF981440, 0xF80FFFFFU ,0x08000084U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_272_OFFSET,
+		0xF80FFFFFU, 0x08000084U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_273 @ 0XFF981444
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_273_PERMISSION                    0x48
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_273_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_273_PARITY                        0x0
+
+    * Entry 273 of the Aperture Permission List, for 32-byte IPI buffer 017 at
+    *  BASE_32B + 0x00000220
+    * (OFFSET, MASK, VALUE)      (0XFF981444, 0xF80FFFFFU ,0x08000048U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_273_OFFSET,
+		0xF80FFFFFU, 0x08000048U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_274 @ 0XFF981448
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_274_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_274_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_274_PARITY                        0x0
+
+    * Entry 274 of the Aperture Permission List, for 32-byte IPI buffer 018 at
+    *  BASE_32B + 0x00000240
+    * (OFFSET, MASK, VALUE)      (0XFF981448, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_274_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_275 @ 0XFF98144C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_275_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_275_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_275_PARITY                        0x0
+
+    * Entry 275 of the Aperture Permission List, for 32-byte IPI buffer 019 at
+    *  BASE_32B + 0x00000260
+    * (OFFSET, MASK, VALUE)      (0XFF98144C, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_275_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_276 @ 0XFF981450
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_276_PERMISSION                    0x81
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_276_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_276_PARITY                        0x0
+
+    * Entry 276 of the Aperture Permission List, for 32-byte IPI buffer 020 at
+    *  BASE_32B + 0x00000280
+    * (OFFSET, MASK, VALUE)      (0XFF981450, 0xF80FFFFFU ,0x08000081U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_276_OFFSET,
+		0xF80FFFFFU, 0x08000081U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_277 @ 0XFF981454
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_277_PERMISSION                    0x18
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_277_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_277_PARITY                        0x0
+
+    * Entry 277 of the Aperture Permission List, for 32-byte IPI buffer 021 at
+    *  BASE_32B + 0x000002A0
+    * (OFFSET, MASK, VALUE)      (0XFF981454, 0xF80FFFFFU ,0x08000018U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_277_OFFSET,
+		0xF80FFFFFU, 0x08000018U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    * Register : APERPERM_278 @ 0XFF981458
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_278_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_278_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_278_PARITY                        0x0
+
+    * Entry 278 of the Aperture Permission List, for 32-byte IPI buffer 022 at
+    *  BASE_32B + 0x000002C0
+    * (OFFSET, MASK, VALUE)      (0XFF981458, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_278_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_279 @ 0XFF98145C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_279_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_279_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_279_PARITY                        0x0
+
+    * Entry 279 of the Aperture Permission List, for 32-byte IPI buffer 023 at
+    *  BASE_32B + 0x000002E0
+    * (OFFSET, MASK, VALUE)      (0XFF98145C, 0xF80FFFFFU ,0x08000008U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_279_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_280 @ 0XFF981460
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_280_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_280_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_280_PARITY                        0x0
+
+    * Entry 280 of the Aperture Permission List, for 32-byte IPI buffer 024 at
+    *  BASE_32B + 0x00000300
+    * (OFFSET, MASK, VALUE)      (0XFF981460, 0xF80FFFFFU ,0x08000080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_280_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_281 @ 0XFF981464
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_281_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_281_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_281_PARITY                        0x0
+
+    * Entry 281 of the Aperture Permission List, for 32-byte IPI buffer 025 at
+    *  BASE_32B + 0x00000320
+    * (OFFSET, MASK, VALUE)      (0XFF981464, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_281_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_282 @ 0XFF981468
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_282_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_282_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_282_PARITY                        0x0
+
+    * Entry 282 of the Aperture Permission List, for 32-byte IPI buffer 026 at
+    *  BASE_32B + 0x00000340
+    * (OFFSET, MASK, VALUE)      (0XFF981468, 0xF80FFFFFU ,0x08000080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_282_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_283 @ 0XFF98146C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_283_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_283_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_283_PARITY                        0x0
+
+    * Entry 283 of the Aperture Permission List, for 32-byte IPI buffer 027 at
+    *  BASE_32B + 0x00000360
+    * (OFFSET, MASK, VALUE)      (0XFF98146C, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_283_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_284 @ 0XFF981470
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_284_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_284_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_284_PARITY                        0x0
+
+    * Entry 284 of the Aperture Permission List, for 32-byte IPI buffer 028 at
+    *  BASE_32B + 0x00000380
+    * (OFFSET, MASK, VALUE)      (0XFF981470, 0xF80FFFFFU ,0x08000080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_284_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_285 @ 0XFF981474
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_285_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_285_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_285_PARITY                        0x0
+
+    * Entry 285 of the Aperture Permission List, for 32-byte IPI buffer 029 at
+    *  BASE_32B + 0x000003A0
+    * (OFFSET, MASK, VALUE)      (0XFF981474, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_285_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_286 @ 0XFF981478
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_286_PERMISSION                    0x82
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_286_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_286_PARITY                        0x0
+
+    * Entry 286 of the Aperture Permission List, for 32-byte IPI buffer 030 at
+    *  BASE_32B + 0x000003C0
+    * (OFFSET, MASK, VALUE)      (0XFF981478, 0xF80FFFFFU ,0x08000082U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_286_OFFSET,
+		0xF80FFFFFU, 0x08000082U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_2, START ADDRESS: FF320000, END ADDRESS: FF32FFFF
+    */
+    /*
+    * Register : APERPERM_287 @ 0XFF98147C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_287_PERMISSION                    0x28
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_287_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_287_PARITY                        0x0
+
+    * Entry 287 of the Aperture Permission List, for 32-byte IPI buffer 031 at
+    *  BASE_32B + 0x000003E0
+    * (OFFSET, MASK, VALUE)      (0XFF98147C, 0xF80FFFFFU ,0x08000028U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_287_OFFSET,
+		0xF80FFFFFU, 0x08000028U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_288 @ 0XFF981480
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_288_PERMISSION                    0x14
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_288_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_288_PARITY                        0x0
+
+    * Entry 288 of the Aperture Permission List, for 32-byte IPI buffer 032 at
+    *  BASE_32B + 0x00000400
+    * (OFFSET, MASK, VALUE)      (0XFF981480, 0xF80FFFFFU ,0x08000014U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_288_OFFSET,
+		0xF80FFFFFU, 0x08000014U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_289 @ 0XFF981484
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_289_PERMISSION                    0x41
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_289_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_289_PARITY                        0x0
+
+    * Entry 289 of the Aperture Permission List, for 32-byte IPI buffer 033 at
+    *  BASE_32B + 0x00000420
+    * (OFFSET, MASK, VALUE)      (0XFF981484, 0xF80FFFFFU ,0x08000041U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_289_OFFSET,
+		0xF80FFFFFU, 0x08000041U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_290 @ 0XFF981488
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_290_PERMISSION                    0x18
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_290_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_290_PARITY                        0x0
+
+    * Entry 290 of the Aperture Permission List, for 32-byte IPI buffer 034 at
+    *  BASE_32B + 0x00000440
+    * (OFFSET, MASK, VALUE)      (0XFF981488, 0xF80FFFFFU ,0x08000018U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_290_OFFSET,
+		0xF80FFFFFU, 0x08000018U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_291 @ 0XFF98148C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_291_PERMISSION                    0x81
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_291_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_291_PARITY                        0x0
+
+    * Entry 291 of the Aperture Permission List, for 32-byte IPI buffer 035 at
+    *  BASE_32B + 0x00000460
+    * (OFFSET, MASK, VALUE)      (0XFF98148C, 0xF80FFFFFU ,0x08000081U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_291_OFFSET,
+		0xF80FFFFFU, 0x08000081U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_292 @ 0XFF981490
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_292_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_292_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_292_PARITY                        0x0
+
+    * Entry 292 of the Aperture Permission List, for 32-byte IPI buffer 036 at
+    *  BASE_32B + 0x00000480
+    * (OFFSET, MASK, VALUE)      (0XFF981490, 0xF80FFFFFU ,0x08000010U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_292_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_293 @ 0XFF981494
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_293_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_293_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_293_PARITY                        0x0
+
+    * Entry 293 of the Aperture Permission List, for 32-byte IPI buffer 037 at
+    *  BASE_32B + 0x000004A0
+    * (OFFSET, MASK, VALUE)      (0XFF981494, 0xF80FFFFFU ,0x08000010U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_293_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
     /*
-    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    * Register : APERPERM_294 @ 0XFF981498
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_294_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_294_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_294_PARITY                        0x0
+
+    * Entry 294 of the Aperture Permission List, for 32-byte IPI buffer 038 at
+    *  BASE_32B + 0x000004C0
+    * (OFFSET, MASK, VALUE)      (0XFF981498, 0xF80FFFFFU ,0x08000010U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_294_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
     */
+    /*
+    * Register : APERPERM_295 @ 0XFF98149C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_295_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_295_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_295_PARITY                        0x0
+
+    * Entry 295 of the Aperture Permission List, for 32-byte IPI buffer 039 at
+    *  BASE_32B + 0x000004E0
+    * (OFFSET, MASK, VALUE)      (0XFF98149C, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_295_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_296 @ 0XFF9814A0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_296_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_296_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_296_PARITY                        0x0
+
+    * Entry 296 of the Aperture Permission List, for 32-byte IPI buffer 040 at
+    *  BASE_32B + 0x00000500
+    * (OFFSET, MASK, VALUE)      (0XFF9814A0, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_296_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_297 @ 0XFF9814A4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_297_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_297_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_297_PARITY                        0x0
+
+    * Entry 297 of the Aperture Permission List, for 32-byte IPI buffer 041 at
+    *  BASE_32B + 0x00000520
+    * (OFFSET, MASK, VALUE)      (0XFF9814A4, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_297_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_298 @ 0XFF9814A8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_298_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_298_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_298_PARITY                        0x0
+
+    * Entry 298 of the Aperture Permission List, for 32-byte IPI buffer 042 at
+    *  BASE_32B + 0x00000540
+    * (OFFSET, MASK, VALUE)      (0XFF9814A8, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_298_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_299 @ 0XFF9814AC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_299_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_299_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_299_PARITY                        0x0
+
+    * Entry 299 of the Aperture Permission List, for 32-byte IPI buffer 043 at
+    *  BASE_32B + 0x00000560
+    * (OFFSET, MASK, VALUE)      (0XFF9814AC, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_299_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_300 @ 0XFF9814B0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_300_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_300_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_300_PARITY                        0x0
+
+    * Entry 300 of the Aperture Permission List, for 32-byte IPI buffer 044 at
+    *  BASE_32B + 0x00000580
+    * (OFFSET, MASK, VALUE)      (0XFF9814B0, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_300_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_301 @ 0XFF9814B4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_301_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_301_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_301_PARITY                        0x0
+
+    * Entry 301 of the Aperture Permission List, for 32-byte IPI buffer 045 at
+    *  BASE_32B + 0x000005A0
+    * (OFFSET, MASK, VALUE)      (0XFF9814B4, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_301_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_302 @ 0XFF9814B8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_302_PERMISSION                    0x12
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_302_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_302_PARITY                        0x0
+
+    * Entry 302 of the Aperture Permission List, for 32-byte IPI buffer 046 at
+    *  BASE_32B + 0x000005C0
+    * (OFFSET, MASK, VALUE)      (0XFF9814B8, 0xF80FFFFFU ,0x08000012U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_302_OFFSET,
+		0xF80FFFFFU, 0x08000012U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_0, START ADDRESS: FF300000, END ADDRESS: FF30FFFF
+    */
+    /*
+    * Register : APERPERM_303 @ 0XFF9814BC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_303_PERMISSION                    0x21
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_303_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_303_PARITY                        0x0
+
+    * Entry 303 of the Aperture Permission List, for 32-byte IPI buffer 047 at
+    *  BASE_32B + 0x000005E0
+    * (OFFSET, MASK, VALUE)      (0XFF9814BC, 0xF80FFFFFU ,0x08000021U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_303_OFFSET,
+		0xF80FFFFFU, 0x08000021U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_304 @ 0XFF9814C0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_304_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_304_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_304_PARITY                        0x0
+
+    * Entry 304 of the Aperture Permission List, for 32-byte IPI buffer 048 at
+    *  BASE_32B + 0x00000600
+    * (OFFSET, MASK, VALUE)      (0XFF9814C0, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_304_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_305 @ 0XFF9814C4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_305_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_305_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_305_PARITY                        0x0
+
+    * Entry 305 of the Aperture Permission List, for 32-byte IPI buffer 049 at
+    *  BASE_32B + 0x00000620
+    * (OFFSET, MASK, VALUE)      (0XFF9814C4, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_305_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_306 @ 0XFF9814C8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_306_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_306_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_306_PARITY                        0x0
+
+    * Entry 306 of the Aperture Permission List, for 32-byte IPI buffer 050 at
+    *  BASE_32B + 0x00000640
+    * (OFFSET, MASK, VALUE)      (0XFF9814C8, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_306_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_307 @ 0XFF9814CC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_307_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_307_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_307_PARITY                        0x0
+
+    * Entry 307 of the Aperture Permission List, for 32-byte IPI buffer 051 at
+    *  BASE_32B + 0x00000660
+    * (OFFSET, MASK, VALUE)      (0XFF9814CC, 0xF80FFFFFU ,0x08000080U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_307_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_308 @ 0XFF9814D0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_308_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_308_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_308_PARITY                        0x0
+
+    * Entry 308 of the Aperture Permission List, for 32-byte IPI buffer 052 at
+    *  BASE_32B + 0x00000680
+    * (OFFSET, MASK, VALUE)      (0XFF9814D0, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_308_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    */
+    /*
+    * Register : APERPERM_309 @ 0XFF9814D4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_309_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_309_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_309_PARITY                        0x0
+
+    * Entry 309 of the Aperture Permission List, for 32-byte IPI buffer 053 at
+    *  BASE_32B + 0x000006A0
+    * (OFFSET, MASK, VALUE)      (0XFF9814D4, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_309_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
     */
@@ -17766,26 +20902,218 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_318 @ 0XFF9814F8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_318_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_318_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_318_PARITY                        0x0
+
+    * Entry 318 of the Aperture Permission List, for 32-byte IPI buffer 062 at
+    *  BASE_32B + 0x000007C0
+    * (OFFSET, MASK, VALUE)      (0XFF9814F8, 0xF80FFFFFU ,0x08000002U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_318_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_319 @ 0XFF9814FC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_319_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_319_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_319_PARITY                        0x0
+
+    * Entry 319 of the Aperture Permission List, for 32-byte IPI buffer 063 at
+    *  BASE_32B + 0x000007E0
+    * (OFFSET, MASK, VALUE)      (0XFF9814FC, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_319_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_320 @ 0XFF981500
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_320_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_320_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_320_PARITY                        0x0
+
+    * Entry 320 of the Aperture Permission List, for 32-byte IPI buffer 064 at
+    *  BASE_32B + 0x00000800
+    * (OFFSET, MASK, VALUE)      (0XFF981500, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_320_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_321 @ 0XFF981504
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_321_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_321_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_321_PARITY                        0x0
+
+    * Entry 321 of the Aperture Permission List, for 32-byte IPI buffer 065 at
+    *  BASE_32B + 0x00000820
+    * (OFFSET, MASK, VALUE)      (0XFF981504, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_321_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_322 @ 0XFF981508
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_322_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_322_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_322_PARITY                        0x0
+
+    * Entry 322 of the Aperture Permission List, for 32-byte IPI buffer 066 at
+    *  BASE_32B + 0x00000840
+    * (OFFSET, MASK, VALUE)      (0XFF981508, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_322_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_7, START ADDRESS: FF340000, END ADDRESS: FF34FFFF
+    * Register : APERPERM_323 @ 0XFF98150C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_323_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_323_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_323_PARITY                        0x0
+
+    * Entry 323 of the Aperture Permission List, for 32-byte IPI buffer 067 at
+    *  BASE_32B + 0x00000860
+    * (OFFSET, MASK, VALUE)      (0XFF98150C, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_323_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    */
+    /*
+    * Register : APERPERM_324 @ 0XFF981510
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_324_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_324_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_324_PARITY                        0x0
+
+    * Entry 324 of the Aperture Permission List, for 32-byte IPI buffer 068 at
+    *  BASE_32B + 0x00000880
+    * (OFFSET, MASK, VALUE)      (0XFF981510, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_324_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    */
+    /*
+    * Register : APERPERM_325 @ 0XFF981514
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_325_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_325_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_325_PARITY                        0x0
+
+    * Entry 325 of the Aperture Permission List, for 32-byte IPI buffer 069 at
+    *  BASE_32B + 0x000008A0
+    * (OFFSET, MASK, VALUE)      (0XFF981514, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_325_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
@@ -17814,26 +21142,218 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_334 @ 0XFF981538
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_334_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_334_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_334_PARITY                        0x0
+
+    * Entry 334 of the Aperture Permission List, for 32-byte IPI buffer 078 at
+    *  BASE_32B + 0x000009C0
+    * (OFFSET, MASK, VALUE)      (0XFF981538, 0xF80FFFFFU ,0x08000002U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_334_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_335 @ 0XFF98153C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_335_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_335_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_335_PARITY                        0x0
+
+    * Entry 335 of the Aperture Permission List, for 32-byte IPI buffer 079 at
+    *  BASE_32B + 0x000009E0
+    * (OFFSET, MASK, VALUE)      (0XFF98153C, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_335_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_336 @ 0XFF981540
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_336_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_336_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_336_PARITY                        0x0
+
+    * Entry 336 of the Aperture Permission List, for 32-byte IPI buffer 080 at
+    *  BASE_32B + 0x00000A00
+    * (OFFSET, MASK, VALUE)      (0XFF981540, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_336_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_337 @ 0XFF981544
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_337_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_337_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_337_PARITY                        0x0
+
+    * Entry 337 of the Aperture Permission List, for 32-byte IPI buffer 081 at
+    *  BASE_32B + 0x00000A20
+    * (OFFSET, MASK, VALUE)      (0XFF981544, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_337_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_338 @ 0XFF981548
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_338_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_338_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_338_PARITY                        0x0
+
+    * Entry 338 of the Aperture Permission List, for 32-byte IPI buffer 082 at
+    *  BASE_32B + 0x00000A40
+    * (OFFSET, MASK, VALUE)      (0XFF981548, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_338_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_8, START ADDRESS: FF350000, END ADDRESS: FF35FFFF
+    * Register : APERPERM_339 @ 0XFF98154C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_339_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_339_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_339_PARITY                        0x0
+
+    * Entry 339 of the Aperture Permission List, for 32-byte IPI buffer 083 at
+    *  BASE_32B + 0x00000A60
+    * (OFFSET, MASK, VALUE)      (0XFF98154C, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_339_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    */
+    /*
+    * Register : APERPERM_340 @ 0XFF981550
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_340_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_340_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_340_PARITY                        0x0
+
+    * Entry 340 of the Aperture Permission List, for 32-byte IPI buffer 084 at
+    *  BASE_32B + 0x00000A80
+    * (OFFSET, MASK, VALUE)      (0XFF981550, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_340_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    */
+    /*
+    * Register : APERPERM_341 @ 0XFF981554
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_341_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_341_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_341_PARITY                        0x0
+
+    * Entry 341 of the Aperture Permission List, for 32-byte IPI buffer 085 at
+    *  BASE_32B + 0x00000AA0
+    * (OFFSET, MASK, VALUE)      (0XFF981554, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_341_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
@@ -17862,26 +21382,218 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_350 @ 0XFF981578
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_350_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_350_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_350_PARITY                        0x0
+
+    * Entry 350 of the Aperture Permission List, for 32-byte IPI buffer 094 at
+    *  BASE_32B + 0x00000BC0
+    * (OFFSET, MASK, VALUE)      (0XFF981578, 0xF80FFFFFU ,0x08000002U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_350_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_351 @ 0XFF98157C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_351_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_351_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_351_PARITY                        0x0
+
+    * Entry 351 of the Aperture Permission List, for 32-byte IPI buffer 095 at
+    *  BASE_32B + 0x00000BE0
+    * (OFFSET, MASK, VALUE)      (0XFF98157C, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_351_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_352 @ 0XFF981580
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_352_PERMISSION                    0x4
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_352_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_352_PARITY                        0x0
+
+    * Entry 352 of the Aperture Permission List, for 32-byte IPI buffer 096 at
+    *  BASE_32B + 0x00000C00
+    * (OFFSET, MASK, VALUE)      (0XFF981580, 0xF80FFFFFU ,0x08000004U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_352_OFFSET,
+		0xF80FFFFFU, 0x08000004U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_353 @ 0XFF981584
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_353_PERMISSION                    0x40
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_353_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_353_PARITY                        0x0
+
+    * Entry 353 of the Aperture Permission List, for 32-byte IPI buffer 097 at
+    *  BASE_32B + 0x00000C20
+    * (OFFSET, MASK, VALUE)      (0XFF981584, 0xF80FFFFFU ,0x08000040U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_353_OFFSET,
+		0xF80FFFFFU, 0x08000040U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_354 @ 0XFF981588
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_354_PERMISSION                    0x8
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_354_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_354_PARITY                        0x0
+
+    * Entry 354 of the Aperture Permission List, for 32-byte IPI buffer 098 at
+    *  BASE_32B + 0x00000C40
+    * (OFFSET, MASK, VALUE)      (0XFF981588, 0xF80FFFFFU ,0x08000008U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_354_OFFSET,
+		0xF80FFFFFU, 0x08000008U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_9, START ADDRESS: FF360000, END ADDRESS: FF36FFFF
+    * Register : APERPERM_355 @ 0XFF98158C
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_355_PERMISSION                    0x80
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_355_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_355_PARITY                        0x0
+
+    * Entry 355 of the Aperture Permission List, for 32-byte IPI buffer 099 at
+    *  BASE_32B + 0x00000C60
+    * (OFFSET, MASK, VALUE)      (0XFF98158C, 0xF80FFFFFU ,0x08000080U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_355_OFFSET,
+		0xF80FFFFFU, 0x08000080U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
+    */
+    /*
+    * Register : APERPERM_356 @ 0XFF981590
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_356_PERMISSION                    0x1
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_356_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_356_PARITY                        0x0
+
+    * Entry 356 of the Aperture Permission List, for 32-byte IPI buffer 100 at
+    *  BASE_32B + 0x00000C80
+    * (OFFSET, MASK, VALUE)      (0XFF981590, 0xF80FFFFFU ,0x08000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_356_OFFSET,
+		0xF80FFFFFU, 0x08000001U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
+    */
+    /*
+    * Register : APERPERM_357 @ 0XFF981594
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_357_PERMISSION                    0x10
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_357_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_357_PARITY                        0x0
+
+    * Entry 357 of the Aperture Permission List, for 32-byte IPI buffer 101 at
+    *  BASE_32B + 0x00000CA0
+    * (OFFSET, MASK, VALUE)      (0XFF981594, 0xF80FFFFFU ,0x08000010U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_357_OFFSET,
+		0xF80FFFFFU, 0x08000010U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
@@ -17910,74 +21622,488 @@ unsigned long psu_lpd_xppu_data(void)
     * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
+    * Register : APERPERM_366 @ 0XFF9815B8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_366_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_366_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_366_PARITY                        0x0
+
+    * Entry 366 of the Aperture Permission List, for 32-byte IPI buffer 110 at
+    *  BASE_32B + 0x00000DC0
+    * (OFFSET, MASK, VALUE)      (0XFF9815B8, 0xF80FFFFFU ,0x08000002U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_366_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
     */
     /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
+    * Register : APERPERM_367 @ 0XFF9815BC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_367_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_367_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_367_PARITY                        0x0
+
+    * Entry 367 of the Aperture Permission List, for 32-byte IPI buffer 111 at
+    *  BASE_32B + 0x00000DE0
+    * (OFFSET, MASK, VALUE)      (0XFF9815BC, 0xF80FFFFFU ,0x08000020U)
     */
-    /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_10, START ADDRESS: FF370000, END ADDRESS: FF37FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
-    */
-    /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
-    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_367_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    * Register : APERPERM_368 @ 0XFF9815C0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_368_PERMISSION                    0x24
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_368_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_368_PARITY                        0x0
+
+    * Entry 368 of the Aperture Permission List, for 32-byte IPI buffer 112 at
+    *  BASE_32B + 0x00000E00
+    * (OFFSET, MASK, VALUE)      (0XFF9815C0, 0xF80FFFFFU ,0x08000024U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_368_OFFSET,
+		0xF80FFFFFU, 0x08000024U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    * Register : APERPERM_369 @ 0XFF9815C4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_369_PERMISSION                    0x42
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_369_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_369_PARITY                        0x0
+
+    * Entry 369 of the Aperture Permission List, for 32-byte IPI buffer 113 at
+    *  BASE_32B + 0x00000E20
+    * (OFFSET, MASK, VALUE)      (0XFF9815C4, 0xF80FFFFFU ,0x08000042U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_369_OFFSET,
+		0xF80FFFFFU, 0x08000042U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    * Register : APERPERM_370 @ 0XFF9815C8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_370_PERMISSION                    0x28
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_370_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_370_PARITY                        0x0
+
+    * Entry 370 of the Aperture Permission List, for 32-byte IPI buffer 114 at
+    *  BASE_32B + 0x00000E40
+    * (OFFSET, MASK, VALUE)      (0XFF9815C8, 0xF80FFFFFU ,0x08000028U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_370_OFFSET,
+		0xF80FFFFFU, 0x08000028U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    * Register : APERPERM_371 @ 0XFF9815CC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_371_PERMISSION                    0x82
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_371_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_371_PARITY                        0x0
+
+    * Entry 371 of the Aperture Permission List, for 32-byte IPI buffer 115 at
+    *  BASE_32B + 0x00000E60
+    * (OFFSET, MASK, VALUE)      (0XFF9815CC, 0xF80FFFFFU ,0x08000082U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_371_OFFSET,
+		0xF80FFFFFU, 0x08000082U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
-    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    * Register : APERPERM_372 @ 0XFF9815D0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_372_PERMISSION                    0x21
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_372_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_372_PARITY                        0x0
+
+    * Entry 372 of the Aperture Permission List, for 32-byte IPI buffer 116 at
+    *  BASE_32B + 0x00000E80
+    * (OFFSET, MASK, VALUE)      (0XFF9815D0, 0xF80FFFFFU ,0x08000021U)
     */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_372_OFFSET,
+		0xF80FFFFFU, 0x08000021U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
     /*
+    * Register : APERPERM_373 @ 0XFF9815D4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_373_PERMISSION                    0x12
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_373_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_373_PARITY                        0x0
+
+    * Entry 373 of the Aperture Permission List, for 32-byte IPI buffer 117 at
+    *  BASE_32B + 0x00000EA0
+    * (OFFSET, MASK, VALUE)      (0XFF9815D4, 0xF80FFFFFU ,0x08000012U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_373_OFFSET,
+		0xF80FFFFFU, 0x08000012U);
+/*##################################################################### */
+
+    /*
     * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
     */
+    /*
+    * Register : APERPERM_374 @ 0XFF9815D8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_374_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_374_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_374_PARITY                        0x0
+
+    * Entry 374 of the Aperture Permission List, for 32-byte IPI buffer 118 at
+    *  BASE_32B + 0x00000EC0
+    * (OFFSET, MASK, VALUE)      (0XFF9815D8, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_374_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_375 @ 0XFF9815DC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_375_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_375_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_375_PARITY                        0x0
+
+    * Entry 375 of the Aperture Permission List, for 32-byte IPI buffer 119 at
+    *  BASE_32B + 0x00000EE0
+    * (OFFSET, MASK, VALUE)      (0XFF9815DC, 0xF80FFFFFU ,0x08000002U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_375_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_376 @ 0XFF9815E0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_376_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_376_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_376_PARITY                        0x0
+
+    * Entry 376 of the Aperture Permission List, for 32-byte IPI buffer 120 at
+    *  BASE_32B + 0x00000F00
+    * (OFFSET, MASK, VALUE)      (0XFF9815E0, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_376_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_377 @ 0XFF9815E4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_377_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_377_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_377_PARITY                        0x0
+
+    * Entry 377 of the Aperture Permission List, for 32-byte IPI buffer 121 at
+    *  BASE_32B + 0x00000F20
+    * (OFFSET, MASK, VALUE)      (0XFF9815E4, 0xF80FFFFFU ,0x08000002U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_377_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_378 @ 0XFF9815E8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_378_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_378_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_378_PARITY                        0x0
+
+    * Entry 378 of the Aperture Permission List, for 32-byte IPI buffer 122 at
+    *  BASE_32B + 0x00000F40
+    * (OFFSET, MASK, VALUE)      (0XFF9815E8, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_378_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_379 @ 0XFF9815EC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_379_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_379_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_379_PARITY                        0x0
+
+    * Entry 379 of the Aperture Permission List, for 32-byte IPI buffer 123 at
+    *  BASE_32B + 0x00000F60
+    * (OFFSET, MASK, VALUE)      (0XFF9815EC, 0xF80FFFFFU ,0x08000002U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_379_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_380 @ 0XFF9815F0
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_380_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_380_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_380_PARITY                        0x0
+
+    * Entry 380 of the Aperture Permission List, for 32-byte IPI buffer 124 at
+    *  BASE_32B + 0x00000F80
+    * (OFFSET, MASK, VALUE)      (0XFF9815F0, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_380_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_381 @ 0XFF9815F4
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_381_PERMISSION                    0x2
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_381_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_381_PARITY                        0x0
+
+    * Entry 381 of the Aperture Permission List, for 32-byte IPI buffer 125 at
+    *  BASE_32B + 0x00000FA0
+    * (OFFSET, MASK, VALUE)      (0XFF9815F4, 0xF80FFFFFU ,0x08000002U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_381_OFFSET,
+		0xF80FFFFFU, 0x08000002U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_382 @ 0XFF9815F8
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_382_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_382_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_382_PARITY                        0x0
+
+    * Entry 382 of the Aperture Permission List, for 32-byte IPI buffer 126 at
+    *  BASE_32B + 0x00000FC0
+    * (OFFSET, MASK, VALUE)      (0XFF9815F8, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_382_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
+    * APERTURE NAME: IPI_PMU, START ADDRESS: FF330000, END ADDRESS: FF33FFFF
+    */
+    /*
+    * Register : APERPERM_383 @ 0XFF9815FC
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_383_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_383_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_383_PARITY                        0x0
+
+    * Entry 383 of the Aperture Permission List, for 32-byte IPI buffer 127 at
+    *  BASE_32B + 0x00000FE0
+    * (OFFSET, MASK, VALUE)      (0XFF9815FC, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_383_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
     /*
     * APERTURE NAME: IOU_GPV, START ADDRESS: FE000000, END ADDRESS: FE0FFFFF
     */
@@ -18037,8 +22163,67 @@ unsigned long psu_lpd_xppu_data(void)
     * : DFFFFFFF
     */
     /*
+    * XPPU INTERRUPT ENABLE
+    */
+    /*
+    * Register : IEN @ 0XFF980018
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_APER_PARITY                            0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_APER_TZ                                0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_APER_PERM                              0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_MID_PARITY                             0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_MID_RO                                 0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_MID_MISS                               0X1
+
+    * See Interuppt Status Register for details
+    *  PSU_LPD_XPPU_CFG_IEN_INV_APB                                0X1
+
+    * Interrupt Enable Register
+    * (OFFSET, MASK, VALUE)      (0XFF980018, 0x000000EFU ,0x000000EFU)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_IEN_OFFSET, 0x000000EFU, 0x000000EFU);
+/*##################################################################### */
+
+    /*
     * XPPU CONTROL
     */
+    /*
+    * Register : err_ctrl @ 0XFF9CFFEC
+
+    * Whether an APB access to the "hole" region and to an unimplemented regis
+    * ter space causes PSLVERR
+    *  PSU_LPD_XPPU_SINK_ERR_CTRL_PSLVERR                          1
+
+    * Error control register
+    * (OFFSET, MASK, VALUE)      (0XFF9CFFEC, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_SINK_ERR_CTRL_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : CTRL @ 0XFF980000
+
+    * 0=Bypass XPPU (transparent) 1=Enable XPPU permission checking
+    *  PSU_LPD_XPPU_CFG_CTRL_ENABLE                                1
+
+    * XPPU Control Register
+    * (OFFSET, MASK, VALUE)      (0XFF980000, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_CTRL_OFFSET, 0x00000001U, 0x00000001U);
+/*##################################################################### */
+
 
 	return 1;
 }
@@ -18103,6 +22288,785 @@ unsigned long psu_fpd_xmpu_data(void)
     /*
     * FPD XMPU
     */
+    /*
+    * Register : R07_CONFIG @ 0XFD5D017C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R07_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R07_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R07_CONFIG_WRALLOWED                       1
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R07_CONFIG_RDALLOWED                       1
+
+    * Region 7 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D017C, 0x0000001EU ,0x00000006U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R07_CONFIG_OFFSET,
+		0x0000001EU, 0x00000006U);
+/*##################################################################### */
+
+    /*
+    * Register : R07_START @ 0XFD5D0170
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R07_START_ADDR                             1037840
+
+    * Region 7 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0170, 0x0FFFFFFFU ,0x000FD610U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R07_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD610U);
+/*##################################################################### */
+
+    /*
+    * Register : R07_END @ 0XFD5D0174
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R07_END_ADDR                               1037967
+
+    * Region 7 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0174, 0x0FFFFFFFU ,0x000FD68FU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R07_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD68FU);
+/*##################################################################### */
+
+    /*
+    * Register : R07_MASTER @ 0XFD5D0178
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R07_MASTER_MASK                            1023
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R07_MASTER_ID                              64
+
+    * Region 7 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0178, 0x03FF03FFU ,0x03FF0040U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R07_MASTER_OFFSET,
+		0x03FF03FFU, 0x03FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : R06_CONFIG @ 0XFD5D016C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R06_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R06_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R06_CONFIG_WRALLOWED                       1
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R06_CONFIG_RDALLOWED                       1
+
+    * Region 6 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D016C, 0x0000001EU ,0x00000006U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R06_CONFIG_OFFSET,
+		0x0000001EU, 0x00000006U);
+/*##################################################################### */
+
+    /*
+    * Register : R06_START @ 0XFD5D0160
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R06_START_ADDR                             1037776
+
+    * Region 6 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0160, 0x0FFFFFFFU ,0x000FD5D0U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R06_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD5D0U);
+/*##################################################################### */
+
+    /*
+    * Register : R06_END @ 0XFD5D0164
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R06_END_ADDR                               1037791
+
+    * Region 6 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0164, 0x0FFFFFFFU ,0x000FD5DFU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R06_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD5DFU);
+/*##################################################################### */
+
+    /*
+    * Register : R06_MASTER @ 0XFD5D0168
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R06_MASTER_MASK                            1023
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R06_MASTER_ID                              64
+
+    * Region 6 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0168, 0x03FF03FFU ,0x03FF0040U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R06_MASTER_OFFSET,
+		0x03FF03FFU, 0x03FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : R05_CONFIG @ 0XFD5D015C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R05_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R05_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R05_CONFIG_WRALLOWED                       1
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R05_CONFIG_RDALLOWED                       1
+
+    * Region 5 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D015C, 0x0000001EU ,0x00000006U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R05_CONFIG_OFFSET,
+		0x0000001EU, 0x00000006U);
+/*##################################################################### */
+
+    /*
+    * Register : R05_START @ 0XFD5D0150
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R05_START_ADDR                             1036704
+
+    * Region 5 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0150, 0x0FFFFFFFU ,0x000FD1A0U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R05_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD1A0U);
+/*##################################################################### */
+
+    /*
+    * Register : R05_END @ 0XFD5D0154
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R05_END_ADDR                               1037023
+
+    * Region 5 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0154, 0x0FFFFFFFU ,0x000FD2DFU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R05_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD2DFU);
+/*##################################################################### */
+
+    /*
+    * Register : R05_MASTER @ 0XFD5D0158
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R05_MASTER_MASK                            1023
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R05_MASTER_ID                              64
+
+    * Region 5 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0158, 0x03FF03FFU ,0x03FF0040U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R05_MASTER_OFFSET,
+		0x03FF03FFU, 0x03FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : R04_CONFIG @ 0XFD5D014C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R04_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R04_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R04_CONFIG_WRALLOWED                       1
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R04_CONFIG_RDALLOWED                       1
+
+    * Region 4 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D014C, 0x0000001EU ,0x00000006U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R04_CONFIG_OFFSET,
+		0x0000001EU, 0x00000006U);
+/*##################################################################### */
+
+    /*
+    * Register : R04_START @ 0XFD5D0140
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R04_START_ADDR                             1036288
+
+    * Region 4 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0140, 0x0FFFFFFFU ,0x000FD000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R04_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD000U);
+/*##################################################################### */
+
+    /*
+    * Register : R04_END @ 0XFD5D0144
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R04_END_ADDR                               1036383
+
+    * Region 4 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0144, 0x0FFFFFFFU ,0x000FD05FU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R04_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD05FU);
+/*##################################################################### */
+
+    /*
+    * Register : R04_MASTER @ 0XFD5D0148
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R04_MASTER_MASK                            1023
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R04_MASTER_ID                              64
+
+    * Region 4 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0148, 0x03FF03FFU ,0x03FF0040U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R04_MASTER_OFFSET,
+		0x03FF03FFU, 0x03FF0040U);
+/*##################################################################### */
+
+    /*
+    * Register : R03_CONFIG @ 0XFD5D013C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R03_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R03_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R03_CONFIG_WRALLOWED                       0
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R03_CONFIG_RDALLOWED                       0
+
+    * Region 3 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D013C, 0x0000001EU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R03_CONFIG_OFFSET,
+		0x0000001EU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R03_START @ 0XFD5D0130
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R03_START_ADDR                             1037840
+
+    * Region 3 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0130, 0x0FFFFFFFU ,0x000FD610U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R03_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD610U);
+/*##################################################################### */
+
+    /*
+    * Register : R03_END @ 0XFD5D0134
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R03_END_ADDR                               1037967
+
+    * Region 3 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0134, 0x0FFFFFFFU ,0x000FD68FU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R03_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD68FU);
+/*##################################################################### */
+
+    /*
+    * Register : R03_MASTER @ 0XFD5D0138
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R03_MASTER_MASK                            0
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R03_MASTER_ID                              0
+
+    * Region 3 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0138, 0x03FF03FFU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R03_MASTER_OFFSET,
+		0x03FF03FFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R02_CONFIG @ 0XFD5D012C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R02_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R02_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R02_CONFIG_WRALLOWED                       0
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R02_CONFIG_RDALLOWED                       0
+
+    * Region 2 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D012C, 0x0000001EU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R02_CONFIG_OFFSET,
+		0x0000001EU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R02_START @ 0XFD5D0120
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R02_START_ADDR                             1037776
+
+    * Region 2 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0120, 0x0FFFFFFFU ,0x000FD5D0U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R02_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD5D0U);
+/*##################################################################### */
+
+    /*
+    * Register : R02_END @ 0XFD5D0124
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R02_END_ADDR                               1037791
+
+    * Region 2 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0124, 0x0FFFFFFFU ,0x000FD5DFU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R02_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD5DFU);
+/*##################################################################### */
+
+    /*
+    * Register : R02_MASTER @ 0XFD5D0128
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R02_MASTER_MASK                            0
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R02_MASTER_ID                              0
+
+    * Region 2 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0128, 0x03FF03FFU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R02_MASTER_OFFSET,
+		0x03FF03FFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R01_CONFIG @ 0XFD5D011C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R01_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R01_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R01_CONFIG_WRALLOWED                       0
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R01_CONFIG_RDALLOWED                       0
+
+    * Region 1 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D011C, 0x0000001EU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R01_CONFIG_OFFSET,
+		0x0000001EU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R01_START @ 0XFD5D0110
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R01_START_ADDR                             1036704
+
+    * Region 1 Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0110, 0x0FFFFFFFU ,0x000FD1A0U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R01_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD1A0U);
+/*##################################################################### */
+
+    /*
+    * Register : R01_END @ 0XFD5D0114
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R01_END_ADDR                               1037023
+
+    * Region 1 End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0114, 0x0FFFFFFFU ,0x000FD2DFU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R01_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD2DFU);
+/*##################################################################### */
+
+    /*
+    * Register : R01_MASTER @ 0XFD5D0118
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R01_MASTER_MASK                            0
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R01_MASTER_ID                              0
+
+    * Region 1 Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0118, 0x03FF03FFU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R01_MASTER_OFFSET,
+		0x03FF03FFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R00_CONFIG @ 0XFD5D010C
+
+    * 0: Relaxed NS checking. A secure access is allowed to access secure or n
+    * on-secure region based on Rd/WrAllowed configuration. A non-secure acces
+    * s can only access non-secure region based on Rd/WrAllowed configuration
+    * 1: Strict NS checking. A secure access can only access secure region bas
+    * ed on Rd/WrAllowed configuration. A non-secure access can only access no
+    * n-secure region based on Rd/WrAllowed configuration
+    *  PSU_FPD_XMPU_CFG_R00_CONFIG_NSCHECKTYPE                     0
+
+    * 0: Region is configured to be secure 1: Region is configured to be non-s
+    * ecure (NS)
+    *  PSU_FPD_XMPU_CFG_R00_CONFIG_REGIONNS                        0
+
+    * 0: Write address matching this region are poisoned 1: Write address matc
+    * hing this region are allowed
+    *  PSU_FPD_XMPU_CFG_R00_CONFIG_WRALLOWED                       0
+
+    * 0: Read address matching this region are poisoned 1: Read address matchi
+    * ng this region are allowed
+    *  PSU_FPD_XMPU_CFG_R00_CONFIG_RDALLOWED                       0
+
+    * Region Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D010C, 0x0000001EU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R00_CONFIG_OFFSET,
+		0x0000001EU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : R00_START @ 0XFD5D0100
+
+    * This field sets the start address bits [39:12] of this region (aligned t
+    * o 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R00_START_ADDR                             1036288
+
+    * Region Start Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0100, 0x0FFFFFFFU ,0x000FD000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R00_START_OFFSET,
+		0x0FFFFFFFU, 0x000FD000U);
+/*##################################################################### */
+
+    /*
+    * Register : R00_END @ 0XFD5D0104
+
+    * This field sets the end address bits [39:12] of this region (aligned to
+    * 4kB). All bits of this field are used during comparison.
+    *  PSU_FPD_XMPU_CFG_R00_END_ADDR                               1036383
+
+    * Region End Address Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0104, 0x0FFFFFFFU ,0x000FD05FU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R00_END_OFFSET,
+		0x0FFFFFFFU, 0x000FD05FU);
+/*##################################################################### */
+
+    /*
+    * Register : R00_MASTER @ 0XFD5D0108
+
+    * Master ID mask.
+    *  PSU_FPD_XMPU_CFG_R00_MASTER_MASK                            0
+
+    * Master ID value. An AXI MasterID will match this Master ID value of this
+    *  region if: AXI_MasterID AND MASK == ID AND MASK
+    *  PSU_FPD_XMPU_CFG_R00_MASTER_ID                              0
+
+    * Region Master ID Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0108, 0x03FF03FFU ,0x00000000U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R00_MASTER_OFFSET,
+		0x03FF03FFU, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * FPD XMPU INTERRUPT ENABLE
+    */
+    /*
+    * Register : IEN @ 0XFD5D0018
+
+    * see INT_STATUS register for details
+    *  PSU_FPD_XMPU_CFG_IEN_SECURITYVIO                            0X1
+
+    * see INT_STATUS register for details
+    *  PSU_FPD_XMPU_CFG_IEN_WRPERMVIO                              0X1
+
+    * see INT_STATUS register for details
+    *  PSU_FPD_XMPU_CFG_IEN_RDPERMVIO                              0X1
+
+    * see INT_STATUS register for details
+    *  PSU_FPD_XMPU_CFG_IEN_INV_APB                                0X1
+
+    * Interrupt Enable Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0018, 0x0000000FU ,0x0000000FU)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_IEN_OFFSET, 0x0000000FU, 0x0000000FU);
+/*##################################################################### */
+
+    /*
+    * FPD XMPU CFG CTRL
+    */
+    /*
+    * Register : err_ctrl @ 0XFD4FFFEC
+
+    * Whether an APB access to the "hole" region and to an unimplemented regis
+    * ter space causes PSLVERR
+    *  PSU_FPD_XMPU_SINK_ERR_CTRL_PSLVERR                          1
+
+    * Error control register
+    * (OFFSET, MASK, VALUE)      (0XFD4FFFEC, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_SINK_ERR_CTRL_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : CTRL @ 0XFD5D0000
+
+    * 0: Transaction poisoning is done by adding poison attribute defined in P
+    * OISON.ATTRIB field 1: Transaction poisoning is done by changing address
+    * to poisoned address defined in POISON.BASE field
+    *  PSU_FPD_XMPU_CFG_CTRL_POISONCFG                             1
+
+    * Default write permission 0: If AXI write Address/ID doesn't match with a
+    * ny of the enabled regions, then write is poisoned 1: If AXI write Addres
+    * s/ID doesn't match with any of the enabled regions, then write is allowe
+    * d to go through
+    *  PSU_FPD_XMPU_CFG_CTRL_DEFWRALLOWED                          1
+
+    * Default read permission 0: If AXI read Address/ID doesn't match with any
+    *  of the enabled regions, then read is poisoned 1: If AXI read Address/ID
+    *  doesn't match with any of the enabled regions, then read is allowed to
+    * go through
+    *  PSU_FPD_XMPU_CFG_CTRL_DEFRDALLOWED                          1
+
+    * XMPU Control Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D0000, 0x00000007U ,0x00000007U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_CTRL_OFFSET, 0x00000007U, 0x00000007U);
+/*##################################################################### */
+
+    /*
+    * ENABLE REGION WHICH ARE NOT USED FOR BLOCKING ACCESS TO FPD XMPU FOR ALL
+    *  MASTERS
+    */
+    /*
+    * Register : R07_CONFIG @ 0XFD5D017C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R07_CONFIG_ENABLE                          1
+
+    * Region 7 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D017C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R07_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R06_CONFIG @ 0XFD5D016C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R06_CONFIG_ENABLE                          1
+
+    * Region 6 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D016C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R06_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R05_CONFIG @ 0XFD5D015C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R05_CONFIG_ENABLE                          1
+
+    * Region 5 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D015C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R05_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R04_CONFIG @ 0XFD5D014C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R04_CONFIG_ENABLE                          1
+
+    * Region 4 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D014C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R04_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R03_CONFIG @ 0XFD5D013C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R03_CONFIG_ENABLE                          1
+
+    * Region 3 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D013C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R03_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R01_CONFIG @ 0XFD5D011C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R01_CONFIG_ENABLE                          1
+
+    * Region 1 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D011C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R01_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * Register : R00_CONFIG @ 0XFD5D010C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R00_CONFIG_ENABLE                          1
+
+    * Region Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D010C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R00_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
+    /*
+    * ENABLE REGIONS WHICH ARE USED FOR BLOCKING FPD XMPU FOR ALL MASTERS AT T
+    * HE END
+    */
+    /*
+    * Register : R02_CONFIG @ 0XFD5D012C
+
+    * 0: Region is disabled 1: Region is enabled
+    *  PSU_FPD_XMPU_CFG_R02_CONFIG_ENABLE                          1
+
+    * Region 2 Configuration Register
+    * (OFFSET, MASK, VALUE)      (0XFD5D012C, 0x00000001U ,0x00000001U)
+    */
+	PSU_Mask_Write(FPD_XMPU_CFG_R02_CONFIG_OFFSET,
+		0x00000001U, 0x00000001U);
+/*##################################################################### */
+
 
 	return 1;
 }
@@ -18118,31 +23082,31 @@ unsigned long psu_protection_lock_data(void)
     * APERTURE NAME: LPD_XPPU, START ADDRESS: FF980000, END ADDRESS: FF99FFFF
     */
     /*
+    * Register : APERPERM_152 @ 0XFF981260
+
+    * This field defines the MASTER ID match criteria. Each entry in the IDL c
+    * orresponds to a bit in this field. 0=not match, 1=match.
+    *  PSU_LPD_XPPU_CFG_APERPERM_152_PERMISSION                    0x20
+
+    * 1=secure or non-secure transactions are allowed 0=only secure transactio
+    * na are allowed
+    *  PSU_LPD_XPPU_CFG_APERPERM_152_TRUSTZONE                     0x1
+
+    * SW must calculate and set up parity, if parity check is enabled by the C
+    * TRL register. 31: parity for bits 19:15 30: parity for bits 14:10 29: pa
+    * rity for bits 9:5 28: parity for bits 27, 4:0
+    *  PSU_LPD_XPPU_CFG_APERPERM_152_PARITY                        0x0
+
+    * Entry 152 of the Aperture Permission List, for the 64K-byte aperture at
+    * BASE_64KB + 0x00980000
+    * (OFFSET, MASK, VALUE)      (0XFF981260, 0xF80FFFFFU ,0x08000020U)
+    */
+	PSU_Mask_Write(LPD_XPPU_CFG_APERPERM_152_OFFSET,
+		0xF80FFFFFU, 0x08000020U);
+/*##################################################################### */
+
+    /*
     * XMPU LOCK
-    */
-    /*
-    * LOCK OCM XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK FPD XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
-    */
-    /*
-    * LOCK DDR XMPU ONLY IF IT IS NOT PROTECTED BY ANY MASTER
     */
 
 	return 1;
@@ -18477,38 +23441,6 @@ unsigned long psu_serdes_init_data(void)
     * GT REFERENCE CLOCK SOURCE SELECTION
     */
     /*
-    * Register : PLL_REF_SEL0 @ 0XFD410000
-
-    * PLL0 Reference Selection. 0x0 - 5MHz, 0x1 - 9.6MHz, 0x2 - 10MHz, 0x3 - 1
-    * 2MHz, 0x4 - 13MHz, 0x5 - 19.2MHz, 0x6 - 20MHz, 0x7 - 24MHz, 0x8 - 26MHz,
-    *  0x9 - 27MHz, 0xA - 38.4MHz, 0xB - 40MHz, 0xC - 52MHz, 0xD - 100MHz, 0xE
-    *  - 108MHz, 0xF - 125MHz, 0x10 - 135MHz, 0x11 - 150 MHz. 0x12 to 0x1F - R
-    * eserved
-    *  PSU_SERDES_PLL_REF_SEL0_PLLREFSEL0                          0x9
-
-    * PLL0 Reference Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD410000, 0x0000001FU ,0x00000009U)
-    */
-	PSU_Mask_Write(SERDES_PLL_REF_SEL0_OFFSET, 0x0000001FU, 0x00000009U);
-/*##################################################################### */
-
-    /*
-    * Register : PLL_REF_SEL1 @ 0XFD410004
-
-    * PLL1 Reference Selection. 0x0 - 5MHz, 0x1 - 9.6MHz, 0x2 - 10MHz, 0x3 - 1
-    * 2MHz, 0x4 - 13MHz, 0x5 - 19.2MHz, 0x6 - 20MHz, 0x7 - 24MHz, 0x8 - 26MHz,
-    *  0x9 - 27MHz, 0xA - 38.4MHz, 0xB - 40MHz, 0xC - 52MHz, 0xD - 100MHz, 0xE
-    *  - 108MHz, 0xF - 125MHz, 0x10 - 135MHz, 0x11 - 150 MHz. 0x12 to 0x1F - R
-    * eserved
-    *  PSU_SERDES_PLL_REF_SEL1_PLLREFSEL1                          0x9
-
-    * PLL1 Reference Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD410004, 0x0000001FU ,0x00000009U)
-    */
-	PSU_Mask_Write(SERDES_PLL_REF_SEL1_OFFSET, 0x0000001FU, 0x00000009U);
-/*##################################################################### */
-
-    /*
     * Register : PLL_REF_SEL2 @ 0XFD410008
 
     * PLL2 Reference Selection. 0x0 - 5MHz, 0x1 - 9.6MHz, 0x2 - 10MHz, 0x3 - 1
@@ -18525,56 +23457,8 @@ unsigned long psu_serdes_init_data(void)
 /*##################################################################### */
 
     /*
-    * Register : PLL_REF_SEL3 @ 0XFD41000C
-
-    * PLL3 Reference Selection. 0x0 - 5MHz, 0x1 - 9.6MHz, 0x2 - 10MHz, 0x3 - 1
-    * 2MHz, 0x4 - 13MHz, 0x5 - 19.2MHz, 0x6 - 20MHz, 0x7 - 24MHz, 0x8 - 26MHz,
-    *  0x9 - 27MHz, 0xA - 38.4MHz, 0xB - 40MHz, 0xC - 52MHz, 0xD - 100MHz, 0xE
-    *  - 108MHz, 0xF - 125MHz, 0x10 - 135MHz, 0x11 - 150 MHz. 0x12 to 0x1F - R
-    * eserved
-    *  PSU_SERDES_PLL_REF_SEL3_PLLREFSEL3                          0xF
-
-    * PLL3 Reference Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD41000C, 0x0000001FU ,0x0000000FU)
-    */
-	PSU_Mask_Write(SERDES_PLL_REF_SEL3_OFFSET, 0x0000001FU, 0x0000000FU);
-/*##################################################################### */
-
-    /*
     * GT REFERENCE CLOCK FREQUENCY SELECTION
     */
-    /*
-    * Register : L0_L0_REF_CLK_SEL @ 0XFD402860
-
-    * Sel of lane 0 ref clock local mux. Set to 1 to select lane 0 slicer outp
-    * ut. Set to 0 to select lane0 ref clock mux output.
-    *  PSU_SERDES_L0_L0_REF_CLK_SEL_L0_REF_CLK_LCL_SEL             0x0
-
-    * Bit 1 of lane 0 ref clock mux one hot sel. Set to 1 to select lane 1 sli
-    * cer output from ref clock network
-    *  PSU_SERDES_L0_L0_REF_CLK_SEL_L0_REF_CLK_SEL_1               0x1
-
-    * Lane0 Ref Clock Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD402860, 0x00000082U ,0x00000002U)
-    */
-	PSU_Mask_Write(SERDES_L0_L0_REF_CLK_SEL_OFFSET,
-		0x00000082U, 0x00000002U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_L1_REF_CLK_SEL @ 0XFD402864
-
-    * Sel of lane 1 ref clock local mux. Set to 1 to select lane 1 slicer outp
-    * ut. Set to 0 to select lane1 ref clock mux output.
-    *  PSU_SERDES_L0_L1_REF_CLK_SEL_L1_REF_CLK_LCL_SEL             0x1
-
-    * Lane1 Ref Clock Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD402864, 0x00000080U ,0x00000080U)
-    */
-	PSU_Mask_Write(SERDES_L0_L1_REF_CLK_SEL_OFFSET,
-		0x00000080U, 0x00000080U);
-/*##################################################################### */
-
     /*
     * Register : L0_L2_REF_CLK_SEL @ 0XFD402868
 
@@ -18586,20 +23470,6 @@ unsigned long psu_serdes_init_data(void)
     * (OFFSET, MASK, VALUE)      (0XFD402868, 0x00000080U ,0x00000080U)
     */
 	PSU_Mask_Write(SERDES_L0_L2_REF_CLK_SEL_OFFSET,
-		0x00000080U, 0x00000080U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_L3_REF_CLK_SEL @ 0XFD40286C
-
-    * Sel of lane 3 ref clock local mux. Set to 1 to select lane 3 slicer outp
-    * ut. Set to 0 to select lane3 ref clock mux output.
-    *  PSU_SERDES_L0_L3_REF_CLK_SEL_L3_REF_CLK_LCL_SEL             0x1
-
-    * Lane3 Ref Clock Selection Register
-    * (OFFSET, MASK, VALUE)      (0XFD40286C, 0x00000080U ,0x00000080U)
-    */
-	PSU_Mask_Write(SERDES_L0_L3_REF_CLK_SEL_OFFSET,
 		0x00000080U, 0x00000080U);
 /*##################################################################### */
 
@@ -18643,200 +23513,6 @@ unsigned long psu_serdes_init_data(void)
     */
 	PSU_Mask_Write(SERDES_L2_PLL_SS_STEPS_1_MSB_OFFSET,
 		0x00000007U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_SS_STEPS_0_LSB @ 0XFD40E368
-
-    * Spread Spectrum No of Steps [7:0]
-    *  PSU_SERDES_L3_PLL_SS_STEPS_0_LSB_SS_NUM_OF_STEPS_0_LSB      0xE0
-
-    * Spread Spectrum No of Steps bits 7:0
-    * (OFFSET, MASK, VALUE)      (0XFD40E368, 0x000000FFU ,0x000000E0U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEPS_0_LSB_OFFSET,
-		0x000000FFU, 0x000000E0U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_SS_STEPS_1_MSB @ 0XFD40E36C
-
-    * Spread Spectrum No of Steps [10:8]
-    *  PSU_SERDES_L3_PLL_SS_STEPS_1_MSB_SS_NUM_OF_STEPS_1_MSB      0x3
-
-    * Spread Spectrum No of Steps bits 10:8
-    * (OFFSET, MASK, VALUE)      (0XFD40E36C, 0x00000007U ,0x00000003U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEPS_1_MSB_OFFSET,
-		0x00000007U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEPS_0_LSB @ 0XFD402368
-
-    * Spread Spectrum No of Steps [7:0]
-    *  PSU_SERDES_L0_PLL_SS_STEPS_0_LSB_SS_NUM_OF_STEPS_0_LSB      0x58
-
-    * Spread Spectrum No of Steps bits 7:0
-    * (OFFSET, MASK, VALUE)      (0XFD402368, 0x000000FFU ,0x00000058U)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEPS_0_LSB_OFFSET,
-		0x000000FFU, 0x00000058U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEPS_1_MSB @ 0XFD40236C
-
-    * Spread Spectrum No of Steps [10:8]
-    *  PSU_SERDES_L0_PLL_SS_STEPS_1_MSB_SS_NUM_OF_STEPS_1_MSB      0x3
-
-    * Spread Spectrum No of Steps bits 10:8
-    * (OFFSET, MASK, VALUE)      (0XFD40236C, 0x00000007U ,0x00000003U)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEPS_1_MSB_OFFSET,
-		0x00000007U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEPS_0_LSB @ 0XFD406368
-
-    * Spread Spectrum No of Steps [7:0]
-    *  PSU_SERDES_L1_PLL_SS_STEPS_0_LSB_SS_NUM_OF_STEPS_0_LSB      0x58
-
-    * Spread Spectrum No of Steps bits 7:0
-    * (OFFSET, MASK, VALUE)      (0XFD406368, 0x000000FFU ,0x00000058U)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEPS_0_LSB_OFFSET,
-		0x000000FFU, 0x00000058U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEPS_1_MSB @ 0XFD40636C
-
-    * Spread Spectrum No of Steps [10:8]
-    *  PSU_SERDES_L1_PLL_SS_STEPS_1_MSB_SS_NUM_OF_STEPS_1_MSB      0x3
-
-    * Spread Spectrum No of Steps bits 10:8
-    * (OFFSET, MASK, VALUE)      (0XFD40636C, 0x00000007U ,0x00000003U)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEPS_1_MSB_OFFSET,
-		0x00000007U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEP_SIZE_0_LSB @ 0XFD402370
-
-    * Step Size for Spread Spectrum [7:0]
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_0_LSB_SS_STEP_SIZE_0_LSB     0x7C
-
-    * Step Size for Spread Spectrum LSB
-    * (OFFSET, MASK, VALUE)      (0XFD402370, 0x000000FFU ,0x0000007CU)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEP_SIZE_0_LSB_OFFSET,
-		0x000000FFU, 0x0000007CU);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEP_SIZE_1 @ 0XFD402374
-
-    * Step Size for Spread Spectrum [15:8]
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_1_SS_STEP_SIZE_1             0x33
-
-    * Step Size for Spread Spectrum 1
-    * (OFFSET, MASK, VALUE)      (0XFD402374, 0x000000FFU ,0x00000033U)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEP_SIZE_1_OFFSET,
-		0x000000FFU, 0x00000033U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEP_SIZE_2 @ 0XFD402378
-
-    * Step Size for Spread Spectrum [23:16]
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_2_SS_STEP_SIZE_2             0x2
-
-    * Step Size for Spread Spectrum 2
-    * (OFFSET, MASK, VALUE)      (0XFD402378, 0x000000FFU ,0x00000002U)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEP_SIZE_2_OFFSET,
-		0x000000FFU, 0x00000002U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_PLL_SS_STEP_SIZE_3_MSB @ 0XFD40237C
-
-    * Step Size for Spread Spectrum [25:24]
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_3_MSB_SS_STEP_SIZE_3_MSB     0x0
-
-    * Enable/Disable test mode force on SS step size
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_STEP_SIZE     0x1
-
-    * Enable/Disable test mode force on SS no of steps
-    *  PSU_SERDES_L0_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_NUM_OF_STEPS  0x1
-
-    * Enable force on enable Spread Spectrum
-    * (OFFSET, MASK, VALUE)      (0XFD40237C, 0x00000033U ,0x00000030U)
-    */
-	PSU_Mask_Write(SERDES_L0_PLL_SS_STEP_SIZE_3_MSB_OFFSET,
-		0x00000033U, 0x00000030U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEP_SIZE_0_LSB @ 0XFD406370
-
-    * Step Size for Spread Spectrum [7:0]
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_0_LSB_SS_STEP_SIZE_0_LSB     0x7C
-
-    * Step Size for Spread Spectrum LSB
-    * (OFFSET, MASK, VALUE)      (0XFD406370, 0x000000FFU ,0x0000007CU)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEP_SIZE_0_LSB_OFFSET,
-		0x000000FFU, 0x0000007CU);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEP_SIZE_1 @ 0XFD406374
-
-    * Step Size for Spread Spectrum [15:8]
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_1_SS_STEP_SIZE_1             0x33
-
-    * Step Size for Spread Spectrum 1
-    * (OFFSET, MASK, VALUE)      (0XFD406374, 0x000000FFU ,0x00000033U)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEP_SIZE_1_OFFSET,
-		0x000000FFU, 0x00000033U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEP_SIZE_2 @ 0XFD406378
-
-    * Step Size for Spread Spectrum [23:16]
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_2_SS_STEP_SIZE_2             0x2
-
-    * Step Size for Spread Spectrum 2
-    * (OFFSET, MASK, VALUE)      (0XFD406378, 0x000000FFU ,0x00000002U)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEP_SIZE_2_OFFSET,
-		0x000000FFU, 0x00000002U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_PLL_SS_STEP_SIZE_3_MSB @ 0XFD40637C
-
-    * Step Size for Spread Spectrum [25:24]
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_3_MSB_SS_STEP_SIZE_3_MSB     0x0
-
-    * Enable/Disable test mode force on SS step size
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_STEP_SIZE     0x1
-
-    * Enable/Disable test mode force on SS no of steps
-    *  PSU_SERDES_L1_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_NUM_OF_STEPS  0x1
-
-    * Enable force on enable Spread Spectrum
-    * (OFFSET, MASK, VALUE)      (0XFD40637C, 0x00000033U ,0x00000030U)
-    */
-	PSU_Mask_Write(SERDES_L1_PLL_SS_STEP_SIZE_3_MSB_OFFSET,
-		0x00000033U, 0x00000030U);
 /*##################################################################### */
 
     /*
@@ -18898,67 +23574,6 @@ unsigned long psu_serdes_init_data(void)
 /*##################################################################### */
 
     /*
-    * Register : L3_PLL_SS_STEP_SIZE_0_LSB @ 0XFD40E370
-
-    * Step Size for Spread Spectrum [7:0]
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_0_LSB_SS_STEP_SIZE_0_LSB     0xC9
-
-    * Step Size for Spread Spectrum LSB
-    * (OFFSET, MASK, VALUE)      (0XFD40E370, 0x000000FFU ,0x000000C9U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEP_SIZE_0_LSB_OFFSET,
-		0x000000FFU, 0x000000C9U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_SS_STEP_SIZE_1 @ 0XFD40E374
-
-    * Step Size for Spread Spectrum [15:8]
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_1_SS_STEP_SIZE_1             0xD2
-
-    * Step Size for Spread Spectrum 1
-    * (OFFSET, MASK, VALUE)      (0XFD40E374, 0x000000FFU ,0x000000D2U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEP_SIZE_1_OFFSET,
-		0x000000FFU, 0x000000D2U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_SS_STEP_SIZE_2 @ 0XFD40E378
-
-    * Step Size for Spread Spectrum [23:16]
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_2_SS_STEP_SIZE_2             0x1
-
-    * Step Size for Spread Spectrum 2
-    * (OFFSET, MASK, VALUE)      (0XFD40E378, 0x000000FFU ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEP_SIZE_2_OFFSET,
-		0x000000FFU, 0x00000001U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_SS_STEP_SIZE_3_MSB @ 0XFD40E37C
-
-    * Step Size for Spread Spectrum [25:24]
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_3_MSB_SS_STEP_SIZE_3_MSB     0x0
-
-    * Enable/Disable test mode force on SS step size
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_STEP_SIZE     0x1
-
-    * Enable/Disable test mode force on SS no of steps
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_3_MSB_FORCE_SS_NUM_OF_STEPS  0x1
-
-    * Enable test mode forcing on enable Spread Spectrum
-    *  PSU_SERDES_L3_PLL_SS_STEP_SIZE_3_MSB_TM_FORCE_EN_SS         0x1
-
-    * Enable force on enable Spread Spectrum
-    * (OFFSET, MASK, VALUE)      (0XFD40E37C, 0x000000B3U ,0x000000B0U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_SS_STEP_SIZE_3_MSB_OFFSET,
-		0x000000B3U, 0x000000B0U);
-/*##################################################################### */
-
-    /*
     * Register : L2_TM_DIG_6 @ 0XFD40906C
 
     * Bypass Descrambler
@@ -18987,60 +23602,6 @@ unsigned long psu_serdes_init_data(void)
     */
 	PSU_Mask_Write(SERDES_L2_TX_DIG_TM_61_OFFSET,
 		0x00000003U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_PLL_FBDIV_FRAC_3_MSB @ 0XFD40E360
-
-    * Enable test mode force on fractional mode enable
-    *  PSU_SERDES_L3_PLL_FBDIV_FRAC_3_MSB_TM_FORCE_EN_FRAC         0x1
-
-    * Fractional feedback division control and fractional value for feedback d
-    * ivision bits 26:24
-    * (OFFSET, MASK, VALUE)      (0XFD40E360, 0x00000040U ,0x00000040U)
-    */
-	PSU_Mask_Write(SERDES_L3_PLL_FBDIV_FRAC_3_MSB_OFFSET,
-		0x00000040U, 0x00000040U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_DIG_6 @ 0XFD40D06C
-
-    * Bypass 8b10b decoder
-    *  PSU_SERDES_L3_TM_DIG_6_BYPASS_DECODER                       0x1
-
-    * Enable Bypass for <3> TM_DIG_CTRL_6
-    *  PSU_SERDES_L3_TM_DIG_6_FORCE_BYPASS_DEC                     0x1
-
-    * Bypass Descrambler
-    *  PSU_SERDES_L3_TM_DIG_6_BYPASS_DESCRAM                       0x1
-
-    * Enable Bypass for <1> TM_DIG_CTRL_6
-    *  PSU_SERDES_L3_TM_DIG_6_FORCE_BYPASS_DESCRAM                 0x1
-
-    * Data path test modes in decoder and descram
-    * (OFFSET, MASK, VALUE)      (0XFD40D06C, 0x0000000FU ,0x0000000FU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_DIG_6_OFFSET, 0x0000000FU, 0x0000000FU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TX_DIG_TM_61 @ 0XFD40C0F4
-
-    * Enable/disable encoder bypass signal
-    *  PSU_SERDES_L3_TX_DIG_TM_61_BYPASS_ENC                       0x1
-
-    * Bypass scrambler signal
-    *  PSU_SERDES_L3_TX_DIG_TM_61_BYPASS_SCRAM                     0x1
-
-    * Enable/disable scrambler bypass signal
-    *  PSU_SERDES_L3_TX_DIG_TM_61_FORCE_BYPASS_SCRAM               0x1
-
-    * MPHY PLL Gear and bypass scrambler
-    * (OFFSET, MASK, VALUE)      (0XFD40C0F4, 0x0000000BU ,0x0000000BU)
-    */
-	PSU_Mask_Write(SERDES_L3_TX_DIG_TM_61_OFFSET,
-		0x0000000BU, 0x0000000BU);
 /*##################################################################### */
 
     /*
@@ -19309,181 +23870,6 @@ unsigned long psu_serdes_init_data(void)
     * (OFFSET, MASK, VALUE)      (0XFD409994, 0x00000007U ,0x00000007U)
     */
 	PSU_Mask_Write(SERDES_L2_TM_ILL13_OFFSET, 0x00000007U, 0x00000007U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_MISC2 @ 0XFD40D89C
-
-    * ILL calib counts BYPASSED with calcode bits
-    *  PSU_SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS                0x1
-
-    * sampler cal
-    * (OFFSET, MASK, VALUE)      (0XFD40D89C, 0x00000080U ,0x00000080U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_MISC2_OFFSET, 0x00000080U, 0x00000080U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_IQ_ILL1 @ 0XFD40D8F8
-
-    * IQ ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 ,
-    * USB3 : SS
-    *  PSU_SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0           0x7D
-
-    * iqpi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D8F8, 0x000000FFU ,0x0000007DU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_IQ_ILL1_OFFSET,
-		0x000000FFU, 0x0000007DU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_IQ_ILL2 @ 0XFD40D8FC
-
-    * IQ ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2
-    *  PSU_SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1           0x7D
-
-    * iqpi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D8FC, 0x000000FFU ,0x0000007DU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_IQ_ILL2_OFFSET,
-		0x000000FFU, 0x0000007DU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_ILL12 @ 0XFD40D990
-
-    * G1A pll ctr bypass value
-    *  PSU_SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL                  0x1
-
-    * ill pll counter values
-    * (OFFSET, MASK, VALUE)      (0XFD40D990, 0x000000FFU ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_ILL12_OFFSET, 0x000000FFU, 0x00000001U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_E_ILL1 @ 0XFD40D924
-
-    * E ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , U
-    * SB3 : SS
-    *  PSU_SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0             0x9C
-
-    * epi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D924, 0x000000FFU ,0x0000009CU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_E_ILL1_OFFSET, 0x000000FFU, 0x0000009CU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_E_ILL2 @ 0XFD40D928
-
-    * E ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2
-    *  PSU_SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1             0x39
-
-    * epi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D928, 0x000000FFU ,0x00000039U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_E_ILL2_OFFSET, 0x000000FFU, 0x00000039U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_ILL11 @ 0XFD40D98C
-
-    * G2A_PCIe1 PLL ctr bypass value
-    *  PSU_SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL      0x2
-
-    * ill pll counter values
-    * (OFFSET, MASK, VALUE)      (0XFD40D98C, 0x000000F0U ,0x00000020U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_ILL11_OFFSET, 0x000000F0U, 0x00000020U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_IQ_ILL3 @ 0XFD40D900
-
-    * IQ ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3
-    *  PSU_SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2           0x7D
-
-    * iqpi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D900, 0x000000FFU ,0x0000007DU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_IQ_ILL3_OFFSET,
-		0x000000FFU, 0x0000007DU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_E_ILL3 @ 0XFD40D92C
-
-    * E ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3
-    *  PSU_SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2             0x64
-
-    * epi cal code
-    * (OFFSET, MASK, VALUE)      (0XFD40D92C, 0x000000FFU ,0x00000064U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_E_ILL3_OFFSET, 0x000000FFU, 0x00000064U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_ILL8 @ 0XFD40D980
-
-    * ILL calibration code change wait time
-    *  PSU_SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT                     0xFF
-
-    * ILL cal routine control
-    * (OFFSET, MASK, VALUE)      (0XFD40D980, 0x000000FFU ,0x000000FFU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_ILL8_OFFSET, 0x000000FFU, 0x000000FFU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_IQ_ILL8 @ 0XFD40D914
-
-    * IQ ILL polytrim bypass value
-    *  PSU_SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL         0xF7
-
-    * iqpi polytrim
-    * (OFFSET, MASK, VALUE)      (0XFD40D914, 0x000000FFU ,0x000000F7U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_IQ_ILL8_OFFSET,
-		0x000000FFU, 0x000000F7U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_IQ_ILL9 @ 0XFD40D918
-
-    * bypass IQ polytrim
-    *  PSU_SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM              0x1
-
-    * enables for lf,constant gm trim and polytirm
-    * (OFFSET, MASK, VALUE)      (0XFD40D918, 0x00000001U ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_IQ_ILL9_OFFSET,
-		0x00000001U, 0x00000001U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_E_ILL8 @ 0XFD40D940
-
-    * E ILL polytrim bypass value
-    *  PSU_SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL           0xF7
-
-    * epi polytrim
-    * (OFFSET, MASK, VALUE)      (0XFD40D940, 0x000000FFU ,0x000000F7U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_E_ILL8_OFFSET, 0x000000FFU, 0x000000F7U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_E_ILL9 @ 0XFD40D944
-
-    * bypass E polytrim
-    *  PSU_SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM                0x1
-
-    * enables for lf,constant gm trim and polytirm
-    * (OFFSET, MASK, VALUE)      (0XFD40D944, 0x00000001U ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_E_ILL9_OFFSET, 0x00000001U, 0x00000001U);
 /*##################################################################### */
 
     /*
@@ -19837,37 +24223,16 @@ unsigned long psu_serdes_init_data(void)
     * GT LANE SETTINGS
     */
     /*
-    * Register : ICM_CFG0 @ 0XFD410010
-
-    * Controls UPHY Lane 0 protocol configuration. 0 - PowerDown, 1 - PCIe .0,
-    *  2 - Sata0, 3 - USB0, 4 - DP.1, 5 - SGMII0, 6 - Unused, 7 - Unused
-    *  PSU_SERDES_ICM_CFG0_L0_ICM_CFG                              4
-
-    * Controls UPHY Lane 1 protocol configuration. 0 - PowerDown, 1 - PCIe.1,
-    * 2 - Sata1, 3 - USB0, 4 - DP.0, 5 - SGMII1, 6 - Unused, 7 - Unused
-    *  PSU_SERDES_ICM_CFG0_L1_ICM_CFG                              4
-
-    * ICM Configuration Register 0
-    * (OFFSET, MASK, VALUE)      (0XFD410010, 0x00000077U ,0x00000044U)
-    */
-	PSU_Mask_Write(SERDES_ICM_CFG0_OFFSET, 0x00000077U, 0x00000044U);
-/*##################################################################### */
-
-    /*
     * Register : ICM_CFG1 @ 0XFD410014
 
     * Controls UPHY Lane 2 protocol configuration. 0 - PowerDown, 1 - PCIe.1,
     * 2 - Sata0, 3 - USB0, 4 - DP.1, 5 - SGMII2, 6 - Unused, 7 - Unused
     *  PSU_SERDES_ICM_CFG1_L2_ICM_CFG                              3
 
-    * Controls UPHY Lane 3 protocol configuration. 0 - PowerDown, 1 - PCIe.3,
-    * 2 - Sata1, 3 - USB1, 4 - DP.0, 5 - SGMII3, 6 - Unused, 7 - Unused
-    *  PSU_SERDES_ICM_CFG1_L3_ICM_CFG                              2
-
     * ICM Configuration Register 1
-    * (OFFSET, MASK, VALUE)      (0XFD410014, 0x00000077U ,0x00000023U)
+    * (OFFSET, MASK, VALUE)      (0XFD410014, 0x00000007U ,0x00000003U)
     */
-	PSU_Mask_Write(SERDES_ICM_CFG1_OFFSET, 0x00000077U, 0x00000023U);
+	PSU_Mask_Write(SERDES_ICM_CFG1_OFFSET, 0x00000007U, 0x00000003U);
 /*##################################################################### */
 
     /*
@@ -19877,226 +24242,14 @@ unsigned long psu_serdes_init_data(void)
     * ENABLE SERIAL DATA MUX DEEMPH
     */
     /*
-    * Register : L0_TXPMD_TM_45 @ 0XFD400CB4
-
-    * Enable/disable DP post2 path
-    *  PSU_SERDES_L0_TXPMD_TM_45_DP_TM_TX_DP_ENABLE_POST2_PATH     0x1
-
-    * Override enable/disable of DP post2 path
-    *  PSU_SERDES_L0_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_POST2_PATH 0x1
-
-    * Override enable/disable of DP post1 path
-    *  PSU_SERDES_L0_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_POST1_PATH 0x1
-
-    * Enable/disable DP main path
-    *  PSU_SERDES_L0_TXPMD_TM_45_DP_TM_TX_DP_ENABLE_MAIN_PATH      0x1
-
-    * Override enable/disable of DP main path
-    *  PSU_SERDES_L0_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_MAIN_PATH 0x1
-
-    * Post or pre or main DP path selection
-    * (OFFSET, MASK, VALUE)      (0XFD400CB4, 0x00000037U ,0x00000037U)
-    */
-	PSU_Mask_Write(SERDES_L0_TXPMD_TM_45_OFFSET,
-		0x00000037U, 0x00000037U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_TXPMD_TM_45 @ 0XFD404CB4
-
-    * Enable/disable DP post2 path
-    *  PSU_SERDES_L1_TXPMD_TM_45_DP_TM_TX_DP_ENABLE_POST2_PATH     0x1
-
-    * Override enable/disable of DP post2 path
-    *  PSU_SERDES_L1_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_POST2_PATH 0x1
-
-    * Override enable/disable of DP post1 path
-    *  PSU_SERDES_L1_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_POST1_PATH 0x1
-
-    * Enable/disable DP main path
-    *  PSU_SERDES_L1_TXPMD_TM_45_DP_TM_TX_DP_ENABLE_MAIN_PATH      0x1
-
-    * Override enable/disable of DP main path
-    *  PSU_SERDES_L1_TXPMD_TM_45_DP_TM_TX_OVRD_DP_ENABLE_MAIN_PATH 0x1
-
-    * Post or pre or main DP path selection
-    * (OFFSET, MASK, VALUE)      (0XFD404CB4, 0x00000037U ,0x00000037U)
-    */
-	PSU_Mask_Write(SERDES_L1_TXPMD_TM_45_OFFSET,
-		0x00000037U, 0x00000037U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_TX_ANA_TM_118 @ 0XFD4001D8
-
-    * Test register force for enabling/disablign TX deemphasis bits <17:0>
-    *  PSU_SERDES_L0_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0            0x1
-
-    * Enable Override of TX deemphasis
-    * (OFFSET, MASK, VALUE)      (0XFD4001D8, 0x00000001U ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L0_TX_ANA_TM_118_OFFSET,
-		0x00000001U, 0x00000001U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_TX_ANA_TM_118 @ 0XFD4041D8
-
-    * Test register force for enabling/disablign TX deemphasis bits <17:0>
-    *  PSU_SERDES_L1_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0            0x1
-
-    * Enable Override of TX deemphasis
-    * (OFFSET, MASK, VALUE)      (0XFD4041D8, 0x00000001U ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L1_TX_ANA_TM_118_OFFSET,
-		0x00000001U, 0x00000001U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TX_ANA_TM_118 @ 0XFD40C1D8
-
-    * Test register force for enabling/disablign TX deemphasis bits <17:0>
-    *  PSU_SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0            0x1
-
-    * Enable Override of TX deemphasis
-    * (OFFSET, MASK, VALUE)      (0XFD40C1D8, 0x00000001U ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_TX_ANA_TM_118_OFFSET,
-		0x00000001U, 0x00000001U);
-/*##################################################################### */
-
-    /*
     * CDR AND RX EQUALIZATION SETTINGS
     */
-    /*
-    * Register : L3_TM_CDR5 @ 0XFD40DC14
-
-    * FPHL FSM accumulate cycles
-    *  PSU_SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES                   0x7
-
-    * FFL Phase0 int gain aka 2ol SD update rate
-    *  PSU_SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN                      0x6
-
-    * Fast phase lock controls -- FSM accumulator cycle control and phase 0 in
-    * t gain control.
-    * (OFFSET, MASK, VALUE)      (0XFD40DC14, 0x000000FFU ,0x000000E6U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_CDR5_OFFSET, 0x000000FFU, 0x000000E6U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_CDR16 @ 0XFD40DC40
-
-    * FFL Phase0 prop gain aka 1ol SD update rate
-    *  PSU_SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN                    0xC
-
-    * Fast phase lock controls -- phase 0 prop gain
-    * (OFFSET, MASK, VALUE)      (0XFD40DC40, 0x0000001FU ,0x0000000CU)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_CDR16_OFFSET, 0x0000001FU, 0x0000000CU);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_EQ0 @ 0XFD40D94C
-
-    * EQ stg 2 controls BYPASSED
-    *  PSU_SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP                       1
-
-    * eq stg1 and stg2 controls
-    * (OFFSET, MASK, VALUE)      (0XFD40D94C, 0x00000020U ,0x00000020U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_EQ0_OFFSET, 0x00000020U, 0x00000020U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TM_EQ1 @ 0XFD40D950
-
-    * EQ STG2 RL PROG
-    *  PSU_SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG                        0x2
-
-    * EQ stg 2 preamp mode val
-    *  PSU_SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL                0x1
-
-    * eq stg1 and stg2 controls
-    * (OFFSET, MASK, VALUE)      (0XFD40D950, 0x00000007U ,0x00000006U)
-    */
-	PSU_Mask_Write(SERDES_L3_TM_EQ1_OFFSET, 0x00000007U, 0x00000006U);
-/*##################################################################### */
-
     /*
     * GEM SERDES SETTINGS
     */
     /*
     * ENABLE PRE EMPHAIS AND VOLTAGE SWING
     */
-    /*
-    * Register : L1_TXPMD_TM_48 @ 0XFD404CC0
-
-    * Margining factor value
-    *  PSU_SERDES_L1_TXPMD_TM_48_TM_RESULTANT_MARGINING_FACTOR     0
-
-    * Margining factor
-    * (OFFSET, MASK, VALUE)      (0XFD404CC0, 0x0000001FU ,0x00000000U)
-    */
-	PSU_Mask_Write(SERDES_L1_TXPMD_TM_48_OFFSET,
-		0x0000001FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_TXPMD_TM_48 @ 0XFD400CC0
-
-    * Margining factor value
-    *  PSU_SERDES_L0_TXPMD_TM_48_TM_RESULTANT_MARGINING_FACTOR     0
-
-    * Margining factor
-    * (OFFSET, MASK, VALUE)      (0XFD400CC0, 0x0000001FU ,0x00000000U)
-    */
-	PSU_Mask_Write(SERDES_L0_TXPMD_TM_48_OFFSET,
-		0x0000001FU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : L1_TX_ANA_TM_18 @ 0XFD404048
-
-    * pipe_TX_Deemph. 0: -6dB de-emphasis, 1: -3.5dB de-emphasis, 2 : No de-em
-    * phasis, Others: reserved
-    *  PSU_SERDES_L1_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0               0
-
-    * Override for PIPE TX de-emphasis
-    * (OFFSET, MASK, VALUE)      (0XFD404048, 0x000000FFU ,0x00000000U)
-    */
-	PSU_Mask_Write(SERDES_L1_TX_ANA_TM_18_OFFSET,
-		0x000000FFU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : L0_TX_ANA_TM_18 @ 0XFD400048
-
-    * pipe_TX_Deemph. 0: -6dB de-emphasis, 1: -3.5dB de-emphasis, 2 : No de-em
-    * phasis, Others: reserved
-    *  PSU_SERDES_L0_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0               0
-
-    * Override for PIPE TX de-emphasis
-    * (OFFSET, MASK, VALUE)      (0XFD400048, 0x000000FFU ,0x00000000U)
-    */
-	PSU_Mask_Write(SERDES_L0_TX_ANA_TM_18_OFFSET,
-		0x000000FFU, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : L3_TX_ANA_TM_18 @ 0XFD40C048
-
-    * pipe_TX_Deemph. 0: -6dB de-emphasis, 1: -3.5dB de-emphasis, 2 : No de-em
-    * phasis, Others: reserved
-    *  PSU_SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0               0x1
-
-    * Override for PIPE TX de-emphasis
-    * (OFFSET, MASK, VALUE)      (0XFD40C048, 0x000000FFU ,0x00000001U)
-    */
-	PSU_Mask_Write(SERDES_L3_TX_ANA_TM_18_OFFSET,
-		0x000000FFU, 0x00000001U);
-/*##################################################################### */
-
 
 	return 1;
 }
@@ -20181,76 +24334,6 @@ unsigned long psu_resetout_init_data(void)
     */
 	PSU_Mask_Write(CRL_APB_RST_LPD_IOU0_OFFSET,
 		0x00000008U, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * PUTTING SATA IN RESET
-    */
-    /*
-    * Register : sata_misc_ctrl @ 0XFD3D0100
-
-    * Sata PM clock control select
-    *  PSU_SIOU_SATA_MISC_CTRL_SATA_PM_CLK_SEL                     0x3
-
-    * Misc Contorls for SATA.This register may only be modified during bootup
-    * (while SATA block is disabled)
-    * (OFFSET, MASK, VALUE)      (0XFD3D0100, 0x00000003U ,0x00000003U)
-    */
-	PSU_Mask_Write(SIOU_SATA_MISC_CTRL_OFFSET, 0x00000003U, 0x00000003U);
-/*##################################################################### */
-
-    /*
-    * Register : RST_FPD_TOP @ 0XFD1A0100
-
-    * Sata block level reset
-    *  PSU_CRF_APB_RST_FPD_TOP_SATA_RESET                          0X0
-
-    * FPD Block level software controlled reset
-    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00000002U ,0x00000000U)
-    */
-	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00000002U, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * PUTTING DP IN RESET
-    */
-    /*
-    * Register : RST_FPD_TOP @ 0XFD1A0100
-
-    * Display Port block level reset (includes DPDMA)
-    *  PSU_CRF_APB_RST_FPD_TOP_DP_RESET                            0X0
-
-    * FPD Block level software controlled reset
-    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00010000U ,0x00000000U)
-    */
-	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00010000U, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : DP_PHY_RESET @ 0XFD4A0200
-
-    * Set to '1' to hold the GT in reset. Clear to release.
-    *  PSU_DP_DP_PHY_RESET_GT_RESET                                0X0
-
-    * Reset the transmitter PHY.
-    * (OFFSET, MASK, VALUE)      (0XFD4A0200, 0x00000002U ,0x00000000U)
-    */
-	PSU_Mask_Write(DP_DP_PHY_RESET_OFFSET, 0x00000002U, 0x00000000U);
-/*##################################################################### */
-
-    /*
-    * Register : DP_TX_PHY_POWER_DOWN @ 0XFD4A0238
-
-    * Two bits per lane. When set to 11, moves the GT to power down mode. When
-    *  set to 00, GT will be in active state. bits [1:0] - lane0 Bits [3:2] -
-    * lane 1
-    *  PSU_DP_DP_TX_PHY_POWER_DOWN_POWER_DWN                       0X0
-
-    * Control PHY Power down
-    * (OFFSET, MASK, VALUE)      (0XFD4A0238, 0x0000000FU ,0x00000000U)
-    */
-	PSU_Mask_Write(DP_DP_TX_PHY_POWER_DOWN_OFFSET,
-		0x0000000FU, 0x00000000U);
 /*##################################################################### */
 
     /*
@@ -20476,20 +24559,6 @@ unsigned long psu_resetout_init_data(void)
 /*##################################################################### */
 
     /*
-    * CHECK PLL LOCK FOR LANE1
-    */
-    /*
-    * Register : L1_PLL_STATUS_READ_1 @ 0XFD4063E4
-
-    * Status Read value of PLL Lock
-    *  PSU_SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ        1
-    * (OFFSET, MASK, VALUE)      (0XFD4063E4, 0x00000010U ,0x00000010U)
-		*/
-	mask_poll(SERDES_L1_PLL_STATUS_READ_1_OFFSET, 0x00000010U);
-
-/*##################################################################### */
-
-    /*
     * CHECK PLL LOCK FOR LANE2
     */
     /*
@@ -20504,127 +24573,8 @@ unsigned long psu_resetout_init_data(void)
 /*##################################################################### */
 
     /*
-    * CHECK PLL LOCK FOR LANE3
-    */
-    /*
-    * Register : L3_PLL_STATUS_READ_1 @ 0XFD40E3E4
-
-    * Status Read value of PLL Lock
-    *  PSU_SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ        1
-    * (OFFSET, MASK, VALUE)      (0XFD40E3E4, 0x00000010U ,0x00000010U)
-		*/
-	mask_poll(SERDES_L3_PLL_STATUS_READ_1_OFFSET, 0x00000010U);
-
-/*##################################################################### */
-
-    /*
     * SATA AHCI VENDOR SETTING
     */
-    /*
-    * Register : PP2C @ 0XFD0C00AC
-
-    * CIBGMN: COMINIT Burst Gap Minimum.
-    *  PSU_SATA_AHCI_VENDOR_PP2C_CIBGMN                            0x18
-
-    * CIBGMX: COMINIT Burst Gap Maximum.
-    *  PSU_SATA_AHCI_VENDOR_PP2C_CIBGMX                            0x40
-
-    * CIBGN: COMINIT Burst Gap Nominal.
-    *  PSU_SATA_AHCI_VENDOR_PP2C_CIBGN                             0x18
-
-    * CINMP: COMINIT Negate Minimum Period.
-    *  PSU_SATA_AHCI_VENDOR_PP2C_CINMP                             0x28
-
-    * PP2C - Port Phy2Cfg Register. This register controls the configuration o
-    * f the Phy Control OOB timing for the COMINIT parameters for either Port
-    * 0 or Port 1. The Port configured is controlled by the value programmed i
-    * nto the Port Config Register.
-    * (OFFSET, MASK, VALUE)      (0XFD0C00AC, 0xFFFFFFFFU ,0x28184018U)
-    */
-	PSU_Mask_Write(SATA_AHCI_VENDOR_PP2C_OFFSET,
-		0xFFFFFFFFU, 0x28184018U);
-/*##################################################################### */
-
-    /*
-    * Register : PP3C @ 0XFD0C00B0
-
-    * CWBGMN: COMWAKE Burst Gap Minimum.
-    *  PSU_SATA_AHCI_VENDOR_PP3C_CWBGMN                            0x06
-
-    * CWBGMX: COMWAKE Burst Gap Maximum.
-    *  PSU_SATA_AHCI_VENDOR_PP3C_CWBGMX                            0x14
-
-    * CWBGN: COMWAKE Burst Gap Nominal.
-    *  PSU_SATA_AHCI_VENDOR_PP3C_CWBGN                             0x08
-
-    * CWNMP: COMWAKE Negate Minimum Period.
-    *  PSU_SATA_AHCI_VENDOR_PP3C_CWNMP                             0x0E
-
-    * PP3C - Port Phy3CfgRegister. This register controls the configuration of
-    *  the Phy Control OOB timing for the COMWAKE parameters for either Port 0
-    *  or Port 1. The Port configured is controlled by the value programmed in
-    * to the Port Config Register.
-    * (OFFSET, MASK, VALUE)      (0XFD0C00B0, 0xFFFFFFFFU ,0x0E081406U)
-    */
-	PSU_Mask_Write(SATA_AHCI_VENDOR_PP3C_OFFSET,
-		0xFFFFFFFFU, 0x0E081406U);
-/*##################################################################### */
-
-    /*
-    * Register : PP4C @ 0XFD0C00B4
-
-    * BMX: COM Burst Maximum.
-    *  PSU_SATA_AHCI_VENDOR_PP4C_BMX                               0x13
-
-    * BNM: COM Burst Nominal.
-    *  PSU_SATA_AHCI_VENDOR_PP4C_BNM                               0x08
-
-    * SFD: Signal Failure Detection, if the signal detection de-asserts for a
-    * time greater than this then the OOB detector will determine this is a li
-    * ne idle and cause the PhyInit state machine to exit the Phy Ready State.
-    *  A value of zero disables the Signal Failure Detector. The value is base
-    * d on the OOB Detector Clock typically (PMCLK Clock Period) * SFD giving
-    * a nominal time of 500ns based on a 150MHz PMCLK.
-    *  PSU_SATA_AHCI_VENDOR_PP4C_SFD                               0x4A
-
-    * PTST: Partial to Slumber timer value, specific delay the controller shou
-    * ld apply while in partial before entering slumber. The value is bases on
-    *  the system clock divided by 128, total delay = (Sys Clock Period) * PTS
-    * T * 128
-    *  PSU_SATA_AHCI_VENDOR_PP4C_PTST                              0x06
-
-    * PP4C - Port Phy4Cfg Register. This register controls the configuration o
-    * f the Phy Control Burst timing for the COM parameters for either Port 0
-    * or Port 1. The Port configured is controlled by the value programmed int
-    * o the Port Config Register.
-    * (OFFSET, MASK, VALUE)      (0XFD0C00B4, 0xFFFFFFFFU ,0x064A0813U)
-    */
-	PSU_Mask_Write(SATA_AHCI_VENDOR_PP4C_OFFSET,
-		0xFFFFFFFFU, 0x064A0813U);
-/*##################################################################### */
-
-    /*
-    * Register : PP5C @ 0XFD0C00B8
-
-    * RIT: Retry Interval Timer. The calculated value divided by two, the lowe
-    * r digit of precision is not needed.
-    *  PSU_SATA_AHCI_VENDOR_PP5C_RIT                               0xC96A4
-
-    * RCT: Rate Change Timer, a value based on the 54.2us for which a SATA dev
-    * ice will transmit at a fixed rate ALIGNp after OOB has completed, for a
-    * fast SERDES it is suggested that this value be 54.2us / 4
-    *  PSU_SATA_AHCI_VENDOR_PP5C_RCT                               0x3FF
-
-    * PP5C - Port Phy5Cfg Register. This register controls the configuration o
-    * f the Phy Control Retry Interval timing for either Port 0 or Port 1. The
-    *  Port configured is controlled by the value programmed into the Port Con
-    * fig Register.
-    * (OFFSET, MASK, VALUE)      (0XFD0C00B8, 0xFFFFFFFFU ,0x3FFC96A4U)
-    */
-	PSU_Mask_Write(SATA_AHCI_VENDOR_PP5C_OFFSET,
-		0xFFFFFFFFU, 0x3FFC96A4U);
-/*##################################################################### */
-
 
 	return 1;
 }
@@ -20668,63 +24618,6 @@ unsigned long psu_resetin_init_data(void)
     */
 	PSU_Mask_Write(CRL_APB_RST_LPD_IOU0_OFFSET,
 		0x00000008U, 0x00000008U);
-/*##################################################################### */
-
-    /*
-    * PUTTING SATA IN RESET
-    */
-    /*
-    * Register : RST_FPD_TOP @ 0XFD1A0100
-
-    * Sata block level reset
-    *  PSU_CRF_APB_RST_FPD_TOP_SATA_RESET                          0X1
-
-    * FPD Block level software controlled reset
-    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00000002U ,0x00000002U)
-    */
-	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00000002U, 0x00000002U);
-/*##################################################################### */
-
-    /*
-    * PUTTING DP IN RESET
-    */
-    /*
-    * Register : DP_TX_PHY_POWER_DOWN @ 0XFD4A0238
-
-    * Two bits per lane. When set to 11, moves the GT to power down mode. When
-    *  set to 00, GT will be in active state. bits [1:0] - lane0 Bits [3:2] -
-    * lane 1
-    *  PSU_DP_DP_TX_PHY_POWER_DOWN_POWER_DWN                       0XA
-
-    * Control PHY Power down
-    * (OFFSET, MASK, VALUE)      (0XFD4A0238, 0x0000000FU ,0x0000000AU)
-    */
-	PSU_Mask_Write(DP_DP_TX_PHY_POWER_DOWN_OFFSET,
-		0x0000000FU, 0x0000000AU);
-/*##################################################################### */
-
-    /*
-    * Register : DP_PHY_RESET @ 0XFD4A0200
-
-    * Set to '1' to hold the GT in reset. Clear to release.
-    *  PSU_DP_DP_PHY_RESET_GT_RESET                                0X1
-
-    * Reset the transmitter PHY.
-    * (OFFSET, MASK, VALUE)      (0XFD4A0200, 0x00000002U ,0x00000002U)
-    */
-	PSU_Mask_Write(DP_DP_PHY_RESET_OFFSET, 0x00000002U, 0x00000002U);
-/*##################################################################### */
-
-    /*
-    * Register : RST_FPD_TOP @ 0XFD1A0100
-
-    * Display Port block level reset (includes DPDMA)
-    *  PSU_CRF_APB_RST_FPD_TOP_DP_RESET                            0X1
-
-    * FPD Block level software controlled reset
-    * (OFFSET, MASK, VALUE)      (0XFD1A0100, 0x00010000U ,0x00010000U)
-    */
-	PSU_Mask_Write(CRF_APB_RST_FPD_TOP_OFFSET, 0x00010000U, 0x00010000U);
 /*##################################################################### */
 
 
@@ -20846,6 +24739,58 @@ unsigned long psu_afi_config(void)
     * (OFFSET, MASK, VALUE)      (0XFD615000, 0x00000F00U ,0x00000A00U)
     */
 	PSU_Mask_Write(FPD_SLCR_AFI_FS_OFFSET, 0x00000F00U, 0x00000A00U);
+/*##################################################################### */
+
+    /*
+    * Register : AFIFM_RDCTRL @ 0XFD380000
+
+    * Configures the Read Channel Fabric interface width. 2'b11 : Reserved 2'b
+    * 10 : 32-bit Fabric 2'b01 : 64-bit enabled 2'b00 : 128-bit enabled
+    *  PSU_AFIFM2_AFIFM_RDCTRL_FABRIC_WIDTH                        0x0
+
+    * Read Channel Control Register
+    * (OFFSET, MASK, VALUE)      (0XFD380000, 0x00000003U ,0x00000000U)
+    */
+	PSU_Mask_Write(AFIFM2_AFIFM_RDCTRL_OFFSET, 0x00000003U, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : AFIFM_RDCTRL @ 0XFD390000
+
+    * Configures the Read Channel Fabric interface width. 2'b11 : Reserved 2'b
+    * 10 : 32-bit Fabric 2'b01 : 64-bit enabled 2'b00 : 128-bit enabled
+    *  PSU_AFIFM3_AFIFM_RDCTRL_FABRIC_WIDTH                        0x0
+
+    * Read Channel Control Register
+    * (OFFSET, MASK, VALUE)      (0XFD390000, 0x00000003U ,0x00000000U)
+    */
+	PSU_Mask_Write(AFIFM3_AFIFM_RDCTRL_OFFSET, 0x00000003U, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : AFIFM_WRCTRL @ 0XFD380014
+
+    * Configures the Write Channel Fabric interface width. 2'b11 : Reserved 2'
+    * b10 : 32-bit Fabric 2'b01 : 64-bit enabled 2'b00 : 128-bit enabled
+    *  PSU_AFIFM2_AFIFM_WRCTRL_FABRIC_WIDTH                        0x0
+
+    * Write Channel Control Register
+    * (OFFSET, MASK, VALUE)      (0XFD380014, 0x00000003U ,0x00000000U)
+    */
+	PSU_Mask_Write(AFIFM2_AFIFM_WRCTRL_OFFSET, 0x00000003U, 0x00000000U);
+/*##################################################################### */
+
+    /*
+    * Register : AFIFM_WRCTRL @ 0XFD390014
+
+    * Configures the Write Channel Fabric interface width. 2'b11 : Reserved 2'
+    * b10 : 32-bit Fabric 2'b01 : 64-bit enabled 2'b00 : 128-bit enabled
+    *  PSU_AFIFM3_AFIFM_WRCTRL_FABRIC_WIDTH                        0x0
+
+    * Write Channel Control Register
+    * (OFFSET, MASK, VALUE)      (0XFD390014, 0x00000003U ,0x00000000U)
+    */
+	PSU_Mask_Write(AFIFM3_AFIFM_WRCTRL_OFFSET, 0x00000003U, 0x00000000U);
 /*##################################################################### */
 
 
@@ -20980,10 +24925,6 @@ unsigned long psu_ddr_phybringup_data(void)
 		>> 16;/*DX0GSR0*/
 		pll_locked &= (Xil_In32(0xFD0809E0) & 0x10000)
 		>> 16;/*DX2GSR0*/
-		pll_locked &= (Xil_In32(0xFD080BE0) & 0x10000)
-		>> 16;/*DX4GSR0*/
-		pll_locked &= (Xil_In32(0xFD080DE0) & 0x10000)
-		>> 16;/*DX6GSR0*/
 		pll_retry--;
 	}
 	Xil_Out32(0xFD0800C4, Xil_In32(0xFD0800C4) |
@@ -21019,60 +24960,78 @@ unsigned long psu_ddr_phybringup_data(void)
 
 	}
 
+	Xil_Out32(0xFD070010U, 0x80000018U);
+	Xil_Out32(0xFD0701B0U, 0x00000001U);
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	while ((regval & 0x1) != 0x0) {
+	/***MRSTAT***/
+		regval = Xil_In32(0xFD070018);
+	}
+
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	Xil_Out32(0xFD070014U, 0x00000B02U);
+	Xil_Out32(0xFD070010U, 0x80000018U);
+	Xil_Out32(0xFD070010U, 0x80000010U);
 	prog_reg(0xFD080014U, 0x00000040U, 0x00000006U, 0x00000001U);
-	Xil_Out32(0xFD080004, 0x0004FE01); /*PUB_PIR*/
+	Xil_Out32(0xFD080004, 0x0004FE05); /*PUB_PIR*/
+
 	regval = Xil_In32(0xFD080030); /*PUB_PGSR0*/
-	while (regval != 0x80000FFF)
+	while ((regval & 0x80001FFF) != 0x80001FFF)
 		regval = Xil_In32(0xFD080030); /*PUB_PGSR0*/
 	regval = ((Xil_In32(0xFD080030) & 0x1FFF0000) >>18);
 	if(regval != 0) {
 		return(0);
 	}
-
-/* Run Vref training in static read mode*/
-	Xil_Out32(0xFD080200U, 0x100091C7U);
-	int cur_R006_tREFPRD;
-
-	cur_R006_tREFPRD = (Xil_In32(0xFD080018U) & 0x0003FFFFU) >> 0x00000000U;
-	prog_reg(0xFD080018, 0x3FFFF, 0x0, cur_R006_tREFPRD);
-
-	prog_reg(0xFD08001CU, 0x00000018U, 0x00000003U, 0x00000003U);
-	prog_reg(0xFD08142CU, 0x00000030U, 0x00000004U, 0x00000003U);
-	prog_reg(0xFD08146CU, 0x00000030U, 0x00000004U, 0x00000003U);
-	prog_reg(0xFD0814ACU, 0x00000030U, 0x00000004U, 0x00000003U);
-	prog_reg(0xFD0814ECU, 0x00000030U, 0x00000004U, 0x00000003U);
-	prog_reg(0xFD08152CU, 0x00000030U, 0x00000004U, 0x00000003U);
-
-
-	Xil_Out32(0xFD080004, 0x00060001); /*PUB_PIR*/
-	regval = Xil_In32(0xFD080030); /*PUB_PGSR0*/
-	while ((regval & 0x80004001) != 0x80004001) {
-	/*PUB_PGSR0*/
-		regval = Xil_In32(0xFD080030);
-	}
-
-	prog_reg(0xFD08001CU, 0x00000018U, 0x00000003U, 0x00000000U);
-	prog_reg(0xFD08142CU, 0x00000030U, 0x00000004U, 0x00000000U);
-	prog_reg(0xFD08146CU, 0x00000030U, 0x00000004U, 0x00000000U);
-	prog_reg(0xFD0814ACU, 0x00000030U, 0x00000004U, 0x00000000U);
-	prog_reg(0xFD0814ECU, 0x00000030U, 0x00000004U, 0x00000000U);
-	prog_reg(0xFD08152CU, 0x00000030U, 0x00000004U, 0x00000000U);
-/*Vref training is complete, disabling static read mode*/
-	Xil_Out32(0xFD080200U, 0x800091C7U);
-	prog_reg(0xFD080018, 0x3FFFF, 0x0, cur_R006_tREFPRD);
-
-
-
-	Xil_Out32(0xFD080004, 0x0000C001); /*PUB_PIR*/
-	regval = Xil_In32(0xFD080030); /*PUB_PGSR0*/
-	while ((regval & 0x80000C01) != 0x80000C01) {
-	/*PUB_PGSR0*/
-		regval = Xil_In32(0xFD080030);
-	}
-
-	Xil_Out32(0xFD070180U, 0x01000040U);
+	Xil_Out32(0xFD070180U, 0x00600018U);
 	Xil_Out32(0xFD070060U, 0x00000000U);
 	prog_reg(0xFD080014U, 0x00000040U, 0x00000006U, 0x00000000U);
+	Xil_Out32(0xFD070010U, 0x80000018U);
+	Xil_Out32(0xFD0701B0U, 0x00000001U);
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	while ((regval & 0x1) != 0x0) {
+	/***MRSTAT***/
+		regval = Xil_In32(0xFD070018);
+	}
+
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	regval = Xil_In32(0xFD070018); /*MRSTAT*/
+	Xil_Out32(0xFD070014U, 0x00000B02U);
+	Xil_Out32(0xFD070010U, 0x80000018U);
+	Xil_Out32(0xFD070010U, 0x80000010U);
+	prog_reg(0xFD080250U, 0x00000002U, 0x00000001U, 0x00000000U);
+	prog_reg(0xFD080250U, 0x0000000CU, 0x00000002U, 0x00000001U);
+	prog_reg(0xFD080250U, 0x000000F0U, 0x00000004U, 0x00000000U);
+	prog_reg(0xFD080250U, 0x00300000U, 0x00000014U, 0x00000001U);
+	prog_reg(0xFD080250U, 0xF0000000U, 0x0000001CU, 0x00000002U);
+	prog_reg(0xFD08070CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD08080CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD08090CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080A0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080B0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080C0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080D0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080E0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080F0CU, 0x08000000U, 0x0000001BU, 0x00000000U);
+	prog_reg(0xFD080254U, 0x000000FFU, 0x00000000U, 0x00000001U);
+	prog_reg(0xFD080254U, 0x000F0000U, 0x00000010U, 0x0000000AU);
+	prog_reg(0xFD080250U, 0x00000001U, 0x00000000U, 0x00000001U);
 
 return 1;
 }
@@ -21398,12 +25357,23 @@ static void init_peripheral(void)
 static int psu_init_xppu_aper_ram(void)
 {
 
+	unsigned long APER_OFFSET = 0xFF981000;
+	int i = 0;
+
+	for (; i <= 400; i++) {
+		PSU_Mask_Write(APER_OFFSET, 0xF80FFFFFU, 0x08080000U);
+		APER_OFFSET = APER_OFFSET + 0x4;
+	}
+
 	return 0;
 }
 
 int psu_lpd_protection(void)
 {
 	psu_init_xppu_aper_ram();
+
+	psu_lpd_xppu_data();
+
 	return 0;
 }
 
@@ -21454,10 +25424,8 @@ psu_init(void)
 	status &=  psu_peripherals_pre_init_data();
 	status &=   psu_pll_init_data();
 	status &=   psu_clock_init_data();
-#ifndef XPAR_DYNAMIC_DDR_ENABLED 
 	status &=  psu_ddr_init_data();
 	status &=  psu_ddr_phybringup_data();
-#endif
 	status &=  psu_peripherals_init_data();
 	status &=  init_serdes();
 	init_peripheral();
@@ -21479,9 +25447,7 @@ int psu_init_ddr_self_refresh(void) {
 	status &=  psu_peripherals_pre_init_data();
 	status &=   psu_pll_init_data();
 	status &=   psu_clock_init_data();
-#ifndef XPAR_DYNAMIC_DDR_ENABLED 
 	status &=  psu_ddr_init_data();
-#endif
 	status &=  psu_peripherals_init_data();
 	status &=  init_serdes();
 	init_peripheral();

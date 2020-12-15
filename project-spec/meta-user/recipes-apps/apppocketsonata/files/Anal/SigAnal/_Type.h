@@ -59,17 +59,28 @@ typedef unsigned int INT32;
 #define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
 
 #define sprintf_s               sprintf
+
 #define wsprintf                sprintf
 
 #define strcpy_s                strcpy
 
 #define _finite                 finite
 
+#ifdef __linux__
+#define _lseek                  lseek64
+#define _read(A,B,C)            pread64(A,B,C,1)
+#else
+
+#endif
+
 #define _time32(A)              time(A)
 #define __time32_t              time_t
 #define __timeb32               timeb
 #define _ftime32_s              ftime
 #define _localtime32_s(A,B)     localtime_r(B,A)
+
+#define _open                   open
+#define _close                  close
 
 #define AfxMessageBox           printf
 

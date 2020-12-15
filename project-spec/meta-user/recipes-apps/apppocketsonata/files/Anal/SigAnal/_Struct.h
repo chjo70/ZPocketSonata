@@ -85,6 +85,7 @@ struct STR_FRQ_GROUP {
 
 	UINT from_frq;
 	UINT to_frq;
+
     UINT from_bin;
     UINT to_bin;
 	char narrow_wide;
@@ -513,13 +514,13 @@ struct STR_DWELL_LEVEL {
   // Update AOA threshold
   UINT _sprfaoa[ 6 ] =
   {
-    0, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa, 2 * _spRxdfAoa
+    0, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR
   } ;
 
   // 에미터로 인지하는 값 
   UINT _spdiffaoa[ 6 ] =
   {
-    0, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa, 5 * _spRxdfAoa
+    0, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR
   } ;
 
 

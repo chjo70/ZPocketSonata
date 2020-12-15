@@ -1,5 +1,3 @@
-
-
 #include <string.h>
 
 #include "../../Anal/OFP_Main.h"
@@ -9,10 +7,11 @@ using namespace std;
 #include <algorithm>
 
 #include "ccollectbank.h"
+#include "../DataFile/DataFile.h"
+
 #include "../../Utils/clog.h"
 #include "../../Utils/ccommonutils.h"
 
-#include "../../Utils/ccommonutils.h"
 
 //
 
@@ -48,6 +47,8 @@ void CCollectBank::Init()
 {
     memset( & m_strPDW, 0, sizeof(STR_PDWDATA) );
 
+    m_strPDW.iBoardID = g_enBoardId;
+
     InitWindowCell();
 
 }
@@ -68,6 +69,8 @@ void CCollectBank::InitWindowCell()
     }
 
     m_theQueueWindowCellID.Pop( & m_uiID );
+
+    m_strPDW.iBank = CCommonUtils::GetEnumCollectBank( m_uiID );
 
 }
 
@@ -243,14 +246,16 @@ void CCollectBank::SimCollectMode()
 void CCollectBank::PushPDWData( _PDW *pstPDW )
 {
 
-    if( m_strPDW.uiTotalPDW+1 < _MAX_PDW ) {
-        memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], pstPDW, sizeof(_PDW) );
+    if( m_strWindowCell.bUse == true ) {
+        if( m_strPDW.uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
+            memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], pstPDW, sizeof(_PDW) );
 
-        ++ m_strPDW.uiTotalPDW;
-        ++ m_strWindowCell.uiTotalPDW;
-    }
-    else {
-        printf( "PDW 데이터가 꽉 참 !!" );
+            ++ m_strPDW.uiTotalPDW;
+            ++ m_strWindowCell.uiTotalPDW;
+        }
+        else {
+            //printf( "PDW 데이터가 꽉 참 !!" );
+        }
     }
 
     //SimCollectMode();
@@ -298,11 +303,12 @@ bool CCollectBank::IsCompleteCollect()
         // 수집 시간 확인
         if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
             ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
-            bRet = true;
+            //bRet = true;
         }
 
         // 수집 개수 확인
-        if( m_strPDW.uiTotalPDW > m_strWindowCell.uiMaxCoPDW ) {
+        if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
+            m_strPDW.uiTotalPDW = m_strWindowCell.uiMaxCoPDW;
             bRet = true;
         }
     }

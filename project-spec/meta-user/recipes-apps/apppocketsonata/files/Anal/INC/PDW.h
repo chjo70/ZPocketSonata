@@ -21,6 +21,96 @@
 
 #include "../SigAnal/_Type.h"
 
+
+//////////////////////////////////////////////////////////////////////////
+
+union UZPOCKETPDW
+{
+#define uint32_t unsigned int
+
+    struct {
+        //
+        // 마지막 구조체 : 방위, 신호세기
+        union {
+            uint32_t pdw_status;
+            struct {
+                uint32_t cw_pulse		: 1; // '0' - pulse, '1' - CW
+                uint32_t pmop_flag		: 1; // '0' - No-mop, '1'-mop
+                uint32_t fmop_flag		: 1; // '0' - No-mop, '1'-mop
+                uint32_t false_pdw		: 1; // '0' - ture, '1'-false
+                uint32_t fmop_dir		: 2; // '0' - tri, '1' - up, '2' - down, '3' - unknown
+                uint32_t reserved		: 10;
+
+                uint32_t fmop_bw		: 16; // res = 1.953125 MHz
+            } stPdw_status;
+        } uniPdw_status;
+
+        //
+        // 마지막 구조체 : 방위, 신호세기
+        union {
+            uint32_t	pdw_dir_pa;
+            struct {
+                uint32_t doa				: 12; // res = 0.087890625 deg
+                uint32_t di				: 1; // '0' - Valid, '1' - invalid
+                uint32_t reserved		: 3;
+                uint32_t pa				: 16; // res = 0 ~ 65536 (linear scale)
+            } stPdw_dir_pa;
+        } uniPdw_dir_pa;
+
+        //
+        // 마지막 구조체 : 펄스폭, 주파수
+        union {
+            uint32_t pdw_pw_freq;
+            struct {
+                uint32_t pulse_width	: 24;
+                uint32_t frequency_L	: 8;
+            } stPdw_pw_freq;
+        } uniPdw_pw_freq;
+
+        //
+        // 마지막 구조체 : 상위 주파수 와 TOA
+        union {
+            uint32_t pdw_freq_toa;
+            struct {
+                uint32_t frequency_H	: 8;
+                uint32_t pdw_phch		: 8;
+                uint32_t toa_L			: 16;
+            } stPdw_freq_toa;
+        } uniPdw_freq_toa;
+
+        //
+        // 마지막 구조체 : 상위 TOA
+        union {
+            uint32_t pdw_toa_edge;
+            struct {
+                uint32_t toa_H			: 28;
+                uint32_t edge			: 1;
+                uint32_t reserved		: 3;
+            } stPdw_toa_edge;
+        } uniPdw_toa_edge;
+
+        //
+        // 마지막 구조체 : PDw
+        union {
+            uint32_t pdw_index;
+            struct {
+                uint32_t index          : 16;
+                uint32_t reserved       : 16;
+            } stPdw_index;
+        } uniPdw_index;
+
+    } ;
+
+    unsigned char chData[24];
+
+} ;
+
+union DMAPDW {
+    char chData[32];
+    union UZPOCKETPDW uPDW;
+
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 #define PDW_WORD_LEN        4
@@ -174,7 +264,7 @@ struct TNEW_SPDW
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 struct _PDW {
-    long long int llTOA;
+    _TOA llTOA;
 
     int iFreq;
     int iPulseType;
@@ -212,7 +302,8 @@ struct STR_PDWDATA {
     ENUM_BANDWIDTH enBandWidth;
 
 #elif defined(_POCKETSONATA_)
-    unsigned int uiBand;
+    unsigned int iBoardID;
+    unsigned int iBank;
     unsigned int iIsStorePDW;
 #elif defined(_SONATA_)
     unsigned int uiBand;
@@ -554,6 +645,8 @@ struct STR_PDWFILE_HEADER {
     unsigned int uiSearchBandNo;
     unsigned int uiSignalDeletingStatus;
     unsigned int uiSignalCount;
+
+    unsigned int uiBoardID;
 
 } ;
 

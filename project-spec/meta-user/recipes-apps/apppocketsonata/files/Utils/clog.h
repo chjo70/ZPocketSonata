@@ -36,7 +36,7 @@ class CLog
 private:
     static CLog *pInstance;
 
-    sem_t m_mutex;
+    static sem_t m_mutex;
 
     char m_szPresentDirectory[LOG_DIR_SIZE];
     char m_szLogDir[LOG_DIR_SIZE*2];

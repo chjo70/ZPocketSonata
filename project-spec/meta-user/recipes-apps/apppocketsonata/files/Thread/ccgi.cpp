@@ -58,7 +58,8 @@ void CCGI::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "error ");
+            //perror( "error ");
+            break;
         }
 
         // CGI 실행 플레그 설정

@@ -27,6 +27,8 @@
 
 #include "NewSigAnal.h"
 
+#include "../../System/csysconfig.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -36,8 +38,6 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
-BOOL CreateDir( char *pPath );
 
 CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
 {
@@ -75,7 +75,9 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
     // AET 생성 초기화
     m_theMakeAET->CNMakeAET::Init();
 
-    SWInit();
+    m_pMidasBlue = new CMIDASBlueFileFormat;
+
+    //SWInit();
 
 }
 
@@ -84,10 +86,23 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
  */
 CNewSigAnal::~CNewSigAnal()
 {
+    delete m_pMidasBlue;
+
     delete m_theGroup;
     delete m_thePulExt;
     delete m_theAnalPRI;
     delete m_theMakeAET;
+
+}
+
+/**
+ * @brief CNewSigAnal::Init
+ */
+void CNewSigAnal::Init()
+{
+    m_uiStep = 0;
+
+    // m_AnalMode = analMode;
 }
 
 /**
@@ -97,27 +112,6 @@ CNewSigAnal::~CNewSigAnal()
 void CNewSigAnal::SetSaveFile( bool bEnable )
 {
     m_bSaveFile = bEnable;
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::InitVar
-        \author   조철희
-        \param    analMode 인자형태 enum ANALYSIS_MODE
-        \return   void
-        \version  0.0.52
-        \date     2008-10-25 15:59:00
-        \warning
-*/
-void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
-{
-    m_nStep = 0;
-    m_AnalMode = analMode;
-
-}
-
-void CNewSigAnal::SWInit()
-{
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -193,7 +187,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     //Printf( "\n\n ==== Start of New Signal Analysis[%dth Band:%d, Co:%d] ====" , m_nStep, pPDWData->stPDW[0].item.band, pPDWData->count );
 #endif
 
-    ++ m_nStep;
+    ++ m_uiStep;
 
     // 신호 분석 관련 초기화.
     Init( pPDWData );
@@ -207,7 +201,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     CheckValidData( pPDWData );
 
     // 수집한 PDW 파일 만들기...
-    SaveAllPdwFile();
+    m_pMidasBlue->SaveRawDataFile( E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
     if( pPDWData->iIsStorePDW == 1 || true ) {
         // PDW 수집 상태 체크를 함.
@@ -215,11 +209,9 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 #ifdef _ELINT
             printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "[%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-#elif defined(_POCKETSONATA_)
-            printf(" \n [W] [%d] 대역에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->uiBand, m_szPDWFilename );
-            Log( enError, "[%d] 대역에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->uiBand, m_szPDWFilename );
 #else
-#error      "TOA 어긋남을 출력으로 남겨야 합니다."
+            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
         }
         else {
@@ -298,110 +290,6 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
     return bRet;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::SaveAllPdwFile
-        \author   조철희
-        \return   void
-        \version  0.0.1
-        \date     2008-01-03 16:02:57
-        \warning
-*/
-void CNewSigAnal::SaveAllPdwFile()
-{
-    char szDirectory[100];
-
-    if( ! m_bSaveFile ) {
-#ifdef _WIN32
-        CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-        CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
-
-        UINT i;
-        FILE *pdwfile;
-        TNEW_PDW *pPDW;
-
-        CString strFilename=pView->GetFileTitle();
-
-        LPTSTR p = strFilename.GetBuffer( 100 );
-
-        sprintf( filename, "c:\\temp\\%03d_col_%s.pdw", m_nStep, p );
-        pdwfile = fopen( filename, "wb" );
-        for( i=0 ; i < m_pPDWData->count ; ++i ) {
-            pPDW = & m_pPDWData->pPdw[ i ];
-
-#ifdef _A50_RWR
-            TNEW_PDW pdw;
-
-            pdw.word[0] = ntohl( pPDW->word[0] );
-            pdw.word[1] = ntohl( pPDW->word[1] );
-            pdw.word[2] = ntohl( pPDW->word[2] );
-            pdw.word[3] = ntohl( pPDW->word[3] );
-
-            fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
-#else
-            fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
-#endif
-        }
-
-        fclose( pdwfile );
-
-        strFilename.ReleaseBuffer();
-
-#else
-        CFile cFile;
-        BOOL bRet;
-
-        enPosition enPos = GetPosition();
-
-#ifdef _ELINT_
-        if( enPos == enBuiltIn )
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
-        else
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
-#elif defined(_POCKETSONATA_)
-        if( enPos == enBuiltIn )
-            sprintf( szDirectory, "%s/대역_%d", LOCAL_DATA_DIRECTORY, m_pPDWData->uiBand );
-        else
-            sprintf( szDirectory, "%s/대역_%d", LOCAL_DATA_DIRECTORY_2, m_pPDWData->uiBand );
-#else
-        sprintf( szDirectory, "%s/대역_%d", LOCAL_DATA_DIRECTORY, m_pPDWData->uiBand );
-#endif
-
-        bRet = CreateDir( szDirectory );
-
-        struct tm stTime;
-        char buffer[100];
-        __time32_t tiNow;
-
-        tiNow = _time32(NULL);
-
-        _localtime32_s( &stTime, & tiNow );
-        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
-
-#ifdef _ELINT_
-        wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
-#elif defined(_POCKETSONATA_)
-        wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->uiBand, buffer, m_nStep, PDW_EXT );
-#else
-
-#endif
-
-        cFile.Open( m_szPDWFilename, CFile::modeCreate | CFile::modeReadWrite );
-        int nSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - m_pPDWData->uiTotalPDW ) * sizeof(_PDW) );
-
-        cFile.Write( m_pPDWData, nSize );
-        cFile.Close();
-
-        Log( enNormal, "신호 수집 EPDW : %s" , m_szPDWFilename );
-
-
-#endif
-
-    }
-    else {
-        m_szPDWFilename[0] = 0;
-    }
-
-}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::MarkToPdwIndex
@@ -605,7 +493,7 @@ void CNewSigAnal::SaveGroupPdwFile( int index )
 */
 void CNewSigAnal::InitAllVar()
 {
-    m_nStep = 0;
+    m_uiStep = 0;
 
 }
 
@@ -720,32 +608,3 @@ char *CNewSigAnal::GetTaskID()
     return NULL;
 }
 
-BOOL CreateDir( char *pPath )
-{
-    BOOL bRet;
-    char dirName[256];
-    char *p=pPath;
-    char *q=dirName;
-
-    while( *p ) {
-        if( ('\\' == *p) || ('/'==*p)) {
-            if( ':' != *(p-1) ) {
-#ifdef _WIN32
-                CreateDirectory( dirName, NULL );
-#else
-                mkdir( dirName, 0666 );
-#endif
-            }
-        }
-
-        *q++ = *p++;
-        *q = '\0';
-    }
-#ifdef _WIN32
-    bRet = CreateDirectory( dirName, NULL );
-#else
-    bRet = mkdir( dirName, 0666 ) != -1;
-#endif
-
-    return bRet;
-}

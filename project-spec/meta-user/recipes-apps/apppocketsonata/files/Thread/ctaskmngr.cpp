@@ -21,13 +21,12 @@
 #include "../Utils/clog.h"
 #include "../System/csysconfig.h"
 
+#include "../Utils/csingleclient.h"
 #include "../Utils/ccommonutils.h"
 
-
+extern CSingleClient *g_pTheCCUSocket;
 
 #define _DEBUG_
-
-
 
 
 // 클래스 내의 정적 멤버변수 값 정의
@@ -139,7 +138,8 @@ void CTaskMngr::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv() 에러");
+            //perror( "QMsgRcv() 에러");
+            break;
         }
         else {
         if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
@@ -159,6 +159,33 @@ void CTaskMngr::_routine()
 
                 case enTHREAD_REQ_IPLVERSION :
                     ReqIPLVersion();
+                    break;
+
+                // 오디오 설정 메시지
+                case enREQ_AUDIO :
+                    ReqAudio();
+                    break;
+                case enREQ_AUDIO_PARAM :
+                    ReqAudioParam();
+                    break;
+
+                // 수집 제어 관련 메시지
+                case enREQ_STOP :
+                    StopUserCollecting();
+                    break;
+
+                // 수신기 설정 메시지
+                case enREQ_Band_Enable :
+                    BandEnable();
+                    break;
+                case enREQ_FMOP_Threshold :
+                    FMOPThreshold();
+                    break;
+                case enREQ_PMOP_Threshold :
+                    PMOPThreshold();
+                    break;
+                case enREQ_RX_Threshold :
+                    RxThreshold();
                     break;
 
                 case enREQ_IPL_START :
@@ -186,29 +213,35 @@ void CTaskMngr::_routine()
  */
 void CTaskMngr::SetMode()
 {
-    ENUM_MODE enMode;
+    ENUM_MODE enMode, enMode2;
 
-    enMode = (ENUM_MODE) m_pMsg->x.szData[0];
+    enMode2 = enMode = (ENUM_MODE) m_pMsg->x.szData[0];
 
     LOGMSG1( enDebug, "모드(%d)를 설정합니다.", enMode );
 
+    GP_SYSCFG->SetMode( enMode );
+
     switch( enMode ) {
         case enES_MODE :
-            break;
         case enEW_MODE :
+            CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
             break;
+
         case enREADY_MODE :
             CreateAllAnalysisThread( false );
             ProcessSummary();
+
+            CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
+
+            CCommonUtils::CloseSocket();
+
+            g_pTheCCUSocket->Stop2();
+            g_pTheCCUSocket->Run( _MSG_CCU_KEY );
             break;
 
         default :
             break;
     }
-
-    GP_SYSCFG->SetMode( enMode );
-
-    CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
 
 }
 
@@ -219,10 +252,10 @@ void CTaskMngr::AnalysisStart()
 {
     time_t tiNow;
 
+    GP_SYSCFG->SetMode( enANAL_Mode );
+
     // 분석 관련 쓰레드를 삭제한다.
     CreateAllAnalysisThread();
-
-    GP_SYSCFG->SetMode( enANAL_Mode );
 
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
     tiNow = (time_t) m_pMsg->x.szData[0];
@@ -230,6 +263,8 @@ void CTaskMngr::AnalysisStart()
     //stime( & tiNow );
 
     SIGCOL->QMsgSnd( m_pMsg );
+
+    CHWIO::StartCollecting( REG_UIO_DMA_1 );
 
 }
 
@@ -241,7 +276,8 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 {
 
     if( bCreate == true ) {
-        LOGMSG1( enDebug, "분석 관련 쓰레드를 구동하여 분석을 준비한다[%d].", bCreate );
+        LOGMSG1( enNormal, "분석 관련 쓰레드를 구동하여 분석을 준비합니다.[%d].", bCreate );
+        LOGMSG( enNormal, "" );
 
         g_AnalLoop = true;
 
@@ -253,7 +289,8 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 
     }
     else {
-        LOGMSG1( enDebug, "분석 관련 쓰레드를 삭제한다[%d].", bCreate );
+        LOGMSG1( enNormal, "분석 관련 쓰레드를 삭제합니다[%d].", bCreate );
+        LOGMSG( enNormal, "" );
 
         g_AnalLoop = false;
 
@@ -371,11 +408,14 @@ void CTaskMngr::IPLDownload()
             break;
 
         case enREQ_IPL_DOWNLOAD :
-            m_theIPL.setIPL( (STR_IPL *) GetArrayMsgData(m_pMsg->iArrayIndex) );
+            m_theIPL.trIPL( (STR_IPL *) GetRecvData() );
+            m_theIPL.setIPL( (STR_IPL *) GetRecvData() );
             InsertIPL( m_iTotalIPL );
             ++ m_iTotalIPL;
 
+            iWriteStatus = (int) ( 0.5 + ( 100. * m_iTotalIPL ) / (m_theIPL.getIPLStart())->uiCountOfIPL );
             CCommonUtils::SendLan( esIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
+            LOGMSG1( enNormal, "IPL WriteStatus[%d]" , iWriteStatus );
             break;
 
         case enREQ_IPL_END :
@@ -403,8 +443,8 @@ void CTaskMngr::DeleteIPL()
     exec( m_szSQLString );
 
     // 레이더 & 레이더 모드 관계
-    sprintf( m_szSQLString, "DELETE FROM RADAR_MODELIFECYCLE" );
-    //exec( m_szSQLString );
+    sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
+    exec( m_szSQLString );
 
     m_iTotalIPL = 0;
 
@@ -432,19 +472,152 @@ void CTaskMngr::InsertIPL( int iIndex )
 DATE_CREATED, \
 RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
 PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
-PRIORITY, RF_TYPE, PRI_TYPE ) VALUES \
+PRIORITY, RF_TYPE, PRI_TYPE, \
+PD_TYPICAL_MIN, PD_TYPICAL_MAX ) VALUES \
 ( %d, 'ZZ', '%s', \
 '%s', \
 %d, %d, %d, %d, %d, \
 %d, %d, %d, %d, %d, \
-%d, 1, 1 )" , \
-    pstrIPL->noIPL, ipl_signal_type[pstrIPL->sigType], \
+%d, %d, %d, \
+%d, %d )" ,
+    pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
     szDate, \
     pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
     pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
-    pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type );
+    pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
+    pstrIPL->pw.low, pstrIPL->pw.hgh );
+    exec( m_szSQLString );
 
+    // 레이더 모드 라이프 사이클
+    sprintf( m_szSQLString, "INSERT INTO RADAR_MODE_LIFECYCLE ( RADAR_INDEX, RADAR_MODE_INDEX, RADAR_MODE_NAME, MODE_CODE ) VALUES ( %d, %d, '%s', 'ZZ' )" , \
+    pstrIPL->noIPL, pstrIPL->noIPL, pstrIPL->elintName );
     exec( m_szSQLString );
 
 }
 
+/**
+ * @brief CTaskMngr::ReqAudio
+ */
+void CTaskMngr::ReqAudio()
+{
+    UNI_LAN_DATA *pLanData;
+
+    pLanData = ( UNI_LAN_DATA * ) GetRecvData();
+
+    LOGMSG1( enNormal, "오디오 [%s] 합니다." , on_off[pLanData->bAudioSW] );
+
+}
+
+/**
+ * @brief CTaskMngr::ReqAudioParam
+ */
+void CTaskMngr::ReqAudioParam()
+{
+    char buffer[100];
+    STR_AUDIO_PARAM *pstrAudioParam;
+
+    pstrAudioParam = ( STR_AUDIO_PARAM * ) GetRecvData();
+
+    sprintf( buffer, "%d,%d/%d,%d/%d,%d/%d,%d" , pstrAudioParam->iLowerBC, pstrAudioParam->iUpperBC, pstrAudioParam->iFromAoa, pstrAudioParam->iToAoa, pstrAudioParam->iLowerFrq, pstrAudioParam->iUpperFrq, pstrAudioParam->iFromPa, pstrAudioParam->iToPa );
+    LOGMSG1( enNormal, "오디오 [%s] 설정 합니다." , buffer );
+
+}
+
+/**
+ * @brief CTaskMngr::BaneEnable
+ */
+void CTaskMngr::BandEnable()
+{
+    char buffer[100];
+
+    STR_BAND_ENABLE *pstrBandEnable;
+
+    pstrBandEnable = ( STR_BAND_ENABLE * ) GetRecvData();
+
+    if( pstrBandEnable->iBand != 0 ) {
+        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+
+        LOGMSG2( enNormal, "대역 [%s]을 설정[%d] 합니다." , buffer, pstrBandEnable->iOnOff );
+    }
+    else {
+        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+    }
+
+}
+
+/**
+ * @brief CTaskMngr::FMOPThreshold
+ */
+void CTaskMngr::FMOPThreshold()
+{
+    char buffer[100];
+
+    STR_FMOP_THRESHOLD *pstrBandEnable;
+
+    pstrBandEnable = ( STR_FMOP_THRESHOLD * ) GetRecvData();
+
+    if( pstrBandEnable->iBand != 0 ) {
+        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+
+        LOGMSG2( enNormal, "대역 [%s]을 설정[%d] 합니다." , buffer, pstrBandEnable->iThreshold );
+    }
+    else {
+        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+    }
+}
+
+/**
+ * @brief CTaskMngr::PMOPThreshold
+ */
+void CTaskMngr::PMOPThreshold()
+{
+    char buffer[100];
+
+    STR_PMOP_THRESHOLD *pstrBandEnable;
+
+    pstrBandEnable = ( STR_PMOP_THRESHOLD * ) GetRecvData();
+
+    if( pstrBandEnable->iBand != 0 ) {
+        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+
+        LOGMSG2( enNormal, "대역 [%s]을 설정[%d] 합니다." , buffer, pstrBandEnable->iThreshold );
+    }
+    else {
+        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+    }
+}
+
+/**
+ * @brief CTaskMngr::RxThreshold
+ */
+void CTaskMngr::RxThreshold()
+{
+    char buffer[100];
+
+    STR_RX_THRESHOLD *pstrRxThreshold;
+
+    pstrRxThreshold = ( STR_RX_THRESHOLD * ) GetRecvData();
+
+    if( pstrRxThreshold->iBand != 0 ) {
+        CCommonUtils::GetStringBand( buffer, pstrRxThreshold->iBand );
+
+        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, pstrRxThreshold->uiCorThreshold );
+        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, pstrRxThreshold->uiMagThreshold );
+        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
+
+        LOGMSG3( enNormal, "대역 [%s]을 설정[Cor:%d/Mag:%d] 합니다." , buffer, pstrRxThreshold->uiCorThreshold, pstrRxThreshold->uiMagThreshold );
+    }
+    else {
+        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+    }
+}
+
+/**
+ * @brief CTaskMngr::StopUserCollecting
+ */
+void CTaskMngr::StopUserCollecting()
+{
+    LOGMSG( enDebug, " 수집 설정을 종료합니다." );
+
+    CHWIO::StopCollecting( REG_UIO_DMA_1 );
+}

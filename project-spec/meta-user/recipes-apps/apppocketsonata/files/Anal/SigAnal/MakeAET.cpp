@@ -227,7 +227,7 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 
     // 주파수 밴드 저장
     pSeg = & m_pSeg[ pEmitter->main_seg ];
-    pFrq->band = BAND[ pSeg->pdw.pIndex[0] ];
+    pFrq->band = m_pBAND[ pSeg->pdw.pIndex[0] ];
 
     // 주파수 타입 결정
     pFrq->type = pEmitter->freq_type;
@@ -695,7 +695,13 @@ void CMakeAET::MakeAOAInfoInSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     unsigned int uiSum=0;
     PDWINDEX *pPdwIndex = pEmitter->pdw.pIndex;
     for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
-        iDiff = pAoa->mean - AOA[ *pPdwIndex++ ];
+        iDiff = pAoa->mean - m_pAOA[ *pPdwIndex++ ];
+        if( iDiff > MAX_AOA / 2 ) {
+            iDiff = ( MAX_AOA - iDiff );
+        }
+        else if( iDiff < -MAX_AOA / 2 ) {
+            iDiff = ( iDiff + MAX_AOA ) % MAX_AOA;
+        }
         uiSum += ( iDiff * iDiff );
 
     }
@@ -1086,7 +1092,7 @@ int CMakeAET::CalMaxChannel( STR_PDWINDEX *pPdw )
     pPdwIndex = pPdw->pIndex;
     hist[0] = hist[1] = hist[2] = hist[3] = 0;
     for( i=0 ; i < count ; ++i ) {
-        max_channel = MAXCHANNEL[ *pPdwIndex++ ];
+        max_channel = m_pMAXCHANNEL[ *pPdwIndex++ ];
         ++ hist[ max_channel ];
     }
 
@@ -1277,6 +1283,8 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_MINMAX_SDEV stVal2;
     SRxLOBData *pLOBData;
 
+    float fDiff;
+
     struct __timeb32 timeBuffer;
 
     STR_FRQ stFrq;
@@ -1309,10 +1317,17 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     // 방위
     MakeAOAInfoInSeg( & stVal2, pEmitter );
-    pLOBData->fDOAMean = FMUL( stVal2.mean, _spAOAres );			//FTOAsCNV( stVal.mean );
-    pLOBData->fDOAMax = FMUL( stVal2.max, _spAOAres );				//FTOAsCNV( stVal.min );
-    pLOBData->fDOAMin = FMUL( stVal2.min, _spAOAres );				//FTOAsCNV( stVal.max );
-    pLOBData->fDOADeviation = pLOBData->fDOAMax - pLOBData->fDOAMin;
+    pLOBData->fDOAMean = FAOACNV( stVal2.mean );			//FTOAsCNV( stVal.mean );
+    pLOBData->fDOAMax = FAOACNV( stVal2.max );				//FTOAsCNV( stVal.min );
+    pLOBData->fDOAMin = FAOACNV( stVal2.min );				//FTOAsCNV( stVal.max );
+    fDiff = pLOBData->fDOAMax - pLOBData->fDOAMin;
+    if( fDiff < 0 ) {
+        pLOBData->fDOADeviation = 360.0 + fDiff;
+    }
+    else {
+        pLOBData->fDOADeviation = fDiff;
+    }
+
     pLOBData->fDOASDeviation = stVal2.fsdev;
 
     // 	if( RADARCOL_1 == m_pNewSigAnal->GetCollectorID() ) {
@@ -1343,7 +1358,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iFreqPositionCount = stFrq.swtLev;
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
     for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
-        pLOBData->fFreqSeq[i] = FMUL( stFrq.swtVal[i], (0.001) );		// FFRQCNV( stFrq.swtVal[i] );
+        pLOBData->fFreqSeq[i] = FFRQCNV( 0, stFrq.swtVal[i] );		// FFRQCNV( stFrq.swtVal[i] );
     }
 
     // PRI 정보 생성
@@ -1352,23 +1367,23 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iPRIType = stPri.type;
     pLOBData->iPRIPatternType = stPri.patType;
     pLOBData->fPRIPatternPeriod = FTOAsCNV( stPri.patPrd );
-    pLOBData->fPRIMean = FDIV( stPri.mean, _spOneMicrosec );
-    pLOBData->fPRIMax = FDIV( stPri.max, _spOneMicrosec );
-    pLOBData->fPRIMin = FDIV( stPri.min, _spOneMicrosec );
-    pLOBData->fPRIDeviation = FDIV( (stPri.max-stPri.min), _spOneMicrosec );
+    pLOBData->fPRIMean = TOAusCNV( stPri.mean );
+    pLOBData->fPRIMax = TOAusCNV( stPri.max );
+    pLOBData->fPRIMin = TOAusCNV( stPri.min );
+    pLOBData->fPRIDeviation = TOAusCNV( stPri.max-stPri.min );
     pLOBData->fPRIJitterRatio = stPri.jtrPer;
     pLOBData->iPRIPositionCount = stPri.swtLev;
     memset( pLOBData->fPRISeq, 0, sizeof(pLOBData->fPRISeq) );
     for( i=0 ; i < pLOBData->iPRIPositionCount ; ++i ) {
-        pLOBData->fPRISeq[i] = FDIV( stPri.swtVal[i], _spOneMicrosec );
+        pLOBData->fPRISeq[i] = TOAusCNV( stPri.swtVal[i] );
     }
 
     // 펄스폭 생성
     MakePWInfoInSeg( & stVal, pEmitter );
-    pLOBData->fPWMean = FDIV( stVal.mean*1000., _spOneMicrosec );			//, _spOneMicrosec );
-    pLOBData->fPWMax = FDIV( stVal.max*1000., _spOneMicrosec );				//, _spOneMicrosec );
-    pLOBData->fPWMin = FDIV( stVal.min*1000., _spOneMicrosec );				//, _spOneMicrosec );
-    pLOBData->fPWDeviation = FDIV( 1000*(stVal.max-stVal.min), _spOneMicrosec );
+    pLOBData->fPWMean = PWCNV( stVal.mean*1000. );			//, _spOneMicrosec );
+    pLOBData->fPWMax = PWCNV( stVal.max*1000. );				//, _spOneMicrosec );
+    pLOBData->fPWMin = PWCNV( stVal.min*1000. );				//, _spOneMicrosec );
+    pLOBData->fPWDeviation = pLOBData->fPWMax - pLOBData->fPWMin;
 
     // 신호 세기 생성
     MakePAInfoInSeg( & stVal, pEmitter );

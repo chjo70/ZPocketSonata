@@ -3,12 +3,13 @@
 #include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
+#include "../Utils/csingleclient.h"
 #include "../Utils/cmultiserver.h"
 
 #define _DEBUG_
 
 extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
+extern CSingleClient *g_pTheCCUSocket;
 
 // 클래스 내의 정적 멤버변수 값 정의
 CTrackAnalysis* CTrackAnalysis::m_pInstance = nullptr;
@@ -105,12 +106,9 @@ void CTrackAnalysis::AnalysisStart()
 
     LOGMSG3( enDebug, " 추적 분석: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
 
-    // 1. PDW 데이터를 갖고온다.
-    PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
+    // 1. 탐지 신호 분석을 호출한다.
 
-    // 2. 탐지 신호 분석을 호출한다.
-
-    pTrkPDWData = ( STR_TRKPDWDATA *) m_uniLanData.szFile;
+    pTrkPDWData = ( STR_TRKPDWDATA *) GetRecvData();
     m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.

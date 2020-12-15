@@ -149,6 +149,7 @@ void CELEmitterMergeMngr::AllocMemory()
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
+
     strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
 
@@ -194,7 +195,7 @@ void CELEmitterMergeMngr::AllocMemory()
 void CELEmitterMergeMngr::FreeMemory()
 {
 #ifdef _SQLITE_
-    free( m_pszSQLString );
+    //free( m_pszSQLString );
 
 #endif
 
@@ -431,7 +432,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     ManageABTs( bMerge );
 
     // 8. 위협 관리 삭제 처리
-    ResetABT();
+    //ResetABT();
 
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
@@ -1273,6 +1274,7 @@ bool CELEmitterMergeMngr::DeleteThreat( CELThreat *pTheAETThreat, CELThreat *pTh
                 }
             }
         }
+
     }
 
     return bRet;
@@ -10659,7 +10661,7 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
 {
 
 #ifdef _SQLITE_
-    sprintf_s( m_pszSQLString, "INSERT INTO LOB_POSITION (LOBID, ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
+    sprintf_s( m_szSQLString, "INSERT INTO LOB_POSITION (LOBID, ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
               pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount, \
               pLOBData->fPRISeq[0], pLOBData->fPRISeq[1], pLOBData->fPRISeq[2], pLOBData->fPRISeq[3], pLOBData->fPRISeq[4], \
               pLOBData->fPRISeq[5], pLOBData->fPRISeq[6], pLOBData->fPRISeq[7], pLOBData->fPRISeq[8], pLOBData->fPRISeq[9], \
@@ -10669,7 +10671,7 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
               pLOBData->fPRISeq[25], pLOBData->fPRISeq[26], pLOBData->fPRISeq[27], pLOBData->fPRISeq[28], pLOBData->fPRISeq[29], \
               pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
 
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
 #else
     DECLARE_BEGIN_CHECKODBC
@@ -10706,7 +10708,7 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 #ifdef _SQLITE_
     _localtime32_s( &stTime, & pLOBData->tiContactTime );
     strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-    sprintf_s( m_pszSQLString, "INSERT INTO LOBDATA ( \
+    sprintf_s( m_szSQLString, "INSERT INTO LOBDATA ( \
                 LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, THREAT_INDEX, POLIZATION, RATIOOFPOL, \
                 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
                 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
@@ -10740,7 +10742,7 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
               // pExt->aetData.uiOpInitID,
 
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
     if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
         m_pIdentifyAlg->UpdateRadarMode( pLOBData );
@@ -10801,7 +10803,7 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
 #ifdef _SQLITE_
-    sprintf_s( m_pszSQLString, "INSERT INTO ABT_POSITION ( \
+    sprintf_s( m_szSQLString, "INSERT INTO ABT_POSITION ( \
               ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
               pABTData->uiABTID, pABTData->uiAETID, pABTData->iPRIPositionCount, \
               pABTData->fPRISeq[0], pABTData->fPRISeq[1], pABTData->fPRISeq[2], pABTData->fPRISeq[3], pABTData->fPRISeq[4], \
@@ -10812,7 +10814,7 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
               pABTData->fPRISeq[25], pABTData->fPRISeq[26], pABTData->fPRISeq[27], pABTData->fPRISeq[28], pABTData->fPRISeq[29], \
               pABTData->fPRISeq[30], pABTData->fPRISeq[31] );
 
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
 #else
     DECLARE_BEGIN_CHECKODBC
@@ -10854,7 +10856,7 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
     strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
     _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
     strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    sprintf_s( m_pszSQLString, \
+    sprintf_s( m_szSQLString, \
         "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
          PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
          RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
@@ -10896,7 +10898,7 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
 
 
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
     if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
@@ -10905,8 +10907,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 
         // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-        exec( m_pszSQLString );
+        sprintf_s( m_szSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+        exec( m_szSQLString );
     }
 
 #else
@@ -10974,7 +10976,7 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
     strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
     _localtime32_s(&stTime, & pAETData->tiFinalAlarmTime );
     strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    sprintf_s( m_pszSQLString, "INSERT INTO AETDATA (AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+    sprintf_s( m_szSQLString, "INSERT INTO AETDATA (AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
                                PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
                                RADARMODE_INDEX, THREAT_INDEX, \
                                VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
@@ -11005,7 +11007,7 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
         pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
 
-    exec( m_pszSQLString );
+    exec( m_szSQLString );
 
     /*
     if( bUpdateThreat == true && pAETData->iThreatIndex > 0 ) {
@@ -11099,7 +11101,10 @@ char *CELEmitterMergeMngr::GetThreatName( int iRadarModeIndex )
 
     if( pSRadarMode != NULL ) {
         pSThreat = m_pIdentifyAlg->GetThreat( pSRadarMode->iThreatIndex );
-        pszThreat = pSThreat->szThreatName;
+        if( pSThreat != NULL )
+            pszThreat = pSThreat->szThreatName;
+        else
+            pszThreat = NULL;
     }
     else {
         pszThreat = NULL;

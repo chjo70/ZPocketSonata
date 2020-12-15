@@ -15,11 +15,12 @@ project-spec/meta-plnx-generated/
 *.autosave
 build-PocketView*/
 Build-PocketView*/
+build-PocketSonata*/
+Build-PocketSonata*/
 *.sqlite3
 *.swp
-
 *.pro.user
-
 *_cgi
+*.user
 
 

@@ -45,6 +45,7 @@ using namespace std;
 #include "./Utils/clog.h"
 #include "./Utils/cmultiserver.h"
 #include "./Utils/csingleserver.h"
+#include "./Utils/csingleclient.h"
 #include "./Thread/creclan.h"
 #include "./Thread/cprompt.h"
 #include "./Thread/curbit.h"
@@ -52,6 +53,7 @@ using namespace std;
 #include "./Thread/csignalcollect.h"
 #include "./Thread/cjamtech.h"
 #include "./Thread/ccgi.h"
+#include "./Thread/cusercollect.h"
 
 #include "./System/csysconfig.h"
 
@@ -67,8 +69,9 @@ void signalHandler(int signo);
 //CMySocket g_thePMCSocket( g_iKeyId++, (char *)"CPMCSocket" );
 
 CMultiServer *g_pTheZYNQSocket;
-CSingleServer *g_pTheCCUSocket;
-CSingleServer *g_pThePMCSocket;
+CSingleClient *g_pTheCCUSocket;
+CSingleClient *g_pThePMCSocket;
+
 
 
 
@@ -99,25 +102,28 @@ void usrAppStart()
     PULTRK->Run( _MSG_PULTRK_KEY );
     JAMTEC->Run( _MSG_JAMTEC_KEY );
 
-    // 3.1 ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
+    // 4. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
     RECZYNQ->Run( _MSG_RECZYNQ_KEY );
     RECCCU->Run( _MSG_RECCCU_KEY );
 
+    // 6. 브라우저의 CGI 메시지를 처리한다.
     CGI->Run( _MSG_ZCGI_KEY );
 
-    // 4. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
+    // 7. 사용자 수집 함수 메시지를 처리한다.
+    UCOL->Run( _MSG_USERCOL_KEY );
+
+    // 8. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
     g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
     g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
-
     if( GP_SYSCFG->GetBoardID() == enMaster ) {
-        g_pTheCCUSocket = new CSingleServer( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT );
+        g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT, GP_SYSCFG->GetPrimeServerOfNetwork() );
         g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 
-        g_pThePMCSocket = new CSingleServer( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT );
-        g_pThePMCSocket->Run( _MSG_CCU_KEY );
+        //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
+        //g_pThePMCSocket->Run( _MSG_CCU_KEY );
     }
 
-    // 5. 마지막으로 키 입력 처리를 호출한다.
+    // 9. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
     PROMPT->Run( _MSG_PROMPT_KEY );
 #endif
@@ -126,37 +132,54 @@ void usrAppStart()
         sleep(1);
     }
     //pause();
+    printf( "\n 종료 처리 시작 합니다." );
 
-    // 운용 관련 쓰레드를 종료 한다.
-    JAMTEC->ReleaseInstance();
-    PULTRK->ReleaseInstance();
-    SIGCOL->ReleaseInstance();
-    URBIT->ReleaseInstance();
-    PROMPT->ReleaseInstance();
-    RECZYNQ->ReleaseInstance();
-    RECCCU->ReleaseInstance();
-    CGI->ReleaseInstance();
+
     //MYSOCK->ReleaseInstance();
 
     // 분석 관련 쓰레드를 종료 한다.
 
+    PROMPT->ReleaseInstance();
+
+    delete g_pTheCCUSocket;
+
+    delete g_pTheZYNQSocket;
+
+    UCOL->ReleaseInstance();
+
+    CGI->ReleaseInstance();
+
+    RECZYNQ->ReleaseInstance();
+    RECCCU->ReleaseInstance();
+
+    JAMTEC->ReleaseInstance();
+    PULTRK->ReleaseInstance();
+
+    URBIT->ReleaseInstance();
 
     // 마지막 타스크 관리자 쓰레드를 종료 한다.
     TMNGR->ReleaseInstance();
 
-    delete g_pTheZYNQSocket;
-    delete g_pTheCCUSocket;
-    delete g_pThePMCSocket;
 
     LOGMSG( enDebug, "[usrAppStart] 를 종료 처리 합니다..." );
 
+    exit(0);
+
 }
 
+/**
+ * @brief signalHandler
+ * @param signo
+ */
 void signalHandler( int signo )
 {
 
-   printf( "\n SIGNO[%d] Handler\n" , signo );
-   //exit(0);
+    printf( "\n SIGNO[%d] Handler\n" , signo );
+
+    if( signo == 2 ) {
+        g_Loop = false;
+        exit(0);
+    }
 
 }
 

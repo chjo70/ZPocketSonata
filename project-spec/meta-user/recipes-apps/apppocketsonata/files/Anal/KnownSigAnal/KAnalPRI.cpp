@@ -36,6 +36,8 @@
 CKAnalPRI::CKAnalPRI( void *pParent, int coMaxPdw ) : CAnalPRI( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
+
+    INIT_ANAL_VAR_(m_pKnownSigAnal)
 }
 
 //////////////////////////////////////////////////////////////////////

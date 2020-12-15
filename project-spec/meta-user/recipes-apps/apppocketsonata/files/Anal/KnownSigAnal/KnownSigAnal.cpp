@@ -18,6 +18,7 @@
 
 #include "KnownSigAnal.h"
 
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -58,6 +59,8 @@ CKnownSigAnal::CKnownSigAnal( int coMaxPdw )
 
 	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
+    m_pMidasBlue = new CMIDASBlueFileFormat;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -70,11 +73,21 @@ CKnownSigAnal::CKnownSigAnal( int coMaxPdw )
 //##ModelId=429A5BDA0154
 CKnownSigAnal::~CKnownSigAnal()
 {
+    delete m_pMidasBlue;
+
 	delete m_theGroup;
 	delete m_thePulExt;
 	delete m_theAnalPRI;
 	delete m_theMakeAET;
 	
+}
+
+/**
+ * @brief CKnownSigAnal::Init
+ */
+void CKnownSigAnal::Init()
+{
+    m_uiStep = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,14 +112,16 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 #else
 #endif
 
+    ++ m_uiStep;
+
 	// 신호 분석 관련 초기화.
     Init( pPDWData );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
     m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW );
 
-	// 수집한 PDW 파일 만들기...
-	SaveAllPdwFile();
+    // 수집한 PDW 파일 만들기...
+    m_pMidasBlue->SaveRawDataFile( E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.

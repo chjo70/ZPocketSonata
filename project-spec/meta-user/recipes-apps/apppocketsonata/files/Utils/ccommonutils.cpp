@@ -2,12 +2,15 @@
 
 #include "../System/csysconfig.h"
 
+#include "../Collect/DataFile/DataFile.h"
+
 #include "../Utils/csingleserver.h"
+#include "../Utils/csingleclient.h"
 #include "../Utils/cmultiserver.h"
 
 extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
-extern CSingleServer *g_pThePMCSocket;
+extern CSingleClient *g_pTheCCUSocket;
+extern CSingleClient *g_pThePMCSocket;
 
 /**
  * @brief 생성자를 수행합니다.
@@ -50,6 +53,23 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 }
 
 /**
+ * @brief CCommonUtils::CloseSocket
+ */
+void CCommonUtils::CloseSocket()
+{
+    if( g_enBoardId == enMaster ) {
+        if( g_pTheCCUSocket != NULL ) {
+            g_pTheCCUSocket->CloseSocket();
+        }
+
+    }
+    else {
+
+    }
+
+}
+
+/**
  * @brief CCommonUtils::IsValid
  * @param pMsg
  * @return
@@ -65,7 +85,7 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             enModeOfMessage = (ENUM_MODE) pMsg->x.szData[0];
 
             if( enMode == enREADY_MODE && enMode == enModeOfMessage  ) {
-                bRet = false;
+                // bRet = false;
             }
             break;
         case enREQ_ANAL_START :
@@ -78,12 +98,14 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
 
         case enREQ_IBIT :
         case enREQ_UBIT :
-        case enREQ_CBIT :
             if( enMode == enES_MODE || enMode == enEW_MODE  ) {
             }
             else {
                 bRet = false;
             }
+            break;
+
+        case enREQ_CBIT :
             break;
 
         case enREQ_SBIT :
@@ -106,12 +128,17 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
             }
             else {
-                bRet = false;
+                //bRet = false;
             }
             break;
 
         case enREQ_RELOAD_LIBRARY :
         case enREQ_IPL_VERSION :
+            break;
+
+        case enREQ_INIT :
+        case enREQ_SET_CONFIG :
+        case enREQ_STOP :
             break;
 
         default:
@@ -149,4 +176,114 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     }
 
     return;
+}
+
+/**
+ * @brief CCommonUtils::AllSwapData32
+ * @param pData
+ * @param iLength
+ */
+void CCommonUtils::AllSwapData32( void *pData, int iLength )
+{
+    int i;
+    UINT *pWord;
+
+    pWord = (UINT *) pData;
+    for( i=0 ; i < iLength ; i+=sizeof(int) ) {
+        swapByteOrder( *pWord );
+        ++ pWord;
+    }
+
+}
+
+/**
+ * @brief CCommonUtils::swapByteOrder
+ * @param ull
+ */
+void CCommonUtils::swapByteOrder(unsigned int& ui)
+{
+    ui = (ui >> 24) |
+        ((ui<<8) & 0x00FF0000) |
+        ((ui>>8) & 0x0000FF00) |
+        (ui << 24);
+}
+
+/**
+ * @brief CCommonUtils::GetStringBand
+ * @param pBuffer
+ * @param iBand
+ */
+void CCommonUtils::GetStringBand( char *pBuffer, int iBand )
+{
+    pBuffer[0] = 0;
+    if( iBand & 0x02 ) {
+        strcat( pBuffer, "1, " );
+    }
+    if( iBand & 0x01 ) {
+        strcat( pBuffer, "2, " );
+    }
+    if( iBand & 0x02 ) {
+        strcat( pBuffer, "3, " );
+    }
+    if( iBand & 0x04 ) {
+        strcat( pBuffer, "4, " );
+    }
+    if( iBand & 0x08 ) {
+        strcat( pBuffer, "5, " );
+    }
+    if( iBand & 0x10 ) {
+        strcat( pBuffer, "6, " );
+    }
+    pBuffer[ strlen(pBuffer)-2 ] = 0;
+
+}
+
+/**
+ * @brief CCommonUtils::Disp_FinePDW
+ * @param pPDWData
+ */
+void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
+{
+
+#ifdef __ZYNQ_BOARD__
+    return;
+#else
+    unsigned int i;
+    _PDW *pPDW;
+
+    pPDW = & pPDWData->stPDW[0];
+    for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
+        printf( "[%4d]\t%12llX %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, pPDW->llTOA, \
+                CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
+                CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
+                CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );
+
+        ++ pPDW;
+    }
+
+    return;
+
+#endif
+
+}
+
+/**
+ * @brief CCommonUtils::GetEnumCollectBank
+ * @param uiCh
+ * @return
+ */
+ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
+{
+    ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
+
+    if( uiCh < DETECT_CHANNEL )
+        enCollectBank = enDetectCollectBank;
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+        enCollectBank = enTrackCollectBank;
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+        enCollectBank = enScanCollectBank;
+    else
+        enCollectBank = enUserCollectBank;
+
+    return enCollectBank;
 }

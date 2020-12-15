@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtNetwork>
 #include <QTcpServer>
 #include <QTcpSocket>
 
@@ -33,6 +34,7 @@ private:
     void ShowCBitResult( void *pData );
 
     void ShowIPLVersion( void *pData );
+    void ShowIPLWriteStatus( void *pData );
 
     void ReadIPLFIle();
 
@@ -40,9 +42,15 @@ private:
     void UpdateAETTable( void *pByteData );
     void DeleteAETTable( void *pByteData );
     void LostAETTable( void *pByteData );
+    void ClearTable();
     void UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iIndexOfTable );
     int GetIndexOfAETTable( unsigned int uiAETID );
     void UpdateColor( int iIndex, STR_AET *pAET, unsigned int opCode );
+
+    void AllSwapData32( void *pData, int iLength );
+    void swapByteOrder(unsigned int& ui);
+
+    int GetUIBand();
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -52,6 +60,10 @@ public:
 
 private slots:
     void newConnection();
+    void disConnected();
+    void readData();
+
+
     void onSocketStateChanged(QAbstractSocket::SocketState socketState);
     void onError(QAbstractSocket::SocketState socketState);
     void onReadyRead();
@@ -86,6 +98,18 @@ private slots:
 
     void on_pushButton_DownloadIPL_clicked();
 
+    void on_pushButton_audio_clicked();
+
+    void on_pushButton_audiosetup_clicked();
+
+    void on_pushButton_bandenable_clicked();
+
+    void on_pushButton_fmopthreshold_clicked();
+
+    void on_pushButton_pmopthreshold_clicked();
+
+    void on_pushButton_rx_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -93,14 +117,20 @@ private:
     bool m_bConnect;
 
     bool m_bHeader;
+    UINT m_uiTotalRead;
+    char m_szLanData[MAX_LAN_DATA];
 
     CDataFile m_theDataFile;
 
-    QTcpSocket m_theTcpSocket;   //socket
+    QTcpServer *m_ptheTcpServer;   //socket
+    QTcpSocket *m_ptheClient;   //socket
+
     //QTcpServer *pServer;
     //QList<QTcpSocket*> _sockets;
 
-    int m_nCoList;
+    //int m_nCoList;
+
+
 
     int m_coLoadIPL;
     STR_IPL m_strIpl[2000];

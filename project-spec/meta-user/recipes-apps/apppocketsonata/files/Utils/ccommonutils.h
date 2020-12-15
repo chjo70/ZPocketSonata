@@ -14,9 +14,20 @@ public:
 
 public:
     static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
+    static void CloseSocket();
+
     static bool IsValidLanData( STR_MessageData *pMsg );
     static bool IsValidThread( STR_MessageData *pMsg );
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
+
+    static void AllSwapData32( void *pData, int iLength );
+    static void swapByteOrder( unsigned int& ui );
+
+    static void GetStringBand( char *pBuffer, int iBand );
+
+    static ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh );
+
+    static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
 };
 

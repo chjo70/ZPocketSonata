@@ -24,7 +24,7 @@ private:
 protected:
     //##ModelId=452B0C5201D5
     CKnownSigAnal *m_pKnownSigAnal;
-	
+
 public:
     //##ModelId=452B0C5201DD
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return CPulExt::GetPulseSeg(); }
@@ -48,6 +48,7 @@ public:
     //##ModelId=452B0C520211
     STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
     UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
+    void ClearAllMark();
 
     //##ModelId=452B0C520212
     void KnownPulseExtract();

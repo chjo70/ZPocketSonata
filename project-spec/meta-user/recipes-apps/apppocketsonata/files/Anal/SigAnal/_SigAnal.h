@@ -27,6 +27,8 @@
 #include "../ScanSigAnal/SDefine.h"
 #include "../ScanSigAnal/SStruct.h"
 
+#include "../../Collect/DataFile/DataFile.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // printf()문을 대체하기 위한 선언.
@@ -53,20 +55,6 @@ extern "C" {
 
 #ifdef _MAIN_
 
-_TOA TOA[MAX_PDW];					// PDW TOA 파라메터
-UINT AOA[MAX_PDW];					// PDW AOA 파라메터
-UINT FREQ[MAX_PDW];					// PDW FREQUENCY 파라메터
-UINT PW[MAX_PDW];						// PDW PULSE WIDTH 파라메터
-int PA[MAX_PDW];						// PDW PULSE AMPLITUDE 파라메터
-UCHAR PMOP[MAX_PDW];				// PDW PMOP 파라메터
-UCHAR FMOP[MAX_PDW];				// PDW FMOP 파라메터
-USHORT MARK[MAX_PDW];				// PDW MARK ; selected pdw
-UCHAR BAND[MAX_PDW];				// 주파수 밴드
-UCHAR STAT[MAX_PDW];				// PDW STATUS(Notmal, CW, PMOP, Chirp Up/Dn)
-USHORT BKMK[MAX_PDW];				// MARK 백업용, 스태거 분석시에 사용함.
-USHORT RSMK[MAX_PDW];				// MARK 백업용, 스태거 분석시에 사용함.
-UCHAR MAXCHANNEL[MAX_PDW];	// PDW의 MaxChannel
-
 // 주파수 해상도 계산용
 
 // HARMONIC MARGIN
@@ -91,20 +79,6 @@ STR_SCANPT stScanPt;
 UINT stOffPdw;
 
 #else
-
-extern _TOA TOA[MAX_PDW];			// PDW TOA 파라메터
-extern UINT AOA[MAX_PDW];			// PDW AOA 파라메터
-extern UINT FREQ[MAX_PDW];		// PDW FREQUENCY 파라메터
-extern UINT PW[MAX_PDW];			// PDW PULSE WIDTH 파라메터
-extern int PA[MAX_PDW];			// PDW PULSE AMPLITUDE 파라메터
-extern UCHAR PMOP[MAX_PDW];		// PDW PMOP 파라메터
-extern UCHAR FMOP[MAX_PDW];		// PDW FMOP 파라메터
-extern USHORT MARK[MAX_PDW];	// PDW MARK ; selected pdw
-extern UCHAR BAND[MAX_PDW];		// 주파수 밴드
-extern UCHAR STAT[MAX_PDW];		// 주파수 밴드
-extern USHORT BKMK[MAX_PDW];		// Mark 펄스열의 백업용
-extern USHORT RSMK[MAX_PDW];	// MARK 백업용, 스태거 분석시에 사용함.
-extern UCHAR MAXCHANNEL[MAX_PDW];	// PDW의 MaxChannel
 
 #ifdef _A50_RWR
 extern UINT stSigma1Aoa[5];

@@ -37,7 +37,7 @@ FORMS += \
 TRANSLATIONS += \
     PocketView_ko_KR.ts
 
-DEFINES += _SONATA_
+DEFINES += _POCKETSONATA_
 DEFINES += _GUI_
 
 QMAKE_LFLAGS += -no-pie

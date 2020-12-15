@@ -32,6 +32,9 @@ using namespace std;
 //##ModelId=452B0C5302F7
 class CPulExt
 {
+protected:
+    DEFINE_ANAL_PVAR_(0)
+
 public:
     //##ModelId=452B0C530301
     int m_nAnalSeg;
@@ -113,6 +116,8 @@ public:
     //##ModelId=452B0C5303DD
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
     virtual int GetCoPdw()=0;
+    virtual void ClearAllMark()=0;
+
 
     template <typename T=_TOA>
     UINT CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
@@ -147,7 +152,6 @@ public:
 
     void MakeCWPulseTrain();
     void ResetJitterSeg();
-    void ClearAllMark();
     BOOL MustDo2ndPulseExtract();
     void MarkStablePulseTrain();
     void CalcEmitterPW( STR_PULSE_TRAIN_SEG *pSeg );

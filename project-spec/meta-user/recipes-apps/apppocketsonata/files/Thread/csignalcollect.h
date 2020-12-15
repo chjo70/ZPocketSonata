@@ -89,20 +89,7 @@ public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CSignalCollect(void);
 
-    ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh ) {
-        ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
 
-        if( uiCh < DETECT_CHANNEL )
-            enCollectBank = enDetectCollectBank;
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
-            enCollectBank = enTrackCollectBank;
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
-            enCollectBank = enScanCollectBank;
-        else
-            enCollectBank = enUserCollectBank;
-
-        return enCollectBank;
-    }
 
     THREAD_STANDARD_FUNCTION( CSignalCollect )
 

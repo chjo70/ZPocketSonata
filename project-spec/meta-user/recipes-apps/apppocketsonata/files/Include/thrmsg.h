@@ -52,6 +52,13 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_CBIT = enREQ_CBIT,
     enTHREAD_REQ_SBIT = enREQ_SBIT,
 
+    // 수집 제어 관련 메시지
+    enTHREAD_REQ_SETCONFIG = enREQ_SET_CONFIG,
+    enTHREAD_REQ_STOP = enREQ_STOP,
+    enTHREAD_REQ_COLSTART = enREQ_COL_START,
+    enTHREAD_REQ_RAWDATA = enREQ_RAWDATA,
+
+    // CGI 명령 관련 메시지
     enCGI_REQ_IBIT = 0xF000,
     enCGI_REQ_UBIT,
     enCGI_REQ_CBIT,

@@ -36,6 +36,16 @@ void CMultiServer::Init()
 {
     Alloc();
 
+    if( m_iPort == CCU_PORT ) {
+        m_ptheRecLan = RECCCU;
+    }
+    else if( m_iPort == PORT ) {
+        m_ptheRecLan = RECZYNQ;
+    }
+    else {
+        m_ptheRecLan = NULL;
+    }
+
 }
 
 /**

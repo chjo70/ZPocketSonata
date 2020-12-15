@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>944</width>
-    <height>666</height>
+    <height>765</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -342,9 +342,9 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>480</x>
+      <x>790</x>
       <y>230</y>
-      <width>451</width>
+      <width>141</width>
       <height>111</height>
      </rect>
     </property>
@@ -359,8 +359,8 @@
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>81</width>
-       <height>61</height>
+       <width>111</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -372,25 +372,6 @@
      <property name="text">
       <string>PDW
 모의 발생</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>30</y>
-       <width>81</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>81</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>시험 1</string>
      </property>
     </widget>
    </widget>
@@ -458,7 +439,7 @@
       <rect>
        <x>100</x>
        <y>25</y>
-       <width>81</width>
+       <width>151</width>
        <height>21</height>
       </rect>
      </property>
@@ -477,7 +458,20 @@
       <rect>
        <x>100</x>
        <y>50</y>
-       <width>81</width>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressBar_IPL_WriteStatus">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>50</y>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -489,8 +483,8 @@
    <widget class="QDialogButtonBox" name="buttonBox">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>590</y>
+      <x>760</x>
+      <y>690</y>
       <width>166</width>
       <height>25</height>
      </rect>
@@ -502,15 +496,382 @@
    <widget class="QTableWidget" name="aettableWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>350</y>
-      <width>911</width>
-      <height>231</height>
+      <x>10</x>
+      <y>460</y>
+      <width>921</width>
+      <height>221</height>
      </rect>
     </property>
     <attribute name="verticalHeaderShowSortIndicator" stdset="0">
      <bool>true</bool>
     </attribute>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>230</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>오디오 설정</string>
+    </property>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>주파수</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>56</y>
+       <width>51</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>방위</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiofreqlow">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiofreqhgh">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>30</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiodoalow">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>56</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiodoahgh">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>56</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>82</y>
+       <width>61</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>신호세기</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiopalow">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>82</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_audiofreqhgh_2">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>82</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_audio">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>30</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>OFF</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>30</y>
+       <width>21</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>56</y>
+       <width>21</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_audiosetup">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>70</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>설정</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>643</x>
+      <y>264</y>
+      <width>16</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>~</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>338</y>
+      <width>551</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>수신기 설정</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_bandenable">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>30</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>대역 설정 OFF</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>371</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="checkBox_band1">
+        <property name="text">
+         <string>대역1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_band2">
+        <property name="text">
+         <string>대역2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_band3">
+        <property name="text">
+         <string>대역3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_band4">
+        <property name="text">
+         <string>대역4</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_band5">
+        <property name="text">
+         <string>대역5</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="pushButton_fmopthreshold">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>93</x>
+       <y>64</y>
+       <width>51</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>FMOP</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_fmopthreshold">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>62</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_pmopthreshold">
+     <property name="geometry">
+      <rect>
+       <x>153</x>
+       <y>61</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_pmopthreshold">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>226</x>
+       <y>63</y>
+       <width>51</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PMOP</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_rx">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>64</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rx</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_rxthreshold">
+     <property name="geometry">
+      <rect>
+       <x>287</x>
+       <y>61</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_corr">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>473</x>
+       <y>63</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cor</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_corrthreshold">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>60</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -41,6 +41,16 @@ void CSingleServer::Init()
 {
     Alloc();
 
+    if( m_iPort == CCU_PORT ) {
+        m_ptheRecLan = RECCCU;
+    }
+    else if( m_iPort == PORT ) {
+        m_ptheRecLan = RECZYNQ;
+    }
+    else {
+        m_ptheRecLan = NULL;
+    }
+
 }
 
 /**
@@ -211,7 +221,7 @@ void CSingleServer::_routine()
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
 
-                                if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+                                if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                     perror( "msgsnd 실패" );
                                 }
                                 else {
@@ -246,11 +256,11 @@ void CSingleServer::_routine()
 
                             if( sndMsg.uiOpCode == enREQ_SIM_PDWDATA ) {
                                 sndMsg.uiArrayLength = strLanHeader.uiLength;
-                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
+                                sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
                             }
                             else if( sndMsg.uiOpCode == enREQ_IPL_DOWNLOAD ) {
                                 sndMsg.uiArrayLength = strLanHeader.uiLength;
-                                sndMsg.iArrayIndex = RECCCU->PushLanData( pLanData, sndMsg.uiArrayLength );
+                                sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
                             }
                             else {
                                 if( strLanHeader.uiLength < sizeof(UNI_MSG_DATA) ) {
@@ -262,7 +272,7 @@ void CSingleServer::_routine()
                                 }
                             }
 
-                            if( msgsnd( RECCCU->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+                            if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                 perror( "msgsnd 실패" );
                             }
                             else {
@@ -319,9 +329,11 @@ int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     strLanHeader.uiOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
+    //CCommonUtils::AllSwapData32( & strLanHeader, sizeof(STR_LAN_HEADER) );
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
 
     if( iRet1 > 0 ) {
+        //CCommonUtils::AllSwapData32( pData, strLanHeader.uiLength );
         iRet2 = send( m_iSocket, (char *) pData, strLanHeader.uiLength, MSG_DONTWAIT );
     }
     else {

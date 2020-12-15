@@ -38,6 +38,8 @@ public:
     int m_CoMakeAet;
 
 protected:
+    DEFINE_ANAL_PVAR_(0)
+
     STR_PDWPARAM *m_pPdwParam;
 
     //##ModelId=452B0C5503CF

@@ -20,9 +20,12 @@
 #include "NAnalPRI.h"
 #include "NMakeAET.h"
 
+#include "../MIDAS/Midas.h"
+//#include "../MIDAS/RawFile.h"
+
 #ifdef __cplusplus
 
-class CNewSigAnal// : public CMSSQL
+class CNewSigAnal
 {
 public:
     CNGroup *m_theGroup;
@@ -32,10 +35,11 @@ public:
 
     STR_NEWAET m_theSimulAET[_SIMUL_CO_ANAL_];
 
+    DEFINE_ANAL_VAR_
+
 private:
-    char m_szPDWFilename[100];
     enum ANALYSIS_MODE m_AnalMode;
-    UINT m_nStep;
+    UINT m_uiStep;
     int m_CoGroup;
     UINT m_nMaxPdw;
     UINT m_CoPdw;
@@ -57,12 +61,16 @@ private:
     //CODBCDatabase m_theMyODBC;
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
+    CMIDASBlueFileFormat *m_pMidasBlue;
+
 private:
 
 
 public:
     enum FREQ_BAND GetBand( int freq );
     void Simul();
+
+    void Init();
 
     // 인라인 외부 연결 함수
     inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
@@ -89,14 +97,13 @@ public:
     inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
 
 
-
     inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
     inline int GetCoLOB() { return m_theAnalPRI->GetCoEmitter(); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
-    inline void SetStep( UINT nStep ) { m_nStep = nStep; }
+    inline void SetStep( UINT nStep ) { m_uiStep = nStep; }
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
     inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
-    inline UINT GetCoStep() { return m_nStep; }
+    inline UINT GetCoStep() { return m_uiStep; }
     inline void SetColPdw(UINT coPdw ) { m_CoPdw=coPdw; }
     inline int GetCoAnalPdw() { return m_theMakeAET->GetCoAnalPdw(); }
     inline void SetCoAnalPdw( UINT coExtPdw ) { m_theMakeAET->SetCoAnalPdw(coExtPdw); }
@@ -130,7 +137,7 @@ public:
     void Init( STR_PDWDATA *pPDWData=NULL );
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type);
-    void SaveAllPdwFile();
+    void SaveAllPdwFile( EnumSCDataType enDataType );
     void SaveGroupPdwFile( int index );
     char *GetTaskID();
     bool CheckValidData( STR_PDWDATA *pPDWData );

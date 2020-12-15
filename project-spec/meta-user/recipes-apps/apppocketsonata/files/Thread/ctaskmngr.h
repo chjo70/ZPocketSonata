@@ -38,6 +38,12 @@ private:
     void SetMode();
     void AnalysisStart();
     void ReqIPLVersion();
+    void ReqAudio();
+    void ReqAudioParam();
+    void BandEnable();
+    void FMOPThreshold();
+    void PMOPThreshold();
+    void RxThreshold();
     void IPLDownload();
     void InsertIPL( int iIndex );
     void DeleteIPL();
@@ -48,6 +54,10 @@ private:
 
     // 인터페이스 관련 함수 모음 입니다.
     void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
+
+    void StopUserCollecting();
+
+    inline void *GetRecvData() { if( m_pMsg->iArrayIndex >= 0 ) return CThread::GetRecvData(); else return & m_pMsg->x.szData[0]; }
 
 public:
     CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );

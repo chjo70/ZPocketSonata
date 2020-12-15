@@ -14,17 +14,27 @@
 
 #include "../../Include/system.h"
 
+#include "../../Anal/SigAnal/_Define.h"
+
+#include "../../Anal/SigAnal/_Type.h"
+#include "../../Anal/SigAnal/_Macro.h"
+#include "../../Anal/SigAnal/_Struct.h"
+
 #include "DataFile.h"
 
 
 
 //#include "../Log/LogDebug.h"
 
+//ENUM_BoardID CPOCKETSONATAPDW::m_enBoardID=g_enBoardId;
+
 #include "CRWRCommonVariables.h"
 
 static int stDataFile;
 
 const char stDV[2] = { ' ', '*' } ;
+
+static char *gstpRawDataBuffer;
 
 #define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
@@ -305,7 +315,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData )
 
 		*pfllTOA = pPDW->llTOA;
 
-		*pfFreq = F_FRQMhzCNV( 0, pPDW->iFreq );	//FFRQCNV(pPDW->item.band + 1, uiTemp);
+        *pfFreq = F_FRQMhzCNV( 0, pPDW->iFreq );	//FFRQCNV(pPDW->item.band + 1, uiTemp);
 
 		*pfPW = PWCNV(pPDW->iPW * 1000. );
 
@@ -609,9 +619,9 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pArrayPDW )
 {
 	UINT i;
 
-	float /*fToa*/ /* firstToa, */ preToa;
+    //float /*fToa*/ /* firstToa, */ preToa;
 
-	_TOA llToa, ll1stToa;
+    //_TOA llToa, ll1stToa;
 	UDRCPDW *pPDW = (UDRCPDW *) & gstpRawDataBuffer[sizeof(STR_PDWFILE_HEADER)];
 
 	_spOneSec = 20000000.;
@@ -636,6 +646,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pArrayPDW )
     _TOA *pfllTOA = m_PDWData.pfllTOA;
 
     for (i = 0; i < m_pRawData->uiDataItems; ++i) {
+        /*
         llToa = (_TOA) ( pPDW->sPDWFormat.m_LSBTOA ) | ( (_TOA) pPDW->sPDWFormat.m_MSBTOA << 32 );
         *pfllTOA = llToa;
         if (i == 0) {
@@ -663,6 +674,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pArrayPDW )
         *pcType = 0; // pPDW->sPDWFormat.m_sigType;
 
         *pcDV = pPDW->sPDWFormat.m_DI;
+        */
 
         //printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[MHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );
 
@@ -686,6 +698,8 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pArrayPDW )
 CPOCKETSONATAPDW::CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData(pRawData )
 {
     m_bPhaseData = false;
+
+    //m_enBoardID = ;
 }
 
 /**
@@ -751,8 +765,14 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData )
 {
     UINT i;
 
-    _TOA llToa;
-    UDRCPDW *pPDW = (UDRCPDW *) & gstpRawDataBuffer[sizeof(STR_PDWFILE_HEADER)];
+    int iCh;
+
+    //UINT uiFreq;
+
+    _TOA ullToa;
+    DMAPDW *pPDW = (DMAPDW *) & gstpRawDataBuffer[sizeof(STR_PDWFILE_HEADER)];
+
+    float fOffsetFreq;
 
     _spOneSec = 20000000.;
     _spOneMilli = FDIV( _spOneSec, 1000. );
@@ -767,19 +787,51 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData )
 
     pPDW1 = & pPDWData->stPDW[0];
 
+    fOffsetFreq = _ZPOCKETSONATA_::m_fCenterFreq[g_enBoardId] / (float) PDW_FREQ_RES;
+
     for (i = 0; i < m_pRawData->uiDataItems; ++i) {
-        llToa = (_TOA) ( pPDW->sPDWFormat.m_LSBTOA ) | ( (_TOA) pPDW->sPDWFormat.m_MSBTOA << 32 );
-        pPDW1->llTOA = llToa;
+        int iFreq;
+        float fFREQ;
 
-        pPDW1->iFreq = pPDW->sPDWFormat.m_freq;		// MHz
+        ullToa = (_TOA) ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
 
-        pPDW1->iPW = pPDW->sPDWFormat.m_PW;
+        pPDW1->llTOA = ullToa;
 
-        pPDW1->iAOA = pPDW->sPDWFormat.m_DOA;
+        iFreq = ( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
 
-        pPDW1->iPA = pPDW->sPDWFormat.m_PA;
+        iCh = pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+        if( iCh < 7 ) {
+            if( iFreq & 0x8000) {
+                iFreq = 0x10000 - iFreq;
+                fFREQ = ( fOffsetFreq + ( ( ( (float) PH_WIDTH_FREQ * (float) iCh) ) / (float) PDW_FREQ_RES ) - (float) iFreq );
+            }
+            else {
+                fFREQ = ( fOffsetFreq + ( ( ( (float) PH_WIDTH_FREQ * (float) iCh) ) / (float) PDW_FREQ_RES ) + (float) iFreq );
+            }
 
-        pPDW1->iPulseType = pPDW->sPDWFormat.m_sigType;
+        }
+        else {
+            iCh = 15 - iCh;
+            if( iFreq & 0x8000 ) {
+                iFreq = 0x10000 - iFreq;
+                fFREQ = ( fOffsetFreq - ( ( ( (float) PH_WIDTH_FREQ * (float) iCh) ) / (float) PDW_FREQ_RES ) - (float) iFreq );
+            }
+            else {
+                fFREQ = ( fOffsetFreq - ( ( ( (float) PH_WIDTH_FREQ * (float) iCh) ) / (float) PDW_FREQ_RES ) + (float) iFreq );
+            }
+        }
+
+        // [kHz] 단위로 변경
+        //pPDW1->iFreq = ( fFREQ / 1000. ) + 0.5;
+        pPDW1->iFreq = (int) ( fFREQ + 0.5 );
+
+        pPDW1->iPW = pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.pulse_width;
+
+        pPDW1->iAOA = pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.doa;
+
+        pPDW1->iPA = pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.pa;
+
+        pPDW1->iPulseType = 0; // pPDW->uniPdw_status.stPdw_status.cw_pulse;
 
         //*pcDV = pPDW->sPDWFormat.m_DI;
 
@@ -1175,7 +1227,11 @@ CData::~CData(void)
 }
 
 
-
+/**
+ * @brief CData::AllSwapData32
+ * @param pData
+ * @param iLength
+ */
 void CData::AllSwapData32( void *pData, int iLength )
 {
 	int i;
@@ -1189,6 +1245,10 @@ void CData::AllSwapData32( void *pData, int iLength )
 
 }
 
+/**
+ * @brief CData::swapByteOrder
+ * @param ull
+ */
 void CData::swapByteOrder(unsigned long long& ull)
 {
 	ull = (ull >> 56) |
@@ -1201,6 +1261,10 @@ void CData::swapByteOrder(unsigned long long& ull)
 		(ull << 56);
 }
 
+/**
+ * @brief CData::swapByteOrder
+ * @param ui
+ */
 void CData::swapByteOrder(unsigned int& ui) 
 {
 	ui = (ui >> 24) |
@@ -1450,7 +1514,7 @@ void CDataFile::ReadDataFile( const char *pstPathname, STR_FILTER_SETUP *pstFilt
 
 			m_pData = new CKFXPDW( & m_RawData, pstFilterSetup );
 
-			m_RawData.uiDataItems = pPDWFile->uiSignalCount;
+			m_RawData.uiDataItems = pPDWFile->uiSignalCount;            
 
 			m_pData->Alloc();
 
@@ -1582,7 +1646,7 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, cons
     if( NULL != strstr( pstPathname, _T(".epdw") ) || NULL != strstr( pstPathname, _T(".enpw") ) ) {
         bEPDW = true;
     }
-    if( NULL != strstr( pstPathname, _T(".ppdw") ) ) {
+    if( NULL != strstr( pstPathname, _T(".zpdw") ) ) {
         bPocketSonata = true;
     }
 

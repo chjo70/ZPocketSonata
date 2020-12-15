@@ -25,8 +25,6 @@ public:
     int PushLanData( void *pData, unsigned int uiLength );
     void PopLanData( void *pData, int iIndex, unsigned int uiLength );
 
-    inline void *GetArrayMsgData(int index) { return m_pszArray[index]; }
-
 private:
     void Alloc();
     void Free();

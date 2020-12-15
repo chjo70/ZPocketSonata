@@ -88,7 +88,7 @@ void CPrompt::Run(key_t key)
 
 
 /**
- * @brief CRecLan::_routine
+ * @brief CPrompt::_routine
  */
 void CPrompt::_routine()
 {
