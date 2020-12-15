@@ -1,0 +1,195 @@
+﻿/**
+ * @file      PDW2SP370.cpp
+ * @brief     PDW 데이터를 SP-350 구조로 변환해주는 클래스
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 2:48 
+ * @warning   
+ */
+
+#include <stdio.h>
+#include <string.h>
+
+#ifdef __linux__
+#include <sys/types.h>
+#include <unistd.h>
+
+#include "../Anal/SigAnal/_Type.h"
+
+#else
+#include <io.h>
+
+#endif
+
+
+
+#define UDIV( A, B )            (unsigned int) ( (float) (A) / (float) (B) + 0.5 )
+
+#include "PDW2SP370.h"
+
+
+#include "ELDecoder.h"
+
+
+/**
+ * @brief     초기화 처리
+ * @param     void
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 2:49 
+ * @warning   
+ */
+CPDW2SP370::CPDW2SP370(void)
+{
+
+	Init();
+
+}
+
+
+/**
+ * @brief     메모리 해지 처리한다.
+ * @param     void
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 3:00 
+ * @warning   
+ */
+CPDW2SP370::~CPDW2SP370(void)
+{
+}
+
+/**
+ * @brief     Init
+ * @param     void
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 3:00 
+ * @warning   
+ */
+void CPDW2SP370::Init(void)
+{
+	m_nPDWWord = 0;
+	memset( & m_stPDWHeader, 0 , sizeof(SELSP350_PDWHEADER ) );
+
+	memset( & m_stPDWWord, 0 , sizeof(SELSP350_PDWWORDS ) );
+	
+}
+
+/**
+ * @brief     SP-350 변환시 PDW 헤더를 저장한다.
+ * @param     void
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 3:10 
+ * @warning   
+ */
+bool CPDW2SP370::MakeHeader(void)
+{
+	int length, index;
+	wchar_t strUnicode[256]={0,};
+
+#ifdef __linux__
+    strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], LIBRARY_NAME );
+#else
+    strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], sizeof(m_stPDWHeader.szMasterLibraryName), LIBRARY_NAME );
+#endif
+
+
+	//pMultibyte = ConvertUnicodeToMultibyte( strUnicode );
+	//int len=MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), NULL, NULL );
+	//MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), strUnicode, len );
+
+	//strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], sizeof(m_stPDWHeader.szMasterLibraryName), LIBRARY_NAME );
+	memcpy( & m_stPDWHeader.szMasterLibraryName[0], strUnicode, wcslen(strUnicode)*2 );
+	index = wcslen(strUnicode)*2;
+	length = sizeof(m_stPDWHeader.szMasterLibraryName) - index;
+	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, length );
+
+	m_stPDWHeader.ucIndexOffsetInBytes = 8;
+
+	return true;
+}
+
+/**
+ * @brief     PDW 데이터를 변환한다.
+ * @param     int nPDW
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-02-07, 오후 3:10 
+ * @warning   
+ */
+bool CPDW2SP370::TransferPDW2SP370( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
+{
+	int i, iFreq, iAoa;
+	double dToa, dPa, dAoa, dPw;
+	SELSP350_PDWWORDS *pstPDWWord;
+
+	pstPDWWord = & m_stPDWWord[0];
+	for( i=0 ; i < iRecords ; ++i ) {
+		AllEndian64( & pS_EL_PDW_DATA->llTOA, sizeof(long long int) );
+		AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRXPDWDataRGroup)- sizeof(long long int) );
+
+		memset( pstPDWWord, 0, sizeof(SELSP350_PDWWORDS) );
+
+		// 1번째 Phase
+		dToa = ELDecoder::DecodeToa( pS_EL_PDW_DATA->llTOA );			// ns 단위로 변경
+		pstPDWWord->x.usTOA = UDIV( dToa, 12.5 );
+
+		// 2번째 Phase
+		dPa = ELDecoder::DecodeGainPA( pS_EL_PDW_DATA->iPA );			// ns 단위로 변경
+		//iPa = UDIV( ( 0xFF * pS_EL_PDW_DATA->iPA ), 440 );
+		pstPDWWord->x.ucAmp = UDIV( dPa, 0.34 );
+
+		dAoa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->iDirection );	// 도 단위로 변경
+		//iAoa = UDIV( ( 0x7FF * pS_EL_PDW_DATA->iDirection ), 3600 );
+		iAoa = UDIV( dAoa, 0.08789 );
+		pstPDWWord->x.uiHighAOA = iAoa >> 5;
+		pstPDWWord->x.uiLowAOA = iAoa & 0x0FF;
+		pstPDWWord->x.uiAOAInvalid = pS_EL_PDW_DATA->iDirectionVaild;
+
+		pstPDWWord->x.usPOPPedFlag = _INVALID;
+		pstPDWWord->x.usPOPFlag = _INVALID;
+		pstPDWWord->x.usPMOPFlag = pS_EL_PDW_DATA->iPMOPFlag;
+		pstPDWWord->x._notused1 = 0;
+		pstPDWWord->x._notused2 = 0;
+		pstPDWWord->x._notused3 = 0;
+
+		// 3번째 Phase
+		pstPDWWord->x.usFreq = pS_EL_PDW_DATA->iFreq / 100;
+		iFreq = pS_EL_PDW_DATA->iFreq - ( ( pS_EL_PDW_DATA->iFreq / 100 ) * 100 );
+		pstPDWWord->x.usFreqFraction = UDIV( iFreq, 3.90625 );
+
+		pstPDWWord->x.usSignalCenterStatus = _VALID;
+		pstPDWWord->x.usIFMValid = _VALID;
+		pstPDWWord->x._notused4 = _INVALID;
+		pstPDWWord->x.usPulseSource = 0x14;
+
+		// 4번째 Phase
+		pstPDWWord->x.usCW = pS_EL_PDW_DATA->iSignalType == E_PDW_SIGNAL_CW ? 1 : 0;
+		dPw = ELDecoder::DecodePW2( pS_EL_PDW_DATA->iPW );	// 도 단위로 변경
+		pstPDWWord->x.usPW = UDIV( dPw*1000., 40 );
+		//pstPDWWord->x.usPW = pS_EL_PDW_DATA->iPW;
+
+		pstPDWWord->x.usHighFMOP = 0;			
+		pstPDWWord->x.usLowFMOP = 0;
+
+		AllEndian32( pstPDWWord, sizeof(SELSP350_PDWWORDS) );
+
+		++ pstPDWWord;
+
+		++ pS_EL_PDW_DATA;
+	}
+	return true;
+}
+
