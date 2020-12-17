@@ -256,6 +256,7 @@ LIBS += -L/usr/local/lib
 LIBS += -pthread
 LIBS += -lreadline
 LIBS += -lboost_thread
+LIBS += -lboost_system
 LIBS += -lsqlite3
 
 INCLUDEPATH += /usr/local/boost

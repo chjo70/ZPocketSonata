@@ -2,6 +2,8 @@
 
 result=0
 
+mkdir ~/SQLite3.DB
+
 emitter_sqlite3="emitter.sqlite3"
 cedeob_sqlite3="cedeob.sqlite3"
 

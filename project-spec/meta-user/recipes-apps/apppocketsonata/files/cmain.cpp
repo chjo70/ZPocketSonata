@@ -135,8 +135,6 @@ void usrAppStart()
     printf( "\n 종료 처리 시작 합니다." );
 
 
-    //MYSOCK->ReleaseInstance();
-
     // 분석 관련 쓰레드를 종료 한다.
 
     PROMPT->ReleaseInstance();
