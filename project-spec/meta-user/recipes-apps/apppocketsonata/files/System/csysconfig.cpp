@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
+#include <sys/ioctl.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+
 #include "csysconfig.h"
 
 #include "../Anal/SigAnal/_Macro.h"
@@ -28,8 +37,6 @@ CSysConfig::CSysConfig(void)
     InitVar();
 
     LoadINI();
-
-
 
 }
 
@@ -125,6 +132,12 @@ void CSysConfig::LoadINI()
  */
 void CSysConfig::InitVar()
 {
+
+    // 네트워크 얻기
+    SetNetworkIP();
+
+#ifdef _POCKETSONATA_
+    // 보드 세팅
     m_strConfig.enBoardID = enMaster;
     m_strConfig.enMode = enREADY_MODE;
 
@@ -137,5 +150,74 @@ void CSysConfig::InitVar()
     _spAMPres = (float) (0.351562);
     _spPWres = _spOneMicrosec;
 
+#else
+
+
+#endif
+
     _spAnalMinPulseCount = 6;
+
+
+}
+
+/**
+ * @brief CSysConfig::SetNetworkIP
+ */
+void CSysConfig::SetNetworkIP()
+{
+    int i=0;
+    char szIPAddress[40];
+
+    szIPAddress[0] = 0;
+    while( g_szDeviceName[i][0] != 0 ) {
+        GetIPAddress( szIPAddress, (char *) g_szDeviceName[i] );
+        if( szIPAddress[0] != 0 ) {
+            break;
+        }
+        ++ i;
+    }
+
+    SetLocalIPAddress( szIPAddress );
+
+    if( szIPAddress[0] != 0 ) {
+        //int a_IP, b_IP, c_IP, d_IP;
+        //sscanf( szIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
+        //SetLocalIPAddress( szIPAddress );
+
+    }
+    else {
+
+    }
+
+
+}
+
+/**
+ * @brief CSysConfig::GetIPAddress
+ * @param pNetworkName
+ */
+bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
+{
+    bool bRet=true;
+    struct ifreq ifr;
+
+    int s;
+
+    s = socket( AF_INET, SOCK_DGRAM, 0 );
+    strncpy( ifr.ifr_name, pNetworkName, IFNAMSIZ );
+    if( ioctl(s, SIOCGIFADDR, &ifr ) < 0 ) {
+        perror("네트워크");
+        pIPAddress[0] = 0;
+        bRet = false;
+    }
+    else {
+        inet_ntop( AF_INET, ifr.ifr_addr.sa_data+2, pIPAddress, sizeof(struct sockaddr));
+
+        sprintf( pIPAddress, "%d.%d.%d" , ifr.ifr_addr.sa_data[2], ifr.ifr_addr.sa_data[3], ifr.ifr_addr.sa_data[4] );
+        //sscanf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
+        //sprintf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
+        //printf("myOwn IP Address is %s\n", ipstr);
+    }
+
+    return bRet;
 }

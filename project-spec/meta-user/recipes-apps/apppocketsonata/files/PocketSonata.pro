@@ -91,6 +91,7 @@ HEADERS += \
     Anal/EmitterMerge/ELMsgDefn.h \
     Anal/EmitterMerge/ELOperationCtrlDataType.h \
     Anal/EmitterMerge/ELPosEstDataType.h \
+    Anal/EmitterMerge/ELStringDefn.h \
     Anal/EmitterMerge/ELThreat.h \
     Anal/EmitterMerge/ElintRsltDataTypedb.h \
     Anal/EmitterMerge/ElintTaskDataTypedb.h \

@@ -61,7 +61,6 @@ extern void usrAppStart();
 
 void signalHandler(int signo);
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // 아래에 타스크 관련 클래스를 정의합니다.
 //CMySocket g_theZYNQSocket( g_iKeyId++, (char *)"CZYNQSocket" );
@@ -72,16 +71,18 @@ CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
 CSingleClient *g_pThePMCSocket;
 
-
-
-
-
 /**
  * @brief 시작 프로그램 입니다.
  */
 void usrAppStart()
 {
-    LOGMSG( enNormal, "----------------------------------------------------------" );
+    LOGMSG( enNormal, "------------------------------------------------------------------------" );
+    LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK   EEEEEEE  TTTTTTTTT" );
+    LOGMSG( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK     EE          TT" );
+    LOGMSG( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK       EEEEEEE     TT" );
+    LOGMSG( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK     EE          TT" );
+    LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK   EEEEEEE     TT  Ver %s" , PROGRAM_VERSION );
+    LOGMSG( enNormal, "-------------------------------------------------------------------------" );
 
     LOGENTRY;
     _ShowProgramTitle();
@@ -129,7 +130,7 @@ void usrAppStart()
 #endif
 
     while( g_Loop ) {
-        sleep(1);
+        sleep(10);
     }
     //pause();
     printf( "\n 종료 처리 시작 합니다." );

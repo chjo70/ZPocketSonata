@@ -10287,10 +10287,10 @@ void CELEmitterMergeMngr::PrintAllValidityByAllLOB( std::vector<STR_LOBS> *pVecL
 {
     UINT i, iSize;
 
-    bool bRet=false;
-    int iCoCheckIn1=0, iCoCheckIn2=0;
+    //bool bRet=false;
+    //int iCoCheckIn1=0, iCoCheckIn2=0;
 
-    float fSumTheta=0.0, fDiff;
+    float /* fSumTheta=0.0, */ fDiff;
 
     float fTheta;
     std::vector<STR_LOBS>::pointer pLOBs;

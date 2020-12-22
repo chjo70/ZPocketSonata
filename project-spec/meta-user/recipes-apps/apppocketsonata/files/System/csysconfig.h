@@ -38,7 +38,11 @@ struct STR_SYSCONFIG {
      * @brief 장비 모드 상태
      */
     ENUM_MODE enMode;
+
+    char szLocalIPAddress[30];
 } ;
+
+static char g_szDeviceName[5][10] = { "eth1", "wlo1" } ;
 
 
 /**
@@ -64,6 +68,9 @@ public:
 private:
     void InitVar();
     void LoadINI();
+
+    void SetNetworkIP();
+    bool GetIPAddress( char *pIPAddress, char *pNetworkName );
 
 public:
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };
@@ -117,6 +124,10 @@ public:
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     };
 
+    char *GetLocalIPAddress() { return m_strConfig.szLocalIPAddress; };
+    void SetLocalIPAddress( char *pIPAddress ) {
+        strcpy( m_strConfig.szLocalIPAddress, pIPAddress );
+    } ;
 
 };
 
