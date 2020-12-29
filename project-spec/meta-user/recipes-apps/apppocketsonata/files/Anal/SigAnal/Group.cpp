@@ -245,12 +245,12 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
     pMaxChannel = & m_pMAXCHANNEL[0];
 
     // 첫번째 TOA 얻기
-    prevllTOA = templlTOA = pdw->llTOA;
+    prevllTOA = templlTOA = pdw->ullTOA;
 
     flagBand = FALSE;
 
     for( i=0 ; i < count ; ++i, ++pdw )	{
-        templlTOA = pdw->llTOA;
+        templlTOA = pdw->ullTOA;
 
         if( flagBand == FALSE ) {
             flagBand = TRUE;
@@ -580,7 +580,6 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
                 break;
 
             case PDW_CW :
-            //case PDW_CW_FMOP :
                 *pCWPdwIndex++ = *pPdwIndex;
                 ++ m_GrStat[STAT_CW].count;
                 break;

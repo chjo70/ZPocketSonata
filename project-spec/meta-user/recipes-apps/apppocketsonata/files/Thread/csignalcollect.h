@@ -5,8 +5,8 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
-#include "../Collect/ccollectbank/ccollectbank.h"
-#include "../Collect/DataFile/DataFile.h"
+#include "../Anal/Collect/ccollectbank/ccollectbank.h"
+#include "../Anal/Collect/DataFile/DataFile.h"
 
 #include "../Anal/Identify/Identify.h"
 

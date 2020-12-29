@@ -121,7 +121,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW );
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( LOCAL_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.
@@ -252,7 +252,7 @@ void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
 	// 신호 수집 개수 정의
     m_CoPdw = m_pPDWData->uiTotalPDW;
 
-    m_iIsStorePDW = pPDWData->iIsStorePDW;
+    m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 
     m_uiABTID = m_pTrkAet->uiABTID;
 

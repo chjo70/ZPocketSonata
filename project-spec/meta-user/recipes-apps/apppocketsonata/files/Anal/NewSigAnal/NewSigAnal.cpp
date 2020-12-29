@@ -131,7 +131,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     m_CoGroup = 0;
 
-    m_iIsStorePDW = pPDWData->iIsStorePDW;
+    m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 
 #ifdef _ELINT_
     m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->iCollectorID;
@@ -201,17 +201,17 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     CheckValidData( pPDWData );
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( LOCAL_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
-    if( pPDWData->iIsStorePDW == 1 || true ) {
+    if( pPDWData->x.ps.iIsStorePDW == 1 || true ) {
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
 #ifdef _ELINT
             printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "[%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
 #else
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
         }
         else {

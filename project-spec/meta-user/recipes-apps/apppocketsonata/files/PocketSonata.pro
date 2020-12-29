@@ -36,8 +36,8 @@ SOURCES += \
         Anal/SigAnal/SysPara.cpp \
         Anal/SigAnal/cencdec.cpp \
         Anal/SigAnal/stdafx.cpp \
-        Collect/DataFile/DataFile.cpp \
-        Collect/ccollectbank/ccollectbank.cpp \
+        Anal/Collect/DataFile/DataFile.cpp \
+        Anal/Collect/ccollectbank/ccollectbank.cpp \
         Anal/MIDAS/Midas.cpp \
         Anal/MIDAS/RawFile.cpp \
         MinIni/minIni.cpp \
@@ -157,15 +157,16 @@ HEADERS += \
     Anal/SigAnal/_Struct.h \
     Anal/SigAnal/_Type.h \
     Anal/SigAnal/cencdec.h \
+    Anal/SigAnal/stdafx.h \
     Anal/TrackSigAnal/KGroup.h \
     Anal/TrackSigAnal/KMakeAET.h \
     Anal/TrackSigAnal/KPulExt.h \
     Anal/TrackSigAnal/KnownSigAnal.h \
-    Collect/DataFile/CRWRCommonVariables.h \
-    Collect/DataFile/DataFile.h \
-    Collect/DataFile/_iq.h \
-    Collect/DataFile/_pdw.h \
-    Collect/ccollectbank/ccollectbank.h \
+    Anal/Collect/DataFile/CRWRCommonVariables.h \
+    Anal/Collect/DataFile/DataFile.h \
+    Anal/Collect/DataFile/_iq.h \
+    Anal/Collect/DataFile/_pdw.h \
+    Anal/Collect/ccollectbank/ccollectbank.h \
     Include/SONATAPIP/ShuICD.h \
     Include/SONATAPIP/_sysmsg.h \
     Include/defines.h \

@@ -284,7 +284,7 @@
 #define   _spMgFixFrqBoundCD	IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
 
 #else
-#error "컴파일러에 DEFINE 을 추가해야 합니다."
+//#error "컴파일러에 DEFINE 을 추가해야 합니다."
 
 
 #endif

@@ -9,11 +9,25 @@
 
 #pragma once
 
+#ifdef __linux__
+#include "../SigAnal/_Type.h"
+
+#include <sys/types.h>
+#include <unistd.h>
+
+#else
+#include <io.h>
+#endif
+
 #include <stdio.h>
 
 #define ERROR_OF_MEMORY_ALLOC	(-100)
 #define ERROR_OF_FILE_WRITE		(-1)
 #define ERROR_OF_FILE_READ		(-2)
+
+#ifdef __linux__
+#define O_BINARY                (0)
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 /*!
@@ -39,7 +53,7 @@
 class CRawFile
 {
 protected:
-	FILE *m_pfile;
+	// FILE *m_pfile;
 
 	int m_fid;
 	unsigned int m_posFid;
@@ -53,17 +67,22 @@ public:
 	bool ReadN( void *pData, int size );
 	bool LoadFile( char *filename );
 
-	bool FileOpen( char *filename, char *file_mode );
-	int Write( void *pData, int c_size, int count );
+	//FILE *GetFileHandler() { return m_pfile; }
+	int GetFileHandler() { return m_fid; }
+	bool FileOpen( char *filename, int iMode );
+	int Read( void *pData, int c_size );
+	int Write( void *pData, int c_size );
 	void FileClose();
     unsigned long long int GetFileSize();
     unsigned long long int GetFileSize( char *pPathFileName );
 	void GetFilename( char *pFilename );
 
-    bool CreateDir( char *pPath );
+    bool CreateDir( TCHAR *pPath );
 
 	inline char *GetFullname() { return m_fullname; }
 	inline char *GetFilename() { return m_filename; }
+
+	inline void SeekToStart() { if( m_fid != 0 ) _lseek(m_fid, 0, SEEK_SET ); }
 
 	//bool IsEndOfFile();
 

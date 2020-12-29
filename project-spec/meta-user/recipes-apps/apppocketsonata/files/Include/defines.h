@@ -41,27 +41,25 @@ typedef unsigned char UCHAR;
 typedef unsigned long long int _TOA;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////
-//#define max(a,b)               ( ( (int)(a) > (int)(b) ) ? (a) : (b) )
-//#define min(a,b)               ( ( (int)(a) < (int)(b) ) ? (a) : (b) )
-
 
 // MFC에서 정의된 define 문을 아래에 정의한다.
-#define MAX_PATH        (256)
+#define MAX_PATH        (1024)
 
 
 // 포토 를 정의합니다.
 #define MAX_CLIENTS     (30)
 #define PORT            (8888)
 
+#define NETWORK_CLASSC  (char *) ( "192.168.0" )
+
 // 제어조종장치 서버
 #ifdef __linux__
-#define CCU_SERVER      (char *) ( "127.0.0.1" )
+//#define CCU_SERVER      (char *) ( "127.0.0.1" )
 #define HOST_SERVER     (char *) ( "192.168.1.245" )
 #define DEV_SERVER      (char *) ( "192.168.1.11" )
 #define DEV2_SERVER     (char *) ( "192.168.1.12" )
 #else
-#define CCU_SERVER      (char *) ( "192.168.1.245" )
+//#define CCU_SERVER      (char *) ( "192.168.1.245" )
 #endif
 
 #ifdef __ZYNQ_BOARD__

@@ -17,6 +17,8 @@
 CSysConfig* CSysConfig::m_pInstance = NULL;
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
+static char g_szDeviceName[5][10] = { "eth1", "wlo1", "enp0s8" } ;
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -172,23 +174,19 @@ void CSysConfig::SetNetworkIP()
     while( g_szDeviceName[i][0] != 0 ) {
         GetIPAddress( szIPAddress, (char *) g_szDeviceName[i] );
         if( szIPAddress[0] != 0 ) {
+            SetLocalIPAddress( szIPAddress );
             break;
         }
         ++ i;
     }
 
-    SetLocalIPAddress( szIPAddress );
-
-    if( szIPAddress[0] != 0 ) {
+    if( szIPAddress[0] == 0 ) {
+        SetLocalIPAddress( NETWORK_CLASSC );
         //int a_IP, b_IP, c_IP, d_IP;
         //sscanf( szIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //SetLocalIPAddress( szIPAddress );
 
     }
-    else {
-
-    }
-
 
 }
 
@@ -213,7 +211,7 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
     else {
         inet_ntop( AF_INET, ifr.ifr_addr.sa_data+2, pIPAddress, sizeof(struct sockaddr));
 
-        sprintf( pIPAddress, "%d.%d.%d" , ifr.ifr_addr.sa_data[2], ifr.ifr_addr.sa_data[3], ifr.ifr_addr.sa_data[4] );
+        sprintf( pIPAddress, "%u.%u.%u" , (unsigned char) ifr.ifr_addr.sa_data[2], (unsigned char) ifr.ifr_addr.sa_data[3], (unsigned char) ifr.ifr_addr.sa_data[4] );
         //sscanf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //sprintf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //printf("myOwn IP Address is %s\n", ipstr);

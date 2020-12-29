@@ -13,7 +13,6 @@
 #ifdef _ELINT_
 #include "../OFP_Main.h"
 #elif _POCKETSONATA_
-//#include "../OFP_Main.h"
 #include "../INC/Macros.h"
 #include "../Identify/ELUtil.h"
 
@@ -145,8 +144,9 @@ CAnalPRI::CAnalPRI( int coMaxPdw /*=NSP_MAX_PDW*/ )
         WhereIs;
     }
 
-    if( bRet == FALSE )
+    if( bRet == FALSE ) {
         printf( "\n [W] PRI 분석 클래스 생성자 실패 !" );
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -161,8 +161,9 @@ CAnalPRI::~CAnalPRI()
 {
     free( m_pMergePdwIndex );
 
-    for( int i=0 ; i < MAX_AET ; ++i )
+    for( int i=0 ; i < MAX_AET ; ++i ) {
         free( m_Emitter[i].pdw.pIndex );
+    }
 
     free( m_pPulseDtoa );
     free( m_pPulseToa );
@@ -382,6 +383,10 @@ void CAnalPRI::GroupingStable( BOOL fDecisionEmitter )
     }
 }
 
+/**
+ * @brief CAnalPRI::GroupingDwell
+ * @param fDecisionEmitter
+ */
 void CAnalPRI::GroupingDwell( BOOL fDecisionEmitter )
 {
     int i, j, k;

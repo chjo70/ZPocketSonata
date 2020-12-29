@@ -9,6 +9,39 @@
 
 #include "../INC/PDW.h"
 
+#define DFD_FREQ_OFFSET		(1900)
+
+#define _spSONATAPAoffset			(-70)					// amplitude initial value
+#define _spSONATAAMPres       (0.3125)			// dB */
+#define	_spSONATAAOAmax				(0x1FF)	
+#define	_spSONATAAmpmax				(0xFF)	
+
+#define	FREQ_MIN			(500)			// 최소 주파수
+#define	FREQ_MAX			(18000)
+
+
+enum ENUM_UnitID {
+	enUnknown = -1,
+
+	enSHU = 0,
+	enRSA,
+	enZPocketSonata
+
+} ;
+
+enum ENUM_BoardID {
+    enPRC_Unknown,
+    enPRC1=1,
+    enPRC2,
+    enPRC3,
+    enPRC4,
+    enPRC5,
+    enPRC6,
+
+    enMaster=enPRC3
+
+};
+
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
 #define UDIV( A, B )            (unsigned int) ( (float) (A) / (float) (B) + 0.5 )
@@ -28,6 +61,7 @@
 #define UADD( A, B )            (UINT) ( (float) (A) + (float) (B) + 0.5 )
 #define FADD( A, B )            (float) ( (float) (A) + (float) (B) )
 #define FMUL( A, B )            ( (float) (A) * (float) (B) )
+#define FDMUL( A, B )           (float) ( (double) (A) * (double) (B) )
 #define TMUL( A, B )            (_TOA) ( (_TOA) (A) * (_TOA) (B) + 0.5 )
 #define TDIV( A, B )            (_TOA) ( (_TOA) (A) / (_TOA) (B) + 0.5 )
 #define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
@@ -166,6 +200,9 @@ T _diffabs( T x, T y)
 
 
 #else
+#define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
+#define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
+#define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
 
@@ -195,7 +232,7 @@ T _diffabs( T x, T y)
 #define PWCNV( A )              UMUL( (A), _spPWres )
 #define F_PWCNV( A )            F_MUL( (A), _spPWres )
 #define C_PWCNV( A )            C_MUL( (A), _spPWres )
-#define PACNV( A, B )           IDIV( FPACNV(A,B), 1 )
+#define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 #define F_PACNV( A, B )         F_IDIV( FPACNV(A,B), 1 )
 #define C_PACNV( A, B )         C_IDIV( FPACNV(A,B), 1 )
 
@@ -207,7 +244,7 @@ T _diffabs( T x, T y)
 #define FPACNV( A )							(float) ( ( (float) (A) * gPaRes[0].res ) + gPaRes[0].offset )
 #define FDBCNV( A, B )					(float) ( ( (float) (A) / gPaRes[B].res ) )
 #define UDBCNV( A, B )					UDIV( (A), gPaRes[B].res )
-#define FFRQCNV( A )						( FMUL( gFreqRes[0].res, (A) ) + gFreqRes[0].offset )
+
 //#define FFRQCNV( A, B )         (float) ( ( (float) B * gFreqRes[A].res) + gFreqRes[A].offset )
 #endif
 

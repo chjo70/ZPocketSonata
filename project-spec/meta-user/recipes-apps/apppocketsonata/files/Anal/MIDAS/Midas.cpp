@@ -8,6 +8,7 @@
  */
 
 #ifdef __linux__
+#define _DECODE_
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -16,6 +17,7 @@
 #include "../SigAnal/_Type.h"
 
 #else
+#include "stdafx.h"
 #include <io.h>
 
 #endif
@@ -29,8 +31,16 @@
 
 #define _EXT_HEADER_
 
-//#include "ELDecoder.h"
-#include "../../Collect/DataFile/DataFile.h"
+#ifdef _DECODE_
+#include "ELDecoder.h"
+#include "../Collect/DataFile/DataFile.h"
+
+#endif
+
+#ifdef _POCKETSONATA_
+char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
+
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -61,8 +71,8 @@ CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
 
     // 초기 설정 정의
     memset( & m_strKeywordValue, 0, sizeof(SEL_KEYWORD_VALUE) );
-    strcpy( m_strKeywordValue.writer_version, "0.1" );
-    strcpy( m_strKeywordValue.writer, "ZSONATA" );
+    strcpy_s( m_strKeywordValue.writer_version, "0.1" );
+    strcpy_s( m_strKeywordValue.writer, "ZSONATA" );
 
 }
 
@@ -103,7 +113,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
     memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
 
     // 1. 사용자 지정 파일 생성
-    if( FileOpen( pMidasFileName, (char *) "wb" ) == false ) { //DTEC_Else
+    if( FileOpen( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
         bRet = false;
     }
     else {
@@ -167,7 +177,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
 
 	if( m_enFileType != E_EL_SCDT_IF || pInputFilename == NULL ) {
 		// 1. 사용자 지정 파일 생성
-        if( FileOpen( pMidasFileName, (char *) "wb" ) == false ) { //DTEC_Else
+        if( FileOpen( pMidasFileName, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
 			return false;
 		}
 
@@ -266,7 +276,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 				return false;
 			}
 
-			iWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup);
+			iWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
 			for( i=0 ; i < numberofdata ; ++i ) {
 				iSize = _read( destFileId, & x.iqData[0], iWriteByte );
 				if( iSize == 0 ) {
@@ -274,18 +284,18 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 				}
 				else {
 					TransferIQ( & x.iqData[0], iSize );
-					iWrite = Write( & x.iqData[0], iSize, 1 );
+					iWrite = Write( & x.iqData[0], iSize );
 				}
 			}
 			break;
 
 		case E_EL_SCDT_IF :
-            lseek( destFileId, 0L, SEEK_END );
+            _lseek( destFileId, 0L, SEEK_END );
 #ifdef __linux__
             sz_file = 0;
             //sz_file = tell( destFileId );
 #else
-            sz_file = tell( destFileId );
+            sz_file = _tell( destFileId );
 #endif
 
 			_lseek( destFileId, 0L, SEEK_SET );
@@ -306,7 +316,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 				}
 				else {
 					//TransferIF( & x.ifData[0], iSize );
-					iWrite = Write( & x.ifData[0], iSize, 1 );
+					iWrite = Write( & x.ifData[0], iSize );
 				}
 			}
 			break;
@@ -329,7 +339,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         iRecords = iSize / sizeof(SRXPDWDataRGroup);
                         TransferPDW2Record( & x.pdwData[0], iRecords );
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
-                        iWrite = Write( m_pPDWRecords, iSize, 1 );
+                        iWrite = Write( m_pPDWRecords, iSize );
                     }
                 }
             }
@@ -346,7 +356,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                     }
                     TransferPDW2Record( & m_pPDWData->stPDW[0], iRecords );
                     iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
-                    iWrite = Write( m_pPDWRecords, iSize, 1 );
+                    iWrite = Write( m_pPDWRecords, iSize );
                 }
             }
 
@@ -377,9 +387,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 // 			}
 // 			break;
 
-#ifdef __linux__
-
-#else
+#ifdef _SP370_
 		case E_EL_SCDT_PDW2SP370 :
 			// 읽을 파일의 헤더를 생략한다.
 			sz_file = _lseek( destFileId, sizeof(SRxPDWData), SEEK_SET );
@@ -430,10 +438,10 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 			memset( pNullData, 0, iWriteByte );
 			do {
 				if( iNullCh-iWriteByte > 0 ) { //DTEC_Else
-					iNullCh -= (unsigned long long) Write( pNullData, iWriteByte, 1 );
+					iNullCh -= (unsigned long long) Write( pNullData, iWriteByte );
 				}
 				else {
-					iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh, 1 );
+					iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh );
 				}
 			} while( iNullCh > 0 );
 
@@ -467,33 +475,33 @@ void CMIDASBlueFileFormat::TransferPDW2Record( SRXPDWDataRGroup *pS_EL_PDW_DATA,
 	for( int i=0 ; i < iRecords ; ++i ) {
 #ifdef __linux__
 #else
-		AllEndian64( & pS_EL_PDW_DATA->llTOA, sizeof(long long int) );
-		AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRXPDWDataRGroup)- sizeof(long long int) );
+		//AllEndian64( & pS_EL_PDW_DATA->llTOA, sizeof(long long int) );
+		//AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRXPDWDataRGroup)- sizeof(long long int) );
 
-		if( i != 0 ) {
-			dtoa = pS_EL_PDW_DATA->llTOA - pre_TOA;
-		}
-
-		pPDWRecords->doa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->iDirection );					// [도]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->doa );
-
-        pPDWRecords->lfreq = (long double) ( ELDecoder::DecodeFrq( pS_EL_PDW_DATA->iFreq ) * 1000 );		// [Hz]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->lfreq );
-
-		pPDWRecords->pa = ELDecoder::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->pa );
-
-		pPDWRecords->pw = (float) ( ELDecoder::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->pw );
-
-		pPDWRecords->toa = (float) ( ELDecoder::DecodeToa( pS_EL_PDW_DATA->llTOA ) / 1000000000. );	// [s]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->toa );
-
-        pPDWRecords->ldtoa = (long double) ( ELDecoder::DecodeToa( dtoa ) / 1000000000. );									// [s]
-		MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ldtoa );
+// 		if( i != 0 ) {
+// 			dtoa = pS_EL_PDW_DATA->llTOA - pre_TOA;
+// 		}
+// 
+// 		pPDWRecords->doa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->iDirection );					// [도]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->doa );
+// 
+//         pPDWRecords->lfreq = (long double) ( ELDecoder::DecodeFrq( pS_EL_PDW_DATA->iFreq ) * 1000 );		// [Hz]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->lfreq );
+// 
+// 		pPDWRecords->pa = ELDecoder::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->pa );
+// 
+// 		pPDWRecords->pw = (float) ( ELDecoder::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->pw );
+// 
+// 		pPDWRecords->toa = (float) ( ELDecoder::DecodeToa( pS_EL_PDW_DATA->llTOA ) / 1000000000. );	// [s]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->toa );
+// 
+//         pPDWRecords->ldtoa = (long double) ( ELDecoder::DecodeToa( dtoa ) / 1000000000. );									// [s]
+// 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ldtoa );
 #endif
 
-		pre_TOA = pS_EL_PDW_DATA->llTOA;
+		pre_TOA = pS_EL_PDW_DATA->ullTOA;
 
 		++ pPDWRecords;
 		++ pS_EL_PDW_DATA;
@@ -513,29 +521,31 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
     pPDWRecords = m_pPDWRecords;
     for( int i=0 ; i < iRecords ; ++i ) {
         if( i != 0 ) {
-            dtoa = pS_EL_PDW_DATA->llTOA - pre_TOA;
+            dtoa = pS_EL_PDW_DATA->ullTOA - pre_TOA;
         }
 
-        pPDWRecords->doa = CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->iAOA );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->doa );
+#ifdef _DECODE_
+        pPDWRecords->ldoa = (double) CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->iAOA );
 
-        pPDWRecords->lfreq = (long double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->iFreq ) * 1000000. );		// [Hz]
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->lfreq );
+        pPDWRecords->lfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->iFreq ) * 1000000. );		// [Hz]
 
-        pPDWRecords->pa = CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->pa );
+        pPDWRecords->lpa = (double) CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
 
-        pPDWRecords->pw = (float) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->pw );
-/*
-        pPDWRecords->toa = (float) ( CPOCKETSONATAPDW::DecodeToa( pS_EL_PDW_DATA->llTOA ) / 1000000000. );	// [s]
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->toa );
+        pPDWRecords->lpw = (double) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
 
-        pPDWRecords->ldtoa = (long double) ( CPOCKETSONATAPDW::DecodeToa( dtoa ) / 1000000000. );									// [s]
+        pPDWRecords->ltoa = (double) ( CPOCKETSONATAPDW::DecodeTOA( pS_EL_PDW_DATA->ullTOA ) / 1000000000. );	// [s]
+
+        pPDWRecords->ldtoa = (double) ( CPOCKETSONATAPDW::DecodeTOA( dtoa ) / 1000000000. );									// [s]
+#endif
+
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->ltoa );
         MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ldtoa );
-*/
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->ldoa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->lfreq );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->lpa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->lpw );
 
-        pre_TOA = pS_EL_PDW_DATA->llTOA;
+        pre_TOA = pS_EL_PDW_DATA->ullTOA;
 
         ++ pPDWRecords;
         ++ pS_EL_PDW_DATA;
@@ -583,14 +593,14 @@ void CMIDASBlueFileFormat::MakeInitMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX )
  * @date      2016-07-25, 오후 4:47 
  * @warning   
  */
-void CMIDASBlueFileFormat::TransferIQ( SRxIQDataRGroup *pSRxIQDataRGroup, int iByte )
+void CMIDASBlueFileFormat::TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte )
 {
 	unsigned short temp;
 
-	for( unsigned int i=0 ; i < iByte / sizeof( SRxIQDataRGroup ) ; ++i ) {
+	for( unsigned int i=0 ; i < iByte / sizeof( SRxIQDataRGroup1 ) ; ++i ) {
 #ifdef __linux__
 #else
-		AllEndian16( pSRxIQDataRGroup, sizeof(SRxIQDataRGroup) );
+		//AllEndian16( pSRxIQDataRGroup, sizeof(SRxIQDataRGroup) );
 #endif
 
 		temp = pSRxIQDataRGroup->sIData;
@@ -683,8 +693,8 @@ void CMIDASBlueFileFormat::MakeHeader()
 	if( m_enFileType == E_EL_SCDT_PDW2SP370 ) {
 #ifdef __linux__
 #else
-		CPDW2SP370::Init();
-		CPDW2SP370::MakeHeader();
+		//CPDW2SP370::Init();
+		//CPDW2SP370::MakeHeader();
 #endif
 	}
 	else {
@@ -935,7 +945,7 @@ void CMIDASBlueFileFormat::MakeAdjunct()
 			pAdjunct6000 = ( SELMIDAS_ADJUNCT_TYPE_6000 * ) & pByte[0x100];
 
 			pAdjunct6000->rstart = 0.0;
-			pAdjunct6000->rdelta = 1,0; // 1.0e-010;
+            pAdjunct6000->rdelta = 1.0e-010;
 			pAdjunct6000->runits = VALUE_UNITS_TIME;
 			pAdjunct6000->subrecords = MAX_SUBRECORDS_OF_PDWDATA;
 			pAdjunct6000->r2start = 0.0;
@@ -1075,16 +1085,16 @@ unsigned int CMIDASBlueFileFormat::GetValueUnits()
  */
 int CMIDASBlueFileFormat::WriteHeader()
 {
-	int nWrite;
+    int nWrite=0;
 
 	if( m_enFileType == E_EL_SCDT_PDW2SP370 ) {
 #ifdef __linux__
 #else
-		nWrite = Write( & m_stPDWHeader, sizeof(SELSP350_PDWHEADER ), 1 );
+		//nWrite = Write( & m_stPDWHeader, sizeof(SELSP350_PDWHEADER ), 1 );
 #endif
 	}
 	else {
-		nWrite = Write( m_pHCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE, 1 );
+		nWrite = Write( m_pHCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
 	}
 	return nWrite;
 }
@@ -1103,7 +1113,12 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
 	int c;
 	char buffer[100];
 
-    tm tm_time, *p_tm_time;
+    tm tm_time;
+
+#ifdef __linux__
+	tm *p_tm_time;
+#endif
+
 	time_t time_tick, start_time;
 
 	SELMIDAS_BINARY_KEYWORD *pBinKeyword;
@@ -1690,7 +1705,7 @@ int CMIDASBlueFileFormat::WriteExtendedHeader()
 	int iWrite=0;
 
 	if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
-		iWrite = Write( m_pExtendOfHeader, sizeof(char)*m_SizeOfExtend, 1 );
+		iWrite = Write( m_pExtendOfHeader, sizeof(char)*m_SizeOfExtend );
 	}
 
 	return iWrite;
@@ -1764,7 +1779,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
 		pConvertIFList = m_vecConvertIFList.data();
 
 		// 1. 사용자 지정 파일 생성
-        if( FileOpen( (*pConvertIFList).szOutputFilename, (char *) "wb" ) == false ) { //DTEC_Else
+        if( FileOpen( (*pConvertIFList).szOutputFilename, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
 			return false;
 		}
 
@@ -1845,114 +1860,70 @@ void CMIDASBlueFileFormat::MIDASClose()
  * @param uiStep
  * @param iBoardID
  */
-void CMIDASBlueFileFormat::SaveRawDataFile( EnumSCDataType enDataType, void *pData, unsigned int uiStep )
+void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
 {
     bool bRet;
-    char szDirectory[500];
+    TCHAR szDirectory[500];
 
     STR_PDWDATA *pPDWData;
 
     pPDWData = ( STR_PDWDATA * ) pData;
 
-    if( g_bSaveFile == true ) {
-#ifdef _WIN32
-        CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-        CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
+    CFile cFile;
 
-        UINT i;
-        FILE *pdwfile;
-        TNEW_PDW *pPDW;
+    struct tm stTime;
+    __time32_t tiNow;
 
-        CString strFilename=pView->GetFileTitle();
+    char buffer[100];
 
-        LPTSTR p = strFilename.GetBuffer( 100 );
+    tiNow = _time32(NULL);
 
-        sprintf( filename, "c:\\temp\\%03d_col_%s.pdw", uiStep, p );
-        pdwfile = fopen( filename, "wb" );
-        for( i=0 ; i < m_pPDWData->count ; ++i ) {
-            pPDW = & m_pPDWData->pPdw[ i ];
+    _localtime32_s( & stTime, & tiNow );
 
-#ifdef _A50_RWR
-            TNEW_PDW pdw;
-
-            pdw.word[0] = ntohl( pPDW->word[0] );
-            pdw.word[1] = ntohl( pPDW->word[1] );
-            pdw.word[2] = ntohl( pPDW->word[2] );
-            pdw.word[3] = ntohl( pPDW->word[3] );
-
-            fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
-#else
-            fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
-#endif
-        }
-
-        fclose( pdwfile );
-
-        strFilename.ReleaseBuffer();
-
-#else
-        CFile cFile;
-
-        struct tm stTime;
-        __time32_t tiNow;
-
-        char buffer[100];
-
-        tiNow = _time32(NULL);
-
-        _localtime32_s( &stTime, & tiNow );
-
-        // 1. 폴더명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d", & stTime);
+    // 1. 폴더명 생성하기
+    strftime( buffer, 100, "%Y-%m-%d", & stTime);
 #ifdef _ELINT_
-        enPosition enPos = GetPosition();
+    enPosition enPos = GetPosition();
 
-        if( enPos == enBuiltIn )
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
-        else
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+    if( enPos == enBuiltIn )
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+    else
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
 #elif defined(_POCKETSONATA_)
-        sprintf( szDirectory, "%s/%s/BRD_%d", LOCAL_DATA_DIRECTORY, buffer, pPDWData->iBoardID );
+     wsprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
 #else
-        sprintf( szDirectory, "%s/BRD_%d", LOCAL_DATA_DIRECTORY, m_pPDWData->uiBand );
+     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 #endif
-        bRet = CreateDir( szDirectory );
+     bRet = CreateDir( szDirectory );
 
-        if( bRet == true ) {
-            // 2. 파일명 생성하기
-            strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+    if( bRet == true ) {
+        // 2. 파일명 생성하기
+        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
 #ifdef _ELINT_
-            wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
+		wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
 #elif defined(_POCKETSONATA_)
-            if( enDataType == E_EL_SCDT_PDW ) {
-                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->iBank], pPDWData->iBoardID, buffer, uiStep, MIDAS_EXT );
+        if( enDataType == E_EL_SCDT_PDW ) {
+            sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, MIDAS_EXT );
 
-                m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
-            }
-            else {
-                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->iBank], pPDWData->iBoardID, buffer, uiStep, PDW_EXT );
-
-                //cFile.Open( m_szPDWFilename, O_WRONLY | O_APPEND | O_CREAT );
-                //int nSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - m_pPDWData->uiTotalPDW ) * sizeof(_PDW) );
-
-                //cFile.Write( m_pPDWData, nSize );
-                //cFile.Close();
-
-            }
-#else
-
-#endif
-
-            SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
-
-            printf( "신호 수집 EPDW : %s" , m_szRawDataFilename );
+            m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
         }
         else {
+            sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_EXT );
+
+            //cFile.Open( m_szPDWFilename, O_WRONLY | O_APPEND | O_CREAT );
+            //int nSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - m_pPDWData->uiTotalPDW ) * sizeof(_PDW) );
+
+            //cFile.Write( m_pPDWData, nSize );
+            //cFile.Close();
 
         }
+#else
 
 #endif
 
+        SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+
+        printf( "신호 수집 EPDW : %s" , m_szRawDataFilename );
     }
     else {
         m_szRawDataFilename[0] = 0;

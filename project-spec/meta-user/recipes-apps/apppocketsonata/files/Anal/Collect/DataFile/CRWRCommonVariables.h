@@ -6,12 +6,16 @@
 #ifndef RWRCOMMONVARIABLES_H_
 #define RWRCOMMONVARIABLES_H_
 
+#ifndef _WIN32
 #include <stdint.h>
+#endif
 
 
 
 #ifdef _POCKETSONATA_
-#include "../../Utils/chwio.h"
+#ifdef __linux__
+#include "../../../Utils/chwio.h"
+#endif
 //#include "../../Test/hw_interface.h"
 
 #else
@@ -410,69 +414,69 @@ struct SScanCollectInfo
 
 struct POCPDW {
     union {
-        uint32_t pdw_index;
+        unsigned int pdw_index;
 
         struct {
-            uint32_t index	  : 16;
-            uint32_t reserved : 16;
+            unsigned int index	  : 16;
+            unsigned int reserved : 16;
         } stPdw_index;
     } uniPdw_index;
 
     union
     {
-        uint32_t		pdw_toa_edge;
+        unsigned int		pdw_toa_edge;
         struct
         {
-            uint32_t 		toa_H			: 28;
-            uint32_t 		edge			: 1;
-            uint32_t 		reserved		: 3;
+            unsigned int 		toa_H			: 28;
+            unsigned int 		edge			: 1;
+            unsigned int 		reserved		: 3;
         }stPdw_toa_edge;
     }uniPdw_toa_edge;
 
     union
     {
-        uint32_t		pdw_freq_toa;
+        unsigned int		pdw_freq_toa;
         struct
         {
-            uint32_t 		frequency_H	: 8;
-            uint32_t 		pdw_phch		: 8;
-            uint32_t		toa_L			: 16;
+            unsigned int 		frequency_H	: 8;
+            unsigned int 		pdw_phch		: 8;
+            unsigned int		toa_L			: 16;
         }stPdw_freq_toa;
     }uniPdw_freq_toa;
 
     union
     {
-        uint32_t		pdw_pw_freq;
+        unsigned int		pdw_pw_freq;
         struct
         {
-            uint32_t 		pulse_width	: 24;
-            uint32_t 		frequency_L	: 8;
+            unsigned int 		pulse_width	: 24;
+            unsigned int 		frequency_L	: 8;
         }stPdw_pw_freq;
     }uniPdw_pw_freq;
 
     union
     {
-        uint32_t	pdw_dir_pa;
+        unsigned int	pdw_dir_pa;
         struct
         {
-            uint32_t 		doa				: 12; // res = 0.087890625 deg
-            uint32_t 		di				: 1; // '0' - Valid, '1' - invalid
-            uint32_t 		reserved		: 3;
-            uint32_t 		pa				: 16; // res = 0 ~ 65536 (linear scale)
+            unsigned int 		doa				: 12; // res = 0.087890625 deg
+            unsigned int 		di				: 1; // '0' - Valid, '1' - invalid
+            unsigned int 		reserved		: 3;
+            unsigned int 		pa				: 16; // res = 0 ~ 65536 (linear scale)
         }stPdw_dir_pa;
     }uniPdw_dir_pa;
 
     union {
-            uint32_t	pdw_status;
+            unsigned int	pdw_status;
             struct
             {
-                uint32_t 		cw_pulse		: 1; // '0' - pulse, '1' - CW
-                uint32_t 		pmop			: 1; // '0' - No-mop, '1'-mop
-                uint32_t 		fmop			: 1; // '0' - No-mop, '1'-mop
-                uint32_t 		false_pdw		: 1; // '0' - ture, '1'-false
-                uint32_t 		fmop_dir		: 2; // '0' - tri, '1' - up, '2' - down, '3' - unknown
-                uint32_t 		reserved		: 10;
-                uint32_t 		fmop_bw		: 16; // res = 3.11MHz
+                unsigned int 		cw_pulse		: 1; // '0' - pulse, '1' - CW
+                unsigned int 		pmop			: 1; // '0' - No-mop, '1'-mop
+                unsigned int 		fmop			: 1; // '0' - No-mop, '1'-mop
+                unsigned int 		false_pdw		: 1; // '0' - ture, '1'-false
+                unsigned int 		fmop_dir		: 2; // '0' - tri, '1' - up, '2' - down, '3' - unknown
+                unsigned int 		reserved		: 10;
+                unsigned int 		fmop_bw		: 16; // res = 3.11MHz
             }stPdw_status;
     } uniPdw_status;
 } ;

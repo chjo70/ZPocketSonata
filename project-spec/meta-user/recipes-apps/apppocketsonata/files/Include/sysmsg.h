@@ -13,7 +13,7 @@
 
 #include "../Anal/INC/AetIPL.h"
 
-#include "../Collect/DataFile/CRWRCommonVariables.h"
+#include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
 #pragma pack(push, 1)
 

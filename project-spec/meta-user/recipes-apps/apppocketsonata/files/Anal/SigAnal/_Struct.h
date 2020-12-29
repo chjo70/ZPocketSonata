@@ -181,17 +181,6 @@ struct STR_PULSE_TRAIN_SEG {
 	
 }  ;
 
-// Freq resolution struct
-//##ModelId=452B0C5403A3
-/*
-typedef struct {    // frequency band code를 위한 구조체
-  UINT min;					// min frequency
-  UINT max;					// max frequency
-  float res;				// 각 구간에 따른 resolution
-
-} STR_FREQ_RESOL ;
-*/
-
 // PRI Table 
 //##ModelId=452B0C5403B6
 struct STR_PRI_RANGE_TABLE {
@@ -502,11 +491,6 @@ struct STR_DWELL_LEVEL {
 
 } ;
 
-#ifdef __cplusplus
-//extern "C"
-//{
-#endif
-
 #ifdef _MAIN_
   STR_SYS _sp;
 
@@ -522,6 +506,9 @@ struct STR_DWELL_LEVEL {
   {
     0, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR
   } ;
+
+  float _spFreqMin;
+  float _spFreqMax;
 
 
 #define DFD_FREQ_OFFSET		(1900)
@@ -563,39 +550,83 @@ PA_RESOL gPaRes[ 6 ] =
 
 
 #else
+  FREQ_RESOL gFreqRes[ 3 ] =
+  {
+	  {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+	  { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+	  { 5866, 18740, 5866, 1.5   }
+  } ;
+
+
+  PA_RESOL gPaRes[ 6 ] =
+  {	// min, max, offset, res
+	  {     0,     0,  (float) _spPAoffset, _spAMPres },
+	  {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+	  {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+	  { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+	  { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+	  {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+  } ;
 
 #endif
-
 #else
-    //extern float _toaRes[en50MHZ_BW+1];
 
-    extern STR_SYS _sp;
+extern float _spFreqMin;
+extern float _spFreqMax;
 
-#ifdef _ELINT_
-    //extern UINT _sprfaoa[ 6 ];
-    extern UINT _spdiffaoa[ 6 ];
-    extern FREQ_RESOL gFreqRes[ 4 ];
-    extern PA_RESOL gPaRes[ 6 ];
-
-#elif defined(_POCKETSONATA_)
-#define _AOARes                 ( (float) (360./512.) )
-    //extern UINT _sprfaoa[ 6 ];
-    extern UINT _spdiffaoa[ 6 ];
-    extern FREQ_RESOL gFreqRes[ 6 ];
-    extern PA_RESOL gPaRes[ 6 ];
-
-#else
-    extern UINT _sprfaoa[ 4 ];
-    extern UINT _spdiffaoa[ 4 ];
-	extern FREQ_RESOL gFreqRes[ 4 ];
+//     //extern float _toaRes[en50MHZ_BW+1];
+// 
+extern STR_SYS _sp;
+// 
+// #ifdef _ELINT_
+//     //extern UINT _sprfaoa[ 6 ];
+extern UINT _spdiffaoa[ 6 ];
+//     extern FREQ_RESOL gFreqRes[ 4 ];
+//     extern PA_RESOL gPaRes[ 6 ];
+// 
+// #elif defined(_POCKETSONATA_)
+// #define _AOARes                 ( (float) (360./512.) )
+//     //extern UINT _sprfaoa[ 6 ];
+//     extern UINT _spdiffaoa[ 6 ];
+//     extern FREQ_RESOL gFreqRes[ 6 ];
+//     extern PA_RESOL gPaRes[ 6 ];
+// 
+// #else
+//     extern UINT _sprfaoa[ 4 ];
+//     extern UINT _spdiffaoa[ 4 ];
+extern FREQ_RESOL gFreqRes[ 3 ];
+extern PA_RESOL gPaRes[ 6 ];
+// #endif
+// 
 #endif
 
-#endif
 
 
-//#ifdef __cplusplus
-//}
-//#endif
+
+
+
+// #ifdef _MAIN_
+// // 인천공항 ELINT
+// //float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+// //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
+// //float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+// 
+// float _spFreqMin;
+// float _spFreqMax;
+// 
+// #else
+// //extern FREQ_RESOL gFreqRes[ 4 ];
+// //extern PA_RESOL gPaRes[ 6 ];
+// 
+// //extern float _toaRes[en50MHZ_BW+1];
+// //extern float _frqRes[en50MHZ_BW+1];
+// 
+// extern float _spFreqMin;
+// extern float _spFreqMax;
+// 
+// extern float _spPWres;
+// 
+// #endif
 
 
 // qsort 함수 선언

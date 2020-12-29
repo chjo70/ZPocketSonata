@@ -277,14 +277,14 @@ void CUserCollect::MakeSIMPDWData()
     pDMAPDW = m_pstrDMAPDW;
 
     for( i=0 ; i < m_strResColStart.uiCoPulseNum ; ++i ) {
-        randomDOA = ( rand() % 20 ) - 20;
-        randomPA =  ( rand() % 20 ) + 20;
-        randomPW =  20000;  // ( rand() % 20 ) + 20000;
+        randomDOA = ( rand() % 40 ) - 20;
+        randomPA =  ( rand() % 40 ) + 20;
+        randomPW =  ( rand() % 20 ) + 20000;
 
-        randomFreq = ( rand() % 20 ) + 2000;
+        randomFreq = ( rand() % 50 ) + 2000;
         randomCh = 1;
 
-        m_ullTOA += 0x1234;
+        m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x1234;
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 

@@ -14,10 +14,9 @@
 
 using namespace std;
 
-#include "PDWIQ.h"
+#include "../OFP_Main.h"
 
-#define _min(a,b)            (((a) < (b)) ? (a) : (b))
-#define _max(a,b)            (((a) > (b)) ? (a) : (b))
+#include "PDWIQ.h"
 
 #define XOR_I_DATA			(0x8A5A)
 #define XOR_Q_DATA			(0x8A5A)
@@ -25,7 +24,7 @@ using namespace std;
 
 #include "RawFile.h"
 
-#include "../OFP_Main.h"
+
 
 //#include "./PDW2SP370.h"
 
@@ -421,13 +420,13 @@ const char stSubrecordFormat[MAX_SUBRECORDS_OF_PDWDATA][10] = { "%e", "%e", "%f"
 // PDW 데이터 구조체 정의
 // 위 stSubrecordName, 과 stSubrecordUnit 과 동일 순서로 설정해야 함.
 typedef struct {
-    long double toa;
-    long double ldtoa;
-    long double lfreq;
+    double ltoa;
+    double ldtoa;
+    double lfreq;
 
-    long double pw;
-	long double pa;
-    long double doa;
+    double lpw;
+    double lpa;
+    double ldoa;
 
 } S_EL_PDW_RECORDS;
 
@@ -508,7 +507,7 @@ struct S_UNI_DATA_SET {
 	//char cbyte;
 
 	// codesonar의 Uninitialized Variable 과 충돌 남.	SRxIQDataRGroup, SRxIFDataRGroup 구조체 초기화를 강제로 막으면 안됨. 해결 필요. 
-	SRxIQDataRGroup iqData[MAX_OF_IQ_DATA];
+	SRxIQDataRGroup1 iqData[MAX_OF_IQ_DATA];
 	SRxIFDataRGroupEEEI ifData[MAX_OF_IF_DATA];
 	//short samplingData[MAX_OF_SAMPLING_DATA];
 	//short prftoneData[MAX_OF_PRF_TONE_DATA];
@@ -600,7 +599,7 @@ private:
 	int MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
     void TransferPDW2Record( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
-	void TransferIQ( SRxIQDataRGroup *pSRxIQDataRGroup, int iByte );
+	void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
 	void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );
 	int MakeSubRecords();
 	void MIDASClose();
@@ -620,7 +619,7 @@ public:
 	void InitIFMidas();
 	bool SaveAllIFMIDASFormat();
 
-    void SaveRawDataFile( EnumSCDataType enDataType, void *pData, unsigned int uiStep );
+    void SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep );
 
     inline char *GetRawDataFilename() { return m_szRawDataFilename; }
 	

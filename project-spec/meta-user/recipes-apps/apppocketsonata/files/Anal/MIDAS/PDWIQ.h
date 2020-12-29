@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#define LENGTH_OF_TASK_ID			20		//과제ID 문자열 길이 (TBD)
+//#include "../INC/PDW.h"
 
 enum ENUM_PDW_SIGNAL_TYPE
 {
@@ -13,17 +13,11 @@ enum ENUM_PDW_SIGNAL_TYPE
  * @struct	SRxIQData
  * @brief	IQ 데이터 그룹
  */
-struct SRxIQDataRGroup
+struct SRxIQDataRGroup1
 {
 	short sQData;	//int->float
 	short sIData;	//int->float
-
-	// !!!! 아래 초기화 구문 주석 풀어야 함 !!!!!!!!!!!!!! codesonar, uninitialized variable 에러 원인이 됨.	
- 	SRxIQDataRGroup()
- 		:sIData(0),
- 		sQData(0)
- 	{
- 	}	
+	
 };
 
 struct SRxIFDataRGroupEEEI

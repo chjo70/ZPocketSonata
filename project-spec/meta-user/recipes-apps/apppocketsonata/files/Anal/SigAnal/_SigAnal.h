@@ -27,7 +27,7 @@
 #include "../ScanSigAnal/SDefine.h"
 #include "../ScanSigAnal/SStruct.h"
 
-#include "../../Collect/DataFile/DataFile.h"
+#include "../../Anal/Collect/DataFile/DataFile.h"
 
 
 //////////////////////////////////////////////////////////////////////////

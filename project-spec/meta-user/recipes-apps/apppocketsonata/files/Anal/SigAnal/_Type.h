@@ -19,8 +19,6 @@
 #ifndef _TYPE_H_
 #define _TYPE_H_
 
-#include <stddef.h>
-
 #include <vector>
 #include <list>
 #include <map>
@@ -31,7 +29,6 @@ using namespace std;
 #include <math.h>
 #include <time.h>
 #include <sys/timeb.h>
-//#include <sys/timeb.h>
 
 #ifdef _MSC_VER
 
@@ -68,7 +65,8 @@ typedef unsigned int INT32;
 
 #ifdef __linux__
 #define _lseek                  lseek64
-#define _read(A,B,C)            pread64(A,B,C,1)
+#define _read(A,B,C)            read(A,B,C)
+#define _write(A,B,C)           write(A,B,C)
 #else
 
 #endif
@@ -109,8 +107,10 @@ typedef unsigned int INT32;
 
 #define TASK  void
 
+#ifdef __linux__
 #define TRUE (true)
 #define FALSE (false)
+#endif
 
 #ifndef _TOA
 typedef unsigned long long int _TOA;

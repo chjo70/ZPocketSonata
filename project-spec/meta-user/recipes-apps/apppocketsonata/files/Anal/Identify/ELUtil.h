@@ -9,17 +9,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-//#include "../InterSignal/INC/_type.h"
 #include "../SigAnal/_Macro.h"
 
-//#include "../InterSignal/INC/_Define.h"
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
 #define	KM_PER_DEGREE_FOR_LONGITUDE						(88.884)				// [km/deg]
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
 
 BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );

@@ -6,26 +6,13 @@
 #ifndef _STRUCT_H
 #define _STRUCT_H
 
-//#include "defines.h"
-//#include "system.h"
-
 #include <time.h>
+
+#include "../Anal/SigAnal/_Macro.h"
 
 /**
  * @brief ZYNQ 보드의 번호를 정의함.
  */
-enum ENUM_BoardID {
-    enPRC_Unknown,
-    enPRC1=1,
-    enPRC2,
-    enPRC3,
-    enPRC4,
-    enPRC5,
-    enPRC6,
-
-    enMaster=enPRC3
-
-};
 
 enum ENUM_COLLECT_MODE {
     enUnused=0,

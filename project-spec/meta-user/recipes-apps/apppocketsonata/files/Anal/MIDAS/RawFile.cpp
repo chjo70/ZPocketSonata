@@ -7,14 +7,14 @@
  * @warning   
  */
 
-
 #ifdef __linux__
-#include <sys/types.h>
-#include <unistd.h>
+//#include <sys/types.h>
+//#include <unistd.h>
 
 #include "../SigAnal/_Type.h"
 
 #else
+#include "stdafx.h"
 #include <io.h>
 
 #endif
@@ -39,7 +39,7 @@
  */
 CRawFile::CRawFile(void)
 {
-	m_pfile = NULL;
+	//m_pfile = NULL;
 	m_fid = 0;
 }
 
@@ -57,7 +57,7 @@ CRawFile::CRawFile(void)
  */
 CRawFile::~CRawFile(void)
 {
-	if( m_pfile != NULL ) fclose( m_pfile );
+	//if( m_pfile != NULL ) fclose( m_pfile );
 	if( m_fid != 0 ) _close( m_fid );
 
 }
@@ -220,17 +220,19 @@ void CRawFile::GetFilename( char *pFilename )
  * @date      2013-07-02 오전 11:50 
  * @warning   
  */
-bool CRawFile::FileOpen( char *filename, char *file_mode )
+bool CRawFile::FileOpen( char *filename, int iMode )
 {
 	bool bRet = false;
 	//Init();
 
-	if( m_pfile != NULL )	fclose( m_pfile );
+	if( m_fid != 0 )	_close( m_fid );
 
 #ifdef __linux__
-    if( ( m_pfile = fopen( filename , file_mode ) ) == 0 ) { //DTEC_Else
+    m_fid = open( filename , iMode, 0644 );
+    if( m_fid == 0 ) { //DTEC_Else
 #else
-    if( 0 != fopen_s( & m_pfile, filename , file_mode ) ) { //DTEC_Else
+	m_fid = _open( filename , iMode );
+    if( m_fid == 0 ) { //DTEC_Else
 #endif
 
 		printf( "\n[W] FIle is not exist !!" );
@@ -268,11 +270,19 @@ bool CRawFile::FileOpen( char *filename, char *file_mode )
  * @date      2013-07-18 오후 7:45 
  * @warning   
  */
-int CRawFile::Write( void *pData, int c_size, int count )
+int CRawFile::Write( void *pData, int c_size )
 {
 	int nWrite;
-	nWrite = fwrite( pData, count, c_size, m_pfile );
+	nWrite = _write( m_fid, pData, c_size );
 	return nWrite;
+}
+
+int CRawFile::Read( void *pData, int c_size )
+{
+	int nRead;
+	nRead = _read( m_fid, pData, c_size );
+
+	return nRead;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -288,9 +298,9 @@ int CRawFile::Write( void *pData, int c_size, int count )
  */
 void CRawFile::FileClose()
 {
-	if( m_pfile != NULL ) {
-		fclose( m_pfile );
-        m_pfile = NULL;
+	if( m_fid != 0 ) {
+		_close( m_fid );
+        m_fid = 0;
 	}
     else {
         perror( "파일:" );
@@ -314,10 +324,10 @@ unsigned long long int CRawFile::GetFileSize()
 {
 	long file_byte=0;
 
-	if( m_pfile != NULL ) {
-		if( fseek( m_pfile, 0L, SEEK_END ) == 0 ) {
-			file_byte = ftell( m_pfile );
-			rewind( m_pfile );
+	if( m_fid != NULL ) {
+		if( _lseek( m_fid, 0L, SEEK_END ) == 0 ) {
+            file_byte = 0;
+			_lseek( m_fid, 0L, SEEK_SET );
 		}
 		else { //DTEC_Else
 			file_byte = -1;
@@ -361,12 +371,13 @@ unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
  * @param pPath
  * @return
  */
-bool CRawFile::CreateDir( char *pPath )
+bool CRawFile::CreateDir( TCHAR *pPath )
 {
-    bool bRet=false;
-    char dirName[256];
-    char *p=pPath;
-    char *q=dirName;
+    BOOL bCreate; 
+	bool bRet=true;
+    TCHAR dirName[256];
+    TCHAR *p=pPath;
+    TCHAR *q=dirName;
 
     while( *p ) {
         if( ('\\' == *p) || ('/'==*p)) {
@@ -383,9 +394,10 @@ bool CRawFile::CreateDir( char *pPath )
         *q = '\0';
     }
 #ifdef _WIN32
-    bRet = CreateDirectory( dirName, NULL );
-    if( bRet != true ) {
+    bCreate = CreateDirectory( dirName, NULL );
+    if( bCreate != TRUE ) {
         perror( "디렉토리 생성");
+		bRet = false;
     }
 #else
     int iRet = mkdir( dirName, 0766 );

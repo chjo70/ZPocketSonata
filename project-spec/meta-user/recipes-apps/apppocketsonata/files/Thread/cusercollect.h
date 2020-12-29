@@ -4,7 +4,7 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
-#include "../Collect/DataFile/CRWRCommonVariables.h"
+#include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
 class CUserCollect : public CThread
 {

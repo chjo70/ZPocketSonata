@@ -14,6 +14,12 @@
 #include "./INC/structs.h"
 
 #include "./INC/ErrorMsg.h"
+
+#ifdef _MIDAS_
+
+#include "./SigAnal/_Macro.h"
+#include "./SigAnal/_Struct.h"
+#else
 #include "./INC/TaskMsg.h"
 
 
@@ -28,7 +34,7 @@
 
 #include "./Identify/ELUtil.h"
 
-
+#endif
 
 
 
@@ -51,7 +57,7 @@
 #ifdef __ZYNQ_BOARD__
 #define LOCAL_DATA_DIRECTORY                    "/var/rawdata"
 #else
-#define LOCAL_DATA_DIRECTORY                    "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
 #endif
 
 #define LOCAL_DATA_DIRECTORY_2                  "/var/log/PPDW"

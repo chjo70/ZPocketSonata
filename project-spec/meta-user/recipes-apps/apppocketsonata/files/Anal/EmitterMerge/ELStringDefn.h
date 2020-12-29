@@ -212,11 +212,11 @@ static const char* strAetSignalType[LENGTH_OF_LOB_STRING] =
 };
 
 //// PDW 관련  - Signal Type// 2014.03.18. aet 신호형태 정의를 사용해 오고 있었으나, 실제 ICD 내용과 다르기 때문에 재정의함.
-enum ENUM_PDW_SIGNAL_TYPE
-{
-	E_PDW_SIGNAL_CW = 0,
-	E_PDW_SIGNAL_PULSE,
-};
+//enum ENUM_PDW_SIGNAL_TYPE
+//{
+//    E_PDW_SIGNAL_CW = 0,
+//    E_PDW_SIGNAL_PULSE,
+//};
 #define NUM_OF_PDW_SIGNAL_TYPE 2
 static const char* strPdwSignalType[LENGTH_OF_LOB_STRING] = 
 {

@@ -44,7 +44,7 @@ extern CCriticalSection g_criticalDbg;
 extern CCriticalSection g_criticalExe;
 
 #elif defined(__linux__)
-#include "_Type.h"
+#include "../../SigAnal/_Type.h"
 #define HWND    unsigned int
 
 #elif defined(__GNUC__)

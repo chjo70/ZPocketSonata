@@ -25,7 +25,11 @@
 #include "../SigAnal/_Type.h"
 
 #include "system.h"
+
+#ifdef _MIDAS_
+#else
 #include "../EmitterMerge/ELMsgDefn.h"
+#endif
 
 // #include "Structs.h"
 
@@ -36,11 +40,6 @@
 
 ///////////////////////       AET DEFINES      /////////////////////////////////////////////
 
-
-//#include "_type.h"
-//#include "_define.h"
-
-//#include "../../RSA/BSP/hw_str.h"
 
 //##ModelId=452B0C51000F
 #ifdef _ELINT_
@@ -673,7 +672,8 @@ struct STR_NEWAET {
 typedef struct SRxLOBData STR_NEWAET;
 #elif defined(_SONATA_)
 typedef struct SRxLOBData STR_NEWAET;
-
+#else
+typedef struct SRxLOBData STR_NEWAET;
 #endif
 
 //##ModelId=452B0C5200E3

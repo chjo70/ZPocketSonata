@@ -2,7 +2,7 @@
 
 #include "../System/csysconfig.h"
 
-#include "../Collect/DataFile/DataFile.h"
+#include "../Anal/Collect/DataFile/DataFile.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
@@ -253,7 +253,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
     pPDW = & pPDWData->stPDW[0];
     for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
-        printf( "[%4d]\t%12llX %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, pPDW->llTOA, \
+        printf( "[%4d]\t%12llX %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, pPDW->ullTOA, \
                 CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
                 CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
                 CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );

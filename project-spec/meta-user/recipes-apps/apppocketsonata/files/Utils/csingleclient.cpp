@@ -196,7 +196,7 @@ void CSingleClient::RunClient()
         }
 
         //LOGMSG2( enDebug, "Try Connection to [%s/%d]...", m_szServerAddress, m_iPort );
-        if( ConnectTimeout( m_iSocket, & sockAddress, 100 ) < 0 ) {
+        if( ConnectTimeout( m_iSocket, & sockAddress, 10 ) < 0 ) {
             sleep( 1 );
         }
         else {

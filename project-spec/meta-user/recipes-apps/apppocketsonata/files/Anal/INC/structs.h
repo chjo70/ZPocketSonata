@@ -16,10 +16,18 @@
 #include "defines.h"
 #include "PDW.h"
 #include "../SigAnal/_Define.h"
-#include "../EmitterMerge/ELMsgDefn.h"
 
 #include "PDW.h"
+
+#ifdef _MIDAS_
+
+#else
+#include "../EmitterMerge/ELMsgDefn.h"
 #include "AetIPL.h"
+#endif
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // 초기화 파일 구조체
@@ -670,11 +678,11 @@ typedef unsigned int UDFINDEX;
 #define MAX_LOG_PDW						400
 
 // 에미터 상세정보 구조체 정의
-struct STR_AET_DETAIL {
-	STR_NEWAET aet;
-	_PDW pdw[MAX_LOG_PDW];
-
-} ;
+// struct STR_AET_DETAIL {
+// 	STR_NEWAET aet;
+// 	_PDW pdw[MAX_LOG_PDW];
+// 
+// } ;
 
 // 시스템 로그 구조체 정의
 struct STR_LOGMSG {
@@ -711,14 +719,14 @@ struct STR_QUEUE_MESSAGE {
 } ;
 
 //PC와 랜 통신을 위한 큐 메시지 구조체 
-struct STR_QUEUE_AET_MESSAGE {
-	USHORT opCode;
-	UCHAR address1;
-	UCHAR address2;
-	UINT opData;
-
-	SRxLOBData stLOB;
-} ;
+// struct STR_QUEUE_AET_MESSAGE {
+// 	USHORT opCode;
+// 	UCHAR address1;
+// 	UCHAR address2;
+// 	UINT opData;
+// 
+// 	SRxLOBData stLOB;
+// } ;
 
 // 시스템 로그 관련 큐 메시지 구조체 
 struct STR_QUEUE_LOG_MESSAGE {

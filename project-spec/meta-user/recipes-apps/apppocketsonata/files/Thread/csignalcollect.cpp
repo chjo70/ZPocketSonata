@@ -336,7 +336,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     iCh = pCollectBank->GetChannelNo();
 
                     if( pWindowCell->uiTotalPDW != _spZero ) {
-                        LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh, pWindowCell->uiTotalPDW );
+                        LOGMSG3( enDebug, " 탐지 [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , i, iCh, pWindowCell->uiTotalPDW );
                     }
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
@@ -363,7 +363,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG4( enDebug, " %s [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , g_szCollectBank[enTrackCollectBank], i, iCh, pWindowCell->uiTotalPDW );
+                    LOGMSG3( enDebug, " 추적 [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , i, iCh, pWindowCell->uiTotalPDW );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -376,7 +376,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == m_pTheScanCollectBank[i]->IsCompleteCollect() ) {
                     iCh = m_pTheScanCollectBank[i]->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enScanCollectBank], i, iCh );
+                    LOGMSG2( enDebug, "\n tmzos 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , i, iCh );
                     break;
                 }
             }
@@ -387,7 +387,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == m_pTheUserCollectBank[i]->IsCompleteCollect() ) {
                     iCh = m_pTheUserCollectBank[i]->GetChannelNo();
 
-                    LOGMSG3( enDebug, "\n %s 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , g_szCollectBank[enDetectCollectBank], i, iCh );
+                    LOGMSG2( enDebug, "\n 사용자 뱅크[%d]에서 [%d] 채널에서 수집 완료되었습니다." , i, iCh );
                     break;
                 }
             }
@@ -568,16 +568,13 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
 void CSignalCollect::SimPDWData()
 {
     STR_PDWDATA stPDWData;
-    //CCollectBank *pCollectBank;
-    //unsigned int uiCh;
 
     // 랜 데이터를 갖고온다.
-    //PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     // 데이터를 지정하여 지정한 행렬에 저장한다.
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, ".zpdw" );
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) ".zpdw" );
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
     SimFilter( & stPDWData );

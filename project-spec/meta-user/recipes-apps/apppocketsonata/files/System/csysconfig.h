@@ -42,8 +42,6 @@ struct STR_SYSCONFIG {
     char szLocalIPAddress[30];
 } ;
 
-static char g_szDeviceName[5][10] = { "eth1", "wlo1" } ;
-
 
 /**
  * @brief 시스템 설정 관련 클래스 임.

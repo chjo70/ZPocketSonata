@@ -11,6 +11,8 @@
 
 #include "../INC/system.h"
 
+#define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
+
 //enum NUMBER_DEF { _spZero=0, _spOne, _spTwo, _spThree } ;
 #define _spZero		(0)
 #define _spOne		(1)
@@ -61,10 +63,10 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spTimeres              (20000000)					// 1 sec / 50 ns */
 #define _spTimeNsRes						(20)
 
-#define _spOneSec               (_spTimeres)				// 1 sec  / 50 ns */
-#define _spOneMilli             (_spOneSec/1000)		// 1 msec / 50 ns */
-#define _spOneMicrosec          (_spOneMilli/1000)
-#define _spOneNanosec						(_spOneMicrosec/1000)
+//#define _spOneSec               (_spTimeres)				// 1 sec  / 50 ns */
+//#define _spOneMilli             (_spOneSec/1000)		// 1 msec / 50 ns */
+//#define _spOneMicrosec          (_spOneMilli/1000)
+//#define _spOneNanosec						(_spOneMicrosec/1000)
 
 #endif
 
@@ -187,7 +189,12 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
+#define TOTAL_FRQAOAPWBIN					(1024)	
+
 #else
+#define KHARM_AOA_MAR							(14)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
+
 #define MAX_AOA       			1024    // 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ      			8192    // 최대 주파수값 2^13 (?/8191)
 #define	FREQ_NARR_MHZ				20			// 20 MHz
@@ -198,10 +205,10 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define   _spAOAmax       0x3FF   // 359.6484375 Degree
 #define		_spAmpmax				0xFF
 //#define   _spAOAres       0.351562  // Degree */
-#define   _spAOAres       (0.01)		//0.351562  // Degree */
-#define   _spAMPres       0.3125    // dB */
-#define   _spTOAres       0.000000050 // SEC(50 ns) */
-#define   _spPWres        50.         // pw res.
+//#define   _spAOAres       (0.01)		//0.351562  // Degree */
+//#define   _spAMPres       0.3125    // dB */
+//#define   _spTOAres       0.000000050 // SEC(50 ns) */
+//#define   _spPWres        50.         // pw res.
 
 #define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수

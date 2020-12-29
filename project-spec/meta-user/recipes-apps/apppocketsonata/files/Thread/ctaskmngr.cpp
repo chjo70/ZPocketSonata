@@ -13,6 +13,7 @@
 #include "ctrackanalysis.h"
 #include "cscananalysis.h"
 #include "cemittermerge.h"
+#include "cusercollect.h"
 
 #include "curbit.h"
 #include "cprompt.h"
@@ -287,6 +288,10 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         TRKANL->Run();
         SCANANL->Run();
 
+        DETANL->Init();
+        TRKANL->Init();
+        SCANANL->Init();
+
     }
     else {
         LOGMSG1( enNormal, "분석 관련 쓰레드를 삭제합니다[%d].", bCreate );
@@ -301,7 +306,9 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         TRKANL_RELEASE;
         SCANANL_RELEASE;
 
-
+        LOGMSG1( enNormal, "수집집 관련 쓰레드를 삭제합니다[%d].", bCreate );
+        UCOL->Stop2();
+        UCOL->Run();
     }
 
 }

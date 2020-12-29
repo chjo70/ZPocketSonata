@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../../Anal/OFP_Main.h"
+#include "../../OFP_Main.h"
 
 using namespace std;
 
@@ -9,8 +9,8 @@ using namespace std;
 #include "ccollectbank.h"
 #include "../DataFile/DataFile.h"
 
-#include "../../Utils/clog.h"
-#include "../../Utils/ccommonutils.h"
+#include "../../../Utils/clog.h"
+#include "../../../Utils/ccommonutils.h"
 
 
 //
@@ -47,7 +47,7 @@ void CCollectBank::Init()
 {
     memset( & m_strPDW, 0, sizeof(STR_PDWDATA) );
 
-    m_strPDW.iBoardID = g_enBoardId;
+    m_strPDW.x.ps.iBoardID = g_enBoardId;
 
     InitWindowCell();
 
@@ -70,7 +70,7 @@ void CCollectBank::InitWindowCell()
 
     m_theQueueWindowCellID.Pop( & m_uiID );
 
-    m_strPDW.iBank = CCommonUtils::GetEnumCollectBank( m_uiID );
+    m_strPDW.x.ps.iBank = CCommonUtils::GetEnumCollectBank( m_uiID );
 
 }
 
@@ -206,7 +206,7 @@ void CCollectBank::SimCollectMode()
             CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
             if( m_strPDW.uiTotalPDW >= _spTwo ) {
-                msDTOA = m_strPDW.stPDW[m_strPDW.uiTotalPDW-1].llTOA - m_strPDW.stPDW[0].llTOA;
+                msDTOA = m_strPDW.stPDW[m_strPDW.uiTotalPDW-1].ullTOA - m_strPDW.stPDW[0].ullTOA;
             }
 
             // 개수 비교
