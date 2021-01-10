@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
     qErrorLog( szLogDirectory );
 
     qErrorPrint( "=======================================" );
-    qDecoderSetUploadBase( "/home/chjo70", 24 * 60 * 60 );
+    qDecoderSetUploadBase( (char *) "/home/chjo70", 24 * 60 * 60 );
 
     qContentType( "text/html" );
     qDecoder();

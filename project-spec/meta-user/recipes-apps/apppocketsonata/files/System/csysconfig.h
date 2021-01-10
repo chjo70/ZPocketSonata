@@ -39,6 +39,12 @@ struct STR_SYSCONFIG {
      */
     ENUM_MODE enMode;
 
+    /**
+     * @brief IPL 버젼 정보
+     */
+    UINT uiIPLVersion;
+
+
     char szLocalIPAddress[30];
 } ;
 
@@ -77,6 +83,15 @@ public:
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
     };
+
+    unsigned int GetIPLVersion() { return m_strConfig.uiIPLVersion; };
+    void SetIPLVersion( const unsigned int uiIPLVersion ) {
+        m_strConfig.uiIPLVersion = uiIPLVersion;
+        m_theMinIni.put( "IPL", "VERSION", (int) uiIPLVersion );
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
 
     char *GetProgramVersion() { return m_strConfig.szProgramVersion; };
     void SetProgramVersion(char *pProgramVersion ) {

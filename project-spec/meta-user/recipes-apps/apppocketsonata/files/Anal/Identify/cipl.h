@@ -5,6 +5,8 @@
 
 #include "../../Include/system.h"
 
+#include "../../System/csysconfig.h"
+
 #define MAX_IPL                 (2000)
 
 class CIPL
@@ -26,6 +28,8 @@ public:
     STR_IPL_START *getIPLStart() { return & m_strIPLStart; } ;
     void setIPLStart( STR_IPL_START *pIPLStart ) {
         memcpy( & m_strIPLStart, pIPLStart, sizeof(STR_IPL_START) );
+
+        GP_SYSCFG->SetIPLVersion( m_strIPLStart.uiIPLVersion );
 
         m_iTotalIPL = 0;
     } ;

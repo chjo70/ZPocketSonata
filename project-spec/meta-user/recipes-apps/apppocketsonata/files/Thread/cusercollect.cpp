@@ -38,7 +38,7 @@ void CUserCollect::InitVar()
 
     // 모의 SIM 데이터 초기화
     m_uiIndex = 0;
-    m_ullTOA = 0xFFFFF00000;
+    m_ullTOA = 0xFFFFFF00000;
 
     // 하드웨어
     //xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
@@ -284,7 +284,8 @@ void CUserCollect::MakeSIMPDWData()
         randomFreq = ( rand() % 50 ) + 2000;
         randomCh = 1;
 
-        m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x1234;
+        //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
+        m_ullTOA += 0x2000;
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 

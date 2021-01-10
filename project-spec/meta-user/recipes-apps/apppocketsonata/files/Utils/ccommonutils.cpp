@@ -250,10 +250,13 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 #else
     unsigned int i;
     _PDW *pPDW;
+    _TOA ullfirstTOA;
 
     pPDW = & pPDWData->stPDW[0];
+    ullfirstTOA = pPDW->ullTOA;
     for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
-        printf( "[%4d]\t%12llX %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, pPDW->ullTOA, \
+        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
+                pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
                 CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
                 CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
                 CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );

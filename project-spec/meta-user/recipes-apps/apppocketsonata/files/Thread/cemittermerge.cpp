@@ -4,6 +4,8 @@
 
 #include "../Utils/ccommonutils.h"
 
+#include "../Anal/Collect/DataFile/DataFile.h"
+
 #define _DEBUG_
 
 

@@ -157,7 +157,7 @@ HEADERS += \
     Anal/SigAnal/_Struct.h \
     Anal/SigAnal/_Type.h \
     Anal/SigAnal/cencdec.h \
-    Anal/SigAnal/stdafx.h \
+    Anal/SigAnal/stdafx.h \   
     Anal/TrackSigAnal/KGroup.h \
     Anal/TrackSigAnal/KMakeAET.h \
     Anal/TrackSigAnal/KPulExt.h \

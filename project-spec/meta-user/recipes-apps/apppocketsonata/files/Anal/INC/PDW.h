@@ -519,7 +519,7 @@ struct SRxPDWHeader {
 
 } ;
 
-struct SRXPDWDataRGroup {
+struct SRxPDWDataRGroup {
     unsigned long long int ullTOA;
     int	iSignalType;
     int	iPolFlag;

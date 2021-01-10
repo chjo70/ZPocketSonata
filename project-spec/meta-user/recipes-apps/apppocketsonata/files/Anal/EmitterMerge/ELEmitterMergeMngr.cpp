@@ -201,13 +201,11 @@ void CELEmitterMergeMngr::FreeMemory()
 
     delete m_pIdentifyAlg;
 
-    if( m_pUniThreat != nullptr ) {
-        free( m_pUniThreat );
-    }
 
-    if( m_pABTtoH000 != nullptr ) {
-        free( m_pABTtoH000 );
-    }
+    _SAFE_FREE( m_pUniThreat );
+
+    _SAFE_FREE( m_pABTtoH000 );
+
 
     //free( m_piCandidate );
 

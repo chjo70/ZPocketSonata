@@ -76,13 +76,7 @@ CSingleClient *g_pThePMCSocket;
  */
 void usrAppStart()
 {
-    LOGMSG( enNormal, "------------------------------------------------------------------------" );
-    LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK   EEEEEEE  TTTTTTTTT" );
-    LOGMSG( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK     EE          TT" );
-    LOGMSG( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK       EEEEEEE     TT" );
-    LOGMSG( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK     EE          TT" );
-    LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK   EEEEEEE     TT  Ver %s" , PROGRAM_VERSION );
-    LOGMSG( enNormal, "-------------------------------------------------------------------------" );
+
 
     LOGENTRY;
     _ShowProgramTitle();

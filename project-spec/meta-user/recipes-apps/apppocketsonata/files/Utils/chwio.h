@@ -30,6 +30,7 @@
 #define COE_SEL				0x0010
 #define PPF_SLICE				0x0020
 #define PPF_SLICE_nCLR		0x0024
+#define PPF_SLICE_FFT		0x0028
 #define CFAR_nCLR				0x0030
 #define CFAR_BEATN			0x0034
 #define CFAR_MODE_ON			0x0038
@@ -76,7 +77,9 @@ typedef enum
 {
     DMA_1_MEM,
     BRAM_CTRL_0,
-    BRAM_CTRL_PPFLT
+    BRAM_CTRL_PPFLT,
+    BRAM_DF_RX,
+    BRAM_TECH
 } mem_dev_t;
 
 //typedef struct

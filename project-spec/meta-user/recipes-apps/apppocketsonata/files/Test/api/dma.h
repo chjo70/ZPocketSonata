@@ -14,6 +14,10 @@
 *  Created on: 2020. 1. 20.
 *      Author: juna
 ******************************************************************/
+
+//#include "../Common.h"
+//#include "../hw_interface.h"
+
 #include "../hw_interface.h"
 #include <stdbool.h>
 #define DMA_COUNT 1
@@ -72,16 +76,16 @@ typedef struct
 ******************************************************************/
 typedef struct
 {
-	dma_dmacr_t		mm2s_dmacr;				// 	SGM	DRM
-	dma_dmasr_t		mm2s_dmasr;				// 	SGM	DRM
+	dma_dmacr_t	mm2s_dmacr;				// 	SGM	DRM
+	dma_dmasr_t	mm2s_dmasr;				// 	SGM	DRM
 	uint64_t		mm2s_curdesc;			// 	SGM
 	uint64_t		mm2s_taildesc;			// 	SGM
 	uint64_t 		mm2s_sa;				// 		DRM
 	uint32_t		mm2s_reserved[2];		//
 	uint32_t 		mm2s_length;			//		DRM
 	uint32_t		sg_ctrl;				//			MC
-	dma_dmacr_t		s2mm_dmacr;				// 	SGM	DRM
-	dma_dmasr_t		s2mm_dmasr;				// 	SGM	DRM
+	dma_dmacr_t	s2mm_dmacr;				// 	SGM	DRM
+	dma_dmasr_t	s2mm_dmasr;				// 	SGM	DRM
 	uint64_t		s2mm_curdesc;			//	SGM
 	uint64_t		s2mm_taildesc;			//	SGM
 	uint64_t 		s2mm_sa;				//		DRM
@@ -137,11 +141,11 @@ typedef struct
 {
     dma_reg_t		*pReg;
 
-	dma_sg_descs_t			mm2s_desc;
-	dma_sg_descs_t			s2mm_desc;
+	dma_sg_descs_t	mm2s_desc;
+	dma_sg_descs_t	s2mm_desc;
 
-    xmem_t					*mm2s_mem;
-    xmem_t					*ps2mm_mem;
+    xmem_t				*mm2s_mem;
+    xmem_t				*ps2mm_mem;
 } dma_t;
 
 /*****************************************************************

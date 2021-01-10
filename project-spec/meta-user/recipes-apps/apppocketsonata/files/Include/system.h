@@ -38,7 +38,8 @@
 #define _DEFAULT_DELETETIME_                (30)
 #define MIN_EMITTER_DELETE_TIME             (10)
 
-
+// 기본 라이브러리 버젼
+#define _DEFAULT_LIB_VERSION_               (0)
 
 
 #include "defines.h"

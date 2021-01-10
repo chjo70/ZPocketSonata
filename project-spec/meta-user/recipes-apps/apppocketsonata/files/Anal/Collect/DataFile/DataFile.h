@@ -22,12 +22,12 @@
 #define			IQ_ITEMS						(1024*128)
 
 //#define			MAX_RAWDATA_SIZE				(4000000)	// 2,432,052
-#define			MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRXPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
+#define			MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
 
 #define			MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
 
 
-#define			INIT_VAL			(-1.0)
+//#define			INIT_VAL			(-1.0)
 
 
 typedef enum {
@@ -171,26 +171,36 @@ typedef struct {
 	void Alloc( int iItems=0 );	\
 	void Free();	\
 	void ReadDataHeader();  \
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );	\
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
 	void *GetHeader() { return NULL; }	\
 	unsigned int GetHeaderSize();	\
+    unsigned int GetOneDataSize();	\
 	unsigned int GetDataItems();
 
 
 class CData
 {
 public:
-	STR_RAWDATA m_RawData;
+    char *m_pRawHeaderBuffer;
+    char *m_pRawDataBuffer;
 
-	UINT m_uiWindowNumber;
+    int m_iHeaderSize;
+    int m_iOneDataSize;
 
-	bool m_bPhaseData;
+public:
+    STR_RAWDATA m_RawData;
+
+    UINT m_uiWindowNumber;
+
+    UINT m_uiLengthOfHeader;
+
+    bool m_bPhaseData;
 
     STR_FILTER_SETUP m_strFilterSetup;
 
-	_TOA m_ll1stToa;
+    _TOA m_ll1stToa;
 
     float _spOneSec;
     float _spOneMilli;
@@ -202,25 +212,26 @@ public:
     float _spAOAres;
 
 public:
-	void ClearFilterSetup();
-	void swapByteOrder(unsigned int& ui);
-	void swapByteOrder(unsigned long long& ull);
-	void AllSwapData32( void *pData, int iLength );
-	void ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData );
+    void ClearFilterSetup();
+    void swapByteOrder(unsigned int& ui);
+    void swapByteOrder(unsigned long long& ull);
+    void AllSwapData32( void *pData, int iLength );
+    void ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData );
 
 public:
-	CData(STR_RAWDATA *pRawData);
-	virtual ~CData();
+    CData(STR_RAWDATA *pRawData);
+    virtual ~CData();
 
-	virtual void Alloc( int nItems=0 )=0;
-	virtual void Free()=0;
-	virtual void ReadDataHeader() = 0;
-    virtual void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
-	virtual void *GetData() = 0;
-	virtual void *GetHeader() = 0;
+    virtual void Alloc( int nItems=0 )=0;
+    virtual void Free()=0;
+    virtual void ReadDataHeader() = 0;
+    virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
+    virtual void *GetData() = 0;
+    virtual void *GetHeader() = 0;
 
-	virtual unsigned int GetHeaderSize() = 0;
-	virtual unsigned int GetDataItems() = 0;
+    virtual unsigned int GetHeaderSize() = 0;
+    virtual unsigned int GetOneDataSize() = 0;
+    virtual unsigned int GetDataItems() = 0;
 };
 
 
@@ -234,6 +245,12 @@ namespace SONATA {
 	const unsigned int uiPDW_CHIRPDN=3;
 	const unsigned int uiPDW_PMOP=1;
 	const unsigned int uiPDW_DV=1;
+
+    const float fAoaRes=(360.0/1024.);
+    const float fToaRes=(20);
+    const float fPWRes=(50);
+    const float fPARes=(80./256.);
+    const float fPAOffset=(-70.);
 }
 
 class CPDW : public CData
@@ -248,12 +265,26 @@ public:
 	void Alloc( int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+
+public:
+    /**
+     * @brief DecodeDOA
+     * @param iDOA
+     * @return
+     */
+    static float EncodeDOA(float fDOA )
+    {
+        return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
+    } ;
+
+
 
 };
 
@@ -274,11 +305,12 @@ public:
 	void Alloc( int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 
 };
@@ -304,11 +336,12 @@ public:
 	void Alloc( int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 
 };
@@ -341,11 +374,12 @@ public:
 	void Alloc( int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 
 public:
@@ -395,9 +429,9 @@ public:
 namespace POCKETSONATA {
     #define PH_WIDTH_FREQ		128000
     #define L_PH_MIN_FREQ		64000
-    #define H_PH_MIN_FREQ		192000 //kHz
+    #define H_PH_MIN_FREQ		192000  // [kHz]
 
-    #define PDW_TIME_RES		7.8125
+    #define PDW_TIME_RES		7.8125  // [ns]
     #define PDW_FREQ_RES		(1.953125)
     #define PDW_AOA_RES			0.087890625
 
@@ -408,27 +442,17 @@ namespace POCKETSONATA {
 class CPOCKETSONATAPDW : public CData
 {
 private:
-	STR_PDWFILE_HEADER m_Header;
+	STR_PDWFILE_HEADER m_stHeader;
 
     STR_PDW_DATA m_PDWData;
 
 	int m_iBoardID;
 
-    //static ENUM_BoardID m_enBoardID;
-
 public:
-    CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+    CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
     virtual ~CPOCKETSONATAPDW();
 
-	void Alloc( int nItems=0 );
-    void Free();
-	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
-    void *GetData();
-	void *GetHeader() { return NULL; }
-
-	inline unsigned int GetHeaderSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+    _COMMON_FUNCTIONS_;
 
 public:
     /**
@@ -444,6 +468,11 @@ public:
         return fDOA;	/* [degree] */
     } ;
 
+    /**
+     * @brief EncodeDOA
+     * @param fDOA
+     * @return
+     */
     static int EncodeDOA( float fDOA )
     {
         int iDOA;
@@ -574,10 +603,22 @@ public:
      */
     static float DecodeTOA( _TOA iTOA  )
     {
-        float fTOA;
+        long double dTOA;
 
-        fTOA = (float) ( (float) iTOA * (float) PDW_TIME_RES / (float) 1.0 );
-        return fTOA;	/* [ns] */
+        iTOA = iTOA & 0xFFFFFFFFFFF;
+
+        dTOA = (long double) ( (long double) iTOA * (long double) PDW_TIME_RES / (long double) 1.0 );
+        return (float) dTOA;	/* [ns] */
+    } ;
+
+    static double DblDecodeTOA( _TOA iTOA  )
+    {
+        double dTOA;
+
+        iTOA = iTOA & 0xFFFFFFFFFFF;
+
+        dTOA = (double) ( (double) iTOA * (double) PDW_TIME_RES / (double) 1.0 );
+        return dTOA;	/* [ns] */
     } ;
 
     /**
@@ -588,6 +629,8 @@ public:
     static float DecodeTOAus( _TOA iTOA  )
     {
         float fretTOA;
+
+        iTOA = iTOA & 0xFFFFFFFFFFF;
 
         fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000. );
         return fretTOA;	/* [us] */
@@ -601,6 +644,8 @@ public:
     static float DecodeTOAms( _TOA iTOA  )
     {
         float fretTOA;
+
+        iTOA = iTOA & 0xFFFFFFFFFFF;
 
         fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000000. );
         return fretTOA;	/* [ms] */
@@ -660,11 +705,12 @@ public:
 	void Alloc( int nItems=0 );
 	void Free();
 	void ReadDataHeader();
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader();
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 
 };
@@ -682,11 +728,12 @@ public:
 	void Alloc( int iItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, int iOffset=0, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
+    inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 };
 
@@ -762,8 +809,11 @@ public:
 
 	void AddMapData( CString *pStrPathName, CData *pData )
 	{
-#ifdef _WIN32
-		Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
+#ifdef __linux__
+#elif defined(_MSC_VER)
+        Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
+#else
+
 #endif
 		m_gMapData.insert( make_pair( *pStrPathName, pData ) );
 
@@ -804,7 +854,7 @@ public:
 		}
 		else {
 			CData *pData;
-#ifdef _WIN32
+#ifdef _MSC_VER
 			while( it != m_gMapData.end() ) {
                 if( pStrWindowTitle->Compare( it->first ) == 0 ) {
 					pData = it->second;
@@ -868,7 +918,7 @@ public:
 	ENUM_UnitType WhatUnitType( char *pStrPathname );
 
 	unsigned int GetHeaderSize( CData *pData );
-	unsigned int GetDataSize( CData *pData );
+	unsigned int GetOneDataSize( CData *pData );
 	unsigned int GetDataItems( CData *pData );
 
 

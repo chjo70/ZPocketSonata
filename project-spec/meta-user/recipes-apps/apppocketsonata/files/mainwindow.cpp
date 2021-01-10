@@ -10,10 +10,8 @@
 #include "mainwindow.h"
 
 
-#include "./Include/defines.h"
-#include "./Include/sysmsg.h"
-
 #include <fcntl.h>
+#include <qcolor.h>
 
 enum enTableHeader {
     enNoAET=0,
@@ -104,7 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->progressBar_IPL->setValue( 0 );
 
-    _InitResolution();
+    SetButtonColor( ui->MODE, QColor("#ffff00" ) );
+
+    //_InitResolution();
 
 }
 
@@ -1468,4 +1468,12 @@ void MainWindow::ClearTable()
     for( i=iCount ; i >= 0 ; --i ) {
         ui->aettableWidget->removeRow( i );
     }
+}
+
+void MainWindow::SetButtonColor( QPushButton *pButton, QColor pc )
+{
+    QPalette p( pButton->palette() );
+
+    p.setColor( QPalette::Button, pc );
+    pButton->setPalette( p );
 }

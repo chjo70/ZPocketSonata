@@ -158,10 +158,6 @@ void CTaskMngr::_routine()
                     bWhile = false;
                     break;
 
-                case enTHREAD_REQ_IPLVERSION :
-                    ReqIPLVersion();
-                    break;
-
                 // 오디오 설정 메시지
                 case enREQ_AUDIO :
                     ReqAudio();
@@ -189,10 +185,15 @@ void CTaskMngr::_routine()
                     RxThreshold();
                     break;
 
+                // IPL 관련 메시지
                 case enREQ_IPL_START :
                 case enREQ_IPL_DOWNLOAD :
                 case enREQ_IPL_END :
                     IPLDownload();
+                    break;
+
+                case enTHREAD_REQ_IPLVERSION :
+                    ReqIPLVersion();
                     break;
 
                 default:

@@ -12,22 +12,18 @@
 #include "./INC/defines.h"
 #include "./INC/PDW.h"
 #include "./INC/structs.h"
-
 #include "./INC/ErrorMsg.h"
+
+
+#include "./SigAnal/_Macro.h"
 
 #ifdef _MIDAS_
 
-#include "./SigAnal/_Macro.h"
 #include "./SigAnal/_Struct.h"
 #else
 #include "./INC/TaskMsg.h"
 
-
-//////////////////////////////////////////////////////////////////////////
-// 메크로 선언
-//
 #include "./SigAnal/_Type.h"
-#include "./SigAnal/_Macro.h"
 #include "./SigAnal/_Struct.h"
 
 #include "./SigAnal/cencdec.h"
@@ -57,14 +53,17 @@
 #ifdef __ZYNQ_BOARD__
 #define LOCAL_DATA_DIRECTORY                    "/var/rawdata"
 #else
-#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+//#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared,user=ELS/rawdata"
 #endif
 
 #define LOCAL_DATA_DIRECTORY_2                  "/var/log/PPDW"
 
 #define PDW_EXT									"zpdw"
-
 #define MIDAS_EXT								"midas"
+
+#define PDW_TYPE                                "pdw"
+#define IQ_TYPE                                 "iq"
 
 #else
 #define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"

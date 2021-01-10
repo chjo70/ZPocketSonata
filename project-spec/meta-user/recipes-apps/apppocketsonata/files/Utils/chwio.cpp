@@ -109,6 +109,7 @@ bool CHWIO::WriteReg(uint8_t sel, uint32_t offset, uint32_t value)
     }
     else {
         *(volatile uint32_t *)(xmem[sel].logical + (offset)) = value;
+        LOGMSG3( enNormal, "WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
 
     }
 

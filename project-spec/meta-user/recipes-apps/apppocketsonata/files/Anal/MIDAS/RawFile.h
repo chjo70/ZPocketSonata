@@ -9,9 +9,9 @@
 
 #pragma once
 
-#ifdef __linux__
 #include "../SigAnal/_Type.h"
 
+#ifdef __linux__
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -70,7 +70,7 @@ public:
 	//FILE *GetFileHandler() { return m_pfile; }
 	int GetFileHandler() { return m_fid; }
 	bool FileOpen( char *filename, int iMode );
-	int Read( void *pData, int c_size );
+	int Read( void *pData, int c_size, int iOffset=0 );
 	int Write( void *pData, int c_size );
 	void FileClose();
     unsigned long long int GetFileSize();

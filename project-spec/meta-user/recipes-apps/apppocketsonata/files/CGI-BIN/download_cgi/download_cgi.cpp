@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     strcat( szLogDirectory, QDECODER_LOG_FILENAME );
     qErrorLog( szLogDirectory );
 
-    if( ( pList = qValueFirst(  "formradio" )) == NULL ) {
+    if( ( pList = qValueFirst( (char *) "formradio" )) == NULL ) {
         qError( "다운로드할 항목이 없습니다. 확인해 주세요." );
         //PreviousPage();
     }

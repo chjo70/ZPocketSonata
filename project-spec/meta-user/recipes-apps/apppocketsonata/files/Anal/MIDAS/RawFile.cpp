@@ -8,16 +8,15 @@
  */
 
 #ifdef __linux__
-//#include <sys/types.h>
-//#include <unistd.h>
 
-#include "../SigAnal/_Type.h"
 
-#else
+#elif defined(_MSC_VER)
 #include "stdafx.h"
 #include <io.h>
-
+#else
+#include <io.h>
 #endif
+
 
 #include <fcntl.h>
 #include <string.h>
@@ -147,6 +146,7 @@ void CRawFile::GetFilename( char *pFilename )
         strcpy_s( m_filename, pOutStr );
 #else
         strcpy_s( m_filename, sizeof(m_filename), pOutStr );
+
 #endif
 
 	}
@@ -277,9 +277,24 @@ int CRawFile::Write( void *pData, int c_size )
 	return nWrite;
 }
 
-int CRawFile::Read( void *pData, int c_size )
+/**
+ * @brief		Read
+ * @param		void * pData
+ * @param		int c_size
+ * @return		int
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/01/06 10:05:06
+ * @warning		
+ */
+int CRawFile::Read( void *pData, int c_size, int iOffset )
 {
 	int nRead;
+
+    if( m_fid != 0 && iOffset != 0 ) { 
+        _lseek(m_fid, iOffset, SEEK_SET );
+    }
+
 	nRead = _read( m_fid, pData, c_size );
 
 	return nRead;
@@ -382,33 +397,42 @@ bool CRawFile::CreateDir( TCHAR *pPath )
     while( *p ) {
         if( ('\\' == *p) || ('/'==*p)) {
             if( ':' != *(p-1) ) {
-#ifdef _WIN32
+
+#ifdef _MSC_VER
                 CreateDirectory( dirName, NULL );
-#else
+#elif defined(__linux__)
                 mkdir( dirName, 0766 );
+#else
+                mkdir( dirName );
 #endif
             }
         }
 
+#ifdef __linux1__
+        mkdir( dirName, 0766 );
+#endif
+
         *q++ = *p++;
         *q = '\0';
     }
-#ifdef _WIN32
+
+
+#ifdef _MSC_VER
     bCreate = CreateDirectory( dirName, NULL );
     if( bCreate != TRUE ) {
         perror( "디렉토리 생성");
-		bRet = false;
+        bRet = false;
     }
-#else
+#elif defined(__linux__)
     int iRet = mkdir( dirName, 0766 );
 
     if( iRet == 0 || ( iRet == -1 && errno == EEXIST ) ) {
-        bRet = true;
     }
     else {
         perror( "디렉토리 생성");
+        bRet = false;
     }
-
+#else
 #endif
 
     return bRet;

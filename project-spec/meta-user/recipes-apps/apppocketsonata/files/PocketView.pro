@@ -17,15 +17,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Anal/MIDAS/RawFile.cpp \
     Anal/SigAnal/cencdec.cpp \
-    Collect/DataFile/DataFile.cpp \
+    Anal/SigAnal/stdafx.cpp \
+    Anal/Collect/DataFile/DataFile.cpp \
     Utils/cfile.cpp \
     chexspinbox.cpp \
     mainView.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    Anal/MIDAS/RawFile.h \
+    Anal/OFP_Main.h \
+    Anal/SigAnal/_Macro.h \
+    Anal/SigAnal/_Type.h \
     Anal/SigAnal/cencdec.h \
+    Anal/SigAnal/stdafx.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     chexspinbox.h \

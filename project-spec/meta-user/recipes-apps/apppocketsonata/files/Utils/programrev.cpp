@@ -78,19 +78,26 @@ void _ShowProgramTitle( void )
 {
     time_t timer;
     struct tm* t;
-    struct timeval tv;
+    //struct timeval tv;
 
     char szDate[LOG_DIR_SIZE];
+
+    LOGMSG( enNormal, "--------------------------------------------------------------------------" );
+    LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
+    LOGMSG( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK    EE         TT" );
+    LOGMSG( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK      EEEEEE     TT" );
+    LOGMSG( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK    EE         TT" );
+    LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT  Ver %s" , PROGRAM_VERSION );
+    LOGMSG( enNormal, "---------------------------------------------------------------------------" );
 
     timer = time( NULL );
     t = localtime(&timer);
     sprintf( szDate, "%d/%d/%d %2d:%2d:%2d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
 
-    LOGMSG3( enDebug, "[%s:%s] 프로그램을 (%s)에 구동합니다.", PROGRAM_NAME, PROGRAM_VERSION, szDate );
+    LOGMSG3( enNormal, "[%s:%s] 프로그램을 (%s)에 구동합니다.", PROGRAM_NAME, PROGRAM_VERSION, szDate );
 
-    //LOGMSG2( enDebug, "Compile Date[%s, %s]" , __DATE__, __TIME__ );
-    //memcpy( gpDebug->_date, __DATE__, sizeof( __DATE__ ) );
-    //memcpy( gpDebug->_time, __TIME__, sizeof( __TIME__ ) );
+    LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+    LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
 
 #ifdef _POCKETSONATA_
 #else

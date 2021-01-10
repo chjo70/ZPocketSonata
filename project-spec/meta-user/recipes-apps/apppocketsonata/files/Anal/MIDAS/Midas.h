@@ -477,12 +477,12 @@ struct SEL_KEYWORD_VALUE{
 	{
 		strcpy_s( classification, "701-ELINT" );
 		// memset(classification, NULL, 50);
-		memset(writer, NULL, sizeof(writer) );
-		memset(writer_version, NULL, sizeof(writer_version));
-		memset(signal_id, NULL, sizeof(signal_id) );
-		memset(notes, NULL, sizeof(notes) );
-		memset(collector, NULL, sizeof(collector));
-		memset(feed, NULL, sizeof(feed));
+        memset(writer, 0, sizeof(writer) );
+        memset(writer_version, 0, sizeof(writer_version));
+        memset(signal_id, 0, sizeof(signal_id) );
+        memset(notes, 0, sizeof(notes) );
+        memset(collector, 0, sizeof(collector));
+        memset(feed, 0, sizeof(feed));
 
 		dGain_value = 70;
 
@@ -511,7 +511,7 @@ struct S_UNI_DATA_SET {
 	SRxIFDataRGroupEEEI ifData[MAX_OF_IF_DATA];
 	//short samplingData[MAX_OF_SAMPLING_DATA];
 	//short prftoneData[MAX_OF_PRF_TONE_DATA];
-    SRXPDWDataRGroup pdwData[MAX_OF_PDW_DATA];
+    SRxPDWDataRGroup pdwData[MAX_OF_PDW_DATA];
 
 	S_EL_PDW_RECORDS pdwRecord[MAX_OF_PDW_DATA];
 
@@ -572,6 +572,8 @@ protected:
 	vector<SELIFMIDAS> m_vecConvertIFList;											///< IF 데이터 파일을 MIDAS 포멧으로 변환하기 위한 목록
 	char m_szIFTaskId[200];
 
+    _TOA m_ullfirstTOA;
+
 private:
     char m_szRawDataFilename[500];
 
@@ -597,7 +599,7 @@ private:
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, char *keyword, char type );
 	SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );
 	int MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
-    void TransferPDW2Record( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
+    void TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
 	void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
 	void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );

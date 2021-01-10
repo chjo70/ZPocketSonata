@@ -141,15 +141,32 @@ void CUrBit::InitHW()
 {
     CHWIO::OpenHW();
 
+    //CHWIO::WriteReg( BRAM_CTRL_0, ADC_BIT_SLICE, 0x2 );
+    //CHWIO::WriteReg( BRAM_CTRL_0, IQ_SOURCE_SW, 0x0 );
+    //CHWIO::WriteReg( BRAM_CTRL_0, ILA_CH_SEL1, 0x1 );
+    //CHWIO::WriteReg( BRAM_CTRL_0, DMA_TEST_D_ON, 0x0 );
+    //CHWIO::WriteReg( BRAM_CTRL_PPFLT, MON_CH_SEL, 0x0 );
+    //CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, 0x300 );
+    //CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, 0x300 );
+    //CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
+    //CHWIO::WriteReg( BRAM_CTRL_0, DMA_BURST_SIZE, PDW_GATHER_SIZE );
+
     CHWIO::WriteReg( BRAM_CTRL_0, ADC_BIT_SLICE, 0x2 );
     CHWIO::WriteReg( BRAM_CTRL_0, IQ_SOURCE_SW, 0x0 );
-    CHWIO::WriteReg( BRAM_CTRL_0, ILA_CH_SEL1, 0x1 );
-    CHWIO::WriteReg( BRAM_CTRL_0, DMA_TEST_D_ON, 0x0 );
+    CHWIO::WriteReg( BRAM_CTRL_0, ILA_CH_SEL1, 0x10 );
+    CHWIO::WriteReg( BRAM_CTRL_0, DMA_TEST_D_ON,0x0 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, DF_WAIT_T, 0xA00 ); // 방탐데이터 기다리는 시간 입력
     CHWIO::WriteReg( BRAM_CTRL_PPFLT, MON_CH_SEL, 0x0 );
-    CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, 0x300 );
-    CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, 0x300 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, CFAR_nCLR, 0 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, CFAR_BEATN, 0x7F00 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, CFAR_MODE_ON, 0 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, 50 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, 50 );
     CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
-    CHWIO::WriteReg( BRAM_CTRL_0, DMA_BURST_SIZE, PDW_GATHER_SIZE );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, PW_AUTO_THD_MIN, 0x0 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, PPF_SLICE, 0x2 );
+    CHWIO::WriteReg( BRAM_CTRL_PPFLT, PPF_SLICE_FFT,0x3 );
+    CHWIO::WriteReg( BRAM_CTRL_0,DMA_BURST_SIZE,PDW_GATHER_SIZE);
 
     RunAXIBusBIT();
 
@@ -256,7 +273,7 @@ bool CUrBit::RunAXIBusBIT()
             bRet = false;
         }
         else {
-            LOGMSG( enNormal, "RunAXIBusBIT() is OK..." );
+            LOGMSG( enNormal, "RunAXIBusBIT() is OK...\n" );
         }
     }
     else {

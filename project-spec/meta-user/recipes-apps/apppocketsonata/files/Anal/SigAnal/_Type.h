@@ -59,7 +59,13 @@ typedef unsigned int INT32;
 
 #define wsprintf                sprintf
 
+#ifdef __linux__
 #define strcpy_s                strcpy
+#elif defined(_MSC_VER)
+
+#else
+#endif
+
 
 #define _finite                 finite
 
@@ -70,6 +76,8 @@ typedef unsigned int INT32;
 #else
 
 #endif
+
+//#define mkdir( A, B )           mkdir( A )
 
 #define _time32(A)              time(A)
 #define __time32_t              time_t
@@ -107,7 +115,9 @@ typedef unsigned int INT32;
 
 #define TASK  void
 
-#ifdef __linux__
+#ifdef _MSC_VER
+
+#else
 #define TRUE (true)
 #define FALSE (false)
 #endif

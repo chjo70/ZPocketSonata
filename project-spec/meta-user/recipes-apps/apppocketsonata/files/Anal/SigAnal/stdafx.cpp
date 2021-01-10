@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef _WIN32
+#ifndef __GNUC__
 #include <iphlpapi.h>
 #include <icmpapi.h>
 
@@ -35,7 +35,7 @@ EN_RADARCOLLECTORID stiCollectorId=RADARCOL_Unknown;
 
 void Log( int nType, const char *fmt, ... )
 {
-#ifdef _WIN32
+#ifndef __GNUC__
 	g_criticalLog.Lock();
 
 	static _TCHAR szLog[5096];
@@ -123,7 +123,7 @@ void Log( int nType, const char *fmt, ... )
 
 char *GetFilePath()
 {
-#ifdef _WIN32
+#ifndef __GNUC__
 	g_criticalExe.Lock();
 
 	static TCHAR pBuf[256] = { 0, } ;
@@ -156,7 +156,7 @@ bool _CreateDir( char *pPath )
 
     dirName[0] = 0;
 
-#ifdef _WIN32
+#ifndef __GNUC__
 	while( *p ) {
 		if( ('\\' == *p) || ('/'==*p)) {
 			if( ':' != *(p-1) ) {
@@ -181,7 +181,7 @@ bool _CreateDir( char *pPath )
 
 bool CheckPing()
 {
-#ifdef _WIN32
+#ifndef __GNUC__
     bool bChkInternet;
 	int nMaxTime = 3;
 	char szSendData[20] = "Check TCP/IP";
@@ -222,8 +222,7 @@ int Printf(char *format, ...)
 
     va_list argptr;
 
-#ifdef _WIN32
-
+#ifndef __GNUC__
 
 	memset(str, 0, sizeof(str));
 
@@ -265,7 +264,7 @@ void SetLocal( bool bLocal )
 
 char *GetIpAddress()
 {
-#ifdef _WIN32
+#ifndef __GNUC__
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	char name[255];
@@ -299,7 +298,7 @@ enPosition GetPosition()
 {
     enPosition enPos=enBuiltIn;
 
-#ifdef _WIN32
+#ifndef __GNUC__
 
 	CString strIPAddress=GetIpAddress();
 

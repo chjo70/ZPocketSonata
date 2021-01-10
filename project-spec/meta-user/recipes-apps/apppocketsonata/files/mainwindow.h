@@ -6,11 +6,14 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include <QButtonGroup>
+#include <QtWidgets/QPushButton>
+
 #include "chexspinbox.h"
 
 #include "./Include/system.h"
 
-#include "./Collect/DataFile/DataFile.h"
+#include "./Anal/Collect/DataFile/DataFile.h"
 
 #include <QtWidgets/QTableWidget>
 
@@ -51,6 +54,8 @@ private:
     void swapByteOrder(unsigned int& ui);
 
     int GetUIBand();
+
+    void SetButtonColor( QPushButton *pButton, QColor pc );
 
 public:
     MainWindow(QWidget *parent = nullptr);

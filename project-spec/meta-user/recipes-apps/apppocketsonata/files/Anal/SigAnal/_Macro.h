@@ -4,8 +4,8 @@
     \version  0.0.1
 */
 
-#ifndef  _MACRO_H
-#define  _MACRO_H
+#ifndef  __MACRO_H
+#define  __MACRO_H
 
 #include "../INC/PDW.h"
 
@@ -41,6 +41,8 @@ enum ENUM_BoardID {
     enMaster=enPRC3
 
 };
+
+#define _SAFE_FREE(A)           if( A != 0 ) { free( A ); A = 0; }
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기

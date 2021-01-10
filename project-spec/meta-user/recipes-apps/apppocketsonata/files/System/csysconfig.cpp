@@ -127,6 +127,10 @@ void CSysConfig::LoadINI()
     // 프로그램 버젼 정보
     SetProgramVersion( _GetProgramVersion() );
 
+    // 신호 삭제 시간
+    iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
+    SetIPLVersion( iValue );
+
 }
 
 /**

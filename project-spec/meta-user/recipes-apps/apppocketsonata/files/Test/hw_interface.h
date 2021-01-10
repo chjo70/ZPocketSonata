@@ -17,11 +17,11 @@
 #include	<sys/sem.h>
 #include	<semaphore.h>
 
-#define XMEM_COUNT			3
+#define XMEM_COUNT			5
 #define XUIO_COUNT			1
 #define XUIO_INTR_COUNT 		1
 
-#define PDW_GATHER_SIZE		32*(100) //8byte*3
+#define PDW_GATHER_SIZE		32*100 //8byte*3
 
 // REG Decoder
 #define ADC_BIT_SLICE		0x7A00
@@ -41,6 +41,7 @@
 #define COE_SEL				0x0010
 #define PPF_SLICE				0x0020
 #define PPF_SLICE_nCLR		0x0024
+#define PPF_SLICE_FFT		0x0028
 #define CFAR_nCLR				0x0030
 #define CFAR_BEATN			0x0034
 #define CFAR_MODE_ON			0x0038
@@ -74,12 +75,12 @@
 #define PDW_TIME_RES			7.8125
 #define PDW_FREQ_RES			1.953125
 #define PDW_AOA_RES			0.087890625
+#define PDW_PA_INIT			-89
 
 #define CENT_FREQ				3072000 //kHz
 #define PH_WIDTH_FREQ		128000 //kHz
 #define L_PH_MIN_FREQ		64000 //kHz
 #define H_PH_MIN_FREQ		192000 //kHz
-
 
 typedef char					i8;
 typedef signed short			i16;
@@ -96,6 +97,39 @@ typedef unsigned long long	ui64;
 typedef float					r32;
 typedef double				r64;
 
+#define UIO_DMA_1_ADDR 0xA0080000
+
+// DF_RX Decoder
+#define DF_RX_FW_VER			0x0000
+#define DF_RX_RD_TEST		0x0004
+
+#define DF_RX_RD_ERR			0x0100
+
+#define DF_RX_SLICE_DF_IN	0x0200
+#define DF_RX_SLICE_AFC		0x0204
+#define DF_RX_SLICE_LPF		0x0208
+#define DF_RX_SLICE_ADD		0x020C
+
+#define DF_RX_PH_INCR		0x0400
+
+#define DF_RX_DLY_IN_EN		0x0500
+#define DF_RX_DLY_IN_VAL		0x0504
+
+// GenTech Decoder
+#define GenTech_FW_VER		0x0000
+#define GenTech_RD_TEST		0x0004
+
+#define GenTech_PULSE_EN 	0x0100
+#define GenTech_SET_PRI  	0x0104
+#define GenTech_SET_PW   	0x0108
+#define GenTech_SET_PH_INCR 0x010C
+
+#define GenTech_SET_DAC_MUX	0x0200
+
+#define GenTech_SET_DET_DLY	0x0300
+
+//pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
+
 /*****************************************************************
 * Definitions
 ******************************************************************/
@@ -106,7 +140,9 @@ typedef enum
 {
 	DMA_1_MEM,
 	BRAM_CTRL_0,
-	BRAM_CTRL_PPFLT
+	BRAM_CTRL_PPFLT,
+	BRAM_DF_RX,
+	BRAM_TECH
 } mem_dev_t;
 
 //typedef struct
@@ -129,7 +165,8 @@ typedef struct
 
 typedef struct
 {
-	uint64_t temp;
+	uint32_t temp1;   // 192~255  DMA one package size
+	uint32_t temp2;   // 192~255  DMA one package size
 	union
 	{
 		uint32_t		pdw_index;
@@ -157,7 +194,8 @@ typedef struct
 		struct
 		{
 			uint32_t 		frequency_H	: 8;
-			uint32_t 		pdw_phch		: 8;
+			uint32_t 		pdw_phch		: 4;
+			uint32_t 		reserved		: 4;
 			uint32_t		toa_L			: 16;
 		}stPdw_freq_toa;
 	}uniPdw_freq_toa;
@@ -183,28 +221,24 @@ typedef struct
 			uint32_t 		pa				: 16; // res = 0 ~ 65536 (linear scale)
 		}stPdw_dir_pa;
 	}uniPdw_dir_pa;
+
 	union
+	{
+		uint32_t	pdw_status;
+		struct
 		{
-			uint32_t	pdw_status;
-			struct
-			{
-				uint32_t 		cw_pulse		: 1; // '0' - pulse, '1' - CW
-				uint32_t 		pmop			: 1; // '0' - No-mop, '1'-mop
-				uint32_t 		fmop			: 1; // '0' - No-mop, '1'-mop
-				uint32_t 		false_pdw		: 1; // '0' - ture, '1'-false
-				uint32_t 		fmop_dir		: 2; // '0' - tri, '1' - up, '2' - down, '3' - unknown
-				uint32_t 		reserved		: 10;
-				uint32_t 		fmop_bw		: 16; // res = 3.11MHz
-			}stPdw_status;
-		}uniPdw_status;
+			uint32_t 		cw_pulse		: 1; // '0' - pulse, '1' - CW
+			uint32_t 		pmop			: 1; // '0' - No-mop, '1'-mop
+			uint32_t 		fmop			: 1; // '0' - No-mop, '1'-mop
+			uint32_t 		false_pdw		: 1; // '0' - ture, '1'-false
+			uint32_t 		fmop_dir		: 2; // '0' - tri, '1' - up, '2' - down, '3' - unknown
+			uint32_t 		reserved		: 10;
+			uint32_t 		fmop_bw		: 16; // res = 3.11MHz
+		}stPdw_status;
+	}uniPdw_status;
 } pdw_reg_t;
 
-static xmem_t xmem[XMEM_COUNT] =
-{
-        { 0x70000000,     0,   0x10000000, (char *) "DMA_1_MEM" },		// DMA IQ MEM(DDR,32MB)
-        { 0xA0000000,     0,   0x00008000, (char *) "BRAM_CTRL_0" },		// DMA IQ MEM(DDR,32MB)
-        { 0xA0010000, 0,   0x00008000, (char *) "BRAM_CTRL_PPFLT" }		// DMA IQ MEM(DDR,32MB)
-};
+
 
 typedef enum
 {
@@ -246,7 +280,6 @@ lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio2 -> ../../devices/p
 lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio3 -> ../../devices/platform/amba_pl@0/a0011000.dma/uio/uio3
 ----------> ���� 4���� dma ���ͷ�Ʈ��(address �� vivado���� address editor ���� Ȯ���غ��� ��)
 ******************************************************************/
-#define UIO_DMA_1_ADDR 0xA0080000
 
 static xuio_t xuio[XUIO_COUNT] =
 {
@@ -254,9 +287,17 @@ static xuio_t xuio[XUIO_COUNT] =
         {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
 };
 
-static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
+static xmem_t xmem[XMEM_COUNT] =
+{
+        { 0x70000000, 0,   0x10000000, (char *) "DMA_1_MEM" },			// DMA IQ MEM(DDR,32MB)
+        { 0xA0000000, 0,   0x00008000, (char *) "BRAM_CTRL_0" },		// DMA IQ MEM(DDR,32MB)
+        { 0xA0010000, 0,   0x00008000, (char *) "BRAM_CTRL_PPFLT" },	// DMA IQ MEM(DDR,32MB)
+		 { 0xA0020000, 0,   0x00008000, (char *) "BRAM_DF_RX" },		// DMA IQ MEM(DDR,32MB)
+        { 0xA0030000, 0,   0x00008000, (char *) "BRAM_TECH" },			// DMA IQ MEM(DDR,32MB)
+};
 
-#ifdef _HW_INTER_
+
+//#ifdef _HW_INTER_
 
 //void reg_write_64(ui64 *logical, ui32 offset, ui32 value);
 //ui64 reg_read_64(ui64 *logical, ui32 offset);
@@ -293,26 +334,10 @@ void hw_open(void);
 void hw_close(void);
 
 i32 startISR(void);
-void reg_write(uint8_t sel, uint32_t offset, ui32 value);
+//void reg_write(uint8_t sel, uint32_t offset, ui32 value);
 
 
-#else
-extern void hw_open(void);
-extern i32 startISR(void);
-extern void reg_write(uint8_t sel, uint32_t offset, ui32 value);
-extern ui32 reg_read(uint8_t sel, uint32_t offset);
-//static void SetInterruptRegister(void *irq_ptr);
-extern xmem_t *mem_get_mem(uint8_t sel);
-extern xmem_t mem_offset(xmem_t *mem, uint32_t offset);
 
-extern xuio_t *uio_get_uio(uint8_t sel);
-
-extern void ClearInterrupt(xuio_t *uio);
-extern bool PendingFromInterrupt(xuio_t *uio);
-
-extern void uio_re_enable_Interrupt(xuio_t *uio);
-
-#endif
 
 
 #endif /* SRC_HW_INTERFACE_H_ */

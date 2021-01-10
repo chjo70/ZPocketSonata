@@ -12,8 +12,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+/////////////////////////////////////////////////////////////////////////
+#define SD_CARD                     "/run/media/mmcblk0p1/SYSTEM"
+
+
+
 #ifdef __ZYNQ_BOARD__
-#define CEDEOB_SQLITE_FOLDER        "/run/media/mmcblk0p1/SYSTEM"
+#define CEDEOB_SQLITE_FOLDER        SD_CARD
 #else
 #define CEDEOB_SQLITE_FOLDER        "/home/chjo70"
 #endif
@@ -29,7 +34,11 @@
 #define QDECODER_LOG_FOLDER         "/var/log/LOG"
 #define QDECODER_LOG_FILENAME       "/qDecoder.log"
 
+#ifdef __ZYNQ_BOARD__
 #define INI_FOLDER                  CEDEOB_SQLITE_FOLDER
+#else
+#define INI_FOLDER                  EMITTER_SQLITE_FOLDER
+#endif
 #define INI_FILENAME                "/sysconfig.ini"
 
 #define PROGRAM_LOG_FOLDER          "/var/log/LOG"
