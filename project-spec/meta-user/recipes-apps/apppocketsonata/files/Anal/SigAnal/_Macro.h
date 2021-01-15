@@ -8,6 +8,7 @@
 #define  __MACRO_H
 
 #include "../INC/PDW.h"
+#include "../SigAnal/_Define.h"
 
 #define DFD_FREQ_OFFSET		(1900)
 
@@ -75,9 +76,6 @@ enum ENUM_BoardID {
 #define HalfThreeOverTen( A )   ( UINT ) ( ( ( ( A ) * 3 ) + 10 ) / 20 )
 
 
-
-#define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
-#define _min(a,b)               ( ( (a) < (b) ) ? (a) : (b) )
 
 
 #define BIT_MERGE(high,low)     ( ( ((UINT)high) << 8 ) | low )

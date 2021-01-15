@@ -9,10 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-//#include "KColPdw.h"
-
-//#include "KVar.h"
-
 #include "KDefine.h"
 
 #include "KGroup.h"
@@ -178,8 +174,7 @@ public:
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
     //##ModelId=452B0C52038B
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
-    //##ModelId=452B0C520395
-    void SaveAllPdwFile();
+
     //##ModelId=452B0C520396
     void Init( STR_PDWDATA *pPDWData );
     //##ModelId=452B0C52039F

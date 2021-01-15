@@ -96,7 +96,6 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 break;
 
             case enLineFeed :
-                m_szLog[0] = 0;
                 break;
 
             case enError :
@@ -113,7 +112,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 vsprintf( & m_szLog[nLength], pMsg, args );
                 va_end( args );
 
-                if( nType == enDebug ) {
+                if( nType == enDebug || nType == enLineFeed ) {
                     puts( & m_szLog[nLength] );
                 }
                 else if( nType == enNormal ) {
@@ -141,7 +140,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
 
             nLength = strlen(m_szLog);
-            if( nLength > 36 ) {
+            if( nLength > 36 || nType == enLineFeed ) {
                 write( fid, m_szLog, nLength );
             }
 

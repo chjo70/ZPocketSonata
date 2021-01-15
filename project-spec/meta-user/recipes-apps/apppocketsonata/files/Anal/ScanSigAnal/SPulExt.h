@@ -18,6 +18,9 @@ class CScanSigAnal;
 //##ModelId=452B0C440363
 class CSPulExt : public CPulExt  
 {
+private:
+    SRxABTData *m_pScnAet;
+
 protected:
 	//##ModelId=452B0C440365
 	int m_nMaxPdw;
@@ -34,10 +37,14 @@ public:
 	//##ModelId=452B0C44037C
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	//##ModelId=452B0C44037D
-	void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX *pRange );
+
+    void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange );
 	//##ModelId=452B0C440382
-	void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, UINT priMean, UINT dtoa_count );
+    void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 	//##ModelId=452B0C440386
+    void DiscardStablePT();
+
+    void ClearAllMark() { };
 
 	void SaveScanPulse();
 	//##ModelId=452B0C44038B

@@ -20,7 +20,7 @@ enum LogType {
     enEnd,
 };
 
-//#define LOG_LINEFEED
+#define LOG_LINEFEED                LOG->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
 
 #define LOGMSG( A, B )              LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B )
 #define LOGMSG1( A, B, C )          LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )

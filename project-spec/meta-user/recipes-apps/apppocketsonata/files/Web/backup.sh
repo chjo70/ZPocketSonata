@@ -1,6 +1,6 @@
 #!/bin/bash
 
-backup_directory="/home/chjo70/Lab/Xilinx/ZPocketSonata/project-spec/meta-user/recipes-apps/apppocketsonata/files/Web"
+backup_directory="/home/chjo70/Lab/Xilinx/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Web"
 
 web_directory="/var/www/html/Web"
 

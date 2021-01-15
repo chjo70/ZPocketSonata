@@ -9,6 +9,12 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "SStruct.h"
+
+#include "../SigAnal/AnalPRI.h"
+
+#include "../SigAnal/_SigAnal.h"
+
 //##ModelId=452B0C450116
 enum LowHighThreatType { LOWTHREAT=0, HIGHTHREAT, OBSCURITY } ;
 //##ModelId=452B0C45012A
@@ -20,8 +26,17 @@ enum PseudoScanType { TrackUnknown=10, DetectUnknown, LowIllustrationTest } ;
 class CScanSigAnal;
 
 //##ModelId=452B0C45013E
-class CSAnalScan  
+class CSAnalScan : public CAnalPRI
 {
+private:
+    SRxABTData *m_pScnAet;
+
+    int m_nMaxPdw;
+
+protected:
+    //##ModelId=452B0C5300EF
+    CScanSigAnal *m_pScanSigAnal;
+
 protected:
 	//##ModelId=452B0C450148
 	UINT m_nCanPeak[_spMaxSample];
@@ -45,16 +60,19 @@ protected:
 	int m_noCh;
 	//##ModelId=452B0C450171
 	int m_noEMT;
-	//##ModelId=452B0C45017B
-	CScanSigAnal *m_pScanSigAnal;
+
 	//##ModelId=452B0C450185
 	STR_SCANPT *m_pScanPt;
 	//##ModelId=452B0C45018E
 	STR_SAMPLE m_nSample;
 	//##ModelId=452B0C450192
-	UINT m_nCoModWc[_spMaxEMTNum+1];
+    UINT m_nCoModWc[256+1];
+
+    UINT stOffPdw;
 
 public:
+    STR_PULSE_TRAIN_SEG *GetPulseSeg();
+
 	BOOL CompMeanDiff(int x, int y, int thresh);
 	float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
@@ -101,11 +119,44 @@ public:
 	//##ModelId=452B0C45021E
 	void CalcSamplingTime();
 	//##ModelId=452B0C450224
-	UINT AnalScan( int preAnalStat=0 );
+    EN_SCANRESULT AnalScan( int preAnalStat=0 );
 	//##ModelId=452B0C450226
 	void Init( int noEMT=0, int noCh=0 );
+
+    BOOL KnownAnalysis();
+
+
+    int FindPeakInHist( int count, PDWINDEX *pPdwIndex ) { return 0; }
+    //##ModelId=452B0C57019E
+    BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
+    //##ModelId=452B0C5701A8
+    void DeleteAllSeg( STR_EMITTER *pEmitter )  { }
+    //##ModelId=452B0C5701AB
+    void ExtractRefStable() { }
+
+    //##ModelId=452B0C5701B4
+    BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return 0; }
+    //##ModelId=452B0C5701BC
+    UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) { return 0; }
+
+    void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
+
+    //##ModelId=452B0C5701C8
+    void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
+    //##ModelId=452B0C5701DA
+    int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
+    //##ModelId=452B0C5701E4
+    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count ) { return 0; }
+    //##ModelId=452B0C5701F8
+    _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count ) { return 0; }
+    int GetBand() { return 0; }
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index ) { }
+
+
+    int GetCoSeg();
+
 	//##ModelId=452B0C45022E
-	CSAnalScan( void *pParent );
+    CSAnalScan( void *pParent, int coMaxPdw );
 	//##ModelId=452B0C450230
 	virtual ~CSAnalScan();
 

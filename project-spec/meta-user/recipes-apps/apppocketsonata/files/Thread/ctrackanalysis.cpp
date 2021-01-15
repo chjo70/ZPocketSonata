@@ -6,6 +6,8 @@
 #include "../Utils/csingleclient.h"
 #include "../Utils/cmultiserver.h"
 
+#include "../Utils/ccommonutils.h"
+
 #define _DEBUG_
 
 extern CMultiServer *g_pTheZYNQSocket;
@@ -76,19 +78,18 @@ void CTrackAnalysis::_routine()
         }
         else {
             switch( m_pMsg->uiOpCode ) {
+                case enTHREAD_KNOWNANAL_START :
+                    AnalysisStart();
+                    break;
 
-            case enTHREAD_KNOWNANAL_START :
-                AnalysisStart();
-                break;
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                    bWhile = false;
+                    break;
 
-            case enTHREAD_REQ_SHUTDOWN :
-                LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
-                bWhile = false;
-                break;
-
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
-                break;
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    break;
             }
         }
     }
@@ -102,16 +103,17 @@ void CTrackAnalysis::AnalysisStart()
     LOGENTRY;
     unsigned int uiTotalLOB;
 
-    STR_TRKPDWDATA *pTrkPDWData;
+    STR_TRKSCNPDWDATA *pTrkPDWData;
 
     LOGMSG3( enDebug, " 추적 분석: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
 
-    // 1. 탐지 신호 분석을 호출한다.
+    //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
-    pTrkPDWData = ( STR_TRKPDWDATA *) GetRecvData();
+    // 1. 추적 신호 분석을 호출한다.
+    pTrkPDWData = ( STR_TRKSCNPDWDATA *) GetRecvData();
     m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData );
 
-    // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
+    // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
     STR_ANALINFO strAnalInfo;
 
     uiTotalLOB = m_pTheKnownSigAnal->GetCoLOB();

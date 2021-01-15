@@ -71,7 +71,7 @@ public:
     void ClearAllMark();
 
 	//##ModelId=452B0C550041
-	CNPulExt( void *pParent, int coMaxPdw=NSP_MAX_PDW );
+    CNPulExt( void *pParent, int coMaxPdw );
 	//##ModelId=452B0C550048
 	virtual ~CNPulExt();
 

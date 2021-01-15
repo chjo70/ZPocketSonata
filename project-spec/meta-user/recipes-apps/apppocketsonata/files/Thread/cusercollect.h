@@ -18,9 +18,13 @@ private:
     DMAPDW *m_pstrDMAPDW;
     char *m_pstrDMAPDWWithFileHeader;
 
+    unsigned int m_uiColStart;
+
     // SIM 모의 데이터 생성하기 위한 변수
     unsigned int m_uiIndex;
     _TOA m_ullTOA;
+
+    unsigned int m_uiCoSim;
 
 private:
     void InitVar();

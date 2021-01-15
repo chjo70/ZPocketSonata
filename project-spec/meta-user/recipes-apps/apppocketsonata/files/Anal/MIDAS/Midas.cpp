@@ -108,51 +108,58 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
 {
     bool bRet = true;
 
-    m_enFileType = enFileType;
-
-    memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
-
-    // 1. 사용자 지정 파일 생성
-    if( FileOpen( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
+    if( pstKeywordValue->numberofdata == 0 ) {
         bRet = false;
     }
     else {
-        if( enFileType == E_EL_SCDT_PDW ) {
-           m_pPDWData = ( STR_PDWDATA * ) pData;
+        m_enFileType = enFileType;
 
-           // 2. MIDAS 포멧으로 헤더 및 부가 구조체 저장
-           MakeHeader();
+        memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
 
-           // 3. Adjunct 헤더 파일 변환
-           MakeAdjunct();
-
-           // 4. HCD 저장
-           WriteHeader();
-
-           // 5. 데이터 저장
-           if( ! WriteData( 0, 0 ) ) { //DTEC_Else
-               bRet = false;
-
-           }
-           else {
-               // 6. Extended Header 변환
-               MakeExtendedHeader();
-
-               WriteExtendedHeader();
-           }
+        // 1. 사용자 지정 파일 생성
+        if( FileOpen( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
+            bRet = false;
         }
         else {
+            if( enFileType == E_EL_SCDT_PDW ) {
+               m_pPDWData = ( STR_PDWDATA * ) pData;
 
+               // 2. MIDAS 포멧으로 헤더 및 부가 구조체 저장
+               MakeHeader();
+
+               // 3. Adjunct 헤더 파일 변환
+               MakeAdjunct();
+
+               // 4. HCD 저장
+               WriteHeader();
+
+               // 5. 데이터 저장
+               if( ! WriteData( 0, 0 ) ) { //DTEC_Else
+                   bRet = false;
+
+               }
+               else {
+                   // 6. Extended Header 변환
+                   MakeExtendedHeader();
+
+                   WriteExtendedHeader();
+               }
+            }
+            else {
+
+            }
+
+            // 7. 변환 파일 닫기
+            FileClose();
+
+            // 8.
+            MIDASClose();
         }
 
-        // 7. 변환 파일 닫기
-        FileClose();
-
-        // 8.
-        MIDASClose();
+        printf( "신호 수집 EPDW : %s" , pMidasFileName );
     }
 
-   return bRet;
+    return bRet;
 
 }
 
@@ -1896,9 +1903,9 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
     enPosition enPos = GetPosition();
 
     if( enPos == enBuiltIn )
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
     else
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
 #elif defined(_POCKETSONATA_)
      wsprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
 #else
@@ -1933,7 +1940,6 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
         SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
 
-        printf( "신호 수집 EPDW : %s" , m_szRawDataFilename );
     }
     else {
         m_szRawDataFilename[0] = 0;

@@ -14,7 +14,6 @@
 #endif
 
 #define _MAIN_
-//#define _MAIN_GLOBALS_
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -100,8 +99,6 @@ CNewSigAnal::~CNewSigAnal()
  */
 void CNewSigAnal::Init()
 {
-    m_uiStep = 0;
-
     // m_AnalMode = analMode;
 }
 
@@ -201,7 +198,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     CheckValidData( pPDWData );
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( LOCAL_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
     if( pPDWData->x.ps.iIsStorePDW == 1 || true ) {
         // PDW 수집 상태 체크를 함.

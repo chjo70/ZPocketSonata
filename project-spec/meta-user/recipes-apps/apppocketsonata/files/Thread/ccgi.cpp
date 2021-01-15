@@ -95,6 +95,9 @@ void CCGI::_routine()
                 printf( "\n enRES_IBIT" );
                 break;
 
+            case enCGI_FETCH :
+                break;
+
             default:
                 LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                 break;

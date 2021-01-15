@@ -42,8 +42,8 @@ public:
     void CopyPDW();
     void PushPDWData( STR_PDWDATA *pstrArrayPDW );
     void PushPDWData( _PDW *pstPDW );
-    void UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell );
-    void CloseTrackWindowCell( STR_WINDOWCELL *pstrWindowCell );
+    void UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell );
+    void CloseTrackWindowCell();
 
     ///
     void SimCollectMode();

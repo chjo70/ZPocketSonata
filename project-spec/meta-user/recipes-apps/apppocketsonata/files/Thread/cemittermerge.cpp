@@ -75,6 +75,9 @@ void CEmitterMerge::_routine()
                     MergeEmitter();
                     break;
 
+                case enTHREAD_SCANANAL_START :
+                    break;
+
                 case enTHREAD_REQ_SHUTDOWN :
                     LOGMSG1( enDebug, " [%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                     bWhile = false;
@@ -117,7 +120,7 @@ void CEmitterMerge::MergeEmitter()
     int i;
     bool bMerge, bTrkLOB=false;
 
-    CELThreat *pThreatAET;
+    //CELThreat *pThreatAET;
 
     STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
@@ -144,13 +147,23 @@ void CEmitterMerge::MergeEmitter()
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo );
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        if( bMerge != true || strAnalInfo.uiAETID != _spZero ) {
+        if( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) {
             strAnalInfo.uiBand = 0;
             strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
-            SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+
+        }
+
+        if( (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_NEW || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) {
+            strAnalInfo.uiBand = 0;
+            strAnalInfo.uiCh = 0;
+            strAnalInfo.uiTotalLOB = _spOne;
+            strAnalInfo.uiAETID = pLOBData->uiAETID;
+            strAnalInfo.uiABTID = pLOBData->uiABTID;
+            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
         }
 
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
@@ -179,19 +192,18 @@ void CEmitterMerge::MergeEmitter()
 
         // 3.1 추적 채널 업데이트 수행
         if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
-            SIGCOL->QMsgSnd( enTHREAD_REQ_SETWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
             // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
             SendLost( strAnalInfo.uiAETID );
         }
         else {
-            SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSEWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            //strAnalInfo.uiAETID = 0;
+            SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
             // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
             SendDelete( strAnalInfo.uiAETID );
         }
-
-
     }
 
 }

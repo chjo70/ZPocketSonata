@@ -25,6 +25,8 @@ protected:
     //##ModelId=452B0C5300EF
     CKnownSigAnal *m_pKnownSigAnal;
 
+    static STR_PULSE_TRAIN_SEG *m_pSeg;
+
 public:
     //##ModelId=452B0C5300F8
     inline void SetAnalSeg( int coSeg ) { CAnalPRI::SetAnalSeg( coSeg ); }
@@ -33,6 +35,7 @@ public:
 
     int GetBand();
 
+    void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof );
 
     //##ModelId=452B0C5300FC
     void Init();
@@ -69,12 +72,14 @@ public:
 
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
 
+    static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
+
     //##ModelId=452B0C53013E
     void GroupingKnownPri();
     //##ModelId=452B0C53013F
     BOOL KnownAnalysis();
     //##ModelId=452B0C530140
-    CKAnalPRI( void *pParent, int coMaxPdw=KSP_MAX_PDW );
+    CKAnalPRI( void *pParent, int coMaxPdw );
     //##ModelId=452B0C530143
     virtual ~CKAnalPRI();
 

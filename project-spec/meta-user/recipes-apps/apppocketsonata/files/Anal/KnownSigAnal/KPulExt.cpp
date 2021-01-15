@@ -125,7 +125,7 @@ void CKPulExt::PulseExtract()
 	// 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
 	DiscardPulseTrain();
 
-	CPulExt::PulseExtract();
+    //CPulExt::PulseExtract();
 
 }
 
@@ -178,7 +178,6 @@ void CKPulExt::KnownPulseExtract()
 {
 	int i;
 	int diff;
-    //STR_PRI *pPri;
 	STR_PRI_RANGE_TABLE extRange;
 
     STR_PULSE_TRAIN_SEG *pSeg;
@@ -255,7 +254,7 @@ void CKPulExt::KnownPulseExtract()
 			break;
 	}
 
-	PrintAllSeg();
+    //CPulExt::PulseExtract();
 
 }
 

@@ -6,15 +6,33 @@
 </head>
 
 <body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
-<p><a href="cgi-bin/listallaet.cgi" target="_self" title="현재의 AET 정보 모두를 표시합니다.">전체 
+<form id="form1" runat="server">
+<table border="1">
+    <tr>
+        <td width="301" height="35">
+            <p><a href="cgi-bin/listallchannel.cgi" target="_self" title="탐지/추적/스캔/사용자 채널 정보를 전시합니다.">수집 
+            채널 정보</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="cgi-bin/listallaet.cgi" target="_self" title="현재의 AET 정보 모두를 표시합니다.">전체 
 AET 
-요청</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="cgi-bin/listallthreat.cgi" target="_self" title="현재의 위협 정보를 표시합니다.">전시기 
+요청</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="cgi-bin/listallthreat.cgi" target="_self" title="극 좌표창에서 전체 위협 정보를 표시합니다.">전시기 
 위협 
- 요청</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="cgi-bin/reinstall.cgi" title="시스템을 포멧하고 설치파일을 복사합니다."><span style="background-color:red;">시스템 
+ 요청</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="cgi-bin/reinstall.cgi" title="시스템을 포멧하고 설치파일을 복사합니다."><span style="background-color:red;">시스템 
 재설치</span></a></p>
+        </td>
+    </tr>
+</table>
+
+</form>
 
 <hr color="#CC99FF">
-
 </body>
 
 

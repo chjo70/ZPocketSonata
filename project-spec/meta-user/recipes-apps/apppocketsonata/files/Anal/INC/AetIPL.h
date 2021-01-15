@@ -973,8 +973,8 @@ struct STR_IPL {
   UINT tmoDel;
   UINT thrLev;
   UINT autoWarn;
-  UCHAR elintNot[ 8 ];
-  UCHAR elintName[ 20 ];
+  char elintNot[ 8 ];
+  char elintName[ 20 ];
   UINT cat;
   UINT thrERP;
   IPL_PLAT platform[ 5 ];    // Modified `98.8.25

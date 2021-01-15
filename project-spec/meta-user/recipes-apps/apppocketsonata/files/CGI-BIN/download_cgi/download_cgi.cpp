@@ -125,49 +125,7 @@ int main(int argc, char *argv[])
 
         DownloadFile( iSwitch );
 
-
-/*
-        if( strcmp( pList, "PDW" ) == 0 ) {
-            Download( "PRGDISK:/col_all.pdw", "수신 PDW가 없어서 다운로드가 안 됩니다. 잠시 후에 재시도 하세요." );
-        }
-        else if( strcmp( pList, "UDF" ) == 0 ) {
-            Download( UDF_FILE, "UDF가 아직 올라가지 않았습니다. 파일이 존재하지 않아서 다운로드가 안 됩니다." );
-        }
-        else if( strcmp( pList, "LOG" ) == 0 ) {
-            Download( theCtrlCMDS->GetLogFilename(), "로깅 파일이 아직 생성하지 않았습니다. 잠시 후에 재시도 하세요." );
-        }
-        else if( strcmp( pList, "DUMP" ) == 0 ) {
-            printf( "\n******************************************************" );
-            theLogDebug->MakeScreenBuffer( SCREEN_BUFFER_TEMP_LOG_FILENAME );
-            Download( SCREEN_BUFFER_TEMP_LOG_FILENAME, "덤프 파일이 없거나 메모리에 문제가 있을 수 있습니다." );
-            unlink( SCREEN_BUFFER_TEMP_LOG_FILENAME );
-        }
-        else if( strcmp( pList, "OFF_DUMP" ) == 0 ) {
-            Download( SCREEN_BUFFER_LOG_FILENAME, "덤프 파일이 없거나 메모리에 문제가 있을 수 있습니다." );
-        }
-        else if( strcmp( pList, "INI" ) == 0 ) {
-            Download( INI_FILE, "시스템이 초기화가 되어 다운로드할 초기화 파일이 없습니다. 잠시 후에 재시도 하세요." );
-        }
-*/
-
     }
-
-    /*
-    while (pReq->getnext(pReq, &obj, "formradio", false) == true) {
-        iSwitch = StrCmp( (char *) obj.data );
-
-        //printf( "[%d]" , iSwitch );
-        switch( iSwitch ) {
-            case enCEDEOB :
-                //DownloadFile( pReq, ( EN_DOWNLOAD_CASE ) iSwitch );
-                break;
-
-            default :
-                break;
-
-        }
-
-    }   */
 
     return 0;
 }

@@ -12,8 +12,6 @@
 class CTrackAnalysis : public CThread
 {
 private:
-    UNI_LAN_DATA m_uniLanData;
-
     CSysPara *m_pTheSysPara;
     CKnownSigAnal *m_pTheKnownSigAnal;
 

@@ -32,7 +32,7 @@ public:
 	//##ModelId=452B0C5300AB
 	int GetMaxPdw();
 	//##ModelId=452B0C5300AC
-	CKGroup( void *pParent, int coMaxPdw=KSP_MAX_PDW );
+    CKGroup( void *pParent, int coMaxPdw );
 	//##ModelId=452B0C5300B4
 	virtual ~CKGroup();
 

@@ -425,7 +425,7 @@ struct SCollectingList
 	SCollectingData stCollectingData[MAX_COLLECTING_LIST];
 };
 
-struct STR_TRKPDWDATA {
+struct STR_TRKSCNPDWDATA {
     STR_PDWDATA strPDW;
 
     SRxABTData strABTData;

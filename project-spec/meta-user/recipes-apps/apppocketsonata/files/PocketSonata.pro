@@ -29,6 +29,10 @@ SOURCES += \
         Anal/NewSigAnal/NPulExt.cpp \
         Anal/NewSigAnal/NewSigAnal.cpp \
         Anal/ParamMngr.cpp \
+        Anal/ScanSigAnal/SAnalScan.cpp \
+        Anal/ScanSigAnal/SGroup.cpp \
+        Anal/ScanSigAnal/SPulExt.cpp \
+        Anal/ScanSigAnal/ScanSigAnal.cpp \
         Anal/SigAnal/AnalPRI.cpp \
         Anal/SigAnal/Group.cpp \
         Anal/SigAnal/MakeAET.cpp \

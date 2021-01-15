@@ -8,24 +8,30 @@
 #include <sys/errno.h> // ENOMSG
 #include <sys/ioctl.h>
 
+#ifndef __ZYNQ_BOARD__
+#define _SIM_USER_COLLECT_
+#endif
+
+
+
 #include "chwio.h"
 #include "./DMA/dma.h"
 
 
 #include "../Utils/clog.h"
 
-#ifndef __ZYNQ_BOARD__
-#define _SIM_USER_COLLECT_
-#endif
+
 
 
 xuio_t CHWIO::xuio[XUIO_COUNT] = {
     {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
 };
 
+unsigned int CHWIO::m_uiCoInterrupt=0;
+
 CHWIO::CHWIO()
 {
-
+    m_uiCoInterrupt = 0;
 }
 
 /**
@@ -220,14 +226,26 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
     }
     else {
 #ifdef _SIM_USER_COLLECT_
-        bRet = true;
-        //bRet = false;
-        sleep( 2 );
+        int iModular;
+
+        sleep( 1 );
+
+        iModular = m_uiCoInterrupt % 50;
+
+        if( iModular <= 4 ) {
+            bRet = true;
+        }
+        else {
+            bRet = false;
+        }
 #else
         LOGMSG1( enError, "VME 인터럽트 핸들러 에러[%d] !!!" , uio->fd );
         bRet = false;
 #endif
+
     }
+
+    ++ m_uiCoInterrupt;
 
     return bRet;
 

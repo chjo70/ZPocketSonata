@@ -13,35 +13,52 @@
 #endif // _MSC_VER > 1000
 
 /////////////////////////////////////////////////////////////////////////
-#define SD_CARD                     "/run/media/mmcblk0p1/SYSTEM"
-
+#ifdef __ZYNQ_BOARD__
+#define SD_CARD                     (char *) "/run/media/mmcblk0p1/SYSTEM"
+#else
+#define SD_CARD                     (char *) "/var/log/LOG"
+#endif
 
 
 #ifdef __ZYNQ_BOARD__
-#define CEDEOB_SQLITE_FOLDER        SD_CARD
+#define HOME_ID                     (char *) "root"
 #else
-#define CEDEOB_SQLITE_FOLDER        "/home/chjo70"
+#define HOME_ID                     (char *) "chjo70"
+#endif
+
+#ifdef __ZYNQ_BOARD__
+#define SHARED_DATA_DIRECTORY        (char *) "/var/rawdata"
+#else
+//#define SHARED_DATA_DIRECTORY      (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+#define SHARED_DATA_DIRECTORY        (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared,user=ELS/rawdata"
+#endif
+
+#ifdef __ZYNQ_BOARD__
+#define CEDEOB_SQLITE_FOLDER        SHARED_DATA_DIRECTORY
+#else
+#define CEDEOB_SQLITE_FOLDER        (char *) "/home/chjo70"
 #endif
 #define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
 
 #ifdef __ZYNQ_BOARD__
-#define EMITTER_SQLITE_FOLDER        "/home/root"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
 #else
-#define EMITTER_SQLITE_FOLDER        "/home/chjo70"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
 #endif
 #define EMITTER_SQLITE_FILENAME     "/emitter.sqlite3"
 
-#define QDECODER_LOG_FOLDER         "/var/log/LOG"
-#define QDECODER_LOG_FILENAME       "/qDecoder.log"
 
-#ifdef __ZYNQ_BOARD__
-#define INI_FOLDER                  CEDEOB_SQLITE_FOLDER
-#else
-#define INI_FOLDER                  EMITTER_SQLITE_FOLDER
-#endif
-#define INI_FILENAME                "/sysconfig.ini"
 
-#define PROGRAM_LOG_FOLDER          "/var/log/LOG"
+#define INI_FOLDER                  SD_CARD
+#define INI_FILENAME                (char *) "/sysconfig.ini"
+
+
+#define QDECODER_LOG_FOLDER         (char *) "/var/log/LOG"
+#define QDECODER_LOG_FILENAME       (char *) "/qDecoder.log"
+
+#define QDECODER_UPLOAD_FOLDER      (char *) "/var/log/UPLOAD"
+
+#define PROGRAM_LOG_FOLDER          (char *) "/var/log/LOG"
 
 
 
@@ -101,17 +118,12 @@
 #define MANAET_RUN_PERIOD							(1)				// 단위는 초.
 
 
-// 수집용 펄스 개수
-#define NEW_COLLECT_PDW								(4096)			// 탐지 분석용 최대 수집 개수
-#define KWN_COLLECT_PDW								(4096)			// 추적 분석용 최대 수집 개수
-#define SCN_COLLECT_PDW								(2000)			// 스캔 분석용 최대 수집 개수
-
 
 // 한번에 수집한 최대 개수
-#define PDW_ONE_BLOCK_SIZE                          (256)           // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
+//#define PDW_ONE_BLOCK_SIZE                          (256)           // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
 
 // 비트 수집용 버퍼 크기
-#define MAX_BIT_COLLECT_COUNT                       (20)            // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
+//#define MAX_BIT_COLLECT_COUNT                       (20)            // NEW_COLLECT_PDW, KWN_COLLECT_PDW, SCN_COLLECT_PDW 중에서 가장 큰것
 
 // 소프트웨어 필터 개수
 #define	NEW_NO_BANK									(5)

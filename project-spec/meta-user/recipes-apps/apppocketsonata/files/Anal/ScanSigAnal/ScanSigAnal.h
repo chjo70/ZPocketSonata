@@ -13,7 +13,7 @@
 
 // #include "SVar.h"
 
-#include "../INC/System.h"
+//#include "../INC/System.h"
 
 #include "SDefine.h"
 
@@ -23,14 +23,25 @@
 #include "SPulExt.h"
 #include "SAnalScan.h"
 
+#include "../MIDAS/Midas.h"
+
 #ifdef __cplusplus
 
 //##ModelId=452B0C450011
 class CScanSigAnal  
 {
+private:
+    SRxABTData *m_pScnAet;
+
+private:
+    UINT m_uiStep;
+    CMIDASBlueFileFormat *m_pMidasBlue;
+
 public:
 	//##ModelId=452B0C450027
 	STR_PDWINDEX *m_pGrPdwIndex;
+
+    DEFINE_ANAL_VAR_
 	
 protected:
 	STR_UPDAET *m_pUpdAet;
@@ -54,10 +65,9 @@ protected:
 	CSAnalScan *m_theAnalScan;
 	//##ModelId=452B0C450058
 	int m_nMaxPdw;
-	
-public:
-	inline int GetCoPdw() { return m_CoPdw; }
 
+
+public:
 	void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int index );
 	void InitVar();
 	BOOL IsAnalScan();
@@ -92,9 +102,15 @@ public:
 	//##ModelId=452B0C4500A8
 	inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->VerifyPRI( pPdwIndex, count ); }
 	//inline STR_UPDAET *GetUpdAet() { return & stScnAet; }
+
+    inline int GetCoPdw() { return m_CoPdw; }
+    inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
+
+    inline SRxABTData *GetScnAET() { return m_pScnAet; }
 	
 	void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
 	void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
+    void Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet );
 	// void Start( STR_PDWDATA *pPDWData, STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg, STR_UPDAET *pUpdAet );
 	//##ModelId=452B0C4500AB
 	void SendScanResult( UINT nResult );
@@ -104,8 +120,7 @@ public:
 	void GetScanRes( int *pScanType, int *pScanPrd );
 	//##ModelId=452B0C4500BD
 	UINT GetCoScanPulse();
-	//##ModelId=452B0C4500BE
-	void ExtractPulse();
+
 	//##ModelId=452B0C4500C6
 	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
 	//##ModelId=452B0C4500C9
@@ -114,8 +129,7 @@ public:
 	void ClearColBuffer();
 	//##ModelId=452B0C4500D3
 	UINT AnalStart( int noEMT, int noCh );
-	//##ModelId=452B0C4500E4
-	void SaveAllPdwFile();
+
 	//##ModelId=452B0C4500E5
 	void Init( STR_PDWDATA *pPDWData );
 	//##ModelId=452B0C4500E6

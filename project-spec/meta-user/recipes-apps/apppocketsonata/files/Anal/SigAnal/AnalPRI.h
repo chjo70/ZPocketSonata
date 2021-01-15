@@ -24,7 +24,7 @@ enum { MERGE=0, NO_MERGE } ;
 class CAnalPRI
 {
 protected:
-    DEFINE_ANAL_PVAR_(0)
+    DEFINE_ANAL_PVAR_
 
 public:
     //##ModelId=452B0C5603D7
@@ -44,7 +44,7 @@ private:
     //##ModelId=452B0C570021
     int m_nMaxPdw;
     //##ModelId=452B0C57002C
-    static STR_PULSE_TRAIN_SEG *m_pSeg;
+    STR_PULSE_TRAIN_SEG *m_pSeg;
 
     STR_PULSE_TRAIN_SEG m_DwlSeg;
 
@@ -172,6 +172,9 @@ public:
     virtual UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )=0;
     //##ModelId=452B0C5701C6
     virtual STR_PULSE_TRAIN_SEG *GetPulseSeg()=0;
+
+    virtual void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )=0;
+
     //##ModelId=452B0C5701C8
     virtual void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )=0;
     //##ModelId=452B0C5701DA
@@ -337,7 +340,7 @@ public:
     bool MakeDwellLevel( STR_EMITTER *pEmitter );
 
     int (CAnalPRI::*qsort_memberfunc)( const void *arg1, const void *arg2 );
-    static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
+    //int incSegPriMeanCompare( const void *arg1, const void *arg2 );
     void SortEmitter();
     void SwapEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter );
     _TOA GetMinPulseTrainMean( STR_EMITTER *pEmitter );
@@ -347,7 +350,7 @@ public:
     //##ModelId=452B0C580075
     void Init();
     //##ModelId=452B0C580076
-    CAnalPRI( int coMaxPdw=NSP_MAX_PDW );
+    CAnalPRI( int coMaxPdw=NEW_COLLECT_PDW );
     //##ModelId=452B0C58007E
     virtual ~CAnalPRI();
 

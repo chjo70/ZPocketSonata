@@ -54,12 +54,26 @@ function qUpload(qForm) {
 <hr color="#CC99FF">
 
 <form method="post" action="cgi-bin/upload.cgi" enctype="multipart/form-data" >
-  <br>CEDEOB 라이브러리: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="file" name="cedeob_binary" accept=".sqlite3">
+<input type="hidden" name="Q_UPLOAD_ID" value="">
+  <br>
+    <table border="1" width="1382" bordercolor="white">
+        <tr>
+            <td width="255">  CEDEOB 라이브러리:</td>
+            <td width="1111">  <input type="file" name="upload_1" accept=".sqlite3">
   
-    <p>운용  소프트웨어: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="file" name="sw_binary">
-  
-    <p>INI 설정  파일: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="file" name="ini_binary" accept=".ini">
+    </td>
+        </tr>
+        <tr>
+            <td width="255"><p>운용  소프트웨어 (*.zip):</td>
+            <td width="1111"><p><input type="file" name="upload_2" accept=".zip"></td>
+        </tr>
+        <tr>
+            <td width="255"><p>INI 설정  파일:</td>
+            <td width="1111"><p><input type="file" name="upload_3" accept=".ini">
     
+            </td>
+        </tr>
+    </table>
 <p><input type="submit" value="업로드"></p>
   
 </form>

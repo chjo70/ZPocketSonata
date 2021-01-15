@@ -287,11 +287,11 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         SIGCOL->Run();
         DETANL->Run();
         TRKANL->Run();
-        SCANANL->Run();
+        SCNANL->Run();
 
         DETANL->Init();
         TRKANL->Init();
-        SCANANL->Init();
+        SCNANL->Init();
 
     }
     else {
@@ -305,7 +305,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         SIGCOL_RELEASE;
         DETANL_RELEASE;
         TRKANL_RELEASE;
-        SCANANL_RELEASE;
+        SCNANL_RELEASE;
 
         LOGMSG1( enNormal, "수집집 관련 쓰레드를 삭제합니다[%d].", bCreate );
         UCOL->Stop2();
@@ -411,6 +411,7 @@ void CTaskMngr::IPLDownload()
 
     switch( m_pMsg->uiOpCode ) {
         case enREQ_IPL_START :
+            m_iTotalIPL = 0;
             m_theIPL.setIPLStart( & pLanData->strIPLStart );
             DeleteIPL();
             break;
@@ -438,23 +439,63 @@ void CTaskMngr::IPLDownload()
 
 /**
  * @brief CTaskMngr::DeleteIPL
+ * @param pszELNOT
  */
-void CTaskMngr::DeleteIPL()
+void CTaskMngr::DeleteIPL( char *pszELNOT )
 {
 
-    // 레이더
-    sprintf( m_szSQLString, "DELETE FROM RADAR" );
-    exec( m_szSQLString );
+    if( pszELNOT != NULL ) {
+        int iRadarIndex, iRadarModeIndex;
 
-    // 레이더 모드
-    sprintf( m_szSQLString, "DELETE FROM RADAR_MODE" );
-    exec( m_szSQLString );
+        Database *pDatabase;
 
-    // 레이더 & 레이더 모드 관계
-    sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
-    exec( m_szSQLString );
+        pDatabase = GetDatabase();
 
-    m_iTotalIPL = 0;
+        // 레이더
+        sprintf( m_szSQLString, "SELECT RADAR_INDEX FROM RADAR WHERE ELNOT='%s'" , pszELNOT );
+        SQLite::Statement query( *pDatabase, m_szSQLString );
+
+        if( query.executeStep() ) {
+            iRadarIndex = query.getColumn(0).getInt();
+
+            sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'" , iRadarIndex );
+            SQLite::Statement query( *pDatabase, m_szSQLString );
+
+            while( query.executeStep() ) {
+                iRadarModeIndex = query.getColumn(0).getInt();
+
+                sprintf( m_szSQLString, "DELETE FROM RADAR_MODE WHERE RADAR_MODE_INDEX='%d'", iRadarModeIndex );
+                exec( m_szSQLString );
+            }
+
+            sprintf( m_szSQLString, "DELETE FROM RADAR WHERE RADAR_INDEX='%d'", iRadarIndex );
+            exec( m_szSQLString );
+
+            sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'", iRadarIndex );
+            exec( m_szSQLString );
+
+        }
+        else {
+
+        }
+
+        //-- m_iTotalIPL;
+    }
+    else {
+        // 레이더
+        sprintf( m_szSQLString, "DELETE FROM RADAR" );
+        exec( m_szSQLString );
+
+        // 레이더 모드
+        sprintf( m_szSQLString, "DELETE FROM RADAR_MODE" );
+        exec( m_szSQLString );
+
+        // 레이더 & 레이더 모드 관계
+        sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
+        exec( m_szSQLString );
+
+        m_iTotalIPL = 0;
+    }
 
 }
 
@@ -466,17 +507,42 @@ void CTaskMngr::InsertIPL( int iIndex )
     STR_IPL *pstrIPL;
     char szDate[100];
 
+    int iRadarIndex, iRadarModeIndex=0;
+
     pstrIPL = m_theIPL.getIPL( iIndex );
 
-    // 레이더
-    sprintf( m_szSQLString, "INSERT INTO RADAR ( RADAR_INDEX, ELNOT, NICKNAME, FUNCTION_CODE, PRIORITY ) VALUES \
-                             ( %d, '%s', 'NICK%d', 'ZZ', %d )" , \
-                             pstrIPL->noIPL, pstrIPL->elintNot, pstrIPL->noIPL, pstrIPL->thrLev );
-    exec( m_szSQLString );
-
-    // 레이더 모드
     getStringPresentTime( szDate );
-    sprintf( m_szSQLString, "INSERT INTO RADAR_MODE ( RADAR_MODE_INDEX, FUNCTION_CODE, SIGNAL_TYPE, \
+
+    // 업데이트 처리
+    if( ( iRadarIndex = IsThrereELNOT( pstrIPL->elintNot ) ) >= 0 && false ) {
+        // DeleteIPL( pstrIPL->elintNot );
+        sprintf( m_szSQLString, "UPDATE RADAR SET PRIORITY='%d', DATE_LAST_UPDATED='%s' WHERE RADAR_INDEX='%d'" , \
+        pstrIPL->thrLev, szDate, iRadarIndex );
+        exec( m_szSQLString );
+
+        sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_UPDATED='%s', SIGNAL_TYPE='%s', \
+RF_TYPICAL_MIN='%d', RF_TYPICAL_MAX='%d', RF_NUM_POSITIONS='%d', RF_PATTERN_PERIOD_MIN='%d', RF_PATTERN_PERIOD_MAX='%d', \
+PRI_TYPICAL_MIN='%d', PRI_TYPICAL_MAX='%d', PRI_NUM_POSITIONS='%d', PRI_PATTERN_PERIOD_MIN='%d', PRI_PATTERN_PERIOD_MAX='%d', \
+PRIORITY='%d', RF_TYPE='%d', PRI_TYPE='%d', PD_TYPICAL_MIN='%d', PD_TYPICAL_MAX='%d' \
+WHERE RADAR_MODE_INDEX='%d'" , \
+        szDate, _SignalType[pstrIPL->sigType], \
+        pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
+        pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
+        pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, pstrIPL->pw.low, pstrIPL->pw.hgh, \
+        iRadarModeIndex );
+        exec( m_szSQLString );
+
+    }
+    // 레이더 추가시 처리
+    else {
+        // 레이더
+        sprintf( m_szSQLString, "INSERT INTO RADAR ( RADAR_INDEX, DATE_LAST_UPDATED, ELNOT, NICKNAME, FUNCTION_CODE, PRIORITY ) VALUES \
+( %d, '%s', '%s', 'NICK%d', 'ZZ', %d )" , \
+        pstrIPL->noIPL, szDate, pstrIPL->elintNot, pstrIPL->noIPL, pstrIPL->thrLev );
+        exec( m_szSQLString );
+
+        // 레이더 모드
+        sprintf( m_szSQLString, "INSERT INTO RADAR_MODE ( RADAR_MODE_INDEX, FUNCTION_CODE, SIGNAL_TYPE, \
 DATE_CREATED, \
 RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
 PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
@@ -488,19 +554,42 @@ PD_TYPICAL_MIN, PD_TYPICAL_MAX ) VALUES \
 %d, %d, %d, %d, %d, \
 %d, %d, %d, \
 %d, %d )" ,
-    pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
-    szDate, \
-    pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
-    pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
-    pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
-    pstrIPL->pw.low, pstrIPL->pw.hgh );
-    exec( m_szSQLString );
+        pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
+        szDate, \
+        pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
+        pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
+        pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
+        pstrIPL->pw.low, pstrIPL->pw.hgh );
+        exec( m_szSQLString );
 
-    // 레이더 모드 라이프 사이클
-    sprintf( m_szSQLString, "INSERT INTO RADAR_MODE_LIFECYCLE ( RADAR_INDEX, RADAR_MODE_INDEX, RADAR_MODE_NAME, MODE_CODE ) VALUES ( %d, %d, '%s', 'ZZ' )" , \
-    pstrIPL->noIPL, pstrIPL->noIPL, pstrIPL->elintName );
-    exec( m_szSQLString );
+        // 레이더 모드 라이프 사이클
+        sprintf( m_szSQLString, "INSERT INTO RADAR_MODE_LIFECYCLE ( RADAR_INDEX, RADAR_MODE_INDEX, RADAR_MODE_NAME, MODE_CODE ) VALUES ( %d, %d, '%s', 'ZZ' )" , \
+        pstrIPL->noIPL, pstrIPL->noIPL, pstrIPL->elintName );
+        exec( m_szSQLString );
+    }
 
+}
+
+/**
+ * @brief CTaskMngr::IsThrereELNOT
+ * @param pszELNOT
+ * @return
+ */
+int CTaskMngr::IsThrereELNOT( char *pszELNOT )
+{
+    int iRadarIndex=-1;
+    Database *pDatabase;
+
+    pDatabase = GetDatabase();
+
+    sprintf( m_szSQLString, "SELECT RADAR_INDEX FROM RADAR WHERE ELNOT='%s'", pszELNOT );
+    SQLite::Statement query( *pDatabase, m_szSQLString );
+
+    if( query.executeStep() ) {
+        iRadarIndex = query.getColumn(0).getInt();
+    }
+
+    return iRadarIndex;
 }
 
 /**

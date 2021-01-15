@@ -137,7 +137,7 @@ public:
     void Init( STR_PDWDATA *pPDWData=NULL );
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type);
-    void SaveAllPdwFile( EnumSCDataType enDataType );
+
     void SaveGroupPdwFile( int index );
     char *GetTaskID();
     bool CheckValidData( STR_PDWDATA *pPDWData );

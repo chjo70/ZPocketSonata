@@ -42,7 +42,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 //
-//#define DATA_DIRECTORY						"Z:\\기타\\EPDW"
+
 #ifdef _ELINT_
 #define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"
 #define LOCAL_DATA_DIRECTORY_2                  "C:\\기타\\EPDW"
@@ -50,13 +50,6 @@
 #define PDW_EXT									"EPDW"
 
 #elif defined(_POCKETSONATA_)
-#ifdef __ZYNQ_BOARD__
-#define LOCAL_DATA_DIRECTORY                    "/var/rawdata"
-#else
-//#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
-#define LOCAL_DATA_DIRECTORY                    (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared,user=ELS/rawdata"
-#endif
-
 #define LOCAL_DATA_DIRECTORY_2                  "/var/log/PPDW"
 
 #define PDW_EXT									"zpdw"

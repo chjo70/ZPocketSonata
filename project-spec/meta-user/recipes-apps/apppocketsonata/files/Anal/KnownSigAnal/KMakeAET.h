@@ -318,7 +318,7 @@ public:
     //##ModelId=452B0C530080
     BOOL KnownMakeAET();
     //##ModelId=452B0C530081
-    CKMakeAET( void *pParent, int coMaxPdw=KSP_MAX_PDW );
+    CKMakeAET( void *pParent, int coMaxPdw );
     //##ModelId=452B0C530084
     virtual ~CKMakeAET();
 

@@ -42,6 +42,33 @@ Copyright Disclaimer:
 static char *_error_contact_info = NULL;
 static char *_error_log_filename = NULL;
 
+void qAlert(const char *format, ...) {
+    char buf[1024];
+    va_list arglist;
+    int status;
+
+    va_start(arglist, format);
+    status = vsprintf(buf, format, arglist);
+
+    if(getenv("REMOTE_ADDR") == NULL)  {
+      printf("Error: %s\n", buf);
+    }
+    else {
+        qErrorPrint( "qAlert[%s]" , buf );
+        qContentType("text/html");
+
+        printf("<html>\n");
+        printf("<head>\n");
+        printf("<meta http-equiv=\"Content-Type\" content=\"text/html\; charset=utf-8\">\n" );
+        printf("<title>Error: %s</title>\n", buf);
+        printf("<script language='JavaScript' charset=\"utf-8\">\n");
+        printf("  alert(\"%s\");\n", buf);
+        printf("</script>\n");
+        printf("</head>\n");
+        printf("</html>\n");
+    }
+}
+
 
 /**********************************************
 ** Usage : qError(format, arg);

@@ -29,7 +29,7 @@
     USHORT RSMK[MAX_PDW];	/* MARK 백업용, 스태거 분석시에 사용함.  */  \
     UCHAR MAXCHANNEL[MAX_PDW];	/* PDW의 MaxChannel      */
 
-#define DEFINE_ANAL_PVAR_(A)    \
+#define DEFINE_ANAL_PVAR_    \
     _TOA *m_pTOA;                   \
     unsigned int *m_pAOA;			/* PDW AOA 파라메터  */ \
     unsigned int *m_pFREQ;          /* PDW FREQUENCY 파라메터   */ \

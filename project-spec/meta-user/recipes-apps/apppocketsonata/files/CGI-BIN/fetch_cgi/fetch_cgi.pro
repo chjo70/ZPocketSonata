@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         ../../MinIni/minIni.cpp \
+        ../../System/csharedmemory.cpp \
         ../Qdecoder/md5/md5c.c \
         ../Qdecoder/mkstemp.c \
         ../Qdecoder/qArg.c \
@@ -64,6 +65,7 @@ HEADERS += \
     ../../MinIni/minGlue.h \
     ../../MinIni/minIni.h \
     ../../MinIni/wxMinIni.h \
+    ../../System/csharedmemory.h \
     ../Qdecoder/md5/md5.h \
     ../Qdecoder/md5/md5_global.h \
     ../Qdecoder/mkstemp.h \

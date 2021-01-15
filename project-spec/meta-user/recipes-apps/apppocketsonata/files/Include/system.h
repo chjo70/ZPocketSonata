@@ -25,11 +25,11 @@
 // 시스템 변수 기본 설정 값
 
 // 수신기 임계값
-#define _RXTHRESHOLD_BAND1_                 "-60.0"
-#define _RXTHRESHOLD_BAND2_                 "-55.3"
-#define _RXTHRESHOLD_BAND3_                 "-60.2"
-#define _RXTHRESHOLD_BAND4_                 "-70.0"
-#define _RXTHRESHOLD_BAND5_                 "-75.0"
+#define _RXTHRESHOLD_BAND1_                 -60.0
+#define _RXTHRESHOLD_BAND2_                 -55.3
+#define _RXTHRESHOLD_BAND3_                 -60.2
+#define _RXTHRESHOLD_BAND4_                 -70.0
+#define _RXTHRESHOLD_BAND5_                 -75.0
 
 // 에미터 최소 펄스 신호 개수
 #define _ANAL_MIN_PULSECOUNT_               (5)

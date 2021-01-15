@@ -62,7 +62,7 @@
 #define PDW_SEL_GAP			0x1000
 
 #define PDW_TIME_RES			7.8125
-#define PDW_FREQ_RES			1.953125
+//#define PDW_FREQ_RES			1.953125
 #define PDW_AOA_RES			0.087890625
 
 
@@ -273,6 +273,8 @@ private :
     //{
     //    {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
     //};
+
+    static unsigned int m_uiCoInterrupt;
 
 public:
     CHWIO();

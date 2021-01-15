@@ -87,6 +87,9 @@ void CSharedMemroy::setupSharedMemory( int iSize )
     m_iSize = iSize;
 }
 
+/**
+ * @brief CSharedMemroy::attachSharedMemory
+ */
 void CSharedMemroy::attachSharedMemory()
 {
    // Attached shared memory
@@ -97,17 +100,25 @@ void CSharedMemroy::attachSharedMemory()
    }
 }
 
-
-void CSharedMemroy::copyToSharedMemroy( void *pData )
+/**
+ * @brief CSharedMemroy::copyToSharedMemroy
+ * @param pData
+ * @return
+ */
+bool CSharedMemroy::copyToSharedMemroy( void *pData )
 {
-   // copy string to shared memory
+    bool bRet=true;
+    // copy string to shared memory
     if( m_shared_memory != (void *) -1 ) {
         memcpy( m_shared_memory, pData , m_iSize );
     }
     else {
         //printf("Error copyToSharedMemroy !!");
+        bRet = false;
     }
-   //sleep( 10 );
+    //sleep( 10 );
+
+    return bRet;
 }
 
 /**
@@ -115,19 +126,25 @@ void CSharedMemroy::copyToSharedMemroy( void *pData )
  * @param pData
  * @param iSize
  */
-void CSharedMemroy::copyToLocalMemroy( void *pData, int iSize )
+bool CSharedMemroy::copyToLocalMemroy( void *pData, int iSize )
 {
-   // copy string to shared memory
+    bool bRet=true;
+    // copy string to shared memory
     if( m_shared_memory != (void *) -1 ) {
         memcpy( pData, m_shared_memory, iSize );
     }
     else {
         memset( pData, 0, iSize );
+        bRet = false;
         //printf("Error attaching shared memory id");
     }
    //sleep( 10 );
+    return bRet;
 }
 
+/**
+ * @brief CSharedMemroy::close
+ */
 void CSharedMemroy::close()
 {
    //sleep(10);

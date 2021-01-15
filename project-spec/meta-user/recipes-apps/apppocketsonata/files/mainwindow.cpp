@@ -700,11 +700,11 @@ void MainWindow::LostAETTable( void *pByteData )
 void MainWindow::DeleteAETTable( void *pByteData )
 {
     int iIndexOfTable;
-    STR_AET *pAET;
+    UINT *pnoEMT;
 
-    pAET = ( STR_AET *) pByteData;
+    pnoEMT = ( UINT *) pByteData;
 
-    iIndexOfTable = GetIndexOfAETTable( pAET->noEMT );
+    iIndexOfTable = GetIndexOfAETTable( *pnoEMT );
     ui->aettableWidget->removeRow( iIndexOfTable );
 }
 

@@ -5,8 +5,6 @@
 #include "../Utils/clog.h"
 #include "../Utils/chwio.h"
 #include "../Utils/DMA/dma.h"
-//#include "../Test/hw_interface.h"
-//#include "../Test/api/dma.h"
 #include "../Utils/ccommonutils.h"
 
 #include "../System/csysconfig.h"
@@ -39,6 +37,10 @@ void CUserCollect::InitVar()
     // 모의 SIM 데이터 초기화
     m_uiIndex = 0;
     m_ullTOA = 0xFFFFFF00000;
+
+    m_uiCoSim = 0;
+
+    m_uiColStart = 0;
 
     // 하드웨어
     //xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
@@ -169,8 +171,6 @@ void CUserCollect::Stop()
  */
 void CUserCollect::ColStart()
 {
-    //unsigned int i, j;
-
     xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
 
     pdw_reg_t s_pdw_reg_t;
@@ -178,13 +178,11 @@ void CUserCollect::ColStart()
     uint32_t DataCount = PDW_GATHER_SIZE;
     uint32_t DumpLen;
 
-    //UZPOCKETPDW *pDRCPDW;
-
     DumpLen = sizeof(uint8_t) * DataCount;
 
     memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
 
-    LOGMSG( enDebug, " 수집 설정을 시작합니다." );
+    LOGMSG1( enDebug, " 수집 설정[%d]을 시작합니다." , m_uiColStart );
 
     // 인터럽트 재설정
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
@@ -239,6 +237,8 @@ void CUserCollect::ColStart()
         UCOL->QMsgSnd( enTHREAD_REQ_COLSTART );
     }
 
+    ++ m_uiColStart;
+
 }
 
 /**
@@ -276,8 +276,12 @@ void CUserCollect::MakeSIMPDWData()
 
     pDMAPDW = m_pstrDMAPDW;
 
+    int iDOA;
+
+    iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 10 );
+
     for( i=0 ; i < m_strResColStart.uiCoPulseNum ; ++i ) {
-        randomDOA = ( rand() % 40 ) - 20;
+        randomDOA = iDOA + ( rand() % 40 ) - 20;
         randomPA =  ( rand() % 40 ) + 20;
         randomPW =  ( rand() % 20 ) + 20000;
 
@@ -319,5 +323,7 @@ void CUserCollect::MakeSIMPDWData()
 
         ++ pDMAPDW;
     }
+
+    ++ m_uiCoSim;
 
 }

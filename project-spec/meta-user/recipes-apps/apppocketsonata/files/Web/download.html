@@ -8,26 +8,41 @@
 
 <body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
 <ul>
-    <h1><img src="graphics/download.gif" width="115" height="87" border="0" alt="로그, PDW 수집한 파일을 다운로드하기 위한 그림"> 
+    <h1><img src="graphics/download.jpg" width="115" height="87" border="0" alt="로그, PDW 수집한 파일을 다운로드하기 위한 그림"> 
     다운로드</h1>
 </ul>
 <hr color="#CC99FF">
 <form method="get" action="cgi-bin/download.cgi">
-  <input type="radio" name="formradio" value="CEDEOB" checked> CED/EOB 파일
-
+    <table border="1" bordercolor="white">
+        <tr>
+            <td width="1223" height="34">
+                <p><input type="radio" name="formradio" value="CEDEOB" checked> CED/EOB 파일</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="1223" height="34"><p><input name="formradio" type="radio" value="AET"> AET SQLITE 파일</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="1223" height="34">    <p><input name="formradio" type="radio" value="RAWDATA"> 모든 PDW 데이터</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="1223" height="34">    <p><input name="formradio" type="radio" value="LOG"> 시스템 로그</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="1223" height="34">    <p><input name="formradio" type="radio" value="SCREEN_DUMP"> 현재 화면덤프</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="1223" height="32">    <p><input name="formradio" type="radio" value="INI"> INI 설정 파일</p>
+            </td>
+        </tr>
+    </table>
+    <p>
   
-    
-    <p><input name="formradio" type="radio" value="AET"> AET SQLITE 파일</p>
-    <p><input name="formradio" type="radio" value="RAWDATA"> 모든 PDW 데이터&nbsp;</p>
-    <p><input name="formradio" type="radio" value="LOG"> 시스템 로그
-  
-    </p>
-    <p><input name="formradio" type="radio" value="SCREEN_DUMP"> 현재 화면덤프&nbsp;</p>
-    <p><input name="formradio" type="radio" value="INI"> INI 설정 파일</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-<p>
-  <input type="submit" value="다운로드">
+      <input type="submit" value="다운로드">
     </p>
 </form>
 <p>&nbsp;</p>

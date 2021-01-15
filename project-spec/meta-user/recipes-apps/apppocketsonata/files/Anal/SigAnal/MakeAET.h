@@ -38,7 +38,7 @@ public:
     int m_CoMakeAet;
 
 protected:
-    DEFINE_ANAL_PVAR_(0)
+    DEFINE_ANAL_PVAR_
 
     STR_PDWPARAM *m_pPdwParam;
 
@@ -130,7 +130,7 @@ public:
     //##ModelId=452B0C560072
     void Init(void);
     //##ModelId=452B0C560074
-    CMakeAET( int coMaxPdw=NSP_MAX_PDW );
+    CMakeAET( int coMaxPdw );
     //##ModelId=452B0C56007B
     virtual ~CMakeAET();
 

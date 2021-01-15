@@ -20,7 +20,7 @@ private:
 
     UNI_LAN_DATA m_uniLanData;
 
-    SRxABTData m_ABTData[TRACK_CHANNEL];
+    SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];
 
     CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
     CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
@@ -28,6 +28,7 @@ private:
     CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
 
     Queue<unsigned int> m_theTrackChannel;
+    Queue<unsigned int> m_theScanChannel;
 
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
@@ -35,7 +36,7 @@ private:
 
     bool m_bSendEnd;
 
-    STR_TRKPDWDATA m_theTrkPDW;
+    STR_TRKSCNPDWDATA m_theTrkScnPDW;
 
 public:
     static CSignalCollect *m_pInstance;
@@ -53,14 +54,21 @@ private:
 
     void SendEndCollect();
 
-    // 윈도우셀 모의
-    void ReqSetWindowCell();
-    void CloseSetWindowCell();
+    // 탐지 채널 관련 함수
+    void ReqTrackWindowCell();
+    void CloseTrackWindowCell();
     void NewTrackWindowCell( SRxABTData *pABTData );
     void StartTrackWindowCell();
     void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
     void UpdateTrackWindowCell( SRxABTData *pABTData );
     void CloseTrackWindowCell( SRxABTData *pABTData );
+
+    // 스캔 채널 관련 함수
+    void ReqScanWindowCell();
+    void CloseScanWindowCell();
+    void NewScanWindowCell( SRxABTData *pABTData );
+    void CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData );
+    void UpdateScanWindowCell( SRxABTData *pABTData );
 
 
     void SimPDWData();

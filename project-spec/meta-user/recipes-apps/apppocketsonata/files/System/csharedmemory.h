@@ -40,8 +40,8 @@ public :
 
     void setupSharedMemory( int iSize );
     void attachSharedMemory();
-    void copyToSharedMemroy( void *pData );
-    void copyToLocalMemroy( void *pData, int iSize );
+    bool copyToSharedMemroy( void *pData );
+    bool copyToLocalMemroy( void *pData, int iSize );
     void close();
 };
 

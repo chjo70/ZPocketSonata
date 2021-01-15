@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../../MinIni/minIni.cpp \
     ../../System/csharedmemory.cpp \
     system_cgi.cpp
 
@@ -26,6 +27,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DEFINES += _POCKETSONATA_
 
 HEADERS += \
+    ../../MinIni/minGlue-FatFs.h \
+    ../../MinIni/minGlue-ccs.h \
+    ../../MinIni/minGlue-efsl.h \
+    ../../MinIni/minGlue-ffs.h \
+    ../../MinIni/minGlue-mdd.h \
+    ../../MinIni/minGlue-stdio.h \
+    ../../MinIni/minGlue.h \
+    ../../MinIni/minIni.h \
+    ../../MinIni/wxMinIni.h \
     ../../System/csharedmemory.h \
     ../../System/csysconfig.h
 

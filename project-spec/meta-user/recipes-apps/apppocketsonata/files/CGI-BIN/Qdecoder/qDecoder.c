@@ -350,7 +350,7 @@ static int _parse_multipart_data(void) {
 
       upload_id = qValue("Q_UPLOAD_ID");
 
-      //qErrorPrint( "upload_id[%s]" , upload_id );
+      qErrorPrint( "upload_id[%s]" , upload_id );
 
       if(upload_id != NULL) {
       	if(_upload_base_init == 0) qError("_parse_multipart_data(): qDecoderSetUploadBase() must be called before.");
@@ -786,7 +786,7 @@ static void _upload_progressbar(char *upload_id) {
     printf("_print_progressbar(): Can not open %s", template);
     return;
   }
-	//printf( "\n AAA" );
+
   if(fflush(stdout) != 0) return;
 
   /* draw progress bar */

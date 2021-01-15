@@ -61,7 +61,7 @@ public:
 	STR_PDWPARAM* GetPdwParam();
 
 	//##ModelId=452B0C5500A2
-	CNMakeAET( void *pParent, int coMaxPdw=NSP_MAX_PDW );
+    CNMakeAET( void *pParent, int coMaxPdw );
 	//##ModelId=452B0C5500A5
 	virtual ~CNMakeAET();
 

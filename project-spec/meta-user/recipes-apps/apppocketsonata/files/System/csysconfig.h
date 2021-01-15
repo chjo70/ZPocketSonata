@@ -44,8 +44,16 @@ struct STR_SYSCONFIG {
      */
     UINT uiIPLVersion;
 
-
+    /**
+     * @brief IP 어드레스
+     */
     char szLocalIPAddress[30];
+
+    void *m_pTheDetectCollectBank[DETECT_CHANNEL];
+    void *m_pTheTrackCollectBank[TRACK_CHANNEL];
+    void *m_pTheScanCollectBank[SCAN_CHANNEL];
+    void *m_pTheUserCollectBank[USER_CHANNEL];
+
 } ;
 
 
@@ -121,8 +129,11 @@ public:
     };
 
     char *GetPrimeServerOfNetwork() { return & m_strConfig.szPrimeServer[0]; };
-    void SetPrimeServerOfNetwork( const char *pPrimeServer ) {
+    void SetPrimeServerOfNetwork( const char *pPrimeServer, bool bINI=false ) {
         strcpy( m_strConfig.szPrimeServer, pPrimeServer );
+        if( bINI == true ) {
+            m_theMinIni.put( "NETWORK" , "PRIME_SERVER" , pPrimeServer );
+        }
     };
 
     ENUM_MODE GetMode() { return m_strConfig.enMode; };
@@ -141,6 +152,30 @@ public:
     void SetLocalIPAddress( char *pIPAddress ) {
         strcpy( m_strConfig.szLocalIPAddress, pIPAddress );
     } ;
+
+    void *GetDetectCollectBnk( int iCh ) { return m_strConfig.m_pTheDetectCollectBank[iCh]; }
+    void SetDetectCollectBank( int iCh, void *pCollectBank ) {
+        m_strConfig.m_pTheDetectCollectBank[iCh] = pCollectBank;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    }
+
+    void *GetTrackCollectBnk( int iCh ) { return m_strConfig.m_pTheTrackCollectBank[iCh]; }
+    void SetTrackCollectBank( int iCh, void *pCollectBank ) {
+        m_strConfig.m_pTheTrackCollectBank[iCh] = pCollectBank;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    }
+
+    void *GetScanCollectBnk( int iCh ) { return m_strConfig.m_pTheScanCollectBank[iCh]; }
+    void SetScanCollectBank( int iCh, void *pCollectBank ) {
+        m_strConfig.m_pTheScanCollectBank[iCh] = pCollectBank;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    }
+
+    void *GetUserCollectBnk( int iCh ) { return m_strConfig.m_pTheUserCollectBank[iCh]; }
+    void SetUserCollectBank( int iCh, void *pCollectBank ) {
+        m_strConfig.m_pTheUserCollectBank[iCh] = pCollectBank;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    }
 
 };
 

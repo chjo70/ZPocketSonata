@@ -82,6 +82,7 @@ void CSysConfig::ReleaseInstance()
 void CSysConfig::LoadINI()
 {
     int i, iValue;
+    float fValue;
     string strValue;
     char szHomeDirectory[100];
 
@@ -96,16 +97,16 @@ void CSysConfig::LoadINI()
     ///////////////////////////////////////////////////////////////////////////////
     // RX Threshold 값 로딩
     i = 0;
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band1" , _RXTHRESHOLD_BAND1_ );
-    fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band2" , _RXTHRESHOLD_BAND2_ );
-    fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band3" , _RXTHRESHOLD_BAND3_ );
-    fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band4" , _RXTHRESHOLD_BAND4_ );
-    fRxThreshold[i++] = atof( strValue.c_str() );
-    strValue = m_theMinIni.gets( "RXTHRESHOLD" , "Band5" , _RXTHRESHOLD_BAND5_ );
-    fRxThreshold[i++] = atof( strValue.c_str() );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band1" , _RXTHRESHOLD_BAND1_ );
+    fRxThreshold[i++] = fValue;
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band2" , _RXTHRESHOLD_BAND2_ );
+    fRxThreshold[i++] = fValue;
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band3" , _RXTHRESHOLD_BAND3_ );
+    fRxThreshold[i++] = fValue;
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band4" , _RXTHRESHOLD_BAND4_ );
+    fRxThreshold[i++] = fValue;
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band5" , _RXTHRESHOLD_BAND5_ );
+    fRxThreshold[i++] = fValue;
 
     SetRxThreshold( fRxThreshold );
 
@@ -115,9 +116,7 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    //m_theMinIni.put( "ANAL" , "MIN_ANALPULSE" , 6 );
-    strValue = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
-    _spAnalMinPulseCount = atoi( strValue.c_str() );
+    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간
@@ -127,7 +126,7 @@ void CSysConfig::LoadINI()
     // 프로그램 버젼 정보
     SetProgramVersion( _GetProgramVersion() );
 
-    // 신호 삭제 시간
+    // 위협 라이브러리 버젼 정보
     iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
     SetIPLVersion( iValue );
 
@@ -203,12 +202,15 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
     bool bRet=true;
     struct ifreq ifr;
 
+    char szError[100];
+
     int s;
 
     s = socket( AF_INET, SOCK_DGRAM, 0 );
     strncpy( ifr.ifr_name, pNetworkName, IFNAMSIZ );
     if( ioctl(s, SIOCGIFADDR, &ifr ) < 0 ) {
-        perror("네트워크");
+        sprintf( szError, "네트워크[%s]" , pNetworkName );
+        perror( szError );
         pIPAddress[0] = 0;
         bRet = false;
     }

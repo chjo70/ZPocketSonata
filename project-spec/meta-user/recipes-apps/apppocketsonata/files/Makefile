@@ -36,6 +36,10 @@ APP_OBJS += Anal/NewSigAnal/NPulExt.o
 APP_OBJS += Anal/NewSigAnal/NAnalPRI.o
 APP_OBJS += Anal/NewSigAnal/NMakeAET.o
 APP_OBJS += Anal/NewSigAnal/NewSigAnal.o
+APP_OBJS += Anal/ScanSigAnal/SAnalScan.o
+APP_OBJS += Anal/ScanSigAnal/SGroup.o
+APP_OBJS += Anal/ScanSigAnal/SPulExt.o
+APP_OBJS += Anal/ScanSigAnal/ScanSigAnal.o
 APP_OBJS += Anal/ParamMngr.o
 APP_OBJS += Anal/SigAnal/Group.o
 APP_OBJS += Anal/SigAnal/PulExt.o
@@ -96,6 +100,34 @@ APP2_OBJS += Test/api/dma.o
 # system.cgi
 SYSTEM_CGI_OBJS = System/csharedmemory.o
 SYSTEM_CGI_OBJS += CGI-BIN/system_cgi/system_cgi.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/md5/md5c.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/mkstemp.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qArg.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qAwk.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qCount.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qDecoder.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qDownload.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qEncode.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qEnv.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qError.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qFile.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qHttpHeader.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qInternalCommon.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qInternalEntry.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qMisc.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qSed.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qSession.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qString.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qTime.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qValid.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qfDecoder.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/qsDecoder.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/snprintf.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/strcasecmp.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/strptime.o
+SYSTEM_CGI_OBJS += CGI-BIN/Qdecoder/timegm.o
+SYSTEM_CGI_OBJS += MinIni/minIni.o
+
 
 # upload.cgi
 UPLOAD_CGI_OBJS = CGI-BIN/Qdecoder/md5/md5c.o
@@ -184,6 +216,7 @@ FETCH_CGI_OBJS += CGI-BIN/Qdecoder/strptime.o
 FETCH_CGI_OBJS += CGI-BIN/Qdecoder/timegm.o
 FETCH_CGI_OBJS += MinIni/minIni.o
 FETCH_CGI_OBJS += CGI-BIN/fetch_cgi/main.o
+FETCH_CGI_OBJS += System/csharedmemory.o
 
 
 # bit.cgi
@@ -257,7 +290,7 @@ $(APP2): $(APP2_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(APP2_OBJS) $(LDLIBS) $(LIBS)	
 	
 $(SYSTEM_CGI): $(SYSTEM_CGI_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $(SYSTEM_CGI_OBJS) $(LDLIBS) $(LIBS)	
+	$(CXX) $(LDFLAGS) -o $@ $(SYSTEM_CGI_OBJS) $(LDLIBS) $(LIBS)
 	
 $(FETCH_CGI): $(FETCH_CGI_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(FETCH_CGI_OBJS) $(LDLIBS) $(LIBS)			

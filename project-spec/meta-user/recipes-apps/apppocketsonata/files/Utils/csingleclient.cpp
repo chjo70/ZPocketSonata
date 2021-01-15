@@ -376,12 +376,11 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
         perror( "fcntl() error" );
         iRet = -1;
     }
-
     else {
         if(connect(sock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
             if (errno != EINPROGRESS) {
                 perror("connect() error\n");
-                return -1;
+                iRet = -1;
             }
         }
 
@@ -396,20 +395,23 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
             len = sizeof(err);
             getsockopt(sock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
             if (err) {
-                //perror("fcntl() error\n");
-                return -1;
+                //perror( "getsockopt()" );
+                iRet = -1;
             }
 
             fcntl(sock, F_GETFL);
             flags = (flags & ~O_NONBLOCK);
             if (fcntl(sock, F_SETFL, flags) != 0) {
-                perror("fcntl() error\n");
-                return -1;
+                perror( "fcntl() error" );
+                iRet = -1;
             }
         }
     }
 
-    m_bConnected = true;
+    if( iRet != -1 ) {
+        m_bConnected = true;
+        OnConnect( pAddr );
+    }
 
     return iRet;
 }
@@ -610,6 +612,20 @@ void CSingleClient::RunServer()
     }
 }
 
+/**
+ * @brief CSingleClient::OnConnect
+ * @param pAddr
+ */
+void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
+{
+    char *pIPAddress;
+
+    if( pAddr != NULL ) {
+        pIPAddress = inet_ntoa( pAddr->sin_addr );
+        GP_SYSCFG->SetPrimeServerOfNetwork( pIPAddress, true );
+    }
+
+}
 
 /**
  * @brief CSingleClient::CloseSocket
@@ -647,26 +663,27 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 
     if( IsConnected() == true ) {
         int iRet1, iRet2=0;
-        STR_LAN_HEADER strLanHeader;
 
         // 랜 헤더 송신
-        strLanHeader.uiOpCode = uiOpCode;
-        strLanHeader.uiLength = uiDataLength;
+        m_strLanHeader.uiOpCode = uiOpCode;
+        m_strLanHeader.uiLength = uiDataLength;
 
-        CCommonUtils::AllSwapData32( & strLanHeader, sizeof(STR_LAN_HEADER) );
-        iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+        CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
+        iRet1 = send( m_iSocket, (char *) & m_strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+        CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
 
         if( iRet1 > 0 && uiDataLength != 0 ) {
             CCommonUtils::AllSwapData32( pData, uiDataLength );
             iRet2 = send( m_iSocket, (char *) pData, uiDataLength, MSG_DONTWAIT );
             CCommonUtils::AllSwapData32( pData, uiDataLength );
 
-            unsigned int *puiData = (unsigned int *) pData;
-            LOGMSG3( enDebug, "랜 송신: Op[0x%04X], Len[%d], Data32[0x%x]" , uiOpCode, uiDataLength, *puiData );
+            m_puiData = (unsigned int *) pData;
+            DisplayMsg();
+
         }
         else {
             // TaskMngr () Send Error 발생시 Lock 이 됨.
-            perror( "send() 에러");
+            perror( "send()" );
         }
 
         iRet = iRet1 + iRet2;
@@ -676,6 +693,57 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
     }
 
     return iRet;
+
+}
+
+/**
+ * @brief CSingleClient::DisplayMsg
+ */
+void CSingleClient::DisplayMsg()
+{
+    char szOpcode[50];
+
+    switch( m_strLanHeader.uiOpCode ) {
+        case enRES_MODE :
+            strcpy( szOpcode, "운용 모드" );
+            break;
+
+        // 분석 관련 메시지
+        case enRES_IBIT :
+            strcpy( szOpcode, "초기자체점검" );
+            break;
+
+        case enRES_UBIT :
+            strcpy( szOpcode, "장비자체점검" );
+            break;
+
+        case enRES_CBIT :
+            strcpy( szOpcode, "연속자체점검" );
+            break;
+
+        // 분석 관련 메시지
+        case esAET_NEW_CCU :
+            strcpy( szOpcode, "신규" );
+            break;
+
+        case esAET_UPD_CCU :
+            strcpy( szOpcode, "변경" );
+            break;
+
+        case esAET_LST_CCU :
+            strcpy( szOpcode, "소실" );
+            break;
+
+        case esAET_DEL_CCU :
+            strcpy( szOpcode, "삭제" );
+            break;
+
+        default :
+            strcpy( szOpcode, "이름 없음" );
+            break;
+    }
+
+    LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, m_strLanHeader.uiOpCode, m_strLanHeader.uiLength, *m_puiData );
 
 }
 

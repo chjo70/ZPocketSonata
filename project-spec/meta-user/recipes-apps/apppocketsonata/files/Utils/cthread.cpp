@@ -390,8 +390,20 @@ void CThread::DisplayMsg( bool bSend )
             strcpy( szOpcode, "모의PDW" );
             break;
 
-        case enTHREAD_REQ_SETWINDOWCELL :
-            strcpy( szOpcode, "채널 요청" );
+        case enTHREAD_REQ_SET_TRACKWINDOWCELL :
+            strcpy( szOpcode, "추적채널 생성 요청" );
+            break;
+
+        case enTHREAD_REQ_CLOSE_TRACKWINDOWCELL :
+            strcpy( szOpcode, "추적채널 삭제 요청" );
+            break;
+
+        case enTHREAD_REQ_SET_SCANWINDOWCELL :
+            strcpy( szOpcode, "스캔채널 생성 요청" );
+            break;
+
+        case enTHREAD_REQ_CLOSE_SCANWINDOWCELL :
+            strcpy( szOpcode, "스캔채널 삭제 요청" );
             break;
 
         case enREQ_IPL_START :
@@ -404,6 +416,10 @@ void CThread::DisplayMsg( bool bSend )
 
         case enREQ_IPL_END :
             strcpy( szOpcode, "IPL 종료" );
+            break;
+
+        case enCGI_FETCH :
+            strcpy( szOpcode, "CGI_FETCH" );
             break;
 
         default :

@@ -126,7 +126,7 @@ struct STR_PW_GROUPS {
 //##ModelId=452B0C540371
 struct STR_CLUSTER {
 	int count;
-	PDWINDEX index[SAP_MAX_PDW];
+    PDWINDEX index[SCN_COLLECT_PDW];
 	int center;
 	float deviation;
 	float distance;
@@ -193,7 +193,7 @@ struct STR_PRI_RANGE_TABLE {
 //##ModelId=452B0C5403CA
 struct STR_EMITTER {
 	STR_PDWINDEX pdw;						// PDW 버퍼
-	UINT seg_idx[ MAX_PT ];			// 펄스열 index, 파라메터 저장 
+    UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
 	int seg_count;							// seg[] 수, 펄스열 수
 
 	PRI_TYPE pri_type;							// PRI 형태
@@ -221,7 +221,7 @@ struct STR_EMITTER {
 	STR_MINMAX pw;							// 에미터 펄스열의 PRI 범위
 
 	UINT main_seg;							// 분석에 성공한 seg index
-	EMITTER_MARK mark;									// 삭제 여부 
+    EMITTER_MARK mark;									// 삭제 여부
 
 	int iDIRatio;
 
@@ -574,59 +574,16 @@ PA_RESOL gPaRes[ 6 ] =
 extern float _spFreqMin;
 extern float _spFreqMax;
 
-//     //extern float _toaRes[en50MHZ_BW+1];
-// 
 extern STR_SYS _sp;
-// 
-// #ifdef _ELINT_
-//     //extern UINT _sprfaoa[ 6 ];
+
 extern UINT _spdiffaoa[ 6 ];
-//     extern FREQ_RESOL gFreqRes[ 4 ];
-//     extern PA_RESOL gPaRes[ 6 ];
-// 
-// #elif defined(_POCKETSONATA_)
-// #define _AOARes                 ( (float) (360./512.) )
-//     //extern UINT _sprfaoa[ 6 ];
-//     extern UINT _spdiffaoa[ 6 ];
-//     extern FREQ_RESOL gFreqRes[ 6 ];
-//     extern PA_RESOL gPaRes[ 6 ];
-// 
-// #else
-//     extern UINT _sprfaoa[ 4 ];
-//     extern UINT _spdiffaoa[ 4 ];
+
 extern FREQ_RESOL gFreqRes[ 3 ];
 extern PA_RESOL gPaRes[ 6 ];
-// #endif
-// 
+
 #endif
 
 
-
-
-
-
-// #ifdef _MAIN_
-// // 인천공항 ELINT
-// //float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
-// //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
-// //float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
-// 
-// float _spFreqMin;
-// float _spFreqMax;
-// 
-// #else
-// //extern FREQ_RESOL gFreqRes[ 4 ];
-// //extern PA_RESOL gPaRes[ 6 ];
-// 
-// //extern float _toaRes[en50MHZ_BW+1];
-// //extern float _frqRes[en50MHZ_BW+1];
-// 
-// extern float _spFreqMin;
-// extern float _spFreqMax;
-// 
-// extern float _spPWres;
-// 
-// #endif
 
 
 // qsort 함수 선언

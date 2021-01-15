@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "../INC/PDW.h"
+#include "SDefine.h"
 
 //##ModelId=452B0C44033B
 typedef unsigned int HIST;
@@ -26,8 +27,8 @@ typedef struct
 //##ModelId=452B0C440345
 struct STR_SCANPT {
 	UINT co;
-	UINT pa[SCN_COLLECT_PDW+10];				// toa
-	UINT toa[SCN_COLLECT_PDW+10];				// amplitude
+    UINT pa[SCN_COLLECT_PDW+10];				// toa
+    UINT toa[SCN_COLLECT_PDW+10];				// amplitude
 
 	STR_LOWHIGH _pa;
 

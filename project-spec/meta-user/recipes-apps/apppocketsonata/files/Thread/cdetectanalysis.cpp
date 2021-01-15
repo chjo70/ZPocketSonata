@@ -84,7 +84,7 @@ void CDetectAnalysis::_routine()
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
                 break;
 
-            case enTHREAD_REQ_SETWINDOWCELL :
+            case enTHREAD_REQ_SET_TRACKWINDOWCELL :
                 LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
                 break;
 
@@ -106,7 +106,7 @@ void CDetectAnalysis::AnalysisStart()
 
     LOGMSG2( enDebug, " 탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
-    CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
+    //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 탐지 신호 분석을 호출한다.
     m_pTheNewSigAnal->Start( ( STR_PDWDATA *) GetRecvData() );

@@ -30,6 +30,10 @@ private:
 
     CRecLan *m_ptheRecLan;
 
+    // 랜 송신시 데이터
+    STR_LAN_HEADER m_strLanHeader;
+    unsigned int *m_puiData;
+
 public:
     CSingleClient( int iKeyId, char *pClassName, int iPort, char *pServerAddress=NULL );
     virtual ~CSingleClient();
@@ -41,17 +45,22 @@ public:
 private:
     void RunServer();
     void RunClient();
+    void OnConnect( struct sockaddr_in *pAddr=NULL );
     int ConnectTimeout( int sock, struct sockaddr_in *pAddress, unsigned long timeout_milli );
     void OnDisconnected( char *pServerIPAddress );
 
     void Alloc();
     void Free();
 
+    void DisplayMsg();
+
 public:
     void Init();
     int SendLan( UINT uiOpCode, void *pData, UINT uiLength );
     void CloseSocket( struct sockaddr_in *pAddress, int *pClientSocket );
     void CloseSocket();
+
+
 
     inline bool IsConnected() { return m_bConnected; }
 

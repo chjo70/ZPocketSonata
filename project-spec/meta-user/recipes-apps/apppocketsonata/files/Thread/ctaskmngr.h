@@ -45,8 +45,11 @@ private:
     void PMOPThreshold();
     void RxThreshold();
     void IPLDownload();
+
+    // 데이터베이스 처리
     void InsertIPL( int iIndex );
-    void DeleteIPL();
+    void DeleteIPL( char *pszELNOT=NULL );
+    int IsThrereELNOT( char *pszELNOT );
 
     // 명령어 처리에 대한 하부 함수 목록 입니다.
     void CreateAllAnalysisThread( bool bCreate=true );

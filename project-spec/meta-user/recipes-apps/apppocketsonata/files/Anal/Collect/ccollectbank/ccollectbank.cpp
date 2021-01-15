@@ -95,16 +95,16 @@ void CCollectBank::CloseCollectBank()
     // 구조체 초기화 한다.
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
-    m_strWindowCell.enCollectMode = enCollecting;
+    m_strWindowCell.enCollectMode = enUnused;
 
     m_strPDW.uiTotalPDW = 0;
 
 }
 
 /**
- * @brief CCollectBank::UpdateTrackWindowCell
+ * @brief CCollectBank::UpdateWindowCell
  */
-void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
+void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 {
 
     memcpy( & m_strWindowCell, pstrWindowCell, sizeof(STR_WINDOWCELL) );
@@ -123,7 +123,7 @@ void CCollectBank::UpdateTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
  * @brief CCollectBank::CloseTrackWindowCell
  * @param pstrWindowCell
  */
-void CCollectBank::CloseTrackWindowCell( STR_WINDOWCELL *pstrWindowCell )
+void CCollectBank::CloseTrackWindowCell()
 {
     m_strWindowCell.bUse = false;
 
@@ -303,7 +303,7 @@ bool CCollectBank::IsCompleteCollect()
         // 수집 시간 확인
         if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
             ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
-            //bRet = true;
+            bRet = true;
         }
 
         // 수집 개수 확인
@@ -334,3 +334,4 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
 
     return bRet;
 }
+

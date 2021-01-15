@@ -40,7 +40,7 @@
 // 최 종 변 경  : 조철희, 2005-07-28 13:19:06
 //
 //##ModelId=426C87D70034
-CGroup::CGroup( int coMaxPdw /*=NSP_MAX_PDW*/ )
+CGroup::CGroup( int coMaxPdw )
 {
     int i;
     BOOL bRet=TRUE;
@@ -245,27 +245,23 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
     pMaxChannel = & m_pMAXCHANNEL[0];
 
     // 첫번째 TOA 얻기
-    prevllTOA = templlTOA = pdw->ullTOA;
+    firstToaBand = prevllTOA = templlTOA = pdw->ullTOA;
 
     flagBand = FALSE;
 
     for( i=0 ; i < count ; ++i, ++pdw )	{
         templlTOA = pdw->ullTOA;
 
-        if( flagBand == FALSE ) {
-            flagBand = TRUE;
-            firstToaBand = templlTOA;
+        if( firstToaBand > templlTOA ) {
+#ifdef _POCKETSONATA_
+            *pToa++ = templlTOA + ( 0x100000000000 - firstToaBand );
+#else
+            *pToa++ = templlTOA - firstToaBand;
+#endif
         }
-
-        if( templlTOA < prevllTOA ) {
-            //bRet = false;
-            prevllTOA = templlTOA;
-            //continue;
-            break;
+        else {
+            *pToa++ = templlTOA - firstToaBand;
         }
-        prevllTOA = templlTOA;
-
-        *pToa++ = templlTOA - firstToaBand;
 
         *pStat++ = pdw->iPulseType;
         *pPa++   = pdw->iPA;

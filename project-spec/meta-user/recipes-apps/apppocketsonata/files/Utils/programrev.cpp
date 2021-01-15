@@ -99,6 +99,11 @@ void _ShowProgramTitle( void )
     LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
     LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
 
+    LOGMSG2( enNormal, "INI 파일 위치는 [%s]이고 파일명은 [%s]입니다.", INI_FOLDER, INI_FILENAME );
+
+    //LOGMSG( enLineFeed, "" );
+    LOG_LINEFEED;
+
 #ifdef _POCKETSONATA_
 #else
 	if( gnoPrc == prc_CIP ) {

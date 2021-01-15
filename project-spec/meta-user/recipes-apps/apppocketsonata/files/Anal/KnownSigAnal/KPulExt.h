@@ -53,7 +53,7 @@ public:
     //##ModelId=452B0C520212
     void KnownPulseExtract();
     //##ModelId=452B0C520213
-    CKPulExt( void *pParent, int coMaxPdw=KSP_MAX_PDW );
+    CKPulExt( void *pParent, int coMaxPdw );
     //##ModelId=452B0C520223
     virtual ~CKPulExt();
 

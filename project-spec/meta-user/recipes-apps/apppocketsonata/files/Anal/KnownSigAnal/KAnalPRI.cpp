@@ -20,6 +20,34 @@
 #include "KnownSigAnal.h"
 #include "KAnalPRI.h"
 
+STR_PULSE_TRAIN_SEG *CKAnalPRI::m_pSeg=NULL;
+
+
+/**
+ * @brief CAnalPRI::incSegPriMeanCompare
+ * @param arg1
+ * @param arg2
+ * @return
+ */
+int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
+{
+    UINT *p1, *p2;
+    STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
+
+    p1 = (UINT *) arg1;
+    p2 = (UINT *) arg2;
+
+    pSeg1 = & m_pSeg[ *p1 ];
+    pSeg2 = & m_pSeg[ *p2 ];
+
+    if( pSeg1->pri.mean > pSeg2->pri.mean )
+        return 1;
+    else if( pSeg1->pri.mean < pSeg2->pri.mean )
+        return (-1);
+    else
+        return 0;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -383,14 +411,34 @@ int CKAnalPRI::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
 	return m_pKnownSigAnal->FindPeakInHist( count, pPdwIndex );
 }
 
+/**
+ * @brief CKAnalPRI::SaveEmitterPdwFile
+ * @param pEmitter
+ * @param index
+ */
 void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 {
     m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, index );
 
 }
 
-
+/**
+ * @brief CKAnalPRI::GetBand
+ * @return
+ */
 int CKAnalPRI::GetBand()
 {
     return m_pKnownSigAnal->GetBand();
+}
+
+/**
+ * @brief CKAnalPRI::QSort
+ * @param pIdx
+ * @param uiCount
+ * @param uiSizeof
+ */
+void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
+{
+    qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
+    return;
 }

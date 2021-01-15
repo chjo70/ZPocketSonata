@@ -61,7 +61,7 @@ CPulExt::CPulExt( int coMaxPdw /*=NSP_MAX_PDW*/ )
     //-- 조철희 2005-12-15 14:04:21 --//
     /*! \todo	 m_nMaxPdw 개수는 초대 스태거 레벨을 계산할 때 필요하기에 최대 개수로 설정할 수 있도록 함. */
     m_nMaxPdw = coMaxPdw;
-    m_MaxSeg = MAX_PT;
+    m_MaxSeg = MAX_SEG;
 
     // 멤버 변수 메모리 할당
     for( i=0 ; i < m_MaxSeg ; ++i ) {
@@ -3909,7 +3909,7 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
 {
     int i;
     _TOA nHarmonic;
-    int count, merged_index[MAX_PT];
+    int count, merged_index[MAX_SEG];
 
     STR_PULSE_TRAIN_SEG *pMainSeg, *pSeg;
 
@@ -4118,7 +4118,7 @@ void CPulExt::PrintAllSeg()
         Log( enNormal, "펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
     }
     for( i=m_nAnalSeg ; i < m_CoSeg ; ++i, ++pSeg ) {
-        printf( "\n\t [%2d]%1c: 개수(%3d), 주파수 형태(%1d) 범위(%.1f-%.1f), PRI 형태(%d) 범위(%.2f -%.2f%3d), 펄스폭(%5d -%5d), 인덱스(%3d(%.2f),%3d -%3d)" ,
+        printf( "\n\t [%2d]%1c: 개수(%3d), 주파수 형태(%1d) 범위(%.1f-%.1f), PRI 형태(%d) 범위(%.2f -%.2f%3d), 펄스폭(%.2f -%.2f), 인덱스(%3d(%.2f),%3d -%3d)" ,
             i,
             gszPulseTrainMark[pSeg->mark],
             pSeg->pdw.count,

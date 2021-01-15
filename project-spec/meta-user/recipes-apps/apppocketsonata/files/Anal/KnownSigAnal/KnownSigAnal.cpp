@@ -87,7 +87,7 @@ CKnownSigAnal::~CKnownSigAnal()
  */
 void CKnownSigAnal::Init()
 {
-    m_uiStep = 0;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW );
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( LOCAL_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.
@@ -182,17 +182,21 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
         // 상속클래스의 에미터 분석
         m_theMakeAET->MakeAET();
 
+#ifdef _POCKETSONATA_
+#elif defined(_ELINT)
+#else
         // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
-        //m_theMakeAET->MakeUpAET();
+        m_theMakeAET->MakeUpAET();
 
         // 그룹화된 펄스열 저장하기
-        // SaveGroupPdwFile();
+        SaveGroupPdwFile();
 
         // 수집 개수 초기화
         // 에미터 전송 전에 수집 버퍼 초기화를 한다.
-        // ClearColBuffer();
+        ClearColBuffer();
 
-        //SendAllAet();
+        SendAllAet();
+#endif
 
         // printf( "\n !!!! End of Known Signal Analysis !!!!" );
     }
@@ -226,7 +230,7 @@ void CKnownSigAnal::ClearColBuffer()
 */
 void CKnownSigAnal::InitVar()
 {
-
+    m_uiStep = 0;
 
 }
 
@@ -293,46 +297,6 @@ void CKnownSigAnal::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_typ
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CKnownSigAnal::SaveAllPdwFile
-// 반환되는 형  : void
-// 함 수 인 자  : 없음
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-05-20 11:38:34
-//
-//##ModelId=42E85F34029E
-void CKnownSigAnal::SaveAllPdwFile()
-{
-#ifdef _WIN321
-	CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-	CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
-
-	int i;
-	FILE *pdwfile;
-	TNEW_PDW *pPDW;
-	PDWINDEX *pPdwIndex;
-	char filename[100];
-
-	CString strFilename=pView->GetFileTitle();
-
-	LPTSTR p = strFilename.GetBuffer( 100 );
-
-	pPdwIndex = & m_pGrPdwIndex->pIndex[0];
-	sprintf( filename, "c:\\temp\\%s_debug_ksp.pdw", p );
-	pdwfile = fopen( filename, "wb" );
-	for( i=0 ; i < m_pPdwBank->count ; ++i ) {
-		pPDW = & m_pPdwBank->pPdw[ i ];
-		fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
-	}
-
-	fclose( pdwfile );
-
-	strFilename.ReleaseBuffer();
-
-#endif
-}
-
-//////////////////////////////////////////////////////////////////////
-//
 // 함 수 이 름  : CKnownSigAnal::SaveEmitterPdwFile
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
@@ -394,6 +358,9 @@ void CKnownSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 
 }
 
+#ifdef _POCKETSONATA_
+#elif defined(_ELINT)
+#else
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKnownSigAnal::SendAllAet
@@ -471,6 +438,7 @@ void CKnownSigAnal::SendAllAet()
 	// m_theMakeAET->SetCoNewAet( CoNewAet );
 
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -554,31 +522,3 @@ void CKnownSigAnal::SendNewAet(SRxLOBData *pNewAet, int inEMT )
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKnownSigAnal::Simul
-		\author   조철희
-		\return   void
-		\version  0.1.114
-		\date     2009-11-16 11:43:52
-		\warning
-*/
-void CKnownSigAnal::Simul()
-{
-	// 시뮬레이션 데이터 실행
-	RunSimul();
-
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKnownSigAnal::RunSimul
-		\author   조철희
-		\return   void
-		\version  0.1.114
-		\date     2009-11-16 11:44:25
-		\warning
-*/
-void CKnownSigAnal::RunSimul()
-{
-	
-
-}

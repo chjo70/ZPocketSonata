@@ -32,6 +32,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     if( g_enBoardId == enMaster ) {
         if( g_pTheCCUSocket != NULL ) {
             g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
+
         }
 
         // EA 경우에 AET 관련 메세지를 전달한다.

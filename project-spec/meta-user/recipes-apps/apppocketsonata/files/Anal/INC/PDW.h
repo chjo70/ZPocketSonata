@@ -20,17 +20,9 @@
 #define _PDW12_H_
 
 #include "../SigAnal/_Type.h"
+#include "../SigAnal/_Define.h"
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +52,7 @@ union UZPOCKETPDW
         union {
             unsigned int	pdw_dir_pa;
             struct {
-                unsigned int doa				: 12; // res = 0.087890625 deg
+                unsigned int doa			: 12; // res = 0.087890625 deg
                 unsigned int di				: 1; // '0' - Valid, '1' - invalid
                 unsigned int reserved		: 3;
                 unsigned int pa				: 16; // res = 0 ~ 65536 (linear scale)
@@ -233,7 +225,7 @@ struct _PDW {
 } ;
 #endif
 
-#define _MAX_PDW					(4096)
+//#define _MAX_PDW					(4096)
 
 #ifndef _STR_PDWDATA
 #define _STR_PDWDATA
@@ -260,7 +252,7 @@ struct STR_PDWDATA {
 
     UINT uiTotalPDW;
 
-    _PDW stPDW[_MAX_PDW];
+    _PDW stPDW[MAX_PDW];
 
 }  ;
 
@@ -311,7 +303,7 @@ struct TNEW_SPDW
 
 } ;
 
-#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
@@ -344,7 +336,7 @@ typedef enum {
 // 
 //     UINT uiTotalPDW;
 // 
-//     _PDW stPDW[_MAX_PDW];
+//     _PDW stPDW[MAX_PDW];
 // 
 // }  ;
 //#endif
@@ -380,7 +372,7 @@ struct TNEW_SPDW
 
 } ;
 
-#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
@@ -432,7 +424,7 @@ struct STR_PDWDATA {
 
     UINT uiTotalPDW;
 
-    _PDW stPDW[_MAX_PDW];
+    _PDW stPDW[MAX_PDW];
 
 }  ;
 #endif

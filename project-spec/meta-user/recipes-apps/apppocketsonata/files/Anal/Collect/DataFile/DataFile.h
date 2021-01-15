@@ -433,7 +433,7 @@ namespace POCKETSONATA {
 
     #define PDW_TIME_RES		7.8125  // [ns]
     #define PDW_FREQ_RES		(1.953125)
-    #define PDW_AOA_RES			0.087890625
+    //#define PDW_AOA_RES			0.087890625
 
     static const float m_fCenterFreq[enPRC6] = { 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
 }
@@ -577,6 +577,14 @@ public:
         float fretPW;
 
         fretPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1000. + 0.5 );
+        return fretPW;
+    } ;
+
+    static float DecodePWns( int iPW )
+    {
+        float fretPW;
+
+        fretPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1000000. + 0.5 );
         return fretPW;
     } ;
 
@@ -853,8 +861,9 @@ public:
 			m_gMapData.clear();
 		}
 		else {
-			CData *pData;
 #ifdef _MSC_VER
+			CData *pData;
+
 			while( it != m_gMapData.end() ) {
                 if( pStrWindowTitle->Compare( it->first ) == 0 ) {
 					pData = it->second;

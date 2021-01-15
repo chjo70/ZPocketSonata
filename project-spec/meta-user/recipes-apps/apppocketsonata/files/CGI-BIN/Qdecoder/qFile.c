@@ -109,8 +109,8 @@ int qCatFile(char *format, ...) {
   for(counter = 0; (c = fgetc(fp)) != EOF; counter++) {
     putc(c, stdout);
   }
-	/*! \bug  ´Ù¿î·Îµå ¹ö±× - ¾Æ·¡¸¦ ½ÇÇàÇá¾ß Á¤»óÀûÀ¸·Î ´Ù¿î·Îµå µÊ.
-	    \date 2009-09-14 19:56:10, Á¶Ã¶Èñ
+	/*! \bug  ë‹¤ìš´ë¡œë“œ ë²„ê·¸ - ì•„ë˜ë¥¼ ì‹¤í–‰í–ì•¼ ì •ìƒì ìœ¼ë¡œ ë‹¤ìš´ë¡œë“œ ë¨.
+	    \date 2009-09-14 19:56:10, ì¡°ì² í¬
 	*/
 	fflush( stdout );
 
@@ -154,8 +154,8 @@ int qSaveStr(char *sp, int spsize, char *filename, char *mode) {
   if((fp = qfopen(filename, mode)) == NULL) return -1;
   for(i = 0; i < spsize; i++) fputc(*sp++, fp);
 
-	/*! \bug  ´Ù¿î·Îµå ¹ö±× - ¾Æ·¡¸¦ ½ÇÇàÇá¾ß Á¤»óÀûÀ¸·Î ´Ù¿î·Îµå µÊ.
-	    \date 2009-09-14 19:56:10, Á¶Ã¶Èñ
+	/*! \bug  ë‹¤ìš´ë¡œë“œ ë²„ê·¸ - ì•„ë˜ë¥¼ ì‹¤í–‰í–ì•¼ ì •ìƒì ìœ¼ë¡œ ë‹¤ìš´ë¡œë“œ ë¨.
+	    \date 2009-09-14 19:56:10, ì¡°ì² í¬
 	*/
 	fflush( fp );
 

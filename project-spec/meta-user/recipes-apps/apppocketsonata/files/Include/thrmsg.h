@@ -22,8 +22,12 @@ enum enTHREAD_REQ_MESSAGE {
 
     // 2. 신호 수집 쓰레드 에서 수신 메시지 정의
     // 추적 수집 신호 설정 메시지
-    enTHREAD_REQ_SETWINDOWCELL,
-    enTHREAD_REQ_CLOSEWINDOWCELL,
+    enTHREAD_REQ_SET_TRACKWINDOWCELL,
+    enTHREAD_REQ_CLOSE_TRACKWINDOWCELL,
+
+    // 스캔 수집 신호 설정 메시지
+    enTHREAD_REQ_SET_SCANWINDOWCELL,
+    enTHREAD_REQ_CLOSE_SCANWINDOWCELL,
 
 
     // 제어 메시지

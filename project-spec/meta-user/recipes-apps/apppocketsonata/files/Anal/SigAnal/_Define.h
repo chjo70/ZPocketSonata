@@ -10,6 +10,10 @@
 #endif // _MSC_VER > 1000
 
 #include "../INC/system.h"
+//#include "../SigAnal/_Macro.h"
+
+#define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
+#define _min(a,b)               ( ( (a) < (b) ) ? (a) : (b) )
 
 #define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
@@ -19,7 +23,16 @@
 #define _spTwo		(2)
 #define _spThree	(3)
 
-enum { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
 
 //##ModelId=452B0C550263
 enum PULSE_EXTRACT_PRI_STEP { STEP1=0, STEP2, STEP_WIDE, STEP_BY_STEP } ;
@@ -51,8 +64,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
 #elif defined(_POCKETSONATA_)
-#define _spTimeNsRes						(25)
-#define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
+//#define _spTimeNsRes						(25)
+//#define _spTimeres                          (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
 #elif defined(_SONATA_)
 #define _spTimeNsRes						(25)
@@ -88,20 +101,21 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////
 //
 
-// 탐지분석판 소프트웨어에서 수집할 수 있는 최대 PDW 개수
 #ifdef _ELINT_
-#define NSP_MAX_PDW					NEW_COLLECT_PDW
-#define	KSP_MAX_PDW					KWN_COLLECT_PDW
-#define	SAP_MAX_PDW					SCN_COLLECT_PDW
-#define	MAX_PDW							NEW_COLLECT_PDW
+#define NEW_COLLECT_PDW				(256)
+#define	KWN_COLLECT_PDW				(256)
+#define	SCN_COLLECT_PDW				(256*2)
 
 #else
-#define NSP_MAX_PDW					(256)
-#define	KSP_MAX_PDW					(512)
-#define	MAX_PDW							(10000)		// NSP_MAX_PDW 와 KSP_MAX_PDW 값 중에서 가장 큰 값으로 한다.
-#define	SAP_MAX_PDW					(1024)
+#define NEW_COLLECT_PDW				(1024)
+#define	KWN_COLLECT_PDW				(1024)
+#define	SCN_COLLECT_PDW				(1024*2)
 
 #endif
+
+// NSP_MAX_PDW 와 KSP_MAX_PDW 값 중에서 가장 큰 값으로 한다.
+#define	MAX_PDW                     ( _max( _max(NEW_COLLECT_PDW, KWN_COLLECT_PDW), SCN_COLLECT_PDW ) )
+
 
 /*! \bug  탐지 분석에 기본 지터율 추출을 최대 53% 까지 추출하게 함.
     \date 2008-10-25 18:01:37, 조철희
@@ -120,7 +134,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 // 펄스열 최대 개수 및 가상 에미터 최대 개수
 //#define	MAX_PT      				(UINT)( 50 + 17 + 50 )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
-#define	MAX_PT      				(UINT)( NSP_MAX_PDW )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
+#define	MAX_SEG      				(UINT)( NEW_COLLECT_PDW )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
 #define	MAX_AET     				(100)		// 최대 AET 수, 04-04-12 -> 50
 
 
@@ -356,8 +370,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
-#define MAX_STAGGER_LEVEL_ELEMENT		(MAX_PT)
-#define MAX_HOP_LEVEL_ELEMENT				(MAX_PT)
+#define MAX_STAGGER_LEVEL_ELEMENT           (MAX_SEG)
+#define MAX_HOP_LEVEL_ELEMENT				(MAX_SEG)
 
 //////////////////////////////////////////////////////////////////////////
 // 신호 분석 관련 정의문

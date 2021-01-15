@@ -33,7 +33,7 @@ using namespace std;
 class CPulExt
 {
 protected:
-    DEFINE_ANAL_PVAR_(0)
+    DEFINE_ANAL_PVAR_
 
 public:
     //##ModelId=452B0C530301
@@ -77,7 +77,7 @@ private:
 
     //! 펄스열 저장소.
     //##ModelId=452B0C53036B
-    STR_PULSE_TRAIN_SEG m_Seg[MAX_PT];
+    STR_PULSE_TRAIN_SEG m_Seg[MAX_SEG];
     //! 규칙성 펄스열 및 불규칙성 펄스열 추출하기 위한 펄스열 밴드 테이블.
     //##ModelId=452B0C530370
     STR_PRI_RANGE_TABLE m_jit_pri_table[MAX_PRI_RANGE];

@@ -29,27 +29,29 @@
 
 char gEmitterMark[DELETE_EMITTER+1] = { ' ', 'X' };
 
-STR_PULSE_TRAIN_SEG *CAnalPRI::m_pSeg=NULL;
+//STR_PULSE_TRAIN_SEG *CAnalPRI::m_psSeg=NULL;
 
 
-int CAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
-{
-    UINT *p1, *p2;
-    STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
+//int CAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
+//{
+//    UINT *p1, *p2;
+//    STR_PULSE_TRAIN_SEG *pSeg, *pSeg1, *pSeg2;
 
-    p1 = (UINT *) arg1;
-    p2 = (UINT *) arg2;
+//    pSeg = GetPulseSeg();
 
-    pSeg1 = & m_pSeg[ *p1 ];
-    pSeg2 = & m_pSeg[ *p2 ];
+//    p1 = (UINT *) arg1;
+//    p2 = (UINT *) arg2;
 
-    if( pSeg1->pri.mean > pSeg2->pri.mean )
-        return 1;
-    else if( pSeg1->pri.mean < pSeg2->pri.mean )
-        return (-1);
-    else
-        return 0;
-}
+//    pSeg1 = & pSeg[ *p1 ];
+//    pSeg2 = & pSeg[ *p2 ];
+
+//    if( pSeg1->pri.mean > pSeg2->pri.mean )
+//        return 1;
+//    else if( pSeg1->pri.mean < pSeg2->pri.mean )
+//        return (-1);
+//    else
+//        return 0;
+//}
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -88,7 +90,7 @@ int incUSCompare( const void *arg1, const void *arg2 )
 // 최 종 변 경  : 조철희, 2005-07-28 13:18:51
 //
 //##ModelId=426C87D7003F
-CAnalPRI::CAnalPRI( int coMaxPdw /*=NSP_MAX_PDW*/ )
+CAnalPRI::CAnalPRI( int coMaxPdw )
 {
     int i;
 
@@ -960,7 +962,8 @@ BOOL CAnalPRI::FindDwellLevel( STR_EMITTER *pEmitter )
 
     _TOA *pPeak;
 
-    qsort( pEmitter->seg_idx, pEmitter->seg_count, sizeof(UINT), CAnalPRI::incSegPriMeanCompare );
+    QSort( pEmitter->seg_idx, pEmitter->seg_count, sizeof(UINT) );
+    //, CAnalPRI::incSegPriMeanCompare );
 
     pSegIdx = pEmitter->seg_idx;
     pPeak = & m_DtoaHist.dtoa_peak[ 0 ];

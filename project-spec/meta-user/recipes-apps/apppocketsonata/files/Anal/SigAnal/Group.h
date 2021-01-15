@@ -29,7 +29,7 @@ const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_FMOP, 0, \
 class CGroup
 {
 protected:
-    DEFINE_ANAL_PVAR_(0)
+    DEFINE_ANAL_PVAR_
 
 	//##ModelId=452B0C5600B6
 	UINT *m_pPdwParam;
@@ -177,7 +177,7 @@ public:
 	void PrintAllGroup();
 	void PrintGroup();
 	//##ModelId=452B0C560343
-	CGroup( int coMaxPdw=NSP_MAX_PDW );
+    CGroup( int coMaxPdw=NEW_COLLECT_PDW );
 	//##ModelId=452B0C560355
 	virtual ~CGroup();
 

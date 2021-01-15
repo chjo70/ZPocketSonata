@@ -5,10 +5,6 @@
 #if !defined(AFX_SIGANAL_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
 #define AFX_SIGANAL_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include "_Type.h"
 #include "_Macro.h"
 
@@ -28,25 +24,6 @@
 #include "../ScanSigAnal/SStruct.h"
 
 #include "../../Anal/Collect/DataFile/DataFile.h"
-
-
-//////////////////////////////////////////////////////////////////////////
-// printf()문을 대체하기 위한 선언.
-// Printf() 관련 함수는 타 소스에서 이를 선언해서 장비에 특성에 맞게 구현함.
-
-// #define printf printf
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-// 
-// int Printf( char *format, ... );
-// 
-// #ifdef __cplusplus
-// }
-// #endif
-
-//////////////////////////////////////////////////////////////////////////
 
 
 #ifdef __cplusplus
@@ -72,11 +49,9 @@ UINT stSigma1Frq[3] = { KHARM_FRQ_MAR_LOW, KHARM_FRQ_MAR_MID, KHARM_FRQ_MAR_HGH 
 
 #endif
 
-STR_MANAET stTrkAet;
-STR_SCNAET stScnAet;
+//STR_MANAET stTrkAet;
+//STR_SCNAET stScnAet;
 STR_SCANPT stScanPt;
-
-UINT stOffPdw;
 
 #else
 
@@ -92,12 +67,9 @@ extern STR_SCANPT stScanPt;
 extern UINT stSigma1Aoa[3];
 extern UINT stSigma1Frq[3];
 
+extern STR_SCANPT stScanPt;
+
 #endif
-
-
-
-
-extern UINT stOffPdw;
 
 #endif	// _MAIN_
 

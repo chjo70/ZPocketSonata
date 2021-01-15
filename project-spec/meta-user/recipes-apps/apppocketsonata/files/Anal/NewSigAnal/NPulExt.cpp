@@ -213,8 +213,6 @@ void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
             //-
             if( MustDo2ndPulseExtract() == TRUE ) {
                 //Printf( "\n 2-Pass" );
-                // PrintAllSeg();
-
                 ClearAllMark();
                 MarkStablePulseTrain();
 

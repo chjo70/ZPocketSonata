@@ -22,10 +22,14 @@ protected:
 	//##ModelId=452B0C550323
 	CNewSigAnal *m_pNewSigAnal;
 
+    static STR_PULSE_TRAIN_SEG *m_pSeg;
+
 public:
 	//##ModelId=452B0C550327
 	inline void MergeGrouping() { CAnalPRI::MergeGrouping(); }
 	//inline void MakeAET() { m_pNewSigAnal->GetCoAet(); }
+
+    void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof );
 
 	//##ModelId=452B0C55032C
 	void Init();
@@ -60,6 +64,8 @@ public:
 	_TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
 	int GetBand();
 	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+
+    static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
 	//##ModelId=452B0C55037C
 	CNAnalPRI( void *pParent, int coMaxPdw );

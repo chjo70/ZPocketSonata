@@ -194,6 +194,8 @@ void      qErrorLog(char *filename);
 void      qErrorContact(char *msg);
 void      qErrorPrint(const char *format, ...);
 
+void      qAlert(const char *format, ...);
+
 /*
  * qEnv.c
  */
