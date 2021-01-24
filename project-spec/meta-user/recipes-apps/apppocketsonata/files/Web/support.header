@@ -1,0 +1,52 @@
+<form id="form1" runat="server">
+<table border="1">
+    <tr>
+        <td width="301" height="35">
+            <p><a href="listallchannel.cgi".cgi" target="_self" title="현재의 위협 정보를 표시합니다.">수집 
+            채널 정보</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="listallaet.cgi" target="_self" title="현재의 AET 정보 모두를 표시합니다.">전체 AET 요청</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="listallthreat.cgi" target="_self" title="현재의 위협 정보를 표시합니다.">전시기 위협 요청</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="reinstall.cgi" title="시스템을 포멧하고 설치파일을 복사합니다."><span style="background-color:red;">시스템 재설치</span></a></p>
+        </td>
+    </tr>
+</table>
+</form>
+<hr color="#CC99FF">
+
+<!-- You can insert the CSS to either the document Head or link it as an external resource -->
+<style type="text/css">
+	table.table-style-two {
+		font-family: verdana, arial, sans-serif;
+		font-size: 11px;
+		color: #333333;
+		border-width: 1px;
+		border-color: #3A3A3A;
+		border-collapse: collapse;
+	}
+ 
+	table.table-style-two th {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #517994;
+		background-color: #B2CFD8;
+	}
+ 
+	table.table-style-two tr:hover td {
+		background-color: #DFEBF1;
+	}
+ 
+	table.table-style-two td {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #517994;
+		background-color: #ffffff;
+	}
+</style>

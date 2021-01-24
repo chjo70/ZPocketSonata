@@ -1,0 +1,7 @@
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+<form name="form1">
+    <p>&nbsp;</p>
+    <p>자동 &nbsp;주기 &nbsp;시간[초] : <input type="text" name="formtext1" size="12"></p>
+</form>
+<p>&nbsp;</p>
+</body>
