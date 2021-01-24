@@ -143,7 +143,7 @@ public:
     //##ModelId=452B0C52035B
     inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
 
-    inline SRxLOBData *GetLOBData() { return m_theMakeAET->GetLOBData(); }
+    inline SRxLOBData *GetLOBData( int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     //##ModelId=452B0C52035B
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
     //##ModelId=452B0C52035C

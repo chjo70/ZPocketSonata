@@ -22,10 +22,10 @@ private:
 
     SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];
 
-    CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
-    CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
-    CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
-    CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
+    static CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
+    static CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
+    static CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
+    static CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
 
     Queue<unsigned int> m_theTrackChannel;
     Queue<unsigned int> m_theScanChannel;

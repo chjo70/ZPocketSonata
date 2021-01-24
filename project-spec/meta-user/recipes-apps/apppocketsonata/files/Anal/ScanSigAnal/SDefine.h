@@ -13,15 +13,15 @@
 #define	M_PI									(3.1415926535)
 #endif
 
-#define	_spPaHistBinSize			(256)
-#define	_spDtoaHistBinSize		(1024)
+#define	_spPaHistBinSize                (256)
+#define	_spDtoaHistBinSize              (1024)
 
-#define	_spMaxSample					(600)
-#define	_spCoSteadyCollect		(4)
+#define	_spMaxSample                    (600)
+#define	_spCoSteadyCollect              (4)
 
-#define	_spCoBreakPulse				(3)				// debug, 99-11-06 15:22:09
+#define	_spCoBreakPulse                 (3)				// debug, 99-11-06 15:22:09
 
-#define	_spMinPrd							(3)
+#define	_spMinPrd						(3)
 
 #define	_spFlatness						(1.0)
 #define	_spSkewness						(1.0)

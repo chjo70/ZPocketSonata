@@ -28,6 +28,7 @@ CCommonUtils::CCommonUtils()
  */
 void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
+#ifndef _CGI_LIST_
     // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
     if( g_enBoardId == enMaster ) {
         if( g_pTheCCUSocket != NULL ) {
@@ -50,6 +51,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 
         }
     }
+#endif
 
 }
 
@@ -58,6 +60,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
  */
 void CCommonUtils::CloseSocket()
 {
+#ifndef _CGI_LIST_
     if( g_enBoardId == enMaster ) {
         if( g_pTheCCUSocket != NULL ) {
             g_pTheCCUSocket->CloseSocket();
@@ -67,6 +70,7 @@ void CCommonUtils::CloseSocket()
     else {
 
     }
+#endif
 
 }
 
@@ -78,6 +82,8 @@ void CCommonUtils::CloseSocket()
 bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
 {
     bool bRet=true;
+
+#ifndef _CGI_LIST_
     ENUM_MODE enMode, enModeOfMessage;
 
     enMode = GP_SYSCFG->GetMode();
@@ -146,6 +152,7 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             break;
 
     }
+#endif
 
     return bRet;
 }

@@ -182,7 +182,7 @@ void CUserCollect::ColStart()
 
     memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
 
-    LOGMSG1( enDebug, " 수집 설정[%d]을 시작합니다." , m_uiColStart );
+    LOGMSG1( enDebug, " 신호 수집 설정[%d]을 시작합니다." , m_uiColStart );
 
     // 인터럽트 재설정
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );

@@ -23,6 +23,7 @@ SRC_URI =	"file://cmain.cpp \
 			file://CGI-BIN/fetch_cgi/main.cpp \
 			file://CGI-BIN/system_cgi/system_cgi.cpp \
 			file://CGI-BIN/upload_cgi/main.cpp \
+			file://CGI-BIN/listallchannel_cgi/main.cpp \
 			file://Makefile \
 			file://bootscript \
 			file://.profile \

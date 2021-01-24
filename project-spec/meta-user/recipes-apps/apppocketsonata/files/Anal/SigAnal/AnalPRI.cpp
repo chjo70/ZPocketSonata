@@ -29,30 +29,6 @@
 
 char gEmitterMark[DELETE_EMITTER+1] = { ' ', 'X' };
 
-//STR_PULSE_TRAIN_SEG *CAnalPRI::m_psSeg=NULL;
-
-
-//int CAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
-//{
-//    UINT *p1, *p2;
-//    STR_PULSE_TRAIN_SEG *pSeg, *pSeg1, *pSeg2;
-
-//    pSeg = GetPulseSeg();
-
-//    p1 = (UINT *) arg1;
-//    p2 = (UINT *) arg2;
-
-//    pSeg1 = & pSeg[ *p1 ];
-//    pSeg2 = & pSeg[ *p2 ];
-
-//    if( pSeg1->pri.mean > pSeg2->pri.mean )
-//        return 1;
-//    else if( pSeg1->pri.mean < pSeg2->pri.mean )
-//        return (-1);
-//    else
-//        return 0;
-//}
-
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : incUSCompare
@@ -143,6 +119,69 @@ CAnalPRI::CAnalPRI( int coMaxPdw )
     if( m_DwlSeg.pdw.pIndex == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_RefSeg.pdw.pIndex's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pSampleToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    if( m_pSampleToa == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pSampleToa's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pSampleData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    if( m_pSampleData == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pSampleData's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pNormData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    if( m_pNormData == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pNormData's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pDataX = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    if( m_pDataX == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pDataX's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pDataY = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    if( m_pDataY == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pDataX's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pAcf = ( float * ) malloc( sizeof( float ) * m_nMaxPdw );
+    if( m_pAcf == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pAcf's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_pCanPeak = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    if( m_pCanPeak == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_pCanPeak's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_p1PrimeData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    if( m_p1PrimeData == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_p1PrimeData's memory allocation error !" );
+        WhereIs;
+    }
+
+    m_p2PrimeData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    if( m_p2PrimeData == NULL ) {
+        bRet = FALSE;
+        printf( "\n [W] m_p2PrimeData's memory allocation error !" );
         WhereIs;
     }
 
@@ -1605,8 +1644,8 @@ void CAnalPRI::PatternAnalysis()
             pPdwIndex = m_pSeg[ pEmitter->main_seg ].pdw.pIndex;
             m_CoData = m_pSeg[ pEmitter->main_seg ].pdw.count;
             for( j=0 ; j < m_CoData ; ++j ) {
-                m_DataX[j] = m_pTOA[ *pPdwIndex ];
-                m_DataY[j] = m_pFREQ[ *pPdwIndex ];
+                m_pDataX[j] = m_pTOA[ *pPdwIndex ];
+                m_pDataY[j] = m_pFREQ[ *pPdwIndex ];
                 ++ pPdwIndex;
             }
 
@@ -1636,19 +1675,19 @@ void CAnalPRI::PatternAnalysis()
             for( j=0 ; j < m_CoData ; ++j ) {
                 _TOA dtoa;
 
-                m_DataX[j] = m_pTOA[ *pPdwIndex ];
+                m_pDataX[j] = m_pTOA[ *pPdwIndex ];
 
                 /*! \bug  DTOA 값을 계산해서 누락이 된다면 이전 값으로 한다.
                     \date 2006-07-25 12:14:32, 조철희
                 */
                 dtoa = m_pTOA[ *pPdwIndex ] - m_pTOA[ *(pPdwIndex-1) ];
                 if( TRUE == CompMarginDiff<_TOA>( dtoa, pri.iLow, pri.iHgh, threshold ) )
-                    m_DataY[j] = dtoa;
+                    m_pDataY[j] = dtoa;
                 else {
                     if( j != 0 )
-                        m_DataY[j] = m_DataY[j-1];
+                        m_pDataY[j] = m_pDataY[j-1];
                     else
-                        m_DataY[j] = m_pSeg[ pEmitter->main_seg ].pri.mean;
+                        m_pDataY[j] = m_pSeg[ pEmitter->main_seg ].pri.mean;
                 }
 
                 ++ pPdwIndex;
@@ -1685,7 +1724,7 @@ void CAnalPRI::CalcSamplingTime( STR_EMITTER *pEmitter )
     spanTime = m_pTOA[ pEmitter->pdw.pIndex[ pEmitter->pdw.count-1 ] ] - m_pTOA[ *pEmitter->pdw.pIndex ];
 
     // 샘플링 타임 계산
-    sampleTimeByPulse = UDIV( spanTime, MAX_SAMPLING_DATA );
+    sampleTimeByPulse = UDIV( spanTime, m_nMaxPdw );
 
     MakePRIInfoInSeg( & pri, pEmitter );
 
@@ -1816,8 +1855,8 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
 
     n_zero_crossing = co_dec = co_inc = 0;
 
-    p1PrimeData = & m_1PrimeData[1];
-    p2PrimeData = & m_2PrimeData[1];
+    p1PrimeData = & m_p1PrimeData[1];
+    p2PrimeData = & m_p2PrimeData[1];
 
     for( i=1 ; i < m_CoSample-1 ; ++i ) {
         /*! \bug  2차 미분에 대해서는 i는 2 이상인 것을 체크.
@@ -1931,8 +1970,8 @@ UINT CAnalPRI::CalPrimeDifference()
 
     total_diff = 0;
 
-    pPrimeData = & m_2PrimeData[1];
-    pSamplingData = & m_SampleData[1];
+    pPrimeData = & m_p2PrimeData[1];
+    pSamplingData = & m_pSampleData[1];
     for( i=1 ; i < m_CoSample-1 ; ++i ) {
         diff = *pPrimeData - *pSamplingData;
         total_diff += ( diff * diff );
@@ -1957,19 +1996,19 @@ void CAnalPRI::CalTwoPrime()
     int *p1PrimeData, *p2PrimeData;
     int *piSamplingData, *pi1SamplingData, *pi2SamplingData, *pi3SamplingData;
 
-    piSamplingData = & m_SampleData[2];
-    pi1SamplingData = & m_SampleData[2];
-    pi2SamplingData = & m_SampleData[1];
-    pi3SamplingData = & m_SampleData[0];
+    piSamplingData = & m_pSampleData[2];
+    pi1SamplingData = & m_pSampleData[2];
+    pi2SamplingData = & m_pSampleData[1];
+    pi3SamplingData = & m_pSampleData[0];
 
-    m_1PrimeData[0] = 0;
-    m_1PrimeData[1] = m_SampleData[1] - m_SampleData[0];
+    m_p1PrimeData[0] = 0;
+    m_p1PrimeData[1] = m_pSampleData[1] - m_pSampleData[0];
 
-    m_2PrimeData[0] = 0;
-    m_2PrimeData[1] = 0;
+    m_p2PrimeData[0] = 0;
+    m_p2PrimeData[1] = 0;
 
-    p1PrimeData = & m_1PrimeData[2];
-    p2PrimeData = & m_2PrimeData[2];
+    p1PrimeData = & m_p1PrimeData[2];
+    p2PrimeData = & m_p2PrimeData[2];
     for( i=2 ; i < m_CoSample-2 ; ++i ) {
         *p1PrimeData++ = *pi1SamplingData - *pi2SamplingData;
         *p2PrimeData++ = -( 2 * *pi2SamplingData ) + *pi1SamplingData + *pi3SamplingData;
@@ -2001,8 +2040,8 @@ void CAnalPRI::KurtosisSkewness()
     UINT mean;
     float sdevY;
 
-    mean = UMUL( IMeanInArray( m_SampleData, m_CoSample ), 1.0 );
-    sdevY = ISDevInArray( m_SampleData, m_CoSample, mean );
+    mean = UMUL( IMeanInArray( m_pSampleData, m_CoSample ), 1.0 );
+    sdevY = ISDevInArray( m_pSampleData, m_CoSample, mean );
 
     if( sdevY == 0 ) {
     m_kurtosis = m_skewness = 5000.0;
@@ -2016,7 +2055,7 @@ void CAnalPRI::KurtosisSkewness()
 
         co = m_CoSample;
     for( i=0 ; i < co ; ++i ) {
-            mds = (double) m_SampleData[i] - mean;
+            mds = (double) m_pSampleData[i] - mean;
             B = mds * mds * mds;
 
             B3 += ( B / sdevY );
@@ -2082,12 +2121,12 @@ void CAnalPRI::FindPeriod()
     minPeriod = 1;
 
   maxPeak = 1.0;			// debug, 00-07-27 15:53:42
-  pAcf = & m_Acf[minPeriod];
+  pAcf = & m_pAcf[minPeriod];
 
     k = 0;
     m_coCanPeak = 0;
   for( i=minPeriod ; i < m_CoAcf-2 ; ++i ) {
-    if( m_coCanPeak < MAX_SAMPLING_DATA &&
+    if( m_coCanPeak < m_nMaxPdw &&
                 *pAcf > 0 && ( *(pAcf-2) <= *(pAcf-1) && *(pAcf-1) <= *pAcf &&
                                              *pAcf >= *(pAcf+1) && *(pAcf+1) >= *(pAcf+2) ) ) {
             /*! \bug  ACF 값은 일정 값보다 커야 한다. 최소값은 0.2로 정했다.
@@ -2100,7 +2139,7 @@ void CAnalPRI::FindPeriod()
                 k = i;										// toa index
         maxPeak = *pAcf;
 
-                m_CanPeak[ m_coCanPeak ] = i;
+                m_pCanPeak[ m_coCanPeak ] = i;
                 ++ m_coCanPeak;
       }
     }
@@ -2122,7 +2161,7 @@ void CAnalPRI::FindPeriod()
         */
         if( m_coCanPeak >= 2 ) {
             //-- 조철희 2006-04-25 19:41:36 --//
-            if( m_Acf[ m_CanPeak[0] ] < 0.4 )
+            if( m_pAcf[ m_pCanPeak[0] ] < 0.4 )
                 return;
 
             // 주기 반복성 체크해서 존재해야 주기값을 인정한다.
@@ -2135,11 +2174,11 @@ void CAnalPRI::FindPeriod()
                 _TOA i_acf, iminus1_acf;
                 _TOA diff_iacf;
 
-                i_acf = m_CanPeak[i];
-                iminus1_acf = m_CanPeak[i-1];
+                i_acf = m_pCanPeak[i];
+                iminus1_acf = m_pCanPeak[i-1];
                 diff_iacf = i_acf - iminus1_acf;
-                if( m_Acf[ i_acf ] >= 0.2 && m_Acf[ iminus1_acf ] >= 0.2 ) {
-                    if( TRUE != CompMeanDiff<_TOA>( diff_iacf, m_CanPeak[0], 2 ) )
+                if( m_pAcf[ i_acf ] >= 0.2 && m_pAcf[ iminus1_acf ] >= 0.2 ) {
+                    if( TRUE != CompMeanDiff<_TOA>( diff_iacf, m_pCanPeak[0], 2 ) )
                         return;
                 }
                 else {
@@ -2148,11 +2187,11 @@ void CAnalPRI::FindPeriod()
                         \date 2006-08-16 20:31:52, 조철희
                     */
                     if( diff_iacf >= 7 &&
-                            TRUE != CompMeanDiff<_TOA>( diff_iacf, m_CanPeak[0], 3+(3*i) ) )
+                            TRUE != CompMeanDiff<_TOA>( diff_iacf, m_pCanPeak[0], 3+(3*i) ) )
                         return;
                 }
             }
-            m_Period = FMUL( m_CanPeak[0], m_SamplingTime );
+            m_Period = FMUL( m_pCanPeak[0], m_SamplingTime );
         }
 
         //-- 조철희 2006-01-09 14:39:46 --//
@@ -2190,22 +2229,22 @@ void CAnalPRI::AutoCorerelation()
 
     int *pxd1, *pxd2;
 
-    memset( m_Acf, 0, sizeof( m_Acf ) );
+    memset( m_pAcf, 0, sizeof( float ) * m_nMaxPdw );
 
     // pAcf = & m_Acf[0];
     m_CoAcf = m_CoSample;
-    pxd1 = & m_SampleData[0];
+    pxd1 = & m_pSampleData[0];
     for( i=0 ; i < m_CoSample ; ++i, ++pxd1 ) {
-        pxd2 = & m_SampleData[i];
-        pAcf = & m_Acf[0];
+        pxd2 = & m_pSampleData[i];
+        pAcf = & m_pAcf[0];
         for( j=i ; j < m_CoSample ; ++j ) {
             *pAcf += ( *pxd1 * *pxd2++ );
             ++ pAcf;
         }
     }
 
-    refAcf = m_Acf[0];
-    pAcf = & m_Acf[1];
+    refAcf = m_pAcf[0];
+    pAcf = & m_pAcf[1];
     if( refAcf != 0.0 ) {
     for( i=1 ; i < m_CoAcf ; ++i )
             *pAcf++ /= refAcf;
@@ -2215,7 +2254,8 @@ void CAnalPRI::AutoCorerelation()
             *pAcf++ = 1 - FDIV( i, m_CoAcf );
     }
 
-  m_Acf[0] = 1.0;
+  m_pAcf[0] = 1.0;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2233,9 +2273,9 @@ void CAnalPRI::Normalize()
 
     int *pDataIndex;
 
-    pDataIndex = & m_SampleData[0];
+    pDataIndex = & m_pSampleData[0];
 
-  mean = (UINT) ( MeanInArray( (UINT *) m_SampleData, m_CoSample ) + 0.5 );
+  mean = (UINT) ( MeanInArray( (UINT *) m_pSampleData, m_CoSample ) + 0.5 );
 
   for( i=0 ; i < m_CoSample ; ++i ) {
         *pDataIndex = *pDataIndex - mean;
@@ -2266,19 +2306,19 @@ void CAnalPRI::ReplaceOffSampling()
     preSampleData = 0;
 
     for( i=0 ; i < m_CoSample ; ++i ) {
-        if( m_SampleData[i] > 0 ) {
-            preSampleData = m_SampleData[0];
+        if( m_pSampleData[i] > 0 ) {
+            preSampleData = m_pSampleData[0];
             break;
         }
     }
 
     // -1 로 된 샘플링 데이터를 교체한다.
     for( i=0 ; i < m_CoSample ; ++i ) {
-        if( m_SampleData[i] == -1 ) {
+        if( m_pSampleData[i] == -1 ) {
             ++ missing;
             if( missing >= CO_OFF_SAMPLING_THRESHOLD ) {
-                for( j=i ; j < m_CoSample && m_SampleData[j] == -1 ; ++j )
-                    m_SampleData[j] = preSampleData;
+                for( j=i ; j < m_CoSample && m_pSampleData[j] == -1 ; ++j )
+                    m_pSampleData[j] = preSampleData;
 
                 // i 번째 루프를 정상 이동시키기 위한 설정
                 if( j != 0 ) {
@@ -2293,12 +2333,12 @@ void CAnalPRI::ReplaceOffSampling()
                 missing = 0;
             }
             else {
-                m_SampleData[i] = preSampleData;
+                m_pSampleData[i] = preSampleData;
             }
         }
         else {
             missing = 0;
-            preSampleData = m_SampleData[i];
+            preSampleData = m_pSampleData[i];
         }
     }
 }
@@ -2340,31 +2380,31 @@ void CAnalPRI::SamplingProcess( STR_EMITTER *pEmitter )
   // SearchLowHghInArray( pPara, pEmitter->pdw.count, & gpScanPt->_pa );
 
     // 샘플링 데이터 초기화
-  memset( & m_SampleData, 0, sizeof( m_SampleData ) );
-  memset( & m_SampleToa, 0, sizeof( m_SampleToa ) );
+  memset( & m_pSampleData, 0, sizeof( int ) * m_nMaxPdw );
+  memset( & m_pSampleToa, 0, sizeof( _TOA ) * m_nMaxPdw );
 
     index = 0;
 
   m_CoSample = 0;
-  psx = m_SampleToa;
-  psy = m_SampleData;
+  psx = m_pSampleToa;
+  psy = m_pSampleData;
 
   sumY = maxY = 0;
   inpulse = 0;
-  dShgh = m_DataX[ 0 ] + m_SamplingTime;
+  dShgh = m_pDataX[ 0 ] + m_SamplingTime;
 
   for( i=0 ; i < m_CoData ; ) {
-    if( m_DataX[ index ] < dShgh ) {
-            sumY += m_DataY[ index ];                    // Sampling 구간내의 PA의 전체 합
-            if( maxY < m_DataY[ index ] )                // Sampling 구간내의 PA의 최대 합
-                maxY = m_DataY[ index ];
+    if( m_pDataX[ index ] < dShgh ) {
+            sumY += m_pDataY[ index ];                    // Sampling 구간내의 PA의 전체 합
+            if( maxY < m_pDataY[ index ] )                // Sampling 구간내의 PA의 최대 합
+                maxY = m_pDataY[ index ];
             ++ inpulse;
             ++ index;
 
             ++i;
     }
     else {
-            if( m_CoSample >= MAX_SAMPLING_DATA ) {
+            if( m_CoSample >= m_nMaxPdw ) {
                 //printf( "\n Over Sample[%d]" , m_CoSample );
                 //WhereIs;
                 break;
@@ -2407,115 +2447,122 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
     int i;
     STR_PULSE_TRAIN_SEG *pSeg;
 
+    SIGNAL_TYPE enSiganlType=ST_NORMAL_PULSE;
+
     if( pEmitter->seg_count == 0 ) {
         printf( "\n [W] Invalid emitter type !" );
         WhereIs;
-        return ST_NORMAL_PULSE;
-    }
-
-    pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
-    if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_NORMAL ) {
-        _TOA mean=0;
-        for( i=0 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            mean += pSeg->pri.mean;
-        }
-
-        mean = UDIV( mean, pEmitter->seg_count );
-        if( mean <= MIN_PRI ) {
-#ifdef _ELINT_
-            return ST_NORMAL_PULSE;
-#elif defined(_POCKETSONATA_)
-            return ST_NORMAL_PULSE;
-#else
-            return ST_HIGHPRF;
-#endif
-        }
-        else {
-            return ST_NORMAL_PULSE;
-        }
-    }
-    else if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_CW ) {
-        for( i=1 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( m_pSTAT[ pSeg->pdw.pIndex[0] ] != PDW_CW ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
-            }
-        }
-        return ST_CW;
-    }
-
-#ifdef _ELINT_
-#elif defined(_POCKETSONATA_)
-#else
-    else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
-        for( i=0 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_FMOP ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
-            }
-        }
-        return ST_FMOP;
-    }
-    else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
-        for( i=1 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_FMOP ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
-            }
-        }
-        return ST_CW_FMOP;
-    }
-    else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_CW_FMOP ) {
-        for( i=1 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_CW_FMOP ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
-            }
-        }
-        return ST_CW_FMOP;
-    }
-    else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_SHORTP ) {
-        for( i=1 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
-
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_SHORTP ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
-            }
-        }
-        return ST_SHORT;
     }
     else {
-        for( i=1 ; i < pEmitter->seg_count ; ++i ) {
-            STR_PULSE_TRAIN_SEG *pSeg;
+        pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
+        if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_NORMAL ) {
 
-            pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
-            if( STAT[ pSeg->pdw.pIndex[0] ] != ST_ALL ) {
-                printf( "\n Invalid Pulse type[%d] !" , i );
-                WhereIs;
+#ifdef _ELINT_
+
+#elif defined(_POCKETSONATA_)
+
+#else
+            _TOA mean=0;
+            for( i=0 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                mean += pSeg->pri.mean;
             }
-        }
-        return ST_ALL;
-    }
+
+            mean = UDIV( mean, pEmitter->seg_count );
+
+            if( mean <= (_TOA) MIN_PRI ) {
+                enSiganlType = ST_HIGHPRF;
+            }
+            else {
+                enSiganlType = ST_NORMAL_PULSE;
+            }
 #endif
 
-    return ST_NORMAL_PULSE;
+        }
+
+        else if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == PDW_CW ) {
+            for( i=1 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( m_pSTAT[ pSeg->pdw.pIndex[0] ] != PDW_CW ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_CW;
+        }
+
+#ifdef _ELINT_
+#elif defined(_POCKETSONATA_)
+#else
+        else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
+            for( i=0 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_FMOP ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_FMOP;
+        }
+        else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
+            for( i=1 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_FMOP ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_CW_FMOP;
+        }
+        else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_CW_FMOP ) {
+            for( i=1 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_CW_FMOP ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_CW_FMOP;
+        }
+        else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_SHORTP ) {
+            for( i=1 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( STAT[ pSeg->pdw.pIndex[0] ] != PDW_SHORTP ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_SHORT;
+        }
+        else {
+            for( i=1 ; i < pEmitter->seg_count ; ++i ) {
+                STR_PULSE_TRAIN_SEG *pSeg;
+
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                if( STAT[ pSeg->pdw.pIndex[0] ] != ST_ALL ) {
+                    printf( "\n Invalid Pulse type[%d] !" , i );
+                    WhereIs;
+                }
+            }
+            enSiganlType = ST_ALL;
+        }
+#endif
+
+    }
+
+    return enSiganlType;
 
 }
 
@@ -2547,14 +2594,13 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
         printf( "\n [W] 잘못된 주파수 형태입니다. !" );
         WhereIs;
         pEmitter->freq.type = _FIXED;
-        return _FIXED;
     }
     pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
     first_pdw_index = pSeg->pdw.pIndex[0];
 
     // +-5 MHz 이하인 PDW개수가 전체 수집 개수의 95% 이하이면, 주파수 고정으로 결정한다.
     band = m_pBAND[ first_pdw_index ];
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_POCKETSONATA_)
     threshold = IFRQMhzCNV( 0, 5 );
 #else
     threshold = abs( (int) C_UDIV( FIXED_FREQ_THRESHOLD, gFreqRes[band+1].res ) );
@@ -2576,8 +2622,9 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     // 주파수 변화폭 형태를 기록한다.
     //-- 조철희 2005-07-14 19:59:11 --//
     int ratio=UDIV( 100 * coOkPdw, count );
-    if( ratio >= FIXED_MATCH_RATIO )
+    if( ratio >= FIXED_MATCH_RATIO ) {
         pEmitter->freq.type = _FIXED;
+    }
     else {
         // 호핑 레벨값 초기화
         pEmitter->hop_level_cnt = 0;
@@ -2597,59 +2644,32 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     // printf( "\n pEmitter->freq.type[%d]" , pEmitter->freq.type );
 
     // 주파수 형태를 기록한다.
-    switch( m_pSTAT[ first_pdw_index ] ) {
-#ifdef _ELINT_
-        case 100:
+//    switch( m_pSTAT[ first_pdw_index ] ) {
+//#ifdef _ELINT_
+//        case 100:
 
-#elif defined(_POCKETSONATA_)
+//#elif defined(_POCKETSONATA_)
 
-        case 100:
-#else
-        case PDW_CHIRPUP :
-        case PDW_CHIRPUP :
-            return _CHIRP_UP;
-        case PDW_CHIRPDN :
-            return _CHIRP_DN;
-        case PDW_PMOP :
-            return _PMOP;
-#endif
+//        case 100:
+//#else
+//        case PDW_CHIRPUP :
+//        case PDW_CHIRPUP :
+//            return _CHIRP_UP;
+//        case PDW_CHIRPDN :
+//            return _CHIRP_DN;
+//        case PDW_PMOP :
+//            return _PMOP;
+//#endif
 
-        default :
-            if( pEmitter->freq.type == _FIXED )
-                return _FIXED;
-            else
-                return _RANDOM_AGILE;
-    }
+//        default :
+//            if( pEmitter->freq.type == _FIXED )
+//                return _FIXED;
+//            else
+//                return _RANDOM_AGILE;
+//    }
 
-}
+    return (FREQ_TYPE) pEmitter->freq.type;
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CAnalPRI::AnalPriType
-// 반환되는 형  : UINT
-// 함 수 인 자  : STR_EMITTER *pEmitter
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-10-28 15:26:57
-//
-UINT CAnalPRI::AnalPriType( STR_EMITTER *pEmitter )
-{
-/*	UINT diff;
-
-    // 펄스열을 근거로 PRI 타입을 결정할 때 아래 루틴을 적용한다.
-    if( ext_type == -1 || ext_type == _REFSTABLE ) {
-        diff = pSeg->pri.max - pSeg->pri.min;
-
-        if( diff > 2*STABLE_MARGIN )
-            return _JITTER;
-        else
-            return _STABLE;
-    }
-    //-- 조철희 2005-08-30 11:37:07 --//
-    // 불규칙성 펄스열 추출할 때는 강제 JITTER 마킹을 한다.
-    else
-        return ext_type;
-        */
-    return _STABLE;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2663,17 +2683,17 @@ UINT CAnalPRI::AnalPriType( STR_EMITTER *pEmitter )
 //
 int pdwindexCompare( const void *arg1, const void *arg2 )
 {
-  PDWINDEX *p1, *p2;
+    PDWINDEX *p1, *p2;
 
-  p1 = (PDWINDEX *) arg1;
-  p2 = (PDWINDEX *) arg2;
+    p1 = (PDWINDEX *) arg1;
+    p2 = (PDWINDEX *) arg2;
 
-  if( *p1 > *p2 )
-    return( 1 );
-  else if( *p1 < *p2 )
-    return( -1 );
-  else
-    return( 0 );
+    if( *p1 > *p2 )
+        return( 1 );
+    else if( *p1 < *p2 )
+        return( -1 );
+    else
+        return( 0 );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2820,8 +2840,9 @@ UINT CAnalPRI::CheckHarmonic(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
         /*! \bug  && 에서 || 으로 변경함.
             \date 2008-11-06 13:04:15, 조철희
         */
-        if( diff_min <= ( 3*STABLE_MARGIN ) || diff_max <= ( 3*STABLE_MARGIN ) )
+        if( diff_min <= (_TOA)( 3*STABLE_MARGIN ) || diff_max <= (_TOA)( 3*STABLE_MARGIN ) ) {
             return 1;
+        }
 
         return 0;
         // return CheckHarmonic( pSeg1, pSeg2 );
@@ -2889,7 +2910,7 @@ UINT CAnalPRI::CheckHarmonic(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
 //##ModelId=42E85F3B0046
 UINT CAnalPRI::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {
-    // UINT harmonic;
+    UINT uiRet = 0;
     _TOA max_mean, min_mean;
 
     if( priMean1 > priMean2 ) {
@@ -2913,14 +2934,17 @@ UINT CAnalPRI::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
     */
     int ret=UDIV( max_mean, min_mean );
     _TOA tModular = (max_mean % min_mean);
-    if( ( (UINT) tModular < uiThreshold ) )
-        return ret;
+    if( ( (UINT) tModular < uiThreshold ) ) {
+        uiRet = (UINT) ret;
+    }
+    else {
+        tModular = min_mean - tModular;
+        if( tModular < uiThreshold ) {
+            uiRet = (UINT) ret;
+        }
+    }
 
-    tModular = min_mean - tModular;
-    if( tModular < uiThreshold )
-        return ret;
-
-    return 0;
+    return uiRet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -3768,7 +3792,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
     for( i=1 ; i < count-1 ; ++i ) {
         // 피크 조건
         if(	*(pToaAcf-1) < *pToaAcf && *pToaAcf > *(pToaAcf+1) ) {
-            m_CanPeak[ m_coCanPeak++ ] = i;
+            m_pCanPeak[ m_coCanPeak++ ] = i;
         }
 
         ++ pToaAcf;
@@ -3777,7 +3801,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
         return FALSE;
     }
     else if( m_coCanPeak == 1 ) {
-        m_pRefFramePri[0] = m_pPulseToa[ m_CanPeak[0] ];
+        m_pRefFramePri[0] = m_pPulseToa[ m_pCanPeak[0] ];
     }
     else {
 #ifdef _STAGGER_LEVEL_PERIOD_
@@ -4040,10 +4064,10 @@ void CAnalPRI::FindPeak()
     _TOA max_Toa_index=-1;
 
     // 제일 큰 피크값을 가진 TOA 점을 찾는다.
-    pPeak = & m_CanPeak[0];
+    pPeak = & m_pCanPeak[0];
     m_nMaxPeak = 0;
     for( i=0 ; i < m_coCanPeak ; ++i ) {
-        if( m_pToaAcf[ m_CanPeak[i] ] > m_nMaxPeak ) {
+        if( m_pToaAcf[ m_pCanPeak[i] ] > m_nMaxPeak ) {
             max_Toa_index = *pPeak;
             m_nMaxPeak = m_pToaAcf[ *pPeak ];
         }
@@ -4065,10 +4089,10 @@ void CAnalPRI::FindPeak()
     threshold_peak = _max( 3, UMUL( m_nMaxPeak, 0.8 ) );
     k = m_coCanPeak;
     m_coCanPeak = 0;
-    pPeak = & m_CanPeak[0];
+    pPeak = & m_pCanPeak[0];
     for( i=0 ; i < k ; ++i ) {
         if( m_pToaAcf[ *pPeak ] >= threshold_peak ) {
-            m_CanPeak[ m_coCanPeak++ ] = *pPeak;
+            m_pCanPeak[ m_coCanPeak++ ] = *pPeak;
         }
         ++ pPeak;
     }
@@ -4121,7 +4145,7 @@ void CAnalPRI::FindPeak()
         _TOA min_dtoa;
 
         min_dtoa = 0xfffffffffffff;
-        pPeak = & m_CanPeak[0];
+        pPeak = & m_pCanPeak[0];
         for( i=0 ; i < m_coCanPeak-1 ; ++i ) {
             _TOA dtoa;
 

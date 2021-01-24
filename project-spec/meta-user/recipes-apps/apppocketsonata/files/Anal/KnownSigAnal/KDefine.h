@@ -59,4 +59,19 @@
     m_pRSMK = & A->RSMK[0];         /* MARK 백업용, 스태거 분석시에 사용함.  */ \
     m_pMAXCHANNEL = & A->MAXCHANNEL[0];	// PDW의 MaxChannel
 
+#define INIT_ANAL_VAR2_(A,B)    \
+    A::m_pTOA = & B->TOA[0];           \
+    A::m_pAOA = & B->AOA[0];			/* PDW AOA 파라메터 */          \
+    A::m_pFREQ = & B->FREQ[0];         /* PDW FREQUENCY 파라메터   */  \
+    A::m_pPW = & B->PW[0];             /* PDW PULSE WIDTH 파라메터 */  \
+    A::m_pPA = & B->PA[0];             /* PDW PULSE AMPLITUDE 파라메터 */  \
+    A::m_pPMOP = & B->PMOP[0];         /* PDW PMOP 파라메터    */          \
+    A::m_pFMOP = & B->FMOP[0];         /* PDW FMOP 파라메터    */          \
+    A::m_pMARK = & B->MARK[0];         /* PDW MARK ; selected pdw  */         \
+    A::m_pBAND = & B->BAND[0];         /* 주파수 밴드       */                  \
+    A::m_pSTAT = & B->STAT[0];         /* 주파수 밴드       */      \
+    A::m_pBKMK = & B->BKMK[0];         /* Mark 펄스열의 백업용        */      \
+    A::m_pRSMK = & B->RSMK[0];         /* MARK 백업용, 스태거 분석시에 사용함.  */ \
+    A::m_pMAXCHANNEL = & B->MAXCHANNEL[0];	// PDW의 MaxChannel
+
 #endif // !defined(AFX_KDEFINE_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

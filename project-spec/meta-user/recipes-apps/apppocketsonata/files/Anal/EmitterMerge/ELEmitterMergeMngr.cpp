@@ -26,6 +26,7 @@
 #include "ELEmitterMergeMngr.h"
 #include "../Identify/Identify.h"
 #include "./PositionEstimationAlg.h"
+#include "../../Anal/INC/AetIPL.h"
 //#include "../Task/ELInsertDBMngr.h"
 
 //#include "../ParamMngr.h"
@@ -201,7 +202,6 @@ void CELEmitterMergeMngr::FreeMemory()
 
     delete m_pIdentifyAlg;
 
-
     _SAFE_FREE( m_pUniThreat );
 
     _SAFE_FREE( m_pABTtoH000 );
@@ -306,7 +306,7 @@ void CELEmitterMergeMngr::InitOfThreat()
 /**
  * @brief CELEmitterMergeMngr::Start
  */
-void CELEmitterMergeMngr::Start()
+void CELEmitterMergeMngr::Start( bool bScanInfo )
 {
     m_VecLOBData.clear();
     m_VecABTData.clear();
@@ -338,33 +338,58 @@ void CELEmitterMergeMngr::Start()
  * @date      2016-01-29 오후 5:53
  * @warning
  */
-bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB, bool bCheckLOB )
+bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo, bool bIsFilteredLOB, bool bCheckLOB )
 {
     bool bMerge;
 
-    char szTaskID[LENGTH_OF_TASK_ID];
+    //char szTaskID[LENGTH_OF_TASK_ID];
 
     //DWORD dwTime = GetTickCount();
+    SetScanInfo( bScanInfo );
 
 #ifdef _POCKETSONATA_
-    printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
-           pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-           pLOBData->fDOAMean,
-           aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-           aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
-           pLOBData->fPWMin, pLOBData->fPWMax,
-           pLOBData->fPAMin, pLOBData->fPAMax,
-           pLOBData->iNumOfPDW
-           );
-    Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
-        pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-        pLOBData->fDOAMean,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
-        pLOBData->fPWMin, pLOBData->fPWMax,
-        pLOBData->fPAMin, pLOBData->fPAMax,
-        pLOBData->iNumOfPDW
-        );
+    if( bScanInfo == false ) {
+        printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
+               pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+               pLOBData->fDOAMean,
+               aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+               aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+               pLOBData->fPWMin, pLOBData->fPWMax,
+               pLOBData->fPAMin, pLOBData->fPAMax,
+               pLOBData->iNumOfPDW
+               );
+        Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
+            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+            pLOBData->fDOAMean,
+            aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+            aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+            pLOBData->fPWMin, pLOBData->fPWMax,
+            pLOBData->fPAMin, pLOBData->fPAMax,
+            pLOBData->iNumOfPDW
+            );
+    }
+    else {
+        printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]\n" ,
+               pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+               pLOBData->fDOAMean,
+               aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+               aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+               pLOBData->fPWMin, pLOBData->fPWMax,
+               pLOBData->fPAMin, pLOBData->fPAMax,
+               pLOBData->iScanType, pLOBData->fScanPeriod,
+               pLOBData->iNumOfPDW
+               );
+        Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
+            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+            pLOBData->fDOAMean,
+            aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+            aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+            pLOBData->fPWMin, pLOBData->fPWMax,
+            pLOBData->fPAMin, pLOBData->fPAMax,
+            pLOBData->iScanType, pLOBData->fScanPeriod,
+            pLOBData->iNumOfPDW
+            );
+    }
 #else
     printf( "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
         pLOBData->aucTaskID,
@@ -388,9 +413,6 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
         );
 #endif
 
-    // 내부 클래스에서 내부 변수로 초기화 함.
-
-
     //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
 
 #ifndef _POCKETSONATA_
@@ -401,7 +423,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     LOBPreSetting( pLOBHeader, pLOBData, pLOBOtherInfo );
 
     // 0. 위협 라이브러러리 로딩
-    LoadCEDLibrary( szTaskID, pLOBData->fFreqMin, pLOBData->fFreqMax );
+    LoadCEDLibrary( NULL, pLOBData->fFreqMin, pLOBData->fFreqMax );
 
     // 위협 처리
     // 항공으로 수신한 위협 데이터 개수 만큼 로드하여 위협 관리를 처리한다. -> 의미가 없음. -> 없앰.
@@ -427,7 +449,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     RunLOBClusteringResult();
 
     // 7. ABT/AET간 병합 수행, 연동기1 이고 운용자 요구 생성이 아니고 DB 가 연결되었을 때만 빔 병합을 수행
-    ManageABTs( bMerge );
+    ManageABTs( bMerge & !m_bScanInfo );
 
     // 8. 위협 관리 삭제 처리
     //ResetABT();
@@ -438,6 +460,32 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     //LogPrint("\n========================================== ManageThreat 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
 
     return bMerge;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::ManageThreat
+ * @param pLOBHeader
+ * @param pSCNData
+ * @param pLOBOtherInfo
+ * @param bIsFilteredLOB
+ * @param bCheckLOB
+ * @return
+ */
+bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB, bool bCheckLOB )
+{
+    char szTaskID[LENGTH_OF_TASK_ID];
+
+#ifdef _POCKETSONATA_
+    printf( "[E%4d][B%4d] %d %.2f [ms]\n" ,
+            pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
+    Log( enNormal, "[E%4d][B%4d] %d %.2f [ms]" , pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
+#else
+
+
+#endif
+
+
+
 }
 
 /**
@@ -1949,7 +1997,7 @@ CELThreat *CELEmitterMergeMngr::UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bo
         pVecCanOfMergeLOB = & m_vecCanOfMergeLOB;
     }
 
-    // 유사도가 낮은 순부터 Udpate를 한다. 그리고 가장 유사한 위협을 리턴한다.
+    // 유사도가 낮은 순부터 Update를 한다. 그리고 가장 유사한 위협을 리턴한다.
     if( bGenNewEmitter == false ) {
         nCoMerge = (int) pVecCanOfMergeLOB->size();
     }
@@ -1975,7 +2023,7 @@ CELThreat *CELEmitterMergeMngr::UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bo
 
         if( pTheABTThreat != NULL ) {
             // LOB 클러스터링을 위한 LOB 데이터 추가
-            InsertLOBPool( pTheABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, false, ( bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) ) && (! bGenNewEmitter ) );
+            InsertLOBPool( pTheABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, false, ( bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) ) && ( !bGenNewEmitter ) && ( !m_bScanInfo ) );
 
             //////////////////////////////////////////////////////////////////////////
             // ABT 업데이트 처리
@@ -2127,55 +2175,67 @@ void CELEmitterMergeMngr::UpdateAET( CELThreat *pTheAETThreat, CELThreat *pTheAB
             // 변경된 위협의 방사체 번호로 매핑을 한다.
             pABTData->uiAETID = pTheABTThreat->m_Idx.uiAET;
 
-            //////////////////////////////////////////////////////////////////////////
-            // 기본 정보 업데이트
-            // 시간 정보
-            UpdateSeenTime( pAETData, pAETExtData, pABTData, pABTExtData);
+            if( m_bScanInfo == false ) {
+                //////////////////////////////////////////////////////////////////////////
+                // 기본 정보 업데이트
+                // 시간 정보
+                UpdateSeenTime( pAETData, pAETExtData, pABTData, pABTExtData);
 
-            // 방위 정보
-            UpdateDOAInfo( pAETData, pAETExtData, pABTData, pABTExtData);
+                // 방위 정보
+                UpdateDOAInfo( pAETData, pAETExtData, pABTData, pABTExtData);
 
-            // 주파수 정보
-            UpdateFreqInfo( pAETData, pAETExtData, pABTData, pABTExtData );
+                // 주파수 정보
+                UpdateFreqInfo( pAETData, pAETExtData, pABTData, pABTExtData );
 
-            // PRI 정보
-            UpdatePRIInfo( pAETData, pAETExtData, pABTData, pABTExtData );
+                // PRI 정보
+                UpdatePRIInfo( pAETData, pAETExtData, pABTData, pABTExtData );
 
-            // 펄스폭 정보
-            UpdatePWInfo( pAETData, pAETExtData, pABTData, pABTExtData );
+                // 펄스폭 정보
+                UpdatePWInfo( pAETData, pAETExtData, pABTData, pABTExtData );
 
-            // 신호세기 정보
-            UpdatePAInfo( pAETData, pAETExtData, pABTData, pABTExtData );
+                // 신호세기 정보
+                UpdatePAInfo( pAETData, pAETExtData, pABTData, pABTExtData );
 
-            // DB를 통한 분산, 표준편차, 평균 구하기
-            // CalStatisticsFromAET( pAETData );
+                // DB를 통한 분산, 표준편차, 평균 구하기
+                // CalStatisticsFromAET( pAETData );
 
-            // 위치 산출 정보
-            UpdatePEInfo( pAETData, pAETExtData, pTheAETThreat );
+                // 위치 산출 정보
+                UpdatePEInfo( pAETData, pAETExtData, pTheAETThreat );
 
-            // 방사체 유효성 업데이트
-            UpdateBeamValidity( pAETData, pAETExtData, pTheAETThreat );
+                // 방사체 유효성 업데이트
+                UpdateBeamValidity( pAETData, pAETExtData, pTheAETThreat );
 
-            // CED/EOB 식별
-            UpdateIDInfo( pAETData, pAETExtData, pTheAETThreat );
+                // CED/EOB 식별
+                UpdateIDInfo( pAETData, pAETExtData, pTheAETThreat );
 
-            //////////////////////////////////////////////////////////////////////////
-            // 추가 정보 업데이트
-            if( bMergeABT == false ) {
-                ++ pAETData->uiCoLOB;
+                //////////////////////////////////////////////////////////////////////////
+                // 추가 정보 업데이트
+                if( bMergeABT == false ) {
+                    ++ pAETData->uiCoLOB;
 
-                pAETExtData->nCoTotalPdw += m_pLOBData->iNumOfPDW;
-                //pAETExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+                    pAETExtData->nCoTotalPdw += m_pLOBData->iNumOfPDW;
+                    //pAETExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+                }
+                else {
+                    pAETData->uiCoLOB += pABTData->uiCoLOB;
+                    ++ pAETData->uiCoABT;
+
+                    pAETExtData->nCoTotalPdw += pABTData->uiTotalOfPDW;
+                    //pAETExtData->nCoTotalIQ += pABTExtData->nCoTotalIQ;
+
+                    // 추가할 빔의 방사체 번호는 병합한 방사체 번호로 변경한다.
+                    pABTData->uiAETID = pAETData->uiAETID;
+
+                }
             }
             else {
-                pAETData->uiCoLOB += pABTData->uiCoLOB;
-                ++ pAETData->uiCoABT;
+                //////////////////////////////////////////////////////////////////////////
+                // 기본 정보 업데이트
+                // 시간 정보
+                UpdateSeenTime( pAETData, pAETExtData, pABTData, pABTExtData);
 
-                pAETExtData->nCoTotalPdw += pABTData->uiTotalOfPDW;
-                //pAETExtData->nCoTotalIQ += pABTExtData->nCoTotalIQ;
-
-                // 추가할 빔의 방사체 번호는 병합한 방사체 번호로 변경한다.
-                pABTData->uiAETID = pAETData->uiAETID;
+                // CED/EOB 식별
+                UpdateIDInfo( pAETData, pAETExtData, pTheAETThreat );
 
             }
 
@@ -2661,7 +2721,7 @@ void CELEmitterMergeMngr::IdentifyAET( SRxAETData *pAETData, SELAETDATA_EXT *pAE
         pAETData->iRadarModeIndex = pABTData->iRadarModeIndex;
     }
 
-    pABTExtData = GetABTExtData( pTheMajorABTThreat->m_nIndex );
+    //pABTExtData = GetABTExtData( pTheMajorABTThreat->m_nIndex );
     //m_theIdentifyAlg.SetIDResult( pAETData, pAETExtData, pABTExtData, m_pSEnvironVariable->eCEDDefaultLibType, m_pSEnvironVariable->eEOBDefaultLibType );
 
     //strcpy_s( pAETExtData->szELNOT, pABTExtData->szELNOT );
@@ -2684,98 +2744,121 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
     bool bEnable; //, bCheckBeamValidity;
     int nIndex=pThreat->m_nIndex;
 
-    //UELTHREAT *pUniThreat;
-    //SRxABTData *pABTData;
-    //SELABTDATA_EXT *pABTExtData;
-
-    //pUniThreat = m_pUniThreat + nIndex;
-
-    //m_pABTData = & pUniThreat->uniABT.stABTData;
-    //m_pABTExtData = & pUniThreat->uniABT.stABTExtData;
-
     m_pABTData = GetABTData( nIndex );
     m_pABTExtData = GetABTExtData( nIndex );
 
-    //////////////////////////////////////////////////////////////////////////
-    // 기본 정보 업데이트
+    if( m_bScanInfo == false ) {
+        //////////////////////////////////////////////////////////////////////////
+        // 기본 정보 업데이트
+        ++ m_pABTData->uiCoLOB;
+        pLOBDataExt->aetAnal.uiCoLOB = (UINT) m_pABTData->uiCoLOB;
 
-    /*! \todo   병합 비교할 때 같은 놈끼리 병합하기 떄문에 아래와 같은 업데이트가 불필요한데, 그냥 복사하는 것으로 함.
-            \author 조철희 (churlhee.jo@lignex1.com)
-            \date 	2016-03-11 10:55:16
-    */
-    UpdateSignalInfo( m_pABTData, m_pABTExtData );
+        /*! \todo   병합 비교할 때 같은 놈끼리 병합하기 떄문에 아래와 같은 업데이트가 불필요한데, 그냥 복사하는 것으로 함.
+                \author 조철희 (churlhee.jo@lignex1.com)
+                \date 	2016-03-11 10:55:16
+        */
+        UpdateSignalInfo( m_pABTData, m_pABTExtData );
 
-    ++ m_pABTData->uiCoLOB;
-    pLOBDataExt->aetAnal.uiCoLOB = (UINT) m_pABTData->uiCoLOB;
+        UpdateSeenTime( m_pABTData, m_pABTExtData );
 
-    UpdateSeenTime( m_pABTData, m_pABTExtData );
+        // 방위 정보
+        UpdateDOAInfo( m_pABTData, m_pABTExtData );
 
-    // 방위 정보
-    UpdateDOAInfo( m_pABTData, m_pABTExtData );
+        // 펄스 정보
+        //UpdatePulseInfo( pABTData, pABTExtData );
 
-    // 펄스 정보
-    //UpdatePulseInfo( pABTData, pABTExtData );
+        // 주파수 정보
+        UpdateFreqInfo( m_pABTData, m_pABTExtData );
 
-    // 주파수 정보
-    UpdateFreqInfo( m_pABTData, m_pABTExtData );
+        // PRI 정보
+        UpdatePRIInfo( m_pABTData, m_pABTExtData );
 
-    // PRI 정보
-    UpdatePRIInfo( m_pABTData, m_pABTExtData );
+        // 펄스폭 정보
+        UpdatePWInfo( m_pABTData, m_pABTExtData );
 
-    // 펄스폭 정보
-    UpdatePWInfo( m_pABTData, m_pABTExtData );
+        // 신호세기 정보
+        UpdatePAInfo( m_pABTData, m_pABTExtData );
 
-    // 신호세기 정보
-    UpdatePAInfo( m_pABTData, m_pABTExtData );
+        // DB를 통한 분산, 표준편차, 평균 구하기
+        // CalStatisticsFromABT( pABTData );
 
-    // DB를 통한 분산, 표준편차, 평균 구하기
-    // CalStatisticsFromABT( pABTData );
+        // 스캔 정보
+        //UpdateScanInfo( pABTData, pABTExtData );
 
-    // 스캔 정보
-    //UpdateScanInfo( pABTData, pABTExtData );
+        // 인트라 정보
+        //UpdateIntraInfo( pABTData, pABTExtData );
 
-    // 인트라 정보
-    //UpdateIntraInfo( pABTData, pABTExtData );
+        // 위치 산출 정보
+        UpdatePEInfo( m_pABTData, m_pABTExtData, nIndex, false, bRunCluster, bRunPE );
 
-    // 위치 산출 정보
-    UpdatePEInfo( m_pABTData, m_pABTExtData, nIndex, false, bRunCluster, bRunPE );
+        // 빔 유효성 업데이트
+        //bCheckBeamValidity = ( bRunCluster || bRunPE );
+        bEnable = UpdateBeamValidity( m_pABTData, m_pABTExtData, nIndex, ( bRunCluster || bRunPE ) );
 
-    // 빔 유효성 업데이트
-    //bCheckBeamValidity = ( bRunCluster || bRunPE );
-    bEnable = UpdateBeamValidity( m_pABTData, m_pABTExtData, nIndex, ( bRunCluster || bRunPE ) );
+        // LOB 클러스터링,
+        if( bRunCluster == true ) {
+            ProcessTheLOBClustering( m_pABTData, m_pABTExtData );
+        }
 
-    // LOB 클러스터링,
-    if( bRunCluster == true ) {
-        ProcessTheLOBClustering( m_pABTData, m_pABTExtData );
+        // CED/EOB 식별 정보
+        IdentifyABT( m_pABTData, m_pABTExtData );
+
+        UpdateIDInfo( m_pABTData, m_pABTExtData );
+
+        //////////////////////////////////////////////////////////////////////////
+        // 추가 정보 업데이트
+        m_pABTData->uiTotalOfPDW += m_pLOBData->iNumOfPDW;
+        //pABTExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+
+        //pABTExtData->bIntraMop = ( pABTData->intraInfo.iTy1pe >= E_AET_MOP_PSK ? true : pABTExtData->bIntraMop );
+
+        //pABTExtData->iTaskType = m_pLOBData->iTaskType / 2;
+
+        m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
+
+        // 방사체간의 병합을 위해서 정보를 저장
+        m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
+        m_pABTExtData->fRadarLatitude = m_pLOBData->fRadarLatitude;
+        m_pABTExtData->fRadarLongitude = m_pLOBData->fRadarLongitude;
+
+    #ifdef _ELINT_
+        m_pABTExtData->uiSeqNum = m_nSeqNum;
+    #endif
+
+        m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
+        m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
     }
+    else {
+        UpdateSeenTime( m_pABTData, m_pABTExtData );
 
-    // CED/EOB 식별 정보
-    IdentifyABT( m_pABTData, m_pABTExtData );
+        // 방위 정보
+        UpdateDOAInfo( m_pABTData, m_pABTExtData );
 
-    UpdateIDInfo( m_pABTData, m_pABTExtData );
+        // 펄스폭 정보
+        UpdatePWInfo( m_pABTData, m_pABTExtData );
 
-    //////////////////////////////////////////////////////////////////////////
-    // 추가 정보 업데이트
-    m_pABTData->uiTotalOfPDW += m_pLOBData->iNumOfPDW;
-    //pABTExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+        // 신호세기 정보
+        UpdatePAInfo( m_pABTData, m_pABTExtData );
 
-    //pABTExtData->bIntraMop = ( pABTData->intraInfo.iType >= E_AET_MOP_PSK ? true : pABTExtData->bIntraMop );
+        // 스캔 정보
+        UpdateScanInfo( m_pABTData, m_pABTExtData );
 
-    //pABTExtData->iTaskType = m_pLOBData->iTaskType / 2;
+        // CED/EOB 식별 정보
+        IdentifyABT( m_pABTData, m_pABTExtData );
 
-    m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
+        UpdateIDInfo( m_pABTData, m_pABTExtData );
 
-    // 방사체간의 병합을 위해서 정보를 저장
-    m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
-    m_pABTExtData->fRadarLatitude = m_pLOBData->fRadarLatitude;
-    m_pABTExtData->fRadarLongitude = m_pLOBData->fRadarLongitude;
+        m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
 
 #ifdef _ELINT_
-    m_pABTExtData->uiSeqNum = m_nSeqNum;
+        m_pABTExtData->uiSeqNum = m_nSeqNum;
 #endif
 
-    m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
-    m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
+        m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
+        m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
+
+        bEnable = true;
+    }
 
     //LogPrint("\n========================================== UpdateABT 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
 
@@ -4019,7 +4102,7 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
     memcpy( pIDInfo, & m_ABTDataExt.aetAnal.idInfo, sizeof( STR_CEDEOBID_INFO ) );
 
 }
-//
+
 // /**
 //  * @brief     빔 정보를 근거로 방사체 정보의 인트라 정보를 변경한다.
 //  * @param     *pABTData 빔 정보의 데이터 포인터
@@ -4074,89 +4157,55 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 // 	}
 //
 // }
-//
-// /**
-//  * @brief     빔 정보를 근거로 방사체 정보의 스캔 정보를 변경한다.
-//  * @param     *pABTData 빔 정보의 데이터 포인터
-//  * @param     *pABTExtData 빔 추가 정보의 데이터 포인터
-//  * @return    리턴값 없음
-//  * @author    조철희 (churlhee.jo@lignex1.com)
-//  * @version   0.0.1
-//  * @date      2016-03-14, 오후 5:03
-//  * @warning
-//  */
-// void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
-// {
-// 	STR_SCAN_INFO *pScanInfo;
-//
-// 	pScanInfo = & pABTData->scanInfo;
-//
-// 	// 안테나 스캔 세부 정보
-// 	switch( m_pLOBData->iScanType ) {
-// 	case E_AET_SCAN_UNKNOWN :
-// 		if( pScanInfo->iType == E_AET_SCAN_UNKNOWN ) {
-// 			pScanInfo->iType = E_AET_SCAN_UNKNOWN;
-// 			pScanInfo->iPeriodMax = 0;
-// 			pScanInfo->iPeriodMin = 0;
-// 			pScanInfo->iPeriodMean = 0;
-// 			pScanInfo->iPeriod = 0;
-// 		}
-// // 			else { //DTEC_Else
-// // 				m_theELUtil.LogPrint( LOG_ERROR, "스캔 형태 업데이트[%d-%d] 에러 입니다.", m_pLOBData->iScanType, pScanInfo->iType );
-// // 			}
-// 		break;
-//
-// 	case E_AET_SCAN_TRACKING :
-// 		if( pScanInfo->iType == E_AET_SCAN_TRACKING ) {
-// 			pScanInfo->iType = E_AET_SCAN_TRACKING;
-// 			pScanInfo->iDetailType = m_pLOBData->iDetailScanType;
-// 			pScanInfo->iPeriodMax = max( m_pLOBData->iScanPeriod, pScanInfo->iPeriodMax );
-// 			pScanInfo->iPeriodMin = min( m_pLOBData->iScanPeriod, pScanInfo->iPeriodMin );
-// 			pScanInfo->iPeriodMean = m_pLOBData->iScanPeriod;
-// 			pScanInfo->iPeriod = m_pLOBData->iScanPeriod;
-// 		}
-// 		else if( pScanInfo->iType == E_AET_SCAN_UNKNOWN ) {
-// 			pScanInfo->iType = m_pLOBData->iScanType;
-// 			pScanInfo->iDetailType = m_pLOBData->iDetailScanType;
-// 			pScanInfo->iPeriodMax = m_pLOBData->iScanPeriod;
-// 			pScanInfo->iPeriodMin = m_pLOBData->iScanPeriod;
-// 			pScanInfo->iPeriodMean = m_pLOBData->iScanPeriod;
-// 			pScanInfo->iPeriod = m_pLOBData->iScanPeriod;
-// 		}
-// 		else { //DTEC_Else
-// 			LogPrint( "스캔 형태 업데이트[%d-%d] 에러 입니다.", m_pLOBData->iScanType, pScanInfo->iType );
-// 		}
-// 		break;
-//
-// 	case E_AET_SCAN_SEARCH :
-// 		if( pScanInfo->iType == E_AET_SCAN_SEARCH ) {
-// 			pScanInfo->iType = E_AET_SCAN_SEARCH;
-// 			pScanInfo->iDetailType = m_pLOBData->iDetailScanType;
-// 			pScanInfo->iPeriodMax = _max( pScanInfo->iPeriodMax, m_pLOBData->iScanPeriod );
-// 			pScanInfo->iPeriodMin = _max( pScanInfo->iPeriodMin, m_pLOBData->iScanPeriod );
-// 			pScanInfo->iPeriodMean = CalcMean( pScanInfo->iPeriodMean, pABTExtData->nCoTotalPdw, m_pLOBData->iScanPeriod, m_pLOBData->iNumOfPDW );
-// 		}
-// 		else if( pScanInfo->iType == E_AET_SCAN_UNKNOWN ) {
-// 			pScanInfo->iType = m_pLOBData->iScanType;
-// 			pScanInfo->iDetailType = m_pLOBData->iDetailScanType;
-// 			pScanInfo->iPeriodMax = 0;
-// 			pScanInfo->iPeriodMin = 0;
-// 			pScanInfo->iPeriodMean = 0;
-// 			pScanInfo->iPeriod = 0;
-// 		}
-// 		else { //DTEC_Else
-// 			LogPrint( "스캔 형태 업데이트[%d-%d] 에러 입니다.", m_pLOBData->iScanType, pScanInfo->iType );
-// 		}
-// 		break;
-//
-// 	default :
-// 	{	//DTEC_Else
-//
-// 	}
-// 	break;
-// 	}
-//
-// }
+
+/**
+* @brief     빔 정보를 근거로 방사체 정보의 스캔 정보를 변경한다.
+* @param     *pABTData 빔 정보의 데이터 포인터
+* @param     *pABTExtData 빔 추가 정보의 데이터 포인터
+* @return    리턴값 없음
+* @author    조철희 (churlhee.jo@lignex1.com)
+* @version   0.0.1
+* @date      2016-03-14, 오후 5:03
+* @warning
+*/
+void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
+{
+
+    // 안테나 스캔 세부 정보
+    switch( m_pLOBData->iScanType ) {
+        case E_AET_SCAN_UNKNOWN :
+            break;
+
+        case E_AET_SCAN_CIRCULAR :
+        case E_AET_SCAN_UNI_DIRECTIONAL :
+        case E_AET_SCAN_BI_DIRECTIONAL :
+        case E_AET_SCAN_CONICAL :
+        case E_AET_SCAN_STEADY :
+            if( pABTData->iScanType == E_AET_SCAN_UNKNOWN ) {
+                pABTData->iScanType = m_pLOBData->iScanType;
+                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
+                pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );
+            }
+            else if( pABTData->iScanType == m_pLOBData->iScanType ) {
+                pABTData->iScanType = m_pLOBData->iScanType;
+                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
+                pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );            }
+            else {
+                pABTData->iScanType = m_pLOBData->iScanType;
+                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
+                pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );
+            }
+            break;
+
+        default :
+            //LogPrint( "스캔 형태 업데이트[%d-%d] 에러 입니다.", m_pLOBData->iScanType, pScanInfo->iType );
+            break;
+    }
+
+}
 
 /**
  * @brief     빔 정보를 근거로 방사체 정보의 신호세기 정보를 변경한다.
@@ -4703,7 +4752,6 @@ void CELEmitterMergeMngr::UpdateFreqInfo( SRxABTData *pABTData, SELABTDATA_EXT *
  */
 void CELEmitterMergeMngr::UpdateSignalInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
-
     // 신호 형태
     pABTData->iSignalType = m_pLOBData->iSignalType;
 
@@ -7117,17 +7165,29 @@ bool CELEmitterMergeMngr::CompMergeLOB( SELLOBDATA_EXT *pThreatDataExt, bool bLi
     SELMERGE_CANDIDATE mergeCandidate;
 
     pThreatAET = GetHeaderThreat( m_pTheThreatRoot );
-    while( pThreatAET != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
-        pThreatABT = GetHeaderThreat( pThreatAET );
-        while( pThreatABT != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
-            // ABT들간의 병합 비교 수행
-            if( CompMergeLOB( & mergeCandidate, pThreatABT, pThreatDataExt, bLinkComp ) == true ) {
-                m_vecCanOfMergeLOB.push_back( mergeCandidate );
-            }
-            pThreatABT = GetNextThreat( pThreatABT );
-        }
 
-        pThreatAET = GetNextThreat( pThreatAET );
+    // 스캔 LOB 는 병합 비교를 하지 않는다.
+    if( m_bScanInfo == false ) {
+        while( pThreatAET != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+            pThreatABT = GetHeaderThreat( pThreatAET );
+            while( pThreatABT != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+                // ABT들간의 병합 비교 수행
+                if( CompMergeLOB( & mergeCandidate, pThreatABT, pThreatDataExt, bLinkComp ) == true ) {
+                    m_vecCanOfMergeLOB.push_back( mergeCandidate );
+                }
+                pThreatABT = GetNextThreat( pThreatABT );
+            }
+
+            pThreatAET = GetNextThreat( pThreatAET );
+        }
+    }
+    else {
+        mergeCandidate.bIsFISINTTask = false;
+        mergeCandidate.fLevel = 0;
+        mergeCandidate.idx.uiAET = m_pLOBData->uiAETID;
+        mergeCandidate.idx.uiABT = m_pLOBData->uiABTID;
+        mergeCandidate.idx.uiLOB = INVALID_INDEX;
+        m_vecCanOfMergeLOB.push_back( mergeCandidate );
     }
 
     // 2. 병합 후보 중에서 레벨 값 적은 순으로 정렬한다.
@@ -8029,8 +8089,6 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     SELEXTDB extDB=SELEXTDB();
 
-    Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
-
     // 식별 정보
     if( m_pLOBOtherInfo->bUpdate == false ) {
         // Primary 식별 정보
@@ -8149,32 +8207,34 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     //UpdateLOBData( i_bIsFilteredLOB );
 
-    if( i_bIsFilteredLOB == false ) {
-        if( m_bDBThread == false ) {
-            // PRI 레벨값 저장
-            if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
-                InsertToDB_Position( m_pLOBData, pExt );
+    if( m_bScanInfo == false ) {
+        if( i_bIsFilteredLOB == false ) {
+            Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+
+            if( m_bDBThread == false ) {
+                // PRI 레벨값 저장
+                if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
+                    InsertToDB_Position( m_pLOBData, pExt );
+                }
+
+                // LOB 데이터 저장
+                InsertToDB_LOB( m_pLOBData, pExt, true );
             }
+            else {
+                //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
+                //m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
+                //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
+                //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
 
-            // LOB 데이터 저장
-            InsertToDB_LOB( m_pLOBData, pExt, true );
+                //GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
+            }
         }
-        else {
-            //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
-            //m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
-            //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
-            //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
 
-            //GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
-        }
+        // LOB 저장소에 추가 한다.
+        PushLOBLANData( m_pLOBData );
     }
 
-    // LOB 저장소에 추가 한다.
-    PushLOBLANData( m_pLOBData );
-
 }
-
-
 
 /**
  * @brief     ABT 데이터를 DB에 기록한다.
@@ -8197,8 +8257,6 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
         if( bEnable == true ) {
             pABTData = GetABTData( pTheThreat->m_nIndex );
             pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
-
-            Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
             iIndex = pABTData->iRadarModeIndex;
             if( iIndex != 0 ) {
@@ -8224,6 +8282,7 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
                 pABTData->szNickName[0] = 0;
             }
 
+            Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
             if( m_bDBThread == false ) {
                 // PRI 레벨값 저장
                 if( pABTData->iPRIPositionCount != 0 ) {
@@ -11109,4 +11168,20 @@ char *CELEmitterMergeMngr::GetThreatName( int iRadarModeIndex )
     }
 
     return pszThreat;
+}
+
+
+/**
+ * @brief CEmitterMerge::IsTryAnalScan
+ * @return
+ */
+bool CELEmitterMergeMngr::DoesAnalScanTry()
+{
+    bool bRet=false;
+    SELABTDATA_EXT *pABTExtData = GetABTExtData();
+
+    if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
+        bRet = true;
+    }
+    return bRet;
 }

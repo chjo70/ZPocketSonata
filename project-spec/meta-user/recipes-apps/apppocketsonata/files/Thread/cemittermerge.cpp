@@ -68,14 +68,19 @@ void CEmitterMerge::_routine()
         else {
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
+                    m_bScanInfo = false;
                     MergeEmitter();
                     break;
 
                 case enTHREAD_KNOWNANAL_START :
+                    m_bScanInfo = false;
                     MergeEmitter();
                     break;
 
                 case enTHREAD_SCANANAL_START :
+                    m_bScanInfo = true;
+                    MergeEmitter();
+                    //UpdateScanEmitter();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
@@ -120,23 +125,26 @@ void CEmitterMerge::MergeEmitter()
     int i;
     bool bMerge, bTrkLOB=false;
 
-    //CELThreat *pThreatAET;
-
     STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
 
     SRxLOBData *pLOBData;
     SRxABTData *pABTData;
 
-    LOGMSG4( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
+    if( m_bScanInfo == false ) {
+        LOGMSG4( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
+    }
+    else {
+        pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
+        LOGMSG3( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+    }
 
     memcpy( & strAnalInfo, & m_pMsg->x.strAnalInfo, sizeof(STR_ANALINFO) );
 
     // 위협 관리 초기화
-    m_pTheEmitterMergeMngr->Start();
+    m_pTheEmitterMergeMngr->Start( m_bScanInfo );
 
     // 1. LOB 데이터를 갖고온다.
-    //PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     // 2. 위협 관리를 호출한다.
@@ -144,11 +152,11 @@ void CEmitterMerge::MergeEmitter()
     pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
-        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo );
+        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        if( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) {
-            strAnalInfo.uiBand = 0;
+        if( !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
+            strAnalInfo.uiBand = g_enBoardId;
             strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
@@ -157,8 +165,8 @@ void CEmitterMerge::MergeEmitter()
 
         }
 
-        if( (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_NEW || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) {
-            strAnalInfo.uiBand = 0;
+        if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
+            strAnalInfo.uiBand = g_enBoardId;
             strAnalInfo.uiCh = 0;
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
@@ -178,31 +186,33 @@ void CEmitterMerge::MergeEmitter()
     }
 
     // 3. 추적 채널 경우에는 재시도 또는 추적 채널을 닫는다.
-    ENUM_COLLECTBANK enCollectBank;
-    enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
+    if( m_bScanInfo == false ) {
+        ENUM_COLLECTBANK enCollectBank;
+        enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
 
-    if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
-        strAnalInfo.uiBand = 0;
-        strAnalInfo.uiCh = m_pMsg->x.strAnalInfo.uiCh;
-        strAnalInfo.uiTotalLOB = _spOne;
-        strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
-        strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
+        if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
+            strAnalInfo.uiBand = g_enBoardId;
+            strAnalInfo.uiCh = m_pMsg->x.strAnalInfo.uiCh;
+            strAnalInfo.uiTotalLOB = _spOne;
+            strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
+            strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
 
-        pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
+            pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
 
-        // 3.1 추적 채널 업데이트 수행
-        if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
-            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            // 3.1 추적 채널 업데이트 수행
+            if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
+                SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
-            // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
-            SendLost( strAnalInfo.uiAETID );
-        }
-        else {
-            //strAnalInfo.uiAETID = 0;
-            SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+                // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
+                SendLost( strAnalInfo.uiAETID );
+            }
+            else {
+                //strAnalInfo.uiAETID = 0;
+                SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
-            // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
-            SendDelete( strAnalInfo.uiAETID );
+                // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
+                SendDelete( strAnalInfo.uiAETID );
+            }
         }
     }
 
@@ -234,7 +244,7 @@ void CEmitterMerge::SendNewUpd()
     stAET.noEMT = pSRxABTData->uiABTID;
     stAET.sigType = pSRxABTData->iSignalType;
 
-    stAET.frq.band = 0;
+    stAET.frq.band = SONATA::ENCODE::BAND( pSRxABTData->fFreqMean );
     stAET.frq.type = pSRxABTData->iFreqType;
     stAET.frq.mean = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMean );
     stAET.frq.min = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMin );
@@ -264,6 +274,10 @@ void CEmitterMerge::SendNewUpd()
     stAET.pa.mean = SONATA::ENCODE::PA( pSRxABTData->fPAMean );
     stAET.pa.min = SONATA::ENCODE::PA( pSRxABTData->fPAMin );
     stAET.pa.max = SONATA::ENCODE::PA( pSRxABTData->fPAMax );
+
+    stAET.as.stat = pSRxABTData->iScanType != 0 ? SELF_SUCCESS : SELF_FAIL;
+    stAET.as.type = pSRxABTData->iScanType;
+    stAET.as.prd = SONATA::ENCODE::SCNPRD( pSRxABTData->fMeanScanPeriod );
 
     stAET.seen.frst = pSRxABTData->tiFirstSeenTime;
     stAET.seen.last = pSRxABTData->tiLastSeenTime;
@@ -314,3 +328,4 @@ void CEmitterMerge::ReloadLibrary()
 {
     m_pTheEmitterMergeMngr->UpdateCEDEOBLibrary();
 }
+

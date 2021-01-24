@@ -738,6 +738,15 @@ void CSingleClient::DisplayMsg()
             strcpy( szOpcode, "삭제" );
             break;
 
+        // IPL 관련 메시지
+        case esIPL_VERSION :
+            strcpy( szOpcode, "IPL 버젼" );
+            break;
+
+        case esIPL_WRITESTATUS :
+            strcpy( szOpcode, "IPL 기록상태" );
+            break;
+
         default :
             strcpy( szOpcode, "이름 없음" );
             break;

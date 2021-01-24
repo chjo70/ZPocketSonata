@@ -104,7 +104,7 @@ typedef struct
 	uint32_t		reserved	: 4;
 } dma_sg_ctrl_t;
 
-typedef struct
+struct dma_sg_stat_t
 {
 	uint32_t		transferred : 26;
 	uint32_t		rx_eof		: 1;
@@ -113,7 +113,7 @@ typedef struct
 	uint32_t		dma_slv_err : 1;
 	uint32_t 		dma_dec_err	: 1;
 	uint32_t 		cmplt		: 1;
-} dma_sg_stat_t;
+} ;
 
 typedef struct
 {
@@ -126,7 +126,7 @@ typedef struct
 	uint32_t		reserved_1[3];
 } dma_sg_desc_t;
 
-typedef struct
+struct dma_sg_descs_t
 {
 	uint32_t		count;
 	uint32_t		size;
@@ -134,7 +134,7 @@ typedef struct
 	dma_sg_desc_t	*item;
 	xmem_t			mem;
 	dma_sg_desc_t	*curr;
-} dma_sg_descs_t;
+} ;
 
 typedef struct
 {

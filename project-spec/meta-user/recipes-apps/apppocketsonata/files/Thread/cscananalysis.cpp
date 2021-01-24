@@ -1,4 +1,6 @@
 #include "cscananalysis.h"
+#include "cemittermerge.h"
+
 #include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
@@ -98,7 +100,8 @@ void CScanAnalysis::_routine()
 void CScanAnalysis::AnalysisStart()
 {
     LOGENTRY;
-    unsigned int uiTotalLOB;
+
+    SRxLOBData *pLOBData;
 
     STR_TRKSCNPDWDATA *pScnPDWData;
 
@@ -113,13 +116,14 @@ void CScanAnalysis::AnalysisStart()
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
     STR_ANALINFO strAnalInfo;
 
-    //uiTotalLOB = m_pTheScanSigAnal->GetCoLOB();
-
-    strAnalInfo.uiBand = 0;
-    strAnalInfo.uiTotalLOB = 0; //uiTotalLOB;
+    strAnalInfo.uiBand = g_enBoardId;
+    strAnalInfo.uiTotalLOB = _spOne;
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
-    //EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheScanSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+    pLOBData = m_pTheScanSigAnal->GetLOBData();
+    pLOBData->uiAETID = strAnalInfo.uiAETID;
+    pLOBData->uiABTID = strAnalInfo.uiABTID;
+    EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
 }

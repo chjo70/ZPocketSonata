@@ -81,6 +81,7 @@ void CSysConfig::ReleaseInstance()
  */
 void CSysConfig::LoadINI()
 {
+#ifndef _CGI_LIST_
     int i, iValue;
     float fValue;
     string strValue;
@@ -130,6 +131,11 @@ void CSysConfig::LoadINI()
     iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
     SetIPLVersion( iValue );
 
+
+
+
+#endif
+
 }
 
 /**
@@ -145,6 +151,13 @@ void CSysConfig::InitVar()
     // 보드 세팅
     m_strConfig.enBoardID = enMaster;
     m_strConfig.enMode = enREADY_MODE;
+
+
+    // 수집 채널 초기화
+    memset( m_strConfig.strDetectWindowCell, 0, sizeof(STR_WINDOWCELL) * DETECT_CHANNEL );
+    memset( m_strConfig.strTrackWindowCell, 0, sizeof(STR_WINDOWCELL) * TRACK_CHANNEL );
+    memset( m_strConfig.strScanWindowCell, 0, sizeof(STR_WINDOWCELL) * SCAN_CHANNEL );
+    memset( m_strConfig.strUserWindowCell, 0, sizeof(STR_WINDOWCELL) * USER_CHANNEL );
 
     _spOneSec = 20000000.;
     _spOneMilli = FDIV( _spOneSec, 1000. );
@@ -224,4 +237,27 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
     }
 
     return bRet;
+}
+
+/**
+ * @brief CSysConfig::SetWindowCell
+ * @param uiCh
+ * @param pWindowCell
+ */
+void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
+{
+
+    if( uiCh < DETECT_CHANNEL ) {
+        SetDetectWindowCell( uiCh, pWindowCell );
+    }
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL ) {
+        SetTrackWindowCell( uiCh-DETECT_CHANNEL, pWindowCell );
+    }
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL ) {
+        SetScanWindowCell( uiCh-DETECT_CHANNEL-TRACK_CHANNEL, pWindowCell );
+    }
+    else {
+        SetUserWindowCell( uiCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL, pWindowCell );
+    }
+
 }

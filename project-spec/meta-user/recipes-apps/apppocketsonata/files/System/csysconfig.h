@@ -49,10 +49,10 @@ struct STR_SYSCONFIG {
      */
     char szLocalIPAddress[30];
 
-    void *m_pTheDetectCollectBank[DETECT_CHANNEL];
-    void *m_pTheTrackCollectBank[TRACK_CHANNEL];
-    void *m_pTheScanCollectBank[SCAN_CHANNEL];
-    void *m_pTheUserCollectBank[USER_CHANNEL];
+    STR_WINDOWCELL strDetectWindowCell[DETECT_CHANNEL];
+    STR_WINDOWCELL strTrackWindowCell[TRACK_CHANNEL];
+    STR_WINDOWCELL strScanWindowCell[SCAN_CHANNEL];
+    STR_WINDOWCELL strUserWindowCell[USER_CHANNEL];
 
 } ;
 
@@ -83,6 +83,9 @@ private:
 
     void SetNetworkIP();
     bool GetIPAddress( char *pIPAddress, char *pNetworkName );
+
+public:
+    void SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell );
 
 public:
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };
@@ -153,29 +156,30 @@ public:
         strcpy( m_strConfig.szLocalIPAddress, pIPAddress );
     } ;
 
-    void *GetDetectCollectBnk( int iCh ) { return m_strConfig.m_pTheDetectCollectBank[iCh]; }
-    void SetDetectCollectBank( int iCh, void *pCollectBank ) {
-        m_strConfig.m_pTheDetectCollectBank[iCh] = pCollectBank;
+    STR_WINDOWCELL *GetDetectWindowCell( int iCh ) { return & m_strConfig.strDetectWindowCell[iCh]; }
+    void SetDetectWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strDetectWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    void *GetTrackCollectBnk( int iCh ) { return m_strConfig.m_pTheTrackCollectBank[iCh]; }
-    void SetTrackCollectBank( int iCh, void *pCollectBank ) {
-        m_strConfig.m_pTheTrackCollectBank[iCh] = pCollectBank;
+    STR_WINDOWCELL *GetTrackWindowCell( int iCh ) { return & m_strConfig.strTrackWindowCell[iCh]; }
+    void SetTrackWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strTrackWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    void *GetScanCollectBnk( int iCh ) { return m_strConfig.m_pTheScanCollectBank[iCh]; }
-    void SetScanCollectBank( int iCh, void *pCollectBank ) {
-        m_strConfig.m_pTheScanCollectBank[iCh] = pCollectBank;
+    STR_WINDOWCELL *GetScanWindowCell( int iCh ) { return & m_strConfig.strScanWindowCell[iCh]; }
+    void SetScanWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strScanWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    void *GetUserCollectBnk( int iCh ) { return m_strConfig.m_pTheUserCollectBank[iCh]; }
-    void SetUserCollectBank( int iCh, void *pCollectBank ) {
-        m_strConfig.m_pTheUserCollectBank[iCh] = pCollectBank;
+    STR_WINDOWCELL *GetUserWindowCell( int iCh ) { return & m_strConfig.strUserWindowCell[iCh]; }
+    void SetUserWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strUserWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
+
 
 };
 

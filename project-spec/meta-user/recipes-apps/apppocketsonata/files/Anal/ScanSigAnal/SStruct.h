@@ -26,11 +26,11 @@ typedef struct
 
 //##ModelId=452B0C440345
 struct STR_SCANPT {
-	UINT co;
+    UINT co;
     UINT pa[SCN_COLLECT_PDW+10];				// toa
     UINT toa[SCN_COLLECT_PDW+10];				// amplitude
 
-	STR_LOWHIGH _pa;
+    STR_LOWHIGH _pa;
 
 }  ;
 
@@ -70,6 +70,20 @@ struct STR_AUTOCOR {
     float	ccf_saw;
     float	ccf_ret;
 }  ;
+
+#ifndef SRxScanData_STRUCT
+#define SRxScanData_STRUCT
+struct SRxScanData {
+    UINT uiABTID;
+    UINT uiAETID;
+
+    UINT uiResult;
+
+    float fScnPrd;     //! 스캔 주기값
+    UINT uiScnTyp;     //! 스캔 형태
+};
+
+#endif
 
 
 #endif // !defined(AFX_SSTRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

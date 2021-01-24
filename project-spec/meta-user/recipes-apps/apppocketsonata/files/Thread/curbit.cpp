@@ -174,7 +174,7 @@ void CUrBit::InitHW()
         _TOA sToa;
         UZPOCKETPDW s_pdw_reg_t;
 
-        s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x2B167;
+        s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x123B167;
         s_pdw_reg_t.uniPdw_freq_toa.stPdw_freq_toa.toa_L = 0x3A60;
         sToa	= ( (_TOA) s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16) | s_pdw_reg_t.uniPdw_freq_toa.stPdw_freq_toa.toa_L;
 

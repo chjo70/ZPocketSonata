@@ -192,7 +192,7 @@ struct STR_PRI_RANGE_TABLE {
 // 에미터 정보
 //##ModelId=452B0C5403CA
 struct STR_EMITTER {
-	STR_PDWINDEX pdw;						// PDW 버퍼
+    STR_PDWINDEX pdw;						// PDW 버퍼
     UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
 	int seg_count;							// seg[] 수, 펄스열 수
 

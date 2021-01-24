@@ -153,7 +153,7 @@ struct STR_FILTER_SETUP {
 
 } ;
 
-typedef struct {
+struct STR_ZOOM_INFO {
 	double dZoomMinX;
 	double dZoomMaxX;
 	double dZoomMinY;
@@ -161,7 +161,7 @@ typedef struct {
 
 	ENUM_SUB_GRAPH enSubGraph;
 
-} STR_ZOOM_INFO;
+} ;
 
 
 //////////////////////////////////////////////////////////////////////////

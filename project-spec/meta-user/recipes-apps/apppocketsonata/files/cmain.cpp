@@ -77,7 +77,6 @@ CSingleClient *g_pThePMCSocket;
 void usrAppStart()
 {
 
-
     LOGENTRY;
     _ShowProgramTitle();
 

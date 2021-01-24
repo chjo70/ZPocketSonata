@@ -29,9 +29,7 @@ protected:
 
 public:
     //##ModelId=452B0C5300F8
-    inline void SetAnalSeg( int coSeg ) { CAnalPRI::SetAnalSeg( coSeg ); }
-    //##ModelId=452B0C5300FA
-    inline void SetCoSeg( int nSeg ) { CAnalPRI::SetCoSeg( nSeg ); }
+    //inline void SetAnalSeg( int coSeg ) { CAnalPRI::SetAnalSeg( coSeg ); }
 
     int GetBand();
 

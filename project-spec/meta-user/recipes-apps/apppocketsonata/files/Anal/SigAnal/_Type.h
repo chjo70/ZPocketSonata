@@ -95,7 +95,7 @@ typedef unsigned int INT32;
 #define TRACE0                  printf
 #define TRACE1                  printf
 
-#define FLT_MIN                 1.175494351e-38F        /* min positive value */
+//#define FLT_MIN                 1.175494351e-38F        /* min positive value */
 
 #ifndef _WIN32
 #define _MAX_PATH               1024

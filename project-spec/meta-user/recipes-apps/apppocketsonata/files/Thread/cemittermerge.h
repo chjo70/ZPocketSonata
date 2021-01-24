@@ -11,6 +11,7 @@
 class CEmitterMerge : public CThread
 {
 private:
+    bool m_bScanInfo;
     UNI_LAN_DATA m_uniLanData;
     CELEmitterMergeMngr *m_pTheEmitterMergeMngr;
 

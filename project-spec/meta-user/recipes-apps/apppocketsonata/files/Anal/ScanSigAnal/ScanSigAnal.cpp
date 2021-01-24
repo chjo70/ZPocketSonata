@@ -33,7 +33,7 @@ CScanSigAnal *theScanSigAnal;
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-16 11:00:59
 //
-void GetScanRes( int *pScanType, int *pScanPrd )
+void GetScanRes( unsigned int *pScanType, float *pScanPrd )
 {
 	theScanSigAnal->GetScanRes( pScanType, pScanPrd );
 }
@@ -190,8 +190,6 @@ CScanSigAnal::~CScanSigAnal()
 */
 void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
-	UINT nResult;
-
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
 
@@ -218,7 +216,10 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
     m_theAnalScan->KnownAnalysis();
 
 	// 스캔 분석 수행한다.
-	nResult = m_theAnalScan->AnalScan();
+    m_strScnResult.uiABTID = m_pScnAet->uiABTID;
+    m_strScnResult.uiAETID = m_pScnAet->uiAETID;
+    m_strScnResult.uiResult = (UINT) m_theAnalScan->AnalScan();
+    GetScanRes( & m_strScnResult.uiScnTyp, & m_strScnResult.fScnPrd );
 
 	// 스캔 분석 결과를 저장한다.
     //SaveScanInfo( nResult, m_pScnAet );
@@ -409,6 +410,8 @@ void CScanSigAnal::Init( STR_PDWDATA *pPDWData )
     // 신호 수집 개수 정의
     m_CoPdw = pPDWData->uiTotalPDW;
 
+    m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
+
 	// 그룹화 초기화
 	m_theGroup->Init();
 
@@ -487,9 +490,13 @@ STR_SCANPT *CScanSigAnal::GetScanPulseTrain( int noCh )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-16 11:02:34
 //
-void CScanSigAnal::GetScanRes( int *pScanType, int *pScanPrd )
+void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 {
-	m_theAnalScan->GetScanRes( pScanType, pScanPrd );
+    UINT uiScnPrd;
+
+    m_theAnalScan->GetScanRes( pScanType, & uiScnPrd );
+
+    *pScanPrd = TOAmsCNV( uiScnPrd );
 }
 
 //////////////////////////////////////////////////////////////////////

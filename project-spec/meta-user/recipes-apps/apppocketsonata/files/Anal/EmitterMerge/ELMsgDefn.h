@@ -127,7 +127,7 @@ struct SRxLOBData {
 
     int iScanType;
     //int iDetailScanType;
-    float fScanPeriod;			// [usec]
+    float fScanPeriod;			// [msec]
 
     int iMOPType;				// 인트라 타입
     int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
@@ -417,7 +417,20 @@ struct SCollectingData {
 	unsigned int uiIsDVEnable;
 	unsigned int uiIsPolarizationFilterApply;
 
-}  ;
+} ;
+
+#ifndef SRxScanData_STRUCT
+#define SRxScanData_STRUCT
+struct SRxScanData {
+    UINT uiABTID;
+    UINT uiAETID;
+
+    UINT uiResult;
+
+    float fScnPrd;     //! 스캔 주기값
+    UINT uiScnTyp;     //! 스캔 형태
+};
+#endif
 
 struct SCollectingList
 {

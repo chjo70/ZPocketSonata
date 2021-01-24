@@ -12,8 +12,12 @@ using namespace std;
 #include "../../../Utils/clog.h"
 #include "../../../Utils/ccommonutils.h"
 
+#include "../../../Thread/csignalcollect.h"
 
+#include "../../../System/csysconfig.h"
 //
+
+
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +32,6 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 {
 
     Init();
-
 
 }
 
@@ -83,6 +86,7 @@ void CCollectBank::SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL )
     LOGENTRY;
 
     memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(STR_WINDOWCELL) );
+    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
 }
 
 /**
@@ -99,6 +103,8 @@ void CCollectBank::CloseCollectBank()
 
     m_strPDW.uiTotalPDW = 0;
 
+    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
+
 }
 
 /**
@@ -111,10 +117,10 @@ void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 
     m_strWindowCell.bUse = true;
 
-    if( IsValidChannel() == true ) {
-        m_strWindowCell.enCollectMode = enCollecting;
+//    if( IsValidChannel() == true ) {
+//        m_strWindowCell.enCollectMode = enCollecting;
 
-    }
+//    }
 
     UpdateWindowCell();
 }
@@ -128,6 +134,8 @@ void CCollectBank::CloseTrackWindowCell()
     m_strWindowCell.bUse = false;
 
     m_strWindowCell.enCollectMode = enUnused;
+
+    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
 }
 
 /**
@@ -285,6 +293,8 @@ void CCollectBank::UpdateWindowCell()
 
     // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
+
+    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
 
 }
 

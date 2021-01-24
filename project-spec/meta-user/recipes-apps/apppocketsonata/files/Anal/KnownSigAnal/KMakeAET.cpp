@@ -121,7 +121,7 @@ void CKMakeAET::MakeAET()
     pNewAet = & m_LOBData[nStartAet];
     for( i=0 ; i < m_CoLOB ; ++i ) {
         if( pNewAet->iPRIType == _DWELL ) {
-			STR_PRI *pNewPri, *pTrkPri;
+            //STR_PRI *pNewPri, *pTrkPri;
 
             //pNewPri = & pNewAet->aet.pri;
             //pTrkPri = & stTrkAet.aet.pri;
@@ -294,6 +294,8 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 	
 }
 
+#ifdef _POCKETSONATA_
+#else
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKMakeAET::MakeUpAET
@@ -396,6 +398,7 @@ void CKMakeAET::MakeUpAET()
 	m_CoNewAet = count - coUpdAet;
 
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 //

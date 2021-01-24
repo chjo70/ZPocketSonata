@@ -223,11 +223,11 @@
 
 /* LAN 기본 데이터 */
 //##ModelId=452B0C4E03E1
-typedef struct
+struct LAN_DATA
 {
-  UINT d1;            // opcode or operand
-  UINT d2;            // operand
-} LAN_DATA;
+  unsigned int d1;            // opcode or operand
+  unsigned int d2;            // operand
+} ;
 
 /* RSA CNF 방위 INHIBIT 데이터 */
 //##ModelId=452B0C4F000D
@@ -239,14 +239,13 @@ typedef struct
 //##ModelId=452B0C4F003F
 
 //##ModelId=452B0C4F0053
-typedef struct
-{
-  UINT nsp;
-  UINT cip;
-  UINT sap;
-  UINT ksp[ 4 ];
-  UINT coEcho;
-} STR_PRCSBIT ;
+struct STR_PRCSBIT {
+  unsigned int nsp;
+  unsigned int cip;
+  unsigned int sap;
+  unsigned int ksp[ 4 ];
+  unsigned int coEcho;
+}  ;
 
 /* RSA IBIT 종합 데이터 */
 //##ModelId=452B0C4F0067

@@ -80,7 +80,7 @@ typedef unsigned long long int _TOA;
 #define DETECT_CHANNEL  (1)
 #define TRACK_CHANNEL   (256)
 #define SCAN_CHANNEL    (256)
-#define USER_CHANNEL    (1)
+#define USER_CHANNEL    (16)
 #define TOTAL_CHANNELS  (DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL+USER_CHANNEL)
 
 

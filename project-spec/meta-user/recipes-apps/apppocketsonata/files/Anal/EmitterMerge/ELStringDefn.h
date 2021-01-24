@@ -159,6 +159,33 @@ static const char* strAetFreqPRIPatternType[LENGTH_OF_LOB_STRING]=
 };
 
 
+#ifdef _POCKETSONATA_
+// AET - Scan Type
+#define NUM_OF_AET_SCAN_TYPE 3
+//enum ENUM_AET_SCAN_TYPE
+//{
+//	E_AET_SCAN_UNKNOWN = 0,
+//	E_AET_SCAN_TRACKING,
+//	E_AET_SCAN_SEARCH,
+//	/*! \todo   스캔 분석이 더 좋아지면 추후에 고려... (IdentifyScan() 함수에 비교 추가)
+//	    \author 조철희 (churlhee.jo@lignex1.com)
+//	    \date 	2014-12-30 13:56:52
+//	*/
+//	E_AET_SCAN_SECTOR
+//};
+//#define NUM_OF_AET_SCAN_TYPE 3
+///*! \bug  	스캔 형태 값 수정
+//    \author 조철희 (churlhee.jo@lignex1.com)
+//    \date 	2013-09-23 19:09:12
+//*/
+//static const char* strAetScanType[LENGTH_OF_LOB_STRING]=
+//{
+//	"모름",
+//	"추적",
+//	"탐색",
+//	"섹터"
+//};
+#else
 // AET - Scan Type
 #define NUM_OF_AET_SCAN_TYPE 3
 enum ENUM_AET_SCAN_TYPE
@@ -184,6 +211,7 @@ static const char* strAetScanType[LENGTH_OF_LOB_STRING]=
 	"탐색",
 	"섹터"
 };
+#endif
 
 // AET - FISINT 과제
 enum ENUM_AET_FISINT_TASK

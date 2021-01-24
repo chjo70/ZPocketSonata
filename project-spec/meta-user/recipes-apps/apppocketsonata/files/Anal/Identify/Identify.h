@@ -80,8 +80,8 @@ enum EnumMATCHRATIO {
 
 	_PW_MATCHRATIO_,
 
-	//_SCANTYPE_MATCHRATIO_,
-	//_SCANPRD_MATCHRATIO_,
+    _SCANTYPE_MATCHRATIO_,
+    _SCANPRD_MATCHRATIO_,
 	//_MOP_MATCHRATIO_,
 
 	_POSITION_MATCHRATIO_	 
@@ -194,7 +194,7 @@ private:
     int m_nCoCEDEOB;																///< CED/EOB 메칭 갯수
 
 
-// 최종 CED/EOB 식별 결과
+    // 최종 CED/EOB 식별 결과
     STR_CEDEOB_FINAL_RESULT m_CEDEOBResult;					///< 최종 CED/EOB 식별 결과
 
     UINT m_fromLib;																	///< 식별시 시작 인덱스
@@ -259,6 +259,8 @@ private:
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
+    void IdentifyScan();
+    void IdentifyPW();
 
  	bool LoadCEDLibrary2();
  	bool LoadEOBLibrary2();

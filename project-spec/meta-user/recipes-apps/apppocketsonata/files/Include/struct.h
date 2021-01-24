@@ -70,7 +70,7 @@ struct STR_WINDOWCELL {
      */
     bool bUse;
 
-    unsigned int uiMode;
+    //unsigned int uiMode;
 
     /**
      * @brief 수집 완료 상태를 나타낸다.

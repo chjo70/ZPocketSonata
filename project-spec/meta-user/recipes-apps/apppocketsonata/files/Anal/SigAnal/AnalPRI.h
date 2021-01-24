@@ -53,9 +53,9 @@ private:
 
     // 패턴 형태 분석을 분석하기 위한 데이터
     //##ModelId=452B0C570049
-    int m_1PrimeData[ MAX_SAMPLING_DATA ];
+    int *m_p1PrimeData;
     //##ModelId=452B0C570053
-    int m_2PrimeData[ MAX_SAMPLING_DATA ];
+    int *m_p2PrimeData;
     //##ModelId=452B0C570054
     int m_nPatternType;
 
@@ -65,11 +65,11 @@ private:
     //##ModelId=452B0C570067
     int m_CoSample;
     //##ModelId=452B0C570071
-    _TOA m_SampleToa[MAX_SAMPLING_DATA];
+    _TOA *m_pSampleToa;
     //##ModelId=452B0C57007C
-    int m_SampleData[MAX_SAMPLING_DATA];
+    int *m_pSampleData;
     //##ModelId=452B0C570086
-    int m_NormData[MAX_SAMPLING_DATA];
+    int *m_pNormData;
     //##ModelId=452B0C570090
     float m_skewness;
     //##ModelId=452B0C5700A4
@@ -78,17 +78,17 @@ private:
     //##ModelId=452B0C5700B8
     int m_CoData;
     //##ModelId=452B0C5700C2
-    _TOA m_DataX[MAX_SAMPLING_DATA];
+    _TOA *m_pDataX;
     //##ModelId=452B0C5700C3
-    _TOA m_DataY[MAX_SAMPLING_DATA];
+    _TOA *m_pDataY;
 
     //##ModelId=452B0C5700CC
-    float m_Acf[MAX_SAMPLING_DATA];
+    float *m_pAcf;
     //##ModelId=452B0C5700D6
     int m_CoAcf;
 
     //##ModelId=452B0C5700E0
-    _TOA m_CanPeak[MAX_SAMPLING_DATA];
+    _TOA *m_pCanPeak;
 
     //##ModelId=452B0C5700EA
     _TOA *m_pPulseDtoa;
@@ -140,8 +140,7 @@ public:
     inline void SetAnalSeg( int nSeg ) { m_nAnalSeg=nSeg; }
     //##ModelId=452B0C57016E
     inline void MergeGrouping() { MergeGrouping( m_nAnalEmitter ); }
-    //##ModelId=452B0C570176
-    inline void SetCoSeg( int nSeg ) { m_CoSeg = nSeg; }
+
     //##ModelId=452B0C570178
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return & m_DtoaHist; }
     //##ModelId=452B0C570180
@@ -315,8 +314,7 @@ public:
     BOOL AnalLobe( STR_EMITTER *pEmitter );
     //##ModelId=452B0C580043
     void MergePdwIndexInSeg( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C58004B
-    UINT AnalPriType( STR_EMITTER *pEmitter );
+
     //##ModelId=452B0C58004D
     FREQ_TYPE AnalFreqType( STR_EMITTER *pEmitter );
     //##ModelId=452B0C580056

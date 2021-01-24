@@ -143,8 +143,8 @@
 
 
 // 신호 식별 밴드 그룹화 정의
-#define	MAX_FREQ_HZ										18398750			//!< 주파수 최대 값, Hz
-#define MIN_FREQ_HZ 									500						//!< 주파수 최소 값
+//#define	MAX_FREQ_HZ										18398750			//!< 주파수 최대 값, Hz
+//#define MIN_FREQ_HZ 									500						//!< 주파수 최소 값
 
 #define	NO_FEID_BAND									32						// 주파수 밴드 개수
 #define FEID_FREQ_RES_HZ							90000					// 90 KHz 의 Histogram res.

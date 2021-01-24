@@ -1051,10 +1051,10 @@ void CELSignalIdentifyAlg::Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBD
     }
 
     // 5. 펄스폭 식별
-    // IdentifyPW();
+    IdentifyPW();
 
     // 6. 스캔 식별
-    //IdentifyScan();
+    IdentifyScan();
 
     // 7. 우선 순위 식별
     //IdentifyPriority();
@@ -3113,7 +3113,7 @@ void CELSignalIdentifyAlg::FIdentifyFixFix( SRxLOBData *pLOBData )
                 \date 	2015-10-20 02:08:45
         */
         if( CompMarginDiff<float>( pLOBData->fFreqMean, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ||
-                CompMarginDiff<float>( pLOBData->fFreqMean, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
+            CompMarginDiff<float>( pLOBData->fFreqMean, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
             ; //bret = true;
         }
         else {
@@ -4181,56 +4181,118 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
 
 }
 
-// //////////////////////////////////////////////////////////////////////////
-// /*! \brief    펄스폭 식별을 수행한다.
-// 		\author   조철희
-// 		\param    pNewAet 인자형태 STR_NEWAET *
-// 		\return   void
-// 		\version  0.0.35
-// 		\date     2008-08-08 00:07:38
-// 		\warning
-// */
-// void CELSignalIdentifyAlg::IdentifyPW()
-// {
-// 	UINT i;
-// 	UINT toLib;
-// 	STR_LIB_IDRESULT *pIdxLib;
-//
-// 	toLib = 0;
-// 	pIdxLib = & m_pIdResult[0];
-//
-// 	for( i=0 ; i < m_toLib ; ++i, ++pIdxLib ) {
-// 		SRadarMode* pRadarMode;
-//
-// 		pRadarMode = pIdxLib->pIdxRadarMode;
-// 		if( pRadarMode == NULL ) { //DTEC_NullPointCheck
-// 			continue;
-// 		}
-//
-// 		if( m_optParameter.pw.bCheckRange == true ) {
-// 			float fDiffPW;
-// 			float fDiff;
-//
-// 			// 펄스폭 최소, 최대 값이 0 일때는 펄스폭 비교는 무시한다.
-// 			//if( pRadarMode->fPD_TypicalMin != 0.0 && pRadarMode->fPD_TypicalMax != 0.0 ) {
-// 			if( Is_FNotZero( pRadarMode->fPD_TypicalMin ) == true && Is_FNotZero( pRadarMode->fPD_TypicalMax ) == true ) {
-// 				fDiff = abs( m_optParameter.pw.fHigh - m_optParameter.pw.fLow );
-// 				fDiffPW = FDIV( fDiff*m_optParameter.pw.fRatioError, 100 );
-// 				fDiffPW = m_optParameter.pw.fRangeError + fDiffPW;
-//
-// 				// 범위 안에 평균이 들어가지 않으면 실패
-// 				if( CompMarginDiffFFF( m_optParameter.pw.fMean, 0, pRadarMode->fPD_TypicalMax, fDiffPW ) == _spFalse ) {
-// 					continue;
-// 				}
-// 			}
-// 		}
-//
-// 		m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
-// 	}
-//
-// 	m_toLib = toLib;
-// }
-//
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    펄스폭 식별을 수행한다.
+    \author   조철희
+    \param    pNewAet 인자형태 STR_NEWAET *
+    \return   void
+    \version  0.0.35
+    \date     2008-08-08 00:07:38
+    \warning
+*/
+void CELSignalIdentifyAlg::IdentifyPW()
+{
+    UINT i;
+    UINT toLib;
+    STR_LIB_IDRESULT *pIdxLib;
+
+    toLib = 0;
+    pIdxLib = & m_pIdResult[0];
+
+    for( i=0 ; i < m_toLib ; ++i, ++pIdxLib ) {
+        SRadarMode* pRadarMode;
+
+        pRadarMode = pIdxLib->pIdxRadarMode;
+        if( pRadarMode == NULL ) { //DTEC_NullPointCheck
+            continue;
+        }
+
+        // 펄스폭 최소, 최대 값이 0 일때는 펄스폭 비교는 무시한다.
+        if( Is_FNotZero( pRadarMode->fPD_TypicalMax ) == true ) {
+            // 범위 안에 평균이 들어가지 않으면 실패
+            if( CompMarginDiff<float>( m_pLOBData->fPWMin, 0, pRadarMode->fPD_TypicalMax, 0 ) == _spFalse ||
+                CompMarginDiff<float>( m_pLOBData->fPWMax, 0, pRadarMode->fPD_TypicalMax, 0 ) == _spFalse ) {
+                continue;
+            }
+        }
+
+        m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
+
+    }
+
+    m_toLib = toLib;
+}
+
+/**
+ * @brief CELSignalIdentifyAlg::IdentifyScan
+ */
+void CELSignalIdentifyAlg::IdentifyScan()
+{
+    UINT i;
+    UINT toLib;
+    STR_LIB_IDRESULT *pIdxLib;
+
+    toLib = 0;
+    pIdxLib = & m_pIdResult[0];
+
+    for( i=0 ; i < m_toLib ; ++i, ++pIdxLib ) {
+        SRadarMode* pRadarMode;
+
+        pRadarMode = pIdxLib->pIdxRadarMode;
+        if( pRadarMode == NULL ) { //DTEC_NullPointCheck
+            continue;
+        }
+
+        switch( m_pLOBData->iScanType ) {
+            case E_AET_SCAN_STEADY :
+                if( pRadarMode->eScanPrimaryType != ScanType::enumD_Non_Scanning ) {
+                    continue;
+                }
+                break;
+
+            case E_AET_SCAN_UNI_DIRECTIONAL :
+                if( pRadarMode->eScanPrimaryType != ScanType::enumU_Uni_Directional_Sector_Plane_Undertermined ) {
+                    continue;
+                }
+                break;
+
+            case E_AET_SCAN_BI_DIRECTIONAL :
+                if( pRadarMode->eScanPrimaryType != ScanType::enumV_Bi_Directional_Sector_Plane_Undetermined ) {
+                    continue;
+                }
+                break;
+
+            case E_AET_SCAN_CONICAL :
+                if( pRadarMode->eScanPrimaryType != ScanType::enumF_Conical ) {
+                    continue;
+                }
+                break;
+
+            case E_AET_SCAN_CIRCULAR :
+                if( pRadarMode->eScanPrimaryType != ScanType::enumA_Circular ) {
+                    continue;
+                }
+                break;
+
+            default :
+                break;
+        }
+
+        // 범위 안에 평균이 들어가지 않으면 실패
+        if( ( m_pLOBData->iScanType >= E_AET_SCAN_CIRCULAR && m_pLOBData->iScanType <= E_AET_SCAN_STEADY ) && \
+            ( pRadarMode->eScanPrimaryType != ScanType::enumUndefinedScanType ) ) {
+            if( CompMarginDiff<float>( m_pLOBData->fScanPeriod, pRadarMode->fScanPrimaryTypicalMin, pRadarMode->fScanPrimaryTypicalMax, 0 ) == _spFalse ) {
+                continue;
+            }
+        }
+
+        m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
+
+    }
+
+    m_toLib = toLib;
+}
+
 // /**
 //  * @brief     스캔 형태에 대해서 신호 식별 결과를 알려준다.
 //  * @param     ScanType::EnumScanType eScanType
@@ -5114,6 +5176,12 @@ void CELSignalIdentifyAlg::CalcMatchRatio()
         // 펄스폭 비교
         fRatio += CalcMatchRatio( _PW_MATCHRATIO_, pRadarMode );
 
+        // 스캔 형태값
+        fRatio += CalcMatchRatio( _SCANTYPE_MATCHRATIO_, pRadarMode );
+
+        // 스캔 주기
+        fRatio += CalcMatchRatio( _SCANPRD_MATCHRATIO_, pRadarMode );
+
         pIdxLib->uRatio = (int) fRatio;
         ++ pIdxLib;
 
@@ -5276,11 +5344,12 @@ float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarM
 // 				}
                 break;
 
-                // PRI 범위 비교
+            // PRI 범위 비교
             case _PRI_RANGE_MATCHRATIO_ :
                 frate = (float) m_pSEnvironVariable->iWeightPriRange;
                 break;
 
+            // PRI 패턴 주기 비교
             case _PRI_PERIOD_MATCHRATIO_ :
                 if( m_pLOBData->fPRIPatternPeriod > 0 ) {
                     frate = (float) m_pSEnvironVariable->iWeightPriModPeriod;
@@ -5319,6 +5388,14 @@ float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarM
                         frate = (float) _DEFAULT_PW_RANGE_RATE;
                     }
                 }
+                break;
+
+            case _SCANTYPE_MATCHRATIO_ :
+                frate = _DEFAULT_SCAN_TYPE_RATE;
+                break;
+
+            case _SCANPRD_MATCHRATIO_ :
+                frate = _DEFAULT_SCAN_TYPE_RATE;
                 break;
 
             default:

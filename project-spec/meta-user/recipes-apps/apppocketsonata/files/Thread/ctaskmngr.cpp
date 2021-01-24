@@ -523,13 +523,14 @@ void CTaskMngr::InsertIPL( int iIndex )
         sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_UPDATED='%s', SIGNAL_TYPE='%s', \
 RF_TYPICAL_MIN='%d', RF_TYPICAL_MAX='%d', RF_NUM_POSITIONS='%d', RF_PATTERN_PERIOD_MIN='%d', RF_PATTERN_PERIOD_MAX='%d', \
 PRI_TYPICAL_MIN='%d', PRI_TYPICAL_MAX='%d', PRI_NUM_POSITIONS='%d', PRI_PATTERN_PERIOD_MIN='%d', PRI_PATTERN_PERIOD_MAX='%d', \
-PRIORITY='%d', RF_TYPE='%d', PRI_TYPE='%d', PD_TYPICAL_MIN='%d', PD_TYPICAL_MAX='%d' \
+PRIORITY='%d', RF_TYPE='%d', PRI_TYPE='%d', PD_TYPICAL_MIN='%d', PD_TYPICAL_MAX='%d', \
+SCAN_PRIMARY_TYPE='%d', SCAN_PRIMARY_TYPICAL_MIN='%d', SCAN_PRIMARY_TYPICAL_MAX='%d', \
 WHERE RADAR_MODE_INDEX='%d'" , \
         szDate, _SignalType[pstrIPL->sigType], \
         pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
         pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
         pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, pstrIPL->pw.low, pstrIPL->pw.hgh, \
-        iRadarModeIndex );
+        pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh, iRadarModeIndex );
         exec( m_szSQLString );
 
     }
@@ -547,19 +548,22 @@ DATE_CREATED, \
 RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
 PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
 PRIORITY, RF_TYPE, PRI_TYPE, \
-PD_TYPICAL_MIN, PD_TYPICAL_MAX ) VALUES \
+PD_TYPICAL_MIN, PD_TYPICAL_MAX, \
+SCAN_PRIMARY_TYPE, SCAN_PRIMARY_TYPICAL_MIN, SCAN_PRIMARY_TYPICAL_MAX ) VALUES \
 ( %d, 'ZZ', '%s', \
 '%s', \
 %d, %d, %d, %d, %d, \
 %d, %d, %d, %d, %d, \
 %d, %d, %d, \
-%d, %d )" ,
+%d, %d, \
+%d, %d, %d )" , \
         pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
         szDate, \
         pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
         pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
         pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
-        pstrIPL->pw.low, pstrIPL->pw.hgh );
+        pstrIPL->pw.low, pstrIPL->pw.hgh, \
+        pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh );
         exec( m_szSQLString );
 
         // 레이더 모드 라이프 사이클

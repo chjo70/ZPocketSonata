@@ -14,6 +14,7 @@ namespace SELTASKDB
 #define _DEFAULT_FREQ_TYPE_RATE				(10)
 #define _DEFAULT_PRI_TYPE_RATE				(10)
 #define _DEFAULT_PW_RANGE_RATE				(10)
+#define _DEFAULT_SCAN_TYPE_RATE				(10)
 
 class CELEnvironVariableImpl;
 struct SOCSystemVariable;

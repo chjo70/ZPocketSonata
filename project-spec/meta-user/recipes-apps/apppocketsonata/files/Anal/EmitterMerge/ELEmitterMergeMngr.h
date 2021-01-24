@@ -64,28 +64,6 @@
 
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 
-
-// typedef struct {
-// 	SRxABTData ABTdata;
-// 	SELABTDATA_EXT ABTExt;
-// 	SELEXTDB ExtDB;
-// 
-// } SEL_INSERTDB_ABT;
-// 
-// typedef struct {
-// 	SELAETDATA AETdata;
-// 	SELAETDATA_EXT AETExt;
-// 	SELEXTDB ExtDB;
-// 
-// } SEL_INSERTDB_AET;
-
-// typedef struct {
-// 	char szTaskID[LENGTH_OF_TASK_ID];
-// 	char szTaskName[SIZE_OF_TASK_NAME];
-// 
-// } SEL_STaskID2Name;
-
-
 /**
 * [식별자 : CLS-GMU-EL-L-SAC]
 *
@@ -179,6 +157,8 @@ private:
 
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
+
+    bool m_bScanInfo;
 
 #ifdef _SQLITE_
     //char *m_pszSQLString;
@@ -320,7 +300,7 @@ private:
     float CalcJitterRatio( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePWInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-// 	void UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    void UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
 // 	void UpdateIntraInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, int nIndex, bool bLOBValidityApplied=false, bool bRunCluster=true, bool bRunPE=true );
@@ -471,6 +451,8 @@ private:
     void InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
     void InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB );
+
+    inline void SetScanInfo( bool bScanInfo ) { m_bScanInfo = bScanInfo; }
  
 public:
     CELEmitterMergeMngr(void);
@@ -479,11 +461,12 @@ public:
     void InitOfThreat();
     void InitDataFromDB();
 
-    void Start();
+    void Start( bool bScanInfo=false );
     void UpdateCEDEOBLibrary();
 
     CELEmitterMergeMngr( bool bDBThread, const char *pFileName );
-    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
+    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
+    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
     UINT DeleteThreat();
     bool CheckDeleteAET( CELThreat *pThreatAET, CELThreat *pDeleteAET );
     void DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelThreatInfo, bool bIsMaster, bool bIsReplay );
@@ -529,7 +512,7 @@ public:
 // 
 // 	void EnableToLoadCEDEOBLibrary() { ++ m_nLoadCEDEOBLibrary; }
 
-
+    bool DoesAnalScanTry();
 
     void ResetToLoadCEDEOBLibrary() { m_nLoadCEDEOBLibrary=_spOne; }
     void DisableToLoadCEDEOBLibrary();
@@ -545,5 +528,7 @@ public:
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
 
     E_BEAM_EMITTER_STAT UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat );
+
+
 };
 

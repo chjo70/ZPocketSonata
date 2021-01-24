@@ -221,34 +221,55 @@ enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, F
 #define	_spUnknown	0
 
 
+#ifdef _ELINT_
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
 //##ModelId=452B0C51022C
-enum SCAN_TYPE
-{
-	//##ModelId=452B0C510241
-  CIRCULAR            = 1,
-	//##ModelId=452B0C51024A
-  UNI_DIRECTIONAL,
-	//##ModelId=452B0C510254
-  BI_DIRECTIONAL,
-	//##ModelId=452B0C51025E
-  CONICAL,
-	//##ModelId=452B0C510268
-  STEADY,
-	//##ModelId=452B0C510286
-  UFO,
-	MAX_SCANTYPE,
-	//##ModelId=452B0C510287
-  DetType,
-	//##ModelId=452B0C510290
-  TYPE_UNKNOWN,
+enum SCAN_TYPE {
+    //##ModelId=452B0C510241
+    CIRCULAR            = 1,
+    //##ModelId=452B0C51024A
+    UNI_DIRECTIONAL,
+    //##ModelId=452B0C510254
+    BI_DIRECTIONAL,
+    //##ModelId=452B0C51025E
+    CONICAL,
+    //##ModelId=452B0C510268
+    STEADY,
+    //##ModelId=452B0C510286
+    UFO,
+    MAX_SCANTYPE,
+    //##ModelId=452B0C510287
+    DetType,
+    //##ModelId=452B0C510290
+    TYPE_UNKNOWN,
 } ;
-
-#ifdef _ELINT_
 const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
 
 #elif defined(_POCKETSONATA_)
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+//##ModelId=452B0C51022C
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    //##ModelId=452B0C510241
+    E_AET_SCAN_CIRCULAR            = 1,
+    //##ModelId=452B0C51024A
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    //##ModelId=452B0C510254
+    E_AET_SCAN_BI_DIRECTIONAL,
+    //##ModelId=452B0C51025E
+    E_AET_SCAN_CONICAL,
+    //##ModelId=452B0C510268
+    E_AET_SCAN_STEADY,
+    //##ModelId=452B0C510286
+    UFO,
+    MAX_SCANTYPE,
+    //##ModelId=452B0C510287
+    DetType,
+    //##ModelId=452B0C510290
+    TYPE_UNKNOWN,
+} ;
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 #elif defined(_SONATA_)
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;

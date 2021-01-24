@@ -316,18 +316,15 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define THRESHOLD_PDWCOUNT_FINE_SIGANAL	50
 
 
-
-
-
 // 주파수 고정, 변경 범위
 #define FIXED_FREQ_THRESHOLD			8				// 5에서 8로 변경함.
 #define FIXED_MATCH_RATIO				(85)			// 85에서 70으로 변경함.
 
 // 패턴 분석
-#define	MAX_SAMPLING_DATA					1024
-#define	CO_OFF_SAMPLING_THRESHOLD	(2)
+#define	CO_OFF_SAMPLING_THRESHOLD               (2)
 
-#define	MID_PRI_BAND							7			// 펄스열 추출 중간 밴드
+// PRI 추출 경계
+#define	MID_PRI_BAND							(7)			// 펄스열 추출 중간 밴드
 
 //////////////////////////////////////////////////////////////////////////
 // PRI 분석
@@ -339,7 +336,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define MIN_STAGGER_LEVEL_PERIOD	(2)		// 스태거 레벨값 최소 반복 회수
 #define MIN_REPEAT_STAGGER_LEVEL	(6)		// 레벨 체크에서 6주기 이상인 경우는 threshold = ( 100 * ( 2*N-1 ) ) / (2*N) 누락되어도 허용하는 최소 반복
 
-#define MIN_PRI										( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
+#define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
 #define FIXED_FREQ_MARGIN				2
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
@@ -363,10 +360,10 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define CONTI_THR_LOW_PULSE					86		// 연속성 최대 지수, SPS-64의 LONG MODE인경우를 고려. 8개 중에 7개 허용.
 #define CONTI_THR_HIGH_PULSE				60
 
-#define	THRESHOLD_OVERLAP						80		// Overlap 율 ( 중첩된 DTOA / 펄스열 총시간 )
+#define	THRESHOLD_OVERLAP					80		// Overlap 율 ( 중첩된 DTOA / 펄스열 총시간 )
 
 // Max Channle 추출하기 위한 최소 펄스 개수
-#define MIN_PULSE_FOR_MAXCHANNEL		20
+#define MIN_PULSE_FOR_MAXCHANNEL            20
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
@@ -432,8 +429,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //----- AOA 평균 계산 방안 200505_1 -----
 #define MIN_N_SEG_PLS_FOR_AOAMEANALG	11	// AOA 평균 계산 알고리즘 위한 최소 펄스 수
-#define PA_DEPTH_TO_SELECT	(4*15)		// [PAmax - B * PAresol, PAmax]인 펄스 선택 시 B에 해당
-#define N_AOA_ELT			10		// AOA 평균값을 계산하기 위해 사용할 AOA 원소 수
+#define PA_DEPTH_TO_SELECT              (4*15)		// [PAmax - B * PAresol, PAmax]인 펄스 선택 시 B에 해당
+#define N_AOA_ELT                       10		// AOA 평균값을 계산하기 위해 사용할 AOA 원소 수
 
 //----- AOA 평균 계산 방안 200505_2 -----
 // PA_DEPTH_TO_SELECT, N_AOA_ELT도 사용
@@ -444,7 +441,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 // 튀는 AOA 판단 시 Q1-K*IQR 또는 Q3+K*IQR보다 바깥에 있는지 여부를 기준으로 한다.
 // 이 때 K에 해당하는 상수가 OUTLIER_COEFF이다.
-#define OUTLIER_COEFF		0.5
+#define OUTLIER_COEFF		(0.5)
 
 //----- AOA 평균 계산 방안 200505_4 -----
 #define AOA_HISTO_RESOL		4		// AOA 히스토 BIN 폭 = AOA 해상도 * AOA_HISTO_RESOL
@@ -455,7 +452,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////////
 // DWELL 펄스열 추출 관련 정의문
 #define _DWELL_PULSECOUNT				(3)				// 드웰당 펄스 개수
-#define _DWELL_DTOA_MARGIN			(7)				// 드웰 DTOA 마진
+#define _DWELL_DTOA_MARGIN              (7)				// 드웰 DTOA 마진
 
 #define _MAX_DWELL_LEVEL				(50)
 
@@ -463,15 +460,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //
 
 
-#define   _spInvAET					(-1)
-#define		_spInvThreat			(-1)
+#define _spInvAET                       (-1)
+#define	_spInvThreat                    (-1)
 
-#define   _spWarning        (-10)
+#define _spWarning                      (-10)
 
-//////////////////////////////////////////////////////////////////////////
-//
-// 분석 시뮬레이션
-#define		_SIMUL_CO_ANAL_			(16)		// 시뮬레이션 분석 에미터 총 개수
-#define		_SIMUL_AVAIL_ANAL_	(4)			// 시뮬레이션 분석 에미터 수
+
 
 #endif // !defined(AFX_DEFINE_H__553E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

@@ -41,6 +41,8 @@ elif [[ "$present_directory" =~ "Web" ]] ; then
 	sudo tar xf $web_directory/web.tar.gz -C $web_directory
 	sudo chmod 777 -R $web_directory		
 	
+	echo ""
+	echo ""
 else
 	echo "[주의] 이 작업은 호스트컴을 공유한 폴더를 리눅스 서버에서 SMB로 연결하여 실행 파일을 실행해야 합니다."
 

@@ -22,6 +22,10 @@ CSharedMemroy::CSharedMemroy( key_t key, int iSize )
 
 }
 
+/**
+ * @brief CSharedMemroy::CSharedMemroy
+ * @param key
+ */
 CSharedMemroy::CSharedMemroy( key_t key )
 {
     setKey( key );

@@ -293,7 +293,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     }
     else {
         // DisplayMsg( & sndMsg );
-        //LOGMSG4( enDebug, "*송신: [?]에서 [%12s] 으로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, uiOpCode, uiDataLength, m_Msg.iArrayIndex );
+        LOGMSG4( enDebug, "*송신: [?]에서 [%12s] 으로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, uiOpCode, uiDataLength, m_Msg.iArrayIndex );
 
     }
 }

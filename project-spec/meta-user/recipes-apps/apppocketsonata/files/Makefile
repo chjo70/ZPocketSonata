@@ -11,6 +11,8 @@ DOWNLOAD_CGI = download.cgi
 
 BIT_CGI = bit.cgi
 
+LISTALLCHANNEL_CGI = listallchannel.cgi
+
 # Add any other object files to this list below
 APP_OBJS  = Anal/EmitterMerge/CInverseMethod.o
 APP_OBJS += Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o
@@ -36,7 +38,7 @@ APP_OBJS += Anal/NewSigAnal/NPulExt.o
 APP_OBJS += Anal/NewSigAnal/NAnalPRI.o
 APP_OBJS += Anal/NewSigAnal/NMakeAET.o
 APP_OBJS += Anal/NewSigAnal/NewSigAnal.o
-APP_OBJS += Anal/ScanSigAnal/SAnalScan.o
+APP_OBJS += Anal/ScanSigAnal/SAnalSCN.o
 APP_OBJS += Anal/ScanSigAnal/SGroup.o
 APP_OBJS += Anal/ScanSigAnal/SPulExt.o
 APP_OBJS += Anal/ScanSigAnal/ScanSigAnal.o
@@ -254,6 +256,43 @@ BIT_CGI_OBJS += Utils/clog.o
 BIT_CGI_OBJS += Utils/cthread.o
 BIT_CGI_OBJS += CGI-BIN/bit_cgi/main.o
 
+# listallchannel.cgi
+LISTALLCHANNEL_CGI_OBJS = CGI-BIN/Qdecoder/md5/md5c.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/mkstemp.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qArg.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qAwk.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qCount.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qDecoder.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qDownload.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qEncode.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qEnv.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qError.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qFile.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qHttpHeader.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qInternalCommon.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qInternalEntry.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qMisc.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qSed.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qSession.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qString.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qTime.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qValid.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qfDecoder.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/qsDecoder.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/snprintf.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/strcasecmp.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/strptime.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/Qdecoder/timegm.o
+LISTALLCHANNEL_CGI_OBJS += CGI-BIN/listallchannel_cgi/main.o
+LISTALLCHANNEL_CGI_OBJS += Anal/Collect/ccollectbank/ccollectbank.o
+LISTALLCHANNEL_CGI_OBJS += Anal/MIDAS/RawFile.o
+LISTALLCHANNEL_CGI_OBJS += System/csharedmemory.o    
+LISTALLCHANNEL_CGI_OBJS += Utils/clog.o    
+LISTALLCHANNEL_CGI_OBJS += System/csysconfig_cgi.o        
+LISTALLCHANNEL_CGI_OBJS += Utils/ccommonutils_cgi.o    
+LISTALLCHANNEL_CGI_OBJS += Anal/Collect/DataFile/DataFile_cgi.o
+
+    
 
 # INLCUDES 경로
 INCLUDES = -I$(TMPDIR)/sysroots-components/aarch64/readline/usr/include
@@ -279,9 +318,12 @@ DEFINES += -D_SQLITE_
 DEFINES += -D__ZYNQ_BOARD__
 
 
+CGI_DEFINES += -D_CGI_LIST_
+
+
 all: build
 
-build: $(APP) $(APP2) $(SYSTEM_CGI) $(UPLOAD_CGI) $(DOWNLOAD_CGI) $(FETCH_CGI)
+build: $(APP) $(APP2) $(SYSTEM_CGI) $(UPLOAD_CGI) $(DOWNLOAD_CGI) $(FETCH_CGI) $(LISTALLCHANNEL_CGI)
 
 $(APP): $(APP_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) $(LIBS)
@@ -304,10 +346,26 @@ $(DOWNLOAD_CGI): $(DOWNLOAD_CGI_OBJS)
 $(BIT_CGI): $(BIT_CGI_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(BIT_CGI_OBJS) $(LDLIBS) $(LIBS)		
 	
+$(LISTALLCHANNEL_CGI): $(LISTALLCHANNEL_CGI_OBJS)
+	$(CXX) $(LDFLAGS) -o $@ $(LISTALLCHANNEL_CGI_OBJS) $(LDLIBS) $(LIBS)
+	
+	
+# 기본 컴파일 방법들	
 	
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES) $(DEFINES) 
 	
+	
+# CGI 구성하기 위한 컴파일 방법들		
+	
+System/csysconfig_cgi.o: System/csysconfig.cpp	
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES) $(DEFINES) $(CGI_DEFINES) 
+	
+Utils/ccommonutils_cgi.o: Utils/ccommonutils.cpp	
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES) $(DEFINES) $(CGI_DEFINES)   	
+	
+Anal/Collect/DataFile/DataFile_cgi.o: Anal/Collect/DataFile/DataFile.cpp	
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES) $(DEFINES) $(CGI_DEFINES)   		
 
 
 clean:

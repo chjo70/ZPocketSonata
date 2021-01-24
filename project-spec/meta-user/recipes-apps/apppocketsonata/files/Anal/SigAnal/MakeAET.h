@@ -21,13 +21,11 @@
 class CMakeAET
 {
 private:
-    char m_Comma[50];
+    //char m_Comma[50];
 
 public:
-    SRxLOBData m_LOBData[ MAX_AET+1 ];
-
     //##ModelId=452B0C55039A
-    UINT *m_pParam;
+    //UINT *m_pParam;
     //##ModelId=452B0C55039B
     int m_CoEmitter;
     //##ModelId=452B0C55039C
@@ -141,7 +139,7 @@ public:
     //virtual void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )=0;
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
-    virtual SRxLOBData *GetLOBData()=0;
+    virtual SRxLOBData *GetLOBData( int index=0 )=0;
 
 };
 

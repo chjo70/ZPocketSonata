@@ -21,6 +21,8 @@ class CKnownSigAnal;
 class CKMakeAET : public CMakeAET
 {
 private :
+    SRxLOBData m_LOBData[ MAX_AET+1 ];
+
     SRxABTData *m_pTrkAet;
 
 protected :
@@ -42,7 +44,7 @@ public:
     inline void SetCoNewAet( int count ) { m_CoNewAet=count; }
     //##ModelId=452B0C53000F
     inline void ClearCoAet() { m_CoLOB=0; }
-    inline SRxLOBData *GetLOBData() { return & m_LOBData[0]; }
+    inline SRxLOBData *GetLOBData( int index ) { return & m_LOBData[index]; }
     inline int GetCoLOB() { return m_CoLOB; }
     //##ModelId=452B0C530012
     //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }

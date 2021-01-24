@@ -104,6 +104,34 @@ public:
             else {
                 if( m_iTotalIPL < MAX_IPL ) {
                     memcpy( & m_strIPL[m_iTotalIPL], pIPL, sizeof(STR_IPL) );
+
+                    // 스캔 정보 변경
+                    switch( m_strIPL[m_iTotalIPL].as.type ) {
+                        case E_AET_SCAN_STEADY :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumD_Non_Scanning;
+                            break;
+
+                        case E_AET_SCAN_UNI_DIRECTIONAL :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumU_Uni_Directional_Sector_Plane_Undertermined;
+                            break;
+
+                        case E_AET_SCAN_BI_DIRECTIONAL :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumV_Bi_Directional_Sector_Plane_Undetermined;
+                            break;
+
+                        case E_AET_SCAN_CONICAL :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumF_Conical;
+                            break;
+
+                        case E_AET_SCAN_CIRCULAR :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumA_Circular;
+                            break;
+
+                        default :
+                            m_strIPL[m_iTotalIPL].as.type = ScanType::enumUndefinedScanType;
+                            break;
+
+                    }
                     ++ m_iTotalIPL;
                 }
                 else {

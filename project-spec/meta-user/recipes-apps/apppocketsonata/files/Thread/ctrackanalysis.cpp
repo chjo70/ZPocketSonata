@@ -118,7 +118,7 @@ void CTrackAnalysis::AnalysisStart()
 
     uiTotalLOB = m_pTheKnownSigAnal->GetCoLOB();
 
-    strAnalInfo.uiBand = 0;
+    strAnalInfo.uiBand = g_enBoardId;
     strAnalInfo.uiTotalLOB = uiTotalLOB;
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;

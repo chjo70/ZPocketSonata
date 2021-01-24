@@ -24,6 +24,9 @@ class CNewSigAnal;
 //##ModelId=452B0C550051
 class CNMakeAET : public CMakeAET
 {
+private:
+    SRxLOBData m_LOBData[ MAX_AET+1 ];
+
 protected:
 	//##ModelId=452B0C55005C
 	CNewSigAnal *m_pNewSigAnal;
@@ -73,7 +76,7 @@ public:
 	void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
 
-    inline SRxLOBData *GetLOBData() { return & m_LOBData[0]; }
+    inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
 
 
 };

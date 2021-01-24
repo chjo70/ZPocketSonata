@@ -33,6 +33,11 @@ EN_RADARCOLLECTORID stiCollectorId=RADARCOL_Unknown;
 
 
 
+/**
+ * @brief Log
+ * @param nType
+ * @param fmt
+ */
 void Log( int nType, const char *fmt, ... )
 {
 #ifndef __GNUC__

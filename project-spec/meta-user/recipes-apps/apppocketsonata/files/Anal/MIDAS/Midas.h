@@ -504,35 +504,35 @@ struct SEL_KEYWORD_VALUE{
 
 
 struct S_UNI_DATA_SET {
-	//char cbyte;
+    //char cbyte;
 
-	// codesonar의 Uninitialized Variable 과 충돌 남.	SRxIQDataRGroup, SRxIFDataRGroup 구조체 초기화를 강제로 막으면 안됨. 해결 필요. 
-	SRxIQDataRGroup1 iqData[MAX_OF_IQ_DATA];
-	SRxIFDataRGroupEEEI ifData[MAX_OF_IF_DATA];
-	//short samplingData[MAX_OF_SAMPLING_DATA];
-	//short prftoneData[MAX_OF_PRF_TONE_DATA];
+    // codesonar의 Uninitialized Variable 과 충돌 남.	SRxIQDataRGroup, SRxIFDataRGroup 구조체 초기화를 강제로 막으면 안됨. 해결 필요.
+    SRxIQDataRGroup1 iqData[MAX_OF_IQ_DATA];
+    SRxIFDataRGroupEEEI ifData[MAX_OF_IF_DATA];
+    //short samplingData[MAX_OF_SAMPLING_DATA];
+    //short prftoneData[MAX_OF_PRF_TONE_DATA];
     SRxPDWDataRGroup pdwData[MAX_OF_PDW_DATA];
 
-	S_EL_PDW_RECORDS pdwRecord[MAX_OF_PDW_DATA];
+    S_EL_PDW_RECORDS pdwRecord[MAX_OF_PDW_DATA];
 
-	S_UNI_DATA_SET()
-	{
-		memset( iqData, 0, sizeof(iqData) );
-		memset( ifData, 0, sizeof(ifData) );
+    S_UNI_DATA_SET()
+    {
+            memset( iqData, 0, sizeof(iqData) );
+            memset( ifData, 0, sizeof(ifData) );
 
-		//memset( samplingData, 0, sizeof(samplingData) );
-		//memset( prftoneData, 0, sizeof(prftoneData) );
-        //memset( pdwData, 0, sizeof(pdwData) );
+            //memset( samplingData, 0, sizeof(samplingData) );
+            //memset( prftoneData, 0, sizeof(prftoneData) );
+    //memset( pdwData, 0, sizeof(pdwData) );
 
-	}
+    }
 
 } ;
 
 typedef struct {
-	char szInputFilename[500];
-	char szOutputFilename[500];
+    char szInputFilename[500];
+    char szOutputFilename[500];
 
-	SEL_KEYWORD_VALUE keywordValue;
+    SEL_KEYWORD_VALUE keywordValue;
 
 } SELIFMIDAS;
 
@@ -559,18 +559,18 @@ typedef struct {
 class CMIDASBlueFileFormat : public CRawFile
 {
 protected:
-	int m_SizeOfExtend;
-	EnumSCDataType m_enFileType;																///< 변환하기 위한 변환 데이터 포멧
-	SELMIDAS_HCB *m_pHCB;
-	unsigned char *m_pExtendOfHeader;
+    int m_SizeOfExtend;
+    EnumSCDataType m_enFileType;																///< 변환하기 위한 변환 데이터 포멧
+    SELMIDAS_HCB *m_pHCB;
+    unsigned char *m_pExtendOfHeader;
 
-	S_EL_PDW_RECORDS *m_pPDWRecords;
+    S_EL_PDW_RECORDS *m_pPDWRecords;
 
-	SEL_MIN_MAX m_MinMaxOfSubrecords[MAX_SUBRECORDS_OF_PDWDATA];
-	SELMIDAS_SUBRECORDS *m_pSubrecords;													///< MIDAS 포멧으로 변환하기 위한 Subrecord
+    SEL_MIN_MAX m_MinMaxOfSubrecords[MAX_SUBRECORDS_OF_PDWDATA];
+    SELMIDAS_SUBRECORDS *m_pSubrecords;													///< MIDAS 포멧으로 변환하기 위한 Subrecord
 
-	vector<SELIFMIDAS> m_vecConvertIFList;											///< IF 데이터 파일을 MIDAS 포멧으로 변환하기 위한 목록
-	char m_szIFTaskId[200];
+    vector<SELIFMIDAS> m_vecConvertIFList;											///< IF 데이터 파일을 MIDAS 포멧으로 변환하기 위한 목록
+    char m_szIFTaskId[200];
 
     _TOA m_ullfirstTOA;
 
@@ -582,44 +582,44 @@ private:
     STR_PDWDATA *m_pPDWData;
 
 private:
-	int GetSampleSize();
-	void MakeHeader();
-	void MakeAdjunct();
-	int WriteHeader();
-	int WriteAdjunct();
-	unsigned int GetValueUnits();
-	bool WriteData( int destFileId, int iSkipByte, bool bMultiIFData=false );
-	void MakePRFToneData();
-	unsigned int CalcExtStart();
-	double CalcDataSize();
-	void MakeExtendedHeader();
-	int WriteExtendedHeader();
-	void MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey=0 );
-	SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, char *keyword, char type, int lkey=0 );
+    int GetSampleSize();
+    void MakeHeader();
+    void MakeAdjunct();
+    int WriteHeader();
+    int WriteAdjunct();
+    unsigned int GetValueUnits();
+    bool WriteData( int destFileId, int iSkipByte, bool bMultiIFData=false );
+    void MakePRFToneData();
+    unsigned int CalcExtStart();
+    double CalcDataSize();
+    void MakeExtendedHeader();
+    int WriteExtendedHeader();
+    void MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey=0 );
+    SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, char *keyword, char type, int lkey=0 );
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, char *keyword, char type );
-	SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );
-	int MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
+    SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );
+    int MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
     void TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
-	void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
-	void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );
-	int MakeSubRecords();
-	void MIDASClose();
-	void MakeMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX, double dValue );
-	void MakeInitMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX );
+    void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
+    void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );
+    int MakeSubRecords();
+    void MIDASClose();
+    void MakeMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX, double dValue );
+    void MakeInitMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX );
 
 public:
-	CMIDASBlueFileFormat(void);
-	~CMIDASBlueFileFormat(void);
-	bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE & stKeywordValue, char *pInputFilename=NULL, char *pTaskID=NULL );
+    CMIDASBlueFileFormat(void);
+    ~CMIDASBlueFileFormat(void);
+    bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE & stKeywordValue, char *pInputFilename=NULL, char *pTaskID=NULL );
 
     bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue );
 
-	void MakeMIDASFileName( char *pstOutFilePathName, char *pstFileName, EnumSCDataType eDataType );
+    void MakeMIDASFileName( char *pstOutFilePathName, char *pstFileName, EnumSCDataType eDataType );
 
-	// IF 데이터를 변환하기 위한 함수
-	void InitIFMidas();
-	bool SaveAllIFMIDASFormat();
+    // IF 데이터를 변환하기 위한 함수
+    void InitIFMidas();
+    bool SaveAllIFMIDASFormat();
 
     void SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep );
 

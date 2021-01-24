@@ -47,12 +47,12 @@ CMakeAET::CMakeAET( int coMaxPdw /*=NSP_MAX_PDW*/ )
 
     m_nMaxPdw = coMaxPdw;
 
-    m_pParam = ( UINT * ) malloc( coMaxPdw * sizeof( UINT ) );
-    if( m_pParam == NULL ) {
-        bRet = FALSE;
-        printf( "\n [W] m_pParam's Memory allocation error !" );
-        WhereIs;
-    }
+//    m_pParam = ( UINT * ) malloc( coMaxPdw * sizeof( UINT ) );
+//    if( m_pParam == NULL ) {
+//        bRet = FALSE;
+//        printf( "\n [W] m_pParam's Memory allocation error !" );
+//        WhereIs;
+//    }
 
     if( bRet == FALSE )
         printf( "\n [W] 에미터 생성 클래스 생성자 실패 !" );
@@ -71,7 +71,7 @@ CMakeAET::CMakeAET( int coMaxPdw /*=NSP_MAX_PDW*/ )
 //##ModelId=426C87D70021
 CMakeAET::~CMakeAET()
 {
-    free( m_pParam );
+//    free( m_pParam );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -811,29 +811,29 @@ void CMakeAET::PrintAllEmitter()
         \date     2008-07-12 13:41:12
         \warning
 */
-char *CMakeAET::Comma( char *pString )
-{
-    int len=0;
-    int num_commas=0;
-    int comma_count=0;
-    int i=0;
-    int n=0;
+//char *CMakeAET::Comma( char *pString )
+//{
+//    int len=0;
+//    int num_commas=0;
+//    int comma_count=0;
+//    int i=0;
+//    int n=0;
 
-    /* count given string */
-    len = strlen( pString );
-    num_commas = (int) ( len / 3 );
+//    /* count given string */
+//    len = strlen( pString );
+//    num_commas = (int) ( len / 3 );
 
-    m_Comma[len + num_commas] = '\0';
-    for( i=len-1, n=1 ; i >= 0 ; i--, n++ ) {
-        m_Comma[i + num_commas - comma_count] = pString[i];
-        if( ( n % 3 ) == 0 ) {
-            comma_count++;
-            m_Comma[i + num_commas - comma_count] = ',';
-        }
-    }
+//    m_Comma[len + num_commas] = '\0';
+//    for( i=len-1, n=1 ; i >= 0 ; i--, n++ ) {
+//        m_Comma[i + num_commas - comma_count] = pString[i];
+//        if( ( n % 3 ) == 0 ) {
+//            comma_count++;
+//            m_Comma[i + num_commas - comma_count] = ',';
+//        }
+//    }
 
-  return & m_Comma[0];
-}
+//  return & m_Comma[0];
+//}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    DISP_FineAet
@@ -1290,7 +1290,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_FRQ stFrq;
     STR_PRI stPri;
 
-    pLOBData = & m_LOBData[m_CoLOB];
+    //pLOBData = & m_LOBData[m_CoLOB];
+    pLOBData = GetLOBData( m_CoLOB );
+    //& m_LOBData[m_CoLOB];
 
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
@@ -1329,18 +1331,6 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     }
 
     pLOBData->fDOASDeviation = stVal2.fsdev;
-
-    // 	if( RADARCOL_1 == m_pNewSigAnal->GetCollectorID() ) {
-    // 		pLOBData->fMeanDOA = 180.0;
-    // 		pLOBData->fMaxDOA = 180.0;
-    // 		pLOBData->fMinDOA = 180.0;
-    // 	}
-    // 	else {
-    // 		pLOBData->fMeanDOA = 270.0;
-    // 		pLOBData->fMaxDOA = 270.0;
-    // 		pLOBData->fMinDOA = 270.0;
-    // 	}
-
 
     // DI 율
     pLOBData->iDIRatio = MakeDIInfoInSeg( pEmitter );							// [0.1%]

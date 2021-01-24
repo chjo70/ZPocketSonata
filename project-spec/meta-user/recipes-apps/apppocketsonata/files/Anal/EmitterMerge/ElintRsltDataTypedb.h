@@ -522,17 +522,17 @@ struct STR_FREQ_PRI_DINFO {
 // } ;
 
 struct STR_SCAN_INFO {
-	int iType;
-	int iDetailType;
-	int iPeriod;
-	int iPeriodMin;
-	int iPeriodMax;
-	int iPeriodMean;
+    int iType;
+    int iDetailType;
+    int iPeriod;
+    int iPeriodMin;
+    int iPeriodMax;
+    int iPeriodMean;
 
-        STR_SCAN_INFO() : iType(0), iDetailType(0), iPeriod(0), iPeriodMin(0), iPeriodMax(0), iPeriodMean(0)
-	{
+    STR_SCAN_INFO() : iType(0), iDetailType(0), iPeriod(0), iPeriodMin(0), iPeriodMax(0), iPeriodMean(0)
+    {
 
-	}
+    }
 
 } ;
 
@@ -722,6 +722,9 @@ struct UELTHREAT {
 
 }  ;
 
+/**
+ * @brief The SELMERGE_CANDIDATE struct
+ */
 struct SELMERGE_CANDIDATE {
 	SELINDEX idx;
 	float fLevel;

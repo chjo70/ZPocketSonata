@@ -35,6 +35,13 @@ const char stDV[2] = { ' ', '*' } ;
 
 #define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
+#ifdef _CGI_LIST_
+void Log( int nType, const char *fmt, ... )
+{
+
+}
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -1328,7 +1335,7 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
         else {
             *pfDTOA = (float) ( *pfTOA - fPreToa );
 
-            *pfDTOA /= 1000000.;
+            //*pfDTOA /= 1000000.;
         }        
         fPreToa = *pfTOA;
 

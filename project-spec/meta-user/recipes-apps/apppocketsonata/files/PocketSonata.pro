@@ -29,7 +29,7 @@ SOURCES += \
         Anal/NewSigAnal/NPulExt.cpp \
         Anal/NewSigAnal/NewSigAnal.cpp \
         Anal/ParamMngr.cpp \
-        Anal/ScanSigAnal/SAnalScan.cpp \
+        Anal/ScanSigAnal/SAnalSCN.cpp \
         Anal/ScanSigAnal/SGroup.cpp \
         Anal/ScanSigAnal/SPulExt.cpp \
         Anal/ScanSigAnal/ScanSigAnal.cpp \
@@ -144,7 +144,7 @@ HEADERS += \
     Anal/NewSigAnal/NPulExt.h \
     Anal/NewSigAnal/NewSigAnal.h \
     Anal/OFP_Main.h \
-    Anal/ScanSigAnal/SAnalScan.h \
+    Anal/ScanSigAnal/SAnalSCN.h \
     Anal/ScanSigAnal/SDefine.h \
     Anal/ScanSigAnal/SGroup.h \
     Anal/ScanSigAnal/SPulExt.h \

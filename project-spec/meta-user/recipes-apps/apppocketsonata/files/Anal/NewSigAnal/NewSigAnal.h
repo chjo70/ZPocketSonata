@@ -33,7 +33,7 @@ public:
     CNAnalPRI *m_theAnalPRI;
     CNMakeAET *m_theMakeAET;
 
-    STR_NEWAET m_theSimulAET[_SIMUL_CO_ANAL_];
+    //STR_NEWAET m_theSimulAET[_SIMUL_CO_ANAL_];
 
     DEFINE_ANAL_VAR_
 
@@ -81,7 +81,7 @@ public:
     // inline void DISP_FineAet( STR_UPDAET *pUpdAet ) { m_theMakeAET->DISP_FineAet( pUpdAet ); }
     inline void DISP_FineAet( STR_MANAET *pManAet ) { /*m_theMakeAET->DISP_FineAet( pManAet );*/ }
     inline void DISP_FineAet( STR_NEWAET *pNewAet ) { /*m_theMakeAET->DISP_FineAet( pNewAet );*/ }
-    inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
+    inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     inline int GetCoAet() { return m_theMakeAET->GetCoAet(); }
     inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 

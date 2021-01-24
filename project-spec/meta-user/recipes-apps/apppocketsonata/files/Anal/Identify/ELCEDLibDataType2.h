@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <float.h>
 
 using namespace std;
 
