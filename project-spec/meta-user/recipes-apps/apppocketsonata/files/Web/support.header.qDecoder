@@ -1,0 +1,51 @@
+<form id="form1" runat="server">
+<table border="1" bordercolor="white">
+    <tr>
+        <td width="301" height="35">
+			<p><a href="showspectrum.cgi" target="_self" title="탐지 스펙트럼을 전시합니다(분석 모두일때만 유효).">탐지 스펙트럼</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="listallchannel.cgi".cgi" target="_self" title="현재의 AET 정보 모두를 표시합니다.">수집 채널 정보</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="listallthreat.cgi" target="_self" title="현재의 위협 정보를 표시합니다.">활성 방사체/빔&nbsp;정보</a></p>
+        </td>
+        <td width="301" height="35">
+            <p><a href="cgi-bin/listallthreat.cgi" target="_self" title="극 좌표창에서 전체 위협 정보를 표시합니다.">전시기 위협 정보</a></p>
+        </td>
+    </tr>
+</table>
+</form>
+<hr color="#CC99FF">
+
+<!-- You can insert the CSS to either the document Head or link it as an external resource -->
+<style type="text/css">
+	table.table-style-two {
+		font-family: verdana, arial, sans-serif;
+		font-size: 11px;
+		color: #333333;
+		border-width: 1px;
+		border-color: #3A3A3A;
+		border-collapse: collapse;
+	}
+ 
+	table.table-style-two th {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #517994;
+		background-color: #B2CFD8;
+	}
+ 
+	table.table-style-two tr:hover td {
+		background-color: #DFEBF1;
+	}
+ 
+	table.table-style-two td {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #517994;
+		background-color: #ffffff;
+	}
+</style>
