@@ -206,7 +206,7 @@ void CUrBit::RunIBit( bool bCGIRunning )
         QMsgSnd( _MSG_CGI_KEY, enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
     }
     else {
-#ifndef _CGI_
+#ifndef _CGI_LIST_
         CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
 #endif
     }
@@ -228,7 +228,7 @@ void CUrBit::RunCBit( bool bCGIRunning )
         printf( "CBIT 결과는 정상 입니다." );
     }
     else {
-#ifndef _CGI_
+#ifndef _CGI_LIST_
         CCommonUtils::SendLan( enRES_CBIT, & m_stESCbit, sizeof(m_stESCbit) );
 #endif
     }
@@ -250,7 +250,7 @@ void CUrBit::RunUBit( bool bCGIRunning )
 
     }
     else {
-#ifndef _CGI_
+#ifndef _CGI_LIST_
         CCommonUtils::SendLan( enRES_UBIT, & m_stESCbit, sizeof(m_stESCbit) );
 #endif
     }

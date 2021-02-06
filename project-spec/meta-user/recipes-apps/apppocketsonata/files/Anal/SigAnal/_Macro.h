@@ -17,9 +17,6 @@
 #define	_spSONATAAOAmax				(0x1FF)	
 #define	_spSONATAAmpmax				(0xFF)	
 
-#define	FREQ_MIN			(500)			// 최소 주파수
-#define	FREQ_MAX			(18000)
-
 
 enum ENUM_UnitID {
 	enUnknown = -1,
@@ -127,6 +124,7 @@ T _diffabs( T x, T y)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define FRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define IFRQMhzCNV( A, B )      CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
+#define IFRQMhz( A, B )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
 #define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].res ) )
 
 #define IFRQMhzLOW( A )         CPOCKETSONATAPDW::EncodeFREQMHzFloor( A )

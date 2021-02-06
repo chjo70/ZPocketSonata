@@ -41,7 +41,7 @@ CLog::~CLog()
  */
 void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
 {
-#ifndef _CGI_
+#ifndef _CGI_LIST_
     int fid;
 
     char szDate[LOG_DIR_SIZE];

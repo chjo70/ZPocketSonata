@@ -25,7 +25,7 @@ CThread::CThread( int iMsgKey, char *pClassName, bool bArrayLanData ) : CArrayMs
     m_pszRecvData = NULL;
 
     // 메시지큐 생성
-    memset( & m_Msg, 0, sizeof(STR_MessageData) );
+    memset( & m_RcvMsg, 0, sizeof(STR_MessageData) );
 
     strcpy( m_szClassName, pClassName );
 
@@ -85,6 +85,8 @@ void CThread::Run( void *(*Func)(void*), key_t key )
     else {
         LOGMSG1( enDebug, "\t 큐 ID[%d]를 생성합니다." , m_MsgKeyID );
     }
+
+    while( QMsgRcv( IPC_NOWAIT ) != -1 );
 
     ++ m_iCoThread;
     pthread_create( & m_MainThread, NULL, Func, this );
@@ -188,14 +190,14 @@ int CThread::QMsgRcv( int iFlag )
 {
     //LOGENTRY;
 
-    int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_Msg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
+    int iMsgRcv = msgrcv( m_MsgKeyID, (void *) & m_RcvMsg, sizeof(STR_MessageData)-sizeof(long), 1 /* (1 >> 1)*/, iFlag );
 
     if( iMsgRcv > 0 ) {
         DisplayMsg( false );
 
-        if( m_Msg.iArrayIndex != -1 ) {
+        if( m_RcvMsg.iArrayIndex != -1 ) {
             m_pszRecvData = m_szRecvData;
-            PopLanData( m_szRecvData, m_Msg.iArrayIndex, m_Msg.uiArrayLength );
+            PopLanData( m_szRecvData, m_RcvMsg.iArrayIndex, m_RcvMsg.uiArrayLength );
         }
         else {
             m_pszRecvData = NULL;
@@ -251,10 +253,10 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
  * @brief CThread::QMsgSnd
  * @param uiOpCode
  */
-void CThread::QMsgSnd( unsigned int uiOpCode )
+void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
 {
 
-    QMsgSnd( uiOpCode, NULL, 0, NULL, 0 );
+    QMsgSnd( uiOpCode, NULL, 0, NULL, 0, pszClassName );
 }
 
 /**
@@ -263,37 +265,37 @@ void CThread::QMsgSnd( unsigned int uiOpCode )
  * @param pArrayMsgData
  * @param uiLength
  */
-void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength )
+void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName )
 {
-    STR_MessageData sndMsg;
+    //STR_MessageData sndMsg;
 
-    sndMsg.mtype = 1;
-    sndMsg.uiOpCode = uiOpCode;
-    sndMsg.iSocket = 0;
+    m_SndMsg.mtype = 1;
+    m_SndMsg.uiOpCode = uiOpCode;
+    m_SndMsg.iSocket = 0;
 
     if( pData != NULL ) {
-        sndMsg.uiDataLength = uiDataLength;
-        memcpy( sndMsg.x.szData, pData, sizeof(char)*sndMsg.uiDataLength );
+        m_SndMsg.uiDataLength = uiDataLength;
+        memcpy( m_SndMsg.x.szData, pData, sizeof(char)*m_SndMsg.uiDataLength );
     }
     else {
-        sndMsg.uiDataLength = 0;
+        m_SndMsg.uiDataLength = 0;
     }
 
     if( pArrayMsgData != NULL ) {
-        sndMsg.uiArrayLength = uiArrayLength;
-        sndMsg.iArrayIndex = PushLanData( pArrayMsgData, sndMsg.uiArrayLength );
+        m_SndMsg.uiArrayLength = uiArrayLength;
+        m_SndMsg.iArrayIndex = PushLanData( pArrayMsgData, m_SndMsg.uiArrayLength );
     }
     else {
-        sndMsg.uiArrayLength = 0;
-        sndMsg.iArrayIndex = -1;
+        m_SndMsg.uiArrayLength = 0;
+        m_SndMsg.iArrayIndex = -1;
     }
 
-    if( msgsnd( m_MsgKeyID, (void *) & sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+    if( msgsnd( m_MsgKeyID, (void *) & m_SndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
     else {
-        // DisplayMsg( & sndMsg );
-        LOGMSG4( enDebug, "*송신: [?]에서 [%12s] 으로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, uiOpCode, uiDataLength, m_Msg.iArrayIndex );
+        DisplayMsg( true, pszClassName );
+        //LOGMSG5( enDebug, "@송신: [%s]에서 [%12s] 으로 Op[0x%04X], Len[%d], Idx[%d]" , pszClassName, m_szClassName, uiOpCode, uiDataLength, m_Msg.iArrayIndex );
 
     }
 }
@@ -321,14 +323,23 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData )
 /**
  * @brief CThread::DisplayMsg
  */
-void CThread::DisplayMsg( bool bSend )
+void CThread::DisplayMsg( bool bSend, const char *pszClassName )
 {
     bool bRet=true;
     char szOpcode[50];
     char buffer[200];
 
+    STR_MessageData *pMsg;
+
+    if( bSend == true ) {
+        pMsg = & m_SndMsg;
+    }
+    else {
+        pMsg = & m_RcvMsg;
+    }
+
     // opcode 에 따른 명령어 파싱
-    switch( m_Msg.uiOpCode ) {
+    switch( pMsg->uiOpCode ) {
         case enREQ_MODE :
             strcpy( szOpcode, "모드 설정" );
             break;
@@ -418,8 +429,13 @@ void CThread::DisplayMsg( bool bSend )
             strcpy( szOpcode, "IPL 종료" );
             break;
 
+        // CGI 관련 메시지 처리
         case enCGI_FETCH :
             strcpy( szOpcode, "CGI_FETCH" );
+            break;
+
+        case enCGI_REQ_SPECTRUM :
+            strcpy( szOpcode, "스펙트럼 요청" );
             break;
 
         default :
@@ -429,10 +445,10 @@ void CThread::DisplayMsg( bool bSend )
 
     if( bRet == true ) {
         if( bSend == false ) {
-            sprintf( buffer, "*수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szClassName, szOpcode, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+            sprintf( buffer, ">>수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szClassName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
         }
         else {
-            sprintf( buffer, "*송신: [%12s]로 Op[0x%04X], Len[%d], Idx[%d]" , m_szClassName, m_Msg.uiOpCode, m_Msg.uiDataLength, m_Msg.iArrayIndex );
+            sprintf( buffer, "<<송신: [%12s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szClassName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
         }
 
         LOGMSG1( enDebug, "%s" , buffer );

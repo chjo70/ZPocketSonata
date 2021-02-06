@@ -37,9 +37,17 @@ elif [[ "$present_directory" =~ "Web" ]] ; then
 	echo ""
 	echo "2단계: 압축된 파일을"  [$web_directory] " 웹 서버에 올립니다." 
 	sudo mkdir -p $web_directory	
+    #sudo rm -r $web_directory
 	sudo cp $backup_directory/web.tar.gz $web_directory
 	sudo tar xf $web_directory/web.tar.gz -C $web_directory
-	sudo chmod 777 -R $web_directory		
+	sudo rm $web_directory/web.tar.gz
+	sudo chown www-data:www-data $web_directory -R
+	
+	#sudo chmod 666 -R $web_directory
+	sudo chmod 757 -R $web_directory/cgi-bin/.
+	sudo chmod 757 -R $web_directory/cgi-bin/*.cgi
+	#sudo chmod 777 $web_directory
+	
 	
 	echo ""
 	echo ""

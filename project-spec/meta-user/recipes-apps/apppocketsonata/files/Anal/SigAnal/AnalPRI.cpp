@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
 
@@ -264,7 +264,7 @@ void CAnalPRI::Analysis()
 //
 void CAnalPRI::PrintAllEmitter()
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     //////////////////////////////////////////////////////////////////////////
     //
     // 가상 에미터 프린트
@@ -977,7 +977,7 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
 
         pre_toa = toa;
 
-        if( pRange != NULL && ( pRange->min > (int) dtoa || pRange->max < (int) dtoa ) ) {
+        if( pRange != NULL && ( pRange->min > dtoa || pRange->max < dtoa ) ) {
             continue;
         }
 
@@ -1697,7 +1697,7 @@ void CAnalPRI::PatternAnalysis()
             if( pEmitter->priPeriod > 0 ) {
                 pEmitter->pri_type = _JITTER_PATTERN;
                 pEmitter->pri_patterntype = m_nPatternType;
-#ifdef _WIN32
+#ifdef _MSC_VER
                 PatternAnalysis( pEmitter );
 #endif
             }

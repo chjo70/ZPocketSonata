@@ -7,7 +7,7 @@
  * @warning
  */
 
-#ifdef __linux__
+#ifdef __GNUC__
 #define _DECODE_
 #include <sys/types.h>
 #include <unistd.h>

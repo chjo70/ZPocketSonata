@@ -38,6 +38,8 @@ private:
     void SendLost( unsigned int uiAETID );
     void SendDelete( unsigned int uiAETID );
 
+    void SetStartOfAnalScan();
+
 };
 
 #define EMTMRG          CEmitterMerge::GetInstance()

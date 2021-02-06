@@ -1,0 +1,12 @@
+<head>
+	<title>Line Styles</title>
+	<script src="../Chart.js-2.9.4/dist/Chart.min.js"></script>
+	<script src="../Chart.js-2.9.4/utils.js"></script>
+	<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+</head>

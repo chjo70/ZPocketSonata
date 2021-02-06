@@ -21,7 +21,7 @@
 
 #include "ElintRsltDataTypedb.h"
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include "../TASK/Task.h"
 #else
 #endif
@@ -158,7 +158,7 @@ private:
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
-    bool m_bScanInfo;
+    bool m_bScanProcess;
 
 #ifdef _SQLITE_
     //char *m_pszSQLString;
@@ -452,7 +452,7 @@ private:
     void InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB );
 
-    inline void SetScanInfo( bool bScanInfo ) { m_bScanInfo = bScanInfo; }
+    inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
  
 public:
     CELEmitterMergeMngr(void);
@@ -513,6 +513,7 @@ public:
 // 	void EnableToLoadCEDEOBLibrary() { ++ m_nLoadCEDEOBLibrary; }
 
     bool DoesAnalScanTry();
+    void SetStartOfAnalScan();
 
     void ResetToLoadCEDEOBLibrary() { m_nLoadCEDEOBLibrary=_spOne; }
     void DisableToLoadCEDEOBLibrary();

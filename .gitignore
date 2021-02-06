@@ -11,6 +11,10 @@ pre-built/linux/
 project-spec/meta-plnx-generated/
 /components/plnx_workspace
 
+.qmake.stash
+
+download_cgi
+
 *.bak
 *.autosave
 build-PocketView*/
@@ -20,7 +24,6 @@ Build-PocketSonata*/
 *.sqlite3
 *.swp
 *.pro.user
-*_cgi
 *.user
 
 

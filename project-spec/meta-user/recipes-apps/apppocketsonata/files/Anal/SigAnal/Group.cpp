@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
 
@@ -1967,7 +1967,7 @@ BOOL CGroup::MakeGrIndex()
 
     PrintGroup();
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     // 방위 그룹화 출력
 // 	printf( "\n //////////////////////////////////////////////////////////////////////////"	);
 // 	if( pFrqGr->narrow_wide == FALSE )

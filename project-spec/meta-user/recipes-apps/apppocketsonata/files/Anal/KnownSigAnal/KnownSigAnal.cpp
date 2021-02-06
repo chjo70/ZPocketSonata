@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // PC용 상위 클래스에 전달하기 위한 선언
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include "../../A50SigAnal/stdafx.h"
 #include "../../A50SigAnal/A50SigAnal.h"
 
@@ -213,7 +213,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 //
 void CKnownSigAnal::ClearColBuffer()
 {
-#ifndef _WIN32
+#ifdef __GNUC__
     //m_pPdwBank->count = 0;
 #else
     m_pPdwBank->count = 0;

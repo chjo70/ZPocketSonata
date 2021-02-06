@@ -42,6 +42,8 @@ void CUserCollect::InitVar()
 
     m_uiColStart = 0;
 
+    m_iColHistoTime = 0;
+
     // 하드웨어
     //xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
     CHWIO::uio_re_enable_Interrupt(REG_UIO_DMA_1);
@@ -112,8 +114,12 @@ void CUserCollect::_routine()
                 SendRawData();
                 break;
 
+            case enCGI_REQ_SPECTRUM :
+                MakeSharedSpectrumData();
+                break;
+
             default:
-                //Log( enNormal, "AAA" );
+                //Log( enError, "AAA" );
                 break;
             }
         }
@@ -182,7 +188,7 @@ void CUserCollect::ColStart()
 
     memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
 
-    LOGMSG1( enDebug, " 신호 수집 설정[%d]을 시작합니다." , m_uiColStart );
+    LOGMSG1( enDebug, " 탐지 신호 수집 설정[%d]을 시작합니다." , m_uiColStart );
 
     // 인터럽트 재설정
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
@@ -195,6 +201,8 @@ void CUserCollect::ColStart()
 
     memset( & m_strResColStart, 0, sizeof(m_strResColStart) );
 
+    NextCollectHistogram();
+
     if( true == CHWIO::PendingFromInterrupt(s_uio) ) {
         printf( " *********************************s_uio->physical = 0x%lx\n", s_uio->physical );
         switch( s_uio->physical ) {
@@ -206,10 +214,13 @@ void CUserCollect::ColStart()
 
                 if( s_uio->fd > 0 ) {
                     memcpy( m_pstrDMAPDW, (void *)(pMem->logical), PDW_GATHER_SIZE );
+                    m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
                     MakeSIMPDWData();
                 }
+
+                MakeCollectHistogram();
 
                 if( GP_SYSCFG->GetMode() == enANAL_Mode ) {
                     STR_PDWFILE_HEADER *pPDWFileHeader;
@@ -217,7 +228,7 @@ void CUserCollect::ColStart()
                     pPDWFileHeader = ( STR_PDWFILE_HEADER * ) m_pstrDMAPDWWithFileHeader;
                     pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
                     pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
-                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0 );
+                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0, ChildClassName() );
                 }
                 break;
 
@@ -234,7 +245,7 @@ void CUserCollect::ColStart()
         CCommonUtils::SendLan( Mres_ColStart, & m_strResColStart, sizeof(STR_RES_COL_START) );
     }
     else {
-        UCOL->QMsgSnd( enTHREAD_REQ_COLSTART );
+        UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, ChildClassName() );
     }
 
     ++ m_uiColStart;
@@ -278,14 +289,16 @@ void CUserCollect::MakeSIMPDWData()
 
     int iDOA;
 
+    m_uiCoPDW = m_strResColStart.uiCoPulseNum;
+
     iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 10 );
 
-    for( i=0 ; i < m_strResColStart.uiCoPulseNum ; ++i ) {
+    for( i=0 ; i < m_uiCoPDW; ++i ) {
         randomDOA = iDOA + ( rand() % 40 ) - 20;
-        randomPA =  ( rand() % 40 ) + 20;
+        randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 20 ) + 20000;
 
-        randomFreq = ( rand() % 50 ) + 2000;
+        randomFreq = 0x3000;  //CPOCKETSONATAPDW::EncodeFREQMHzFloor( 500 );     // ( rand() % 50 ) + 2000;
         randomCh = 1;
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
@@ -325,5 +338,80 @@ void CUserCollect::MakeSIMPDWData()
     }
 
     ++ m_uiCoSim;
+
+}
+
+/**
+ * @brief CUserCollect::MakeCollectHistogram
+ */
+void CUserCollect::MakeCollectHistogram()
+{
+    float fFreq;
+    int iIndex, iCh, iMax=0;
+    unsigned int ui, uiFreq;
+    //unsigned char (*pColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
+
+    unsigned char *pColHisto;
+
+    DMAPDW *pDMAPDW;
+
+    // 주파수 변환하여 기록
+    pColHisto = & m_ucColHisto[m_iColHistoTime][0];
+
+    pDMAPDW = m_pstrDMAPDW;
+    for( ui=0; ui < m_uiCoPDW ; ++ui ) {
+        uiFreq = ( pDMAPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
+        iCh = pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
+        iIndex = (int) ( ( fFreq - MIN_FREQ_MHZ ) / COLHISTO_WIDTH_MHZ );
+
+        iIndex = _min( iIndex, COLHISTO_CELLS-1 );
+        iIndex = _max( iIndex, 0 );
+        if( pColHisto[iIndex] >= 0xFF ) {
+        }
+        else {
+            ++ pColHisto[iIndex];
+
+            iMax = _max( iMax, pColHisto[iIndex] );
+        }
+
+        ++ pDMAPDW;
+    }
+
+    pColHisto[COLHISTO_CELLS] = iMax;
+
+}
+
+/**
+ * @brief CUserCollect::NextCollectHistogram
+ */
+void CUserCollect::NextCollectHistogram()
+{
+    //unsigned char (*pColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
+    m_iColHistoTime = m_iColHistoTime >= (COLHISTO_TIME-1) ? 0 : m_iColHistoTime+1;
+    memset( & m_ucColHisto[m_iColHistoTime][0], 0, sizeof(char)*COLHISTO_CELLS );
+
+
+}
+
+/**
+ * @brief CUserCollect::MakeSharedSpectrumData
+ */
+void CUserCollect::MakeSharedSpectrumData()
+{
+    int i, iMax;
+    unsigned char *pColHisto;
+
+    unsigned char (*pSharedColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
+
+    pColHisto = & m_ucColHisto[m_iColHistoTime][0];
+
+    // 정형화하여 SharedMemory 에 저장한다.
+    iMax = pColHisto[COLHISTO_CELLS];
+    for( i=0; i < COLHISTO_CELLS ; ++i ) {
+        pSharedColHisto[0][i] = IDIV( pColHisto[i] * 100, iMax );
+    }
+
+    GP_SYSCFG->SetColHisto();
 
 }

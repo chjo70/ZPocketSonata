@@ -113,15 +113,14 @@ struct STR_H000 {
 #endif
 
 #ifdef _ELINT_
-#define MAX_FRQ_MHZ						(6000)
-#define MIN_FRQ_MHZ						(500)
+
 
 #define FLIB_FREQ_RES_MHZ               (10)
 #elif defined(_POCKETSONATA_)
 #define FLIB_FREQ_RES_MHZ               (1.0)
 
-#define MAX_FRQ_MHZ						(18100)
-#define MIN_FRQ_MHZ						(490)
+
+#else
 
 #endif
 

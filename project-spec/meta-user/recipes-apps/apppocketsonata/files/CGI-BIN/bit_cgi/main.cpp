@@ -13,11 +13,11 @@
 #include <stdbool.h>
 
 
-#include "../../../Include/system.h"
+#include "../../Include/system.h"
 
-#include "../../../Anal/INC/system.h"
+#include "../../Anal/INC/system.h"
 
-#include "../../../Thread/ccgi.h"
+#include "../../Thread/ccgi.h"
 
 #include "../Qdecoder/qDecoder.h"
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 
     qDecoderSetUploadBase( "/home/chjo70", 24 * 60 * 60 );
 
-    qErrorPrint( "=======================================" );
+    qErrorPrint( "CGI Process Start ========================================" );
 
     if( ( pList = qValueFirst(  "formradio" )) == NULL ) {
         //qErrorPrint( "자체점검할 항목을 선택하지 않았습니다." );
@@ -132,6 +132,7 @@ int main(int argc, char *argv[])
         iSwitch = StrCmp( pList );
 
         RunBIT( iSwitch );
+
     }
 
     qErrorPrint( "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" );

@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // PC용 상위 클래스에 전달하기 위한 선언
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include "../../A50SigAnal/stdafx.h"
 
 //#include "../../AdvSigAnal/AdvSigAnal.h"

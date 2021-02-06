@@ -128,9 +128,7 @@ void usrAppStart()
     //pause();
     printf( "\n 종료 처리 시작 합니다." );
 
-
     // 분석 관련 쓰레드를 종료 한다.
-
     PROMPT->ReleaseInstance();
 
     delete g_pTheCCUSocket;
@@ -152,8 +150,7 @@ void usrAppStart()
     // 마지막 타스크 관리자 쓰레드를 종료 한다.
     TMNGR->ReleaseInstance();
 
-
-    LOGMSG( enDebug, "[usrAppStart] 를 종료 처리 합니다..." );
+    LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
     exit(0);
 

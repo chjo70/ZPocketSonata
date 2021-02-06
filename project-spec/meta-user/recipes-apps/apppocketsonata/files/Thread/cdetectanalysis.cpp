@@ -22,12 +22,12 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
 {
     m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW );
     if( m_pTheNewSigAnal == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
+        LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
     }
 
     m_pTheSysPara = new CSysPara();
     if( m_pTheSysPara == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
+        LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
     }
 
 }

@@ -271,6 +271,10 @@ INCLUDEPATH += /usr/local/include
 DEFINES += _POCKETSONATA_
 DEFINES += _SQLITE_
 
+DEFINES -= UNICODE
+DEFINES -= _UNICODE
+DEFINES -= __UNICODE__
+
 DISTFILES += \
     NetMem/CMakeLists.txt \
     NetMem/client/CMakeLists.txt \

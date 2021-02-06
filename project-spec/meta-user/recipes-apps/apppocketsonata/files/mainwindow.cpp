@@ -565,7 +565,7 @@ void MainWindow::UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iInd
     qTemp.sprintf( "%7.1f(%.1f,%.1f)", SONATA::DECODE::PA( pAET->pa.mean ), SONATA::DECODE::PA(pAET->pa.min), SONATA::DECODE::PA(pAET->pa.max) );
     pQTableWidget->setItem( iIndexOfTable, enPA, new QTableWidgetItem(qTemp) );
 
-    if( pAET->as.type == CONICAL ) {
+    if( pAET->as.type == E_AET_SCAN_CONICAL ) {
         qTemp.sprintf( "%s %s%7.1f", aet_asp_stat_ch[pAET->as.stat], aet_asp_type_ch[pAET->as.type], SONATA::DECODE::TOA(pAET->as.prd) );
     }
     else {

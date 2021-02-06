@@ -6,8 +6,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+
+#ifdef __linux__
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#else
+typedef int key_t;
+
+#endif
+
 #include <unistd.h>
 #include <string>
 

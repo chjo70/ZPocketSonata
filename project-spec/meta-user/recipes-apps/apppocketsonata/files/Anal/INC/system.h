@@ -142,10 +142,6 @@
 #define DEFAULT_DELETE_CW_AET_TIME		(10*FILTER_ONE_SEC)		// CW 에미터 삭제 시간
 
 
-// 신호 식별 밴드 그룹화 정의
-//#define	MAX_FREQ_HZ										18398750			//!< 주파수 최대 값, Hz
-//#define MIN_FREQ_HZ 									500						//!< 주파수 최소 값
-
 #define	NO_FEID_BAND									32						// 주파수 밴드 개수
 #define FEID_FREQ_RES_HZ							90000					// 90 KHz 의 Histogram res.
 
@@ -281,6 +277,9 @@
 //  Merge for direction
 //  debug, 1 -> 3, 00-09-20 09:43:31
 #ifdef _ELINT_
+#define	MAX_FREQ_HZ									18000			//!< 주파수 최대 값, Hz
+#define MIN_FREQ_HZ 								500						//!< 주파수 최소 값
+
 #define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
 #define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
 #define   _spMgFixFrqEJ				IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
@@ -289,12 +288,22 @@
 #define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #elif defined(_POCKETSONATA_)
-#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
-#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
+#define	MAX_FREQ_MHZ					(18000)                     //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					(500)						//!< 주파수 최소 값
+
+// 수집 히스토그램
+// 주파수 폭
+#define COLHISTO_WIDTH_MHZ              (500)                       // [MHz]
+#define COLHISTO_TIME                   (10)                        // 탐지 횟수 깊이
+
+#define COLHISTO_CELLS                  ((MAX_FREQ_MHZ-MIN_FREQ_MHZ)/COLHISTO_WIDTH_MHZ)
+
+#define   _spMgAoaEJ					IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+#define   _spMgAoaCD					IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
 #define   _spMgFixFrqEJ                 IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
 #define   _spMgFixFrqCD                 IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundEJ            IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define   _spMgFixFrqBoundCD            IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #elif defined(_SONATA_)
 #define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도

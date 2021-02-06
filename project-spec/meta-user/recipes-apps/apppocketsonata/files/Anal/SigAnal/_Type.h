@@ -44,8 +44,8 @@ typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 typedef char TCHAR;
 typedef unsigned short USHORT;
-#ifndef _WIN32
-typedef time_t __time32_t;
+#ifndef _MSC_VER
+//typedef time_t __time32_t;
 #endif
 
 typedef string CString;

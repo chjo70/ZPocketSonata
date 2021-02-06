@@ -1,0 +1,30 @@
+				responsive: true,
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: '주파수[GHz]'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: '수집율[%]'
+						},
+						ticks: {
+							min: 0,
+							max: 100
+						}
+					}]
+				}
+			}

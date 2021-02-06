@@ -982,7 +982,7 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
 
             uiFreq = ( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
             iCh = pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
-            *pfFreq = DecodeFREQ( uiFreq, iCh, m_stHeader.uiBoardID );
+            *pfFreq = DecodeRealFREQMHz( uiFreq, iCh, m_stHeader.uiBoardID );
 
             *pfPW = DecodePW( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.pulse_width );
 
@@ -1324,7 +1324,6 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
         }
 
 		*pullTOA  = pPDW->ullTOA;
-
 	
 		*pfTOA = FDMUL( pPDW->ullTOA, 6.48824/1000.0 );
         *pfTOA /= 1000000.;

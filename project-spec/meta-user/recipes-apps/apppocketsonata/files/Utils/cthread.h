@@ -148,7 +148,8 @@ class CThread : public CArrayMsgData
 private:
     pthread_t m_MainThread;
     key_t m_MsgKeyID;
-    STR_MessageData m_Msg;
+    STR_MessageData m_RcvMsg;
+    STR_MessageData m_SndMsg;
 
     char *m_pszRecvData;
     char m_szRecvData[_MAX_LANDATA];
@@ -160,7 +161,7 @@ protected:
     char m_szClassName[LENGTH_OF_CLASSNAME];
 
 private:
-    void DisplayMsg( bool bSend );
+    void DisplayMsg( bool bSend, const char *pszClassName=NULL );
 
 public:
     CThread( int iMsgKey, char *pClassName, bool bArrayLanData=false );
@@ -172,15 +173,15 @@ public:
     void Stop();
     void Stop2();
     int QMsgRcv( int iFlag=0 );
-    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0 );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
-    void QMsgSnd( unsigned int uiOpCode );
+    void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
     inline key_t GetKeyId() { return m_MsgKeyID; }
 
-    inline STR_MessageData *GetDataMessage() { return & m_Msg; }
+    inline STR_MessageData *GetDataMessage() { return & m_RcvMsg; }
     inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
     inline void *GetRecvData() { return m_pszRecvData; }

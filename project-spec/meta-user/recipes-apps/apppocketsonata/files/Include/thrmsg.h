@@ -68,7 +68,7 @@ enum enTHREAD_REQ_MESSAGE {
     enCGI_REQ_CBIT,
     enCGI_REQ_SBIT,
     enCGI_FETCH,
-
+    enCGI_REQ_SPECTRUM,
 
     //
     enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,

@@ -2000,31 +2000,31 @@ union UELMANUALVAL {
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
 struct SELABTDATA_EXT {
-	// 누적된 전체 PDW 개수
-	//int nCoTotalPdw;
-	//int nCoTotalIQ;
+    // 누적된 전체 PDW 개수
+    //int nCoTotalPdw;
+    //int nCoTotalIQ;
 
-	// 인트라 변조 유무
-	//bool bIntraMop;
+    // 인트라 변조 유무
+    //bool bIntraMop;
 
-	// 위치 산출 정보-Covariace 값
-	double dPECoVar[4];
+    // 위치 산출 정보-Covariace 값
+    double dPECoVar[4];
 
-	float fLastAOA;
+    float fLastAOA;
     float fRadarLatitude;
     float fRadarLongitude;
 
-	// 수동 편집 여부
-        bool bIsManualEdited;
+    // 수동 편집 여부
+    bool bIsManualEdited;
 
-	// 방사체의 활동 상태를 저장
-	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
+    // 방사체의 활동 상태를 저장
+    enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
 
-	// 빔 유효성 갯수
-	int nCoBeamValidity;
+    // 빔 유효성 갯수
+    int nCoBeamValidity;
 
-	// 수동 편집 여부 플레그
-	//UELMANUALVAL xManualEdited;
+    // 수동 편집 여부 플레그
+    //UELMANUALVAL xManualEdited;
 
 #ifdef _ELINT_
 	// FISINT용 과제
@@ -2039,33 +2039,37 @@ struct SELABTDATA_EXT {
     float fManualLatitude;
     float fManualLongitude;
 
-	//SLOBOtherInfo stLOBOtherInfo;
+    //SLOBOtherInfo stLOBOtherInfo;
 
-	int iLOBPoolIndex;
+    int iLOBPoolIndex;
 
-	STR_ID_TYPE stIDType;
+    STR_ID_TYPE stIDType;
 
-	enTHREAT_PLATFORM enPlatform;
+    enTHREAT_PLATFORM enPlatform;
 
-	int nCoIdEOB;
-	//STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
+    int nCoIdEOB;
+    //STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
 
-	// 빔 병합 정보
-	bool bCompFreq;
-	bool bCompPRI;
+    // 빔 병합 정보
+    bool bCompFreq;
+    bool bCompPRI;
 
-	// 신규 CED 및 EOB로 식별한 정보
-	STR_CEDEOBID_INFO idInfo;
+    // 신규 CED 및 EOB로 식별한 정보
+    STR_CEDEOBID_INFO idInfo;
 
-	ENUM_PE_STAT enValid;
-	bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
+    ENUM_PE_STAT enValid;
+    bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
 
-	UINT uiPE;
-	bool bFullOfPE;
+    UINT uiPE;
+    bool bFullOfPE;
     double dLatitude[MAX_OF_LOBS_PE];
     double dLongitude[MAX_OF_LOBS_PE];
-	double dEasting[MAX_OF_LOBS_PE];
-	double dNorthing[MAX_OF_LOBS_PE];
+    double dEasting[MAX_OF_LOBS_PE];
+    double dNorthing[MAX_OF_LOBS_PE];
+
+    // 스캔 분석 추가 정보
+    unsigned int uiTry;
+    unsigned int uiScanStep;
 
 } ;
 

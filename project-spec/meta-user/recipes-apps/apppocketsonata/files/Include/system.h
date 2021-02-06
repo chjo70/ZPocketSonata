@@ -70,7 +70,7 @@ enum ENUM_THREAD_KEY {
     _MSG_ZCGI_KEY,
     _MSG_USERCOL_KEY,
 
-    _MSG_CGI_KEY,
+    _MSG_CGI_KEY,           // 웹 서버에서 메시지를 받기 위한 메시지 ID
 
     _MSG_PROMPT_KEY,
 

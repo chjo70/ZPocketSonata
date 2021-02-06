@@ -166,6 +166,8 @@ void CEmitterMerge::MergeEmitter()
         }
 
         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
+            SetStartOfAnalScan();
+
             strAnalInfo.uiBand = g_enBoardId;
             strAnalInfo.uiCh = 0;
             strAnalInfo.uiTotalLOB = _spOne;
@@ -329,3 +331,10 @@ void CEmitterMerge::ReloadLibrary()
     m_pTheEmitterMergeMngr->UpdateCEDEOBLibrary();
 }
 
+/**
+ * @brief CEmitterMerge::SetStartOfAnalScan
+ */
+void CEmitterMerge::SetStartOfAnalScan()
+{
+    m_pTheEmitterMergeMngr->SetStartOfAnalScan();
+}

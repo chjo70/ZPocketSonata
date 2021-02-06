@@ -76,7 +76,7 @@ CRawFile::~CRawFile(void)
 // bool CRawFile::LoadFile( char *filename )
 // {
 // 
-// #ifdef _WIN32
+// #ifdef _MSC_VER
 // 	m_fid = _open( filename, _O_RDONLY | _O_BINARY ); // , 0644 );
 // 
 // #else

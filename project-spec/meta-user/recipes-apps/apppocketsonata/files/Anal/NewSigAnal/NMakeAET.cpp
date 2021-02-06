@@ -4,7 +4,7 @@
 
 #include "../SigAnal/stdafx.h"
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
 

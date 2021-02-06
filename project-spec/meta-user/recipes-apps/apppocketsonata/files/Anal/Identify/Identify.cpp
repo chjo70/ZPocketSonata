@@ -221,7 +221,7 @@ void CELSignalIdentifyAlg::InitVar()
  */
 bool CELSignalIdentifyAlg::LoadCEDLibrary2()
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     DWORD dwTime=GetTickCount();
 #endif
     vector<SRadarMode_Sequence_Values*> vecRadarMode_Sequence_Values;
@@ -1674,7 +1674,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
 
     memset( theFLib, _spZero, sizeof( STR_FLIB ) * ( NO_FLIB_BAND + 1 ) );
 
-    iHistSize = ( MAX_FRQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
+    iHistSize = ( MAX_FREQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
     pHist = ( UINT * ) malloc( (UINT)( iHistSize * sizeof(int) ) );
     if( pHist == NULL ) { //DTEC_NullPointCheck
         printf( "\n 메모리가 부족해서 히스토그램을 위한 메모리를 할당하지 못했습니다 !" );
@@ -1735,7 +1735,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
         */
         // 주파수 식별 밴드 개수 보다 많을 경우에는 개수를 optimal 하게 나눠서 하게 한다.
         if( total_bin_count >= NO_FLIB_BAND ) {
-            UINT freq_div = UDIV( UDIV(MAX_FRQ_MHZ,1000), NO_FLIB_BAND );
+            UINT freq_div = UDIV( UDIV(MAX_FREQ_MHZ,1000), NO_FLIB_BAND );
 
             opt_count = C_NDIV( total_bin_count, NO_FLIB_BAND );
             /*! \bug  	음수값을 unsigned type으로 변환을 자제해야 한다.
@@ -1784,7 +1784,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
         }
         // 주파수 식별 밴드 개수 보다 적을 경우에는 고정 주파수 대역으로 나눈다.
         else {
-            UINT freq_div = UDIV( (MAX_FRQ_MHZ - MIN_FRQ_MHZ), NO_FLIB_BAND );
+            UINT freq_div = UDIV( (MAX_FREQ_MHZ - MIN_FREQ_MHZ), NO_FLIB_BAND );
 
             freq_low = _spZero;
             /*! \bug  	음수값을 unsigned type으로 변환을 자제해야 한다.
@@ -5737,7 +5737,7 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMo
         //Log( enNormal, "***라이브러리 기반 분석" );
         pBackupMatchRadarMode = pMatchRadarMode;
         for( i=0 ; i < *puiCoKnownRadarMode ; ++i ) {
-#ifdef _WIN32
+#ifdef _MSC_VER
             iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eFreqType], aet_pri_type[(*pBackupMatchRadarMode)->ePRIType] );
 #else
             iCnt += sprintf( & buffer[iCnt], "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eRF_Type], aet_pri_type[(*pBackupMatchRadarMode)->ePRI_Type] );

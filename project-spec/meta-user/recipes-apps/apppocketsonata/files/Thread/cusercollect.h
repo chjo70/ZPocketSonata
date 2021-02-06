@@ -18,6 +18,8 @@ private:
     DMAPDW *m_pstrDMAPDW;
     char *m_pstrDMAPDWWithFileHeader;
 
+    UINT m_uiCoPDW;
+
     unsigned int m_uiColStart;
 
     // SIM 모의 데이터 생성하기 위한 변수
@@ -25,6 +27,10 @@ private:
     _TOA m_ullTOA;
 
     unsigned int m_uiCoSim;
+
+    unsigned int m_iColHistoTime;
+
+    unsigned char m_ucColHisto[COLHISTO_TIME][COLHISTO_CELLS+1];
 
 private:
     void InitVar();
@@ -38,6 +44,10 @@ private:
     void SendRawData();
 
     void MakeSIMPDWData();
+
+    void MakeCollectHistogram();
+    void NextCollectHistogram();
+    void MakeSharedSpectrumData();
 
 public:
     CUserCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );

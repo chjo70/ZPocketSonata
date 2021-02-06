@@ -1,8 +1,10 @@
 #include "ccgi.h"
 #include "../Utils/clog.h"
 
+#ifndef _CGI_LIST_
 #include "curbit.h"
-
+#include "cusercollect.h"
+#endif
 
 
 // 클래스 내의 정적 멤버변수 값 정의
@@ -75,18 +77,24 @@ void CCGI::_routine()
             // 메인 운용 소프트웨어에서 수신 처리 부분
             case enCGI_REQ_IBIT :
                 LOGMSG1( enNormal, "IBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+#ifndef _CGI_LIST_
                 URBIT->QMsgSnd( m_pMsg );
+#endif
                 break;
 
             case enCGI_REQ_CBIT :
                 LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+#ifndef _CGI_LIST_
                 URBIT->QMsgSnd( m_pMsg );
+#endif
                 break;
 
             case enCGI_REQ_UBIT :
             case enCGI_REQ_SBIT :
                 LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+#ifndef _CGI_LIST_
                 URBIT->QMsgSnd( m_pMsg );
+#endif
                 break;
 
             //////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +104,12 @@ void CCGI::_routine()
                 break;
 
             case enCGI_FETCH :
+                break;
+
+            case enCGI_REQ_SPECTRUM :
+#ifndef _CGI_LIST_
+                UCOL->QMsgSnd( m_pMsg );
+#endif
                 break;
 
             default:

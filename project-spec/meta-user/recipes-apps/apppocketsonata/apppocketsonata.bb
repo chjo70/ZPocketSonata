@@ -79,6 +79,7 @@ do_install() {
 		 install -m 0755 fetch.cgi ${D}/srv/www/cgi-bin/fetch.cgi
 		 install -m 0755 upload.cgi ${D}/srv/www/cgi-bin/upload.cgi
 		 install -m 0755 download.cgi ${D}/srv/www/cgi-bin/download.cgi
+		 install -m 0755 listallchannel.cgi ${D}/srv/www/cgi-bin/listallchannel.cgi
 		 #install -m 0755 bit.cgi ${D}/srv/www/cgi-bin/bit.cgi
 		 
 		 #install -d ${D}/srv/www/cgi-bin

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #else
 #include "../SigAnal/_Type.h"
 #endif

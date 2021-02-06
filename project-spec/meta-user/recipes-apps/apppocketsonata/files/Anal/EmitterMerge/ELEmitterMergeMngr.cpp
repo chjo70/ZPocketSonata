@@ -449,7 +449,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     RunLOBClusteringResult();
 
     // 7. ABT/AET간 병합 수행, 연동기1 이고 운용자 요구 생성이 아니고 DB 가 연결되었을 때만 빔 병합을 수행
-    ManageABTs( bMerge & !m_bScanInfo );
+    ManageABTs( bMerge & !m_bScanProcess );
 
     // 8. 위협 관리 삭제 처리
     //ResetABT();
@@ -1165,7 +1165,7 @@ void CELEmitterMergeMngr::DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelT
             int i, iCnt=0;
 
             for( i=0 ; i < nCoDelThreat && i < 5 ; ++i ) {
-#ifdef _WIN32
+#ifdef _MSC_VER
                 iCnt += sprintf_s( & chDelThreat[iCnt], sizeof(chDelThreat)-iCnt, "[A%d,B%d]", pVecDelThreatInfo->at((UINT) i).iAETID, pVecDelThreatInfo->at((UINT) i).iABTID );
 #else
                 iCnt += sprintf_s( & chDelThreat[iCnt], "[A%d,B%d]", pVecDelThreatInfo->at((UINT) i).iAETID, pVecDelThreatInfo->at((UINT) i).iABTID );
@@ -2023,7 +2023,7 @@ CELThreat *CELEmitterMergeMngr::UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bo
 
         if( pTheABTThreat != NULL ) {
             // LOB 클러스터링을 위한 LOB 데이터 추가
-            InsertLOBPool( pTheABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, false, ( bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) ) && ( !bGenNewEmitter ) && ( !m_bScanInfo ) );
+            InsertLOBPool( pTheABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, false, ( bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) ) && ( !bGenNewEmitter ) && ( !m_bScanProcess ) );
 
             //////////////////////////////////////////////////////////////////////////
             // ABT 업데이트 처리
@@ -2175,7 +2175,7 @@ void CELEmitterMergeMngr::UpdateAET( CELThreat *pTheAETThreat, CELThreat *pTheAB
             // 변경된 위협의 방사체 번호로 매핑을 한다.
             pABTData->uiAETID = pTheABTThreat->m_Idx.uiAET;
 
-            if( m_bScanInfo == false ) {
+            if( m_bScanProcess == false ) {
                 //////////////////////////////////////////////////////////////////////////
                 // 기본 정보 업데이트
                 // 시간 정보
@@ -2747,7 +2747,7 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
     m_pABTData = GetABTData( nIndex );
     m_pABTExtData = GetABTExtData( nIndex );
 
-    if( m_bScanInfo == false ) {
+    if( m_bScanProcess == false ) {
         //////////////////////////////////////////////////////////////////////////
         // 기본 정보 업데이트
         ++ m_pABTData->uiCoLOB;
@@ -2978,7 +2978,7 @@ void CELEmitterMergeMngr::IdentifyABT( SRxABTData *pABTData, SELABTDATA_EXT *pAB
 
     /*
     if( m_pLOBData->aucRadarName[0] != 0 ) {
-#ifdef _WIN32
+#ifdef _MSC_VER
         strcpy_s( pABTData->aucRadarName, sizeof(pABTData->aucRadarName), m_pLOBData->aucRadarName );
 #else
         strcpy_s( pABTData->aucRadarName, m_pLOBData->aucRadarName );
@@ -7167,7 +7167,7 @@ bool CELEmitterMergeMngr::CompMergeLOB( SELLOBDATA_EXT *pThreatDataExt, bool bLi
     pThreatAET = GetHeaderThreat( m_pTheThreatRoot );
 
     // 스캔 LOB 는 병합 비교를 하지 않는다.
-    if( m_bScanInfo == false ) {
+    if( m_bScanProcess == false ) {
         while( pThreatAET != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
             pThreatABT = GetHeaderThreat( pThreatAET );
             while( pThreatABT != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
@@ -8207,7 +8207,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     //UpdateLOBData( i_bIsFilteredLOB );
 
-    if( m_bScanInfo == false ) {
+    if( m_bScanProcess == false ) {
         if( i_bIsFilteredLOB == false ) {
             Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
@@ -8777,7 +8777,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 
     //////////////////////////////////////////////////////////////////////////
     // 하나의 임무에서 Unique한 방사체 번호 얻기
-#ifdef _WIN32
+#ifdef _MSC_VER
     sprintf_s( buffer, sizeof(buffer), "select max(AETID) from ABTDATA" );
 #else
     sprintf_s( buffer, "select max(AETID) from ABTDATA" );
@@ -8793,7 +8793,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 // #else
 // 	sprintf_s( buffer, sizeof(buffer), "SELECT max(AET_ID) FROM E_AA_MSG_LOB where MISSION_ID='%s' ", GetMissionID( _LINK1 ) );
 // #endif
-#ifdef _WIN32
+#ifdef _MSC_VER
     sprintf_s( buffer, sizeof(buffer), "select max(LOBID) from LOBDATA where OP_INIT_ID=%d" , m_uiOpInitID );
 #else
     sprintf_s( buffer, "select max(LOBID) from LOBDATA" );
@@ -8840,7 +8840,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 // 	//m_uiABTID = _max( m_uiABTID, stLOBData.uiAETID );
 // 	//m_uiABTID = MakeUpperID( m_uiABTID );
 // 	m_uiABTID = m_uiAETID;
-#ifdef _WIN32
+#ifdef _MSC_VER
     sprintf_s( buffer, sizeof(buffer), "select max(ABTID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
 #else
     sprintf_s( buffer, "select max(ABTID) from ABTDATA" );
@@ -11179,9 +11179,24 @@ bool CELEmitterMergeMngr::DoesAnalScanTry()
 {
     bool bRet=false;
     SELABTDATA_EXT *pABTExtData = GetABTExtData();
+    SRxABTData *pABTData = GetABTData();
 
-    if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        bRet = true;
+    if( pABTData != NULL ) {
+        if( pABTData->iScanType == E_AET_SCAN_UNKNOWN ) {
+            if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
+                bRet = true;
+            }
+        }
     }
     return bRet;
+}
+
+/**
+ * @brief CELEmitterMergeMngr::SetStartOfAnalScan
+ */
+void CELEmitterMergeMngr::SetStartOfAnalScan()
+{
+    if( m_pABTExtData != NULL ) {
+
+    }
 }

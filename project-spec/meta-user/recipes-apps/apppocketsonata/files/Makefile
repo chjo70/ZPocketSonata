@@ -369,7 +369,7 @@ Anal/Collect/DataFile/DataFile_cgi.o: Anal/Collect/DataFile/DataFile.cpp
 
 
 clean:
-	$(RM) $(APP_OBJS) $(APP) $(SYSTEM_CGI)
+	$(RM) $(APP_OBJS) $(APP) $(SYSTEM_CGI) $(FETCH_CGI) $(UPLOAD_CGI) $(DOWNLOAD_CGI) $(BIT_CGI) $(LISTALLCHANNEL_CGI)
 	
 install:
 	$(TARGETINST) -a "/dev/mmcblk0p1	/media/sdcard	auto	default,sync,noauto	0	0"	/etc/fstab	

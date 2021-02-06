@@ -17,8 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     ../../Thread/ccgi.cpp \
     ../../Thread/curbit.cpp \
+    ../../Utils/DMA/dma.cpp \
     ../../Utils/carraymsgdata.cpp \
     ../../Utils/cgpio.cpp \
+    ../../Utils/chwio.cpp \
     ../../Utils/clog.cpp \
     ../../Utils/cthread.cpp \
     ../Qdecoder/md5/md5c.c \
@@ -64,6 +66,8 @@ HEADERS += \
     ../../../Utils/cgpio.h \
     ../../../Utils/clog.h \
     ../../../Utils/cthread.h \
+    ../../Utils/DMA/dma.h \
+    ../../Utils/chwio.h \
     ../../Utils/cthread.h \
     ../Qdecoder/internal.h \
     ../Qdecoder/md5/md5.h \

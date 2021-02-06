@@ -113,7 +113,25 @@ void CCollectBank::CloseCollectBank()
 void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 {
 
-    memcpy( & m_strWindowCell, pstrWindowCell, sizeof(STR_WINDOWCELL) );
+    /**
+    * @brief 최대 수집 게수 및 수집 시간
+    */
+    m_strWindowCell.uiMaxCoPDW = pstrWindowCell->uiMaxCoPDW;
+    m_strWindowCell.uiMaxCollectTimesec = pstrWindowCell->uiMaxCollectTimesec;
+    m_strWindowCell.uiMaxCollectTimems = pstrWindowCell->uiMaxCollectTimems;
+
+    m_strWindowCell.strAoa = pstrWindowCell->strAoa;
+    m_strWindowCell.strFreq = pstrWindowCell->strFreq;
+    m_strWindowCell.strPA = pstrWindowCell->strPA;
+    m_strWindowCell.strPW = pstrWindowCell->strPW;
+
+    m_strWindowCell.tsCollectStart = pstrWindowCell->tsCollectStart;
+
+    m_strWindowCell.uiCollectTime = pstrWindowCell->uiCollectTime;;
+
+    m_strWindowCell.uiABTID = pstrWindowCell->uiABTID;
+
+    // memcpy( & m_strWindowCell, pstrWindowCell, sizeof(STR_WINDOWCELL) );
 
     m_strWindowCell.bUse = true;
 
@@ -229,6 +247,10 @@ void CCollectBank::SimCollectMode()
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
 
+            if( m_strWindowCell.enCollectMode == enCompleteCollection ) {
+                m_strWindowCell.uiTotalPDW = m_strPDW.uiTotalPDW;
+            }
+
             //round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
             //printf( "[%ld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
 
@@ -275,8 +297,6 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
  */
 void CCollectBank::UpdateWindowCell()
 {
-    // 수집한 PDW 개수 업데이트
-    m_strWindowCell.uiTotalPDW = 0;
 
     m_strWindowCell.uiAccumulatedTime += m_strWindowCell.uiCollectTime;
 
@@ -290,6 +310,9 @@ void CCollectBank::UpdateWindowCell()
 
     // PDW 정보 클리어
     m_strPDW.uiTotalPDW = 0;
+
+    // 수집한 PDW 개수 업데이트
+    m_strWindowCell.uiTotalPDW = 0;
 
     // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );

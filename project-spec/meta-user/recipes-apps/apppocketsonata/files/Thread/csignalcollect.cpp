@@ -123,7 +123,7 @@ void CSignalCollect::_routine()
     pthread_cleanup_push( TCleanUpHandler, NULL);
 
     // 사용자 수집 함수로 시작
-    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART );
+    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, ChildClassName() );
 
     while( g_AnalLoop ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
@@ -181,7 +181,7 @@ void CSignalCollect::_routine()
 void CSignalCollect::SendEndCollect()
 {
     if( m_bSendEnd == false || true ) {
-        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END );
+        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END, ChildClassName() );
 
         m_bSendEnd = true;
     }
@@ -226,8 +226,8 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     pWindowCell->strAoa.iLow = IAOACNV( 0 );
     pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
 
-    pWindowCell->strFreq.iLow = IFRQMhzCNV( 0, 500 );
-    pWindowCell->strFreq.iHgh = IFRQMhzCNV( 0, 18000 );
+    pWindowCell->strFreq.iLow = IFRQMhzCNV( 0, MIN_FREQ_MHZ );
+    pWindowCell->strFreq.iHgh = IFRQMhzCNV( 0, MAX_FREQ_MHZ );
 
     pWindowCell->strPA.iLow = IPACNV( -70 );
     pWindowCell->strPA.iHgh = IPACNV( 10 );
@@ -311,7 +311,7 @@ void CSignalCollect::AnalysisStart()
             memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
-            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), ChildClassName() );
 
             bIsOut = false;
         }
@@ -484,23 +484,6 @@ void CSignalCollect::CloseTrackWindowCell()
     GetCollectBank( m_pMsg->x.strAnalInfo.uiCh )->CloseTrackWindowCell();
 
 }
-
-/**
- * @brief CSignalCollect::CloseTrackWindowCell
- * @param pABTData
- */
-/*
-void CSignalCollect::CloseTrackWindowCell( SRxABTData *pABTData )
-{
-    STR_WINDOWCELL strWindowCell;
-
-    // 정보 업데이트
-    CalTrackWindowCell( & strWindowCell, pABTData );
-
-    m_pTheCollectBank->CloseTrackWindowCell( & strWindowCell );
-
-}
-*/
 
 /**
  * @brief CSignalCollect::UpdateTrackWindowCell

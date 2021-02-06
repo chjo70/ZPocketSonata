@@ -159,6 +159,9 @@ void CSysConfig::InitVar()
     memset( m_strConfig.strScanWindowCell, 0, sizeof(STR_WINDOWCELL) * SCAN_CHANNEL );
     memset( m_strConfig.strUserWindowCell, 0, sizeof(STR_WINDOWCELL) * USER_CHANNEL );
 
+    // 수집 히스토그램 초기화
+    memset( m_strConfig.ucColHisto, 0, sizeof(m_strConfig.ucColHisto) );
+
     _spOneSec = 20000000.;
     _spOneMilli = FDIV( _spOneSec, 1000. );
     _spOneMicrosec = FDIV( _spOneMilli, 1000. );

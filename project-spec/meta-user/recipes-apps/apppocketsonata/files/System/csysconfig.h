@@ -32,6 +32,9 @@ struct STR_SYSCONFIG {
      */
     float fRxThreshold[5];
 
+    /**
+     * @brief 최근 연결된 서버 IP 주소
+     */
     char szPrimeServer[30];
 
     /**
@@ -49,10 +52,28 @@ struct STR_SYSCONFIG {
      */
     char szLocalIPAddress[30];
 
+    // 탐지/추적/스캔 채널 정보
+    /**
+     * @brief 탐지 채널 정보
+     */
     STR_WINDOWCELL strDetectWindowCell[DETECT_CHANNEL];
+
+    /**
+     * @brief 추적 채널 정보
+     */
     STR_WINDOWCELL strTrackWindowCell[TRACK_CHANNEL];
+
+    /**
+     * @brief 스캔 채널 정보
+     */
     STR_WINDOWCELL strScanWindowCell[SCAN_CHANNEL];
+
+    /**
+     * @brief 사용자 채널 정보
+     */
     STR_WINDOWCELL strUserWindowCell[USER_CHANNEL];
+
+    unsigned char ucColHisto[COLHISTO_TIME][COLHISTO_CELLS];
 
 } ;
 
@@ -179,6 +200,12 @@ public:
         memcpy( & m_strConfig.strUserWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
+
+    void SetColHisto() {
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+    }
+
+    unsigned char (*GetColHisto()) [(MAX_FREQ_MHZ-MIN_FREQ_MHZ)/COLHISTO_WIDTH_MHZ] { return m_strConfig.ucColHisto; }
 
 
 };

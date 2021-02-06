@@ -83,9 +83,9 @@ void CSharedMemroy::setupSharedMemory( int iSize )
             close();
 
             if ( ( m_shmid = shmget(m_key, iSize , IPC_CREAT | 0666 )) < 0 ) {
-            perror( "Error getting shared memory id" );
+                perror( "Error getting shared memory id" );
+            }
         }
-   }
     }
 
     m_iSize = iSize;

@@ -182,15 +182,15 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // DTOA 히스트그램 최대 개수
 #define	DTOA_RES                ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#define MAX_FREQ      			((18000.*1000.)*1.953125)   // 최대 주파수sms 5000 MHz로 함.
-#define	FREQ_NARR_MHZ			((20.*1000.)/1.953125)		// 20 MHz
-#define	FREQ_WIDE_MHZ			((100*1000.)/1.953125)		// 100 MHz
+#define	FREQ_NARR_MHZ           IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
+#define	FREQ_WIDE_MHZ           IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
 
 #define	MAX_FREQ_DEVIATION		((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-
 #define STABLE_MARGIN			ITOAusCNV(1)
 
+// 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 최대값으로 설정해야 한다.
+#define MAX_FREQ                (0x200000)
 #define MAX_AOA       			(0x1000)
 #define	MAX_PW					(0x1000000)
 
