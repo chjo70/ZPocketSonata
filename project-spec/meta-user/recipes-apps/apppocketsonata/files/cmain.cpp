@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  *
 * Placeholder PetaLinux user application.
@@ -30,6 +30,13 @@
 * Software without prior written authorization from Xilinx.
 *
 */
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#else
+
+#endif
 
 #include <iostream>
 
@@ -71,20 +78,29 @@ CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
 CSingleClient *g_pThePMCSocket;
 
-/**
- * @brief 시작 프로그램 입니다.
- */
-void usrAppStart()
-{
 
+/**
+ * @brief     Start
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-08, 11:43
+ * @warning
+ */
+void Start()
+{
     LOGENTRY;
     _ShowProgramTitle();
 
     signal( SIGINT, signalHandler);
     signal( SIGABRT, signalHandler);
-    signal( SIGHUP, signalHandler);
     signal( SIGTERM, signalHandler);
+
+#ifdef __linux__
+    signal( SIGHUP, signalHandler);
     signal( SIGSTOP, signalHandler);
+#endif
 
     // 1. 쓰레드 관리 쓰레드를 호출한다.
     TMNGR->Run( _MSG_TMNGR_KEY );
@@ -93,58 +109,68 @@ void usrAppStart()
     URBIT->Run( _MSG_URBIT_KEY );
 
     // 3. 분석 및 재밍 관련 쓰레드를 호출한다.
-    PULTRK->Run( _MSG_PULTRK_KEY );
-    JAMTEC->Run( _MSG_JAMTEC_KEY );
+    //PULTRK->Run( _MSG_PULTRK_KEY );
+    //JAMTEC->Run( _MSG_JAMTEC_KEY );
 
     // 4. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
     RECZYNQ->Run( _MSG_RECZYNQ_KEY );
     RECCCU->Run( _MSG_RECCCU_KEY );
 
     // 6. 브라우저의 CGI 메시지를 처리한다.
-    CGI->Run( _MSG_ZCGI_KEY );
+    //CGI->Run( _MSG_ZCGI_KEY );
 
     // 7. 사용자 수집 함수 메시지를 처리한다.
     UCOL->Run( _MSG_USERCOL_KEY );
 
     // 8. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
-    g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
-    g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
-    if( GP_SYSCFG->GetBoardID() == enMaster ) {
+    //g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
+    //g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
+    //     if( GP_SYSCFG->GetBoardID() == enMaster ) {
         g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT, GP_SYSCFG->GetPrimeServerOfNetwork() );
         g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 
-        //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
-        //g_pThePMCSocket->Run( _MSG_CCU_KEY );
-    }
+    //         //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
+    //         //g_pThePMCSocket->Run( _MSG_CCU_KEY );
+    //     }
 
     // 9. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
-    PROMPT->Run( _MSG_PROMPT_KEY );
+    //PROMPT->Run( _MSG_PROMPT_KEY );
 #endif
 
-    while( g_Loop ) {
-        sleep(10);
     }
+
+/**
+ * @brief     End
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-08, 11:43
+ * @warning
+ */
+void End()
+{
     //pause();
     printf( "\n 종료 처리 시작 합니다." );
 
     // 분석 관련 쓰레드를 종료 한다.
-    PROMPT->ReleaseInstance();
-
+    //PROMPT->ReleaseInstance();
+    // 
     delete g_pTheCCUSocket;
 
-    delete g_pTheZYNQSocket;
-
+    //delete g_pTheZYNQSocket;
+    // 
     UCOL->ReleaseInstance();
 
-    CGI->ReleaseInstance();
+    //CGI->ReleaseInstance();
 
     RECZYNQ->ReleaseInstance();
     RECCCU->ReleaseInstance();
 
-    JAMTEC->ReleaseInstance();
-    PULTRK->ReleaseInstance();
-
+    //JAMTEC->ReleaseInstance();
+    //PULTRK->ReleaseInstance();
+    // 
     URBIT->ReleaseInstance();
 
     // 마지막 타스크 관리자 쓰레드를 종료 한다.
@@ -154,6 +180,22 @@ void usrAppStart()
 
     exit(0);
 
+}
+
+/**
+ * @brief 시작 프로그램 입니다.
+ */
+void usrAppStart()
+{
+    // 쓰레드 생성 초기화
+    Start();
+
+    while( g_Loop ) {
+        sleep(10);
+    }
+
+    // 쓰레드 종료
+    End();
 }
 
 /**
@@ -206,22 +248,22 @@ void cleanup_handler(void *arg )
     // close your socket
 }
 
-void *execute_on_thread(void *arg)
-{
-    pthread_cleanup_push(cleanup_handler, NULL);
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-
-    while(1)
-    {
-        //sleep(1);
-        printf("Running\n");
-        //thread stuff
-    }
-
-    pthread_cleanup_pop(1);
-
-    return (void *) 0;
-}
+// void *execute_on_thread(void *arg)
+// {
+//     pthread_cleanup_push(cleanup_handler, NULL);
+//     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+// 
+//     while(1)
+//     {
+//         //sleep(1);
+//         printf("Running\n");
+//         //thread stuff
+//     }
+// 
+//     pthread_cleanup_pop(1);
+// 
+//     return (void *) 0;
+// }
 
 
 /**
@@ -236,7 +278,6 @@ int main(int argc, char *argv[])
     /////////////////////////////////////////////////////////////////////////////////
     // 아규먼트를 파싱하여 프로그램을 설정합니다.
     ParsingArgument( argc, argv );
-
 
 #ifdef _DAEMON_
     pid_t pid;

@@ -13,9 +13,11 @@
 
 #include "../Identify/ELUtil.h"
 
+#include "KnownSigAnal.h"
+
 #ifdef __cplusplus
 
-class CKnownSigAnal;
+//class CKnownSigAnal;
 
 //##ModelId=452B0C5203C8
 class CKMakeAET : public CMakeAET
@@ -95,10 +97,8 @@ public:
 
 
 
-    template <typename T>
-    UINT CheckHarmonic(T mean1, T mean2, T priThreshold ) {
-        return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
-    }
+     //template <typename T>
+     UINT CheckHarmonic(float mean1, float mean2, float priThreshold );
 
 
     template <typename T>
@@ -250,7 +250,7 @@ public:
                 framePri += pAet1->fPRISeq[i];
             }
 
-            return CheckHarmonic<float>( (float) framePri, pAet2->fPRIMean, 2*_spOneMicrosec );
+            return CheckHarmonic( (float) framePri, pAet2->fPRIMean, 2*_spOneMicrosec );
         }
         else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STAGGER ) {
             int framePri;
@@ -264,7 +264,7 @@ public:
                     framePri += pAet1->fPRISeq[i];
                 }
 
-                return CheckHarmonic<float>( framePri, pAet1->fPRIMean, 2*_spOneMicrosec );
+                return CheckHarmonic( framePri, pAet1->fPRIMean, 2*_spOneMicrosec );
             }
         }
         //-- 조철희 2005-10-25 19:01:09 --//
@@ -275,7 +275,7 @@ public:
             for( i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
                 BOOL bRet;
 
-                bRet = CheckHarmonic<float>( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
+                bRet = CheckHarmonic( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
                 if( bRet != 0 ) {
                     return bRet;
                 }

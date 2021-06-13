@@ -193,7 +193,7 @@ struct SELEmitterEdited
     int  nLOBId;
 
     // 수정 그룹 비티맵
-    UELMANUALVAL userManual;
+    //UELMANUALVAL userManual;
 
     // 방사체 정보 데이터
     SELAETDATA aetData;

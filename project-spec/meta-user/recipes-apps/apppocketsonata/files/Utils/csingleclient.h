@@ -1,8 +1,10 @@
-#ifndef CSINGLECLIENT_H
+﻿#ifndef CSINGLECLIENT_H
 #define CSINGLECLIENT_H
 
+#ifdef __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
 
 
 #include "../Include/system.h"

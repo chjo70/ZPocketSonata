@@ -1,16 +1,42 @@
-#ifndef CTHREAD_H
+﻿#ifndef CTHREAD_H
 #define CTHREAD_H
 
+#ifdef _MSC_VER
+//#include "../Common/MessageQueue.h"
+
+#include <iostream>
+#include <queue>
+
+#if _MSC_VER <= 1600 || _AFXDLL
+
+#else
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+
+#endif
+
+using namespace std;
+
+
+
+#else
 #include <pthread.h>
-#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
+
+#endif
+
+#ifdef __linux__
 #include <sys/msg.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
-#include <sys/stat.h>
 #include <regex.h>
+#endif
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "../Include/system.h"
 #include "../Anal/INC/system.h"
@@ -140,14 +166,60 @@ struct STR_MessageData {
 
 } ;
 
+#if defined(_MSC_VER) || defined(__VXWORKS__)
+class CThreadContext
+{
+public:
+	CThreadContext() {
+		memset(this, 0, sizeof(this));
+	}
+
+	/*
+		*	Attributes Section
+		*/
+public:
+	HANDLE m_hThread;					//	The Thread Handle
+	DWORD  m_dwTID;						//	The Thread ID
+	LPVOID m_pUserData;						//	The user data pointer
+	LPVOID m_pParent;					//	The this pointer of the parent CThread object
+	DWORD  m_dwExitCode;				//	The Exit Code of the thread
+};
+#endif
+
 /**
  * @brief The CThread class
  */
 class CThread : public CArrayMsgData
 {
 private:
+#ifdef _MSC_VER
+    CThreadContext m_MainThread;
+    //CMessageQueue<STR_MessageData*>* m_pTheMessageQueue;
+
+    LPTHREAD_START_ROUTINE	m_pThreadFunc;	//	The Worker Thread Function Pointer
+    //void *m_pThreadFunc(void *);
+
+    HANDLE m_hEvent;
+
+	//std::queue<STR_MessageData> m_queue;
+    queue<STR_MessageData> m_queue;
+
+#if _MSC_VER <= 1600 || _AFXDLL
+	CCriticalSection m_cs;
+
+#else
+	std::mutex m_mutex;
+#endif
+
+#elif __VXWORKS__
+    CThreadContext m_MainThread;
+    key_t m_MsgKeyID;
+
+#else
     pthread_t m_MainThread;
     key_t m_MsgKeyID;
+#endif
+
     STR_MessageData m_RcvMsg;
     STR_MessageData m_SndMsg;
 
@@ -168,7 +240,18 @@ public:
     ~CThread();
 
     void Run( key_t key=IPC_PRIVATE );
-    void Run( void *(*Func)(void*), key_t key=IPC_PRIVATE );
+
+#ifdef _MSC_VER
+    void Run( void *(*pFunc)(void*), key_t key );
+    DWORD Start( void *pArg=NULL );
+#elif __VXWORKS__
+    void Run( void *(*pFunc)(void*), key_t key );
+    DWORD Start( void *pArg=NULL );
+#else
+    DWORD Start( void *pArg=NULL );
+    void Run( void *(*Func)(void*), key_t key );
+#endif
+
     int Pend();
     void Stop();
     void Stop2();
@@ -179,7 +262,84 @@ public:
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
+#ifdef _MSC_VER
+    inline key_t GetKeyId() { return 0; }
+
+    static DWORD WINAPI EntryPoint( LPVOID pArg)
+    {
+        CThread *pParent = reinterpret_cast<CThread*>(pArg);
+
+        pParent->ThreadCtor();
+
+        pParent->Run( pParent->m_MainThread.m_pUserData );
+
+        pParent->ThreadDtor();
+
+        return STILL_ACTIVE;
+    }
+
+	/*
+		*	Info: Constructor-like function. 
+		*	
+		*	Will be called by EntryPoint before executing the thread body.
+		*  Override this function to provide your extra initialization.
+		*
+		*  NOTE: do not confuse it with the classes constructor
+		*/
+	virtual void ThreadCtor() {	}
+
+	/*
+		*	Info: Destructor-like function. 
+		*	
+		*	Will be called by EntryPoint after executing the thread body.
+		*  Override this function to provide your extra destruction.
+		*
+		*  NOTE: do not confuse it with the classes constructor
+		*/
+	virtual void ThreadDtor() {	}
+
+    /*
+	*	Info: Override this method.
+	*	
+	*	This function should contain the body/code of your thread.
+	*	Notice the signature is similar to that of any worker thread function
+	*  except for the calling convention.
+	*/
+    virtual DWORD Run( LPVOID /* arg */ ) {
+        return m_MainThread.m_dwExitCode; 
+    }
+
+	/*
+		*	Info: Attaches a Thread Function
+		*	
+		*	Used primarily for porting but can serve in developing generic thread objects
+		*/
+	void Attach( LPTHREAD_START_ROUTINE lpThreadFunc ) {
+    //void Attach( void *(*Func)(void*) ) {
+		m_pThreadFunc = lpThreadFunc;
+	}
+
+    void Lock() {
+#if _MSC_VER <= 1600 || _AFXDLL
+        m_cs.Lock();
+#else
+        std::unique_lock<std::mutex> lk(m_mutex);
+#endif
+
+    }
+
+    void UnLock() {
+#if _MSC_VER <= 1600 || _AFXDLL
+        m_cs.Unlock();
+#else
+
+#endif
+
+    }
+
+#else
     inline key_t GetKeyId() { return m_MsgKeyID; }
+#endif
 
     inline STR_MessageData *GetDataMessage() { return & m_RcvMsg; }
     inline int GetCoThread() { return m_iCoThread; }

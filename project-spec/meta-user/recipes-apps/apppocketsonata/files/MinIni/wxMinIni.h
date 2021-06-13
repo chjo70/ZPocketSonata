@@ -1,4 +1,4 @@
-/*  minIni - Multi-Platform INI file parser, wxWidgets interface
+﻿/*  minIni - Multi-Platform INI file parser, wxWidgets interface
  *
  *  Copyright (c) CompuPhase, 2008-2012
  *

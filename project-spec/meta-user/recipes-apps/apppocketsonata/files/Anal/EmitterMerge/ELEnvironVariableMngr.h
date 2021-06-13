@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../SigAnal/_Type.h"
+
 //#include "..\..\CEFCOMMON\CommonMngr.h"
 
 namespace SELTASKDB

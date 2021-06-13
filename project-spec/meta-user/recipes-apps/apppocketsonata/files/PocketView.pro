@@ -19,9 +19,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Anal/MIDAS/RawFile.cpp \
     Anal/SigAnal/cencdec.cpp \
-    Anal/SigAnal/stdafx.cpp \
     Anal/Collect/DataFile/DataFile.cpp \
     Utils/cfile.cpp \
+    Utils/clog.cpp \
     chexspinbox.cpp \
     mainView.cpp \
     mainwindow.cpp
@@ -35,6 +35,7 @@ HEADERS += \
     Anal/SigAnal/stdafx.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
+    Utils/clog.h \
     chexspinbox.h \
     mainwindow.h
 

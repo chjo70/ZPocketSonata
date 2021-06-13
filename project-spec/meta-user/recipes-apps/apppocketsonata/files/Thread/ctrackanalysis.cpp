@@ -1,3 +1,14 @@
+// CTrackAnalysis.cpp: implementation of the CTrackAnalysis class.
+//
+//////////////////////////////////////////////////////////////////////
+
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
+
 #include "ctrackanalysis.h"
 #include "cemittermerge.h"
 #include "../Utils/clog.h"

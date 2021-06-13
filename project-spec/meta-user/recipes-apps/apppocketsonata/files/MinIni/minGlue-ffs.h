@@ -1,4 +1,4 @@
-/*  Glue functions for the minIni library, based on the "FAT Filing System"
+﻿/*  Glue functions for the minIni library, based on the "FAT Filing System"
  *  library by embedded-code.com, now IBEX UK.
  *  https://github.com/ibexuk/C_Memory_SD_Card_FAT_Driver
  *

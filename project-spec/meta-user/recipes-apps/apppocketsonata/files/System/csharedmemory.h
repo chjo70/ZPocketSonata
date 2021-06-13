@@ -1,4 +1,4 @@
-#ifndef CSHAREDMEMORY_H
+﻿#ifndef CSHAREDMEMORY_H
 #define CSHAREDMEMORY_H
 
 
@@ -10,12 +10,14 @@
 #ifdef __linux__
 #include <sys/ipc.h>
 #include <sys/shm.h>
+
+#elif _MSC_VER
+#define SHARED_NAME _T("Shared_Memory")
 #else
-typedef int key_t;
+#include <unistd.h>
 
 #endif
 
-#include <unistd.h>
 #include <string>
 
 #include "../Include/system.h"
@@ -28,11 +30,17 @@ class CSharedMemroy
 {
 
 private :
-
-    int m_shmid;
-    key_t m_key;
     void *m_shared_memory;
     int m_iSize;
+
+#ifdef _MSC_VER
+    HANDLE m_hHandle;
+
+#else
+    int m_shmid;
+    key_t m_key;
+
+#endif
 
 
 public :

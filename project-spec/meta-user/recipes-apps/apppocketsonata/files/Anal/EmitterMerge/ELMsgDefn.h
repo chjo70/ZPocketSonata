@@ -156,6 +156,7 @@ struct SRxLOBData {
 
 #ifndef _POCKETSONATA_
 	char	aucTaskID[LENGTH_OF_TASK_ID];
+    
 #endif
 
 }  ;
@@ -180,8 +181,8 @@ struct SRxABTData {
 
     unsigned int uiCoLOB;
 
-    __time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-    __time32_t tiLastSeenTime;
+    time_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+    time_t /* __time32_t */ tiLastSeenTime;
 
     char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
     char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
@@ -302,8 +303,8 @@ struct SRxAETData {
     int iRadarPriority;
     int iThreatPriority;
 
-    __time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-    __time32_t tiLastSeenTime;
+    time_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+    time_t tiLastSeenTime;
 
     int iValidity;
 

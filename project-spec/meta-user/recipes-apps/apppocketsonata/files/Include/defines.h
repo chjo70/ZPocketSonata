@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 시스템의 정의문을 정의합니다.
  * */
 
@@ -12,25 +12,11 @@
 #define PROGRAM_VERSION     "0.1a"
 
 // 실행 파일이 있는 위치에서 로그 디렉토리
-#define LOG_DIRECTORY       ("/var/log/LOG")
-
-////////////////////////////////////////////////////////////////////////////////
-// 아래는 프로그램 설정과 관련된 정의를 나열합니다.
-
-// 메인 프로그램을 데몬으로 구동합니다.
-//#define _DAEMON_
-
-// ZYNQ 보드의 GPIO 값으로 AUTO 설정함을 정의한다.
-//#define _AUTO_ID_
-
-// readline 라이브러리를 이용하여 쉘 입력을 처리한다.
-//#define _READLINE_
-
-// LOG 디렉토리에서 실행 파일의 경로를 기준으로 LOG_DIRECTORY 경로를 생성한다.
-//#define _LOG_RELATIVE_PATH_
-
-// LOG 풀력시 함수, 라인 등의 정보를 출력한다.
-//#define _LOG_WHERE
+//#ifdef __linux__
+//#define LOG_DIRECTORY       ("/tmp/log/LOG")
+//#else
+//#define LOG_DIRECTORY       ("c:/temp")
+//#endif
 
 
 // 변수 타입을 정의합니다.
@@ -42,8 +28,13 @@ typedef unsigned long long int _TOA;
 #endif
 
 
+#ifdef _MSC_VER
+
+#else
 // MFC에서 정의된 define 문을 아래에 정의한다.
 #define MAX_PATH        (1024)
+
+#endif
 
 
 // 포토 를 정의합니다.
@@ -52,12 +43,25 @@ typedef unsigned long long int _TOA;
 
 #define NETWORK_CLASSC  (char *) ( "192.168.0" )
 
+
+#ifdef _SIM_SERVER_
+#define HOST_SERVER     (char *) ( "127.0.0.1" )
+#define DEV_SERVER      (char *) ( "127.0.0.1" )
+#define DEV2_SERVER     (char *) ( "127.0.0.1" )
+
+#else
+
+#define HOST_SERVER     (char *) ( "192.168.10.245" )
+#define DEV_SERVER      (char *) ( "192.168.10.11" )
+#define DEV2_SERVER     (char *) ( "192.168.10.12" )
+
+#endif
+
+
+
 // 제어조종장치 서버
 #ifdef __linux__
 //#define CCU_SERVER      (char *) ( "127.0.0.1" )
-#define HOST_SERVER     (char *) ( "192.168.1.245" )
-#define DEV_SERVER      (char *) ( "192.168.1.11" )
-#define DEV2_SERVER     (char *) ( "192.168.1.12" )
 #else
 //#define CCU_SERVER      (char *) ( "192.168.1.245" )
 #endif
@@ -85,16 +89,24 @@ typedef unsigned long long int _TOA;
 
 
 /////////////////////////////////////////////////////////////////////////////////
-#ifdef LINUX
+#ifdef __linux__
 //#define CString QString
+
+#elif _MSC_VER
 
 #else
 //#define CString QString
 #define _MBCS
 #define _T(A)           (A)
 
+#if	!defined(TRUE) || (TRUE!=(1))
 #define TRUE            (true)
+#endif
+
+#if	!defined(FALSE) || (FALSE!=(0))
 #define FALSE           (false)
+#endif
+
 #define bool            bool
 
 #endif

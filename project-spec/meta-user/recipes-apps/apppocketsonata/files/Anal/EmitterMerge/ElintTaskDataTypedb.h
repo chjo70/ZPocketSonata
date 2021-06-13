@@ -2,11 +2,11 @@
 
 #ifndef _H_ELINT_TASK_DATATYPE
 #define _H_ELINT_TASK_DATATYPE
-// Fisint Data Type 정의
 
 #include <string>
 using namespace std;
 
+//#include "../Identify/ELCEDLibDataType.h"
 #include "../Identify/ELCEDLibDataType.h"
 
 

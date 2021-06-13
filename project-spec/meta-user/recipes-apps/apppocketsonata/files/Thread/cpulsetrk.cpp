@@ -18,7 +18,7 @@ CPulseTrk::CPulseTrk( int iKeyId, char *pClassName, bool bArrayLanData ) : CThre
 
 
 /**
- * @brief CPulseTrk::~CJamTech
+ * @brief CPulseTrk::~CPulseTrk
  */
 CPulseTrk::~CPulseTrk(void)
 {

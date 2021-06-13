@@ -1,4 +1,4 @@
-#ifndef CCGI_H
+﻿#ifndef CCGI_H
 #define CCGI_H
 
 

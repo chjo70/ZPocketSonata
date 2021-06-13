@@ -1,4 +1,4 @@
-#ifndef CURBIT_H
+﻿#ifndef CURBIT_H
 #define CURBIT_H
 
 
@@ -19,7 +19,9 @@ class CUrBit : public CThread
 private:
     int m_nBoardID;
 
+#ifdef __ZYNQ_BOARD__
     CGPIO m_theGPIO;
+#endif
 
     UNI_ES_IBIT m_stESIbit;
     STR_ES_CBIT m_stESCbit;
@@ -38,8 +40,10 @@ private:
     void RunUBit( bool bCGIRunning );
     void InitIBit();
 
+#ifdef __ZYNQ_BOARD__
     // 모듈 자체점검 함수
     bool RunAXIBusBIT();
+#endif
 
 public:
     CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );

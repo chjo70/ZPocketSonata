@@ -6,6 +6,7 @@ pre-built/linux/
 .petalinux/*
 !.petalinux/metadata
 *.o
+*.obj
 *.jou
 *.log
 project-spec/meta-plnx-generated/
@@ -28,3 +29,9 @@ Build-PocketSonata*/
 
 
 apptest*
+
+
+# Precompiled Headers
+*.gch
+*.pch
+*.log

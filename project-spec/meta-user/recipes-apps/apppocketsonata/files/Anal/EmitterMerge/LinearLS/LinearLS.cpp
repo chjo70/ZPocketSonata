@@ -7,7 +7,11 @@
  * @warning   
  */
 
-#include "StdAfx.h"
+#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
 
 #include <math.h>
 
@@ -38,7 +42,7 @@ CLinearLS::~CLinearLS(void)
  * @date      2013-09-09 오후 7:04 
  * @warning   
  */
-void CLinearLS::RunLinearLS( SELUTMTIME *pResult, SELUTMTIME *pSensor, double *pLob, int nEle, EL_TARGET_STATE_OPTION eTargetState )
+void CLinearLS::RunLinearLS( SELSensorPosition *pResult, SELUTMTIME *pSensor, double *pLob, int nEle, EL_TARGET_STATE_OPTION eTargetState )
 {
 	int i;
 	double a, b, c, d;

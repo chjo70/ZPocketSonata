@@ -1,5 +1,11 @@
 #include <errno.h>
+
+#ifdef __linux__
 #include <arpa/inet.h>
+#elif __VXWORKS__
+#include <sys/select.h>
+
+#endif
 
 #include "csingleserver.h"
 
@@ -90,6 +96,12 @@ void CSingleServer::Run( key_t key )
  */
 void CSingleServer::_routine()
 {
+#ifdef __MINGW32__
+    while( true ) {
+        sleep( 10000 );
+    }
+
+#else
     bool bHeader;
     UINT uiTotalRead;
 
@@ -221,12 +233,16 @@ void CSingleServer::_routine()
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
 
+#ifdef __linux__                                
                                 if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                     perror( "msgsnd 실패" );
                                 }
                                 else {
                                     // DisplayMsg( & sndMsg );
                                 }
+#else
+                                
+#endif
 
                             }
                             else {
@@ -272,6 +288,7 @@ void CSingleServer::_routine()
                                 }
                             }
 
+#ifdef __linux__                                
                             if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                 perror( "msgsnd 실패" );
                             }
@@ -279,6 +296,9 @@ void CSingleServer::_routine()
                                 // DisplayMsg( & sndMsg );
 
                             }
+#else
+                            
+#endif                            
 
                         }
                     }
@@ -287,6 +307,9 @@ void CSingleServer::_routine()
         }
 
     }
+
+#endif
+
 }
 
 
@@ -298,6 +321,9 @@ void CSingleServer::_routine()
  */
 void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket )
 {
+#ifdef __MINGW32__
+
+#else
     int addrlen;
 
     addrlen = sizeof(sockaddr_in);
@@ -314,6 +340,7 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
 
     UINT uiMode=enREADY_MODE;
     QMsgSnd( TMNGR->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
+#endif
 
 }
 
@@ -329,6 +356,10 @@ int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     strLanHeader.uiOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
+#ifdef __MINGW32__
+    iRet1 = 0;
+
+#else
     //CCommonUtils::AllSwapData32( & strLanHeader, sizeof(STR_LAN_HEADER) );
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
 
@@ -340,6 +371,7 @@ int CSingleServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         // TaskMngr () Send Error 발생시 Lock 이 됨.
         //perror( "send() 에러");
     }
+#endif
 
     return iRet1 + iRet2;
 

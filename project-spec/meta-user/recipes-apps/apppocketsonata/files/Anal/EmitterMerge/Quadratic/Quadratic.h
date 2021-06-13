@@ -12,7 +12,10 @@
 #include "../PositionEstimation.h"
 #include "../ELEmitterDataType.h"
 
-class CQuadratic
+#include "../CEP/AnalyticCEP.h"
+
+
+class CQuadratic : public CAnalyticCEP
 {
 private:
 
@@ -21,7 +24,7 @@ public:
 	CQuadratic(void);
 	~CQuadratic(void);
 
-	bool Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitude, double *pLob, int nLob );
+	bool Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, double *pLob, int nLob );
 	void CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData );
 
 };

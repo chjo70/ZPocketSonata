@@ -15,6 +15,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#elif __VXWORKS__
+#include <ioLib.h>
 #else
 #include <io.h>
 #endif

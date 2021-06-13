@@ -2,6 +2,11 @@
 // 신규 데이터를 수집하기위한 수집 제어와 분석된 데이터를 기반으로 추적 수집 채널을 할당해서 추적 채널을 관리한다.
 // 또한, 스캔 채널을 할당하여 스캔 수집을 하게 한다.
 
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include "../Anal/OFP_Main.h"
 
 #include "csignalcollect.h"
@@ -120,7 +125,10 @@ void CSignalCollect::_routine()
 
     m_pMsg = GetDataMessage();
 
+#ifdef _MSC_VER
+#else
     pthread_cleanup_push( TCleanUpHandler, NULL);
+#endif
 
     // 사용자 수집 함수로 시작
     UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, ChildClassName() );
@@ -163,15 +171,18 @@ void CSignalCollect::_routine()
                     break;
             }
         }
-        else {
+        //else {
             // 신호 수집은 여기서 수행한다.
             if( bRunCollecting == true ) {
                 AnalysisStart();
             }
-        }
+        //}
     }
 
+#ifdef _MSC_VER
+#else
     pthread_cleanup_pop( 1 );
+#endif
 
 }
 
@@ -340,7 +351,13 @@ void CSignalCollect::AnalysisStart()
             bIsOut = false;
         }
 
+#ifdef __VXWORKS__        
+        //usleep( 1000 );
+#elif _MSC_VER
+        Sleep( 1 );
+#else   
         usleep( 1000 );
+#endif        
         //printf( "." );
         if( bIsOut == true ) {
             break;

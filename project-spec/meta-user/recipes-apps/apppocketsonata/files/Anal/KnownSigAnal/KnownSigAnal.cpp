@@ -2,14 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-// PC용 상위 클래스에 전달하기 위한 선언
 #ifdef _MSC_VER
-#include "../../A50SigAnal/stdafx.h"
-#include "../../A50SigAnal/A50SigAnal.h"
-
-#include "../../A50SigAnal/MainFrm.h"
-#include "../../A50SigAnal/A50SigAnalDoc.h"
-#include "../../A50SigAnal/A50SigAnalView.h"
+#include "stdafx.h"
 
 #endif
 
@@ -215,9 +209,11 @@ void CKnownSigAnal::ClearColBuffer()
 {
 #ifdef __GNUC__
     //m_pPdwBank->count = 0;
+#elif _POCKETSONATA_
 #else
     m_pPdwBank->count = 0;
 #endif
+
 }
 
 //////////////////////////////////////////////////////////////////////////

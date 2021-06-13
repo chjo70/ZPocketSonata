@@ -475,7 +475,11 @@ struct SEL_KEYWORD_VALUE{
 		dGain_value(0.0),
 		numberofdata(0)
 	{
+#ifdef _MSC_VER
 		strcpy_s( classification, "701-ELINT" );
+#else
+        strcpy( classification, "701-ELINT" );
+#endif
 		// memset(classification, NULL, 50);
         memset(writer, 0, sizeof(writer) );
         memset(writer_version, 0, sizeof(writer_version));

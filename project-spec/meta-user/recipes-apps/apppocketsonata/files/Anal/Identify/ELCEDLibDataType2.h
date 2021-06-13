@@ -1,7 +1,10 @@
 ﻿
 #pragma once
 
+#ifndef __VXWORKS__
 #include <memory.h>
+#endif
+
 #include <vector>
 #include <list>
 #include <map>
@@ -1190,7 +1193,7 @@ struct SWeaponSystem	//무기체계
     vector<CString> vecSelectedELNOT_ForGUI;	//관련된 전정부호명
 	SWeaponSystem() : nWeaponIndex(0)
 	{
-        strWeaponSys = _T("");
+        strWeaponSys = "";
         vecSelectedELNOT_ForGUI = vector<CString>();
 	}
 };
@@ -1203,7 +1206,7 @@ struct SPlatform	//플랫폼
     vector<CString> vecSelectedELNOT_ForGUI;	//관련된 전정부호명 목록
 	SPlatform() : nPlatformIndex(0)
 	{
-        strPlatform = _T("");
+        strPlatform = "";
         vecSelectedELNOT_ForGUI = vector<CString>();
 	}
 };
@@ -1296,7 +1299,11 @@ struct SDeviceBase
 
 		//memcpy( szBuffer, (LPCSTR) strLongitude, strLongitude.GetLength()+1 );
         //sscanf_s( szLongitude, "%d%1c" , & iVal, & ch );
-		sscanf_s( szLongitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+#ifdef _MSC_VER
+        sscanf_s( szLongitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+#else
+        sscanf( szLongitude, "%d%1c" , & iVal, & ch );
+#endif
 
 		if( ch != 'E' && ch != 'e' && ch != 'W' && ch == 'w' ) {
 			iVal = 0;
@@ -1321,7 +1328,12 @@ struct SDeviceBase
 		int iVal=0;
 
 		// memcpy( szBuffer, (LPCSTR) strLatitude, strLatitude.GetLength()+1 );
-		sscanf_s( szLatitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+
+#ifdef _MSC_VER
+        sscanf_s( szLatitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+#else
+        sscanf( szLatitude, "%d%1c" , & iVal, & ch );
+#endif
 
 		if( ch != 'N' && ch != 'n' && ch != 'S' && ch == 's' ) {
 			iVal = 0;
@@ -1896,7 +1908,7 @@ struct SRadarMOP_CW
 		fMOP_CW_DutyCycleMin=0.0f;
 		fMOP_CW_DutyCycleMax=0.0f;
 
-		strMOP_CW_PatternName = _T("");
+                strMOP_CW_PatternName = "";
 
 		vecRadarMOP_CW_Values = vector <SRadarMOP_CW_Values>();
 
@@ -1988,7 +2000,7 @@ struct SRadarModeLifeCycle
 	{
 		nRadarIndex=0;
 		nRadarModeIndex=0;
-		strRadarModeName=_T("");
+                strRadarModeName="";
 		szModeCode[0] = 0;
 	}
 };

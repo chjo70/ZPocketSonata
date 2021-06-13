@@ -1,10 +1,18 @@
-﻿#include "csharedmemory.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
+#include "csharedmemory.h"
 
 /**
  * @brief CSharedMemroy::CSharedMemroy
  */
 CSharedMemroy::CSharedMemroy()
 {
+#ifdef _MSC_VER
+    m_hHandle = NULL;
+#endif
 
 }
 
@@ -15,6 +23,8 @@ CSharedMemroy::CSharedMemroy()
  */
 CSharedMemroy::CSharedMemroy( key_t key, int iSize )
 {
+
+
     setKey( key );
 
     setupSharedMemory( iSize );
@@ -49,7 +59,12 @@ CSharedMemroy::~CSharedMemroy()
  */
 void CSharedMemroy::setShmId( int id )
 {
+#ifdef _MSC_VER
+
+#else
     m_shmid = id;
+#endif
+
 }
 
 /**
@@ -58,7 +73,13 @@ void CSharedMemroy::setShmId( int id )
  */
 void CSharedMemroy::setKey( key_t key )
 {
+    
+#ifdef _MSC_VER
+    m_hHandle = NULL;
+#else
     m_key = key;
+
+#endif
 }
 
 /**
@@ -68,7 +89,7 @@ void CSharedMemroy::setKey( key_t key )
 void CSharedMemroy::setupSharedMemory( int iSize )
 {
    // Setup shared memory, 11 is the size
-
+#ifdef __linux__
    if( iSize == 0 ) {
         if ( ( m_shmid = shmget(m_key, 0 , 0)) < 0 ) {
             perror( "Error getting shared memory id\n" );
@@ -87,6 +108,29 @@ void CSharedMemroy::setupSharedMemory( int iSize )
             }
         }
     }
+#elif _MSC_VER
+    if( iSize == 0 ) {
+        if( m_hHandle == NULL ) {
+            m_hHandle = ::OpenFileMapping( FILE_MAP_ALL_ACCESS, NULL, SHARED_NAME );
+        }            
+        if( m_hHandle != NULL ) {
+            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, iSize );
+        }
+    }
+    else {
+        if( m_hHandle == NULL ) {
+            m_hHandle = ::CreateFileMapping( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, iSize, SHARED_NAME );
+        }
+        if( m_hHandle != NULL ) {
+            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, iSize );
+        }
+    }
+
+#else
+   m_shmid = 0;
+
+#endif
+
 
     m_iSize = iSize;
 }
@@ -96,12 +140,20 @@ void CSharedMemroy::setupSharedMemory( int iSize )
  */
 void CSharedMemroy::attachSharedMemory()
 {
+#ifdef __linux__
    // Attached shared memory
    if ( ( m_shared_memory = shmat( m_shmid , NULL , 0 ) ) == (char *)-1)
    {
       perror("Error attaching shared memory id");
         //printf( "Error attachSharedMemory !!" );
    }
+#elif _MSC_VER
+
+#else
+    m_shared_memory = (void *) -1;
+
+#endif
+
 }
 
 /**
@@ -151,11 +203,14 @@ bool CSharedMemroy::copyToLocalMemroy( void *pData, int iSize )
  */
 void CSharedMemroy::close()
 {
+#ifdef __linux__
    //sleep(10);
 
    // Detach and remove shared memory
    shmdt( m_shared_memory );
    shmctl( m_shmid , IPC_RMID, NULL );
+
+#endif
 
 }
 

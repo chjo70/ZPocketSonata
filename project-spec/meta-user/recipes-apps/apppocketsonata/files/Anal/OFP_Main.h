@@ -50,8 +50,6 @@
 #define PDW_EXT									"EPDW"
 
 #elif defined(_POCKETSONATA_)
-#define LOCAL_DATA_DIRECTORY_2                  "/var/log/PPDW"
-
 #define PDW_EXT									"zpdw"
 #define MIDAS_EXT								"midas"
 

@@ -16,6 +16,12 @@
 
 #include "../Anal/SigAnal/_Type.h"
 
+#elif __VXWORKS__
+#include <ioLib.h>
+
+#elif _MSC_VER
+#include "stdafx.h"
+
 #else
 #include <io.h>
 
@@ -97,13 +103,13 @@ bool CPDW2SP370::MakeHeader(void)
 	int length, index;
 	wchar_t strUnicode[256]={0,};
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__VXWORKS__)
     strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], LIBRARY_NAME );
 #else
     strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], sizeof(m_stPDWHeader.szMasterLibraryName), LIBRARY_NAME );
 #endif
 
-
+#ifndef __VXWORKS__
 	//pMultibyte = ConvertUnicodeToMultibyte( strUnicode );
 	//int len=MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), NULL, NULL );
 	//MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), strUnicode, len );
@@ -113,7 +119,8 @@ bool CPDW2SP370::MakeHeader(void)
 	index = wcslen(strUnicode)*2;
 	length = sizeof(m_stPDWHeader.szMasterLibraryName) - index;
 	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, length );
-
+#endif
+	
 	m_stPDWHeader.ucIndexOffsetInBytes = 8;
 
 	return true;
@@ -129,7 +136,7 @@ bool CPDW2SP370::MakeHeader(void)
  * @date      2017-02-07, 오후 3:10 
  * @warning   
  */
-bool CPDW2SP370::TransferPDW2SP370( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
+bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
 {
 	int i, iFreq, iAoa;
 	double dToa, dPa, dAoa, dPw;
@@ -137,13 +144,13 @@ bool CPDW2SP370::TransferPDW2SP370( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 
 	pstPDWWord = & m_stPDWWord[0];
 	for( i=0 ; i < iRecords ; ++i ) {
-		AllEndian64( & pS_EL_PDW_DATA->llTOA, sizeof(long long int) );
-		AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRXPDWDataRGroup)- sizeof(long long int) );
+		AllEndian64( & pS_EL_PDW_DATA->ullTOA, sizeof(long long int) );
+		AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRxPDWDataRGroup)- sizeof(long long int) );
 
 		memset( pstPDWWord, 0, sizeof(SELSP350_PDWWORDS) );
 
 		// 1번째 Phase
-		dToa = ELDecoder::DecodeToa( pS_EL_PDW_DATA->llTOA );			// ns 단위로 변경
+		dToa = ELDecoder::DecodeToa( pS_EL_PDW_DATA->ullTOA );			// ns 단위로 변경
 		pstPDWWord->x.usTOA = UDIV( dToa, 12.5 );
 
 		// 2번째 Phase

@@ -7,26 +7,47 @@
  * @warning   
  */
 
-#include "../../SigAnal/stdafx.h"
-
+#if defined(_MSC_VER)
 #define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
 
 #include <math.h>
 
-#include "../../SigAnal/_Macro.h"
-#include "../../SigAnal/_Define.h"
-
 #include "DistanceLeastSquare.h"
-#include "../LOBClustering.h"
 
-#include "../UTM.h"
+#include "../UTM/UTM.h"
+
+#include "../Matrix/Matrix.h"
+
+#include "../GeoCoordConv/GeoCoordConv.h"
+#include "../Coordinate/Coordinate.h"
 
 
+/**
+ * @brief		CDistanceLeastSquare
+ * @param		void
+ * @return		
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/03/16 14:37:18
+ * @warning		
+ */
 CDistanceLeastSquare::CDistanceLeastSquare(void)
 {
 }
 
 
+/**
+ * @brief		~CDistanceLeastSquare
+ * @param		void
+ * @return		
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/03/16 14:37:23
+ * @warning		
+ */
 CDistanceLeastSquare::~CDistanceLeastSquare(void)
 {
 }
@@ -58,15 +79,17 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 	double *ppUTMX, *ppUTMY;
 	//double dDistX, dDistY;
 
+    m_nLob = nLob;
+
 	memset( pResult, 0, sizeof(SELPE_RESULT) );
-	pResult->eep_theta = -1;
+	pResult->dEEP_theta = -1;
 
 // 	for( i=0 ; i < nLob ; ++i ) {
 // 		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
 // 	}
 
-	ppUTMX = pUTMX;
-	ppUTMY = pUTMY;
+	m_pUTMX = ppUTMX = pUTMX;
+	m_pUTMY = ppUTMY = pUTMY;
 
 	sumA = 0.0;
 	sumB = 0.0;
@@ -108,22 +131,18 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 	//sumA2 = sumA * sumA;
 	dDiv = (sumB1 * sumB2) - ( sumA * sumA );
 
-	pResult->eep_major_axis = -1.0;
-	pResult->eep_minor_axis = -1.0;
-	pResult->eep_theta = 0.0;
-	pResult->cep_error = -1.0;
+	pResult->dEEP_major_axis = -1.0;
+	pResult->dEEP_minor_axis = -1.0;
+	pResult->dEEP_theta = 0.0;
+	pResult->dCEP_error = -1.0;
 
 	if( dDiv > 0. || dDiv < 0. ) {
+        double dDistX, dDistY;
+
 		pResult->bResult = true;
 
-		// 최종 위치 산출 값을 저장
-#if defined(_UTM_POSITION_)
 		pResult->dEasting = ( (sumB2 * sumE) - (sumA * sumD ) ) / dDiv;
 		pResult->dNorthing = ( (sumB1 * sumD) - (sumA * sumE) ) / dDiv;
-
-		UTMXYToLatLon( pResult->dEasting, pResult->dNorthing, (int) UTM_ZONE, false, pResult->dLatitude, pResult->dLongitude );
-		pResult->dLatitude = RadToDeg( pResult->dLatitude );
-		pResult->dLongitude = RadToDeg( pResult->dLongitude );
 
 		dDistX = fabs( pResult->dEasting - ppUTMY[0] );
 		dDistY = fabs( pResult->dNorthing - ppUTMX[0] );
@@ -135,34 +154,9 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 			pResult->dLatitude = -1;
 			pResult->bResult = false;
 		}
-
-#elif defined(_TM_POSITION_)
-		pResult->dEasting = ( (sumB2 * sumE) - (sumA * sumD ) ) / dDiv;
-		pResult->dNorthing = ( (sumB1 * sumD) - (sumA * sumE) ) / dDiv;
-
-		if( /* dDistX < 0.0001 && dDistY < 0.0001 || */ pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
-			pResult->dEasting = -1;
-			pResult->dNorthing = -1;
-			pResult->dLongitude = -1;
-			pResult->dLatitude = -1;
-			pResult->bResult = false;
-		}
-#else
-		pResult->dLongitude = ( (sumB2 * sumE) + (sumA * (-sumD)) ) / dDiv;
-		pResult->dLatitude = ( -sumB1 * (-sumD) - (sumA * sumE) ) / dDiv;
-
-		dDistX = fabs( pResult->dLatitude - ppUTMY[0] );
-		dDistY = fabs( pResult->dLongitude - ppUTMX[0] );
-
-		//if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
-		if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dLatitude == 0 || pResult->dLongitude == 0 ) {
-			pResult->dEasting = -1;
-			pResult->dNorthing = -1;
-			pResult->dLongitude = -1;
-			pResult->dLatitude = -1;
-			pResult->bResult = false;
-		}
-#endif
+        else {
+        CalAnalyticNonlinear( pResult );
+        }
 
 	}
 	else {
@@ -170,17 +164,22 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 
 	}
 
-#ifndef _TM_POSITION_
-	if( pResult->bResult == true ) {
-		Log( enNormal, "[%.5f/%.5f]" , pResult->dLongitude, pResult->dLatitude );
-	}
-#endif
 
 	return pResult->bResult;
 
 }
 
 #define RADIUS_ERATH			(6378137)		// [m]
+/**
+ * @brief		CalCEP
+ * @param		SELPE_RESULT * pResult
+ * @param		SELABTDATA_EXT * pABTExtData
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/02/18 16:54:40
+ * @warning		
+ */
 bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 {
 	bool bRet=true;
@@ -198,14 +197,11 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 
 	double dDiffNE2, dLamda1, dLamda2, dSLL2;
 
-	if( pResult->bResult == false || ( pABTExtData->bFullOfPE == false && pABTExtData->uiPE <= _spOne ) ) {
+	if( pABTExtData == NULL || pResult->bResult == false || ( pABTExtData->bFullOfPE == false && pABTExtData->uiPE <= 1 ) ) {
 		bRet = false;
 	}
 	// 위치 산출 개수가 2개 이상일 때 CEP를 계산한다.
 	else {
-// 		int iCnt=0;
-// 		char buffer[500];
-
 		LatLonToUTMXY( pResult->dLatitude, pResult->dLongitude, UTM_ZONE, dEasting, dNorthing );
 
 		if( pABTExtData->bFullOfPE == true ) {
@@ -215,19 +211,6 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 			iNumPE = pABTExtData->uiPE;
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		//
-// 		iCnt = sprintf_s( & buffer[0], sizeof(buffer)-iCnt, "%f " , pResult->dNorthing );
-// 		for( i=0 ; i < iNumPE ; ++i ) {
-// 			iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "%f ", pABTExtData->dNorthing[i] );
-// 		}
-// 		Log( enNormal, buffer );
-// 
-// 		iCnt = sprintf_s( & buffer[0], sizeof(buffer)-iCnt, "%f " , pResult->dEasting );
-// 		for( i=0 ; i < iNumPE ; ++i ) {
-// 			iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "%f ", pABTExtData->dEasting[i] );
-// 		}
-// 		Log( enNormal, buffer );
 
 		// Northing 평균 구하기
 		dENorthing = pResult->dNorthing;
@@ -276,15 +259,15 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 		dDiffNE2 = ( dSSNorthing - dSSEasting ) * ( dSSNorthing - dSSEasting );
 		dLamda1 = ( ( dSSNorthing + dSSEasting ) + sqrt( dDiffNE2 + 4 * dSLL2 ) ) / 2.0;
 		dLamda2 = ( ( dSSNorthing + dSSEasting ) - sqrt( dDiffNE2 + 4 * dSLL2 ) ) / 2.0;
-		pResult->cep_error = RADIUS_ERATH * 0.75 * sqrt( dC * dLamda1 + dC * dLamda2 );
-		pResult->cep_error = 0.75 * sqrt( dSSNorthing + dSSEasting );
+		pResult->dCEP_error = RADIUS_ERATH * 0.75 * sqrt( dC * dLamda1 + dC * dLamda2 );
+		pResult->dCEP_error = 0.75 * sqrt( dSSNorthing + dSSEasting );
 
 		//Log( enNormal, "CEP=%.2f[m]" , pResult->cep_error );
 
 		// EEP 기울기 구하기
-		pResult->eep_theta = 0.5 * atan( ( 2. * dSNorthing * dSEasting ) / ( dSNorthing - dSEasting ) );
-		pResult->eep_theta = ( RADIAN2DEGREE( pResult->eep_theta ) - 0. ) + 180.;
-		pResult->eep_theta = fmod( pResult->eep_theta + 360.0, 360.0 );
+		pResult->dEEP_theta = 0.5 * atan( ( 2. * dSNorthing * dSEasting ) / ( dSNorthing - dSEasting ) );
+		pResult->dEEP_theta = ( RADIAN2DEGREE( pResult->dEEP_theta ) - 0. ) + 180.;
+		pResult->dEEP_theta = fmod( pResult->dEEP_theta + 360.0, 360.0 );
 
 		// EEP 장축/단축 구하기
 		dSumSS = dSSNorthing + dSSEasting;
@@ -292,8 +275,8 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 		dR1 = 0.5 * ( dSumSS + sqrt( dSumA ) );
 		dR2 = 0.5 * ( dSumSS - sqrt( dSumA ) );
 
-		pResult->eep_major_axis = sqrt( dR1 * dC ) * 1.;		
-		pResult->eep_minor_axis = sqrt( dR2 * dC ) * 1.;		
+		pResult->dEEP_major_axis = sqrt( dR1 * dC ) * 1.;		
+		pResult->dEEP_minor_axis = sqrt( dR2 * dC ) * 1.;		
 	}
 
 	return bRet;
@@ -417,7 +400,6 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 
 			pResult->eep_theta = ( 0.5 * atan( ( 2 * rho_xy ) / ( sigma_x_square - sigma_y_square ) ) ) * ( 180. / M_PI );
 
-
 			/*! \debug  EEP 변환
 					\author 조철희 (churlhee.jo@lignex1.com)
 					\date 	2015-07-20 17:01:47
@@ -436,3 +418,4 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 	}
 
 }
+

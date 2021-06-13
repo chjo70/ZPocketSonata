@@ -21,7 +21,10 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#ifdef __linux__
 #include <sys/mman.h>
+#endif
 
 #include "../../Utils/clog.h"
 
@@ -29,8 +32,8 @@
 /*****************************************************************
 * Definitions
 ******************************************************************/
-#define	mem_l2p(mem, p)				((mem)->physical + ((uint64_t)(p) - (mem)->logical ))
-#define	mem_p2l(mem, p)				((mem)->logical + ((uint64_t)(p) - (mem)->physical ))
+#define	mem_l2p(mem, p)				((mem)->ulphysical + ((uint64_t)(p) - (mem)->ullogical ))
+#define	mem_p2l(mem, p)				((mem)->ullogical + ((uint64_t)(p) - (mem)->ulphysical ))
 
 /*****************************************************************
 * Structure definitions
@@ -83,8 +86,8 @@ void make_desc( dma_sg_descs_t *list, xmem_t *mem, uint32_t count, uint32_t bloc
 	uint64_t mem_size = sizeof(dma_sg_desc_t) * count;
 	list->count = count;
 	list->size = block_size;
-    list->mem = CHWIO::mem_offset( mem, (0x40 - (mem->physical & 0x3F)) & 0x3F );
-	list->item = (dma_sg_desc_t *)list->mem.logical;
+    list->mem = CHWIO::mem_offset( mem, (0x40 - (mem->ulphysical & 0x3F)) & 0x3F );
+    list->item = (dma_sg_desc_t *)list->mem.ullogical;
 
 	memset( list->item, 0, mem_size );
 }
@@ -155,7 +158,7 @@ bool dma_mm2s_start( dma_dev_t dev, xmem_t *src, uint32_t length, bool wait_done
 
         dma[dev].pReg->mm2s_dmacr.rs = 1;
         dma[dev].pReg->mm2s_dmacr.ioc_irq_en = 1;
-        dma[dev].pReg->mm2s_sa = src->physical;
+        dma[dev].pReg->mm2s_sa = src->ulphysical;
         dma[dev].pReg->mm2s_length = length;
 
         dma[dev].pmm2s_mem = src;
@@ -163,7 +166,7 @@ bool dma_mm2s_start( dma_dev_t dev, xmem_t *src, uint32_t length, bool wait_done
 	else
 	{
 		int count = 0;
-		if ( (count = desc_init( &dma[dev].mm2s_desc, src->physical, length )) > 0 )
+        if ( (count = desc_init( &dma[dev].mm2s_desc, src->ulphysical, length )) > 0 )
 		{
 			// Clear Interrupt
             dma[dev].pReg->mm2s_dmasr.ioc_irq = 1;
@@ -211,7 +214,7 @@ bool dma_s2mm_start( dma_dev_t dev, xmem_t *dst, uint32_t length, bool wait_done
 
             dma[dev].pReg->s2mm_dmacr.rs = 1;
             dma[dev].pReg->s2mm_dmacr.ioc_irq_en = 1;
-            dma[dev].pReg->s2mm_sa = dst->physical;
+            dma[dev].pReg->s2mm_sa = dst->ulphysical;
             dma[dev].pReg->s2mm_length = length;
 
             dma[dev].ps2mm_mem = dst;
@@ -219,7 +222,7 @@ bool dma_s2mm_start( dma_dev_t dev, xmem_t *dst, uint32_t length, bool wait_done
         else
         {
             int count = 0;
-            if ( (count = desc_init( &dma[dev].s2mm_desc, dst->physical, length )) > 0 )
+            if ( (count = desc_init( &dma[dev].s2mm_desc, dst->ulphysical, length )) > 0 )
             {
                 // Clear Interrupt
                 dma[dev].pReg->s2mm_dmasr.ioc_irq = 1;
@@ -265,7 +268,7 @@ bool dma_mm2s_cyclic( dma_dev_t dev, xmem_t *src, uint32_t length )
 	else
 	{
 		int count = 0;
-		if ( (count = desc_init( &dma[dev].mm2s_desc, src->physical, length )) > 0 )
+        if ( (count = desc_init( &dma[dev].mm2s_desc, src->ulphysical, length )) > 0 )
 		{
             dma[dev].pReg->mm2s_curdesc = mem_l2p( &dma[dev].mm2s_desc.mem, &dma[dev].mm2s_desc.item[0] );
             dma[dev].pReg->mm2s_dmacr.cyclic_bd_enabled = 1;
@@ -286,7 +289,7 @@ bool dma_s2mm_cyclic( dma_dev_t dev, xmem_t *dst, uint32_t length )
 	else
 	{
 		int count = 0;
-		if ( (count = desc_init( &dma[dev].s2mm_desc, dst->physical, length )) > 0 )
+        if ( (count = desc_init( &dma[dev].s2mm_desc, dst->ulphysical, length )) > 0 )
 		{
 			// 20.09.02 jykim : ���ͷ�Ʈ ���� �������� ���� �߰�
 			//  -> ���� dma_s2mm_start() �Լ����� ����

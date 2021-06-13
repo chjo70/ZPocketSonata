@@ -1,4 +1,11 @@
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include "cipl.h"
+
+
 
 //#include "../../System/csysconfig.h"
 

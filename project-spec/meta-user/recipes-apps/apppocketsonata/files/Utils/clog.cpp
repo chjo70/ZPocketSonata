@@ -1,28 +1,48 @@
-#include "clog.h"
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#include <io.h>
+#include <direct.h>
+
+#define _LOG_RELATIVE_PATH_
+
+#else
+#include <unistd.h>
+#include <sys/time.h>
+#endif
 
 #include <time.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/time.h>
+
 #include <sys/types.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <stdarg.h>
 
+#include "clog.h"
+
 CLog* CLog::pInstance = nullptr;
 
+#ifdef _MSC_VER
+CCriticalSection CLog::m_cs;
+#else
 sem_t CLog::m_mutex;
+#endif
 
 /**
  * @brief CLog::CLog
  */
 CLog::CLog()
 {
+#ifdef _MSC_VER
+#else
     if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
         perror( "세마포어 실패" );
     }
+#endif
 
 }
 
@@ -42,7 +62,11 @@ CLog::~CLog()
 void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
 {
 #ifndef _CGI_LIST_
+#ifdef _MSC_VER
+    FILE *fp=NULL;
+#else
     int fid;
+#endif
 
     char szDate[LOG_DIR_SIZE];
 
@@ -54,7 +78,11 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     int nLength, nLengthTime;
 
+#ifdef _MSC_VER
+    m_cs.Lock();
+#else
     sem_wait( & m_mutex );
+#endif
 
 #ifdef _LOG_RELATIVE_PATH_
     getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
@@ -66,21 +94,46 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
 #endif
 
-    if( 0 == mkdir( m_szLogDir, 0776 ) || errno == EEXIST ) {
+#ifdef __linux__
+    if( 0 == mkdir( m_szLogDir, 0766 ) || errno == EEXIST ) {
+#else
+    if( 0 == mkdir( m_szLogDir ) || errno == EEXIST ) {
+#endif
+
+#ifdef _MSC_VER
+        SYSTEMTIME tmSystem;
+
+        ::GetSystemTime( & tmSystem );
+        sprintf( szDate, "/%d_%d_%d.log", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay );
+#else
+        struct timeval tv;
         time_t timer;
         struct tm* t;
-        struct timeval tv;
 
         gettimeofday( &tv,NULL);
-        timer = time( & tv.tv_sec );
+        timer = time( (time_t *) & tv.tv_sec );
         t = localtime(&timer);
 
         sprintf( szDate, "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
+#endif
+
         strcat( m_szLogDir, szDate );
 
+#ifdef _MSC_VER
+        fopen_s( & fp, m_szLogDir, "a+" );
+        //fid = open(m_szLogDir, O_APPEND | O_WRONLY | O_BINARY );
+#else
         fid = open(m_szLogDir, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+#endif
+
+        
+#ifdef _MSC_VER
+        if( fp != NULL ) {
+            sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+#else
         if( fid != 0 ) {
             sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+#endif
 
             nLengthTime = strlen(m_szLog);
 
@@ -141,14 +194,29 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
             nLength = strlen(m_szLog);
             if( nLength > 36 || nType == enLineFeed ) {
-                write( fid, m_szLog, nLength );
-            }
+#ifdef _MSC_VER
+                fprintf( fp, "%s" , m_szLog );
+                fflush( fp );
 
+                TRACE0( m_szLog );
+#else
+                write( fid, m_szLog, nLength );
+#endif
+            }
+#ifdef _MSC_VER
+            fclose( fp );
+#else
             close( fid );
+#endif
         }
     }
 
+#ifdef _MSC_VER
+    m_cs.Unlock();
+#else
     sem_post( & m_mutex );
+#endif
+    
 #endif
 
 }

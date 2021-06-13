@@ -14,7 +14,12 @@
 #include <string.h>
 
 #include <time.h>
+
+#ifdef _MSC_VER
+
+#else
 #include <sys/time.h>
+#endif
 
 #include "Column.h"
 
@@ -50,7 +55,7 @@ extern const int OPEN_FULLMUTEX;    // SQLITE_OPEN_FULLMUTEX
 /// Enable URI filename interpretation, parsed according to RFC 3986 (ex. "file:data.db?mode=ro&cache=private")
 extern const int OPEN_URI;          // SQLITE_OPEN_URI
 
-extern const int OK;                ///< SQLITE_OK (used by check() bellow)
+extern const int SQLITE_OK;                ///< SQLITE_OK (used by check() bellow)
 
 extern const char*  VERSION;        ///< SQLITE_VERSION string from the sqlite3.h used at compile time
 extern const int    VERSION_NUMBER; ///< SQLITE_VERSION_NUMBER from the sqlite3.h used at compile time
@@ -345,7 +350,11 @@ public:
      */
     sqlite3* getHandle() const noexcept
     {
+#ifdef __VXWORKS__
+        return NULL;
+#else
         return mSQLitePtr.get();
+#endif
     }
 
     /**
@@ -480,7 +489,7 @@ public:
      */
     void check(const int aRet) const
     {
-        if (SQLite::OK != aRet)
+        if (SQLite::SQLite_OK != aRet)
         {
             throw SQLite::Exception(getHandle(), aRet);
         }
@@ -490,16 +499,21 @@ public:
 
 
     void getStringPresentTime( char *pString ) {
-        struct tm stTime;
+        struct tm *pstTime;
         time_t nowTime=time(NULL);
 
-        localtime_r( & nowTime, & stTime );
-        strftime( pString, 100, "%Y-%m-%d %H:%M:%S", & stTime );
+        pstTime = localtime( & nowTime );
+        strftime( pString, 100, "%Y-%m-%d %H:%M:%S", pstTime );
     }
 
 private:
     // TODO: perhaps switch to having Statement sharing a pointer to the Connexion
+#ifdef __VXWORKS__
+    //std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
+#else
     std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
+#endif
+
     std::string mFilename;                          ///< UTF-8 filename used to open the database
 
 protected:

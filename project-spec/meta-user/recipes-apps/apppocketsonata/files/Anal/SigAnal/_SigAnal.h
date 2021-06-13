@@ -12,7 +12,7 @@
 #include "_Struct.h"
 
 #ifdef _MSC_VER
-#include "../../AdvSigAnal/Dummy/Dummy.h"
+//#include "../../AdvSigAnal/Dummy/Dummy.h"
 #endif
 
 #include "../INC/system.h"

@@ -7,7 +7,10 @@
  * @warning   
  */
 
-#include "../SigAnal/stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
 
 using namespace std;
 
@@ -26,7 +29,7 @@ using namespace std;
 //#include "../../../ELINT/MNGR/ELEmitterMergeMngr.h"
 
 #include "./constants.h"
-#include "../EmitterMerge/CInverseMethod.h"
+#include "../EmitterMerge/InverseMethod/CInverseMethod.h"
 
 //#include "../../MNGR/ELEnvironVariableMngr.h"
 #include "../EmitterMerge/ELPosEstDataType.h"

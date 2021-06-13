@@ -1,20 +1,19 @@
 ﻿#ifndef _H_EL_EMITTER_DATATYPE
 #define _H_EL_EMITTER_DATATYPE
 
+#ifndef __VXWORKS__
 #include <memory.h>
+#endif
+
+
 #include <string>
 #include <list>
 using namespace std;
 
 #include "ELMsgDefn.h"
 
-#include "../Identify/ELCEDLibDataType2.h"
-//#include "ElintRsltDataTypedb.h"
-//#include "ELCEDLibDataType.h"
-//#include "ELPosEstDataType.h"
-//#include "../ALGORITHM/InterSignal/INC/_common.h"
+//#include "../Identify/ELCEDLibDataType2.h"
 
-//#include "ELCEDLibDataType2.h"
 
 /**
 * [식별자 : D-GR-SDD-XXX]
@@ -34,6 +33,7 @@ using namespace std;
 #define MAX_OF_LOBS_PE								(30)					// LOB 최대 갯수
 // 빔에서 보관하기 위한 LOB 갯수 정의
 #define MAX_OF_LOBS										(100)					// LOB 후보 개수
+
 
 /************************************************************************************
 *   ELINT Logic -> View에 사용되는 자료형 구조체
@@ -1703,6 +1703,7 @@ struct STR_LOBS {
 	float fDoa;
 	float fLatitude;
 	float fLongitude;
+	float fAltitude;
 
 	int iCollectorID;
 
@@ -1756,8 +1757,8 @@ struct STR_POSITION_ESTIMATION {
 	float fTheta;									// [0.1도]
 	float fDistanceErrorOfThreat;	// [m]
 
-    int iManualLongitude;				// [deg], MANUAL_POS_EST_LONG
-    int iManualLatitude;				// [deg], MANUAL_POS_EST_LAT
+	//int iManualLongitude;				// [deg], MANUAL_POS_EST_LONG
+	//int iManualLatitude;				// [deg], MANUAL_POS_EST_LAT
 
 	bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
 

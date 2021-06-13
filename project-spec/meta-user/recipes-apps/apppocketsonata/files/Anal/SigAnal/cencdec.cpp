@@ -1,3 +1,14 @@
+// cencdec.cpp: implementation of the SONATA class.
+//
+//////////////////////////////////////////////////////////////////////
+
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
+
 #include "cencdec.h"
 
 #include "../Collect/DataFile/DataFile.h"
@@ -108,7 +119,7 @@ float SONATA::DECODE::FREQ( int iBAND, int iFREQ )
  */
 float SONATA::DECODE::FREQ_C( int iBAND, int iFREQ )
 {
-    return ( ( (float) iFREQ  * _spFreqRes[iBAND].fRes ) + 0.5 ) + _spFreqRes[iBAND].iOffset;
+    return ( ( (float) iFREQ  * _spFreqRes[iBAND].fRes ) + (float) 0.5 ) + _spFreqRes[iBAND].iOffset;
 }
 
 /**

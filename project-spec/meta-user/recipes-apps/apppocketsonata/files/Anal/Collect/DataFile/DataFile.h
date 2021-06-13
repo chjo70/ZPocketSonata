@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "../../INC/system.h"
+#include "../../../Anal/SigAnal/_Type.h"
 
 #include "../../../Anal/OFP_Main.h"
 
@@ -25,6 +26,8 @@
 #define			MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
 
 #define			MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
+
+#define	RAD2DEG			(57.2957795130)
 
 
 //#define			INIT_VAL			(-1.0)
@@ -177,7 +180,8 @@ struct STR_ZOOM_INFO {
 	void *GetHeader() { return NULL; }	\
 	unsigned int GetHeaderSize();	\
     unsigned int GetOneDataSize();	\
-	unsigned int GetDataItems();
+	unsigned int GetDataItems();    \
+    void SetHeaderData( void *pData );
 
 
 class CData
@@ -232,6 +236,7 @@ public:
     virtual unsigned int GetHeaderSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
     virtual unsigned int GetDataItems() = 0;
+    virtual void SetHeaderData( void *pData ) = 0;
 };
 
 
@@ -273,6 +278,8 @@ public:
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
 
+    inline void SetHeaderData( void *pData ) { return; }
+
 public:
     /**
      * @brief DecodeDOA
@@ -312,6 +319,7 @@ public:
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+    inline void SetHeaderData( void *pData ) { return; }
 
 };
 
@@ -343,6 +351,7 @@ public:
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+    inline void SetHeaderData( void *pData ) { return; }
 
 };
 
@@ -381,6 +390,8 @@ public:
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+            
+    inline void SetHeaderData( void *pData ) { return; }
 
 public:
 	float DecodeDOA(int iDOA  ) 
@@ -735,6 +746,7 @@ public:
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+    inline void SetHeaderData( void *pData ) { return; }
 
 };
 
@@ -758,6 +770,8 @@ public:
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems() { return 0; }
+    
+    inline void SetHeaderData( void *pData ) { return; }
 };
 
 class CEIQ : public CData
@@ -807,6 +821,7 @@ public:
 
 };
 
+#ifndef __VXWORKS__
 //////////////////////////////////////////////////////////////////////////
 class CMapData {
 private:
@@ -834,12 +849,12 @@ public:
 	{
 #ifdef __linux__
 #elif defined(_MSC_VER)
-        Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
+        //Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
 #else
 
 #endif
+        
 		m_gMapData.insert( make_pair( *pStrPathName, pData ) );
-
 	}
 
 	CData *FindMapData( CString *pStrPathName )
@@ -904,6 +919,7 @@ public:
     }
 
 };
+#endif
 
 class CDataFile
 {

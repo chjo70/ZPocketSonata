@@ -3,7 +3,10 @@
 //////////////////////////////////////////////////////////////////////
 
 
+#ifdef _MSC_VER
 #include "stdafx.h"
+
+#endif
 
 #include "SysPara.h"
 
@@ -93,7 +96,7 @@ void CSysPara::LoadDefaultSysParameter()
 	_sp.mg.fixfrq_boundary[4] = _spMgFixFrqBoundEJ;
 	_sp.mg.fixfrq_boundary[5] = _spMgFixFrqBoundCD;
 
-	_sp.mg.pw = _spMgPW;
+	_sp.mg.pw = (UINT) _spMgPW;
 
 	_sp.mg.frqPrd = _spMgFrqPrd;
 

@@ -3,8 +3,10 @@
 #define _MULTI_BEAM_
 
 #ifdef _SQLITE_
-#include "../../SQLite/SQLiteCpp.h"
+//#include "../../SQLite/SQLiteCpp.h"
 
+
+#elif _NO_SQLITE_
 
 #else
 #include "../../ELINTOP/ODBC/mssql.h"
@@ -81,7 +83,12 @@ enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
+
+#ifdef _NO_SQLITE_
+class CELEmitterMergeMngr : public CLOBClustering
+#else
 class CELEmitterMergeMngr : public CLOBClustering, public SQLite::Database
+#endif
 {
 private:
     bool m_bDBThread;

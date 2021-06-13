@@ -80,7 +80,7 @@ private:
 public:
 	void Init();
 	bool MakeHeader();
-	bool TransferPDW2SP370( SRXPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
+	bool TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
 
 
 public:

@@ -1,4 +1,4 @@
-/**
+﻿/**
 * @file CRWRCommonVariables.h
 * RWR Operation CSC에서 사용하는 공용변수 및 함수 헤더 파일
 * RWR Operation CSC의 공용변수 및 함수를 지원한다.

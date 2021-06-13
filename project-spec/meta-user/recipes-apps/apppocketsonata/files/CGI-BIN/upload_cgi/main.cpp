@@ -1,6 +1,7 @@
 #include <string.h>
 #include <memory.h>
 #include <pwd.h>
+#include <errno.h>
 #include <sys/types.h>
 
 #ifdef ENABLE_FASTCGI
@@ -215,6 +216,64 @@ bool ProcessUpload( ENUM_UPLOAD enUpload )
     return bRet;
 }
 
+/**
+ * @brief CreateDir
+ * @param pPath
+ * @return
+ */
+bool CreateDir( char *pPath )
+{
+    bool bCreate;
+    bool bRet=true;
+    char dirName[256];
+    char *p=pPath;
+    char *q=dirName;
+
+    while( *p ) {
+        if( ('\\' == *p) || ('/'==*p)) {
+            if( ':' != *(p-1) ) {
+
+#ifdef _MSC_VER
+                CreateDirectory( dirName, NULL );
+#elif defined(__linux__)
+                mkdir( dirName, 0766 );
+#else
+                mkdir( dirName );
+#endif
+            }
+        }
+
+#ifdef __linux1__
+        mkdir( dirName, 0766 );
+#endif
+
+        *q++ = *p++;
+        *q = '\0';
+    }
+
+
+#ifdef _MSC_VER
+    bCreate = CreateDirectory( dirName, NULL );
+    if( bCreate != TRUE ) {
+        perror( "디렉토리 생성");
+        bRet = false;
+    }
+#elif defined(__linux__)
+    int iRet = mkdir( dirName, 0766 );
+
+    if( iRet == 0 || ( iRet == -1 && errno == EEXIST ) ) {
+    }
+    else {
+        perror( "디렉토리 생성");
+        bRet = false;
+    }
+#else
+#endif
+
+    return bRet;
+}
+
+
 int main(int argc, char *argv[])
 {
     bool bRet;
@@ -224,6 +283,8 @@ int main(int argc, char *argv[])
 
     char szMultiPart[100];
     char szLogDirectory[100];
+
+    CreateDir( QDECODER_LOG_FOLDER );
 
     // 로그는 현재 홈 디렉토리에 저장한다.
     strcpy( szLogDirectory, QDECODER_LOG_FOLDER );

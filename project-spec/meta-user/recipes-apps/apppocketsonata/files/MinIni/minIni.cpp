@@ -20,6 +20,11 @@
  *  Version: $Id: minIni.c 53 2015-01-18 13:35:11Z thiadmer.riemersma@gmail.com $
  */
 
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #if (defined _UNICODE || defined __UNICODE__ || defined UNICODE) && !defined INI_ANSIONLY
 # if !defined UNICODE   /* for Windows */
 #   define UNICODE

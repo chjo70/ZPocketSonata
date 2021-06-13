@@ -1,12 +1,24 @@
-﻿
+﻿// ELDecoder.cpp: implementation of the ELDecoder class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
+
 #include <math.h>
 #include <time.h>
 
 #ifdef __linux__
+#elif __VXWORKS__
+#include <vxworks.h>
 #else
 #include <mmsystem.h>
 #endif
 
+#include "../SigAnal/_type.h"
 #include "ELDecoder.h"
 
 #define ENDIAN16(x)		((x&0x00ff)<<8) | ((x&0xff00)>>8)
@@ -34,6 +46,7 @@ void AllEndian32(void* i_pData, unsigned int i_nSize)
 	}
 }
 
+#ifndef __VXWORKS__
 void AllEndian64(void *i_pData, unsigned int i_nSize)
 {
 	unsigned __int64 un64Value=0;
@@ -46,6 +59,7 @@ void AllEndian64(void *i_pData, unsigned int i_nSize)
 	}
 }
 
+
 void AllEndian16(void* i_pData, UINT i_nSize)
 {
 	WORD dwValue=0;
@@ -57,7 +71,7 @@ void AllEndian16(void* i_pData, UINT i_nSize)
 		memcpy(&((BYTE*)i_pData)[i], &dwValue, nStepSize);
 	}
 }
-
+#endif
 
 static time_t _stNOW;
 static tm _stTM;

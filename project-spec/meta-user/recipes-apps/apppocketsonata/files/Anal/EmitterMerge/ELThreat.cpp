@@ -7,7 +7,10 @@
  * @warning
  */
 
-#include "../SigAnal/stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
 
 #include "ELThreat.h"
 

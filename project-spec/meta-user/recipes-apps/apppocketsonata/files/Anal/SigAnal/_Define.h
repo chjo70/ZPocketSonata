@@ -15,7 +15,7 @@
 #define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
 #define _min(a,b)               ( ( (a) < (b) ) ? (a) : (b) )
 
-#define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
+//#define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
 //enum NUMBER_DEF { _spZero=0, _spOne, _spTwo, _spThree } ;
 #define _spZero		(0)
@@ -180,7 +180,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define TOTAL_FRQAOAPWBIN       (91000)			//(1024*4)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES                ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_RES                UTOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
 #define	FREQ_NARR_MHZ           IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
 #define	FREQ_WIDE_MHZ           IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz

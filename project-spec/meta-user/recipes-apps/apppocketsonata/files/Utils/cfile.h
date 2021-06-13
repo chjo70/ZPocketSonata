@@ -1,10 +1,12 @@
-#ifndef CFILE_H
+﻿#ifndef CFILE_H
 #define CFILE_H
 
 #include <fcntl.h>
 
+#include "../Anal/INC/OS.h"
 
-class CFile
+
+class CMyFile
 {
 private:
     int m_iFile;
@@ -17,8 +19,8 @@ public:
     static unsigned int modeCreate;
 
 public:
-    CFile();
-    virtual ~CFile();
+    CMyFile();
+    virtual ~CMyFile();
 
     bool Open( const char *pstPathname, int iMode );
     int Read( void *pstBuffer, int iLength );

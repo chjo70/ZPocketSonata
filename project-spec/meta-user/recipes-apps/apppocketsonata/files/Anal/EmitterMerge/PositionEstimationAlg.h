@@ -16,35 +16,32 @@ using namespace std;
 
 #include "./PositionEstimation.h"
 
-#include "./GeoCoordConv.h"
+#include "./GeoCoordConv/GeoCoordConv.h"
 
 #include "./Quadratic/Quadratic.h"
 #include "./DistanceLeastSquare/DistanceLeastSquare.h"
 #include "./LinearLS/LinearLS.h"
 #include "./NonlinearLS/NonLinearLS.h"
+
+
+#include "./Coordinate/Coordinate.h"
+
+
 //#include "../Library/EGeoLocCommonDll.h"
 
 // 프로젝트에 따라서 이전 위치 산출 추정치 이력 관련 구조체를 선언해야 한다.
 // ELINT용 위치 산출 정보 구초체를 추가함.
-//#include "../../../COMMON/DBIF/ElintDtctDataTypedb.h"
-#include "./ElintRsltDataTypedb.h"
+//#include "./ElintRsltDataTypedb.h"
 #include "./ELEmitterDataType.h"
 
-// COMINT용 입력 데이터 구조체 INCLUDE
-//#include "../../../COMINT/MNGR/CMDMAPInterfaceMngr.h"
-//#include "../../../COMINT/DATATYPE/CM_FH_DataType.h"
-
-// FISINT용 입력 데이터 구조체 INCLUDE
-//#include "../../../FISINT/DATATYPE/FSAcqSigListDataType.h"
 
 #define _POSITION_ESTIMATION_OPTION					(1)
 
-//using namespace SELDTCTDB;
 
 
 // UTM 계로 위치 산출
 //#define _UTM_POSITION_
-#define _TM_POSITION_
+//#define _TM_POSITION_
 
 /*!
  * @def				LOB2AOA
@@ -88,26 +85,34 @@ using namespace std;
 class CPositionEstimationAlg
 {
 private:
-	static CPositionEstimationAlg *m_pInstance;					///< 인스턴스 샛체
+    static CPositionEstimationAlg *m_pInstance;					///< 인스턴스 샛체
 
+    // 위치 산출 알고리즘 
 	CDistanceLeastSquare m_theDistanceLeastSquare;
 	CQuadratic m_theQuadratric;
 
 	UINT m_nLob;																				///< 위치 산출할 LOB 개수
-	SELPE_RESULT *m_pSensorXY;														///< 위치 산출할 데이터 (항공 위, 경도, LOB 방위 )
 	SELPE_RESULT m_estEmitterXY;													///< 위치 산출 결과
 
 	double *m_pLob;																			///< 위치 산출 라이브러리에 사용할 LOB 데이터
 	SELSensorPosition m_Sensor;													///< 위치 산출 라이브러리에 사용할 항공기 센서 좌표
 
-	double **m_pdCoVar;																	///< 위치 산출 결과의 CoVariance 벡터 값
-
 	CGeoCoordConv m_theGeoCoordConv;
+
+	STR_LOBS *m_pR1;
+	STR_LOBS *m_pR2;
+	STR_LOBS *m_pR3;
+	STR_LOBS *m_pR4;
+
+    // ENUN 일때 기본 좌표계
+#if defined(_ENU_POSITION_)
+    SLlhPos m_stOrgLlh;
+#endif
 
 public:
 	CPositionEstimationAlg(void);
-    virtual ~CPositionEstimationAlg(void);
-	static CPositionEstimationAlg* GetInstance();
+	~CPositionEstimationAlg(void);
+    static CPositionEstimationAlg* GetInstance();
 
 	virtual BOOL Finalize() { 
 		ReleaseInstance(); 
@@ -116,45 +121,31 @@ public:
 
 	static void ReleaseInstance();
 
-	void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, EL_POSIOTN_ESTIMATION_ALGORITHM_OPTION eOption, EL_TARGET_STATE_OPTION eTargetState=STOP, SELABTDATA_EXT *pABTExtData=NULL, STR_POSITION_ESTIMATION *pPEInfo=NULL );
-
 	void ConvertLatLong2( int nLob, SELSensorPosition *pSensor );
 
-	//////////////////////////////////////////////////////////////////////////
-	// ELINT용 위치 산출 알고리즘
-	// 
+    void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, int nLob, STR_LOBS *pstrLOB );
 	void RunPositionEstimation( STR_POSITION_ESTIMATION *pPEInfo, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB );
-	void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB );
-	//////////////////////////////////////////////////////////////////////////
+    void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB );
 
-	//////////////////////////////////////////////////////////////////////////
-	// COMINT용 위치 산출 알고리즘
-	// 
-	//bool RunPositionEstimation( SELPositionEstimationResult *pResult, std::vector<_LOCATION_ESTIMATION_REQ>* pVectorLoc, int nLob );
-	//bool RunPositionEstimation( SELPositionEstimationResult *pResult, std::vector<SCMWBAcqDFWnd>* pVectorLoc, int nLob );
-	//bool RunPositionEstimation( SELPositionEstimationResult *pResult, std::vector<SCMFHAcqDFWnd>* pVectorLoc, int nLob );
-	//////////////////////////////////////////////////////////////////////////
+	void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, std::vector<STR_LOBS> *pVecLOB );
 
+	double EstimatedAltitude( SEnuPos *pstEnuPos );
 	//////////////////////////////////////////////////////////////////////////
-	// COMINT용 위치 산출 알고리즘
-	// 
-	//bool RunPositionEstimation( SELPositionEstimationResult *pResult, std::vector<SFSLocationEstimationREQ>* pVectorLoc, int nLob );
-	//////////////////////////////////////////////////////////////////////////
-
-	//bool CalculateTwoEclippse( double dTargetLocDeg[2], double dEEPData[4], STR_POSITION_ESTIMATION *pPEInfo, double dPECoVar[4], double *pdCoVar );
 
 private:
+	void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, EL_POSIOTN_ESTIMATION_ALGORITHM_OPTION eOption, EL_TARGET_STATE_OPTION eTargetState=STOP, STR_POSITION_ESTIMATION *pPEInfo=NULL );
+
 	bool VerifyOfPositionEstimation( SELPE_RESULT *pResult, SELSensorPosition *pSensor );
 	void VerifyOfPositionEstimation( SELPositionEstimationResult *pResult );
 	void VerifyOfLOB( SRxABTData *pABTData );
 
 	void FilteredByCensorPosition();
 
-	bool AllocateBuffer( int isize );
-	void ReleaseBuffer();
+	//bool AllocateBuffer( int isize );
+	//void ReleaseBuffer();
 
 	void AllocSensors( int nLob );
-	void CommonRunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, STR_POSITION_ESTIMATION *pPEInfo=NULL );
+	void CommonRunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, STR_POSITION_ESTIMATION *pPEInfo=NULL );
 	void FreeSensors();
 	float M2Map( int iEEPTiltAngle );
 

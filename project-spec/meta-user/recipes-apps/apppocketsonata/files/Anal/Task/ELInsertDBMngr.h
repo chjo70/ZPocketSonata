@@ -18,7 +18,7 @@
 #endif
 
 #ifdef _SQLITE_
-#include "../../SQLite/SQLiteCpp.h"
+//#include "../../SQLite/SQLiteCpp.h"
 
 #else
 #include "../../ELINTOP/ODBC/mssql.h"

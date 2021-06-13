@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #ifdef _MSC_VER
-#define	M_PI									(3.1415926535)
+//#define	M_PI									(3.1415926535)
 #endif
 
 #define	_spPaHistBinSize                (256)

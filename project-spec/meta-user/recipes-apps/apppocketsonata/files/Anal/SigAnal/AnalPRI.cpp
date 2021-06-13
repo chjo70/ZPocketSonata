@@ -2,7 +2,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#ifdef _MSC_VER
 #include "stdafx.h"
+
+#endif
+
 
 #ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -26,6 +30,8 @@
 #include <stdlib.h>
 
 #include "AnalPRI.h"
+
+#include "../../Utils/clog.h"
 
 char gEmitterMark[DELETE_EMITTER+1] = { ' ', 'X' };
 
@@ -188,6 +194,14 @@ CAnalPRI::CAnalPRI( int coMaxPdw )
     if( bRet == FALSE ) {
         printf( "\n [W] PRI 분석 클래스 생성자 실패 !" );
     }
+
+    _TOA diff_min, A, B;
+
+    A = 0x0ffffffffff;
+    B = 0xfffffffffff;
+
+    diff_min = _abs( A - B );
+
 }
 
 //////////////////////////////////////////////////////////////////////

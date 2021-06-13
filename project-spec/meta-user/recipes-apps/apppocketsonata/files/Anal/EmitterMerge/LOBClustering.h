@@ -27,7 +27,7 @@
 // 항공기 헤딩을 수식 방위로 변환
 #define ALGLE2MATH(A)																	((-A+900)/10.)
 #define RADIAN2DEGREE(A)															((A*180.)/M_PI)
-#define DEGREE2RADIAN(A)															((A*M_PI)/180.)
+//#define DEGREE2RADIAN(A)															((A*M_PI)/180.)
 
 //
 #define _LIMIT_OF_MAX_RANGE														(500.)																						// 최대 거리 정의

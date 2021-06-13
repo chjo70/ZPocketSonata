@@ -1,4 +1,4 @@
-/*  minIni glue functions for FAT library by CCS, Inc. (as provided with their
+﻿/*  minIni glue functions for FAT library by CCS, Inc. (as provided with their
  *  PIC MCU compiler)
  *
  *  By CompuPhase, 2011-2012

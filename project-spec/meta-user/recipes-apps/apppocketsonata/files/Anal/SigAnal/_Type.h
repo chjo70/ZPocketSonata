@@ -19,6 +19,7 @@
 #ifndef _TYPE_H_
 #define _TYPE_H_
 
+
 #include <vector>
 #include <list>
 #include <map>
@@ -28,125 +29,281 @@ using namespace std;
 
 #include <math.h>
 #include <time.h>
-#include <sys/timeb.h>
 
 #ifdef _MSC_VER
+#include <sys/timeb.h>
 
-#elif defined(_VXWORKS_)
+#elif defined(__VXWORKS__)
 #include <types/vxTypesOld.h>
 
-#else
+#elif __linux__
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// 리눅스용 컴파일 추가
+#endif
+
+
+
+#ifdef __linux__
+#define _MAX_PATH               1024
+
 typedef bool BOOL;
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 typedef char TCHAR;
 typedef unsigned short USHORT;
-#ifndef _MSC_VER
-//typedef time_t __time32_t;
+
+typedef string CString;
+typedef unsigned int INT32;
+
+
+typedef unsigned long DWORD;
+
+typedef string CString;
+
+#define __time32_t              time_t
+
+
+#define _open                   open
+#define _close                  close
+#define	_write					write
+#define	_read					read
+
+
+
+#define _T(A)                   (A)
+
+#define TRUE (true)
+#define FALSE (false)
+
+#define TRACE                   printf
+#define TRACE0                  printf
+#define TRACE1                  printf
+
+#define _lseek                  lseek
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MFC 버젼
+#elif _MSC_VER
+#define MSG_DONTWAIT            (0)
+#define IPC_NOWAIT              (04000)
+
+#define IPC_PRIVATE             (0)
+
+typedef int key_t;
+
+#include <winsock.h>
+
+//typedef timeval timespec;
+#define timespec timeval
+
+#define sleep(A)   Sleep(A*1000)
+
+
+//#define sprintf_s               sprintf
+
+#ifndef _T
+#define _T(A)                   (A)
 #endif
+
+
+//#define CString string
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// VxWorks 버젼
+#elif __VXWORKS__
+#define _MAX_PATH               1024
+
+#define  IPC_NOWAIT          0
+
+typedef string CString;
+#define IPC_PRIVATE     (0)
+
+#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
+#define sscanf_s(A,B,C,D,E,F,G,H)     sscanf(A,B,C,D,E,F,G)
+#define sscanf_s(A,B,C,D,E,F,G,H,I)     sscanf(A,B,C,D,E,F,G,H)
+
+#define sprintf_s               sprintf
+
+#define wsprintf                sprintf
+#define __time32_t              time_t
+#define	_time64					time
+#define _lseek                  lseek
+#define strcpy_s                strcpy
+typedef char TCHAR;
+#define _T(A)                   (A)
+
+#define _open                   open
+#define _close                  close
+#define	_write					write
+#define	_read					read
+
+#define	wcslen					strlen
+#define	_localtime64_s(A, B)	localtime_r(B, A)
+#define	localtime_s(A, B)		localtime_r(B, A)
+
+
+#define	_mktime32				mktime
+
+#define TRACE                   printf
+#define TRACE0                  printf
+#define TRACE1                  printf
+
+typedef unsigned long DWORD;
+typedef unsigned char BYTE;
+
+#define M_PI          3.14159265358979323846  /* pi */
+
+#define	O_BINARY				(0)
+
+typedef void             *LPVOID;
+
+#else
+typedef bool BOOL;
+typedef unsigned int UINT;
+typedef unsigned char UCHAR;
+typedef char TCHAR;
+typedef unsigned short USHORT;
 
 typedef string CString;
 typedef unsigned int INT32;
 
 #define _T(A)                   (A)
 
-#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
-
-#define sprintf_s               sprintf
-
-#define wsprintf                sprintf
-
-#ifdef __linux__
-#define strcpy_s                strcpy
-#elif defined(_MSC_VER)
-
-#else
-#endif
-
-
-#define _finite                 finite
-
-#ifdef __linux__
-#define _lseek                  lseek64
-#define _read(A,B,C)            read(A,B,C)
-#define _write(A,B,C)           write(A,B,C)
-#else
-
-#endif
-
-//#define mkdir( A, B )           mkdir( A )
-
-#define _time32(A)              time(A)
-#define __time32_t              time_t
-#define __timeb32               timeb
-#define _ftime32_s              ftime
-#define _localtime32_s(A,B)     localtime_r(B,A)
-
-#define _open                   open
-#define _close                  close
-
-#define AfxMessageBox           printf
-
-
-#define TRACE                   printf
-#define TRACE0                  printf
-#define TRACE1                  printf
-
-//#define FLT_MIN                 1.175494351e-38F        /* min positive value */
-
-#ifndef _WIN32
-#define _MAX_PATH               1024
-#endif
-
-#include "../../Utils/cfile.h"
-
-
-
-#endif
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//  레이더 징표분석기용 형 선언
-//
-
-#define TASK  void
-
-#ifdef _MSC_VER
-
-#else
 #define TRUE (true)
 #define FALSE (false)
-#endif
-
-#ifndef _TOA
-typedef unsigned long long int _TOA;
-#endif
-
-#define DINT  int
-
-#define WORD32  unsigned int
-#define WORD16  unsigned short
-#define WORD08  unsigned char
-
-#ifdef _WIN32
-//#define RET_OK    1
-//#define BOOL  int
-//#define UINT  unsigned int
-//#define UCHAR unsigned char
-//#define USHORT  unsigned short
 
 #endif
 
-#ifdef _VXWORKS_
-#define bool unsigned int
 
-#else
-#define TASK_TCB TCB
 
-#endif
+// 
+// 
+// #ifdef _MSC_VER
+// 
+// 
+// #elif defined(__VXWORKS__)
+// 
+// 
+// 
+// 
+// #else
+// 
+// 
+// 
+// /////////////////////////////////////////////////////////////////////////////////////////
+// // 리눅스용 컴파일 추가
+// typedef bool BOOL;
+// typedef unsigned int UINT;
+// typedef unsigned char UCHAR;
+// typedef char TCHAR;
+// typedef unsigned short USHORT;
+// 
+// 
+// typedef string CString;
+// typedef unsigned int INT32;
+// 
+// #define _T(A)                   (A)
+// 
+// #define sscanf_s(A,B,C,D,E)     		sscanf(A,B,C,D)
+// #define sscanf_s(A,B,C,D,E,F,G,H)     	sscanf(A,B,C,D,E,F,G)
+// #define sscanf_s(A,B,C,D,E,F,G,H,I)     sscanf(A,B,C,D,E,F,G,H)
+// 
+// #define sprintf_s               sprintf
+// 
+// #define wsprintf                sprintf
+// 
+// #ifdef __linux__
+// #define strcpy_s                strcpy
+// #elif defined(_MSC_VER)
+// 
+// #else
+// 
+// typedef int key_t;
+// 
+// #define IPC_PRIVATE     (0)
+// 
+// #endif
+// 
+// 
+// #define _finite                 finite
+// 
+// #ifdef __linux__
+// #define _lseek                  lseek64
+// #define _read(A,B,C)            read(A,B,C)
+// #define _write(A,B,C)           write(A,B,C)
+// 
+// #define _localtime32_s(A,B)     localtime_r(B,A)
+// 
+// #else
+// 
+// #endif
+// 
+// //#define mkdir( A, B )           mkdir( A )
+// 
+// #define _time32(A)              time(A)
+// #define __time32_t              time_t
+// #define __timeb32               timeb
+// #define _ftime32_s              ftime
+// 
+// 
+// 
+// #define _open                   open
+// #define _close                  close
+// 
+// #define AfxMessageBox           printf
+// 
+// 
+// 
+// //#define FLT_MIN                 1.175494351e-38F        /* min positive value */
+// 
+// #include "../../Utils/cfile.h"
+// 
+// 
+// 
+// #endif
+// 
+// 
+// 
+// /////////////////////////////////////////////////////////////////////////////////////////
+// //  레이더 징표분석기용 형 선언
+// //
+// 
+// #define TASK  void
+// 
+// #ifdef _MSC_VER
+// 
+// #elif defined(__VXWORKS__)
+// 
+// #else
+// #define TRUE (true)
+// #define FALSE (false)
+// #endif
+// 
+// #ifndef _TOA
+// typedef unsigned long long int _TOA;
+// #endif
+// 
+// #define DINT  int
+// 
+// #define WORD32  unsigned int
+// #define WORD16  unsigned short
+// #define WORD08  unsigned char
+// 
+// #ifdef _WIN32
+// //#define RET_OK    1
+// //#define BOOL  int
+// //#define UINT  unsigned int
+// //#define UCHAR unsigned char
+// //#define USHORT  unsigned short
+// 
+// #endif
+// 
+// #ifdef _VXWORKS_
+// #define bool unsigned int
+// 
+// #else
+// #define TASK_TCB TCB
+// 
+// #endif
 
 #endif  // #ifndef _TYPE_H_

@@ -5,14 +5,14 @@
 #if !defined(AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)
 #define AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_
 
-#ifdef _VXWORKS_
+#ifdef __VXWORKS__
 #include <types/vxTypesOld.h>
-#include "prjParams.h"
+//#include "prjParams.h"
 
 #define RING_ID					UINT
-#define SEM_ID					UINT
+//#define SEM_ID					UINT
 #define IMPORT					extern
-#define MSG_Q_ID				UINT
+//#define MSG_Q_ID				UINT
 #define WAIT_FOREVER		0
 #define VX_FP_TASK			0
 #define timer_t					UINT
@@ -25,6 +25,15 @@
 
 #elif defined(_GNUCC__)
 #define WAIT_FOREVER		0
+
+#elif _MSC_VER
+#define WAIT_FOREVER		    0
+#define VX_FP_TASK			    0
+
+#define CLOCK_REALTIME	        0
+
+
+
 #endif
 
 #endif // !defined(AFX_OS_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)

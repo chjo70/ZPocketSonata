@@ -23,6 +23,8 @@
 #include "../MIDAS/Midas.h"
 //#include "../MIDAS/RawFile.h"
 
+#include "../../Utils/clog.h"
+
 #ifdef __cplusplus
 
 class CNewSigAnal

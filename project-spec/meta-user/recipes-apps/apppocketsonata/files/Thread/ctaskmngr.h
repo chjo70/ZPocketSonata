@@ -1,4 +1,4 @@
-#ifndef CTASKMNGR_H
+﻿#ifndef CTASKMNGR_H
 #define CTASKMNGR_H
 
 using namespace std;
@@ -9,7 +9,9 @@ using namespace std;
 #include "../Anal/Identify/cipl.h"
 
 #ifdef _SQLITE_
-#include "../SQLite/SQLiteCpp.h"
+//#include "../SQLite/SQLiteCpp.h"
+
+#elif _NO_SQLITE_
 
 #else
 #include "../../ELINTOP/ODBC/mssql.h"
@@ -18,7 +20,8 @@ using namespace std;
 
 
 
-class CTaskMngr : public CThread, public SQLite::Database
+//class CTaskMngr : public CThread, public SQLite::Database
+class CTaskMngr : public CThread
 {
 private:
     static CTaskMngr *m_pInstance;
@@ -26,7 +29,7 @@ private:
     STR_MessageData *m_pMsg;
 
     int m_iTotalIPL;
-    CIPL m_theIPL;
+    //CIPL m_theIPL;
 
 private:
     void Init();

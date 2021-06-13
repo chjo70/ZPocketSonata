@@ -2,7 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../SigAnal/stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
 
 #include <stdlib.h>
 
@@ -53,6 +56,8 @@ BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int th
 
 #ifdef _MSC_VER
     diff = _abs64( (long long int) ( x - y ) );
+#elif __VXWORKS__
+    diff = labs( (long long int) ( x - y ) );
 #else
     diff = llabs( (long long int) ( x - y ) );
 #endif

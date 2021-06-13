@@ -1,4 +1,4 @@
-#ifndef CTRACKANALYSIS_H
+﻿#ifndef CTRACKANALYSIS_H
 #define CTRACKANALYSIS_H
 
 #include "../Utils/clog.h"

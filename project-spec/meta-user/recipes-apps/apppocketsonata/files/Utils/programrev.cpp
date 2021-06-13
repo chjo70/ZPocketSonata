@@ -16,6 +16,11 @@
  컴파일 일시 :
 *****************************************************************************************/
 
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include <time.h>
 #include <stdio.h>
 
@@ -131,12 +136,12 @@ void _ShowProgramTitle( void )
  */
 char *_GetProgramVersion()
 {
-    char szVersion[100];
+    //char szVersion[100];
 
     //char szMon[10];
     //int iDate, iYear;
 
-    memset( g_szVersion, 0, sizeof(szVersion) );
+    memset( g_szVersion, 0, sizeof(g_szVersion) );
     strcat( g_szVersion, PROGRAM_VERSION );
 
     //sscanf( __DATE__, "%s %d %d" , szMon, & iDate, & iYear );

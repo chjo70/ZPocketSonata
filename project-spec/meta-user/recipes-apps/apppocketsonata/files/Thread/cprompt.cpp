@@ -1,6 +1,9 @@
 #include <stdio.h>
 
+#ifdef __linux__
 #include <termios.h>
+#endif
+
 #include <unistd.h>
 #include <ctype.h>
 
@@ -303,6 +306,7 @@ int CPrompt::ownCmdHandler(char** parsed)
 // function for finding pipe
 int CPrompt::parsePipe(char* str, char** strpiped)
 {
+#ifdef __linux__
     int i;
     for (i = 0; i < 2; i++) {
         strpiped[i] = strsep(&str, "|");
@@ -315,11 +319,17 @@ int CPrompt::parsePipe(char* str, char** strpiped)
     else {
         return 1;
     }
+#else
+    return 0;
+
+#endif
+
 }
 
 // function for parsing command words
 void CPrompt::parseSpace(char* str, char** parsed)
 {
+#ifdef __linux__
     int i;
 
     for (i = 0; i < MAX_LIST; i++) {
@@ -330,6 +340,8 @@ void CPrompt::parseSpace(char* str, char** parsed)
         if (strlen(parsed[i]) == 0)
             i--;
     }
+#endif
+
 }
 
 /**
@@ -470,6 +482,7 @@ void CPrompt::URBit( UINT uiData )
 
     *puiUnit = uiData;
 
+#ifdef __linux__
     if( msgsnd( URBIT->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
@@ -477,4 +490,6 @@ void CPrompt::URBit( UINT uiData )
         // DisplayMsg( & sndMsg );
 
     }
+#endif
+
 }

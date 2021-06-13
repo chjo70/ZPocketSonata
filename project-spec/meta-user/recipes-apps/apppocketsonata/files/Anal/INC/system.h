@@ -15,8 +15,10 @@
 /////////////////////////////////////////////////////////////////////////
 #ifdef __ZYNQ_BOARD__
 #define SD_CARD                     (char *) "/run/media/mmcblk0p1/SYSTEM"
+#elif defined(__linux__)
+#define SD_CARD                     (char *) "/home/chjo70" // "/var/log/LOG"
 #else
-#define SD_CARD                     (char *) "/var/log/LOG"
+#define SD_CARD                     (char *) "E:\\SONATA2\\Dev\\PocketSONATA\\dev"               // getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
 #endif
 
 
@@ -28,22 +30,28 @@
 
 #ifdef __ZYNQ_BOARD__
 #define SHARED_DATA_DIRECTORY        (char *) "/var/rawdata"
+#elif _WIN32
+#define SHARED_DATA_DIRECTORY        (char *) "c:/rawdata"
 #else
 //#define SHARED_DATA_DIRECTORY      (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
-#define SHARED_DATA_DIRECTORY        (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared,user=ELS/rawdata"
+#define SHARED_DATA_DIRECTORY        (char *) "/run/user/1000/gvfs/smb-share:server=192.168.10.245,share=shared,user=ELS/rawdata"
 #endif
 
 #ifdef __ZYNQ_BOARD__
 #define CEDEOB_SQLITE_FOLDER        SHARED_DATA_DIRECTORY
-#else
+#elif defined(__linux__)
 #define CEDEOB_SQLITE_FOLDER        (char *) "/home/chjo70"
+#else
+#define CEDEOB_SQLITE_FOLDER        (char *) "c:/sqlite3"
 #endif
 #define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
 
 #ifdef __ZYNQ_BOARD__
 #define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
-#else
+#elif defined(__linux__)
 #define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
+#else
+#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3"
 #endif
 #define EMITTER_SQLITE_FILENAME     "/emitter.sqlite3"
 
@@ -53,12 +61,25 @@
 #define INI_FILENAME                (char *) "/sysconfig.ini"
 
 
-#define QDECODER_LOG_FOLDER         (char *) "/var/log/LOG"
+#define QDECODER_LOG_FOLDER         (char *) "/tmp/LOG"
 #define QDECODER_LOG_FILENAME       (char *) "/qDecoder.log"
 
-#define QDECODER_UPLOAD_FOLDER      (char *) "/var/log/UPLOAD"
+#define QDECODER_UPLOAD_FOLDER      (char *) "/tmp/LOG/UPLOAD"
 
-#define PROGRAM_LOG_FOLDER          (char *) "/var/log/LOG"
+#ifdef __linux__
+#define PROGRAM_LOG_FOLDER          (char *) "/tmp/LOG"
+#else
+#define PROGRAM_LOG_FOLDER          (char *) "c:"
+#endif
+
+// 실행 파일이 있는 위치에서 로그 디렉토리
+#ifdef __linux__
+#define LOG_DIRECTORY               ("/tmp/LOG")
+#elif _MSC_VER
+#define LOG_DIRECTORY               ("\\Debug\\LOG")
+#else
+#define LOG_DIRECTORY               ("c:/temp")
+#endif
 
 
 

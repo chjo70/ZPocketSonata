@@ -4,17 +4,19 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        Anal/EmitterMerge/CInverseMethod.cpp \
+        Anal/EmitterMerge/CEP/AnalyticCEP.cpp \
+        Anal/EmitterMerge/Coordinate/Coordinate.cpp \
         Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.cpp \
         Anal/EmitterMerge/ELEmitterMergeMngr.cpp \
         Anal/EmitterMerge/ELEnvironVariableMngr.cpp \
         Anal/EmitterMerge/ELThreat.cpp \
-        Anal/EmitterMerge/GeoCoordConv.cpp \
+        Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.cpp \
+        Anal/EmitterMerge/InverseMethod/CInverseMethod.cpp \
         Anal/EmitterMerge/LOBClustering.cpp \
         Anal/EmitterMerge/Matrix/Matrix.cpp \
         Anal/EmitterMerge/PositionEstimationAlg.cpp \
         Anal/EmitterMerge/Quadratic/Quadratic.cpp \
-        Anal/EmitterMerge/UTM.cpp \
+        Anal/EmitterMerge/UTM/UTM.cpp \
         Anal/Identify/ELUtil.cpp \
         Anal/Identify/Identify.cpp \
         Anal/Identify/cipl.cpp \
@@ -39,7 +41,6 @@ SOURCES += \
         Anal/SigAnal/PulExt.cpp \
         Anal/SigAnal/SysPara.cpp \
         Anal/SigAnal/cencdec.cpp \
-        Anal/SigAnal/stdafx.cpp \
         Anal/Collect/DataFile/DataFile.cpp \
         Anal/Collect/ccollectbank/ccollectbank.cpp \
         Anal/MIDAS/Midas.cpp \
@@ -87,6 +88,9 @@ SOURCES += \
         cmain.cpp
 
 HEADERS += \
+    Anal/EmitterMerge/CEP/AnalyticCEP.h \
+    Anal/EmitterMerge/Coordinate/Coordinate.h \
+    Anal/EmitterMerge/Coordinate/MatrixConverter.h \
     Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.h \
     Anal/EmitterMerge/ELEmitterDataType.h \
     Anal/EmitterMerge/ELEmitterMergeMngr.h \
@@ -99,7 +103,10 @@ HEADERS += \
     Anal/EmitterMerge/ELThreat.h \
     Anal/EmitterMerge/ElintRsltDataTypedb.h \
     Anal/EmitterMerge/ElintTaskDataTypedb.h \
-    Anal/EmitterMerge/GeoCoordConv.h \
+    Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.h \
+    Anal/EmitterMerge/InverseMethod/CInverseMethod.h \
+    Anal/EmitterMerge/InverseMethod/VincentyParam.h \
+    Anal/EmitterMerge/LOBClustering.h \
     Anal/EmitterMerge/LinearLS/LinearLS.h \
     Anal/EmitterMerge/Matrix/Matrix.h \
     Anal/EmitterMerge/NonlinearLS/NonLinearLS.h \
@@ -107,6 +114,7 @@ HEADERS += \
     Anal/EmitterMerge/PositionEstimationAlg.h \
     Anal/EmitterMerge/Quadratic/Quadratic.h \
     Anal/EmitterMerge/Stack.h \
+    Anal/EmitterMerge/UTM/UTM.h \
     Anal/INC/AetIPL.h \
     Anal/INC/ErrorMsg.h \
     Anal/INC/Macros.h \
@@ -179,8 +187,6 @@ HEADERS += \
     Include/sysmsg.h \
     Include/system.h \
     Include/thrmsg.h \
-    Include/SONATAPIP\_sysmsg.h \
-    Include/SONATAPIP\ShuICD.h \
     Anal/MIDAS/Midas.h \
     Anal/MIDAS/RawFile.h \
     MinIni/minGlue-FatFs.h \
@@ -242,19 +248,7 @@ HEADERS += \
     Utils/cthread.h \
     Utils/chwio.h \
     Utils/DMA/dma.h \
-    _sysmsg.h \
-    _system.h \
-    cjamtech.h \
-    clog.h \
-    cmain.h \
-    cprompt.h \
-    cpulsetrk.h \
-    creclan.h \
-    csignalcollect.h \
-    ctaskmngr.h \
-    curbit.h \
-    mysocket.h \
-    tcpip.h
+    cmain.h
 
 QMAKE_CXXFLAGS += -std=c++0x
 
@@ -268,8 +262,10 @@ LIBS += -lsqlite3
 INCLUDEPATH += /usr/local/boost
 INCLUDEPATH += /usr/local/include
 
+DEFINES += _UTM_POSITION_
+
 DEFINES += _POCKETSONATA_
-DEFINES += _SQLITE_
+DEFINES += _NO_SQLITE_
 
 DEFINES -= UNICODE
 DEFINES -= _UNICODE

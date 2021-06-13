@@ -1,14 +1,27 @@
-#include <errno.h>
+﻿#ifdef _MSC_VER
+#include "stdafx.h"
+
+#elif __linux__
 #include <arpa/inet.h>
-
-
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+
+#elif __VXWORKS__
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#else
+#include <unistd.h>
+
+#endif
+
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #include <fcntl.h>
 
 #include "csingleclient.h"
@@ -174,7 +187,11 @@ void CSingleClient::RunClient()
         LOGMSG2( enDebug, "[클라이언트] [%s/%d] 연결하려 합니다.", m_szServerAddress[iServerSwitch], m_iPort );
 
         //type of socket created
+#ifdef _MSC_VER
+        memset( (char *)&sockAddress, 0, sizeof(sockAddress) );
+#else
         bzero((char *)&sockAddress, sizeof(sockAddress));
+#endif
         sockAddress.sin_family = AF_INET;
         sockAddress.sin_addr.s_addr = inet_addr(m_szServerAddress[iServerSwitch] );
         sockAddress.sin_port = htons( m_iPort );
@@ -246,9 +263,14 @@ void CSingleClient::RunClient()
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
 
+#ifdef _MSC_VER
+                                m_ptheRecLan->QMsgSnd( & sndMsg, NULL );
+#elif __VXWORKS__                                
+#else
                                 if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                     perror( "msgsnd 실패" );
                                 }
+#endif
                             }
                             else {
                                 bHeader = false;
@@ -302,6 +324,10 @@ void CSingleClient::RunClient()
                                 }
                             }           */
 
+#ifdef _MSC_VER
+                            m_ptheRecLan->QMsgSnd( & sndMsg, NULL );
+#elif __VXWORKS__
+#else
                             if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                 perror( "msgsnd 실패" );
                             }
@@ -313,6 +339,7 @@ void CSingleClient::RunClient()
                                 // DisplayMsg( & sndMsg );
 
                             }
+#endif
 
                         }
                     }
@@ -326,6 +353,8 @@ void CSingleClient::RunClient()
         CloseSocket();
 
     }
+
+
 }
 
 /**
@@ -348,9 +377,11 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 
     sndMsg.x.uiData = enREADY_MODE;
 
+#ifdef __linux__
     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
+#endif
 
 }
 
@@ -363,13 +394,60 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
  */
 int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned long timeout_milli )
 {
-    int iRet=0, err;
+    int iRet=0;
+
+    int err;
+
     socklen_t len;
     fd_set writefds;
     struct timeval timeout;
-    int flags;
 
     FD_ZERO(&writefds);
+
+#ifdef _MSC_VER
+    u_long block = 1;
+    if(ioctlsocket( sock, FIONBIO, & block ) != 0) {
+        perror( "fcntl() error" );
+        iRet = -1;
+    }
+    else {
+        if(connect(sock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
+#ifdef _MSC_VER
+#else
+            if (errno != EINPROGRESS) {
+                perror("connect() error\n");
+                iRet = -1;
+            }
+#endif
+        }
+
+        timeout.tv_sec = timeout_milli / 1000;
+        timeout.tv_usec = (timeout_milli % 1000) * 1000;
+        FD_SET(sock, &writefds);
+        if(select(sock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
+            //perror("connection timeout\n");
+            iRet = -1;
+        }
+        else {
+            len = sizeof(err);
+            getsockopt(sock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
+//             if (err) {
+//                 //perror( "getsockopt()" );
+//                 //iRet = -1;
+//             }
+
+
+            block = 0;
+            if(ioctlsocket( sock, FIONBIO, & block ) != 0) {
+                perror( "ioctlsocket() error" );
+                iRet = -1;
+            }
+        }
+    }
+
+#else
+    int flags;
+
     flags = fcntl(sock, F_GETFL);
     flags = (flags | O_NONBLOCK);
     if(fcntl(sock, F_SETFL, flags) != 0) {
@@ -407,6 +485,7 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
             }
         }
     }
+#endif
 
     if( iRet != -1 ) {
         m_bConnected = true;
@@ -414,6 +493,7 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
     }
 
     return iRet;
+
 }
 
 
@@ -422,6 +502,7 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
  */
 void CSingleClient::RunServer()
 {
+#ifdef __linux__
     bool bHeader;
     UINT uiTotalRead;
 
@@ -608,8 +689,15 @@ void CSingleClient::RunServer()
                 }
             }
         }
+    }
+#else
+    while( true ) {
+        sleep( 10 );
 
     }
+
+#endif
+
 }
 
 /**
@@ -618,12 +706,14 @@ void CSingleClient::RunServer()
  */
 void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
 {
+#ifdef __linux__
     char *pIPAddress;
 
     if( pAddr != NULL ) {
         pIPAddress = inet_ntoa( pAddr->sin_addr );
         GP_SYSCFG->SetPrimeServerOfNetwork( pIPAddress, true );
     }
+#endif
 
 }
 
@@ -635,6 +725,7 @@ void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
  */
 void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocket )
 {
+#ifdef __linux__
     int addrlen;
 
     addrlen = sizeof(sockaddr_in);
@@ -651,6 +742,7 @@ void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocke
 
     UINT uiMode=enREADY_MODE;
     QMsgSnd( TMNGR->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
+#endif
 
 }
 
@@ -661,6 +753,7 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 {
     int iRet;
 
+#if defined(__linux__) || defined(_MSC_VER)
     if( IsConnected() == true ) {
         int iRet1, iRet2=0;
 
@@ -691,6 +784,11 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
     else {
         iRet = -1;
     }
+
+#else
+    iRet = 0;
+
+#endif
 
     return iRet;
 
@@ -727,7 +825,7 @@ void CSingleClient::DisplayMsg()
             break;
 
         case esAET_UPD_CCU :
-            strcpy( szOpcode, "변경" );
+             strcpy( szOpcode, "수정" );
             break;
 
         case esAET_LST_CCU :
@@ -766,7 +864,11 @@ void CSingleClient::CloseSocket()
 
     if( m_iSocket > 0 ) {
         LOGMSG( enNormal, "소켓을 정상적으로 닫습니다." );
+#ifdef _MSC_VER
+        closesocket( m_iSocket );
+#else
         close( m_iSocket );
+#endif
     }
     else {
         LOGMSG( enError, "두번 이상 소켓을 닫았습니다." );

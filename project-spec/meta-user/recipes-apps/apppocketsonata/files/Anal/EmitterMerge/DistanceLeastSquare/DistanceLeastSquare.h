@@ -14,10 +14,11 @@
 
 #include "../Matrix/Matrix.h"
 
-class CDistanceLeastSquare
+#include "../CEP/AnalyticCEP.h"
+
+class CDistanceLeastSquare : public CAnalyticCEP
 {
 private:
-
 
 public:
 	CDistanceLeastSquare(void);

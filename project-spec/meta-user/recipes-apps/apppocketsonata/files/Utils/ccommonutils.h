@@ -1,8 +1,15 @@
-#ifndef CCOMMONUTILS_H
+﻿#ifndef CCOMMONUTILS_H
 #define CCOMMONUTILS_H
 
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
+
+#ifdef _MSC_VER
+int clock_gettime(int X, struct timeval *tv);
+LARGE_INTEGER getFILETIMEoffset();
+#endif
+
+
 
 class CCommonUtils
 {

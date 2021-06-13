@@ -1,7 +1,15 @@
-/*
+﻿/*
  * 자체점검 Process : 자체점검을 처리하는 쓰레드 입니다.
  *
  * */
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+
+#else
+
+#endif
 
 
 #include "curbit.h"
@@ -123,8 +131,10 @@ void CUrBit::_routine()
 void CUrBit::Init()
 {
 
-    // 멤버 클래스 초기화
+#ifdef __ZYNQ_BOARD__
+    // 
     m_theGPIO.OpenChannel( 309 );
+#endif
 
     // DMA 설정
     InitHW();
@@ -139,6 +149,7 @@ void CUrBit::Init()
  */
 void CUrBit::InitHW()
 {
+#ifdef __ZYNQ_BOARD__
     CHWIO::OpenHW();
 
     //CHWIO::WriteReg( BRAM_CTRL_0, ADC_BIT_SLICE, 0x2 );
@@ -170,15 +181,17 @@ void CUrBit::InitHW()
 
     RunAXIBusBIT();
 
+#endif
+
     {
         _TOA sToa;
         UZPOCKETPDW s_pdw_reg_t;
 
-        s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x123B167;
-        s_pdw_reg_t.uniPdw_freq_toa.stPdw_freq_toa.toa_L = 0x3A60;
-        sToa	= ( (_TOA) s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16) | s_pdw_reg_t.uniPdw_freq_toa.stPdw_freq_toa.toa_L;
+        s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x123B167;
+        s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = 0x3A60;
+        sToa	= ( (_TOA) s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16) | s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L;
 
-        printf(">> toa		= %015.3f[ms](0x%llX)(0x%X:0x%X)\n", sToa*PDW_TIME_RES/1000., sToa, s_pdw_reg_t.uniPdw_toa_edge.stPdw_toa_edge.toa_H, s_pdw_reg_t.uniPdw_freq_toa.stPdw_freq_toa.toa_L  ); //us
+        printf(">> toa		= %015.3f[ms](0x%llX)(0x%X:0x%X)\n", sToa*PDW_TIME_RES/1000., sToa, s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H, s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L  ); //us
     }
 
 }
@@ -190,7 +203,7 @@ void CUrBit::InitIBit()
 {
     m_stESIbit.w32 = 0;
 
-    LOGMSG( enDebug, "IBIT를 시작 합니다...." );
+    LOGMSG( enDebug, _T("IBIT를 시작 합니다....") );
 }
 
 /**
@@ -256,6 +269,7 @@ void CUrBit::RunUBit( bool bCGIRunning )
     }
 }
 
+#ifdef __ZYNQ_BOARD__
 /**
  * @brief CUrBit::RunAXIBusBIT
  */
@@ -284,3 +298,7 @@ bool CUrBit::RunAXIBusBIT()
     return bRet;
 
 }
+#else
+
+
+#endif

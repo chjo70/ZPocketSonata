@@ -7,33 +7,28 @@
  * @warning
  */
 
-#include "../SigAnal/stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
 
 #include <math.h>
 #include <float.h>
 
-// #include "Eigen/Dense"
+#include "IsNumber.h"
 
-#include "./IsNumber.h"
-#include "../SigAnal/_Define.h"
-#include "./PositionEstimationAlg.h"
+#include "PositionEstimationAlg.h"
 
-//#include "./Matrix/Matrix.h"
 
-//#include "./Geo2UTM/Geo2UTM.h"
-
-#include "./UTM.h"
-#include "./GeoCoordConv.h"
+#include "./UTM/UTM.h"
+#include "./GeoCoordConv/GeoCoordConv.h"
 #include "../Identify/ELUtil.h"
-//#include "../../MNGR/Codec/ELDecoder.h"
-//#include "../../../COMMON/MNGR/GRTestParamMngr.h"
-#include "../Identify/ELCEDLibDataType2.h"
-#include "../EmitterMerge/CInverseMethod.h"
-#include "../EmitterMerge/VincentyParam.h"
+
+#include "./InverseMethod/CInverseMethod.h"
+#include "./InverseMethod/VincentyParam.h"
 
 
-//#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
-//#define _abs(a)                 ( (int) (a) >= 0 ? (a) : -(a) )
+#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
 
 #define	IS_VALID_LL( A, B )			( ( ( IsNumber(A) == true ) && ( IsNumber(B) == true ) && ( !( ( A > 360. ) || ( A < -360. ) || ( B > 360. ) || ( B < -360. ) ) ) ) == true )
 #define	IS_NOT_ZERO_LL( A, B )	( ( ( A > 0 || A < 0 ) == true ) && ( ( B > 0 || B < 0 ) == true ) )
@@ -45,9 +40,15 @@
 #define ITEMS_FOR_TWO_ECLPISE													(5)
 
 
-//#include "../../MNGR/ELElintUtilMngr.h"
+#if defined(_ENU_POSITION_)
 
-//#include "../PositionEstimation/VincentyInverse/CInverseMethod.h"
+//#define ORG_ENU_LATITUDE                    DEGREE2RADIAN(37.0)
+//#define ORG_ENU_LONGITUDE                   DEGREE2RADIAN(127.0)
+#define ORG_ENU_HEIGHT                      (100)
+
+
+#endif
+
 
 CPositionEstimationAlg*  CPositionEstimationAlg::m_pInstance = 0;				///< 정적 초기화
 
@@ -65,12 +66,19 @@ CPositionEstimationAlg*  CPositionEstimationAlg::m_pInstance = 0;				///< 정적
 CPositionEstimationAlg::CPositionEstimationAlg(void)
 {
 
-	m_pdCoVar = (double **) malloc( 2 * sizeof(double *) );
+// 	m_pdCoVar = (double **) malloc( 2 * sizeof(double *) );
+// 
+// 	if( m_pdCoVar != NULL ) {
+// 		*(m_pdCoVar+0) = (double * ) malloc( 2 * sizeof(double) );
+// 		*(m_pdCoVar+1) = (double * ) malloc( 2 * sizeof(double) );
+// 	}
 
-	if( m_pdCoVar != NULL ) {
-		*(m_pdCoVar+0) = (double * ) malloc( 2 * sizeof(double) );
-		*(m_pdCoVar+1) = (double * ) malloc( 2 * sizeof(double) );
-	}
+#if defined(_ENU_POSITION_)
+    //m_stOrgLlh.lat = ORG_ENU_LATITUDE;
+    //m_stOrgLlh.lon = ORG_ENU_LONGITUDE;
+    //m_stOrgLlh.hgt = ORG_ENU_HEIGHT;
+
+#endif
 
 }
 
@@ -89,9 +97,9 @@ CPositionEstimationAlg::~CPositionEstimationAlg(void)
 {
 	// 소멸자에세 객체를 메모리에서 해지함.
 
-	free( *(m_pdCoVar+0) );
-	free( *(m_pdCoVar+1) );
-	free( m_pdCoVar );
+// 	free( *(m_pdCoVar+0) );
+// 	free( *(m_pdCoVar+1) );
+// 	free( m_pdCoVar );
 
 }
 
@@ -107,10 +115,10 @@ CPositionEstimationAlg::~CPositionEstimationAlg(void)
  */
 void CPositionEstimationAlg::ReleaseInstance()
 {
-	if( m_pInstance != NULL ) {
-		delete m_pInstance;
-		m_pInstance = NULL;
-	}
+// 	if( m_pInstance != NULL ) {
+// 		delete m_pInstance;
+// 		m_pInstance = NULL;
+// 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -126,11 +134,11 @@ void CPositionEstimationAlg::ReleaseInstance()
  */
 CPositionEstimationAlg* CPositionEstimationAlg::GetInstance()
 {
-	if( m_pInstance == NULL ) {
-		m_pInstance = new CPositionEstimationAlg();
-	}
+    if( m_pInstance == NULL ) {
+        m_pInstance = new CPositionEstimationAlg();
+    }
 
-	return m_pInstance;
+    return m_pInstance;
 }
 
 /**
@@ -145,28 +153,56 @@ CPositionEstimationAlg* CPositionEstimationAlg::GetInstance()
  * @date      2016-03-17, 오후 3:47
  * @warning
  */
-void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB )
+void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, int nLob, STR_LOBS *pstrLOB )
 {
-	int nLob;
 	double *pLatitude, *pLongitude, *pLob;
+	double dMinLatitude=360., dMaxLatitude=-360.;
+	double dMinLongitude=360.0, dMaxLongitude=-360.;
 
 	SELPositionEstimationResult result;
 
-	std::vector<STR_LOBS>::pointer ppVecLOB;
+	STR_LOBS *ppVecLOB;
 
 	// 1. 센서 좌표에 대한 메모리 할당
-	nLob = (int) pVecLOB->size();
 	AllocSensors( nLob );
 
 	// 2. 항공기 위치와 LOB 저장
 	pLatitude = m_Sensor.pLatitude;
 	pLongitude = m_Sensor.pLongitude;
 	pLob = m_Sensor.pLob;
-	ppVecLOB = pVecLOB->data() + ( nLob-1 );
+	ppVecLOB = & pstrLOB[nLob-1];
+	m_pR1 = ppVecLOB;
+	m_pR2 = ppVecLOB;
+	m_pR3 = ppVecLOB;
+	m_pR4 = ppVecLOB;
 	for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
 		*pLatitude = (double) ppVecLOB->fLatitude;
 		*pLongitude = (double) ppVecLOB->fLongitude;
 		*pLob	= (double) ppVecLOB->fDoa;
+
+#if defined(_ENU_POSITION_)
+		if( i >= 1 ) {
+			if( m_pR1->fLatitude > *pLatitude ) {
+				m_pR1 = ppVecLOB;
+			}
+			if( m_pR2->fLatitude < *pLatitude ) {
+				m_pR2 = ppVecLOB;
+			}
+			if( m_pR3->fLongitude > *pLongitude ) {
+				m_pR3 = ppVecLOB;
+			}
+			if( m_pR4->fLongitude < *pLongitude ) {
+				m_pR4 = ppVecLOB;
+			}
+
+		}
+
+		dMinLatitude = min( *pLatitude, dMinLatitude );
+		dMaxLatitude = max( *pLatitude, dMinLatitude );
+
+		dMinLongitude = min( *pLongitude, dMinLongitude );
+		dMaxLongitude = max( *pLongitude, dMaxLongitude );
+#endif
 
 		++ pLatitude;
 		++ pLongitude;
@@ -176,14 +212,49 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 
 	}
 
+#if defined(_ENU_POSITION_)
+	if( m_pR1 == m_pR2 ) {
+		m_pR2 = m_pR3;
+		m_pR3 = m_pR4;
+	}
+	else if( m_pR1 == m_pR3 ) {
+		m_pR3 = m_pR4;
+	}
+	else if( m_pR2 == m_pR3 ) {
+		m_pR3 = m_pR4;
+	}
+	else {
+
+	}	
+
+	m_stOrgLlh.lat = ( dMinLatitude + dMaxLatitude ) / 2.0;
+	m_stOrgLlh.lon = ( dMinLongitude + dMaxLongitude ) / 2.0;
+	m_stOrgLlh.hgt = ORG_ENU_HEIGHT;
+#endif
+
 	// 3. 위치 산출
-	CommonRunPositionEstimation( pSELPE_RESULT, pABTData, pABTExtData );
+	CommonRunPositionEstimation( pSELPE_RESULT );
 
 	// 4. 메모리 해지
 	FreeSensors();
 
 }
 
+void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB )
+{
+    int nLOB;
+
+    nLOB = (int) pVecLOB->size();
+
+
+}
+
+/**
+ * @brief CPositionEstimationAlg::RunPositionEstimation
+ * @param pPEInfo
+ * @param pABTExtData
+ * @param pVecLOB
+ */
 void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPEInfo, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB )
 {
 	int nLob;
@@ -216,7 +287,7 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	}
 
 	// 3. 위치 산출
-	CommonRunPositionEstimation( NULL, & stABTData, pABTExtData );
+	CommonRunPositionEstimation( NULL );
 
 	// 4. 결과 변환
 	memset( & stABTData, 0, sizeof(STR_POSITION_ESTIMATION) );
@@ -236,72 +307,11 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 }
 
 /**
- * @brief     위치 산출 결과와 LOB를 비교하여 LOB를 검증하여 LOB가 이상하면 위치 산출 결과를 버린다.
- * @param     SELPositionEstimationResult * pResult
- * @param     SELSensorPosition * pSensor
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2015-06-23, 오후 5:09
- * @warning
+ * @brief CPositionEstimationAlg::VerifyOfPositionEstimation
+ * @param pResult
+ * @param pSensor
+ * @return
  */
-#define ERROR_CHECK_OF_LOB_ERROR_RATIO		(60)			// 단위는 %, LOB 이상 개수를 체크
-#define ERROR_CHECK_OF_LOB_DIFFERENCE			(80)			// 단위는 %, LOB 이상 개수를 체크
-void CPositionEstimationAlg::VerifyOfLOB( SRxABTData *pABTData )
-{
-	int iError=0;
-	SELDISTLOB distlob;
-
-	int iDistLob;
-	float fDistLob;
-
-	if( ! ( pABTData->fCEP < 0 ) ) {
-		double *pLatitude, *pLongitude, *pLob;
-
-		pLob = & m_Sensor.pLob[0];
-		pLatitude = & m_Sensor.pLatitude[0];
-		pLongitude = & m_Sensor.pLongitude[0];
-		for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
-            ST_IMA->VincentyInverse( & distlob, *pLatitude, *pLongitude, pABTData->fLatitude, pABTData->fLongitude );
-
-			fDistLob = (float) ( distlob.fwdlob - *pLob + 0.5 );
-			if( fDistLob < 0 ) {
-				iDistLob = (int) ( fDistLob - 0.5 );
-			}
-			else {
-				iDistLob = (int) ( fDistLob + 0.5 );
-			}
-
-			iDistLob = ( 360 + iDistLob ) % 360;
-
-			// +- 90도 범위안에 들면 본 방향으로 판단한다.
-			if( ! ( ( iDistLob > (360-ERROR_CHECK_OF_LOB_DIFFERENCE) /* && iDistLob <= 360 */ ) ||
-			        ( iDistLob >= 0 && iDistLob <= ERROR_CHECK_OF_LOB_DIFFERENCE ) ) ) { //DTEC_Else
-				++ iError;
-			}
-
-			++ pLob;
-			++ pLatitude;
-			++ pLongitude;
-		}
-		//
-		if( UDIV( iError * 100, m_Sensor.n ) > ERROR_CHECK_OF_LOB_ERROR_RATIO ) {
-			pABTData->iPEValid = _spZero;
-			pABTData->fCEP = -1.0;
-
-            pABTData->fLatitude = 0.;
-            pABTData->fLongitude = 0.;
-
-			pABTData->fMajorAxis = (float) 0.;
-			pABTData->fMinorAxis = (float) 0.;
-			pABTData->fTheta = (float) 0.;
-			pABTData->fCEP = (float) 0.;
-		}
-		//TRACE( "\n ++++ 검증 에러 : %d / %d\n" , iError, m_Sensor.n );
-	}
-}
-
 bool CPositionEstimationAlg::VerifyOfPositionEstimation( SELPE_RESULT *pResult, SELSensorPosition *pSensor )
 {
 	UINT uI;
@@ -395,9 +405,11 @@ void CPositionEstimationAlg::AllocSensors( int nLob )
 
 	m_Sensor.pLatitude = new double[m_Sensor.n];
 	m_Sensor.pLongitude = new double[m_Sensor.n];
+	m_Sensor.pAltitude = new double[m_Sensor.n];
 
-	m_Sensor.pUTMX = new double[m_Sensor.n];
-	m_Sensor.pUTMY = new double[m_Sensor.n];
+	m_Sensor.pX = new double[m_Sensor.n];
+	m_Sensor.pY = new double[m_Sensor.n];
+    m_Sensor.pH = new double[m_Sensor.n];
 
 	m_Sensor.pLob			 = new double[m_Sensor.n];
 	m_Sensor.pTime		 = new time_t[m_Sensor.n];
@@ -419,9 +431,11 @@ void CPositionEstimationAlg::FreeSensors()
 {
 	delete[] m_Sensor.pLatitude;
 	delete[] m_Sensor.pLongitude;
+	delete[] m_Sensor.pAltitude;
 
-	delete[] m_Sensor.pUTMX;
-	delete[] m_Sensor.pUTMY;
+	delete[] m_Sensor.pX;
+	delete[] m_Sensor.pY;
+    delete[] m_Sensor.pH;
 
 	delete[] m_Sensor.pLob;
 	delete[] m_Sensor.pTime;
@@ -439,12 +453,12 @@ void CPositionEstimationAlg::FreeSensors()
  * @date      2015-06-25, 오후 11:26
  * @warning
  */
-void CPositionEstimationAlg::CommonRunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, STR_POSITION_ESTIMATION *pPEInfo  )
+void CPositionEstimationAlg::CommonRunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, STR_POSITION_ESTIMATION *pPEInfo  )
 {
 
 	// 위치 산출
 	// 1. 위치 산출 알고리즘을 계산한다.
-	RunPositionEstimation( pSELPE_RESULT, pABTData, ADD_PE, STOP, pABTExtData, pPEInfo );
+	RunPositionEstimation( pSELPE_RESULT, DISTANCE_LEAST_SQUARE, STOP, pPEInfo );
 
 	// 2. 예외처리를 체크하여 위치 산출 결과 여부를 결정한다.
 	// 2.1 예외 처리 #1: 항공기 최종 위치 근방에 위치 산출 결과가 나오는지를 검증한다.
@@ -468,8 +482,9 @@ void CPositionEstimationAlg::CommonRunPositionEstimation( SELPE_RESULT *pSELPE_R
  * @date      2013-09-09 오후 5:08
  * @warning
  */
-void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, EL_POSIOTN_ESTIMATION_ALGORITHM_OPTION eOption, EL_TARGET_STATE_OPTION eTargetState, SELABTDATA_EXT *pABTExtData, STR_POSITION_ESTIMATION *pPEInfo )
+void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, EL_POSIOTN_ESTIMATION_ALGORITHM_OPTION eOption, EL_TARGET_STATE_OPTION eTargetState, STR_POSITION_ESTIMATION *pPEInfo )
 {
+	time_t firstToa=0;
 
 	bool *pValid;
 
@@ -483,14 +498,14 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 	//pResult->cep_error = -2.0;
 
 	// LOB 개수가 부족할 때 에러로 리턴한다.
-	if( m_nLob >= _spTwo && IsVerifyLOB() ) { //DTEC_Else
+	if( m_nLob >= 2 && IsVerifyLOB() ) { //DTEC_Else
 		// 센서와 LOB를 검증하여 위치 산출의 입력 데이터를 걸러낸다.
 		// FilteredByCensorPosition();
 
 		// 위치 산출 실행하기 전에 메모리 할당
-		if( true == AllocateBuffer( (int) m_nLob ) ) {
 			bool bResult;
 			UINT uiFlagInitPos=0;
+		double *dTemp=NULL;
 
 			pValid = m_Sensor.pValid;
 
@@ -511,64 +526,66 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 				dInitPosRad[1] = 0.;
 			}
 
-			//bResult = m_theQuadratric.Run( & stResult, m_Sensor.pLatitude, m_Sensor.pLongitude, m_Sensor.pLob, m_nLob );
-			//bResult = m_theDistanceLeastSquare.Run( & stResult, m_Sensor.pLatitude, m_Sensor.pLongitude, m_Sensor.pLob, m_nLob );
-			//m_theDistanceLeastSquare.CalCEP( & stResult, pABTExtData );
-
 			ConvertLatLong2( m_nLob, & m_Sensor );
 
-#if defined(_UTM_POSITION_)
-			bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pUTMX, m_Sensor.pUTMY, m_Sensor.pLob, m_nLob );
-#elif defined(_TM_POSITION_)
-			bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pUTMX, m_Sensor.pUTMY, m_Sensor.pLob, m_nLob );
+		switch( eOption ) {
+			case DISTANCE_LEAST_SQUARE :
+				bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );        
+				break;
 
-			if( bResult == true ) {
-				m_theGeoCoordConv.SetSrcType( kWgs84, kTmWest );
-				m_theGeoCoordConv.SetDstType( kWgs84, kGeographic );
-				m_theGeoCoordConv.Conv( pSELPE_RESULT->dEasting, pSELPE_RESULT->dNorthing, pSELPE_RESULT->dLongitude, pSELPE_RESULT->dLatitude );
+			case QUADRATIC :
+				bResult = m_theQuadratric.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );
+				break;
 
-				VerifyOfPositionEstimation( pSELPE_RESULT, & m_Sensor );
+			case AUTO :
+				if( m_nLob > 10 ) {
+					bResult = m_theQuadratric.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );
 			}
 			else {
-				pSELPE_RESULT->dLongitude = 0;
-				pSELPE_RESULT->dLatitude = 0;
+					bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );        
 			}
+				break;
 
-#else
-			bResult = m_theDistanceLeastSquare.Run( pSELPositionEstimationResult, m_Sensor.pLatitude, m_Sensor.pLongitude, m_Sensor.pLob, m_nLob );
-#endif
+			default :
+				break;
 
-			m_theDistanceLeastSquare.CalCEP( pSELPE_RESULT, pABTExtData );
-			//LogPrint("\n========================================== UseElintGeoLoc_CLobsDll 시간(%d) : %d ms", m_nLob, (int)((GetTickCount() - dwTime) / 1));
+		}
 
 			if( bResult == true ) {
-				//m_estEmitterXY.bResult = true;
-// 				pABTData->iPEValid = _spOne;
-// 				pABTData->dLatitude = stResult.dLatitude;
-// 				pABTData->dLongitude = stResult.dLongitude;
-// 
-// 				pABTData->fMajorAxis = (float) stResult.eep_major_axis;		// dEEPData[0] * 2.0;
-// 				pABTData->fMinorAxis = (float) stResult.eep_minor_axis;			// dEEPData[1] * 2.0;
-// 				pABTData->fTheta = (float) stResult.eep_theta;					// M2Map( (int) ( dEEPData[2]*10. ) );
-// 				pABTData->fCEP = (float) stResult.cep_error;
-// 
-// 				// 위,경도 값 유효성 체크
-// 				if( ( pABTData->dLatitude > 40.0 || pABTData->dLatitude < 33 ) ||
-// 					  ( pABTData->dLongitude > 135. || pABTData->dLongitude < 120. ) ||
-// 					  ( 0 == _finite( pABTData->dLatitude ) ) ||
-// 					  ( 0 == _finite( pABTData->dLongitude ) ) ) { //DTEC_Else
-// 					pABTData->iPEValid = _spZero;
-// 					pABTData->fCEP = -1.0;
-// 				}
-			}
-// 			else {
-// 				pABTData->iPEValid = _spZero;
-// 				pABTData->fCEP = -1.0;
-// 			}
+#if defined(_UTM_POSITION_)
+            UTMXYToLatLon( pSELPE_RESULT->dEasting, pSELPE_RESULT->dNorthing, (int) UTM_ZONE, false, pSELPE_RESULT->dLatitude, pSELPE_RESULT->dLongitude );
+            pSELPE_RESULT->dLatitude = RadToDeg( pSELPE_RESULT->dLatitude );
+            pSELPE_RESULT->dLongitude = RadToDeg( pSELPE_RESULT->dLongitude );
+			pSELPE_RESULT->dAltitude = 0.0;
+
+#elif defined(_ENU_POSITION_)
+            SLlhPos stLlhPos;
+            SEnuPos stEnuPos;
+
+            stEnuPos.east = pSELPE_RESULT->dEasting;
+            stEnuPos.north = pSELPE_RESULT->dNorthing;
+            stEnuPos.up = EstimatedAltitude( & stEnuPos );
+
+            CCoordinate::ConvertENU2LLH( stEnuPos, m_stOrgLlh, & stLlhPos );
+            pSELPE_RESULT->dLatitude = stLlhPos.lat*RAD2DEG;
+            pSELPE_RESULT->dLongitude = stLlhPos.lon*RAD2DEG;	
+			pSELPE_RESULT->dAltitude = stLlhPos.hgt;
+
+
+#elif defined(_TM_POSITION_)
+            m_theGeoCoordConv.SetSrcType( kWgs84, kTmWest );
+            m_theGeoCoordConv.SetDstType( kWgs84, kGeographic );
+            m_theGeoCoordConv.Conv( pSELPE_RESULT->dEasting, pSELPE_RESULT->dNorthing, pSELPE_RESULT->dLongitude, pSELPE_RESULT->dLatitude );
+			pSELPE_RESULT->dAltitude = 0.0;
+            //VerifyOfPositionEstimation( pResult, & m_Sensor );
+#else
+
+#endif
+
 		}
 
 		// 위치 산출 실행후 메모리 해지
-		ReleaseBuffer();
+		//ReleaseBuffer();
 	}
 	else {
 		pSELPE_RESULT->bResult = false;
@@ -579,6 +596,120 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 	return;
 }
 
+double CPositionEstimationAlg::EstimatedAltitude( SEnuPos *pstEnuPos )
+{
+#ifdef _ENU_POSITION_
+	SLlhPos stLlhPos;
+	SEnuPos stEnuPos1, stEnuPos2, stEnuPos3;
+
+	double dRet=m_stOrgLlh.hgt;
+	double dA, dB, dC, dD;
+
+	CMatrix theA( 3, 3);
+
+	stLlhPos.lat = DEGREE2RADIAN( m_pR1->fLatitude );
+	stLlhPos.lon = DEGREE2RADIAN( m_pR1->fLongitude );
+	stLlhPos.hgt = m_pR1->fAltitude;
+	CCoordinate::ConvertLLH2ENU( stLlhPos, m_stOrgLlh, & stEnuPos1 );
+
+	stLlhPos.lat = DEGREE2RADIAN( m_pR2->fLatitude );
+	stLlhPos.lon = DEGREE2RADIAN( m_pR2->fLongitude );
+	stLlhPos.hgt = m_pR2->fAltitude;
+	CCoordinate::ConvertLLH2ENU( stLlhPos, m_stOrgLlh, & stEnuPos2 );
+
+	stLlhPos.lat = DEGREE2RADIAN( m_pR3->fLatitude );
+	stLlhPos.lon = DEGREE2RADIAN( m_pR3->fLongitude );
+	stLlhPos.hgt = m_pR3->fAltitude;
+	CCoordinate::ConvertLLH2ENU( stLlhPos, m_stOrgLlh, & stEnuPos3 );
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	try {
+		theA( 1, 1 ) = 1.0;
+		theA( 1, 2 ) = stEnuPos1.north;
+		theA( 1, 3 ) = stEnuPos1.up;
+		theA( 2, 1 ) = 1.0;
+		theA( 2, 2 ) = stEnuPos2.north;
+		theA( 2, 3 ) = stEnuPos2.up;
+		theA( 3, 1 ) = 1.0;
+		theA( 3, 2 ) = stEnuPos3.north;
+		theA( 3, 3 ) = stEnuPos3.up;
+
+		theA.Print();
+		dA = Det( theA );	
+
+		//////////////////////////////////////////////////////////////////////////
+		theA( 1, 1 ) = stEnuPos1.east;
+		theA( 1, 2 ) = 1;
+		theA( 1, 3 ) = stEnuPos1.up;
+		theA( 2, 1 ) = stEnuPos2.east;
+		theA( 2, 2 ) = 1;
+		theA( 2, 3 ) = stEnuPos2.up;
+		theA( 3, 1 ) = stEnuPos3.east;
+		theA( 3, 2 ) = 1;
+		theA( 3, 3 ) = stEnuPos3.up;
+
+		theA.Print();
+		dB = Det( theA );	
+
+		//////////////////////////////////////////////////////////////////////////
+		theA( 1, 1 ) = stEnuPos1.east;
+		theA( 1, 2 ) = stEnuPos1.north;
+		theA( 1, 3 ) = 1;
+		theA( 2, 1 ) = stEnuPos2.east;
+		theA( 2, 2 ) = stEnuPos2.north;
+		theA( 2, 3 ) = 1;
+		theA( 3, 1 ) = stEnuPos3.east;
+		theA( 3, 2 ) = stEnuPos3.north;
+		theA( 3, 3 ) = 1;
+
+		theA.Print();
+		dC = Det( theA );
+
+		//////////////////////////////////////////////////////////////////////////
+		theA( 1, 1 ) = stEnuPos1.east;
+		theA( 1, 2 ) = stEnuPos1.north;
+		theA( 1, 3 ) = stEnuPos1.up;
+		theA( 2, 1 ) = stEnuPos2.east;
+		theA( 2, 2 ) = stEnuPos2.north;
+		theA( 2, 3 ) = stEnuPos2.up;
+		theA( 3, 1 ) = stEnuPos3.east;
+		theA( 3, 2 ) = stEnuPos3.north;
+		theA( 3, 3 ) = stEnuPos3.up;
+
+		theA.Print();
+		dD = -Det( theA );
+
+		if( dC != 0 ) {
+			dRet = - ( ( dA * pstEnuPos->east ) + ( dB * pstEnuPos->north ) + dD ) / dC;
+		}
+		else {
+			dRet = m_stOrgLlh.hgt;
+		}
+	}
+	catch (Exception err) {
+		printf("Error: %s\n", err.msg);
+	}
+	catch (...) {
+		printf("An error occured...\n");
+	}
+	return dRet;
+#else
+	return 0.0;
+
+#endif
+	
+}
+
+
+/**
+ * @brief		IsVerifyLOB
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/02/18 16:20:12
+ * @warning		
+ */
 bool CPositionEstimationAlg::IsVerifyLOB()
 {
 	int i;
@@ -610,16 +741,31 @@ bool CPositionEstimationAlg::IsVerifyLOB()
 void CPositionEstimationAlg::ConvertLatLong2( int nLob, SELSensorPosition *pSensor )
 {
 	int i;
-	double *pX, *pY;
+	double *pX, *pY, *pH;
 	double *pLat, *pLong;
 
-	pX = pSensor->pUTMX;
-	pY = pSensor->pUTMY;
+
+	pX = pSensor->pX;
+	pY = pSensor->pY;
+    pH = pSensor->pH;
 	pLat = pSensor->pLatitude;
 	pLong = pSensor->pLongitude;
 	for( i=0 ; i < nLob ; ++i ) {
 #if defined(_UTM_POSITION_)
-		LatLonToUTMXY( *pLat, *pLong, (int) UTM_ZONE, *pY, *pX );
+		LatLonToUTMXY( *pLat, *pLong, (int) UTM_ZONE, *pX, *pY );
+#elif defined(_ENU_POSITION_)
+        SLlhPos stLlhPos;
+        SEnuPos stEnuPos;
+
+        stLlhPos.lat = DEGREE2RADIAN( *pLat );
+        stLlhPos.lon = DEGREE2RADIAN( *pLong );
+        stLlhPos.hgt = 100;
+        CCoordinate::ConvertLLH2ENU( stLlhPos, m_stOrgLlh, & stEnuPos );
+
+        *pX = stEnuPos.east;
+        *pY = stEnuPos.north;
+        *pH = stEnuPos.up;
+
 #elif defined(_TM_POSITION_)
 		m_theGeoCoordConv.SetSrcType(kWgs84, kGeographic );
 		m_theGeoCoordConv.SetDstType(kWgs84, kTmWest );
@@ -630,6 +776,7 @@ void CPositionEstimationAlg::ConvertLatLong2( int nLob, SELSensorPosition *pSens
 
 		++ pX;
 		++ pY;
+        ++ pH;
 
 		++ pLat;
 		++ pLong;
@@ -728,33 +875,33 @@ void CPositionEstimationAlg::FilteredByCensorPosition()
  * @date      2013-09-09 오후 6:12
  * @warning
  */
-bool CPositionEstimationAlg::AllocateBuffer( int isize )
-{
-	int nSize;
-
-	/*! \debug  신뢰성: 메모리 크기 지정
-			\author 조철희 (churlhee.jo@lignex1.com)
-			\date 	2015-10-6 9:51:16
-	*/
-	if( isize < MAX_LOBS ) {
-		nSize = (int) sizeof(SELPE_RESULT) * isize;
-		m_pSensorXY = ( SELPE_RESULT * ) malloc( (UINT) nSize );
-
-		/*! \debug  신뢰성: 메모리 크기 지정
-				\author 조철희 (churlhee.jo@lignex1.com)
-				\date 	2015-10-6 9:51:16
-		*/
-		nSize = (int) sizeof(double) * isize;
-		m_pLob = ( double * ) malloc( (UINT) nSize );
-	}
-	else {
-		m_pSensorXY = NULL;
-		m_pLob = NULL;
-	}
-
-	return m_pSensorXY != NULL && m_pLob != NULL;
-
-}
+// bool CPositionEstimationAlg::AllocateBuffer( int isize )
+// {
+// 	int nSize;
+// 
+// 	/*! \debug  신뢰성: 메모리 크기 지정
+// 			\author 조철희 (churlhee.jo@lignex1.com)
+// 			\date 	2015-10-6 9:51:16
+// 	*/
+// 	if( isize < MAX_LOBS ) {
+// 		nSize = (int) sizeof(SELPE_RESULT) * isize;
+// 		m_pSensorXY = ( SELPE_RESULT * ) malloc( (UINT) nSize );
+// 
+// 		/*! \debug  신뢰성: 메모리 크기 지정
+// 				\author 조철희 (churlhee.jo@lignex1.com)
+// 				\date 	2015-10-6 9:51:16
+// 		*/
+// 		nSize = (int) sizeof(double) * isize;
+// 		m_pLob = ( double * ) malloc( (UINT) nSize );
+// 	}
+// 	else {
+// 		m_pSensorXY = NULL;
+// 		m_pLob = NULL;
+// 	}
+// 
+// 	return m_pSensorXY != NULL && m_pLob != NULL;
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////////
 /*!
@@ -767,25 +914,25 @@ bool CPositionEstimationAlg::AllocateBuffer( int isize )
  * @date      2013-09-09 오후 6:12
  * @warning
  */
-void CPositionEstimationAlg::ReleaseBuffer()
-{
-	//EL_UTIL.LogPrint( LOG_DUMMY, "\n 메모리 해지 주소 : %p" , m_SensorXY );
-
-	/*! \debug  신뢰성: NULL 포인터 체크하여 처리
-			\author 조철희 (churlhee.jo@lignex1.com)
-			\date 	2015-10-5 21:17:57
-	*/
-	if( m_pSensorXY != NULL ) {
-		free( m_pSensorXY );
-	}
-	m_pSensorXY = NULL;
-
-	if( m_pLob != NULL )	{
-		free( m_pLob );
-	}
-	m_pLob = NULL;
-
-}
+// void CPositionEstimationAlg::ReleaseBuffer()
+// {
+// 	//EL_UTIL.LogPrint( LOG_DUMMY, "\n 메모리 해지 주소 : %p" , m_SensorXY );
+// 
+// 	/*! \debug  신뢰성: NULL 포인터 체크하여 처리
+// 			\author 조철희 (churlhee.jo@lignex1.com)
+// 			\date 	2015-10-5 21:17:57
+// 	*/
+// 	if( m_pSensorXY != NULL ) {
+// 		free( m_pSensorXY );
+// 	}
+// 	m_pSensorXY = NULL;
+// 
+// 	if( m_pLob != NULL )	{
+// 		free( m_pLob );
+// 	}
+// 	m_pLob = NULL;
+// 
+// }
 
 /**
  * @brief     이전의 위치 산출 결과를 내적 계산으로 근거로 신규 위치 산출 계산한다.

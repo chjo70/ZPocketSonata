@@ -7,25 +7,43 @@
  * @warning   
  */
 
-#include "../../SigAnal/stdafx.h"
-
+#if defined(_MSC_VER)
 #define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
+
+
 #include <math.h>
 
-#include "../../SigAnal/_Macro.h"
-#include "../../SigAnal/_Define.h"
-
 #include "Quadratic.h"
-#include "../LOBClustering.h"
 
-#include "../UTM.h"
+#include "../UTM/UTM.h"
 
 
+/**
+ * @brief		CQuadratic
+ * @param		void
+ * @return		
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/02/18 16:23:18
+ * @warning		
+ */
 CQuadratic::CQuadratic(void)
 {
 }
 
 
+/**
+ * @brief		~CQuadratic
+ * @param		void
+ * @return		
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/02/18 16:23:15
+ * @warning		
+ */
 CQuadratic::~CQuadratic(void)
 {
 }
@@ -43,7 +61,7 @@ CQuadratic::~CQuadratic(void)
  * @date      2013-09-09 오후 7:04 
  * @warning   
  */
-bool CQuadratic::Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitude, double *pLob, int nLob )
+bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, double *pLob, int nLob )
 {
 	int i;
 
@@ -62,14 +80,17 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitu
 
 	double dTheta;
 
+    m_nLob = nLob;
+
 	memset( pResult, 0, sizeof(SELPE_RESULT) );
+    pResult->dEEP_theta = -1;
 
-	for( i=0 ; i < nLob ; ++i ) {
-		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
-	}
+// 	for( i=0 ; i < nLob ; ++i ) {
+// 		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
+// 	}
 
-	ppLatitude = pLatitude;
-	ppLongitude = pLongitude;
+	m_pUTMX = ppLatitude = pUTMX;
+	m_pUTMY = ppLongitude = pUTMY;
 
 	/*! \bug  	condition에 직접적인 assignment operator를 사용하지 말아야 한다.
 	    \author 조철희 (churlhee.jo@lignex1.com)
@@ -91,7 +112,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitu
 
 		a = sin( dTheta );
 		b = -cos( dTheta );
-		c = *pLongitude * a + *pLatitude * b;
+		c = *pUTMY * a + *pUTMX * b;
 
 		A = a * b;
 		B1 = a * a;
@@ -110,8 +131,8 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitu
 		sumG = G + sumG;
 
 		++ pLob;
-		++ pLongitude;
-		++ pLatitude;
+		++ pUTMY;
+		++ pUTMX;
 	}
 
 	sumD2 = sumD * sumD;
@@ -145,36 +166,53 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitu
 	condi1 = (sumB * x1*x1) - ( 4 * sumA * x1 * y1 ) - ( sumB * y1*y1 ) + ( sumE * x1 ) - ( sumD * y1 );
 	condi2 = (sumB * x2*x2) - ( 4 * sumA * x2 * y2 ) - ( sumB * y2*y2 ) + ( sumE * x2 ) - ( sumD * y2 );
 
-	pResult->eep_major_axis = -1.0;
-	pResult->eep_minor_axis = -1.0;
-	pResult->eep_theta = 0.0;
-	pResult->cep_error = -1.0;
+	pResult->dEEP_major_axis = -1.0;
+	pResult->dEEP_minor_axis = -1.0;
+	pResult->dEEP_theta = 0.0;
+	pResult->dCEP_error = -1.0;
 
 	// 최종 위치 산출 값을 저장
 	if( fabs(condi1) < fabs(condi2) ) {
-		pResult->dLongitude = x1;
-		pResult->dLatitude = y1;
-  }
+		pResult->dNorthing = x1;
+		pResult->dEasting = y1;
+    }
 	else {
-		pResult->dLongitude = x2;
-		pResult->dLatitude = y2;
+		pResult->dNorthing = x2;
+		pResult->dEasting = y2;
 	}
 
-	dDistX = fabs( pResult->dLongitude - ppLongitude[0] );
-	dDistY = fabs( pResult->dLatitude - ppLatitude[0] );
+	dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
+	dDistY = fabs( pResult->dEasting - ppLatitude[0] );
 
-	if( dDistX < 0.0001 && dDistY < 0.0001 ) {
-		pResult->dLongitude = -1;
-		pResult->dLatitude = -1;
-		return false;
-	}
+	if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
+            pResult->dEasting = -1;
+            pResult->dNorthing = -1;
+            pResult->dLongitude = -1;
+            pResult->dLatitude = -1;
+            pResult->bResult = false;
+        }
+    else {
+        // 최종 위치 산출 값을 저장
+        pResult->bResult = true;
 
-	pResult->bResult = true;
+        CalAnalyticNonlinear( pResult );
 
-	return true;
+    }	
+
+	return pResult->bResult;
 
 }
 
+/**
+ * @brief		CalCEP
+ * @param		SELPE_RESULT * pResult
+ * @param		SELABTDATA_EXT * pABTExtData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/03/16 14:38:21
+ * @warning		
+ */
 void CQuadratic::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 {
 	int i, iNumPE;
@@ -189,7 +227,7 @@ void CQuadratic::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 	double dSumSS, dSumA, dC;
 
 	if( pResult->bResult == true ) {
-		if( pABTExtData->bFullOfPE == false && pABTExtData->uiPE <= _spOne ) {
+		if( pABTExtData->bFullOfPE == false && pABTExtData->uiPE <= 1 ) {
 
 		}
 		else {
@@ -244,11 +282,11 @@ void CQuadratic::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 			dSLL /= (iNumPE+1);
 
 			// CEP 구하기
-			pResult->cep_error = 0.75 * sqrt( dSSNorthing + dSSEasting );
+			pResult->dCEP_error = 0.75 * sqrt( dSSNorthing + dSSEasting );
 
 			// EEP 기울기 구하기
-			pResult->eep_theta = 0.5 * atan( ( 2. * dSNorthing * dSEasting ) / ( dSNorthing - dSEasting ) );
-			pResult->eep_theta = RADIAN2DEGREE( pResult->eep_theta );
+			pResult->dEEP_theta = 0.5 * atan( ( 2. * dSNorthing * dSEasting ) / ( dSNorthing - dSEasting ) );
+			pResult->dEEP_theta = RADIAN2DEGREE( pResult->dEEP_theta );
 
 			// EEP 장축/단축 구하기
 			dC = -2.0 * log( 1.0 - 0.4 );
@@ -257,8 +295,8 @@ void CQuadratic::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 			dR1 = 0.5 * ( dSumSS + sqrt( dSumA ) );
 			dR2 = 0.5 * ( dSumSS - sqrt( dSumA ) );
 
-			pResult->eep_major_axis = sqrt( dR1 * dC );
-			pResult->eep_minor_axis = sqrt( dR2 * dC );
+			pResult->dEEP_major_axis = sqrt( dR1 * dC );
+			pResult->dEEP_minor_axis = sqrt( dR2 * dC );
 		}
 	}
 

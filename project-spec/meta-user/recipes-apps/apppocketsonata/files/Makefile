@@ -14,17 +14,19 @@ BIT_CGI = bit.cgi
 LISTALLCHANNEL_CGI = listallchannel.cgi
 
 # Add any other object files to this list below
-APP_OBJS  = Anal/EmitterMerge/CInverseMethod.o
+APP_OBJS  = Anal/EmitterMerge/CEP/AnalyticCEP.o
+APP_OBJS += Anal/EmitterMerge/Coordinate/Coordinate.o
 APP_OBJS += Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o
 APP_OBJS += Anal/EmitterMerge/ELEmitterMergeMngr.o
 APP_OBJS += Anal/EmitterMerge/ELEnvironVariableMngr.o
 APP_OBJS += Anal/EmitterMerge/ELThreat.o
-APP_OBJS += Anal/EmitterMerge/GeoCoordConv.o
+APP_OBJS += Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.o
+APP_OBJS += Anal/EmitterMerge/InverseMethod/CInverseMethod.o
 APP_OBJS += Anal/EmitterMerge/LOBClustering.o
 APP_OBJS += Anal/EmitterMerge/Matrix/Matrix.o
 APP_OBJS += Anal/EmitterMerge/PositionEstimationAlg.o
 APP_OBJS += Anal/EmitterMerge/Quadratic/Quadratic.o
-APP_OBJS += Anal/EmitterMerge/UTM.o
+APP_OBJS += Anal/EmitterMerge/UTM/UTM.o
 APP_OBJS += Anal/Identify/ELUtil.o
 APP_OBJS += Anal/Identify/Identify.o
 APP_OBJS += Anal/Identify/cipl.o
@@ -316,6 +318,7 @@ LDLIBS = -pthread -lreadline -lncurses -lsqlite3
 DEFINES += -D_POCKETSONATA_
 DEFINES += -D_SQLITE_
 DEFINES += -D__ZYNQ_BOARD__
+DEFINES += -D_UTM_POSITION_
 
 
 CGI_DEFINES += -D_CGI_LIST_

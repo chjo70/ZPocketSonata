@@ -2,15 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-// PC용 상위 클래스에 전달하기 위한 선언
 #ifdef _MSC_VER
-#include "../../A50SigAnal/stdafx.h"
-
-//#include "../../AdvSigAnal/AdvSigAnal.h"
-
-//#include "../../AdvSigAnal/MainFrm.h"
-//#include "../../AdvSigAnal/AdvSigAnalDoc.h"
-//#include "../../AdvSigAnal/AdvSigAnalView.h"
+#include "stdafx.h"
 
 #endif
 
@@ -150,8 +143,8 @@ BOOL CKMakeAET::KnownMakeAET()
 {
 	int i;
 	UINT maxPulse;
-	int idxEmitter;
-	STR_EMITTER *pEmitter;
+	//int idxEmitter;
+	//STR_EMITTER *pEmitter;
 
 	MakeAET();
 
@@ -227,7 +220,7 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
             else if( pTrkPri->iPRIType == _STAGGER ) {
                 if( pNewPri->iPRIElementCount == pTrkPri->iPRIElementCount ) {
                     for( i=0 ; i < pNewPri->iPRIElementCount ; ++i ) {
-                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], 2*STABLE_MARGIN ) == FALSE ) {
+                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], (float) 2*STABLE_MARGIN ) == FALSE ) {
 	  					return FALSE;
 						}
 					}
@@ -254,9 +247,9 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 			*/
             pri_margin = 20 * _spOneMicrosec;
             if( pTrkPri->iPRIType == _STAGGER ) {
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, pri_margin ) )
+                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, (float) pri_margin ) )
 					return FALSE;
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, pri_margin ) )
+                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, (float) pri_margin ) )
 					return FALSE;
 
 				return TRUE;
@@ -739,4 +732,21 @@ void CKMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 unsigned int CKMakeAET::IsStorePDW()
 {
     return m_pKnownSigAnal->IsStorePDW();
+}
+
+/**
+ * @brief     CheckHarmonic
+ * @param     float mean1
+ * @param     float mean2
+ * @param     float priThreshold
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-04, 10:21
+ * @warning
+ */
+UINT CKMakeAET::CheckHarmonic(float mean1, float mean2, float priThreshold ) 
+{
+    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
 }

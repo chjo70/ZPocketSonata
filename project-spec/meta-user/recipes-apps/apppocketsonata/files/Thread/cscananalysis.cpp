@@ -1,3 +1,12 @@
+// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include "cscananalysis.h"
 #include "cemittermerge.h"
 

@@ -9,7 +9,13 @@
 
 #ifdef __cplusplus
 
+#ifndef __VXWORKS__
 #include <memory.h>
+#endif
+
+#include "../SigAnal/_Type.h"
+
+#include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 스택 

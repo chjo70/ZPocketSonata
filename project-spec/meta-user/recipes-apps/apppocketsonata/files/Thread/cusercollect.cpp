@@ -1,3 +1,9 @@
+#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
+
 #include "cusercollect.h"
 
 #include "csignalcollect.h"
@@ -46,7 +52,10 @@ void CUserCollect::InitVar()
 
     // 하드웨어
     //xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
+#ifdef __ZYNQ_BOARD__
     CHWIO::uio_re_enable_Interrupt(REG_UIO_DMA_1);
+#endif
+
 }
 
 /**
@@ -168,7 +177,9 @@ void CUserCollect::Stop()
 {
     LOGMSG( enDebug, " 수집 설정을 종료합니다." );
 
+#ifdef __ZYNQ_BOARD__
     CHWIO::StopCollecting( REG_UIO_DMA_1 );
+#endif
 
 }
 
@@ -177,27 +188,34 @@ void CUserCollect::Stop()
  */
 void CUserCollect::ColStart()
 {
-    xuio_t *s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
+    xuio_t *s_uio;
 
     pdw_reg_t s_pdw_reg_t;
 
     uint32_t DataCount = PDW_GATHER_SIZE;
     uint32_t DumpLen;
 
+    s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
+
     DumpLen = sizeof(uint8_t) * DataCount;
 
     memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
 
     LOGMSG1( enDebug, " 탐지 신호 수집 설정[%d]을 시작합니다." , m_uiColStart );
-
-    // 인터럽트 재설정
+	
+    // 인터럽트 재설정 
+#ifdef __ZYNQ_BOARD__
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
+#endif
+
 
     // 하드웨어로 부터 PDW 데이터를 수집합니다.
     xmem_t *pMem = CHWIO::mem_get_mem(DMA_1_MEM);
 
+#ifdef __ZYNQ_BOARD__
     dma_s2mm_reset(dma_dev_1);
     dma_s2mm_start(dma_dev_1, pMem, PDW_GATHER_SIZE, false );
+#endif
 
     memset( & m_strResColStart, 0, sizeof(m_strResColStart) );
 
@@ -207,13 +225,15 @@ void CUserCollect::ColStart()
         printf( " *********************************s_uio->physical = 0x%lx\n", s_uio->physical );
         switch( s_uio->physical ) {
             case UIO_DMA_1_ADDR :
+#ifdef __ZYNQ_BOARD__
                 CHWIO::ClearInterrupt(s_uio);
+#endif
 
                 m_strResColStart.uiBoardID = GP_SYSCFG->GetBoardID();
                 m_strResColStart.uiCoPulseNum = PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( s_uio->fd > 0 ) {
-                    memcpy( m_pstrDMAPDW, (void *)(pMem->logical), PDW_GATHER_SIZE );
+                    memcpy( m_pstrDMAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
                     m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
@@ -226,6 +246,7 @@ void CUserCollect::ColStart()
                     STR_PDWFILE_HEADER *pPDWFileHeader;
 
                     pPDWFileHeader = ( STR_PDWFILE_HEADER * ) m_pstrDMAPDWWithFileHeader;
+                    memset( pPDWFileHeader, 0, sizeof(STR_PDWFILE_HEADER) );
                     pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
                     pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
                     SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0, ChildClassName() );
@@ -233,12 +254,16 @@ void CUserCollect::ColStart()
                 break;
 
             default :
+#ifdef __ZYNQ_BOARD__
                 CHWIO::ClearInterrupt(s_uio);
+#endif
                 //ClearInterrupt(s_uio);
                 break;
         }
 
+#ifdef __ZYNQ_BOARD__
         CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
+#endif
     }
 
     if( GP_SYSCFG->GetMode() != enANAL_ES_MODE ) {
@@ -291,7 +316,7 @@ void CUserCollect::MakeSIMPDWData()
 
     m_uiCoPDW = m_strResColStart.uiCoPulseNum;
 
-    iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 10 );
+    iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
 
     for( i=0 ; i < m_uiCoPDW; ++i ) {
         randomDOA = iDOA + ( rand() % 40 ) - 20;
@@ -307,28 +332,28 @@ void CUserCollect::MakeSIMPDWData()
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 
         //
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.cw_pulse = 1;
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.pmop_flag = 0;
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.fmop_flag = 0;
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.false_pdw = 0;
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.fmop_dir = 1;
-        pDMAPDW->uPDW.uniPdw_status.stPdw_status.fmop_bw = 8000;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
 
-        pDMAPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
-        pDMAPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
-        pDMAPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
+        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
+        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
+        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
 
-        pDMAPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
-        pDMAPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
+        pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
+        pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
 
-        pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
-        pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
-        pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
+        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
+        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
+        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
 
-        pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
-        pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
+        pDMAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
+        pDMAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
 
-        pDMAPDW->uPDW.uniPdw_index.stPdw_index.index = m_uiIndex;
+        pDMAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
 
         //printf( "m_ullTOA[%llx], [%0X:%0X]\n" , m_ullTOA, pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H, pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L );
 
@@ -360,8 +385,8 @@ void CUserCollect::MakeCollectHistogram()
 
     pDMAPDW = m_pstrDMAPDW;
     for( ui=0; ui < m_uiCoPDW ; ++ui ) {
-        uiFreq = ( pDMAPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
-        iCh = pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+        uiFreq = ( pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
+        iCh = pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
         fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
         iIndex = (int) ( ( fFreq - MIN_FREQ_MHZ ) / COLHISTO_WIDTH_MHZ );
 

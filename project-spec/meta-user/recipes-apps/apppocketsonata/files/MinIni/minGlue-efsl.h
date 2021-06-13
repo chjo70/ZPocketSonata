@@ -1,4 +1,4 @@
-/*  Glue functions for the minIni library, based on the EFS Library, see
+﻿/*  Glue functions for the minIni library, based on the EFS Library, see
  *  https://sourceforge.net/projects/efsl/
  *
  *  By CompuPhase, 2008-2012

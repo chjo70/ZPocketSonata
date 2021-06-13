@@ -7,7 +7,7 @@
  * @warning   
  */
 
-#include "StdAfx.h"
+//#include "StdAfx.h"
 
 #define _USE_MATH_DEFINES
 

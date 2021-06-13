@@ -105,7 +105,9 @@ struct STR_H000 {
 
 
 #ifdef _SQLITE_
-#include "../../SQLite/SQLiteCpp.h"
+//#include "../../SQLite/SQLiteCpp.h"
+
+#elif _NO_SQLITE_
 
 #else
 #include "../../ELINTOP/ODBC/mssql.h"
@@ -142,7 +144,8 @@ struct STR_H000 {
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
-class CELSignalIdentifyAlg : public SQLite::Database
+//class CELSignalIdentifyAlg : public SQLite::Database
+class CELSignalIdentifyAlg 
 {
  protected:
 #ifdef _SQLITE_
@@ -439,7 +442,7 @@ private:
 // 	void SortRadarIndex( int *pCount, int *pIndex, int nMax=100 );
 // 	void RemoveDuplicateIndex( int *pCount, int *pIndex, int nMax );
 
-#ifdef _SQLITE_
+#if defined(_SQLITE_) || defined(_NO_SQLITE_)
     CELSignalIdentifyAlg( const char *pFileName );
 #else
     CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );

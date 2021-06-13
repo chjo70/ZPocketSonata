@@ -1,3 +1,13 @@
+// CCollectBank.cpp: implementation of the CCollectBank class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
+
 #include <string.h>
 
 #include "../../OFP_Main.h"
@@ -335,7 +345,11 @@ bool CCollectBank::IsCompleteCollect()
 
         // 수집 시간 확인
         if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
+#ifdef _MSC_VER
+            ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_usec >= m_strWindowCell.uiMaxCollectTimems * 1000 ) ) {
+#else
             ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
+#endif
             bRet = true;
         }
 

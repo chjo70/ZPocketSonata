@@ -1,8 +1,10 @@
-#ifndef CMULTISERVER_H
+﻿#ifndef CMULTISERVER_H
 #define CMULTISERVER_H
 
+#ifdef __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
 
 
 #include "../Include/system.h"

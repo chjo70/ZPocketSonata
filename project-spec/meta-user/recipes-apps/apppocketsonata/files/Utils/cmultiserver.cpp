@@ -1,9 +1,12 @@
 #include <errno.h>
+
+#ifdef __linux__
 #include <arpa/inet.h>
+#endif
+
 
 #include "cmultiserver.h"
 #include "../Utils/clog.h"
-
 
 #include "../Thread/creclan.h"
 
@@ -94,6 +97,7 @@ void CMultiServer::_routine()
 {
     LOGENTRY;
 
+#ifdef __linux__
     bool bHeader[MAX_CLIENTS];
     UINT uiTotalRead[MAX_CLIENTS];
 
@@ -257,6 +261,14 @@ void CMultiServer::_routine()
             }
         }
     }
+#else
+    while( true ) {
+        sleep( 1000 );
+    }
+
+
+#endif
+
 
 }
 
@@ -270,6 +282,7 @@ void CMultiServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *
 {
     int addrlen;
 
+#ifdef __linux__
     addrlen = sizeof(sockaddr_in);
     //Somebody disconnected , get his details and print
     getpeername(iSocket , (struct sockaddr*) pAddress , (socklen_t*)&addrlen);
@@ -281,6 +294,7 @@ void CMultiServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *
     if( pClientSocket != NULL ) {
         *pClientSocket = 0;
     }
+#endif
 
 }
 
@@ -300,10 +314,19 @@ int CMultiServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     strLanHeader.uiOpCode = uiOpCode;
     strLanHeader.uiLength = uiLength;
 
+#ifdef __linux__
     iRet1 = send( m_iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+#else
+    iRet1 = 0;
+#endif
 
     if( iRet1 > 0 ) {
+#ifdef __linux__
         iRet2 = send( m_iSocket, (char *) pData, strLanHeader.uiLength, MSG_DONTWAIT );
+#else
+        iRet2 = 0;
+
+#endif
     }
     else {
         perror( "send() 에러");

@@ -1,4 +1,8 @@
-﻿#include "./SigAnal/stdafx.h"
+﻿#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
 
 #include "ParamMngr.h"
 

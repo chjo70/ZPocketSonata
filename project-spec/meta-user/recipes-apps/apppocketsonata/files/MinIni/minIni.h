@@ -1,4 +1,4 @@
-/*  minIni - Multi-Platform INI file parser, suitable for embedded systems
+﻿/*  minIni - Multi-Platform INI file parser, suitable for embedded systems
  *
  *  Copyright (c) CompuPhase, 2008-2017
  *

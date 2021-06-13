@@ -29,6 +29,8 @@
 
 #include "Midas.h"
 
+#include "../../Utils/cfile.h"
+
 #define _EXT_HEADER_
 
 #ifdef _DECODE_
@@ -71,8 +73,8 @@ CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
 
     // 초기 설정 정의
     memset( & m_strKeywordValue, 0, sizeof(SEL_KEYWORD_VALUE) );
-    strcpy_s( m_strKeywordValue.writer_version, "0.1" );
-    strcpy_s( m_strKeywordValue.writer, "ZSONATA" );
+    strcpy( m_strKeywordValue.writer_version, "0.1" );
+    strcpy( m_strKeywordValue.writer, "ZSONATA" );
 
 }
 
@@ -222,12 +224,12 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
         SELIFMIDAS stIFMIDAS;
 
         if( m_vecConvertIFList.size() == 0 ) {
-            strcpy_s( m_szIFTaskId, pTaskId );
+            strcpy( m_szIFTaskId, pTaskId );
         }
 
         if( strcmp( m_szIFTaskId, pTaskId ) == 0 ) {
-            strcpy_s( stIFMIDAS.szInputFilename, pInputFilename );
-            strcpy_s( stIFMIDAS.szOutputFilename, pMidasFileName );
+            strcpy( stIFMIDAS.szInputFilename, pInputFilename );
+            strcpy( stIFMIDAS.szOutputFilename, pMidasFileName );
             stIFMIDAS.keywordValue = stKeywordValue;
             m_vecConvertIFList.push_back( stIFMIDAS );
         }
@@ -285,7 +287,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
             iWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
             for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, & x.iqData[0], iWriteByte );
+                iSize = _read( destFileId, (char *) & x.iqData[0], iWriteByte );
                 if( iSize == 0 ) {
                     break;
                 }
@@ -298,7 +300,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
         case E_EL_SCDT_IF :
             _lseek( destFileId, 0L, SEEK_END );
-#ifdef __linux__
+#if defined(__linux__) || defined(__VXWORKS__)
             sz_file = 0;
             //sz_file = tell( destFileId );
 #else
@@ -317,7 +319,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
             iWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
             for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, & x.ifData[0], iWriteByte );
+                iSize = _read( destFileId, (char *) & x.ifData[0], iWriteByte );
                 if( iSize == 0 ) { //DTEC_Else
                     break;
                 }
@@ -338,7 +340,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
                 iWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
                 for( i=0 ; i < numberofdata ; ++i ) {
-                    iSize = _read( destFileId, & x.pdwData[0], iWriteByte );
+                    iSize = _read( destFileId, (char * )& x.pdwData[0], iWriteByte );
                     if( iSize == 0 ) { //DTEC_Else
                         break;
                     }
@@ -1787,6 +1789,8 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
     int iFile;
     bool bRet=true;
     unsigned int i, nSize;
+    
+#ifndef __VXWORKS__    
 
     vector<SELIFMIDAS>::pointer pConvertIFList;
 
@@ -1852,6 +1856,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
 
         bRet = true;
     }
+#endif    
 
     return bRet;
 
@@ -1881,24 +1886,26 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 {
     bool bRet;
     TCHAR szDirectory[500];
+    
+#ifndef __VXWORKS__    
 
     STR_PDWDATA *pPDWData;
 
     pPDWData = ( STR_PDWDATA * ) pData;
 
-    CFile cFile;
+    CMyFile cFile;
 
-    struct tm stTime;
-    __time32_t tiNow;
+    struct tm *pstTime;
+    time_t tiNow;
 
     char buffer[100];
 
-    tiNow = _time32(NULL);
+    tiNow = time(NULL);
 
-    _localtime32_s( & stTime, & tiNow );
+    pstTime = localtime( & tiNow );
 
     // 1. 폴더명 생성하기
-    strftime( buffer, 100, "%Y-%m-%d", & stTime);
+    strftime( buffer, 100, "%Y-%m-%d", pstTime );
 #ifdef _ELINT_
     enPosition enPos = GetPosition();
 
@@ -1907,7 +1914,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
     else
         sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
 #elif defined(_POCKETSONATA_)
-     wsprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
+     sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
 #else
      sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 #endif
@@ -1915,7 +1922,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
     if( bRet == true ) {
         // 2. 파일명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", pstTime );
 #ifdef _ELINT_
         wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
 #elif defined(_POCKETSONATA_)
@@ -1944,5 +1951,6 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
     else {
         m_szRawDataFilename[0] = 0;
     }
+#endif    
 
 }

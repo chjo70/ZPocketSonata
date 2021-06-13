@@ -2,14 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-// PC용 상위 클래스에 전달하기 위한 선언
 #ifdef _MSC_VER
-#include "../../A50SigAnal/stdafx.h"
-//#include "../../AdvSigAnal/AdvSigAnal.h"
+#include "stdafx.h"
 
-//#include "../../AdvSigAnal/MainFrm.h"
-//#include "../../AdvSigAnal/AdvSigAnalDoc.h"
-//#include "../../AdvSigAnal/AdvSigAnalView.h"
 #endif
 
 #include <stdio.h>
@@ -233,14 +228,14 @@ void CSPulExt::DiscardStablePT()
 //
 void CSPulExt::SaveScanPulse()
 {
-	int i;
+	//int i;
 
-	UINT count;
-	UINT *pScanTOA, *pScanPA;
+	//UINT count;
+	//UINT *pScanTOA, *pScanPA;
 
-	STR_SCANPT *pScanPT;
-	STR_PDWPARAM *pPdwParam;
-	UINT *pParamIndex;
+	//STR_SCANPT *pScanPT;
+	//STR_PDWPARAM *pPdwParam;
+	//UINT *pParamIndex;
 
 	CPulExt::SavePdwParamIndex();
 
@@ -259,7 +254,7 @@ void CSPulExt::SaveScanPulse()
 //		}
 //	}
 
-	pScanPT->co = count;
+	//pScanPT->co = count;
 
 }
 

@@ -1,8 +1,13 @@
-#ifndef CHWIO_H
+﻿#ifndef CHWIO_H
 #define CHWIO_H
 
+#ifdef _MSC_VER
+#define _INTSAFE_H_INCLUDED_
+#include <stdint.h>
+#else
 #include <stdint.h>
 #include <pthread.h>
+#endif
 
 #define XMEM_COUNT			3
 #define XUIO_COUNT			1
@@ -92,9 +97,9 @@ typedef enum
 
 typedef struct
 {
-    uint64_t 	physical;
-    uint64_t 	logical;
-    uint32_t	size;
+    uint64_t 	ulphysical;
+    uint64_t 	ullogical;
+    uint32_t	uisize;
     char		*name;
 } xmem_t;
 
@@ -172,9 +177,7 @@ typedef struct
         }uniPdw_status;
 } pdw_reg_t;
 
-static xmem_t xmem[XMEM_COUNT] =
-{
-    { 0x70000000, 0,   0x10000000, (char *) "DMA_1_MEM" },		// DMA IQ MEM(DDR,32MB)
+static xmem_t xmem[XMEM_COUNT] = { { 0x70000000, 0,   0x10000000, (char *) "DMA_1_MEM" },		// DMA IQ MEM(DDR,32MB)
     { 0xA0000000, 0,   0x00008000, (char *) "BRAM_CTRL_0" },		// DMA IQ MEM(DDR,32MB)
     { 0xA0010000, 0,   0x00008000, (char *) "BRAM_CTRL_PPFLT" }		// DMA IQ MEM(DDR,32MB)
 };
@@ -205,19 +208,20 @@ typedef struct
 // PL ������ Address Editor �� �Ҵ�� uio device ����
 //  -> Memory device �� ����
 // ���� uio0 ~ uio3 �� uio ����� ���ͷ�Ʈ�� ���
-/*****************************************************************
-* [Note]system-user.dtsi �� ���ǵ� uio �� vivado���� ������ address ���� ����
-*  => �ܼ�â���� Ȯ�� ����
-*  root@zynqPrj:/sys/class/uio# ls -al
-total 0
-drwxr-xr-x    2 root     root             0 Sep  3 22:14 .
-drwxr-xr-x   53 root     root             0 Sep  3 22:14 ..
-lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio0 -> ../../devices/platform/amba_pl@0/a0001000.dma/uio/uio0
-lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio1 -> ../../devices/platform/amba_pl@0/a0010000.dma/uio/uio1
-lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio2 -> ../../devices/platform/amba_pl@0/a0000000.dma/uio/uio2
-lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio3 -> ../../devices/platform/amba_pl@0/a0011000.dma/uio/uio3
-----------> ���� 4���� dma ���ͷ�Ʈ��(address �� vivado���� address editor ���� Ȯ���غ��� ��)
-******************************************************************/
+// *****************************************************************
+///* [Note]system-user.dtsi �� ���ǵ� uio �� vivado���� ������ address ���� ����
+//*  => �ܼ�â���� Ȯ�� ����
+//*  root@zynqPrj:/sys/class/uio# ls -al
+//total 0
+//drwxr-xr-x    2 root     root             0 Sep  3 22:14 .
+//drwxr-xr-x   53 root     root             0 Sep  3 22:14 ..
+//lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio0 -> ../../devices/platform/amba_pl@0/a0001000.dma/uio/uio0
+//lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio1 -> ../../devices/platform/amba_pl@0/a0010000.dma/uio/uio1
+//lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio2 -> ../../devices/platform/amba_pl@0/a0000000.dma/uio/uio2
+//lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio3 -> ../../devices/platform/amba_pl@0/a0011000.dma/uio/uio3
+//----------> ���� 4���� dma ���ͷ�Ʈ��(address �� vivado���� address editor ���� Ȯ���غ��� ��)
+//
+
 #define UIO_DMA_1_ADDR 0xA0080000
 
 //static xuio_t xuio[XUIO_COUNT] =
@@ -225,7 +229,10 @@ lrwxrwxrwx    1 root     root             0 Sep  3 22:14 uio3 -> ../../devices/p
 //    {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
 //};
 
+#ifdef _MSC_VER
+#else
 static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
+#endif
 
 //void reg_write_64(ui64 *logical, ui32 offset, ui32 value);
 //ui64 reg_read_64(ui64 *logical, ui32 offset);

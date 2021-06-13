@@ -10,9 +10,13 @@
 #ifdef __linux__
 
 
-#elif defined(_MSC_VER)
+#elif _MSC_VER
 #include "stdafx.h"
 #include <io.h>
+
+#elif __VXWORKS__
+#include <ioLib.h>
+
 #else
 #include <io.h>
 #endif
@@ -23,6 +27,8 @@
 #include <sys/stat.h>
 
 #include "RawFile.h"
+
+#include "../SigAnal/_Type.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,8 +148,8 @@ void CRawFile::GetFilename( char *pFilename )
 
 	// 파일명에 파일명을 복사한다.
 	if( pOutStr != NULL ) {
-#ifdef __linux__
-        strcpy_s( m_filename, pOutStr );
+#if defined(__linux__) || defined(__VXWORKS__)
+        strcpy( m_filename, pOutStr );
 #else
         strcpy_s( m_filename, sizeof(m_filename), pOutStr );
 
@@ -227,7 +233,7 @@ bool CRawFile::FileOpen( char *filename, int iMode )
 
 	if( m_fid != 0 )	_close( m_fid );
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__VXWORKS__)
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == 0 ) { //DTEC_Else
 #else
@@ -238,8 +244,8 @@ bool CRawFile::FileOpen( char *filename, int iMode )
 		printf( "\n[W] FIle is not exist !!" );
 	}
 	else {
-#ifdef __linux__
-        strcpy_s( m_fullname, filename );
+#if defined(__linux__) || defined(__VXWORKS__)
+        strcpy( m_fullname, filename );
 #else
         strcpy_s( m_fullname, sizeof(m_fullname), filename );
 #endif
@@ -273,7 +279,7 @@ bool CRawFile::FileOpen( char *filename, int iMode )
 int CRawFile::Write( void *pData, int c_size )
 {
 	int nWrite;
-	nWrite = _write( m_fid, pData, c_size );
+	nWrite = _write( m_fid, (char *) pData, c_size );
 	return nWrite;
 }
 
@@ -295,7 +301,7 @@ int CRawFile::Read( void *pData, int c_size, int iOffset )
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
-	nRead = _read( m_fid, pData, c_size );
+	nRead = _read( m_fid, (char *) pData, c_size );
 
 	return nRead;
 }
@@ -365,7 +371,15 @@ unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 {
     unsigned long long int iRet=-1;
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__VXWORKS__)
+	struct stat statbuf;
+
+	if( stat( pPathFileName, & statbuf ) != 0 ) {
+		iRet = -1;
+	}
+	else {
+		iRet = statbuf.st_size;
+	}
 
 #else
 	struct _stati64 statbuf;
@@ -400,6 +414,7 @@ bool CRawFile::CreateDir( TCHAR *pPath )
 
 #ifdef _MSC_VER
                 CreateDirectory( dirName, NULL );
+                //mkdir( dirName );
 #elif defined(__linux__)
                 mkdir( dirName, 0766 );
 #else

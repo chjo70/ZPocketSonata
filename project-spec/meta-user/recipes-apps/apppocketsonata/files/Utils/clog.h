@@ -1,10 +1,25 @@
-#ifndef CLOG_H
+﻿#ifndef CLOG_H
 #define CLOG_H
 
 #include <stdio.h>
+
+#ifdef _MSC_VER
+#include <afxmt.h>
+
+#define getcwd  _getcwd
+#define mkdir   _mkdir
+#define open    _open
+#define write   _write
+#define close   _close
+
+#else
 #include <semaphore.h>
 
+#endif
+
 #include "../Include/system.h"
+
+
 
 
 
@@ -30,6 +45,9 @@ enum LogType {
 #define LOGMSG5( A, B, C, D, E, F, G ) LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
 
 
+#define Log                             LOG->LogMsg
+
+
 #define LOGENTRY                    LOG->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
 
 class CLog
@@ -37,7 +55,11 @@ class CLog
 private:
     static CLog *pInstance;
 
+#ifdef _MSC_VER
+    static CCriticalSection m_cs;
+#else
     static sem_t m_mutex;
+#endif
 
     char m_szPresentDirectory[LOG_DIR_SIZE];
     char m_szLogDir[LOG_DIR_SIZE*2];

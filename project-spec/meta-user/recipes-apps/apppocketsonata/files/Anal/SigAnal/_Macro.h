@@ -8,7 +8,7 @@
 #define  __MACRO_H
 
 #include "../INC/PDW.h"
-#include "../SigAnal/_Define.h"
+#include "_Define.h"
 
 #define DFD_FREQ_OFFSET		(1900)
 
@@ -96,6 +96,22 @@ T _diffabs( T x, T y)
 
 
 #define _abs(a)                 ( (a) >= 0 ? (a) : -(a) )
+
+// template <typename T>
+// T _abs( T a )
+// {
+//     if( a  0 )
+// 
+// }
+
+
+
+
+
+
+
+
+
 #define High( A )               ( (int) A >> 8 ) & 0x00ff
 #define Low( A )                ( A & 0x00ff )
 
@@ -104,6 +120,7 @@ T _diffabs( T x, T y)
 #define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
 #define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
@@ -134,6 +151,7 @@ T _diffabs( T x, T y)
 #define TOAmsCNV( A )           CPOCKETSONATAPDW::DecodeTOAms( A )
 #define FTOAsCNV( A )			CPOCKETSONATAPDW::DecodeTOAs( A )
 #define ITOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
+#define UTOAusCNV( A )			(unsigned int) CPOCKETSONATAPDW::EncodeTOAus( A )
 #define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )

@@ -1,7 +1,12 @@
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#elif __linux__
+#include <sys/socket.h>
+#endif
+
 
 #include <sys/types.h>
-#include <sys/socket.h>
-
 
 #include "creclan.h"
 #include "../Utils/clog.h"
@@ -192,13 +197,17 @@ void CRecLan::DumpList()
     strLanHeader.uiOpCode = enRES_DUMP_LIST;
     strLanHeader.uiLength = DUMP_DATA_SIZE;
 
+#ifdef __linux__
     iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+#endif
 
     // 랜 데이터 송신
     memcpy( & uniLanData.strResDumpList.strReqDumpList, pData, sizeof(STR_REQ_DUMP_LIST) );
     memcpy( uniLanData.strResDumpList.cData, pBuffer, DUMP_DATA_SIZE );
 
+#ifdef __linux__
     iRet = send( m_pMsg->iSocket, (char *) & uniLanData, (int) strLanHeader.uiLength, MSG_DONTWAIT );
+#endif
 
 #ifdef _DEBUG_
     free( pBuffer );

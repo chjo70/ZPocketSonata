@@ -1,7 +1,9 @@
 ﻿#ifdef _MSC_VER
 #include "stdafx.h"
+#elif __VXWORKS__
+//#include "../../SigAnal/stdafx.h"
 #else
-#include "../../SigAnal/stdafx.h"
+//#include "../../SigAnal/stdafx.h"
 #endif
 
 #include <math.h>
@@ -18,8 +20,8 @@
 //#define _MAIN_GLOBALS_
 
 #elif defined(_MSC_VER)
-#define _MAIN_
-#define _MAIN_GLOBALS_
+//#define _MAIN_
+//#define _MAIN_GLOBALS_
 #endif
 
 
@@ -27,13 +29,14 @@
 
 #include "CRWRCommonVariables.h"
 
+#include "../../../Utils/clog.h"
+
 static int stDataFile;
 
 const char stDV[2] = { ' ', '*' } ;
 
 //static char *m_pRawDataBuffer;
 
-#define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
 #ifdef _CGI_LIST_
 void Log( int nType, const char *fmt, ... )
@@ -136,7 +139,7 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 
 	m_PDWData.iDataItems = 0;
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for (i = 0; i < m_RawData.uiDataItems ; ++i) {
 		temp.bpdw[0][0] = pPDW->item.toa_1;
@@ -339,7 +342,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 	m_PDWData.iDataItems = 0;
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    LOGMSG1( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
 
     for ( i=0; i < m_RawData.uiDataItems ; ++i ) {
 		if (i == 0) {
@@ -367,7 +370,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 		*pfFreq = F_FRQMhzCNV( 0, pPDW->iFreq );	//FFRQCNV(pPDW->item.band + 1, uiTemp);
 
-		*pfPW = PWCNV(pPDW->iPW * 1000. );
+		*pfPW = PWCNV( pPDW->iPW * 1000 );
 
 		if( pPDW->iAOA == 0 ) {
 			*pfAOA = (float) 0.00000001;
@@ -434,7 +437,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 	}
 
 	//m_pRawData->uiDataItems = uiDataItems;
-	Log( enNormal, _T("필터링 PDW 개수는 %d 입니다.") , m_PDWData.iDataItems );
+    LOGMSG1( enNormal, _T("필터링 PDW 개수는 %d 입니다.") , m_PDWData.iDataItems );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -733,7 +736,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP 
 
 	m_PDWData.iDataItems = 0;
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for (i = 0; i < m_RawData.uiDataItems ; ++i) {
 		llToa = (_TOA) ( pPDW->sPDWFormat.m_LSBTOA ) | ( (_TOA) pPDW->sPDWFormat.m_MSBTOA << 32 );
@@ -793,7 +796,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP 
 		++pPDW;
 	}
 
-	Log( enNormal, _T("필터링 PDW 개수는 %d 입니다.") , m_PDWData.iDataItems );
+    Log( enNormal, "필터링 PDW 개수는 %d 입니다.", m_PDWData.iDataItems );
 }
 
 
@@ -848,7 +851,7 @@ void CPOCKETSONATAPDW::Alloc( int iItems )
 		iItems = m_RawData.uiDataItems;
 	}
 
-    Log( enNormal, _T("Alloc()을 [%d]개를 할당합니다.") , iItems );
+    Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , iItems );
 
     if( m_PDWData.pfFreq == 0 ) {
         m_PDWData.pfFreq = (float *)malloc(sizeof(float) * iItems);
@@ -938,7 +941,7 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
 
     DMAPDW *pPDW = (DMAPDW *) & m_pRawDataBuffer[0];
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     if( pPDWData == NULL ) {
         float *pfFreq, *pfPW, *pfAOA, *pfTOA, *pfDTOA, *pfPA;
@@ -966,7 +969,7 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
         m_PDWData.iDataItems = 0;
 
         for (i = 0; i < m_RawData.uiDataItems ; ++i) {
-            ullToa = (_TOA) ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
+            ullToa = (_TOA) ( pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
 
             *pullTOA = ullToa;
             if (i == 0) {
@@ -980,19 +983,19 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
             }
             preToa = *pfTOA;
 
-            uiFreq = ( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
-            iCh = pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+            uiFreq = ( pPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
+            iCh = pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
             *pfFreq = DecodeRealFREQMHz( uiFreq, iCh, m_stHeader.uiBoardID );
 
-            *pfPW = DecodePW( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.pulse_width );
+            *pfPW = DecodePW( pPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width );
 
-            *pfAOA = DecodeDOA( pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.doa );
+            *pfAOA = DecodeDOA( pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa );
 
-            *pfPA = DecodePA( pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.pa );
+            *pfPA = DecodePA( pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa );
 
             *pcType = 0; // pPDW->sPDWFormat.m_sigType;
 
-            *pcDV = pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.di;
+            *pcDV = pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di;
 
             printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[MHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[(*pcDV & 0x1)], *pfFreq, *pfTOA, *pfPW );
 
@@ -1030,13 +1033,13 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
             int iFreq;
             float fFREQ;
 
-            ullToa = (_TOA) ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
+            ullToa = (_TOA) ( pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
 
             pPDW1->ullTOA = ullToa;
 
-            iFreq = ( pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
+            iFreq = ( pPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
 
-            iCh = pPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+            iCh = pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
             if( iCh < 7 ) {
                 if( iFreq & 0x8000) {
                     iFreq = 0x10000 - iFreq;
@@ -1061,11 +1064,11 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
             // [kHz] 단위로 변경
             pPDW1->iFreq = (int) ( fFREQ + 0.5 );
 
-            pPDW1->iPW = pPDW->uPDW.uniPdw_pw_freq.stPdw_pw_freq.pulse_width;
+            pPDW1->iPW = pPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width;
 
-            pPDW1->iAOA = pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.doa;
+            pPDW1->iAOA = pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa;
 
-            pPDW1->iPA = pPDW->uPDW.uniPdw_dir_pa.stPdw_dir_pa.pa;
+            pPDW1->iPA = pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa;
 
             pPDW1->iPulseType = 0; // pPDW->uniPdw_status.stPdw_status.cw_pulse;
 
@@ -1103,6 +1106,26 @@ unsigned int CPOCKETSONATAPDW::GetHeaderSize()
     }
 
 	return m_iHeaderSize;
+}
+
+/**
+ * @brief		SetHeaderData
+ * @param		void * pData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/06/10 15:30:08
+ * @warning		
+ */
+void CPOCKETSONATAPDW::SetHeaderData( void *pData )
+{
+    if( m_iHeaderSize == -1 ) {
+        memcpy( & m_stHeader, pData, sizeof(STR_PDWFILE_HEADER) );
+
+        //m_iHeaderSize = sizeof(STR_PDWFILE_HEADER);
+    }
+
+    return;
 }
 
 /**
@@ -1199,7 +1222,7 @@ void C7PDW::Alloc( int iItems )
 		iItems = m_RawData.uiDataItems;
 	}
 
-	Log( enNormal, _T("Alloc()을 [%d]개를 할당합니다.") , iItems );
+    Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , iItems );
 
     if( m_PDWData.pfFreq == 0 ) {
 	    m_PDWData.pfFreq = (float *) malloc(sizeof(float) * iItems );
@@ -1249,7 +1272,7 @@ void C7PDW::Alloc( int iItems )
  */
 void C7PDW::Free()
 {
-	Log( enNormal, _T("Free()를 해지합니다.") );
+    Log( enNormal, "Free()를 해지합니다." );
 
 	_SAFE_FREE( m_PDWData.pfFreq);
 	_SAFE_FREE(m_PDWData.pfPW);
@@ -1315,7 +1338,7 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 	m_PDWData.iDataItems = 0;
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );    
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for (i = 0; i < m_RawData.uiDataItems ; ++i) {
         if( bSwap == true ) {
@@ -1378,7 +1401,7 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 		++pPDW;
 	}
 
-	Log( enNormal, _T("PDW 개수는 %d 입니다.") , m_PDWData.iDataItems );
+    Log( enNormal, "PDW 개수는 %d 입니다." , m_PDWData.iDataItems );
 
 }
 
@@ -1403,6 +1426,20 @@ unsigned int C7PDW::GetHeaderSize()
     }
 
 	return m_iHeaderSize;
+}
+
+/**
+ * @brief		SetHeaderData
+ * @param		void * pData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/06/10 15:40:59
+ * @warning		
+ */
+void C7PDW::SetHeaderData( void *pData )
+{
+
 }
 
 /**
@@ -1715,7 +1752,7 @@ void CEIQ::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 // 		pIQ = (TNEW_IQ *) & m_pRawDataBuffer[iOffset];
 // 	}
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
 	m_IQData.iDataItems = 0;
 
@@ -1827,6 +1864,21 @@ void CEIQ::ReadDataHeader(void)
 
 
 }
+
+/**
+ * @brief		SetHeaderData
+ * @param		void * pData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/06/10 15:40:59
+ * @warning		
+ */
+void CEIQ::SetHeaderData( void *pData )
+{
+
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -2038,7 +2090,7 @@ CMIDAS::~CMIDAS(void)
  */
 void CMIDAS::Alloc( int iItems )
 {
-	Log( enNormal, _T("Alloc()을 [%d]개를 할당합니다.") , iItems );
+    Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , iItems );
 
 	m_PDWData.iDataItems = iItems;
 
@@ -2090,7 +2142,7 @@ void CMIDAS::Alloc( int iItems )
  */
 void CMIDAS::Free()
 {
-	Log( enNormal, _T("Free()를 해지합니다.") );
+    Log( enNormal, "Free()를 해지합니다." );
 
 	free(m_PDWData.pfFreq);
 	free(m_PDWData.pfPW);
@@ -2153,7 +2205,7 @@ void CMIDAS::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *
 	
 	m_PDWData.iDataItems = 0;
 
-    Log( enNormal, _T("ConvertArray()를 [%d]개를 변환합니다.") , m_RawData.uiDataItems );
+    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for( ui=0 ; ui < m_RawData.uiDataItems ; ++ui ) {
 		GetSubRecords( & strPDWRecords );
@@ -2348,6 +2400,21 @@ unsigned int CMIDAS::GetHeaderSize()
 
 	return m_iHeaderSize;
 }
+
+/**
+ * @brief		SetHeaderData
+ * @param		void * pData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/06/10 15:40:59
+ * @warning		
+ */
+void CMIDAS::SetHeaderData( void *pData )
+{
+
+}
+
 
 /**
  * @brief		GetOneDataSize
@@ -2592,13 +2659,11 @@ void CData::swapByteOrder(unsigned int& ui)
  */
 void CData::ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData )
 {
+#ifdef _FFTW_
 	int i;
 
 	float *psI, *psQ;
-
 	float *psFFT = pIQData->pfFFT;
-
-#ifdef _FFTW_
 
 	fftw_complex *pIn, *pOut;
 	fftw_complex *pP;
@@ -3034,10 +3099,10 @@ CData *CDataFile::ReadDataFile( char *pPathname, int iFileIndex, CData *pData, S
 	// 파일 닫기 처리
 	if( m_RawDataFile.GetFileHandler() != NULL ) {
 		m_RawDataFile.FileClose();
-		Log( enNormal, _T("파일을 닫습니다.") );
+        Log( enNormal, "파일을 닫습니다." );
 	}
 
-	Log( enNormal, _T("현재 위치[%d], 총 개수[%d]") , m_iFileIndex, iDataItems );
+    Log( enNormal, "현재 위치[%d], 총 개수[%d]" , m_iFileIndex, iDataItems );
 
 	return m_pData;
 
@@ -3067,7 +3132,7 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
     if( enUnitType == en_SONATA || enUnitType == en_KFX ) {
         if( enDataType == en_PDW_DATA) {
 
-            if( ! m_RawDataFile.FileOpen( pstPathname, O_CREAT | O_BINARY ) ) {
+       		if( ! m_RawDataFile.FileOpen( pstPathname, O_CREAT | O_BINARY ) ) {            		
                 //LOGMSG1( enWarning, _T("PDW 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
             }
             else {
@@ -3187,7 +3252,7 @@ UINT CDataFile::LoadRawData( CData *pData, int iFileIndex )
 	//UINT uiLengthOfHeader;
 
 	if( m_RawDataFile.FileOpen( m_szPathname, O_RDONLY | O_BINARY ) == TRUE ) {
-		Log( enNormal, _T("파일[%s]을 오픈합니다."), m_szPathname );
+        Log( enNormal, "파일[%s]을 오픈합니다.", m_szPathname );
 
 		// 1. 헤더 파일만 읽기
 		ReadDataHeader( pData );
@@ -3206,7 +3271,7 @@ UINT CDataFile::LoadRawData( CData *pData, int iFileIndex )
 
 	}
 	else {
-		Log( enError, _T("파일[%s]이 존재하지 않습니다."), m_szPathname );
+        Log( enError, "파일[%s]이 존재하지 않습니다.", m_szPathname );
 	}
 
 	return pData->m_RawData.uiDataItems;
@@ -3461,6 +3526,7 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char
 
         m_pData->m_RawData.uiDataItems = pPDWFile->uiSignalCount;
 
+        m_pData->SetHeaderData( pPDWFile );
         m_pData->ConvertArray( pPDWData, true );
     }
 

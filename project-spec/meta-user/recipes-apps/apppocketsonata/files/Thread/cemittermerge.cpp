@@ -1,3 +1,12 @@
+// CEmitterMerge.cpp: implementation of the CEmitterMerge class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include "cemittermerge.h"
 
 #include "csignalcollect.h"

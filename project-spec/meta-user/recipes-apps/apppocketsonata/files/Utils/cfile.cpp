@@ -1,28 +1,37 @@
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#include <io.h>
+
+#else
+#include <unistd.h>
+#endif
+
 #include "cfile.h"
 
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 
-unsigned int CFile::shareDenyNone=0;
-unsigned int CFile::typeBinary=0;
-unsigned int CFile::modeReadWrite=0;
-unsigned int CFile::modeRead=O_RDONLY;
-unsigned int CFile::modeCreate=O_CREAT;
+
+unsigned int CMyFile::shareDenyNone=0;
+unsigned int CMyFile::typeBinary=0;
+unsigned int CMyFile::modeReadWrite=0;
+unsigned int CMyFile::modeRead=O_RDONLY;
+unsigned int CMyFile::modeCreate=O_CREAT;
 
 /**
- * @brief CFile::CFile
+ * @brief CMyFile::CMyFile
  */
-CFile::CFile()
+CMyFile::CMyFile()
 {
     m_iFile = -1;
 }
 
 /**
- * @brief CFile::~CFile
+ * @brief CMyFile::~CMyFile
  */
-CFile::~CFile()
+CMyFile::~CMyFile()
 {
     if( m_iFile > 0 ) {
         close( m_iFile );
@@ -32,15 +41,19 @@ CFile::~CFile()
 }
 
 /**
- * @brief CFile::Open
+ * @brief CMyFile::Open
  * @param pstPathname
  * @param iMode
  */
-bool CFile::Open( const char *pstPathname, int iMode )
+bool CMyFile::Open( const char *pstPathname, int iMode )
 {
     bool bRet=true;
 
+#ifdef _MSC_VER
+    m_iFile = open( pstPathname, iMode );
+#else
     m_iFile = open( pstPathname, iMode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+#endif
 
     if( m_iFile < 0 ) {
         bRet = false;
@@ -51,12 +64,12 @@ bool CFile::Open( const char *pstPathname, int iMode )
 }
 
 /**
- * @brief CFile::Read
+ * @brief CMyFile::Read
  * @param pstBuffer
  * @param iLength
  * @return
  */
-int CFile::Read( void *pstBuffer, int iLength )
+int CMyFile::Read( void *pstBuffer, int iLength )
 {
     int iRead;
 
@@ -66,12 +79,12 @@ int CFile::Read( void *pstBuffer, int iLength )
 }
 
 /**
- * @brief CFile::Write
+ * @brief CMyFile::Write
  * @param pstBuffer
  * @param iLength
  * @return
  */
-int CFile::Write( void *pstBuffer, int iLength )
+int CMyFile::Write( void *pstBuffer, int iLength )
 {
     int iRead;
 
@@ -81,15 +94,15 @@ int CFile::Write( void *pstBuffer, int iLength )
 }
 
 /**
- * @brief CFile::Close
+ * @brief CMyFile::Close
  */
-void CFile::Close()
+void CMyFile::Close()
 {
     close( m_iFile );
 }
 
 
-unsigned int CFile::GetFileLength()
+unsigned int CMyFile::GetFileLength()
 {
     unsigned int uiSize;
 

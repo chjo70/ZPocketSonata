@@ -11,6 +11,8 @@
 
 #include "../SigAnal/Group.h"
 
+#include "KnownSigAnal.h"
+
 #ifdef __cplusplus
 
 class CKnownSigAnal;

@@ -7,8 +7,10 @@
  * @warning
  */
 
-#include "../SigAnal/stdafx.h"
-//#include "stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
 
 #include <vector>
 
@@ -31,13 +33,15 @@
 
 //#include "../ParamMngr.h"
 
-#include "./CInverseMethod.h"
+#include "./InverseMethod/CInverseMethod.h"
 
 #include "./ELStringDefn.h"
 
 #include "../../System/csysconfig.h"
 
-#include "UTM.h"
+#include "./UTM/UTM.h"
+
+#include "../../Utils/clog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -63,15 +67,18 @@ UINT CELEmitterMergeMngr::m_nSeqNum = 0;
  * @date      2016-01-29 오후 5:30
  * @warning
  */
-//CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread ) : CMSSQL( & m_theMyODBC )
+#ifdef _NO_SQLITE_
+CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
+#else
 CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
+#endif
 {
     m_CoInstance = 0;
 
     m_bDBThread = bDBThread;
 
 #ifdef _SQLITE_
-
+#elif _NO_SQLITE_
 #else
     // MSSQL 연결
     CMSSQL::Init();
@@ -128,7 +135,7 @@ void CELEmitterMergeMngr::RecoverThreat()
 CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
 {
 
-#ifndef _SQLITE_
+#ifndef _NO_SQLITE_
     m_theMyODBC.Close();
 #endif
 
@@ -150,18 +157,17 @@ void CELEmitterMergeMngr::AllocMemory()
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
-
     strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
 
-    //m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
-
 #elif defined(_MSSQL_)
     m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
 
-#else
+#elif _NO_SQLITE_
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
+
 #endif
 
     m_pUniThreat = ( UELTHREAT *) malloc( sizeof(UELTHREAT) * TOTAL_ITEMS_OF_THREAT_NODE );
@@ -473,9 +479,10 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
  */
 bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB, bool bCheckLOB )
 {
-    char szTaskID[LENGTH_OF_TASK_ID];
 
 #ifdef _POCKETSONATA_
+    //char szTaskID[LENGTH_OF_TASK_ID];
+
     printf( "[E%4d][B%4d] %d %.2f [ms]\n" ,
             pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
     Log( enNormal, "[E%4d][B%4d] %d %.2f [ms]" , pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
@@ -484,7 +491,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* p
 
 #endif
 
-
+    return true;
 
 }
 
@@ -956,18 +963,29 @@ void CELEmitterMergeMngr::IdentifyLOB( SRxLOBData *pLOBData )
 
     pLOBData->iRadarModeIndex = m_LOBDataExt.aetAnal.idInfo.nRadarModeIndex[0];
 
-    //pRadarName = m_pIdentifyAlg->GetRadarName( pLOBData->iRadarModeIndex );
-    //if( pRadarName != NULL ) {
-        //strcpy_s( pLOBData->aucRadarName, sizeof(pLOBData->aucRadarName), pRadarName );
-        //strcpy_s( pLOBData->aucRadarName, pRadarName );
-    //}
-    //else {
-    //    pLOBData->aucRadarName[0] = 0;
-    //}
+#ifdef _SQLITE_
+    pRadarName = m_pIdentifyAlg->GetRadarName( pLOBData->iRadarModeIndex );
+#elif _NO_SQLITE_
+#else
+    pRadarName = NULL;
 
-    //pLOBData->iThreatIndex = 0;
+#endif
+
+#if 0
+    if( pRadarName != NULL ) {
+        strcpy_s( pLOBData->aucRadarName, sizeof(pLOBData->aucRadarName), pRadarName );
+        strcpy_s( pLOBData->aucRadarName, pRadarName );
+    }
+    else {
+        pLOBData->aucRadarName[0] = 0;
+    }
+#endif
+
+    pLOBData->iThreatIndex = 0;
 
     //LogPrint("\n========================================== LOB Identify 시간 : %d ms(L%d)", (int)((GetTickCount() - dwTime) / 1), pLOBDataGrp->uiLOBID );
+
+
 
 }
 
@@ -1168,7 +1186,7 @@ void CELEmitterMergeMngr::DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelT
 #ifdef _MSC_VER
                 iCnt += sprintf_s( & chDelThreat[iCnt], sizeof(chDelThreat)-iCnt, "[A%d,B%d]", pVecDelThreatInfo->at((UINT) i).iAETID, pVecDelThreatInfo->at((UINT) i).iABTID );
 #else
-                iCnt += sprintf_s( & chDelThreat[iCnt], "[A%d,B%d]", pVecDelThreatInfo->at((UINT) i).iAETID, pVecDelThreatInfo->at((UINT) i).iABTID );
+                iCnt += sprintf( & chDelThreat[iCnt], "[A%d,B%d]", pVecDelThreatInfo->at((UINT) i).iAETID, pVecDelThreatInfo->at((UINT) i).iABTID );
 #endif
             }
             LogPrint( "방사체[%s] %d 개수를 미활동으로 처리 했습니다.", chDelThreat, nCoDelThreat );
@@ -2535,7 +2553,7 @@ void CELEmitterMergeMngr::UpdateABT( CELThreat *pTheABTThreat, SELAETDATA *pAETD
         pABTData = GetABTData( pTheABTThreat->m_nIndex );
         pABTExtData = GetABTExtData( pTheABTThreat->m_nIndex );
 
-        pABTData->tiLastSeenTime = _time32(NULL);
+        pABTData->tiLastSeenTime = time(NULL);
 
         //pABTExtData->bManualPosEstPreferred = pSELEmitterEdited->bManualPosEstPreferred;
 
@@ -3770,7 +3788,6 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
     AppendLOBs( nIndex );
 
     if( bLOiValidityApplied == true ) {
-
         // 위치 산출 호출
         ST_PEA->RunPositionEstimation( & stResult, pABTData, pABTExtData, pVecLOBs );
 
@@ -3796,10 +3813,10 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
                     pABTData->fLatitude = (float) stResult.dLatitude;
                     pABTData->fLongitude = (float) stResult.dLongitude;
 
-                    pABTData->fMajorAxis = (float) stResult.eep_major_axis;		// dEEPData[0] * 2.0;
-                    pABTData->fMinorAxis = (float) stResult.eep_minor_axis;			// dEEPData[1] * 2.0;
-                    pABTData->fTheta = (float) stResult.eep_theta;					// M2Map( (int) ( dEEPData[2]*10. ) );
-                    pABTData->fCEP = (float) stResult.cep_error;
+                    pABTData->fMajorAxis = (float) stResult.dEEP_major_axis;		// dEEPData[0] * 2.0;
+                    pABTData->fMinorAxis = (float) stResult.dEEP_minor_axis;			// dEEPData[1] * 2.0;
+                    pABTData->fTheta = (float) stResult.dEEP_theta;					// M2Map( (int) ( dEEPData[2]*10. ) );
+                    pABTData->fCEP = (float) stResult.dCEP_error;
 
                     // 위,경도 값 유효성 체크
 #ifdef _ELINT_
@@ -3842,18 +3859,25 @@ PlatformCode::EnumPlatformCode CELEmitterMergeMngr::CheckPlatform( SRxABTData *p
 
 }
 
+/**
+ * @brief CELEmitterMergeMngr::PushPEInfoOfABTData
+ * @param pABTExtData
+ * @param pABTData
+ */
 void CELEmitterMergeMngr::PushPEInfoOfABTData( SELABTDATA_EXT *pABTExtData, SRxABTData *pABTData )
 {
     double dEasting, dNorthing;
 
     if( pABTData->iPEValid == _spOne ) {
 #if defined(_UTM_POSITION_)
-        LatLonToUTMXY( pABTData->dLatitude, pABTData->dLongitude, UTM_ZONE, dEasting, dNorthing );
+        LatLonToUTMXY( pABTData->fLatitude, pABTData->fLongitude, UTM_ZONE, dEasting, dNorthing );
 #elif defined(_TM_POSITION_)
         m_theGeoCoordConv.SetSrcType(kWgs84, kGeographic );
         m_theGeoCoordConv.SetDstType(kWgs84, kTmWest );
         //m_theGeoCoordConv.Conv( *pLong, *pLat, *pX, *pY );
         m_theGeoCoordConv.Conv( (double) pABTData->fLongitude, (double) pABTData->fLatitude, dEasting, dNorthing );
+#elif defined(_ENU_POSITION_)
+
 #else
         에러 발생
 #endif
@@ -8780,7 +8804,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #ifdef _MSC_VER
     sprintf_s( buffer, sizeof(buffer), "select max(AETID) from ABTDATA" );
 #else
-    sprintf_s( buffer, "select max(AETID) from ABTDATA" );
+    sprintf( buffer, "select max(AETID) from ABTDATA" );
 #endif
     m_uiAETID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiAETID == 0 ) {
@@ -8794,9 +8818,10 @@ void CELEmitterMergeMngr::InitDataFromDB()
 // 	sprintf_s( buffer, sizeof(buffer), "SELECT max(AET_ID) FROM E_AA_MSG_LOB where MISSION_ID='%s' ", GetMissionID( _LINK1 ) );
 // #endif
 #ifdef _MSC_VER
-    sprintf_s( buffer, sizeof(buffer), "select max(LOBID) from LOBDATA where OP_INIT_ID=%d" , m_uiOpInitID );
-#else
+    //sprintf_s( buffer, sizeof(buffer), "select max(LOBID) from LOBDATA where OP_INIT_ID=%d" , m_uiOpInitID );
     sprintf_s( buffer, "select max(LOBID) from LOBDATA" );
+#else
+    sprintf( buffer, "select max(LOBID) from LOBDATA" );
 #endif
     m_uiLOBID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiLOBID == 0 ) {
@@ -8841,9 +8866,10 @@ void CELEmitterMergeMngr::InitDataFromDB()
 // 	//m_uiABTID = MakeUpperID( m_uiABTID );
 // 	m_uiABTID = m_uiAETID;
 #ifdef _MSC_VER
-    sprintf_s( buffer, sizeof(buffer), "select max(ABTID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
-#else
+    //sprintf_s( buffer, sizeof(buffer), "select max(ABTID) from ABTDATA where OP_INIT_ID=%d" , m_uiOpInitID );
     sprintf_s( buffer, "select max(ABTID) from ABTDATA" );
+#else
+    sprintf( buffer, "select max(ABTID) from ABTDATA" );
 #endif
     m_uiABTID = (unsigned int) GetINTData( buffer ) + 1;
     if( m_uiABTID == 0 ) {
@@ -10701,7 +10727,8 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
     }
 
     return iValue;
-
+#elif _NO_SQLITE_
+    return 0;
 #else
 
 
@@ -10729,7 +10756,7 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
               pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
 
     exec( m_szSQLString );
-
+#elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -10760,11 +10787,11 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
 void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode )
 {
     char buffer[100];
-    struct tm stTime;
+    struct tm *pstTime;
 
 #ifdef _SQLITE_
-    _localtime32_s( &stTime, & pLOBData->tiContactTime );
-    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+    pstTime = localtime( & pLOBData->tiContactTime );
+    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
     sprintf_s( m_szSQLString, "INSERT INTO LOBDATA ( \
                 LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, THREAT_INDEX, POLIZATION, RATIOOFPOL, \
                 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
@@ -10805,6 +10832,7 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
         m_pIdentifyAlg->UpdateRadarMode( pLOBData );
 
     }
+#elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -10872,7 +10900,7 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
               pABTData->fPRISeq[30], pABTData->fPRISeq[31] );
 
     exec( m_szSQLString );
-
+#elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -10904,15 +10932,15 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
 void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat )
 {
 #ifdef _SQLITE_
-    struct tm stTime;
+    struct tm *pstTime;
     char buffer1[100], buffer2[100], buffer3[100];
 
-    _localtime32_s(& stTime, & pABTData->tiFirstSeenTime );
-    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    _localtime32_s(&stTime, & pABTData->tiLastSeenTime );
-    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
-    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    pstTime = localtime( & pABTData->tiFirstSeenTime );
+    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    pstTime = localtime( & pABTData->tiLastSeenTime );
+    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    pstTime = localtime( & pABTData->tiFinalAlarmTime );
+    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
     sprintf_s( m_szSQLString, \
         "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
          PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
@@ -10960,14 +10988,14 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
     if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
 
-        _localtime32_s( & stTime, & nowTime );
-        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+        pstTime = localtime( & nowTime );
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
         // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
         sprintf_s( m_szSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
         exec( m_szSQLString );
     }
-
+#elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -11024,15 +11052,15 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB )
 {
 #ifdef _SQLITE_
-    struct tm stTime;
+    struct tm *pstTime;
     char buffer1[100], buffer2[100], buffer3[100];
 
-    _localtime32_s(& stTime, & pAETData->tiFirstSeenTime );
-    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    _localtime32_s(&stTime, & pAETData->tiLastSeenTime );
-    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    _localtime32_s(&stTime, & pAETData->tiFinalAlarmTime );
-    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
+    pstTime = localtime( & pAETData->tiFirstSeenTime );
+    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    pstTime = localtime( & pAETData->tiLastSeenTime );
+    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    pstTime = localtime( & pAETData->tiFinalAlarmTime );
+    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime );
     sprintf_s( m_szSQLString, "INSERT INTO AETDATA (AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
                                PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
                                RADARMODE_INDEX, THREAT_INDEX, \

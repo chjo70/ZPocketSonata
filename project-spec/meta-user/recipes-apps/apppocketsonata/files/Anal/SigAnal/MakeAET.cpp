@@ -2,7 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#ifdef _MSC_VER
 #include "stdafx.h"
+
+#endif
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -25,6 +28,9 @@
 #include <stdlib.h>
 
 #include "MakeAET.h"
+
+#include "../../Utils/clog.h"
+#include "../../Utils/ccommonutils.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -1285,8 +1291,6 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     float fDiff;
 
-    struct __timeb32 timeBuffer;
-
     STR_FRQ stFrq;
     STR_PRI stPri;
 
@@ -1303,15 +1307,15 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->uiAETID = 0;
 
     // 시간 정보
-#ifdef _WIN32
-    _ftime32_s( & timeBuffer );
-    pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
-    pLOBData->tiContactTimems = timeBuffer.millitm;
-#else
-    _ftime32_s( & timeBuffer );
-    pLOBData->tiContactTime = timeBuffer.time; // _time32(NULL);
-    pLOBData->tiContactTimems = timeBuffer.millitm;
+    struct timespec tsNow;
 
+    clock_gettime( CLOCK_REALTIME, & tsNow );
+
+    pLOBData->tiContactTime = tsNow.tv_sec;
+#ifdef _MSC_VER
+    pLOBData->tiContactTimems = tsNow.tv_usec;
+#else
+    pLOBData->tiContactTimems = tsNow.tv_nsec;
 #endif
 
     // 신호 형태
@@ -1324,7 +1328,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->fDOAMin = FAOACNV( stVal2.min );				//FTOAsCNV( stVal.max );
     fDiff = pLOBData->fDOAMax - pLOBData->fDOAMin;
     if( fDiff < 0 ) {
-        pLOBData->fDOADeviation = 360.0 + fDiff;
+        pLOBData->fDOADeviation = (float) 360.0 + fDiff;
     }
     else {
         pLOBData->fDOADeviation = fDiff;
@@ -1340,7 +1344,11 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     pLOBData->iFreqType = stFrq.type;
     pLOBData->iFreqPatternType = stFrq.patType;
-    pLOBData->fFreqPatternPeriod = FTOAsCNV( stFrq.patPrd );
+#ifdef _POCKETSONATA_
+    pLOBData->fFreqPatternPeriod = (float) FTOAsCNV( (_TOA) stFrq.patPrd );
+#else
+    pLOBData->fFreqPatternPeriod = FTOAsCNV( (_TOA) stFrq.patPrd );
+#endif
     pLOBData->fFreqMean = FFRQCNV( 0, stFrq.mean );
     pLOBData->fFreqMax = FFRQCNV( 0, stFrq.max );
     pLOBData->fFreqMin = FFRQCNV( 0, stFrq.min );
@@ -1356,7 +1364,11 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     pLOBData->iPRIType = stPri.type;
     pLOBData->iPRIPatternType = stPri.patType;
-    pLOBData->fPRIPatternPeriod = FTOAsCNV( stPri.patPrd );
+#ifdef _POCKETSONATA_
+    pLOBData->fPRIPatternPeriod = (float) FTOAsCNV( (_TOA) stPri.patPrd );
+#else
+    pLOBData->fPRIPatternPeriod = FTOAsCNV( (_TOA) stPri.patPrd );
+#endif    
     pLOBData->fPRIMean = TOAusCNV( stPri.mean );
     pLOBData->fPRIMax = TOAusCNV( stPri.max );
     pLOBData->fPRIMin = TOAusCNV( stPri.min );
@@ -1370,9 +1382,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     // 펄스폭 생성
     MakePWInfoInSeg( & stVal, pEmitter );
-    pLOBData->fPWMean = PWCNV( stVal.mean*1000. );			//, _spOneMicrosec );
-    pLOBData->fPWMax = PWCNV( stVal.max*1000. );				//, _spOneMicrosec );
-    pLOBData->fPWMin = PWCNV( stVal.min*1000. );				//, _spOneMicrosec );
+    pLOBData->fPWMean = PWCNV( stVal.mean*1000 );			//, _spOneMicrosec );
+    pLOBData->fPWMax = PWCNV( stVal.max*1000 );				//, _spOneMicrosec );
+    pLOBData->fPWMin = PWCNV( stVal.min*1000 );				//, _spOneMicrosec );
     pLOBData->fPWDeviation = pLOBData->fPWMax - pLOBData->fPWMin;
 
     // 신호 세기 생성

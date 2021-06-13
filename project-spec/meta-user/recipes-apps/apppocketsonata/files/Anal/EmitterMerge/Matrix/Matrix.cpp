@@ -7,7 +7,12 @@
  * @warning   
  */
 
-#include "../../SigAnal/stdafx.h"
+#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#include "stdafx.h"
+
+#endif
+
 #include "Matrix.h"
 
 CMatrix::CMatrix()
@@ -114,6 +119,10 @@ double CMatrix::get(const int r, const int c) const
 // assignment operator
 CMatrix& CMatrix::operator= (const CMatrix& a)
 {
+	if( rows != 0 ) {
+		CleanMatrix();
+	}
+
 	rows = a.rows;
 	cols = a.cols;
 	p = new double*[a.rows];
@@ -442,6 +451,7 @@ int CMatrix::GetCols() const
 // print the contents of the CMatrix
 void CMatrix::Print() const
 {
+#ifdef _MSC_VER	
 	if (p != NULL)
 	{
 		TRACE0("[");
@@ -470,6 +480,7 @@ void CMatrix::Print() const
 		// CMatrix is empty
 		TRACE0("[ ]\n");
 	}
+#endif	
 }
 
 
@@ -477,6 +488,12 @@ void CMatrix::Print() const
 CMatrix::~CMatrix()
 {
 	// clean up allocated memory
+	CleanMatrix();
+
+}
+
+void CMatrix::CleanMatrix()
+{
 	for (int r = 0; r < rows; r++)
 	{
 		/*! \debug  신뢰성: 메모리 할당된 영역 체크하여 해지하게 함.
@@ -538,6 +555,22 @@ CMatrix CMatrix::Ident(const int rows, const int cols)
 	}
 	return res;
 }
+
+CMatrix CMatrix::Transpose()
+{
+    CMatrix res = CMatrix(cols, rows );
+
+    for (int r = 1; r <= rows; r++)
+    {
+        for (int c = 1; c <= cols; c++)
+        {
+            res(c, r) = p[r-1][c-1];
+        }
+    }
+    return res;
+}
+
+
 /**
 * returns a CMatrix with size cols x rows with zeros as values
 */
@@ -661,6 +694,7 @@ void Swap(double& a, double& b)
 CMatrix Inv(const CMatrix& a, bool *pRet )
 {
 	CMatrix res;
+
 	/*! \bug  	float 자료형에서 동등성 비교연산을 수행하지 말아야 한다.
 	    \author 조철희 (churlhee.jo@lignex1.com)
 	    \date 	2014-01-24 16:12:37

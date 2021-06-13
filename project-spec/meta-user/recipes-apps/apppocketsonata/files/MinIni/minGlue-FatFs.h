@@ -1,4 +1,4 @@
-/*  Glue functions for the minIni library, based on the FatFs and Petit-FatFs
+﻿/*  Glue functions for the minIni library, based on the FatFs and Petit-FatFs
  *  libraries, see http://elm-chan.org/fsw/ff/00index_e.html
  *
  *  By CompuPhase, 2008-2019

@@ -24,13 +24,15 @@
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
+#ifndef _TOA_
+typedef unsigned long long int _TOA;
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 
-union UZPOCKETPDW
-{
-//#define uint32_t unsigned int
+union UZPOCKETPDW {
 
-    struct {
+    struct PDWWORD {
         //
         // 마지막 구조체 : 방위, 신호세기
         union {
@@ -101,7 +103,7 @@ union UZPOCKETPDW
             } stPdw_index;
         } uniPdw_index;
 
-    } ;
+    } x ;
 
     unsigned char chData[24];
 
@@ -214,6 +216,7 @@ struct _PDW {
 	int iPW;
 	int iPFTag;
 	int iAOA;
+    int iMOP;
 
 #ifdef _ELINT_
 	float fPh1;

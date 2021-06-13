@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 장치들간의 내부 메시지를 정의합니다. 메시지들간의 정의와 데이터를 나타냅니다.
  * */
 
@@ -7,6 +7,15 @@
 #define _STRUCT_H
 
 #include <time.h>
+
+#ifdef _MSC_VER
+//#include <sys/time.h>
+#include <winsock.h>
+
+#elif __VXWORKS__
+#include <sys/time.h>
+
+#endif
 
 #include "../Anal/SigAnal/_Macro.h"
 
@@ -95,6 +104,7 @@ struct STR_WINDOWCELL {
     STR_LOWHIGH strPW;
 
     struct timespec tsCollectStart;
+
 
     /**
      * @brief 실제 수집 시간 정보 [ms]

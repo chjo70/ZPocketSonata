@@ -1,4 +1,4 @@
-#ifndef CCOLLECTBANK_H
+﻿#ifndef CCOLLECTBANK_H
 #define CCOLLECTBANK_H
 
 #include "../../../Include/system.h"

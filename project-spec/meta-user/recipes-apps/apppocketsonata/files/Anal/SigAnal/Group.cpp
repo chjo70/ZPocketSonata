@@ -2,7 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#ifdef _MSC_VER
 #include "stdafx.h"
+
+#endif
 
 #ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -27,6 +30,8 @@
 #include <string.h>
 
 #include "Group.h"
+
+#include "../../Utils/clog.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -269,6 +274,9 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
         *pPw++ = pdw->iPW;
         *pFreq++ = pdw->iFreq;
         *pMark++ = UnMark;
+
+        //*pBand++ = 
+        //*pPmop++ = pdw->iFreq;
 
         //*pMaxChannel ++ = pdw->item.max_channel;
     }
@@ -516,7 +524,8 @@ void CGroup::MakeBandGroup()
     // 밴드 그룹화
     pBand = & m_pBAND[0];
     for( i=0 ; i < m_nCoPdw ; ++i ) {
-        m_Band[ *pBand ].pIndex[ m_Band[ *pBand ].count++ ] = i;	// Band 그룹화
+        //m_Band[ *pBand ].pIndex[ m_Band[ *pBand ].count++ ] = i;	// Band 그룹화
+        m_Band[ 0 ].pIndex[ m_Band[ 0 ].count++ ] = i;	// Band 그룹화
         ++ pBand;
     }
 }
@@ -540,7 +549,7 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     PDWINDEX *pShortPdwIndex;
     PDWINDEX *pNormalPdwIndex;
     //PDWINDEX *pChirpDnPdwIndex;
-    PDWINDEX *pFmopPdwIndex;
+    
     //PDWINDEX *pChirpUpPdwIndex;
 
     // 밴드 STAT 별 PDW 인덱스 포인터
@@ -555,6 +564,8 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
 
 #else
+    PDWINDEX *pFmopPdwIndex;
+
     pNormalPdwIndex = m_GrStat[STAT_NORMAL].pIndex;
     pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
     pChirpDnPdwIndex = m_GrStat[STAT_FMOP].pIndex;

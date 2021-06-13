@@ -181,10 +181,14 @@ public:
   // destructor
   ~CMatrix();
 
+  void CleanMatrix();
+
   int Size(const CMatrix& a, const int i);
   CMatrix Ones(const int rows, const int cols);
   CMatrix Zeros(const int rows, const int cols);
   CMatrix Ident(const int rows, const int cols);
+  
+  CMatrix Transpose();
   
 
 private:
@@ -192,6 +196,7 @@ private:
   int cols;
   double** p;     // pointer to a CMatrix with doubles
 };
+
 
  CMatrix Inv(const CMatrix& a, bool *pRet);
  double Det(const CMatrix& a);

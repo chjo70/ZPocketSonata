@@ -1,4 +1,4 @@
-#ifndef CARRAYMSGDATA_H
+﻿#ifndef CARRAYMSGDATA_H
 #define CARRAYMSGDATA_H
 
 #include "../Include/system.h"

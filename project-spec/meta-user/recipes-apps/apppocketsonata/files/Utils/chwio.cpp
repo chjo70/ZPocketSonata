@@ -1,12 +1,20 @@
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>		// open() �Լ�
-#include <sys/mman.h>   // mmap() �Լ�
 #include <stdlib.h>
+
+#ifdef __linux__
 #include <unistd.h> // read, write
 #include <endian.h>
+#include <sys/mman.h>   // mmap() �Լ�
 #include <sys/errno.h> // ENOMSG
 #include <sys/ioctl.h>
+#endif
 
 #ifndef __ZYNQ_BOARD__
 #define _SIM_USER_COLLECT_
@@ -41,6 +49,8 @@ void CHWIO::OpenHW()
 {
     xuio_t *pUIO;
 
+#ifdef __linux__
+
     /**
      * dev/mem open
      */
@@ -57,8 +67,8 @@ void CHWIO::OpenHW()
         int i;
         for (i=0; i<XMEM_COUNT; i++)
         {
-            if (xmem[i].physical > 0) {
-                xmem[i].logical = (uint64_t)mmap(0, xmem[i].size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, xmem[i].physical);
+            if (xmem[i].ulphysical > 0) {
+                xmem[i].ullogical = (uint64_t)mmap(0, xmem[i].uisize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, xmem[i].ulphysical);
             }
         }
         close( fd );
@@ -96,6 +106,8 @@ void CHWIO::OpenHW()
 
         dma_init( dma_dev_1, REG_UIO_DMA_1 );
     }
+#endif
+
 
 }
 
@@ -109,12 +121,12 @@ bool CHWIO::WriteReg(uint8_t sel, uint32_t offset, uint32_t value)
 {
     bool bRet = true;
 
-    if( sel >= XMEM_COUNT || xmem[sel].logical == 0) {
+    if( sel >= XMEM_COUNT || xmem[sel].ullogical == 0) {
         LOGMSG3( enError, "Error of WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
         bRet = false;
     }
     else {
-        *(volatile uint32_t *)(xmem[sel].logical + (offset)) = value;
+        *(volatile uint32_t *)(xmem[sel].ullogical + (offset)) = value;
         LOGMSG3( enNormal, "WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
 
     }
@@ -132,11 +144,11 @@ uint32_t CHWIO::ReadReg(uint8_t sel, uint32_t offset)
 {
     uint32_t uiVal = 0;
 
-    if (sel >= XMEM_COUNT || xmem[sel].logical == 0) {
+    if (sel >= XMEM_COUNT || xmem[sel].ullogical == 0) {
 
     }
     else {
-        uiVal = *(volatile uint32_t *)(xmem[sel].logical + (offset));
+        uiVal = *(volatile uint32_t *)(xmem[sel].ullogical + (offset));
     }
 
     return uiVal;
@@ -162,7 +174,7 @@ xmem_t *CHWIO::mem_get_mem(uint8_t sel)
 {
     xmem_t *pRet;
 
-    if (sel >= XMEM_COUNT && xmem[sel].logical == 0) {
+    if (sel >= XMEM_COUNT && xmem[sel].ullogical == 0) {
         printf( "\n error of mem_get_mem" );
         pRet = NULL;
     }
@@ -183,9 +195,9 @@ xmem_t *CHWIO::mem_get_mem(uint8_t sel)
 xmem_t CHWIO::mem_offset( xmem_t *mem, uint32_t offset )
 {
     xmem_t ret;
-    ret.physical = mem->physical + offset;
-    ret.logical = mem->logical + offset;
-    ret.size = 0;
+    ret.ulphysical = mem->ulphysical + offset;
+    ret.ullogical = mem->ullogical + offset;
+    ret.uisize = 0;
 
     return ret;
 }
@@ -200,12 +212,14 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
 
     int pending = 0;
 
-    fd_set set;
     struct timeval timeout;
     int rv;
 
     printf( "\n uio->fd[%d]\n", uio->fd );
     if( uio->fd != -1 ) {
+#ifdef __linux__
+        fd_set set;
+
         FD_ZERO( & set ); /* clear the set */
         FD_SET( uio->fd, & set ); /* add our file descriptor to the set */
 
@@ -223,6 +237,7 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
         else {
             (void) read(uio->fd, (void *)&pending, sizeof(int));
         }
+#endif
     }
     else {
 #ifdef _SIM_USER_COLLECT_
@@ -232,7 +247,7 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
 
         iModular = m_uiCoInterrupt % 50;
 
-        if( iModular <= 4 ) {
+        if( iModular <= 40 ) {
             bRet = true;
         }
         else {
@@ -261,11 +276,13 @@ void CHWIO::ClearInterrupt(xuio_t *uio)
     switch( uio->physical ) {
         case UIO_DMA_1_ADDR :
             {
+#ifdef __ZYNQ_BOARD__
                 //printf( "dma_s2mm_stop .........\n" );
                 dma_s2mm_stop( dma_dev_1 );
 
                 //printf( "dma_s2mm_irq_clear .........\n" );
                 dma_s2mm_irq_clear( dma_dev_1 );
+#endif
             }
             break;
 

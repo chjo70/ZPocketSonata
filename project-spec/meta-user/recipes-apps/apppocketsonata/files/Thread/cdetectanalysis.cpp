@@ -1,3 +1,12 @@
+// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include "cdetectanalysis.h"
 #include "cemittermerge.h"
 #include "csignalcollect.h"

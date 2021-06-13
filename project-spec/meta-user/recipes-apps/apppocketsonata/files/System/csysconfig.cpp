@@ -1,14 +1,24 @@
+// CSysConfig.cpp: implementation of the CSysConfig class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __linux__
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
 #include <sys/ioctl.h>
-#include <sys/ioctl.h>
 #include <net/if.h>
 #include <arpa/inet.h>
+#endif
 
 #include "csysconfig.h"
 
@@ -215,12 +225,16 @@ void CSysConfig::SetNetworkIP()
  */
 bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
 {
-    bool bRet=true;
+    bool bRet=false;
+
+#ifdef __linux__
     struct ifreq ifr;
 
     char szError[100];
 
     int s;
+
+    bRet = true;
 
     s = socket( AF_INET, SOCK_DGRAM, 0 );
     strncpy( ifr.ifr_name, pNetworkName, IFNAMSIZ );
@@ -238,6 +252,7 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
         //sprintf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //printf("myOwn IP Address is %s\n", ipstr);
     }
+#endif
 
     return bRet;
 }

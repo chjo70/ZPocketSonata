@@ -119,8 +119,8 @@ public:
     virtual void ClearAllMark()=0;
 
 
-    template <typename T=_TOA>
-    UINT CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+    template <typename T>
+    T CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
         T harmonic;
         T max_mean, min_mean;
 
@@ -134,7 +134,7 @@ public:
         }
 
         if( strcmp( typeid(T).name(), "float" ) == 0 )
-            harmonic = fmod( max_mean, min_mean );
+            harmonic = fmod( (float) max_mean, (float) min_mean );
         else
             harmonic = max_mean % min_mean;
 

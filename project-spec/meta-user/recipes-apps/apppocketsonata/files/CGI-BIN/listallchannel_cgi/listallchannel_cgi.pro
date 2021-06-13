@@ -18,37 +18,37 @@ SOURCES += \
     ../../Anal/Collect/DataFile/DataFile.cpp \
     ../../Anal/Collect/ccollectbank/ccollectbank.cpp \
     ../../Anal/MIDAS/RawFile.cpp \
-        ../../System/csharedmemory.cpp \
+    ../../System/csharedmemory.cpp \
     ../../System/csysconfig.cpp \
     ../../Utils/ccommonutils.cpp \
     ../../Utils/clog.cpp \
-../Qdecoder/md5/md5c.c \
-../Qdecoder/mkstemp.c \
-../Qdecoder/qArg.c \
-../Qdecoder/qAwk.c \
-../Qdecoder/qCount.c \
-../Qdecoder/qDecoder.c \
-../Qdecoder/qDownload.c \
-../Qdecoder/qEncode.c \
-../Qdecoder/qEnv.c \
-../Qdecoder/qError.c \
-../Qdecoder/qFile.c \
-../Qdecoder/qHttpHeader.c \
-../Qdecoder/qInternalCommon.c \
-../Qdecoder/qInternalEntry.c \
-../Qdecoder/qMisc.c \
-../Qdecoder/qSed.c \
-../Qdecoder/qSession.c \
-../Qdecoder/qString.c \
-../Qdecoder/qTime.c \
-../Qdecoder/qValid.c \
-../Qdecoder/qfDecoder.c \
-../Qdecoder/qsDecoder.c \
-../Qdecoder/snprintf.c \
-../Qdecoder/strcasecmp.c \
-../Qdecoder/strptime.c \
-../Qdecoder/timegm.c \
-        main.cpp
+    ../Qdecoder/md5/md5c.c \
+    ../Qdecoder/mkstemp.c \
+    ../Qdecoder/qArg.c \
+    ../Qdecoder/qAwk.c \
+    ../Qdecoder/qCount.c \
+    ../Qdecoder/qDecoder.c \
+    ../Qdecoder/qDownload.c \
+    ../Qdecoder/qEncode.c \
+    ../Qdecoder/qEnv.c \
+    ../Qdecoder/qError.c \
+    ../Qdecoder/qFile.c \
+    ../Qdecoder/qHttpHeader.c \
+    ../Qdecoder/qInternalCommon.c \
+    ../Qdecoder/qInternalEntry.c \
+    ../Qdecoder/qMisc.c \
+    ../Qdecoder/qSed.c \
+    ../Qdecoder/qSession.c \
+    ../Qdecoder/qString.c \
+    ../Qdecoder/qTime.c \
+    ../Qdecoder/qValid.c \
+    ../Qdecoder/qfDecoder.c \
+    ../Qdecoder/qsDecoder.c \
+    ../Qdecoder/snprintf.c \
+    ../Qdecoder/strcasecmp.c \
+    ../Qdecoder/strptime.c \
+    ../Qdecoder/timegm.c \
+    main.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -2,7 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#ifdef _MSC_VER
 #include "stdafx.h"
+
+#endif
 
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
@@ -25,6 +28,8 @@
 #include <stdlib.h>
 
 #include "PulExt.h"
+
+#include "../../Utils/clog.h"
 
 char gszPulseTrainMark[CHECKED_SEG+1] = { '#', 'X', 'M', 'C' };
 
@@ -4156,7 +4161,7 @@ void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
     char szBuffer[5000];
 
     for( i=1 ; i < pSeg->pdw.count && i < m_nMaxPdw ; ++i ) {
-#ifdef _WIN32
+#ifdef _MSC_VER
         iCnt += sprintf_s( & szBuffer[iCnt], sizeof(szBuffer)-iCnt, ",%3d" , pSeg->pdw.pIndex[i] );
 #else
         iCnt += sprintf( & szBuffer[iCnt], ",%3d" , pSeg->pdw.pIndex[i] );

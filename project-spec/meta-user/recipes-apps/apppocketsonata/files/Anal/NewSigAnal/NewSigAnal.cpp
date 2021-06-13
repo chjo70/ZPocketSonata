@@ -2,7 +2,14 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../SigAnal/stdafx.h"
+#ifdef _MSC_VER
+#include "stdafx.h"
+
+#else
+#include <unistd.h>
+
+#endif
+//#include "../SigAnal/stdafx.h"
 
 #ifdef _USRDLL
 
@@ -17,7 +24,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+
 
 
 #include "../OFP_Main.h"
@@ -61,6 +68,8 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw ) // : CMSSQL( & m_theMyODBC )
     m_pSeg = GetPulseSeg();
 
     m_CoPdw = 0;
+
+    m_uiStep = 0;
 
     // 그룹화 초기화
     m_theGroup->CNGroup::Init();

@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../Anal/SigAnal/_Type.h"
+
 #define		MIN_LISTITEMSOF_LOB					(100)
 #define		DELTA_DISTANCE_BT_POINT_AND_POINT			(20)
 #define		FTP_FOLDER						"c:/"

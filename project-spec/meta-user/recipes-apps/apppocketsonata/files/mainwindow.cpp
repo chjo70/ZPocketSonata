@@ -13,6 +13,8 @@
 #include <fcntl.h>
 #include <qcolor.h>
 
+#include "./Utils/cfile.h"
+
 enum enTableHeader {
     enNoAET=0,
     enFirstSeen,
@@ -1007,7 +1009,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 {
     int iRet;
 
-    CFile theRawDataFile;
+    CMyFile theRawDataFile;
     STR_LAN_HEADER strLanHeader;
 
     UINT uiFilelength;

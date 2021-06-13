@@ -1,4 +1,4 @@
-#ifndef CSYSCONFIG_H
+﻿#ifndef CSYSCONFIG_H
 #define CSYSCONFIG_H
 
 #include "../Anal/INC/system.h"

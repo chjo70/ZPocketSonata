@@ -1,8 +1,13 @@
 #ifndef CSINGLESERVER_H
 #define CSINGLESERVER_H
 
+#ifdef __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
+#elif __VXWORKS__
+#include <netinet/in.h>
+#else
+#endif
 
 
 #include "../Include/system.h"

@@ -2,14 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-// PC용 상위 클래스에 전달하기 위한 선언
 #ifdef _MSC_VER
-#include "../../A50SigAnal/stdafx.h"
-#include "../../A50SigAnal/A50SigAnal.h"
+#include "stdafx.h"
 
-#include "../../A50SigAnal/MainFrm.h"
-#include "../../A50SigAnal/A50SigAnalDoc.h"
-#include "../../A50SigAnal/A50SigAnalView.h"
 #endif
 
 #include <stdio.h>

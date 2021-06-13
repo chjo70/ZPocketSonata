@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <time.h>
+
 // 방탐 분산값
 // Analytic CEP를 계산하기 위한 측정값
 #define AOA_VARIANCE									(1)						// 단위 : degree
@@ -68,43 +70,48 @@ struct SELPositionEstimationResult {
 struct SELSensorPosition {
 	double *pLatitude;		// 단위 : degree
 	double *pLongitude;		// 단위 : degree
+	double *pAltitude;		// 단위 : meter
 
-	double *pUTMX;
-	double *pUTMY;
+	int iCollectorID;
+
+	double *pX;
+	double *pY;
+    double *pH;
 
 	double *pLob;				// 단위 : degree
 	time_t *pTime;				// 단위 : 초
 
 	bool *pValid;					// LOB 유효 플레그
 
-	UINT n;
+    unsigned int n;
 
 }  ;
 
 
 /*!
- * @typedef   SELPE_RESULT
+ * @typedef   SELUTM
  * @brief		UTM계 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @date      2013-09-09 오후 5:44
  */
-struct SELPE_RESULT {
-	double dLongitude;			// 경도
-	double dLatitude;			// 위도
+typedef struct {
+	double dLongitude;			// 경도 [도]
+	double dLatitude;			// 위도 [도]
+	double dAltitude;			// 고도 [m]
 
 	double dEasting;
 	double dNorthing;
 
 	//unsigned int time_sec;
 
-	double eep_major_axis;
-	double eep_minor_axis;
-	double eep_theta;
-	double cep_error;
+	double dEEP_major_axis;     // [m]
+	double dEEP_minor_axis;     // [m]
+	double dEEP_theta;          // [도]
+	double dCEP_error;          // [m]
 
 	bool bResult;
 
-} ;
+} SELPE_RESULT ;
 
 /*!
  * @typedef   VECTOR

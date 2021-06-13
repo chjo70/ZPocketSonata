@@ -1,4 +1,4 @@
-#ifndef CSIGNALCOLLECT_H
+﻿#ifndef CSIGNALCOLLECT_H
 #define CSIGNALCOLLECT_H
 
 
