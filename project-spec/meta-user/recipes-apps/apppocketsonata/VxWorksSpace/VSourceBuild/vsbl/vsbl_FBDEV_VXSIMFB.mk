@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# FBDEV_VXSIMFB Section
+##########################
+
+
+ifdef _WRS_CONFIG_FBDEV_VXSIMFB
+VSBL_FBDEV_VXSIMFB_SRC = 
+VSBL_FBDEV_VXSIMFB_DEPEND = 
+
+ifdef _WRS_CONFIG_FBDEV_1_0_0_2_VXSIMFB_1_0_4_0
+VSBL_FBDEV_VXSIMFB_SRC += FBDEV_VXSIMFB
+VSBL_FBDEV_VXSIMFB_DEPEND += FBDEV_COMMON
+FBDEV_VXSIMFB_FASTBUILD = YES
+VSBL_FBDEV_VXSIMFB_PATH = $(WIND_BASE)/pkgs/ui/fbdev-1.0.0.2/vxsim-1.0.4.0
+VSBL_FBDEV_VXSIMFB_VERSION = FBDEV_1_0_0_2_VXSIMFB_1_0_4_0
+endif
+endif
+

@@ -1,0 +1,5 @@
+WRTargetCentricContentManipulationPage.showallprojects=true
+com.windriver.pb.ui.views.WRProjectExplorer.projectLayout=1
+eclipse.preferences.version=1
+wrbuild.disabled_errors_parser_ids=org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.VCErrorParser
+wrbuild.errors_parser_ids=org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;com.windriver.cdt.ui.xcc.XCCErrorParser;com.windriver.cdt.ui.llvm.llvmErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.CWDLocator;com.windriver.cdt.ui.diab.dccErrorParser;com.windriver.cdt.ui.verocell.VerocellErrorParser;com.windriver.cdt.ui.Make4CWDLocator;com.windriver.cdt.ui.llvm.llvmLinkErrorParser;com.windriver.cdt.ui.icc.ICCErrorParser;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.VCErrorParser;com.windriver.cdt.ui.spc.SPCErrorParser;com.windriver.cdt.ui.diab.dldErrorParser;org.eclipse.cdt.core.GCCErrorParser

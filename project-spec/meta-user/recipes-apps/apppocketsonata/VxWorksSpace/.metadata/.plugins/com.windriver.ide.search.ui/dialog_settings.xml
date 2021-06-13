@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.windriver.ide.search.ui.internal.text.RetrieverPage">
+		<item value="549" key="splitter.w1"/>
+		<item value="450" key="splitter.w2"/>
+		<list key="file-patterns.combo">
+			<item value="*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx,*.mk,Makefile"/>
+			<item value="*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx;Makefile;*.mk"/>
+			<item value="*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx"/>
+			<item value="*.java,*.mf,*.properties,*.xml"/>
+		</list>
+		<list key="replacement-string.combo">
+		</list>
+		<list key="search-string.combo">
+			<item value="CompTOAMeanDiff"/>
+			<item value="__INCmathh"/>
+			<item value="tr1"/>
+			<item value="dosFsVolFormat"/>
+			<item value="TICK_COUNT"/>
+			<item value="SetTimeBySNMP"/>
+			<item value="ramdisk_address"/>
+			<item value="USER_RESERVED_MEM"/>
+			<item value="MIB2IF_LONG_COUNTERS"/>
+			<item value="Getche"/>
+			<item value="ROOT_DIR"/>
+			<item value="WEBS_HTTP_PORT"/>
+		</list>
+		<list key="scope-history">
+			<item value="Workspace"/>
+			<item value="Project VSourceBuild"/>
+			<item value="Project VBootShell"/>
+		</list>
+		<list key="filter-pattern.combo">
+		</list>
+		<section name="search-scope">
+			<item value="false" key="includeExternalIndex"/>
+		</section>
+		<section name="scope-history-Project VSourceBuild">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VSourceBuild"/>
+			</list>
+		</section>
+		<section name="scope-history-Project VBootShell">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VBootShell"/>
+			</list>
+		</section>
+	</section>
+</section>

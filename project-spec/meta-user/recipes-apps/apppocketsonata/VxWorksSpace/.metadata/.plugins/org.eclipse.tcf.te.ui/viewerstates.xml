@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewerStates>
+<viewerState id="org.eclipse.tcf.te.ui.controls.viewer.fs.dd468617-a74d-41d4-a8d3-3954ee51286f">
+<column id="name" order="0" visible="true" width="516"/>
+<column id="size" order="1" visible="true" width="172"/>
+<column id="type" order="3" visible="false" width="100"/>
+<column id="modified" order="2" visible="true" width="208"/>
+<column id="accessed" order="5" visible="false" width="120"/>
+<filter enabled="true" id="com.windriver.te.tcf.ui.vxw.navigator.filter.HostFSFilter"/>
+<filter enabled="true" id="org.eclipse.tcf.te.tcf.filesystem.navigator.filter.hiddenFiles"/>
+</viewerState>
+<viewerState id="org.eclipse.tcf.te.ui.controls.viewer.fs.c3d72177-0adf-4667-b1c5-5590409e9ed2">
+<column id="name" order="0" visible="true" width="658"/>
+<column id="size" order="1" visible="true" width="219"/>
+<column id="type" order="3" visible="false" width="100"/>
+<column id="modified" order="2" visible="true" width="265"/>
+<column id="accessed" order="5" visible="false" width="120"/>
+<filter enabled="true" id="com.windriver.te.tcf.ui.vxw.navigator.filter.HostFSFilter"/>
+<filter enabled="true" id="org.eclipse.tcf.te.tcf.filesystem.navigator.filter.hiddenFiles"/>
+</viewerState>
+<viewerState id="org.eclipse.tcf.te.ui.controls.viewer.fs.df1ae4bb-d680-4955-b4a9-04125a347a17">
+<column id="name" order="0" visible="true" width="534"/>
+<column id="size" order="1" visible="true" width="178"/>
+<column id="type" order="3" visible="false" width="100"/>
+<column id="modified" order="2" visible="true" width="215"/>
+<column id="accessed" order="5" visible="false" width="120"/>
+<filter enabled="true" id="com.windriver.te.tcf.ui.vxw.navigator.filter.HostFSFilter"/>
+<filter enabled="true" id="org.eclipse.tcf.te.tcf.filesystem.navigator.filter.hiddenFiles"/>
+</viewerState>
+</viewerStates>

@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\SQLite">
+      <UniqueIdentifier>{e6f655f8-b122-4758-a633-36aa49549fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utils">
+      <UniqueIdentifier>{753147fa-bde0-47d5-a4a2-263dbd3bd25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Thread">
+      <UniqueIdentifier>{2f9c7aca-1483-4764-98b6-f756b890975b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\System">
+      <UniqueIdentifier>{5d1bdf36-4264-4609-82ef-c1b714d5122e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal">
+      <UniqueIdentifier>{9d50c2d6-43ef-4076-b9f8-d55d4412fe8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\MIDAS">
+      <UniqueIdentifier>{dbce125c-6b62-4d8a-aa6f-988d639e0085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\KnownSigAnal">
+      <UniqueIdentifier>{744e46e0-a8f9-4bc0-b293-67623f683600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include">
+      <UniqueIdentifier>{474317b8-497d-4d0c-b9b3-c284748e7746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Collect">
+      <UniqueIdentifier>{fb4e774a-69b9-4863-8acb-7e12fa6c2cea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Collect\collectbank">
+      <UniqueIdentifier>{c63d4902-3db3-4887-8b1d-0c80624d3d4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Collect\DataFile">
+      <UniqueIdentifier>{fa36ea95-bb30-4127-88ea-33829b6b6f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge">
+      <UniqueIdentifier>{db52a57b-d3a7-4ac3-8816-beb1062b80d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Identify">
+      <UniqueIdentifier>{41ac78cc-ffe5-4fc4-94e8-802bd0874bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\CEP">
+      <UniqueIdentifier>{64c706f6-78bf-4afe-9274-acbf6d82b745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\Coordinate">
+      <UniqueIdentifier>{58650379-148f-4dc7-8952-05ae15678363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\DistanceLeastSquare">
+      <UniqueIdentifier>{5f24c5e6-3000-4338-9722-e36ddc5032e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\GeoCoordConv">
+      <UniqueIdentifier>{6bd48a3b-6a5a-43bc-ab9f-14c6edfee120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
+      <UniqueIdentifier>{6e87eee3-8f99-4cf0-ac6d-4f81f87498fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\LinearLS">
+      <UniqueIdentifier>{d0e610e2-9962-4f31-afbc-392a74a74d6f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\cmain.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Assertion.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Backup.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Column.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Database.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Exception.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\ExecuteMany.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\SQLiteCpp.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Statement.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Transaction.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Utils.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\VariadicBind.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\carraymsgdata.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cfile.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cgpio.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\chwio.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clog.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cmultiserver.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cqueue.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\csingleclient.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\csingleserver.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cthread.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\stdstring.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\ccgi.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cdetectanalysis.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cemittermerge.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cjamtech.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cprompt.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cpulsetrk.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\creclan.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cscananalysis.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\csignalcollect.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\ctaskmngr.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\ctrackanalysis.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\curbit.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\cusercollect.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csharedmemory.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csysconfig.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDW2SP370.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDWIQ.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KDefine.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KGroup.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KMakeAET.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KnownSigAnal.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KPulExt.h">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\defines.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\global.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\struct.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\sysmsg.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\system.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\thrmsg.h">
+      <Filter>소스 파일\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h">
+      <Filter>소스 파일\Anal\Collect\collectbank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELDecoder.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEOBLibDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELGMIMsgDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintRsltDataTypedb.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintTaskDataTypedb.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELMsgDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELOperationCtrlDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELPosEstDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELStringDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELThreat.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Geo2UTM.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\IsNumber.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LatLong-UTMconversion.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LOBClustering.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimation.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Stack.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\define.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\Identify.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\structs.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h">
+      <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.h">
+      <Filter>소스 파일\Anal\EmitterMerge\Coordinate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\MatrixConverter.h">
+      <Filter>소스 파일\Anal\EmitterMerge\Coordinate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.h">
+      <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.h">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\VincentyParam.h">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LinearLS\LinearLS.h">
+      <Filter>소스 파일\Anal\EmitterMerge\LinearLS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="VSIGA.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\cmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Backup.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Column.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Database.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Exception.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Statement.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\Transaction.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cfile.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cgpio.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\chwio.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\csingleclient.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\csingleserver.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cthread.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\programrev.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\ccgi.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cdetectanalysis.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cemittermerge.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cjamtech.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cprompt.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cpulsetrk.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\creclan.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cscananalysis.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\csignalcollect.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\ctaskmngr.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\ctrackanalysis.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\curbit.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cusercollect.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csysconfig.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\PDW2SP370.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.cpp">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KGroup.cpp">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KMakeAET.cpp">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KnownSigAnal.cpp">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KPulExt.cpp">
+      <Filter>소스 파일\Anal\KnownSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp">
+      <Filter>소스 파일\Anal\Collect\collectbank</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELThreat.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\LOBClustering.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\Coordinate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\LinearLS\LinearLS.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\LinearLS</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

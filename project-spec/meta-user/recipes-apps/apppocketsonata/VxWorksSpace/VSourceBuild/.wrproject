@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wrxml>
+    <properties platform="VxWorks7" platform_name="vxworks-7" root="1" type="VxWorksSourceBuildProject"/>
+    <attributes>
+        <mapAttribute>
+            <intAttribute key="BuildSupportEnabled" value="2"/>
+            <stringAttribute key="BLD::Info|cmd" value="make"/>
+            <intAttribute key="BLD::Info|refreshType" value="3"/>
+            <listAttribute key="BLD::Info|GlobalMacros">
+                <stringAttribute value="VSB_DIR"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|GlobalMacro|VSB_DIR" value="$(PRJ_ROOT_DIR)"/>
+        </mapAttribute>
+    </attributes>
+    <buildtargets>
+        <buildtarget name="PRENOBUILD" passed="false" targetname="PRENOBUILD"/>
+    </buildtargets>
+</wrxml>

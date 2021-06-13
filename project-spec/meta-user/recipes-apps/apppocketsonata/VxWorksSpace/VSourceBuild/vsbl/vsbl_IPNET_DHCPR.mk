@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# IPNET_DHCPR Section
+##########################
+
+
+ifdef _WRS_CONFIG_IPNET_DHCPR
+VSBL_IPNET_DHCPR_SRC = 
+VSBL_IPNET_DHCPR_DEPEND = 
+
+ifdef _WRS_CONFIG_IPNET_1_1_1_2_DHCPR_1_0_0_7
+VSBL_IPNET_DHCPR_SRC += IPNET_DHCPR
+VSBL_IPNET_DHCPR_DEPEND += IPNET_COREIP
+VSBL_IPNET_DHCPR_DEPEND += SEC_HASH
+IPNET_DHCPR_FASTBUILD = YES
+VSBL_IPNET_DHCPR_PATH = $(WIND_BASE)/pkgs/net/ipnet-1.1.1.2/app/dhcpr-1.0.0.7
+VSBL_IPNET_DHCPR_VERSION = IPNET_1_1_1_2_DHCPR_1_0_0_7
+endif
+endif
+

@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\UnTar">
+      <UniqueIdentifier>{4f1014a1-147c-4711-9413-1f35c6614dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\WebServer">
+      <UniqueIdentifier>{3ceadff9-c611-42e9-8533-53d02283a7ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="VBootShell\BootShell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\BootShellMain.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\ManSbc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\Untar\FileTar.cpp">
+      <Filter>소스 파일\UnTar</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\asp.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\balloc.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\base64.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\cgi.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\default.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\ejlex.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\ejparse.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\emfdb.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\form.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\h.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\handler.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\main.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\md5c.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\mime.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\misc.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\mocana_ssl.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\page.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\ringq.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\rom.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\security.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\sock.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\sockGen.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\strdup.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\strncasecmp.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\sym.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\uemf.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\um.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\umui.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\url.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\value.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\webrom.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\webs.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\websda.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="VBootShell\WebServer\websuemf.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VBootShell\BootShell.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\BootShellMain.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\ManSbc.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\Untar\FileTar.h">
+      <Filter>소스 파일\UnTar</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\ej.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\ejIntrn.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\emfdb.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\md5.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\mkstemp.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\strdup.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\strncasecmp.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\uemf.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\um.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\webs.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\websda.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="VBootShell\WebServer\wsIntrn.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

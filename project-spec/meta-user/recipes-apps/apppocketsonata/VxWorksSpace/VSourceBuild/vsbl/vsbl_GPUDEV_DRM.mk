@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# GPUDEV_DRM Section
+##########################
+
+
+ifdef _WRS_CONFIG_GPUDEV_DRM
+VSBL_GPUDEV_DRM_SRC = 
+VSBL_GPUDEV_DRM_DEPEND = 
+
+ifdef _WRS_CONFIG_GPUDEV_1_0_0_2_DRM_4_9_0_1
+VSBL_GPUDEV_DRM_SRC += GPUDEV_DRM
+VSBL_GPUDEV_DRM_DEPEND += GPUDEV_LIBDRM
+GPUDEV_DRM_FASTBUILD = YES
+GPUDEV_DRM_FRIEND = GPUDEV_ITLI915 GPUDEV_SAMPLEDRM
+VSBL_GPUDEV_DRM_PATH = $(WIND_BASE)/pkgs/ui/gpudev-1.0.0.2/drm-4.9.0.1
+VSBL_GPUDEV_DRM_VERSION = GPUDEV_1_0_0_2_DRM_4_9_0_1
+endif
+endif
+

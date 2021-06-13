@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# SHELL_VXTEST Section
+##########################
+
+
+ifdef _WRS_CONFIG_SHELL_VXTEST
+VSBL_SHELL_VXTEST_SRC = 
+VSBL_SHELL_VXTEST_DEPEND = 
+
+ifdef _WRS_CONFIG_SHELL_1_1_6_1_VXTEST_1_0_0_1
+VSBL_SHELL_VXTEST_SRC += SHELL_VXTEST
+VSBL_SHELL_VXTEST_DEPEND += CORE_KERNEL_VXTEST
+SHELL_VXTEST_FASTBUILD = YES
+VSBL_SHELL_VXTEST_PATH = $(WIND_BASE)/pkgs/os/utils/shell-1.1.6.1/vxTest
+VSBL_SHELL_VXTEST_VERSION = SHELL_1_1_6_1_VXTEST_1_0_0_1
+endif
+endif
+

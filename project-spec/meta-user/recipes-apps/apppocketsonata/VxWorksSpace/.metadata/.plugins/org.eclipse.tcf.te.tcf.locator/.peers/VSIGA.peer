@@ -1,0 +1,16 @@
+{
+  "Host": "192.168.10.50",
+  "ID": "c3d72177-0adf-4667-b1c5-5590409e9ed2",
+  "KernelImage": "D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSIGA/VSourceBuild_PPCE6500gnu_SMP/VSIGA/Debug/VSIGA.out",
+  "Mode": "run",
+  "Name": "VSIGA",
+  "OfflineServices": "RunControl,PathMap,MemoryMap,WR_HostFsV1,WR_Module,Processes,ProcessesV1,SysMonitor,FileSystem",
+  "Port": "1534",
+  "SubType": "real",
+  "TempDir": "C:/Users/ELS/AppData/Local/Temp/",
+  "TransportName": "TCP",
+  "Type": "vxworks",
+  "Version": "1.0.0",
+  "autoConnect": "true",
+  "autoStartDebugger": "true"
+}

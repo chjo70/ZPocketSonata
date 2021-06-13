@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+	<configuration id="org.eclipse.cdt.core.default.config.754910741" name="Configuration">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider id="org.eclipse.cdt.ui.UserLanguageSettingsProvider">
+				<language id="com.windriver.cdt.core.wrGnuCpp">
+					<resource project-relative-path="">
+						<entry kind="macro" name="POST_BUILD_STEP" value="dir"/>
+					</resource>
+				</language>
+			</provider>
+		</extension>
+	</configuration>
+</project>

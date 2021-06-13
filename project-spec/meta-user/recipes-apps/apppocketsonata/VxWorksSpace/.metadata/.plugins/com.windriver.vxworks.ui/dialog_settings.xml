@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="VSBKConfigEditor_vxconfig">
+		<item value="true" key="showChoiceItems"/>
+		<item value="false" key="showAll"/>
+		<item value="false" key="autoReszeColumns"/>
+		<item value="VxWorks Global Configuration Options for BSP hmt_t2080vpx3u" key="selected"/>
+		<list key="expanded">
+			<item value="app"/>
+			<item value="myQspiFlash"/>
+			<item value="vip_profiles"/>
+			<item value="VxWorks User Library Configuration"/>
+			<item value="Build User-side libraries"/>
+		</list>
+		<list key="splitter2">
+			<item value="714"/>
+			<item value="285"/>
+		</list>
+		<list key="depsSplitter">
+			<item value="1"/>
+			<item value="1"/>
+		</list>
+		<list key="colWidth2">
+			<item value="0"/>
+			<item value="0"/>
+			<item value="0"/>
+		</list>
+	</section>
+</section>

@@ -1,0 +1,34 @@
+# Automatically generated file: do not edit
+
+##########################
+# BDM_FLASH Section
+##########################
+
+
+ifdef _WRS_CONFIG_BDM_FLASH
+VSBL_BDM_FLASH_SRC = 
+VSBL_BDM_FLASH_DEPEND = 
+
+ifdef _WRS_CONFIG_BDM_1_0_1_3_FLASH_1_0_0_1
+ifdef _WRS_CONFIG_BDM_MTD
+VSBL_BDM_FLASH_SRC += BDM_MTD
+endif
+ifdef _WRS_CONFIG_BDM_NFTL
+VSBL_BDM_FLASH_SRC += BDM_NFTL
+endif
+ifdef _WRS_CONFIG_BDM_SIM
+VSBL_BDM_FLASH_SRC += BDM_SIM
+endif
+ifdef _WRS_CONFIG_BDM_TFFS
+VSBL_BDM_FLASH_SRC += BDM_TFFS
+endif
+ifdef _WRS_CONFIG_BDM_TFFS_DRIVER
+VSBL_BDM_FLASH_SRC += BDM_TFFS_DRIVER
+endif
+VSBL_BDM_FLASH_SRC += BDM_FLASH
+BDM_FLASH_FASTBUILD = YES
+VSBL_BDM_FLASH_PATH = $(WIND_BASE)/pkgs/storage/bdm-1.0.1.3/flash
+VSBL_BDM_FLASH_VERSION = BDM_1_0_1_3_FLASH_1_0_0_1
+endif
+endif
+

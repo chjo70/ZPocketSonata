@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="SearchDialog.ScopePart">
+		<item value="2" key="scope"/>
+		<list key="lastUsedWorkingSetNames">
+			<item value="VBootShell"/>
+		</list>
+	</section>
+	<section name="Search">
+		<list key="Search.processedPageIds">
+			<item value="com.windriver.ide.search.ui.RetrieverFindPage"/>
+			<item value="org.eclipse.search.internal.ui.text.TextSearchPage"/>
+			<item value="org.eclipse.cdt.ui.pdomSearchPage"/>
+			<item value="org.eclipse.egit.ui.commitSearchPage"/>
+		</list>
+		<list key="Search.enabledPageIds">
+			<item value="com.windriver.ide.search.ui.RetrieverFindPage"/>
+			<item value="org.eclipse.search.internal.ui.text.TextSearchPage"/>
+			<item value="org.eclipse.cdt.ui.pdomSearchPage"/>
+			<item value="org.eclipse.egit.ui.commitSearchPage"/>
+		</list>
+	</section>
+	<section name="org.eclipse.cdt.ui.pdomSearchViewPage">
+		<item value="true" key="showEnclosingDefinitions"/>
+	</section>
+	<section name="SearchDialog">
+		<item value="com.windriver.ide.search.ui.RetrieverFindPage" key="PREVIOUS_PAGE"/>
+	</section>
+	<section name="DialogBounds_SearchDialog">
+		<item value="859" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="614" key="DIALOG_HEIGHT"/>
+		<item value="234" key="DIALOG_X_ORIGIN"/>
+		<item value="377" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

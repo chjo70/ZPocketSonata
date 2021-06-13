@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+	<configuration id="POWERPC Diab" name="POWERPC Diab">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true">
+				<language id="com.windriver.diab.c">
+					<resource project-relative-path="">
+						<entry kind="macro" name="LIGNEX1" value=""/>
+					</resource>
+				</language>
+			</provider>
+			<provider class="com.windriver.cdt.core.project.WRBuildLanguageSettingsProvider" id="com.windriver.cdt.core.project.WRBuildLanguageSettingsProvider" name="Wind River Build Settings Provider" prefer-non-shared="true" store-entries-with-project="true">
+				<resource project-relative-path="">
+					<entry kind="includePath" name="krnl/configlette"/>
+					<entry kind="includePath" name="share/h"/>
+					<entry kind="includePath" name="h"/>
+					<entry kind="includePath" name="krnl/h/public"/>
+					<entry kind="includePath" name="krnl/h/system"/>
+					<entry kind="includePath" name="usr/h/public"/>
+					<entry kind="includePath" name="usr/h"/>
+					<entry kind="macro" name="CPU" value="PPCE6500"/>
+					<entry kind="macro" name="_VSB_CONFIG_FILE" value="&quot;config/vsbConfig.h&quot;"/>
+					<entry kind="macro" name="_VX_CPU_FAMILY" value="ppc"/>
+				</resource>
+			</provider>
+			<provider class="com.windriver.cdt.core.project.WRDiabBuiltinDefinesDetector" console="false" id="com.windriver.cdt.core.project.WRDiabBuiltinDefinesDetector" keep-relative-paths="false" name="Wind River Diab Builtin Compiler Defines" parameter="dcc -Xcpp-dump-symbols -E -tPPCFH:vxworks7 -Xstmw-slow -DPPC32_fp60x -Xstsw-slow ${INPUTS}" prefer-non-shared="true">
+				<language-scope id="com.windriver.diab.c"/>
+				<language-scope id="com.windriver.diab.cpp"/>
+			</provider>
+			<provider class="com.windriver.cdt.core.project.WRDiabBuiltinIncludePathsDetector" console="false" id="com.windriver.cdt.core.project.WRDiabBuiltinIncludePathsDetector" keep-relative-paths="false" name="Wind River Diab Builtin Compiler Include Paths" parameter="dcc -## -E -tPPCFH:vxworks7 -Xstmw-slow -DPPC32_fp60x -Xstsw-slow ${INPUTS}" prefer-non-shared="true">
+				<language-scope id="com.windriver.diab.c"/>
+				<language-scope id="com.windriver.diab.cpp"/>
+			</provider>
+		</extension>
+	</configuration>
+	<configuration id="POWERPC GNU" name="POWERPC GNU">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true"/>
+			<provider class="com.windriver.cdt.core.project.WRBuildLanguageSettingsProvider" id="com.windriver.cdt.core.project.WRBuildLanguageSettingsProvider" name="Wind River Build Settings Provider" prefer-non-shared="true" store-entries-with-project="true">
+				<resource project-relative-path="">
+					<entry kind="includePath" name="krnl/configlette"/>
+					<entry kind="includePath" name="share/h"/>
+					<entry kind="includePath" name="h"/>
+					<entry kind="includePath" name="krnl/h/public"/>
+					<entry kind="includePath" name="krnl/h/system"/>
+					<entry kind="includePath" name="usr/h/public"/>
+					<entry kind="includePath" name="usr/h"/>
+					<entry kind="macro" name="CPU" value="PPCE6500"/>
+					<entry kind="macro" name="_VSB_CONFIG_FILE" value="&quot;config/vsbConfig.h&quot;"/>
+					<entry kind="macro" name="_VX_CPU_FAMILY" value="ppc"/>
+				</resource>
+			</provider>
+			<provider class="com.windriver.cdt.core.project.WRGnuBuiltinSpecsDetector" console="false" id="com.windriver.cdt.core.project.WRGnuBuiltinSpecsDetector" keep-relative-paths="false" name="Wind River GNU Builtin Compiler Settings" parameter="ccppc -v -dD -P -E -mhard-float -mstrict-align -fno-implicit-fp -DPPC32_fp60x ${INPUTS}" prefer-non-shared="true">
+				<language-scope id="com.windriver.cdt.core.wrGnuC"/>
+				<language-scope id="com.windriver.cdt.core.wrGnuCpp"/>
+			</provider>
+		</extension>
+	</configuration>
+</project>

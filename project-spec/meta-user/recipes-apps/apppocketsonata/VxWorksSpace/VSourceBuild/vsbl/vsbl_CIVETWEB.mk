@@ -1,0 +1,22 @@
+# Automatically generated file: do not edit
+
+##########################
+# CIVETWEB Section
+##########################
+
+
+ifdef _WRS_CONFIG_CIVETWEB
+VSBL_CIVETWEB_SRC = 
+VSBL_CIVETWEB_DEPEND = 
+
+ifdef _WRS_CONFIG_CIVETWEB_1_9_1_0
+VSBL_CIVETWEB_SRC += CIVETWEB
+VSBL_CIVETWEB_DEPEND += OPENSSL
+VSBL_CIVETWEB_DEPEND += UNIX
+CIVETWEB_FASTBUILD = YES
+CIVETWEB_SUBSCRIBE = UNIX
+VSBL_CIVETWEB_PATH = $(WIND_BASE)/pkgs/app/civetweb-1.9.1.0
+VSBL_CIVETWEB_VERSION = CIVETWEB_1_9_1_0
+endif
+endif
+

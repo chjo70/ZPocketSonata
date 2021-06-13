@@ -1,0 +1,2969 @@
+# Automatically generated file: do not edit
+
+
+menu "VxWorks Global Configuration Options for BSP hmt_t2080vpx3u"
+
+config BSP_hmt_t2080vpx3u_1_0_0_0
+   bool 
+   default y
+
+config BSP_hmt_t2080vpx3u
+   bool 
+   default y
+
+
+config BSP_BASED
+   bool 
+   default y
+
+
+# This is a hidden VSB option that specifies the version number of the VSB.
+# In 6.9.3 this version was created and set to 1.
+# All VSBs prior to 6.9.3 did not have a version number.
+# This number is expected to change if there is any restructuring of the VSB.
+config VSB_VERSION
+   int
+   default 1
+
+
+config COMPAT69_SUPPORTED
+   bool
+   default y
+
+
+config DEFAULT_IPV6
+   bool
+   default y
+
+
+config DEFAULT_SMP_Y
+   bool
+   depends on SUPPORTS_SMP
+   default y
+
+
+config REQUIRES_VX7_COMPATIBLE
+      bool
+      default y
+
+
+config SUPPORTS_LP64
+   bool
+   default y
+
+config SUPPORTS_ILP32
+   bool
+   default y
+
+config SUPPORTS_SMP
+   bool
+   default y
+
+config  LP64
+   bool
+   prompt "Enable building LP64 libraries for VxWorks 64-bit" if !LP64_ONLY
+   depends on (SUPPORTS_LP64 && !DEFAULT_SIT_NB) || DEFAULT_LP64_Y || LP64_ONLY
+   default y if DEFAULT_LP64_Y || LP64_ONLY
+   help
+   This option enables the 64-bit mode support (LP64 data model) in VxWorks. When this option is not selected the 32-bit mode (ILP32 data model) is supported.
+
+comment "LP64 enabled for this VSB"
+   depends on LP64_ONLY
+
+config ILP32
+   bool
+   default y
+   depends on !LP64 && SUPPORTS_ILP32
+
+config VSB_DATAMODEL
+   string
+   default "ILP32" if ILP32
+   default "LP64" if LP64
+   default "UNSET" if !LP64 && !ILP32
+
+
+comment "Error Configuration does not support either ILP32 or LP64!"
+   depends on  !LP64 && !ILP32
+
+comment "hmt_t2080vpx3u_1_0_0_0_CPU = PPCE6500"
+
+config BSP_PPCE6500
+   bool 
+   default y
+
+config CPU_PPCE6500
+   bool
+   default y
+   depends on BSP_PPCE6500
+
+config CPU
+   string
+   default "PPCE6500" if CPU_PPCE6500
+
+
+
+choice
+      prompt "Select the Floating Point configuration" 
+      depends on CPU_PPCE6500
+      default FP_PPCE6500_hard_32 if !LP64
+      default FP_PPCE6500_hard_64 if LP64
+      help 
+          The Floating Point Option (FP) needs to be selected for the library.
+
+config FP_PPCE6500_hard_32
+      bool "hard"
+      depends on !LP64
+
+config FP_PPCE6500_soft_32
+      bool "soft"
+      depends on !LP64
+
+config FP_PPCE6500_hard_64
+      bool "hard"
+      depends on LP64
+
+endchoice
+
+
+config FP_hard
+      bool
+      default y
+      depends on (FP_PPCE6500_hard_32 || FP_PPCE6500_hard_64)
+
+
+config FP_soft
+      bool
+      default y
+      depends on (FP_PPCE6500_soft_32 || FP_PPCE6500_soft_64)
+
+
+config FP
+      string
+      default "hard" if FP_hard
+      default "soft" if FP_soft
+
+config hmt_t2080vpx3u_1_0_0_0_FP
+      string
+      depends on CPU_PPCE6500
+      default "hard" if (FP_PPCE6500_hard_32 || FP_PPCE6500_hard_64)
+      default "soft" if (FP_PPCE6500_soft_32 || FP_PPCE6500_soft_64)
+
+
+choice
+    depends on CPU_PPCE6500
+      prompt "Select the ENDIAN configuration" 
+      default ENDIAN_PPCE6500_big_32 if !LP64
+      default ENDIAN_PPCE6500_big_64 if LP64
+      help 
+          The ENDIAN Option needs to be selected for the library.
+
+config ENDIAN_PPCE6500_big_32
+      bool "big"
+      depends on !LP64
+
+config ENDIAN_PPCE6500_big_64
+      bool "big"
+      depends on LP64
+
+endchoice
+
+
+config ENDIAN_big
+      bool
+      default y
+      depends on (ENDIAN_PPCE6500_big_32 ||ENDIAN_PPCE6500_big_64)
+
+
+config ENDIAN
+      string
+      default "big" if ENDIAN_big
+
+config hmt_t2080vpx3u_1_0_0_0_ENDIAN
+      string
+      depends on CPU_PPCE6500
+      default "big" if (ENDIAN_PPCE6500_big_32 || ENDIAN_PPCE6500_big_64)
+
+
+config diab_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_CCTDN
+  string
+  default "diab_5_9_6_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_CCVER
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_CCRTC
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_CCTDN
+  string
+  default "diab_5_9_6_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_CCVER
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_CCRTC
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_CCTDN
+  string
+  default "diab_5_9_6_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_CCVER
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_CCRTC
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_CCTDN
+  string
+  default "diab_5_9_6_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_CCVER
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_CCRTC
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.6.5/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_CCTDN
+  string
+  default "diab_5_9_6_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_CCVER
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_5_9_6_5_CCRTC
+  string
+  default "diab_5_9_6_5"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_6_5
+
+
+config diab_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_CCTDN
+  string
+  default "diab_5_9_4_0"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_CCVER
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_CCRTC
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_CCTDN
+  string
+  default "diab_5_9_4_0"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_CCVER
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_CCRTC
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_CCTDN
+  string
+  default "diab_5_9_4_0"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_CCVER
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_CCRTC
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_CCTDN
+  string
+  default "diab_5_9_4_0"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_CCVER
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_CCRTC
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.4.9/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_CCTDN
+  string
+  default "diab_5_9_4_0"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_CCTT
+  string
+  default "diab"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_CCVER
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_5_9_4_9_CCRTC
+  string
+  default "diab_5_9_4_9"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && diab_5_9_4_9
+
+
+config diab_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/WIN32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/LINUX386/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_CCTDN
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_CCTT
+  string
+  default "diab"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_CCVER
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_CCRTC
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/WIN32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/LINUX386/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_CCTDN
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_CCTT
+  string
+  default "diab"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_CCVER
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_CCRTC
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/WIN32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/LINUX386/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_CCTDN
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_CCTT
+  string
+  default "diab"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_CCVER
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_CCRTC
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/WIN32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/LINUX386/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_CCTDN
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_CCTT
+  string
+  default "diab"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_CCVER
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_CCRTC
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/WIN32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/diab-5.9.1.0/LINUX386/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_CCTDN
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_CCTT
+  string
+  default "diab"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_CCVER
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config diab_5_9_1_0_CCRTC
+  string
+  default "diab_5_9_1_0"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && diab_5_9_1_0
+
+
+config gnu_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-win32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-linux2/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_CCTDN
+  string
+  default "gnu_4_8_1_8"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_CCTT
+  string
+  default "gnu"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_CCVER
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_CCRTC
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-win32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-linux2/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_CCTDN
+  string
+  default "gnu_4_8_1_8"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_CCTT
+  string
+  default "gnu"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_CCVER
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_CCRTC
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-win32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-linux2/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_CCTDN
+  string
+  default "gnu_4_8_1_8"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_CCTT
+  string
+  default "gnu"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_CCVER
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_CCRTC
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-win32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-linux2/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_CCTDN
+  string
+  default "gnu_4_8_1_8"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_CCTT
+  string
+  default "gnu"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_CCVER
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_CCRTC
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-win32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.8.1.10/x86-linux2/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_CCTDN
+  string
+  default "gnu_4_8_1_8"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_CCTT
+  string
+  default "gnu"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_CCVER
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_4_8_1_10_CCRTC
+  string
+  default "gnu_4_8_1_10"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && gnu_4_8_1_10
+
+
+config gnu_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_CCVER
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_CCRTC
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_CCVER
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_CCRTC
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_CCVER
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_CCRTC
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_CCVER
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_CCRTC
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.2/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_CCVER
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_4_3_3_2_CCRTC
+  string
+  default "gnu_4_3_3_2"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_2
+
+
+config gnu_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_CCVER
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_CCRTC
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_CCVER
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_CCRTC
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_CCVER
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_CCRTC
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_CCVER
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_CCRTC
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-win32/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/gnu-4.3.3.1/x86-linux2/bin"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_CCTDN
+  string
+  default "gnu_4_3_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_CCTT
+  string
+  default "gnu"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_CCVER
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config gnu_4_3_3_1_CCRTC
+  string
+  default "gnu_4_3_3_1"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && gnu_4_3_3_1
+
+
+config llvm_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_CCTDN
+  string
+  default "llvm_2016_04"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_CCTT
+  string
+  default "llvm"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_CCVER
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_CCRTC
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_CCTDN
+  string
+  default "llvm_2016_04"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_CCTT
+  string
+  default "llvm"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_CCVER
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_CCRTC
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_CCTDN
+  string
+  default "llvm_2016_04"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_CCTT
+  string
+  default "llvm"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_CCVER
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_CCRTC
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_CCTDN
+  string
+  default "llvm_2016_04"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_CCTT
+  string
+  default "llvm"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_CCVER
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_CCRTC
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/WIN32/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/llvm-3.8.1.1/LINUX386/bin"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_CCTDN
+  string
+  default "llvm_2016_04"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_CCTT
+  string
+  default "llvm"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_CCVER
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config llvm_3_8_1_1_CCRTC
+  string
+  default "llvm_3_8_1_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && llvm_3_8_1_1
+
+
+config icc_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-win/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-linux/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_CCTDN
+  string
+  default "icc_16"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_CCTT
+  string
+  default "icc"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_CCVER
+  string
+  default "icc_16_0_0_039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_CCRTC
+  string
+  default "gnu_4_8_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-win/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-linux/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_CCTDN
+  string
+  default "icc_16"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_CCTT
+  string
+  default "icc"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_CCVER
+  string
+  default "icc_16_0_0_039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_CCRTC
+  string
+  default "gnu_4_8_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-win/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-linux/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_CCTDN
+  string
+  default "icc_16"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_CCTT
+  string
+  default "icc"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_CCVER
+  string
+  default "icc_16_0_0_039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_CCRTC
+  string
+  default "gnu_4_8_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-win/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-linux/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_CCTDN
+  string
+  default "icc_16"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_CCTT
+  string
+  default "icc"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_CCVER
+  string
+  default "icc_16_0_0_039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_CCRTC
+  string
+  default "gnu_4_8_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-win/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc_vxworks-16.0.0.039/x86-linux/bin/intel64"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_CCTDN
+  string
+  default "icc_16"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_CCTT
+  string
+  default "icc"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_CCVER
+  string
+  default "icc_16_0_0_039"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_16_0_0_039_CCRTC
+  string
+  default "gnu_4_8_1"
+  depends on ((!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7) && icc_16_0_0_039
+
+
+config icc_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-win32/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-linux2/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_CCTDN
+  string
+  default "icc_12"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_CCTT
+  string
+  default "icc"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_CCVER
+  string
+  default "icc_12_0_0_4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_CCRTC
+  string
+  default "gnu_4_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-win32/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-linux2/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_CCTDN
+  string
+  default "icc_12"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_CCTT
+  string
+  default "icc"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_CCVER
+  string
+  default "icc_12_0_0_4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_CCRTC
+  string
+  default "gnu_4_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-win32/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-linux2/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_CCTDN
+  string
+  default "icc_12"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_CCTT
+  string
+  default "icc"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_CCVER
+  string
+  default "icc_12_0_0_4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_CCRTC
+  string
+  default "gnu_4_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-win32/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-linux2/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_CCTDN
+  string
+  default "icc_12"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_CCTT
+  string
+  default "icc"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_CCVER
+  string
+  default "icc_12_0_0_4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_CCRTC
+  string
+  default "gnu_4_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_CCBASE_PATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_WIN_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-win32/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_LINUX_CCPATH
+  string
+  default "$(WIND_HOME)/compilers/icc-12.0.0.4/x86-linux2/bin/ia32"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_CCTDN
+  string
+  default "icc_12"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_CCTT
+  string
+  default "icc"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_CCVER
+  string
+  default "icc_12_0_0_4"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config icc_12_0_0_4_CCRTC
+  string
+  default "gnu_4_3"
+  depends on ((COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7) && icc_12_0_0_4
+
+
+config ARCH_ppc
+      default y
+      bool
+
+
+choice ch_pri_tool_ILP32_PPCE6500
+   prompt "Select the Primary Tool" 
+   depends on ILP32 && CPU_PPCE6500 && !COMPAT69
+   default PRI_TOOL_diab 
+  help 
+   The Primary Tool is used to compile the core source.
+
+config PRI_TOOL_PPCE6500_ILP32_diab
+   bool "diab"
+
+endchoice
+
+
+choice ch_pri_tool69_ILP32_PPCE6500
+   prompt "Select the Primary Tool" 
+   depends on ILP32 && CPU_PPCE6500 && COMPAT69
+   default PRI_TOOL_diab 
+  help 
+   The Primary Tool is used to compile the core source.
+
+config PRI_TOOL69_PPCE6500_ILP32_diab
+   bool "diab"
+
+endchoice
+
+
+choice ch_pri_tool_diab_ver_ILP32_PPCE6500
+   prompt "Select the diab version" 
+   depends on PRI_TOOL_PPCE6500_ILP32_diab && ILP32 && !COMPAT69
+   default PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5
+
+
+config PRI_TOOL_PPCE6500_ILP32_diab_5_9_1_0
+   bool "diab_5_9_1_0"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+
+config PRI_TOOL_PPCE6500_ILP32_diab_5_9_4_9
+   bool "diab_5_9_4_9"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+
+config PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5
+   bool "diab_5_9_6_5"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+endchoice
+
+
+config PRI_TOOL_ILP32_diab_5_9_1_0
+   bool
+   default y
+   depends on PRI_TOOL_PPCE6500_ILP32_diab_5_9_1_0
+
+
+config PRI_TOOL_ILP32_diab_5_9_4_9
+   bool
+   default y
+   depends on PRI_TOOL_PPCE6500_ILP32_diab_5_9_4_9
+
+
+config PRI_TOOL_ILP32_diab_5_9_6_5
+   bool
+   default y
+   depends on PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5
+
+
+choice ch_pri_tool69_diab_ver_ILP32_PPCE6500
+   prompt "Select the diab version" 
+   depends on PRI_TOOL69_PPCE6500_ILP32_diab && ILP32 && COMPAT69
+   default PRI_TOOL69_PPCE6500_ILP32_diab_5_9_1_0
+
+
+config PRI_TOOL69_PPCE6500_ILP32_diab_5_9_1_0
+   bool "diab_5_9_1_0"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+
+config PRI_TOOL69_PPCE6500_ILP32_diab_5_9_4_9
+   bool "diab_5_9_4_9"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+
+config PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5
+   bool "diab_5_9_6_5"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+endchoice
+
+
+config PRI_TOOL69_ILP32_diab_5_9_1_0
+   bool
+   default y
+   depends on PRI_TOOL69_PPCE6500_ILP32_diab_5_9_1_0
+
+
+config PRI_TOOL69_ILP32_diab_5_9_4_9
+   bool
+   default y
+   depends on PRI_TOOL69_PPCE6500_ILP32_diab_5_9_4_9
+
+
+config PRI_TOOL69_ILP32_diab_5_9_6_5
+   bool
+   default y
+   depends on PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5
+
+
+choice ch_pri_tool_LP64_PPCE6500
+   prompt "Select the Primary Tool" 
+   depends on LP64 && CPU_PPCE6500 && !COMPAT69
+   default PRI_TOOL_diab 
+  help 
+   The Primary Tool is used to compile the core source.
+
+config PRI_TOOL_PPCE6500_LP64_diab
+   bool "diab"
+
+endchoice
+
+comment "Error NO PRIMARY TOOL AVAILBLE, Switch COMPAT69 mode or CHECK INSTALLED COMPILERS"
+   depends on PPCE6500
+
+choice ch_pri_tool_diab_ver_LP64_PPCE6500
+   prompt "Select the diab version" 
+   depends on PRI_TOOL_PPCE6500_LP64_diab && LP64 && !COMPAT69
+   default PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5
+
+
+config PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5
+   bool "diab_5_9_6_5"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+endchoice
+
+
+config PRI_TOOL_LP64_diab_5_9_6_5
+   bool
+   default y
+   depends on PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5
+
+
+#set the features for the primary compiler
+
+
+config PRI_diab_WEAK_SYMBOL
+   bool
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5 && COMPAT69
+
+config PRI_diab_PPC64
+   bool
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5 && COMPAT69
+
+config PRI_diab_PPC64_SMALL_CODE_MODEL
+   bool
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5 && COMPAT69
+
+config PRI_diab_PPC64_MEDIUM_CODE_MODEL
+   bool
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5 && COMPAT69
+
+
+config PRI_diab
+   bool
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_1_0 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_1_0 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_1_0 && COMPAT69
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_4_9 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_4_9 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_4_9 && COMPAT69
+   default y if PRI_TOOL_PPCE6500_ILP32_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL_PPCE6500_LP64_diab_5_9_6_5 && !COMPAT69
+   default y if PRI_TOOL69_PPCE6500_ILP32_diab_5_9_6_5 && COMPAT69
+
+
+
+choice ch_sec_tool__ILP32_PPCE6500
+   prompt "Select the Secondary Tool" 
+   depends on ILP32 && CPU_PPCE6500 && !COMPAT69
+   default SEC_TOOL_DISABLED_PPCE6500_ILP32 if DEF_PRIMARY_ONLY
+  help
+   If disabled the Secondary TOOL will be ignored during the build process. This will disable the compilation of any kernel libraries with this tool, this in turn will require any VIPs, DKMs, or RTPs to be built with the Primary TOOL if this VSB is used. Disable this option if only one compiler has been installed.
+
+config SEC_TOOL_PPCE6500_ILP32_gnu
+   depends on !PRI_TOOL_PPCE6500_ILP32_gnu
+   bool "gnu"
+
+config SEC_TOOL_DISABLED_PPCE6500_ILP32
+   bool "No Secondary Tool"
+
+endchoice
+
+
+config SEC_TOOL_DISABLED_ILP32
+   bool
+   default y
+   depends on SEC_TOOL_DISABLED_PPCE6500_ILP32
+
+
+choice ch_sec_tool69__ILP32_PPCE6500
+   prompt "Select the Secondary Tool" 
+   depends on ILP32 && CPU_PPCE6500 && COMPAT69
+   default SEC_TOOL69_DISABLED_PPCE6500_ILP32 if DEF_PRIMARY_ONLY
+  help
+   If disabled the Secondary TOOL will be ignored during the build process. This will disable the compilation of any kernel libraries with this tool, this in turn will require any VIPs, DKMs, or RTPs to be built with the Primary TOOL if this VSB is used. Disable this option if only one compiler has been installed.
+
+config SEC_TOOL69_PPCE6500_ILP32_gnu
+   depends on !PRI_TOOL69_PPCE6500_ILP32_gnu
+   bool "gnu"
+
+config SEC_TOOL69_DISABLED_PPCE6500_ILP32
+   bool "No Secondary Tool"
+
+endchoice
+
+
+config SEC_TOOL69_DISABLED_ILP32
+   bool
+   default y
+   depends on SEC_TOOL69_DISABLED_PPCE6500_ILP32
+
+
+choice ch_sec_tool_gnu_ver_ILP32_PPCE6500
+   prompt "Select the gnu version" 
+   depends on SEC_TOOL_PPCE6500_ILP32_gnu && ILP32 && !COMPAT69
+   default SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10 if !COMPAT69
+
+config SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_1
+   bool "gnu_4_3_3_1"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+config SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_2
+   bool "gnu_4_3_3_2"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+config SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10
+   bool "gnu_4_8_1_10"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+endchoice
+
+
+config SEC_TOOL_ILP32_gnu_4_3_3_1
+   bool
+   default y
+   depends on SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_1
+
+
+config SEC_TOOL_ILP32_gnu_4_3_3_2
+   bool
+   default y
+   depends on SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_2
+
+
+config SEC_TOOL_ILP32_gnu_4_8_1_10
+   bool
+   default y
+   depends on SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10
+
+
+choice ch_sec_tool69_gnu_ver_ILP32_PPCE6500
+   prompt "Select the gnu version" 
+   depends on SEC_TOOL69_PPCE6500_ILP32_gnu && ILP32 && COMPAT69 
+   default SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_2 if COMPAT69
+
+config SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_1
+   bool "gnu_4_3_3_1"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+config SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_2
+   bool "gnu_4_3_3_2"
+   depends on (COMPAT69 || FORCE_COMPAT69 || ALLCOMP) && !FORCE_COMPAT7
+
+config SEC_TOOL69_PPCE6500_ILP32_gnu_4_8_1_10
+   bool "gnu_4_8_1_10"
+   depends on (!COMPAT69 && !FORCE_COMPAT69) || ALLCOMP || FORCE_COMPAT7
+
+endchoice
+
+
+config SEC_TOOL69_ILP32_gnu_4_3_3_1
+   bool
+   default y
+   depends on SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_1
+
+
+config SEC_TOOL69_ILP32_gnu_4_3_3_2
+   bool
+   default y
+   depends on SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_2
+
+
+config SEC_TOOL69_ILP32_gnu_4_8_1_10
+   bool
+   default y
+   depends on SEC_TOOL69_PPCE6500_ILP32_gnu_4_8_1_10
+
+
+choice ch_sec_tool__LP64_PPCE6500
+   prompt "Select the Secondary Tool" 
+   depends on LP64 && CPU_PPCE6500 && !COMPAT69
+   default SEC_TOOL_DISABLED_PPCE6500_LP64 if DEF_PRIMARY_ONLY
+  help
+   If disabled the Secondary TOOL will be ignored during the build process. This will disable the compilation of any kernel libraries with this tool, this in turn will require any VIPs, DKMs, or RTPs to be built with the Primary TOOL if this VSB is used. Disable this option if only one compiler has been installed.
+
+config SEC_TOOL_DISABLED_PPCE6500_LP64
+   bool "No Secondary Tool"
+
+endchoice
+
+
+config SEC_TOOL_DISABLED_LP64
+   bool
+   default y
+   depends on SEC_TOOL_DISABLED_PPCE6500_LP64
+
+
+choice ch_sec_tool69__LP64_PPCE6500
+   prompt "Select the Secondary Tool" 
+   depends on LP64 && CPU_PPCE6500 && COMPAT69
+   default SEC_TOOL69_DISABLED_PPCE6500_LP64 if DEF_PRIMARY_ONLY
+  help
+   If disabled the Secondary TOOL will be ignored during the build process. This will disable the compilation of any kernel libraries with this tool, this in turn will require any VIPs, DKMs, or RTPs to be built with the Primary TOOL if this VSB is used. Disable this option if only one compiler has been installed.
+
+config SEC_TOOL69_DISABLED_PPCE6500_LP64
+   bool "No Secondary Tool"
+
+endchoice
+
+
+config SEC_TOOL69_DISABLED_LP64
+   bool
+   default y
+   depends on SEC_TOOL69_DISABLED_PPCE6500_LP64
+
+
+# set the features for the secondary compiler
+
+
+config SEC_gnu_COMMON_PAGE_SIZE_FLAG
+   bool
+   default y if SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10 && !COMPAT69
+   default y if SEC_TOOL69_PPCE6500_ILP32_gnu_4_8_1_10 && COMPAT69
+
+
+config SEC_gnu_CPP2011
+   bool
+   default y if SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10 && !COMPAT69
+   default y if SEC_TOOL69_PPCE6500_ILP32_gnu_4_8_1_10 && COMPAT69
+
+
+
+config SEC_gnu
+   bool
+   default y if SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_1 && !COMPAT69
+   default y if SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_1 && COMPAT69
+   default y if SEC_TOOL_PPCE6500_ILP32_gnu_4_3_3_2 && !COMPAT69
+   default y if SEC_TOOL69_PPCE6500_ILP32_gnu_4_3_3_2 && COMPAT69
+   default y if SEC_TOOL_PPCE6500_ILP32_gnu_4_8_1_10 && !COMPAT69
+   default y if SEC_TOOL69_PPCE6500_ILP32_gnu_4_8_1_10 && COMPAT69
+
+
+config diab_SUPPORTED
+   bool
+   default y if (PRI_TOOL_PPCE6500_ILP32_diab || SEC_TOOL_PPCE6500_ILP32_diab ) &&  ILP32 && !COMPAT69
+   default y if (PRI_TOOL_PPCE6500_LP64_diab || SEC_TOOL_PPCE6500_LP64_diab ) &&  LP64 && !COMPAT69
+   default y if (PRI_TOOL69_PPCE6500_ILP32_diab || SEC_TOOL69_PPCE6500_ILP32_diab ) &&  ILP32 && COMPAT69
+
+config gnu_SUPPORTED
+   bool
+   default y if (PRI_TOOL_PPCE6500_ILP32_gnu || SEC_TOOL_PPCE6500_ILP32_gnu ) &&  ILP32 && !COMPAT69
+   default y if (PRI_TOOL69_PPCE6500_ILP32_gnu || SEC_TOOL69_PPCE6500_ILP32_gnu ) &&  ILP32 && COMPAT69
+
+choice
+   prompt "Select the Applications Tool" 
+   depends on CPU_PPCE6500
+
+config APP_PRI_PPCE6500
+   bool "Same As Primary Tool"
+
+config APP_SEC_PPCE6500
+   bool "Same As Secondary Tool"
+   depends on !SEC_TOOL_DISABLED
+
+endchoice
+
+config hmt_t2080vpx3u_1_0_0_0_APP_TOOL
+   string
+   depends on CPU_PPCE6500
+   default "diab" if (T_diab_5_9_1_0 && APP_PRI_PPCE6500) || (T2_diab_5_9_1_0 && APP_SEC_PPCE6500)
+   default "diab" if (T_diab_5_9_4_9 && APP_PRI_PPCE6500) || (T2_diab_5_9_4_9 && APP_SEC_PPCE6500)
+   default "diab" if (T_diab_5_9_6_5 && APP_PRI_PPCE6500) || (T2_diab_5_9_6_5 && APP_SEC_PPCE6500)
+   default "gnu" if (T_gnu_4_3_3_1 && APP_PRI_PPCE6500) || (T2_gnu_4_3_3_1 && APP_SEC_PPCE6500)
+   default "gnu" if (T_gnu_4_3_3_2 && APP_PRI_PPCE6500) || (T2_gnu_4_3_3_2 && APP_SEC_PPCE6500)
+   default "gnu" if (T_gnu_4_8_1_10 && APP_PRI_PPCE6500) || (T2_gnu_4_8_1_10 && APP_SEC_PPCE6500)
+   default "icc" if (T_icc_12_0_0_4 && APP_PRI_PPCE6500) || (T2_icc_12_0_0_4 && APP_SEC_PPCE6500)
+   default "icc" if (T_icc_16_0_0_039 && APP_PRI_PPCE6500) || (T2_icc_16_0_0_039 && APP_SEC_PPCE6500)
+   default "llvm" if (T_llvm_3_8_1_1 && APP_PRI_PPCE6500) || (T2_llvm_3_8_1_1 && APP_SEC_PPCE6500)
+
+config hmt_t2080vpx3u_1_0_0_0_APP_TOOL_VERSION
+   string
+   depends on CPU_PPCE6500
+   default "diab_5_9_1_0" if (T_diab_5_9_1_0 && APP_PRI_PPCE6500) || (T2_diab_5_9_1_0 && APP_SEC_PPCE6500)
+   default "diab_5_9_4_9" if (T_diab_5_9_4_9 && APP_PRI_PPCE6500) || (T2_diab_5_9_4_9 && APP_SEC_PPCE6500)
+   default "diab_5_9_6_5" if (T_diab_5_9_6_5 && APP_PRI_PPCE6500) || (T2_diab_5_9_6_5 && APP_SEC_PPCE6500)
+   default "gnu_4_3_3_1" if (T_gnu_4_3_3_1 && APP_PRI_PPCE6500) || (T2_gnu_4_3_3_1 && APP_SEC_PPCE6500)
+   default "gnu_4_3_3_2" if (T_gnu_4_3_3_2 && APP_PRI_PPCE6500) || (T2_gnu_4_3_3_2 && APP_SEC_PPCE6500)
+   default "gnu_4_8_1_10" if (T_gnu_4_8_1_10 && APP_PRI_PPCE6500) || (T2_gnu_4_8_1_10 && APP_SEC_PPCE6500)
+   default "icc_12_0_0_4" if (T_icc_12_0_0_4 && APP_PRI_PPCE6500) || (T2_icc_12_0_0_4 && APP_SEC_PPCE6500)
+   default "icc_16_0_0_039" if (T_icc_16_0_0_039 && APP_PRI_PPCE6500) || (T2_icc_16_0_0_039 && APP_SEC_PPCE6500)
+   default "llvm_3_8_1_1" if (T_llvm_3_8_1_1 && APP_PRI_PPCE6500) || (T2_llvm_3_8_1_1 && APP_SEC_PPCE6500)
+
+config T_diab_5_9_1_0
+   bool
+   default y if (PRI_TOOL_ILP32_diab_5_9_1_0 || PRI_TOOL69_ILP32_diab_5_9_1_0)
+   default y if (PRI_TOOL_LP64_diab_5_9_1_0 || PRI_TOOL69_LP64_diab_5_9_1_0)
+
+config T_diab_5_9_4_9
+   bool
+   default y if (PRI_TOOL_ILP32_diab_5_9_4_9 || PRI_TOOL69_ILP32_diab_5_9_4_9)
+   default y if (PRI_TOOL_LP64_diab_5_9_4_9 || PRI_TOOL69_LP64_diab_5_9_4_9)
+
+config T_diab_5_9_6_5
+   bool
+   default y if (PRI_TOOL_ILP32_diab_5_9_6_5 || PRI_TOOL69_ILP32_diab_5_9_6_5)
+   default y if (PRI_TOOL_LP64_diab_5_9_6_5 || PRI_TOOL69_LP64_diab_5_9_6_5)
+
+config T_gnu_4_3_3_1
+   bool
+   default y if (PRI_TOOL_ILP32_gnu_4_3_3_1 || PRI_TOOL69_ILP32_gnu_4_3_3_1)
+   default y if (PRI_TOOL_LP64_gnu_4_3_3_1 || PRI_TOOL69_LP64_gnu_4_3_3_1)
+
+config T_gnu_4_3_3_2
+   bool
+   default y if (PRI_TOOL_ILP32_gnu_4_3_3_2 || PRI_TOOL69_ILP32_gnu_4_3_3_2)
+   default y if (PRI_TOOL_LP64_gnu_4_3_3_2 || PRI_TOOL69_LP64_gnu_4_3_3_2)
+
+config T_gnu_4_8_1_10
+   bool
+   default y if (PRI_TOOL_ILP32_gnu_4_8_1_10 || PRI_TOOL69_ILP32_gnu_4_8_1_10)
+   default y if (PRI_TOOL_LP64_gnu_4_8_1_10 || PRI_TOOL69_LP64_gnu_4_8_1_10)
+
+config T_icc_12_0_0_4
+   bool
+   default y if (PRI_TOOL_ILP32_icc_12_0_0_4 || PRI_TOOL69_ILP32_icc_12_0_0_4)
+   default y if (PRI_TOOL_LP64_icc_12_0_0_4 || PRI_TOOL69_LP64_icc_12_0_0_4)
+
+config T_icc_16_0_0_039
+   bool
+   default y if (PRI_TOOL_ILP32_icc_16_0_0_039 || PRI_TOOL69_ILP32_icc_16_0_0_039)
+   default y if (PRI_TOOL_LP64_icc_16_0_0_039 || PRI_TOOL69_LP64_icc_16_0_0_039)
+
+config T_llvm_3_8_1_1
+   bool
+   default y if (PRI_TOOL_ILP32_llvm_3_8_1_1 || PRI_TOOL69_ILP32_llvm_3_8_1_1)
+   default y if (PRI_TOOL_LP64_llvm_3_8_1_1 || PRI_TOOL69_LP64_llvm_3_8_1_1)
+
+config T2_diab_5_9_1_0
+   bool
+   default y if (SEC_TOOL_ILP32_diab_5_9_1_0 || SEC_TOOL69_ILP32_diab_5_9_1_0)
+   default y if (SEC_TOOL_LP64_diab_5_9_1_0 || SEC_TOOL69_LP64_diab_5_9_1_0)
+
+config T2_diab_5_9_4_9
+   bool
+   default y if (SEC_TOOL_ILP32_diab_5_9_4_9 || SEC_TOOL69_ILP32_diab_5_9_4_9)
+   default y if (SEC_TOOL_LP64_diab_5_9_4_9 || SEC_TOOL69_LP64_diab_5_9_4_9)
+
+config T2_diab_5_9_6_5
+   bool
+   default y if (SEC_TOOL_ILP32_diab_5_9_6_5 || SEC_TOOL69_ILP32_diab_5_9_6_5)
+   default y if (SEC_TOOL_LP64_diab_5_9_6_5 || SEC_TOOL69_LP64_diab_5_9_6_5)
+
+config T2_gnu_4_3_3_1
+   bool
+   default y if (SEC_TOOL_ILP32_gnu_4_3_3_1 || SEC_TOOL69_ILP32_gnu_4_3_3_1)
+   default y if (SEC_TOOL_LP64_gnu_4_3_3_1 || SEC_TOOL69_LP64_gnu_4_3_3_1)
+
+config T2_gnu_4_3_3_2
+   bool
+   default y if (SEC_TOOL_ILP32_gnu_4_3_3_2 || SEC_TOOL69_ILP32_gnu_4_3_3_2)
+   default y if (SEC_TOOL_LP64_gnu_4_3_3_2 || SEC_TOOL69_LP64_gnu_4_3_3_2)
+
+config T2_gnu_4_8_1_10
+   bool
+   default y if (SEC_TOOL_ILP32_gnu_4_8_1_10 || SEC_TOOL69_ILP32_gnu_4_8_1_10)
+   default y if (SEC_TOOL_LP64_gnu_4_8_1_10 || SEC_TOOL69_LP64_gnu_4_8_1_10)
+
+config T2_icc_12_0_0_4
+   bool
+   default y if (SEC_TOOL_ILP32_icc_12_0_0_4 || SEC_TOOL69_ILP32_icc_12_0_0_4)
+   default y if (SEC_TOOL_LP64_icc_12_0_0_4 || SEC_TOOL69_LP64_icc_12_0_0_4)
+
+config T2_icc_16_0_0_039
+   bool
+   default y if (SEC_TOOL_ILP32_icc_16_0_0_039 || SEC_TOOL69_ILP32_icc_16_0_0_039)
+   default y if (SEC_TOOL_LP64_icc_16_0_0_039 || SEC_TOOL69_LP64_icc_16_0_0_039)
+
+config T2_llvm_3_8_1_1
+   bool
+   default y if (SEC_TOOL_ILP32_llvm_3_8_1_1 || SEC_TOOL69_ILP32_llvm_3_8_1_1)
+   default y if (SEC_TOOL_LP64_llvm_3_8_1_1 || SEC_TOOL69_LP64_llvm_3_8_1_1)
+
+config diab_5_9_1_0
+   bool
+   default y if (T_diab_5_9_1_0 || T2_diab_5_9_1_0)
+
+config diab_5_9_4_9
+   bool
+   default y if (T_diab_5_9_4_9 || T2_diab_5_9_4_9)
+
+config diab_5_9_6_5
+   bool
+   default y if (T_diab_5_9_6_5 || T2_diab_5_9_6_5)
+
+config gnu_4_3_3_1
+   bool
+   default y if (T_gnu_4_3_3_1 || T2_gnu_4_3_3_1)
+
+config gnu_4_3_3_2
+   bool
+   default y if (T_gnu_4_3_3_2 || T2_gnu_4_3_3_2)
+
+config gnu_4_8_1_10
+   bool
+   default y if (T_gnu_4_8_1_10 || T2_gnu_4_8_1_10)
+
+config icc_12_0_0_4
+   bool
+   default y if (T_icc_12_0_0_4 || T2_icc_12_0_0_4)
+
+config icc_16_0_0_039
+   bool
+   default y if (T_icc_16_0_0_039 || T2_icc_16_0_0_039)
+
+config llvm_3_8_1_1
+   bool
+   default y if (T_llvm_3_8_1_1 || T2_llvm_3_8_1_1)
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL
+   string
+   default "diab" if T_diab_5_9_1_0
+   default "diab" if T_diab_5_9_4_9
+   default "diab" if T_diab_5_9_6_5
+   default "gnu" if T_gnu_4_3_3_1
+   default "gnu" if T_gnu_4_3_3_2
+   default "gnu" if T_gnu_4_8_1_10
+   default "icc" if T_icc_12_0_0_4
+   default "icc" if T_icc_16_0_0_039
+   default "llvm" if T_llvm_3_8_1_1
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL_VERSION
+   string
+   default "diab_5_9_1_0" if T_diab_5_9_1_0
+   default "diab_5_9_4_9" if T_diab_5_9_4_9
+   default "diab_5_9_6_5" if T_diab_5_9_6_5
+   default "gnu_4_3_3_1" if T_gnu_4_3_3_1
+   default "gnu_4_3_3_2" if T_gnu_4_3_3_2
+   default "gnu_4_8_1_10" if T_gnu_4_8_1_10
+   default "icc_12_0_0_4" if T_icc_12_0_0_4
+   default "icc_16_0_0_039" if T_icc_16_0_0_039
+   default "llvm_3_8_1_1" if T_llvm_3_8_1_1
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL_TDN
+   string
+   default "diab_5_9_1_0" if T_diab_5_9_1_0
+   default "diab_5_9_4_0" if T_diab_5_9_4_9
+   default "diab_5_9_6_1" if T_diab_5_9_6_5
+   default "gnu_4_3_3" if T_gnu_4_3_3_1 || T_gnu_4_3_3_2
+   default "gnu_4_8_1_8" if T_gnu_4_8_1_10
+   default "icc_12" if T_icc_12_0_0_4
+   default "icc_16" if T_icc_16_0_0_039
+   default "llvm_2016_04" if T_llvm_3_8_1_1
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL2
+   string
+   default "diab" if T2_diab_5_9_1_0
+   default "diab" if T2_diab_5_9_4_9
+   default "diab" if T2_diab_5_9_6_5
+   default "gnu" if T2_gnu_4_3_3_1
+   default "gnu" if T2_gnu_4_3_3_2
+   default "gnu" if T2_gnu_4_8_1_10
+   default "icc" if T2_icc_12_0_0_4
+   default "icc" if T2_icc_16_0_0_039
+   default "llvm" if T2_llvm_3_8_1_1
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL2_VERSION
+   string
+   default "diab_5_9_1_0" if T2_diab_5_9_1_0
+   default "diab_5_9_4_9" if T2_diab_5_9_4_9
+   default "diab_5_9_6_5" if T2_diab_5_9_6_5
+   default "gnu_4_3_3_1" if T2_gnu_4_3_3_1
+   default "gnu_4_3_3_2" if T2_gnu_4_3_3_2
+   default "gnu_4_8_1_10" if T2_gnu_4_8_1_10
+   default "icc_12_0_0_4" if T2_icc_12_0_0_4
+   default "icc_16_0_0_039" if T2_icc_16_0_0_039
+   default "llvm_3_8_1_1" if T2_llvm_3_8_1_1
+
+config hmt_t2080vpx3u_1_0_0_0_TOOL2_TDN
+   string
+   default "diab_5_9_1_0" if T2_diab_5_9_1_0
+   default "diab_5_9_4_0" if T2_diab_5_9_4_9
+   default "diab_5_9_6_1" if T2_diab_5_9_6_5
+   default "gnu_4_3_3" if T2_gnu_4_3_3_1 || T2_gnu_4_3_3_2
+   default "gnu_4_8_1_8" if T2_gnu_4_8_1_10
+   default "icc_12" if T2_icc_12_0_0_4
+   default "icc_16" if T2_icc_16_0_0_039
+   default "llvm_2016_04" if T2_llvm_3_8_1_1
+
+
+config SEC_TOOL_DISABLED
+   bool
+   default y if (SEC_TOOL_DISABLED_ILP32 || SEC_TOOL69_DISABLED_ILP32)
+   default y if (SEC_TOOL_DISABLED_LP64 || SEC_TOOL69_DISABLED_LP64)
+
+
+config SECTOOLS
+   string
+   default "diab_5_9_1_0 gnu_4_3_3_1"   if T_diab_5_9_1_0 && T2_gnu_4_3_3_1
+   default "diab_5_9_1_0 gnu_4_3_3_2"   if T_diab_5_9_1_0 && T2_gnu_4_3_3_2
+   default "diab_5_9_1_0 gnu_4_8_1_10"   if T_diab_5_9_1_0 && T2_gnu_4_8_1_10
+   default "diab_5_9_1_0 icc_12_0_0_4"   if T_diab_5_9_1_0 && T2_icc_12_0_0_4
+   default "diab_5_9_1_0 icc_16_0_0_039"   if T_diab_5_9_1_0 && T2_icc_16_0_0_039
+   default "diab_5_9_1_0 llvm_3_8_1_1"   if T_diab_5_9_1_0 && T2_llvm_3_8_1_1
+   default "diab_5_9_1_0"   if T_diab_5_9_1_0 && SEC_TOOL_DISABLED
+   default "diab_5_9_4_9 gnu_4_3_3_1"   if T_diab_5_9_4_9 && T2_gnu_4_3_3_1
+   default "diab_5_9_4_9 gnu_4_3_3_2"   if T_diab_5_9_4_9 && T2_gnu_4_3_3_2
+   default "diab_5_9_4_9 gnu_4_8_1_10"   if T_diab_5_9_4_9 && T2_gnu_4_8_1_10
+   default "diab_5_9_4_9 icc_12_0_0_4"   if T_diab_5_9_4_9 && T2_icc_12_0_0_4
+   default "diab_5_9_4_9 icc_16_0_0_039"   if T_diab_5_9_4_9 && T2_icc_16_0_0_039
+   default "diab_5_9_4_9 llvm_3_8_1_1"   if T_diab_5_9_4_9 && T2_llvm_3_8_1_1
+   default "diab_5_9_4_9"   if T_diab_5_9_4_9 && SEC_TOOL_DISABLED
+   default "diab_5_9_6_5 gnu_4_3_3_1"   if T_diab_5_9_6_5 && T2_gnu_4_3_3_1
+   default "diab_5_9_6_5 gnu_4_3_3_2"   if T_diab_5_9_6_5 && T2_gnu_4_3_3_2
+   default "diab_5_9_6_5 gnu_4_8_1_10"   if T_diab_5_9_6_5 && T2_gnu_4_8_1_10
+   default "diab_5_9_6_5 icc_12_0_0_4"   if T_diab_5_9_6_5 && T2_icc_12_0_0_4
+   default "diab_5_9_6_5 icc_16_0_0_039"   if T_diab_5_9_6_5 && T2_icc_16_0_0_039
+   default "diab_5_9_6_5 llvm_3_8_1_1"   if T_diab_5_9_6_5 && T2_llvm_3_8_1_1
+   default "diab_5_9_6_5"   if T_diab_5_9_6_5 && SEC_TOOL_DISABLED
+   default "gnu_4_3_3_1 diab_5_9_1_0"   if T_gnu_4_3_3_1 && T2_diab_5_9_1_0
+   default "gnu_4_3_3_1 diab_5_9_4_9"   if T_gnu_4_3_3_1 && T2_diab_5_9_4_9
+   default "gnu_4_3_3_1 diab_5_9_6_5"   if T_gnu_4_3_3_1 && T2_diab_5_9_6_5
+   default "gnu_4_3_3_1 icc_12_0_0_4"   if T_gnu_4_3_3_1 && T2_icc_12_0_0_4
+   default "gnu_4_3_3_1 icc_16_0_0_039"   if T_gnu_4_3_3_1 && T2_icc_16_0_0_039
+   default "gnu_4_3_3_1 llvm_3_8_1_1"   if T_gnu_4_3_3_1 && T2_llvm_3_8_1_1
+   default "gnu_4_3_3_1"   if T_gnu_4_3_3_1 && SEC_TOOL_DISABLED
+   default "gnu_4_3_3_2 diab_5_9_1_0"   if T_gnu_4_3_3_2 && T2_diab_5_9_1_0
+   default "gnu_4_3_3_2 diab_5_9_4_9"   if T_gnu_4_3_3_2 && T2_diab_5_9_4_9
+   default "gnu_4_3_3_2 diab_5_9_6_5"   if T_gnu_4_3_3_2 && T2_diab_5_9_6_5
+   default "gnu_4_3_3_2 icc_12_0_0_4"   if T_gnu_4_3_3_2 && T2_icc_12_0_0_4
+   default "gnu_4_3_3_2 icc_16_0_0_039"   if T_gnu_4_3_3_2 && T2_icc_16_0_0_039
+   default "gnu_4_3_3_2 llvm_3_8_1_1"   if T_gnu_4_3_3_2 && T2_llvm_3_8_1_1
+   default "gnu_4_3_3_2"   if T_gnu_4_3_3_2 && SEC_TOOL_DISABLED
+   default "gnu_4_8_1_10 diab_5_9_1_0"   if T_gnu_4_8_1_10 && T2_diab_5_9_1_0
+   default "gnu_4_8_1_10 diab_5_9_4_9"   if T_gnu_4_8_1_10 && T2_diab_5_9_4_9
+   default "gnu_4_8_1_10 diab_5_9_6_5"   if T_gnu_4_8_1_10 && T2_diab_5_9_6_5
+   default "gnu_4_8_1_10 icc_12_0_0_4"   if T_gnu_4_8_1_10 && T2_icc_12_0_0_4
+   default "gnu_4_8_1_10 icc_16_0_0_039"   if T_gnu_4_8_1_10 && T2_icc_16_0_0_039
+   default "gnu_4_8_1_10 llvm_3_8_1_1"   if T_gnu_4_8_1_10 && T2_llvm_3_8_1_1
+   default "gnu_4_8_1_10"   if T_gnu_4_8_1_10 && SEC_TOOL_DISABLED
+   default "icc_12_0_0_4 diab_5_9_1_0"   if T_icc_12_0_0_4 && T2_diab_5_9_1_0
+   default "icc_12_0_0_4 diab_5_9_4_9"   if T_icc_12_0_0_4 && T2_diab_5_9_4_9
+   default "icc_12_0_0_4 diab_5_9_6_5"   if T_icc_12_0_0_4 && T2_diab_5_9_6_5
+   default "icc_12_0_0_4 gnu_4_3_3_1"   if T_icc_12_0_0_4 && T2_gnu_4_3_3_1
+   default "icc_12_0_0_4 gnu_4_3_3_2"   if T_icc_12_0_0_4 && T2_gnu_4_3_3_2
+   default "icc_12_0_0_4 gnu_4_8_1_10"   if T_icc_12_0_0_4 && T2_gnu_4_8_1_10
+   default "icc_12_0_0_4 llvm_3_8_1_1"   if T_icc_12_0_0_4 && T2_llvm_3_8_1_1
+   default "icc_12_0_0_4"   if T_icc_12_0_0_4 && SEC_TOOL_DISABLED
+   default "icc_16_0_0_039 diab_5_9_1_0"   if T_icc_16_0_0_039 && T2_diab_5_9_1_0
+   default "icc_16_0_0_039 diab_5_9_4_9"   if T_icc_16_0_0_039 && T2_diab_5_9_4_9
+   default "icc_16_0_0_039 diab_5_9_6_5"   if T_icc_16_0_0_039 && T2_diab_5_9_6_5
+   default "icc_16_0_0_039 gnu_4_3_3_1"   if T_icc_16_0_0_039 && T2_gnu_4_3_3_1
+   default "icc_16_0_0_039 gnu_4_3_3_2"   if T_icc_16_0_0_039 && T2_gnu_4_3_3_2
+   default "icc_16_0_0_039 gnu_4_8_1_10"   if T_icc_16_0_0_039 && T2_gnu_4_8_1_10
+   default "icc_16_0_0_039 llvm_3_8_1_1"   if T_icc_16_0_0_039 && T2_llvm_3_8_1_1
+   default "icc_16_0_0_039"   if T_icc_16_0_0_039 && SEC_TOOL_DISABLED
+   default "llvm_3_8_1_1 diab_5_9_1_0"   if T_llvm_3_8_1_1 && T2_diab_5_9_1_0
+   default "llvm_3_8_1_1 diab_5_9_4_9"   if T_llvm_3_8_1_1 && T2_diab_5_9_4_9
+   default "llvm_3_8_1_1 diab_5_9_6_5"   if T_llvm_3_8_1_1 && T2_diab_5_9_6_5
+   default "llvm_3_8_1_1 gnu_4_3_3_1"   if T_llvm_3_8_1_1 && T2_gnu_4_3_3_1
+   default "llvm_3_8_1_1 gnu_4_3_3_2"   if T_llvm_3_8_1_1 && T2_gnu_4_3_3_2
+   default "llvm_3_8_1_1 gnu_4_8_1_10"   if T_llvm_3_8_1_1 && T2_gnu_4_8_1_10
+   default "llvm_3_8_1_1 icc_12_0_0_4"   if T_llvm_3_8_1_1 && T2_icc_12_0_0_4
+   default "llvm_3_8_1_1 icc_16_0_0_039"   if T_llvm_3_8_1_1 && T2_icc_16_0_0_039
+   default "llvm_3_8_1_1"   if T_llvm_3_8_1_1 && SEC_TOOL_DISABLED
+
+config ALL_TOOLS
+   string
+   default "diab_5_9_1_0 gnu_4_3_3_1"   if T_diab_5_9_1_0 && T2_gnu_4_3_3_1
+   default "diab_5_9_1_0 gnu_4_3_3_2"   if T_diab_5_9_1_0 && T2_gnu_4_3_3_2
+   default "diab_5_9_1_0 gnu_4_8_1_10"   if T_diab_5_9_1_0 && T2_gnu_4_8_1_10
+   default "diab_5_9_1_0 icc_12_0_0_4"   if T_diab_5_9_1_0 && T2_icc_12_0_0_4
+   default "diab_5_9_1_0 icc_16_0_0_039"   if T_diab_5_9_1_0 && T2_icc_16_0_0_039
+   default "diab_5_9_1_0 llvm_3_8_1_1"   if T_diab_5_9_1_0 && T2_llvm_3_8_1_1
+   default "diab_5_9_1_0"   if T_diab_5_9_1_0 && SEC_TOOL_DISABLED 
+   default "diab_5_9_4_9 gnu_4_3_3_1"   if T_diab_5_9_4_9 && T2_gnu_4_3_3_1
+   default "diab_5_9_4_9 gnu_4_3_3_2"   if T_diab_5_9_4_9 && T2_gnu_4_3_3_2
+   default "diab_5_9_4_9 gnu_4_8_1_10"   if T_diab_5_9_4_9 && T2_gnu_4_8_1_10
+   default "diab_5_9_4_9 icc_12_0_0_4"   if T_diab_5_9_4_9 && T2_icc_12_0_0_4
+   default "diab_5_9_4_9 icc_16_0_0_039"   if T_diab_5_9_4_9 && T2_icc_16_0_0_039
+   default "diab_5_9_4_9 llvm_3_8_1_1"   if T_diab_5_9_4_9 && T2_llvm_3_8_1_1
+   default "diab_5_9_4_9"   if T_diab_5_9_4_9 && SEC_TOOL_DISABLED 
+   default "diab_5_9_6_5 gnu_4_3_3_1"   if T_diab_5_9_6_5 && T2_gnu_4_3_3_1
+   default "diab_5_9_6_5 gnu_4_3_3_2"   if T_diab_5_9_6_5 && T2_gnu_4_3_3_2
+   default "diab_5_9_6_5 gnu_4_8_1_10"   if T_diab_5_9_6_5 && T2_gnu_4_8_1_10
+   default "diab_5_9_6_5 icc_12_0_0_4"   if T_diab_5_9_6_5 && T2_icc_12_0_0_4
+   default "diab_5_9_6_5 icc_16_0_0_039"   if T_diab_5_9_6_5 && T2_icc_16_0_0_039
+   default "diab_5_9_6_5 llvm_3_8_1_1"   if T_diab_5_9_6_5 && T2_llvm_3_8_1_1
+   default "diab_5_9_6_5"   if T_diab_5_9_6_5 && SEC_TOOL_DISABLED 
+   default "gnu_4_3_3_1 diab_5_9_1_0"   if T_gnu_4_3_3_1 && T2_diab_5_9_1_0
+   default "gnu_4_3_3_1 diab_5_9_4_9"   if T_gnu_4_3_3_1 && T2_diab_5_9_4_9
+   default "gnu_4_3_3_1 diab_5_9_6_5"   if T_gnu_4_3_3_1 && T2_diab_5_9_6_5
+   default "gnu_4_3_3_1 icc_12_0_0_4"   if T_gnu_4_3_3_1 && T2_icc_12_0_0_4
+   default "gnu_4_3_3_1 icc_16_0_0_039"   if T_gnu_4_3_3_1 && T2_icc_16_0_0_039
+   default "gnu_4_3_3_1 llvm_3_8_1_1"   if T_gnu_4_3_3_1 && T2_llvm_3_8_1_1
+   default "gnu_4_3_3_1"   if T_gnu_4_3_3_1 && SEC_TOOL_DISABLED 
+   default "gnu_4_3_3_2 diab_5_9_1_0"   if T_gnu_4_3_3_2 && T2_diab_5_9_1_0
+   default "gnu_4_3_3_2 diab_5_9_4_9"   if T_gnu_4_3_3_2 && T2_diab_5_9_4_9
+   default "gnu_4_3_3_2 diab_5_9_6_5"   if T_gnu_4_3_3_2 && T2_diab_5_9_6_5
+   default "gnu_4_3_3_2 icc_12_0_0_4"   if T_gnu_4_3_3_2 && T2_icc_12_0_0_4
+   default "gnu_4_3_3_2 icc_16_0_0_039"   if T_gnu_4_3_3_2 && T2_icc_16_0_0_039
+   default "gnu_4_3_3_2 llvm_3_8_1_1"   if T_gnu_4_3_3_2 && T2_llvm_3_8_1_1
+   default "gnu_4_3_3_2"   if T_gnu_4_3_3_2 && SEC_TOOL_DISABLED 
+   default "gnu_4_8_1_10 diab_5_9_1_0"   if T_gnu_4_8_1_10 && T2_diab_5_9_1_0
+   default "gnu_4_8_1_10 diab_5_9_4_9"   if T_gnu_4_8_1_10 && T2_diab_5_9_4_9
+   default "gnu_4_8_1_10 diab_5_9_6_5"   if T_gnu_4_8_1_10 && T2_diab_5_9_6_5
+   default "gnu_4_8_1_10 icc_12_0_0_4"   if T_gnu_4_8_1_10 && T2_icc_12_0_0_4
+   default "gnu_4_8_1_10 icc_16_0_0_039"   if T_gnu_4_8_1_10 && T2_icc_16_0_0_039
+   default "gnu_4_8_1_10 llvm_3_8_1_1"   if T_gnu_4_8_1_10 && T2_llvm_3_8_1_1
+   default "gnu_4_8_1_10"   if T_gnu_4_8_1_10 && SEC_TOOL_DISABLED 
+   default "icc_12_0_0_4 diab_5_9_1_0"   if T_icc_12_0_0_4 && T2_diab_5_9_1_0
+   default "icc_12_0_0_4 diab_5_9_4_9"   if T_icc_12_0_0_4 && T2_diab_5_9_4_9
+   default "icc_12_0_0_4 diab_5_9_6_5"   if T_icc_12_0_0_4 && T2_diab_5_9_6_5
+   default "icc_12_0_0_4 gnu_4_3_3_1"   if T_icc_12_0_0_4 && T2_gnu_4_3_3_1
+   default "icc_12_0_0_4 gnu_4_3_3_2"   if T_icc_12_0_0_4 && T2_gnu_4_3_3_2
+   default "icc_12_0_0_4 gnu_4_8_1_10"   if T_icc_12_0_0_4 && T2_gnu_4_8_1_10
+   default "icc_12_0_0_4 llvm_3_8_1_1"   if T_icc_12_0_0_4 && T2_llvm_3_8_1_1
+   default "icc_12_0_0_4"   if T_icc_12_0_0_4 && SEC_TOOL_DISABLED 
+   default "icc_16_0_0_039 diab_5_9_1_0"   if T_icc_16_0_0_039 && T2_diab_5_9_1_0
+   default "icc_16_0_0_039 diab_5_9_4_9"   if T_icc_16_0_0_039 && T2_diab_5_9_4_9
+   default "icc_16_0_0_039 diab_5_9_6_5"   if T_icc_16_0_0_039 && T2_diab_5_9_6_5
+   default "icc_16_0_0_039 gnu_4_3_3_1"   if T_icc_16_0_0_039 && T2_gnu_4_3_3_1
+   default "icc_16_0_0_039 gnu_4_3_3_2"   if T_icc_16_0_0_039 && T2_gnu_4_3_3_2
+   default "icc_16_0_0_039 gnu_4_8_1_10"   if T_icc_16_0_0_039 && T2_gnu_4_8_1_10
+   default "icc_16_0_0_039 llvm_3_8_1_1"   if T_icc_16_0_0_039 && T2_llvm_3_8_1_1
+   default "icc_16_0_0_039"   if T_icc_16_0_0_039 && SEC_TOOL_DISABLED 
+   default "llvm_3_8_1_1 diab_5_9_1_0"   if T_llvm_3_8_1_1 && T2_diab_5_9_1_0
+   default "llvm_3_8_1_1 diab_5_9_4_9"   if T_llvm_3_8_1_1 && T2_diab_5_9_4_9
+   default "llvm_3_8_1_1 diab_5_9_6_5"   if T_llvm_3_8_1_1 && T2_diab_5_9_6_5
+   default "llvm_3_8_1_1 gnu_4_3_3_1"   if T_llvm_3_8_1_1 && T2_gnu_4_3_3_1
+   default "llvm_3_8_1_1 gnu_4_3_3_2"   if T_llvm_3_8_1_1 && T2_gnu_4_3_3_2
+   default "llvm_3_8_1_1 gnu_4_8_1_10"   if T_llvm_3_8_1_1 && T2_gnu_4_8_1_10
+   default "llvm_3_8_1_1 icc_12_0_0_4"   if T_llvm_3_8_1_1 && T2_icc_12_0_0_4
+   default "llvm_3_8_1_1 icc_16_0_0_039"   if T_llvm_3_8_1_1 && T2_icc_16_0_0_039
+   default "llvm_3_8_1_1"   if T_llvm_3_8_1_1 && SEC_TOOL_DISABLED 
+
+config diab_VERSION
+   string
+   default "diab_5_9_1_0" if T_diab_5_9_1_0 || T2_diab_5_9_1_0
+   default "diab_5_9_4_9" if T_diab_5_9_4_9 || T2_diab_5_9_4_9
+   default "diab_5_9_6_5" if T_diab_5_9_6_5 || T2_diab_5_9_6_5
+
+config gnu_VERSION
+   string
+   default "gnu_4_3_3_1" if T_gnu_4_3_3_1 || T2_gnu_4_3_3_1
+   default "gnu_4_3_3_2" if T_gnu_4_3_3_2 || T2_gnu_4_3_3_2
+   default "gnu_4_8_1_10" if T_gnu_4_8_1_10 || T2_gnu_4_8_1_10
+
+config icc_VERSION
+   string
+   default "icc_12_0_0_4" if T_icc_12_0_0_4 || T2_icc_12_0_0_4
+   default "icc_16_0_0_039" if T_icc_16_0_0_039 || T2_icc_16_0_0_039
+
+config llvm_VERSION
+   string
+   default "llvm_3_8_1_1" if T_llvm_3_8_1_1 || T2_llvm_3_8_1_1
+
+config  ADDEDCFLAGS
+    string "Optional kernel compiler flags for Primary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Primary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDCFLAGS is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDCFLAGS .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+
+
+config  ADDEDUSERCFLAGS
+    string "Optional user compiler flags for Primary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Primary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDUSERCFLAGS is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDUSERCFLAGS .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+
+
+config  ADDEDCFLAGS_APP
+    string "Optional user application compiler flags for Primary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Primary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDCFLAGS_APP is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDCFLAGS_APP .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+
+
+config  ADDEDCFLAGS2
+    depends on !SEC_TOOL_DISABLED
+    string "Optional kernel compiler flags for Secondary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Secondary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDCFLAGS2 is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDCFLAGS2 .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+
+
+config  ADDEDUSERCFLAGS2
+    depends on !SEC_TOOL_DISABLED
+    string "Optional user compiler flags for Secondary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Secondary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDUSERCFLAGS2 is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDUSERCFLAGS2 .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+
+
+config  ADDEDCFLAGS_APP2
+    depends on !SEC_TOOL_DISABLED
+    string "Optional user application compiler flags for Secondary Tool [?]"
+    default ""
+    help 
+          These optional flags will be passed to the Secondary Tool compiler.
+          Sometimes it is inconvenient to modify config.h to control a VSB  configuration. ADDEDCFLAGS_APP2 is useful for defining additional macros  without modifying any source code.
+          Consider the hypothetical Acme XYZ-75 BSP that supports two hardware  configurations. The XYZ-75 has a daughter board interface, and in this  interface either a Galaxy-A or a Galaxy-B module is installed. The  drivers for the modules are found in the directory src/drv/multi.
+          The macro GALAXY_C_FILE determines which driver to include at compile-time.  The file named by GALAXY_C_FILE is #included by sysLib.c.
+          The default configuration (Galaxy-A module installed) is established in config.h:
+          #ifndef GALAXY_C_FILE
+          #define GALAXY_C_FILE "multi/acmeGalaxyA.c"
+          #endif /* GALAXY_C_FILE */ 
+          When make is called normally, the VSB supports the XYZ-75 with the Galaxy-A  module installed. 
+          To override the default and build the VSB for the  XYZ-75/Galaxy-B configuration, add -DGALAXY_C_FILE=multi/acmeGalaxy02.c to ADDEDCFLAGS_APP2 .
+          For ease of use, you can encapsulate a lengthy command within a shell script.
+

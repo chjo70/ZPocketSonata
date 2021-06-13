@@ -1,0 +1,5 @@
+#Thu Apr 22 09:40:22 KST 2021
+__DEFAULT__=false
+com.windriver.ui.klSearch.master=true
+org.eclipse.help.ui.localSearch.master=true
+expression=std\:\:list

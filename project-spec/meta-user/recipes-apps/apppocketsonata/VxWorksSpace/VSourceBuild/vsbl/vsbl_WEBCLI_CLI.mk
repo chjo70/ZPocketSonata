@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# WEBCLI_CLI Section
+##########################
+
+
+ifdef _WRS_CONFIG_WEBCLI_CLI
+VSBL_WEBCLI_CLI_SRC = 
+VSBL_WEBCLI_CLI_DEPEND = 
+
+ifdef _WRS_CONFIG_WEBCLI_1_0_0_3_CLI_1_0_1_7
+VSBL_WEBCLI_CLI_SRC += WEBCLI_CLI
+VSBL_WEBCLI_CLI_DEPEND += WEBCLI_BACKPLANE
+VSBL_WEBCLI_CLI_DEPEND += WEBCLI_COMMON
+WEBCLI_CLI_FASTBUILD = YES
+VSBL_WEBCLI_CLI_PATH = $(WIND_BASE)/pkgs/app/webcli-1.0.0.3/cli-1.0.1.7
+VSBL_WEBCLI_CLI_VERSION = WEBCLI_1_0_0_3_CLI_1_0_1_7
+endif
+endif
+

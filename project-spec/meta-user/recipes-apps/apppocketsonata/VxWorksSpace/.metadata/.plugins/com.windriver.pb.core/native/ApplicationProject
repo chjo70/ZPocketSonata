@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<attributes>
+    <mapAttribute>
+        <intAttribute key="BuildSupportEnabled" value="1"/>
+        <listAttribute key="BLD::Info|GlobalMacros">
+            <stringAttribute value="PROJECT_TYPE"/>
+            <stringAttribute value="DEFINES"/>
+        </listAttribute>
+        <stringAttribute key="BLD::Info|GlobalMacro|DEFINES" value=""/>
+        <stringAttribute key="BLD::Info|GlobalMacro|PROJECT_TYPE" value="APP"/>
+        <listAttribute key="BLD::Info|Incl|Linux-gnu-native-3.x-4.x"/>
+        <listAttribute key="BLD::Info|Incl|Windows-gnu-native-3.x-4.x"/>
+        <listAttribute key="BLD::Info|Macros">
+            <stringAttribute value="TOOL_PATH"/>
+            <stringAttribute value="LIBPATH"/>
+            <stringAttribute value="LIBS"/>
+            <stringAttribute value="ADAPT_DEPS"/>
+        </listAttribute>
+        <stringAttribute key="BLD::Info|Macro|ADAPT_DEPS|value|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|ADAPT_DEPS|value|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|LIBPATH|value|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|LIBPATH|value|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|LIBS|value|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|LIBS|value|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|TOOL_PATH|value|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Macro|TOOL_PATH|value|Windows-gnu-native-3.x-4.x" value=""/>
+        <listAttribute key="BLD::Info|Tools">
+            <stringAttribute value="C-Compiler"/>
+            <stringAttribute value="C++-Compiler"/>
+            <stringAttribute value="C-Linker"/>
+            <stringAttribute value="C++-Linker"/>
+            <stringAttribute value="Librarian"/>
+            <stringAttribute value="Assembler"/>
+        </listAttribute>
+        <stringAttribute key="BLD::Info|Tool|Assembler|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%assemblerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%assemblerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|dbgFlags|Linux-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|dbgFlags|Windows-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|derivedSigs|Linux-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|flags|Linux-gnu-native-3.x-4.x" value="-x assembler -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|flags|Windows-gnu-native-3.x-4.x" value="-x assembler -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|Assembler|object" value="true"/>
+        <booleanAttribute key="BLD::Info|Tool|Assembler|passAble" value="false"/>
+        <stringAttribute key="BLD::Info|Tool|Assembler|sigs" value="*.ppc;*.s"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)g++ %DebugModeFlags% %ToolFlags% $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)g++ %DebugModeFlags% %ToolFlags% $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|Linux-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|Windows-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|Linux-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|Linux-gnu-native-3.x-4.x" value="-ansi -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|Windows-gnu-native-3.x-4.x" value="-ansi -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|C++-Compiler|object" value="true"/>
+        <booleanAttribute key="BLD::Info|Tool|C++-Compiler|passAble" value="false"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Compiler|sigs" value="*.cpp;*.cxx;*.C;*.cc"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%cpplinkerprefix% $(TOOL_PATH)g++ %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS)"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%cpplinkerprefix% $(TOOL_PATH)g++ %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS)"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|dbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|dbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|derivedSigs|Linux-gnu-native-3.x-4.x" value="*"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.exe"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|flags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|flags|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|C++-Linker|object" value="false"/>
+        <booleanAttribute key="BLD::Info|Tool|C++-Linker|passAble" value="false"/>
+        <stringAttribute key="BLD::Info|Tool|C++-Linker|sigs" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%ccompilerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%ccompilerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) $(DEFINES) -MD -MP -c -o %OutFile% %InFile%"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|dbgFlags|Linux-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|dbgFlags|Windows-gnu-native-3.x-4.x" value="-g"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|Linux-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.o"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|flags|Linux-gnu-native-3.x-4.x" value="-ansi -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|flags|Windows-gnu-native-3.x-4.x" value="-ansi -fno-builtin -Wall"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|C-Compiler|object" value="true"/>
+        <booleanAttribute key="BLD::Info|Tool|C-Compiler|passAble" value="false"/>
+        <stringAttribute key="BLD::Info|Tool|C-Compiler|sigs" value="*.c"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%clinkerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS)"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%clinkerprefix% $(TOOL_PATH)gcc %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS)"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|dbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|dbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|derivedSigs|Linux-gnu-native-3.x-4.x" value="*"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.exe"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|flags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|flags|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|C-Linker|object" value="false"/>
+        <booleanAttribute key="BLD::Info|Tool|C-Linker|passAble" value="false"/>
+        <stringAttribute key="BLD::Info|Tool|C-Linker|sigs" value=""/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|cmd|Linux-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%archiverprefix% $(TOOL_PATH)ar %ToolFlags% %OutFile% %Objects% $(ADDED_OBJECTS)"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|cmd|Windows-gnu-native-3.x-4.x" value="echo &quot;building $@&quot;;%archiverprefix% $(TOOL_PATH)ar %ToolFlags% %OutFile% %Objects% $(ADDED_OBJECTS)"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|dbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|dbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|derivedSigs|Linux-gnu-native-3.x-4.x" value="*.a"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|derivedSigs|Windows-gnu-native-3.x-4.x" value="*.a"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|flags|Linux-gnu-native-3.x-4.x" value="crus"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|flags|Windows-gnu-native-3.x-4.x" value="crus"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|nonDbgFlags|Linux-gnu-native-3.x-4.x" value=""/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|nonDbgFlags|Windows-gnu-native-3.x-4.x" value=""/>
+        <booleanAttribute key="BLD::Info|Tool|Librarian|object" value="false"/>
+        <booleanAttribute key="BLD::Info|Tool|Librarian|passAble" value="true"/>
+        <stringAttribute key="BLD::Info|Tool|Librarian|sigs" value=""/>
+        <stringAttribute key="BLD::Info|cmd" value="%makeprefix% make --no-print-directory JOBS=1"/>
+        <stringAttribute key="BLD::Info|defaultSpec" value="Windows-gnu-native-3.x-4.x"/>
+        <booleanAttribute key="BLD::Info|defaultDebugMode" value="true"/>
+        <stringAttribute key="BLD::Info|redirDir|Linux-gnu-native-3.x-4.x" value="Linux-gnu-native-3.x-4.x"/>
+        <stringAttribute key="BLD::Info|redirDir|Windows-gnu-native-3.x-4.x" value="Windows-gnu-native-3.x-4.x"/>
+        <stringAttribute key="BLD::Info|redirRoot" value=""/>
+        <listAttribute key="BLD::Info|specs">
+            <stringAttribute value="Linux-gnu-native-3.x-4.x"/>
+            <stringAttribute value="Windows-gnu-native-3.x-4.x"/>
+        </listAttribute>
+    </mapAttribute>
+</attributes>

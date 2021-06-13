@@ -1,0 +1,22 @@
+# Automatically generated file: do not edit
+
+##########################
+# NODEJS Section
+##########################
+
+
+ifdef _WRS_CONFIG_NODEJS
+VSBL_NODEJS_SRC = 
+VSBL_NODEJS_DEPEND = 
+
+ifdef _WRS_CONFIG_NODEJS_4_4_3_2
+VSBL_NODEJS_SRC += NODEJS
+VSBL_NODEJS_DEPEND += LANG_LIB_CPLUS_CPLUS_USER_2011
+VSBL_NODEJS_DEPEND += OPENSSL
+VSBL_NODEJS_DEPEND += USER_MANAGEMENT
+NODEJS_FASTBUILD = YES
+VSBL_NODEJS_PATH = $(WIND_BASE)/pkgs/app/nodejs-4.4.3.2
+VSBL_NODEJS_VERSION = NODEJS_4_4_3_2
+endif
+endif
+

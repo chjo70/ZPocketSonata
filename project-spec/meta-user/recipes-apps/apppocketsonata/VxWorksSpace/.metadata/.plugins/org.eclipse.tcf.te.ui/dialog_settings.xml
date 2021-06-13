@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="StartRTPDialog">
+		<list key="Working_Directory">
+		</list>
+		<list key="Arguments">
+			<item value="sss"/>
+		</list>
+		<list key="Target_Path">
+		</list>
+		<list key="Host_Path">
+			<item value="VSIGA\VSourceBuild_PPCE6500gnu_SMP\VSIGA\Debug\VSIGA.out"/>
+		</list>
+		<list key="Library_Path">
+		</list>
+	</section>
+	<section name="ModuleLoadDialogContext">
+		<item value="525" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="461" key="DIALOG_HEIGHT"/>
+		<item value="706" key="DIALOG_X_ORIGIN"/>
+		<item value="221" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="ModuleUnloadDialog">
+	</section>
+	<section name="ModuleLoadDialog">
+	</section>
+	<section name="ModuleLoadButtonSection">
+		<item value="525" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="742" key="DIALOG_HEIGHT"/>
+		<item value="0" key="DIALOG_X_ORIGIN"/>
+		<item value="-213" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="ModuleUnloadDialogContext">
+		<item value="525" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="367" key="DIALOG_HEIGHT"/>
+		<item value="706" key="DIALOG_X_ORIGIN"/>
+		<item value="284" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="StartKernelTaskDialogContext">
+		<item value="563" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="706" key="DIALOG_HEIGHT"/>
+		<item value="687" key="DIALOG_X_ORIGIN"/>
+		<item value="58" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="VxWorksRunModeConfigPanel">
+		<item value="525" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="306" key="DIALOG_HEIGHT"/>
+		<item value="706" key="DIALOG_X_ORIGIN"/>
+		<item value="324" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="StartKernelTaskDialog">
+		<list key="Entry_Point">
+			<item value="start"/>
+		</list>
+		<list key="Arguments">
+		</list>
+	</section>
+	<section name="StartRTPDialogContext">
+		<item value="697" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="543" key="DIALOG_HEIGHT"/>
+		<item value="620" key="DIALOG_X_ORIGIN"/>
+		<item value="166" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

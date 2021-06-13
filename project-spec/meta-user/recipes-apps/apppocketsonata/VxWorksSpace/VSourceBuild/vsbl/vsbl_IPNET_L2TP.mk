@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# IPNET_L2TP Section
+##########################
+
+
+ifdef _WRS_CONFIG_IPNET_L2TP
+VSBL_IPNET_L2TP_SRC = 
+VSBL_IPNET_L2TP_DEPEND = 
+
+ifdef _WRS_CONFIG_IPNET_1_1_1_2_LINKPROTO_1_0_1_2_L2TP_1_0_0_7
+VSBL_IPNET_L2TP_SRC += IPNET_L2TP
+VSBL_IPNET_L2TP_DEPEND += IPNET_COREIP
+VSBL_IPNET_L2TP_DEPEND += SEC_HASH
+IPNET_L2TP_FASTBUILD = YES
+VSBL_IPNET_L2TP_PATH = $(WIND_BASE)/pkgs/net/ipnet-1.1.1.2/linkproto/l2tp-1.0.0.7
+VSBL_IPNET_L2TP_VERSION = IPNET_1_1_1_2_LINKPROTO_1_0_1_2_L2TP_1_0_0_7
+endif
+endif
+

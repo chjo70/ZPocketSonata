@@ -1,0 +1,4 @@
+#Mon May 24 12:24:25 KST 2021
+__DEFAULT__=true
+com.windriver.ui.klSearch.master=true
+org.eclipse.help.ui.localSearch.master=true

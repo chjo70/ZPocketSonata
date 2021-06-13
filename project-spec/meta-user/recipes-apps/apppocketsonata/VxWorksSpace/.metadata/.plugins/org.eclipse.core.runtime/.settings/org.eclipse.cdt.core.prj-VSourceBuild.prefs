@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+indexer/indexAllFiles=false
+indexer/indexAllHeaderVersions=false
+indexer/indexImportLocation=.settings/cdt-index.zip
+indexer/indexOnOpen=false
+indexer/indexUnusedHeadersWithAlternateLang=false
+indexer/indexUnusedHeadersWithDefaultLang=true
+indexer/indexerId=org.eclipse.cdt.core.fastIndexer
+indexer/preferenceScope=1
+indexer/skipFilesLargerThanMB=8
+indexer/skipImplicitReferences=true
+indexer/skipIncludedFilesLargerThanMB=16
+indexer/skipMacroReferences=false
+indexer/skipReferences=false
+indexer/skipTypeReferences=false
+indexer/updatePolicy=1
+indexer/useHeuristicIncludeResolution=false

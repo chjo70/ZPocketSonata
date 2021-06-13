@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wrxml>
+    <properties platform="VxWorks7" platform_name="vxworks-7" root="1" type="DownloadableKernelModuleProject"/>
+    <attributes>
+        <mapAttribute>
+            <intAttribute key="BuildSupportEnabled" value="1"/>
+            <stringAttribute key="BLD::Info|cmd" value="%makeprefix% make --no-print-directory"/>
+            <listAttribute key="BLD::Info|GlobalMacros">
+                <stringAttribute value="PROJECT_TYPE"/>
+                <stringAttribute value="DEFINES"/>
+                <stringAttribute value="EXPAND_DBG"/>
+                <stringAttribute value="APICHECK_OPTIONS"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|GlobalMacro|PROJECT_TYPE" value="DKM"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|DEFINES" value=""/>
+            <stringAttribute key="BLD::Info|GlobalMacro|EXPAND_DBG" value="0"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|APICHECK_OPTIONS" value="-warning"/>
+            <listAttribute key="BLD::Info|Macros">
+                <stringAttribute value="VX_CPU_FAMILY"/>
+                <stringAttribute value="CPU"/>
+                <stringAttribute value="TOOL_FAMILY"/>
+                <stringAttribute value="TOOL_VERSION"/>
+                <stringAttribute value="_CC_VERSION"/>
+                <stringAttribute value="TOOL"/>
+                <stringAttribute value="TOOL_PATH"/>
+                <stringAttribute value="CC_ARCH_SPEC"/>
+                <stringAttribute value="VSB_DIR"/>
+                <stringAttribute value="VSB_CONFIG_FILE"/>
+                <stringAttribute value="LIBPATH"/>
+                <stringAttribute value="LIBS"/>
+                <stringAttribute value="DKM_LONGCALL"/>
+                <stringAttribute value="BDGEN_VSB_INCLUDE"/>
+                <stringAttribute value="APICHECK_CMD"/>
+                <stringAttribute value="APICHECK"/>
+            </listAttribute>
+            <listAttribute key="BLD::Info|Tools">
+                <stringAttribute value="C-Compiler"/>
+                <stringAttribute value="C++-Compiler"/>
+                <stringAttribute value="Linker"/>
+                <stringAttribute value="Partial Image Linker"/>
+                <stringAttribute value="Librarian"/>
+                <stringAttribute value="Assembler"/>
+                <stringAttribute value="POST_BUILD"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|sigs" value="*.c"/>
+            <booleanAttribute key="BLD::Info|Tool|C-Compiler|object" value="true"/>
+            <booleanAttribute key="BLD::Info|Tool|C-Compiler|passAble" value="false"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|sigs" value="*.cpp;*.CPP;*.C;*.cxx;*.cc"/>
+            <booleanAttribute key="BLD::Info|Tool|C++-Compiler|object" value="true"/>
+            <booleanAttribute key="BLD::Info|Tool|C++-Compiler|passAble" value="false"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|sigs" value=""/>
+            <booleanAttribute key="BLD::Info|Tool|Linker|object" value="false"/>
+            <booleanAttribute key="BLD::Info|Tool|Linker|passAble" value="false"/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|sigs" value=""/>
+            <booleanAttribute key="BLD::Info|Tool|Partial Image Linker|object" value="false"/>
+            <booleanAttribute key="BLD::Info|Tool|Partial Image Linker|passAble" value="true"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|sigs" value=""/>
+            <booleanAttribute key="BLD::Info|Tool|Librarian|object" value="false"/>
+            <booleanAttribute key="BLD::Info|Tool|Librarian|passAble" value="true"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|sigs" value="*.s;*.S"/>
+            <booleanAttribute key="BLD::Info|Tool|Assembler|object" value="true"/>
+            <booleanAttribute key="BLD::Info|Tool|Assembler|passAble" value="false"/>
+            <listAttribute key="BLD::Info|specs">
+                <stringAttribute value="VSourceBuild_PPCE6500diab_SMP"/>
+                <stringAttribute value="VSourceBuild_PPCE6500gnu_SMP"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|redirDir|VSourceBuild_PPCE6500diab_SMP" value="VSourceBuild_PPCE6500diab_SMP"/>
+            <stringAttribute key="BLD::Info|Macro|VX_CPU_FAMILY|value|VSourceBuild_PPCE6500diab_SMP" value="ppc"/>
+            <stringAttribute key="BLD::Info|Macro|CPU|value|VSourceBuild_PPCE6500diab_SMP" value="PPCE6500"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_FAMILY|value|VSourceBuild_PPCE6500diab_SMP" value="diab"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_VERSION|value|VSourceBuild_PPCE6500diab_SMP" value="diab_5_9_6_1"/>
+            <stringAttribute key="BLD::Info|Macro|_CC_VERSION|value|VSourceBuild_PPCE6500diab_SMP" value="diab_5_9_6_5"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL|value|VSourceBuild_PPCE6500diab_SMP" value="diab"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_PATH|value|VSourceBuild_PPCE6500diab_SMP" value="$(WIND_HOME)/compilers/diab-5.9.6.5/$(WIND_VX7_DIAB_HOST_TYPE)/bin"/>
+            <stringAttribute key="BLD::Info|Macro|CC_ARCH_SPEC|value|VSourceBuild_PPCE6500diab_SMP" value=" -tPPCE6500FV:vxworks7 -Xkeywords=0x0 -D_WRS_HARDWARE_FP"/>
+            <stringAttribute key="BLD::Info|Macro|VSB_DIR|value|VSourceBuild_PPCE6500diab_SMP" value="$(PRJ_ROOT_DIR)/../VSourceBuild"/>
+            <stringAttribute key="BLD::Info|Macro|VSB_CONFIG_FILE|value|VSourceBuild_PPCE6500diab_SMP" value="$(VSB_DIR)/h/config/vsbConfig.h"/>
+            <stringAttribute key="BLD::Info|Macro|LIBPATH|value|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Macro|LIBS|value|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Macro|DKM_LONGCALL|value|VSourceBuild_PPCE6500diab_SMP" value="-Xcode-absolute-far"/>
+            <stringAttribute key="BLD::Info|Macro|BDGEN_VSB_INCLUDE|value|VSourceBuild_PPCE6500diab_SMP" value="$(VSB_DIR)/h/config/auto.conf"/>
+            <stringAttribute key="BLD::Info|Macro|APICHECK_CMD|value|VSourceBuild_PPCE6500diab_SMP" value="apicheck.sh -r &quot;$(VSB_DIR)/krnl/apicheck/forbidden_api.lst&quot; -n &quot;nmppc&quot; -u -s &quot;$&lt;&quot; &quot;$@&quot; $(APICHECK_OPTIONS)"/>
+            <stringAttribute key="BLD::Info|Macro|APICHECK|value|VSourceBuild_PPCE6500diab_SMP" value="0"/>
+            <listAttribute key="BLD::Info|Incl|VSourceBuild_PPCE6500diab_SMP">
+                <stringAttribute value="-I$(VSB_DIR)/share/h"/>
+                <stringAttribute value="-I$(VSB_DIR)/krnl/h/system"/>
+                <stringAttribute value="-I$(VSB_DIR)/krnl/h/public"/>
+            </listAttribute>
+            <listAttribute key="BLD::Info|Definess|VSourceBuild_PPCE6500diab_SMP">
+                <stringAttribute value="-DCPU=_VX_$(CPU)"/>
+                <stringAttribute value="-DTOOL_FAMILY=$(TOOL_FAMILY)"/>
+                <stringAttribute value="-DTOOL=$(TOOL)"/>
+                <stringAttribute value="-D_WRS_KERNEL"/>
+                <stringAttribute value="-D_WRS_VX_SMP"/>
+                <stringAttribute value="-D_WRS_CONFIG_SMP"/>
+                <stringAttribute value="-D_VSB_CONFIG_FILE=\&quot;$(VSB_DIR)/h/config/vsbConfig.h\&quot;"/>
+                <stringAttribute value=" "/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-g -Xdebug-dwarf3"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-XO -Xsize-opt"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|flags|VSourceBuild_PPCE6500diab_SMP" value="$(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;;%ccompilerprefix% $(TOOL_PATH)/dcc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-g -Xdebug-dwarf3"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-XO -Xsize-opt"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_PPCE6500diab_SMP" value="$(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)/dcc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.out"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-g -Xdebug-dwarf3"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-XO -Xsize-opt"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|flags|VSourceBuild_PPCE6500diab_SMP" value="-r4"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;;rm -f %OutFile%;$(TOOL_PATH)/ddump -Ng %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/dcc %DebugModeFlags% $(CC_ARCH_SPEC) -Xdollar-in-ident -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations  $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/dld -tPPCE6500FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) &amp;&amp; true"/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|flags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;; %linkerprefix% $(TOOL_PATH)/dld -tPPCE6500FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.a"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|flags|VSourceBuild_PPCE6500diab_SMP" value="crus"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;;%archiverprefix% $(TOOL_PATH)/dar %ToolFlags% %OutFile% %Objects% $(ADDED_OBJECTS)"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-g -Xdebug-dwarf3"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|nonDbgFlags|VSourceBuild_PPCE6500diab_SMP" value="-XO -Xsize-opt"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|flags|VSourceBuild_PPCE6500diab_SMP" value="$(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|cmd|VSourceBuild_PPCE6500diab_SMP" value="echo &quot;building $@&quot;;%assemblerprefix% $(TOOL_PATH)/dcc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile%"/>
+            <stringAttribute key="BLD::Info|redirDir|VSourceBuild_PPCE6500gnu_SMP" value="VSourceBuild_PPCE6500gnu_SMP"/>
+            <stringAttribute key="BLD::Info|Macro|VX_CPU_FAMILY|value|VSourceBuild_PPCE6500gnu_SMP" value="ppc"/>
+            <stringAttribute key="BLD::Info|Macro|CPU|value|VSourceBuild_PPCE6500gnu_SMP" value="PPCE6500"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_FAMILY|value|VSourceBuild_PPCE6500gnu_SMP" value="gnu"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_VERSION|value|VSourceBuild_PPCE6500gnu_SMP" value="gnu_4_8_1_8"/>
+            <stringAttribute key="BLD::Info|Macro|_CC_VERSION|value|VSourceBuild_PPCE6500gnu_SMP" value="gnu_4_8_1_10"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL|value|VSourceBuild_PPCE6500gnu_SMP" value="gnu"/>
+            <stringAttribute key="BLD::Info|Macro|TOOL_PATH|value|VSourceBuild_PPCE6500gnu_SMP" value="$(WIND_HOME)/compilers/gnu-4.8.1.10/$(WIND_VX7_GNU_HOST_TYPE)/bin"/>
+            <stringAttribute key="BLD::Info|Macro|CC_ARCH_SPEC|value|VSourceBuild_PPCE6500gnu_SMP" value="-mcpu=e6500 -D_WRS_HARDWARE_FP -fstrength-reduce -fno-builtin -mhard-float -fno-implicit-fp -mstrict-align"/>
+            <stringAttribute key="BLD::Info|Macro|VSB_DIR|value|VSourceBuild_PPCE6500gnu_SMP" value="$(PRJ_ROOT_DIR)/../VSourceBuild"/>
+            <stringAttribute key="BLD::Info|Macro|VSB_CONFIG_FILE|value|VSourceBuild_PPCE6500gnu_SMP" value="$(VSB_DIR)/h/config/vsbConfig.h"/>
+            <stringAttribute key="BLD::Info|Macro|LIBPATH|value|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Macro|LIBS|value|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Macro|DKM_LONGCALL|value|VSourceBuild_PPCE6500gnu_SMP" value="-mlongcall"/>
+            <stringAttribute key="BLD::Info|Macro|BDGEN_VSB_INCLUDE|value|VSourceBuild_PPCE6500gnu_SMP" value="$(VSB_DIR)/h/config/auto.conf"/>
+            <stringAttribute key="BLD::Info|Macro|APICHECK_CMD|value|VSourceBuild_PPCE6500gnu_SMP" value="apicheck.sh -r &quot;$(VSB_DIR)/krnl/apicheck/forbidden_api.lst&quot; -n &quot;nmppc&quot; -u -s &quot;$&lt;&quot; &quot;$@&quot; $(APICHECK_OPTIONS)"/>
+            <stringAttribute key="BLD::Info|Macro|APICHECK|value|VSourceBuild_PPCE6500gnu_SMP" value="0"/>
+            <listAttribute key="BLD::Info|Incl|VSourceBuild_PPCE6500gnu_SMP">
+                <stringAttribute value="-I$(VSB_DIR)/share/h"/>
+                <stringAttribute value="-I$(VSB_DIR)/krnl/h/system"/>
+                <stringAttribute value="-I$(VSB_DIR)/krnl/h/public"/>
+            </listAttribute>
+            <listAttribute key="BLD::Info|Definess|VSourceBuild_PPCE6500gnu_SMP">
+                <stringAttribute value="-DCPU=_VX_$(CPU)"/>
+                <stringAttribute value="-DTOOL_FAMILY=$(TOOL_FAMILY)"/>
+                <stringAttribute value="-DTOOL=$(TOOL)"/>
+                <stringAttribute value="-D_WRS_KERNEL"/>
+                <stringAttribute value="-D_WRS_VX_SMP"/>
+                <stringAttribute value="-D_WRS_CONFIG_SMP"/>
+                <stringAttribute value="-D_VSB_CONFIG_FILE=\&quot;$(VSB_DIR)/h/config/vsbConfig.h\&quot;"/>
+                <stringAttribute value="-D__VXWORKS__"/>
+                <stringAttribute value="-D_POCKETSONATA_"/>
+                <stringAttribute value="-D _SQLITE_"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall    -MD -MP $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|C-Compiler|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall  -std=c++11 -MD -MP $(DKM_LONGCALL) -fexceptions -w "/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)/c++ppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) -std=c++11 -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.out"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|flags|VSourceBuild_PPCE6500gnu_SMP" value="-T $(WIND_BASE)/build/tool/gnu_4_8_1_8/krnl/ldscripts/link.OUT"/>
+            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;rm -f %OutFile%;nmppc %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% $(CC_ARCH_SPEC) -fdollars-in-identifiers -Wall   $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) &amp;&amp; true"/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|flags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Partial Image Linker|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% %Objects% $(ADDED_OBJECTS) %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.a"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|flags|VSourceBuild_PPCE6500gnu_SMP" value="crus"/>
+            <stringAttribute key="BLD::Info|Tool|Librarian|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%archiverprefix% $(TOOL_PATH)/arppc %ToolFlags% %OutFile% %Objects% $(ADDED_OBJECTS)"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss  -xassembler-with-cpp  -MD -MP $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|Assembler|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%assemblerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile%"/>
+            <stringAttribute key="BLD::Info|redirRoot" value=""/>
+            <stringAttribute key="BLD::Info|defaultSpec" value="VSourceBuild_PPCE6500diab_SMP"/>
+            <listAttribute key="BLD::Info|BuildRules">
+                <stringAttribute value="POST"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|BuildRule|POST|value" value="dir %selected_project_location%"/>
+            <booleanAttribute key="BLD::Info|BuildRule|POST|isCommand" value="true"/>
+            <intAttribute key="BLD::Info|BuildRule|POST|refreshType" value="1"/>
+            <stringAttribute key="BLD::Info|buildRule" value=""/>
+            <stringAttribute key="BLD::Info|folderBuildRule" value=""/>
+            <stringAttribute key="BLD::Info|cleanRule" value="clean"/>
+            <stringAttribute key="BLD::Info|folderCleanRule" value="clean"/>
+            <stringAttribute key="BLD::Info|rebuildRule" value="clean all"/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|sigs" value="VSIGA.out"/>
+            <booleanAttribute key="BLD::Info|Tool|POST_BUILD|object" value="false"/>
+            <booleanAttribute key="BLD::Info|Tool|POST_BUILD|passAble" value="false"/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|cmd|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*"/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|cmd|VSourceBuild_PPCE6500gnu_SMP" value="dir"/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*"/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|flags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+            <stringAttribute key="BLD::Info|Tool|POST_BUILD|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
+        </mapAttribute>
+    </attributes>
+    <buildtargets>
+        <buildtarget buildtool="Linker" name="VSIGA" passed="false" targetname="VSIGA">
+            <contents>
+                <buildtargetreference name="/VSIGA/VSIGA_partialImage"/>
+            </contents>
+        </buildtarget>
+        <buildtarget buildtool="Partial Image Linker" name="VSIGA_partialImage" passed="true" targetname="VSIGA_partialImage">
+            <contents>
+                <folder name="/VSIGA" recursive="true">
+                    <contents>
+                        <file name="/VSIGA/cmain.cpp">
+                            <attributes>
+                                <mapAttribute>
+                                    <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall    -MD -MP $(DKM_LONGCALL) -fexceptions"/>
+                                </mapAttribute>
+                            </attributes>
+                        </file>
+                    </contents>
+                    <excludes>
+                        <file name="stdafx.cpp"/>
+                        <file name="VSIGA.cpp"/>
+                    </excludes>
+                </folder>
+            </contents>
+        </buildtarget>
+    </buildtargets>
+</wrxml>

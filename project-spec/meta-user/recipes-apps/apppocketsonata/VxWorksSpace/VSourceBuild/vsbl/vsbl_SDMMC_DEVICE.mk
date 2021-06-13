@@ -1,0 +1,22 @@
+# Automatically generated file: do not edit
+
+##########################
+# SDMMC_DEVICE Section
+##########################
+
+
+ifdef _WRS_CONFIG_SDMMC_DEVICE
+VSBL_SDMMC_DEVICE_SRC = 
+VSBL_SDMMC_DEVICE_DEPEND = 
+
+ifdef _WRS_CONFIG_SDMMC_1_0_1_3_DEVICE_1_0_0_2
+ifdef _WRS_CONFIG_SDMMC_STORAGE
+VSBL_SDMMC_DEVICE_SRC += SDMMC_STORAGE
+endif
+VSBL_SDMMC_DEVICE_SRC += SDMMC_DEVICE
+SDMMC_DEVICE_FASTBUILD = YES
+VSBL_SDMMC_DEVICE_PATH = $(WIND_BASE)/pkgs/connectivity/sdmmc-1.0.1.3/device
+VSBL_SDMMC_DEVICE_VERSION = SDMMC_1_0_1_3_DEVICE_1_0_0_2
+endif
+endif
+

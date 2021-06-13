@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# DSI_DSI_USER Section
+##########################
+
+
+ifdef _WRS_CONFIG_DSI_DSI_USER
+VSBL_DSI_DSI_USER_SRC = 
+VSBL_DSI_DSI_USER_DEPEND = 
+
+ifdef _WRS_CONFIG_DSI_1_0_0_1_DSI_USER_1_0_0_5
+VSBL_DSI_DSI_USER_SRC += DSI_DSI_USER
+VSBL_DSI_DSI_USER_DEPEND += IPNET_COREIP
+VSBL_DSI_DSI_USER_DEPEND += TIPC_TIPC_USER
+DSI_DSI_USER_FASTBUILD = YES
+VSBL_DSI_DSI_USER_PATH = $(WIND_BASE)/pkgs/ipc/dsi-1.0.0.1/dsi_usr-1.0.0.5
+VSBL_DSI_DSI_USER_VERSION = DSI_1_0_0_1_DSI_USER_1_0_0_5
+endif
+endif
+

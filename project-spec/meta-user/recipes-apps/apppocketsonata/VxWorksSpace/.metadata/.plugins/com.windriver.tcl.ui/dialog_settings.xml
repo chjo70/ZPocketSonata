@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="WRVxWorksKCE">
+		<item value="false" key="ComponentsPage.STORE_AUTO_RESIZE_COLUMNS"/>
+		<item value="false" key="ComponentsPage.STORE_FILTER_UNAVAILABLE"/>
+		<list key="ComponentsPage.STORE_SPLITTER_WEIGHTS">
+			<item value="813"/>
+			<item value="186"/>
+		</list>
+		<list key="ComponentsPage.STORE_COLUMN_WIDTH">
+			<item value="0"/>
+			<item value="219"/>
+			<item value="0"/>
+			<item value="0"/>
+		</list>
+		<list key="ComponentsPage.STORE_EXPANDED_ELEMENTS">
+			<item value="FOLDER_CPLUS"/>
+			<item value="FOLDER_CPLUS_STDLIB"/>
+			<item value="FOLDER_BOOT_APP"/>
+			<item value="INCLUDE_BOOTAPP_GENERIC_NVRAM"/>
+			<item value="FOLDER_KERNEL_DEBUG"/>
+			<item value="FOLDER_SHELL"/>
+			<item value="FOLDER_SHOW_ROUTINES"/>
+			<item value="FOLDER_SYMTBL"/>
+			<item value="FOLDER_SYM_TBL_INIT"/>
+			<item value="SELECT_SYM_TBL_INIT"/>
+			<item value="FOLDER_HARDWARE"/>
+			<item value="FOLDER_MEMORY"/>
+			<item value="INCLUDE_MEMORY_CONFIG"/>
+			<item value="FOLDER_SOCKET"/>
+			<item value="FOLDER_APPLICATION"/>
+			<item value="FOLDER_STORAGE"/>
+		</list>
+	</section>
+</section>

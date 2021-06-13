@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BF225BB0-8384-4DFE-8AEB-E5C6A405FDC9}</ProjectGuid>
+    <RootNamespace>VBootShell</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>__VXWORKS__;UEMF;WEBS;DIGEST_ACCESS_SUPPORT;USER_MANAGEMENT_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="VBootShell\BootShell.cpp" />
+    <ClCompile Include="VBootShell\BootShellMain.c" />
+    <ClCompile Include="VBootShell\ManSbc.cpp" />
+    <ClCompile Include="VBootShell\Untar\FileTar.cpp" />
+    <ClCompile Include="VBootShell\WebServer\asp.c" />
+    <ClCompile Include="VBootShell\WebServer\balloc.c" />
+    <ClCompile Include="VBootShell\WebServer\base64.c" />
+    <ClCompile Include="VBootShell\WebServer\cgi.c" />
+    <ClCompile Include="VBootShell\WebServer\default.c" />
+    <ClCompile Include="VBootShell\WebServer\ejlex.c" />
+    <ClCompile Include="VBootShell\WebServer\ejparse.c" />
+    <ClCompile Include="VBootShell\WebServer\emfdb.c" />
+    <ClCompile Include="VBootShell\WebServer\form.c" />
+    <ClCompile Include="VBootShell\WebServer\h.c" />
+    <ClCompile Include="VBootShell\WebServer\handler.c" />
+    <ClCompile Include="VBootShell\WebServer\main.c" />
+    <ClCompile Include="VBootShell\WebServer\md5c.c" />
+    <ClCompile Include="VBootShell\WebServer\mime.c" />
+    <ClCompile Include="VBootShell\WebServer\misc.c" />
+    <ClCompile Include="VBootShell\WebServer\mocana_ssl.c" />
+    <ClCompile Include="VBootShell\WebServer\page.c" />
+    <ClCompile Include="VBootShell\WebServer\ringq.c" />
+    <ClCompile Include="VBootShell\WebServer\rom.c" />
+    <ClCompile Include="VBootShell\WebServer\security.c" />
+    <ClCompile Include="VBootShell\WebServer\sock.c" />
+    <ClCompile Include="VBootShell\WebServer\sockGen.c" />
+    <ClCompile Include="VBootShell\WebServer\strdup.c" />
+    <ClCompile Include="VBootShell\WebServer\strncasecmp.c" />
+    <ClCompile Include="VBootShell\WebServer\sym.c" />
+    <ClCompile Include="VBootShell\WebServer\uemf.c" />
+    <ClCompile Include="VBootShell\WebServer\um.c" />
+    <ClCompile Include="VBootShell\WebServer\umui.c" />
+    <ClCompile Include="VBootShell\WebServer\url.c" />
+    <ClCompile Include="VBootShell\WebServer\value.c" />
+    <ClCompile Include="VBootShell\WebServer\webrom.c" />
+    <ClCompile Include="VBootShell\WebServer\webs.c" />
+    <ClCompile Include="VBootShell\WebServer\websda.c" />
+    <ClCompile Include="VBootShell\WebServer\websuemf.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VBootShell\BootShell.h" />
+    <ClInclude Include="VBootShell\BootShellMain.h" />
+    <ClInclude Include="VBootShell\ManSbc.h" />
+    <ClInclude Include="VBootShell\Untar\FileTar.h" />
+    <ClInclude Include="VBootShell\WebServer\ej.h" />
+    <ClInclude Include="VBootShell\WebServer\ejIntrn.h" />
+    <ClInclude Include="VBootShell\WebServer\emfdb.h" />
+    <ClInclude Include="VBootShell\WebServer\md5.h" />
+    <ClInclude Include="VBootShell\WebServer\mkstemp.h" />
+    <ClInclude Include="VBootShell\WebServer\strdup.h" />
+    <ClInclude Include="VBootShell\WebServer\strncasecmp.h" />
+    <ClInclude Include="VBootShell\WebServer\uemf.h" />
+    <ClInclude Include="VBootShell\WebServer\um.h" />
+    <ClInclude Include="VBootShell\WebServer\webs.h" />
+    <ClInclude Include="VBootShell\WebServer\websda.h" />
+    <ClInclude Include="VBootShell\WebServer\wsIntrn.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

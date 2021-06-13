@@ -1,0 +1,22 @@
+# Automatically generated file: do not edit
+
+##########################
+# SNMP_AGENT Section
+##########################
+
+
+ifdef _WRS_CONFIG_SNMP_AGENT
+VSBL_SNMP_AGENT_SRC = 
+VSBL_SNMP_AGENT_DEPEND = 
+
+ifdef _WRS_CONFIG_SNMP_1_0_0_3_AGENT_1_0_1_5
+VSBL_SNMP_AGENT_SRC += SNMP_AGENT
+VSBL_SNMP_AGENT_DEPEND += MIB2
+VSBL_SNMP_AGENT_DEPEND += SNMP_ENGINE
+VSBL_SNMP_AGENT_DEPEND += SOCKET
+SNMP_AGENT_FASTBUILD = YES
+VSBL_SNMP_AGENT_PATH = $(WIND_BASE)/pkgs/app/snmp-1.0.0.3/agent-1.0.1.5
+VSBL_SNMP_AGENT_VERSION = SNMP_1_0_0_3_AGENT_1_0_1_5
+endif
+endif
+

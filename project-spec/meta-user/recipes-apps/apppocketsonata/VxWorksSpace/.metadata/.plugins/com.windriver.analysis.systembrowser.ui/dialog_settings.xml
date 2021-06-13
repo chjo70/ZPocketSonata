@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="{&#x0A;  &quot;call-tree&quot;: true,&#x0A;  &quot;hotspots&quot;: 15.0,&#x0A;  &quot;precision&quot;: 4.0,&#x0A;  &quot;minimum-age&quot;: &quot;75.0%&quot;,&#x0A;  &quot;minimum-age-enabled&quot;: true,&#x0A;  &quot;orientation&quot;: &quot;AUTO&quot;,&#x0A;  &quot;tree-size-percent&quot;: 80.0,&#x0A;  &quot;detail-sort-column&quot;: 0.0,&#x0A;  &quot;detail-sort-descending&quot;: false,&#x0A;  &quot;detail-column-order&quot;: [&#x0A;    0.0,&#x0A;    1.0,&#x0A;    3.0,&#x0A;    2.0,&#x0A;    4.0&#x0A;  ],&#x0A;  &quot;detail-column-widths&quot;: [&#x0A;    40.0,&#x0A;    80.0,&#x0A;    60.0,&#x0A;    60.0,&#x0A;    60.0&#x0A;  ],&#x0A;  &quot;enabled-contices&quot;: [&#x0A;    &quot;CORE:NAME&quot;,&#x0A;    &quot;PROCESS:NAME&quot;,&#x0A;    &quot;THREAD:NAME&quot;&#x0A;  ],&#x0A;  &quot;shown-contices&quot;: []&#x0A;}" key="calltree-settings"/>
+	<item value="false" key="autoscale-time-axis"/>
+</section>

@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AE81011E-4906-4E2D-870A-0FA32861B6F9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>VSIGA</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h" />
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\MatrixConverter.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELDecoder.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterDataType.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEOBLibDataType.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELGMIMsgDefn.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintRsltDataTypedb.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintTaskDataTypedb.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELMsgDefn.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELOperationCtrlDataType.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELPosEstDataType.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELStringDefn.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELThreat.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Geo2UTM.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\VincentyParam.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\IsNumber.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LatLong-UTMconversion.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LinearLS\LinearLS.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LOBClustering.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimation.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Stack.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\cipl.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\define.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KDefine.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KGroup.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KMakeAET.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KnownSigAnal.h" />
+    <ClInclude Include="..\..\files\Anal\KnownSigAnal\KPulExt.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDW2SP370.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDWIQ.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
+    <ClInclude Include="..\..\files\cmain.h" />
+    <ClInclude Include="..\..\files\Include\defines.h" />
+    <ClInclude Include="..\..\files\Include\global.h" />
+    <ClInclude Include="..\..\files\Include\struct.h" />
+    <ClInclude Include="..\..\files\Include\sysmsg.h" />
+    <ClInclude Include="..\..\files\Include\system.h" />
+    <ClInclude Include="..\..\files\Include\thrmsg.h" />
+    <ClInclude Include="..\..\files\SQLite\Assertion.h" />
+    <ClInclude Include="..\..\files\SQLite\Backup.h" />
+    <ClInclude Include="..\..\files\SQLite\Column.h" />
+    <ClInclude Include="..\..\files\SQLite\Database.h" />
+    <ClInclude Include="..\..\files\SQLite\Exception.h" />
+    <ClInclude Include="..\..\files\SQLite\ExecuteMany.h" />
+    <ClInclude Include="..\..\files\SQLite\SQLiteCpp.h" />
+    <ClInclude Include="..\..\files\SQLite\Statement.h" />
+    <ClInclude Include="..\..\files\SQLite\Transaction.h" />
+    <ClInclude Include="..\..\files\SQLite\Utils.h" />
+    <ClInclude Include="..\..\files\SQLite\VariadicBind.h" />
+    <ClInclude Include="..\..\files\System\csharedmemory.h" />
+    <ClInclude Include="..\..\files\System\csysconfig.h" />
+    <ClInclude Include="..\..\files\Thread\ccgi.h" />
+    <ClInclude Include="..\..\files\Thread\cdetectanalysis.h" />
+    <ClInclude Include="..\..\files\Thread\cemittermerge.h" />
+    <ClInclude Include="..\..\files\Thread\cjamtech.h" />
+    <ClInclude Include="..\..\files\Thread\cprompt.h" />
+    <ClInclude Include="..\..\files\Thread\cpulsetrk.h" />
+    <ClInclude Include="..\..\files\Thread\creclan.h" />
+    <ClInclude Include="..\..\files\Thread\cscananalysis.h" />
+    <ClInclude Include="..\..\files\Thread\csignalcollect.h" />
+    <ClInclude Include="..\..\files\Thread\ctaskmngr.h" />
+    <ClInclude Include="..\..\files\Thread\ctrackanalysis.h" />
+    <ClInclude Include="..\..\files\Thread\curbit.h" />
+    <ClInclude Include="..\..\files\Thread\cusercollect.h" />
+    <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
+    <ClInclude Include="..\..\files\Utils\cfile.h" />
+    <ClInclude Include="..\..\files\Utils\cgpio.h" />
+    <ClInclude Include="..\..\files\Utils\chwio.h" />
+    <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="..\..\files\Utils\cmultiserver.h" />
+    <ClInclude Include="..\..\files\Utils\cqueue.h" />
+    <ClInclude Include="..\..\files\Utils\csingleclient.h" />
+    <ClInclude Include="..\..\files\Utils\csingleserver.h" />
+    <ClInclude Include="..\..\files\Utils\cthread.h" />
+    <ClInclude Include="..\..\files\Utils\stdstring.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp" />
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELThreat.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\LinearLS\LinearLS.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\LOBClustering.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.cpp" />
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KGroup.cpp" />
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KMakeAET.cpp" />
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KnownSigAnal.cpp" />
+    <ClCompile Include="..\..\files\Anal\KnownSigAnal\KPulExt.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\PDW2SP370.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
+    <ClCompile Include="..\..\files\cmain.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Backup.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Column.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Database.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Exception.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Statement.cpp" />
+    <ClCompile Include="..\..\files\SQLite\Transaction.cpp" />
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp" />
+    <ClCompile Include="..\..\files\System\csysconfig.cpp" />
+    <ClCompile Include="..\..\files\Thread\ccgi.cpp" />
+    <ClCompile Include="..\..\files\Thread\cdetectanalysis.cpp" />
+    <ClCompile Include="..\..\files\Thread\cemittermerge.cpp" />
+    <ClCompile Include="..\..\files\Thread\cjamtech.cpp" />
+    <ClCompile Include="..\..\files\Thread\cprompt.cpp" />
+    <ClCompile Include="..\..\files\Thread\cpulsetrk.cpp" />
+    <ClCompile Include="..\..\files\Thread\creclan.cpp" />
+    <ClCompile Include="..\..\files\Thread\cscananalysis.cpp" />
+    <ClCompile Include="..\..\files\Thread\csignalcollect.cpp" />
+    <ClCompile Include="..\..\files\Thread\ctaskmngr.cpp" />
+    <ClCompile Include="..\..\files\Thread\ctrackanalysis.cpp" />
+    <ClCompile Include="..\..\files\Thread\curbit.cpp" />
+    <ClCompile Include="..\..\files\Thread\cusercollect.cpp" />
+    <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\..\files\Utils\cfile.cpp" />
+    <ClCompile Include="..\..\files\Utils\cgpio.cpp" />
+    <ClCompile Include="..\..\files\Utils\chwio.cpp" />
+    <ClCompile Include="..\..\files\Utils\clog.cpp" />
+    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp" />
+    <ClCompile Include="..\..\files\Utils\csingleclient.cpp" />
+    <ClCompile Include="..\..\files\Utils\csingleserver.cpp" />
+    <ClCompile Include="..\..\files\Utils\cthread.cpp" />
+    <ClCompile Include="..\..\files\Utils\programrev.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="VSIGA.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

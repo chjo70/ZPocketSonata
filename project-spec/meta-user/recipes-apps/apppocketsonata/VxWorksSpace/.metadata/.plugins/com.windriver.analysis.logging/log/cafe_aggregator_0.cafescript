@@ -1,0 +1,194 @@
+
+#########################################################
+#########################################################
+# Created: 2021.04.14 at 19:49:49 KST    Domain : TARGET
+#########################################################
+#########################################################
+
+
+##############################
+# Event Processor system_info
+##############################
+create system_info as system_info_EP567673360
+enable "t[system_info.workarea]"
+
+#################################
+# Event Processor vxworks_kernel
+#################################
+create vxworks_kernel as vxworks_kernel_EP567770112
+set max_stack_depth "32"
+enable "t[cafe.timestamp_config]" "t[cafe.timestamp]"
+enable "t[vxWorks.tickAnnounce]" "t[cafe.timestamp]"
+enable "t[vxWorks.rtpName]"
+enable "t[vxWorks.rtpLoad]"
+enable "t[vxWorks.taskName]"
+enable "t[vxWorks.windPrioritySetRaise]"
+enable "t[vxWorks.windPrioritySetLower]"
+enable "t[vxWorks.rtpUnload]"
+enable "t[vxWorks.moduleLoad]"
+enable "t[vxWorks.windDelete]"
+
+############################
+# Event Processor aux_clock
+############################
+create aux_clock as aux_clock_EP567795280
+set frequency "127"
+enable "t[aux_clock.fired]"
+
+##########################################
+# Event Processor performance_profiler_od
+##########################################
+create performance_profiler_od as performance_profiler_od_EP567798304
+set max_stack_depth "32"
+enable "t[performance_profiler.missed_interrupts]"
+enable "t[performance_profiler_od.idle_sample]"
+enable "t[performance_profiler_od.kernel_sample]"
+enable "t[performance_profiler_od.sample]" "t[cafe.core_id]" "t[vxWorks.context]" "t[cafe.stacktrace]"
+
+##############################
+# Event Processor elog_native
+##############################
+create elog_native as elog_native_EP567801024
+set record_overflows "1"
+set log_size "1000000"
+enable "t[cafe.overflow]"
+
+############################################
+# Event Processor cafe_timestamp_normalizer
+############################################
+create cafe_timestamp_normalizer as cafe_timestamp_normalizer_EP569739392
+enable "t[cafe.wildcard]"
+
+#############################
+# Event Processor cafe_timer
+#############################
+create cafe_timer as cafe_timer_EP569741808
+set debug "0"
+set interval "3000"
+enable "t[cafe_timer.timer]" "t[cafe.timestamp]"
+
+##################################
+# Event Processor vxworks_polling
+##################################
+create vxworks_polling as vxworks_polling_EP569742192
+
+##################################
+# Event Processor cafe_aggregator
+##################################
+create cafe_aggregator as cafe_aggregator_EP569755552
+enable "t[cafe_aggregator.aggregator]"
+typedef N[cafe.TABLE_NAME,v[name,s]]
+typedef N[cafe.DYNAMIC_TABLE]
+typedef N[cafe.EVENT_DEF,v[def,s]]
+typedef N[cafe.AGGREGATE_TYPE]
+typedef N[cafe.SUM,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.SET,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.SCRIPTED_CONTEXT]
+typedef N[cafe.METRIC_CLASS]
+typedef N[cafe.COUNTER_METRIC_CLASS,v[is_sampled,?]v[value,Q],n[cafe.METRIC_CLASS]]
+typedef N[cafe.address_space_id]
+typedef N[cafe.memory_map_generation]
+typedef N[cafe.callstack]
+typedef N[cafe.ADDRESS]
+typedef S[cafe.mm_delta_entry,v[start_addr,Q,n[cafe.ADDRESS]]v[len,Q]v[file_offset,Q]v[file_name,s]]
+typedef N[cafe.PERSISTENT]
+typedef N[cafe.PRIVATE]
+typedef N[cafe.AGGREGATE_TYPE]
+typedef N[cafe.SUM,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.SET,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.COPY_TABLE]
+typedef N[cafe.TRACKER_TABLE]
+typedef S[cafe.setval_Q,v[is_set,?]v[value,Q]]
+typedef S[cafe.setval_s,v[is_set,?]v[value,s]]
+typedef N[cafe.DELETE_FLAG]
+typedef N[cafe.PERSISTENT]
+typedef N[cafe.PRIVATE]
+typedef N[cafe.AGGREGATE_TYPE]
+typedef N[cafe.SUM,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.SET,,n[cafe.AGGREGATE_TYPE]]
+typedef N[cafe.COPY_TABLE]
+typedef S[cafe.setval_Q,v[is_set,?]v[value,Q]]
+typedef S[cafe.setval_s,v[is_set,?]v[value,s]]
+typedef S[cafe.setval_q,v[is_set,?]v[value,q]]
+typedef N[cafe.DELETE_FLAG]
+typedef N[cafe.PERSISTENT]
+typedef N[cafe.PRIVATE]
+typedef N[cafe.AGGREGATE_TYPE]
+typedef N[cafe.SET,,n[cafe.AGGREGATE_TYPE]]
+typedef S[cafe.setval_Q,v[is_set,?]v[value,Q]]
+typedef N[cafe.SUM,,n[cafe.AGGREGATE_TYPE]]
+table "S[cafe_overflow__0,v[SUM_count,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"cafe_overflow\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"cafe.overflow/count/ULONG\"]]"
+table S[cafe_time_tbl,v[cafe_timeofday,Q,n[cafe.SET]]v[cafe_duration,Q,n[cafe.SUM]],n[cafe.TRACKER_TABLE]]
+table S[vx_tt2_task_tbl,k[vx_tt2_task_tbl_key,Q]v[vx_task_id,t[cafe.setval_Q],n[cafe.SET]]v[vx_task_name,t[cafe.setval_s],n[cafe.SET]]v[vx_task_priority,t[cafe.setval_q],n[cafe.SET]]v[vx_task_deleted,?,n[cafe.SET]n[cafe.DELETE_FLAG]],n[cafe.COPY_TABLE]n[cafe.TRACKER_TABLE]]
+table S[vx_rtp_ids,k[vx_rtp_pidkey,Q]v[vx_rtp_genid,Q,n[cafe.SET]],n[cafe.PERSISTENT]n[cafe.PRIVATE]]
+table "S[performance_profiler_od_idle_sample__0,v[COUNT,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"performance_profiler_od_idle_sample\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"performance_profiler_od.idle_sample\"]n[cafe.COUNTER_METRIC_CLASS]]"
+table "S[performance_profiler_od_kernel_sample__0,v[COUNT,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"performance_profiler_od_kernel_sample\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"performance_profiler_od.kernel_sample\"]n[cafe.COUNTER_METRIC_CLASS]]"
+table "S[performance_profiler_missed_interrupts__0,v[SUM_count,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"performance_profiler_missed_interrupts\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"performance_profiler.missed_interrupts/count/ULONG\"]]"
+table S[cafe_time_tracker_tbl,v[cafe_frequency,Q,n[cafe.SET]]v[cafe_last_timestamp,t[cafe.setval_Q],n[cafe.SET]]v[cafe_timeofday_accumulator,Q,n[cafe.SUM]],n[cafe.PERSISTENT]n[cafe.PRIVATE]]
+table S[vx_tt2_gentbl_tbl,k[vx_tt2_gentbl_tbl_tid,Q]v[vx_tt2_tid_genkey,Q,n[cafe.SET]],n[cafe.PERSISTENT]n[cafe.PRIVATE]]
+table S[vx_tt2_state_tbl,v[vx_tt2_generation_count,Q,n[cafe.SUM]],n[cafe.PERSISTENT]n[cafe.PRIVATE]]
+table S[vx_rtp_state,v[vx_rtp_nextId,Q,n[cafe.SUM]],n[cafe.PERSISTENT]n[cafe.PRIVATE]]
+table "S[cafe_wildcard__0,k[cafeEventTypeContext,s,n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]v[COUNT,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"cafe_wildcard\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"cafe.wildcard\"]]"
+table "S[performance_profiler_od_sample__0,k[__MM_SYM_RESOLVE_addr_space,Q,n[cafe.address_space_id]n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]k[__MM_SYM_RESOLVE_mm_gen,Q,n[cafe.memory_map_generation]n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]k[__MM_SYM_RESOLVE_stack,a[Q],n[cafe.callstack]n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]k[cafeCoreContext,I,n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]k[vxRTPContext,Q,n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]k[vxTaskContext,Q,n[cafe.SET]n[cafe.SCRIPTED_CONTEXT]]v[COUNT,Q,n[cafe.SUM]],n[cafe.TABLE_NAME,\"performance_profiler_od_sample\"]n[cafe.DYNAMIC_TABLE]n[cafe.EVENT_DEF,\"performance_profiler_od.sample\"]n[cafe.COUNTER_METRIC_CLASS]]"
+table S[cafe.mm_delta,v[delta_list,a[t[cafe.mm_delta_entry]]]]
+table S[vx_rtp_table,k[vx_rtp_genkey,Q]v[vx_rtp_id,t[cafe.setval_Q],n[cafe.SET]]v[vx_rtp_name,t[cafe.setval_s],n[cafe.SET]]v[vx_rtp_deleted,?,n[cafe.SET]n[cafe.DELETE_FLAG]],n[cafe.COPY_TABLE]n[cafe.TRACKER_TABLE]]
+action -f vx_rtp_ids[$1.rtpId].vx_rtp_genid==0 vxWorks.rtpName vx_rtp_state.vx_rtp_nextId count 
+action -f vx_rtp_ids[$1.rtpId].vx_rtp_genid==0 vxWorks.rtpName vx_rtp_ids[$1.rtpId].vx_rtp_genid set vx_rtp_state.vx_rtp_nextId
+action -f vx_rtp_ids[$1.rtpId].vx_rtp_genid==0 vxWorks.rtpLoad vx_rtp_state.vx_rtp_nextId count 
+action -f vx_rtp_ids[$1.rtpId].vx_rtp_genid==0 vxWorks.rtpLoad vx_rtp_ids[$1.rtpId].vx_rtp_genid set vx_rtp_state.vx_rtp_nextId
+action vxWorks.rtpName vx_rtp_table[vx_rtp_ids[$1.rtpId].vx_rtp_genid].vx_rtp_id set $1.rtpId
+action vxWorks.rtpName vx_rtp_table[vx_rtp_ids[$1.rtpId].vx_rtp_genid].vx_rtp_name set $1.name
+action vxWorks.rtpLoad vx_rtp_table[vx_rtp_ids[$1.rtpId].vx_rtp_genid].vx_rtp_id set $1.rtpId
+action vxWorks.rtpLoad vx_rtp_table[vx_rtp_ids[$1.rtpId].vx_rtp_genid].vx_rtp_name set $1.name
+action -f vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey==0 vxWorks.taskName vx_tt2_state_tbl.vx_tt2_generation_count count 
+action -f vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey==0 vxWorks.taskName vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey set vx_tt2_state_tbl.vx_tt2_generation_count
+action vxWorks.taskName vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey].vx_task_id set $1.tid
+action vxWorks.taskName vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey].vx_task_name set $1.name
+action vxWorks.taskName vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.tid].vx_tt2_tid_genkey].vx_task_priority set $1.priority
+action vxWorks.windPrioritySetRaise vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.taskId].vx_tt2_tid_genkey].vx_task_priority set $1.newPri
+action vxWorks.windPrioritySetLower vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.taskId].vx_tt2_tid_genkey].vx_task_priority set $1.newPri
+action -f cafe_time_tracker_tbl.cafe_last_timestamp.is_set cafe.timestamp_config,cafe.timestamp cafe_time_tbl.cafe_duration sum "($2.timestamp - cafe_time_tracker_tbl.cafe_last_timestamp.value) * 1000000000 / cafe_time_tracker_tbl.cafe_frequency"
+action -f cafe_time_tracker_tbl.cafe_last_timestamp.is_set cafe.timestamp_config,cafe.timestamp cafe_time_tracker_tbl.cafe_timeofday_accumulator sum cafe_time_tbl.cafe_duration
+action cafe.timestamp_config,cafe.timestamp cafe_time_tracker_tbl.cafe_last_timestamp set $2.timestamp
+action cafe.timestamp_config cafe_time_tracker_tbl.cafe_frequency set $1.frequency
+action -f "cafe_time_tracker_tbl.cafe_last_timestamp.is_set && $2.timestamp > cafe_time_tracker_tbl.cafe_last_timestamp.value" cafe_timer.timer,cafe.timestamp cafe_time_tbl.cafe_duration sum "($2.timestamp - cafe_time_tracker_tbl.cafe_last_timestamp.value) * 1000000000 / cafe_time_tracker_tbl.cafe_frequency"
+action -f "cafe_time_tracker_tbl.cafe_last_timestamp.is_set && $2.timestamp > cafe_time_tracker_tbl.cafe_last_timestamp.value" cafe_timer.timer cafe_time_tracker_tbl.cafe_timeofday_accumulator sum cafe_time_tbl.cafe_duration
+action -f "!cafe_time_tracker_tbl.cafe_last_timestamp.is_set || $2.timestamp > cafe_time_tracker_tbl.cafe_last_timestamp.value" cafe_timer.timer,cafe.timestamp cafe_time_tracker_tbl.cafe_last_timestamp set $2.timestamp
+action cafe_timer.timer cafe_time_tbl.cafe_timeofday set cafe_time_tracker_tbl.cafe_timeofday_accumulator
+action cafe.overflow cafe_overflow__0.SUM_count sum cafe.overflow.count
+action cafe.wildcard cafe_wildcard__0[typename($1)].COUNT count 
+action performance_profiler.missed_interrupts performance_profiler_missed_interrupts__0.SUM_count sum performance_profiler.missed_interrupts.count
+action performance_profiler_od.idle_sample performance_profiler_od_idle_sample__0.COUNT count 
+action performance_profiler_od.kernel_sample performance_profiler_od_kernel_sample__0.COUNT count 
+action performance_profiler_od.sample,vxWorks.context,cafe.stacktrace,cafe.core_id performance_profiler_od_sample__0[vx_rtp_ids[vxWorks.context.pid].vx_rtp_genid,mm_gen(vx_rtp_ids[vxWorks.context.pid].vx_rtp_genid),normalize_stack(cafe.stacktrace.stack),cafe.core_id.core,vx_rtp_ids[vxWorks.context.pid].vx_rtp_genid,vx_tt2_gentbl_tbl[vxWorks.context.tid].vx_tt2_tid_genkey].COUNT count 
+action vxWorks.rtpLoad cafe.mm_delta mm_clear vx_rtp_ids[$1.rtpId].vx_rtp_genid,1
+action vxWorks.rtpLoad cafe.mm_delta mm_update vx_rtp_ids[$1.rtpId].vx_rtp_genid,$1.textAddr,$1.textSize,-1,1,$1.name
+action vxWorks.rtpUnload cafe.mm_delta mm_delete vx_rtp_ids[$1.rtpId].vx_rtp_genid
+action vxWorks.moduleLoad cafe.mm_delta mm_update vx_rtp_ids[$1.rtpId].vx_rtp_genid,$1.textAddr,$1.textSize,-1,1,$1.name
+action -f vx_rtp_ids[$1.rtpId].vx_rtp_genid>0 vxWorks.rtpUnload vx_rtp_table[vx_rtp_ids[$1.rtpId].vx_rtp_genid].vx_rtp_deleted set 1
+action vxWorks.rtpUnload vx_rtp_ids[$1.rtpId] clear 
+action -f vx_tt2_gentbl_tbl[$1.taskId].vx_tt2_tid_genkey>0 vxWorks.windDelete vx_tt2_task_tbl[vx_tt2_gentbl_tbl[$1.taskId].vx_tt2_tid_genkey].vx_task_deleted set 1
+action vxWorks.windDelete vx_tt2_gentbl_tbl[$1.taskId] clear 
+action -f cafe_time_tbl.cafe_duration cafe_timer.timer - snapshot
+
+#####################################
+# Event Processor file_stream_writer
+#####################################
+create file_stream_writer as file_stream_writer_EP1
+set filename "$1"
+
+###########################
+# Connect Event Processors
+###########################
+connect system_info_EP567673360 to file_stream_writer_EP1
+connect vxworks_kernel_EP567770112 to elog_native_EP567801024
+connect aux_clock_EP567795280 to performance_profiler_od_EP567798304
+connect performance_profiler_od_EP567798304 to elog_native_EP567801024
+connect elog_native_EP567801024 to cafe_timestamp_normalizer_EP569739392
+connect cafe_timestamp_normalizer_EP569739392 to cafe_timer_EP569741808
+connect cafe_timestamp_normalizer_EP569739392 to cafe_aggregator_EP569755552
+connect cafe_timer_EP569741808 to vxworks_polling_EP569742192
+connect cafe_timer_EP569741808 to cafe_aggregator_EP569755552
+connect vxworks_polling_EP569742192 to cafe_aggregator_EP569755552
+connect cafe_aggregator_EP569755552 to file_stream_writer_EP1
+

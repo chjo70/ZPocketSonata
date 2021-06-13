@@ -1,0 +1,9 @@
+WRBuilder.traceBuildRun=true
+WRBuilder.useJobs=true
+WRBuild|disabledBuildInstrumentations=
+WRBuild|disabledBuilderContributions=
+WRBuild|disabledManagedBuildProcessExtensions=
+WRBuild|enabledBuildInstrumentations=
+WRBuild|enabledBuilderContributions=
+WRBuild|enabledManagedBuildProcessExtensions=
+eclipse.preferences.version=1

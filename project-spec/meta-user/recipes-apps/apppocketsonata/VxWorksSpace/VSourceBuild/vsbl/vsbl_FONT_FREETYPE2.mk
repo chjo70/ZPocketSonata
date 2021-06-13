@@ -1,0 +1,19 @@
+# Automatically generated file: do not edit
+
+##########################
+# FONT_FREETYPE2 Section
+##########################
+
+
+ifdef _WRS_CONFIG_FONT_FREETYPE2
+VSBL_FONT_FREETYPE2_SRC = 
+VSBL_FONT_FREETYPE2_DEPEND = 
+
+ifdef _WRS_CONFIG_FONT_1_0_0_1_FREETYPE2_2_3_2_3
+VSBL_FONT_FREETYPE2_SRC += FONT_FREETYPE2
+FONT_FREETYPE2_FASTBUILD = YES
+VSBL_FONT_FREETYPE2_PATH = $(WIND_BASE)/pkgs/ui/font-1.0.0.1/freetype2-2.3.2.3
+VSBL_FONT_FREETYPE2_VERSION = FONT_1_0_0_1_FREETYPE2_2_3_2_3
+endif
+endif
+

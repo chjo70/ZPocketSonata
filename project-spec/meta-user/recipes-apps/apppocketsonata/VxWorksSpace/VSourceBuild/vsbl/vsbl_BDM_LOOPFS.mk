@@ -1,0 +1,22 @@
+# Automatically generated file: do not edit
+
+##########################
+# BDM_LOOPFS Section
+##########################
+
+
+ifdef _WRS_CONFIG_BDM_LOOPFS
+VSBL_BDM_LOOPFS_SRC = 
+VSBL_BDM_LOOPFS_DEPEND = 
+
+ifdef _WRS_CONFIG_BDM_1_0_1_3_LOOPFS_1_0_0_5
+VSBL_BDM_LOOPFS_SRC += BDM_LOOPFS
+VSBL_BDM_LOOPFS_DEPEND += BDM_XBD
+VSBL_BDM_LOOPFS_DEPEND += ERF
+VSBL_BDM_LOOPFS_DEPEND += FS_COMMON
+BDM_LOOPFS_FASTBUILD = YES
+VSBL_BDM_LOOPFS_PATH = $(WIND_BASE)/pkgs/storage/bdm-1.0.1.3/loopfs-1.0.0.5
+VSBL_BDM_LOOPFS_VERSION = BDM_1_0_1_3_LOOPFS_1_0_0_5
+endif
+endif
+

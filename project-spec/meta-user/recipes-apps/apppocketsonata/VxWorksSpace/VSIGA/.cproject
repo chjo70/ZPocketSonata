@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.eclipse.cdt.core.default.config.754910741">
+			<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.754910741" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.windriver.ide.core.WRElfParserVxWorks" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="userdefinedContainer"/>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+		<pathentry kind="src" path=""/>
+		<pathentry include="D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h" kind="inc" path="" system="true"/>
+		<pathentry include="D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/system" kind="inc" path="" system="true"/>
+		<pathentry include="D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public" kind="inc" path="" system="true"/>
+		<pathentry include="D:/vxWorks7/compilers/diab-5.9.6.5/include/cpp/std" kind="inc" path="" system="true"/>
+		<pathentry include="D:/vxWorks7/compilers/diab-5.9.6.5/include/cpp" kind="inc" path="" system="true"/>
+		<pathentry include="D:/vxWorks7/compilers/diab-5.9.6.5/include/vxworks7" kind="inc" path="" system="true"/>
+		<pathentry include="D:/vxWorks7/compilers/diab-5.9.6.5/include/diab" kind="inc" path="" system="true"/>
+		<pathentry kind="mac" name="CPU" path="" value="_VX_PPCE6500"/>
+		<pathentry kind="mac" name="TOOL" path="" value="diab"/>
+		<pathentry kind="mac" name="TOOL_FAMILY" path="" value="diab"/>
+		<pathentry kind="mac" name="_DIAB_TOOL" path="" value="1"/>
+		<pathentry kind="mac" name="_SUPPORTS_BUILTIN_EXPECT" path="" value="1"/>
+		<pathentry kind="mac" name="_SUPPORTS_BUILTIN_PREFETCH" path="" value="1"/>
+		<pathentry kind="mac" name="_VSB_CONFIG_FILE" path="" value="&quot;D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSIGA/../VSourceBuild/h/config/vsbConfig.h&quot;"/>
+		<pathentry kind="mac" name="_WRS_CONFIG_SMP" path="" value="1"/>
+		<pathentry kind="mac" name="_WRS_HARDWARE_FP" path="" value="1"/>
+		<pathentry kind="mac" name="_WRS_KERNEL" path="" value="1"/>
+		<pathentry kind="mac" name="_WRS_VX_SMP" path="" value="1"/>
+		<pathentry kind="mac" name="__ARRAY_OPERATORS" path="" value="1"/>
+		<pathentry kind="mac" name="__BIG_ENDIAN__" path="" value="1"/>
+		<pathentry kind="mac" name="__CHAR16_T_AND_CHAR32_T" path="" value="1"/>
+		<pathentry kind="mac" name="__CONFIGURE_EMBEDDED" path="" value="0"/>
+		<pathentry kind="mac" name="__CONFIGURE_EXCEPTIONS" path="" value="1"/>
+		<pathentry kind="mac" name="__DCC__" path="" value="1"/>
+		<pathentry kind="mac" name="__DONT_INIT_IOSTREAMS" path="" value="1"/>
+		<pathentry kind="mac" name="__EABI__" path="" value="1"/>
+		<pathentry kind="mac" name="__EDG_IA64_ABI" path="" value="1"/>
+		<pathentry kind="mac" name="__EDG_IA64_ABI_USE_INT_STATIC_INIT_GUARD" path="" value="0"/>
+		<pathentry kind="mac" name="__EDG_IA64_ABI_VARIANT_CTORS_AND_DTORS_RETURN_THIS" path="" value="0"/>
+		<pathentry kind="mac" name="__EDG_PTRDIFF_TYPE__" path="" value="int"/>
+		<pathentry kind="mac" name="__EDG_RUNTIME_USES_NAMESPACES" path="" value="1"/>
+		<pathentry kind="mac" name="__EDG_SIZE_TYPE__" path="" value="unsigned int"/>
+		<pathentry kind="mac" name="__EDG_TYPE_TRAITS_ENABLED" path="" value="1"/>
+		<pathentry kind="mac" name="__EDG_VERSION__" path="" value="410"/>
+		<pathentry kind="mac" name="__EDG__" path="" value="1"/>
+		<pathentry kind="mac" name="__ETOA_NAMESPACES__" path="" value="1"/>
+		<pathentry kind="mac" name="__ETOA__" path="" value="1"/>
+		<pathentry kind="mac" name="__EXCEPTIONS" path="" value="1"/>
+		<pathentry kind="mac" name="__HAS__THREAD__" path="" value="1"/>
+		<pathentry kind="mac" name="__NO_SDATA__" path="" value="1"/>
+		<pathentry kind="mac" name="__PLACEMENT_DELETE" path="" value="1"/>
+		<pathentry kind="mac" name="__RTTI" path="" value="1"/>
+		<pathentry kind="mac" name="__SIGNED_CHARS__" path="" value="1"/>
+		<pathentry kind="mac" name="__SIZEOF_POINTER__" path="" value="4"/>
+		<pathentry kind="mac" name="__STDC__" path="" value="1"/>
+		<pathentry kind="mac" name="__UNWIND_API_HIDE" path="" value="1"/>
+		<pathentry kind="mac" name="__VEC__" path="" value="10205"/>
+		<pathentry kind="mac" name="__VERSION_NUMBER__" path="" value="5965"/>
+		<pathentry kind="mac" name="__VERSION__" path="" value="&quot;5.9.6.5&quot;"/>
+		<pathentry kind="mac" name="__VXWORKS__" path="" value="1"/>
+		<pathentry kind="mac" name="__bool" path="" value="1"/>
+		<pathentry kind="mac" name="__cplusplus" path="" value="1"/>
+		<pathentry kind="mac" name="__cpp_unicode_characters" path="" value="200704"/>
+		<pathentry kind="mac" name="__cpp_unicode_literals" path="" value="200710"/>
+		<pathentry kind="mac" name="__hardfp" path="" value="1"/>
+		<pathentry kind="mac" name="__ppc" path="" value="1"/>
+		<pathentry kind="mac" name="__vxworks" path="" value="1"/>
+		<pathentry kind="mac" name="__wchar_t" path="" value="1"/>
+		<pathentry kind="out" path=""/>
+		<pathentry kind="con" path="com.windriver.ide.core.WR_CONTAINER"/>
+	</storageModule>
+</cproject>

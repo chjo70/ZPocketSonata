@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0",
+  "targetType": "vxworks",
+  "connectionSettings": {
+    "live__va_symresolve:targetDomain:vxworks_system_clock_frequency": 97.0,
+    "live__va_symresolve:targetDomain:vxworks_task_filter": "",
+    "live__va_symresolve:targetDomain:vxworks_aux_clock_frequency": 127.0,
+    "live__va_symresolve:targetDomain:vxworks_cafe_timer_interval": 3000.0,
+    "live__va_symresolve:targetDomain:linux_cafe_timer_interval": 3000.0,
+    "live__va_symresolve:targetDomain:vxworks_performance_profiler_od_max_stack_depth": 32.0,
+    "live__va_symresolve:targetDomain:vxworks_core_filter": "",
+    "live__va_symresolve:targetDomain:vxworks_rtp_filter": "",
+    "live__va_symresolve:targetDomain:vxworks_hpc_max_stack_depth": 32.0,
+    "live__va_symresolve:targetDomain:vxworks_kernel_max_stack_depth": 32.0
+  },
+  "editorAnnotation": {
+    "metricName": "_range_percent_cumulative(vx_task_percent)"
+  },
+  "bookmarks": [],
+  "overview": {
+    "historyPosition": {
+      "min": 0.0,
+      "live": false,
+      "max": 3.007736933
+    },
+    "zoom": {
+      "max": 3.007736933,
+      "extent": 120.0
+    },
+    "verticalGrid": false,
+    "horizontalGrid": false,
+    "dataSeries": [
+      {
+        "chart": "PLOT_HISTORY_RADAR",
+        "presentation": "REGULAR",
+        "metric": "_snapshot_percent_cumulative(vx_task_percent)",
+        "filter": "true"
+      }
+    ]
+  },
+  "grid": {
+    "noContextChange": false,
+    "metrics": [
+      {
+        "name": "rtp_name_context",
+        "isKey": true
+      },
+      {
+        "name": "task_name_context",
+        "isKey": true
+      },
+      {
+        "name": "_snapshot_percent_cumulative(vx_task_percent)"
+      },
+      {
+        "name": "_range_percent_cumulative(vx_task_percent)"
+      },
+      {
+        "name": "_range_percent_self(vx_task_percent)"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "activeTab": true,
+      "type": "CALL_TREE",
+      "metric": "_range_percent_cumulative(vx_task_percent)",
+      "call-tree": true,
+      "hotspots": 15.0,
+      "precision": 4.0,
+      "minimum-age": "75.0%",
+      "minimum-age-enabled": true,
+      "orientation": "AUTO",
+      "tree-size-percent": 80.0,
+      "detail-sort-column": 0.0,
+      "detail-sort-descending": false,
+      "detail-column-order": [
+        0.0,
+        1.0,
+        3.0,
+        2.0,
+        4.0
+      ],
+      "detail-column-widths": [
+        40.0,
+        80.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "enabled-contices": [
+        "CORE:NAME",
+        "PROCESS:NAME",
+        "THREAD:NAME"
+      ],
+      "shown-contices": [
+        "PROCESS",
+        "THREAD"
+      ]
+    }
+  ],
+  "layout": {
+    "state_charts": "SHOWN",
+    "state_details": "HIDDEN",
+    "state_history": "HIDDEN",
+    "shashWeights": [
+      500.0,
+      500.0
+    ]
+  },
+  "description": "<p><b>Overview:</b></p>↕ % CPU<p><b>Table:</b></p>Aggregated by: RTP Name and Task Name<li bindent=\"10\">↕ % CPU - Percentage of CPU usage in summary in current snapshot</li><li bindent=\"10\">% CPU - Percentage of CPU usage in summary in selected range</li><li bindent=\"10\">% CPU (direct) - Percentage of CPU usage (direct) in summary in selected range</li><p><b>Charts:</b></p><li bindent=\"10\">Call tree for % CPU</li><p>(Saved on Apr 14, 2021 7:51:27 PM)</p>\n",
+  "detached": true
+}

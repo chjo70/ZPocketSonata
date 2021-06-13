@@ -1,0 +1,23 @@
+# Automatically generated file: do not edit
+
+##########################
+# CORE_DUMP Section
+##########################
+
+
+ifdef _WRS_CONFIG_CORE_DUMP
+VSBL_CORE_DUMP_SRC = 
+VSBL_CORE_DUMP_DEPEND = 
+
+ifdef _WRS_CONFIG_CORE_DUMP_1_1_1_1
+VSBL_CORE_DUMP_SRC += CORE_DUMP
+VSBL_CORE_DUMP_DEPEND += LOADER
+VSBL_CORE_DUMP_DEPEND += VXDBG
+VSBL_CORE_DUMP_DEPEND += CORE_KERNEL
+VSBL_CORE_DUMP_DEPEND += CORE_KERNEL
+CORE_DUMP_FASTBUILD = YES
+VSBL_CORE_DUMP_PATH = $(WIND_BASE)/pkgs/os/debug/coredump-1.1.1.1
+VSBL_CORE_DUMP_VERSION = CORE_DUMP_1_1_1_1
+endif
+endif
+

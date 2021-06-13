@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.windriver.te.tcf.ui.vxw.wizards.NewConfigWizard">
+		<section name="ConfigurationPanelControl">
+			<section name="vxworks:real">
+				<list key="Target_Address">
+					<item value="192.168.10.50:1534"/>
+				</list>
+				<list key="Kernel_Symbol_File">
+					<item value="VSIGA\VSourceBuild_PPCE6500gnu_SMP\VSIGA\Debug\VSIGA.out"/>
+					<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell\default\vxWorks"/>
+				</list>
+			</section>
+			<section name="vxworks:core">
+			</section>
+			<section name="vxworks:sim:com.windriver.te.tcf.core.vxw.services.simulator">
+			</section>
+		</section>
+	</section>
+</section>

@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# BDM_TFFS_DRIVER Section
+##########################
+
+
+ifdef _WRS_CONFIG_BDM_TFFS_DRIVER
+VSBL_BDM_TFFS_DRIVER_SRC = 
+VSBL_BDM_TFFS_DRIVER_DEPEND = 
+
+ifdef _WRS_CONFIG_BDM_1_0_1_3_FLASH_1_0_0_1_TFFS_DRIVER_1_0_1_3
+VSBL_BDM_TFFS_DRIVER_SRC += BDM_TFFS_DRIVER
+VSBL_BDM_TFFS_DRIVER_DEPEND += BDM_TFFS
+BDM_TFFS_DRIVER_FASTBUILD = YES
+VSBL_BDM_TFFS_DRIVER_PATH = $(WIND_BASE)/pkgs/storage/bdm-1.0.1.3/flash/tffs_drv-1.0.1.3
+VSBL_BDM_TFFS_DRIVER_VERSION = BDM_1_0_1_3_FLASH_1_0_0_1_TFFS_DRIVER_1_0_1_3
+endif
+endif
+
