@@ -105,11 +105,17 @@ struct STR_H000 {
 
 
 #ifdef _SQLITE_
-//#include "../../SQLite/SQLiteCpp.h"
+//#include "../../SQLite/Database.h"
+#include "../../SQLite/KompexSQLitePrerequisites.h"
+#include "../../SQLite/KompexSQLiteDatabase.h"
+#include "../../SQLite/KompexSQLiteStatement.h"
+#include "../../SQLite/KompexSQLiteException.h"
+#include "../../SQLite/KompexSQLiteStreamRedirection.h"
+#include "../../SQLite/KompexSQLiteBlob.h"
 
 #elif _NO_SQLITE_
 
-#else
+#elif _MSSQL_
 #include "../../ELINTOP/ODBC/mssql.h"
 #include "../../ELINTOP/ODBC/odbccore.h"
 #endif
@@ -144,12 +150,21 @@ struct STR_H000 {
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
-//class CELSignalIdentifyAlg : public SQLite::Database
+#ifdef _NO_SQLITE_
+class CELSignalIdentifyAlg
+#elif _SQLITE_
+//class CELSignalIdentifyAlg : public Database
+class CELSignalIdentifyAlg : public Kompex::SQLiteDatabase
+#else
 class CELSignalIdentifyAlg 
+#endif
 {
  protected:
 #ifdef _SQLITE_
     //static char *m_pszSQLString;
+    char m_szSQLString[4000];
+
+    static Kompex::SQLiteDatabase *m_pDatabase;
 
 #endif
     static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그

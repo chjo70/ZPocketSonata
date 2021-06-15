@@ -2,20 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifdef _MSC_VER
 #include "stdafx.h"
 
-#else
-//#include <unistd.h>
-
-#endif
-//#include "../SigAnal/stdafx.h"
-
-#ifdef _MSC_VER
-// PC용 상위 클래스에 전달하기 위한 선언
-//#include "../../A50SigAnal/stdafx.h"
-
-#endif
 
 #include "../OFP_Main.h"
 

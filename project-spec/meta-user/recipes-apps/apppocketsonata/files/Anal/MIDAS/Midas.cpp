@@ -7,6 +7,8 @@
  * @warning
  */
 
+#include "stdafx.h"
+
 #ifdef __GNUC__
 #define _DECODE_
 #include <sys/types.h>
@@ -17,7 +19,6 @@
 #include "../SigAnal/_Type.h"
 
 #else
-#include "stdafx.h"
 #include <io.h>
 
 #endif

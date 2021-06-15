@@ -2,11 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
-
 
 #include <math.h>
 #include <time.h>
@@ -350,7 +346,7 @@ void ELDecoder::UpdateDateTime()
 {
 	if( _stNOW == 0 ) {
 		_stNOW = _time64( NULL );
-		_localtime64_s( & _stTM, & _stNOW );
+		_localtime32_s( & _stTM, & _stNOW );
 
 		_stTM.tm_year -= 100;
 		_stTM.tm_mon += 1;

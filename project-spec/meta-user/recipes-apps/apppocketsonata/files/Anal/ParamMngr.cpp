@@ -1,8 +1,8 @@
-﻿#if defined(_MSC_VER)
-#define _USE_MATH_DEFINES
+﻿
 #include "stdafx.h"
 
-#endif
+#define _USE_MATH_DEFINES
+
 
 #include "ParamMngr.h"
 

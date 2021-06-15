@@ -1,5 +1,6 @@
-#ifdef _MSC_VER
 #include "stdafx.h"
+
+#ifdef _MSC_VER
 
 #elif __linux__
 #include <sys/socket.h>

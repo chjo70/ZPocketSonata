@@ -3,13 +3,9 @@
  *
  * */
 
-#ifdef _MSC_VER
+
 #include "stdafx.h"
 
-
-#else
-
-#endif
 
 
 #include "curbit.h"

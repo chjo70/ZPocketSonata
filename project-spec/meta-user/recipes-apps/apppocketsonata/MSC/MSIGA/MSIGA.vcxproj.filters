@@ -504,6 +504,24 @@
     <ClInclude Include="..\..\files\Anal\ParamMngr.h">
       <Filter>소스 파일\Anal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteDatabase.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteException.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLitePrerequisites.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStatement.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStreamRedirection.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -709,6 +727,15 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\ParamMngr.cpp">
       <Filter>소스 파일\Anal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteDatabase.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteStatement.cpp">
+      <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

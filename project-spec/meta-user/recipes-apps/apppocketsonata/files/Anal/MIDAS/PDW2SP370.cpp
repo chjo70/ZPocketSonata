@@ -7,6 +7,8 @@
  * @warning   
  */
 
+#include "stdafx.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -20,7 +22,6 @@
 #include <ioLib.h>
 
 #elif _MSC_VER
-#include "stdafx.h"
 
 #else
 #include <io.h>

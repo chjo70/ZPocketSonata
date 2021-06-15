@@ -1,7 +1,7 @@
 
-#ifdef _MSC_VER
 #include "stdafx.h"
 
+#ifdef _MSC_VER
 #include <io.h>
 #include <direct.h>
 
@@ -24,7 +24,7 @@
 
 #include "clog.h"
 
-CLog* CLog::pInstance = nullptr;
+CLog* CLog::m_pInstance = nullptr;
 
 #ifdef _MSC_VER
 CCriticalSection CLog::m_cs;

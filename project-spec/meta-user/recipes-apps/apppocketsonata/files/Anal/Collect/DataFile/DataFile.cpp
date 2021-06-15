@@ -1,10 +1,6 @@
-﻿#ifdef _MSC_VER
+﻿
 #include "stdafx.h"
-#elif __VXWORKS__
-//#include "../../SigAnal/stdafx.h"
-#else
-//#include "../../SigAnal/stdafx.h"
-#endif
+
 
 #include <math.h>
 #include <stdio.h>

@@ -6,10 +6,7 @@
  * 모든 타스크를 관리해 주는 입니다.
  * */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
 
 #include <signal.h>
 #include <cassert>
@@ -65,7 +62,7 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
 CTaskMngr::~CTaskMngr(void)
 {
     // 객체를 소멸하게 한다.
-    //GP_SYSCFG->ReleaseInstance();
+    GP_SYSCFG->ReleaseInstance();
 }
 
 /**
@@ -124,7 +121,7 @@ void CTaskMngr::Init()
 void CTaskMngr::InitVar()
 {
     // 보드 ID를 설정한다.
-    //GP_SYSCFG->SetBoardID( GetBoardID() );
+    GP_SYSCFG->SetBoardID( GetBoardID() );
 
 }
 
@@ -267,7 +264,7 @@ void CTaskMngr::SetMode()
  */
 void CTaskMngr::AnalysisStart()
 {
-    time_t tiNow;
+    
 
     GP_SYSCFG->SetMode( enANAL_Mode );
 
@@ -275,6 +272,8 @@ void CTaskMngr::AnalysisStart()
     CreateAllAnalysisThread();
 
 #ifndef _MSC_VER
+    time_t tiNow;
+
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
     tiNow = (time_t) m_pMsg->x.szData[0];
     // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.

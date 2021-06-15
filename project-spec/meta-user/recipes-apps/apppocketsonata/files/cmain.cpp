@@ -31,8 +31,18 @@
 *
 */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
+
+#ifdef _MSC_VER
+
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
 
 #else
 
@@ -113,8 +123,8 @@ void Start()
     //JAMTEC->Run( _MSG_JAMTEC_KEY );
 
     // 4. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
-    RECZYNQ->Run( _MSG_RECZYNQ_KEY );
-    RECCCU->Run( _MSG_RECCCU_KEY );
+    //RECZYNQ->Run( _MSG_RECZYNQ_KEY );
+    //RECCCU->Run( _MSG_RECCCU_KEY );
 
     // 6. 브라우저의 CGI 메시지를 처리한다.
     //CGI->Run( _MSG_ZCGI_KEY );
@@ -165,7 +175,7 @@ void End()
 
     //CGI->ReleaseInstance();
 
-    RECZYNQ->ReleaseInstance();
+    //RECZYNQ->ReleaseInstance();
     RECCCU->ReleaseInstance();
 
     //JAMTEC->ReleaseInstance();
@@ -178,7 +188,11 @@ void End()
 
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
+    LOG->ReleaseInstance();
+
+#ifndef _MSC_VER
     exit(0);
+#endif
 
 }
 

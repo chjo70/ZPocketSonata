@@ -2,8 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifdef _MSC_VER
 #include "stdafx.h"
+
+#ifdef _MSC_VER
 
 #else
 #include <unistd.h>

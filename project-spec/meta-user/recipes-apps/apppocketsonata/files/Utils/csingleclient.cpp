@@ -1,5 +1,7 @@
-﻿#ifdef _MSC_VER
-#include "stdafx.h"
+﻿#include "stdafx.h"
+
+#ifdef _MSC_VER
+
 
 #elif __linux__
 #include <arpa/inet.h>

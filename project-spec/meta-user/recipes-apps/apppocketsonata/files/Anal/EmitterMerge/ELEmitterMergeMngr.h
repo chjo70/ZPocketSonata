@@ -3,12 +3,17 @@
 #define _MULTI_BEAM_
 
 #ifdef _SQLITE_
-//#include "../../SQLite/SQLiteCpp.h"
-
+//#include "../../SQLite/Database.h"
+#include "../../SQLite/KompexSQLitePrerequisites.h"
+#include "../../SQLite/KompexSQLiteDatabase.h"
+#include "../../SQLite/KompexSQLiteStatement.h"
+#include "../../SQLite/KompexSQLiteException.h"
+#include "../../SQLite/KompexSQLiteStreamRedirection.h"
+#include "../../SQLite/KompexSQLiteBlob.h"
 
 #elif _NO_SQLITE_
 
-#else
+#elif _MSSQL_
 #include "../../ELINTOP/ODBC/mssql.h"
 #include "../../ELINTOP/ODBC/odbccore.h"
 #endif
@@ -86,8 +91,11 @@ enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 
 #ifdef _NO_SQLITE_
 class CELEmitterMergeMngr : public CLOBClustering
+#elif _SQLITE_
+//class CELEmitterMergeMngr : public CLOBClustering, public Database
+class CELEmitterMergeMngr : public CLOBClustering, public Kompex::SQLiteDatabase
 #else
-class CELEmitterMergeMngr : public CLOBClustering, public SQLite::Database
+class CELEmitterMergeMngr : public CLOBClustering
 #endif
 {
 private:
@@ -167,13 +175,6 @@ private:
 
     bool m_bScanProcess;
 
-#ifdef _SQLITE_
-    //char *m_pszSQLString;
-#elif defined(_MSSQL_)
-    CODBCDatabase m_theMyODBC;
-#else
-#endif
-
 
     //SQMsg m_sqMsg;														///< 수신 쓰레드와 매니저 간의 메시지 구조체
 
@@ -213,6 +214,17 @@ public:
     std::vector<SRxLOBData> m_VecLOBData;
     std::vector<SRxABTData> m_VecABTData;
     std::vector<SRxAETData> m_VecAETData;
+
+protected:
+#ifdef _SQLITE_
+    //char *m_pszSQLString;
+    char m_szSQLString[4000];
+    static Kompex::SQLiteDatabase *m_pDatabase;
+
+#elif defined(_MSSQL_)
+    CODBCDatabase m_theMyODBC;
+#else
+#endif
 
 
 private:

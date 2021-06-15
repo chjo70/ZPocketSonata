@@ -7,11 +7,12 @@
  * @warning   
  */
 
+#include "stdafx.h"
+
 #ifdef __linux__
 
 
 #elif _MSC_VER
-#include "stdafx.h"
 #include <io.h>
 
 #elif __VXWORKS__

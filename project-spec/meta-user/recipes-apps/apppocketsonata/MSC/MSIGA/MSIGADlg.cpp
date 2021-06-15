@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+    ON_WM_NCDESTROY()
 END_MESSAGE_MAP()
 
 
@@ -105,7 +106,10 @@ BOOL CMSIGADlg::OnInitDialog()
 	ShowWindow(SW_MINIMIZE);
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-    //usrAppStart();
+    _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+    //_CrtSetBreakAlloc(1231); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
+
     ParsingArgument( __argc, __argv );
 
     Start();
@@ -162,3 +166,13 @@ HCURSOR CMSIGADlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CMSIGADlg::OnNcDestroy()
+{
+    CDialogEx::OnNcDestroy();
+
+    // TODO: 여기에 메시지 처리기 코드를 추가합니다.
+    End();
+
+}

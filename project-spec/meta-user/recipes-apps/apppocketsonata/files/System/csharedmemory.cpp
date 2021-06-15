@@ -1,7 +1,8 @@
-#ifdef _MSC_VER
-#include "stdafx.h"
+// CSharedMemroy.cpp: implementation of the CSharedMemroy class.
+//
+//////////////////////////////////////////////////////////////////////
 
-#endif
+#include "stdafx.h"
 
 #include "csharedmemory.h"
 

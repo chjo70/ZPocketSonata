@@ -28,7 +28,7 @@
 #include "./InverseMethod/VincentyParam.h"
 
 
-#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
+//#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
 
 #define	IS_VALID_LL( A, B )			( ( ( IsNumber(A) == true ) && ( IsNumber(B) == true ) && ( !( ( A > 360. ) || ( A < -360. ) || ( B > 360. ) || ( B < -360. ) ) ) ) == true )
 #define	IS_NOT_ZERO_LL( A, B )	( ( ( A > 0 || A < 0 ) == true ) && ( ( B > 0 || B < 0 ) == true ) )

@@ -7,10 +7,7 @@
  * @warning
  */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
 
 #include <vector>
 
@@ -52,6 +49,8 @@ static char THIS_FILE[] = __FILE__;
 
 #define MAX_AET_IDCANDIDATE				(1000+MAX_IDCANDIDATE)
 
+Kompex::SQLiteDatabase *CELEmitterMergeMngr::m_pDatabase=NULL;
+
 bool CompareMergeCandidate( SELMERGE_CANDIDATE stMergeCanA, SELMERGE_CANDIDATE stMergeCanB );
 
 int CELEmitterMergeMngr::m_CoInstance = 0;
@@ -70,7 +69,8 @@ UINT CELEmitterMergeMngr::m_nSeqNum = 0;
 #ifdef _NO_SQLITE_
 CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 #else
-CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
+//CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
+CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName ) : Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 )
 #endif
 {
     m_CoInstance = 0;
@@ -78,8 +78,9 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
     m_bDBThread = bDBThread;
 
 #ifdef _SQLITE_
+    m_pDatabase = GetDatabase();
 #elif _NO_SQLITE_
-#else
+#elif _MSSQL_
     // MSSQL 연결
     CMSSQL::Init();
 #endif
@@ -135,7 +136,10 @@ void CELEmitterMergeMngr::RecoverThreat()
 CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
 {
 
-#ifndef _NO_SQLITE_
+#ifdef _NO_SQLITE_
+#elif _SQLITE_
+
+#elif _MS_SQL_
     m_theMyODBC.Close();
 #endif
 
@@ -957,17 +961,21 @@ void CELEmitterMergeMngr::UpdateMergedLOBDB( bool bMerge )
  */
 void CELEmitterMergeMngr::IdentifyLOB( SRxLOBData *pLOBData )
 {
-    char *pRadarName;
+
 
     m_pIdentifyAlg->Identify( pLOBData, & m_LOBDataExt, NULL, false );
 
     pLOBData->iRadarModeIndex = m_LOBDataExt.aetAnal.idInfo.nRadarModeIndex[0];
 
 #ifdef _SQLITE_
-    pRadarName = m_pIdentifyAlg->GetRadarName( pLOBData->iRadarModeIndex );
+    
 #elif _NO_SQLITE_
+
+#elif _MSSQL_
+   char *pRadarName = m_pIdentifyAlg->GetRadarName( pLOBData->iRadarModeIndex );
+
 #else
-    pRadarName = NULL;
+    // pRadarName = NULL;
 
 #endif
 
@@ -8455,7 +8463,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 {
     int iLatitude=0, iLongitude=0;
 
-    char *pChar;
+    //char *pChar;
     int iIndex;
     CString strMsg;
     SELEXTDB extDB=SELEXTDB();
@@ -8465,7 +8473,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 
     //STR_CEDEOBID_INFO *pIDInfo;
     SThreat *pThreat;
-    SRadarMode *pRadarMode, *pRadarMode1, *pRadarMode2;
+    SRadarMode *pRadarMode;
 
     if( pTheThreat != NULL && bEnable == true ) {
         pAETData = GetAETData( pTheThreat->m_nIndex );
@@ -10715,15 +10723,12 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
 #ifdef _SQLITE_
     int i, iValue=-1;
 
-    Database *pDatabase;
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( pSQLString );
 
-    pDatabase = GetDatabase();
-
-    SQLite::Statement query( *pDatabase, pSQLString );
-
-    if( query.executeStep() ) {
+    if( stmt.FetchRow() ) {
         i = 0;
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
     }
 
     return iValue;
@@ -10755,9 +10760,11 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
               pLOBData->fPRISeq[25], pLOBData->fPRISeq[26], pLOBData->fPRISeq[27], pLOBData->fPRISeq[28], pLOBData->fPRISeq[29], \
               pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
 
-    exec( m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
+
 #elif _NO_SQLITE_
-#else
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
@@ -10826,7 +10833,8 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
               // pExt->aetData.uiOpInitID,
 
-    exec( m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
 
     if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
         m_pIdentifyAlg->UpdateRadarMode( pLOBData );
@@ -10899,9 +10907,11 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
               pABTData->fPRISeq[25], pABTData->fPRISeq[26], pABTData->fPRISeq[27], pABTData->fPRISeq[28], pABTData->fPRISeq[29], \
               pABTData->fPRISeq[30], pABTData->fPRISeq[31] );
 
-    exec( m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
+
 #elif _NO_SQLITE_
-#else
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
@@ -10983,7 +10993,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
 
 
-    exec( m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
 
     if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
@@ -10993,7 +11004,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 
         // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
         sprintf_s( m_szSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-        exec( m_szSQLString );
+        Kompex::SQLiteStatement stmt( m_pDatabase );
+        stmt.Sql( m_szSQLString );
     }
 #elif _NO_SQLITE_
 #else
@@ -11092,7 +11104,8 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
         pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
 
-    exec( m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
 
     /*
     if( bUpdateThreat == true && pAETData->iThreatIndex > 0 ) {

@@ -53,7 +53,7 @@ enum LogType {
 class CLog
 {
 private:
-    static CLog *pInstance;
+    static CLog *m_pInstance;
 
 #ifdef _MSC_VER
     static CCriticalSection m_cs;
@@ -73,10 +73,17 @@ public:
 
     static CLog* GetInstance()
     { // 게으른 초기화
-        if(pInstance == NULL) {
-            pInstance = new CLog();
+        if(m_pInstance == NULL) {
+            m_pInstance = new CLog();
         }
-        return pInstance;
+        return m_pInstance;
+    }
+
+    static void ReleaseInstance() { 
+        if( m_pInstance != NULL ) {
+            delete m_pInstance;
+            m_pInstance = NULL;
+        } 
     }
 
     void LogMsg( int nType, char *pMsg );

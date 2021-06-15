@@ -2,12 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifdef _MSC_VER
 #include "stdafx.h"
 
 #define _USE_MATH_DEFINES
 
-#endif
 
 #include <math.h>
 #include <stdio.h>

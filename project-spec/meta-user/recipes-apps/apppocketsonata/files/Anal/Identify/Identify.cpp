@@ -2,10 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
 
 #include <math.h>
 #include <stdlib.h>
@@ -48,6 +45,8 @@
 
 // 정적 초기화
 int  CELSignalIdentifyAlg::m_CoInstance = 0;
+
+Kompex::SQLiteDatabase *CELSignalIdentifyAlg::m_pDatabase=NULL;
 
 bool CELSignalIdentifyAlg::m_bInitTable = false;
 STR_FLIB *CELSignalIdentifyAlg::m_pFLib = NULL;
@@ -99,7 +98,7 @@ STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 
 #ifdef _NO_SQLITE_
 CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 #else
-CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( pFileName, SQLite::OPEN_READWRITE )
+CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 )
 #endif
 {
     //m_pMyODBC = pMyODBC;
@@ -135,6 +134,14 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Database( 
         IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
 
         m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
+
+#ifdef _SQLITE_
+        m_pDatabase = GetDatabase();
+#elif _NO_SQLITE_
+#elif _MSSQL_
+        // MSSQL 연결
+        CMSSQL::Init();
+#endif
     }
 
 }
@@ -1748,7 +1755,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
 
     memset( theFLib, _spZero, sizeof( STR_FLIB ) * ( NO_FLIB_BAND + 1 ) );
 
-    iHistSize = ( MAX_FREQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
+    iHistSize = (int) ( MAX_FREQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
     pHist = ( UINT * ) malloc( (UINT)( iHistSize * sizeof(int) ) );
     if( pHist == NULL ) { //DTEC_NullPointCheck
         printf( "\n 메모리가 부족해서 히스토그램을 위한 메모리를 할당하지 못했습니다 !" );
@@ -2875,12 +2882,12 @@ void CELSignalIdentifyAlg::IdentifySigType( int iSignalType )
         }
 
         switch( iSignalType ) {
-            case SIGNAL_TYPE::ST_NORMAL_PULSE :
+            case ST_NORMAL_PULSE :
                 if( pRadarMode->eSignalType != SignalType::enumPulsed )
                     continue;
                 break;
 
-            case SIGNAL_TYPE::ST_CW :
+            case ST_CW :
                 if( pRadarMode->eSignalType != SignalType::enumCW )
                     continue;
                 break;
@@ -5807,8 +5814,8 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMo
 
     *puiCoKnownRadarMode = 0;
 
-    _uiFreqMin = FRQMhzCNV( 0, uiFreqMin );
-    _uiFreqMax = FRQMhzCNV( 0, uiFreqMax );
+    _uiFreqMin = (unsigned int) ( FRQMhzCNV( 0, uiFreqMin ) + 0.5 );
+    _uiFreqMax = (unsigned int) ( FRQMhzCNV( 0, uiFreqMax ) + 0.5 );
 
     band.ilow = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) _uiFreqMin );
     band.ihgh = (int) BandSelect( 0, (UINT)NO_FLIB_BAND-1, (int) _uiFreqMax );
@@ -5876,9 +5883,6 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
 #ifdef _SQLITE_
     int i;
-    Database *pDatabase;
-
-    pDatabase = GetDatabase();
 
     sprintf( m_szSQLString, "SELECT RM_RADAR_MODE_INDEX, RM_FUNCTION_CODE, RM_SIGNAL_TYPE, RM_POLARIZATION, RM_PLATFORM, RM_VALIDATION, \
                              RM_RF_TYPE, RM_RF_TYPICAL_MIN, RM_RF_TYPICAL_MAX, RM_RF_PATTERN, RM_RF_NUM_ELEMENTS, RM_RF_NUM_POSITIONS, RM_RF_PATTERN_PERIOD_MIN, RM_RF_PATTERN_PERIOD_MAX, RM_RF_MEAN_MIN, RM_RF_MEAN_MAX, \
@@ -5889,101 +5893,103 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
                              R_PRIORITY, R_ELNOT, R_NICKNAME, R_TIME_INACTIVATED, \
                              D_THREAT_INDEX, D_DEVICE_INDEX, D_ELNOT \
                              FROM VEL_RADARMODE_LIST ORDER BY RM_RADAR_MODE_INDEX" );
-    SQLite::Statement query( *pDatabase, m_szSQLString );
 
-    while( query.executeStep() ) {
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
+
+    while( stmt.FetchRow() ) {
         int iValue;
         char buffer[100];
 
         i = 0;
 
-        pRadarMode->iRadarModeIndex = query.getColumn(i++).getInt();
+        pRadarMode->iRadarModeIndex = stmt.GetColumnInt(i++);
 
-        strcpy( buffer, query.getColumn(i++).getText() );
+        strcpy( buffer, stmt.GetColumnName(i++) );
         pRadarMode->eFunctionCode = GetFunctionCodes( buffer );
 
-        strcpy( buffer, query.getColumn(i++).getText() );
+        strcpy( buffer, stmt.GetColumnName(i++) );
         pRadarMode->eSignalType = GetSignalType( buffer );
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->ePolarization = GetPolarizationCodes( iValue );
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->ePlatform = GetPlatformCode( iValue );
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->eValidation = GetValidationCode( iValue );
 
         // 주파수 정보
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->eRF_Type = GetFreqType( iValue );
 
-        pRadarMode->fRF_TypicalMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fRF_TypicalMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fRF_TypicalMin = (float) stmt.GetColumnInt(i++);
+        pRadarMode->fRF_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->eRF_Pattern = GetPatternCode( iValue );
 
-        pRadarMode->nRF_NumElements = query.getColumn(i++).getInt();
-        pRadarMode->nRF_NumPositions = query.getColumn(i++).getInt();
+        pRadarMode->nRF_NumElements = stmt.GetColumnInt(i++);
+        pRadarMode->nRF_NumPositions = stmt.GetColumnInt(i++);
 
-        pRadarMode->fRF_PatternPeriodMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fRF_PatternPeriodMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fRF_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fRF_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
 
-        pRadarMode->fRF_MeanMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fRF_MeanMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fRF_MeanMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fRF_MeanMax = (float) stmt.GetColumnDouble(i++);
 
         // PRI 정보
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->ePRI_Type = GetPRIType( iValue );
 
-        pRadarMode->fPRI_TypicalMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fPRI_TypicalMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fPRI_TypicalMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fPRI_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->ePRI_Pattern = GetPatternCode( iValue );
 
-        pRadarMode->nPRI_NumElements = query.getColumn(i++).getInt();
-        pRadarMode->nPRI_NumPositions = query.getColumn(i++).getInt();
+        pRadarMode->nPRI_NumElements = stmt.GetColumnInt(i++);
+        pRadarMode->nPRI_NumPositions = stmt.GetColumnInt(i++);
 
-        pRadarMode->fPRI_PatternPeriodMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fPRI_PatternPeriodMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fPRI_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fPRI_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
 
-        pRadarMode->fPRI_MeanMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fPRI_MeanMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fPRI_MeanMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fPRI_MeanMax = (float) stmt.GetColumnDouble(i++);
 
         // 펄스폭 정보
-        pRadarMode->fPD_TypicalMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fPD_TypicalMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fPD_TypicalMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fPD_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
         // 스캔 정보
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->eScanPrimaryType = GetScanType( iValue );
-        pRadarMode->fScanPrimaryTypicalMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fScanPrimaryTypicalMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fScanPrimaryTypicalMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fScanPrimaryTypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = query.getColumn(i++).getInt();
+        iValue = stmt.GetColumnInt(i++);
         pRadarMode->eScanSecondaryType = GetScanType( iValue );
-        pRadarMode->fScanSecondaryTypicalMin = (float) query.getColumn(i++).getDouble();
-        pRadarMode->fScanSecondaryTypicalMax = (float) query.getColumn(i++).getDouble();
+        pRadarMode->fScanSecondaryTypicalMin = (float) stmt.GetColumnDouble(i++);
+        pRadarMode->fScanSecondaryTypicalMax = (float) stmt.GetColumnDouble(i++);
 
         // 기타 정보
         //pRadarMode->nAssocIndex	= query.getColumn(i++).getInt();													//모드 간 연관관계에 대한 링크
-        strcpy( pRadarMode->szModulationCode, query.getColumn(i++).getText() );
-        pRadarMode->iRadarModePriority = query.getColumn(i++).getInt();
+        strcpy( pRadarMode->szModulationCode, stmt.GetColumnName(i++) );
+        pRadarMode->iRadarModePriority = stmt.GetColumnInt(i++);
 
         // 레이더 정보
-        pRadarMode->iRadarIndex = query.getColumn(i++).getInt();
-        strcpy( pRadarMode->szRadarModeName, query.getColumn(i++).getText() );
-        strcpy( pRadarMode->szModeCode, query.getColumn(i++).getText() );
+        pRadarMode->iRadarIndex = stmt.GetColumnInt(i++);
+        strcpy( pRadarMode->szRadarModeName, stmt.GetColumnName(i++) );
+        strcpy( pRadarMode->szModeCode, stmt.GetColumnName(i++) );
 
-        pRadarMode->iRadarPriority = query.getColumn(i++).getInt();
-        strcpy( pRadarMode->szELNOT, query.getColumn(i++).getText() );
-        strcpy( pRadarMode->szNickName, query.getColumn(i++).getText() );
-        pRadarMode->iTimeInactivated = query.getColumn(i++).getInt();
+        pRadarMode->iRadarPriority = stmt.GetColumnInt(i++);
+        strcpy( pRadarMode->szELNOT, stmt.GetColumnName(i++) );
+        strcpy( pRadarMode->szNickName, stmt.GetColumnName(i++) );
+        pRadarMode->iTimeInactivated = stmt.GetColumnInt(i++);
 
-        pRadarMode->iThreatIndex = query.getColumn(i++).getInt();
-        pRadarMode->iDeviceIndex = query.getColumn(i++).getInt();
+        pRadarMode->iThreatIndex = stmt.GetColumnInt(i++);
+        pRadarMode->iDeviceIndex = stmt.GetColumnInt(i++);
 
         if( pRadarMode->eValidation == enumValidated ) {
             ++ *pnRadarMode;
@@ -5995,6 +6001,10 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         }
 
     }
+
+    // do not forget to clean-up
+    stmt.FreeQuery();
+
 #elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
@@ -6082,26 +6092,24 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
     SRadarMode_Sequence_Values *pRadarMode_RFSequence_Values;
 
     int i;
-    Database *pDatabase;
-
-    pDatabase = GetDatabase();
 
     sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, RF_INDEX, RF_MIN, RF_MAX FROM VEL_RADAR_RF_SEQENCE ORDER BY RADAR_MODE_INDEX, RF_SEQ_ID" );
-    SQLite::Statement query( *pDatabase, m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
 
     pVecRadarMode_RFSequence->clear();
     pVecRadarMode_RFSequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
 
-    while( query.executeStep() ) {
+    while( stmt.FetchRow() ) {
         i = 0;
 
         pRadarMode_RFSequence_Values = new SRadarMode_Sequence_Values;
 
-        pRadarMode_RFSequence_Values->iRadarModeIndex = query.getColumn(i++).getInt();
-        pRadarMode_RFSequence_Values->i_Index = query.getColumn(i++).getInt();
+        pRadarMode_RFSequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
+        pRadarMode_RFSequence_Values->i_Index = stmt.GetColumnInt(i++);
 
-        pRadarMode_RFSequence_Values->f_Min = (float) query.getColumn(i++).getDouble();
-        pRadarMode_RFSequence_Values->f_Max = (float) query.getColumn(i++).getDouble();
+        pRadarMode_RFSequence_Values->f_Min = (float) stmt.GetColumnDouble(i++);
+        pRadarMode_RFSequence_Values->f_Max = (float) stmt.GetColumnDouble(i++);
 
         pVecRadarMode_RFSequence->push_back( pRadarMode_RFSequence_Values );
 
@@ -6157,28 +6165,27 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 #ifdef _SQLITE_   
 
     int i;
-    Database *pDatabase;
 
     SRadarMode_Sequence_Values *pRadarMode_PRISequence_Values;
 
-    pDatabase = GetDatabase();
-
     sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, PRI_INDEX, PRI_MIN, PRI_MAX FROM VEL_RADAR_PRI_SEQENCE ORDER BY RADAR_MODE_INDEX, PRI_SEQ_ID" );
-    SQLite::Statement query( *pDatabase, m_szSQLString );
+    Kompex::SQLiteStatement stmt( m_pDatabase );
+    stmt.Sql( m_szSQLString );
+    //SQLite::Statement query( *pDatabase, m_szSQLString );
 
     pVecRadarMode_PRISequence->clear();
     pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
 
-    while( query.executeStep() ) {
+    while( stmt.FetchRow() ) {
         i = 0;
 
         pRadarMode_PRISequence_Values = new SRadarMode_Sequence_Values;
 
-        pRadarMode_PRISequence_Values->iRadarModeIndex = query.getColumn(i++).getInt();
-        pRadarMode_PRISequence_Values->i_Index = query.getColumn(i++).getInt();
+        pRadarMode_PRISequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
+        pRadarMode_PRISequence_Values->i_Index = stmt.GetColumnInt(i++);
 
-        pRadarMode_PRISequence_Values->f_Min = (float) query.getColumn(i++).getDouble();
-        pRadarMode_PRISequence_Values->f_Max = (float) query.getColumn(i++).getDouble();
+        pRadarMode_PRISequence_Values->f_Min = (float) stmt.GetColumnInt(i++);
+        pRadarMode_PRISequence_Values->f_Max = (float) stmt.GetColumnInt(i++);
 
         pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
 
@@ -6437,20 +6444,19 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
 //     pstTime = localtime( & nowTime );
 #endif    
 
-#ifndef _NO_SQLITE_
-    char buffer[100];
+    // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+#ifdef _SQLITE_
+    char buffer[100];    
 
     strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", pstTime );
 
     // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+    Kompex::SQLiteStatement stmt( m_pDatabase );
     sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-    exec( m_szSQLString );
-#endif
+    stmt.Sql( m_szSQLString );
 
-    // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-#ifdef _SQLITE_
     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
-    exec( m_szSQLString );
+    stmt.Sql( m_szSQLString );
 
 #elif _NO_SQLITE_
 #else

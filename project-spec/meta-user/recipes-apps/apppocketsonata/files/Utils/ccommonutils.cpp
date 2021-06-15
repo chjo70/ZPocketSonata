@@ -1,5 +1,7 @@
-#ifdef _MSC_VER
+
 #include "stdafx.h"
+
+#ifdef _MSC_VER
 #include <sys/timeb.h>
 #endif
 
