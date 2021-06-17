@@ -1,4 +1,4 @@
-// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
+﻿// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 

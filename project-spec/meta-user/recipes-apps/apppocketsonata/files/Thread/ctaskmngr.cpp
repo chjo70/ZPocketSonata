@@ -61,6 +61,10 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
  */
 CTaskMngr::~CTaskMngr(void)
 {
+
+    //GP_SYSCFG->SetMode( enMode );
+    CreateAllAnalysisThread( false );
+
     // 객체를 소멸하게 한다.
     GP_SYSCFG->ReleaseInstance();
 }
@@ -320,10 +324,10 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 
 //         // 1. 먼저 관련 분석 쓰레드를 삭제한다.
         EMTMRG_RELEASE;
-//         SIGCOL_RELEASE;
-//         DETANL_RELEASE;
-//         TRKANL_RELEASE;
-//         SCNANL_RELEASE;
+        SIGCOL_RELEASE;
+        DETANL_RELEASE;
+        TRKANL_RELEASE;
+        SCNANL_RELEASE;
 
         LOGMSG1( enNormal, "수집집 관련 쓰레드를 삭제합니다[%d].", bCreate );
 //         UCOL->Stop2();

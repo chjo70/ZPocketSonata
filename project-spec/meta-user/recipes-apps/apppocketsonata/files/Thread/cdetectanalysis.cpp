@@ -1,4 +1,4 @@
-// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
+﻿// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 

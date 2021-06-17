@@ -1,4 +1,4 @@
-// CSignalCollect.cpp: implementation of the CScanAnalysis class.
+﻿// CSignalCollect.cpp: implementation of the CScanAnalysis class.
 //
 // 신호 수집 및 관리한다.
 // 신규 데이터를 수집하기위한 수집 제어와 분석된 데이터를 기반으로 추적 수집 채널을 할당해서 추적 채널을 관리한다.
