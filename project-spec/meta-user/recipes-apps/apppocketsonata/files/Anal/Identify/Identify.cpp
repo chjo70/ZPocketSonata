@@ -136,8 +136,7 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
             m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
 
         }
-        catch(Kompex::SQLiteException &exception)
-        {
+        catch(Kompex::SQLiteException &exception) {
             std::cerr << "\nException Occured" << std::endl;
             exception.Show();
             std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
@@ -147,6 +146,9 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
         // MSSQL 연결
         CMSSQL::Init();
 #endif
+    }
+    else {
+        m_pDatabase = NULL;
     }
 
 }
