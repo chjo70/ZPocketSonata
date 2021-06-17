@@ -54,7 +54,7 @@ void CRecLan::ReleaseInstance()
     {
         int iIndex;
 
-        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
         iIndex = m_iIndex;
         delete m_pInstance[iIndex];

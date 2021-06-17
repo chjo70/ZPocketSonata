@@ -247,7 +247,7 @@ void CUserCollect::ColStart()
                     memset( pPDWFileHeader, 0, sizeof(STR_PDWFILE_HEADER) );
                     pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
                     pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
-                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0, ChildClassName() );
+                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0, GetThreadName() );
                 }
                 break;
 
@@ -268,7 +268,7 @@ void CUserCollect::ColStart()
         CCommonUtils::SendLan( Mres_ColStart, & m_strResColStart, sizeof(STR_RES_COL_START) );
     }
     else {
-        UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, ChildClassName() );
+        UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
     }
 
     ++ m_uiColStart;
@@ -321,7 +321,7 @@ void CUserCollect::MakeSIMPDWData()
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 20 ) + 20000;
 
-        randomFreq = 0x3000;  //CPOCKETSONATAPDW::EncodeFREQMHzFloor( 500 );     // ( rand() % 50 ) + 2000;
+        randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
         randomCh = 1;
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;

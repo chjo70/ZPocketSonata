@@ -301,15 +301,15 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 
         g_AnalLoop = true;
 
-         EMTMRG->Run();
-         SIGCOL->Run();
-         DETANL->Run();
-         TRKANL->Run();
-         SCNANL->Run();
+        EMTMRG->Run();
+        SIGCOL->Run();
+        DETANL->Run();
+        TRKANL->Run();
+        SCNANL->Run();
  
-         DETANL->Init();
-         TRKANL->Init();
-         SCNANL->Init();
+        DETANL->Init();
+        TRKANL->Init();
+        SCNANL->Init();
 
     }
     else {
@@ -319,7 +319,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         g_AnalLoop = false;
 
 //         // 1. 먼저 관련 분석 쓰레드를 삭제한다.
-//         EMTMRG_RELEASE;
+        EMTMRG_RELEASE;
 //         SIGCOL_RELEASE;
 //         DETANL_RELEASE;
 //         TRKANL_RELEASE;

@@ -91,7 +91,7 @@ void CTrackAnalysis::_routine()
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", ChildClassName() );
+                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
                     bWhile = false;
                     break;
 
@@ -131,6 +131,6 @@ void CTrackAnalysis::AnalysisStart()
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
-    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), ChildClassName() );
+    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

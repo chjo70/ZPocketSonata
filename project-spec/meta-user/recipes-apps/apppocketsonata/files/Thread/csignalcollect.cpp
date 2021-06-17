@@ -133,7 +133,7 @@ void CSignalCollect::_routine()
 #endif
 
     // 사용자 수집 함수로 시작
-    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, ChildClassName() );
+    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
 
     while( g_AnalLoop ) {
         if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
@@ -160,7 +160,7 @@ void CSignalCollect::_routine()
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+                    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
                     break;
 
                 // 모의 명령 처리
@@ -194,7 +194,7 @@ void CSignalCollect::_routine()
 void CSignalCollect::SendEndCollect()
 {
     if( m_bSendEnd == false || true ) {
-        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END, ChildClassName() );
+        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END, GetThreadName() );
 
         m_bSendEnd = true;
     }
@@ -324,7 +324,7 @@ void CSignalCollect::AnalysisStart()
             memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
-            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), ChildClassName() );
+            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
 
             bIsOut = false;
         }

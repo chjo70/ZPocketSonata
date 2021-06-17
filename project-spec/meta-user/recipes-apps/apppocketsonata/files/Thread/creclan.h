@@ -29,7 +29,7 @@ public:
 
 
     virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
+    virtual const char *GetThreadName() { return m_szClassName; }
 
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화
