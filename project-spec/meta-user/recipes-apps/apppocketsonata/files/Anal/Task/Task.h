@@ -82,7 +82,7 @@ private:
 
 protected:
 	int m_TaskId;
-	int m_QueueSize;
+	unsigned int m_uiQueueSize;
 	int m_RingSize;
 
 	bool m_bDangerOfQueueBufferFull;

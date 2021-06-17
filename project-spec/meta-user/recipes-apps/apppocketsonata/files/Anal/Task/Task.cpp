@@ -91,7 +91,7 @@ void CTask::InitVar()
 */
 void CTask::MallocBuffer()
 {
-	m_pqMsg = ( char * ) malloc( m_QueueSize * sizeof(char) );
+	m_pqMsg = ( char * ) malloc( m_uiQueueSize * sizeof(char) );
 	if( m_pqMsg == NULL ) {
 		printf( "\n [W] 메모리를 할당하지 못했습니다." );
 	}
@@ -114,7 +114,7 @@ void CTask::InitTask()
 {
 #ifndef _WIN32
 	// 큐 메시지 생성한다.
-	m_msgQId = msgQCreate( MAX_LEN_MSGQ, m_QueueSize, MSG_Q_PRIORITY );
+	m_msgQId = msgQCreate( MAX_LEN_MSGQ, m_uiQueueSize, MSG_Q_PRIORITY );
 	if( NULL == m_msgQId ) {
 		PrintErr( ( "\n [W] 큐 메시지를 생성하지 못했습니다." ) );
 	}
@@ -204,7 +204,7 @@ void CTask::ReceiveMessage()
 void CTask::ReceiveMessage( MSG_Q_ID msgQId, void *pMsg, int timeout )
 {
 #ifndef _WIN32
-	if( ERROR == msgQReceive( msgQId, (char *) pMsg, m_QueueSize, timeout ) ) {
+	if( ERROR == msgQReceive( msgQId, (char *) pMsg, m_uiQueueSize, timeout ) ) {
 		int noError = errnoGet();
 
 		if( noError != S_objLib_OBJ_TIMEOUT ) {
@@ -227,7 +227,7 @@ void CTask::ReceiveMessage( MSG_Q_ID msgQId, void *pMsg, int timeout )
 void CTask::SendMessage( MSG_Q_ID msgQId, void *pMsg )
 {
 #ifndef _WIN32
-	if( ERROR == msgQSend( msgQId, (char *) pMsg, m_QueueSize, WAIT_FOREVER, MSG_PRI_NORMAL ) ) {
+	if( ERROR == msgQSend( msgQId, (char *) pMsg, m_uiQueueSize, WAIT_FOREVER, MSG_PRI_NORMAL ) ) {
 		int noError = errnoGet();
 		logMsg("[msgQSend] errno[0x%x]\n", noError,0,0,0,0,0);
 
@@ -267,7 +267,7 @@ void CTask::SendMessage( SQMsg *psqMsg )
 void CTask::SendMessage( MSG_Q_ID msgQId, void *pMsg, int options )
 {
 #ifndef _WIN32
-	if( ERROR == msgQSend( msgQId, (char *) pMsg, m_QueueSize, options, MSG_PRI_NORMAL ) ) {
+	if( ERROR == msgQSend( msgQId, (char *) pMsg, m_uiQueueSize, options, MSG_PRI_NORMAL ) ) {
 		int noError = errnoGet();
 		logMsg("[mssQSend] errno[0x%x]\n", noError,0,0,0,0,0);
 
@@ -514,9 +514,9 @@ void CTask::EmptyQueue()
 {
 	char *pMsg;
 
-	pMsg = ( char * ) malloc( m_QueueSize * sizeof(char) );
+	pMsg = ( char * ) malloc( m_uiQueueSize * sizeof(char) );
 #ifndef _WIN32
-	while( ERROR != msgQReceive( m_msgQId, (char *) pMsg, m_QueueSize, (int)(10*OS_ONE_MILLISEC) ) ) {
+	while( ERROR != msgQReceive( m_msgQId, (char *) pMsg, m_uiQueueSize, (int)(10*OS_ONE_MILLISEC) ) ) {
 		printf( "/" );
 	}
 #endif
