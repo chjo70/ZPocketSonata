@@ -274,7 +274,7 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
         *pPmop++ = pdw->iPMOP;
         *pFmop++ = pdw->iFMOP;
 
-        *pBand++ = 0;
+        *pBand++ = g_enBoardId;
 
         //*pMaxChannel ++ = pdw->item.max_channel;
     }
