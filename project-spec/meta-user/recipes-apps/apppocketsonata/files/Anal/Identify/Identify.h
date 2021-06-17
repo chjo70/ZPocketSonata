@@ -157,7 +157,6 @@ class CELSignalIdentifyAlg
     //static char *m_pszSQLString;
     char m_szSQLString[4000];
 
-    Kompex::SQLiteDatabase *m_pTheSQLiteDB;
     Kompex::SQLiteDatabase *m_pDatabase;
 
 #endif
