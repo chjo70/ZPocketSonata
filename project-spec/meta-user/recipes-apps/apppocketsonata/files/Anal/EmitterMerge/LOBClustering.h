@@ -168,7 +168,7 @@ typedef struct {
 class CLOBClustering
 {
 protected:
-	int m_iInterSect;																///< 교차점 개수
+	unsigned int m_uiInterSect;																///< 교차점 개수
 	//UINT m_nClusetrCount;														///< 클러스터링 개수
 
 	std::vector<STR_LOBS> m_VecLOBs;								///< LOB 데이터 저장소
@@ -223,7 +223,7 @@ private:
 	void CalMaxDiffAoa( STR_LOBCLUSTER *pCluster );
 
 	// 교차점 구하기
-	int CalcIntersectionPoints( int nLines );
+	unsigned int CalcIntersectionPoints( int nLines );
 	bool CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDATA_MINIMIZE *pLOBData1, SELLOBDATA_MINIMIZE *pLOBData2 );
 	void GroupOfIntersection();
 	bool IsThereCluster( STR_LOBCLUSTER *pCluster );

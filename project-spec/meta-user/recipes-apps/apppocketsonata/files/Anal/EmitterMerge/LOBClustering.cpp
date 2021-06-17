@@ -336,22 +336,22 @@ bool CLOBClustering::AllocMemory()
 	bool bRet=true;
 
 	// 교차점 메모리 할당
-	m_iInterSect = CalcIntersectionPoints( QUEUE_LOB_POOL_SIZE );
-	m_pIntersect = ( SELINTERSECTION * ) malloc( sizeof(SELINTERSECTION) * (UINT) m_iInterSect );
+	m_uiInterSect = CalcIntersectionPoints( QUEUE_LOB_POOL_SIZE );
+	m_pIntersect = ( SELINTERSECTION * ) malloc( sizeof(SELINTERSECTION) * m_uiInterSect );
 	if( m_pIntersect == NULL ) { //DTEC_NullPointCheck
 		bRet = false;
 	}
 
 	m_pOptimalLOBID = ( int * ) malloc( sizeof(int) * QUEUE_LOB_POOL_SIZE );
 
-	m_pCluster = ( STR_LOBCLUSTER * ) malloc( sizeof(STR_LOBCLUSTER) * (UINT) m_iInterSect );
+	m_pCluster = ( STR_LOBCLUSTER * ) malloc( sizeof(STR_LOBCLUSTER) * m_uiInterSect );
 	if( m_pCluster == NULL ) { //DTEC_NullPointCheck
 		bRet = false;
 	}
 	else {
-		for( i=0 ; i < m_iInterSect ; ++i ) {
+		for( i=0 ; i < m_uiInterSect ; ++i ) {
 			// LOB 관리를 위해서 +2 개를 더한다.
-			m_pCluster[i].pQueueIndex = ( unsigned int * ) malloc( sizeof(QueueIndex) * (UINT) ( m_iInterSect + 2 ) );
+			m_pCluster[i].pQueueIndex = ( unsigned int * ) malloc( sizeof(QueueIndex) * (UINT) ( m_uiInterSect + 2 ) );
 			if( m_pCluster[i].pQueueIndex == NULL ) { //DTEC_NullPointCheck
 				bRet = false;
 			}
@@ -627,7 +627,7 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
  * @date      2016-06-23, 오전 10:13 
  * @warning   
  */
-int CLOBClustering::CalcIntersectionPoints( int nLines )
+unsigned int CLOBClustering::CalcIntersectionPoints( int nLines )
 {
 	return ( nLines * ( nLines - 1 ) ) / 2;
 }
