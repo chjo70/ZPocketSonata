@@ -106,7 +106,7 @@ struct STR_RAWDATA {
 typedef unsigned long long int _TOA;
 
 struct STR_PDW_DATA {
-	int iDataItems;
+	unsigned int uiDataItems;
 
 	float *pfFreq;			// [KHz]
 	float *pfPW;			// [ns]
@@ -171,7 +171,7 @@ struct STR_ZOOM_INFO {
 //
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
-	void Alloc( int iItems=0 );	\
+	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
 	void ReadDataHeader();  \
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
@@ -226,7 +226,7 @@ public:
     CData(STR_RAWDATA *pRawData);
     virtual ~CData();
 
-    virtual void Alloc( int nItems=0 )=0;
+    virtual void Alloc( unsigned int uiItems=0 )=0;
     virtual void Free()=0;
     virtual void ReadDataHeader() = 0;
     virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
@@ -267,7 +267,7 @@ public:
 	CPDW(STR_RAWDATA *pRawData);
 	virtual ~CPDW();
 
-	void Alloc( int nItems=0 );
+	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -309,7 +309,7 @@ public:
 	CSPDW(STR_RAWDATA *pRawData);
 	virtual ~CSPDW();
 
-	void Alloc( int nItems=0 );
+	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -341,7 +341,7 @@ public:
 	CEPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CEPDW();
 
-	void Alloc( int nItems=0 );
+	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -380,7 +380,7 @@ public:
 	CKFXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CKFXPDW();
 
-	void Alloc( int nItems=0 );
+	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -736,7 +736,7 @@ public:
 	CIQ(STR_RAWDATA *pRawData);
 	virtual ~CIQ();
 
-	void Alloc( int nItems=0 );
+	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader();
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -760,7 +760,7 @@ public:
     C7IQ(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pFilterSetup );
 	virtual ~C7IQ();
 
-	void Alloc( int iItems=0 );
+	void Alloc( unsigned int iItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
@@ -971,7 +971,7 @@ public:
 	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
-	inline UINT GetFilteredDataItems() { STR_PDW_DATA *pPDWData=(STR_PDW_DATA *) m_pData->GetData(); return pPDWData->iDataItems; }
+	inline UINT GetFilteredDataItems() { STR_PDW_DATA *pPDWData=(STR_PDW_DATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
 	
 	inline bool IsPhaseData() { return m_pData->m_bPhaseData; }
 	
