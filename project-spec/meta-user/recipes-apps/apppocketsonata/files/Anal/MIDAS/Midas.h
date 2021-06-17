@@ -563,7 +563,7 @@ typedef struct {
 class CMIDASBlueFileFormat : public CRawFile
 {
 protected:
-    int m_SizeOfExtend;
+    unsigned int m_uiSizeOfExtend;
     EnumSCDataType m_enFileType;																///< 변환하기 위한 변환 데이터 포멧
     SELMIDAS_HCB *m_pHCB;
     unsigned char *m_pExtendOfHeader;

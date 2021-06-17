@@ -266,7 +266,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
             \author 조철희 (churlhee.jo@lignex1.com)
             \date 	2015-10-5 17:36:12
     */
-    int iWriteByte=0;
+    unsigned int uiWriteByte=0;
 
     numberofdata = m_strKeywordValue.numberofdata;
 
@@ -286,9 +286,9 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 return false;
             }
 
-            iWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
+            uiWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
             for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, (char *) & x.iqData[0], iWriteByte );
+                iSize = _read( destFileId, (char *) & x.iqData[0], uiWriteByte );
                 if( iSize == 0 ) {
                     break;
                 }
@@ -318,9 +318,9 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 }
             }
 
-            iWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
+            uiWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
             for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, (char *) & x.ifData[0], iWriteByte );
+                iSize = _read( destFileId, (char *) & x.ifData[0], uiWriteByte );
                 if( iSize == 0 ) { //DTEC_Else
                     break;
                 }
@@ -339,9 +339,9 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                     return false;
                 }
 
-                iWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
+                uiWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
                 for( i=0 ; i < numberofdata ; ++i ) {
-                    iSize = _read( destFileId, (char * )& x.pdwData[0], iWriteByte );
+                    iSize = _read( destFileId, (char * )& x.pdwData[0], uiWriteByte );
                     if( iSize == 0 ) { //DTEC_Else
                         break;
                     }
@@ -371,7 +371,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 }
             }
 
-            iWriteByte = MAX_OF_PDW_DATA * sizeof(S_EL_PDW_RECORDS);
+            uiWriteByte = MAX_OF_PDW_DATA * sizeof(S_EL_PDW_RECORDS);
             break;
 
 // 		case E_EL_SCDT_PRF :
@@ -445,11 +445,11 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
             char *pNullData;
 
             // 데이터와 NULL 문자 저장
-            pNullData = ( char * ) malloc( sizeof(char) * iWriteByte );
-            memset( pNullData, 0, iWriteByte );
+            pNullData = ( char * ) malloc( sizeof(char) * uiWriteByte );
+            memset( pNullData, 0, uiWriteByte );
             do {
-                if( iNullCh-iWriteByte > 0 ) { //DTEC_Else
-                    iNullCh -= (unsigned long long) Write( pNullData, iWriteByte );
+                if( iNullCh-uiWriteByte > 0 ) { //DTEC_Else
+                    iNullCh -= (unsigned long long) Write( pNullData, uiWriteByte );
                 }
                 else {
                     iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh );
@@ -700,7 +700,7 @@ int CMIDASBlueFileFormat::GetSampleSize()
  */
 void CMIDASBlueFileFormat::MakeHeader()
 {
-    m_SizeOfExtend = EXTENDED_HEADER_SIZE;
+    m_uiSizeOfExtend = EXTENDED_HEADER_SIZE;
 
     if( m_enFileType == E_EL_SCDT_PDW2SP370 ) {
 #ifdef __linux__
@@ -715,13 +715,13 @@ void CMIDASBlueFileFormat::MakeHeader()
         pHCB = ( SELMIDAS_HCB * ) m_pHCB;
 
         if( m_enFileType == E_EL_SCDT_PDW ) {
-            m_SizeOfExtend = 2 * EXTENDED_HEADER_SIZE;
+            m_uiSizeOfExtend = 2 * EXTENDED_HEADER_SIZE;
         }
         else if( m_enFileType == E_EL_SCDT_IF ) {
 #ifdef _EXT_HEADER_
-            m_SizeOfExtend = 2 * EXTENDED_HEADER_SIZE;
+            m_uiSizeOfExtend = 2 * EXTENDED_HEADER_SIZE;
 #endif
-            m_SizeOfExtend = 0x0600;
+            m_uiSizeOfExtend = 0x0600;
         }
         memset( pHCB, 0, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
 
@@ -747,7 +747,7 @@ void CMIDASBlueFileFormat::MakeHeader()
         pHCB->ext_start = CalcExtStart();					// 데이터를 쓰고나서 / 512를 나눈 값으로 설정함.
 
         // Extended header의 크기
-        pHCB->ext_size = m_SizeOfExtend;	// extended header 길이를 바이트 단위로 기록한다.
+        pHCB->ext_size = m_uiSizeOfExtend;	// extended header 길이를 바이트 단위로 기록한다.
 
         // 데이터 시작
         pHCB->data_start = (double) HEADER_CONTROL_BLOCK_SIZE;		// 데이터 시작 번지, bytes
@@ -1168,8 +1168,8 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
         time_tick = time( NULL );
 
         //m_pExtendOfHeader = new byte[m_SizeOfExtend];
-        m_pExtendOfHeader = ( unsigned char * ) malloc( m_SizeOfExtend );
-        memset( m_pExtendOfHeader, 0, sizeof( char ) * m_SizeOfExtend );
+        m_pExtendOfHeader = ( unsigned char * ) malloc( m_uiSizeOfExtend );
+        memset( m_pExtendOfHeader, 0, sizeof( char ) * m_uiSizeOfExtend );
 
         // Extended Header 구조체 초기화
         pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) & m_pExtendOfHeader[0];
@@ -1725,7 +1725,7 @@ int CMIDASBlueFileFormat::WriteExtendedHeader()
     int iWrite=0;
 
     if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
-        iWrite = Write( m_pExtendOfHeader, sizeof(char)*m_SizeOfExtend );
+        iWrite = Write( m_pExtendOfHeader, sizeof(char)*m_uiSizeOfExtend );
     }
 
     return iWrite;
