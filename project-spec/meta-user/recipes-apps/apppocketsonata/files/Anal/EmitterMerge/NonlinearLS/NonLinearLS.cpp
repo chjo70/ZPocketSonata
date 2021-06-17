@@ -250,7 +250,7 @@ void CNonLinearLS::RunNonLinearLS( SELUTMTIME *pResult, SELINIT *pInit, SELUTMTI
  * @date      2014-02-11 오후 4:14 
  * @warning   
  */
-void CNonLinearLS::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, int nEle )
+void CNonLinearLS::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, unsigned int uiEle )
 {
 	int i;
 
@@ -272,11 +272,11 @@ void CNonLinearLS::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *p
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 20:55:09
 	*/
-	nEle = min( nEle, MAX_OF_LOBS );
+	uiEle = min( uiEle, MAX_OF_LOBS );
 
 	// 기초 연산값 버퍼 할당
-	pU = ( double * ) malloc( sizeof(double) * nEle );
-	pMHat = ( double * ) malloc( sizeof(double) * nEle );
+	pU = ( double * ) malloc( sizeof(double) * uiEle );
+	pMHat = ( double * ) malloc( sizeof(double) * uiEle );
 	if( pU == NULL || pMHat == NULL ) {
 		if( pU != NULL ) free( pU );
 		if( pMHat != NULL ) free( pMHat );
@@ -301,8 +301,8 @@ void CNonLinearLS::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *p
 	// H 벡터 생성
 	pU = pBackU;
 	pMHat = pBackMHat;
-	H = CMatrix( nEle, 2 );
-	Ht = CMatrix( 2, nEle );
+	H = CMatrix( uiEle, 2 );
+	Ht = CMatrix( 2, uiEle );
 	for( i=1 ; i <= nEle ; ++i ) {
 		double ddivide;
 
@@ -324,12 +324,13 @@ void CNonLinearLS::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *p
 	W = aoaVariance * Diag( nEle );
 	W.Print();
 	W = Inv( W, & bret );
-	if( bret == false )				return;
+	if( bret == false ) {
+        // return;
+    }
+    else {
+	    Q = Ht * W * H;
+	    Q.Print();
 
-	Q = Ht * W * H;
-	Q.Print();
-
-	if( bret == true ) {
 		// EEP / CEP 결과 저장
 		double c;
 		double randa_1, randa_2;
