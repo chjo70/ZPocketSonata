@@ -143,7 +143,7 @@ void *CThread::CallBack( void *pArg )
 void CThread::Run( void *(*pFunc)(void*), key_t key )
 //void CThread::Run( LPTHREAD_START_ROUTINE pFunc, key_t key )
 {
-    LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", ChildClassName() );
+    LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", GetThreadName() );
 
 #ifdef __linux__
     ++ m_iCoMsgQueue;
@@ -168,7 +168,7 @@ void CThread::Run( void *(*pFunc)(void*), key_t key )
     pthread_create( & m_MainThread, NULL, pFunc, this );
 
 #elif _MSC_VER
-	m_hEvent = CreateEvent( NULL, FALSE, FALSE, ChildClassName() );
+	m_hEvent = CreateEvent( NULL, FALSE, FALSE, GetThreadName() );
     //m_pTheMessageQueue = new CMessageQueue<STR_MessageData*>;
 
     ++ m_iCoMsgQueue;

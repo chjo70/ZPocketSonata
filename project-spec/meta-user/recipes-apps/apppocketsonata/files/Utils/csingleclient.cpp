@@ -72,7 +72,7 @@ CSingleClient::CSingleClient( int iKeyId, char *pClassName, int iPort, char *pSe
  */
 CSingleClient::~CSingleClient()
 {
-    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
     Free();
 }
@@ -147,7 +147,7 @@ void CSingleClient::_routine()
         }
         sprintf( & buffer[iIndex], "%s" , m_szServerAddress[i] );
 
-        LOGMSG2( enDebug, "[클라이언트] [%s,%d] 연결하려 합니다.", buffer, m_iPort );
+        LOGMSG3( enDebug, "[클라이언트:%s] [%s,%d] 연결하려 합니다.", GetThreadName(), buffer, m_iPort );
         RunClient();
     }
 
@@ -186,7 +186,7 @@ void CSingleClient::RunClient()
     while( true ) {
         iServerSwitch = ( iServerSwitch+1 >= NUM_OF_SERVER ? iServerSwitch=0 : iServerSwitch+1 );
 
-        LOGMSG2( enDebug, "[클라이언트] [%s/%d] 연결하려 합니다.", m_szServerAddress[iServerSwitch], m_iPort );
+        LOGMSG3( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_iPort );
 
         //type of socket created
 #ifdef _MSC_VER

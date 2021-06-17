@@ -48,7 +48,7 @@ using namespace std;
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *ChildClassName() { return m_szClassName; } \
+virtual const char *GetThreadName() { return m_szClassName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
@@ -70,7 +70,7 @@ static bool IsThereInstance() { \
 #define THREAD_STANDARD_FUNCTION_2(A )    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *ChildClassName() { return m_szClassName; } \
+virtual const char *GetThreadName() { return m_szClassName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         char szSQLiteFileName[100]; \
@@ -350,7 +350,7 @@ public:
     static void *CallBack( void *pArg );
 
     virtual void _routine() { }
-    virtual const char *ChildClassName() { return NULL; }
+    virtual const char *GetThreadName() { return NULL; }
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
 };
