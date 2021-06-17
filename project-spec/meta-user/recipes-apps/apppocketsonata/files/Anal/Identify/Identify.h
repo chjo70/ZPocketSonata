@@ -150,21 +150,15 @@ struct STR_H000 {
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
-#ifdef _NO_SQLITE_
 class CELSignalIdentifyAlg
-#elif _SQLITE_
-//class CELSignalIdentifyAlg : public Database
-class CELSignalIdentifyAlg : public Kompex::SQLiteDatabase
-#else
-class CELSignalIdentifyAlg 
-#endif
 {
  protected:
 #ifdef _SQLITE_
     //static char *m_pszSQLString;
     char m_szSQLString[4000];
 
-    static Kompex::SQLiteDatabase *m_pDatabase;
+    Kompex::SQLiteDatabase *m_pTheSQLiteDB;
+    Kompex::SQLiteDatabase *m_pDatabase;
 
 #endif
     static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그

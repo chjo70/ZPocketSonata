@@ -46,7 +46,7 @@
 // 정적 초기화
 int  CELSignalIdentifyAlg::m_CoInstance = 0;
 
-Kompex::SQLiteDatabase *CELSignalIdentifyAlg::m_pDatabase=NULL;
+//Kompex::SQLiteDatabase *CELSignalIdentifyAlg::m_pDatabase=NULL;
 
 bool CELSignalIdentifyAlg::m_bInitTable = false;
 STR_FLIB *CELSignalIdentifyAlg::m_pFLib = NULL;
@@ -95,11 +95,7 @@ STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 
  * @date      2016-07-19, 오후 5:10
  * @warning
  */
-#ifdef _NO_SQLITE_
 CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
-#else
-CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 )
-#endif
 {
     //m_pMyODBC = pMyODBC;
 
@@ -136,7 +132,16 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName ) : Kompex::SQ
         m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
 
 #ifdef _SQLITE_
-        m_pDatabase = GetDatabase();
+        try {
+            m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
+
+        }
+        catch(Kompex::SQLiteException &exception)
+        {
+            std::cerr << "\nException Occured" << std::endl;
+            exception.Show();
+            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+        }
 #elif _NO_SQLITE_
 #elif _MSSQL_
         // MSSQL 연결
@@ -162,6 +167,10 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
     if( m_CoInstance == 0 ) {
         //GP_ENVI_VAR->ReleaseInstance();
         GP_ENVI_VAR->ReleaseInstance();
+
+#ifdef _SQLITE_
+        delete m_pDatabase;
+#endif
 
         Destory();
     }
@@ -1735,7 +1744,7 @@ int CELSignalIdentifyAlg::IdentifyPosition( SRxABTData *pABTData )
 void CELSignalIdentifyAlg::MakeFreqBand()
 {
     UINT i, j, l;
-    UINT istart, iend, iHistSize;
+    UINT istart, iend, uiHistSize;
 
     UINT total_bin_count;
     UINT *pHist;
@@ -1755,13 +1764,13 @@ void CELSignalIdentifyAlg::MakeFreqBand()
 
     memset( theFLib, _spZero, sizeof( STR_FLIB ) * ( NO_FLIB_BAND + 1 ) );
 
-    iHistSize = (int) ( MAX_FREQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
-    pHist = ( UINT * ) malloc( (UINT)( iHistSize * sizeof(int) ) );
+    uiHistSize = (int) ( MAX_FREQ_MHZ / FLIB_FREQ_RES_MHZ ) + 1;
+    pHist = ( UINT * ) malloc( (UINT)( uiHistSize * sizeof(int) ) );
     if( pHist == NULL ) { //DTEC_NullPointCheck
         printf( "\n 메모리가 부족해서 히스토그램을 위한 메모리를 할당하지 못했습니다 !" );
     }
     else {
-        memset( pHist, _spZero, iHistSize * sizeof(int) );
+        memset( pHist, _spZero, uiHistSize * sizeof(int) );
 
         /*! \bug  	condition에 직접적인 assignment operator를 사용하지 말아야 한다.
                 \author 조철희 (churlhee.jo@lignex1.com)
@@ -1787,8 +1796,8 @@ void CELSignalIdentifyAlg::MakeFreqBand()
                         iend   = C_NDIV( pRadarMode->fRF_TypicalMax, FLIB_FREQ_RES_MHZ );
 
                         for( l=istart ; l <= iend ; ++l ) {
-                            if( l >= iHistSize ) {
-                                ++ pHist[ iHistSize - 1 ];
+                            if( l >= uiHistSize ) {
+                                ++ pHist[ uiHistSize - 1 ];
                             }
                             else {
                                 ++ pHist[ l ];
@@ -1839,7 +1848,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
                     \date 	2014-01-24 17:10:50
             */
             j = 0;
-            for( i=0 ; i < iHistSize ; ++i ) {
+            for( i=0 ; i < uiHistSize ; ++i ) {
                 total_count += pHist[i];
 
                 if( total_count >= opt_count ) {
@@ -5894,116 +5903,123 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
                              D_THREAT_INDEX, D_DEVICE_INDEX, D_ELNOT \
                              FROM VEL_RADARMODE_LIST ORDER BY RM_RADAR_MODE_INDEX" );
 
-    Kompex::SQLiteStatement stmt( m_pDatabase );
-    stmt.Sql( m_szSQLString );
+    try {
+        Kompex::SQLiteStatement stmt( m_pDatabase );
+        stmt.Sql( m_szSQLString );
 
-    while( stmt.FetchRow() ) {
-        int iValue;
-        char buffer[100];
+        while( stmt.FetchRow() ) {
+            int iValue;
+            char buffer[100];
 
-        i = 0;
+            i = 0;
 
-        pRadarMode->iRadarModeIndex = stmt.GetColumnInt(i++);
+            pRadarMode->iRadarModeIndex = stmt.GetColumnInt(i++);
 
-        strcpy( buffer, stmt.GetColumnName(i++) );
-        pRadarMode->eFunctionCode = GetFunctionCodes( buffer );
+            strcpy( buffer, stmt.GetColumnName(i++) );
+            pRadarMode->eFunctionCode = GetFunctionCodes( buffer );
 
-        strcpy( buffer, stmt.GetColumnName(i++) );
-        pRadarMode->eSignalType = GetSignalType( buffer );
+            strcpy( buffer, stmt.GetColumnName(i++) );
+            pRadarMode->eSignalType = GetSignalType( buffer );
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->ePolarization = GetPolarizationCodes( iValue );
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->ePolarization = GetPolarizationCodes( iValue );
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->ePlatform = GetPlatformCode( iValue );
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->ePlatform = GetPlatformCode( iValue );
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->eValidation = GetValidationCode( iValue );
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->eValidation = GetValidationCode( iValue );
 
-        // 주파수 정보
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->eRF_Type = GetFreqType( iValue );
+            // 주파수 정보
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->eRF_Type = GetFreqType( iValue );
 
-        pRadarMode->fRF_TypicalMin = (float) stmt.GetColumnInt(i++);
-        pRadarMode->fRF_TypicalMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fRF_TypicalMin = (float) stmt.GetColumnInt(i++);
+            pRadarMode->fRF_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->eRF_Pattern = GetPatternCode( iValue );
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->eRF_Pattern = GetPatternCode( iValue );
 
-        pRadarMode->nRF_NumElements = stmt.GetColumnInt(i++);
-        pRadarMode->nRF_NumPositions = stmt.GetColumnInt(i++);
+            pRadarMode->nRF_NumElements = stmt.GetColumnInt(i++);
+            pRadarMode->nRF_NumPositions = stmt.GetColumnInt(i++);
 
-        pRadarMode->fRF_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fRF_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fRF_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fRF_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
 
-        pRadarMode->fRF_MeanMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fRF_MeanMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fRF_MeanMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fRF_MeanMax = (float) stmt.GetColumnDouble(i++);
 
-        // PRI 정보
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->ePRI_Type = GetPRIType( iValue );
+            // PRI 정보
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->ePRI_Type = GetPRIType( iValue );
 
-        pRadarMode->fPRI_TypicalMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fPRI_TypicalMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_TypicalMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->ePRI_Pattern = GetPatternCode( iValue );
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->ePRI_Pattern = GetPatternCode( iValue );
 
-        pRadarMode->nPRI_NumElements = stmt.GetColumnInt(i++);
-        pRadarMode->nPRI_NumPositions = stmt.GetColumnInt(i++);
+            pRadarMode->nPRI_NumElements = stmt.GetColumnInt(i++);
+            pRadarMode->nPRI_NumPositions = stmt.GetColumnInt(i++);
 
-        pRadarMode->fPRI_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fPRI_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_PatternPeriodMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_PatternPeriodMax = (float) stmt.GetColumnDouble(i++);
 
-        pRadarMode->fPRI_MeanMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fPRI_MeanMax = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_MeanMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPRI_MeanMax = (float) stmt.GetColumnDouble(i++);
 
-        // 펄스폭 정보
-        pRadarMode->fPD_TypicalMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fPD_TypicalMax = (float) stmt.GetColumnDouble(i++);
+            // 펄스폭 정보
+            pRadarMode->fPD_TypicalMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fPD_TypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        // 스캔 정보
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->eScanPrimaryType = GetScanType( iValue );
-        pRadarMode->fScanPrimaryTypicalMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fScanPrimaryTypicalMax = (float) stmt.GetColumnDouble(i++);
+            // 스캔 정보
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->eScanPrimaryType = GetScanType( iValue );
+            pRadarMode->fScanPrimaryTypicalMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fScanPrimaryTypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        iValue = stmt.GetColumnInt(i++);
-        pRadarMode->eScanSecondaryType = GetScanType( iValue );
-        pRadarMode->fScanSecondaryTypicalMin = (float) stmt.GetColumnDouble(i++);
-        pRadarMode->fScanSecondaryTypicalMax = (float) stmt.GetColumnDouble(i++);
+            iValue = stmt.GetColumnInt(i++);
+            pRadarMode->eScanSecondaryType = GetScanType( iValue );
+            pRadarMode->fScanSecondaryTypicalMin = (float) stmt.GetColumnDouble(i++);
+            pRadarMode->fScanSecondaryTypicalMax = (float) stmt.GetColumnDouble(i++);
 
-        // 기타 정보
-        //pRadarMode->nAssocIndex	= query.getColumn(i++).getInt();													//모드 간 연관관계에 대한 링크
-        strcpy( pRadarMode->szModulationCode, stmt.GetColumnName(i++) );
-        pRadarMode->iRadarModePriority = stmt.GetColumnInt(i++);
+            // 기타 정보
+            //pRadarMode->nAssocIndex	= query.getColumn(i++).getInt();													//모드 간 연관관계에 대한 링크
+            strcpy( pRadarMode->szModulationCode, stmt.GetColumnName(i++) );
+            pRadarMode->iRadarModePriority = stmt.GetColumnInt(i++);
 
-        // 레이더 정보
-        pRadarMode->iRadarIndex = stmt.GetColumnInt(i++);
-        strcpy( pRadarMode->szRadarModeName, stmt.GetColumnName(i++) );
-        strcpy( pRadarMode->szModeCode, stmt.GetColumnName(i++) );
+            // 레이더 정보
+            pRadarMode->iRadarIndex = stmt.GetColumnInt(i++);
+            strcpy( pRadarMode->szRadarModeName, stmt.GetColumnName(i++) );
+            strcpy( pRadarMode->szModeCode, stmt.GetColumnName(i++) );
 
-        pRadarMode->iRadarPriority = stmt.GetColumnInt(i++);
-        strcpy( pRadarMode->szELNOT, stmt.GetColumnName(i++) );
-        strcpy( pRadarMode->szNickName, stmt.GetColumnName(i++) );
-        pRadarMode->iTimeInactivated = stmt.GetColumnInt(i++);
+            pRadarMode->iRadarPriority = stmt.GetColumnInt(i++);
+            strcpy( pRadarMode->szELNOT, stmt.GetColumnName(i++) );
+            strcpy( pRadarMode->szNickName, stmt.GetColumnName(i++) );
+            pRadarMode->iTimeInactivated = stmt.GetColumnInt(i++);
 
-        pRadarMode->iThreatIndex = stmt.GetColumnInt(i++);
-        pRadarMode->iDeviceIndex = stmt.GetColumnInt(i++);
+            pRadarMode->iThreatIndex = stmt.GetColumnInt(i++);
+            pRadarMode->iDeviceIndex = stmt.GetColumnInt(i++);
 
-        if( pRadarMode->eValidation == enumValidated ) {
-            ++ *pnRadarMode;
-            ++ pRadarMode;
+            if( pRadarMode->eValidation == enumValidated ) {
+                ++ *pnRadarMode;
+                ++ pRadarMode;
+            }
+
+            if( iMaxItems != 0 && *pnRadarMode >= iMaxItems ) {
+                break;
+            }
+
         }
 
-        if( iMaxItems != 0 && *pnRadarMode >= iMaxItems ) {
-            break;
-        }
-
+        // do not forget to clean-up
+        stmt.FreeQuery();
     }
-
-    // do not forget to clean-up
-    stmt.FreeQuery();
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+    }
 
 #elif _NO_SQLITE_
 #else
@@ -6094,25 +6110,35 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
     int i;
 
     sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, RF_INDEX, RF_MIN, RF_MAX FROM VEL_RADAR_RF_SEQENCE ORDER BY RADAR_MODE_INDEX, RF_SEQ_ID" );
-    Kompex::SQLiteStatement stmt( m_pDatabase );
-    stmt.Sql( m_szSQLString );
 
-    pVecRadarMode_RFSequence->clear();
-    pVecRadarMode_RFSequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
+    try {
+        Kompex::SQLiteStatement stmt( m_pDatabase );
+        stmt.Sql( m_szSQLString );
 
-    while( stmt.FetchRow() ) {
-        i = 0;
+        pVecRadarMode_RFSequence->clear();
+        pVecRadarMode_RFSequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
 
-        pRadarMode_RFSequence_Values = new SRadarMode_Sequence_Values;
+        while( stmt.FetchRow() ) {
+            i = 0;
 
-        pRadarMode_RFSequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
-        pRadarMode_RFSequence_Values->i_Index = stmt.GetColumnInt(i++);
+            pRadarMode_RFSequence_Values = new SRadarMode_Sequence_Values;
 
-        pRadarMode_RFSequence_Values->f_Min = (float) stmt.GetColumnDouble(i++);
-        pRadarMode_RFSequence_Values->f_Max = (float) stmt.GetColumnDouble(i++);
+            pRadarMode_RFSequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
+            pRadarMode_RFSequence_Values->i_Index = stmt.GetColumnInt(i++);
 
-        pVecRadarMode_RFSequence->push_back( pRadarMode_RFSequence_Values );
+            pRadarMode_RFSequence_Values->f_Min = (float) stmt.GetColumnDouble(i++);
+            pRadarMode_RFSequence_Values->f_Max = (float) stmt.GetColumnDouble(i++);
 
+            pVecRadarMode_RFSequence->push_back( pRadarMode_RFSequence_Values );
+        }
+
+        // do not forget to clean-up
+        stmt.FreeQuery();  
+    }
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 #elif _NO_SQLITE_
 #else
@@ -6169,27 +6195,40 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
     SRadarMode_Sequence_Values *pRadarMode_PRISequence_Values;
 
     sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, PRI_INDEX, PRI_MIN, PRI_MAX FROM VEL_RADAR_PRI_SEQENCE ORDER BY RADAR_MODE_INDEX, PRI_SEQ_ID" );
-    Kompex::SQLiteStatement stmt( m_pDatabase );
-    stmt.Sql( m_szSQLString );
-    //SQLite::Statement query( *pDatabase, m_szSQLString );
 
-    pVecRadarMode_PRISequence->clear();
-    pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
+    try {
+        Kompex::SQLiteStatement stmt( m_pDatabase );
+        stmt.Sql( m_szSQLString );
+        //SQLite::Statement query( *pDatabase, m_szSQLString );
 
-    while( stmt.FetchRow() ) {
-        i = 0;
+        pVecRadarMode_PRISequence->clear();
+        pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
 
-        pRadarMode_PRISequence_Values = new SRadarMode_Sequence_Values;
+        while( stmt.FetchRow() ) {
+            i = 0;
 
-        pRadarMode_PRISequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
-        pRadarMode_PRISequence_Values->i_Index = stmt.GetColumnInt(i++);
+            pRadarMode_PRISequence_Values = new SRadarMode_Sequence_Values;
 
-        pRadarMode_PRISequence_Values->f_Min = (float) stmt.GetColumnInt(i++);
-        pRadarMode_PRISequence_Values->f_Max = (float) stmt.GetColumnInt(i++);
+            pRadarMode_PRISequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
+            pRadarMode_PRISequence_Values->i_Index = stmt.GetColumnInt(i++);
 
-        pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
+            pRadarMode_PRISequence_Values->f_Min = (float) stmt.GetColumnInt(i++);
+            pRadarMode_PRISequence_Values->f_Max = (float) stmt.GetColumnInt(i++);
+
+            pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
+        }
+
+        // do not forget to clean-up
+        stmt.FreeQuery();  
 
     }
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+    }
+
+    
 #elif _NO_SQLITE_
 #else
     DECLARE_BEGIN_CHECKODBC
@@ -6451,12 +6490,22 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
     strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", pstTime );
 
     // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-    Kompex::SQLiteStatement stmt( m_pDatabase );
-    sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-    stmt.Sql( m_szSQLString );
+    try {
+        Kompex::SQLiteStatement stmt( m_pDatabase );
+        sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+        stmt.Sql( m_szSQLString );
 
-    sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
-    stmt.Sql( m_szSQLString );
+        sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
+        stmt.Sql( m_szSQLString );
+
+        // do not forget to clean-up
+        stmt.FreeQuery();  
+    }
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+    }
 
 #elif _NO_SQLITE_
 #else
