@@ -1310,7 +1310,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     pLOBData->tiContactTime = tsNow.tv_sec;
 #ifdef _MSC_VER
-    pLOBData->tiContactTimems = tsNow.tv_usec;
+    pLOBData->tiContactTimems = tsNow.tv_usec / 1000;
 #else
     pLOBData->tiContactTimems = tsNow.tv_nsec;
 #endif
