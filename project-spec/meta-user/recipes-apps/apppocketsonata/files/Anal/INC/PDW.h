@@ -218,6 +218,9 @@ struct _PDW {
 	int iAOA;
     int iMOP;
 
+    int iPMOP;
+    int iFMOP;
+
 #ifdef _ELINT_
 	float fPh1;
 	float fPh2;
@@ -388,6 +391,9 @@ struct _PDW {
     int iPW;
     int iPFTag;
     int iAOA;
+
+    int iPMOP;
+    int iFMOP;
 
     float fPh1;
     float fPh2;
