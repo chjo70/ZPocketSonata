@@ -46,7 +46,6 @@ SQLiteStatement::~SQLiteStatement()
 void SQLiteStatement::Prepare(const char *sqlStatement)
 {
 	mIsColumnNumberAssignedToColumnName = false;
-	CheckDatabase();
 
 	// If the nByte argument is less than zero, 
 	// then zSql is read up to the first zero terminator. 

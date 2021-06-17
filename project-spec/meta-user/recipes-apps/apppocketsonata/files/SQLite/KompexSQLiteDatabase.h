@@ -299,7 +299,7 @@ namespace Kompex
 		int GetRuntimeStatusInformation(int operation, bool highwaterValue = false, bool resetFlag = false) const;
 
         // Ãß°¡
-        inline SQLiteDatabase *GetDatabase() { return this; }
+        SQLiteDatabase *GetDatabase();
 
 	private:
 		//! SQLite db handle

@@ -516,4 +516,9 @@ int SQLiteDatabase::GetLookasideMemoryMissCountDueToFullMemory(bool resetValue)
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL, true, resetValue);
 }
 
+SQLiteDatabase *SQLiteDatabase::GetDatabase()
+{
+    return this;
+}
+
 }	// namespace Kompex

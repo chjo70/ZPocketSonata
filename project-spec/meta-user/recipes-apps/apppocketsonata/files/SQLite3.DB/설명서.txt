@@ -1,0 +1,6 @@
+
+
+Windows 에서 실행할 경우
+===================
+cedeob.sqlite3 파일과 emitter.sqlite3 파일을 c:\sqlite3 에 복사하세요..
+이 db 파일은 데이터가 없는 테이블만 있는 파일 입니다.
