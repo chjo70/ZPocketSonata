@@ -105,5 +105,6 @@ public:
 
 #define SIGCOL          CSignalCollect::GetInstance()
 #define SIGCOL_RELEASE  CSignalCollect::ReleaseInstance()
+#define SIGCOL_IS       CSignalCollect::IsThereInstance()
 
 #endif // CSIGNALCOLLECT_H

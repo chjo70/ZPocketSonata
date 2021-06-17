@@ -33,5 +33,6 @@ public:
 
 #define SCNANL             CScanAnalysis::GetInstance()
 #define SCNANL_RELEASE     CScanAnalysis::ReleaseInstance()
+#define SCNANL_IS          CScanAnalysis::IsThereInstance()
 
 #endif // CSCANANALYSIS_H

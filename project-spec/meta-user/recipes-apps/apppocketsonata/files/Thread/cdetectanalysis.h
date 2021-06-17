@@ -35,5 +35,6 @@ private:
 
 #define DETANL          CDetectAnalysis::GetInstance()
 #define DETANL_RELEASE  CDetectAnalysis::ReleaseInstance()
+#define DETANL_IS       CDetectAnalysis::IsThereInstance()
 
 #endif // CDETECTANALYSIS_H

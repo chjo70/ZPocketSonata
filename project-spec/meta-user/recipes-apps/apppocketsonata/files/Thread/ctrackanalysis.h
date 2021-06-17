@@ -32,5 +32,6 @@ public:
 
 #define TRKANL          CTrackAnalysis::GetInstance()
 #define TRKANL_RELEASE  CTrackAnalysis::ReleaseInstance()
+#define TRKANL_IS       CTrackAnalysis::IsThereInstance()
 
 #endif // CTRACKANALYSIS_H
