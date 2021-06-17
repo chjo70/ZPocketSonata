@@ -18,7 +18,7 @@ CSPulExt::CSPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
 {
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
-	m_nMaxPdw = coMaxPdw;
+	m_uiMaxPdw = coMaxPdw;
 
     INIT_ANAL_VAR_(m_pScanSigAnal);
 }

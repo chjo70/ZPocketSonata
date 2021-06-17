@@ -32,7 +32,7 @@ class CSAnalScan : public CAnalPRI, public CMakeAET
 private:
     SRxABTData *m_pScnAet;
 
-    int m_nMaxPdw;
+    int m_uiMaxPdw;
 
     SRxLOBData m_LOBData[ MAX_AET+1 ];
 

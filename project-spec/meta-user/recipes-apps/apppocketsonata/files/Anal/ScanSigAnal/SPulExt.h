@@ -23,7 +23,7 @@ private:
 
 protected:
 	//##ModelId=452B0C440365
-	int m_nMaxPdw;
+	int m_uiMaxPdw;
 	//##ModelId=452B0C44036D
 	int m_noEMT;
 	//##ModelId=452B0C44036E

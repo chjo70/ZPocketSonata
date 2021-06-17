@@ -33,7 +33,7 @@ CSAnalScan::CSAnalScan( void *pParent, int coMaxPdw ) : CAnalPRI( coMaxPdw ), CM
     INIT_ANAL_VAR2_( CAnalPRI, m_pScanSigAnal);
     INIT_ANAL_VAR2_( CMakeAET, m_pScanSigAnal);
 
-    m_nMaxPdw = coMaxPdw;
+    m_uiMaxPdw = coMaxPdw;
 
 }
 
@@ -256,7 +256,7 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
     pScanTOA = & m_pScanPt->toa[0];
     pIndex = pPdwIndex->pIndex;
     pdw_count = pPdwIndex->count;
-    for( i=count=0 ; i < m_nMaxPdw && i < pdw_count ; ++i ) {
+    for( i=count=0 ; i < m_uiMaxPdw && i < pdw_count ; ++i ) {
         int idx;
 
         idx = *pIndex++;
