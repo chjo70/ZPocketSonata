@@ -42,7 +42,7 @@ private:
     //##ModelId=452B0C570018
     PDWINDEX *m_pBinSearchIndex;
     //##ModelId=452B0C570021
-    int m_nMaxPdw;
+    unsigned int m_uiMaxPdw;
     //##ModelId=452B0C57002C
     STR_PULSE_TRAIN_SEG *m_pSeg;
 

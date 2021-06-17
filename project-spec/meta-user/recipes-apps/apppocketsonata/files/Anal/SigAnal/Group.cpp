@@ -47,10 +47,10 @@ CGroup::CGroup( int coMaxPdw )
     int i;
     BOOL bRet=TRUE;
 
-    m_nMaxPdw = coMaxPdw;
+    m_uiMaxPdw = coMaxPdw;
 
     for( i=0 ; i < TOTAL_BAND ; ++i ) {
-        m_Band[i].pIndex = ( PDWINDEX * ) malloc( m_nMaxPdw * sizeof( PDWINDEX ) );
+        m_Band[i].pIndex = ( PDWINDEX * ) malloc( m_uiMaxPdw * sizeof( PDWINDEX ) );
         if( m_Band[i].pIndex == NULL ) {
             bRet = FALSE;
             printf( "\n [W] Memory allocation error !" );
@@ -60,7 +60,7 @@ CGroup::CGroup( int coMaxPdw )
 
     // 멤버 변수 메모리 할당
     for( i=0 ; i < MAX_STAT ; ++i ) {
-        m_GrStat[i].pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+        m_GrStat[i].pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
         if( m_GrStat[i].pIndex == NULL ) {
             bRet = FALSE;
             printf( "\n [W] m_GrStat[%d].pIndex's Memory allocation error !" , i );
@@ -69,7 +69,7 @@ CGroup::CGroup( int coMaxPdw )
     }
 
     for( i=0 ; i < MAX_AGRT ; ++i ) {
-        m_AoaGroups.aoa[i].pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+        m_AoaGroups.aoa[i].pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
         if( m_AoaGroups.aoa[i].pIndex == NULL ) {
             bRet = FALSE;
             printf( "\n [W] m_AoaGroups.aoa[%d]'s Memory allocation error !" , i );
@@ -77,7 +77,7 @@ CGroup::CGroup( int coMaxPdw )
         }
     }
 
-    m_FrqAoaPwIdx.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+    m_FrqAoaPwIdx.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
     if( m_FrqAoaPwIdx.pIndex == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_FrqAoaPwIdx.pIndex's Memory allocation error !" );
@@ -271,9 +271,10 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
         *pPw++ = pdw->iPW;
         *pFreq++ = pdw->iFreq;
         *pMark++ = UnMark;
+        *pPmop++ = pdw->iPMOP;
+        *pFmop++ = pdw->iFMOP;
 
-        //*pBand++ = 
-        //*pPmop++ = pdw->iFreq;
+        *pBand++ = 0;
 
         //*pMaxChannel ++ = pdw->item.max_channel;
     }
@@ -457,7 +458,7 @@ void CGroup::PrintGroup()
 
     Log( enDebug, "------------------------------------------------------------------" );
     //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-    Log( enDebug, " [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+    Log( enDebug, " [%d]번째 그룹화: 개수(%3d), 방위(%.1f-%.1f), 주파수[MHz](%.1f-%.1f), 펄스폭[us](%.2f-%.2f)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
 
 }
 

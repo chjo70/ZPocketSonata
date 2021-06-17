@@ -40,7 +40,7 @@ protected:
 	//##ModelId=452B0C5600D4
 	int m_nCoPdw;
 	//##ModelId=452B0C5600DE
-	int m_nMaxPdw;
+	unsigned int m_uiMaxPdw;
 	//##ModelId=452B0C5600DF
 	int m_nBand;
 	//##ModelId=452B0C5600E8

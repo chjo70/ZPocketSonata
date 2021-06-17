@@ -75,9 +75,9 @@ CAnalPRI::CAnalPRI( int coMaxPdw )
 
     BOOL bRet=TRUE;
 
-    m_nMaxPdw = coMaxPdw;
+    m_uiMaxPdw = coMaxPdw;
 
-    m_pMergePdwIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+    m_pMergePdwIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
     if( m_pMergePdwIndex == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pMergePdwIndex's memory allocation error !" );
@@ -85,7 +85,7 @@ CAnalPRI::CAnalPRI( int coMaxPdw )
     }
 
     for( i=0 ; i < MAX_AET ; ++i ) {
-        m_Emitter[i].pdw.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+        m_Emitter[i].pdw.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
         if( m_Emitter[i].pdw.pIndex == NULL ) {
             bRet = FALSE;
             printf( "\n [W] m_Emitter[%d].pdw.pIndex's memory allocation error !" , i );
@@ -93,95 +93,95 @@ CAnalPRI::CAnalPRI( int coMaxPdw )
         }
     }
 
-    m_pPulseDtoa = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pPulseDtoa = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pPulseDtoa == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pPulseDtoa's memory allocation error !" );
         WhereIs;
     }
-    m_pPulseToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pPulseToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pPulseToa == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pPulseToa's memory allocation error !" );
         WhereIs;
     }
-    m_pToaAcf = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pToaAcf = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pToaAcf == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pToaAcf's memory allocation error !" );
         WhereIs;
     }
-    m_pRefFramePri = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pRefFramePri = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pRefFramePri == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pRefFramePri's memory allocation error !" );
         WhereIs;
     }
 
-    m_DwlSeg.pdw.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_nMaxPdw );
+    m_DwlSeg.pdw.pIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
     if( m_DwlSeg.pdw.pIndex == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_RefSeg.pdw.pIndex's memory allocation error !" );
         WhereIs;
     }
 
-    m_pSampleToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pSampleToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pSampleToa == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pSampleToa's memory allocation error !" );
         WhereIs;
     }
 
-    m_pSampleData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    m_pSampleData = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
     if( m_pSampleData == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pSampleData's memory allocation error !" );
         WhereIs;
     }
 
-    m_pNormData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    m_pNormData = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
     if( m_pNormData == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pNormData's memory allocation error !" );
         WhereIs;
     }
 
-    m_pDataX = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pDataX = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pDataX == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pDataX's memory allocation error !" );
         WhereIs;
     }
 
-    m_pDataY = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pDataY = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pDataY == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pDataX's memory allocation error !" );
         WhereIs;
     }
 
-    m_pAcf = ( float * ) malloc( sizeof( float ) * m_nMaxPdw );
+    m_pAcf = ( float * ) malloc( sizeof( float ) * m_uiMaxPdw );
     if( m_pAcf == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pAcf's memory allocation error !" );
         WhereIs;
     }
 
-    m_pCanPeak = ( _TOA * ) malloc( sizeof( _TOA ) * m_nMaxPdw );
+    m_pCanPeak = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
     if( m_pCanPeak == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_pCanPeak's memory allocation error !" );
         WhereIs;
     }
 
-    m_p1PrimeData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    m_p1PrimeData = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
     if( m_p1PrimeData == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_p1PrimeData's memory allocation error !" );
         WhereIs;
     }
 
-    m_p2PrimeData = ( int * ) malloc( sizeof( int ) * m_nMaxPdw );
+    m_p2PrimeData = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
     if( m_p2PrimeData == NULL ) {
         bRet = FALSE;
         printf( "\n [W] m_p2PrimeData's memory allocation error !" );
@@ -1168,7 +1168,7 @@ BOOL CAnalPRI::DwellAnalysis( STR_EMITTER *pEmitter )
         // Dwell 값으로 재 추출한다.
         //DeleteAllSeg( pEmitter );
         if( TRUE == ExtractDwellPT() ) {
-            memset( pEmitter->pdw.pIndex, 0, sizeof(PDWINDEX)*m_nMaxPdw );
+            memset( pEmitter->pdw.pIndex, 0, sizeof(PDWINDEX)*m_uiMaxPdw );
             pEmitter->pdw.count = m_DwlSeg.pdw.count;
             memcpy( pEmitter->pdw.pIndex, m_DwlSeg.pdw.pIndex, sizeof(PDWINDEX)*m_DwlSeg.pdw.count );
             // m_CoEmitter 값이 증가됨... 그래서 위에 m_CoEmitter 값을 end_emitter 에 보관함.
@@ -1554,7 +1554,7 @@ void CAnalPRI::MergePdwIndexInSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_S
     size = pSeg1->pdw.count + pSeg2->pdw.count;
 
     // 데이터 초기화
-    memset( m_pMergePdwIndex, 0, sizeof( PDWINDEX ) * m_nMaxPdw );
+    memset( m_pMergePdwIndex, 0, sizeof( PDWINDEX ) * m_uiMaxPdw );
 
     // PDW 인덱스 복사
     memcpy( m_pMergePdwIndex, pSeg1->pdw.pIndex, sizeof(PDWINDEX)*pSeg1->pdw.count );
@@ -1735,7 +1735,7 @@ void CAnalPRI::CalcSamplingTime( STR_EMITTER *pEmitter )
     spanTime = m_pTOA[ pEmitter->pdw.pIndex[ pEmitter->pdw.count-1 ] ] - m_pTOA[ *pEmitter->pdw.pIndex ];
 
     // 샘플링 타임 계산
-    sampleTimeByPulse = UDIV( spanTime, m_nMaxPdw );
+    sampleTimeByPulse = UDIV( spanTime, m_uiMaxPdw );
 
     MakePRIInfoInSeg( & pri, pEmitter );
 
@@ -2137,7 +2137,7 @@ void CAnalPRI::FindPeriod()
     k = 0;
     m_coCanPeak = 0;
   for( i=minPeriod ; i < m_CoAcf-2 ; ++i ) {
-    if( m_coCanPeak < m_nMaxPdw &&
+    if( m_coCanPeak < m_uiMaxPdw &&
                 *pAcf > 0 && ( *(pAcf-2) <= *(pAcf-1) && *(pAcf-1) <= *pAcf &&
                                              *pAcf >= *(pAcf+1) && *(pAcf+1) >= *(pAcf+2) ) ) {
             /*! \bug  ACF 값은 일정 값보다 커야 한다. 최소값은 0.2로 정했다.
@@ -2240,7 +2240,7 @@ void CAnalPRI::AutoCorerelation()
 
     int *pxd1, *pxd2;
 
-    memset( m_pAcf, 0, sizeof( float ) * m_nMaxPdw );
+    memset( m_pAcf, 0, sizeof( float ) * m_uiMaxPdw );
 
     // pAcf = & m_Acf[0];
     m_CoAcf = m_CoSample;
@@ -2391,8 +2391,8 @@ void CAnalPRI::SamplingProcess( STR_EMITTER *pEmitter )
   // SearchLowHghInArray( pPara, pEmitter->pdw.count, & gpScanPt->_pa );
 
     // 샘플링 데이터 초기화
-  memset( & m_pSampleData, 0, sizeof( int ) * m_nMaxPdw );
-  memset( & m_pSampleToa, 0, sizeof( _TOA ) * m_nMaxPdw );
+  memset( & m_pSampleData, 0, sizeof( int ) * m_uiMaxPdw );
+  memset( & m_pSampleToa, 0, sizeof( _TOA ) * m_uiMaxPdw );
 
     index = 0;
 
@@ -2415,7 +2415,7 @@ void CAnalPRI::SamplingProcess( STR_EMITTER *pEmitter )
             ++i;
     }
     else {
-            if( m_CoSample >= m_nMaxPdw ) {
+            if( m_CoSample >= m_uiMaxPdw ) {
                 //printf( "\n Over Sample[%d]" , m_CoSample );
                 //WhereIs;
                 break;
@@ -2725,7 +2725,7 @@ void CAnalPRI::MergePdwIndexInSeg(STR_EMITTER *pEmitter)
     STR_PULSE_TRAIN_SEG *pSeg;
 
     //pEmitter->pdw.count = 0;
-    memset( m_pMergePdwIndex, 0, sizeof( PDWINDEX ) * m_nMaxPdw );
+    memset( m_pMergePdwIndex, 0, sizeof( PDWINDEX ) * m_uiMaxPdw );
     for( i=max_count_compare=0 ; i < pEmitter->seg_count ; ++i ) {
         pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
         count = pSeg->pdw.count;
@@ -2745,7 +2745,7 @@ void CAnalPRI::MergePdwIndexInSeg(STR_EMITTER *pEmitter)
 
     pEmitterPdwIndex = pEmitter->pdw.pIndex;
     pMergePdwIndex = m_pMergePdwIndex;
-    for( i=count=0 ; i <= max_count_compare && i < m_nMaxPdw ; ++i ) {
+    for( i=count=0 ; i <= max_count_compare && i < m_uiMaxPdw ; ++i ) {
         if( *pMergePdwIndex++ == 1 ) {
             *(pEmitterPdwIndex+count) = i;
             ++ count;
@@ -3759,7 +3759,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
     // Step : 2
     // ACF 연산
     //-- 조철희 2005-10-07 20:10:39 --//
-    memset( m_pToaAcf, 0, sizeof( _TOA ) * m_nMaxPdw );
+    memset( m_pToaAcf, 0, sizeof( _TOA ) * m_uiMaxPdw );
     /*! \bug  i=1 에서 i=0 으로 수정함. 첫번째 ACF 값을 구하지 않게 된것을 수정함.
         \date 2006-08-25 16:33:43, 조철희
     */

@@ -65,7 +65,7 @@ private:
     int m_nRefEndSeg;
     //! 최대 PDW 개수
     //##ModelId=452B0C530347
-    int m_nMaxPdw;
+    unsigned int m_uiMaxPdw;
     //##ModelId=452B0C530348
     int m_MaxSeg;
 
