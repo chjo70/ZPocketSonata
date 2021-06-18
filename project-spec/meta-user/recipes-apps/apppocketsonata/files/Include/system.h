@@ -11,7 +11,7 @@
 
 
 // 랜 데이터 최대 크기
-#define _MAX_LANDATA        (1024*256)
+#define _MAX_LANDATA        (256*1024)          // 256 KB
 
 
 
