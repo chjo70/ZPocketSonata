@@ -104,6 +104,12 @@ typedef int key_t;
 #define _T(A)                   (A)
 #endif
 
+#define open                    _open
+#define close                   _close
+#define	write					_write
+#define	read					_read
+#define	chmod					_chmod
+
 
 //#define CString string
 

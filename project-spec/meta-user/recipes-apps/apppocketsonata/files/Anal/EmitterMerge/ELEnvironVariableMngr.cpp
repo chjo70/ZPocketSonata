@@ -35,17 +35,25 @@ CELEnvironVariable::CELEnvironVariable(void)
 {
 	bool bRtn = false;
 
+    
+
 	// 기본 설정 값
 	m_stEnvironVariable.iDVRatio = 60;							// [%]
-	m_stEnvironVariable.fMarginFrqError = 2;				// [MHz]
-	m_stEnvironVariable.fMarginPriError = 100;			// [us]
-
+	m_stEnvironVariable.fMarginFrqError = 2.0;				// [MHz]	
 	m_stEnvironVariable.fMarginFrqModPeriodErrorRatio = 50;
+
+    m_stEnvironVariable.fMarginPriError = 100.0;			// [us]
 	m_stEnvironVariable.fMarginMinRqdPriRangeNestedRatio = 50;
 	m_stEnvironVariable.fMarginPriModPeriodErrorRatio = 30;
 
-	m_stEnvironVariable.uiEmmgNumOfMinLobToBeam = 3;
+    m_stEnvironVariable.fMarginPwError = 100.0;
+    m_stEnvironVariable.fMarginErrorRatioCompareToPw = 100.0;
 
+    m_stEnvironVariable.fMarginPaErrorInPulseGroup = 10.0;
+    m_stEnvironVariable.fMarginScanPeriodErrorRatio = 10.0;
+
+    m_stEnvironVariable.uiEmmgEmitterDeleteTimeSec = 60;
+	m_stEnvironVariable.uiEmmgNumOfMinLobToBeam = 3;
 	m_stEnvironVariable.fEobIndfRangeMeters = 10000.0;
 
 	m_stEnvironVariable.iWeightFrqRange = 10;			// 신호식별가중치-주파수범위

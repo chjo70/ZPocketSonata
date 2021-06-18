@@ -4,7 +4,7 @@
 
 #ifdef _SQLITE_
 //#include "../../SQLite/Database.h"
-#include "../../SQLite/KompexSQLitePrerequisites.h"
+//#include "../../SQLite/KompexSQLitePrerequisites.h"
 #include "../../SQLite/KompexSQLiteDatabase.h"
 #include "../../SQLite/KompexSQLiteStatement.h"
 #include "../../SQLite/KompexSQLiteException.h"
@@ -89,14 +89,7 @@ enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 * - 해당사항 없음
 */
 
-#ifdef _NO_SQLITE_
 class CELEmitterMergeMngr : public CLOBClustering
-#elif _SQLITE_
-//class CELEmitterMergeMngr : public CLOBClustering, public Database
-class CELEmitterMergeMngr : public CLOBClustering, public Kompex::SQLiteDatabase
-#else
-class CELEmitterMergeMngr : public CLOBClustering
-#endif
 {
 private:
     bool m_bDBThread;
@@ -219,7 +212,8 @@ protected:
 #ifdef _SQLITE_
     //char *m_pszSQLString;
     char m_szSQLString[4000];
-    static Kompex::SQLiteDatabase *m_pDatabase;
+
+    Kompex::SQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
     CODBCDatabase m_theMyODBC;

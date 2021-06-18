@@ -47,13 +47,13 @@
 #define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
 
 #ifdef __ZYNQ_BOARD__
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/root/"
 #elif defined(__linux__)
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70/"
 #else
-#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3"
+#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3/"
 #endif
-#define EMITTER_SQLITE_FILENAME     "/emitter.sqlite3"
+#define EMITTER_SQLITE_FILENAME     "emitter.sqlite3"
 
 
 
