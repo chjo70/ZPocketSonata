@@ -40,6 +40,10 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
+#include <afxmt.h>
+#include <direct.h>
+#include <xutility>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -74,6 +78,8 @@ using namespace std;
 
 #include "./System/csysconfig.h"
 
+#include "./Utils/ccommonutils.h"
+
 extern void usrAppStart();
 
 void signalHandler(int signo);
@@ -87,6 +93,37 @@ void signalHandler(int signo);
 CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
 CSingleClient *g_pThePMCSocket;
+
+
+void InitDatabase()
+{
+    char szSQLiteFileName[100];
+
+    strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+#ifdef _SQLITE_
+#ifdef __linux__
+    if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
+#elif _MSC_VER
+    {
+#elif __VXWORKS__
+    if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+        CCommonUtils::CopyFile( EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
+#else
+    if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+#endif
+
+        
+#elif _NO_SQLITE_
+
+#elif _MSSQL_
+
+#endif
+
+    }
+
+}
 
 
 /**
@@ -112,6 +149,8 @@ void Start()
     signal( SIGSTOP, signalHandler);
 #endif
 
+    InitDatabase();
+
     // 1. 쓰레드 관리 쓰레드를 호출한다.
     TMNGR->Run( _MSG_TMNGR_KEY );
 
@@ -124,7 +163,7 @@ void Start()
 
     // 4. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
     //RECZYNQ->Run( _MSG_RECZYNQ_KEY );
-    //RECCCU->Run( _MSG_RECCCU_KEY );
+    RECCCU->Run( _MSG_RECCCU_KEY );
 
     // 6. 브라우저의 CGI 메시지를 처리한다.
     //CGI->Run( _MSG_ZCGI_KEY );
@@ -135,13 +174,13 @@ void Start()
     // 8. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
     //g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
     //g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
-    //     if( GP_SYSCFG->GetBoardID() == enMaster ) {
+    if( GP_SYSCFG->GetBoardID() == enMaster ) {
         g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT, GP_SYSCFG->GetPrimeServerOfNetwork() );
         g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 
-    //         //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
-    //         //g_pThePMCSocket->Run( _MSG_CCU_KEY );
-    //     }
+        //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
+        //g_pThePMCSocket->Run( _MSG_CCU_KEY );
+    }
 
     // 9. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
@@ -166,8 +205,11 @@ void End()
 
     // 분석 관련 쓰레드를 종료 한다.
     //PROMPT->ReleaseInstance();
-    // 
+    
     delete g_pTheCCUSocket;
+    g_pTheCCUSocket = NULL;
+    //delete g_pThePMCSocket;
+    //g_pThePMCSocket = NULL;
 
     //delete g_pTheZYNQSocket;
     // 
@@ -338,4 +380,6 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+
 
