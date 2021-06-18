@@ -341,9 +341,9 @@ bool CCollectBank::IsCompleteCollect()
         CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
         // 수집 시간 확인
-        if( tsDiff.tv_sec > m_strWindowCell.uiMaxCollectTimesec ||
+        if( tsDiff.tv_sec > (long) m_strWindowCell.uiMaxCollectTimesec ||
 #ifdef _MSC_VER
-            ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_usec >= m_strWindowCell.uiMaxCollectTimems * 1000 ) ) {
+            ( tsDiff.tv_sec == (long) m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_usec >= (long) m_strWindowCell.uiMaxCollectTimems * 1000 ) ) {
 #else
             ( tsDiff.tv_sec == m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_nsec >= m_strWindowCell.uiMaxCollectTimems * 1000000 ) ) {
 #endif

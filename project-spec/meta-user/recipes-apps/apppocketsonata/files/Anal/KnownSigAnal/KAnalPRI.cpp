@@ -23,6 +23,7 @@ STR_PULSE_TRAIN_SEG *CKAnalPRI::m_pSeg=NULL;
  */
 int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 {
+    int iRet;
     UINT *p1, *p2;
     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
 
@@ -32,12 +33,17 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
     pSeg1 = & m_pSeg[ *p1 ];
     pSeg2 = & m_pSeg[ *p2 ];
 
-    if( pSeg1->pri.mean > pSeg2->pri.mean )
-        return 1;
-    else if( pSeg1->pri.mean < pSeg2->pri.mean )
-        return (-1);
-    else
-        return 0;
+    if( pSeg1->pri.mean > pSeg2->pri.mean ) {
+        iRet = 1;
+    }
+    else if( pSeg1->pri.mean < pSeg2->pri.mean ) {
+        iRet = (-1);
+    }
+    else {
+        iRet = 0;
+    }
+
+    return iRet;
 }
 
 //////////////////////////////////////////////////////////////////////

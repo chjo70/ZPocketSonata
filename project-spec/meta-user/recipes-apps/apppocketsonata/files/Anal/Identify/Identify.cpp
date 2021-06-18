@@ -2230,28 +2230,28 @@ BOOL CELSignalIdentifyAlg::CheckFreqType( FREQ_TYPE frqType, SRadarMode *pRadarM
 */
 UINT CELSignalIdentifyAlg::BandSelect( int from, int to, int searchVal ) //#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found)
 {
-    UINT band, div2;
+    UINT uiRet, div2;
 
     div2 = ( to + from ) / 2;
 
     if( abs( (int)(from-to) ) <= 1 ) {
         if( m_pFLib[from].frq.ihgh < searchVal ) {
-            return to;
+            uiRet = to;
         }
         else {
-            return from;
+            uiRet = from;
         }
-
-    }
-
-    if( m_pFLib[div2].frq.ilow >= searchVal ) {
-        band = BandSelect( from, div2, searchVal );
     }
     else {
-        band = BandSelect( div2, to, searchVal );
+        if( m_pFLib[div2].frq.ilow >= searchVal ) {
+            uiRet = BandSelect( from, div2, searchVal );
+        }
+        else {
+            uiRet = BandSelect( div2, to, searchVal );
+        }
     }
 
-    return band;
+    return uiRet;
 }
 
 /*!
@@ -2795,7 +2795,7 @@ void CELSignalIdentifyAlg::FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pF
             \date 	2015-10-6 14:07:27
     */
     if( pLeftLib == NULL || pRightLib == NULL || pBand == NULL || *pLeftLib == NULL || *pRightLib == NULL ) { //DTEC_NullPointCheck
-        // return;
+        
     }
     else {
         SRadarMode *pRadarMode;
@@ -4252,7 +4252,7 @@ void CELSignalIdentifyAlg::PIdentifyPatPat( SRxLOBData *pLOBData )
  */
 BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found)
 {
-    BOOL bret;
+    BOOL bret=TRUE;
     //int diff;
 
     /*! \bug  신뢰성: NULL 체크하여 예외처리하게 함.
@@ -4260,13 +4260,13 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
             \date 	2015-10-6 13:56:40
     */
     if( pRadarMode == NULL ) { //DTEC_NullPointCheck
-        return FALSE;
+        bret = FALSE;
     }
 
-    if( _spFalse == IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
-            _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ||
-        _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ) {
-        return FALSE;
+    else if( _spFalse == IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
+             _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ||
+             _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ) {
+        bret = FALSE;
     }
 
 // 	bret = IsOverlapSpace( m_optParameter.pri.fLow, m_optParameter.pri.fHigh, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_optParameter.pri.iOverlapRatio );
@@ -4295,12 +4295,11 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
     // PRI 변경 주기 체크
     //diff = IDIV( m_pSEnvironVariable->fMarginPriError * m_optParameter.ppattern.iValue, 100 );
 
-    bret = CompMarginDiff<float>( m_pLOBData->fPRIPatternPeriod, pRadarMode->fPRI_PatternPeriodMin, pRadarMode->fPRI_PatternPeriodMax, m_pSEnvironVariable->fMarginPriModPeriodErrorRatio );
-    if( bret == _spFalse ) {
-        return FALSE;
+    else if( CompMarginDiff<float>( m_pLOBData->fPRIPatternPeriod, pRadarMode->fPRI_PatternPeriodMin, pRadarMode->fPRI_PatternPeriodMax, m_pSEnvironVariable->fMarginPriModPeriodErrorRatio ) == _spFalse ) {
+        bret = FALSE;
     }
 
-    return TRUE;
+    return bret;
 
 }
 

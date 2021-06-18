@@ -1,4 +1,4 @@
-﻿// Util.h: interface for the CUtil class.
+﻿// ELUtil.h: interface for the CUtil class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -197,9 +197,5 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
     return 0;
 }
 
-
-// #ifdef __cplusplus
-// }
-// #endif
 
 #endif // !defined(AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_)

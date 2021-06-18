@@ -205,34 +205,32 @@ BOOL CKMakeAET::KnownMakeAET()
 BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 {
 	int i;
-	int pri_margin;
+	float pri_margin;
+    BOOL bRet=TRUE;
 
     switch( pNewPri->iPRIType ) {
 		case _STABLE :
-			return TRUE;
+        case _JITTER_PATTERN :
+        case _DWELL :
+			break;
 
 		case _STAGGER :
-            if( pTrkPri->iPRIType == _JITTER_RANDOM )
-				return TRUE;
+            if( pTrkPri->iPRIType == _JITTER_RANDOM ) {
+            }
             else if( pTrkPri->iPRIType == _STAGGER ) {
+                pri_margin = (float) ( 2. * STABLE_MARGIN );  
                 if( pNewPri->iPRIElementCount == pTrkPri->iPRIElementCount ) {
                     for( i=0 ; i < pNewPri->iPRIElementCount ; ++i ) {
-                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], (float) 2*STABLE_MARGIN ) == FALSE ) {
-	  					return FALSE;
+                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], pri_margin ) == FALSE ) {
+	  					    bRet = FALSE;
 						}
 					}
 				}
 				else {
-					return FALSE;
+					bRet = FALSE;
 				}
 			}
 			break;
-
-		case _JITTER_PATTERN :
-			return TRUE;
-
-		case _DWELL :
-			return TRUE;
 
 		case _JITTER_RANDOM :
 			// 스태거 추적 신호를 추적분석을 해서
@@ -244,43 +242,17 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 			*/
             pri_margin = 20 * _spOneMicrosec;
             if( pTrkPri->iPRIType == _STAGGER ) {
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, (float) pri_margin ) )
-					return FALSE;
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, (float) pri_margin ) )
-					return FALSE;
+                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, pri_margin ) ) {
+					bRet = FALSE;
+                }
+                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, pri_margin ) ) {
+					bRet = FALSE;
+                }
 
-				return TRUE;
 			}
-			else {
-				return TRUE;
-			}
-
 	}
-/*
-	diff = _spZero;
-	b1ret = _spFalse;
-	for( i=0 ; i < pNewAet->aet.pri.swtLev ; ++i ) {
-		b2ret = _spFalse;
-		priMean = pNewAet->aet.pri.swtVal[i];
 
-		for( j=0 ; j < pNewAet->aet.pri.swtLev ; ++j ) {
-			b2ret = CompMeanDiff( priMean, pAet->pri.swtVal[j], _sp.mg.fixpri );
-
-			if( b2ret == _spTrue ) {
-	  		diff += _abs( (int) ( pAet->pri.swtVal[j] - priMean ) );		// Call Cal...
-				break;
-			}
-		}
-
-		if( b2ret == _spFalse ) {
-    		return _spMaxVal32;
-		}
-		else
-			b1ret = _spTrue;
-
-	}		*/
-
-	return TRUE;
+	return bRet;
 	
 }
 
@@ -470,10 +442,13 @@ int CKMakeAET::GetIndexNewAet()
 //
 SRxLOBData *CKMakeAET::GetUpdAet()
 {
-	if( m_IdxUpdAet >= 0 )
-        return & m_LOBData[m_IdxUpdAet];
-	else
-		return NULL;
+    SRxLOBData *pSRxLOBData=NULL;
+
+	if( m_IdxUpdAet >= 0 ) {
+        pSRxLOBData = & m_LOBData[m_IdxUpdAet];
+    }
+
+    return pSRxLOBData;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -629,12 +604,12 @@ UINT CKMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CKMakeAET::UpdateFreq
-		\author   조철희
-		\param    pUpdAetFrq 인자형태 STR_FRQ *
-		\return   void
-		\version  0.0.53
-		\date     2008-11-03 11:25:01
-		\warning
+    \author   조철희
+    \param    pUpdAetFrq 인자형태 STR_FRQ *
+    \return   void
+    \version  0.0.53
+    \date     2008-11-03 11:25:01
+    \warning
 */
 void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
 {
@@ -654,7 +629,6 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
                 pUpdAetFrq->iFreqPositionCount = m_pTrkAet->iFreqPositionCount;
                 pUpdAetFrq->iFreqElementCount = m_pTrkAet->iFreqElementCount;
                 memcpy( pUpdAetFrq->fFreqSeq, m_pTrkAet->fFreqSeq, sizeof( m_pTrkAet->fFreqSeq ) );
-
 				break;
 
 			case _RANDOM_AGILE :

@@ -9,9 +9,6 @@
 #include "ELUtil.h"
 #include "../SigAnal/_Define.h"
 
-//#include "../../MNGR/ELElintUtilMngr.h"
-
-//#include "../PositionEstimation/Geo2UTM/constants.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -20,18 +17,6 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 bool st_bSimulator=false;
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    입력 값의 차이가 임계값 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-02-19 17:44:27
-        \warning
-*/
 
 
 /**
