@@ -352,7 +352,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         TRKANL_RELEASE;
         SCNANL_RELEASE;
 
-        LOGMSG1( enNormal, "수집집 관련 쓰레드를 삭제합니다[%d].", bCreate );
+        LOGMSG1( enNormal, "수집 관련 쓰레드를 삭제합니다[%d].", bCreate );
 //         UCOL->Stop2();
 //         UCOL->Run();
     }
