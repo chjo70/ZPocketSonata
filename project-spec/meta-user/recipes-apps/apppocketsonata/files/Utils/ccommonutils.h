@@ -35,7 +35,9 @@ public:
 
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
-    static void getStringPresentTime( char *pString ) 
+    static void getStringPresentTime( char *pString );
+
+    static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
 };
 

@@ -2,8 +2,17 @@
 #include "stdafx.h"
 
 #ifdef _MSC_VER
+#include <io.h>
+#include <direct.h>
 #include <sys/timeb.h>
 #include <stdint.h>
+#include <sys/utime.h>
+
+#include <fcntl.h>
+#else
+#include <unistd.h>
+#include <sys/time.h>
+
 #endif
 
 
@@ -11,6 +20,7 @@
 
 #include "../System/csysconfig.h"
 
+#include "../Anal/SigAnal/_Type.h"
 #include "../Anal/Collect/DataFile/DataFile.h"
 
 #include "../Utils/csingleserver.h"
@@ -388,6 +398,78 @@ void CCommonUtils::getStringPresentTime( char *pString )
     strftime( pString, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 }
 
-//////////////////////////////////////////////////////////////////////
-// 정적 함수 정의
+int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr )
+{
+    int iRet=-1;
+    int     src_fd;
+    int     dest_fd;
+    struct  stat sts;
+    char    data_buf[4096];
+    int     tmp_errno;
+    int     size;
+    struct  utimbuf attr;
 
+    if((src_fd = _open(src_file, O_RDONLY | O_BINARY )) != -1) {
+
+        /* 원본 file의 속성을 읽습니다. */
+        fstat(src_fd, &sts);
+
+        if(overwrite) { /* 이미 파일이 있으면 overwrite를 하겠다면... */
+            dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, sts.st_mode);
+        } else {        /* 파일이 있으면, 생성하지 말라고 설정한 경우 */
+            dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_EXCL | O_BINARY , sts.st_mode);
+        }
+
+        if(dest_fd == -1) {
+            tmp_errno = errno; 
+            close(src_fd);  
+            errno = tmp_errno; // close가 초기화한 errno를 복구함
+            return -1;
+        }
+
+        while(size = read(src_fd, data_buf, 4096)) {
+            if(size == -1) {
+                if(errno == EINTR) {
+                    continue;
+                }
+                tmp_errno = errno;
+                close(src_fd);
+                close(dest_fd);
+                errno = tmp_errno; // close가 초기화한 errno를 복구함
+                return -1;
+            }
+
+            while(write(dest_fd, data_buf, size) == -1) {
+                if(errno == EINTR) {
+                    /* signal이 발생한 경우에는 재작업 */
+                    continue;
+                } else {
+                    /* disk가 full났거나 무슨 일이 있음. */
+                    tmp_errno = errno;
+                    close(src_fd);
+                    close(dest_fd);
+                    errno = tmp_errno; // close가 초기화한 errno를 복구함
+                }
+            }
+        }
+        close(src_fd);
+        close(dest_fd);
+    
+        /* 원본 파일의 속성을 복원해야 한다면... */
+        if(copy_attr) {
+            /* last access 시간, last modify 시간 복구 */
+            attr.actime  = sts.st_atime;
+            attr.modtime = sts.st_mtime;
+            utime(dest_file, &attr);  
+        
+            /* 원본 파일의 파일 권한을 복원하기 
+            * open시에 파일권한을 설정하였지만, 
+            * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
+            * 파일의 권한도 복구합니다.
+            */
+            chmod(dest_file, sts.st_mode);
+        }
+    }
+
+    return 0;
+}

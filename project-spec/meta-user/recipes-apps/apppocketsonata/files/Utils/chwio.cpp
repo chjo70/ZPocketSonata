@@ -212,12 +212,13 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
 
     int pending = 0;
 
-    struct timeval timeout;
-    int rv;
 
+    
     printf( "\n uio->fd[%d]\n", uio->fd );
     if( uio->fd != -1 ) {
 #ifdef __linux__
+        struct timeval timeout;
+        int rv;
         fd_set set;
 
         FD_ZERO( & set ); /* clear the set */
