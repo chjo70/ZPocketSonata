@@ -9,18 +9,23 @@ using namespace std;
 #include "../Anal/Identify/cipl.h"
 
 #ifdef _SQLITE_
-//#include "../SQLite/SQLiteCpp.h"
+//#include "../../SQLite/Database.h"
+#include "../SQLite/KompexSQLitePrerequisites.h"
+#include "../SQLite/KompexSQLiteDatabase.h"
+#include "../SQLite/KompexSQLiteStatement.h"
+#include "../SQLite/KompexSQLiteException.h"
+#include "../SQLite/KompexSQLiteStreamRedirection.h"
+#include "../SQLite/KompexSQLiteBlob.h"
 
 #elif _NO_SQLITE_
 
-#else
+#elif _MSSQL_
 #include "../../ELINTOP/ODBC/mssql.h"
 #include "../../ELINTOP/ODBC/odbccore.h"
 #endif
 
 
 
-//class CTaskMngr : public CThread, public SQLite::Database
 class CTaskMngr : public CThread
 {
 private:
@@ -29,7 +34,17 @@ private:
     STR_MessageData *m_pMsg;
 
     int m_iTotalIPL;
-    //CIPL m_theIPL;
+    CIPL m_theIPL;
+
+#ifdef _SQLITE_
+    char m_szSQLString[4000];
+
+    Kompex::SQLiteDatabase *m_pDatabase;
+
+#elif defined(_MSSQL_)
+    CODBCDatabase m_theMyODBC;
+#else
+#endif
 
 private:
     void Init();

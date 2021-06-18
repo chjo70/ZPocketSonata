@@ -47,12 +47,20 @@ CTaskMngr* CTaskMngr::m_pInstance = nullptr;
 /**
  * @brief CTaskMngr::CTaskMngr
  */
-//CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData ), Database( pFileName, SQLite::OPEN_READWRITE )
 CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 
     Init();
+
+    try {
+        m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
+    }
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+    }
 
 }
 
@@ -67,6 +75,15 @@ CTaskMngr::~CTaskMngr(void)
 
     // 객체를 소멸하게 한다.
     GP_SYSCFG->ReleaseInstance();
+
+#ifdef _NO_SQLITE_
+#elif _SQLITE_
+    delete m_pDatabase;
+
+#elif _MS_SQL_
+    m_theMyODBC.Close();
+#endif
+
 }
 
 /**
@@ -253,7 +270,7 @@ void CTaskMngr::SetMode()
 
             CCommonUtils::CloseSocket();
 
-            g_pTheCCUSocket->Stop2();
+            g_pTheCCUSocket->Stop();
             g_pTheCCUSocket->Run( _MSG_CCU_KEY );
             break;
 
@@ -321,6 +338,12 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
         LOGMSG( enNormal, "" );
 
         g_AnalLoop = false;
+
+        if( EMTMRG_IS ) { EMTMRG->Stop(); }
+        if( SIGCOL_IS ) { SIGCOL->Stop(); }
+        if( DETANL_IS ) { DETANL->Stop(); }
+        if( TRKANL_IS ) { TRKANL->Stop(); }
+        if( SCNANL_IS ) { SCNANL->Stop(); }
 
 //         // 1. 먼저 관련 분석 쓰레드를 삭제한다.
         EMTMRG_RELEASE;
@@ -419,9 +442,9 @@ void CTaskMngr::ReqIPLVersion()
 {
     STR_IPL_VERSION strIPLVersion;
 
-    //strIPLVersion.uiIPLVersion = (m_theIPL.getIPLStart())->uiIPLVersion;
-    //strIPLVersion.uiStatus = strIPLVersion.uiIPLVersion != _spZero ? _spPass : _spFail;
-    //CCommonUtils::SendLan( esIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
+    strIPLVersion.uiIPLVersion = (m_theIPL.getIPLStart())->uiIPLVersion;
+    strIPLVersion.uiStatus = strIPLVersion.uiIPLVersion != _spZero ? _spPass : _spFail;
+    CCommonUtils::SendLan( esIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
 }
 
 /**
@@ -429,37 +452,37 @@ void CTaskMngr::ReqIPLVersion()
  */
 void CTaskMngr::IPLDownload()
 {
-//     int iWriteStatus;
-//     UNI_LAN_DATA *pLanData;
-// 
-//     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
-// 
-//     switch( m_pMsg->uiOpCode ) {
-//         case enREQ_IPL_START :
-//             m_iTotalIPL = 0;
-//             m_theIPL.setIPLStart( & pLanData->strIPLStart );
-//             DeleteIPL();
-//             break;
-// 
-//         case enREQ_IPL_DOWNLOAD :
-//             m_theIPL.trIPL( (STR_IPL *) GetRecvData() );
-//             m_theIPL.setIPL( (STR_IPL *) GetRecvData() );
-//             InsertIPL( m_iTotalIPL );
-//             ++ m_iTotalIPL;
-// 
-//             iWriteStatus = (int) ( 0.5 + ( 100. * m_iTotalIPL ) / (m_theIPL.getIPLStart())->uiCountOfIPL );
-//             CCommonUtils::SendLan( esIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
-//             LOGMSG1( enNormal, "IPL WriteStatus[%d]" , iWriteStatus );
-//             break;
-// 
-//         case enREQ_IPL_END :
-//             if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
-//             break;
-// 
-//         default :
-//             break;
-// 
-//     }
+    int iWriteStatus;
+    UNI_LAN_DATA *pLanData;
+
+    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
+
+    switch( m_pMsg->uiOpCode ) {
+    case enREQ_IPL_START :
+        m_iTotalIPL = 0;
+        m_theIPL.setIPLStart( & pLanData->strIPLStart );
+        DeleteIPL();
+        break;
+
+    case enREQ_IPL_DOWNLOAD :
+        m_theIPL.trIPL( (STR_IPL *) GetRecvData() );
+        m_theIPL.setIPL( (STR_IPL *) GetRecvData() );
+        InsertIPL( m_iTotalIPL );
+        ++ m_iTotalIPL;
+
+        iWriteStatus = (int) ( 0.5 + ( 100. * m_iTotalIPL ) / (m_theIPL.getIPLStart())->uiCountOfIPL );
+        CCommonUtils::SendLan( esIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
+        LOGMSG1( enNormal, "IPL WriteStatus[%d]" , iWriteStatus );
+        break;
+
+    case enREQ_IPL_END :
+        if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+        break;
+
+    default :
+        break;
+
+    }
 }
 
 /**
@@ -469,62 +492,75 @@ void CTaskMngr::IPLDownload()
 void CTaskMngr::DeleteIPL( char *pszELNOT )
 {
 
-// #ifdef _SQLITE3_
-//     if( pszELNOT != NULL ) {
-//         int iRadarIndex, iRadarModeIndex;
-// 
-//         Database *pDatabase;
-// 
-//         pDatabase = GetDatabase();
-// 
-//         // 레이더
-//         sprintf( m_szSQLString, "SELECT RADAR_INDEX FROM RADAR WHERE ELNOT='%s'" , pszELNOT );
-//         SQLite::Statement query( *pDatabase, m_szSQLString );
-// 
-//         if( query.executeStep() ) {
-//             iRadarIndex = query.getColumn(0).getInt();
-// 
-//             sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'" , iRadarIndex );
-//             SQLite::Statement query( *pDatabase, m_szSQLString );
-// 
-//             while( query.executeStep() ) {
-//                 iRadarModeIndex = query.getColumn(0).getInt();
-// 
-//                 sprintf( m_szSQLString, "DELETE FROM RADAR_MODE WHERE RADAR_MODE_INDEX='%d'", iRadarModeIndex );
-//                 exec( m_szSQLString );
-//             }
-// 
-//             sprintf( m_szSQLString, "DELETE FROM RADAR WHERE RADAR_INDEX='%d'", iRadarIndex );
-//             exec( m_szSQLString );
-// 
-//             sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'", iRadarIndex );
-//             exec( m_szSQLString );
-//         }
-//         else {
-// 
-//         }
-// 
-// 
-// 
-//         //-- m_iTotalIPL;
-//     }
-//     else {
-//         // 레이더
-//         sprintf( m_szSQLString, "DELETE FROM RADAR" );
-//         exec( m_szSQLString );
-// 
-//         // 레이더 모드
-//         sprintf( m_szSQLString, "DELETE FROM RADAR_MODE" );
-//         exec( m_szSQLString );
-// 
-//         // 레이더 & 레이더 모드 관계
-//         sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
-//         exec( m_szSQLString );
-// 
-//         m_iTotalIPL = 0;
-//     }
-// 
-// #endif
+#ifdef _SQLITE_
+    if( pszELNOT != NULL ) {
+        int iRadarIndex, iRadarModeIndex;
+
+        sprintf( m_szSQLString, "SELECT RADAR_INDEX FROM RADAR WHERE ELNOT='%s'" , pszELNOT );
+
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+            stmt.Sql( m_szSQLString );
+
+            if( stmt.FetchRow() ) {
+                iRadarIndex = stmt.GetColumnInt(0);
+
+                sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'" , iRadarIndex );
+                stmt.Sql( m_szSQLString );
+
+                if( stmt.FetchRow() ) {
+                    iRadarModeIndex = stmt.GetColumnInt(0);
+
+                    sprintf( m_szSQLString, "DELETE FROM RADAR_MODE WHERE RADAR_MODE_INDEX='%d'", iRadarModeIndex );
+                    stmt.Sql( m_szSQLString );
+                }
+
+                sprintf( m_szSQLString, "DELETE FROM RADAR WHERE RADAR_INDEX='%d'", iRadarIndex );
+                stmt.Sql( m_szSQLString );
+
+                sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE WHERE RADAR_INDEX='%d'", iRadarIndex );
+                stmt.Sql( m_szSQLString );
+            }
+
+            // do not forget to clean-up
+            stmt.FreeQuery();
+        }
+        catch( Kompex::SQLiteException &exception ) {
+            std::cerr << "\nException Occured" << std::endl;
+            exception.Show();
+            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+        }
+
+        //-- m_iTotalIPL;
+    }
+    else {
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+
+            // 레이더
+            sprintf( m_szSQLString, "DELETE FROM RADAR" );
+            stmt.SqlStatement( m_szSQLString );
+
+            // 레이더 모드
+            sprintf( m_szSQLString, "DELETE FROM RADAR_MODE" );
+            stmt.SqlStatement( m_szSQLString );
+
+            // 레이더 & 레이더 모드 관계
+            sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
+            stmt.SqlStatement( m_szSQLString );
+        }
+        catch( Kompex::SQLiteException &exception ) {
+            std::cerr << "\nException Occured" << std::endl;
+            exception.Show();
+            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+        }
+
+        m_iTotalIPL = 0;
+    }
+
+#elif _MSSQL_
+
+#endif
 
 }
 
@@ -533,7 +569,7 @@ void CTaskMngr::DeleteIPL( char *pszELNOT )
  */
 void CTaskMngr::InsertIPL( int iIndex )
 {
-#ifdef _SQLITE3_
+#ifdef _SQLITE_
     STR_IPL *pstrIPL;
     char szDate[100];
 
@@ -541,66 +577,75 @@ void CTaskMngr::InsertIPL( int iIndex )
 
     pstrIPL = m_theIPL.getIPL( iIndex );
 
-    getStringPresentTime( szDate );
+    CCommonUtils::getStringPresentTime( szDate );
 
     // 업데이트 처리
-    if( ( iRadarIndex = IsThrereELNOT( pstrIPL->elintNot ) ) >= 0 && false ) {
-        // DeleteIPL( pstrIPL->elintNot );
-        sprintf( m_szSQLString, "UPDATE RADAR SET PRIORITY='%d', DATE_LAST_UPDATED='%s' WHERE RADAR_INDEX='%d'" , \
-        pstrIPL->thrLev, szDate, iRadarIndex );
-        exec( m_szSQLString );
+    try {
+        Kompex::SQLiteStatement stmt( m_pDatabase );
 
-        sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_UPDATED='%s', SIGNAL_TYPE='%s', \
-RF_TYPICAL_MIN='%d', RF_TYPICAL_MAX='%d', RF_NUM_POSITIONS='%d', RF_PATTERN_PERIOD_MIN='%d', RF_PATTERN_PERIOD_MAX='%d', \
-PRI_TYPICAL_MIN='%d', PRI_TYPICAL_MAX='%d', PRI_NUM_POSITIONS='%d', PRI_PATTERN_PERIOD_MIN='%d', PRI_PATTERN_PERIOD_MAX='%d', \
-PRIORITY='%d', RF_TYPE='%d', PRI_TYPE='%d', PD_TYPICAL_MIN='%d', PD_TYPICAL_MAX='%d', \
-SCAN_PRIMARY_TYPE='%d', SCAN_PRIMARY_TYPICAL_MIN='%d', SCAN_PRIMARY_TYPICAL_MAX='%d', \
-WHERE RADAR_MODE_INDEX='%d'" , \
-        szDate, _SignalType[pstrIPL->sigType], \
-        pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
-        pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
-        pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, pstrIPL->pw.low, pstrIPL->pw.hgh, \
-        pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh, iRadarModeIndex );
-        exec( m_szSQLString );
+        if( ( iRadarIndex = IsThrereELNOT( pstrIPL->elintNot ) ) >= 0 && false ) {
+
+            // DeleteIPL( pstrIPL->elintNot );
+            sprintf( m_szSQLString, "UPDATE RADAR SET PRIORITY='%d', DATE_LAST_UPDATED='%s' WHERE RADAR_INDEX='%d'" , pstrIPL->thrLev, szDate, iRadarIndex );
+            stmt.SqlStatement( m_szSQLString );
+
+            sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_UPDATED='%s', SIGNAL_TYPE='%s', \
+    RF_TYPICAL_MIN='%d', RF_TYPICAL_MAX='%d', RF_NUM_POSITIONS='%d', RF_PATTERN_PERIOD_MIN='%d', RF_PATTERN_PERIOD_MAX='%d', \
+    PRI_TYPICAL_MIN='%d', PRI_TYPICAL_MAX='%d', PRI_NUM_POSITIONS='%d', PRI_PATTERN_PERIOD_MIN='%d', PRI_PATTERN_PERIOD_MAX='%d', \
+    PRIORITY='%d', RF_TYPE='%d', PRI_TYPE='%d', PD_TYPICAL_MIN='%d', PD_TYPICAL_MAX='%d', \
+    SCAN_PRIMARY_TYPE='%d', SCAN_PRIMARY_TYPICAL_MIN='%d', SCAN_PRIMARY_TYPICAL_MAX='%d', \
+    WHERE RADAR_MODE_INDEX='%d'" , \
+            szDate, _SignalType[pstrIPL->sigType], \
+            pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
+            pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
+            pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, pstrIPL->pw.low, pstrIPL->pw.hgh, \
+            pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh, iRadarModeIndex );
+            stmt.SqlStatement( m_szSQLString );
+
+        }
+        else {
+            // 레이더
+            sprintf( m_szSQLString, "INSERT INTO RADAR ( RADAR_INDEX, DATE_LAST_UPDATED, ELNOT, NICKNAME, FUNCTION_CODE, PRIORITY ) VALUES \
+                                    ( %d, '%s', '%s', 'NICK%d', 'ZZ', %d )" , \
+                                    pstrIPL->noIPL, szDate, pstrIPL->elintNot, pstrIPL->noIPL, pstrIPL->thrLev );
+            stmt.SqlStatement( m_szSQLString );
+
+            // 레이더 모드
+            sprintf( m_szSQLString, "INSERT INTO RADAR_MODE ( RADAR_MODE_INDEX, FUNCTION_CODE, SIGNAL_TYPE, \
+                                    DATE_CREATED, \
+                                    RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
+                                    PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
+                                    PRIORITY, RF_TYPE, PRI_TYPE, \
+                                    PD_TYPICAL_MIN, PD_TYPICAL_MAX, \
+                                    SCAN_PRIMARY_TYPE, SCAN_PRIMARY_TYPICAL_MIN, SCAN_PRIMARY_TYPICAL_MAX ) VALUES \
+                                    ( %d, 'ZZ', '%s', \
+                                    '%s', \
+                                    %d, %d, %d, %d, %d, \
+                                    %d, %d, %d, %d, %d, \
+                                    %d, %d, %d, \
+                                    %d, %d, \
+                                    %d, %d, %d )" , \
+                                    pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
+                                    szDate, \
+                                    pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
+                                    pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
+                                    pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
+                                    pstrIPL->pw.low, pstrIPL->pw.hgh, \
+                                    pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh );
+            stmt.SqlStatement( m_szSQLString );
+
+            // 레이더 모드 라이프 사이클
+            sprintf( m_szSQLString, "INSERT INTO RADAR_MODE_LIFECYCLE ( RADAR_INDEX, RADAR_MODE_INDEX, RADAR_MODE_NAME, MODE_CODE ) VALUES ( %d, %d, '%s', 'ZZ' )" , \
+                pstrIPL->noIPL, pstrIPL->noIPL, pstrIPL->elintName );
+            stmt.SqlStatement( m_szSQLString );
+
+        }
 
     }
-    // 레이더 추가시 처리
-    else {
-        // 레이더
-        sprintf( m_szSQLString, "INSERT INTO RADAR ( RADAR_INDEX, DATE_LAST_UPDATED, ELNOT, NICKNAME, FUNCTION_CODE, PRIORITY ) VALUES \
-( %d, '%s', '%s', 'NICK%d', 'ZZ', %d )" , \
-        pstrIPL->noIPL, szDate, pstrIPL->elintNot, pstrIPL->noIPL, pstrIPL->thrLev );
-        exec( m_szSQLString );
-
-        // 레이더 모드
-        sprintf( m_szSQLString, "INSERT INTO RADAR_MODE ( RADAR_MODE_INDEX, FUNCTION_CODE, SIGNAL_TYPE, \
-DATE_CREATED, \
-RF_TYPICAL_MIN, RF_TYPICAL_MAX, RF_NUM_POSITIONS, RF_PATTERN_PERIOD_MIN, RF_PATTERN_PERIOD_MAX, \
-PRI_TYPICAL_MIN, PRI_TYPICAL_MAX, PRI_NUM_POSITIONS, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, \
-PRIORITY, RF_TYPE, PRI_TYPE, \
-PD_TYPICAL_MIN, PD_TYPICAL_MAX, \
-SCAN_PRIMARY_TYPE, SCAN_PRIMARY_TYPICAL_MIN, SCAN_PRIMARY_TYPICAL_MAX ) VALUES \
-( %d, 'ZZ', '%s', \
-'%s', \
-%d, %d, %d, %d, %d, \
-%d, %d, %d, %d, %d, \
-%d, %d, %d, \
-%d, %d, \
-%d, %d, %d )" , \
-        pstrIPL->noIPL, _SignalType[pstrIPL->sigType], \
-        szDate, \
-        pstrIPL->frq.low, pstrIPL->frq.hgh, pstrIPL->frq.swtLev, pstrIPL->frq.ppLow, pstrIPL->frq.ppHgh, \
-        pstrIPL->pri.low, pstrIPL->pri.hgh, pstrIPL->pri.swtLev, pstrIPL->pri.ppLow, pstrIPL->pri.ppHgh, \
-        pstrIPL->thrLev, pstrIPL->frq.type, pstrIPL->pri.type, \
-        pstrIPL->pw.low, pstrIPL->pw.hgh, \
-        pstrIPL->as.type, pstrIPL->as.prdLow, pstrIPL->as.prdHgh );
-        exec( m_szSQLString );
-
-        // 레이더 모드 라이프 사이클
-        sprintf( m_szSQLString, "INSERT INTO RADAR_MODE_LIFECYCLE ( RADAR_INDEX, RADAR_MODE_INDEX, RADAR_MODE_NAME, MODE_CODE ) VALUES ( %d, %d, '%s', 'ZZ' )" , \
-        pstrIPL->noIPL, pstrIPL->noIPL, pstrIPL->elintName );
-        exec( m_szSQLString );
-
+    catch( Kompex::SQLiteException &exception ) {
+        std::cerr << "\nException Occured" << std::endl;
+        exception.Show();
+        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
 #endif
