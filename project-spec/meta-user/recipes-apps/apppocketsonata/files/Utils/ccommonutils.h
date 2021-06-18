@@ -10,7 +10,6 @@ LARGE_INTEGER getFILETIMEoffset();
 #endif
 
 
-
 class CCommonUtils
 {
 private:
@@ -35,6 +34,8 @@ public:
     static ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh );
 
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
+
+    static void getStringPresentTime( char *pString ) 
 
 };
 

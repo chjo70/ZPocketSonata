@@ -378,3 +378,16 @@ ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
 
     return enCollectBank;
 }
+
+void CCommonUtils::getStringPresentTime( char *pString ) 
+{
+    struct tm *pstTime;
+    time_t nowTime=time(NULL);
+
+    pstTime = localtime( & nowTime );
+    strftime( pString, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+}
+
+//////////////////////////////////////////////////////////////////////
+// 정적 함수 정의
+
