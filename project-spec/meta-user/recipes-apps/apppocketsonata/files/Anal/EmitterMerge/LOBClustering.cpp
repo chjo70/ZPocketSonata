@@ -332,7 +332,7 @@ bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
  */
 bool CLOBClustering::AllocMemory()
 {
-	int i;
+	unsigned int i;
 	bool bRet=true;
 
 	// 교차점 메모리 할당

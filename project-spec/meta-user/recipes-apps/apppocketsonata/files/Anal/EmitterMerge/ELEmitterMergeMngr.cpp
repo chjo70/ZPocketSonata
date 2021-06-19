@@ -585,7 +585,7 @@ void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fFreqMin, float
         m_pIdentifyAlg->LoadCEDLibrary2();
         m_pIdentifyAlg->LoadEOBLibrary2();
 
-        LogPrint( "신호 식별하기 위해서 레이더 모드와 위협을 로딩 했습니다." );
+        Log( enNormal, "신호 식별하기 위해서 레이더 모드와 위협을 로딩 했습니다." );
 
         DisableToLoadCEDEOBLibrary();
     }
@@ -4235,18 +4235,18 @@ void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *
         case E_AET_SCAN_STEADY :
             if( pABTData->iScanType == E_AET_SCAN_UNKNOWN ) {
                 pABTData->iScanType = m_pLOBData->iScanType;
-                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMeanScanPeriod = FDIV( ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ), 2.0 );			// [usec]
                 pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
                 pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );
             }
             else if( pABTData->iScanType == m_pLOBData->iScanType ) {
                 pABTData->iScanType = m_pLOBData->iScanType;
-                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMeanScanPeriod = FDIV( ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ), 2.0 );			// [usec]
                 pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
                 pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );            }
             else {
                 pABTData->iScanType = m_pLOBData->iScanType;
-                pABTData->fMeanScanPeriod = ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ) / 2.0;			// [usec]
+                pABTData->fMeanScanPeriod = FDIV( ( pABTData->fMeanScanPeriod + m_pLOBData->fScanPeriod ), 2.0 );			// [usec]
                 pABTData->fMaxScanPeriod = _max( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );			// [usec]
                 pABTData->fMinScanPeriod = _min( pABTData->fMeanScanPeriod, m_pLOBData->fScanPeriod );
             }
