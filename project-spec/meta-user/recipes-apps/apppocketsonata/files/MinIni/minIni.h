@@ -79,8 +79,14 @@ int  ini_browse(INI_CALLBACK Callback, void *UserData, const mTCHAR *Filename);
   class minIni
   {
   public:
-    minIni(const std::string& filename) : iniFilename(filename)
+      minIni()
       { }
+      minIni(const std::string& filename) : iniFilename(filename)
+      { }
+
+      inline void setfilename( const std::string& filename) {
+          iniFilename = filename;
+      }
 
     bool getbool(const std::string& Section, const std::string& Key, bool DefValue=false) const
       { return ini_getbool(Section.c_str(), Key.c_str(), int(DefValue), iniFilename.c_str()) != 0; }

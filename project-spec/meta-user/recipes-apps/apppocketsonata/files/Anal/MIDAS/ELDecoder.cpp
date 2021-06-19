@@ -72,8 +72,6 @@ void AllEndian16(void* i_pData, UINT i_nSize)
 static time_t _stNOW;
 static tm _stTM;
 
-static DWORD g_stTime;
-
 // REAL
 float ELDecoder::DecodeAOA(const int i_iBinAoa)
 {
@@ -231,17 +229,17 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  * @date      2016-05-10, 오전 10:06 
  * @warning   
  */
-void ELDecoder::DecodeStringTime( char *szTime, char *pSmartTime )
-{
-	char szToday[30]={0,};
-
-	UpdateDateTime();
-
-	sscanf( pSmartTime, "%s" , szToday );
-
-	strcpy( szTime, pSmartTime );
-
-}
+// void ELDecoder::DecodeStringTime( char *szTime, char *pSmartTime )
+// {
+// 	char szToday[30]={0,};
+// 
+// 	UpdateDateTime();
+// 
+// 	sscanf( pSmartTime, "%s" , szToday );
+// 
+// 	strcpy( szTime, pSmartTime );
+// 
+// }
 
 /**
  * @brief     DecodeSmartTime
@@ -254,48 +252,48 @@ void ELDecoder::DecodeStringTime( char *szTime, char *pSmartTime )
  * @date      2016-06-17, 오후 4:47 
  * @warning   
  */
-void ELDecoder::DecodeSmartTime( char *pSmartTime, char *pszTime )
-{
-	// codesonar, uninitialized variable. 이정남
-	//struct tm szTimeConvert;
-	struct tm szTimeConvert = tm();
-	unsigned int uiMillisec=0;
+// void ELDecoder::DecodeSmartTime( char *pSmartTime, char *pszTime )
+// {
+// 	// codesonar, uninitialized variable. 이정남
+// 	//struct tm szTimeConvert;
+// 	struct tm szTimeConvert = tm();
+// 	unsigned int uiMillisec=0;
+// 
+// 	if( pszTime[0] == NULL )
+// 	{//DTEC_NullPointCheck
+// 		pSmartTime[0] = NULL;
+// 	}
+// 	else {
+// 		UpdateDateTime();
+// 
+// 		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
+// 		//sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
+// 		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec );
+// 
+// 	}
+// 
+// }
 
-	if( pszTime[0] == NULL )
-	{//DTEC_NullPointCheck
-		pSmartTime[0] = NULL;
-	}
-	else {
-		UpdateDateTime();
-
-		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
-		//sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
-		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec );
-
-	}
-
-}
-
-void ELDecoder::DecodeSmartMillisec( char *pSmartTime, char *pszTime )
-{
-	// codesonar, uninitialized variable. 이정남
-	//struct tm szTimeConvert;
-	struct tm szTimeConvert = tm();
-	unsigned int uiMillisec=0;
-
-	if( pszTime[0] == NULL )
-	{//DTEC_NullPointCheck
-		pSmartTime[0] = NULL;
-	}
-	else {
-		UpdateDateTime();
-
-		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
-		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
-
-	}
-
-}
+// void ELDecoder::DecodeSmartMillisec( char *pSmartTime, char *pszTime )
+// {
+// 	// codesonar, uninitialized variable. 이정남
+// 	//struct tm szTimeConvert;
+// 	struct tm szTimeConvert = tm();
+// 	unsigned int uiMillisec=0;
+// 
+// 	if( pszTime[0] == NULL )
+// 	{//DTEC_NullPointCheck
+// 		pSmartTime[0] = NULL;
+// 	}
+// 	else {
+// 		UpdateDateTime();
+// 
+// 		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
+// 		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
+// 
+// 	}
+// 
+// }
 
 /**
  * @brief     년월일을 초로 변환, 기본검색의 날짜 또는 수집 데이터 목록창에서 날짜/시간 문자열을 초로 변환
@@ -309,28 +307,28 @@ void ELDecoder::DecodeSmartMillisec( char *pSmartTime, char *pszTime )
  * @date      2017-01-09, 오후 4:09 
  * @warning   
  */
-void ELDecoder::DecodeStringTime( unsigned int *pTime_t, unsigned int *pMillisec, char *pszTime )
-{
-	//struct tm tmToday;
-
-	//codesonar. Uninitialzed Variable. 이정남.
-	struct tm tmToday = tm();
-
-	// pszTime 포멧: 01/11/01 01:54:04.112
-	sscanf_s( pszTime, "%d/%02d/%02d %02d:%02d:%02d.%d" , & tmToday.tm_year, & tmToday.tm_mon, & tmToday.tm_mday, & tmToday.tm_hour, & tmToday.tm_min, & tmToday.tm_sec, pMillisec );
-
-	// 연도 변환
-	if( tmToday.tm_year > 2000 )
-		tmToday.tm_year -= 1900;
-	else { //DTEC_Else
-		tmToday.tm_year = ( tmToday.tm_year + 2000 - 1900 );
-	}
-
-	// 월 변환
-	-- tmToday.tm_mon;
-
-	*pTime_t = _mktime32( & tmToday );
-}
+// void ELDecoder::DecodeStringTime( unsigned int *pTime_t, unsigned int *pMillisec, char *pszTime )
+// {
+// 	//struct tm tmToday;
+// 
+// 	//codesonar. Uninitialzed Variable. 이정남.
+// 	struct tm tmToday = tm();
+// 
+// 	// pszTime 포멧: 01/11/01 01:54:04.112
+// 	sscanf_s( pszTime, "%d/%02d/%02d %02d:%02d:%02d.%d" , & tmToday.tm_year, & tmToday.tm_mon, & tmToday.tm_mday, & tmToday.tm_hour, & tmToday.tm_min, & tmToday.tm_sec, pMillisec );
+// 
+// 	// 연도 변환
+// 	if( tmToday.tm_year > 2000 )
+// 		tmToday.tm_year -= 1900;
+// 	else { //DTEC_Else
+// 		tmToday.tm_year = ( tmToday.tm_year + 2000 - 1900 );
+// 	}
+// 
+// 	// 월 변환
+// 	-- tmToday.tm_mon;
+// 
+// 	*pTime_t = _mktime32( & tmToday );
+// }
 
 /**
  * @brief     UpdateDateTime
@@ -353,48 +351,48 @@ void ELDecoder::UpdateDateTime()
 	}
 }
 
-float ELDecoder::DecodeFrq(const int i_iBinFrq)
-{
-	float fFrq = 0.0;
-	fFrq = (float)i_iBinFrq * (float)DEF_OF_RES_FRQ;
-	return fFrq;
-}
+// float ELDecoder::DecodeFrq(const int i_iBinFrq)
+// {
+// 	float fFrq = 0.0;
+// 	fFrq = (float)i_iBinFrq * (float)DEF_OF_RES_FRQ;
+// 	return fFrq;
+// }
 
-float ELDecoder::DecodeFrq(const unsigned long long int i_iBinFrq)
-{
-	float fFrq = 0.0;
-	fFrq = (float)i_iBinFrq * (float)DEF_OF_RES_FRQ;
-	return fFrq;
-}
+// float ELDecoder::DecodeFrq(const unsigned long long int i_iBinFrq)
+// {
+// 	float fFrq = 0.0;
+// 	fFrq = (float)i_iBinFrq * (float)DEF_OF_RES_FRQ;
+// 	return fFrq;
+// }
 
 
-float ELDecoder::DecodeFrqChangeWidth(const int i_iBinFrqChangeWidth)
-{
-	float fFrqChangeWidth = 0.0;
-	fFrqChangeWidth = (float)i_iBinFrqChangeWidth * DEF_OF_RES_FRQ_CHANGE_WIDTH;
-	return fFrqChangeWidth;
-}
+// float ELDecoder::DecodeFrqChangeWidth(const int i_iBinFrqChangeWidth)
+// {
+// 	float fFrqChangeWidth = 0.0;
+// 	fFrqChangeWidth = (float)i_iBinFrqChangeWidth * DEF_OF_RES_FRQ_CHANGE_WIDTH;
+// 	return fFrqChangeWidth;
+// }
 
-float ELDecoder::DecodeMeanFrqStep(const int i_iBinMeanFrqStep)
-{
-	float fMeanFrqStep = 0.0;
-	fMeanFrqStep = (float)i_iBinMeanFrqStep * (float)DEF_OF_RES_FRQ;
-	return fMeanFrqStep;
-}
-
-float ELDecoder::DecodeFrqChangePeriod(const int i_iBinFrqChangePeriod)
-{
-	float fFrqChangePeriod = 0.0;
-	fFrqChangePeriod = (float)i_iBinFrqChangePeriod * (float)DEF_OF_RES_FRQ_CHANGE_PERIOD;
-	return fFrqChangePeriod;
-}
-
-float ELDecoder::DecodePriChangePeriod(const int i_iBinPriChangePeriod)
-{
-	float fPri = 0.0;
-	fPri = (float)i_iBinPriChangePeriod * (float)DEF_OF_RES_PRI_CHANGE_PERIOD;
-	return fPri;
-}
+// float ELDecoder::DecodeMeanFrqStep(const int i_iBinMeanFrqStep)
+// {
+// 	float fMeanFrqStep = 0.0;
+// 	fMeanFrqStep = (float)i_iBinMeanFrqStep * (float)DEF_OF_RES_FRQ;
+// 	return fMeanFrqStep;
+// }
+// 
+// float ELDecoder::DecodeFrqChangePeriod(const int i_iBinFrqChangePeriod)
+// {
+// 	float fFrqChangePeriod = 0.0;
+// 	fFrqChangePeriod = (float)i_iBinFrqChangePeriod * (float)DEF_OF_RES_FRQ_CHANGE_PERIOD;
+// 	return fFrqChangePeriod;
+// }
+// 
+// float ELDecoder::DecodePriChangePeriod(const int i_iBinPriChangePeriod)
+// {
+// 	float fPri = 0.0;
+// 	fPri = (float)i_iBinPriChangePeriod * (float)DEF_OF_RES_PRI_CHANGE_PERIOD;
+// 	return fPri;
+// }
 
 //////////////////////////////////////////////////////////////////////////
 /*!
@@ -407,12 +405,12 @@ float ELDecoder::DecodePriChangePeriod(const int i_iBinPriChangePeriod)
  * @date      2013-11-24 오후 2:53 
  * @warning   
  */
-float ELDecoder::DecodePriRatioPercent(const int i_iBinPriChangePercent)
-{
-	float fPri = 0.0;
-	fPri = (float)i_iBinPriChangePercent * (float)DEF_OF_RES_PRI_CHANGE_PERCENT;
-	return fPri;
-}
+// float ELDecoder::DecodePriRatioPercent(const int i_iBinPriChangePercent)
+// {
+// 	float fPri = 0.0;
+// 	fPri = (float)i_iBinPriChangePercent * (float)DEF_OF_RES_PRI_CHANGE_PERCENT;
+// 	return fPri;
+// }
 
 double ELDecoder::DecodeToa(const long long int i_llilToa)
 {
@@ -421,21 +419,21 @@ double ELDecoder::DecodeToa(const long long int i_llilToa)
 	return dToa;
 }
 
-double ELDecoder::DecodeWideBandToa(const long long int i_llilToa)
-{
-	double dToa = 0.0;
-	dToa = (double)i_llilToa * (double)DEF_OF_RES_WB_TOA;
-	return dToa;
-}
-
-int ELDecoder::DecodeAltitude(const int i_nAltitude)
-{
-	int nRtn = 0;
-	nRtn = i_nAltitude * DEF_OF_RES_ALTITUDE;
-	if( (nRtn/DEF_OF_RES_ALTITUDE) != i_nAltitude)
-		nRtn = -1;
-	return nRtn;
-}
+// double ELDecoder::DecodeWideBandToa(const long long int i_llilToa)
+// {
+// 	double dToa = 0.0;
+// 	dToa = (double)i_llilToa * (double)DEF_OF_RES_WB_TOA;
+// 	return dToa;
+// }
+// 
+// int ELDecoder::DecodeAltitude(const int i_nAltitude)
+// {
+// 	int nRtn = 0;
+// 	nRtn = i_nAltitude * DEF_OF_RES_ALTITUDE;
+// 	if( (nRtn/DEF_OF_RES_ALTITUDE) != i_nAltitude)
+// 		nRtn = -1;
+// 	return nRtn;
+// }
 
 // 시간 정보(초와 ms)를 저장할 수 있는 문자열로 변환
 void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int millisec )
@@ -472,12 +470,12 @@ void ELDecoder::MakeTimeString( char *pString, time_t ti, unsigned int millisec 
 	}
 }
 
-double ELDecoder::DecodeGeoPosition(const int& i_nPosLatLong)
-{
-	double dVal = 0.0;
-	dVal = (double)i_nPosLatLong / (double)DEF_OF_RES_GEOPOS;
-	return dVal;
-}
+// double ELDecoder::DecodeGeoPosition(const int& i_nPosLatLong)
+// {
+// 	double dVal = 0.0;
+// 	dVal = (double)i_nPosLatLong / (double)DEF_OF_RES_GEOPOS;
+// 	return dVal;
+// }
 
 /**
  * @brief     기준 값의 문자열 테이블과 찾고자할 문자열과 비교하여 인덱스를 리턴한다.
@@ -490,16 +488,16 @@ double ELDecoder::DecodeGeoPosition(const int& i_nPosLatLong)
  * @date      2016-08-10, 오후 2:58 
  * @warning   
  */
-int ELDecoder::GetComboValue( char *pSearch, const char **pRefTable, int nRef )
-{
-	int iRet=0;
-
-	for( int i=0 ; i < nRef ; ++i ) {
-		if( strcmp( pSearch, pRefTable[i] ) == 0 ) {
-			iRet = i;
-			break;
-		}
-	}
-
-	return iRet;
-}
+// int ELDecoder::GetComboValue( char *pSearch, const char **pRefTable, int nRef )
+// {
+// 	int iRet=0;
+// 
+// 	for( int i=0 ; i < nRef ; ++i ) {
+// 		if( strcmp( pSearch, pRefTable[i] ) == 0 ) {
+// 			iRet = i;
+// 			break;
+// 		}
+// 	}
+// 
+// 	return iRet;
+// }
