@@ -1,6 +1,6 @@
 ﻿/*  minIni - Multi-Platform INI file parser, suitable for embedded systems
  *
- *  Copyright (c) CompuPhase, 2008-2017
+ *  Copyright (c) CompuPhase, 2008-2021
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not
  *  use this file except in compliance with the License. You may obtain a copy
@@ -43,6 +43,9 @@ int   ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue,
 int   ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename);
 int   ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename);
 
+int   ini_hassection(const mTCHAR *Section, const mTCHAR *Filename);
+int   ini_haskey(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Filename);
+
 #if defined INI_REAL
 INI_REAL ini_getf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename);
 #endif
@@ -76,14 +79,8 @@ int  ini_browse(INI_CALLBACK Callback, void *UserData, const mTCHAR *Filename);
   class minIni
   {
   public:
-    minIni()
-      { }
     minIni(const std::string& filename) : iniFilename(filename)
       { }
-
-    inline void setfilename( const std::string& filename) {
-        iniFilename = filename;
-    }
 
     bool getbool(const std::string& Section, const std::string& Key, bool DefValue=false) const
       { return ini_getbool(Section.c_str(), Key.c_str(), int(DefValue), iniFilename.c_str()) != 0; }
@@ -114,6 +111,12 @@ int  ini_browse(INI_CALLBACK Callback, void *UserData, const mTCHAR *Filename);
         ini_getkey(Section.c_str(), idx, buffer, INI_BUFFERSIZE, iniFilename.c_str());
         return buffer;
       }
+
+    bool hassection(const std::string& Section) const
+      { return ini_hassection(Section.c_str(), iniFilename.c_str()) != 0; }
+
+    bool haskey(const std::string& Section, const std::string& Key) const
+      { return ini_haskey(Section.c_str(), Key.c_str(), iniFilename.c_str()) != 0; }
 
 #if defined INI_REAL
     INI_REAL getf(const std::string& Section, const std::string& Key, INI_REAL DefValue=0) const
