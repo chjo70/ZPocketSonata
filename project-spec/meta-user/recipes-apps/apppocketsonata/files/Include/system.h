@@ -25,11 +25,11 @@
 // 시스템 변수 기본 설정 값
 
 // 수신기 임계값
-#define _RXTHRESHOLD_BAND1_                 -60.0
-#define _RXTHRESHOLD_BAND2_                 -55.3
-#define _RXTHRESHOLD_BAND3_                 -60.2
-#define _RXTHRESHOLD_BAND4_                 -70.0
-#define _RXTHRESHOLD_BAND5_                 -75.0
+#define _RXTHRESHOLD_BAND1_                 (float) (-60.0)
+#define _RXTHRESHOLD_BAND2_                 (float) (-55.3)
+#define _RXTHRESHOLD_BAND3_                 (float) (-60.2)
+#define _RXTHRESHOLD_BAND4_                 (float) (-70.0)
+#define _RXTHRESHOLD_BAND5_                 (float) (-75.0)
 
 // 에미터 최소 펄스 신호 개수
 #define _ANAL_MIN_PULSECOUNT_               (5)
@@ -57,8 +57,17 @@
 
 #define _SHM_MEMORY_KEY             (333)
 
+#ifdef __VXWORKS__
+#define _OFFSET_KEY_                (100)
+#elif _MSC_VER
+#define _OFFSET_KEY_                (0)
+#else
+#define _OFFSET_KEY_                (_SHM_MEMORY_KEY)
+#endif
+
+// 아래 정의된 키는 vxworks 에서는 priority 로 사용한다.
 enum ENUM_THREAD_KEY {
-    _MSG_TMNGR_KEY = (_SHM_MEMORY_KEY) + 1,
+    _MSG_TMNGR_KEY = (_OFFSET_KEY_) + 1,
     _MSG_URBIT_KEY,
     _MSG_PULTRK_KEY,
     _MSG_JAMTEC_KEY,
@@ -75,8 +84,6 @@ enum ENUM_THREAD_KEY {
     _MSG_PROMPT_KEY,
 
 };
-
-
 
 
 
