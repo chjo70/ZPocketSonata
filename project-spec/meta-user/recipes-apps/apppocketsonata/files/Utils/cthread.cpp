@@ -42,13 +42,14 @@ CThread::CThread( int iMsgKey, char *pClassName, bool bArrayLanData ) : CArrayMs
     m_MsgKeyID = 0;
 #endif    
 
+    m_iThreadID = iMsgKey;
+
     m_pszRecvData = NULL;
 
     // 메시지큐 생성
     memset( & m_RcvMsg, 0, sizeof(STR_MessageData) );
 
     strcpy( m_szClassName, pClassName );
-
 
 }
 
@@ -76,11 +77,11 @@ CThread::~CThread()
 
     if(m_hEvent != 0 ) {
         CloseHandle(m_hEvent);
+        -- m_iCoMsgQueue;
     }
     
-    -- m_iCoMsgQueue;
-    LOGMSG( enDebug, "\t 큐 ID를 종료 처리합니다." );
-    
+    LOGMSG2( enDebug, "\t 쓰레드[%d], 큐 [%d개] 가 남아 있습니다." , m_iCoThread, m_iCoMsgQueue );
+       
 #elif defined(__VXWORKS__)    
     
 #else    
@@ -108,6 +109,8 @@ CThread::~CThread()
         //Stop();
     }
 #endif    
+
+    LOG->UnLock();
 
 }
 
@@ -141,7 +144,6 @@ void *CThread::CallBack( void *pArg )
  * @brief CThread::Create
  */
 void CThread::Run( void *(*pFunc)(void*), key_t key )
-//void CThread::Run( LPTHREAD_START_ROUTINE pFunc, key_t key )
 {
     LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", GetThreadName() );
 
@@ -251,8 +253,7 @@ int CThread::Pend()
 void CThread::Stop()
 {
 #ifdef _MSC_VER
-    if ( m_MainThread.m_hThread )
-    {
+    if ( m_MainThread.m_hThread ) {
         GetExitCodeThread(m_MainThread.m_hThread, & m_MainThread.m_dwExitCode );
 
         if ( m_MainThread.m_dwExitCode == STILL_ACTIVE ) {
@@ -267,27 +268,9 @@ void CThread::Stop()
 
         m_MainThread.m_hThread = NULL;
     }
+#elif _VXWORKS_
 
 #else	
-    static int retval=999;
-
-    //printf( "\n thread die..[%d]\n" , retval );
-
-    pthread_exit( (void *) & retval );
-    
-    -- m_iCoThread;
-#endif    
-
-}
-
-void CThread::Stop2()
-{
-
-#ifdef _MSC_VER
-	
-#elif __VXWORKS__	
-
-#else
     if( m_MainThread != 0 ) {
         if (!pthread_cancel(m_MainThread)) {
             pthread_join(m_MainThread, NULL);
@@ -300,9 +283,11 @@ void CThread::Stop2()
             perror("pthread_cancel");
         }
     }
-#endif
+#endif    
 
 }
+
+
 
 
 
@@ -371,6 +356,8 @@ int CThread::QMsgRcv( int iFlag )
     }
     
     UnLock();
+
+#elif __VXWORKS__
 		
 #else
 

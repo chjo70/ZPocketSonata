@@ -20,7 +20,7 @@
 #include "../Include/system.h"
 
 
-
+#define LOG_EXTRA_SIZE      (50)
 
 
 #define LOG_DIR_SIZE        (1024)
@@ -35,20 +35,20 @@ enum LogType {
     enEnd,
 };
 
-#define LOG_LINEFEED                LOG->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
+#define LOG_LINEFEED                    LOG->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
 
-#define LOGMSG( A, B )              LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B )
-#define LOGMSG1( A, B, C )          LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )
-#define LOGMSG2( A, B, C, D )       LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D )
-#define LOGMSG3( A, B, C, D, E )    LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E )
-#define LOGMSG4( A, B, C, D, E, F ) LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
-#define LOGMSG5( A, B, C, D, E, F, G ) LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
+#define LOGMSG( A, B )                  LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B )
+#define LOGMSG1( A, B, C )              LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )
+#define LOGMSG2( A, B, C, D )           LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D )
+#define LOGMSG3( A, B, C, D, E )        LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E )
+#define LOGMSG4( A, B, C, D, E, F )     LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
+#define LOGMSG5( A, B, C, D, E, F, G )  LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
 
 
 #define Log                             LOG->LogMsg
 
 
-#define LOGENTRY                    LOG->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
+#define LOGENTRY                        LOG->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
 
 class CLog
 {
@@ -85,6 +85,9 @@ public:
             m_pInstance = NULL;
         } 
     }
+
+    void Lock();
+    void UnLock();
 
     void LogMsg( int nType, char *pMsg );
     void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );

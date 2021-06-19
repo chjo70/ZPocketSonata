@@ -206,7 +206,6 @@ private:
 
 #if _MSC_VER <= 1600 || _AFXDLL
 	CCriticalSection m_cs;
-
 #else
 	std::mutex m_mutex;
 #endif
@@ -230,6 +229,7 @@ private:
     static int m_iCoMsgQueue;
 
 protected:
+    int m_iThreadID;
     char m_szClassName[LENGTH_OF_CLASSNAME];
 
 private:
@@ -254,13 +254,14 @@ public:
 
     int Pend();
     void Stop();
-    void Stop2();
     int QMsgRcv( int iFlag=0 );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
     void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
+
+    int GetThreadID() { return m_iThreadID; }
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
@@ -351,6 +352,7 @@ public:
 
     virtual void _routine() { }
     virtual const char *GetThreadName() { return NULL; }
+    
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
 };

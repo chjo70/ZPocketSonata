@@ -94,6 +94,9 @@ void CArrayMsgData::SetMark( int iIndex )
 int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
     ++ m_ucPushIndex;
+    if( m_ucPushIndex >= SIZE_OF_MSGDATA_ARRAY ) {
+        m_ucPushIndex = 0;
+    }
 
     if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );

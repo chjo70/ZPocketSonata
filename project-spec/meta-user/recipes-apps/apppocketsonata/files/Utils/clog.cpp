@@ -69,6 +69,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
 
     char szDate[LOG_DIR_SIZE];
+    //char szExtra[LOG_EXTRA_SIZE];
 
 #ifdef _LOG_WHERE
     char szFileLine[LOG_DIR_SIZE];
@@ -78,11 +79,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     int nLength, nLengthTime;
 
-#ifdef _MSC_VER
-    m_cs.Lock();
-#else
-    sem_wait( & m_mutex );
-#endif
+	Lock();
 
 #ifdef _LOG_RELATIVE_PATH_
     getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
@@ -192,6 +189,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
             }
 #endif
 
+            //sprintf( szExtra, "[%2d]" , int iThreadID );
+            //strcat( m_szLog, szExtra );
+
             nLength = strlen(m_szLog);
             if( nLength > 36 || nType == enLineFeed ) {
 #ifdef _MSC_VER
@@ -211,12 +211,26 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
         }
     }
 
-#ifdef _MSC_VER
+	UnLock();
+
+}
+
+void CLog::Lock() 
+{
+#if _MSC_VER <= 1600 || _AFXDLL
+    m_cs.Lock();
+#else
+    std::unique_lock<std::mutex> lk(m_mutex);
+#endif
+
+}
+
+void CLog::UnLock() 
+{
+#if _MSC_VER <= 1600 || _AFXDLL
     m_cs.Unlock();
 #else
-    sem_post( & m_mutex );
-#endif
-    
+
 #endif
 
 }

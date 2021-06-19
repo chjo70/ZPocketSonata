@@ -47,9 +47,9 @@ CHWIO::CHWIO()
  */
 void CHWIO::OpenHW()
 {
-    xuio_t *pUIO;
-
+    
 #ifdef __linux__
+    xuio_t *pUIO;
 
     /**
      * dev/mem open
