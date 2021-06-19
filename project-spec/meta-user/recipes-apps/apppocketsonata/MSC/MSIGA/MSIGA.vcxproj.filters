@@ -132,9 +132,6 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\cfile.h">
-      <Filter>소스 파일\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Utils\chwio.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
@@ -540,9 +537,6 @@
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
-      <Filter>소스 파일\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\cfile.cpp">
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\chwio.cpp">

@@ -227,7 +227,6 @@
     <ClInclude Include="..\..\files\Thread\cusercollect.h" />
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
-    <ClInclude Include="..\..\files\Utils\cfile.h" />
     <ClInclude Include="..\..\files\Utils\chwio.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
     <ClInclude Include="..\..\files\Utils\cqueue.h" />
@@ -425,9 +424,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\cfile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\chwio.cpp">
