@@ -6,7 +6,6 @@
 #include <sys/socket.h>
 #endif
 
-
 #include <sys/types.h>
 
 #include "creclan.h"
@@ -177,14 +176,14 @@ void CRecLan::_routine()
  */
 void CRecLan::DumpList()
 {
-    UINT uiStartAddress;
+    // UINT uiStartAddress;
 
     STR_LAN_HEADER strLanHeader;
     UNI_LAN_DATA uniLanData;
 
     STR_REQ_DUMP_LIST *pData= ( STR_REQ_DUMP_LIST * ) m_pMsg->x.szData;
 
-    int iRet;
+    //int iRet;
     char *pAddress;
 
 #ifdef _DEBUG_

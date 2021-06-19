@@ -2727,7 +2727,6 @@ void CELSignalIdentifyAlg::IdentifyFreqPRI( SRxLOBData *pLOBData )
         pPriType = (int *) & m_HowToId[pLOBData->iFreqType][pLOBData->iPRIType].pri[0];
     }
 
-    // 예외처리. 2015.1.22. 이정남  -> 원복. QAC 에러
     if( pFrqType == NULL || pPriType == NULL || pLOBData->iFreqType < 0 || pLOBData->iPRIType < 0) { //DTEC_NullPointCheck
     }
     else {
@@ -4762,7 +4761,7 @@ void CELSignalIdentifyAlg::IdentifyScan()
 // 			}
 // 			// 등록되지 않은 미식별 번호에 대해서는 기본값으로 리턴한다.
 // 			else {
-// 				sprintf_s( m_H0000, 10, "H000A" ); //2015.07.08.이정남. "L"붙임.
+// 				sprintf_s( m_H0000, 10, "H000A" ); 
 //
 // 			}
 // 			return m_H0000;
