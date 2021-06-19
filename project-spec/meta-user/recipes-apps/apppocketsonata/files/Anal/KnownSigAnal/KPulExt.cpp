@@ -174,9 +174,10 @@ void CKPulExt::KnownPulseExtract()
     STR_PULSE_TRAIN_SEG *pSeg;
 
     pSeg = GetPulseSeg();
-
+    
 	// 타입에 따라서 펄스열 추출을 달리한다.
     //pPri = & SRxABTDatapri;
+
     switch( m_pTrkAet->iPRIType ) {
 		case _STABLE :
             extRange.min_pri = ITOAusCNV( m_pTrkAet->fPRIMin ) - STABLE_MARGIN;
@@ -263,32 +264,33 @@ void CKPulExt::DiscardStablePT()
 	int i, j;
 	STR_PULSE_TRAIN_SEG *pSeg, *pSeg1, *pSeg2;
 
-	if( m_CoSeg == 0 )
-		return;
+	if( m_CoSeg == 0 ) {
+    }
+    else {
+	    STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
-	STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+	    pSeg = GetPulseSeg();
+        ClearAllMark();
+        //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
 
-	pSeg = GetPulseSeg();
-    ClearAllMark();
-    //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
+	    // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
+	    if( m_CoSeg == 1 ) {
+		    MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.count, EXTRACT_MARK );
+		    m_CoSeg = 0;
+	    }
+        else {
+	        /*! \todo	스태거열을 찾아서 제거해야 한다. */
 
-	// 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
-	if( m_CoSeg == 1 ) {
-		MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.count, EXTRACT_MARK );
-		m_CoSeg = 0;
-		return;
-	}
+	        // Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
+	        // pSeg1 = pSeg + m_nAnalSeg;
+	        for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
+		        pSeg2 = pSeg + i + 1;
+		        for( j=i+1 ; j < m_CoSeg ; ++j ) {
 
-	/*! \todo	스태거열을 찾아서 제거해야 한다. */
-
-	// Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
-	// pSeg1 = pSeg + m_nAnalSeg;
-	for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
-		pSeg2 = pSeg + i + 1;
-		for( j=i+1 ; j < m_CoSeg ; ++j ) {
-
-		}
-	}
+		        }
+	        }
+        }
+    }
 
 }
 

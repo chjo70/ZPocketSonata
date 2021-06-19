@@ -202,69 +202,68 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     if( pPDWData->uiTotalPDW <= RPC || pPDWData->uiTotalPDW > MAX_PDW ) {
         //Printf( "PDW 개수(%d)가 %d 이하 이거나 너무 초과되어 분석을 수행하지 않습니다. !!" , pPDWData->count, RPC );
         Log( enNormal, "PDW 개수(%d)가 %d 이하 이거나 너무 초과되어 분석을 수행하지 않습니다. !!" , pPDWData->uiTotalPDW, RPC );
-        return;
     }
+    else {
+        CheckValidData( pPDWData );
 
-    CheckValidData( pPDWData );
+        // 수집한 PDW 파일 만들기...
+        m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
-    // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
-
-    if( pPDWData->x.ps.iIsStorePDW == 1 || true ) {
-        // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
+        if( pPDWData->x.ps.iIsStorePDW == 1 || true ) {
+            // PDW 수집 상태 체크를 함.
+            if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
 #ifdef _ELINT
-            printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-            Log( enError, "[%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
+                printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
+                Log( enError, "[%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
 #else
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+                printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+                Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
-        }
-        else {
+            }
+            else {
 
-            // 라이브러리 기반 펄스열 추출
-            if( TRUE == m_theGroup->MakeGroup() ) {
-                CheckKnownByAnalysis();
+                // 라이브러리 기반 펄스열 추출
+                if( TRUE == m_theGroup->MakeGroup() ) {
+                    CheckKnownByAnalysis();
 
-                // 그룹화 만들기
-                while( ! m_theGroup->IsLastGroup() ) {
-                    // 협대역 주파수 그룹화
-                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
-                    m_theGroup->MakeGrIndex();
+                    // 그룹화 만들기
+                    while( ! m_theGroup->IsLastGroup() ) {
+                        // 협대역 주파수 그룹화
+                        // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+                        m_theGroup->MakeGrIndex();
 
-                    SaveGroupPdwFile( m_CoGroup+1 );
+                        SaveGroupPdwFile( m_CoGroup+1 );
 
-                    // 규칙성 및 불규칙성 펄스열 추출
-                    m_thePulExt->PulseExtract( m_uiCoKnownRadarMode, & m_pRadarMode[0] );
+                        // 규칙성 및 불규칙성 펄스열 추출
+                        m_thePulExt->PulseExtract( m_uiCoKnownRadarMode, & m_pRadarMode[0] );
 
-                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-                    // m_thePulExt->UnknownExtract();
+                        // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+                        // m_thePulExt->UnknownExtract();
 
-                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                    memset( & MARK, 0, sizeof( MARK ) );
+                        // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+                        memset( & MARK, 0, sizeof( MARK ) );
 
-                    // PRI 분석
-                    m_theAnalPRI->Analysis();
+                        // PRI 분석
+                        m_theAnalPRI->Analysis();
 
-                    // 에미터 분석
-                    m_theMakeAET->MakeAET();
+                        // 에미터 분석
+                        m_theMakeAET->MakeAET();
 
-                    // 그룹화 생성 개수 증가
-                    ++ m_CoGroup;
+                        // 그룹화 생성 개수 증가
+                        ++ m_CoGroup;
 
+                    }
                 }
             }
+
+            m_theMakeAET->PrintAllEmitter();
+
+            // Printf( "\n ==== End of New Signal Analysis ====\n" );
+
+            // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
+            SaveRemainedPdwFile();
         }
-
-        m_theMakeAET->PrintAllEmitter();
-
-        // Printf( "\n ==== End of New Signal Analysis ====\n" );
-
-        // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
-        SaveRemainedPdwFile();
     }
-
 }
 
 /**
@@ -313,8 +312,10 @@ void CNewSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type)
 {
     int i;
 
-    for( i=0 ; i < count ; ++i )
+    for( i=0 ; i < count ; ++i ) {
         MARK[ *pPdwIndex++ ] = mark_type;
+    }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -569,15 +570,25 @@ void CNewSigAnal::SaveRemainedPdwFile()
 */
 enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 {
-    if( freq >= 2000 && freq < 6000 )
-        return BAND1;
-    else if( freq >= 6000 && freq < 10000 )
-        return BAND2;
-    else if( freq >= 10000 && freq < 14000 )
-        return BAND3;
-    else if( freq >= 14000 && freq <= 19000 )
-        return BAND4;
-    return BAND5;
+    enum FREQ_BAND enBand;
+
+    if( freq >= 2000 && freq < 6000 ) {
+        enBand = BAND1;
+    }
+    else if( freq >= 6000 && freq < 10000 ) {
+        enBand = BAND2;
+    }
+    else if( freq >= 10000 && freq < 14000 ) {
+        enBand = BAND3;
+    }
+    else if( freq >= 14000 && freq <= 19000 ) {
+        enBand = BAND4;
+    }
+    else {
+        enBand = BAND5;
+    }
+
+    return enBand;
 
 }
 

@@ -274,7 +274,7 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count )
         *pPmop++ = pdw->iPMOP;
         *pFmop++ = pdw->iFMOP;
 
-        *pBand++ = g_enBoardId;
+        *pBand++ = 0; // g_enBoardId;
 
         //*pMaxChannel ++ = pdw->item.max_channel;
     }
@@ -522,8 +522,8 @@ void CGroup::MakeBandGroup()
     // 밴드 그룹화
     pBand = & m_pBAND[0];
     for( i=0 ; i < m_nCoPdw ; ++i ) {
-        //m_Band[ *pBand ].pIndex[ m_Band[ *pBand ].count++ ] = i;	// Band 그룹화
-        m_Band[ 0 ].pIndex[ m_Band[ 0 ].count++ ] = i;	// Band 그룹화
+        m_Band[ *pBand ].pIndex[ m_Band[ *pBand ].count++ ] = i;	// Band 그룹화
+        //m_Band[ 0 ].pIndex[ m_Band[ 0 ].count++ ] = i;	// Band 그룹화
         ++ pBand;
     }
 }
