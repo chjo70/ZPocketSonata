@@ -210,8 +210,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
         }
     }
-
+ 
 	UnLock();
+#endif
 
 }
 
