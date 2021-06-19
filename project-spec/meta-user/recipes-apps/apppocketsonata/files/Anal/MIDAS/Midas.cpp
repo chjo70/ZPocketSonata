@@ -30,7 +30,7 @@
 
 #include "Midas.h"
 
-#include "../../Utils/cfile.h"
+//#include "../../Utils/cfile.h"
 
 #define _EXT_HEADER_
 
@@ -188,38 +188,40 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
     if( m_enFileType != E_EL_SCDT_IF || pInputFilename == NULL ) {
         // 1. 사용자 지정 파일 생성
         if( FileOpen( pMidasFileName, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
-            return false;
-        }
-
-        //
-        memcpy( & m_strKeywordValue, & stKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
-
-        // 2. MIDAS 포멧으로 헤더 및 부가 구조체 저장
-        MakeHeader();
-
-        // 3. Adjunct 헤더 파일 변환
-        MakeAdjunct();
-
-        // 4. HCD 저장
-        WriteHeader();
-
-        // 5. 데이터 저장
-        if( ! WriteData( i_pstReadFile, i_nFileRawDataStartOffset ) ) { //DTEC_Else
             bRet = false;
-
         }
         else {
-            // 6. Extended Header 변환
-            MakeExtendedHeader();
 
-            WriteExtendedHeader();
+            //
+            memcpy( & m_strKeywordValue, & stKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
+
+            // 2. MIDAS 포멧으로 헤더 및 부가 구조체 저장
+            MakeHeader();
+
+            // 3. Adjunct 헤더 파일 변환
+            MakeAdjunct();
+
+            // 4. HCD 저장
+            WriteHeader();
+
+            // 5. 데이터 저장
+            if( ! WriteData( i_pstReadFile, i_nFileRawDataStartOffset ) ) { //DTEC_Else
+                bRet = false;
+
+            }
+            else {
+                // 6. Extended Header 변환
+                MakeExtendedHeader();
+
+                WriteExtendedHeader();
+            }
+
+            // 7. 변환 파일 닫기
+            FileClose();
+
+            // 8.
+            MIDASClose();
         }
-
-        // 7. 변환 파일 닫기
-        FileClose();
-
-        // 8.
-        MIDASClose();
     }
     else {
         SELIFMIDAS stIFMIDAS;
@@ -253,6 +255,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
  */
 bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMultiIFData )
 {
+    bool bRet=true;
     long sz_file;
     int iSize, iWrite;
     unsigned int i, numberofdata;
@@ -274,105 +277,109 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
         // 데이터 블럭에서 쓰고 난 이후에 512 블럭을 맞추기 위해서 NULL 문자 개수를 계산함.
         iNullCh = (unsigned long long) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( m_pHCB->data_size + (double) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
         if( iNullCh < 0 ) { //DTEC_Else
-            return false;
+            bRet = false;
         }
     }
 
-    switch( m_enFileType ) {
-        case E_EL_SCDT_IQ :
-            // 읽을 파일의 헤더를 생략한다.
-            sz_file = _lseek( destFileId, sizeof(SRxIQData), SEEK_SET );
-            if( sz_file != sizeof(SRxIQData) ) { //DTEC_Else
-                return false;
-            }
-
-            uiWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
-            for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, (char *) & x.iqData[0], uiWriteByte );
-                if( iSize == 0 ) {
-                    break;
+    if( bRet == true ) {
+        switch( m_enFileType ) {
+            case E_EL_SCDT_IQ :
+                // 읽을 파일의 헤더를 생략한다.
+                sz_file = _lseek( destFileId, sizeof(SRxIQData), SEEK_SET );
+                if( sz_file != sizeof(SRxIQData) ) { //DTEC_Else
+                    bRet = false;
                 }
                 else {
-                    TransferIQ( & x.iqData[0], iSize );
-                    iWrite = Write( & x.iqData[0], iSize );
+                    uiWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
+                    for( i=0 ; i < numberofdata ; ++i ) {
+                        iSize = _read( destFileId, (char *) & x.iqData[0], uiWriteByte );
+                        if( iSize == 0 ) {
+                            break;
+                        }
+                        else {
+                            TransferIQ( & x.iqData[0], iSize );
+                            iWrite = Write( & x.iqData[0], iSize );
+                        }
+                    }
                 }
-            }
-            break;
+                break;
 
-        case E_EL_SCDT_IF :
-            _lseek( destFileId, 0L, SEEK_END );
+            case E_EL_SCDT_IF :
+                _lseek( destFileId, 0L, SEEK_END );
 #if defined(__linux__) || defined(__VXWORKS__)
-            sz_file = 0;
-            //sz_file = tell( destFileId );
+                sz_file = 0;
+                //sz_file = tell( destFileId );
 #else
-            sz_file = _tell( destFileId );
+                sz_file = _tell( destFileId );
 #endif
 
-            _lseek( destFileId, 0L, SEEK_SET );
+                _lseek( destFileId, 0L, SEEK_SET );
 
-            // 읽을 파일의 헤더를 생략한다.
-            if( sz_file > 36 * 1024 * 1024 ) {
-                sz_file = _lseek( destFileId, sizeof(SRxIFData), SEEK_SET );
-                if( sz_file != sizeof(SRxIFData) ) { //DTEC_Else
-                    return false;
-                }
-            }
-
-            uiWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
-            for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, (char *) & x.ifData[0], uiWriteByte );
-                if( iSize == 0 ) { //DTEC_Else
-                    break;
-                }
-                else {
-                    //TransferIF( & x.ifData[0], iSize );
-                    iWrite = Write( & x.ifData[0], iSize );
-                }
-            }
-            break;
-
-        case E_EL_SCDT_PDW :
-            // 읽을 파일의 헤더를 생략한다.
-            if( destFileId != 0 ) {
-                sz_file = _lseek( destFileId, sizeof(SRxPDWData), SEEK_SET );
-                if( sz_file != sizeof(SRxPDWData) ) { //DTEC_Else
-                    return false;
-                }
-
-                uiWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
-                for( i=0 ; i < numberofdata ; ++i ) {
-                    iSize = _read( destFileId, (char * )& x.pdwData[0], uiWriteByte );
-                    if( iSize == 0 ) { //DTEC_Else
-                        break;
+                // 읽을 파일의 헤더를 생략한다.
+                if( sz_file > 36 * 1024 * 1024 ) {
+                    sz_file = _lseek( destFileId, sizeof(SRxIFData), SEEK_SET );
+                    if( sz_file != sizeof(SRxIFData) ) { //DTEC_Else
+                        bRet = false;
                     }
                     else {
-                        iRecords = iSize / sizeof(SRxPDWDataRGroup);
-                        TransferPDW2Record( & x.pdwData[0], iRecords );
+                        uiWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
+                        for( i=0 ; i < numberofdata ; ++i ) {
+                            iSize = _read( destFileId, (char *) & x.ifData[0], uiWriteByte );
+                            if( iSize == 0 ) { //DTEC_Else
+                                break;
+                            }
+                            else {
+                                //TransferIF( & x.ifData[0], iSize );
+                                iWrite = Write( & x.ifData[0], iSize );
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case E_EL_SCDT_PDW :
+                // 읽을 파일의 헤더를 생략한다.
+                if( destFileId != 0 ) {
+                    sz_file = _lseek( destFileId, sizeof(SRxPDWData), SEEK_SET );
+                    if( sz_file != sizeof(SRxPDWData) ) { //DTEC_Else
+                        bRet = false;
+                    }
+                    else {
+                        uiWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
+                        for( i=0 ; i < numberofdata ; ++i ) {
+                            iSize = _read( destFileId, (char * )& x.pdwData[0], uiWriteByte );
+                            if( iSize == 0 ) { //DTEC_Else
+                                break;
+                            }
+                            else {
+                                iRecords = iSize / sizeof(SRxPDWDataRGroup);
+                                TransferPDW2Record( & x.pdwData[0], iRecords );
+                                iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
+                                iWrite = Write( m_pPDWRecords, iSize );
+                            }
+                        }
+                    }
+                }
+                else {
+                    // 각 항목별 최소/최대값 초기화
+                    MakeInitMinMaxValue( m_MinMaxOfSubrecords );
+
+                    m_ullfirstTOA = m_pPDWData->stPDW[0].ullTOA;
+                    for( i=0 ; i < numberofdata ; i += MAX_OF_PDW_DATA ) {
+                        if( numberofdata - i >= MAX_OF_PDW_DATA ) {
+                            iRecords = MAX_OF_PDW_DATA;
+                        }
+                        else {
+                            iRecords = numberofdata - i;
+                        }
+                        TransferPDW2Record( & m_pPDWData->stPDW[i], iRecords );
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
                         iWrite = Write( m_pPDWRecords, iSize );
                     }
                 }
-            }
-            else {
-                // 각 항목별 최소/최대값 초기화
-                MakeInitMinMaxValue( m_MinMaxOfSubrecords );
 
-                m_ullfirstTOA = m_pPDWData->stPDW[0].ullTOA;
-                for( i=0 ; i < numberofdata ; i += MAX_OF_PDW_DATA ) {
-                    if( numberofdata - i >= MAX_OF_PDW_DATA ) {
-                        iRecords = MAX_OF_PDW_DATA;
-                    }
-                    else {
-                        iRecords = numberofdata - i;
-                    }
-                    TransferPDW2Record( & m_pPDWData->stPDW[i], iRecords );
-                    iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
-                    iWrite = Write( m_pPDWRecords, iSize );
-                }
-            }
-
-            uiWriteByte = MAX_OF_PDW_DATA * sizeof(S_EL_PDW_RECORDS);
-            break;
+                uiWriteByte = MAX_OF_PDW_DATA * sizeof(S_EL_PDW_RECORDS);
+                break;
 
 // 		case E_EL_SCDT_PRF :
 // 			iWriteByte = MAX_OF_PRF_TONE_DATA * sizeof(short);
@@ -399,68 +406,70 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 // 			break;
 
 #ifdef _SP370_
-        case E_EL_SCDT_PDW2SP370 :
-            // 읽을 파일의 헤더를 생략한다.
-            sz_file = _lseek( destFileId, sizeof(SRxPDWData), SEEK_SET );
-            if( sz_file != sizeof(SRxPDWData) ) { //DTEC_Else
-                return false;
-            }
-
-            iWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
-            for( i=0 ; i < numberofdata ; ++i ) {
-                iSize = _read( destFileId, & x.pdwData[0], iWriteByte );
-                if( iSize == 0 ) { //DTEC_Else
-                    break;
+            case E_EL_SCDT_PDW2SP370 :
+                // 읽을 파일의 헤더를 생략한다.
+                sz_file = _lseek( destFileId, sizeof(SRxPDWData), SEEK_SET );
+                if( sz_file != sizeof(SRxPDWData) ) { //DTEC_Else
+                    bRet = false;
                 }
                 else {
-                    iRecords = iSize / sizeof(SRxPDWDataRGroup);
-                    TransferPDW2SP370( & x.pdwData[0], iRecords );
-                    iSize = iRecords * sizeof( SELSP350_PDWWORDS );
-                    iWrite = Write( m_stPDWWord, iSize, 1 );
+                    iWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
+                    for( i=0 ; i < numberofdata ; ++i ) {
+                        iSize = _read( destFileId, & x.pdwData[0], iWriteByte );
+                        if( iSize == 0 ) { //DTEC_Else
+                            break;
+                        }
+                        else {
+                            iRecords = iSize / sizeof(SRxPDWDataRGroup);
+                            TransferPDW2SP370( & x.pdwData[0], iRecords );
+                            iSize = iRecords * sizeof( SELSP350_PDWWORDS );
+                            iWrite = Write( m_stPDWWord, iSize, 1 );
+                        }
+                    }
                 }
-            }
-            break;
+                break;
 #endif
 
-        case E_EL_SCDT_UNKNOWN :
-        case E_EL_SCDT_SPECTRUM	:
-        case E_EL_SCDT_LOB	:
-        case E_EL_SCDT_PRF :
-        case E_EL_SCDT_LOG :
-        case E_EL_SCDT_ALL :					// 검색할 때 인자를 주기 위한 것
-            {
-                //DTEC_Else
-            }
-            break;
-
-        default :
-            { //DTEC_Else
-
-            }
-            break;
-    }
-
-    if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
-        if( bMultiIFData == false ) {
-            char *pNullData;
-
-            // 데이터와 NULL 문자 저장
-            pNullData = ( char * ) malloc( sizeof(char) * uiWriteByte );
-            memset( pNullData, 0, uiWriteByte );
-            do {
-                if( iNullCh-uiWriteByte > 0 ) { //DTEC_Else
-                    iNullCh -= (unsigned long long) Write( pNullData, uiWriteByte );
+            case E_EL_SCDT_UNKNOWN :
+            case E_EL_SCDT_SPECTRUM	:
+            case E_EL_SCDT_LOB	:
+            case E_EL_SCDT_PRF :
+            case E_EL_SCDT_LOG :
+            case E_EL_SCDT_ALL :					// 검색할 때 인자를 주기 위한 것
+                {
+                    //DTEC_Else
                 }
-                else {
-                    iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh );
-                }
-            } while( iNullCh > 0 );
+                break;
 
-            free( pNullData );
+            default :
+                { //DTEC_Else
+
+                }
+                break;
+        }
+
+        if( bRet == true && m_enFileType != E_EL_SCDT_PDW2SP370 ) {
+            if( bMultiIFData == false ) {
+                char *pNullData;
+
+                // 데이터와 NULL 문자 저장
+                pNullData = ( char * ) malloc( sizeof(char) * uiWriteByte );
+                memset( pNullData, 0, uiWriteByte );
+                do {
+                    if( iNullCh-uiWriteByte > 0 ) { //DTEC_Else
+                        iNullCh -= (unsigned long long) Write( pNullData, uiWriteByte );
+                    }
+                    else {
+                        iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh );
+                    }
+                } while( iNullCh > 0 );
+
+                free( pNullData );
+            }
         }
     }
 
-    return true;
+    return bRet;
 
 }
 
@@ -1636,7 +1645,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
 
     default :
         printf( "\n 에러 발생..." );
-        return pBinKeyword;
+        break;
     }
 
     MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type, lkey );
@@ -1692,7 +1701,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
 
     default :
         printf( "\n 에러 발생..." );
-        return pBinKeyword;
+        break;
     }
 
     MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type );
@@ -1833,11 +1842,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
                 break;
             }
 
-#ifdef __linux__
             close( iFile );
-#else
-            _close( iFile );
-#endif
 
             ++ pConvertIFList;
         }
@@ -1894,7 +1899,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
     pPDWData = ( STR_PDWDATA * ) pData;
 
-    CMyFile cFile;
+    //CMyFile cFile;
 
     struct tm *pstTime;
     time_t tiNow;
