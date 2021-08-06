@@ -1,4 +1,4 @@
-﻿#ifndef CRECLAN_H
+#ifndef CRECLAN_H
 #define CRECLAN_H
 
 #include "../Include/system.h"

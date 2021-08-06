@@ -1,10 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #define _MULTI_BEAM_
 
 #ifdef _SQLITE_
-//#include "../../SQLite/Database.h"
-//#include "../../SQLite/KompexSQLitePrerequisites.h"
 #include "../../SQLite/KompexSQLiteDatabase.h"
 #include "../../SQLite/KompexSQLiteStatement.h"
 #include "../../SQLite/KompexSQLiteException.h"
@@ -14,8 +12,9 @@
 #elif _NO_SQLITE_
 
 #elif _MSSQL_
-#include "../../ELINTOP/ODBC/mssql.h"
-#include "../../ELINTOP/ODBC/odbccore.h"
+#include "../../../ELINTOP/ODBC/mssql.h"
+#include "../../../ELINTOP/ODBC/odbccore.h"
+
 #endif
 
 #include "../../Anal/OFP_Main.h"
@@ -88,14 +87,17 @@ enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
-
+#ifdef _MSSQL_
+class CELEmitterMergeMngr : public CLOBClustering, public CMSSQL
+#else
 class CELEmitterMergeMngr : public CLOBClustering
+#endif
 {
 private:
     bool m_bDBThread;
 
     static int m_CoInstance;									///< 위협 관리 객체 갯수
-    static UINT m_nSeqNum;										///< DB 테이블 번호
+    static int m_nSeqNum;										///< DB 테이블 번호
 
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
@@ -168,6 +170,10 @@ private:
 
     bool m_bScanProcess;
 
+#ifdef _ELINT_
+    LONG m_lOpInitID;
+
+#endif
 
     //SQMsg m_sqMsg;														///< 수신 쓰레드와 매니저 간의 메시지 구조체
 
@@ -210,13 +216,13 @@ public:
 
 protected:
 #ifdef _SQLITE_
-    //char *m_pszSQLString;
-    char m_szSQLString[4000];
+    char m_szSQLString[MAX_SQL_SIZE];
 
     Kompex::SQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
-    CODBCDatabase m_theMyODBC;
+    char m_szSQLString[MAX_SQL_SIZE];
+
 #else
 #endif
 
@@ -286,8 +292,9 @@ private:
 //
 // 	void GetAirGPSTime( time_t *pNow, int nLink );
 //
-// 	//
-    inline SRxABTData *GetABTData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTData); }
+
+    //inline SRxABTData *GetABTData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTData); }
+    inline SRxABTData *GetABTData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniABT.stABTData); }
     inline SELABTDATA_EXT *GetABTExtData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTExtData); }
     inline SRxAETData *GetAETData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniAET.stAETData); }
     inline SELAETDATA_EXT *GetAETExtData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniAET.stAETExtData); }
@@ -459,16 +466,23 @@ private:
 
     // 쿠리 수행 함수
     int GetINTData( char *pSQLString );
-    void InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt );
-    void InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
-    void InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
-    void InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    void InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB );
+    LONG GetLONGData( char *pSQLString );
+    bool InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bFreqSeq );
+    bool InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
+    bool InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
+    bool InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bFreqSeq );
+    bool InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB );
 
     inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
  
 public:
-    CELEmitterMergeMngr(void);
+#ifdef _MSSQL_
+    CELEmitterMergeMngr(bool bDBThread, CODBCDatabase *pMyODBC );
+#else
+    CELEmitterMergeMngr(bool bDBThread, const char *pFileName );
+#endif
+
+    //CELEmitterMergeMngr(void);
     virtual ~CELEmitterMergeMngr(void);
     void Init();
     void InitOfThreat();
@@ -477,7 +491,6 @@ public:
     void Start( bool bScanInfo=false );
     void UpdateCEDEOBLibrary();
 
-    CELEmitterMergeMngr( bool bDBThread, const char *pFileName );
     bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
     bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
     UINT DeleteThreat();
@@ -495,6 +508,10 @@ public:
 
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
+
+#ifdef _ELINT_
+    inline UINT GetOpInitID() { return m_lOpInitID; }
+#endif
 
     char *GetELNOT( int iRadarModeIndex );
     char *GetRadarModeName( int iRadarModeIndex );
@@ -540,6 +557,7 @@ public:
     inline unsigned int GetAETID() { return m_uiAETID; }
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
+    SELABTDATA_EXT *CELEmitterMergeMngr::GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );
 
     E_BEAM_EMITTER_STAT UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat );
 

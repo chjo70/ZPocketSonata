@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     stack.h
   \brief    
 	\version  0.0.1
@@ -18,7 +18,7 @@
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////////
-// 스택 
+// �뒪�깮 
 
 template <class T>
 class Stack
@@ -196,7 +196,7 @@ Stack<T>& Stack<T> ::operator=( const Stack<T> &s )
 
 
 //////////////////////////////////////////////////////////////////////////
-// 큐
+// �걧
 
 #define	MAX_OF_QUEUE_SIZE				(1000000)
 
@@ -233,8 +233,8 @@ Queue<T>::Queue(int nElems)
 	head = 0;
 	tail = 0;
 
-	/*! \debug  신뢰성: 상한값 설정
-			\author 조철희 (churlhee.jo@lignex1.com)
+	/*! \debug  �떊猶곗꽦: �긽�븳媛� �꽕�젙
+			\author 議곗쿋�씗 (churlhee.jo@lignex1.com)
 			\date 	2015-10-6 16:00:58
 	*/
 	if( nElems < MAX_OF_QUEUE_SIZE ) {
@@ -259,7 +259,7 @@ void Queue<T>::Init(unsigned int nElemt)
 	head = 0;
 	tail = 0;
 
-	if( v != nullptr ) {
+	if( v != NULL ) {
 		delete[] v;
 	}
 	nelems = (int) nElemt + 1;
@@ -278,7 +278,8 @@ template <class T>
 void Queue<T>::Reset()
 {
 
-	head = tail = 0;
+	head = 0;
+    tail = 0;
 	memset( v, 0, sizeof(T)*(UINT)nelems );
 
 }
@@ -313,7 +314,7 @@ bool Queue<T>::Push( T element )
 template <class T>
 T *Queue<T>::PushAt()
 {
-	T *p=nullptr;
+	T *p=NULL;
 
 	if ( nelems != 0 && (tail+1) % nelems != head) {
 		p = & v[tail++];
@@ -398,7 +399,7 @@ void Queue<T>::Copy( Queue *pQue )
 }
 
 //////////////////////////////////////////////////////////////////////////
-// 원형 큐
+// �썝�삎 �걧
 
 template <typename T>
 class CCircularQueue 
@@ -438,8 +439,8 @@ CCircularQueue<T>::CCircularQueue( T init, unsigned int size, T *pBuffer )
 
 	initValue = init;
 
-	// 사전에 저장된 크기가 달리되어 있을 때,
-	// 즉, 처음 작업을 할 때만 기록한다.
+	// �궗�쟾�뿉 ���옣�맂 �겕湲곌� �떖由щ릺�뼱 �엳�쓣 �븣,
+	// 利�, 泥섏쓬 �옉�뾽�쓣 �븷 �븣留� 湲곕줉�븳�떎.
 	if( *pNQueueCount != (int) size ) {
 		*pFront = 0;
 		*pRear  = 0;
@@ -495,7 +496,7 @@ void CCircularQueue<T>::SetFool( bool state )
 template <typename T>
 bool CCircularQueue<T>::EnQueueList( T Enlist )
 {
-	//큐가 다 찬 상태면, false를 리턴
+	//�걧媛� �떎 李� �긽�깭硫�, false瑜� 由ы꽩
 	if( IsFool() == false ) {
 		pQueueDataList[*pFront] = Enlist;
 		++ (*pFront);

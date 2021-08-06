@@ -187,9 +187,9 @@ void CKPulExt::KnownPulseExtract()
 
 		case _STAGGER :
 			// 추출할 펄스열의 범위폭을 계산한다.
-            extRange.min_pri = m_pTrkAet->fPRIMin - STABLE_MARGIN;
-            extRange.max_pri = m_pTrkAet->fPRIMax + STABLE_MARGIN;
-			ExtractJitterPT( & extRange, -1, 3, TRUE );
+            extRange.min_pri = ITOAusCNV( m_pTrkAet->fPRIMin ) - STABLE_MARGIN;
+            extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRIMax ) + STABLE_MARGIN;
+			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
 
 			/*! \bug  추출하고자할 PRI 평균값을 중심으로 지터열을 추출하게 한다.
 			    \date 2006-06-28 00:39:34, 조철희
@@ -199,8 +199,8 @@ void CKPulExt::KnownPulseExtract()
 
 		case _DWELL :
             for( i=0 ; i < m_pTrkAet->iPRIPositionCount ; ++i ) {
-                extRange.min_pri = m_pTrkAet->fPRISeq[i] - ( 2 * STABLE_MARGIN );
-                extRange.max_pri = m_pTrkAet->fPRISeq[i] + ( 2 * STABLE_MARGIN );
+                extRange.min_pri = ITOAusCNV( m_pTrkAet->fPRISeq[i] ) - ( 2 * STABLE_MARGIN );
+                extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRISeq[i] ) + ( 2 * STABLE_MARGIN );
                 ExtractDwellRefPT( pSeg, & extRange );
 			}
 			ExtractRefStable();
@@ -213,7 +213,7 @@ void CKPulExt::KnownPulseExtract()
 			// 지터열 추출 마진 설정
             diff = UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
             extRange.min_pri = _max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
-            extRange.max_pri = m_pTrkAet->fPRIMean + diff;
+            extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRIMean ) + diff;
 			ExtractStablePT( & extRange, TRUE );
 			DiscardStablePT();
 
@@ -224,26 +224,29 @@ void CKPulExt::KnownPulseExtract()
 			*/
             diff = UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+20 ), 200 );
             extRange.min_pri = _max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
-            extRange.max_pri = m_pTrkAet->fPRIMean + diff;
+            extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRIMean ) + diff;
 			// 추출할 펄스열의 범위폭을 계산한다.
-			ExtractJitterPT( & extRange, -1, 3, TRUE );
+			ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 
 			// D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인 
 			// 하노닉 레이더 신호(?) 때문에 
 			// 2배의 PRI도 추출하도록 한다.
 			extRange.min_pri = 2 * extRange.min_pri;
 			extRange.max_pri = 2 * extRange.max_pri;
-			ExtractJitterPT( & extRange, -1, 3, TRUE );
+			ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 			break;
 
 		case _JITTER_PATTERN :
 			// 추출할 펄스열의 범위폭을 계산한다.
 			diff = 200;
 			//-- 조철희 2006-02-22 09:59:34 --//
-            extRange.min_pri = m_pTrkAet->fPRIMin - diff;
-            extRange.max_pri = m_pTrkAet->fPRIMax + diff;
+            extRange.min_pri = ITOAusCNV( m_pTrkAet->fPRIMin ) - diff;
+            extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRIMax ) + diff;
 			ExtractPatternPT( & extRange, 3, TRUE );
 			break;
+
+        default:
+            break;
 	}
 
     //CPulExt::PulseExtract();
@@ -267,7 +270,7 @@ void CKPulExt::DiscardStablePT()
 	if( m_CoSeg == 0 ) {
     }
     else {
-	    STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+	    // STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
 	    pSeg = GetPulseSeg();
         ClearAllMark();

@@ -179,12 +179,17 @@ void CSingleClient::RunClient()
     STR_MessageData sndMsg;
 
     //initialise all client_socket[] to 0 so not checked
-    m_iSocket = 0;
+    m_uiSocket = 0;
 
     m_bConnected = false;
 
     while( true ) {
-        iServerSwitch = ( iServerSwitch+1 >= NUM_OF_SERVER ? iServerSwitch=0 : iServerSwitch+1 );
+        if( iServerSwitch+1 >= NUM_OF_SERVER ) {
+            iServerSwitch = 0;
+        }
+        else {
+            ++ iServerSwitch;
+        }
 
         LOGMSG3( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_iPort );
 
@@ -199,7 +204,8 @@ void CSingleClient::RunClient()
         sockAddress.sin_port = htons( m_iPort );
 
         //create a master socket
-        if( ( m_iSocket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 ) {
+        m_uiSocket = socket( AF_INET, SOCK_STREAM, 0 );
+        if( m_uiSocket == 0 ) {
             perror( "Master Socket 실패" );
             continue;
         }
@@ -207,15 +213,15 @@ void CSingleClient::RunClient()
         //set master socket to allow multiple connections ,
         //this is just a good habit, it will work without this
         int sizeOfLanBuf = 10240;
-        if( setsockopt( m_iSocket, SOL_SOCKET, SO_SNDBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
+        if( setsockopt( m_uiSocket, SOL_SOCKET, SO_SNDBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
             perror( "Master Socket 소켓 옵션");
         }
-        if( setsockopt( m_iSocket, SOL_SOCKET, SO_RCVBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
+        if( setsockopt( m_uiSocket, SOL_SOCKET, SO_RCVBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
             perror( "Master Socket 소켓 옵션");
         }
 
         //LOGMSG2( enDebug, "Try Connection to [%s/%d]...", m_szServerAddress, m_iPort );
-        if( ConnectTimeout( m_iSocket, & sockAddress, 10 ) < 0 ) {
+        if( ConnectTimeout( m_uiSocket, & sockAddress, 10 ) < 0 ) {
             sleep( 1 );
         }
         else {
@@ -228,8 +234,8 @@ void CSingleClient::RunClient()
                 FD_ZERO(&readfds);
 
                 //add master socket to set
-                FD_SET( m_iSocket, &readfds);
-                iMaxSocket = m_iSocket;
+                FD_SET( m_uiSocket, &readfds);
+                iMaxSocket = m_uiSocket;
 
                 //wait for an activity on one of the sockets , timeout is NULL ,
                 //so wait indefinitely
@@ -243,7 +249,7 @@ void CSingleClient::RunClient()
 
                 if( bHeader == true ) {
                     pLanData = (char *) & strLanHeader;
-                    iRead = recv( m_iSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT );
+                    iRead = recv( m_uiSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT );
                     if( iRead == 0 ) {
                         perror( "recv 에러" );
                         OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
@@ -260,7 +266,7 @@ void CSingleClient::RunClient()
 
                                 sndMsg.mtype = 1;
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                sndMsg.iSocket = m_iSocket;
+                                sndMsg.iSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
@@ -283,7 +289,8 @@ void CSingleClient::RunClient()
                 }
                 else {
                     pLanData = (char *) & m_pszLanData[0];
-                    if (( iRead = recv( m_iSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
+                    iRead = recv( m_uiSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT );
+                    if( iRead == 0 ) {
                         perror( "recv 에러" );
                         OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
                         break;
@@ -297,7 +304,7 @@ void CSingleClient::RunClient()
 
                             sndMsg.mtype = 1;
                             sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                            sndMsg.iSocket = m_iSocket;
+                            sndMsg.iSocket = m_uiSocket;
                             sndMsg.iArrayIndex = -1;
                             sndMsg.uiArrayLength = 0;
                             sndMsg.uiDataLength = 0;
@@ -372,7 +379,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 
     sndMsg.mtype = 1;
     sndMsg.uiOpCode = enREQ_MODE;
-    sndMsg.iSocket = m_iSocket;
+    sndMsg.iSocket = m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
@@ -394,7 +401,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
  * @param timeout_milli
  * @return
  */
-int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned long timeout_milli )
+int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAddr, unsigned long timeout_milli )
 {
     int iRet=0;
 
@@ -408,12 +415,12 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
 
 #ifdef _MSC_VER
     u_long block = 1;
-    if(ioctlsocket( sock, FIONBIO, & block ) != 0) {
+    if(ioctlsocket( uiSock, FIONBIO, & block ) != 0) {
         perror( "fcntl() error" );
         iRet = -1;
     }
     else {
-        if(connect(sock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
+        if(connect( uiSock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
 #ifdef _MSC_VER
 #else
             if (errno != EINPROGRESS) {
@@ -425,14 +432,14 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
 
         timeout.tv_sec = timeout_milli / 1000;
         timeout.tv_usec = (timeout_milli % 1000) * 1000;
-        FD_SET(sock, &writefds);
-        if(select(sock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
+        FD_SET(uiSock, &writefds);
+        if(select( uiSock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
             //perror("connection timeout\n");
             iRet = -1;
         }
         else {
             len = sizeof(err);
-            getsockopt(sock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
+            getsockopt( uiSock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
 //             if (err) {
 //                 //perror( "getsockopt()" );
 //                 //iRet = -1;
@@ -440,7 +447,7 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
 
 
             block = 0;
-            if(ioctlsocket( sock, FIONBIO, & block ) != 0) {
+            if(ioctlsocket( uiSock, FIONBIO, & block ) != 0) {
                 perror( "ioctlsocket() error" );
                 iRet = -1;
             }
@@ -450,14 +457,14 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
 #else
     int flags;
 
-    flags = fcntl(sock, F_GETFL);
+    flags = fcntl(uiSock, F_GETFL);
     flags = (flags | O_NONBLOCK);
-    if(fcntl(sock, F_SETFL, flags) != 0) {
+    if(fcntl(uiSock, F_SETFL, flags) != 0) {
         perror( "fcntl() error" );
         iRet = -1;
     }
     else {
-        if(connect(sock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
+        if(connect(uiSock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
             if (errno != EINPROGRESS) {
                 perror("connect() error\n");
                 iRet = -1;
@@ -466,22 +473,22 @@ int CSingleClient::ConnectTimeout( int sock, struct sockaddr_in *pAddr, unsigned
 
         timeout.tv_sec = timeout_milli / 1000;
         timeout.tv_usec = (timeout_milli % 1000) * 1000;
-        FD_SET(sock, &writefds);
-        if(select(sock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
+        FD_SET(uiSock, &writefds);
+        if(select(uiSock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
             //perror("connection timeout\n");
             iRet = -1;
         }
         else {
             len = sizeof(err);
-            getsockopt(sock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
+            getsockopt(uiSock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
             if (err) {
                 //perror( "getsockopt()" );
                 iRet = -1;
             }
 
-            fcntl(sock, F_GETFL);
+            fcntl(uiSock, F_GETFL);
             flags = (flags & ~O_NONBLOCK);
-            if (fcntl(sock, F_SETFL, flags) != 0) {
+            if (fcntl(uiSock, F_SETFL, flags) != 0) {
                 perror( "fcntl() error" );
                 iRet = -1;
             }
@@ -571,16 +578,16 @@ void CSingleClient::RunServer()
         //add child sockets to set
         {
             //socket descriptor
-            m_iSocket = iClientSocket;
+            m_uiSocket = iClientSocket;
 
             //if valid socket descriptor then add to read list
-            if( m_iSocket > 0) {
-                FD_SET( m_iSocket , &readfds);
+            if( m_uiSocket > 0) {
+                FD_SET( m_uiSocket , &readfds);
             }
 
             //highest file descriptor number, need it for the select function
-            if(m_iSocket > iMaxSocket) {
-                iMaxSocket = m_iSocket;
+            if(m_uiSocket > iMaxSocket) {
+                iMaxSocket = m_uiSocket;
             }
         }
 
@@ -611,14 +618,14 @@ void CSingleClient::RunServer()
 
         //else its some IO operation on some other socket
         {
-            m_iSocket = iClientSocket;
+            m_uiSocket = iClientSocket;
 
             //Check if it was for closing , and also read the
             //incoming message
-            if (FD_ISSET( m_iSocket , &readfds)) {
+            if (FD_ISSET( m_uiSocket , &readfds)) {
                 if( bHeader == true ) {
                     pLanData = (char *) & strLanHeader;
-                    if (( iRead = recv( m_iSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
+                    if (( iRead = recv( m_uiSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
                         CloseSocket( & sockAddress, & iClientSocket );
                     }
                     //Echo back the message that came in
@@ -631,7 +638,7 @@ void CSingleClient::RunServer()
 
                                 sndMsg.mtype = 1;
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                sndMsg.iSocket = m_iSocket;
+                                sndMsg.iSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
@@ -653,7 +660,7 @@ void CSingleClient::RunServer()
                 }
                 else {
                     pLanData = (char *) & m_pszLanData[0];
-                    if (( iRead = recv( m_iSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
+                    if (( iRead = recv( m_uiSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT ) ) == 0 ) {
                         CloseSocket( & sockAddress, & iClientSocket );
                     }
                     else {
@@ -664,7 +671,7 @@ void CSingleClient::RunServer()
 
                             sndMsg.mtype = 1;
                             sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                            sndMsg.iSocket = m_iSocket;
+                            sndMsg.iSocket = m_uiSocket;
                             sndMsg.iArrayIndex = -1;
                             sndMsg.uiArrayLength = 0;
                             sndMsg.uiDataLength = 0;
@@ -732,7 +739,7 @@ void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocke
 
     addrlen = sizeof(sockaddr_in);
     //Somebody disconnected , get his details and print
-    getpeername( m_iSocket , (struct sockaddr*) pAddress , (socklen_t*)&addrlen);
+    getpeername( m_uiSocket , (struct sockaddr*) pAddress , (socklen_t*)&addrlen);
     LOGMSG2( enDebug, "연결 단절: ip %s , port %d" , inet_ntoa(pAddress->sin_addr) , ntohs(pAddress->sin_port));
 
     //Close the socket and mark as 0 in list for reuse
@@ -764,12 +771,12 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
         m_strLanHeader.uiLength = uiDataLength;
 
         CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
-        iRet1 = send( m_iSocket, (char *) & m_strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+        iRet1 = send( m_uiSocket, (char *) & m_strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
         CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
 
         if( iRet1 > 0 && uiDataLength != 0 ) {
             CCommonUtils::AllSwapData32( pData, uiDataLength );
-            iRet2 = send( m_iSocket, (char *) pData, uiDataLength, MSG_DONTWAIT );
+            iRet2 = send( m_uiSocket, (char *) pData, uiDataLength, MSG_DONTWAIT );
             CCommonUtils::AllSwapData32( pData, uiDataLength );
 
             m_puiData = (unsigned int *) pData;
@@ -864,18 +871,18 @@ void CSingleClient::CloseSocket()
 {
     m_bConnected = false;
 
-    if( m_iSocket > 0 ) {
+    if( m_uiSocket > 0 ) {
         LOGMSG( enNormal, "소켓을 정상적으로 닫습니다." );
 #ifdef _MSC_VER
-        closesocket( m_iSocket );
+        closesocket( m_uiSocket );
 #else
-        close( m_iSocket );
+        close( m_uiSocket );
 #endif
     }
     else {
         LOGMSG( enError, "두번 이상 소켓을 닫았습니다." );
     }
 
-    m_iSocket = -1;
+    m_uiSocket = UINT_MAX;
 
 }

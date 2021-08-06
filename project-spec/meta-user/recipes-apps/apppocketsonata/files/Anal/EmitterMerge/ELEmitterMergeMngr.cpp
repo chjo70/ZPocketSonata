@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file      ELEmitterMergeMngr.cpp
  * @brief     위협 관리 처리하는 클래스
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -24,6 +24,7 @@
 
 #include "ELEmitterMergeMngr.h"
 #include "../Identify/Identify.h"
+#include "../Identify/ELUtil.h"
 #include "./PositionEstimationAlg.h"
 #include "../../Anal/INC/AetIPL.h"
 //#include "../Task/ELInsertDBMngr.h"
@@ -40,6 +41,7 @@
 
 #include "../../Utils/clog.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #define CRTDBG_MAP_ALLOC
@@ -52,7 +54,7 @@ static char THIS_FILE[] = __FILE__;
 bool CompareMergeCandidate( SELMERGE_CANDIDATE stMergeCanA, SELMERGE_CANDIDATE stMergeCanB );
 
 int CELEmitterMergeMngr::m_CoInstance = 0;
-UINT CELEmitterMergeMngr::m_nSeqNum = 0;
+int CELEmitterMergeMngr::m_nSeqNum = 0;
 
 //////////////////////////////////////////////////////////////////////////
 /*!
@@ -64,11 +66,22 @@ UINT CELEmitterMergeMngr::m_nSeqNum = 0;
  * @date      2016-01-29 오후 5:30
  * @warning
  */
+#ifdef _MSSQL_
+CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, CODBCDatabase *pMyODBC ) : CMSSQL( pMyODBC )
+#else
 CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
+#endif
 {
+    // 멤머 변수 초기화...
     m_CoInstance = 0;
 
     m_bDBThread = bDBThread;
+
+#ifdef _ELINT_
+    m_lOpInitID = 0;
+#else
+
+#endif
 
 #ifdef _SQLITE_
     try {
@@ -177,12 +190,14 @@ void CELEmitterMergeMngr::AllocMemory()
     char szSQLiteFileName[100];
 
     strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
 
 #elif defined(_MSSQL_)
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
+    CODBCDatabase *pMyODBC=GetDBCDatabase();
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( pMyODBC );
 
 #elif _NO_SQLITE_
     m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
@@ -239,7 +254,7 @@ void CELEmitterMergeMngr::FreeMemory()
     if( m_pTheThreatRoot != NULL ) {
         m_pTheThreatRoot->RemoveAll();
     }
-    delete m_pTheThreatRoot;
+    //delete m_pTheThreatRoot;
 
     ST_PEA->ReleaseInstance();
 
@@ -374,79 +389,49 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
 #ifdef _POCKETSONATA_
     if( bScanInfo == false ) {
-        /*
-        printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
-               pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-               pLOBData->fDOAMean,
-               aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-               aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
-               pLOBData->fPWMin, pLOBData->fPWMax,
-               pLOBData->fPAMin, pLOBData->fPAMax,
-               pLOBData->iNumOfPDW
-               );
-        */
+
         Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
-            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+            pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
             pLOBData->fDOAMean,
-            aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-            aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+            g_szAetFreqType[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+            g_szAetPriType[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
             pLOBData->fPWMin, pLOBData->fPWMax,
             pLOBData->fPAMin, pLOBData->fPAMax,
             pLOBData->iNumOfPDW
             );
     }
     else {
-        /*
-        printf( "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]\n" ,
-               pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-               pLOBData->fDOAMean,
-               aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-               aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
-               pLOBData->fPWMin, pLOBData->fPWMax,
-               pLOBData->fPAMin, pLOBData->fPAMax,
-               pLOBData->iScanType, pLOBData->fScanPeriod,
-               pLOBData->iNumOfPDW
-               );
-        */
         Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
-            pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+            pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
             pLOBData->fDOAMean,
-            aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-            aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+            g_szAetFreqType[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+            g_szAetPriType[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
             pLOBData->fPWMin, pLOBData->fPWMax,
             pLOBData->fPAMin, pLOBData->fPAMax,
             pLOBData->iScanType, pLOBData->fScanPeriod,
             pLOBData->iNumOfPDW
             );
     }
-#else
-    /*
-    printf( "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]\n" ,
-        pLOBData->aucTaskID,
-        pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
-        pLOBData->fDOAMean,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
-        pLOBData->fPWMin, pLOBData->fPWMax,
-        pLOBData->fPAMin, pLOBData->fPAMax,
-        pLOBData->iNumOfPDW
-        );  */
+#elif _ELINT_
     Log( enNormal, "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
         pLOBData->aucTaskID,
-        pLOBData->uiLOBID, aet_signal_type[pLOBData->iSignalType],
+        pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
         pLOBData->fDOAMean,
-        aet_freq_type[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
-        aet_pri_type[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+        g_szAetFreqType[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+        g_szAetPriType[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
         pLOBData->fPWMin, pLOBData->fPWMax,
         pLOBData->fPAMin, pLOBData->fPAMax,
         pLOBData->iNumOfPDW
         );
+#else
+
 #endif
 
     //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
 
-#ifndef _POCKETSONATA_
-    strcpy_s( szTaskID, pLOBData->aucTaskID );
+#ifdef _POCKETSONATA_
+#elif _ELINT_
+    // strcpy_s( szTaskID, pLOBData->aucTaskID );
 #endif
 
     // LOB 데이터를 사전 세팅하기위한 함수
@@ -532,9 +517,9 @@ void CELEmitterMergeMngr::PrintAllABTData()
     for( i=0 ; i < m_VecABTData.size() ; ++i ) {
         Log( enNormal, "[%4d-%4d] %s [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [R%2d/T%2d], [%.4f/%.4f/%.1f/%.1f/%.1f/%.1f/%.1f]" ,
             pSRxABTData->uiAETID, pSRxABTData->uiABTID,
-            aet_signal_type[pSRxABTData->iSignalType],
-            aet_freq_type[pSRxABTData->iFreqType], pSRxABTData->fFreqMin, pSRxABTData->fFreqMax,
-            aet_pri_type[pSRxABTData->iPRIType], pSRxABTData->fPRIMin, pSRxABTData->fPRIMax,
+            g_szAetSignalType[pSRxABTData->iSignalType],
+            g_szAetFreqType[pSRxABTData->iFreqType], pSRxABTData->fFreqMin, pSRxABTData->fFreqMax,
+            g_szAetPriType[pSRxABTData->iPRIType], pSRxABTData->fPRIMin, pSRxABTData->fPRIMax,
             pSRxABTData->fPWMin, pSRxABTData->fPWMax,
             pSRxABTData->fPAMin, pSRxABTData->fPAMax,
             pSRxABTData->iRadarModeIndex, pSRxABTData->iThreatIndex,
@@ -585,7 +570,7 @@ void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fFreqMin, float
         m_pIdentifyAlg->LoadCEDLibrary2();
         m_pIdentifyAlg->LoadEOBLibrary2();
 
-        Log( enNormal, "신호 식별하기 위해서 레이더 모드와 위협을 로딩 했습니다." );
+        Log( enNormal, "Loading CED/EOB library..." );
 
         DisableToLoadCEDEOBLibrary();
     }
@@ -992,7 +977,7 @@ void CELEmitterMergeMngr::IdentifyLOB( SRxLOBData *pLOBData )
 #elif _NO_SQLITE_
 
 #elif _MSSQL_
-   char *pRadarName = m_pIdentifyAlg->GetRadarName( pLOBData->iRadarModeIndex );
+   char *pRadarName = m_pIdentifyAlg->GetRadarModeName( pLOBData->iRadarModeIndex );
 
 #else
     // pRadarName = NULL;
@@ -1036,6 +1021,9 @@ void CELEmitterMergeMngr::LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* p
     if( pLOBOtherInfo != NULL ) {
         m_pLOBOtherInfo = pLOBOtherInfo;
     }
+    else {
+        m_pLOBOtherInfo = NULL;
+    }
 
     // LOB 데이터 설정
     m_pLOBData->uiLOBID = m_uiLOBID++;
@@ -1060,7 +1048,7 @@ void CELEmitterMergeMngr::LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* p
 
 
 #ifdef _ELINT_
-    m_LOBDataExt.aetData.uiOpInitID = m_uiOpInitID;
+    //m_LOBDataExt.aetData.lOpInitID = m_lOpInitID;
     memcpy( m_LOBDataExt.aetData.aucTaskID, m_pLOBData->aucTaskID, sizeof(m_pLOBData->aucTaskID) );
 #endif
 
@@ -1207,7 +1195,8 @@ void CELEmitterMergeMngr::DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelT
         //LogPrint("\n========================================== [%d] 회를 미활동 검사를 했습니다. : %d ms", nCoDeleteCheck, (int)((GetTickCount() - dwTime) / 1));
 
         // 미활동 방사체 번호 출력
-        if( (nCoDelThreat=(int) pVecDelThreatInfo->size()) > 0 ) {
+        nCoDelThreat = (int) pVecDelThreatInfo->size();
+        if( nCoDelThreat > 0 ) {
             int i, iCnt=0;
 
             for( i=0 ; i < nCoDelThreat && i < 5 ; ++i ) {
@@ -1748,6 +1737,7 @@ void CELEmitterMergeMngr::AddThreatInfo( SELEmitterEdited *pSELEmitterEdited, E_
 bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCluster, bool bDBInsert, UINT nSeqNum, UINT uiAETID, UINT uiABTID, SELMERGE_CANDIDATE *pMergeCandidate, bool bOnlyMakeAET )
 { //#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found.)
     UINT uiDeleteAETID;
+    bool bRet = true;
     CELThreat *pAETThreat, *pABTThreat;
 
     if( uiAETID == INVALID_INDEX ) {
@@ -1758,20 +1748,23 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCl
         if( pAETThreat == NULL ) {
             TRACE( "생성할 위협[E%d]을 찾지 못했습니다.", uiAETID );
             LogPrint( "생성할 위협[E%d]을 찾지 못했습니다.", uiAETID );
-            return false;
+            bRet = false;
         }
+
     }
 
-    if( bOnlyMakeAET == false ) {
+    if( bRet == true && bOnlyMakeAET == false ) {
         if( uiABTID == INVALID_INDEX ) {
             pABTThreat = new CELThreat( m_uiAETID, m_uiABTID, INVALID_INDEX );
         }
         else {
             pABTThreat = m_pTheThreatRoot->Find( uiAETID, uiABTID );
             if( pABTThreat == NULL ) {
+                delete pAETThreat;
+
                 TRACE( "생성할 위협[E%d,B%d]을 찾지 못했습니다.", uiAETID, uiABTID );
                 LogPrint( "생성할 위협[E%d,B%d]을 찾지 못했습니다.", uiAETID, uiABTID );
-                return false;
+                bRet = false;
             }
         }
     }
@@ -1781,75 +1774,77 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCl
 
     }
 
-    if( pAETThreat->m_nIndex == INVALID_INDEX || ( pABTThreat != NULL && pABTThreat->m_nIndex == INVALID_INDEX ) ) {
-        /*! \todo   위협 관리가 FULL 이 되어서 위협을 생성할 수 없습니다. 가장 오래된 위협을 삭제 하거나 버퍼수를 늘려야 한다.
-            \author 조철희 (churlhee.jo@lignex1.com)
-            \date 	2017-07-07 11:30:45
-        */
-        uiDeleteAETID = DeleteThreat();
+    if( bRet == true ) {
+        if( pAETThreat->m_nIndex == INVALID_INDEX || ( pABTThreat != NULL && pABTThreat->m_nIndex == INVALID_INDEX ) ) {
+            /*! \todo   위협 관리가 FULL 이 되어서 위협을 생성할 수 없습니다. 가장 오래된 위협을 삭제 하거나 버퍼수를 늘려야 한다.
+                \author 조철희 (churlhee.jo@lignex1.com)
+                \date 	2017-07-07 11:30:45
+            */
+            uiDeleteAETID = DeleteThreat();
 
-        if( pAETThreat != NULL ) {
             delete pAETThreat;
-        }
-        if( pABTThreat != NULL ) {
-            delete pABTThreat;
+            pAETThreat = NULL;
+            
+            if( pABTThreat != NULL ) {
+                delete pABTThreat;
+            }
+
+            pAETThreat = new CELThreat( m_uiAETID, INVALID_INDEX, INVALID_INDEX );
+            if( bOnlyMakeAET == false ) {
+                pABTThreat = new CELThreat( m_uiAETID, m_uiABTID, INVALID_INDEX );
+            }
+
+            LogPrint( "위협 노드가 FULL 입니다. 위협[%d]을 삭제 합니다.", uiDeleteAETID );
         }
 
-        pAETThreat = new CELThreat( m_uiAETID, INVALID_INDEX, INVALID_INDEX );
+        // 방사체/빔 위협 업데이트
+        m_pAETThreat = pAETThreat;
+        m_pABTThreat = pABTThreat;
+
+        if( uiAETID == INVALID_INDEX || uiABTID == INVALID_INDEX ) {
+            m_pTheThreatRoot->AppendChildNode( pAETThreat );
+            pAETThreat->AppendChildNode( pABTThreat );
+        }
+
         if( bOnlyMakeAET == false ) {
-            pABTThreat = new CELThreat( m_uiAETID, m_uiABTID, INVALID_INDEX );
+            // ABT 노드 생성
+            CreateABTThreat( pABTThreat, m_pLOBHeader, m_pLOBData, pThreatDataExt, bCluster );
+
+            // DB 테이블 추가
+            InsertABT( pABTThreat, false, bDBInsert, nSeqNum, uiAETID, uiABTID, pMergeCandidate );
+
+            // AET 노드 생성
+            CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
+            InsertAET( pAETThreat, false, bDBInsert, nSeqNum, uiAETID );
+
+            //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
+            SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
+
+            // LOB 클러스터링을 위한 LOB 데이터 추가
+            InsertLOBPool( pABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, true, bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == 1 ) );
+
+            //GP_MGR_LOG.ELSetCommonSysLog( E_TYPE_MSG, E_WARNING_NONE, enumGMEO_DEVICE, enumGMEI_DEVICE, "신규 방사체(%d)을 생성했습니다." , m_uiAETID );
+
+            NextAETID();
+            NextABTID();
+        }
+        else {
+            CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
+            //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
+            //SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
+
+            // LOB 클러스터링을 위한 LOB 데이터 추가
+            //InsertLOBPool( pABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, true, bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == 1 ) );
+
+            LogPrint( "빔 분리로 신규 방사체(%d)를 생성했습니다." , m_uiAETID );
+
+            NextAETID();
         }
 
-        LogPrint( "위협 노드가 FULL 입니다. 위협[%d]을 삭제 합니다.", uiDeleteAETID );
+        //NextLOBID();
     }
 
-    // 방사체/빔 위협 업데이트
-    m_pAETThreat = pAETThreat;
-    m_pABTThreat = pABTThreat;
-
-    if( uiAETID == INVALID_INDEX || uiABTID == INVALID_INDEX ) {
-        m_pTheThreatRoot->AppendChildNode( pAETThreat );
-        pAETThreat->AppendChildNode( pABTThreat );
-    }
-
-    if( bOnlyMakeAET == false ) {
-        // ABT 노드 생성
-        CreateABTThreat( pABTThreat, m_pLOBHeader, m_pLOBData, pThreatDataExt, bCluster );
-
-        // DB 테이블 추가
-        InsertABT( pABTThreat, false, bDBInsert, nSeqNum, uiAETID, uiABTID, pMergeCandidate );
-
-        // AET 노드 생성
-        CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
-        InsertAET( pAETThreat, false, bDBInsert, nSeqNum, uiAETID );
-
-        //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
-        SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
-
-        // LOB 클러스터링을 위한 LOB 데이터 추가
-        InsertLOBPool( pABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, true, bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == 1 ) );
-
-        //GP_MGR_LOG.ELSetCommonSysLog( E_TYPE_MSG, E_WARNING_NONE, enumGMEO_DEVICE, enumGMEI_DEVICE, "신규 방사체(%d)을 생성했습니다." , m_uiAETID );
-
-        NextAETID();
-        NextABTID();
-    }
-    else {
-        CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
-        //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
-        //SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
-
-        // LOB 클러스터링을 위한 LOB 데이터 추가
-        //InsertLOBPool( pABTThreat->m_nIndex, m_pLOBData, m_pLOBData->uiLOBID, true, bCluster && ( m_LOBDataExt.aetAnal.iBeamValidity == 1 ) );
-
-        LogPrint( "빔 분리로 신규 방사체(%d)를 생성했습니다." , m_uiAETID );
-
-        NextAETID();
-    }
-
-    //NextLOBID();
-
-    return true;
+    return bRet;
 }
 
 /**
@@ -3141,7 +3136,8 @@ void CELEmitterMergeMngr::ProcessTheLOBClustering( SRxABTData *pABTData, SELABTD
     // DB가 끊겨져 있을 경우에는 LOB 클러스터링 체크를 중지한다.
     // CED 식별된것만 수행한다.
     if( pABTExtData->bApplayOfLOBClustering == false && ( pABTExtData->idInfo.nCoRadarModeIndex >= _spOne ) ) {
-        if( pABTData->iValidity == false && pABTData->uiCoLOB >= (int) GP_ENVI_VAR->GetEmmgNumOfMinLobToBeam() ) {
+        UINT uiGetEmmgNumOfMinLobToBeam= GP_ENVI_VAR->GetEmmgNumOfMinLobToBeam();
+        if( pABTData->iValidity == 0 && pABTData->uiCoLOB >= uiGetEmmgNumOfMinLobToBeam ) {
             // LOB 클러서링을 수행하여 유효 여부를 최종 확인함.
             if( true /* GP_MGR_PARAM->IsLOBClustering() == true */ ) {
                 bCluster = LOBClustering( pABTExtData->iLOBPoolIndex, & pABTExtData->idInfo );
@@ -3641,21 +3637,26 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxAETData *pAETData, SELAETDATA_EXT *pA
     // 빔 갯수가 1개일 때는 빔의 위치 산출 정보로 업데이트
     if( pAETData->uiCoABT == _spOne ) {
         pTheABTThreat = GetHeaderThreat( pTheAETThreat );
-        pABTData = GetABTData( pTheABTThreat->m_nIndex );
-        pABTExtData = GetABTExtData( pTheABTThreat->m_nIndex );
+        if( pTheABTThreat != NULL ) {
+            pABTData = GetABTData( pTheABTThreat->m_nIndex );
+            pABTExtData = GetABTExtData( pTheABTThreat->m_nIndex );
 
-        // ABT의 위치 산출 정보를 AET의 위치 산출 정보에 대입
-        if( pABTData != NULL ) {
-            //memcpy( & pAETData->peInfo, & pABTData->peInfo, sizeof( STR_POSITION_ESTIMATION ) );
-            pAETData->iPEValid = (int) pABTExtData->enValid;
-            pAETData->fLatitude = pABTData->fLongitude;
-            pAETData->fLatitude = pABTData->fLatitude;
-            //pAETData->peInfo.iAltidude = pABTData->peInfo.iAltidude;
-            pAETData->fCEP = pABTData->fCEP;
-            pAETData->fMajorAxis = pABTData->fMajorAxis;
-            pAETData->fMinorAxis = pABTData->fMinorAxis;
-            pAETData->fTheta = pABTData->fTheta;
-            pAETData->fDistanceErrorOfThreat = pABTData->fDistanceErrorOfThreat;
+            // ABT의 위치 산출 정보를 AET의 위치 산출 정보에 대입
+            if( pABTData != NULL ) {
+                //memcpy( & pAETData->peInfo, & pABTData->peInfo, sizeof( STR_POSITION_ESTIMATION ) );
+                pAETData->iPEValid = (int) pABTExtData->enValid;
+                pAETData->fLatitude = pABTData->fLongitude;
+                pAETData->fLatitude = pABTData->fLatitude;
+                //pAETData->peInfo.iAltidude = pABTData->peInfo.iAltidude;
+                pAETData->fCEP = pABTData->fCEP;
+                pAETData->fMajorAxis = pABTData->fMajorAxis;
+                pAETData->fMinorAxis = pABTData->fMinorAxis;
+                pAETData->fTheta = pABTData->fTheta;
+                pAETData->fDistanceErrorOfThreat = pABTData->fDistanceErrorOfThreat;
+            }
+        }
+        else {
+
         }
 
     }
@@ -3907,7 +3908,7 @@ void CELEmitterMergeMngr::PushPEInfoOfABTData( SELABTDATA_EXT *pABTExtData, SRxA
 #elif defined(_ENU_POSITION_)
 
 #else
-        에러 발생
+#pragma message( "제어기 버젼을 정의해야 합니다." ) 
 #endif
 
         pABTExtData->dLatitude[ pABTExtData->uiPE ] = (double) pABTData->fLatitude;
@@ -4062,7 +4063,7 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
         pVecLOBs->push_back( stLOB );
     }
     else {
-        UINT i, iIndex=-1;
+        UINT i, iIndex=(UINT) -1;
         UINT uiSize=pVecLOBs->size();
         std::vector<STR_LOBS>::pointer ppVecLOBs;
 
@@ -4551,6 +4552,9 @@ void CELEmitterMergeMngr::UpdatePRIInfo( SRxABTData *pABTData, SELABTDATA_EXT *p
 // 		memcpy( pPRIDInfo->iSeq, m_pLOBData->iPRISeq, sizeof(pPRIDInfo->iSeq) );
 // 		break;
 
+    default:
+        break;
+
     }
 
     // PRI 통계 정보
@@ -5032,6 +5036,8 @@ void CELEmitterMergeMngr::CreateAETThreat( CELThreat *pAETThreat, CELThreat *pAB
     //pAETData->finalReportedTime = 0;
     pAETData->tiFinalAlarmTime = 0;
 
+    pAETData->iStat = 0;
+
     //////////////////////////////////////////////////////////////////////////
     // AET 추가 정보 초기화
     memset( pAETExtData, 0, sizeof(SELAETDATA_EXT) );
@@ -5177,36 +5183,43 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
     // 알람 정보
     m_pABTData->tiFinalAlarmTime = 0;
 
+    m_pABTData->iStat = 0;
+
     IdentifyABT( m_pABTData, m_pABTExtData );
 
-#ifdef _ELINT_
     m_pABTExtData->bCompFreq = true;
     m_pABTExtData->bCompPRI = true;
-    memset( & m_pABTExtData->idInfo, 0, sizeof( STR_CEDEOBID_INFO ) );
-
-    // 위치 산출 정보
-    //memset( & pABTExtData->peInfo, 0, sizeof( STR_POSITION_ESTIMATION ) );
-    m_pABTExtData->enValid = E_EL_PESTAT_NOT_YET;
-    m_pABTExtData->bApplayOfLOBClustering = ! bCluster;
-
-    //////////////////////////////////////////////////////////////////////////
-    // ABT 추가 정보 설정
-    //memset( & pABTExtData->xManualEdited, 0, sizeof(UELMANUALVAL) );
-
 
     m_pABTExtData->nCoBeamValidity = ( m_LOBDataExt.aetAnal.iBeamValidity > 0 ? 1 : 0 );
 
-    //pABTExtData->bIsManualEdited = false;
+    memset( & m_pABTExtData->idInfo, 0, sizeof( STR_CEDEOBID_INFO ) );
 
     m_pABTExtData->enBeamEmitterStat = E_ES_NEW;
 
     m_pABTExtData->enPlatform = enPlatform_UNKNOWN;
 
+    m_pABTExtData->enValid = E_EL_PESTAT_NOT_YET;
+    m_pABTExtData->bApplayOfLOBClustering = ! bCluster;
+
+#ifdef _ELINT_   
+
+    // 위치 산출 정보
+    //memset( & pABTExtData->peInfo, 0, sizeof( STR_POSITION_ESTIMATION ) );
+
+    //////////////////////////////////////////////////////////////////////////
+    // ABT 추가 정보 설정
+    //memset( & pABTExtData->xManualEdited, 0, sizeof(UELMANUALVAL) );
+  
+    //pABTExtData->bIsManualEdited = false;
+
     //pABTExtData->bManualPosEstPreferred = false;
 
     m_pABTExtData->uiSeqNum = m_nSeqNum;
 
-    m_pABTExtData->uiOpInitID = m_uiOpInitID;
+    m_pABTExtData->uiOpInitID = m_lOpInitID;
+
+#elif _POCKETSONATA_
+    m_pABTExtData->tiSendLan = 0;
 
 #endif
 
@@ -5422,6 +5435,9 @@ bool CELEmitterMergeMngr::CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTEx
 
         case E_EL_PESTAT_IMPOSSIBILITY :
             bRet = true;
+            break;
+
+        default:
             break;
         }
     }
@@ -5661,6 +5677,7 @@ bool CELEmitterMergeMngr::CompFreqType( SRxABTData *pABTData )
                 switch( pABTData->iFreqPatternType ) {
                 case E_AET_FREQ_PRI_UNKNOWN :
                     bRet = true;
+                    break;
 
                 case E_AET_FREQ_PRI_SINE :
                 case E_AET_FREQ_PRI_SLIDE_INC :
@@ -5669,6 +5686,9 @@ bool CELEmitterMergeMngr::CompFreqType( SRxABTData *pABTData )
                     if( pABTData->iFreqPatternType == m_pLOBData->iFreqPatternType ) {
                         bRet = true;
                     }
+                    break;
+
+                default:
                     break;
                 }
             }
@@ -5684,17 +5704,21 @@ bool CELEmitterMergeMngr::CompFreqType( SRxABTData *pABTData )
         }
         break;
 
+    default:
+        break;
+
 // 	case E_AET_FRQ_BEACON :
 // 		if( m_pLOBData->iFreqType == E_AET_FRQ_BEACON ) {
 // 			bRet = true;
 // 		}
-        break;
+        // break;
 
     }
 
-    if( bRet == false ) {
-        m_LOBDataExt.aetAnal.eBeamCode = E_CREATE_FREQ_TYPE_CODE;
-    }
+//     if( bRet == false ) {
+//         m_LOBDataExt.aetAnal.eBeamCode = E_CREATE_FREQ_TYPE_CODE;
+//     }
+
     return bRet;
 }
 
@@ -5743,23 +5767,24 @@ bool CELEmitterMergeMngr::CompPRIType( SRxABTData *pABTData )
     case E_AET_PRI_PATTERN :
         if( m_pLOBData->iPRIType == E_AET_PRI_PATTERN ) {
             switch( pABTData->iFreqPatternType ) {
-            case E_AET_FREQ_PRI_UNKNOWN :
-                bRet = true;
-
-            case E_AET_FREQ_PRI_SINE :
-            case E_AET_FREQ_PRI_SLIDE_INC :
-            case E_AET_FREQ_PRI_SLIDE_DEC :
-            case E_AET_FREQ_PRI_SAW_TRI :
-                if( m_pLOBData->iPRIPatternType == E_AET_FREQ_PRI_UNKNOWN ) {
+                case E_AET_FREQ_PRI_UNKNOWN :
                     bRet = true;
-                }
-                if( pABTData->iFreqPatternType == m_pLOBData->iPRIPatternType ) {
-                    bRet = true;
-                }
-                break;
+                    break;
 
-            default :
-                break;
+                case E_AET_FREQ_PRI_SINE :
+                case E_AET_FREQ_PRI_SLIDE_INC :
+                case E_AET_FREQ_PRI_SLIDE_DEC :
+                case E_AET_FREQ_PRI_SAW_TRI :
+                    if( m_pLOBData->iPRIPatternType == E_AET_FREQ_PRI_UNKNOWN ) {
+                        bRet = true;
+                    }
+                    if( pABTData->iFreqPatternType == m_pLOBData->iPRIPatternType ) {
+                        bRet = true;
+                    }
+                    break;
+
+                default :
+                    break;
             }
         }
         break;
@@ -5775,9 +5800,9 @@ bool CELEmitterMergeMngr::CompPRIType( SRxABTData *pABTData )
 
     }
 
-    if( bRet == false ) {
-        m_LOBDataExt.aetAnal.eBeamCode = E_CREATE_PRI_TYPE_CODE;
-    }
+//     if( bRet == false ) {
+//         m_LOBDataExt.aetAnal.eBeamCode = E_CREATE_PRI_TYPE_CODE;
+//     }
     return bRet;
 }
 
@@ -5900,6 +5925,9 @@ int CELEmitterMergeMngr::CompFreqRange( SRxABTData *pABTData, SELABTDATA_EXT *pA
 // 					return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 // 				}
 // 			}
+            break;
+
+        default:
             break;
 
         }
@@ -6156,7 +6184,7 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
     // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
     // 					}
     // 					break;
-                if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) 0 ) ) {
+                if( false == IsOverlapSpace<float>( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) 0 ) ) {
                     return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
                 }
                 else {
@@ -6310,6 +6338,9 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
 // 				}
 // 			}
 // 			break;
+        default:
+            break;
+
         }
     }
 
@@ -6432,6 +6463,9 @@ float CELEmitterMergeMngr::CompDistRange( SRxABTData *pABTData, SELABTDATA_EXT *
 
         case E_EL_PESTAT_IMPOSSIBILITY :
             fDifferenceLevel = PE_CANDIDATE_LEVEL;
+            break;
+
+        default:
             break;
 
         }
@@ -8159,7 +8193,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
     SELEXTDB extDB=SELEXTDB();
 
     // 식별 정보
-    if( m_pLOBOtherInfo->bUpdate == false ) {
+    if( m_pLOBOtherInfo == NULL || m_pLOBOtherInfo->bUpdate == false ) {
         // Primary 식별 정보
         iIndex = pExt->aetAnal.idInfo.n3LevelRadarModeIndex[0];
         if( iIndex != 0 ) {
@@ -8281,13 +8315,19 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
             Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
             if( m_bDBThread == false ) {
-                // PRI 레벨값 저장
-                if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
-                    InsertToDB_Position( m_pLOBData, pExt );
-                }
-
                 // LOB 데이터 저장
                 InsertToDB_LOB( m_pLOBData, pExt, true );
+
+                // FREQ 레벨값 저장
+                if( m_pLOBData->iFreqPositionCount >= _spTwo ) {
+                    InsertToDB_Position( m_pLOBData, pExt, true );
+                }
+                // PRI 레벨값 저장
+                if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
+                    InsertToDB_Position( m_pLOBData, pExt, false );
+                }
+
+
             }
             else {
                 //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
@@ -8353,14 +8393,17 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
 
             Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
             if( m_bDBThread == false ) {
-                // PRI 레벨값 저장
-                if( pABTData->iPRIPositionCount != 0 ) {
-                    // _CALL_DB( InsertToDB_Position( m_pLOBData, pABTData, pABTExtData, & extDB, E_EN_PRI_DATA_ELEMENT_TYPE ) )
-                    InsertToDB_Position( m_pLOBData, pABTData, pABTExtData );
-                }
-
                 // 빔 레코드 추가
                 InsertToDB_ABT( pABTData, pABTExtData, true );
+
+                // FREQ 레벨값 저장
+                if( pABTData->iFreqPositionCount >= _spTwo ) {
+                    InsertToDB_Position( m_pLOBData, pABTData, pABTExtData, true );
+                }
+                // PRI 레벨값 저장
+                if( pABTData->iPRIPositionCount >= _spTwo ) {
+                    InsertToDB_Position( m_pLOBData, pABTData, pABTExtData, false );
+                }
             }
             else {
                 //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_ABTDATA_;
@@ -8530,7 +8573,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
         }
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT)
+#elif defined(_ELINT_)
 #else
         // 추가 자료 만들기
         // 임무 정보
@@ -8545,7 +8588,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 #endif
 
         // 수동 위치 변경시 변경
-        if( m_pLOBOtherInfo->bUpdate == false ) {
+        if( m_pLOBOtherInfo == NULL || m_pLOBOtherInfo->bUpdate == false ) {
             iIndex = pAETData->iRadarModeIndex;
             if( iIndex != 0 ) {
                 pRadarMode = m_pIdentifyAlg->GetRadarMode( iIndex );
@@ -8586,12 +8629,20 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
             if( iIndex != 0 ) {
                 pThreat = m_pIdentifyAlg->GetThreat( iIndex );
 
-                strcpy( pAETData->szPlaceNameKor, pThreat->szPlaceNameKor );
-                strcpy( pAETData->szPlaceNameKor, pThreat->szPlaceNameKor );
                 pAETData->iPinNum = pThreat->iPinNum;
+                
+                strcpy( pAETData->szPlaceNameKor, pThreat->szPlaceNameKor );
+
+                pAETData->szThreatFuncCode[0] = 0;
+                //strcpy( pAETData->szPlaceNameKor, pThreat->szThreatFuncCode );
+                
             }
             else {
                 pAETData->iPinNum = 0;
+
+                pAETData->szPlaceNameKor[0] = 0;
+
+                pAETData->szThreatFuncCode[0] = 0;
             }
 
 // 			pRadarMode = GP_MNGR_CED_LIB2->RTGetRadarModeDataFromMemory( pIDInfo->nRadarModeIndex[0], m_pSEnvironVariable->eCEDDefaultLibType );
@@ -8677,8 +8728,8 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 // 			if( pChar != NULL ) {
 // 				strcpy_s( extDB.szPlatformCode, pChar );
 // 			}
-            extDB.iRadarPriority = m_pLOBOtherInfo->iRadarPriority;
-            extDB.iRadarModePriority = m_pLOBOtherInfo->iRadarModePriority;
+            //extDB.iRadarPriority = m_pLOBOtherInfo->iRadarPriority;
+            //extDB.iRadarModePriority = m_pLOBOtherInfo->iRadarModePriority;
         }
 
         // 방사체 정보 변경시 처리
@@ -8851,6 +8902,13 @@ void CELEmitterMergeMngr::InitDataFromDB()
 {
     char buffer[400];
 
+#ifdef _ELINT_
+    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
+
+    m_lOpInitID = GetLONGData( buffer ) + 1;
+
+#endif
+
     //////////////////////////////////////////////////////////////////////////
     // 하나의 임무에서 Unique한 방사체 번호 얻기
 #ifdef _MSC_VER
@@ -8858,7 +8916,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #else
     sprintf( buffer, "select max(AETID) from ABTDATA" );
 #endif
-    m_uiAETID = (unsigned int) GetINTData( buffer ) + 1;
+    m_uiAETID = (unsigned int) ( GetINTData( buffer ) + 1 );
     if( m_uiAETID == 0 ) {
         m_uiAETID = _spOne;
     }
@@ -8875,7 +8933,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #else
     sprintf( buffer, "select max(LOBID) from LOBDATA" );
 #endif
-    m_uiLOBID = (unsigned int) GetINTData( buffer ) + 1;
+    m_uiLOBID = (unsigned int) ( GetINTData( buffer ) + 1 );
     if( m_uiLOBID == 0 ) {
         m_uiLOBID = _spOne;
     }
@@ -8923,7 +8981,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 #else
     sprintf( buffer, "select max(ABTID) from ABTDATA" );
 #endif
-    m_uiABTID = (unsigned int) GetINTData( buffer ) + 1;
+    m_uiABTID = (unsigned int) ( GetINTData( buffer ) + 1 );
     if( m_uiABTID == 0 ) {
         m_uiABTID = _spOne;
     }
@@ -9008,7 +9066,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 
         */
 
-    Log( enNormal, " LOB[%d], ABT[%d], AET[%d]로 번호를 시작합니다." , m_uiLOBID, m_uiABTID, m_uiAETID );
+    Log( enNormal, "Starting the ID of LOB[%d], ABT[%d], AET[%d]" , m_uiLOBID, m_uiABTID, m_uiAETID );
 
 }
 
@@ -10023,49 +10081,26 @@ void CELEmitterMergeMngr::IncH0000( int coRadarModeIndex )
  */
 void CELEmitterMergeMngr::GetGlobalSequenceNum()
 {
-    //char buffer[200];
-
-    //SRxLOBData stLOBHeader;
-    //SRxLOBDataGroup stLOBData;
-
     m_nSeqNum = 0;
-// 	// LOB 테이블 조회
-// 	sprintf_s( buffer, 200, "SELECT MAX(SEQ_NUM) FROM E_AA_MSG_LOB ORDER BY SEQ_NUM DESC" );
-// 	_CALL_DB( GetDataFromDB_LOB( & stLOBHeader, & stLOBData, buffer ) )
-// 	m_nSeqNum = _max( m_nSeqNum, stLOBData.uiAETID );
-//
-// 	sprintf_s( buffer, 200, "SELECT MAX(SEQ_NUM) FROM E_AA_MSG_LOB_LINK2 ORDER BY SEQ_NUM DESC" );
-// 	_CALL_DB( GetDataFromDB_LOB( & stLOBHeader, & stLOBData, buffer ) )
-// 	m_nSeqNum = _max( m_nSeqNum, stLOBData.uiAETID );
-//
-// 	// ABT 테이블 조회
-// 	sprintf_s( buffer, 200, "SELECT MAX(SEQ_NUM) FROM E_AA_GMI_BEAM ORDER BY SEQ_NUM DESC" );
-// 	_CALL_DB( GetDataFromDB_ABT( & stLOBHeader, & stLOBData, buffer ) )
-// 	m_nSeqNum = _max( m_nSeqNum, stLOBData.uiAETID );
-//
-// 	// AET 테이블 조회
-// 	sprintf_s( buffer, 200, "SELECT MAX(SEQ_NUM) FROM E_AA_GMI_EMITTER ORDER BY SEQ_NUM DESC" );
-// 	_CALL_DB( GetDataFromDB_ABT( & stLOBHeader, & stLOBData, buffer ) )
-// 	m_nSeqNum = _max( m_nSeqNum, stLOBData.uiAETID );
-//
-// #ifdef SET_SEQ_NUM
-// 	m_nSeqNum = SET_SEQ_NUM;
-// #else
-// 	++ m_nSeqNum;
-// #endif
-//
-// 	// 링크2 SEQNUM 세팅
-// #ifdef GET_SEQ_NUM
-// 	m_nGetSeqNum = GET_SEQ_NUM;
-// #else
-// 	sprintf_s( buffer, 200, "SELECT MAX(SEQ_NUM) FROM E_AA_MSG_LOB_LINK2 ORDER BY SEQ_NUM DESC" );
-// 	_CALL_DB( GetDataFromDB_LOB( & stLOBHeader, & stLOBData, buffer ) )
-// 	m_nGetSeqNum = stLOBData.uiAETID + 1;
-//
-// 	// m_nGetSeqNum = m_nSeqNum;
-//
-// #endif
-//
+
+#ifdef _SQLITE_
+#elif _NO_SQLITE_
+#elif _MSSQL_
+    char buffer[100];
+
+    sprintf_s( buffer, sizeof(buffer), "select max(SEQ_NUM) from LOBDATA" );    
+    m_nSeqNum = _max( m_nSeqNum, GetINTData( buffer ) );
+
+    sprintf_s( buffer, sizeof(buffer), "select max(SEQ_NUM) from ABTDATA" );
+    m_nSeqNum = _max( m_nSeqNum, GetINTData( buffer ) );
+
+    sprintf_s( buffer, sizeof(buffer), "select max(SEQ_NUM) from AETDATA" );
+    m_nSeqNum = _max( m_nSeqNum, GetINTData( buffer ) );
+
+    ++ m_nSeqNum;
+
+#endif
+
     //LogPrint( "연동기1의 LOB_SEQ_NUM[%d]이고 연동기1/2(LINK2)의 LOB_SEQ_NUM[%d] 입니다.", m_nSeqNum, m_nGetSeqNum );
 
 }
@@ -10789,9 +10824,61 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
 
 #elif _NO_SQLITE_
     return 0;
-#else
+#elif _MSSQL_
+    int iValue=-1;
 
+    DECLARE_BEGIN_CHECKODBC
 
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    theRS.Open( pSQLString );
+    if( ! theRS.IsEof() ) {
+        theRS.GetFieldValue( 0, & iValue );
+    }
+
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+
+    return iValue;
+#endif
+
+}
+
+/**
+ * @brief     GetLONGData
+ * @param     char * pSQLString
+ * @return    LONG
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-22, 16:45
+ * @warning
+ */
+LONG CELEmitterMergeMngr::GetLONGData( char *pSQLString )
+{
+#ifdef _SQLITE_
+    return 0;
+#elif _NO_SQLITE_
+    return 0;
+
+#elif _MSSQL_
+    LONG lValue=0;
+
+    DECLARE_BEGIN_CHECKODBC
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    theRS.Open( pSQLString );
+    if( ! theRS.IsEof() ) {
+        theRS.GetFieldValue( 0, & lValue );
+    }
+
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+
+    return lValue;
 #endif
 
 }
@@ -10801,19 +10888,21 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
  * @param pLOBData
  * @param pExt
  */
-void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt )
+bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bFreqSeq )
 {
 
 #ifdef _SQLITE_
-    sprintf_s( m_szSQLString, "INSERT INTO LOB_POSITION (LOBID, ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
+    bool bRet=true;
+    sprintf_s( m_szSQLString, "INSERT INTO LOB_POSITION (LOBID, ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16 ) VALUES ( %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
               pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount, \
               pLOBData->fPRISeq[0], pLOBData->fPRISeq[1], pLOBData->fPRISeq[2], pLOBData->fPRISeq[3], pLOBData->fPRISeq[4], \
               pLOBData->fPRISeq[5], pLOBData->fPRISeq[6], pLOBData->fPRISeq[7], pLOBData->fPRISeq[8], pLOBData->fPRISeq[9], \
-              pLOBData->fPRISeq[10], pLOBData->fPRISeq[11], pLOBData->fPRISeq[12], pLOBData->fPRISeq[13], pLOBData->fPRISeq[14], \
-              pLOBData->fPRISeq[15], pLOBData->fPRISeq[16], pLOBData->fPRISeq[17], pLOBData->fPRISeq[18], pLOBData->fPRISeq[19], \
-              pLOBData->fPRISeq[20], pLOBData->fPRISeq[21], pLOBData->fPRISeq[22], pLOBData->fPRISeq[23], pLOBData->fPRISeq[24], \
-              pLOBData->fPRISeq[25], pLOBData->fPRISeq[26], pLOBData->fPRISeq[27], pLOBData->fPRISeq[28], pLOBData->fPRISeq[29], \
-              pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
+              pLOBData->fPRISeq[10], pLOBData->fPRISeq[11], pLOBData->fPRISeq[12], pLOBData->fPRISeq[13], pLOBData->fPRISeq[14], pLOBData->fPRISeq[15] );
+              //, pLOBData->fPRISeq[16] );
+//               pLOBData->fPRISeq[15], pLOBData->fPRISeq[16], pLOBData->fPRISeq[17], pLOBData->fPRISeq[18], pLOBData->fPRISeq[19], \
+//               pLOBData->fPRISeq[20], pLOBData->fPRISeq[21], pLOBData->fPRISeq[22], pLOBData->fPRISeq[23], pLOBData->fPRISeq[24], \
+//               pLOBData->fPRISeq[25], pLOBData->fPRISeq[26], pLOBData->fPRISeq[27], pLOBData->fPRISeq[28], pLOBData->fPRISeq[29], \
+//               pLOBData->fPRISeq[30], pLOBData->fPRISeq[31] );
 
     try {
         Kompex::SQLiteStatement stmt( m_pDatabase );
@@ -10823,25 +10912,41 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
         stmt.FreeQuery();  
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
+    return bRet;
+
 #elif _NO_SQLITE_
+    return true;
+
 #elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOB_POSITION (OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%d', '%s', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
-        pExt->aetData.uiOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, pLOBData->iPRIPositionCount,
+    if( bFreqSeq == true ) {
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO LOB_POSITION (SEQ_NUM, SEQ_TYPE, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f' )" ,
+            m_nSeqNum, bFreqSeq, pLOBData->iFreqPositionCount,
+            pLOBData->fFreqSeq[0], pLOBData->fFreqSeq[1], pLOBData->fFreqSeq[2], pLOBData->fFreqSeq[3], pLOBData->fFreqSeq[4],
+            pLOBData->fFreqSeq[5], pLOBData->fFreqSeq[6], pLOBData->fFreqSeq[7], pLOBData->fFreqSeq[8], pLOBData->fFreqSeq[9],
+            pLOBData->fFreqSeq[10], pLOBData->fFreqSeq[11], pLOBData->fFreqSeq[12], pLOBData->fFreqSeq[13], pLOBData->fFreqSeq[14],
+            pLOBData->fFreqSeq[15] );
+    }
+    else {
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO LOB_POSITION (SEQ_NUM, SEQ_TYPE, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f' )" ,
+            m_nSeqNum, bFreqSeq, pLOBData->iPRIPositionCount,
               pLOBData->fPRISeq[0], pLOBData->fPRISeq[1], pLOBData->fPRISeq[2], pLOBData->fPRISeq[3], pLOBData->fPRISeq[4],
               pLOBData->fPRISeq[5], pLOBData->fPRISeq[6], pLOBData->fPRISeq[7], pLOBData->fPRISeq[8], pLOBData->fPRISeq[9],
               pLOBData->fPRISeq[10], pLOBData->fPRISeq[11], pLOBData->fPRISeq[12], pLOBData->fPRISeq[13], pLOBData->fPRISeq[14],
-              pLOBData->fPRISeq[15], pLOBData->fPRISeq[16] );
+            pLOBData->fPRISeq[15] );
+    }
 
-    theRS.Open( m_pszSQLString );
+
+    theRS.Open( m_szSQLString );
     theRS.Close();
 
     DECLARE_END_CHECKODBC
@@ -10856,66 +10961,76 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
  * @param pExt
  * @param bUpdateRadarMode
  */
-void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode )
+bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode )
 {
-    char buffer[100];
-    struct tm *pstTime;
 
 #ifdef _SQLITE_
+    struct tm *pstTime;
+    char buffer[100];
+
+    bool bRet=true;
     pstTime = localtime( & pLOBData->tiContactTime );
-    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
-    sprintf_s( m_szSQLString, "INSERT INTO LOBDATA ( \
-                LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, THREAT_INDEX, POLIZATION, RATIOOFPOL, \
-                SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
-                FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
-                PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
-                PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
-                PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
-                SCAN_TYPE, SCAN_PRD, \
-                INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
-                SHIP_LAT, SHIP_LONG, SHIP_PITCH, SHIP_ROLL, SHIP_HEADING, SHIP_ALT, IS_VALIDITY, \
-                IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
-                ( %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, %d, \
-                %d, %f, %f, %f, %f, %f, %d, \
-                %d, %d, %f, %f, %f, %f, %f, %d, %d, \
-                %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
-                %f, %f, %f, %f, \
-                %f, %f, %f, %f, \
-                %d, %f, \
-                %d, %d, %f, %f, %f, %f, \
-                %f, %f, %f, %f, %f, %f, %d, \
-                %d, %d, %d, %d )" , \
-         pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
-         pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
-         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
-         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
-         pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
-         pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
-         pLOBData->iScanType, pLOBData->fScanPeriod, \
-         pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
-         pLOBData->fShipLatitude, pLOBData->fShipLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
-         pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+    if( pstTime != NULL ) {
+        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+        sprintf_s( m_szSQLString, "INSERT INTO LOBDATA ( \
+                    LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, THREAT_INDEX, POLIZATION, RATIOOFPOL, \
+                    SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+                    FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+                    PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+                    PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                    PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                    SCAN_TYPE, SCAN_PRD, \
+                    INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
+                    SHIP_LAT, SHIP_LONG, SHIP_PITCH, SHIP_ROLL, SHIP_HEADING, SHIP_ALT, IS_VALIDITY, \
+                    IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+                    ( %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, %d, \
+                    %d, %f, %f, %f, %f, %f, %d, \
+                    %d, %d, %f, %f, %f, %f, %f, %d, %d, \
+                    %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+                    %f, %f, %f, %f, \
+                    %f, %f, %f, %f, \
+                    %d, %f, \
+                    %d, %d, %f, %f, %f, %f, \
+                    %f, %f, %f, %f, %f, %f, %d, \
+                    %d, %d, %d, %d )" , \
+             pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
+             pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+             pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+             pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+             pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+             pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
+             pLOBData->iScanType, pLOBData->fScanPeriod, \
+             pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
+             pLOBData->fShipLatitude, pLOBData->fShipLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
+             pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
 
-              // pExt->aetData.uiOpInitID,
-    try {
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        stmt.SqlStatement( m_szSQLString );
+                  // pExt->aetData.uiOpInitID,
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+            stmt.SqlStatement( m_szSQLString );
 
-        // do not forget to clean-up
-        //stmt.FreeQuery();  
+            // do not forget to clean-up
+            //stmt.FreeQuery();  
 
-        if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
-            m_pIdentifyAlg->UpdateRadarMode( pLOBData );
+            if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
+                m_pIdentifyAlg->UpdateRadarMode( pLOBData );
+            }
+
+        }
+        catch( Kompex::SQLiteException &exception ) {
+            bRet = false;
+            std::cerr << "\nException Occured" << std::endl;
+            exception.Show();
+            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
         }
 
     }
-    catch( Kompex::SQLiteException &exception ) {
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }
+
+    return bRet;
 
 #elif _NO_SQLITE_
+    return true;
+
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -10926,17 +11041,17 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
     _localtime32_s( &stTime, & pLOBData->tiContactTime );
     strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d', '%d' )", \
-        pExt->aetData.uiOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( SEQ_NUM, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX ) values( '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d', '%d' )", \
+        m_nSeqNum, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
         pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
         pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
-        pLOBData->iIsStorePDW, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
-        pLOBData->dRadarCollectionLatitude, pLOBData->dRadarCollectionLongitude, \
+        pLOBData->iIsStoreData, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
+        pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, \
         pLOBData->aucRadarName, pLOBData->iRadarModeIndex, pLOBData->iThreatIndex );
 
-    theRS.Open( m_pszSQLString );
+    theRS.Open( m_szSQLString );
 
     if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
@@ -10945,11 +11060,11 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
         strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 
         // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-        theRS.Open( m_pszSQLString );
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+        theRS.Open( m_szSQLString );
 
         // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
         //theRS.Open( m_pszSQLString );
 
     }
@@ -10960,6 +11075,7 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     DECLARE_RETURN
 
 #endif
+
 }
 
 /**
@@ -10968,10 +11084,10 @@ void CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
  * @param pABTData
  * @param pABTExtData
  */
-void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
+bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bFreqSeq )
 {
 #ifdef _SQLITE_
-
+    bool bRet=true;
     sprintf_s( m_szSQLString, "INSERT INTO ABT_POSITION ( \
               ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
               pABTData->uiABTID, pABTData->uiAETID, pABTData->iPRIPositionCount, \
@@ -10991,25 +11107,40 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
         //stmt.FreeQuery();  
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
+    return bRet;
+
 #elif _NO_SQLITE_
+    return true;
+
 #elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABT_POSITION ( OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_08, SEQ_07, SEQ_09, SEQ_10, SEQ_11, SEQ_13, SEQ_12, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%d', '%s', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
-        pABTExtData->uiOpInitID, pLOBData->uiLOBID, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iPRIPositionCount,
+    if( bFreqSeq == true ) {
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO ABT_POSITION ( SEQ_NUM, SEQ_TYPE, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_08, SEQ_07, SEQ_09, SEQ_10, SEQ_11, SEQ_13, SEQ_12, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
+            m_nSeqNum, bFreqSeq, pABTData->iFreqPositionCount,
+            pABTData->fFreqSeq[0], pABTData->fFreqSeq[1], pABTData->fFreqSeq[2], pABTData->fFreqSeq[3], pABTData->fFreqSeq[4],
+            pABTData->fFreqSeq[5], pABTData->fFreqSeq[6], pABTData->fFreqSeq[7], pABTData->fFreqSeq[8], pABTData->fFreqSeq[9],
+            pABTData->fFreqSeq[10], pABTData->fFreqSeq[11], pABTData->fFreqSeq[12], pABTData->fFreqSeq[13], pABTData->fFreqSeq[14],
+            pABTData->fFreqSeq[15] );
+    }
+    else {
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO ABT_POSITION ( SEQ_NUM, SEQ_TYPE, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_08, SEQ_07, SEQ_09, SEQ_10, SEQ_11, SEQ_13, SEQ_12, SEQ_14, SEQ_15, SEQ_16 ) values( '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f')" ,
+            m_nSeqNum, bFreqSeq, pABTData->iPRIPositionCount,
               pABTData->fPRISeq[0], pABTData->fPRISeq[1], pABTData->fPRISeq[2], pABTData->fPRISeq[3], pABTData->fPRISeq[4],
               pABTData->fPRISeq[5], pABTData->fPRISeq[6], pABTData->fPRISeq[7], pABTData->fPRISeq[8], pABTData->fPRISeq[9],
               pABTData->fPRISeq[10], pABTData->fPRISeq[11], pABTData->fPRISeq[12], pABTData->fPRISeq[13], pABTData->fPRISeq[14],
-              pABTData->fPRISeq[15], pABTData->fPRISeq[16] );
+            pABTData->fPRISeq[15] );
+    }
 
-    theRS.Open( m_pszSQLString );
+    theRS.Open( m_szSQLString );
     theRS.Close();
 
     DECLARE_END_CHECKODBC
@@ -11025,18 +11156,36 @@ void CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
  * @param pABTExtData
  * @param bUpdateThreat
  */
-void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat )
+bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat )
 {
 #ifdef _SQLITE_
+    bool bRet=true;
     struct tm *pstTime;
     char buffer1[100], buffer2[100], buffer3[100];
 
     pstTime = localtime( & pABTData->tiFirstSeenTime );
-    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    if( pstTime != NULL ) {
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer1, "1970-01-01 00:00:00" );
+    }
     pstTime = localtime( & pABTData->tiLastSeenTime );
-    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    if( pstTime != NULL ) {
+        strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer2, "1970-01-01 00:00:00" );
+    }
+    
     pstTime = localtime( & pABTData->tiFinalAlarmTime );
-    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    if( pstTime != NULL ) {
+        strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer3, "1970-01-01 00:00:00" );
+    }    
+
     sprintf_s( m_szSQLString, \
         "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
          PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
@@ -11089,23 +11238,31 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
             __time32_t nowTime=_time32(NULL);
 
             pstTime = localtime( & nowTime );
-            strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
-            // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-            sprintf_s( m_szSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-            // Kompex::SQLiteStatement stmt( m_pDatabase );
-            stmt.SqlStatement( m_szSQLString );
+            if( pstTime != NULL ) {
+                strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+
+                // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+                sprintf_s( m_szSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+                // Kompex::SQLiteStatement stmt( m_pDatabase );
+                stmt.SqlStatement( m_szSQLString );
+            }
 
             // do not forget to clean-up
             //stmt.FreeQuery();  
         }
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
+    return bRet;
+
 #elif _NO_SQLITE_
+    return bRet;
+
 #else
     DECLARE_BEGIN_CHECKODBC
 
@@ -11120,18 +11277,18 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
     strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
     _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
     strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, ALARM_TIME, STAT ) values( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%s', '%d' )", \
-                                                pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (SEQ_NUM, OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, ALARM_TIME, STAT ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%s', '%d' )", \
+                                                m_nSeqNum, pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
                                                 pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
                                                 pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->iFreqPositionCount, \
                                                 pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
                                                 pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, \
                                                 pABTData->uiTotalOfPDW, pABTData->aucRadarName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
-                                                pABTData->iPEValid, pABTData->dLatitude, pABTData->dLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
+                                                pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
                                                 buffer3, pABTData->iStat );
 
 
-    theRS.Open( m_pszSQLString );
+    theRS.Open( m_szSQLString );
 
     if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
@@ -11140,8 +11297,8 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 
         // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-        theRS.Open( m_pszSQLString );
+        sprintf_s( m_szSQLString, MAX_SQL_SIZE, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+        theRS.Open( m_szSQLString );
     }
 
     theRS.Close();
@@ -11159,18 +11316,38 @@ void CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
  * @param pABTExtData
  * @param bUpdateThreat
  */
-void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB )
+bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB )
 {
 #ifdef _SQLITE_
+    bool bRet=true;
     struct tm *pstTime;
     char buffer1[100], buffer2[100], buffer3[100];
 
     pstTime = localtime( & pAETData->tiFirstSeenTime );
-    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    if( pstTime != NULL ) {
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer1, "1970-01-01 00:00:00" );
+    }
+
     pstTime = localtime( & pAETData->tiLastSeenTime );
-    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    if( pstTime != NULL ) {
+        strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer2, "1970-01-01 00:00:00" );
+    }
+    
     pstTime = localtime( & pAETData->tiFinalAlarmTime );
-    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+    if( pstTime != NULL ) {
+        strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+    }
+    else {
+        strcpy( buffer3, "1970-01-01 00:00:00" );
+    }
+
+    
     sprintf_s( m_szSQLString, "INSERT INTO AETDATA (AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
                                PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
                                RADARMODE_INDEX, THREAT_INDEX, \
@@ -11210,6 +11387,7 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         //stmt.FreeQuery();  
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
@@ -11228,16 +11406,94 @@ void CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
     }
     */
 
+    return bRet;
+
+#elif _NO_SQLITE_
+    return true;
+
 #else
+    DECLARE_BEGIN_CHECKODBC
+
+    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+    struct tm *pstTime;
+    char buffer1[100], buffer2[100], buffer3[100];
+
+    pstTime = localtime( & pAETData->tiFirstSeenTime );
+    if( pstTime != NULL ) {
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer1, "1970-01-01 00:00:00" );
+    }
+
+    pstTime = localtime( & pAETData->tiLastSeenTime );
+    if( pstTime != NULL ) {
+        strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer2, "1970-01-01 00:00:00" );
+    }
+
+    pstTime = localtime( & pAETData->tiFinalAlarmTime );
+    if( pstTime != NULL ) {
+        strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+    }
+    else {
+        strcpy( buffer3, "1970-01-01 00:00:00" );
+    }
+
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE, "INSERT INTO AETDATA (SEQ_NUM, OP_INIT_ID, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADARMODE_PRIORITY, RADAR_PRIORITY, \
+                              PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
+                              RADARMODE_INDEX, THREAT_INDEX, \
+                              VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+                              FRQ_MEAN, FRQ_MIN, FRQ_MAX, FRQ_DEV, \
+                              PRI_MEAN,  PRI_MIN, PRI_MAX, PRI_DEV, \
+                              PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                              PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                              PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+                              IDINFO, NUM_OF_LOBS, NUM_OF_BEAMS, FINAL_ALARM_TIME, STAT ) VALUES \
+                              ( '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', \
+                              '%d', '%s', '%s', '%d', \
+                              '%d', '%d', \
+                              '%d', '%f', '%f', '%f', '%f', \
+                              '%f', '%f', '%f', '%f', \
+                              '%f', '%f', '%f', '%f', \
+                              '%f', '%f', '%f', '%f', \
+                              '%f', '%f', '%f', '%f', \
+                              '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', \
+                              '%s', '%d', '%d', '%s', '%d' )" , \
+                              m_nSeqNum, m_lOpInitID, \
+                              pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
+                              pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
+                              pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
+                              pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
+                              pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
+                              pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
+                              pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
+                              pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
+                              pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
+                              pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETData->iStat );
+
+    theRS.Open( m_szSQLString );
+    theRS.Close();
+
+    DECLARE_END_CHECKODBC
+    DECLARE_RETURN
 
 #endif
 }
 
 /**
- * @brief CELEmitterMergeMngr::GetABTData
- * @param uiAETID
- * @param uiABTID
- * @return
+ * @brief     GetABTData
+ * @param     unsigned int uiAETID
+ * @param     unsigned int uiABTID
+ * @return    SRxABTData *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-02, 13:48
+ * @warning
  */
 SRxABTData *CELEmitterMergeMngr::GetABTData( unsigned int uiAETID, unsigned int uiABTID )
 {
@@ -11245,6 +11501,25 @@ SRxABTData *CELEmitterMergeMngr::GetABTData( unsigned int uiAETID, unsigned int 
 
     pABTTheThreat = m_pTheThreatRoot->Find( uiAETID, uiABTID );
     return GetABTData( pABTTheThreat->m_nIndex );
+}
+
+/**
+ * @brief     GetABTExtData
+ * @param     unsigned int uiAETID
+ * @param     unsigned int uiABTID
+ * @return    SELABTDATA_EXT *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-02, 13:48
+ * @warning
+ */
+SELABTDATA_EXT *CELEmitterMergeMngr::GetABTExtData( unsigned int uiAETID, unsigned int uiABTID )
+{
+    CELThreat *pABTTheThreat;
+
+    pABTTheThreat = m_pTheThreatRoot->Find( uiAETID, uiABTID );
+    return GetABTExtData( pABTTheThreat->m_nIndex );
 }
 
 /**

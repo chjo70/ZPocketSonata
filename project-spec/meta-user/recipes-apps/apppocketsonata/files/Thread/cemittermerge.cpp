@@ -1,4 +1,4 @@
-﻿// CEmitterMerge.cpp: implementation of the CEmitterMerge class.
+// CEmitterMerge.cpp: implementation of the CEmitterMerge class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -26,6 +26,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     char szSQLiteFileName[100];
 
     strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
     //Init();
@@ -83,6 +84,10 @@ void CEmitterMerge::_routine()
                     MergeEmitter();
                     break;
 
+                case enTHREAD_KNOWNANAL_FAIL :
+                    TrackFail();
+                    break;
+
                 case enTHREAD_SCANANAL_START :
                     m_bScanInfo = true;
                     MergeEmitter();
@@ -138,11 +143,11 @@ void CEmitterMerge::MergeEmitter()
     SRxABTData *pABTData;
 
     if( m_bScanInfo == false ) {
-        LOGMSG4( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
+        LOGMSG4( enDebug, "Operating the [%d] Band, in the Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
     }
     else {
         pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
-        LOGMSG3( enDebug, " [%d] 대역, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+        LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
     }
 
     memcpy( & strAnalInfo, & m_pMsg->x.strAnalInfo, sizeof(STR_ANALINFO) );
@@ -207,18 +212,18 @@ void CEmitterMerge::MergeEmitter()
 
             pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
 
-            // 3.1 추적 채널 업데이트 수행
+            // 3.1 추적 채널 업데이트 및 빔 정보 제어조종 및 재밍신호관리장치에게 전달
             if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
+                SELABTDATA_EXT *pABTExtData;
+
                 SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
-                // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
-                SendLost( strAnalInfo.uiAETID );
+                pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( strAnalInfo.uiAETID, strAnalInfo.uiABTID );
+                SendLan( esAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
             }
             else {
-                //strAnalInfo.uiAETID = 0;
                 SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
-                // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
                 SendDelete( strAnalInfo.uiAETID );
             }
         }
@@ -227,13 +232,62 @@ void CEmitterMerge::MergeEmitter()
 }
 
 /**
- * @brief CEmitterMerge::SendAnalResult
+ * @brief     TrackFail
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-24, 17:03
+ * @warning
+ */
+void CEmitterMerge::TrackFail()
+{
+    STR_ANALINFO strAnalInfo;
+
+    SRxLOBData *pLOBData;
+    SRxABTData *pSRxABTData;
+    SELABTDATA_EXT *pABTExtData;
+
+    pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
+
+    pSRxABTData = m_pTheEmitterMergeMngr->GetABTData( pLOBData->uiAETID, pLOBData->uiABTID );
+    
+    if( pSRxABTData != NULL ) {
+        strAnalInfo.uiBand = g_enBoardId;
+        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+        strAnalInfo.uiTotalLOB = _spOne;
+        strAnalInfo.uiAETID = pLOBData->uiAETID;
+        strAnalInfo.uiABTID = pLOBData->uiABTID;
+        SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+
+        pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( pLOBData->uiAETID, pLOBData->uiABTID );
+        SendLan( esAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
+    }
+    else {
+        LOGMSG1( enError, " Invalid the Track Fail [%d] !!!", pLOBData->uiAETID );
+    }
+
+}
+
+void CEmitterMerge::ScanFail()
+{
+
+}
+
+/**
+ * @brief     SendNewUpd
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-24, 17:03
+ * @warning
  */
 void CEmitterMerge::SendNewUpd()
 {
-#ifdef _PREBUILD_
-        //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
-#else
+    //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+
+#ifdef _POCKETSONATA_
     int i;
 
     char *pString;
@@ -301,11 +355,13 @@ void CEmitterMerge::SendNewUpd()
     stAET.id.coAmbi = min( pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
     memcpy( stAET.id.noIPL, pABTExtData->idInfo.nRadarModeIndex, sizeof(int) * stAET.id.coAmbi );
 
+    // 랜 메시지 전달한다.
+    
     if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        CCommonUtils::SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET) );
+        SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
     else {
-        CCommonUtils::SendLan( esAET_UPD_CCU, & stAET, sizeof(stAET) );
+        SendLan( esAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
 
 #endif
@@ -313,13 +369,31 @@ void CEmitterMerge::SendNewUpd()
 }
 
 /**
- * @brief CEmitterMerge::SendLost
+ * @brief     SendLan
+ * @param     unsigned int uiOpcode
+ * @param     void * pData
+ * @param     unsigned int uiDataSize
+ * @param     SELABTDATA_EXT * pABTExtData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-02, 13:25
+ * @warning
  */
-void CEmitterMerge::SendLost( unsigned int uiAETID )
+void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData )
 {
-    CCommonUtils::SendLan( esAET_LST_CCU, & uiAETID, sizeof(uiAETID) );
-}
+    if( pABTExtData != NULL && ( uiOpcode == esAET_NEW_CCU || difftime( pABTExtData->tiSendLan, time(NULL) ) > 1.0 || ( pABTExtData->uiOpcode != uiOpcode ) ) ) {
+        CCommonUtils::SendLan( uiOpcode, pData, uiDataSize );
 
+        pABTExtData->uiOpcode = uiOpcode;
+        pABTExtData->tiSendLan = time( NULL );
+    }
+    else {
+        LOGMSG( enNormal, " Ignore the Sending the LAN message !!!" );
+    }
+
+}
 
 /**
  * @brief CEmitterMerge::SendDelete

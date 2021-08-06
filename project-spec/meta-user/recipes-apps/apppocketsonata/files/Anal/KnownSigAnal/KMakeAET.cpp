@@ -250,6 +250,10 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
                 }
 
 			}
+            break;
+
+        default:
+            break;
 	}
 
 	return bRet;
@@ -640,6 +644,9 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
                 pUpdAetFrq->fFreqPatternPeriod = m_pTrkAet->fFreqPatternPeriodMean;
                 pUpdAetFrq->iFreqPatternType = m_pTrkAet->iFreqPatternType;
 				break;
+
+            default:
+                break;
 		}
 	}
 

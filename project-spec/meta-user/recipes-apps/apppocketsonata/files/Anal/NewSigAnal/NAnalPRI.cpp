@@ -8,7 +8,7 @@
 
 
 #ifdef _ELINT_
-//#define _MAIN_GLOBALS_
+
 #include "../OFP_Main.h"
 #endif
 

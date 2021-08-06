@@ -108,7 +108,7 @@ void CSPulExt::KnownPulseExtract()
             // 추출할 펄스열의 범위폭을 계산한다.
             extRange.min_pri = m_pScnAet->fPRIMin - STABLE_MARGIN;
             extRange.max_pri = m_pScnAet->fPRIMax + STABLE_MARGIN;
-            ExtractJitterPT( & extRange, -1, 3, TRUE );
+            ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 
             /*! \bug  추출하고자할 PRI 평균값을 중심으로 지터열을 추출하게 한다.
                 \date 2006-06-28 00:39:34, 조철희
@@ -145,14 +145,14 @@ void CSPulExt::KnownPulseExtract()
             extRange.min_pri = _max( (int)(m_pScnAet->fPRIMean - diff), 2 );
             extRange.max_pri = m_pScnAet->fPRIMean + diff;
             // 추출할 펄스열의 범위폭을 계산한다.
-            ExtractJitterPT( & extRange, -1, 3, TRUE );
+            ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 
             // D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인
             // 하노닉 레이더 신호(?) 때문에
             // 2배의 PRI도 추출하도록 한다.
             extRange.min_pri = 2 * extRange.min_pri;
             extRange.max_pri = 2 * extRange.max_pri;
-            ExtractJitterPT( & extRange, -1, 3, TRUE );
+            ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
             break;
 
         case _JITTER_PATTERN :
@@ -162,6 +162,9 @@ void CSPulExt::KnownPulseExtract()
             extRange.min_pri = m_pScnAet->fPRIMin - diff;
             extRange.max_pri = m_pScnAet->fPRIMax + diff;
             ExtractPatternPT( & extRange, 3, TRUE );
+            break;
+
+        default:
             break;
     }
 
@@ -267,11 +270,11 @@ void CSPulExt::SaveScanPulse()
 */
 void CSPulExt::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
 {
-	int i, count, pdw_count;
-
-	PDWINDEX *pIndex;
-	STR_SCANPT *pScanPT;
-	UINT *pScanTOA, *pScanPA;
+// 	int i, count, pdw_count;
+// 
+// 	PDWINDEX *pIndex;
+// 	STR_SCANPT *pScanPT;
+// 	UINT *pScanTOA, *pScanPA;
 
 //	pScanPT = & stScanPt; // & stScanPt[m_noCh];
 //	pScanPA = & pScanPT->pa[0];
@@ -288,7 +291,7 @@ void CSPulExt::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
 
 //	}
 
-	pScanPT->co = count;
+	//pScanPT->co = count;
 
 }
 

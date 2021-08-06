@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #define _USE_MATH_DEFINES
@@ -9,7 +9,9 @@
 // 자료 재전송 하기 위한 테스트 : 모의기로 LOB를 전송하여 연동기에서 LINK2 데이터를 갖고 와서 처리
 //#define _RETRANSMIT_TEST_
 
-CParamMngr* CParamMngr::m_pInstance = NULL;
+
+CParamMngr* CParamMngr::m_pInstance = nullptr;
+
 
 CParamMngr::CParamMngr(void)
 	:m_b701DLL(false)

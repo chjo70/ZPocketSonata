@@ -1,4 +1,4 @@
-﻿#ifndef _H_EDB_RSLT_DATATYPE
+#ifndef _H_EDB_RSLT_DATATYPE
 #define _H_EDB_RSLT_DATATYPE
 
 #include "ELThreat.h"

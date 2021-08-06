@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file      ELThreat.cpp
  * @brief
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -7,10 +7,8 @@
  * @warning
  */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
 
-#endif
 
 #include "ELThreat.h"
 

@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 
 #ifndef __VXWORKS__
@@ -18,9 +18,6 @@ using namespace std;
 #endif
 
 
-//#include "../../ELINT/ALGORITHM/InterSignal/INC/_define.h"
-
-//#include "../ELINT/MNGR/Codec/ELDecoder.h"
 
 enum EnumNullValueType
 {
@@ -28,50 +25,7 @@ enum EnumNullValueType
 	INVALID_INT_VALUE = -1
 };
 
-// 진행바 스텝수
-#define _PROGRESS_STEP												(80)
 
-// 문자열 크기 정의
-#define _NULL_CHAR_													(1)
-
-#define _MAX_STRING_SIZE_											(50)
-
-#define _MAX_SIZE_OF_MODECODE                                       (4)
-#define _MAX_SIZE_OF_FUNCTIONCODE                                   (4)
-#define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
-
-
-#define _MAX_RADARMODE_NAME_SIZE									(10)
-#define _MAX_PLATFORM_NAME_SIZE                                     (10)
-#define _MAX_THREAT_NAME_SIZE										(10)
-#define _MAX_SITE_NAME_SIZE											(10)
-#define _MAX_SIZE_OF_IDINFO                                         (10)
-#define _MAX_SIZE_OF_BENUMBER                                       (30)
-
-#define _MAX_MODECODE_STRING_SIZE_									(2+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_									(30+_NULL_CHAR_)
-#define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
-
-#define _MAX_FUNCTIONCODE_STRING_SIZE_								(4+_NULL_CHAR_)
-#define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
-
-#define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
-#define _MAX_USER_COUNTRY_STRING_SIZE_								(4+_NULL_CHAR_)
-#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_                          (4+_NULL_CHAR_)
-#define _MAX_FRIEND_OR_FOE_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_ADA_STRING_SIZE_										(8+_NULL_CHAR_)
-#define _MAX_DATETIME_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_DISTINCTION_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
-#define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_ELNOT_STRING_SIZE_										(10+_NULL_CHAR_)
-#define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
-
-#define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_KOREASITENAME_									(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
 template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_Q_2502_T5
 {
@@ -563,15 +517,15 @@ namespace RadarModeFreqType
 	};
 }
 
-static const char* _strFrqType[]=
-{
-	"고정",
-	"호핑",
-	"어자일",
-	"패턴",
-
-	"모름"
-};
+// static const char* _strFrqType[]=
+// {
+// 	"고정",
+// 	"호핑",
+// 	"어자일",
+// 	"패턴",
+// 
+// 	"모름"
+// };
 
 namespace RadarModePRIType
 {
@@ -585,18 +539,18 @@ namespace RadarModePRIType
 
 		enumPRIUnknown
 	};
-}
+} 
 
-static const char* _strPRIType[]=
-{
-	"고정",
-	"지터",
-	"드웰",
-	"스태거",
-	"패턴",
-
-	"모름"
-};
+// static const char* _strPRIType[]=
+// {
+// 	"고정",
+// 	"지터",
+// 	"드웰",
+// 	"스태거",
+// 	"패턴",
+// 
+// 	"모름"
+// };
 
 
 enum EnumRadarStatus
@@ -629,7 +583,7 @@ namespace ScanType
 	//start_static_0919
 	enum EnumScanType	//#FA_Q_2502_T2
 	{
-		enumUndefinedScanType = -1,								//아무것도 표시되지 않음
+		enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
 		
 		enumA_Circular = 0,										// 탐지형
 		enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
@@ -1349,8 +1303,8 @@ struct SThreatBase	//위협 (EOB 기반임)
                                                                                                                 //PIN
 // 	char szBE_Number[_MAX_BE_NUMBER_STRING_SIZE_];								//위협의 BE Number (10)
 // 	char szFacilityName[_MAX_SIZE_OF_FACILITYNAME_];							//기지명칭 (위협명) (50)
-// 	char szPlaceNameKor[_MAX_STRING_SIZE_];												//한글지명 (50)
-// 	char szPlaceNameEng[_MAX_STRING_SIZE_];												//영문지명 (50)
+ 	char szPlaceNameKor[_MAX_STRING_SIZE_];												//한글지명 (50)
+ 	char szPlaceNameEng[_MAX_STRING_SIZE_];												//영문지명 (50)
 // 	char szUserCountry[_MAX_USER_COUNTRY_STRING_SIZE_];						//사용국가 (2)	//*추후 삭제예정
 // 	char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
 // 	char szADA[_MAX_ADA_STRING_SIZE_];														//대공방공구역 (ADA) (AA123 형식) (5)
@@ -1440,8 +1394,8 @@ struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반
 
 	float fIdRange;
 
-    char szPlaceNameKor[_MAX_SITE_NAME_SIZE];
-    char szPlaceNameEng[_MAX_SITE_NAME_SIZE];
+    //char szPlaceNameKor[_MAX_SITE_NAME_SIZE];
+    //char szPlaceNameEng[_MAX_SITE_NAME_SIZE];
 
     char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
 
@@ -2067,10 +2021,16 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 {
     int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
-    //* 일반정보
-    //* 전정부호, 우선순위는 SRadarInfo에 있음 (상속)
-    //* 모드명, 모드부호는 SRadarModeLifeCycle에 있음
-    //* 연관관계는 SParamSetAssociations에 있음 (상속)
+#ifdef _ELINT_
+    char szRadarName[_MAX_RADARMODE_NAME_SIZE];
+    __time32_t tiCreated;
+    __time32_t tiLastUpdated;
+
+    __time32_t tiFirstSeen;
+    __time32_t tiLastSeen;
+
+#endif
+
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)
     int iRadarModePriority;                                                 // 우선순위
@@ -2081,13 +2041,6 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
     char szModeCode[_MAX_MODECODE_STRING_SIZE_];
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-
-
-    //__time32_t tiCreated;
-    //__time32_t tiLastUpdated;
-
-    //__time32_t tiFirstSeen;
-    //__time32_t tiLastSeen;
 
     PlatformCode::EnumPlatformCode ePlatform;				//플랫폼 형태: 탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
     SignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태
@@ -2138,7 +2091,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
     //* 펄스반복주기 세부정보
     vector <SRadarPRI_SpotValues> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
-    //map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
+    map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
     vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
     //vector <SRadarPRI_GroupSpacing> vecRadarPRI_GroupSpacing;				//그룹 펄스 안의 펄스간 간격에 올 수 있는 값들
 

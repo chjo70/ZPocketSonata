@@ -318,7 +318,12 @@ void CHWIO::StopCollecting( ENUM_UIO_DEV enUIO )
 {
     xuio_t *pUIO = (xuio_t*) CHWIO::uio_get_uio( (uint8_t) enUIO );
 
-    printf( "\n StopCollecting[%d]::::::::::::::::\n ", pUIO->fd );
+    if( pUIO != NULL ) {
+        printf( "\n StopCollecting[%d]::::::::::::::::\n ", pUIO->fd );
+    }
+    else {
+        printf( "\n StopCollecting[NULL]::::::::::::::::\n " );
+    }
 
     //close( pUIO->fd );
     //pUIO->fd = -1;
@@ -336,7 +341,12 @@ void CHWIO::StartCollecting( ENUM_UIO_DEV enUIO )
     // 재 파일을 오픈합니다.
 
     //pUIO->fd = open( pUIO->dev, O_RDWR);
-    printf( "\n StartCollecting[%d]::::::::::::::::\n", pUIO->fd );
+    if( pUIO != NULL ) {
+        printf( "\n StartCollecting[%d]::::::::::::::::\n", pUIO->fd );
+    }
+    else {
+        printf( "\n StartCollecting[NULL]::::::::::::::::\n" );
+    }
 
 
 }

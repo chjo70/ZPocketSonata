@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file      ELThreat.h
  * @brief     모든 위협에 대한 인덱스를 트리 구조로 만들어 관리한다.
  * @author    조철희 (churlhee.jo@lignex1.com)

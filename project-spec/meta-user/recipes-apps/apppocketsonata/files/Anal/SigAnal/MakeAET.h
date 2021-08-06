@@ -1,4 +1,4 @@
-﻿// MakeAET.h: interface for the CMakeAET class.
+// MakeAET.h: interface for the CMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -140,6 +140,10 @@ public:
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
     virtual SRxLOBData *GetLOBData( int index=0 )=0;
+#ifdef _ELINT_
+    virtual EN_RADARCOLLECTORID GetCollectorID()=0;
+    virtual char *GetTaskID()=0;
+#endif
 
 };
 

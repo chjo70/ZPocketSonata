@@ -20,7 +20,6 @@ SOURCES += \
     Anal/MIDAS/RawFile.cpp \
     Anal/SigAnal/cencdec.cpp \
     Anal/Collect/DataFile/DataFile.cpp \
-    Utils/cfile.cpp \
     Utils/clog.cpp \
     chexspinbox.cpp \
     mainView.cpp \

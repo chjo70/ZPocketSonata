@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file      PDW2SP370.cpp
  * @brief     PDW 데이터를 SP-350 구조로 변환해주는 클래스
  * @author    조철희 (churlhee.jo@lignex1.com)

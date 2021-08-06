@@ -20,6 +20,7 @@
 #include "csysconfig.h"
 
 #include "../Anal/SigAnal/_Macro.h"
+#include "../Anal/SigAnal/_Struct.h"
 
 CSysConfig* CSysConfig::m_pInstance = NULL;
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
@@ -136,9 +137,7 @@ void CSysConfig::LoadINI()
 
     // 위협 라이브러리 버젼 정보
     iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
-    SetIPLVersion( iValue );
-
-
+    SetIPLVersion( _abs(iValue) );
 
 
 #endif
@@ -169,14 +168,24 @@ void CSysConfig::InitVar()
     // 수집 히스토그램 초기화
     memset( m_strConfig.ucColHisto, 0, sizeof(m_strConfig.ucColHisto) );
 
-    _spOneSec = 20000000.;
-    _spOneMilli = FDIV( _spOneSec, 1000. );
-    _spOneMicrosec = FDIV( _spOneMilli, 1000. );
-    _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
+//     _spOneSec = 20000000.;
+//     _spOneMilli = FDIV( _spOneSec, 1000. );
+//     _spOneMicrosec = FDIV( _spOneMilli, 1000. );
+//     _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
+// 
+//     _spAOAres = (float) ( 0.351562 );
+//     _spAMPres = (float) (0.351562);
+//     _spPWres = _spOneMicrosec;
 
-    _spAOAres = (float) ( 0.351562 );
-    _spAMPres = (float) (0.351562);
-    _spPWres = _spOneMicrosec;
+#elif _ELINT_
+//     _spOneSec = FDIV( 1000000000, _toaRes[0] );
+//     _spOneMilli = FDIV( 1000000, _toaRes[0] );
+//     _spOneMicrosec = FDIV( 1000, _toaRes[0] );
+//     _spOneNanosec = FDIV( 1, _toaRes[0] );
+// 
+//     _spAOAres = (float) 0.01;
+//     _spAMPres = (float) (0.25);
+//     _spPWres = _spOneMicrosec;
 
 #else
 
@@ -249,6 +258,27 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
         //sprintf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //printf("myOwn IP Address is %s\n", ipstr);
     }
+#elif _MFC_VER
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    char name[255];
+    PHOSTENT hostinfo;
+
+    wVersionRequested = MAKEWORD(2, 0);
+
+    if( WSAStartup(wVersionRequested, &wsaData) == 0) {
+        if( gethostname(name, sizeof(name)) == 0 ) {
+            hostinfo = gethostbyname(name);
+            if( hostinfo != NULL ) {
+                struct in_addr *pIpAddr;
+                // strIpAddress = inet_ntoa (*(struct in_addr *)*hostinfo->h_addr_list);
+                pIpAddr = (struct in_addr *) (*hostinfo->h_addr_list);
+                sprintf( pIPAddress, "%d.%d.%d" , (unsigned char) pIpAddr->S_un.S_un_b.s_b2, (unsigned char) pIpAddr->S_un.S_un_b.s_b3, (unsigned char) pIpAddr->S_un.S_un_b.s_b4 );
+            }
+        } 
+        WSACleanup();
+    }
+
 #endif
 
     return bRet;

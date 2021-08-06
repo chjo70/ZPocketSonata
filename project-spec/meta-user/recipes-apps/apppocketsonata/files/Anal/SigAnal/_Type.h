@@ -1,4 +1,4 @@
-﻿/****************************************************************************************
+/****************************************************************************************
  파 일 명 : _type.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
@@ -124,9 +124,9 @@ typedef int key_t;
 typedef string CString;
 #define IPC_PRIVATE     (0)
 
-#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
-#define sscanf_s(A,B,C,D,E,F,G,H)     sscanf(A,B,C,D,E,F,G)
-#define sscanf_s(A,B,C,D,E,F,G,H,I)     sscanf(A,B,C,D,E,F,G,H)
+//#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
+//#define sscanf_s(A,B,C,D,E,F,G,H)     sscanf(A,B,C,D,E,F,G)
+//#define sscanf_s(A,B,C,D,E,F,G,H,I)     sscanf(A,B,C,D,E,F,G,H)
 
 #define sprintf_s               sprintf
 
@@ -172,6 +172,8 @@ typedef unsigned short USHORT;
 
 typedef string CString;
 typedef unsigned int INT32;
+
+#define ULONGLONG_MAX   (0xffffffffffffffff)
 
 #define _T(A)                   (A)
 

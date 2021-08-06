@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 본 문서는 장치들간의 내부 메시지를 정의합니다. 메시지들간의 정의와 데이터를 나타냅니다.
  * */
 
@@ -98,8 +98,9 @@ struct STR_WINDOWCELL {
     unsigned int uiMaxCollectTimesec;         // 최대 수집 시간 [s]
     unsigned int uiMaxCollectTimems;          // 최대 수집 시간 [ms]
 
-    STR_LOWHIGH strAoa;
     STR_LOWHIGH strFreq;
+
+    STR_LOWHIGH strAoa;
     STR_LOWHIGH strPA;
     STR_LOWHIGH strPW;
 

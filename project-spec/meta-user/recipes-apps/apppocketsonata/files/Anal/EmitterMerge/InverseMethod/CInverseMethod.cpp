@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      CInverseMethod.cpp
  * @brief     지구의 위경도 및 방위각 관련 클래스
@@ -15,9 +15,8 @@
 
 #include "CInverseMethod.h"
 
-//#include "../Geo2UTM/Geo2UTM.h"
 
-CInverseMethod*  CInverseMethod::m_pInstance = 0;				///< 정적 초기화
+CInverseMethod *CInverseMethod::m_pInstance;				///< 정적 초기화
 
 
 /**
@@ -186,8 +185,10 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 		lambdaP = lambda;
 		lambda = L + (1 - C) * e->dFlatness * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * ( -1 + 2 * cos2SigmaM * cos2SigmaM)));
 		eps = fabs(lambda - lambdaP);
+
+        -- iterLimit;
 	}
-	while (eps > 1e-12 && --iterLimit > 0);
+	while (eps > 1e-12 && iterLimit > 0);
 
 	if (iterLimit == 0) { //DTEC_Else
 		return false; // formula failed to converge

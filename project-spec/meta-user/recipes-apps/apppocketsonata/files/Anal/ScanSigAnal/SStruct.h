@@ -28,7 +28,7 @@ typedef struct
 struct STR_SCANPT {
     UINT co;
     UINT pa[SCN_COLLECT_PDW+10];				// toa
-    UINT toa[SCN_COLLECT_PDW+10];				// amplitude
+    _TOA toa[SCN_COLLECT_PDW+10];				// amplitude
 
     STR_LOWHIGH _pa;
 
@@ -37,7 +37,7 @@ struct STR_SCANPT {
 //##ModelId=452B0C44034F
 struct STR_SAMPLE {
 	UINT co;
-	UINT toa[_spMaxSample+10];
+	_TOA toa[_spMaxSample+10];
 	UINT pa[_spMaxSample+10];	
 
 	float normPa[_spMaxSample];					// normalize of pa

@@ -1,4 +1,4 @@
-﻿#ifndef CHWIO_H
+#ifndef CHWIO_H
 #define CHWIO_H
 
 #ifdef _MSC_VER

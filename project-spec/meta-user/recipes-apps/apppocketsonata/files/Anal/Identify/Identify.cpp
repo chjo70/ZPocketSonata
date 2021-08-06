@@ -1,4 +1,4 @@
-﻿// Identify.cpp: implementation of the CELSignalIdentifyAlg class.
+// Identify.cpp: implementation of the CELSignalIdentifyAlg class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -77,7 +77,9 @@ STR_EOB_RESULT *CELSignalIdentifyAlg::m_pEOBResult;			///< EOB 식별 결과를 
 STR_LIB_IDRESULT *CELSignalIdentifyAlg::m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
 STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 결과
 
-//char *CELSignalIdentifyAlg::m_pszSQLString;
+// void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
+// void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
+
 
 //vector<SDeviceData> CELSignalIdentifyAlg::m_vecDeviceData;
 
@@ -95,17 +97,14 @@ STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 
  * @date      2016-07-19, 오후 5:10
  * @warning
  */
+#ifdef _MSSQL_
+CELSignalIdentifyAlg::CELSignalIdentifyAlg( CODBCDatabase *pMyODBC ) : CMSSQL( pMyODBC )
+#else
 CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
+#endif
 {
-    //m_pMyODBC = pMyODBC;
 
     ++ m_CoInstance;
-
-    if( m_CoInstance == _spOne ) {
-        MallocBuffer();
-        InitVar();
-
-        InitIdentifyTable();
 
         //////////////////////////////////////////////////////////////////////////
         // 식별 콜함수 정의
@@ -129,6 +128,12 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
         IdentifyPri[PPatternPattern] = & CELSignalIdentifyAlg::PIdentifyPatPat;
         IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
 
+    if( m_CoInstance == _spOne ) {
+        MallocBuffer();
+        InitVar();
+
+        InitIdentifyTable();
+
         m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
 
 #ifdef _SQLITE_
@@ -148,7 +153,10 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 #endif
     }
     else {
+#ifdef _SQLITE_    		
         m_pDatabase = NULL;
+#else        
+#endif        
     }
 
 }
@@ -167,7 +175,6 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
     -- m_CoInstance;
 
     if( m_CoInstance == 0 ) {
-        //GP_ENVI_VAR->ReleaseInstance();
         GP_ENVI_VAR->ReleaseInstance();
 
 #ifdef _SQLITE_
@@ -256,7 +263,7 @@ bool CELSignalIdentifyAlg::LoadCEDLibrary2()
 #ifdef _MSC_VER
     DWORD dwTime=GetTickCount();
 #endif
-    vector<SRadarMode_Sequence_Values*> vecRadarMode_Sequence_Values;
+    vector<SRadarMode_Sequence_Values> vecRadarMode_Sequence_Values;
 
     InitRadarModeData();
 
@@ -279,7 +286,8 @@ bool CELSignalIdentifyAlg::LoadCEDLibrary2()
 
     //LogPrint("\n===================== 식별 데이터를 로딩했습니다. !! 시간 : %d ms\n", (int)((GetTickCount() - dwTime) / 1));
 
-    DeletePointers( vecRadarMode_Sequence_Values );
+    //DeletePointers( vecRadarMode_Sequence_Values );
+    vecRadarMode_Sequence_Values.clear();
 
     return true;
 }
@@ -309,133 +317,60 @@ void CELSignalIdentifyAlg::InitRadarModeData()
   * @return 	void
   * @date			2019/04/24 16:21
 */
-void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_Sequence_Values, ENUM_Sequence enSeq )
+void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_Sequence_Values, ENUM_Sequence enSeq )
 {
     int i;
-#ifdef __VXWORKS__
-    int j;
+
+    unsigned int j;
     SRadarMode_Sequence_Values *pstSRadarMode_Sequence_Values;
-#else    
-    vector<SRadarMode_Sequence_Values*>::pointer pRadarMode_Sequence;
-#endif    
 
     SRadarMode *pRadarMode;
     SRadarMode_Sequence_Values stRadarMode_SequenceValues;
 
     UINT uiRadarMode_Sequence=0, uiSizeOfRadarMode_Sequence;
 
-#ifdef __VXWORKS__
-#else    
-    pRadarMode_Sequence = pVecRadarMode_Sequence_Values->data();
-#endif
-    
     uiSizeOfRadarMode_Sequence = pVecRadarMode_Sequence_Values->size();
 
     pRadarMode = m_pRadarMode;
 
     uiSizeOfRadarMode_Sequence = pVecRadarMode_Sequence_Values->size();
 
-    if( uiSizeOfRadarMode_Sequence != 0 ) {
-        if( enSeq == enRFSequenceValue ) {
+    if( uiSizeOfRadarMode_Sequence > 0 ) {
+        j = 0;
+        pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
+
             for( i=0 ; i < m_iRadarMode ; ) {
-                // 다음번으로 이동
-         
-#ifdef __VXWORKS__
-				j = 0;
-				pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);            		
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
-					++ uiRadarMode_Sequence;
-					pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);
+            while( j < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
+                pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
                 }
 
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
+            while( j <= uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
                     stRadarMode_SequenceValues.iRadarModeIndex = pstSRadarMode_Sequence_Values->iRadarModeIndex;
                     stRadarMode_SequenceValues.i_Index = pstSRadarMode_Sequence_Values->i_Index;
                     stRadarMode_SequenceValues.f_Min = pstSRadarMode_Sequence_Values->f_Min;
                     stRadarMode_SequenceValues.f_Max = pstSRadarMode_Sequence_Values->f_Max;
 
+                if( enSeq == enRFSequenceValue ) {
                     pRadarMode->vecRadarMode_RFSequenceValues.push_back( stRadarMode_SequenceValues );
-
-                    pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);
-                    ++ uiRadarMode_Sequence;
                 }				
-#else    
-            	pRadarMode_Sequence = pVecRadarMode_Sequence_Values->data();
-            	
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && (*pRadarMode_Sequence)->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
-                    ++ uiRadarMode_Sequence;
-                    ++ pRadarMode_Sequence;
+                else {
+                    pRadarMode->vecRadarMode_PRISequenceValues.push_back( stRadarMode_SequenceValues );
                 }
 
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && (*pRadarMode_Sequence)->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
-                    stRadarMode_SequenceValues.iRadarModeIndex = (*pRadarMode_Sequence)->iRadarModeIndex;
-                    stRadarMode_SequenceValues.i_Index = (*pRadarMode_Sequence)->i_Index;
-                    stRadarMode_SequenceValues.f_Min = (*pRadarMode_Sequence)->f_Min;
-                    stRadarMode_SequenceValues.f_Max = (*pRadarMode_Sequence)->f_Max;
-
-                     pRadarMode->vecRadarMode_RFSequenceValues.push_back( stRadarMode_SequenceValues );
-
-                    ++ uiRadarMode_Sequence;
-                    ++ pRadarMode_Sequence;
+                if( j == uiSizeOfRadarMode_Sequence ) {
+                    break;
                 }
-            	
-#endif            		
+                else {
+                    pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
+					++ uiRadarMode_Sequence;
+				}
+				}
 
                 ++ i;
                 ++ pRadarMode;
 
             }
         }
-        else if( enSeq == enPRISequenceValue ) {
-            for( i=0 ; i < m_iRadarMode ; ) {
-                // 다음번으로 이동
-#ifdef __VXWORKS__
-    			j = 0;
-    			pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);
-    				
-				while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
-					++ uiRadarMode_Sequence;
-					pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);
-				}
-
-				while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
-					stRadarMode_SequenceValues.iRadarModeIndex = pstSRadarMode_Sequence_Values->iRadarModeIndex;
-					stRadarMode_SequenceValues.i_Index = pstSRadarMode_Sequence_Values->i_Index;
-					stRadarMode_SequenceValues.f_Min = pstSRadarMode_Sequence_Values->f_Min;
-					stRadarMode_SequenceValues.f_Max = pstSRadarMode_Sequence_Values->f_Max;
-
-					pRadarMode->vecRadarMode_PRISequenceValues.push_back( stRadarMode_SequenceValues );
-
-					pstSRadarMode_Sequence_Values = pVecRadarMode_Sequence_Values->at(j++);
-					++ uiRadarMode_Sequence;
-					
-				}
-            		
-#else            		
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && (*pRadarMode_Sequence)->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
-                    ++ uiRadarMode_Sequence;
-                    ++ pRadarMode_Sequence;
-                }
-
-                while( uiRadarMode_Sequence < uiSizeOfRadarMode_Sequence && (*pRadarMode_Sequence)->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
-                    stRadarMode_SequenceValues.iRadarModeIndex = (*pRadarMode_Sequence)->iRadarModeIndex;
-                    stRadarMode_SequenceValues.i_Index = (*pRadarMode_Sequence)->i_Index;
-                    stRadarMode_SequenceValues.f_Min = (*pRadarMode_Sequence)->f_Min;
-                    stRadarMode_SequenceValues.f_Max = (*pRadarMode_Sequence)->f_Max;
-
-                     pRadarMode->vecRadarMode_PRISequenceValues.push_back( stRadarMode_SequenceValues );
-
-                    ++ uiRadarMode_Sequence;
-                    ++ pRadarMode_Sequence;
-                }
-#endif                
-
-                ++ i;
-                ++ pRadarMode;
-
-            }
-        }
-    }
 
 }
 
@@ -491,11 +426,11 @@ void CELSignalIdentifyAlg::MallocBuffer()
     }
 
     if( m_pEOBResult == NULL ) {
-        m_pEOBResult = ( STR_EOB_RESULT * ) malloc( sizeof( STR_EOB_RESULT ) * MAX_ELINT_LIBRARY );
+        m_pEOBResult = ( STR_EOB_RESULT * ) malloc( sizeof( STR_EOB_RESULT ) * MAX_RADARMODE );
     }
 
     if( m_pIdResult == NULL ) {
-        m_pIdResult = ( STR_LIB_IDRESULT *) malloc( sizeof(STR_LIB_IDRESULT) * MAX_ELINT_LIBRARY );
+        m_pIdResult = ( STR_LIB_IDRESULT *) malloc( sizeof(STR_LIB_IDRESULT) * MAX_RADARMODE );
     }
 
     if( m_pCEDEOBResult == NULL ) {
@@ -526,7 +461,7 @@ void CELSignalIdentifyAlg::Init()
     m_fromLib = _spZero;
     m_toLib = _spZero;
     m_nCoIdResult = _spZero;
-    memset( m_pIdResult, 0, sizeof( LIBINDEX ) * MAX_ELINT_LIBRARY );
+    memset( m_pIdResult, 0, sizeof( LIBINDEX ) * MAX_RADARMODE );
 
     // EOB 기반 초기화
     m_pEOBResult->nThreatIndex = 0;
@@ -543,7 +478,7 @@ void CELSignalIdentifyAlg::Init()
     m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
 
 }
-//
+
 /**
  * @brief     신호 식별을 수행하기 위한 식별 테이블 함수를 정의한다.
  * @param     void
@@ -611,8 +546,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         *pFrqType = (int) _HOPPING,     *pPriType = (int) _DWELL;
 
         // Fixed, PRI 무시
-        pFrqType = & m_HowToId[_FIXED][_IGNORE_PRI].frq[0];
-        pPriType = & m_HowToId[_FIXED][_IGNORE_PRI].pri[0];
+        pFrqType = & m_HowToId[_FIXED][_UNKNOWN_PRI].frq[0];
+        pPriType = & m_HowToId[_FIXED][_UNKNOWN_PRI].pri[0];
         *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL,										++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE,									++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM,						++ pFrqType,  ++ pPriType;
@@ -660,8 +595,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL;
 
         // Random Agile, PRI 무시
-        pFrqType = & m_HowToId[_RANDOM_AGILE][_IGNORE_PRI].frq[0];
-        pPriType = & m_HowToId[_RANDOM_AGILE][_IGNORE_PRI].pri[0];
+        pFrqType = & m_HowToId[_RANDOM_AGILE][_UNKNOWN_PRI].frq[0];
+        pPriType = & m_HowToId[_RANDOM_AGILE][_UNKNOWN_PRI].pri[0];
         *pFrqType = (int) _RANDOM_AGILE,				*pPriType = (int) _DWELL,							++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _RANDOM_AGILE,				*pPriType = (int) _STABLE,						++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _RANDOM_AGILE,				*pPriType = (int) _JITTER_RANDOM,			++ pFrqType,  ++ pPriType;
@@ -706,8 +641,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL;
 
         // Hopping, PRI 무시
-        pFrqType = & m_HowToId[_HOPPING][_IGNORE_PRI].frq[0];
-        pPriType = & m_HowToId[_HOPPING][_IGNORE_PRI].pri[0];
+        pFrqType = & m_HowToId[_HOPPING][_UNKNOWN_PRI].frq[0];
+        pPriType = & m_HowToId[_HOPPING][_UNKNOWN_PRI].pri[0];
         *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL,										++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _HOPPING,				*pPriType = (int) _STABLE,									++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_RANDOM,						++ pFrqType,  ++ pPriType;
@@ -744,8 +679,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
 
         // Pattern Agile, PRI 무시
-        pFrqType = & m_HowToId[_PATTERN_AGILE][_IGNORE_PRI].frq[0];
-        pPriType = & m_HowToId[_PATTERN_AGILE][_IGNORE_PRI].pri[0];
+        pFrqType = & m_HowToId[_PATTERN_AGILE][_UNKNOWN_PRI].frq[0];
+        pPriType = & m_HowToId[_PATTERN_AGILE][_UNKNOWN_PRI].pri[0];
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
@@ -807,8 +742,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL,
 
         // 주파수 무시, PRI 무시
-        pFrqType = & m_HowToId[_IGNORE_FREQ][_IGNORE_PRI].frq[0];
-        pPriType = & m_HowToId[_IGNORE_FREQ][_IGNORE_PRI].pri[0];
+        pFrqType = & m_HowToId[_IGNORE_FREQ][_UNKNOWN_PRI].frq[0];
+        pPriType = & m_HowToId[_IGNORE_FREQ][_UNKNOWN_PRI].pri[0];
         *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE,								++ pFrqType,  ++pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL,									++ pFrqType,  ++pPriType;
@@ -1827,7 +1762,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
         */
         // 주파수 식별 밴드 개수 보다 많을 경우에는 개수를 optimal 하게 나눠서 하게 한다.
         if( total_bin_count >= NO_FLIB_BAND ) {
-            UINT freq_div = UDIV( UDIV(MAX_FREQ_MHZ,1000), NO_FLIB_BAND );
+            //UINT freq_div = UDIV( UDIV(MAX_FREQ_MHZ,1000), NO_FLIB_BAND );
 
             opt_count = C_NDIV( total_bin_count, NO_FLIB_BAND );
             /*! \bug  	음수값을 unsigned type으로 변환을 자제해야 한다.
@@ -1864,7 +1799,7 @@ void CELSignalIdentifyAlg::MakeFreqBand()
                     }
 
                     theFLib[j].frq.ilow = freq_low;
-                    theFLib[j].frq.ihgh = IMUL( ( j + 1 ), freq_div );
+                    theFLib[j].frq.ihgh = ( i + 1 ) * FLIB_FREQ_RES_MHZ;        //IMUL( ( j + 1 ), freq_div );
 
                     freq_low = theFLib[j].frq.ihgh + 1;
 
@@ -1873,12 +1808,26 @@ void CELSignalIdentifyAlg::MakeFreqBand()
                     ++ j;
                 }
             }
+
+            // 나머지 잔여 추가
+            if( j >= NO_FLIB_BAND ) {
+                //theFLib[NO_FLIB_BAND-1].frq.ilow = freq_low;
+                theFLib[NO_FLIB_BAND-1].frq.ihgh = i * FLIB_FREQ_RES_MHZ;        //IMUL( ( j + 1 ), freq_div );
+            }
+            else {
+                theFLib[j].frq.ilow = freq_low;
+                theFLib[j].frq.ihgh = i * FLIB_FREQ_RES_MHZ;        //IMUL( ( j + 1 ), freq_div );
+            }
+
         }
         // 주파수 식별 밴드 개수 보다 적을 경우에는 고정 주파수 대역으로 나눈다.
         else {
-            UINT freq_div = UDIV( (MAX_FREQ_MHZ - MIN_FREQ_MHZ), NO_FLIB_BAND );
+            UINT freq_div;
 
-            freq_low = _spZero;
+            freq_low = _spZero; /* MIN_FREQ_MHZ */
+
+            freq_div = UDIV( (MAX_FREQ_MHZ - freq_low ), NO_FLIB_BAND );
+
             /*! \bug  	음수값을 unsigned type으로 변환을 자제해야 한다.
                     \author 조철희 (churlhee.jo@lignex1.com)
                     \date 	2014-02-02 13:55:06
@@ -1912,8 +1861,6 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
 
     STR_FLIB *theFLib;
 
-    int preRadarModeIndex;
-
     if( m_total_ced != _spZero ) {
         UINT uiSize;
         SRadarMode *pRadarMode;
@@ -1922,12 +1869,18 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
         uiSize = (UINT) m_iRadarMode;
 
         if( uiSize != 0 ) {
-            preRadarModeIndex = -1;
             for( i=0 ; i < uiSize ; ++i ) {
+                if( pRadarMode->eRF_Type == _UNKNOWN_FT ) {                    
+                    theFLib = & m_pFLib[0];
+                    for( l=0 ; l < NO_FLIB_BAND ; ++l ) {                        
+                            theFLib->pIdxRadarMode[ theFLib->uicount++ ] = pRadarMode;
+                        ++ theFLib;
+                    }
+                }
+                else {
                 band.ilow = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMin, 1 ) );
                 band.ihgh = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMax, 1 ) );
 
-                if( pRadarMode->iRadarModeIndex != preRadarModeIndex ) {
                     theFLib = & m_pFLib[band.ilow];
                     for( l=band.ilow ; l <= band.ihgh ; ++l ) {
                         theFLib->pIdxRadarMode[ theFLib->uicount++ ] = pRadarMode;
@@ -1935,7 +1888,6 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
                         ++ theFLib;
                     }
 
-                    preRadarModeIndex = pRadarMode->iRadarModeIndex;
                 }
 
                 ++ pRadarMode;
@@ -1944,7 +1896,7 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
         }
 
         theFLib = & m_pFLib[0];
-        for( i=0 ; i <= NO_FLIB_BAND ; ++i ) {
+        for( i=0 ; i < NO_FLIB_BAND ; ++i ) {
             inSum = _spZero;
             uicount = theFLib->uicount;
 
@@ -1976,8 +1928,8 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
         }
     }
     else {
-        printf( "\t [W] CED 데이터베이스에 항목이 없어서 주파수 테이블화 작업을 할 수 없습니다.\n" );
-        Log( enError, "[W] RADARMODE 테이블에 항목이 없어서 주파수 테이블화 작업을 할 수 없습니다." );
+        //printf( "\t [W] CED 데이터베이스에 항목이 없어서 주파수 테이블화 작업을 할 수 없습니다.\n" );
+        Log( enNormal, "Ther is no radarmode data..." );
     }
 }
 
@@ -2011,7 +1963,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         (pLibRange+_DWELL)->from = pFrqEid;
         (pLibRange+_DWELL)->uicount = _spZero;
         for( i=0 ; i < uicount ; ++i, ++pLibIndex ) {
-            if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
             }
 
@@ -2034,7 +1986,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         (pLibRange+_STABLE)->from = pFrqEid;
         (pLibRange+_STABLE)->uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
-            if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
             }
 
@@ -2056,7 +2008,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         (pLibRange+_STAGGER)->from = pFrqEid;
         (pLibRange+_STAGGER)->uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
-            if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_Else
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_Else
                 continue;
             }
 
@@ -2078,7 +2030,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         (pLibRange+_JITTER_PATTERN)->from = pFrqEid;		// Jitter IPL range
         (pLibRange+_JITTER_PATTERN)->uicount = _spZero;		// Jitter IPL range
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
-            if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
             }
 
@@ -2101,7 +2053,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         (pLibRange+_JITTER_RANDOM)->from = pFrqEid;		// Pattern IPL range
         (pLibRange+_JITTER_RANDOM)->uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
-            if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
             }
 
@@ -2117,24 +2069,16 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
             }
         }
 
-        // 7. enumUndefinedPRI_LegacyType 에 대한 식별
+        // 6. enumUndefinedPRI_LegacyType 에 대한 식별
         pLibIndex = pFrqEid;
-        (pLibRange+_IGNORE_PRI)->from = pFrqEid;		// Pattern IPL range
-        (pLibRange+_IGNORE_PRI)->uicount = _spZero;
-        if( incNoEid < uicount ) {
-            LogPrint( "\n 미정의된 레이더 모드[%d] 주파수 형태[%d] : " , uicount, frqType );
+        (pLibRange+_UNKNOWN_PRI)->from = pFrqEid;		// Pattern IPL range
+        (pLibRange+_UNKNOWN_PRI)->uicount = _spZero;
             for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
-                if( *pLibIndex == NULL || CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
-                    if( *pLibIndex == NULL ) {
-                        LogPrint( "잘못된 인덱스 !!!" );
-                    }
-                    else {
-                        LogPrint( "[%d]" , (*pLibIndex)->iRadarModeIndex );
-                    }
+            if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                     continue;
                 }
 
-                if( true /* || (*pLibIndex)->ePRI_LagacyType == enumUndefinedPRI_LegacyType */ ) {
+            if( (*pLibIndex)->ePRI_Type == RadarModePRIType::enumPRIUnknown ) {
                     bkupLIBINDEX = *pFrqEid;
                     *pFrqEid = *pLibIndex;
                     *pLibIndex = bkupLIBINDEX;
@@ -2142,10 +2086,31 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                     ++ pFrqEid;
                     ++ incNoEid;
 
-                    ++ (pLibRange+_IGNORE_PRI)->uicount;
-                }
+                ++ (pLibRange+_UNKNOWN_PRI)->uicount;
             }
         }
+
+        // 7. PRI 타입이 잘못된 레이더 모드 출력
+//         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
+//             bool bRet=true;
+//             if( pLibIndex != NULL && CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
+//                 if( *pLibIndex == NULL ) {
+//                     if( bRet == true ) {
+//                         Log( enNormal, " Invalid RadarMode[%d] Freq Type[%d] : " , uicount, frqType );
+//                         bRet = false;
+//                     }
+//                     Log( enNoLineFeed, "Invalid Index !!!" );
+//                 }
+//                 else {
+//                     if( bRet == true ) {
+//                         Log( enNormal, " Invalid RadarMode[%d] Freq Type[%d] : " , uicount, frqType );
+//                         bRet = false;
+//                     }
+//                     Log( enNoLineFeed, "[%d]" , (*pLibIndex)->iRadarModeIndex );
+//                 }
+//                 continue;
+//             }
+//         }
     }
 
     return incNoEid;
@@ -2363,7 +2328,8 @@ void CELSignalIdentifyAlg::CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIA
         // 식별 후보 정보
         memset( szELNOT, 0, sizeof(szELNOT) );
         memset( pLOBDataIdInfo->n3LevelRadarModeIndex, 0, sizeof(pLOBDataIdInfo->n3LevelRadarModeIndex) );
-        for( i=j=0 ; i < m_nCoIdResult ; ++i ) {
+        j = 0;
+        for( i=0 ; i < m_nCoIdResult ; ++i ) {
             int iRadarModeIndex;
 
             iRadarModeIndex = m_pIdResult[i].pIdxRadarMode->iRadarModeIndex;
@@ -2891,23 +2857,38 @@ void CELSignalIdentifyAlg::IdentifySigType( int iSignalType )
             continue;
         }
 
-        switch( iSignalType ) {
-            case ST_NORMAL_PULSE :
-                if( pRadarMode->eSignalType != SignalType::enumPulsed )
-                    continue;
-                break;
 
-            case ST_CW :
-                if( pRadarMode->eSignalType != SignalType::enumCW )
-                    continue;
-                break;
-
-            default:
-                { //DTEC_Else
-                    continue;
-                }
-                break;
+        if( iSignalType == ST_NORMAL_PULSE ) {
+            if( pRadarMode->eSignalType != SignalType::enumPulsed ) {
+                continue;
+            }
         }
+        else if( iSignalType == ST_CW ) {
+            if( pRadarMode->eSignalType != SignalType::enumCW ) {
+                continue;
+            }
+        }
+        else {
+            continue;
+        }
+
+//         switch( iSignalType ) {
+//             case ST_NORMAL_PULSE :
+//                 if( pRadarMode->eSignalType != SignalType::enumPulsed ) {
+//                     continue;
+//                 }
+//                 break;
+// 
+//             case ST_CW :
+//                 if( pRadarMode->eSignalType != SignalType::enumCW ) {
+//                     continue;
+//                 }
+//                 break;
+// 
+//             default:
+//                 continue;
+//                 // break;
+//         }
 
         // 빔 번호 추가
         m_pIdResult[toLib++].pIdxRadarMode = pIdxLibAmbi->pIdxRadarMode;
@@ -3697,7 +3678,7 @@ void CELSignalIdentifyAlg::FIdentifyPatPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginFrqModPeriodErrorRatio * ( pRadarMode->fRF_TypicalMax - pRadarMode->fRF_TypicalMin ), 100.0 );
-        bret = IsOverlapSpace( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
+        bret = IsOverlapSpace<float>( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
         if( bret == _spFalse ) {
             continue;
         }
@@ -3757,7 +3738,7 @@ void CELSignalIdentifyAlg::FIdentifyAgiPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdFrqRangeNestedRatio * ( pRadarMode->fRF_TypicalMax - pRadarMode->fRF_TypicalMin ), 100.0 );
-        bret = IsOverlapSpace( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
+        bret = IsOverlapSpace<float>( pLOBData->fFreqMin, pLOBData->fFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, fOverlapValue );
         if( bret == _spFalse ) {
             continue;
         }
@@ -3791,13 +3772,13 @@ void CELSignalIdentifyAlg::FIdentifyAgiPat( SRxLOBData *pLOBData )
  * @date      2016-08-08, 오후 10:29
  * @warning
  */
-bool CELSignalIdentifyAlg::IsOverlapSpace( float flow1, float fhgh1, float flow2, float fhgh2, float nRatio )
-{
-    float fOverlapSpace;
-
-    fOverlapSpace = CalOverlapSpace<float>( fhgh1, flow1, fhgh2, flow2 );
-    return fOverlapSpace >= nRatio;
-}
+// bool CELSignalIdentifyAlg::IsOverlapSpace( float flow1, float fhgh1, float flow2, float fhgh2, float nRatio )
+// {
+//     float fOverlapSpace;
+// 
+//     fOverlapSpace = CalOverlapSpace<float>( fhgh1, flow1, fhgh2, flow2 );
+//     return fOverlapSpace >= nRatio;
+// }
 
 /**
  * @brief     두 범위 간의 중첩을 계산한다.
@@ -3812,13 +3793,13 @@ bool CELSignalIdentifyAlg::IsOverlapSpace( float flow1, float fhgh1, float flow2
  * @date      2016-08-08, 오후 10:29
  * @warning
  */
-bool CELSignalIdentifyAlg::IsOverlapSpace( int low1, int hgh1, int low2, int hgh2, int nRatio )
-{
-    UINT nOverlapSpace;
-
-    nOverlapSpace = CalOverlapSpace<UINT>( hgh1, low1, hgh2, low2 );
-    return (int) nOverlapSpace >= nRatio;
-}
+// bool CELSignalIdentifyAlg::IsOverlapSpace( int low1, int hgh1, int low2, int hgh2, int nRatio )
+// {
+//     UINT nOverlapSpace;
+// 
+//     nOverlapSpace = CalOverlapSpace<UINT>( hgh1, low1, hgh2, low2 );
+//     return (int) nOverlapSpace >= nRatio;
+// }
 
 /*!
  * @brief     PRI 형태를 무시한 경우의 PRI 범위에 대한 식별 처리를 수행한다.
@@ -3945,27 +3926,26 @@ void CELSignalIdentifyAlg::PIdentifyStbDwl( SRxLOBData *pLOBData )
         }
 
         // Dwell 특성 여부
-// 		for( auto iter = pRadarMode->mapRadarPRI_Sequence.begin(); iter != pRadarMode->mapRadarPRI_Sequence.end(); iter++ ) { //#FA_C_PotentialUnboundedLoop_T3
-// 			SRadarPRI_Sequence *pstSRadarPRI_Sequence = & (*iter).second;
-//
-// 			SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex;
-// 			vector<SRadarPRI_SequenceNumIndex> *pvecPRI_NumIndex;
-//
-// 			pvecPRI_NumIndex = & pstSRadarPRI_Sequence->vecPRI_NumIndex;
-// 			pPRI_SequenceNumIndex = & pvecPRI_NumIndex->at(0);
-//
-// 			bret = CompSwitchLevel( pLOBData->fPRIMin, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
-// 			if( bret == FALSE ) {
-// 				continue;
-// 			}
-// 			bret = CompSwitchLevel( pLOBData->fPRIMax, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
-// 			if( bret == FALSE ) {
-// 				continue;
-// 			}
-//
-// 			break;
-//
-// 		}
+		for( auto iter = pRadarMode->mapRadarPRI_Sequence.begin(); iter != pRadarMode->mapRadarPRI_Sequence.end(); iter++ ) { //#FA_C_PotentialUnboundedLoop_T3
+			SRadarPRI_Sequence *pstSRadarPRI_Sequence = & (*iter).second;
+
+			SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex;
+			vector<SRadarPRI_SequenceNumIndex> *pvecPRI_NumIndex;
+
+			pvecPRI_NumIndex = & pstSRadarPRI_Sequence->vecPRI_NumIndex;
+			pPRI_SequenceNumIndex = & pvecPRI_NumIndex->at(0);
+
+			bret = CompSwitchLevel( pLOBData->fPRIMin, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
+			if( bret == FALSE ) {
+				continue;
+			}
+			bret = CompSwitchLevel( pLOBData->fPRIMax, & pRadarMode->vecRadarMode_PRISequenceValues, pPRI_SequenceNumIndex, pvecPRI_NumIndex->size(), pRadarMode );
+			if( bret == FALSE ) {
+				continue;
+			}
+
+			break;
+		}
 
         if( bret == FALSE ) {
             continue;
@@ -4107,7 +4087,7 @@ void CELSignalIdentifyAlg::PIdentifyJitStg( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pRadarMode->fPRI_TypicalMax - pRadarMode->fPRI_TypicalMin ), 100.0 );
-        if( false == IsOverlapSpace( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
+        if( false == IsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
             continue;
         }
 
@@ -4190,7 +4170,7 @@ void CELSignalIdentifyAlg::PIdentifyJitPat( SRxLOBData *pLOBData )
         }
 
         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pRadarMode->fPRI_TypicalMax - pRadarMode->fPRI_TypicalMin ), 100.0 );
-        if( false == IsOverlapSpace( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
+        if( false == IsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, fOverlapValue ) ) {
             continue;
         }
 
@@ -4262,7 +4242,7 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
         bret = FALSE;
     }
 
-    else if( _spFalse == IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
+    else if( _spFalse == IsOverlapSpace<float>( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, 200. ) ||
              _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ||
              _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) ) {
         bret = FALSE;
@@ -5387,6 +5367,7 @@ float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarM
                     break;
 
                 }
+                break;
 
             // PRI 형태 비교
             case _PRI_TYPE_MATCHRATIO_ :
@@ -5806,22 +5787,19 @@ char *CELSignalIdentifyAlg::GetRadarModeName( int iRadarModeIndex )
  * @param uiFreqMax
  * @return
  */
-bool CELSignalIdentifyAlg::IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMode **pMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax )
+bool CELSignalIdentifyAlg::IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax )
 {
     UINT i, j;
     bool bRet=false;
     STR_FLOWHIGH band=STR_FLOWHIGH();
 
     STR_FLIB *pFLib;
-    SRadarMode *pRadarMode;
 
-    SRadarMode **pBackupMatchRadarMode;
+    SRadarMode **ppRadarMode;
 
     UINT _uiFreqMin, _uiFreqMax;
 
-    pBackupMatchRadarMode = pMatchRadarMode;
-
-    *puiCoKnownRadarMode = 0;
+    pVecMatchRadarMode->clear();
 
     _uiFreqMin = (unsigned int) ( FRQMhzCNV( 0, uiFreqMin ) + 0.5 );
     _uiFreqMax = (unsigned int) ( FRQMhzCNV( 0, uiFreqMax ) + 0.5 );
@@ -5831,48 +5809,49 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMo
 
     pFLib = & m_pFLib[band.ilow];
     for( i=(UINT) band.ilow ; i <= (UINT) band.ihgh ; ++i ) {
-        pRadarMode = pFLib->pIdxRadarMode[0];
+        ppRadarMode = & pFLib->pIdxRadarMode[0];
         for( j=0 ; j < pFLib->uicount ; ++ j ) {
-            if( CalOverlapSpace<float>( (float) _uiFreqMax, (float) _uiFreqMin, pRadarMode->fRF_TypicalMax, pRadarMode->fRF_TypicalMin ) > 0 ) {
-                    //CompMarginDiff<float>( (float) _uiFreqMin, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE &&
-                    //CompMarginDiff<float>( (float) _uiFreqMax, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, m_pSEnvironVariable->fMarginFrqError ) == TRUE ) {
-
-                *pBackupMatchRadarMode = pRadarMode;
-
-                ++ *puiCoKnownRadarMode;
-
-                ++ pBackupMatchRadarMode;
+            if( (*ppRadarMode)->eRF_Type != _UNKNOWN_FT && (*ppRadarMode)->ePRI_Type != _UNKNOWN_PRI &&
+                CalOverlapSpace<float>( (float) _uiFreqMax, (float) _uiFreqMin, (*ppRadarMode)->fRF_TypicalMax, (*ppRadarMode)->fRF_TypicalMin ) > 0 ) {
+                pVecMatchRadarMode->push_back( *ppRadarMode );
 
                 bRet = true;
             }
-            ++ pRadarMode;
+            ++ ppRadarMode;
         }
+
+        sort( pVecMatchRadarMode->begin(), pVecMatchRadarMode->end() );
+        pVecMatchRadarMode->erase( unique( pVecMatchRadarMode->begin(), pVecMatchRadarMode->end() ), pVecMatchRadarMode->end() );
+        //qsort( pMatchRadarMode, (size_t) *puiCoKnownRadarMode, sizeof(SRadarMode*), incRadarModeCompare );
+        //RemoveUniqueRadarIndex( pMatchRadarMode, puiCoKnownRadarMode );
+        //pBackupMatchRadarMode = pMatchRadarMode + *puiCoKnownRadarMode;
+
         ++ pFLib;
     }
 
     if( bRet == true ) {
-        char buffer[200];
-        int iCnt=0;
+//         char buffer[200];
+//         int iCnt=0;
+// 
+//         //printf( "\n ***라이브러리 기반 분석" );
+//         //Log( enNormal, "***라이브러리 기반 분석" );
+//         pBackupMatchRadarMode = pMatchRadarMode;
+//         for( i=0 ; i < *puiCoKnownRadarMode ; ++i ) {
+// #ifdef _MSC_VER
+//             //iCnt += sprintf( & buffer[iCnt], sizeof(buffer)-iCnt, "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eFreqType], aet_pri_type[(*pBackupMatchRadarMode)->ePRIType] );
+//             iCnt += sprintf( & buffer[iCnt], "(%s, %s)", g_szAetFreqType[(*pBackupMatchRadarMode)->eRF_Type], g_szAetPriType[(*pBackupMatchRadarMode)->ePRI_Type] );
+// #else
+//             iCnt += sprintf( & buffer[iCnt], "(%s, %s)", g_szAetFreqType[(*pBackupMatchRadarMode)->eRF_Type], g_szAetPriType[(*pBackupMatchRadarMode)->ePRI_Type] );
+// #endif
+//             ++ pBackupMatchRadarMode;
+// 
+//             if( iCnt >= (int) sizeof(buffer)-40 ) {
+//                 break;
+//             }
+// 
+//         }        
+//         Log( enNormal, "ID Result[%d] : %s" , *puiCoKnownRadarMode, buffer );
 
-        //printf( "\n ***라이브러리 기반 분석" );
-        //Log( enNormal, "***라이브러리 기반 분석" );
-        pBackupMatchRadarMode = pMatchRadarMode;
-        for( i=0 ; i < *puiCoKnownRadarMode ; ++i ) {
-#ifdef _MSC_VER
-            //iCnt += sprintf( & buffer[iCnt], sizeof(buffer)-iCnt, "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eFreqType], aet_pri_type[(*pBackupMatchRadarMode)->ePRIType] );
-            iCnt += sprintf( & buffer[iCnt], "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eRF_Type], aet_pri_type[(*pBackupMatchRadarMode)->ePRI_Type] );
-#else
-            iCnt += sprintf( & buffer[iCnt], "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eRF_Type], aet_pri_type[(*pBackupMatchRadarMode)->ePRI_Type] );
-#endif
-            ++ pBackupMatchRadarMode;
-
-            if( iCnt >= (int) sizeof(buffer)-40 ) {
-                break;
-            }
-
-        }
-        printf( "\n 레이더 모드 매칭 결과[%d] : %s" , *puiCoKnownRadarMode, buffer );
-        Log( enNormal, "레이더 모드 매칭 결과[%d] : %s" , *puiCoKnownRadarMode, buffer );
     }
 
     return bRet;
@@ -5886,11 +5865,13 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMo
  * @param iMaxItems
  * @return
  */
-void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems )
+bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems )
 {
+    
     *pnRadarMode = 0;
 
 #ifdef _SQLITE_
+    bool bRet=true;
     int i;
 
     sprintf( m_szSQLString, "SELECT RM_RADAR_MODE_INDEX, RM_FUNCTION_CODE, RM_SIGNAL_TYPE, RM_POLARIZATION, RM_PLATFORM, RM_VALIDATION, \
@@ -5909,17 +5890,18 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
         while( stmt.FetchRow() ) {
             int iValue;
-            char buffer[100];
+            //char buffer[100];
+            char *p;
 
             i = 0;
 
             pRadarMode->iRadarModeIndex = stmt.GetColumnInt(i++);
 
-            strcpy( buffer, stmt.GetColumnName(i++) );
-            pRadarMode->eFunctionCode = GetFunctionCodes( buffer );
+            p = (char *) stmt.GetColumnName(i++);
+            pRadarMode->eFunctionCode = GetFunctionCodes( p );
 
-            strcpy( buffer, stmt.GetColumnName(i++) );
-            pRadarMode->eSignalType = GetSignalType( buffer );
+            p = (char *) stmt.GetColumnName(i++);
+            pRadarMode->eSignalType = GetSignalType( p );
 
             iValue = stmt.GetColumnInt(i++);
             pRadarMode->ePolarization = GetPolarizationCodes( iValue );
@@ -6014,61 +5996,68 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
         // do not forget to clean-up
         stmt.FreeQuery();
+        
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
+    return bRet;
+
 #elif _NO_SQLITE_
-#else
+
+    return true;
+
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
-    int index;
-
+    int i;
+ 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE,  "SELECT * FROM RADARMODE ORDER BY RADAR_MODE_INDEX" );
-
-    theRS.Open( m_pszSQLString );
-
+ 
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE,  "SELECT * FROM RADARMODE ORDER BY RADAR_MODE_INDEX" );
+ 
+    theRS.Open( m_szSQLString );
+ 
     while (!theRS.IsEof()) {
-        index = 0;
+        i = 0;
 
-        theRS.GetFieldValue( index++, & pRadarMode->iRadarModeIndex );
+        theRS.GetFieldValue( i++, & pRadarMode->iRadarModeIndex );
 
-        theRS.GetFieldValue( index++, pRadarMode->szRadarName );
+        theRS.GetFieldValue( i++, pRadarMode->szRadarName );
 
-        theRS.GetFieldTimeValue( index++, & pRadarMode->tiCreated );
-        theRS.GetFieldTimeValue( index++, & pRadarMode->tiLastUpdated );
+        theRS.GetFieldTimeValue( i++, & pRadarMode->tiCreated );
+        theRS.GetFieldTimeValue( i++, & pRadarMode->tiLastUpdated );
 
-        theRS.GetFieldTimeValue( index++, & pRadarMode->tiFirstSeen );
-        theRS.GetFieldTimeValue( index++, & pRadarMode->tiLastSeen );
+        theRS.GetFieldTimeValue( i++, & pRadarMode->tiFirstSeen );
+        theRS.GetFieldTimeValue( i++, & pRadarMode->tiLastSeen );
 
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->ePlatform );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->ePlatform );
 
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->eSignalType );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->eSignalType );
 
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->eFreqType );
-        theRS.GetFieldValue( index++, & pRadarMode->fRF_TypicalMin );
-        theRS.GetFieldValue( index++, & pRadarMode->fRF_TypicalMax );
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->eRF_PatternType );
-        theRS.GetFieldValue( index++, & pRadarMode->nRF_NumPositions );
-        theRS.GetFieldValue( index++, & pRadarMode->fRF_PatternPeriodMin );
-        theRS.GetFieldValue( index++, & pRadarMode->fRF_PatternPeriodMax );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->eRF_Type );
+        theRS.GetFieldValue( i++, & pRadarMode->fRF_TypicalMin );
+        theRS.GetFieldValue( i++, & pRadarMode->fRF_TypicalMax );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->eRF_Pattern );
+        theRS.GetFieldValue( i++, & pRadarMode->nRF_NumPositions );
+        theRS.GetFieldValue( i++, & pRadarMode->fRF_PatternPeriodMin );
+        theRS.GetFieldValue( i++, & pRadarMode->fRF_PatternPeriodMax );
 
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->ePRIType );
-        theRS.GetFieldValue( index++, & pRadarMode->fPRI_TypicalMin );
-        theRS.GetFieldValue( index++, & pRadarMode->fPRI_TypicalMax );
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->ePRI_PatternType );
-        theRS.GetFieldValue( index++, & pRadarMode->nPRI_NumPositions );
-        theRS.GetFieldValue( index++, & pRadarMode->fPRI_PatternPeriodMin );
-        theRS.GetFieldValue( index++, & pRadarMode->fPRI_PatternPeriodMax );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->ePRI_Type );
+        theRS.GetFieldValue( i++, & pRadarMode->fPRI_TypicalMin );
+        theRS.GetFieldValue( i++, & pRadarMode->fPRI_TypicalMax );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->ePRI_Pattern );
+        theRS.GetFieldValue( i++, & pRadarMode->nPRI_NumPositions );
+        theRS.GetFieldValue( i++, & pRadarMode->fPRI_PatternPeriodMin );
+        theRS.GetFieldValue( i++, & pRadarMode->fPRI_PatternPeriodMax );
 
-        theRS.GetFieldValue( index++, & pRadarMode->fPD_TypicalMin );
-        theRS.GetFieldValue( index++, & pRadarMode->fPD_TypicalMax );
+        theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMin );
+        theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMax );
 
-        theRS.GetFieldValue( index++, (int *) & pRadarMode->eValidation );
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->eValidation );
 
         if( pRadarMode->eValidation == enumValidated ) {
             ++ *pnRadarMode;
@@ -6079,13 +6068,13 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
             break;
         }
 
-        theRS.MoveNext();
-    }
+         theRS.MoveNext();
+     }
 
-    theRS.Close();
-
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
+     theRS.Close();
+ 
+     DECLARE_END_CHECKODBC
+     DECLARE_RETURN
 #endif
 
 }
@@ -6101,11 +6090,12 @@ void CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
  * @date      2021-06-04, 17:37
  * @warning
  */
-void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_RFSequence, int nMaxRadarMode )
+bool CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence, int nMaxRadarMode )
 {
 
 #ifdef _SQLITE_
-    SRadarMode_Sequence_Values *pRadarMode_RFSequence_Values;
+    bool bRet=true;
+    SRadarMode_Sequence_Values stRadarMode_RFSequence_Values;
 
     int i;
 
@@ -6121,52 +6111,54 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
         while( stmt.FetchRow() ) {
             i = 0;
 
-            pRadarMode_RFSequence_Values = new SRadarMode_Sequence_Values;
+            stRadarMode_RFSequence_Values.iRadarModeIndex = stmt.GetColumnInt(i++);
+            stRadarMode_RFSequence_Values.i_Index = stmt.GetColumnInt(i++);
 
-            pRadarMode_RFSequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
-            pRadarMode_RFSequence_Values->i_Index = stmt.GetColumnInt(i++);
+            stRadarMode_RFSequence_Values.f_Min = (float) stmt.GetColumnDouble(i++);
+            stRadarMode_RFSequence_Values.f_Max = (float) stmt.GetColumnDouble(i++);
 
-            pRadarMode_RFSequence_Values->f_Min = (float) stmt.GetColumnDouble(i++);
-            pRadarMode_RFSequence_Values->f_Max = (float) stmt.GetColumnDouble(i++);
-
-            pVecRadarMode_RFSequence->push_back( pRadarMode_RFSequence_Values );
+            pVecRadarMode_RFSequence->push_back( stRadarMode_RFSequence_Values );
         }
 
         // do not forget to clean-up
         stmt.FreeQuery();  
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
+
+    return bRet;
+
 #elif _NO_SQLITE_
-#else
+    return true;
+
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
-    int index;
-
-
+    int i;
+    SRadarMode_Sequence_Values stRadarMode_RFSequence_Values;
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "SELECT RADAR_MODE_INDEX, PRI_SEQ_ID, PRI_MIN, PRI_MAX FROM RADARMODE_PRI_SEQUENCE ORDER BY RADAR_MODE_INDEX ASC, PRI_SEQ_ID ASC" );
-    theRS.Open( m_pszSQLString );
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE, "SELECT RADAR_MODE_INDEX, RF_SEQ_ID, RF_MIN, RF_MAX FROM RADARMODE_RF_SEQUENCE ORDER BY RADAR_MODE_INDEX ASC, RF_SEQ_ID ASC" );
+    theRS.Open( m_szSQLString );
 
-    pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
-    DeletePointers( *pVecRadarMode_PRISequence );
+    pVecRadarMode_RFSequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
+    pVecRadarMode_RFSequence->clear();
+    //DeletePointers( *pVecRadarMode_RFSequence );
 
     while (!theRS.IsEof()) {
-        index = 0;
+        i = 0;
 
-        pRadarMode_PRISequence_Values = new SRadarMode_PRISequence_Values;
+        theRS.GetFieldValue( i++, & stRadarMode_RFSequence_Values.iRadarModeIndex );
+        theRS.GetFieldValue( i++, & stRadarMode_RFSequence_Values.i_Index );
 
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->iRadarModeIndex );
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->iPRI_Index );
+        theRS.GetFieldValue( i++, & stRadarMode_RFSequence_Values.f_Min );
+        theRS.GetFieldValue( i++, & stRadarMode_RFSequence_Values.f_Max );
 
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->fPRI_Min );
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->fPRI_Max );
-
-        pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
+        pVecRadarMode_RFSequence->push_back( stRadarMode_RFSequence_Values );
 
         theRS.MoveNext();
 
@@ -6176,6 +6168,7 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+#else
 #endif
 
 }
@@ -6185,14 +6178,14 @@ void CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
  * @param pVecRadarMode_PRISequence
  * @param nMaxRadarMode
  */
-void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode )
+bool CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence, int nMaxRadarMode )
 {
     
 #ifdef _SQLITE_   
-
+    bool bRet=true;
     int i;
 
-    SRadarMode_Sequence_Values *pRadarMode_PRISequence_Values;
+    SRadarMode_Sequence_Values stRadarMode_PRISequence_Values;
 
     sprintf( m_szSQLString, "SELECT RADAR_MODE_INDEX, PRI_INDEX, PRI_MIN, PRI_MAX FROM VEL_RADAR_PRI_SEQENCE ORDER BY RADAR_MODE_INDEX, PRI_SEQ_ID" );
 
@@ -6207,15 +6200,13 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
         while( stmt.FetchRow() ) {
             i = 0;
 
-            pRadarMode_PRISequence_Values = new SRadarMode_Sequence_Values;
+            stRadarMode_PRISequence_Values.iRadarModeIndex = stmt.GetColumnInt(i++);
+            stRadarMode_PRISequence_Values.i_Index = stmt.GetColumnInt(i++);
 
-            pRadarMode_PRISequence_Values->iRadarModeIndex = stmt.GetColumnInt(i++);
-            pRadarMode_PRISequence_Values->i_Index = stmt.GetColumnInt(i++);
+            stRadarMode_PRISequence_Values.f_Min = (float) stmt.GetColumnInt(i++);
+            stRadarMode_PRISequence_Values.f_Max = (float) stmt.GetColumnInt(i++);
 
-            pRadarMode_PRISequence_Values->f_Min = (float) stmt.GetColumnInt(i++);
-            pRadarMode_PRISequence_Values->f_Max = (float) stmt.GetColumnInt(i++);
-
-            pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
+            pVecRadarMode_PRISequence->push_back( stRadarMode_PRISequence_Values );
         }
 
         // do not forget to clean-up
@@ -6223,37 +6214,42 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 
     }
     catch( Kompex::SQLiteException &exception ) {
+        bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
+    return bRet;
     
 #elif _NO_SQLITE_
-#else
+    return false;
+
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
     int index;
 
+    SRadarMode_Sequence_Values stRadarMode_PRISequence_Values;
+
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "SELECT RADAR_MODE_INDEX, PRI_SEQ_ID, PRI_MIN, PRI_MAX FROM RADARMODE_PRI_SEQUENCE ORDER BY RADAR_MODE_INDEX ASC, PRI_SEQ_ID ASC" );
-    theRS.Open( m_pszSQLString );
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE, "SELECT RADAR_MODE_INDEX, PRI_SEQ_ID, PRI_MIN, PRI_MAX FROM RADARMODE_PRI_SEQUENCE ORDER BY RADAR_MODE_INDEX ASC, PRI_SEQ_ID ASC" );
+    theRS.Open( m_szSQLString );
 
     pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
-    DeletePointers( *pVecRadarMode_PRISequence );
+    pVecRadarMode_PRISequence->clear();
+//     DeletePointers( *pVecRadarMode_PRISequence );
 
     while (!theRS.IsEof()) {
         index = 0;
 
-        pRadarMode_PRISequence_Values = new SRadarMode_PRISequence_Values;
+        theRS.GetFieldValue( index++, & stRadarMode_PRISequence_Values.iRadarModeIndex );
+        theRS.GetFieldValue( index++, & stRadarMode_PRISequence_Values.i_Index );
 
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->iRadarModeIndex );
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->iPRI_Index );
+        theRS.GetFieldValue( index++, & stRadarMode_PRISequence_Values.f_Min );
+        theRS.GetFieldValue( index++, & stRadarMode_PRISequence_Values.f_Max );
 
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->fPRI_Min );
-        theRS.GetFieldValue( index++, & pRadarMode_PRISequence_Values->fPRI_Max );
-
-        pVecRadarMode_PRISequence->push_back( pRadarMode_PRISequence_Values );
+        pVecRadarMode_PRISequence->push_back( stRadarMode_PRISequence_Values );
 
         theRS.MoveNext();
 
@@ -6263,6 +6259,8 @@ void CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+#else
+
 #endif
 
 }
@@ -6298,9 +6296,14 @@ EnumFunctionCodes CELSignalIdentifyAlg::GetFunctionCodes( char *pData )
 }
 
 /**
- * @brief CELSignalIdentifyAlg::GetFunctionCodes
- * @param eFunctionCode
- * @return
+ * @brief     GetFunctionCode
+ * @param     EnumFunctionCodes eFunctionCode
+ * @return    char *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:42
+ * @warning
  */
 char *CELSignalIdentifyAlg::GetFunctionCode( EnumFunctionCodes eFunctionCode )
 {
@@ -6485,32 +6488,35 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
 
     // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
 #ifdef _SQLITE_
-    char buffer[100];    
+    char buffer[100]={"1970/01/01 00:00:00"};    
 
-    strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", pstTime );
+    if( pstTime != NULL ) {
+        strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", pstTime );
 
-    // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-    try {
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-        stmt.Sql( m_szSQLString );
+        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+            sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+            stmt.Sql( m_szSQLString );
 
-        sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
-        stmt.Sql( m_szSQLString );
+            sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
+            stmt.Sql( m_szSQLString );
 
-        // do not forget to clean-up
-        stmt.FreeQuery();  
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+            // do not forget to clean-up
+            stmt.FreeQuery();  
+        }
+        catch( Kompex::SQLiteException &exception ) {
+            std::cerr << "\nException Occured" << std::endl;
+            exception.Show();
+            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+        }
     }
 
 #elif _NO_SQLITE_
+#elif _MSSQL_
+//     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+//     exec( m_szSQLString );
 #else
-    sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
-    exec( m_szSQLString );
 #endif
     
 

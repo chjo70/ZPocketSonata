@@ -47,6 +47,9 @@ CCommonUtils::CCommonUtils()
  */
 void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
+#ifdef _ELINT_
+
+#elif _POCKETSONATA_
 #ifndef _CGI_LIST_
     // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
     if( g_enBoardId == enMaster ) {
@@ -56,8 +59,8 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         }
 
         // EA 경우에 AET 관련 메세지를 전달한다.
-        if( g_pThePMCSocket != NULL && ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
-
+        if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
+            g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
         }
 
     }
@@ -71,6 +74,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         }
     }
 #endif
+#endif
 
 }
 
@@ -79,6 +83,9 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
  */
 void CCommonUtils::CloseSocket()
 {
+#ifdef _ELINT_
+
+#elif _POCKETSONATA_
 #ifndef _CGI_LIST_
     if( g_enBoardId == enMaster ) {
         if( g_pTheCCUSocket != NULL ) {
@@ -89,6 +96,7 @@ void CCommonUtils::CloseSocket()
     else {
 
     }
+#endif
 #endif
 
 }
@@ -252,8 +260,6 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
         clock_gettime( CLOCK_REALTIME, & tsNow );
     }
 
-
-
 #ifdef _MSC_VER
     if ((tsNow.tv_usec - start->tv_usec) < 0) {
         result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
@@ -304,36 +310,6 @@ void CCommonUtils::swapByteOrder(unsigned int& ui)
         ((ui<<8) & 0x00FF0000) |
         ((ui>>8) & 0x0000FF00) |
         (ui << 24);
-}
-
-/**
- * @brief CCommonUtils::GetStringBand
- * @param pBuffer
- * @param iBand
- */
-void CCommonUtils::GetStringBand( char *pBuffer, int iBand )
-{
-    pBuffer[0] = 0;
-    if( iBand & 0x02 ) {
-        strcat( pBuffer, "1, " );
-    }
-    if( iBand & 0x01 ) {
-        strcat( pBuffer, "2, " );
-    }
-    if( iBand & 0x02 ) {
-        strcat( pBuffer, "3, " );
-    }
-    if( iBand & 0x04 ) {
-        strcat( pBuffer, "4, " );
-    }
-    if( iBand & 0x08 ) {
-        strcat( pBuffer, "5, " );
-    }
-    if( iBand & 0x10 ) {
-        strcat( pBuffer, "6, " );
-    }
-    pBuffer[ strlen(pBuffer)-2 ] = 0;
-
 }
 
 /**
@@ -389,15 +365,43 @@ ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
     return enCollectBank;
 }
 
+/**
+ * @brief     getStringPresentTime
+ * @param     char * pString
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 17:27
+ * @warning
+ */
 void CCommonUtils::getStringPresentTime( char *pString ) 
 {
     struct tm *pstTime;
     time_t nowTime=time(NULL);
 
     pstTime = localtime( & nowTime );
-    strftime( pString, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+    if( pstTime != NULL ) {
+        strftime( pString, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+    }
+    else {
+        strcpy( pString, "1970-01-01 00:00:00" );
+    }
 }
 
+/**
+ * @brief     CopyFile
+ * @param     const char * src_file
+ * @param     const char * dest_file
+ * @param     int overwrite
+ * @param     int copy_attr
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 17:27
+ * @warning
+ */
 int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr )
 {
     int iRet=-1;
@@ -407,9 +411,16 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     char    data_buf[4096];
     int     tmp_errno;
     int     size;
-    struct  utimbuf attr;
 
-    if((src_fd = _open(src_file, O_RDONLY | O_BINARY )) != -1) {
+#if defined(__linux__) || defined(__VXWORKS__)
+    src_fd = open(src_file, O_RDONLY | O_BINARY, 0644 );
+#else
+    src_fd = open(src_file, O_RDONLY | O_BINARY );
+    
+#endif
+    
+    if( src_fd != -1) {
+        memset( & sts, 0, sizeof(sts) );
 
         /* 원본 file의 속성을 읽습니다. */
         fstat(src_fd, &sts);
@@ -427,17 +438,22 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
             return -1;
         }
 
-        while(size = read(src_fd, data_buf, 4096)) {
-            if(size == -1) {
-                if(errno == EINTR) {
-                    continue;
-                }
-                tmp_errno = errno;
-                close(src_fd);
-                close(dest_fd);
-                errno = tmp_errno; // close가 초기화한 errno를 복구함
-                return -1;
+        do { // while( size = read(src_fd, data_buf, 4096) ) {
+            size = read(src_fd, data_buf, 4096);
+            if( size <= 0 ) {
+                break;
             }
+
+//             if(size == -1) {
+//                 if(errno == EINTR) {
+//                     continue;
+//                 }
+//                 tmp_errno = errno;
+//                 close(src_fd);
+//                 close(dest_fd);
+//                 errno = tmp_errno; // close가 초기화한 errno를 복구함
+//                 return -1;
+//             }
 
             while(write(dest_fd, data_buf, size) == -1) {
                 if(errno == EINTR) {
@@ -448,19 +464,27 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
                     tmp_errno = errno;
                     close(src_fd);
                     close(dest_fd);
-                    errno = tmp_errno; // close가 초기화한 errno를 복구함
+                    errno = tmp_errno;
                 }
             }
         }
+        while( true );
+
         close(src_fd);
         close(dest_fd);
     
         /* 원본 파일의 속성을 복원해야 한다면... */
         if(copy_attr) {
+#ifdef __VXWORKS__        		
+  
+#else 		
+        	struct  utimbuf attr;
+    			
             /* last access 시간, last modify 시간 복구 */
             attr.actime  = sts.st_atime;
             attr.modtime = sts.st_mtime;
-            utime(dest_file, &attr);  
+            utime(dest_file, &attr);            
+#endif            
         
             /* 원본 파일의 파일 권한을 복원하기 
             * open시에 파일권한을 설정하였지만, 

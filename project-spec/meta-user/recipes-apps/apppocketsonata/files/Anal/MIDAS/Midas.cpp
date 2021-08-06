@@ -9,8 +9,10 @@
 
 #include "stdafx.h"
 
-#ifdef __GNUC__
 #define _DECODE_
+
+#ifdef __GNUC__
+
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -27,6 +29,9 @@
 #include <fcntl.h>
 #include <time.h>
 #include <stdlib.h>
+
+
+#include "../Collect/DataFile/DataFile.h"
 
 #include "Midas.h"
 
@@ -75,7 +80,13 @@ CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
     // 초기 설정 정의
     memset( & m_strKeywordValue, 0, sizeof(SEL_KEYWORD_VALUE) );
     strcpy( m_strKeywordValue.writer_version, "0.1" );
+#ifdef _ELINT_
+    strcpy( m_strKeywordValue.writer, "ELINT" );
+#elif _POCKETSONATA_
     strcpy( m_strKeywordValue.writer, "ZSONATA" );
+#else
+    strcpy( m_strKeywordValue.writer, "MIDAS" );
+#endif
 
 }
 
@@ -117,7 +128,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
     else {
         m_enFileType = enFileType;
 
-        memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
+        //memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
 
         // 1. 사용자 지정 파일 생성
         if( FileOpen( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
@@ -257,12 +268,12 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 {
     bool bRet=true;
     long sz_file;
-    int iSize, iWrite;
+    unsigned int uiWrite;
     unsigned int i, numberofdata;
 
-    long long iNullCh=0;
+    long long llNullCh=0;
 
-    int iRecords;
+    int iRecords, iSize;
 
     S_UNI_DATA_SET x;
     /*! \bug  신뢰성: 변수 초기화
@@ -275,8 +286,8 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
     if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
         // 데이터 블럭에서 쓰고 난 이후에 512 블럭을 맞추기 위해서 NULL 문자 개수를 계산함.
-        iNullCh = (unsigned long long) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( m_pHCB->data_size + (double) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
-        if( iNullCh < 0 ) { //DTEC_Else
+        llNullCh = (long long) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( m_pHCB->data_size + (double) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
+        if( llNullCh < 0 ) { //DTEC_Else
             bRet = false;
         }
     }
@@ -293,12 +304,12 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                     uiWriteByte = MAX_OF_IQ_DATA * sizeof(SRxIQDataRGroup1);
                     for( i=0 ; i < numberofdata ; ++i ) {
                         iSize = _read( destFileId, (char *) & x.iqData[0], uiWriteByte );
-                        if( iSize == 0 ) {
+                        if( iSize <= 0 ) {
                             break;
                         }
                         else {
                             TransferIQ( & x.iqData[0], iSize );
-                            iWrite = Write( & x.iqData[0], iSize );
+                            uiWrite = Write( & x.iqData[0], iSize );
                         }
                     }
                 }
@@ -325,12 +336,12 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         uiWriteByte = MAX_OF_IF_DATA * sizeof(SRxIFDataRGroupEEEI);
                         for( i=0 ; i < numberofdata ; ++i ) {
                             iSize = _read( destFileId, (char *) & x.ifData[0], uiWriteByte );
-                            if( iSize == 0 ) { //DTEC_Else
+                            if( iSize <= 0 ) { //DTEC_Else
                                 break;
                             }
                             else {
                                 //TransferIF( & x.ifData[0], iSize );
-                                iWrite = Write( & x.ifData[0], iSize );
+                                uiWrite = Write( & x.ifData[0], iSize );
                             }
                         }
                     }
@@ -348,14 +359,14 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         uiWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
                         for( i=0 ; i < numberofdata ; ++i ) {
                             iSize = _read( destFileId, (char * )& x.pdwData[0], uiWriteByte );
-                            if( iSize == 0 ) { //DTEC_Else
+                            if( iSize <= 0 ) { //DTEC_Else
                                 break;
                             }
                             else {
-                                iRecords = iSize / sizeof(SRxPDWDataRGroup);
+                                iRecords = (int) ( iSize / sizeof(SRxPDWDataRGroup) );
                                 TransferPDW2Record( & x.pdwData[0], iRecords );
                                 iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
-                                iWrite = Write( m_pPDWRecords, iSize );
+                                uiWrite = Write( m_pPDWRecords, iSize );
                             }
                         }
                     }
@@ -374,7 +385,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         }
                         TransferPDW2Record( & m_pPDWData->stPDW[i], iRecords );
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
-                        iWrite = Write( m_pPDWRecords, iSize );
+                        uiWrite = Write( m_pPDWRecords, iSize );
                     }
                 }
 
@@ -415,15 +426,15 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 else {
                     iWriteByte = MAX_OF_PDW_DATA * sizeof(SRxPDWDataRGroup);
                     for( i=0 ; i < numberofdata ; ++i ) {
-                        iSize = _read( destFileId, & x.pdwData[0], iWriteByte );
-                        if( iSize == 0 ) { //DTEC_Else
+                        uiSize = _read( destFileId, & x.pdwData[0], iWriteByte );
+                        if( uiSize == 0 ) { //DTEC_Else
                             break;
                         }
                         else {
                             iRecords = iSize / sizeof(SRxPDWDataRGroup);
                             TransferPDW2SP370( & x.pdwData[0], iRecords );
-                            iSize = iRecords * sizeof( SELSP350_PDWWORDS );
-                            iWrite = Write( m_stPDWWord, iSize, 1 );
+                            uiSize = iRecords * sizeof( SELSP350_PDWWORDS );
+                            uiWrite = Write( m_stPDWWord, uiSize, 1 );
                         }
                     }
                 }
@@ -454,17 +465,22 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
                 // 데이터와 NULL 문자 저장
                 pNullData = ( char * ) malloc( sizeof(char) * uiWriteByte );
-                memset( pNullData, 0, uiWriteByte );
-                do {
-                    if( iNullCh-uiWriteByte > 0 ) { //DTEC_Else
-                        iNullCh -= (unsigned long long) Write( pNullData, uiWriteByte );
-                    }
-                    else {
-                        iNullCh -= (unsigned long long) Write( pNullData, (int) iNullCh );
-                    }
-                } while( iNullCh > 0 );
+                if( pNullData != NULL ) {
+                    memset( pNullData, 0, uiWriteByte );
+                    do {
+                        if( llNullCh-(long long) uiWriteByte > 0 ) { //DTEC_Else
+                            llNullCh -= (long long) Write( pNullData, uiWriteByte );
+                        }
+                        else {
+                            llNullCh -= (long long) Write( pNullData, (int) llNullCh );
+                        }
+                    } while( llNullCh > 0 );
 
-                free( pNullData );
+                    free( pNullData );
+                }
+                else {
+
+                }
             }
         }
     }
@@ -546,25 +562,49 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
         }
 
 #ifdef _DECODE_
-        pPDWRecords->ldoa = (double) CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->iAOA );
+#ifdef _POCKETSONATA_
+        pPDWRecords->ddoa = (double) CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->iAOA );
 
-        pPDWRecords->lfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->iFreq ) * 1000000. );		// [Hz]
+        pPDWRecords->dfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->iFreq ) * 1000000. );		// [Hz]
 
-        pPDWRecords->lpa = (double) CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
+        pPDWRecords->dpa = (double) CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
 
-        pPDWRecords->lpw = (double) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
+        pPDWRecords->dpw = (double) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
 
-        pPDWRecords->ltoa = CPOCKETSONATAPDW::DblDecodeTOA( pS_EL_PDW_DATA->ullTOA-m_ullfirstTOA );	// [s]
+        pPDWRecords->dtoa = CPOCKETSONATAPDW::DblDecodeTOA( pS_EL_PDW_DATA->ullTOA-m_ullfirstTOA );	// [s]
 
-        pPDWRecords->ldtoa = 0; //(double) ( CPOCKETSONATAPDW::DecodeTOA( dtoa ) / 1000000000. );									// [s]
+        pPDWRecords->ddtoa = 0;
+
+#elif _ELINT_
+        pPDWRecords->ddoa = FAOACNV( pS_EL_PDW_DATA->iAOA );
+
+        pPDWRecords->dfreq = DFRQMhzCNV( 0, pS_EL_PDW_DATA->iFreq ) * 1000000.;
+
+        pPDWRecords->dpa = PACNV( pS_EL_PDW_DATA->iPA );										// [dBm]
+
+        pPDWRecords->dpw = DPWCNV( pS_EL_PDW_DATA->iPW );			// [s]
+
+        pPDWRecords->dtoa = (float) ( pS_EL_PDW_DATA->ullTOA - m_ullfirstTOA );	// [s]
+
+        pPDWRecords->ddtoa = 0;
+#else
+        pPDWRecords->ddoa = 0;
+        pPDWRecords->dfreq = 0;
+        pPDWRecords->dpa = 0;
+        pPDWRecords->dpw = 0;
+        pPDWRecords->dtoa = 0;
+        pPDWRecords->ddtoa = 0;
+
 #endif
 
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->ltoa );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ldtoa );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->ldoa );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->lfreq );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->lpa );
-        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->lpw );
+#endif
+
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enTOAOfSub], pPDWRecords->dtoa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ddtoa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enDOAOfSub], pPDWRecords->ddoa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enFreqOfSub], pPDWRecords->dfreq );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->dpa );
+        MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->dpw );
 
         pre_TOA = pS_EL_PDW_DATA->ullTOA;
 
@@ -618,7 +658,7 @@ void CMIDASBlueFileFormat::TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int i
 {
     unsigned short temp;
 
-    for( unsigned int i=0 ; i < iByte / sizeof( SRxIQDataRGroup1 ) ; ++i ) {
+    for( int i=0 ; i < (int) ( iByte / sizeof( SRxIQDataRGroup1 ) ) ; ++i ) {
 #ifdef __linux__
 #else
         //AllEndian16( pSRxIQDataRGroup, sizeof(SRxIQDataRGroup) );
@@ -809,7 +849,7 @@ void CMIDASBlueFileFormat::MakeHeader()
         // 버젼, IO 등 기록하기
         memset( pHCB->keywords, 0, sizeof( pHCB->keywords ) );
 
-        int c = 0;
+        unsigned int c = 0;
         if( m_strKeywordValue.writer_version[0] == 0 ) {
             c += sprintf( & pHCB->keywords[c], "VER=%s" , DEFAULT_HEADER_VER );
         }
@@ -836,10 +876,13 @@ void CMIDASBlueFileFormat::MakeHeader()
             c += 1;
         }
 
-        memset( & pHCB->keywords[c], 0, sizeof( pHCB->keywords )-c );
+        unsigned int uiSize= sizeof( pHCB->keywords ) - c;
+        if( uiSize <= sizeof(pHCB->keywords) ) {
+            memset( & pHCB->keywords[c], 0, uiSize );
+        }
 
         // 키워드 길이; keylength
-        pHCB->keylength = c;
+        pHCB->uiKeylength = c;
     }
 
 }
@@ -1132,15 +1175,15 @@ int CMIDASBlueFileFormat::WriteHeader()
 void CMIDASBlueFileFormat::MakeExtendedHeader()
 {
     int c;
-    char buffer[100];
+    char buffer[2129];
 
-    tm tm_time;
+    tm tm_time={0};
 
 #ifdef __linux__
     tm *p_tm_time;
 #endif
 
-    time_t time_tick, start_time;
+    time_t time_tick=0, start_time;
 
     SELMIDAS_BINARY_KEYWORD *pBinKeyword;
 
@@ -1178,297 +1221,300 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
 
         //m_pExtendOfHeader = new byte[m_SizeOfExtend];
         m_pExtendOfHeader = ( unsigned char * ) malloc( m_uiSizeOfExtend );
-        memset( m_pExtendOfHeader, 0, sizeof( char ) * m_uiSizeOfExtend );
 
-        // Extended Header 구조체 초기화
-        pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) & m_pExtendOfHeader[0];
+        if( m_pExtendOfHeader != NULL ) {
+            memset( m_pExtendOfHeader, 0, sizeof( char ) * m_uiSizeOfExtend );
 
-        // CLASSIFICATION
-        // keyword, value 저장
-        if( m_enFileType == E_EL_SCDT_PDW ) {
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "SECRETCLASSIFICATION", (char *) "CLASSIFICATION" );
+            // Extended Header 구조체 초기화
+            pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) & m_pExtendOfHeader[0];
 
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "UNTAGGEDFUNCTIONS_VALUES", (char *) "FUNCTIONS_VALUES" );
+            // CLASSIFICATION
+            // keyword, value 저장
+            if( m_enFileType == E_EL_SCDT_PDW ) {
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "SECRETCLASSIFICATION", (char *) "CLASSIFICATION" );
 
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "PLATINUMIO", (char *) "IO" );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "UNTAGGEDFUNCTIONS_VALUES", (char *) "FUNCTIONS_VALUES" );
 
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "jpluto/ASPENIOVERSION", (char *) "IOVERSION" );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "PLATINUMIO", (char *) "IO" );
 
-            //pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, "UNTAGGEDSIGNAL_VALUES", "SIGNAL_VALUES" );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "jpluto/ASPENIOVERSION", (char *) "IOVERSION" );
 
-        }
-        else {
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "UNCLASSIFIEDCLASSIFICATION", (char *)"CLASSIFICATION" );
+                //pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, "UNTAGGEDSIGNAL_VALUES", "SIGNAL_VALUES" );
 
-            // WRITER
-            sprintf( buffer, "%sWRITER" , DEFAULT_WRITER_VALUE );
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "WRITER" );
-
-            // WRITER_VERSION
-            if( m_strKeywordValue.writer_version[0] == 0 ) {
-                sprintf( buffer, "%sWRITER_VERSION" , DEFAULT_WRITER_VERSION_VALUE );
             }
-            else {  //DTEC_Else
-                sprintf( buffer, "%sWRITER1_VERSION" , m_strKeywordValue.writer_version );
-            }
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "WRITER_VERSION" );
+            else {
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "UNCLASSIFIEDCLASSIFICATION", (char *)"CLASSIFICATION" );
 
-            // COLLECTOR
-            if( m_strKeywordValue.collector[0] == 0 ) {
-                sprintf( buffer, "%sCOLLECTOR" , DEFAULT_COLLECTOR_VALUE );
-            }
-            else { //DTEC_Else
-                sprintf( buffer, "%sCOLLECTOR" , m_strKeywordValue.collector );
-            }
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "COLLECTOR" );
+                // WRITER
+                sprintf( buffer, "%sWRITER" , DEFAULT_WRITER_VALUE );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "WRITER" );
 
-            // FEED
-            if( m_strKeywordValue.feed[0] == 0 ) {
-                c = sprintf( buffer, "%sFEED" , DEFAULT_FEED_VALUE );
-            }
-            else { //DTEC_Else
-                c = sprintf( buffer, "%sFEED" , m_strKeywordValue.feed );
-            }
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "FEED" );
+                // WRITER_VERSION
+                if( m_strKeywordValue.writer_version[0] == 0 ) {
+                    sprintf( buffer, "%sWRITER_VERSION" , DEFAULT_WRITER_VERSION_VALUE );
+                }
+                else {  //DTEC_Else
+                    sprintf( buffer, "%sWRITER1_VERSION" , m_strKeywordValue.writer_version );
+                }
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "WRITER_VERSION" );
 
-            // SIGNAL_ID
-            if( m_strKeywordValue.signal_id[0] == 0 ) {
-                c = sprintf( buffer, "%sSIGNAL_ID" , DEFAULT_SIGNAL_ID_VALUE );
-            }
-            else { //DTEC_Else
-                c = sprintf( buffer, "%sSIGNAL_ID" , m_strKeywordValue.signal_id );
-            }
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "SIGNAL_ID" );
+                // COLLECTOR
+                if( m_strKeywordValue.collector[0] == 0 ) {
+                    sprintf( buffer, "%sCOLLECTOR" , DEFAULT_COLLECTOR_VALUE );
+                }
+                else { //DTEC_Else
+                    sprintf( buffer, "%sCOLLECTOR" , m_strKeywordValue.collector );
+                }
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "COLLECTOR" );
 
-            // NOTES
-            if( m_strKeywordValue.notes[0] == 0 ) {
-                sprintf( buffer, "%sNOTES" , DEFAULT_NOTES_VALUE );
-            }
-            else { //DTEC_Else
-                sprintf( buffer, "%sNOTES" , m_strKeywordValue.notes );
-            }
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "NOTES" );
+                // FEED
+                if( m_strKeywordValue.feed[0] == 0 ) {
+                    c = sprintf( buffer, "%sFEED" , DEFAULT_FEED_VALUE );
+                }
+                else { //DTEC_Else
+                    c = sprintf( buffer, "%sFEED" , m_strKeywordValue.feed );
+                }
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "FEED" );
 
-            // TIME_EPOCH
+                // SIGNAL_ID
+                if( m_strKeywordValue.signal_id[0] == 0 ) {
+                    c = sprintf( buffer, "%sSIGNAL_ID" , DEFAULT_SIGNAL_ID_VALUE );
+                }
+                else { //DTEC_Else
+                    c = sprintf( buffer, "%sSIGNAL_ID" , m_strKeywordValue.signal_id );
+                }
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "SIGNAL_ID" );
+
+                // NOTES
+                if( m_strKeywordValue.notes[0] == 0 ) {
+                    sprintf( buffer, "%sNOTES" , DEFAULT_NOTES_VALUE );
+                }
+                else { //DTEC_Else
+                    sprintf( buffer, "%sNOTES" , m_strKeywordValue.notes );
+                }
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "NOTES" );
+
+                // TIME_EPOCH
+                if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
+#ifdef __linux__
+                    p_tm_time = localtime( & time_tick );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
+#else
+                    localtime_s( & tm_time, & time_tick );
+#endif
+                }
+                else {
+#ifdef __linux__
+                    p_tm_time = localtime( & time_tick );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
+#else
+                    localtime_s( & tm_time, & m_strKeywordValue.tiTime );
+#endif
+                }
+                sprintf( buffer, (char *) "%4d-%02d-%02dT00:00:00TIME_EPOCH" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "TIME_EPOCH" );
+
+                // TIME_DELTA
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1.0e-010, (char *) "TIME_DELTA", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+
+                // TIMETAG.OFFSET
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+
+                // TIMETAG.TIME
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, dTimeTag, (char *) "TIMETAG.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+            }
+
+            // ACQDATE
             if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
 #ifdef __linux__
-                p_tm_time = localtime( & time_tick );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
+                    p_tm_time = localtime( & time_tick );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
 #else
-                localtime_s( & tm_time, & time_tick );
+                    localtime_s( & tm_time, & time_tick );
 #endif
             }
             else {
 #ifdef __linux__
-                p_tm_time = localtime( & time_tick );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
+                    p_tm_time = localtime( & m_strKeywordValue.tiTime );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
 #else
-                localtime_s( & tm_time, & m_strKeywordValue.tiTime );
+                    localtime_s( & tm_time, & m_strKeywordValue.tiTime );
 #endif
             }
-            sprintf( buffer, (char *) "%4d-%02d-%02dT00:00:00TIME_EPOCH" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "TIME_EPOCH" );
+            c = sprintf( buffer, (char *)"%4d%02d%02dACQDATE" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
+            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "ACQDATE" );
 
-            // TIME_DELTA
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1.0e-010, (char *) "TIME_DELTA", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
-
-            // TIMETAG.OFFSET
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
-
-            // TIMETAG.TIME
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, dTimeTag, (char *) "TIMETAG.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
-        }
-
-        // ACQDATE
-        if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
-#ifdef __linux__
-                p_tm_time = localtime( & time_tick );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
-#else
-                localtime_s( & tm_time, & time_tick );
-#endif
-        }
-        else {
-#ifdef __linux__
-                p_tm_time = localtime( & m_strKeywordValue.tiTime );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
-#else
-                localtime_s( & tm_time, & m_strKeywordValue.tiTime );
-#endif
-        }
-        c = sprintf( buffer, (char *)"%4d%02d%02dACQDATE" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
-        pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "ACQDATE" );
-
-        // ACQTIME
-        if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
-#ifdef __linux__
-                p_tm_time = localtime( & time_tick );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
-#else
-                localtime_s( & tm_time, & time_tick );
-#endif
-        }
-        else {
-#ifdef __linux__
-                p_tm_time = localtime( & m_strKeywordValue.tiTime );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
-#else
-                localtime_s( & tm_time, & m_strKeywordValue.tiTime );
-#endif
-
-        }
-        c = sprintf( buffer, (char *)"%02d:%02d:%02dACQTIME" , tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec );
-        pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "ACQTIME" );
-
-        // 메타 파일 종류에 따른 extended_header 영역에 기록하기
-        if( m_enFileType == E_EL_SCDT_PDW ) {
-            // SUBREC_DEF 키워드 추가
-            c = MakeSubRecords();
-            MakeBinaryKeyword( pBinKeyword, ( char *) m_pSubrecords, (char *) "SUBREC_DEF", c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
-            pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
-
-            // SUBREC_DESCRIP
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "TYPE0SUBREC_DESCRIP", (char *) "SUBREC_DESCRIP" );
-
-            // TIMETAG.OFFSET
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
-
-            // TIMETAG.TIME
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
-
-            // TIMETAG.TIME.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_TIME, (char *) "TIMETAG.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
-
-            // TIME_DELTA
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1.0, (char *) "TIME_DELTA", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
-
-            // TIME_EPOCH
+            // ACQTIME
             if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
 #ifdef __linux__
-                p_tm_time = localtime( & time_tick );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
+                    p_tm_time = localtime( & time_tick );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
 #else
-                localtime_s( & tm_time, & time_tick );
+                    localtime_s( & tm_time, & time_tick );
 #endif
             }
             else {
 #ifdef __linux__
-                p_tm_time = localtime( & m_strKeywordValue.tiTime  );
-                memcpy( & tm_time, p_tm_time, sizeof(tm) );
+                    p_tm_time = localtime( & m_strKeywordValue.tiTime );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
 #else
-                localtime_s( & tm_time, & m_strKeywordValue.tiTime  );
+                    localtime_s( & tm_time, & m_strKeywordValue.tiTime );
 #endif
+
             }
-            c = sprintf( buffer, (char *) "%4d-%02d-%02dT00:00:00ZTIME_EPOCH" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
-            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "TIME_EPOCH" );
+            c = sprintf( buffer, (char *)"%02d:%02d:%02dACQTIME" , tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec );
+            pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "ACQTIME" );
 
-            // TIME_TICKS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1, (char *) "TIME_TICKS", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+            // 메타 파일 종류에 따른 extended_header 영역에 기록하기
+            if( m_enFileType == E_EL_SCDT_PDW ) {
+                // SUBREC_DEF 키워드 추가
+                c = MakeSubRecords();
+                MakeBinaryKeyword( pBinKeyword, ( char *) m_pSubrecords, (char *) "SUBREC_DEF", c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
+                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
 
-            // EVENT.DURATION
-            long double dDuration = m_MinMaxOfSubrecords[enTOAOfSub].fMaxVal - m_MinMaxOfSubrecords[enTOAOfSub].fMinVal;
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dDuration, (char *) "EVENT.DURATION", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // SUBREC_DESCRIP
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "TYPE0SUBREC_DESCRIP", (char *) "SUBREC_DESCRIP" );
 
-            // EVENT.DURATION.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_TIME, (char *) "EVENT.DURATION.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+                // TIMETAG.OFFSET
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
 
-            // EVENT.OFFSET
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+                // TIMETAG.TIME
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "TIMETAG.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // EVENT.TIME
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // TIMETAG.TIME.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_TIME, (char *) "TIMETAG.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
 
-            // EVENT.TIME.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_COUNTS, (char *) "EVENT.TIME.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+                // TIME_DELTA
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1.0, (char *) "TIME_DELTA", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-        }
-        else {
-            // COL_RF
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dRF, (char *) "COL_RF", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // TIME_EPOCH
+                if( m_strKeywordValue.tiTime == 0 ) { //DTEC_Else
+#ifdef __linux__
+                    p_tm_time = localtime( & time_tick );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
+#else
+                    localtime_s( & tm_time, & time_tick );
+#endif
+                }
+                else {
+#ifdef __linux__
+                    p_tm_time = localtime( & m_strKeywordValue.tiTime  );
+                    memcpy( & tm_time, p_tm_time, sizeof(tm) );
+#else
+                    localtime_s( & tm_time, & m_strKeywordValue.tiTime  );
+#endif
+                }
+                c = sprintf( buffer, (char *) "%4d-%02d-%02dT00:00:00ZTIME_EPOCH" , tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday );
+                pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, buffer, (char *) "TIME_EPOCH" );
 
-            // COL_RF_UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_RF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // TIME_TICKS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 1, (char *) "TIME_TICKS", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
 
-            // ACQETF (?)
-            dValue = m_strKeywordValue.dRF;
-            c = sizeof( dValue );
-            memcpy( buffer, & dValue, sizeof(dValue) );
-            c += sprintf( & buffer[sizeof(dValue)], (char *) "ACQETF" );
-            MakeBinaryKeyword( pBinKeyword, buffer, (char *) "ACQETF", c, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
-            pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+                // EVENT.DURATION
+                long double dDuration = m_MinMaxOfSubrecords[enTOAOfSub].fMaxVal - m_MinMaxOfSubrecords[enTOAOfSub].fMinVal;
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dDuration, (char *) "EVENT.DURATION", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // ACQETF.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "ACQETF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // EVENT.DURATION.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_TIME, (char *) "EVENT.DURATION.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
 
-            // COL_BW
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dBW, (char *) "COL_BW", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // EVENT.OFFSET
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
 
-            // COL_BW.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_BW.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // EVENT.TIME
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // OUTPUT_IF
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "OUTPUT_IF", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // EVENT.TIME.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_COUNTS, (char *) "EVENT.TIME.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
 
-            // OUTPUT_IF_UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "OUTPUT_IF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+            }
+            else {
+                // COL_RF
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dRF, (char *) "COL_RF", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // SPECTRUM
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "SPECTRUM", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // COL_RF_UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_RF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // REC_BW
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), "REC_BW", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // ACQETF (?)
+                dValue = m_strKeywordValue.dRF;
+                c = sizeof( dValue );
+                memcpy( buffer, & dValue, sizeof(dValue) );
+                c += sprintf( & buffer[sizeof(dValue)], (char *) "ACQETF" );
+                MakeBinaryKeyword( pBinKeyword, buffer, (char *) "ACQETF", c, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
 
-            // REC_BW_UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "REC_BW.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // ACQETF.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "ACQETF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // COL_SAMPLE_RATE
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), "COL_SAMPLE_RATE", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // COL_BW
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dBW, (char *) "COL_BW", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // COL_SAMPLE_RATE_UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_SAMPLE_RATE.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // COL_BW.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_BW.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // COL_SAMPLE_SIZE
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) GetSampleSize(), (char *) "COL_SAMPLE_SIZE", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // OUTPUT_IF
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "OUTPUT_IF", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // GAIN_MODE
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( m_strKeywordValue.gain_mode & 0x1 ), "GAIN_MODE", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // OUTPUT_IF_UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "OUTPUT_IF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // COL_GAIN : 기본값: 70
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dGain_value, (char *) "COL_GAIN", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // SPECTRUM
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "SPECTRUM", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // COL_GAIN.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_RELATIVE_POWER, (char *) "COL_GAIN.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // REC_BW
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), "REC_BW", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // COL_LOCKED_LO
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dLockedLO, (char *) "COL_LOCKED_LO", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // REC_BW_UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "REC_BW.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // COL_LOCKED_LO.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_LOCKED_LO.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // COL_SAMPLE_RATE
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), "COL_SAMPLE_RATE", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // DATA_BANDWIDTH
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), (char *) "DATA_BANDWIDTH", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // COL_SAMPLE_RATE_UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_SAMPLE_RATE.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // DATA_BANDWIDTH.UNITS
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "DATA_BANDWIDTH.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+                // COL_SAMPLE_SIZE
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) GetSampleSize(), (char *) "COL_SAMPLE_SIZE", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // EVENT.DURATION
-            long double dDuration = m_vecConvertIFList.size() * ( 36. * 1024. * 1024. / 4. ) / 71110000.;
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dDuration, (char *) "EVENT.DURATION", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+                // GAIN_MODE
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( m_strKeywordValue.gain_mode & 0x1 ), "GAIN_MODE", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // EVENT.OFFSET
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+                // COL_GAIN : 기본값: 70
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dGain_value, (char *) "COL_GAIN", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // EVENT.TIME
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dTimeTag, (char *) "EVENT.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+                // COL_GAIN.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_RELATIVE_POWER, (char *) "COL_GAIN.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // EVENT.TIME.UNITS
-            //pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (ULONGLONG) VALUE_UNITS_COUNTS, "EVENT.TIME.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+                // COL_LOCKED_LO
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.dLockedLO, (char *) "COL_LOCKED_LO", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
 
-            // MISSION
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.mission, (char *) "MISSION", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+                // COL_LOCKED_LO.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "COL_LOCKED_LO.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
 
-            // RECEIVER
-            pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (unsigned long long) m_strKeywordValue.receiver, (char *) "RECEIVER", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER, 0x1d0 );
+                // DATA_BANDWIDTH
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) ( 1. / m_strKeywordValue.dSamplingPeriod ), (char *) "DATA_BANDWIDTH", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+
+                // DATA_BANDWIDTH.UNITS
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "DATA_BANDWIDTH.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
+
+                // EVENT.DURATION
+                long double dDuration = m_vecConvertIFList.size() * ( 36. * 1024. * 1024. / 4. ) / 71110000.;
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dDuration, (char *) "EVENT.DURATION", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
+
+                // EVENT.OFFSET
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) 0, (char *) "EVENT.OFFSET", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+
+                // EVENT.TIME
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) dTimeTag, (char *) "EVENT.TIME", DATA_FORMAT_TYPE_DESIGNATOR_64BIT_INTEGER );
+
+                // EVENT.TIME.UNITS
+                //pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (ULONGLONG) VALUE_UNITS_COUNTS, "EVENT.TIME.UNITS", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+
+                // MISSION
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) m_strKeywordValue.mission, (char *) "MISSION", DATA_FORMAT_TYPE_DESIGNATOR_16BIT_INTEGER );
+
+                // RECEIVER
+                pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (unsigned long long) m_strKeywordValue.receiver, (char *) "RECEIVER", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER, 0x1d0 );
+            }
         }
     }
 
@@ -1497,23 +1543,29 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         memset( pSubrecords->name, 0x20, sizeof( pSubrecords->name ) );
         c = sprintf( buffer, (char *) "%s" , stSubrecordName[i] );
         memcpy( pSubrecords->name, buffer , strlen(buffer) );
-        pSubrecords->name[c] = 0x20;
+
+        _PUT_ARRAY_VALUE( pSubrecords->name, c, 0x20 );
+//         if( c < sizeof(pSubrecords->name) ) {
+//             pSubrecords->name[c] = 0x20;
+//         }
 
         // 최소 값
         memset( pSubrecords->minval, 0x20, sizeof( pSubrecords->minval ) );
         c = sprintf( & pSubrecords->minval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMinVal );
-        pSubrecords->minval[c] = 0x20;
+        _PUT_ARRAY_VALUE( pSubrecords->minval, c, 0x20 );
 
         // 최소 값
         memset( pSubrecords->maxval, 0x20, sizeof( pSubrecords->maxval ) );
         c = sprintf( & pSubrecords->maxval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMaxVal );
-        pSubrecords->maxval[c] = 0x20;
+        //pSubrecords->maxval[c] = 0x20;
+        _PUT_ARRAY_VALUE( pSubrecords->maxval, c, 0x20 );
 
         // 옵셋
         memset( pSubrecords->offset, 0x20, sizeof( pSubrecords->offset ) );
         c = sprintf( buffer, (char *) "%d" , iOffset );
         memcpy( pSubrecords->offset, buffer , strlen(buffer) );
-        pSubrecords->offset[c] = 0x20;
+        //pSubrecords->offset[c] = 0x20;
+        _PUT_ARRAY_VALUE( pSubrecords->offset, c, 0x20 );
 
         // 엘리먼트 갯수
         c = sprintf( buffer, (char *) "%d" , 1 );
@@ -1597,17 +1649,22 @@ void CMIDASBlueFileFormat::MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeywo
 }
 
 /**
- * @brief 키워드에 값을 설정한다.
- * @param pBinKeyword
- * @param ivalue
- * @param keyword
- * @param type
- * @param lkey
- * @return
+ * @brief     키워드에 값을 설정한다.
+ * @param     SELMIDAS_BINARY_KEYWORD * pBinKeyword
+ * @param     unsigned long long ivalue
+ * @param     char * keyword
+ * @param     char type
+ * @param     int lkey
+ * @return    SELMIDAS_BINARY_KEYWORD *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-05, 12:20
+ * @warning
  */
 SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long ivalue, char *keyword, char type, int lkey )
 {
-    int c;
+    int c=0;
     char buffer[200];
     unsigned short sValue;
     long double ldValue;
@@ -1645,6 +1702,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
 
     default :
         printf( "\n 에러 발생..." );
+        memset( buffer, 0, sizeof(buffer) );
         break;
     }
 
@@ -1663,7 +1721,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
  */
 SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double ivalue, char *keyword, char type )
 {
-    int c;
+    int c=0;
     char buffer[200];
     unsigned short sValue;
     long double ldValue;
@@ -1733,7 +1791,7 @@ int CMIDASBlueFileFormat::WriteExtendedHeader()
 {
     int iWrite=0;
 
-    if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
+    if( m_enFileType != E_EL_SCDT_PDW2SP370 && m_pExtendOfHeader != NULL ) {
         iWrite = Write( m_pExtendOfHeader, sizeof(char)*m_uiSizeOfExtend );
     }
 
@@ -1904,58 +1962,55 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
     struct tm *pstTime;
     time_t tiNow;
 
-    char buffer[100];
+    char buffer[100]={0};
 
     tiNow = time(NULL);
 
     pstTime = localtime( & tiNow );
 
-    // 1. 폴더명 생성하기
-    strftime( buffer, 100, "%Y-%m-%d", pstTime );
+    if( pstTime != NULL ) {
+        // 1. 폴더명 생성하기
+        strftime( buffer, 100, "%Y-%m-%d", pstTime );
 #ifdef _ELINT_
-    enPosition enPos = GetPosition();
+        enPosition enPos = GetPosition();
 
-    if( enPos == enBuiltIn )
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
-    else
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, m_pPDWData->iCollectorID, m_pPDWData->aucTaskID );
-#elif defined(_POCKETSONATA_)
-     sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
+        if( enPos == enBuiltIn )
+            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+        else
+            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+
+#elif _POCKETSONATA_
+        sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
 #else
-     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
+        sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 #endif
-     bRet = CreateDir( szDirectory );
+        bRet = CreateDir( szDirectory );
 
-    if( bRet == true ) {
-        // 2. 파일명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", pstTime );
-#ifdef _ELINT_
-        wsprintf( m_szPDWFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, m_pPDWData->iCollectorID, buffer, m_nStep, PDW_EXT );
-#elif defined(_POCKETSONATA_)
-        if( enDataType == E_EL_SCDT_PDW ) {
-            sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_TYPE, MIDAS_EXT );
+        if( bRet == true ) {
+            // 2. 파일명 생성하기
+            strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", pstTime );
 
             m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
-        }
-        else {
-            sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_EXT );
 
-            //cFile.Open( m_szPDWFilename, O_WRONLY | O_APPEND | O_CREAT );
-            //int nSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - m_pPDWData->uiTotalPDW ) * sizeof(_PDW) );
-
-            //cFile.Write( m_pPDWData, nSize );
-            //cFile.Close();
-
-        }
+#ifdef _ELINT_
+            sprintf( m_szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, uiStep, PDW_EXT );
+#elif _POCKETSONATA_
+            if( enDataType == E_EL_SCDT_PDW ) {
+                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_TYPE, MIDAS_EXT );
+            }
+            else {
+                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_EXT );
+            }
 #else
 
 #endif
 
-        SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+            SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
 
-    }
-    else {
-        m_szRawDataFilename[0] = 0;
+        }
+        else {
+            m_szRawDataFilename[0] = 0;
+        }
     }
 #endif    
 

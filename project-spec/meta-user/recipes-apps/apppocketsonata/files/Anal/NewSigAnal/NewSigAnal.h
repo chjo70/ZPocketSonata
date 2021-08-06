@@ -9,8 +9,12 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-//#include "../../ELINTOP/ODBC/mssql.h"
-//#include "../../ELINTOP/ODBC/odbccore.h"
+#ifdef _MSSQL_
+#include "../../../ELINTOP/ODBC/mssql.h"
+#include "../../../ELINTOP/ODBC/odbccore.h"
+#else
+
+#endif
 
 #include "../INC/defines.h"
 #include "../Identify/Identify.h"
@@ -25,9 +29,15 @@
 
 #include "../../Utils/clog.h"
 
+#define MAX_MATCH_RADARMODE         (2*MAX_RADARMODE)
+
 #ifdef __cplusplus
 
+#ifdef _MSSQL_
+class CNewSigAnal : public CMSSQL
+#else
 class CNewSigAnal
+#endif
 {
 public:
     CNGroup *m_theGroup;
@@ -50,18 +60,24 @@ private:
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
     int m_iIsStorePDW;
-#ifdef _ELINT_
-    EN_RADARCOLLECTORID m_enCollectorID;
-#endif
 
+#ifdef _ELINT_
+    unsigned char m_szTaskID[LENGTH_OF_TASK_ID];
+    EN_RADARCOLLECTORID m_enCollectorID;
     ENUM_BANDWIDTH m_enBandWidth;
+
+    CODBCDatabase m_theMyODBC;
+    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+#elif _POCKETSONATA_
+    ENUM_BANDWIDTH m_enBandWidth;
+
+    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+
+#endif    
 
     bool m_bSaveFile;
 
-    UINT m_uiCoKnownRadarMode;
-    SRadarMode *m_pRadarMode[ MAX_ELINT_LIBRARY ];
-    //CODBCDatabase m_theMyODBC;
-    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+    vector<SRadarMode *> m_VecMatchRadarMode;
 
     CMIDASBlueFileFormat *m_pMidasBlue;
 
@@ -74,6 +90,8 @@ public:
 
     void Init();
 
+    void LoadCEDLibrary();
+
     // 인라인 외부 연결 함수
     inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
     inline int GetCoPdw() { return m_CoPdw; }
@@ -83,6 +101,7 @@ public:
     // inline void DISP_FineAet( STR_UPDAET *pUpdAet ) { m_theMakeAET->DISP_FineAet( pUpdAet ); }
     inline void DISP_FineAet( STR_MANAET *pManAet ) { /*m_theMakeAET->DISP_FineAet( pManAet );*/ }
     inline void DISP_FineAet( STR_NEWAET *pNewAet ) { /*m_theMakeAET->DISP_FineAet( pNewAet );*/ }
+    inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
     inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     inline int GetCoAet() { return m_theMakeAET->GetCoAet(); }
     inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
@@ -152,6 +171,8 @@ public:
 
     // 분석 제어 관련 함수
     void SetSaveFile( bool bEnable );
+
+    void InitResolution();
 
     CNewSigAnal( int coMaxPdw );
     virtual ~CNewSigAnal();

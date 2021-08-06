@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file      Midas.h
  * @brief     
  * @exception MIDAS Blue File Format 헤더 파일
@@ -24,6 +24,9 @@ using namespace std;
 
 #include "RawFile.h"
 
+
+#define _PUT_ARRAY_VALUE( A, B, C )      if( B < sizeof(A) ) {   \
+                                            A[B] = C;   }
 
 
 //#include "./PDW2SP370.h"
@@ -277,7 +280,7 @@ typedef struct {
 	double out_byte;									// Next out byte (cumulative)
 	double outbytes[8];								// Next out byte (each outlet)
 
-	unsigned int keylength;						// Length of keyword string
+	unsigned int uiKeylength;						// Length of keyword string
 	char keywords[92];								// User defined keyword string
 
 } SELMIDAS_HCB ;
@@ -420,13 +423,13 @@ const char stSubrecordFormat[MAX_SUBRECORDS_OF_PDWDATA][10] = { "%e", "%e", "%f"
 // PDW 데이터 구조체 정의
 // 위 stSubrecordName, 과 stSubrecordUnit 과 동일 순서로 설정해야 함.
 typedef struct {
-    double ltoa;
-    double ldtoa;
-    double lfreq;
+    double dtoa;
+    double ddtoa;
+    double dfreq;
 
-    double lpw;
-    double lpa;
-    double ldoa;
+    double dpw;
+    double dpa;
+    double ddoa;
 
 } S_EL_PDW_RECORDS;
 
@@ -465,34 +468,35 @@ struct SEL_KEYWORD_VALUE{
 
 	int mission;
 	int receiver;
+// 
+// 	SEL_KEYWORD_VALUE() :
+// 		dRF(0.0),
+// 		dBW(0.0),
+// 		dSamplingPeriod(0.0),
+// 		dRecBW(0.0),
+// 		gain_mode(0),
+// 		dGain_value(0.0),
+// 		numberofdata(0)
+// 	{
+// #ifdef _MSC_VER
+// 		strcpy_s( classification, "701-ELINT" );
+// #else
+//         strcpy( classification, "701-ELINT" );
+// #endif
+// 		// memset(classification, NULL, 50);
+//         memset(writer, 0, sizeof(writer) );
+//         memset(writer_version, 0, sizeof(writer_version));
+//         memset(signal_id, 0, sizeof(signal_id) );
+//         memset(notes, 0, sizeof(notes) );
+//         memset(collector, 0, sizeof(collector));
+//         memset(feed, 0, sizeof(feed));
+// 
+// 		dGain_value = 70;
+// 
+// 		mission = 0;
+// 		receiver = 0;
+// 	}
 
-	SEL_KEYWORD_VALUE() :
-		dRF(0.0),
-		dBW(0.0),
-		dSamplingPeriod(0.0),
-		dRecBW(0.0),
-		gain_mode(0),
-		dGain_value(0.0),
-		numberofdata(0)
-	{
-#ifdef _MSC_VER
-		strcpy_s( classification, "701-ELINT" );
-#else
-        strcpy( classification, "701-ELINT" );
-#endif
-		// memset(classification, NULL, 50);
-        memset(writer, 0, sizeof(writer) );
-        memset(writer_version, 0, sizeof(writer_version));
-        memset(signal_id, 0, sizeof(signal_id) );
-        memset(notes, 0, sizeof(notes) );
-        memset(collector, 0, sizeof(collector));
-        memset(feed, 0, sizeof(feed));
-
-		dGain_value = 70;
-
-		mission = 0;
-		receiver = 0;
-	}
 };
 
 
@@ -539,6 +543,13 @@ typedef struct {
     SEL_KEYWORD_VALUE keywordValue;
 
 } SELIFMIDAS;
+
+
+union UNI_ADJUNCT_TYPE {
+    SELMIDAS_ADJUNCT_TYPE_1000 _1000;
+    SELMIDAS_ADJUNCT_TYPE_2000 _2000;
+    SELMIDAS_ADJUNCT_TYPE_6000 _6000;
+};
 
 /**
  * @class     CMIDASBlueFileFormat

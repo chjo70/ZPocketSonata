@@ -1,4 +1,4 @@
-﻿// PulExt.cpp: implementation of the CPulExt class.
+// PulExt.cpp: implementation of the CPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -62,7 +62,7 @@ CPulExt::CPulExt( int coMaxPdw /*=NSP_MAX_PDW*/ )
 
     //-- 조철희 2005-12-15 14:04:21 --//
     /*! \todo	 m_nMaxPdw 개수는 초대 스태거 레벨을 계산할 때 필요하기에 최대 개수로 설정할 수 있도록 함. */
-    m_uiMaxPdw = coMaxPdw;
+    m_uiMaxPdw = _min( coMaxPdw, MAX_PDW );
     m_MaxSeg = MAX_SEG;
 
     // 멤버 변수 메모리 할당
@@ -157,7 +157,7 @@ CPulExt::~CPulExt()
 //##ModelId=42757D4C01F8
 void CPulExt::Init()
 {
-    m_CoSeg = m_nAnalSeg = 0;
+    _EQUALS3( m_CoSeg, m_nAnalSeg, 0 );
 
     // PRI 밴드 초기화
     m_Start_pri_level = 0;
@@ -179,7 +179,7 @@ void CPulExt::Init()
         pRange->min_pri = temp_pri;
 
         power_2 = power_2 * 2;
-        temp_pri = pRange->max_pri = UDIV( 7 * pRange->min_pri, 4 );
+        _EQUALS3( temp_pri, pRange->max_pri, UDIV( 7 * pRange->min_pri, 4 ) );
         /*! \bug  하모닉을 고려해서 2배까지 PRI 밴드로 한다.
             \date 2006-08-25 11:30:14, 조철희
         */
@@ -461,7 +461,8 @@ void CPulExt::RemoveStablePulseTrain()
 
             nPdwCount = pExtSeg->pdw.count;
             pPdwIndex = pExtSeg->pdw.pIndex;
-            for( k=coMatch=0 ; k < nPdwCount ; ++k ) {
+            coMatch = 0;
+            for( k=0 ; k < nPdwCount ; ++k ) {
                 if( m_pRemovePdwIndex[*pPdwIndex++] == 1 ) {
                     ++ coMatch;
                 }
@@ -495,7 +496,7 @@ void CPulExt::CleanPulseTrains( int startseg, int endseg )
 
     STR_PULSE_TRAIN_SEG *pSeg, *pDestSeg;
 
-    pDestSeg = pSeg = & m_Seg[ startseg ];
+    _EQUALS3( pDestSeg, pSeg, & m_Seg[ startseg ] );
     for( i=startseg ; i < endseg ; ++i ) {
         if( pSeg->pdw.count > (int) _sp.cm.Rpc && pSeg->mark != DELETE_SEG ) {
             MemcpySeg( pDestSeg, pSeg );
@@ -863,7 +864,12 @@ void CPulExt::ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL
                 // 추출된 펄스열의 제원의 계산
                 CalcSegParam( pSeg );
 
-                pSeg->pri_band = nPriBand;
+                if( nPriBand > 0 ) {
+                    pSeg->uiPRI_Band = nPriBand;
+                }
+                else {
+                    pSeg->uiPRI_Band = 0;
+                }
 
                 /*! \bug  기준 펄스열로 추출했다는 것으 마킹한다.
                     \date 2006-08-11 12:27:14, 조철희
@@ -1193,7 +1199,8 @@ void CPulExt::CalcEmitterPW( STR_PULSE_TRAIN_SEG *pSeg )
     pPdwIndex = pSeg->pdw.pIndex;
     count = pSeg->pdw.count;
     pPw = & pSeg->pw;
-    pPw->min = pPw->max = pPw->mean = m_pPW[ *pPdwIndex++ ];
+    _EQUALS4( pPw->min, pPw->max, pPw->mean, m_pPW[ *pPdwIndex ] );
+    pPdwIndex ++;
     for( i=1 ; i < count ; ++i, ++pPdwIndex ) {
         int pw;
 
@@ -1229,7 +1236,7 @@ void CPulExt::CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg )
     pPdwIndex = pSeg->pdw.pIndex;
     count = pSeg->pdw.count;
     pFrq = & pSeg->freq;
-    pFrq->min = pFrq->max = pFrq->mean = m_pFREQ[ *pPdwIndex++ ];
+    _EQUALS4( pFrq->min, pFrq->max, pFrq->mean, m_pFREQ[ *pPdwIndex++ ] );
     for( i=1 ; i < count ; ++i, ++pPdwIndex ) {
         int freq;
 
@@ -1245,6 +1252,7 @@ void CPulExt::CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg )
     //-- 조철희 2005-11-01 14:10:03 --//
     pFrq->mean = UDIV( pFrq->mean, count );
     pFrq->median = MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1318,23 +1326,27 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
     pGrPdwIndex = & pColPdwIndex->pIndex[pSeg->gr_ref_idx];
     pSegPdwIndex = & pSeg->pdw.pIndex[ m_uiMaxPdw-bak_count-1 ];
     pre_toa = m_pTOA[ pSeg->pdw.pIndex[0] ];
-    //for( i=pSeg->gr_ref_idx-1 ; i >= 0 ; --i ) {
+    
     while( pGrPdwIndex != pColPdwIndex->pIndex ) {
-        index = *(--pGrPdwIndex);
-        if( m_pMARK[index] != 0 )
+        -- pGrPdwIndex;
+        index = *pGrPdwIndex;
+        if( m_pMARK[index] != 0 ) {
             continue;
+        }
 
         /*! \bug  주파수 정보를 이용한 펄스열 추출 추가함.
             \date 2006-08-11 11:21:28, 조철희
         */
-        if( margin == 0 && IsValidPDW( index, pSeg ) == FALSE )
+        if( margin == 0 && IsValidPDW( index, pSeg ) == FALSE ) {
             continue;
+        }
 
         dtoa = pre_toa - m_pTOA[index];
 
         // 펄스
-        if( dtoa < (UINT) pri_range.iLow )
+        if( dtoa < (UINT) pri_range.iLow ) {
             continue;
+        }
 
         // 펄스 존재시에 처리를 한다.
         else if( TRUE == CompMarginDiff<_TOA>( dtoa, pri_range.iLow, pri_range.iHgh, 0 ) ) {
@@ -1402,12 +1414,14 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
                 break;
             */
         }
-        else if( dtoa > (UINT) ( max_miss * pri_range.iHgh ) )
+        else if( dtoa > (UINT) ( max_miss * pri_range.iHgh ) ) {
             break;
+        }
     }
 
-    if( pLastIndex != NULL )
+    if( pLastIndex != NULL ) {
         memcpy( & pSeg->pdw.pIndex[0], & pSeg->pdw.pIndex[ m_uiMaxPdw-pSeg->pdw.count ], pSeg->pdw.count * sizeof( PDWINDEX ) );
+    }
 
     return;
 }
@@ -1425,6 +1439,8 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
 //
 BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
 {
+    BOOL bRet;
+
     if( pSeg->freq_type == _FIXED ) {
         int threshold;
 
@@ -1441,10 +1457,12 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
         threshold = 2 * abs( (int) IDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].res ) );
 #endif
 
-        if( CompMeanDiff<UINT>( m_pFREQ[ index ], pSeg->freq.mean, threshold ) == TRUE )
-            return true;
-        else
-            return false;
+        if( CompMeanDiff<UINT>( m_pFREQ[ index ], pSeg->freq.mean, threshold ) == TRUE ) {
+            bRet = true;
+        }
+        else {
+            bRet = false;
+        }
     }
     // Random Agile 일 경우...
     else {
@@ -1453,13 +1471,15 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
             \date 2007-06-19 18:01:57, 조철희
         */
         diff = 2 * ( pSeg->pw.max - pSeg->pw.min );
-        if( CompMarginDiff<UINT>( m_pPW[index], pSeg->pw.min, pSeg->pw.max, diff ) )
-            return true;
-        else
-            return false;
+        if( CompMarginDiff<UINT>( m_pPW[index], pSeg->pw.min, pSeg->pw.max, diff ) ) {
+            bRet = true;
+        }
+        else {
+            bRet = false;
+        }
     }
 
-    return true;
+    return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1800,11 +1820,9 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     pSeg->last_toa = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->last_idx ] ];
     pSeg->first_toa = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->first_idx ] ];
 
-    freqMean = pwMean = paMean = aoaMean = 0;
-    pSeg->freq.max = pSeg->pa.max = pSeg->pw.max = pSeg->aoa.max = -9999999;
-    pSeg->freq.min = pSeg->pa.min = pSeg->pw.min = pSeg->aoa.min = 0xffffff;
-
-    //pSeg->pri.max = pSeg->pri.min = priMean = pSeg->pri.mean;
+    _EQUALS5( freqMean, pwMean, paMean, aoaMean, 0 );
+    _EQUALS5( pSeg->freq.max, pSeg->pa.max, pSeg->pw.max, pSeg->aoa.max, -9999999 );
+    _EQUALS5( pSeg->freq.min, pSeg->pa.min, pSeg->pw.min, pSeg->aoa.min, 0xffffff );
 
     /*! \bug  priMean 값의 최기값으로 pSeg->pri.mean 값으로 했기 때문에 dtoa_count의 초기값은 1로 함.
         \date 2006-08-25 15:47:53, 조철희
@@ -1822,10 +1840,10 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
         if( i == 0 ) {
             frstAoa = m_pAOA[ *pPdwIndex ];
 
-            pSeg->freq.max = pSeg->freq.min = m_pFREQ[*pPdwIndex];
-            pSeg->pa.max = pSeg->pa.min = m_pPA[*pPdwIndex];
-            pSeg->pw.max = pSeg->pw.min = m_pPW[*pPdwIndex];
-            pSeg->aoa.max = pSeg->aoa.min = 0;
+            _EQUALS3( pSeg->freq.max, pSeg->freq.min, m_pFREQ[*pPdwIndex] );
+            _EQUALS3( pSeg->pa.max, pSeg->pa.min, m_pPA[*pPdwIndex] );
+            _EQUALS3( pSeg->pw.max, pSeg->pw.min, m_pPW[*pPdwIndex] );
+            _EQUALS3( pSeg->aoa.max, pSeg->aoa.min, 0 );
         }
 
         // DTOA 계산
@@ -1962,6 +1980,8 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     int freqMean;
     int threshold;
 
+    UINT uiFreqType;
+
     PDWINDEX *pPdwIndex;
 
     int freq;
@@ -1975,8 +1995,9 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     freq = abs( (int) IDIV( 10, gFreqRes[ pSeg->band ].res ) );
 #endif
     if( CompMeanDiff( pSeg->freq.max, pSeg->freq.min, freq ) == TRUE ) {
-        return _FIXED;
+        uiFreqType = _FIXED;
     }
+    else {
 
 #ifdef _ELINT_
     threshold = IFRQMhzCNV( 0, FIXED_FREQ_MARGIN );
@@ -1988,7 +2009,8 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     freqMean = pSeg->freq.median;
     pPdwIndex = pSeg->pdw.pIndex;
     count = pSeg->pdw.count;
-    for( i=coOkPdw=0 ; i < count ; ++i ) {
+    coOkPdw = 0;
+    for( i=0 ; i < count ; ++i ) {
         int freq;
 
         freq = m_pFREQ[ *pPdwIndex ];
@@ -2002,9 +2024,12 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
 
     //-- 조철희 2005-07-14 19:59:11 --//
     if( ratio >= FREQ_MEAN_MARGIN_THRESHOLD || (count-coOkPdw) <= _spTwo )
-        return _FIXED;
+            uiFreqType = _FIXED;
     else
-        return _RANDOM_AGILE;
+            uiFreqType = _RANDOM_AGILE;
+    }
+
+    return uiFreqType;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2064,7 +2089,7 @@ void CPulExt::ExtractJitterPT()
 // 최 종 변 경  : 조철희, 2005-07-28 17:56:09
 //
 //##ModelId=42E98F300347
-void CPulExt::ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, int coRef, BOOL flagMargin, int iMark, BOOL bIgnoreJitterP )
+void CPulExt::ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, int coRef, BOOL flagMargin, int iMark, BOOL bIgnoreJitterP )
 {
     int ref_idx;
 
@@ -2072,64 +2097,75 @@ void CPulExt::ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, int
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    if( m_pGrPdwIndex->count == 0 )
-        return;
+    if( m_pGrPdwIndex->count == 0 ) {
+        // return;
+    }
+    else {
+        bool bRet=false;
 
-    // 시작 PDW 인덱스
-    ref_idx = 0;
+        // 시작 PDW 인덱스
+        ref_idx = 0;
 
-    startSeg = m_CoSeg;
+        startSeg = m_CoSeg;
 
-    for( ;; ) {
-        if( m_CoSeg >= m_MaxSeg )
-            return;
+        for( ;; ) {
+            if( m_CoSeg >= m_MaxSeg ) {
+                bRet = true;
+                break;
+            }
+            else {
+                pSeg = & m_Seg[ m_CoSeg ];
 
-        pSeg = & m_Seg[ m_CoSeg ];
+                // 기준 펄스열 추출을 찾아서 존재하지 않으면 다음 밴드를 선택한다.
+                if( TRUE == ExtractRefPT( pExtRange, _JITTER_RANDOM, pSeg, ref_idx, m_pGrPdwIndex, coRef, flagMargin, bIgnoreJitterP ) ) {
+                    ref_idx = pSeg->gr_ref_idx;
+                    ExtractBackPT( pSeg, _JITTER_RANDOM, m_pGrPdwIndex, flagMargin );
 
-        // 기준 펄스열 추출을 찾아서 존재하지 않으면 다음 밴드를 선택한다.
-        if( TRUE == ExtractRefPT( pExtRange, _JITTER_RANDOM, pSeg, ref_idx, m_pGrPdwIndex, coRef, flagMargin, bIgnoreJitterP ) ) {
-            ref_idx = pSeg->gr_ref_idx;
-            ExtractBackPT( pSeg, _JITTER_RANDOM, m_pGrPdwIndex, flagMargin );
+                    ExtractForPT( pSeg, _JITTER_RANDOM, m_pGrPdwIndex, flagMargin );
 
-            ExtractForPT( pSeg, _JITTER_RANDOM, m_pGrPdwIndex, flagMargin );
+                    // 펄스열은 기준펄스열로 추출된 것 이상인것만 체크한다.
+                    if( ( flagMargin == TRUE && pSeg->pdw.count > (int) _sp.cm.Rpc ) || flagMargin == FALSE ) {
+                    //-- 조철희 2005-12-07 14:45:52 --//
+                        // 추출된 펄스열의 제원의 계산
+                        // 지터로 추출하지 못할 때는 해당 펄스열을 버린다.
+                        //-- 조철희 2005-12-19 15:18:29 --//
+                        if( TRUE == CalcSegParam( pSeg, bIgnoreJitterP ) ) {
+                            pSeg->uiPRI_Band = uiPriBand;
 
-            // 펄스열은 기준펄스열로 추출된 것 이상인것만 체크한다.
-            if( ( flagMargin == TRUE && pSeg->pdw.count > (int) _sp.cm.Rpc ) ||
-                        flagMargin == FALSE ) {
-            //-- 조철희 2005-12-07 14:45:52 --//
-                // 추출된 펄스열의 제원의 계산
-                // 지터로 추출하지 못할 때는 해당 펄스열을 버린다.
-                //-- 조철희 2005-12-19 15:18:29 --//
-                if( TRUE == CalcSegParam( pSeg, bIgnoreJitterP ) ) {
-                    pSeg->pri_band = nPriBand;
-                    /*! \todo		주파수 그룹화에서 넓게 열어서 펄스열을 추출하기 때문에 시간적인 하모닉 관계가
-                                            있는 신호들이 같이 추출할 수 있다. 그래서, 추출한 펄스열에서
-                                            상세 펄스열 분석해서 펄스열 분리를 해야 한다.
+                            /*! \todo		주파수 그룹화에서 넓게 열어서 펄스열을 추출하기 때문에 시간적인 하모닉 관계가
+                                                    있는 신호들이 같이 추출할 수 있다. 그래서, 추출한 펄스열에서
+                                                    상세 펄스열 분석해서 펄스열 분리를 해야 한다.
 
-                                            그 방안으로 규칙성 펄스열에서 찾은 펄스열과 펄스열의 총 시간과
-                                            비교해서 신호 분리를 판단 한다.
-                    */
-                    // 추출된 펄스 Marking
-                    MarkToPdwIndex( pSeg, iMark );
+                                                    그 방안으로 규칙성 펄스열에서 찾은 펄스열과 펄스열의 총 시간과
+                                                    비교해서 신호 분리를 판단 한다.
+                            */
+                            // 추출된 펄스 Marking
+                            MarkToPdwIndex( pSeg, iMark );
 
-                    // 펄스열 인덱스 증가
-                    ++ m_CoSeg;
+                            // 펄스열 인덱스 증가
+                            ++ m_CoSeg;
+                        }
+                        else {
+                            MarkToPdwIndex( pSeg, STABLE_MARK );
+                        }
+                    }
+
+                    ++ ref_idx;
                 }
                 else {
-                    MarkToPdwIndex( pSeg, STABLE_MARK );
+                    break;
                 }
             }
-
-            ++ ref_idx;
         }
-        else
-            break;
+
+        if( bRet == false ) {
+            /*! \bug  지터 펄스열로 추출한 펄스열들중에서 유사 펄스열들을 병합시킨다.
+                    \date 2006-08-23 10:53:25, 조철희
+            */
+            MergeJitterPulseTrain( startSeg, m_CoSeg, bIgnoreJitterP );
+        }
     }
 
-    /*! \bug  지터 펄스열로 추출한 펄스열들중에서 유사 펄스열들을 병합시킨다.
-            \date 2006-08-23 10:53:25, 조철희
-    */
-    MergeJitterPulseTrain( startSeg, m_CoSeg, bIgnoreJitterP );
 
 }
 
@@ -2300,7 +2336,7 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
         // 추출된 펄스열의 제원의 계산
         CalcSegParam( pDwlSeg );
 
-        pDwlSeg->pri_band = -1;
+        pDwlSeg->uiPRI_Band = (UINT) -1;
 
         /*! \bug  기준 펄스열로 추출했다는 것으 마킹한다.
                 \date 2006-08-11 12:27:14, 조철희
@@ -2357,7 +2393,8 @@ void CPulExt::UnknownExtract()
     bIdx = FALSE;
     pSegPdwIndex = & pSeg->pdw.pIndex[0];
     pGrPdwIndex = & m_pGrPdwIndex->pIndex[0];
-    for( pSeg->pdw.count=i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
+    pSeg->pdw.count = 0;
+    for( i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
         index = *pGrPdwIndex++;
 
         // 추출된 펄스 제외
@@ -2619,8 +2656,13 @@ _TOA CPulExt::VerifyPRI( PDWINDEX *pPdwIndex, int count)
     }
     m_PdwParam.count = count - 1;
 
-    // Qsort...
-    qsort( m_PdwParam.pTOAParam, (size_t) m_PdwParam.count, sizeof( _TOA ), lliparamCompare );
+    if( m_PdwParam.count > 0 ) {
+        // Qsort...
+        qsort( m_PdwParam.pTOAParam, (size_t) m_PdwParam.count, sizeof( _TOA ), lliparamCompare );
+    }
+    else {
+
+    }
 
     /*! \bug  PRI 평균값은 DTOA 크기를 작은 순위로 정렬했을 때의 중간값 에서
                         1/3 지점으로 택했다.
@@ -2857,7 +2899,7 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
             // 추출된 펄스 Marking
             MarkToPdwIndex( & m_RefSeg, REFSTB_MARK );
 
-            m_RefSeg.pri_band = nPriBand;
+            m_RefSeg.uiPRI_Band = nPriBand;
 
             // 추가할 펄스열을 생성한다.
             m_RefSeg.pri_type = _REFSTABLE;
@@ -3420,7 +3462,7 @@ UINT CPulExt::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
     int maxExtPdw;
 
     _TOA dtoa1, dtoa2;
-    UINT maxMissFramePri;
+    _TOA maxMissFramePri;
 
     PDWINDEX *pPdwIndex;
 
@@ -3921,14 +3963,13 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
         pSeg = & m_Seg[ startSeg ];
         count = 0;
         for( i=startSeg ; i < endSeg ; ++i, ++pSeg ) {
-            if( pSeg->mark == DELETE_SEG )
+            if( pSeg->mark == DELETE_SEG || pSeg->mark == MERGED_SEG ) {
                 continue;
+            }
 
-            if( pSeg->mark == MERGED_SEG )
+            if( pMainSeg->freq_type != pSeg->freq_type ) {
                 continue;
-
-            if( pMainSeg->freq_type != pSeg->freq_type )
-                continue;
+            }
 
             /*! \bug  주파수 고정일때 주파수 값을 범위를 확인해서 펄스열을 병합하게 함.
                 \date 2006-09-11 10:33:10, 조철희
@@ -3940,8 +3981,9 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
                     continue;
             }
 
-            if( pMainSeg == pSeg )
+            if( pMainSeg == pSeg ) {
                 continue;
+            }
 
             nHarmonic = CheckHarmonic( pMainSeg, pSeg );
             if( ( ( nHarmonic != 0 && OverlappedSeg( pMainSeg, pSeg ) == FALSE ) ) || bIgnoreJitterP == TRUE ) {
@@ -4017,15 +4059,19 @@ void CPulExt::MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG
     // 기준 펄스열 인덱스 설정
     pParam = m_PdwParam.piParam;
     pPdwIndex = pMrgSeg->pdw.pIndex;
-    for( i=0 ; i < pMrgSeg->pdw.count ; ++i )
-        pParam[ *pPdwIndex++ ] = 1;
+    for( i=0 ; i < pMrgSeg->pdw.count ; ++i ) {
+        pParam[ *pPdwIndex ] = 1;
+        pPdwIndex ++;
+    }
 
     // 병합시킬 펄스열 인덱스 설정
     pParam = m_PdwParam.piParam;
     m_PdwParam.count = pSrcSeg->pdw.count;
     pPdwIndex = pSrcSeg->pdw.pIndex;
-    for( i=0 ; i < pSrcSeg->pdw.count ; ++i )
-        pParam[ *pPdwIndex++ ] = 1;
+    for( i=0 ; i < pSrcSeg->pdw.count ; ++i ) {
+        pParam[ *pPdwIndex ] = 1;
+        pPdwIndex++;
+    }
 
     // m_PdwParam.count = _max( pMrgSeg->last_idx, pSrcSeg->last_idx );
     pParam = m_PdwParam.piParam;
@@ -4033,7 +4079,8 @@ void CPulExt::MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG
     /*! \bug  비교 대상 개수는 최대 256개로 한다.
         \date 2008-01-16 18:04:36, 조철희
     */
-    for( i=mrg_count=0 ; i < m_uiMaxPdw ; ++i ) {
+    mrg_count = 0;
+    for( i=0 ; i < m_uiMaxPdw ; ++i ) {
         if( *pParam++ == 1 ) {
             *pPdwIndex++ = i;
             ++ mrg_count;
@@ -4112,36 +4159,22 @@ void CPulExt::PrintAllSeg()
     // 펄스열 프린트
     pSeg = & m_Seg[m_nAnalSeg];
     if( m_CoSeg == m_nAnalSeg ) {
-        printf( "\n\n 펄스열 추출 개수 없음" );
-        Log( enNormal, "펄스열 추출 개수 없음" );
+        //printf( "\n\n No Pulse Train !" );
+        Log( enNormal, "No Pulse Train !" );
     }
     else {
-        printf( "\n\n 펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
-        Log( enNormal, "펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
+        //printf( "\n\n 펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
+        Log( enNormal, "Pulse Train : %d" , m_CoSeg-m_nAnalSeg );
     }
     for( i=m_nAnalSeg ; i < m_CoSeg ; ++i, ++pSeg ) {
-        /*
-        printf( "\n\t [%2d]%1c: 개수(%3d), 주파수 형태(%1d) 범위(%.1f-%.1f), PRI 형태(%d) 범위(%.2f -%.2f%3d), 펄스폭(%.2f -%.2f), 인덱스(%3d(%.2f),%3d -%3d)" ,
+        Log( enNormal, "\t[%2d]%1c: Co(%3d), %s (%5d-%5d), %s (%5d-%5d/%2d), PW(%5d -%5d), I(%3d(%8d),%3d -%3d)" ,
             i,
             gszPulseTrainMark[pSeg->mark],
             pSeg->pdw.count,
-            pSeg->freq_type,
-            FRQMhzCNV( pSeg->band, pSeg->freq.min ),
-            FRQMhzCNV( pSeg->band, pSeg->freq.max ),
-            pSeg->pri_type, TOAusCNV( pSeg->pri.min ), TOAusCNV( pSeg->pri.max ), IMUL( pSeg->jitter_p, 100 ),
-            PWCNV( pSeg->pw.min ), PWCNV( pSeg->pw.max ),
-            m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], TOAusCNV( m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]] ), m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
-        */
-        Log( enNormal, "\t[%2d]%1c: 개수(%3d), 주파수 형태(%1d) 범위(%.1f-%.1f), PRI 형태(%1d) 범위(%.2f -%.2f%3d), 펄스폭(%.2f -%.2f), 인덱스(%3d(%.2f),%3d -%3d)" ,
-            i,
-            gszPulseTrainMark[pSeg->mark],
-            pSeg->pdw.count,
-            pSeg->freq_type,
-            FRQMhzCNV( pSeg->band, pSeg->freq.min ),
-            FRQMhzCNV( pSeg->band, pSeg->freq.max ),
-            pSeg->pri_type, TOAusCNV( pSeg->pri.min ), TOAusCNV( pSeg->pri.max ), IMUL( pSeg->jitter_p, 100 ),
-            PWCNV( pSeg->pw.min ), PWCNV( pSeg->pw.max ),
-            m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], TOAusCNV( m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]] ), m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
+            g_szFreqType[pSeg->freq_type], I_FRQMhzCNV( pSeg->band, pSeg->freq.min ), I_FRQMhzCNV( pSeg->band, pSeg->freq.max ),
+            g_szPRIType[pSeg->pri_type], I_TOAusCNV( pSeg->pri.min ), I_TOAusCNV( pSeg->pri.max ), IMUL( pSeg->jitter_p, 100 ),
+            I_PWCNV( pSeg->pw.min ), I_PWCNV( pSeg->pw.max ),
+            m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], I_TOAusCNV( m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]] ), m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
 
         PrintAllSegPDW( pSeg );
 
@@ -4171,14 +4204,6 @@ void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
 
 }
 
-
-// int CPulExt::CnvPW( int val )
-// {
-// 	if( val >= 10 * _spOneMicrosec )
-// 		return -1;
-// 	else
-// 		return val * 50;
-// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -4268,6 +4293,15 @@ void CPulExt::ResetJitterSeg()
     }
 }
 
+/**
+ * @brief     MakeCWPulseTrain
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-07, 09:44
+ * @warning
+ */
 void CPulExt::MakeCWPulseTrain()
 {
     STR_PULSE_TRAIN_SEG *pSeg;

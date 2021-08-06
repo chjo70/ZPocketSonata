@@ -1,4 +1,4 @@
-﻿/****************************************************************************************
+/****************************************************************************************
  파 일 명 : programrev.c
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : 쓰레드 및 메시지 통신 클래스
@@ -163,7 +163,7 @@ void *CThread::CallBack( void *pArg )
  */
 void CThread::Run( void *(*pFunc)(void*), key_t key )
 {
-    LOGMSG1( enDebug, "[%s] 쓰레드를 생성 합니다...", GetThreadName() );
+    LOGMSG1( enDebug, "Create the [%s] Thread...", GetThreadName() );
 
 #ifdef __linux__
     ++ m_iCoMsgQueue;
@@ -193,7 +193,7 @@ void CThread::Run( void *(*pFunc)(void*), key_t key )
 
     ++ m_iCoMsgQueue;
 
-    LOGMSG( enDebug, "\t 큐 ID를 생성합니다." );    
+    LOGMSG1( enDebug, "Create the Queue ID[0x%x].." , m_hEvent );
 
     // 쓰레드 생성
     Attach( (LPTHREAD_START_ROUTINE) pFunc );
@@ -286,7 +286,7 @@ void CThread::Stop()
 
         m_MainThread.m_hThread = NULL;
     }
-#elif _VXWORKS_
+#elif __VXWORKS__
 
 #else	
     if( m_MainThread != 0 ) {

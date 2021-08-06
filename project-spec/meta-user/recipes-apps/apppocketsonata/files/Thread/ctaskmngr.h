@@ -1,4 +1,4 @@
-﻿#ifndef CTASKMNGR_H
+#ifndef CTASKMNGR_H
 #define CTASKMNGR_H
 
 using namespace std;

@@ -1,4 +1,4 @@
-﻿// MakeAET.cpp: implementation of the CMakeAET class.
+// MakeAET.cpp: implementation of the CMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -250,6 +250,21 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             pFrq->patType = pEmitter->freq_patterntype;
             pFrq->type = _PATTERN_AGILE;
 
+            // 펄스열로부터 주파수 최대값과 최소값을 얻는다.
+            count = 0;
+            pFrq->max = 0;
+            pFrq->min = 0xffffff;
+            pFrq->mean = 0;
+            for( i=0 ; i < pEmitter->seg_count ; ++i ) {
+                pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
+                pFrq->min = _min( pFrq->min, pSeg->freq.min );
+                pFrq->max = _max( pFrq->max, pSeg->freq.max );
+                pFrq->mean += ( pSeg->pdw.count * pSeg->freq.mean );
+                count += pSeg->pdw.count;
+            }
+            pFrq->mean = UDIV( pFrq->mean, count );
+            break;
+
         case _RANDOM_AGILE :
             if( pFrq->type == _HOPPING ) {
                 pFrq->mean = pSeg->freq.mean;
@@ -286,6 +301,9 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             // 호핑 레벨값을 산출한다.
             pFrq->swtLev = pEmitter->hop_level_cnt;
             memcpy( pFrq->swtVal, pEmitter->hop_level, _min( _spMaxSwtLev, pFrq->swtLev )*sizeof(int) );
+            break;
+
+        default:
             break;
 
     }
@@ -347,7 +365,7 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
                 else
                     break;
             }
-            pPri->min = pPri->max = pEmitter->stag_dwell_level[min_index];
+            _EQUALS3( pPri->min, pPri->max, pEmitter->stag_dwell_level[min_index] );
 
             // 그 인덱스 값부터 에미터의 스태거단에 기록한다.
             // 그리고 PRI 범위와 평균값을 기록한다.
@@ -364,7 +382,7 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             // 스태거일 때는 PRI 제원을 확인하여 Jitter율이 작거나 PRI 범위 STABLE_MARGIN 범위에 들면 STABLE로 간주한다.
             //-- 조철희 2005-09-29 15:53:46 --//
             pPri->jtrPer = FDIV( 100 * ( pPri->max - pPri->min ), pPri->mean );
-            if( 0 && CompMeanDiff<_TOA>( pPri->max, pPri->min, 2*STABLE_MARGIN ) == TRUE ) {
+            if( CompMeanDiff<_TOA>( pPri->max, pPri->min, 2*STABLE_MARGIN ) == TRUE ) {
                 pPri->type = _STABLE;
             }
             // 지터율이 50%이상인 펄스열은 지터율로 정의 한다.
@@ -399,7 +417,7 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             break;
 
         case _DWELL :
-            pPri->min = pPri->max = pEmitter->stag_dwell_element[0];
+            _EQUALS3( pPri->min, pPri->max, pEmitter->stag_dwell_element[0] );
 
             pPri->swtLev = min( pEmitter->stag_dwell_element_cnt, _spMaxSwtLev );
 
@@ -410,7 +428,7 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
                 pPri->max = _max( pPri->max, pEmitter->stag_dwell_element[i] );
             }
 
-            pPri->mean = count = 0;
+            _EQUALS3( pPri->mean, count, 0 );
             for( i=0 ; i < pEmitter->seg_count ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
                 pPri->mean += ( pSeg->pri.mean * pSeg->pdw.count );
@@ -560,8 +578,8 @@ void CMakeAET::MakePAInfoInSeg(STR_MINMAX *pPa, STR_EMITTER *pEmitter)
     STR_PULSE_TRAIN_SEG *pSeg;
 
     // 신호 세기의 최소 최대값은 모든 펄스열에서 최대, 최소 값으로 한다.
-    //pa.max = -99999999;
-    //pa.min = 0;
+    pa.max = 0;
+    pa.min = 0;
     for( i=0 ; i < pEmitter->seg_count ; ++i ) {
         pSeg = & m_pSeg[ pEmitter->seg_idx[i] ];
         if( i > 0 ) {
@@ -577,7 +595,7 @@ void CMakeAET::MakePAInfoInSeg(STR_MINMAX *pPa, STR_EMITTER *pEmitter)
     pPa->max = pa.max;
 
     // 신호 세기 평균은 매인 펄스열에서 선택한다.
-    pSeg = & m_pSeg[ pEmitter->main_seg ];
+    // pSeg = & m_pSeg[ pEmitter->main_seg ];
     pPa->mean = CalcPAMean( pEmitter->pdw.pIndex, pEmitter->pdw.count );
 }
 
@@ -783,12 +801,12 @@ void CMakeAET::PrintAllEmitter()
     SRxLOBData *pLOB;
 
     if( m_CoLOB == 0 ) {
-        printf( "\n\n LOB 개수 : None." );
-        Log( enNormal, "LOB 개수 : None." );
+        //printf( "\n\n LOB 개수 : None." );
+        Log( enNormal, "LOB : None." );
     }
     else {
-        printf( "\n\n LOB 개수 : %d", m_CoLOB );
-        Log( enNormal, "LOB 개수 : %d", m_CoLOB );
+        //printf( "\n\n LOB 개수 : %d", m_CoLOB );
+        Log( enNormal, "LOB : %d", m_CoLOB );
         pLOB = GetLOBData();		//& m_LOBData[0];
 
     // printf( "\n---- PAET[%3d] -----------------------------------------------------------------------------------------------------------" , m_CoMakeAet );
@@ -1093,9 +1111,10 @@ int CMakeAET::CalMaxChannel( STR_PDWINDEX *pPdw )
     int count = pPdw->count;
 
     pPdwIndex = pPdw->pIndex;
-    hist[0] = hist[1] = hist[2] = hist[3] = 0;
+    _EQUALS5( hist[0], hist[1], hist[2], hist[3], 0 );
     for( i=0 ; i < count ; ++i ) {
-        max_channel = m_pMAXCHANNEL[ *pPdwIndex++ ];
+        max_channel = m_pMAXCHANNEL[ *pPdwIndex ];
+        ++ pPdwIndex;
         ++ hist[ max_channel ];
     }
 
@@ -1107,10 +1126,10 @@ int CMakeAET::CalMaxChannel( STR_PDWINDEX *pPdw )
         max_channel = 3;
 
     // 최소 개수는 무의미하게 처리하게 함.
-    if( TRUE || hist[max_channel] >= MIN_PULSE_FOR_MAXCHANNEL )
+    //if( TRUE || hist[max_channel] >= MIN_PULSE_FOR_MAXCHANNEL )
         return max_channel;
-    else
-        return -1;
+    //else
+    //    return -1;
 
 }
 
@@ -1341,20 +1360,31 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     pLOBData->iFreqType = stFrq.type;
     pLOBData->iFreqPatternType = stFrq.patType;
-#ifdef _POCKETSONATA_
-    pLOBData->fFreqPatternPeriod = (float) FTOAsCNV( (_TOA) stFrq.patPrd );
-#else
-    pLOBData->fFreqPatternPeriod = FTOAsCNV( (_TOA) stFrq.patPrd );
-#endif
-    pLOBData->fFreqMean = FFRQCNV( 0, stFrq.mean );
-    pLOBData->fFreqMax = FFRQCNV( 0, stFrq.max );
-    pLOBData->fFreqMin = FFRQCNV( 0, stFrq.min );
-    pLOBData->fFreqDeviation = FFRQCNV( 0, stFrq.max-stFrq.min );
     pLOBData->iFreqPositionCount = stFrq.swtLev;
+
+    pLOBData->fFreqPatternPeriod = (float) FTOAsCNV( (_TOA) stFrq.patPrd );
+
+#ifdef _POCKETSONATA_
+    pLOBData->fFreqMean = FRQMhzCNV( g_enBoardId, stFrq.mean );      
+    pLOBData->fFreqMax = FRQMhzCNV( g_enBoardId, stFrq.max );        
+    pLOBData->fFreqMin = FRQMhzCNV( g_enBoardId, stFrq.min );        
+    
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
     for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
-        pLOBData->fFreqSeq[i] = FFRQCNV( 0, stFrq.swtVal[i] );		// FFRQCNV( stFrq.swtVal[i] );
+        pLOBData->fFreqSeq[i] = FRQMhzCNV( g_enBoardId, stFrq.swtVal[i] );
     }
+#else
+    pLOBData->fFreqMean = FMUL( stFrq.mean, (0.001) );      //FFRQCNV( 0, stFrq.mean );
+    pLOBData->fFreqMax = FMUL( stFrq.max, (0.001) );        //FFRQCNV( 0, stFrq.max );
+    pLOBData->fFreqMin = FMUL( stFrq.min, (0.001) );        //FFRQCNV( 0, stFrq.min );
+    
+    memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
+    for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
+        pLOBData->fFreqSeq[i] = FMUL( stFrq.swtVal[i], (0.001) );		// FFRQCNV( stFrq.swtVal[i] );
+    }
+#endif
+    pLOBData->fFreqDeviation = pLOBData->fFreqMax - pLOBData->fFreqMin;
+
 
     // PRI 정보 생성
     MakePRIInfoInSeg( & stPri, pEmitter );
@@ -1379,9 +1409,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     // 펄스폭 생성
     MakePWInfoInSeg( & stVal, pEmitter );
-    pLOBData->fPWMean = PWCNV( stVal.mean*1000 );			//, _spOneMicrosec );
-    pLOBData->fPWMax = PWCNV( stVal.max*1000 );				//, _spOneMicrosec );
-    pLOBData->fPWMin = PWCNV( stVal.min*1000 );				//, _spOneMicrosec );
+    pLOBData->fPWMean = PWCNV( stVal.mean );			//, _spOneMicrosec );
+    pLOBData->fPWMax = PWCNV( stVal.max );				//, _spOneMicrosec );
+    pLOBData->fPWMin = PWCNV( stVal.min );				//, _spOneMicrosec );
     pLOBData->fPWDeviation = pLOBData->fPWMax - pLOBData->fPWMin;
 
     // 신호 세기 생성
@@ -1395,18 +1425,19 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     pLOBData->iIsStoreData = IsStorePDW();
     pLOBData->iNumOfPDW = pEmitter->pdw.count;
 #ifdef _ELINT_
-    pLOBData->iCollectorID = m_pNewSigAnal->GetCollectorID();
+    pLOBData->iCollectorID = GetCollectorID();
+    memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
 #endif
 
     // 수집소 위치 정보 저장
 #ifdef _ELINT_
     if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
-        pLOBData->dRadarCollectionLatitude = dRCLatitude[pLOBData->iCollectorID];
-        pLOBData->dRadarCollectionLongitude = dRCLongitude[pLOBData->iCollectorID];
+         pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
+         pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
     }
     else {
-        pLOBData->dRadarCollectionLatitude = 0.0;
-        pLOBData->dRadarCollectionLongitude = 0.0;
+         pLOBData->fRadarLatitude = 0.0;
+         pLOBData->fRadarLongitude = 0.0;
     }
 #else
 
@@ -1418,10 +1449,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     //pLOBData->uiSeqNum = 0;
 
-    //STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
-
 #ifdef _ELINT_
-    memcpy( pLOBData->aucTaskID, pPDWData->aucTaskID, sizeof(pPDWData->aucTaskID) );
+    //STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
+    //memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
 #elif defined(_POCKETSONATA_)
 
 #else

@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
     \version  0.0.1
@@ -9,6 +9,7 @@
 
 #include "../INC/PDW.h"
 #include "_Define.h"
+
 
 #define DFD_FREQ_OFFSET		(1900)
 
@@ -28,19 +29,21 @@ enum ENUM_UnitID {
 } ;
 
 enum ENUM_BoardID {
-    enPRC_Unknown,
+    enPRC_Unknown=0,
+
     enPRC1=1,
     enPRC2,
     enPRC3,
     enPRC4,
     enPRC5,
     enPRC6,
+    enMAXPRC,
 
     enMaster=enPRC3
 
 };
 
-#define _SAFE_FREE(A)           if( A != 0 ) { free( A ); A = 0; }
+#define _SAFE_FREE(A)           if( A != NULL ) { free( A ); A = NULL; }
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
@@ -52,7 +55,7 @@ enum ENUM_BoardID {
 #define FDIV( A, B )            (float) ( (float) (A) / (float) (B) )
 #define F_UDIV( A, B )          (int) ( (float) (A) / (float) (B) - 0.5 )
 #define C_UDIV( A, B )          (int) ( (float) (A) / (float) (B) + 0.5 )
-#define IDIV( A, B )            ( ( (A) > 0 ) ? UDIV(A,B) : NDIV(A,B) )
+#define IDIV( A, B )            ( ( (A) > 0 ) ? (int) UDIV(A,B) : NDIV(A,B) )
 #define F_IDIV( A, B )          ( ( (A) > 0 ) ? F_UDIV(A,B) : F_NDIV(A,B) )
 #define C_IDIV( A, B )          ( ( (A) > 0 ) ? C_UDIV(A,B) : C_NDIV(A,B) )
 #define IMUL( A, B )            ( ( (A) > 0 ) ? UMUL(A,B) : NMUL(A,B) )
@@ -97,19 +100,6 @@ T _diffabs( T x, T y)
 
 #define _abs(a)                 ( (a) >= 0 ? (a) : -(a) )
 
-// template <typename T>
-// T _abs( T a )
-// {
-//     if( a  0 )
-// 
-// }
-
-
-
-
-
-
-
 
 
 #define High( A )               ( (int) A >> 8 ) & 0x00ff
@@ -117,16 +107,25 @@ T _diffabs( T x, T y)
 
 #ifdef _ELINT_
 #define FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
-#define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
-#define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
-#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define I_FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
+#define FFRQMhzCNV( A, B )		(float) ( (float)(B) * (float) (0.001) )
+#define DFRQMhzCNV( A, B )		(double) ( (double)(B) * (double) (0.001) )
+#define IFRQMhzCNV( A, B )		FDIV( (B), ( 0.001) )
+#define I_FRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
+#define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
+#define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
+#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
+#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					
 
-#define PWCNV( A )				IDIV( (A*1000.), _spOneMicrosec )
-#define IPWCNV( A )				IMUL( (A), _spOneMicrosec )
+#define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+#define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
+#define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+#define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
 #define AOACNV( A )             IMUL( (A), _spAOAres )
+#define I_AOACNV( A )           IMUL( (A), _spAOAres )
+#define FAOACNV( A )            FMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
 
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
@@ -135,19 +134,36 @@ T _diffabs( T x, T y)
 #define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
 #define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
-#define IPACNV( A )				FDIV( (A), _spAMPres )
+#define IPACNV( A )				IDIV( (A + 110.), _spAMPres )
+
+#define FFRQCNV( A, B )			( FMUL( gFreqRes[0].res, (A) ) + gFreqRes[0].offset )
+
+
+#define F_FRQMhzCNV( A, B )		FMUL( (B), (_frqRes[0]) )
+#define F_IFRQMhzCNV( A, B )	FDIV( (B), (_frqRes[0]) )
+
+#define FPWCNV( A )             FMUL( (A), _spOneNanosec )
+
+#define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
 #elif defined(_POCKETSONATA_)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
-#define FRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
-#define IFRQMhzCNV( A, B )      CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
+#define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define I_FRQMhzCNV( A, B )		IDIV( ( FMUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define FFRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define IFRQMhzCNV( A, B )		FDIV( ( FMUL( B, 1000. ) - gFreqRes[(A)].offset ), gFreqRes[(A)].res )
+#define I_IFRQMhzCNV( A, B )	IDIV( ( FMUL( B, 1000. ) - gFreqRes[(A)].offset ), gFreqRes[(A)].res )
 #define IFRQMhz( A, B )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
 #define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].res ) )
+#define I_IFRQCNV( A, B )       IDIV( (B), ( gFreqRes[A].res ) )
+
+//#define IFRQMhzCNV( A, B, C )   CPOCKETSONATAPDW::EncodeRealFREQMHz( A )
 
 #define IFRQMhzLOW( A )         CPOCKETSONATAPDW::EncodeFREQMHzFloor( A )
 #define IFRQMhzHGH( A )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
 
 #define TOAusCNV( A )           CPOCKETSONATAPDW::DecodeTOAus( A )
+#define I_TOAusCNV( A )         (int) ( CPOCKETSONATAPDW::DecodeTOAus( A ) + 0.5 )
 #define TOAmsCNV( A )           CPOCKETSONATAPDW::DecodeTOAms( A )
 #define FTOAsCNV( A )			CPOCKETSONATAPDW::DecodeTOAs( A )
 #define ITOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
@@ -155,6 +171,7 @@ T _diffabs( T x, T y)
 #define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
+#define I_PWCNV( A )			(int) ( CPOCKETSONATAPDW::DecodePWus( A ) + 0.5 )
 #define IPWCNV( A )				IMUL( (A), _spOneNanosec )
 #define FPWCNV( A )             FMUL( (A), _spOneNanosec )
 
@@ -162,6 +179,7 @@ T _diffabs( T x, T y)
 #define IPWCNVHGH( A )			CPOCKETSONATAPDW::EncodePWCeiling( A )
 
 #define AOACNV( A )             CPOCKETSONATAPDW::DecodeDOA( A )
+#define I_AOACNV( A )           IMUL( CPOCKETSONATAPDW::DecodeDOA( A ), 1.0 )
 #define IAOACNV( A )            CPOCKETSONATAPDW::EncodeDOA( A )
 #define FAOACNV( A )            CPOCKETSONATAPDW::DecodeDOA( A )
 
@@ -171,6 +189,7 @@ T _diffabs( T x, T y)
 
 #define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
 #define IPACNV( A )				FDIV( (A), _spAMPres )
+#define I_IPACNV( A )			IDIV( (A), _spAMPres )
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
@@ -180,6 +199,7 @@ T _diffabs( T x, T y)
 #define F_FRQCNV( A, B )            (UINT) ( F_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
 #define C_FRQCNV( A, B )            (UINT) ( C_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
 #define FRQMhzCNV( A, B )           IMUL( (B), ( gFreqRes[(A)].res ) )
+#define I_FRQMhzCNV( A, B )         IMUL( (B), ( gFreqRes[(A)].res ) )
 #define IFRQMhzCNV( A )             IDIV( (A), ( gFreqRes[0].res ) )
 #define IFRQCNV( A, B )             IDIV( (A), ( gFreqRes[0].res ) )
 
@@ -200,7 +220,8 @@ T _diffabs( T x, T y)
 #define IPWCNVLOW( A )			F_MUL( (A), _spOneNanosec )
 #define IPWCNVHGH( A )			C_MUL( (A), _spOneNanosec )
 
-#define AOACNV( A )             FMUL( (A), _spAOAres )
+#define AOACNV( A )             IMUL( (A), _spAOAres )
+#define I_AOACNV( A )           IMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
 #define FAOACNV( A )            (float) ( (float) A * _spAOAres )
 
@@ -265,7 +286,7 @@ T _diffabs( T x, T y)
 #endif
 
 #ifdef _WIN32
-#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); Log( enNormal, "%s", __FUNCTION__ ); }
+#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); LOG->LogMsg( enNormal, "%s", __FUNCTION__ ); }
 #else
 #define PrintFunction { }
 #endif
@@ -338,46 +359,13 @@ float _spTOAres;
 float _spPWres;
 
 float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
-float _frqRes[2] = { (float) 0.117, (float) 65.104167 } ;
 
-int _spAnalMinPulseCount;
-
-void _InitResolution()
-{
 #ifdef _ELINT_
-    m_enBandWidth = pPDWData->enBandWidth;
-
-    _spOneSec = FDIV( 1000000000, _toaRes[m_enBandWidth] );
-    _spOneMilli = FDIV( 1000000, _toaRes[m_enBandWidth] );
-    _spOneMicrosec = FDIV( 1000, _toaRes[m_enBandWidth] );
-    _spOneNanosec = FDIV( 1, _toaRes[m_enBandWidth] );
-
-    _spAOAres = (float) 0.01;
-    _spAMPres = (float) (0.25);
-    _spPWres = _spOneMicrosec;
-
-#elif defined(_POCKETSONATA_)
-    _spOneSec = FDIV( 1000000000, 6.48824007 );
-    _spOneMilli = FDIV( 1000000, 6.48824007 );
-    _spOneMicrosec = FDIV( 1000, 6.48824007 );
-    _spOneNanosec = FDIV( 1, 6.48824007 );
-
-    _spAOAres = (float) ( 0.351562 );
-    _spAMPres = (float) (0.351562);
-    _spPWres = _spOneMicrosec;
-
-#elif defined(_SONATA_)
-    _spOneSec = 20000000.;
-    _spOneMilli = FDIV( _spOneSec, 1000. );
-    _spOneMicrosec = FDIV( _spOneMilli, 1000. );
-    _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
-
-    _spAOAres = (float) ( 0.351562 );
-    _spAMPres = (float) (0.351562);
-    _spPWres = (float) ( 50 );
-
+float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+#else
+float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
 #endif
-}
+
 
 #else
 extern float _spOneSec;
@@ -393,7 +381,6 @@ extern float _spPWres;
 extern float _toaRes[en50MHZ_BW+1];
 extern float _frqRes[2];
 
-extern int _spAnalMinPulseCount;
 
 #endif
 

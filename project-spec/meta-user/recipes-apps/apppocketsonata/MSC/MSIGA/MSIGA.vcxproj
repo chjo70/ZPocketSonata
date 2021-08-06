@@ -53,6 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_POCKETSONATA_;_CRT_SECURE_NO_WARNINGS;_SQLITE_;_UTM_POSITION_;_SIM_SERVER_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,7 +150,6 @@
     <ClInclude Include="..\..\files\Anal\INC\Macros.h" />
     <ClInclude Include="..\..\files\Anal\INC\OS.h" />
     <ClInclude Include="..\..\files\Anal\INC\PDW.h" />
-    <ClInclude Include="..\..\files\Anal\INC\Stack.h" />
     <ClInclude Include="..\..\files\Anal\INC\structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\system.h" />
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
@@ -229,7 +229,6 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\chwio.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
-    <ClInclude Include="..\..\files\Utils\cqueue.h" />
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />

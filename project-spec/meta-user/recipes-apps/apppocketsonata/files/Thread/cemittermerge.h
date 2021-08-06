@@ -32,13 +32,18 @@ private:
     void InitData();
     void MergeEmitter();
 
+    void TrackFail();
+    void ScanFail();
+
     void ReloadLibrary();
 
     void SendNewUpd();
-    void SendLost( unsigned int uiAETID );
     void SendDelete( unsigned int uiAETID );
+    void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
 
     void SetStartOfAnalScan();
+
+
 
 };
 

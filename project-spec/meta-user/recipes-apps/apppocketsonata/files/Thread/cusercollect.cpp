@@ -157,7 +157,7 @@ void CUserCollect::_routine()
  */
 void CUserCollect::SetConfig()
 {
-    char szBuffer[200];
+    char szBuffer[2904];
     unsigned int uiResult;
 
     UNI_LAN_DATA *pLanData;
@@ -217,7 +217,7 @@ void CUserCollect::ColStart()
 
     memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
 
-    LOGMSG1( enDebug, " 탐지 신호 수집 설정[%d]을 시작합니다." , m_uiColStart );
+    LOGMSG1( enDebug, " Starting of the Collecting Signal [%d]... " , m_uiColStart );
 	
     // 인터럽트 재설정 
 #ifdef __ZYNQ_BOARD__
@@ -265,7 +265,7 @@ void CUserCollect::ColStart()
                     memset( pPDWFileHeader, 0, sizeof(STR_PDWFILE_HEADER) );
                     pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
                     pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
-                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), 0, 0, GetThreadName() );
+                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), NULL, 0, GetThreadName() );
                 }
                 break;
 
@@ -316,7 +316,13 @@ void CUserCollect::SendRawData()
 }
 
 /**
- * @brief CUserCollect::MakeSIMPDWData
+ * @brief     MakeSIMPDWData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-02, 11:07
+ * @warning
  */
 void CUserCollect::MakeSIMPDWData()
 {
@@ -337,10 +343,16 @@ void CUserCollect::MakeSIMPDWData()
     for( i=0 ; i < m_uiCoPDW; ++i ) {
         randomDOA = iDOA + ( rand() % 40 ) - 20;
         randomPA =  ( rand() % 140 ) + 20;
-        randomPW =  ( rand() % 20 ) + 20000;
+        randomPW =  ( rand() % 1000 ) + 20000;
 
-        randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
-        randomCh = 1;
+        if( m_uiCoSim % 20 == 0 ) {
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3585.0 );
+            //randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
+            //randomCh = 1;
+        }
+        else {
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
+        }
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
         m_ullTOA += 0x2000;
@@ -348,7 +360,7 @@ void CUserCollect::MakeSIMPDWData()
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 
         //
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 0;        // uiPDW_CW;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;

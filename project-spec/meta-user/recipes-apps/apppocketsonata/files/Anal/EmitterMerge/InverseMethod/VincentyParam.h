@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @brief Vincenty's Formulae를 위한 파라미터들
  */
 #pragma once

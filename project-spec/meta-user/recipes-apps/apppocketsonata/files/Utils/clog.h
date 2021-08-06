@@ -1,4 +1,4 @@
-﻿#ifndef CLOG_H
+#ifndef CLOG_H
 #define CLOG_H
 
 #include <stdio.h>
@@ -30,6 +30,8 @@ enum LogType {
     enDebug=0,
     enNormal,
     enLineFeed,
+    enNoLineFeed,
+
     enWarning,
     enError,
     enEnd,
@@ -89,10 +91,10 @@ public:
     void Lock();
     void UnLock();
 
-    void LogMsg( int nType, char *pMsg );
-    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );
+    //void LogMsg( int nType, char *pMsg );
+    void LogMsg( int nType, char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );
 
-    void LogMsg( int nType, const char *fmt, ... );
+    void LogMsg( int nType, char *fmt, ... );
 
 };
 

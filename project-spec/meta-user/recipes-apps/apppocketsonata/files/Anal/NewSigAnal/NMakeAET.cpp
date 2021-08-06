@@ -292,35 +292,15 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
     char buffer[500];
 
-// 	UINT temp;
-//
-// 	char buff1[20], buff2[20], buff3[20], buff4[20];
-//
-// 	printf( "\n" );
-//
-// 	int noSymbol = 0; //GetNoSymbol( pNewAet->aet.noEMT );
-// 	if( pManAet->loc.trackFI.bUse == TRUE ) {
-// 		if( noSymbol != -1 )
-// 			printf( "%1c%2dT%2d" , aet_stat[pManAet->loc.stat], pManAet->loc.trackFI.noFilter, noSymbol );
-// 		else
-// 			printf( "%1c%2d-" , aet_stat[pManAet->loc.stat], pManAet->loc.trackFI.noFilter );
-// 	}
-// 	else {
-// 		if( pManAet->loc.noThreat != -1 )
-// 			printf( "%1c-T%2d" , aet_stat[pManAet->loc.stat], noSymbol );
-// 		else
-// 			printf( "%1c--" , aet_stat[pManAet->loc.stat] );
-// 	}
-
     // 신호 정보
     int iCnt=0;
-    iCnt += sprintf( & buffer[iCnt], "%s", aet_signal_type[pLOB->iSignalType]);
+    iCnt += sprintf( & buffer[iCnt], "%s", g_szAetSignalType[pLOB->iSignalType]);
 
     // 방위
     iCnt += sprintf( & buffer[iCnt], " %4.1f(%4.1f,%4.1f)" , pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax );
 
     // 주파수
-    iCnt += sprintf( & buffer[iCnt], " %s" , aet_freq_type[pLOB->iFreqType] );
+    iCnt += sprintf( & buffer[iCnt], " %s" , g_szAetFreqType[pLOB->iFreqType] );
 // 	temp = abs( pManAet->aet.frq.max - pManAet->aet.frq.min );
     iCnt += sprintf( & buffer[iCnt], " %.3f[%.3f, %.3f]" , pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax );
     //sprintf_s( buff1, "%.3f" , pLOB->fFreqMean );
@@ -336,7 +316,7 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     }
 
     // PRI
-    iCnt += sprintf( & buffer[iCnt], " %s    " , aet_pri_type[pLOB->iPRIType] );
+    iCnt += sprintf( & buffer[iCnt], " %s    " , g_szAetPriType[pLOB->iPRIType] );
     iCnt += sprintf( & buffer[iCnt], "%0.1f(%.1f,%.1f), %2d" , pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount );
 
     // PW
@@ -363,3 +343,17 @@ unsigned int CNMakeAET::IsStorePDW()
 {
     return m_pNewSigAnal->IsStorePDW();
 }
+
+#ifdef _ELINT_
+
+EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
+{
+    return m_pNewSigAnal->GetCollectorID();
+}
+
+char *CNMakeAET::GetTaskID()
+{
+    return m_pNewSigAnal->GetTaskID();
+}
+
+#endif

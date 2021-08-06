@@ -1,4 +1,4 @@
-﻿// _Define.h: interface for the 분석 소프트웨어의 정의
+// _Define.h: interface for the 분석 소프트웨어의 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,14 +10,12 @@
 #endif // _MSC_VER > 1000
 
 #include "../INC/system.h"
-//#include "../SigAnal/_Macro.h"
+
 
 #define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
 #define _min(a,b)               ( ( (a) < (b) ) ? (a) : (b) )
 
-//#define	RAD2DEG			(180./M_PI)		// 57.295779513082320876798154814114
 
-//enum NUMBER_DEF { _spZero=0, _spOne, _spTwo, _spThree } ;
 #define _spZero		(0)
 #define _spOne		(1)
 #define _spTwo		(2)
@@ -102,9 +100,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //
 
 #ifdef _ELINT_
-#define NEW_COLLECT_PDW				(256)
-#define	KWN_COLLECT_PDW				(256)
-#define	SCN_COLLECT_PDW				(256*2)
+#define NEW_COLLECT_PDW				(4096)			// 탐지 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(200)				// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(2000)			// 스캔 분석용 최대 수집 개수
 
 #else
 #define NEW_COLLECT_PDW				(1024)
@@ -147,22 +145,22 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
-#define KHARM_AOA_MAR							(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
+#define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
 
-#define TOTAL_FRQAOAPWBIN					(91000)			//(1024*4)											// 전체 히스토그램 BIN수
+#define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES									ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#define MAX_AOA       			(36000)			// 최대 방위값 2^10 (360도/1023)
-#define MAX_FREQ      			IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
-#define	FREQ_NARR_MHZ			IFRQMhzCNV( 0, 20 )			// 20 MHz
-#define	FREQ_WIDE_MHZ			IFRQMhzCNV( 0, 100 )		// 100 MHz
+#define MAX_AOA       			    (36000)			// 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ      			    IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
+#define	FREQ_NARR_MHZ			    IFRQMhzCNV( 0, 20 )			// 20 MHz
+#define	FREQ_WIDE_MHZ			    IFRQMhzCNV( 0, 100 )		// 100 MHz
 
-#define	MAX_FREQ_DEVIATION		(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+#define	MAX_FREQ_DEVIATION		    (500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define   _spAOAmax       0x1FF
+#define   _spAOAmax                 0x1FF
 #define		_spAmpmax				0xFF
 
 //#define   _spAOAres       (2*0.351562)		// Degree */
@@ -172,27 +170,27 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define STABLE_MARGIN				ITOAusCNV( 8 ) // ( 1 * _spOneMicrosec )	// 1 us
 
-#define	MAX_PW							(1024*16)
+#define	MAX_PW						(1024*16)
 
 #elif defined(_POCKETSONATA_)
-#define KHARM_AOA_MAR           (int) ( ( 8 * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 )     // 하모닉 방위 마진
-#define KHARM_FRQ_MAR           (int) ( ((10.*1000.)/1.953125)+0.5)                  // 하모닉 주파수 마진 (Band1)
+#define KHARM_AOA_MAR               (int) ( ( 8 * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 )     // 하모닉 방위 마진
+#define KHARM_FRQ_MAR               (int) ( ((10.*1000.)/1.953125)+0.5)                  // 하모닉 주파수 마진 (Band1)
 
-#define TOTAL_FRQAOAPWBIN       (91000)			//(1024*4)											// 전체 히스토그램 BIN수
+#define TOTAL_FRQAOAPWBIN           (91000)			//(1024*4)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES                UTOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_RES                    UTOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#define	FREQ_NARR_MHZ           IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
-#define	FREQ_WIDE_MHZ           IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
+#define	FREQ_NARR_MHZ               IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
+#define	FREQ_WIDE_MHZ               IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
 
-#define	MAX_FREQ_DEVIATION		((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+#define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define STABLE_MARGIN			ITOAusCNV(1)
+#define STABLE_MARGIN			    ITOAusCNV(1)
 
 // 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 최대값으로 설정해야 한다.
-#define MAX_FREQ                (0x200000)
-#define MAX_AOA       			(0x1000)
-#define	MAX_PW					(0x1000000)
+#define MAX_FREQ                    (0x200000)
+#define MAX_AOA       			    (0x1000)
+#define	MAX_PW					    (0x1000000)
 
 
 
@@ -464,6 +462,56 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	_spInvThreat                    (-1)
 
 #define _spWarning                      (-10)
+
+
+
+
+
+// 진행바 스텝수
+#define _PROGRESS_STEP												(80)
+
+// 문자열 크기 정의
+#define _NULL_CHAR_													(1)
+
+#define _MAX_STRING_SIZE_											(50)
+
+#define _MAX_SIZE_OF_MODECODE                                       (4)
+#define _MAX_SIZE_OF_FUNCTIONCODE                                   (4)
+#define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
+
+
+#define _MAX_RADARMODE_NAME_SIZE									(10)
+#define _MAX_PLATFORM_NAME_SIZE                                     (10)
+#define _MAX_THREAT_NAME_SIZE										(10)
+#define _MAX_SITE_NAME_SIZE											(10)
+#define _MAX_SIZE_OF_IDINFO                                         (10)
+#define _MAX_SIZE_OF_BENUMBER                                       (30)
+
+#define _MAX_MODECODE_STRING_SIZE_									(2+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_									(30+_NULL_CHAR_)
+#define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
+
+#define _MAX_FUNCTIONCODE_STRING_SIZE_								(4+_NULL_CHAR_)
+#define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
+
+#define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
+#define _MAX_USER_COUNTRY_STRING_SIZE_								(4+_NULL_CHAR_)
+#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_                          (4+_NULL_CHAR_)
+#define _MAX_FRIEND_OR_FOE_STRING_SIZE_								(12+_NULL_CHAR_)
+#define _MAX_ADA_STRING_SIZE_										(8+_NULL_CHAR_)
+#define _MAX_DATETIME_STRING_SIZE_									(40+_NULL_CHAR_)
+#define _MAX_DISTINCTION_STRING_SIZE_								(12+_NULL_CHAR_)
+#define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
+#define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
+#define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
+#define _MAX_ELNOT_STRING_SIZE_										(10+_NULL_CHAR_)
+#define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
+#define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
+
+#define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
+#define _MAX_SIZE_OF_KOREASITENAME_									(70+_NULL_CHAR_)
+#define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
+
 
 
 

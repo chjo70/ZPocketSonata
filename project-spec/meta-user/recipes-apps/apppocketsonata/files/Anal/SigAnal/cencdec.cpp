@@ -26,11 +26,14 @@ int SONATA::ENCODE::BAND( float fFREQ )
 {
     int iBand=0;
 
-    if( fFREQ > 2000.0 ) {
+    if( fFREQ > 6000.0 ) {
+        iBand = 2;
+    }
+    else if( fFREQ > 2000.0 ) {
         iBand = 1;
     }
-    else if( fFREQ > 6000.0 ) {
-        iBand = 2;
+    else {
+
     }
 
     return iBand;

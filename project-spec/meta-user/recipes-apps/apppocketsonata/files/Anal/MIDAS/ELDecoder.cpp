@@ -1,4 +1,4 @@
-﻿// ELDecoder.cpp: implementation of the ELDecoder class.
+// ELDecoder.cpp: implementation of the ELDecoder class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -343,11 +343,15 @@ float ELDecoder::DecodePA(const float i_fBinPa)
 void ELDecoder::UpdateDateTime()
 {
 	if( _stNOW == 0 ) {
-		_stNOW = _time64( NULL );
+#ifdef _MSC_VER			
+		_stNOW = time( NULL );
 		_localtime32_s( & _stTM, & _stNOW );
 
 		_stTM.tm_year -= 100;
 		_stTM.tm_mon += 1;
+#else
+		
+#endif		
 	}
 }
 

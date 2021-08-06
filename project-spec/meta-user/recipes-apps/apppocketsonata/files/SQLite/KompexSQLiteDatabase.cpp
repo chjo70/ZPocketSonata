@@ -26,7 +26,7 @@ namespace Kompex
 {
 
 SQLiteDatabase::SQLiteDatabase():
-	mDatabaseHandle(0),
+	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false),
 	mDatabaseFilenameUtf8(""),
 	mDatabaseFilenameUtf16(L"")
@@ -34,21 +34,21 @@ SQLiteDatabase::SQLiteDatabase():
 }
 
 SQLiteDatabase::SQLiteDatabase(const char *filename, int flags, const char *zVfs):
-	mDatabaseHandle(0),
+	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
 	Open(filename, flags, zVfs);
 }
 
 SQLiteDatabase::SQLiteDatabase(const wchar_t *filename):
-	mDatabaseHandle(0),
+	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
 	Open(filename);
 }
 
 SQLiteDatabase::SQLiteDatabase(const std::string &filename, int flags, const char *zVfs):
-	mDatabaseHandle(0),
+	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
 	Open(filename, flags, zVfs);
@@ -62,13 +62,13 @@ SQLiteDatabase::~SQLiteDatabase()
 void SQLiteDatabase::Open(const char *filename, int flags, const char *zVfs)
 {
 	// close old db, if one exist
-	if(mDatabaseHandle)
+	if(m_pDatabaseHandle)
 		Close();
 
-	if(sqlite3_open_v2(filename, &mDatabaseHandle, flags, zVfs) != SQLITE_OK)
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+	if(sqlite3_open_v2(filename, &m_pDatabaseHandle, flags, zVfs) != SQLITE_OK)
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
-	sqlite3_extended_result_codes(mDatabaseHandle, true);
+	sqlite3_extended_result_codes(m_pDatabaseHandle, true);
 
 	mDatabaseFilenameUtf8 = std::string(filename);
 	mDatabaseFilenameUtf16 = L"";
@@ -77,13 +77,13 @@ void SQLiteDatabase::Open(const char *filename, int flags, const char *zVfs)
 void SQLiteDatabase::Open(const std::string &filename, int flags, const char *zVfs)
 {
 	// close old db, if one exist
-	if(mDatabaseHandle)
+	if(m_pDatabaseHandle)
 		Close();
 
-	if(sqlite3_open_v2(filename.c_str(), &mDatabaseHandle, flags, zVfs) != SQLITE_OK)
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+	if(sqlite3_open_v2(filename.c_str(), &m_pDatabaseHandle, flags, zVfs) != SQLITE_OK)
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
-	sqlite3_extended_result_codes(mDatabaseHandle, true);
+	sqlite3_extended_result_codes(m_pDatabaseHandle, true);
 
 	mDatabaseFilenameUtf8 = std::string(filename);
 	mDatabaseFilenameUtf16 = L"";
@@ -92,14 +92,14 @@ void SQLiteDatabase::Open(const std::string &filename, int flags, const char *zV
 void SQLiteDatabase::Open(const wchar_t *filename)
 {
 	// close old db, if one exist
-	if(mDatabaseHandle)
+	if(m_pDatabaseHandle)
 		Close();
 
 	// standard usage: SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
-	if(sqlite3_open16(filename, &mDatabaseHandle) != SQLITE_OK)
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+	if(sqlite3_open16(filename, &m_pDatabaseHandle) != SQLITE_OK)
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
-	sqlite3_extended_result_codes(mDatabaseHandle, true);
+	sqlite3_extended_result_codes(m_pDatabaseHandle, true);
 
 	mDatabaseFilenameUtf8 = "";
 	mDatabaseFilenameUtf16 = filename;
@@ -110,18 +110,17 @@ void SQLiteDatabase::Close()
 	// detach database if the database was moved into memory
 	if(mIsMemoryDatabaseActive)
 	{
-		if(sqlite3_exec(mDatabaseHandle, "DETACH DATABASE origin", 0, 0, 0) != SQLITE_OK)
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+		if(sqlite3_exec(m_pDatabaseHandle, "DETACH DATABASE origin", 0, NULL, 0) != SQLITE_OK)
+			KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 	}
 
 	// close the database
-	if(mDatabaseHandle && sqlite3_close(mDatabaseHandle) != SQLITE_OK)
-	{
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+    int iSqlite=sqlite3_close(m_pDatabaseHandle);
+	if( iSqlite != SQLITE_OK) {
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 	}
-	else
-	{
-		mDatabaseHandle = 0;
+	else {
+		m_pDatabaseHandle = NULL;
 		mDatabaseFilenameUtf8 = "";
 		mDatabaseFilenameUtf16 = L"";
 		mIsMemoryDatabaseActive = false;
@@ -141,188 +140,189 @@ void SQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 ti
 
 void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 {
-	if(!mIsMemoryDatabaseActive)
-	{
-		if(mDatabaseFilenameUtf8 == "" && mDatabaseFilenameUtf16 == L"")
-		{
+	if(!mIsMemoryDatabaseActive) {
+		if(mDatabaseFilenameUtf8 == "" && mDatabaseFilenameUtf16 == L"") {
 			KOMPEX_EXCEPT("No opened database! Please open a database first.", -1);
-			return;
+			// return;
 		}
-
-		sqlite3 *memoryDatabase;
-		if(mDatabaseFilenameUtf8 != "")
-			sqlite3_open(":memory:", &memoryDatabase);   
-		else
-			sqlite3_open16(L":memory:", &memoryDatabase);
+        else {
+		    sqlite3 *memoryDatabase;
+		    if(mDatabaseFilenameUtf8 != "")
+			    sqlite3_open(":memory:", &memoryDatabase);   
+		    else
+			    sqlite3_open16(L":memory:", &memoryDatabase);
 		
-		// create the in-memory schema from the origin database
-		sqlite3_exec(mDatabaseHandle, "BEGIN", 0, 0, 0);
+		    // create the in-memory schema from the origin database
+		    sqlite3_exec(m_pDatabaseHandle, "BEGIN", 0, NULL, 0);
 
-		if(encoding == UTF8)
-		{
-			sqlite3_exec(mDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", &Kompex::SQLiteDatabase::ProcessDDLRow, memoryDatabase, 0);
-		}
-		else if(encoding == UTF16)
-		{
-			struct sqlite3_stmt *statement;
-			if(sqlite3_prepare_v2(mDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", -1, &statement, 0) != SQLITE_OK)
-				CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+		    if(encoding == UTF8)
+		    {
+			    sqlite3_exec(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", &Kompex::SQLiteDatabase::ProcessDDLRow, memoryDatabase, NULL );
+		    }
+		    else if(encoding == UTF16)
+		    {
+			    struct sqlite3_stmt *statement;
+			    if(sqlite3_prepare_v2(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", -1, &statement, NULL ) != SQLITE_OK)
+				    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
-			bool resultsAvailable = true;
-			while(resultsAvailable)
-			{
-				switch(sqlite3_step(statement))
-				{
-					case SQLITE_ROW:
-					{
-						resultsAvailable = true;
-						struct sqlite3_stmt *transferStatement;
-						if(sqlite3_prepare16_v2(memoryDatabase, sqlite3_column_text16(statement, 0), -1, &transferStatement, 0) != SQLITE_OK)
-						{
-							sqlite3_finalize(transferStatement);
-							CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						}
+			    bool resultsAvailable = true;
+			    while(resultsAvailable)
+			    {
+				    switch(sqlite3_step(statement))
+				    {
+					    case SQLITE_ROW:
+					    {
+						    resultsAvailable = true;
+						    struct sqlite3_stmt *transferStatement;
+						    if(sqlite3_prepare16_v2(memoryDatabase, sqlite3_column_text16(statement, 0), -1, &transferStatement, NULL ) != SQLITE_OK)
+						    {
+							    sqlite3_finalize(transferStatement);
+							    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+						    }
 						
-						// SQLITE_DONE should always be returned
-						if(sqlite3_step(transferStatement) != SQLITE_DONE)
-						{
-							sqlite3_finalize(transferStatement);
-							CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						}
+						    // SQLITE_DONE should always be returned
+						    if(sqlite3_step(transferStatement) != SQLITE_DONE)
+						    {
+							    sqlite3_finalize(transferStatement);
+							    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+						    }
 
-						sqlite3_finalize(transferStatement);
-						break;
-					}
-					case SQLITE_DONE:
-						resultsAvailable = false;
-						break;
-					case SQLITE_BUSY:
-						CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, "SQLITE_BUSY", SQLITE_BUSY);
-						resultsAvailable = false;
-						break;
-					case SQLITE_ERROR:
-						CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
-						resultsAvailable = false;
-						break;
-					default:
-						CleanUpFailedMemoryDatabase(memoryDatabase, mDatabaseHandle, false, true, statement, sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
-						resultsAvailable = false;
-				}
-			}
+						    sqlite3_finalize(transferStatement);
+						    break;
+					    }
+					    case SQLITE_DONE:
+						    resultsAvailable = false;
+						    break;
+					    case SQLITE_BUSY:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, "SQLITE_BUSY", SQLITE_BUSY);						
+						    break;
+					    case SQLITE_ERROR:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));						
+						    break;
+					    default:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));						
+                            break;
+				    }
+			    }
 
-			sqlite3_finalize(statement);
-		}
+			    sqlite3_finalize(statement);
+		    }
 
-		sqlite3_exec(mDatabaseHandle, "COMMIT", 0, 0, 0);
+		    sqlite3_exec(m_pDatabaseHandle, "COMMIT", 0, NULL, 0);
 
-		// attach the origin database to the in-memory
-		if(mDatabaseFilenameUtf8 != "")
-		{
-			std::string sql = "ATTACH DATABASE '" + mDatabaseFilenameUtf8 + "' as origin";
-			if(sqlite3_exec(memoryDatabase, sql.c_str(), 0, 0, 0) != SQLITE_OK)
-			{
-				sqlite3_close(memoryDatabase);
-				KOMPEX_EXCEPT(sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-			}
-		}
-		else
-		{
-			struct sqlite3_stmt *statement;
-			std::wstring sql = L"ATTACH DATABASE '" + mDatabaseFilenameUtf16 + L"' as origin";
-			if(sqlite3_prepare16_v2(memoryDatabase, sql.c_str(), -1, &statement, 0) != SQLITE_OK)
-				CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+		    // attach the origin database to the in-memory
+		    if(mDatabaseFilenameUtf8 != "")
+		    {
+			    std::string sql = "ATTACH DATABASE '" + mDatabaseFilenameUtf8 + "' as origin";
+			    if(sqlite3_exec(memoryDatabase, sql.c_str(), 0, NULL, 0) != SQLITE_OK)
+			    {
+				    sqlite3_close(memoryDatabase);
+				    KOMPEX_EXCEPT(sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+			    }
+		    }
+		    else
+		    {
+			    struct sqlite3_stmt *statement;
+			    std::wstring sql = L"ATTACH DATABASE '" + mDatabaseFilenameUtf16 + L"' as origin";
+			    if(sqlite3_prepare16_v2(memoryDatabase, sql.c_str(), -1, &statement, NULL ) != SQLITE_OK)
+				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 
-			if(sqlite3_step(statement) != SQLITE_DONE)
-				CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+			    if(sqlite3_step(statement) != SQLITE_DONE)
+				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 
-			sqlite3_finalize(statement);
-		}
+			    sqlite3_finalize(statement);
+		    }
 
-		// copy the data from the origin database to the in-memory
-		sqlite3_exec(memoryDatabase, "BEGIN", 0, 0, 0);
+		    // copy the data from the origin database to the in-memory
+		    sqlite3_exec(memoryDatabase, "BEGIN", 0, NULL, 0);
 
-		if(encoding == UTF8)
-		{
-			sqlite3_exec(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", &Kompex::SQLiteDatabase::ProcessDMLRow, memoryDatabase, 0);
-		}
-		else if(encoding == UTF16)
-		{
-			struct sqlite3_stmt *statement;
-			if(sqlite3_prepare_v2(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", -1, &statement, 0) != SQLITE_OK)
-				CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+		    if(encoding == UTF8)
+		    {
+			    sqlite3_exec(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", &Kompex::SQLiteDatabase::ProcessDMLRow, memoryDatabase, NULL );
+		    }
+		    else if(encoding == UTF16)
+		    {
+			    struct sqlite3_stmt *statement;
+			    if(sqlite3_prepare_v2(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", -1, &statement, NULL ) != SQLITE_OK)
+				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 
-			bool resultsAvailable = true;
-			while(resultsAvailable)
-			{
-				switch(sqlite3_step(statement))
-				{
-					case SQLITE_ROW:
-					{
-						resultsAvailable = true;
+			    bool resultsAvailable = true;
+			    while(resultsAvailable)
+			    {
+				    switch(sqlite3_step(statement))
+				    {
+					    case SQLITE_ROW:
+					    {
+						    resultsAvailable = true;
 						
-						std::wstring tableName = (wchar_t*)sqlite3_column_text16(statement, 0);
-						std::wstring stmt = std::wstring(L"INSERT INTO main.") + tableName + std::wstring(L" SELECT * FROM origin.") + tableName;
-						struct sqlite3_stmt *transferStatement;
-						if(sqlite3_prepare16_v2(memoryDatabase, stmt.c_str(), -1, &transferStatement, 0) != SQLITE_OK)
-						{
-							sqlite3_finalize(transferStatement);
-							CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						}
+						    std::wstring tableName = (wchar_t*)sqlite3_column_text16(statement, 0);
+						    std::wstring stmt = std::wstring(L"INSERT INTO main.") + tableName + std::wstring(L" SELECT * FROM origin.") + tableName;
+						    struct sqlite3_stmt *transferStatement;
+						    if(sqlite3_prepare16_v2(memoryDatabase, stmt.c_str(), -1, &transferStatement, NULL ) != SQLITE_OK)
+						    {
+							    sqlite3_finalize(transferStatement);
+							    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+						    }
 
-						// SQLITE_DONE should always be returned
-						if(sqlite3_step(transferStatement) != SQLITE_DONE)
-						{
-							sqlite3_finalize(transferStatement);
-							CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						}
+						    // SQLITE_DONE should always be returned
+						    if(sqlite3_step(transferStatement) != SQLITE_DONE)
+						    {
+							    sqlite3_finalize(transferStatement);
+							    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+						    }
 
-						sqlite3_finalize(transferStatement);
+						    sqlite3_finalize(transferStatement);
 
-						break;
-					}
-					case SQLITE_DONE:
-						resultsAvailable = false;
-						break;
-					case SQLITE_BUSY:
-						CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);
-						resultsAvailable = false;
-						break;
-					case SQLITE_ERROR:
-						CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						resultsAvailable = false;
-						break;
-					default:
-						CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-						resultsAvailable = false;
-				}
-			}
+						    break;
+					    }
+					    case SQLITE_DONE:
+						    resultsAvailable = false;
+						    break;
+					    case SQLITE_BUSY:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);						
+						    break;
+					    case SQLITE_ERROR:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));						
+						    break;
+					    default:
+                            resultsAvailable = false;
+						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+						    break;
+				    }
+			    }
 			
-			sqlite3_finalize(statement);
-		}
+			    sqlite3_finalize(statement);
+		    }
 
-		if(sqlite3_exec(memoryDatabase, "COMMIT", 0, 0, 0) == SQLITE_OK)
-		{
-			sqlite3_close(mDatabaseHandle);
-			mDatabaseHandle = memoryDatabase;
-			mIsMemoryDatabaseActive = true;
-		}
-		else
-		{
-			CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, 0, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-		}
+		    if(sqlite3_exec(memoryDatabase, "COMMIT", 0, NULL, 0) == SQLITE_OK)
+		    {
+			    sqlite3_close(m_pDatabaseHandle);
+			    m_pDatabaseHandle = memoryDatabase;
+			    mIsMemoryDatabaseActive = true;
+		    }
+		    else
+		    {
+			    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, NULL, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
+		    }
+        }
 	}
 }
 
 void SQLiteDatabase::CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite3 *rollbackDatabase, bool isDetachNecessary, bool isRollbackNecessary, sqlite3_stmt *stmt, const std::string &errMsg, int internalSqliteErrCode)
 {
-	if(stmt != 0)
+	if(stmt != NULL )
 		sqlite3_finalize(stmt);
 
 	if(isRollbackNecessary)
-		sqlite3_exec(rollbackDatabase, "ROLLBACK", 0, 0, 0);
+		sqlite3_exec(rollbackDatabase, "ROLLBACK", 0, NULL, 0);
 
 	if(isDetachNecessary)
-		sqlite3_exec(memoryDatabase, "DETACH DATABASE origin", 0, 0, 0);
+		sqlite3_exec(memoryDatabase, "DETACH DATABASE origin", 0, NULL, 0);
 
 	sqlite3_close(memoryDatabase);
 	KOMPEX_EXCEPT(errMsg, internalSqliteErrCode);
@@ -333,12 +333,13 @@ int SQLiteDatabase::ProcessDDLRow(void *db, int columnsCount, char **values, cha
 	if(columnsCount != 1)
 	{
 		KOMPEX_EXCEPT("error occured during DDL: columnsCount != 1", -1);
-		return -1;
+		//return -1;
 	}
 
 	// execute a sql statement in values[0] in the database db.
-	if(sqlite3_exec(static_cast<sqlite3*>(db), values[0], 0, 0, 0) != SQLITE_OK)
+	if(sqlite3_exec(static_cast<sqlite3*>(db), values[0], 0, NULL, 0) != SQLITE_OK) {
 		KOMPEX_EXCEPT("error occured during DDL: sqlite3_exec (error message: " + std::string(sqlite3_errmsg(static_cast<sqlite3*>(db))) + ")", sqlite3_errcode(static_cast<sqlite3*>(db)));
+    }
 
 	return 0;
 }
@@ -348,12 +349,12 @@ int SQLiteDatabase::ProcessDMLRow(void *db, int columnsCount, char **values, cha
 	if(columnsCount != 1)
 	{
 		KOMPEX_EXCEPT("error occured during DML: columnsCount != 1", -1);
-		return -1;
+		// return -1;
 	}
 	
 	char *stmt = sqlite3_mprintf("INSERT INTO main.%q SELECT * FROM origin.%q", values[0], values[0]);
 
-	if(sqlite3_exec(static_cast<sqlite3*>(db), stmt, 0, 0, 0) != SQLITE_OK)
+	if(sqlite3_exec(static_cast<sqlite3*>(db), stmt, 0, NULL, 0) != SQLITE_OK)
 		KOMPEX_EXCEPT("error occured during DDL: sqlite3_exec (error message: " + std::string(sqlite3_errmsg(static_cast<sqlite3*>(db))) + ")", sqlite3_errcode(static_cast<sqlite3*>(db)));
 
 	sqlite3_free(stmt);    
@@ -370,7 +371,7 @@ void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
 		{
 			if(mDatabaseFilenameUtf8 != "")
 			{
-				if(sqlite3_open_v2(mDatabaseFilenameUtf8.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0) != SQLITE_OK)
+				if(sqlite3_open_v2(mDatabaseFilenameUtf8.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL ) != SQLITE_OK)
 					KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
 			}
 			else
@@ -381,7 +382,7 @@ void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
 		}
 		else
 		{
-			if(sqlite3_open_v2(filename.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0) != SQLITE_OK)
+			if(sqlite3_open_v2(filename.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK)
 				KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
 		}
 		
@@ -404,7 +405,7 @@ void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const wchar_t *filename)
 void SQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
 {
 	sqlite3_backup *backup;
-	backup = sqlite3_backup_init(destinationDatabase, "main", mDatabaseHandle, "main");
+	backup = sqlite3_backup_init(destinationDatabase, "main", m_pDatabaseHandle, "main");
 	if(backup)
 	{
 		// -1 to copy the entire source database to the destination
@@ -429,7 +430,7 @@ void SQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
 
 bool SQLiteDatabase::IsDatabaseReadOnly()
 {
-	int result = sqlite3_db_readonly(mDatabaseHandle, "main");
+	int result = sqlite3_db_readonly(m_pDatabaseHandle, "main");
 	if(result == -1)
 		KOMPEX_EXCEPT("'main' is not the name of a database on connection mDatabaseHandle", -1);
 
@@ -438,8 +439,8 @@ bool SQLiteDatabase::IsDatabaseReadOnly()
 
 void SQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_module *module, void *clientData, void(*xDestroy)(void*))
 {
-	if(sqlite3_create_module_v2(mDatabaseHandle, moduleName.c_str(), module, clientData, xDestroy))
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+	if(sqlite3_create_module_v2(m_pDatabaseHandle, moduleName.c_str(), module, clientData, xDestroy))
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 }
 
 int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterValue, bool resetFlag) const
@@ -447,8 +448,8 @@ int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterVal
 	int curValue;
 	int hiwtrValue;
 
-	if(sqlite3_db_status(mDatabaseHandle, operation, &curValue, &hiwtrValue, resetFlag) != SQLITE_OK)
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabaseHandle), sqlite3_errcode(mDatabaseHandle));
+	if(sqlite3_db_status(m_pDatabaseHandle, operation, &curValue, &hiwtrValue, resetFlag) != SQLITE_OK)
+		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
 	if(highwaterValue)
 		return hiwtrValue;

@@ -56,6 +56,7 @@
 
 using namespace std;
 
+#define _MAIN_
 #define _MAIN_GLOBALS_
 
 #include <signal.h>
@@ -99,16 +100,19 @@ void InitDatabase()
 {
     char szSQLiteFileName[100];
 
+    // 1. 위협 라이브러리 존재 확인
     strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
 #ifdef _SQLITE_
 #ifdef __linux__
     if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
 #elif _MSC_VER
-    {
-#elif __VXWORKS__
     if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+        CCommonUtils::CopyFile( EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
+#elif __VXWORKS__
+    if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
         CCommonUtils::CopyFile( EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
 #else
     if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
@@ -137,6 +141,7 @@ void InitDatabase()
  */
 void Start()
 {
+    
     LOGENTRY;
     _ShowProgramTitle();
 
@@ -148,6 +153,8 @@ void Start()
     signal( SIGHUP, signalHandler);
     signal( SIGSTOP, signalHandler);
 #endif
+
+    CPOCKETSONATAPDW::Test();
 
     InitDatabase();
 
@@ -246,7 +253,7 @@ void usrAppStart()
     // 쓰레드 생성 초기화
     Start();
 
-    while( g_Loop ) {
+    while( true ) {
         sleep(10);
     }
 
@@ -293,7 +300,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
         }
     }
     else {
-        LOGMSG( enDebug, "프로그램 아큐먼트가 입력되지 않아서 기본 마스터로 설정합니다." );
+        LOGMSG( enDebug, "The reason that no arguments inputs, it will set up the default..." );
         g_enBoardId = enMaster;
     }
 }

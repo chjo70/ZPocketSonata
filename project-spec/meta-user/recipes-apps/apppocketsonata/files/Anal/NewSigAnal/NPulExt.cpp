@@ -83,14 +83,15 @@ void CNPulExt::Init()
         \date     2006-08-23 22:25:42
         \warning
 */
-void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
+void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 {
     PrintFunction
 
     /*! \todo	하나의 그룹화에서는 펄스열 인덱스를 최기화해서 펄스열 자원을 활용할수 있게 한다.*/
     Init();
 
-    if( uiCoKnownRadarMode == 0 ) {
+    ExtractPulseTrainByLibrary( pVecMatchRadarMode );
+
 #ifdef _EXTRACT_PULSE_METHOD1_
         // 규칙성 펄스열을 먼저 추출하고서 나머지 잔여 펄스를 불규칙성 펄스열로 추출하는 것을 말함.
         PulseExtract( STEP_WIDE );
@@ -150,8 +151,9 @@ void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
 
         int nExtSeg = m_CoSeg;
 
-        for( i=0 ; i < MAX_PRI_RANGE ; ++i )
+    for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
             PulseExtract( i );
+    }
 
         /*! \bug  기본 규칙성 펄스열에서 추출한 펄스열과 펄스열 추출후의 펄스열 끼리
                             비교해서 유사 펄스열이면, 기본 규칙성 펄스열을 제거한다.
@@ -220,10 +222,7 @@ void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
         #pragma message( "펄스열 추적 알고리즘을 선택해야 합니다." __FILE__ )
 
 #endif
-    }
-    else {
-        ExtractPulseTrainByLibrary( uiCoKnownRadarMode, pRadarMode );
-    }
+
 
     m_CoPulseTrains = m_CoSeg;
     m_CoRefSeg = m_CoSeg;
@@ -237,34 +236,37 @@ void CNPulExt::PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
  * @param uiCoKnownRadarMode
  * @param pRadarMode
  */
-void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode )
+void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode )
 {
     UINT i;
     int j;
 
     STR_PRI_RANGE_TABLE extRange;
 
-    Init();
+    SRadarMode *pRadarMode;
 
-    ClearAllMark();
+    //ClearAllMark();
     //memset( m_pMARK, 0, sizeof( m_pNewSigAnal->MARK ) );
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
     vector <SRadarMode_Sequence_Values>::pointer pVecPRISequenceValues;
 
+    if( pVecMatchRadarMode->size() > 0 ) {
+    pRadarMode = pVecMatchRadarMode->at(0);
+
     pSeg = GetPulseSeg();
-    for( i=0 ; i < uiCoKnownRadarMode ; ++i ) {
-        switch( (*pRadarMode)->ePRI_Type ) {
+    for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
+        switch( pRadarMode->ePRI_Type ) {
             case RadarModePRIType::enumStable :
-                extRange.min_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMin );
-                extRange.max_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMax );
-                ExtractJitterPT( & extRange, -1, _sp.cm.Rpc, TRUE , JITTER_MARK, TRUE );
+                extRange.min_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                extRange.max_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                ExtractStablePT( & extRange, 0 );
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
-                pVecPRISequenceValues = (*pRadarMode)->vecRadarMode_PRISequenceValues.data();
-                for( j=0 ; j < (*pRadarMode)->nPRI_NumPositions ; ++j ) {
+                pVecPRISequenceValues = pRadarMode->vecRadarMode_PRISequenceValues.data();
+                for( j=0 ; j < pRadarMode->nPRI_NumPositions ; ++j ) {
                     extRange.min_pri = ITOAusCNV( pVecPRISequenceValues->f_Min );
                     extRange.max_pri = ITOAusCNV( pVecPRISequenceValues->f_Max );
                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
@@ -280,9 +282,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode *
             case RadarModePRIType::enumJITTER :
             case RadarModePRIType::enumSTAGGER :
             case RadarModePRIType::enumPATTERN :
-                extRange.min_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMin );
-                extRange.max_pri = ITOAusCNV( (*pRadarMode)->fPRI_TypicalMax );
-                ExtractJitterPT( & extRange, -1, _sp.cm.Rpc, TRUE , JITTER_MARK, TRUE );
+                extRange.min_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                extRange.max_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                ExtractJitterPT( & extRange, UINT_MAX, _sp.cm.Rpc, TRUE , JITTER_MARK, TRUE );
                 break;
 
             default :
@@ -290,6 +292,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode *
         }
 
         ++ pRadarMode;
+        }
     }
 
 }

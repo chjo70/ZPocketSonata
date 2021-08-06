@@ -1,4 +1,4 @@
-﻿#ifndef _H_EL_GMI_MSG
+#ifndef _H_EL_GMI_MSG
 #define _H_EL_GMI_MSG
 
 #include <time.h>

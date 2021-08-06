@@ -1,9 +1,9 @@
-﻿#ifndef CCOLLECTBANK_H
+#ifndef CCOLLECTBANK_H
 #define CCOLLECTBANK_H
 
 #include "../../../Include/system.h"
 
-#include "../../../Utils/cqueue.h"
+#include "../../../Anal/EmitterMerge/Stack.h"
 
 #include "../../../Anal/INC/PDW.h"
 

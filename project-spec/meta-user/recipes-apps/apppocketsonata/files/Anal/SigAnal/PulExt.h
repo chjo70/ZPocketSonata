@@ -1,4 +1,4 @@
-﻿// PulExt.h: interface for the CPulExt class.
+// PulExt.h: interface for the CPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -226,7 +226,7 @@ public:
     //##ModelId=452B0C540141
     void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, int iMark=STABLE_MARK );
     //##ModelId=452B0C540168
-    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
+    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C54017E
     void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
     //##ModelId=452B0C540191

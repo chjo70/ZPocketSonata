@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     System.h
   \brief    interface for the 시스템 관련 정의문
 	\version  0.0.1
@@ -44,14 +44,14 @@
 #else
 #define CEDEOB_SQLITE_FOLDER        (char *) "c:/sqlite3"
 #endif
-#define CEDEOB_SQLITE_FILENAME      "/cedeob.sqlite3"
+#define CEDEOB_SQLITE_FILENAME      "cedeob.sqlite3"
 
 #ifdef __ZYNQ_BOARD__
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/root/"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
 #elif defined(__linux__)
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70/"
+#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
 #else
-#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3/"
+#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3"
 #endif
 #define EMITTER_SQLITE_FILENAME     "emitter.sqlite3"
 
@@ -298,19 +298,42 @@
 //  Merge for direction
 //  debug, 1 -> 3, 00-09-20 09:43:31
 #ifdef _ELINT_
-#define	MAX_FREQ_HZ									18000			//!< 주파수 최대 값, Hz
-#define MIN_FREQ_HZ 								500						//!< 주파수 최소 값
+#define	MAX_FREQ_MHZ					    (18000)			            //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					    (500)					    //!< 주파수 최소 값
 
-#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
-#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
-#define   _spMgFixFrqEJ				IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqCD				IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
+#define _spMgFixFrqEJ				        IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD				        IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD	                IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #elif defined(_POCKETSONATA_)
-#define	MAX_FREQ_MHZ					(18000)                     //!< 주파수 최대 값, Hz
-#define MIN_FREQ_MHZ 					(500)						//!< 주파수 최소 값
+#define	MAX_FREQ_MHZ					    (18000)                     //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					    (500)						//!< 주파수 최소 값
+
+#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
+#define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD                       IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ                  IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD                  IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+
+#elif defined(_SONATA_)
+#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
+#define _spMgFixFrqEJ                       IFRQMhzCNV( 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD				        IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD	                IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
+
+#else
+//#error "컴파일러에 DEFINE 을 추가해야 합니다."
+
+
+#endif
+
+
 
 // 수집 히스토그램
 // 주파수 폭
@@ -318,27 +341,6 @@
 #define COLHISTO_TIME                   (10)                        // 탐지 횟수 깊이
 
 #define COLHISTO_CELLS                  ((MAX_FREQ_MHZ-MIN_FREQ_MHZ)/COLHISTO_WIDTH_MHZ)
-
-#define   _spMgAoaEJ					IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
-#define   _spMgAoaCD					IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
-#define   _spMgFixFrqEJ                 IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqCD                 IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundEJ            IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundCD            IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
-
-#elif defined(_SONATA_)
-#define   _spMgAoaEJ					IAOACNV( 15 )					// UMUL(15,_spAOAres)		// 15도
-#define   _spMgAoaCD					IAOACNV( 30 )					// UMUL(30,_spAOAres)		// 30도
-#define   _spMgFixFrqEJ                 IFRQMhzCNV( 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqCD				IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundEJ	IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define   _spMgFixFrqBoundCD	IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
-
-#else
-//#error "컴파일러에 DEFINE 을 추가해야 합니다."
-
-
-#endif
 
 
 
@@ -488,7 +490,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 펄스열 추출 정의
-//#define     _spAnalMinPulseCount              (6)
 #define     _spContiThresholdMinPulseCount    10
 
 // Stable 에미터 최소 펄스 개수(누락 및 스캔 신호를 고려한)
@@ -506,7 +507,7 @@
 #define			DWELL_PRI_MARGIN									(1.5)
 
 // 수신기 개수
-#define			ALL_BAND													5
+#define			ALL_BAND											5
 
 // 에미터 구조체 정의
 #define	_spOverlapCoEMT     _spMaxEMTNum

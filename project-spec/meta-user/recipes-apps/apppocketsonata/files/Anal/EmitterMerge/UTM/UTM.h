@@ -1,4 +1,4 @@
-﻿// UTM.h
+// UTM.h
 
 // Original Javascript by Chuck Taylor
 // Port to C++ by Alex Hajnal

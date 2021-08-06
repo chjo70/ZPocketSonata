@@ -54,11 +54,11 @@ CKGroup::~CKGroup()
 BOOL CKGroup::MakeGroup()
 {
 	// 방위 및 주파수 그룹화 초기화
-	m_AoaGroups.count = 0;
+	m_AoaGroups.iCount = 0;
 	m_AoaGroups.coAnal = 0;
-	m_FrqGroups.count = 0;
+	m_FrqGroups.iCount = 0;
 	m_FrqGroups.coAnal = 0;
-	m_PwGroups.count = 0;
+	m_PwGroups.iCount = 0;
 	m_PwGroups.coAnal = 0;
 
 	MakeBandGroup();
@@ -71,15 +71,19 @@ BOOL CKGroup::MakeGroup()
 	else
 		m_nStat = STAT[0];
 
+#elif _POCKETSONATA_
+    m_nStat = m_pSTAT[0];
+
 #else
     m_nStat = stStat2GrStat[ m_pSTAT[0] ];
+
 #endif
 
     MakeStatGroup( & m_Band[m_nBand] );
 
 	CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] );
 
-	return m_AoaGroups.count != 0;	
+	return m_AoaGroups.iCount != 0;	
 }
 
 //////////////////////////////////////////////////////////////////////

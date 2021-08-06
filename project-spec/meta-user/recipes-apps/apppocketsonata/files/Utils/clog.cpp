@@ -59,7 +59,7 @@ CLog::~CLog()
  * @param iLine
  * @param pStr
  */
-void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
+void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
 {
 #ifndef _CGI_LIST_
 #ifdef _MSC_VER
@@ -123,13 +123,19 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
         fid = open(m_szLogDir, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
 #endif
 
-        
+        m_szLog[0] = NULL;
 #ifdef _MSC_VER
         if( fp != NULL ) {
+            if( enNoLineFeed != nType ) {
             sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+            }
+
 #else
         if( fid != 0 ) {
+            if( enNoLineFeed != nType ) {
             sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+            }
+
 #endif
 
             nLengthTime = strlen(m_szLog);
@@ -218,18 +224,23 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
 void CLog::Lock() 
 {
-#if _MSC_VER <= 1600 || _AFXDLL
+#ifdef _MSC_VER
     m_cs.Lock();
+#elif __VXWORKS__
+    sem_wait( & m_mutex );
+    
 #else
-    std::unique_lock<std::mutex> lk(m_mutex);
+    // std::unique_lock<std::mutex> lk(m_mutex);
 #endif
 
 }
 
 void CLog::UnLock() 
 {
-#if _MSC_VER <= 1600 || _AFXDLL
+#ifdef _MSC_VER
     m_cs.Unlock();
+#elif __VXWORKS__
+    sem_post( & m_mutex );    
 #else
 
 #endif
@@ -241,12 +252,16 @@ void CLog::UnLock()
  * @param nType
  * @param fmt
  */
-void CLog::LogMsg( int nType, const char *fmt, ... )
+void CLog::LogMsg( int nType, char *fmt, ... )
 {
     va_list args;
 
     va_start( args, fmt );
+#ifdef _MFC_VER
+    vsprintf_s( m_szLogString, sizeof(m_szLogString), fmt, args );
+#else
     vsprintf( m_szLogString, fmt, args );
+#endif
     va_end( args );
 
     LOGMSG( nType, m_szLogString );

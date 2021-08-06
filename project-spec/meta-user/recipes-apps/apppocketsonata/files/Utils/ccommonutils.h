@@ -1,4 +1,4 @@
-﻿#ifndef CCOMMONUTILS_H
+#ifndef CCOMMONUTILS_H
 #define CCOMMONUTILS_H
 
 #include "../Include/system.h"
@@ -28,8 +28,6 @@ public:
 
     static void AllSwapData32( void *pData, int iLength );
     static void swapByteOrder( unsigned int& ui );
-
-    static void GetStringBand( char *pBuffer, int iBand );
 
     static ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh );
 

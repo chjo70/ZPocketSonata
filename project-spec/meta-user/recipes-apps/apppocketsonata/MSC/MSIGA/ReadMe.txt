@@ -10,8 +10,49 @@
 요약 설명이 포함되어 있습니다.
 
 
+
+
+사전 정의문
+==================================
+
+_WINDOWS
+_DEBUG
+_USE_32BIT_TIME_T
+_POCKETSONATA_
+_CRT_SECURE_NO_WARNINGS
+_SQLITE_
+_UTM_POSITION_
+_SIM_SERVER_
+
+
+ 코나 실행시 무한 진행이 될때
+=================================
+
+[2021.06.24 16:11:22] 임동훈 (대리 / 기타조직) 님의 말:
+작업관리자에서 grammatech 프로세스를 종료하시면됩니다.
+[2021.06.24 16:11:30] 조철희 (수석연구원 / 전자전연구소.2팀) 님의 말:
+예
+[2021.06.24 16:11:49] 임동훈 (대리 / 기타조직) 님의 말:
+코드소나 마크로, grammatech codesonar가 프로세스 명입니다.
+
+
 C/C++ 함수 파일 요약
 =======================
+
+
+/**
+ * @brief     $SymbolName$
+ * @param     $MethodArg$
+ * @return    $SymbolType$
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      $YEAR$-$MONTH_02$-$DAY_02$, $HOUR_02$:$MINUTE$
+ * @warning
+ */
+
+
+
 
 /****************************************************************************************
  파 일 명 : programrev.c

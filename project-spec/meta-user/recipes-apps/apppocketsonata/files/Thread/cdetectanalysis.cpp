@@ -1,4 +1,4 @@
-﻿// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
+// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -77,9 +77,9 @@ void CDetectAnalysis::_routine()
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( g_AnalLoop ) {
-        if( QMsgRcv() == -1 ) {
-            break;
+        if( QMsgRcv() == -1 ) {            
             perror( "QMsgRcv" );
+            break;
         }
         else {
         switch( m_pMsg->uiOpCode ) {

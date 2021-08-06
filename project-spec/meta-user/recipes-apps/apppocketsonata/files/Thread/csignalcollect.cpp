@@ -1,4 +1,4 @@
-﻿// CSignalCollect.cpp: implementation of the CScanAnalysis class.
+// CSignalCollect.cpp: implementation of the CScanAnalysis class.
 //
 // 신호 수집 및 관리한다.
 // 신규 데이터를 수집하기위한 수집 제어와 분석된 데이터를 기반으로 추적 수집 채널을 할당해서 추적 채널을 관리한다.
@@ -85,19 +85,19 @@ CSignalCollect::~CSignalCollect(void)
 
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
         delete m_pTheDetectCollectBank[i];
-        m_pTheDetectCollectBank[i] = 0;
+        m_pTheDetectCollectBank[i] = NULL;
     }
     for( i=0 ; i < TRACK_CHANNEL ; ++i ) {
         delete m_pTheTrackCollectBank[i];
-        m_pTheTrackCollectBank[i] = 0;
+        m_pTheTrackCollectBank[i] = NULL;
     }
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
         delete m_pTheScanCollectBank[i];
-        m_pTheScanCollectBank[i] = 0;
+        m_pTheScanCollectBank[i] = NULL;
     }
     for( i=0 ; i < USER_CHANNEL ; ++i ) {
         delete m_pTheUserCollectBank[i];
-        m_pTheUserCollectBank[i] = 0;
+        m_pTheUserCollectBank[i] = NULL;
     }
 
     delete m_pIdentifyAlg;
@@ -239,11 +239,11 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     pWindowCell->strAoa.iLow = IAOACNV( 0 );
     pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
 
-    pWindowCell->strFreq.iLow = IFRQMhzCNV( 0, MIN_FREQ_MHZ );
-    pWindowCell->strFreq.iHgh = IFRQMhzCNV( 0, MAX_FREQ_MHZ );
+    pWindowCell->strFreq.iLow = 0; // IFRQMhzCNV( 0, MIN_FREQ_MHZ );
+    pWindowCell->strFreq.iHgh = 0xffffff; // IFRQMhzCNV( 0, MAX_FREQ_MHZ );
 
-    pWindowCell->strPA.iLow = IPACNV( -70 );
-    pWindowCell->strPA.iHgh = IPACNV( 10 );
+    pWindowCell->strPA.iLow = I_IPACNV( -70 );
+    pWindowCell->strPA.iHgh = I_IPACNV( 10 );
 
     pWindowCell->strPW.iLow = 0;
     pWindowCell->strPW.iHgh = 0xFFFFFF;
@@ -294,11 +294,19 @@ void CSignalCollect::AnalysisStart()
         bIsOut = true;
 
         // 탐지 채널 버퍼 체크
-        iCh = CheckCollectBank( enDetectCollectBank );
-        pCollectBank = m_pTheDetectCollectBank[iCh];
+        iCh = CheckCollectBank( enDetectCollectBank );        
         if( iCh >= 0 ) {
+            pCollectBank = m_pTheDetectCollectBank[iCh];
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
-            if( strCollectInfo.uiTotalPDW >= (unsigned int) GP_SYSCFG->GetMinAnalPulse() ) {
+
+            //unsigned int uiGetMinAnalPulse = (unsigned int) GP_SYSCFG->GetMinAnalPulse();  
+            int iGetMinAnalPulse = GP_SYSCFG->GetMinAnalPulse();
+            unsigned int uiGetMinAnalPulse=0;
+            if( iGetMinAnalPulse > 0 ) {
+                uiGetMinAnalPulse = iGetMinAnalPulse;
+            }
+
+            if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
                 strCollectInfo.uiCh = iCh;
                 DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             }
@@ -324,7 +332,13 @@ void CSignalCollect::AnalysisStart()
             memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
-            TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+            if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
+                TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+            }
+            // PDW 펄스 개수 부족시 위협 처리로 바로 전달
+            else {
+                EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+            }
 
             bIsOut = false;
         }
@@ -416,7 +430,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG2( enDebug, " 추적 뱅크 [%2d]채널에서 [%d]개를 수집 완료되었습니다." , iCh, pWindowCell->uiTotalPDW );
+                    LOGMSG2( enDebug, "Completion of TRK [%d] Collecting in the Ch[%2d]..." , pWindowCell->uiTotalPDW, iCh );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -538,18 +552,25 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 
         m_pTheCollectBank->UpdateWindowCell( & strWindowCell );
 
-        LOGMSG2( enDebug, " 빔 번호[%d]를 추적 [%d]채널에 설정 합니다." , pABTData->uiABTID, uiCh );
+        LOGMSG2( enDebug, " Setting up in the TRK [%d]Ch for B[%d]" , uiCh, pABTData->uiABTID );
     }
     else {
-        LOGMSG( enDebug, "추적 채널이 없습니다 !!"  );
+        LOGMSG( enDebug, "Nont of Track channel !!" );
     }
 
 
 }
 
 /**
- * @brief CSignalCollect::CalTrackWindowCell
- * @param pABTData
+ * @brief     CalTrackWindowCell
+ * @param     STR_WINDOWCELL * pstrWindowCell
+ * @param     SRxABTData * pABTData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-24, 17:40
+ * @warning
  */
 void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData )
 {
@@ -567,9 +588,9 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
         pstrWindowCell->uiABTID = pABTData->uiABTID;
 
         // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
-        if( pRadarMode != NULL && false ) {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_TypicalMin );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_TypicalMax );
+        if( pRadarMode != NULL ) {
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMin );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMax );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
@@ -577,14 +598,17 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fFreqMin );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fFreqMax );
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMin );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMax );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
 
             fMinCollectTime = pABTData->fMaxScanPeriod;
         }
+
+        pstrWindowCell->strPA.iLow = 0;
+        pstrWindowCell->strPA.iHgh = 0x7fffffff;
 
         pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA;
         pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA;
@@ -608,6 +632,8 @@ void CSignalCollect::SimPDWData()
 {
     STR_PDWDATA stPDWData;
 
+    stPDWData.uiTotalPDW = 0;
+
     // 랜 데이터를 갖고온다.
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
@@ -625,8 +651,14 @@ void CSignalCollect::SimPDWData()
 }
 
 /**
- * @brief CSignalCollect::SimFilter
- * @param pPDWData
+ * @brief     SimFilter
+ * @param     STR_PDWDATA * pPDWData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 18:27
+ * @warning
  */
 void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 {
@@ -783,18 +815,22 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
         pstrWindowCell->uiABTID = pABTData->uiABTID;
 
         // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
-        if( pRadarMode != NULL && false ) {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pRadarMode->fRF_TypicalMin );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pRadarMode->fRF_TypicalMax );
+        if( pRadarMode != NULL ) {
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMin );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMax );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iLow, & pstrWindowCell->strCh.iLow, (int) g_enBoardId, pRadarMode->fRF_TypicalMin );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iHgh, & pstrWindowCell->strCh.iHgh, (int) g_enBoardId, pRadarMode->fRF_TypicalMax );
 
-            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
-            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_TypicalMin );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_TypicalMax );
 
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            pstrWindowCell->strFreq.iLow = IFRQMhzLOW( pABTData->fFreqMin );
-            pstrWindowCell->strFreq.iHgh = IFRQMhzHGH( pABTData->fFreqMax );
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( 0, pABTData->fFreqMin );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( 0, pABTData->fFreqMax );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iLow, & pstrWindowCell->strCh.iLow, (int) g_enBoardId, pABTData->fFreqMin );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iHgh, & pstrWindowCell->strCh.iHgh, (int) g_enBoardId, pABTData->fFreqMax );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );

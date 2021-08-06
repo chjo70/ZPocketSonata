@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     Structs.h
   \brief    interface for the 구조체
 	\version  0.0.1
@@ -58,7 +58,7 @@ struct STR_FLIB {
 	UINT uicount;
 	STR_FLOWHIGH frq;
 
-	SRadarMode *pIdxRadarMode[ MAX_ELINT_LIBRARY ];
+	SRadarMode *pIdxRadarMode[ MAX_RADARMODE ];
 
 	STR_LIB_RANGE pLib[MAX_FRQTYPE][MAX_PRITYPE];
 

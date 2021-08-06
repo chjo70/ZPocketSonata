@@ -1,6 +1,8 @@
 ﻿#ifndef CSYSCONFIG_H
 #define CSYSCONFIG_H
 
+#include <string.h>
+
 #include "../Anal/INC/system.h"
 
 #include "../MinIni/minIni.h"

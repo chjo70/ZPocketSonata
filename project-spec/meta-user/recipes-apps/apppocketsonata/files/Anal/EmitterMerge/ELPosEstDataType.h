@@ -1,4 +1,4 @@
-﻿#ifndef _H_EL_POS_EST_DATATYPE
+#ifndef _H_EL_POS_EST_DATATYPE
 #define _H_EL_POS_EST_DATATYPE
 
 #define SIZE_OF_CHAR_SMALL_INFO 15

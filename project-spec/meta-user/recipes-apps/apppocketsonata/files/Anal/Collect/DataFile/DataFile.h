@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <stdio.h>
 
@@ -174,7 +174,7 @@ struct STR_ZOOM_INFO {
 	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
 	void ReadDataHeader();  \
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );	\
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
 	void *GetHeader() { return NULL; }	\
@@ -191,7 +191,9 @@ public:
     char *m_pRawDataBuffer;
 
     int m_iHeaderSize;
-    int m_iOneDataSize;
+    unsigned int m_iOneDataSize;
+
+    ULONGLONG m_ullFileSize;
 
 public:
     STR_RAWDATA m_RawData;
@@ -206,14 +208,14 @@ public:
 
     _TOA m_ll1stToa;
 
-    float _spOneSec;
-    float _spOneMilli;
-    float _spOneMicrosec;
-    float _spOneNanosec;
+    float m_spOneSec;
+    float m_spOneMilli;
+    float m_spOneMicrosec;
+    float m_spOneNanosec;
 
-    float _spAMPres;
-    float _spPWres;
-    float _spAOAres;
+    float m_spAMPres;
+    float m_spPWres;
+    float m_spAOAres;
 
 public:
     void ClearFilterSetup();
@@ -222,6 +224,8 @@ public:
     void AllSwapData32( void *pData, int iLength );
     void ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData );
 
+    void UpdateMacroSysVar();
+
 public:
     CData(STR_RAWDATA *pRawData);
     virtual ~CData();
@@ -229,7 +233,7 @@ public:
     virtual void Alloc( unsigned int uiItems=0 )=0;
     virtual void Free()=0;
     virtual void ReadDataHeader() = 0;
-    virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
+    virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true ) = 0;
     virtual void *GetData() = 0;
     virtual void *GetHeader() = 0;
 
@@ -270,7 +274,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -312,7 +316,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -335,6 +339,8 @@ class CEPDW : public CData
 private:
 	STR_PDW_DATA m_PDWData;
 
+    STR_ELINT_HEADER m_stHeader;
+
 	ENUM_BANDWIDTH m_enBandWidth;
 
 public:
@@ -344,13 +350,14 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
-	void *GetHeader() { return NULL; }
+	void *GetHeader() { return (void *) & m_stHeader; }
+    unsigned int GetDataItems();
+    unsigned int GetHeaderSize();
 
-	inline unsigned int GetHeaderSize() { return 0; }
-    inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
+    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
 
 };
@@ -383,7 +390,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -446,7 +453,12 @@ namespace POCKETSONATA {
     #define PDW_FREQ_RES		(1.953125)
     //#define PDW_AOA_RES			0.087890625
 
-    static const float m_fCenterFreq[enPRC6] = { 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
+    #define PDW_PA_INIT		    (-89.0)
+
+    const unsigned int uiPDW_CW=1;
+    const unsigned int uiPDW_NORMAL=0;
+
+    static const float m_fCenterFreq[enMAXPRC] = { 0, 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
 }
 
 
@@ -457,7 +469,7 @@ private:
 
     STR_PDW_DATA m_PDWData;
 
-	int m_iBoardID;
+	static int m_iBoardID;
 
 public:
     CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
@@ -501,33 +513,38 @@ public:
     {
         float fPA;
 
-        fPA = (float) iPA;
+        fPA = (float) PDW_PA_INIT + FMUL( 20.,  (float) log10( (double) iPA ) );
         return fPA;		/* [dBm] */
     } ;
 
     /**
-     * @brief DecodeFREQ
-     * @param iFreq
-     * @param iCh
-     * @param iBoardID
-     * @return
+     * @brief     DecodeRealFREQMHz
+     * @param     int iFreq
+     * @param     int iCh
+     * @param     int iBoardID
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2021-07-24, 10:47
+     * @warning
      */
     static float DecodeRealFREQMHz( int iFreq, int iCh, int iBoardID )
     {
         float fFREQ;
 
-        if( iCh < 7 ) {
+        if( iCh < 8 ) {
             if( iFreq & 0x8000 ) {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) iFreq * (float) PDW_FREQ_RES);
+                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) ( 0x10000 - iFreq ) * (float) PDW_FREQ_RES);
             }
             else {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * (float) PDW_FREQ_RES);
+                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * (float) PDW_FREQ_RES);      // 1.953125*32767 = 64MHz
             }
         }
         else {
-            iCh = 15 - iCh;
+            iCh = 16 - iCh;
             if( iFreq & 0x8000 ) {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) iFreq * (float) PDW_FREQ_RES ) );
+                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) ( 0x10000 - iFreq ) * (float) PDW_FREQ_RES ) );
             }
             else {
                 fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * (float) PDW_FREQ_RES ) );
@@ -544,10 +561,106 @@ public:
      */
     static float DecodeFREQMHz( int iFreq )
     {
-        float fFreq;
+        float fRetFreq;
 
-        fFreq = ( (float) iFreq * (float) PDW_FREQ_RES / (float) 1000. );
-        return fFreq;	/* [MHz] */
+        fRetFreq = ( (float) iFreq * (float) PDW_FREQ_RES / (float) 1000. );
+        return fRetFreq;	/* [MHz] */
+    } ;
+
+    /**
+     * @brief     EncodeRealFREQMHz
+     * @param     int * piFreq
+     * @param     int * piCh
+     * @param     int iBoardID
+     * @param     float fFreq
+     * @return    bool
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2021-07-24, 10:47
+     * @warning
+     */
+    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, int iBoardID, float fFreq )
+    {
+        bool bRet=true;
+        float fFREQ;
+        
+        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[iBoardID] - 64000 );
+
+        if( fFREQ < 0. ) {
+            fFREQ += 1024000.0;
+            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+
+            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+            }
+            else {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+            }
+
+            *piCh += 8;
+        }
+        else {
+            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+
+            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+            }
+            else {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+            }
+
+        }
+
+        return bRet;
+    } ;
+
+    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq )
+    {
+        bool bRet=true;
+        float fFREQ;
+
+        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[CPOCKETSONATAPDW::m_iBoardID] - 64000 );
+
+        if( fFREQ < 0. ) {
+            fFREQ += 1024000.0;
+            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+
+            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+            }
+            else {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+            }
+
+            *piCh += 8;
+        }
+        else {
+            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+
+            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+            }
+            else {
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+            }
+
+        }
+
+        return bRet;
+    } ;
+
+    /**
+     * @brief DecodeFREQMHz
+     * @param iFreqHz
+     * @return
+     */
+    static float EncodeFREQMHz( float fFreq )
+    {
+        float fRetFreq;
+
+        fRetFreq = ( ( fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        return fRetFreq;	/* [MHz] */
     } ;
 
     /**
@@ -602,7 +715,8 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1000. + 0.5 );
+        fretPW = (float) iPW * (float) PDW_TIME_RES;
+        fretPW = ( fretPW / (float) 1000. );
         return fretPW;
     } ;
 
@@ -610,7 +724,8 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1000000. + 0.5 );
+        fretPW = (float) iPW * (float) PDW_TIME_RES;
+        fretPW = ( fretPW / (float) 1000000. );
         return fretPW;
     } ;
 
@@ -618,7 +733,8 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) ( (float) fPW * (float) 1. / (float) PDW_TIME_RES );
+        fretPW = fPW * (float) 1000.;
+        fretPW = fretPW / (float) PDW_TIME_RES;
         return (int) fretPW;
     } ;
 
@@ -626,7 +742,8 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) ( (float) fPW * (float) 1. / (float) PDW_TIME_RES );
+        fretPW = fPW * (float) 1000.;
+        fretPW = fretPW / (float) PDW_TIME_RES;
         return (int) ( fretPW + 0.5 );
     } ;
 
@@ -724,6 +841,47 @@ public:
         return fTOA;	/* [ns] */
     } ;
 
+    static bool Test()
+    {
+        bool bRet=true;
+
+        int i, j;
+        int iFreq, iCh;
+        int iDFreq, iDCh;
+        float fFreq;
+
+        for( i=0 ; i < 15 ; ++i ) {
+            for( j=0 ; j < 0xFFFF ; ++j ) {
+                iDFreq = j;
+                iDCh = i;
+                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                if( iDFreq == iFreq && iDCh == iCh ) {
+                }
+                else {
+                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    bRet = false;
+                }
+
+                iDFreq = j;
+                iDCh = i;
+                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                if( iDFreq == iFreq && iDCh == iCh ) {
+                }
+                else {
+                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    bRet = false;
+                }
+            }
+        }
+
+        return bRet;
+    }
+
+
 };
 
 class CIQ : public CData
@@ -739,7 +897,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader();
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader();
 
@@ -763,7 +921,7 @@ public:
 	void Alloc( unsigned int iItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -787,11 +945,11 @@ public:
 
 };
 
-union UNI_ADJUNCT_TYPE {
-	SELMIDAS_ADJUNCT_TYPE_1000 _1000;
-	SELMIDAS_ADJUNCT_TYPE_2000 _2000;
-	SELMIDAS_ADJUNCT_TYPE_6000 _6000;
-};
+// union UNI_ADJUNCT_TYPE {
+// 	SELMIDAS_ADJUNCT_TYPE_1000 _1000;
+// 	SELMIDAS_ADJUNCT_TYPE_2000 _2000;
+// 	SELMIDAS_ADJUNCT_TYPE_6000 _6000;
+// };
 
 class CMIDAS : public CData
 {
@@ -941,8 +1099,8 @@ public:
 	virtual ~CDataFile(void);
 
     void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
-	CData *ReadDataFile( char *pPathname, int iFileIndex, CData *pData, STR_FILTER_SETUP *pstFilterSetup );
-	UINT LoadRawData( CData *pData, int iFileIndex );
+	CData *ReadDataFile( char *pPathname, int iFileIndex, CData *pData, STR_FILTER_SETUP *pstFilterSetup ,bool bConvert=true );
+	UINT LoadRawData( CData *pData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();

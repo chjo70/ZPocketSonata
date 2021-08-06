@@ -1,4 +1,4 @@
-﻿// TaskMsg.h: interface for the 타스크 간의 메시지 정의
+// TaskMsg.h: interface for the 타스크 간의 메시지 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -13,12 +13,14 @@
 //#define SEM_ID					UINT
 #define IMPORT					extern
 //#define MSG_Q_ID				UINT
-#define WAIT_FOREVER		0
-#define VX_FP_TASK			0
+//#define WAIT_FOREVER		0
+//#define VX_FP_TASK			0
 #define timer_t					UINT
-#define CLOCK_REALTIME	0
+//#define CLOCK_REALTIME	0
 #define MODULE					char
 #define NO_WAIT					0
+
+#define ULONGLONG_MAX           (0xffffffffffffffff)
 
 //#define UDF_RAMDISK_FILENAME	"c:\\tftpboot\\udf_1.udf"
 #define UDF_RAMDISK_FILENAME	"C:\\LMS\\EidFiles\\udf_1.udf"

@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      Quadratic.cpp
  * @brief     Quadratic 위치 산출 알고리즘
@@ -85,8 +85,11 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 // 		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
 // 	}
 
-	m_pUTMX = ppUTMX = pUTMX;
-	m_pUTMY = ppUTMY = pUTMY;
+	ppUTMX = pUTMX;
+    m_pUTMX = pUTMX;
+
+	ppUTMY = pUTMY;
+    m_pUTMY = pUTMY;
 
 	sumA = 0.0;
 	sumB = 0.0;

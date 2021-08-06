@@ -1,4 +1,4 @@
-﻿// Globals.h: interface for the Main Class
+// Globals.h: interface for the Main Class
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -14,17 +14,16 @@
 #include "./INC/structs.h"
 #include "./INC/ErrorMsg.h"
 
-
 #include "./SigAnal/_Macro.h"
+#include "./SigAnal/_Struct.h"
 
 #ifdef _MIDAS_
 
-#include "./SigAnal/_Struct.h"
 #else
 #include "./INC/TaskMsg.h"
 
 #include "./SigAnal/_Type.h"
-#include "./SigAnal/_Struct.h"
+#include "./SigAnal/_SigAnal.h"
 
 #include "./SigAnal/cencdec.h"
 

@@ -1,4 +1,4 @@
-﻿// Macros.h: interface for the macro definetion
+// Macros.h: interface for the macro definetion
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -40,6 +40,12 @@
 
 // 이진 타이머 수식
 #define	BINARY_TIMER( A, N )		( ( A % (2*N) ) / N )
+
+// 
+#define _EQUALS3( A, B, C )             B = C; A = B;
+#define _EQUALS4( A, B, C, D )          C = D; B = C; A = B;
+#define _EQUALS5( A, B, C, D, E )       D = E; C = D; B = C; A = B;
+#define _EQUALS6( A, B, C, D, E, F )    E = F; D = E; C = D; B = C; A = B;
 
 
 #endif // !defined(AFX_MACRO_H__93E04DDF_CE5E_4DB7_95B5_D35B77F287E7__INCLUDED_)

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 자체점검 Process : 자체점검을 처리하는 쓰레드 입니다.
  *
  * */
@@ -199,7 +199,7 @@ void CUrBit::InitIBit()
 {
     m_stESIbit.w32 = 0;
 
-    LOGMSG( enDebug, _T("IBIT를 시작 합니다....") );
+    LOGMSG( enDebug, _T("Starting the Init-BIT...") );
 }
 
 /**

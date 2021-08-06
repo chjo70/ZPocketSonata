@@ -1,4 +1,4 @@
-﻿#ifndef CSCANANALYSIS_H
+#ifndef CSCANANALYSIS_H
 #define CSCANANALYSIS_H
 
 #include "../Utils/clog.h"

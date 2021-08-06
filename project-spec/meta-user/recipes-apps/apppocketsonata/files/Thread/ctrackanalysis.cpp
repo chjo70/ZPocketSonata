@@ -1,4 +1,4 @@
-﻿// CTrackAnalysis.cpp: implementation of the CTrackAnalysis class.
+// CTrackAnalysis.cpp: implementation of the CTrackAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -104,7 +104,13 @@ void CTrackAnalysis::_routine()
 }
 
 /**
- * @brief CTrackAnalysis::AnalysisStart
+ * @brief     AnalysisStart
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-24, 17:57
+ * @warning
  */
 void CTrackAnalysis::AnalysisStart()
 {
@@ -113,7 +119,7 @@ void CTrackAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
-    LOGMSG3( enDebug, " 추적 분석: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 

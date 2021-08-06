@@ -279,7 +279,19 @@ void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 	y = m_arScaleFactor[m_eDstSystem] * (ml - m_dDstMl0 + n * tq * (als * (0.5 + als / 24.0 * (5.0 - t + 9.0 * c + 4.0 * c * c + als / 30.0 * (61.0 - 58.0 * t + t * t + 600.0 * c - 330.0 * m_dDstEsp))))) + m_arFalseNorthing[m_eDstSystem];
 }
 
-// function for converting TM X,Y to Longitude and Latitude
+/**
+ * @brief     Tm2Geo
+ * @param     double x
+ * @param     double y
+ * @param     double & lon
+ * @param     double & lat
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 {
 
@@ -356,28 +368,76 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 	}
 }
 
-//////////////////////////////////////////
-// Internal Value calculation Function
+/**
+ * @brief     e0fn
+ * @param     double x
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::e0fn(double x)
 {
 	return 1.0 - 0.25 * x * (1.0 + x / 16.0 * (3.0 + 1.25 * x));
 }
 
+/**
+ * @brief     e1fn
+ * @param     double x
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::e1fn(double x)
 {
 	return 0.375 * x * (1.0 + 0.25 * x * (1.0 + 0.46875 * x));
 }
 
+/**
+ * @brief     e2fn
+ * @param     double x
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::e2fn(double x)
 {
 	return 0.05859375 * x * x * (1.0 + 0.75 * x);
 }
 
+/**
+ * @brief     e3fn
+ * @param     double x
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::e3fn(double x)
 {
 	return x * x * x * (35.0 / 3072.0);
 }
 
+/**
+ * @brief     e4fn
+ * @param     double x
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::e4fn(double x)
 {
 	double con, com;
@@ -387,11 +447,35 @@ double CGeoCoordConv::e4fn(double x)
     return sqrt(pow(con, con) * pow(com, com));
 }
 
+/**
+ * @brief     mlfn
+ * @param     double e0
+ * @param     double e1
+ * @param     double e2
+ * @param     double e3
+ * @param     double phi
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::mlfn(double e0, double e1, double e2, double e3, double phi)
 {
 	return e0 * phi - e1 * sin(2.0 * phi) + e2 * sin(4.0 * phi) - e3 * sin(6.0 * phi);
 }
 
+/**
+ * @brief     asinz
+ * @param     double value
+ * @return    double
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:17
+ * @warning
+ */
 double CGeoCoordConv::asinz(double value)
 {
     if (fabs(value) > 1.0)
@@ -400,10 +484,19 @@ double CGeoCoordConv::asinz(double value)
     return asin(value);
 }
 
+/**
+ * @brief     InitDatumVar
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-06-30, 20:16
+ * @warning
+ */
 void CGeoCoordConv::InitDatumVar()
 {
 	int iDefFact;
-	double dF;
+	//double dF;
 
 	// direction factor for datum transformation
 	// eg) Bessel to Bessel would be 0
@@ -415,7 +508,7 @@ void CGeoCoordConv::InitDatumVar()
 	m_iDeltaZ = iDefFact * Z_W2B;
 	
 	m_dTemp = m_arMinor[m_eSrcEllips] / m_arMajor[m_eSrcEllips];
-	dF = 1.0 - m_dTemp; // flattening
+	//dF = 1.0 - m_dTemp; // flattening
 	m_dEsTemp = 1.0 - m_dTemp * m_dTemp; // e2
 
 	m_dDeltaA = m_arMajor[m_eDstEllips] - m_arMajor[m_eSrcEllips]; // output major axis - input major axis

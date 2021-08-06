@@ -88,7 +88,7 @@ public:
 
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
 
-	BOOL CompMeanDiff(int x, int y, int thresh);
+	//BOOL CompMeanDiff(int x, int y, int thresh);
 	float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
     inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_nScnTyp, *pScanPrd= m_nScnPrd; }

@@ -1,4 +1,4 @@
-﻿// _Define.h: interface for the 분석 소프트웨어의 정의
+// _Define.h: interface for the 분석 소프트웨어의 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,8 +11,9 @@
 
 #include "../SigAnal/_Define.h"
 
-// 위협 라이브러리 총 개수
-#define	MAX_ELINT_LIBRARY							(4096*4)
+
+#define MAX_RADARMODE			(1000)
+#define MAX_THREAT				(500)
 
 /**
  * @def       NO_FLIB_BAND

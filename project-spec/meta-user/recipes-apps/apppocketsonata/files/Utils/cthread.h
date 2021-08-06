@@ -1,4 +1,4 @@
-﻿#ifndef CTHREAD_H
+#ifndef CTHREAD_H
 #define CTHREAD_H
 
 #ifdef _MSC_VER
@@ -75,6 +75,7 @@ static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         char szSQLiteFileName[100]; \
         strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER ); \
+        strcat( szSQLiteFileName, "/" ); \
         strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME ); \
         m_pInstance = new A( g_iKeyId++, (char*) #A, true, (char*) szSQLiteFileName ); \
     } \

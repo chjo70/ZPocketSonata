@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file      LOB 클러스터링 관련 클래스
  * @brief     
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -7,10 +7,7 @@
  * @warning   
  */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
 
 using namespace std;
 
@@ -82,7 +79,8 @@ CLOBClustering::CLOBClustering()
 	m_bIsSimulator = false;	// ST_OCM->IsSimulatorMode();
 
 	// 연동기 또는 모의기 할 때만 아래를 수행하게 함.
-	if( m_bIsSimulator == true || GP_MGR_PARAM->IsPOSN() == false ) {
+    bool bIsPOSN = GP_MGR_PARAM->IsPOSN();
+	if( m_bIsSimulator == true || bIsPOSN == false ) {
 		// LOB Pool 할당
 		m_pQueLOBDataPool = new Queue<SELLOBDATA_MINIMIZE> [TOTAL_ITEMS_OF_THREAT_NODE];
 
@@ -961,7 +959,8 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 		// 4. 기성인 것만 LOB 클러스터링을 시도하게 함.
 		if( stResPosEstData.nRadarIndex != _spZero ) { // || ST_OCM->IsSimulatorMode() == true ) {
- 			if( peInfo.fCEP == 0.0 || peInfo.fCEP > GP_ENVI_VAR->GetEobIndfRangeMeters() ) {
+            float fGetEobIndfRangeMeters=GP_ENVI_VAR->GetEobIndfRangeMeters();
+ 			if( peInfo.fCEP == 0.0 || peInfo.fCEP > fGetEobIndfRangeMeters ) {
 				LogPrint( "\n CEP[%f m] 반경이 벗어 났습니다!" , peInfo.fCEP );
  				bRet = false;
 				continue;
@@ -971,8 +970,9 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 				ST_PEA->RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
 				// 장축/단축 비교를 추가 
+                float fGetEobIndfRangeMeters=GP_ENVI_VAR->GetEobIndfRangeMeters();
 				if( bRet == true && peInfo.fCEP != 0. && \
-					( peInfo.fCEP <= GP_ENVI_VAR->GetEobIndfRangeMeters() ) || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
+					( peInfo.fCEP <= fGetEobIndfRangeMeters ) || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
 					LogPrint( "\n CEP[%d m] 반장축[%f m] 반단축[%f m] 반경 안에 들었습니다!" , peInfo.fCEP, peInfo.fMajorAxis/2, peInfo.fMinorAxis/2 );
 					bRet = true;
 					break;

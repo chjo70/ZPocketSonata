@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #ifdef _MSC_VER
 
@@ -164,7 +164,7 @@ void CRecLan::_routine()
                 }
             }
             else {
-                LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+                LOGMSG1( enError, "Invalid the flow[0x%X] !!", m_pMsg->uiOpCode );
                 }
             }
     }
@@ -176,6 +176,9 @@ void CRecLan::_routine()
  */
 void CRecLan::DumpList()
 {
+#ifdef _MSC_VER
+
+#else
     // UINT uiStartAddress;
 
     STR_LAN_HEADER strLanHeader;
@@ -188,7 +191,8 @@ void CRecLan::DumpList()
 
 #ifdef _DEBUG_
     char *pBuffer;
-    pBuffer = pAddress = (char *) malloc( 16 * 1000 );
+    pAddress = (char *) malloc( 16 * 1000 );
+    pBuffer = pAddress;
 #else
     pAddress = (char *) uiStartAddress;
 #endif
@@ -211,6 +215,8 @@ void CRecLan::DumpList()
 
 #ifdef _DEBUG_
     free( pBuffer );
+#endif
+
 #endif
 }
 

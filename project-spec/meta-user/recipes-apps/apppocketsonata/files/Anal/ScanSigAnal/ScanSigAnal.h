@@ -158,7 +158,7 @@ extern "C" {
 	void CreateScanSigAnalClass();
 	void DeleteScanSigAnalClass();
 	
-	int ScanSigAnal( int noEMT, int noCh );
+	//int ScanSigAnal( int noEMT, int noCh );
 
 	UINT ExtPul( int noEMT, UINT noCh );
 	void InitScanSigAnal();

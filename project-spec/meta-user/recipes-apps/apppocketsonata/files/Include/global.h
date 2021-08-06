@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
  * */
 
@@ -8,7 +8,6 @@
 
 // 전역 변수를 정의한다.
 #ifdef _MAIN_GLOBALS_
-
 
 // 메시지 큐 ID 정의합니다.
 int g_iKeyId=1;
@@ -25,6 +24,35 @@ bool g_AnalLoop=true;
 bool g_bSaveFile=true;
 
 
+
+
+
+
+
+
+
+
+
+#ifdef _ELINT_
+// #include "../Anal/Task/GetPdw.h"
+// 
+// 
+// 
+// CGetPdw *theGetPdwTask;
+// CSigAnal *theSigAnalTask;
+// CLOBMngr *theLOBMngrTask;
+
+
+#elif _POCKETSONATA_
+
+#elif _SONATA_
+
+#else
+
+
+#endif
+
+
 #else
 extern int g_iKeyId;
 extern int g_iMode;
@@ -36,6 +64,19 @@ extern bool g_Loop;
 extern bool g_AnalLoop;
 
 extern bool g_bSaveFile;
+
+#ifdef _ELINT_
+// #include "../Anal/Task/GetPdw.h"
+// 
+// extern CGetPdw *theGetPdwTask;
+// extern CSigAnal *theSigAnalTask;
+// extern CLOBMngr *theLOBMngrTask;
+
+
+#else
+
+
+#endif
 
 #endif
 

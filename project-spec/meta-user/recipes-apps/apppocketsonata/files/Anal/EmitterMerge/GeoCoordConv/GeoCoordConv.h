@@ -1,4 +1,4 @@
-﻿// GeoCoordConv.h: interface for the CGeoCoordConv class.
+// GeoCoordConv.h: interface for the CGeoCoordConv class.
 //
 //////////////////////////////////////////////////////////////////////
 // 이 라이브러리는 신상희님의 비쥬얼 베이직 소스를 바탕으로 

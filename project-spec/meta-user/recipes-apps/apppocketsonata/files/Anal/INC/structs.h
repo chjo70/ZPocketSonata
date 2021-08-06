@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     Structs.h
   \brief    interface for the 구조체
 	\version  0.0.1

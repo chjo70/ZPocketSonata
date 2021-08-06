@@ -1,4 +1,4 @@
-﻿#ifndef CSINGLECLIENT_H
+#ifndef CSINGLECLIENT_H
 #define CSINGLECLIENT_H
 
 #ifdef __linux__
@@ -24,7 +24,7 @@ private:
     char m_szServerAddress[NUM_OF_SERVER][100];
 
     int m_iPort;
-    int m_iSocket;
+    unsigned int m_uiSocket;
 
     STR_MessageData *m_pMsg;
 
@@ -48,7 +48,7 @@ private:
     void RunServer();
     void RunClient();
     void OnConnect( struct sockaddr_in *pAddr=NULL );
-    int ConnectTimeout( int sock, struct sockaddr_in *pAddress, unsigned long timeout_milli );
+    int ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAddress, unsigned long timeout_milli );
     void OnDisconnected( char *pServerIPAddress );
 
     void Alloc();

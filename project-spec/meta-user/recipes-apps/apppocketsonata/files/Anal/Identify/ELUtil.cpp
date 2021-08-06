@@ -1,4 +1,4 @@
-﻿// Util.cpp: implementation of the CUtil class.
+// Util.cpp: implementation of the CUtil class.
 //
 //////////////////////////////////////////////////////////////////////
 

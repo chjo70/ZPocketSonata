@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 본 문서는 쓰레들간의 내부 메시지를 정의합니다. 메시지들간의 정의와 데이터를 나타냅니다.
  * */
 
@@ -36,8 +36,11 @@ enum enTHREAD_REQ_MESSAGE {
     // 분석 관련 메시지
     enTHREAD_DETECTANAL_START = enREQ_ANAL_START,
     enTHREAD_DETECTANAL_END,
+
     enTHREAD_KNOWNANAL_START,
     enTHREAD_KNOWNANAL_END,
+    enTHREAD_KNOWNANAL_FAIL,
+
     enTHREAD_SCANANAL_START,
     enTHREAD_SCANANAL_END,
 

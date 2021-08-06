@@ -1,4 +1,4 @@
-﻿#ifndef CENCDEC_H
+#ifndef CENCDEC_H
 #define CENCDEC_H
 
 /**

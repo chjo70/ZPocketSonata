@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file      Matrix.cpp
  * @brief     행렬 계산을 편리하게 계산하기 위한 클래스
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
@@ -10,86 +10,134 @@
 
 #include "stdafx.h"
 
-
 #include "Matrix.h"
+#include "../../SigAnal/_Define.h"
 
+#define MAX_ITEMS           (1000)
+
+/**
+ * @brief     CMatrix
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:11
+ * @warning
+ */
 CMatrix::CMatrix()
 {
 	//printf("Executing constructor CMatrix() ...\n");
 	// create a CMatrix object without content
 	p = NULL;
-	rows = 0;
-	cols = 0;
+	uiRows = 0;
+	uiCols = 0;
 }
 
 // constructor
-CMatrix::CMatrix(const int row_count, const int column_count)
+/**
+ * @brief     CMatrix
+ * @param     const unsigned int row_count
+ * @param     const unsigned int column_count
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:11
+ * @warning
+ */
+CMatrix::CMatrix(const unsigned int row_count, const unsigned int column_count)
 {
 	// create a CMatrix object with given number of rows and columns
 	p = NULL;
 
-	if (row_count > 0 && column_count > 0)
+	uiRows = _min( MAX_ITEMS, row_count );
+	uiCols = _min( MAX_ITEMS, column_count );
+
+	p = new double*[uiRows];
+	for (unsigned int r = 0; r < uiRows; r++)
 	{
-		rows = row_count;
-		cols = column_count;
+		p[r] = new double[uiCols];
 
-		p = new double*[rows];
-		for (int r = 0; r < rows; r++)
+		// initially fill in zeros for all values in the CMatrix;
+		for (unsigned int c = 0; c < uiCols; c++)
 		{
-			p[r] = new double[cols];
-
-			// initially fill in zeros for all values in the CMatrix;
-			for (int c = 0; c < cols; c++)
-			{
-				p[r][c] = 0;
-			}
+			p[r][c] = 0;
 		}
 	}
+
 }
 
 // assignment operator
+/**
+ * @brief     CMatrix
+ * @param     const CMatrix & a
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:11
+ * @warning
+ */
 CMatrix::CMatrix(const CMatrix& a)
 {
-	rows = a.rows;
-	cols = a.cols;
-	p = new double*[a.rows];
+    unsigned int uia_rows, uia_cols;
+
+	uiRows = _min( MAX_ITEMS, a.uiRows );
+	uiCols = _min( MAX_ITEMS, a.uiCols );
+
+    uia_rows = _min( MAX_ITEMS, a.uiRows );
+    uia_cols = _min( MAX_ITEMS, a.uiCols );
+	p = new double*[uia_rows];
 
 	/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 17:12:29
 	*/
-	if( p == NULL )
-		return;
+	if( p == NULL ) {
+		
+    }
+    else {
+	    for(unsigned int r = 0; r < uia_rows ; r++ ) {
+		    p[r] = new double[uia_cols];
 
-	for (int r = 0; r < a.rows; r++)
-	{
-		p[r] = new double[a.cols];
+		    /*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
+				    \author 조철희 (churlhee.jo@lignex1.com)
+				    \date 	2015-10-5 17:14:53
+		    */
+// 		    if( p[r] == NULL ) {
+// 			    for( int i=0 ; i < r ; ++ i ) {
+// 				    if( p[r] != NULL ) delete p[r];
+// 			    }
+// 			    if( p != NULL ) delete p;
+// 			    return;
+// 		    }
 
-		/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
-				\author 조철희 (churlhee.jo@lignex1.com)
-				\date 	2015-10-5 17:14:53
-		*/
-		if( p[r] == NULL ) {
-			for( int i=0 ; i < r ; ++ i ) {
-				if( p[r] != NULL ) delete p[r];
-			}
-			if( p != NULL ) delete p;
-			return;
-		}
-
-		// copy the values from the CMatrix a
-		for (int c = 0; c < a.cols; c++)
-		{
-			p[r][c] = a.p[r][c];
-		}
-	}
+		    // copy the values from the CMatrix a
+		    for (unsigned int c = 0; c < uia_cols ; c++) {
+                if( a.p != NULL && a.p[r] != NULL ) {
+			        p[r][c] = a.p[r][c];
+                }
+		    }
+	    }
+    }
 }
 
 // index operator. You can use this class like myCMatrix(col, row)
 // the indexes are one-based, not zero based.
-double& CMatrix::operator()(const int r, const int c)
+/**
+ * @brief     operator()
+ * @param     const unsigned int r
+ * @param     const unsigned int c
+ * @return    double&
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:11
+ * @warning
+ */
+double& CMatrix::operator()(const unsigned int r, const unsigned int c)
 {
-	if (p != NULL && r > 0 && r <= rows && c > 0 && c <= cols)
+	if (p != NULL && r > 0 && r <= uiRows && c > 0 && c <= uiCols)
 	{
 		return p[r-1][c-1];
 	}
@@ -102,9 +150,9 @@ double& CMatrix::operator()(const int r, const int c)
 // index operator. You can use this class like myCMatrix.get(col, row)
 // the indexes are one-based, not zero based.
 // use this function get if you want to read from a const CMatrix
-double CMatrix::get(const int r, const int c) const
+double CMatrix::get(const unsigned int r, const unsigned int c) const
 {
-	if (p != NULL && r > 0 && r <= rows && c > 0 && c <= cols)
+	if (p != NULL && r > 0 && r <= uiRows && c > 0 && c <= uiCols)
 	{
 		return p[r-1][c-1];
 	}
@@ -114,57 +162,80 @@ double CMatrix::get(const int r, const int c) const
 	}
 }
 
-// assignment operator
+/**
+ * @brief     CMatrix
+ * @param     const CMatrix & a
+ * @return    CMatrix&
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:11
+ * @warning
+ */
 CMatrix& CMatrix::operator= (const CMatrix& a)
 {
-	if( rows != 0 ) {
+    unsigned int uia_rows, uia_cols;
+
+	if( uiRows != 0 ) {
 		CleanMatrix();
 	}
 
-	rows = a.rows;
-	cols = a.cols;
-	p = new double*[a.rows];
+	uiRows = _min( MAX_ITEMS, a.uiRows );
+	uiCols = _min( MAX_ITEMS, a.uiCols );
+
+    uia_rows = _min( MAX_ITEMS, a.uiRows );
+    uia_cols = _min( MAX_ITEMS, a.uiCols );
+	p = new double*[uia_rows];
 
 	/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 17:12:29
 	*/
-	if( p == NULL )
-		return *this;
+	//if( p == NULL ) 
+	//	return *this;
 
-	for (int r = 0; r < a.rows; r++)
-	{
-		p[r] = new double[a.cols];
+	for (unsigned int r = 0; r < uia_rows ; r++) {
+		p[r] = new double[uia_cols];
 
 		/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
 				\author 조철희 (churlhee.jo@lignex1.com)
 				\date 	2015-10-5 17:14:53
 		*/
-		if( p[r] == NULL ) {
-			for( int i=0 ; i < r ; ++ i ) {
-				if( p[r] != NULL ) delete p[r];
-			}
-			if( p != NULL ) delete p;
-			return *this;
-		}
+// 		if( p[r] == NULL ) {
+// 			for( unsigned int i=0 ; i < r ; ++ i ) {
+// 				if( p[r] != NULL ) delete p[r];
+// 			}
+// 			if( p != NULL ) delete p;
+// 			return *this;
+// 		}
 
 		// copy the values from the CMatrix a
-		for (int c = 0; c < a.cols; c++)
-		{
-			p[r][c] = a.p[r][c];
+		for (unsigned int c = 0; c < uia_cols ; c++) {
+            if( a.p != NULL && a.p[r] != NULL ) {
+			    p[r][c] = a.p[r][c];
+            }
 		}
 	}
 	return *this;
 }
 
-// add a double value (elements wise)
+/**
+ * @brief     add a double value (elements wise)
+ * @param     const double v
+ * @return    CMatrix&
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:46
+ * @warning
+ */
 CMatrix& CMatrix::Add(const double v)
 {
-	for (int r = 0; r < rows; r++)
-	{
-		for (int c = 0; c < cols; c++)
-		{
-			p[r][c] += v;
+	for (unsigned int r = 0; r < uiRows; r++) {
+		for (unsigned int c = 0; c < uiCols; c++) {
+            if( p[r] != NULL ) {
+			    p[r][c] += v;
+            }
 		}
 	}
 	return *this;
@@ -179,9 +250,9 @@ CMatrix& CMatrix::Subtract(const double v)
 // multiply a double value (elements wise)
 CMatrix& CMatrix::Multiply(const double v)
 {
-	for (int r = 0; r < rows; r++)
+	for (unsigned int r = 0; r < uiRows; r++)
 	{
-		for (int c = 0; c < cols; c++)
+		for (unsigned int c = 0; c < uiCols; c++)
 		{
 			p[r][c] *= v;
 		}
@@ -199,13 +270,13 @@ CMatrix& CMatrix::Divide(const double v)
 CMatrix operator+(const CMatrix& a, const CMatrix& b)
 {
 	// check if the dimensions match
-	if (a.rows == b.rows && a.cols == b.cols)
+	if (a.uiRows == b.uiRows && a.uiCols == b.uiCols)
 	{
-		CMatrix res(a.rows, a.cols);
+		CMatrix res(a.uiRows, a.uiCols);
 
-		for (int r = 0; r < a.rows; r++)
+		for (unsigned int r = 0; r < a.uiRows; r++)
 		{
-			for (int c = 0; c < a.cols; c++)
+			for (unsigned int c = 0; c < a.uiCols; c++)
 			{
 				res.p[r][c] = a.p[r][c] + b.p[r][c];
 			}
@@ -240,19 +311,20 @@ CMatrix operator+ (const double b, const CMatrix& a)
 // subtraction of CMatrix with CMatrix
 CMatrix operator- (const CMatrix& a, const CMatrix& b)
 {
-	// check if the dimensions match
-	if (a.rows == b.rows && a.cols == b.cols)
-	{
-		CMatrix res(a.rows, a.cols);
+    CMatrix res(a.uiRows, a.uiCols);
 
-		for (int r = 0; r < a.rows; r++)
+	// check if the dimensions match
+	if (a.uiRows == b.uiRows && a.uiCols == b.uiCols)
+	{
+
+		for (unsigned int r = 0; r < a.uiRows; r++)
 		{
-			for (int c = 0; c < a.cols; c++)
+			for (unsigned int c = 0; c < a.uiCols; c++)
 			{
 				res.p[r][c] = a.p[r][c] - b.p[r][c];
 			}
 		}
-		return res;
+
 	}
 	else
 	{
@@ -261,7 +333,7 @@ CMatrix operator- (const CMatrix& a, const CMatrix& b)
 	}
 
 	// return an empty CMatrix (this never happens but just for safety)
-	return CMatrix();
+	return res;
 }
 
 // subtraction of CMatrix with double
@@ -282,11 +354,11 @@ CMatrix operator- (const double b, const CMatrix& a)
 // operator unary minus
 CMatrix operator- (const CMatrix& a)
 {
-	CMatrix res(a.rows, a.cols);
+	CMatrix res(a.uiRows, a.uiCols);
 
-	for (int r = 0; r < a.rows; r++)
+	for (unsigned int r = 0; r < a.uiRows; r++)
 	{
-		for (int c = 0; c < a.cols; c++)
+		for (unsigned int c = 0; c < a.uiCols; c++)
 		{
 			res.p[r][c] = -a.p[r][c];
 		}
@@ -298,31 +370,32 @@ CMatrix operator- (const CMatrix& a)
 // operator multiplication
 CMatrix operator* (const CMatrix& a, const CMatrix& b)
 {
-	// check if the dimensions match
-	if (a.cols == b.rows)
-	{
-		CMatrix res(a.rows, b.cols);
+    CMatrix res(a.uiRows, b.uiCols);
 
-		for (int r = 0; r < a.rows; r++)
+	// check if the dimensions match
+	if (a.uiCols == b.uiRows)
+	{	
+		for (unsigned int r = 0; r < a.uiRows; r++)
 		{
-			for (int c_res = 0; c_res < b.cols; c_res++)
+			for (unsigned int c_res = 0; c_res < b.uiCols; c_res++)
 			{
-				for (int c = 0; c < a.cols; c++)
+				for (unsigned int c = 0; c < a.uiCols; c++)
 				{
-					res.p[r][c_res] += a.p[r][c] * b.p[c][c_res];
+                    if( a.p != NULL ) {
+					    res.p[r][c_res] += a.p[r][c] * b.p[c][c_res];
+                    }
 				}
 			}
 		}
-		return res;
+
 	}
-	else
-	{
+	else {
 		// give an error
 		throw Exception("Dimensions does not match");
 	}
 
 	// return an empty CMatrix (this never happens but just for safety)
-	return CMatrix();
+	return res;
 }
 
 // multiplication of CMatrix with double
@@ -348,12 +421,12 @@ CMatrix operator/ (const CMatrix& a, const CMatrix& b)
 	    \author 조철희 (churlhee.jo@lignex1.com)
 	    \date 	2014-01-22 14:55:36
 	*/
-	// if (a.rows == a.cols && a.rows == a.cols && b.rows == b.cols)
-	if (a.rows == a.cols && b.rows == b.cols && a.rows == b.rows )
+	// if (a.uiRows == a.uiCols && a.uiRows == a.uiCols && b.uiRows == b.uiCols)
+	if (a.uiRows == a.uiCols && b.uiRows == b.uiCols && a.uiRows == b.uiRows )
 	{
 		bool bret;
 
-		CMatrix res(a.rows, a.cols);
+		CMatrix res(a.uiRows, a.uiCols);
 
 		res = a * Inv(b, &bret );
 
@@ -391,17 +464,17 @@ CMatrix operator/ (const double b, const CMatrix& a)
 * returns the minor from the given CMatrix where
 * the selected row and column are removed
 */
-CMatrix CMatrix::Minor(const int row, const int col) const
+CMatrix CMatrix::Minor(const unsigned int row, const unsigned int col) const
 {
 	CMatrix res;
-	if (row > 0 && row <= rows && col > 0 && col <= cols)
+	if (row > 0 && row <= uiRows && col > 0 && col <= uiCols)
 	{
-		res = CMatrix(rows - 1, cols - 1);
+		res = CMatrix(uiRows - 1, uiCols - 1);
 
 		// copy the content of the CMatrix to the minor, except the selected
-		for (int r = 1; r <= (rows - (row >= rows)); r++)
+		for (unsigned int r = 1; r <= (uiRows - (row >= uiRows)); r++)
 		{
-			for (int c = 1; c <= (cols - (col >= cols)); c++)
+			for (unsigned int c = 1; c <= (uiCols - (col >= uiCols)); c++)
 			{
 				res(r - (r > row), c - (c > col)) = p[r-1][c-1];
 			}
@@ -425,11 +498,11 @@ int CMatrix::Size(const int i) const
 {
 	if (i == 1)
 	{
-		return rows;
+		return uiRows;
 	}
 	else if (i == 2)
 	{
-		return cols;
+		return uiCols;
 	}
 	return 0;
 }
@@ -437,13 +510,13 @@ int CMatrix::Size(const int i) const
 // returns the number of rows
 int CMatrix::GetRows() const
 {
-	return rows;
+	return uiRows;
 }
 
 // returns the number of columns
 int CMatrix::GetCols() const
 {
-	return cols;
+	return uiCols;
 }
 
 // print the contents of the CMatrix
@@ -453,23 +526,23 @@ void CMatrix::Print() const
 	if (p != NULL)
 	{
 		TRACE0("[");
-		for (int r = 0; r < rows; r++)
+		for (unsigned int r = 0; r < uiRows; r++)
 		{
 			if (r > 0)
 			{
 				TRACE0(" ");
 			}
-			for (int c = 0; c < cols-1; c++)
+			for (unsigned int c = 0; c < uiCols-1; c++)
 			{
 				TRACE1("%.6f, ", p[r][c]);
 			}
-			if (r < rows-1)
+			if (r < uiRows-1)
 			{
-				TRACE1("%.6f;\n", p[r][cols-1]);
+				TRACE1("%.6f;\n", p[r][uiCols-1]);
 			}
 			else
 			{
-				TRACE1("%.6f]\n", p[r][cols-1]);
+				TRACE1("%.6f]\n", p[r][uiCols-1]);
 			}
 		}
 	}
@@ -492,13 +565,13 @@ CMatrix::~CMatrix()
 
 void CMatrix::CleanMatrix()
 {
-	for (int r = 0; r < rows; r++)
+	for (unsigned int r = 0; r < uiRows; r++)
 	{
 		/*! \debug  신뢰성: 메모리 할당된 영역 체크하여 해지하게 함.
 				\author 조철희 (churlhee.jo@lignex1.com)
 				\date 	2015-10-5 17:09:41
 		*/
-		if( p[r] != NULL ) delete p[r];
+        if( p != NULL && p[r] != NULL ) { delete p[r]; }
 	}
 
 	/*! \debug  신뢰성: 메모리 할당된 영역 체크하여 해지하게 함.
@@ -545,24 +618,35 @@ CMatrix CMatrix::Ident(const int rows, const int cols)
 	{
 		for (int c = 1; c <= cols; c++)
 		{
-			if( r == c)
+			if( r == c) {
 				res(r, c) = 1;
-			else
+            }
+			else {
 				res(r, c) = 0;
+            }
 		}
 	}
 	return res;
 }
 
+/**
+ * @brief     Transpose
+ * @return    CMatrix
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:35
+ * @warning
+ */
 CMatrix CMatrix::Transpose()
 {
-    CMatrix res = CMatrix(cols, rows );
+    CMatrix res = CMatrix(uiCols, uiRows );
 
-    for (int r = 1; r <= rows; r++)
-    {
-        for (int c = 1; c <= cols; c++)
-        {
-            res(c, r) = p[r-1][c-1];
+    for (unsigned int r = 1; r <= uiRows; r++) {
+        for (unsigned int c = 1; c <= uiCols; c++) {
+            if( p != NULL && p[r-1] != NULL ) {
+                res(c, r) = p[r-1][c-1];
+            }
         }
     }
     return res;
@@ -572,6 +656,17 @@ CMatrix CMatrix::Transpose()
 /**
 * returns a CMatrix with size cols x rows with zeros as values
 */
+/**
+ * @brief     Zeros
+ * @param     const int rows
+ * @param     const int cols
+ * @return    CMatrix
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:35
+ * @warning
+ */
 CMatrix CMatrix::Zeros(const int rows, const int cols)
 {
 	return CMatrix(rows, cols);
@@ -594,10 +689,15 @@ CMatrix Diag(const int n)
 }
 
 /**
-* returns a diagonal CMatrix
-* @param  v a vector
-* @return a diagonal CMatrix with the given vector v on the diagonal
-*/
+ * @brief     Diag
+ * @param     const CMatrix & v
+ * @return    a diagonal CMatrix with the given vector v on the diagonal
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-04, 13:35
+ * @warning
+ */
 CMatrix Diag(const CMatrix& v)
 {
 	CMatrix res;

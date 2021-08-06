@@ -91,11 +91,11 @@
     <Filter Include="소스 파일\SQLite">
       <UniqueIdentifier>{3b57caea-71bd-46a7-bea8-dd4c3976141b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Include">
-      <UniqueIdentifier>{9026f23e-58b3-4d99-b72f-d361bdda4647}</UniqueIdentifier>
+    <Filter Include="소스 파일\INCLUDE">
+      <UniqueIdentifier>{e0bdd766-d5eb-4d41-b229-4d708ea0cf28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Include\SONATAPIP">
-      <UniqueIdentifier>{170c7d2b-6545-440d-a2a5-961af9b94cf6}</UniqueIdentifier>
+    <Filter Include="소스 파일\INCLUDE\SONATAPIP">
+      <UniqueIdentifier>{66760bf7-d9d1-46b4-a708-72ebf1a3baa2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +136,6 @@
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\clog.h">
-      <Filter>소스 파일\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\cqueue.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\csingleclient.h">
@@ -215,30 +212,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
       <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\SONATAPIP\_sysmsg.h">
-      <Filter>소스 파일\Include\SONATAPIP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\SONATAPIP\ShuICD.h">
-      <Filter>소스 파일\Include\SONATAPIP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\defines.h">
-      <Filter>소스 파일\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\global.h">
-      <Filter>소스 파일\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\struct.h">
-      <Filter>소스 파일\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\sysmsg.h">
-      <Filter>소스 파일\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\system.h">
-      <Filter>소스 파일\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Include\thrmsg.h">
-      <Filter>소스 파일\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\_Define.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
@@ -338,36 +311,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KPulExt.h">
       <Filter>소스 파일\Anal\KnownSigAnal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\AetIPL.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\defines.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\Macros.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\OS.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\PDW.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\Stack.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\structs.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\system.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
       <Filter>소스 파일\Anal\Identify</Filter>
@@ -519,6 +462,57 @@
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteStreamRedirection.h">
       <Filter>소스 파일\SQLite</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\AetIPL.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\defines.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\Macros.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\OS.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\PDW.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\structs.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\system.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\defines.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\global.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\struct.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\sysmsg.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\system.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\thrmsg.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\SONATAPIP\_sysmsg.h">
+      <Filter>소스 파일\INCLUDE\SONATAPIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\SONATAPIP\ShuICD.h">
+      <Filter>소스 파일\INCLUDE\SONATAPIP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -586,9 +580,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\System\csysconfig.cpp">
       <Filter>소스 파일\System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\SQLite\sqlite3.c">
-      <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\MinIni\minIni.cpp">
       <Filter>소스 파일\MinIni</Filter>
@@ -729,6 +720,9 @@
       <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\SQLite\KompexSQLiteStatement.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\sqlite3.c">
       <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
   </ItemGroup>

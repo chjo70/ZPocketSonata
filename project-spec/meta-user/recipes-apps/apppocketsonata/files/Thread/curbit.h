@@ -1,4 +1,4 @@
-﻿#ifndef CURBIT_H
+#ifndef CURBIT_H
 #define CURBIT_H
 
 

@@ -1,4 +1,4 @@
-﻿/****************************************************************************************
+/****************************************************************************************
  파 일 명 : _aetipl.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
@@ -108,16 +108,11 @@ enum SIGNAL_TYPE
 } ;
 
 
-#ifdef _ELINT_
-const char aet_signal_type[7][3] = { "NP" , "CW" , "DP" , "FM" , "CF", "SH", "AL" };
-#elif defined(_POCKETSONATA_)
-static const char aet_signal_type[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-#else
-static const char aet_signal_type[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-#endif
+
 
 
 //##ModelId=452B0C5100B9
+// 내부 신호 분석에서 사용하는 정의
 enum FREQ_TYPE
 {
      _FIXED              = 0,
@@ -132,17 +127,10 @@ enum FREQ_TYPE
     MAX_FRQTYPE
 } ;
 
-#ifdef _ELINT_
-const char aet_freq_type[6][3] = { "--", "F_" , "HP" , "RA" , "PA", "UK" };
-#elif defined(_POCKETSONATA_)
-static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
-#elif defined(_SONATA_)
-static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
-#else
-static const char aet_freq_type[8][3] = { "F_" , "RA" , "PA", "HP", "C+", "C-", "pM" };
-#endif
+
 
 //##ModelId=452B0C510131
+// 내부 신호 분석에서 사용하는 정의
 enum PRI_TYPE
 {
     _STABLE               = 0,
@@ -151,7 +139,7 @@ enum PRI_TYPE
     _STAGGER,
     _JITTER_PATTERN,
 
-    _IGNORE_PRI,
+    _UNKNOWN_PRI,
 
     MAX_PRITYPE,
 
@@ -161,15 +149,7 @@ enum PRI_TYPE
 
 
 } ; // Id...
-#ifdef _ELINT_
-const char aet_pri_type[6][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
-#elif defined(_POCKETSONATA_)
-static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
-#elif defined(_SONATA_)
-static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
-#else
-static const char aet_pri_type[6][3] = { "ST" , "SG" , "JT" , "PT", "DW" } ;
-#endif
+
 
 //##ModelId=452B0C5101C7
 enum PATTERN_TYPE
@@ -225,17 +205,20 @@ enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, F
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
 //##ModelId=452B0C51022C
-enum SCAN_TYPE {
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
     //##ModelId=452B0C510241
-    CIRCULAR            = 1,
+    E_AET_SCAN_CIRCULAR            = 1,
     //##ModelId=452B0C51024A
-    UNI_DIRECTIONAL,
+    E_AET_SCAN_UNI_DIRECTIONAL,
     //##ModelId=452B0C510254
-    BI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
     //##ModelId=452B0C51025E
-    CONICAL,
+    E_AET_SCAN_CONICAL,
     //##ModelId=452B0C510268
-    STEADY,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
     //##ModelId=452B0C510286
     UFO,
     MAX_SCANTYPE,
@@ -244,7 +227,7 @@ enum SCAN_TYPE {
     //##ModelId=452B0C510290
     TYPE_UNKNOWN,
 } ;
-const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 
 #elif defined(_POCKETSONATA_)
 /////////////////////////////////////////////////////////////////////////////////////////

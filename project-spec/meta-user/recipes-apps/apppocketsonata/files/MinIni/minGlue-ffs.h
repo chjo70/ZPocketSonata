@@ -14,7 +14,9 @@
 #include <mem-ffs.h>
 
 #define INI_FILETYPE                  FFS_FILE*
+1
 #define ini_openread(filename,file)   ((*(file) = ffs_fopen((filename),"r")) != NULL)
+
 #define ini_openwrite(filename,file)  ((*(file) = ffs_fopen((filename),"w")) != NULL)
 #define ini_close(file)               (ffs_fclose(*(file)) == 0)
 #define ini_read(buffer,size,file)    (ffs_fgets((buffer),(size),*(file)) != NULL)

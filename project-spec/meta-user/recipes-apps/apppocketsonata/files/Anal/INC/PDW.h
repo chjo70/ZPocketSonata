@@ -1,4 +1,4 @@
-﻿/****************************************************************************************
+/****************************************************************************************
  파 일 명 : _pdw.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : PDW 정의
@@ -203,6 +203,20 @@ typedef union
 
 #endif
 
+
+// 수퍼헷 수신장치 개발한 것의 PDW 포멧
+struct TNEW_SPDW
+{
+    float Freq ;
+    float PA ;
+    float PW ;
+    unsigned int TOA ;
+    int Ref_Phase3 ;
+
+} ;
+
+
+
 // 아래는 MIDAS 변환을 하기 위해서 각 장치별로 변환 구조체 필요....
 
 #ifndef _PDW_STRUCT
@@ -216,227 +230,26 @@ struct _PDW {
 	int iPW;
 	int iPFTag;
 	int iAOA;
-    int iMOP;
-
-    int iPMOP;
-    int iFMOP;
 
 #ifdef _ELINT_
 	float fPh1;
 	float fPh2;
 	float fPh3;
 	float fPh4;
-#endif
 
-} ;
-#endif
-
-//#define _MAX_PDW					(4096)
-
-#ifndef _STR_PDWDATA
-#define _STR_PDWDATA
-struct STR_PDWDATA {
-    union UNION_HEADER {
-        struct STR_ELINT_HEADER {
-            unsigned char aucTaskID[LENGTH_OF_TASK_ID];
-            unsigned int iIsStorePDW;
-            int iCollectorID;
-            ENUM_BANDWIDTH enBandWidth;
-        } el ;
-
-        struct POCKETSONATA_HEADER {
-            unsigned int iBoardID;
-            unsigned int iBank;
-            unsigned int iIsStorePDW;
-        } ps ;
-
-        struct SONATA_HEADER {
-            unsigned int uiBand;
-            unsigned int iIsStorePDW;
-        } so ;
-    } x;
-
-    UINT uiTotalPDW;
-
-    _PDW stPDW[MAX_PDW];
-
-}  ;
-
-#endif
-
-
-#ifdef _ELINT_
-
-#ifndef _PDW_STRUCT
-#define _PDW_STRUCT
-typedef struct {
-    long long int llTOA;
-
-    int iFreq;
-    int iPulseType;
-    int iPA;
-    int iPW;
-    int iPFTag;
-    int iAOA;
-
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-
-} _PDW;
-#endif
-
-#ifndef ENUM_BANDWIDTH_ENUM
-#define ENUM_BANDWIDTH_ENUM
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-#elif defined(_POCKETSONATA_)
-
-// 수퍼헷 수신장치 개발한 것의 PDW 포멧
-struct TNEW_SPDW
-{
-    float Freq ;
-    float PA ;
-    float PW ;
-    unsigned int TOA ;
-    int Ref_Phase3 ;
-
-} ;
-
-//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-// #ifndef _STR_PDWDATA
-// #define _STR_PDWDATA
-// struct STR_PDWDATA {
-// #ifdef _ELINT_
-//     unsigned char aucTaskID[LENGTH_OF_TASK_ID];
-//     unsigned int iIsStorePDW;
-//     int iCollectorID;
-//     ENUM_BANDWIDTH enBandWidth;
-// 
-// #elif defined(_POCKETSONATA_)
-//     unsigned int iBoardID;
-//     unsigned int iBank;
-//     unsigned int iIsStorePDW;
-// #elif defined(_SONATA_)
-//     unsigned int uiBand;
-//     unsigned int iIsStorePDW;
-// #else
-// 
-// #endif
-// 
-//     UINT uiTotalPDW;
-// 
-//     _PDW stPDW[MAX_PDW];
-// 
-// }  ;
-//#endif
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-#elif defined(_SONATA_)
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-// 수퍼헷 수신장치 개발한 것의 PDW 포멧
-struct TNEW_SPDW
-{
-    float Freq ;
-    float PA ;
-    float PW ;
-    unsigned int TOA ;
-    int Ref_Phase3 ;
-
-} ;
-
-//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-#ifndef _PDW_STRUCT
-#define _PDW_STRUCT
-struct _PDW {
-    long long int llTOA;
-
-    int iFreq;
-    int iPulseType;
-    int iPA;
-    int iPW;
-    int iPFTag;
-    int iAOA;
-
+#elif _POCKETSONATA_
     int iPMOP;
     int iFMOP;
 
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-
-} ;
+    int iChannel;
 #endif
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-#ifndef _STR_PDWDATA
-#define _STR_PDWDATA
-struct STR_PDWDATA {
-#ifdef _ELINT_
-    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
-    unsigned int iIsStorePDW;
-    int iCollectorID;
-    ENUM_BANDWIDTH enBandWidth;
-
-#elif defined(_POCKETSONATA_)
-    unsigned int uiBand;
-    unsigned int iIsStorePDW;
-#elif defined(_SONATA_)
-    unsigned int uiBand;
-    unsigned int iIsStorePDW;
-#else
-
-#endif
-
-    UINT uiTotalPDW;
-
-    _PDW stPDW[MAX_PDW];
 
 }  ;
+
 #endif
+
+
+#ifdef _ELINT_
 
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
@@ -447,56 +260,120 @@ typedef enum {
 } ENUM_BANDWIDTH ;
 #endif
 
-#else
+
+
+#elif defined(_POCKETSONATA_)
+
+
+
+//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+#elif defined(_SONATA_)
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
 // 수퍼헷 수신장치 개발한 것의 PDW 포멧
 struct TNEW_SPDW
 {
-	float Freq ;
-	float PA ;
-	float PW ;
-	unsigned int TOA ;
-	int Ref_Phase3 ;
+    float Freq ;
+    float PA ;
+    float PW ;
+    unsigned int TOA ;
+    int Ref_Phase3 ;
 
 } ;
+
+//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+#else
+
+
+
 #endif
 
 //////////////////////////////////////////////////////////////////////////
 // PDW 신호 상태
 
-#ifdef _ELINT_
-#define PDW_DV				(1)
-
-#define PDW_NORMAL          (1)
-#define PDW_CW              (0)
-
-
-#elif defined(_POCKETSONATA_)
-
-#define PDW_NORMAL          (0)
-#define PDW_CW              (1)
-
-#define PDW_DV				(1)
-#elif defined(_SONATA_)
-#define PDW_CW              4
-#define PDW_CHIRPUP         2
-#define PDW_CHIRPDN         3
-#define PDW_PMOP            1
-#define PDW_NORMAL          0
-
-#define PDW_DV				(1)
-
-#else
-#define PDW_DV				(1)
-
-//PDW 상태 별 정의 값
-#define PDW_NORMAL          (1)
-#define PDW_CW              (2)
-#define PDW_FMOP						(5)
-#define PDW_CW_FMOP					(6)
-#define PDW_SHORTP          (7)
-#define PDW_ALL							(8)
-
-#endif
+// #ifdef _ELINT_
+// #define PDW_DV				(1)
+// 
+// #define PDW_NORMAL          (1)
+// #define PDW_CW              (0)
+// 
+// 
+// #elif defined(_POCKETSONATA_)
+// 
+// #define PDW_NORMAL          (0)
+// #define PDW_CW              (1)
+// 
+// #define PDW_DV				(1)
+// #elif defined(_SONATA_)
+// #define PDW_CW              4
+// #define PDW_CHIRPUP         2
+// #define PDW_CHIRPDN         3
+// #define PDW_PMOP            1
+// #define PDW_NORMAL          0
+// 
+// #define PDW_DV				(1)
+// 
+// #else
+// #define PDW_DV				(1)
+// 
+// //PDW 상태 별 정의 값
+// #define PDW_NORMAL          (1)
+// #define PDW_CW              (2)
+// #define PDW_FMOP						(5)
+// #define PDW_CW_FMOP					(6)
+// #define PDW_SHORTP          (7)
+// #define PDW_ALL							(8)
+// 
+// #endif
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -571,6 +448,61 @@ struct TNEW_IQ {
 	short sI;
 	short sQ;
 }  ;
+
+
+#ifndef _STR_PDWDATA
+#define _STR_PDWDATA
+
+#ifndef _STR_ELINT_HEADER_
+#define _STR_ELINT_HEADER_
+typedef struct {
+            unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+            unsigned int iIsStorePDW;
+            int iCollectorID;
+            ENUM_BANDWIDTH enBandWidth;
+
+    unsigned int uiCount;
+
+    int dummy;
+
+} STR_ELINT_HEADER ;
+#endif
+
+#ifndef _POCKETSONATA_HEADER_
+#define _POCKETSONATA_HEADER_
+typedef struct {
+            unsigned int iBoardID;
+            unsigned int iBank;
+            unsigned int iIsStorePDW;
+
+} POCKETSONATA_HEADER ;
+#endif
+
+#ifndef _SONATA_HEADER_
+#define _SONATA_HEADER_
+typedef struct {
+            unsigned int uiBand;
+            unsigned int iIsStorePDW;
+
+} SONATA_HEADER ;
+#endif
+
+struct STR_PDWDATA {
+    union UNION_HEADER {
+        STR_ELINT_HEADER el;
+
+        POCKETSONATA_HEADER ps;
+
+        SONATA_HEADER so;
+    } x;
+
+    UINT uiTotalPDW;
+
+    _PDW stPDW[MAX_PDW];
+
+}  ;
+
+#endif
 
 
 #endif  // #ifndef _PDW_H_

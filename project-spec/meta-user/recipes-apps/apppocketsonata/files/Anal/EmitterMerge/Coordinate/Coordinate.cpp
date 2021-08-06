@@ -1,4 +1,4 @@
-﻿/********************************************************************************
+/********************************************************************************
 
     @file		Coordinate.cpp
     @auther		bu sugn chun(sungchun.bu@lignex1.com)
@@ -577,11 +577,11 @@ void CCoordinate::ConvertENU2LLH(const SEnuPos & stEnuPos,const SLlhPos &stLLHOr
 *********************************************************************************/
 void CCoordinate::ConvertDeg2DegMin(double dInDeg,double *pdDeg,double *pdMin)
 {
-    double fractional =0;
+    //double fractional =0;
     double dDeg =0;
     double dMin =0;
 
-    fractional = modf(dInDeg,&dDeg);
+    modf(dInDeg,&dDeg);
     dMin = (dInDeg-dDeg)*60;
 
     *pdDeg = dDeg;
@@ -624,14 +624,14 @@ void CCoordinate::ConvertDegMin2Deg(double dInDeg , double dInMin,double *pdDeg)
 *********************************************************************************/
 void CCoordinate::ConvertDeg2DegMinSec(double dInDeg , double *pdDeg, double *pdMin,double *pdSec)
 {
-    double fractional =0;
+    //double fractional =0;
     double dDeg =0;
     double dMin =0;
     double dSec =0;
 
-    fractional = modf(dInDeg,&dDeg);
+    modf(dInDeg,&dDeg);
 
-    fractional = modf((dInDeg - dDeg)*60,&dMin);
+    modf((dInDeg - dDeg)*60,&dMin);
     dSec = ((dInDeg - dDeg)*60 - dMin) *60;
 
     *pdDeg = dDeg;

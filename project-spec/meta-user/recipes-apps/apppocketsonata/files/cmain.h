@@ -1,6 +1,8 @@
 #ifndef CMAIN_H
 #define CMAIN_H
 
+#include "./Anal/OFP_Main.h"
+
 using namespace std;
 
 #include "./Include/system.h"

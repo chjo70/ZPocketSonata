@@ -1,4 +1,4 @@
-﻿// SysPara.cpp: implementation of the CSysPara class.
+// SysPara.cpp: implementation of the CSysPara class.
 //
 //////////////////////////////////////////////////////////////////////
 

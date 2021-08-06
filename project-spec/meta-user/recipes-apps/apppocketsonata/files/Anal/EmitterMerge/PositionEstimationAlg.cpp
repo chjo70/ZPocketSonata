@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      PositionEstimationAlg.cpp
  * @brief     위치 산출을 계산하기 위한 메인 클래스.
@@ -7,10 +7,7 @@
  * @warning
  */
 
-#ifdef _MSC_VER
 #include "stdafx.h"
-
-#endif
 
 #include <math.h>
 #include <float.h>
@@ -33,11 +30,11 @@
 #define	IS_VALID_LL( A, B )			( ( ( IsNumber(A) == true ) && ( IsNumber(B) == true ) && ( !( ( A > 360. ) || ( A < -360. ) || ( B > 360. ) || ( B < -360. ) ) ) ) == true )
 #define	IS_NOT_ZERO_LL( A, B )	( ( ( A > 0 || A < 0 ) == true ) && ( ( B > 0 || B < 0 ) == true ) )
 
-#define MAX_LOBS																			(100000)
+#define MAX_LOBS							(100000)
 
-#define THRESHOLD_OF_LOB_FOR_PE												(20)
+#define THRESHOLD_OF_LOB_FOR_PE				(20)
 
-#define ITEMS_FOR_TWO_ECLPISE													(5)
+#define ITEMS_FOR_TWO_ECLPISE				(5)
 
 
 #if defined(_ENU_POSITION_)
@@ -50,7 +47,7 @@
 #endif
 
 
-CPositionEstimationAlg*  CPositionEstimationAlg::m_pInstance = 0;				///< 정적 초기화
+CPositionEstimationAlg*  CPositionEstimationAlg::m_pInstance = NULL;				///< 정적 초기화
 
 
 /**
@@ -240,11 +237,26 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 
 }
 
+/**
+ * @brief     RunPositionEstimation
+ * @param     SELPE_RESULT * pSELPE_RESULT
+ * @param     SRxABTData * pABTData
+ * @param     SELABTDATA_EXT * pABTExtData
+ * @param     std::vector<STR_LOBS> * pVecLOB
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-05, 12:12
+ * @warning
+ */
 void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB )
 {
     int nLOB;
 
     nLOB = (int) pVecLOB->size();
+
+    pSELPE_RESULT->bResult = false;
 
 
 }
@@ -260,7 +272,9 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	int nLob;
 	double *pLatitude, *pLongitude, *pLob;
 
-	SRxABTData stABTData;
+	//SRxABTData stABTData;
+
+    SELPE_RESULT stSELPE_RESULT;
 
 	std::vector<STR_LOBS>::pointer ppVecLOB;
 
@@ -287,19 +301,19 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	}
 
 	// 3. 위치 산출
-	CommonRunPositionEstimation( NULL );
+	CommonRunPositionEstimation( & stSELPE_RESULT );
 
 	// 4. 결과 변환
-	memset( & stABTData, 0, sizeof(STR_POSITION_ESTIMATION) );
-	//pPEInfo->enValid = stABTData.iPEValid;
+	//memset( & stABTData, 0, sizeof(STR_POSITION_ESTIMATION) );
+	pPEInfo->enValid = ( stSELPE_RESULT.bResult == true ? E_EL_PESTAT_SUCCESS : E_EL_PESTAT_FAIL );
 
-    pPEInfo->fLatitude = stABTData.fLatitude;
-    pPEInfo->fLongitude = stABTData.fLongitude;
+    pPEInfo->fLatitude = (float) stSELPE_RESULT.dLatitude;
+    pPEInfo->fLongitude = (float) stSELPE_RESULT.dLongitude;
 
-	pPEInfo->fCEP = stABTData.fCEP;
-	pPEInfo->fMajorAxis = stABTData.fMajorAxis;
-	pPEInfo->fMinorAxis = stABTData.fMinorAxis;
-	pPEInfo->fTheta = stABTData.fTheta;
+	pPEInfo->fCEP = (float) stSELPE_RESULT.dCEP_error;
+	pPEInfo->fMajorAxis = (float) stSELPE_RESULT.dEEP_major_axis;
+	pPEInfo->fMinorAxis = (float) stSELPE_RESULT.dEEP_minor_axis;
+	pPEInfo->fTheta = (float) stSELPE_RESULT.dEEP_theta;
 
 	// 5. 메모리 해지
 	FreeSensors();
@@ -503,30 +517,30 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 		// FilteredByCensorPosition();
 
 		// 위치 산출 실행하기 전에 메모리 할당
-			bool bResult;
-			UINT uiFlagInitPos=0;
+		bool bResult;
+		UINT uiFlagInitPos=0;
 		double *dTemp=NULL;
 
-			pValid = m_Sensor.pValid;
+		pValid = m_Sensor.pValid;
 
-			dTargetLocDeg[0] = 0.;
-			dEEPData[0] = 0.;
+		dTargetLocDeg[0] = 0.;
+		dEEPData[0] = 0.;
 
-			// 위치 산출의 초기값 지정한다.
-			if( pPEInfo != nullptr && pPEInfo->enValid == E_EL_PESTAT_SUCCESS ) {
-				uiFlagInitPos = 1;
+		// 위치 산출의 초기값 지정한다.
+		if( pPEInfo != nullptr && pPEInfo->enValid == E_EL_PESTAT_SUCCESS ) {
+			uiFlagInitPos = 1;
 
-				dInitPosRad[0] = (double) pPEInfo->fLatitude;
-				dInitPosRad[1] = (double) pPEInfo->fLongitude;
-			}
-			else {
-				uiFlagInitPos = 0;
+			dInitPosRad[0] = (double) pPEInfo->fLatitude;
+			dInitPosRad[1] = (double) pPEInfo->fLongitude;
+		}
+		else {
+			uiFlagInitPos = 0;
 
-				dInitPosRad[0] = 0.;
-				dInitPosRad[1] = 0.;
-			}
+			dInitPosRad[0] = 0.;
+			dInitPosRad[1] = 0.;
+		}
 
-			ConvertLatLong2( m_nLob, & m_Sensor );
+		ConvertLatLong2( m_nLob, & m_Sensor );
 
 		switch( eOption ) {
 			case DISTANCE_LEAST_SQUARE :
@@ -540,18 +554,19 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 			case AUTO :
 				if( m_nLob > 10 ) {
 					bResult = m_theQuadratric.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );
-			}
-			else {
-					bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );        
-			}
+                }
+                else {
+                    bResult = m_theDistanceLeastSquare.Run( pSELPE_RESULT, m_Sensor.pX, m_Sensor.pY, m_Sensor.pLob, m_nLob );        
+                }
 				break;
 
 			default :
+                bResult = false;
 				break;
 
 		}
 
-			if( bResult == true ) {
+		if( bResult == true ) {
 #if defined(_UTM_POSITION_)
             UTMXYToLatLon( pSELPE_RESULT->dEasting, pSELPE_RESULT->dNorthing, (int) UTM_ZONE, false, pSELPE_RESULT->dLatitude, pSELPE_RESULT->dLongitude );
             pSELPE_RESULT->dLatitude = RadToDeg( pSELPE_RESULT->dLatitude );

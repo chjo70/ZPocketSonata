@@ -1,4 +1,4 @@
-﻿// _SigAnal.h: interface for the 탐지분석 소프트웨어의 헤더파일
+// _SigAnal.h: interface for the 탐지분석 소프트웨어의 헤더파일
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -39,9 +39,9 @@ extern "C" {
 UINT stSigma1Aoa[5] = { KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
 UINT stSigma1Frq[5] = { KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
 
-#elif defined(_POCKETSONATA_)
-UINT stSigma1Aoa[5] = { KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
-UINT stSigma1Frq[5] = { KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
+#elif _POCKETSONATA_
+UINT stSigma1Aoa[enMAXPRC] = { 0, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
+UINT stSigma1Frq[enMAXPRC] = { 0, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
 
 #else
 UINT stSigma1Aoa[3] = { KHARM_AOA_MAR_LOW, KHARM_AOA_MAR_MID, KHARM_AOA_MAR_HGH } ;
@@ -55,19 +55,23 @@ STR_SCANPT stScanPt;
 
 #else
 
-#ifdef _A50_RWR
-extern UINT stSigma1Aoa[5];
-extern UINT stSigma1Frq[5];
-
 extern STR_MANAET stTrkAet;
 extern STR_SCNAET stScnAet;
 extern STR_SCANPT stScanPt;
 
+#ifdef _ELINT_
+extern UINT stSigma1Aoa[5];
+extern UINT stSigma1Frq[5];
+
+#elif _POCKETSONATA_
+extern UINT stSigma1Aoa[enMAXPRC];
+extern UINT stSigma1Frq[enMAXPRC];
+
+
 #else
+2
 extern UINT stSigma1Aoa[3];
 extern UINT stSigma1Frq[3];
-
-extern STR_SCANPT stScanPt;
 
 #endif
 

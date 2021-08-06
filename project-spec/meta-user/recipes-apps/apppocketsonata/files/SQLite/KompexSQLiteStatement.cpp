@@ -31,7 +31,7 @@ namespace Kompex
 
 SQLiteStatement::SQLiteStatement(SQLiteDatabase *db):
 	mDatabase(db),
-	mStatement(0),
+	mStatement(NULL),
 	mTransactionID(0),
 	mIsColumnNumberAssignedToColumnName(false)
 {
@@ -50,7 +50,7 @@ void SQLiteStatement::Prepare(const char *sqlStatement)
 	// If the nByte argument is less than zero, 
 	// then zSql is read up to the first zero terminator. 
 
-	if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, 0) != SQLITE_OK)
+	if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK)
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 
 	if(!mStatement)
@@ -65,7 +65,7 @@ void SQLiteStatement::Prepare(const wchar_t *sqlStatement)
 	// If the nByte argument is less than zero, 
 	// then zSql is read up to the first zero terminator. 
 
-	if(sqlite3_prepare16_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, 0) != SQLITE_OK)
+	if(sqlite3_prepare16_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK)
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 
 	if(!mStatement)
@@ -74,17 +74,35 @@ void SQLiteStatement::Prepare(const wchar_t *sqlStatement)
 
 bool SQLiteStatement::Step() const
 {
-	switch(sqlite3_step(mStatement))
-	{
-		// sqlite3_step() has finished executing
-		case SQLITE_DONE:
-			return false;
-		// sqlite3_step() has another row ready
-		case SQLITE_ROW:
-			return true;
-		default:
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
-	}
+    bool bRet=false;
+
+
+    int iSql=sqlite3_step(mStatement);
+    if( iSql == SQLITE_DONE ) {
+        // bRet = false;
+    }
+    else if( iSql == SQLITE_ROW ) {
+        bRet = false;
+    }
+    else {
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+
+// 	switch(sqlite3_step(mStatement))
+// 	{
+// 		// sqlite3_step() has finished executing
+// 		case SQLITE_DONE:
+// 			bRet = false;
+//             break;
+// 		// sqlite3_step() has another row ready
+// 		case SQLITE_ROW:
+// 			bRet = true;
+//             break;
+// 		default:
+// 			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             //break;
+// 	}
+    return bRet;
 }
 
 void SQLiteStatement::SqlStatement(const char *sqlStatement)
@@ -105,31 +123,43 @@ bool SQLiteStatement::FetchRow() const
 {
 	int rc = sqlite3_step(mStatement);
 
+    bool bRet=false;
+
 	switch(rc)
 	{
 		case SQLITE_BUSY:
-			KOMPEX_EXCEPT("FetchRow() SQLITE_BUSY", SQLITE_BUSY);
-			return false;
+            bRet = false;
+            KOMPEX_EXCEPT("FetchRow() SQLITE_BUSY", SQLITE_BUSY);			
+            break;
 		case SQLITE_DONE:
-			return false;
+			bRet = false;
+            break;
+
 		case SQLITE_ROW:
-			return true;
+			bRet = true;
+            break;
+
 		case SQLITE_ERROR:
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), SQLITE_ERROR);
-			return false;
+            bRet = false;
+			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), SQLITE_ERROR);			
+            break;
 		case SQLITE_MISUSE:
-			KOMPEX_EXCEPT("FetchRow() SQLITE_MISUSE", SQLITE_MISUSE);
-			return false;
+            bRet = false;
+			KOMPEX_EXCEPT("FetchRow() SQLITE_MISUSE", SQLITE_MISUSE);			
+            break;
+
+        default:
+            break;
 	}
 
-	return false;
+	return bRet;
 }
 
 void SQLiteStatement::FreeQuery()
 {
 	// destroy prepared statement
 	sqlite3_finalize(mStatement);
-	mStatement = 0;
+	mStatement = NULL;
 }
 
 void SQLiteStatement::CheckStatement() const
@@ -146,7 +176,7 @@ void SQLiteStatement::CheckDatabase() const
 
 float SQLiteStatement::SqlAggregateFuncResult(const std::string &countSql)
 {
-	float result;
+	float result=-1.0;
 
 	Sql(countSql);
 	while(FetchRow())
@@ -158,7 +188,7 @@ float SQLiteStatement::SqlAggregateFuncResult(const std::string &countSql)
 
 float SQLiteStatement::SqlAggregateFuncResult(wchar_t *countSql)
 {
-	float result;
+	float result=-1.0;
 
 	Sql(countSql);
 	while(FetchRow())
@@ -170,11 +200,12 @@ float SQLiteStatement::SqlAggregateFuncResult(wchar_t *countSql)
 
 float SQLiteStatement::SqlAggregateFuncResult(const char *countSql)
 {
-	float result;
+	float result=-1.0;
 
 	Sql(countSql);
-	while(FetchRow())
+	while(FetchRow()) {
 		result = static_cast<float>(GetColumnDouble(0));
+    }
 	
 	FreeQuery();
 	return result;
@@ -214,13 +245,19 @@ std::string SQLiteStatement::GetColumnString(int column) const
 
 	const unsigned char *result = sqlite3_column_text(mStatement, column);
 
-	// capture NULL results
-	if(result == 0)
-		return "";
+    std::stringstream ss;
 
-	std::stringstream ss;
-	ss << result;
-	return ss.str();
+	// capture NULL results
+	if(result == NULL ) {
+		ss << "";
+    }
+    else {	    
+	    ss << result;
+	    
+    }
+
+    return ss.str();
+
 }
 
 double SQLiteStatement::GetColumnDouble(int column) const
@@ -450,7 +487,7 @@ std::string SQLiteStatement::GetColumnString(const std::string &column) const
 	const unsigned char *result = sqlite3_column_text(mStatement, GetAssignedColumnNumber(column));
 
 	// capture NULL results
-	if(result == 0)
+	if(result == NULL )
 		return "";
 
 	std::stringstream ss;
@@ -532,15 +569,31 @@ void SQLiteStatement::BindString16(int column, const wchar_t *string) const
 void SQLiteStatement::BindString64(int column, const char *string, uint64 byteLength, ENCODING encoding) const
 {
 	// SQLITE_TRANSIENT: SQLite makes its own private copy of the data immediately, before the sqlite3_bind_*() routine returns
-	switch(sqlite3_bind_text64(mStatement, column, string, byteLength, SQLITE_TRANSIENT, encoding))
-	{
-		case SQLITE_OK:
-			break;
-		case SQLITE_TOOBIG:
-			KOMPEX_EXCEPT("SQLITE_TOOBIG - string was larger than stated in byteLength or exceeded the default maximum length", -1);
-		default:
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
-	}
+    int iSql=sqlite3_bind_text64(mStatement, column, string, byteLength, SQLITE_TRANSIENT, encoding);
+
+    if( iSql == SQLITE_OK ) {
+
+    }
+    else if( iSql == SQLITE_TOOBIG ) {
+        KOMPEX_EXCEPT("SQLITE_TOOBIG - string was larger than stated in byteLength or exceeded the default maximum length", -1);
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+    else {
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+
+// 	switch(sqlite3_bind_text64(mStatement, column, string, byteLength, SQLITE_TRANSIENT, encoding))
+// 	{
+// 		case SQLITE_OK:
+// 			break;
+// 		case SQLITE_TOOBIG:
+// 			KOMPEX_EXCEPT("SQLITE_TOOBIG - string was larger than stated in byteLength or exceeded the default maximum length", -1);
+//             KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             // break;
+// 		default:
+// 			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             //break;
+// 	}
 }
 
 void SQLiteStatement::BindDouble(int column, double value) const
@@ -645,7 +698,7 @@ void SQLiteStatement::GetTableColumnMetadata(const std::string &tableName, const
 	int notnull, primaryKey, autoInc;
 	const char *dataType, *collSeq;
 
-	if(sqlite3_table_column_metadata(mDatabase->GetDatabaseHandle(), 0, tableName.c_str(), columnName.c_str(), &dataType, &collSeq, &notnull, &primaryKey, &autoInc))
+	if(sqlite3_table_column_metadata(mDatabase->GetDatabaseHandle(), NULL, tableName.c_str(), columnName.c_str(), &dataType, &collSeq, &notnull, &primaryKey, &autoInc))
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 			
 	std::cout << "TableColumnMetadata:" << std::endl;
@@ -660,8 +713,11 @@ void SQLiteStatement::ClearBindings() const
 {
 	CheckStatement();
 
-	if(sqlite3_clear_bindings(mStatement) != SQLITE_OK)
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    sqlite3_clear_bindings(mStatement);
+
+//     if(sqlite3_clear_bindings(mStatement) != SQLITE_OK) {
+// 		// KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//     }
 }
 
 void SQLiteStatement::Reset() const
@@ -1022,7 +1078,7 @@ int SQLiteStatement::GetAssignedColumnNumber(const std::string &columnName) cons
 		// if you don't catch the exception then we will return -1 so that the function sqlite3_column_*()
 		// will return a undefined value
 		KOMPEX_EXCEPT("GetAssignedColumnNumber() column name '" + columnName + "' does not exists", -1);
-		return -1;
+		//return -1;
 	}
 
 	return iter->second;
@@ -1038,7 +1094,7 @@ std::string SQLiteStatement::Mprintf(const char *sql, ...)
 	if(!sqlResult)
 	{
 		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
-		return "";
+		//return "";
 	}
 
 	std::string result = sqlResult;
@@ -1053,7 +1109,7 @@ std::string SQLiteStatement::Vmprintf(const char *sql, va_list args)
 	if(!sqlResult)
 	{
 		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
-		return "";
+		//return "";
 	}
 
 	std::string result = sqlResult;

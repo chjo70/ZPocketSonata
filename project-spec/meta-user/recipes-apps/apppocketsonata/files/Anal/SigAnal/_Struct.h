@@ -1,4 +1,4 @@
-﻿// Struct.h: interface for the 탐지분석판 소프트웨어의 구조체
+// Struct.h: interface for the 탐지분석판 소프트웨어의 구조체
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,22 @@
 #include "../INC/PDW.h"
 #include "../INC/AetIPL.h"
 
-//#define BIT_MERGE(high,low)     ( ( ((UINT)high) << 8 ) | low )
+#include "../Collect/DataFile/DataFile.h"
+
+#ifdef _SONATA_
+enum PDW_MARK { STAT_CW=0, STAT_NORMAL, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, STAT_BIT, MAX_STAT } ;
+
+#elif _POCKETSONATA_
+enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
+
+#elif _ELINT_
+enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, MAX_STAT } ;
+
+enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
+
+#else
+
+#endif
 
 // PDW  펄스열 플레그
 //##ModelId=452B0C5402BC
@@ -60,10 +75,10 @@ struct STR_AOA_GROUP {
 	UINT band;
     UINT stat;
     PDWINDEX *pIndex;
-    int count;
+    int iCount;
     UINT bOverAoa;
-    UINT from_aoa;
-    UINT to_aoa;
+    int from_aoa;
+    int to_aoa;
     UINT from_bin;
     UINT to_bin;
 
@@ -72,8 +87,8 @@ struct STR_AOA_GROUP {
 // 방위 그룹화 구조체
 //##ModelId=452B0C54032A
 struct STR_AOA_GROUPS {
-  STR_AOA_GROUP aoa[ MAX_AGRT ];
-  int count;
+    STR_AOA_GROUP aoa[ MAX_AGRT ];
+    int iCount;
 	int coAnal;
 
 }  ;
@@ -97,7 +112,7 @@ struct STR_FRQ_GROUP {
 //##ModelId=452B0C540348
 struct STR_FRQ_GROUPS {
 	STR_FRQ_GROUP frq[ MAX_FGRT ];
-	int count;
+	int iCount;
 	int coAnal;
 
 }  ;
@@ -117,7 +132,7 @@ struct STR_PW_GROUP {
 //##ModelId=452B0C540366
 struct STR_PW_GROUPS {
 	STR_PW_GROUP pw[ MAX_PGRT ];
-	int count;
+	int iCount;
 	int coAnal;
 
 }  ;
@@ -125,7 +140,7 @@ struct STR_PW_GROUPS {
 // ISODATA 클러스터링 테이블
 //##ModelId=452B0C540371
 struct STR_CLUSTER {
-	int count;
+	int iCount;
     PDWINDEX index[SCN_COLLECT_PDW];
 	int center;
 	float deviation;
@@ -152,7 +167,7 @@ struct STR_PULSE_TRAIN_SEG {
 	STR_PDWINDEX pdw;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
 
 	UINT miss;							// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
-	UINT pri_band;					// 펄스열 추출할 때의 PRI 밴드
+	UINT uiPRI_Band;					// 펄스열 추출할 때의 PRI 밴드
 	UINT extract_step;			// 기준 펄스열, STABLE, Jitter PRI
 	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
 	PDWINDEX first_idx;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
@@ -510,35 +525,75 @@ struct STR_DWELL_LEVEL {
   float _spFreqMin;
   float _spFreqMax;
 
+  int _spAnalMinPulseCount;
+
 
 #define DFD_FREQ_OFFSET		(1900)
 
+char g_szFreqType[MAX_FRQTYPE][3] = { "F_", "HO", "RA", "PA", "UK", "IF" } ;
+char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
+
 #ifdef _ELINT_
+    char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
+    char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
+    char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+    char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+
+    
+    FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
+  {	// min, max, offset, res
+      {     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
+      {  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
+      {  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
+      { 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
+      { 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* 고대역3	*/
+      {     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
+  } ;
+
+  PA_RESOL gPaRes[ 6 ] =
+  {	// min, max, offset, res
+      {     0,     0,  (float) _spPAoffset, _spAMPres }, 
+      {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+      {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+      { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+      { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+      {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+  } ;
+
+  double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
+  double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 #elif defined(_POCKETSONATA_)
+    char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
+    char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+    char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+    char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+
 #define _AOARes                 ( (float) (360./512.) )
-FREQ_RESOL gFreqRes[ 6 ] =
-{	// min, max, offset, res
-    {     0,     0, 0, (float) 0.0131072 },
-    {  2000,  6000, 0, (float) 0.0131072 },		/* 저대역		*/
-    {  5500, 10000, 0, (float) 0.0131072 },		/* 고대역1	*/
-    { 10000, 14000, 0, (float) 0.0131072 },		/* 고대역2	*/
-    { 14000, 18000, 0, (float) 0.0131072 },		/* 고대역3	*/
-    {     0,  5000, 0, (float) 0.0131072 }		/* C/D			*/
-} ;
+    FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
+          {     0,     0, 0, (float) 0 } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+          {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
-
-PA_RESOL gPaRes[ 6 ] =
-{	// min, max, offset, res
-  {     0,     0,  (float) _spPAoffset, _spAMPres },
-    {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-    {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-    { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-    { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-    {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
-} ;
+  PA_RESOL gPaRes[ 6 ] =
+  {	// min, max, offset, res
+      {     0,     0,  (float) _spPAoffset, _spAMPres },
+      {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+      {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+      { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+      { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+      {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+  } ;
 
 #elif defined(_SONATA_)
+  char g_szAetSignalType[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+  char g_szAetFreqType[6][3] = { "--", "F_" , "HP" , "RA" , "PA", "UK" };
+  char g_szAetPriType[6][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
+
 #define _AOARes                 ( (float) (360./512.) )
   FREQ_RESOL gFreqRes[ 3 ] =
   {
@@ -547,10 +602,12 @@ PA_RESOL gPaRes[ 6 ] =
       { 5866, 18740, 5866, 1.5   }
   } ;
 
-
-
 #else
-  FREQ_RESOL gFreqRes[ 3 ] =
+  char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+  char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+  char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+
+  FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
   {
 	  {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
 	  { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
@@ -578,8 +635,39 @@ extern STR_SYS _sp;
 
 extern UINT _spdiffaoa[ 6 ];
 
+extern int _spAnalMinPulseCount;
+
+extern char g_szPulseType[MAX_STAT][3];
+
+extern char g_szFreqType[MAX_FRQTYPE][3];
+extern char g_szPRIType[MAX_PRITYPE][3];
+
+extern char g_szAetFreqType[MAX_FRQTYPE][3];
+extern char g_szAetPriType[MAX_PRITYPE][3];
+
+#ifdef _ELINT_
+extern char g_szAetSignalType[7][3];
+extern FREQ_RESOL gFreqRes[ TOTAL_BAND ];
+extern PA_RESOL gPaRes[ 6 ];
+
+extern double dRCLatitude[RADARCOL_MAX];
+extern double dRCLongitude[RADARCOL_MAX];
+
+#elif _POCKETSONATA_
+extern char g_szAetSignalType[7][3];
+
+extern FREQ_RESOL gFreqRes[ enMAXPRC ];
+extern PA_RESOL gPaRes[ 6 ];
+
+#elif _SONATA_
+extern char g_szAetSignalType[ST_MAX][3];
+
 extern FREQ_RESOL gFreqRes[ 3 ];
 extern PA_RESOL gPaRes[ 6 ];
+
+#else
+extern PA_RESOL gPaRes[ 6 ];
+#endif
 
 #endif
 

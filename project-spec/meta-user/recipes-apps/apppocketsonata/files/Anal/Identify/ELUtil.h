@@ -1,4 +1,4 @@
-﻿// ELUtil.h: interface for the CUtil class.
+// ELUtil.h: interface for the CUtil class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -193,6 +193,17 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
 
     if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
         return ( hgh1 - low2 + 1 );						//          |------------|
+
+    return 0;
+}
+
+template <typename T>
+bool IsOverlapSpace(T hgh1, T low1, T hgh2, T low2, T tRatio )
+{
+    T tOverlapSpace;
+
+    tOverlapSpace = CalOverlapSpace<T>( hgh1, low1, hgh2, low2 );
+    return tOverlapSpace >= tRatio;
 
     return 0;
 }

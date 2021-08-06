@@ -136,37 +136,37 @@ namespace Kompex
 		void Close();
 
 		//! Returns the SQLite db handle.
-		sqlite3 *GetDatabaseHandle() const {return mDatabaseHandle;}
+		sqlite3 *GetDatabaseHandle() const {return m_pDatabaseHandle;}
 		//! Returns the version number of sqlite.
 		inline int GetLibVersionNumber() const {return sqlite3_libversion_number();}
 		//! Returns the number of database rows that were changed, inserted or deleted\n
 		//! by the most recently completed SQL statement.
-		int GetDatabaseChanges() const {return sqlite3_changes(mDatabaseHandle);}
+		int GetDatabaseChanges() const {return sqlite3_changes(m_pDatabaseHandle);}
 		//! Returns the total number of row changes caused by INSERT, UPDATE or DELETE statements\n
 		//! since the database connection was opened. The count includes all changes from all trigger contexts.\n
 		//! However, the count does not include changes used to implement REPLACE constraints,\n
 		//! do rollbacks or ABORT processing, or DROP table processing.\n
 		//! The changes are counted as soon as the statement that makes them is completed.
-		int GetTotalDatabaseChanges() const {return sqlite3_total_changes(mDatabaseHandle);}
+		int GetTotalDatabaseChanges() const {return sqlite3_total_changes(m_pDatabaseHandle);}
 		//! Causes any pending database operation to abort and return at its earliest opportunity.\n
 		//! This routine is typically called in response to a user action such as pressing "Cancel"\n
 		//! or Ctrl-C where the user wants a long query operation to halt immediately.
-		void InterruptDatabaseOperation() const {sqlite3_interrupt(mDatabaseHandle);}
+		void InterruptDatabaseOperation() const {sqlite3_interrupt(m_pDatabaseHandle);}
 		//! Returns non-zero or zero if the given database connection is or is not in autocommit mode, respectively.\n
 		//! Autocommit mode is on by default. Autocommit mode is disabled by a BEGIN statement.\n
 		//! Autocommit mode is re-enabled by a COMMIT or ROLLBACK.
-		int GetAutoCommit() const {return sqlite3_get_autocommit(mDatabaseHandle);}
+		int GetAutoCommit() const {return sqlite3_get_autocommit(m_pDatabaseHandle);}
 
 		//! Trace() is invoked at various times when a SQL statement is being run by FetchRow(), SqlStatement() or ExecuteAndFree(). \n
 		//! The callback returns a UTF-8 rendering of the SQL statement text as the statement first begins executing.\n
 		//! Output: std::cout
-		inline void ActivateTracing() const {sqlite3_trace(mDatabaseHandle, &Kompex::SQLiteDatabase::TraceOutput, 0);}
+		inline void ActivateTracing() const {sqlite3_trace(m_pDatabaseHandle, &Kompex::SQLiteDatabase::TraceOutput, NULL );}
 		//! Profile() is invoked as each SQL statement finishes.\n
 		//! The profile callback contains the original statement text\n
 		//! and an estimate of wall-clock time of how long that statement took to run.\n
 		//! Note: time in ns\n
 		//! Output: std::cout
-		inline void ActivateProfiling() const {sqlite3_profile(mDatabaseHandle, &Kompex::SQLiteDatabase::ProfileOutput, 0);}
+		inline void ActivateProfiling() const {sqlite3_profile(m_pDatabaseHandle, &Kompex::SQLiteDatabase::ProfileOutput, NULL );}
 
 		//! The SetSoftHeapLimit() interface places a "soft" limit on the amount of heap memory that may be allocated by SQLite.\n
 		//! If an internal allocation is requested that would exceed the soft heap limit, sqlite3_release_memory()\n
@@ -218,14 +218,14 @@ namespace Kompex
 		//! The rowid is always available as an undeclared column named ROWID, OID or _ROWID_ as long as\n
 		//! those names are not also used by explicitly declared columns. If the table has a column\n
 		//! of type INTEGER PRIMARY KEY then that column is another alias for the rowid.
-		long long GetLastInsertRowId() const {return sqlite3_last_insert_rowid(mDatabaseHandle);}
+		long long GetLastInsertRowId() const {return sqlite3_last_insert_rowid(m_pDatabaseHandle);}
 
 		//! This function returns true if the database was opened in read-only mode an false if the\n
 		//! database was opened in read/write mode.
 		bool IsDatabaseReadOnly();
 
 		//! This function attempts to free as much heap memory as possible from the database connection.
-		inline void ReleaseMemory() {sqlite3_db_release_memory(mDatabaseHandle);}
+		inline void ReleaseMemory() {sqlite3_db_release_memory(m_pDatabaseHandle);}
 
 		/**
 		This method can be used to register a new virtual table module name. Module names must be\n
@@ -303,7 +303,7 @@ namespace Kompex
 
 	private:
 		//! SQLite db handle
-		struct sqlite3 *mDatabaseHandle;
+		struct sqlite3 *m_pDatabaseHandle;
 		//! Database filename UTF-8
 		std::string mDatabaseFilenameUtf8;
 		//! Database filename UTF-16

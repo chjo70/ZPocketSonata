@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 
 
@@ -51,8 +51,10 @@ struct SRxLOBHeader
  * @author    이정남 (jeongnam.lee@lignex1.com)
  * @date      2016-02-16 오후 12:06 
  */
+//#define MAX_RADARNAME						(9+1)
+//#define MAX_FREQ_PRI_STEP                   (16*2)
 #define MAX_RADARNAME						(9+1)
-#define MAX_FREQ_PRI_STEP                   (16*2)
+#define MAX_FREQ_PRI_STEP				(16)
 
 
 #ifndef SRxLOBData_STRUCT
@@ -151,11 +153,20 @@ struct SRxLOBData {
     float fRadarLatitude;
     float fRadarLongitude;
 
+    char aucRadarName[MAX_RADARNAME];
     int iRadarModeIndex;
     int iThreatIndex;
 
-#ifndef _POCKETSONATA_
+
+#ifdef _POCKETSONATA_
+
+#elif _ELINT_
+    int	iCollectorID;
+
+    unsigned int uiSeqNum;
 	char	aucTaskID[LENGTH_OF_TASK_ID];
+
+#else
     
 #endif
 
@@ -199,7 +210,7 @@ struct SRxABTData {
 
     int iPolarization;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
@@ -275,6 +286,8 @@ struct SRxABTData {
 
     int iStat;
 
+    char aucRadarName[MAX_RADARNAME];
+
 }  ;
 #endif
 
@@ -308,7 +321,7 @@ struct SRxAETData {
 
     int iValidity;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;

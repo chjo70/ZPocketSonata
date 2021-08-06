@@ -1,4 +1,4 @@
-﻿// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
+// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -112,11 +112,11 @@ void CScanAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pScnPDWData;
 
-    LOGMSG3( enDebug, " 스캔 분석: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " Scan Anal: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
-    // 1. 추적 신호 분석을 호출한다.
+    // 1. 스캔 신호 분석을 호출한다.
     pScnPDWData = ( STR_TRKSCNPDWDATA *) GetRecvData();
     m_pTheScanSigAnal->Start( & pScnPDWData->strPDW, & pScnPDWData->strABTData );
 
@@ -131,6 +131,9 @@ void CScanAnalysis::AnalysisStart()
     pLOBData = m_pTheScanSigAnal->GetLOBData();
     pLOBData->uiAETID = strAnalInfo.uiAETID;
     pLOBData->uiABTID = strAnalInfo.uiABTID;
-    EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
+    pLOBData->uiLOBID = 0;
+    pLOBData->iScanType = 0;
+    pLOBData->fScanPeriod = 0;
+    //EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
 }

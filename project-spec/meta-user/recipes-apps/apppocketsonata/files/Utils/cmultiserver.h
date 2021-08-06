@@ -1,4 +1,4 @@
-﻿#ifndef CMULTISERVER_H
+#ifndef CMULTISERVER_H
 #define CMULTISERVER_H
 
 #ifdef __linux__

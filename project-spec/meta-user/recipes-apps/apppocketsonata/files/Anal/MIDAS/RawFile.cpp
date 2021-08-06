@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      RawFile.cpp
  * @brief     RawData 파일을 억세스 하여 데이터 읽기, 쓰기 등을 수행한다.
@@ -13,6 +13,7 @@
 
 
 #elif _MSC_VER
+#include <intsafe.h>
 #include <io.h>
 
 #elif __VXWORKS__
@@ -277,11 +278,19 @@ bool CRawFile::FileOpen( char *filename, int iMode )
  * @date      2013-07-18 오후 7:45 
  * @warning   
  */
-int CRawFile::Write( void *pData, int c_size )
+unsigned int CRawFile::Write( void *pData, int c_size )
 {
-	int nWrite;
-	nWrite = _write( m_fid, (char *) pData, c_size );
-	return nWrite;
+    int iWrite;
+	unsigned int uiWrite=0;
+
+    if( c_size > 0 && pData != NULL ) {
+	    iWrite = _write( m_fid, (char *) pData, c_size );
+        if( iWrite > 0 ) {
+            uiWrite = (unsigned int ) iWrite;
+        }
+    }
+        
+	return uiWrite;
 }
 
 /**
@@ -294,17 +303,24 @@ int CRawFile::Write( void *pData, int c_size )
  * @date		2021/01/06 10:05:06
  * @warning		
  */
-int CRawFile::Read( void *pData, int c_size, int iOffset )
+unsigned int CRawFile::Read( void *pData, int c_size, int iOffset )
 {
-	int nRead;
+	unsigned int uiRead;
+    int iRead;
 
     if( m_fid != 0 && iOffset != 0 ) { 
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
-	nRead = _read( m_fid, (char *) pData, c_size );
+	iRead = _read( m_fid, (char *) pData, c_size );
+    if( iRead < 0 ) {
+        uiRead = 0;
+    }
+    else {
+        uiRead = iRead;
+    }
 
-	return nRead;
+	return uiRead;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -344,19 +360,20 @@ void CRawFile::FileClose()
  */
 unsigned long long int CRawFile::GetFileSize()
 {
-	long file_byte=0;
+	unsigned long long ullfile_byte=0;
 
 	if( m_fid != NULL ) {
-		if( _lseek( m_fid, 0L, SEEK_END ) == 0 ) {
-            file_byte = 0;
-			_lseek( m_fid, 0L, SEEK_SET );
-		}
-		else { //DTEC_Else
-			file_byte = -1;
-		}
+        ullfile_byte = _filelength( m_fid );
+// 		if( _lseek( m_fid, 0L, SEEK_END ) > 0 ) {
+//             ullfile_byte = _filelength( m_fid );
+// 			_lseek( m_fid, 0L, SEEK_SET );
+// 		}
+// 		else { //DTEC_Else
+// 			ullfile_byte = (unsigned long long) -1;
+// 		}
 	}
 
-	return file_byte;
+	return ullfile_byte;
 }
 
 /**
@@ -370,13 +387,13 @@ unsigned long long int CRawFile::GetFileSize()
  */
 unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 {
-    unsigned long long int iRet=-1;
+    unsigned long long int iRet=ULONGLONG_MAX;
 
 #if defined(__linux__) || defined(__VXWORKS__)
 	struct stat statbuf;
 
 	if( stat( pPathFileName, & statbuf ) != 0 ) {
-		iRet = -1;
+		iRet = ULONGLONG_MAX;
 	}
 	else {
 		iRet = statbuf.st_size;
@@ -386,7 +403,7 @@ unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 	struct _stati64 statbuf;
 
 	if( _stati64( pPathFileName, & statbuf ) != 0 ) {
-		iRet = -1;
+		iRet = ULONGLONG_MAX;
 	}
 	else {
 		iRet = statbuf.st_size;
@@ -411,7 +428,7 @@ bool CRawFile::CreateDir( TCHAR *pPath )
 
     while( *p ) {
         if( ('\\' == *p) || ('/'==*p)) {
-            if( ':' != *(p-1) ) {
+            if( p != pPath && ':' != *(p-1) ) {
 
 #ifdef _MSC_VER
                 CreateDirectory( dirName, NULL );
@@ -434,11 +451,17 @@ bool CRawFile::CreateDir( TCHAR *pPath )
 
 
 #ifdef _MSC_VER
+    if( ! PathFileExists( dirName ) ) {
     bCreate = CreateDirectory( dirName, NULL );
     if( bCreate != TRUE ) {
         perror( "디렉토리 생성");
         bRet = false;
     }
+    }
+    else {
+
+    }
+
 #elif defined(__linux__)
     int iRet = mkdir( dirName, 0766 );
 

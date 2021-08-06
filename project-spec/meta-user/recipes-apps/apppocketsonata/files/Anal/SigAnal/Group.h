@@ -1,4 +1,4 @@
-﻿// Group.h: interface for the CGroup class.
+// Group.h: interface for the CGroup class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,8 +11,7 @@
 
 #include "_SigAnal.h"
 
-//##ModelId=452B0C560084
-enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, MAX_STAT=16 } ;
+
 
 const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_FMOP, 0, \
 																0, STAT_SHORTP, 0, 0, 0, 0, 0, 0, 0, \
@@ -74,8 +73,8 @@ protected:
 public:
 	inline int GetBand() { return m_nBand; }
 	BOOL CompMarginDiff( int x, int y1, int y2, int thresh );
-	inline UINT GetCoGroups() { return m_PwGroups.count; }
-	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.count=coGroup; }
+	inline UINT GetCoGroups() { return m_PwGroups.iCount; }
+	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.iCount=coGroup; }
 	//##ModelId=452B0C56016A
 	//inline int GetGroupedPdw() { return m_FrqAoaPwIdx.count; }
 	//##ModelId=452B0C56016B

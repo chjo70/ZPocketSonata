@@ -151,10 +151,10 @@ int  ini_browse(INI_CALLBACK Callback, void *UserData, const mTCHAR *Filename);
 #endif
 
     bool del(const std::string& Section, const std::string& Key)
-      { return ini_puts(Section.c_str(), Key.c_str(), 0, iniFilename.c_str()) != 0; }
+      { return ini_puts(Section.c_str(), Key.c_str(), NULL, iniFilename.c_str()) != 0; }
 
     bool del(const std::string& Section)
-      { return ini_puts(Section.c_str(), 0, 0, iniFilename.c_str()) != 0; }
+      { return ini_puts(Section.c_str(), 0, NULL, iniFilename.c_str()) != 0; }
 #endif
 
 #if !defined INI_NOBROWSE

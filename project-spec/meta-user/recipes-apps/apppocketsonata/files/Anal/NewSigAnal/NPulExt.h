@@ -54,7 +54,7 @@ public:
 	void Init();
 	//##ModelId=452B0C550023
 	//void PulseExtract();
-    void PulseExtract( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode );
+    void PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode );
 	//##ModelId=452B0C550029
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	//##ModelId=452B0C55002A
@@ -66,7 +66,7 @@ public:
 	//##ModelId=452B0C550040
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
-	void ExtractPulseTrainByLibrary( UINT uiCoKnownRadarMode, SRadarMode **pRadarMode );
+	void ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode );
     int GetPulseStat();
     void ClearAllMark();
 

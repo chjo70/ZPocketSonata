@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      Quadratic.cpp
  * @brief     Quadratic 위치 산출 알고리즘
@@ -85,8 +85,11 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 // 		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
 // 	}
 
-	m_pUTMX = ppLatitude = pUTMX;
-	m_pUTMY = ppLongitude = pUTMY;
+	m_pUTMX = pUTMX;
+    ppLatitude = pUTMX;
+
+    ppLongitude = pUTMY;
+	m_pUTMY = pUTMY;        
 
 	/*! \bug  	condition에 직접적인 assignment operator를 사용하지 말아야 한다.
 	    \author 조철희 (churlhee.jo@lignex1.com)

@@ -207,6 +207,9 @@ BOOL CKAnalPRI::KnownAnalysis()
 			PatternAnalysis();
 			break;
 
+        default:
+            break;
+
 	}
 
 	CAnalPRI::Analysis();

@@ -13,7 +13,7 @@
 #include <fcntl.h>
 #include <qcolor.h>
 
-#include "./Utils/cfile.h"
+//#include "./Utils/cfile.h"
 
 enum enTableHeader {
     enNoAET=0,
@@ -1009,7 +1009,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 {
     int iRet;
 
-    CMyFile theRawDataFile;
+    CRawFile theRawDataFile;
     STR_LAN_HEADER strLanHeader;
 
     UINT uiFilelength;
@@ -1021,8 +1021,8 @@ void MainWindow::on_pushButton_SimPDW_clicked()
 
     QString fileName = QFileDialog::getOpenFileName( this, QString::fromLocal8Bit("파일 선택"), "~/", "PDW 파일(*.zpdw)" );
 
-    if (theRawDataFile.Open( fileName.toStdString().c_str(), O_RDONLY ) == TRUE) {
-        uiFilelength = theRawDataFile.GetFileLength();
+    if (theRawDataFile.FileOpen( (char *) fileName.toStdString().c_str(), O_RDONLY ) == TRUE) {
+        uiFilelength = theRawDataFile.GetFileSize();
         strLanHeader.uiLength = uiFilelength;
 
         pRawDataBuffer = ( char * ) malloc( sizeof(char) * uiFilelength );
@@ -1033,7 +1033,7 @@ void MainWindow::on_pushButton_SimPDW_clicked()
             iRet = SendRSA( & strLanHeader, pRawDataBuffer, strLanHeader.uiLength );
 
             free( pRawDataBuffer );
-            theRawDataFile.Close();
+            theRawDataFile.FileClose();
 
         }
         else {

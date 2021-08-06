@@ -1,4 +1,4 @@
-﻿/* led_cgi.h */
+/* led_cgi.h */
 #ifndef LED_CGI_H
 #define LED_CGI_H
 

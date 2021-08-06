@@ -27,25 +27,25 @@ namespace Kompex
 {
 
 SQLiteBlob::SQLiteBlob():
-	mBlobHandle(0)
+	mBlobHandle(NULL)
 {
 }
 
 SQLiteBlob::SQLiteBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode):
-	mBlobHandle(0)
+	mBlobHandle(NULL)
 {
 	OpenBlob(db, symbolicDatabaseName, tableName, columnName, rowId, accessMode);
 }
 
 SQLiteBlob::~SQLiteBlob()
 {
-	if(mBlobHandle != 0)
+	if(mBlobHandle != NULL )
 		CloseBlob();
 }
 
 void SQLiteBlob::OpenBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode)
 {
-	if(mBlobHandle != 0)
+	if(mBlobHandle != NULL )
 		CloseBlob();
 
 	mDatabase = db;
@@ -58,12 +58,12 @@ void SQLiteBlob::CloseBlob()
 	if(sqlite3_blob_close(mBlobHandle) != SQLITE_OK)
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 
-	mBlobHandle = 0;
+	mBlobHandle = NULL;
 }
 
 int SQLiteBlob::GetBlobSize() const
 {
-	if(mBlobHandle == 0)
+	if(mBlobHandle == NULL)
 		KOMPEX_EXCEPT("GetBlobSize() no open BLOB handle", -1);
 
 	return sqlite3_blob_bytes(mBlobHandle);
@@ -71,38 +71,71 @@ int SQLiteBlob::GetBlobSize() const
 
 void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
 {
-	if(mBlobHandle == 0)
+	if(mBlobHandle == NULL)
 		KOMPEX_EXCEPT("ReadBlob() no open BLOB handle", -1);
 	if((offset + numberOfBytes) > GetBlobSize())
 		KOMPEX_EXCEPT("ReadBlob() offset and numberOfBytes exceed the BLOB size", -1);
 		
-	switch(sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset))
-	{
-		case SQLITE_OK:
-			break;
-		case SQLITE_ABORT:
-			KOMPEX_EXCEPT("ReadBlob() BLOB handle expired - can not read BLOB", -1);
-		default:
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
-	}
+    int iSql=sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset);
+
+    if( iSql == SQLITE_OK ) {
+
+    }
+    else if( iSql == SQLITE_ABORT ) {
+        KOMPEX_EXCEPT("ReadBlob() BLOB handle expired - can not read BLOB", -1);
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+    else {
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+
+// 
+// 	switch(sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset))
+// 	{
+// 		case SQLITE_OK:
+// 			break;
+// 		case SQLITE_ABORT:
+// 			KOMPEX_EXCEPT("ReadBlob() BLOB handle expired - can not read BLOB", -1);
+//             KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             break;
+// 		default:
+// 			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             break;
+// 	}
 }
 
 void SQLiteBlob::WriteBlob(const void *buffer, int numberOfBytes, int offset)
 {
-	if(mBlobHandle == 0)
+	if(mBlobHandle == NULL)
 		KOMPEX_EXCEPT("WriteBlob() no open BLOB handle", -1);
 	if((offset + numberOfBytes) > GetBlobSize())
 		KOMPEX_EXCEPT("WriteBlob() offset and numberOfBytes exceed the BLOB size", -1);
 
-	switch(sqlite3_blob_write(mBlobHandle, buffer, numberOfBytes, offset))
-	{
-		case SQLITE_OK:
-			break;
-		case SQLITE_ABORT:
-			KOMPEX_EXCEPT("WriteBlob() BLOB handle expired - can not write BLOB", -1);
-		default:
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
-	}
+    int iSql=sqlite3_blob_write(mBlobHandle, buffer, numberOfBytes, offset);
+
+    if( iSql == SQLITE_OK ) {
+
+    }
+    else if( iSql == SQLITE_ABORT ) {
+        KOMPEX_EXCEPT("WriteBlob() BLOB handle expired - can not write BLOB", -1);
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+    else {
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
+
+// 	switch(sqlite3_blob_write(mBlobHandle, buffer, numberOfBytes, offset))
+// 	{
+// 		case SQLITE_OK:
+// 			break;
+// 		case SQLITE_ABORT:
+// 			KOMPEX_EXCEPT("WriteBlob() BLOB handle expired - can not write BLOB", -1);
+//             KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             break;
+// 		default:
+// 			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+//             break;
+// 	}
 }
 
 }	// namespace Kompex

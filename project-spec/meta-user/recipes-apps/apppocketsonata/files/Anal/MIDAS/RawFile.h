@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      RawFile.h
  * @brief     파일 접근에 대한 기본 클래스를 생성한다.
@@ -72,8 +72,8 @@ public:
 	//FILE *GetFileHandler() { return m_pfile; }
 	int GetFileHandler() { return m_fid; }
 	bool FileOpen( char *filename, int iMode );
-	int Read( void *pData, int c_size, int iOffset=0 );
-	int Write( void *pData, int c_size );
+	unsigned int Read( void *pData, int c_size, int iOffset=0 );
+	unsigned int Write( void *pData, int c_size );
 	void FileClose();
     unsigned long long int GetFileSize();
     unsigned long long int GetFileSize( char *pPathFileName );

@@ -1,4 +1,4 @@
-﻿// Identify.h: interface for the CELSignalIdentifyAlg class.
+// Identify.h: interface for the CELSignalIdentifyAlg class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -100,13 +100,11 @@ struct STR_H000 {
 
 }  ;
 
-#define MAX_RADARMODE			(1000)
-#define MAX_THREAT				(500)
+//#define MAX_RADARMODE			(1000)
+//#define MAX_THREAT				(500)
 
 
 #ifdef _SQLITE_
-//#include "../../SQLite/Database.h"
-#include "../../SQLite/KompexSQLitePrerequisites.h"
 #include "../../SQLite/KompexSQLiteDatabase.h"
 #include "../../SQLite/KompexSQLiteStatement.h"
 #include "../../SQLite/KompexSQLiteException.h"
@@ -116,17 +114,15 @@ struct STR_H000 {
 #elif _NO_SQLITE_
 
 #elif _MSSQL_
-#include "../../ELINTOP/ODBC/mssql.h"
-#include "../../ELINTOP/ODBC/odbccore.h"
+#include "../../../ELINTOP/ODBC/mssql.h"
+#include "../../../ELINTOP/ODBC/odbccore.h"
 #endif
 
 #ifdef _ELINT_
-
-
 #define FLIB_FREQ_RES_MHZ               (10)
-#elif defined(_POCKETSONATA_)
-#define FLIB_FREQ_RES_MHZ               (1.0)
 
+#elif defined(_POCKETSONATA_)
+#define FLIB_FREQ_RES_MHZ               (1)
 
 #else
 
@@ -150,14 +146,19 @@ struct STR_H000 {
 * (3) 제한 및 예외처리
 * - 해당사항 없음
 */
+#ifdef _MSSQL_
+class CELSignalIdentifyAlg : CMSSQL
+#else
 class CELSignalIdentifyAlg
+#endif
 {
  protected:
 #ifdef _SQLITE_
-    //static char *m_pszSQLString;
-    char m_szSQLString[4000];
-
+    char m_szSQLString[MAX_SQL_SIZE];
     Kompex::SQLiteDatabase *m_pDatabase;
+
+#elif _MSSQL_
+     char m_szSQLString[MAX_SQL_SIZE];
 
 #endif
     static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그
@@ -210,23 +211,15 @@ private:
     UINT m_fromLib;																	///< 식별시 시작 인덱스
     UINT m_toLib;																		///< 식별시 종료 인덱스
 
-// 	SELIDENTIFICATIONOPTION_PARAMETER m_optParameter;
-// 
-// 	EnumLibType m_eCEDLibType;											///< CED 기본형 또는 실무형 상태
-// 	EnumLibType m_eEOBLibType;											///< EOB 기본형 또는 실무형 상태
-// 
-// 	// 실시간 식별 하기 위한 멤버 변수, 함수 리턴용으로 사용됨
-// 	SRadar m_stRadar;																///< 식별용으로 내부적으로 사용하기 위한 레이더 1개에 대해서 저장소
-// 	SRadarMode m_stRadarMode;												///< 식별용으로 내부적으로 사용하기 위한 레이더모드 1개에 대해서 저장소
-
  public:
     UINT m_total_ced;																///< CED의 레이더 모드 총 갯수
     UINT m_total_eob;																///< EOB의 위협 총 갯수
 
     SRxLOBData *m_pLOBData;
 
-// 	STR_NEWAET m_IdAet;															///< 수동 분석한 에미터를 식별하기 위한 저장소
-// 
+    void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
+    void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
+
  public:
     void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, BOOL bMakeH0000 );
     void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true, bool bMakeH0000=true );
@@ -252,15 +245,12 @@ private:
  	BOOL IdentifyPatternRange( SRadarMode *pRadarMode );
  	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData ); }		//!< http://izeph.com/tt/blog/155 참조.
  	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData ); }
-	void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
- 	void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
+	
  	void IdentifySigType( int iSignalType );
  	void FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pFrqHgh, STR_FLOWHIGH *pBand, UINT *cotoIpl );
  	void InitIdentifyTable();
  	void Init();
  	void CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIAetData, BOOL bMakeH0000 );
- 	bool IsOverlapSpace( int hgh1, int low1, int hgh2, int low2, int nRatio );
- 	bool IsOverlapSpace( float flow1, float fhgh1, float fhgh2, float flow2, float nRatio );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
  	void SortThreatLevel();
  	void IdentifyPriority();
@@ -274,7 +264,7 @@ private:
 
  	bool LoadCEDLibrary2();
  	bool LoadEOBLibrary2();
-    void MakeRadarMode( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
+    void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
 
     char *GetRadarModeName( int iRadarModeIndex );
 
@@ -290,7 +280,7 @@ private:
     BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
  	//BOOL CompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 
-	bool IsThereFreqRange( UINT *puiCoKnownRadarMode, SRadarMode **pMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
+	bool IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
     //  외부 에서 CED/EOB 테이블에 쿼리 실행 함수
     void UpdateRadarMode( SRxLOBData *pLOBData );
@@ -452,11 +442,13 @@ private:
 
 #if defined(_SQLITE_) || defined(_NO_SQLITE_)
     CELSignalIdentifyAlg( const char *pFileName );
-#else
+#elif _MSSQL_
     CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );
+#else
+    CELSignalIdentifyAlg( const char *pFileName );
 #endif
 
-    CELSignalIdentifyAlg();
+    // CELSignalIdentifyAlg();
 	virtual ~CELSignalIdentifyAlg();
 
 protected:
@@ -467,9 +459,9 @@ protected:
 
 	void InitRadarModeData();
 
-    void LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
-    void LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_RFSequence, int nMaxRadarMode );
-    void LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode );
+    bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
+    bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence, int nMaxRadarMode );
+    bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence, int nMaxRadarMode );
     bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
 
     // 변환 코드

@@ -1,4 +1,4 @@
-﻿// SysPara.h: interface for the CSysPara class.
+// SysPara.h: interface for the CSysPara class.
 //
 //////////////////////////////////////////////////////////////////////
 

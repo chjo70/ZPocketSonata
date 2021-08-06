@@ -1,4 +1,4 @@
-﻿#ifndef CUSERCOLLECT_H
+#ifndef CUSERCOLLECT_H
 #define CUSERCOLLECT_H
 
 #include "../Include/system.h"

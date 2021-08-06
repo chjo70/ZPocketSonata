@@ -1,4 +1,4 @@
-﻿#ifndef _H_EL_EOBLIB_DATA_TYPE
+#ifndef _H_EL_EOBLIB_DATA_TYPE
 #define _H_EL_EOBLIB_DATA_TYPE
 #pragma once
 #include <vector>

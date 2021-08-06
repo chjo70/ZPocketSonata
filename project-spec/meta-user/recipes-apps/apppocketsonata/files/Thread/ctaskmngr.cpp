@@ -1,4 +1,4 @@
-﻿// CTaskMngr.cpp: implementation of the CTaskMngr class.
+// CTaskMngr.cpp: implementation of the CTaskMngr class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -39,7 +39,6 @@
 extern CSingleClient *g_pTheCCUSocket;
 
 #define _DEBUG_
-
 
 // 클래스 내의 정적 멤버변수 값 정의
 CTaskMngr* CTaskMngr::m_pInstance = nullptr;
@@ -252,7 +251,7 @@ void CTaskMngr::SetMode()
 
     enMode2 = enMode = (ENUM_MODE) m_pMsg->x.szData[0];
 
-    LOGMSG1( enDebug, "모드(%d)를 설정합니다.", enMode );
+    LOGMSG1( enDebug, "Set Mode[%d]", enMode );
 
     GP_SYSCFG->SetMode( enMode );
 
@@ -285,20 +284,29 @@ void CTaskMngr::SetMode()
  */
 void CTaskMngr::AnalysisStart()
 {
-    
 
     GP_SYSCFG->SetMode( enANAL_Mode );
 
     // 분석 관련 쓰레드를 삭제한다.
     CreateAllAnalysisThread();
-
-#ifndef _MSC_VER
+    
     time_t tiNow;
 
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
-    tiNow = (time_t) m_pMsg->x.szData[0];
+    tiNow = (time_t) m_pMsg->x.szData[0];    
+
+#ifdef _MSC_VER
+    
+#elif __VXWORKS__
+    struct timespec time_spec;
+    
+    time_spec.tv_sec = tiNow;
+    clock_settime( CLOCK_REALTIME, &time_spec );
+    
+#elif __linux__
     // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
     stime( & tiNow );
+    
 #endif
 
     SIGCOL->QMsgSnd( m_pMsg );
@@ -317,7 +325,7 @@ void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
 {
 
     if( bCreate == true ) {
-        LOGMSG1( enNormal, "분석 관련 쓰레드를 구동하여 분석을 준비합니다.[%d].", bCreate );
+        LOGMSG1( enNormal, "Create the All Analysis Thread...[%d].", bCreate );
         LOGMSG( enNormal, "" );
 
         g_AnalLoop = true;
@@ -375,8 +383,13 @@ ENUM_BoardID CTaskMngr::GetBoardID()
     if( g_enBoardId == enPRC_Unknown ) {
         char *pEnv=getenv( "DESKTOP_SESSION" );
 
-        if( strcmp( pEnv, "ubuntu" ) == 0 ) {
-            enBoardID = enMaster;
+        if( pEnv != NULL ) {
+            if( strcmp( pEnv, "ubuntu" ) == 0 ) {
+                enBoardID = enMaster;
+            }
+            else {
+                enBoardID = enPRC1;
+            }
         }
         else {
             enBoardID = enPRC1;
@@ -571,7 +584,7 @@ void CTaskMngr::InsertIPL( int iIndex )
 {
 #ifdef _SQLITE_
     STR_IPL *pstrIPL;
-    char szDate[100];
+    char szDate[100]={0};
 
     int iRadarIndex, iRadarModeIndex=0;
 
@@ -583,8 +596,8 @@ void CTaskMngr::InsertIPL( int iIndex )
     try {
         Kompex::SQLiteStatement stmt( m_pDatabase );
 
-        if( ( iRadarIndex = IsThrereELNOT( pstrIPL->elintNot ) ) >= 0 && false ) {
-
+        iRadarIndex = IsThrereELNOT( pstrIPL->elintNot );
+        if( iRadarIndex >= 0 && false ) {
             // DeleteIPL( pstrIPL->elintNot );
             sprintf( m_szSQLString, "UPDATE RADAR SET PRIORITY='%d', DATE_LAST_UPDATED='%s' WHERE RADAR_INDEX='%d'" , pstrIPL->thrLev, szDate, iRadarIndex );
             stmt.SqlStatement( m_szSQLString );
@@ -710,16 +723,16 @@ void CTaskMngr::ReqAudioParam()
  */
 void CTaskMngr::BandEnable()
 {
-    char buffer[100];
+    //char buffer[100];
 
     STR_BAND_ENABLE *pstrBandEnable;
 
     pstrBandEnable = ( STR_BAND_ENABLE * ) GetRecvData();
 
     if( pstrBandEnable->iBand != 0 ) {
-        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
 
-        LOGMSG2( enNormal, "대역 [%s]을 설정[%d] 합니다." , buffer, pstrBandEnable->iOnOff );
+        LOGMSG2( enNormal, "대역[%d]을 설정[%d] 합니다." , pstrBandEnable->iBand, pstrBandEnable->iOnOff );
     }
     else {
         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
@@ -732,16 +745,16 @@ void CTaskMngr::BandEnable()
  */
 void CTaskMngr::FMOPThreshold()
 {
-    char buffer[100];
+    //char buffer[100];
 
     STR_FMOP_THRESHOLD *pstrBandEnable;
 
     pstrBandEnable = ( STR_FMOP_THRESHOLD * ) GetRecvData();
 
     if( pstrBandEnable->iBand != 0 ) {
-        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
 
-        LOGMSG2( enNormal, "대역 [%s]을 FMOP 임계값[%d]을 설정 합니다." , buffer, pstrBandEnable->iThreshold );
+        LOGMSG2( enNormal, "대역[%d]을 FMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
     }
     else {
         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
@@ -753,16 +766,16 @@ void CTaskMngr::FMOPThreshold()
  */
 void CTaskMngr::PMOPThreshold()
 {
-    char buffer[100];
+    //char buffer[100];
 
     STR_PMOP_THRESHOLD *pstrBandEnable;
 
     pstrBandEnable = ( STR_PMOP_THRESHOLD * ) GetRecvData();
 
     if( pstrBandEnable->iBand != 0 ) {
-        CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
 
-        LOGMSG2( enNormal, "대역 [%s]을 PMOP 임계값[%d]을 설정 합니다." , buffer, pstrBandEnable->iThreshold );
+        LOGMSG2( enNormal, "대역[%d]을 PMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
     }
     else {
         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
@@ -774,7 +787,7 @@ void CTaskMngr::PMOPThreshold()
  */
 void CTaskMngr::RxThreshold()
 {
-    char buffer[100];
+    //char buffer[100];
 
     STR_RX_THRESHOLD *pstrRxThreshold;
 
@@ -789,7 +802,7 @@ void CTaskMngr::RxThreshold()
         CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
 #endif
 
-        LOGMSG3( enNormal, "대역 [%s]을 설정[Cor:%d/Mag:%d] 합니다." , buffer, pstrRxThreshold->uiCorThreshold, pstrRxThreshold->uiMagThreshold );
+        LOGMSG3( enNormal, "대역 [%d]을 설정[Cor:%d/Mag:%d] 합니다." , pstrRxThreshold->iBand, pstrRxThreshold->uiCorThreshold, pstrRxThreshold->uiMagThreshold );
     }
     else {
         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );

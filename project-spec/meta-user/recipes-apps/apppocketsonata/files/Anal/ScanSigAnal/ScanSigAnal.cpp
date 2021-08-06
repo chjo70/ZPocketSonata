@@ -11,7 +11,7 @@
 #include "ScanSigAnal.h"
 
 // CSColPdw *theSAPColPdw;
-CScanSigAnal *theScanSigAnal;
+//CScanSigAnal *theScanSigAnal;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -26,10 +26,10 @@ CScanSigAnal *theScanSigAnal;
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-16 11:00:59
 //
-void GetScanRes( unsigned int *pScanType, float *pScanPrd )
-{
-	theScanSigAnal->GetScanRes( pScanType, pScanPrd );
-}
+// void GetScanRes( unsigned int *pScanType, float *pScanPrd )
+// {
+// 	theScanSigAnal->GetScanRes( pScanType, pScanPrd );
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -40,23 +40,23 @@ void GetScanRes( unsigned int *pScanType, float *pScanPrd )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-13 16:53:19
 //
-UINT ExtPul( int noEMT, UINT noCh ) {
-
-	printf( "\n **************************************************************************" );
-
-	// 변수 초기화
-	theScanSigAnal->ScanExtractPulseInit( noEMT, noCh );
-
-	// 펄스열 추출
-    //theScanSigAnal->ExtractPulse();
-	int count=theScanSigAnal->GetCoScanPulse();
-	printf( "\n 스캔 펄스열 추출: %3d 번, %2d 채널, %d 개" , noEMT, noCh, count );
-
-	printf( "\n **************************************************************************" );
-	printf( "\n" );
-	return count;
-
-}
+// UINT ExtPul( int noEMT, UINT noCh ) {
+// 
+// 	printf( "\n **************************************************************************" );
+// 
+// 	// 변수 초기화
+// 	theScanSigAnal->ScanExtractPulseInit( noEMT, noCh );
+// 
+// 	// 펄스열 추출
+//     //theScanSigAnal->ExtractPulse();
+// 	int count=theScanSigAnal->GetCoScanPulse();
+// 	printf( "\n 스캔 펄스열 추출: %3d 번, %2d 채널, %d 개" , noEMT, noCh, count );
+// 
+// 	printf( "\n **************************************************************************" );
+// 	printf( "\n" );
+// 	return count;
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -67,24 +67,24 @@ UINT ExtPul( int noEMT, UINT noCh ) {
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-15 16:01:18
 //
-int ScanSigAnal( int noEMT, int noCh ) {
-
-	printf( "\n **************************************************************************" );
-
-	// 변수 초기화
-	theScanSigAnal->ScanSigAnalInit( noEMT, noCh );
-
-	printf( "\n 스캔 분석 시작: %3d 번, %2d 채널, %d 개" , noEMT, noCh, theScanSigAnal->GetCoScanPulse() );
-
-	// 스캔 분석
-    //int nResult=theScanSigAnal->AnalStart( noEMT, noCh );
-
-	printf( "\n **************************************************************************" );
-	printf( "\n" );
-
-    return 0;
-
-}
+// int ScanSigAnal( int noEMT, int noCh ) {
+// 
+// 	printf( "\n **************************************************************************" );
+// 
+// 	// 변수 초기화
+// 	theScanSigAnal->ScanSigAnalInit( noEMT, noCh );
+// 
+// 	printf( "\n 스캔 분석 시작: %3d 번, %2d 채널, %d 개" , noEMT, noCh, theScanSigAnal->GetCoScanPulse() );
+// 
+// 	// 스캔 분석
+//     //int nResult=theScanSigAnal->AnalStart( noEMT, noCh );
+// 
+// 	printf( "\n **************************************************************************" );
+// 	printf( "\n" );
+// 
+//     return 0;
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////
 //

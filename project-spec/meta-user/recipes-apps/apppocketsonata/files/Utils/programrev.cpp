@@ -1,4 +1,4 @@
-﻿/****************************************************************************************
+/****************************************************************************************
  파 일 명 : programrev.c
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : RSA 분석 표시용 컴파일 일자 등록 프로그램
@@ -84,6 +84,7 @@ void _ShowProgramTitle( void )
 
     char szDate[LOG_DIR_SIZE];
 
+#ifdef _POCKETSONATA_
     LOGMSG( enNormal, "--------------------------------------------------------------------------" );
     LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
     LOGMSG( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK    EE         TT" );
@@ -92,21 +93,31 @@ void _ShowProgramTitle( void )
     LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT  Ver %s" , PROGRAM_VERSION );
     LOGMSG( enNormal, "---------------------------------------------------------------------------" );
 
+#elif _ELINT_
+
+#endif
+
     timer = time( NULL );
     t = localtime(&timer);
-    sprintf( szDate, "%d/%d/%d %2d:%2d:%2d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
+    if( t != NULL ) {
+        sprintf( szDate, "%d/%d/%d %2d:%2d:%2d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
 
-    LOGMSG3( enNormal, "[%s:%s] 프로그램을 (%s)에 구동합니다.", PROGRAM_NAME, PROGRAM_VERSION, szDate );
+        LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, szDate );
+    }
+    else {
+        LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, "INVALID_DATE" );
+    }
 
-    LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-    LOGMSG2( enNormal, "CEDEOB 데이터베이스 파일 위치는 [%s]이고 파일명은 [%s]입니다.", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
+    LOGMSG2( enNormal, "The CED/EOB Database is positioned at [%s] and the file name is [%s].", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+    LOGMSG2( enNormal, "The Emitter Database is positioned at [%s] and the file name is [%s].", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
 
-    LOGMSG2( enNormal, "INI 파일 위치는 [%s]이고 파일명은 [%s]입니다.", INI_FOLDER, INI_FILENAME );
+    LOGMSG2( enNormal, "The INI is positioned at [%s], and the file name is [%s].", INI_FOLDER, INI_FILENAME );
 
     //LOGMSG( enLineFeed, "" );
     LOG_LINEFEED;
 
 #ifdef _POCKETSONATA_
+#elif _ELINT_
 #else
 	if( gnoPrc == prc_CIP ) {
 #ifndef _TESTBIT_

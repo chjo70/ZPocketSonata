@@ -1,4 +1,4 @@
-﻿// AnalPRI.h: interface for the CAnalPRI class.
+// AnalPRI.h: interface for the CAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@ private:
     //##ModelId=452B0C57005D
     UINT m_SamplingTime;
     //##ModelId=452B0C570067
-    int m_CoSample;
+    unsigned int m_CoSample;
     //##ModelId=452B0C570071
     _TOA *m_pSampleToa;
     //##ModelId=452B0C57007C
@@ -85,7 +85,7 @@ private:
     //##ModelId=452B0C5700CC
     float *m_pAcf;
     //##ModelId=452B0C5700D6
-    int m_CoAcf;
+    unsigned int m_CoAcf;
 
     //##ModelId=452B0C5700E0
     _TOA *m_pCanPeak;
@@ -107,7 +107,7 @@ private:
     //##ModelId=452B0C570112
     _TOA *m_pToaAcf;
     //##ModelId=452B0C570126
-    int m_coCanPeak;
+    unsigned int m_coCanPeak;
     //##ModelId=452B0C570130
     _TOA m_nMaxPeak;
 
