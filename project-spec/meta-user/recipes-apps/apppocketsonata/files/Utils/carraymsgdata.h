@@ -1,9 +1,8 @@
 #ifndef CARRAYMSGDATA_H
 #define CARRAYMSGDATA_H
 
-#include "../Include/system.h"
 
-#define SIZE_OF_MSGDATA_ARRAY           (128)
+#define SIZE_OF_MSGDATA_ARRAY           (32)            // 128 -> 64
 
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)
@@ -24,6 +23,8 @@ public:
 
     int PushLanData( void *pData, unsigned int uiLength );
     void PopLanData( void *pData, int iIndex, unsigned int uiLength );
+
+    virtual void Sleep( int mssleep )=0;
 
 private:
     void Alloc();

@@ -21,6 +21,9 @@
 #include <exception>
 #include <sstream>
 #include <string.h>
+#include <stddef.h>
+
+#include <iosfwd>
 
 #include "KompexSQLiteStatement.h"
 #include "KompexSQLiteDatabase.h"
@@ -50,8 +53,10 @@ void SQLiteStatement::Prepare(const char *sqlStatement)
 	// If the nByte argument is less than zero, 
 	// then zSql is read up to the first zero terminator. 
 
-	if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK)
+	if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK) {
+        //printf( " m_szSQLString[%s]" , sqlStatement );
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
 
 	if(!mStatement)
 		KOMPEX_EXCEPT("Prepare() SQL statement failed", -1);
@@ -125,32 +130,27 @@ bool SQLiteStatement::FetchRow() const
 
     bool bRet=false;
 
-	switch(rc)
-	{
-		case SQLITE_BUSY:
-            bRet = false;
-            KOMPEX_EXCEPT("FetchRow() SQLITE_BUSY", SQLITE_BUSY);			
-            break;
-		case SQLITE_DONE:
-			bRet = false;
-            break;
+    if( rc == SQLITE_BUSY ) {
+        bRet = false;
+        KOMPEX_EXCEPT("FetchRow() SQLITE_BUSY", SQLITE_BUSY);			
+    }
+    else if( rc == SQLITE_DONE ) {
+        bRet = false;
+    }
+    else if( rc == SQLITE_ROW ) {
+        bRet = true;
+    }
+    else if( rc == SQLITE_ERROR ) {
+        bRet = false;
+        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), SQLITE_ERROR);			
+    }
+    else if( rc == SQLITE_MISUSE ) {
+        bRet = false;
+        KOMPEX_EXCEPT("FetchRow() SQLITE_MISUSE", SQLITE_MISUSE);			
+    }
+    else {
 
-		case SQLITE_ROW:
-			bRet = true;
-            break;
-
-		case SQLITE_ERROR:
-            bRet = false;
-			KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), SQLITE_ERROR);			
-            break;
-		case SQLITE_MISUSE:
-            bRet = false;
-			KOMPEX_EXCEPT("FetchRow() SQLITE_MISUSE", SQLITE_MISUSE);			
-            break;
-
-        default:
-            break;
-	}
+    }
 
 	return bRet;
 }
@@ -576,7 +576,7 @@ void SQLiteStatement::BindString64(int column, const char *string, uint64 byteLe
     }
     else if( iSql == SQLITE_TOOBIG ) {
         KOMPEX_EXCEPT("SQLITE_TOOBIG - string was larger than stated in byteLength or exceeded the default maximum length", -1);
-        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+        //KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
     }
     else {
         KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
@@ -834,9 +834,9 @@ void SQLiteStatement::SecureTransaction(const std::string sql)
 
 void SQLiteStatement::SecureTransaction(const wchar_t *sql) 
 {
-	wchar_t *buffer = new wchar_t[wcslen(sql) + 1];
-	wcscpy(buffer, sql);
-	mTransactionSQL16[mTransactionID++] = std::make_pair(buffer, true);
+	//wchar_t *buffer = new wchar_t[wcslen(sql) + 1];
+	//wcscpy(buffer, sql);
+	//mTransactionSQL16[mTransactionID++] = std::make_pair(buffer, true);
 }
 
 //------------------------------------------------------------------------------------
@@ -965,9 +965,9 @@ wchar_t *SQLiteStatement::SqlResultString16(wchar_t *defaultReturnValue)
 	else
 		queryResult = SQLiteStatement::GetColumnString16(0);
 	
-	std::wstringstream wstrStream;
+	std::stringstream wstrStream;
 	wstrStream << queryResult;
-	std::wstring result = wstrStream.str();
+	std::string result = wstrStream.str();
 
 	wchar_t *buffer = new wchar_t[result.length() + 1];
 	memcpy(buffer, result.c_str(), result.length() + 1);

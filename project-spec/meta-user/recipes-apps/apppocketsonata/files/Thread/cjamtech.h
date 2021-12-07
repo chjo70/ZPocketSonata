@@ -4,7 +4,7 @@
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 
 class CJamTech : public CThread

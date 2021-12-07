@@ -244,6 +244,9 @@ Queue<T>::Queue(int nElems)
 // 			printf( "out of memory" );
 // 		}
 	}
+    else {
+        v = NULL;
+    }
 
 }
 
@@ -261,6 +264,7 @@ void Queue<T>::Init(unsigned int nElemt)
 
 	if( v != NULL ) {
 		delete[] v;
+        v = NULL;
 	}
 	nelems = (int) nElemt + 1;
 	if( nelems < MAX_OF_QUEUE_SIZE ) {
@@ -301,7 +305,7 @@ template <class T>
 bool Queue<T>::Push( T element )
 {
 	bool bRet=false;
-	if ( nelems != 0 && (tail+1) % nelems != head) {
+	if ( v != NULL && nelems != 0 && (tail+1) % nelems != head) {
 		v[tail++]=element;
 		tail %= nelems;
 		bRet = true;
@@ -316,7 +320,7 @@ T *Queue<T>::PushAt()
 {
 	T *p=NULL;
 
-	if ( nelems != 0 && (tail+1) % nelems != head) {
+	if ( v != NULL && nelems != 0 && (tail+1) % nelems != head) {
 		p = & v[tail++];
 		tail %= nelems;
 	}
@@ -346,7 +350,7 @@ bool Queue<T>::Pop( T *element )
 {
 	bool bRet=false;
 	if( tail != head && nelems != 0 ) {
-		if( element != NULL ) {
+		if( v != NULL && element != NULL ) {
 			*element = v[head];
 		}
 		// v[head] = -1;
@@ -354,6 +358,9 @@ bool Queue<T>::Pop( T *element )
 		head %= nelems;
 		bRet = true;
 	}
+    else {
+        //memset( element, 0, sizeof(T) );
+    }
 
 	return bRet;
 }

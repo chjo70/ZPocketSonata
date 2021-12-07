@@ -1,4 +1,4 @@
-/*
+﻿/*
     This file is part of Kompex SQLite Wrapper.
 	Copyright (c) 2008-2017 Sven Broeske
 

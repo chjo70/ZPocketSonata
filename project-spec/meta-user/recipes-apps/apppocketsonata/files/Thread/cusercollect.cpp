@@ -24,15 +24,17 @@
 
 #include "csignalcollect.h"
 
-#include "../Utils/clog.h"
 #include "../Utils/chwio.h"
 #include "../Utils/DMA/dma.h"
 #include "../Utils/ccommonutils.h"
 
-#include "../System/csysconfig.h"
+//#include "../System/csysconfig.h"
 
-// 클래스 내의 정적 멤버변수 값 정의
-CUserCollect* CUserCollect::m_pInstance = nullptr;
+#include "../Include/globals.h"
+
+#ifndef __ZYNQ_BOARD__
+#define _SIM_USER_COLLECT_
+#endif
 
 CUserCollect::CUserCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -127,12 +129,18 @@ void CUserCollect::_routine()
                 SetConfig();
                 break;
 
-            case enTHREAD_REQ_STOP :
-                Stop();
-                break;
+//             case enTHREAD_REQ_STOP :
+//                 Stop();
+//                 break;
+
 
             case enTHREAD_REQ_COLSTART :
                 ColStart();
+                break;
+
+            case enTHREAD_REQ_COLEND :
+                TRACE( "\nenTHREAD_REQ_COLEND.........................");
+                Stop();
                 break;
 
             case enTHREAD_REQ_RAWDATA :
@@ -204,14 +212,14 @@ void CUserCollect::Stop()
  */
 void CUserCollect::ColStart()
 {
-    xuio_t *s_uio;
+    xuio_t *pUIO;
 
     pdw_reg_t s_pdw_reg_t;
 
     uint32_t DataCount = PDW_GATHER_SIZE;
     uint32_t DumpLen;
 
-    s_uio = (xuio_t*) CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
+    pUIO = CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
 
     DumpLen = sizeof(uint8_t) * DataCount;
 
@@ -224,7 +232,6 @@ void CUserCollect::ColStart()
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
 #endif
 
-
     // 하드웨어로 부터 PDW 데이터를 수집합니다.
     xmem_t *pMem = CHWIO::mem_get_mem(DMA_1_MEM);
 
@@ -236,44 +243,65 @@ void CUserCollect::ColStart()
     memset( & m_strResColStart, 0, sizeof(m_strResColStart) );
 
     NextCollectHistogram();
+    
+    if( true == CHWIO::PendingFromInterrupt(pUIO) ) {
+    		
+#ifdef _SIM_USER_COLLECT_
+        CThread::Sleep( 1000 );
 
-    if( true == CHWIO::PendingFromInterrupt(s_uio) ) {
-        printf( " *********************************s_uio->physical = 0x%lx\n", s_uio->physical );
-        switch( s_uio->physical ) {
-            case UIO_DMA_1_ADDR :
-#ifdef __ZYNQ_BOARD__
-                CHWIO::ClearInterrupt(s_uio);
 #endif
 
-                m_strResColStart.uiBoardID = GP_SYSCFG->GetBoardID();
+        //pUIO->ullPhysical = UIO_DMA_1_ADDR;
+        //pUIO->size = 0x1000;
+
+#ifdef _MFC_VER
+        //TRACE( " *********************************pUIO->physical = %I64u\n", pUIO->ullPhysical );
+#else
+        //printf( " *********************************pUIO[0x%p], iFd[%d], uLLPhysical[%llu], Dev[%s], Size[%d]\n", pUIO, pUIO->iFd, pUIO->ullPhysical, pUIO->pszDev, sizeof(xuio_t) );
+#endif
+      
+        switch( pUIO->ullPhysical ) {
+            case UIO_DMA_1_ADDR :
+#ifdef __ZYNQ_BOARD__
+                CHWIO::ClearInterrupt(pUIO);
+#endif
+
+                m_strResColStart.uiBoardID = g_pTheSysConfig->GetBoardID();
+
+                // 실제 PDW 수집한 개수는 현재는 그냥 100 으로 한다.
                 m_strResColStart.uiCoPulseNum = PDW_GATHER_SIZE / sizeof(DMAPDW);
 
-                if( s_uio->fd > 0 ) {
+                if( pUIO->iFd > 0 ) {
                     memcpy( m_pstrDMAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
-                    m_uiCoPDW = NUM_OF_PDW;
+                    //m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
+                	Sleep( 5 );
                     MakeSIMPDWData();
                 }
 
                 MakeCollectHistogram();
 
-                if( GP_SYSCFG->GetMode() == enANAL_Mode ) {
+                // ES 모드일때만 모의 데이터를 수집 관리에 밀어 넣는다.
+                if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
                     STR_PDWFILE_HEADER *pPDWFileHeader;
+
+                    // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
                     pPDWFileHeader = ( STR_PDWFILE_HEADER * ) m_pstrDMAPDWWithFileHeader;
                     memset( pPDWFileHeader, 0, sizeof(STR_PDWFILE_HEADER) );
                     pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
                     pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
-                    SIGCOL->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), NULL, 0, GetThreadName() );
+                    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), NULL, 0, GetThreadName() );
                 }
                 break;
 
             default :
 #ifdef __ZYNQ_BOARD__
-                CHWIO::ClearInterrupt(s_uio);
+                CHWIO::ClearInterrupt(pUIO);
 #endif
                 //ClearInterrupt(s_uio);
+                //printf( "\n AAAA" );
                 break;
         }
 
@@ -282,11 +310,12 @@ void CUserCollect::ColStart()
 #endif
     }
 
-    if( GP_SYSCFG->GetMode() != enANAL_ES_MODE ) {
-        CCommonUtils::SendLan( Mres_ColStart, & m_strResColStart, sizeof(STR_RES_COL_START) );
+    if( g_pTheSysConfig->GetMode() & enANAL_Mode ) {
+        g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
     }
     else {
-        UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
+        WhereIs;
+        //CCommonUtils::SendLan( Mres_ColStart, & m_strResColStart, sizeof(STR_RES_COL_START) );        
     }
 
     ++ m_uiColStart;
@@ -294,7 +323,13 @@ void CUserCollect::ColStart()
 }
 
 /**
- * @brief CUserCollect::SendRawData
+ * @brief     SendRawData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-10, 17:05
+ * @warning
  */
 void CUserCollect::SendRawData()
 {
@@ -303,16 +338,18 @@ void CUserCollect::SendRawData()
 
     LOGMSG1( enDebug, " 수집한 PDW [%d] 개를 전송합니다." , m_strResColStart.uiCoPulseNum );
 
-    pDMAPDW = m_pstrDMAPDW;
+    //pDMAPDW = m_pstrDMAPDW;
     for( ui=0 ; ui < m_strResColStart.uiCoPulseNum ; ui += PDW_BLOCK ) {
+        pDMAPDW = & m_pstrDMAPDW[ui];
         if( m_strResColStart.uiCoPulseNum - ui >= PDW_BLOCK ) {
             CCommonUtils::SendLan( enRES_RAWDATA, pDMAPDW, sizeof(UDRCPDW)*PDW_BLOCK );
         }
         else {
             CCommonUtils::SendLan( enRES_RAWDATA, pDMAPDW, sizeof(UDRCPDW)*(m_strResColStart.uiCoPulseNum-ui) );
         }
-        pDMAPDW += PDW_BLOCK;
+        //pDMAPDW += PDW_BLOCK;
     }
+
 }
 
 /**
@@ -326,7 +363,7 @@ void CUserCollect::SendRawData()
  */
 void CUserCollect::MakeSIMPDWData()
 {
-    unsigned int i;
+    unsigned int i, uiCoPDW;
 
     unsigned int randomDOA, randomPA, randomPW, randomFreq, randomCh;
 
@@ -336,16 +373,18 @@ void CUserCollect::MakeSIMPDWData()
 
     int iDOA;
 
-    m_uiCoPDW = m_strResColStart.uiCoPulseNum;
+    TRACE( "\nMakeSIMPDWData.." );
+
+    uiCoPDW = m_strResColStart.uiCoPulseNum;
 
     iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
 
-    for( i=0 ; i < m_uiCoPDW; ++i ) {
+    for( i=0 ; i < uiCoPDW; ++i ) {
         randomDOA = iDOA + ( rand() % 40 ) - 20;
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 1000 ) + 20000;
 
-        if( m_uiCoSim % 20 == 0 ) {
+        if( m_uiCoSim % 20 == 0 || true ) {
             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3585.0 );
             //randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
             //randomCh = 1;
@@ -355,7 +394,10 @@ void CUserCollect::MakeSIMPDWData()
         }
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
-        m_ullTOA += 0x2000;
+        if( i % 2 || true )
+            m_ullTOA += 0x2000;
+        else
+            m_ullTOA += 0x1500;
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 
@@ -412,7 +454,7 @@ void CUserCollect::MakeCollectHistogram()
     pColHisto = & m_ucColHisto[m_iColHistoTime][0];
 
     pDMAPDW = m_pstrDMAPDW;
-    for( ui=0; ui < m_uiCoPDW ; ++ui ) {
+    for( ui=0; ui < m_strResColStart.uiCoPulseNum ; ++ui ) {
         uiFreq = ( pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
         iCh = pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
         fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
@@ -440,7 +482,7 @@ void CUserCollect::MakeCollectHistogram()
  */
 void CUserCollect::NextCollectHistogram()
 {
-    //unsigned char (*pColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
+    //unsigned char (*pColHisto)[COLHISTO_CELLS] = g_pTheSysConfig->GetColHisto();
     m_iColHistoTime = m_iColHistoTime >= (COLHISTO_TIME-1) ? 0 : m_iColHistoTime+1;
     memset( & m_ucColHisto[m_iColHistoTime][0], 0, sizeof(char)*COLHISTO_CELLS );
 
@@ -455,7 +497,7 @@ void CUserCollect::MakeSharedSpectrumData()
     int i, iMax;
     unsigned char *pColHisto;
 
-    unsigned char (*pSharedColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
+    unsigned char (*pSharedColHisto)[COLHISTO_CELLS] = g_pTheSysConfig->GetColHisto();
 
     pColHisto = & m_ucColHisto[m_iColHistoTime][0];
 
@@ -465,6 +507,6 @@ void CUserCollect::MakeSharedSpectrumData()
         pSharedColHisto[0][i] = IDIV( pColHisto[i] * 100, iMax );
     }
 
-    GP_SYSCFG->SetColHisto();
+    g_pTheSysConfig->SetColHisto();
 
 }

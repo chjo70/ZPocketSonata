@@ -1,7 +1,7 @@
 #ifndef CCOMMONUTILS_H
 #define CCOMMONUTILS_H
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #ifdef _MSC_VER
@@ -28,6 +28,9 @@ public:
 
     static void AllSwapData32( void *pData, int iLength );
     static void swapByteOrder( unsigned int& ui );
+    static void swapByteOrder(double & d);
+    static void swapByteOrder(double *p, int iSize );
+    static void swapByteOrder( unsigned short & us);
 
     static ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh );
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 자체점검 Process : 자체점검을 처리하는 쓰레드 입니다.
  *
  * */
@@ -6,20 +6,18 @@
 
 #include "stdafx.h"
 
-
-
 #include "curbit.h"
-#include "../Utils/clog.h"
+#include "ccgi.h"
+//#include "../Utils/clog.h"
 
 #include "../Utils/chwio.h"
 //#include "../Test/hw_interface.h"
 #include "../Utils/ccommonutils.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
-
-// 클래스 내의 정적 멤버변수 값 정의
-CUrBit* CUrBit::m_pInstance = nullptr;
 
 /**
  * @brief CUrBit::CUrBit
@@ -72,8 +70,8 @@ void CUrBit::_routine()
 
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            //perror( "error ");
-            break;
+            perror( "error ");
+            //break;
         }
 
         // CGI 실행 플레그 설정
@@ -87,7 +85,7 @@ void CUrBit::_routine()
         switch( m_pMsg->uiOpCode ) {
             case enCGI_REQ_IBIT :
             case enTHREAD_REQ_IBIT :
-                LOGMSG1( enNormal, "IBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
+                LOGMSG( enNormal, "IBIT를 수행합니다 !!" );
                 RunIBit( bCGIRunning );
                 break;
 
@@ -105,7 +103,7 @@ void CUrBit::_routine()
             case enCGI_REQ_UBIT :
             case enTHREAD_REQ_UBIT :            
                 LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
-                RunCBit( bCGIRunning );
+                RunUBit( bCGIRunning );
                 break;
 
             case enTHREAD_REQ_SHUTDOWN :
@@ -179,16 +177,16 @@ void CUrBit::InitHW()
 
 #endif
 
-    {
-        _TOA sToa;
-        UZPOCKETPDW s_pdw_reg_t;
-
-        s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x123B167;
-        s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = 0x3A60;
-        sToa	= ( (_TOA) s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16) | s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L;
-
-        printf(">> toa		= %015.3f[ms](0x%llX)(0x%X:0x%X)\n", sToa*PDW_TIME_RES/1000., sToa, s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H, s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L  ); //us
-    }
+//     {
+//         _TOA sToa;
+//         UZPOCKETPDW s_pdw_reg_t;
+// 
+//         s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = 0x123B167;
+//         s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = 0x3A60;
+//         sToa	= ( (_TOA) s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16) | s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L;
+// 
+//         printf(">> toa		= %015.3f[ms](0x%llX)(0x%X:0x%X)\n", sToa*PDW_TIME_RES/1000., sToa, s_pdw_reg_t.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H, s_pdw_reg_t.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L  ); //us
+//     }
 
 }
 
@@ -207,12 +205,17 @@ void CUrBit::InitIBit()
  */
 void CUrBit::RunIBit( bool bCGIRunning )
 {
-    LOGMSG( enDebug, "비트 결과는 입니다." );
+
     sleep( 1 );
 
     if( bCGIRunning == true ) {
-        printf( "IBIT 결과는 정상 입니다." );
-        QMsgSnd( _MSG_CGI_KEY, enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+        LOGMSG( enDebug, "IBIT 결과는 정상 입니다." );
+#ifdef __linux__  
+        QMsgSnd( CGI->GetKeyId(), enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+#else
+		printf( "\n QMsgSnd..." );
+#endif
+
     }
     else {
 #ifndef _CGI_LIST_
@@ -226,15 +229,13 @@ void CUrBit::RunIBit( bool bCGIRunning )
  */
 void CUrBit::RunCBit( bool bCGIRunning )
 {
-    LOGMSG( enDebug, "비트 결과는 입니다." );
+    sleep( 2 );
 
     //
     memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
-    sleep( 2 );
-
 
     if( bCGIRunning == true ) {
-        printf( "CBIT 결과는 정상 입니다." );
+        LOGMSG( enDebug, "CBIT 결과는 정상 입니다." );
     }
     else {
 #ifndef _CGI_LIST_
@@ -250,12 +251,11 @@ void CUrBit::RunCBit( bool bCGIRunning )
 void CUrBit::RunUBit( bool bCGIRunning )
 {
     //
-    memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
     sleep( 10 );
 
-    LOGMSG( enDebug, "비트 결과는 입니다." );
-
+    memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
     if( bCGIRunning == true ) {
+        LOGMSG( enDebug, "UBIT 결과는 정상 입니다." );
 
     }
     else {

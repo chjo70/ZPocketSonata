@@ -1,7 +1,7 @@
 #ifndef CRECLAN_H
 #define CRECLAN_H
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 static char gszClassName[2][10] = { "RECZYNQ", "RECCCU" };
@@ -29,7 +29,7 @@ public:
 
 
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szClassName; }
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화

@@ -18,7 +18,7 @@
 //#include "../../Test/hw_interface.h"
 
 #define _INTSAFE_H_INCLUDED_
-#include <stdint.h>
+//#include <stdint.h>
 
 #ifndef _MSC_VER
 #include <stdbool.h>
@@ -181,7 +181,7 @@ bool dma_s2mm_start	(dma_dev_t dev, xmem_t *dst, uint32_t length, bool wait_done
 bool dma_mm2s_cyclic(dma_dev_t dev, xmem_t *src, uint32_t length);
 bool dma_s2mm_cyclic(dma_dev_t dev, xmem_t *dst, uint32_t length);
 
-// 20.09.02 jykim sg 모드?�서 ?�터?�트 ?�리?? ?�정 ?�수 추�?
+// 20.09.02 jykim sg 모드?�서 ?�터?�트 ?�리?? ?�정 ?�수 추�?
 void dma_sg_s2mm_irq_enable(dma_dev_t dev);
 void dma_sg_s2mm_irq_clear(dma_dev_t dev);
 void dma_s2mm_irq_clear(dma_dev_t dev);

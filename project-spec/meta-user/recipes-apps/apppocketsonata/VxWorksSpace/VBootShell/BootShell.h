@@ -21,10 +21,22 @@
 
 
 // Ű���� ��ɾ�
-enum { DOWNLOAD_APP=0, WRITE_APP_FLASH, RUN_APP, INSTALL_WEB, DOWNLOAD_UTEST_PROG, WRITE_UTEST_PROG, RUN_UTEST_PROG, WRITE_BOOT_PROG, RUN_BOOT_PROG } ;
+enum { 
+	DOWNLOAD_APP=0, 
+	WRITE_APP_FLASH, 
+	RUN_APP, 
+	INSTALL_WEB, 
+	DOWNLOAD_UTEST_PROG, 
+	WRITE_UTEST_PROG, 
+	RUN_UTEST_PROG, 
+	WRITE_BOOT_PROG, 
+	RUN_BOOT_PROG,
+	
+	DEBUG_APP
+} ;
 
 // Ű���� Ÿ�� �ƿ� ������
-#define KEYBOARD_TIMEOUT					(3)
+#define KEYBOARD_TIMEOUT					(5)
 
 
 
@@ -41,10 +53,28 @@ enum { DOWNLOAD_APP=0, WRITE_APP_FLASH, RUN_APP, INSTALL_WEB, DOWNLOAD_UTEST_PRO
 
 //////////////////////////////////////////////////////////////////////
 // 파일 정의
-#define WEB_FILENAME				                ((char *) "Web.tar")
+#define WEB_FILENAME				                ((char *) "tftpboot.tar")
 #define WEB_FOLDER				                    ((char *) "Web")
 
+#define BLK_EMITTER_SQLITE_FILENAME					((char *) "emitter_blank.sqlite3")
+#define EMITTER_SQLITE_FILENAME						((char *) "emitter.sqlite3")
+#define SQLITE_FOLDER								((char *) "LIB")
+
+#define CEDEOB_SQLITE_FILENAME      				((char *) "cedeob.sqlite3")
+
+
+#define INI_FOLDER                  				((char *) "INI")
+#define INI_FILENAME                				((char *) "sysconfig.ini")
+
+#ifdef __VXWORKS__
+#if defined(__LP64__)
+#define APP_FILENAME				                ((char *) "VSIGA64.out")
+#else
 #define APP_FILENAME				                ((char *) "VSIGA.out")
+#endif
+#else
+#define APP_FILENAME				                ((char *) "VSIGA.out")
+#endif
 
 //////////////////////////////////////////////////////////////////////
 // 타스크명 정의
@@ -60,7 +90,7 @@ static int _tShell_priority;
 #ifdef INCLUDE_SHELL
 #define	GetCharX					taskPriorityGet( taskNameToId( (char *)"tShell0" ), & _tShell_priority );	\
 													taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 ); \
-													getchar();	\
+													// getchar();	\
 													taskPrioritySet( taskNameToId( (char *) "tShell0" ), _tShell_priority );
 #else
 #define GetCharX					getchar();

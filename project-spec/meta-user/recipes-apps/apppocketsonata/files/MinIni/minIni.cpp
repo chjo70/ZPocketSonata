@@ -33,6 +33,19 @@
 #endif
 
 #define MININI_IMPLEMENTATION
+
+#ifdef __VXWORKS__
+#include <stdint.h>
+#include <types/vxTypesOld.h>
+
+#define NDEBUG
+#define PORTABLE_STRNICMP
+
+#else
+
+#endif
+
+
 #include "minIni.h"
 #if defined NDEBUG
   #define assert(e)
@@ -188,6 +201,7 @@ static TCHAR *ini_strncpy(TCHAR *dest, const TCHAR *source, size_t maxlen, enum 
     break;
   default:
     assert(0);
+    break;
   } /* switch */
 
   return dest;
@@ -518,9 +532,9 @@ int ini_browse(INI_CALLBACK Callback, void *UserData, const TCHAR *Filename)
     lenSec = (int)_tcslen(LocalBuffer) + 1;
   for ( ;; ) {
     TCHAR *sp, *ep;
-    if (!ini_read(LocalBuffer + lenSec, INI_BUFFERSIZE - lenSec, &fp))
+    if (!ini_read( & LocalBuffer[lenSec], INI_BUFFERSIZE - lenSec, &fp))
       break;
-    sp = skipleading(LocalBuffer + lenSec);
+    sp = skipleading( & LocalBuffer[lenSec] );
     /* ignore empty strings and comments */
     if (*sp == '\0' || *sp == ';' || *sp == '#')
       continue;
@@ -528,7 +542,7 @@ int ini_browse(INI_CALLBACK Callback, void *UserData, const TCHAR *Filename)
     ep = _tcsrchr(sp, ']');
     if (*sp == '[' && ep != NULL) {
       *ep = '\0';
-      ini_strncpy(LocalBuffer, sp + 1, INI_BUFFERSIZE, QUOTE_NONE);
+      ini_strncpy(LocalBuffer, & sp[1],  INI_BUFFERSIZE, QUOTE_NONE);
       lenSec = (int)_tcslen(LocalBuffer) + 1;
       continue;
     } /* if */
@@ -540,8 +554,8 @@ int ini_browse(INI_CALLBACK Callback, void *UserData, const TCHAR *Filename)
       continue;               /* invalid line, ignore */
     *ep++ = '\0';             /* split the key from the value */
     striptrailing(sp);
-    ini_strncpy(LocalBuffer + lenSec, sp, INI_BUFFERSIZE - lenSec, QUOTE_NONE);
-    lenKey = (int)_tcslen(LocalBuffer + lenSec) + 1;
+    ini_strncpy( & LocalBuffer[lenSec], sp, INI_BUFFERSIZE - lenSec, QUOTE_NONE);
+    lenKey = (int)_tcslen( & LocalBuffer[lenSec] ) + 1;
     /* clean up the value */
     sp = skipleading(ep);
     sp = cleanstring(sp, &quotes);  /* Remove a trailing comment */
@@ -683,7 +697,7 @@ int ini_puts(const TCHAR *Section, const TCHAR *Key, const TCHAR *Value, const T
     /* If the .ini file doesn't exist, make a new file */
     if (Key != NULL && Value != NULL) {
       ini_openwrite(Filename, &wfp);
-      if ( wfp = NULL ) {
+      if ( wfp == NULL ) {
         return 0;
       }
       writesection(LocalBuffer, Section, &wfp);

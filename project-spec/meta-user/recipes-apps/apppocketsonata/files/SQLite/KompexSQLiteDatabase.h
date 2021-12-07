@@ -80,7 +80,7 @@ namespace Kompex
 		//! Overloaded constructor.\n
 		//! Opens a connection to a SQLite database file.
 		//! @param filename		Database filename (UTF-16)
-		SQLiteDatabase(const wchar_t *filename);
+		SQLiteDatabase(const char *filename);
 
 		//! Destructor
 		virtual ~SQLiteDatabase();
@@ -130,7 +130,7 @@ namespace Kompex
 		//! Opens a connection to a SQLite database file.\n
 		//! Shut down existing database handle, if one exist.
 		//! @param filename		Database filename (UTF-16)
-		void Open(const wchar_t *filename);
+		void Open(const char *filename);
 
 		//! Closes a connection to a SQLite database file.
 		void Close();
@@ -209,7 +209,7 @@ namespace Kompex
 		void SaveDatabaseFromMemoryToFile(const std::string &filename = "");
 		//! Takes a snapshot of a database which is located in memory and saves it to a database file.
 		//! @param filename		Filename for the new database file to which the snapshot will be saved.
-		void SaveDatabaseFromMemoryToFile(const wchar_t *filename);
+		void SaveDatabaseFromMemoryToFile(const char *filename);
 
 		//! This function returns the rowid of the most recent successful INSERT into the database.\n
 		//! If no successful INSERTs have ever occurred on that database connection, zero is returned.\n\n
@@ -307,7 +307,7 @@ namespace Kompex
 		//! Database filename UTF-8
 		std::string mDatabaseFilenameUtf8;
 		//! Database filename UTF-16
-		std::wstring mDatabaseFilenameUtf16;
+		//std::string mDatabaseFilenameUtf16;
 		//! Is the database currently stored in memory?
 		bool mIsMemoryDatabaseActive;
 

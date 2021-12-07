@@ -178,14 +178,14 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define TOTAL_FRQAOAPWBIN           (91000)			//(1024*4)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES                    UTOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_RES                    UTOAusCNV((_TOA) 10)								// ( 10 * _spOneMicrosec )
 
 #define	FREQ_NARR_MHZ               IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
 #define	FREQ_WIDE_MHZ               IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
 
 #define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define STABLE_MARGIN			    ITOAusCNV(1)
+#define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
 
 // 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 최대값으로 설정해야 한다.
 #define MAX_FREQ                    (0x200000)
@@ -321,6 +321,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 패턴 분석
 #define	CO_OFF_SAMPLING_THRESHOLD               (2)
 
+// 최소 ACF 개수
+#define MIN_CO_ACF                             (5)
+
 // PRI 추출 경계
 #define	MID_PRI_BAND							(7)			// 펄스열 추출 중간 밴드
 
@@ -450,7 +453,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////////
 // DWELL 펄스열 추출 관련 정의문
 #define _DWELL_PULSECOUNT				(3)				// 드웰당 펄스 개수
-#define _DWELL_DTOA_MARGIN              (7)				// 드웰 DTOA 마진
+#define _DWELL_DTOA_MARGIN              (_TOA) (7)				// 드웰 DTOA 마진
 
 #define _MAX_DWELL_LEVEL				(50)
 
@@ -471,7 +474,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _PROGRESS_STEP												(80)
 
 // 문자열 크기 정의
-#define _NULL_CHAR_													(1)
+#define _NULL_CHAR_													(2)
 
 #define _MAX_STRING_SIZE_											(50)
 
@@ -480,7 +483,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
 
 
-#define _MAX_RADARMODE_NAME_SIZE									(10)
+#define _MAX_RADARMODE_NAME_SIZE									(12)
 #define _MAX_PLATFORM_NAME_SIZE                                     (10)
 #define _MAX_THREAT_NAME_SIZE										(10)
 #define _MAX_SITE_NAME_SIZE											(10)
@@ -488,7 +491,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SIZE_OF_BENUMBER                                       (30)
 
 #define _MAX_MODECODE_STRING_SIZE_									(2+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_									(30+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_									(28+_NULL_CHAR_)
 #define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
 
 #define _MAX_FUNCTIONCODE_STRING_SIZE_								(4+_NULL_CHAR_)
@@ -504,7 +507,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
 #define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
 #define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_ELNOT_STRING_SIZE_										(10+_NULL_CHAR_)
+#define _MAX_ELNOT_STRING_SIZE_										(8+_NULL_CHAR_)
 #define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
 #define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 

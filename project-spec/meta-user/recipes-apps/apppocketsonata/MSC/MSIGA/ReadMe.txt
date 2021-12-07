@@ -10,6 +10,52 @@
 요약 설명이 포함되어 있습니다.
 
 
+1. 스캔 분석 을 시작하면 됩니다.
+
+
+2. 추적 분석시 실패 처리 확인  --- 수집 데이터에서 추적 펄스열을 못 찾았을떼 에러 처리 추가
+
+3.종료 처리 (대기 모드)
+
+
+
+
+#ifdef _MSC_VER
+
+
+
+
+# 고려 사항 
+1. 아래와 같이 레이더모드에서 주파수를 계산하는데서 오차를 고려해서 계산해야 함.
+	
+  해당 보드에 대해서 주파수 범위를 체크해야 되는지...
+
+void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData )
+{
+    UINT uiCollectTime;
+
+    SRadarMode *pRadarMode;
+
+    float fMinCollectTime=0;
+
+    if( pstrWindowCell != NULL ) {
+        pRadarMode = m_pIdentifyAlg->GetRadarMode( pABTData->iRadarModeIndex );
+
+        memset( pstrWindowCell, 0, sizeof(STR_WINDOWCELL) );
+
+        pstrWindowCell->uiABTID = pABTData->uiABTID;
+
+        // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
+        if( pRadarMode != NULL ) {
+            pstrWindowCell->strFreq.iLow = IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMin );				<---------------------- 주파수 범위가 벗어나면 하지 말아야 하는데...
+            pstrWindowCell->strFreq.iHgh = IFRQMhzCNV( pRadarMode->fRF_TypicalMax );
+
+            pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
+            pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
+
+            fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
+
+
 
 
 사전 정의문

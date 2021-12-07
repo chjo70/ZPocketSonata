@@ -6,9 +6,11 @@
 
 
 #include "cmultiserver.h"
-#include "../Utils/clog.h"
+
 
 #include "../Thread/creclan.h"
+
+#include "../Include/globals.h"
 
 /**
  * @brief CMultiServer::CMultiServer
@@ -27,7 +29,7 @@ CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread(
  */
 CMultiServer::~CMultiServer()
 {
-    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
     Free();
 }
@@ -116,7 +118,7 @@ void CMultiServer::_routine()
 
     STR_MessageData sndMsg;
 
-    LOG->LogMsg( enDebug, "[서버] ZYNQ 서버 소켓을 설정 합니다." );
+    LOGMSG( enDebug, "[서버] ZYNQ 서버 소켓을 설정 합니다." );
 
     //initialise all client_socket[] to 0 so not checked
     for( i=0 ; i < MAX_CLIENTS ; i++) {

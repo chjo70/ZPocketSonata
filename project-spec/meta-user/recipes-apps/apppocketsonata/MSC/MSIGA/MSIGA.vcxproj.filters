@@ -73,9 +73,6 @@
     <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
       <UniqueIdentifier>{a31ac47d-7f17-403c-8574-7b147471630f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Anal\EmitterMerge\LinearLS">
-      <UniqueIdentifier>{f4784d2a-c09a-485f-965a-175297c79d16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Anal\EmitterMerge\Matrix">
       <UniqueIdentifier>{8ea3b3df-872b-46d6-a31d-39acaf6d37b5}</UniqueIdentifier>
     </Filter>
@@ -441,9 +438,6 @@
     <ClInclude Include="..\..\files\Anal\OFP_Main.h">
       <Filter>소스 파일\Anal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\ParamMngr.h">
-      <Filter>소스 파일\Anal</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h">
       <Filter>소스 파일\SQLite</Filter>
     </ClInclude>
@@ -492,9 +486,6 @@
     <ClInclude Include="..\..\files\Include\defines.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Include\global.h">
-      <Filter>소스 파일\INCLUDE</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Include\struct.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
@@ -512,6 +503,15 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Include\SONATAPIP\ShuICD.h">
       <Filter>소스 파일\INCLUDE\SONATAPIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\globals.h">
+      <Filter>소스 파일\INCLUDE</Filter>
+    </ClInclude>
+    <ClInclude Include="FileTar.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Include\global.h">
+      <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -710,9 +710,6 @@
     <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp">
       <Filter>소스 파일\Anal\Collect\CollectBank</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\ParamMngr.cpp">
-      <Filter>소스 파일\Anal</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp">
       <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
@@ -724,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\SQLite\sqlite3.c">
       <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="FileTar.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

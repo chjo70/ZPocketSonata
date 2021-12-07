@@ -2,7 +2,7 @@
 #define CURBIT_H
 
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,8 +27,6 @@ private:
     STR_ES_CBIT m_stESCbit;
 
 public:
-    static CUrBit *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
 private:
@@ -48,10 +46,9 @@ private:
 public:
     CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUrBit();
-
-    THREAD_STANDARD_FUNCTION( CUrBit )
+    void Run( key_t key=IPC_PRIVATE );
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 };
-
-#define URBIT     CUrBit::GetInstance()
 
 #endif // CURBIT_H

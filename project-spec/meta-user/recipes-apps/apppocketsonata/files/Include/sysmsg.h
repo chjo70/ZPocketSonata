@@ -15,7 +15,12 @@
 
 #include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
-#pragma pack(push, 1)
+#if TOOL==diab 
+#pragma pack( 1 )
+#else
+#pragma pack( push, 1 )
+#endif
+
 
 struct STR_LAN_HEADER {
     unsigned int uiOpCode;
@@ -27,7 +32,7 @@ struct STR_LAN_HEADER {
 // 송신 메시지 정의
 
 enum ENUM_MODE {
-    enES_MODE=0,
+    enES_MODE=1,
     enEW_MODE,
     enREADY_MODE,
 
@@ -74,7 +79,11 @@ enum enREQ_MESSAGE {
     enREQ_SET_CONFIG = REQ_SET_CONFIG,
     enREQ_STOP = REQ_STOP,
     enREQ_COL_START = REQ_COL_START,
+    enREQ_COL_END = REQ_STOP,
     enREQ_RAWDATA = REQ_RAWDATA,
+
+    // 시스템 변수
+    enREQ_SYS=Mcnf_ReqSys,
 
 
     // 디버깅 용
@@ -102,20 +111,22 @@ enum enRES_MESSAGE {
     enRES_DUMP_LIST = enREQ_DUMP_LIST,
 
     // 기존 SONATA 체계 명령어
-    enRES_MODE = enREQ_MODE,
+    enRES_MODE = Esys_SetMode,
 
     enRES_IBIT = Mbit_ResultEsIbit,
     enRES_UBIT = Mbit_ResultEsUbit,
     enRES_CBIT = Mbit_ResultEsCbit,
     enRES_SBIT = Mbit_ResultEsSbit,
 
-    esAET_NEW_CCU = Maet_New_Ccu,
-    esAET_UPD_CCU = Maet_Update_Ccu,
-    esAET_LST_CCU = Maet_Lost_Ccu,
-    esAET_DEL_CCU = Maet_Delete_Ccu,
+    enAET_NEW_CCU = Maet_New_Ccu,
+    enAET_UPD_CCU = Maet_Update_Ccu,
+    enAET_LST_CCU = Maet_Lost_Ccu,
+    enAET_DEL_CCU = Maet_Delete_Ccu,
 
-    esIPL_VERSION = Mipl_Version,
-    esIPL_WRITESTATUS = Mipl_WriteStatus,
+    enIPL_VERSION = Mipl_Version,
+    enIPL_WRITESTATUS = Mipl_WriteStatus,
+
+    enRES_SETSYS = Ecnf_SetSys,
 
     esRES_SETCONFIG = Mres_SetConfig,
     enRES_COLSTART = Mres_ColStart,
@@ -240,8 +251,8 @@ struct STR_FMOP_THRESHOLD {
 
 struct STR_RX_THRESHOLD {
     int iBand;
-    unsigned int uiMagThreshold;
-    unsigned int uiCorThreshold;
+    int iThreshold;
+    //unsigned int uiCorThreshold;
 };
 
 typedef struct STR_FMOP_THRESHOLD STR_PMOP_THRESHOLD;
@@ -284,10 +295,15 @@ union UNI_LAN_DATA {
 
     // 모의 데이터 및 장치 시험용
     unsigned char szFile[_MAX_LANDATA];
+    SRxLOBData stLOBData[_MAX_LOBDATA];
 
 };
 
-#pragma pack(pop)
+#if TOOL==diab 
+#pragma pack( 4 )
+#else
+#pragma pack( pop )
+#endif
 
 #endif // _SYSMSG_H
 

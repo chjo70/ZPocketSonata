@@ -109,7 +109,11 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     Init( pPDWData );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW );
+#ifdef _POCKETSONATA_
+    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW, pPDWData->x.ps.uiBand );
+#else
+    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW, 0 );
+#endif
 
     // 수집한 PDW 파일 만들기...
     m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
@@ -122,13 +126,13 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     if( TRUE == m_theGroup->MakeGrIndex() ) {
         // 펄스열 추출
         m_thePulExt->KnownPulseExtract();
-
+        
         // PRI 분석
         m_theAnalPRI->KnownAnalysis();
-
+        
         // 에미터 분석
         bRet = m_theMakeAET->KnownMakeAET();
-
+        
         //////////////////////////////////////////////////////////////////////////
         // printf( "\n 새로운 에미터 분석 시작" );
 
@@ -323,7 +327,7 @@ void CKnownSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 	sprintf( filename, "c:\\temp\\%03d_%03d_%s.kwn_emt.pdw", nStep, index, p );
 	pdwfile = fopen( filename, "wb" );
 
-	total_count = pEmitter->pdw.count;
+	total_count = pEmitter->pdw.uiCount;
 
 	pEmitterPdwIndex = pEmitter->pdw.pIndex;
 	for( i=0 ; i < total_count ; ++i ) {

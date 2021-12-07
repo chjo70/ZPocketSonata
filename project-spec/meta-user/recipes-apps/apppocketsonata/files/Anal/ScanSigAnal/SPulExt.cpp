@@ -42,7 +42,7 @@ void CSPulExt::Init()
 	m_noEMT = m_pScanSigAnal->GetNoEMT();
 	m_noCh = m_pScanSigAnal->GetScanNoCh();
 
-    m_nAnalSeg = m_CoSeg;
+    m_uiAnalSeg = m_uiCoSeg;
 
     m_pScnAet = m_pScanSigAnal->GetScnAET();
 
@@ -106,20 +106,20 @@ void CSPulExt::KnownPulseExtract()
 
 		case _STAGGER :
             // 추출할 펄스열의 범위폭을 계산한다.
-            extRange.min_pri = m_pScnAet->fPRIMin - STABLE_MARGIN;
-            extRange.max_pri = m_pScnAet->fPRIMax + STABLE_MARGIN;
+            extRange.min_pri = ITOAusCNV( m_pScnAet->fPRIMin ) - STABLE_MARGIN;
+            extRange.max_pri = ITOAusCNV( m_pScnAet->fPRIMax ) + STABLE_MARGIN;
             ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 
             /*! \bug  추출하고자할 PRI 평균값을 중심으로 지터열을 추출하게 한다.
                 \date 2006-06-28 00:39:34, 조철희
             */
-            ExtractTrackPT( m_pScnAet->fPRIMean, FDIV( m_pScnAet->fPRIJitterRatio, 100 ) );
+            ExtractTrackPT( ITOAusCNV(m_pScnAet->fPRIMean), FDIV( m_pScnAet->fPRIJitterRatio, 100 ) );
 			break;
 
 		case _DWELL :
             for( i=0 ; i < m_pScnAet->iPRIPositionCount ; ++i ) {
-                extRange.min_pri = m_pScnAet->fPRISeq[i] - ( 2 * STABLE_MARGIN );
-                extRange.max_pri = m_pScnAet->fPRISeq[i] + ( 2 * STABLE_MARGIN );
+                extRange.min_pri = ITOAusCNV(m_pScnAet->fPRISeq[i]) - ( 2 * STABLE_MARGIN );
+                extRange.max_pri = ITOAusCNV(m_pScnAet->fPRISeq[i]) + ( 2 * STABLE_MARGIN );
                 ExtractDwellRefPT( pSeg, & extRange );
             }
             ExtractRefStable();
@@ -132,7 +132,7 @@ void CSPulExt::KnownPulseExtract()
             // 지터열 추출 마진 설정
             diff = UDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
             extRange.min_pri = _max( (int)(m_pScnAet->fPRIMean - diff), 2 );
-            extRange.max_pri = m_pScnAet->fPRIMean + diff;
+            extRange.max_pri = ITOAusCNV( m_pScnAet->fPRIMean + diff );
             ExtractStablePT( & extRange, TRUE );
             DiscardStablePT();
 
@@ -143,7 +143,7 @@ void CSPulExt::KnownPulseExtract()
             */
             diff = UDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+20 ), 200 );
             extRange.min_pri = _max( (int)(m_pScnAet->fPRIMean - diff), 2 );
-            extRange.max_pri = m_pScnAet->fPRIMean + diff;
+            extRange.max_pri = ITOAusCNV( m_pScnAet->fPRIMean + diff );
             // 추출할 펄스열의 범위폭을 계산한다.
             ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
 
@@ -159,8 +159,8 @@ void CSPulExt::KnownPulseExtract()
             // 추출할 펄스열의 범위폭을 계산한다.
             diff = 200;
             //-- 조철희 2006-02-22 09:59:34 --//
-            extRange.min_pri = m_pScnAet->fPRIMin - diff;
-            extRange.max_pri = m_pScnAet->fPRIMax + diff;
+            extRange.min_pri = ITOAusCNV( m_pScnAet->fPRIMin - diff );
+            extRange.max_pri = ITOAusCNV( m_pScnAet->fPRIMax + diff );
             ExtractPatternPT( & extRange, 3, TRUE );
             break;
 
@@ -186,11 +186,12 @@ void CSPulExt::KnownPulseExtract()
 //
 void CSPulExt::DiscardStablePT()
 {
-    int i, j;
-    STR_PULSE_TRAIN_SEG *pSeg, *pSeg2;
+    //int i;//, j;
+    STR_PULSE_TRAIN_SEG *pSeg; //, *pSeg2;
 
-    if( m_CoSeg == 0 )
+    if( m_uiCoSeg == 0 ) {
         return;
+    }
 
     //STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
@@ -199,9 +200,9 @@ void CSPulExt::DiscardStablePT()
     //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
 
     // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
-    if( m_CoSeg == 1 ) {
-        MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.count, EXTRACT_MARK );
-        m_CoSeg = 0;
+    if( m_uiCoSeg == 1 ) {
+        MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.uiCount, EXTRACT_MARK );
+        m_uiCoSeg = 0;
         return;
     }
 
@@ -209,12 +210,12 @@ void CSPulExt::DiscardStablePT()
 
     // Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
     // pSeg1 = pSeg + m_nAnalSeg;
-    for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
-        pSeg2 = pSeg + i + 1;
-        for( j=i+1 ; j < m_CoSeg ; ++j ) {
-
-        }
-    }
+//     for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
+//         pSeg2 = pSeg + i + 1;
+//         for( j=i+1 ; j < m_CoSeg ; ++j ) {
+// 
+//         }
+//     }
 
 }
 

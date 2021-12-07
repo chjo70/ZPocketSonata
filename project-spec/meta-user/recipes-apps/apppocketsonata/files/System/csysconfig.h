@@ -86,19 +86,16 @@ struct STR_SYSCONFIG {
 class CSysConfig
 {
 private:
-    static CSysConfig* m_pInstance;
     static CSharedMemroy* m_pSharedMemory;
 
     STR_SYSCONFIG m_strConfig;
+    //STR_CNFSYS m_strCnfSys;
 
     minIni m_theMinIni;
 
 public:
     CSysConfig(void);
     virtual ~CSysConfig(void);
-
-    static CSysConfig* getInstance();
-    static void ReleaseInstance();
 
 private:
     void InitVar();
@@ -111,6 +108,9 @@ public:
     void SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell );
 
 public:
+    inline STR_SYSCONFIG *GetSysConfig() { return & m_strConfig; }
+
+
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };
     void SetBoardID(ENUM_BoardID enBoardID) {
         m_strConfig.enBoardID = enBoardID;
@@ -211,7 +211,5 @@ public:
 
 
 };
-
-#define GP_SYSCFG CSysConfig::getInstance()
 
 #endif // CSYSCONFIG_H

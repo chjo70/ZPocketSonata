@@ -102,7 +102,7 @@ void CPDW2SP370::Init(void)
 bool CPDW2SP370::MakeHeader(void)
 {
 	int length, index;
-	wchar_t strUnicode[256]={0,};
+	char strUnicode[256]={0,};
 
 #if defined(__linux__) || defined(__VXWORKS__)
     strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], LIBRARY_NAME );
@@ -116,8 +116,8 @@ bool CPDW2SP370::MakeHeader(void)
 	//MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), strUnicode, len );
 
 	//strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], sizeof(m_stPDWHeader.szMasterLibraryName), LIBRARY_NAME );
-	memcpy( & m_stPDWHeader.szMasterLibraryName[0], strUnicode, wcslen(strUnicode)*2 );
-	index = wcslen(strUnicode)*2;
+	memcpy( & m_stPDWHeader.szMasterLibraryName[0], strUnicode, strlen(strUnicode)*2 );
+	index = strlen(strUnicode)*2;
 	length = sizeof(m_stPDWHeader.szMasterLibraryName) - index;
 	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, length );
 #endif

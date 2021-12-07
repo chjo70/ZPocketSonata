@@ -12,7 +12,7 @@
 #include "../Anal/OFP_Main.h"
 
 #include "csignalcollect.h"
-#include "../Utils/clog.h"
+
 
 #include "cdetectanalysis.h"
 #include "cemittermerge.h"
@@ -26,11 +26,10 @@
 
 #include "../System/csysconfig.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
-
-// 클래스 내의 정적 멤버변수 값 정의
-CSignalCollect* CSignalCollect::m_pInstance = nullptr;
 
 CCollectBank* CSignalCollect::m_pTheDetectCollectBank[DETECT_CHANNEL];
 CCollectBank* CSignalCollect::m_pTheTrackCollectBank[TRACK_CHANNEL];
@@ -123,26 +122,66 @@ void CSignalCollect::Run(key_t key)
 void CSignalCollect::_routine()
 {
     LOGENTRY;
-    bool bRunCollecting=false;
-
+    
     m_pMsg = GetDataMessage();
-
+    
 #ifdef _MSC_VER
 #else
     pthread_cleanup_push( TCleanUpHandler, NULL);
 #endif
 
     // 사용자 수집 함수로 시작
-    UCOL->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
+    //g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
 
-    while( g_AnalLoop ) {
-        if( QMsgRcv( IPC_NOWAIT ) > 0 ) {
+    while( true ) {
+        if( QMsgRcv() == -1 ) {
+            perror( "QMsgRcv" );
+        }
+        else {
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
-                    Init();
-                    bRunCollecting = true;
+                    RoutineForDetectAnal();
                     break;
 
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+                    break;
+
+                case enTHREAD_MODE :
+                    break;
+
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    break;
+            }
+
+        }
+    }
+
+#ifdef _MSC_VER
+#else
+    pthread_cleanup_pop( 1 );
+#endif
+
+}
+
+/**
+ * @brief		RoutineForDetectAnal
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/23 11:59:24
+ * @warning		
+ */
+void CSignalCollect::RoutineForDetectAnal()
+{
+    bool bRoutineForDetectAnal=true;
+
+    Init();
+
+    while( bRoutineForDetectAnal == true ) {
+        if( QMsgRcv( enNO_WAIT ) > 0 ) {
+            switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_REQ_SET_TRACKWINDOWCELL :
                     ReqTrackWindowCell();
                     break;
@@ -163,7 +202,11 @@ void CSignalCollect::_routine()
                     LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
                     break;
 
-                // 모의 명령 처리
+                case enTHREAD_MODE :
+                    bRoutineForDetectAnal = false;
+                    break;
+
+                    // 모의 명령 처리
                 case enTHREAD_REQ_SIM_PDWDATA :
                     SimPDWData();
                     break;
@@ -171,21 +214,16 @@ void CSignalCollect::_routine()
                 default:
                     LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
+                
             }
         }
-        //else {
-            // 신호 수집은 여기서 수행한다.
-            if( bRunCollecting == true ) {
-                AnalysisStart();
-            }
-        //}
+
+        // 신호 수집은 여기서 수행한다.
+        if( bRoutineForDetectAnal == true ) {
+            AnalysisStart();
+        }
     }
-
-#ifdef _MSC_VER
-#else
-    pthread_cleanup_pop( 1 );
-#endif
-
+    
 }
 
 /**
@@ -194,7 +232,9 @@ void CSignalCollect::_routine()
 void CSignalCollect::SendEndCollect()
 {
     if( m_bSendEnd == false || true ) {
-        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_END, GetThreadName() );
+        //TRACE( "\nCSignalCollect::SendEndCollect()");
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_END, GetThreadName() );
+        //TRACE( "!");
 
         m_bSendEnd = true;
     }
@@ -300,7 +340,7 @@ void CSignalCollect::AnalysisStart()
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
 
             //unsigned int uiGetMinAnalPulse = (unsigned int) GP_SYSCFG->GetMinAnalPulse();  
-            int iGetMinAnalPulse = GP_SYSCFG->GetMinAnalPulse();
+            int iGetMinAnalPulse = g_pTheSysConfig->GetMinAnalPulse();
             unsigned int uiGetMinAnalPulse=0;
             if( iGetMinAnalPulse > 0 ) {
                 uiGetMinAnalPulse = iGetMinAnalPulse;
@@ -308,7 +348,7 @@ void CSignalCollect::AnalysisStart()
 
             if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
                 strCollectInfo.uiCh = iCh;
-                DETANL->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             }
 
             // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
@@ -333,11 +373,15 @@ void CSignalCollect::AnalysisStart()
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
             if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
-                TRKANL->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                //TRACE( "\nCSignalCollect::AnalysisStart()");
+                g_pTheTrackAnalysis->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                //TRACE( "#");
             }
             // PDW 펄스 개수 부족시 위협 처리로 바로 전달
             else {
-                EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                //TRACE( "\nCSignalCollect::AnalysisStart()");
+                g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                //TRACE( "#");
             }
 
             bIsOut = false;
@@ -356,7 +400,7 @@ void CSignalCollect::AnalysisStart()
             memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
-            SCNANL->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+            //g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
             bIsOut = false;
         }
 
@@ -370,7 +414,8 @@ void CSignalCollect::AnalysisStart()
 #ifdef __VXWORKS__        
         //usleep( 1000 );
 #elif _MSC_VER
-        Sleep( 1 );
+        // 이 쓰레드에서는 Sleep() 없이 코딩해야 UseCollect 쓰레드에 지연 없이 처리할 수 있음.
+        //Sleep( 10 );
 #else   
         usleep( 1000 );
 #endif        
@@ -539,7 +584,7 @@ void CSignalCollect::UpdateTrackWindowCell( SRxABTData *pABTData )
  */
 void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 {
-    unsigned int uiCh;
+    unsigned int uiCh=DETECT_CHANNEL;
 
     STR_WINDOWCELL strWindowCell;
 
@@ -633,6 +678,8 @@ void CSignalCollect::SimPDWData()
     STR_PDWDATA stPDWData;
 
     stPDWData.uiTotalPDW = 0;
+
+    //printf( "\n SimPDWData..." );
 
     // 랜 데이터를 갖고온다.
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
@@ -774,12 +821,12 @@ void CSignalCollect::CloseScanWindowCell()
  */
 void CSignalCollect::NewScanWindowCell( SRxABTData *pABTData )
 {
-    unsigned int uiCh;
+    unsigned int uiCh=TRACK_CHANNEL;
 
     STR_WINDOWCELL strWindowCell;
 
     if( m_theScanChannel.Pop( & uiCh ) == true ) {
-        memcpy( & m_ABTData[uiCh-DETECT_CHANNEL], pABTData, sizeof(SRxABTData) );
+        memcpy( & m_ABTData[uiCh-TRACK_CHANNEL], pABTData, sizeof(SRxABTData) );
 
         CalScanWindowCell( & strWindowCell, pABTData );
 

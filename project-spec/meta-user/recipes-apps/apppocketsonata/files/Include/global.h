@@ -5,6 +5,13 @@
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
+enum ENUM_ENDIAN_MODE {
+    enLITTLE_ENDIAN=0,
+    enBIG_ENDIAN,
+    enUNKNOWN_ENDIAN
+
+};
+
 
 // 전역 변수를 정의한다.
 #ifdef _MAIN_GLOBALS_
@@ -19,38 +26,23 @@ bool g_Loop=true;
 
 bool g_AnalLoop=true;
 
+ENUM_ENDIAN_MODE g_enEndian;
+
 /////////////////////////////////////////////////////////////////////////////////
 
 bool g_bSaveFile=true;
 
+#ifdef __VXWORKS__
+MSG_Q_ID g_ShmMemMsgQID;
+#define _SHM_MEMORY_KEY             g_ShmMemMsgQID
 
-
-
-
-
-
-
-
-
-
-#ifdef _ELINT_
-// #include "../Anal/Task/GetPdw.h"
-// 
-// 
-// 
-// CGetPdw *theGetPdwTask;
-// CSigAnal *theSigAnalTask;
-// CLOBMngr *theLOBMngrTask;
-
-
-#elif _POCKETSONATA_
-
-#elif _SONATA_
+int g_iClkTickPerSecond;
 
 #else
-
-
+#define _SHM_MEMORY_KEY             (333)
 #endif
+
+
 
 
 #else
@@ -65,17 +57,15 @@ extern bool g_AnalLoop;
 
 extern bool g_bSaveFile;
 
-#ifdef _ELINT_
-// #include "../Anal/Task/GetPdw.h"
-// 
-// extern CGetPdw *theGetPdwTask;
-// extern CSigAnal *theSigAnalTask;
-// extern CLOBMngr *theLOBMngrTask;
+extern ENUM_ENDIAN_MODE g_enEndian;
 
+#ifdef __VXWORKS__
+extern MSG_Q_ID g_ShmMemMsgQID;
+#define _SHM_MEMORY_KEY             g_ShmMemMsgQID
 
+extern int g_iClkTickPerSecond;
 #else
-
-
+#define _SHM_MEMORY_KEY             (333)
 #endif
 
 #endif

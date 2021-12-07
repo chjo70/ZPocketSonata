@@ -603,7 +603,7 @@ STR_EMITTER *CKMakeAET::GetEmitter()
 //
 UINT CKMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
+	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,7 @@ HEADERS += \
     Anal/SigAnal/_Type.h \
     Anal/SigAnal/cencdec.h \
     Anal/SigAnal/stdafx.h \
+    Anal/EmitterMerge/PositionEstimationAlg.h \
     Collect/DataFile/CRWRCommonVariables.h \
     Collect/DataFile/DataFile.h \
     Utils/clog.h \

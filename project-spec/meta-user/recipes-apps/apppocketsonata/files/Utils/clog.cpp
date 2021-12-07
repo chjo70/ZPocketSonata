@@ -22,9 +22,10 @@
 #include <errno.h>
 #include <stdarg.h>
 
-#include "clog.h"
 
-CLog* CLog::m_pInstance = nullptr;
+#include "../Include/globals.h"
+
+bool CLog::m_bcs=false;
 
 #ifdef _MSC_VER
 CCriticalSection CLog::m_cs;
@@ -44,6 +45,15 @@ CLog::CLog()
     }
 #endif
 
+#ifdef __VXWORKS__
+
+#else
+
+#endif
+
+    memset( m_szPresentDirectory, 0, sizeof(m_szPresentDirectory) );
+    getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
+
 }
 
 CLog::~CLog()
@@ -59,7 +69,7 @@ CLog::~CLog()
  * @param iLine
  * @param pStr
  */
-void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
+void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
 {
 #ifndef _CGI_LIST_
 #ifdef _MSC_VER
@@ -68,8 +78,9 @@ void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int 
     int fid;
 #endif
 
+    char szLogDir[LOG_DIR_SIZE*2];
+    char szLogFullName[LOG_DIR_SIZE*2];
     char szDate[LOG_DIR_SIZE];
-    //char szExtra[LOG_EXTRA_SIZE];
 
 #ifdef _LOG_WHERE
     char szFileLine[LOG_DIR_SIZE];
@@ -82,25 +93,23 @@ void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int 
 	Lock();
 
 #ifdef _LOG_RELATIVE_PATH_
-    getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
-
-    strcpy( m_szLogDir, m_szPresentDirectory );
-    strcat( m_szLogDir, LOG_DIRECTORY );
+    strcpy( szLogDir, m_szPresentDirectory );
+    strcat( szLogDir, LOG_DIRECTORY );
 #else
-    strcpy( m_szLogDir, LOG_DIRECTORY );
+    strcpy( szLogDir, LOG_DIRECTORY );
 
 #endif
 
 #ifdef __linux__
-    if( 0 == mkdir( m_szLogDir, 0766 ) || errno == EEXIST ) {
+    if( 0 == mkdir( szLogDir, 0766 ) || errno == EEXIST ) {
 #else
-    if( 0 == mkdir( m_szLogDir ) || errno == EEXIST ) {
+    if( 0 == mkdir( szLogDir ) || errno == EEXIST ) {
 #endif
 
 #ifdef _MSC_VER
         SYSTEMTIME tmSystem;
 
-        ::GetSystemTime( & tmSystem );
+        ::GetLocalTime( & tmSystem );
         sprintf( szDate, "/%d_%d_%d.log", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay );
 #else
         struct timeval tv;
@@ -114,26 +123,33 @@ void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int 
         sprintf( szDate, "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
 #endif
 
-        strcat( m_szLogDir, szDate );
+        strcpy( szLogFullName, szLogDir );
+        strcat( szLogFullName, szDate );
+        //strcat( szLogDir, szDate );
+
+        // vxworks 인 경우에 저장 공간이 없으면 로그 파일을 삭제한다.
+#ifdef __VXWORKS__
+
+#endif
 
 #ifdef _MSC_VER
-        fopen_s( & fp, m_szLogDir, "a+" );
-        //fid = open(m_szLogDir, O_APPEND | O_WRONLY | O_BINARY );
+        fopen_s( & fp, szLogFullName, "a+" );
+        //fid = open(szLogFullName, O_APPEND | O_WRONLY | O_BINARY );
 #else
-        fid = open(m_szLogDir, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+        fid = open(szLogFullName, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
 #endif
 
         m_szLog[0] = NULL;
 #ifdef _MSC_VER
         if( fp != NULL ) {
             if( enNoLineFeed != nType ) {
-            sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+                sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
             }
 
 #else
         if( fid != 0 ) {
             if( enNoLineFeed != nType ) {
-            sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+                sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
             }
 
 #endif
@@ -177,6 +193,11 @@ void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int 
                 else if( nType == enError ) {
                     puts( & m_szLog[nLengthTime] );
                 }
+#ifdef __VXWORKS__
+                fflush( stdout );
+
+#endif
+
                 //strcat( & m_szLog[nLength], pMsg );
 
 #ifdef _LOG_WHERE
@@ -222,21 +243,44 @@ void CLog::LogMsg( int nType, char *pszFunction, const char *pszFile, const int 
 
 }
 
+/**
+ * @brief     Lock
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-23, 10:23
+ * @warning
+ */
 void CLog::Lock() 
 {
+
 #ifdef _MSC_VER
+    //TRACE( "\nLock()" );
     m_cs.Lock();
 #elif __VXWORKS__
     sem_wait( & m_mutex );
-    
 #else
     // std::unique_lock<std::mutex> lk(m_mutex);
 #endif
+    m_bcs = true;
+
 
 }
 
+/**
+ * @brief     UnLock
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-23, 10:23
+ * @warning
+ */
 void CLog::UnLock() 
 {
+    //TRACE( "\nUnLock()" );
+
 #ifdef _MSC_VER
     m_cs.Unlock();
 #elif __VXWORKS__
@@ -244,6 +288,7 @@ void CLog::UnLock()
 #else
 
 #endif
+    m_bcs = false;
 
 }
 
@@ -252,18 +297,89 @@ void CLog::UnLock()
  * @param nType
  * @param fmt
  */
-void CLog::LogMsg( int nType, char *fmt, ... )
+void CLog::LogMsg( int nType, const char *fmt, ... )
 {
     va_list args;
+    char szLogString[LOG_DIR_SIZE*5];
 
     va_start( args, fmt );
-#ifdef _MFC_VER
-    vsprintf_s( m_szLogString, sizeof(m_szLogString), fmt, args );
+#ifdef _MSC_VER
+    vsprintf_s( szLogString, sizeof(szLogString), fmt, args );
 #else
-    vsprintf( m_szLogString, fmt, args );
+    vsprintf( szLogString, fmt, args );
 #endif
     va_end( args );
 
-    LOGMSG( nType, m_szLogString );
+    //char *pTemp = UTF8ToANSI( szLogString );
+    LOGMSG( nType, szLogString );
+    //delete pTemp;
+
+}
+
+/**
+ * @brief     ANSIToUTF8
+ * @param     const char * pszCode
+ * @return    char *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-10-27, 13:16
+ * @warning
+ */
+char *CLog::ANSIToUTF8( const char * pszCode )
+{
+#ifdef _MFC_VER
+    int		nLength, nLength2;
+    BSTR	bstrCode; 
+    char*	pszUTFCode = NULL;
+
+    nLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
+    bstrCode = SysAllocStringLen(NULL, nLength); 
+    MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, nLength);
+
+    nLength2 = WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, 0, NULL, NULL); 
+    pszUTFCode = (char*)malloc(nLength2+1); 
+    WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, nLength2, NULL, NULL); 
+
+    return pszUTFCode;
+#else
+    return NULL;
+
+#endif
+
+}
+
+/**
+ * @brief     UTF8ToANSI
+ * @param     const char * pszCode
+ * @return    char*
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-10-27, 13:16
+ * @warning
+ */
+char* CLog::UTF8ToANSI( const char *pszCode )
+{
+#ifdef _MFC_VER
+    BSTR    bstrWide;
+    char*   pszAnsi;
+    int     nLength;
+
+    nLength = MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, NULL, NULL);
+    bstrWide = SysAllocStringLen(NULL, nLength);
+
+    MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, bstrWide, nLength);
+
+    nLength = WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, NULL, 0, NULL, NULL);
+    pszAnsi = new char[nLength];
+
+    WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
+    SysFreeString(bstrWide);
+
+    return pszAnsi;
+#else
+    return NULL;
+#endif
 
 }

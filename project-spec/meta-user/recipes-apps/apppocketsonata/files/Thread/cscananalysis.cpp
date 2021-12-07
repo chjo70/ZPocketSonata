@@ -8,18 +8,16 @@
 #include "cscananalysis.h"
 #include "cemittermerge.h"
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
-extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
 
-// 클래스 내의 정적 멤버변수 값 정의
-CScanAnalysis* CScanAnalysis::m_pInstance = nullptr;
 
 /**
  * @brief CScanAnalysis::CScanAnalysis

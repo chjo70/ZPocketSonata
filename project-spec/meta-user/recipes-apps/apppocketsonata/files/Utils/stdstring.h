@@ -596,14 +596,14 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
 
 			typedef const char*		PCSTR;
 			typedef char*			PSTR;
-			typedef const wchar_t*	PCWSTR;
-			typedef wchar_t*		PWSTR;
+			typedef const char*	PCWSTR;
+			typedef char*		PWSTR;
 			#ifdef UNICODE
-				typedef wchar_t		TCHAR;
+				typedef char		TCHAR;
 			#else
 				typedef char		TCHAR;
 			#endif
-			typedef wchar_t			OLECHAR;
+			typedef char			OLECHAR;
 
 		#endif	// #ifndef _WIN32
 
@@ -839,7 +839,7 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
 
 	// 'SSCodeCvt' - shorthand name for the codecvt facet we use
 
-	typedef std::codecvt<wchar_t, char, mbstate_t> SSCodeCvt;
+	typedef std::codecvt<char, char, mbstate_t> SSCodeCvt;
 
 	inline PWSTR StdCodeCvt(PWSTR pDstW, int nDst, PCSTR pSrcA, int nSrc,
 		const std::locale& loc=std::locale())
@@ -1127,7 +1127,7 @@ inline PWSTR StdCodeCvt(PWSTR pDst, int nDst, PCWSTR pSrc, int nSrc)
 	if ( nChars > 0 )
 	{
 		pDst[0]				= '\0';
-		std::basic_string<wchar_t>::traits_type::copy(pDst, pSrc, nChars);
+		std::basic_string<char>::traits_type::copy(pDst, pSrc, nChars);
 //		std::char_traits<wchar_t>::copy(pDst, pSrc, nChars);
 		pDst[nChars]	= '\0';
 	}
@@ -1235,9 +1235,9 @@ inline SS_NOTHROW int sslen(const std::wstring& s)
 
 #ifdef SS_NO_LOCALE
 	inline char sstoupper(char ch)		{ return (char)::toupper(ch); }
-	inline wchar_t sstoupper(wchar_t ch){ return (wchar_t)::towupper(ch); }
+	inline char sstoupper(char ch){ return (char)::towupper(ch); }
 	inline char sstolower(char ch)		{ return (char)::tolower(ch); }
-	inline wchar_t sstolower(wchar_t ch){ return (wchar_t)::tolower(ch); }
+	inline char sstolower(char ch){ return (char)::tolower(ch); }
 #else
 	template<typename CT>
 	inline CT sstolower(const CT& t, const std::locale& loc = std::locale())
@@ -1929,7 +1929,7 @@ inline int sscpycvt(PWSTR pDst, PCWSTR pSrc, int nMax)
 {
 	int nCount = nMax;
 	for (; nCount > 0 && *pSrc; ++pSrc, ++pDst, --nCount)
-		std::basic_string<wchar_t>::traits_type::assign(*pDst, *pSrc);
+		std::basic_string<char>::traits_type::assign(*pDst, *pSrc);
 
 	*pDst = L'\0';
 	return nMax - nCount;
@@ -3814,8 +3814,8 @@ public:
 			
 			if ( (hdr.byCtrl & SSSO_UNICODE) != 0 )
 			{
-				ULONG nBytes	= hdr.nChars * sizeof(wchar_t);
-				if ( sizeof(CT) == sizeof(wchar_t) )
+				ULONG nBytes	= hdr.nChars * sizeof(char);
+				if ( sizeof(CT) == sizeof(char) )
 				{
 					if ( FAILED(hr=pStream->Read(pMyBuf, nBytes, &nRead)) )
 						TRACE(_T("StreamLoad: Cannot read string: 0x%X\n"), hr);
@@ -3939,7 +3939,7 @@ public:
 //	Now typedef our class names based upon this humongous template
 
 typedef CStdStr<char>		CStdStringA;	// a better std::string
-typedef CStdStr<wchar_t>	CStdStringW;	// a better std::wstring
+typedef CStdStr<char>	CStdStringW;	// a better std::wstring
 typedef CStdStr<OLECHAR>	CStdStringO;	// almost always CStdStringW
 
 // -----------------------------------------------------------------------------

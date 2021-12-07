@@ -149,13 +149,13 @@ enum ENUM_AET_FREQ_PRI_PATTERN_TYPE
     \author 조철희 (churlhee.jo@lignex1.com)
     \date 	2013-09-23 19:09:12
 */
-static const char* strAetFreqPRIPatternType[LENGTH_OF_LOB_STRING]=
+static const char strAetFreqPRIPatternType[NUM_OF_AET_PRI_PATTERN_TYPE][10]=
 {
-	"모름",
-	"사인",
+	"Unk",
+	"SIN",
 	"SL+",
 	"SL-",
-	"삼각"
+	"SAW"
 };
 
 

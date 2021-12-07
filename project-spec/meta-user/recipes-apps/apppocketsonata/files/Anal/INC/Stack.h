@@ -1,4 +1,4 @@
-﻿/*!
+/*!
   \file     stack.h
   \brief    
 	\version  0.0.1

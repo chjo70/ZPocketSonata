@@ -46,15 +46,12 @@ struct SRxLOBHeader
 
 
 /*! 
- * @struct    SRxLOBData
- * @brief			항공에서 수신되는 LOB 메시지의 Data Group 구조체
- * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-16 오후 12:06 
+ * @struct  SRxLOBData
+ * @brief   항공에서 수신되는 LOB 메시지의 Data Group 구조체
+ * @author  이정남 (jeongnam.lee@lignex1.com)
+ * @date    2016-02-16 오후 12:06 
  */
-//#define MAX_RADARNAME						(9+1)
-//#define MAX_FREQ_PRI_STEP                   (16*2)
-#define MAX_RADARNAME						(9+1)
-#define MAX_FREQ_PRI_STEP				(16)
+#define MAX_FREQ_PRI_STEP                   (32)
 
 
 #ifndef SRxLOBData_STRUCT
@@ -66,20 +63,6 @@ struct SRxLOBData {
 
     __time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
     unsigned int tiContactTimems;
-
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
-
-    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
-
-    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-    char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
-
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
     int iPolarization;                              // 극성
     int iRatioOfPOL;                                // 극성 신뢰도
@@ -153,18 +136,33 @@ struct SRxLOBData {
     float fRadarLatitude;
     float fRadarLongitude;
 
-    char aucRadarName[MAX_RADARNAME];
+    char aucRadarName[_MAX_RADARMODE_NAME_SIZE];
     int iRadarModeIndex;
-    int iThreatIndex;
+    //int iThreatIndex;
+
+    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+
+    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
+
+    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+    char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
+
+    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
 
 #ifdef _POCKETSONATA_
+    char aucTaskID[LENGTH_OF_TASK_ID];
 
 #elif _ELINT_
     int	iCollectorID;
 
     unsigned int uiSeqNum;
-	char	aucTaskID[LENGTH_OF_TASK_ID];
+	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #else
     
@@ -194,16 +192,6 @@ struct SRxABTData {
 
     time_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
     time_t /* __time32_t */ tiLastSeenTime;
-
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
-
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szPlatform[_MAX_PLATFORM_NAME_SIZE];
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
-    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
     int iRadarModePriority;
     int iRadarPriority;
@@ -286,7 +274,17 @@ struct SRxABTData {
 
     int iStat;
 
-    char aucRadarName[MAX_RADARNAME];
+    char aucRadarName[_MAX_RADARMODE_NAME_SIZE];
+
+    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+
+    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+    char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
 }  ;
 #endif
@@ -328,28 +326,15 @@ struct SRxAETData {
     float fDOADeviation;				// [0.1도]
 #endif
 
-    int iFreqType;
-    int iFreqPatternType;
-    float fFreqPatternPeriodMean;	  // [us]
-    float fFreqPatternPeriodMin;	  // [us]
-    float fFreqPatternPeriodMax;	  // [us]
-    int iFreqPositionCount;
     float fFreqMean;
     float fFreqMax;
     float fFreqMin;
     float fFreqDeviation;
 
-    int iPRIType;
-    int iPRIPatternType;
-    float fPRIPatternPeriodMean;							// [us]
-    float fPRIPatternPeriodMin;							// [us]
-    float fPRIPatternPeriodMax;							// [us]
     float fPRIMean;											// [1ns]
     float fPRIMax;
     float fPRIMin;
-    float fPRIJitterRatio;
     float fPRIDeviation;// [%]
-    int iPRIPositionCount;
 
     float fPWMean;											// 1ns
     float fPWMax;

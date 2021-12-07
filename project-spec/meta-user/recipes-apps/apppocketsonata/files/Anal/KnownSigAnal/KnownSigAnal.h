@@ -101,9 +101,9 @@ public:
     //##ModelId=452B0C5202D8
     inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
     //##ModelId=452B0C5202E1
-    inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
+    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     //##ModelId=452B0C5202E2
-    inline int GetAnalSeg() { return m_thePulExt->m_nAnalSeg; }
+    inline int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
     //##ModelId=452B0C5202E3
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, count ); }
     //##ModelId=43D4818F0298
@@ -133,7 +133,7 @@ public:
     //##ModelId=452B0C52031F
     inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, count, pRange ); }
     //##ModelId=452B0C520329
-    inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, UINT priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
+    inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
     //##ModelId=452B0C52033D
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     //##ModelId=452B0C520346
@@ -179,7 +179,7 @@ public:
     //##ModelId=452B0C52038B
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
 
-    UINT CheckHarmonic(float mean1, float mean2, float priThreshold ) {
+    UINT CheckHarmonic(_TOA mean1, float mean2, float priThreshold ) {
         return 0;
     }
 

@@ -65,14 +65,14 @@ enum FREQ_BAND
 {
     BAND0=0,
     //##ModelId=452B0C510038
-    BAND1=0,
+    BAND1,
     //##ModelId=452B0C510041
-    BAND2=0,
+    BAND2,
     //##ModelId=452B0C51004B
-    BAND3=0,
+    BAND3,
     //##ModelId=452B0C51005F
-    BAND4=0,
-    BAND5=0,
+    BAND4,
+    BAND5,
 
     TOTAL_BAND
 };
@@ -295,10 +295,10 @@ static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "
 // 기본 AET 구조
 //
 
-#define     _spMaxSwtLev            16      // 주파수, PRI Stagger 단 개수
-#define     _spMaxCoSysAmbi         5				// IPL의 Ambiguity 개수
+#define     _spMaxSwtLev            (16)            // MAX_FREQ_PRI_STEP // 기존 소나타는 16 개임.
+#define     _spMaxCoSysAmbi         (5)				// IPL의 Ambiguity 개수
 
-#define			_spMaxAoaQueue										(10)
+#define		_spMaxAoaQueue			(10)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  LowHigh, MinMax 구조체

@@ -11,12 +11,7 @@
 #define PROGRAM_NAME        "PocketSonata"
 #define PROGRAM_VERSION     "0.1a"
 
-// 실행 파일이 있는 위치에서 로그 디렉토리
-//#ifdef __linux__
-//#define LOG_DIRECTORY       ("/tmp/log/LOG")
-//#else
-//#define LOG_DIRECTORY       ("c:/temp")
-//#endif
+
 
 
 // 변수 타입을 정의합니다.

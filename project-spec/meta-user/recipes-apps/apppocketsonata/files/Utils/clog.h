@@ -19,6 +19,8 @@
 
 #include "../Include/system.h"
 
+//#include "../Include/globals.h"
+
 
 #define LOG_EXTRA_SIZE      (50)
 
@@ -37,25 +39,10 @@ enum LogType {
     enEnd,
 };
 
-#define LOG_LINEFEED                    LOG->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
-
-#define LOGMSG( A, B )                  LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B )
-#define LOGMSG1( A, B, C )              LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )
-#define LOGMSG2( A, B, C, D )           LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D )
-#define LOGMSG3( A, B, C, D, E )        LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E )
-#define LOGMSG4( A, B, C, D, E, F )     LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
-#define LOGMSG5( A, B, C, D, E, F, G )  LOG->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
-
-
-#define Log                             LOG->LogMsg
-
-
-#define LOGENTRY                        LOG->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
-
 class CLog
 {
 private:
-    static CLog *m_pInstance;
+    static bool m_bcs;
 
 #ifdef _MSC_VER
     static CCriticalSection m_cs;
@@ -64,41 +51,28 @@ private:
 #endif
 
     char m_szPresentDirectory[LOG_DIR_SIZE];
-    char m_szLogDir[LOG_DIR_SIZE*2];
-
     char m_szLog[LOG_DIR_SIZE*5];
     char m_szLogString[LOG_DIR_SIZE*5];
+
+private:
+    char *ANSIToUTF8( const char * pszCode );
+    char *UTF8ToANSI( const char *pszCode );
 
 public:
     CLog();
     virtual ~CLog();
 
-    static CLog* GetInstance()
-    { // 게으른 초기화
-        if(m_pInstance == NULL) {
-            m_pInstance = new CLog();
-        }
-        return m_pInstance;
-    }
-
-    static void ReleaseInstance() { 
-        if( m_pInstance != NULL ) {
-            delete m_pInstance;
-            m_pInstance = NULL;
-        } 
-    }
-
     void Lock();
     void UnLock();
 
-    //void LogMsg( int nType, char *pMsg );
-    void LogMsg( int nType, char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );
+    inline bool IsLock() { return m_bcs==true; }
 
-    void LogMsg( int nType, char *fmt, ... );
+    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );
+
+    void LogMsg( int nType, const char *fmt, ... );
 
 };
 
 
-#define LOG     CLog::GetInstance()
 
 #endif // CLOG_H

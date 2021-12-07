@@ -11,10 +11,11 @@
 
 #include "../Thread/creclan.h"
 #include "../Thread/ctaskmngr.h"
-#include "../Utils/clog.h"
 
 
 #include "../Utils/ccommonutils.h"
+
+#include "../Include/globals.h"
 
 /**
  * @brief CSingleServer::CSingleServer
@@ -35,7 +36,7 @@ CSingleServer::CSingleServer( int iKeyId, char *pClassName, int iPort ) : CThrea
  */
 CSingleServer::~CSingleServer()
 {
-    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", ChildClassName() );
+    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
     Free();
 }
@@ -226,7 +227,9 @@ void CSingleServer::_routine()
                                 bHeader = true;
                                 uiTotalRead = 0;
 
+#ifdef __linux__                                
                                 sndMsg.mtype = 1;
+#endif                                
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
                                 sndMsg.iSocket = m_iSocket;
                                 sndMsg.iArrayIndex = -1;
@@ -263,7 +266,10 @@ void CSingleServer::_routine()
                             bHeader = true;
                             uiTotalRead = 0;
 
+#ifdef __linux__                            
                             sndMsg.mtype = 1;
+#endif
+                            
                             sndMsg.uiOpCode = strLanHeader.uiOpCode;
                             sndMsg.iSocket = m_iSocket;
                             sndMsg.iArrayIndex = -1;
@@ -339,7 +345,7 @@ void CSingleServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int 
     }
 
     UINT uiMode=enREADY_MODE;
-    QMsgSnd( TMNGR->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
+    g_pTheTaskMngr->QMsgSnd( enREQ_MODE, NULL, 0, & uiMode, sizeof(int) );
 #endif
 
 }

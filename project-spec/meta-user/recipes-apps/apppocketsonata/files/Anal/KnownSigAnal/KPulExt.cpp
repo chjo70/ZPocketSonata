@@ -56,7 +56,7 @@ CKPulExt::~CKPulExt()
 //
 void CKPulExt::Init()
 {
-	m_nAnalSeg = m_CoSeg;
+	m_uiAnalSeg = m_uiCoSeg;
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 
@@ -194,7 +194,7 @@ void CKPulExt::KnownPulseExtract()
 			/*! \bug  추출하고자할 PRI 평균값을 중심으로 지터열을 추출하게 한다.
 			    \date 2006-06-28 00:39:34, 조철희
 			*/
-            ExtractTrackPT( m_pTrkAet->fPRIMean, FDIV( m_pTrkAet->fPRIJitterRatio, 100 ) );
+            ExtractTrackPT( ITOAusCNV(m_pTrkAet->fPRIMean), FDIV( m_pTrkAet->fPRIJitterRatio, 100 ) );
 			break;
 
 		case _DWELL :
@@ -264,10 +264,10 @@ void CKPulExt::KnownPulseExtract()
 //
 void CKPulExt::DiscardStablePT()
 {
-	int i, j;
-	STR_PULSE_TRAIN_SEG *pSeg, *pSeg1, *pSeg2;
+	//int j;
+	STR_PULSE_TRAIN_SEG *pSeg; //, *pSeg1, *pSeg2;
 
-	if( m_CoSeg == 0 ) {
+	if( m_uiCoSeg == 0 ) {
     }
     else {
 	    // STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
@@ -277,21 +277,21 @@ void CKPulExt::DiscardStablePT()
         //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
 
 	    // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
-	    if( m_CoSeg == 1 ) {
-		    MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.count, EXTRACT_MARK );
-		    m_CoSeg = 0;
+	    if( m_uiCoSeg == 1 ) {
+		    MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.uiCount, EXTRACT_MARK );
+		    m_uiCoSeg = 0;
 	    }
         else {
 	        /*! \todo	스태거열을 찾아서 제거해야 한다. */
 
 	        // Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
 	        // pSeg1 = pSeg + m_nAnalSeg;
-	        for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
-		        pSeg2 = pSeg + i + 1;
-		        for( j=i+1 ; j < m_CoSeg ; ++j ) {
-
-		        }
-	        }
+// 	        for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
+// 		        pSeg2 = pSeg + i + 1;
+// 		        for( j=i+1 ; j < m_CoSeg ; ++j ) {
+// 
+// 		        }
+// 	        }
         }
     }
 

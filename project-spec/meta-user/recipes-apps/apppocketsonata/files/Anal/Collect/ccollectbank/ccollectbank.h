@@ -40,7 +40,7 @@ public:
 
 
     void CopyPDW();
-    void PushPDWData( STR_PDWDATA *pstrArrayPDW );
+    //void PushPDWData( STR_PDWDATA *pstrArrayPDW );
     void PushPDWData( _PDW *pstPDW );
     void UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell );
     void CloseTrackWindowCell();

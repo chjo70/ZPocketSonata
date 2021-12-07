@@ -186,22 +186,14 @@ enum ENUM_UIO_DEV {
     REG_UIO_DMA_1 = 0
 } ;
 
-//typedef struct
-//{
-//	int 		fd;
-//	uint64_t 	physical;
-//	uint64_t 	logical;
-//	uint32_t	size;
-//	char		*dev;
-//}xuio_t;
+typedef struct {
+    int iFd;
+    unsigned int uiSize;
 
-typedef struct
-{
-    int 		fd;
-    uint64_t 	physical;
-    uint64_t 	logical;
-    uint32_t	size;
-    char		*dev;
+    uint64_t ullPhysical;
+    uint64_t ullLogical;
+
+    char pszDev[100];
 }xuio_t;
 
 // xuio_t xuio ���� ����
@@ -222,7 +214,11 @@ typedef struct
 //----------> ���� 4���� dma ���ͷ�Ʈ��(address �� vivado���� address editor ���� Ȯ���غ��� ��)
 //
 
-#define UIO_DMA_1_ADDR 0xA0080000
+#ifdef _MFC_VER
+#define UIO_DMA_1_ADDR (0xA0080000U)  // ((uint64_t)(0x00000000A0080000))   // 0xA0080000
+#else
+#define UIO_DMA_1_ADDR (0xA0080000U)  // ((uint64_t)(0x00000000A0080000))   // 0xA0080000
+#endif
 
 //static xuio_t xuio[XUIO_COUNT] =
 //{
@@ -275,11 +271,7 @@ signed int startISR(void);
 class CHWIO
 {
 private :
-    static xuio_t xuio[XUIO_COUNT];
-    //=
-    //{
-    //    {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
-    //};
+    static xuio_t m_xuio[XUIO_COUNT];
 
     static unsigned int m_uiCoInterrupt;
 

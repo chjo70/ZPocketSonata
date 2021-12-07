@@ -170,7 +170,6 @@
     <ClInclude Include="..\..\files\Anal\NewSigAnal\NMakeAET.h" />
     <ClInclude Include="..\..\files\Anal\NewSigAnal\NPulExt.h" />
     <ClInclude Include="..\..\files\Anal\OFP_Main.h" />
-    <ClInclude Include="..\..\files\Anal\ParamMngr.h" />
     <ClInclude Include="..\..\files\Anal\ScanSigAnal\SAnalSCN.h" />
     <ClInclude Include="..\..\files\Anal\ScanSigAnal\ScanSigAnal.h" />
     <ClInclude Include="..\..\files\Anal\ScanSigAnal\SDefine.h" />
@@ -191,6 +190,7 @@
     <ClInclude Include="..\..\files\cmain.h" />
     <ClInclude Include="..\..\files\Include\defines.h" />
     <ClInclude Include="..\..\files\Include\global.h" />
+    <ClInclude Include="..\..\files\Include\globals.h" />
     <ClInclude Include="..\..\files\Include\SONATAPIP\ShuICD.h" />
     <ClInclude Include="..\..\files\Include\SONATAPIP\_sysmsg.h" />
     <ClInclude Include="..\..\files\Include\struct.h" />
@@ -232,6 +232,7 @@
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />
+    <ClInclude Include="FileTar.h" />
     <ClInclude Include="MSIGA.h" />
     <ClInclude Include="MSIGADlg.h" />
     <ClInclude Include="Resource.h" />
@@ -333,9 +334,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\NewSigAnal\NPulExt.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Anal\ParamMngr.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\ScanSigAnal\SAnalSCN.cpp">
@@ -440,6 +438,7 @@
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FileTar.cpp" />
     <ClCompile Include="MSIGA.cpp" />
     <ClCompile Include="MSIGADlg.cpp" />
     <ClCompile Include="stdafx.cpp">

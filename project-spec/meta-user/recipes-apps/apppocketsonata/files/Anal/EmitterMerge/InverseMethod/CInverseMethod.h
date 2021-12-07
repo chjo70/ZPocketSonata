@@ -51,15 +51,11 @@ public:
 	~CInverseMethod( );
 
 private:
-	static CInverseMethod *m_pInstance;				///< 객체 포인터
 	double m_dDistance;												///< 두 지점간의 거리 [km]
 	double m_dFwdAz;													///< 방위각
 	double m_dRevAz;													///< 방위각
 	
 public:
-	static CInverseMethod* GetInstance();
-	void Finalize();
-
 	bool VincentyInverse( sEllipsoid *e, double lat1, double lon1, double lat2, double lon2 );
 	int VincentyInverse( SELDISTLOB *pResult, double lat1, double lon1, double lat2, double lon2 );
 
@@ -75,8 +71,3 @@ public:
 	double EllipsoidDistance(double lat1, double lon1, double lat2, double lon2);
 };
 
-/*!
- * @def				ST_IMA
- * @brief			인스턴스 객체를 얻어온다.
- */
-#define ST_IMA	CInverseMethod::GetInstance()

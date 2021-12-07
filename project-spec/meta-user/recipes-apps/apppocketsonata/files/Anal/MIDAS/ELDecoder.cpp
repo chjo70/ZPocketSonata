@@ -42,10 +42,27 @@ void AllEndian32(void* i_pData, unsigned int i_nSize)
 	}
 }
 
-#ifndef __VXWORKS__
+#ifdef __VXWORKS__
+unsigned long long _byteswap_uint64(unsigned long long i)
+{
+    unsigned long long j;
+    j =  (i << 56);
+    j += (i << 40)&0x00FF000000000000;
+    j += (i << 24)&0x0000FF0000000000;
+    j += (i <<  8)&0x000000FF00000000;
+    j += (i >>  8)&0x00000000FF000000;
+    j += (i >> 24)&0x0000000000FF0000;
+    j += (i >> 40)&0x000000000000FF00;
+    j += (i >> 56);
+    return j;
+
+}
+
+#endif
+
 void AllEndian64(void *i_pData, unsigned int i_nSize)
 {
-	unsigned __int64 un64Value=0;
+	__int64 un64Value=0;
 	UINT nStepSize=sizeof(unsigned __int64);
 	for(int i=0; i<(int)i_nSize; i+=nStepSize) 
 	{
@@ -67,7 +84,7 @@ void AllEndian16(void* i_pData, UINT i_nSize)
 		memcpy(&((BYTE*)i_pData)[i], &dwValue, nStepSize);
 	}
 }
-#endif
+
 
 static time_t _stNOW;
 static tm _stTM;

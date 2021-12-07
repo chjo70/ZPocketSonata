@@ -19,8 +19,8 @@ typedef unsigned int HIST;
 #define _STR_LOWHIGH
 typedef struct
 {
-  int low;
-  int hgh;
+  int iLow;
+  int iHgh;
 } STR_LOWHIGH;
 #endif
 

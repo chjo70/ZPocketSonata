@@ -35,7 +35,9 @@
 
 #include "Midas.h"
 
-//#include "../../Utils/cfile.h"
+#include "../../Utils/ccommonutils.h"
+#include "../../Include/global.h"
+
 
 #define _EXT_HEADER_
 
@@ -170,7 +172,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
             MIDASClose();
         }
 
-        printf( "신호 수집 EPDW : %s" , pMidasFileName );
+        //printf( "신호 수집 EPDW : %s" , pMidasFileName );
     }
 
     return bRet;
@@ -271,7 +273,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
     unsigned int uiWrite;
     unsigned int i, numberofdata;
 
-    long long llNullCh=0;
+    long long int llNullCh=0;
 
     int iRecords, iSize;
 
@@ -286,7 +288,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
     if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
         // 데이터 블럭에서 쓰고 난 이후에 512 블럭을 맞추기 위해서 NULL 문자 개수를 계산함.
-        llNullCh = (long long) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( m_pHCB->data_size + (double) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
+        llNullCh = (long long int) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( m_pHCB->data_size + (long long int) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
         if( llNullCh < 0 ) { //DTEC_Else
             bRet = false;
         }
@@ -366,6 +368,18 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                                 iRecords = (int) ( iSize / sizeof(SRxPDWDataRGroup) );
                                 TransferPDW2Record( & x.pdwData[0], iRecords );
                                 iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
+
+                                if( g_enEndian == enBIG_ENDIAN ) {
+                                    int i;
+                                    for( i=0 ; i < iRecords ; ++i ) {
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].dtoa );
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].ddtoa );
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].dfreq );
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].dpw );
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].dpa );
+                                        CCommonUtils::swapByteOrder( m_pPDWRecords[i].ddoa );
+                                    }
+                                }
                                 uiWrite = Write( m_pPDWRecords, iSize );
                             }
                         }
@@ -374,7 +388,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 else {
                     // 각 항목별 최소/최대값 초기화
                     MakeInitMinMaxValue( m_MinMaxOfSubrecords );
-
+                    
                     m_ullfirstTOA = m_pPDWData->stPDW[0].ullTOA;
                     for( i=0 ; i < numberofdata ; i += MAX_OF_PDW_DATA ) {
                         if( numberofdata - i >= MAX_OF_PDW_DATA ) {
@@ -385,8 +399,20 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         }
                         TransferPDW2Record( & m_pPDWData->stPDW[i], iRecords );
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
+
+                        if( g_enEndian == enBIG_ENDIAN ) {
+                            int i;
+                            for( i=0 ; i < iRecords ; ++i ) {
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].dtoa );
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].ddtoa );
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].dfreq );
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].dpw );
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].dpa );
+                                CCommonUtils::swapByteOrder( m_pPDWRecords[i].ddoa );
+                            }
+                        }
                         uiWrite = Write( m_pPDWRecords, iSize );
-                    }
+                    }                    
                 }
 
                 uiWriteByte = MAX_OF_PDW_DATA * sizeof(S_EL_PDW_RECORDS);
@@ -459,6 +485,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 break;
         }
 
+
         if( bRet == true && m_enFileType != E_EL_SCDT_PDW2SP370 ) {
             if( bMultiIFData == false ) {
                 char *pNullData;
@@ -467,14 +494,16 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 pNullData = ( char * ) malloc( sizeof(char) * uiWriteByte );
                 if( pNullData != NULL ) {
                     memset( pNullData, 0, uiWriteByte );
+                    //printf( "\nuiWriteByte=%d", uiWriteByte );
                     do {
-                        if( llNullCh-(long long) uiWriteByte > 0 ) { //DTEC_Else
-                            llNullCh -= (long long) Write( pNullData, uiWriteByte );
+                    	//printf( "\n llNullCh[%lld, %lld]" , llNullCh, llNullCh-(long long int) uiWriteByte );
+                        if( llNullCh-(long long int) uiWriteByte > (long long int ) 0 ) { //DTEC_Else
+                            llNullCh -= (long long int) Write( pNullData, uiWriteByte );
                         }
                         else {
-                            llNullCh -= (long long) Write( pNullData, (int) llNullCh );
+                            llNullCh -= (long long int) Write( pNullData, (int) llNullCh );
                         }
-                    } while( llNullCh > 0 );
+                    } while( llNullCh > (long long int) 0 );
 
                     free( pNullData );
                 }
@@ -964,7 +993,7 @@ unsigned int CMIDASBlueFileFormat::CalcExtStart()
 void CMIDASBlueFileFormat::MakeAdjunct()
 {
     char *pByte;
-    int nOffset;
+    int nOffset, iOffset;
 
     SELMIDAS_ADJUNCT_TYPE_1000 *pAdjunct1000;
     SELMIDAS_ADJUNCT_TYPE_6000 *pAdjunct6000;
@@ -1018,32 +1047,37 @@ void CMIDASBlueFileFormat::MakeAdjunct()
             pAdjunct6000->record_length = sizeof(S_EL_PDW_RECORDS);
 
             // SUBRECORDS 초기화
-            pSubRecords = ( SELSUBRECORDS * ) ( pAdjunct6000 + 1 );
+            pSubRecords = ( SELSUBRECORDS * ) & pAdjunct6000[1];
             pSubRecords->offset = 0;
             nOffset = 0;
 
             // 주파수 SUBRECORDS 입력
-            nOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[0], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset = MakeSubRecords( pSubRecords, (char *) stSubrecordName[0], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            nOffset += iOffset;
             ++ pSubRecords;
 
             // TOA SUBRECORDS 입력
-            nOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[1], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[1], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            nOffset += iOffset;
             ++ pSubRecords;
 
             // DOA SUBRECORDS 입력
-            nOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[2], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[2], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            nOffset += iOffset;
             ++ pSubRecords;
 
             // PW SUBRECORDS 입력
-            nOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[3], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[3], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            nOffset += iOffset;
             ++ pSubRecords;
 
             // PA SUBRECORDS 입력
-            nOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[4], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[4], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            nOffset += iOffset;
             ++ pSubRecords;
 
             // DTOA SUBRECORDS 입력
-            nOffset = MakeSubRecords( pSubRecords, (char *) stSubrecordName[5], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            MakeSubRecords( pSubRecords, (char *) stSubrecordName[5], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
             //++ ioffset;
             //++ pSubRecords;
             break;
@@ -1158,7 +1192,34 @@ int CMIDASBlueFileFormat::WriteHeader()
 #endif
     }
     else {
-        nWrite = Write( m_pHCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
+        if( g_enEndian == enLITTLE_ENDIAN ) {
+            nWrite = Write( m_pHCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
+        }
+        else {
+            SELMIDAS_HCB m_HCB;
+
+            memcpy( & m_HCB, m_pHCB, sizeof(SELMIDAS_HCB) );
+            CCommonUtils::swapByteOrder( m_HCB.detached );
+            CCommonUtils::swapByteOrder( m_HCB._protected );
+            CCommonUtils::swapByteOrder( m_HCB.pipe );
+            CCommonUtils::swapByteOrder( m_HCB.ext_start );
+            CCommonUtils::swapByteOrder( m_HCB.ext_size );
+            CCommonUtils::swapByteOrder( m_HCB.data_start );
+            CCommonUtils::swapByteOrder( m_HCB.data_size );
+            CCommonUtils::swapByteOrder( m_HCB.type );
+            CCommonUtils::swapByteOrder( m_HCB.flagmask );
+            CCommonUtils::swapByteOrder( m_HCB.timecode );
+            CCommonUtils::swapByteOrder( m_HCB.inlet );
+            CCommonUtils::swapByteOrder( m_HCB.outlets );
+            CCommonUtils::swapByteOrder( m_HCB.outmaks );
+            CCommonUtils::swapByteOrder( m_HCB.pipeloc );
+            CCommonUtils::swapByteOrder( m_HCB.pipesize );
+            CCommonUtils::swapByteOrder( m_HCB.in_byte );
+            CCommonUtils::swapByteOrder( m_HCB.out_byte );
+            CCommonUtils::swapByteOrder( m_HCB.outbytes, 8 );
+            CCommonUtils::swapByteOrder( m_HCB.uiKeylength );
+            nWrite = Write( & m_HCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
+        }
     }
     return nWrite;
 }
@@ -1176,6 +1237,7 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
 {
     int c;
     char buffer[2129];
+    char *pByte;
 
     tm tm_time={0};
 
@@ -1367,10 +1429,14 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
 
             // 메타 파일 종류에 따른 extended_header 영역에 기록하기
             if( m_enFileType == E_EL_SCDT_PDW ) {
+                unsigned int lkey;
+
                 // SUBREC_DEF 키워드 추가
                 c = MakeSubRecords();
-                MakeBinaryKeyword( pBinKeyword, ( char *) m_pSubrecords, (char *) "SUBREC_DEF", c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
-                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+                lkey = MakeBinaryKeyword( pBinKeyword, ( char *) m_pSubrecords, (char *) SUBREC_DEF, c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
+                //pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+                pByte = ( char * ) pBinKeyword;
+                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) & pByte[lkey];
 
                 // SUBREC_DESCRIP
                 pBinKeyword = MakeSetBinaryKeyword( pBinKeyword, (char *) "TYPE0SUBREC_DESCRIP", (char *) "SUBREC_DESCRIP" );
@@ -1440,7 +1506,9 @@ void CMIDASBlueFileFormat::MakeExtendedHeader()
                 memcpy( buffer, & dValue, sizeof(dValue) );
                 c += sprintf( & buffer[sizeof(dValue)], (char *) "ACQETF" );
                 MakeBinaryKeyword( pBinKeyword, buffer, (char *) "ACQETF", c, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT );
-                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+                //pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+                pByte = ( char * ) pBinKeyword;
+                pBinKeyword = ( SELMIDAS_BINARY_KEYWORD * ) & pByte[pBinKeyword->lkey];
 
                 // ACQETF.UNITS
                 pBinKeyword = MakeValueBinaryKeyword( pBinKeyword, (long double) VALUE_UNITS_HZ, (char *) "ACQETF.UNITS", DATA_FORMAT_TYPE_DESIGNATOR__8BIT_INTEGER );
@@ -1603,9 +1671,10 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         ++ pSubrecords;
     }
 
-    memcpy( pSubrecords, "SUBREC_DEF", strlen("SUBREC_DEF") );
+    //memcpy( pSubrecords, "SUBREC_DEF", strlen("SUBREC_DEF") );
+    strcpy( (char *) pSubrecords, SUBREC_DEF );
 
-    return sizeof( SELMIDAS_SUBRECORDS ) * MAX_SUBRECORDS_OF_PDWDATA + strlen("SUBREC_DEF");
+    return sizeof( SELMIDAS_SUBRECORDS ) * MAX_SUBRECORDS_OF_PDWDATA + strlen(SUBREC_DEF);
 
 }
 
@@ -1618,14 +1687,18 @@ int CMIDASBlueFileFormat::MakeSubRecords()
  * @date      2015-03-06, 17:01:25
  * @warning
  */
-void CMIDASBlueFileFormat::MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey )
+unsigned int CMIDASBlueFileFormat::MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey )
 {
+    unsigned int uiret=0;
+
     /*! \bug  신뢰성: 상/하한값 설정하게 함.
             \author 조철희 (churlhee.jo@lignex1.com)
             \date 	2015-10-5 17:20:10
     */
     if( c > 0 && c < MAX_OF_KEYWORD ) {
-        memcpy( (char *) pBinKeyword + sizeof(SELMIDAS_BINARY_KEYWORD), value_keyword, c );
+        // SELMIDAS_BINARY_KEYWORD 구조체 다음이 문자열
+        //memcpy( (char *) pBinKeyword + sizeof(SELMIDAS_BINARY_KEYWORD), value_keyword, c );
+        memcpy( (char *) & pBinKeyword[1], value_keyword, c );
 
         if( lkey == 0 ) {
             if( c % 8 == 0 )
@@ -1636,16 +1709,24 @@ void CMIDASBlueFileFormat::MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeywo
         else {
             pBinKeyword->lkey = lkey;
         }
+        uiret = pBinKeyword->lkey;
 
         // binary keyword 구조체에 값을 저장
         pBinKeyword->ltag = (unsigned char) strlen( keyword );
         pBinKeyword->lext = (unsigned short) ( pBinKeyword->lkey - ( c - pBinKeyword->ltag ) );
 
         pBinKeyword->type = type;
+
+        if( g_enEndian == enBIG_ENDIAN ) {
+            CCommonUtils::swapByteOrder( pBinKeyword->lkey );
+            CCommonUtils::swapByteOrder( pBinKeyword->lext );
+        }
     }
     else {
         printf( "\n 키워드 값이 초과 되었습니다." );
     }
+
+    return uiret;
 }
 
 /**
@@ -1670,6 +1751,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
     long double ldValue;
     unsigned long long llValue;
     unsigned char cValue;
+    int ikey;
 
     switch( type ) {
     case DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT :
@@ -1706,8 +1788,9 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
         break;
     }
 
-    MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type, lkey );
-    return ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+    ikey = MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type, lkey );
+    char *pByte = ( char * ) pBinKeyword;
+    return ( SELMIDAS_BINARY_KEYWORD * ) ( & pByte[ikey] );
 
 }
 
@@ -1727,6 +1810,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
     long double ldValue;
     unsigned long long llValue;
     unsigned char cValue;
+    int ikey;
 
     switch( type ) {
     case DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT :
@@ -1762,19 +1846,36 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
         break;
     }
 
-    MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type );
-    return ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+    ikey = MakeBinaryKeyword( pBinKeyword, buffer, keyword, c, type );
+    char *pByte = ( char * ) pBinKeyword;
+    return ( SELMIDAS_BINARY_KEYWORD * ) ( & pByte[ikey] );
+    //return ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
 
 }
 
-// 문자열로 키워드 값을 설정한다.
+/**
+ * @brief     문자열로 키워드 값을 설정한다.
+ * @param     SELMIDAS_BINARY_KEYWORD * pBinKeyword
+ * @param     char * pValue
+ * @param     char * keyword
+ * @return    SELMIDAS_BINARY_KEYWORD *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-08-10, 17:04
+ * @warning
+ */
 SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword )
 {
     int c;
+    char *pByte;
+    unsigned int lKey;
 
     c = strlen( pValue );
-    MakeBinaryKeyword( pBinKeyword, pValue, keyword, c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
-    return ( SELMIDAS_BINARY_KEYWORD * ) ( (char *) pBinKeyword + pBinKeyword->lkey );
+    lKey = MakeBinaryKeyword( pBinKeyword, pValue, keyword, c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
+    pByte = (char *) pBinKeyword;
+    
+    return ( SELMIDAS_BINARY_KEYWORD * ) ( & pByte[lKey] );
 
 }
 
@@ -1948,16 +2049,14 @@ void CMIDASBlueFileFormat::MIDASClose()
  */
 void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
 {
+    return;
+
     bool bRet;
     TCHAR szDirectory[500];
-    
-#ifndef __VXWORKS__    
 
     STR_PDWDATA *pPDWData;
 
     pPDWData = ( STR_PDWDATA * ) pData;
-
-    //CMyFile cFile;
 
     struct tm *pstTime;
     time_t tiNow;
@@ -1984,11 +2083,12 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 #else
         sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 #endif
+        printf( "\n Create the Dir[%s]" , szDirectory );
         bRet = CreateDir( szDirectory );
 
         if( bRet == true ) {
             // 2. 파일명 생성하기
-            strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", pstTime );
+            strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
 
             m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
 
@@ -2004,7 +2104,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 #else
 
 #endif
-
+            //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
             SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
 
         }
@@ -2012,6 +2112,6 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
             m_szRawDataFilename[0] = 0;
         }
     }
-#endif    
+
 
 }

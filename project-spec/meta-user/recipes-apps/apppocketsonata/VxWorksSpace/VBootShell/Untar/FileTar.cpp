@@ -23,6 +23,60 @@ void untar( char *filename, char *destfolder );
 }
 #endif
 
+char *strlastfind(char *s, char *t)
+{    
+    int i, j;
+    int len_str, len_target;
+
+    // 두 문자열의 길이를 구한다.
+    for (len_str = 0; s[len_str] != '\0'; len_str++) ;
+    for (len_target = 0; t[len_target] != '\0'; len_target++) ;
+
+    // 원본 문자열의 길이에서 찾을 문자열의 길이를 뺀 만큼만 루프를 돌면 된다.
+    for (i = len_str - len_target ; i >= 0 ; i--) {
+        // 찾을 문자열의 길이만큼 for문을 돈다.
+        for ( j = 0; j < len_target; j++) {
+            if (s[i + j] != t[j])   // 위치의 문자들이 같지 않다면 loop를 빠진다.
+                break;
+        }
+
+        // 만약 j가 len_target과 같다면, 즉 앞의 for문이 중간에
+        // break가 되지 않고 끝까지 다 돌았다면 문자열을 찾은 것이다.
+        if (j == len_target)
+            return (s + i);       // 찾은 문자열의 시작 주소를 리턴한다.
+    }
+
+    // 문자열을 못찾았다면 NULL을 반환한다.
+    return (NULL);
+}
+
+
+char *strfind(char *s, char *t)
+{    
+    int i, j;
+    int len_str, len_target;
+
+    // 두 문자열의 길이를 구한다.
+    for (len_str = 0; s[len_str] != '\0'; len_str++) ;
+    for (len_target = 0; t[len_target] != '\0'; len_target++) ;
+    // 원본 문자열의 길이에서 찾을 문자열의 길이를 뺀 만큼만 루프를 돌면 된다.
+    for (i = 0; i < len_str - len_target; i++) {
+        // 찾을 문자열의 길이만큼 for문을 돈다.
+        for ( j = 0; j < len_target; j++) {
+            if (s[i + j] != t[j])   // 위치의 문자들이 같지 않다면 loop를 빠진다.
+                break;
+        }
+    
+        // 만약 j가 len_target과 같다면, 즉 앞의 for문이 중간에
+        // break가 되지 않고 끝까지 다 돌았다면 문자열을 찾은 것이다.
+        if (j == len_target)
+            return (s + i);       // 찾은 문자열의 시작 주소를 리턴한다.
+    }
+
+    // 문자열을 못찾았다면 NULL을 반환한다.
+    return (NULL);
+}
+
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    untar
 		\author   ��ö��
@@ -136,7 +190,7 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		strcat(tarfullpath,"/");
 	strcat(tarfullpath,TarFName);
 	int fdout=0;
-	int ret;
+	ssize_t ret;
 	int i;
 	if((fdout=open(tarfullpath,_O_CREAT|_O_WRONLY|_O_BINARY|_O_TRUNC,
 		_S_IWRITE))<0)
@@ -145,10 +199,10 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		return 1;
 	}	
 	ret=_write(fdout,(char *) &m_TarHeader,sizeof(UNI_BLOCK));
-	int ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
+	long ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
 	for(i=1;i<=m_TarHeader.GetCount();i++)
 	{
-		m_pTarIndex[i]->Start=ssize;
+		m_pTarIndex[i]->Start= ssize;
 		ret=_write(fdout,(char *) m_pTarIndex[i],sizeof(TarIndex));
 		ssize += m_pTarIndex[i]->Size;
 	}
@@ -167,7 +221,7 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 int CFileTar::AppendFile(int fdout, char *fpath)
 {
 	int fdin=0;
-	int len;
+	size_t len;
 	if((fdin=_open(fpath,_O_RDONLY|_O_BINARY))<0)
 	{
 		_close(fdin);
@@ -204,12 +258,13 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 	if( m_TarFile < 0 ) {
         printf( "\n pTarFile[%s]" , pTarFile );
 		if( ( m_TarFile=_open( pTarFile,_O_BINARY|_O_RDONLY ) ) < 0 ) {
+			printf( "\n Error found !" );
 			return FALSE;
 		}
 	}
 
 	memset( pTarHeader, 0, sizeof(UNI_BLOCK) );
-	int nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
+	ssize_t nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
 
 	pTarHeader->m_filesize = Octal2Deciaml( pTarHeader->m_block.header.size, sizeof(pTarHeader->m_block.header.size) );
 	GetDate( & pTarHeader->m_time, pTarHeader->m_block.header.mtime, sizeof(pTarHeader->m_block.header.mtime) );
@@ -233,7 +288,7 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 {
 	int fdout;
-	int nRead, nWrite;
+	ssize_t nRead, nWrite;
 	UNI_BLOCK *pBlock;
 
 	struct _stat filestat;
@@ -269,7 +324,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	if( rem > 0 ) {
 		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
 		nWrite = _write( fdout, buff, rem );
-		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
+		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (ssize_t) rem ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
 			return FALSE;
@@ -302,12 +357,11 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 {
 	BOOL bLoop=TRUE;
 	char fpath[_MAX_PATH];
+    char *p;
 	TarHeader th;
 
-	// UNI_BLOCK *pBlock;
-
 	printf( "\n untar %s into %s" , pTarFile, pDestpath );
-    bLoop = MkDir( pDestpath );
+    bLoop = true; // MkDir( pDestpath );
 
 	while( bLoop ) {
 
@@ -324,10 +378,21 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 		if( fpath[strlen( fpath )-1] != '/' )
 			strcat( fpath, "/" );
 #endif
+        
 		strcat( fpath, th.m_block.header.name );
 
 		switch( th.m_block.header.typeflag ) {
 			case REGTYPE :
+                if( (p=strfind( th.m_block.header.name, "/" )) != NULL ) {
+                    char fpath2[_MAX_PATH];
+
+                    strcpy( fpath2, fpath );
+                    p = strlastfind( fpath2, "/" );
+                    *p = 0;
+
+                    MkDir( fpath2 );
+                }
+
 				bLoop = UnTar( fpath, & th );
 				break;
 
@@ -436,6 +501,31 @@ void CFileTar::GetDate( struct _utimbuf *pTime, char *pByte, int size )
 BOOL CFileTar::MkDir( char *directory )
 {
 	printf( "\n*make directory(%s)" , directory );
-	return _mkdir( directory ) == 0;
+	//return _mkdir( directory ) == 0;
 
+    BOOL bRet;
+    char dirName[256];
+    char *p=directory;
+    char *q=dirName;
+
+    dirName[0] = 0;
+    while( *p ) {
+        if( ('\\' == *p) || ('/'==*p)) {
+            if( ':' != *(p-1) ) {
+                if( dirName[0] != 0 && strcmp( dirName, "\\" ) != 0 ) {
+                    _mkdir( dirName );
+                }
+            }
+        }
+
+        *q++ = *p++;
+        *q = '\0';
+    }
+    bRet = _mkdir( dirName );
+
+    if( bRet == 0 ) {
+        // bRet = ( GetLastError() == ERROR_ALREADY_EXISTS );
+    }
+
+    return true;
 }

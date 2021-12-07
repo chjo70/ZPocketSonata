@@ -13,7 +13,6 @@
 
 #include "../Thread/creclan.h"
 
-//#define MAX_LAN_DATA    (1024)
 
 
 class CMultiServer : public CThread
@@ -32,7 +31,7 @@ public:
 
     void Run( key_t key );
     virtual void _routine();
-    virtual const char *ChildClassName() { return m_szClassName; }
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void Init();

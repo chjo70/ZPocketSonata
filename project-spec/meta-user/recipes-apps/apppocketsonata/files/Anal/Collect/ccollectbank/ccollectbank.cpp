@@ -16,7 +16,7 @@ using namespace std;
 #include "ccollectbank.h"
 #include "../DataFile/DataFile.h"
 
-#include "../../../Utils/clog.h"
+//#include "../../../Utils/clog.h"
 #include "../../../Utils/ccommonutils.h"
 
 #include "../../../Thread/csignalcollect.h"
@@ -24,7 +24,7 @@ using namespace std;
 #include "../../../System/csysconfig.h"
 //
 
-
+#include "../../../Include/globals.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +58,7 @@ void CCollectBank::Init()
     memset( & m_strPDW, 0, sizeof(STR_PDWDATA) );
 
     m_strPDW.x.ps.iBoardID = g_enBoardId;
+    m_strPDW.x.ps.uiBand = g_enBoardId;
 
     InitWindowCell();
 
@@ -93,7 +94,7 @@ void CCollectBank::SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL )
     LOGENTRY;
 
     memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(STR_WINDOWCELL) );
-    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 }
 
 /**
@@ -110,7 +111,7 @@ void CCollectBank::CloseCollectBank()
 
     m_strPDW.uiTotalPDW = 0;
 
-    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 
 }
 
@@ -160,7 +161,7 @@ void CCollectBank::CloseTrackWindowCell()
 
     m_strWindowCell.enCollectMode = enUnused;
 
-    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 }
 
 /**
@@ -195,37 +196,37 @@ bool CCollectBank::IsValidChannel()
  * @brief CCollectBank::PushPDWData
  * @param pstrArrayPDW
  */
-void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
-{
-    int iTo;
-
-    iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pPDWData->uiTotalPDW ) );
-    if( iTo > 0 ) {
-        iTo = pPDWData->uiTotalPDW;
-        m_strPDW.uiTotalPDW = iTo;
-    }
-    else {
-        iTo = (int) ( _MAX_COL_PDW - m_strWindowCell.uiTotalPDW );
-        m_strPDW.uiTotalPDW = _MAX_COL_PDW;
-    }
-
-    // PDW 정보 복사
-    UINT uiTo=0;
-    if( iTo > 0 ) {
-        uiTo = (unsigned int) iTo * sizeof(_PDW);
-
-        memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], uiTo );
-    }    
-
-    // 추적 윈도우 셀 정보 업데이트
-    UpdateWindowCell();
-
-    //m_strWindowCell.uiCollectTime = DecodeTOA( m_strPDW.llToa[m_strPDW.uiTotalPDW-1] - m_strPDW.llToa[0] );
-
-    // 수집 완료 마킹함.
-    m_strWindowCell.enCollectMode = enCompleteCollection;
-
-}
+// void CCollectBank::PushPDWData( STR_PDWDATA *pPDWData )
+// {
+//     int iTo;
+// 
+//     iTo = (int) ( _MAX_COL_PDW - ( m_strWindowCell.uiTotalPDW + pPDWData->uiTotalPDW ) );
+//     if( iTo > 0 ) {
+//         iTo = pPDWData->uiTotalPDW;
+//         m_strPDW.uiTotalPDW = iTo;
+//     }
+//     else {
+//         iTo = (int) ( _MAX_COL_PDW - m_strWindowCell.uiTotalPDW );
+//         m_strPDW.uiTotalPDW = _MAX_COL_PDW;
+//     }
+// 
+//     // PDW 정보 복사
+//     UINT uiTo;
+//     if( iTo > 0 ) {
+//         uiTo = (unsigned int) iTo * sizeof(_PDW);
+// 
+//         memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], uiTo );
+//     }    
+// 
+//     // 추적 윈도우 셀 정보 업데이트
+//     UpdateWindowCell();
+// 
+//     //m_strWindowCell.uiCollectTime = DecodeTOA( m_strPDW.llToa[m_strPDW.uiTotalPDW-1] - m_strPDW.llToa[0] );
+// 
+//     // 수집 완료 마킹함.
+//     m_strWindowCell.enCollectMode = enCompleteCollection;
+// 
+// }
 
 /**
  * @brief CCollectBank::SimCollectMode
@@ -264,7 +265,7 @@ void CCollectBank::SimCollectMode()
             }
 
             //round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
-            //printf( "[%ld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
+            //printf( "[%lld]\n" , round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) );
 
             //m_strWindowCell.enCollectMode = enCompleteCollection;
             break;
@@ -329,7 +330,7 @@ void CCollectBank::UpdateWindowCell()
     // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
-    GP_SYSCFG->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 
 }
 

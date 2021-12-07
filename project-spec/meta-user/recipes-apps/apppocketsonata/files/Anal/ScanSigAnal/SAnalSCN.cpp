@@ -70,7 +70,7 @@ void CSAnalScan::Init( int noEMT, int noCh )
     //m_pSeg = GetPulseSeg();
 
     //m_nAnalSeg = 0;
-    m_CoSeg = GetCoSeg();
+    m_uiCoSeg = GetCoSeg();
 
 	//memset( & m_nCoModWc, _spZero, sizeof( m_nCoModWc ) );
 
@@ -107,7 +107,7 @@ int CSAnalScan::GetCoSeg()
 BOOL CSAnalScan::KnownAnalysis()
 {
 
-    m_CoSeg = GetCoSeg();
+    m_uiCoSeg = GetCoSeg();
 
     // 타입에 따라서 펄스열 분석을 달리한다.
     switch( m_pScnAet->iPRIType ) {
@@ -260,7 +260,7 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
     pScanPA = & m_pScanPt->pa[0];
     pScanTOA = & m_pScanPt->toa[0];
     pIndex = pPdwIndex->pIndex;
-    pdw_count = pPdwIndex->count;
+    pdw_count = pPdwIndex->uiCount;
     for( i=0 ; i < m_uiMaxPdw && i < pdw_count ; ++i ) {
         int idx;
 
@@ -284,7 +284,7 @@ STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
     STR_EMITTER *pEmitter;
 
     pEmitter = CAnalPRI::GetEmitter();
-    if( CAnalPRI::m_CoEmitter == _spOne && pEmitter[0].pdw.count > 10 ) {
+    if( CAnalPRI::m_CoEmitter == _spOne && pEmitter[0].pdw.uiCount > 10 ) {
 
     }
     else {
@@ -365,10 +365,10 @@ UINT CSAnalScan::CalcSamplingTime( UINT priMean )
     UINT sampleTimeByPulse;
     UINT sampleTimeByPri;
 
-    PDWINDEX *pPDWIndex;
+    //PDWINDEX *pPDWIndex;
     //UINT uiLastIndex;
 
-    pPDWIndex = m_pEmitter->pdw.pIndex;
+    //pPDWIndex = m_pEmitter->pdw.pIndex;
     //uiLastIndex = pPDWIndex[ m_pEmitter->pdw.count-1 ];
 
     // 수집 총 시간 측정
@@ -483,14 +483,14 @@ void CSAnalScan::SearchLowHghInArray( UINT *series, UINT co, STR_LOWHIGH *lh )
 {
     UINT i;
  
-    lh->hgh = *series;
-    lh->low = *series;
+    lh->iHgh = *series;
+    lh->iLow = *series;
     for( i=0 ; i < co ; ++i ) {
-		if( (int) *series > lh->hgh )
-			lh->hgh = *series;
+		if( (int) *series > lh->iHgh )
+			lh->iHgh = *series;
 
-		if( (int) *series < lh->low )
-			lh->low = *series;
+		if( (int) *series < lh->iLow )
+			lh->iLow = *series;
 
 		++ series;
     }
@@ -573,7 +573,7 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 						/*! \bug  수집된 신호 세기 값이 존재하지 않으면 샘플링 값을 0 으로 취한다.
 						    \date 2006-05-12 11:43:15, 조철희
 						*/
-						*pPa = pScanPt->_pa.low;
+						*pPa = pScanPt->_pa.iLow;
 					}
 					else {
                         if( ( i >= 1 && i < sizeof(pSample->pa) ) && j >= 0 ) {
@@ -645,7 +645,7 @@ bool CSAnalScan::CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY )
 	UINT cleanPa;
 
 	UINT *pPa;
-    UINT thPa=IPACNV(3);			// 3dBm 이하 허용하게 함.
+    UINT thPa=I_IPACNV(3);			// 3dBm 이하 허용하게 함.
 
 	pPa = ( UINT * ) & pSample->pa[0];
 	cleanPa = _spZero;
@@ -753,21 +753,22 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 
 	k = _spZero;
 	co = pAutoCor->co;
-  for( i=_spMinPrd ; i < co-_spMinPrd ; ++i ) {
-		if( *pAcf > 0.1 && ( *(pAcf-2) <= *(pAcf-1) && *(pAcf-1) <= *pAcf &&
-        *pAcf >= *(pAcf+1) && *(pAcf+1) >= *(pAcf+2) ) ) {
-			m_nCanPeak[ m_nCoCanPeak ] = i;
-			++ m_nCoCanPeak;
+    if( co >= MIN_CO_ACF+_spMinPrd ) {
+        for( i=_spMinPrd ; i < co-_spMinPrd ; ++i ) {
+	        if( *pAcf > 0.1 && ( *(pAcf-2) <= *(pAcf-1) && *(pAcf-1) <= *pAcf && *pAcf >= pAcf[1] && pAcf[1] >= pAcf[2] ) ) {
+		        m_nCanPeak[ m_nCoCanPeak ] = i;
+		        ++ m_nCoCanPeak;
 
-			// debug, 00-02-10 22:46:36
-      if(	*pAcf > maxY ) {				// debug, 00-09-01 12:10:39
-				k = i;				// toa index
-        maxY = *pAcf;
-      }
+			    // debug, 00-02-10 22:46:36
+                if(	*pAcf > maxY ) {				// debug, 00-09-01 12:10:39
+	                k = i;				// toa index
+                    maxY = *pAcf;
+                }
+            }
+
+            ++ pAcf;
+        }
     }
-
-    ++ pAcf;
-  }
 
 	// printf( "\n 피크 후보 개수[%d]" , m_nCoCanPeak );
 
@@ -1560,7 +1561,7 @@ int CSAnalScan::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
  */
 UINT CSAnalScan::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-    return m_pScanSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
+    return m_pScanSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
 }
 
 /**

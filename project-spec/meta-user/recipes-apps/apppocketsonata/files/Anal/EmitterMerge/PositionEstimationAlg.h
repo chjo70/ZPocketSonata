@@ -23,6 +23,7 @@ using namespace std;
 #include "./LinearLS/LinearLS.h"
 #include "./NonlinearLS/NonLinearLS.h"
 
+#include "./InverseMethod/CInverseMethod.h"
 
 #include "./Coordinate/Coordinate.h"
 
@@ -85,8 +86,6 @@ using namespace std;
 class CPositionEstimationAlg
 {
 private:
-    static CPositionEstimationAlg *m_pInstance;					///< 인스턴스 샛체
-
     // 위치 산출 알고리즘 
 	CDistanceLeastSquare m_theDistanceLeastSquare;
 	CQuadratic m_theQuadratric;
@@ -97,7 +96,11 @@ private:
 	double *m_pLob;																			///< 위치 산출 라이브러리에 사용할 LOB 데이터
 	SELSensorPosition m_Sensor;													///< 위치 산출 라이브러리에 사용할 항공기 센서 좌표
 
+#if defined(_TM_POSITION_)
 	CGeoCoordConv m_theGeoCoordConv;
+#endif
+
+    CInverseMethod m_theInverseMethod;
 
 	STR_LOBS *m_pR1;
 	STR_LOBS *m_pR2;
@@ -112,14 +115,6 @@ private:
 public:
 	CPositionEstimationAlg(void);
 	~CPositionEstimationAlg(void);
-    static CPositionEstimationAlg* GetInstance();
-
-	virtual BOOL Finalize() { 
-		ReleaseInstance(); 
-		return TRUE; 
-	};
-
-	static void ReleaseInstance();
 
 	void ConvertLatLong2( int nLob, SELSensorPosition *pSensor );
 
@@ -153,8 +148,3 @@ private:
 
 };
 
-/*!
- * @def				ST_PEA
- * @brief			인스턴스 객체를 얻어온다.
- */
-#define ST_PEA	CPositionEstimationAlg::GetInstance()

@@ -18,6 +18,8 @@
 
 #include <iostream>
 
+#include "../Anal/SigAnal/_Type.h"
+
 #include "KompexSQLiteBlob.h"
 #include "KompexSQLiteStatement.h"
 #include "KompexSQLiteDatabase.h"
@@ -83,7 +85,7 @@ void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
     }
     else if( iSql == SQLITE_ABORT ) {
         KOMPEX_EXCEPT("ReadBlob() BLOB handle expired - can not read BLOB", -1);
-        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+        //KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
     }
     else {
         KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
@@ -118,7 +120,7 @@ void SQLiteBlob::WriteBlob(const void *buffer, int numberOfBytes, int offset)
     }
     else if( iSql == SQLITE_ABORT ) {
         KOMPEX_EXCEPT("WriteBlob() BLOB handle expired - can not write BLOB", -1);
-        KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+        //KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
     }
     else {
         KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));

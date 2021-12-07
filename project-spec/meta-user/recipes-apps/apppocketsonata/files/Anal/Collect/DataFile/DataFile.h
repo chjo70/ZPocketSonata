@@ -5,8 +5,6 @@
 #include "../../INC/system.h"
 #include "../../../Anal/SigAnal/_Type.h"
 
-#include "../../../Anal/OFP_Main.h"
-
 #include "../../../Anal/MIDAS/RawFile.h"
 
 #include "../../../Anal/MIDAS/PDWIQ.h"
@@ -17,7 +15,6 @@
 
 #include "../../../Anal/MIDAS/Midas.h"
 
-//#include "../../Log/LogDebug.h"
 
 #define			PDW_ITEMS						(1024*128)			// 9437164
 #define			IQ_ITEMS						(1024*128)
@@ -193,7 +190,7 @@ public:
     int m_iHeaderSize;
     unsigned int m_iOneDataSize;
 
-    ULONGLONG m_ullFileSize;
+    unsigned long long  m_ullFileSize;
 
 public:
     STR_RAWDATA m_RawData;
@@ -807,11 +804,19 @@ public:
      * @param iTOA
      * @return
      */
-    static int EncodeTOAus( _TOA iTOA  )
+    static _TOA EncodeTOAus( _TOA iTOA  )
     {
-        int iretTOA;
+        _TOA iretTOA;
 
-        iretTOA = (int) ( ( ( (float) iTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
+        iretTOA = (_TOA) ( ( ( (float) iTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
+        return iretTOA;	/* [ns] */
+    } ;
+
+    static _TOA EncodeTOAus( float fTOA  )
+    {
+        _TOA iretTOA;
+
+        iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
         return iretTOA;	/* [ns] */
     } ;
 

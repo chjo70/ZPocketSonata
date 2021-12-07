@@ -33,7 +33,7 @@ protected:
 	//##ModelId=452B0C5600B6
 	UINT *m_pPdwParam;
 	//##ModelId=452B0C5600CA
-	int m_nClusters;
+	unsigned int m_uiClusters;
 	//##ModelId=452B0C5600CC
 	STR_CLUSTER *m_pCluster;
 	//##ModelId=452B0C5600D4
@@ -72,7 +72,7 @@ protected:
 
 public:
 	inline int GetBand() { return m_nBand; }
-	BOOL CompMarginDiff( int x, int y1, int y2, int thresh );
+	//BOOL CompMarginDiff( int x, int y1, int y2, int thresh );
 	inline UINT GetCoGroups() { return m_PwGroups.iCount; }
 	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.iCount=coGroup; }
 	//##ModelId=452B0C56016A
@@ -95,7 +95,7 @@ public:
 	//##ModelId=452B0C56017F
 	void SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C560189
-	void FineFreqGroup();
+	//void FineFreqGroup();
 	//##ModelId=452B0C56018A
 	void MakePWGroup( bool bForce1Group=false );
 	//##ModelId=452B0C560192
@@ -122,7 +122,7 @@ public:
 	//##ModelId=452B0C5601E5
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
 	//##ModelId=452B0C5601F7
-    bool MakePDWArray( _PDW *pdw, int count );
+    bool MakePDWArray( _PDW *pdw, int count, int iBand=0 );
 	//##ModelId=452B0C560201
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	//##ModelId=452B0C560203

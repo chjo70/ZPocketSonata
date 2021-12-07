@@ -1,18 +1,16 @@
 
 #include "stdafx.h"
 
-
-
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>		// open() �Լ�
 #include <stdlib.h>
 
 #ifdef __linux__
-#include <unistd.h> // read, write
+#include <unistd.h>
 #include <endian.h>
-#include <sys/mman.h>   // mmap() �Լ�
-#include <sys/errno.h> // ENOMSG
+#include <sys/mman.h>
+#include <sys/errno.h>
 #include <sys/ioctl.h>
 #endif
 
@@ -28,18 +26,17 @@
 
 #include "../Utils/clog.h"
 
+#include "../Include/globals.h"
 
-
-
-xuio_t CHWIO::xuio[XUIO_COUNT] = {
-    {-1,  UIO_DMA_1_ADDR, 0,    0x1000, (char *) "/dev/uio4" }, //DMA 0 Control Register
+xuio_t CHWIO::m_xuio[XUIO_COUNT] = {
+    { -1, 0x1000, UIO_DMA_1_ADDR, 0U, "/dev/uio4" }, //DMA 0 Control Register
 };
 
 unsigned int CHWIO::m_uiCoInterrupt=0;
 
 CHWIO::CHWIO()
 {
-    m_uiCoInterrupt = 0;
+    // m_uiCoInterrupt = 0;
 }
 
 /**
@@ -82,20 +79,20 @@ void CHWIO::OpenHW()
         {
             pUIO = uio_get_uio(i);
 
-            if(pUIO->fd == -1 ) {
-                pUIO->fd = open(pUIO->dev, O_RDWR);
-                printf( " uio->fd[%d]\n" , pUIO->fd );
+            if(pUIO->iFd == -1 ) {
+                pUIO->iFd = open(pUIO->pszDev, O_RDWR);
+                printf( " uio->fd[%d]\n" , pUIO->iFd );
 
-                if ( pUIO->fd != -1 ) {
-                    if (pUIO->physical > 0) {
-                        pUIO->logical = (uint64_t)mmap(0, pUIO->size, PROT_READ | PROT_WRITE, MAP_SHARED, pUIO->fd, 0);
-                        printf( " logical[%ld]\n" , pUIO->logical );
+                if ( pUIO->iFd != -1 ) {
+                    if (pUIO->ullPhysical > 0) {
+                        pUIO->ullLogical = (uint64_t)mmap(0, pUIO->size, PROT_READ | PROT_WRITE, MAP_SHARED, pUIO->iFd, 0);
+                        printf( " logical[%ld]\n" , pUIO->ullLogical );
                     }
                 }
                 else {
                     char buffer[100];
 
-                    sprintf( buffer, "open(%s)" , pUIO->dev );
+                    sprintf( buffer, "open(%s)" , pUIO->pszDev );
                     perror( buffer );
                 }
             }
@@ -161,8 +158,8 @@ uint32_t CHWIO::ReadReg(uint8_t sel, uint32_t offset)
  */
 xuio_t *CHWIO::uio_get_uio(uint8_t sel)
 {
-    if (sel >= XUIO_COUNT && xuio[sel].logical == 0) { printf( "\n error of uio_get_uio" ); return NULL; }
-    return & xuio[sel];
+    if (sel >= XUIO_COUNT && m_xuio[sel].ullLogical == 0) { printf( "\n error of uio_get_uio" ); return NULL; }
+    return & m_xuio[sel];
 }
 
 /**
@@ -211,23 +208,21 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
     bool bRet=true;
 
     int pending = 0;
-
-
     
-    printf( "\n uio->fd[%d]\n", uio->fd );
-    if( uio->fd != -1 ) {
+    //printf( "\n uio->fd[%d]\n", uio->fd );
+    if( uio->iFd != -1 ) {
 #ifdef __linux__
         struct timeval timeout;
         int rv;
         fd_set set;
 
         FD_ZERO( & set ); /* clear the set */
-        FD_SET( uio->fd, & set ); /* add our file descriptor to the set */
+        FD_SET( uio->iFd, & set ); /* add our file descriptor to the set */
 
         timeout.tv_sec = 10;
         timeout.tv_usec = 00000;
 
-        rv = select( uio->fd + 1, & set, NULL, NULL, & timeout );
+        rv = select( uio->iFd + 1, & set, NULL, NULL, & timeout );
         if( rv == -1 ) {
             perror( "select" ); /* an error accured */
         }
@@ -236,15 +231,13 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
             bRet = false;
         }
         else {
-            (void) read(uio->fd, (void *)&pending, sizeof(int));
+            (void) read(uio->iFd, (void *)&pending, sizeof(int));
         }
 #endif
     }
     else {
 #ifdef _SIM_USER_COLLECT_
         int iModular;
-
-        sleep( 1 );
 
         iModular = m_uiCoInterrupt % 50;
 
@@ -274,7 +267,7 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
 void CHWIO::ClearInterrupt(xuio_t *uio)
 {
 
-    switch( uio->physical ) {
+    switch( uio->ullPhysical ) {
         case UIO_DMA_1_ADDR :
             {
 #ifdef __ZYNQ_BOARD__
@@ -307,7 +300,7 @@ void CHWIO::uio_re_enable_Interrupt( ENUM_UIO_DEV enUIO )
 
 #ifndef _SIM_USER_COLLECT_
     // ���ͷ�Ʈ ��Ȱ��ȭ
-    write(pUIO->fd, (void *)&reenable, sizeof(int));
+    write(pUIO->iFd, (void *)&reenable, sizeof(int));
 #endif
 }
 
@@ -319,7 +312,7 @@ void CHWIO::StopCollecting( ENUM_UIO_DEV enUIO )
     xuio_t *pUIO = (xuio_t*) CHWIO::uio_get_uio( (uint8_t) enUIO );
 
     if( pUIO != NULL ) {
-        printf( "\n StopCollecting[%d]::::::::::::::::\n ", pUIO->fd );
+        printf( "\n StopCollecting[%d]::::::::::::::::\n ", pUIO->iFd );
     }
     else {
         printf( "\n StopCollecting[NULL]::::::::::::::::\n " );
@@ -342,7 +335,7 @@ void CHWIO::StartCollecting( ENUM_UIO_DEV enUIO )
 
     //pUIO->fd = open( pUIO->dev, O_RDWR);
     if( pUIO != NULL ) {
-        printf( "\n StartCollecting[%d]::::::::::::::::\n", pUIO->fd );
+        printf( "\n StartCollecting[%d]::::::::::::::::\n", pUIO->iFd );
     }
     else {
         printf( "\n StartCollecting[NULL]::::::::::::::::\n" );

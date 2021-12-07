@@ -27,7 +27,7 @@
 #include "../MIDAS/Midas.h"
 //#include "../MIDAS/RawFile.h"
 
-#include "../../Utils/clog.h"
+//#include "../../Include/globals.h"
 
 #define MAX_MATCH_RADARMODE         (2*MAX_RADARMODE)
 
@@ -115,7 +115,7 @@ public:
 #endif
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
-    inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
+    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
 
 
     inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }

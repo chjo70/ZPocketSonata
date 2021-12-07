@@ -21,6 +21,8 @@
 #include "NAnalPRI.h"
 #include "NewSigAnal.h"
 
+#include "../../Include/globals.h"
+
 STR_PULSE_TRAIN_SEG *CNAnalPRI::m_pSeg=NULL;
 
 //////////////////////////////////////////////////////////////////////
@@ -101,7 +103,7 @@ void CNAnalPRI::Init()
 {
 
     m_nAnalSeg = 0;
-    m_CoSeg = GetCoSeg();
+    m_uiCoSeg = GetCoSeg();
 
     m_nAnalEmitter = m_CoEmitter;
 
@@ -126,7 +128,7 @@ void CNAnalPRI::Analysis()
     PrintFunction
 
     // 초기화
-    m_CoSeg = GetCoSeg();
+    m_uiCoSeg = GetCoSeg();
     m_nAnalEmitter = m_CoEmitter;
     // Init();
 

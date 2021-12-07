@@ -1,9 +1,9 @@
 #ifndef CPROMPT_H
 #define CPROMPT_H
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #define NOOFOWNCMDS             (8)

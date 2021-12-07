@@ -22,7 +22,6 @@
 #include "../Anal/SigAnal/_Macro.h"
 #include "../Anal/SigAnal/_Struct.h"
 
-CSysConfig* CSysConfig::m_pInstance = NULL;
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
 static char g_szDeviceName[5][10] = { "eth1", "wlo1", "enp0s8" } ;
@@ -57,31 +56,6 @@ CSysConfig::~CSysConfig(void)
 {
     m_pSharedMemory->close();
     delete m_pSharedMemory;
-}
-
-/**
- * @brief CSysConfig::getInstance
- * @return
- */
-CSysConfig* CSysConfig::getInstance()
-{
-    if(!m_pInstance)
-    {
-        m_pInstance = new CSysConfig;
-    }
-    return m_pInstance;
-}
-
-/**
- * @brief CSysConfig::ReleaseInstance
- */
-void CSysConfig::ReleaseInstance()
-{
-    if(m_pInstance)
-    {
-        delete m_pInstance;
-        m_pInstance = NULL;
-    }
 }
 
 /**
@@ -125,7 +99,7 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
+    _spAnalMinPulseCount = (unsigned int) m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간
@@ -258,7 +232,7 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
         //sprintf( pIPAddress, "%d.%d.%d.%d" , & a_IP, & b_IP, & c_IP, & d_IP );
         //printf("myOwn IP Address is %s\n", ipstr);
     }
-#elif _MFC_VER
+#elif _MSC_VER
     WORD wVersionRequested;
     WSADATA wsaData;
     char name[255];

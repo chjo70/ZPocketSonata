@@ -17,25 +17,15 @@
 #include "../SigAnal/_SigAnal.h"
 
 #include "../EmitterMerge/ELStringDefn.h"
-// #include "../EmitterMerge/Geo2UTM.h"
-// #include "../EmitterMerge/VincentyParam.h"
-// #include "../EmitterMerge/CInverseMethod.h"
-// #include "../EmitterMerge/ELCEDLibMngr2.h"
-// #include "../../../ELINT/MNGR/ELElintUtilMngr.h"
-// #include "../../../COMMON\MNGR\GRTestParamMngr.h"
-// #include "../../../COMMON\MNGR\GRLogMngr.h"
+
 #include "Identify.h"
 #include "../EmitterMerge/InverseMethod/CInverseMethod.h"
-// #include "../../DATATYPE\ELCEDLibDataType.h"
 
-// #include "atlstr.h"
-//
-// #include "../../MNGR/Codec/ELDecoder.h"
 #include "./ELUtil.h"
 
 
-#include "../../Utils/clog.h"
-
+//#include "../../Utils/clog.h"
+#include "../../Include/globals.h"
 
 #define MAX_SIZE_OF_CONDITION					(300)
 
@@ -67,6 +57,7 @@ vector<STR_H000> CELSignalIdentifyAlg::m_vecH000;
 
 int CELSignalIdentifyAlg::m_iH000;
 
+int CELSignalIdentifyAlg::m_iRadar;
 int CELSignalIdentifyAlg::m_iRadarMode;
 SRadarMode *CELSignalIdentifyAlg::m_pRadarMode;
 
@@ -76,9 +67,6 @@ SThreat *CELSignalIdentifyAlg::m_pThreat;
 STR_EOB_RESULT *CELSignalIdentifyAlg::m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
 STR_LIB_IDRESULT *CELSignalIdentifyAlg::m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
 STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 결과
-
-// void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
-// void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
 
 
 //vector<SDeviceData> CELSignalIdentifyAlg::m_vecDeviceData;
@@ -106,27 +94,27 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 
     ++ m_CoInstance;
 
-        //////////////////////////////////////////////////////////////////////////
-        // 식별 콜함수 정의
-        // 주파수 식별 매칭 정의
-        IdentifyFrq[FFixedFixed] = & CELSignalIdentifyAlg::FIdentifyFixFix;
-        IdentifyFrq[FFixedHopping] = & CELSignalIdentifyAlg::FIdentifyFixHop;
-        IdentifyFrq[FFixedPattern] = & CELSignalIdentifyAlg::FIdentifyFixPat;
-        IdentifyFrq[FHoppingHopping] = & CELSignalIdentifyAlg::FIdentifyHopHop;
-        IdentifyFrq[FPatternPattern] = & CELSignalIdentifyAlg::FIdentifyPatPat;
-        IdentifyFrq[FAgilePattern] = & CELSignalIdentifyAlg::FIdentifyAgiPat;
-        IdentifyFrq[FIgnoreFreqType] = & CELSignalIdentifyAlg::FIdentifyFreq;
+    //////////////////////////////////////////////////////////////////////////
+    // 식별 콜함수 정의
+    // 주파수 식별 매칭 정의
+    IdentifyFrq[FFixedFixed] = & CELSignalIdentifyAlg::FIdentifyFixFix;
+    IdentifyFrq[FFixedHopping] = & CELSignalIdentifyAlg::FIdentifyFixHop;
+    IdentifyFrq[FFixedPattern] = & CELSignalIdentifyAlg::FIdentifyFixPat;
+    IdentifyFrq[FHoppingHopping] = & CELSignalIdentifyAlg::FIdentifyHopHop;
+    IdentifyFrq[FPatternPattern] = & CELSignalIdentifyAlg::FIdentifyPatPat;
+    IdentifyFrq[FAgilePattern] = & CELSignalIdentifyAlg::FIdentifyAgiPat;
+    IdentifyFrq[FIgnoreFreqType] = & CELSignalIdentifyAlg::FIdentifyFreq;
 
-        // PRI 식별 매칭 정의
-        IdentifyPri[PStableStable] = & CELSignalIdentifyAlg::PIdentifyStbStb;
-        IdentifyPri[PStableDwell] = & CELSignalIdentifyAlg::PIdentifyStbDwl;
-        IdentifyPri[PStaggerStagger] = & CELSignalIdentifyAlg::PIdentifyStgStg;
-        IdentifyPri[PDwellDwell] = & CELSignalIdentifyAlg::PIdentifyDwlDwl;
-        IdentifyPri[PJitterStagger] = & CELSignalIdentifyAlg::PIdentifyJitStg;
-        IdentifyPri[PJitterJitter] = & CELSignalIdentifyAlg::PIdentifyJitJit;
-        IdentifyPri[PJitterPattern] = & CELSignalIdentifyAlg::PIdentifyJitPat;
-        IdentifyPri[PPatternPattern] = & CELSignalIdentifyAlg::PIdentifyPatPat;
-        IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
+    // PRI 식별 매칭 정의
+    IdentifyPri[PStableStable] = & CELSignalIdentifyAlg::PIdentifyStbStb;
+    IdentifyPri[PStableDwell] = & CELSignalIdentifyAlg::PIdentifyStbDwl;
+    IdentifyPri[PStaggerStagger] = & CELSignalIdentifyAlg::PIdentifyStgStg;
+    IdentifyPri[PDwellDwell] = & CELSignalIdentifyAlg::PIdentifyDwlDwl;
+    IdentifyPri[PJitterStagger] = & CELSignalIdentifyAlg::PIdentifyJitStg;
+    IdentifyPri[PJitterJitter] = & CELSignalIdentifyAlg::PIdentifyJitJit;
+    IdentifyPri[PJitterPattern] = & CELSignalIdentifyAlg::PIdentifyJitPat;
+    IdentifyPri[PPatternPattern] = & CELSignalIdentifyAlg::PIdentifyPatPat;
+    IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
 
     if( m_CoInstance == _spOne ) {
         MallocBuffer();
@@ -134,7 +122,7 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 
         InitIdentifyTable();
 
-        m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
+        m_pSEnvironVariable = g_pTheELEnvironVariable->GetEnvrionVariable();
 
 #ifdef _SQLITE_
         try {
@@ -175,14 +163,16 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
     -- m_CoInstance;
 
     if( m_CoInstance == 0 ) {
-        GP_ENVI_VAR->ReleaseInstance();
-
-#ifdef _SQLITE_
-        delete m_pDatabase;
-#endif
+        //delete g_pTheEnvironVariable;
+        //g_pTheEnvironVariable->ReleaseInstance();
 
         Destory();
     }
+
+#ifdef _SQLITE_
+    delete m_pDatabase;
+#endif
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -227,6 +217,8 @@ void CELSignalIdentifyAlg::Destory()
 */
 void CELSignalIdentifyAlg::InitVar()
 {
+
+    m_pSEnvironVariable = NULL; //g_pTheEmitterMerge->m_theEnvironVariable.GetEnvrionVariable();
 
 // 	m_optParameter.freq.bCheckRange = true;
 // 	m_optParameter.pri.bCheckRange = true;
@@ -287,6 +279,7 @@ bool CELSignalIdentifyAlg::LoadCEDLibrary2()
     //LogPrint("\n===================== 식별 데이터를 로딩했습니다. !! 시간 : %d ms\n", (int)((GetTickCount() - dwTime) / 1));
 
     //DeletePointers( vecRadarMode_Sequence_Values );
+    LOGMSG2( enNormal, "Loading the Radar[%d], RadarMode[%d]..." , m_iRadar, m_iRadarMode );
     vecRadarMode_Sequence_Values.clear();
 
     return true;
@@ -328,7 +321,7 @@ void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pV
     SRadarMode_Sequence_Values stRadarMode_SequenceValues;
 
     UINT uiRadarMode_Sequence=0, uiSizeOfRadarMode_Sequence;
-
+   
     uiSizeOfRadarMode_Sequence = pVecRadarMode_Sequence_Values->size();
 
     pRadarMode = m_pRadarMode;
@@ -339,20 +332,20 @@ void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pV
         j = 0;
         pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
 
-            for( i=0 ; i < m_iRadarMode ; ) {
+        for( i=0 ; i < m_iRadarMode ; ) {
             while( j < uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex < pRadarMode->iRadarModeIndex ) {
                 pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
-                }
+            }
 
             while( j <= uiSizeOfRadarMode_Sequence && pstSRadarMode_Sequence_Values->iRadarModeIndex == pRadarMode->iRadarModeIndex ) {
-                    stRadarMode_SequenceValues.iRadarModeIndex = pstSRadarMode_Sequence_Values->iRadarModeIndex;
-                    stRadarMode_SequenceValues.i_Index = pstSRadarMode_Sequence_Values->i_Index;
-                    stRadarMode_SequenceValues.f_Min = pstSRadarMode_Sequence_Values->f_Min;
-                    stRadarMode_SequenceValues.f_Max = pstSRadarMode_Sequence_Values->f_Max;
+                stRadarMode_SequenceValues.iRadarModeIndex = pstSRadarMode_Sequence_Values->iRadarModeIndex;
+                stRadarMode_SequenceValues.i_Index = pstSRadarMode_Sequence_Values->i_Index;
+                stRadarMode_SequenceValues.f_Min = pstSRadarMode_Sequence_Values->f_Min;
+                stRadarMode_SequenceValues.f_Max = pstSRadarMode_Sequence_Values->f_Max;
 
                 if( enSeq == enRFSequenceValue ) {
                     pRadarMode->vecRadarMode_RFSequenceValues.push_back( stRadarMode_SequenceValues );
-                }				
+                }
                 else {
                     pRadarMode->vecRadarMode_PRISequenceValues.push_back( stRadarMode_SequenceValues );
                 }
@@ -362,15 +355,15 @@ void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pV
                 }
                 else {
                     pstSRadarMode_Sequence_Values = & pVecRadarMode_Sequence_Values->at(j++);
-					++ uiRadarMode_Sequence;
-				}
-				}
+                    ++ uiRadarMode_Sequence;
+                }                    
+            }                    
 
-                ++ i;
-                ++ pRadarMode;
+            ++ i;
+            ++ pRadarMode;
 
-            }
         }
+    }
 
 }
 
@@ -473,9 +466,7 @@ void CELSignalIdentifyAlg::Init()
     m_CEDEOBResult.chELNOT[0] = 0;
 
     m_CEDEOBResult.nThreatIndex = 0;
-    m_CEDEOBResult.nDeviceIndex = 0;
-
-    m_pSEnvironVariable = GP_ENVI_VAR->GetEnvrionVariable();
+    m_CEDEOBResult.nDeviceIndex = 0;    
 
 }
 
@@ -643,10 +634,14 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         // Hopping, PRI 무시
         pFrqType = & m_HowToId[_HOPPING][_UNKNOWN_PRI].frq[0];
         pPriType = & m_HowToId[_HOPPING][_UNKNOWN_PRI].pri[0];
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL,										++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STABLE,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_RANDOM,						++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER,									++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_PATTERN;
 
         ////////////////////////////////////////////////////////////////////////////
@@ -654,7 +649,8 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         // Pattern Agile, Stable
         pFrqType = & m_HowToId[_PATTERN_AGILE][_STABLE].frq[0];
         pPriType = & m_HowToId[_PATTERN_AGILE][_STABLE].pri[0];
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL;
 
         // Pattern Agile, Stagger
@@ -676,15 +672,20 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         // Pattern Agile, Dwell
         pFrqType = & m_HowToId[_PATTERN_AGILE][_DWELL].frq[0];
         pPriType = & m_HowToId[_PATTERN_AGILE][_DWELL].pri[0];
-        *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL;
+        //++ pFrqType,  ++ pPriType;
 
         // Pattern Agile, PRI 무시
         pFrqType = & m_HowToId[_PATTERN_AGILE][_UNKNOWN_PRI].frq[0];
         pPriType = & m_HowToId[_PATTERN_AGILE][_UNKNOWN_PRI].pri[0];
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_PATTERN;
 
         ////////////////////////////////////////////////////////////////////////////
@@ -692,61 +693,91 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         // 주파수 무시, Stable
         pFrqType = & m_HowToId[_IGNORE_FREQ][_STABLE].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_STABLE].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,	*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,	*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STABLE,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,	*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,	*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE, *pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STABLE;
 
         // 주파수 무시, Stagger
         pFrqType = & m_HowToId[_IGNORE_FREQ][_STAGGER].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_STAGGER].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STAGGER;
 
         // 주파수 무시, Jitter
         pFrqType = & m_HowToId[_IGNORE_FREQ][_JITTER_RANDOM].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_JITTER_RANDOM].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _STAGGER;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
         *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _STAGGER;
 
         // 주파수 무시, Pattern
         pFrqType = & m_HowToId[_IGNORE_FREQ][_JITTER_PATTERN].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_JITTER_PATTERN].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_PATTERN,								++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_PATTERN,
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _JITTER_PATTERN;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _JITTER_PATTERN;
 
         // 주파수 무시, Dwell
         pFrqType = & m_HowToId[_IGNORE_FREQ][_DWELL].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_DWELL].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL,									++ pFrqType,  ++ pPriType;
-        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL,
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _RANDOM_AGILE,  *pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _HOPPING,				*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++ pPriType;
+        *pFrqType = (int) _PATTERN_AGILE,	*pPriType = (int) _DWELL;
 
         // 주파수 무시, PRI 무시
         pFrqType = & m_HowToId[_IGNORE_FREQ][_UNKNOWN_PRI].frq[0];
         pPriType = & m_HowToId[_IGNORE_FREQ][_UNKNOWN_PRI].pri[0];
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE,								++ pFrqType,  ++pPriType;
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM,					++ pFrqType,  ++pPriType;
-        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL,									++ pFrqType,  ++pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _STABLE;
+        ++ pFrqType,  ++pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_RANDOM;
+        ++ pFrqType,  ++pPriType;
+        *pFrqType = (int) _FIXED,					*pPriType = (int) _DWELL;
+        ++ pFrqType,  ++pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _STAGGER,								++ pFrqType,  ++pPriType;
         *pFrqType = (int) _FIXED,					*pPriType = (int) _JITTER_PATTERN,				++ pFrqType,  ++pPriType;
         *pFrqType = (int) _RANDOM_AGILE,	*pPriType = (int) _STABLE,								++ pFrqType,  ++pPriType;
@@ -1399,7 +1430,7 @@ int CELSignalIdentifyAlg::IdentifyPosition( SRxABTData *pABTData )
 // 				eob_longitude = pDeviceData->eob_longitude / 10000.;
 //
             //ST_IMA->VincentyInverse( & distlob, eob_latitude, eob_longitude, res_latitude, res_longitude );
-        dDistance = ST_IMA->GCDistance( (double) pThreat->fLatitude, (double) pThreat->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
+        dDistance = m_theInverseMethod.GCDistance( (double) pThreat->fLatitude, (double) pThreat->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
 
         //printf( "\nDist from Th[%d] : %f [m]", pThreat->iThreatIndex, dDistance );
         //Log( enNormal, "Dist from Th[%d] : %f [m]", pThreat->iThreatIndex, dDistance );
@@ -1769,9 +1800,9 @@ void CELSignalIdentifyAlg::MakeFreqBand()
                     \author 조철희 (churlhee.jo@lignex1.com)
                     \date 	2014-02-02 13:57:06
             */
-            if( opt_count == (UINT) _spZero ) {
-                opt_count = 1;
-            }
+//             if( opt_count == (UINT) _spZero ) {
+//                 opt_count = 1;
+//             }
 
             /*! \bug  	음수값을 unsigned type으로 변환을 자제해야 한다.
                     \author 조철희 (churlhee.jo@lignex1.com)
@@ -1873,13 +1904,13 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
                 if( pRadarMode->eRF_Type == _UNKNOWN_FT ) {                    
                     theFLib = & m_pFLib[0];
                     for( l=0 ; l < NO_FLIB_BAND ; ++l ) {                        
-                            theFLib->pIdxRadarMode[ theFLib->uicount++ ] = pRadarMode;
+                        theFLib->pIdxRadarMode[ theFLib->uicount++ ] = pRadarMode;
                         ++ theFLib;
                     }
                 }
                 else {
-                band.ilow = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMin, 1 ) );
-                band.ihgh = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMax, 1 ) );
+                    band.ilow = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMin, 1 ) );
+                    band.ihgh = (int) BandSelect( 0, (UINT) NO_FLIB_BAND-1, (int) F_UDIV( pRadarMode->fRF_TypicalMax, 1 ) );
 
                     theFLib = & m_pFLib[band.ilow];
                     for( l=band.ilow ; l <= band.ihgh ; ++l ) {
@@ -1960,8 +1991,10 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
         // 1. D&S 에 대한 정렬
         pLibIndex = inLib;
         pFrqEid = inLib;
-        (pLibRange+_DWELL)->from = pFrqEid;
-        (pLibRange+_DWELL)->uicount = _spZero;
+        //(pLibRange+_DWELL)->from = pFrqEid;
+        pLibRange[_DWELL].from = pFrqEid;        
+        //(pLibRange+_DWELL)->uicount = _spZero;
+        pLibRange[_DWELL].uicount = _spZero;        
         for( i=0 ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
@@ -1976,15 +2009,18 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                 ++ pFrqEid;
                 ++ incNoEid;
 
-                ++ (pLibRange+_DWELL)->uicount;	// count of IPL(Stable)
+                ++ pLibRange[_DWELL].uicount;
+                //++ (pLibRange+_DWELL)->uicount;	// count of IPL(Stable)
             }
 
         }
 
         // 2. Stable 에 대한 정렬
         pLibIndex = pFrqEid;
-        (pLibRange+_STABLE)->from = pFrqEid;
-        (pLibRange+_STABLE)->uicount = _spZero;
+        //(pLibRange+_STABLE)->from = pFrqEid;
+        pLibRange[_STABLE].from = pFrqEid;
+        //(pLibRange+_STABLE)->uicount = _spZero;
+        pLibRange[_STABLE].uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
@@ -1999,14 +2035,17 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                     ++ pFrqEid;
                     ++ incNoEid;
 
-                    ++ ( (pLibRange+_STABLE)->uicount );
+                    //++ ( (pLibRange+_STABLE)->uicount );
+                    ++ pLibRange[_STABLE].uicount;
             }
         }
 
         // 3. Stagger 에 대한 정렬
         pLibIndex = pFrqEid;
-        (pLibRange+_STAGGER)->from = pFrqEid;
-        (pLibRange+_STAGGER)->uicount = _spZero;
+        //(pLibRange+_STAGGER)->from = pFrqEid;
+        pLibRange[_STAGGER].from = pFrqEid;
+        //(pLibRange+_STAGGER)->uicount = _spZero;
+        pLibRange[_STAGGER].uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_Else
                 continue;
@@ -2021,14 +2060,17 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                 ++ pFrqEid;
                 ++ incNoEid;                    // next loop initial val.
 
-                ++ (pLibRange+_STAGGER)->uicount;    // count of IPL(Stable)
+                //++ (pLibRange+_STAGGER)->uicount;    // count of IPL(Stable)
+                ++ pLibRange[_STAGGER].uicount;
             }
         }
 
         // 4. 패턴 에 대한 정렬
         pLibIndex = pFrqEid;
-        (pLibRange+_JITTER_PATTERN)->from = pFrqEid;		// Jitter IPL range
-        (pLibRange+_JITTER_PATTERN)->uicount = _spZero;		// Jitter IPL range
+        //(pLibRange+_JITTER_PATTERN)->from = pFrqEid;		// Jitter IPL range
+        pLibRange[_JITTER_PATTERN].from = pFrqEid;
+        //(pLibRange+_JITTER_PATTERN)->uicount = _spZero;		// Jitter IPL range
+        pLibRange[_JITTER_PATTERN].uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
@@ -2044,14 +2086,17 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                 ++ pFrqEid;
                 ++ incNoEid;
 
-                ++ (pLibRange+_JITTER_PATTERN)->uicount;
+                //++ (pLibRange+_JITTER_PATTERN)->uicount;
+                ++ pLibRange[_JITTER_PATTERN].uicount;
             }
         }
 
         // 5. 지터 에 대한 식별
         pLibIndex = pFrqEid;
-        (pLibRange+_JITTER_RANDOM)->from = pFrqEid;		// Pattern IPL range
-        (pLibRange+_JITTER_RANDOM)->uicount = _spZero;
+        //(pLibRange+_JITTER_RANDOM)->from = pFrqEid;		// Pattern IPL range
+        pLibRange[_JITTER_RANDOM].from = pFrqEid;
+        //(pLibRange+_JITTER_RANDOM)->uicount = _spZero;
+        pLibRange[_JITTER_RANDOM].uicount = _spZero;
         for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
                 continue;
@@ -2065,28 +2110,32 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
                 ++ pFrqEid;
                 ++ incNoEid;
 
-                ++ (pLibRange+_JITTER_RANDOM)->uicount;
+                // ++ (pLibRange+_JITTER_RANDOM)->uicount;
+                ++ pLibRange[_JITTER_RANDOM].uicount;
             }
         }
 
         // 6. enumUndefinedPRI_LegacyType 에 대한 식별
         pLibIndex = pFrqEid;
-        (pLibRange+_UNKNOWN_PRI)->from = pFrqEid;		// Pattern IPL range
-        (pLibRange+_UNKNOWN_PRI)->uicount = _spZero;
-            for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
+        //(pLibRange+_UNKNOWN_PRI)->from = pFrqEid;		// Pattern IPL range
+        pLibRange[_UNKNOWN_PRI].from = pFrqEid;
+        //(pLibRange+_UNKNOWN_PRI)->uicount = _spZero;
+        pLibRange[_UNKNOWN_PRI].uicount = _spZero;
+        for( i=incNoEid ; i < uicount ; ++i, ++pLibIndex ) {
             if( CheckFreqType( frqType, *pLibIndex ) != TRUE ) { //DTEC_NullPointCheck
-                    continue;
-                }
+                continue;
+            }
 
             if( (*pLibIndex)->ePRI_Type == RadarModePRIType::enumPRIUnknown ) {
-                    bkupLIBINDEX = *pFrqEid;
-                    *pFrqEid = *pLibIndex;
-                    *pLibIndex = bkupLIBINDEX;
+                bkupLIBINDEX = *pFrqEid;
+                *pFrqEid = *pLibIndex;
+                *pLibIndex = bkupLIBINDEX;
 
-                    ++ pFrqEid;
-                    ++ incNoEid;
+                ++ pFrqEid;
+                ++ incNoEid;
 
-                ++ (pLibRange+_UNKNOWN_PRI)->uicount;
+                //++ (pLibRange+_UNKNOWN_PRI)->uicount;
+                ++ pLibRange[_UNKNOWN_PRI].uicount;
             }
         }
 
@@ -3378,11 +3427,11 @@ BOOL CELSignalIdentifyAlg::CompSwitchLevel( float *series, int coSeries, vector 
 
                     bRet = CompMarginDiff<float>( series[0], pRadarPRI_Values->f_Min, pRadarPRI_Values->f_Max, (float) m_pSEnvironVariable->fMarginPriError );
                     if( TRUE == bRet ) {
-                        pTempPRI_SequenceNumIndex2 = pTempPRI_SequenceNumIndex + 1;
+                        pTempPRI_SequenceNumIndex2 = & pTempPRI_SequenceNumIndex[1];
                         // 나머지 레벨 값을 비교.
                         for( l=1 ; l < coSeries ; ++l ) {
                             pRadarPRI_Values = & pvecRadarPRI_Values->at( (UINT) pTempPRI_SequenceNumIndex->nPRI_Index - 1 );
-                            if( pTempPRI_SequenceNumIndex2 >= pPRI_SequenceNumIndex+coNumIndex ) {
+                            if( pTempPRI_SequenceNumIndex2 >= & pPRI_SequenceNumIndex[coNumIndex] ) {
                                 pTempPRI_SequenceNumIndex2 = pPRI_SequenceNumIndex;
                             }
 
@@ -3697,7 +3746,7 @@ void CELSignalIdentifyAlg::FIdentifyPatPat( SRxLOBData *pLOBData )
         // 주파수 변경 주기 체크
         diff = IDIV( m_pSEnvironVariable->fMarginMinRqdFrqRangeNestedRatio * pLOBData->fFreqPatternPeriod, 100 );
 
-        bret = CompMarginDiff( pLOBData->fFreqPatternPeriod, pRadarMode->fPRI_PatternPeriodMin, pRadarMode->fPRI_PatternPeriodMax, m_pSEnvironVariable->fMarginFrqError );
+        bret = CompMarginDiff<float>( pLOBData->fFreqPatternPeriod, pRadarMode->fPRI_PatternPeriodMin, pRadarMode->fPRI_PatternPeriodMax, m_pSEnvironVariable->fMarginFrqError );
         if( bret == _spFalse ) {
             continue;
         }
@@ -5967,17 +6016,56 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
             // 기타 정보
             //pRadarMode->nAssocIndex	= query.getColumn(i++).getInt();													//모드 간 연관관계에 대한 링크
-            strcpy( pRadarMode->szModulationCode, stmt.GetColumnName(i++) );
+            
+            p = (char *) stmt.GetColumnName(i++);
+            if( p != NULL ) {
+                strcpy( pRadarMode->szModulationCode, p );
+            }
+            else {
+                pRadarMode->szModulationCode[0] = 0;
+            }
+
             pRadarMode->iRadarModePriority = stmt.GetColumnInt(i++);
 
             // 레이더 정보
             pRadarMode->iRadarIndex = stmt.GetColumnInt(i++);
-            strcpy( pRadarMode->szRadarModeName, stmt.GetColumnName(i++) );
-            strcpy( pRadarMode->szModeCode, stmt.GetColumnName(i++) );
+            //strcpy( pRadarMode->szRadarModeName, stmt.GetColumnName(i++) );
+            p = (char *) stmt.GetColumnName(i++);
+            if( p != NULL ) {
+                strcpy( pRadarMode->szRadarModeName, p );
+            }
+            else {
+                pRadarMode->szRadarModeName[0] = 0;
+            }
+
+            //strcpy( pRadarMode->szModeCode, stmt.GetColumnName(i++) );
+            p = (char *) stmt.GetColumnName(i++);
+            if( p != NULL ) {
+                strcpy( pRadarMode->szModeCode, p );
+            }
+            else {
+                pRadarMode->szModeCode[0] = 0;
+            }
 
             pRadarMode->iRadarPriority = stmt.GetColumnInt(i++);
-            strcpy( pRadarMode->szELNOT, stmt.GetColumnName(i++) );
-            strcpy( pRadarMode->szNickName, stmt.GetColumnName(i++) );
+            //strcpy( pRadarMode->szELNOT, stmt.GetColumnName(i++) );
+            p = (char *) stmt.GetColumnName(i++);
+            if( p != NULL ) {
+                strcpy( pRadarMode->szELNOT, p );
+            }
+            else {
+                pRadarMode->szELNOT[0] = 0;
+            }
+
+            //strcpy( pRadarMode->szNickName, stmt.GetColumnName(i++) );
+            p = (char *) stmt.GetColumnName(i++);
+            if( p != NULL ) {
+                strcpy( pRadarMode->szNickName, p );
+            }
+            else {
+                pRadarMode->szNickName[0] = 0;
+            }
+
             pRadarMode->iTimeInactivated = stmt.GetColumnInt(i++);
 
             pRadarMode->iThreatIndex = stmt.GetColumnInt(i++);
@@ -6075,7 +6163,7 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
  
      DECLARE_END_CHECKODBC
      DECLARE_RETURN
-#endif
+#endif     
 
 }
 
@@ -6238,7 +6326,7 @@ bool CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 
     pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
     pVecRadarMode_PRISequence->clear();
-//     DeletePointers( *pVecRadarMode_PRISequence );
+    //DeletePointers( *pVecRadarMode_PRISequence );
 
     while (!theRS.IsEof()) {
         index = 0;

@@ -1,4 +1,4 @@
-// CTaskMngr.cpp: implementation of the CTaskMngr class.
+﻿// CTaskMngr.cpp: implementation of the CTaskMngr class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -29,19 +29,18 @@
 #include "cprompt.h"
 #include "creclan.h"
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 #include "../Utils/chwio.h"
 #include "../System/csysconfig.h"
 
 #include "../Utils/csingleclient.h"
 #include "../Utils/ccommonutils.h"
 
-extern CSingleClient *g_pTheCCUSocket;
+#include "../Include/globals.h"
+
+
 
 #define _DEBUG_
-
-// 클래스 내의 정적 멤버변수 값 정의
-CTaskMngr* CTaskMngr::m_pInstance = nullptr;
 
 /**
  * @brief CTaskMngr::CTaskMngr
@@ -52,6 +51,7 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
 
     Init();
 
+#ifdef _SQLITE_
     try {
         m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
     }
@@ -60,6 +60,11 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
+#elif _NO_SQLITE_
+#elif _MSSQL_
+    // MSSQL 연결
+    CMSSQL::Init();
+#endif
 
 }
 
@@ -70,10 +75,7 @@ CTaskMngr::~CTaskMngr(void)
 {
 
     //GP_SYSCFG->SetMode( enMode );
-    CreateAllAnalysisThread( false );
-
-    // 객체를 소멸하게 한다.
-    GP_SYSCFG->ReleaseInstance();
+    //CreateAllAnalysisThread( false );
 
 #ifdef _NO_SQLITE_
 #elif _SQLITE_
@@ -141,7 +143,7 @@ void CTaskMngr::Init()
 void CTaskMngr::InitVar()
 {
     // 보드 ID를 설정한다.
-    GP_SYSCFG->SetBoardID( GetBoardID() );
+    g_pTheSysConfig->SetBoardID( GetBoardID() );
 
 }
 
@@ -163,20 +165,17 @@ void CTaskMngr::_routine()
 {
     LOGENTRY;
     bool bWhile=true;
-    //UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
 
-    //pLanData = ( UNI_LAN_DATA * ) & m_pMsg->msg[0];
-
     while( bWhile ) {
         if( QMsgRcv() == -1 ) {
-            //perror( "QMsgRcv() 에러");
-            break;
+            perror( "QMsgRcv() 에러");
+            //break;
         }
         else {
-        if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-            switch( m_pMsg->uiOpCode ) {
+            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+                switch( m_pMsg->uiOpCode ) {
                     case enTHREAD_MODE :
                         SetMode();
                         break;
@@ -228,6 +227,11 @@ void CTaskMngr::_routine()
                         ReqIPLVersion();
                         break;
 
+                    // 시스템 변수 관련 메시지
+                    case enREQ_SYS :
+                        ReqSystemVar();
+                        break;
+
                     default:
                         LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                         break;
@@ -249,11 +253,11 @@ void CTaskMngr::SetMode()
 {
     ENUM_MODE enMode, enMode2;
 
-    enMode2 = enMode = (ENUM_MODE) m_pMsg->x.szData[0];
+    _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData );
 
     LOGMSG1( enDebug, "Set Mode[%d]", enMode );
 
-    GP_SYSCFG->SetMode( enMode );
+    g_pTheSysConfig->SetMode( enMode );
 
     switch( enMode ) {
         case enES_MODE :
@@ -261,16 +265,20 @@ void CTaskMngr::SetMode()
             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
             break;
 
-        case enREADY_MODE :
-            CreateAllAnalysisThread( false );
+        case enREADY_MODE :            
+            g_pTheCCUSocket->Stop();
+
+            g_pTheSignalCollect->QMsgSnd( m_pMsg, GetThreadName() );
+            g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLEND, GetThreadName() );
+
             ProcessSummary();
 
             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
 
             CCommonUtils::CloseSocket();
 
-            g_pTheCCUSocket->Stop();
             g_pTheCCUSocket->Run( _MSG_CCU_KEY );
+            LOGMSG( enDebug, "================================================================" );
             break;
 
         default :
@@ -285,15 +293,20 @@ void CTaskMngr::SetMode()
 void CTaskMngr::AnalysisStart()
 {
 
-    GP_SYSCFG->SetMode( enANAL_Mode );
+    g_pTheSysConfig->SetMode( enANAL_Mode );
+
+	// 수집 시작
+    g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
 
     // 분석 관련 쓰레드를 삭제한다.
-    CreateAllAnalysisThread();
+    // CreateAllAnalysisThread();
     
     time_t tiNow;
 
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
-    tiNow = (time_t) m_pMsg->x.szData[0];    
+    
+    tiNow = (time_t) m_pMsg->x.tiNow;    
+    //printf( "\n tiNow = %d" , tiNow );
 
 #ifdef _MSC_VER
     
@@ -307,63 +320,15 @@ void CTaskMngr::AnalysisStart()
     // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
     stime( & tiNow );
     
+#else    
+    
 #endif
 
-    SIGCOL->QMsgSnd( m_pMsg );
+    g_pTheSignalCollect->QMsgSnd( m_pMsg );
 
 #ifdef __ZYNQ_BOARD__
     CHWIO::StartCollecting( REG_UIO_DMA_1 );
 #endif
-
-}
-
-/**
- * @brief 분석 관련 쓰레드를 생성하거나 삭제 한다.
- * @param bCreate
- */
-void CTaskMngr::CreateAllAnalysisThread( bool bCreate )
-{
-
-    if( bCreate == true ) {
-        LOGMSG1( enNormal, "Create the All Analysis Thread...[%d].", bCreate );
-        LOGMSG( enNormal, "" );
-
-        g_AnalLoop = true;
-
-        EMTMRG->Run();
-        SIGCOL->Run();
-        DETANL->Run();
-        TRKANL->Run();
-        SCNANL->Run();
- 
-        DETANL->Init();
-        TRKANL->Init();
-        SCNANL->Init();
-
-    }
-    else {
-        LOGMSG1( enNormal, "분석 관련 쓰레드를 삭제합니다[%d].", bCreate );
-        LOGMSG( enNormal, "" );
-
-        g_AnalLoop = false;
-
-        if( EMTMRG_IS ) { EMTMRG->Stop(); }
-        if( SIGCOL_IS ) { SIGCOL->Stop(); }
-        if( DETANL_IS ) { DETANL->Stop(); }
-        if( TRKANL_IS ) { TRKANL->Stop(); }
-        if( SCNANL_IS ) { SCNANL->Stop(); }
-
-//         // 1. 먼저 관련 분석 쓰레드를 삭제한다.
-        EMTMRG_RELEASE;
-        SIGCOL_RELEASE;
-        DETANL_RELEASE;
-        TRKANL_RELEASE;
-        SCNANL_RELEASE;
-
-        LOGMSG1( enNormal, "수집 관련 쓰레드를 삭제합니다[%d].", bCreate );
-//         UCOL->Stop2();
-//         UCOL->Run();
-    }
 
 }
 
@@ -444,7 +409,7 @@ void CTaskMngr::Shutdown()
 void CTaskMngr::ProcessSummary()
 {
     LOGMSG( enDebug, "--------------------------------------------------------" );
-    LOGMSG2( enDebug, "  총 타스크 개수 : %d\t   총 메시지 큐 개수 : %d" , GetCoThread(), GetCoThread() );
+    LOGMSG2( enDebug, "  Total of Thread : %d\t   Total of Thread : %d" , GetCoThread(), GetCoThread() );
     LOGMSG( enDebug, "--------------------------------------------------------" );
 }
 
@@ -457,7 +422,7 @@ void CTaskMngr::ReqIPLVersion()
 
     strIPLVersion.uiIPLVersion = (m_theIPL.getIPLStart())->uiIPLVersion;
     strIPLVersion.uiStatus = strIPLVersion.uiIPLVersion != _spZero ? _spPass : _spFail;
-    CCommonUtils::SendLan( esIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
+    CCommonUtils::SendLan( enIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
 }
 
 /**
@@ -472,7 +437,6 @@ void CTaskMngr::IPLDownload()
 
     switch( m_pMsg->uiOpCode ) {
     case enREQ_IPL_START :
-        m_iTotalIPL = 0;
         m_theIPL.setIPLStart( & pLanData->strIPLStart );
         DeleteIPL();
         break;
@@ -480,16 +444,15 @@ void CTaskMngr::IPLDownload()
     case enREQ_IPL_DOWNLOAD :
         m_theIPL.trIPL( (STR_IPL *) GetRecvData() );
         m_theIPL.setIPL( (STR_IPL *) GetRecvData() );
-        InsertIPL( m_iTotalIPL );
-        ++ m_iTotalIPL;
+        InsertIPL( m_theIPL.GetTotalIPL()-1 );        
 
-        iWriteStatus = (int) ( 0.5 + ( 100. * m_iTotalIPL ) / (m_theIPL.getIPLStart())->uiCountOfIPL );
-        CCommonUtils::SendLan( esIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
+        iWriteStatus = (int) ( 0.5 + ( 100. * m_theIPL.GetTotalIPL() ) / (m_theIPL.getIPLStart())->uiCountOfIPL );
+        CCommonUtils::SendLan( enIPL_WRITESTATUS, & iWriteStatus, sizeof(int) );
         LOGMSG1( enNormal, "IPL WriteStatus[%d]" , iWriteStatus );
         break;
 
     case enREQ_IPL_END :
-        if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+        if( g_pTheEmitterMerge != NULL ) { g_pTheEmitterMerge->QMsgSnd( m_pMsg, GetThreadName() ); }
         break;
 
     default :
@@ -561,6 +524,9 @@ void CTaskMngr::DeleteIPL( char *pszELNOT )
             // 레이더 & 레이더 모드 관계
             sprintf( m_szSQLString, "DELETE FROM RADAR_MODE_LIFECYCLE" );
             stmt.SqlStatement( m_szSQLString );
+
+            // do not forget to clean-up
+            stmt.FreeQuery();  
         }
         catch( Kompex::SQLiteException &exception ) {
             std::cerr << "\nException Occured" << std::endl;
@@ -568,7 +534,6 @@ void CTaskMngr::DeleteIPL( char *pszELNOT )
             std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
         }
 
-        m_iTotalIPL = 0;
     }
 
 #elif _MSSQL_
@@ -653,6 +618,9 @@ void CTaskMngr::InsertIPL( int iIndex )
             stmt.SqlStatement( m_szSQLString );
 
         }
+
+        // do not forget to clean-up
+        stmt.FreeQuery();  
 
     }
     catch( Kompex::SQLiteException &exception ) {
@@ -802,7 +770,7 @@ void CTaskMngr::RxThreshold()
         CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
 #endif
 
-        LOGMSG3( enNormal, "대역 [%d]을 설정[Cor:%d/Mag:%d] 합니다." , pstrRxThreshold->iBand, pstrRxThreshold->uiCorThreshold, pstrRxThreshold->uiMagThreshold );
+        LOGMSG2( enNormal, "대역 [%d]을 설정[%d] 합니다." , pstrRxThreshold->iBand, pstrRxThreshold->iThreshold );
     }
     else {
         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
@@ -820,4 +788,20 @@ void CTaskMngr::StopUserCollecting()
     CHWIO::StopCollecting( REG_UIO_DMA_1 );
 #endif
 
+}
+
+/**
+ * @brief		ReqSystemVar
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/23 19:55:29
+ * @warning		
+ */
+void CTaskMngr::ReqSystemVar()
+{
+    STR_SYSCONFIG *pstrSysConfig;
+    
+    pstrSysConfig = g_pTheSysConfig->GetSysConfig();
+    CCommonUtils::SendLan( enRES_SETSYS, pstrSysConfig, sizeof(STR_SYSCONFIG) );
 }

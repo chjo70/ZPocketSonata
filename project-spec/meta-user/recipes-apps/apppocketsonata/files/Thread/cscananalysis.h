@@ -1,9 +1,9 @@
 #ifndef CSCANANALYSIS_H
 #define CSCANANALYSIS_H
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/SigAnal/SysPara.h"
@@ -17,8 +17,6 @@ private:
     CScanSigAnal *m_pTheScanSigAnal;
 
 public:
-    static CScanAnalysis *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
 private:
@@ -28,11 +26,11 @@ public:
     CScanAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CScanAnalysis(void);
 
-    THREAD_STANDARD_FUNCTION( CScanAnalysis )
+    void Run( key_t key=IPC_PRIVATE ); 
+
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 };
 
-#define SCNANL             CScanAnalysis::GetInstance()
-#define SCNANL_RELEASE     CScanAnalysis::ReleaseInstance()
-#define SCNANL_IS          CScanAnalysis::IsThereInstance()
 
 #endif // CSCANANALYSIS_H

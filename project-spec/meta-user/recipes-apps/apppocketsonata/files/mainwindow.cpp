@@ -41,6 +41,11 @@ char szTableHeader[enMax][30] = { "#", "최초접촉", "최근접촉", "위협�
 void _InitResolution();
 
 
+char g_szPulseType[11][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
+char g_szAetSignalType[7][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+char g_szAetFreqType[6][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+char g_szAetPriType[6][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+
 
 /**
  * @brief MainWindow::MainWindow
@@ -541,23 +546,23 @@ void MainWindow::UpdateRow( QTableWidget *pQTableWidget, STR_AET *pAET, int iInd
 
     qTemp.sprintf( (char *) "%d", pAET->noEMT );
     pQTableWidget->setItem( iIndexOfTable, enNoAET, new QTableWidgetItem(qTemp) );
-    qTemp.sprintf( "%s", aet_signal_type[pAET->sigType] );
+    qTemp.sprintf( "%s", g_szAetSignalType[pAET->sigType] );
     pQTableWidget->setItem( iIndexOfTable, enSIGTYPE, new QTableWidgetItem(qTemp) );
     qTemp.sprintf( "%.1f", SONATA::DECODE::DOA( pAET->aoa ) );
     pQTableWidget->setItem( iIndexOfTable, enAOA, new QTableWidgetItem(qTemp) );
     if( pAET->frq.type == _PATTERN_AGILE ) {
-        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::TOA(pAET->frq.patPrd), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
+        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", g_szAetFreqType[pAET->frq.type], SONATA::DECODE::TOA(pAET->frq.patPrd), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
     }
     else {
-        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_freq_type[pAET->frq.type], SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
+        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", g_szAetFreqType[pAET->frq.type], SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.mean ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.min ), SONATA::DECODE::FREQ( pAET->frq.band, pAET->frq.max ) );
     }
     pQTableWidget->setItem( iIndexOfTable, enFREQ, new QTableWidgetItem(qTemp) );
 
     if( pAET->pri.type == _JITTER_PATTERN ) {
-        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA(pAET->pri.patPrd), SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA(pAET->pri.min), SONATA::DECODE::TOA(pAET->pri.max) );
+        qTemp.sprintf( "%s(%.1f) %7.2f(%.1f,%.1f)", g_szAetPriType[pAET->pri.type], SONATA::DECODE::TOA(pAET->pri.patPrd), SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA(pAET->pri.min), SONATA::DECODE::TOA(pAET->pri.max) );
     }
     else {
-        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", aet_pri_type[pAET->pri.type], SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA( pAET->pri.min ), SONATA::DECODE::TOA( pAET->pri.max ) );
+        qTemp.sprintf( "%s %-7.2f(%.2f,%.2f)", g_szAetPriType[pAET->pri.type], SONATA::DECODE::TOA( pAET->pri.mean ), SONATA::DECODE::TOA( pAET->pri.min ), SONATA::DECODE::TOA( pAET->pri.max ) );
     }
     pQTableWidget->setItem( iIndexOfTable, enPRI, new QTableWidgetItem(qTemp) );
 

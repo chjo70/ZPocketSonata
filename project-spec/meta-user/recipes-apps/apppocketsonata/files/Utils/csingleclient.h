@@ -42,7 +42,7 @@ public:
 
     void Run( key_t key );
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szClassName; }
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void RunServer();

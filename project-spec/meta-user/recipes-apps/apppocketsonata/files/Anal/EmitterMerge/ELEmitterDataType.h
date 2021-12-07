@@ -1657,11 +1657,6 @@ struct STR_POSITION_ESTIMATION {
 
 	bool bApplayOfLOBClustering;// TRUE: �쟻�슜, FALSE: 誘몄쟻�슜
 
-// 	STR_POSITION_ESTIMATION::STR_POSITION_ESTIMATION() : enValid(E_EL_PESTAT_FAIL), fLongitude(0.0), fLatitude(0.0), fCEP(0), fMajorAxis(0), fMinorAxis(0), fTheta(0), fDistanceErrorOfThreat(0), bApplayOfLOBClustering(false)
-// 	{
-// 
-// 	}
-
 } ;
 
 
@@ -1770,8 +1765,6 @@ struct I_AET_ANAL {
 	int tiContactTimems;																				// �빆怨듭뿉�꽌 遺꾩꽍 �떆媛�
 
 	E_BEAM_EMITTER_STAT enEmitterStat;													// LOB �긽�깭
-
-        //int iTaskType;																							// 怨쇱젣 �삎�깭 醫낅쪟
 
 	unsigned int uiCoLOB;																				// LOB 媛쒖닔
 

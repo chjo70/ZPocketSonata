@@ -14,13 +14,10 @@
 
 #include "../Utils/ccommonutils.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
-extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleServer *g_pTheCCUSocket;
-
-// 클래스 내의 정적 멤버변수 값 정의
-CDetectAnalysis* CDetectAnalysis::m_pInstance = nullptr;
 
 /**
  * @brief CDetectAnalysis::CDetectAnalysis
@@ -79,7 +76,7 @@ void CDetectAnalysis::_routine()
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {            
             perror( "QMsgRcv" );
-            break;
+            //break;
         }
         else {
         switch( m_pMsg->uiOpCode ) {
@@ -129,7 +126,7 @@ void CDetectAnalysis::AnalysisStart()
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;        
 
-        EMTMRG->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
     }
 
 }

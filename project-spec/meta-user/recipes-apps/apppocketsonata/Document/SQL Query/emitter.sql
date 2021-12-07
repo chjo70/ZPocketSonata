@@ -1,6 +1,3 @@
-# 2020-08-26 오후 3:22:26
-
-# 에미터 관련 테이블을 삭제합니다.
 DROP TABLE if exists "LOBDATA";
 DROP TABLE if exists "LOB_POSITION";
 DROP TABLE if exists "ABTDATA";
@@ -8,9 +5,8 @@ DROP TABLE if exists "ABT_POSITION";
 DROP TABLE if exists "AETDATA";
 
 
-# 에미터 관련 테이블을 생성합니다.
 CREATE TABLE "LOBDATA" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
+	"SEQ_NUM"	integer,
 	"LOBID"	INTEGER NOT NULL,
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,
@@ -101,11 +97,11 @@ CREATE TABLE "LOBDATA" (
 );
 
 CREATE TABLE "LOB_POSITION" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
+	"SEQ_NUM"	integer,
+	"SEQ_TYPE"	int NOT NULL,
 	"LOBID"	int NOT NULL,
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,
-	"TASK_ID"	varchar(30) NOT NULL,
 	"POSITION_COUNT"	tinyint,
 	"SEQ_01"	float,
 	"SEQ_02"	float,

@@ -17,7 +17,11 @@
 #endif
 
 #ifndef WhereIs
+#ifdef _WIN32
+#define WhereIs									TRACE( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#else
 #define WhereIs									printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#endif
 #endif
 
 

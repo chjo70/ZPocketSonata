@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "clog.h"
-
 #include "carraymsgdata.h"
+
+#include "../Include/globals.h"
 
 /**
  * @brief CArrayMsgData::CArrayMsgData
@@ -18,6 +18,8 @@ CArrayMsgData::CArrayMsgData( bool bArrayLanData )
     m_bArrayLanData = bArrayLanData;
 
     Init();
+
+    Alloc();
 
 }
 
@@ -37,8 +39,6 @@ void CArrayMsgData::Init()
     m_ucPushIndex = 0;
     m_ucPopIndex = 0;
 
-    Alloc();
-
 }
 
 /**
@@ -48,10 +48,9 @@ void CArrayMsgData::Alloc()
 {
     int i;
 
-    if( m_bArrayLanData == true ) {
+    if( m_bArrayLanData == true ) {        
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );
-
+            m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );            
             SetMark( i );
         }
     }
@@ -71,8 +70,9 @@ void CArrayMsgData::Free()
     int i;
 
     if( m_bArrayLanData == true ) {
+        //TRACE( "\ndelete in the thread m_pszArray[i]=0x%p" , m_pszArray[0] );
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            free( m_pszArray[i] );
+            _SAFE_FREE( m_pszArray[i] );
         }
     }
 
@@ -86,6 +86,7 @@ void CArrayMsgData::SetMark( int iIndex )
 {
     m_pszArray[iIndex][0] = ARARAY_MARK_UPPER;
     m_pszArray[iIndex][1] = ARARAY_MARK_LOWER;
+
 }
 
 /**
@@ -98,6 +99,9 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
         m_ucPushIndex = 0;
     }
 
+    while( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
+        Sleep( 1000 );
+    }
     if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
     }

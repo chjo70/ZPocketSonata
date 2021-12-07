@@ -27,21 +27,23 @@
 
 #include "ElintRsltDataTypedb.h"
 
+#include "./InverseMethod/CInverseMethod.h"
+
 #ifdef _MSC_VER
 #include "../TASK/Task.h"
 #else
 #endif
 
 // 최대 후보 갯수
-#define MAX_MERGE_CANDIDATE_LEVEL											(100)
+#define MAX_MERGE_CANDIDATE_LEVEL			(100)
 
 // 유사도 임계값 정의
 #define	THRESHOLD_OF_MIN_CANDIDATE_LEVEL	(200000)
 #define	PE_CANDIDATE_LEVEL			(float) (50000.)
 
-#define H0000_SIZE				(10)
+#define H0000_SIZE				            (10)
 
-#define TOTAL_UNDEF_ID_NUMBER			(100000)			// 미식별 총 갯수
+#define TOTAL_UNDEF_ID_NUMBER			    (100000)			// 미식별 총 갯수
 
 // 위치 산출 에러
 #define	PE_EFFECTIVE_DOA                (float) (0.5)					// UDIV(0.5, DEF_OF_RES_AOA)	// 0.5도
@@ -69,6 +71,7 @@
 #define MAX_LOB_FOR_INHIBIT_PE			(20)
 
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
+
 
 /**
 * [식별자 : CLS-GMU-EL-L-SAC]
@@ -99,6 +102,9 @@ private:
     static int m_CoInstance;									///< 위협 관리 객체 갯수
     static int m_nSeqNum;										///< DB 테이블 번호
 
+    CInverseMethod m_theInverseMethod;
+    CPositionEstimationAlg m_thePositionEstimation;
+
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
     CELThreat *m_pAETThreat;									///< 생성할때 위협(방사체) 관리 포인터
@@ -107,15 +113,15 @@ private:
     CELThreat *m_pUpdateAETThreat;						///< 병합된 AET 방사체 위협 포인터
     CELThreat *m_pUpdateABTThreat;						///< 병합된 ABT 방사체 위협 포인터
 
-    SEnvironVariable *m_pSEnvironVariable;			///< 시스템 설정값 환경 포인터
-
     std::vector<STR_LOBS> *m_pVecLOBs;
 
     UINT m_uiLOBID;														///< LOB 번호
     UINT m_uiAETID;														///< 방사체 번호
     UINT m_uiABTID;														///< 빔 번호
 
+#if defined(_TM_POSITION_)
     CGeoCoordConv m_theGeoCoordConv;
+#endif
 
     // 위협 관리 관련 멤버 변수
     UELTHREAT *m_pUniThreat;									///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
@@ -170,6 +176,9 @@ private:
 
     bool m_bScanProcess;
 
+    SEnvironVariable *m_pSEnvironVariable;
+    
+
 #ifdef _ELINT_
     LONG m_lOpInitID;
 
@@ -216,12 +225,13 @@ public:
 
 protected:
 #ifdef _SQLITE_
-    char m_szSQLString[MAX_SQL_SIZE];
+    char *m_pszSQLString;
 
     Kompex::SQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
-    char m_szSQLString[MAX_SQL_SIZE];
+    char *m_pszSQLString;
+    //char m_szSQLString[MAX_SQL_SIZE];
 
 #else
 #endif
@@ -295,9 +305,9 @@ private:
 
     //inline SRxABTData *GetABTData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTData); }
     inline SRxABTData *GetABTData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniABT.stABTData); }
-    inline SELABTDATA_EXT *GetABTExtData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTExtData); }
-    inline SRxAETData *GetAETData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniAET.stAETData); }
-    inline SELAETDATA_EXT *GetAETExtData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniAET.stAETExtData); }
+    inline SELABTDATA_EXT *GetABTExtData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniABT.stABTExtData); }
+    inline SRxAETData *GetAETData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniAET.stAETData); }
+    inline SELAETDATA_EXT *GetAETExtData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniAET.stAETExtData); }
 
 // 	// 빔 병합
     void ManageABTs( bool bMerge );
@@ -557,7 +567,7 @@ public:
     inline unsigned int GetAETID() { return m_uiAETID; }
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
-    SELABTDATA_EXT *CELEmitterMergeMngr::GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );
+    SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );
 
     E_BEAM_EMITTER_STAT UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat );
 

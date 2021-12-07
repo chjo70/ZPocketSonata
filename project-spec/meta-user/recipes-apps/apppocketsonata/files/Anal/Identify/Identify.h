@@ -11,16 +11,12 @@
 
 //#define CEDEOBLIB
 
-//using namespace SELTASKDB;
-
-//#include "../SigAnal/_define.h"
 #include "define.h"
 #include "structs.h"
 #include "../SigAnal/_Macro.h"
 
 
 #include "../EmitterMerge/PositionEstimationAlg.h"
- 
 #include "../EmitterMerge/ELGMIMsgDefn.h"
 #include "../EmitterMerge/ELEmitterDataType.h"
 #include "../EmitterMerge/ELPosEstDataType.h"
@@ -29,6 +25,8 @@
 #include "../EmitterMerge/ElintRsltDataTypedb.h"
  
 #include "../EmitterMerge/ELEnvironVariableMngr.h"
+
+#include "../EmitterMerge/InverseMethod/CInverseMethod.h"
 
 // #define FILTER_LONGLAT_RANGE					(3)								
 // 
@@ -171,7 +169,6 @@ class CELSignalIdentifyAlg
     static bool m_bLoadedDB;												///< CED/EOB 테이블 로딩 여부 플레스
 
     static int m_CoInstance;												///< 인스턴스 생성 개수
-    static CELSignalIdentifyAlg *m_pInstance;				///< 신호 식별 객체 포인터
 
     // 미식별 번호 관리
     static STR_FLIB *m_pFLib;											///< 주파수 테이블화 저장소, 기본형-0, 실무형-1
@@ -184,6 +181,7 @@ class CELSignalIdentifyAlg
 
     //static vector<SThreat> m_vecThreatData;			///< EOB 식별하기 위한 장비 목록 값
 
+    static int m_iRadar;
     static int m_iRadarMode;
     static SRadarMode *m_pRadarMode;												///< 레이더 모드 구조체
 
@@ -210,6 +208,8 @@ private:
 
     UINT m_fromLib;																	///< 식별시 시작 인덱스
     UINT m_toLib;																		///< 식별시 종료 인덱스
+
+    CInverseMethod m_theInverseMethod;
 
  public:
     UINT m_total_ced;																///< CED의 레이더 모드 총 갯수

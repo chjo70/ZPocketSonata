@@ -44,6 +44,7 @@ enum ENUM_BoardID {
 };
 
 #define _SAFE_FREE(A)           if( A != NULL ) { free( A ); A = NULL; }
+#define _SAFE_DELETE(A)         if( A != NULL ) { delete A; A = NULL; }
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
@@ -110,8 +111,7 @@ T _diffabs( T x, T y)
 #define I_FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
 #define FFRQMhzCNV( A, B )		(float) ( (float)(B) * (float) (0.001) )
 #define DFRQMhzCNV( A, B )		(double) ( (double)(B) * (double) (0.001) )
-#define IFRQMhzCNV( A, B )		FDIV( (B), ( 0.001) )
-#define I_FRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
+#define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
 #define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
 #define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
@@ -123,7 +123,7 @@ T _diffabs( T x, T y)
 #define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
 #define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
 #define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
-#define AOACNV( A )             IMUL( (A), _spAOAres )
+#define AOACNV( A )             FMUL( (A), _spAOAres )
 #define I_AOACNV( A )           IMUL( (A), _spAOAres )
 #define FAOACNV( A )            FMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
@@ -286,7 +286,7 @@ T _diffabs( T x, T y)
 #endif
 
 #ifdef _WIN32
-#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); LOG->LogMsg( enNormal, "%s", __FUNCTION__ ); }
+#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); g_pTheLog->LogMsg( enNormal, "%s", __FUNCTION__ ); }
 #else
 #define PrintFunction { }
 #endif
@@ -337,7 +337,13 @@ extern "C"
 
 #if !defined(M68K) && !defined(_MBIT)
 #ifndef WhereIs
-#define WhereIs       printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+
+#ifdef _WIN32
+#define WhereIs									TRACE( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#else
+#define WhereIs									printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#endif
+
 #endif
 
 #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()

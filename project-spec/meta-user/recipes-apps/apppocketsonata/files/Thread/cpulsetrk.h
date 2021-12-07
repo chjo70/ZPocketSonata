@@ -2,7 +2,7 @@
 #define CPULSETRK_H
 
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 class CPulseTrk : public CThread

@@ -22,7 +22,13 @@
 
 #endif
 
+#if TOOL==diab 
+#pragma pack( 1 )
+#else
 #pragma pack( push, 1 )
+#endif
+
+
 
 
 //#include <Data/CPDWContainer.h>
@@ -842,6 +848,10 @@ void SigProcLogOn();
 // 		
 // };
 
+#if TOOL==diab 
+#pragma pack( 4 )
+#else
 #pragma pack( pop )
+#endif
 
 #endif

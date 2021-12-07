@@ -1,7 +1,7 @@
 #ifndef CEMITTERMERGE_H
 #define CEMITTERMERGE_H
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
@@ -12,21 +12,28 @@ class CEmitterMerge : public CThread
 {
 private:
     bool m_bScanInfo;
+#ifdef __VXWORKS__
+    alignas(16) UNI_LAN_DATA m_uniLanData;		// 32 -> 16
+#else
     UNI_LAN_DATA m_uniLanData;
+#endif
     CELEmitterMergeMngr *m_pTheEmitterMergeMngr;
 
     SLOBOtherInfo m_sLOBOtherInfo;				///< 타체계연동 변수
 
-public:
-    static CEmitterMerge *m_pInstance;
 
+public:
     STR_MessageData *m_pMsg;
 
 public:
     CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData );
     virtual ~CEmitterMerge(void);
 
-    THREAD_STANDARD_FUNCTION( CEmitterMerge )
+    inline CELEmitterMergeMngr *GetEmitterMergeMngr() { return m_pTheEmitterMergeMngr; }
+
+    void Run( key_t key=IPC_PRIVATE );
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void InitData();
@@ -47,8 +54,5 @@ private:
 
 };
 
-#define EMTMRG          CEmitterMerge::GetInstance()
-#define EMTMRG_RELEASE  CEmitterMerge::ReleaseInstance()
-#define EMTMRG_IS       CEmitterMerge::IsThereInstance()
 
 #endif // CEMITTERMERGE_H

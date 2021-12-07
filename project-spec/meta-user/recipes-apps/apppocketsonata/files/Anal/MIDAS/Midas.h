@@ -31,6 +31,8 @@ using namespace std;
 
 //#include "./PDW2SP370.h"
 
+#define SUBREC_DEF          "SUBREC_DEF"
+
 
 enum EnumSCDataType
 {
@@ -609,7 +611,7 @@ private:
     double CalcDataSize();
     void MakeExtendedHeader();
     int WriteExtendedHeader();
-    void MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey=0 );
+    unsigned int MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey=0 );
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, char *keyword, char type, int lkey=0 );
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, char *keyword, char type );
     SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );

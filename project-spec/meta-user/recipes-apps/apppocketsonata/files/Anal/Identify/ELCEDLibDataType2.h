@@ -29,7 +29,7 @@ enum EnumNullValueType
 
 template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_Q_2502_T5
 {
-	for (auto iter = i_listContainer.begin(); iter != i_listContainer.end(); iter++) //#FA_C_PotentialUnboundedLoop_T3
+	for ( auto iter = i_listContainer.begin() ; iter != i_listContainer.end(); iter++) //#FA_C_PotentialUnboundedLoop_T3
 	{
 		delete (*iter);
 		// *iter = nullptr;
@@ -298,7 +298,7 @@ namespace PolizationCode
 		enumZ_Undetermined
 	};
 }
-
+/*
 static char _PolizationCode[PolizationCode::enumZ_Undetermined + 1][100 + 1] = 
 { 
 	"C - Diverse (Agile or adaptive). Capable of pulse-to-pulse agility.",
@@ -317,7 +317,7 @@ static char _PolizationCode[PolizationCode::enumZ_Undetermined + 1][100 + 1] =
 	"W - Unpolarized - modulated or spinning linear polarization",
 	"Y - Polarization fixed but type unknown",
 	"Z - Undetermined"
-};
+};	*/
 
 enum EnumRotationDirCode
 {
@@ -326,12 +326,12 @@ enum EnumRotationDirCode
 	enumCounterClockwise = 0,
 	enumClockwise
 };
-
+/*
 static char _RotationDirCode[enumClockwise + 1][25 + 1] = 
 { 
 	"Counter Clockwise",
 	"Clockwise"
-};
+};	*/
 
 namespace ContinuityCode
 {
@@ -344,13 +344,13 @@ namespace ContinuityCode
 		enumCountinuous
 	};
 }
-
+/*
 static char _ContinuityCodes[ContinuityCode::enumCountinuous + 1][25 + 1] = 
 { 
 	"UNKNOWN",
 	"DISCRETE", 
 	"COUNTINUOUS"
-};
+};	*/
 
 namespace PatternCode
 {
@@ -365,7 +365,7 @@ namespace PatternCode
 		enumUnmodulated = 5
 	};
 }
-
+/*
 static char _PatternCodes[PatternCode::enumUnmodulated + 1][25 + 1] = 
 { 
 	"UNKNOWN",
@@ -374,7 +374,7 @@ static char _PatternCodes[PatternCode::enumUnmodulated + 1][25 + 1] =
 	"ADAPTIVE",
 	"",
 	"UNMODULATED"
-};
+};	*/
 
 namespace CohencyCode
 {
@@ -387,14 +387,14 @@ namespace CohencyCode
 		enumUnknown = 3
 	};
 }
-
+/*
 static char _CoherencyCodes[CohencyCode::enumUnknown + 1][25 + 1] = 
 { 
 	"COHERENT", 
 	"NON_COHERENT",
 	"",
 	"UNKNOWN"
-};
+};	*/
 
 enum EnumValidationCode
 {
@@ -404,13 +404,13 @@ enum EnumValidationCode
 	enumValidated,			//기본값
 	enumPostulated
 };
-
+/*
 static char _ValidationCodes[enumPostulated + 1][25 + 1] = 
 { 
 	"UNVALIDATED",
 	"VALIDATED", 
 	"POSTULATED"
-};
+};	*/
 
 enum EnumRF_LagacyTypeCode
 {
@@ -433,7 +433,7 @@ enum EnumRF_LagacyTypeCode
 	enumConstantSingleRF,						// 고정
 	enumLinearRF_Stepping,						// 호핑인가 ?
 };
-
+/*
 static char _RF_LagacyTypeCodes[enumLinearRF_Stepping + 1][100 + 1] = 
 { 
 	"RF_AGILE",
@@ -452,7 +452,7 @@ static char _RF_LagacyTypeCodes[enumLinearRF_Stepping + 1][100 + 1] =
 	"ON_OFF_KEYED",
 	"CONSTANT_SINGLE_RF",
 	"LINEAR_RF_STEPPING"
-};
+};	*/
 
 /**
  * @enum      EnumPRI_LegacyTypeCode
@@ -473,17 +473,17 @@ enum EnumPRI_LegacyTypeCode
 	enumPRI_PhaseModulationOrShifting
 };
 
-static char _PRI_LagacyTypeCodes[(enumPRI_PhaseModulationOrShifting - enumPulseConstant) + 1][100 + 1] = 
-{ 
-	"PULSE_CONSTANT",
-	"STAGGER",
-	"JITTER",
-	"DWELL_AND_SWITCH",
-	"PULSE_POSITION_MODULATION",
-	"PULSE_FREQUENCY_MODULATION",
-	"PRI_SLIDING",
-	"PRI_PHASE_MODULATION_OR_SHIFTING"
-};
+// static char _PRI_LagacyTypeCodes[(enumPRI_PhaseModulationOrShifting - enumPulseConstant) + 1][100 + 1] = 
+// { 
+// 	"PULSE_CONSTANT",
+// 	"STAGGER",
+// 	"JITTER",
+// 	"DWELL_AND_SWITCH",
+// 	"PULSE_POSITION_MODULATION",
+// 	"PULSE_FREQUENCY_MODULATION",
+// 	"PRI_SLIDING",
+// 	"PRI_PHASE_MODULATION_OR_SHIFTING"
+// };
 
 namespace SignalType
 {
@@ -508,12 +508,12 @@ namespace RadarModeFreqType
 {
 	enum EnumRadarModeFreqType
 	{
-                enumFIXED = 0,
-		enumHOPPING,
-		enumAGILE,
-		enumPATTERN,
+        enumFIXED = 0,
+        enumHOPPING,
+        enumAGILE,
+        enumPATTERN,
 
-		enumFreqUnknown
+        enumFreqUnknown
 	};
 }
 
@@ -567,15 +567,15 @@ enum EnumRadarStatus
 	enumMaxOfRadarStatus
 };
 
-static char _RadarStatus[enumUndetected + 1][21] = 
-{ 
-	"ACTIVE",
-	"RENOTATED", 
-	"CANCELED", 
-	"INCORPORATED", 
-	"RETIRED", 
-	"UNDETECTED"
-};
+// static char _RadarStatus[enumUndetected + 1][21] = 
+// { 
+// 	"ACTIVE",
+// 	"RENOTATED", 
+// 	"CANCELED", 
+// 	"INCORPORATED", 
+// 	"RETIRED", 
+// 	"UNDETECTED"
+// };
 
 // 섹터형, 탐지형, 추적형 추가할 때 CheckScanType()와 CalcMatchRatio()에 해당 항목을 추가 코딩해야 함.
 namespace ScanType
@@ -607,7 +607,7 @@ namespace ScanType
 	};
 	//end_static_0919
 }
-
+/*
 static char _ScanTypes[ScanType::enumZ_Undetermined + 1][100 + 1] = 
 {
 	"A - Circular",
@@ -629,7 +629,7 @@ static char _ScanTypes[ScanType::enumZ_Undetermined + 1][100 + 1] =
 	"U - Uni-Directional Sector (Plane Undertermined)",
 	"V - Bi-Directional Sector (Plane Undetermined)",
 	"Z - Undetermined"
-};
+};	*/
 
 namespace MOP_CW_ModulationType
 {
@@ -644,7 +644,7 @@ namespace MOP_CW_ModulationType
 		enumUnModulated			// NM
 	};
 }
-
+/*
 static char _MOP_CW_ModulationType[MOP_CW_ModulationType::enumUnModulated + 1][25 + 1] = 
 {
 	"UNKNOWN", 
@@ -652,7 +652,7 @@ static char _MOP_CW_ModulationType[MOP_CW_ModulationType::enumUnModulated + 1][2
 	"PHASE",
 	"AMPLITUDE",
 	"UNMODULATED"
-};
+};	*/
 
 enum EnumMOP_CW_LegacyType
 {
@@ -675,7 +675,7 @@ enum EnumMOP_CW_LegacyType
 	enumON_OFF_Keying,
 	enumOOK_SRW
 };
-
+/*
 static EnumMOP_CW_LegacyType _MOP_CW_LegacyTypeArray[16] = 
 {
 	enumFMOP,
@@ -694,8 +694,8 @@ static EnumMOP_CW_LegacyType _MOP_CW_LegacyTypeArray[16] =
 	enumAM_Tones,
 	enumON_OFF_Keying,
 	enumOOK_SRW
-};
-
+};	*/
+/*
 static char _MOP_CW_LegacyType[16][100 + 1] = 
 {
 	"FMOP",
@@ -714,7 +714,7 @@ static char _MOP_CW_LegacyType[16][100 + 1] =
 	"AM_TONES",
 	"ON_OFF_KEYING",
 	"OOK_SRW"
-};
+};	*/
 
 enum EnumThreatStatusCode
 {
@@ -729,7 +729,7 @@ enum EnumThreatStatusCode
 	enumI,
 	enumA
 };
-
+/*
 static char _ThreatStatucCode[enumA + 1][2] = 
 {
 	"C", 
@@ -740,7 +740,7 @@ static char _ThreatStatucCode[enumA + 1][2] =
 	"U",
 	"I",
 	"A"
-};
+};	*/
 
 namespace CountryCode
 {
@@ -1058,13 +1058,13 @@ namespace FriendOrFOE
 		enumMaxOfFriendOrFOE,
 	};
 }
-
+/*
 static char _FriendOrFOE[FriendOrFOE::enumFOE + 1][10 + 1] =
 {
 	"UNKNOWN",
 	"FRIEND", 
 	"FOE" 
-};
+};	*/
 
 struct SRadarComments
 {

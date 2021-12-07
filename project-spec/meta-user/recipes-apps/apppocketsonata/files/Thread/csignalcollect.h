@@ -2,7 +2,7 @@
 #define CSIGNALCOLLECT_H
 
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/Collect/ccollectbank/ccollectbank.h"
@@ -20,7 +20,7 @@ private:
 
     UNI_LAN_DATA m_uniLanData;
 
-    SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];
+    SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];       // 추적/스캔 채널에 대한 대상 위협 정보
 
     static CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
     static CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
@@ -39,13 +39,12 @@ private:
     STR_TRKSCNPDWDATA m_theTrkScnPDW;
 
 public:
-    static CSignalCollect *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
 private:
     void Init();
     void AnalysisStart();
+    void RoutineForDetectAnal();
 
     void CloseCollectBank();
     void SetupDetectCollectBank( int iCh );
@@ -97,14 +96,11 @@ public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CSignalCollect(void);
 
-
-
-    THREAD_STANDARD_FUNCTION( CSignalCollect )
+    void Run( key_t key=IPC_PRIVATE );
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 };
 
-#define SIGCOL          CSignalCollect::GetInstance()
-#define SIGCOL_RELEASE  CSignalCollect::ReleaseInstance()
-#define SIGCOL_IS       CSignalCollect::IsThereInstance()
 
 #endif // CSIGNALCOLLECT_H

@@ -1,7 +1,7 @@
 #ifndef CDETECTANALYSIS_H
 #define CDETECTANALYSIS_H
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
@@ -18,23 +18,21 @@ private:
     CNewSigAnal *m_pTheNewSigAnal;
 
 public:
-    static CDetectAnalysis *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
 public:
     CDetectAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CDetectAnalysis(void);
 
-    THREAD_STANDARD_FUNCTION( CDetectAnalysis )
+    void Run( key_t key=IPC_PRIVATE );
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void AnalysisStart();
 
 };
 
-#define DETANL          CDetectAnalysis::GetInstance()
-#define DETANL_RELEASE  CDetectAnalysis::ReleaseInstance()
-#define DETANL_IS       CDetectAnalysis::IsThereInstance()
+
 
 #endif // CDETECTANALYSIS_H

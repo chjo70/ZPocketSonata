@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/Identify/cipl.h"
@@ -29,11 +29,8 @@ using namespace std;
 class CTaskMngr : public CThread
 {
 private:
-    static CTaskMngr *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
-    int m_iTotalIPL;
     CIPL m_theIPL;
 
 #ifdef _SQLITE_
@@ -63,6 +60,7 @@ private:
     void PMOPThreshold();
     void RxThreshold();
     void IPLDownload();
+    void ReqSystemVar();
 
     // 데이터베이스 처리
     void InsertIPL( int iIndex );
@@ -70,7 +68,6 @@ private:
     int IsThrereELNOT( char *pszELNOT );
 
     // 명령어 처리에 대한 하부 함수 목록 입니다.
-    void CreateAllAnalysisThread( bool bCreate=true );
     void ProcessSummary();
 
     // 인터페이스 관련 함수 모음 입니다.
@@ -83,14 +80,15 @@ private:
 public:
     CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
     virtual ~CTaskMngr(void);
-
-    THREAD_STANDARD_FUNCTION_2( CTaskMngr )
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 public:
+    void Run( key_t key=IPC_PRIVATE );
     void Shutdown();
 
 };
 
-#define TMNGR   CTaskMngr::GetInstance()
+// #define TMNGR   CTaskMngr::GetInstance()
 
 #endif // CTASKMNGR_H

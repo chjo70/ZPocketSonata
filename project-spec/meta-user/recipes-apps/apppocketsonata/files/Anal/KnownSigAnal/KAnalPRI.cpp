@@ -90,7 +90,7 @@ CKAnalPRI::~CKAnalPRI()
 void CKAnalPRI::Init()
 {
 
-	m_CoSeg = GetCoSeg();
+	m_uiCoSeg = GetCoSeg();
 	m_nAnalSeg = GetAnalSeg();
 
 	m_nAnalEmitter = GetCoEmitter();
@@ -168,7 +168,7 @@ BOOL CKAnalPRI::KnownAnalysis()
 {
     //STR_PRI *pPri;
 	
-	m_CoSeg = GetCoSeg();
+	m_uiCoSeg = GetCoSeg();
 
 	// 타입에 따라서 펄스열 분석을 달리한다.
     //pPri = & stTrkAet.aet.pri;

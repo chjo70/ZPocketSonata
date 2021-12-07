@@ -13,11 +13,12 @@
 
 
 #elif _MSC_VER
-#include <intsafe.h>
+//#include <intsafe.h>
 #include <io.h>
 
 #elif __VXWORKS__
 #include <ioLib.h>
+#include <nfs/nfsCommon.h>
 
 #else
 #include <io.h>
@@ -65,7 +66,7 @@ CRawFile::CRawFile(void)
 CRawFile::~CRawFile(void)
 {
 	//if( m_pfile != NULL ) fclose( m_pfile );
-	if( m_fid != 0 ) _close( m_fid );
+	if( m_fid > 0 ) _close( m_fid );
 
 }
 
@@ -130,7 +131,7 @@ void CRawFile::GetFilename( char *pFilename )
 	//int nLen = strlen(pFilename);
 	int nLen = (int) strlen(pFilename);
 
-	char* pEndStr = pFilename + (nLen-1);
+	char* pEndStr = & pFilename[nLen-1];
 	char* pTempStr = pEndStr;
 	char* pOutStr = NULL;
 	char ch;
@@ -233,11 +234,15 @@ bool CRawFile::FileOpen( char *filename, int iMode )
 	bool bRet = false;
 	//Init();
 
-	if( m_fid != 0 )	_close( m_fid );
+	if( m_fid > 0 )	_close( m_fid );
 
-#if defined(__linux__) || defined(__VXWORKS__)
+#if defined(__linux__) 
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == 0 ) { //DTEC_Else
+#elif defined(__VXWORKS__)
+    //printf( "\n File open[%s]" , filename );
+    m_fid = open( filename , iMode, 0644 );
+    if( m_fid == ERROR ) { //DTEC_Else
 #else
 	m_fid = _open( filename , iMode );
     if( m_fid == 0 ) { //DTEC_Else
@@ -284,10 +289,12 @@ unsigned int CRawFile::Write( void *pData, int c_size )
 	unsigned int uiWrite=0;
 
     if( c_size > 0 && pData != NULL ) {
+    	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
 	    iWrite = _write( m_fid, (char *) pData, c_size );
         if( iWrite > 0 ) {
             uiWrite = (unsigned int ) iWrite;
         }
+        //printf( "iWrite= %d" , iWrite );
     }
         
 	return uiWrite;
@@ -363,14 +370,9 @@ unsigned long long int CRawFile::GetFileSize()
 	unsigned long long ullfile_byte=0;
 
 	if( m_fid != NULL ) {
-        ullfile_byte = _filelength( m_fid );
-// 		if( _lseek( m_fid, 0L, SEEK_END ) > 0 ) {
-//             ullfile_byte = _filelength( m_fid );
-// 			_lseek( m_fid, 0L, SEEK_SET );
-// 		}
-// 		else { //DTEC_Else
-// 			ullfile_byte = (unsigned long long) -1;
-// 		}
+        // ullfile_byte = _filelength( m_fid );
+        ullfile_byte = GetFileSize( m_fullname );
+
 	}
 
 	return ullfile_byte;
@@ -452,11 +454,11 @@ bool CRawFile::CreateDir( TCHAR *pPath )
 
 #ifdef _MSC_VER
     if( ! PathFileExists( dirName ) ) {
-    bCreate = CreateDirectory( dirName, NULL );
-    if( bCreate != TRUE ) {
-        perror( "디렉토리 생성");
-        bRet = false;
-    }
+        bCreate = CreateDirectory( dirName, NULL );
+        if( bCreate != TRUE ) {
+            perror( "디렉토리 생성");
+            bRet = false;
+        }
     }
     else {
 
@@ -472,6 +474,16 @@ bool CRawFile::CreateDir( TCHAR *pPath )
         bRet = false;
     }
 #else
+    int iRet = mkdir( dirName );
+
+    //printf( "\n iRet=%d" , iRet );
+    if( iRet == 0 || ( iRet == -1 && ( errno == EEXIST || errno == S_nfsLib_NFSERR_EXIST ) ) ) {
+    }
+    else {
+        perror( "디렉토리 생성");
+        bRet = false;
+    }
+
 #endif
 
     return bRet;

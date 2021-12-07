@@ -270,10 +270,10 @@ CMatrix& CMatrix::Divide(const double v)
 CMatrix operator+(const CMatrix& a, const CMatrix& b)
 {
 	// check if the dimensions match
+    CMatrix res(a.uiRows, a.uiCols);
+
 	if (a.uiRows == b.uiRows && a.uiCols == b.uiCols)
 	{
-		CMatrix res(a.uiRows, a.uiCols);
-
 		for (unsigned int r = 0; r < a.uiRows; r++)
 		{
 			for (unsigned int c = 0; c < a.uiCols; c++)
@@ -281,7 +281,7 @@ CMatrix operator+(const CMatrix& a, const CMatrix& b)
 				res.p[r][c] = a.p[r][c] + b.p[r][c];
 			}
 		}
-		return res;
+		//return res;
 	}
 	else
 	{
@@ -290,7 +290,7 @@ CMatrix operator+(const CMatrix& a, const CMatrix& b)
 	}
 
 	// return an empty CMatrix (this never happens but just for safety)
-	return CMatrix();
+	return res; // CMatrix();
 }
 
 // addition of CMatrix with double
@@ -422,15 +422,15 @@ CMatrix operator/ (const CMatrix& a, const CMatrix& b)
 	    \date 	2014-01-22 14:55:36
 	*/
 	// if (a.uiRows == a.uiCols && a.uiRows == a.uiCols && b.uiRows == b.uiCols)
+    CMatrix res(a.uiRows, a.uiCols);
+
 	if (a.uiRows == a.uiCols && b.uiRows == b.uiCols && a.uiRows == b.uiRows )
 	{
 		bool bret;
 
-		CMatrix res(a.uiRows, a.uiCols);
-
 		res = a * Inv(b, &bret );
 
-		return res;
+		// return res;
 	}
 	else
 	{
@@ -439,7 +439,7 @@ CMatrix operator/ (const CMatrix& a, const CMatrix& b)
 	}
 
 	// return an empty CMatrix (this never happens but just for safety)
-	return CMatrix();
+	return res; //CMatrix();
 }
 
 // division of CMatrix with double

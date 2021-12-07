@@ -19,7 +19,7 @@ using namespace std;
 
 //#include "../../../COMMON/MNGR/GRLogMngr.h"
 //#include "../../../COMMON/COMMIF/CGRCommIF.h"
-#include "../ParamMngr.h"
+//#include "../ParamMngr.h"
 //#include "../../../COMMON/MNGR/GRLoginMngr.h"
 
 //#include "../../../ELINT/MNGR/ELOperationCtrlMngr.h"
@@ -32,6 +32,8 @@ using namespace std;
 #include "../EmitterMerge/ELPosEstDataType.h"
 #include "../EmitterMerge/PositionEstimationAlg.h"
 #include "../EmitterMerge/ELEnvironVariableMngr.h"
+
+#include "../../Include/globals.h"
 
 
 #ifdef _DEBUG
@@ -79,7 +81,7 @@ CLOBClustering::CLOBClustering()
 	m_bIsSimulator = false;	// ST_OCM->IsSimulatorMode();
 
 	// 연동기 또는 모의기 할 때만 아래를 수행하게 함.
-    bool bIsPOSN = GP_MGR_PARAM->IsPOSN();
+    bool bIsPOSN = false; // GP_MGR_PARAM->IsPOSN();
 	if( m_bIsSimulator == true || bIsPOSN == false ) {
 		// LOB Pool 할당
 		m_pQueLOBDataPool = new Queue<SELLOBDATA_MINIMIZE> [TOTAL_ITEMS_OF_THREAT_NODE];
@@ -100,6 +102,7 @@ CLOBClustering::CLOBClustering()
 	m_nCheckClustering = 0;
 
 	AllocMemory();
+
 }
 
 /**
@@ -184,14 +187,15 @@ void CLOBClustering::AddLOBPool( int nDestIndex, int nSrcIndex )
 	SELLOBDATA_MINIMIZE stLOBData;
 	Queue<SELLOBDATA_MINIMIZE> *pSrcQueLOBDataPool, *pDestQueLOBDataPool;
 
-	pSrcQueLOBDataPool = m_pQueLOBDataPool + nSrcIndex;
-	pDestQueLOBDataPool = m_pQueLOBDataPool + nDestIndex;
+	pSrcQueLOBDataPool = & m_pQueLOBDataPool[ nSrcIndex ];
+	pDestQueLOBDataPool = & m_pQueLOBDataPool[ nDestIndex ];
 
+    memset( & stLOBData, 0, sizeof(stLOBData) );
 	int qCount = pSrcQueLOBDataPool->Count();
 	for( int i=0 ; i < qCount ; ++i ) {
-		pSrcQueLOBDataPool->Pop( & stLOBData );
-
-		pDestQueLOBDataPool->Push( stLOBData );
+		if( true == pSrcQueLOBDataPool->Pop( & stLOBData ) ) {
+		    pDestQueLOBDataPool->Push( stLOBData );
+        }
 	}
 	
 }
@@ -214,7 +218,7 @@ SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( int index, SRxLOBData *pSRxL
 	Queue<SELLOBDATA_MINIMIZE> *pQueLOBDataPool;
 
 	if( bInsertLOB == true ) {
-		pQueLOBDataPool = m_pQueLOBDataPool + index;
+		pQueLOBDataPool = & m_pQueLOBDataPool[index];
 
 		// 큐 버퍼 초기화
 		if( bInit == true ) {
@@ -286,10 +290,10 @@ bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
 {
 	m_bCluster = false;
 
-	m_pQueLOBData = m_pQueLOBDataPool + index;
+	m_pQueLOBData = & m_pQueLOBDataPool[ index ];
 	m_nLOB = m_pQueLOBData->Count();
 
-	if( m_nLOB >= (int) GP_ENVI_VAR->GetEmmgNumOfMinLobToBeam() && m_nLOB < MAX_LOB_FOR_CLUSTERING ) {
+	if( m_nLOB >= (int) g_pTheELEnvironVariable->GetEmmgNumOfMinLobToBeam() && m_nLOB < MAX_LOB_FOR_CLUSTERING ) {
         //DWORD dwTime = GetTickCount();
 
 		// 0. LOB 클러스터링을 계산하기 위한 사전 데이터 할당
@@ -410,8 +414,8 @@ void CLOBClustering::GroupOfIntersection()
 
 	for( i=0 ; i < n_nTotalOfIntersection ; ++i ) {
 		if( m_pIntersect[i].bEnable == true ) {
-			CalClusterInfo( pCluster, m_pIntersect+i );
-			if( pCluster->iCount >= (int) GP_ENVI_VAR->GetEmmgNumOfMinLobToBeam() ) { // && pCluster->iCount != (int) m_nLOB ) {
+			CalClusterInfo( pCluster, & m_pIntersect[i] );
+			if( pCluster->iCount >= (int) g_pTheELEnvironVariable->GetEmmgNumOfMinLobToBeam() ) { // && pCluster->iCount != (int) m_nLOB ) {
 				//ShowCluster( pCluster );
 
 				if( false == IsThereCluster( pCluster ) ) {
@@ -598,13 +602,13 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
 		// fDist = CalDistance( pRefInterSect, pIntersect );
-        fTheta = (float) ST_IMA->GCAzimuth( (double) pLOBData->fRadarLatitude, (double) pLOBData->fRadarLongitude, pRefInterSect->fLatitude, pRefInterSect->fLongitude );
+        fTheta = (float) m_theInverseMethod.GCAzimuth( (double) pLOBData->fRadarLatitude, (double) pLOBData->fRadarLongitude, pRefInterSect->fLatitude, pRefInterSect->fLongitude );
 		fDiff = _abs( (float) fTheta - pLOBData->fMeanDOA );
 
 		//LogPrint( "D-DOA[%d, %.3f] " , pLOBData->iLOBID, fDiff/10. );
 
-		if( fDiff <= (GP_MGR_PARAM->GetEffectiveDOADiff2()) ) {
-		//if( fDiff/10. <= GP_MGR_TEST_PARAM->GetEffectiveDOADiff3() ) {
+		if( fDiff <= 10 /* (GP_MGR_PARAM->GetEffectiveDOADiff2()) */ ) {
+		    //if( fDiff/10. <= GP_MGR_TEST_PARAM->GetEffectiveDOADiff3() ) {
 			// SELLOBDATA_MINIMIZE *pLOBData1, *pLOBData2;
 			PushQueueIndex( pCluster, (UINT) i );
 
@@ -945,7 +949,7 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 		}
 
 		// 2. 위치 산출을 수행하여 반경 체크해서 리턴한다.
-		ST_PEA->RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
+		m_thePositionEstimation.RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
 		//LogPrint( "\n [%d] %.2f/%.2f" , i, peInfo.fLatitude, peInfo.fLongitude );
 		ShowCluster( pOptimalCluster );
 
@@ -959,7 +963,7 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 		// 4. 기성인 것만 LOB 클러스터링을 시도하게 함.
 		if( stResPosEstData.nRadarIndex != _spZero ) { // || ST_OCM->IsSimulatorMode() == true ) {
-            float fGetEobIndfRangeMeters=GP_ENVI_VAR->GetEobIndfRangeMeters();
+            float fGetEobIndfRangeMeters=g_pTheELEnvironVariable->GetEobIndfRangeMeters();
  			if( peInfo.fCEP == 0.0 || peInfo.fCEP > fGetEobIndfRangeMeters ) {
 				LogPrint( "\n CEP[%f m] 반경이 벗어 났습니다!" , peInfo.fCEP );
  				bRet = false;
@@ -968,9 +972,9 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 			else {
 				bRet = ReMakeOptimalCluster( & peInfo, i );
 
-				ST_PEA->RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
+				m_thePositionEstimation.RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
 				// 장축/단축 비교를 추가 
-                float fGetEobIndfRangeMeters=GP_ENVI_VAR->GetEobIndfRangeMeters();
+                float fGetEobIndfRangeMeters=g_pTheELEnvironVariable->GetEobIndfRangeMeters();
 				if( bRet == true && peInfo.fCEP != 0. && \
 					( peInfo.fCEP <= fGetEobIndfRangeMeters ) || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
 					LogPrint( "\n CEP[%d m] 반장축[%f m] 반단축[%f m] 반경 안에 들었습니다!" , peInfo.fCEP, peInfo.fMajorAxis/2, peInfo.fMinorAxis/2 );
@@ -1107,8 +1111,8 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 	for( i=0 ; i < m_pQueLOBData->Count() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
-        fTheta = (float) ST_IMA->GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
-		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, GP_MGR_PARAM->GetEffectiveDOADiff2() ) ) {
+        fTheta = (float) m_theInverseMethod.GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
+		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
 			AddOptimalLOBID( pLOBData->uiLOBID );
 
 			AddPEData( pLOBData );
@@ -1122,7 +1126,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 			++ m_pOptimalCluster[nOptimalIndex]->iCount;
 		}
 
-		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, GP_MGR_PARAM->GetEffectiveDOADiff1() ) ) { 
+		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) { 
 			++ iCoGetEffectiveDOADiff1;
 		}
 

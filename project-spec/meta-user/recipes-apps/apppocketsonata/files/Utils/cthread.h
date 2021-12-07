@@ -30,6 +30,10 @@ using namespace std;
 #include <sys/msg.h>
 #include <sys/ipc.h>
 #include <regex.h>
+#include <semaphore.h>
+#elif __VXWORKS__
+#include <semaphore.h>
+
 #endif
 
 #include <stdlib.h>
@@ -48,7 +52,7 @@ using namespace std;
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *GetThreadName() { return m_szClassName; } \
+virtual const char *GetThreadName() { return m_szThreadName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
@@ -70,7 +74,7 @@ static bool IsThereInstance() { \
 #define THREAD_STANDARD_FUNCTION_2(A )    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *GetThreadName() { return m_szClassName; } \
+virtual const char *GetThreadName() { return m_szThreadName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         char szSQLiteFileName[100]; \
@@ -93,7 +97,13 @@ static bool IsThereInstance() { \
     return bRet; }
 
 
-#pragma pack(push, 1)
+typedef enum {
+    enNO_WAIT=0,
+    enWAIT_FOREVER,
+
+} ENUM_RCVMSG ;
+
+//#pragma pack(push, 1)
 
 
 /**
@@ -144,7 +154,9 @@ union UNI_MSG_DATA {
  * @brief 쓰레드간의 메시지 데이터 구조체 정의
  */
 struct STR_MessageData {
+#ifdef __linux__
     long mtype;
+#endif
 
     // Opcode
     unsigned int uiOpCode;
@@ -187,22 +199,24 @@ public:
 };
 #endif
 
+//#pragma pack(pop)
+
 /**
  * @brief The CThread class
  */
 class CThread : public CArrayMsgData
 {
 private:
+    
+
 #ifdef _MSC_VER
     CThreadContext m_MainThread;
-    //CMessageQueue<STR_MessageData*>* m_pTheMessageQueue;
 
     LPTHREAD_START_ROUTINE	m_pThreadFunc;	//	The Worker Thread Function Pointer
-    //void *m_pThreadFunc(void *);
 
     HANDLE m_hEvent;
+    HANDLE m_hSleepEvent;
 
-	//std::queue<STR_MessageData> m_queue;
     queue<STR_MessageData> m_queue;
 
 #if _MSC_VER <= 1600 || _AFXDLL
@@ -212,32 +226,47 @@ private:
 #endif
 
 #elif __VXWORKS__
-    CThreadContext m_MainThread;
-    key_t m_MsgKeyID;
+    sem_t m_mutex;
 
-#else
+    // 타스크 관련 멤버 변수
+    TASK_ID m_TaskID;
+    int m_iPriority;
+    bool m_bTaskRunStat;
+
+    // 메시지 큐 관련 멤버 변수
+    MSG_Q_ID m_MsgKeyID;
+
+#elif __linux__
+    sem_t m_mutex;
+
     pthread_t m_MainThread;
     key_t m_MsgKeyID;
+#else
 #endif
 
     STR_MessageData m_RcvMsg;
     STR_MessageData m_SndMsg;
 
     char *m_pszRecvData;
-    char m_szRecvData[_MAX_LANDATA];
+#ifdef __VXWORKS__
+    int m_szRecvData[_MAX_LANDATA/sizeof(UINT)] __attribute__ ((aligned(16)));	// 32 -> 16
+#else
+    UINT m_szRecvData[_MAX_LANDATA/sizeof(UINT)];
+#endif
 
     static int m_iCoThread;
     static int m_iCoMsgQueue;
 
 protected:
+    bool m_bMainLoop;
     int m_iThreadID;
-    char m_szClassName[LENGTH_OF_CLASSNAME];
+    char m_szThreadName[LENGTH_OF_CLASSNAME];
 
 private:
-    void DisplayMsg( bool bSend, const char *pszClassName=NULL );
-
+    void DisplayMsg( bool bSend, const char *pszClassName=NULL, STR_MessageData *pInMsg=NULL );
+    
 public:
-    CThread( int iMsgKey, char *pClassName, bool bArrayLanData=false );
+    CThread( int iMsgKey, char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
     ~CThread();
 
     void Run( key_t key=IPC_PRIVATE );
@@ -248,6 +277,98 @@ public:
 #elif __VXWORKS__
     void Run( void *(*pFunc)(void*), key_t key );
     DWORD Start( void *pArg=NULL );
+
+    inline int GetPriority() { return m_iPriority; }
+    inline TASK_ID GetTaskID() { return m_TaskID; }
+    inline bool GetTaskRunStat() { return m_bTaskRunStat; }
+    inline void SetTaskSuspend() { taskSuspend( m_TaskID ), m_bTaskRunStat=false; }
+    inline void SetTaskResume() { taskResume( m_TaskID ), m_bTaskRunStat=true; }
+    inline void ShowTaskMessae( int iLevel=0 ) { printf( "\n*** %s ***" , m_szThreadName ), msgQShow( m_MsgKeyID, iLevel ); }
+    
+#define TASK_DEFAULT_PRIORITY   (100)
+
+    int GetPriorityByThreadName() {
+        int iPriority=TASK_DEFAULT_PRIORITY;
+
+        if( (++ iPriority) && strcmp( "CTaskMngr" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CCCUSocket" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "RECCCU" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CUrBit" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CUserCollect" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CEmitterMerge" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CDetectAnalysis" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CTrackAnalysis" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CScanAnalysis" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else if( (++ iPriority) && strcmp( "CSignalCollect" , m_szThreadName ) == 0 ) {
+            //WhereIs;
+        }
+        else {
+            printf( "\n 타스크 우선순위가 설정되지 않아서 기본 값으로 설정 합니다.");
+
+            iPriority = TASK_DEFAULT_PRIORITY;
+            WhereIs;
+        }
+
+        //printf( "[iPriority=%d]" , iPriority );
+        return iPriority;
+    }
+
+#define TASK_DEFAULT_STACKSIZE   (0x1000)
+
+    size_t GetStackSize() { 
+        int iStackSize=TASK_DEFAULT_STACKSIZE;
+
+        if( strcmp( "CTaskMngr" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CCCUSocket" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "RECCCU" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CUrBit" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CUserCollect" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CEmitterMerge" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x30000;
+        }
+        else if( strcmp( "CSignalCollect" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CDetectAnalysis" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CTrackAnalysis" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+        else if( strcmp( "CScanAnalysis" , m_szThreadName ) == 0 ) {
+            iStackSize = 0x10000;
+        }
+
+        return iStackSize;
+    }
 #else
     DWORD Start( void *pArg=NULL );
     void Run( void *(*Func)(void*), key_t key );
@@ -255,10 +376,11 @@ public:
 
     int Pend();
     void Stop();
-    int QMsgRcv( int iFlag=0 );
+    void Sleep( int mssleep );
+    int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER );
+    void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
+    void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
-    void QMsgSnd( key_t iKeyId, UINT uiOpCode, void *pData=NULL, int iByte=0 );
-    void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
@@ -317,31 +439,42 @@ public:
 		*	Used primarily for porting but can serve in developing generic thread objects
 		*/
 	void Attach( LPTHREAD_START_ROUTINE lpThreadFunc ) {
-    //void Attach( void *(*Func)(void*) ) {
 		m_pThreadFunc = lpThreadFunc;
 	}
 
+#else
+    inline key_t GetKeyId() { return m_MsgKeyID; }
+#endif
+
     void Lock() {
+#ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Lock();
+#elif _VXWORKS_
+        printf( "\n set up lock()...");
 #else
         std::unique_lock<std::mutex> lk(m_mutex);
+#endif
+#else
+        sem_wait( & m_mutex );
 #endif
 
     }
 
     void UnLock() {
+#ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Unlock();
+#elif _VXWORKS_
+        printf( "\n set up unlock()...");
 #else
 
+#endif
+#else
+        sem_post( & m_mutex );
 #endif
 
     }
-
-#else
-    inline key_t GetKeyId() { return m_MsgKeyID; }
-#endif
 
     inline STR_MessageData *GetDataMessage() { return & m_RcvMsg; }
     inline int GetCoThread() { return m_iCoThread; }
@@ -357,7 +490,5 @@ public:
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
 };
-
-#pragma pack(pop)
 
 #endif // CTHREAD_H

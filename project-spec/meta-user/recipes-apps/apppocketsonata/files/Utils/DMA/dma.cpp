@@ -26,7 +26,8 @@
 #include <sys/mman.h>
 #endif
 
-#include "../../Utils/clog.h"
+//#include "../../Utils/clog.h"
+#include "../../Include/globals.h"
 
 
 /*****************************************************************
@@ -63,7 +64,7 @@ void dma_init( dma_dev_t dev, uint32_t mem_id )
 {
     //memset( dma, 0, sizeof(dma) );
     //dma[dev].pReg = ((volatile dma_reg_t *)(uio_get_uio(uio_dev)->logical));
-    dma[dev].pReg = ((dma_reg_t *)(CHWIO::uio_get_uio( mem_id)->logical));
+    dma[dev].pReg = ((dma_reg_t *)(CHWIO::uio_get_uio( mem_id)->ullLogical));
     printf( "dev=%d, mem=%d, dma[dev].reg=0x%p" , dev, mem_id, (void*)(dma[dev].pReg) );
 }
 

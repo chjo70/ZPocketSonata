@@ -8,7 +8,7 @@
 
 #include "ctrackanalysis.h"
 #include "cemittermerge.h"
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
@@ -16,13 +16,10 @@
 
 #include "../Utils/ccommonutils.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
-extern CMultiServer *g_pTheZYNQSocket;
-extern CSingleClient *g_pTheCCUSocket;
-
-// 클래스 내의 정적 멤버변수 값 정의
-CTrackAnalysis* CTrackAnalysis::m_pInstance = nullptr;
 
 /**
  * @brief CTrackAnalysis::CTrackAnalysis
@@ -137,6 +134,6 @@ void CTrackAnalysis::AnalysisStart()
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
-    EMTMRG->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

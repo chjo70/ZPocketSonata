@@ -81,38 +81,15 @@ struct SEnvironVariable {
 class CELEnvironVariable
 {
 private:
-	CELEnvironVariable(void);
-	virtual ~CELEnvironVariable(void);	
-	
-private:
-	static CELEnvironVariable* m_pInstance;
-
 	SEnvironVariable m_stEnvironVariable;
 	
 public:
+    CELEnvironVariable(void);
+    virtual ~CELEnvironVariable(void);	
 	
-	/**
-	* @brief       싱글턴 객체 획득 함수
-	* @return      CELEnvironVariableMngr*   
-	*/
-	static CELEnvironVariable* getInstance();
-	
-	/**
-	* @brief       객체 준비여부 확인 함수
-	* @return      bool   준비 완료 true, 미준비 false
-	*/
-	//static bool IsReadyInstance();
-	
-	/**
-	* @brief       싱글턴 객체 삭제 함수
-	* @return      void   
-	*/
-	static void ReleaseInstance();
-
 	
 public:
 	inline SEnvironVariable *GetEnvrionVariable() { return & m_stEnvironVariable; }
-    //inline void GetEnvrionVariable( SEnvironVariable *pSEnvironVariable ) { pSEnvironVariable = & m_stEnvironVariable; }
 
 	void SetEnvironVaraiable( SEnvironVariable *pSEnvironVariable );
 
@@ -264,5 +241,5 @@ public:
 
 };
 
-#define GP_ENVI_VAR CELEnvironVariable::getInstance()
+//#define GP_ENVI_VAR CELEnvironVariable::getInstance()
 

@@ -15,6 +15,8 @@
 #include "NPulExt.h"
 #include "NewSigAnal.h"
 
+#include "../../Include/globals.h"
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -93,39 +95,90 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     ExtractPulseTrainByLibrary( pVecMatchRadarMode );
 
 #ifdef _EXTRACT_PULSE_METHOD1_
-        // 규칙성 펄스열을 먼저 추출하고서 나머지 잔여 펄스를 불규칙성 펄스열로 추출하는 것을 말함.
-        PulseExtract( STEP_WIDE );
+    // 규칙성 펄스열을 먼저 추출하고서 나머지 잔여 펄스를 불규칙성 펄스열로 추출하는 것을 말함.
+    PulseExtract( STEP_WIDE );
 
 #elif defined( _EXTRACT_PULSE_METHOD2_ )
-        // 펄스열 추출 간격을 중간영역 까지 규칙성 펄스열을 먼저 추출하고서 나머지 잔여 펄스열에 대해서
-        // 불규칙성 펄스열로 추출한다. 그리고 나머지 추출 간격을 마찬가지 방법으로 한다.
-        PulseExtract( STEP1 );
-        PulseExtract( STEP2 );
+    // 펄스열 추출 간격을 중간영역 까지 규칙성 펄스열을 먼저 추출하고서 나머지 잔여 펄스열에 대해서
+    // 불규칙성 펄스열로 추출한다. 그리고 나머지 추출 간격을 마찬가지 방법으로 한다.
+    PulseExtract( STEP1 );
+    PulseExtract( STEP2 );
 
 #elif defined( _EXTRACT_PULSE_METHOD3_ )
 
-        // 규칙성 펄스열의 기준 PRI 값을 찾는다.
-        FindRefStable();
+    // 규칙성 펄스열의 기준 PRI 값을 찾는다.
+    FindRefStable();
 
-        // 기준 PRI 로 펄스열 추출
-        ExtractRefStable();
+    // 기준 PRI 로 펄스열 추출
+    ExtractRefStable();
 
-        m_nRefSeg = m_CoSeg;
+        m_nRefSeg = m_uiCoSeg;
 
-        // 모든 펄스열을 초기화한 상태에서 불규칙성 펄스열을 추출하도록 한다.
-        memset( MARK, 0, sizeof( MARK ) );
+    // 모든 펄스열을 초기화한 상태에서 불규칙성 펄스열을 추출하도록 한다.
+    memset( MARK, 0, sizeof( MARK ) );
 
-        // 규칙성 펄스열의 기준 PRI 값을 찾는다.
-        ExtractJitterPT();
+    // 규칙성 펄스열의 기준 PRI 값을 찾는다.
+    ExtractJitterPT();
 
 #elif defined( _EXTRACT_PULSE_METHOD4_ )
 
+    //////////////////////////////////////////////////////////////////////////
+    // 규칙성 펄스열 찾기
+        m_uiStart_pri_level = 0;
+        m_uiEnd_pri_level = MAX_PRI_RANGE - 1;
+
+        m_uiRefStartSeg = m_uiCoSeg;
+
+    // 규칙성 펄스열의 기준 PRI 값을 찾는다. 모든 전 구간에서 찾는다.
+    FindRefStable();
+
+    // 기준 PRI 로 펄스열 추출
+    ExtractRefStable();
+
+    // 펄스 개수가 작거나 펄스열의 마크가 DELETE_SEG 일때 버린다.
+    // 펄스열 저장소를 정리한다.
+        CleanPulseTrains( nRefSeg, m_uiCoSeg );
+
+    // 규칙성 펄스열을 찾은 펄스열 인덱스
+        m_uiRefEndSeg = m_uiCoSeg;
+
+    memset( MARK, 0, sizeof( MARK ) );
+
+    //////////////////////////////////////////////////////////////////////////
+    // 불규칙성 펄스열 찾기
+    //
+    // 펄스열 구간마다 불규칙성 펄스열과 불규칙성 펄스열을 같이 추출한다.
+    // 펄스열은 각 단계마다 규칙성 펄스열과 불규칙성 펄스열을 동시에 수행한다.
+    //-- 조철희 2005-12-09 16:11:27 --//
+
+        int nExtSeg = m_uiCoSeg;
+
+    for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
+        PulseExtract( i );
+    }
+
+    /*! \bug  기본 규칙성 펄스열에서 추출한 펄스열과 펄스열 추출후의 펄스열 끼리
+                        비교해서 유사 펄스열이면, 기본 규칙성 펄스열을 제거한다.
+            \date 2006-05-19 17:59:24, 조철희
+    */
+    DiscardPulseTrain( nRefSeg, nExtSeg );
+
+#elif defined( _EXTRACT_PULSE_METHOD5_ )
+
+    if( GetPulseStat() == STAT_CW ) {
+        MakeCWPulseTrain();
+    }
+    else {
+        //////////////////////////////////////////////////////////////////////////
+        // 1차 펄스열 추출
+
+        //////////////////////////////////////////////////////////////////////////
+        // DTOA 히스토그램을 이용해서 펄스열의 범위를 대략 구한다.
+        GetStartEndPriLevel();
+
         //////////////////////////////////////////////////////////////////////////
         // 규칙성 펄스열 찾기
-        m_Start_pri_level = 0;
-        m_End_pri_level = MAX_PRI_RANGE - 1;
-
-        m_nRefStartSeg = m_CoSeg;
+        SetRefStartSeg();
 
         // 규칙성 펄스열의 기준 PRI 값을 찾는다. 모든 전 구간에서 찾는다.
         FindRefStable();
@@ -135,88 +188,37 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 
         // 펄스 개수가 작거나 펄스열의 마크가 DELETE_SEG 일때 버린다.
         // 펄스열 저장소를 정리한다.
-        CleanPulseTrains( nRefSeg, m_CoSeg );
+        CleanPulseTrains();
 
         // 규칙성 펄스열을 찾은 펄스열 인덱스
-        m_nRefEndSeg = m_CoSeg;
+        SetRefEndSeg();
 
-        memset( MARK, 0, sizeof( MARK ) );
+        ClearAllMark();
 
         //////////////////////////////////////////////////////////////////////////
         // 불규칙성 펄스열 찾기
         //
-        // 펄스열 구간마다 불규칙성 펄스열과 불규칙성 펄스열을 같이 추출한다.
+        // 펄스열 구간마다 규칙성 펄스열과 불규칙성 펄스열을 같이 추출한다.
         // 펄스열은 각 단계마다 규칙성 펄스열과 불규칙성 펄스열을 동시에 수행한다.
         //-- 조철희 2005-12-09 16:11:27 --//
+        ExtractJitter( _STABLE + _JITTER_RANDOM );
 
-        int nExtSeg = m_CoSeg;
+        // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
+        DiscardPulseTrain();
 
-    for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
-            PulseExtract( i );
-    }
-
-        /*! \bug  기본 규칙성 펄스열에서 추출한 펄스열과 펄스열 추출후의 펄스열 끼리
-                            비교해서 유사 펄스열이면, 기본 규칙성 펄스열을 제거한다.
-                \date 2006-05-19 17:59:24, 조철희
-        */
-        DiscardPulseTrain( nRefSeg, nExtSeg );
-
-#elif defined( _EXTRACT_PULSE_METHOD5_ )
-
-        if( GetPulseStat() == STAT_CW ) {
-            MakeCWPulseTrain();
-        }
-        else {
-            //////////////////////////////////////////////////////////////////////////
-            // 1차 펄스열 추출
-
-            //////////////////////////////////////////////////////////////////////////
-            // DTOA 히스토그램을 이용해서 펄스열의 범위를 대략 구한다.
-            GetStartEndPriLevel();
-
-            //////////////////////////////////////////////////////////////////////////
-            // 규칙성 펄스열 찾기
-            SetRefStartSeg();
-
-            // 규칙성 펄스열의 기준 PRI 값을 찾는다. 모든 전 구간에서 찾는다.
-            FindRefStable();
-
-            // 기준 PRI 로 펄스열 추출
-            ExtractRefStable();
-
-            // 펄스 개수가 작거나 펄스열의 마크가 DELETE_SEG 일때 버린다.
-            // 펄스열 저장소를 정리한다.
-            CleanPulseTrains();
-
-            // 규칙성 펄스열을 찾은 펄스열 인덱스
-            SetRefEndSeg();
-
+        //////////////////////////////////////////////////////////////////////////
+        // 2차 펄스열 추출
+        //  [7/2/2007 조철희]
+        //-
+        if( MustDo2ndPulseExtract() == TRUE ) {
+            //Printf( "\n 2-Pass" );
             ClearAllMark();
+            MarkStablePulseTrain();
 
-            //////////////////////////////////////////////////////////////////////////
-            // 불규칙성 펄스열 찾기
-            //
-            // 펄스열 구간마다 규칙성 펄스열과 불규칙성 펄스열을 같이 추출한다.
-            // 펄스열은 각 단계마다 규칙성 펄스열과 불규칙성 펄스열을 동시에 수행한다.
-            //-- 조철희 2005-12-09 16:11:27 --//
-            ExtractJitter( _STABLE + _JITTER_RANDOM );
-
-            // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
-            DiscardPulseTrain();
-
-            //////////////////////////////////////////////////////////////////////////
-            // 2차 펄스열 추출
-            //  [7/2/2007 조철희]
-            //-
-            if( MustDo2ndPulseExtract() == TRUE ) {
-                //Printf( "\n 2-Pass" );
-                ClearAllMark();
-                MarkStablePulseTrain();
-
-                ResetJitterSeg();
-                ExtractJitter( _JITTER_RANDOM );
-            }
+            ResetJitterSeg();
+            ExtractJitter( _JITTER_RANDOM );
         }
+    }
 
 #else
         #pragma message( "펄스열 추적 알고리즘을 선택해야 합니다." __FILE__ )
@@ -224,8 +226,8 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 #endif
 
 
-    m_CoPulseTrains = m_CoSeg;
-    m_CoRefSeg = m_CoSeg;
+    m_CoPulseTrains = m_uiCoSeg;
+    m_uiCoRefSeg = m_uiCoSeg;
 
     CPulExt::PulseExtract();
 
@@ -239,7 +241,6 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode )
 {
     UINT i;
-    int j;
 
     STR_PRI_RANGE_TABLE extRange;
 
@@ -250,14 +251,14 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    vector <SRadarMode_Sequence_Values>::pointer pVecPRISequenceValues;
+    vector <SRadarMode_Sequence_Values>::iterator iter;
 
     if( pVecMatchRadarMode->size() > 0 ) {
-    pRadarMode = pVecMatchRadarMode->at(0);
+        pRadarMode = pVecMatchRadarMode->at(0);
 
-    pSeg = GetPulseSeg();
-    for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
-        switch( pRadarMode->ePRI_Type ) {
+        pSeg = GetPulseSeg();
+        for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
+            switch( pRadarMode->ePRI_Type ) {
             case RadarModePRIType::enumStable :
                 extRange.min_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
                 extRange.max_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
@@ -265,17 +266,15 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
-                pVecPRISequenceValues = pRadarMode->vecRadarMode_PRISequenceValues.data();
-                for( j=0 ; j < pRadarMode->nPRI_NumPositions ; ++j ) {
-                    extRange.min_pri = ITOAusCNV( pVecPRISequenceValues->f_Min );
-                    extRange.max_pri = ITOAusCNV( pVecPRISequenceValues->f_Max );
+                for( iter=pRadarMode->vecRadarMode_PRISequenceValues.begin() ; iter != pRadarMode->vecRadarMode_PRISequenceValues.end() ; ++iter ) {
+                    extRange.min_pri = ITOAusCNV( (*iter).f_Min );
+                    extRange.max_pri = ITOAusCNV( (*iter).f_Max );
                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
-                        ++ m_CoSeg;
+                        ++ m_uiCoSeg;
 
                         ++ pSeg;
                     }
 
-                    ++ pVecPRISequenceValues;
                 }
                 break;
 
@@ -289,9 +288,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
             default :
                 break;
-        }
+            }
 
-        ++ pRadarMode;
+            ++ pRadarMode;
         }
     }
 

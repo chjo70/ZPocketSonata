@@ -44,11 +44,11 @@ void CSysPara::LoadDefaultSysParameter()
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
 #ifdef _ELINT_
-  _sp.mg.aoa[1] = _spMgAoaEJ;
-  _sp.mg.aoa[2] = _spMgAoaEJ;
-  _sp.mg.aoa[3] = _spMgAoaEJ;
-  _sp.mg.aoa[4] = _spMgAoaEJ;
-  _sp.mg.aoa[5] = _spMgAoaCD;
+    _sp.mg.aoa[1] = _spMgAoaEJ;
+    _sp.mg.aoa[2] = _spMgAoaEJ;
+    _sp.mg.aoa[3] = _spMgAoaEJ;
+    _sp.mg.aoa[4] = _spMgAoaEJ;
+    _sp.mg.aoa[5] = _spMgAoaCD;
 
 #elif defined(_POCKETSONATA_)
     _sp.mg.aoa[1] = _spMgAoaEJ;
@@ -81,17 +81,17 @@ void CSysPara::LoadDefaultSysParameter()
 	_sp.mg.fixfrq[0] = _spMgFixFrqEJ;
 #endif
 
-	_sp.mg.fixfrq[1] = _spMgFixFrqEJ;
-	_sp.mg.fixfrq[2] = _spMgFixFrqEJ;
-	_sp.mg.fixfrq[3] = _spMgFixFrqEJ;
-	_sp.mg.fixfrq[4] = _spMgFixFrqEJ;
-	_sp.mg.fixfrq[5] = _spMgFixFrqCD;
+	_sp.mg.fixfrq[1] = (UINT) _spMgFixFrqEJ;
+	_sp.mg.fixfrq[2] = (UINT) _spMgFixFrqEJ;
+	_sp.mg.fixfrq[3] = (UINT) _spMgFixFrqEJ;
+	_sp.mg.fixfrq[4] = (UINT) _spMgFixFrqEJ;
+	_sp.mg.fixfrq[5] = (UINT) _spMgFixFrqCD;
 
-	_sp.mg.fixfrq_boundary[1] = _spMgFixFrqBoundEJ;
-	_sp.mg.fixfrq_boundary[2] = _spMgFixFrqBoundEJ;
-	_sp.mg.fixfrq_boundary[3] = _spMgFixFrqBoundEJ;
-	_sp.mg.fixfrq_boundary[4] = _spMgFixFrqBoundEJ;
-	_sp.mg.fixfrq_boundary[5] = _spMgFixFrqBoundCD;
+	_sp.mg.fixfrq_boundary[1] = (UINT) _spMgFixFrqBoundEJ;
+	_sp.mg.fixfrq_boundary[2] = (UINT) _spMgFixFrqBoundEJ;
+	_sp.mg.fixfrq_boundary[3] = (UINT) _spMgFixFrqBoundEJ;
+	_sp.mg.fixfrq_boundary[4] = (UINT) _spMgFixFrqBoundEJ;
+	_sp.mg.fixfrq_boundary[5] = (UINT) _spMgFixFrqBoundCD;
 
 	_sp.mg.pw = (UINT) _spMgPW;
 

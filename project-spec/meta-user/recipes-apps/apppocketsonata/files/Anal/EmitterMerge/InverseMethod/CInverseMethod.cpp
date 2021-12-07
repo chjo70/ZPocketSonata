@@ -16,8 +16,6 @@
 #include "CInverseMethod.h"
 
 
-CInverseMethod *CInverseMethod::m_pInstance;				///< 정적 초기화
-
 
 /**
  * @brief     지구의 위경도 및 방위각 관련 객체를 생성한다.
@@ -35,28 +33,28 @@ CInverseMethod::CInverseMethod()
 	m_dFwdAz = 0.0;
 	m_dRevAz = 0.0;
 
-	double lat1, lon1, lat2, lon2;
-
-	// 타겟 : 왕산
-	lat2 = 37.4692;
-	lon2 = 126.3625;
-
-	double doa;
-
-	// 신불
-	lat1 = 37.4528;
-	lon1 = 126.4839;
-	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
-
-	// 관제수신소
-	lat1 = 37.4859;
-	lon1 = 126.4587;
-	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
-
-	// 소방대분소
-	lat1 = 37.45348;
-	lon1 = 126.42333;
-	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
+// 	double lat1, lon1, lat2, lon2;
+// 
+// 	// 타겟 : 왕산
+// 	lat2 = 37.4692;
+// 	lon2 = 126.3625;
+// 
+// 	double doa;
+// 
+// 	// 신불
+// 	lat1 = 37.4528;
+// 	lon1 = 126.4839;
+// 	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
+// 
+// 	// 관제수신소
+// 	lat1 = 37.4859;
+// 	lon1 = 126.4587;
+// 	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
+// 
+// 	// 소방대분소
+// 	lat1 = 37.45348;
+// 	lon1 = 126.42333;
+// 	doa = GCAzimuth(lat1, lon1, lat2, lon2, true );
 }
 
 /**
@@ -75,41 +73,6 @@ CInverseMethod::~CInverseMethod( )
 
 }
 
-/**
- * @brief     Finalize
- * @param     void
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2017-03-07, 오후 6:49
- * @warning
- */
-void CInverseMethod::Finalize()
-{
-	delete m_pInstance;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-/*!
- * @brief     객체를 생성한다.
- * @param     void
- * @return    CInverseMethod *
- * @version   0.0.1
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-09-09 오후 8:56
- * @warning
- */
-CInverseMethod* CInverseMethod::GetInstance()
-{
-	if( m_pInstance == NULL ) {
-		m_pInstance = new CInverseMethod();
-	}
-
-	return m_pInstance;
-}
 
 /**
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

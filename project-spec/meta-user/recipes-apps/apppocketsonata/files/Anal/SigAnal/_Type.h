@@ -45,6 +45,10 @@ using namespace std;
 #ifdef __linux__
 #define _MAX_PATH               1024
 
+#define UINT_MAX                0xffffffff
+#define INT_MAX                 2147483647
+#define ULONGLONG_MAX   (0xffffffffffffffff)
+
 typedef bool BOOL;
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
@@ -56,6 +60,7 @@ typedef unsigned int INT32;
 
 
 typedef unsigned long DWORD;
+typedef long LONG;
 
 typedef string CString;
 
@@ -67,6 +72,9 @@ typedef string CString;
 #define	_write					write
 #define	_read					read
 
+
+#define sprintf_s               sprintf
+#define strcpy_s                strcpy
 
 
 #define _T(A)                   (A)
@@ -117,16 +125,19 @@ typedef int key_t;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // VxWorks 버젼
 #elif __VXWORKS__
+#include <msgQLib.h>
+
 #define _MAX_PATH               1024
 
-#define  IPC_NOWAIT          0
+//#define UINT_MAX                (0xffffffff)
+#define ULONGLONG_MAX   		(0xffffffffffffffff)
+
+#define  IPC_NOWAIT          	(0)
 
 typedef string CString;
-#define IPC_PRIVATE     (0)
+#define key_t MSG_Q_ID
 
-//#define sscanf_s(A,B,C,D,E)     sscanf(A,B,C,D)
-//#define sscanf_s(A,B,C,D,E,F,G,H)     sscanf(A,B,C,D,E,F,G)
-//#define sscanf_s(A,B,C,D,E,F,G,H,I)     sscanf(A,B,C,D,E,F,G,H)
+#define IPC_PRIVATE     		(0)
 
 #define sprintf_s               sprintf
 
@@ -144,6 +155,7 @@ typedef char TCHAR;
 #define	_read					read
 
 #define	wcslen					strlen
+#define	wcscpy					strcpy
 #define	_localtime64_s(A, B)	localtime_r(B, A)
 #define	localtime_s(A, B)		localtime_r(B, A)
 
@@ -156,12 +168,18 @@ typedef char TCHAR;
 
 typedef unsigned long DWORD;
 typedef unsigned char BYTE;
+typedef long long __int64;
+typedef unsigned int WORD;
+
 
 #define M_PI          3.14159265358979323846  /* pi */
 
 #define	O_BINARY				(0)
 
 typedef void             *LPVOID;
+typedef unsigned long DWORD;
+typedef long LONG;
+
 
 #else
 typedef bool BOOL;

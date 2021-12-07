@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
-
-//#include <StdAfx.h>
+#ifdef __VXWORKS__
+#else
 #include <memory.h>
+#endif
 
 #include "ELEnvironVariableMngr.h"
 
@@ -13,8 +14,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-
-CELEnvironVariable* CELEnvironVariable::m_pInstance = NULL;
 
 //////////////////////////////////////////////////////////////////////////
 /*!
@@ -107,15 +106,15 @@ CELEnvironVariable::~CELEnvironVariable(void)
 * @date      2016-01-29 오후 5:32 
 * @warning   
 */
-CELEnvironVariable* CELEnvironVariable::getInstance()
-{
-	if(m_pInstance == nullptr)
-	{	 //EX_DTEC_NullPointCheck
-		m_pInstance = new CELEnvironVariable;
-		//static Cleanup cleanup;
-	}
-	return m_pInstance;
-}
+// CELEnvironVariable* CELEnvironVariable::getInstance()
+// {
+// 	if(m_pInstance == nullptr)
+// 	{	 //EX_DTEC_NullPointCheck
+// 		m_pInstance = new CELEnvironVariable;
+// 		//static Cleanup cleanup;
+// 	}
+// 	return m_pInstance;
+// }
 // 
 // /**
 // * @brief     IsReadyInstance
@@ -148,14 +147,14 @@ CELEnvironVariable* CELEnvironVariable::getInstance()
 // * @date      2016-01-29 오후 5:32 
 // * @warning   
 // */
-void CELEnvironVariable::ReleaseInstance()
-{
-
-	if( m_pInstance != NULL ) {
- 		delete m_pInstance;
-		m_pInstance = NULL;
-	}
-}
+// void CELEnvironVariable::ReleaseInstance()
+// {
+// 
+// 	if( m_pInstance != NULL ) {
+//  		delete m_pInstance;
+// 		m_pInstance = NULL;
+// 	}
+// }
 
 void CELEnvironVariable::SetEnvironVaraiable( SEnvironVariable *pSEnvironVariable )
 {

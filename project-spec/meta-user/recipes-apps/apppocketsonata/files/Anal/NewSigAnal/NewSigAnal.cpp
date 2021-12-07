@@ -34,6 +34,8 @@
 
 #include "../../System/csysconfig.h"
 
+#include "../../Include/globals.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -55,12 +57,21 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw )
     srand( time(NULL) & 0xFFFF );
 
     // MSSQL 연결
-#ifdef _MSSQL_
+#ifdef _SQLITE_
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
+
+    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
+    strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );  
+
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
+#elif _MSSQL_
     CMSSQL::Init();
     m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
-#elif _SQLITE_
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
 
+#else
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
 #endif
 
     m_bSaveFile = true;
@@ -158,14 +169,12 @@ void CNewSigAnal::SetSaveFile( bool bEnable )
 void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 {
 
-    m_enBandWidth = pPDWData->x.el.enBandWidth;
-
-    InitResolution();
-
     m_CoGroup = 0;
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
+        m_enBandWidth = pPDWData->x.el.enBandWidth;
+
         m_CoPdw = pPDWData->uiTotalPDW;
 
 #ifdef _ELINT_
@@ -182,11 +191,15 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         m_CoPdw = 0;
         m_iIsStorePDW = 0;
 
+        m_enBandWidth = en5MHZ_BW;
+
 #ifdef _ELINT_
         m_enCollectorID = RADARCOL_Unknown;
 #else
 #endif
     }      
+
+    InitResolution();
 
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -240,60 +253,60 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         // 수집한 PDW 파일 만들기...
         m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
-            // PDW 수집 상태 체크를 함.
-            if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
+        // PDW 수집 상태 체크를 함.
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
 #ifdef _ELINT_
-                //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-                Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
+            //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
+            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
 #elif _POCKETSONATA_
-                printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
-                Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
-            }
-            else {
+        }
+        else {
 
-                // 라이브러리 기반 펄스열 추출
-                if( TRUE == m_theGroup->MakeGroup() ) {
-                    CheckKnownByAnalysis();
+            // 라이브러리 기반 펄스열 추출
+            if( TRUE == m_theGroup->MakeGroup() ) {
+                CheckKnownByAnalysis();
 
-                    // 그룹화 만들기
-                    while( ! m_theGroup->IsLastGroup() ) {
-                        // 협대역 주파수 그룹화
-                        // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
-                        m_theGroup->MakeGrIndex();
+                // 그룹화 만들기
+                while( ! m_theGroup->IsLastGroup() ) {
+                    // 협대역 주파수 그룹화
+                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+                    m_theGroup->MakeGrIndex();
 
-                        SaveGroupPdwFile( m_CoGroup+1 );
+                    SaveGroupPdwFile( m_CoGroup+1 );
 
-                        // 규칙성 및 불규칙성 펄스열 추출
-                        m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
+                    // 규칙성 및 불규칙성 펄스열 추출
+                    m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
 
-                        // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-                        // m_thePulExt->UnknownExtract();
+                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+                    // m_thePulExt->UnknownExtract();
 
-                        // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                        memset( & MARK, 0, sizeof( MARK ) );
+                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+                    memset( & MARK, 0, sizeof( MARK ) );
 
-                        // PRI 분석
-                        m_theAnalPRI->Analysis();
+                    // PRI 분석
+                    m_theAnalPRI->Analysis();
 
-                        // 에미터 분석
-                        m_theMakeAET->MakeAET();
+                    // 에미터 분석
+                    m_theMakeAET->MakeAET();
 
-                        // 그룹화 생성 개수 증가
-                        ++ m_CoGroup;
+                    // 그룹화 생성 개수 증가
+                    ++ m_CoGroup;
 
-                    }
                 }
             }
-
-            m_theMakeAET->PrintAllEmitter();
-
-            // Printf( "\n ==== End of New Signal Analysis ====\n" );
-
-            // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
-            SaveRemainedPdwFile();
         }
+
+        m_theMakeAET->PrintAllEmitter();
+
+        // Printf( "\n ==== End of New Signal Analysis ====\n" );
+
+        // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
+        SaveRemainedPdwFile();
     }
+}
 
 /**
  * @brief CNewSigAnal::CheckValidData

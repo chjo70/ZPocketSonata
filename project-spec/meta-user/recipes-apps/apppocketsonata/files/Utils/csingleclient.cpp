@@ -30,10 +30,12 @@
 
 #include "../Thread/creclan.h"
 #include "../Thread/ctaskmngr.h"
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 
 #include "../Utils/ccommonutils.h"
+
+#include "../Include/globals.h"
 
 /**
  * @brief CSingleClient::CSingleServer
@@ -147,7 +149,7 @@ void CSingleClient::_routine()
         }
         sprintf( & buffer[iIndex], "%s" , m_szServerAddress[i] );
 
-        LOGMSG3( enDebug, "[클라이언트:%s] [%s,%d] 연결하려 합니다.", GetThreadName(), buffer, m_iPort );
+        //LOGMSG3( enDebug, "[클라이언트:%s] [%s,%d] 연결하려 합니다.", GetThreadName(), buffer, m_iPort );
         RunClient();
     }
 
@@ -183,7 +185,7 @@ void CSingleClient::RunClient()
 
     m_bConnected = false;
 
-    while( true ) {
+    while( m_bMainLoop ) {
         if( iServerSwitch+1 >= NUM_OF_SERVER ) {
             iServerSwitch = 0;
         }
@@ -221,7 +223,7 @@ void CSingleClient::RunClient()
         }
 
         //LOGMSG2( enDebug, "Try Connection to [%s/%d]...", m_szServerAddress, m_iPort );
-        if( ConnectTimeout( m_uiSocket, & sockAddress, 10 ) < 0 ) {
+        if( ConnectTimeout( m_uiSocket, & sockAddress, 5 ) < 0 ) {
             sleep( 1 );
         }
         else {
@@ -230,6 +232,7 @@ void CSingleClient::RunClient()
             uiTotalRead = 0;
 
             while( true ) {
+            	
                 //clear the socket set
                 FD_ZERO(&readfds);
 
@@ -249,108 +252,135 @@ void CSingleClient::RunClient()
 
                 if( bHeader == true ) {
                     pLanData = (char *) & strLanHeader;
-                    iRead = recv( m_uiSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT );
-                    if( iRead == 0 ) {
-                        perror( "recv 에러" );
-                        OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
-                        break;
+
+                    if( (int) ( sizeof(STR_LAN_HEADER)-uiTotalRead ) >= 1 ) {
+                        iRead = recv( m_uiSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT );
+                        TRACE( "[H%d]" , iRead );
+                        if( iRead <= 0 ) {
+                            perror( "recv 에러" );
+                            OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
+                            break;
+                        }
+                        //Echo back the message that came in
+                        else {
+#ifdef _WIN32
+                            CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
+#endif
+                            uiTotalRead += iRead;
+                            //printf( "#[%d/%d]" , uiTotalRead, strLanHeader.uiLength );
+                            if( uiTotalRead == sizeof(STR_LAN_HEADER) ) {
+                                if( strLanHeader.uiLength == 0 ) {
+                                    bHeader = true;
+                                    uiTotalRead = 0;
+#ifdef __linux__
+                                    sndMsg.mtype = 1;
+#endif                                    
+                                    sndMsg.uiOpCode = strLanHeader.uiOpCode;
+                                    sndMsg.iSocket = m_uiSocket;
+                                    sndMsg.iArrayIndex = -1;
+                                    sndMsg.uiArrayLength = 0;
+                                    sndMsg.uiDataLength = 0;
+
+#if defined(_MSC_VER) || defined(__VXWORKS__)
+                                    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL );
+                  
+#elif __linux__
+                                    if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+                                        perror( "msgsnd 실패" );
+                                        Log( enError, "msgsnd 실패" );
+                                    }
+#else
+                                    LOGMSG( enError, "타스크/쓰레드간 메시지 통신방안을 구성해야 합니다." );
+#endif
+                                }
+                                else {
+                                    bHeader = false;
+                                    uiTotalRead = 0;
+                                }
+                            }
+                        }
                     }
-                    //Echo back the message that came in
                     else {
-                        CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
-                        uiTotalRead += iRead;
-                        if( uiTotalRead == sizeof(STR_LAN_HEADER) ) {
-                            if( strLanHeader.uiLength == 0 ) {
+                        perror( "recv()::header 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                        Log( enError, "recv()::header 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                    }
+                }
+                else {
+                    if( (int) ( sizeof(STR_LAN_HEADER)-uiTotalRead ) >= 1 || true ) {
+                        pLanData = (char *) & m_pszLanData[0];
+                        iRead = recv( m_uiSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT );
+                        TRACE( "[D%d]" , iRead );
+                        if( iRead <= 0 ) {
+                            perror( "recv 에러" );
+                            OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
+                            break;
+                        }
+                        else {
+#ifdef _WIN32
+                            CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
+#endif
+                            uiTotalRead += iRead;
+                            //printf( "*[%d/0x%X/%d]" , uiTotalRead, strLanHeader.uiOpCode, strLanHeader.uiLength );
+                            if( uiTotalRead == strLanHeader.uiLength ) {
                                 bHeader = true;
                                 uiTotalRead = 0;
-
+#ifdef __linux__
                                 sndMsg.mtype = 1;
+#endif                                
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
                                 sndMsg.iSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
 
-#ifdef _MSC_VER
-                                m_ptheRecLan->QMsgSnd( & sndMsg, NULL );
-#elif __VXWORKS__                                
-#else
-                                if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
-                                    perror( "msgsnd 실패" );
-                                }
-#endif
-                            }
-                            else {
-                                bHeader = false;
-                                uiTotalRead = 0;
-                            }
-                        }
-                    }
-                }
-                else {
-                    pLanData = (char *) & m_pszLanData[0];
-                    iRead = recv( m_uiSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT );
-                    if( iRead == 0 ) {
-                        perror( "recv 에러" );
-                        OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
-                        break;
-                    }
-                    else {
-                        CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
-                        uiTotalRead += iRead;
-                        if( uiTotalRead == strLanHeader.uiLength ) {
-                            bHeader = true;
-                            uiTotalRead = 0;
-
-                            sndMsg.mtype = 1;
-                            sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                            sndMsg.iSocket = m_uiSocket;
-                            sndMsg.iArrayIndex = -1;
-                            sndMsg.uiArrayLength = 0;
-                            sndMsg.uiDataLength = 0;
-
-                            if( strLanHeader.uiLength < sizeof(UNI_MSG_DATA) ) {
-                                sndMsg.uiDataLength = strLanHeader.uiLength;
-                                memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
-                            }
-                            else {
-                                sndMsg.uiArrayLength = strLanHeader.uiLength;
-                                sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
-                            }
-
-/*
- *                             if( sndMsg.uiOpCode == enREQ_SIM_PDWDATA || sndMsg.uiOpCode == enREQ_IPL_DOWNLOAD || sndMsg.uiOpCode == enREQ_SET_CONFIG ) {
-                                sndMsg.uiArrayLength = strLanHeader.uiLength;
-                                sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
-                            }
-                            else {
                                 if( strLanHeader.uiLength < sizeof(UNI_MSG_DATA) ) {
                                     sndMsg.uiDataLength = strLanHeader.uiLength;
                                     memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
                                 }
                                 else {
-                                    LOGMSG1( enError, "랜 수신 데이터(0x%x)를 초과했습니다. PushLanData()를 이용해서 저장해야 합니다. !!", m_pMsg->uiOpCode );
+                                    sndMsg.uiArrayLength = strLanHeader.uiLength;
+                                    sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
                                 }
-                            }           */
 
-#ifdef _MSC_VER
-                            m_ptheRecLan->QMsgSnd( & sndMsg, NULL );
-#elif __VXWORKS__
+    /*
+     *                             if( sndMsg.uiOpCode == enREQ_SIM_PDWDATA || sndMsg.uiOpCode == enREQ_IPL_DOWNLOAD || sndMsg.uiOpCode == enREQ_SET_CONFIG ) {
+                                    sndMsg.uiArrayLength = strLanHeader.uiLength;
+                                    sndMsg.iArrayIndex = m_ptheRecLan->PushLanData( pLanData, sndMsg.uiArrayLength );
+                                }
+                                else {
+                                    if( strLanHeader.uiLength < sizeof(UNI_MSG_DATA) ) {
+                                        sndMsg.uiDataLength = strLanHeader.uiLength;
+                                        memcpy( & sndMsg.x.szData[0], pLanData, sndMsg.uiDataLength );
+                                    }
+                                    else {
+                                        LOGMSG1( enError, "랜 수신 데이터(0x%x)를 초과했습니다. PushLanData()를 이용해서 저장해야 합니다. !!", m_pMsg->uiOpCode );
+                                    }
+                                }           */
+
+#if defined(_MSC_VER) || defined(__VXWORKS__)
+                                m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL );
+
+#elif __linux__
+                                if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+                                    perror( "msgsnd 실패" );
+                                }
+                                else {
+                                    if( sndMsg.uiOpCode == enREQ_MODE && sndMsg.x.uiData == enREADY_MODE ) {
+                                       // LOGMSG( enError, "대기 명령으로 소켓을 닫습니다." );
+                                       // break;
+                                    }
+                                    // DisplayMsg( & sndMsg );
+
+                                }
 #else
-                            if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
-                                perror( "msgsnd 실패" );
-                            }
-                            else {
-                                if( sndMsg.uiOpCode == enREQ_MODE && sndMsg.x.uiData == enREADY_MODE ) {
-                                   // LOGMSG( enError, "대기 명령으로 소켓을 닫습니다." );
-                                   // break;
-                                }
-                                // DisplayMsg( & sndMsg );
-
-                            }
+                                Log( enError, "타스크/쓰레드간 메시지 통신방안을 구성해야 합니다." );
 #endif
-
+                            }
                         }
+                    }
+                    else {
+                        perror( "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                        Log( enError, "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
                     }
                 }
             }
@@ -375,9 +405,13 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 
     CloseSocket();
 
-    LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
+    //LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
+    TRACE( "서버가 끊겼습니다." );
 
+#ifdef __linux__    
     sndMsg.mtype = 1;
+#endif
+    
     sndMsg.uiOpCode = enREQ_MODE;
     sndMsg.iSocket = m_uiSocket;
     sndMsg.iArrayIndex = -1;
@@ -386,7 +420,10 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 
     sndMsg.x.uiData = enREADY_MODE;
 
-#ifdef __linux__
+#ifdef _MSC_VER
+    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL );
+#elif __VXWORKS__
+#elif __linux__
     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
@@ -454,11 +491,52 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
         }
     }
 
+#elif __VXWORKS__
+    
+    int iOn;
+    
+    iOn = 1;
+    if(ioctl(uiSock, FIONBIO, & iOn ) != 0) {
+        perror( "ioctl() error" );
+        iRet = -1;
+    }
+    else {
+		if(connect(uiSock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
+			if (errno != EINPROGRESS) {
+				perror( "connect() error" );
+				iRet = -1;
+			}
+		}
+	
+		timeout.tv_sec = timeout_milli / 1000;
+		timeout.tv_usec = (timeout_milli % 1000) * 1000;
+		FD_SET(uiSock, &writefds);
+		if(select(uiSock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
+			// perror("select");
+			iRet = -1;
+		}
+		else {
+			len = sizeof(err);
+			getsockopt(uiSock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
+			if (err) {
+				perror( "getsockopt() error" );
+				iRet = -1;
+			}
+			
+            iOn = 0;
+            if(ioctl(uiSock, FIONBIO, & iOn ) != 0) {
+                perror( "ioctl() error" );
+                iRet = -1;
+            }			
+		}
+    }
+
 #else
     int flags;
 
     flags = fcntl(uiSock, F_GETFL);
     flags = (flags | O_NONBLOCK);
+
     if(fcntl(uiSock, F_SETFL, flags) != 0) {
         perror( "fcntl() error" );
         iRet = -1;
@@ -466,7 +544,7 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
     else {
         if(connect(uiSock, (struct sockaddr *) pAddr, sizeof(sockaddr_in) ) != 0 ) {
             if (errno != EINPROGRESS) {
-                perror("connect() error\n");
+                perror( "connect() error" );
                 iRet = -1;
             }
         }
@@ -475,14 +553,14 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
         timeout.tv_usec = (timeout_milli % 1000) * 1000;
         FD_SET(uiSock, &writefds);
         if(select(uiSock+1, NULL, &writefds, NULL, &timeout) <= 0 ) {
-            //perror("connection timeout\n");
+            perror("select");
             iRet = -1;
         }
         else {
             len = sizeof(err);
             getsockopt(uiSock, SOL_SOCKET, SO_ERROR, (char *)&err, &len);
             if (err) {
-                //perror( "getsockopt()" );
+                perror( "getsockopt()" );
                 iRet = -1;
             }
 
@@ -720,7 +798,7 @@ void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
 
     if( pAddr != NULL ) {
         pIPAddress = inet_ntoa( pAddr->sin_addr );
-        GP_SYSCFG->SetPrimeServerOfNetwork( pIPAddress, true );
+        g_pTheSysConfig->SetPrimeServerOfNetwork( pIPAddress, true );
     }
 #endif
 
@@ -750,7 +828,7 @@ void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocke
     }
 
     UINT uiMode=enREADY_MODE;
-    QMsgSnd( TMNGR->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
+    QMsgSnd( g_pTheTaskMngr->GetKeyId(), enREQ_MODE, & uiMode, sizeof(int) );
 #endif
 
 }
@@ -777,6 +855,9 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
         if( iRet1 > 0 && uiDataLength != 0 ) {
             CCommonUtils::AllSwapData32( pData, uiDataLength );
             iRet2 = send( m_uiSocket, (char *) pData, uiDataLength, MSG_DONTWAIT );
+            if( iRet2 <= 0 ) {
+                perror( "send()" );
+            }
             CCommonUtils::AllSwapData32( pData, uiDataLength );
 
             m_puiData = (unsigned int *) pData;
@@ -829,30 +910,33 @@ void CSingleClient::DisplayMsg()
             break;
 
         // 분석 관련 메시지
-        case esAET_NEW_CCU :
+        case enAET_NEW_CCU :
             strcpy( szOpcode, "신규" );
             break;
 
-        case esAET_UPD_CCU :
+        case enAET_UPD_CCU :
              strcpy( szOpcode, "수정" );
             break;
 
-        case esAET_LST_CCU :
+        case enAET_LST_CCU :
             strcpy( szOpcode, "소실" );
             break;
 
-        case esAET_DEL_CCU :
+        case enAET_DEL_CCU :
             strcpy( szOpcode, "삭제" );
             break;
 
         // IPL 관련 메시지
-        case esIPL_VERSION :
+        case enIPL_VERSION :
             strcpy( szOpcode, "IPL 버젼" );
             break;
 
-        case esIPL_WRITESTATUS :
+        case enIPL_WRITESTATUS :
             strcpy( szOpcode, "IPL 기록상태" );
             break;
+
+        case enRES_SETSYS :
+            strcpy( szOpcode, "시스템 변수" );
 
         default :
             strcpy( szOpcode, "이름 없음" );
@@ -872,17 +956,21 @@ void CSingleClient::CloseSocket()
     m_bConnected = false;
 
     if( m_uiSocket > 0 ) {
+        int uiSocket = m_uiSocket;
+        m_uiSocket = 0;
+
         LOGMSG( enNormal, "소켓을 정상적으로 닫습니다." );
 #ifdef _MSC_VER
-        closesocket( m_uiSocket );
+        
+        closesocket( uiSocket );
 #else
-        close( m_uiSocket );
+        close( uiSocket );
 #endif
     }
     else {
         LOGMSG( enError, "두번 이상 소켓을 닫았습니다." );
     }
 
-    m_uiSocket = UINT_MAX;
+    // m_uiSocket = 0;
 
 }

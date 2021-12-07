@@ -8,6 +8,8 @@
 #include "afxdialogex.h"
 
 
+#include "FileTar.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -69,9 +71,10 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-extern void Start();
+extern void Start( int iArgc, char *iArgv[] );
 extern void End();
-extern void ParsingArgument( int iArgc, char *iArgv[] );
+
+extern void ss();
 
 
 // CMSIGADlg 메시지 처리기
@@ -110,11 +113,12 @@ BOOL CMSIGADlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
-    //_CrtSetBreakAlloc(1231); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
+    // _CrtSetBreakAlloc(316394); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
 
-    ParsingArgument( __argc, __argv );
-
-    Start();
+    //CFileTar theFileTar;
+    //theFileTar.UnTar( "d:/tftpboot/tftpboot.tar", "d:/tffs0" );
+    Start( __argc, __argv );
+    
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }

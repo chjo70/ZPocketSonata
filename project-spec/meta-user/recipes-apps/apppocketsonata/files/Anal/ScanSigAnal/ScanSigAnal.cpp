@@ -525,7 +525,7 @@ void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int index )
 	sprintf( filename, "c:\\temp\\%s_emitter_%02d_ksp.pdw", p, index );
 	pdwfile = fopen( filename, "wb" );
 
-	total_count = pEmitter->pdw.count;
+	total_count = pEmitter->pdw.uiCount;
 
 	pEmitterPdwIndex = pEmitter->pdw.pIndex;
 	for( i=0 ; i < total_count ; ++i ) {
@@ -640,7 +640,7 @@ void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int index )
 	sprintf( filename, "c:\\temp\\%03d_%03d_%s.scn_emt.pdw", nStep, index, p );
 	pdwfile = fopen( filename, "wb" );
 
-	total_count = pPdw->count;
+	total_count = pPdw->uiCount;
 
 	pEmitterPdwIndex = pPdw->pIndex;
 	for( i=0 ; i < total_count ; ++i ) {

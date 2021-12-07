@@ -40,7 +40,7 @@ typedef USHORT PDWINDEX;
 //##ModelId=452B0C5402E5
 struct STR_PDWINDEX {
     PDWINDEX *pIndex;
-    int count;
+    unsigned int uiCount;
 
 }  ;
 
@@ -209,7 +209,7 @@ struct STR_PRI_RANGE_TABLE {
 struct STR_EMITTER {
     STR_PDWINDEX pdw;						// PDW 버퍼
     UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
-	int seg_count;							// seg[] 수, 펄스열 수
+	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수
 
 	PRI_TYPE pri_type;							// PRI 형태
 	_TOA framePri;								// 스태거일 때의 frmae PRI 값
@@ -217,10 +217,10 @@ struct STR_EMITTER {
 	UINT pri_patterntype;
 	float priPeriod;
 
-	int stag_dwell_element_cnt;					// stagger level 수 
+	unsigned int iStagDwellElementCount;					// stagger level 수 
 	_TOA stag_dwell_element[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
 
-	int stag_dwell_level_cnt;					// stagger level 수 
+	int iStagDwellLevelCount;					// stagger level 수 
 	_TOA stag_dwell_level[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
 
 	int hop_level[ MAX_HOP_LEVEL_ELEMENT ];					// Hopping level
@@ -525,7 +525,7 @@ struct STR_DWELL_LEVEL {
   float _spFreqMin;
   float _spFreqMax;
 
-  int _spAnalMinPulseCount;
+  unsigned int _spAnalMinPulseCount;
 
 
 #define DFD_FREQ_OFFSET		(1900)
@@ -541,27 +541,27 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
     
     FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
-  {	// min, max, offset, res
-      {     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
-      {  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
-      {  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
-      { 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
-      { 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* 고대역3	*/
-      {     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
-  } ;
+    {	// min, max, offset, res
+        {     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
+        {  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
+        {  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
+        { 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
+        { 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* 고대역3	*/
+        {     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
+    } ;
 
-  PA_RESOL gPaRes[ 6 ] =
-  {	// min, max, offset, res
-      {     0,     0,  (float) _spPAoffset, _spAMPres }, 
-      {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-      {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-      { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-      { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-      {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
-  } ;
+    PA_RESOL gPaRes[ 6 ] =
+    {	// min, max, offset, res
+        {     0,     0,  (float) _spPAoffset, _spAMPres }, 
+        {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+        {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+        { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+        { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+        {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+    } ;
 
-  double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
-  double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
+    double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
+    double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 #elif defined(_POCKETSONATA_)
     char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
@@ -579,15 +579,15 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
-  PA_RESOL gPaRes[ 6 ] =
-  {	// min, max, offset, res
-      {     0,     0,  (float) _spPAoffset, _spAMPres },
-      {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-      {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-      { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-      { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-      {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
-  } ;
+    PA_RESOL gPaRes[ 6 ] =
+    {	// min, max, offset, res
+        {     0,     0,  (float) _spPAoffset, _spAMPres },
+        {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+        {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+        { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+        { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+        {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+    } ;
 
 #elif defined(_SONATA_)
   char g_szAetSignalType[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
@@ -609,20 +609,20 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
   FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
   {
-	  {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
-	  { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
-	  { 5866, 18740, 5866, 1.5   }
+      {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+      { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+      { 5866, 18740, 5866, 1.5   }
   } ;
 
 
   PA_RESOL gPaRes[ 6 ] =
   {	// min, max, offset, res
-	  {     0,     0,  (float) _spPAoffset, _spAMPres },
-	  {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-	  {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-	  { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-	  { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-	  {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+      {     0,     0,  (float) _spPAoffset, _spAMPres },
+      {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+      {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+      { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+      { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+      {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
   } ;
 
 #endif
@@ -635,7 +635,7 @@ extern STR_SYS _sp;
 
 extern UINT _spdiffaoa[ 6 ];
 
-extern int _spAnalMinPulseCount;
+extern unsigned int _spAnalMinPulseCount;
 
 extern char g_szPulseType[MAX_STAT][3];
 

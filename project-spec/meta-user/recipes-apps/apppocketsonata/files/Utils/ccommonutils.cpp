@@ -2,16 +2,22 @@
 #include "stdafx.h"
 
 #ifdef _MSC_VER
+
 #include <io.h>
 #include <direct.h>
 #include <sys/timeb.h>
+
+
 #include <stdint.h>
+
 #include <sys/utime.h>
 
 #include <fcntl.h>
 #else
 #include <unistd.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 #endif
 
@@ -23,9 +29,7 @@
 #include "../Anal/SigAnal/_Type.h"
 #include "../Anal/Collect/DataFile/DataFile.h"
 
-#include "../Utils/csingleserver.h"
-#include "../Utils/csingleclient.h"
-#include "../Utils/cmultiserver.h"
+#include "../Include/globals.h"
 
 extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
@@ -113,7 +117,7 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
 #ifndef _CGI_LIST_
     ENUM_MODE enMode, enModeOfMessage;
 
-    enMode = GP_SYSCFG->GetMode();
+    enMode = g_pTheSysConfig->GetMode();
     switch( pMsg->uiOpCode ) {
         case enREQ_MODE :
             enModeOfMessage = (ENUM_MODE) pMsg->x.szData[0];
@@ -169,7 +173,17 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
             break;
 
         case enREQ_RELOAD_LIBRARY :
+            if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
+            }
+            else {
+                bRet = false;
+            }
+            break;
+
         case enREQ_IPL_VERSION :
+            break;
+
+        case enREQ_SYS :
             break;
 
         case enREQ_INIT :
@@ -301,15 +315,58 @@ void CCommonUtils::AllSwapData32( void *pData, int iLength )
 }
 
 /**
+ * @brief		swapByteOrder
+ * @param		unsigned short & us
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/18 19:16:45
+ * @warning		
+ */
+void CCommonUtils::swapByteOrder(unsigned short& us)
+{
+    us = (us >> 8) | ((us<<8) & 0xFF00);
+}
+
+/**
  * @brief CCommonUtils::swapByteOrder
  * @param ull
  */
 void CCommonUtils::swapByteOrder(unsigned int& ui)
 {
-    ui = (ui >> 24) |
-        ((ui<<8) & 0x00FF0000) |
-        ((ui>>8) & 0x0000FF00) |
-        (ui << 24);
+    ui = (ui >> 24) | ((ui<<8) & 0x00FF0000) | ((ui>>8) & 0x0000FF00) | (ui << 24);
+}
+
+/**
+ * @brief		swapByteOrder
+ * @param		double & di
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/18 19:06:02
+ * @warning		
+ */
+void CCommonUtils::swapByteOrder(double & d)
+{
+    uint64_t um = (uint64_t) & d;
+    
+    d = (double) ( ( ( um & 0xff00000000000000 ) >> 56 ) |
+                   ( ( um & 0x00ff000000000000 ) >> 40 ) |
+                   ( ( um & 0x0000ff0000000000 ) >> 24 ) |
+                   ( ( um & 0x000000ff00000000 ) >> 8 ) |
+                   ( ( um & 0x00000000ff000000 ) << 8 ) |
+                   ( ( um & 0x0000000000ff0000 ) << 24 ) |
+                   ( ( um & 0x000000000000ff00 ) << 40 ) |
+                   ( ( um & 0x00000000000000ff ) << 56 ) );
+}
+
+void CCommonUtils::swapByteOrder(double *p, int iSize )
+{
+    auto i=iSize;
+
+    for( i=0 ; i < iSize ; ++i ) {
+        swapByteOrder( p[i] );
+    }
 }
 
 /**
@@ -475,8 +532,17 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     
         /* 원본 파일의 속성을 복원해야 한다면... */
         if(copy_attr) {
+            /* 원본 파일의 파일 권한을 복원하기 
+            * open시에 파일권한을 설정하였지만, 
+            * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
+            * 파일의 권한도 복구합니다.
+            */
+            chmod(dest_file, sts.st_mode);
+
 #ifdef __VXWORKS__        		
   
+#elif __linux__
+
 #else 		
         	struct  utimbuf attr;
     			
@@ -486,12 +552,6 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
             utime(dest_file, &attr);            
 #endif            
         
-            /* 원본 파일의 파일 권한을 복원하기 
-            * open시에 파일권한을 설정하였지만, 
-            * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
-            * 파일의 권한도 복구합니다.
-            */
-            chmod(dest_file, sts.st_mode);
         }
     }
 

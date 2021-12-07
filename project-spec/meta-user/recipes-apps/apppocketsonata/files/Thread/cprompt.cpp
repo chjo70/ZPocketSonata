@@ -8,9 +8,11 @@
 #include <ctype.h>
 
 #include "cprompt.h"
-#include "../Utils/clog.h"
-#include "curbit.h"
-#include "ctaskmngr.h"
+//#include "../Utils/clog.h"
+//#include "curbit.h"
+//#include "ctaskmngr.h"
+
+#include "../Include/globals.h"
 
 #ifdef _READLINE_
 //#include <curses.h>
@@ -292,7 +294,7 @@ int CPrompt::ownCmdHandler(char** parsed)
     case enBye :
         printf( "\n program exit...\n" );
         m_bWhileFlag = false;
-        QMsgSnd( TMNGR->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
+        g_pTheTaskMngr->QMsgSnd( enTHREAD_REQ_SHUTDOWN );
         break;
 
     default:
@@ -476,14 +478,17 @@ void CPrompt::URBit( UINT uiData )
 
     puiUnit = (UINT *) & sndMsg.x.szData[0];
 
+#ifdef __linux__    
     sndMsg.mtype = 1;
+#endif
+    
     sndMsg.uiOpCode = enREQ_URBIT;
     sndMsg.iSocket = 0;
 
     *puiUnit = uiData;
 
 #ifdef __linux__
-    if( msgsnd( URBIT->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+    if( msgsnd( g_pTheUrBit->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
     else {

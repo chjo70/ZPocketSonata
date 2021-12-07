@@ -1,16 +1,14 @@
 #ifndef CUSERCOLLECT_H
 #define CUSERCOLLECT_H
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
-#include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
+//#include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
 class CUserCollect : public CThread
 {
 private:
-    static CUserCollect *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
     STR_RES_COL_START m_strResColStart;
@@ -18,7 +16,7 @@ private:
     DMAPDW *m_pstrDMAPDW;
     char *m_pstrDMAPDWWithFileHeader;
 
-    UINT m_uiCoPDW;
+    //UINT m_uiCoPDW;
 
     unsigned int m_uiColStart;
 
@@ -53,9 +51,13 @@ public:
     CUserCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUserCollect();
 
-    THREAD_STANDARD_FUNCTION( CUserCollect )
+    void Run( key_t key=IPC_PRIVATE ); 
+
+
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 };
 
-#define UCOL   CUserCollect::GetInstance()
+//#define UCOL   CUserCollect::GetInstance()
 
 #endif // CUSERCOLLECT_H

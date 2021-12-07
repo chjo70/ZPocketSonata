@@ -6,25 +6,25 @@
 
 #ifdef _MSC_VER
 
+#elif __linux__
+#include <sys/timeb.h>
+
+#elif __VXWORKS__
+
 #else
 #include <unistd.h>
 
 #endif
-//#include "../SigAnal/stdafx.h"
 
-#ifdef _MSC_VER
-// PC용 상위 클래스에 전달하기 위한 선언
-//#include "../../A50SigAnal/stdafx.h"
-
-#endif
 
 #include "../OFP_Main.h"
 
-#include <sys/timeb.h>
 #include <stdio.h>
 
 #include "NMakeAET.h"
 #include "NewSigAnal.h"
+
+#include "../../Include/globals.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ STR_EMITTER *CNMakeAET::GetEmitter()
 //
 UINT CNMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-    return m_pNewSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.count );
+    return m_pNewSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -328,7 +328,7 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     // ID
 // 	printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
 
-    iCnt += sprintf( & buffer[iCnt], " [%3d]" , pLOB->iNumOfPDW );
+    sprintf( & buffer[iCnt], " [%3d]" , pLOB->iNumOfPDW );
 
     //printf( "\n%s", buffer );
     Log( enNormal, "\t%s", buffer );

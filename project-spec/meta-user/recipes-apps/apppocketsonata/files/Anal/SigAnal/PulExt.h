@@ -37,16 +37,16 @@ protected:
 
 public:
     //##ModelId=452B0C530301
-    int m_nAnalSeg;
+    unsigned int m_uiAnalSeg;
     //! 펄스열 총 개수
     //##ModelId=452B0C53030B
-    int m_CoSeg;
-    int m_CoRefSeg;
+    unsigned int m_uiCoSeg;
+    unsigned int m_uiCoRefSeg;
 
     //##ModelId=452B0C53030C
-    int m_End_pri_level;
+    unsigned int m_uiEnd_pri_level;
     //##ModelId=452B0C530315
-    int m_Start_pri_level;
+    unsigned int m_uiStart_pri_level;
 
 
 private:
@@ -60,14 +60,14 @@ private:
     int m_nToaShift;
 
     //##ModelId=452B0C530333
-    int m_nRefStartSeg;
+    unsigned int m_uiRefStartSeg;
     //##ModelId=452B0C53033D
-    int m_nRefEndSeg;
+    unsigned int m_uiRefEndSeg;
     //! 최대 PDW 개수
     //##ModelId=452B0C530347
     unsigned int m_uiMaxPdw;
     //##ModelId=452B0C530348
-    int m_MaxSeg;
+    unsigned int m_uiMaxSeg;
 
     //##ModelId=452B0C53035C
     STR_PDWPARAM m_PdwParam;
@@ -89,15 +89,15 @@ public:
     //##ModelId=452B0C530383
     inline STR_PDWPARAM* GetPdwParam() { return & m_PdwParam; }
     //##ModelId=452B0C530384
-    inline void SetRefEndSeg() { m_nRefEndSeg = m_CoSeg; }
+    inline void SetRefEndSeg() { m_uiRefEndSeg = m_uiCoSeg; }
     //##ModelId=452B0C530385
-    inline void CleanPulseTrains() { CleanPulseTrains( m_nRefStartSeg, m_CoSeg ); }
+    inline void CleanPulseTrains() { CleanPulseTrains( m_uiRefStartSeg, m_uiCoSeg ); }
     //##ModelId=452B0C530397
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_Seg; }
     //##ModelId=452B0C530398
-    inline void GetStartEndPriLevel() { GetStartEndPriLevel( & m_Start_pri_level, & m_End_pri_level ); }
+    inline void GetStartEndPriLevel() { GetStartEndPriLevel( & m_uiStart_pri_level, & m_uiEnd_pri_level ); }
     //##ModelId=452B0C530399
-    inline void SetRefStartSeg() { m_nRefStartSeg = m_CoSeg; }
+    inline void SetRefStartSeg() { m_uiRefStartSeg = m_uiCoSeg; }
     //##ModelId=452B0C5303A1
     inline void SetGrPdwIndex( STR_PDWINDEX *pPdwIndex ) { m_pGrPdwIndex = pPdwIndex; }
 
@@ -120,7 +120,7 @@ public:
 
 
     template <typename T>
-    T CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+    unsigned int CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
         T harmonic;
         T max_mean, min_mean;
 
@@ -133,19 +133,20 @@ public:
             min_mean = priMean1;
         }
 
-        if( strcmp( typeid(T).name(), "float" ) == 0 )
-            harmonic = fmod( (float) max_mean, (float) min_mean );
-        else
+        if( strcmp( typeid(T).name(), "float" ) == 0 ) {
+            harmonic = (unsigned int) ( fmod( (float) max_mean, (float) min_mean ) + 0.5 );
+        }
+        else {
             harmonic = max_mean % min_mean;
+        }
 
         // 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
         T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
 
         // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
-        if( harmonic <= tThreshold+margin_th )
-            return _TOADIV( max_mean, min_mean );
-        if( min_mean-harmonic <= tThreshold+margin_th )
-            return _TOADIV( max_mean, min_mean );
+        if( harmonic <= tThreshold+margin_th || min_mean-harmonic <= tThreshold+margin_th ) {
+            return (unsigned int) _TOADIV( max_mean, min_mean );
+        }
 
         return 0;
     }
@@ -179,7 +180,7 @@ public:
     //##ModelId=452B0C540063
     void CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C54006D
-    void GetStartEndPriLevel( int *pStart_pri_level, int *pEnd_pri_level );
+    void GetStartEndPriLevel( unsigned int *pStart_pri_level, unsigned int *pEnd_pri_level );
     //##ModelId=452B0C540077
     void MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C54008C
@@ -187,7 +188,7 @@ public:
     //##ModelId=452B0C54009F
     void DePulseExtract();
     //##ModelId=452B0C5400A0
-    void DiscardPulseTrain( int startseg, int endseg );
+    void DiscardPulseTrain( unsigned int uiStartseg, unsigned int uiEndseg );
     //##ModelId=452B0C5400AA
     void MemcpySeg( STR_PULSE_TRAIN_SEG *pDestSeg, STR_PULSE_TRAIN_SEG *pSrcDeg );
     //##ModelId=452B0C5400BD
@@ -195,7 +196,7 @@ public:
     //##ModelId=452B0C5400C7
     void MarkSegForExt( int nStartSeg, int nEndSeg );
     //##ModelId=452B0C5400D2
-    void CompStablesJitters( int nStartStableSeg, int nStartJitterSeg );
+    void CompStablesJitters( unsigned int nStartStableSeg, unsigned int nStartJitterSeg );
     //##ModelId=452B0C5400DC
     int GetCoExtPulse();
     //##ModelId=452B0C5400DD
@@ -290,7 +291,7 @@ public:
     //##ModelId=452B0C54028D
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
     //##ModelId=452B0C540297
-    BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, int coRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
+    BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int coRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C5402AB
     void ExtractStablePT();
     //! 멤버 변수 초기화초

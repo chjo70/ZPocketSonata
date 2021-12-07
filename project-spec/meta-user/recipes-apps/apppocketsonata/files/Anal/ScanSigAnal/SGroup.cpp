@@ -59,7 +59,7 @@ void CSGroup::MakeOneGroup()
 	int i;
 	PDWINDEX *pPdwIndex;
 
-	m_FrqAoaPwIdx.count = m_nCoPdw;
+	m_FrqAoaPwIdx.uiCount = m_nCoPdw;
 
 	pPdwIndex = m_FrqAoaPwIdx.pIndex;
 	for( i=0 ; i < m_nCoPdw ; ++i ) {

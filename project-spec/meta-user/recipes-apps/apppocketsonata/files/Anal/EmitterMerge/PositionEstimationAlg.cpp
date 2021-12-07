@@ -25,8 +25,6 @@
 #include "./InverseMethod/VincentyParam.h"
 
 
-//#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
-
 #define	IS_VALID_LL( A, B )			( ( ( IsNumber(A) == true ) && ( IsNumber(B) == true ) && ( !( ( A > 360. ) || ( A < -360. ) || ( B > 360. ) || ( B < -360. ) ) ) ) == true )
 #define	IS_NOT_ZERO_LL( A, B )	( ( ( A > 0 || A < 0 ) == true ) && ( ( B > 0 || B < 0 ) == true ) )
 
@@ -39,15 +37,10 @@
 
 #if defined(_ENU_POSITION_)
 
-//#define ORG_ENU_LATITUDE                    DEGREE2RADIAN(37.0)
-//#define ORG_ENU_LONGITUDE                   DEGREE2RADIAN(127.0)
 #define ORG_ENU_HEIGHT                      (100)
 
 
 #endif
-
-
-CPositionEstimationAlg*  CPositionEstimationAlg::m_pInstance = NULL;				///< 정적 초기화
 
 
 /**
@@ -98,44 +91,6 @@ CPositionEstimationAlg::~CPositionEstimationAlg(void)
 // 	free( *(m_pdCoVar+1) );
 // 	free( m_pdCoVar );
 
-}
-
-/**
- * @brief     클래스의 인스턴스를 해지한다.
- * @param     void
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2017-03-07, 오후 2:47
- * @warning
- */
-void CPositionEstimationAlg::ReleaseInstance()
-{
-// 	if( m_pInstance != NULL ) {
-// 		delete m_pInstance;
-// 		m_pInstance = NULL;
-// 	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*!
- * @brief     위치 산출 알고리즘 객채를 리턴하며 비생성시에 생성하여 객체 값을 리턴한다.
- * @param     void
- * @return    CPositionEstimationAlg *
- * @version   0.0.1
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-09-09 오후 3:59
- * @warning
- */
-CPositionEstimationAlg* CPositionEstimationAlg::GetInstance()
-{
-    if( m_pInstance == NULL ) {
-        m_pInstance = new CPositionEstimationAlg();
-    }
-
-    return m_pInstance;
 }
 
 /**
@@ -276,7 +231,8 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 
     SELPE_RESULT stSELPE_RESULT;
 
-	std::vector<STR_LOBS>::pointer ppVecLOB;
+	//std::vector<STR_LOBS>::pointer ppVecLOB;
+    std::vector<STR_LOBS>::iterator iter;
 
 	// 1. 센서 좌표에 대한 메모리 할당
 	nLob = (int) pVecLOB->size();
@@ -286,17 +242,17 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	pLatitude = m_Sensor.pLatitude;
 	pLongitude = m_Sensor.pLongitude;
 	pLob = m_Sensor.pLob;
-	ppVecLOB = pVecLOB->data() + ( nLob-1 );
+	iter = pVecLOB->end();
 	for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
-		*pLatitude = (double) ppVecLOB->fLatitude;
-		*pLongitude = (double) ppVecLOB->fLongitude;
-		*pLob	= (double) ppVecLOB->fDoa;
+		*pLatitude = (double) (*iter).fLatitude;
+		*pLongitude = (double) (*iter).fLongitude;
+		*pLob	= (double) (*iter).fDoa;
 
 		++ pLatitude;
 		++ pLongitude;
 		++ pLob;
 
-		-- ppVecLOB;
+		-- iter;
 
 	}
 
@@ -389,7 +345,7 @@ void CPositionEstimationAlg::VerifyOfPositionEstimation( SELPositionEstimationRe
 	SELDISTLOB distlob;
 
 	if( ! ( pResult->cep_error < 0 ) ) {
-		ST_IMA->VincentyInverse( & distlob, pResult->latitude, pResult->longitude, m_Sensor.pLatitude[m_Sensor.n-1], m_Sensor.pLongitude[m_Sensor.n-1] );
+		m_theInverseMethod.VincentyInverse( & distlob, pResult->latitude, pResult->longitude, m_Sensor.pLatitude[m_Sensor.n-1], m_Sensor.pLongitude[m_Sensor.n-1] );
 
 		//
 		if( distlob.dDistance < ERROR_CHECK_OF_DISTANCE ) {

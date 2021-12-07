@@ -9,7 +9,7 @@
 #include <sys/types.h>
 
 #include "creclan.h"
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
 #include "ctaskmngr.h"
 #include "csignalcollect.h"
@@ -18,6 +18,8 @@
 #include "cusercollect.h"
 
 #include "../Utils/ccommonutils.h"
+
+#include "../Include/globals.h"
 
 #define _DEBUG_
 
@@ -30,7 +32,7 @@ CRecLan* CRecLan::m_pInstance[2] = { nullptr, nullptr } ;
  * @brief CRecLan::CRecLan
  * @param iKeyId
  */
-CRecLan::CRecLan( int iKeyId, int iIndex, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CRecLan::CRecLan( int iKeyId, int iIndex, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData, true )
 {
    LOGENTRY;
 
@@ -79,46 +81,57 @@ void CRecLan::Run( key_t key )
 void CRecLan::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
     m_pMsg = GetDataMessage();
 
-    while( bWhile ) {
+    while( true ) {
         if( QMsgRcv() == -1 ) {
-            //perror( "QMsgRcv");
-            break;
+            perror( "QMsgRcv");
+            //break;
         }
         else {            
-
             if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
                 switch( m_pMsg->uiOpCode ) {
                     // 기존 SONATA 체계 명령어
                     case enREQ_MODE :
                     case enREQ_ANAL_START :
-                        TMNGR->QMsgSnd( m_pMsg );
+                        g_pTheTaskMngr->QMsgSnd( m_pMsg );
                         break;
 
                     case enREQ_IBIT :
                     case enREQ_UBIT :
                     case enREQ_CBIT :
                     case enREQ_SBIT :
-                        URBIT->QMsgSnd( m_pMsg );
+                        if( g_pTheUrBit != NULL ) {
+                            g_pTheUrBit->QMsgSnd( m_pMsg );
+                        }
                         break;
 
                     case enREQ_RELOAD_LIBRARY :
-                        if( EMTMRG_IS ) { EMTMRG->QMsgSnd( m_pMsg ); }
+                        if( g_pTheEmitterMerge != NULL ) { 
+                            g_pTheEmitterMerge->QMsgSnd( m_pMsg ); 
+                        }
+                        else {
+                            // LOGMSG1( enError, "Invalid the flow[0x%X] !!", m_pMsg->uiOpCode );
+                        }
                         break;
 
                     case enREQ_IPL_VERSION :
-                        TMNGR->QMsgSnd( m_pMsg );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg );
+                        }
                         break;
 
                     case enREQ_IPL_START :
                     case enREQ_IPL_END :
-                        TMNGR->QMsgSnd( m_pMsg );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg );
+                        }
                         break;
 
                     case enREQ_IPL_DOWNLOAD :
-                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
                         break;
 
                     /////////////////////////////////////////////////////////////////////////////////////////
@@ -127,18 +140,22 @@ void CRecLan::_routine()
                     case enREQ_SET_CONFIG :
                     case enREQ_COL_START :
                     case enREQ_RAWDATA :
-                        UCOL->QMsgSnd( m_pMsg, GetRecvData() );
+                        g_pTheUserCollect->QMsgSnd( m_pMsg, GetRecvData() );
                         break;
 
                     case enREQ_STOP :
-                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
                         break;
 
                     /////////////////////////////////////////////////////////////////////////////////////////
                     // 오디오 제어 관련 메시지
                     case enREQ_AUDIO :
                     case enREQ_AUDIO_PARAM :
-                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
                         break;
 
                     // 수신기 설정 관련 메시지
@@ -146,12 +163,22 @@ void CRecLan::_routine()
                     case enREQ_FMOP_Threshold :
                     case enREQ_PMOP_Threshold :
                     case enREQ_RX_Threshold :
-                        TMNGR->QMsgSnd( m_pMsg, GetRecvData() );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
+                        break;
+
+                    case enREQ_SYS :
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
                         break;
 
                     // 추가 명령어
                     case enREQ_SIM_PDWDATA :
-                        SIGCOL->QMsgSnd( m_pMsg, GetRecvData() );
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheSignalCollect->QMsgSnd( m_pMsg, GetRecvData() );
+                        }
                         break;
 
                     case enREQ_DUMP_LIST :
@@ -202,7 +229,7 @@ void CRecLan::DumpList()
     strLanHeader.uiLength = DUMP_DATA_SIZE;
 
 #ifdef __linux__
-    iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+    int iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
 #endif
 
     // 랜 데이터 송신

@@ -27,6 +27,8 @@
 
 #include "clog.h"
 
+#include "../Include/globals.h"
+
 //#include "../INC/_common.h"
 //#include "../BSP/sbc_str.h"
 
@@ -84,6 +86,8 @@ void _ShowProgramTitle( void )
 
     char szDate[LOG_DIR_SIZE];
 
+    memset( g_szVersion, 0, sizeof(g_szVersion) );
+
 #ifdef _POCKETSONATA_
     LOGMSG( enNormal, "--------------------------------------------------------------------------" );
     LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
@@ -108,8 +112,10 @@ void _ShowProgramTitle( void )
         LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, "INVALID_DATE" );
     }
 
+#ifdef _SQLITE_
     LOGMSG2( enNormal, "The CED/EOB Database is positioned at [%s] and the file name is [%s].", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
     LOGMSG2( enNormal, "The Emitter Database is positioned at [%s] and the file name is [%s].", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
+#endif
 
     LOGMSG2( enNormal, "The INI is positioned at [%s], and the file name is [%s].", INI_FOLDER, INI_FILENAME );
 
@@ -144,12 +150,8 @@ void _ShowProgramTitle( void )
  */
 char *_GetProgramVersion()
 {
-    //char szVersion[100];
 
-    //char szMon[10];
-    //int iDate, iYear;
-
-    memset( g_szVersion, 0, sizeof(g_szVersion) );
+    //memset( g_szVersion, 0, sizeof(g_szVersion) );
     strcat( g_szVersion, PROGRAM_VERSION );
 
     //sscanf( __DATE__, "%s %d %d" , szMon, & iDate, & iYear );

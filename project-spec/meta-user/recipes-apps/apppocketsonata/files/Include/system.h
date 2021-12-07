@@ -11,7 +11,8 @@
 
 
 // 랜 데이터 최대 크기
-#define _MAX_LANDATA        (256*1024)          // 256 KB
+#define _MAX_LANDATA        (128*1024)          // 256 KB -> 16KB
+#define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(SRxLOBData))
 
 
 
@@ -55,8 +56,6 @@
 
 // 쓰레드에 대한 큐메시지 키 값 정의
 
-#define _SHM_MEMORY_KEY             (333)
-
 #ifdef __VXWORKS__
 #define _OFFSET_KEY_                (100)
 #elif _MSC_VER
@@ -66,6 +65,15 @@
 #endif
 
 // 아래 정의된 키는 vxworks 에서는 priority 로 사용한다.
+#ifdef __VXWORKS__
+#include <stdio.h>
+#define _MSG_CCU_KEY NULL
+#define _MSG_TMNGR_KEY NULL
+#define _MSG_URBIT_KEY NULL
+#define _MSG_RECCCU_KEY NULL
+#define _MSG_USERCOL_KEY NULL
+
+#else
 enum ENUM_THREAD_KEY {
     _MSG_TMNGR_KEY = (_OFFSET_KEY_) + 1,
     _MSG_URBIT_KEY,
@@ -85,6 +93,7 @@ enum ENUM_THREAD_KEY {
 
 };
 
+#endif
 
 
 

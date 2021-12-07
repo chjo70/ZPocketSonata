@@ -32,7 +32,7 @@ public:
     //##ModelId=452B0C5603E1
     int m_CoEmitter;
     //##ModelId=452B0C570003
-    int m_CoSeg;
+    unsigned int m_uiCoSeg;
     //##ModelId=452B0C570004
     int m_nAnalSeg;
 
@@ -117,9 +117,9 @@ private:
     //##ModelId=452B0C57013B
     _TOA *m_pRefFramePri;
     //##ModelId=452B0C570144
-    UINT m_nTmpStaggerLevel[_spMaxSwtLev];
+    UINT m_nTmpStaggerLevel[MAX_FREQ_PRI_STEP];
     //##ModelId=452B0C57014E
-    UINT m_nStaggerLevel[_spMaxSwtLev];
+    UINT m_nStaggerLevel[MAX_FREQ_PRI_STEP];
 
     //##ModelId=452B0C570163
     STR_DTOA_HISTOGRAM m_DtoaHist;

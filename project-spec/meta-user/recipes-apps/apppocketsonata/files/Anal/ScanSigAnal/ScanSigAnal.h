@@ -9,12 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-// #include "SColPdw.h"
-
-// #include "SVar.h"
-
-//#include "../INC/System.h"
-
 #include "SDefine.h"
 
 #include "SStruct.h"
@@ -109,7 +103,7 @@ public:
 
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoPdw() { return m_CoPdw; }
-    inline int GetCoSeg() { return m_thePulExt->m_CoSeg; }
+    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     inline SRxABTData *GetScnAET() { return m_pScnAet; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
     inline int IsStorePDW() { return m_iIsStorePDW; }

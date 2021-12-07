@@ -11,12 +11,12 @@ using namespace std;
 #include "../SigAnal/_Type.h"
 #endif
 
-
+/*
 static const char* strCEDSignalType [] =
 {
 	"Normal Pulse",
 	"CW"
-};
+};	*/
 #define NUM_OF_CED_SIGNAL_TYPE 2
 enum EnumCEDSignalType	//신호형태
 {
@@ -26,14 +26,14 @@ enum EnumCEDSignalType	//신호형태
 	E_EL_SIG_NORMAL_PULSE=0,	// NP (Normal Pulse)
 	E_EL_SIG_CW,							// CW
 };
-
+/*
 static const char* strCEDFreqType [] =
 {
 	"Fixed",
 	"Agile",
 	"Hopping",
 	"Pattern"
-};
+};	*/
 #define NUM_OF_CED_FREQ_TYPE 4
 enum EnumFreqType	//주파수형태
 {
@@ -45,7 +45,7 @@ enum EnumFreqType	//주파수형태
 	E_EL_FREQ_AGILE,					// Agile
 	E_EL_FREQ_PATTERN					// Pattern
 };
-
+/*
 static const char* strCEDPriType [] =
 {
 	"Stable",
@@ -54,6 +54,7 @@ static const char* strCEDPriType [] =
 	"Pattern"
 	"Jitter",
 };
+*/
 #define NUM_OF_CED_PRI_TYPE 5
 enum EnumPRIType	//PRI형태
 {
@@ -67,13 +68,13 @@ enum EnumPRIType	//PRI형태
 	E_EL_PRI_JITTER,			//Jitter
 	
 };
-
+/*
 static const char* strCEDScanType [] =
 {
 	"Unknown",
 	"Tracking",
 	"Search"
-};
+};	*/
 #define NUM_OF_CED_SCAN_TYPE 3
 //start_static_0919
 enum EnumCEDScanType	//스캔형태	//#FA_Q_2502_T2
@@ -87,6 +88,7 @@ enum EnumCEDScanType	//스캔형태	//#FA_Q_2502_T2
 };
 //end_static_0919
 
+/*
 static const char* strCEDMOPType [] =
 {
 	"Unknown",
@@ -96,6 +98,7 @@ static const char* strCEDMOPType [] =
 	"LFM(F)",
 	"NLFM(F)"
 };
+*/
 #define NUM_OF_CED_MOP_TYPE 6
 enum EnumMOPType	//MOP형태
 {
@@ -114,6 +117,7 @@ enum EnumMOPType	//MOP형태
 	E_EL_MOP_FMOP_NLFM,	//FMOP(NLFM)
 };
 
+/*
 static const char* strCEDPolType [] =
 {
 	"V",
@@ -123,6 +127,7 @@ static const char* strCEDPolType [] =
 	"RS",
 	"LS"
 };
+*/
 #define NUM_OF_CED_POL_TYPE 5       //20151001 CodeSonar수정  //
 enum EnumPolizationType	//극성
 {
@@ -137,6 +142,7 @@ enum EnumPolizationType	//극성
 	E_EL_PZ_UNKNOWN
 };
 
+/*
 static const char* strCEDFreqPatternType[] =
 {
 	"Unknown",
@@ -145,6 +151,8 @@ static const char* strCEDFreqPatternType[] =
 	"SL-",
 	"삼각"
 };
+*/
+
 #define NUM_OF_CED_FREQ_PATTERN_TYPE 5
 enum EnumFreqPatternType	//주파수 패턴타입
 {
@@ -157,6 +165,7 @@ enum EnumFreqPatternType	//주파수 패턴타입
 	E_EL_FPT_TRIANGLUAR,
 };
 
+/*
 static const char* strCEDPRIPatternType[] =
 {
 	"Unknown",
@@ -165,6 +174,8 @@ static const char* strCEDPRIPatternType[] =
 	"SL-",
 	"삼각"
 };
+*/
+
 #define NUM_OF_CED_PRI_PATTERN_TYPE 5
 enum EnumPRIPatternType	//주파수 패턴타입
 {

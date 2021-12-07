@@ -22,27 +22,27 @@
 
 //////////////////////////////////////////////////////////////////////////
 // 타스크 Priority
-enum ENUM_TASK_PRIORITY {
-    tPRI_MANTSK=110,
-    tPRI_ALIVEMARK,
-
-    tPRI_RECVSERIAL,
-    tPRI_SENDSERIAL,
-
-    tPRI_RT1553,
-    tPRI_CTRLCMDS,
-    tPRI_RUNBIT,
-
-    //tPRI_RECVSERIAL,
-    //tPRI_SENDSERIAL,
-
-    tPRI_POLLKEY,
-    tPRI_GRDISP,
-    tPRI_GETPDW,
-    tPRI_MANAET,
-    tPRI_SIGANAL,
-    tPRI_LOGDEBUG,
-    tPRI_TCPSRV } ;
+// enum ENUM_TASK_PRIORITY {
+//     tPRI_MANTSK=110,
+//     tPRI_ALIVEMARK,
+// 
+//     tPRI_RECVSERIAL,
+//     tPRI_SENDSERIAL,
+// 
+//     tPRI_RT1553,
+//     tPRI_CTRLCMDS,
+//     tPRI_RUNBIT,
+// 
+//     //tPRI_RECVSERIAL,
+//     //tPRI_SENDSERIAL,
+// 
+//     tPRI_POLLKEY,
+//     tPRI_GRDISP,
+//     tPRI_GETPDW,
+//     tPRI_MANAET,
+//     tPRI_SIGANAL,
+//     tPRI_LOGDEBUG,
+//     tPRI_TCPSRV } ;
 
 //////////////////////////////////////////////////////////////////////////
 // OS 관련 정의문

@@ -12,16 +12,19 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define _MAIN_
 #define _MAIN_GLOBALS_
 
-#include "../../Anal/INC/system.h"
+// #include "../../Anal/INC/system.h"
 
 #include "../Qdecoder/qDecoder.h"
 
 #include "../../Anal/Collect/ccollectbank/ccollectbank.h"
-#include "../../Anal/Collect/DataFile/DataFile.h"
+
 
 #include "../../System/csysconfig.h"
+
+#include "../../../Include/globals.h"
 
 
 #define TABLE_COLS      (12)

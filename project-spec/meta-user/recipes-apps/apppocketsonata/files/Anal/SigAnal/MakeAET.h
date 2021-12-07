@@ -107,7 +107,7 @@ public:
     //##ModelId=452B0C56003A
     UINT CalcAoaMean_GSKIMF_200505_6( STR_EMITTER *pEmitter );
     //##ModelId=452B0C56003F
-    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, int type ) { MarkToPdwIndex( pEmitter->pdw.pIndex, pEmitter->pdw.count, type ); }
+    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, int type ) { MarkToPdwIndex( pEmitter->pdw.pIndex, pEmitter->pdw.uiCount, type ); }
     //##ModelId=452B0C560042
     void MakeExtInfoInSeg( STR_EXT *pExt, STR_EMITTER *pEmitter );
     //##ModelId=452B0C56004A

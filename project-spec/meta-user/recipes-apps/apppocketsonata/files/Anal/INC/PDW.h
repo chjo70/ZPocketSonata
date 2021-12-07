@@ -25,7 +25,12 @@
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
 #ifndef _TOA_
+#ifdef __VXWORKS_
+typedef unsigned long long _TOA;
+#else
 typedef unsigned long long int _TOA;
+#endif
+
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -244,8 +249,7 @@ struct _PDW {
     int iChannel;
 #endif
 
-}  ;
-
+} ;
 #endif
 
 
@@ -382,7 +386,12 @@ typedef enum {
 
 #define _701_LENGTH_OF_TASK_ID			(20)		//과제ID 문자열 길이 (TBD)
 
-#pragma pack(push, 1)
+
+#if TOOL==diab 
+#pragma pack( 1 )
+#else
+#pragma pack( push, 1 )
+#endif
 
 struct SRxPDWHeader {
     unsigned int uiAcqTime;
@@ -420,7 +429,12 @@ struct SRxPDWDataRGroup {
 
 } ;
 
-#pragma pack(pop)
+
+#if TOOL==diab 
+#pragma pack( 4 )
+#else
+#pragma pack( pop )
+#endif
 
 /**
  * @brief KFX 데이터애 저장된 헤더 파일
@@ -456,10 +470,10 @@ struct TNEW_IQ {
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
 typedef struct {
-            unsigned char aucTaskID[LENGTH_OF_TASK_ID];
-            unsigned int iIsStorePDW;
-            int iCollectorID;
-            ENUM_BANDWIDTH enBandWidth;
+    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+    unsigned int iIsStorePDW;
+    int iCollectorID;
+    ENUM_BANDWIDTH enBandWidth;
 
     unsigned int uiCount;
 
@@ -471,9 +485,10 @@ typedef struct {
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
-            unsigned int iBoardID;
-            unsigned int iBank;
-            unsigned int iIsStorePDW;
+    unsigned int iBoardID;
+    unsigned int iBank;
+    unsigned int uiBand;                // 주파수 대역
+    unsigned int iIsStorePDW;
 
 } POCKETSONATA_HEADER ;
 #endif
@@ -481,8 +496,8 @@ typedef struct {
 #ifndef _SONATA_HEADER_
 #define _SONATA_HEADER_
 typedef struct {
-            unsigned int uiBand;
-            unsigned int iIsStorePDW;
+    unsigned int uiBand;
+    unsigned int iIsStorePDW;
 
 } SONATA_HEADER ;
 #endif

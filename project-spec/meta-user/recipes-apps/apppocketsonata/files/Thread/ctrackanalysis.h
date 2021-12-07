@@ -1,9 +1,9 @@
 #ifndef CTRACKANALYSIS_H
 #define CTRACKANALYSIS_H
 
-#include "../Utils/clog.h"
+//#include "../Utils/clog.h"
 
-#include "../Include/system.h"
+//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/SigAnal/SysPara.h"
@@ -16,8 +16,6 @@ private:
     CKnownSigAnal *m_pTheKnownSigAnal;
 
 public:
-    static CTrackAnalysis *m_pInstance;
-
     STR_MessageData *m_pMsg;
 
 private:
@@ -27,11 +25,9 @@ public:
     CTrackAnalysis( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CTrackAnalysis(void);
 
-    THREAD_STANDARD_FUNCTION( CTrackAnalysis )
+    void Run( key_t key=IPC_PRIVATE );
+    virtual void _routine();
+    virtual const char *GetThreadName() { return m_szThreadName; }
 };
-
-#define TRKANL          CTrackAnalysis::GetInstance()
-#define TRKANL_RELEASE  CTrackAnalysis::ReleaseInstance()
-#define TRKANL_IS       CTrackAnalysis::IsThereInstance()
 
 #endif // CTRACKANALYSIS_H

@@ -1,4 +1,4 @@
-// CEmitterMerge.cpp: implementation of the CEmitterMerge class.
+﻿// CEmitterMerge.cpp: implementation of the CEmitterMerge class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,15 +12,14 @@
 
 #include "../Anal/Collect/DataFile/DataFile.h"
 
+#include "../Include/globals.h"
+
 #define _DEBUG_
 
 
-// 클래스 내의 정적 멤버변수 값 정의
-CEmitterMerge* CEmitterMerge::m_pInstance = nullptr;
-
 CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-   LOGENTRY;
+    LOGENTRY;
 
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
@@ -29,7 +28,6 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
-    //Init();
     m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, szSQLiteFileName );
 
     InitData();
@@ -68,7 +66,7 @@ void CEmitterMerge::_routine()
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( g_AnalLoop ) {
+    while( bWhile ) {
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv" );
         }
@@ -100,11 +98,12 @@ void CEmitterMerge::_routine()
                     break;
 
                 case enTHREAD_DETECTANAL_END :
-                    //LOGMSG( enDebug, " 탐지 수집/분석 완료를 수신했습니다." );
+                    LOGMSG( enDebug, " 탐지 수집/분석 완료를 수신했습니다." );
 
                     // 탐지 분석 완료로 이 시그널을 이용하여 위협 사이클 관리를 수행하고...
                     break;
 
+                case enTHREAD_IPL_END :
                 case enTHREAD_RELOAD_LIBRARY :
                     ReloadLibrary();
                     break;
@@ -146,7 +145,6 @@ void CEmitterMerge::MergeEmitter()
         LOGMSG4( enDebug, "Operating the [%d] Band, in the Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
     }
     else {
-        pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
         LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
     }
 
@@ -160,10 +158,13 @@ void CEmitterMerge::MergeEmitter()
 
     // 2. 위협 관리를 호출한다.
     strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
-    pLOBData = ( SRxLOBData *) m_uniLanData.szFile;
+    pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
+    
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
+
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
+        
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
         if( !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
@@ -172,7 +173,7 @@ void CEmitterMerge::MergeEmitter()
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
-            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         }
 
@@ -184,7 +185,7 @@ void CEmitterMerge::MergeEmitter()
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
-            SIGCOL->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
         }
 
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
@@ -216,13 +217,13 @@ void CEmitterMerge::MergeEmitter()
             if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
                 SELABTDATA_EXT *pABTExtData;
 
-                SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+                g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
                 pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( strAnalInfo.uiAETID, strAnalInfo.uiABTID );
-                SendLan( esAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
+                SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
             }
             else {
-                SIGCOL->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+                g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
                 SendDelete( strAnalInfo.uiAETID );
             }
@@ -258,10 +259,10 @@ void CEmitterMerge::TrackFail()
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
         strAnalInfo.uiABTID = pLOBData->uiABTID;
-        SIGCOL->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( pLOBData->uiAETID, pLOBData->uiABTID );
-        SendLan( esAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
+        SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
     }
     else {
         LOGMSG1( enError, " Invalid the Track Fail [%d] !!!", pLOBData->uiAETID );
@@ -358,10 +359,10 @@ void CEmitterMerge::SendNewUpd()
     // 랜 메시지 전달한다.
     
     if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        SendLan( esAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
+        SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
     else {
-        SendLan( esAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
+        SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
 
 #endif
@@ -383,7 +384,10 @@ void CEmitterMerge::SendNewUpd()
  */
 void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData )
 {
-    if( pABTExtData != NULL && ( uiOpcode == esAET_NEW_CCU || difftime( pABTExtData->tiSendLan, time(NULL) ) > 1.0 || ( pABTExtData->uiOpcode != uiOpcode ) ) ) {
+    time_t now;
+
+    now = time(NULL);
+    if( pABTExtData != NULL && ( uiOpcode == enAET_NEW_CCU || difftime( now, pABTExtData->tiSendLan ) > 1.0 || ( pABTExtData->uiOpcode != uiOpcode ) ) ) {
         CCommonUtils::SendLan( uiOpcode, pData, uiDataSize );
 
         pABTExtData->uiOpcode = uiOpcode;
@@ -400,7 +404,7 @@ void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int ui
  */
 void CEmitterMerge::SendDelete( unsigned int uiAETID )
 {
-    CCommonUtils::SendLan( esAET_DEL_CCU, & uiAETID, sizeof(uiAETID) );
+    CCommonUtils::SendLan( enAET_DEL_CCU, & uiAETID, sizeof(uiAETID) );
 }
 
 /**

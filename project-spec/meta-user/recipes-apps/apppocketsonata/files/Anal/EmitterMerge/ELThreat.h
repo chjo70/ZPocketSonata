@@ -45,7 +45,7 @@ typedef enum {
 
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
-#define TOTAL_ITEMS_OF_THREAT_NODE			(10000)						// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(100000)						// 최대 위협 개수
 
 /**
 * [식별자 : CLS-GMU-EL-L-SAC]

@@ -15,6 +15,7 @@
 #include "./INC/ErrorMsg.h"
 
 #include "./SigAnal/_Macro.h"
+#include "./Collect/DataFile/DataFile.h"
 #include "./SigAnal/_Struct.h"
 
 #ifdef _MIDAS_

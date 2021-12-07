@@ -27,7 +27,7 @@
 #ifdef __cplusplus
 
 //CManTsk *theManTsk;
-CLogDebug *theLogDebug;
+//CLogDebug *theLogDebug;
 //CSendSerial *theSendSerial;
 //CRecvSerial *theRecvSerial;
 //CRunBit *theRunBit;
@@ -73,7 +73,7 @@ double dRCDOA[RADARCOL_MAX] = { 10, 300, 70 } ;
 #ifdef __cplusplus
 
 // IMPORT CManTsk *theManTsk;
-IMPORT CLogDebug *theLogDebug;
+//IMPORT CLogDebug *theLogDebug;
 // IMPORT CSendSerial *theSendSerial;
 // IMPORT CRecvSerial *theRecvSerial;
 // IMPORT CRunBit *theRunBit;

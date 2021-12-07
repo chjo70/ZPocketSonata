@@ -30,7 +30,6 @@ SOURCES += \
         Anal/NewSigAnal/NMakeAET.cpp \
         Anal/NewSigAnal/NPulExt.cpp \
         Anal/NewSigAnal/NewSigAnal.cpp \
-        Anal/ParamMngr.cpp \
         Anal/ScanSigAnal/SAnalSCN.cpp \
         Anal/ScanSigAnal/SGroup.cpp \
         Anal/ScanSigAnal/SPulExt.cpp \
@@ -52,12 +51,9 @@ SOURCES += \
         NetMem/server/MemoryPage.cpp \
         NetMem/server/ServerSocket.cpp \
         NetMem/utils/ApiNetMem.cpp \
-        SQLite/Backup.cpp \
-        SQLite/Column.cpp \
-        SQLite/Database.cpp \
-        SQLite/Exception.cpp \
-        SQLite/Statement.cpp \
-        SQLite/Transaction.cpp \
+        SQLite/KompexSQLiteBlob.cpp \
+        SQLite/KompexSQLiteDatabase.cpp \
+        SQLite/KompexSQLiteStatement.cpp \
         System/csharedmemory.cpp \
         System/csysconfig.cpp \
         Thread/ccgi.cpp \
@@ -75,7 +71,6 @@ SOURCES += \
         Thread/cusercollect.cpp \
         Utils/carraymsgdata.cpp \
         Utils/ccommonutils.cpp \
-        Utils/cfile.cpp \
         Utils/clog.cpp \
         Utils/cmultiserver.cpp \
         Utils/csingleclient.cpp \
@@ -169,7 +164,7 @@ HEADERS += \
     Anal/SigAnal/_Struct.h \
     Anal/SigAnal/_Type.h \
     Anal/SigAnal/cencdec.h \
-    Anal/SigAnal/stdafx.h \   
+    Anal/SigAnal/stdafx.h \
     Anal/TrackSigAnal/KGroup.h \
     Anal/TrackSigAnal/KMakeAET.h \
     Anal/TrackSigAnal/KPulExt.h \
@@ -183,6 +178,7 @@ HEADERS += \
     Include/SONATAPIP/_sysmsg.h \
     Include/defines.h \
     Include/global.h \
+    Include/globals.h \
     Include/struct.h \
     Include/sysmsg.h \
     Include/system.h \
@@ -208,17 +204,12 @@ HEADERS += \
     NetMem/server/ServerSocket.h \
     NetMem/utils/ApiNetMem.h \
     NetMem/utils/PortableSocket.h \
-    SQLite/Assertion.h \
-    SQLite/Backup.h \
-    SQLite/Column.h \
-    SQLite/Database.h \
-    SQLite/Exception.h \
-    SQLite/ExecuteMany.h \
-    SQLite/SQLiteCpp.h \
-    SQLite/Statement.h \
-    SQLite/Transaction.h \
-    SQLite/Utils.h \
-    SQLite/VariadicBind.h \
+    SQLite/KompexSQLiteBlob.h \
+    SQLite/KompexSQLiteDatabase.h \
+    SQLite/KompexSQLiteException.h \
+    SQLite/KompexSQLitePrerequisites.h \
+    SQLite/KompexSQLiteStatement.h \
+    SQLite/KompexSQLiteStreamRedirection.h \
     System/csharedmemory.h \
     System/csysconfig.h \
     Thread/ccgi.h \
@@ -263,10 +254,8 @@ INCLUDEPATH += /usr/local/boost
 INCLUDEPATH += /usr/local/include
 
 DEFINES += _UTM_POSITION_
-
 DEFINES += _POCKETSONATA_
-DEFINES += _NO_SQLITE_
-
+DEFINES += _SQLITE_
 DEFINES -= UNICODE
 DEFINES -= _UNICODE
 DEFINES -= __UNICODE__

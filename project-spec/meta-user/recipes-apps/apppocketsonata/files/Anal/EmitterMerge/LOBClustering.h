@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_LOBCLUSTERING_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
-#define AFX_IF2PDW_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_
+#define AFX_LOBCLUSTERING_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -16,6 +16,8 @@
 
 #include "../Identify/Identify.h"
 #include "../Identify/ELUtil.h"
+
+#include "./InverseMethod/CInverseMethod.h"
 
 
 // LOB를 보관하기 위한 버퍼 크기
@@ -80,15 +82,15 @@ typedef struct {
 
 	//SELLOBDATA_EXT stELLOBDataExt;
 
-} SELLOBDATA;
+} SELLOBDATA ;
 
 typedef struct  {
 	// LOB 제원 정보
 	float	fMeanDOA;			// [1.0 도]
 	unsigned int uiLOBID;
 
-        float fRadarLatitude;
-        float fRadarLongitude;
+    float fRadarLatitude;
+    float fRadarLongitude;
 
 } SELLOBDATA_MINIMIZE ;
 
@@ -167,13 +169,13 @@ typedef struct {
  */
 class CLOBClustering
 {
+private:
+    SEnvironVariable *m_pSEnvironVariable;
+
 protected:
 	unsigned int m_uiInterSect;																///< 교차점 개수
-	//UINT m_nClusetrCount;														///< 클러스터링 개수
 
 	std::vector<STR_LOBS> m_VecLOBs;								///< LOB 데이터 저장소
-
-	//CELSignalIdentifyAlg m_theIdentifyAlg;					///< CED/EOb 신호 식별 객체
 
 	bool m_bCluster;										///<	최적의 클러스터 수행 여부를 플레그
 	bool m_bIsSimulator;								///<  시뮬레이션 모드시 플레그 값
@@ -188,6 +190,9 @@ protected:
 	vector<UINT> m_vecOptimalLODID;			///<  최적의 LOB 데이터 번호
 	int m_nOptimalLOBID;								///<	최적의 클러스터에서 LOB 개수
 	int *m_pOptimalLOBID;								///<	최적의 클러스터에서 LOB 번호 그룹
+
+    CPositionEstimationAlg m_thePositionEstimation;
+    CInverseMethod m_theInverseMethod;
 
 	// LOB 클러스터링을 하기 위한 저장소
 	Queue<SELLOBDATA_MINIMIZE> *m_pQueLOBDataPool;			///<  LOB POOL 데이터 저장소

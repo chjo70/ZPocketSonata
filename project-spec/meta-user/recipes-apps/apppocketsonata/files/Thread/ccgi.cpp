@@ -6,6 +6,8 @@
 #include "cusercollect.h"
 #endif
 
+#include "../Include/globals.h"
+
 
 // 클래스 내의 정적 멤버변수 값 정의
 CCGI* CCGI::m_pInstance = nullptr;
@@ -78,14 +80,14 @@ void CCGI::_routine()
             case enCGI_REQ_IBIT :
                 LOGMSG1( enNormal, "IBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
-                URBIT->QMsgSnd( m_pMsg );
+                g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
                 break;
 
             case enCGI_REQ_CBIT :
                 LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
-                URBIT->QMsgSnd( m_pMsg );
+                g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
                 break;
 
@@ -93,7 +95,7 @@ void CCGI::_routine()
             case enCGI_REQ_SBIT :
                 LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
-                URBIT->QMsgSnd( m_pMsg );
+                g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
                 break;
 
@@ -108,7 +110,7 @@ void CCGI::_routine()
 
             case enCGI_REQ_SPECTRUM :
 #ifndef _CGI_LIST_
-                UCOL->QMsgSnd( m_pMsg );
+                g_pTheUserCollect->QMsgSnd( m_pMsg );
 #endif
                 break;
 

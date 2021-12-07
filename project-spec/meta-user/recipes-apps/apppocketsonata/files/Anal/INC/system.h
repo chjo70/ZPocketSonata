@@ -12,11 +12,22 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#ifdef __VXWORKS__
+#define	RAMDRV										(char *) "/RAMDRV"
+#define	RAMDRV_NO									(char *) ":0"
+#define	TFFSDRV										(char *) "/tffs0"
+
+#define SQLITE_FOLDER								((char *) "LIB")
+#endif
+
+
 /////////////////////////////////////////////////////////////////////////
 #ifdef __ZYNQ_BOARD__
 #define SD_CARD                     (char *) "/run/media/mmcblk0p1/SYSTEM"
 #elif defined(__linux__)
 #define SD_CARD                     (char *) "/home/chjo70" // "/var/log/LOG"
+#elif __VXWORKS__
+#define SD_CARD                     (char *) "/RAMDRV:0/"
 #else
 #define SD_CARD                     (char *) "E:\\SONATA2\\Dev\\PocketSONATA\\dev"               // getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
 #endif
@@ -32,35 +43,53 @@
 #define SHARED_DATA_DIRECTORY        (char *) "/var/rawdata"
 #elif _WIN32
 #define SHARED_DATA_DIRECTORY        (char *) "c:/rawdata"
+#elif __VXWORKS__
+#define SHARED_DATA_DIRECTORY         (char *) "/d/rawdata" // "/var/log/LOG"
 #else
 //#define SHARED_DATA_DIRECTORY      (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
 #define SHARED_DATA_DIRECTORY        (char *) "/run/user/1000/gvfs/smb-share:server=192.168.10.245,share=shared,user=ELS/rawdata"
 #endif
 
+// CED/EOB 폴더 위치
 #ifdef __ZYNQ_BOARD__
 #define CEDEOB_SQLITE_FOLDER        SHARED_DATA_DIRECTORY
 #elif defined(__linux__)
 #define CEDEOB_SQLITE_FOLDER        (char *) "/home/chjo70"
+#elif defined(__VXWORKS__)
+#define CEDEOB_SQLITE_FOLDER        (char *) "/RAMDRV:0/LIB"
 #else
 #define CEDEOB_SQLITE_FOLDER        (char *) "c:/sqlite3"
 #endif
 #define CEDEOB_SQLITE_FILENAME      "cedeob.sqlite3"
 
+// 위협정보 폴더 위치
 #ifdef __ZYNQ_BOARD__
 #define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
 #elif defined(__linux__)
 #define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
+#elif defined(__VXWORKS__)
+#define EMITTER_SQLITE_FOLDER       (char *) "/RAMDRV:0/LIB"
 #else
 #define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3"
 #endif
-#define EMITTER_SQLITE_FILENAME     "emitter.sqlite3"
+#define EMITTER_SQLITE_FILENAME     (char *) "emitter.sqlite3"
 
+// 위협정보 원본 파일
+#define BLK_EMITTER_SQLITE_FILENAME (char *) "emitter_blank.sqlite3"
 
-
-#define INI_FOLDER                  SD_CARD
+// INI 폴더 위치
+#ifdef __ZYNQ_BOARD__
+#define INI_FOLDER                  (char *) "/home/root"
+#elif defined(__VXWORKS__)
+#define INI_FOLDER                  (char *) "/tffs0/INI"
+#elif defined(__linux__)
+#define INI_FOLDER                  (char *) "/home/chjo70"
+#else
+#define INI_FOLDER                  (char *) "c:/sqlite3"
+#endif
 #define INI_FILENAME                (char *) "/sysconfig.ini"
 
-
+// qDecoder 폴더 위치
 #define QDECODER_LOG_FOLDER         (char *) "/tmp/LOG"
 #define QDECODER_LOG_FILENAME       (char *) "/qDecoder.log"
 
@@ -77,6 +106,8 @@
 #define LOG_DIRECTORY               ("/tmp/LOG")
 #elif _MSC_VER
 #define LOG_DIRECTORY               ("\\Debug\\LOG")
+#elif __VXWORKS__
+#define LOG_DIRECTORY               ("/RAMDRV:0/LOG")
 #else
 #define LOG_DIRECTORY               ("c:/temp")
 #endif
