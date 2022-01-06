@@ -29,6 +29,7 @@ Build-PocketSonata*/
 
 
 apptest*
+Debug/*
 
 
 # Precompiled Headers
