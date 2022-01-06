@@ -101,11 +101,8 @@ CREATE TABLE "LOBDATA" (
 );
 
 CREATE TABLE "LOB_POSITION" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
-	"LOBID"	int NOT NULL,
-	"ABTID"	int NOT NULL,
-	"AETID"	int NOT NULL,
-	"TASK_ID"	varchar(30) NOT NULL,
+	"SEQ_NUM"	integer,
+	"SEQ_TYPE"	tinyint NOT NULL,
 	"POSITION_COUNT"	tinyint,
 	"SEQ_01"	float,
 	"SEQ_02"	float,
@@ -245,10 +242,7 @@ CREATE TABLE "ABTDATA" (
 
 CREATE TABLE "ABT_POSITION" (
 	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
-	"LOBID"	int NOT NULL,
-	"ABTID"	int NOT NULL,
-	"AETID"	int NOT NULL,
-	"TASK_ID"	varchar(30) NOT NULL,
+	"SEQ_TYPE"	tinyint NOT NULL,
 	"POSITION_COUNT"	tinyint,
 	"SEQ_01"	float,
 	"SEQ_02"	float,

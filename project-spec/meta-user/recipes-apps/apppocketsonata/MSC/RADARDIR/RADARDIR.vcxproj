@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AF61494A-622B-448E-958D-6F27C288EF23}</ProjectGuid>
+    <RootNamespace>RADARDIR</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)R</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_ELINT_;_MSSQL_;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>.\RADARDIR.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>build_run.bat</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ELINT_;_MSSQL_;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\RADARDIR.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="RADARDIR.def" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\RADARDIR.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\PDW2SP370.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
+    <ClCompile Include="..\..\files\Anal\NewSigAnal\NAnalPRI.cpp" />
+    <ClCompile Include="..\..\files\Anal\NewSigAnal\NewSigAnal.cpp" />
+    <ClCompile Include="..\..\files\Anal\NewSigAnal\NGroup.cpp" />
+    <ClCompile Include="..\..\files\Anal\NewSigAnal\NMakeAET.cpp" />
+    <ClCompile Include="..\..\files\Anal\NewSigAnal\NPulExt.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\AnalPRI.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\cencdec.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\Group.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\MakeAET.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\PulExt.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\SysPara.cpp" />
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp" />
+    <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
+    <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp" />
+    <ClCompile Include="..\..\files\System\csysconfig.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\..\files\Utils\clog.cpp" />
+    <ClCompile Include="..\..\files\Utils\programrev.cpp" />
+    <ClCompile Include="RADARDIR.cpp" />
+    <ClCompile Include="RadarDirAlgorithm.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\VincentyParam.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\cipl.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\define.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
+    <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
+    <ClInclude Include="..\..\files\Anal\INC\AetIPL.h" />
+    <ClInclude Include="..\..\files\Anal\INC\defines.h" />
+    <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h" />
+    <ClInclude Include="..\..\files\Anal\INC\Globals.h" />
+    <ClInclude Include="..\..\files\Anal\INC\Macros.h" />
+    <ClInclude Include="..\..\files\Anal\INC\OS.h" />
+    <ClInclude Include="..\..\files\Anal\INC\PDW.h" />
+    <ClInclude Include="..\..\files\Anal\INC\Stack.h" />
+    <ClInclude Include="..\..\files\Anal\INC\structs.h" />
+    <ClInclude Include="..\..\files\Anal\INC\system.h" />
+    <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDW2SP370.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\PDWIQ.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
+    <ClInclude Include="..\..\files\Anal\NewSigAnal\NAnalPRI.h" />
+    <ClInclude Include="..\..\files\Anal\NewSigAnal\NewSigAnal.h" />
+    <ClInclude Include="..\..\files\Anal\NewSigAnal\NGroup.h" />
+    <ClInclude Include="..\..\files\Anal\NewSigAnal\NMakeAET.h" />
+    <ClInclude Include="..\..\files\Anal\NewSigAnal\NPulExt.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\AnalPRI.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\cencdec.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\Group.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\MakeAET.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\SysPara.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_Define.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_Macro.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_SigAnal.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_Struct.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_Type.h" />
+    <ClInclude Include="..\..\files\Include\defines.h" />
+    <ClInclude Include="..\..\files\Include\global.h" />
+    <ClInclude Include="..\..\files\Include\globals.h" />
+    <ClInclude Include="..\..\files\Include\SONATAPIP\ShuICD.h" />
+    <ClInclude Include="..\..\files\Include\SONATAPIP\_sysmsg.h" />
+    <ClInclude Include="..\..\files\Include\struct.h" />
+    <ClInclude Include="..\..\files\Include\sysmsg.h" />
+    <ClInclude Include="..\..\files\Include\system.h" />
+    <ClInclude Include="..\..\files\Include\thrmsg.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue.h" />
+    <ClInclude Include="..\..\files\MinIni\minIni.h" />
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h" />
+    <ClInclude Include="..\..\files\ODBC\MSSQL.h" />
+    <ClInclude Include="..\..\files\ODBC\odbccore.h" />
+    <ClInclude Include="..\..\files\System\csharedmemory.h" />
+    <ClInclude Include="..\..\files\System\csysconfig.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
+    <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="RADARDIR.h" />
+    <ClInclude Include="RadarDirAlgorithm.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RADARDIR.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
