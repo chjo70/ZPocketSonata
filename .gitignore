@@ -36,3 +36,5 @@ Debug/*
 *.gch
 *.pch
 *.log
+Debug
+Release
