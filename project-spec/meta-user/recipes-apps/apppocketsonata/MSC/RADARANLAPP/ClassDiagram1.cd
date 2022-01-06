@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CODBCDatabase">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CODBCDatabase::drvCompletion" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>E:\고정형 전파방향탐지 시스템\DevelopSource\ELINTOP\ELINTOP\ODBC\odbccore.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACAAAAJAAIAQoAREAAAgAAAAAABAAAgAAAAEAACohBA=</HashCode>
+      <FileName>E:\고정형 전파방향탐지 시스템\DevelopSource\ELINTOP\ELINTOP\ODBC\odbccore.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CODBCRecordset">
+    <Position X="7.75" Y="1" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CODBCRecordset::datatypeEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>E:\고정형 전파방향탐지 시스템\DevelopSource\ELINTOP\ELINTOP\ODBC\odbccore.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAIAAAAEAABQICEAAACAAICAAAAAAQAAIAgAgACAIEE=</HashCode>
+      <FileName>E:\고정형 전파방향탐지 시스템\DevelopSource\ELINTOP\ELINTOP\ODBC\odbccore.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMSSQL">
+    <Position X="10.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwQAIAAkAAAgAAAABAAAAAAGgAAAAQAQCCiBAAMBAA=</HashCode>
+      <FileName>E:\고정형 전파방향탐지 시스템\DevelopSource\ELINTOP\ELINTOP\ODBC\MSSQL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

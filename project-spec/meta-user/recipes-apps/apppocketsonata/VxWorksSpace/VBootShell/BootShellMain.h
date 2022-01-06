@@ -13,10 +13,10 @@
 
 #define VERSION					"Ver 1.0"
 
-//#define tPRI_Ref				90
+#define tPRI_Ref				90
 
 // MBIT 프로그램, 사용자 프로그램, 부트 쉘 프로그램의 메인 타스크의 Priority
-enum { tPRI_HTTPDAEMON=150, tPRI_BOOTSHEL=1, tPRI_App=200 };
+enum { tPRI_HTTPDAEMON=tPRI_Ref, tPRI_BOOTSHEL=1, tPRI_App=200 };
 
 #define CTRL_X						(24)
 #define REBOOT						CTRL_X

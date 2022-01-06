@@ -94,7 +94,7 @@ void CRecLan::_routine()
                     // 기존 SONATA 체계 명령어
                     case enREQ_MODE :
                     case enREQ_ANAL_START :
-                        g_pTheTaskMngr->QMsgSnd( m_pMsg );
+                        g_pTheTaskMngr->QMsgSnd( m_pMsg, GetThreadName() );
                         break;
 
                     case enREQ_IBIT :
@@ -102,7 +102,7 @@ void CRecLan::_routine()
                     case enREQ_CBIT :
                     case enREQ_SBIT :
                         if( g_pTheUrBit != NULL ) {
-                            g_pTheUrBit->QMsgSnd( m_pMsg );
+                            g_pTheUrBit->QMsgSnd( m_pMsg, GetThreadName() );
                         }
                         break;
 
@@ -130,7 +130,7 @@ void CRecLan::_routine()
 
                     case enREQ_IPL_DOWNLOAD :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 
@@ -140,12 +140,12 @@ void CRecLan::_routine()
                     case enREQ_SET_CONFIG :
                     case enREQ_COL_START :
                     case enREQ_RAWDATA :
-                        g_pTheUserCollect->QMsgSnd( m_pMsg, GetRecvData() );
+                        g_pTheUserCollect->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         break;
 
                     case enREQ_STOP :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 
@@ -154,7 +154,7 @@ void CRecLan::_routine()
                     case enREQ_AUDIO :
                     case enREQ_AUDIO_PARAM :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 
@@ -164,20 +164,20 @@ void CRecLan::_routine()
                     case enREQ_PMOP_Threshold :
                     case enREQ_RX_Threshold :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 
                     case enREQ_SYS :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 
                     // 추가 명령어
                     case enREQ_SIM_PDWDATA :
                         if( g_pTheTaskMngr != NULL ) {
-                            g_pTheSignalCollect->QMsgSnd( m_pMsg, GetRecvData() );
+                            g_pTheSignalCollect->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
                         break;
 

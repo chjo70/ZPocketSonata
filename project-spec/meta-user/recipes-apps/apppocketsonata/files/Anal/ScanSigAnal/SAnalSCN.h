@@ -141,7 +141,6 @@ public:
 
     BOOL KnownAnalysis();
 
-
     int FindPeakInHist( int count, PDWINDEX *pPdwIndex );
     //##ModelId=452B0C57019E
     BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
@@ -196,6 +195,8 @@ public:
 
     void DISP_FineAet( SRxLOBData *pLOBData ) { }
     unsigned int IsStorePDW();
+
+    CMakeAET* GetMakeAET() { return NULL; }
 
 
 	//##ModelId=452B0C45022E

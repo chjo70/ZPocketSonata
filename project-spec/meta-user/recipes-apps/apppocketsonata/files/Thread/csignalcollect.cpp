@@ -348,7 +348,7 @@ void CSignalCollect::AnalysisStart()
 
             if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
                 strCollectInfo.uiCh = iCh;
-                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
             }
 
             // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.

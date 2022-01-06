@@ -11,6 +11,8 @@
 
 #include "_SigAnal.h"
 
+#include "../SigAnal/MakeAET.h"
+
 // CompFreqLevel 함수에서 리턴되는 정의
 //##ModelId=452B0C56035F
 enum ANAL_FREQ_TYPE { FIXED_TYPE=0, AGILE_TYPE, FORCED_FIXED, NOT_MATCH } ;
@@ -123,9 +125,10 @@ private:
 
     //##ModelId=452B0C570163
     STR_DTOA_HISTOGRAM m_DtoaHist;
+    STR_HOPPING_DATA m_HoppingData;
 
     int m_iCoDwellLevel;
-    STR_DWELL_LEVEL m_stDwellLevel[_MAX_DWELL_LEVEL];
+    STR_DWELL_LEVEL m_stDwellLevel[_MAX_DWELL_LEVEL];    
 
 public:
     void CalHopLevel( STR_EMITTER *pEmitter );
@@ -133,6 +136,20 @@ public:
     BOOL CompAoaDiff( int x, int y, int thresh );
     float MeanInArray( UINT *series, UINT co );
     float IMeanInArray( int *series, UINT co );
+
+    void CopySeg(STR_EMITTER *pEmitter);
+
+    void DNSAnalysis();
+    bool CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
+    void MergePdwIndexInEmitter(STR_EMITTER *pEmitter);
+    int CalcDiffAOA(int iAOA1, int iAOA2);
+    bool CheckOverlapSeg(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
+    bool CheckFreqType(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
+    void HoppingAnalysis();
+    void MakeFreqHistogram(STR_EMITTER *pEmitter);
+    void ExtractHoppingLevel(STR_EMITTER *pEmitter);
+    BOOL HoppingDecision(STR_EMITTER *pEmitter);
+    void SetHoppingInfo(STR_EMITTER *pEmitter);
 
     inline void PrintAllSeg() { }
 
@@ -184,6 +201,7 @@ public:
     virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count )=0;
     virtual int GetBand()=0;
     virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )=0;
+    virtual CMakeAET* GetMakeAET()=0;
 
     BOOL CompAoa( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     //##ModelId=452B0C57020C
@@ -347,10 +365,14 @@ public:
     void Analysis();
     //##ModelId=452B0C580075
     void Init();
+
+    void InitSeg(STR_EMITTER *pEmitter);
+
     //##ModelId=452B0C580076
     CAnalPRI( int coMaxPdw=NEW_COLLECT_PDW );
     //##ModelId=452B0C58007E
     virtual ~CAnalPRI();
+
 
 };
 

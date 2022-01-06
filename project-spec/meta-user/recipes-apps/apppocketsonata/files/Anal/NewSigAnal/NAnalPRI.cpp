@@ -128,31 +128,26 @@ void CNAnalPRI::Analysis()
     PrintFunction
 
     // 초기화
-    m_uiCoSeg = GetCoSeg();
-    m_nAnalEmitter = m_CoEmitter;
-    // Init();
+    Init();
 
-    // Wide 펄스열들을 참조해서 Narrow 그룹화된 펄스열 제거 여부를 판단한다.
-    // DeleteNarrowSeg();
-
-    // 펄스열 그룹핑
-    // 아래 함수 순서는 각 처리에 따라 호출되기 때문에
-    // 변경할 때 주의해서 변경해야 한다.
-    GroupingStable();
+    // 고정펄스열들에 대하여 스태거 그룹핑 수행하여 스태거 신호인지 분석한다.
     GroupingStagger();
-    //GroupingStable();
-    GroupingJitter();
-    GroupingDwell();
-    GroupingUnknown();
-
-    PrintAllEmitter();
-
-    // 정밀 PRI 분석
-    // 하모닉 Stable로 펄스열이 구성이 되면 Dwell을 의심해 본다.
-    //-- 조철희 2005-12-22 16:09:50 --//
-    // Dwell 분석시에 Dwell 펄스열 추출을 위해
-    DwellAnalysis();
     StaggerAnalysis();
+
+    // 고정펄스열 그룹핑은 스태거 그룹핑 후 검증하여 해제된 펄스열들에 대해 한다.
+    GroupingStable();
+    GroupingJitter();
+
+    // 지터 그룹핑된 이후 스태거 분석을 한번 더 수행한다.(Jitter 펄스열들에 대해 Auto-Correlation Function으로 스태거 분석 수행)
+    StaggerAnalysis();
+
+    // PRI 고정으로 분석된 에미터들에 대해 D&S 분석을 수행한다.
+    DNSAnalysis();
+
+    // Agile 형태 에미터를 대상으로 Hopping 여부를 분석한다.
+    HoppingAnalysis();
+
+    // 패턴 분석을 수행한다.
     PatternAnalysis();
 
     // 에미터 그룹핑
@@ -394,4 +389,18 @@ void CNAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
 {
     qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
     return;
+}
+
+
+/**
+ * @brief		GetMakeAET
+ * @return		CMakeAET*
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 16:49:18
+ * @warning		
+ */
+CMakeAET* CNAnalPRI::GetMakeAET()
+{
+    return m_pNewSigAnal->GetMakeAET();
 }

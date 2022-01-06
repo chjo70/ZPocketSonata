@@ -87,14 +87,12 @@ enum ENUM_BoardID {
 template <typename T>
 T _diffabs( T x, T y)
 {
-
     if (x > y) {
         return x - y;
     }
     else {
         return y - x;
     }
-
 }
 
 

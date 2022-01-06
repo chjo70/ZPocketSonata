@@ -324,7 +324,7 @@ void CTaskMngr::AnalysisStart()
     
 #endif
 
-    g_pTheSignalCollect->QMsgSnd( m_pMsg );
+    g_pTheSignalCollect->QMsgSnd( m_pMsg, GetThreadName() );
 
 #ifdef __ZYNQ_BOARD__
     CHWIO::StartCollecting( REG_UIO_DMA_1 );

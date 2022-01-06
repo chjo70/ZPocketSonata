@@ -141,7 +141,7 @@ public:
 	* @brief       싱글턴 객체 획득 함수
 	* @return      CParamMngr*   
 	*/
-	static CParamMngr* getInstance();	
+	//static CParamMngr* getInstance();	
 	
 	/**
 	* @brief       객체소멸 함수
@@ -527,5 +527,5 @@ public:
 	};	
 };
 
-#define GP_MGR_PARAM CParamMngr::getInstance()
+//#define GP_MGR_PARAM CParamMngr::getInstance()
 

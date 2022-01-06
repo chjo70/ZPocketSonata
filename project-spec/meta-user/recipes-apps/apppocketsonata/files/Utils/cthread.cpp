@@ -507,7 +507,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
                     ResetEvent( m_hEvent );
                 }
                 else {
-                    TRACE( "Invalid the receive message..." );
+                    //TRACE( "Invalid the receive message..." );
                 }
             }
         }
@@ -665,18 +665,15 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
  * @brief CThread::QMsgSnd
  * @param pMessageData
  */
-void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData )
+void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName )
 {
 
     if( pArrayMsgData != NULL ) {
-        //Lock();        
-
         pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiArrayLength );
-
-        //UnLock();        
+  
     }
 
-    QMsgSnd( pMessageData );
+    QMsgSnd( pMessageData, pszThreadName );
 
 }
 
@@ -707,7 +704,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
     UnLock();
 
     //TRACE( "\nQueue Size : %d" , m_queue.size() );
-    TRACE( "\nSending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
+    TRACE( "\n\tSending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
 
 	::SetEvent(m_hEvent);    
 	

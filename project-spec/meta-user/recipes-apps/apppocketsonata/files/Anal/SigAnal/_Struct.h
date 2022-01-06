@@ -69,6 +69,19 @@ struct STR_DTOA_HISTOGRAM {
 
 } ;
 
+// 주파수 호핑 분석 구조체
+
+struct STR_HOPPING_DATA {
+    UINT bin_count[FREQ_BIN];
+    PDWINDEX hist[FREQ_BIN][MAX_PDW];
+    UINT pt_count;
+    UINT pt_pdw_count[MAX_PDW];
+    PDWINDEX pt_pdw_idx[MAX_PDW][MAX_PDW];
+    UINT hop_level_cnt;
+    int hop_level[MAX_HOPPING_LEVEL_ELEMENT];
+
+} ;
+
 // 방위(AOA) 그룹 
 //##ModelId=452B0C540317
 struct STR_AOA_GROUP {
@@ -209,7 +222,9 @@ struct STR_PRI_RANGE_TABLE {
 struct STR_EMITTER {
     STR_PDWINDEX pdw;						// PDW 버퍼
     UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
-	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수
+    STR_PULSE_TRAIN_SEG seg[ MAX_SEG ];			// 펄스열 저장
+
+	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
 
 	PRI_TYPE pri_type;							// PRI 형태
 	_TOA framePri;								// 스태거일 때의 frmae PRI 값
@@ -218,12 +233,12 @@ struct STR_EMITTER {
 	float priPeriod;
 
 	unsigned int iStagDwellElementCount;					// stagger level 수 
-	_TOA stag_dwell_element[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
+	_TOA stag_dwell_element[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
 	int iStagDwellLevelCount;					// stagger level 수 
-	_TOA stag_dwell_level[ MAX_STAGGER_LEVEL_ELEMENT ];		// Stagger level
+	_TOA stag_dwell_level[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	int hop_level[ MAX_HOP_LEVEL_ELEMENT ];					// Hopping level
+	int hop_level[ MAX_FREQ_PRI_STEP ];					// Hopping level
 	int hop_level_cnt;					// Hop level 수 
 
 	SIGNAL_TYPE signal_type;	
@@ -232,6 +247,8 @@ struct STR_EMITTER {
 	UINT freq_patterntype;
 	STR_TYPEMINMAX freq;				// 에미터 간의 병합시에 판단할 주파수 통계량
 	float freqPeriod;
+    int freq_level[ MAX_FREQ_PRI_STEP ];
+    int freq_level_cnt;
 
 	STR_MINMAX pw;							// 에미터 펄스열의 PRI 범위
 

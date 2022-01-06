@@ -10,8 +10,8 @@
 #endif // _MSC_VER > 1000
 
 #ifdef _MSSQL_
-#include "../../../ELINTOP/ODBC/mssql.h"
-#include "../../../ELINTOP/ODBC/odbccore.h"
+#include "../../ODBC/mssql.h"
+#include "../../ODBC/odbccore.h"
 #else
 
 #endif
@@ -149,6 +149,7 @@ public:
     inline int CalcPAMean(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->CalcPAMean( pPdwIndex, count); }
     inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoAet( coAet ); }
+    inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
 
     // 기타 함수
     void SaveRemainedPdwFile();

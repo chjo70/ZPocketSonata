@@ -126,7 +126,7 @@ void CDetectAnalysis::AnalysisStart()
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;        
 
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO) );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
     }
 
 }

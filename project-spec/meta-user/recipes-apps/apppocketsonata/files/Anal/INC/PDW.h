@@ -25,7 +25,7 @@
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
 #ifndef _TOA_
-#ifdef __VXWORKS_
+#ifdef _VXWORKS_
 typedef unsigned long long _TOA;
 #else
 typedef unsigned long long int _TOA;
@@ -464,9 +464,6 @@ struct TNEW_IQ {
 }  ;
 
 
-#ifndef _STR_PDWDATA
-#define _STR_PDWDATA
-
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
 typedef struct {
@@ -502,6 +499,8 @@ typedef struct {
 } SONATA_HEADER ;
 #endif
 
+#ifndef _STR_PDWDATA
+#define _STR_PDWDATA
 struct STR_PDWDATA {
     union UNION_HEADER {
         STR_ELINT_HEADER el;
@@ -512,6 +511,7 @@ struct STR_PDWDATA {
     } x;
 
     UINT uiTotalPDW;
+    int _dummy;
 
     _PDW stPDW[MAX_PDW];
 

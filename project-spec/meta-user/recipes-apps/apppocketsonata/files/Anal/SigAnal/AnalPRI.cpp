@@ -1,4 +1,4 @@
-// AnalPRI.cpp: implementation of the CAnalPRI class.
+﻿// AnalPRI.cpp: implementation of the CAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -286,37 +286,36 @@ void CAnalPRI::Analysis()
 //
 void CAnalPRI::PrintAllEmitter()
 {
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
     //////////////////////////////////////////////////////////////////////////
     //
     // 가상 에미터 프린트
-//     STR_EMITTER *pEmitter;
-//     int i;
-// 
-//     char buffer[1000];
-//     int iCnt;
-// 
-//     pEmitter = & m_Emitter[m_nAnalEmitter];
-//     if( m_CoEmitter == m_nAnalEmitter ) {
-//         Log( enNormal, "No PAET !!" );
-//     }
-//     else {
-//         Log( enNormal, "PAET : %d" , m_CoEmitter-m_nAnalEmitter );
-//     }
-// 
-//     for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++pEmitter ) {
-//         iCnt=0;
-//         buffer[0] = NULL;
-//         for( int j=0 ; j < pEmitter->seg_count ; ++j ) {
-//             iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "[%2d]" , pEmitter->seg_idx[j] );
-//         }
-//         Log( enNormal, "\t[%2d]%1c : Co(%2d, %s)" , i, gEmitterMark[pEmitter->mark], pEmitter->seg_count, buffer );
-// 
-//         //printf( "\n\t\t 주파수 형태(%1d), PRI 형태(%1d) 범위(%5d -%5d)" , pEmitter->freq_type, pEmitter->pri_type, F_UDIV( pEmitter->pri.min, _spOneMicrosec ), F_UDIV( pEmitter->pri.max, _spOneMicrosec ) );
-// 
-//     }
+    STR_EMITTER *pEmitter;
+    int i;
 
-#endif
+    char buffer[1000];
+    int iCnt;
+
+    pEmitter = & m_Emitter[m_nAnalEmitter];
+    if( m_CoEmitter == m_nAnalEmitter ) {
+        Log( enNormal, "No PAET !!" );
+    }
+    else {
+        Log( enNormal, "PAET : %d" , m_CoEmitter-m_nAnalEmitter );
+
+        for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++pEmitter ) {
+            iCnt=0;
+            buffer[0] = NULL;
+            for( unsigned int j=0 ; j < pEmitter->uiCoSeg ; ++j ) {
+                iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "[%2d]" , pEmitter->seg_idx[j] );
+            }
+            Log( enNormal, "\t[%2d]%1c : Co(%2d, %s)" , i, gEmitterMark[pEmitter->mark], pEmitter->uiCoSeg, buffer );
+            Log( enNormal, "\t\t F[%1d], P[%1d] (%5d -%5d)" , pEmitter->freq_type, pEmitter->pri_type, I_TOAusCNV( pEmitter->pri.min ), I_TOAusCNV( pEmitter->pri.max ) );
+
+        }
+    }
+
+//#endif
 
 }
 
@@ -333,7 +332,7 @@ void CAnalPRI::GroupingStable( BOOL fDecisionEmitter )
 {
     unsigned int i, j;
 
-    BOOL bMakeEmitter;
+    BOOL bMakeEmitter, bOverlap;
 
     STR_EMITTER *pEmitter;
     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
@@ -362,29 +361,36 @@ void CAnalPRI::GroupingStable( BOOL fDecisionEmitter )
             pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = i;
 
             pSeg2 = & m_pSeg[i+1];
+            bOverlap = FALSE;
             for( j=i+1 ; j < m_uiCoSeg ; ++j, ++pSeg2 ) {
-                if( pSeg2->mark == CHECKED_SEG || pSeg2->mark == DELETE_SEG )
+                
+                if( pSeg2->mark == CHECKED_SEG || pSeg2->mark == DELETE_SEG || pSeg2->mark == OVERLAPPED_SEG ) {
                     continue;
+                }
 
                 // 유사 펄스열이 있고 시간적으로 겹쳐져 있으면 STABLE 로 마킹하지 않는다.
                 // 다음 GroupStagger 단계에서 Stagger 타입으로 만들기 위함이다.
                 if( pSeg2->pri_type == _STABLE && CompFreq( pSeg1, pSeg2 ) == TRUE ) {
                     if( CheckHarmonic( pSeg1, pSeg2 ) >= 1 ) {
+                        //pSeg2->mark = CHECKED_SEG;
+                        //pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = j;
+                        if( OverlappedSeg( pSeg1, pSeg2 ) == FALSE ) {
                             pSeg2->mark = CHECKED_SEG;
                             pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = j;
-/*
-                        if( OverlappedSeg( pSeg1, pSeg2 ) == TRUE ) {
-                            pSeg2->mark = CHECKED_SEG;
-                            pEmitter->seg_idx[ pEmitter->seg_count++ ] = j;
                         }
                         else {
-                            bMakeEmitter = FALSE;
+                            bOverlap = TRUE;
                             pSeg1->mark = NORMAL_SEG;
-                            break;
+                            pSeg2->mark = OVERLAPPED_SEG;
                         }
-*/
+
                     }
                 }
+            }
+
+            // 겹쳐지지 않은 STABLE 일때만 에미터로 뺀다.
+            if( bOverlap == TRUE || pSeg1->mark == OVERLAPPED_SEG ) {
+                bMakeEmitter = FALSE;
             }
 
             // 겹쳐져 있지 않은 STABLE 펄스열에 대해서만 에미터를 생성한다.
@@ -566,115 +572,143 @@ void CAnalPRI::GroupingDwell( BOOL fDecisionEmitter )
 //##ModelId=428832A302D3
 void CAnalPRI::GroupingStagger( BOOL fDecisionEmitter )
 {
-    unsigned int i, j, k;
+    unsigned int i, j;
 
     BOOL bCheck;
 
     STR_EMITTER *pEmitter;
     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
 
-    pSeg1 = & m_pSeg[m_nAnalSeg];
-    for( i=m_nAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg1 ) {
-        /*! \bug  최대 에미터 개수 벗어날 조건 추가함.
-            \date 2006-08-29 09:58:13, 조철희
-        */
-        if( m_CoEmitter >= MAX_AET )
-            return;
+	pSeg1 = & m_pSeg[m_nAnalSeg];
+	for( i=m_nAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg1 ) {
+		/*! \bug  최대 에미터 개수 벗어날 조건 추가함.
+		    \date 2006-08-29 09:58:13, 조철희
+		*/
+		if( m_CoEmitter >= MAX_AET ) {
+			break;
+        }
 
-        // 스태거열 분석할 때는 삭제된 펄스열도 포함해서 본다.
-        // 왜냐하면 펄스열 추출시에는 규칙성 펄스열 부족으로 짤라 낼수 있기 때문이다.
-        if( pSeg1->mark == CHECKED_SEG || pSeg1->mark == DELETE_SEG )
-            continue;
+		// 스태거열 분석할 때는 삭제된 펄스열도 포함해서 본다.
+		// 왜냐하면 펄스열 추출시에는 규칙성 펄스열 부족으로 짤라 낼수 있기 때문이다.
+		if( pSeg1->mark == CHECKED_SEG || pSeg1->mark == DELETE_SEG ) {
+			continue;
+        }
 
-        if( pSeg1->pri_type == _STABLE ) {
-            bCheck = TRUE;
+		if( pSeg1->pri_type == _STABLE ) {
+			bCheck = TRUE;
 
-            // 에미터 변수 초기화
-            pEmitter = & m_Emitter[ m_CoEmitter ];
-            pEmitter->pri_type = _STABLE;
-            pEmitter->uiCoSeg = 0;
-            pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = i;
+			// 에미터 변수 초기화
+			pEmitter = & m_Emitter[ m_CoEmitter ];
+			pEmitter->pri_type = _STABLE;
+			pEmitter->uiCoSeg = _spZero;
+			pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = (UINT)i;
 
-            pSeg2 = & m_pSeg[i+1];
-            for( j=i+1 ; j < m_uiCoSeg ; ++j, ++pSeg2 ) {
-                /*! \bug  pSeg2->mark == DELETE_SEG 추가함.
-                    \date 2008-11-11 22:22:30, 조철희
-                */
-                if( pSeg2->mark == CHECKED_SEG || pSeg2->mark == DELETE_SEG )
-                    continue;
+			pSeg2 = & m_pSeg[i+1];
+			for( j=i+1 ; j < m_uiCoSeg ; ++j, ++pSeg2 ) {
+				if( pSeg2->mark == CHECKED_SEG || pSeg2->mark == DELETE_SEG )
+					continue;
 
-                if( CompFreq( pSeg1, pSeg2 ) == TRUE && pSeg2->pri_type == _STABLE &&
-                        CompMeanDiff<_TOA>( pSeg1->pri.mean, pSeg2->pri.mean, STABLE_MARGIN ) == TRUE ) {
-                    if( OverlappedSeg( pSeg1, pSeg2 ) == TRUE && CheckPriInterval( pSeg1, pSeg2 ) == FALSE ) {
-                        bCheck = FALSE;
+				if( CompFreq( pSeg1, pSeg2 ) == TRUE && pSeg2->pri_type == _STABLE &&
+						CompMeanDiff<_TOA>( pSeg1->pri.mean, pSeg2->pri.mean, STABLE_MARGIN ) == TRUE ) {
+					if( OverlappedSeg( pSeg1, pSeg2 ) == TRUE && CheckPriInterval( pSeg1, pSeg2 ) == FALSE ) {
+						bCheck = FALSE;
 
-                        pSeg2->mark = CHECKED_SEG;
-                        pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = j;
-                    }
-                }
-            }
+						pSeg2->mark = CHECKED_SEG;
+						pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = (UINT)j;
+					}
+				}
+			}
 
-            if( bCheck == FALSE ) {                
-                _TOA priMean, priLow, priHgh;
+			if( bCheck == FALSE ) {
+				unsigned int k;
+				_TOA priMean, priLow, priHgh;
 
-                STR_PULSE_TRAIN_SEG *pSeg;
+				STR_PULSE_TRAIN_SEG *pSeg;
+				
+				pSeg1->mark = CHECKED_SEG;
+				MergePdwIndexInSeg( pEmitter );
+				// 스태거 펄스열이면 병합된 PRI 값을 대충 파악해 본다. 
+				priMean = VerifyPRI( pEmitter->pdw.pIndex, pEmitter->pdw.uiCount );
+				priLow = m_pSeg[ pEmitter->seg_idx[0] ].pri.max;
+				priHgh = pEmitter->pri.max = 0;
+				for( k=0 ; k < pEmitter->uiCoSeg ; ++k ) {
+					pSeg = & m_pSeg[ pEmitter->seg_idx[k] ];
+					priLow = _min( priLow, pSeg->pri.min );
+					priHgh = _max( priHgh, pSeg->pri.max );
+				}
+				if( priMean > priLow ) {
+					// 해당 펄스열 인덱스를 해지한다.
+					for( k=0 ; k < pEmitter->uiCoSeg ; ++k ) {
+						pSeg = & m_pSeg[ pEmitter->seg_idx[k] ];
+						pSeg->mark = NORMAL_SEG;
+					}
+				}
+				else {
+					// 펄스열 로그 판단
+					// 에미터로 생성 여부를 결정한다.
+					if( fDecisionEmitter == TRUE || DecisionEmitter( pEmitter ) == TRUE ) {
+						pEmitter->mark = NORMAL_EMITTER;
+						pEmitter->signal_type = AnalSignalType( pEmitter );
 
-                pSeg1->mark = CHECKED_SEG;
+						// 프레임 PRI는 규칙성 펄스열의 PRI로 한다.
+						//-- 조철희 2005-11-23 10:31:30 --//
+						pEmitter->framePri = pSeg1->pri.mean;
 
-                MergePdwIndexInSeg( pEmitter );
+						// PRI 범위 및 타입 결정
+						CalcEmitterPri( pEmitter );
+						pEmitter->pri_type = _STAGGER_DWELL;
 
-                // 스태거 펄스열이면 병합된 PRI 값을 대충 파악해 본다.
-                priMean = VerifyPRI( pEmitter->pdw.pIndex, pEmitter->pdw.uiCount );
-                priLow = 0xffffffffff;
-                _EQUALS3( priHgh, pEmitter->pri.max, 0 );
-                for( k=0 ; k < pEmitter->uiCoSeg ; ++k ) {
-                    pSeg = & m_pSeg[ pEmitter->seg_idx[k] ];
-                    priLow = _min( priLow, pSeg->pri.min );
-                    priHgh = _max( priHgh, pSeg->pri.max );
-                }
-                if( priMean > priLow ) {
-                    // 해당 펄스열 인덱스를 해지한다.
-                    for( k=0 ; k < pEmitter->uiCoSeg ; ++k ) {
-                        pSeg = & m_pSeg[ pEmitter->seg_idx[k] ];
-                        pSeg->mark = NORMAL_SEG;
-                    }
-                }
-                else {
-                    // 펄스열 로그 판단
-                    // 에미터로 생성 여부를 결정한다.
-                    if( fDecisionEmitter == TRUE || DecisionEmitter( pEmitter ) == TRUE ) {
-                        pEmitter->mark = NORMAL_EMITTER;
-                        pEmitter->signal_type = AnalSignalType( pEmitter );
+						// 주파수 범위 및 타입 결정
+						CalcEmitterFrq( pEmitter );
+						pEmitter->freq_type = AnalFreqType( pEmitter );
 
-                        // 프레임 PRI는 규칙성 펄스열의 PRI로 한다.
-                        //-- 조철희 2005-11-23 10:31:30 --//
-                        pEmitter->framePri = pSeg1->pri.mean;
+						CalcEmitterPW( pEmitter );
 
-                        // PRI 범위 및 타입 결정
-                        CalcEmitterPri( pEmitter );
-                        pEmitter->pri_type = _STAGGER_DWELL;
+						CopySeg( pEmitter );
 
-                        // 주파수 범위 및 타입 결정
-                        CalcEmitterFrq( pEmitter );
-                        pEmitter->freq_type = AnalFreqType( pEmitter );
-
-                        CalcEmitterPW( pEmitter );
-
-                        ++ m_CoEmitter;
-                    }
-                    // UnknownExtract 펄스열에 삽입한다.
-                    else {
-                        // 에미터 실패된 펄스열들은 모두 삭제된 펄스열로 등록한다.
-                        // 추후에 펄스열들 끼리 병합을 수행한다.
-                        for( j=0 ; j < pEmitter->uiCoSeg ; ++j ) {
-                            m_pSeg[ pEmitter->seg_idx[j] ].mark = DELETE_SEG;
+						++ m_CoEmitter;
+					}
+					// UnknownExtract 펄스열에 삽입한다.
+					else {
+						// 에미터 실패된 펄스열들은 모두 삭제된 펄스열로 등록한다.
+						// 추후에 펄스열들 끼리 병합을 수행한다.
+						for( j=0 ; j < pEmitter->uiCoSeg ; ++j ) {
+							m_pSeg[ pEmitter->seg_idx[j] ].mark = DELETE_SEG;
                         }
-                    }
-                }
-            }
+
+					}
+				}
+			}
+		}
+
+	}
+
+}
+
+/**
+ * @brief		CopySeg
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 14:52:31
+ * @warning		
+ */
+void CAnalPRI::CopySeg(STR_EMITTER *pEmitter)
+{
+    unsigned int i;
+
+    // 에미터의 펄스열 정보를 복사한다.
+    for (i = 0; i < pEmitter->uiCoSeg ; i++) {
+        memcpy( & pEmitter->seg[i], & m_pSeg[pEmitter->seg_idx[i]], sizeof(STR_PULSE_TRAIN_SEG) );
+
+        // 현재 펄스열 정보가 main 펄스열일 경우 인덱스를 변환한다.
+        if( pEmitter->seg_idx[i] == pEmitter->main_seg) {
+            pEmitter->main_seg = (UINT)i;
         }
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1052,7 +1086,7 @@ BOOL CAnalPRI::FindDwellLevel( STR_EMITTER *pEmitter )
 
     }
 
-    return m_DtoaHist.dtoa_peak_count != 0;
+    return m_DtoaHist.dtoa_peak_count >= _spTwo;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1088,6 +1122,15 @@ BOOL CAnalPRI::FindDwellLevel()
 }
 
 
+/**
+ * @brief		FindDtoa
+ * @param		_TOA priMean
+ * @return		BOOL
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/12/13 18:19:42
+ * @warning		
+ */
 BOOL CAnalPRI::FindDtoa( _TOA priMean )
 {
     int i;
@@ -1187,9 +1230,9 @@ BOOL CAnalPRI::DwellAnalysis( STR_EMITTER *pEmitter )
 {
     BOOL bRet=FALSE;
 
-    SaveEmitterPdwFile( pEmitter, 2000 );
+    //SaveEmitterPdwFile( pEmitter, 2000 );
 
-    //MakeDtoaHistogram( pEmitter->pdw.pIndex, pEmitter->pdw.count, & pEmitter->pri );
+    MakeDtoaHistogram( pEmitter->pdw.pIndex, pEmitter->pdw.uiCount, & pEmitter->pri );
     if( TRUE == FindDwellLevel(pEmitter) ) {
         // 펄스열 추출 클래스로 보내서
         // 가상 에미터로 추출된 펄스열을 제거하고
@@ -1324,6 +1367,15 @@ BOOL CAnalPRI::CalcPRILevel( STR_EMITTER *pEmitter )
 
 }
 
+/**
+ * @brief		MakeDwellLevel
+ * @param		STR_EMITTER * pEmitter
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 14:38:55
+ * @warning		
+ */
 bool CAnalPRI::MakeDwellLevel( STR_EMITTER *pEmitter )
 {
     int i;
@@ -1384,6 +1436,14 @@ void CAnalPRI::AddDwellLevel( STR_DWELL_LEVEL *pSTR_DWELL_LEVEL )
 
 }
 
+/**
+ * @brief		SortEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/12/13 18:07:18
+ * @warning		
+ */
 void CAnalPRI::SortEmitter()
 {
     int i, j;
@@ -1465,45 +1525,47 @@ void CAnalPRI::DwellAnalysis()
 
         // 디버그
         // 확실한 Stagger 인 경우에만 정밀 분석해서 정확한 단을 찾는것이 나을수 있다.
-        if( pEmitter->pri_type == _STABLE || pEmitter->pri_type == _STAGGER_DWELL ) {
-            // Dwell 값 초기화
-            pEmitter->iStagDwellElementCount = _spOne;
+        if( /*pEmitter->pri_type == _STABLE || */pEmitter->pri_type == _STAGGER_DWELL ) {
+//             // Dwell 값 초기화
+//             pEmitter->iStagDwellElementCount = _spOne;
+// 
+//             if( pEmitter->pri_type == _STABLE ) {
+//                 pEmitter->stag_dwell_element[0] = pEmitter->pri.mean;
+//             }
+//             else {
+//                 pEmitter->stag_dwell_element[0] = pEmitter->pri.mean;
+//             }
+// 
+//             bCheck = false;
+//             pEmitter2 = & m_Emitter[ i+1 ];
+//             for( j=m_nAnalEmitter+1 ; j < m_CoEmitter ; ++j, ++ pEmitter2 ) {
+//                 if( pEmitter2->mark == DELETE_EMITTER )
+//                     continue;
+// 
+//                 if( pEmitter2->pri_type == _STABLE || pEmitter2->pri_type == _STAGGER_DWELL ) {
+//                     if( CheckContiStable( pEmitter, pEmitter2 ) == TRUE ) {
+//                         MergeEmitter( pEmitter, pEmitter2, MERGE );
+// 
+//                         pEmitter->stag_dwell_element[pEmitter->iStagDwellElementCount] = pEmitter2->pri.mean;
+//                         ++ pEmitter->iStagDwellElementCount;
+// 
+//                         pEmitter2->mark = DELETE_EMITTER;
+//                         bCheck = true;
+// 
+//                     }
+//                 }
+// 
+//             }
 
-            if( pEmitter->pri_type == _STABLE ) {
-                pEmitter->stag_dwell_element[0] = pEmitter->pri.mean;
-            }
-            else {
-                pEmitter->stag_dwell_element[0] = pEmitter->pri.mean;
-            }
+            DwellAnalysis( pEmitter );
 
-            bCheck = false;
-            pEmitter2 = & m_Emitter[ i+1 ];
-            for( j=m_nAnalEmitter+1 ; j < m_CoEmitter ; ++j, ++ pEmitter2 ) {
-                if( pEmitter2->mark == DELETE_EMITTER )
-                    continue;
-
-                if( pEmitter2->pri_type == _STABLE || pEmitter2->pri_type == _STAGGER_DWELL ) {
-                    if( CheckContiStable( pEmitter, pEmitter2 ) == TRUE ) {
-                        MergeEmitter( pEmitter, pEmitter2, MERGE );
-
-                        pEmitter->stag_dwell_element[pEmitter->iStagDwellElementCount] = pEmitter2->pri.mean;
-                        ++ pEmitter->iStagDwellElementCount;
-
-                        pEmitter2->mark = DELETE_EMITTER;
-                        bCheck = true;
-
-                    }
-                }
-
-            }
-
-            if( bCheck == true ) {
-                DwellAnalysis( pEmitter );
-            }
-            else {
-                pEmitter->iStagDwellLevelCount = 0;
-                pEmitter->iStagDwellElementCount = 0;
-            }
+//             if( bCheck == true || true ) {
+//                 DwellAnalysis( pEmitter );
+//             }
+//             else {
+//                 pEmitter->iStagDwellLevelCount = 0;
+//                 pEmitter->iStagDwellElementCount = 0;
+//             }
         }
     }
 }
@@ -1633,31 +1695,45 @@ void CAnalPRI::StaggerAnalysis()
         switch( pEmitter->pri_type ) {
             case _JITTER_RANDOM :
                 // Auto-Correlation Function 으로 스태거 분석한다.
-                StaggerAnalysis( pEmitter );
+                if( TRUE == StaggerAnalysis( pEmitter ) ) {
+                    MergePdwIndexInSeg( pEmitter );
+                    CopySeg(pEmitter);
+                }
+                else {
+                    // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
+                    if( _spAnalMinPulseJitterEmitter > pEmitter->pdw.uiCount ) {
+                        pEmitter->mark = DELETE_EMITTER;
+                    }
+                }
                 break;
 
             case _STAGGER_DWELL :
-                // Dwell 타입을 체크한다.
-                /*
-                if( FALSE == DwellAnalysis( pEmitter ) ) {
-                    // Stable N 개 펄스열로부터 스태거 분석이 실패가 되면,
-                    // 이 신호는 Jitter 0%로 분석된다. 그리고 이 신호를 엄밀히 살펴보면,
-                    // Stable 인것을 알수 있을 것이다.
-                    // 이러한 에미터는 버린다.
-                    // 아래 검증은 이러한 예외적인 에미터를 막기 위함이다.
-                    // 유사관계가 있는 N 개의 Stable 펄스열을 스태거 분석에서 실패하면 그 펄스열은 버린다.
-                }
-                */
-                pEmitter->pri_type = _JITTER_RANDOM;
+				// Dwell 타입을 체크한다.
+				/*
+				if( FALSE == DwellAnalysis( pEmitter ) ) {
+					// Stable N 개 펄스열로부터 스태거 분석이 실패가 되면,
+					// 이 신호는 Jitter 0%로 분석된다. 그리고 이 신호를 엄밀히 살펴보면,
+					// Stable 인것을 알수 있을 것이다.
+					// 이러한 에미터는 버린다.
+					// 아래 검증은 이러한 예외적인 에미터를 막기 위함이다.
+					// 유사관계가 있는 N 개의 Stable 펄스열을 스태거 분석에서 실패하면 그 펄스열은 버린다.
 
-                // 규칙성 펄스열로써 Stagger 펄스열이 의심되기 때문에 그냥 스태거로 펄스열을 추출한다.
-                if( FALSE == StaggerLevelAnalysis( pEmitter ) ) {
-                    pEmitter->mark = DELETE_EMITTER;
-                }
-                else {
-                    pEmitter->pri_type = _STAGGER;
-                }
-                break;
+				}
+				*/
+				pEmitter->pri_type = _JITTER_RANDOM;
+
+				// 규칙성 펄스열로써 Stagger 펄스열이 의심되기 때문에 그냥 스태거로 펄스열을 추출한다.
+				if( FALSE == StaggerLevelAnalysis( pEmitter ) ) {
+					pEmitter->mark = DELETE_EMITTER;
+					// 김용준 수정
+					// 스태거로 그룹핑되었다가 해제된 펄스열들이 다시 그룹핑될 수 있도록 초기화한다.
+					InitSeg(pEmitter);
+				}
+				else {
+					pEmitter->pri_type = _STAGGER;
+					CopySeg(pEmitter);
+				}
+				break;
 
             default:
                 break;
@@ -1666,6 +1742,26 @@ void CAnalPRI::StaggerAnalysis()
 
         MergePdwIndexInSeg( pEmitter );
     }
+}
+
+/**
+ * @brief		InitSeg
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 17:23:28
+ * @warning		
+ */
+void CAnalPRI::InitSeg(STR_EMITTER *pEmitter)
+{
+    unsigned int i;
+
+    // 해당 에미터의 펄스열들을 전부 초기화한다.
+    for( i=0 ; i < pEmitter->uiCoSeg ; i++ ) {
+        m_pSeg[pEmitter->seg_idx[i]].mark = NORMAL_SEG;
+    }
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -3672,7 +3768,7 @@ BOOL CAnalPRI::StaggerLevelAnalysis( STR_EMITTER *pEmitter )
             pEmitter->stag_dwell_level[ pEmitter->iStagDwellLevelCount ] = pSeg->first_toa % pEmitter->framePri;
             ++ pEmitter->iStagDwellLevelCount;
 
-            /*! \bug  스태거 레벨의 상한을 정한다.
+            /*! \bug  스태거 레벨 개수 이상이면 Jitter 로 분석하기 위함이다.
                 \date 2006-08-31 17:14:48, 조철희
             */
             if( (unsigned int) pEmitter->iStagDwellLevelCount >= MAX_STAGGER_LEVEL_ELEMENT ) {
@@ -3723,8 +3819,9 @@ BOOL CAnalPRI::StaggerLevelAnalysis( STR_EMITTER *pEmitter )
                                 스태거 검증에서 에러로 판단이 되면 이 펄스열을 버린다.
                 \date 2006-05-18 15:04:22, 조철희
             */
-            if( VerifyStaggerLevel( pEmitter ) == FALSE )
+            if( VerifyStaggerLevel( pEmitter ) == FALSE ) {
                 bRet = FALSE;
+            }
             else {
                 /*! \bug  스태거 레벨을 작은 값부터 정렬을 한다.
                     \date 2006-07-04 19:42:30, 조철희
@@ -3733,7 +3830,7 @@ BOOL CAnalPRI::StaggerLevelAnalysis( STR_EMITTER *pEmitter )
 
                 // 스태거 PRI의 PRI 범위 및 평균을 계산한다.
                 pEmitter->pri.mean = 0;
-                pEmitter->pri.min = 0xffffff;
+                pEmitter->pri.min = pEmitter->stag_dwell_level[0];
                 pEmitter->pri.max = 0;
                 for( i=0 ; i < (int) pEmitter->iStagDwellLevelCount && i < MAX_FREQ_PRI_STEP ; ++i ) {
                     pEmitter->pri.min = _min( pEmitter->pri.min, pEmitter->stag_dwell_level[i] );
@@ -3866,21 +3963,23 @@ BOOL CAnalPRI::VerifyStaggerLevel( STR_EMITTER *pStaggerEmitter, STR_EMITTER *pE
 BOOL CAnalPRI::CompareAllStaggerLevel( STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg )
 {
     int i;
-    _TOA harm_toa;
-
+    _TOA harm_toa, threshold_toa;
+    
     BOOL bRet=FALSE;
+
+    threshold_toa = 2 * STABLE_MARGIN;
 
     harm_toa = pSeg->first_toa % pEmitter->framePri;
     for( i=0 ; i < pEmitter->iStagDwellLevelCount ; ++i ) {
-        _TOA ullDiff;
+        _TOA toaDiff;
 
-        ullDiff = harm_toa - pEmitter->stag_dwell_level[i];
-        if( ullDiff < 18 * _spOneMicrosec ) {
+        toaDiff = harm_toa - pEmitter->stag_dwell_level[i];
+        if( toaDiff < threshold_toa ) {
             bRet = TRUE;
             break;
         }
-        ullDiff = pEmitter->framePri - ullDiff;
-        if( ullDiff < 18 * _spOneMicrosec ) {
+        toaDiff = pEmitter->framePri - toaDiff;
+        if( toaDiff < threshold_toa ) {
             bRet = TRUE;
             break;
         }
@@ -5511,7 +5610,7 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
         if( bMatch == FALSE ) {
             pEmitter->hop_level[hop_count] = freq;
             ++ hop_count;
-            if( (UINT) hop_count > MAX_HOP_LEVEL_ELEMENT ) {
+            if( (UINT) hop_count > MAX_FREQ_PRI_STEP ) {
                 printf( "\n [W] Hopping 레벨 값이 기본 레벨 크기를 초과했습니다." );
                 hop_count = 0;
                 return;
@@ -5529,3 +5628,583 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
     }
 }
 
+
+
+//////////////////////////////////////////////////////////////////////
+//
+// 함 수 이 름  : CAnalPRI::DNSAnalysis
+// 반환되는 형  : void
+// 함 수 인 자  : void
+// 함 수 설 명  : 
+// 최 종 변 경  : 김용준, 2014-03-19 15:17:00
+//
+void CAnalPRI::DNSAnalysis()
+{
+	int i, j, k;
+	int count;
+	STR_EMITTER *pEmitter1, *pEmitter2;
+	BOOL bMakeEmitter, bFirst, bLevelExist;
+
+	pEmitter1 = & m_Emitter[ m_nAnalEmitter ];
+	for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++ pEmitter1 ) {
+		bMakeEmitter = FALSE;
+		bFirst = TRUE;
+		
+		if( pEmitter1->mark == DELETE_EMITTER )
+			continue;
+
+		if (_STABLE != pEmitter1->pri_type)
+		{
+			continue;
+		}
+
+		pEmitter2 = & m_Emitter[i+1];
+
+		for (j = i+1; j < m_CoEmitter; ++j, ++ pEmitter2)
+		{
+			// 에미터1의 PRI 레벨 개수가 16을 넘는 경우 병합하지 않는다.
+			if (pEmitter1->iStagDwellElementCount >= MAX_STAGGER_LEVEL_ELEMENT) {
+				break;
+			}
+
+			if (_STABLE != pEmitter2->pri_type) {
+				continue;
+			}
+
+			// D&S 병합 가능 여부를 판단한다.
+			if (TRUE == CheckDNSPossibility(pEmitter1, pEmitter2)) {
+				// 첫번째 병합이면 에미터1의 첫번째 레벨 값을 채운다.
+				if (TRUE == bFirst)
+				{
+					pEmitter1->stag_dwell_element[ pEmitter1->iStagDwellElementCount++ ] = pEmitter1->seg[pEmitter1->main_seg].pri.mean;
+					bFirst = FALSE;
+				}
+
+				bMakeEmitter = TRUE;
+
+				// 펄스열 인덱스 병합
+				memcpy( & pEmitter1->seg_idx[pEmitter1->uiCoSeg], pEmitter2->seg_idx, sizeof(UINT)*(UINT)pEmitter2->uiCoSeg );
+				memcpy( & pEmitter1->seg[pEmitter1->uiCoSeg], pEmitter2->seg, sizeof(STR_PULSE_TRAIN_SEG)*(UINT)pEmitter2->uiCoSeg );
+				pEmitter1->uiCoSeg += pEmitter2->uiCoSeg;
+
+				// 에미터1의 PRI 레벨 값을 확인하여 없는 값이면 추가한다.
+				bLevelExist = FALSE;
+				for (k = 0; k < pEmitter1->iStagDwellLevelCount; k++)
+				{
+					if (TRUE == CompMeanDiff<_TOA>(pEmitter1->stag_dwell_level[k], pEmitter2->seg[ pEmitter2->main_seg ].pri.mean, STABLE_MARGIN))
+					{
+						bLevelExist = TRUE;
+						break;
+					}
+				}
+
+				if (FALSE == bLevelExist) {
+					pEmitter1->stag_dwell_level[ pEmitter1->iStagDwellLevelCount++ ] = pEmitter2->seg[ pEmitter2->main_seg ].pri.mean;
+				}
+
+				/*
+
+				// PDW 개수가 많은 에미터의 main 펄스열을 병합되는 에미터의 main 펄스열로 설정
+				if( pEmitter1->pdw.count < pEmitter2->pdw.count ) {
+					pEmitter1->main_seg = pEmitter2->main_seg;
+				}
+				*/
+
+				pEmitter2->mark = DELETE_EMITTER;
+
+				// PRI 평균값 업데이트
+				count = pEmitter1->pdw.uiCount + pEmitter2->pdw.uiCount - 2;
+				pEmitter1->pri.mean = (pEmitter1->pri.mean * (pEmitter1->pdw.uiCount-1)) + (pEmitter2->pri.mean * (pEmitter2->pdw.uiCount-1));
+				pEmitter1->pri.mean = (int)UDIV( pEmitter1->pri.mean, count );
+
+				// 에미터의 PRI 최대/최소값 재설정
+				pEmitter1->pri.min = pEmitter1->stag_dwell_level[0];
+				pEmitter1->pri.max = pEmitter1->stag_dwell_level[0];
+				for (k = 1; k < pEmitter1->iStagDwellLevelCount; k++)
+				{
+					pEmitter1->pri.min = _min(pEmitter1->pri.min, pEmitter1->stag_dwell_level[k]);
+					pEmitter1->pri.max = _max(pEmitter1->pri.max, pEmitter1->stag_dwell_level[k]);
+				}
+
+			}
+		}
+		
+		if (TRUE == bMakeEmitter)
+		{
+			MergePdwIndexInEmitter( pEmitter1 );
+
+			// 주파수 범위 및 타입 결정
+			CalcEmitterFrq( pEmitter1 );
+			pEmitter1->freq_type = AnalFreqType( pEmitter1 );
+
+			// PRI 타입 결정
+			if (pEmitter1->iStagDwellLevelCount > _spOne ) {
+				pEmitter1->pri_type = _DWELL;
+			}
+			else {
+				pEmitter1->pri_type = _STABLE;
+			}
+
+			// PW 결정
+			CalcEmitterPW( pEmitter1 );
+		}
+	}
+}
+
+/**
+ * @brief		MergePdwIndexInEmitter
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:04:13
+ * @warning		
+ */
+void CAnalPRI::MergePdwIndexInEmitter(STR_EMITTER *pEmitter)
+{
+    unsigned int i, j;
+    UINT count, idx;
+    PDWINDEX *pSegPdwIndex, *pEmitterPdwIndex;
+    PDWINDEX *pMergePdwIndex;
+    STR_PULSE_TRAIN_SEG *pSeg;
+
+    pEmitter->pdw.uiCount = 0;
+    memset( m_pMergePdwIndex, 0, sizeof( unsigned char ) * (UINT) m_uiMaxPdw );
+    for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
+        pSeg = & pEmitter->seg[i];
+        count = (UINT)pSeg->pdw.uiCount;
+
+        // memcpy( m_pMergePdwIndex+pEmitter->pdw.count, pSeg->pdw.pIndex, sizeof( PDWINDEX ) * pSeg->pdw.count );
+        pSegPdwIndex = pSeg->pdw.pIndex;
+        for( j=0 ; j < (int)count ; ++j ) {
+            idx = *pSegPdwIndex++;
+            *(m_pMergePdwIndex+idx) = 1;
+        }
+    }
+
+    count = 0;
+    pEmitterPdwIndex = pEmitter->pdw.pIndex;
+    pMergePdwIndex = m_pMergePdwIndex;
+    for( i=0 ; i < m_uiMaxPdw ; ++i ) {
+        if( *pMergePdwIndex++ == 1 ) {
+            *(pEmitterPdwIndex+count) = (UINT)i;
+            ++ count;
+        }
+    }
+
+    pEmitter->pdw.uiCount = (int) count;
+}
+
+/**
+ * @brief		CalcDiffAOA
+ * @param		int iAOA1
+ * @param		int iAOA2
+ * @return		int
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:29:19
+ * @warning		
+ */
+int CAnalPRI::CalcDiffAOA(int iAOA1, int iAOA2)
+{
+    int iDiffAOA;
+
+    iDiffAOA = _diffabs<int>(iAOA1, iAOA2);
+    if( iDiffAOA > MAX_AOA/2 ) {
+        iDiffAOA = MAX_AOA - iDiffAOA;
+    }
+
+    return iDiffAOA;
+}
+
+/**
+ * @brief		CheckOverlapSeg
+ * @param		STR_EMITTER * pEmitter1
+ * @param		STR_EMITTER * pEmitter2
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:29:15
+ * @warning		
+ */
+bool CAnalPRI::CheckOverlapSeg(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
+{
+    bool bResult = false;
+    unsigned int i, j;
+
+    for( i=0 ; i < pEmitter1->uiCoSeg ; i++ ) {
+        for( j=0 ; j < pEmitter2->uiCoSeg ; j++) {
+            // 에미터1과 에미터2의 펄스열이 겹치는지 확인한다.
+            if (((pEmitter1->seg[i].first_toa < pEmitter2->seg[j].last_toa) && (pEmitter1->seg[i].first_toa > pEmitter2->seg[j].first_toa)) ||
+                ((pEmitter2->seg[j].first_toa < pEmitter1->seg[i].last_toa) && (pEmitter2->seg[j].first_toa > pEmitter1->seg[i].first_toa))) {
+                bResult = true;
+                break;
+            }
+        }
+    }
+
+    return bResult;
+
+}
+
+/**
+ * @brief		CheckDNSPossibility
+ * @param		STR_EMITTER * pEmitter1
+ * @param		STR_EMITTER * pEmitter2
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 14:58:45
+ * @warning		
+ */
+bool CAnalPRI::CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
+{
+    // bool bAOAResult = false, bTOAResult = false, bFreqResult = false, bResult = false;
+    bool bResult = false;
+    STR_MINMAX_SDEV stAOA1, stAOA2;
+
+    CMakeAET* pMakeAET = GetMakeAET();
+
+    pMakeAET->MakeAOAInfoInSeg(&stAOA1, pEmitter1);
+    pMakeAET->MakeAOAInfoInSeg(&stAOA2, pEmitter2);
+
+    /// 1. AOA의 평균값 차이가 마진을 벗어나면 병합 불가
+    if (HOPPING_MERGE_AOA_MARGIN < CalcDiffAOA(stAOA1.mean, stAOA2.mean))
+    {
+        bResult = false;
+    }
+    /// 2. TOA가 겹치면 병합 불가
+    else if (true == CheckOverlapSeg(pEmitter1, pEmitter2))
+    {
+        bResult = false;
+    }
+    /// 3. 주파수 형태가 유사하지 않으면 병합 불가
+    else if (false == CheckFreqType(pEmitter1, pEmitter2))
+    {
+        bResult = false;
+    }
+    /// 4. 해당 사항 없으면 병합 가능
+    else
+    {
+        bResult = true;
+    }
+
+    return bResult;
+
+}
+
+/**
+ * @brief		CheckFreqType
+ * @param		STR_EMITTER * pEmitter1
+ * @param		STR_EMITTER * pEmitter2
+ * @return		bool
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:31:20
+ * @warning		
+ */
+bool CAnalPRI::CheckFreqType(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
+{
+    bool bResult;
+
+    // 에미터1이 주파수 고정인 경우 에미터2가 주파수 고정이고 주파수 값이 유사할 경우 매칭 판정
+    if (pEmitter1->freq_type == _FIXED)
+    {
+        if ((pEmitter2->freq_type == _FIXED) && (TRUE == CompMeanDiff(pEmitter1->freq.mean, pEmitter2->freq.mean, FIXED_FREQ_MARGIN)))
+        {
+            bResult = true;
+        }
+        else
+        {
+            bResult = false;
+        }
+    }
+    // 에미터1, 2가 둘다 주파수 고정이 아닌 경우 타입이 같으면 매칭 판정
+    else if (/*(pEmitter1->freq_type != _FIXED) && */(pEmitter2->freq_type != _FIXED))
+    {
+        if (pEmitter1->freq_type == pEmitter2->freq_type)
+        {
+            bResult = true;
+        }
+        else
+        {
+            bResult = false;
+        }
+    }
+    // 나머지 경우 매칭 불가
+    else
+    {
+        bResult = false;
+    }
+
+    return bResult;
+}
+
+/**
+ * @brief		HoppingAnalysis
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:43:43
+ * @warning		
+ */
+void CAnalPRI::HoppingAnalysis()
+{
+    int i;
+    STR_EMITTER *pEmitter;
+
+    pEmitter = & m_Emitter[ m_nAnalEmitter ];
+    for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++ pEmitter ) {
+
+        if( pEmitter->mark == DELETE_EMITTER )
+            continue;
+
+        if (_RANDOM_AGILE != pEmitter->freq_type)
+        {
+            continue;
+        }
+
+        /// 호핑 분석 정보 초기화
+        memset(&m_HoppingData, 0, sizeof(STR_HOPPING_DATA));
+
+        /// 1. 주파수 히스토그램을 그린다.
+        MakeFreqHistogram(pEmitter);
+
+        /// 2. 주파수 히스토그램을 기반으로 호핑 레벨을 추출한다.
+        ExtractHoppingLevel(pEmitter);
+
+        /// 3. 호핑 분석 정보를 기반으로 호핑 여부를 판정한다.
+        if (TRUE == HoppingDecision(pEmitter)) {
+            /// 호핑 가능으로 판정된 경우 호핑 정보를 재설정한다.
+            pEmitter->freq_type = _HOPPING;
+            pEmitter->freq.type = _HOPPING;
+            memcpy(pEmitter->freq_level, m_HoppingData.hop_level, sizeof(int)*m_HoppingData.hop_level_cnt);
+            pEmitter->freq_level_cnt = (int)m_HoppingData.hop_level_cnt;
+        }
+    }
+}
+
+/**
+ * @brief		MakeFreqHistogram
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 16:39:56
+ * @warning		
+ */
+void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
+{
+    unsigned int i;
+    int band;
+    float fResol = 0.0;
+    UINT uiFreqBin = 0;
+    PDWINDEX Idx = 0;
+
+    band = (int) m_pBAND[pEmitter->pdw.pIndex[0]];
+    fResol = gFreqRes[band+1].res;
+
+    /// 주파수 히스토그램을 생성한다.
+    for( i=0 ; i < pEmitter->pdw.uiCount ; i++ ) {
+        Idx = *(pEmitter->pdw.pIndex+i);
+        uiFreqBin = (UINT)((float) m_pFREQ[Idx] * fResol / (float)FREQ_BIN_WIDTH);
+
+        if (uiFreqBin < FREQ_BIN) {
+            m_HoppingData.hist[uiFreqBin][m_HoppingData.bin_count[uiFreqBin]] = Idx;
+            m_HoppingData.bin_count[uiFreqBin]++;
+        }
+    }
+
+}
+
+/**
+ * @brief		ExtractHoppingLevel
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 16:43:03
+ * @warning		
+ */
+void CAnalPRI::ExtractHoppingLevel(STR_EMITTER *pEmitter)
+{
+    int i, j;
+    PDWINDEX Idx1, Idx2, aLevelIdx[MAX_PDW];
+    UINT uiLevelIdxCnt;
+
+    // 주파수 히스토그램에서 호핑 레벨 임계치 이상인 것들에 대해 호핑 레벨을 추출한다.
+    for (i = 0; i < FREQ_BIN; i++)
+    {
+        // 임계치 미만인 Bin은 체크하지 않음
+        if (m_HoppingData.bin_count[i] < HOP_LEVEL_THREAT_CNT)
+        {
+            continue;
+        }
+
+        uiLevelIdxCnt = 0;
+        memset(aLevelIdx, 0, sizeof(aLevelIdx));
+
+        // Bin 내의 인덱스를 체크
+        for (j = 1; j < (int)m_HoppingData.bin_count[i]; j++)
+        {
+            Idx1 = m_HoppingData.hist[i][j-1];
+            Idx2 = m_HoppingData.hist[i][j];
+
+            if (j == 1)
+            {
+                aLevelIdx[uiLevelIdxCnt] = Idx1;
+                uiLevelIdxCnt++;
+            }
+
+            // 인덱스1-2의 차이가 최대 미싱 개수를 넘는 경우 처리
+            if (_diffabs((UINT)Idx2, (UINT)Idx1) > MAX_FREQ_MISS_CNT)
+            {
+                // 호핑 레벨 개수가 임계치를 넘는 경우
+                if (uiLevelIdxCnt >= HOP_LEVEL_THREAT_CNT)
+                {
+                    // 호핑 레벨의 인덱스 정보 추가
+                    memcpy(m_HoppingData.pt_pdw_idx[m_HoppingData.pt_count], aLevelIdx, sizeof(PDWINDEX)*uiLevelIdxCnt);
+                    m_HoppingData.pt_pdw_count[m_HoppingData.pt_count] = uiLevelIdxCnt;
+                    m_HoppingData.pt_count++;
+                }
+
+                // 호핑 레벨 정보 초기화
+                uiLevelIdxCnt = 0;
+                memset(aLevelIdx, 0, sizeof(aLevelIdx));
+            }
+            else
+            {
+                aLevelIdx[uiLevelIdxCnt] = Idx2;
+                uiLevelIdxCnt++;
+            }
+        }
+
+        // 호핑 레벨 개수가 임계치를 넘는 경우
+        if (uiLevelIdxCnt >= HOP_LEVEL_THREAT_CNT)
+        {
+            // 호핑 레벨의 인덱스 정보 추가
+            memcpy(m_HoppingData.pt_pdw_idx[m_HoppingData.pt_count], aLevelIdx, sizeof(PDWINDEX)*uiLevelIdxCnt);
+            m_HoppingData.pt_pdw_count[m_HoppingData.pt_count] = uiLevelIdxCnt;
+            m_HoppingData.pt_count++;
+        }
+    }
+}
+
+/**
+ * @brief		HoppingDecision
+ * @param		STR_EMITTER * pEmitter
+ * @return		BOOL
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 16:35:22
+ * @warning		
+ */
+BOOL CAnalPRI::HoppingDecision(STR_EMITTER *pEmitter)
+{
+    BOOL bResult = TRUE;
+    UINT i, j, uiTotalPDWCnt = 0;
+    double dHopPercentage = 0.0;
+
+    for (i = 0; i < m_HoppingData.pt_count; i++)
+    {
+        for (j = i+1; j < m_HoppingData.pt_count; j++)
+        {
+            // 호핑 레벨로 추출된 인덱스 배열을 서로 비교하여 겹치는지 확인한다.
+            // 겹치는 부분이 있으면 호핑 불가로 판정한다.
+            if (((UINT)m_HoppingData.pt_pdw_idx[i][0] < (UINT)m_HoppingData.pt_pdw_idx[j][0]) &&
+                ((UINT)m_HoppingData.pt_pdw_idx[i][m_HoppingData.pt_pdw_count[i]-1] > (UINT)m_HoppingData.pt_pdw_idx[j][0]))
+            {
+                bResult = FALSE;
+                break;
+            }
+        }
+    }
+
+    // 전체 에미터 PDW 개수 중 호핑으로 판정된 PDW 개수가 일정% 이상인지 확인한다.
+    if (TRUE == bResult)
+    {
+        for (i = 0; i < m_HoppingData.pt_count; i++)
+        {
+            uiTotalPDWCnt += (UINT)m_HoppingData.pt_pdw_count[i];
+        }
+
+        // 호핑 백분율 계산
+        dHopPercentage = (double)uiTotalPDWCnt / (double)pEmitter->pdw.uiCount * 100.0;
+
+        // 기준 백분율보다 작으면 호핑 불가로 판정한다.
+        if (dHopPercentage < HOP_PDW_PERCENTAGE)
+        {
+            bResult = FALSE;
+        }
+    }
+
+    // 호핑 레벨 값을 계산한다.
+    if (TRUE == bResult)
+    {
+        SetHoppingInfo(pEmitter);
+
+        // 호핑 레벨이 최대 개수를 넘어서면 호핑 불가로 판정한다.
+        if (m_HoppingData.hop_level_cnt > MAX_HOPPING_LEVEL_ELEMENT)
+        {
+            bResult = FALSE;
+        }
+    }
+
+    return bResult;
+}
+
+/**
+ * @brief		SetHoppingInfo
+ * @param		STR_EMITTER * pEmitter
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 16:35:37
+ * @warning		
+ */
+void CAnalPRI::SetHoppingInfo(STR_EMITTER *pEmitter)
+{
+    BOOL bExist = FALSE;
+    UINT i, j, uiFreqSum, uiFreqAvg, uiFreqThres;
+    int band;
+
+    // 추출한 호핑 레벨의 평균 주파수값을 계산한다.
+    for (i = 0; i < m_HoppingData.pt_count; i++)
+    {
+        uiFreqSum = uiFreqAvg = 0;
+        for (j = 0; j < m_HoppingData.pt_pdw_count[i]; j++)
+        {
+            uiFreqSum += m_pFREQ[m_HoppingData.pt_pdw_idx[i][j]];
+        }
+        uiFreqAvg = UDIV(uiFreqSum, m_HoppingData.pt_pdw_count[i]);
+        band = m_pBAND[m_HoppingData.pt_pdw_idx[i][0]];
+        uiFreqThres = UDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].res );	
+
+        bExist = FALSE;
+
+        // 기존 호핑 정보에 포함되어 있는지 확인한다.
+        for (j = 0; j < m_HoppingData.hop_level_cnt; j++)
+        {
+            if (TRUE == CompMeanDiff((int)uiFreqAvg, m_HoppingData.hop_level[j], (int)uiFreqThres))
+            {
+                bExist = TRUE;
+                break;
+            }
+        }
+
+        // 기존 호핑 정보에 포함되어 있지 않은 레벨이면 새로 추가한다.
+        if (FALSE == bExist)
+        {
+            // 저장 가능한 호핑 레벨 개수를 넘어서면 중단한다.
+            if ((MAX_HOPPING_LEVEL_ELEMENT*2) <= m_HoppingData.hop_level_cnt)
+            {
+                break;
+            }
+            else
+            {
+                m_HoppingData.hop_level[m_HoppingData.hop_level_cnt] = (int)uiFreqAvg;
+                m_HoppingData.hop_level_cnt++;
+            }
+        }
+    }
+}

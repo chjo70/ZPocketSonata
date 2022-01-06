@@ -383,8 +383,6 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 	}
 
 	entryAddr = 0;
-	/*
-#ifdef 0	
 	if (symFindByName(sysSymTbl, pEntry, &entryAddr, &ptype) == -1) {
 		fmtAlloc(&pname, VALUE_MAX_STRING, T("_%s"), pEntry);
 		symFindByName(sysSymTbl, pname, &entryAddr, &ptype);
@@ -396,8 +394,6 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 			0, 0, 0, 0, 0);
 		goto DONE;
 	}
-#endif
-*/	
 
 /*
  *	Try to load the module.
@@ -406,9 +402,7 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 		loadModule(fd, LOAD_GLOBAL_SYMBOLS) == NULL) {
 		goto DONE;
 	}
-	printf( "\n spawn : %s, %d, %s, %s" , pEntry, priority, stdIn, stdOut );
-	/*
-#ifdef 0	
+	// printf( "\n spawn : %s, %d, %s, %s" , pEntry, priority, stdIn, stdOut );
 	if ((symFindByName(sysSymTbl, pEntry, &entryAddr, &ptype)) == -1) {
 		fmtAlloc(&pname, VALUE_MAX_STRING, T("_%s"), pEntry);
 		symFindByName(sysSymTbl, pname, &entryAddr, &ptype);
@@ -419,9 +413,7 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 			(int)entryAddr, (int)argp, (int)envp, (int)stdIn, (int)stdOut,
 			0, 0, 0, 0, 0);
 	}
-#endif	
-*/
-	
+
 DONE:
 	if (fd != -1) {
 		gclose(fd);

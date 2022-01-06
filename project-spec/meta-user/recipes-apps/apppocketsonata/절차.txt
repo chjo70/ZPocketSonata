@@ -1,0 +1,13 @@
+1. apps 를 생성한다.
+
+	petalinux-create -t apps -n apppocketsonata
+
+2. app 소스를 복사한다.
+
+아래에 있는 폴더에 있는 파일들을 위에 1번에서 생성한 폴더(.../project-spec/meta-user/recipes-apps/apppocketsonata)에  overwrite  한다.
+(/home/user/shared/1.TEST)
+
+
+
+2. 빌드 한다.
+

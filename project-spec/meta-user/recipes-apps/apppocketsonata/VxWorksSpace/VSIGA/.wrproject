@@ -161,7 +161,7 @@
                 <stringAttribute value="-D_VSB_CONFIG_FILE=\&quot;$(VSB_DIR)/h/config/vsbConfig.h\&quot;"/>
                 <stringAttribute value="-D__VXWORKS__"/>
                 <stringAttribute value="-D_POCKETSONATA_"/>
-                <stringAttribute value="-D_NO_SQLITE_"/>
+                <stringAttribute value="-D_SQLITE_"/>
             </listAttribute>
             <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
             <stringAttribute key="BLD::Info|Tool|C-Compiler|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
@@ -171,13 +171,13 @@
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
-            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall  -std=c++11 -MD -MP $(DKM_LONGCALL) -fexceptions -w -mstrict-align"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall  -std=c++11 -MD -MP $(DKM_LONGCALL) -fexceptions -w "/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)/g++ppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) -std=c++11 -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
             <stringAttribute key="BLD::Info|Tool|Linker|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.out"/>
             <stringAttribute key="BLD::Info|Tool|Linker|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-gdwarf-3"/>
             <stringAttribute key="BLD::Info|Tool|Linker|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value="-O2"/>
             <stringAttribute key="BLD::Info|Tool|Linker|flags|VSourceBuild_PPCE6500gnu_SMP" value="-T $(WIND_BASE)/build/tool/gnu_4_8_1_8/krnl/ldscripts/link.OUT"/>
-            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building link $@&quot;;rm -f %OutFile%;nmppc %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% $(CC_ARCH_SPEC) -fdollars-in-identifiers -Wall   $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true);cp &quot;$@&quot; d:/tftpboot/."/>
+            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;rm -f %OutFile%;nmppc %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% $(CC_ARCH_SPEC) -fdollars-in-identifiers -Wall   $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true);cp &quot;$@&quot; d:/tftpboot/. &amp;&amp; true "/>
             <stringAttribute key="BLD::Info|Tool|Partial Image Linker|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.o"/>
             <stringAttribute key="BLD::Info|Tool|Partial Image Linker|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|Partial Image Linker|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
@@ -194,11 +194,10 @@
             <stringAttribute key="BLD::Info|Tool|Assembler|flags|VSourceBuild_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss  -xassembler-with-cpp  -MD -MP $(DKM_LONGCALL)"/>
             <stringAttribute key="BLD::Info|Tool|Assembler|cmd|VSourceBuild_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%assemblerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES) -o %OutFile% -c %InFile%"/>
             <stringAttribute key="BLD::Info|redirRoot" value=""/>
-            <stringAttribute key="BLD::Info|defaultSpec" value="VSourceBuild_PPCE6500gnu_SMP"/>
+            <stringAttribute key="BLD::Info|defaultSpec" value="VSourceBuild_PPCE6500diab_SMP"/>
             <listAttribute key="BLD::Info|BuildRules">
                 <stringAttribute value="deploy_output"/>
                 <stringAttribute value="POST_BUILD_RULE"/>
-                <stringAttribute value="POST"/>
             </listAttribute>
             <stringAttribute key="BLD::Info|buildRule" value=""/>
             <stringAttribute key="BLD::Info|folderBuildRule" value=""/>
@@ -214,28 +213,19 @@
             <stringAttribute key="BLD::Info|Tool|POST|cmd|VSourceBuild_PPCE6500diab_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|POST|dbgFlags|VSourceBuild_PPCE6500diab_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|POST|derivedSigs|VSourceBuild_PPCE6500diab_SMP" value="*"/>
-            <stringAttribute key="BLD::Info|Tool|POST|cmd|VSourceBuild_PPCE6500gnu_SMP" value="ls"/>
+            <stringAttribute key="BLD::Info|Tool|POST|cmd|VSourceBuild_PPCE6500gnu_SMP" value="dir"/>
             <stringAttribute key="BLD::Info|Tool|POST|dbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|POST|derivedSigs|VSourceBuild_PPCE6500gnu_SMP" value="*.out"/>
             <stringAttribute key="BLD::Info|Tool|POST|flags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|POST|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|GlobalMacro|POST_BUILD_RULE" value="dir"/>
             <stringAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|value" value="dir"/>
-            <booleanAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|isCommand" value="false"/>
-            <intAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|refreshType" value="1"/>
-            <stringAttribute key="BLD::Info|BuildRule|POST|value" value="post_build.bat"/>
-            <booleanAttribute key="BLD::Info|BuildRule|POST|isCommand" value="true"/>
-            <intAttribute key="BLD::Info|BuildRule|POST|refreshType" value="0"/>
-            <booleanAttribute key="BLD::Info|defaultDebugMode" value="true"/>
+            <booleanAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|isCommand" value="true"/>
+            <intAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|refreshType" value="4"/>
         </mapAttribute>
     </attributes>
     <buildtargets>
         <buildtarget buildtool="Linker" name="VSIGA" passed="false" targetname="VSIGA">
-            <attributes>
-                <mapAttribute>
-                    <stringAttribute key="BLD::Info|GlobalMacro|POST_BUILD_RULE" value="ls"/>
-                </mapAttribute>
-            </attributes>
             <contents>
                 <buildtargetreference name="/VSIGA/VSIGA_partialImage"/>
             </contents>
@@ -252,6 +242,10 @@
                             </attributes>
                         </file>
                     </contents>
+                    <excludes>
+                        <file name="stdafx.cpp"/>
+                        <file name="VSIGA.cpp"/>
+                    </excludes>
                 </folder>
             </contents>
         </buildtarget>

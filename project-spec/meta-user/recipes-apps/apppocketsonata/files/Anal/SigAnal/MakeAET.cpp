@@ -324,8 +324,9 @@ void CMakeAET::MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 //##ModelId=428832A201F6
 void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
 {
-    int i;
-    int count;
+    unsigned int i;
+    
+    int j, count;
     int min_index, min_stagger_level, stagger_level_index;
 
     STR_PULSE_TRAIN_SEG *pSeg;
@@ -347,10 +348,10 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             // 스태거 레벨 에서 가장 작은 레벨값과 인덱스 값을 얻는다.
             min_index = 0;
             min_stagger_level = UDIV( pEmitter->stag_dwell_level[0], _spOneMicrosec );
-            for( i=1 ; i < pEmitter->iStagDwellLevelCount && i < MAX_FREQ_PRI_STEP ; ++i ) {
-                if( min_stagger_level > (int) UDIV( pEmitter->stag_dwell_level[i], _spOneMicrosec ) ) {
-                    min_index = i;
-                    min_stagger_level = UDIV( pEmitter->stag_dwell_level[i], _spOneMicrosec );
+            for( j=1 ; j < pEmitter->iStagDwellLevelCount && j < MAX_FREQ_PRI_STEP ; ++j ) {
+                if( min_stagger_level > (int) UDIV( pEmitter->stag_dwell_level[j], _spOneMicrosec ) ) {
+                    min_index = j;
+                    min_stagger_level = UDIV( pEmitter->stag_dwell_level[j], _spOneMicrosec );
                 }
             }
             /*! \bug  역방향으로 작은 레벨값을 검색해서 제일 작은 레벨 값을 시작으로 한다.
@@ -358,7 +359,7 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             */
             //
             stagger_level_index = min_index;
-            for( i=1 ; i < pEmitter->iStagDwellLevelCount && i < MAX_FREQ_PRI_STEP ; ++i ) {
+            for( j=1 ; j < pEmitter->iStagDwellLevelCount && j < MAX_FREQ_PRI_STEP ; ++j ) {
                 stagger_level_index = ( pEmitter->iStagDwellLevelCount + stagger_level_index - 1 ) % pEmitter->iStagDwellLevelCount;
                 if( TRUE == CompMeanDiff<_TOA>( pEmitter->stag_dwell_level[stagger_level_index], pEmitter->stag_dwell_level[min_index], ITTOAusCNV( (_TOA) 1) ) ) {
                     min_index = stagger_level_index;
@@ -372,13 +373,13 @@ void CMakeAET::MakePRIInfoInSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             // 그 인덱스 값부터 에미터의 스태거단에 기록한다.
             // 그리고 PRI 범위와 평균값을 기록한다.
             pPri->mean = 0;
-            for( i=0 ; i < (int) pEmitter->iStagDwellLevelCount && i < MAX_FREQ_PRI_STEP ; ++i ) {
-                pPri->swtVal[i] = pEmitter->stag_dwell_level[(min_index+i) % pEmitter->iStagDwellLevelCount];
-                pPri->min = _min( pPri->min, pPri->swtVal[i] );
-                pPri->max = _max( pPri->max, pPri->swtVal[i] );
-                pPri->mean += pPri->swtVal[i];
+            for( j=0 ; j < (int) pEmitter->iStagDwellLevelCount && j < MAX_FREQ_PRI_STEP ; ++j ) {
+                pPri->swtVal[j] = pEmitter->stag_dwell_level[(min_index+j) % pEmitter->iStagDwellLevelCount];
+                pPri->min = _min( pPri->min, pPri->swtVal[j] );
+                pPri->max = _max( pPri->max, pPri->swtVal[j] );
+                pPri->mean += pPri->swtVal[j];
             }
-            pPri->mean = UDIV( pPri->mean, i );
+            pPri->mean = UDIV( pPri->mean, j );
 
             // 이상 에미터 제원은 삭제 또는 제원을 변경한다.
             // 스태거일 때는 PRI 제원을 확인하여 Jitter율이 작거나 PRI 범위 STABLE_MARGIN 범위에 들면 STABLE로 간주한다.

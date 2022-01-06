@@ -139,8 +139,9 @@ void InitDatabase()
     }
 #elif _MSC_VER
     if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
-        CCommonUtils::CopyFile( EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
-    }
+         CCommonUtils::CopyFile( BLK_EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
+     }
+
 #elif __VXWORKS__
     char szSrcFilename[100], szDstFilename[100];
 

@@ -402,6 +402,15 @@ UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 }
 
 
+/**
+ * @brief     ClearAllMark
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-05, 15:56
+ * @warning
+ */
 void CKPulExt::ClearAllMark()
 {
     memset( & m_pMARK[0], 0, sizeof( m_pKnownSigAnal->MARK ) );

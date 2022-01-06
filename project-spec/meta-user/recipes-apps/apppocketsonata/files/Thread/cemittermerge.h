@@ -1,8 +1,6 @@
 #ifndef CEMITTERMERGE_H
 #define CEMITTERMERGE_H
 
-//#include "../Utils/clog.h"
-
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 

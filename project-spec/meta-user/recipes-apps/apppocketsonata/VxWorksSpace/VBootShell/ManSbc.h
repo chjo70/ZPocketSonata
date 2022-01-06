@@ -47,7 +47,7 @@ enum enWhatDrvAPP {
 
 #define TFTP_SERVER_IP				SNTP_SERVER_IP
 //#define TFTP_SERVER_IP					"150.150.49.228"
-#define TFTP_MODE						((char*) "binary" )
+#define TFTP_MODE								"binary"
 #define	DOWNLOAD_FILENAME				"vxworks"
 
 // 지역 로컬 시간 정의
@@ -86,19 +86,14 @@ private:
 	BOOL CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
     BOOL CreateTffsDisk( char *szDiskName );
 	UCHAR Getche( int sec );
-	UCHAR Getche2( int sec );
 
     BOOL DownloadfromTftp(char *tftpfilename, char *ramfilename );
-    int CopyFile( const char *src_file, const char *dest_file );
 	
 public:	
 	UCHAR GetCommand();	
     void InstallWeb();
     void DownloadApp();
-    void DownloadAndROMWriteApp();
     void RunApp( enWhatDrvAPP enApp );
-
-    void InitDataBase();
 	
 	CManSbc();
 	virtual ~CManSbc();

@@ -67,6 +67,8 @@ public:
 
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
+    CMakeAET *GetMakeAET();
+
 	//##ModelId=452B0C55037C
 	CNAnalPRI( void *pParent, int coMaxPdw );
 	//##ModelId=452B0C55037F

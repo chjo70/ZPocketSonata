@@ -224,11 +224,10 @@ void CELEmitterMergeMngr::AllocMemory()
  */
 void CELEmitterMergeMngr::FreeMemory()
 {
-#ifdef _SQLITE_
-    free( m_pszSQLString );
-#elif defined(_MSSQL_)
+#if defined(_SQLITE_) || defined(_MSSQL_)
     free( m_pszSQLString );
 #else
+
 #endif
 
     _SAFE_FREE( m_pUniThreat );
@@ -367,13 +366,6 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     SetScanInfo( bScanInfo );
 
 #ifdef _POCKETSONATA_
-//     printf( "\n pLOBData[%p]" , pLOBData );
-//     printf( "[%4d] %s ", pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType] );
-//     printf( "%5.1f [%s] (%7.1f,%7.1f)[MHz]", pLOBData->fDOAMean, g_szAetFreqType[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax );
-//     printf( "[%s] (%7.1f,%7.1f)[us]", g_szAetPriType[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax );
-//     printf( "(%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm]", pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMin, pLOBData->fPAMax );
-//     printf( "(%d,%5.1f[us]) [%d]", pLOBData->iScanType, pLOBData->fScanPeriod, pLOBData->iNumOfPDW );
-
     Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
         pLOBData->fDOAMean,
@@ -436,10 +428,10 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     //////////////////////////////////////////////////////////////////////////
     // 6. LOB 클러스터링 결과 수행
-    RunLOBClusteringResult();
+    // RunLOBClusteringResult();
 
     // 7. ABT/AET간 병합 수행, 연동기1 이고 운용자 요구 생성이 아니고 DB 가 연결되었을 때만 빔 병합을 수행
-    ManageABTs( bMerge & !m_bScanProcess );
+    // ManageABTs( bMerge & !m_bScanProcess );
 
     // 8. 위협 관리 삭제 처리
     //ResetABT();
@@ -10854,7 +10846,7 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
         for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
             iIndex += sprintf( & m_pszSQLString[iIndex], "%f, " , pLOBData->fPRISeq[i] );
         }        
-        sprintf( & m_pszSQLString[iIndex], "%f )" , pLOBData->fFreqSeq[i] );
+        sprintf( & m_pszSQLString[iIndex], "%f )" , pLOBData->fPRISeq[i] );
     }
 
     try {
@@ -11048,17 +11040,32 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bFreqSeq )
 {
 #ifdef _SQLITE_
+    int iIndex, i;
     bool bRet=true;
-    sprintf( m_pszSQLString, "INSERT INTO ABT_POSITION ( \
-              ABTID, AETID, POSITION_COUNT, SEQ_01, SEQ_02, SEQ_03, SEQ_04, SEQ_05, SEQ_06, SEQ_07, SEQ_08, SEQ_09, SEQ_10, SEQ_11, SEQ_12, SEQ_13, SEQ_14, SEQ_15, SEQ_16, SEQ_17, SEQ_18, SEQ_19, SEQ_20, SEQ_21, SEQ_22, SEQ_23, SEQ_24, SEQ_25, SEQ_26, SEQ_27, SEQ_28, SEQ_29, SEQ_30, SEQ_31, SEQ_32 ) VALUES ( %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f )" ,
-              pABTData->uiABTID, pABTData->uiAETID, pABTData->iPRIPositionCount, \
-              pABTData->fPRISeq[0], pABTData->fPRISeq[1], pABTData->fPRISeq[2], pABTData->fPRISeq[3], pABTData->fPRISeq[4], \
-              pABTData->fPRISeq[5], pABTData->fPRISeq[6], pABTData->fPRISeq[7], pABTData->fPRISeq[8], pABTData->fPRISeq[9], \
-              pABTData->fPRISeq[10], pABTData->fPRISeq[11], pABTData->fPRISeq[12], pABTData->fPRISeq[13], pABTData->fPRISeq[14], \
-              pABTData->fPRISeq[15], pABTData->fPRISeq[16], pABTData->fPRISeq[17], pABTData->fPRISeq[18], pABTData->fPRISeq[19], \
-              pABTData->fPRISeq[20], pABTData->fPRISeq[21], pABTData->fPRISeq[22], pABTData->fPRISeq[23], pABTData->fPRISeq[24], \
-              pABTData->fPRISeq[25], pABTData->fPRISeq[26], pABTData->fPRISeq[27], pABTData->fPRISeq[28], pABTData->fPRISeq[29], \
-              pABTData->fPRISeq[30], pABTData->fPRISeq[31] );
+
+    strcpy( m_pszSQLString, "INSERT INTO ABT_POSITION (SEQ_NUM, SEQ_TYPE, ABTID, AETID, TASK_ID, POSITION_COUNT, " );
+
+    iIndex = strlen( m_pszSQLString );
+    for( i=1 ; i < pABTData->iFreqPositionCount || i < pABTData->iPRIPositionCount ; ++i ) {
+        iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d, " , i );
+    }
+    iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d ) values ( ", i );
+
+    if( bFreqSeq == true ) {
+        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iFreqPositionCount );
+        for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
+            iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fFreqSeq[i] );
+        }
+        iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fFreqSeq[i] );    
+    }
+    else {
+        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iPRIPositionCount );
+        for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
+            iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fPRISeq[i] );
+        }
+        iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fPRISeq[i] );
+
+    }
 
     try {
         Kompex::SQLiteStatement stmt( m_pDatabase );
@@ -11155,8 +11162,7 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         strcpy( buffer3, "1970-01-01 00:00:00" );
     }    
 
-/*
-    sprintf_s( m_pszSQLString, \
+    sprintf( m_pszSQLString, \
         "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
          PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
          RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
@@ -11213,7 +11219,7 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
                 strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
                 // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-                sprintf_s( m_pszSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
+                sprintf_s( m_pszSQLString, sizeof(m_pszSQLString), "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
                 //Kompex::SQLiteStatement stmt( m_pDatabase );
                 //stmt.SqlStatement( m_pszSQLString );
             }
@@ -11223,14 +11229,13 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         }
     }
     catch( Kompex::SQLiteException &exception ) {
-        LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
+        // LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
         bRet = false;
         std::cerr << "\nException Occured" << std::endl;
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
 
-    */
     return bRet;
 
 #elif _NO_SQLITE_

@@ -51,7 +51,7 @@ struct SRxLOBHeader
  * @author  이정남 (jeongnam.lee@lignex1.com)
  * @date    2016-02-16 오후 12:06 
  */
-#define MAX_FREQ_PRI_STEP                   (32)
+#define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_ELEMENT)
 
 
 #ifndef SRxLOBData_STRUCT

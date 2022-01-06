@@ -443,3 +443,29 @@ void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
     qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
     return;
 }
+
+/**
+ * @brief		GetMakeAET
+ * @return		CMakeAET*
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:24:27
+ * @warning		
+ */
+CMakeAET* CKAnalPRI::GetMakeAET()
+{
+    return m_pKnownSigAnal->GetMakeAET();
+}
+
+/**
+ * @brief		HoppingAnalysis
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/01/03 15:41:15
+ * @warning		
+ */
+void CKAnalPRI::HoppingAnalysis()
+{
+    CAnalPRI::HoppingAnalysis();
+}

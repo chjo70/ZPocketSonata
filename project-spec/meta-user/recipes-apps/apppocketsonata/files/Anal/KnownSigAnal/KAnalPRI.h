@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "../SigAnal/AnalPRI.h"
+#include "../SigAnal/MakeAET.h"
 
 #ifdef __cplusplus
 
@@ -70,12 +71,19 @@ public:
 
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
 
+    void HoppingAnalysis();
+
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
     //##ModelId=452B0C53013E
     void GroupingKnownPri();
     //##ModelId=452B0C53013F
     BOOL KnownAnalysis();
+
+
+    CMakeAET* GetMakeAET();
+
+
     //##ModelId=452B0C530140
     CKAnalPRI( void *pParent, int coMaxPdw );
     //##ModelId=452B0C530143

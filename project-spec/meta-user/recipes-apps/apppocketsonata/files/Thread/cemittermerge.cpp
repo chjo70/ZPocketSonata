@@ -28,7 +28,12 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
-    m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, szSQLiteFileName );
+    try {
+        m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, szSQLiteFileName );
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
+    }
 
     InitData();
 
@@ -71,6 +76,7 @@ void CEmitterMerge::_routine()
             perror( "QMsgRcv" );
         }
         else {
+            TRACE( "\n ====================== Start of CEmitterMerge" );
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     m_bScanInfo = false;
@@ -112,6 +118,7 @@ void CEmitterMerge::_routine()
                     LOGMSG1( enError, " 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
+            TRACE( "\n ====================== End of CEmitterMerge" );
         }
     }
 }
@@ -161,19 +168,17 @@ void CEmitterMerge::MergeEmitter()
     pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
     
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
-
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
-        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
-        
+        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        if( !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
+        if( false && !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
             strAnalInfo.uiBand = g_enBoardId;
             strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
-            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
         }
 
@@ -185,7 +190,7 @@ void CEmitterMerge::MergeEmitter()
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
-            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
 
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
@@ -359,10 +364,10 @@ void CEmitterMerge::SendNewUpd()
     // 랜 메시지 전달한다.
     
     if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
+        //SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
     else {
-        SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
+        //SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
 
 #endif

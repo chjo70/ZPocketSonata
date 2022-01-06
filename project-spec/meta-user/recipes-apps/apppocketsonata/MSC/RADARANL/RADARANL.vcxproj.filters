@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\DLL">
+      <UniqueIdentifier>{b44c55a1-24fc-443e-9728-32ce4f1b1462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ODBC">
+      <UniqueIdentifier>{62cf6a21-e12c-44ba-868f-a81590ec1ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal">
+      <UniqueIdentifier>{703a051b-bf4c-456f-a1d1-9197460a3862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge">
+      <UniqueIdentifier>{631225d9-dd06-437f-9400-cc240b47ad56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Identify">
+      <UniqueIdentifier>{ce29102b-dffb-479c-8c2d-2e34ef7bc279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\UTM">
+      <UniqueIdentifier>{22bb6fc6-f01c-473e-a9ce-6b60a0476faa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\CEP">
+      <UniqueIdentifier>{572c2296-dfc7-4bcb-a675-5e328e385f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
+      <UniqueIdentifier>{73f1b2e0-684f-4afa-9fab-7a913f7d2b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\Quadratic">
+      <UniqueIdentifier>{a3ac7574-a550-40ef-9864-6fd3f34ced10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Utils">
+      <UniqueIdentifier>{6b066d1f-f04d-455e-bd0a-5a66c9ddf51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\Matrix">
+      <UniqueIdentifier>{0bd223f2-5946-4609-8b0e-43c7f5ab5ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\GeoCoordConv">
+      <UniqueIdentifier>{9c1984ab-8c09-494c-8e69-499147e0ec5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\EmitterMerge\DistanceLeastSquare">
+      <UniqueIdentifier>{39858973-e6a1-4803-9d1e-b694320487fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\System">
+      <UniqueIdentifier>{0b8eaff6-3bd1-49ae-aac3-6b0ac9438a35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Minini">
+      <UniqueIdentifier>{83a06694-b74a-41ca-835e-d637615caaad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="RADARANL.def">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="res\RADARANL.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RADARANL.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="RadarAnlAlgorithm.cpp">
+      <Filter>소스 파일\DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\ODBC\MSSQL.cpp">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp">
+      <Filter>소스 파일\Anal\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csysconfig.cpp">
+      <Filter>소스 파일\Anal\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\programrev.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\Matrix\Matrix.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\Quadratic\Quadratic.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\Quadratic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\UTM\UTM.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\UTM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\ELThreat.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\LOBClustering.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RADARANL.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RadarAnlAlgorithm.h">
+      <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\ODBC\MSSQL.h">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\ODBC\odbccore.h">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\define.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\Identify.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\structs.h">
+      <Filter>소스 파일\Anal\Identify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minIni.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
+      <Filter>소스 파일\Anal\Minini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csharedmemory.h">
+      <Filter>소스 파일\Anal\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csysconfig.h">
+      <Filter>소스 파일\Anal\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clog.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\OFP_Main.h">
+      <Filter>소스 파일\Anal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h">
+      <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.h">
+      <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.h">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\VincentyParam.h">
+      <Filter>소스 파일\Anal\EmitterMerge\InverseMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Matrix\Matrix.h">
+      <Filter>소스 파일\Anal\EmitterMerge\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Quadratic\Quadratic.h">
+      <Filter>소스 파일\Anal\EmitterMerge\Quadratic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\UTM\UTM.h">
+      <Filter>소스 파일\Anal\EmitterMerge\UTM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELDecoder.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEOBLibDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELGMIMsgDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintRsltDataTypedb.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ElintTaskDataTypedb.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELMsgDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELOperationCtrlDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELPosEstDataType.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELStringDefn.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELThreat.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Geo2UTM.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\IsNumber.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LatLong-UTMconversion.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\LOBClustering.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimation.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\Stack.h">
+      <Filter>소스 파일\Anal\EmitterMerge</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RADARANL.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

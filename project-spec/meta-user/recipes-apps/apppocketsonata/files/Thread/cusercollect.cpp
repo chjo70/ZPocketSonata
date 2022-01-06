@@ -276,7 +276,6 @@ void CUserCollect::ColStart()
                     //m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
-                	Sleep( 5 );
                     MakeSIMPDWData();
                 }
 
@@ -373,6 +372,16 @@ void CUserCollect::MakeSIMPDWData()
 
     int iDOA;
 
+#define MANUALTOA   (30)
+    _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 4359.585 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 5746.258 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 7022.91 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 8270.053 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 9516.386 ),
+    } ;
+
     TRACE( "\nMakeSIMPDWData.." );
 
     uiCoPDW = m_strResColStart.uiCoPulseNum;
@@ -394,10 +403,14 @@ void CUserCollect::MakeSIMPDWData()
         }
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
-        if( i % 2 || true )
+        if( i % 2 )
             m_ullTOA += 0x2000;
         else
             m_ullTOA += 0x1500;
+
+        if( i < MANUALTOA ) {
+            m_ullTOA = manualTOA[i];
+        }
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 

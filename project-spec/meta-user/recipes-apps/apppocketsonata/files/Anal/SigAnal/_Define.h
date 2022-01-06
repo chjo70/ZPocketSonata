@@ -36,7 +36,12 @@ enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol
 enum PULSE_EXTRACT_PRI_STEP { STEP1=0, STEP2, STEP_WIDE, STEP_BY_STEP } ;
 
 //##ModelId=452B0C550277
-enum SEG_MARK { NORMAL_SEG=0, DELETE_SEG, MERGED_SEG, CHECKED_SEG } ;
+enum SEG_MARK { NORMAL_SEG=0, 
+                DELETE_SEG, 
+                MERGED_SEG, 
+                CHECKED_SEG,         // 에미터로 생성된 펄스열 마킹
+                OVERLAPPED_SEG
+} ;
 
 //##ModelId=452B0C550295
 enum EMITTER_MARK { NORMAL_EMITTER=0, DELETE_EMITTER } ;
@@ -90,21 +95,19 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 
 
-#ifdef _ELINT_
-#define   _spPAoffset       (-75)	// amplitude initial value */
-#else
-#define   _spPAoffset       (-70)       // amplitude initial value */
-#endif
-
 //////////////////////////////////////////////////////////////////////
 //
 
 #ifdef _ELINT_
+#define   _spPAoffset               (-75)	// amplitude initial value */
+
 #define NEW_COLLECT_PDW				(4096)			// 탐지 분석용 최대 수집 개수
 #define KWN_COLLECT_PDW				(200)				// 추적 분석용 최대 수집 개수
 #define SCN_COLLECT_PDW				(2000)			// 스캔 분석용 최대 수집 개수
 
 #else
+#define   _spPAoffset               (-70)       // amplitude initial value */
+
 #define NEW_COLLECT_PDW				(1024)
 #define	KWN_COLLECT_PDW				(1024)
 #define	SCN_COLLECT_PDW				(1024*2)
@@ -128,7 +131,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 // 신호 펄스열 최대 개수
 // Jitter, Stagger 기준 펄스열의 최소 펄스수 (Min. Jitter Stagger Pulse Count)
-#define RJGPC								(5)
+#define RJGPC						(5)
 
 // 펄스열 최대 개수 및 가상 에미터 최대 개수
 //#define	MAX_PT      				(UINT)( 50 + 17 + 50 )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
@@ -352,6 +355,13 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 16단 까지 측정할 수 있게 한다.
 #define	MAX_PEAK_DTOAHISTOGRAM		(16)
 
+// 호핑 분석 데이터 관련 정의
+#define FREQ_BIN_WIDTH              (10)            // BIN 하나의 주파수 범위(10MHz)
+#define FREQ_BIN                    (12000 / FREQ_BIN_WIDTH)  // BIN 당 10MHz로 설정                
+#define MAX_FREQ_MISS_CNT           (5)             // 호핑 레벨 최대 누락 개수
+#define HOP_LEVEL_THREAT_CNT        (10)            // 호핑 레벨 최소 PDW 개수
+#define HOP_PDW_PERCENTAGE          (85.0)            // 호핑 판정을 위한 호핑 PDW 비율
+
 // 패턴 SAW 형 임계값 정의
 #define THRESHOLD_SAW_PATTERN			(60)		// 60 % 이상
 #define	THRESHOLD_SAW_PATTERN			(60)		// 60 % 이상
@@ -368,7 +378,13 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
-#define MAX_STAGGER_LEVEL_ELEMENT           (MAX_SEG)
+#ifdef _ELINT_
+#define MAX_HOPPING_LEVEL_ELEMENT           32
+#else
+#define MAX_HOPPING_LEVEL_ELEMENT           16
+#endif
+
+#define MAX_STAGGER_LEVEL_ELEMENT           (MAX_HOPPING_LEVEL_ELEMENT)
 #define MAX_HOP_LEVEL_ELEMENT				(MAX_SEG)
 
 //////////////////////////////////////////////////////////////////////////
@@ -458,7 +474,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_DWELL_LEVEL				(50)
 
 //////////////////////////////////////////////////////////////////////////
-//
+//----- Hopping 병합 변수
+#define HOPPING_MERGE_AOA_MARGIN        (15)    //  5도   
+
 
 
 #define _spInvAET                       (-1)
@@ -474,7 +492,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _PROGRESS_STEP												(80)
 
 // 문자열 크기 정의
-#define _NULL_CHAR_													(2)
+#define _NULL_CHAR_													(1)
 
 #define _MAX_STRING_SIZE_											(50)
 

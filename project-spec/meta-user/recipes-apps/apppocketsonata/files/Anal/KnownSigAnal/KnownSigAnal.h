@@ -158,6 +158,7 @@ public:
     inline void ClearCoAet() { m_theMakeAET->ClearCoAet(); }
     //##ModelId=452B0C520365
     inline void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoInSeg( pPri, pEmitter ); }
+    inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdAet(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
@@ -179,7 +180,7 @@ public:
     //##ModelId=452B0C52038B
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
 
-    UINT CheckHarmonic(_TOA mean1, float mean2, float priThreshold ) {
+    UINT CheckHarmonic(_TOA mean1, _TOA mean2, _TOA priThreshold ) {
         return 0;
     }
 

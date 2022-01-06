@@ -112,8 +112,8 @@ struct STR_H000 {
 #elif _NO_SQLITE_
 
 #elif _MSSQL_
-#include "../../../ELINTOP/ODBC/mssql.h"
-#include "../../../ELINTOP/ODBC/odbccore.h"
+#include "../../ODBC/mssql.h"
+#include "../../ODBC/odbccore.h"
 #endif
 
 #ifdef _ELINT_
