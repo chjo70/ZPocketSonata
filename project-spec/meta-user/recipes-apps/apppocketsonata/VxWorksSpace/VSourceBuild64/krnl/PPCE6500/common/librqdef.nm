@@ -1,0 +1,76 @@
+
+librqdef.a:
+
+readyQDeltaLib.o:
+00000000 d readyQGblHead
+00000020 d readyQGblBMap
+000019e4 t readyQRotateOrderListGet
+00001248 d execTasks
+00000140 t readyQLowCpuFind
+00001348 d nextCpuSet
+00000764 t readyQCandidateTaskFind
+000009a4 t readyQCandidateTaskUpdate
+00001350 d taskIdCurrentRotateOrder
+00000000 T readyQInit
+         U .TOC.
+         U vxCpuConfigured
+         U readyQSmpHead
+         U readyQSmpBMap
+         U qPriBMapInit
+00001794 T readyQReservationCheck
+         U _func_readyQReservationCheck
+         U _func_readyQRotateOrderListGet
+000000fc T readyQCpuInit
+00000128 T readyQTaskInit
+         U vxCpuSetReserved
+         U vxCpuEnabled
+         U vxAtomic32Or
+00000290 T readyQPut
+         U vxCpuIndexGet
+         U vxKernelVars
+00000a0c T readyQRemove
+00000bac T readyQResort
+00000f24 T readyQRotate
+00001418 T readyQPreemptCheck
+         U vxAtomic32And
+000014c4 T readyQTaskGet
+0000172c T readyQNextCpuGet
+00001784 T readyQNodeToTcb
+
+librqdef.a:
+
+readyQDeltaLib.o:
+00000000 d readyQGblHead
+00000020 d readyQGblBMap
+000019e4 t readyQRotateOrderListGet
+00001248 d execTasks
+00000140 t readyQLowCpuFind
+00001348 d nextCpuSet
+00000764 t readyQCandidateTaskFind
+000009a4 t readyQCandidateTaskUpdate
+00001350 d taskIdCurrentRotateOrder
+00000000 T readyQInit
+         U .TOC.
+         U vxCpuConfigured
+         U readyQSmpHead
+         U readyQSmpBMap
+         U qPriBMapInit
+00001794 T readyQReservationCheck
+         U _func_readyQReservationCheck
+         U _func_readyQRotateOrderListGet
+000000fc T readyQCpuInit
+00000128 T readyQTaskInit
+         U vxCpuSetReserved
+         U vxCpuEnabled
+         U vxAtomic32Or
+00000290 T readyQPut
+         U vxCpuIndexGet
+         U vxKernelVars
+00000a0c T readyQRemove
+00000bac T readyQResort
+00000f24 T readyQRotate
+00001418 T readyQPreemptCheck
+         U vxAtomic32And
+000014c4 T readyQTaskGet
+0000172c T readyQNextCpuGet
+00001784 T readyQNodeToTcb

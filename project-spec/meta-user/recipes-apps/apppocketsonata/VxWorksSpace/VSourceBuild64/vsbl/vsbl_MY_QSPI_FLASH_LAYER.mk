@@ -1,0 +1,19 @@
+# Automatically generated file: do not edit
+
+##########################
+# MY_QSPI_FLASH_LAYER Section
+##########################
+
+
+ifdef _WRS_CONFIG_MY_QSPI_FLASH_LAYER
+VSBL_MY_QSPI_FLASH_LAYER_SRC = 
+VSBL_MY_QSPI_FLASH_LAYER_DEPEND = 
+
+ifdef _WRS_CONFIG_MY_QSPI_FLASH_LAYER_1_0_0_0
+VSBL_MY_QSPI_FLASH_LAYER_SRC += MY_QSPI_FLASH_LAYER
+MY_QSPI_FLASH_LAYER_FASTBUILD = YES
+VSBL_MY_QSPI_FLASH_LAYER_PATH = $(WIND_BASE)/pkgs/custom/myQspiFlash
+VSBL_MY_QSPI_FLASH_LAYER_VERSION = MY_QSPI_FLASH_LAYER_1_0_0_0
+endif
+endif
+

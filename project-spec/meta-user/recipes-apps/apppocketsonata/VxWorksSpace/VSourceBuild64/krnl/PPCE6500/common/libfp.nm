@@ -1,0 +1,1470 @@
+
+libfp.a:
+
+frexp.o:
+00000000 d FLOAT_TEMP.31
+00000004 d FLOAT_TEMP.32
+00000008 d FLOAT_TEMP.33
+0000000c d FLOAT_TEMP.34
+00000000 T frexp
+         U .TOC.
+         U fpTypeGet
+         U __errno
+         U fabs
+
+ldexp.o:
+00000000 t FLOAT_TEMP.50
+00000004 t FLOAT_TEMP.51
+00000008 t FLOAT_TEMP.52
+00000000 T ldexp
+         U .TOC.
+         U fpTypeGet
+         U __errno
+         U getNan
+
+modf.o:
+00000000 d msign
+00000000 t FLOAT_TEMP.28
+00000000 T modf
+         U .TOC.
+
+acosh.o:
+00000000 d FLOAT_TEMP.7
+00000000 t ln2hi
+00000008 d FLOAT_TEMP.8
+00000008 t ln2lo
+00000000 T acosh
+         U .TOC.
+         U log1p
+         U sqrt
+
+asincos.o:
+00000000 d FLOAT_TEMP.20
+00000004 d FLOAT_TEMP.21
+00000008 d FLOAT_TEMP.22
+0000000c d FLOAT_TEMP.23
+00000000 T asin
+         U .TOC.
+         U __errno
+         U getNan
+         U copysign
+         U sqrt
+         U atan2
+00000104 T acos
+
+asinh.o:
+00000000 d one.4
+00000008 d ln2hi
+00000010 d ln2lo
+00000018 d small.2
+00000020 d big.3
+00000000 T asinh
+         U .TOC.
+         U copysign
+         U sqrt
+         U log1p
+
+atan.o:
+00000000 t FLOAT_TEMP.2
+00000000 T atan
+         U .TOC.
+         U atan2
+
+atan2.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.73
+00000004 d FLOAT_TEMP.74
+00000008 d FLOAT_TEMP.75
+0000000c d FLOAT_TEMP.76
+00000010 d FLOAT_TEMP.77
+00000008 d one.3
+00000010 d big.5
+00000018 d PI
+00000020 d small.4
+00000028 d PIo4
+00000030 d PIo2
+00000038 d athfhi
+00000040 d athflo
+00000048 d at1fhi
+00000050 d at1flo
+00000058 d a1
+00000060 d a2
+00000068 d a3
+00000070 d a4
+00000078 d a5
+00000080 d a6
+00000088 d a7
+00000090 d a8
+00000098 d a9
+000000a0 d a10
+000000a8 d a11
+00000000 T atan2
+         U .TOC.
+         U _savefpr_25
+         U copysign
+         U finite
+         U logb
+         U scalb
+         U _Raise_Inexact
+         U _restfpr_25
+
+atanh.o:
+00000000 d FLOAT_TEMP.2
+00000004 d FLOAT_TEMP.3
+00000000 T atanh
+         U .TOC.
+         U copysign
+         U log1p
+
+ceil.o:
+00000000 d FLOAT_TEMP.20
+00000004 d FLOAT_TEMP.21
+00000000 T ceil
+         U .TOC.
+         U fpTypeGet
+
+cosh.o:
+00000000 d one.3
+00000000 d FLOAT_TEMP.19
+00000008 d FLOAT_TEMP.20
+00000010 d FLOAT_TEMP.21
+00000014 d FLOAT_TEMP.22
+00000018 d FLOAT_TEMP.23
+00000008 d lnovfl
+00000010 d half.2
+00000018 d max
+00000020 d mln2hi
+00000028 d mln2lo
+00000030 d small.4
+00000000 T cosh
+         U .TOC.
+         U copysign
+         U exp__E
+         U exp
+         U scalb
+
+exp.o:
+00000000 d p1
+00000000 t FLOAT_TEMP.18
+00000004 t FLOAT_TEMP.19
+00000008 t FLOAT_TEMP.20
+0000000c t FLOAT_TEMP.21
+00000010 t FLOAT_TEMP.22
+00000008 d p2
+00000010 d p3
+00000018 d p4
+00000020 d p5
+00000028 d ln2hi
+00000030 d ln2lo
+00000038 d lnhuge
+00000040 d lntiny
+00000048 d invln2
+00000000 T exp
+         U .TOC.
+         U copysign
+         U scalb
+         U finite
+         U __errno
+
+exp__E.o:
+00000000 d one.3
+00000008 d half.4
+00000010 d zero.2
+00000018 d small.5
+00000020 d p1
+00000028 d p2
+00000030 d q1
+00000038 d q2
+00000000 T exp__E
+         U .TOC.
+         U copysign
+         U _Raise_Inexact
+
+expm1.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.37
+00000004 d FLOAT_TEMP.38
+00000008 d FLOAT_TEMP.39
+0000000c d FLOAT_TEMP.40
+00000008 d ln2hi
+00000010 d ln2lo
+00000018 d half.3
+00000020 d prec.4
+00000028 d lnhuge
+00000030 d invln2
+00000000 T expm1
+         U .TOC.
+         U copysign
+         U exp__E
+         U scalb
+         U finite
+         U _Raise_Inexact
+
+floor.o:
+00000000 d FLOAT_TEMP.19
+00000004 d FLOAT_TEMP.20
+00000000 T floor
+         U .TOC.
+         U fpTypeGet
+
+fmod.o:
+00000004 d FLOAT_TEMP.51
+00000000 d FLOAT_TEMP.50
+00000008 d FLOAT_TEMP.52
+00000000 T fmod
+         U .TOC.
+         U fpTypeGet
+         U errnoSet
+
+log.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.24
+00000004 d FLOAT_TEMP.25
+00000008 d FLOAT_TEMP.26
+00000008 d half.4
+00000010 d negone.3
+00000018 d ln2hi
+00000020 d ln2lo
+00000028 d sqrt2
+00000000 T log
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U logb
+         U scalb
+         U log__L
+         U __errno
+         U _restfpr_27
+
+log10.o:
+00000000 b ivln10
+00000000 T log10
+         U .TOC.
+         U log
+
+log1p.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.26
+00000004 d FLOAT_TEMP.27
+00000008 d FLOAT_TEMP.28
+00000008 d negone.3
+00000010 d half.5
+00000018 d one.4
+00000020 d ln2hi
+00000028 d ln2lo
+00000030 d sqrt2
+00000038 d small.6
+00000000 T log1p
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U copysign
+         U logb
+         U scalb
+         U log__L
+         U _restfpr_27
+
+log__L.o:
+00000000 t L1
+00000008 t L2
+00000010 t L3
+00000018 t L4
+00000020 t L5
+00000028 t L6
+00000030 t L7
+00000000 T log__L
+         U .TOC.
+
+pow.o:
+00000000 d one
+00000000 d FLOAT_TEMP.86
+00000004 d FLOAT_TEMP.87
+00000008 d FLOAT_TEMP.88
+0000000c d FLOAT_TEMP.89
+00000008 d zero
+00000010 d half
+00000018 d ln2hi
+00000020 d ln2lo
+00000028 d two
+00000030 d invln2
+00000038 d sqrt2
+00000040 d negone
+00000000 T pow_p
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U logb
+         U scalb
+         U log__L
+         U copysign
+         U exp__E
+         U _Raise_Inexact
+         U _restfpr_27
+000003bc T pow
+         U drem
+         U __errno
+
+sincos.o:
+00000000 d half
+00000000 d FLOAT_TEMP.31
+00000008 d one
+00000010 d thresh
+00000018 d PIo4
+00000020 d PIo2
+00000028 d PI3o4
+00000030 d PI
+00000038 d PI2
+00000040 d small
+00000048 d big
+00000050 d S0
+00000058 d S1
+00000060 d S2
+00000068 d S3
+00000070 d S4
+00000078 d S5
+00000080 d C0
+00000088 d C1
+00000090 d C2
+00000098 d C3
+000000a0 d C4
+000000a8 d C5
+000000b0 d negone
+00000000 T sin
+         U .TOC.
+         U finite
+         U drem
+         U copysign
+         U _Raise_Inexact
+000001f8 T cos
+
+sinh.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.13
+00000008 d lnovfl
+00000010 d max
+00000018 d mln2hi
+00000020 d mln2lo
+00000028 d half.3
+00000000 T sinh
+         U .TOC.
+         U copysign
+         U expm1
+         U scalb
+         U __errno
+
+sqrt.o:
+00000000 d FLOAT_TEMP.38
+00000004 d FLOAT_TEMP.39
+00000008 d FLOAT_TEMP.40
+0000000c d FLOAT_TEMP.41
+00000010 d FLOAT_TEMP.42
+00000014 d FLOAT_TEMP.43
+00000018 d FLOAT_TEMP.44
+00000020 d FLOAT_TEMP.46
+0000001c d FLOAT_TEMP.45
+00000024 d FLOAT_TEMP.47
+00000000 T sqrt
+         U .TOC.
+         U _savefpr_27
+         U __errno
+         U finite
+         U logb
+         U scalb
+         U _Raise_Inexact
+         U _restfpr_27
+
+support.o:
+00000002 d msign
+00000000 d mexp
+00000000 d FLOAT_TEMP.79
+00000004 d FLOAT_TEMP.80
+00000008 d FLOAT_TEMP.81
+0000000c d FLOAT_TEMP.82
+00000010 d FLOAT_TEMP.83
+00000014 d FLOAT_TEMP.84
+00000004 d gap
+00000006 d prep1
+00000008 d novf
+00000010 d nunf
+00000018 d zero
+00000020 d bias
+00000000 T copysign
+         U .TOC.
+00000040 T logb
+00000114 T finite
+0000014c T scalb
+00000328 T drem
+0000057c T _Raise_Inexact
+
+tan.o:
+00000000 d half
+00000008 d one
+00000010 d thresh
+00000018 d PIo4
+00000020 d PIo2
+00000028 d PI
+00000030 d zero
+00000038 d small
+00000040 d big
+00000048 d S0
+00000050 d S1
+00000058 d S2
+00000060 d S3
+00000068 d S4
+00000070 d S5
+00000078 d C0
+00000080 d C1
+00000088 d C2
+00000090 d C3
+00000098 d C4
+000000a0 d C5
+00000000 T tan
+         U .TOC.
+         U finite
+         U drem
+         U copysign
+         U _Raise_Inexact
+
+tanh.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.21
+00000008 d FLOAT_TEMP.22
+00000008 d two.3
+00000010 d small.4
+00000018 d big.5
+00000000 T tanh
+         U .TOC.
+         U copysign
+         U expm1
+         U _Raise_Inexact
+         U finite
+
+fabs.o:
+00000000 d FLOAT_TEMP.19
+00000000 T fabs
+         U .TOC.
+         U fpTypeGet
+         U __errno
+
+fpType.o:
+00000000 d map
+00000000 T fpTypeGet
+         U .TOC.
+00000178 T getInf
+000001a0 T getNan
+
+cabs.o:
+00000000 d one.3
+00000000 d FLOAT_TEMP.39
+00000008 d zero.2
+00000010 d ibig.5
+00000018 d r2p1hi
+00000020 d r2p1lo
+00000028 d sqrt2
+00000030 d small.4
+00000000 T hypot
+         U .TOC.
+         U _savefpr_28
+         U finite
+         U copysign
+         U logb
+         U _Raise_Inexact
+         U sqrt
+         U _restfpr_28
+00000264 T cabs
+0000029c T z_abs
+
+mprec.o:
+00000000 t mprec_calloc
+00000064 t mprec_realloc
+00000118 d p05.128
+00000124 d FLOAT_TEMP.327
+00000128 d FLOAT_TEMP.328
+         U .TOC.
+         U malloc
+         U memset
+         U realloc
+00000090 T _Jv_Balloc
+         U __assert
+000001e8 T _Jv_Bfree
+00000218 T _Jv_multadd
+         U memcpy
+0000033c T _Jv_s2b
+0000049c T _Jv_hi0bits
+00000524 T _Jv_lo0bits
+00000604 T _Jv_i2b
+00000650 T _Jv_mult
+00000840 T _Jv_pow5mult
+000009a8 T _Jv_lshift
+00000af8 T _Jv__mcmp
+00000b6c T _Jv__mdiff
+00000d00 T _Jv_ulp
+00000d7c T _Jv_b2d
+00000e7c T _Jv_d2b
+00000fbc T _Jv_ratio
+00001060 T _mprec_log10
+00000000 D _Jv__mprec_tens
+000000c8 D _Jv__mprec_bigtens
+000000f0 D _Jv__mprec_tinytens
+
+dtoa.o:
+00000000 t quorem
+00000000 d FLOAT_TEMP.382
+00000004 d FLOAT_TEMP.383
+00000008 d FLOAT_TEMP.384
+0000000c d FLOAT_TEMP.385
+00000010 d FLOAT_TEMP.386
+00000020 d FLOAT_TEMP.388
+00000018 d FLOAT_TEMP.387
+00000028 d FLOAT_TEMP.390
+0000002c d FLOAT_TEMP.391
+00000030 d FLOAT_TEMP.392
+00000034 d FLOAT_TEMP.393
+00000038 d FLOAT_TEMP.394
+         U .TOC.
+         U _Jv__mcmp
+00000204 T _Jv_dtoa_r
+         U _Jv_Bfree
+         U _Jv_d2b
+         U _Jv__mprec_tens
+         U _Jv_Balloc
+         U _Jv__mprec_bigtens
+         U _Jv_i2b
+         U _Jv_pow5mult
+         U _Jv_mult
+         U _Jv_hi0bits
+         U _Jv_lshift
+         U _Jv_multadd
+         U memcpy
+         U _Jv__mdiff
+00001370 T free_Bigints
+         U free
+000013bc T __dtoa
+         U memset
+         U strncpy
+
+bsd_cvt.o:
+00000000 d FLOAT_TEMP.49
+00000000 T setAlt
+         U .TOC.
+0000000c T setFpt
+00000018 T bsd_cvt
+         U __dtoa
+
+fioBaseLib.o:
+00000200 t .T685
+00000004 d blanks
+00000014 d zeroes
+00000000 T fioBaseLibInit
+         U .TOC.
+00001634 T printErr
+         U _func_printErr
+0000001c T sprintf
+00001ac4 T fioBufPut
+00000094 T fioFormatV
+         U _func_altivecProbeRtn
+         U malloc
+         U memchr
+         U strlen
+         U free
+         U _func_fioFltFormatRtn
+00000000 D fieldSzIncludeSign
+00001550 T printf
+00001ba8 T fioBufPrint
+000015b8 T oprintf
+0000169c T printExc
+         U intContext
+         U taskIdSelf
+         U kernelLockOwnedByMe
+00000008 C _func_printExcPrintHook
+         U _func_excJobAdd
+         U vmLibInfo
+         U sysExcMsg
+         U evtAction
+         U vxAtomic32Add
+         U edrBufLock
+         U edrBufUnlock
+         U taskUnsafe
+         U _func_shellExcPrint
+         U taskClassId
+         U eventPointSwHandle
+00001a30 T snprintf
+00001b24 T fioSnBufPut
+         U bcopy
+         U _func_consoleOut
+         U _func_kwrite
+
+floatLib.o:
+00000730 t floatScan
+000005f0 t floatFormat
+00000048 t exponentCvt
+00000104 t cvt
+00000058 d FLOAT_TEMP.290
+0000005c d FLOAT_TEMP.295
+00000000 d power10.160
+00000060 d FLOAT_TEMP.296
+00000000 d f125
+00000000 T fioFltInstall
+         U .TOC.
+         U _func_fioFltFormatRtn
+         U _func_fioFltScanRtn
+0000001c T floatInit
+         U bsd_cvt
+         U __ctype_tolower
+         U fabs
+         U fpTypeGet
+         U strcpy
+         U ldexp
+
+floatFuncBind.o:
+00000000 D _func_fioFltFormatRtn
+00000008 D _func_fioFltScanRtn
+
+fioFuncBind.o:
+00000008 C _func_printErr
+
+e_fmod.o:
+00000000 d Zero
+00000010 d FLOAT_TEMP.115
+00000000 T __ieee754_fmod
+         U .TOC.
+
+e_pow.o:
+00000030 d FLOAT_TEMP.147
+00000034 d FLOAT_TEMP.148
+00000038 d FLOAT_TEMP.149
+00000048 d FLOAT_TEMP.152
+00000040 d FLOAT_TEMP.151
+0000003c d FLOAT_TEMP.150
+00000050 d FLOAT_TEMP.154
+00000058 d FLOAT_TEMP.155
+0000004c d FLOAT_TEMP.153
+00000060 d FLOAT_TEMP.156
+00000000 d bp
+00000068 d FLOAT_TEMP.157
+00000070 d FLOAT_TEMP.158
+00000078 d FLOAT_TEMP.159
+00000098 d FLOAT_TEMP.163
+00000090 d FLOAT_TEMP.162
+00000080 d FLOAT_TEMP.160
+000000a8 d FLOAT_TEMP.166
+000000a0 d FLOAT_TEMP.165
+00000088 d FLOAT_TEMP.161
+0000009c d FLOAT_TEMP.164
+000000b0 d FLOAT_TEMP.167
+000000b4 d FLOAT_TEMP.168
+000000b8 d FLOAT_TEMP.169
+000000c8 d FLOAT_TEMP.171
+000000d0 d FLOAT_TEMP.172
+00000100 d FLOAT_TEMP.178
+000000c0 d FLOAT_TEMP.170
+000000d8 d FLOAT_TEMP.173
+000000e8 d FLOAT_TEMP.175
+000000e0 d FLOAT_TEMP.174
+000000f0 d FLOAT_TEMP.176
+000000f8 d FLOAT_TEMP.177
+00000010 d dp_h
+00000020 d dp_l
+00000000 T __ieee754_pow
+         U .TOC.
+         U _savefpr_28
+         U __ieee754_sqrt
+         U fabs
+         U getNan
+         U scalbn
+         U _restfpr_28
+
+e_remainder.o:
+00000000 d FLOAT_TEMP.25
+00000004 d FLOAT_TEMP.26
+00000000 T __ieee754_remainder
+         U .TOC.
+         U __ieee754_fmod
+         U fabs
+
+s_rint.o:
+00000000 d TWO52
+00000000 T rint
+         U .TOC.
+
+s_scalbn.o:
+00000000 d FLOAT_TEMP.25
+00000004 d FLOAT_TEMP.26
+00000008 d FLOAT_TEMP.27
+00000010 d FLOAT_TEMP.28
+00000018 d FLOAT_TEMP.29
+00000020 d FLOAT_TEMP.30
+00000000 T scalbn
+         U .TOC.
+         U copysign
+
+e_sqrt.o:
+00000000 T __ieee754_sqrt
+         U .TOC.
+         U getNan
+
+fioLib.o:
+00000390 t scanString
+00000494 t scanChar
+00000778 t scanNum
+00000d70 t .T533
+00001970 t getbuf
+00000000 T fioLibInit
+         U .TOC.
+         U printErr
+         U _func_printErr
+0000001c T voprintf
+         U fioBufPrint
+         U fioFormatV
+00000074 T fdprintf
+000000e0 T vprintf
+00000118 T vfdprintf
+00000158 T vsprintf
+         U fioBufPut
+000001a8 T vsnprintf
+         U fioSnBufPut
+00000214 T fioRead
+         U read
+000002b4 T fioRdString
+         U __ctype
+00000568 T scanCharSet
+00000a34 T scanField
+         U _func_altivecProbeRtn
+         U _func_fioFltScanRtn
+000014b0 T fioScanV
+00001900 T sscanf
+
+libfp.a:
+
+frexp.o:
+00000000 d FLOAT_TEMP.31
+00000004 d FLOAT_TEMP.32
+00000008 d FLOAT_TEMP.33
+0000000c d FLOAT_TEMP.34
+00000000 T frexp
+         U .TOC.
+         U fpTypeGet
+         U __errno
+         U fabs
+
+ldexp.o:
+00000000 t FLOAT_TEMP.50
+00000004 t FLOAT_TEMP.51
+00000008 t FLOAT_TEMP.52
+00000000 T ldexp
+         U .TOC.
+         U fpTypeGet
+         U __errno
+         U getNan
+
+modf.o:
+00000000 d msign
+00000000 t FLOAT_TEMP.28
+00000000 T modf
+         U .TOC.
+
+acosh.o:
+00000000 d FLOAT_TEMP.7
+00000000 t ln2hi
+00000008 d FLOAT_TEMP.8
+00000008 t ln2lo
+00000000 T acosh
+         U .TOC.
+         U log1p
+         U sqrt
+
+asincos.o:
+00000000 d FLOAT_TEMP.20
+00000004 d FLOAT_TEMP.21
+00000008 d FLOAT_TEMP.22
+0000000c d FLOAT_TEMP.23
+00000000 T asin
+         U .TOC.
+         U __errno
+         U getNan
+         U copysign
+         U sqrt
+         U atan2
+00000104 T acos
+
+asinh.o:
+00000000 d one.4
+00000008 d ln2hi
+00000010 d ln2lo
+00000018 d small.2
+00000020 d big.3
+00000000 T asinh
+         U .TOC.
+         U copysign
+         U sqrt
+         U log1p
+
+atan.o:
+00000000 t FLOAT_TEMP.2
+00000000 T atan
+         U .TOC.
+         U atan2
+
+atan2.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.73
+00000004 d FLOAT_TEMP.74
+00000008 d FLOAT_TEMP.75
+0000000c d FLOAT_TEMP.76
+00000010 d FLOAT_TEMP.77
+00000008 d one.3
+00000010 d big.5
+00000018 d PI
+00000020 d small.4
+00000028 d PIo4
+00000030 d PIo2
+00000038 d athfhi
+00000040 d athflo
+00000048 d at1fhi
+00000050 d at1flo
+00000058 d a1
+00000060 d a2
+00000068 d a3
+00000070 d a4
+00000078 d a5
+00000080 d a6
+00000088 d a7
+00000090 d a8
+00000098 d a9
+000000a0 d a10
+000000a8 d a11
+00000000 T atan2
+         U .TOC.
+         U _savefpr_25
+         U copysign
+         U finite
+         U logb
+         U scalb
+         U _Raise_Inexact
+         U _restfpr_25
+
+atanh.o:
+00000000 d FLOAT_TEMP.2
+00000004 d FLOAT_TEMP.3
+00000000 T atanh
+         U .TOC.
+         U copysign
+         U log1p
+
+ceil.o:
+00000000 d FLOAT_TEMP.20
+00000004 d FLOAT_TEMP.21
+00000000 T ceil
+         U .TOC.
+         U fpTypeGet
+
+cosh.o:
+00000000 d one.3
+00000000 d FLOAT_TEMP.19
+00000008 d FLOAT_TEMP.20
+00000010 d FLOAT_TEMP.21
+00000014 d FLOAT_TEMP.22
+00000018 d FLOAT_TEMP.23
+00000008 d lnovfl
+00000010 d half.2
+00000018 d max
+00000020 d mln2hi
+00000028 d mln2lo
+00000030 d small.4
+00000000 T cosh
+         U .TOC.
+         U copysign
+         U exp__E
+         U exp
+         U scalb
+
+exp.o:
+00000000 d p1
+00000000 t FLOAT_TEMP.18
+00000004 t FLOAT_TEMP.19
+00000008 t FLOAT_TEMP.20
+0000000c t FLOAT_TEMP.21
+00000010 t FLOAT_TEMP.22
+00000008 d p2
+00000010 d p3
+00000018 d p4
+00000020 d p5
+00000028 d ln2hi
+00000030 d ln2lo
+00000038 d lnhuge
+00000040 d lntiny
+00000048 d invln2
+00000000 T exp
+         U .TOC.
+         U copysign
+         U scalb
+         U finite
+         U __errno
+
+exp__E.o:
+00000000 d one.3
+00000008 d half.4
+00000010 d zero.2
+00000018 d small.5
+00000020 d p1
+00000028 d p2
+00000030 d q1
+00000038 d q2
+00000000 T exp__E
+         U .TOC.
+         U copysign
+         U _Raise_Inexact
+
+expm1.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.37
+00000004 d FLOAT_TEMP.38
+00000008 d FLOAT_TEMP.39
+0000000c d FLOAT_TEMP.40
+00000008 d ln2hi
+00000010 d ln2lo
+00000018 d half.3
+00000020 d prec.4
+00000028 d lnhuge
+00000030 d invln2
+00000000 T expm1
+         U .TOC.
+         U copysign
+         U exp__E
+         U scalb
+         U finite
+         U _Raise_Inexact
+
+floor.o:
+00000000 d FLOAT_TEMP.19
+00000004 d FLOAT_TEMP.20
+00000000 T floor
+         U .TOC.
+         U fpTypeGet
+
+fmod.o:
+00000004 d FLOAT_TEMP.51
+00000000 d FLOAT_TEMP.50
+00000008 d FLOAT_TEMP.52
+00000000 T fmod
+         U .TOC.
+         U fpTypeGet
+         U errnoSet
+
+log.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.24
+00000004 d FLOAT_TEMP.25
+00000008 d FLOAT_TEMP.26
+00000008 d half.4
+00000010 d negone.3
+00000018 d ln2hi
+00000020 d ln2lo
+00000028 d sqrt2
+00000000 T log
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U logb
+         U scalb
+         U log__L
+         U __errno
+         U _restfpr_27
+
+log10.o:
+00000000 b ivln10
+00000000 T log10
+         U .TOC.
+         U log
+
+log1p.o:
+00000000 d zero.2
+00000000 d FLOAT_TEMP.26
+00000004 d FLOAT_TEMP.27
+00000008 d FLOAT_TEMP.28
+00000008 d negone.3
+00000010 d half.5
+00000018 d one.4
+00000020 d ln2hi
+00000028 d ln2lo
+00000030 d sqrt2
+00000038 d small.6
+00000000 T log1p
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U copysign
+         U logb
+         U scalb
+         U log__L
+         U _restfpr_27
+
+log__L.o:
+00000000 t L1
+00000008 t L2
+00000010 t L3
+00000018 t L4
+00000020 t L5
+00000028 t L6
+00000030 t L7
+00000000 T log__L
+         U .TOC.
+
+pow.o:
+00000000 d one
+00000000 d FLOAT_TEMP.86
+00000004 d FLOAT_TEMP.87
+00000008 d FLOAT_TEMP.88
+0000000c d FLOAT_TEMP.89
+00000008 d zero
+00000010 d half
+00000018 d ln2hi
+00000020 d ln2lo
+00000028 d two
+00000030 d invln2
+00000038 d sqrt2
+00000040 d negone
+00000000 T pow_p
+         U .TOC.
+         U _savefpr_27
+         U finite
+         U logb
+         U scalb
+         U log__L
+         U copysign
+         U exp__E
+         U _Raise_Inexact
+         U _restfpr_27
+000003bc T pow
+         U drem
+         U __errno
+
+sincos.o:
+00000000 d half
+00000000 d FLOAT_TEMP.31
+00000008 d one
+00000010 d thresh
+00000018 d PIo4
+00000020 d PIo2
+00000028 d PI3o4
+00000030 d PI
+00000038 d PI2
+00000040 d small
+00000048 d big
+00000050 d S0
+00000058 d S1
+00000060 d S2
+00000068 d S3
+00000070 d S4
+00000078 d S5
+00000080 d C0
+00000088 d C1
+00000090 d C2
+00000098 d C3
+000000a0 d C4
+000000a8 d C5
+000000b0 d negone
+00000000 T sin
+         U .TOC.
+         U finite
+         U drem
+         U copysign
+         U _Raise_Inexact
+000001f8 T cos
+
+sinh.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.13
+00000008 d lnovfl
+00000010 d max
+00000018 d mln2hi
+00000020 d mln2lo
+00000028 d half.3
+00000000 T sinh
+         U .TOC.
+         U copysign
+         U expm1
+         U scalb
+         U __errno
+
+sqrt.o:
+00000000 d FLOAT_TEMP.38
+00000004 d FLOAT_TEMP.39
+00000008 d FLOAT_TEMP.40
+0000000c d FLOAT_TEMP.41
+00000010 d FLOAT_TEMP.42
+00000014 d FLOAT_TEMP.43
+00000018 d FLOAT_TEMP.44
+00000020 d FLOAT_TEMP.46
+0000001c d FLOAT_TEMP.45
+00000024 d FLOAT_TEMP.47
+00000000 T sqrt
+         U .TOC.
+         U _savefpr_27
+         U __errno
+         U finite
+         U logb
+         U scalb
+         U _Raise_Inexact
+         U _restfpr_27
+
+support.o:
+00000002 d msign
+00000000 d mexp
+00000000 d FLOAT_TEMP.79
+00000004 d FLOAT_TEMP.80
+00000008 d FLOAT_TEMP.81
+0000000c d FLOAT_TEMP.82
+00000010 d FLOAT_TEMP.83
+00000014 d FLOAT_TEMP.84
+00000004 d gap
+00000006 d prep1
+00000008 d novf
+00000010 d nunf
+00000018 d zero
+00000020 d bias
+00000000 T copysign
+         U .TOC.
+00000040 T logb
+00000114 T finite
+0000014c T scalb
+00000328 T drem
+0000057c T _Raise_Inexact
+
+tan.o:
+00000000 d half
+00000008 d one
+00000010 d thresh
+00000018 d PIo4
+00000020 d PIo2
+00000028 d PI
+00000030 d zero
+00000038 d small
+00000040 d big
+00000048 d S0
+00000050 d S1
+00000058 d S2
+00000060 d S3
+00000068 d S4
+00000070 d S5
+00000078 d C0
+00000080 d C1
+00000088 d C2
+00000090 d C3
+00000098 d C4
+000000a0 d C5
+00000000 T tan
+         U .TOC.
+         U finite
+         U drem
+         U copysign
+         U _Raise_Inexact
+
+tanh.o:
+00000000 d one.2
+00000000 d FLOAT_TEMP.21
+00000008 d FLOAT_TEMP.22
+00000008 d two.3
+00000010 d small.4
+00000018 d big.5
+00000000 T tanh
+         U .TOC.
+         U copysign
+         U expm1
+         U _Raise_Inexact
+         U finite
+
+fabs.o:
+00000000 d FLOAT_TEMP.19
+00000000 T fabs
+         U .TOC.
+         U fpTypeGet
+         U __errno
+
+fpType.o:
+00000000 d map
+00000000 T fpTypeGet
+         U .TOC.
+00000178 T getInf
+000001a0 T getNan
+
+cabs.o:
+00000000 d one.3
+00000000 d FLOAT_TEMP.39
+00000008 d zero.2
+00000010 d ibig.5
+00000018 d r2p1hi
+00000020 d r2p1lo
+00000028 d sqrt2
+00000030 d small.4
+00000000 T hypot
+         U .TOC.
+         U _savefpr_28
+         U finite
+         U copysign
+         U logb
+         U _Raise_Inexact
+         U sqrt
+         U _restfpr_28
+00000264 T cabs
+0000029c T z_abs
+
+mprec.o:
+00000000 t mprec_calloc
+00000064 t mprec_realloc
+00000118 d p05.128
+00000124 d FLOAT_TEMP.327
+00000128 d FLOAT_TEMP.328
+         U .TOC.
+         U malloc
+         U memset
+         U realloc
+00000090 T _Jv_Balloc
+         U __assert
+000001e8 T _Jv_Bfree
+00000218 T _Jv_multadd
+         U memcpy
+0000033c T _Jv_s2b
+0000049c T _Jv_hi0bits
+00000524 T _Jv_lo0bits
+00000604 T _Jv_i2b
+00000650 T _Jv_mult
+00000840 T _Jv_pow5mult
+000009a8 T _Jv_lshift
+00000af8 T _Jv__mcmp
+00000b6c T _Jv__mdiff
+00000d00 T _Jv_ulp
+00000d7c T _Jv_b2d
+00000e7c T _Jv_d2b
+00000fbc T _Jv_ratio
+00001060 T _mprec_log10
+00000000 D _Jv__mprec_tens
+000000c8 D _Jv__mprec_bigtens
+000000f0 D _Jv__mprec_tinytens
+
+dtoa.o:
+00000000 t quorem
+00000000 d FLOAT_TEMP.382
+00000004 d FLOAT_TEMP.383
+00000008 d FLOAT_TEMP.384
+0000000c d FLOAT_TEMP.385
+00000010 d FLOAT_TEMP.386
+00000020 d FLOAT_TEMP.388
+00000018 d FLOAT_TEMP.387
+00000028 d FLOAT_TEMP.390
+0000002c d FLOAT_TEMP.391
+00000030 d FLOAT_TEMP.392
+00000034 d FLOAT_TEMP.393
+00000038 d FLOAT_TEMP.394
+         U .TOC.
+         U _Jv__mcmp
+00000204 T _Jv_dtoa_r
+         U _Jv_Bfree
+         U _Jv_d2b
+         U _Jv__mprec_tens
+         U _Jv_Balloc
+         U _Jv__mprec_bigtens
+         U _Jv_i2b
+         U _Jv_pow5mult
+         U _Jv_mult
+         U _Jv_hi0bits
+         U _Jv_lshift
+         U _Jv_multadd
+         U memcpy
+         U _Jv__mdiff
+00001370 T free_Bigints
+         U free
+000013bc T __dtoa
+         U memset
+         U strncpy
+
+bsd_cvt.o:
+00000000 d FLOAT_TEMP.49
+00000000 T setAlt
+         U .TOC.
+0000000c T setFpt
+00000018 T bsd_cvt
+         U __dtoa
+
+fioBaseLib.o:
+00000200 t .T685
+00000004 d blanks
+00000014 d zeroes
+00000000 T fioBaseLibInit
+         U .TOC.
+00001634 T printErr
+         U _func_printErr
+0000001c T sprintf
+00001ac4 T fioBufPut
+00000094 T fioFormatV
+         U _func_altivecProbeRtn
+         U malloc
+         U memchr
+         U strlen
+         U free
+         U _func_fioFltFormatRtn
+00000000 D fieldSzIncludeSign
+00001550 T printf
+00001ba8 T fioBufPrint
+000015b8 T oprintf
+0000169c T printExc
+         U intContext
+         U taskIdSelf
+         U kernelLockOwnedByMe
+00000008 C _func_printExcPrintHook
+         U _func_excJobAdd
+         U vmLibInfo
+         U sysExcMsg
+         U evtAction
+         U vxAtomic32Add
+         U edrBufLock
+         U edrBufUnlock
+         U taskUnsafe
+         U _func_shellExcPrint
+         U taskClassId
+         U eventPointSwHandle
+00001a30 T snprintf
+00001b24 T fioSnBufPut
+         U bcopy
+         U _func_consoleOut
+         U _func_kwrite
+
+floatLib.o:
+00000730 t floatScan
+000005f0 t floatFormat
+00000048 t exponentCvt
+00000104 t cvt
+00000058 d FLOAT_TEMP.290
+0000005c d FLOAT_TEMP.295
+00000000 d power10.160
+00000060 d FLOAT_TEMP.296
+00000000 d f125
+00000000 T fioFltInstall
+         U .TOC.
+         U _func_fioFltFormatRtn
+         U _func_fioFltScanRtn
+0000001c T floatInit
+         U bsd_cvt
+         U __ctype_tolower
+         U fabs
+         U fpTypeGet
+         U strcpy
+         U ldexp
+
+floatFuncBind.o:
+00000000 D _func_fioFltFormatRtn
+00000008 D _func_fioFltScanRtn
+
+fioFuncBind.o:
+00000008 C _func_printErr
+
+e_fmod.o:
+00000000 d Zero
+00000010 d FLOAT_TEMP.115
+00000000 T __ieee754_fmod
+         U .TOC.
+
+e_pow.o:
+00000030 d FLOAT_TEMP.147
+00000034 d FLOAT_TEMP.148
+00000038 d FLOAT_TEMP.149
+00000048 d FLOAT_TEMP.152
+00000040 d FLOAT_TEMP.151
+0000003c d FLOAT_TEMP.150
+00000050 d FLOAT_TEMP.154
+00000058 d FLOAT_TEMP.155
+0000004c d FLOAT_TEMP.153
+00000060 d FLOAT_TEMP.156
+00000000 d bp
+00000068 d FLOAT_TEMP.157
+00000070 d FLOAT_TEMP.158
+00000078 d FLOAT_TEMP.159
+00000098 d FLOAT_TEMP.163
+00000090 d FLOAT_TEMP.162
+00000080 d FLOAT_TEMP.160
+000000a8 d FLOAT_TEMP.166
+000000a0 d FLOAT_TEMP.165
+00000088 d FLOAT_TEMP.161
+0000009c d FLOAT_TEMP.164
+000000b0 d FLOAT_TEMP.167
+000000b4 d FLOAT_TEMP.168
+000000b8 d FLOAT_TEMP.169
+000000c8 d FLOAT_TEMP.171
+000000d0 d FLOAT_TEMP.172
+00000100 d FLOAT_TEMP.178
+000000c0 d FLOAT_TEMP.170
+000000d8 d FLOAT_TEMP.173
+000000e8 d FLOAT_TEMP.175
+000000e0 d FLOAT_TEMP.174
+000000f0 d FLOAT_TEMP.176
+000000f8 d FLOAT_TEMP.177
+00000010 d dp_h
+00000020 d dp_l
+00000000 T __ieee754_pow
+         U .TOC.
+         U _savefpr_28
+         U __ieee754_sqrt
+         U fabs
+         U getNan
+         U scalbn
+         U _restfpr_28
+
+e_remainder.o:
+00000000 d FLOAT_TEMP.25
+00000004 d FLOAT_TEMP.26
+00000000 T __ieee754_remainder
+         U .TOC.
+         U __ieee754_fmod
+         U fabs
+
+s_rint.o:
+00000000 d TWO52
+00000000 T rint
+         U .TOC.
+
+s_scalbn.o:
+00000000 d FLOAT_TEMP.25
+00000004 d FLOAT_TEMP.26
+00000008 d FLOAT_TEMP.27
+00000010 d FLOAT_TEMP.28
+00000018 d FLOAT_TEMP.29
+00000020 d FLOAT_TEMP.30
+00000000 T scalbn
+         U .TOC.
+         U copysign
+
+e_sqrt.o:
+00000000 T __ieee754_sqrt
+         U .TOC.
+         U getNan
+
+fioLib.o:
+00000390 t scanString
+00000494 t scanChar
+00000778 t scanNum
+00000d70 t .T533
+00001970 t getbuf
+00000000 T fioLibInit
+         U .TOC.
+         U printErr
+         U _func_printErr
+0000001c T voprintf
+         U fioBufPrint
+         U fioFormatV
+00000074 T fdprintf
+000000e0 T vprintf
+00000118 T vfdprintf
+00000158 T vsprintf
+         U fioBufPut
+000001a8 T vsnprintf
+         U fioSnBufPut
+00000214 T fioRead
+         U read
+000002b4 T fioRdString
+         U __ctype
+00000568 T scanCharSet
+00000a34 T scanField
+         U _func_altivecProbeRtn
+         U _func_fioFltScanRtn
+000014b0 T fioScanV
+00001900 T sscanf

@@ -1,0 +1,1426 @@
+
+libservices.a:
+
+coprocLib.o:
+000005a4 t coprocAction
+0000072c t coprocTaskRegsAccess
+00000000 T coprocLibInit
+         U .TOC.
+         U coprocsDiscover
+00000000 D pCoprocDescList
+         U calloc
+         U errnoSet
+         U coprocDescriptorsInit
+0000022c T coprocTaskCreateHook
+         U taskCreateHookAdd
+0000041c T coprocTaskDeleteHook
+         U taskDeleteHookAdd
+000004ec T coprocTaskSwapHook
+         U taskSwapHookAdd
+         U taskDeleteHookDelete
+         U taskCreateHookDelete
+         U free
+         U taskStackAllot
+         U errnoOfTaskSet
+         U bzero
+         U taskSwapHookAttach
+         U taskSwapHookDetach
+000006cc T coprocEnable
+000006fc T coprocDisable
+         U taskTcb
+         U ffsMsb
+         U taskIdSelf
+         U vxAtomic32Add
+         U evtAction
+         U bcopy
+         U taskCpuUnlock
+         U eventPointSwHandle
+000009f4 T coprocTaskRegsGet
+00000a2c T coprocTaskRegsSet
+00000a64 T coprocSave
+00000b08 T coprocShowOnDebug
+00000b68 T coprocCtxStorageSizeGet
+
+errnoLib.o:
+00000000 T __errno
+         U .TOC.
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U workQWorkInProgress
+00000004 C dummyErrno
+         U intCpuMicroUnlock
+000000b0 T errnoGet
+00000140 T errnoOfTaskGet
+         U taskTcb
+00000180 T errnoSet
+         U evtAction
+         U taskClassId
+         U eventPointSwHandle
+0000026c T errnoOfTaskSet
+         U taskIdSelf
+
+excGenericLib.o:
+00000000 T excGenericHandle
+         U .TOC.
+         U vxKernelVars
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+         U _func_excBaseHook
+         U _func_excOnSigMap
+         U intCpuLock
+         U kernelLockOwnedByMe
+         U intCpuUnlock
+         U strncpy
+         U strlen
+         U strncat
+         U edrErrorInjectStub
+         U edrSystemFatalPolicyHandler
+         U intContext
+         U edrInterruptFatalPolicyHandler
+         U edrInitFatalPolicyHandler
+         U vxAtomic32Add
+         U evtAction
+         U rootTaskId
+         U taskIdDefault
+         U bcopy
+         U excArchFaultGet
+         U _func_excSigSend
+         U _func_excInfoShow
+         U taskIdSelf
+         U kernelId
+         U excExcepHook
+         U snprintf
+         U edrKernelFatalPolicyHandler
+         U edrRtpFatalPolicyHandler
+         U eventPointSwHandle
+
+excSigLib.o:
+00000020 t excSigSend
+00000000 T excSigLibInit
+         U .TOC.
+         U _func_excSigSend
+         U taskIdSelf
+         U kernelId
+         U _func_sigExcKill
+         U _func_rtpSigExcKill
+         U __errno
+         U snprintf
+
+excFuncBind.o:
+00000008 C _func_excBaseHook
+00000008 C _func_excInfoShow
+00000008 C _func_excIntHook
+00000008 C _func_excJobAdd
+00000008 C _func_excPanicHook
+00000008 C excExcepHook
+00000008 C _func_excOnSigMap
+00000008 C _func_excSigSend
+
+excLib.o:
+00000040 d isrJobRing
+00000080 d isrJobSyncSem
+00000414 t excTask
+00000190 t _excJobAdd
+00000000 d tExcTaskJobsLost
+00000000 d oldJobsLost.41
+00000000 T excInit
+         U .TOC.
+         U printf
+         U vxAtomic32Clear
+         U semBInit
+00000008 C tExcTaskTcb
+00000010 C tExcTaskStk
+00000010 C tExcTaskExcStk
+         U taskStaticInitialize
+         U taskActivate
+000003bc T excJobAdd
+         U _func_excJobAdd
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U vxAtomic32Cas
+         U isrJobPool
+         U taskCredentialsGet
+         U vxAtomic32Set
+         U intCpuMicroUnlock
+         U semBGiveDefer
+         U vxAtomic32Inc
+         U semGive
+000003e8 T excJobAddDefer
+         U taskIdSelf
+         U semBTake
+         U taskCredentialsSet
+         U snprintf
+         U edrErrorInjectStub
+0000056c T excHookAdd
+         U excExcepHook
+
+intLib.o:
+00000000 T intRestrict
+         U .TOC.
+         U intContext
+         U __errno
+00000058 T intCount
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+000000c4 T intConnect
+00000008 C _func_isrConnect
+         U intArchConnect
+00000150 T intDisconnect
+00000008 C _func_isrDisconnect
+         U intArchDisconnect
+00000008 C _func_isrCreate
+00000008 C _func_isrDelete
+00000008 C _func_isrDispatcher
+00000008 C _func_isrInfo
+00000008 C _func_vxbIntConnect
+00000008 C _func_vxbIntDisconnect
+
+jobFuncBind.o:
+00000008 C _func_jobTaskWorkAdd
+
+jobLib.o:
+00000000 T jobAdd
+         U .TOC.
+         U intContext
+         U _func_jobTaskWorkAdd
+         U excJobAdd
+
+jobTaskLib.o:
+000001f0 d clientMutex
+00000130 d jobMutex
+00000070 d jobSyncSem
+000004d8 t jobTask
+000002b0 d jobTaskId
+00000000 d workerJob
+00000068 d jobTaskAffinity
+00000000 T jobTaskLibInit
+         U .TOC.
+         U semMInit
+         U semBInit
+         U taskSpawn
+00000120 T jobTaskWorkAdd
+         U _func_jobTaskWorkAdd
+         U _func_eventReceive
+         U errnoSet
+         U semTake
+         U semGive
+         U taskIdSelf
+         U taskPriorityGet
+         U taskPrioritySet
+         U taskCredentialsGet
+         U taskCpuAffinityGet
+         U taskCpuAffinitySet
+         U evtAction
+         U vxAtomic32Add
+         U semMTakeByProxy
+         U vxAtomicGet
+         U __errno
+         U snprintf
+         U edrErrorInjectStub
+         U edrKernelFatalPolicyHandler
+         U taskClassId
+         U eventPointSwHandle
+         U taskUnsafe
+         U taskCredentialsSet
+         U objVerify
+         U _func_eventSend
+
+kprintfLib.o:
+00000000 T kprintf
+         U .TOC.
+         U _func_kwrite
+         U fioFormatV
+
+kputsLib.o:
+00000000 T kputs
+         U .TOC.
+         U strlen
+         U _func_kwrite
+
+kwriteFuncBind.o:
+00000000 D _func_kwrite
+00000008 D _func_kprintf
+
+logFuncBind.o:
+00000008 C _func_logMsg
+00000008 C _func_logMsgNoWait
+
+kernelBaseLib.o:
+00000000 d kernelBaseLibInstalled
+00000000 b kernelObjSem
+000000c0 b kernelObjMgtSem
+00000000 T kernelBaseInit
+         U .TOC.
+         U kernelObjClassId
+         U classInit
+         U kernelId
+         U objCoreInit
+         U semMInit
+         U reboot
+00000120 T getpid
+         U taskIdSelf
+00000174 T kernelIdGet
+
+rebootLib.o:
+00000004 d rebootInProgress
+00000000 d rebootTask
+00000000 T reboot
+         U .TOC.
+         U taskIdSelf
+         U sysToMonitor
+         U intContext
+         U vxCpuIndexGet
+         U sprintf
+         U setjmp
+         U edrErrorInjectStub
+         U spinLockDbgDisable
+         U spinLockApiAvailable
+         U vxAtomic32Cas
+00000000 D rebootHookTblSize
+00000008 C pRebootHookTbl
+         U vxAtomic32Add
+         U evtAction
+         U eventPointSwHandle
+
+rebootHookLib.o:
+00000000 T rebootHookAdd
+         U .TOC.
+         U rebootHookTblSize
+         U pRebootHookTbl
+         U hookAddToTail
+0000003c T rebootHookDelete
+         U hookDelete
+
+vxMemProbeLib.o:
+00000000 T vxMemProbeInit
+         U .TOC.
+         U vxMemArchProbeInit
+0000002c T vxMemProbe
+00000000 D _func_vxMemProbeHook
+         U vxMemArchProbe
+
+aimFppLib.o:
+00000000 T aimFppLibInit
+         U .TOC.
+0000000c T fppTaskRegsSet
+         U coprocTaskRegsSet
+00000040 T fppTaskRegsGet
+         U coprocTaskRegsGet
+
+aimFppShow.o:
+00000000 T aimFppShowInit
+         U .TOC.
+0000000c T fppTaskRegsShow
+         U fppProbe
+         U fppTaskRegsGet
+         U fpCtlRegName
+         U printf
+         U fppTaskRegsCFmt
+         U fpRegName
+         U fppTaskRegsDFmt
+
+bootLib.o:
+00000000 t addAssignNum
+000000a4 t addAssignString
+00000514 t printParamNum
+00000570 t printClear
+000005f0 t printParamString
+00000000 t strBootDevice
+000007c4 t promptRead
+000008a0 t promptParamBootDevice
+00000a94 t promptParamString
+00000bfc t promptParamNum
+00000d78 t .T292
+0000000c t strUser
+00000015 t strHostName
+0000001f t strFileName
+00000029 t strFlags
+00000033 t strOther
+0000003d t strHostInet
+0000004b t strTargetName
+0000005c t strGatewayInet
+0000006d t strProcNum
+0000007e t strStartup
+00000091 t strInetOnEthernet
+000000a6 t strInetOnBackplane
+000000bc t strUnitNum
+000000c8 t strFtpPw
+000000da t strFtpPwLong
+         U .TOC.
+         U snprintf
+         U strendcpy
+00000104 T bootStructToStringExt
+000002f0 T bootStructToString
+         U vmLibInfo
+         U taskIdSelf
+         U evtAction
+         U vxAtomic32Add
+         U taskUnsafe
+         U taskClassId
+         U eventPointSwHandle
+         U printf
+         U __ctype
+00000664 T bootParamsShow
+         U bootStringToStruct
+         U bootParamsErrorPrint
+         U fioRdString
+         U strtol
+         U strncat
+         U strlen
+         U strncpy
+00000d04 T bootParamsPromptBp
+00000f54 T bootParamsPromptExt
+00000fd4 T bootParamsPrompt
+
+bootParseLib.o:
+00000000 t skipSpace
+0000004c t getWord
+00000110 t getConst
+000001dc t getAssign
+00000268 t getAssignNum
+00000d00 t bootSubfieldExtract
+         U .TOC.
+         U __ctype
+         U index
+         U __ctype_tolower
+         U strtol
+00000320 T bootStringToStructAdd
+00000718 T bootStringToStruct
+         U bzero
+00000770 T bootParamsErrorPrint
+         U printf
+000007bc T bootParamsReserveGet
+         U strcat
+         U sysBootLine
+         U strstr
+         U strtok_r
+00000888 T bootParamsReserveSet
+         U strchr
+         U strncpy
+         U snprintf
+         U bootStructToString
+00000950 T bootParamCheck
+         U strcmp
+         U strspn
+         U strlen
+         U strtoul
+00000d98 T bootLeaseExtract
+00000eb4 T bootNetmaskExtract
+00000f58 T bootBpAnchorExtract
+
+cksumLib.o:
+00000000 T checksum
+         U .TOC.
+
+coprocFuncBind.o:
+00000008 C _func_coprocShow
+00000008 C _func_coprocTaskRegsShow
+
+copyright.o:
+00000000 D copyright_wind_river
+
+jitterLib.o:
+00000000 d jitterSyncSem
+00000698 t jitterTask
+00000008 d jitterTid
+00000024 d tsPeriod
+000000b8 d taskCumulative
+000000c0 d isrCumulative
+000000b0 d isrTotal
+000000a8 d isrRange
+000000ac d taskRange
+00000028 d isrBin
+00000068 d taskBin
+00000020 d auxPeriod
+00000620 t jitterClkIsr
+00000000 d jitterClkOn
+00000338 t jitterGraph
+00000008 d pBar.39
+00000010 d isrTime
+00000014 d isrDelta
+00000018 d taskTime
+0000001c d taskDelta
+00000000 T jitterLibInit
+         U .TOC.
+         U semBCreate
+         U taskSpawn
+         U sysTimestampPeriod
+000000d8 T jitterClkStart
+         U taskPrioritySet
+         U sysAuxClkDisable
+         U sysAuxClkRateSet
+         U sysAuxClkEnable
+         U sysAuxClkRateGet
+00000004 C jitterData
+         U sysTimestampFreq
+         U sysAuxClkConnect
+         U sysTimestampEnable
+         U vxAtomic32Set
+000002ac T jitterClkStop
+         U sysTimestampDisable
+         U printf
+0000046c T jitterReport
+         U sysTimestamp
+         U semGive
+         U semTake
+         U taskDelay
+         U vxAtomic32Get
+         U vxAtomic32Inc
+
+kwriteSioLib.o:
+00000000 t kwriteSioOut
+00000000 d pSioChan
+00000000 t pErrorMsgKwrite
+         U .TOC.
+         U intCpuLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuUnlock
+00000310 T kwriteSioInit
+         U sysSerialChanGet
+         U strlen
+         U sysExcMsg
+         U strncat
+         U _func_kwrite
+
+logLib.o:
+00000020 t oldLogFd.32
+000003dc t logMsgTimeout
+00000024 t logMsgsLost
+000005e0 t lprintf
+00000000 d oldMsgsLost.61
+00000000 T logFdAdd
+         U .TOC.
+00000008 C logFdSem
+         U semTake
+00000004 C numLogFds
+00000004 C logFd
+         U semGive
+000000a8 T logFdDelete
+00000190 T logFdSet
+0000001c T logFdFromRlogin
+00000248 T logInit
+00000000 T logTaskId
+00000018 T mutexOptionsLogLib
+         U semMInit
+00000008 C _func_syslogInit
+00000008 C logMsgQId
+         U msgQCreate
+00000008 T logTaskOptions
+00000010 T logTaskStackSize
+000006fc T logTask
+         U taskSpawn
+         U msgQDelete
+00000444 T logMsg
+         U _func_logMsg
+00000518 T logMsgNoWait
+         U _func_logMsgNoWait
+         U msgQSend
+         U vxAtomic32Inc
+         U intContext
+         U taskIdSelf
+         U fdprintf
+00000008 C _func_syslogEarlyMsgHandle
+         U msgQReceive
+00000008 C _func_syslogMsgHandle
+         U taskIdVerify
+         U taskName
+         U strncpy
+00000938 T logShow
+         U printf
+
+syslogLib.o:
+000000c8 t syslogInit
+00000010 d syslogFdSem
+00000300 t _func_syslogWrite
+00000000 d syslogFd
+00000004 d initState
+000000d0 d syslogTaskPoolId
+00000520 t syslogEarlyMsgHandle
+0000071c t syslogMsgHandle
+00000d30 t syslogMsgSendFromIpcom
+000000d8 d clkFreq
+00000250 t syslogOutputMessageToConsole
+00000000 t sdata
+000002e8 t syslogOutputMessageToAny
+00000450 t syslogOutputMessage
+00000008 d earlyMsgCount
+000005a4 t syslogMsgHandleError
+0000000c d lostMsgCount
+000000e0 t syslogLock
+00000000 T syslogLibInit
+         U .TOC.
+         U _func_syslogInit
+0000001c T syslogFdAndWrapperSet
+         U semTake
+         U semGive
+         U semMInit
+         U poolCreate
+         U logMsgQId
+         U msgQOpen
+         U poolDelete
+         U _func_syslogEarlyMsgHandle
+         U _func_syslogMsgHandle
+         U _func_syslogMsgSendFromIpcom
+         U sysClkRateGet
+         U write
+         U consoleFd
+         U fdprintf
+         U snprintf
+         U localtime_r
+         U gethostname
+         U strncpy
+         U syslogEarlyMsgs
+         U syslogEarlyMsgNum
+         U taskName
+         U strlcpy
+         U clock_gettime
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U vsnprintf
+         U _func_ipcom_syslogd
+         U vxAtomic32Set
+000007f0 T openlog
+000008b0 T closelog
+00000910 T setlogmask
+0000099c T vsyslog
+         U intContext
+         U __errno
+00000cd0 T syslog
+         U vxAtomic32Inc
+         U poolItemGet
+         U msgQSend
+         U poolItemReturn
+00000d88 T syslogFdSet
+
+trcLib.o:
+00000000 t trcStackLvlUser
+000000e0 t trcStackLvl
+0000054c t trcPcValidate
+         U .TOC.
+         U trcLibFuncs
+00000208 T trcStackCtxTrace
+000002bc T trcStackTrace
+         U taskTcb
+         U _func_taskMemCtxSwitch
+         U _func_printErr
+         U wrs_kernel_text_start
+         U wrs_kernel_text_end
+         U vxMemProbe
+
+coprocShow.o:
+00000000 T coprocShowInit
+         U .TOC.
+000001fc T coprocShow
+0000037c T coprocTaskRegsShow
+         U _func_coprocShow
+         U _func_coprocTaskRegsShow
+0000002c T getSymNames
+         U sysSymTbl
+         U _func_symFindSymbol
+         U sprintf
+         U _func_symNameGet
+         U _func_symValueGet
+         U cplusDemangle
+         U pCoprocDescList
+         U printf
+         U taskTcb
+0000045c T coprocRegListShow
+000004bc T coprocCtxReplicate
+         U ffsMsb
+         U errnoSet
+         U memalign
+         U coprocTaskRegsGet
+         U free
+000005c8 T coprocMRegs
+
+envLib.o:
+00000000 d envTblSize
+00000008 d nEntries
+00000294 t envCreateHook
+000007b4 t envDeleteHook
+000000f4 t envDestroy
+0000016c t envDuplicate
+000015c4 t envFind
+00000000 T envLibInit
+         U .TOC.
+00000008 C ppGlobalEnviron
+         U calloc
+         U taskCreateHookAdd
+         U taskDeleteHookAdd
+00002d40 T envGet
+00000008 C _func_envGet
+00000008 C envLibSemId
+         U semRWCreate
+         U free
+         U strlen
+         U malloc
+         U strncpy
+         U evtAction
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+         U vxAtomic32Cas
+         U semWMinTakeHard
+         U taskTcb
+         U _func_logMsg
+         U semWMinGiveHard
+         U semRMinGiveHard
+         U errnoSet
+         U taskOptionsSet
+         U semClassId
+         U eventPointSwHandle
+00000ac0 T envPrivateCreate
+00001278 T envPrivateDestroy
+         U strncmp
+000016a8 T putenv
+         U realloc
+         U bzero
+00001cec T getenv
+         U semRMinTakeHard
+000021cc T getenv_s
+00002744 T envShow
+         U printf
+         U snprintf
+
+syslogFuncBind.o:
+00000008 C _func_ipcom_syslogd
+00000008 C _func_syslogMsgSendFromIpcom
+
+cacheDma32FuncBind.o:
+00000000 D cacheDma32PartId
+
+cacheDma32Lib.o:
+00000000 t cacheDma32Map
+         U .TOC.
+         U vmLibInfo
+         U __errno
+         U pmapGlobalMap
+000000dc T cacheDma32PartInit
+         U sysMemDescGet
+         U cacheDma32PartId
+         U memPartCreate
+         U memPartAddToPool
+00000224 T cacheDma32Malloc
+         U memPartAlignedAlloc
+00000278 T cacheDma32Free
+         U memPartFree
+
+libservices.a:
+
+coprocLib.o:
+000005a4 t coprocAction
+0000072c t coprocTaskRegsAccess
+00000000 T coprocLibInit
+         U .TOC.
+         U coprocsDiscover
+00000000 D pCoprocDescList
+         U calloc
+         U errnoSet
+         U coprocDescriptorsInit
+0000022c T coprocTaskCreateHook
+         U taskCreateHookAdd
+0000041c T coprocTaskDeleteHook
+         U taskDeleteHookAdd
+000004ec T coprocTaskSwapHook
+         U taskSwapHookAdd
+         U taskDeleteHookDelete
+         U taskCreateHookDelete
+         U free
+         U taskStackAllot
+         U errnoOfTaskSet
+         U bzero
+         U taskSwapHookAttach
+         U taskSwapHookDetach
+000006cc T coprocEnable
+000006fc T coprocDisable
+         U taskTcb
+         U ffsMsb
+         U taskIdSelf
+         U vxAtomic32Add
+         U evtAction
+         U bcopy
+         U taskCpuUnlock
+         U eventPointSwHandle
+000009f4 T coprocTaskRegsGet
+00000a2c T coprocTaskRegsSet
+00000a64 T coprocSave
+00000b08 T coprocShowOnDebug
+00000b68 T coprocCtxStorageSizeGet
+
+errnoLib.o:
+00000000 T __errno
+         U .TOC.
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U workQWorkInProgress
+00000004 C dummyErrno
+         U intCpuMicroUnlock
+000000b0 T errnoGet
+00000140 T errnoOfTaskGet
+         U taskTcb
+00000180 T errnoSet
+         U evtAction
+         U taskClassId
+         U eventPointSwHandle
+0000026c T errnoOfTaskSet
+         U taskIdSelf
+
+excGenericLib.o:
+00000000 T excGenericHandle
+         U .TOC.
+         U vxKernelVars
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+         U _func_excBaseHook
+         U _func_excOnSigMap
+         U intCpuLock
+         U kernelLockOwnedByMe
+         U intCpuUnlock
+         U strncpy
+         U strlen
+         U strncat
+         U edrErrorInjectStub
+         U edrSystemFatalPolicyHandler
+         U intContext
+         U edrInterruptFatalPolicyHandler
+         U edrInitFatalPolicyHandler
+         U vxAtomic32Add
+         U evtAction
+         U rootTaskId
+         U taskIdDefault
+         U bcopy
+         U excArchFaultGet
+         U _func_excSigSend
+         U _func_excInfoShow
+         U taskIdSelf
+         U kernelId
+         U excExcepHook
+         U snprintf
+         U edrKernelFatalPolicyHandler
+         U edrRtpFatalPolicyHandler
+         U eventPointSwHandle
+
+excSigLib.o:
+00000020 t excSigSend
+00000000 T excSigLibInit
+         U .TOC.
+         U _func_excSigSend
+         U taskIdSelf
+         U kernelId
+         U _func_sigExcKill
+         U _func_rtpSigExcKill
+         U __errno
+         U snprintf
+
+excFuncBind.o:
+00000008 C _func_excBaseHook
+00000008 C _func_excInfoShow
+00000008 C _func_excIntHook
+00000008 C _func_excJobAdd
+00000008 C _func_excPanicHook
+00000008 C excExcepHook
+00000008 C _func_excOnSigMap
+00000008 C _func_excSigSend
+
+excLib.o:
+00000040 d isrJobRing
+00000080 d isrJobSyncSem
+00000414 t excTask
+00000190 t _excJobAdd
+00000000 d tExcTaskJobsLost
+00000000 d oldJobsLost.41
+00000000 T excInit
+         U .TOC.
+         U printf
+         U vxAtomic32Clear
+         U semBInit
+00000008 C tExcTaskTcb
+00000010 C tExcTaskStk
+00000010 C tExcTaskExcStk
+         U taskStaticInitialize
+         U taskActivate
+000003bc T excJobAdd
+         U _func_excJobAdd
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U vxAtomic32Cas
+         U isrJobPool
+         U taskCredentialsGet
+         U vxAtomic32Set
+         U intCpuMicroUnlock
+         U semBGiveDefer
+         U vxAtomic32Inc
+         U semGive
+000003e8 T excJobAddDefer
+         U taskIdSelf
+         U semBTake
+         U taskCredentialsSet
+         U snprintf
+         U edrErrorInjectStub
+0000056c T excHookAdd
+         U excExcepHook
+
+intLib.o:
+00000000 T intRestrict
+         U .TOC.
+         U intContext
+         U __errno
+00000058 T intCount
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+000000c4 T intConnect
+00000008 C _func_isrConnect
+         U intArchConnect
+00000150 T intDisconnect
+00000008 C _func_isrDisconnect
+         U intArchDisconnect
+00000008 C _func_isrCreate
+00000008 C _func_isrDelete
+00000008 C _func_isrDispatcher
+00000008 C _func_isrInfo
+00000008 C _func_vxbIntConnect
+00000008 C _func_vxbIntDisconnect
+
+jobFuncBind.o:
+00000008 C _func_jobTaskWorkAdd
+
+jobLib.o:
+00000000 T jobAdd
+         U .TOC.
+         U intContext
+         U _func_jobTaskWorkAdd
+         U excJobAdd
+
+jobTaskLib.o:
+000001f0 d clientMutex
+00000130 d jobMutex
+00000070 d jobSyncSem
+000004d8 t jobTask
+000002b0 d jobTaskId
+00000000 d workerJob
+00000068 d jobTaskAffinity
+00000000 T jobTaskLibInit
+         U .TOC.
+         U semMInit
+         U semBInit
+         U taskSpawn
+00000120 T jobTaskWorkAdd
+         U _func_jobTaskWorkAdd
+         U _func_eventReceive
+         U errnoSet
+         U semTake
+         U semGive
+         U taskIdSelf
+         U taskPriorityGet
+         U taskPrioritySet
+         U taskCredentialsGet
+         U taskCpuAffinityGet
+         U taskCpuAffinitySet
+         U evtAction
+         U vxAtomic32Add
+         U semMTakeByProxy
+         U vxAtomicGet
+         U __errno
+         U snprintf
+         U edrErrorInjectStub
+         U edrKernelFatalPolicyHandler
+         U taskClassId
+         U eventPointSwHandle
+         U taskUnsafe
+         U taskCredentialsSet
+         U objVerify
+         U _func_eventSend
+
+kprintfLib.o:
+00000000 T kprintf
+         U .TOC.
+         U _func_kwrite
+         U fioFormatV
+
+kputsLib.o:
+00000000 T kputs
+         U .TOC.
+         U strlen
+         U _func_kwrite
+
+kwriteFuncBind.o:
+00000000 D _func_kwrite
+00000008 D _func_kprintf
+
+logFuncBind.o:
+00000008 C _func_logMsg
+00000008 C _func_logMsgNoWait
+
+kernelBaseLib.o:
+00000000 d kernelBaseLibInstalled
+00000000 b kernelObjSem
+000000c0 b kernelObjMgtSem
+00000000 T kernelBaseInit
+         U .TOC.
+         U kernelObjClassId
+         U classInit
+         U kernelId
+         U objCoreInit
+         U semMInit
+         U reboot
+00000120 T getpid
+         U taskIdSelf
+00000174 T kernelIdGet
+
+rebootLib.o:
+00000004 d rebootInProgress
+00000000 d rebootTask
+00000000 T reboot
+         U .TOC.
+         U taskIdSelf
+         U sysToMonitor
+         U intContext
+         U vxCpuIndexGet
+         U sprintf
+         U setjmp
+         U edrErrorInjectStub
+         U spinLockDbgDisable
+         U spinLockApiAvailable
+         U vxAtomic32Cas
+00000000 D rebootHookTblSize
+00000008 C pRebootHookTbl
+         U vxAtomic32Add
+         U evtAction
+         U eventPointSwHandle
+
+rebootHookLib.o:
+00000000 T rebootHookAdd
+         U .TOC.
+         U rebootHookTblSize
+         U pRebootHookTbl
+         U hookAddToTail
+0000003c T rebootHookDelete
+         U hookDelete
+
+vxMemProbeLib.o:
+00000000 T vxMemProbeInit
+         U .TOC.
+         U vxMemArchProbeInit
+0000002c T vxMemProbe
+00000000 D _func_vxMemProbeHook
+         U vxMemArchProbe
+
+aimFppLib.o:
+00000000 T aimFppLibInit
+         U .TOC.
+0000000c T fppTaskRegsSet
+         U coprocTaskRegsSet
+00000040 T fppTaskRegsGet
+         U coprocTaskRegsGet
+
+aimFppShow.o:
+00000000 T aimFppShowInit
+         U .TOC.
+0000000c T fppTaskRegsShow
+         U fppProbe
+         U fppTaskRegsGet
+         U fpCtlRegName
+         U printf
+         U fppTaskRegsCFmt
+         U fpRegName
+         U fppTaskRegsDFmt
+
+bootLib.o:
+00000000 t addAssignNum
+000000a4 t addAssignString
+00000514 t printParamNum
+00000570 t printClear
+000005f0 t printParamString
+00000000 t strBootDevice
+000007c4 t promptRead
+000008a0 t promptParamBootDevice
+00000a94 t promptParamString
+00000bfc t promptParamNum
+00000d78 t .T292
+0000000c t strUser
+00000015 t strHostName
+0000001f t strFileName
+00000029 t strFlags
+00000033 t strOther
+0000003d t strHostInet
+0000004b t strTargetName
+0000005c t strGatewayInet
+0000006d t strProcNum
+0000007e t strStartup
+00000091 t strInetOnEthernet
+000000a6 t strInetOnBackplane
+000000bc t strUnitNum
+000000c8 t strFtpPw
+000000da t strFtpPwLong
+         U .TOC.
+         U snprintf
+         U strendcpy
+00000104 T bootStructToStringExt
+000002f0 T bootStructToString
+         U vmLibInfo
+         U taskIdSelf
+         U evtAction
+         U vxAtomic32Add
+         U taskUnsafe
+         U taskClassId
+         U eventPointSwHandle
+         U printf
+         U __ctype
+00000664 T bootParamsShow
+         U bootStringToStruct
+         U bootParamsErrorPrint
+         U fioRdString
+         U strtol
+         U strncat
+         U strlen
+         U strncpy
+00000d04 T bootParamsPromptBp
+00000f54 T bootParamsPromptExt
+00000fd4 T bootParamsPrompt
+
+bootParseLib.o:
+00000000 t skipSpace
+0000004c t getWord
+00000110 t getConst
+000001dc t getAssign
+00000268 t getAssignNum
+00000d00 t bootSubfieldExtract
+         U .TOC.
+         U __ctype
+         U index
+         U __ctype_tolower
+         U strtol
+00000320 T bootStringToStructAdd
+00000718 T bootStringToStruct
+         U bzero
+00000770 T bootParamsErrorPrint
+         U printf
+000007bc T bootParamsReserveGet
+         U strcat
+         U sysBootLine
+         U strstr
+         U strtok_r
+00000888 T bootParamsReserveSet
+         U strchr
+         U strncpy
+         U snprintf
+         U bootStructToString
+00000950 T bootParamCheck
+         U strcmp
+         U strspn
+         U strlen
+         U strtoul
+00000d98 T bootLeaseExtract
+00000eb4 T bootNetmaskExtract
+00000f58 T bootBpAnchorExtract
+
+cksumLib.o:
+00000000 T checksum
+         U .TOC.
+
+coprocFuncBind.o:
+00000008 C _func_coprocShow
+00000008 C _func_coprocTaskRegsShow
+
+copyright.o:
+00000000 D copyright_wind_river
+
+jitterLib.o:
+00000000 d jitterSyncSem
+00000698 t jitterTask
+00000008 d jitterTid
+00000024 d tsPeriod
+000000b8 d taskCumulative
+000000c0 d isrCumulative
+000000b0 d isrTotal
+000000a8 d isrRange
+000000ac d taskRange
+00000028 d isrBin
+00000068 d taskBin
+00000020 d auxPeriod
+00000620 t jitterClkIsr
+00000000 d jitterClkOn
+00000338 t jitterGraph
+00000008 d pBar.39
+00000010 d isrTime
+00000014 d isrDelta
+00000018 d taskTime
+0000001c d taskDelta
+00000000 T jitterLibInit
+         U .TOC.
+         U semBCreate
+         U taskSpawn
+         U sysTimestampPeriod
+000000d8 T jitterClkStart
+         U taskPrioritySet
+         U sysAuxClkDisable
+         U sysAuxClkRateSet
+         U sysAuxClkEnable
+         U sysAuxClkRateGet
+00000004 C jitterData
+         U sysTimestampFreq
+         U sysAuxClkConnect
+         U sysTimestampEnable
+         U vxAtomic32Set
+000002ac T jitterClkStop
+         U sysTimestampDisable
+         U printf
+0000046c T jitterReport
+         U sysTimestamp
+         U semGive
+         U semTake
+         U taskDelay
+         U vxAtomic32Get
+         U vxAtomic32Inc
+
+kwriteSioLib.o:
+00000000 t kwriteSioOut
+00000000 d pSioChan
+00000000 t pErrorMsgKwrite
+         U .TOC.
+         U intCpuLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuUnlock
+00000310 T kwriteSioInit
+         U sysSerialChanGet
+         U strlen
+         U sysExcMsg
+         U strncat
+         U _func_kwrite
+
+logLib.o:
+00000020 t oldLogFd.32
+000003dc t logMsgTimeout
+00000024 t logMsgsLost
+000005e0 t lprintf
+00000000 d oldMsgsLost.61
+00000000 T logFdAdd
+         U .TOC.
+00000008 C logFdSem
+         U semTake
+00000004 C numLogFds
+00000004 C logFd
+         U semGive
+000000a8 T logFdDelete
+00000190 T logFdSet
+0000001c T logFdFromRlogin
+00000248 T logInit
+00000000 T logTaskId
+00000018 T mutexOptionsLogLib
+         U semMInit
+00000008 C _func_syslogInit
+00000008 C logMsgQId
+         U msgQCreate
+00000008 T logTaskOptions
+00000010 T logTaskStackSize
+000006fc T logTask
+         U taskSpawn
+         U msgQDelete
+00000444 T logMsg
+         U _func_logMsg
+00000518 T logMsgNoWait
+         U _func_logMsgNoWait
+         U msgQSend
+         U vxAtomic32Inc
+         U intContext
+         U taskIdSelf
+         U fdprintf
+00000008 C _func_syslogEarlyMsgHandle
+         U msgQReceive
+00000008 C _func_syslogMsgHandle
+         U taskIdVerify
+         U taskName
+         U strncpy
+00000938 T logShow
+         U printf
+
+syslogLib.o:
+000000c8 t syslogInit
+00000010 d syslogFdSem
+00000300 t _func_syslogWrite
+00000000 d syslogFd
+00000004 d initState
+000000d0 d syslogTaskPoolId
+00000520 t syslogEarlyMsgHandle
+0000071c t syslogMsgHandle
+00000d30 t syslogMsgSendFromIpcom
+000000d8 d clkFreq
+00000250 t syslogOutputMessageToConsole
+00000000 t sdata
+000002e8 t syslogOutputMessageToAny
+00000450 t syslogOutputMessage
+00000008 d earlyMsgCount
+000005a4 t syslogMsgHandleError
+0000000c d lostMsgCount
+000000e0 t syslogLock
+00000000 T syslogLibInit
+         U .TOC.
+         U _func_syslogInit
+0000001c T syslogFdAndWrapperSet
+         U semTake
+         U semGive
+         U semMInit
+         U poolCreate
+         U logMsgQId
+         U msgQOpen
+         U poolDelete
+         U _func_syslogEarlyMsgHandle
+         U _func_syslogMsgHandle
+         U _func_syslogMsgSendFromIpcom
+         U sysClkRateGet
+         U write
+         U consoleFd
+         U fdprintf
+         U snprintf
+         U localtime_r
+         U gethostname
+         U strncpy
+         U syslogEarlyMsgs
+         U syslogEarlyMsgNum
+         U taskName
+         U strlcpy
+         U clock_gettime
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U vsnprintf
+         U _func_ipcom_syslogd
+         U vxAtomic32Set
+000007f0 T openlog
+000008b0 T closelog
+00000910 T setlogmask
+0000099c T vsyslog
+         U intContext
+         U __errno
+00000cd0 T syslog
+         U vxAtomic32Inc
+         U poolItemGet
+         U msgQSend
+         U poolItemReturn
+00000d88 T syslogFdSet
+
+trcLib.o:
+00000000 t trcStackLvlUser
+000000e0 t trcStackLvl
+0000054c t trcPcValidate
+         U .TOC.
+         U trcLibFuncs
+00000208 T trcStackCtxTrace
+000002bc T trcStackTrace
+         U taskTcb
+         U _func_taskMemCtxSwitch
+         U _func_printErr
+         U wrs_kernel_text_start
+         U wrs_kernel_text_end
+         U vxMemProbe
+
+coprocShow.o:
+00000000 T coprocShowInit
+         U .TOC.
+000001fc T coprocShow
+0000037c T coprocTaskRegsShow
+         U _func_coprocShow
+         U _func_coprocTaskRegsShow
+0000002c T getSymNames
+         U sysSymTbl
+         U _func_symFindSymbol
+         U sprintf
+         U _func_symNameGet
+         U _func_symValueGet
+         U cplusDemangle
+         U pCoprocDescList
+         U printf
+         U taskTcb
+0000045c T coprocRegListShow
+000004bc T coprocCtxReplicate
+         U ffsMsb
+         U errnoSet
+         U memalign
+         U coprocTaskRegsGet
+         U free
+000005c8 T coprocMRegs
+
+envLib.o:
+00000000 d envTblSize
+00000008 d nEntries
+00000294 t envCreateHook
+000007b4 t envDeleteHook
+000000f4 t envDestroy
+0000016c t envDuplicate
+000015c4 t envFind
+00000000 T envLibInit
+         U .TOC.
+00000008 C ppGlobalEnviron
+         U calloc
+         U taskCreateHookAdd
+         U taskDeleteHookAdd
+00002d40 T envGet
+00000008 C _func_envGet
+00000008 C envLibSemId
+         U semRWCreate
+         U free
+         U strlen
+         U malloc
+         U strncpy
+         U evtAction
+         U intCpuMicroLock
+         U vxKernelVars
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+         U vxAtomic32Cas
+         U semWMinTakeHard
+         U taskTcb
+         U _func_logMsg
+         U semWMinGiveHard
+         U semRMinGiveHard
+         U errnoSet
+         U taskOptionsSet
+         U semClassId
+         U eventPointSwHandle
+00000ac0 T envPrivateCreate
+00001278 T envPrivateDestroy
+         U strncmp
+000016a8 T putenv
+         U realloc
+         U bzero
+00001cec T getenv
+         U semRMinTakeHard
+000021cc T getenv_s
+00002744 T envShow
+         U printf
+         U snprintf
+
+syslogFuncBind.o:
+00000008 C _func_ipcom_syslogd
+00000008 C _func_syslogMsgSendFromIpcom
+
+cacheDma32FuncBind.o:
+00000000 D cacheDma32PartId
+
+cacheDma32Lib.o:
+00000000 t cacheDma32Map
+         U .TOC.
+         U vmLibInfo
+         U __errno
+         U pmapGlobalMap
+000000dc T cacheDma32PartInit
+         U sysMemDescGet
+         U cacheDma32PartId
+         U memPartCreate
+         U memPartAddToPool
+00000224 T cacheDma32Malloc
+         U memPartAlignedAlloc
+00000278 T cacheDma32Free
+         U memPartFree

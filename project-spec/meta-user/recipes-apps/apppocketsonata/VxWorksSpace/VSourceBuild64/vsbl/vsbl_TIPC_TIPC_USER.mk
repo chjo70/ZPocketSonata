@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# TIPC_TIPC_USER Section
+##########################
+
+
+ifdef _WRS_CONFIG_TIPC_TIPC_USER
+VSBL_TIPC_TIPC_USER_SRC = 
+VSBL_TIPC_TIPC_USER_DEPEND = 
+
+ifdef _WRS_CONFIG_TIPC_1_0_0_1_TIPC_USER_1_0_0_3
+VSBL_TIPC_TIPC_USER_SRC += TIPC_TIPC_USER
+VSBL_TIPC_TIPC_USER_DEPEND += IPNET_COREIP
+TIPC_TIPC_USER_FASTBUILD = YES
+VSBL_TIPC_TIPC_USER_PATH = $(WIND_BASE)/pkgs/ipc/tipc-1.0.0.1/tipc_usr-1.0.0.3
+VSBL_TIPC_TIPC_USER_VERSION = TIPC_1_0_0_1_TIPC_USER_1_0_0_3
+endif
+endif
+

@@ -1,0 +1,124 @@
+
+libspl.a:
+
+kernelLockLib.o:
+00000000 T kernelLockInit
+         U .TOC.
+00000000 D kernelStateLock
+00000030 T kernelLockOwnedByMe
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+00000098 T kernelLockOwnerGet
+
+spinLockIsrNdLib.o:
+00000000 T spinLockIsrNdInit
+         U .TOC.
+00000000 T spinlockIsrNdInit
+
+spinLockSmpLib.o:
+00000000 T spinLockIsrInit
+         U .TOC.
+         U vxCpuConfigured
+00000050 T spinLockIsrTake
+         U intCpuLock
+         U vxCpuIndexGet
+         U vxKernelVars
+         U vxAtomic32Cas
+         U vxAtomic32Set
+00000000 D rtSpinlockMaxSpin
+         U vxAtomic32Add
+         U intCpuUnlock
+         U vxAtomic32Sub
+00000224 T spinLockIsrHeld
+00000294 T spinLockRestrict
+         U intCpuMicroLock
+         U intCpuMicroUnlock
+000003a8 T spinLockIsrGive
+         U kernelLockOwnerGet
+         U taskCpuUnlockInternal
+00000520 T spinLockTaskInit
+00000548 T spinLockTaskTake
+         U evtAction
+         U vxAtomicInc
+         U vxAtomicGet
+         U eventPointSwHandle
+00000654 T spinLockTaskGive
+         U vxAtomicSet
+00000750 T spinLockDbgDisable
+
+spinLockNdTimedLib.o:
+00000000 T spinLockNdTimedInit
+         U .TOC.
+00000050 T spinLockNdTimedTake
+         U sysClkRateGet
+         U intCpuLock
+         U vxAbsTicksGet
+         U atomic32Get
+         U atomic32Cas
+         U intCpuUnlock
+         U errnoSet
+000003b0 T spinLockNdTimedGive
+00000450 T spinLockNdTimedPrevOwnerGet
+
+libspl.a:
+
+kernelLockLib.o:
+00000000 T kernelLockInit
+         U .TOC.
+00000000 D kernelStateLock
+00000030 T kernelLockOwnedByMe
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+00000098 T kernelLockOwnerGet
+
+spinLockIsrNdLib.o:
+00000000 T spinLockIsrNdInit
+         U .TOC.
+00000000 T spinlockIsrNdInit
+
+spinLockSmpLib.o:
+00000000 T spinLockIsrInit
+         U .TOC.
+         U vxCpuConfigured
+00000050 T spinLockIsrTake
+         U intCpuLock
+         U vxCpuIndexGet
+         U vxKernelVars
+         U vxAtomic32Cas
+         U vxAtomic32Set
+00000000 D rtSpinlockMaxSpin
+         U vxAtomic32Add
+         U intCpuUnlock
+         U vxAtomic32Sub
+00000224 T spinLockIsrHeld
+00000294 T spinLockRestrict
+         U intCpuMicroLock
+         U intCpuMicroUnlock
+000003a8 T spinLockIsrGive
+         U kernelLockOwnerGet
+         U taskCpuUnlockInternal
+00000520 T spinLockTaskInit
+00000548 T spinLockTaskTake
+         U evtAction
+         U vxAtomicInc
+         U vxAtomicGet
+         U eventPointSwHandle
+00000654 T spinLockTaskGive
+         U vxAtomicSet
+00000750 T spinLockDbgDisable
+
+spinLockNdTimedLib.o:
+00000000 T spinLockNdTimedInit
+         U .TOC.
+00000050 T spinLockNdTimedTake
+         U sysClkRateGet
+         U intCpuLock
+         U vxAbsTicksGet
+         U atomic32Get
+         U atomic32Cas
+         U intCpuUnlock
+         U errnoSet
+000003b0 T spinLockNdTimedGive
+00000450 T spinLockNdTimedPrevOwnerGet

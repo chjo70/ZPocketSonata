@@ -1,0 +1,162 @@
+
+libSEC_HASH.a:
+
+secHash.o:
+00000000 T secHashInit
+         U .TOC.
+0000005c T secHashUpdate
+000000b8 T secHashFinal
+00000124 T secHashCleanup
+00000178 T secHash
+00000228 T secHashCtrl
+0000028c T secHashCopy
+         U memset
+         U memcpy
+
+secHmac.o:
+00000000 T secHmacInit
+         U .TOC.
+         U memset
+         U secHashInit
+         U secHashUpdate
+         U secHashFinal
+         U secHashCleanup
+         U memcpy
+00000198 T secHmacUpdate
+000001e0 T secHmacFinal
+0000030c T secHmacCleanup
+00000338 T secHmac
+
+secHashMd5.o:
+00000000 T secHashMd5TemplateGet
+         U .TOC.
+00000000 D secHashMd5Templ
+00000014 T secHashMd5TemplateSet
+
+secPbkdf2.o:
+00000000 t F
+         U .TOC.
+         U secHmacInit
+         U secHmacUpdate
+         U secHmacFinal
+         U secHmacCleanup
+         U memcpy
+         U secHmac
+000001e4 T secPbkdf2Hmac
+
+secHashSha1.o:
+00000000 T secHashSha1TemplateGet
+         U .TOC.
+00000000 D secHashSha1Templ
+00000014 T secHashSha1TemplateSet
+
+secHashSha256.o:
+00000000 T secHashSha256TemplateGet
+         U .TOC.
+00000000 D secHashSha256Templ
+00000014 T secHashSha256TemplateSet
+
+secHashSha384.o:
+00000000 T secHashSha384TemplateGet
+         U .TOC.
+00000000 D secHashSha384Templ
+00000014 T secHashSha384TemplateSet
+
+secHashSha512.o:
+00000000 T secHashSha512TemplateGet
+         U .TOC.
+00000000 D secHashSha512Templ
+00000014 T secHashSha512TemplateSet
+
+secHashRmd.o:
+00000000 T secHashRmdTemplateGet
+         U .TOC.
+00000000 D secHashRmdTempl
+00000014 T secHashRmdTemplateSet
+
+secHashWhirlpool.o:
+00000000 T secHashWhirlpoolTemplateGet
+         U .TOC.
+00000000 D secHashWhirlpoolTempl
+00000014 T secHashWhirlpoolTemplateSet
+
+libSEC_HASH.a:
+
+secHash.o:
+00000000 T secHashInit
+         U .TOC.
+0000005c T secHashUpdate
+000000b8 T secHashFinal
+00000124 T secHashCleanup
+00000178 T secHash
+00000228 T secHashCtrl
+0000028c T secHashCopy
+         U memset
+         U memcpy
+
+secHmac.o:
+00000000 T secHmacInit
+         U .TOC.
+         U memset
+         U secHashInit
+         U secHashUpdate
+         U secHashFinal
+         U secHashCleanup
+         U memcpy
+00000198 T secHmacUpdate
+000001e0 T secHmacFinal
+0000030c T secHmacCleanup
+00000338 T secHmac
+
+secHashMd5.o:
+00000000 T secHashMd5TemplateGet
+         U .TOC.
+00000000 D secHashMd5Templ
+00000014 T secHashMd5TemplateSet
+
+secPbkdf2.o:
+00000000 t F
+         U .TOC.
+         U secHmacInit
+         U secHmacUpdate
+         U secHmacFinal
+         U secHmacCleanup
+         U memcpy
+         U secHmac
+000001e4 T secPbkdf2Hmac
+
+secHashSha1.o:
+00000000 T secHashSha1TemplateGet
+         U .TOC.
+00000000 D secHashSha1Templ
+00000014 T secHashSha1TemplateSet
+
+secHashSha256.o:
+00000000 T secHashSha256TemplateGet
+         U .TOC.
+00000000 D secHashSha256Templ
+00000014 T secHashSha256TemplateSet
+
+secHashSha384.o:
+00000000 T secHashSha384TemplateGet
+         U .TOC.
+00000000 D secHashSha384Templ
+00000014 T secHashSha384TemplateSet
+
+secHashSha512.o:
+00000000 T secHashSha512TemplateGet
+         U .TOC.
+00000000 D secHashSha512Templ
+00000014 T secHashSha512TemplateSet
+
+secHashRmd.o:
+00000000 T secHashRmdTemplateGet
+         U .TOC.
+00000000 D secHashRmdTempl
+00000014 T secHashRmdTemplateSet
+
+secHashWhirlpool.o:
+00000000 T secHashWhirlpoolTemplateGet
+         U .TOC.
+00000000 D secHashWhirlpoolTempl
+00000014 T secHashWhirlpoolTemplateSet

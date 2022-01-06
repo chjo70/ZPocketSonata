@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# IPNET_WLAN Section
+##########################
+
+
+ifdef _WRS_CONFIG_IPNET_WLAN
+VSBL_IPNET_WLAN_SRC = 
+VSBL_IPNET_WLAN_DEPEND = 
+
+ifdef _WRS_CONFIG_IPNET_1_1_1_2_MOBILITY_1_0_1_0_WLAN_1_0_1_0
+VSBL_IPNET_WLAN_SRC += IPNET_WLAN
+VSBL_IPNET_WLAN_DEPEND += IPNET_COREIP
+VSBL_IPNET_WLAN_DEPEND += OPENSSL
+IPNET_WLAN_FASTBUILD = YES
+VSBL_IPNET_WLAN_PATH = $(WIND_BASE)/pkgs/net/ipnet-1.1.1.2/mobility-1.0.1.0/wlan
+VSBL_IPNET_WLAN_VERSION = IPNET_1_1_1_2_MOBILITY_1_0_1_0_WLAN_1_0_1_0
+endif
+endif
+

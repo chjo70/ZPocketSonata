@@ -1,0 +1,54 @@
+##############################################################################
+# syscallUsrNum.def.template - Template for user-defined system call numbers
+#
+# Copyright 2004 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,24mar04,yvp  Written.
+#
+#			   -- IMPORTANT --
+#  TO START USING THIS FILE, PLEASE RENAME IT TO syscallUsrNum.def FIRST.
+#
+#  DESCRIPTION:
+#  This file defines system call function numbers for user-defined VxWorks 
+#  system calls. It complements syscallApi.def in that it allows VxWorks 
+#  users to experiment with their own custom system calls.
+#
+#  FORMAT:
+#  
+#  The format is identical to that used by syscallNum.def.
+#  A Group definition line defines one system call group. 
+#  Its format is as follows:
+#  
+#  	SYSCALL_GROUP  SCG_<groupName>   <groupNumber> [ <configMacro(s)> ]
+#  
+#  For example "SYSCALL_GROUP SCG_fooLib 3" defines a System Call Group
+#  "SCG_fooLib" for the kernel library fooLib, whose group number is
+#  3. The group numbering scheme is as follows -
+#  
+#  	0 - 1        Reserved.
+#  	2 - 7        Customer use.
+#  	8 onwards    Wind River and partners
+#
+#  Following each System Call Group definition is the list of System Calls
+#  included in that System Call Group. Each System Call is declared using
+#  the format:
+#
+#	<number> <name> 
+#
+#  <number> is the system call number within the system call group
+#  <name> is the name of the system call.
+#
+#  System call numbers within a given group should start at 0 and must be 
+#  less than 256. They need not be sequential. 
+#
+#  This file is paired with a companion file named syscallUsrApi.def that 
+#  defines the system call API (i.e. function argument number & types) for
+#  user-defined system calls. These two files are parsed by the scgen 
+#  utility to automatically generate header files, assembly stubs and 
+#  initialized system call tables used by the system.
+#
+#  For uniformity and readability, all numbers in this file should be decimal.
+##############################################################################
+

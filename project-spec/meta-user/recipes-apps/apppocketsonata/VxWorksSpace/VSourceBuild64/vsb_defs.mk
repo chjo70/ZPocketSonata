@@ -1,0 +1,12 @@
+# Automatically generated file: do not edit
+_WRS_CONFIG_hmt_t2080vpx3u_1_0_0_0_CPU = PPCE6500
+
+
+ifdef _WRS_CONFIG_PPC_1_3_1_5 
+_HW_hmt_t2080vpx3u_1_0_0_0_USR_MODEL = PPCE6500
+endif
+
+_HW_CONFIGURATION_hmt_t2080vpx3u_1_0_0_0_BSPDIR = $(WIND_BASE)/pkgs/os/board/ppc/hmt_t2080vpx3u_1_0_0_0
+_HW_CONFIGURATION_BSPS = hmt_t2080vpx3u_1_0_0_0
+_HW_CONFIGURATION_CPUS = 
+_HW_CONFIGURATIONS = $(_HW_CONFIGURATION_BSPS) $(_HW_CONFIGURATION_CPUS)

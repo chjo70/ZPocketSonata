@@ -1,0 +1,150 @@
+
+libaim.a:
+
+cacheFuncBind.o:
+00000000 D cacheLib
+00000080 D cacheNullFuncs
+000000a0 D cacheDmaFuncs
+000000c0 D cacheUserFuncs
+00000008 C _func_cacheFuncsSet
+000000e0 D cacheMmuAvailable
+
+cacheLib.o:
+00000000 T cacheLibInit
+         U .TOC.
+0000049c T cacheFuncsSet
+         U _func_cacheFuncsSet
+         U cacheArchLibInit
+00000044 T cacheEnable
+         U cacheLib
+00000094 T cacheDisable
+000000e4 T cacheLock
+00000134 T cacheUnlock
+00000184 T cacheFlush
+000001d4 T cacheInvalidate
+00000224 T cacheClear
+000002d0 T cachePipeFlush
+0000031c T cacheTextLocalUpdate
+0000037c T cacheTextUpdate
+000003b8 T cacheDmaMalloc
+00000000 D cacheDmaMallocRtn
+         U memSysPartId
+         U memPartAlignedAlloc
+00000420 T cacheDmaFree
+00000008 D cacheDmaFreeRtn
+00000014 D cacheDataEnabled
+         U memPartFree
+         U free
+         U cacheDmaFuncs
+00000010 D cacheDataMode
+         U cacheUserFuncs
+         U cacheNullFuncs
+         U cacheMmuAvailable
+000005d0 T cacheDrvFlush
+0000061c T cacheDrvInvalidate
+00000668 T cacheDrvVirtToPhys
+000006b0 T cacheForeignFlush
+00000708 T cacheForeignClear
+00000760 T cacheForeignInvalidate
+
+aimCpuLib.o:
+00000000 t pgCpuLibFuncs
+00000000 T aimCpuLibInit
+         U .TOC.
+0000002c T aimCpuStart
+00000080 T aimCpuShutdown
+000000d4 T aimCpuShow
+0000011c T aimCpuSmpLoop
+
+aimMmuBaseLib.o:
+00000000 T aimMmuBaseLibInit
+         U .TOC.
+         U mmuLibFuncs
+00000000 D aimMmuBlockSize
+00000008 D aimMmuPageSize
+
+aimMmuSysctl.o:
+00000000 T aimMmuSysctlInit
+         U .TOC.
+         U hw_node
+         U pSysctlCtxList
+00000000 D mmu_node
+         U sysctl_add_oid_internal
+         U sysctl_handle_int
+         U aimMmuPageSize
+         U aimMmuBlockSize
+
+libaim.a:
+
+cacheFuncBind.o:
+00000000 D cacheLib
+00000080 D cacheNullFuncs
+000000a0 D cacheDmaFuncs
+000000c0 D cacheUserFuncs
+00000008 C _func_cacheFuncsSet
+000000e0 D cacheMmuAvailable
+
+cacheLib.o:
+00000000 T cacheLibInit
+         U .TOC.
+0000049c T cacheFuncsSet
+         U _func_cacheFuncsSet
+         U cacheArchLibInit
+00000044 T cacheEnable
+         U cacheLib
+00000094 T cacheDisable
+000000e4 T cacheLock
+00000134 T cacheUnlock
+00000184 T cacheFlush
+000001d4 T cacheInvalidate
+00000224 T cacheClear
+000002d0 T cachePipeFlush
+0000031c T cacheTextLocalUpdate
+0000037c T cacheTextUpdate
+000003b8 T cacheDmaMalloc
+00000000 D cacheDmaMallocRtn
+         U memSysPartId
+         U memPartAlignedAlloc
+00000420 T cacheDmaFree
+00000008 D cacheDmaFreeRtn
+00000014 D cacheDataEnabled
+         U memPartFree
+         U free
+         U cacheDmaFuncs
+00000010 D cacheDataMode
+         U cacheUserFuncs
+         U cacheNullFuncs
+         U cacheMmuAvailable
+000005d0 T cacheDrvFlush
+0000061c T cacheDrvInvalidate
+00000668 T cacheDrvVirtToPhys
+000006b0 T cacheForeignFlush
+00000708 T cacheForeignClear
+00000760 T cacheForeignInvalidate
+
+aimCpuLib.o:
+00000000 t pgCpuLibFuncs
+00000000 T aimCpuLibInit
+         U .TOC.
+0000002c T aimCpuStart
+00000080 T aimCpuShutdown
+000000d4 T aimCpuShow
+0000011c T aimCpuSmpLoop
+
+aimMmuBaseLib.o:
+00000000 T aimMmuBaseLibInit
+         U .TOC.
+         U mmuLibFuncs
+00000000 D aimMmuBlockSize
+00000008 D aimMmuPageSize
+
+aimMmuSysctl.o:
+00000000 T aimMmuSysctlInit
+         U .TOC.
+         U hw_node
+         U pSysctlCtxList
+00000000 D mmu_node
+         U sysctl_add_oid_internal
+         U sysctl_handle_int
+         U aimMmuPageSize
+         U aimMmuBlockSize

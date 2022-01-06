@@ -1,0 +1,1404 @@
+
+libdcc.a:
+
+_x_diab_hfpfitof.o:
+00000000 B ___x_diab_hfpfitof_o
+00000000 T __itof
+
+_x_diab_hfpfutof.o:
+00000000 D ___x_diab_hfpfutof_o
+00000000 T __utof
+
+_x_diab_sfpddtoll.o:
+00000000 B ___x_diab_sfpddtoll_o
+00000000 T _d_dtoll
+         U .TOC.
+000000f8 T __dtoll
+
+_x_diab_sfpddtoull.o:
+00000000 B ___x_diab_sfpddtoull_o
+00000000 T _d_dtoull
+         U .TOC.
+000000d8 T __dtoull
+
+_x_diab_sfpdlltod.o:
+00000000 B ___x_diab_sfpdlltod_o
+00000000 T _d_lltod
+         U .TOC.
+         U sfpDoubleNormalize
+00000060 T __lltod
+
+_x_diab_sfpdulltod.o:
+00000000 B ___x_diab_sfpdulltod_o
+00000000 T _d_ulltod
+         U .TOC.
+         U sfpDoubleNormalize
+00000048 T __ulltod
+
+_x_diab_sfpfftoll.o:
+00000000 B ___x_diab_sfpfftoll_o
+00000000 T _f_ftoll
+         U .TOC.
+000000d8 T __ftoll
+
+_x_diab_sfpfftoull.o:
+00000000 B ___x_diab_sfpfftoull_o
+00000000 T _f_ftoull
+         U .TOC.
+000000c0 T __ftoull
+
+_x_diab_sfpflltof.o:
+00000000 B ___x_diab_sfpflltof_o
+00000000 T _f_lltof
+         U .TOC.
+         U sfpFloatNormalize
+00000080 T __lltof
+
+_x_diab_sfpfulltof.o:
+00000000 B ___x_diab_sfpfulltof_o
+00000000 T _f_ulltof
+         U .TOC.
+         U sfpFloatNormalize
+0000006c T __ulltof
+
+_x_diab_sfpdnorm.o:
+00000000 B ___x_diab_sfpdnorm_o
+00000000 T sfpDoubleNormalize
+         U .TOC.
+0000020c T sfpDoubleNormalize2
+
+_x_diab_sfpfnorm.o:
+00000000 D ___x_diab_sfpfnorm_o
+00000000 T sfpFloatNormalize
+         U .TOC.
+
+_x_diab_rd_pk_db.o:
+00000000 B ___x_diab_rd_pk_db_o
+00000000 T __DIAB_rd_pk_db
+         U .TOC.
+
+_x_diab_rd_pk_fl.o:
+00000000 B ___x_diab_rd_pk_fl_o
+00000000 T __DIAB_rd_pk_fl
+         U .TOC.
+
+_x_diab_rd_pk_ld.o:
+00000000 B ___x_diab_rd_pk_ld_o
+00000000 T __DIAB_rd_pk_ld
+         U .TOC.
+
+_x_diab_rd_sw_db.o:
+00000000 B ___x_diab_rd_sw_db_o
+00000000 T __DIAB_rd_sw_db
+         U .TOC.
+
+_x_diab_rd_sw_fl.o:
+00000000 B ___x_diab_rd_sw_fl_o
+00000000 T __DIAB_rd_sw_fl
+         U .TOC.
+
+_x_diab_rd_sw_ld.o:
+00000000 B ___x_diab_rd_sw_ld_o
+00000000 T __DIAB_rd_sw_ld
+         U .TOC.
+
+_x_diab_wr_pk_db.o:
+00000000 B ___x_diab_wr_pk_db_o
+00000000 T __DIAB_wr_pk_db
+         U .TOC.
+
+_x_diab_wr_pk_fl.o:
+00000000 B ___x_diab_wr_pk_fl_o
+00000000 T __DIAB_wr_pk_fl
+         U .TOC.
+
+_x_diab_wr_pk_ld.o:
+00000000 B ___x_diab_wr_pk_ld_o
+00000000 T __DIAB_wr_pk_ld
+         U .TOC.
+
+_x_diab_wr_sw_db.o:
+00000000 B ___x_diab_wr_sw_db_o
+00000000 T __DIAB_wr_sw_db
+         U .TOC.
+
+_x_diab_wr_sw_fl.o:
+00000000 B ___x_diab_wr_sw_fl_o
+00000000 T __DIAB_wr_sw_fl
+         U .TOC.
+
+_x_diab_wr_sw_ld.o:
+00000000 B ___x_diab_wr_sw_ld_o
+00000000 T __DIAB_wr_sw_ld
+         U .TOC.
+
+_x_diab_wrc_matp.o:
+00000000 B ___x_diab_wrc_matp_o
+00000000 T __wrc_matp_i4i4i4_888
+         U .TOC.
+         U _savegpr0_18
+         U _restgpr0_18
+00000108 T __wrc_matp_i4i1i4_888
+
+_x_diab_misc.o:
+00000000 B ___x_diab_misc_o
+00000000 A __EVEC32BIT
+
+__diab_intrinsics_impfp.o:
+00000000 d __diab_intrinsics_impfp
+00000000 T __diab_intrinsics_impfpInit
+         U .TOC.
+         U ___x_diab_hfpfitof_o
+         U ___x_diab_hfpfutof_o
+         U ___x_diab_sfpddtoll_o
+         U ___x_diab_sfpddtoull_o
+         U ___x_diab_sfpdlltod_o
+         U ___x_diab_sfpdulltod_o
+         U ___x_diab_sfpfftoll_o
+         U ___x_diab_sfpfftoull_o
+         U ___x_diab_sfpflltof_o
+         U ___x_diab_sfpfulltof_o
+         U ___x_diab_sfpdnorm_o
+         U ___x_diab_sfpfnorm_o
+         U ___x_diab_rd_pk_db_o
+         U ___x_diab_rd_pk_fl_o
+         U ___x_diab_rd_pk_ld_o
+         U ___x_diab_rd_sw_db_o
+         U ___x_diab_rd_sw_fl_o
+         U ___x_diab_rd_sw_ld_o
+         U ___x_diab_wr_pk_db_o
+         U ___x_diab_wr_pk_fl_o
+         U ___x_diab_wr_pk_ld_o
+         U ___x_diab_wr_sw_db_o
+         U ___x_diab_wr_sw_fl_o
+         U ___x_diab_wr_sw_ld_o
+         U ___x_diab_wrc_matp_o
+         U ___x_diab_misc_o
+
+_x_diab_sxpdiv32.o:
+00000000 t div32
+00000000 D ___x_diab_sxpdiv32_o
+         U .TOC.
+00000070 T __div32
+000000ec T __udiv32
+
+_x_diab_sxprem32.o:
+00000000 t rem32
+00000000 B ___x_diab_sxprem32_o
+         U .TOC.
+00000164 T __rem32
+000001cc T __urem32
+
+_x_diab_sxpdiv64.o:
+00000000 t div64
+00000000 D ___x_diab_sxpdiv64_o
+         U .TOC.
+00000204 T __div64
+00000298 T __udiv64
+
+_x_diab_sxprem64.o:
+00000000 t rem64
+00000000 B ___x_diab_sxprem64_o
+         U .TOC.
+00000190 T __rem64
+00000220 T __urem64
+
+_x_diab_sxpmul64.o:
+00000000 B ___x_diab_sxpmul64_o
+00000000 T __mul64
+         U .TOC.
+
+_x_diab_sxplsl64.o:
+00000000 B ___x_diab_sxplsl64_o
+00000000 T __lsl64
+         U .TOC.
+
+_x_diab_sxpasr64.o:
+00000000 B ___x_diab_sxpasr64_o
+00000000 T __asr64
+         U .TOC.
+
+_x_diab_sxplsr64.o:
+00000000 B ___x_diab_sxplsr64_o
+00000000 T __lsr64
+         U .TOC.
+
+_x_diab_sxpadd64.o:
+00000000 B ___x_diab_sxpadd64_o
+00000000 T __add64
+         U .TOC.
+00000010 T __sub64
+
+_x_diab_sxpcmp64.o:
+00000000 D ___x_diab_sxpcmp64_o
+00000000 T __eq64
+         U .TOC.
+00000018 T __ne64
+00000030 T __ge64
+00000088 T __gt64
+000000e0 T __le64
+00000138 T __lt64
+00000190 T __uge64
+000001e8 T __ugt64
+00000240 T __ule64
+00000298 T __ult64
+
+_x_diab_restfreg.o:
+00000000 D ___x_diab_restfreg_o
+00000000 T _restf14
+00000004 T _restf15
+00000008 T _restf16
+0000000c T _restf17
+00000010 T _restf18
+00000014 T _restf19
+00000018 T _restf20
+0000001c T _restf21
+00000020 T _restf22
+00000024 T _restf23
+00000028 T _restf24
+0000002c T _restf25
+00000030 T _restf26
+00000034 T _restf27
+00000038 T _restf28
+0000003c T _restf29
+00000040 T _restf30
+00000044 T _restf31
+
+_x_diab_savefreg.o:
+00000000 D ___x_diab_savefreg_o
+00000000 T _savef14
+00000004 T _savef15
+00000008 T _savef16
+0000000c T _savef17
+00000010 T _savef18
+00000014 T _savef19
+00000018 T _savef20
+0000001c T _savef21
+00000020 T _savef22
+00000024 T _savef23
+00000028 T _savef24
+0000002c T _savef25
+00000030 T _savef26
+00000034 T _savef27
+00000038 T _savef28
+0000003c T _savef29
+00000040 T _savef30
+00000044 T _savef31
+
+_x_diab_restfpr.o:
+00000000 D ___x_diab_restfpr_o
+00000000 T _restfpr_14
+00000004 T _restfpr_15
+00000008 T _restfpr_16
+0000000c T _restfpr_17
+00000010 T _restfpr_18
+00000014 T _restfpr_19
+00000018 T _restfpr_20
+0000001c T _restfpr_21
+00000020 T _restfpr_22
+00000024 T _restfpr_23
+00000028 T _restfpr_24
+0000002c T _restfpr_25
+00000030 T _restfpr_26
+00000034 T _restfpr_27
+00000038 T _restfpr_28
+0000003c T _restfpr_29
+00000054 T _restfpr_30
+00000058 T _restfpr_31
+
+_x_diab_savefpr.o:
+00000000 D ___x_diab_savefpr_o
+00000000 T _savefpr_14
+00000004 T _savefpr_15
+00000008 T _savefpr_16
+0000000c T _savefpr_17
+00000010 T _savefpr_18
+00000014 T _savefpr_19
+00000018 T _savefpr_20
+0000001c T _savefpr_21
+00000020 T _savefpr_22
+00000024 T _savefpr_23
+00000028 T _savefpr_24
+0000002c T _savefpr_25
+00000030 T _savefpr_26
+00000034 T _savefpr_27
+00000038 T _savefpr_28
+0000003c T _savefpr_29
+00000040 T _savefpr_30
+00000044 T _savefpr_31
+
+_x_diab_restfprs.o:
+00000000 B ___x_diab_restfprs_o
+00000000 T _restfprs_14_l
+00000004 T _restfprs_15_l
+00000008 T _restfprs_16_l
+0000000c T _restfprs_17_l
+00000010 T _restfprs_18_l
+00000014 T _restfprs_19_l
+00000018 T _restfprs_20_l
+0000001c T _restfprs_21_l
+00000020 T _restfprs_22_l
+00000024 T _restfprs_23_l
+00000028 T _restfprs_24_l
+0000002c T _restfprs_25_l
+00000030 T _restfprs_26_l
+00000034 T _restfprs_27_l
+00000038 T _restfprs_28_l
+00000058 T _restfprs_29_l
+0000005c T _restfprs_30_l
+00000060 T _restfprs_31_l
+
+_x_diab_savefprs.o:
+00000000 D ___x_diab_savefprs_o
+00000000 T _savefprs_14_l
+00000004 T _savefprs_15_l
+00000008 T _savefprs_16_l
+0000000c T _savefprs_17_l
+00000010 T _savefprs_18_l
+00000014 T _savefprs_19_l
+00000018 T _savefprs_20_l
+0000001c T _savefprs_21_l
+00000020 T _savefprs_22_l
+00000024 T _savefprs_23_l
+00000028 T _savefprs_24_l
+0000002c T _savefprs_25_l
+00000030 T _savefprs_26_l
+00000034 T _savefprs_27_l
+00000038 T _savefprs_28_l
+0000003c T _savefprs_29_l
+00000040 T _savefprs_30_l
+00000044 T _savefprs_31_l
+
+_x_diab_restfprx.o:
+00000000 B ___x_diab_restfprx_o
+00000000 T _restfprx_14_l
+00000004 T _restfprx_15_l
+00000008 T _restfprx_16_l
+0000000c T _restfprx_17_l
+00000010 T _restfprx_18_l
+00000014 T _restfprx_19_l
+00000018 T _restfprx_20_l
+0000001c T _restfprx_21_l
+00000020 T _restfprx_22_l
+00000024 T _restfprx_23_l
+00000028 T _restfprx_24_l
+0000002c T _restfprx_25_l
+00000030 T _restfprx_26_l
+00000034 T _restfprx_27_l
+00000038 T _restfprx_28_l
+00000058 T _restfprx_29_l
+0000005c T _restfprx_30_l
+00000060 T _restfprx_31_l
+
+_x_diab_savefprx.o:
+00000000 D ___x_diab_savefprx_o
+00000000 T _savefprx_14_l
+00000004 T _savefprx_15_l
+00000008 T _savefprx_16_l
+0000000c T _savefprx_17_l
+00000010 T _savefprx_18_l
+00000014 T _savefprx_19_l
+00000018 T _savefprx_20_l
+0000001c T _savefprx_21_l
+00000020 T _savefprx_22_l
+00000024 T _savefprx_23_l
+00000028 T _savefprx_24_l
+0000002c T _savefprx_25_l
+00000030 T _savefprx_26_l
+00000034 T _savefprx_27_l
+00000038 T _savefprx_28_l
+0000003c T _savefprx_29_l
+00000040 T _savefprx_30_l
+00000044 T _savefprx_31_l
+
+_x_diab_restgpr.o:
+00000000 T ___x_diab_restgpr_o
+00000000 T _restgpr0_14
+00000004 T _restgpr0_15
+00000008 T _restgpr0_16
+0000000c T _restgpr0_17
+00000010 T _restgpr0_18
+00000014 T _restgpr0_19
+00000018 T _restgpr0_20
+0000001c T _restgpr0_21
+00000020 T _restgpr0_22
+00000024 T _restgpr0_23
+00000028 T _restgpr0_24
+0000002c T _restgpr0_25
+00000030 T _restgpr0_26
+00000034 T _restgpr0_27
+00000038 T _restgpr0_28
+0000003c T _restgpr0_29
+00000054 T _restgpr0_30
+00000058 T _restgpr0_31
+00000068 T _restgpr1_14
+0000006c T _restgpr1_15
+00000070 T _restgpr1_16
+00000074 T _restgpr1_17
+00000078 T _restgpr1_18
+0000007c T _restgpr1_19
+00000080 T _restgpr1_20
+00000084 T _restgpr1_21
+00000088 T _restgpr1_22
+0000008c T _restgpr1_23
+00000090 T _restgpr1_24
+00000094 T _restgpr1_25
+00000098 T _restgpr1_26
+0000009c T _restgpr1_27
+000000a0 T _restgpr1_28
+000000a4 T _restgpr1_29
+000000a8 T _restgpr1_30
+000000ac T _restgpr1_31
+
+_x_diab_savegpr.o:
+00000000 D ___x_diab_savegpr_o
+00000000 T _savegpr0_14
+00000004 T _savegpr0_15
+00000008 T _savegpr0_16
+0000000c T _savegpr0_17
+00000010 T _savegpr0_18
+00000014 T _savegpr0_19
+00000018 T _savegpr0_20
+0000001c T _savegpr0_21
+00000020 T _savegpr0_22
+00000024 T _savegpr0_23
+00000028 T _savegpr0_24
+0000002c T _savegpr0_25
+00000030 T _savegpr0_26
+00000034 T _savegpr0_27
+00000038 T _savegpr0_28
+0000003c T _savegpr0_29
+00000040 T _savegpr0_30
+00000044 T _savegpr0_31
+00000050 T _savegpr1_14
+00000054 T _savegpr1_15
+00000058 T _savegpr1_16
+0000005c T _savegpr1_17
+00000060 T _savegpr1_18
+00000064 T _savegpr1_19
+00000068 T _savegpr1_20
+0000006c T _savegpr1_21
+00000070 T _savegpr1_22
+00000074 T _savegpr1_23
+00000078 T _savegpr1_24
+0000007c T _savegpr1_25
+00000080 T _savegpr1_26
+00000084 T _savegpr1_27
+00000088 T _savegpr1_28
+0000008c T _savegpr1_29
+00000090 T _savegpr1_30
+00000094 T _savegpr1_31
+
+_x_diab_restgprx.o:
+00000000 B ___x_diab_restgprx_o
+00000000 T _restgprx_14_l
+00000004 T _restgprx_15_l
+00000008 T _restgprx_16_l
+0000000c T _restgprx_17_l
+00000010 T _restgprx_18_l
+00000014 T _restgprx_19_l
+00000018 T _restgprx_20_l
+0000001c T _restgprx_21_l
+00000020 T _restgprx_22_l
+00000024 T _restgprx_23_l
+00000028 T _restgprx_24_l
+0000002c T _restgprx_25_l
+00000030 T _restgprx_26_l
+00000034 T _restgprx_27_l
+00000058 T _restgprx_28_l
+0000005c T _restgprx_29_l
+00000060 T _restgprx_30_l
+00000064 T _restgprx_31_l
+
+_x_diab_savegprx.o:
+00000000 D ___x_diab_savegprx_o
+00000000 T _savegprx_14_l
+00000004 T _savegprx_15_l
+00000008 T _savegprx_16_l
+0000000c T _savegprx_17_l
+00000010 T _savegprx_18_l
+00000014 T _savegprx_19_l
+00000018 T _savegprx_20_l
+0000001c T _savegprx_21_l
+00000020 T _savegprx_22_l
+00000024 T _savegprx_23_l
+00000028 T _savegprx_24_l
+0000002c T _savegprx_25_l
+00000030 T _savegprx_26_l
+00000034 T _savegprx_27_l
+00000038 T _savegprx_28_l
+0000003c T _savegprx_29_l
+00000040 T _savegprx_30_l
+00000044 T _savegprx_31_l
+
+_x_diab_svrs_vpr.o:
+00000000 D ___x_diab_svrs_vpr_o
+00000000 T _savevr_20
+00000008 T _savevr_21
+00000010 T _savevr_22
+00000018 T _savevr_23
+00000020 T _savevr_24
+00000028 T _savevr_25
+00000030 T _savevr_26
+00000038 T _savevr_27
+00000040 T _savevr_28
+00000048 T _savevr_29
+00000050 T _savevr_30
+00000058 T _savevr_31
+00000064 T _restvr_20
+0000006c T _restvr_21
+00000074 T _restvr_22
+0000007c T _restvr_23
+00000084 T _restvr_24
+0000008c T _restvr_25
+00000094 T _restvr_26
+0000009c T _restvr_27
+000000a4 T _restvr_28
+000000ac T _restvr_29
+000000b4 T _restvr_30
+000000bc T _restvr_31
+
+_x_diab_va_arg.o:
+00000000 B ___x_diab_va_arg_o
+
+_x_diab_crtlibso.o:
+00000000 D ___x_diab_crtlibso_o
+00000000 T __init
+         U .TOC.
+         U __exec_ctors
+00000000 T __fini
+         U __exec_dtors
+
+_x_diab_ctordtor.o:
+00000000 d __CTOR_END__
+00000000 t __CTOR_LIST__
+00000000 b __DTOR_LIST__
+00000000 b __DTOR_END__
+00000000 B ___x_diab_ctordtor_o
+00000000 T __exec_ctors
+         U .TOC.
+0000006c T __exec_dtors
+00000008 B __exec_xtor_table
+
+_x_diab_copytable.o:
+00000000 D ___x_diab_copytable_o
+00000000 T __copy
+         U .TOC.
+         U memset
+         U memcpy
+0000006c T __copy_multiple
+
+_x_diab_wrc_ssp_guard.o:
+00000000 D ___x_diab_wrc_ssp_guard_o
+00000008 D __stack_chk_guard
+
+_x_diab_wrc_ssp_fail.o:
+00000000 B ___x_diab_wrc_ssp_fail_o
+00000000 T __stack_chk_fail
+         U .TOC.
+         U write
+         U abort
+
+_x_diab_dmemcpy.o:
+00000000 B ___x_diab_dmemcpy_o
+00000000 T __diab_memcpy
+         U .TOC.
+
+_x_diab_dmemset.o:
+00000000 B ___x_diab_dmemset_o
+00000000 T __diab_memset
+         U .TOC.
+
+__diab_intrinsics_impl.o:
+00000000 d __diab_intrinsics_impl
+00000000 T __diab_intrinsics_implInit
+         U .TOC.
+         U ___x_diab_sxpdiv32_o
+         U ___x_diab_sxprem32_o
+         U ___x_diab_sxpdiv64_o
+         U ___x_diab_sxprem64_o
+         U ___x_diab_sxpmul64_o
+         U ___x_diab_sxplsl64_o
+         U ___x_diab_sxpasr64_o
+         U ___x_diab_sxplsr64_o
+         U ___x_diab_sxpadd64_o
+         U ___x_diab_sxpcmp64_o
+         U ___x_diab_restfreg_o
+         U ___x_diab_savefreg_o
+         U ___x_diab_restfpr_o
+         U ___x_diab_savefpr_o
+         U ___x_diab_restfprs_o
+         U ___x_diab_savefprs_o
+         U ___x_diab_restfprx_o
+         U ___x_diab_savefprx_o
+         U ___x_diab_restgpr_o
+         U ___x_diab_savegpr_o
+         U ___x_diab_restgprx_o
+         U ___x_diab_savegprx_o
+         U ___x_diab_svrs_vpr_o
+         U ___x_diab_va_arg_o
+         U ___x_diab_crtlibso_o
+         U ___x_diab_ctordtor_o
+         U ___x_diab_copytable_o
+         U ___x_diab_wrc_ssp_guard_o
+         U ___x_diab_wrc_ssp_fail_o
+         U ___x_diab_dmemcpy_o
+         U ___x_diab_dmemset_o
+
+_x_diab_torn_syncatomic.o:
+00000000 t __diab_atomic_lock
+00000000 D ___x_diab_torn_syncatomic_o
+00000000 T _STI__07__diab_atomic_init
+         U .TOC.
+         U __diab_alloc_mutex
+0000003c T __diab_atomic_enter
+         U __diab_lock_mutex
+00000074 T __diab_atomic_restore
+         U __diab_unlock_mutex
+
+_x_diab_torn_syncmutex.o:
+00000000 D ___x_diab_torn_syncmutex_o
+00000000 T __diab_alloc_mutex
+         U .TOC.
+         U semMCreate
+00000030 T __diab_free_mutex
+         U semDelete
+0000005c T __diab_lock_mutex
+         U semTake
+0000008c T __diab_trylock_mutex
+000000bc T __diab_unlock_mutex
+         U semGive
+
+_x_diab_torn_syncsem.o:
+00000000 D ___x_diab_torn_syncsem_o
+00000000 T __diab_alloc_semaphore
+         U .TOC.
+         U semMCreate
+00000030 T __diab_free_semaphore
+         U semDelete
+0000005c T __diab_lock_semaphore
+         U semTake
+0000008c T __diab_trylock_semaphore
+000000bc T __diab_unlock_semaphore
+         U semGive
+
+_x_diab_comljmp.o:
+00000000 B ___x_diab_comljmp_o
+00000000 T __common_long_jmp
+         U .TOC.
+
+_x_diab_libg.o:
+00000000 D ___x_diab_libg_o
+00000000 B __cie
+
+__diab_intrinsics_torn.o:
+00000000 d __diab_intrinsics_torn
+00000000 T __diab_intrinsics_tornInit
+         U .TOC.
+         U ___x_diab_torn_syncatomic_o
+         U ___x_diab_torn_syncmutex_o
+         U ___x_diab_torn_syncsem_o
+         U ___x_diab_comljmp_o
+         U ___x_diab_libg_o
+
+libdcc.a:
+
+_x_diab_hfpfitof.o:
+00000000 B ___x_diab_hfpfitof_o
+00000000 T __itof
+
+_x_diab_hfpfutof.o:
+00000000 D ___x_diab_hfpfutof_o
+00000000 T __utof
+
+_x_diab_sfpddtoll.o:
+00000000 B ___x_diab_sfpddtoll_o
+00000000 T _d_dtoll
+         U .TOC.
+000000f8 T __dtoll
+
+_x_diab_sfpddtoull.o:
+00000000 B ___x_diab_sfpddtoull_o
+00000000 T _d_dtoull
+         U .TOC.
+000000d8 T __dtoull
+
+_x_diab_sfpdlltod.o:
+00000000 B ___x_diab_sfpdlltod_o
+00000000 T _d_lltod
+         U .TOC.
+         U sfpDoubleNormalize
+00000060 T __lltod
+
+_x_diab_sfpdulltod.o:
+00000000 B ___x_diab_sfpdulltod_o
+00000000 T _d_ulltod
+         U .TOC.
+         U sfpDoubleNormalize
+00000048 T __ulltod
+
+_x_diab_sfpfftoll.o:
+00000000 B ___x_diab_sfpfftoll_o
+00000000 T _f_ftoll
+         U .TOC.
+000000d8 T __ftoll
+
+_x_diab_sfpfftoull.o:
+00000000 B ___x_diab_sfpfftoull_o
+00000000 T _f_ftoull
+         U .TOC.
+000000c0 T __ftoull
+
+_x_diab_sfpflltof.o:
+00000000 B ___x_diab_sfpflltof_o
+00000000 T _f_lltof
+         U .TOC.
+         U sfpFloatNormalize
+00000080 T __lltof
+
+_x_diab_sfpfulltof.o:
+00000000 B ___x_diab_sfpfulltof_o
+00000000 T _f_ulltof
+         U .TOC.
+         U sfpFloatNormalize
+0000006c T __ulltof
+
+_x_diab_sfpdnorm.o:
+00000000 B ___x_diab_sfpdnorm_o
+00000000 T sfpDoubleNormalize
+         U .TOC.
+0000020c T sfpDoubleNormalize2
+
+_x_diab_sfpfnorm.o:
+00000000 D ___x_diab_sfpfnorm_o
+00000000 T sfpFloatNormalize
+         U .TOC.
+
+_x_diab_rd_pk_db.o:
+00000000 B ___x_diab_rd_pk_db_o
+00000000 T __DIAB_rd_pk_db
+         U .TOC.
+
+_x_diab_rd_pk_fl.o:
+00000000 B ___x_diab_rd_pk_fl_o
+00000000 T __DIAB_rd_pk_fl
+         U .TOC.
+
+_x_diab_rd_pk_ld.o:
+00000000 B ___x_diab_rd_pk_ld_o
+00000000 T __DIAB_rd_pk_ld
+         U .TOC.
+
+_x_diab_rd_sw_db.o:
+00000000 B ___x_diab_rd_sw_db_o
+00000000 T __DIAB_rd_sw_db
+         U .TOC.
+
+_x_diab_rd_sw_fl.o:
+00000000 B ___x_diab_rd_sw_fl_o
+00000000 T __DIAB_rd_sw_fl
+         U .TOC.
+
+_x_diab_rd_sw_ld.o:
+00000000 B ___x_diab_rd_sw_ld_o
+00000000 T __DIAB_rd_sw_ld
+         U .TOC.
+
+_x_diab_wr_pk_db.o:
+00000000 B ___x_diab_wr_pk_db_o
+00000000 T __DIAB_wr_pk_db
+         U .TOC.
+
+_x_diab_wr_pk_fl.o:
+00000000 B ___x_diab_wr_pk_fl_o
+00000000 T __DIAB_wr_pk_fl
+         U .TOC.
+
+_x_diab_wr_pk_ld.o:
+00000000 B ___x_diab_wr_pk_ld_o
+00000000 T __DIAB_wr_pk_ld
+         U .TOC.
+
+_x_diab_wr_sw_db.o:
+00000000 B ___x_diab_wr_sw_db_o
+00000000 T __DIAB_wr_sw_db
+         U .TOC.
+
+_x_diab_wr_sw_fl.o:
+00000000 B ___x_diab_wr_sw_fl_o
+00000000 T __DIAB_wr_sw_fl
+         U .TOC.
+
+_x_diab_wr_sw_ld.o:
+00000000 B ___x_diab_wr_sw_ld_o
+00000000 T __DIAB_wr_sw_ld
+         U .TOC.
+
+_x_diab_wrc_matp.o:
+00000000 B ___x_diab_wrc_matp_o
+00000000 T __wrc_matp_i4i4i4_888
+         U .TOC.
+         U _savegpr0_18
+         U _restgpr0_18
+00000108 T __wrc_matp_i4i1i4_888
+
+_x_diab_misc.o:
+00000000 B ___x_diab_misc_o
+00000000 A __EVEC32BIT
+
+__diab_intrinsics_impfp.o:
+00000000 d __diab_intrinsics_impfp
+00000000 T __diab_intrinsics_impfpInit
+         U .TOC.
+         U ___x_diab_hfpfitof_o
+         U ___x_diab_hfpfutof_o
+         U ___x_diab_sfpddtoll_o
+         U ___x_diab_sfpddtoull_o
+         U ___x_diab_sfpdlltod_o
+         U ___x_diab_sfpdulltod_o
+         U ___x_diab_sfpfftoll_o
+         U ___x_diab_sfpfftoull_o
+         U ___x_diab_sfpflltof_o
+         U ___x_diab_sfpfulltof_o
+         U ___x_diab_sfpdnorm_o
+         U ___x_diab_sfpfnorm_o
+         U ___x_diab_rd_pk_db_o
+         U ___x_diab_rd_pk_fl_o
+         U ___x_diab_rd_pk_ld_o
+         U ___x_diab_rd_sw_db_o
+         U ___x_diab_rd_sw_fl_o
+         U ___x_diab_rd_sw_ld_o
+         U ___x_diab_wr_pk_db_o
+         U ___x_diab_wr_pk_fl_o
+         U ___x_diab_wr_pk_ld_o
+         U ___x_diab_wr_sw_db_o
+         U ___x_diab_wr_sw_fl_o
+         U ___x_diab_wr_sw_ld_o
+         U ___x_diab_wrc_matp_o
+         U ___x_diab_misc_o
+
+_x_diab_sxpdiv32.o:
+00000000 t div32
+00000000 D ___x_diab_sxpdiv32_o
+         U .TOC.
+00000070 T __div32
+000000ec T __udiv32
+
+_x_diab_sxprem32.o:
+00000000 t rem32
+00000000 B ___x_diab_sxprem32_o
+         U .TOC.
+00000164 T __rem32
+000001cc T __urem32
+
+_x_diab_sxpdiv64.o:
+00000000 t div64
+00000000 D ___x_diab_sxpdiv64_o
+         U .TOC.
+00000204 T __div64
+00000298 T __udiv64
+
+_x_diab_sxprem64.o:
+00000000 t rem64
+00000000 B ___x_diab_sxprem64_o
+         U .TOC.
+00000190 T __rem64
+00000220 T __urem64
+
+_x_diab_sxpmul64.o:
+00000000 B ___x_diab_sxpmul64_o
+00000000 T __mul64
+         U .TOC.
+
+_x_diab_sxplsl64.o:
+00000000 B ___x_diab_sxplsl64_o
+00000000 T __lsl64
+         U .TOC.
+
+_x_diab_sxpasr64.o:
+00000000 B ___x_diab_sxpasr64_o
+00000000 T __asr64
+         U .TOC.
+
+_x_diab_sxplsr64.o:
+00000000 B ___x_diab_sxplsr64_o
+00000000 T __lsr64
+         U .TOC.
+
+_x_diab_sxpadd64.o:
+00000000 B ___x_diab_sxpadd64_o
+00000000 T __add64
+         U .TOC.
+00000010 T __sub64
+
+_x_diab_sxpcmp64.o:
+00000000 D ___x_diab_sxpcmp64_o
+00000000 T __eq64
+         U .TOC.
+00000018 T __ne64
+00000030 T __ge64
+00000088 T __gt64
+000000e0 T __le64
+00000138 T __lt64
+00000190 T __uge64
+000001e8 T __ugt64
+00000240 T __ule64
+00000298 T __ult64
+
+_x_diab_restfreg.o:
+00000000 D ___x_diab_restfreg_o
+00000000 T _restf14
+00000004 T _restf15
+00000008 T _restf16
+0000000c T _restf17
+00000010 T _restf18
+00000014 T _restf19
+00000018 T _restf20
+0000001c T _restf21
+00000020 T _restf22
+00000024 T _restf23
+00000028 T _restf24
+0000002c T _restf25
+00000030 T _restf26
+00000034 T _restf27
+00000038 T _restf28
+0000003c T _restf29
+00000040 T _restf30
+00000044 T _restf31
+
+_x_diab_savefreg.o:
+00000000 D ___x_diab_savefreg_o
+00000000 T _savef14
+00000004 T _savef15
+00000008 T _savef16
+0000000c T _savef17
+00000010 T _savef18
+00000014 T _savef19
+00000018 T _savef20
+0000001c T _savef21
+00000020 T _savef22
+00000024 T _savef23
+00000028 T _savef24
+0000002c T _savef25
+00000030 T _savef26
+00000034 T _savef27
+00000038 T _savef28
+0000003c T _savef29
+00000040 T _savef30
+00000044 T _savef31
+
+_x_diab_restfpr.o:
+00000000 D ___x_diab_restfpr_o
+00000000 T _restfpr_14
+00000004 T _restfpr_15
+00000008 T _restfpr_16
+0000000c T _restfpr_17
+00000010 T _restfpr_18
+00000014 T _restfpr_19
+00000018 T _restfpr_20
+0000001c T _restfpr_21
+00000020 T _restfpr_22
+00000024 T _restfpr_23
+00000028 T _restfpr_24
+0000002c T _restfpr_25
+00000030 T _restfpr_26
+00000034 T _restfpr_27
+00000038 T _restfpr_28
+0000003c T _restfpr_29
+00000054 T _restfpr_30
+00000058 T _restfpr_31
+
+_x_diab_savefpr.o:
+00000000 D ___x_diab_savefpr_o
+00000000 T _savefpr_14
+00000004 T _savefpr_15
+00000008 T _savefpr_16
+0000000c T _savefpr_17
+00000010 T _savefpr_18
+00000014 T _savefpr_19
+00000018 T _savefpr_20
+0000001c T _savefpr_21
+00000020 T _savefpr_22
+00000024 T _savefpr_23
+00000028 T _savefpr_24
+0000002c T _savefpr_25
+00000030 T _savefpr_26
+00000034 T _savefpr_27
+00000038 T _savefpr_28
+0000003c T _savefpr_29
+00000040 T _savefpr_30
+00000044 T _savefpr_31
+
+_x_diab_restfprs.o:
+00000000 B ___x_diab_restfprs_o
+00000000 T _restfprs_14_l
+00000004 T _restfprs_15_l
+00000008 T _restfprs_16_l
+0000000c T _restfprs_17_l
+00000010 T _restfprs_18_l
+00000014 T _restfprs_19_l
+00000018 T _restfprs_20_l
+0000001c T _restfprs_21_l
+00000020 T _restfprs_22_l
+00000024 T _restfprs_23_l
+00000028 T _restfprs_24_l
+0000002c T _restfprs_25_l
+00000030 T _restfprs_26_l
+00000034 T _restfprs_27_l
+00000038 T _restfprs_28_l
+00000058 T _restfprs_29_l
+0000005c T _restfprs_30_l
+00000060 T _restfprs_31_l
+
+_x_diab_savefprs.o:
+00000000 D ___x_diab_savefprs_o
+00000000 T _savefprs_14_l
+00000004 T _savefprs_15_l
+00000008 T _savefprs_16_l
+0000000c T _savefprs_17_l
+00000010 T _savefprs_18_l
+00000014 T _savefprs_19_l
+00000018 T _savefprs_20_l
+0000001c T _savefprs_21_l
+00000020 T _savefprs_22_l
+00000024 T _savefprs_23_l
+00000028 T _savefprs_24_l
+0000002c T _savefprs_25_l
+00000030 T _savefprs_26_l
+00000034 T _savefprs_27_l
+00000038 T _savefprs_28_l
+0000003c T _savefprs_29_l
+00000040 T _savefprs_30_l
+00000044 T _savefprs_31_l
+
+_x_diab_restfprx.o:
+00000000 B ___x_diab_restfprx_o
+00000000 T _restfprx_14_l
+00000004 T _restfprx_15_l
+00000008 T _restfprx_16_l
+0000000c T _restfprx_17_l
+00000010 T _restfprx_18_l
+00000014 T _restfprx_19_l
+00000018 T _restfprx_20_l
+0000001c T _restfprx_21_l
+00000020 T _restfprx_22_l
+00000024 T _restfprx_23_l
+00000028 T _restfprx_24_l
+0000002c T _restfprx_25_l
+00000030 T _restfprx_26_l
+00000034 T _restfprx_27_l
+00000038 T _restfprx_28_l
+00000058 T _restfprx_29_l
+0000005c T _restfprx_30_l
+00000060 T _restfprx_31_l
+
+_x_diab_savefprx.o:
+00000000 D ___x_diab_savefprx_o
+00000000 T _savefprx_14_l
+00000004 T _savefprx_15_l
+00000008 T _savefprx_16_l
+0000000c T _savefprx_17_l
+00000010 T _savefprx_18_l
+00000014 T _savefprx_19_l
+00000018 T _savefprx_20_l
+0000001c T _savefprx_21_l
+00000020 T _savefprx_22_l
+00000024 T _savefprx_23_l
+00000028 T _savefprx_24_l
+0000002c T _savefprx_25_l
+00000030 T _savefprx_26_l
+00000034 T _savefprx_27_l
+00000038 T _savefprx_28_l
+0000003c T _savefprx_29_l
+00000040 T _savefprx_30_l
+00000044 T _savefprx_31_l
+
+_x_diab_restgpr.o:
+00000000 T ___x_diab_restgpr_o
+00000000 T _restgpr0_14
+00000004 T _restgpr0_15
+00000008 T _restgpr0_16
+0000000c T _restgpr0_17
+00000010 T _restgpr0_18
+00000014 T _restgpr0_19
+00000018 T _restgpr0_20
+0000001c T _restgpr0_21
+00000020 T _restgpr0_22
+00000024 T _restgpr0_23
+00000028 T _restgpr0_24
+0000002c T _restgpr0_25
+00000030 T _restgpr0_26
+00000034 T _restgpr0_27
+00000038 T _restgpr0_28
+0000003c T _restgpr0_29
+00000054 T _restgpr0_30
+00000058 T _restgpr0_31
+00000068 T _restgpr1_14
+0000006c T _restgpr1_15
+00000070 T _restgpr1_16
+00000074 T _restgpr1_17
+00000078 T _restgpr1_18
+0000007c T _restgpr1_19
+00000080 T _restgpr1_20
+00000084 T _restgpr1_21
+00000088 T _restgpr1_22
+0000008c T _restgpr1_23
+00000090 T _restgpr1_24
+00000094 T _restgpr1_25
+00000098 T _restgpr1_26
+0000009c T _restgpr1_27
+000000a0 T _restgpr1_28
+000000a4 T _restgpr1_29
+000000a8 T _restgpr1_30
+000000ac T _restgpr1_31
+
+_x_diab_savegpr.o:
+00000000 D ___x_diab_savegpr_o
+00000000 T _savegpr0_14
+00000004 T _savegpr0_15
+00000008 T _savegpr0_16
+0000000c T _savegpr0_17
+00000010 T _savegpr0_18
+00000014 T _savegpr0_19
+00000018 T _savegpr0_20
+0000001c T _savegpr0_21
+00000020 T _savegpr0_22
+00000024 T _savegpr0_23
+00000028 T _savegpr0_24
+0000002c T _savegpr0_25
+00000030 T _savegpr0_26
+00000034 T _savegpr0_27
+00000038 T _savegpr0_28
+0000003c T _savegpr0_29
+00000040 T _savegpr0_30
+00000044 T _savegpr0_31
+00000050 T _savegpr1_14
+00000054 T _savegpr1_15
+00000058 T _savegpr1_16
+0000005c T _savegpr1_17
+00000060 T _savegpr1_18
+00000064 T _savegpr1_19
+00000068 T _savegpr1_20
+0000006c T _savegpr1_21
+00000070 T _savegpr1_22
+00000074 T _savegpr1_23
+00000078 T _savegpr1_24
+0000007c T _savegpr1_25
+00000080 T _savegpr1_26
+00000084 T _savegpr1_27
+00000088 T _savegpr1_28
+0000008c T _savegpr1_29
+00000090 T _savegpr1_30
+00000094 T _savegpr1_31
+
+_x_diab_restgprx.o:
+00000000 B ___x_diab_restgprx_o
+00000000 T _restgprx_14_l
+00000004 T _restgprx_15_l
+00000008 T _restgprx_16_l
+0000000c T _restgprx_17_l
+00000010 T _restgprx_18_l
+00000014 T _restgprx_19_l
+00000018 T _restgprx_20_l
+0000001c T _restgprx_21_l
+00000020 T _restgprx_22_l
+00000024 T _restgprx_23_l
+00000028 T _restgprx_24_l
+0000002c T _restgprx_25_l
+00000030 T _restgprx_26_l
+00000034 T _restgprx_27_l
+00000058 T _restgprx_28_l
+0000005c T _restgprx_29_l
+00000060 T _restgprx_30_l
+00000064 T _restgprx_31_l
+
+_x_diab_savegprx.o:
+00000000 D ___x_diab_savegprx_o
+00000000 T _savegprx_14_l
+00000004 T _savegprx_15_l
+00000008 T _savegprx_16_l
+0000000c T _savegprx_17_l
+00000010 T _savegprx_18_l
+00000014 T _savegprx_19_l
+00000018 T _savegprx_20_l
+0000001c T _savegprx_21_l
+00000020 T _savegprx_22_l
+00000024 T _savegprx_23_l
+00000028 T _savegprx_24_l
+0000002c T _savegprx_25_l
+00000030 T _savegprx_26_l
+00000034 T _savegprx_27_l
+00000038 T _savegprx_28_l
+0000003c T _savegprx_29_l
+00000040 T _savegprx_30_l
+00000044 T _savegprx_31_l
+
+_x_diab_svrs_vpr.o:
+00000000 D ___x_diab_svrs_vpr_o
+00000000 T _savevr_20
+00000008 T _savevr_21
+00000010 T _savevr_22
+00000018 T _savevr_23
+00000020 T _savevr_24
+00000028 T _savevr_25
+00000030 T _savevr_26
+00000038 T _savevr_27
+00000040 T _savevr_28
+00000048 T _savevr_29
+00000050 T _savevr_30
+00000058 T _savevr_31
+00000064 T _restvr_20
+0000006c T _restvr_21
+00000074 T _restvr_22
+0000007c T _restvr_23
+00000084 T _restvr_24
+0000008c T _restvr_25
+00000094 T _restvr_26
+0000009c T _restvr_27
+000000a4 T _restvr_28
+000000ac T _restvr_29
+000000b4 T _restvr_30
+000000bc T _restvr_31
+
+_x_diab_va_arg.o:
+00000000 B ___x_diab_va_arg_o
+
+_x_diab_crtlibso.o:
+00000000 D ___x_diab_crtlibso_o
+00000000 T __init
+         U .TOC.
+         U __exec_ctors
+00000000 T __fini
+         U __exec_dtors
+
+_x_diab_ctordtor.o:
+00000000 d __CTOR_END__
+00000000 t __CTOR_LIST__
+00000000 b __DTOR_LIST__
+00000000 b __DTOR_END__
+00000000 B ___x_diab_ctordtor_o
+00000000 T __exec_ctors
+         U .TOC.
+0000006c T __exec_dtors
+00000008 B __exec_xtor_table
+
+_x_diab_copytable.o:
+00000000 D ___x_diab_copytable_o
+00000000 T __copy
+         U .TOC.
+         U memset
+         U memcpy
+0000006c T __copy_multiple
+
+_x_diab_wrc_ssp_guard.o:
+00000000 D ___x_diab_wrc_ssp_guard_o
+00000008 D __stack_chk_guard
+
+_x_diab_wrc_ssp_fail.o:
+00000000 B ___x_diab_wrc_ssp_fail_o
+00000000 T __stack_chk_fail
+         U .TOC.
+         U write
+         U abort
+
+_x_diab_dmemcpy.o:
+00000000 B ___x_diab_dmemcpy_o
+00000000 T __diab_memcpy
+         U .TOC.
+
+_x_diab_dmemset.o:
+00000000 B ___x_diab_dmemset_o
+00000000 T __diab_memset
+         U .TOC.
+
+__diab_intrinsics_impl.o:
+00000000 d __diab_intrinsics_impl
+00000000 T __diab_intrinsics_implInit
+         U .TOC.
+         U ___x_diab_sxpdiv32_o
+         U ___x_diab_sxprem32_o
+         U ___x_diab_sxpdiv64_o
+         U ___x_diab_sxprem64_o
+         U ___x_diab_sxpmul64_o
+         U ___x_diab_sxplsl64_o
+         U ___x_diab_sxpasr64_o
+         U ___x_diab_sxplsr64_o
+         U ___x_diab_sxpadd64_o
+         U ___x_diab_sxpcmp64_o
+         U ___x_diab_restfreg_o
+         U ___x_diab_savefreg_o
+         U ___x_diab_restfpr_o
+         U ___x_diab_savefpr_o
+         U ___x_diab_restfprs_o
+         U ___x_diab_savefprs_o
+         U ___x_diab_restfprx_o
+         U ___x_diab_savefprx_o
+         U ___x_diab_restgpr_o
+         U ___x_diab_savegpr_o
+         U ___x_diab_restgprx_o
+         U ___x_diab_savegprx_o
+         U ___x_diab_svrs_vpr_o
+         U ___x_diab_va_arg_o
+         U ___x_diab_crtlibso_o
+         U ___x_diab_ctordtor_o
+         U ___x_diab_copytable_o
+         U ___x_diab_wrc_ssp_guard_o
+         U ___x_diab_wrc_ssp_fail_o
+         U ___x_diab_dmemcpy_o
+         U ___x_diab_dmemset_o
+
+_x_diab_torn_syncatomic.o:
+00000000 t __diab_atomic_lock
+00000000 D ___x_diab_torn_syncatomic_o
+00000000 T _STI__07__diab_atomic_init
+         U .TOC.
+         U __diab_alloc_mutex
+0000003c T __diab_atomic_enter
+         U __diab_lock_mutex
+00000074 T __diab_atomic_restore
+         U __diab_unlock_mutex
+
+_x_diab_torn_syncmutex.o:
+00000000 D ___x_diab_torn_syncmutex_o
+00000000 T __diab_alloc_mutex
+         U .TOC.
+         U semMCreate
+00000030 T __diab_free_mutex
+         U semDelete
+0000005c T __diab_lock_mutex
+         U semTake
+0000008c T __diab_trylock_mutex
+000000bc T __diab_unlock_mutex
+         U semGive
+
+_x_diab_torn_syncsem.o:
+00000000 D ___x_diab_torn_syncsem_o
+00000000 T __diab_alloc_semaphore
+         U .TOC.
+         U semMCreate
+00000030 T __diab_free_semaphore
+         U semDelete
+0000005c T __diab_lock_semaphore
+         U semTake
+0000008c T __diab_trylock_semaphore
+000000bc T __diab_unlock_semaphore
+         U semGive
+
+_x_diab_comljmp.o:
+00000000 B ___x_diab_comljmp_o
+00000000 T __common_long_jmp
+         U .TOC.
+
+_x_diab_libg.o:
+00000000 D ___x_diab_libg_o
+00000000 B __cie
+
+__diab_intrinsics_torn.o:
+00000000 d __diab_intrinsics_torn
+00000000 T __diab_intrinsics_tornInit
+         U .TOC.
+         U ___x_diab_torn_syncatomic_o
+         U ___x_diab_torn_syncmutex_o
+         U ___x_diab_torn_syncsem_o
+         U ___x_diab_comljmp_o
+         U ___x_diab_libg_o

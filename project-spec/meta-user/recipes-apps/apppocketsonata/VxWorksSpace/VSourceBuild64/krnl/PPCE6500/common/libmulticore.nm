@@ -1,0 +1,214 @@
+
+libmulticore.a:
+
+cpuset.o:
+00000000 T cpusetLogicalToPhys
+         U .TOC.
+         U vxCpuConfiguredGet
+         U vxBaseCpuPhysIndex
+00000078 T cpusetPhysToLogical
+
+vxCpuLib.o:
+0000000c d cpuReserveFlag
+00000000 T vxCpuLibInit
+         U .TOC.
+         U vxCpuArchLibInit
+0000002c T vxCpuEnabledGet
+00000004 D vxCpuEnabled
+00000040 T vxCpuConfiguredGet
+         U vxCpuConfigured
+00000054 T vxCpuReservedGet
+         U errnoSet
+00000008 D vxCpuSetReserved
+         U vxAtomic32Set
+000000ac T vxCpuReserve
+         U spinLockRestrict
+         U intContext
+         U __errno
+         U kernelLockTake
+00000004 C vxCpuSetReservedAvail
+         U windExit
+         U readyQReservationCheck
+000002d8 T vxCpuUnreserve
+0000042c T vxCpuReservedStringParse
+         U vxCpuIndexGet
+         U strtol
+00000000 D vxBaseCpuPhysIndex
+
+cpcLib.o:
+00000000 d cpcPpaLock
+000002e4 t cpcIntHandler
+00000000 d pErrorMsgIpi
+00000220 d cpcTargetCpuSet
+00000228 d cpcFuncParam
+00000230 d cpcVoidParam
+00000238 d cpcParamSize
+00000240 d cpcFlagsParam
+00000008 d pErrorMsg.2
+00000000 T cpcInit
+         U .TOC.
+         U spinLockIsrInit
+         U vxIpiConnect
+         U vxIpiEnable
+         U setjmp
+         U edrErrorInjectStub
+         U edrInitFatalPolicyHandler
+00000100 T cpcInvoke
+         U vxCpuEnabledGet
+         U vxCpuIndexGet
+         U spinLockIsrTake
+         U vxAtomic32Set
+         U vxIpiEmit
+         U spinLockIsrGive
+         U intCpuMicroLock
+         U sysExcMsg
+         U strcat
+         U strlen
+         U edrSystemFatalPolicyHandler
+         U intCpuMicroUnlock
+         U reboot
+         U vxAtomic32And
+000003f4 T cpcSync
+
+vxAtomicScLib.o:
+000000bc t .T96
+0000031c t .T98
+00000000 T atomic32OpSc
+         U .TOC.
+         U scMemValidate
+         U errnoSet
+         U vxAtomic32Add
+         U vxAtomic32And
+         U vxAtomic32Dec
+         U vxAtomic32Inc
+         U vxAtomic32Nand
+         U vxAtomic32Or
+         U vxAtomic32Sub
+         U vxAtomic32Xor
+         U vxAtomic32Clear
+         U vxAtomic32Get
+         U vxAtomic32Set
+         U vxAtomic32Cas
+         U __errno
+0000025c T atomic64OpSc
+         U vxAtomic64Add
+         U vxAtomic64And
+         U vxAtomic64Dec
+         U vxAtomic64Inc
+         U vxAtomic64Nand
+         U vxAtomic64Or
+         U vxAtomic64Sub
+         U vxAtomic64Xor
+         U vxAtomic64Clear
+         U vxAtomic64Get
+         U vxAtomic64Set
+         U vxAtomic64Cas
+
+vxAtomicLib.o:
+
+libmulticore.a:
+
+cpuset.o:
+00000000 T cpusetLogicalToPhys
+         U .TOC.
+         U vxCpuConfiguredGet
+         U vxBaseCpuPhysIndex
+00000078 T cpusetPhysToLogical
+
+vxCpuLib.o:
+0000000c d cpuReserveFlag
+00000000 T vxCpuLibInit
+         U .TOC.
+         U vxCpuArchLibInit
+0000002c T vxCpuEnabledGet
+00000004 D vxCpuEnabled
+00000040 T vxCpuConfiguredGet
+         U vxCpuConfigured
+00000054 T vxCpuReservedGet
+         U errnoSet
+00000008 D vxCpuSetReserved
+         U vxAtomic32Set
+000000ac T vxCpuReserve
+         U spinLockRestrict
+         U intContext
+         U __errno
+         U kernelLockTake
+00000004 C vxCpuSetReservedAvail
+         U windExit
+         U readyQReservationCheck
+000002d8 T vxCpuUnreserve
+0000042c T vxCpuReservedStringParse
+         U vxCpuIndexGet
+         U strtol
+00000000 D vxBaseCpuPhysIndex
+
+cpcLib.o:
+00000000 d cpcPpaLock
+000002e4 t cpcIntHandler
+00000000 d pErrorMsgIpi
+00000220 d cpcTargetCpuSet
+00000228 d cpcFuncParam
+00000230 d cpcVoidParam
+00000238 d cpcParamSize
+00000240 d cpcFlagsParam
+00000008 d pErrorMsg.2
+00000000 T cpcInit
+         U .TOC.
+         U spinLockIsrInit
+         U vxIpiConnect
+         U vxIpiEnable
+         U setjmp
+         U edrErrorInjectStub
+         U edrInitFatalPolicyHandler
+00000100 T cpcInvoke
+         U vxCpuEnabledGet
+         U vxCpuIndexGet
+         U spinLockIsrTake
+         U vxAtomic32Set
+         U vxIpiEmit
+         U spinLockIsrGive
+         U intCpuMicroLock
+         U sysExcMsg
+         U strcat
+         U strlen
+         U edrSystemFatalPolicyHandler
+         U intCpuMicroUnlock
+         U reboot
+         U vxAtomic32And
+000003f4 T cpcSync
+
+vxAtomicScLib.o:
+000000bc t .T96
+0000031c t .T98
+00000000 T atomic32OpSc
+         U .TOC.
+         U scMemValidate
+         U errnoSet
+         U vxAtomic32Add
+         U vxAtomic32And
+         U vxAtomic32Dec
+         U vxAtomic32Inc
+         U vxAtomic32Nand
+         U vxAtomic32Or
+         U vxAtomic32Sub
+         U vxAtomic32Xor
+         U vxAtomic32Clear
+         U vxAtomic32Get
+         U vxAtomic32Set
+         U vxAtomic32Cas
+         U __errno
+0000025c T atomic64OpSc
+         U vxAtomic64Add
+         U vxAtomic64And
+         U vxAtomic64Dec
+         U vxAtomic64Inc
+         U vxAtomic64Nand
+         U vxAtomic64Or
+         U vxAtomic64Sub
+         U vxAtomic64Xor
+         U vxAtomic64Clear
+         U vxAtomic64Get
+         U vxAtomic64Set
+         U vxAtomic64Cas
+
+vxAtomicLib.o:

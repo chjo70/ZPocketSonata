@@ -1,0 +1,610 @@
+
+libcoreutil.a:
+
+avlUintLib.o:
+00000000 t avlUintRebalance
+         U .TOC.
+000001b4 T avlUintInsert
+00000280 T avlUintDelete
+000003cc T avlUintSearch
+00000410 T avlUintSuccessorGet
+00000460 T avlUintPredecessorGet
+000004b0 T avlUintMinimumGet
+000004ec T avlUintMaximumGet
+00000528 T avlUintTreeWalk
+
+bLib.o:
+00000000 T bcmp
+         U .TOC.
+00000040 T binvert
+0000007c T bswap
+000000b4 T uswab
+000000ec T bzero
+         U bfill
+0000011c T index
+00000160 T rindex
+         U strlen
+
+bmpLib.o:
+00000000 T bitFirstGet
+         U .TOC.
+         U ffsMsb
+
+dllLib.o:
+00000000 T dllInit
+         U .TOC.
+0000001c T dllTerminate
+0000002c T dllInsert
+00000070 T dllAdd
+000000a0 T dllRemove
+000000e4 T dllGet
+00000124 T dllCount
+00000150 T dllEach
+
+ffsLib.o:
+
+lstLib.o:
+00000000 T lstInit
+         U .TOC.
+0000001c T lstInsert
+0000006c T lstAdd
+0000009c T lstDelete
+000000ec T lstCount
+000000fc T lstFirst
+0000010c T lstLast
+0000011c T lstGet
+00000168 T lstPrevious
+00000178 T lstNext
+00000188 T lstFind
+000001c4 T lstConcat
+00000250 T lstExtract
+000002d4 T lstNth
+0000035c T lstNStep
+         U abs
+00000400 T lstFree2
+00000490 T lstFree
+         U free
+
+rngLib.o:
+00000000 T rngCreate
+         U .TOC.
+         U malloc
+         U free
+0000009c T rngDelete
+000000e4 T rngFlush
+000000fc T rngBufGet
+         U bcopy
+00000214 T rngBufPut
+00000364 T rngIsEmpty
+00000384 T rngIsFull
+000003c4 T rngFreeBytes
+000003f4 T rngNBytes
+00000420 T rngPutAhead
+00000450 T rngMoveAhead
+
+sllLib.o:
+00000000 T sllInit
+         U .TOC.
+0000001c T sllTerminate
+0000002c T sllCount
+00000058 T sllGet
+00000094 T sllPutAtHead
+000000cc T sllPutAtTail
+00000100 T sllRemove
+00000144 T sllPrevious
+00000194 T sllEach
+
+hookLib.o:
+00000000 T hookAddToTail
+         U .TOC.
+         U taskIdSelf
+         U kernelLockTake
+         U windExit
+         U errnoSet
+000000fc T hookAddToHead
+00000228 T hookDelete
+00000374 T hookFind
+
+hookTblLib.o:
+00000000 T hookTblInit
+         U .TOC.
+         U qFifoClassId
+         U qFifoInit
+         U semMInitialize
+0000006c T hookTblAddToTail
+         U intContext
+         U __errno
+         U taskIdSelf
+         U semMTake
+         U semMGive
+         U errnoSet
+         U vxAtomicCas
+         U kernelLockTake
+         U windPendQPut
+         U windExit
+0000027c T hookTblAddToHead
+000004d4 T hookTblDelete
+00000770 T hookTblUpdatersUnpend
+         U kernelLockTry
+         U windPendQFlush
+         U workQAdd1
+000007f4 T hookTblFind
+         U vxAtomicOr
+         U vxAtomic32Inc
+         U vxAtomicAnd
+         U vxAtomic32Dec
+
+dataset.o:
+00000000 T datasetIterate
+         U .TOC.
+         U wrs_kernel_data_set_start
+         U wrs_kernel_data_set_end
+         U strncmp
+
+strendcpy.o:
+00000000 T strendcpy
+         U .TOC.
+
+skipPrefix.o:
+00000000 T skipPrefix
+         U .TOC.
+
+getpagesize.o:
+00000000 T getpagesize
+         U .TOC.
+         U vmLibInfo
+
+applUtilLib.o:
+00000070 d logCatNames
+000000e0 d logPriNames
+00000120 d loggerInitialized
+00000000 T applLoggerInit
+         U .TOC.
+00000008 C applUtilLogSem
+00000000 D catInfo
+00000058 T applUtilInstInit
+         U __errno
+00000124 T applLoggerStop
+0000016c T logLevelChange
+000001d8 T logDecorationChange
+0000022c T loggerInfoShow
+         U printf
+000002c4 T initApplLogger
+000002f4 T stopApplLogger
+00000320 T changeLogLevel
+00000350 T showLoggerInfo
+00000378 T _applLog
+         U snprintf
+         U strerror_r
+         U strncmp
+         U semTake
+         U write
+         U vfdprintf
+         U semGive
+
+avlUint64Lib.o:
+00000000 t avlUint64Rebalance
+         U .TOC.
+00000198 T avlUint64Insert
+0000025c T avlUint64Delete
+0000038c T avlUint64Search
+000003d0 T avlUint64SuccessorGet
+00000410 T avlUint64PredecessorGet
+00000450 T avlUint64MinimumGet
+00000484 T avlUint64MaximumGet
+000004b8 T avlUint64TreeWalk
+
+memmem.o:
+00000000 t memSearch
+         U .TOC.
+         U __ctype_toupper
+         U __ctype_tolower
+000001a4 T memmem
+000001d0 T memimem
+
+hookShow.o:
+00000000 T hookShow
+         U .TOC.
+         U _func_symFindSymbol
+         U sysSymTbl
+         U _func_symNameGet
+         U _func_symValueGet
+         U cplusDemangle
+         U printf
+
+hookTblShow.o:
+00000000 T hookTblShow
+         U .TOC.
+         U vxAtomicOr
+         U vxAtomic32Inc
+         U objRoutineNameGet
+         U printf
+         U vxAtomicAnd
+         U vxAtomic32Dec
+         U vxAtomicCas
+         U hookTblUpdatersUnpend
+
+getopt.o:
+00000008 d optplace
+00000000 d argv0.45
+00000000 T getopt_r
+         U .TOC.
+         U strchr
+         U __stderr
+         U fprintf
+00000250 T getopt
+00000000 D opterr
+00000004 D optind
+00000004 C optopt
+00000004 C optreset
+00000008 C optarg
+00000328 T getoptInit
+0000035c T getOptServ
+         U strtok_r
+
+avlLib.o:
+00000000 t avlRebalance
+         U .TOC.
+00000198 T avlInsert
+000002b0 T avlDelete
+00000430 T avlSearch
+000004c4 T avlSuccessorGet
+00000560 T avlPredecessorGet
+000005fc T avlMinimumGet
+00000630 T avlMaximumGet
+00000664 T avlTreeWalk
+000007f0 T avlInsertInform
+         U printf
+00000918 T avlRemoveInsert
+
+dllCreateLib.o:
+00000000 T dllCreate
+         U .TOC.
+         U malloc
+         U dllInit
+00000050 T dllDelete
+         U free
+
+hashLib.o:
+00000000 T hashTblInit
+         U .TOC.
+         U sllInit
+         U handleInit
+000000d4 T hashTblCreate
+         U malloc
+00000194 T hashTblDestroy
+         U handleTerminate
+         U free
+00000218 T hashTblDelete
+00000244 T hashTblTerminate
+00000270 T hashTblPut
+         U sllPutAtHead
+0000030c T hashTblFind
+000003f0 T hashTblRemove
+         U sllPrevious
+         U sllRemove
+000004ac T hashTblEach
+         U sllEach
+00000570 T hashFuncIterScale
+000005b0 T hashFuncModulo
+000005d4 T hashFuncMultiply
+         U ffsMsb
+00000630 T hashKeyCmp
+00000650 T hashKeyStrCmp
+         U strcmp
+
+sllCreateLib.o:
+00000000 T sllCreate
+         U .TOC.
+         U malloc
+         U sllInit
+00000050 T sllDelete
+         U free
+
+procNumSetFuncBind.o:
+00000000 D _procNumWasSet
+
+libcoreutil.a:
+
+avlUintLib.o:
+00000000 t avlUintRebalance
+         U .TOC.
+000001b4 T avlUintInsert
+00000280 T avlUintDelete
+000003cc T avlUintSearch
+00000410 T avlUintSuccessorGet
+00000460 T avlUintPredecessorGet
+000004b0 T avlUintMinimumGet
+000004ec T avlUintMaximumGet
+00000528 T avlUintTreeWalk
+
+bLib.o:
+00000000 T bcmp
+         U .TOC.
+00000040 T binvert
+0000007c T bswap
+000000b4 T uswab
+000000ec T bzero
+         U bfill
+0000011c T index
+00000160 T rindex
+         U strlen
+
+bmpLib.o:
+00000000 T bitFirstGet
+         U .TOC.
+         U ffsMsb
+
+dllLib.o:
+00000000 T dllInit
+         U .TOC.
+0000001c T dllTerminate
+0000002c T dllInsert
+00000070 T dllAdd
+000000a0 T dllRemove
+000000e4 T dllGet
+00000124 T dllCount
+00000150 T dllEach
+
+ffsLib.o:
+
+lstLib.o:
+00000000 T lstInit
+         U .TOC.
+0000001c T lstInsert
+0000006c T lstAdd
+0000009c T lstDelete
+000000ec T lstCount
+000000fc T lstFirst
+0000010c T lstLast
+0000011c T lstGet
+00000168 T lstPrevious
+00000178 T lstNext
+00000188 T lstFind
+000001c4 T lstConcat
+00000250 T lstExtract
+000002d4 T lstNth
+0000035c T lstNStep
+         U abs
+00000400 T lstFree2
+00000490 T lstFree
+         U free
+
+rngLib.o:
+00000000 T rngCreate
+         U .TOC.
+         U malloc
+         U free
+0000009c T rngDelete
+000000e4 T rngFlush
+000000fc T rngBufGet
+         U bcopy
+00000214 T rngBufPut
+00000364 T rngIsEmpty
+00000384 T rngIsFull
+000003c4 T rngFreeBytes
+000003f4 T rngNBytes
+00000420 T rngPutAhead
+00000450 T rngMoveAhead
+
+sllLib.o:
+00000000 T sllInit
+         U .TOC.
+0000001c T sllTerminate
+0000002c T sllCount
+00000058 T sllGet
+00000094 T sllPutAtHead
+000000cc T sllPutAtTail
+00000100 T sllRemove
+00000144 T sllPrevious
+00000194 T sllEach
+
+hookLib.o:
+00000000 T hookAddToTail
+         U .TOC.
+         U taskIdSelf
+         U kernelLockTake
+         U windExit
+         U errnoSet
+000000fc T hookAddToHead
+00000228 T hookDelete
+00000374 T hookFind
+
+hookTblLib.o:
+00000000 T hookTblInit
+         U .TOC.
+         U qFifoClassId
+         U qFifoInit
+         U semMInitialize
+0000006c T hookTblAddToTail
+         U intContext
+         U __errno
+         U taskIdSelf
+         U semMTake
+         U semMGive
+         U errnoSet
+         U vxAtomicCas
+         U kernelLockTake
+         U windPendQPut
+         U windExit
+0000027c T hookTblAddToHead
+000004d4 T hookTblDelete
+00000770 T hookTblUpdatersUnpend
+         U kernelLockTry
+         U windPendQFlush
+         U workQAdd1
+000007f4 T hookTblFind
+         U vxAtomicOr
+         U vxAtomic32Inc
+         U vxAtomicAnd
+         U vxAtomic32Dec
+
+dataset.o:
+00000000 T datasetIterate
+         U .TOC.
+         U wrs_kernel_data_set_start
+         U wrs_kernel_data_set_end
+         U strncmp
+
+strendcpy.o:
+00000000 T strendcpy
+         U .TOC.
+
+skipPrefix.o:
+00000000 T skipPrefix
+         U .TOC.
+
+getpagesize.o:
+00000000 T getpagesize
+         U .TOC.
+         U vmLibInfo
+
+applUtilLib.o:
+00000070 d logCatNames
+000000e0 d logPriNames
+00000120 d loggerInitialized
+00000000 T applLoggerInit
+         U .TOC.
+00000008 C applUtilLogSem
+00000000 D catInfo
+00000058 T applUtilInstInit
+         U __errno
+00000124 T applLoggerStop
+0000016c T logLevelChange
+000001d8 T logDecorationChange
+0000022c T loggerInfoShow
+         U printf
+000002c4 T initApplLogger
+000002f4 T stopApplLogger
+00000320 T changeLogLevel
+00000350 T showLoggerInfo
+00000378 T _applLog
+         U snprintf
+         U strerror_r
+         U strncmp
+         U semTake
+         U write
+         U vfdprintf
+         U semGive
+
+avlUint64Lib.o:
+00000000 t avlUint64Rebalance
+         U .TOC.
+00000198 T avlUint64Insert
+0000025c T avlUint64Delete
+0000038c T avlUint64Search
+000003d0 T avlUint64SuccessorGet
+00000410 T avlUint64PredecessorGet
+00000450 T avlUint64MinimumGet
+00000484 T avlUint64MaximumGet
+000004b8 T avlUint64TreeWalk
+
+memmem.o:
+00000000 t memSearch
+         U .TOC.
+         U __ctype_toupper
+         U __ctype_tolower
+000001a4 T memmem
+000001d0 T memimem
+
+hookShow.o:
+00000000 T hookShow
+         U .TOC.
+         U _func_symFindSymbol
+         U sysSymTbl
+         U _func_symNameGet
+         U _func_symValueGet
+         U cplusDemangle
+         U printf
+
+hookTblShow.o:
+00000000 T hookTblShow
+         U .TOC.
+         U vxAtomicOr
+         U vxAtomic32Inc
+         U objRoutineNameGet
+         U printf
+         U vxAtomicAnd
+         U vxAtomic32Dec
+         U vxAtomicCas
+         U hookTblUpdatersUnpend
+
+getopt.o:
+00000008 d optplace
+00000000 d argv0.45
+00000000 T getopt_r
+         U .TOC.
+         U strchr
+         U __stderr
+         U fprintf
+00000250 T getopt
+00000000 D opterr
+00000004 D optind
+00000004 C optopt
+00000004 C optreset
+00000008 C optarg
+00000328 T getoptInit
+0000035c T getOptServ
+         U strtok_r
+
+avlLib.o:
+00000000 t avlRebalance
+         U .TOC.
+00000198 T avlInsert
+000002b0 T avlDelete
+00000430 T avlSearch
+000004c4 T avlSuccessorGet
+00000560 T avlPredecessorGet
+000005fc T avlMinimumGet
+00000630 T avlMaximumGet
+00000664 T avlTreeWalk
+000007f0 T avlInsertInform
+         U printf
+00000918 T avlRemoveInsert
+
+dllCreateLib.o:
+00000000 T dllCreate
+         U .TOC.
+         U malloc
+         U dllInit
+00000050 T dllDelete
+         U free
+
+hashLib.o:
+00000000 T hashTblInit
+         U .TOC.
+         U sllInit
+         U handleInit
+000000d4 T hashTblCreate
+         U malloc
+00000194 T hashTblDestroy
+         U handleTerminate
+         U free
+00000218 T hashTblDelete
+00000244 T hashTblTerminate
+00000270 T hashTblPut
+         U sllPutAtHead
+0000030c T hashTblFind
+000003f0 T hashTblRemove
+         U sllPrevious
+         U sllRemove
+000004ac T hashTblEach
+         U sllEach
+00000570 T hashFuncIterScale
+000005b0 T hashFuncModulo
+000005d4 T hashFuncMultiply
+         U ffsMsb
+00000630 T hashKeyCmp
+00000650 T hashKeyStrCmp
+         U strcmp
+
+sllCreateLib.o:
+00000000 T sllCreate
+         U .TOC.
+         U malloc
+         U sllInit
+00000050 T sllDelete
+         U free
+
+procNumSetFuncBind.o:
+00000000 D _procNumWasSet

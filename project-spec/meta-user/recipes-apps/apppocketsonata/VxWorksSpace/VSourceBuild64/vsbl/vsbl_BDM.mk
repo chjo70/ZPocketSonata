@@ -1,0 +1,52 @@
+# Automatically generated file: do not edit
+
+##########################
+# BDM Section
+##########################
+
+
+ifdef _WRS_CONFIG_BDM
+VSBL_BDM_SRC = 
+VSBL_BDM_DEPEND = 
+
+ifdef _WRS_CONFIG_BDM_1_0_1_3
+ifdef _WRS_CONFIG_BDM_FLASH
+VSBL_BDM_SRC += BDM_FLASH
+endif
+ifdef _WRS_CONFIG_BDM_MTD
+VSBL_BDM_SRC += BDM_MTD
+endif
+ifdef _WRS_CONFIG_BDM_NFTL
+VSBL_BDM_SRC += BDM_NFTL
+endif
+ifdef _WRS_CONFIG_BDM_SIM
+VSBL_BDM_SRC += BDM_SIM
+endif
+ifdef _WRS_CONFIG_BDM_TFFS
+VSBL_BDM_SRC += BDM_TFFS
+endif
+ifdef _WRS_CONFIG_BDM_TFFS_DRIVER
+VSBL_BDM_SRC += BDM_TFFS_DRIVER
+endif
+ifdef _WRS_CONFIG_BDM_LOOPFS
+VSBL_BDM_SRC += BDM_LOOPFS
+endif
+ifdef _WRS_CONFIG_BDM_NVRAM
+VSBL_BDM_SRC += BDM_NVRAM
+endif
+ifdef _WRS_CONFIG_BDM_SATA
+VSBL_BDM_SRC += BDM_SATA
+endif
+ifdef _WRS_CONFIG_BDM_SDMMC
+VSBL_BDM_SRC += BDM_SDMMC
+endif
+ifdef _WRS_CONFIG_BDM_XBD
+VSBL_BDM_SRC += BDM_XBD
+endif
+VSBL_BDM_SRC += BDM
+BDM_FASTBUILD = YES
+VSBL_BDM_PATH = $(WIND_BASE)/pkgs/storage/bdm-1.0.1.3
+VSBL_BDM_VERSION = BDM_1_0_1_3
+endif
+endif
+

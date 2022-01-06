@@ -1,0 +1,366 @@
+
+libruntime_analysis_topdemo.a:
+
+cafe_top_demo.o:
+00000000 t ioTest
+00000000 d taskTestRunning
+000002f8 d buffer.2
+00000214 t fractionSpin
+00000030 d loadRunning
+00000000 d loadArray
+00000190 d cpu_load_tasks_tids
+000002b0 d cafe_tRamp_tid
+00000020 d rampRunning
+00000838 t arrayInit
+000008d0 t doBadTest
+00000a4c t doGoodTest
+00000bcc t configMemHelper
+00000e34 t configMemWdHelper
+00000010 d memRunning
+00000e70 t configIoWdHelper
+00000028 d ioRunning
+00000eac t cafe_demo_mem_test_start
+000002d0 d cafe_topMem_tid
+00000020 d memWd
+000010b8 t nothing
+000010c4 t multiTaskSpawn
+000001d0 d multitask_tasks_tids
+000012c8 t taskTestTask
+000002d8 d cafe_multiSpawn_tid
+00000270 d topTasks_tids
+000002f0 d cafe_topIo_tid
+000000d8 d ioWd
+0000180c t prioritySet
+00001920 t priorityA
+00000040 d delayedStopPriority
+000002e0 d cafe_priorityTask_tid
+000002e8 d cafe_prioritySetTask_tid
+00000008 d priorityRunning
+000002c0 d cafe_taskGen_tid
+000002c8 d cafe_cpuLoadRamp_tid
+00000080 d topDemoRunning
+00001cd0 t intLocker
+00000038 d intLockerAbort
+00001ec4 t taskMover
+00000018 d taskMoveRunning
+000002b8 d cafe_taskMover_tid
+000020c0 t idleTaskSpin
+00000048 d idleTaskAbort
+00000050 d demo_load
+00000054 d intLockerCounter
+00000058 d memWdId
+00000060 d ioWdId
+00000068 d test_file_locations
+         U .TOC.
+         U open
+         U vxAtomicGet
+         U lseek
+         U write
+         U sysClkRateGet
+         U taskDelay
+         U read
+         U close
+         U remove
+         U printf
+         U vxAtomicSet
+         U taskCpuAffinitySet
+         U tickGet
+         U tree_a
+0000033c T cafe_demo_load_test_start
+         U vxCpuConfiguredGet
+         U snprintf
+         U taskCreate
+         U taskActivate
+00000500 T cafe_demo_load_test_stop
+0000053c T cafe_demo_load_cycle
+0000064c T cafe_demo_load_ramp_start
+         U taskSpawn
+00000800 T cafe_demo_load_ramp_stop
+         U malloc
+00000004 C cafe_goodBadTestResult
+         U tick64Get
+         U free
+         U taskSuspend
+000009c4 T cafe_demo_cache_bad
+00000b44 T cafe_demo_cache_good
+         U memset
+         U memPartCreate
+         U memPartOptionsGet
+         U memPartOptionsSet
+         U memPartAlloc
+         U memPartInfoGet
+         U memPartFree
+         U memPartDelete
+         U memSysPartId
+         U wdInitialize
+         U wdStart
+         U taskClassId
+         U objVerify
+0000136c T cafe_demo_task_stop
+000013a4 T cafe_demo_task_start
+         U rand
+00001610 T cafe_demo_io_start
+000017d4 T cafe_demo_io_stop
+         U taskPrioritySet
+0000198c T cafe_demo_priority_start
+00001afc T cafe_demo_priority_stop
+00001b38 T cafe_demo_multi_stop
+00001bc4 T cafe_demo_multi_start
+         U intCpuLock
+         U intCpuUnlock
+00001e08 T cafe_demo_intlock_start
+00001e88 T cafe_demo_intlock_stop
+         U taskIdSelf
+         U vxCpuEnabledGet
+00001fac T cafe_demo_task_mover_start
+00002084 T cafe_demo_task_mover_stop
+00002108 T cafe_demo_idletask_start
+00002264 T cafe_demo_idletask_stop
+
+topDemoLib.o:
+00000000 T cpuLoadTestStart
+         U .TOC.
+         U cafe_demo_load_test_start
+0000002c T cpuLoadTestStop
+         U cafe_demo_load_test_stop
+00000058 T cacheTestBad
+         U cafe_demo_cache_bad
+00000084 T cacheTestGood
+         U cafe_demo_cache_good
+000000b0 T topDemoStop
+         U cafe_demo_multi_stop
+000000dc T topDemoStart
+         U cafe_demo_multi_start
+00000108 T intLockerStart
+         U cafe_demo_intlock_start
+00000134 T intLockerStop
+         U cafe_demo_intlock_stop
+00000160 T idleTaskStart
+         U cafe_demo_idletask_start
+0000018c T idleTaskStop
+         U cafe_demo_idletask_stop
+000001b8 T taskMoverStart
+         U cafe_demo_task_mover_start
+000001e4 T taskMoverStop
+         U cafe_demo_task_mover_stop
+
+a.o:
+00000000 T tree_a
+         U .TOC.
+         U tree_b
+         U tree_c
+         U tree_x
+00000004 C a_a
+
+b.o:
+00000000 T tree_b
+         U .TOC.
+         U tree_c
+         U tree_d
+00000004 C b_b
+
+c.o:
+00000000 T tree_c
+         U .TOC.
+         U tree_d
+00000004 C c_c
+
+d.o:
+00000000 T tree_d
+         U .TOC.
+00000004 C d_d
+
+x.o:
+00000000 T tree_x
+         U .TOC.
+         U tree_c
+         U tree_y
+00000004 C x_x
+
+y.o:
+00000000 T tree_y
+         U .TOC.
+00000004 C y_y
+
+libruntime_analysis_topdemo.a:
+
+cafe_top_demo.o:
+00000000 t ioTest
+00000000 d taskTestRunning
+000002f8 d buffer.2
+00000214 t fractionSpin
+00000030 d loadRunning
+00000000 d loadArray
+00000190 d cpu_load_tasks_tids
+000002b0 d cafe_tRamp_tid
+00000020 d rampRunning
+00000838 t arrayInit
+000008d0 t doBadTest
+00000a4c t doGoodTest
+00000bcc t configMemHelper
+00000e34 t configMemWdHelper
+00000010 d memRunning
+00000e70 t configIoWdHelper
+00000028 d ioRunning
+00000eac t cafe_demo_mem_test_start
+000002d0 d cafe_topMem_tid
+00000020 d memWd
+000010b8 t nothing
+000010c4 t multiTaskSpawn
+000001d0 d multitask_tasks_tids
+000012c8 t taskTestTask
+000002d8 d cafe_multiSpawn_tid
+00000270 d topTasks_tids
+000002f0 d cafe_topIo_tid
+000000d8 d ioWd
+0000180c t prioritySet
+00001920 t priorityA
+00000040 d delayedStopPriority
+000002e0 d cafe_priorityTask_tid
+000002e8 d cafe_prioritySetTask_tid
+00000008 d priorityRunning
+000002c0 d cafe_taskGen_tid
+000002c8 d cafe_cpuLoadRamp_tid
+00000080 d topDemoRunning
+00001cd0 t intLocker
+00000038 d intLockerAbort
+00001ec4 t taskMover
+00000018 d taskMoveRunning
+000002b8 d cafe_taskMover_tid
+000020c0 t idleTaskSpin
+00000048 d idleTaskAbort
+00000050 d demo_load
+00000054 d intLockerCounter
+00000058 d memWdId
+00000060 d ioWdId
+00000068 d test_file_locations
+         U .TOC.
+         U open
+         U vxAtomicGet
+         U lseek
+         U write
+         U sysClkRateGet
+         U taskDelay
+         U read
+         U close
+         U remove
+         U printf
+         U vxAtomicSet
+         U taskCpuAffinitySet
+         U tickGet
+         U tree_a
+0000033c T cafe_demo_load_test_start
+         U vxCpuConfiguredGet
+         U snprintf
+         U taskCreate
+         U taskActivate
+00000500 T cafe_demo_load_test_stop
+0000053c T cafe_demo_load_cycle
+0000064c T cafe_demo_load_ramp_start
+         U taskSpawn
+00000800 T cafe_demo_load_ramp_stop
+         U malloc
+00000004 C cafe_goodBadTestResult
+         U tick64Get
+         U free
+         U taskSuspend
+000009c4 T cafe_demo_cache_bad
+00000b44 T cafe_demo_cache_good
+         U memset
+         U memPartCreate
+         U memPartOptionsGet
+         U memPartOptionsSet
+         U memPartAlloc
+         U memPartInfoGet
+         U memPartFree
+         U memPartDelete
+         U memSysPartId
+         U wdInitialize
+         U wdStart
+         U taskClassId
+         U objVerify
+0000136c T cafe_demo_task_stop
+000013a4 T cafe_demo_task_start
+         U rand
+00001610 T cafe_demo_io_start
+000017d4 T cafe_demo_io_stop
+         U taskPrioritySet
+0000198c T cafe_demo_priority_start
+00001afc T cafe_demo_priority_stop
+00001b38 T cafe_demo_multi_stop
+00001bc4 T cafe_demo_multi_start
+         U intCpuLock
+         U intCpuUnlock
+00001e08 T cafe_demo_intlock_start
+00001e88 T cafe_demo_intlock_stop
+         U taskIdSelf
+         U vxCpuEnabledGet
+00001fac T cafe_demo_task_mover_start
+00002084 T cafe_demo_task_mover_stop
+00002108 T cafe_demo_idletask_start
+00002264 T cafe_demo_idletask_stop
+
+topDemoLib.o:
+00000000 T cpuLoadTestStart
+         U .TOC.
+         U cafe_demo_load_test_start
+0000002c T cpuLoadTestStop
+         U cafe_demo_load_test_stop
+00000058 T cacheTestBad
+         U cafe_demo_cache_bad
+00000084 T cacheTestGood
+         U cafe_demo_cache_good
+000000b0 T topDemoStop
+         U cafe_demo_multi_stop
+000000dc T topDemoStart
+         U cafe_demo_multi_start
+00000108 T intLockerStart
+         U cafe_demo_intlock_start
+00000134 T intLockerStop
+         U cafe_demo_intlock_stop
+00000160 T idleTaskStart
+         U cafe_demo_idletask_start
+0000018c T idleTaskStop
+         U cafe_demo_idletask_stop
+000001b8 T taskMoverStart
+         U cafe_demo_task_mover_start
+000001e4 T taskMoverStop
+         U cafe_demo_task_mover_stop
+
+a.o:
+00000000 T tree_a
+         U .TOC.
+         U tree_b
+         U tree_c
+         U tree_x
+00000004 C a_a
+
+b.o:
+00000000 T tree_b
+         U .TOC.
+         U tree_c
+         U tree_d
+00000004 C b_b
+
+c.o:
+00000000 T tree_c
+         U .TOC.
+         U tree_d
+00000004 C c_c
+
+d.o:
+00000000 T tree_d
+         U .TOC.
+00000004 C d_d
+
+x.o:
+00000000 T tree_x
+         U .TOC.
+         U tree_c
+         U tree_y
+00000004 C x_x
+
+y.o:
+00000000 T tree_y
+         U .TOC.
+00000004 C y_y

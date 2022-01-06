@@ -1,0 +1,4 @@
+
+MKDIR = mkdir -p
+
+include $(WIND_KRNL_MK)/rules.vsb.build.mk

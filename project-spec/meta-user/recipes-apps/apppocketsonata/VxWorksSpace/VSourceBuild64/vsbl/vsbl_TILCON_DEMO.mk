@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# TILCON_DEMO Section
+##########################
+
+
+ifdef _WRS_CONFIG_TILCON_DEMO
+VSBL_TILCON_DEMO_SRC = 
+VSBL_TILCON_DEMO_DEPEND = 
+
+ifdef _WRS_CONFIG_TILCON_7_0_0_1_DEMO_7_2_1_3
+VSBL_TILCON_DEMO_SRC += TILCON_DEMO
+VSBL_TILCON_DEMO_DEPEND += TILCON_KERNEL
+TILCON_DEMO_FASTBUILD = YES
+VSBL_TILCON_DEMO_PATH = $(WIND_BASE)/pkgs/ui/tilcon-7.0.0.1/demo-7.2.1.3
+VSBL_TILCON_DEMO_VERSION = TILCON_7_0_0_1_DEMO_7_2_1_3
+endif
+endif
+

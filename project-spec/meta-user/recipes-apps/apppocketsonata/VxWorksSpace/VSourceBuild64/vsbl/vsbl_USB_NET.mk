@@ -1,0 +1,24 @@
+# Automatically generated file: do not edit
+
+##########################
+# USB_NET Section
+##########################
+
+
+ifdef _WRS_CONFIG_USB_NET
+VSBL_USB_NET_SRC = 
+VSBL_USB_NET_DEPEND = 
+
+ifdef _WRS_CONFIG_USB_1_1_0_6_TARGET_1_1_0_1_FUNCTION_1_1_0_1_NET_1_1_0_14
+VSBL_USB_NET_SRC += USB_NET
+VSBL_USB_NET_DEPEND += END_LIB
+VSBL_USB_NET_DEPEND += ERF
+VSBL_USB_NET_DEPEND += IPNET_COREIP
+VSBL_USB_NET_DEPEND += SOCKET
+VSBL_USB_NET_DEPEND += USB_HLP
+USB_NET_FASTBUILD = YES
+VSBL_USB_NET_PATH = $(WIND_BASE)/pkgs/connectivity/usb-1.1.0.6/target/function/net-1.1.0.14
+VSBL_USB_NET_VERSION = USB_1_1_0_6_TARGET_1_1_0_1_FUNCTION_1_1_0_1_NET_1_1_0_14
+endif
+endif
+

@@ -1,0 +1,24 @@
+
+ifndef __HEADER_ACCESS_END_INCLUDED
+__HEADER_ACCESS_END_INCLUDED = TRUE
+
+
+
+
+
+__SUBSCRIBE_ACCESS_END = 
+
+
+
+ifneq ($(wildcard $(VSB_KERNEL_PROTECTED_INCLUDE_DIR)/END),)
+
+ifneq ($(VSBL_NAME),)
+ifeq ($(VSBL_NAME),$(filter $(VSBL_NAME), END))
+VSBL_LKH += $(OPTION_INCLUDE_DIR)$(VSB_KERNEL_PROTECTED_INCLUDE_DIR)/END
+endif
+endif
+
+endif
+
+endif
+

@@ -1,0 +1,114 @@
+Document file - DO NOT EDIT
+
+<BEGIN> CORE_INFO_TYPE
+::prj_vsb
+<END>
+
+<BEGIN> CORE_INFO_VERSION
+4.2
+<END>
+
+<BEGIN> VSB_ARCH
+ppc
+<END>
+
+<BEGIN> VSB_BASELINE
+SR0530
+<END>
+
+<BEGIN> VSB_Bsp
+hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> VSB_BspDir
+$(WIND_BASE)/pkgs/os/board/ppc/hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> VSB_CFG
+
+<END>
+
+<BEGIN> VSB_COMPAT69
+0
+<END>
+
+<BEGIN> VSB_DEBUG
+0
+<END>
+
+<BEGIN> VSB_DEBUGOPT
+0
+<END>
+
+<BEGIN> VSB_DEFAULTFlag
+0
+<END>
+
+<BEGIN> VSB_GPPFlag
+0
+<END>
+
+<BEGIN> VSB_INETFlag
+2
+<END>
+
+<BEGIN> VSB_PRIONLY
+1
+<END>
+
+<BEGIN> VSB_PRI_DEFAULT
+
+<END>
+
+<BEGIN> VSB_PSL
+
+<END>
+
+<BEGIN> VSB_RPM_VERSION
+1.2.1.2
+<END>
+
+<BEGIN> VSB_SEC_DEFAULT
+
+<END>
+
+<BEGIN> VSB_SITNBFlag
+0
+<END>
+
+<BEGIN> VSB_SMPFlag
+1
+<END>
+
+<BEGIN> VSB_SPEED
+0
+<END>
+
+<BEGIN> VSB_TYPE
+0
+<END>
+
+<BEGIN> VSB_VERSION
+1
+<END>
+
+<BEGIN> VSB_catch_cpus
+BSP_PPCE6500
+<END>
+
+<BEGIN> VSB_cpu_name
+PPCE6500
+<END>
+
+<BEGIN> VSB_lp64Flag
+1
+<END>
+
+<BEGIN> VSB_possible_cpus
+PPCE6500
+<END>
+
+<BEGIN> VX_WIND_PLATFORM
+vxworks-7
+<END>
+

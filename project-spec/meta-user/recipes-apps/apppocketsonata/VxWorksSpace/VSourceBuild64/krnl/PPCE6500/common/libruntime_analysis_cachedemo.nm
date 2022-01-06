@@ -1,0 +1,40 @@
+
+libruntime_analysis_cachedemo.a:
+
+cafe_cache_demo.o:
+00000204 t do_cafe_memcpy_demo
+00000000 T initialize_source
+         U .TOC.
+         U memset
+00000038 T transform_source
+         U memcpy
+0000016c T consume_destination
+         U tickGet
+         U malloc
+         U free
+         U printf
+         U taskSuspend
+0000037c T cafe_cache_demo
+         U __stderr
+         U fprintf
+         U taskSpawn
+
+libruntime_analysis_cachedemo.a:
+
+cafe_cache_demo.o:
+00000204 t do_cafe_memcpy_demo
+00000000 T initialize_source
+         U .TOC.
+         U memset
+00000038 T transform_source
+         U memcpy
+0000016c T consume_destination
+         U tickGet
+         U malloc
+         U free
+         U printf
+         U taskSuspend
+0000037c T cafe_cache_demo
+         U __stderr
+         U fprintf
+         U taskSpawn

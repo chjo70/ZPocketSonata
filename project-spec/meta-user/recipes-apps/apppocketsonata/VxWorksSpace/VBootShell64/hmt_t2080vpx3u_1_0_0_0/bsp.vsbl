@@ -1,0 +1,67 @@
+/* bsp.vsbl - Freescale T2/T4 family BSP metadata file */
+
+/*
+ * Copyright (c) 2014-2017 Wind River Systems, Inc.
+ *
+ * The right to copy, distribute, modify or otherwise make use
+ * of this software may be licensed only pursuant to the terms
+ * of an applicable Wind River license agreement.
+ */
+
+/*
+modification history
+--------------------
+06dec17,syt  added RPM version dependency on os_arch_ppc and fsl_qoriq.
+             version number to 1.0.9.3. (V7PRO-4121)
+25oct17,j_x  modify the description of eMMC and SATA
+23may17,syt  corrected spelling mistakes and description error about VxBL.(V7PRO-3777)
+13jan17,syt  corrected some typos in target.ref.(V7PRO-3435)
+29dec16,syt  extend the vxbl's flash partition for uVxWorks image.(V7PRO-3371)
+29nov16,ffu  update version to 1.0.9.0 for add LP64 support in TFFS layer (F4496)
+12dec16,yjl  added SATA driver support on PPC64 model (V7STO-749)
+02sep16,x_w  fix vsb configuration issue for SD/MMC support.(V7STO-690)
+12sep16,syt  add T2080RDB support, Uprev to 1.0.8.0.(US85017)
+20jul16,d_l  Uprev to 1.0.7.2.
+02jun16,l_z  fix INCLUDE_FSL_SGMII_PHY component typo. (V7PRO-3110)
+31mar16,zly  added eSDHC support for SD/MMC card and eMMC chip on t2080qds,
+             updated version to 1.0.7.1. (F6541)
+29mar16,wap  Bump version for 10 gigabit support (F1921)
+21mar16,geo  Add hypervisor 653 support
+15mar16,r_w  add INCLUDE_DEBUG_KPUTS for BOARD_DESC_FLAG_DBG. (V7COR-3896)
+07mar16,fao  Update to 1.0.6.2.(V7PRO-2687)
+15dec15,syt  added BUILD_SPECS as default, updated the
+             version number to 1.0.6.1. (V7PRO-1405)
+29oct15,p_x  Add dependency for INCLUDE_BOOT_APP and BSP_DEFAULT 
+             on DRV_FPGA_FDT_FSL_QORIQ. (V7PRO-2482)
+29oct15,syt  added WARM_BOOT support and updated the version number to 1.0.6.0.(F3387)
+10sep15,jmp  Removed lma adjustement for non LP64 config (V7PRO-2406).
+27aug15,mze  switch to new __WRVX_BSP_POST_BUILD_RULE 1.0.5.1 (V7COR-3501)
+03dec14,syt  added LP64 support. (US15027))
+11jul15,dlk  V7NET-617: 1.0.4.4. T4240QDS needs at least 24 Qman & Bman portals.
+31mar15,d_l  Fix the DTB component display issue. (V7PRO-1861)
+             pass BOOT_COLD to usrInit. (V7PRO-738)
+             Update to 1.0.4.3.
+14jan15,d_l  fix apigen warning by removing NAME section
+             update version to 1.0.4.2
+23dec14,jzl  update vsb/vip info for USB(V7CON-84)
+23sep14,l_z  fix the DTB select issue when use workBench. (V7PRO-1193)
+12jun14,syt  added required feature for T4240QDS. (US15742)
+20may14,ylu  added SMT support for T4240QDS. (US34958)
+15may15,x_z  added Requires for boardInfoShow() and updated version. (US35954)
+21apr14,ylu  added support for PPC E6500 SMP, updated the version.(US34480)
+16apr14,ylu  added required feature for fsl_t2t4 BSP.
+09apr14,mze  replace VSB_REQUIRES with LAYER_REQUIRES add FEATURE_REQUIRES
+10mar14,ylu  created.
+*/
+
+Layer hmt_t2080vpx3u {
+ SYNOPSIS         Hanmarutech T2080 BSP
+ VERSION          1.0.0.0
+ VENDOR           Wind River
+ LAYER_REQUIRES   FDT BOARDLIB
+ FEATURE_REQUIRES {PPC_DRV FSL_PPCE6500_TIMER} \
+                  {VXBUS_DRV STANDARD_FDT_COMPAT} \
+                  {FSL_QORIQ SYSCLK_FREQ_GET}
+ RETROFIT         {REPLACE, 1.0.0.0 - 1.0.1.*, FEATURE_REQUIRES, {PPC_DRV FSL_PPCE6500_TIMER} {VXBUS_DRV STANDARD_FDT_COMPAT}} \
+                  {ADD, 1.0.0.0 - 1.0.1.*, LAYER_REQUIRES, BOARDLIB FSL_QORIQ}
+}

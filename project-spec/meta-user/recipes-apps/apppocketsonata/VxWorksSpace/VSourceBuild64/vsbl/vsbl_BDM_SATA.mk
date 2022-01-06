@@ -1,0 +1,28 @@
+# Automatically generated file: do not edit
+
+##########################
+# BDM_SATA Section
+##########################
+
+
+ifdef _WRS_CONFIG_BDM_SATA
+VSBL_BDM_SATA_SRC = 
+VSBL_BDM_SATA_DEPEND = 
+
+ifdef _WRS_CONFIG_BDM_1_0_1_3_SATA_1_1_3_5
+VSBL_BDM_SATA_SRC += BDM_SATA
+VSBL_BDM_SATA_DEPEND += BDM_XBD
+VSBL_BDM_SATA_DEPEND += ERF
+VSBL_BDM_SATA_DEPEND += FS_COMMON
+ifdef _WRS_CONFIG_VXBUS_BUSLIB
+VSBL_BDM_SATA_DEPEND += VXBUS_BUSLIB
+endif
+ifdef _WRS_CONFIG_VXBUS*
+VSBL_BDM_SATA_DEPEND += VXBUS_BUSLIB
+endif
+BDM_SATA_FASTBUILD = YES
+VSBL_BDM_SATA_PATH = $(WIND_BASE)/pkgs/storage/bdm-1.0.1.3/sata-1.1.3.5
+VSBL_BDM_SATA_VERSION = BDM_1_0_1_3_SATA_1_1_3_5
+endif
+endif
+

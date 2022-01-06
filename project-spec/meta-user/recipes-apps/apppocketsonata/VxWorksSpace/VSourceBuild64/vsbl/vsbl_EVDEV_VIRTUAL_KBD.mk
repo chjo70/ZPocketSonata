@@ -1,0 +1,19 @@
+# Automatically generated file: do not edit
+
+##########################
+# EVDEV_VIRTUAL_KBD Section
+##########################
+
+
+ifdef _WRS_CONFIG_EVDEV_VIRTUAL_KBD
+VSBL_EVDEV_VIRTUAL_KBD_SRC = 
+VSBL_EVDEV_VIRTUAL_KBD_DEPEND = 
+
+ifdef _WRS_CONFIG_EVDEV_1_0_0_3_DRV_1_0_0_1_VIRTUAL_KBD_1_0_0_1
+VSBL_EVDEV_VIRTUAL_KBD_SRC += EVDEV_VIRTUAL_KBD
+EVDEV_VIRTUAL_KBD_FASTBUILD = YES
+VSBL_EVDEV_VIRTUAL_KBD_PATH = $(WIND_BASE)/pkgs/ui/evdev-1.0.0.3/drv/virtualKbd-1.0.0.1
+VSBL_EVDEV_VIRTUAL_KBD_VERSION = EVDEV_1_0_0_3_DRV_1_0_0_1_VIRTUAL_KBD_1_0_0_1
+endif
+endif
+

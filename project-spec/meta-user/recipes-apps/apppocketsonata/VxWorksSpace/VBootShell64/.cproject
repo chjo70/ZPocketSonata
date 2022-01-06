@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<buildSystem id="POWERPC Diab">
+			<storageModule id="POWERPC Diab" moduleId="org.eclipse.cdt.core.settings"/>
+		</buildSystem>
+		<cconfiguration id="POWERPC Diab">
+			<storageModule id="POWERPC Diab" moduleId="defaultConfigurationDataProvider" name="POWERPC Diab">
+				<sourceEntries/>
+				<folderData id="POWERPC Diab.1404635798" name="" path="">
+					<languageData contentTypeIds="org.eclipse.cdt.core.cSource;org.eclipse.cdt.core.cHeader" id="POWERPC Diab.1404635798.1545685711" languageId="com.windriver.diab.c" name="Wind River Diab C" supportedEntryKinds="includePath;includeFile;macro;macroFile">
+						<settingEntries/>
+					</languageData>
+					<languageData contentTypeIds="org.eclipse.cdt.core.cxxSource;org.eclipse.cdt.core.cxxHeader" id="POWERPC Diab.1404635798.426200572" languageId="com.windriver.diab.cpp" name="Wind River Diab C++" supportedEntryKinds="includePath;includeFile;macro;macroFile">
+						<settingEntries/>
+					</languageData>
+				</folderData>
+				<buildData id="POWERPC Diab.749989242"/>
+				<targetPlatformData binaryParsers="com.windriver.ide.core.WRElfParserVxWorks;org.eclipse.cdt.core.GNU_ELF" id="POWERPC Diab.1294781426"/>
+			</storageModule>
+			<storageModule buildSystemId="com.windriver.cdt.core.WRDiabCfgDataProvider" id="POWERPC Diab" moduleId="org.eclipse.cdt.core.settings" name="POWERPC Diab">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.windriver.ide.core.WRElfParserVxWorks" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>

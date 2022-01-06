@@ -1,0 +1,14 @@
+
+# this file is generated
+
+# layers that have been built in the VSB
+__BUILT_LAYERS += MY_QSPI_FLASH_LAYER
+
+__OBJS_BUILT_MY_QSPI_FLASH_LAYER = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.o  D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.o  D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.d D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.d
+
+
+# built libraries
+__BUILT_LIBRARIES += krnl_PPCE6500_common_my_qspi_flash_layer
+
+
+__OBJS_BUILT_krnl_PPCE6500_common_my_qspi_flash_layer = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.o  D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64/krnl/PPCE6500/common/objmy_qspi_flash_layer/vxbMySpiFlash.o 

@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# SNMP_WRSNMP Section
+##########################
+
+
+ifdef _WRS_CONFIG_SNMP_WRSNMP
+VSBL_SNMP_WRSNMP_SRC = 
+VSBL_SNMP_WRSNMP_DEPEND = 
+
+ifdef _WRS_CONFIG_SNMP_1_0_0_3_WRSNMP_1_0_1_5
+VSBL_SNMP_WRSNMP_SRC += SNMP_WRSNMP
+VSBL_SNMP_WRSNMP_DEPEND += IPNET_COREIP
+VSBL_SNMP_WRSNMP_DEPEND += SNMP_ENGINE
+SNMP_WRSNMP_FASTBUILD = YES
+VSBL_SNMP_WRSNMP_PATH = $(WIND_BASE)/pkgs/app/snmp-1.0.0.3/wrsnmp-1.0.1.5
+VSBL_SNMP_WRSNMP_VERSION = SNMP_1_0_0_3_WRSNMP_1_0_1_5
+endif
+endif
+

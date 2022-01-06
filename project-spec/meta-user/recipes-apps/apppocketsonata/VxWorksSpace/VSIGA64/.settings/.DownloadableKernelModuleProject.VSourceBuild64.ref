@@ -1,0 +1,175 @@
+Version=1.0
+BuildSupport=Managed
+BuildCommand=%makeprefix% make --no-print-directory
+PreferredBuildSpecs=win32:A*.*
+PreferredBuildSpecs=linux:A*.*
+GlobalMacro.Name=PROJECT_TYPE
+GlobalMacro.PROJECT_TYPE.Value=DKM
+GlobalMacro.Name=DEFINES
+GlobalMacro.DEFINES.Value=
+GlobalMacro.Name=EXPAND_DBG
+GlobalMacro.EXPAND_DBG.Value=0
+GlobalMacro.Name=APICHECK_OPTIONS
+GlobalMacro.APICHECK_OPTIONS.Value=-warning
+Macro.Name=VX_CPU_FAMILY
+Macro.Name=CPU
+Macro.Name=TOOL_FAMILY
+Macro.Name=TOOL_VERSION
+Macro.Name=_CC_VERSION
+Macro.Name=TOOL
+Macro.Name=TOOL_PATH
+Macro.Name=CC_ARCH_SPEC
+Macro.Name=VSB_DIR
+Macro.Name=VSB_CONFIG_FILE
+Macro.Name=LIBPATH
+Macro.Name=LIBS
+Macro.Name=DKM_LONGCALL
+Macro.Name=BDGEN_VSB_INCLUDE
+Macro.Name=APICHECK_CMD
+Macro.Name=APICHECK
+BuildTool.Name=C-Compiler
+BuildTool.C-Compiler.InputSuffixes=*.c
+BuildTool.C-Compiler.OutputIsObject=true
+BuildTool.C-Compiler.OutputCanBePassed=false
+BuildTool.Name=C++-Compiler
+BuildTool.C++-Compiler.InputSuffixes=*.cpp;*.CPP;*.C;*.cxx;*.cc
+BuildTool.C++-Compiler.OutputIsObject=true
+BuildTool.C++-Compiler.OutputCanBePassed=false
+BuildTool.Name=Linker
+BuildTool.Linker.InputSuffixes=
+BuildTool.Linker.OutputIsObject=false
+BuildTool.Linker.OutputCanBePassed=false
+BuildTool.Name=Partial Image Linker
+BuildTool.Partial Image Linker.InputSuffixes=
+BuildTool.Partial Image Linker.OutputIsObject=false
+BuildTool.Partial Image Linker.OutputCanBePassed=true
+BuildTool.Name=Librarian
+BuildTool.Librarian.InputSuffixes=
+BuildTool.Librarian.OutputIsObject=false
+BuildTool.Librarian.OutputCanBePassed=true
+BuildTool.Name=Assembler
+BuildTool.Assembler.InputSuffixes=*.s;*.S
+BuildTool.Assembler.OutputIsObject=true
+BuildTool.Assembler.OutputCanBePassed=false
+BuildSpec.Name=VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.VX_CPU_FAMILY.Value=ppc
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.CPU.Value=PPCE6500
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.TOOL_FAMILY.Value=diab
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.TOOL_VERSION.Value=diab_5_9_6_1
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro._CC_VERSION.Value=diab_5_9_6_5
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.TOOL.Value=diab
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/diab-5.9.6.5/#WIND_VX7_DIAB_HOST_TYPE#/bin
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.CC_ARCH_SPEC.Value= -tPPCLP64FV:vxworks7 -Xkeywords=0x0 -D_WRS_HARDWARE_FP -ffixed-r13 -I#WIND_BASE#/pkgs/os/arch/ppc/kernel/base/h/arch/ppc/private/globRegs.h -Xcode-model-medium
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.LIBPATH.Value=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.LIBS.Value=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.DKM_LONGCALL.Value=-Xcode-absolute-far
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/krnl/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Macro.APICHECK.Value=0
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=-I#VSB_DIR#/share/h
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=-I#VSB_DIR#/krnl/h/system
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=-I#VSB_DIR#/krnl/h/public
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol=-DCPU=_VX_#CPU#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol=-DTOOL_FAMILY=#TOOL_FAMILY#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol=-DTOOL=#TOOL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol=-D_WRS_KERNEL
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.SymbolList=-D_WRS_VX_SMP -D_WRS_CONFIG_SMP
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol=-D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.Symbol= 
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.SymbolList=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C-Compiler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C++-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C++-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C++-Compiler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Linker.DerivedFileSignatures=*.out
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Linker.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Linker.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Linker.ToolFlags=-r4
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Linker.Command=echo "building $@";rm -f %OutFile%;#TOOL_PATH#/ddump -Ng %Objects% | tclsh #WIND_BASE#/build/mk/tcl/munch.tcl -c ppc -tags #VSB_DIR#/krnl/tags/dkm.tags > #OBJ_DIR#/ctdt.c;%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% #CC_ARCH_SPEC# -Xdollar-in-ident -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations  #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES#  #DKM_LONGCALL# %Defines% #DEFINES# -o #OBJ_DIR#/ctdt.o -c #OBJ_DIR#/ctdt.c; %linkerprefix% #TOOL_PATH#/dld -tPPCLP64FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% #OBJ_DIR#/ctdt.o %Objects% %Libraries% #LIBPATH# #LIBS# #ADDED_LIBPATH# #ADDED_LIBS# && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Partial Image Linker.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Partial Image Linker.DebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Partial Image Linker.NonDebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Partial Image Linker.ToolFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Partial Image Linker.Command=echo "building $@"; %linkerprefix% #TOOL_PATH#/dld -tPPCLP64FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% %Objects% #ADDED_OBJECTS# %Libraries% #LIBPATH# #LIBS# #ADDED_LIBPATH# #ADDED_LIBS# && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Librarian.DerivedFileSignatures=*.a
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Librarian.DebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Librarian.NonDebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Librarian.ToolFlags=crus
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Librarian.Command=echo "building $@";%archiverprefix% #TOOL_PATH#/dar %ToolFlags% %OutFile% %Objects% #ADDED_OBJECTS#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Assembler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Assembler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Assembler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_MEDIUM_SMP.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%
+BuildSpec.Name=VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.VX_CPU_FAMILY.Value=ppc
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.CPU.Value=PPCE6500
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.TOOL_FAMILY.Value=diab
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.TOOL_VERSION.Value=diab_5_9_6_1
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro._CC_VERSION.Value=diab_5_9_6_5
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.TOOL.Value=diab
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/diab-5.9.6.5/#WIND_VX7_DIAB_HOST_TYPE#/bin
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.CC_ARCH_SPEC.Value= -tPPCLP64FV:vxworks7 -Xkeywords=0x0 -D_WRS_HARDWARE_FP -ffixed-r13 -I#WIND_BASE#/pkgs/os/arch/ppc/kernel/base/h/arch/ppc/private/globRegs.h -Xcode-model-small 
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.LIBPATH.Value=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.LIBS.Value=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.DKM_LONGCALL.Value=-Xcode-absolute-far
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/krnl/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Macro.APICHECK.Value=0
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=-I#VSB_DIR#/share/h
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=-I#VSB_DIR#/krnl/h/system
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=-I#VSB_DIR#/krnl/h/public
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.IncludeSearchPath=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol=-DCPU=_VX_#CPU#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol=-DTOOL_FAMILY=#TOOL_FAMILY#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol=-DTOOL=#TOOL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol=-D_WRS_KERNEL
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.SymbolList=-D_WRS_VX_SMP -D_WRS_CONFIG_SMP
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol=-D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.Symbol= 
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.SymbolList=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C-Compiler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C++-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C++-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C++-Compiler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Linker.DerivedFileSignatures=*.out
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Linker.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Linker.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Linker.ToolFlags=-r4
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Linker.Command=echo "building $@";rm -f %OutFile%;#TOOL_PATH#/ddump -Ng %Objects% | tclsh #WIND_BASE#/build/mk/tcl/munch.tcl -c ppc -tags #VSB_DIR#/krnl/tags/dkm.tags > #OBJ_DIR#/ctdt.c;%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% #CC_ARCH_SPEC# -Xdollar-in-ident -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations  #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES#  #DKM_LONGCALL# %Defines% #DEFINES# -o #OBJ_DIR#/ctdt.o -c #OBJ_DIR#/ctdt.c; %linkerprefix% #TOOL_PATH#/dld -tPPCLP64FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% #OBJ_DIR#/ctdt.o %Objects% %Libraries% #LIBPATH# #LIBS# #ADDED_LIBPATH# #ADDED_LIBS# && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Partial Image Linker.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Partial Image Linker.DebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Partial Image Linker.NonDebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Partial Image Linker.ToolFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Partial Image Linker.Command=echo "building $@"; %linkerprefix% #TOOL_PATH#/dld -tPPCLP64FV:vxworks7 -X -r5 %ToolFlags% -o %OutFile% %Objects% #ADDED_OBJECTS# %Libraries% #LIBPATH# #LIBS# #ADDED_LIBPATH# #ADDED_LIBS# && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Librarian.DerivedFileSignatures=*.a
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Librarian.DebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Librarian.NonDebugFlags=
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Librarian.ToolFlags=crus
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Librarian.Command=echo "building $@";%archiverprefix% #TOOL_PATH#/dar %ToolFlags% %OutFile% %Objects% #ADDED_OBJECTS#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Assembler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Assembler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Assembler.NonDebugFlags=-XO -Xsize-opt
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd #DKM_LONGCALL#
+BuildSpec.VSourceBuild64_PPCE6500diab_LP64_SMALL_SMP.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%

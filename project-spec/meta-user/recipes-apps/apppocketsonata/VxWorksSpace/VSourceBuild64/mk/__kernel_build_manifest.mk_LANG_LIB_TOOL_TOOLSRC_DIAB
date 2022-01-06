@@ -1,0 +1,13 @@
+
+# this file is generated
+
+# layers that have been built in the VSB
+__BUILT_LAYERS += LANG_LIB_TOOL_TOOLSRC_DIAB
+
+__OBJS_BUILT_LANG_LIB_TOOL_TOOLSRC_DIAB = 
+
+
+# built libraries
+__BUILT_LIBRARIES += 
+
+

@@ -1,0 +1,26 @@
+# Automatically generated file: do not edit
+
+##########################
+# FS_NFS Section
+##########################
+
+
+ifdef _WRS_CONFIG_FS_NFS
+VSBL_FS_NFS_SRC = 
+VSBL_FS_NFS_DEPEND = 
+
+ifdef _WRS_CONFIG_FS_1_0_0_2_NFS_1_0_2_1
+VSBL_FS_NFS_SRC += FS_NFS
+VSBL_FS_NFS_DEPEND += FSAPI_UTIL
+VSBL_FS_NFS_DEPEND += FS_VFS
+VSBL_FS_NFS_DEPEND += IPNET_COREIP
+VSBL_FS_NFS_DEPEND += JOBQUEUE
+VSBL_FS_NFS_DEPEND += RPC
+VSBL_FS_NFS_DEPEND += SOCKET
+VSBL_FS_NFS_DEPEND += CORE_IO
+FS_NFS_FASTBUILD = YES
+VSBL_FS_NFS_PATH = $(WIND_BASE)/pkgs/storage/fs-1.0.0.2/nfs-1.0.2.1
+VSBL_FS_NFS_VERSION = FS_1_0_0_2_NFS_1_0_2_1
+endif
+endif
+

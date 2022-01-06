@@ -1,0 +1,472 @@
+########################################################################
+# syscallNum.def - VxWorks System Call Number Space Definition File
+#
+# Copyright 2003-2007, 2011-2017 Wind River Systems, Inc.
+#
+# The right to copy, distribute, modify or otherwise make use of this
+# software may be licensed only pursuant to the terms of an applicable
+# Wind River license agreement.
+#
+# modification history
+# --------------------
+# 16nov17,dlk  Restore old taskDelay() system call as _taskDelay(), and use
+#              a new system call ID for taskDelayEx().  Also, add note
+#              about System Viewer syscall event definition files.
+# 09nov17,dlk  add pipeAnonCreate() system call
+# 20may17,dlk  Introduce eventReceiveEx() to control early return due to
+#              EINTR or EDOOM on a call-by-call basis.
+#              Similarly replace taskDelay() with taskDelayEx(). (F5593)
+# 29jun16,dlk  Move _umiosfd() and _selWakeupOp() to the VXWORKS_2 group;
+#              rename _umiosfd() to _umiosFdGet() and remove its argument.
+# 04jun16,dlk  Adding _umiosfd.
+# 14apr16,dlk  Rename dup, dup2, unlink, link, rename, fpathconf, pathconf,
+#              access, chdir, and chmod system calls for user mode I/O system
+#              (F6848).
+# 12apr16,mca  BSD socket API routines begins with _ (F6564)
+# 23mar16,dlk  Changed _selWakeup to _selWakeupOp, and _select to _selectX.
+# 05oct15,zl   added _selWakeup. Renamed select to _select and remove
+#              to _remove.
+# 28sep15,rr   taskCtl system call is broken down in to multiple
+#              system calls (F3906)
+# 24mar15,txu  add _umask() system call (US55492)
+# 18nov14,gls  Added vxSysInfoGet(), _tick64Get(), tickRateGet(),
+#              shmVolNameGet(), _clock_getres(), _clock_gettime(),and
+#               _clock_settime() system calls
+# 18sep14,pad  Added getlogin_r() (US44416).
+# 26aug14,pad  Added _seteuid(), _geteuid(), _setegid() and _getegid() system
+#              calls (US44512).
+# 04jul14,pad  Added _setuid(), _getuid(), _setgid() and _getgid() system
+#              calls (US40207).
+# 23may14,h_k  fixed scgen warnings introduced by comments for pipe and _pipe.
+#              (V7COR-1196)
+# 25apr14,h_k  replaced pipe with _pipe. (US35006)
+# 18mar14,pad  Added userAuthenticate(), userPasswordUpdate(), _getpwuid() and
+#              _getpwnam() system calls. Introduced SCG_STANDARD_2 and
+#              SCG_VXWORKS_2.
+#              Formalized intended use for all system call groups.
+# 13feb14,cww  added SCG_SIEMENS
+# 30sep13,rfr  added condVar syscalls
+# 19sep12,zl   add _taskTcbCurrentGet()
+# 06may11,tcr  Add wvRtpEvent.
+# 26jun07,gls  added _semExchange
+# 13jun07,mfj  Adding semRTake, semWTake
+# 05jul06,tcr  add POSIX trace syscalls
+# 22may06,pcm  made changes for pthread cancellation points
+# 07apr06,kk   remove _taskOpenExt, replace by _taskOpenWithGuard
+# 10feb06,yvp  Added clockCtl.
+# 09feb06,kk   renamed _taskOpenExt to _taskOpenWithGuard
+# 22dec05,yvp  Changed system call number bit field widths.
+#              SYSCALL_GROUP_NUM_BITS is 10 bits wide.
+#              SYSCALL_ROUTINE_NUM_BITS is 6 bits wide.
+# 22dec05,jln  added _taskOpenExt system call
+# 03aug05,pad  Added system call number for chmod().
+# 16jun05,yvp  Added CoreIO/filesystem related system calls.
+# 13may05,hya  add syscall _open & _ioctl
+# 14feb05,zl   added added _mctl() system call.
+# 06oct04,yvp  Aliased sdCreate/sdOpen to _sdCreate/_sdOpen respectively.
+# 08jun04,job  SPR#98083: Added system call group SCG_RTI
+# 19may04,yvp  Moved sigaltstack into SCG_STANDARD.
+# 19may04,yvp  Added sigaltstack.
+# 17may04,yvp  Renamed sigqueue/taskSigqueue to _sigqueue/_taskSigqueue.
+# 23apr04,pad  Added system call numbers for the SL-related system calls.
+# 23apr04,yvp  Added SL syscalls, objUnlink and (get/set)prlimit.
+# 26mar04,dcc  added objUnlink() syscall.
+# 07apr04,gls  added sdInfoGet
+# 19mar04,yvp  Derived from 02f of syscall.def.
+# 26feb04,yvp  Added wvEvent() in SCG_VXWORKS.
+# 13feb04,yvp  Added include files for resSearchN system call.
+# 06feb04,yvp  Added SCG_VXTEST.
+# 06feb04,yvp  Added resSearchN (DNS resolver) + remove comCoreTypes.h
+# 03feb04,md   Added _edrErrorInject and edrFlagsGet
+# 18feb04,dat  chg getcwd to _getcwd for error handling
+# 02feb04,gls  modified shared data system calls to use OBJ_HANDLE
+# 18dec03,gls  added shared data system calls
+# 12dec03,yvp  Added INCLUDE_SC_SOCKLIB conditional for socket system calls.
+# 12dec03,aeg  fixed typo for the _msgQOpen system call.
+# 10dec03,yvp  Changed format to take full C-like function prototypes
+#              and scalability-defines.
+# 04dec03,ans  renamed timerOpen to _timer_open
+# 05nov03,md   renamed semTake, semGive, and semOpen.  Added semCtl
+# 02dec03,aeg  renamed semOpen, msgQOpen, taskOpen to
+#	       _semOpen, _msgQOpen, and _taskOpen.
+# 20nov03,vvv  added sysctl system call group
+# 14nov03,nee  added SCG_sockets
+# 03nov03,dat  chg numargs for pipeDevDelete, iosFdTblSizeGet
+# 06nov03,nrj  added getpid, waitpid, getppid
+# 03nov03,m_s  added posix sem and mq system calls to SCG_posix group
+# 21oct03,aeg  added temporary sysClkRateGet system call to Wind group
+# 16oct03,ans  added SCG_posix and timer system calls.
+# 14oct03,nrj  added RTP signal system calls
+# 22sep03,kk   added rtpSpawn & rtpInfoGet
+# 18sep03,yvp  created.
+#
+#  DESCRIPTION:
+#  This file defines system call numbers for all official VxWorks system calls.
+#  Numbers once assigned are not re-assigned.
+#
+#  FORMAT:
+#
+#  A Group definition line defines one system call group.
+#  Its format is as follows:
+#
+#  	SYSCALL_GROUP  SCG_<groupName>   <groupNumber> [ <configMacro(s)> ]
+#
+#  For example "SYSCALL_GROUP SCG_fooLib 3" defines a System Call Group
+#  "SCG_fooLib" for the kernel library fooLib, whose group number is
+#  3. The group numbering scheme is as follows -
+#
+#  	0 - 1        Reserved for short term usage by Wind River.
+#  	2 - 7        Only for customer short term usage.
+#  	8 - 10       Reserved for long term usage by Wind River.
+#       11 - 14      Reserved for officially registered Third Party partners.
+#       15 - 50      Reserved for long term usage by Wind River.
+#       51 - onwards Reserved for officially registered Third Party partners.
+#
+#  Following each System Call Group definition is the list of System Calls
+#  included in that System Call Group. Each System Call is declared using
+#  the format:
+#
+#	<number> <name>
+#
+#  The number is the system call number within the system call group
+#  The name is the name of the system call.
+#
+#  System call numbers within a given group should start at 0 and must be
+#  less than 64. They need not be sequential.
+#
+#  This file is paired with a companion file named syscallApi.def that
+#  defines the system call API (i.e. function argument number & types).
+#  These two files are parsed by the scgen utility to automatically generate
+#  header files, assembly stubs  and initialized system call tables used by
+#  the system.
+#
+#  IMPORTANT NOTE:
+#  Since this file defines the System Call number space in VxWorks, all
+#  new additions to this file should be well considered and approved.
+#  System calls once added must not be deleted or changed after product
+#  release to maintain backward compatibility from future versions.
+#
+#  WARNING: System Viewer maintains files describing system call events.
+#  These files need to be regenerated by the System Viewer team when the
+#  system call interface here is modified:
+#
+#    workbench-4/wrsysviewer/host/resource/windview/VxWorks/
+#         7.0.0_32bit/syscalls_syn.xml
+#         7.0.0_64bit/syscalls_syn.xml
+#
+#  For uniformity and readability, all numbers used in this file are decimal.
+########################################################################
+
+SET SYSCALL_GROUP_NUM_BITS		10
+SET SYSCALL_ROUTINE_NUM_BITS		6
+SET SYSCALL_GROUP_NO_BIT_START		6
+
+
+########################################################################
+# Group and system call number assignments for kernel libraries
+#
+#       NOTE : THESE NUMBER ASSIGNMENTS MUST *NEVER* BE CHANGED ONCE
+#              THEY ARE ADDED. THIS IS TO ENSURE COMPATIBILITY WITH
+#              FUTURE VERSIONS.
+########################################################################
+
+SYSCALL_GROUP	SCG_RESERVED0		0
+SYSCALL_GROUP	SCG_RESERVED1		1
+SYSCALL_GROUP	SCG_USER0		2
+SYSCALL_GROUP	SCG_USER1		3
+SYSCALL_GROUP	SCG_USER2		4
+SYSCALL_GROUP	SCG_USER3		5
+SYSCALL_GROUP	SCG_USER4		6
+SYSCALL_GROUP	SCG_USER5		7
+
+
+########################################################################
+#
+# The STANDARD system call group contains system calls which are in common
+# with UNIX(tm) like systems
+#
+########################################################################
+
+SYSCALL_GROUP	 SCG_STANDARD		8
+
+  0  _exit
+  1  creat      # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+  1  _creat     # Applies to VxWorks 6.4 and later
+  2  open	# Obsolete in VxWorks 6.2 and later. Keep for VxWorks 6.0 & 6.1
+  2  _open	# Applies to VxWorks 6.2 and later
+  3  close      # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+  3  _close     # Applies to VxWorks 6.4 and later
+  4  read       # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+  4  _read      # Applies to VxWorks 6.4 and later
+  5  write      # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+  5  _write     # Applies to VxWorks 6.4 and later
+  6  ioctl	# Obsolete in VxWorks 6.2 and later. Keep for VxWorks 6.0 & 6.1
+  6  _ioctl	# Applies to VxWorks 6.2 and later
+  7  dup
+  7  _dup       # VxWorks 7 system call definition layer 1.0.10.0 and later.
+  8  dup2
+  8  _dup2      # VxWorks 7 system call definition layer 1.0.10.0 and later.
+  9  pipe	# Obsolete in VxWorks 7 system call definition layer 1.0.1.0 and later. Keep for VxWorks 7 system call definition layer 1.0.0.0.
+  9  _pipe	# Applies to VxWorks 7 system call definition layer 1.0.1.0 and later.
+ 10  remove
+ 10  _remove    # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 11  select
+ 11  _selectX   # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 12  socket
+ 12  _socket
+ 13  bind
+ 13  _bind
+ 14  listen
+ 14  _listen
+ 15  accept
+ 15  _accept
+ 16  connect
+ 16  _connect
+ 17  sendto
+ 17  _sendto
+ 18  send
+ 18  _send
+ 19  sendmsg
+ 19  _sendmsg
+ 20  recvfrom
+ 20  _recvfrom
+ 21  recv
+ 21  _recv
+ 22  recvmsg
+ 22  _recvmsg
+ 23  setsockopt
+ 23  _setsockopt
+ 24  getsockopt
+ 24  _getsockopt
+ 25  getsockname
+ 25  _getsockname
+ 26  getpeername
+ 26  _getpeername
+ 27  shutdown
+ 27  _shutdown
+ 28  mmap
+ 29  munmap
+ 30  mprotect
+ 31  kill
+ 32  pause      # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 32  _pause     # Applies to VxWorks 6.4 and later
+ 33  sigpending
+ 34  sigprocmask
+ 35  _sigqueue
+ 36  sigsuspend  # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 36  _sigsuspend # Applies to VxWorks 6.4 and later
+ 37  sigtimedwait  # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 37  _sigtimedwait # Applies to VxWorks 6.4 and later
+ 38  _sigaction
+ 39  _sigreturn
+ 40  chdir
+ 41  _getcwd
+ 42  symlink
+ 43  getpid
+ 44  getppid
+ 45  waitpid  # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 45  _waitpid # Applies to VxWorks 6.4 and later
+ 46  sysctl
+ 47  _schedPxInfoGet
+ 48  sigaltstack
+ 49  unlink
+ 49  _unlink  # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 50  link
+ 50  _link    # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 51  fsync      # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 51  _fsync     # Applies to VxWorks 6.4 and later
+ 52  fdatasync  # Obsolete in VxWorks 6.4 and later. Keep for previous versions
+ 52  _fdatasync # Applies to VxWorks 6.4 and later
+ 53  rename
+ 53  _rename  # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 54  fpathconf
+ 54  _fpathconf  # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 55  pathconf
+ 55  _pathconf   # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 56  access
+ 56  _access     # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 57  chmod
+ 57  _chmod      # VxWorks 7 system call definition layer 1.0.10.0 and later.
+ 58  pxTraceCreation         # create traces with or without log
+ 59  pxTraceCtl              # perform operations on active traces
+ 60  pxTraceEvent            # store event or event name data from a traced process
+ 61  pxTraceEventNameQuery   # retrieve event name data
+ 62  pxTraceLog              # open, close, rewind on pre-recorded logs
+ 63  pxTraceEventGet         # read event data
+
+# NOTE: Max 64 routines per syscall group. Routine numbers cannot exceed 63.
+
+########################################################################
+#
+# The VXWORKS system call group contains system calls which are unique
+# to Wind River's VxWorks or are otherwise not similar to UNIX(tm)
+#
+########################################################################
+
+SYSCALL_GROUP	SCG_VXWORKS		9
+
+  0  eventReceiveEx
+  1  eventSend
+  2  eventCtl
+  3  msgQSend
+  4  msgQReceive
+  5  _msgQOpen
+  6  objDelete
+  7  objInfoGet
+  8  _semTake
+  9  _semGive
+ 10  _semOpen
+ 11  semCtl
+ 12  _taskOpen
+ 13  taskCtl
+ 14  _taskDelay
+ 15  rtpSpawn
+ 16  rtpInfoGet
+ 17  taskKill
+ 18  _taskSigqueue
+ 19  _timer_open
+ 20  timerCtl
+ 21  pxOpen
+ 22  pxClose
+ 23  pxUnlink
+ 24  pxCtl
+ 25  pxMqReceive
+ 26  pxMqSend
+ 27  pxSemWait
+ 28  pxSemPost
+ 29  pipeDevCreate
+ 30  pipeDevDelete
+
+# WARNING - System calls sdCreate and sdOpen are deprecated at Itn6frz11.
+#           Aliasing of system call numbers is fine in this case as the
+#           prototype does not change, and syscallApi.def controls which
+#           name is actually used. The old names will be removed before FCS.
+ 31  sdCreate
+ 31  _sdCreate
+ 32  sdOpen
+ 32  _sdOpen
+
+ 33  sdDelete
+ 34  sdMap
+ 35  sdUnmap
+ 36  sdProtect
+ 37  _edrErrorInject
+ 38  edrFlagsGet
+ 39  resSearchN
+ 40  wvEvent
+ 41  rtpVarAdd
+ 42  sdInfoGet
+ 43  _shlOpen
+ 44  _shlUnlock
+ 45  _shlClose
+ 46  _shlGet
+ 47  _shlPut
+ 48  objUnlink
+ 49  getprlimit
+ 50  setprlimit
+ 51  _mctl
+ 52  _taskOpenWithGuard
+ 53  clockCtl
+ 54 _semRTake
+ 55 _semWTake
+ 56 _semExchange
+ 57 wvRtpEvent
+ 58 _taskTcbCurrentGet
+ 59 _condVarOpen
+ 60 _condVarWait
+ 61 _condVarSignal
+ 62 userAuthenticate
+ 63 userPasswordUpdate
+
+# NOTE: Max 64 routines per syscall group. Routine numbers cannot exceed 63.
+
+########################################################################
+#
+# The VXTEST system call group contains system calls which are used by
+# the VxTest Test Infrastructure and other test suites that need their
+# own dedicated system calls. This group will be registered dynamically
+#
+########################################################################
+
+SYSCALL_GROUP	SCG_VXTEST		10
+
+########################################################################
+#
+# The system call groups 11 to 14 are assigned to Third Party usage
+#
+########################################################################
+
+SYSCALL_GROUP   SCG_RTI                 11
+SYSCALL_GROUP   SCG_RADSTONE            12
+SYSCALL_GROUP	SCG_SIEMENS		13
+
+########################################################################
+#
+# The SCG_STANDARD_2 system call group extends the STANDARD system call
+# group and has the same purpose.
+#
+########################################################################
+
+SYSCALL_GROUP	 SCG_STANDARD_2         15
+
+  0 _getpwuid
+  1 _getpwnam
+  2 _setuid
+  3 _getuid
+  4 _setgid
+  5 _getgid
+  6 _seteuid
+  7 _geteuid
+  8 _setegid
+  9 _getegid
+ 10 getlogin_r
+ 11 _clock_getres
+ 12 _clock_gettime
+ 13 _clock_settime
+ 14 _umask
+
+# NOTE: Max 64 routines per syscall group. Routine numbers cannot exceed 63.
+
+########################################################################
+#
+# The VXWORKS_2 system call group extends the VXWORKS system call group
+# and has the same purpose.
+#
+########################################################################
+
+SYSCALL_GROUP    SCG_VXWORKS_2          16
+
+ 0 randNumGenCtl
+ 1 taskStateCtl
+ 2 taskParamCtl
+ 3 taskPriCtl
+ 4 taskCpuAffCtl
+ 5 taskVarCtl
+ 6 taskPxAttrCtl
+ 7 _taskWait
+ 8 atomic32Op
+ 9 atomic64Op
+10 _rtpTaskExitRegister
+11 vxSysInfoGet
+12 _tick64Get
+13 tickRateGet
+14 shmVolNameGet
+15 _selWakeupOp  # VxWorks 7 system call definition layer 1.0.11.0 and later.
+16 _umiosFdGet   # VxWorks 7 system call definition layer 1.0.11.0 and later.
+17 pipeAnonCreate  # VxWorks 7 system call definition layer 1.0.14.0 and later
+18 taskDelayEx   # VxWorks 7 system call definition layer 1.0.14.0 and later.
+
+# NOTE: Max 64 routines per syscall group. Routine numbers cannot exceed 63.
+
+########################################################################
+#
+# The system call groups 17 to 50 are reserved for VxWorks.
+#
+########################################################################
+
+########################################################################
+#
+# All remaining system call groups (i.e. 51 to 1023 are reserved for
+# Third Party usage.
+#
+########################################################################

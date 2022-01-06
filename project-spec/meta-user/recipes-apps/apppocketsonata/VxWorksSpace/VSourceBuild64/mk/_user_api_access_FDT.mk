@@ -1,0 +1,24 @@
+
+ifndef __HEADER_ACCESS_FDT_INCLUDED
+__HEADER_ACCESS_FDT_INCLUDED = TRUE
+
+
+
+
+
+__SUBSCRIBE_ACCESS_FDT = 
+
+
+
+ifneq ($(wildcard $(VSB_USER_PROTECTED_INCLUDE_DIR)/FDT),)
+
+ifneq ($(VSBL_NAME),)
+ifeq ($(VSBL_NAME),$(filter $(VSBL_NAME), FDT))
+VSBL_LUH += $(OPTION_INCLUDE_DIR)$(VSB_USER_PROTECTED_INCLUDE_DIR)/FDT
+endif
+endif
+
+endif
+
+endif
+

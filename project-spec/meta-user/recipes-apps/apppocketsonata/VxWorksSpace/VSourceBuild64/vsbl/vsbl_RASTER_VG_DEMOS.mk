@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# RASTER_VG_DEMOS Section
+##########################
+
+
+ifdef _WRS_CONFIG_RASTER_VG_DEMOS
+VSBL_RASTER_VG_DEMOS_SRC = 
+VSBL_RASTER_VG_DEMOS_DEPEND = 
+
+ifdef _WRS_CONFIG_RASTER_1_0_0_2_VG_DEMOS_1_0_5_1
+VSBL_RASTER_VG_DEMOS_SRC += RASTER_VG_DEMOS
+VSBL_RASTER_VG_DEMOS_DEPEND += RASTER_VG
+RASTER_VG_DEMOS_FASTBUILD = YES
+VSBL_RASTER_VG_DEMOS_PATH = $(WIND_BASE)/pkgs/ui/raster-1.0.0.2/vg_demos-1.0.5.1
+VSBL_RASTER_VG_DEMOS_VERSION = RASTER_1_0_0_2_VG_DEMOS_1_0_5_1
+endif
+endif
+

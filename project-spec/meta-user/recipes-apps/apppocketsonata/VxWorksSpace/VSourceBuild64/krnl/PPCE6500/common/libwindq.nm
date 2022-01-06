@@ -1,0 +1,258 @@
+
+libwindq.a:
+
+qFifoLib.o:
+00000000 T qFifoInit
+         U .TOC.
+00000028 T qFifoPut
+00000070 T qFifoRestore
+000000a4 T qFifoGet
+000000e4 T qFifoRemove
+00000130 T qFifoResort
+0000013c T qFifoInfo
+         U dllCount
+000001ac T qFifoEach
+00000230 T qFifoNext
+00000000 D qFifoClass
+00000060 D qFifoClassId
+
+qPriBMapLib.o:
+00000520 t qPriBMapReadyQResort
+00000018 d qPriBMapClass
+00000078 d qTradPriBMapClass
+00000000 T qPriBMapInit
+         U .TOC.
+         U dllInit
+         U bzero
+000000c8 T qTradPriBMapSetCompatible
+00000008 D qTradPriBMapClassId
+000004d0 T qPriBMapResort
+00000010 D _func_qPriBMapNativeResort
+000000f0 T qPriBMapPut
+         U dllAdd
+0000018c T qPriBMapRemove
+000002f4 T qPriBMapGet
+00000330 T qPriBMapRestore
+         U dllInsert
+000003dc T qPriBMapNext
+000005f4 T qPriBMapKey
+00000604 T qPriBMapInfo
+         U dllCount
+00000708 T qPriBMapEach
+000007d8 T qPriBMapSet
+00000000 D qPriBMapClassId
+
+qPriDeltaLib.o:
+00000008 d qPriDeltaClass
+00000000 T qPriDeltaInit
+         U .TOC.
+00000020 T qPriDeltaPut
+         U dllInsert
+000000c0 T qPriDeltaGet
+00000100 T qPriDeltaRemove
+00000164 T qPriDeltaResort
+000001a0 T qPriDeltaAdvance
+000001d8 T qPriDeltaGetExpired
+00000228 T qPriDeltaKey
+00000258 T qPriDeltaInfo
+         U dllCount
+000002c8 T qPriDeltaEach
+00000370 T qPriDeltaNext
+00000000 D qPriDeltaClassId
+
+qPriListLib.o:
+00000228 t qPriListReadyQResort
+00000018 t qPriListClass
+00000078 t qTradPriListClass
+000000d8 t qPriListFromTailClass
+00000000 T qPriListInit
+         U .TOC.
+00000028 T qTradPriListSetCompatible
+00000008 T qTradPriListClassId
+0000018c T qPriListResort
+00000048 T qPriListPut
+         U dllInsert
+000000b4 T qPriListPutFromTail
+00000118 T qPriListGet
+         U dllGet
+0000015c T qPriListRemove
+         U dllRemove
+00000318 T qPriListKey
+00000328 T qPriListInfo
+         U dllCount
+00000398 T qPriListEach
+00000440 T qPriListNext
+00000000 T qPriListClassId
+00000010 T qPriListFromTailClassId
+
+qPxPriBMapLib.o:
+00000000 t qPxPriBMapPut
+00000130 t qPxPriBMapResort
+00000008 d qPxPriBMapClass
+         U .TOC.
+         U readyQNodeToTcb
+         U qPriBMapPut
+         U qPriBMapSet
+         U dllAdd
+         U dllInsert
+         U _func_qPriBMapNativeResort
+         U qPriBMapRemove
+00000000 D qPxPriBMapClassId
+         U qPriBMapGet
+         U qPriBMapKey
+         U qPriBMapInfo
+         U qPriBMapEach
+         U qPriBMapRestore
+         U qPriBMapNext
+
+qPxSSPriBMapLib.o:
+00000000 t qPxSSPriBMapPut
+00000184 t qPxSSPriBMapRemove
+000001fc t qPxSSPriBMapResort
+00000008 d qPxSSPriBMapClass
+         U .TOC.
+         U readyQNodeToTcb
+         U qPriBMapPut
+         U pxSSThreadStateActive
+         U qPriBMapSet
+         U dllAdd
+         U dllInsert
+         U qPriBMapRemove
+         U pxSSThreadStateBlock
+         U _func_qPriBMapNativeResort
+00000000 D qPxSSPriBMapClassId
+         U qPriBMapGet
+         U qPriBMapKey
+         U qPriBMapInfo
+         U qPriBMapEach
+         U qPriBMapRestore
+         U qPriBMapNext
+
+libwindq.a:
+
+qFifoLib.o:
+00000000 T qFifoInit
+         U .TOC.
+00000028 T qFifoPut
+00000070 T qFifoRestore
+000000a4 T qFifoGet
+000000e4 T qFifoRemove
+00000130 T qFifoResort
+0000013c T qFifoInfo
+         U dllCount
+000001ac T qFifoEach
+00000230 T qFifoNext
+00000000 D qFifoClass
+00000060 D qFifoClassId
+
+qPriBMapLib.o:
+00000520 t qPriBMapReadyQResort
+00000018 d qPriBMapClass
+00000078 d qTradPriBMapClass
+00000000 T qPriBMapInit
+         U .TOC.
+         U dllInit
+         U bzero
+000000c8 T qTradPriBMapSetCompatible
+00000008 D qTradPriBMapClassId
+000004d0 T qPriBMapResort
+00000010 D _func_qPriBMapNativeResort
+000000f0 T qPriBMapPut
+         U dllAdd
+0000018c T qPriBMapRemove
+000002f4 T qPriBMapGet
+00000330 T qPriBMapRestore
+         U dllInsert
+000003dc T qPriBMapNext
+000005f4 T qPriBMapKey
+00000604 T qPriBMapInfo
+         U dllCount
+00000708 T qPriBMapEach
+000007d8 T qPriBMapSet
+00000000 D qPriBMapClassId
+
+qPriDeltaLib.o:
+00000008 d qPriDeltaClass
+00000000 T qPriDeltaInit
+         U .TOC.
+00000020 T qPriDeltaPut
+         U dllInsert
+000000c0 T qPriDeltaGet
+00000100 T qPriDeltaRemove
+00000164 T qPriDeltaResort
+000001a0 T qPriDeltaAdvance
+000001d8 T qPriDeltaGetExpired
+00000228 T qPriDeltaKey
+00000258 T qPriDeltaInfo
+         U dllCount
+000002c8 T qPriDeltaEach
+00000370 T qPriDeltaNext
+00000000 D qPriDeltaClassId
+
+qPriListLib.o:
+00000228 t qPriListReadyQResort
+00000018 t qPriListClass
+00000078 t qTradPriListClass
+000000d8 t qPriListFromTailClass
+00000000 T qPriListInit
+         U .TOC.
+00000028 T qTradPriListSetCompatible
+00000008 T qTradPriListClassId
+0000018c T qPriListResort
+00000048 T qPriListPut
+         U dllInsert
+000000b4 T qPriListPutFromTail
+00000118 T qPriListGet
+         U dllGet
+0000015c T qPriListRemove
+         U dllRemove
+00000318 T qPriListKey
+00000328 T qPriListInfo
+         U dllCount
+00000398 T qPriListEach
+00000440 T qPriListNext
+00000000 T qPriListClassId
+00000010 T qPriListFromTailClassId
+
+qPxPriBMapLib.o:
+00000000 t qPxPriBMapPut
+00000130 t qPxPriBMapResort
+00000008 d qPxPriBMapClass
+         U .TOC.
+         U readyQNodeToTcb
+         U qPriBMapPut
+         U qPriBMapSet
+         U dllAdd
+         U dllInsert
+         U _func_qPriBMapNativeResort
+         U qPriBMapRemove
+00000000 D qPxPriBMapClassId
+         U qPriBMapGet
+         U qPriBMapKey
+         U qPriBMapInfo
+         U qPriBMapEach
+         U qPriBMapRestore
+         U qPriBMapNext
+
+qPxSSPriBMapLib.o:
+00000000 t qPxSSPriBMapPut
+00000184 t qPxSSPriBMapRemove
+000001fc t qPxSSPriBMapResort
+00000008 d qPxSSPriBMapClass
+         U .TOC.
+         U readyQNodeToTcb
+         U qPriBMapPut
+         U pxSSThreadStateActive
+         U qPriBMapSet
+         U dllAdd
+         U dllInsert
+         U qPriBMapRemove
+         U pxSSThreadStateBlock
+         U _func_qPriBMapNativeResort
+00000000 D qPxSSPriBMapClassId
+         U qPriBMapGet
+         U qPriBMapKey
+         U qPriBMapInfo
+         U qPriBMapEach
+         U qPriBMapRestore
+         U qPriBMapNext

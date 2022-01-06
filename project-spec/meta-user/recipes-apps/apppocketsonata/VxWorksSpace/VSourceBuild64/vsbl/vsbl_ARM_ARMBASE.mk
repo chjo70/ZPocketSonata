@@ -1,0 +1,20 @@
+# Automatically generated file: do not edit
+
+##########################
+# ARM_ARMBASE Section
+##########################
+
+
+ifdef _WRS_CONFIG_ARM_ARMBASE
+VSBL_ARM_ARMBASE_SRC = 
+VSBL_ARM_ARMBASE_DEPEND = 
+
+ifdef _WRS_CONFIG_ARM_1_1_10_2_KERNEL_1_0_13_2_ARMBASE_1_0_5_2
+VSBL_ARM_ARMBASE_SRC += ARM_ARMBASE
+VSBL_ARM_ARMBASE_DEPEND += CORE_KERNEL
+ARM_ARMBASE_FASTBUILD = YES
+VSBL_ARM_ARMBASE_PATH = $(WIND_BASE)/pkgs/os/arch/arm-1.1.10.2/kernel/armbase
+VSBL_ARM_ARMBASE_VERSION = ARM_1_1_10_2_KERNEL_1_0_13_2_ARMBASE_1_0_5_2
+endif
+endif
+

@@ -1,0 +1,24 @@
+
+ifndef __HEADER_ACCESS_UTF_INCLUDED
+__HEADER_ACCESS_UTF_INCLUDED = TRUE
+
+
+
+
+
+__SUBSCRIBE_ACCESS_UTF = 
+
+
+
+ifneq ($(wildcard $(VSB_KERNEL_PROTECTED_INCLUDE_DIR)/UTF),)
+
+ifneq ($(VSBL_NAME),)
+ifeq ($(VSBL_NAME),$(filter $(VSBL_NAME), UTF))
+VSBL_LKH += $(OPTION_INCLUDE_DIR)$(VSB_KERNEL_PROTECTED_INCLUDE_DIR)/UTF
+endif
+endif
+
+endif
+
+endif
+

@@ -1,0 +1,21 @@
+# Automatically generated file: do not edit
+
+##########################
+# UNIX_VXTEST Section
+##########################
+
+
+ifdef _WRS_CONFIG_UNIX_VXTEST
+VSBL_UNIX_VXTEST_SRC = 
+VSBL_UNIX_VXTEST_DEPEND = 
+
+ifdef _WRS_CONFIG_UNIX_1_0_0_3_VXTEST_1_0_0_1
+VSBL_UNIX_VXTEST_SRC += UNIX_VXTEST
+VSBL_UNIX_VXTEST_DEPEND += CORE_KERNEL_VXTEST
+UNIX_VXTEST_FASTBUILD = YES
+UNIX_VXTEST_SUBSCRIBE = UNIX
+VSBL_UNIX_VXTEST_PATH = $(WIND_BASE)/pkgs/os/utils/unix-1.0.0.3/vxTest
+VSBL_UNIX_VXTEST_VERSION = UNIX_1_0_0_3_VXTEST_1_0_0_1
+endif
+endif
+

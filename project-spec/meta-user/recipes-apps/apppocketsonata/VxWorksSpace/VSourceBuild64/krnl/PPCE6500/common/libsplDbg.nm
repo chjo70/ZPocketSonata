@@ -1,0 +1,126 @@
+
+libsplDbg.a:
+
+kernelLockLib.o:
+00000000 T kernelLockInit
+         U .TOC.
+00000000 D kernelStateLock
+00000030 T kernelLockOwnedByMe
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+00000098 T kernelLockOwnerGet
+
+spinLockIsrNdLib.o:
+00000000 T spinLockIsrNdInit
+         U .TOC.
+00000000 T spinlockIsrNdInit
+
+spinLockSmpDbgLib.o:
+00000008 d pInvContextErrMsg
+00000010 d bSpinlockDbgDisabled
+00000018 d pNotOwnerErrMsg
+00000020 d pNotHeldErrMsg
+00000028 d pNestedErrMsg
+00000030 d pRecursedTakeErrMsg
+00000038 d pInvalidLockCntErrMsg
+00000000 T spinLockIsrInit
+         U .TOC.
+         U intContext
+         U setjmp
+         U edrErrorInjectStub
+         U edrInterruptFatalPolicyHandler
+         U vxCpuConfigured
+0000011c T spinLockIsrTake
+         U intCpuLock
+         U vxCpuIndexGet
+         U vxAtomic32Get
+         U intCpuUnlock
+         U vxKernelVars
+         U vxAtomic32Cas
+         U vxAtomic32Set
+00000000 D rtSpinlockMaxSpin
+         U vxAtomic32Add
+         U vxAtomic32Sub
+         U intCpuEnable
+         U edrSystemFatalPolicyHandler
+         U reboot
+000003fc T spinLockIsrGive
+         U kernelLockOwnerGet
+         U taskCpuUnlockInternal
+00000650 T spinLockTaskInit
+0000073c T spinLockTaskTake
+         U intCpuMicroLock
+         U intCpuMicroUnlock
+         U evtAction
+         U vxAtomicInc
+         U vxAtomicGet
+         U eventPointSwHandle
+00000954 T spinLockTaskGive
+         U vxAtomicSet
+00000b74 T spinLockIsrHeld
+00000bf4 T spinLockRestrict
+00000d08 T spinLockDbgDisable
+
+libsplDbg.a:
+
+kernelLockLib.o:
+00000000 T kernelLockInit
+         U .TOC.
+00000000 D kernelStateLock
+00000030 T kernelLockOwnedByMe
+         U intCpuMicroLock
+         U vxCpuIndexGet
+         U intCpuMicroUnlock
+00000098 T kernelLockOwnerGet
+
+spinLockIsrNdLib.o:
+00000000 T spinLockIsrNdInit
+         U .TOC.
+00000000 T spinlockIsrNdInit
+
+spinLockSmpDbgLib.o:
+00000008 d pInvContextErrMsg
+00000010 d bSpinlockDbgDisabled
+00000018 d pNotOwnerErrMsg
+00000020 d pNotHeldErrMsg
+00000028 d pNestedErrMsg
+00000030 d pRecursedTakeErrMsg
+00000038 d pInvalidLockCntErrMsg
+00000000 T spinLockIsrInit
+         U .TOC.
+         U intContext
+         U setjmp
+         U edrErrorInjectStub
+         U edrInterruptFatalPolicyHandler
+         U vxCpuConfigured
+0000011c T spinLockIsrTake
+         U intCpuLock
+         U vxCpuIndexGet
+         U vxAtomic32Get
+         U intCpuUnlock
+         U vxKernelVars
+         U vxAtomic32Cas
+         U vxAtomic32Set
+00000000 D rtSpinlockMaxSpin
+         U vxAtomic32Add
+         U vxAtomic32Sub
+         U intCpuEnable
+         U edrSystemFatalPolicyHandler
+         U reboot
+000003fc T spinLockIsrGive
+         U kernelLockOwnerGet
+         U taskCpuUnlockInternal
+00000650 T spinLockTaskInit
+0000073c T spinLockTaskTake
+         U intCpuMicroLock
+         U intCpuMicroUnlock
+         U evtAction
+         U vxAtomicInc
+         U vxAtomicGet
+         U eventPointSwHandle
+00000954 T spinLockTaskGive
+         U vxAtomicSet
+00000b74 T spinLockIsrHeld
+00000bf4 T spinLockRestrict
+00000d08 T spinLockDbgDisable

@@ -1,0 +1,64 @@
+##############################################################################
+# syscallXPNum.def - Experimental VxWorks System Call Number Definition File
+#
+# Copyright 2004 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,10aug04,yvp  Removed fork, vfork and exec.
+# 01b,11may04,job  Removed tickGet, tick64Get & sysClkRateGet APIs
+# 01a,19mar04,yvp  Written.
+#
+#  DESCRIPTION:
+#  This file defines system call numbers for experimental VxWorks system calls.
+#  This file complements syscallNum.def in that it allows developers to 
+#  experiment with new system calls before commiting them into syscallNum.def
+#  and syscallApi.def. Therefore any system calls defined in this file 
+#  should finally be moved into the official system call definition files
+#  syscallNum.def and syscallApi.def. 
+#
+#  IMPORTANT: THIS FILE WILL NOT BE SHIPPED AS PART OF THE PRODUCT. IT IS 
+#             INTENDED FOR DEVELOPERS TO PROTOTYPE NEW SYSTEM CALLS ONLY.
+#
+#  FORMAT:
+#  
+#  The format is identical to that used by syscallNum.def.
+#  A Group definition line defines one system call group. 
+#  Its format is as follows:
+#  
+#  	SYSCALL_GROUP  SCG_<groupName>   <groupNumber> [ <configMacro(s)> ]
+#  
+#  For example "SYSCALL_GROUP SCG_fooLib 3" defines a System Call Group
+#  "SCG_fooLib" for the kernel library fooLib, whose group number is
+#  3. The group numbering scheme is as follows -
+#  
+#  	0 - 1        Reserved.
+#  	2 - 7        Customer use.
+#  	8 onwards    Wind River and partners
+#
+#  Following each System Call Group definition is the list of System Calls
+#  included in that System Call Group. Each System Call is declared using
+#  the format:
+#
+#	<number> <name> 
+#
+#  <number> is the system call number within the system call group
+#  <name> is the name of the system call.
+#
+#  System call numbers within a given group should start at 0 and must be 
+#  less than 256. They need not be sequential. 
+#
+#  This file is paired with a companion file named syscallApi.def that 
+#  defines the system call API (i.e. function argument number & types).
+#  These two files are parsed by the scgen utility to automatically generate
+#  header files, assembly stubs  and initialized system call tables used by 
+#  the system.
+#
+#  For uniformity and readability, all numbers used in this file are decimal.
+##############################################################################
+
+#SYSCALL_GROUP	SCG_TEMP		7
+#  2  exec
+#  3  fork
+#  4  vfork
+

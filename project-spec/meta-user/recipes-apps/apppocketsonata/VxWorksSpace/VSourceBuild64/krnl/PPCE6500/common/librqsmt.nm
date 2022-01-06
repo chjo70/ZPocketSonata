@@ -1,0 +1,82 @@
+
+librqsmt.a:
+
+readyQDeltaSmtLib.o:
+00000000 d readyQGblHead
+00000020 d readyQGblBMap
+00001450 d nonIdleCpuSet
+00001e20 t readyQRotateOrderListGet
+00001248 d execTasks
+00000174 t readyQLowCpuFind
+00001348 d nextCpuSet
+000008a8 t readyQSmtLoadBalance
+00000ab4 t readyQCandidateTaskFind
+00000cf4 t readyQCandidateTaskUpdate
+00001350 d taskIdCurrentRotateOrder
+00000000 T readyQInit
+         U .TOC.
+         U vxCpuConfigured
+         U readyQSmpHead
+         U readyQSmpBMap
+         U qPriBMapInit
+00001bb4 T readyQReservationCheck
+         U _func_readyQReservationCheck
+         U _func_readyQRotateOrderListGet
+00000104 T readyQCpuInit
+0000015c T readyQTaskInit
+         U vxCpuSetReserved
+         U vxCpuEnabled
+         U vxAtomic32Or
+         U __vxSmtSet
+00000310 T readyQPut
+         U vxCpuIndexGet
+         U vxKernelVars
+00000d88 T readyQRemove
+00000f40 T readyQResort
+000012b8 T readyQRotate
+000017d0 T readyQPreemptCheck
+         U vxAtomic32And
+0000187c T readyQTaskGet
+00001b4c T readyQNextCpuGet
+00001ba4 T readyQNodeToTcb
+
+librqsmt.a:
+
+readyQDeltaSmtLib.o:
+00000000 d readyQGblHead
+00000020 d readyQGblBMap
+00001450 d nonIdleCpuSet
+00001e20 t readyQRotateOrderListGet
+00001248 d execTasks
+00000174 t readyQLowCpuFind
+00001348 d nextCpuSet
+000008a8 t readyQSmtLoadBalance
+00000ab4 t readyQCandidateTaskFind
+00000cf4 t readyQCandidateTaskUpdate
+00001350 d taskIdCurrentRotateOrder
+00000000 T readyQInit
+         U .TOC.
+         U vxCpuConfigured
+         U readyQSmpHead
+         U readyQSmpBMap
+         U qPriBMapInit
+00001bb4 T readyQReservationCheck
+         U _func_readyQReservationCheck
+         U _func_readyQRotateOrderListGet
+00000104 T readyQCpuInit
+0000015c T readyQTaskInit
+         U vxCpuSetReserved
+         U vxCpuEnabled
+         U vxAtomic32Or
+         U __vxSmtSet
+00000310 T readyQPut
+         U vxCpuIndexGet
+         U vxKernelVars
+00000d88 T readyQRemove
+00000f40 T readyQResort
+000012b8 T readyQRotate
+000017d0 T readyQPreemptCheck
+         U vxAtomic32And
+0000187c T readyQTaskGet
+00001b4c T readyQNextCpuGet
+00001ba4 T readyQNodeToTcb

@@ -1,0 +1,64 @@
+
+libruntime_analysis_intlatencydemo.a:
+
+cafe_intlatency_demo.o:
+00000000 t intLocker
+00000000 d intLockerAbort
+00000000 d intLockerCounter
+0000022c t rxDataPoll
+00000328 d rx_driver_abort
+00000330 d rxDataCount
+00000338 d rx_sem
+000002d8 t rxCopy
+00000198 d rx_buffer
+00000008 d rx_shared_buffer
+         U .TOC.
+         U vxAtomicSet
+         U vxAtomicGet
+         U intCpuLock
+         U intCpuUnlock
+0000011c T cafe_intlatency_demo_start
+         U taskSpawn
+000001f0 T cafe_intlatency_demo_stop
+         U rand
+         U semGive
+         U semDelete
+         U semTake
+         U memcpy
+         U free
+00000464 T cafe_intlatency_drv_demo_start
+         U malloc
+         U semBCreate
+00000650 T cafe_intlatency_drv_demo_stop
+
+libruntime_analysis_intlatencydemo.a:
+
+cafe_intlatency_demo.o:
+00000000 t intLocker
+00000000 d intLockerAbort
+00000000 d intLockerCounter
+0000022c t rxDataPoll
+00000328 d rx_driver_abort
+00000330 d rxDataCount
+00000338 d rx_sem
+000002d8 t rxCopy
+00000198 d rx_buffer
+00000008 d rx_shared_buffer
+         U .TOC.
+         U vxAtomicSet
+         U vxAtomicGet
+         U intCpuLock
+         U intCpuUnlock
+0000011c T cafe_intlatency_demo_start
+         U taskSpawn
+000001f0 T cafe_intlatency_demo_stop
+         U rand
+         U semGive
+         U semDelete
+         U semTake
+         U memcpy
+         U free
+00000464 T cafe_intlatency_drv_demo_start
+         U malloc
+         U semBCreate
+00000650 T cafe_intlatency_drv_demo_stop

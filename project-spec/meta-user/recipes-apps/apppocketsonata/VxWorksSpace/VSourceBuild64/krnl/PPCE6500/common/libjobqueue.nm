@@ -1,0 +1,96 @@
+
+libjobqueue.a:
+
+jobQueueLib.o:
+00000000 T jobQueueLibInit
+         U .TOC.
+00000000 T jobQueuePost
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U semBGiveScalable
+0000011c T jobQueueStdPost
+00000288 T jobQueueProcess
+         U taskIdSelf
+         U semBTakeScalable
+00000000 T jobQueuePriorityMask
+000000a8 T jobQueueInit
+         U memset
+         U spinLockIsrInit
+         U semBInitialize
+0000018c T jobQueueCreate
+         U memalign
+         U free
+00000210 T jobQueueTask
+00000230 T jobQueueStdPoolInit
+00000268 T jobQueueStdJobsAlloc
+00000008 C _func_netDaemonIxToQId
+00000008 C _func_netDaemonQIdToIx
+00000000 D jobQueueProcessFunc
+
+jobQueueUtilLib.o:
+00000128 t jobQuitHandler
+00000000 T jobQueueUtilInit
+         U .TOC.
+000001a0 T jobQueueProcessWrapper
+         U jobQueueProcessFunc
+0000001c T jobQueueQuit
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U jobQueuePost
+         U longjmp
+         U setjmp
+         U jobQueueProcess
+00000218 T jobQueueTerminate
+         U semTerminate
+0000031c T jobQueueDelete
+         U free
+00000390 T jobQueueStdPoolJobsFree
+00000408 T jobQueueIsRunning
+
+libjobqueue.a:
+
+jobQueueLib.o:
+00000000 T jobQueueLibInit
+         U .TOC.
+00000000 T jobQueuePost
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U semBGiveScalable
+0000011c T jobQueueStdPost
+00000288 T jobQueueProcess
+         U taskIdSelf
+         U semBTakeScalable
+00000000 T jobQueuePriorityMask
+000000a8 T jobQueueInit
+         U memset
+         U spinLockIsrInit
+         U semBInitialize
+0000018c T jobQueueCreate
+         U memalign
+         U free
+00000210 T jobQueueTask
+00000230 T jobQueueStdPoolInit
+00000268 T jobQueueStdJobsAlloc
+00000008 C _func_netDaemonIxToQId
+00000008 C _func_netDaemonQIdToIx
+00000000 D jobQueueProcessFunc
+
+jobQueueUtilLib.o:
+00000128 t jobQuitHandler
+00000000 T jobQueueUtilInit
+         U .TOC.
+000001a0 T jobQueueProcessWrapper
+         U jobQueueProcessFunc
+0000001c T jobQueueQuit
+         U spinLockIsrTake
+         U spinLockIsrGive
+         U jobQueuePost
+         U longjmp
+         U setjmp
+         U jobQueueProcess
+00000218 T jobQueueTerminate
+         U semTerminate
+0000031c T jobQueueDelete
+         U free
+00000390 T jobQueueStdPoolJobsFree
+00000408 T jobQueueIsRunning

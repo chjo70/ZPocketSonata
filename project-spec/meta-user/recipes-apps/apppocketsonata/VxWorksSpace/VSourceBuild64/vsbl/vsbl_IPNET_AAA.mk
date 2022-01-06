@@ -1,0 +1,26 @@
+# Automatically generated file: do not edit
+
+##########################
+# IPNET_AAA Section
+##########################
+
+
+ifdef _WRS_CONFIG_IPNET_AAA
+VSBL_IPNET_AAA_SRC = 
+VSBL_IPNET_AAA_DEPEND = 
+
+ifdef _WRS_CONFIG_IPNET_1_1_1_2_AAA_1_0_1_10
+ifdef _WRS_CONFIG_IPNET_DIAMETER
+VSBL_IPNET_AAA_SRC += IPNET_DIAMETER
+endif
+ifdef _WRS_CONFIG_IPNET_RADIUS
+VSBL_IPNET_AAA_SRC += IPNET_RADIUS
+endif
+VSBL_IPNET_AAA_SRC += IPNET_AAA
+VSBL_IPNET_AAA_DEPEND += IPNET_COREIP
+IPNET_AAA_FASTBUILD = YES
+VSBL_IPNET_AAA_PATH = $(WIND_BASE)/pkgs/net/ipnet-1.1.1.2/aaa-1.0.1.10
+VSBL_IPNET_AAA_VERSION = IPNET_1_1_1_2_AAA_1_0_1_10
+endif
+endif
+

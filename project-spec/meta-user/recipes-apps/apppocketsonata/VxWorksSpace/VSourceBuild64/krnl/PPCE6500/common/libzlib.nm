@@ -1,0 +1,568 @@
+
+libzlib.a:
+
+adler32.o:
+00000300 t adler32_combine_
+00000000 T adler32
+         U .TOC.
+000003d8 T adler32_combine
+00000400 T adler32_combine64
+
+compress.o:
+00000000 T compress2
+         U .TOC.
+         U deflateInit_
+         U deflate
+         U deflateEnd
+000000e4 T compress
+00000110 T compressBound
+
+crc32.o:
+00000000 d crc_table
+00000014 t crc32_little
+000003d4 t crc32_big
+0000083c t gf2_matrix_times
+0000087c t gf2_matrix_square
+000008cc t crc32_combine_
+00000000 T get_crc_table
+         U .TOC.
+000007e4 T crc32
+000009bc T crc32_combine
+000009e4 T crc32_combine64
+
+deflate.o:
+00000100 t lm_init
+00000048 d configuration_table
+000000e8 d my_version.3
+00000710 t read_buf
+000007f0 t fill_window
+00000e6c t putShortMSB
+00000ea4 t flush_pending
+00000f78 t deflate_rle
+00001320 t deflate_huff
+000026c4 t longest_match
+000028c4 t deflate_stored
+00002b2c t deflate_fast
+00002fcc t deflate_slow
+00000000 T deflateResetKeep
+         U .TOC.
+         U crc32
+         U adler32
+         U _tr_init
+         U memset
+000001d4 T deflateReset
+00000228 T deflateEnd
+00000394 T deflateInit2_
+         U zcalloc
+         U zcfree
+         U z_errmsg
+000006cc T deflateInit_
+         U memcpy
+00000ab0 T deflateSetDictionary
+00000cdc T deflateSetHeader
+00000d20 T deflatePending
+00000d6c T deflatePrime
+         U _tr_flush_bits
+         U _length_code
+         U _dist_code
+         U _tr_flush_block
+00001578 T deflate
+         U _tr_align
+         U _tr_stored_block
+000021a8 T deflateParams
+000022f0 T deflateTune
+0000232c T deflateBound
+00002480 T deflateCopy
+00000000 D deflate_copyright
+
+gzclose.o:
+00000000 T gzclose
+         U .TOC.
+         U gzclose_r
+         U gzclose_w
+
+gzlib.o:
+0000012c t gz_reset
+000001a4 t gz_open
+00000278 t .T230
+00000000 T gz_error
+         U .TOC.
+         U free
+         U strlen
+         U malloc
+         U snprintf
+         U open
+         U lseek
+000006e0 T gzopen
+00000710 T gzopen64
+00000740 T gzdopen
+000007ec T gzbuffer
+0000083c T gzrewind
+000008dc T gzseek64
+00000ad0 T gzseek
+00000afc T gztell64
+00000b54 T gztell
+00000b7c T gzoffset64
+00000c10 T gzoffset
+00000c38 T gzeof
+00000c70 T gzerror
+00000ce0 T gzclearerr
+
+gzread.o:
+00000000 t gz_load
+000000dc t gz_avail
+000001bc t gz_look
+000003c4 t gz_decomp
+0000054c t gz_fetch
+00000668 t gz_skip
+         U .TOC.
+         U read
+         U __errno
+         U strerror
+         U gz_error
+         U malloc
+         U free
+         U inflateInit2_
+         U inflateReset
+         U memcpy
+         U inflate
+00000734 T gzread
+0000093c T gzgetc
+000009f0 T gzgetc_
+00000a18 T gzungetc
+00000b98 T gzgets
+         U memchr
+00000d54 T gzdirect
+00000dc0 T gzclose_r
+         U inflateEnd
+         U close
+
+gzwrite.o:
+00000000 t gz_init
+0000011c t gz_comp
+000002e0 t gz_zero
+         U .TOC.
+         U malloc
+         U deflateInit2_
+         U free
+         U gz_error
+         U write
+         U __errno
+         U strerror
+         U deflate
+         U deflateReset
+         U memset
+000003d8 T gzwrite
+         U memcpy
+000005f0 T gzputc
+0000071c T gzputs
+         U strlen
+00000798 T gzvprintf
+         U vsnprintf
+00000910 T gzprintf
+0000096c T gzflush
+00000a20 T gzsetparams
+         U deflateParams
+00000b3c T gzclose_w
+         U deflateEnd
+         U close
+
+infback.o:
+00000134 t fixedtables
+00000000 b order.21
+00000026 b distfix.19
+000000a6 b lenfix.18
+00000000 T inflateBackInit_
+         U .TOC.
+         U zcalloc
+         U zcfree
+00000168 T inflateBack
+         U memcpy
+         U inflate_table
+         U inflate_fast
+00001184 T inflateBackEnd
+
+inffast.o:
+00000000 T inflate_fast
+         U .TOC.
+
+inflate.o:
+000003d8 t fixedtables
+00000000 d order.89
+0000040c t updatewindow
+0000066c t .T992
+00002124 t syncsearch
+00000026 d distfix.64
+000000a6 d lenfix.63
+00000000 T inflateResetKeep
+         U .TOC.
+000000a0 T inflateReset
+000000f4 T inflateReset2
+000001e0 T inflateInit2_
+         U zcalloc
+         U zcfree
+00000318 T inflateInit_
+0000034c T inflatePrime
+         U memcpy
+00000580 T inflate
+         U crc32
+         U adler32
+         U inflate_table
+         U inflate_fast
+00001e78 T inflateEnd
+00001f14 T inflateGetDictionary
+00001fd8 T inflateSetDictionary
+000020d8 T inflateGetHeader
+00002190 T inflateSync
+000022d8 T inflateSyncPoint
+00002324 T inflateCopy
+00002518 T inflateUndermine
+0000254c T inflateMark
+
+inftrees.o:
+00000030 d lbase.2
+0000006e d lext.3
+000000ac d dbase.4
+000000ec d dext.5
+00000000 T inflate_table
+         U .TOC.
+00000000 D inflate_copyright
+
+trees.o:
+00000000 t init_block
+00000000 t static_l_desc
+00000020 t static_d_desc
+00000040 t static_bl_desc
+000000ec t pqdownheap
+000001f8 t gen_bitlen
+000004a4 t bi_reverse
+000004d4 t gen_codes
+00000568 t build_tree
+0000085c t scan_tree
+000009a4 t send_tree
+00000f20 t build_bl_tree
+00000300 d bl_order
+00000fc4 t send_all_trees
+00001284 t bi_windup
+000012ec t copy_block
+00001470 t bi_flush
+00000314 d static_ltree
+00001658 t compress_block
+00001a8c t detect_data_type
+00000794 d extra_lbits
+0000096c d static_dtree
+00000808 d extra_dbits
+000009e4 d extra_blbits
+00000880 d base_length
+000008f4 d base_dist
+         U .TOC.
+0000007c T _tr_init
+000013c0 T _tr_stored_block
+000014fc T _tr_flush_bits
+00001524 T _tr_align
+00000200 D _length_code
+00000000 D _dist_code
+00001b34 T _tr_flush_block
+00001db4 T _tr_tally
+
+uncompr.o:
+00000000 T uncompress
+         U .TOC.
+         U inflateInit_
+         U inflate
+         U inflateEnd
+
+zutil.o:
+00000000 T zlibVersion
+         U .TOC.
+00000014 T zlibCompileFlags
+00000024 T zError
+00000000 D z_errmsg
+00000048 T zcalloc
+         U malloc
+0000007c T zcfree
+         U free
+
+libzlib.a:
+
+adler32.o:
+00000300 t adler32_combine_
+00000000 T adler32
+         U .TOC.
+000003d8 T adler32_combine
+00000400 T adler32_combine64
+
+compress.o:
+00000000 T compress2
+         U .TOC.
+         U deflateInit_
+         U deflate
+         U deflateEnd
+000000e4 T compress
+00000110 T compressBound
+
+crc32.o:
+00000000 d crc_table
+00000014 t crc32_little
+000003d4 t crc32_big
+0000083c t gf2_matrix_times
+0000087c t gf2_matrix_square
+000008cc t crc32_combine_
+00000000 T get_crc_table
+         U .TOC.
+000007e4 T crc32
+000009bc T crc32_combine
+000009e4 T crc32_combine64
+
+deflate.o:
+00000100 t lm_init
+00000048 d configuration_table
+000000e8 d my_version.3
+00000710 t read_buf
+000007f0 t fill_window
+00000e6c t putShortMSB
+00000ea4 t flush_pending
+00000f78 t deflate_rle
+00001320 t deflate_huff
+000026c4 t longest_match
+000028c4 t deflate_stored
+00002b2c t deflate_fast
+00002fcc t deflate_slow
+00000000 T deflateResetKeep
+         U .TOC.
+         U crc32
+         U adler32
+         U _tr_init
+         U memset
+000001d4 T deflateReset
+00000228 T deflateEnd
+00000394 T deflateInit2_
+         U zcalloc
+         U zcfree
+         U z_errmsg
+000006cc T deflateInit_
+         U memcpy
+00000ab0 T deflateSetDictionary
+00000cdc T deflateSetHeader
+00000d20 T deflatePending
+00000d6c T deflatePrime
+         U _tr_flush_bits
+         U _length_code
+         U _dist_code
+         U _tr_flush_block
+00001578 T deflate
+         U _tr_align
+         U _tr_stored_block
+000021a8 T deflateParams
+000022f0 T deflateTune
+0000232c T deflateBound
+00002480 T deflateCopy
+00000000 D deflate_copyright
+
+gzclose.o:
+00000000 T gzclose
+         U .TOC.
+         U gzclose_r
+         U gzclose_w
+
+gzlib.o:
+0000012c t gz_reset
+000001a4 t gz_open
+00000278 t .T230
+00000000 T gz_error
+         U .TOC.
+         U free
+         U strlen
+         U malloc
+         U snprintf
+         U open
+         U lseek
+000006e0 T gzopen
+00000710 T gzopen64
+00000740 T gzdopen
+000007ec T gzbuffer
+0000083c T gzrewind
+000008dc T gzseek64
+00000ad0 T gzseek
+00000afc T gztell64
+00000b54 T gztell
+00000b7c T gzoffset64
+00000c10 T gzoffset
+00000c38 T gzeof
+00000c70 T gzerror
+00000ce0 T gzclearerr
+
+gzread.o:
+00000000 t gz_load
+000000dc t gz_avail
+000001bc t gz_look
+000003c4 t gz_decomp
+0000054c t gz_fetch
+00000668 t gz_skip
+         U .TOC.
+         U read
+         U __errno
+         U strerror
+         U gz_error
+         U malloc
+         U free
+         U inflateInit2_
+         U inflateReset
+         U memcpy
+         U inflate
+00000734 T gzread
+0000093c T gzgetc
+000009f0 T gzgetc_
+00000a18 T gzungetc
+00000b98 T gzgets
+         U memchr
+00000d54 T gzdirect
+00000dc0 T gzclose_r
+         U inflateEnd
+         U close
+
+gzwrite.o:
+00000000 t gz_init
+0000011c t gz_comp
+000002e0 t gz_zero
+         U .TOC.
+         U malloc
+         U deflateInit2_
+         U free
+         U gz_error
+         U write
+         U __errno
+         U strerror
+         U deflate
+         U deflateReset
+         U memset
+000003d8 T gzwrite
+         U memcpy
+000005f0 T gzputc
+0000071c T gzputs
+         U strlen
+00000798 T gzvprintf
+         U vsnprintf
+00000910 T gzprintf
+0000096c T gzflush
+00000a20 T gzsetparams
+         U deflateParams
+00000b3c T gzclose_w
+         U deflateEnd
+         U close
+
+infback.o:
+00000134 t fixedtables
+00000000 b order.21
+00000026 b distfix.19
+000000a6 b lenfix.18
+00000000 T inflateBackInit_
+         U .TOC.
+         U zcalloc
+         U zcfree
+00000168 T inflateBack
+         U memcpy
+         U inflate_table
+         U inflate_fast
+00001184 T inflateBackEnd
+
+inffast.o:
+00000000 T inflate_fast
+         U .TOC.
+
+inflate.o:
+000003d8 t fixedtables
+00000000 d order.89
+0000040c t updatewindow
+0000066c t .T992
+00002124 t syncsearch
+00000026 d distfix.64
+000000a6 d lenfix.63
+00000000 T inflateResetKeep
+         U .TOC.
+000000a0 T inflateReset
+000000f4 T inflateReset2
+000001e0 T inflateInit2_
+         U zcalloc
+         U zcfree
+00000318 T inflateInit_
+0000034c T inflatePrime
+         U memcpy
+00000580 T inflate
+         U crc32
+         U adler32
+         U inflate_table
+         U inflate_fast
+00001e78 T inflateEnd
+00001f14 T inflateGetDictionary
+00001fd8 T inflateSetDictionary
+000020d8 T inflateGetHeader
+00002190 T inflateSync
+000022d8 T inflateSyncPoint
+00002324 T inflateCopy
+00002518 T inflateUndermine
+0000254c T inflateMark
+
+inftrees.o:
+00000030 d lbase.2
+0000006e d lext.3
+000000ac d dbase.4
+000000ec d dext.5
+00000000 T inflate_table
+         U .TOC.
+00000000 D inflate_copyright
+
+trees.o:
+00000000 t init_block
+00000000 t static_l_desc
+00000020 t static_d_desc
+00000040 t static_bl_desc
+000000ec t pqdownheap
+000001f8 t gen_bitlen
+000004a4 t bi_reverse
+000004d4 t gen_codes
+00000568 t build_tree
+0000085c t scan_tree
+000009a4 t send_tree
+00000f20 t build_bl_tree
+00000300 d bl_order
+00000fc4 t send_all_trees
+00001284 t bi_windup
+000012ec t copy_block
+00001470 t bi_flush
+00000314 d static_ltree
+00001658 t compress_block
+00001a8c t detect_data_type
+00000794 d extra_lbits
+0000096c d static_dtree
+00000808 d extra_dbits
+000009e4 d extra_blbits
+00000880 d base_length
+000008f4 d base_dist
+         U .TOC.
+0000007c T _tr_init
+000013c0 T _tr_stored_block
+000014fc T _tr_flush_bits
+00001524 T _tr_align
+00000200 D _length_code
+00000000 D _dist_code
+00001b34 T _tr_flush_block
+00001db4 T _tr_tally
+
+uncompr.o:
+00000000 T uncompress
+         U .TOC.
+         U inflateInit_
+         U inflate
+         U inflateEnd
+
+zutil.o:
+00000000 T zlibVersion
+         U .TOC.
+00000014 T zlibCompileFlags
+00000024 T zError
+00000000 D z_errmsg
+00000048 T zcalloc
+         U malloc
+0000007c T zcfree
+         U free

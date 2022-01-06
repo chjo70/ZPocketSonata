@@ -1,0 +1,86 @@
+
+libutf.a:
+
+utfLib.o:
+00000000 T utfLibInit
+         U .TOC.
+00000314 T utf8ToCP
+         U _func_utf8ToCP
+         U _func_CPToUtf16
+00000390 T CPToUtf8
+000005b8 T CPToUtf16
+00000694 T utflen8
+         U _func_utflen8
+000006c4 T utflen16
+000006f4 T proofUtf8String
+         U _func_utflen16
+         U _func_proofUtf8String
+00000770 T utf8ToUtf16String
+0000083c T utf16ToUtf8String
+         U _func_utf8ToUtf16String
+         U _func_utf16ToUtf8String
+         U _func_CPToUtf8
+000004cc T utf16ToCP
+         U _func_utf16ToCP
+00000920 T utf8ToUtf16StringBOM
+000009a0 T utf16ToUtf8StringBOM
+         U _func_utf8ToUtf16StringBOM
+         U _func_utf16ToUtf8StringBOM
+00000128 T proofUtf8
+00000000 D utf8Offsets
+
+utfFuncBind.o:
+00000000 T _func_utf8ToCP
+00000008 T _func_utf16ToCP
+00000010 T _func_CPToUtf8
+00000018 T _func_CPToUtf16
+00000020 T _func_utflen8
+00000028 T _func_utflen16
+00000030 T _func_proofUtf8String
+00000038 T _func_utf8ToUtf16String
+00000040 T _func_utf16ToUtf8String
+00000048 T _func_utf8ToUtf16StringBOM
+00000050 T _func_utf16ToUtf8StringBOM
+
+libutf.a:
+
+utfLib.o:
+00000000 T utfLibInit
+         U .TOC.
+00000314 T utf8ToCP
+         U _func_utf8ToCP
+         U _func_CPToUtf16
+00000390 T CPToUtf8
+000005b8 T CPToUtf16
+00000694 T utflen8
+         U _func_utflen8
+000006c4 T utflen16
+000006f4 T proofUtf8String
+         U _func_utflen16
+         U _func_proofUtf8String
+00000770 T utf8ToUtf16String
+0000083c T utf16ToUtf8String
+         U _func_utf8ToUtf16String
+         U _func_utf16ToUtf8String
+         U _func_CPToUtf8
+000004cc T utf16ToCP
+         U _func_utf16ToCP
+00000920 T utf8ToUtf16StringBOM
+000009a0 T utf16ToUtf8StringBOM
+         U _func_utf8ToUtf16StringBOM
+         U _func_utf16ToUtf8StringBOM
+00000128 T proofUtf8
+00000000 D utf8Offsets
+
+utfFuncBind.o:
+00000000 T _func_utf8ToCP
+00000008 T _func_utf16ToCP
+00000010 T _func_CPToUtf8
+00000018 T _func_CPToUtf16
+00000020 T _func_utflen8
+00000028 T _func_utflen16
+00000030 T _func_proofUtf8String
+00000038 T _func_utf8ToUtf16String
+00000040 T _func_utf16ToUtf8String
+00000048 T _func_utf8ToUtf16StringBOM
+00000050 T _func_utf16ToUtf8StringBOM

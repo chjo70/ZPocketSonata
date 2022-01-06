@@ -1,0 +1,11 @@
+#ifndef __INCmySystemCallh
+#define __INCmySystemCallh
+
+typedef struct
+    {
+    unsigned int major;
+    unsigned int minor;
+    unsigned int maint;
+    } vxWorksVersionInfo;
+
+#endif /* __INCmySystemCallh */

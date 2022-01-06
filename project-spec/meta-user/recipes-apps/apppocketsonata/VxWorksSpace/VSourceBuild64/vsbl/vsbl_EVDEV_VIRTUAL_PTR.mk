@@ -1,0 +1,19 @@
+# Automatically generated file: do not edit
+
+##########################
+# EVDEV_VIRTUAL_PTR Section
+##########################
+
+
+ifdef _WRS_CONFIG_EVDEV_VIRTUAL_PTR
+VSBL_EVDEV_VIRTUAL_PTR_SRC = 
+VSBL_EVDEV_VIRTUAL_PTR_DEPEND = 
+
+ifdef _WRS_CONFIG_EVDEV_1_0_0_3_DRV_1_0_0_1_VIRTUAL_PTR_1_0_0_1
+VSBL_EVDEV_VIRTUAL_PTR_SRC += EVDEV_VIRTUAL_PTR
+EVDEV_VIRTUAL_PTR_FASTBUILD = YES
+VSBL_EVDEV_VIRTUAL_PTR_PATH = $(WIND_BASE)/pkgs/ui/evdev-1.0.0.3/drv/virtualPtr-1.0.0.1
+VSBL_EVDEV_VIRTUAL_PTR_VERSION = EVDEV_1_0_0_3_DRV_1_0_0_1_VIRTUAL_PTR_1_0_0_1
+endif
+endif
+

@@ -1,0 +1,37 @@
+##### vxWorks tftp booting #####
+setenv bootdelay      3
+setenv ethact         FM1@DTSEC3
+setenv ethprime       FM1@DTSEC3
+setenv ethaddr        00:04:9F:03:31:D0
+setenv eth1addr       00:04:9F:03:31:D1
+setenv ipaddr         192.168.10.30
+setenv netmask        255.255.255.0
+setenv serverip       192.168.10.10
+setenv gatewayip      192.168.10.1
+
+#setenv bootargs       "memac(0,0)host:vxWorks h=192.168.10.10 e=192.168.10.30:ffffff00 g=192.168.10.1 u=t2x pw=1234 f=0x408 tn=t2080"
+setenv bootargs       "memac(0,0)host:vxWorks h=$serverip e=$ipaddr:ffffff00 g=$gatewayip u=t2x pw=1234 f=0x408 tn=t2080"
+
+setenv BootUpdate     "protect off eff40000 +c0000; erase eff40000 +c0000; tftp 10000000 u-boot.bin; cp.b 10000000 eff40000 c0000"
+setenv FmanUpdate     "protect off eff00000 +20000; erase eff00000 +20000; tftp 10000000 fman.bin; cp.b 10000000 eff00000 20000"
+
+setenv tftpUvX        "tftp 0x2000000 VIP_T2x/default/uVxWorks"
+setenv tftpDTB        "tftp 0xf000000 VIP_T2x/default/t2080vpx3u.dtb"
+
+setenv uVxBoot        "bootm 0x2000000 - 0xf000000"
+
+setenv bootcmd        "run tftpUvX; run tftpDTB; run uVxBoot"
+
+save
+
+
+##### vxWorks NOR Flash Booting #####
+setenv flashDtb   "protect off e7000000 +80000; erase e7000000 +80000; run tftpDTB; cp.b 0xf000000 e7000000 80000"
+setenv flashUvx   "protect off e7100000 +600000; erase e7100000 +600000; run tftpUvX; cp.b 0x2000000 e7100000 0x600000"
+setenv flashBoot  "cp.b e7000000 0xf000000 0x5000; cp.b e7100000 0x2000000 0x600000; bootm 0x2000000 - 0xf000000"
+setenv flashBoot  "bootm e7100000 - e7000000"
+setenv bootcmd    "run flashBoot"
+save
+
+
+

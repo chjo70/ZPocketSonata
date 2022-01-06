@@ -1,0 +1,1604 @@
+
+libc_wr.a:
+
+assert.o:
+00000000 T __assert
+         U .TOC.
+         U fdprintf
+         U abort
+
+__ctype_tab.o:
+00000000 d __ctype_tab
+00000101 d __ctype_tolower_tab
+00000202 d __ctype_toupper_tab
+00000000 D __ctype
+00000008 D __ctype_tolower
+00000010 D __ctype_toupper
+
+isalnum.o:
+00000000 T isalnum
+         U .TOC.
+         U __ctype
+
+isalpha.o:
+00000000 T isalpha
+         U .TOC.
+         U __ctype
+
+iscntrl.o:
+00000000 T iscntrl
+         U .TOC.
+         U __ctype
+
+isdigit.o:
+00000000 T isdigit
+         U .TOC.
+         U __ctype
+
+isgraph.o:
+00000000 T isgraph
+         U .TOC.
+         U __ctype
+
+islower.o:
+00000000 T islower
+         U .TOC.
+         U __ctype
+
+isprint.o:
+00000000 T isprint
+         U .TOC.
+         U __ctype
+
+ispunct.o:
+00000000 T ispunct
+         U .TOC.
+         U __ctype
+
+isspace.o:
+00000000 T isspace
+         U .TOC.
+         U __ctype
+
+isupper.o:
+00000000 T isupper
+         U .TOC.
+         U __ctype
+
+isxdigit.o:
+00000000 T isxdigit
+         U .TOC.
+         U __ctype
+
+tolower.o:
+00000000 T tolower
+         U .TOC.
+         U __ctype_tolower
+
+toupper.o:
+00000000 T toupper
+         U .TOC.
+         U __ctype_toupper
+
+localeconv.o:
+00000058 d null
+00000000 T localeconv
+         U .TOC.
+00000000 D __locale
+
+setlocale.o:
+000001f8 b currentName
+00000000 T setlocale
+         U .TOC.
+         U strcmp
+00000000 B __clocale
+
+longjmp.o:
+00000000 T _setjmpSetup
+         U .TOC.
+         U taskIdSelf
+         U kernelId
+         U _func_rtpSigprocmask
+00000104 T longjmp
+         U taskSuspend
+         U __rta_longjmp
+         U _func_sigprocmask
+         U _sigCtxRtnValSet
+         U _sigCtxLoad
+
+clearerr.o:
+00000000 T clearerr
+         U .TOC.
+
+fdopen.o:
+00000000 T fdopen
+         U .TOC.
+         U iosFdMap
+         U __sflags
+         U stdioFpCreate
+
+feof.o:
+00000000 T feof
+         U .TOC.
+
+ferror.o:
+00000000 T ferror
+         U .TOC.
+
+fflush.o:
+00000000 T __sflush
+         U .TOC.
+         U __swrite
+000000f0 T fflush
+         U __errno
+
+fgetc.o:
+00000000 T fgetc
+         U .TOC.
+         U __srget
+
+fgetpos.o:
+00000000 T fgetpos
+         U .TOC.
+         U ftell
+
+fgets.o:
+00000000 T fgets
+         U .TOC.
+         U __srefill
+         U memchr
+         U bcopy
+
+fileno.o:
+00000000 T fileno
+         U .TOC.
+
+flags.o:
+00000000 T __sflags
+         U .TOC.
+         U __errno
+
+fopen.o:
+00000000 T fopen
+         U .TOC.
+         U __sflags
+         U stdioFpCreate
+         U open
+         U stdioFpDestroy
+         U __sseek
+
+fputc.o:
+00000000 T fputc
+         U .TOC.
+         U __swbuf
+
+fputs.o:
+00000000 T fputs
+         U .TOC.
+         U strlen
+         U __sfvwrite
+
+fread.o:
+00000000 T fread
+         U .TOC.
+         U bcopy
+         U __srefill
+
+fsetpos.o:
+00000000 T fsetpos
+         U .TOC.
+         U fseek
+
+ftell.o:
+00000000 T ftell
+         U .TOC.
+         U __sseek
+
+fvwrite.o:
+00000000 T __sfvwrite
+         U .TOC.
+         U __swsetup
+         U __swrite
+         U bcopy
+         U fflush
+         U memchr
+
+fwrite.o:
+00000000 T fwrite
+         U .TOC.
+         U __sfvwrite
+
+getc.o:
+00000000 T getc
+         U .TOC.
+         U __srget
+
+getchar.o:
+00000000 T getchar
+         U .TOC.
+         U __stdin
+         U __srget
+
+gets.o:
+00000000 T gets
+         U .TOC.
+         U __stdin
+         U __srget
+
+getw.o:
+00000000 T getw
+         U .TOC.
+         U fread
+
+perror.o:
+00000000 T perror
+         U .TOC.
+         U __stderr
+         U fprintf
+         U __errno
+         U strerror
+
+putc.o:
+00000000 T putc
+         U .TOC.
+         U __swbuf
+
+putchar.o:
+00000000 T putchar
+         U .TOC.
+         U __stdout
+         U __swbuf
+
+putw.o:
+00000000 T putw
+         U .TOC.
+         U fwrite
+
+puts.o:
+00000000 T puts
+         U .TOC.
+         U strlen
+         U __stdout
+         U __sfvwrite
+
+rewind.o:
+00000000 T rewind
+         U .TOC.
+         U fseek
+
+rget.o:
+00000000 T __srget
+         U .TOC.
+         U __srefill
+
+setbuf.o:
+00000000 T setbuf
+         U .TOC.
+         U setvbuf
+
+setbuffer.o:
+00000000 T setbuffer
+         U .TOC.
+         U setvbuf
+0000005c T setlinebuf
+
+stdio.o:
+00000000 T __sread
+         U .TOC.
+         U read
+00000060 T __swrite
+         U lseek
+         U write
+000000ec T __sseek
+0000014c T __sclose
+         U close
+
+tmpnam.o:
+00000000 d buf.2
+00000000 d seed.3
+00000000 T tmpnam
+         U .TOC.
+         U strcpy
+         U strlen
+
+tmpfile.o:
+00000000 T tmpfile
+         U .TOC.
+
+wbuf.o:
+00000000 T __swbuf
+         U .TOC.
+         U __swsetup
+         U fflush
+
+vfprintf.o:
+000001d8 t putbuf
+00000000 T vfprintf
+         U .TOC.
+         U __swsetup
+         U handleInit
+         U fioFormatV
+         U fflush
+         U handleTerminate
+         U __swbuf
+
+fprintf.o:
+00000000 T fprintf
+         U .TOC.
+         U vfprintf
+
+fscanf.o:
+00000000 T fscanf
+         U .TOC.
+         U fgetc
+         U fioScanV
+         U ungetc
+
+scanf.o:
+00000000 T scanf
+         U .TOC.
+         U __stdin
+         U fgetc
+         U fioScanV
+         U ungetc
+
+stdioFuncBind.o:
+00000000 B _func_fclose
+
+fclose.o:
+00000000 T fclose
+         U .TOC.
+         U __errno
+         U __sflush
+         U __sclose
+         U free
+         U stdioFpDestroy
+
+freopen.o:
+00000000 T freopen
+         U .TOC.
+         U __sflags
+         U fclose
+         U __sflush
+         U __sclose
+         U open
+         U __errno
+         U free
+         U stdioFpDestroy
+
+fseek.o:
+00000000 T fseek
+         U .TOC.
+         U __sseek
+         U __errno
+         U __smakebuf
+         U ioctl
+         U free
+         U __srefill
+         U __sflush
+
+makebuf.o:
+00000000 T __smakebuf
+         U .TOC.
+         U ioctl
+         U malloc
+         U isatty
+
+refill.o:
+00000000 t lflush
+         U .TOC.
+         U __sflush
+0000003c T __srefill
+         U __errno
+         U free
+         U __smakebuf
+         U __sread
+
+setvbuf.o:
+00000000 T setvbuf
+         U .TOC.
+         U __sflush
+         U free
+
+stdioLib.o:
+00000000 d stdioInitialized
+0000015c t stdioStdfpCleanup
+000002f8 t stdioInitStd
+00000004 d stdioFpCleanupHookDone
+00000000 T stdioInit
+         U .TOC.
+         U fclose
+         U _func_fclose
+00000038 T stdioFpCreate
+         U malloc
+         U taskIdSelf
+         U handleInit
+000000f0 T stdioFpDestroy
+         U handleTerminate
+         U free
+00000214 T __stdin
+00000260 T __stdout
+000002ac T __stderr
+         U _func_taskDeleteHookAdd
+         U taskCreateHookInit
+         U taskDeleteHookAdd
+0000041c T stdioFp
+
+stdioShow.o:
+00000000 T stdioShowInit
+         U .TOC.
+0000003c T stdioShow
+         U handleShowConnect
+         U printf
+
+ungetc.o:
+00000000 t __submore
+         U .TOC.
+         U malloc
+         U realloc
+         U bcopy
+000000f4 T ungetc
+         U __sflush
+
+wsetup.o:
+00000000 T __swsetup
+         U .TOC.
+         U free
+         U __smakebuf
+
+abort.o:
+00000000 T abort
+         U .TOC.
+         U raise
+         U exit
+
+abs.o:
+00000000 T abs
+         U .TOC.
+
+atexit.o:
+00000000 T atexit
+         U .TOC.
+
+atof.o:
+00000000 T atof
+         U .TOC.
+         U strtod
+
+atoi.o:
+00000000 T atoi
+         U .TOC.
+         U strtol
+
+atol.o:
+00000000 T atol
+         U .TOC.
+         U strtol
+
+bsearch.o:
+00000000 T bsearch
+         U .TOC.
+
+div.o:
+00000000 T div_r
+         U .TOC.
+00000044 T div
+
+labs.o:
+00000000 T labs
+         U .TOC.
+
+ldiv.o:
+00000000 T ldiv_r
+         U .TOC.
+00000040 T ldiv
+
+multibyte.o:
+00000000 T mblen
+         U .TOC.
+         U strcmp
+00000074 T mbtowc
+000000ec T wctomb
+0000013c T mbstowcs
+000001b8 T wcstombs
+
+qsort.o:
+00000000 t insertion_sort
+00000108 t quick_sort
+         U .TOC.
+000005e8 T qsort
+
+stdrand.o:
+00000000 T rand
+         U .TOC.
+00000000 B _Randseed
+00000038 T srand
+
+strtol.o:
+00000000 T strtol
+         U .TOC.
+         U __errno
+         U __ctype
+
+strtoul.o:
+00000000 T strtoul
+         U .TOC.
+         U __ctype
+         U __errno
+
+system.o:
+00000000 T system
+         U .TOC.
+
+strtod.o:
+00000058 t FLOAT_TEMP.89
+00000060 t FLOAT_TEMP.91
+0000005c t FLOAT_TEMP.90
+00000064 t FLOAT_TEMP.92
+00000000 t f125
+00000000 T strtod
+         U .TOC.
+         U __ctype
+         U ldexp
+
+strtoll.o:
+00000000 T strtoll
+         U .TOC.
+         U __ctype
+         U errnoSet
+
+strtoull.o:
+00000000 T strtoull
+         U .TOC.
+         U __ctype
+         U errnoSet
+
+memchr.o:
+00000000 T memchr
+         U .TOC.
+
+memcmp.o:
+00000000 T memcmp
+         U .TOC.
+
+memcpy.o:
+00000000 T memcpy
+         U .TOC.
+         U bcopy
+
+memmove.o:
+00000000 T memmove
+         U .TOC.
+         U bcopy
+
+memset.o:
+00000000 T memset
+         U .TOC.
+         U bfill
+
+memset_s.o:
+00000000 T __internal_memset_s
+         U .TOC.
+00000028 T memset_s
+00000000 T _memset_s_func
+
+strcat.o:
+00000000 T strcat
+         U .TOC.
+
+strchr.o:
+00000000 T strchr
+         U .TOC.
+
+strcmp.o:
+00000000 T strcmp
+         U .TOC.
+
+strcoll.o:
+00000000 t getxfrm
+00000000 d initial.10
+         U .TOC.
+         U __strxfrm
+000000a0 T strcoll
+         U memcmp
+
+strcpy.o:
+00000000 T strcpy
+         U .TOC.
+
+strcspn.o:
+00000000 T strcspn
+         U .TOC.
+
+strerror.o:
+00000000 t buffer.10
+00000000 T strerrorIf
+         U .TOC.
+         U _func_symFindSymbol
+         U statSymTbl
+         U _func_symNameGet
+         U _func_symValueGet
+000000f4 T strerror_r
+         U strlcpy
+         U snprintf
+00000184 T strerror
+
+strlen.o:
+00000000 T strlen
+         U .TOC.
+
+strncat.o:
+00000000 T strncat
+         U .TOC.
+
+strncmp.o:
+00000000 T strncmp
+         U .TOC.
+
+strncpy.o:
+00000000 T strncpy
+         U .TOC.
+
+strpbrk.o:
+00000000 T strpbrk
+         U .TOC.
+
+strrchr.o:
+00000000 T strrchr
+         U .TOC.
+
+strspn.o:
+00000000 T strspn
+         U .TOC.
+
+strstr.o:
+00000000 T strstr
+         U .TOC.
+
+strtok.o:
+00000000 d last.2
+00000000 T strtok
+         U .TOC.
+         U strtok_r
+
+strtok_r.o:
+00000000 T strtok_r
+         U .TOC.
+         U strspn
+         U strpbrk
+
+strxfrm.o:
+00000000 T __strxfrm
+         U .TOC.
+         U __costate
+00000144 T strxfrm
+
+xstate.o:
+00000000 d __table
+00000000 D __costate
+
+strlcat.o:
+00000000 T strlcat
+         U .TOC.
+         U strlen
+
+strlcpy.o:
+00000000 T strlcpy
+         U .TOC.
+
+strcasecmp.o:
+00000000 T strcasecmp
+         U .TOC.
+         U __ctype_tolower
+
+strncasecmp.o:
+00000000 T strncasecmp
+         U .TOC.
+         U __ctype_tolower
+
+strdup.o:
+00000000 T strdup
+         U .TOC.
+         U strlen
+         U malloc
+         U strcpy
+
+locTime.o:
+00000008 d __ctime
+00000000 D __loctime
+
+asctime.o:
+00000000 d asctimeBuf.2
+00000000 T asctime_r
+         U .TOC.
+         U strftime
+00000058 T asctime
+00000098 T _vxworks_asctime_r
+
+clock.o:
+00000000 T clock
+         U .TOC.
+
+ctime.o:
+00000000 b asctimeBuf.2
+00000000 T ctime_r
+         U .TOC.
+         U localtime
+         U asctime_r
+00000050 T ctime
+00000080 T _vxworks_ctime_r
+         U _vxworks_asctime_r
+
+gmtime.o:
+00000000 d jdays.24
+00000000 b timeBuffer.2
+00000000 T __daysSinceEpoch
+         U .TOC.
+0000006c T __julday
+000000f4 T __getTime
+         U ldiv_r
+0000022c T gmtime_r
+00000270 T gmtime
+000002b0 T _vxworks_gmtime_r
+
+localtime.o:
+00000000 d timeBuffer.2
+00000000 T localtime_r
+         U .TOC.
+         U __loctime
+         U __getZoneInfo
+         U atoi
+         U __getTime
+         U __getDstInfoSub
+0000010c T localtime
+0000014c T _vxworks_localtime_r
+
+mktime.o:
+00000000 t __tmNormalize
+00000060 t __tmValidate
+         U .TOC.
+         U __julday
+000002e4 T mktime
+         U __daysSinceEpoch
+         U __loctime
+         U __getDstInfoSub
+         U __getZoneInfo
+         U atoi
+
+strftime.o:
+00000000 t __weekOfYear
+000001d0 t __getLocale
+000002f4 t __intToStr
+00000340 t __getDay
+000003cc t __getMonth
+0000045c t __generateTime
+000004ac t .T273
+00000940 t strftime_r
+         U .TOC.
+00000030 T __getZoneInfo
+         U getenv_s
+         U strpbrk
+         U strncpy
+         U strcmp
+         U strlen
+         U memcpy
+         U abs
+00000b0c T strftime
+         U __loctime
+00000b3c T __getDstInfoSub
+         U strtok_r
+         U bzero
+         U atoi
+00000fdc T __getDstInfo
+
+time.o:
+00000000 T time
+         U .TOC.
+         U clock_gettime
+
+difftime.o:
+00000000 T difftime
+         U .TOC.
+         U __ulltod
+
+libc_wr.a:
+
+assert.o:
+00000000 T __assert
+         U .TOC.
+         U fdprintf
+         U abort
+
+__ctype_tab.o:
+00000000 d __ctype_tab
+00000101 d __ctype_tolower_tab
+00000202 d __ctype_toupper_tab
+00000000 D __ctype
+00000008 D __ctype_tolower
+00000010 D __ctype_toupper
+
+isalnum.o:
+00000000 T isalnum
+         U .TOC.
+         U __ctype
+
+isalpha.o:
+00000000 T isalpha
+         U .TOC.
+         U __ctype
+
+iscntrl.o:
+00000000 T iscntrl
+         U .TOC.
+         U __ctype
+
+isdigit.o:
+00000000 T isdigit
+         U .TOC.
+         U __ctype
+
+isgraph.o:
+00000000 T isgraph
+         U .TOC.
+         U __ctype
+
+islower.o:
+00000000 T islower
+         U .TOC.
+         U __ctype
+
+isprint.o:
+00000000 T isprint
+         U .TOC.
+         U __ctype
+
+ispunct.o:
+00000000 T ispunct
+         U .TOC.
+         U __ctype
+
+isspace.o:
+00000000 T isspace
+         U .TOC.
+         U __ctype
+
+isupper.o:
+00000000 T isupper
+         U .TOC.
+         U __ctype
+
+isxdigit.o:
+00000000 T isxdigit
+         U .TOC.
+         U __ctype
+
+tolower.o:
+00000000 T tolower
+         U .TOC.
+         U __ctype_tolower
+
+toupper.o:
+00000000 T toupper
+         U .TOC.
+         U __ctype_toupper
+
+localeconv.o:
+00000058 d null
+00000000 T localeconv
+         U .TOC.
+00000000 D __locale
+
+setlocale.o:
+000001f8 b currentName
+00000000 T setlocale
+         U .TOC.
+         U strcmp
+00000000 B __clocale
+
+longjmp.o:
+00000000 T _setjmpSetup
+         U .TOC.
+         U taskIdSelf
+         U kernelId
+         U _func_rtpSigprocmask
+00000104 T longjmp
+         U taskSuspend
+         U __rta_longjmp
+         U _func_sigprocmask
+         U _sigCtxRtnValSet
+         U _sigCtxLoad
+
+clearerr.o:
+00000000 T clearerr
+         U .TOC.
+
+fdopen.o:
+00000000 T fdopen
+         U .TOC.
+         U iosFdMap
+         U __sflags
+         U stdioFpCreate
+
+feof.o:
+00000000 T feof
+         U .TOC.
+
+ferror.o:
+00000000 T ferror
+         U .TOC.
+
+fflush.o:
+00000000 T __sflush
+         U .TOC.
+         U __swrite
+000000f0 T fflush
+         U __errno
+
+fgetc.o:
+00000000 T fgetc
+         U .TOC.
+         U __srget
+
+fgetpos.o:
+00000000 T fgetpos
+         U .TOC.
+         U ftell
+
+fgets.o:
+00000000 T fgets
+         U .TOC.
+         U __srefill
+         U memchr
+         U bcopy
+
+fileno.o:
+00000000 T fileno
+         U .TOC.
+
+flags.o:
+00000000 T __sflags
+         U .TOC.
+         U __errno
+
+fopen.o:
+00000000 T fopen
+         U .TOC.
+         U __sflags
+         U stdioFpCreate
+         U open
+         U stdioFpDestroy
+         U __sseek
+
+fputc.o:
+00000000 T fputc
+         U .TOC.
+         U __swbuf
+
+fputs.o:
+00000000 T fputs
+         U .TOC.
+         U strlen
+         U __sfvwrite
+
+fread.o:
+00000000 T fread
+         U .TOC.
+         U bcopy
+         U __srefill
+
+fsetpos.o:
+00000000 T fsetpos
+         U .TOC.
+         U fseek
+
+ftell.o:
+00000000 T ftell
+         U .TOC.
+         U __sseek
+
+fvwrite.o:
+00000000 T __sfvwrite
+         U .TOC.
+         U __swsetup
+         U __swrite
+         U bcopy
+         U fflush
+         U memchr
+
+fwrite.o:
+00000000 T fwrite
+         U .TOC.
+         U __sfvwrite
+
+getc.o:
+00000000 T getc
+         U .TOC.
+         U __srget
+
+getchar.o:
+00000000 T getchar
+         U .TOC.
+         U __stdin
+         U __srget
+
+gets.o:
+00000000 T gets
+         U .TOC.
+         U __stdin
+         U __srget
+
+getw.o:
+00000000 T getw
+         U .TOC.
+         U fread
+
+perror.o:
+00000000 T perror
+         U .TOC.
+         U __stderr
+         U fprintf
+         U __errno
+         U strerror
+
+putc.o:
+00000000 T putc
+         U .TOC.
+         U __swbuf
+
+putchar.o:
+00000000 T putchar
+         U .TOC.
+         U __stdout
+         U __swbuf
+
+putw.o:
+00000000 T putw
+         U .TOC.
+         U fwrite
+
+puts.o:
+00000000 T puts
+         U .TOC.
+         U strlen
+         U __stdout
+         U __sfvwrite
+
+rewind.o:
+00000000 T rewind
+         U .TOC.
+         U fseek
+
+rget.o:
+00000000 T __srget
+         U .TOC.
+         U __srefill
+
+setbuf.o:
+00000000 T setbuf
+         U .TOC.
+         U setvbuf
+
+setbuffer.o:
+00000000 T setbuffer
+         U .TOC.
+         U setvbuf
+0000005c T setlinebuf
+
+stdio.o:
+00000000 T __sread
+         U .TOC.
+         U read
+00000060 T __swrite
+         U lseek
+         U write
+000000ec T __sseek
+0000014c T __sclose
+         U close
+
+tmpnam.o:
+00000000 d buf.2
+00000000 d seed.3
+00000000 T tmpnam
+         U .TOC.
+         U strcpy
+         U strlen
+
+tmpfile.o:
+00000000 T tmpfile
+         U .TOC.
+
+wbuf.o:
+00000000 T __swbuf
+         U .TOC.
+         U __swsetup
+         U fflush
+
+vfprintf.o:
+000001d8 t putbuf
+00000000 T vfprintf
+         U .TOC.
+         U __swsetup
+         U handleInit
+         U fioFormatV
+         U fflush
+         U handleTerminate
+         U __swbuf
+
+fprintf.o:
+00000000 T fprintf
+         U .TOC.
+         U vfprintf
+
+fscanf.o:
+00000000 T fscanf
+         U .TOC.
+         U fgetc
+         U fioScanV
+         U ungetc
+
+scanf.o:
+00000000 T scanf
+         U .TOC.
+         U __stdin
+         U fgetc
+         U fioScanV
+         U ungetc
+
+stdioFuncBind.o:
+00000000 B _func_fclose
+
+fclose.o:
+00000000 T fclose
+         U .TOC.
+         U __errno
+         U __sflush
+         U __sclose
+         U free
+         U stdioFpDestroy
+
+freopen.o:
+00000000 T freopen
+         U .TOC.
+         U __sflags
+         U fclose
+         U __sflush
+         U __sclose
+         U open
+         U __errno
+         U free
+         U stdioFpDestroy
+
+fseek.o:
+00000000 T fseek
+         U .TOC.
+         U __sseek
+         U __errno
+         U __smakebuf
+         U ioctl
+         U free
+         U __srefill
+         U __sflush
+
+makebuf.o:
+00000000 T __smakebuf
+         U .TOC.
+         U ioctl
+         U malloc
+         U isatty
+
+refill.o:
+00000000 t lflush
+         U .TOC.
+         U __sflush
+0000003c T __srefill
+         U __errno
+         U free
+         U __smakebuf
+         U __sread
+
+setvbuf.o:
+00000000 T setvbuf
+         U .TOC.
+         U __sflush
+         U free
+
+stdioLib.o:
+00000000 d stdioInitialized
+0000015c t stdioStdfpCleanup
+000002f8 t stdioInitStd
+00000004 d stdioFpCleanupHookDone
+00000000 T stdioInit
+         U .TOC.
+         U fclose
+         U _func_fclose
+00000038 T stdioFpCreate
+         U malloc
+         U taskIdSelf
+         U handleInit
+000000f0 T stdioFpDestroy
+         U handleTerminate
+         U free
+00000214 T __stdin
+00000260 T __stdout
+000002ac T __stderr
+         U _func_taskDeleteHookAdd
+         U taskCreateHookInit
+         U taskDeleteHookAdd
+0000041c T stdioFp
+
+stdioShow.o:
+00000000 T stdioShowInit
+         U .TOC.
+0000003c T stdioShow
+         U handleShowConnect
+         U printf
+
+ungetc.o:
+00000000 t __submore
+         U .TOC.
+         U malloc
+         U realloc
+         U bcopy
+000000f4 T ungetc
+         U __sflush
+
+wsetup.o:
+00000000 T __swsetup
+         U .TOC.
+         U free
+         U __smakebuf
+
+abort.o:
+00000000 T abort
+         U .TOC.
+         U raise
+         U exit
+
+abs.o:
+00000000 T abs
+         U .TOC.
+
+atexit.o:
+00000000 T atexit
+         U .TOC.
+
+atof.o:
+00000000 T atof
+         U .TOC.
+         U strtod
+
+atoi.o:
+00000000 T atoi
+         U .TOC.
+         U strtol
+
+atol.o:
+00000000 T atol
+         U .TOC.
+         U strtol
+
+bsearch.o:
+00000000 T bsearch
+         U .TOC.
+
+div.o:
+00000000 T div_r
+         U .TOC.
+00000044 T div
+
+labs.o:
+00000000 T labs
+         U .TOC.
+
+ldiv.o:
+00000000 T ldiv_r
+         U .TOC.
+00000040 T ldiv
+
+multibyte.o:
+00000000 T mblen
+         U .TOC.
+         U strcmp
+00000074 T mbtowc
+000000ec T wctomb
+0000013c T mbstowcs
+000001b8 T wcstombs
+
+qsort.o:
+00000000 t insertion_sort
+00000108 t quick_sort
+         U .TOC.
+000005e8 T qsort
+
+stdrand.o:
+00000000 T rand
+         U .TOC.
+00000000 B _Randseed
+00000038 T srand
+
+strtol.o:
+00000000 T strtol
+         U .TOC.
+         U __errno
+         U __ctype
+
+strtoul.o:
+00000000 T strtoul
+         U .TOC.
+         U __ctype
+         U __errno
+
+system.o:
+00000000 T system
+         U .TOC.
+
+strtod.o:
+00000058 t FLOAT_TEMP.89
+00000060 t FLOAT_TEMP.91
+0000005c t FLOAT_TEMP.90
+00000064 t FLOAT_TEMP.92
+00000000 t f125
+00000000 T strtod
+         U .TOC.
+         U __ctype
+         U ldexp
+
+strtoll.o:
+00000000 T strtoll
+         U .TOC.
+         U __ctype
+         U errnoSet
+
+strtoull.o:
+00000000 T strtoull
+         U .TOC.
+         U __ctype
+         U errnoSet
+
+memchr.o:
+00000000 T memchr
+         U .TOC.
+
+memcmp.o:
+00000000 T memcmp
+         U .TOC.
+
+memcpy.o:
+00000000 T memcpy
+         U .TOC.
+         U bcopy
+
+memmove.o:
+00000000 T memmove
+         U .TOC.
+         U bcopy
+
+memset.o:
+00000000 T memset
+         U .TOC.
+         U bfill
+
+memset_s.o:
+00000000 T __internal_memset_s
+         U .TOC.
+00000028 T memset_s
+00000000 T _memset_s_func
+
+strcat.o:
+00000000 T strcat
+         U .TOC.
+
+strchr.o:
+00000000 T strchr
+         U .TOC.
+
+strcmp.o:
+00000000 T strcmp
+         U .TOC.
+
+strcoll.o:
+00000000 t getxfrm
+00000000 d initial.10
+         U .TOC.
+         U __strxfrm
+000000a0 T strcoll
+         U memcmp
+
+strcpy.o:
+00000000 T strcpy
+         U .TOC.
+
+strcspn.o:
+00000000 T strcspn
+         U .TOC.
+
+strerror.o:
+00000000 t buffer.10
+00000000 T strerrorIf
+         U .TOC.
+         U _func_symFindSymbol
+         U statSymTbl
+         U _func_symNameGet
+         U _func_symValueGet
+000000f4 T strerror_r
+         U strlcpy
+         U snprintf
+00000184 T strerror
+
+strlen.o:
+00000000 T strlen
+         U .TOC.
+
+strncat.o:
+00000000 T strncat
+         U .TOC.
+
+strncmp.o:
+00000000 T strncmp
+         U .TOC.
+
+strncpy.o:
+00000000 T strncpy
+         U .TOC.
+
+strpbrk.o:
+00000000 T strpbrk
+         U .TOC.
+
+strrchr.o:
+00000000 T strrchr
+         U .TOC.
+
+strspn.o:
+00000000 T strspn
+         U .TOC.
+
+strstr.o:
+00000000 T strstr
+         U .TOC.
+
+strtok.o:
+00000000 d last.2
+00000000 T strtok
+         U .TOC.
+         U strtok_r
+
+strtok_r.o:
+00000000 T strtok_r
+         U .TOC.
+         U strspn
+         U strpbrk
+
+strxfrm.o:
+00000000 T __strxfrm
+         U .TOC.
+         U __costate
+00000144 T strxfrm
+
+xstate.o:
+00000000 d __table
+00000000 D __costate
+
+strlcat.o:
+00000000 T strlcat
+         U .TOC.
+         U strlen
+
+strlcpy.o:
+00000000 T strlcpy
+         U .TOC.
+
+strcasecmp.o:
+00000000 T strcasecmp
+         U .TOC.
+         U __ctype_tolower
+
+strncasecmp.o:
+00000000 T strncasecmp
+         U .TOC.
+         U __ctype_tolower
+
+strdup.o:
+00000000 T strdup
+         U .TOC.
+         U strlen
+         U malloc
+         U strcpy
+
+locTime.o:
+00000008 d __ctime
+00000000 D __loctime
+
+asctime.o:
+00000000 d asctimeBuf.2
+00000000 T asctime_r
+         U .TOC.
+         U strftime
+00000058 T asctime
+00000098 T _vxworks_asctime_r
+
+clock.o:
+00000000 T clock
+         U .TOC.
+
+ctime.o:
+00000000 b asctimeBuf.2
+00000000 T ctime_r
+         U .TOC.
+         U localtime
+         U asctime_r
+00000050 T ctime
+00000080 T _vxworks_ctime_r
+         U _vxworks_asctime_r
+
+gmtime.o:
+00000000 d jdays.24
+00000000 b timeBuffer.2
+00000000 T __daysSinceEpoch
+         U .TOC.
+0000006c T __julday
+000000f4 T __getTime
+         U ldiv_r
+0000022c T gmtime_r
+00000270 T gmtime
+000002b0 T _vxworks_gmtime_r
+
+localtime.o:
+00000000 d timeBuffer.2
+00000000 T localtime_r
+         U .TOC.
+         U __loctime
+         U __getZoneInfo
+         U atoi
+         U __getTime
+         U __getDstInfoSub
+0000010c T localtime
+0000014c T _vxworks_localtime_r
+
+mktime.o:
+00000000 t __tmNormalize
+00000060 t __tmValidate
+         U .TOC.
+         U __julday
+000002e4 T mktime
+         U __daysSinceEpoch
+         U __loctime
+         U __getDstInfoSub
+         U __getZoneInfo
+         U atoi
+
+strftime.o:
+00000000 t __weekOfYear
+000001d0 t __getLocale
+000002f4 t __intToStr
+00000340 t __getDay
+000003cc t __getMonth
+0000045c t __generateTime
+000004ac t .T273
+00000940 t strftime_r
+         U .TOC.
+00000030 T __getZoneInfo
+         U getenv_s
+         U strpbrk
+         U strncpy
+         U strcmp
+         U strlen
+         U memcpy
+         U abs
+00000b0c T strftime
+         U __loctime
+00000b3c T __getDstInfoSub
+         U strtok_r
+         U bzero
+         U atoi
+00000fdc T __getDstInfo
+
+time.o:
+00000000 T time
+         U .TOC.
+         U clock_gettime
+
+difftime.o:
+00000000 T difftime
+         U .TOC.
+         U __ulltod

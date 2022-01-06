@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wrxml>
+    <properties platform="VxWorks7" platform_name="vxworks-7" root="1" type="VxWorksImageProject"/>
+    <attributes>
+        <mapAttribute>
+            <intAttribute key="BuildSupportEnabled" value="1"/>
+            <stringAttribute key="BLD::Info|cmd" value="make --no-print-directory"/>
+            <listAttribute key="BLD::Info|specs">
+                <stringAttribute value="default"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|redirDir|default" value="default"/>
+            <listAttribute key="BLD::Info|Tools"/>
+            <stringAttribute key="BLD::Info|redirRoot" value=""/>
+            <stringAttribute key="BLD::Info|defaultSpec" value="default"/>
+            <listAttribute key="BLD::Info|GlobalMacros">
+                <stringAttribute value="VSB_DIR"/>
+                <stringAttribute value="BUILD_SPEC_DKM"/>
+                <stringAttribute value="DEBUG_MODE_DKM"/>
+                <stringAttribute value="BUILD_SPEC_RTP"/>
+                <stringAttribute value="DEBUG_MODE_RTP"/>
+            </listAttribute>
+            <stringAttribute key="BLD::Info|GlobalMacro|VSB_DIR" value="$(PRJ_ROOT_DIR)/../VSourceBuild64"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|BUILD_SPEC_DKM" value="!"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|DEBUG_MODE_DKM" value="*"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|BUILD_SPEC_RTP" value="!"/>
+            <stringAttribute key="BLD::Info|GlobalMacro|DEBUG_MODE_RTP" value="*"/>
+        </mapAttribute>
+    </attributes>
+    <buildtargets>
+        <buildtarget name="target_uVxWorks" passed="false" targetname="uVxWorks"/>
+        <buildtarget name="target_vxWorks" passed="false" targetname="vxWorks"/>
+    </buildtargets>
+</wrxml>

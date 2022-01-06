@@ -1,0 +1,19 @@
+# Automatically generated file: do not edit
+
+##########################
+# SYSCALLS_CUSTOM Section
+##########################
+
+
+ifdef _WRS_CONFIG_SYSCALLS_CUSTOM
+VSBL_SYSCALLS_CUSTOM_SRC = 
+VSBL_SYSCALLS_CUSTOM_DEPEND = 
+
+ifdef _WRS_CONFIG_SYSCALLS_1_0_14_0_CUSTOM_1_0_1_8
+VSBL_SYSCALLS_CUSTOM_SRC += SYSCALLS_CUSTOM
+SYSCALLS_CUSTOM_FASTBUILD = YES
+VSBL_SYSCALLS_CUSTOM_PATH = $(WIND_BASE)/pkgs/os/core/syscalls-1.0.14.0/custom
+VSBL_SYSCALLS_CUSTOM_VERSION = SYSCALLS_1_0_14_0_CUSTOM_1_0_1_8
+endif
+endif
+

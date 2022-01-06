@@ -1,0 +1,745 @@
+########################################################################
+# syscallApi.def -  VxWorks System Call API Definition File
+#
+# Copyright 2003-2007, 2009-2017 Wind River Systems, Inc.
+#
+# The right to copy, distribute, modify or otherwise make use of this
+# software may be licensed only pursuant to the terms of an applicable
+# Wind River license agreement.
+#
+# modification history
+# --------------------
+# 16nov17,dlk  Restore old taskDelay() system call as _taskDelay(), and use
+#              a new system call ID for taskDelayEx().  Also, add note
+#              about System Viewer syscall event definition files.
+# 09nov17,dlk  adding pipeAnonCreate() system call
+# 30oct17,wap  Fix syntax for randNumGenCtl and taskPxAttrCtl (V7COR-5388)
+# 20may17,dlk  Introduce eventReceiveEx() to control early return due to
+#              EINTR or EDOOM on a call-by-call basis.
+#              Similarly replace taskDelay() with taskDelayEx(). (F5593)
+# 06jul16,dlk  _dup() now takes a startFd argument.
+# 29jun16,dlk  Move _umiosfd() and _selWakeupOp() to the VXWORKS_2 group;
+#              rename _umiosfd() to _umiosFdGet() and remove its argument.
+# 02jun16,dlk  Adding _umiosfd() system call.
+# 14apr16,dlk  Rename dup, dup2, unlink, link, rename, fpathconf, pathconf,
+#              access, and chmod system calls for user mode I/O system (F6848).
+# 12apr16,dlk  Remove whitespace at end of lines.
+# 12apr16,mca  BSD socket API routines begins with _ (F6564)
+# 23mar16,dlk  Changed _selWakeup to _selWakeupOp, _select to _selectX
+#              for uIOS.
+# 05oct15,zl   added _selWakeup. Renamed select to _select and remove
+#              to _remove.
+# 28sep15,rr   taskCtl system call is broken down in to multiple
+#              system calls (F3906)
+# 27aug15,h_k  corrected VSB macro prefix name. (V7COR-2871)
+# 13aug15,dlk  Update sockets system call prototypes (V7NET-671).
+# 29apr15,rr   Removed _creatSc() (V7COR-2660).
+# 23apr15,gls  added INCLUDE_SC_SEM_READ_WRITE, INCLUDE_SC_CONDVAR, and
+#              INCLUDE_SC_SEM_EXCHANGE
+# 24mar15,txu  Added definitions for _umask(). (US55492)
+# 17mar15,cww  fixed component dependency for randNumGenCtlSc()
+# 07dec14,ymz  made IOS system calls conditional depends on if is CERT
+# 18nov14,gls  removed dependency on sysctl for basic RTP support
+# 08oct14,pad  Applied V7SEC-84 changes to _seteuid() and _setegid().
+# 07oct14,gls  added INCLUDE_RTP_SIGNALS support
+# 29sep14,jpb  V7SEC-84. Made _setgid, _setuid, getpwuid, use one native-word
+#	       size.  Cannot use short data type without padding.
+# 18sep14,pad  Added the definition for getlogin_r() (US44416).
+# 26aug14,pad  Added definitions for _seteuid(), _geteuid(), _setegid() and
+#              _getegid() system calls (US44512).
+# 19aug14,jpb  added randNumGenCtl
+# 04jul14,pad  Added definitions for _setuid(), _getuid(), _setgid() and
+#              _getgid() system calls (US40207).
+# 25apr14,h_k  replaced pipe with _pipe. (US35006)
+# 18mar14,pad  Added definitions for userAuthenticate(), userPasswordUpdate(),
+#              _getpwuid() and _getpwnam().
+# 02mar14,zl   Build options to support both VSB options and VIP components
+#              (issue VXW7-2334).
+# 19feb14,pad  Added VSB options to allow for conditional compilation of items
+#              in generated files (issue VXW7-1269).
+# 30sep13,rfr  added condVar syscalls
+# 18sep12,zl   add _taskTcbCurrentGet; fix argument count of pxTrace calls
+# 15jun11,pcs  Change the data type for argument 'arg' of _mctl from 'int'
+#              to 'void *'
+# 06may11,tcr  Add wvRtpEvent.
+# 31jan11,pad  Fixed typo in header.
+# 02jul10,pcs  change the data type of timeout and ticks from an int to
+#              _Vx_ticks_t
+# 10jun10,cww  added 64-bit return flag
+# 08jun10,jxu  LP64: changed the second argument of pipeDevCreate
+#              from int to size_t.
+# 07may10,jpb  Updated pxCtl structure for LP64 adaptation.
+# 06apr10,jpb  Fixed timerCtl mismatch.
+# 04mar10,jpb  Updated clock & timer system call structures for LP64
+#              adaptation.
+# 23feb10,zl   replaced off_t64 with off64_t.
+# 22feb10,jpb  Updated sdCreate and sdOpen for LP64 adaptation.
+# 02feb10,lxj  changed the third arguments of _ioctl from int
+#              to _Vx_ioctl_arg_t for LP64, change the third
+#              arguments of pipeDevCreate from int to size_t
+# 28dec09,jpb  Updated rtpSc for LP64 adaptation.
+# 03dec09,jpb  LP64 adaptation for windScLib system calls.
+# 27jun07,gls  added _semExchange
+# 13jun07,mfj  Adding semRTake, semWTake
+# 26aug06,kch  Removed coreip stack resolver's header files and
+#              INCLUDE_DNS_RESOLVER.
+# 04jul06,tcr  add POSIX trace syscalls
+# 17may06,pcm  made pthread cancellation point changes
+# 02mar06,pad  Replaced dependency on INCLUDE_POSIX_SCHED with dependency
+#              on INCLUDE_RTP_POSIX_PSE52 for the _schedPxInfoGet system
+#              call (SPR# 118411).
+# 10feb06,yvp  Added clockCtl.
+# 07feb06,kk   renamed taskOpenExt to taskOpenWithGuard
+# 25jan06,yvp  Posix conformance: made timeout parameter const for
+#              pxSemWait, pxMqReceive and pxMqSend.
+# 22dec05,jln  added _taskOpenExt system call
+# 10aug05,hya  added new syscall chmod().
+# 20jul05,hya  Fixed a mistake on unlink()'s number of parameters.
+# 05jul05,hya  added new syscall access(), etc.
+# 14feb05,zl   added _mctl() system call.
+# 09may05,hya  removed symlink, changed open & ioctl
+# 25oct04,gls  made pVirtAddress for _sdOpen/Create a void **
+# 21oct04,yvp  SPR 102855: Wrong no. of arguments to rtpSpawn.
+# 14oct04,yvp  Conditionalised pipeDev(Create/Delete) on INCLUDE_PIPES
+#              (SPR 102336).
+# 11oct04,gls  added mode parameter to _sdOpen (SPR #101348)
+# 05oct04,gls  renamed sdOpen and sdCreate to _sdOpen and _sdCreate
+# 01oct04,gls  updated mmap()
+# 30sep04,gls  updated sdOpen() and sdCreate() sysCall definitions
+# 29sep04,ans  added code parameter to _sigqueue and _taskSigqueue
+# 23sep04,yvp  Uncommented (get/set)prlimit calls.
+# 24aug04,job  Added INCLUDE_POSIX_* protection to POSIX timers, semaphores,
+#              message queues & scheduler system calls.
+# 27jul04,md   updated _edrErrorInject prototype
+# 19may04,ans  added sigaltstack()
+# 17may04,yvp  Renamed sigqueue/taskSigqueue to _sigqueue/_taskSigqueue.
+# 07may04,yvp  Added extra parameter to rtpSpawn.
+# 11may04,gls  made shared data calls require INCLUDE_SHARED_DATA
+# 23apr04,yvp  Added SL syscalls and (get/set)prlimit.
+# 23apr04,dcc  added "context" to the parameters list for semOpen(),
+#              msgQOpen() and timer_open() syscalls.
+# 15apr04,kk   fix number of args for rtpVarAdd
+# 26mar04,dcc  added objUnlink() syscall.
+# 03mar04,kk   added rtpVarAdd system call
+# 11jan04,hya  Enable event syscalls.
+# 15apr04,kk   change RTP_IDs to OBJ_HANDLEs
+# 07apr04,gls  added sdInfoGet
+# 25mar04,yvp  Removed rtpVarAdd till SL work complete.
+# 19mar04,yvp  Derived from 02f of syscall.def.
+# 26feb04,yvp  Added wvEvent() in SCG_VXWORKS.
+# 13feb04,yvp  Added include files for resSearchN system call.
+# 06feb04,yvp  Added SCG_VXTEST.
+# 06feb04,yvp  Added resSearchN (DNS resolver) + remove comCoreTypes.h
+# 03feb04,md   Added _edrErrorInject and edrFlagsGet
+# 18feb04,dat  chg getcwd to _getcwd for error handling
+# 02feb04,gls  modified shared data system calls to use OBJ_HANDLE
+# 18dec03,gls  added shared data system calls
+# 12dec03,yvp  Added INCLUDE_SC_SOCKLIB conditional for socket system calls.
+# 12dec03,aeg  fixed typo for the _msgQOpen system call.
+# 10dec03,yvp  Changed format to take full C-like function prototypes
+#              and scalability-defines.
+# 04dec03,ans  renamed timerOpen to _timer_open
+# 05nov03,md   renamed semTake, semGive, and semOpen.  Added semCtl
+# 02dec03,aeg  renamed semOpen, msgQOpen, taskOpen to
+#             _semOpen, _msgQOpen, and _taskOpen.
+# 20nov03,vvv  added sysctl system call group
+# 14nov03,nee  added SCG_sockets
+# 03nov03,dat  chg numargs for pipeDevDelete, iosFdTblSizeGet
+# 06nov03,nrj  added getpid, waitpid, getppid
+# 03nov03,m_s  added posix sem and mq system calls to SCG_posix group
+# 21oct03,aeg  added temporary sysClkRateGet system call to Wind group
+# 16oct03,ans  added SCG_posix and timer system calls.
+# 14oct03,nrj  added RTP signal system calls
+# 22sep03,kk   added rtpSpawn & rtpInfoGet
+# 18sep03,yvp  created.
+#
+#  FORMAT:
+#
+#  A system call function API definition line has the format:
+#
+#  <name> <#args> [<arg list>] [<return size>] [<vipMacro(s)>] [<vsbMacro(s)>]
+#
+#  The name is the name of the system call. It must be the same as the name
+#  mentioned in syscallNum.def.
+#
+#  <#args> is the number of arguments taken by the system call. For functions
+#  taking 64-bit arguments on a 32-bit system, <#args> must be increased so
+#  that <#args> reflects the total number of native-words occupied by the
+#  entire argument list. <#args> must not exceed 8.
+#
+#  <arg list> optionally defines the parameter list for this system call
+#  for the purpose of generating the nameScArgs structure. The argument list is
+#  enclosed in []'s. If <#args> is zero, an empty [ ] may be used. This is
+#  necessary, for example, when explicit return size or configuration macros
+#  are specified.
+#
+#  <return size> is an optional parameter that specifies the size of the
+#  return value.  Valid entries are int, long and ptr.  This parameter is
+#  enclosed in []'s and must be provided if any of the macro lists described
+#  below are used. When omitted and no following macro lists are used, a 32-bit
+#  return value is assumed.
+#
+#  <vipMacro(s)> is an optional list of VIP configuration macros. Those
+#  macro's names correspond to CDL components included in the VIP and usually
+#  start with "INCLUDE_". This list makes possible to exclude a system call
+#  definition when none of the listed CDL components are defined in the VIP.
+#  In other words at least one of the listed components must be included in
+#  the VIP in order for this system call to be included into the system. This
+#  parameter is enclosed in []'s and may be omitted only if the system call is
+#  always included and no VSB macros (see below) are defined. If the system
+#  call inclusion depends only on VSB macros, the VIP macro list must be
+#  empty ("[ ]").
+#
+#  <vsbMacro(s)> is an optional list of VSB configuration macros. Those
+#  macro's names correspond to the feature-specific VSB configuration macros
+#  defined in a VSB when the corresponding feature is enabled. By convention
+#  all of those macros are in the format: _WRS_CONFIG_<option name>. When this
+#  list is provided, at least one of the listed VSB macros must be defined in
+#  order for this system call to be included into the system. This parameter is
+#  enclosed in []'s.
+#
+#  For example, the socket() APIs has the signature:
+#
+#	int socket (int domain, int type, int protocol);
+#
+# which translates into the following system call definition:
+#
+#   socket      3  [ int domain; int type; int protocol; ] [ int ] \
+#                  [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+#
+#  Given the definition above, the socket system call will be included into
+#  the system only if INCLUDE_SC_SOCKLIB is defined in the VIP configuration,
+#  and the system call argument structures are defined only if the socket layer
+#  is included in the VSB configuration.
+#
+#  The definitions of the prototypes for the system calls may require
+#  including header files in the generated header files. This is done via the
+#  INCLUDE keyword, one per line using the following format:
+#
+#       INCLUDE <header>        <VSB macro(s)>
+#
+#  Where <VSB macro(s)> is an optional list of VSB configuration macros as
+#  described above.
+#
+#  INCLUDE directives and system call definitions lines that are not followed
+#  with a VSB configuration macro are considered to refer to items that are
+#  always available in a VSB.
+#
+#  WARNING: System Viewer maintains files describing system call events.
+#  These files need to be regenerated by the System Viewer team when the
+#  system call interface here is modified:
+#
+#    workbench-4/wrsysviewer/host/resource/windview/VxWorks/
+#         7.0.0_32bit/syscalls_syn.xml
+#         7.0.0_64bit/syscalls_syn.xml
+#
+#  WARNING: Although VxWorks 7 _currently_ makes no guarantees about
+#  binary backwards compatibility for RTPs, making changes to the
+#  system call interface that are not binary backwards compatible is
+#  discouraged.  It is generally better to introduce a new system call
+#  ID rather than modifying an existing one.
+#
+########################################################################
+
+########################################################################
+#
+# A list of included headers that are needed.
+#
+########################################################################
+
+INCLUDE <vxWorks.h>
+INCLUDE <taskLib.h>
+INCLUDE <rtpLib.h>
+INCLUDE <sdLib.h>
+INCLUDE <shlLib.h>
+INCLUDE <signal.h>
+INCLUDE <socket.h>                      _WRS_CONFIG_SOCKET
+INCLUDE <time.h>
+INCLUDE <setjmp.h>
+INCLUDE <ioLib.h>
+INCLUDE <private/semSysCall.h>
+INCLUDE <private/objLibP.h>
+INCLUDE <private/rtpLibP.h>
+INCLUDE <private/mqPxSysCall.h>
+INCLUDE <private/pxObjSysCall.h>
+INCLUDE <private/semPxSysCall.h>
+INCLUDE <private/taskSysCall.h>
+INCLUDE <private/timerSysCall.h>
+INCLUDE <private/eventSysCall.h>
+INCLUDE <private/randomNumGenSysCallP.h>
+INCLUDE <sys/resource.h>
+INCLUDE <sys/types.h>
+INCLUDE <base/b_trace_attr_t.h>
+INCLUDE <base/b_trace_id_t.h>
+INCLUDE <base/b_trace_event_id_t.h>
+INCLUDE <base/b_pthread_t.h>
+INCLUDE <private/vxSysInfoCommonP.h>
+
+########################################################################
+#
+# The STANDARD system call group contains system calls which are in common
+# with UNIX(tm) like systems
+#
+########################################################################
+
+
+ _exit 	     1	[ int status; ]
+ _open 	     3	[ const char * name; int flags; int mode; ]
+ _close	     1	[ int fd; ]
+ _read 	     3	[ int fd; void * buffer; size_t maxbytes; ] [ long ]
+ _write	     3	[ int fd; const void * buffer; size_t nbytes; ] [ long ]
+ _ioctl      3	[ int fd; int function; _Vx_ioctl_arg_t arg; ]
+ _dup 	     2	[ int fd; int startFd; ]
+ _dup2       2	[ int fd; int fd2; ]
+ _pipe 	     2	[ int * fildes; int flags; ] [ int ] [ INCLUDE_SC_PIPE ]
+ _remove     1	[ const char * name; ]
+ _selectX    6	[ int width; fd_set * readFds; fd_set * writeFds; \
+		  fd_set * excFds; struct timeval * timeout; BOOL clearSem; ]
+
+# Socket library system calls are included by the INCLUDE_SC_SOCKLIB component
+# and are built by the SOCKET layer.
+
+ _socket     3	[ int domain; int type; int protocol; ] [ int ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+ _bind 	     3	[ int s; const struct sockaddr * name; socklen_t namelen; ] [ int ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _listen     2	[ int s; int backlog; ] [ int ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _accept     3	[ int s; struct sockaddr * addr; socklen_t *addrlen; ] [ int ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _connect    3	[ int s; const struct sockaddr * name; socklen_t namelen; ] [ int ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _sendto     6	[ int s; const void * buf; size_t bufLen; int flags; \
+		  const struct sockaddr * to; socklen_t tolen; ] [ ssize_t ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _send	     4	[ int s; const void * buf; size_t bufLen; int flags; ] [ ssize_t ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _sendmsg    3	[ int s; const struct msghdr * mp; int flags; ] [ ssize_t ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _recvfrom   6	[ int s; void * buf; size_t bufLen; int flags; \
+		  struct sockaddr *from; socklen_t * pFromLen; ] [ ssize_t ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _recv	     4	[ int s; void * buf; size_t bufLen; int flags; ] [ ssize_t ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _recvmsg    3	[ int s; struct msghdr * mp; int flags; ] [ ssize_t ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _setsockopt 5	[ int s; int level; int optname; const void * optval; socklen_t optlen; ] \
+                [ int ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _getsockopt 5	[ int s; int level; int optname; void * optval; \
+                  socklen_t * optlen; ] [ int ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _getsockname 3	[ int s; struct sockaddr *name; socklen_t * namelen; ] [ int ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _getpeername 3	[ int s; struct sockaddr *name; socklen_t * namelen; ] [ int ] \
+		[ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ _shutdown   2	[ int s; int how; ] [ int ] \
+                [ INCLUDE_SC_SOCKLIB ] [ _WRS_CONFIG_SOCKET ]
+
+ mmap	     8	[ void * addr; size_t len; int prot; int flags; \
+		  int fildes; off64_t off; ] [ ptr ]
+
+ munmap      2	[ void * addr; size_t len; ]
+
+ mprotect    3	[ void * addr; size_t len; int prot; ]
+
+ kill        2	[ OBJ_HANDLE rtpId; int signo; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _pause      0  [ ] [ int ] [ INCLUDE_RTP_SIGNALS ]
+
+ sigpending  1	[ sigset_t * pSet; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ sigprocmask 3	[ int how; const sigset_t * pSet; sigset_t * pOset; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ sigaltstack 2  [ stack_t * ss; stack_t * oss; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+
+ _sigqueue   4	[ OBJ_HANDLE rtpId; int  signo; const union sigval * pValue;\
+                  int sigCode; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _sigsuspend 1	[ const sigset_t * pSet; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _sigtimedwait \
+             3  [ const sigset_t * pSet; struct siginfo * pInfo; \
+		  const struct timespec * pTime; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _sigaction  4	[  int signo; const struct sigaction  * pAct; \
+		   struct sigaction * pOact; void * retAddr; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _sigreturn  0  [ ] [ int ] [ INCLUDE_RTP_SIGNALS ]
+
+ chdir 	     1	[ const char * name; ]
+
+ _getcwd     2	[ char * buffer; int length; ] [ ptr ]
+
+ getpid      0
+
+ getppid     0
+
+ _waitpid    3	[ OBJ_HANDLE childRtpId; int * pStatus; int options; ] \
+                [ long ] [ INCLUDE_RTP_SIGNALS ]
+
+ sysctl      6	[ int * pName; u_int nameLen; void * pOld; \
+    		  size_t * pOldLen; void * pNew; size_t newLen; ] [ int ] \
+ 	 	[ INCLUDE_SC_SYSCTL ]
+
+ _schedPxInfoGet \
+             2  [ BOOL * pTimeSlicingOn; ULONG * pTimeSlicePeriod; ] \
+                [ int ] \
+                [ INCLUDE_RTP_POSIX_PSE52 ]
+
+ _unlink     1	[ const char * name; ]
+ _link       2	[ const char * name; const char * newname; ]
+ _fsync	     1	[ int fd; ]
+ _fdatasync  1	[ int fd; ]
+ _rename     2	[ const char * oldname; const char * newname; ]
+ _fpathconf  2	[ int fd; int name; ] [ long ]
+ _pathconf   2	[ const char * path; int name; ] [ long ]
+ _access     2	[ const char * path; int amode; ]
+ _chmod      2	[ const char * path; mode_t mode; ]
+
+ pxTraceCreation \
+             5  [ int cmd; pid_t pid; trace_attr_t * attr; int fd; \
+                  trace_id_t * trid; ] [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+ pxTraceCtl  7  [ int cmd; trace_id_t trid; struct trace_event_set_t * filter; \
+                  int how; pthread_t thread_id; void * pc; \
+                  void * ptr_out; ] [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+ pxTraceEvent \
+             7  [ int cmd; int id_in; char * data; size_t data_len; \
+                  pthread_t thread_id; void * pc; trace_event_id_t * id_out; ] \
+                [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+ pxTraceEventNameQuery \
+             7  [ int cmd; trace_id_t trid; int id_in1; int id_in2; \
+                  char * name; trace_event_id_t * id_out; int * unavailable; ] \
+                [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+ pxTraceLog  4  [ int cmd; trace_id_t trid_in; int fd; trace_id_t *trid_out; ] \
+                [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+ pxTraceEventGet \
+             8  [ int cmd; trace_id_t trid; size_t num_bytes; \
+                  struct timespec * timeout; \
+                  struct posix_trace_event_info * event; void * data; \
+                  size_t * data_len; int * unavailable; ] \
+                [ int ] \
+                [ INCLUDE_POSIX_TRACE ]
+
+########################################################################
+#
+# The VXWORKS system call group contains system calls which are unique
+# to Wind River's VxWorks or are otherwise not similar to UNIX(tm)
+#
+########################################################################
+
+ eventReceiveEx \
+             4  [ UINT32 events; UINT32 options; _Vx_ticks_t timeout; \
+		  UINT32 * pEvtsReceived; ]
+
+ eventSend   2	[ int taskId; UINT32 events; ]
+
+ eventCtl    4	[ OBJ_HANDLE handle; VX_EVT_CTL_CMD command; \
+		  void * pArg; size_t * pArgSize; ]
+
+ msgQSend    5	[ OBJ_HANDLE handle; char * buffer; size_t nBytes; \
+		  _Vx_ticks_t timeout; int priority; ] [ int ] \
+                [ INCLUDE_MSG_Q ]
+
+ msgQReceive 4	[ OBJ_HANDLE handle; char * buffer; size_t maxNBytes; \
+		  _Vx_ticks_t timeout; ] [ long ] \
+                [ INCLUDE_MSG_Q ]
+
+ _msgQOpen   6	[ const char * name; size_t maxMsgs;  size_t maxMsgLength; \
+		  int options; int mode; void * context; ] [ int ] \
+                [ INCLUDE_MSG_Q ]
+
+ objDelete   2	[ OBJ_HANDLE handle; int options; ]
+
+ objInfoGet  4	[ OBJ_HANDLE handle; void * pInfo; \
+		  size_t * pInfoSize; int level; ]
+
+ _semTake    2	[ OBJ_HANDLE handle; _Vx_ticks_t timeout; ]
+
+ _semExchange \
+             3  [ OBJ_HANDLE giveHandle; OBJ_HANDLE takeHandle; \
+                  _Vx_ticks_t timeout; ] [ int ] \
+                [ INCLUDE_SC_SEM_EXCHANGE ]
+
+ _semGive    1	[ OBJ_HANDLE handle; ]
+
+ _semOpen    6	[ const char * name; SEM_TYPE type; \
+		  int initState; int options; int mode; void * context; ]
+
+ semCtl      4	[ OBJ_HANDLE handle; VX_SEM_CTL_CMD command; \
+		  void * pArg; size_t * pArgSize; ]
+
+ _taskOpen   1	[ struct vx_task_open_sc_args * pArgs; ]
+
+
+ _taskDelay  1	[ _Vx_ticks_t ticks; ]
+
+ rtpSpawn    7	[ const char * rtpFileName; const char ** argv; \
+		  const char ** envp; int priority; size_t uStackSize; \
+		  int options; int taskOptions; ]
+
+ rtpInfoGet  2	[ OBJ_HANDLE rtpId; RTP_DESC * rtpStruct; ]
+
+ taskKill    2	[ OBJ_HANDLE taskHandle; int signo; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _taskSigqueue \
+             4  [ OBJ_HANDLE taskHandle; int signo; \
+		  const union sigval * pValue; int sigCode; ] [ int ] \
+                [ INCLUDE_RTP_SIGNALS ]
+
+ _timer_open 5	[ const char * name; int mode; clockid_t clockId; \
+		  struct sigevent * evp; void * context; ] [ int ] \
+                [ INCLUDE_POSIX_TIMERS ]
+
+ timerCtl    4	[ TIMER_CTL_CMD cmdCode; OBJ_HANDLE timerHandle; void * pArgs; \
+    		  size_t pArgSize; ] [ int ] \
+                [ INCLUDE_POSIX_TIMERS ]
+
+ pxOpen      4	[ PX_OBJ_TYPE type; const char * name; \
+    		  int objOpenMode; void * attr; ] [ int ] \
+                [ INCLUDE_POSIX_SEM INCLUDE_POSIX_MQ ]
+
+ pxClose     1	[ OBJ_HANDLE handle; ] [ int ] \
+                [ INCLUDE_POSIX_SEM INCLUDE_POSIX_MQ ]
+
+ pxUnlink    2	[ PX_OBJ_TYPE  type; const char * name; ] [ int ] \
+                [ INCLUDE_POSIX_SEM INCLUDE_POSIX_MQ ]
+
+ pxCtl       4	[ OBJ_HANDLE handle; PX_CTL_CMD_CODE cmdCode; \
+    		  void * pArgs; size_t * pArgSize; ] [ int ] \
+                [ INCLUDE_POSIX_SEM INCLUDE_POSIX_MQ ]
+
+ pxMqReceive 6	[ OBJ_HANDLE handle; char * pMsg; size_t msgLen; \
+    		  unsigned int * pMsgPrio; PX_WAIT_OPTION waitOption; \
+    		  const struct timespec * time_out; ] [ long ] \
+                [ INCLUDE_POSIX_MQ ]
+
+ pxMqSend    6	[ OBJ_HANDLE handle; const char * pMsg; size_t msgLen; \
+		  unsigned int msgPrio; PX_WAIT_OPTION waitOption; \
+		  const struct timespec * time_out; ] [ int ] \
+                [ INCLUDE_POSIX_MQ ]
+
+ pxSemWait   3	[ OBJ_HANDLE handle; PX_WAIT_OPTION waitOption; \
+    		  const struct timespec * time_out; ] [ int ] \
+                [ INCLUDE_POSIX_SEM ]
+
+ pxSemPost   1	[ OBJ_HANDLE handle; ] [ int ] \
+                [ INCLUDE_POSIX_SEM ]
+
+ pipeDevCreate \
+             3  [ const char * name; size_t nMessages; size_t nBytes; ] \
+                [ int ] \
+                [ INCLUDE_PIPES ]
+
+ pipeDevDelete \
+             2  [ const char * name; BOOL force; ] [ int ] \
+                [ INCLUDE_PIPES ]
+
+ _sdCreate   8  [ char * name; int options; size_t size; off64_t physAddress; \
+                  MMU_ATTR attr; void ** pVirtAddress; ] [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ _sdOpen     8  [ char * name; int options; int mode; size_t size; \
+	          off64_t physAddress; MMU_ATTR attr; void ** pVirtAddress; ] \
+                [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ sdDelete    2	[ OBJ_HANDLE handle; int options; ] [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ sdMap       3  [ OBJ_HANDLE handle; MMU_ATTR attr; int options; ] [ ptr ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ sdUnmap     2  [ OBJ_HANDLE handle; int options; ] [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ sdProtect   2  [ OBJ_HANDLE handle; MMU_ATTR attr; ] [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ sdInfoGet   2  [ OBJ_HANDLE handle; SD_DESC * pSdStruct; ] [ int ] \
+                [ INCLUDE_SHARED_DATA ]
+
+ _edrErrorInject \
+             6  [ int kind; const char *fileName; int lineNumber; \
+                  REG_SET *regset; void *addr; const char *msg; ]
+
+ edrFlagsGet 0
+
+
+# System Viewer's event support is included by the INCLUDE_WINDVIEW component
+# and built by the SYSTEMVIEWER layer.
+
+ wvEvent     3	[ int eventId; const char * pData; \
+		  unsigned int dataSize; ] [ int ] \
+                [ INCLUDE_WINDVIEW ] [ _WRS_CONFIG_SYSTEMVIEWER ]
+
+ objUnlink   2	[ const char * name; enum windObjClassType classType; ]
+
+ rtpVarAdd   2	[ void ** pVar; void * value; ]
+
+ _shlOpen    2	[ const char * name; int options; ] [ int ] \
+                [ INCLUDE_SHL ]
+ _shlUnlock  1	[ SHL_ID shlId; ] [ int ] \
+                [ INCLUDE_SHL ]
+ _shlClose   1	[ SHL_ID shlId; ] [ int ] \
+                [ INCLUDE_SHL ]
+ _shlGet     2	[ SHL_ID shlId; SHLINFO *pInfo; ] [ int ] \
+                [ INCLUDE_SHL ]
+ _shlPut     2	[ SHL_ID shlId; const SHLINFO *pInfo; ] [ int ] \
+                [ INCLUDE_SHL ]
+
+getprlimit   4  [ int idtype; OBJ_HANDLE handle; int resource; \
+                  struct rlimit *rlp; ] [ int ]
+
+setprlimit   4  [ int idtype; OBJ_HANDLE handle; int resource; \
+                  struct rlimit *rlp; ] [ int ] [ INCLUDE_SC_RTP_LIMITS ]
+
+ _mctl       4	[ void * addr; size_t len; int function; void * arg; ]
+
+ _taskOpenWithGuard \
+             1  [ struct vx_task_open_guard_sc_args * pArgs; ]
+
+ clockCtl    4  [ clockid_t clock_id; CLOCK_CTL_CMD cmdCode; \
+                  void * pArgStruct; size_t * pArgSize; ] [ int ] \
+                [ INCLUDE_POSIX_CLOCKS ]
+
+_semRTake    2	[ OBJ_HANDLE handle; _Vx_ticks_t timeout; ] [ int ] \
+                [ INCLUDE_SC_SEM_READ_WRITE ]
+
+_semWTake    2	[ OBJ_HANDLE handle; _Vx_ticks_t timeout; ] [ int ] \
+                [ INCLUDE_SC_SEM_READ_WRITE ]
+
+wvRtpEvent   3	[ int eventId; const char * pData; \
+	          unsigned int dataSize; ] [ int ] \
+                [ INCLUDE_WINDVIEW ] [ _WRS_CONFIG_SYSTEMVIEWER ]
+
+_taskTcbCurrentGet \
+             0	[  ] [ ptr ]
+
+_condVarOpen 4  [ const char *name; int options; int mode; void *context; ] \
+                [ int ] \
+                [ INCLUDE_SC_CONDVAR ]
+_condVarWait 3  [ OBJ_HANDLE handle; OBJ_HANDLE mtx_handle; \
+	         _Vx_ticks_t timeout; ] [ int ] \
+                [ INCLUDE_SC_CONDVAR ]
+_condVarSignal \
+             2  [ OBJ_HANDLE handle; int broadcast; ] [ int ] \
+                [ INCLUDE_SC_CONDVAR ]
+userAuthenticate \
+             4  [ const char * loginName; const char * clearPassword; \
+                  uid_t * pUserId; gid_t * pGroupId; ] [ int ] \
+                [ INCLUDE_USER_IDENTIFICATION ] [ _WRS_CONFIG_USER_MANAGEMENT ]
+userPasswordUpdate \
+             3  [ const char * loginName; const char * oldClearPassword; \
+                  const char * newClearPassword; ] [ int ] \
+                [ INCLUDE_USER_IDENTIFICATION ] [ _WRS_CONFIG_USER_MANAGEMENT ]
+
+
+########################################################################
+#
+# The SCG_STANDARD_2 system call group extends the STANDARD system call
+# group and has the same purpose.
+#
+########################################################################
+
+_getpwuid    4  [ int userId; struct passwd * pwd; char * buffer; \
+                  size_t bufsize; ] [ int ] \
+                [ INCLUDE_USER_IDENTIFICATION ] [ _WRS_CONFIG_USER_MANAGEMENT ]
+_getpwnam    4  [ const char * loginName; struct passwd * pwd; char * buffer; \
+                  size_t bufsize; ] [ int ] \
+                [ INCLUDE_USER_IDENTIFICATION ] [ _WRS_CONFIG_USER_MANAGEMENT ]
+_setuid      1  [ int uid; ] [ int ]
+_getuid      0  [  ] [ int ]
+_setgid      1  [ int gid; ] [ int ]
+_getgid      0  [  ] [ int ]
+_seteuid     1  [ int euid; ] [ int ]
+_geteuid     0  [  ] [ int ]
+_setegid     1  [ int egid; ] [ int ]
+_getegid     0  [  ] [ int ]
+getlogin_r   2  [ char * loginName; size_t nameSz; ] [ int ]
+_clock_getres \
+             2  [ clockid_t clock_id; struct timespec * res; ] [ int ] \
+                [ INCLUDE_POSIX_CLOCKS ]
+
+_clock_gettime \
+             2  [ clockid_t clock_id; struct timespec * tp; ] [ int ] \
+                [ INCLUDE_POSIX_CLOCKS ]
+
+_clock_settime \
+             2  [ clockid_t clock_id; const struct timespec * tp; ] [ int ] \
+                [ INCLUDE_POSIX_CLOCKS ]
+_umask       1  [ mode_t cmask; ] [ int ] \
+                [ INCLUDE_POSIX_UMASK ] [ _WRS_CONFIG_FILE_CREATION_MASK ]
+
+########################################################################
+#
+# The VXWORKS_2 system call group extends the VXWORKS system call group
+# and has the same purpose.
+#
+########################################################################
+
+randNumGenCtl 3  [ VX_RANDOM_NUM_GEN_CTL_CMD command; \
+                  void * pArg; size_t pArgSize; ] [ int ] [ INCLUDE_RANDOM_NUM_GEN ]
+taskStateCtl  4	 [ int tid; VX_TASK_CTL_CMD command; \
+		   void * pArg; size_t  argSize; ]
+taskParamCtl  3  [ int tid; VX_TASK_CTL_CMD command; void * pArg; ]
+taskPriCtl    3  [ int tid; VX_TASK_CTL_CMD command; void * pArg;  ]
+taskCpuAffCtl 3  [ int tid; VX_TASK_CTL_CMD command; void * pArg;  ]
+taskVarCtl    4  [ int tid; VX_TASK_CTL_CMD command; \
+                   long * pVar; long* pValue; ]
+taskPxAttrCtl 3  [ int tid; VX_TASK_CTL_CMD command; \
+                   void * pArg; ] [ int ] [ INCLUDE_POSIX_PTHREAD_SCHEDULER ]
+_taskWait     2  [ int tid; _Vx_ticks_t timeout; ]
+atomic32Op    5  [ atomic32_t* target; atomic32Val_t oldValue;\
+                   atomic32Val_t value; atomic32Val_t* returnVal; \
+                   int atomicSwitch; ]
+atomic64Op    5  [ atomic64_t* target; atomic64Val_t oldValue;\
+                   atomic64Val_t value; atomic64Val_t* returnVal; \
+                   int atomicSwitch; ]
+_rtpTaskExitRegister \
+              1  [ void * funcPtr; ]
+vxSysInfoGet  1 [ _VX_SYS_INFO * pVxSysInfo; ]
+_tick64Get    1 [ _Vx_ticks64_t * pTickVal; ] [ int ]
+tickRateGet   0 [ ] [ int ]
+
+shmVolNameGet 2 [ char * name; size_t len; ] [ int ] \
+                [ INCLUDE_SC_POSIX_SHM ]
+_selWakeupOp  2 [ int tid; int op; ] [ int ]
+_umiosFdGet   0 [ ] [ int ]
+pipeAnonCreate 4 [ size_t nMessages; size_t nBytes; unsigned flags; int * pFd; ] [ int ] \
+                 [ INCLUDE_PIPES ]
+taskDelayEx   2 [ _Vx_ticks_t ticks; UINT32 flags; ]

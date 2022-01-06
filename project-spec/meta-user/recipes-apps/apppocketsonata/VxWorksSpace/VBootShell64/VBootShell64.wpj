@@ -1,0 +1,919 @@
+Document file - DO NOT EDIT
+
+<BEGIN> BSP
+hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> BSP_DIR
+$(PRJ_DIR)/hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> BSP_MACROS
+
+<END>
+
+<BEGIN> BSP_VERSION
+1.0.0.0
+<END>
+
+<BEGIN> BUILD_RULE_linkSyms.o
+{linkSyms.o \
+	: \
+	$(PRJ_DIR)/linkSyms.c} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(CFLAGS_OPTIONS_ALL) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/linkSyms.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_prjConfig.o
+{prjConfig.o \
+	: \
+	$(PRJ_DIR)/prjConfig.c} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(CFLAGS_OPTIONS_ALL) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/prjConfig.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_SOURCE_ENABLE
+0
+<END>
+
+<BEGIN> BUILD__CURRENT
+default
+<END>
+
+<BEGIN> BUILD__LIST
+default
+<END>
+
+<BEGIN> BUILD_default_MACRO_BOOT_EXTRA
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_C++FLAGS_OPTIONS_ALL
+-std=c99 \
+	-DLIGNEX1 \
+	-DUEMF \
+	-DWEBS \
+	-DDIGEST_ACCESS_SUPPORT \
+	-DUSER_MANAGEMENT_SUPPORT1
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_OPTIONS_ALL
+-std=c99 \
+	-DLIGNEX1 \
+	-DUEMF \
+	-DWEBS \
+	-DDIGEST_ACCESS_SUPPORT \
+	-DUSER_MANAGEMENT_SUPPORT1
+<END>
+
+<BEGIN> BUILD_default_MACRO_EXTRA_MODULES
+$(SUB_TARGETS)
+<END>
+
+<BEGIN> BUILD_default_RO_DEPEND_PATH
+
+<END>
+
+<BEGIN> BUILD_default_TC
+::tc_PPCE6500diab
+<END>
+
+<BEGIN> COMPONENT_ERROR_STATUS
+0
+<END>
+
+<BEGIN> CORE_INFO_TYPE
+::prj_vxWorks
+<END>
+
+<BEGIN> CORE_INFO_VERSION
+4.2
+<END>
+
+<BEGIN> DEBUG
+0
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/BootShell.cpp_objects
+BootShell.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/BootShell.cpp_tool
+C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/BootShellMain.c_objects
+BootShellMain.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/BootShellMain.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/ManSbc.cpp_objects
+ManSbc.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/ManSbc.cpp_tool
+C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/Untar/FileTar.cpp_objects
+FileTar.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/Untar/FileTar.cpp_tool
+C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/asp.c_objects
+asp.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/asp.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/balloc.c_objects
+balloc.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/balloc.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/base64.c_objects
+base64.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/base64.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/cgi.c_objects
+cgi.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/cgi.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/default.c_objects
+default.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/default.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ejlex.c_objects
+ejlex.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ejlex.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ejparse.c_objects
+ejparse.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ejparse.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/emfdb.c_objects
+emfdb.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/emfdb.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/form.c_objects
+form.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/form.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/h.c_objects
+h.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/h.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/handler.c_objects
+handler.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/handler.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/main.c_objects
+main.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/main.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/md5c.c_objects
+md5c.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/md5c.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/mime.c_objects
+mime.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/mime.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/misc.c_objects
+misc.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/misc.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/mocana_ssl.c_objects
+mocana_ssl.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/mocana_ssl.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/page.c_objects
+page.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/page.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ringq.c_objects
+ringq.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/ringq.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/rom.c_objects
+rom.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/rom.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/security.c_objects
+security.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/security.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sock.c_objects
+sock.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sock.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sockGen.c_objects
+sockGen.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sockGen.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/strdup.c_objects
+strdup.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/strdup.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/strncasecmp.c_objects
+strncasecmp.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/strncasecmp.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sym.c_objects
+sym.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/sym.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/uemf.c_objects
+uemf.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/uemf.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/um.c_objects
+um.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/um.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/umui.c_objects
+umui.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/umui.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/url.c_objects
+url.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/url.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/value.c_objects
+value.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/value.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/webrom.c_objects
+webrom.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/webrom.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/webs.c_objects
+webs.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/webs.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/websda.c_objects
+websda.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/websda.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/websuemf.c_objects
+websuemf.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/../VBootShell/WebServer/websuemf.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_customRule
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_objects
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_customRule
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_objects
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_objects
+usrAppInit.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_tool
+C compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrRtpAppInit.c_objects
+usrRtpAppInit.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrRtpAppInit.c_tool
+C compiler
+<END>
+
+<BEGIN> INITIAL_PROFILE
+BSP_DEFAULT
+<END>
+
+<BEGIN> MAKEFILE
+Makefile.mk
+<END>
+
+<BEGIN> OPT
+-inet6
+<END>
+
+<BEGIN> OS_NAME
+vxworks-7
+<END>
+
+<BEGIN> PROJECT_FILES
+$(PRJ_DIR)/usrAppInit.c \
+	$(PRJ_DIR)/usrRtpAppInit.c \
+	$(PRJ_DIR)/prjConfig.c \
+	$(PRJ_DIR)/linkSyms.c \
+	$(PRJ_DIR)/../VBootShell/BootShell.cpp \
+	$(PRJ_DIR)/../VBootShell/BootShellMain.c \
+	$(PRJ_DIR)/../VBootShell/ManSbc.cpp \
+	$(PRJ_DIR)/../VBootShell/Untar/FileTar.cpp \
+	$(PRJ_DIR)/../VBootShell/WebServer/asp.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/balloc.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/base64.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/cgi.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/default.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/ejlex.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/ejparse.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/emfdb.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/form.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/h.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/handler.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/main.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/md5c.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/mime.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/misc.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/mocana_ssl.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/page.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/ringq.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/rom.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/security.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/sock.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/sockGen.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/strdup.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/strncasecmp.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/sym.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/uemf.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/um.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/umui.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/url.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/value.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/webrom.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/webs.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/websda.c \
+	$(PRJ_DIR)/../VBootShell/WebServer/websuemf.c
+<END>
+
+<BEGIN> TOOL
+diab
+<END>
+
+<BEGIN> VIP_BUILD_TARGETS
+uVxWorks vxWorks
+<END>
+
+<BEGIN> VSB_DIR
+$(PRJ_DIR)/../VSourceBuild64
+<END>
+
+<BEGIN> VSB_VERSION
+1
+<END>
+
+<BEGIN> VXBUILD
+LP64 SMP
+<END>
+
+<BEGIN> VX_WIND_PLATFORM
+vxworks-7
+<END>
+
+<BEGIN> WCC__CDF_PATH
+$(VSB_DIR)/krnl/cdf/diab \
+	$(VSB_DIR)/krnl/cdf \
+	$(BSP_DIR) \
+	$(PRJ_DIR)
+<END>
+
+<BEGIN> WCC__CURRENT
+hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> WCC__LIST
+hmt_t2080vpx3u_1_0_0_0
+<END>
+
+<BEGIN> WCC__MXR_LIBS
+
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_COMPONENTS
+DRV_CORENET_L2_CACHE \
+	DRV_CORENET_L3_CACHE \
+	DRV_FPGA_FDT_FSL_QORIQ \
+	DRV_QORIQMEMAC_MDIO \
+	DRV_VXBEND_QORIQMEMAC \
+	DRV_VXB_NORFLASH \
+	DRV_VXB_NORFLASH_CMDSET_AMD \
+	INCLUDE_BANNER \
+	INCLUDE_BOOT_LINE_INIT \
+	INCLUDE_CORE_NFS_CLIENT \
+	INCLUDE_DEBUG \
+	INCLUDE_DEBUG_KPRINTF \
+	INCLUDE_DOSFS_FAT \
+	INCLUDE_DOSFS_MAIN \
+	INCLUDE_DOSFS_PRTMSG_LEVEL \
+	INCLUDE_DOSFS_SHOW \
+	INCLUDE_DOSFS_VOL_BIO_BUFFER_SIZE \
+	INCLUDE_FSL_SGMII_PHY \
+	INCLUDE_GENERICPHY \
+	INCLUDE_GENERIC_MMD_PHY \
+	INCLUDE_LOADER \
+	INCLUDE_MEM_SHOW \
+	INCLUDE_NFS2_CLIENT \
+	INCLUDE_SHELL \
+	INCLUDE_SHELL_BANNER \
+	INCLUDE_SHELL_INTERP_C \
+	INCLUDE_SHELL_VI_MODE \
+	INCLUDE_SPINLOCK_ISR_ND \
+	INCLUDE_TFFS \
+	INCLUDE_TFFS_MOUNT \
+	INCLUDE_USER_APPL \
+	INCLUDE_WVUPLOAD_FILE
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_FEATURES
+COREOS DEBUG_ANALYSIS NETWORKING NOT_DEFINED SECURITY STORAGE UI
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_IMPLICIT_COMPONENTS
+DRV_BUS_FDT_ROOT \
+	DRV_BUS_FDT_SIMPLE \
+	DRV_FSL_LAW \
+	DRV_FSL_QIXIS \
+	DRV_INTCTLR_FDT_MPIC \
+	DRV_NEXUS_GENERIC \
+	DRV_QORIQDTSEC_MDIO \
+	DRV_QORIQ_CLK \
+	DRV_RESOURCE_QORIQBMAN \
+	DRV_RESOURCE_QORIQFMAN \
+	DRV_RESOURCE_QORIQQMAN \
+	DRV_SIO_FDT_NS16550 \
+	DRV_TIMER_FSL_BOOKE \
+	DRV_TIMER_OPENPIC \
+	INCLUDE_ADR_SPACE_DIRECT_MAP \
+	INCLUDE_ADR_SPACE_LIB \
+	INCLUDE_AIM_CACHE \
+	INCLUDE_ALTIVEC \
+	INCLUDE_ANSI_ABORT \
+	INCLUDE_ANSI_ABS \
+	INCLUDE_ANSI_ASSERT \
+	INCLUDE_ANSI_ATOF \
+	INCLUDE_ANSI_BSEARCH \
+	INCLUDE_ANSI_CTYPE \
+	INCLUDE_ANSI_LONGJMP \
+	INCLUDE_ANSI_MATH \
+	INCLUDE_ANSI_MEMCHR \
+	INCLUDE_ANSI_MEMCMP \
+	INCLUDE_ANSI_MEMCPY \
+	INCLUDE_ANSI_MEMMOVE \
+	INCLUDE_ANSI_MEMSET \
+	INCLUDE_ANSI_STDIO \
+	INCLUDE_ANSI_STDLIB \
+	INCLUDE_ANSI_STDLIB_NUMBERS \
+	INCLUDE_ANSI_STRCASECMP \
+	INCLUDE_ANSI_STRCAT \
+	INCLUDE_ANSI_STRCMP \
+	INCLUDE_ANSI_STRCPY \
+	INCLUDE_ANSI_STRDUP \
+	INCLUDE_ANSI_STRERROR \
+	INCLUDE_ANSI_STRING \
+	INCLUDE_ANSI_STRLCAT \
+	INCLUDE_ANSI_STRLCPY \
+	INCLUDE_ANSI_STRLEN \
+	INCLUDE_ANSI_STRNCASECMP \
+	INCLUDE_ANSI_STRNCAT \
+	INCLUDE_ANSI_STRNCMP \
+	INCLUDE_ANSI_STRNCPY \
+	INCLUDE_ANSI_STRTOD \
+	INCLUDE_ANSI_TIME \
+	INCLUDE_APPL_LOG_UTIL \
+	INCLUDE_ARPAINETLIB \
+	INCLUDE_ATOMIC_OPERATORS \
+	INCLUDE_AUX_CLK \
+	INCLUDE_AVL_TREES \
+	INCLUDE_AVL_UINT_TREES \
+	INCLUDE_BASE_KERNEL \
+	INCLUDE_BLIB \
+	INCLUDE_BLIB_ARCH \
+	INCLUDE_BMPLIB \
+	INCLUDE_BOARD_INIT \
+	INCLUDE_BOARD_LIB_INIT \
+	INCLUDE_BSP_MACROS \
+	INCLUDE_CACHE_ENABLE \
+	INCLUDE_CACHE_SUPPORT \
+	INCLUDE_CHECKSUM \
+	INCLUDE_CLASS_LIB \
+	INCLUDE_CLASS_LIST \
+	INCLUDE_CONDVAR \
+	INCLUDE_CONDVAR_OPEN \
+	INCLUDE_COPROCESSOR \
+	INCLUDE_COPROCESSOR_SHOW \
+	INCLUDE_CPC \
+	INCLUDE_CPU_INIT \
+	INCLUDE_CTORS_DTORS \
+	INCLUDE_DATACOLLECTOR \
+	INCLUDE_DEFERRED_INTERRUPT_ENABLE \
+	INCLUDE_DEVCLK_SYS \
+	INCLUDE_DEVICE_MANAGER \
+	INCLUDE_DIAB_INTRINSICS \
+	INCLUDE_DLL \
+	INCLUDE_DMA_SYS \
+	INCLUDE_DOSFS_DIR_VFAT \
+	INCLUDE_EDR_DEFAULT_POLICY \
+	INCLUDE_EDR_STUB \
+	INCLUDE_END \
+	INCLUDE_END_COMMON \
+	INCLUDE_END_ETHER_HDR \
+	INCLUDE_ENV_VARS \
+	INCLUDE_ERF \
+	INCLUDE_ETHERNET \
+	INCLUDE_EVENTPOINT \
+	INCLUDE_EVENTPOINT_STUB \
+	INCLUDE_EXC_HANDLING \
+	INCLUDE_EXC_SIGNALS \
+	INCLUDE_EXC_TASK \
+	INCLUDE_FDT_LIB \
+	INCLUDE_FLOATING_POINT \
+	INCLUDE_FORMATTED_IO \
+	INCLUDE_FORMATTED_OUT_BASIC \
+	INCLUDE_FP_TYPE \
+	INCLUDE_FS_EVENT_UTIL \
+	INCLUDE_FS_MONITOR \
+	INCLUDE_HANDLE_SHOW \
+	INCLUDE_HASH \
+	INCLUDE_HOOKS \
+	INCLUDE_HOST_TBL \
+	INCLUDE_HW_FP \
+	INCLUDE_IDLE_TASKS \
+	INCLUDE_INT_LIB_INIT \
+	INCLUDE_IO_BASIC \
+	INCLUDE_IO_FILE_SYSTEM \
+	INCLUDE_IO_MISC \
+	INCLUDE_IO_POSIX \
+	INCLUDE_IO_REMOVABLE \
+	INCLUDE_IO_RTP \
+	INCLUDE_IO_SYSTEM \
+	INCLUDE_IPCOM \
+	INCLUDE_IPCOM_USE_ETHERNET \
+	INCLUDE_IPCOM_USE_INET \
+	INCLUDE_IPCOM_USE_INET6 \
+	INCLUDE_IPCOM_USR \
+	INCLUDE_IPNET \
+	INCLUDE_IPNET6_USE_MCAST_ROUTING \
+	INCLUDE_IPNET_IFCONFIG_1 \
+	INCLUDE_IPNET_LOOPBACK_CONFIG \
+	INCLUDE_IPNET_SOCKET \
+	INCLUDE_IPNET_USE_LOOPBACK \
+	INCLUDE_IPNET_USE_MCAST_ROUTING \
+	INCLUDE_IPNET_USE_NETLINKSOCK \
+	INCLUDE_IPNET_USE_ROUTESOCK \
+	INCLUDE_IPNET_USE_SOCK_COMPAT \
+	INCLUDE_IPNET_USE_VLAN \
+	INCLUDE_IPRADVD \
+	INCLUDE_IPTCP \
+	INCLUDE_IPV4 \
+	INCLUDE_IPV6 \
+	INCLUDE_IPWRAP_GETADDRINFO \
+	INCLUDE_ISR_DEFER \
+	INCLUDE_ISR_HANDLER_INIT \
+	INCLUDE_JOB_DEFER \
+	INCLUDE_JOB_QUEUE \
+	INCLUDE_KERNEL \
+	INCLUDE_KERNEL_ARCH \
+	INCLUDE_KERNEL_COMMON_HEAP \
+	INCLUDE_KERNEL_PROXIMITY_HEAP \
+	INCLUDE_LINKBUFPOOL \
+	INCLUDE_LOADER_CODE \
+	INCLUDE_LOADER_HOOKS \
+	INCLUDE_LOGGING \
+	INCLUDE_LSTLIB \
+	INCLUDE_MBUF_UTIL1 \
+	INCLUDE_MEMORY_CONFIG \
+	INCLUDE_MEM_DESC \
+	INCLUDE_MEM_MGR_BASIC \
+	INCLUDE_MEM_MGR_FULL \
+	INCLUDE_MEM_MGR_INFO \
+	INCLUDE_MII_FDT_SYS \
+	INCLUDE_MII_MONITOR_TASK \
+	INCLUDE_MII_SYS \
+	INCLUDE_MMU_ARCH_COMMON_ALIB \
+	INCLUDE_MMU_BASIC \
+	INCLUDE_MMU_GLOBAL_MAP \
+	INCLUDE_MODULE_MANAGER \
+	INCLUDE_MSG_Q \
+	INCLUDE_MSG_Q_CREATE_DELETE \
+	INCLUDE_MSG_Q_EVENTS \
+	INCLUDE_MSG_Q_OPEN \
+	INCLUDE_MTD \
+	INCLUDE_MTD_VXBFLASH \
+	INCLUDE_MUX2 \
+	INCLUDE_MUX2_OVER_END \
+	INCLUDE_MUX_COMMON \
+	INCLUDE_NETBUFLIB \
+	INCLUDE_NETBUFPOOL \
+	INCLUDE_NETMASK_GET \
+	INCLUDE_NETWORK \
+	INCLUDE_NET_BOOT \
+	INCLUDE_NET_DAEMON \
+	INCLUDE_NET_HOST_SETUP \
+	INCLUDE_NFS_DEBUG \
+	INCLUDE_OBJ_INFO \
+	INCLUDE_OBJ_LIB \
+	INCLUDE_OBJ_LIB_ARCH \
+	INCLUDE_OBJ_OPEN \
+	INCLUDE_OFFSET_SYMBOLS \
+	INCLUDE_PG_MGR_BASIC \
+	INCLUDE_PG_POOL_LIB \
+	INCLUDE_PG_POOL_PHYS_LIB \
+	INCLUDE_PG_POOL_VIRT_LIB \
+	INCLUDE_PMAP_LIB \
+	INCLUDE_POOL \
+	INCLUDE_POSIX_CLOCKS \
+	INCLUDE_POSIX_DIRLIB \
+	INCLUDE_POSIX_FS \
+	INCLUDE_POSIX_TIMERS \
+	INCLUDE_POSIX_UMASK \
+	INCLUDE_POSIX_USER_GROUP \
+	INCLUDE_PTYDRV \
+	INCLUDE_Q_FIFO \
+	INCLUDE_Q_PRI_BMAP \
+	INCLUDE_Q_PRI_DELTA \
+	INCLUDE_Q_PRI_LIST \
+	INCLUDE_RANDOM_NUM_GEN \
+	INCLUDE_RAWFS \
+	INCLUDE_RBUFF \
+	INCLUDE_REBOOT_HOOKS \
+	INCLUDE_REMLIB \
+	INCLUDE_RNG_BUF \
+	INCLUDE_RPC \
+	INCLUDE_SEC_HASH_MD5 \
+	INCLUDE_SEC_HASH_MD5_OPENSSL \
+	INCLUDE_SEC_HASH_SHA1 \
+	INCLUDE_SEC_HASH_SHA1_OPENSSL \
+	INCLUDE_SEC_HASH_SHA256 \
+	INCLUDE_SEC_HASH_SHA256_OPENSSL \
+	INCLUDE_SELECT \
+	INCLUDE_SELECT_SUPPORT \
+	INCLUDE_SEM_BINARY \
+	INCLUDE_SEM_BINARY_CREATE \
+	INCLUDE_SEM_COUNTING \
+	INCLUDE_SEM_COUNTING_CREATE \
+	INCLUDE_SEM_DELETE \
+	INCLUDE_SEM_EVENTS \
+	INCLUDE_SEM_INFO \
+	INCLUDE_SEM_LIB \
+	INCLUDE_SEM_MUTEX \
+	INCLUDE_SEM_MUTEX_CREATE \
+	INCLUDE_SEM_OPEN \
+	INCLUDE_SEM_READ_WRITE \
+	INCLUDE_SEM_READ_WRITE_CREATE \
+	INCLUDE_SEM_SHOW \
+	INCLUDE_SEQ_TIMESTAMP \
+	INCLUDE_SHELL_CORE \
+	INCLUDE_SIGEVENT \
+	INCLUDE_SIGNALS \
+	INCLUDE_SIGNAL_ARCH \
+	INCLUDE_SIO \
+	INCLUDE_SLL \
+	INCLUDE_SMP_INIT \
+	INCLUDE_SMP_SCHED_SMT_POLICY \
+	INCLUDE_SOCKLIB \
+	INCLUDE_SPINLOCK \
+	INCLUDE_STACKTRACE \
+	INCLUDE_STACKTRACE_MODULE \
+	INCLUDE_STANDALONE_SYM_TBL \
+	INCLUDE_STDIO \
+	INCLUDE_SV_DATACOLLECTOR \
+	INCLUDE_SW_RANDOM_NUM_GEN \
+	INCLUDE_SYM_TBL \
+	INCLUDE_SYM_TBL_INIT \
+	INCLUDE_SYM_TBL_SHOW \
+	INCLUDE_SYSCLK_INIT \
+	INCLUDE_SYSLOG \
+	INCLUDE_SYS_START \
+	INCLUDE_TASK_CREATE_DELETE \
+	INCLUDE_TASK_CREATE_HOOKS \
+	INCLUDE_TASK_INFO \
+	INCLUDE_TASK_LIST \
+	INCLUDE_TASK_OPEN \
+	INCLUDE_TASK_RESTART \
+	INCLUDE_TASK_SHOW \
+	INCLUDE_TASK_SWAP_HOOKS \
+	INCLUDE_TASK_SWITCH_HOOKS \
+	INCLUDE_TASK_TOOLS_UTIL \
+	INCLUDE_TIMER_OPEN \
+	INCLUDE_TIMER_SYS \
+	INCLUDE_TIP \
+	INCLUDE_TLS \
+	INCLUDE_TLS_LOADER_SUPPORT \
+	INCLUDE_TL_FTL \
+	INCLUDE_TTY_DEV \
+	INCLUDE_TYLIB \
+	INCLUDE_UNLOADER \
+	INCLUDE_VXBUS \
+	INCLUDE_VXBUS_PARAMS \
+	INCLUDE_VXB_AUX_CLK \
+	INCLUDE_VXB_SYS_CLK \
+	INCLUDE_VXCPULIB \
+	INCLUDE_VXDBG \
+	INCLUDE_VXDBG_CPU_CONTROL \
+	INCLUDE_VXDBG_HOOK \
+	INCLUDE_VXDBG_MODULE \
+	INCLUDE_VXDBG_RUNCTRL \
+	INCLUDE_VXEVENTS \
+	INCLUDE_VXIPI \
+	INCLUDE_VXMEMPROBE_INIT \
+	INCLUDE_VXMUX_MBLK \
+	INCLUDE_VXMUX_NULLBUFPOOL \
+	INCLUDE_VX_TRADITIONAL_SCHEDULER \
+	INCLUDE_WATCHDOGS \
+	INCLUDE_WATCHDOGS_CREATE_DELETE \
+	INCLUDE_WINDVIEW \
+	INCLUDE_WINDVIEW_CLASS \
+	INCLUDE_WINDVIEW_MODULE_CLASS \
+	INCLUDE_XBD \
+	INCLUDE_XDR
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_PARAM_KERNEL_COMMON_HEAP_INIT_SIZE
+0x60000000
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_PARAM_MAX_REBOOT_HOOKS
+8
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_PARAM_TYLIB_WRT_THRESHLD
+20
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_PARAM_VXBFLASH_CFG_STR
+"$norflash0#0:0x0,0x3c00000,0x0,rfa0"
+<END>
+
+<BEGIN> WCC_hmt_t2080vpx3u_1_0_0_0_SOFT_EXCLUDE_COMPONENTS
+
+<END>
+
+<BEGIN> userComments
+
+<END>
+
