@@ -1,0 +1,15 @@
+{
+  "Host": "192.168.10.50",
+  "ID": "07d3e9ee-444f-4e6c-8df1-58eb52e8d0cc",
+  "KernelImage": "D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/default/vxWorks",
+  "Mode": "run",
+  "Name": "VxWorks",
+  "OfflineServices": "RunControl,PathMap,MemoryMap,WR_HostFsV1,WR_Module,Processes,ProcessesV1,SysMonitor,FileSystem",
+  "Port": "1534",
+  "SubType": "real",
+  "TempDir": "C:/Users/ELS/AppData/Local/Temp/",
+  "TransportName": "TCP",
+  "Type": "vxworks",
+  "Version": "1.0.0",
+  "autoConnect": "true"
+}
