@@ -232,7 +232,6 @@
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />
-    <ClInclude Include="FileTar.h" />
     <ClInclude Include="MSIGA.h" />
     <ClInclude Include="MSIGADlg.h" />
     <ClInclude Include="Resource.h" />
@@ -438,7 +437,6 @@
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="FileTar.cpp" />
     <ClCompile Include="MSIGA.cpp" />
     <ClCompile Include="MSIGADlg.cpp" />
     <ClCompile Include="stdafx.cpp">

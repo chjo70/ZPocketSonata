@@ -507,9 +507,6 @@
     <ClInclude Include="..\..\files\Include\globals.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
-    <ClInclude Include="FileTar.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Include\global.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
@@ -721,9 +718,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\SQLite\sqlite3.c">
       <Filter>소스 파일\SQLite</Filter>
-    </ClCompile>
-    <ClCompile Include="FileTar.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

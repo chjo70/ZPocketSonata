@@ -126,10 +126,19 @@ namespace RadarDirAlgotirhm
         return;
     }
 
+	/**
+	 * @brief     GetCoLOB
+	 * @return    int
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-08, 13:23
+	 * @warning
+	 */
 	int RadarDirAlgotirhm::GetCoLOB()
 	{
 		if( gpNewSigAnal != NULL ) {
-			return gpNewSigAnal->GetCoAet();
+			return gpNewSigAnal->GetCoLOB();
 		}
 		else {
 			printf( "\n Init() 함수를 호출하지 않고 GetCoEmitter() 함수를 실행했습니다.!!" );
@@ -138,6 +147,15 @@ namespace RadarDirAlgotirhm
 
 	}
 
+	/**
+	 * @brief     GetLOBData
+	 * @return    SRxLOBData *
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-08, 13:23
+	 * @warning
+	 */
 	SRxLOBData *RadarDirAlgotirhm::GetLOBData()
 	{
 		if( gpNewSigAnal != NULL ) {
@@ -148,6 +166,15 @@ namespace RadarDirAlgotirhm
 		}
 	}
 
+	/**
+	 * @brief     Close
+	 * @return    void
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-08, 13:23
+	 * @warning
+	 */
 	void RadarDirAlgotirhm::Close()
 	{
 		Log( enNormal, "레이더 방탐 라이브러리를 종료합니다...." );
