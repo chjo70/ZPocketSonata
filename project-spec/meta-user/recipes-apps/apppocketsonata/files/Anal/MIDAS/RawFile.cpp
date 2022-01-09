@@ -27,6 +27,7 @@
 
 #include <fcntl.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/stat.h>
 
 #include "RawFile.h"
@@ -389,7 +390,7 @@ unsigned long long int CRawFile::GetFileSize()
  */
 unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 {
-    unsigned long long int iRet=ULONGLONG_MAX;
+    unsigned long long int iRet=UINT_FAST64_MAX;
 
 #if defined(__linux__) || defined(__VXWORKS__)
 	struct stat statbuf;
@@ -405,7 +406,7 @@ unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 	struct _stati64 statbuf;
 
 	if( _stati64( pPathFileName, & statbuf ) != 0 ) {
-		iRet = ULONGLONG_MAX;
+		iRet = UINT_FAST64_MAX;
 	}
 	else {
 		iRet = statbuf.st_size;

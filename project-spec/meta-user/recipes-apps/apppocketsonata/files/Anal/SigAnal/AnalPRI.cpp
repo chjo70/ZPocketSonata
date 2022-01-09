@@ -8,7 +8,7 @@
 #ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
-#include <intsafe.h>
+#include <stdint.h>
 
 #endif
 
@@ -4049,7 +4049,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
             // ACF를 계산하는데 수정 주의.
             while( k < count ) {
                 idtoa = cmpToa - *pToa1;
-                if( idtoa > ( ULONGLONG_MAX-10) ) {
+                if( idtoa > ( UINT_FAST64_MAX-10) ) {
                     break;
                 }
                 else if( idtoa <= 10 ) {
@@ -4350,7 +4350,7 @@ void CAnalPRI::FindPeak()
 
     _TOA *pPeak;
 
-    _TOA max_Toa_index=ULONGLONG_MAX-1;
+    _TOA max_Toa_index=UINT_FAST64_MAX-1;
 
     // 제일 큰 피크값을 가진 TOA 점을 찾는다.
     pPeak = & m_pCanPeak[0];

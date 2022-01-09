@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "KnownSigAnal.h"
 #include "KPulExt.h"
@@ -189,7 +190,7 @@ void CKPulExt::KnownPulseExtract()
 			// 추출할 펄스열의 범위폭을 계산한다.
             extRange.min_pri = ITOAusCNV( m_pTrkAet->fPRIMin ) - STABLE_MARGIN;
             extRange.max_pri = ITOAusCNV( m_pTrkAet->fPRIMax ) + STABLE_MARGIN;
-			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
+			ExtractJitterPT( & extRange, UINT_FAST32_MAX, 3, TRUE );
 
 			/*! \bug  추출하고자할 PRI 평균값을 중심으로 지터열을 추출하게 한다.
 			    \date 2006-06-28 00:39:34, 조철희

@@ -122,7 +122,7 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 
         InitIdentifyTable();
 
-        m_pSEnvironVariable = g_pTheELEnvironVariable->GetEnvrionVariable();
+        m_pSEnvironVariable = GlobalMemberFunction::GetEnvrionVariable();
 
 #ifdef _SQLITE_
         try {

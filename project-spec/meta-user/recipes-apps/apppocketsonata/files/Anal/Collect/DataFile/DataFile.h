@@ -812,6 +812,15 @@ public:
         return iretTOA;	/* [ns] */
     } ;
 
+    /**
+     * @brief     
+     * @param     float fTOA
+     * @return    _TOA
+     * @author    議곗쿋??(churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/01/09 12:59:01
+     * @warning   
+     */
     static _TOA EncodeTOAus( float fTOA  )
     {
         _TOA iretTOA;

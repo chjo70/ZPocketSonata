@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define _INTSAFE_H_INCLUDED_
+
 #ifdef _QT_MAKE_
 #define _AFXDLL
 #endif

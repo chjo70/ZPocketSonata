@@ -7,6 +7,7 @@
 #define RWRCOMMONVARIABLES_H_
 
 #ifndef _WIN32
+#define _INTSAFE_H_INCLUDED_
 #include <stdint.h>
 #endif
 

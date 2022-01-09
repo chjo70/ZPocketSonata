@@ -364,7 +364,7 @@ void CThread::Stop()
             HANDLE hThread;
 
             // 로그 관련 CriticalSection 락을 푼다.
-            TRACE( "Stop::" );
+            TRACE( "CThread::Stop" );
             while( g_pTheLog->IsLock() == true ) {
                 Sleep(10);
                 TRACE( "*" );
