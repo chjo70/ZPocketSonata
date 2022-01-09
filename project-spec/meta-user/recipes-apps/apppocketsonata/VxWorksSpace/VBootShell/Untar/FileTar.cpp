@@ -1,11 +1,6 @@
 //Author :- Nish [nishforever@vsnl.com]
 
-
-#ifdef _WIN32
-#include "../../A50SigAnal/stdafx.h"
-#else
-
-#endif
+#include "stdafx.h"
 
 #include "FileTar.h"
 
@@ -22,6 +17,60 @@ void untar( char *filename, char *destfolder );
 #ifdef __cplusplus
 }
 #endif
+
+char *strlastfind(char *s, char *t)
+{    
+    int i, j;
+    int len_str, len_target;
+
+    // 두 문자열의 길이를 구한다.
+    for (len_str = 0; s[len_str] != '\0'; len_str++) ;
+    for (len_target = 0; t[len_target] != '\0'; len_target++) ;
+
+    // 원본 문자열의 길이에서 찾을 문자열의 길이를 뺀 만큼만 루프를 돌면 된다.
+    for (i = len_str - len_target ; i >= 0 ; i--) {
+        // 찾을 문자열의 길이만큼 for문을 돈다.
+        for ( j = 0; j < len_target; j++) {
+            if (s[i + j] != t[j])   // 위치의 문자들이 같지 않다면 loop를 빠진다.
+                break;
+        }
+
+        // 만약 j가 len_target과 같다면, 즉 앞의 for문이 중간에
+        // break가 되지 않고 끝까지 다 돌았다면 문자열을 찾은 것이다.
+        if (j == len_target)
+            return (s + i);       // 찾은 문자열의 시작 주소를 리턴한다.
+    }
+
+    // 문자열을 못찾았다면 NULL을 반환한다.
+    return (NULL);
+}
+
+
+char *strfind(char *s, char *t)
+{    
+    int i, j;
+    int len_str, len_target;
+
+    // 두 문자열의 길이를 구한다.
+    for (len_str = 0; s[len_str] != '\0'; len_str++) ;
+    for (len_target = 0; t[len_target] != '\0'; len_target++) ;
+    // 원본 문자열의 길이에서 찾을 문자열의 길이를 뺀 만큼만 루프를 돌면 된다.
+    for (i = 0; i < len_str - len_target; i++) {
+        // 찾을 문자열의 길이만큼 for문을 돈다.
+        for ( j = 0; j < len_target; j++) {
+            if (s[i + j] != t[j])   // 위치의 문자들이 같지 않다면 loop를 빠진다.
+                break;
+        }
+    
+        // 만약 j가 len_target과 같다면, 즉 앞의 for문이 중간에
+        // break가 되지 않고 끝까지 다 돌았다면 문자열을 찾은 것이다.
+        if (j == len_target)
+            return (s + i);       // 찾은 문자열의 시작 주소를 리턴한다.
+    }
+
+    // 문자열을 못찾았다면 NULL을 반환한다.
+    return (NULL);
+}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    untar
@@ -204,6 +253,7 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 	if( m_TarFile < 0 ) {
         printf( "\n pTarFile[%s]" , pTarFile );
 		if( ( m_TarFile=_open( pTarFile,_O_BINARY|_O_RDONLY ) ) < 0 ) {
+			printf( "\n Error found !" );
 			return FALSE;
 		}
 	}
@@ -302,12 +352,11 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 {
 	BOOL bLoop=TRUE;
 	char fpath[_MAX_PATH];
+    char *p;
 	TarHeader th;
 
-	// UNI_BLOCK *pBlock;
-
 	printf( "\n untar %s into %s" , pTarFile, pDestpath );
-    bLoop = MkDir( pDestpath );
+    bLoop = true; // MkDir( pDestpath );
 
 	while( bLoop ) {
 
@@ -324,10 +373,21 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 		if( fpath[strlen( fpath )-1] != '/' )
 			strcat( fpath, "/" );
 #endif
+        
 		strcat( fpath, th.m_block.header.name );
 
 		switch( th.m_block.header.typeflag ) {
 			case REGTYPE :
+                if( (p=strfind( th.m_block.header.name, "/" )) != NULL ) {
+                    char fpath2[_MAX_PATH];
+
+                    strcpy( fpath2, fpath );
+                    p = strlastfind( fpath2, "/" );
+                    *p = NULL;
+
+                    MkDir( fpath2 );
+                }
+
 				bLoop = UnTar( fpath, & th );
 				break;
 
@@ -436,6 +496,31 @@ void CFileTar::GetDate( struct _utimbuf *pTime, char *pByte, int size )
 BOOL CFileTar::MkDir( char *directory )
 {
 	printf( "\n*make directory(%s)" , directory );
-	return _mkdir( directory ) == 0;
+	//return _mkdir( directory ) == 0;
 
+    BOOL bRet;
+    char dirName[256];
+    char *p=directory;
+    char *q=dirName;
+
+    dirName[0] = NULL;
+    while( *p ) {
+        if( ('\\' == *p) || ('/'==*p)) {
+            if( ':' != *(p-1) ) {
+                if( dirName[0] != NULL && _tcscmp( dirName, _T("\\") ) != 0 ) {
+                    _mkdir( dirName );
+                }
+            }
+        }
+
+        *q++ = *p++;
+        *q = '\0';
+    }
+    bRet = _mkdir( dirName );
+
+    if( bRet == 0 ) {
+        // bRet = ( GetLastError() == ERROR_ALREADY_EXISTS );
+    }
+
+    return true;
 }
