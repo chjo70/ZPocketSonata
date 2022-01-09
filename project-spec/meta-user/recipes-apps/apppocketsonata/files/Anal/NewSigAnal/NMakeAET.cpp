@@ -74,7 +74,7 @@ void CNMakeAET::Init()
     /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
         \date 2008-07-30 13:29:46, 조철희
     */
-    m_CoMakeLOB = 0;
+    //m_CoMakeLOB = 0;
 
     m_enBandWidth = m_pNewSigAnal->GetBandWidth();
 
@@ -206,7 +206,7 @@ int CNMakeAET::GetCoSeg()
 //
 int CNMakeAET::GetCoEmitter()
 {
-    return m_pNewSigAnal->GetCoLOB();
+    return m_pNewSigAnal->GetCoEmitter();
 }
 
 //////////////////////////////////////////////////////////////////////

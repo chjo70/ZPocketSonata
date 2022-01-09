@@ -172,6 +172,8 @@ CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
  */
 void CELEmitterMergeMngr::AllocMemory()
 {
+    g_pTheELEnvironVariable = new CELEnvironVariable();
+
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
@@ -201,7 +203,7 @@ void CELEmitterMergeMngr::AllocMemory()
 
     m_pVecLOBs = new std::vector<STR_LOBS> [TOTAL_ITEMS_OF_THREAT_NODE];
 
-    g_pTheELEnvironVariable = new CELEnvironVariable();
+    
 
     //m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
 
@@ -261,11 +263,10 @@ void CELEmitterMergeMngr::Init()
     ResetToLoadCEDEOBLibrary();
 
     // 시스템 변수 초기화
-    m_pSEnvironVariable = g_pTheELEnvironVariable->GetEnvrionVariable();
+    m_pSEnvironVariable = GlobalMemberFunction::GetEnvrionVariable();
 
     // 미식별 테이블 초기화
-    if( m_pABTtoH000 != nullptr )
-    {
+    if( m_pABTtoH000 != nullptr ) {
         unsigned short *pABTtoH000;
         pABTtoH000 = m_pABTtoH000;
         for( int i = 0; i < TOTAL_UNDEF_ID_NUMBER; ++i )
@@ -479,16 +480,16 @@ void CELEmitterMergeMngr::PrintAllABTData()
     vector<SRxABTData>::iterator iter;
 
     for( iter=m_VecABTData.begin() ; iter != m_VecABTData.end() ; ++iter ) {
-//         Log( enNormal, "[%4d-%4d] %s [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [R%2d/T%2d], [%.4f/%.4f/%.1f/%.1f/%.1f/%.1f/%.1f]" ,
-//             (*iter).uiAETID, (*iter).uiABTID,
-//             g_szAetSignalType[(*iter).iSignalType],
-//             g_szAetFreqType[(*iter).iFreqType], (*iter).fFreqMin, (*iter).fFreqMax,
-//             g_szAetPriType[(*iter).iPRIType], (*iter).fPRIMin, (*iter).fPRIMax,
-//             (*iter).fPWMin, (*iter).fPWMax,
-//             (*iter).fPAMin, (*iter).fPAMax,
-//             (*iter).iRadarModeIndex, (*iter).iThreatIndex,
-//             (*iter).fLatitude, (*iter).fLongitude, (*iter).fCEP, (*iter).fMajorAxis, (*iter).fMinorAxis, (*iter).fTheta, (*iter).fDistanceErrorOfThreat
-//             );
+        Log( enNormal, "[%4d-%4d] %s [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [R%2d/T%2d], [%.4f/%.4f/%.1f/%.1f/%.1f/%.1f/%.1f]" ,
+            (*iter).uiAETID, (*iter).uiABTID,
+            g_szAetSignalType[(*iter).iSignalType],
+            g_szAetFreqType[(*iter).iFreqType], (*iter).fFreqMin, (*iter).fFreqMax,
+            g_szAetPriType[(*iter).iPRIType], (*iter).fPRIMin, (*iter).fPRIMax,
+            (*iter).fPWMin, (*iter).fPWMax,
+            (*iter).fPAMin, (*iter).fPAMax,
+            (*iter).iRadarModeIndex, (*iter).iThreatIndex,
+            (*iter).fLatitude, (*iter).fLongitude, (*iter).fCEP, (*iter).fMajorAxis, (*iter).fMinorAxis, (*iter).fTheta, (*iter).fDistanceErrorOfThreat
+            );
 
     }
 }

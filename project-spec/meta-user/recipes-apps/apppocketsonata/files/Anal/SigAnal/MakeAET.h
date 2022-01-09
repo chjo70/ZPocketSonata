@@ -66,8 +66,7 @@ public:
 
     char * Comma( char *pString );
     void PrintAllEmitter();
-    //BOOL CompMeanDiff(int x, int y, int thresh);
-    //BOOL CompMeanDiff64(_TOA x, _TOA y, _TOA thresh);
+
     //##ModelId=452B0C5503E0
     inline int GetMakeAet() { return m_CoMakeAet; }
 
@@ -75,8 +74,8 @@ public:
     inline int GetCoAnalPdw() { return m_CoAnalPdw; }
     inline void SetCoAnalPdw(UINT coAnalPdw ) { m_CoAnalPdw=coAnalPdw; }
     //##ModelId=452B0C560003
-    inline int GetCoAet() { return m_CoLOB; }
-    inline void SetCoAet( UINT coLOB ) { m_CoLOB = coLOB; }
+    inline int GetCoLOB() { return m_CoLOB; }
+    inline void SetCoLOB( UINT coLOB ) { m_CoLOB = coLOB; }
 
     //##ModelId=452B0C560004
     virtual int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )=0;

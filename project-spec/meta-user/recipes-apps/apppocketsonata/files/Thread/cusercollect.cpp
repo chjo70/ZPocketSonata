@@ -380,6 +380,24 @@ void CUserCollect::MakeSIMPDWData()
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 7022.91 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 8270.053 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 9516.386 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 10763.56 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 12010.74 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 13362.59 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 16424.9 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 17956.39 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 21018.86 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 22410.07 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 23801.04 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 25192.14 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 26582.81 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 29115.85 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 30362.69 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 31609.92 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 32857.43 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 37344.84 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 38874.19 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 40402.47 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 41951.62 ),
     } ;
 
     TRACE( "\nMakeSIMPDWData.." );
@@ -403,13 +421,15 @@ void CUserCollect::MakeSIMPDWData()
         }
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
-        if( i % 2 )
-            m_ullTOA += 0x2000;
-        else
-            m_ullTOA += 0x1500;
 
         if( i < MANUALTOA ) {
             m_ullTOA = manualTOA[i];
+        }
+        else {
+            if( i % 2 )
+                m_ullTOA += 0x2000;
+            else
+                m_ullTOA += 0x1500;
         }
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );

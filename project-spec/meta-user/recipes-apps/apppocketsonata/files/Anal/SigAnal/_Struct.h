@@ -259,7 +259,7 @@ struct STR_EMITTER {
 
 } ;
 
-// 펄스열의 제원을 게산하기 위한 변수
+// 펄스열의 제원을 계산하기 위한 변수
 //##ModelId=452B0C5403D5
 struct STR_PDWPARAM {
 	_TOA *pTOAParam;

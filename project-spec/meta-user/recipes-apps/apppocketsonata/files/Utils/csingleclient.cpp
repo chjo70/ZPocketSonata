@@ -282,7 +282,7 @@ void CSingleClient::RunClient()
                                     sndMsg.uiDataLength = 0;
 
 #if defined(_MSC_VER) || defined(__VXWORKS__)
-                                    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, "RCVLAN" );
+                                    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
                   
 #elif __linux__
                                     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
@@ -358,7 +358,7 @@ void CSingleClient::RunClient()
                                 }           */
 
 #if defined(_MSC_VER) || defined(__VXWORKS__)
-                                m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, "RcvLan" );
+                                m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
 
 #elif __linux__
                                 if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
@@ -421,7 +421,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
     sndMsg.x.uiData = enREADY_MODE;
 
 #ifdef _MSC_VER
-    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, "RCVLAN" );
+    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
 #elif __VXWORKS__
 #elif __linux__
     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {

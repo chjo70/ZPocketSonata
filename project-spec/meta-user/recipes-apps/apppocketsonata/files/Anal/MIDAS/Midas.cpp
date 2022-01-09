@@ -2049,8 +2049,6 @@ void CMIDASBlueFileFormat::MIDASClose()
  */
 void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
 {
-    return;
-
     bool bRet;
     TCHAR szDirectory[500];
 

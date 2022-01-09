@@ -448,7 +448,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     iCh = pCollectBank->GetChannelNo();
 
                     if( pWindowCell->uiTotalPDW != _spZero ) {
-                        LOGMSG3( enDebug, " 탐지 [%2d]뱅크/[%2d]채널에서 [%d]개를 수집 완료되었습니다." , i, iCh, pWindowCell->uiTotalPDW );
+                        LOGMSG3( enDebug, " It was collected the [%d]PDWs at the NEW [%2d]Bank/[%2d]Ch." , i, iCh, pWindowCell->uiTotalPDW );
                     }
 
                     pCollectBank->SetCollectMode( enCompleteCollection );

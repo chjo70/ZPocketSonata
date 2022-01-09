@@ -1010,7 +1010,6 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
     PDWINDEX *pIndex;
 
     if( count <= 1 ) {
-
         _EQUALS3( m_DtoaHist.bin_range.iLow, m_DtoaHist.bin_range.iHgh, 0 );
     }
     else {
@@ -1035,7 +1034,7 @@ void CAnalPRI::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA
             }
 
             // DTOA_BIN 이내에 든 것만 히스토그램을 작성한다.
-            if( DTOA_BIN > dtoa_index ) {
+            if( DTOA_BIN > dtoa_index && dtoa_index >= 0 ) {
                 ++ m_DtoaHist.hist[ dtoa_index ];
                 m_DtoaHist.bin_range.iHgh = _max( m_DtoaHist.bin_range.iHgh, dtoa_index );
                 m_DtoaHist.bin_range.iLow = _min( m_DtoaHist.bin_range.iLow, dtoa_index );

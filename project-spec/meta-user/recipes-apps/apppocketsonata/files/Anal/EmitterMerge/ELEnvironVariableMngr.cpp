@@ -27,11 +27,8 @@ static char THIS_FILE[] = __FILE__;
 * @warning   
 */
 CELEnvironVariable::CELEnvironVariable(void)
-	//:m_pImpl(nullptr)
 {
-	bool bRtn = false;
-
-    
+	bool bRtn = false;    
 
 	// 기본 설정 값
 	m_stEnvironVariable.iDVRatio = 60;							// [%]
@@ -72,6 +69,19 @@ CELEnvironVariable::CELEnvironVariable(void)
 
 }
 
+/**
+ * @brief     GetEnvrionVariable
+ * @return    SEnvironVariable *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-07, 20:39
+ * @warning
+ */
+SEnvironVariable *CELEnvironVariable::GetEnvrionVariable()
+{ 
+    return & m_stEnvironVariable; 
+}
 
 //////////////////////////////////////////////////////////////////////////
 /*!

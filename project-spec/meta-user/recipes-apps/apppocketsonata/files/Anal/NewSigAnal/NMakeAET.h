@@ -70,7 +70,7 @@ public:
 
 	// 타 장비 관련 위협 데이터를 생성한다.
 public:
-	int m_CoMakeLOB;
+	//int m_CoMakeLOB;
 
 	void DISP_FineAet( SRxLOBData *pManAet );
 	void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );

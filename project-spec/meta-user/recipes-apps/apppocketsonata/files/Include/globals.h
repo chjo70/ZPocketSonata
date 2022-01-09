@@ -117,6 +117,23 @@ extern char *_GetProgramVersion();
 }
 #endif
 
+class GlobalMemberFunction {
+
+public:
+	static SEnvironVariable *GetEnvrionVariable()
+	{
+		if( g_pTheELEnvironVariable != NULL )
+			return g_pTheELEnvironVariable->GetEnvrionVariable();
+		else {
+			TRACE( "The g_pTheELEnvironVariable is null pointer !!" );
+			return NULL;
+		}
+	}
+
+};
+
+
+
 
 
 #define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )

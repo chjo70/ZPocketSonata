@@ -331,8 +331,17 @@ void CPulExt::CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist
 //
 void CPulExt::DiscardPulseTrain()
 {
-    RemoveStablePulseTrain();
-    DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg );
+//     RemoveStablePulseTrain();
+//     DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg );
+
+	// Stable 열과 Stable+Jitter 펄스열을 비교하여 서로 유사한 펄스열을 제거한다.
+	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, m_uiRefEndSeg );
+
+	/*! \bug  Stable+Jitter 열 중에서 서로 유사한 펄스열을 제거한다.
+	    \date 2011-08-30 11:37:09, 조철희
+	*/
+	DiscardPulseTrain( m_uiRefEndSeg, m_uiCoSeg, m_uiRefEndSeg+1 );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -347,80 +356,110 @@ void CPulExt::DiscardPulseTrain()
 //! \date		 2006-05-19 09:23:05
 //! \warning
 //
-void CPulExt::DiscardPulseTrain( unsigned int uiStartseg, unsigned int uiEndseg )
+void CPulExt::DiscardPulseTrain( int startseg1, int endseg, int startseg2 )
 {
-    if( uiStartseg != uiEndseg ) {
-        unsigned int i, j, k;
-        int coMatch;
+	if( startseg1 == endseg )
+	{
+	}
+	else {
+		int i;
+        unsigned int j, k;
+		int coMatch;
 
-        int *pParam;
-        PDWINDEX *pPdwIndex;
+		UINT *pParam;
+		PDWINDEX *pPdwIndex;
 
-        STR_PULSE_TRAIN_SEG *pRefSeg, *pExtSeg;
+		STR_PULSE_TRAIN_SEG *pRefSeg, *pExtSeg;
 
-        pRefSeg = & m_Seg[ uiStartseg ];
-        for( i=uiStartseg ; i < uiEndseg ; ++i, ++pRefSeg ) {
-            if( pRefSeg->mark == DELETE_SEG )
-                continue;
-
-            // 기준 펄스열 인덱스 설정
-            pParam = m_PdwParam.piParam;
-            m_PdwParam.count = pRefSeg->pdw.uiCount;
-            memset( pParam, 0, sizeof( int ) * m_uiMaxPdw );
-            pPdwIndex = pRefSeg->pdw.pIndex;
-            for( j=0 ; j < pRefSeg->pdw.uiCount ; ++j ) {
-                pParam[ *pPdwIndex++ ] = 1;
+		pRefSeg = & m_Seg[ startseg1 ];
+		for( i=startseg1 ; i < endseg ; ++i, ++pRefSeg ) {
+			if( pRefSeg->mark == DELETE_SEG ) {
+				continue;
             }
 
-            // 펄스열 추출한 것과 펄스열 비교해서 유사 참조 펄스열들은 제거한다.
-            pExtSeg = & m_Seg[ uiEndseg ];
-            for( j=uiEndseg ; j < m_uiCoSeg ; ++j, ++ pExtSeg ) {
-                int stable_ratio, jitter_ratio;
-
-                if( pExtSeg->mark == DELETE_SEG )
-                    continue;
-
-                pPdwIndex = pExtSeg->pdw.pIndex;
-                coMatch = 0;
-                for( k=0 ; k < pExtSeg->pdw.uiCount ; ++k ) {
-                    if( pParam[ *pPdwIndex++ ] == 1 )
-                        ++ coMatch;
-                }
-
-                // 매칭 기준 임계값보다 클때 그 펄스열을 삭제 마킹을 한다.
-                /*! \bug  jitter_2step.pdw에서 stable 9개의 펄스열이 jitter와 7개의 펄스열이 중복되어 있는데도
-                                    삭제 판단이 안됨. 그래서 임계값을 0.9 에서 0.7 로 수정함.
-                    \date 2006-09-01 11:16:00, 조철희
-                */
-                /*
-                int threshold_match;
-
-                threshold_match = UMUL( pRefSeg->pdw.count, 0.7 );
-                if( threshold_match <= coMatch ) {
-                    pRefSeg->mark = DELETE_SEG;
-                    break;
-                }
-                threshold_match = UMUL( pExtSeg->pdw.count, 0.7 );
-                if( threshold_match <= coMatch ) {
-                    pExtSeg->mark = DELETE_SEG;
-                }
-                */
-
-                /*! \bug  매칭된 펄스 개수를 비교해서 규칙성 펄스열과 불규칙성 펄스열에 대한
-                                    비율이 확연히 차이가 날 수록 Jitter를 선택하고 그렇치 않을 때는 Stable 펄스열을 선택한다.
-
-                    \date 2007-06-20 15:56:28, 조철희
-                */
-                stable_ratio = UDIV( 100 * coMatch, pRefSeg->pdw.uiCount );
-                jitter_ratio = UDIV( 100 * coMatch, pExtSeg->pdw.uiCount );
-
-                if( stable_ratio >= 70 && jitter_ratio >= 70 )
-                    pExtSeg->mark = DELETE_SEG;
-                else if( stable_ratio >= 70 && stable_ratio > jitter_ratio )
-                    pRefSeg->mark = DELETE_SEG;
+			// 기준 펄스열 인덱스 설정
+			pParam = m_PdwParam.puiParam;
+			m_PdwParam.count = pRefSeg->pdw.uiCount;
+			memset( pParam, 0, sizeof( UINT ) * (UINT)m_uiMaxPdw );
+			pPdwIndex = pRefSeg->pdw.pIndex;
+			for( j=0 ; j < pRefSeg->pdw.uiCount ; ++j ) {
+				pParam[ *pPdwIndex++ ] = EXTRACT_MARK;
             }
-        }
-    }
+
+			// 펄스열 추출한 것과 펄스열 비교해서 유사 참조 펄스열들은 제거한다.
+			pExtSeg = & m_Seg[ startseg2 ];
+			for( j=startseg2 ; j < m_uiCoSeg ; ++j, ++ pExtSeg ) {
+				int stable_ratio, jitter_ratio;
+
+				/*! \bug  펄스열 추출할 때 자신과 자신을 비교할 때 제거하지 않도록 한다.
+				    \date 2012-09-05 20:47:43, 조철희
+				*/
+				if( pRefSeg == pExtSeg ) {
+					continue;
+                }
+
+				if( pExtSeg->mark == DELETE_SEG ) {
+					continue;
+                }
+
+				pPdwIndex = pExtSeg->pdw.pIndex;
+				coMatch = 0;
+				for( k=0 ; k < pExtSeg->pdw.uiCount ; ++k ) {
+					if( pParam[ *pPdwIndex++ ] == EXTRACT_MARK ) {
+						++ coMatch;
+                    }
+				}
+
+				// 매칭 기준 임계값보다 클때 그 펄스열을 삭제 마킹을 한다.
+				/*! \bug  jitter_2step.pdw에서 stable 9개의 펄스열이 jitter와 7개의 펄스열이 중복되어 있는데도 
+									삭제 판단이 안됨. 그래서 임계값을 0.9 에서 0.7 로 수정함.
+				    \date 2006-09-01 11:16:00, 조철희
+				*/
+				/*
+				int threshold_match;
+
+				threshold_match = UMUL( pRefSeg->pdw.count, 0.7 );
+				if( threshold_match <= coMatch ) {
+					pRefSeg->mark = DELETE_SEG;
+					break;
+				}
+				threshold_match = UMUL( pExtSeg->pdw.count, 0.7 );
+				if( threshold_match <= coMatch ) {
+					pExtSeg->mark = DELETE_SEG;
+				}
+				*/
+
+				/*! \bug  매칭된 펄스 개수를 비교해서 규칙성 펄스열과 불규칙성 펄스열에 대한
+									비율이 확연히 차이가 날 수록 Jitter를 선택하고 그렇치 않을 때는 Stable 펄스열을 선택한다.
+
+				    \date 2007-06-20 15:56:28, 조철희
+				*/
+				stable_ratio = (int)UDIV( 100 * coMatch, pRefSeg->pdw.uiCount );
+				jitter_ratio = (int)UDIV( 100 * coMatch, pExtSeg->pdw.uiCount );
+/*
+				// 두 펄스열이 모두 Stable인 경우
+				// RefSeg쪽이 더 작은 PRI를 가지므로 ExtSeg의 삭제 여부를 판단한다.
+				if ((_STABLE == pRefSeg->pri_type) && (_STABLE == pExtSeg->pri_type))
+				{
+					if(stable_ratio >= 70 )
+						pExtSeg->mark = DELETE_SEG;
+				}
+				// 나머지 경우
+				else
+*/
+				{
+					if( stable_ratio >= 70 && jitter_ratio >= 70 ) {
+						pExtSeg->mark = DELETE_SEG;
+					}
+					else if( stable_ratio >= 70 /* && stable_ratio > jitter_ratio */ )
+						pRefSeg->mark = DELETE_SEG;
+					else
+					{
+					}
+				}
+			}
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -442,13 +481,15 @@ void CPulExt::RemoveStablePulseTrain()
 
     pRefSeg = & m_Seg[ m_uiRefEndSeg ];
     for( i=m_uiRefEndSeg ; i < m_uiCoSeg ; ++i, ++pRefSeg ) {
-        if( pRefSeg->pri_type != _STABLE )
+        if( pRefSeg->pri_type != _STABLE ) {
             continue;
+        }
 
         pExtSeg = & m_Seg[ 0 ];
         for( j=0 ; j < m_uiRefEndSeg ; ++j, ++pExtSeg ) {
-            if( pExtSeg->pri_type != _STABLE )
+            if( pExtSeg->pri_type != _STABLE ) {
                 continue;
+            }
 
             memset( m_pRemovePdwIndex, 0, sizeof(char)*m_CoPdw );
 
@@ -2801,37 +2842,37 @@ void CPulExt::FindRefStable()
     /*! \bug  펄스 개수가 0개 이면 바로 리턴 처리한다.
         \date 2008-08-11 09:45:24, 조철희
     */
-    if( m_pGrPdwIndex->uiCount <= 2 ) {
-        return;
-    }
+    if( m_pGrPdwIndex->uiCount > _spThree ) {
+        largest_pri = ( m_pTOA[ m_pGrPdwIndex->pIndex[m_pGrPdwIndex->uiCount-1] ] - m_pTOA[ m_pGrPdwIndex->pIndex[0] ] ) / _sp.cm.Rpc;
 
-    largest_pri = ( m_pTOA[ m_pGrPdwIndex->pIndex[m_pGrPdwIndex->uiCount-1] ] - m_pTOA[ m_pGrPdwIndex->pIndex[0] ] ) / _sp.cm.Rpc;
-
-    if( largest_pri > m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri )
-        largest_pri = m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri;
-
-    // 펄스열 기본 추출
-    for( i=m_uiStart_pri_level ; i <= m_uiEnd_pri_level ; ++i ) {
-        // PRI 범위 구하기
-        ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
-        ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
-
-        if( ext_range.max_pri > largest_pri )
-            ext_range.max_pri = largest_pri;
-
-        FindRefStableSeg( & ext_range, i );
-    }
-
-    // 기준 펄스열로 추출한 펄스열에 대해서 Unmark 하게 한다.
-    // 추출된 펄스 Marking
-    pSeg = & m_Seg[ m_uiAnalSeg ];
-    for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg->pri_type == _REFSTABLE ) {
-            // 추출된 펄스 Marking해서 Jitter 펄스열 추출하지 못하도록 한다.
-            MarkToPdwIndex( pSeg, UnMark );
+        if( largest_pri > m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri ) {
+            largest_pri = m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri;
         }
 
-        ++ pSeg;
+        // 펄스열 기본 추출
+        for( i=m_uiStart_pri_level ; i <= m_uiEnd_pri_level ; ++i ) {
+            // PRI 범위 구하기
+            ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
+            ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
+
+            if( ext_range.max_pri > largest_pri ) {
+                ext_range.max_pri = largest_pri;
+            }
+
+            FindRefStableSeg( & ext_range, i );
+        }
+
+        // 기준 펄스열로 추출한 펄스열에 대해서 Unmark 하게 한다.
+        // 추출된 펄스 Marking
+        pSeg = & m_Seg[ m_uiAnalSeg ];
+        for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i ) {
+            if( pSeg->pri_type == _REFSTABLE ) {
+                // 추출된 펄스 Marking해서 Jitter 펄스열 추출하지 못하도록 한다.
+                MarkToPdwIndex( pSeg, UnMark );
+            }
+
+            ++ pSeg;
+        }
     }
 }
 
@@ -2865,14 +2906,11 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
     ref_idx = 0;
 
     // 누락 펄스가 없을 때 고려한 펄스열 추출
-    for( ;; ) {
-        if( m_uiCoSeg >= m_uiMaxSeg ) {
-            return;
-        }
-
+    while( m_uiCoSeg < m_uiMaxSeg ) {
         // 기준 펄스열 추출을 찾아서 존재하지 않으면 다음 밴드를 선택한다.
-        if( FALSE == ExtractRefPT( pExtRange, _REFSTABLE, & m_RefSeg, ref_idx, m_pGrPdwIndex, _sp.cm.Rpc ) )
+        if( FALSE == ExtractRefPT( pExtRange, _REFSTABLE, & m_RefSeg, ref_idx, m_pGrPdwIndex, _sp.cm.Rpc ) ) {
             break;
+        }
 
         /*! \bug  다음번째 PDW 인덱스를 선택할 때 +1 만큼한 것으로 하는 대신에 추출열을 보고 다음번째열을 설정한다.
             \date 2008-11-19 11:18:00, 조철희

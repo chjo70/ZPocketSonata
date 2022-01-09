@@ -101,9 +101,9 @@ public:
     // inline void DISP_FineAet( STR_UPDAET *pUpdAet ) { m_theMakeAET->DISP_FineAet( pUpdAet ); }
     inline void DISP_FineAet( STR_MANAET *pManAet ) { /*m_theMakeAET->DISP_FineAet( pManAet );*/ }
     inline void DISP_FineAet( STR_NEWAET *pNewAet ) { /*m_theMakeAET->DISP_FineAet( pNewAet );*/ }
-    inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
+    
     inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
-    inline int GetCoAet() { return m_theMakeAET->GetCoAet(); }
+    
     inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
@@ -112,15 +112,22 @@ public:
     inline int GetColPdw() { return m_CoPdw; }
 #ifdef _ELINT_
     inline EN_RADARCOLLECTORID GetCollectorID() { return m_enCollectorID; }
-#endif
-    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
+#endif    
     inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
 
 
-    inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
-    inline int GetCoLOB() { return m_theAnalPRI->GetCoEmitter(); }
+    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
+
+    inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
+    inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
+
+    //inline int GetCoAet() { return m_theMakeAET->GetCoAet(); }
+    inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
+    inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
+
+    
     inline void SetStep( UINT nStep ) { m_uiStep = nStep; }
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
     inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
@@ -148,7 +155,7 @@ public:
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->CalcPAMean( pPdwIndex, count); }
     inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
-    inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoAet( coAet ); }
+    inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
 
     // 기타 함수

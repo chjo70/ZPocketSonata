@@ -89,7 +89,7 @@ public:
 	
 	
 public:
-	inline SEnvironVariable *GetEnvrionVariable() { return & m_stEnvironVariable; }
+	SEnvironVariable *GetEnvrionVariable();
 
 	void SetEnvironVaraiable( SEnvironVariable *pSEnvironVariable );
 

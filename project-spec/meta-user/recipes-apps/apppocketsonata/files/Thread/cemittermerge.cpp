@@ -172,14 +172,15 @@ void CEmitterMerge::MergeEmitter()
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        if( false && !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
+        if( !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
+#ifdef _TRACK_ENABLED_
             strAnalInfo.uiBand = g_enBoardId;
             strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-
+#endif
         }
 
         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
@@ -364,10 +365,10 @@ void CEmitterMerge::SendNewUpd()
     // 랜 메시지 전달한다.
     
     if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        //SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
+        SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
     else {
-        //SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
+        SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
 
 #endif
