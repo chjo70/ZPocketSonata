@@ -70,17 +70,22 @@ CString GetIpAddress();
 int Printf(char *format, ...);
 void SetWindowHandler( HWND hWnd );
 
-#define BUILTIN_IP					"192.168.0.66"
-#define MYHOME_IP						"192.168.0.156"
-#define OFFICE_IP						"10.29.52.175"
+// X 밴드 일때 DB 서버 어드레스
+#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
+// 인천공항
+// #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
 
-typedef enum {
-	enBuiltIn=0,
-	enOffice,
-	enMyHome
-} enPosition;
-
-enPosition GetPosition();
+// #define BUILTIN_IP					"192.168.0.66"
+// #define MYHOME_IP						"192.168.0.156"
+// #define OFFICE_IP						"10.29.52.175"
+// 
+// typedef enum {
+// 	enBuiltIn=0,
+// 	enOffice,
+// 	enMyHome
+// } enPosition;
+// 
+// enPosition GetPosition();
 
 
 

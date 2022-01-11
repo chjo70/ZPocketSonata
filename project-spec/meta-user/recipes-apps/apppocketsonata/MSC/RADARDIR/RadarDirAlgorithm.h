@@ -172,7 +172,10 @@ struct SRxLOBData {
     char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
+#ifndef _ONPOOM_
     int iPolarization;                              // ±Ø¼º
+#endif
+
     int iRatioOfPOL;                                // ±Ø¼º ½Å·Úµµ
 
     int iSignalType;
@@ -180,7 +183,7 @@ struct SRxLOBData {
     float fDOAMean;                                 // [0.1µµ]
     float fDOAMax;
     float fDOAMin;
-    float fDOADeviation;				// [0.1µµ]
+    float fDOADeviation;							// [0.1µµ]
     float fDOASDeviation;
 
     int iDIRatio;					// [1 %]
@@ -218,6 +221,7 @@ struct SRxLOBData {
     float fPAMin;
     float fPADeviation;			// ±âÁ¸´ë·Î
 
+#ifndef _ONPOOM_
     int iScanType;
     //int iDetailScanType;
     float fScanPeriod;			// [msec]
@@ -229,6 +233,7 @@ struct SRxLOBData {
     float fMOPMeanFreq;
     float fMOPFreqDeviation;
 
+
     float fShipLatitude;
     float fShipLongitude;
     float fPitchAngle;
@@ -236,13 +241,11 @@ struct SRxLOBData {
     float fHeadingAngle;
     float fAltitude;
     int iValidity;
+#endif
 
     int iIsStoreData;
     int iNumOfPDW;
     int iNumOfIQ;
-
-    float fRadarLatitude;
-    float fRadarLongitude;
 
     char aucRadarName[MAX_RADARNAME];
     int iRadarModeIndex;

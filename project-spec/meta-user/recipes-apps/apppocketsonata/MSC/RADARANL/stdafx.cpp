@@ -231,25 +231,44 @@ CString GetIpAddress()
 	return strIpAddress;
 }
 
-enPosition GetPosition()
-{
-	enPosition enPos;
-	CString strIPAddress=GetIpAddress();
+/**
+ * @brief     
+ * @return    enPosition
+ * @author    조철??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/11 19:41:53
+ * @warning   
+ */
+// enPosition GetPosition()
+// {
+//  	enPosition enPos;
+// // 	CString strIPAddress=GetIpAddress();
+// // 
+// // 	if( strIPAddress.Compare( OFFICE_IP ) == 0 ) {
+// // 		enPos = enOffice;
+// // 	}
+// // 	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
+// // 		enPos = enMyHome;
+// // 	}
+// // 	else if( strIPAddress.Compare( ONPOOM_IP ) == 0 ) {
+// // 		enPos = enMyHome;
+// // 	}
+// // 	else {
+// // 		enPos = enOnpoom;
+// // 	}
+// 
+// 	return enPos;
+// 
+// }
 
-	if( strIPAddress.Compare( OFFICE_IP ) == 0 ) {
-		enPos = enOffice;
-	}
-	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
-		enPos = enMyHome;
-	}
-	else {
-		enPos = enBuiltIn;
-	}
-
-	return enPos;
-
-}
-
+/**
+ * @brief     
+ * @return    BOOL
+ * @author    조철??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/11 19:41:58
+ * @warning   
+ */
 BOOL CheckPing()
 {
 	BOOL bChkInternet;
@@ -265,8 +284,9 @@ BOOL CheckPing()
 	while(TRUE) {
 		bChkInternet = IcmpSendEcho(hlcmpFile, inet_addr( DB_SERVER_IP_ADDRESS ), szSendData, strlen(szSendData), NULL, szReplyBuffer, sizeof(szReplyBuffer), 1000 );
 
-		if( bChkInternet )
+		if( bChkInternet ) {
 			break;
+		}
 
 		Sleep(1000);
 

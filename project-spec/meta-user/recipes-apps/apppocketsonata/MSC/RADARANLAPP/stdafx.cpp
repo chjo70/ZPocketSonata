@@ -179,21 +179,21 @@ int Printf(char *format, ...)
 
 }
 
-enPosition GetPosition()
-{
-	enPosition enPos;
-	CString strIPAddress=GetIpAddress();
-
-	if( strIPAddress.Compare( OFFICE_IP ) == 0 ) {
-		enPos = enOffice;
-	}
-	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
-		enPos = enMyHome;
-	}
-	else {
-		enPos = enBuiltIn;
-	}
-
-	return enPos;
-
-}
+// enPosition GetPosition()
+// {
+// 	enPosition enPos;
+// 	CString strIPAddress=GetIpAddress();
+// 
+// 	if( strIPAddress.Compare( OFFICE_IP ) == 0 ) {
+// 		enPos = enOffice;
+// 	}
+// 	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
+// 		enPos = enMyHome;
+// 	}
+// 	else {
+// 		enPos = enBuiltIn;
+// 	}
+// 
+// 	return enPos;
+// 
+// }

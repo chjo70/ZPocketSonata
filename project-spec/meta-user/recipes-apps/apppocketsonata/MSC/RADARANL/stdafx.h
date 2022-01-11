@@ -42,16 +42,24 @@
 
 #include <afxmt.h>
 
-#define BUILTIN_IP					"192.168.0.66"
-#define OFFICE_IP						"10.29.52.175"
-#define MYHOME_IP						"192.168.0.156"
+// #define BUILTIN_IP						"192.168.0.66"
+// #define OFFICE_IP						"10.29.52.175"
+// #define MYHOME_IP						"192.168.0.156"
+// #define ONPOOM_IP						"30.30.30.54"
+
+
 
 //#define LOG_DIRECTORY					"RADARANL_LOG"
 #define	LOG_SUBDIRECTORY				"레이더 분석"
 #define GLOBAL_LOG_DIRECTORY			"\\\\192.168.0.41\\Files"
 #define GLOBAL_LOG_DIRECTORY2			"\\\\192.168.0.41"
 
-#define DB_SERVER_IP_ADDRESS			"192.168.0.41"
+
+// X 밴드 일때 DB 서버 어드레스
+#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
+// 인천공항
+// #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
+
 
 
 extern CCriticalSection g_criticalLog;
@@ -64,24 +72,24 @@ CString GetFilePath();
 BOOL CreateDir( char *pPath );
 BOOL CheckPing();
 
-// 로그 타입 사용자가 원하는 대로 정의
-// enum LogType {
-// 	enDebug=0,
-// 	enNormal,
-// 	enLineFeed,
-// 	enError,
-// 	enEnd,
-// };
-
-
 
 CString GetIpAddress();
 
 typedef enum {
 	enBuiltIn=0,
 	enOffice,
-	enMyHome
+	enMyHome,
+	enOnpoom,
+
+	enLAST_COM
 } enPosition;
+
+// SOCKADDR g_ComIPAddress[enLAST_COM][30] = { { "192.168.0.66" },
+// 									  { "10.29.52.175" },
+// 									  { "192.168.0.156" },
+// 									  { "30.30.30.54" } } ;
+
+
 
 //enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
 
