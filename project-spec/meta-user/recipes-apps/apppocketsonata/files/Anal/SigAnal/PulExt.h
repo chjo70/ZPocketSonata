@@ -120,8 +120,9 @@ public:
 
 
     template <typename T>
-    T CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
-        T ret=0;
+    UINT CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+        UINT ret=0;
+		T r;
         T harmonic;
         T max_mean, min_mean;
 
@@ -146,8 +147,12 @@ public:
 
         // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
         if( harmonic <= tThreshold+margin_th || min_mean-harmonic <= tThreshold+margin_th ) {
-            ret = MulDiv64( 1, max_mean, min_mean );
+            r = MulDiv64( 1, max_mean, min_mean );
         }
+
+		if( r > UINT_MAX ) {
+			ret = UINT_MAX;
+		}
 
         return ret;
     }

@@ -1322,7 +1322,7 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
 
     int index;
     UINT max_miss;
-    _TOA uiMiss;
+    UINT uiMiss;
 
     _TOA dtoa_margin;
 
@@ -1550,6 +1550,7 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
     int max_miss;
 
     _TOA dtoa_margin;
+	UINT uiMiss;
 
     _TOA pre_toa, dtoa;
 
@@ -1623,7 +1624,7 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
                 }
                 // 펄스가 누락 처리 또는 다른 신호인지를 검사한다.
                 else if( dtoa > (UINT) pri_range.iHgh ) {
-                    UINT uiMiss=CheckHarmonic<_TOA>( dtoa, pSeg->pri.mean, (_TOA) ITOAusCNV((_TOA)5) );
+                    uiMiss = CheckHarmonic<_TOA>( dtoa, pSeg->pri.mean, (_TOA) ITOAusCNV((_TOA)5) );
 
                     if( uiMiss > _spOne && ( uiMiss <= (UINT) max_miss ) ) {
                         //if( TRUE == CompMarginDiff<_TOA>( dtoa, uiMiss*pri_range.iLow, uiMiss*pri_range.iHgh, 0 ) ) {

@@ -324,7 +324,7 @@ void CRADARDIRAPPApp::LoadProfile()
 
 void CRADARDIRAPPApp::SaveProfile()
 {
-	char szBuffer[100];
+	//char szBuffer[100];
 
 	//sprintf_s(szBuffer, sizeof(szBuffer), "ON");
 	::WritePrivateProfileString( "Settings", "FOLDER", (LPSTR) (LPCTSTR) m_strInitPath, m_strIniFile);

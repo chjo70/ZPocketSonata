@@ -159,10 +159,14 @@ struct SRxLOBData {
 
 
 #ifdef _POCKETSONATA_
+	float fRadarLatitude;
+	float fRadarLongitude;	
+
+	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #elif _ELINT_
-	double	dRadarCollectionLatitude;
-	double	dRadarCollectionLongitude;	
+	float fRadarLatitude;
+	float fRadarLongitude;	
 
 	int	iCollectorID;
 

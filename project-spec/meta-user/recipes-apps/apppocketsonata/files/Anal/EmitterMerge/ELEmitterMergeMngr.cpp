@@ -4165,6 +4165,7 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
 
+#ifndef _ONPOOM_
     // 안테나 스캔 세부 정보
     switch( m_pLOBData->iScanType ) {
         case E_AET_SCAN_UNKNOWN :
@@ -4198,6 +4199,7 @@ void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *
             //LogPrint( "스캔 형태 업데이트[%d-%d] 에러 입니다.", m_pLOBData->iScanType, pScanInfo->iType );
             break;
     }
+#endif
 
 }
 

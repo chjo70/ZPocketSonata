@@ -253,10 +253,12 @@ struct SRxLOBData {
 
 
 #ifdef _POCKETSONATA_
+	float fRadarLatitude;
+	float fRadarLongitude;		
 
 #elif _ELINT_
-    double	dRadarCollectionLatitude;
-    double	dRadarCollectionLongitude;	
+	float fRadarLatitude;
+	float fRadarLongitude;		
 
     int	iCollectorID;
 
