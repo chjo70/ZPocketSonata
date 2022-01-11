@@ -360,9 +360,20 @@ void CCommonUtils::swapByteOrder(double & d)
                    ( ( um & 0x00000000000000ff ) << 56 ) );
 }
 
+/**
+ * @brief     swapByteOrder
+ * @param     double * p
+ * @param     int iSize
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 13:49
+ * @warning
+ */
 void CCommonUtils::swapByteOrder(double *p, int iSize )
 {
-    auto i=iSize;
+    int i;
 
     for( i=0 ; i < iSize ; ++i ) {
         swapByteOrder( p[i] );

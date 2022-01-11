@@ -510,6 +510,9 @@
     <ClInclude Include="..\..\files\Include\global.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Utils\MulDiv64.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -718,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\SQLite\sqlite3.c">
       <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
+      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

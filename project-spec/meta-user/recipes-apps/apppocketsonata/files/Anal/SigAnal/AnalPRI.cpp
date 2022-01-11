@@ -9,6 +9,7 @@
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
 #include <stdint.h>
+#include "../../Utils/MulDiv64.h"
 
 #endif
 
@@ -1519,8 +1520,9 @@ void CAnalPRI::DwellAnalysis()
     pEmitter = & m_Emitter[ m_nAnalEmitter ];
     end_emitter = m_CoEmitter;
     for( i=m_nAnalEmitter ; i < end_emitter ; ++i, ++ pEmitter ) {
-        if( pEmitter->mark == DELETE_EMITTER )
+        if( pEmitter->mark == DELETE_EMITTER ) {
             continue;
+        }
 
         // 디버그
         // 확실한 Stagger 인 경우에만 정밀 분석해서 정확한 단을 찾는것이 나을수 있다.
@@ -2815,15 +2817,13 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     int threshold;
     PDWINDEX *pPdwIndex;
 
-    STR_PULSE_TRAIN_SEG *pSeg;
-
     pEmitter->hop_level_cnt = 0;
     if( pEmitter->uiCoSeg == 0 ) {
         printf( "\n [W] 잘못된 주파수 형태입니다. !" );
         WhereIs;
         pEmitter->freq.type = _FIXED;
     }
-    pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
+    
 
     // +-5 MHz 이하인 PDW개수가 전체 수집 개수의 95% 이하이면, 주파수 고정으로 결정한다.
 #ifdef _ELINT_
@@ -2831,6 +2831,8 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
 #elif _POCKETSONATA_
     threshold = I_IFRQCNV( 0, 5 );
 #else
+    STR_PULSE_TRAIN_SEG *pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
+
     int first_pdw_index = pSeg->pdw.pIndex[0];
     int band = m_pBAND[ first_pdw_index ];
     threshold = abs( (int) C_UDIV( FIXED_FREQ_THRESHOLD, gFreqRes[band+1].res ) );
@@ -4953,7 +4955,8 @@ void CAnalPRI::MergeEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter, 
 
         pDstEmitter->pri.min = _min( pDstEmitter->pri.min, pSrcEmitter->pri.min );
         pDstEmitter->pri.max = _max( pDstEmitter->pri.max, pSrcEmitter->pri.max );
-        pDstEmitter->pri.mean = _TOADIV( pDstEmitter->pri.mean+pSrcEmitter->pri.mean, 2. );
+        pDstEmitter->pri.mean = MulDiv64( 1, pDstEmitter->pri.mean+pSrcEmitter->pri.mean, 2 );
+        //_mul128( )
     }
 }
 

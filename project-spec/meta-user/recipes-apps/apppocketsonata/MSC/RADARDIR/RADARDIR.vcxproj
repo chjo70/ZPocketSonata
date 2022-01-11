@@ -44,7 +44,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
@@ -143,6 +143,9 @@
     <ClCompile Include="..\..\files\System\csysconfig.cpp" />
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
     <ClCompile Include="..\..\files\Utils\clog.cpp" />
+    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\programrev.cpp" />
     <ClCompile Include="RADARDIR.cpp" />
     <ClCompile Include="RadarDirAlgorithm.cpp">
@@ -221,6 +224,7 @@
     <ClInclude Include="..\..\files\System\csysconfig.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
     <ClInclude Include="RADARDIR.h" />
     <ClInclude Include="RadarDirAlgorithm.h" />
     <ClInclude Include="Resource.h" />

@@ -937,6 +937,7 @@ void CSingleClient::DisplayMsg()
 
         case enRES_SETSYS :
             strcpy( szOpcode, "시스템 변수" );
+            break;
 
         default :
             strcpy( szOpcode, "이름 없음" );

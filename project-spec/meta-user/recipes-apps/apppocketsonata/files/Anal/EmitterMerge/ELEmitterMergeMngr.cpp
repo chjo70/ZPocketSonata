@@ -10918,7 +10918,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
 #ifdef _SQLITE_
     struct tm *pstTime;
-    char buffer[100];
+    char buffer[100]={0};
 
     bool bRet=true;
     pstTime = localtime( & pLOBData->tiContactTime );
@@ -11138,7 +11138,7 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 #ifdef _SQLITE_
     bool bRet=true;
     struct tm *pstTime;
-    char buffer1[100], buffer2[100], buffer3[100];
+    char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
 
     pstTime = localtime( & pABTData->tiFirstSeenTime );
     if( pstTime != NULL ) {
@@ -11300,7 +11300,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 #ifdef _SQLITE_
     bool bRet=true;
     struct tm *pstTime;
-    char buffer1[100], buffer2[100], buffer3[100];
+    char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
 
     //printf( "\n pAETData[%p], pAETExtData[%p], pExtDB[%p]" , pAETData, pAETExtData, pExtDB );
 

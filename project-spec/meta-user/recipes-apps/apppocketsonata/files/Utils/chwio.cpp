@@ -295,12 +295,12 @@ void CHWIO::ClearInterrupt(xuio_t *uio)
  */
 void CHWIO::uio_re_enable_Interrupt( ENUM_UIO_DEV enUIO )
 {
+#ifndef _SIM_USER_COLLECT_
     int reenable = 1;
     xuio_t *pUIO = (xuio_t*) CHWIO::uio_get_uio( (uint8_t) enUIO );
 
-#ifndef _SIM_USER_COLLECT_
     // ���ͷ�Ʈ ��Ȱ��ȭ
-    write(pUIO->iFd, (void *)&reenable, sizeof(int));
+    write(pUIO->iFd, (void *)& reenable, sizeof(int) );
 #endif
 }
 

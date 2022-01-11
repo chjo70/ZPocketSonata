@@ -207,9 +207,7 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
  */
 void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB )
 {
-    int nLOB;
-
-    nLOB = (int) pVecLOB->size();
+    //int nLOB = (int) pVecLOB->size();
 
     pSELPE_RESULT->bResult = false;
 
@@ -243,6 +241,7 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	pLongitude = m_Sensor.pLongitude;
 	pLob = m_Sensor.pLob;
 	iter = pVecLOB->end();
+    -- iter;
 	for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
 		*pLatitude = (double) (*iter).fLatitude;
 		*pLongitude = (double) (*iter).fLongitude;

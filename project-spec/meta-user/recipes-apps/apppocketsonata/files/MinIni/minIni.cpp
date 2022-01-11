@@ -445,19 +445,21 @@ int  ini_getsection(int idx, TCHAR *Buffer, int BufferSize, const TCHAR *Filenam
     INI_FILETYPE fp;
     int ok = 0;
 
-    if (Buffer == NULL || BufferSize <= 0 || idx < 0) {
-    }
-    else {
-        ini_openread(Filename, &fp);
-        if ( fp == NULL ) {
-            ok = getkeystring(&fp, NULL, NULL, idx, -1, Buffer, BufferSize, NULL);
-            (void)ini_close(&fp);
-        } /* if */
-        if (!ok) {
-            *Buffer = '\0';
+    if (Buffer != NULL ) {
+        if ( BufferSize <= 0 || idx < 0) {
         }
-        iRet = (int)_tcslen(Buffer);
+        else {
+            ini_openread(Filename, &fp);
+            if ( fp == NULL ) {
+                ok = getkeystring(&fp, NULL, NULL, idx, -1, Buffer, BufferSize, NULL);
+                (void)ini_close(&fp);
+            } /* if */
+            if (!ok) {
+                *Buffer = '\0';
+            }
+            iRet = (int)_tcslen(Buffer);
 
+        }
     }
     return iRet;
 }

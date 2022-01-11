@@ -120,7 +120,8 @@ public:
 
 
     template <typename T>
-    unsigned int CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+    T CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
+        T ret=0;
         T harmonic;
         T max_mean, min_mean;
 
@@ -145,10 +146,10 @@ public:
 
         // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
         if( harmonic <= tThreshold+margin_th || min_mean-harmonic <= tThreshold+margin_th ) {
-            return (unsigned int) _TOADIV( max_mean, min_mean );
+            ret = MulDiv64( 1, max_mean, min_mean );
         }
 
-        return 0;
+        return ret;
     }
 
     void MakeCWPulseTrain();
@@ -166,6 +167,7 @@ public:
     void DiscardPulseTrain();
     //##ModelId=452B0C54001E
     void PrintAllSeg();
+    void PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg );
     void PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C54001F
     void ChangeMarkTo( int startSeg, int endSeg, UINT from_mark, SEG_MARK to_mark );
@@ -202,6 +204,7 @@ public:
     //##ModelId=452B0C5400DD
     BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     BOOL CheckToaInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    BOOL CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     //##ModelId=452B0C5400F9
     void DeleteAllSeg( STR_EMITTER *pEmitter );
     //##ModelId=452B0C540103
@@ -259,7 +262,7 @@ public:
     //##ModelId=452B0C540226
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
     //##ModelId=452B0C540230
-    _TOA FindSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end);
+    bool FindSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end);
     //##ModelId=452B0C540244
     void ExtractRefStable();
     //##ModelId=452B0C540245

@@ -143,15 +143,22 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #ifdef _MSC_VER
         if( fp != NULL ) {
             if( enNoLineFeed != nType ) {
+#ifdef _LOG_DATA_ENABLED_
                 sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+#else
+                sprintf( m_szLog, "\n" );
+#endif
             }
 
 #else
         if( fid != 0 ) {
             if( enNoLineFeed != nType ) {
+#ifdef _LOG_DATA_ENABLED_
                 sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+#else
+                sprintf( m_szLog, "\n" );
+#endif
             }
-
 #endif
 
             nLengthTime = strlen(m_szLog);
@@ -197,7 +204,6 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 fflush( stdout );
 
 #endif
-
                 //strcat( & m_szLog[nLength], pMsg );
 
 #ifdef _LOG_WHERE

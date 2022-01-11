@@ -231,6 +231,7 @@
     <ClInclude Include="..\..\files\Utils\clog.h" />
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
+    <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />
     <ClInclude Include="MSIGA.h" />
     <ClInclude Include="MSIGADlg.h" />
@@ -433,6 +434,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\cthread.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
