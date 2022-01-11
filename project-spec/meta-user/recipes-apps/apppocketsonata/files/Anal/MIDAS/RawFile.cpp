@@ -13,7 +13,7 @@
 
 
 #elif _MSC_VER
-#include <intsafe.h>
+#include <stdint.h>
 #include <io.h>
 
 #elif __VXWORKS__

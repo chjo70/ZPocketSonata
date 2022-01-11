@@ -30,17 +30,15 @@
 #define DPrintf(A)							theLogDebug->DebugPrintf(A)
 
 // 수식 연산 정의
-#define FMUL( A, B )            ( (float) (A) * (float) (B) )
+#define FMUL( A, B )                            ( (float) (A) * (float) (B) )
 //#define UDIV( A, B )            (UINT) ( (float) (A) / (float) (B) + 0.5 )
-#define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
-
-#define _TOADIV( A, B )         (_TOA) ( (double) (A) / (double) (B) + 0.5 )
+#define UMUL( A, B )                            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 
 // 변환 수식 정의
-#define DB(A)										UDIV( 256 * ( (float) A + 74.6875 ), 80 )
+#define DB(A)									UDIV( 256 * ( (float) A + 74.6875 ), 80 )
 #define CD_DB(A)								UDIV( ((float) A * 31.654) + 1713.77, 7.8125 )
 #define FMOP(A)									UDIV( A, 1.25 )
-#define CW(A)										UDIV( A, 0.2 )
+#define CW(A)									UDIV( A, 0.2 )
 
 // 이진 타이머 수식
 #define	BINARY_TIMER( A, N )		( ( A % (2*N) ) / N )

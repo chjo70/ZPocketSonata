@@ -26,6 +26,50 @@ bool Is_DZero( const double &dvalue );
 bool Is_FNotZero( const float &value );
 bool Is_DNotZero( const double &dvalue );
 
+/**
+ * @brief     IsSamePulseTrain
+ * @param     T x1
+ * @param     T x2
+ * @param     T priMean
+ * @param     T margin
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:41
+ * @warning
+ */
+template <typename T>
+BOOL IsSamePulseTrain( T x1, T x2, T priMean, T margin )
+{
+    T diffToa;
+    BOOL bRet=TRUE;
+
+    if( priMean > margin ) {
+        diffToa = ( x2 - x1 ) % priMean;
+        if( diffToa > margin && diffToa < ( priMean - margin ) ) {
+            bRet = FALSE;
+        }
+    }
+    else {
+        bRet = FALSE;
+    }
+
+    return bRet;
+}
+
+/**
+ * @brief     CompMeanDiff
+ * @param     T x
+ * @param     T y
+ * @param     T thresh
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:37
+ * @warning
+ */
 template <typename T>
 BOOL CompMeanDiff( T x, T y, T thresh )
 {
@@ -44,6 +88,19 @@ BOOL CompMeanDiff( T x, T y, T thresh )
     return bRet;
 }
 
+/**
+ * @brief     ELCompSwitchLevel
+ * @param     T * pSeries1
+ * @param     T * pSeries2
+ * @param     int coSeries
+ * @param     T margin
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:36
+ * @warning
+ */
 template <typename T>
 BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 {
@@ -86,6 +143,20 @@ BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 
 }
 
+/**
+ * @brief     CompSwitch2Level
+ * @param     T * pSeries1
+ * @param     T * pSeries2
+ * @param     int coSeries1
+ * @param     int coSeries2
+ * @param     T margin
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:36
+ * @warning
+ */
 template <typename T>
 BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T margin )
 {
@@ -159,6 +230,19 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
         \date     2008-02-19 17:44:30
         \warning
 */
+/**
+ * @brief     CompMarginDiff
+ * @param     T x
+ * @param     T iy1
+ * @param     T iy2
+ * @param     T fthresh
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:36
+ * @warning
+ */
 template <typename T>
 BOOL CompMarginDiff( T x, T iy1, T iy2, T fthresh )
 {
@@ -173,6 +257,19 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T fthresh )
     return bRet;
 }
 
+/**
+ * @brief     CalOverlapSpace
+ * @param     T hgh1
+ * @param     T low1
+ * @param     T hgh2
+ * @param     T low2
+ * @return    T
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:36
+ * @warning
+ */
 template <typename T>
 T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
 {
@@ -197,6 +294,20 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
     return 0;
 }
 
+/**
+ * @brief     IsOverlapSpace
+ * @param     T hgh1
+ * @param     T low1
+ * @param     T hgh2
+ * @param     T low2
+ * @param     T tRatio
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 14:36
+ * @warning
+ */
 template <typename T>
 bool IsOverlapSpace(T hgh1, T low1, T hgh2, T low2, T tRatio )
 {
@@ -205,7 +316,6 @@ bool IsOverlapSpace(T hgh1, T low1, T hgh2, T low2, T tRatio )
     tOverlapSpace = CalOverlapSpace<T>( hgh1, low1, hgh2, low2 );
     return tOverlapSpace >= tRatio;
 
-    return 0;
 }
 
 
