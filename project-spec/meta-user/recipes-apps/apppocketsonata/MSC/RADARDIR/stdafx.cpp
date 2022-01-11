@@ -265,35 +265,35 @@ CString GetIpAddress()
 	return strIpAddress;
 }
 
-enPosition GetPosition()
-{
-	enPosition enPos;
-	CString strIPAddress=GetIpAddress();
-
-	if( strIPAddress.Compare( RADARDIR_1_IP_ADDRESS ) == 0 ) {
-		stiCollectorId = RADARCOL_1;
-	}
-	else if( strIPAddress.Compare( RADARDIR_2_IP_ADDRESS ) == 0 ) {
-		stiCollectorId = RADARCOL_2;
-	}
-	else if( strIPAddress.Compare( RADARDIR_3_IP_ADDRESS ) == 0 ) {
-		stiCollectorId = RADARCOL_3;
-	}
-	else {
-		stiCollectorId = RADARCOL_Unknown;
-	}
-
-	if( strIPAddress.Compare( BUILTIN_IP ) == 0 || 
-			strIPAddress.Compare( RADARDIR_1_IP_ADDRESS ) == 0 || strIPAddress.Compare( RADARDIR_2_IP_ADDRESS ) == 0 || strIPAddress.Compare( RADARDIR_3_IP_ADDRESS ) == 0 ) {
-		enPos = enBuiltIn;
-	}
-	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
-		enPos = enMyHome;
-	}
-	else {
-		enPos = enOffice;
-	}
-
-	return enPos;
-
-}
+// enPosition GetPosition()
+// {
+// 	enPosition enPos;
+// 	CString strIPAddress=GetIpAddress();
+// 
+// 	if( strIPAddress.Compare( RADARDIR_1_IP_ADDRESS ) == 0 ) {
+// 		stiCollectorId = RADARCOL_1;
+// 	}
+// 	else if( strIPAddress.Compare( RADARDIR_2_IP_ADDRESS ) == 0 ) {
+// 		stiCollectorId = RADARCOL_2;
+// 	}
+// 	else if( strIPAddress.Compare( RADARDIR_3_IP_ADDRESS ) == 0 ) {
+// 		stiCollectorId = RADARCOL_3;
+// 	}
+// 	else {
+// 		stiCollectorId = RADARCOL_Unknown;
+// 	}
+// 
+// 	if( strIPAddress.Compare( BUILTIN_IP ) == 0 || 
+// 			strIPAddress.Compare( RADARDIR_1_IP_ADDRESS ) == 0 || strIPAddress.Compare( RADARDIR_2_IP_ADDRESS ) == 0 || strIPAddress.Compare( RADARDIR_3_IP_ADDRESS ) == 0 ) {
+// 		enPos = enBuiltIn;
+// 	}
+// 	else if( strIPAddress.Compare( MYHOME_IP ) == 0 ) {
+// 		enPos = enMyHome;
+// 	}
+// 	else {
+// 		enPos = enOffice;
+// 	}
+// 
+// 	return enPos;
+// 
+// }

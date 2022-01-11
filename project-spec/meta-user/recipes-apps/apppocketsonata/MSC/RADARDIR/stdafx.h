@@ -51,7 +51,10 @@
 #define RADARDIR_2_IP_ADDRESS				"192.168.0.24"
 #define RADARDIR_3_IP_ADDRESS				"192.168.0.34"
 
-#define DB_SERVER_IP_ADDRESS				"192.168.0.41"
+// X 밴드 일때 DB 서버 어드레스
+#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
+// 인천공항
+// #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
 
 //#define LOG_DIRECTORY						"RADARDIR_LOG"
 #define LOG_SUB_DIRECTORY					"레이더 방탐"
@@ -91,13 +94,13 @@ void SetLocal( bool bLocal );
 
 //enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
 
-typedef enum {
-	enBuiltIn=0,
-	enOffice,
-	enMyHome
-} enPosition;
-
-enPosition GetPosition();
+// typedef enum {
+// 	enBuiltIn=0,
+// 	enOffice,
+// 	enMyHome
+// } enPosition;
+// 
+// enPosition GetPosition();
 
 #ifdef __cplusplus
 extern "C" {
