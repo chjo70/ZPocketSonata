@@ -110,14 +110,7 @@ public:
     //inline void SetAnalSeg( int co ) { m_thePulExt->SetAnalSeg( co ); }
 
 
-    //UINT CheckHarmonic(float priMean1, float priMean2, float priThreshold ) {
-    //    return m_thePulExt->CheckHarmonic( priMean1, priMean2, priThreshold );
-    //}
-
-//     template <typename T>
-//     UINT CheckHarmonic(T priMean1, T priMean2, T priThreshold ) {
-//         return m_thePulExt->CheckHarmonic( priMean1, priMean2, priThreshold );
-//     }
+	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
 
 
     //##ModelId=452B0C520301
@@ -179,10 +172,6 @@ public:
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
     //##ModelId=452B0C52038B
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
-
-    UINT CheckHarmonic(_TOA mean1, _TOA mean2, _TOA priThreshold ) {
-        return 0;
-    }
 
     //##ModelId=452B0C520396
     void Init( STR_PDWDATA *pPDWData );

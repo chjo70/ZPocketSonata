@@ -724,7 +724,7 @@ unsigned int CKMakeAET::IsStorePDW()
  * @date      2021-06-04, 10:21
  * @warning
  */
-UINT CKMakeAET::CheckHarmonic(float mean1, float mean2, float priThreshold ) 
-{
-    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
-}
+// UINT CKMakeAET::CheckHarmonic(float mean1, float mean2, float priThreshold ) 
+//{
+//    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
+//}

@@ -98,7 +98,7 @@ public:
 
 
      //template <typename T>
-     UINT CheckHarmonic(float mean1, float mean2, float priThreshold );
+     //UINT CheckHarmonic(float mean1, float mean2, float priThreshold );
 
 
     template <typename T>
