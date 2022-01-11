@@ -57,115 +57,120 @@ struct SRxLOBHeader
 #ifndef SRxLOBData_STRUCT
 #define SRxLOBData_STRUCT
 struct SRxLOBData {
-    unsigned int uiLOBID;
-    unsigned int uiABTID;
-    unsigned int uiAETID;
+	unsigned int uiLOBID;
+	unsigned int uiABTID;
+	unsigned int uiAETID;
 
-    __time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
-    unsigned int tiContactTimems;
+	__time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
+	unsigned int tiContactTimems;
 
-    int iPolarization;                              // 극성
-    int iRatioOfPOL;                                // 극성 신뢰도
+	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-    int iSignalType;
+	char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
 
-    float fDOAMean;                                 // [0.1도]
-    float fDOAMax;
-    float fDOAMin;
-    float fDOADeviation;				// [0.1도]
-    float fDOASDeviation;
+	char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+	char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
-    int iDIRatio;					// [1 %]
+	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
-    int iFreqType;
-    int iFreqPatternType;
-    float fFreqPatternPeriod;                       // [us]
-    float fFreqMean;				// [10KHz]
-    float fFreqMax;
-    float fFreqMin;
-    float fFreqDeviation;                           //
-    int iFreqPositionCount;
-    int iFreqElementCount;
-    float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
+#ifndef _ONPOOM_
+	int iPolarization;                              // 극성
+#endif
 
-    int iPRIType;
-    int iPRIPatternType;
-    float fPRIPatternPeriod;		// [us]
-    float fPRIMean;				// [1ns]
-    float fPRIMax;
-    float fPRIMin;
-    float fPRIDeviation;			// [1ns]
-    float fPRIJitterRatio;			// [%]
-    int iPRIPositionCount;
-    int iPRIElementCount;
-    float fPRISeq[MAX_FREQ_PRI_STEP];
+	int iRatioOfPOL;                                // 극성 신뢰도
 
-    float fPWMean;				// 1ns
-    float fPWMax;
-    float fPWMin;
-    float fPWDeviation;
+	int iSignalType;
 
-    float fPAMean;				// 기존대로
-    float fPAMax;
-    float fPAMin;
-    float fPADeviation;			// 기존대로
+	float fDOAMean;                                 // [0.1도]
+	float fDOAMax;
+	float fDOAMin;
+	float fDOADeviation;							// [0.1도]
+	float fDOASDeviation;
 
-    int iScanType;
-    //int iDetailScanType;
-    float fScanPeriod;			// [msec]
+	int iDIRatio;					// [1 %]
 
-    int iMOPType;				// 인트라 타입
-    int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
-    float fMOPMaxFreq;			// ??
-    float fMOPMinFreq;
-    float fMOPMeanFreq;
-    float fMOPFreqDeviation;
+	int iFreqType;
+	int iFreqPatternType;
+	float fFreqPatternPeriod;                       // [us]
+	float fFreqMean;				// [10KHz]
+	float fFreqMax;
+	float fFreqMin;
+	float fFreqDeviation;                           //
+	int iFreqPositionCount;
+	int iFreqElementCount;
+	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-    float fShipLatitude;
-    float fShipLongitude;
-    float fPitchAngle;
-    float fRollAngle;
-    float fHeadingAngle;
-    float fAltitude;
-    int iValidity;
+	int iPRIType;
+	int iPRIPatternType;
+	float fPRIPatternPeriod;		// [us]
+	float fPRIMean;				// [1ns]
+	float fPRIMax;
+	float fPRIMin;
+	float fPRIDeviation;			// [1ns]
+	float fPRIJitterRatio;			// [%]
+	int iPRIPositionCount;
+	int iPRIElementCount;
+	float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    int iIsStoreData;
-    int iNumOfPDW;
-    int iNumOfIQ;
+	float fPWMean;				// 1ns
+	float fPWMax;
+	float fPWMin;
+	float fPWDeviation;
 
-    float fRadarLatitude;
-    float fRadarLongitude;
+	float fPAMean;				// 기존대로
+	float fPAMax;
+	float fPAMin;
+	float fPADeviation;			// 기존대로
 
-    char aucRadarName[_MAX_RADARMODE_NAME_SIZE];
-    int iRadarModeIndex;
-    //int iThreatIndex;
+#ifndef _ONPOOM_
+	int iScanType;
+	//int iDetailScanType;
+	float fScanPeriod;			// [msec]
 
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+	int iMOPType;				// 인트라 타입
+	int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
+	float fMOPMaxFreq;			// ??
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
 
-    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
 
-    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-    char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
+	float fShipLatitude;
+	float fShipLongitude;
+	float fPitchAngle;
+	float fRollAngle;
+	float fHeadingAngle;
+	float fAltitude;
+	int iValidity;
+#endif
 
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+	int iIsStoreData;
+	int iNumOfPDW;
+	int iNumOfIQ;
+
+	char aucRadarName[_MAX_RADARMODE_NAME_SIZE];
+	int iRadarModeIndex;
+	//int iThreatIndex;
 
 
 #ifdef _POCKETSONATA_
-    char aucTaskID[LENGTH_OF_TASK_ID];
 
 #elif _ELINT_
-    int	iCollectorID;
+	double	dRadarCollectionLatitude;
+	double	dRadarCollectionLongitude;	
 
-    unsigned int uiSeqNum;
+	int	iCollectorID;
+
+	unsigned int uiSeqNum;
 	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #else
-    
+
 #endif
 
 }  ;

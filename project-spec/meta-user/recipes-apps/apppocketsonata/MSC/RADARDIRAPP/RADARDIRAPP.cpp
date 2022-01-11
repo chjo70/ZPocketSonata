@@ -317,6 +317,9 @@ void CRADARDIRAPPApp::LoadProfile()
 
 	::GetPrivateProfileString( "Settings", "FOLDER", "C:\\", szBuffer, 100, m_strIniFile);
 	m_strInitPath = szBuffer;
+
+	//::GetPrivateProfileString( "SQL_SERVER", "IP", "C:\\", szBuffer, 100, m_strIniFile);
+	//m_strInitPath = szBuffer;
 }
 
 void CRADARDIRAPPApp::SaveProfile()

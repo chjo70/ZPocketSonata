@@ -19,6 +19,7 @@
 #include "stdafx.h"
 
 #define _USE_MATH_DEFINES
+//#define _INTSAFE_H_INCLUDED_
 
 #include "cusercollect.h"
 
@@ -426,10 +427,11 @@ void CUserCollect::MakeSIMPDWData()
             m_ullTOA = manualTOA[i];
         }
         else {
-            if( i % 2 )
-                m_ullTOA += 0x2000;
-            else
-                m_ullTOA += 0x1500;
+			m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
+//             if( i % 2 )
+//                 m_ullTOA += 0x2000;
+//             else
+//                 m_ullTOA += 0x1500;
         }
 
         memset( pDMAPDW, 0, sizeof(DMAPDW) );

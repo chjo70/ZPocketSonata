@@ -2069,12 +2069,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
         // 1. 폴더명 생성하기
         strftime( buffer, 100, "%Y-%m-%d", pstTime );
 #ifdef _ELINT_
-        enPosition enPos = GetPosition();
-
-        if( enPos == enBuiltIn )
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
-        else
-            sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
         sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
