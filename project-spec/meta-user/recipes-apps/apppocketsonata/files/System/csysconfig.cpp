@@ -41,7 +41,9 @@ CSysConfig::CSysConfig(void)
 {
 
     // 공유 메모리 설정
+#ifndef _ONPOOM_
     m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
+#endif
 
     InitVar();
 
@@ -54,8 +56,11 @@ CSysConfig::CSysConfig(void)
  */
 CSysConfig::~CSysConfig(void)
 {
+#ifndef _ONPOOM_
     m_pSharedMemory->close();
     delete m_pSharedMemory;
+#endif
+
 }
 
 /**
@@ -247,7 +252,7 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
                 struct in_addr *pIpAddr;
                 // strIpAddress = inet_ntoa (*(struct in_addr *)*hostinfo->h_addr_list);
                 pIpAddr = (struct in_addr *) (*hostinfo->h_addr_list);
-                sprintf( pIPAddress, "%d.%d.%d" , (unsigned char) pIpAddr->S_un.S_un_b.s_b2, (unsigned char) pIpAddr->S_un.S_un_b.s_b3, (unsigned char) pIpAddr->S_un.S_un_b.s_b4 );
+                sprintf( pIPAddress, "%d.%d.%d.%d" , (unsigned char) pIpAddr->S_un.S_un_b.s_b1, (unsigned char) pIpAddr->S_un.S_un_b.s_b2, (unsigned char) pIpAddr->S_un.S_un_b.s_b3, (unsigned char) pIpAddr->S_un.S_un_b.s_b4 );
             }
         } 
         WSACleanup();

@@ -4378,12 +4378,14 @@ void CELSignalIdentifyAlg::IdentifyPW()
  */
 void CELSignalIdentifyAlg::IdentifyScan()
 {
+#ifndef _ONPOOM_
     UINT i;
     UINT toLib;
     STR_LIB_IDRESULT *pIdxLib;
 
     toLib = 0;
     pIdxLib = & m_pIdResult[0];
+
 
     for( i=0 ; i < m_toLib ; ++i, ++pIdxLib ) {
         SRadarMode* pRadarMode;
@@ -4439,8 +4441,11 @@ void CELSignalIdentifyAlg::IdentifyScan()
         m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
 
     }
+	m_toLib = toLib;
 
-    m_toLib = toLib;
+#endif
+
+    
 }
 
 // /**

@@ -225,7 +225,6 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 
 #endif
 
-
     m_CoPulseTrains = m_uiCoSeg;
     m_uiCoRefSeg = m_uiCoSeg;
 

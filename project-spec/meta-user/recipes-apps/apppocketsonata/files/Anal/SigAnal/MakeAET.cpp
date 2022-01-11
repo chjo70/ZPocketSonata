@@ -1435,12 +1435,12 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 수집소 위치 정보 저장
 #ifdef _ELINT_
     if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
-         pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
-         pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
+         pLOBData->dRadarCollectionLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
+         pLOBData->dRadarCollectionLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
     }
     else {
-         pLOBData->fRadarLatitude = 0.0;
-         pLOBData->fRadarLongitude = 0.0;
+         pLOBData->dRadarCollectionLatitude = 0.0;
+         pLOBData->dRadarCollectionLongitude = 0.0;
     }
 #else
 
