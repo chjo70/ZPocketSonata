@@ -148,11 +148,13 @@ public:
         // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
         if( harmonic <= tThreshold+margin_th || min_mean-harmonic <= tThreshold+margin_th ) {
             r = MulDiv64( 1, max_mean, min_mean );
+			if( r > UINT_MAX ) {
+				ret = UINT_MAX;
+			}
+			else {
+				ret = (UINT) r;
+			}
         }
-
-		if( r > UINT_MAX ) {
-			ret = UINT_MAX;
-		}
 
         return ret;
     }

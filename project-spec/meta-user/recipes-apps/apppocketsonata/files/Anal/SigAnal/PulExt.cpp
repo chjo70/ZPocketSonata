@@ -2948,7 +2948,7 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
         // 이용해서 제거한다.
         //-- 조철희 2005-12-28 09:58:17 --//
         bRet = FindSeg( & m_RefSeg, nStartSeg, m_uiCoSeg );
-        PrintSeg( 0, & m_RefSeg );
+        PrintSeg( -1, & m_RefSeg );
 
         if( bRet == false ) {
             // 추출된 펄스 Marking
@@ -3229,7 +3229,7 @@ bool CPulExt::FindSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end )
         //-- 조철희 2006-01-04 14:52:32 --//
         nHarmonic = CheckHarmonic( pRefSeg, pSeg );
 
-        if( nHarmonic == 1 && /* CheckPriInterval( pRefSeg, pSeg ) == TRUE && */ CheckToaInterval( pRefSeg, pSeg ) == TRUE && CheckOmittedPulse( pRefSeg, pSeg ) == TRUE ) {
+        if( nHarmonic == 1 && CheckToaInterval( pRefSeg, pSeg ) == TRUE && CheckOmittedPulse( pRefSeg, pSeg ) == TRUE ) {
             bRet = true;
             break;
         }
@@ -3974,18 +3974,29 @@ BOOL CPulExt::CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG
     BOOL bRet=TRUE;
 
     _TOA dtoa;
+	int iMaxMiss;
 
     if( IsOverlapSpace<PDWINDEX>( pSeg1->last_idx, pSeg1->first_idx, pSeg2->last_idx, pSeg2->first_idx, 1 ) == true ) {
         bRet = FALSE;
     }
-    else if( pSeg1->last_idx < pSeg2->first_idx ) {
-        bRet = FALSE;
-        //dtoa = 
-    }
-    else {
-        bRet = FALSE;
-        
-    }
+	else {
+		_TOA r;
+		iMaxMiss = CalMaxMiss( pSeg1->pri_type );
+
+		if( pSeg1->last_idx < pSeg2->first_idx ) {
+			dtoa = pSeg2->first_toa - pSeg1->last_toa;
+		}
+		else {			
+			dtoa = pSeg1->first_toa - pSeg2->last_toa;       
+		}
+
+		r = MulDiv64( 1, dtoa, pSeg1->pri.mean );
+		if( r > (_TOA) iMaxMiss ) {
+			bRet = FALSE;
+		}
+		
+
+	}
 
     return bRet;
 }

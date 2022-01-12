@@ -6,13 +6,17 @@ IF NOT EXIST D:\RADAR\RADAR_DF\Debug goto ERROR
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_DF\Debug"
+copy ..\RadarDirAlgorithm.h "D:\RADAR\RADAR_DF\ICAA"
+
+IF NOT EXIST D:\RADAR\RADAR_RD\Debug goto ERROR
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_RD\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_RD\Debug"
 copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_RD\Debug"
-copy ..\RadarDirAlgorithm.h "\\192.168.0.41\Files\라이브러리\레이더 방탐"
+copy ..\RadarDirAlgorithm.h "D:\RADAR\RADAR_RD\Debug"
+
 goto DONE
 
-REM X밴드 방탐기 ======================================
+REM 인천 공항 ======================================
 IF NOT EXIST \\192.168.0.41\Files\라이브러리\레이더 방탐 goto ERROR
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
