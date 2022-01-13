@@ -501,7 +501,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
 
 
-#define _MAX_RADARMODE_NAME_SIZE									(12)
+#define _MAX_RADARMODE_NAME_SIZE									(8)
 #define _MAX_PLATFORM_NAME_SIZE                                     (10)
 #define _MAX_THREAT_NAME_SIZE										(10)
 #define _MAX_SITE_NAME_SIZE											(10)

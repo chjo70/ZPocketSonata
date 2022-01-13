@@ -80,9 +80,9 @@ struct SRxLOBData {
 
 #ifndef _XBAND_
 	int iPolarization;                              // 극성
-#endif
 
 	int iRatioOfPOL;                                // 극성 신뢰도
+#endif
 
 	int iSignalType;
 

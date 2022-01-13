@@ -174,9 +174,9 @@ struct SRxLOBData {
 
 #ifndef _XBAND_
     int iPolarization;                              // 必己
-#endif
-
     int iRatioOfPOL;                                // 必己 脚汾档
+
+#endif
 
     int iSignalType;
 
@@ -247,7 +247,7 @@ struct SRxLOBData {
     int iNumOfPDW;
     int iNumOfIQ;
 
-    char aucRadarName[MAX_RADARNAME];
+    char aucRadarName[_MAX_RADARMODE_NAME_SIZE];
     int iRadarModeIndex;
     //int iThreatIndex;
 
