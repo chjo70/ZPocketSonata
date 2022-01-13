@@ -95,7 +95,11 @@ namespace RadarAnlAlgotirhm
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( int i=0 ; i < pstLOBHeader->iNumOfLOB ; ++i ) {
 				if( pstLOBData->aucTaskID[0] != NULL ) {
+#ifdef _XBAND_
+					bIsResult = gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, true );
+#else
 					bIsResult = gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
+#endif
 
 					++ pstLOBData;
 				}

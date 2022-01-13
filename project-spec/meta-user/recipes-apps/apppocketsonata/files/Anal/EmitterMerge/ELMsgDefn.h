@@ -207,7 +207,7 @@ struct SRxABTData {
 
     int iPolarization;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
@@ -328,7 +328,7 @@ struct SRxAETData {
 
     int iValidity;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
