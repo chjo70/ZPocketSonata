@@ -1,7 +1,11 @@
 echo off
 
+
+SET RADAR_DF_FOLDER = E:\GitHub\RADAR_DF\Debug
+
+
 REM X밴드 방탐기 ======================================
-IF NOT EXIST D:\RADAR\RADAR_DF\Debug goto ERROR
+IF NOT EXIST %RADAR_DF_FOLDER% goto ERROR
 echo 레이더 방탐 라이브러리
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
@@ -30,7 +34,7 @@ Echo 복사 완료 했습니다.
 goto END
 
 :ERROR
-Echo 이동할 폴더가 없어서 복사하지 못했습니다.
+Echo 이동할 폴더(%RADAR_DF_FOLDER%)가 없어서 복사하지 못했습니다.
 goto END
 
 :END
