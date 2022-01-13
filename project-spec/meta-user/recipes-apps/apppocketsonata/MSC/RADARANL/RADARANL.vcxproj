@@ -195,6 +195,7 @@
     <ClInclude Include="..\..\files\System\csharedmemory.h" />
     <ClInclude Include="..\..\files\System\csysconfig.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="RADARANL.h" />
     <ClInclude Include="RadarAnlAlgorithm.h" />
     <ClInclude Include="Resource.h" />

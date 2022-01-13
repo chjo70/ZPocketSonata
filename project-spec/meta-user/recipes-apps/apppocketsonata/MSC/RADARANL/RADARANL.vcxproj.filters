@@ -317,6 +317,9 @@
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Stack.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
+    <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h">
+      <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RADARANL.rc">
