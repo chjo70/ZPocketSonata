@@ -3,16 +3,22 @@ echo off
 
 REM X밴드 방탐기 ======================================
 IF NOT EXIST D:\RADAR\RADAR_DF\Debug goto ERROR
+echo 레이더 방탐 라이브러리
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
 copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_DF\Debug"
-rem copy ..\RadarDirAlgorithm.h "D:\RADAR\Temp\RADAR_DF\ICAA"
+
+echo 레이더 방탐 헤더 파일
+copy RadarDirAlgorithm.h "D:\RADAR\RADAR_DF\ICAA"
 
 IF NOT EXIST D:\RADAR\RADAR_RD\Debug goto ERROR
+echo 레이더 방탐 라이브러리
 copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_RD\Debug"
 copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_RD\Debug"
 copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_RD\Debug"
-rem copy ..\RadarDirAlgorithm.h "D:\RADAR\Temp\RADAR_RD\ICAA"
+
+echo 레이더 방탐 헤더 파일
+copy RadarDirAlgorithm.h "D:\RADAR\RADAR_RD\ICAA"
 
 goto DONE
 

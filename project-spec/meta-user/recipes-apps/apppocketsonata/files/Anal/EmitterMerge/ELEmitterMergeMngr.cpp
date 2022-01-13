@@ -172,7 +172,9 @@ CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
  */
 void CELEmitterMergeMngr::AllocMemory()
 {
-    g_pTheELEnvironVariable = new CELEnvironVariable();
+	if( g_pTheELEnvironVariable == NULL ) {
+		g_pTheELEnvironVariable = new CELEnvironVariable();
+	}
 
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기

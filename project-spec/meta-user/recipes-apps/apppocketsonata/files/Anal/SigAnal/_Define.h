@@ -508,11 +508,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SIZE_OF_IDINFO                                         (10)
 #define _MAX_SIZE_OF_BENUMBER                                       (30)
 
-#define _MAX_MODECODE_STRING_SIZE_									(2+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_									(28+_NULL_CHAR_)
+#define _MAX_MODECODE_STRING_SIZE_									(3+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_									(27+_NULL_CHAR_)
 #define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
 
-#define _MAX_FUNCTIONCODE_STRING_SIZE_								(4+_NULL_CHAR_)
+#define _MAX_FUNCTIONCODE_STRING_SIZE_								(3+_NULL_CHAR_)
 #define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
 
 #define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
@@ -525,7 +525,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
 #define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
 #define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_ELNOT_STRING_SIZE_										(8+_NULL_CHAR_)
+#define _MAX_ELNOT_STRING_SIZE_										(7+_NULL_CHAR_)
 #define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
 #define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 

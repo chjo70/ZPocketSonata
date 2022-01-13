@@ -56,6 +56,10 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw )
 
     srand( time(NULL) & 0xFFFF );
 
+	if( g_pTheELEnvironVariable == NULL ) {
+		g_pTheELEnvironVariable = new CELEnvironVariable();
+	}
+
     // MSSQL 연결
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기

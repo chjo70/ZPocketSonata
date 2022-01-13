@@ -113,7 +113,7 @@ struct STR_PDWDATA {
 }  ;
 #endif
 
-#define MAX_RADARNAME					(9+1)
+#define MAX_RADARNAME					(8)
 
 #ifndef MAX_FREQ_PRI_STEP
 #define MAX_FREQ_PRI_STEP				(32)
@@ -124,7 +124,7 @@ struct STR_PDWDATA {
 #endif
 
 #ifndef _MAX_ELNOT_STRING_SIZE_
-#define _MAX_ELNOT_STRING_SIZE_			(8+_NULL_CHAR_)
+#define _MAX_ELNOT_STRING_SIZE_			(7+_NULL_CHAR_)
 #endif
 
 #ifndef _MAX_SIZE_OF_MODECODE
@@ -132,7 +132,7 @@ struct STR_PDWDATA {
 #endif
 
 #ifndef _MAX_MODECODE_STRING_SIZE_
-#define _MAX_MODECODE_STRING_SIZE_		(2+_NULL_CHAR_)
+#define _MAX_MODECODE_STRING_SIZE_		(3+_NULL_CHAR_)
 #endif
 
 #ifndef _MAX_RADARMODE_NAME_SIZE
@@ -140,11 +140,11 @@ struct STR_PDWDATA {
 #endif
 
 #ifndef _MAX_FUNCTIONCODE_STRING_SIZE_
-#define _MAX_FUNCTIONCODE_STRING_SIZE_	(4+_NULL_CHAR_)
+#define _MAX_FUNCTIONCODE_STRING_SIZE_	(3+_NULL_CHAR_)
 #endif
 
 #ifndef _MAX_NICKNAME_STRING_SIZE_
-#define _MAX_NICKNAME_STRING_SIZE_		(28+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_		(27+_NULL_CHAR_)
 #endif
 
 
