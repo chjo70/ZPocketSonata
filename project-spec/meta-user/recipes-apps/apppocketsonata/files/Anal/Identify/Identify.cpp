@@ -4378,7 +4378,7 @@ void CELSignalIdentifyAlg::IdentifyPW()
  */
 void CELSignalIdentifyAlg::IdentifyScan()
 {
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     UINT i;
     UINT toLib;
     STR_LIB_IDRESULT *pIdxLib;

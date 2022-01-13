@@ -104,7 +104,7 @@ T _diffabs( T x, T y)
 #define High( A )               ( (int) A >> 8 ) & 0x00ff
 #define Low( A )                ( A & 0x00ff )
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
 #define I_FRQMhzCNV( A, B )		IMUL( (B), ( 0.001) )
 #define FFRQMhzCNV( A, B )		(float) ( (float)(B) * (float) (0.001) )
@@ -364,7 +364,7 @@ float _spPWres;
 
 float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
 #else
 float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;

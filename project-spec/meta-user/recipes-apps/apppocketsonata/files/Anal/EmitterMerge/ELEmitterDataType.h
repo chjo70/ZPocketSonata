@@ -1543,7 +1543,7 @@ struct I_AET_DATA {
  	unsigned short usEmitterId;
  	unsigned short usBeamId;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 	LONG lOpInitID;
 	unsigned char	aucTaskID[LENGTH_OF_TASK_ID];
 #endif
@@ -1952,7 +1952,7 @@ struct SELABTDATA_EXT {
     unsigned int uiTry;
     unsigned int uiScanStep;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     // FISINT�슜 怨쇱젣
     //bool bIsFISINTTask;
     UINT uiOpInitID;

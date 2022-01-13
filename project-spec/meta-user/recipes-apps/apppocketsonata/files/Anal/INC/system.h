@@ -328,7 +328,7 @@
 //  for Merge, system parameter definition
 //  Merge for direction
 //  debug, 1 -> 3, 00-09-20 09:43:31
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define	MAX_FREQ_MHZ					    (18000)			            //!< 주파수 최대 값, Hz
 #define MIN_FREQ_MHZ 					    (500)					    //!< 주파수 최소 값
 
@@ -402,7 +402,7 @@
 #define   _spMgJtrPer       4     // not use, from 99-07-23 13:37:55
 
 // 펄스폭 병합 범위
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define   _spMgPW						ITOAusCNV( 100 )			//(100*_spOneMicrosec)
 #else
 #define   _spMgPW						(100*_spOneMicrosec)

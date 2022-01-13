@@ -98,7 +98,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 	// 추적할 에미터를 복사한다.
     m_pTrkAet = pTrkAet;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     Printf( "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , stTrkAet.aet.noEMT, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
 #else
 #endif
@@ -483,7 +483,7 @@ void CKnownSigAnal::SendLostAet()
 
 #endif
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 	Printf( "\n Lost[%d]" , stTrkAet.aet.noEMT );
 #else
 #endif

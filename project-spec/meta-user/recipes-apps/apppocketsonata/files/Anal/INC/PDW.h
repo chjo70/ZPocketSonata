@@ -236,7 +236,7 @@ struct _PDW {
 	int iPFTag;
 	int iAOA;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 	float fPh1;
 	float fPh2;
 	float fPh3;
@@ -253,7 +253,7 @@ struct _PDW {
 #endif
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
@@ -344,7 +344,7 @@ typedef enum {
 //////////////////////////////////////////////////////////////////////////
 // PDW 신호 상태
 
-// #ifdef _ELINT_
+// #if defined(_ELINT_) || defined(_XBAND_)
 // #define PDW_DV				(1)
 // 
 // #define PDW_NORMAL          (1)

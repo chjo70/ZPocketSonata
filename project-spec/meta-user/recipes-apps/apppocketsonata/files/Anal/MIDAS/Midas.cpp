@@ -82,7 +82,7 @@ CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
     // 초기 설정 정의
     memset( & m_strKeywordValue, 0, sizeof(SEL_KEYWORD_VALUE) );
     strcpy( m_strKeywordValue.writer_version, "0.1" );
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     strcpy( m_strKeywordValue.writer, "ELINT" );
 #elif _POCKETSONATA_
     strcpy( m_strKeywordValue.writer, "ZSONATA" );
@@ -604,7 +604,7 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
 
         pPDWRecords->ddtoa = 0;
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
         pPDWRecords->ddoa = FAOACNV( pS_EL_PDW_DATA->iAOA );
 
         pPDWRecords->dfreq = DFRQMhzCNV( 0, pS_EL_PDW_DATA->iFreq ) * 1000000.;
@@ -2068,7 +2068,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
     if( pstTime != NULL ) {
         // 1. 폴더명 생성하기
         strftime( buffer, 100, "%Y-%m-%d", pstTime );
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
@@ -2085,7 +2085,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
             m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
             sprintf( m_szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, uiStep, PDW_EXT );
 #elif _POCKETSONATA_
             if( enDataType == E_EL_SCDT_PDW ) {

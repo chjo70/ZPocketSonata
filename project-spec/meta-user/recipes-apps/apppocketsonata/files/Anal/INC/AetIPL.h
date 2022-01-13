@@ -42,7 +42,7 @@
 
 
 //##ModelId=452B0C51000F
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 enum FREQ_BAND
 {
     BAND0=0,
@@ -201,7 +201,7 @@ enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, F
 #define	_spUnknown	0
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
 //##ModelId=452B0C51022C
@@ -281,7 +281,7 @@ enum SCAN_STAT
   All_Fail          = 6
 } ;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 //const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
 #elif defined(_POCKETSONATA_)
 static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
@@ -663,7 +663,7 @@ struct STR_LOST {
 }  ;
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 //##ModelId=452B0C5200D8
 struct STR_NEWAET {
     // New AET structure
@@ -769,7 +769,7 @@ struct STR_LOC {
 }  ;
 
 struct STR_MANAET {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     STR_AET aet;
 #elif defined(_POCKETSONATA_)
     SRxLOBData aet;

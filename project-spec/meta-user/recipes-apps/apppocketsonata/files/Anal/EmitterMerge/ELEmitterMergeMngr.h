@@ -179,7 +179,7 @@ private:
     SEnvironVariable *m_pSEnvironVariable;
     
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     LONG m_lOpInitID;
 
 #endif
@@ -519,7 +519,7 @@ public:
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     inline UINT GetOpInitID() { return m_lOpInitID; }
 #endif
 

@@ -116,7 +116,7 @@ struct STR_H000 {
 #include "../../ODBC/odbccore.h"
 #endif
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define FLIB_FREQ_RES_MHZ               (10)
 
 #elif defined(_POCKETSONATA_)

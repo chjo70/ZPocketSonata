@@ -62,7 +62,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 //
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define _spTimeNsRes						(25)
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
@@ -98,7 +98,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////
 //
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define   _spPAoffset               (-75)	// amplitude initial value */
 
 #define NEW_COLLECT_PDW				(4096)			// 탐지 분석용 최대 수집 개수
@@ -144,7 +144,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 방위/주파수/펄스폭 그룹화
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
@@ -263,7 +263,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define MAX_FGRT      			( 30 )	// 최대 주파수 그룹 범위 개수(겹침고려 2배)
 #define MAX_PGRT      			( 40 )	// 최대 펄스폭 그룹 범위 개수(겹침고려 2배)
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #else
 
@@ -272,7 +272,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 /*! \bug  소청도에서의 강경리 신호가 펄스폭으로 분리되기 때문에 이를 1에서 2로 설정해서 하나의 그룹으로 만들기 위함.
     \date 2008-01-24 14:26:28, 조철희
 */
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define	PW_SHIFT_CNT				(10)			//
 #else
 #define	PW_SHIFT_CNT				(7)			//
@@ -378,7 +378,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define MAX_HOPPING_LEVEL_ELEMENT           32
 #else
 #define MAX_HOPPING_LEVEL_ELEMENT           16

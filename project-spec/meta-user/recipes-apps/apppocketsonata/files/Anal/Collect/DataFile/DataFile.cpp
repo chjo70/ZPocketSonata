@@ -1252,7 +1252,7 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
 
             pPDW1->iPFTag = 0;
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
             // 신호 형태 저장
             //pPDW1->iPulseType = STAT_NORMAL;
 
@@ -2961,7 +2961,7 @@ void CData::ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData )
 void CData::UpdateMacroSysVar()
 {
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     _spAMPres = m_spAMPres;
     _spAOAres = (float) 0.01;
     _spOneMicrosec = m_spOneMicrosec;

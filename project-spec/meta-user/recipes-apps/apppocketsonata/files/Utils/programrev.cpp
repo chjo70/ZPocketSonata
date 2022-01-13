@@ -97,7 +97,7 @@ void _ShowProgramTitle( void )
     LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT  Ver %s" , PROGRAM_VERSION );
     LOGMSG( enNormal, "---------------------------------------------------------------------------" );
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
 
 #endif
 
@@ -124,7 +124,7 @@ void _ShowProgramTitle( void )
     LOG_LINEFEED;
 
 #ifdef _POCKETSONATA_
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
 #else
 	if( gnoPrc == prc_CIP ) {
 #ifndef _TESTBIT_

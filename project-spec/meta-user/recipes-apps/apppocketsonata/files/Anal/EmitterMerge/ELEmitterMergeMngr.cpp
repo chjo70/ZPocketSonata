@@ -75,7 +75,7 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 
     m_bDBThread = bDBThread;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     m_lOpInitID = 0;
 #else
 
@@ -379,7 +379,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
         );
     // WhereIs;    */
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
     Log( enNormal, "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
         pLOBData->aucTaskID,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
@@ -397,7 +397,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
 
 #ifdef _POCKETSONATA_
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
     // strcpy_s( szTaskID, pLOBData->aucTaskID );
 #endif
     
@@ -996,7 +996,7 @@ void CELEmitterMergeMngr::LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* p
     m_LOBDataExt.aetAnal.tiContactTimems = m_pLOBData->tiContactTimems;
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     //m_LOBDataExt.aetData.lOpInitID = m_lOpInitID;
     memcpy( m_LOBDataExt.aetData.aucTaskID, m_pLOBData->aucTaskID, sizeof(m_pLOBData->aucTaskID) );
 #endif
@@ -2814,9 +2814,9 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
         m_pABTExtData->fRadarLatitude = m_pLOBData->fRadarLatitude;
         m_pABTExtData->fRadarLongitude = m_pLOBData->fRadarLongitude;
 
-    #ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         m_pABTExtData->uiSeqNum = m_nSeqNum;
-    #endif
+#endif
 
         m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
         m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
@@ -2843,7 +2843,7 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
 
         m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         m_pABTExtData->uiSeqNum = m_nSeqNum;
 #endif
 
@@ -3795,7 +3795,7 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
                     pABTData->fCEP = (float) stResult.dCEP_error;
 
                     // 위,경도 값 유효성 체크
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
                     if( ( pABTData->fLatitude > 40.0 || pABTData->fLatitude < 33 ) ||
                             ( pABTData->fLongitude > 135. || pABTData->fLongitude < 120. ) ||
                             ( 0 == _finite( pABTData->fLatitude ) ) ||
@@ -4165,7 +4165,7 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pA
 void CELEmitterMergeMngr::UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
 
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     // 안테나 스캔 세부 정보
     switch( m_pLOBData->iScanType ) {
         case E_AET_SCAN_UNKNOWN :
@@ -5141,7 +5141,7 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
     m_pABTExtData->enValid = E_EL_PESTAT_NOT_YET;
     m_pABTExtData->bApplayOfLOBClustering = ! bCluster;
 
-#ifdef _ELINT_   
+#if defined(_ELINT_) || defined(_XBAND_)
 
     // 위치 산출 정보
     //memset( & pABTExtData->peInfo, 0, sizeof( STR_POSITION_ESTIMATION ) );
@@ -8504,7 +8504,7 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
         }
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT_)
+#elif defined(_ELINT_) || defined(_XBAND_)
 #else
         // 추가 자료 만들기
         // 임무 정보
@@ -8833,7 +8833,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 {
     char buffer[400];
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
 
     m_lOpInitID = GetLONGData( buffer ) + 1;

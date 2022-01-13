@@ -12,10 +12,14 @@
 #include "_SigAnal.h"
 
 
-
+#ifdef _XBAND_
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, 0, 0, \
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+#else
 const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_FMOP, 0, \
 																0, STAT_SHORTP, 0, 0, 0, 0, 0, 0, 0, \
 																0 };
+#endif
 
 
 #ifdef __cplusplus

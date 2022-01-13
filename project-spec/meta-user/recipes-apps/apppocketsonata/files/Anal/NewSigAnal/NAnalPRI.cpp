@@ -7,7 +7,7 @@
 
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #include "../OFP_Main.h"
 #endif

@@ -51,7 +51,7 @@ CCommonUtils::CCommonUtils()
  */
 void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif _POCKETSONATA_
 #ifndef _CGI_LIST_
@@ -87,7 +87,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
  */
 void CCommonUtils::CloseSocket()
 {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif _POCKETSONATA_
 #ifndef _CGI_LIST_

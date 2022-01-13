@@ -43,7 +43,7 @@
 //////////////////////////////////////////////////////////////////////////
 //
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"
 #define LOCAL_DATA_DIRECTORY_2                  "C:\\기타\\EPDW"
 

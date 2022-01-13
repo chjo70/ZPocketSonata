@@ -34,7 +34,7 @@ typedef struct {
     int iPFTag;
     int iAOA;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     float fPh1;
     float fPh2;
     float fPh3;
@@ -172,7 +172,7 @@ struct SRxLOBData {
     char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     int iPolarization;                              // 극성
 #endif
 
@@ -221,7 +221,7 @@ struct SRxLOBData {
     float fPAMin;
     float fPADeviation;			// 기존대로
 
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     int iScanType;
     //int iDetailScanType;
     float fScanPeriod;			// [msec]
@@ -256,7 +256,7 @@ struct SRxLOBData {
 	float fRadarLatitude;
 	float fRadarLongitude;		
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
 	float fRadarLatitude;
 	float fRadarLongitude;		
 

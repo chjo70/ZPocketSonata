@@ -11,7 +11,7 @@
 
 #endif
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #include "../OFP_Main.h"
 
 #elif _POCKETSONATA_
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "PulExt.h"
 
@@ -1090,7 +1091,7 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                 CalcEmitterPW( pSeg );
 
                 // 밴드 코드 설정
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
                 pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ];
 #else
                 pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ] + 1;
@@ -1209,7 +1210,7 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                         CalcEmitterPW( pSeg );
 
                         // 밴드 코드 설정
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
                         pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ];
 #else
                         pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ] + 1;
@@ -1492,7 +1493,7 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
     if( pSeg->freq_type == _FIXED ) {
         int threshold;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         threshold = IFRQMhzCNV( 0, 40 );
 
 #elif _POCKETSONATA_
@@ -1862,9 +1863,9 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
         dtoa_range.iHgh = pSeg->pri.max;
 
         pSeg->pri.max = 0;
-        pSeg->pri.min = 0xfffffff;
+        pSeg->pri.min = UINT64_MAX;
 
-        priMean = pSeg->pri.mean;
+        priMean = 0; // pSeg->pri.mean;
     }
 
     // 펄스열의 최초시간 및 마지막 시간 설정
@@ -1878,7 +1879,7 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     /*! \bug  priMean 값의 최기값으로 pSeg->pri.mean 값으로 했기 때문에 dtoa_count의 초기값은 1로 함.
         \date 2006-08-25 15:47:53, 조철희
     */
-    dtoa_count = 1;
+    dtoa_count = 0;
 
     pPdwIndex = & pSeg->pdw.pIndex[0];
     preToa = m_pTOA[ *pPdwIndex ];
@@ -1995,7 +1996,7 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     }
 
     // 밴드 코드 설정
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ];
 #else
     pSeg->band = m_pBAND[ pSeg->pdw.pIndex[0] ] + 1;
@@ -2040,7 +2041,7 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     /*! \bug  주파수 범위차가 10MHz 이내이면 FIXED 로 한다.
         \date 2006-08-24 12:08:01, 조철희
     */
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     freq = IFRQMhzCNV( 0, 10 );
 #else
     freq = abs( (int) IDIV( 10, gFreqRes[ pSeg->band ].res ) );
@@ -2050,7 +2051,7 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     }
     else {
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     threshold = IFRQMhzCNV( 0, FIXED_FREQ_MARGIN );
 #else
     int band = m_pBAND[ pSeg->pdw.pIndex[0] ];
@@ -4472,7 +4473,9 @@ void CPulExt::MakeCWPulseTrain()
     pSeg->pdw.uiCount = m_pGrPdwIndex->uiCount;
 
     pSeg->pri.min = 0;
-    pSeg->pri.max = 0xFFFFFF;
+	pSeg->pri.max = 500002; // UINT64_MAX;
+	pSeg->pri.mean = 0;
+
     pSeg->gr_ref_idx = 0;
     pSeg->first_idx = 0;
     pSeg->last_idx = pSeg->pdw.uiCount - 1;

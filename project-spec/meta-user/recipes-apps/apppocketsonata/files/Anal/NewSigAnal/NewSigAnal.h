@@ -61,7 +61,7 @@ private:
 
     int m_iIsStorePDW;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     unsigned char m_szTaskID[LENGTH_OF_TASK_ID];
     EN_RADARCOLLECTORID m_enCollectorID;
     ENUM_BANDWIDTH m_enBandWidth;
@@ -110,7 +110,7 @@ public:
     inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
     inline int IsStorePDW() { return m_iIsStorePDW; }
     inline int GetColPdw() { return m_CoPdw; }
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     inline EN_RADARCOLLECTORID GetCollectorID() { return m_enCollectorID; }
 #endif    
     inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }

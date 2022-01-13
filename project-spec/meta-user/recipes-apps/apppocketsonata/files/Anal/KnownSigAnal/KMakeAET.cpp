@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #include "../OFP_Main.h"
 #elif _POCKETSONATA_
 #include "../INC/Macros.h"

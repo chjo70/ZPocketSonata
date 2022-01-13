@@ -35,7 +35,7 @@ extern "C" {
 // 주파수 해상도 계산용
 
 // HARMONIC MARGIN
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 UINT stSigma1Aoa[5] = { KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR, KHARM_AOA_MAR } ;
 UINT stSigma1Frq[5] = { KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR, KHARM_FRQ_MAR } ;
 
@@ -59,7 +59,7 @@ extern STR_MANAET stTrkAet;
 extern STR_SCNAET stScnAet;
 extern STR_SCANPT stScanPt;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 extern UINT stSigma1Aoa[5];
 extern UINT stSigma1Frq[5];
 

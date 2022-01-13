@@ -10,7 +10,7 @@
 
 #endif
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #include "../OFP_Main.h"
 
 #elif _POCKETSONATA_
@@ -1427,13 +1427,13 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 기타 정보 저장
     pLOBData->iIsStoreData = IsStorePDW();
     pLOBData->iNumOfPDW = pEmitter->pdw.uiCount;
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     pLOBData->iCollectorID = GetCollectorID();
     memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
 #endif
 
     // 수집소 위치 정보 저장
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
          pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
          pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
@@ -1452,7 +1452,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 
     //pLOBData->uiSeqNum = 0;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     //STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
     //memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
 #elif defined(_POCKETSONATA_)

@@ -177,7 +177,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
         m_CoPdw = pPDWData->uiTotalPDW;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         memcpy( m_szTaskID, pPDWData->x.el.aucTaskID, sizeof(m_szTaskID) );
         m_iIsStorePDW = pPDWData->x.el.iIsStorePDW;
         m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->x.el.iCollectorID;
@@ -193,7 +193,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
         m_enBandWidth = en5MHZ_BW;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         m_enCollectorID = RADARCOL_Unknown;
 #else
 #endif
@@ -255,7 +255,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
 #elif _POCKETSONATA_
@@ -315,7 +315,7 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
 {
     bool bRet=true;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     if( pPDWData->x.el.aucTaskID[0] == 0 ) {
         Log( enError, "PDW 데이터에 과제 정보가 없습니다. !!"  );
         bRet = false;
@@ -374,7 +374,7 @@ void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index)
 {
 //     if( m_bSaveFile == true ) {
 // 
-// #ifdef _ELINT_
+//#if defined(_ELINT_) || defined(_XBAND_)
 //         UINT uiSize;
 //         char filename[100];
 //         char szDirectory[100];
@@ -479,7 +479,7 @@ void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index)
 void CNewSigAnal::SaveGroupPdwFile( int index )
 {
 //     if( m_bSaveFile == true ) {
-// #ifdef _ELINT_
+// #if defined(_ELINT_) || defined(_XBAND_)
 //         UINT uiSize;
 //         char filename[100];
 //         char szDirectory[100];
@@ -689,7 +689,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
  */
 char *CNewSigAnal::GetTaskID()
 {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     return (char *) & m_szTaskID[0];
 #else
     return NULL;
@@ -710,7 +710,7 @@ char *CNewSigAnal::GetTaskID()
  */
 void CNewSigAnal::InitResolution()
 {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     //STR_PDWDATA *pPDWData;
     //m_enBandWidth = pPDWData->x.el.enBandWidth;
 

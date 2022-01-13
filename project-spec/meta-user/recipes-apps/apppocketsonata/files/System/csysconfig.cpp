@@ -41,7 +41,7 @@ CSysConfig::CSysConfig(void)
 {
 
     // 공유 메모리 설정
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
 #endif
 
@@ -56,7 +56,7 @@ CSysConfig::CSysConfig(void)
  */
 CSysConfig::~CSysConfig(void)
 {
-#ifndef _ONPOOM_
+#ifndef _XBAND_
     m_pSharedMemory->close();
     delete m_pSharedMemory;
 #endif
@@ -156,7 +156,7 @@ void CSysConfig::InitVar()
 //     _spAMPres = (float) (0.351562);
 //     _spPWres = _spOneMicrosec;
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
 //     _spOneSec = FDIV( 1000000000, _toaRes[0] );
 //     _spOneMilli = FDIV( 1000000, _toaRes[0] );
 //     _spOneMicrosec = FDIV( 1000, _toaRes[0] );

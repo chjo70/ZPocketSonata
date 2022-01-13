@@ -43,7 +43,7 @@ void CSysPara::LoadDefaultSysParameter()
 
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     _sp.mg.aoa[1] = _spMgAoaEJ;
     _sp.mg.aoa[2] = _spMgAoaEJ;
     _sp.mg.aoa[3] = _spMgAoaEJ;
@@ -77,7 +77,7 @@ void CSysPara::LoadDefaultSysParameter()
   _sp.mg.agifrqin = _spMgAgileFrqIn;
   _sp.mg.agifrqout = _spMgAgileFrqOut;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 	_sp.mg.fixfrq[0] = _spMgFixFrqEJ;
 #endif
 

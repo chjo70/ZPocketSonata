@@ -78,7 +78,7 @@ public:
 
     inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();
     char *GetTaskID();
 #endif

@@ -13,7 +13,7 @@
 
 #endif
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #include "../OFP_Main.h"
 #elif _POCKETSONATA_
 #include "../INC/Macros.h"
@@ -2071,7 +2071,7 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
         if( co_dec > co_inc ) {
             ratio = UDIV( co_dec * 100, m_CoSample-1 );
             if( ratio > THRESHOLD_SAW_PATTERN ) {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #elif defined(_POCKETSONATA_)
                 *pSawPatternType = SAW_INC;
 #else
@@ -2089,7 +2089,7 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
         else {
             ratio = UDIV( co_inc * 100, m_CoSample-1 );
             if( ratio > THRESHOLD_SAW_PATTERN ) {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif defined(_POCKETSONATA_)
                 *pSawPatternType = SAW_DEC;
@@ -2690,7 +2690,7 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
         pSeg = & m_pSeg[ pEmitter->seg_idx[0] ]; 
         if( m_pSTAT[ pSeg->pdw.pIndex[0] ] == STAT_NORMAL ) {
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif defined(_POCKETSONATA_)
 
@@ -2728,7 +2728,7 @@ SIGNAL_TYPE CAnalPRI::AnalSignalType( STR_EMITTER *pEmitter )
             enSiganlType = ST_CW;
         }
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #elif defined(_POCKETSONATA_)
 #else
         else if( STAT[ pSeg->pdw.pIndex[0] ] == PDW_FMOP ) {
@@ -2826,7 +2826,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     
 
     // +-5 MHz 이하인 PDW개수가 전체 수집 개수의 95% 이하이면, 주파수 고정으로 결정한다.
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     threshold = IFRQMhzCNV( 0, 5 );
 #elif _POCKETSONATA_
     threshold = I_IFRQCNV( 0, 5 );
@@ -4730,7 +4730,7 @@ BOOL CAnalPRI::CompFreq( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 
         return TRUE;
     }
     else {
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
         if( TRUE == CompMeanDiff<_TOA>( pSeg1->freq.mean, pSeg2->freq.mean, _sp.mg.fixfrq[pSeg1->band] ) ) {
 #else
         if( TRUE == CompMeanDiff<_TOA>( pSeg1->freq.mean, pSeg2->freq.mean, _sp.mg.fixfrq[pSeg1->band] ) ) {
@@ -4781,7 +4781,7 @@ UINT CAnalPRI::CompFreqLevel( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 )
         return NOT_MATCH;
     else if( pEmitter1->freq.type == _PATTERN_AGILE && ( pEmitter2->freq.type != _RANDOM_AGILE || pEmitter2->freq.type != _PATTERN_AGILE ) )
         return NOT_MATCH;
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #elif defined(_POCKETSONATA_)
 #else
     else if( pEmitter1->freq.type == _PMOP && pEmitter2->freq.type != _PMOP )

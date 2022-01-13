@@ -12,12 +12,11 @@
 
 #include "../OFP_Main.h"
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 //#include "../OFP_Main.h"
 
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_)
 #include "../Identify/ELUtil.h"
-
 
 #else
 #error "컴파일러에 DEFINE 을 추가해야 합니다."
@@ -209,7 +208,7 @@ void CGroup::MakePDWArray( _PDW *pdw, int count, int iDummy )
     }
 }
 
-#elif defined(_ELINT_) || defined(_POCKETSONATA_)
+#elif defined(_ELINT_) || defined(_POCKETSONATA_) || defined(_XBAND_)
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CGroup::MakePDWArray
@@ -440,7 +439,7 @@ void CGroup::PrintAllGroup()
             Log( enNormal, "\t[%d] Wide   %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[us](%6d-%6d)" , IdxFrqAoaPw, g_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( nBand, pFrqGr->from_frq), I_FRQMhzCNV( nBand, pFrqGr->to_frq), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
         }
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif defined(_POCKETSONATA_)
         //printf( "주파수[MHz](%4d-%4d), " , CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->from_frq), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->to_frq) );
@@ -576,6 +575,10 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     pShortPdwIndex = m_GrStat[STAT_SHORTP].pIndex;
     pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
 
+#elif defined(_XBAND_)
+	pNormalPdwIndex = m_GrStat[STAT_NORMAL].pIndex;
+	pCWPdwIndex = m_GrStat[STAT_CW].pIndex;
+
 #elif defined(_POCKETSONATA_)
     PDWINDEX *pChirpDnPdwIndex;
     PDWINDEX *pChirpUpPdwIndex;
@@ -625,7 +628,7 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
                 *pShortPdwIndex++ = *pPdwIndex;
                 ++ m_GrStat[STAT_SHORTP].uiCount;
                 break;
-
+#elif _XBAND_
 #elif defined(_POCKETSONATA_)
             case STAT_CHIRPDN :
                 *pChirpDnPdwIndex++ = *pPdwIndex;
@@ -1220,7 +1223,7 @@ int CGroup::GetFreqShift( int band, int freq )
     int i;
     int power=1;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
     for( i=1 ; i <= 30 ; ++i ) {
         if( power >= freq ) {
             break;
@@ -1829,7 +1832,7 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
     UINT max_freq_diff;
 
     // 1 GHz 주파수 값
-#if defined(_ELINT_)
+#if defined(_ELINT_) || defined(_XBAND_)
     max_freq_diff = IFRQMhzCNV( 0, MAX_FREQ_DIFF );
 #elif defined(_POCKETSONATA_)
     max_freq_diff = I_IFRQCNV( g_enBoardId, MAX_FREQ_DIFF );
@@ -2242,7 +2245,7 @@ void CGroup::MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-12-28 13:23:43
 //
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 #define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoa )		// 대역중에서 가장 큰 방위 오차
 #define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoa )		// 클러스터 사이간의 최대 길이
 

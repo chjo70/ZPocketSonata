@@ -344,7 +344,7 @@ unsigned int CNMakeAET::IsStorePDW()
     return m_pNewSigAnal->IsStorePDW();
 }
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
 {

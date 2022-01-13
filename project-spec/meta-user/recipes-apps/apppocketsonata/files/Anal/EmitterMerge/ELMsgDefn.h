@@ -78,7 +78,7 @@ struct SRxLOBData {
 	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
-#ifndef _ONPOOM_
+#ifndef _XBAND_
 	int iPolarization;                              // 극성
 #endif
 
@@ -127,7 +127,7 @@ struct SRxLOBData {
 	float fPAMin;
 	float fPADeviation;			// 기존대로
 
-#ifndef _ONPOOM_
+#ifndef _XBAND_
 	int iScanType;
 	//int iDetailScanType;
 	float fScanPeriod;			// [msec]
@@ -164,7 +164,7 @@ struct SRxLOBData {
 
 	char aucTaskID[LENGTH_OF_TASK_ID];
 
-#elif _ELINT_
+#elif defined(_ELINT_) || defined(_XBAND_)
 	float fRadarLatitude;
 	float fRadarLongitude;	
 

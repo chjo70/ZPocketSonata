@@ -25,6 +25,11 @@ enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, MAX_STAT }
 
 enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
 
+#elif _XBAND_
+enum PDW_MARK { STAT_CW=0, STAT_NORMAL=1, MAX_STAT } ;
+
+enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
+
 #else
 
 #endif
@@ -550,7 +555,7 @@ struct STR_DWELL_LEVEL {
 char g_szFreqType[MAX_FRQTYPE][3] = { "F_", "HO", "RA", "PA", "UK", "IF" } ;
 char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
-#ifdef _ELINT_
+#if defined(_ELINT_)
     char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
     char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
@@ -579,6 +584,36 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
     double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
     double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
+
+#elif defined(_XBAND_)
+	char g_szPulseType[MAX_STAT][3] = { "CW" , "NP" };
+	char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
+	char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+	char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+
+
+	FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
+	{	// min, max, offset, res
+		{     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
+		{  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
+		{  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
+		{ 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
+		{ 14000, 18000,  12000+DFD_FREQ_OFFSET,  1.25 },		/* 고대역3	*/
+		{     0,  5000,   6300-DFD_FREQ_OFFSET, -1.25 }		/* C/D			*/
+	} ;
+
+	PA_RESOL gPaRes[ 6 ] =
+	{	// min, max, offset, res
+		{     0,     0,  (float) _spPAoffset, _spAMPres }, 
+		{  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+		{  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+		{ 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+		{ 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+		{     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+	} ;
+
+	double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
+	double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 #elif defined(_POCKETSONATA_)
     char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
@@ -662,7 +697,7 @@ extern char g_szPRIType[MAX_PRITYPE][3];
 extern char g_szAetFreqType[MAX_FRQTYPE][3];
 extern char g_szAetPriType[MAX_PRITYPE][3];
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 extern char g_szAetSignalType[7][3];
 extern FREQ_RESOL gFreqRes[ TOTAL_BAND ];
 extern PA_RESOL gPaRes[ 6 ];

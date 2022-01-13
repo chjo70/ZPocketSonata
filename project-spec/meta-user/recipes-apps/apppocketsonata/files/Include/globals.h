@@ -52,7 +52,7 @@ CELEnvironVariable *g_pTheELEnvironVariable;
 vector<CThread *> g_vecThis;
 
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 
 #elif _POCKETSONATA_
@@ -88,7 +88,7 @@ extern CELEnvironVariable *g_pTheELEnvironVariable;
 
 extern vector<CThread *> g_vecThis;
 
-#ifdef _ELINT_
+#if defined(_ELINT_) || defined(_XBAND_)
 
 
 
