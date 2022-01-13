@@ -1,24 +1,29 @@
 echo off
 
 
-SET RADAR_DF_FOLDER = E:\GitHub\RADAR_DF\Debug
+SET RADAR_DF_LIB=E:\GitHub\RADAR_DF\Debug
+SET RADAR_DF_HEADER=E:\GitHub\RADAR_DF\ICAA
+
+SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\Debug
+SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
 
 
 REM X밴드 방탐기 ======================================
-IF NOT EXIST %RADAR_DF_FOLDER% goto ERROR
-echo 레이더 방탐 라이브러리
-copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
-copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
-copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_DF\Debug"
+IF NOT EXIST %RADAR_RD_LIB% goto ERROR
+echo ===== 레이더 분석 라이브러리 (%RADAR_RD_LIB%)
+copy ..\DEBUG\RADARANL.lib %RADAR_RD_LIB%
+copy ..\DEBUG\RADARANL.dll %RADAR_RD_LIB%
+copy ..\DEBUG\RADARANL.pdb %RADAR_RD_LIB%
 
-echo 레이더 방탐 헤더 파일
-copy RadarAnlAlgorithm.h "D:\RADAR\RADAR_DF\ICAA"
+echo.
+echo ===== 레이더 분석 헤더 파일 (%RADAR_RD_HEADER%)
+copy RadarAnlAlgorithm.h %RADAR_RD_HEADER%
 
 IF NOT EXIST D:\RADAR\RADAR_RD\Debug goto ERROR
-echo 레이더 방탐 라이브러리
-copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_RD\Debug"
-copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_RD\Debug"
-copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_RD\Debug"
+echo ===== 레이더 분석 라이브러리 (%RADAR_DF_LIB%)
+copy ..\DEBUG\RADARANL.lib "D:\RADAR\RADAR_RD\Debug"
+copy ..\DEBUG\RADARANL.dll "D:\RADAR\RADAR_RD\Debug"
+copy ..\DEBUG\RADARANL.pdb "D:\RADAR\RADAR_RD\Debug"
 
 echo 레이더 방탐 헤더 파일
 copy RadarAnlAlgorithm.h "D:\RADAR\RADAR_RD\ICAA"
