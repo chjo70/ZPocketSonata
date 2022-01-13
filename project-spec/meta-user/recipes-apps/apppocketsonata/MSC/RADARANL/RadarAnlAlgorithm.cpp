@@ -41,7 +41,7 @@ namespace RadarAnlAlgotirhm
         }
 
 		::Log( enNormal, "+---------------------------------------------------+" );
-		::Log( enNormal, "레이더 분석 라이브러리를 구동합니다...." );
+		::Log( enNormal, "레이더 분석 라이브러리를 구동합니다....Ver" );
 
 		if( gpEmitterMergeMngr == NULL ) {
 			gpEmitterMergeMngr = new CELEmitterMergeMngr( bDBThread, & gz_theMyODBC );
@@ -95,11 +95,7 @@ namespace RadarAnlAlgotirhm
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( int i=0 ; i < pstLOBHeader->iNumOfLOB ; ++i ) {
 				if( pstLOBData->aucTaskID[0] != NULL ) {
-#ifdef _XBAND_
 					bIsResult = gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, true );
-#else
-					bIsResult = gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
-#endif
 
 					++ pstLOBData;
 				}

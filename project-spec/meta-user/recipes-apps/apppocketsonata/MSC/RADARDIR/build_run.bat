@@ -2,16 +2,16 @@ echo off
 
 
 REM XπÍµÂ πÊ≈Ω±‚ ======================================
-IF NOT EXIST D:\RADAR\Temp\RADAR_DF\Debug goto ERROR
-copy ..\DEBUG\RADARDIR.lib "D:\RADAR\Temp\RADAR_DF\Debug"
-copy ..\DEBUG\RADARDIR.dll "D:\RADAR\Temp\RADAR_DF\Debug"
-copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\Temp\RADAR_DF\Debug"
+IF NOT EXIST D:\RADAR\RADAR_DF\Debug goto ERROR
+copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_DF\Debug"
+copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_DF\Debug"
+copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_DF\Debug"
 rem copy ..\RadarDirAlgorithm.h "D:\RADAR\Temp\RADAR_DF\ICAA"
 
-IF NOT EXIST D:\RADAR\Temp\RADAR_RD\Debug goto ERROR
-copy ..\DEBUG\RADARDIR.lib "D:\RADAR\Temp\RADAR_RD\Debug"
-copy ..\DEBUG\RADARDIR.dll "D:\RADAR\Temp\RADAR_RD\Debug"
-copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\Temp\RADAR_RD\Debug"
+IF NOT EXIST D:\RADAR\RADAR_RD\Debug goto ERROR
+copy ..\DEBUG\RADARDIR.lib "D:\RADAR\RADAR_RD\Debug"
+copy ..\DEBUG\RADARDIR.dll "D:\RADAR\RADAR_RD\Debug"
+copy ..\DEBUG\RADARDIR.pdb "D:\RADAR\RADAR_RD\Debug"
 rem copy ..\RadarDirAlgorithm.h "D:\RADAR\Temp\RADAR_RD\ICAA"
 
 goto DONE

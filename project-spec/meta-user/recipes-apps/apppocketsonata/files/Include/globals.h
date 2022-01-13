@@ -125,7 +125,7 @@ public:
 		if( g_pTheELEnvironVariable != NULL )
 			return g_pTheELEnvironVariable->GetEnvrionVariable();
 		else {
-			TRACE( "The g_pTheELEnvironVariable is null pointer !!" );
+			TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
 			return NULL;
 		}
 	}
