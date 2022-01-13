@@ -8250,6 +8250,36 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     //UpdateLOBData( i_bIsFilteredLOB );
 
+#ifdef _XBAND_
+	if( i_bIsFilteredLOB == false ) {
+		Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+
+		if( m_bDBThread == false ) {
+			// LOB 데이터 저장
+			InsertToDB_LOB( m_pLOBData, pExt, true );
+
+			// FREQ 레벨값 저장
+			if( m_pLOBData->iFreqPositionCount >= _spTwo ) {
+				InsertToDB_Position( m_pLOBData, pExt, true );
+			}
+			// PRI 레벨값 저장
+			if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
+				InsertToDB_Position( m_pLOBData, pExt, false );
+			}
+		}
+		else {
+			//m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
+			//m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
+			//memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
+			//memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
+
+			//GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
+		}
+	}
+
+	// LOB 저장소에 추가 한다.
+	PushLOBLANData( m_pLOBData );
+#else
     if( m_bScanProcess == false ) {
         if( i_bIsFilteredLOB == false ) {
             Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
@@ -8280,6 +8310,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
         // LOB 저장소에 추가 한다.
         PushLOBLANData( m_pLOBData );
     }
+#endif
 
 }
 
