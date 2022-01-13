@@ -50,7 +50,7 @@ rem copy $(RemoteDebuggerWorkingDirectory)\RadarDirAlgorithm.h "z:\레이더 방탐"
 
 :ERROR
 echo.
-Echo 이동할 폴더가 없어서 복사하지 못했습니다.
+Echo 이동할 폴더(%RADAR_DF_FOLDER%)가 없어서 복사하지 못했습니다.
 goto END
 
 :DONE

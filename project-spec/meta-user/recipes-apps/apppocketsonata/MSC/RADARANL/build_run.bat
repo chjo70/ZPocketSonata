@@ -36,7 +36,8 @@ rem copy $(TargetDir)\$(TargetName).dll "z:\레이더 분석"
 rem copy $(RemoteDebuggerWorkingDirectory)\RadarAnlAlgorithm.h "z:/레이더 분석"
 
 :DONE
-Echo 복사 완료 했습니다.
+echo.
+Echo ***** 복사 완료 했습니다.
 goto END
 
 :ERROR
