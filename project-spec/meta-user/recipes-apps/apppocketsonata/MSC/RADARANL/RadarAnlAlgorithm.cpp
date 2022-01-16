@@ -29,7 +29,7 @@ namespace RadarAnlAlgotirhm
 	{
 		SetWindowHandler( hWnd );
 
-		if( bLocal == false && CheckPing() == TRUE ) {
+		if( bLocal == false /* && CheckPing() == TRUE */ ) {
 			SetLocal( bLocal );
 		}
 		else {

@@ -113,8 +113,6 @@ struct STR_PDWDATA {
 }  ;
 #endif
 
-#define MAX_RADARNAME					(8)
-
 #ifndef MAX_FREQ_PRI_STEP
 #define MAX_FREQ_PRI_STEP				(32)
 #endif

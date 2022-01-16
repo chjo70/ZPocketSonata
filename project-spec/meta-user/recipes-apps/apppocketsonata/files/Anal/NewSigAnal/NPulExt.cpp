@@ -165,7 +165,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
 
-    if( GetPulseStat() == STAT_CW ) {
+    if( GetPulseStat() == STAT_CW && false ) {
         MakeCWPulseTrain();
     }
     else {

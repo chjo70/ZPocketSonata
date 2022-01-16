@@ -30,7 +30,6 @@
 
 #include "../Thread/creclan.h"
 #include "../Thread/ctaskmngr.h"
-//#include "../Utils/clog.h"
 
 
 #include "../Utils/ccommonutils.h"
@@ -423,6 +422,8 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 #ifdef _MSC_VER
     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
 #elif __VXWORKS__
+    printf( "\n SendMessage...모드 전환" );
+
 #elif __linux__
     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );

@@ -25,7 +25,7 @@
  *     Xscaled = Xstart * Multiplier / Divider
  * Uses 128 bit intermediate result
  */
-__int64 _stdcall MulDiv64(__int64 operant, __int64 multiplier, __int64 divider);
+__int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider);
 
 
 /*
@@ -35,7 +35,7 @@ __int64 _stdcall MulDiv64(__int64 operant, __int64 multiplier, __int64 divider);
  *     Xscaled = (Xstart * Multiplier) SHR rshift
  * Uses 128 bit intermediate result
  */
-__int64 _stdcall MulShr64(__int64 operant, __int64 multiplier, unsigned char rshift);
+__int64 MulShr64(__int64 operant, __int64 multiplier, unsigned char rshift);
 
 #endif
 

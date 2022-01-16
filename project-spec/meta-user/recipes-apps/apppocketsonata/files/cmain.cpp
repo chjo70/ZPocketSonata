@@ -280,7 +280,34 @@ void Start( int iArgc, char *iArgv[] )
     //PROMPT->Run( _MSG_PROMPT_KEY );
 #endif
 
-    }
+}
+
+void SIM_Start()
+{
+    STR_MessageData sndMsg;
+
+    //
+    g_pTheCCUSocket->Stop();
+    Sleep( 10 );
+
+    //
+    sndMsg.uiOpCode = enREQ_MODE;
+    sndMsg.iSocket = 0; //m_uiSocket;
+    sndMsg.iArrayIndex = -1;
+    sndMsg.uiArrayLength = 0;
+    sndMsg.uiDataLength = sizeof(int);
+
+    sndMsg.x.uiData = enES_MODE;
+
+    g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+
+    Sleep( 10 );
+
+    sndMsg.uiOpCode = enREQ_ANAL_START;
+    sndMsg.x.tiNow = time(NULL);
+    g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+
+}
 
 /**
  * @brief     End

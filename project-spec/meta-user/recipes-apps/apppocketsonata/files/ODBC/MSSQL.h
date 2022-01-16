@@ -48,6 +48,7 @@ public:
 	CODBCDatabase *m_pMyODBC;
 
 private:
+	static bool m_bTryConnect;
 	//CODBCDatabase *m_pMyODBC;
 
 	//int m_iErrorException;
@@ -75,7 +76,7 @@ protected:
         BOOL bRet;
 		char szConnect[100];
 
-		if( m_pMyODBC->IsConnected() == false ) {
+		if( m_bTryConnect == false && m_pMyODBC->IsConnected() == false ) {
 			char szOut[1024];
 
 			m_pMyODBC->SetConnectionTimeout(1);
@@ -88,6 +89,8 @@ protected:
 			if( bRet == FALSE ) {
 				sprintf( szConnect, "SQL 서버(%s)에 연결이 안 됩니다. DB 서버 IP를 확인하거나 Firewall을 확인해주세요..." , DB_SERVER_IP_ADDRESS );
 				AfxMessageBox( szConnect );
+
+				m_bTryConnect = true;
 			}
 
 // 			if( enPos == enBuiltIn ) {

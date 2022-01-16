@@ -185,7 +185,7 @@ struct SRxABTData {
 
     int iStat;
 
-    char aucRadarName[MAX_RADARNAME];
+    char aucRadarName[_MAX_RADARNAME_SIZE];
 
 }  ;
 #endif

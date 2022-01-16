@@ -390,7 +390,7 @@ unsigned long long int CRawFile::GetFileSize()
  */
 unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 {
-    unsigned long long int iRet=UINT_FAST64_MAX;
+    unsigned long long int iRet=UINT64_MAX;
 
 #if defined(__linux__) || defined(__VXWORKS__)
 	struct stat statbuf;

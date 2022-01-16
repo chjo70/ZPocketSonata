@@ -120,13 +120,15 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw )
  */
 CNewSigAnal::~CNewSigAnal()
 {
-    delete m_pIdentifyAlg;
-    delete m_pMidasBlue;
+    _SAFE_DELETE( g_pTheELEnvironVariable );
 
-    delete m_theGroup;
-    delete m_thePulExt;
-    delete m_theAnalPRI;
-    delete m_theMakeAET;
+    _SAFE_DELETE( m_pIdentifyAlg );
+    _SAFE_DELETE( m_pMidasBlue );
+
+    _SAFE_DELETE( m_theGroup );
+    _SAFE_DELETE( m_thePulExt );
+    _SAFE_DELETE( m_theAnalPRI );
+    _SAFE_DELETE( m_theMakeAET );
 
 }
 

@@ -23,7 +23,7 @@ namespace RadarDirAlgotirhm
 	void RadarDirAlgotirhm::Init( HWND hWnd, bool bLocal )
 	{
 		
-		if( bLocal == false && CheckPing() == TRUE ) {
+		if( bLocal == false /*&& CheckPing() == TRUE*/ ) {
 			SetLocal( bLocal );
 		}
 		else {

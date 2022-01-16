@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
     ON_WM_NCDESTROY()
+    ON_BN_CLICKED(ID_SIM_START, &CMSIGADlg::OnBnClickedSimStart)
 END_MESSAGE_MAP()
 
 
@@ -75,6 +76,7 @@ extern void Start( int iArgc, char *iArgv[] );
 extern void End();
 
 extern void ss();
+extern void SIM_Start();
 
 
 // CMSIGADlg 메시지 처리기
@@ -181,4 +183,12 @@ void CMSIGADlg::OnNcDestroy()
     // TODO: 여기에 메시지 처리기 코드를 추가합니다.
     End();
 
+}
+
+
+void CMSIGADlg::OnBnClickedSimStart()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+    SIM_Start();
 }

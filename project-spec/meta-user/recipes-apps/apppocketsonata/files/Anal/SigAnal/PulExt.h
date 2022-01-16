@@ -17,6 +17,8 @@
 
 using namespace std;
 
+#include "../../Utils/MulDiv64.h"
+
 /**	\brief	클래스명 CPulExt;
                         주파수,방위,펄스폭 그룹화 단계를 거친 후에 입력된 신호를 근거로 펄스열 추출을 한다.
                         펄스열 추출은 크게 기본 규칙성 펄스열단계에서 STABLE PRI를 먼저 찾는다. 이 과정에서

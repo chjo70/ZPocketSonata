@@ -9,6 +9,11 @@
  *	$Log: $
  */
 
+#include "stdafx.h"
+
+#include <stdint.h>
+
+#include "../Include/globals.h"
 
 /*
  * MulDiv64
@@ -19,7 +24,7 @@
  */
 #define ABS64(num) (num >=0 ? num : -num)
 //
-__int64 _stdcall MulDiv64(__int64 operant, __int64 multiplier, __int64 divider)
+__int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider)
 {
 #ifdef _WIN32
 	// Declare 128bit storage
@@ -235,9 +240,17 @@ done:
 	}
 	// result is returned in edx:eax
 
+#elif __linux__
+
+#elif _VXWORKS_
+
 #else
     // vxworks and linux 
-    _mul64( );
+	__int64 result;
+	
+	result = ( operant * multiplier ) / divider;
+	
+	return result;
 
 #endif
 
@@ -250,8 +263,9 @@ done:
  *     Xscaled = (Xstart * Multiplier) SHR rshift
  * Uses 128 bit intermediate result
  */
-__int64 _stdcall MulShr64(__int64 operant, __int64 multiplier, unsigned char rshift)
+__int64 MulShr64(__int64 operant, __int64 multiplier, unsigned char rshift)
 {
+#ifdef _WIN32	
 	// Declare 128bit storage
 	struct{
 		unsigned long DW[4];
@@ -415,4 +429,13 @@ storeRES:
 done:
 	}
 	// result is returned in edx:eax
+
+#elif __linux__
+
+#elif _VXWORKS_
+
+#else
+	
+#endif	
+	
 }

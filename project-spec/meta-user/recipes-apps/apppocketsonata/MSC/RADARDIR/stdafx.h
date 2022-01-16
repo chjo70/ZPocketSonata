@@ -52,9 +52,11 @@
 #define RADARDIR_3_IP_ADDRESS				"192.168.0.34"
 
 // X 밴드 일때 DB 서버 어드레스
-#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
+//#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
 // 인천공항
 // #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
+// 회사에서
+#define DB_SERVER_IP_ADDRESS			"127.0.0.1"
 
 //#define LOG_DIRECTORY						"RADARDIR_LOG"
 #define LOG_SUB_DIRECTORY					"레이더 방탐"

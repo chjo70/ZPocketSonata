@@ -8,8 +8,6 @@
 #ifdef _MSC_VER
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
-#include <stdint.h>
-#include "../../Utils/MulDiv64.h"
 
 #endif
 
@@ -27,6 +25,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+#include "../../Utils/MulDiv64.h"
 
 #include "AnalPRI.h"
 
@@ -308,7 +309,7 @@ void CAnalPRI::PrintAllEmitter()
             iCnt=0;
             buffer[0] = NULL;
             for( unsigned int j=0 ; j < pEmitter->uiCoSeg ; ++j ) {
-                iCnt += sprintf_s( & buffer[iCnt], sizeof(buffer)-iCnt, "[%2d]" , pEmitter->seg_idx[j] );
+                iCnt += sprintf( & buffer[iCnt], "[%2d]" , pEmitter->seg_idx[j] );
             }
             Log( enNormal, "\t[%2d]%1c : Co(%2d, %s)" , i, gEmitterMark[pEmitter->mark], pEmitter->uiCoSeg, buffer );
             Log( enNormal, "\t\t F[%1d], P[%1d] (%5d -%5d)" , pEmitter->freq_type, pEmitter->pri_type, I_TOAusCNV( pEmitter->pri.min ), I_TOAusCNV( pEmitter->pri.max ) );
@@ -4051,7 +4052,7 @@ BOOL CAnalPRI::StaggerAnalysis( STR_EMITTER *pEmitter )
             // ACF를 계산하는데 수정 주의.
             while( k < count ) {
                 idtoa = cmpToa - *pToa1;
-                if( idtoa > ( UINT_FAST64_MAX-10) ) {
+                if( idtoa > ( UINT64_MAX-10) ) {
                     break;
                 }
                 else if( idtoa <= 10 ) {
@@ -4352,7 +4353,7 @@ void CAnalPRI::FindPeak()
 
     _TOA *pPeak;
 
-    _TOA max_Toa_index=UINT_FAST64_MAX-1;
+    _TOA max_Toa_index=UINT64_MAX - 1;
 
     // 제일 큰 피크값을 가진 TOA 점을 찾는다.
     pPeak = & m_pCanPeak[0];

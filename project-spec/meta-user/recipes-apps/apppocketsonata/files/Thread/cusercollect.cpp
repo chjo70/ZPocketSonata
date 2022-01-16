@@ -19,7 +19,6 @@
 #include "stdafx.h"
 
 #define _USE_MATH_DEFINES
-//#define _INTSAFE_H_INCLUDED_
 
 #include "cusercollect.h"
 
@@ -423,7 +422,7 @@ void CUserCollect::MakeSIMPDWData()
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
 
-        if( i < MANUALTOA ) {
+        if( i < MANUALTOA && false ) {
             m_ullTOA = manualTOA[i];
         }
         else {

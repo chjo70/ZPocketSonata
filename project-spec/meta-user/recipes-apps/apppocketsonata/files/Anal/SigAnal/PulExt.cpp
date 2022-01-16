@@ -7,7 +7,6 @@
 #ifdef _WIN32
 // PC용 상위 클래스에 전달하기 위한 선언
 //#include "../../A50SigAnal/stdafx.h"
-#include "../../Utils/MulDiv64.h"
 
 #endif
 
@@ -27,6 +26,7 @@
 #include <stdint.h>
 
 #include "PulExt.h"
+
 
 #include "../../Include/globals.h"
 

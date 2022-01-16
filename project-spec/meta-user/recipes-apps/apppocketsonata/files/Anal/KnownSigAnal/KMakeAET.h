@@ -165,20 +165,21 @@ public:
     template <typename T>
     UINT CheckHarmonic( T *pAet1, SRxLOBData *pAet2 ) {
         int i;
+        unsigned int uRet=0;
 
         int nHarmonic;
 
         if( pAet1 == NULL || pAet2 == NULL ) {
             printf( "\n\t [W] Invalid comparion of AET !" );
-            return 0;
         }
 
         // 추적할 것이 STAGGER 일때 새로운 에미터가 Jitter라고 하면 새로운 에미터를 송신하지 않는다.
-        if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _JITTER_RANDOM ) {
-            if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, STABLE_MARGIN ) &&
-                TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, STABLE_MARGIN ) ) {
-                return 1;
-            }
+        else { 
+            if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _JITTER_RANDOM ) {
+                if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, STABLE_MARGIN ) &&
+                    TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, STABLE_MARGIN ) ) {
+                    uRet = 1;
+                }
 
                 /*! \bug  Jitter 신호는 하모닉 체크해서 최대한 없앤다.
                     \date 2006-08-25 09:37:36, 조철희
@@ -216,97 +217,101 @@ public:
                         return CheckHarmonic( & pAet1->pri, & pAet2->pri ) == 1;
                 }
                 */
-        }
-        else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _JITTER_RANDOM ) {
-            nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
-            if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMax, pAet1->fPWMin, pAet2->fPWMax, pAet2->fPWMin ) ) {
-                return 0;
             }
-            return nHarmonic;
-        }
-        /*! \bug  지터와 Stable 비교는 무시한다.
-            \date 2006-09-05 08:51:47, 조철희
-        */
-        else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _STABLE ) {
-             return 0;
-                // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
-        }
-        /*! \bug  지터와 Stable 비교는 무시한다.
-            \date 2006-09-05 08:51:47, 조철희
-        */
-        else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _JITTER_RANDOM ) {
-            return 0;
-                // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
-        }
-        else if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _STABLE ) {
-            int framePri;
-
-            if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
-                return 1;
+            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _JITTER_RANDOM ) {
+                nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
+                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMax, pAet1->fPWMin, pAet2->fPWMax, pAet2->fPWMin ) ) {
+                    return 0;
+                }
+                return nHarmonic;
+            }
+            /*! \bug  지터와 Stable 비교는 무시한다.
+                \date 2006-09-05 08:51:47, 조철희
+            */
+            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _STABLE ) {
+                 return 0;
+                    // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
+            }
+            /*! \bug  지터와 Stable 비교는 무시한다.
+                \date 2006-09-05 08:51:47, 조철희
+            */
+            else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _JITTER_RANDOM ) {
+                uRet = 0;
+                    // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
             }
 
-            framePri = 0;
-            for( int i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
-                framePri += pAet1->fPRISeq[i];
-            }
 
-            return CheckHarmonic( (float) framePri, pAet2->fPRIMean, 2*_spOneMicrosec );
-        }
-        else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STAGGER ) {
-            int framePri;
+            /*
+            else if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _STABLE ) {
+                unsigned int uiFramePri;
 
-            if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
-                return 1;
-            }
-            else {
-                framePri = 0;
+                if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
+                    return 1;
+                }
+
+                uiFramePri = 0;
                 for( int i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
-                    framePri += pAet1->fPRISeq[i];
+                    uiFramePri += pAet1->fPRISeq[i];
                 }
 
-                return CheckHarmonic( framePri, pAet1->fPRIMean, 2*_spOneMicrosec );
+                return CheckHarmonic( framePri, pAet2->fPRIMean, 2*_spOneMicrosec );
             }
-        }
-        //-- 조철희 2005-10-25 19:01:09 --//
-        else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STABLE ) {
-            return CheckHarmonic<float>( pAet1->fPRIMean, pAet2->fPRIMean, 2*_spOneMicrosec );
-        }
-        else if( pAet1->iPRIType == _DWELL && pAet2->iPRIType == _STABLE ) {
-            for( i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
-                BOOL bRet;
+            else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STAGGER ) {
+                unsigned int uiFramePri;
 
-                bRet = CheckHarmonic( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
-                if( bRet != 0 ) {
-                    return bRet;
+                if( CompMeanDiff<float>( pAet1->fPRIMean, pAet2->fPRIMean, STABLE_MARGIN ) ) {
+                    return 1;
+                }
+                else {
+                    framePri = 0;
+                    for( int i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
+                        framePri += pAet1->fPRISeq[i];
+                    }
+
+                    return CheckHarmonic( framePri, pAet1->fPRIMean, 2*_spOneMicrosec );
                 }
             }
+            else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _STABLE ) {
+                return CheckHarmonic<float>( pAet1->fPRIMean, pAet2->fPRIMean, 2*_spOneMicrosec );
+            }
+            else if( pAet1->iPRIType == _DWELL && pAet2->iPRIType == _STABLE ) {
+                for( i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
+                    BOOL bRet;
+
+                    bRet = CheckHarmonic( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
+                    if( bRet != 0 ) {
+                        return bRet;
+                    }
+                }
+            }
+            else if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _STAGGER ) {
+                return CheckStaggerHarmonic<T>( pAet1, pAet2 );
+            }
+
+            */
+
+            /*! \bug
+                \date 2006-09-26 18:34:38, 조철희
+            */
+            /*
+            else if( pAet1->pri.type == _JITTER && pAet2->pri.type == _PATTERN ) {
+            nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
+
+                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                            return 0;
+                    return nHarmonic;
+            }
+            else if( pAet1->pri.type == _PATTERN && pAet2->pri.type == _JITTER ) {
+            nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
+
+                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                            return 0;
+                    return nHarmonic;
+            }
+            */
         }
-        else if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _STAGGER ) {
-            return CheckStaggerHarmonic<T>( pAet1, pAet2 );
-        }
-        /*! \bug
-            \date 2006-09-26 18:34:38, 조철희
-        */
-        /*
-        else if( pAet1->pri.type == _JITTER && pAet2->pri.type == _PATTERN ) {
-        nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
 
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
-                        return 0;
-                return nHarmonic;
-        }
-        else if( pAet1->pri.type == _PATTERN && pAet2->pri.type == _JITTER ) {
-        nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
-
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
-                        return 0;
-                return nHarmonic;
-        }
-        */
-
-        return 0;
-
-
+        return uRet;
 
     }
 

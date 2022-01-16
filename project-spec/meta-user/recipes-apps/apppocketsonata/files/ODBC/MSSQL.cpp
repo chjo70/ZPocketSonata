@@ -20,6 +20,8 @@
 
 //CODBCDatabase *CMSSQL::m_pMyODBC=NULL;
 
+bool CMSSQL::m_bTryConnect=false;
+
 /**
 	* @brief		
 	* @return 	void
