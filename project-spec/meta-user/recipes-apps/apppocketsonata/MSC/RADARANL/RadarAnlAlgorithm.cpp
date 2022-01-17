@@ -19,7 +19,10 @@
 
 
 CELEmitterMergeMngr *gpEmitterMergeMngr;
+
+#ifdef _MSSQL
 CODBCDatabase gz_theMyODBC;
+#endif
 
 
 namespace RadarAnlAlgotirhm
@@ -44,7 +47,11 @@ namespace RadarAnlAlgotirhm
 		::Log( enNormal, "레이더 분석 라이브러리를 구동합니다....Ver" );
 
 		if( gpEmitterMergeMngr == NULL ) {
+#ifdef _MSSQL_
 			gpEmitterMergeMngr = new CELEmitterMergeMngr( bDBThread, & gz_theMyODBC );
+#else
+			gpEmitterMergeMngr = new CELEmitterMergeMngr( bDBThread, NULL );
+#endif
 			
 		}
 
