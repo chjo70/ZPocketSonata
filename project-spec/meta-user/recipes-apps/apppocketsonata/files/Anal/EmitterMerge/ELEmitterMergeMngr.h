@@ -105,8 +105,8 @@ private:
     CInverseMethod m_theInverseMethod;
     CPositionEstimationAlg m_thePositionEstimation;
 
-    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
-
+	CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+ 
     CELThreat *m_pAETThreat;									///< 생성할때 위협(방사체) 관리 포인터
     CELThreat *m_pABTThreat;									///< 생성할때 위협(빔) 관리 포인터
 
@@ -174,47 +174,15 @@ private:
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
-    bool m_bScanProcess;
-
-    SEnvironVariable *m_pSEnvironVariable;
+     bool m_bScanProcess;
+ 
+     SEnvironVariable *m_pSEnvironVariable;
     
 
 #if defined(_ELINT_) || defined(_XBAND_)
     LONG m_lOpInitID;
 
 #endif
-
-    //SQMsg m_sqMsg;														///< 수신 쓰레드와 매니저 간의 메시지 구조체
-
-// 	int m_nInsertDB;													///< DB 테이블에 삽입할 레코드 개수
-// 
-// 	bool m_bGenNewEmitter;										///< 사용자 방사체 생성 플레그
-// 	UINT m_nAETIDFromGenNewEmitter;						///< 강제 방사체 생성시의 방사체 번호
-// 	char m_szELNOTFromGenNewEmitter[_MAX_ELNOT_STRING_SIZE_];		///< 강제 방사체 생성시의 ELNOT
-// 
-// 	std::vector<SEL_STaskID2Name> m_VecTaskID2NameTable;				///< 과제ID별 과제명을 관리하긱 위한 테이블 
-// 
-// 	//////////////////////////////////////////////////////////////////////////
-// #ifndef _THREAD_DB_
-// 	int m_nArrayLOB;													///< LOB 레코드를 삽입할 개수
-// 	SELArrLOB m_ArrayLOB;											///< LOB 레코드를 삽입할 데이터
-// 
-// 	int m_nArrayLOB_Position;									///< LOB의 주파수 및 PRI 레빌 개수
-// 	SELArrLOBABT_Position m_ArrayLOB_Position;///< LOB의 주파수 및 PRI 레빌 값 데이터
-// 
-// 	int m_nArrayABT;													///< 빔 레코드를 삽입할 개수
-// 	SELArrABT m_ArrayABT;											///< 빔 레코드를 삽입할 데이터
-// 
-// 	int m_nArrayABT_Position;									///< 빔 주파수 및 PRI 레빌 개수
-// 	SELArrLOBABT_Position m_ArrayABT_Position;///< 빔 주파수 및 PRI 레빌 값 데이터
-// 
-// 	int m_nArrayAET;													///< 방사체 레코드를 삽입할 개수
-// 	SELArrAET m_ArrayAET;											///< 방사체 레코드를 삽입할 데이터
-// 
-// #endif
-// 	//////////////////////////////////////////////////////////////////////////
-// 
-
 
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
