@@ -66,7 +66,10 @@ private:
     EN_RADARCOLLECTORID m_enCollectorID;
     ENUM_BANDWIDTH m_enBandWidth;
 
+#ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
+#endif
+
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 #elif _POCKETSONATA_
     ENUM_BANDWIDTH m_enBandWidth;
