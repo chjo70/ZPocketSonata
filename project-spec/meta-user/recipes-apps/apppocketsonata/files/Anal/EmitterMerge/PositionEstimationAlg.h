@@ -91,13 +91,16 @@ private:
 	CQuadratic m_theQuadratric;
 
 	UINT m_nLob;																				///< 위치 산출할 LOB 개수
-	SELPE_RESULT m_estEmitterXY;													///< 위치 산출 결과
+	//SELPE_RESULT m_estEmitterXY;													///< 위치 산출 결과
 
 	double *m_pLob;																			///< 위치 산출 라이브러리에 사용할 LOB 데이터
 	SELSensorPosition m_Sensor;													///< 위치 산출 라이브러리에 사용할 항공기 센서 좌표
 
 #if defined(_TM_POSITION_)
 	CGeoCoordConv m_theGeoCoordConv;
+#elif defined(_ENU_POSITION_)
+	SLlhPos m_stOrgLlh;
+#else
 #endif
 
     CInverseMethod m_theInverseMethod;
@@ -106,11 +109,6 @@ private:
 	STR_LOBS *m_pR2;
 	STR_LOBS *m_pR3;
 	STR_LOBS *m_pR4;
-
-    // ENUN 일때 기본 좌표계
-#if defined(_ENU_POSITION_)
-    SLlhPos m_stOrgLlh;
-#endif
 
 public:
 	CPositionEstimationAlg(void);
