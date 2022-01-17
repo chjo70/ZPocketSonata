@@ -503,7 +503,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define _MAX_RADARMODE_NAME_SIZE									(12)
 #define _MAX_RADARNAME_SIZE											(8)
-#define _MAX_PLATFORM_NAME_SIZE                                     (10)
+#define _MAX_PLATFORM_NAME_SIZE                                     (8)
 #define _MAX_THREAT_NAME_SIZE										(10)
 #define _MAX_SITE_NAME_SIZE											(10)
 #define _MAX_SIZE_OF_IDINFO                                         (10)
@@ -531,7 +531,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 
 #define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_KOREASITENAME_									(70+_NULL_CHAR_)
+#define _MAX_SIZE_OF_KOREASITENAME_									(11+_NULL_CHAR_)
 #define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
 
