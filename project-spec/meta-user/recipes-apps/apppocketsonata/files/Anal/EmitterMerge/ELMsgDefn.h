@@ -211,8 +211,6 @@ struct SRxABTData {
 #endif
 
 #if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
-
-
 	float fDOAMean;                                 // [0.1도]
 	float fDOAMax;
 	float fDOAMin;

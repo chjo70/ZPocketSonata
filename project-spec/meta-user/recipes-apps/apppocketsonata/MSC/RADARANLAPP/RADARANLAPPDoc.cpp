@@ -58,7 +58,9 @@ END_MESSAGE_MAP()
 CRADARANLAPPDoc::CRADARANLAPPDoc() : CMSSQL( & m_theMyODBC )
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
+#ifdef _MSSQL_
 	CMSSQL::Init();
+#endif
 
 	MakeIniFilename();
 
@@ -177,7 +179,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 	float fDOAMax, fDOAMin;
 
-	stLOBData.stLOBHeader.iNumOfLOB = 5;
+	stLOBData.stLOBHeader.iNumOfLOB = 1;
 	//strcpy_s( stLOBData.stLOBHeader.aucTaskID, sizeof(stLOBData.stLOBHeader.aucTaskID), "RADARANLAPP" );
 
 	pLOBData = & stLOBData.stLOBData[0];
@@ -199,7 +201,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->tiContactTime = _time32(NULL);
 		pLOBData->tiContactTimems = i;
 
-		pLOBData->iSignalType = ST_NORMAL_PULSE;
+		pLOBData->iSignalType = ST_CW;
 
 		fTheta = (float) GCAzimuth( (double) dRCLatitude[pLOBData->iCollectorID], (double) dRCLongitude[pLOBData->iCollectorID], dRTarget[0], dRTarget[1], false );
 		fErr = (float) ( ( rand() % 100 ) / 10. - 5. );
