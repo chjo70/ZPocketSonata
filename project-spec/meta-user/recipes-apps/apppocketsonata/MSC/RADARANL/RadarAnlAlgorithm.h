@@ -75,118 +75,130 @@ struct SRxABTHeader
 #define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 
 #define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_KOREASITENAME_									(70+_NULL_CHAR_)
+
+#ifndef _MAX_SIZE_OF_KOREASITENAME_
+#define _MAX_SIZE_OF_KOREASITENAME_									(11+_NULL_CHAR_)
+#endif
+
 #define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
 //#define _MAX_SIZE_OF_MODECODE                                       (4)
-#define _MAX_PLATFORM_NAME_SIZE                                     (10)
+#define _MAX_PLATFORM_NAME_SIZE                                     (8)
 
 #ifndef _STR_ABTDATA_STRUCT
 #define _STR_ABTDATA_STRUCT
-struct SRxABTData {
-    unsigned int uiABTID;
-    unsigned int uiAETID;
+struct SRxABTData { // 레이더 분석
+	unsigned int uiABTID;
+	unsigned int uiAETID;
 
-    int iSignalType;
+	int iSignalType;
 
-    unsigned int uiCoLOB;
+	unsigned int uiCoLOB;
 
-    time_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-    time_t /* __time32_t */ tiLastSeenTime;
+	__time32_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+	__time32_t /* __time32_t */ tiLastSeenTime;
 
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+	int iRadarModePriority;
+	int iRadarPriority;
 
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szPlatform[_MAX_PLATFORM_NAME_SIZE];
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
-    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+#ifndef _XBAND_
+	int iPolarization;
 
-    int iRadarModePriority;
-    int iRadarPriority;
-
-    int iPolarization;
-
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
-    float fDOAMean;                                 // [0.1도]
-    float fDOAMax;
-    float fDOAMin;
-    float fDOADeviation;				// [0.1도]
 #endif
 
-    int iFreqType;
-    int iFreqPatternType;
-    float fFreqPatternPeriodMean;	  // [us]
-    float fFreqPatternPeriodMin;	  // [us]
-    float fFreqPatternPeriodMax;	  // [us]
-    float fFreqMean;										// [10KHz]
-    float fFreqMax;
-    float fFreqMin;
-    float fFreqDeviation;
-    int iFreqPositionCount;
-    int iFreqElementCount;
-    float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
 
-    int iPRIType;
-    int iPRIPatternType;
-    float fPRIPatternPeriodMean;							// [us]
-    float fPRIPatternPeriodMin;							// [us]
-    float fPRIPatternPeriodMax;							// [us]
-    float fPRIMean;											// [1ns]
-    float fPRIMax;
-    float fPRIMin;
-    float fPRIDeviation;			// [1ns]
-    float fPRIJitterRatio;							// [%]
-    int iPRIPositionCount;
-    int iPRIElementCount;
-    float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fPWMean;											// 1ns
-    float fPWMax;
-    float fPWMin;
-    float fPWDeviation;
+	float fDOAMean;                                 // [0.1도]
+	float fDOAMax;
+	float fDOAMin;
+	float fDOADeviation;				// [0.1도]
+#endif
 
-    float fPAMean;											// 기존대로
-    float fPAMax;
-    float fPAMin;
-    float fPADeviation;
+	int iFreqType;
+	int iFreqPatternType;
+	float fFreqPatternPeriodMean;	  // [us]
+	float fFreqPatternPeriodMin;	  // [us]
+	float fFreqPatternPeriodMax;	  // [us]
+	float fFreqMean;										// [10KHz]
+	float fFreqMax;
+	float fFreqMin;
+	float fFreqDeviation;
+	int iFreqPositionCount;
+	int iFreqElementCount;
+	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-    int iScanType;
-    float fMeanScanPeriod;			// [usec]
-    float fMaxScanPeriod;			// [usec]
-    float fMinScanPeriod;			// [usec]
+	int iPRIType;
+	int iPRIPatternType;
+	float fPRIPatternPeriodMean;							// [us]
+	float fPRIPatternPeriodMin;							// [us]
+	float fPRIPatternPeriodMax;							// [us]
+	float fPRIMean;											// [1ns]
+	float fPRIMax;
+	float fPRIMin;
+	float fPRIDeviation;			// [1ns]
+	float fPRIJitterRatio;							// [%]
+	int iPRIPositionCount;
+	int iPRIElementCount;
+	float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    int iHasIntraMod;
-    float fMaxIntraMod;
-    float fMinIntraMod;
+	float fPWMean;											// 1ns
+	float fPWMax;
+	float fPWMin;
+	float fPWDeviation;
 
-    int iPEValid;
-    float fLatitude;							// [deg]
-    float fLongitude;							// [deg]
-    float fHeight;
-    float fCEP;										// [m]
-    float fMajorAxis;							// [m]
-    float fMinorAxis;							// [m]
-    float fTheta;									// [0.1도]
-    float fDistanceErrorOfThreat;	// [m]
+	float fPAMean;											// 기존대로
+	float fPAMax;
+	float fPAMin;
+	float fPADeviation;
 
-    int iValidity;
+#ifndef _XBAND_
+	int iScanType;
+	float fMeanScanPeriod;			// [usec]
+	float fMaxScanPeriod;			// [usec]
+	float fMinScanPeriod;			// [usec]
 
-    unsigned int uiTotalOfPDW;
+	int iHasIntraMod;
+	float fMaxIntraMod;
+	float fMinIntraMod;
+#endif
 
-    int iRadarModeIndex;
-    int iThreatIndex;
+	int iPEValid;
+	float fLatitude;							// [deg]
+	float fLongitude;							// [deg]
+	float fHeight;
+	float fCEP;										// [m]
+	float fMajorAxis;							// [m]
+	float fMinorAxis;							// [m]
+	float fTheta;									// [0.1도]
+	float fDistanceErrorOfThreat;	// [m]
 
-    int iIsManualInput;
+	int iValidity;
 
-    __time32_t tiFinalAlarmTime;
+	unsigned int uiTotalOfPDW;
 
-    int iStat;
+	int iRadarModeIndex;
+	int iThreatIndex;
 
-    char aucRadarName[_MAX_RADARNAME_SIZE];
+#ifndef _XBAND_
+	int iIsManualInput;
 
+	__time32_t tiFinalAlarmTime;
+#endif
+
+	int iStat;
+
+	char aucRadarName[_MAX_RADARNAME_SIZE];
+
+	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+
+	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 }  ;
 #endif
 

@@ -153,119 +153,121 @@ struct STR_PDWDATA {
 #ifndef SRxLOBData_STRUCT
 #define SRxLOBData_STRUCT
 struct SRxLOBData {
-    unsigned int uiLOBID;
-    unsigned int uiABTID;
-    unsigned int uiAETID;
+	unsigned int uiLOBID;
+	unsigned int uiABTID;
+	unsigned int uiAETID;
 
-    __time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
-    unsigned int tiContactTimems;
+	__time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
+	unsigned int tiContactTimems;
 
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
+	char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
 
-    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-    char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
+	char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+	char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
 #ifndef _XBAND_
-    int iPolarization;                              // 극성
+	int iPolarization;                              // 극성
     int iRatioOfPOL;                                // 극성 신뢰도
 
 #endif
 
-    int iSignalType;
+	int iSignalType;
 
-    float fDOAMean;                                 // [0.1도]
-    float fDOAMax;
-    float fDOAMin;
-    float fDOADeviation;							// [0.1도]
-    float fDOASDeviation;
+	float fDOAMean;                                 // [0.1도]
+	float fDOAMax;
+	float fDOAMin;
+	float fDOADeviation;							// [0.1도]
+	float fDOASDeviation;
 
-    int iDIRatio;					// [1 %]
+	int iDIRatio;					// [1 %]
 
-    int iFreqType;
-    int iFreqPatternType;
-    float fFreqPatternPeriod;                       // [us]
-    float fFreqMean;				// [10KHz]
-    float fFreqMax;
-    float fFreqMin;
-    float fFreqDeviation;                           //
-    int iFreqPositionCount;
-    int iFreqElementCount;
-    float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
+	int iFreqType;
+	int iFreqPatternType;
+	float fFreqPatternPeriod;                       // [us]
+	float fFreqMean;				// [10KHz]
+	float fFreqMax;
+	float fFreqMin;
+	float fFreqDeviation;                           //
+	int iFreqPositionCount;
+	int iFreqElementCount;
+	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-    int iPRIType;
-    int iPRIPatternType;
-    float fPRIPatternPeriod;		// [us]
-    float fPRIMean;				// [1ns]
-    float fPRIMax;
-    float fPRIMin;
-    float fPRIDeviation;			// [1ns]
-    float fPRIJitterRatio;			// [%]
-    int iPRIPositionCount;
-    int iPRIElementCount;
-    float fPRISeq[MAX_FREQ_PRI_STEP];
+	int iPRIType;
+	int iPRIPatternType;
+	float fPRIPatternPeriod;		// [us]
+	float fPRIMean;				// [1ns]
+	float fPRIMax;
+	float fPRIMin;
+	float fPRIDeviation;			// [1ns]
+	float fPRIJitterRatio;			// [%]
+	int iPRIPositionCount;
+	int iPRIElementCount;
+	float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fPWMean;				// 1ns
-    float fPWMax;
-    float fPWMin;
-    float fPWDeviation;
+	float fPWMean;				// 1ns
+	float fPWMax;
+	float fPWMin;
+	float fPWDeviation;
 
-    float fPAMean;				// 기존대로
-    float fPAMax;
-    float fPAMin;
-    float fPADeviation;			// 기존대로
+	float fPAMean;				// 기존대로
+	float fPAMax;
+	float fPAMin;
+	float fPADeviation;			// 기존대로
 
 #ifndef _XBAND_
-    int iScanType;
-    //int iDetailScanType;
-    float fScanPeriod;			// [msec]
+	int iScanType;
+	//int iDetailScanType;
+	float fScanPeriod;			// [msec]
 
-    int iMOPType;				// 인트라 타입
-    int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
-    float fMOPMaxFreq;			// ??
-    float fMOPMinFreq;
-    float fMOPMeanFreq;
-    float fMOPFreqDeviation;
+	int iMOPType;				// 인트라 타입
+	int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
+	float fMOPMaxFreq;			// ??
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
 
 
-    float fShipLatitude;
-    float fShipLongitude;
-    float fPitchAngle;
-    float fRollAngle;
-    float fHeadingAngle;
-    float fAltitude;
-    int iValidity;
+	float fShipLatitude;
+	float fShipLongitude;
+	float fPitchAngle;
+	float fRollAngle;
+	float fHeadingAngle;
+	float fAltitude;
+	int iValidity;
 #endif
 
-    int iIsStoreData;
-    int iNumOfPDW;
-    int iNumOfIQ;
+	int iIsStoreData;
+	int iNumOfPDW;
+	int iNumOfIQ;
 
-    char aucRadarName[_MAX_RADARNAME_SIZE];
-    int iRadarModeIndex;
-    //int iThreatIndex;
+	char aucRadarName[_MAX_RADARNAME_SIZE];
+	int iRadarModeIndex;
+	//int iThreatIndex;
 
 
 #ifdef _POCKETSONATA_
 	float fRadarLatitude;
-	float fRadarLongitude;		
+	float fRadarLongitude;	
+
+	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #elif defined(_ELINT_) || defined(_XBAND_)
 	float fRadarLatitude;
-	float fRadarLongitude;		
+	float fRadarLongitude;	
 
-    int	iCollectorID;
+	int	iCollectorID;
 
-    unsigned int uiSeqNum;
-    char aucTaskID[LENGTH_OF_TASK_ID];
+	unsigned int uiSeqNum;
+	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #else
 

@@ -270,6 +270,8 @@ void CRADARANLAPPApp::InitApp()
 
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true, true );
 
+	RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();
+
 	for( i=0 ; i < CHILD_WINDOWS ; ++i ) {
 		pos = GetFirstDocTemplatePosition();
 
