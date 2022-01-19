@@ -5478,30 +5478,35 @@ BOOL CAnalPRI::GetDtoaRange( int peak_index, STR_LOWHIGH *pRange )
 BOOL CAnalPRI::OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
 {
     UINT ratio;
+	BOOL bRet = FALSE;
     _TOA overlapToa, diffToa;
 
     // 겹쳐진 영역중에서 누락 펄스열이 많이 존재하면 겹쳐지지 않은 것으로 해야 한다.
     //-- 조철희 2006-02-06 14:34:59 --//
     if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->last_idx, pSeg1->first_idx, pSeg2->last_idx, pSeg2->first_idx ) ) {
-        if( pSeg1->last_idx < pSeg2->last_idx )
+        if( pSeg1->last_idx < pSeg2->last_idx ) {
             overlapToa = pSeg1->last_toa - pSeg2->first_toa;
-        else
+		}
+        else {
             overlapToa = pSeg2->last_toa - pSeg1->first_toa;
+		}
 
         diffToa = pSeg1->last_toa - pSeg1->first_toa;
         ratio = UDIV( overlapToa * 100, diffToa );
-        if( ratio >= THRESHOLD_OVERLAP )
-            return TRUE;
+        if( ratio >= THRESHOLD_OVERLAP ) {
+            bRet = TRUE;
+		}
 
         diffToa = pSeg2->last_toa - pSeg2->first_toa;
         ratio = UDIV( overlapToa * 100, diffToa );
-        if( ratio >= THRESHOLD_OVERLAP )
-            return TRUE;
+        if( ratio >= THRESHOLD_OVERLAP ) {
+            bRet = TRUE;
+		}
 
-        return FALSE;
+        bRet = FALSE;
     }
 
-    return FALSE;
+    return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////////

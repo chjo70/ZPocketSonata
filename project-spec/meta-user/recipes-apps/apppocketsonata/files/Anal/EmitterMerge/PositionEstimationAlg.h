@@ -91,6 +91,8 @@ private:
 	CQuadratic m_theQuadratric;
 
 	UINT m_nLob;																				///< 위치 산출할 LOB 개수
+
+	// DLL 에서 double 형이 있으면 객체 포인터가 꼬인다. ??
 	//SELPE_RESULT m_estEmitterXY;													///< 위치 산출 결과
 
 	double *m_pLob;																			///< 위치 산출 라이브러리에 사용할 LOB 데이터

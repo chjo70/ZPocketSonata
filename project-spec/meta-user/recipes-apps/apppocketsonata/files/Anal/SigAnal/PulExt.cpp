@@ -336,6 +336,9 @@ void CPulExt::DiscardPulseTrain()
 //     RemoveStablePulseTrain();
 //     DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg );
 
+	// Stable 열과 Stable 열을 펄스열을 비교하여 서로 유사한 펄스열을 제거한다.
+	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, m_uiRefStartSeg+1 );
+
 	// Stable 열과 Stable+Jitter 펄스열을 비교하여 서로 유사한 펄스열을 제거한다.
 	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, m_uiRefEndSeg );
 
@@ -2948,8 +2951,8 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
         // 기존에 추출된 펄스열과 하모닉 관계가 있을 수 있기 때문에 모든 대역에서 추출한 펄스열이 DTOA 관계를
         // 이용해서 제거한다.
         //-- 조철희 2005-12-28 09:58:17 --//
-        bRet = FindSeg( & m_RefSeg, nStartSeg, m_uiCoSeg );
-        PrintSeg( -1, & m_RefSeg );
+		PrintSeg( -1, & m_RefSeg );
+        bRet = FindSeg( & m_RefSeg, nStartSeg, m_uiCoSeg );    
 
         if( bRet == false ) {
             // 추출된 펄스 Marking
@@ -3310,21 +3313,24 @@ void CPulExt::ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR
 UINT CPulExt::AnalPRIType(STR_PULSE_TRAIN_SEG *pSeg, int ext_type )
 {
     _TOA diff;
+	UINT uiRet;
 
     // 펄스열을 근거로 PRI 타입을 결정할 때 아래 루틴을 적용한다.
     if( ext_type == -1 || ext_type == _REFSTABLE ) {
         diff = pSeg->pri.max - pSeg->pri.min;
 
         if( diff > 2*STABLE_MARGIN )
-            return _JITTER_RANDOM;
+            uiRet = _JITTER_RANDOM;
         else
-            return _STABLE;
+            uiRet = _STABLE;
     }
     //-- 조철희 2005-08-30 11:37:07 --//
     // 불규칙성 펄스열 추출할 때는 강제 JITTER 마킹을 한다.
     else {
-        return ext_type;
+        uiRet = ext_type;
     }
+
+	return uiRet;
 }
 
 //////////////////////////////////////////////////////////////////////

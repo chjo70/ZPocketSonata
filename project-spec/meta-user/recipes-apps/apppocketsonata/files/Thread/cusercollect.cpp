@@ -436,7 +436,7 @@ void CUserCollect::MakeSIMPDWData()
         memset( pDMAPDW, 0, sizeof(DMAPDW) );
 
         //
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 0;        // uiPDW_CW;
+        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
         pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
