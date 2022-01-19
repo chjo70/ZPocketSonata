@@ -116,6 +116,7 @@ T _diffabs( T x, T y)
 #define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
 #define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					
+#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
 #define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
@@ -125,6 +126,13 @@ T _diffabs( T x, T y)
 #define I_AOACNV( A )           IMUL( (A), _spAOAres )
 #define FAOACNV( A )            FMUL( (A), _spAOAres )
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
+
+#define I_IPACNV( A )			IDIV( (A), _spAMPres )
+
+#define I_IFRQMhzCNV( A, B )	IDIV( FMUL( B, 1000. ), (0.001) )
+
+#define IPWCNVLOW( A )			_DIV( (A*_spOneMicrosec), 1000. )
+#define IPWCNVHGH( A )			UDIV( (A*_spOneMicrosec), 1000. )
 
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
@@ -144,6 +152,9 @@ T _diffabs( T x, T y)
 
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////
 #elif defined(_POCKETSONATA_)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
@@ -192,6 +203,7 @@ T _diffabs( T x, T y)
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 
+////////////////////////////////////////////////////////////////////////////////////////
 #elif defined(_SONATA_)
 #define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
 #define F_FRQCNV( A, B )            (UINT) ( F_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
@@ -233,19 +245,18 @@ T _diffabs( T x, T y)
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 
-
 #else
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
-#define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
-#define FFRQCNV( A, B )             FMUL( (B), ( gFreqRes[(A)].res ) )
+#define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
+#define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].res ) )
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
 
-#define TOAsCNV( A )						UDIV( (A), _spOneSec )
+#define TOAsCNV( A )			UDIV( (A), _spOneSec )
 #define TOAmsCNV( A )           UDIV( (A), _spOneMilli )
 #define TOAusCNV( A )           UDIV( (A), _spOneMicrosec )
 #define TOAnsCNV( A )           UMUL( (A), _spTimeNsRes )
-#define FTOAsCNV( A )						FDIV( (A), _spOneMicrosec )
+#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
 #define F_TOAusCNV( A )         UDIV( (A), _spOneMicrosec )
 #define C_TOAusCNV( A )         UDIV( (A), _spOneMicrosec )
@@ -257,7 +268,7 @@ T _diffabs( T x, T y)
 #define FTOAusCNV( A )          FDIV( (A), _spOneMicrosec )
 
 //#define AMPCNV( A )             (int) ( UMUL( A, _spAMPres) + _spPAoffset )
-#define FRQRESCNV( A, B )				(UINT) ( abs( (int) IMUL( gFreqRes[(A)].res, (B) ) ) )
+#define FRQRESCNV( A, B )		(UINT) ( abs( (int) IMUL( gFreqRes[(A)].res, (B) ) ) )
 #define FRQCNV( A, B )          (UINT) ( UMUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
 #define F_FRQCNV( A, B )        (UINT) ( F_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
 #define C_FRQCNV( A, B )        (UINT) ( C_MUL( gFreqRes[(A)].res, (B) ) + gFreqRes[(A)].offset )
@@ -276,9 +287,10 @@ T _diffabs( T x, T y)
 #define FAOACNV( A )            (float) ( (float) A * _spAOAres )
 #define FPWCNV( A )             (float) ( (float) A * _spPWres )
 //#define FPACNV( A, B )					(float) ( ( (float) (A) * gPaRes[B].res ) + gPaRes[B].offset )
-#define FPACNV( A )							(float) ( ( (float) (A) * gPaRes[0].res ) + gPaRes[0].offset )
-#define FDBCNV( A, B )					(float) ( ( (float) (A) / gPaRes[B].res ) )
-#define UDBCNV( A, B )					UDIV( (A), gPaRes[B].res )
+#define FPACNV( A )				(float) ( ( (float) (A) * gPaRes[0].res ) + gPaRes[0].offset )
+#define FDBCNV( A, B )			(float) ( ( (float) (A) / gPaRes[B].res ) )
+#define UDBCNV( A, B )			UDIV( (A), gPaRes[B].res )
+
 
 //#define FFRQCNV( A, B )         (float) ( ( (float) B * gFreqRes[A].res) + gFreqRes[A].offset )
 #endif
