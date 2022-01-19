@@ -157,6 +157,11 @@ public:
 
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
+#if defined(_ELINT_) || defined(_XBAND_)
+	inline EN_RADARCOLLECTORID GetCollectorID() { return RADARCOL_Unknown; }
+	inline char *GetTaskID() { return NULL; }
+#endif  
+
     void InitVar();
     //##ModelId=452B0C52036E
     void ClearColBuffer();

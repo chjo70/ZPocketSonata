@@ -306,9 +306,13 @@ void CKMakeAET::MakeUpAET()
 
 		for( int i=0 ; i < count ; ++i ) {
             if( m_LOBData[i].uiABTID != _spZero ) {
+#ifndef _XBAND_
                 pUpdAet->iScanType = m_pTrkAet->iScanType;
                 pUpdAet->fScanPeriod = m_pTrkAet->fMeanScanPeriod;
+
 				++ coUpdAet;
+
+#endif
 			}
 		}
 	}

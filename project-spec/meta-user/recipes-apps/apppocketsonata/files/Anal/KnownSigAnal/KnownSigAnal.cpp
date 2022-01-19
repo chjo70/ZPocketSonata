@@ -7,7 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../OFP_Main.h"
+
 #include "KnownSigAnal.h"
+
+#include "../../Include/globals.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -99,7 +103,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     m_pTrkAet = pTrkAet;
 
 #if defined(_ELINT_) || defined(_XBAND_)
-    Printf( "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , stTrkAet.aet.noEMT, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
+    Log( enNormal, "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , stTrkAet.aet.noEMT, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
 #else
 #endif
 
@@ -178,7 +182,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
         m_theMakeAET->MakeAET();
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT)
+#elif defined(_ELINT) || defined(_XBAND_)
 #else
         // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
         m_theMakeAET->MakeUpAET();
@@ -211,8 +215,10 @@ void CKnownSigAnal::ClearColBuffer()
 #ifdef __GNUC__
     //m_pPdwBank->count = 0;
 #elif _POCKETSONATA_
+
+#elif defined(_ELINT) || defined(_XBAND_)
 #else
-    m_pPdwBank->count = 0;
+    m_pPdwBank-> = 0;
 #endif
 
 }
@@ -409,7 +415,7 @@ void CKnownSigAnal::SendAllAet()
 
 	for( i=0 ; i < count ; ++i ) {
 		if( pUpdAet == NULL ||
-            ( pUpdAet != NULL && m_theMakeAET->CheckHarmonic( pUpdAet, (pNewAet+inEMT) ) == 0 ) ) {
+            ( pUpdAet != NULL && m_theMakeAET->CheckHarmonic<SRxLOBData>( pUpdAet, (pNewAet+inEMT) ) == 0 ) ) {
 			// CheckHarmonic() 에서는 PRI 값으로 펄스열 병합을 수행하고
 			// 실패된 펄스열에 대해서 이제는 펄스열 인덱스를 비교해서 두 펄스열간의 병합을 최종 판단한다.
 			//-- 조철희 2005-10-31 13:59:43 --//
@@ -484,7 +490,7 @@ void CKnownSigAnal::SendLostAet()
 #endif
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	Printf( "\n Lost[%d]" , stTrkAet.aet.noEMT );
+	Log( enNormal, "Lost[%d]" , stTrkAet.aet.noEMT );
 #else
 #endif
 

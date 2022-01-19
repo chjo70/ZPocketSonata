@@ -52,6 +52,11 @@ public:
     //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }
     // inline STR_EMITTER *GetEmitter() { return CMakeAET::GetEmitter(); }
 
+#if defined(_ELINT_) || defined(_XBAND_)
+	EN_RADARCOLLECTORID GetCollectorID();
+	char *GetTaskID();
+#endif
+
     STR_PDWPARAM* GetPdwParam();
     //##ModelId=452B0C530013
     void Init();
@@ -176,8 +181,8 @@ public:
         // 추적할 것이 STAGGER 일때 새로운 에미터가 Jitter라고 하면 새로운 에미터를 송신하지 않는다.
         else { 
             if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _JITTER_RANDOM ) {
-                if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, STABLE_MARGIN ) &&
-                    TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, STABLE_MARGIN ) ) {
+                if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) STABLE_MARGIN ) &&
+                    TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) STABLE_MARGIN ) ) {
                     uRet = 1;
                 }
 

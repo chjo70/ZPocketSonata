@@ -198,6 +198,10 @@ public:
 
     CMakeAET* GetMakeAET() { return NULL; }
 
+#if defined(_ELINT_) || defined(_XBAND_)
+	EN_RADARCOLLECTORID GetCollectorID();
+	char *GetTaskID();
+#endif
 
 	//##ModelId=452B0C45022E
     CSAnalScan( void *pParent, int coMaxPdw );

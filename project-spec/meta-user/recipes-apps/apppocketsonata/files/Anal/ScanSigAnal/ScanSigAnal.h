@@ -108,6 +108,11 @@ public:
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
+#if defined(_ELINT_) || defined(_XBAND_)
+	inline EN_RADARCOLLECTORID GetCollectorID() { return RADARCOL_Unknown; }
+	inline char *GetTaskID() { return NULL; }
+#endif    
+
 	
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );

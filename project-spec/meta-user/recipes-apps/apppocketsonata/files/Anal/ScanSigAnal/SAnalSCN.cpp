@@ -239,8 +239,12 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
 
     // 스캔 정보 저장
     pLOBData = GetLOBData();
+
+#ifndef _XBAND_
     pLOBData->iScanType = m_nScnTyp;
     pLOBData->fScanPeriod = TOAmsCNV( m_nScnPrd );
+
+#endif
 
     return enScanResult;
 }
@@ -1595,3 +1599,32 @@ unsigned int CSAnalScan::IsStorePDW()
     return m_pScanSigAnal->IsStorePDW();
 }
 
+#if defined(_ELINT_) || defined(_XBAND_)
+
+/**
+ * @brief     
+ * @return    EN_RADARCOLLECTORID
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/19 20:54:57
+ * @warning   
+ */
+EN_RADARCOLLECTORID CSAnalScan::GetCollectorID()
+{ 
+	return m_pScanSigAnal->GetCollectorID(); 
+}
+
+/**
+ * @brief     
+ * @return    char *
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/19 20:55:02
+ * @warning   
+ */
+char *CSAnalScan::GetTaskID()
+{
+	return m_pScanSigAnal->GetTaskID(); 
+}
+
+#endif

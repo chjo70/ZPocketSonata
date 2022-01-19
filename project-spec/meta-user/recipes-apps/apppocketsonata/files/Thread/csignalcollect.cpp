@@ -649,7 +649,11 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
 
-            fMinCollectTime = pABTData->fMaxScanPeriod;
+#ifdef _XBAND_
+            fMinCollectTime = (float) 10.0;
+#else
+			fMinCollectTime = pABTData->fMaxScanPeriod;
+#endif
         }
 
         pstrWindowCell->strPA.iLow = 0;
@@ -882,7 +886,9 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );
 
+#ifndef _XBAND_
             fMinCollectTime = pABTData->fMaxScanPeriod;
+#endif
         }
 
         pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA;

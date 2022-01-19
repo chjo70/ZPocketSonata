@@ -25,7 +25,6 @@
 #include <sys/stat.h>
 
 
-
 #include "../OFP_Main.h"
 
 #include <string.h>
@@ -305,7 +304,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
             }
         }
 
-        m_theMakeAET->PrintAllEmitter();
+        //m_theMakeAET->PrintAllEmitter();
 
         // Printf( "\n ==== End of New Signal Analysis ====\n" );
 

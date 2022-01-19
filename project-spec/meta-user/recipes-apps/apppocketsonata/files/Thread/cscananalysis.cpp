@@ -130,8 +130,12 @@ void CScanAnalysis::AnalysisStart()
     pLOBData->uiAETID = strAnalInfo.uiAETID;
     pLOBData->uiABTID = strAnalInfo.uiABTID;
     pLOBData->uiLOBID = 0;
+
+#ifndef _XBAND_
     pLOBData->iScanType = 0;
     pLOBData->fScanPeriod = 0;
+#endif
+
     //EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
 }

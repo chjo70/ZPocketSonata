@@ -1959,10 +1959,11 @@ struct SELABTDATA_EXT {
 
     unsigned int uiSeqNum;
 #elif _POCKETSONATA_
-    unsigned uiOpcode;
-    time_t tiSendLan;
 
 #endif
+
+    unsigned uiOpcode;
+    time_t tiSendLan;
 
 } ;
 
