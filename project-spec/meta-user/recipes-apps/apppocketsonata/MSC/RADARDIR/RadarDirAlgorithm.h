@@ -235,7 +235,6 @@ struct SRxLOBData {
 	float fMOPMeanFreq;
 	float fMOPFreqDeviation;
 
-
 	float fShipLatitude;
 	float fShipLongitude;
 	float fPitchAngle;
@@ -253,7 +252,6 @@ struct SRxLOBData {
 	int iRadarModeIndex;
 	//int iThreatIndex;
 
-
 #ifdef _POCKETSONATA_
 	float fRadarLatitude;
 	float fRadarLongitude;	
@@ -268,7 +266,6 @@ struct SRxLOBData {
 
 	unsigned int uiSeqNum;
 	char aucTaskID[LENGTH_OF_TASK_ID];
-
 #else
 
 #endif

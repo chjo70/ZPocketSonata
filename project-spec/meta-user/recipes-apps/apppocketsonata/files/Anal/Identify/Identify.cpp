@@ -6100,10 +6100,6 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
     return bRet;
 
-#elif _NO_SQLITE_
-
-    return true;
-
 #elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
     int i;
@@ -6168,6 +6164,11 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
  
      DECLARE_END_CHECKODBC
      DECLARE_RETURN
+
+#else
+
+return true;
+
 #endif     
 
 }
@@ -6225,9 +6226,6 @@ bool CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
 #elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
     int i;
@@ -6262,6 +6260,8 @@ bool CELSignalIdentifyAlg::LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
 #else
+	return true;
+
 #endif
 
 }
@@ -6315,9 +6315,6 @@ bool CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
 
     return bRet;
     
-#elif _NO_SQLITE_
-    return false;
-
 #elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
     int index;
@@ -6353,7 +6350,7 @@ bool CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
 #else
-
+	return false;
 #endif
 
 }

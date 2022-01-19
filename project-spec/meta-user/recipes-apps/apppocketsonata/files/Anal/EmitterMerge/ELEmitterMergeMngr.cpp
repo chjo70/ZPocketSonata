@@ -10791,8 +10791,6 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
 
     return iValue;
 
-#elif _NO_SQLITE_
-    return 0;
 #elif _MSSQL_
     int iValue=-1;
 
@@ -10810,6 +10808,10 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
     DECLARE_END_CHECKODBC
 
     return iValue;
+
+#else
+	return 0;
+
 #endif
 
 }
@@ -10827,8 +10829,6 @@ int CELEmitterMergeMngr::GetINTData( char *pSQLString )
 LONG CELEmitterMergeMngr::GetLONGData( char *pSQLString )
 {
 #ifdef _SQLITE_
-    return 0;
-#elif _NO_SQLITE_
     return 0;
 
 #elif _MSSQL_
@@ -10848,6 +10848,10 @@ LONG CELEmitterMergeMngr::GetLONGData( char *pSQLString )
     DECLARE_END_CHECKODBC
 
     return lValue;
+
+#else
+	return 0;
+
 #endif
 
 }
@@ -10903,9 +10907,6 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
 #elif _MSSQL_
     int i, iIndex;
     DECLARE_BEGIN_CHECKODBC
@@ -10940,6 +10941,10 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+
+#else
+	return true;
+
 #endif
 
 }
@@ -11019,10 +11024,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
-#else
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     struct tm stTime;
@@ -11064,6 +11066,9 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+
+#else
+	return true;
 
 #endif
 
@@ -11121,9 +11126,6 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
 #elif _MSSQL_
     int i, iIndex;
     DECLARE_BEGIN_CHECKODBC
@@ -11159,6 +11161,10 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+
+#else
+	return true;
+
 #endif
 
 
@@ -11276,10 +11282,7 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
-#else
+#elif _NSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     struct tm stTime;
@@ -11322,7 +11325,11 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
     // 아래에서 다운이 되면 SQL 버퍼수를 늘히면 됩니다.
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+#else 
+	return true;
+
 #endif
+
 }
 
 
@@ -11431,10 +11438,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 
     return bRet;
 
-#elif _NO_SQLITE_
-    return true;
-
-#else
+#elif _MSSQL_
     DECLARE_BEGIN_CHECKODBC
 
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
@@ -11503,6 +11507,9 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 
     DECLARE_END_CHECKODBC
     DECLARE_RETURN
+
+#else
+	return true;
 
 #endif
 }

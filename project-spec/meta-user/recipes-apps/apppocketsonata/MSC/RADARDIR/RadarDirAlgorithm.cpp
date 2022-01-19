@@ -3,8 +3,6 @@
 
 #define MATHFUNCSDLL_EXPORTS
 
-//#include "../../files/Anal/OFP_Main.h"
-
 #include "../../files/Anal/SigAnal/SysPara.h"
 #include "../../files/Anal/NewSigAnal/NewSigAnal.h"
 
