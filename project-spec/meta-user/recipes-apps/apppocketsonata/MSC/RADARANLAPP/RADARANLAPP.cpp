@@ -268,7 +268,7 @@ void CRADARANLAPPApp::InitApp()
 
 	SetWindowHandler( pMainFrame->GetOutputWnd()->GetSafeHwnd() );
 
-	RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true, true );
+	RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), false, true );
 
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();
 
