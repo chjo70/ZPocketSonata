@@ -1508,8 +1508,8 @@ _TOA CAnalPRI::GetMinPulseTrainMean( STR_EMITTER *pEmitter )
 //
 void CAnalPRI::DwellAnalysis()
 {
-    bool bCheck;
-    int i, j, end_emitter;
+    //bool bCheck;
+    int i, /*j , */ end_emitter;
     STR_EMITTER *pEmitter, *pEmitter2;
 
     // SORT 정렬
@@ -4432,7 +4432,9 @@ void CAnalPRI::FindPeak()
         //-- 조철희 2005-10-11 16:35:13 --//
         // ...
         // 피크점이 2개 이상일 때 제일 짧은 DTOA를 Frame PRI로 한다.
-        if( m_coCanPeak == 1 )
+		if( m_coCanPeak == 0 ) {
+		}
+        else if( m_coCanPeak == 1 )
             m_pRefFramePri[0] = m_pPulseToa[max_Toa_index];
         else {
             _TOA min_dtoa;

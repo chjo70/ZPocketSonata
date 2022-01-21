@@ -586,10 +586,13 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
     double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 #elif defined(_XBAND_)
+	// PDW
 	char g_szPulseType[MAX_STAT][3] = { "CW" , "NP" };
-	char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
+
+	// LOB & ABT & AET
+	char g_szAetSignalType[7][3] = { "CW" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
 	char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-	char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+	char g_szAetPriType[MAX_PRITYPE][3] = { "UK", "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
 
 	FREQ_RESOL gFreqRes[ TOTAL_BAND ] =

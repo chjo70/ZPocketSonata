@@ -3931,15 +3931,15 @@ void CELSignalIdentifyAlg::PIdentifyStbStb( SRxLOBData *pLOBData )
 
         if( ( pRadarMode->fPRI_TypicalMin > 0 /* || pRadarMode->fPRI_TypicalMin < 0 */ ) || ( pRadarMode->fPRI_TypicalMax > 0 /* || pRadarMode->fPRI_TypicalMax < 0 */ ) ) {
             bret = ( CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
-                             CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
+                     CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
 
             if( bret == _spFalse ) {
                 continue;
             }
         }
-        else {
-            continue;
-        }
+//         else {
+//             continue;
+//         }
 
         m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
     }
@@ -6113,9 +6113,21 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
     while (!theRS.IsEof()) {
         i = 0;
 
+		// 레이더
+		pRadarMode->szELNOT[0] = NULL;
+		pRadarMode->szNickName[0] = NULL;
+		pRadarMode->szPlaceNameKor[0] = NULL;
+		pRadarMode->szWeaponSys[0] = NULL;
+		pRadarMode->szPlatform[0] = NULL;
+
+		// 레이더 모드
+		pRadarMode->szModulationCode[0] = NULL;
+		pRadarMode->szModeCode[0] = NULL;
+		pRadarMode->szRadarModeName[0] = NULL;
+
         theRS.GetFieldValue( i++, & pRadarMode->iRadarModeIndex );
 
-        theRS.GetFieldValue( i++, pRadarMode->szRadarName );
+        theRS.GetFieldValue( i++, pRadarMode->szRadarModeName );
 
         theRS.GetFieldTimeValue( i++, & pRadarMode->tiCreated );
         theRS.GetFieldTimeValue( i++, & pRadarMode->tiLastUpdated );
@@ -6136,15 +6148,22 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         theRS.GetFieldValue( i++, & pRadarMode->fRF_PatternPeriodMax );
 
         theRS.GetFieldValue( i++, (int *) & pRadarMode->ePRI_Type );
+
         theRS.GetFieldValue( i++, & pRadarMode->fPRI_TypicalMin );
+		if( pRadarMode->fPRI_TypicalMin < 1 ) {  pRadarMode->fPRI_TypicalMin = 0.0; }
+
         theRS.GetFieldValue( i++, & pRadarMode->fPRI_TypicalMax );
+		if( pRadarMode->fPRI_TypicalMax < 1 ) {  pRadarMode->fPRI_TypicalMax = 0.0; }
+
         theRS.GetFieldValue( i++, (int *) & pRadarMode->ePRI_Pattern );
         theRS.GetFieldValue( i++, & pRadarMode->nPRI_NumPositions );
         theRS.GetFieldValue( i++, & pRadarMode->fPRI_PatternPeriodMin );
         theRS.GetFieldValue( i++, & pRadarMode->fPRI_PatternPeriodMax );
 
         theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMin );
+		if( pRadarMode->fPD_TypicalMin < 1 ) {  pRadarMode->fPD_TypicalMin = 0.0; }
         theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMax );
+		if( pRadarMode->fPD_TypicalMax < 1 ) {  pRadarMode->fPD_TypicalMax = 0.0; }
 
         theRS.GetFieldValue( i++, (int *) & pRadarMode->eValidation );
 
