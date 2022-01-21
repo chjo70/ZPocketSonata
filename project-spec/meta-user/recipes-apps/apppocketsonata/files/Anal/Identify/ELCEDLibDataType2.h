@@ -491,18 +491,33 @@ namespace SignalType
 	{
 		enumSignalUndefined = -1,
 
+#ifdef _XBAND_
+		enumCW =0,
+		enumPulsed,	//기본값
+		enumEA
+#else
 		enumPulsed = 0,	//기본값
 		enumCW,
 		enumEA
+#endif
 	};
 }
 
+#ifdef _XBAND_
+static char _SignalType[SignalType::enumEA + 1][11] = 
+{ 
+	"CW",
+	"Pulsed", 
+	"EA"
+};
+#else
 static char _SignalType[SignalType::enumEA + 1][11] = 
 { 
 	"Pulsed",
 	"CW", 
 	"EA"
 };
+#endif
 
 namespace RadarModeFreqType
 {
@@ -529,6 +544,7 @@ namespace RadarModeFreqType
 
 namespace RadarModePRIType
 {
+#ifdef _XBAND_
 	enum EnumRadarModePRIType
 	{
 		enumStable = 0,
@@ -539,6 +555,18 @@ namespace RadarModePRIType
 
 		enumPRIUnknown
 	};
+#else
+	enum EnumRadarModePRIType
+	{
+		enumStable = 1,
+		enumJITTER,
+		enumDwellSWITCH,
+		enumSTAGGER,
+		enumPATTERN,
+
+		enumPRIUnknown
+	};
+#endif
 } 
 
 // static const char* _strPRIType[]=

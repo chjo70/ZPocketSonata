@@ -42,7 +42,7 @@
 
 
 //##ModelId=452B0C51000F
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_)
 enum FREQ_BAND
 {
     BAND0=0,
@@ -57,6 +57,53 @@ enum FREQ_BAND
 	BAND5,
     TOTAL_BAND
 };
+
+// 신호 형태 정의값
+enum SIGNAL_TYPE
+{
+	ST_NORMAL_PULSE = 1,
+	ST_CW,
+	ST_DOPPLER,
+	ST_HIGHPRF,
+
+	ST_FMOP,
+	ST_CW_FMOP,
+	ST_SHORT,
+	ST_ALL,
+	ST_MAX
+} ;
+
+#elif defined(_XBAND_)
+enum FREQ_BAND
+{
+	BAND0=0,
+	//##ModelId=452B0C510038
+	BAND1,
+	//##ModelId=452B0C510041
+	BAND2,
+	//##ModelId=452B0C51004B
+	BAND3,
+	//##ModelId=452B0C51005F
+	BAND4,
+	BAND5,
+	TOTAL_BAND
+};
+
+// 신호 형태 정의값
+enum SIGNAL_TYPE
+{
+	ST_CW = 0,
+	ST_NORMAL_PULSE,
+	
+	ST_DOPPLER,
+	ST_HIGHPRF,
+
+	ST_FMOP,
+	ST_CW_FMOP,
+	ST_SHORT,
+	ST_ALL,
+	ST_MAX
+} ;
 
 #elif defined(_POCKETSONATA_)
 
@@ -77,6 +124,21 @@ enum FREQ_BAND
     TOTAL_BAND
 };
 
+// 신호 형태 정의값
+enum SIGNAL_TYPE
+{
+	ST_NORMAL_PULSE = 1,
+	ST_CW,
+	ST_DOPPLER,
+	ST_HIGHPRF,
+
+	ST_FMOP,
+	ST_CW_FMOP,
+	ST_SHORT,
+	ST_ALL,
+	ST_MAX
+} ;
+
 #else
 enum FREQ_BAND
 {
@@ -90,15 +152,14 @@ enum FREQ_BAND
 	//##ModelId=452B0C51005F
     TOTAL_BAND
 };
-#endif
 
 // 신호 형태 정의값
 enum SIGNAL_TYPE
 {
-    ST_NORMAL_PULSE = 1,
-    ST_CW,
-    ST_DOPPLER,
-    ST_HIGHPRF,
+	ST_NORMAL_PULSE = 1,
+	ST_CW,
+	ST_DOPPLER,
+	ST_HIGHPRF,
 
 	ST_FMOP,
 	ST_CW_FMOP,
@@ -106,6 +167,10 @@ enum SIGNAL_TYPE
 	ST_ALL,
 	ST_MAX
 } ;
+
+#endif
+
+
 
 
 
@@ -131,6 +196,26 @@ enum FREQ_TYPE
 
 //##ModelId=452B0C510131
 // 내부 신호 분석에서 사용하는 정의
+#ifdef _XBAND_
+enum PRI_TYPE
+{
+	_STABLE               = 1,
+	_JITTER_RANDOM,
+	_DWELL,
+	_STAGGER,
+	_JITTER_PATTERN,
+
+	_UNKNOWN_PRI,
+
+	MAX_PRITYPE,
+
+	_REFSTABLE,
+
+	_STAGGER_DWELL,
+
+
+} ; // Id...
+#else
 enum PRI_TYPE
 {
     _STABLE               = 0,
@@ -149,6 +234,7 @@ enum PRI_TYPE
 
 
 } ; // Id...
+#endif
 
 
 //##ModelId=452B0C5101C7

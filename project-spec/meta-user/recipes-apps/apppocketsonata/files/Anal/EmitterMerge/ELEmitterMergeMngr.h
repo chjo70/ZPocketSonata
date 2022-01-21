@@ -369,13 +369,13 @@ private:
     int CompValid( SRxABTData *pABTData );
     bool CompELNOTInfo( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompIDELNOTInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-//
+// 
 // 	//////////////////////////////////////////////////////////////////////////
 // 	// ABT 간 병합
-//
+// 
 // 	// 재연모드 관련 함수
 // 	//void GetThreatInfo();
-//
+// 
 // 	// 통계 함수
     float CalcMean( float fMean1, int iCount1, float fMean2, int iCount2 );
     int CalcMean( int iMean1, int iCount1, int iMean2, int iCount2 );
