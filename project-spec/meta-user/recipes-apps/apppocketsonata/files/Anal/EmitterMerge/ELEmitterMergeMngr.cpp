@@ -8255,6 +8255,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
     //UpdateLOBData( i_bIsFilteredLOB );
 
 #ifdef _XBAND_
+	int size = m_VecLOBData.size();
 	if( i_bIsFilteredLOB == false ) {
 		Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
 
