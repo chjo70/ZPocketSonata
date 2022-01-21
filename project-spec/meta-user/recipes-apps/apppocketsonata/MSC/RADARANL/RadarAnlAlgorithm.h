@@ -188,7 +188,7 @@ struct SRxABTData { // 레이더 분석
 
 	int iStat;
 
-	char aucRadarName[_MAX_RADARNAME_SIZE];
+	char szRadarName[_MAX_RADARNAME_SIZE];
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
 	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT

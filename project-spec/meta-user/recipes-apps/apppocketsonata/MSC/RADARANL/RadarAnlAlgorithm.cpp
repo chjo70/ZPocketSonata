@@ -20,7 +20,7 @@
 
 CELEmitterMergeMngr *gpEmitterMergeMngr;
 
-#ifdef _MSSQL
+#ifdef _MSSQL_
 CODBCDatabase gz_theMyODBC;
 #endif
 
