@@ -74,7 +74,7 @@ struct SRxLOBData {
 	char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
 	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+	char szRadarName[_MAX_RADARMODE_NAME_SIZE];
 	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
@@ -153,7 +153,7 @@ struct SRxLOBData {
 	int iNumOfPDW;
 	int iNumOfIQ;
 
-	char aucRadarName[_MAX_RADARNAME_SIZE];
+	char szRadarModeName[_MAX_RADARNAME_SIZE];
 	int iRadarModeIndex;
 	//int iThreatIndex;
 
@@ -290,8 +290,8 @@ struct SRxABTData {
 
 	int iStat;
 
-	char aucRadarName[_MAX_RADARNAME_SIZE];
-
+	char szRadarName[_MAX_RADARNAME_SIZE];
+	
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
 	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
