@@ -12,6 +12,10 @@ REM SET RADAR_DF_HEADER=E:\X 밴드\DevSrc\RADAR_DF\ICAA
 
 REM ########################################################################
 REM  작업실에서...
+
+echo $(ConfigurationName)
+IF $(ConfigurationName)==Release echo "AAAA"
+
 SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\Debug
 SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
 

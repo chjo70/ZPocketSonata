@@ -42,7 +42,14 @@
 #ifdef __ZYNQ_BOARD__
 #define SHARED_DATA_DIRECTORY        (char *) "/var/rawdata"
 #elif _WIN32
-#define SHARED_DATA_DIRECTORY        (char *) "c:/rawdata"
+
+#ifdef _XBAND_
+#define SHARED_DATA_DIRECTORY        (char *) "d:/rawdata"
+#else
+#define SHARED_DATA_DIRECTORY        (char *) "d:/rawdata"
+#endif
+
+
 #elif __VXWORKS__
 #define SHARED_DATA_DIRECTORY         (char *) "/d/rawdata" // "/var/log/LOG"
 #else

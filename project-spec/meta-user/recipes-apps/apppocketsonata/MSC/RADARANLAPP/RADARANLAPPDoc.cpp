@@ -237,13 +237,13 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->iFreqType = _FIXED;
 		pLOBData->iFreqPatternType = UNK;			
 		pLOBData->fFreqPatternPeriod = 0;	  // [us]
-		pLOBData->fFreqMean = (float) 2873.297852;										// [10KHz]
-		pLOBData->fFreqMax = (float) 2873.803955;
-		pLOBData->fFreqMin = (float) 2872.763916;
+		pLOBData->fFreqMean = (float) 6000.297852;										// [10KHz]
+		pLOBData->fFreqMax = (float) 6000.803955;
+		pLOBData->fFreqMin = (float) 6000.763916;
 		pLOBData->iFreqPositionCount = 0;
 		memset( pLOBData->fFreqSeq, 0 , sizeof(pLOBData->fFreqSeq) );
 
-		pLOBData->iPRIType = _DWELL;
+		pLOBData->iPRIType = _STABLE;
 		pLOBData->iPRIPatternType = UNK;
 		pLOBData->fPRIPatternPeriod = 0;
 		pLOBData->fPRIMean = (float) 1233.268188;
@@ -269,7 +269,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
 		pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];	
 
-		memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
+		memset( pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName) );
 		pLOBData->iRadarModeIndex = 0;
 		//pLOBData->iThreatIndex = 0;
 
@@ -482,7 +482,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, SEQ_NUM, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADAR_NAME, RADARMODE_INDEX from LOBDATA" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, SEQ_NUM, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY SEQ_NUM desc" );
 
@@ -542,7 +542,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fRadarLatitude);
 		theRS.GetFieldValue(index++, &pLOBData->fRadarLongitude);
 
-		theRS.GetFieldValue(index++, pLOBData->aucRadarName);
+		theRS.GetFieldValue(index++, pLOBData->szRadarModeName);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iRadarModeIndex);
 		//theRS.GetFieldValue(index++, (int*)&pLOBData->iThreatIndex);
 

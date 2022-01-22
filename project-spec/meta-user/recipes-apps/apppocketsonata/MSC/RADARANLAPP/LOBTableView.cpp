@@ -292,7 +292,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fRadarLongitude );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->aucRadarName );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->szRadarModeName );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iRadarModeIndex );

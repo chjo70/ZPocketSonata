@@ -2061,15 +2061,19 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
     char buffer[100]={0};
 
-    tiNow = time(NULL);
+    m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
 
+    tiNow = time(NULL);
     pstTime = localtime( & tiNow );
 
     if( pstTime != NULL ) {
         // 1. 폴더명 생성하기
         strftime( buffer, 100, "%Y-%m-%d", pstTime );
-#if defined(_ELINT_) || defined(_XBAND_)
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+#if defined(_ELINT_)
+		sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+
+#elif defined(_XBAND_)
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", pLocalDirectory, buffer, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
         sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
@@ -2082,8 +2086,6 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
         if( bRet == true ) {
             // 2. 파일명 생성하기
             strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
-
-            m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
 
 #if defined(_ELINT_) || defined(_XBAND_)
             sprintf( m_szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, uiStep, PDW_EXT );
@@ -2098,13 +2100,16 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataTy
 
 #endif
             //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
+#ifdef _XBAND_
             SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+#else
+			SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+#endif
 
         }
         else {
             m_szRawDataFilename[0] = 0;
         }
     }
-
 
 }

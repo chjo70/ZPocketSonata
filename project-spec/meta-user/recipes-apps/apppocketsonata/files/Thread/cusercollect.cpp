@@ -422,7 +422,7 @@ void CUserCollect::MakeSIMPDWData()
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
 
-        if( i < MANUALTOA && false ) {
+        if( i < MANUALTOA ) {
             m_ullTOA = manualTOA[i];
         }
         else {
