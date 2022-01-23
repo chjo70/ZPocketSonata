@@ -51,13 +51,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_POCKETSONATA_;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_SIM_SERVER_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_SIM_SERVER_;_SQLITE1_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -206,6 +207,8 @@
     <ClInclude Include="..\..\files\MinIni\minGlue.h" />
     <ClInclude Include="..\..\files\MinIni\minIni.h" />
     <ClInclude Include="..\..\files\MinIni\wxMinIni.h" />
+    <ClInclude Include="..\..\files\ODBC\MSSQL.h" />
+    <ClInclude Include="..\..\files\ODBC\odbccore.h" />
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h" />
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteDatabase.h" />
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteException.h" />
@@ -371,6 +374,10 @@
     </ClCompile>
     <ClCompile Include="..\..\files\MinIni\minIni.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
+    <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

@@ -2047,69 +2047,21 @@ void CMIDASBlueFileFormat::MIDASClose()
  * @param uiStep
  * @param iBoardID
  */
-void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pLocalDirectory, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
+void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
 {
-    bool bRet;
-    TCHAR szDirectory[500];
-
     STR_PDWDATA *pPDWData;
 
     pPDWData = ( STR_PDWDATA * ) pData;
 
-    struct tm *pstTime;
-    time_t tiNow;
-
-    char buffer[100]={0};
-
     m_strKeywordValue.numberofdata = pPDWData->uiTotalPDW;
 
-    tiNow = time(NULL);
-    pstTime = localtime( & tiNow );
+    //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
+    strcpy( m_szRawDataFilename, pRawdataFileName );
 
-    if( pstTime != NULL ) {
-        // 1. 폴더명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d", pstTime );
-#if defined(_ELINT_)
-		sprintf_s( szDirectory, "%s\\수집소_%d\\%s", pLocalDirectory, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
-
-#elif defined(_XBAND_)
-        sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", pLocalDirectory, buffer, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
-
-#elif _POCKETSONATA_
-        sprintf( szDirectory, _T("%s/%s/BRD_%d"), pLocalDirectory, buffer, pPDWData->x.ps.iBoardID );
-#else
-        sprintf( szDirectory, "%s/BRD", pLocalDirectory );
-#endif
-        printf( "\n Create the Dir[%s]" , szDirectory );
-        bRet = CreateDir( szDirectory );
-
-        if( bRet == true ) {
-            // 2. 파일명 생성하기
-            strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
-
-#if defined(_ELINT_) || defined(_XBAND_)
-            sprintf( m_szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, uiStep, PDW_EXT );
-#elif _POCKETSONATA_
-            if( enDataType == E_EL_SCDT_PDW ) {
-                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_TYPE, MIDAS_EXT );
-            }
-            else {
-                sprintf( m_szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, uiStep, PDW_EXT );
-            }
-#else
-
-#endif
-            //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
 #ifdef _XBAND_
-            SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+    SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
 #else
-			SaveMIDASFormat( m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+	SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
 #endif
-
-        }
-        else {
-            m_szRawDataFilename[0] = 0;
-        }
-    }
 
 }

@@ -94,6 +94,9 @@
     <Filter Include="소스 파일\INCLUDE\SONATAPIP">
       <UniqueIdentifier>{66760bf7-d9d1-46b4-a708-72ebf1a3baa2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ODBC">
+      <UniqueIdentifier>{38258f16-e649-4993-8b02-351dc43ab872}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -513,6 +516,12 @@
     <ClInclude Include="..\..\files\Utils\MulDiv64.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\ODBC\MSSQL.h">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\ODBC\odbccore.h">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -724,6 +733,12 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
       <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\ODBC\MSSQL.cpp">
+      <Filter>소스 파일\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
+      <Filter>소스 파일\ODBC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

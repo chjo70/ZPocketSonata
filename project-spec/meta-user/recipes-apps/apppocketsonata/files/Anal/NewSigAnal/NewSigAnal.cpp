@@ -55,10 +55,6 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw )
 
     srand( time(NULL) & 0xFFFF );
 
-	if( g_pTheELEnvironVariable == NULL ) {
-		g_pTheELEnvironVariable = new CELEnvironVariable();
-	}
-
     // MSSQL 연결
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
@@ -249,14 +245,17 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
+#ifdef _TESTSBC_
+
+#else
     if( pPDWData->uiTotalPDW <= RPC || pPDWData->uiTotalPDW > MAX_PDW ) {
         Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , pPDWData->uiTotalPDW, RPC );
     }
     else {
         CheckValidData( pPDWData );
 
-        // 수집한 PDW 파일 만들기...
-        m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+        // 수집한 PDW 파일 저장하기...
+        InsertRAWData( pPDWData );
 
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
@@ -311,6 +310,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
         SaveRemainedPdwFile();
     }
+#endif
+
 }
 
 /**
@@ -337,6 +338,7 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
     }
 #elif defined(_POCKETSONATA_)
 
+#else
 
 #endif
 
@@ -749,4 +751,79 @@ void CNewSigAnal::InitResolution()
     _spPWres = (float) ( 50 );
 
 #endif
+}
+
+
+/**
+ * @brief     InsertRAWData
+ * @param     STR_PDWDATA * pPDWData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-23, 17:53
+ * @warning
+ */
+void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
+{
+    bool bRet;
+    char buffer[100]={0};
+    TCHAR szDirectory[500], szRawDataFilename[500];
+
+    struct tm *pstTime;
+    time_t tiNow;
+
+#ifdef _XBAND_
+    Log( enDebug, ".InsertRAWData[S%d]" , m_uiStep );
+#else
+
+#endif
+
+    tiNow = time(NULL);
+    pstTime = localtime( & tiNow );
+
+    // 1. 폴더명 생성하기
+    strftime( buffer, 100, "%Y-%m-%d", pstTime );
+#if defined(_ELINT_)
+    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+
+#elif defined(_XBAND_)
+    sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
+
+#elif _POCKETSONATA_
+    sprintf( szDirectory, _T("%s/%s/BRD_%d"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID );
+#else
+    sprintf( szDirectory, "%s/BRD", pLocalDirectory );
+#endif
+
+    printf( "\n Create the Dir[%s]" , szDirectory );
+    bRet = CreateDir( szDirectory );
+
+    if( bRet == true ) {
+        // 2. 파일명 생성하기
+        strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
+
+#if defined(_ELINT_) || defined(_XBAND_)
+        sprintf( szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
+#elif _POCKETSONATA_
+        if( enDataType == E_EL_SCDT_PDW ) {
+            sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
+        }
+        else {
+            sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_EXT );
+        }
+#else
+
+#endif
+
+//         if( m_bDBThread == false ) {
+// 
+//         }
+
+        m_pMidasBlue->SaveRawDataFile( szRawDataFilename, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+
+        
+
+    }
+
 }

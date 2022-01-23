@@ -41,7 +41,11 @@ CCollectBank* CSignalCollect::m_pTheUserCollectBank[USER_CHANNEL];
  * @param iKeyId
  * @param pClassName
  */
+#ifdef _MSSQL_
+CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+#else
 CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+#endif
 {
     int i, iCh;
 
@@ -70,7 +74,22 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
         m_pTheUserCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
     }
 
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( "" );
+#ifdef _SQLITE_
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
+
+    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
+    strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );  
+
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
+#elif _MSSQL_
+    CMSSQL::Init();
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
+
+#else
+    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
+#endif
 
 }
 
@@ -266,6 +285,17 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
 
     CCollectBank *pCollectBank = m_pTheDetectCollectBank[iCh];
 
+    STR_PDWDATA *pPDWData = pCollectBank->GetPDWData();
+
+#if defined(_ELINT_) || defined(_XBAND_)
+    strcpy_s( (char *) pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA" );
+    pPDWData->x.el.iIsStorePDW = 1;
+    pPDWData->x.el.iCollectorID = RADARCOL_1;
+    pPDWData->x.el.enBandWidth = en5MHZ_BW;
+#else
+
+#endif
+
     pCollectBank->SetCollectMode( enCollecting );
 
     pWindowCell = pCollectBank->GetWindowCell();
@@ -348,7 +378,7 @@ void CSignalCollect::AnalysisStart()
 
             if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
                 strCollectInfo.uiCh = iCh;
-                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDW(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
             }
 
             // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
@@ -369,7 +399,7 @@ void CSignalCollect::AnalysisStart()
             strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL].uiAETID;
             strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL].uiABTID;
 
-            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
+            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
             if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
@@ -397,7 +427,7 @@ void CSignalCollect::AnalysisStart()
             strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiAETID;
             strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiABTID;
 
-            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDW(), sizeof(STR_PDWDATA) );
+            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
             //g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );

@@ -16,11 +16,15 @@
 
 #define _DEBUG_
 
-
+#ifdef _MSSQL_
+CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+#else
 CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+#endif
 {
     LOGENTRY;
 
+#ifdef _SQLITE_
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
@@ -34,6 +38,15 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
     }
+#elif _MSSQL_
+    CMSSQL::Init();
+
+    m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, & m_theMyODBC );
+
+#else
+	m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, NULL );
+
+#endif
 
     InitData();
 
@@ -168,6 +181,8 @@ void CEmitterMerge::MergeEmitter()
     pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
     
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
+#ifdef _TESTSBC_
+#else
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
@@ -201,6 +216,7 @@ void CEmitterMerge::MergeEmitter()
         if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != _spZero ) {
             bTrkLOB = true;
         }
+#endif
 
         ++ pLOBData;
     }
@@ -364,12 +380,15 @@ void CEmitterMerge::SendNewUpd()
 
     // 랜 메시지 전달한다.
     
+#ifdef _TESTSBC_
+#else
     if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
         SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
     else {
         SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
     }
+#endif
 
 #endif
 

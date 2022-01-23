@@ -11,7 +11,7 @@
 
 
 // 랜 데이터 최대 크기
-#define _MAX_LANDATA        (128*1024)          // 256 KB -> 16KB
+#define _MAX_LANDATA        (200*1024)          
 #define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(SRxLOBData))
 
 

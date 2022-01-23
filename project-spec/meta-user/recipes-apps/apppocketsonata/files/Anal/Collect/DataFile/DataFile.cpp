@@ -1254,7 +1254,10 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
 
 #elif defined(_ELINT_) || defined(_XBAND_)
             // 신호 형태 저장
-            //pPDW1->iPulseType = STAT_NORMAL;
+             if( pPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 )
+                 pPDW1->iPulseType = STAT_CW;
+             else
+                 pPDW1->iPulseType = STAT_NORMAL;
 
 #endif
             //*pcDV = pPDW->sPDWFormat.m_DI;

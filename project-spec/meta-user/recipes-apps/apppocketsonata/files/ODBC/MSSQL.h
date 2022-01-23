@@ -40,6 +40,15 @@
 
 #define CAST_THROW_MESSAGE						{ m_iErrorException = SQL_ERROR_FIELD_LENGTH; throw m_iErrorException; }
 
+#ifdef _ELINT_
+// 인천공항
+// #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
+#else
+// X 밴드 일때 DB 서버 어드레스
+//#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
+#define DB_SERVER_IP_ADDRESS			"127.0.0.1"
+#endif
+
 
 
 class CMSSQL 
@@ -49,7 +58,6 @@ public:
 
 private:
 	static bool m_bTryConnect;
-	//CODBCDatabase *m_pMyODBC;
 
 	//int m_iErrorException;
 

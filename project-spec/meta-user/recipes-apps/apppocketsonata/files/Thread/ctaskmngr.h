@@ -26,7 +26,12 @@ using namespace std;
 
 
 
+
+#ifdef _MSSQL_
+class CTaskMngr : public CThread, public CMSSQL 
+#else
 class CTaskMngr : public CThread
+#endif
 {
 private:
     STR_MessageData *m_pMsg;
@@ -78,7 +83,12 @@ private:
     inline void *GetRecvData() { if( m_pMsg->iArrayIndex >= 0 ) return CThread::GetRecvData(); else return & m_pMsg->x.szData[0]; }
 
 public:
+#ifdef _MSSQL_
+    CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+#else
     CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
+#endif
+
     virtual ~CTaskMngr(void);
     virtual void _routine();
     virtual const char *GetThreadName() { return m_szThreadName; }

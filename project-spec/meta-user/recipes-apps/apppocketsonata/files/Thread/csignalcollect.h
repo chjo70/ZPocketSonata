@@ -13,9 +13,23 @@
 /**
  * @brief The CSignalCollect class
  */
+#ifdef _MSSQL_
+class CSignalCollect : public CThread, public CMSSQL 
+#else
 class CSignalCollect : public CThread
+#endif
 {
 private:
+#ifdef _SQLITE_
+    char m_szSQLString[4000];
+
+    Kompex::SQLiteDatabase *m_pDatabase;
+
+#elif defined(_MSSQL_)
+    CODBCDatabase m_theMyODBC;
+#else
+#endif
+
     CDataFile m_theDataFile;
 
     UNI_LAN_DATA m_uniLanData;
@@ -93,7 +107,12 @@ private:
     }
 
 public:
+#ifdef _MSSQL_
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+#else
+    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+#endif
+
     virtual ~CSignalCollect(void);
 
     void Run( key_t key=IPC_PRIVATE );

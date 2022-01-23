@@ -733,6 +733,7 @@ unsigned int CKMakeAET::IsStorePDW()
 //    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
 //}
 
+#if defined(_ELINT_) || defined(_XBAND_)
 /**
  * @brief     
  * @return    EN_RADARCOLLECTORID
@@ -758,6 +759,7 @@ char *CKMakeAET::GetTaskID()
 {
 	return m_pKnownSigAnal->GetTaskID(); 
 }
+#endif
 
 /**
  * @brief     

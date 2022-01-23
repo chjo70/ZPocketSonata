@@ -172,9 +172,6 @@ CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
  */
 void CELEmitterMergeMngr::AllocMemory()
 {
-	if( g_pTheELEnvironVariable == NULL ) {
-		g_pTheELEnvironVariable = new CELEnvironVariable();
-	}
 
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
@@ -8397,6 +8394,16 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
 
 }
 
+/**
+ * @brief     PushLOBLANData
+ * @param     SRxLOBData * pLOBData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-23, 18:55
+ * @warning
+ */
 void CELEmitterMergeMngr::PushLOBLANData( SRxLOBData *pLOBData )
 {
 
@@ -8412,7 +8419,7 @@ void CELEmitterMergeMngr::PushLOBLANData( SRxLOBData *pLOBData )
 // 		pLOBData->iThreatIndex
 // 		);
 
-    m_VecLOBData.push_back( *pLOBData );
+    //m_VecLOBData.push_back( *pLOBData );
 
 }
 
@@ -8431,7 +8438,7 @@ void CELEmitterMergeMngr::PushABTLANData( CELThreat *pTheThreat )
         pABTData = GetABTData( pTheThreat->m_nIndex );
         //pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
 
-        PushABTLANData( pABTData );
+        //PushABTLANData( pABTData );
     }
 }
 
@@ -8462,7 +8469,7 @@ void CELEmitterMergeMngr::PushABTLANData( SRxABTData *pABTData )
 // 		pABTData->iThreatIndex
 // 		);
 
-    m_VecABTData.push_back( *pABTData );
+    //m_VecABTData.push_back( *pABTData );
 
 }
 
@@ -8493,7 +8500,7 @@ void CELEmitterMergeMngr::PushAETLANData( SRxAETData *pAETData )
 // 		pABTData->iThreatIndex
 // 		);
 
-    m_VecAETData.push_back( *pAETData );
+    //m_VecAETData.push_back( *pAETData );
 
 }
 

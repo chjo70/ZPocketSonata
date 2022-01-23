@@ -122,10 +122,12 @@ class GlobalMemberFunction {
 public:
 	static SEnvironVariable *GetEnvrionVariable()
 	{
-		if( g_pTheELEnvironVariable != NULL )
+		if( g_pTheELEnvironVariable != NULL ) {
 			return g_pTheELEnvironVariable->GetEnvrionVariable();
+		}
 		else {
-			TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
+			g_pTheELEnvironVariable = new CELEnvironVariable();
+			//TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
 			return NULL;
 		}
 	}

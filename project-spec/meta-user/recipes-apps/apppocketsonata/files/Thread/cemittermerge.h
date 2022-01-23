@@ -6,9 +6,18 @@
 
 #include "../Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
+#ifdef _MSSQL_
+class CEmitterMerge : public CThread, public CMSSQL
+#else
 class CEmitterMerge : public CThread
+#endif
 {
 private:
+
+#ifdef _MSSQL_
+    CODBCDatabase m_theMyODBC;
+#endif
+
     bool m_bScanInfo;
 #ifdef __VXWORKS__
     alignas(16) UNI_LAN_DATA m_uniLanData;		// 32 -> 16

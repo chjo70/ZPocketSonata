@@ -53,7 +53,7 @@ public:
     inline int GetChannelNo() { return m_iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
     inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
-    inline STR_PDWDATA *GetPDW() { return & m_strPDW; }
+    inline STR_PDWDATA *GetPDWData() { return & m_strPDW; }
 
     ///
     inline bool IsSave() { return m_strWindowCell.enCollectMode == enCollecting; }

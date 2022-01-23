@@ -45,7 +45,11 @@
 /**
  * @brief CTaskMngr::CTaskMngr
  */
+#ifdef _MSSQL_
+CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+#else
 CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData )
+#endif
 {
     LOGENTRY;
 

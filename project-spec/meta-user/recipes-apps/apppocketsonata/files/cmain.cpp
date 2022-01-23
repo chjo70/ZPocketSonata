@@ -225,11 +225,21 @@ void Start( int iArgc, char *iArgv[] )
     g_pTheSysConfig = new CSysConfig();
 
     // 1. 쓰레드 관리 쓰레드를 호출한다.
+#ifdef _SQLITE_
     char szSQLiteFileName[100];
     strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
     strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
     g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true, (char*) szSQLiteFileName );
+
+#elif _MSSQL_
+    // MSSQL 연결
+    g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true );
+
+#else
+	g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true, (char*) NULL );
+    
+#endif
     g_pTheTaskMngr->Run( _MSG_TMNGR_KEY );
 
     // 2. 운용 관련 쓰레드를 호출한다.
@@ -284,6 +294,7 @@ void Start( int iArgc, char *iArgv[] )
 
 void SIM_Start()
 {
+#ifdef _MFC_VER	
     STR_MessageData sndMsg;
 
     //
@@ -306,6 +317,7 @@ void SIM_Start()
     sndMsg.uiOpCode = enREQ_ANAL_START;
     sndMsg.x.tiNow = time(NULL);
     g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+#endif    
 
 }
 

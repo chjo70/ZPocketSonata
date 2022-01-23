@@ -34,9 +34,9 @@
 #ifdef __cplusplus
 
 #ifdef _MSSQL_
-class CNewSigAnal : public CMSSQL
+class CNewSigAnal : public CMSSQL, public CRawFile
 #else
-class CNewSigAnal
+class CNewSigAnal : public CRawFile
 #endif
 {
 public:
@@ -66,10 +66,6 @@ private:
     EN_RADARCOLLECTORID m_enCollectorID;
     ENUM_BANDWIDTH m_enBandWidth;
 
-#ifdef _MSSQL_
-    CODBCDatabase m_theMyODBC;
-#endif
-
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 #elif _POCKETSONATA_
     ENUM_BANDWIDTH m_enBandWidth;
@@ -77,6 +73,10 @@ private:
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
 #endif    
+
+#ifdef _MSSQL_
+    CODBCDatabase m_theMyODBC;
+#endif
 
     bool m_bSaveFile;
 
@@ -169,6 +169,8 @@ public:
     void Init( STR_PDWDATA *pPDWData=NULL );
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type);
+
+    void InsertRAWData( STR_PDWDATA *pPDWData );
 
     void SaveGroupPdwFile( int index );
     char *GetTaskID();
