@@ -106,6 +106,11 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
         LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
     }
 
+	if( uiLength > _MAX_LANDATA ) {
+		TRACE( "\n************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
+		exit( 1 );
+	}
+
     memcpy( m_pszArray[m_ucPushIndex], pData, uiLength );
     return m_ucPushIndex;
 }
