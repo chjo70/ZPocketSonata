@@ -50,6 +50,7 @@ public:
     DEFINE_ANAL_VAR_
 
 private:
+    bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
     UINT m_uiStep;
     int m_CoGroup;
@@ -171,6 +172,7 @@ public:
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type);
 
     void InsertRAWData( STR_PDWDATA *pPDWData );
+	bool InsertToDB_RAW( STR_PDWDATA *pPDWData );
 
     void SaveGroupPdwFile( int index );
     char *GetTaskID();
@@ -187,7 +189,7 @@ public:
 
     void InitResolution();
 
-    CNewSigAnal( int coMaxPdw );
+    CNewSigAnal( int coMaxPdw, bool bDBThread=false );
     virtual ~CNewSigAnal();
 
 };

@@ -35,6 +35,11 @@
 
 #include "../../Include/globals.h"
 
+#ifdef _POCKETSONATA_
+char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
+
+#endif
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -46,12 +51,14 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 
 #ifdef _MSSQL_
-CNewSigAnal::CNewSigAnal( int coMaxPdw ) : CMSSQL( & m_theMyODBC )
+CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread ) : CMSSQL( & m_theMyODBC )
 #else
-CNewSigAnal::CNewSigAnal( int coMaxPdw )
+CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
 #endif
 {
     //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
+
+    m_bDBThread = bDBThread;
 
     srand( time(NULL) & 0xFFFF );
 
@@ -805,25 +812,141 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 
 #if defined(_ELINT_) || defined(_XBAND_)
         sprintf( szRawDataFilename, _T("%s\\_COL%d_%s_%05d.%s"), szDirectory, pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
+
 #elif _POCKETSONATA_
-        if( enDataType == E_EL_SCDT_PDW ) {
-            sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
-        }
-        else {
-            sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_EXT );
-        }
+		sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
+//         if( enDataType == E_EL_SCDT_PDW ) {
+//             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
+//         }
+//         else {
+//             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_EXT );
+//         }
 #else
 
 #endif
 
-//         if( m_bDBThread == false ) {
-// 
-//         }
+		if( m_bDBThread == false ) {
+			// RAWDATA 데이터 저장
+			InsertToDB_RAW( pPDWData ); 
+		}
+		else {
+
+		}
 
         m_pMidasBlue->SaveRawDataFile( szRawDataFilename, E_EL_SCDT_PDW, pPDWData, m_uiStep );
 
-        
-
     }
+
+}
+
+/**
+ * @brief     
+ * @param     STR_PDWDATA * pPDWData
+ * @return    bool
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/23 23:33:21
+ * @warning   
+ */
+bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
+{
+
+#ifdef _SQLITE_
+	struct tm *pstTime;
+	char buffer[100]={0};
+
+	bool bRet=true;
+	pstTime = localtime( & pLOBData->tiContactTime );
+	if( pstTime != NULL ) {
+		printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
+		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+		sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
+								 SEQ_NUM, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
+								 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+								 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+								 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+								 PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+								 PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+								 SCAN_TYPE, SCAN_PRD, \
+								 INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
+								 SHIP_LAT, SHIP_LONG, SHIP_PITCH, SHIP_ROLL, SHIP_HEADING, SHIP_ALT, IS_VALIDITY, \
+								 IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+								 ( %d, %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, \
+								 %d, %f, %f, %f, %f, %f, %d, \
+								 %d, %d, %f, %f, %f, %f, %f, %d, %d, \
+								 %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+								 %f, %f, %f, %f, \
+								 %f, %f, %f, %f, \
+								 %d, %f, \
+								 %d, %d, %f, %f, %f, %f, \
+								 %f, %f, %f, %f, %f, %f, %d, \
+								 %d, %d, %d, %d )" , \
+								 m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
+								 pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+								 pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+								 pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+								 pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+								 pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
+								 pLOBData->iScanType, pLOBData->fScanPeriod, \
+								 pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
+								 pLOBData->fShipLatitude, pLOBData->fShipLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
+								 pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+
+		try {
+			//LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
+
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.SqlStatement( m_pszSQLString );
+
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+
+			if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
+				m_pIdentifyAlg->UpdateRadarMode( pLOBData );
+			}
+
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+
+	return bRet;
+
+#elif _MSSQL_
+	DECLARE_BEGIN_CHECKODBC
+
+	struct tm stTime;
+	char buffer[100];
+
+	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+	_localtime32_s( &stTime, & pLOBData->tiContactTime );
+	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CREAT_TIME, CONTACT_TIME_MS, COUNTOFDATA, ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
+		m_nSeqNum, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+		pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+		pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+		pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+		pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
+		pLOBData->iIsStoreData, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
+		pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, \
+		pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
+
+	theRS.Open( m_pszSQLString );
+
+	theRS.Close();
+
+	DECLARE_END_CHECKODBC
+	DECLARE_RETURN
+
+#else
+	return true;
+
+#endif
 
 }
