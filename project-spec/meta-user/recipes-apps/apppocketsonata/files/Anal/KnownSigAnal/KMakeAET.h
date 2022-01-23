@@ -42,11 +42,14 @@ protected :
 public:
     void UpdatePRI( SRxLOBData *pUpdAetPri );
     void UpdateFreq( SRxLOBData *pUpdAetFrq );
+
+	SRxLOBData *GetLOBData( int index=0 );
+
     //##ModelId=452B0C53000D
     inline void SetCoNewAet( int count ) { m_CoNewAet=count; }
     //##ModelId=452B0C53000F
     inline void ClearCoAet() { m_CoLOB=0; }
-    inline SRxLOBData *GetLOBData( int index ) { return & m_LOBData[index]; }
+    
     inline int GetCoLOB() { return m_CoLOB; }
     //##ModelId=452B0C530012
     //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }
@@ -92,9 +95,9 @@ public:
     //##ModelId=452B0C53005A
     STR_EMITTER *GetEmitter();
     //##ModelId=452B0C53005B
-    SRxLOBData *GetNewAet();
+    SRxLOBData *GetNewLOB();
     //##ModelId=452B0C53005C
-    SRxLOBData *GetUpdAet();
+    SRxLOBData *GetUpdLOB();
     //##ModelId=452B0C530064
     int GetCoNewAet();
     //##ModelId=452B0C530065
@@ -109,7 +112,7 @@ public:
     template <typename T>
     UINT CheckPRIHarmonic( T *pPri1, SRxLOBData *pPri2 ) {
         int overlap_ratio;
-        int overlap_space;
+        float fOverlap_space;
         int exp_pri_min, exp_pri_max;
 
         float fdiv_jitter_ratio;
@@ -121,11 +124,11 @@ public:
             exp_pri_min = UMUL( fdiv_jitter_ratio, pPri2->fPRIMin );
             exp_pri_max = UMUL( fdiv_jitter_ratio, pPri2->fPRIMax );
 
-            overlap_space = CalOverlapSpace<float>( pPri1->fPRIMax, pPri1->fPRIMin, exp_pri_max, exp_pri_min );
-            if( overlap_space != 0 ) {
-                overlap_ratio = UDIV( overlap_space * 100 , pPri1->fPRIMax - pPri1->fPRIMin );
+            fOverlap_space = CalOverlapSpace<float>( pPri1->fPRIMax, pPri1->fPRIMin, (float) exp_pri_max, (float) exp_pri_min );
+            if( fOverlap_space != 0 ) {
+                overlap_ratio = UDIV( fOverlap_space * 100 , pPri1->fPRIMax - pPri1->fPRIMin );
                 if( overlap_ratio < 80 ) {
-                    overlap_ratio = UDIV( ( pPri1->fPRIMax - pPri1->fPRIMin ) * 100 , overlap_space );
+                    overlap_ratio = UDIV( ( pPri1->fPRIMax - pPri1->fPRIMin ) * 100 , fOverlap_space );
                     if( overlap_ratio >= 80 ) {
                         return (int) ( fdiv_jitter_ratio + 0.5 );
                     }
@@ -141,8 +144,6 @@ public:
             exp_pri_min = UMUL( fdiv_jitter_ratio, pPri1->fPRIMin );
             exp_pri_max = UMUL( fdiv_jitter_ratio, pPri1->fPRIMax );
         }
-
-
 
         return 0;
     }
@@ -169,7 +170,7 @@ public:
 
     template <typename T>
     UINT CheckHarmonic( T *pAet1, SRxLOBData *pAet2 ) {
-        int i;
+        //int i;
         unsigned int uRet=0;
 
         int nHarmonic;

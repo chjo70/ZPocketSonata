@@ -103,7 +103,8 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
     m_pTrkAet = pTrkAet;
 
 #if defined(_ELINT_) || defined(_XBAND_)
-    Log( enNormal, "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , stTrkAet.aet.noEMT, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
+    Log( enNormal, "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , m_pTrkAet->uiCoLOB );
+	//, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
 #else
 #endif
 
@@ -384,7 +385,7 @@ void CKnownSigAnal::SendAllAet()
     SRxLOBData *pDstAet;
 
 	// 추적 성공 또는 실패인지를 검사한다.
-	pUpdAet = m_theMakeAET->GetUpdAet();
+	pUpdAet = m_theMakeAET->GetUpdLOB();
 	if( pUpdAet != NULL ) {
 		SendUpdAet( pUpdAet );
 		m_CoUpdAet = 1;
@@ -402,7 +403,7 @@ void CKnownSigAnal::SendAllAet()
 	// 두개 이상의 추적 성공 에미터 제외한다.
 	count = m_theMakeAET->GetCoNewAet();
 
-    pNewAet = m_theMakeAET->CMakeAET::GetLOBData();
+    pNewAet = m_theMakeAET->GetLOBData();
 
 	int inEMT;
 
@@ -490,7 +491,7 @@ void CKnownSigAnal::SendLostAet()
 #endif
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	Log( enNormal, "Lost[%d]" , stTrkAet.aet.noEMT );
+	//Log( enNormal, "Lost[%d]" , stTrkAet.aet.noEMT );
 #else
 #endif
 

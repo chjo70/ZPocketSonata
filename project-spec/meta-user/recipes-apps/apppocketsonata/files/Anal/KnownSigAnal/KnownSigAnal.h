@@ -146,13 +146,13 @@ public:
     //##ModelId=452B0C52035C
     inline int GetCoNewAet() { return m_CoNewAet; }
     //##ModelId=452B0C520363
-    inline SRxLOBData *GetNewAet() { return m_theMakeAET->GetNewAet(); }
+    inline SRxLOBData *GetNewAet() { return m_theMakeAET->GetNewLOB(); }
     //##ModelId=452B0C520364
     inline void ClearCoAet() { m_theMakeAET->ClearCoAet(); }
     //##ModelId=452B0C520365
     inline void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoInSeg( pPri, pEmitter ); }
     inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
-    inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdAet(); }
+    inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
     inline int IsStorePDW() { return m_iIsStorePDW; }

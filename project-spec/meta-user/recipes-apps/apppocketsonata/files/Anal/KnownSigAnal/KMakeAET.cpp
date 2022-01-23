@@ -277,9 +277,9 @@ void CKMakeAET::MakeUpAET()
     SRxLOBData *pNewAet;
     SRxLOBData *pUpdAet;
 	
-	count = GetCoAet();
-	pNewAet = GetNewAet();
-	pUpdAet = GetUpdAet();
+	count = GetCoLOB();
+	pNewAet = GetNewLOB();
+	pUpdAet = GetUpdLOB();
 
 	coUpdAet = 0;
 
@@ -289,7 +289,7 @@ void CKMakeAET::MakeUpAET()
 	if( pUpdAet != NULL ) {
 		// 추적 성공 에미터와 추적할 에미터 제원과 비교해서 하모닉 체크해서 유사 에미터로 판정한다.
 		//-- 조철희 2005-12-07 19:16:44 --//
-        if( CheckHarmonic( m_pTrkAet, pUpdAet ) >= 2 ) {
+        if( CheckHarmonic<SRxABTData>( m_pTrkAet, pUpdAet ) >= 2 ) {
             pUpdAet->iPRIType = m_pTrkAet->iPRIType;
             pUpdAet->iPRIPatternType = m_pTrkAet->iPRIPatternType;
             pUpdAet->fPRIPatternPeriod = m_pTrkAet->fPRIPatternPeriodMean;
@@ -405,7 +405,7 @@ int CKMakeAET::GetCoNewAet()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2005-10-24 11:41:29
 //
-SRxLOBData *CKMakeAET::GetNewAet()
+SRxLOBData *CKMakeAET::GetNewLOB()
 {
     SRxLOBData *pLOBData=NULL;
 
@@ -448,7 +448,7 @@ int CKMakeAET::GetIndexNewAet()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2005-10-24 11:42:24
 //
-SRxLOBData *CKMakeAET::GetUpdAet()
+SRxLOBData *CKMakeAET::GetUpdLOB()
 {
     SRxLOBData *pSRxLOBData=NULL;
 
@@ -732,3 +732,43 @@ unsigned int CKMakeAET::IsStorePDW()
 //{
 //    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
 //}
+
+/**
+ * @brief     
+ * @return    EN_RADARCOLLECTORID
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/22 12:23:55
+ * @warning   
+ */
+EN_RADARCOLLECTORID CKMakeAET::GetCollectorID() 
+{
+	return m_pKnownSigAnal->GetCollectorID(); 
+}
+
+/**
+ * @brief     
+ * @return    char *
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/22 12:23:51
+ * @warning   
+ */
+char *CKMakeAET::GetTaskID()
+{
+	return m_pKnownSigAnal->GetTaskID(); 
+}
+
+/**
+ * @brief     
+ * @param     int index
+ * @return    SRxLOBData *
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/22 12:26:33
+ * @warning   
+ */
+SRxLOBData *CKMakeAET::GetLOBData( int index ) 
+{
+	return & m_LOBData[index]; 
+}

@@ -41,9 +41,7 @@ CSysConfig::CSysConfig(void)
 {
 
     // 공유 메모리 설정
-#ifndef _XBAND_
     m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
-#endif
 
     InitVar();
 
@@ -56,10 +54,10 @@ CSysConfig::CSysConfig(void)
  */
 CSysConfig::~CSysConfig(void)
 {
-#ifndef _XBAND_
+//#ifndef _XBAND_
     m_pSharedMemory->close();
     delete m_pSharedMemory;
-#endif
+//#endif
 
 }
 

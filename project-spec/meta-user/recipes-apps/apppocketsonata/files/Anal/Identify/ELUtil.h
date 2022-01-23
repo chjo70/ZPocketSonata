@@ -273,25 +273,27 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T fthresh )
 template <typename T>
 T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
 {
+	T ret=0;
+
     if( hgh1 < low2 || hgh2 < low1 )				// |-------|		|--------|
-        return 0;															//			 |---|
+        ret = 0;															//			 |---|
 
     if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
-        return 1;
+        ret = 1;
 
     if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-        return hgh1 - low1 + 1;								//    |------------------|
+        ret = hgh1 - low1 + 1;								//    |------------------|
 
     if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
-        return hgh2 - low2 + 1;			 					//          |--------|
+        ret = hgh2 - low2 + 1;			 					//          |--------|
 
     if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-        return ( hgh2 - low1 + 1);     			//    |-----------|
+        ret = ( hgh2 - low1 + 1);     			//    |-----------|
 
     if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        return ( hgh1 - low2 + 1 );						//          |------------|
+        ret = ( hgh1 - low2 + 1 );						//          |------------|
 
-    return 0;
+    return ret;
 }
 
 /**

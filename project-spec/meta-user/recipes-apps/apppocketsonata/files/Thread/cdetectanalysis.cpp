@@ -108,7 +108,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, " 탐지 분석: %d 채널에서 %d개의 PDW 분석을 시작합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, " DET : At the %d[Ch], collecting the analysis for the count of PDW[%d]..." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
