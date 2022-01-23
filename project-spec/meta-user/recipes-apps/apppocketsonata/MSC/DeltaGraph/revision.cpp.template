@@ -1,0 +1,23 @@
+
+#include "stdafx.h"
+#include "MainFrm.h"
+#include "ClassView.h"
+#include "Resource.h"
+#include "DeltaGraph.h"
+
+
+//////////////////////////////////////////////////////////////////////
+// »ý¼º/¼Ò¸ê
+//////////////////////////////////////////////////////////////////////
+
+const TCHAR *GetRevision()
+{
+	static TCHAR st_szRev[100] = { _T("$WCREV$") };
+	return st_szRev;
+}
+
+const TCHAR *GetBuildDate()
+{
+	static TCHAR st_szDate[100] = { _T("$WCNOW$") };
+	return st_szDate;
+}
