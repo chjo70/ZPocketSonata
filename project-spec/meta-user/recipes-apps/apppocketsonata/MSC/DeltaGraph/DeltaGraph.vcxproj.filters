@@ -55,6 +55,9 @@
     <Filter Include="소스 파일\SpinCtrl">
       <UniqueIdentifier>{b9f79767-da38-4553-b0a5-b1893b304147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Utils">
+      <UniqueIdentifier>{53472950-baba-4b14-b57b-f0e56f849e10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -276,6 +279,9 @@
     <ClInclude Include="SpinCtrl\NumSpinCtrl.h">
       <Filter>소스 파일\SpinCtrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeltaGraph.cpp">
@@ -364,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="SpinCtrl\NumSpinCtrl.cpp">
       <Filter>소스 파일\SpinCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

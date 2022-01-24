@@ -13,15 +13,16 @@
 
 
 #elif _MSC_VER
-#include <stdint.h>
 #include <io.h>
 
 #elif __VXWORKS__
 #include <ioLib.h>
 #include <nfs/nfsCommon.h>
 
+
 #else
 #include <io.h>
+
 #endif
 
 
@@ -406,7 +407,7 @@ unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
 	struct _stati64 statbuf;
 
 	if( _stati64( pPathFileName, & statbuf ) != 0 ) {
-		iRet = UINT_FAST64_MAX;
+		iRet = UINT64_MAX;
 	}
 	else {
 		iRet = statbuf.st_size;

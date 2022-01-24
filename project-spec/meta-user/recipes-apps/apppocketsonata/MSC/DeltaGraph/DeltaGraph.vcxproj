@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)DeltaGraph;C:\ProEssentials9\VC;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)ShuDeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)DeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,7 +54,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_MATH_DEFINES;_MIDAS_;_FFTW_;_CRT_SECURE_NO_WARNINGS;_GRAPH_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_MATH_DEFINES;_MIDAS_;_FFTW_;_CRT_SECURE_NO_WARNINGS;_GRAPH_;_GUI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -140,6 +140,7 @@
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\ShuDeltaGraph\Anal\INC\IQ.h" />
     <ClInclude Include="..\ShuDeltaGraph\Anal\INC\PDW.h" />
     <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Define.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
     <ClCompile Include="ButtonST\BCMenu.cpp" />
     <ClCompile Include="ButtonST\BtnST.cpp" />
     <ClCompile Include="ChildFrm.cpp" />

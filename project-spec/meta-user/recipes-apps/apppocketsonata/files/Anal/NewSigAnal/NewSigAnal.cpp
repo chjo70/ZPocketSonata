@@ -925,24 +925,24 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	_localtime32_s( &stTime, & pLOBData->tiContactTime );
+	_localtime32_s( &stTime, & pPDWData->uiTime );
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CREAT_TIME, CONTACT_TIME_MS, COUNTOFDATA, ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
-		m_nSeqNum, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
-		pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
-		pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
-		pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
-		pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
-		pLOBData->iIsStoreData, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
-		pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, \
-		pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
-
-	theRS.Open( m_pszSQLString );
-
-	theRS.Close();
-
-	DECLARE_END_CHECKODBC
-	DECLARE_RETURN
+// 	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CREAT_TIME, CONTACT_TIME_MS, COUNTOFDATA, ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
+// 		m_nSeqNum, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+// 		pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+// 		pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+// 		pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+// 		pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
+// 		pLOBData->iIsStoreData, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
+// 		pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, \
+// 		pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
+// 
+// 	theRS.Open( m_pszSQLString );
+// 
+// 	theRS.Close();
+// 
+ 	DECLARE_END_CHECKODBC
+ 	DECLARE_RETURN
 
 #else
 	return true;
@@ -950,3 +950,4 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 #endif
 
 }
+

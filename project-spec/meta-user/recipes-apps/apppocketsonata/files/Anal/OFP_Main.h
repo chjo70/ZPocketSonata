@@ -18,20 +18,6 @@
 #include "./Collect/DataFile/DataFile.h"
 #include "./SigAnal/_Struct.h"
 
-#ifdef _MIDAS_
-
-#else
-#include "./INC/TaskMsg.h"
-
-#include "./SigAnal/_Type.h"
-#include "./SigAnal/_SigAnal.h"
-
-#include "./SigAnal/cencdec.h"
-
-#include "./Identify/ELUtil.h"
-
-#endif
-
 
 
 

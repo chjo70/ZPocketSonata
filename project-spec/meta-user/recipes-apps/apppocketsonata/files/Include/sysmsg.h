@@ -6,7 +6,6 @@
 #ifndef _SYSMSG_H
 #define _SYSMSG_H
 
-
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
 #include "./SONATAPIP/ShuICD.h"
@@ -257,6 +256,9 @@ struct STR_RX_THRESHOLD {
 
 typedef struct STR_FMOP_THRESHOLD STR_PMOP_THRESHOLD;
 
+
+#ifndef _GRAPH_
+
 /**
  * @brief 랜 메시지 구조체
  */
@@ -299,11 +301,14 @@ union UNI_LAN_DATA {
 
 };
 
+#endif
+
 #if TOOL==diab 
 #pragma pack( 4 )
 #else
 #pragma pack( pop )
 #endif
+
 
 #endif // _SYSMSG_H
 
