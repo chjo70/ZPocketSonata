@@ -70,10 +70,6 @@ CString GetIpAddress();
 int Printf(char *format, ...);
 void SetWindowHandler( HWND hWnd );
 
-// X 밴드 일때 DB 서버 어드레스
-#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
-// 인천공항
-// #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
 
 // #define BUILTIN_IP					"192.168.0.66"
 // #define MYHOME_IP						"192.168.0.156"
