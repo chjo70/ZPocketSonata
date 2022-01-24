@@ -24,6 +24,7 @@
 
 #include "ccommonutils.h"
 
+#ifndef _GRAPH_
 #include "../System/csysconfig.h"
 
 #include "../Anal/SigAnal/_Type.h"
@@ -35,6 +36,8 @@ extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
 extern CSingleClient *g_pThePMCSocket;
 
+#endif
+
 /**
  * @brief 생성자를 수행합니다.
  */
@@ -42,6 +45,8 @@ CCommonUtils::CCommonUtils()
 {
 
 }
+
+#ifndef _GRAPH_
 
 /**
  * @brief opcode, data 를 입력받아서 랜으로 송신한다.
@@ -250,135 +255,6 @@ int clock_gettime(int X, struct timeval *tv)
     return (0);
 } 
 
-#endif
-
-/**
- * @brief CCommonUtils::timespec_diff
- * @param result
- * @param start
- * @param stop
- */
-void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop )
-{
-    struct timespec tsNow;
-
-    if( stop != NULL ) {
-        tsNow.tv_sec = stop->tv_sec;
-#ifdef _MSC_VER
-        tsNow.tv_usec = stop->tv_usec;
-#else
-        tsNow.tv_nsec = stop->tv_nsec;
-#endif
-    }
-    else {
-        clock_gettime( CLOCK_REALTIME, & tsNow );
-    }
-
-#ifdef _MSC_VER
-    if ((tsNow.tv_usec - start->tv_usec) < 0) {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
-        result->tv_usec = tsNow.tv_usec - start->tv_usec + 1000000;
-    } else {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec;
-        result->tv_usec = tsNow.tv_usec - start->tv_usec;
-    }
-#else
-    if ((tsNow.tv_nsec - start->tv_nsec) < 0) {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
-        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
-    } else {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec;
-        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec;
-    }
-
-#endif
-
-    return;
-}
-
-/**
- * @brief CCommonUtils::AllSwapData32
- * @param pData
- * @param iLength
- */
-void CCommonUtils::AllSwapData32( void *pData, int iLength )
-{
-    int i;
-    UINT *pWord;
-
-    pWord = (UINT *) pData;
-    for( i=0 ; i < iLength ; i+=sizeof(int) ) {
-        swapByteOrder( *pWord );
-        ++ pWord;
-    }
-
-}
-
-/**
- * @brief		swapByteOrder
- * @param		unsigned short & us
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2021/11/18 19:16:45
- * @warning		
- */
-void CCommonUtils::swapByteOrder(unsigned short& us)
-{
-    us = (us >> 8) | ((us<<8) & 0xFF00);
-}
-
-/**
- * @brief CCommonUtils::swapByteOrder
- * @param ull
- */
-void CCommonUtils::swapByteOrder(unsigned int& ui)
-{
-    ui = (ui >> 24) | ((ui<<8) & 0x00FF0000) | ((ui>>8) & 0x0000FF00) | (ui << 24);
-}
-
-/**
- * @brief		swapByteOrder
- * @param		double & di
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2021/11/18 19:06:02
- * @warning		
- */
-void CCommonUtils::swapByteOrder(double & d)
-{
-    uint64_t um = (uint64_t) & d;
-    
-    d = (double) ( ( ( um & 0xff00000000000000 ) >> 56 ) |
-                   ( ( um & 0x00ff000000000000 ) >> 40 ) |
-                   ( ( um & 0x0000ff0000000000 ) >> 24 ) |
-                   ( ( um & 0x000000ff00000000 ) >> 8 ) |
-                   ( ( um & 0x00000000ff000000 ) << 8 ) |
-                   ( ( um & 0x0000000000ff0000 ) << 24 ) |
-                   ( ( um & 0x000000000000ff00 ) << 40 ) |
-                   ( ( um & 0x00000000000000ff ) << 56 ) );
-}
-
-/**
- * @brief     swapByteOrder
- * @param     double * p
- * @param     int iSize
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-01-10, 13:49
- * @warning
- */
-void CCommonUtils::swapByteOrder(double *p, int iSize )
-{
-    int i;
-
-    for( i=0 ; i < iSize ; ++i ) {
-        swapByteOrder( p[i] );
-    }
-}
 
 /**
  * @brief CCommonUtils::Disp_FinePDW
@@ -567,4 +443,137 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     }
 
     return 0;
+}
+
+
+/**
+ * @brief CCommonUtils::timespec_diff
+ * @param result
+ * @param start
+ * @param stop
+ */
+void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop )
+{
+    struct timespec tsNow;
+
+    if( stop != NULL ) {
+        tsNow.tv_sec = stop->tv_sec;
+#ifdef _MSC_VER
+        tsNow.tv_usec = stop->tv_usec;
+#else
+        tsNow.tv_nsec = stop->tv_nsec;
+#endif
+    }
+    else {
+        clock_gettime( CLOCK_REALTIME, & tsNow );
+    }
+
+#ifdef _MSC_VER
+    if ((tsNow.tv_usec - start->tv_usec) < 0) {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
+        result->tv_usec = tsNow.tv_usec - start->tv_usec + 1000000;
+    } else {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec;
+        result->tv_usec = tsNow.tv_usec - start->tv_usec;
+    }
+#else
+    if ((tsNow.tv_nsec - start->tv_nsec) < 0) {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
+        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
+    } else {
+        result->tv_sec = tsNow.tv_sec - start->tv_sec;
+        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec;
+    }
+
+#endif
+
+    return;
+}
+
+#endif
+
+#endif
+
+/**
+ * @brief CCommonUtils::AllSwapData32
+ * @param pData
+ * @param iLength
+ */
+void CCommonUtils::AllSwapData32( void *pData, int iLength )
+{
+    int i;
+    UINT *pWord;
+
+    pWord = (UINT *) pData;
+    for( i=0 ; i < iLength ; i+=sizeof(int) ) {
+        swapByteOrder( *pWord );
+        ++ pWord;
+    }
+
+}
+
+/**
+ * @brief		swapByteOrder
+ * @param		unsigned short & us
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/18 19:16:45
+ * @warning		
+ */
+void CCommonUtils::swapByteOrder(unsigned short& us)
+{
+    us = (us >> 8) | ((us<<8) & 0xFF00);
+}
+
+/**
+ * @brief CCommonUtils::swapByteOrder
+ * @param ull
+ */
+void CCommonUtils::swapByteOrder(unsigned int& ui)
+{
+    ui = (ui >> 24) | ((ui<<8) & 0x00FF0000) | ((ui>>8) & 0x0000FF00) | (ui << 24);
+}
+
+/**
+ * @brief		swapByteOrder
+ * @param		double & di
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2021/11/18 19:06:02
+ * @warning		
+ */
+void CCommonUtils::swapByteOrder(double & d)
+{
+    uint64_t um = (uint64_t) & d;
+    
+    d = (double) ( ( ( um & 0xff00000000000000 ) >> 56 ) |
+                   ( ( um & 0x00ff000000000000 ) >> 40 ) |
+                   ( ( um & 0x0000ff0000000000 ) >> 24 ) |
+                   ( ( um & 0x000000ff00000000 ) >> 8 ) |
+                   ( ( um & 0x00000000ff000000 ) << 8 ) |
+                   ( ( um & 0x0000000000ff0000 ) << 24 ) |
+                   ( ( um & 0x000000000000ff00 ) << 40 ) |
+                   ( ( um & 0x00000000000000ff ) << 56 ) );
+}
+
+/**
+ * @brief     swapByteOrder
+ * @param     double * p
+ * @param     int iSize
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-10, 13:49
+ * @warning
+ */
+void CCommonUtils::swapByteOrder(double *p, int iSize )
+{
+    int i;
+
+    for( i=0 ; i < iSize ; ++i ) {
+        swapByteOrder( p[i] );
+    }
 }

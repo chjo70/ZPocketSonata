@@ -25,7 +25,7 @@
 
 #include "CRWRCommonVariables.h"
 
-#include "../../../Include/globals.h"
+//#include "../../../Include/globals.h"
 
 
 #define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
@@ -198,7 +198,7 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 
 	    m_PDWData.uiDataItems = 0;
 
-        Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
+        //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
         for (i = 0; i < m_RawData.uiDataItems ; ++i) {
 		    temp.bpdw[0][0] = pPDW->item.toa_1;
@@ -407,7 +407,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 {
     unsigned int i;
 
-    LOGMSG1( enNormal, _T("Converting %d Items In ConvertArray()") , m_RawData.uiDataItems );
+    //LOGMSG1( enNormal, _T("Converting %d Items In ConvertArray()") , m_RawData.uiDataItems );
 
     Alloc( m_RawData.uiDataItems );
 
@@ -537,7 +537,7 @@ void CEPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 	}
 
 	//m_pRawData->uiDataItems = uiDataItems;
-    LOGMSG1( enNormal, _T("The count of filtererd PDW(s) is %d.") , m_PDWData.uiDataItems );
+    //LOGMSG1( enNormal, _T("The count of filtererd PDW(s) is %d.") , m_PDWData.uiDataItems );
 }
 
 /**
@@ -903,7 +903,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP 
 
 	m_PDWData.uiDataItems = 0;
 
-    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
+    //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for (i = 0; i < m_RawData.uiDataItems ; ++i) {
 		llToa = (_TOA) ( pPDW->sPDWFormat.m_LSBTOA ) | ( (_TOA) pPDW->sPDWFormat.m_MSBTOA << 32 );
@@ -963,7 +963,7 @@ void CKFXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP 
 		++pPDW;
 	}
 
-    Log( enNormal, "필터링 PDW 개수는 %d 입니다.", m_PDWData.uiDataItems );
+    //Log( enNormal, "필터링 PDW 개수는 %d 입니다.", m_PDWData.uiDataItems );
 }
 
 
@@ -1018,7 +1018,7 @@ void CPOCKETSONATAPDW::Alloc( unsigned int uiItems )
 		uiItems = m_RawData.uiDataItems;
 	}
     else if ( uiItems <= MAX_ITEMS ) {
-        Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
+        //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
 
         if( m_PDWData.pfFreq == NULL ) {
             m_PDWData.pfFreq = (float *) malloc(sizeof(float) * uiItems);
@@ -1112,7 +1112,7 @@ void CPOCKETSONATAPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILT
 
     DMAPDW *pPDW = (DMAPDW *) & m_pRawDataBuffer[0];
 
-    LOGMSG1( enNormal, _T("Converting %d Items In ConvertArray()") , m_RawData.uiDataItems );
+    //LOGMSG1( enNormal, _T("Converting %d Items In ConvertArray()") , m_RawData.uiDataItems );
 
     if( pPDWData == NULL ) {
         float *pfFreq, *pfPW, *pfAOA, *pfTOA, *pfDTOA, *pfPA;
@@ -1408,7 +1408,7 @@ void C7PDW::Alloc( unsigned int uiItems )
 		uiItems = m_RawData.uiDataItems;
 	}
     else if ( uiItems <= MAX_ITEMS ) {
-        Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
+        //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
 
         if( m_PDWData.pfFreq == NULL ) {
 	        m_PDWData.pfFreq = (float *) malloc(sizeof(float) * uiItems );
@@ -1459,7 +1459,7 @@ void C7PDW::Alloc( unsigned int uiItems )
  */
 void C7PDW::Free()
 {
-    Log( enNormal, "Free()를 해지합니다." );
+    //Log( enNormal, "Free()를 해지합니다." );
 
 	_SAFE_FREE( m_PDWData.pfFreq);
 	_SAFE_FREE(m_PDWData.pfPW);
@@ -1525,7 +1525,7 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 	m_PDWData.uiDataItems = 0;
 
-    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
+    //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for (i = 0; i < m_RawData.uiDataItems ; ++i) {
         if( bSwap == true ) {
@@ -1588,7 +1588,7 @@ void C7PDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 		++pPDW;
 	}
 
-    Log( enNormal, "PDW 개수는 %d 입니다." , m_PDWData.uiDataItems );
+    //Log( enNormal, "PDW 개수는 %d 입니다." , m_PDWData.uiDataItems );
 
 }
 
@@ -1947,7 +1947,7 @@ void CEIQ::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 // 		pIQ = (TNEW_IQ *) & m_pRawDataBuffer[iOffset];
 // 	}
 
-    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
+    //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
 	m_IQData.iDataItems = 0;
 
@@ -2288,7 +2288,7 @@ CMIDAS::~CMIDAS(void)
  */
 void CMIDAS::Alloc( unsigned int uiItems )
 {
-    Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
+    //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
 
 	m_PDWData.uiDataItems = uiItems;
     if( uiItems > 0 && uiItems <= MAX_ITEMS ) {
@@ -2344,7 +2344,7 @@ void CMIDAS::Alloc( unsigned int uiItems )
  */
 void CMIDAS::Free()
 {
-    Log( enNormal, "Free()를 해지합니다." );
+    //Log( enNormal, "Free()를 해지합니다." );
 
 	_SAFE_FREE(m_PDWData.pfFreq);
 	_SAFE_FREE(m_PDWData.pfPW);
@@ -2407,7 +2407,7 @@ void CMIDAS::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *
 	
 	m_PDWData.uiDataItems = 0;
 
-    Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
+    //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
     for( ui=0 ; ui < m_RawData.uiDataItems ; ++ui ) {
 		GetSubRecords( & strPDWRecords );
@@ -2944,9 +2944,9 @@ void CData::ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData )
 
 		}
 
-		fftw_destroy_plan( plan );
-		fftw__SAFE_FREE( pIn );
-		fftw__SAFE_FREE( pOut );
+		//fftw_destroy_plan( plan );
+		//fftw__SAFE_FREE( pIn );
+		//fftw__SAFE_FREE( pOut );
 	}
 #endif
 
@@ -3358,10 +3358,10 @@ CData *CDataFile::ReadDataFile( char *pPathname, int iFileIndex, CData *pData, S
 	// 파일 닫기 처리
 	if( m_RawDataFile.GetFileHandler() != NULL ) {
 		m_RawDataFile.FileClose();
-        Log( enNormal, "파일을 닫습니다." );
+        //Log( enNormal, "파일을 닫습니다." );
 	}
 
-    Log( enNormal, "현재 위치[%d], 총 개수[%d]" , m_iFileIndex, iDataItems );
+    //Log( enNormal, "현재 위치[%d], 총 개수[%d]" , m_iFileIndex, iDataItems );
 
 	return m_pData;
 
@@ -3511,7 +3511,7 @@ UINT CDataFile::LoadRawData( CData *pData, int iFileIndex, bool bConvert )
 	//UINT uiLengthOfHeader;
 
 	if( m_RawDataFile.FileOpen( m_szPathname, O_RDONLY | O_BINARY ) == TRUE ) {
-        Log( enNormal, "파일[%s]을 오픈합니다.", m_szPathname );
+        //Log( enNormal, "파일[%s]을 오픈합니다.", m_szPathname );
 
 		// 1. 헤더 파일만 읽기
 		ReadDataHeader( pData );
@@ -3530,7 +3530,7 @@ UINT CDataFile::LoadRawData( CData *pData, int iFileIndex, bool bConvert )
 
 	}
 	else {
-        Log( enError, "파일[%s]이 존재하지 않습니다.", m_szPathname );
+        //Log( enError, "파일[%s]이 존재하지 않습니다.", m_szPathname );
 	}
 
 	return pData->m_RawData.uiDataItems;

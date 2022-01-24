@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-#include "../../INC/system.h"
-#include "../../../Anal/SigAnal/_Type.h"
+//#include "../../INC/system.h"
+//#include "../../../Anal/SigAnal/_Type.h"
 
 #include "../../../Anal/MIDAS/RawFile.h"
 
@@ -11,23 +11,23 @@
 
 #ifdef _FFTW_
 #include "../../../../MSC/DeltaGraph/FFTW/fftw3.h"
+
 #endif
+
 
 #include "../../../Anal/MIDAS/Midas.h"
 
 
-#define			PDW_ITEMS						(1024*128)			// 9437164
-#define			IQ_ITEMS						(1024*128)
+#define	PDW_ITEMS						(1024*128)			// 9437164
+#define IQ_ITEMS						(1024*128)
 
 //#define			MAX_RAWDATA_SIZE				(4000000)	// 2,432,052
-#define			MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
+#define MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
 
-#define			MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
+#define	MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
 
 #define	RAD2DEG			(57.2957795130)
 
-
-//#define			INIT_VAL			(-1.0)
 
 
 typedef enum {

@@ -9,6 +9,8 @@
 #include "DeltaGraph.h"
 #endif
 
+#define _MAIN_
+
 #include "MainFrm.h"
 #include "ChildFrm.h"
 

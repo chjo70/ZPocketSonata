@@ -1008,7 +1008,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				Log( enNormal, _T("그래프에 데이터를 삭체 처리 시작합니다.") );
 				if( iComboDV == 0 ) {
 					for (i = 0; i < uiPDWDataItems; ++i) {
-						if (*pcDV == PDW_DV) {
+						if (*pcDV == 1) {
 							PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), & f1);
 						}
 						else {
@@ -1019,7 +1019,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				}
 				else if ( iComboDV == 1 ) {
 					for (i = 0; i < uiPDWDataItems; ++i) {
-						if (*pcDV == PDW_DV) {
+						if (*pcDV == 1) {
 							PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), & f1);
 						}
 						else {
@@ -1031,7 +1031,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				}
 				else {
 					for (i = 0; i < uiPDWDataItems; ++i) {
-						if (*pcDV == PDW_DV) {
+						if (*pcDV == 1) {
 							PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), & f1);
 						}
 						else {

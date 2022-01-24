@@ -224,6 +224,7 @@ struct STR_PRI_RANGE_TABLE {
 
 // 에미터 정보
 //##ModelId=452B0C5403CA
+#ifndef _GRAPH_
 struct STR_EMITTER {
     STR_PDWINDEX pdw;						// PDW 버퍼
     UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
@@ -494,6 +495,8 @@ struct STR_SYS
   STR_SC sc;
 } ;
 
+#endif
+
 #ifndef _FREQ_RESOL_
 #define _FREQ_RESOL_
 /**	\brief	구조체명 FREQ_RESOL 
@@ -529,7 +532,10 @@ struct STR_DWELL_LEVEL {
 } ;
 
 #ifdef _MAIN_
+
+#ifndef _GRAPH_
   STR_SYS _sp;
+#endif
 
   // 주파수 밴드별 옵셋값과 resolution
   // Update AOA threshold
@@ -686,11 +692,8 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 extern float _spFreqMin;
 extern float _spFreqMax;
 
+#ifndef _GRAPH_
 extern STR_SYS _sp;
-
-extern UINT _spdiffaoa[ 6 ];
-
-extern unsigned int _spAnalMinPulseCount;
 
 extern char g_szPulseType[MAX_STAT][3];
 
@@ -699,6 +702,14 @@ extern char g_szPRIType[MAX_PRITYPE][3];
 
 extern char g_szAetFreqType[MAX_FRQTYPE][3];
 extern char g_szAetPriType[MAX_PRITYPE][3];
+
+#endif
+
+extern UINT _spdiffaoa[ 6 ];
+
+extern unsigned int _spAnalMinPulseCount;
+
+
 
 #if defined(_ELINT_) || defined(_XBAND_)
 extern char g_szAetSignalType[7][3];
@@ -722,6 +733,7 @@ extern PA_RESOL gPaRes[ 6 ];
 
 #else
 extern PA_RESOL gPaRes[ 6 ];
+extern FREQ_RESOL gFreqRes[ 7 ];
 #endif
 
 #endif
