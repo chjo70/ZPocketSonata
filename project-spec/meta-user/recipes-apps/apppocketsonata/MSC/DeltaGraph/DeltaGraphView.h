@@ -7,12 +7,12 @@
 #include "resource.h"
 #include "afxcmn.h"
 
-#include "../ShuDeltaGraph/ListCtrl/ReportCtrl.h"
-#include "../ShuDeltaGraph/ListCtrl/CBSpeedListCtrl.h"
+#include "ListCtrl/ReportCtrl.h"
+#include "ListCtrl/CBSpeedListCtrl.h"
 
-#include "../ShuDeltaGraph/EasySize/EasySize.h"
+#include "EasySize/EasySize.h"
 
-#include "../ShuDeltaGraph/SpinCtrl/NumSpinCtrl.h"
+#include "SpinCtrl/NumSpinCtrl.h"
 
 #include "Show.h"
 

@@ -192,9 +192,6 @@
     <ClInclude Include="PropertiesWnd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Log\LogDebug.h">
-      <Filter>소스 파일\LOG</Filter>
-    </ClInclude>
     <ClInclude Include="revision.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -206,21 +203,6 @@
     </ClInclude>
     <ClInclude Include="..\ShuDeltaGraph\SpinCtrl\NumSpinCtrl.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\ButtonST\BCMenu.h">
-      <Filter>소스 파일\ButtonST</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\ButtonST\BtnST.h">
-      <Filter>소스 파일\ButtonST</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\MIDAS\Midas.h">
-      <Filter>소스 파일\Anal\MIDAS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\MIDAS\PDWIQ.h">
-      <Filter>소스 파일\Anal\MIDAS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\MIDAS\RawFile.h">
-      <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClInclude>
     <ClInclude Include="..\ShuDeltaGraph\Anal\INC\IQ.h">
       <Filter>소스 파일\Anal\INC</Filter>
@@ -276,6 +258,21 @@
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
     </ClInclude>
+    <ClInclude Include="Log\LogDebug.h">
+      <Filter>소스 파일\LOG</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonST\BCMenu.h">
+      <Filter>소스 파일\ButtonST</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonST\BtnST.h">
+      <Filter>소스 파일\ButtonST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeltaGraph.cpp">
@@ -308,9 +305,6 @@
     <ClCompile Include="PropertiesWnd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\Log\LogDebug.cpp">
-      <Filter>소스 파일\LOG</Filter>
-    </ClCompile>
     <ClCompile Include="revision.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -323,20 +317,8 @@
     <ClCompile Include="..\ShuDeltaGraph\SpinCtrl\NumSpinCtrl.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\ButtonST\BCMenu.cpp">
-      <Filter>소스 파일\ButtonST</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\ButtonST\BtnST.cpp">
-      <Filter>소스 파일\ButtonST</Filter>
-    </ClCompile>
     <ClCompile Include="MainFrm.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\Anal\MIDAS\Midas.cpp">
-      <Filter>소스 파일\Anal\MIDAS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\Anal\MIDAS\RawFile.cpp">
-      <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
     <ClCompile Include="ToolTip\XInfoTip.cpp">
       <Filter>소스 파일\ToolTip</Filter>
@@ -364,6 +346,21 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\LogDebug.cpp">
+      <Filter>소스 파일\LOG</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonST\BCMenu.cpp">
+      <Filter>소스 파일\ButtonST</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonST\BtnST.cpp">
+      <Filter>소스 파일\ButtonST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@
 #include "DeltaGraphView2.h"
 
 
-#include "../ShuDeltaGraph/Log/LogDebug.h"
+#include "Log/LogDebug.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
