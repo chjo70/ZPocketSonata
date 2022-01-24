@@ -274,6 +274,6 @@ UINT CDeltaGraphDoc::GetPDWDataItems()
 	STR_PDW_DATA *pPDWData;
 
 	pPDWData = ( STR_PDW_DATA * ) m_theDataFile.GetData();
-	return pPDWData->iDataItems; 
+	return pPDWData->uiDataItems; 
 }
 

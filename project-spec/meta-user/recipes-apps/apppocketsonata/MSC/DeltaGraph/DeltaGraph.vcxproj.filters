@@ -43,9 +43,6 @@
     <Filter Include="소스 파일\Anal\SigAnal">
       <UniqueIdentifier>{1b5ae10c-09d8-404c-aaa1-bd4489b34598}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Utils">
-      <UniqueIdentifier>{b9f79767-da38-4553-b0a5-b1893b304147}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Anal\INC">
       <UniqueIdentifier>{b364d609-d65c-49ed-a308-eefd4142aa16}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="소스 파일\Anal\Collect\DataFile">
       <UniqueIdentifier>{144db461-0928-4ca9-aac4-c15258dec9ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SpinCtrl">
+      <UniqueIdentifier>{b9f79767-da38-4553-b0a5-b1893b304147}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +273,9 @@
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
       <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClInclude>
+    <ClInclude Include="SpinCtrl\NumSpinCtrl.h">
+      <Filter>소스 파일\SpinCtrl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeltaGraph.cpp">
@@ -312,9 +315,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Show.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ShuDeltaGraph\SpinCtrl\NumSpinCtrl.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
@@ -361,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
       <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="SpinCtrl\NumSpinCtrl.cpp">
+      <Filter>소스 파일\SpinCtrl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
