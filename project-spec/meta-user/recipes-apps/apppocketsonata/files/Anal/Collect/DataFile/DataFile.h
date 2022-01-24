@@ -10,7 +10,7 @@
 #include "../../../Anal/MIDAS/PDWIQ.h"
 
 #ifdef _FFTW_
-#include "../../../FFTW/fftw3.h"
+#include "../../../../MSC/DeltaGraph/FFTW/fftw3.h"
 #endif
 
 #include "../../../Anal/MIDAS/Midas.h"

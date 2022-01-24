@@ -47,11 +47,6 @@
 
 #endif
 
-#ifdef _POCKETSONATA_
-char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
-
-#endif
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
