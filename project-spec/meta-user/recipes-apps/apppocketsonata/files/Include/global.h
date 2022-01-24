@@ -12,6 +12,8 @@ enum ENUM_ENDIAN_MODE {
 
 };
 
+extern ENUM_ENDIAN_MODE g_enEndian;
+
 
 // 전역 변수를 정의한다.
 #ifdef _MAIN_GLOBALS_
@@ -26,7 +28,7 @@ bool g_Loop=true;
 
 bool g_AnalLoop=true;
 
-ENUM_ENDIAN_MODE g_enEndian;
+//ENUM_ENDIAN_MODE g_enEndian;
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -56,8 +58,6 @@ extern bool g_Loop;
 extern bool g_AnalLoop;
 
 extern bool g_bSaveFile;
-
-extern ENUM_ENDIAN_MODE g_enEndian;
 
 #ifdef __VXWORKS__
 extern MSG_Q_ID g_ShmMemMsgQID;

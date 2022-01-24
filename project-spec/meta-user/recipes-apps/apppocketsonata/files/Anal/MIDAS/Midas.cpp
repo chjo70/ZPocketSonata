@@ -51,6 +51,8 @@
 #define new DEBUG_NEW
 #endif
 
+ENUM_ENDIAN_MODE g_enEndian;
+
 /**
  * @brief     MIDAS 포멧을 처리하기 위한 메모리를 할당한다.
  * @param     void
