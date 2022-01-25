@@ -232,7 +232,8 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 			*pfPW = DecodePW( uiTemp );
 
 		    uiTemp = BIT_MERGE(pPDW->item.direction_h, pPDW->item.direction_l);
-		    *pfAOA = FAOACNV(uiTemp);
+		    //*pfAOA = FAOACNV(uiTemp);
+			*pfAOA = DecodeDOA( uiTemp );
 
 		    uiTemp = pPDW->item.amplitude;
 		    *pfPA = PACNV(uiTemp);

@@ -146,10 +146,10 @@ void CDeltaGraphView::InitButton()
 void CDeltaGraphView::InitSpinCtrl()
 {
 
-	m_CSpinPage.SetDecimalPlaces(0);
-	m_CSpinPage.SetTrimTrailingZeros(FALSE);
-	m_CSpinPage.SetRangeAndDelta( 0, 10000, 10.0 );
-	m_CSpinPage.SetPos( (double) 0 );
+	//m_CSpinPage.SetDecimalPlaces(0);
+	//m_CSpinPage.SetTrimTrailingZeros(FALSE);
+	//m_CSpinPage.SetRangeAndDelta( 0, 10000, 10.0 );
+	//m_CSpinPage.SetPos( (double) 0 );
 
 }
 

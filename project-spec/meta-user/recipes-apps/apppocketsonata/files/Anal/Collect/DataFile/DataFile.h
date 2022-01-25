@@ -271,6 +271,8 @@ namespace PDW {
 
 	#define PW_RES				(50)
 
+	#define	DOA_RES				(0.351562)
+
 	struct FREQ_RESOL {
 		UINT uiMin;
 		UINT uiMax;
@@ -337,9 +339,9 @@ public:
 		return 0.0;
 	} ;
 
-	static float DecodeDOA(float fDOA )
+	static float DecodeDOA( unsigned int uiDOA )
 	{
-		return 0.0;
+		return (float) PDW::DOA_RES * (float) uiDOA;
 	} ;
 
     /**
