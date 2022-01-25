@@ -511,7 +511,7 @@ struct STR_PDWDATA {
     } x;
 
     UINT uiTotalPDW;
-    __time32_t uiTime;
+    __time32_t tColTime;
 
     _PDW stPDW[MAX_PDW];
 

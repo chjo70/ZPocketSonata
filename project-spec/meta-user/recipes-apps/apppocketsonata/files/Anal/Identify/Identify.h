@@ -109,11 +109,12 @@ struct STR_H000 {
 #include "../../SQLite/KompexSQLiteStreamRedirection.h"
 #include "../../SQLite/KompexSQLiteBlob.h"
 
-#elif _NO_SQLITE_
-
 #elif _MSSQL_
 #include "../../ODBC/mssql.h"
 #include "../../ODBC/odbccore.h"
+
+#else
+
 #endif
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -440,7 +441,7 @@ private:
 // 	void SortRadarIndex( int *pCount, int *pIndex, int nMax=100 );
 // 	void RemoveDuplicateIndex( int *pCount, int *pIndex, int nMax );
 
-#if defined(_SQLITE_) || defined(_NO_SQLITE_)
+#if defined(_SQLITE_)
     CELSignalIdentifyAlg( const char *pFileName );
 #elif _MSSQL_
     CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );

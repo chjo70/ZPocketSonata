@@ -17,11 +17,12 @@ using namespace std;
 #include "../SQLite/KompexSQLiteStreamRedirection.h"
 #include "../SQLite/KompexSQLiteBlob.h"
 
-#elif _NO_SQLITE_
-
 #elif _MSSQL_
 #include "../ODBC/mssql.h"
 #include "../ODBC/odbccore.h"
+
+#else
+
 #endif
 
 

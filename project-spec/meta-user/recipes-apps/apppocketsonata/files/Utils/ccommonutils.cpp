@@ -256,58 +256,7 @@ int clock_gettime(int X, struct timeval *tv)
 } 
 
 
-/**
- * @brief CCommonUtils::Disp_FinePDW
- * @param pPDWData
- */
-void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
-{
 
-#ifdef __ZYNQ_BOARD__
-    return;
-#else
-    unsigned int i;
-    _PDW *pPDW;
-    _TOA ullfirstTOA;
-
-    pPDW = & pPDWData->stPDW[0];
-    ullfirstTOA = pPDW->ullTOA;
-    for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
-        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
-                pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
-                CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
-                CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
-                CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );
-
-        ++ pPDW;
-    }
-
-    return;
-
-#endif
-
-}
-
-/**
- * @brief CCommonUtils::GetEnumCollectBank
- * @param uiCh
- * @return
- */
-ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
-{
-    ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
-
-    if( uiCh < DETECT_CHANNEL )
-        enCollectBank = enDetectCollectBank;
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
-        enCollectBank = enTrackCollectBank;
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
-        enCollectBank = enScanCollectBank;
-    else
-        enCollectBank = enUserCollectBank;
-
-    return enCollectBank;
-}
 
 /**
  * @brief     getStringPresentTime
@@ -492,7 +441,63 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
 
 #endif
 
+/**
+ * @brief CCommonUtils::Disp_FinePDW
+ * @param pPDWData
+ */
+void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
+{
+
+#ifdef __ZYNQ_BOARD__
+    return;
+#else
+    unsigned int i;
+    _PDW *pPDW;
+    _TOA ullfirstTOA;
+
+    pPDW = & pPDWData->stPDW[0];
+    ullfirstTOA = pPDW->ullTOA;
+    for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
+        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
+                pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
+                CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
+                CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
+                CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );
+
+        ++ pPDW;
+    }
+
+    return;
+
 #endif
+
+}
+
+
+
+
+/**
+ * @brief CCommonUtils::GetEnumCollectBank
+ * @param uiCh
+ * @return
+ */
+ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
+{
+    ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
+
+    if( uiCh < DETECT_CHANNEL )
+        enCollectBank = enDetectCollectBank;
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+        enCollectBank = enTrackCollectBank;
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+        enCollectBank = enScanCollectBank;
+    else
+        enCollectBank = enUserCollectBank;
+
+    return enCollectBank;
+}
+
+#endif	// _GRAPH_
 
 /**
  * @brief CCommonUtils::AllSwapData32

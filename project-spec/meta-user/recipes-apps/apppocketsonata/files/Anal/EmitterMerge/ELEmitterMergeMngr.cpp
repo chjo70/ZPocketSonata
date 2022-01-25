@@ -92,10 +92,11 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
     
-#elif _NO_SQLITE_
 #elif _MSSQL_
     // MSSQL 연결
     CMSSQL::Init();
+#else
+
 #endif
 
     // 메모리 할당
@@ -10058,7 +10059,6 @@ void CELEmitterMergeMngr::GetGlobalSequenceNum()
     m_nSeqNum = 0;
 
 #ifdef _SQLITE_
-#elif _NO_SQLITE_
 #elif _MSSQL_
     char buffer[100];
 
@@ -10072,7 +10072,7 @@ void CELEmitterMergeMngr::GetGlobalSequenceNum()
     m_nSeqNum = _max( m_nSeqNum, GetINTData( buffer ) );
 
     ++ m_nSeqNum;
-
+#else
 #endif
 
     //LogPrint( "연동기1의 LOB_SEQ_NUM[%d]이고 연동기1/2(LINK2)의 LOB_SEQ_NUM[%d] 입니다.", m_nSeqNum, m_nGetSeqNum );

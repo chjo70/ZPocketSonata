@@ -9,11 +9,11 @@
 #include "../../SQLite/KompexSQLiteStreamRedirection.h"
 #include "../../SQLite/KompexSQLiteBlob.h"
 
-#elif _NO_SQLITE_
-
 #elif _MSSQL_
 #include "../../ODBC/mssql.h"
 #include "../../ODBC/odbccore.h"
+
+#else
 
 #endif
 
@@ -199,7 +199,6 @@ protected:
 
 #elif defined(_MSSQL_)
     char *m_pszSQLString;
-    //char m_szSQLString[MAX_SQL_SIZE];
 
 #else
 #endif

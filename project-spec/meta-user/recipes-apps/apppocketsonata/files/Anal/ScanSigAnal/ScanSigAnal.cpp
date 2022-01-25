@@ -195,7 +195,7 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
     m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW );
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
 
     /*! \bug  그룹화는 생략하고 수집 펄스열을 하나의 그룹화 내에 올려 놓는다.
         \date 2009-03-03 17:05:22, 조철희

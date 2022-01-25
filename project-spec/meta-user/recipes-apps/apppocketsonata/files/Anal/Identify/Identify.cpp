@@ -134,10 +134,11 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
             exception.Show();
             std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
         }
-#elif _NO_SQLITE_
 #elif _MSSQL_
         // MSSQL 연결
         CMSSQL::Init();
+#else
+
 #endif
     }
     else {
@@ -6621,7 +6622,6 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
         }
     }
 
-#elif _NO_SQLITE_
 #elif _MSSQL_
 //     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
 //     exec( m_szSQLString );

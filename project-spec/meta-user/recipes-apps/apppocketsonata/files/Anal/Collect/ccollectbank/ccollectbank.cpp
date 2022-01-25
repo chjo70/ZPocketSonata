@@ -385,3 +385,27 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
     return bRet;
 }
 
+
+/**
+ * @brief     SetCollectUpdateTime
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-01-25, 10:46
+ * @warning
+ */
+void CCollectBank::SetCollectUpdateTime()
+{
+    __time32_t tNow;
+    tNow = time( NULL );
+
+#ifdef _MSC_VER
+    m_strPDW.tColTime = tNow;
+
+#else
+    m_strPDW.tColTime = tNow;
+
+#endif
+
+}

@@ -482,6 +482,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     }
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
+                    pCollectBank->SetCollectUpdateTime();
                     break;
                 }
                 else {

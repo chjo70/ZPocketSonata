@@ -49,6 +49,8 @@ public:
     void SimCollectMode();
     bool IsFiltered( _PDW *pstPDW );
 
+    void SetCollectUpdateTime();
+
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_iChannelNo; }
     inline int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }

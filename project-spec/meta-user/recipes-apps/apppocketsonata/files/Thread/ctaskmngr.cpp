@@ -64,10 +64,12 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
-#elif _NO_SQLITE_
 #elif _MSSQL_
     // MSSQL 연결
     CMSSQL::Init();
+
+#else
+
 #endif
 
 }
@@ -81,12 +83,14 @@ CTaskMngr::~CTaskMngr(void)
     //GP_SYSCFG->SetMode( enMode );
     //CreateAllAnalysisThread( false );
 
-#ifdef _NO_SQLITE_
-#elif _SQLITE_
+#ifdef _SQLITE_
     delete m_pDatabase;
 
 #elif _MS_SQL_
     m_theMyODBC.Close();
+
+#else
+
 #endif
 
 }

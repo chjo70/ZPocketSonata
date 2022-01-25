@@ -121,7 +121,7 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 #endif
 
     // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.

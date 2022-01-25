@@ -4,6 +4,7 @@
 
 //#include "../../INC/system.h"
 //#include "../../../Anal/SigAnal/_Type.h"
+#include "../../../Anal/SigAnal/_Macro.h"
 
 #include "../../../Anal/MIDAS/RawFile.h"
 
@@ -273,11 +274,16 @@ public:
 	void ReadDataHeader() {  }
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
+
+    unsigned int GetDataItems();
+
+
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+
+	
 
     inline void SetHeaderData( void *pData ) { return; }
 

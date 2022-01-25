@@ -360,8 +360,9 @@ extern "C"
 
 #endif
 
-
 void _InitResolution();
+
+
 
 #ifdef _MAIN_GLOBALS_
 float _spOneSec;

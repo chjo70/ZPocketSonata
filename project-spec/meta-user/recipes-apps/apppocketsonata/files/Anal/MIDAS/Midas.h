@@ -638,7 +638,7 @@ public:
     void InitIFMidas();
     bool SaveAllIFMIDASFormat();
 
-    void SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData, unsigned int uiStep );
+    void SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData );
 
     inline char *GetRawDataFilename() { return m_szRawDataFilename; }
 	

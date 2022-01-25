@@ -167,10 +167,10 @@ void InitDatabase()
 #endif
 
         
-#elif _NO_SQLITE_
-    printf( "\n #### NO_SQLITE 모드 입니다. ####" );
-
 #elif _MSSQL_
+
+#else
+    printf( "\n #### NO_SQLITE 모드 입니다. ####" );
 
 #endif
 

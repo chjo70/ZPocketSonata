@@ -53,7 +53,7 @@ vector<CThread *> g_vecThis;
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
-
+LONG g_lOpInitID;
 
 #elif _POCKETSONATA_
 
@@ -83,9 +83,10 @@ extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
 extern CSingleClient *g_pThePMCSocket;
 
-
+// 신호 분석 관련 정보
 extern CELEnvironVariable *g_pTheELEnvironVariable;
 
+// 쓰레드 관련 정보
 extern vector<CThread *> g_vecThis;
 
 #if defined(_ELINT_) || defined(_XBAND_)

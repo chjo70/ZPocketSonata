@@ -10,6 +10,7 @@
 
 #include "../Utils/ccommonutils.h"
 
+#include "../Anal/SigAnal/cencdec.h"
 #include "../Anal/Collect/DataFile/DataFile.h"
 
 #include "../Include/globals.h"

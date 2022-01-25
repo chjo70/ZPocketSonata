@@ -25,9 +25,6 @@
 #include "NMakeAET.h"
 
 #include "../MIDAS/Midas.h"
-//#include "../MIDAS/RawFile.h"
-
-//#include "../../Include/globals.h"
 
 #define MAX_MATCH_RADARMODE         (2*MAX_RADARMODE)
 
@@ -50,6 +47,10 @@ public:
     DEFINE_ANAL_VAR_
 
 private:
+    int m_nSeqNum;
+    LONG m_lOpInitID;
+    int m_iPDWID;
+
     bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
     UINT m_uiStep;
@@ -61,6 +62,13 @@ private:
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
     int m_iIsStorePDW;
+
+    __time32_t m_tColTime;
+    unsigned int m_tColTimeMs;
+
+    char m_szRawDataFilename[100];
+
+    char *m_pszSQLString;
 
 #if defined(_ELINT_) || defined(_XBAND_)
     unsigned char m_szTaskID[LENGTH_OF_TASK_ID];
@@ -91,8 +99,6 @@ private:
 public:
     enum FREQ_BAND GetBand( int freq );
     void Simul();
-
-    void Init();
 
     void LoadCEDLibrary();
 
@@ -161,10 +167,12 @@ public:
     inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
+    inline void NextSeqNum() { ++ m_nSeqNum; }
 
     // 기타 함수
     void SaveRemainedPdwFile();
     void InitAllVar();
+    void InitDataFromDB();
     void InitVar( enum ANALYSIS_MODE analMode );
     void SWInit();
     void Init( STR_PDWDATA *pPDWData=NULL );

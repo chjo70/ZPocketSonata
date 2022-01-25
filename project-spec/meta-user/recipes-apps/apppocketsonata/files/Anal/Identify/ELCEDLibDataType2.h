@@ -2049,7 +2049,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 {
     int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) /* || defined(_POCKETSONATA_) */
     char szRadarName[_MAX_RADARMODE_NAME_SIZE];
     __time32_t tiCreated;
     __time32_t tiLastUpdated;

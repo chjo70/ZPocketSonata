@@ -10,14 +10,15 @@
 #include <fcntl.h>
 
 
-#if defined(_GUI_)
-#define _MAIN_GLOBALS_
+#if defined(_MSC_VER)
+//#define _MAIN_
+//#define _MAIN_GLOBALS_
+
 #elif __linux__
 //#define _MAIN_GLOBALS_
 
-#elif defined(_MSC_VER)
-//#define _MAIN_
-//#define _MAIN_GLOBALS_
+#else
+
 #endif
 
 
@@ -265,7 +266,13 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
+
+unsigned int CEPDW::GetDataItems()
+{
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /**
@@ -3077,10 +3084,8 @@ CData *CDataFile::ReadDataFile( char *pPathname, int iFileIndex, CData *pData, S
 		enDataType = m_pData->m_RawData.enDataType;
 	}
 
+    // SONATA 체계용 PDW 파일을 읽을때...
 	if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {
-		//uiLengthOfHeader = 0;
-		//uiLengthOf1PDWIQ = sizeof(TNEW_PDW);
-
 		if( m_pData == NULL ) {
 			m_pData = pData;
 			if( m_pData == NULL ) {
@@ -3101,9 +3106,6 @@ CData *CDataFile::ReadDataFile( char *pPathname, int iFileIndex, CData *pData, S
 		if( m_pData == NULL ) {
 			m_pData = pData;
 			if( m_pData == NULL ) {
-				//uiLengthOfHeader = 0;
-				//uiLengthOf1PDWIQ = sizeof(TNEW_PDW);
-
 				m_pData = new CSPDW( NULL );
 
 				iDataItems = LoadRawData( m_pData, iFileIndex );
@@ -3508,16 +3510,12 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
  */
 UINT CDataFile::LoadRawData( CData *pData, int iFileIndex, bool bConvert )
 {
-	//UINT uiLengthOfHeader;
 
 	if( m_RawDataFile.FileOpen( m_szPathname, O_RDONLY | O_BINARY ) == TRUE ) {
         //Log( enNormal, "파일[%s]을 오픈합니다.", m_szPathname );
 
 		// 1. 헤더 파일만 읽기
 		ReadDataHeader( pData );
-
-		// 1.1 헤더 크기 계산
-		pData->m_uiLengthOfHeader = GetHeaderSize( pData );
 
 		// 1.2 데이터 엘리먼트 계산
 		pData->m_RawData.uiDataItems = GetDataItems( pData );
@@ -3582,16 +3580,25 @@ unsigned int CDataFile::GetOneDataSize( CData *pData )
  */
 void CDataFile::ReadDataHeader( CData *pData )
 {
-	//int iRead;
-
+    // 파일 처음으로 이동
 	m_RawDataFile.SeekToStart();
 
+    // 1.1 헤더 크기 계산
+    pData->m_uiLengthOfHeader = GetHeaderSize( pData );
+
+    if( pData->m_uiLengthOfHeader != 0 ) {
 	// 데이터 파일 중에서 제일 큰 것을 읽는다.
 	m_RawDataFile.Read( pData->m_pRawHeaderBuffer, MAX_HEADER_SIZE );	
 
+        // 다시 처음으로 이동
 	m_RawDataFile.SeekToStart();
 
     pData->m_ullFileSize = m_RawDataFile.GetFileSize();
+
+    }
+    else {
+        pData->m_pRawHeaderBuffer[0] = NULL;
+    }
 
 }
 

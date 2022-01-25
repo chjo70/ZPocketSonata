@@ -2044,7 +2044,7 @@ void CMIDASBlueFileFormat::MIDASClose()
  * @param uiStep
  * @param iBoardID
  */
-void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData, unsigned int uiStep )
+void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData )
 {
     STR_PDWDATA *pPDWData;
 
