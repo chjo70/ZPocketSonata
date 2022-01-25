@@ -342,6 +342,15 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 	if( true == IsExistFile( *pStrPathname ) ) {
 		++ m_uiWindowNumber;
 
+		if( GetDataType(*pStrPathname) == en_PDW_DATA ) {
+			pos = GetFirstDocTemplatePosition();
+			for( i=0 ; i < PDW_MULTI_WINDOWS ; ++i ) {
+ 				pDocTemplate = GetNextDocTemplate( pos );
+ 
+ 				pDoc = ( CDeltaGraphDoc *) pDocTemplate->OpenDocumentFile(*pStrPathname);
+			}
+		}
+		else {
 		pos = GetFirstDocTemplatePosition();
 
 		for( i=0 ; i < IQ_MULTI_WINDOWS ; ++i ) {
@@ -349,6 +358,7 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
  
  			pDoc = ( CDeltaGraphDoc *) pDocTemplate->OpenDocumentFile(*pStrPathname);
 
+		}
 		}
 
 		::PostMessage( m_pMainWnd->m_hWnd, WM_COMMAND, ID_WINDOW_TILE_HORZ, NULL );

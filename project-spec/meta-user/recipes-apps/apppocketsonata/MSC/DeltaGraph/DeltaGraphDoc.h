@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include "../../Files/Anal/SigAnal/_Macro.h"
+#include "../../Files/Anal/SigAnal/_Struct.h"
+
 #include "../../Files/Anal/Collect/DataFile/DataFile.h"
 
 class CDeltaGraphDoc : public CDocument
