@@ -15,7 +15,6 @@
 #include "../Utils/clog.h"
 
 
-//#include "../../OFP/Identify/ELCEDLibDataType2.h"
 #include "../Anal/EmitterMerge/ELEmitterDataType.h"
 #include "../Anal/EmitterMerge/PositionEstimationAlg.h"
 
@@ -24,18 +23,11 @@
 
 //#include "../../OFP/Include/globals.h"
 
-//#define MAX_SQL_SIZE								(10000)
-
 #define MAX_OF_COLUMN_LENGTH				(130)
 #define MAX_COUNT_OF_FIELD					(100)
 
-// ¿¡·¯ Á¤ÀÇ
-//#define SQL_ERROR_DISCONNECTION				(0xFFFF)
-//#define SQL_ERROR_QUERY								(0xFFF0)
-//#define SQL_ERROR_FIELD_LENGTH				(0xFFE0)
-
 #define DECLARE_BEGIN_CHECKODBC				    try { CheckConnection();
-#define DECLARE_END_CHECKODBC					} catch( int iErrorException ) { printf( "\n Error !!!" ); if( g_pTheLog ) { Log( enError, "DB Äõ¸® ¿¡·¯" ); } else TRACE( "DB Äõ¸® ¿¡·¯" );ErrorException( iErrorException ); }
+#define DECLARE_END_CHECKODBC					} catch( int iErrorException ) { /*if( g_pTheLog ) { Log( enError, "DB Äõ¸® ¿¡·¯" ); } else */ TRACE( "DB Äõ¸® ¿¡·¯" );ErrorException( iErrorException ); }
 #define	DECLARE_RETURN							return m_bRet;
 
 #define CAST_THROW_MESSAGE						{ m_iErrorException = SQL_ERROR_FIELD_LENGTH; throw m_iErrorException; }
@@ -146,7 +138,8 @@ protected:
 	bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems=0 );
 
 	// SQL Äõ¸® ÇÔ¼ö
-	int GetLONGData( char *pSQLString );
+	LONG GetLONGData( char *pSQLString );
+    int GetINTData( char *pSQLString );
 	bool InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=false );
 	bool InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt );
 	bool InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=false );

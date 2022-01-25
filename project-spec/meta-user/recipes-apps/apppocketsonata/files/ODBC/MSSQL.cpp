@@ -80,26 +80,52 @@ void CMSSQL::DisplayErrorException( int iErrorException )
 	* @return 	int
 	* @date			2019/04/18 17:10
 */
-// int CMSSQL::GetLONGData( char *pSQLString )
-// {
-// 	LONG lValue=-1;
-// 
-// 	DECLARE_BEGIN_CHECKODBC
-// 
-// 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-// 
-// 	theRS.Open( pSQLString );
-// 	if( ! theRS.IsEof() ) {
-// 		theRS.GetFieldValue( 0, & lValue );
-// 	}
-// 
-// 	theRS.Close();
-// 
-// 	DECLARE_END_CHECKODBC
-// 
-// 	return lValue;
-// }
-// 
+LONG CMSSQL::GetLONGData( char *pSQLString )
+{
+	LONG lValue=0;
+
+	DECLARE_BEGIN_CHECKODBC
+
+	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+	theRS.Open( pSQLString );
+	if( ! theRS.IsEof() ) {
+		theRS.GetFieldValue( 0, & lValue );
+	}
+
+	theRS.Close();
+
+	DECLARE_END_CHECKODBC
+
+	return lValue;
+}
+
+/**
+	* @brief		LONG 값을 리턴한다.
+	* @param		char * pSQLString
+	* @return 	int
+	* @date			2019/04/18 17:10
+*/
+int CMSSQL::GetINTData( char *pSQLString )
+{
+	int iValue=0;
+
+	DECLARE_BEGIN_CHECKODBC
+
+	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+	theRS.Open( pSQLString );
+	if( ! theRS.IsEof() ) {
+		theRS.GetFieldValue( 0, & iValue );
+	}
+
+	theRS.Close();
+
+	DECLARE_END_CHECKODBC
+
+	return iValue;
+}
+
 // /**
 // 	* @brief		
 // 	* @param		SRxLOBData * pLOBData

@@ -267,7 +267,7 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 }
 
 
-unsigned int CEPDW::GetDataItems()
+unsigned int CPDW::GetDataItems()
 {
     return 0;
 }
@@ -3648,7 +3648,8 @@ void CDataFile::ReadDataAll( CData *pData )
  */
 unsigned int CDataFile::GetDataItems( CData *pData )
 {
-	
+	unsigned long long ullFileSize=m_RawDataFile.GetFileSize();
+
 	return pData->GetDataItems();
 
 }
