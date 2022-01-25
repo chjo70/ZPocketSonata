@@ -1837,7 +1837,7 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
 #elif defined(_POCKETSONATA_)
     max_freq_diff = I_IFRQCNV( g_enBoardId, MAX_FREQ_DIFF );
 #else
-    max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].res ) );
+    max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].fRes ) );
 #endif
 
     //////////////////////////////////////////////////////////////////////

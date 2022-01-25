@@ -1018,13 +1018,17 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
  */
 void CNewSigAnal::InitDataFromDB()
 {
-    char buffer[400];
+    
 
     m_lOpInitID = 0;
     m_nSeqNum = 0;
     m_iPDWID = 0;
 
+#ifdef _MSSQL_
+
 #if defined(_ELINT_) || defined(_XBAND_)
+	char buffer[400];
+
     sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
     m_lOpInitID = GetLONGData( buffer ) + 1;
 
@@ -1033,6 +1037,11 @@ void CNewSigAnal::InitDataFromDB()
 
     sprintf_s( buffer, sizeof(buffer), "select max(PDW_ID) from RAWDATA" );
     m_iPDWID = GetINTData( buffer ) + 1;
+
+#endif
+
+#else
+
 
 #endif
 

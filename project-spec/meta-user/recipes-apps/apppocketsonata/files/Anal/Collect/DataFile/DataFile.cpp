@@ -9,6 +9,7 @@
 
 #include <fcntl.h>
 
+#include <stdint.h>
 
 #if defined(_MSC_VER)
 //#define _MAIN_
@@ -95,7 +96,7 @@ void CPDW::Alloc( unsigned int uiItems )
 	if( uiItems == 0 ) {
 		uiItems = m_RawData.uiDataItems;
 	}
-    else if ( uiItems <= MAX_ITEMS ) {
+    else /* if ( uiItems <= MAX_ITEMS ) */ {
 	    m_PDWData.pfFreq = (float *)malloc(sizeof(float) * uiItems );
 	    m_PDWData.pfPW = (float *)malloc(sizeof(float) * uiItems );
 	    m_PDWData.pfAOA = (float *)malloc(sizeof(float) * uiItems );
@@ -107,9 +108,7 @@ void CPDW::Alloc( unsigned int uiItems )
 	    m_PDWData.pcType = (char *)malloc(sizeof(char) * uiItems );
 	    m_PDWData.pcDV = (char *)malloc(sizeof(char) * uiItems );
     }
-    else {
 
-    }
 
 }
 
@@ -166,6 +165,8 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 {
     unsigned int i;
 
+	Alloc( m_RawData.uiDataItems );
+
 	float *pfFreq = m_PDWData.pfFreq;
 	float *pfPW = m_PDWData.pfPW;
 	float *pfAOA = m_PDWData.pfAOA;
@@ -199,6 +200,7 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 
 	    m_PDWData.uiDataItems = 0;
 
+
         //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 
         for (i = 0; i < m_RawData.uiDataItems ; ++i) {
@@ -208,8 +210,7 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 		    temp.bpdw[0][3] = pPDW->item.toa_4;
 
 		    uiToa = temp.wpdw[0];
-		    *pfTOA = FDIV(uiToa, m_spOneMicrosec );
-		    //*pfTOA = FDIV( uiToa * 20, 1000. );
+			*pfTOA = DecodeTOAus( uiToa );
 
 		    if (i == 0) {
 			    *pfDTOA = 0;
@@ -217,19 +218,18 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 		    }
 		    else {
 			    uiDToa = uiToa - preToa;
-			    *pfDTOA = FDIV( uiDToa, m_spOneMicrosec );
-			    //*pfDTOA = FDIV( uiDToa*20, 1000. );
+				*pfDTOA = DecodeTOAus( uiDToa );
 			    preToa = uiToa;
 		    }
-
 		    *pfllTOA = uiToa;
 
-
 		    uiTemp = BIT_MERGE(pPDW->item.frequency_h, pPDW->item.frequency_l);
-		    *pfFreq = FFRQCNV(pPDW->item.band + 1, uiTemp);
+		    //*pfFreq = FFRQCNV(pPDW->item.band, uiTemp);
+			*pfFreq = DecodeRealFREQMHz( pPDW->item.band, uiTemp );
 
 		    uiTemp = BIT_MERGE(pPDW->item.pulse_width_h, pPDW->item.pulse_width_l);
-		    *pfPW = FMUL( uiTemp, m_spPWres );
+		    //*pfPW = FMUL( uiTemp, m_spPWres );
+			*pfPW = DecodePW( uiTemp );
 
 		    uiTemp = BIT_MERGE(pPDW->item.direction_h, pPDW->item.direction_l);
 		    *pfAOA = FAOACNV(uiTemp);
@@ -267,9 +267,26 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 }
 
 
-unsigned int CPDW::GetDataItems()
+/**
+ * @brief     
+ * @param     unsigned long long ullFileSize
+ * @return    unsigned int
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/25 23:56:38
+ * @warning   
+ */
+unsigned int CPDW::GetDataItems( unsigned long long ullFileSize )
 {
-    return 0;
+	unsigned int uiDataItems;
+
+	if( ullFileSize <= UINT32_MAX ) {
+		uiDataItems = (unsigned int) ( ullFileSize ) / sizeof( TNEW_PDW );
+	}
+	else {
+		uiDataItems = 0;
+	}
+    return uiDataItems;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -578,7 +595,7 @@ unsigned int CEPDW::GetHeaderSize()
  * @date      2021-07-20, 15:02
  * @warning
  */
-unsigned int CEPDW::GetDataItems()
+unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
@@ -748,7 +765,7 @@ void CSPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 		    uiTemp = BIT_MERGE(pPDW->item.frequency_h, pPDW->item.frequency_l);
 		    *pfFreq = FFRQCNV(pPDW->item.band + 1, uiTemp);
-
+			
 		    uiTemp = BIT_MERGE(pPDW->item.pulse_width_h, pPDW->item.pulse_width_l);
 		    *pfPW = FPWCNV(uiTemp);
 
@@ -756,7 +773,7 @@ void CSPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 		    *pfAOA = FAOACNV(uiTemp);
 
 		    uiTemp = pPDW->item.amplitude;
-		    *pfPA = FPACNV(uiTemp);
+		    //*pfPA = FPACNV(uiTemp);
 
 		    *pcType = pPDW->item.stat;
 		    *pcDV = pPDW->item.dv;
@@ -1342,7 +1359,7 @@ unsigned int CPOCKETSONATAPDW::GetOneDataSize()
  * @date		2020/12/24 15:02:30
  * @warning		
  */
-unsigned int CPOCKETSONATAPDW::GetDataItems()
+unsigned int CPOCKETSONATAPDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
@@ -1657,7 +1674,7 @@ unsigned int C7PDW::GetOneDataSize()
  * @date		2020/12/24 15:02:30
  * @warning		
  */
-unsigned int C7PDW::GetDataItems()
+unsigned int C7PDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
@@ -2046,7 +2063,7 @@ unsigned int CEIQ::GetOneDataSize()
  * @date		2020/12/28 10:19:33
  * @warning		
  */
-unsigned int CEIQ::GetDataItems()
+unsigned int CEIQ::GetDataItems( unsigned long long ullFileSize )
 {
 	return sizeof(TNEW_IQ);
 }
@@ -2688,7 +2705,7 @@ unsigned int CMIDAS::GetOneDataSize()
  * @date		2020/12/24 15:02:30
  * @warning		
  */
-unsigned int CMIDAS::GetDataItems()
+unsigned int CMIDAS::GetDataItems( unsigned long long ullFileSize )
 {
 	unsigned int i, iBit=0;
 	SELSUBRECORDS *pSubRecords;
@@ -3518,7 +3535,7 @@ UINT CDataFile::LoadRawData( CData *pData, int iFileIndex, bool bConvert )
 		ReadDataHeader( pData );
 
 		// 1.2 데이터 엘리먼트 계산
-		pData->m_RawData.uiDataItems = GetDataItems( pData );
+		GetDataItems( pData );
 
 		// 2. 전체 파일 읽기
 		ReadDataAll( pData );		
@@ -3650,7 +3667,9 @@ unsigned int CDataFile::GetDataItems( CData *pData )
 {
 	unsigned long long ullFileSize=m_RawDataFile.GetFileSize();
 
-	return pData->GetDataItems();
+	pData->m_RawData.uiDataItems = pData->GetDataItems( ullFileSize );
+
+	return pData->m_RawData.uiDataItems;
 
 }
 

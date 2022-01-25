@@ -497,27 +497,28 @@ struct STR_SYS
 
 #endif
 
+
+
 #ifndef _FREQ_RESOL_
 #define _FREQ_RESOL_
+
 /**	\brief	구조체명 FREQ_RESOL 
 */
 struct FREQ_RESOL {
-    // frequency band code를 위한 구조체
-    UINT min;       // min frequency
-    UINT max;       // max frequency
-	int offset;       // max frequency
-    float res;			// 각 구간에 따른 resolution
+    UINT uiMin;
+    UINT uiMax;
+	int iOffset;
+    float fRes;			// 각 구간에 따른 resolution
 } ;
 #endif
 
 #ifndef _PA_RESOL_
 #define _PA_RESOL_
 struct PA_RESOL {
-    // frequency band code를 위한 구조체
-    UINT min;       // min frequency
-    UINT max;       // max frequency
-	float offset;      // max frequency
-    float res;			// 각 구간에 따른 resolution
+    UINT uiMin;
+    UINT uiMax;
+	float fOffset;
+    float fRes;			// 각 구간에 따른 resolution
 } ;
 #endif
 

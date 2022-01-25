@@ -5,6 +5,7 @@
 //#include "../../INC/system.h"
 //#include "../../../Anal/SigAnal/_Type.h"
 #include "../../../Anal/SigAnal/_Macro.h"
+#include "../../../Anal/SigAnal/_Struct.h"
 
 #include "../../../Anal/MIDAS/RawFile.h"
 
@@ -178,7 +179,7 @@ struct STR_ZOOM_INFO {
 	void *GetHeader() { return NULL; }	\
 	unsigned int GetHeaderSize();	\
     unsigned int GetOneDataSize();	\
-	unsigned int GetDataItems();    \
+	unsigned int GetDataItems( unsigned long long ullFileSize=0 );    \
     void SetHeaderData( void *pData );
 
 
@@ -237,7 +238,7 @@ public:
 
     virtual unsigned int GetHeaderSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
-    virtual unsigned int GetDataItems() = 0;
+    virtual unsigned int GetDataItems( unsigned long long ullFileSize=0 ) = 0;
     virtual void SetHeaderData( void *pData ) = 0;
 };
 
@@ -260,6 +261,29 @@ namespace SONATA {
     const float fPAOffset=(-70.);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// SONATA 체계 RSA PDW 포멧
+namespace PDW {
+    #define PDW_PA_INIT		    (-89.0)
+
+	#define ONE_SEC				(20000000)
+	#define ONE_MICROSEC		(20)
+
+	#define PW_RES				(50)
+
+	struct FREQ_RESOL {
+		UINT uiMin;
+		UINT uiMax;
+		int iOffset;
+		float fRes;			// 각 구간에 따른 resolution
+	} ;
+
+	static FREQ_RESOL stFreqRes[ 3 ] = { {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+										 { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+										 { 5866, 18740, 5866, 1.5   } } ;
+
+}
+
 class CPDW : public CData
 {
 private:
@@ -275,19 +299,49 @@ public:
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 
-    unsigned int GetDataItems();
-
+    unsigned int GetDataItems( unsigned long long ullFileSize );
 
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetHeaderSize() { return 0; }
-    inline unsigned int GetOneDataSize() { return 0; }
-
-	
-
+    inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
 
 public:
+
+    /**
+     * @brief DecodeTOA
+     * @param iTOA
+     * @return
+     */
+    static float DecodeTOAus( unsigned int uiTOA  )
+    {
+        return (float) uiTOA / (float) ONE_MICROSEC;
+    } ;
+
+	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
+	{
+		if( iBand >= 0 && iBand <= 2 )
+			return FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
+		else
+			return 0.0;
+	}
+
+	static float DecodePW( unsigned int uiPW )
+	{
+		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
+	} ;
+
+	static float DecodeFREQMHz( int iFreq )
+	{
+		return 0.0;
+	} ;
+
+	static float DecodeDOA(float fDOA )
+	{
+		return 0.0;
+	} ;
+
     /**
      * @brief DecodeDOA
      * @param iDOA
@@ -297,7 +351,6 @@ public:
     {
         return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
     } ;
-
 
 
 };
@@ -325,7 +378,7 @@ public:
 
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     inline void SetHeaderData( void *pData ) { return; }
 
 };
@@ -356,7 +409,7 @@ public:
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
 	void *GetHeader() { return (void *) & m_stHeader; }
-    unsigned int GetDataItems();
+    unsigned int GetDataItems( unsigned long long ullFileSize );
     unsigned int GetHeaderSize();
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
@@ -399,7 +452,7 @@ public:
 
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
             
     inline void SetHeaderData( void *pData ) { return; }
 
@@ -462,6 +515,8 @@ namespace POCKETSONATA {
     const unsigned int uiPDW_NORMAL=0;
 
     static const float m_fCenterFreq[enMAXPRC] = { 0, 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
+
+	#define ONE_MICROSEC		(20)
 }
 
 
@@ -923,7 +978,7 @@ public:
 
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     inline void SetHeaderData( void *pData ) { return; }
 
 };
@@ -947,7 +1002,7 @@ public:
 
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems() { return 0; }
+	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     
     inline void SetHeaderData( void *pData ) { return; }
 };

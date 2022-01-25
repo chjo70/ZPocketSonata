@@ -1516,7 +1516,7 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
         int band;
 
         band = m_pBAND[ index ];
-        threshold = 2 * abs( (int) IDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].res ) );
+        threshold = 2 * abs( (int) IDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].fRes ) );
 #endif
 
         if( CompMeanDiff<UINT>( m_pFREQ[ index ], pSeg->freq.mean, threshold ) == TRUE ) {
@@ -2056,7 +2056,7 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
 #if defined(_ELINT_) || defined(_XBAND_)
     freq = IFRQMhzCNV( 0, 10 );
 #else
-    freq = abs( (int) IDIV( 10, gFreqRes[ pSeg->band ].res ) );
+    freq = abs( (int) IDIV( 10, gFreqRes[ pSeg->band ].fRes ) );
 #endif
     if( CompMeanDiff( pSeg->freq.max, pSeg->freq.min, freq ) == TRUE ) {
         uiFreqType = _FIXED;
@@ -2067,7 +2067,7 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
     threshold = IFRQMhzCNV( 0, FIXED_FREQ_MARGIN );
 #else
     int band = m_pBAND[ pSeg->pdw.pIndex[0] ];
-    threshold = abs( (int) IDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].res ) );	// 2MHz
+    threshold = abs( (int) IDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].fRes ) );	// 2MHz
 #endif
 
     freqMean = pSeg->freq.median;

@@ -2836,7 +2836,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
 
     int first_pdw_index = pSeg->pdw.pIndex[0];
     int band = m_pBAND[ first_pdw_index ];
-    threshold = abs( (int) C_UDIV( FIXED_FREQ_THRESHOLD, gFreqRes[band+1].res ) );
+    threshold = abs( (int) C_UDIV( FIXED_FREQ_THRESHOLD, gFreqRes[band+1].fRes ) );
 #endif
 
     // freqCenter = UDIV( pSeg->freq.max+pSeg->freq.min, 2 );
@@ -6012,7 +6012,7 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     PDWINDEX Idx = 0;
 
     band = (int) m_pBAND[pEmitter->pdw.pIndex[0]];
-    fResol = gFreqRes[band+1].res;
+    fResol = gFreqRes[band+1].fRes;
 
     /// 주파수 히스토그램을 생성한다.
     for( i=0 ; i < pEmitter->pdw.uiCount ; i++ ) {
@@ -6188,7 +6188,7 @@ void CAnalPRI::SetHoppingInfo(STR_EMITTER *pEmitter)
         }
         uiFreqAvg = UDIV(uiFreqSum, m_HoppingData.pt_pdw_count[i]);
         band = m_pBAND[m_HoppingData.pt_pdw_idx[i][0]];
-        uiFreqThres = UDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].res );	
+        uiFreqThres = UDIV( FIXED_FREQ_MARGIN, gFreqRes[band+1].fRes );	
 
         bExist = FALSE;
 
