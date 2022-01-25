@@ -1,4 +1,4 @@
-/****** Object: Table [dbo].[ABTDATA]   Script Date: 2022-01-10 오후 5:30:37 ******/
+/****** Object: Table [dbo].[ABTDATA]   Script Date: 2022-01-25 오후 5:07:05 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;
@@ -41,7 +41,7 @@ CREATE TABLE [dbo].[ABTDATA] (
 [PA_MIN] float NULL,
 [PA_MAX] float NULL,
 [TOTAL_PDW] int NULL,
-[RADAR_NAME] varchar(20) NULL,
+[RADARMODE_NAME] varchar(20) NULL,
 [RADARMODE_INDEX] smallint NULL,
 [THREAT_INDEX] smallint NULL,
 [PE_VALID] smallint NULL,

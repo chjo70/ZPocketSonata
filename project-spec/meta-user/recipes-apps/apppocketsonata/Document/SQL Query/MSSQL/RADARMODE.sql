@@ -1,4 +1,4 @@
-/****** Object: Table [dbo].[RADARMODE]   Script Date: 2022-01-10 오후 5:32:58 ******/
+/****** Object: Table [dbo].[RADARMODE]   Script Date: 2022-01-25 오후 5:08:04 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;

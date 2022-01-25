@@ -1,4 +1,4 @@
-/****** Object: Table [dbo].[AETDATA]   Script Date: 2022-01-10 오후 5:30:59 ******/
+/****** Object: Table [dbo].[AETDATA]   Script Date: 2022-01-25 오후 5:07:11 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;
@@ -7,6 +7,13 @@ SET QUOTED_IDENTIFIER ON;
 GO
 CREATE TABLE [dbo].[AETDATA] (
 [SEQ_NUM] int NOT NULL,
+[NUM_OF_BEAMS] int NULL,
+[STAT] tinyint NULL,
+[IDINFO] varchar(12) NULL,
+[NUM_OF_LOBS] int NULL,
+[FINAL_ALARM_TIME] datetime NULL,
+[PE_THETA] float NULL,
+[PE_DISTANCE] float NULL,
 [OP_INIT_ID] int NOT NULL,
 [AETID] int NOT NULL,
 [FIRST_TIME] datetime NULL,
@@ -52,14 +59,7 @@ CREATE TABLE [dbo].[AETDATA] (
 [PE_HEIGHT] float NULL,
 [PE_CEP] float NULL,
 [PE_MAJOR_AXIS] float NULL,
-[PE_MINOR_AXIS] float NULL,
-[PE_THETA] float NULL,
-[PE_DISTANCE] float NULL,
-[IDINFO] varchar(12) NULL,
-[NUM_OF_LOBS] int NULL,
-[NUM_OF_BEAMS] int NULL,
-[FINAL_ALARM_TIME] datetime NULL,
-[STAT] tinyint NULL)
+[PE_MINOR_AXIS] float NULL)
 ON [PRIMARY]
 WITH (DATA_COMPRESSION = NONE);
 GO

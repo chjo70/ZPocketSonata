@@ -1,4 +1,3 @@
-/****** Object: Table [dbo].[RAWDATA]   Script Date: 2022-01-10 ¿ÀÈÄ 5:35:26 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;
@@ -7,8 +6,12 @@ SET QUOTED_IDENTIFIER ON;
 GO
 CREATE TABLE [dbo].[RAWDATA] (
 [SEQ_NUM] int NOT NULL,
-[SEQ_TYPE] tinyint NOT NULL,
-[POSITION_COUNT] tinyint NULL,
+[OP_INIT_ID] tinyint NULL,
+[PDW_ID] int NULL,
+[TASK_ID] char(30) NULL,
+[CREATE_TIME] datetime NULL,
+[CREATE_TIME_MS] tinyint NULL,
+[COUNTOFDATA] tinyint NULL,
 [FILENAME] char(100) NULL)
 ON [PRIMARY]
 WITH (DATA_COMPRESSION = NONE);
