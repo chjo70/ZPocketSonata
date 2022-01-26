@@ -102,6 +102,8 @@ public:
 
     void LoadCEDLibrary();
 
+	void GetCollectTime( struct timespec *pTimeSpec );
+
     // 인라인 외부 연결 함수
     inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
     inline int GetCoPdw() { return m_CoPdw; }

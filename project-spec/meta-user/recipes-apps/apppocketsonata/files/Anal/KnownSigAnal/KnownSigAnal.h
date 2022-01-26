@@ -28,6 +28,9 @@ private:
 
     int m_iIsStorePDW;
 
+	__time32_t m_tColTime;
+	unsigned int m_tColTimeMs;
+
 public:
     //##ModelId=452B0C52024B
     int m_CoNewAet;
@@ -73,6 +76,8 @@ public:
     void Simul();
 
     void Init();
+
+	void GetCollectTime( struct timespec *pTimeSpec );
 
     inline int GetCoPdw() { return m_CoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }

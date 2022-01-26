@@ -13,6 +13,7 @@
 
 #include "../../Include/globals.h"
 
+#include "../../Utils/ccommonutils.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -526,3 +527,30 @@ void CKnownSigAnal::SendNewAet(SRxLOBData *pNewAet, int inEMT )
 
 }
 
+/**
+ * @brief     
+ * @param     struct timespec * pTimeSpec
+ * @return    void
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:57:51
+ * @warning   
+ */
+void CKnownSigAnal::GetCollectTime( struct timespec *pTimeSpec )
+{
+	if( m_tColTime == 0 ) {
+		clock_gettime( CLOCK_REALTIME, pTimeSpec );
+	}
+	else {
+		pTimeSpec->tv_sec = m_tColTime;
+#ifdef _MSC_VER
+		pTimeSpec->tv_usec = m_tColTimeMs * 1000;
+#else
+		pTimeSpec->tv_nsec = m_tColTimeMs * 1000000;
+#endif
+
+	}
+
+	return;
+
+}

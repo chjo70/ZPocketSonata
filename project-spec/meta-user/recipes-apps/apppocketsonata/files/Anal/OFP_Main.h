@@ -29,11 +29,19 @@
 //////////////////////////////////////////////////////////////////////////
 //
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_)
 #define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"
 #define LOCAL_DATA_DIRECTORY_2                  "C:\\기타\\EPDW"
 
 #define PDW_EXT									"EPDW"
+
+
+#elif defined(_XBAND_)
+#define LOCAL_DATA_DIRECTORY                    "\\\\192.168.0.41\\Files\\EPDW"
+#define LOCAL_DATA_DIRECTORY_2                  "C:\\기타\\EPDW"
+
+#define PDW_EXT									"XPDW"
+
 
 #elif defined(_POCKETSONATA_)
 #define PDW_EXT									"zpdw"

@@ -32,6 +32,8 @@
 
 #include "../../Include/globals.h"
 
+#include "../../Utils/ccommonutils.h"
+
 #ifdef _POCKETSONATA_
 char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
 
@@ -839,7 +841,8 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     TCHAR szDirectory[500], szRawDataPathname[500];
 
     struct tm *pstTime;
-    time_t tiNow;
+    //time_t tiNow;
+	struct timeval tiNow;
 
 #ifdef _XBAND_
     Log( enDebug, ".InsertRAWData[S%d]" , m_uiStep );
@@ -847,8 +850,8 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 
 #endif
 
-    tiNow = time(NULL);
-    pstTime = localtime( & tiNow );
+    GetCollectTime( & tiNow );
+    pstTime = localtime( & tiNow.tv_sec );
 
     // 1. 폴더명 생성하기
     strftime( buffer, 100, "%Y-%m-%d", pstTime );
@@ -860,8 +863,10 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 
 #elif _POCKETSONATA_
     sprintf( szDirectory, _T("%s/%s/BRD_%d"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID );
+
 #else
     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
+
 #endif
 
     printf( "\n Create the Dir[%s]" , szDirectory );
@@ -874,6 +879,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 #if defined(_ELINT_) || defined(_XBAND_)
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
+
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
         sprintf( szRawDataFilename, "%s/%s/%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], m_szRawDataFilename );
@@ -985,9 +991,13 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 	struct tm stTime;
 	char buffer[100];
 
+	struct timeval tiNow;
+
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	_localtime32_s( &stTime, & pPDWData->tColTime );
+	GetCollectTime( & tiNow );
+
+	_localtime32_s( &stTime, & tiNow.tv_sec );
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
   	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDW_ID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME ) values( \
         '%d', '%ld', '%d', '%s', '%s', '%d', '%d', '%s' )", \
@@ -1019,7 +1029,6 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 void CNewSigAnal::InitDataFromDB()
 {
     
-
     m_lOpInitID = 0;
     m_nSeqNum = 0;
     m_iPDWID = 0;
@@ -1047,3 +1056,30 @@ void CNewSigAnal::InitDataFromDB()
 
 }
 
+/**
+ * @brief     
+ * @return    __time32_t
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:22:00
+ * @warning   
+ */
+void CNewSigAnal::GetCollectTime( struct timespec *pTimeSpec )
+{
+
+	if( m_tColTime == 0 ) {
+		clock_gettime( CLOCK_REALTIME, pTimeSpec );
+	}
+	else {
+		pTimeSpec->tv_sec = m_tColTime;
+#ifdef _MSC_VER
+		pTimeSpec->tv_usec = m_tColTimeMs * 1000;
+#else
+		pTimeSpec->tv_nsec = m_tColTimeMs * 1000000;
+#endif
+
+	}
+
+	return;
+
+}
