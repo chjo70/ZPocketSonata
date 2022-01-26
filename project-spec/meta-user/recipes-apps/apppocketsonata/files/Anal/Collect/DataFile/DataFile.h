@@ -273,6 +273,8 @@ namespace PDW {
 
 	#define	DOA_RES				(0.351562)
 
+	#define	AMP_RES				(0.351562)
+
 	struct FREQ_RESOL {
 		UINT uiMin;
 		UINT uiMax;
@@ -323,10 +325,13 @@ public:
 
 	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
 	{
-		if( iBand >= 0 && iBand <= 2 )
-			return FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
-		else
-			return 0.0;
+		float fVal=0.0;
+
+		if( iBand >= 0 && iBand <= 2 ) {
+			fVal = FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
+		}
+		
+		return fVal;
 	}
 
 	static float DecodePW( unsigned int uiPW )
@@ -341,7 +346,12 @@ public:
 
 	static float DecodeDOA( unsigned int uiDOA )
 	{
-		return (float) PDW::DOA_RES * (float) uiDOA;
+		return (float) DOA_RES * (float) uiDOA;
+	} ;
+
+	static float DecodePA( unsigned int uiDOA )
+	{		
+		return (float) ( ( (float) uiDOA * (float) AMP_RES ) - (float) 110. );
 	} ;
 
     /**
@@ -417,6 +427,60 @@ public:
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
     inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
+
+};
+
+
+namespace XPDW {
+// #define PDW_PA_INIT		    (-89.0)
+// 
+// #define ONE_SEC				(20000000)
+// #define ONE_MICROSEC		(20)
+// 
+// #define PW_RES				(50)
+// 
+// #define	DOA_RES				(0.351562)
+// 
+// #define	AMP_RES				(0.351562)
+// 
+// 	struct FREQ_RESOL {
+// 		UINT uiMin;
+// 		UINT uiMax;
+// 		int iOffset;
+// 		float fRes;			// 각 구간에 따른 resolution
+// 	} ;
+// 
+// 	static FREQ_RESOL stFreqRes[ 3 ] = { {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+// 	{ 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+// 	{ 5866, 18740, 5866, 1.5   } } ;
+
+}
+
+class CXPDW : public CData
+{
+private:
+	STR_PDW_DATA m_PDWData;
+
+	STR_ELINT_HEADER m_stHeader;
+
+	ENUM_BANDWIDTH m_enBandWidth;
+
+public:
+	CXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+	virtual ~CXPDW();
+
+	void Alloc( unsigned int nItems=0 );
+	void Free();
+	void ReadDataHeader() {  }
+	void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+	void *GetData();
+	void *GetHeader() { return (void *) & m_stHeader; }
+	unsigned int GetDataItems( unsigned long long ullFileSize );
+	unsigned int GetHeaderSize();
+
+	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
+	inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
+	inline void SetHeaderData( void *pData ) { return; }
 
 };
 

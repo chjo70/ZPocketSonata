@@ -103,7 +103,7 @@ public:
     //##ModelId=452B0C530065
     UINT CheckHarmonic(UINT mean1, float jitter_p1, UINT mean2, float jitter_p2);
 
-
+	void GetCollectTime( struct timespec *pTimeSpec );
 
      //template <typename T>
      //UINT CheckHarmonic(float mean1, float mean2, float priThreshold );

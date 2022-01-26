@@ -1599,6 +1599,20 @@ unsigned int CSAnalScan::IsStorePDW()
     return m_pScanSigAnal->IsStorePDW();
 }
 
+/**
+ * @brief     
+ * @param     struct timespec * pTimeSpec
+ * @return    void
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 22:00:41
+ * @warning   
+ */
+void CSAnalScan::GetCollectTime( struct timespec *pTimeSpec )
+{
+	m_pScanSigAnal->GetCollectTime( pTimeSpec );
+}
+
 #if defined(_ELINT_) || defined(_XBAND_)
 
 /**

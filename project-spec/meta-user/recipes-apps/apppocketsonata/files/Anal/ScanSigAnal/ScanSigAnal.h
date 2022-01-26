@@ -29,6 +29,9 @@ private:
 
     int m_iIsStorePDW;
 
+	__time32_t m_tColTime;
+	unsigned int m_tColTimeMs;
+
 private:
     UINT m_uiStep;
     CMIDASBlueFileFormat *m_pMidasBlue;
@@ -68,6 +71,8 @@ public:
     void InitVar();
     BOOL IsAnalScan();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
+
+	void GetCollectTime( struct timespec *pTimeSpec );
 
     //##ModelId=452B0C450059
     inline int GetMaxPdw() { return m_nMaxPdw; }

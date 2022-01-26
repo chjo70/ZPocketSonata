@@ -774,3 +774,17 @@ SRxLOBData *CKMakeAET::GetLOBData( int index )
 {
 	return & m_LOBData[index]; 
 }
+
+/**
+ * @brief     
+ * @param     struct timespec * pTimeSpec
+ * @return    void
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:45:47
+ * @warning   
+ */
+void CKMakeAET::GetCollectTime( struct timespec *pTimeSpec )
+{
+	m_pKnownSigAnal->GetCollectTime( pTimeSpec );
+}

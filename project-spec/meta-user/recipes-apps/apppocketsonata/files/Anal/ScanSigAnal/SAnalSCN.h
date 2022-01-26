@@ -193,6 +193,9 @@ public:
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
     STR_PDWPARAM* GetPdwParam();
 
+	void GetCollectTime( struct timespec *pTimeSpec );
+
+
     void DISP_FineAet( SRxLOBData *pLOBData ) { }
     unsigned int IsStorePDW();
 

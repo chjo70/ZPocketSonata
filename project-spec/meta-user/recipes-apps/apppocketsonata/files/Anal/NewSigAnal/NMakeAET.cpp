@@ -344,13 +344,43 @@ unsigned int CNMakeAET::IsStorePDW()
     return m_pNewSigAnal->IsStorePDW();
 }
 
+/**
+ * @brief     
+ * @param     struct timespec * pTimeSpec
+ * @return    void
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:43:36
+ * @warning   
+ */
+void CNMakeAET::GetCollectTime( struct timespec *pTimeSpec )
+{
+	m_pNewSigAnal->GetCollectTime( pTimeSpec );
+}
+
 #if defined(_ELINT_) || defined(_XBAND_)
 
+/**
+ * @brief     
+ * @return    EN_RADARCOLLECTORID
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:43:55
+ * @warning   
+ */
 EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
 {
     return m_pNewSigAnal->GetCollectorID();
 }
 
+/**
+ * @brief     
+ * @return    char *
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 21:44:00
+ * @warning   
+ */
 char *CNMakeAET::GetTaskID()
 {
     return m_pNewSigAnal->GetTaskID();

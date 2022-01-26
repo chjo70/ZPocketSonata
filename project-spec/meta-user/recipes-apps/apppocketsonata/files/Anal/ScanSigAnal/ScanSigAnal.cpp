@@ -10,6 +10,8 @@
 
 #include "ScanSigAnal.h"
 
+#include "../../Utils/ccommonutils.h"
+
 // CSColPdw *theSAPColPdw;
 //CScanSigAnal *theScanSigAnal;
 
@@ -664,5 +666,24 @@ void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int index )
 	strFilename.ReleaseBuffer();
 
 #endif
+
+}
+
+void CScanSigAnal::GetCollectTime( struct timespec *pTimeSpec )
+{
+	if( m_tColTime == 0 ) {
+		clock_gettime( CLOCK_REALTIME, pTimeSpec );
+	}
+	else {
+		pTimeSpec->tv_sec = m_tColTime;
+#ifdef _MSC_VER
+		pTimeSpec->tv_usec = m_tColTimeMs * 1000;
+#else
+		pTimeSpec->tv_nsec = m_tColTimeMs * 1000000;
+#endif
+
+	}
+
+	return;
 
 }

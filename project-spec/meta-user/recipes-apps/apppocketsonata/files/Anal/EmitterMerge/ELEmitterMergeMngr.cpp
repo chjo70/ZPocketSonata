@@ -11263,9 +11263,8 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         stmt.FreeQuery();  
 
         if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
-            time_t nowTime=time(NULL);
 
-            pstTime = localtime( & nowTime );
+            pstTime = localtime( & pABTData->tiLastSeenTime );
 
             if( pstTime != NULL ) {
                 strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );

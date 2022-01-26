@@ -101,6 +101,8 @@ public:
     virtual UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )=0;
     virtual STR_PDWPARAM* GetPdwParam()=0;
 
+	virtual void GetCollectTime( struct timespec *pTimeSpec )=0;
+
     //##ModelId=452B0C560039
     void MakeAoaHistoInPdwIdxArr();
     //##ModelId=452B0C56003A

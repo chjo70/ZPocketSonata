@@ -1328,7 +1328,9 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 시간 정보
     struct timespec tsNow;
 
-    clock_gettime( CLOCK_REALTIME, & tsNow );
+
+    //clock_gettime( CLOCK_REALTIME, & tsNow );
+	GetCollectTime( & tsNow );
 
     pLOBData->tiContactTime = tsNow.tv_sec;
 #ifdef _MSC_VER

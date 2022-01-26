@@ -75,6 +75,7 @@ public:
 	void DISP_FineAet( SRxLOBData *pManAet );
 	void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
+	void GetCollectTime( struct timespec *pTimeSpec );
 
     inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
 

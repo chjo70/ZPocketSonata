@@ -479,6 +479,7 @@ typedef struct {
 } STR_ELINT_HEADER ;
 #endif
 
+
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
@@ -511,7 +512,9 @@ struct STR_PDWDATA {
     } x;
 
     UINT uiTotalPDW;
+
     __time32_t tColTime;
+	UINT uiColTimeMs;
 
     _PDW stPDW[MAX_PDW];
 
