@@ -2056,9 +2056,19 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataT
     strcpy( m_szRawDataFilename, pRawdataFileName );
 
 #ifdef _XBAND_
-    SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+	if( true == FileOpen( pRawdataFileName, O_WRONLY | O_CREAT | O_EXCL ) ) {
+		Write( & pPDWData->x, sizeof(STR_ELINT_HEADER) );
+		Write( & pPDWData->uiTotalPDW, 3*sizeof(int) );
+
+		Write( & pPDWData->stPDW[0], pPDWData->uiTotalPDW*sizeof(_PDW) );
+
+		FileClose();
+	}
+
+
 #else
 	SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+
 #endif
 
 }

@@ -898,13 +898,7 @@ void CXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
  */
 unsigned int CXPDW::GetHeaderSize()
 {
-    if( m_iHeaderSize == -1 ) {
-        memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
-
-        m_iHeaderSize = sizeof(STR_ELINT_HEADER);
-
-        m_enBandWidth = m_stHeader.enBandWidth;
-    }
+    m_iHeaderSize = sizeof(STR_ELINT_HEADER);
 
     return m_iHeaderSize;
 }
@@ -923,7 +917,15 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
     unsigned int uiDataItems;
 
     if( m_iHeaderSize != -1 ) {
-        uiDataItems = m_stHeader.uiCount; //( m_ullFileSize - sizeof(m_stHeader) ) / sizeof(_PDW);
+		memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(STR_ELINT_HEADER) );
+
+		memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
+
+		// 아래는 시간 정보
+		//memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
+		//memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
+		
+		m_enBandWidth = m_stHeader.enBandWidth;
 
     }
     else {
@@ -3443,6 +3445,26 @@ CData *CDataFile::ReadDataFile( char *pPathname, int iFileIndex, CData *pData, S
 		}
 
 	}
+
+	// SONATA 체계용 PDW 파일을 읽을때...
+	else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
+		if( m_pData == NULL ) {
+			m_pData = pData;
+			if( m_pData == NULL ) {
+				m_pData = new CXPDW( NULL, pstFilterSetup );
+
+				iDataItems = LoadRawData( m_pData, iFileIndex );
+			}
+			else {
+				iDataItems = m_pData->m_RawData.uiDataItems;
+			}
+		}
+		else {
+			iDataItems = m_pData->m_RawData.uiDataItems;
+		}
+
+	}
+
 	else if( enDataType == en_PDW_DATA && enUnitType == en_SONATA_SHU ) {
 		if( m_pData == NULL ) {
 			m_pData = pData;
@@ -3789,6 +3811,12 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 	else if( NULL != strstr( pStrPathname, ".epdw" ) || NULL != strstr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
 		enDataType = en_PDW_DATA;
 	}
+	else if( NULL != strstr( pStrPathname, ".xpdw" ) ) {
+		enDataType = en_PDW_DATA;
+	}
+	else {
+
+	}
 
 	return enDataType;
 
@@ -3828,6 +3856,10 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 	else if( NULL != strstr( pStrPathname, ".zpdw" ) || NULL != strstr( pStrPathname, ".znpw" ) ) {
 		enUnitType = en_ZPOCKETSONATA;
 	}
+	else if( NULL != strstr( pStrPathname, ".xpdw" ) ) {
+		enUnitType = en_XBAND;
+	}
+
 	else {
 		enUnitType = en_UnknownUnit;
 	}
@@ -3889,6 +3921,15 @@ unsigned int CDataFile::GetHeaderSize( CData *pData )
 	return pData->GetHeaderSize();
 }
 
+/**
+ * @brief     
+ * @param     CData * pData
+ * @return    unsigned int
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/01/26 22:34:12
+ * @warning   
+ */
 unsigned int CDataFile::GetOneDataSize( CData *pData )
 {
     return pData->GetOneDataSize();
@@ -3928,13 +3969,13 @@ void CDataFile::ReadDataHeader( CData *pData )
     pData->m_uiLengthOfHeader = GetHeaderSize( pData );
 
     if( pData->m_uiLengthOfHeader != 0 ) {
-	// 데이터 파일 중에서 제일 큰 것을 읽는다.
-	m_RawDataFile.Read( pData->m_pRawHeaderBuffer, MAX_HEADER_SIZE );	
+		// 데이터 파일 중에서 제일 큰 것을 읽는다.
+		m_RawDataFile.Read( pData->m_pRawHeaderBuffer, MAX_HEADER_SIZE );	
 
-        // 다시 처음으로 이동
-	m_RawDataFile.SeekToStart();
+		// 다시 처음으로 이동
+		m_RawDataFile.SeekToStart();
 
-    pData->m_ullFileSize = m_RawDataFile.GetFileSize();
+		pData->m_ullFileSize = m_RawDataFile.GetFileSize();
 
     }
     else {

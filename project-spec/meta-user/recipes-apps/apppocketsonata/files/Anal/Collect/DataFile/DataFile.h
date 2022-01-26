@@ -60,6 +60,7 @@ typedef enum {
 	en_SONATA,
 	en_SONATA_SHU,
 	en_ELINT,
+	en_XBAND,
 	en_701,
     en_KFX,
     en_ZPOCKETSONATA,
@@ -313,11 +314,6 @@ public:
 
 public:
 
-    /**
-     * @brief DecodeTOA
-     * @param iTOA
-     * @return
-     */
     static float DecodeTOAus( unsigned int uiTOA  )
     {
         return (float) uiTOA / (float) ONE_MICROSEC;
@@ -481,6 +477,53 @@ public:
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
 	inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
 	inline void SetHeaderData( void *pData ) { return; }
+
+
+    static float DecodeTOAus( unsigned int uiTOA  )
+    {
+        return (float) uiTOA / (float) ONE_MICROSEC;
+    } ;
+
+	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
+	{
+		float fVal=0.0;
+
+		if( iBand >= 0 && iBand <= 2 ) {
+			fVal = FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
+		}
+		
+		return fVal;
+	}
+
+	static float DecodePW( unsigned int uiPW )
+	{
+		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
+	} ;
+
+	static float DecodeFREQMHz( int iFreq )
+	{
+		return 0.0;
+	} ;
+
+	static float DecodeDOA( unsigned int uiDOA )
+	{
+		return (float) DOA_RES * (float) uiDOA;
+	} ;
+
+	static float DecodePA( unsigned int uiDOA )
+	{		
+		return (float) ( ( (float) uiDOA * (float) AMP_RES ) - (float) 110. );
+	} ;
+
+    /**
+     * @brief DecodeDOA
+     * @param iDOA
+     * @return
+     */
+    static float EncodeDOA(float fDOA )
+    {
+        return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
+    } ;
 
 };
 
