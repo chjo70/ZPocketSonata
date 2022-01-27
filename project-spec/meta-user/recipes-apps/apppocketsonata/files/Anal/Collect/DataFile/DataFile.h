@@ -467,7 +467,7 @@ public:
 	inline void SetHeaderData( void *pData ) { return; }
 
 
-    static float DecodeTOAus( unsigned int uiTOA, ENUM_BANDWIDTH enBandWidth )
+    static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
         return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000. );
     } ;

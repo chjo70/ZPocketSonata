@@ -811,7 +811,8 @@ void CXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 			*pfTOA = DecodeTOAus( pPDW->ullTOA - m_ll1stToa, m_enBandWidth );
 
 			//*pfDTOA = FDIV( *pfTOA-fPreToa, m_spOneMicrosec );
-			*pfDTOA = DecodeTOAus( *pfTOA-fPreToa, m_enBandWidth );
+			//*pfDTOA = DecodeTOAus( *pfTOA-fPreToa, m_enBandWidth );
+			*pfDTOA = *pfTOA - fPreToa;
 			fPreToa = *pfTOA;
 		}
 

@@ -236,6 +236,13 @@ struct _PDW {
 	int iPFTag;
 	int iAOA;
 
+#ifdef _GRAPH_
+	float fPh1;
+	float fPh2;
+	float fPh3;
+	float fPh4;
+
+#else
 #if defined(_ELINT_) || defined(_XBAND_)
 	float fPh1;
 	float fPh2;
@@ -247,6 +254,7 @@ struct _PDW {
     int iFMOP;
 
     int iChannel;
+#endif
 #endif
 
 } ;

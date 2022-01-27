@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>D:\VirtualBox VMs\Shared\rawdata\2021-01-12\BRD_3\탐지_COL3_2021-01-12 14_35_58_000001.pdw.midas</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>E:\Temp\1_2022-01-27_15_45_51_0000000001.XPDW</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
