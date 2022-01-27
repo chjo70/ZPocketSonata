@@ -56,7 +56,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_XBAND_;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_UTM_POSITION_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_UTM_POSITION_;_XBAND_;_MSSQL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -81,25 +81,23 @@
 echo $(ConfigurationName)
 
 REM ########################################################################
-REM  작업실에서...
+REM 아래는 집에서...
+REM SET RADAR_DF_LIB=E:\GitHub\RADAR_DF\$(ConfigurationName)
+REM SET RADAR_DF_HEADER=E:\GitHub\RADAR_DF\ICAA
 
-SET RADAR_DF_LIB=E:\GitHub\RADAR_DF\$(ConfigurationName)
-SET RADAR_DF_HEADER=E:\GitHub\RADAR_DF\ICAA
-
-REM 아래는 회사에서...
-REM SET RADAR_DF_LIB=E:\X 밴드\DevSrc\RADAR_DF\Debug
-REN SET RADAR_DF_HEADER=E:\X 밴드\DevSrc\RADAR_DF\ICAA
+REM 아래는 온품 회사에서...
+SET RADAR_DF_LIB=D:\RADAR\RADAR_DF\Debug
+SET RADAR_DF_HEADER=D:\RADAR\RADAR_DF\ICAA
 
 
 REM ########################################################################
-REM  작업실에서...
-SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\$(ConfigurationName)
-SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
+REM 아래는 집에서...
+REM SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\$(ConfigurationName)
+REM SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
 
-
-REM 아래는 회사에서...
-REM SET RADAR_RD_LIB=E:\X 밴드\DevSrc\RADAR_RD\Debug
-REM SET RADAR_RD_HEADER=E:\X 밴드\DevSrc\RADAR_RD\ICAA
+REM 아래는 온품 회사에서...
+SET RADAR_RD_LIB=D:\RADAR\RADAR_RD\Debug
+SET RADAR_RD_HEADER=D:\RADAR\RADAR_RD\ICAA
 
 
 REM X밴드 방탐기 ======================================

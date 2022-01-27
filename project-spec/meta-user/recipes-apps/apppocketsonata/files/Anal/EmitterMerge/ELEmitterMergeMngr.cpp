@@ -8420,7 +8420,7 @@ void CELEmitterMergeMngr::PushLOBLANData( SRxLOBData *pLOBData )
 // 		pLOBData->iThreatIndex
 // 		);
 
-    //m_VecLOBData.push_back( *pLOBData );
+    m_VecLOBData.push_back( *pLOBData );
 
 }
 
@@ -8470,7 +8470,7 @@ void CELEmitterMergeMngr::PushABTLANData( SRxABTData *pABTData )
 // 		pABTData->iThreatIndex
 // 		);
 
-    //m_VecABTData.push_back( *pABTData );
+    m_VecABTData.push_back( *pABTData );
 
 }
 
@@ -8501,7 +8501,7 @@ void CELEmitterMergeMngr::PushAETLANData( SRxAETData *pAETData )
 // 		pABTData->iThreatIndex
 // 		);
 
-    //m_VecAETData.push_back( *pAETData );
+    m_VecAETData.push_back( *pAETData );
 
 }
 

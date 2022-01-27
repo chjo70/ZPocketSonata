@@ -601,7 +601,8 @@ unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
     unsigned int uiDataItems;
 
     if( m_iHeaderSize != -1 ) {
-        uiDataItems = m_stHeader.uiCount; //( m_ullFileSize - sizeof(m_stHeader) ) / sizeof(_PDW);
+        //uiDataItems = m_stHeader.uiCount; //( m_ullFileSize - sizeof(m_stHeader) ) / sizeof(_PDW);
+		uiDataItems = 0; //( m_ullFileSize - sizeof(m_stHeader) ) / sizeof(_PDW);
 
     }
     else {
@@ -801,25 +802,30 @@ void CXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 			}
 
 			*pfDTOA = 0;
-			*pfTOA = FDIV(pPDW->ullTOA-m_ll1stToa, m_spOneMicrosec );
+			//*pfTOA = FDIV(pPDW->ullTOA-m_ll1stToa, m_spOneMicrosec );
+			*pfTOA = DecodeTOAus( pPDW->ullTOA - m_ll1stToa, m_enBandWidth );
 			fPreToa = *pfTOA;
 		}
 		else {
-			//uiToa = pPDW->llTOA - m_ll1stToa;
-			*pfTOA = FDIV(pPDW->ullTOA-m_ll1stToa, m_spOneMicrosec );
+			//*pfTOA = FDIV(pPDW->ullTOA-m_ll1stToa, m_spOneMicrosec );
+			*pfTOA = DecodeTOAus( pPDW->ullTOA - m_ll1stToa, m_enBandWidth );
 
-			//*pfDTOA = (float) ( uiToa - preToa );
-			*pfDTOA = FDIV( *pfTOA-fPreToa, m_spOneMicrosec );
+			//*pfDTOA = FDIV( *pfTOA-fPreToa, m_spOneMicrosec );
+			*pfDTOA = DecodeTOAus( *pfTOA-fPreToa, m_enBandWidth );
 			fPreToa = *pfTOA;
 		}
 
 		*pullTOA = pPDW->ullTOA;
 
         if( bConvert == true ) {
-		    *pfFreq = F_FRQMhzCNV( 0, pPDW->iFreq );
-		    *pfPW = PWCNV( pPDW->iPW );
-			*pfAOA = AOACNV( pPDW->iAOA );
-		    *pfPA = PACNV(pPDW->iPA);
+		    //*pfFreq = F_FRQMhzCNV( 0, pPDW->iFreq );
+			*pfFreq = DecodeRealFREQMHz( pPDW->iFreq );
+		    //*pfPW = PWCNV( pPDW->iPW );
+			*pfPW = DecodePW( pPDW->iPW, m_enBandWidth );
+			//*pfAOA = AOACNV( pPDW->iAOA );
+			*pfAOA = DecodeDOA( pPDW->iAOA );
+		    //*pfPA = PACNV(pPDW->iPA);
+			*pfPA = DecodePA(pPDW->iPA);
         }
         else {
             *pfFreq = (float) pPDW->iFreq;
@@ -830,7 +836,7 @@ void CXPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *p
 
 		*pcType = pPDW->iPulseType;
 
-		*pcDV = _spOne;
+		*pcDV = 1;
 
 		if( m_bPhaseData == true ) {
 			//*pfPh1 = pPDW->fPh1;
@@ -901,6 +907,11 @@ unsigned int CXPDW::GetHeaderSize()
     m_iHeaderSize = sizeof(STR_ELINT_HEADER);
 
     return m_iHeaderSize;
+}
+
+unsigned int CXPDW::GetOffsetSize()
+{
+	return sizeof(int) * 4;
 }
 
 /**
@@ -4013,7 +4024,7 @@ void CDataFile::ReadDataAll( CData *pData )
     }
 
 	// 데이터 파일 중에서 제일 큰 것을 읽는다.
-	pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_RawData.uiDataItems, pData->GetHeaderSize() );		
+	pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_RawData.uiDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
 
 	m_RawDataFile.SeekToStart();
 

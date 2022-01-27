@@ -44,7 +44,7 @@
 #elif _WIN32
 
 #ifdef _XBAND_
-#define SHARED_DATA_DIRECTORY        (char *) "d:/rawdata"
+#define SHARED_DATA_DIRECTORY        (char *) "D:/PDW_RAW"
 #else
 #define SHARED_DATA_DIRECTORY        (char *) "d:/rawdata"
 #endif

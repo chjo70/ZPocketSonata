@@ -68,10 +68,6 @@ typedef struct {
     int iCollectorID;
     ENUM_BANDWIDTH enBandWidth;
 
-    unsigned int uiCount;
-
-    int dummy;
-
 } STR_ELINT_HEADER ;
 #endif
 
@@ -109,6 +105,7 @@ struct STR_PDWDATA {
 
     __time32_t tColTime;
 	UINT uiColTimeMs;
+	UINT _dummy;			// 16바이트 얼라인 하기위한 변수 추가
 
     _PDW stPDW[MAX_PDW];
 

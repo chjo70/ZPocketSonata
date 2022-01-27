@@ -238,6 +238,7 @@ public:
     virtual void *GetHeader() = 0;
 
     virtual unsigned int GetHeaderSize() = 0;
+	virtual unsigned int GetOffsetSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
     virtual unsigned int GetDataItems( unsigned long long ullFileSize=0 ) = 0;
     virtual void SetHeaderData( void *pData ) = 0;
@@ -308,6 +309,7 @@ public:
 
 	void *GetHeader() { return NULL; }
 
+	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
@@ -345,9 +347,9 @@ public:
 		return (float) DOA_RES * (float) uiDOA;
 	} ;
 
-	static float DecodePA( unsigned int uiDOA )
+	static float DecodePA( unsigned int uiPA )
 	{		
-		return (float) ( ( (float) uiDOA * (float) AMP_RES ) - (float) 110. );
+		return (float) ( ( (float) uiPA * (float) AMP_RES ) - (float) 110. );
 	} ;
 
     /**
@@ -384,6 +386,7 @@ public:
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
+	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
@@ -419,6 +422,8 @@ public:
 	void *GetHeader() { return (void *) & m_stHeader; }
     unsigned int GetDataItems( unsigned long long ullFileSize );
     unsigned int GetHeaderSize();
+	
+	inline unsigned int GetOffsetSize() { return 0; }
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
     inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
@@ -428,28 +433,10 @@ public:
 
 
 namespace XPDW {
-// #define PDW_PA_INIT		    (-89.0)
-// 
-// #define ONE_SEC				(20000000)
-// #define ONE_MICROSEC		(20)
-// 
-// #define PW_RES				(50)
-// 
-// #define	DOA_RES				(0.351562)
-// 
-// #define	AMP_RES				(0.351562)
-// 
-// 	struct FREQ_RESOL {
-// 		UINT uiMin;
-// 		UINT uiMax;
-// 		int iOffset;
-// 		float fRes;			// 각 구간에 따른 resolution
-// 	} ;
-// 
-// 	static FREQ_RESOL stFreqRes[ 3 ] = { {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
-// 	{ 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
-// 	{ 5866, 18740, 5866, 1.5   } } ;
-
+	const float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+	const float fFreqRes=(float) 0.001;
+	const float fDOARes=(float) 0.01;
+	const float fPARes=(float) 0.25;
 }
 
 class CXPDW : public CData
@@ -473,31 +460,30 @@ public:
 	void *GetHeader() { return (void *) & m_stHeader; }
 	unsigned int GetDataItems( unsigned long long ullFileSize );
 	unsigned int GetHeaderSize();
+	unsigned int GetOffsetSize();
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
 	inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
 	inline void SetHeaderData( void *pData ) { return; }
 
 
-    static float DecodeTOAus( unsigned int uiTOA  )
+    static float DecodeTOAus( unsigned int uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) uiTOA / (float) ONE_MICROSEC;
+        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000. );
     } ;
 
-	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
+	static float DecodeRealFREQMHz( unsigned int uiFreq )
 	{
-		float fVal=0.0;
+		float fVal;
 
-		if( iBand >= 0 && iBand <= 2 ) {
-			fVal = FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
-		}
+		fVal = FMUL( uiFreq, XPDW::fFreqRes );
 		
 		return fVal;
 	}
 
-	static float DecodePW( unsigned int uiPW )
+	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
 	{
-		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
+		return (float) uiPW * XPDW::_toaRes[enBandWidth];
 	} ;
 
 	static float DecodeFREQMHz( int iFreq )
@@ -507,12 +493,14 @@ public:
 
 	static float DecodeDOA( unsigned int uiDOA )
 	{
-		return (float) DOA_RES * (float) uiDOA;
+		float fDOA;
+		fDOA = (float) XPDW::fDOARes * (float) ( uiDOA % 36000 );
+		return fDOA;
 	} ;
 
-	static float DecodePA( unsigned int uiDOA )
+	static float DecodePA( unsigned int uiPA )
 	{		
-		return (float) ( ( (float) uiDOA * (float) AMP_RES ) - (float) 110. );
+		return (float) ( ( (float) uiPA * (float) XPDW::fPARes ) - (float) 110. );
 	} ;
 
     /**
@@ -540,6 +528,8 @@ public:
 
 	_COMMON_FUNCTIONS_
 
+	inline unsigned int GetOffsetSize() { return 0; }
+
 };
 
 // KFX PDW
@@ -559,6 +549,7 @@ public:
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
+	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
@@ -643,6 +634,8 @@ public:
     virtual ~CPOCKETSONATAPDW();
 
     _COMMON_FUNCTIONS_;
+
+	inline unsigned int GetOffsetSize() { return 0; }
 
 public:
     /**
@@ -1085,6 +1078,7 @@ public:
 	void *GetData();
 	void *GetHeader();
 
+	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
@@ -1109,6 +1103,7 @@ public:
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
+	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
@@ -1126,6 +1121,8 @@ public:
 	virtual ~CEIQ();
 
 	_COMMON_FUNCTIONS_;
+
+	inline unsigned int GetOffsetSize() { return 0; }
 
 };
 
@@ -1160,6 +1157,8 @@ public:
 	int GetDataFormatSize( char ch );
 	void GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords );
 	double GetSubValue( char *psubformat );
+
+	inline unsigned int GetOffsetSize() { return 0; }
 
 };
 
