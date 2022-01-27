@@ -377,8 +377,11 @@ float _spPWres;
 
 float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_)
 float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+#elif defined(_XBAND_)
+float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+//float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
 #else
 float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
 #endif

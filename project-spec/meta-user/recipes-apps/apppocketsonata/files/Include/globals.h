@@ -129,7 +129,7 @@ public:
 		else {
 			g_pTheELEnvironVariable = new CELEnvironVariable();
 			//TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
-			return NULL;
+			return g_pTheELEnvironVariable->GetEnvrionVariable();
 		}
 	}
 
