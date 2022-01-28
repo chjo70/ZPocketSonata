@@ -139,18 +139,18 @@ struct STR_IQ_DATA {
 } ;
 
 struct STR_FILTER_SETUP {
-	double dToaMin;
-	double dToaMax;
-	double dDtoaMin;
-	double dDtoaMax;
-	double dAoaMin;
-	double dAoaMax;
-	double dFrqMin;
-	double dFrqMax;
-	double dPAMin;
-	double dPAMax;
-	double dPWMin;
-	double dPWMax;
+	unsigned long long int ullToaMin;
+	unsigned long long int ullToaMax;
+	unsigned long long int ullDtoaMin;
+	unsigned long long int ullDtoaMax;
+	unsigned int uiAoaMin;
+	unsigned int uiAoaMax;
+	unsigned int uiFrqMin;
+	unsigned int uiFrqMax;
+	unsigned int uiPAMin;
+	unsigned int uiPAMax;
+	unsigned int uiPWMin;
+	unsigned int uiPWMax;
 
 	ENUM_SUB_GRAPH enSubGraph;
 
@@ -195,27 +195,13 @@ public:
 
     unsigned long long  m_ullFileSize;
 
-public:
+	STR_PDW_DATA m_PDWData;
+
     STR_RAWDATA m_RawData;
 
     UINT m_uiWindowNumber;
 
-    UINT m_uiLengthOfHeader;
-
-    bool m_bPhaseData;
-
     STR_FILTER_SETUP m_strFilterSetup;
-
-    _TOA m_ll1stToa;
-
-    float m_spOneSec;
-    float m_spOneMilli;
-    float m_spOneMicrosec;
-    float m_spOneNanosec;
-
-    float m_spAMPres;
-    float m_spPWres;
-    float m_spAOAres;
 
 public:
     void ClearFilterSetup();
@@ -230,8 +216,9 @@ public:
     CData(STR_RAWDATA *pRawData);
     virtual ~CData();
 
-    virtual void Alloc( unsigned int uiItems=0 )=0;
-    virtual void Free()=0;
+    void Alloc( unsigned int uiItems=0 );
+    void Free();
+
     virtual void ReadDataHeader() = 0;
     virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true ) = 0;
     virtual void *GetData() = 0;
@@ -442,7 +429,7 @@ namespace XPDW {
 class CXPDW : public CData
 {
 private:
-	STR_PDW_DATA m_PDWData;
+	
 
 	STR_ELINT_HEADER m_stHeader;
 
@@ -452,8 +439,6 @@ public:
 	CXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CXPDW();
 
-	void Alloc( unsigned int nItems=0 );
-	void Free();
 	void ReadDataHeader() {  }
 	void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 	void *GetData();
@@ -469,7 +454,7 @@ public:
 
     static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000. );
+        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
 	static float DecodeRealFREQMHz( unsigned int uiFreq )
@@ -1313,8 +1298,6 @@ public:
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
 	inline UINT GetFilteredDataItems() { STR_PDW_DATA *pPDWData=(STR_PDW_DATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
-	
-	inline bool IsPhaseData() { return m_pData->m_bPhaseData; }
 	
 private:
 	

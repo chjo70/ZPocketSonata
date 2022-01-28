@@ -105,36 +105,21 @@ SET RADAR_DF_HEADER=D:\RADAR\RADAR_DF\ICAA
 
 REM ########################################################################
 
-IF $(ConfigurationName)==Debug (
+
 REM 집에서
-REM SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\Debug
-REM SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
+SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\$(ConfigurationName)
+SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
 
 REM 아래는 온품 회사에서...
-SET RADAR_RD_LIB=D:\RADAR\RADAR_RD\Debug
-SET RADAR_RD_HEADER=D:\RADAR\RADAR_RD\ICAA
-
-) else (
-REM 집에서
-REM SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\Release
-REM RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
-
-REM 아래는 온품 회사에서...
-SET RADAR_RD_LIB=D:\RADAR\RADAR_RD\Release
-SET RADAR_RD_HEADER=D:\RADAR\RADAR_RD\ICAA
-
-)
-
-REM 아래는 회사에서...
-REM SET RADAR_RD_LIB=E:\X 밴드\DevSrc\RADAR_RD\Debug
-REM SET RADAR_RD_HEADER=E:\X 밴드\DevSrc\RADAR_RD\ICAA
+REM SET RADAR_RD_LIB=D:\RADAR\RADAR_RD$(ConfigurationName)
+REM SET RADAR_RD_HEADER=D:\RADAR\RADAR_RD\ICAA
 
 REM X밴드 방탐기 ======================================
 IF NOT EXIST "%RADAR_DF_LIB%" goto ERROR
 echo ===== 레이더 방탐 라이브러리 (%RADAR_DF_LIB%)
-copy ..\DEBUG\RADARDIR.lib "%RADAR_DF_LIB%"
-copy ..\DEBUG\RADARDIR.dll "%RADAR_DF_LIB%"
-copy ..\DEBUG\RADARDIR.pdb "%RADAR_DF_LIB%"
+copy ..\$(ConfigurationName)RADARDIR.lib "%RADAR_DF_LIB%"
+copy ..\$(ConfigurationName)\RADARDIR.dll "%RADAR_DF_LIB%"
+copy ..\$(ConfigurationName)\RADARDIR.pdb "%RADAR_DF_LIB%"
 
 echo.
 echo ===== 레이더 방탐 헤더 파일 (%RADAR_DF_HEADER%)
@@ -143,9 +128,9 @@ copy RadarDirAlgorithm.h "%RADAR_DF_HEADER%"
 IF NOT EXIST "%RADAR_RD_LIB%" goto ERROR
 echo.
 echo ===== 레이더 방탐 라이브러리 (%RADAR_RD_LIB%)
-copy ..\DEBUG\RADARDIR.lib "%RADAR_RD_LIB%"
-copy ..\DEBUG\RADARDIR.dll "%RADAR_RD_LIB%"
-copy ..\DEBUG\RADARDIR.pdb "%RADAR_RD_LIB%"
+copy ..\$(ConfigurationName)\RADARDIR.lib "%RADAR_RD_LIB%"
+copy ..\$(ConfigurationName)\RADARDIR.dll "%RADAR_RD_LIB%"
+copy ..\$(ConfigurationName)\RADARDIR.pdb "%RADAR_RD_LIB%"
 
 echo.
 echo ===== 레이더 방탐 헤더 파일 (%RADAR_RD_HEADER%)

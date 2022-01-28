@@ -283,7 +283,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	m_CListRawData.DeleteAllItems();
 
 	if( uiPDWDataItems != 0 ) {
-		bPhaseData = m_pDoc->IsPhaseData();
+		//bPhaseData = m_pDoc->IsPhaseData();
 		enDataType = m_pDoc->GetDataType();
 		pData = m_pDoc->GetData();
 
@@ -340,11 +340,6 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 					strVal.Format( _T("%5.1f") , *pfPW );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
-
-					if( bPhaseData == true ) {
-						//strVal.Format( _T("%7.2f/%7.2f/%7.2f/%7.2f") , *pfPh1, *pfPh2, *pfPh3, *pfPh4 );
-						//m_pListCtrl->SetItemText( i, j++, strVal ); 
-					}
 
 					++ pfTOA;
 					++ pfDTOA;

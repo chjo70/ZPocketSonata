@@ -19,6 +19,8 @@
 
 #include "Log/LogDebug.h"
 
+#include <stdint.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -300,18 +302,18 @@ void CDeltaGraphView2::ClearFilterSetup( STR_FILTER_SETUP *pstrFilterSetup )
 		pstrFilterSetup = & m_strFilterSetup;
 	}
 
-    pstrFilterSetup->dToaMin = 0.;
-    pstrFilterSetup->dToaMax = DBL_MAX;
-    pstrFilterSetup->dDtoaMin = 0;
-    pstrFilterSetup->dDtoaMax = DBL_MAX;
-    pstrFilterSetup->dAoaMin = 0;
-    pstrFilterSetup->dAoaMax = DBL_MAX;
-    pstrFilterSetup->dFrqMin = 0;
-    pstrFilterSetup->dFrqMax = DBL_MAX;
-    pstrFilterSetup->dPAMin = -DBL_MAX;
-    pstrFilterSetup->dPAMax = DBL_MAX;
-    pstrFilterSetup->dPWMin = 0;
-    pstrFilterSetup->dPWMax = DBL_MAX;
+    pstrFilterSetup->ullToaMin = 0.;
+    pstrFilterSetup->ullToaMax = UINT64_MAX;
+    pstrFilterSetup->ullDtoaMin = 0;
+    pstrFilterSetup->ullDtoaMax = UINT64_MAX;
+    pstrFilterSetup->uiAoaMin = 0;
+    pstrFilterSetup->uiAoaMax = UINT32_MAX;
+    pstrFilterSetup->uiFrqMin = 0;
+    pstrFilterSetup->uiFrqMax = UINT32_MAX;
+    pstrFilterSetup->uiPAMin = -DBL_MAX;
+    pstrFilterSetup->uiPAMax = UINT32_MAX;
+    pstrFilterSetup->uiPWMin = 0;
+    pstrFilterSetup->uiPWMax = UINT32_MAX;
 
 	pstrFilterSetup->enSubGraph = enUnselectedSubGraph;
 
@@ -1373,11 +1375,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 	 switch( enSubGraph ) {
 	 case enSubMenu_1 :
 		 if (enDataType == en_PDW_DATA) {
-			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
 
-			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dAoaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dAoaMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dAoaMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dAoaMax );
 
 		 }
 		 else {
@@ -1386,11 +1388,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 break;
 	 case enSubMenu_2 :
 		 if (enDataType == en_PDW_DATA) {
-			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
 
-			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dFrqMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dFrqMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dFrqMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dFrqMax );
 		 }
 		 else {
 
@@ -1399,11 +1401,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_3 :		// 시간대 DTOA
 		 if (enDataType == en_PDW_DATA) {
-			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
 
-			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dDtoaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dDtoaMax );
+			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dDtoaMin );
+			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dDtoaMax );
 		 }
 		 else {
 
@@ -1412,11 +1414,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_4 :
 		 if (enDataType == en_PDW_DATA) {
-			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
-
-			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPAMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPAMax );
+// 			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
+// 			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+// 
+// 			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPAMin );
+// 			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPAMax );
 		 }
 		 else {
 
@@ -1425,11 +1427,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_5 :
 		 if (enDataType == en_PDW_DATA) {
-			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
-
-			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPWMin );
-			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPWMax );
+// 			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
+// 			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+// 
+// 			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPWMin );
+// 			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPWMax );
 		 }
 		 else {
 
@@ -1457,35 +1459,27 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 	 int iCnt=0;
 	 TCHAR szBuffer[800];
 
-// 	 iCnt += _stprintf_s( szBuffer, _countof(szBuffer), _T("T %.3f~%.3f[us]\rD %.3f~%.3f[도]\rF %.3f~%.3f[MHz]\rP %.3f~%.3f[dB]\rW %.3f~%.3f[ns]"), \
-// 		 m_strFilterSetup.dPAMin, m_strFilterSetup.dPAMax, m_strFilterSetup.dPWMin, m_strFilterSetup.dPWMax );
-
-	 if( m_strFilterSetup.dToaMin != -DBL_MAX && m_strFilterSetup.dToaMax != DBL_MAX ) {
-		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("시간 %.3f ~ %.3f[s]\r"), m_strFilterSetup.dToaMin, m_strFilterSetup.dToaMax );
-	 }
-	 if( m_strFilterSetup.dDtoaMin != -DBL_MAX && m_strFilterSetup.dDtoaMax != DBL_MAX ) {
-		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("T %.3f ~ %.3f[s]\r"), m_strFilterSetup.dDtoaMin, m_strFilterSetup.dDtoaMax );
-	 }
-	 if( m_strFilterSetup.dAoaMin != -DBL_MAX && m_strFilterSetup.dAoaMax != DBL_MAX ) {
-		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("방위 %.1f ~ %.1f[도]\r"), m_strFilterSetup.dAoaMin, m_strFilterSetup.dAoaMax );
-	 }
-	 if( m_strFilterSetup.dFrqMin != -DBL_MAX && m_strFilterSetup.dFrqMax != DBL_MAX ) {
-		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("주파수 %.3f ~ %.3f[MHz]\r"), m_strFilterSetup.dFrqMin, m_strFilterSetup.dFrqMin );
-	 }
-	 if( m_strFilterSetup.dPAMin != -DBL_MAX && m_strFilterSetup.dPAMax != DBL_MAX ) {
-		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("세기 %.1f ~ %.1f[dBm]\r"), m_strFilterSetup.dPAMin, m_strFilterSetup.dPAMax );
-	 }
-
-	 if( iCnt != 0 ) {
-		szBuffer[iCnt-1] = NULL;
-	 }
-
-		 // m_strFilterSetup.dPAMin, m_strFilterSetup.dPAMax, m_strFilterSetup.dPWMin, m_strFilterSetup.dPWMax );
-
-	 // 	double dDtoaMin;
-	 // 	double dDtoaMax;
-
-	 UpdateToolTip( szBuffer, GetDlgItem(IDC_BUTTON_FILTER_APPLY) );
+// 	 if( m_strFilterSetup.dToaMin != -DBL_MAX && m_strFilterSetup.dToaMax != DBL_MAX ) {
+// 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("시간 %.3f ~ %.3f[s]\r"), m_strFilterSetup.dToaMin, m_strFilterSetup.dToaMax );
+// 	 }
+// 	 if( m_strFilterSetup.dDtoaMin != -DBL_MAX && m_strFilterSetup.dDtoaMax != DBL_MAX ) {
+// 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("T %.3f ~ %.3f[s]\r"), m_strFilterSetup.dDtoaMin, m_strFilterSetup.dDtoaMax );
+// 	 }
+// 	 if( m_strFilterSetup.dAoaMin != -DBL_MAX && m_strFilterSetup.dAoaMax != DBL_MAX ) {
+// 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("방위 %.1f ~ %.1f[도]\r"), m_strFilterSetup.dAoaMin, m_strFilterSetup.dAoaMax );
+// 	 }
+// 	 if( m_strFilterSetup.dFrqMin != -DBL_MAX && m_strFilterSetup.dFrqMax != DBL_MAX ) {
+// 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("주파수 %.3f ~ %.3f[MHz]\r"), m_strFilterSetup.dFrqMin, m_strFilterSetup.dFrqMin );
+// 	 }
+// 	 if( m_strFilterSetup.dPAMin != -DBL_MAX && m_strFilterSetup.dPAMax != DBL_MAX ) {
+// 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("세기 %.1f ~ %.1f[dBm]\r"), m_strFilterSetup.dPAMin, m_strFilterSetup.dPAMax );
+// 	 }
+// 
+// 	 if( iCnt != 0 ) {
+// 		szBuffer[iCnt-1] = NULL;
+// 	 }
+// 
+// 	 UpdateToolTip( szBuffer, GetDlgItem(IDC_BUTTON_FILTER_APPLY) );
  }
 
 /**

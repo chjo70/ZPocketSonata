@@ -39,7 +39,6 @@ public:
 	
 	inline UINT GetDataItems() { return m_theDataFile.GetDataItems(); }
 	inline ENUM_UnitType GetUnitType() { return m_enUnitType; /* .GetUnitType(); */ }
-	inline bool IsPhaseData() { return m_theDataFile.IsPhaseData(); }
 	inline void *GetData() { return m_theDataFile.GetData(); }
 
 	//inline STR_FILTER_SETUP *GetFilterSetup() { return m_theDataFile.GetFilterSetup(); }
