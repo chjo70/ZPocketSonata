@@ -25,6 +25,7 @@ public:
     void PopLanData( void *pData, int iIndex, unsigned int uiLength );
 
     virtual void Sleep( int mssleep )=0;
+    virtual const char *GetThreadName()=0;
 
 private:
     void Alloc();

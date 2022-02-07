@@ -268,10 +268,10 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count, int iBand )
         }
 
         *pStat++ = pdw->iPulseType;
-        *pPa++   = pdw->iPA;
-        *pAoa++ = pdw->iAOA;
-        *pPw++ = pdw->iPW;
-        *pFreq++ = pdw->iFreq;
+        *pPa++   = pdw->uiPA;
+        *pAoa++ = pdw->uiAOA;
+        *pPw++ = pdw->uiPW;
+        *pFreq++ = pdw->uiFreq;
         *pMark++ = UnMark;
 
 #ifdef _POCKETSONATA_

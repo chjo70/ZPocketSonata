@@ -257,8 +257,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     else {
         CheckValidData( pPDWData );
 
-        // 수집한 PDW 파일 만들기...
-        // m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData, m_uiStep );
+        // 수집한 PDW 파일 저장하기...
+        InsertRAWData( pPDWData );
 
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
@@ -277,32 +277,32 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
                  CheckKnownByAnalysis();
  
                  // 그룹화 만들기
-//                 while( ! m_theGroup->IsLastGroup() ) {
-//                     // 협대역 주파수 그룹화
-//                     // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
-//                     m_theGroup->MakeGrIndex();
-// 
-//                     SaveGroupPdwFile( m_CoGroup+1 );
-// 
-//                     // 규칙성 및 불규칙성 펄스열 추출
-//                     m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
-// 
-//                     // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-//                     // m_thePulExt->UnknownExtract();
-// 
-//                     // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-//                     memset( & MARK, 0, sizeof( MARK ) );
-// 
-//                     // PRI 분석
-//                     m_theAnalPRI->Analysis();
-// 
-//                     // 에미터 분석
-//                     m_theMakeAET->MakeAET();
-// 
-//                     // 그룹화 생성 개수 증가
-//                     ++ m_CoGroup;
-// 
-//                 }
+                while( ! m_theGroup->IsLastGroup() ) {
+                    // 협대역 주파수 그룹화
+                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+                    m_theGroup->MakeGrIndex();
+
+                    SaveGroupPdwFile( m_CoGroup+1 );
+
+                    // 규칙성 및 불규칙성 펄스열 추출
+                    m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
+
+                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+                    // m_thePulExt->UnknownExtract();
+
+                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+                    memset( & MARK, 0, sizeof( MARK ) );
+
+                    // PRI 분석
+                    m_theAnalPRI->Analysis();
+
+                    // 에미터 분석
+                    m_theMakeAET->MakeAET();
+
+                    // 그룹화 생성 개수 증가
+                    ++ m_CoGroup;
+
+                }
             }
         }
 
@@ -841,8 +841,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     TCHAR szDirectory[500], szRawDataPathname[500];
 
     struct tm *pstTime;
-    //time_t tiNow;
-	struct timeval tiNow;
+	struct timespec tiNow;
 
 #ifdef _XBAND_
     Log( enDebug, ".InsertRAWData[S%d]" , m_uiStep );
@@ -863,8 +862,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 	sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
-    sprintf( szDirectory, _T("%s/%s/BRD_%d"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID );
-
+    sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
 #else
     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 
@@ -883,7 +881,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
-        sprintf( szRawDataFilename, "%s/%s/%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], m_szRawDataFilename );
+        sprintf( szRawDataPathname, "%s/%s", szDirectory, m_szRawDataFilename );
 //         if( enDataType == E_EL_SCDT_PDW ) {
 //             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
 //         }
@@ -921,7 +919,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 {
 
 #ifdef _SQLITE_
-	struct tm *pstTime;
+	//struct tm *pstTime;
 	char buffer[100]={0};
 
 	bool bRet=true;

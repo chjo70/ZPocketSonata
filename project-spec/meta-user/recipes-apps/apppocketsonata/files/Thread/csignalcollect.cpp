@@ -754,15 +754,15 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
     pstPDW = & pPDWData->stPDW[0];
     for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
         // 모의
-        pstPDW->iAOA = pstPDW->iAOA + ( ( rand() % 10 ) - 5 );
-        if( pstPDW->iAOA < 0 ) {
-            pstPDW->iAOA += MAX_AOA;
+        pstPDW->uiAOA = pstPDW->uiAOA + ( ( rand() % 10 ) - 5 );
+        if( (int) pstPDW->uiAOA < 0 ) {
+            pstPDW->uiAOA += MAX_AOA;
         }
-        pstPDW->iAOA = pstPDW->iAOA % MAX_AOA;
+        pstPDW->uiAOA = pstPDW->uiAOA % MAX_AOA;
 
-        pstPDW->iFreq = pstPDW->iFreq; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->iPW = pstPDW->iPW; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->iPA = pstPDW->iPA; // + ( ( rand() % 20 ) - 10 );
+        pstPDW->uiFreq = pstPDW->uiFreq; // + ( ( rand() % 20 ) - 10 );
+        pstPDW->uiPW = pstPDW->uiPW; // + ( ( rand() % 20 ) - 10 );
+        pstPDW->uiPA = pstPDW->uiPA; // + ( ( rand() % 20 ) - 10 );
 
 
         // 추적 채널 설정

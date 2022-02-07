@@ -589,26 +589,26 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
 
 #ifdef _DECODE_
 #ifdef _POCKETSONATA_
-        pPDWRecords->ddoa = (double) CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->iAOA );
+        pPDWRecords->ddoa = (double) CPOCKETSONATAPDW::DecodeDOA( pS_EL_PDW_DATA->uiAOA );
 
-        pPDWRecords->dfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->iFreq ) * 1000000. );		// [Hz]
+        pPDWRecords->dfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->uiFreq ) * 1000000. );		// [Hz]
 
-        pPDWRecords->dpa = (double) CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->iPA );										// [dBm]
+        pPDWRecords->dpa = (double) CPOCKETSONATAPDW::DecodePA( pS_EL_PDW_DATA->uiPA );										// [dBm]
 
-        pPDWRecords->dpw = (double) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->iPW ) / 1000000000. );			// [s]
+        pPDWRecords->dpw = (double) ( CPOCKETSONATAPDW::DecodePW( pS_EL_PDW_DATA->uiPW ) / 1000000000. );			// [s]
 
         pPDWRecords->dtoa = CPOCKETSONATAPDW::DblDecodeTOA( pS_EL_PDW_DATA->ullTOA-m_ullfirstTOA );	// [s]
 
         pPDWRecords->ddtoa = 0;
 
 #elif defined(_ELINT_) || defined(_XBAND_)
-        pPDWRecords->ddoa = FAOACNV( pS_EL_PDW_DATA->iAOA );
+        pPDWRecords->ddoa = FAOACNV( pS_EL_PDW_DATA->uiAOA );
 
-        pPDWRecords->dfreq = DFRQMhzCNV( 0, pS_EL_PDW_DATA->iFreq ) * 1000000.;
+        pPDWRecords->dfreq = DFRQMhzCNV( 0, pS_EL_PDW_DATA->uiFreq ) * 1000000.;
 
-        pPDWRecords->dpa = PACNV( pS_EL_PDW_DATA->iPA );										// [dBm]
+        pPDWRecords->dpa = PACNV( pS_EL_PDW_DATA->uiPA );										// [dBm]
 
-        pPDWRecords->dpw = DPWCNV( pS_EL_PDW_DATA->iPW );			// [s]
+        pPDWRecords->dpw = DPWCNV( pS_EL_PDW_DATA->uiPW );			// [s]
 
         pPDWRecords->dtoa = (float) ( pS_EL_PDW_DATA->ullTOA - m_ullfirstTOA );	// [s]
 

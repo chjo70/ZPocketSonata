@@ -372,7 +372,7 @@ void CUserCollect::MakeSIMPDWData()
 
     int iDOA;
 
-#define MANUALTOA   (30)
+#define MANUALTOA   (35)
     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 4359.585 ),
@@ -398,6 +398,13 @@ void CUserCollect::MakeSIMPDWData()
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 38874.19 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 40402.47 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 41951.62 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 43256.66 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 44647.55 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 46038.38 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 47429.53 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 48715.07 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 49961.97 ),
+                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
     } ;
 
     TRACE( "\nMakeSIMPDWData.." );

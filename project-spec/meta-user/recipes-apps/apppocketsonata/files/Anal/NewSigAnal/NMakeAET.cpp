@@ -290,11 +290,14 @@ void CNMakeAET::MarkAllAetToPdwIndex()
 */
 void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
+#ifdef _MSC_VER
     char buffer[500];
 
     // 신호 정보
     int iCnt=0;
     iCnt += sprintf( & buffer[iCnt], "%s", g_szAetSignalType[pLOB->iSignalType]);
+
+WhereIs;
 
     // 방위
     iCnt += sprintf( & buffer[iCnt], " %4.1f(%4.1f,%4.1f)" , pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax );
@@ -303,10 +306,7 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     iCnt += sprintf( & buffer[iCnt], " %s" , g_szAetFreqType[pLOB->iFreqType] );
 // 	temp = abs( pManAet->aet.frq.max - pManAet->aet.frq.min );
     iCnt += sprintf( & buffer[iCnt], " %.3f[%.3f, %.3f]" , pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax );
-    //sprintf_s( buff1, "%.3f" , pLOB->fFreqMean );
-    //sprintf_s( buff2, "%.3f" , F_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.min ) );
-    //sprintf_s( buff3, "%5d" , C_FRQCNV( pManAet->aet.frq.band, pManAet->aet.frq.max ) );
-    //sprintf_s( buff4, "%3d" , TOAmsCNV( pManAet->aet.frq.patPrd ) );
+
     if( pLOB->iFreqType == _PATTERN_AGILE ) {
         //printf( "%s(%s,%s)%s" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), Comma( buff4 ) );
     }
@@ -326,12 +326,14 @@ void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
     iCnt += sprintf( & buffer[iCnt], " %.2f(%.2f,%.2f)" , pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax );
 
     // ID
-// 	printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
+    //printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
 
     sprintf( & buffer[iCnt], " [%3d]" , pLOB->iNumOfPDW );
 
     //printf( "\n%s", buffer );
     Log( enNormal, "\t%s", buffer );
+
+#endif
 
 }
 

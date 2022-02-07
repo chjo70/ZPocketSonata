@@ -124,13 +124,13 @@ public:
 	static SEnvironVariable *GetEnvrionVariable()
 	{
 		if( g_pTheELEnvironVariable != NULL ) {
-			return g_pTheELEnvironVariable->GetEnvrionVariable();
 		}
 		else {
 			g_pTheELEnvironVariable = new CELEnvironVariable();
 			//TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
-			return g_pTheELEnvironVariable->GetEnvrionVariable();
 		}
+
+        return g_pTheELEnvironVariable->GetEnvrionVariable();
 	}
 
 };

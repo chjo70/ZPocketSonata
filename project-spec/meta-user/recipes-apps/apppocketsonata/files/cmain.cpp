@@ -369,6 +369,7 @@ void End()
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
     _SAFE_DELETE( g_pTheSysConfig ); 
+    _SAFE_DELETE( g_pTheELEnvironVariable );
 
     _SAFE_DELETE( g_pTheLog );
 
@@ -667,8 +668,15 @@ void qq( int iLevel )
 
 }
 
-
-
+/**
+ * @brief		MemotyTest
+ * @param		size_t iSize
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/02/07 14:59:23
+ * @warning		
+ */
 void MemotyTest( size_t iSize )
 {
     size_t ii;
@@ -696,89 +704,6 @@ void MemotyTest( size_t iSize )
 
     printf( "\n\n\n Memory Check OK !" );
     free( pMemory );
-
-    /////
-    struct tm *pstTime;
-
-    char szSQLString[1024*2];
-    char buffer1[100], buffer2[100], buffer3[100];
-
-    SRxABTData stSRxABTData;
-    SELABTDATA_EXT stABTExtData;
-
-    SELABTDATA_EXT *pABTExtData = & stABTExtData;
-    SRxABTData *pABTData = & stSRxABTData;
-
-    memset( pABTData, 0, sizeof(SRxABTData) );
-    memset( pABTExtData, 0, sizeof(SELABTDATA_EXT) );
-
-    pstTime = localtime( & pABTData->tiFirstSeenTime );
-    if( pstTime != NULL ) {
-        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
-    }
-    else {
-        strcpy( buffer1, "1970-01-01 00:00:00" );
-    }
-    pstTime = localtime( & pABTData->tiLastSeenTime );
-    if( pstTime != NULL ) {
-        strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
-    }
-    else {
-        strcpy( buffer2, "1970-01-01 00:00:00" );
-    }
-
-    pstTime = localtime( & pABTData->tiFinalAlarmTime );
-    if( pstTime != NULL ) {
-        strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
-    }
-    else {
-        strcpy( buffer3, "1970-01-01 00:00:00" );
-    }    
-
-    for( int i=0 ; i < 10 ; ++i ) {
-        sprintf_s( szSQLString, \
-            "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
-            PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
-            RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
-            SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
-            FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
-            PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
-            PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
-            PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
-            SCAN_TYPE, SCAN_PRD_MEAN_SEC, SCAN_PRD_MIN_SEC, SCAN_PRD_MAX_SEC, \
-            HAS_INTRA_MOD, INTRA_FRQ_CHNG_WID_MAX, INTRA_FRQ_CHNG_WID_MIN, \
-            PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
-            IS_VALIDITY, TOTAL_PDW, NUM_LOB, ALARM_TIME, STAT, \
-            IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG ) VALUES \
-            ( %d, %d, \"%s\", \"%s\", \
-            \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
-            %d, %d, %d, \
-            %d, %f, %f, %f, %f, \
-            %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
-            %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
-            %f, %f, %f, %f, \
-            %f, %f, %f, %f, \
-            %d, %f, %f, %f, \
-            %d, %f, %f, \
-            %d, %f, %f, %f, %f, %f, %f, %f, %f, \
-            %d, %d, %d, \"%s\", %d, \
-            %d, %d, %f, %f )" , \
-            pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
-            pABTData->szPrimaryELNOT, pABTData->szPrimaryModeCode, pABTData->szModulationCode, pABTData->szRadarModeName, pABTData->szPlaceNameKor, pABTData->szNickName, pABTData->szFuncCode, pABTData->szPlatform, pABTData->iRadarModePriority, pABTData->iRadarPriority, \
-            pABTData->iRadarModeIndex, pABTData->iThreatIndex, pABTData->iPolarization, \
-            pABTData->iSignalType, pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax, pABTData->fDOADeviation, \
-            pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
-            pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
-            pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPWDeviation, \
-            pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, pABTData->fPADeviation, \
-            pABTData->iScanType, pABTData->fMeanScanPeriod, pABTData->fMinScanPeriod, pABTData->fMaxScanPeriod, \
-            pABTData->iHasIntraMod, pABTData->fMaxIntraMod, pABTData->fMinIntraMod, \
-            pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fHeight, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
-            pABTData->iValidity, pABTData->uiTotalOfPDW, pABTData->uiCoLOB, buffer3, pABTData->iStat, \
-            pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
-    
-        printf( "[%s]" , szSQLString );
-    }
 
 }
 

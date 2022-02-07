@@ -4305,6 +4305,7 @@ STR_PULSE_TRAIN_SEG *CPulExt::GetMainSeg( int startSeg, int endSeg )
 //
 void CPulExt::PrintAllSeg()
 {
+#ifdef _MSC_VER
     unsigned int i;
     STR_PULSE_TRAIN_SEG *pSeg;
 
@@ -4318,14 +4319,16 @@ void CPulExt::PrintAllSeg()
     else {
         //printf( "\n\n 펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
         Log( enNormal, "Pulse Train : %d" , m_uiCoSeg-m_uiAnalSeg );
-    }
+
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
         PrintSeg( i, pSeg );
 
         PrintAllSegPDW( pSeg );
 
     }
+    }
     printf( "\n" );
+#endif
 
 }
 
@@ -4342,6 +4345,7 @@ void CPulExt::PrintAllSeg()
  */
 void CPulExt::PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg )
 {
+#ifdef _MSC_VER
     Log( enNormal, "\t[%2d]%1c: Co(%3d), %s (%5d-%5d), %s %5d(%5d-%5d)/%2d, PW(%5d -%5d), I(%3d(0x%0llx),%3d -%3d)" ,
         iSeg,
         gszPulseTrainMark[pSeg->mark],
@@ -4351,6 +4355,8 @@ void CPulExt::PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg )
         I_PWCNV( pSeg->pw.min ), I_PWCNV( pSeg->pw.max ),
         m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]], m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
 
+#endif
+
 }
 
 /**
@@ -4359,6 +4365,7 @@ void CPulExt::PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg )
  */
 void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
 {
+#ifdef _MSC_VER
     unsigned int i, iCnt=0;
     char szBuffer[5000];
 
@@ -4370,7 +4377,10 @@ void CPulExt::PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg )
 #endif
     }
 
-    printf( "\n\t\t(%3d: %3d%s)", pSeg->pdw.uiCount, pSeg->pdw.pIndex[0], szBuffer );
+    //printf( "\n\t\t(%3d: %3d%s)", pSeg->pdw.uiCount, pSeg->pdw.pIndex[0], szBuffer );
+    Log( enDebug, "(%3d: %3d%s)", pSeg->pdw.uiCount, pSeg->pdw.pIndex[0], szBuffer );
+
+#endif
 
 }
 

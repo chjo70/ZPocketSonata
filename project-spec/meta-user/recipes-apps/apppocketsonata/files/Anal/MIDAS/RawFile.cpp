@@ -290,7 +290,7 @@ unsigned int CRawFile::Write( void *pData, int c_size )
     int iWrite;
 	unsigned int uiWrite=0;
 
-    if( c_size > 0 && pData != NULL ) {
+    if( c_size > 0 && pData != NULL && m_fid > 0 ) {
     	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
 	    iWrite = _write( m_fid, (char *) pData, c_size );
         if( iWrite > 0 ) {

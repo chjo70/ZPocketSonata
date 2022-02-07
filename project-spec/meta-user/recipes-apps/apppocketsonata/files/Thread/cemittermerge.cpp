@@ -42,10 +42,20 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
 #elif _MSSQL_
     CMSSQL::Init();
 
+    try {
     m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, & m_theMyODBC );
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
+    }
 
 #else
+    try {
 	m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, NULL );
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
+    }
 
 #endif
 
@@ -90,7 +100,7 @@ void CEmitterMerge::_routine()
             perror( "QMsgRcv" );
         }
         else {
-            TRACE( "\n ====================== Start of CEmitterMerge" );
+            
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     m_bScanInfo = false;
@@ -132,7 +142,7 @@ void CEmitterMerge::_routine()
                     LOGMSG1( enError, " 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
-            TRACE( "\n ====================== End of CEmitterMerge" );
+            
         }
     }
 }
@@ -183,6 +193,9 @@ void CEmitterMerge::MergeEmitter()
     
     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
 #ifdef _TESTSBC_
+         // 2.1 분석된 LOB 데이터를 병합 관리한다.
+         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
+
 #else
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        

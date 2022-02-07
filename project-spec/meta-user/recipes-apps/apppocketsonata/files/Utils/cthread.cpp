@@ -711,7 +711,14 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 #elif __VXWORKS__    
     STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof(STR_MessageData), NO_WAIT, MSG_PRI_NORMAL );
     if( stat == ERROR ) {
-        LOGMSG( enError, "msgsnd 실패" );
+        while( true ) {
+            char buffer[100];
+
+            sprintf( buffer, "QMsgSnd 송신 실패 : from %s to %s..." , pszThreadName, GetThreadName() );
+            LOGMSG( enError, buffer );
+
+            taskDelay(100);
+        }
     }                                   
     else {
         DisplayMsg( true, m_szThreadName, pMessageData );

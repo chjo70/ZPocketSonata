@@ -378,8 +378,8 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
     bool bRet=false;
 
     if( m_strWindowCell.bUse == true ) {
-        bRet = CompMarginDiff<int>( pstPDW->iFreq, m_strWindowCell.strFreq.iLow, m_strWindowCell.strFreq.iHgh, 10 ) && \
-               CompMarginDiff<int>( pstPDW->iPW, m_strWindowCell.strPW.iLow, m_strWindowCell.strPW.iHgh, 10 );
+        bRet = CompMarginDiff<int>( (int)pstPDW->uiFreq, m_strWindowCell.strFreq.iLow, m_strWindowCell.strFreq.iHgh, 10 ) && \
+               CompMarginDiff<int>( (int)pstPDW->uiPW, m_strWindowCell.strPW.iLow, m_strWindowCell.strPW.iHgh, 10 );
     }
 
     return bRet;

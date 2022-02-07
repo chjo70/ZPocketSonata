@@ -96,7 +96,7 @@ struct STR_RAWDATA {
 	UINT uiByte;
 	void *pDataBuffer;
 
-	UINT uiDataItems;
+	//UINT uiDataItems;
 	ENUM_DataType enDataType;
 	ENUM_UnitType enUnitType;
     char szFileName[_MAX_PATH];
@@ -187,15 +187,16 @@ struct STR_ZOOM_INFO {
 class CData
 {
 public:
-    char *m_pRawHeaderBuffer;
-    char *m_pRawDataBuffer;
+    char *m_pRawHeaderBuffer;           // 헤더 데이터 저장소
+    char *m_pRawDataBuffer;             // 실제 데이터 저장소
 
-    int m_iHeaderSize;
-    unsigned int m_iOneDataSize;
+    int m_iHeaderSize;                  // 헤더 크기
+    unsigned int m_iOneDataSize;        // 한개 PDW 데이터 크기
+    unsigned long long  m_ullFileSize;  // 파일 크기
+    UINT m_uiTotalDataItems;            // 전체 PDW 개수
 
-    unsigned long long  m_ullFileSize;
 
-	STR_PDW_DATA m_PDWData;
+	STR_PDW_DATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
     STR_RAWDATA m_RawData;
 
@@ -280,7 +281,7 @@ namespace PDW {
 class CPDW : public CData
 {
 private:
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
 public:
 	CPDW(STR_RAWDATA *pRawData);
@@ -360,7 +361,7 @@ public:
 class CSPDW : public CData
 {
 private:
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
 public:
 	CSPDW(STR_RAWDATA *pRawData);
@@ -391,7 +392,7 @@ namespace ELINT {
 class CEPDW : public CData
 {
 private:
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
     STR_ELINT_HEADER m_stHeader;
 
@@ -464,18 +465,49 @@ public:
 		fVal = FMUL( uiFreq, XPDW::fFreqRes );
 		
 		return fVal;
-	}
-
-	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
-	{
-		return (float) uiPW * XPDW::_toaRes[enBandWidth];
 	} ;
 
+	/**
+	 * @brief     DecodePW
+	 * @param     unsigned int uiPW
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
+	{
+		return (float) ( ( (float) uiPW * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+	} ;
+
+	/**
+	 * @brief     DecodeFREQMHz
+	 * @param     int iFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
 	static float DecodeFREQMHz( int iFreq )
 	{
 		return 0.0;
 	} ;
 
+	/**
+	 * @brief     DecodeDOA
+	 * @param     unsigned int uiDOA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
 	static float DecodeDOA( unsigned int uiDOA )
 	{
 		float fDOA;
@@ -483,6 +515,16 @@ public:
 		return fDOA;
 	} ;
 
+	/**
+	 * @brief     DecodePA
+	 * @param     unsigned int uiPA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
 	static float DecodePA( unsigned int uiPA )
 	{		
 		return (float) ( ( (float) uiPA * (float) XPDW::fPARes ) - (float) 110. );
@@ -505,7 +547,7 @@ class C7PDW : public CData
 {
 private:
 	SRxPDWHeader m_stHeader;
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
 public:
 	C7PDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -521,7 +563,7 @@ public:
 class CKFXPDW : public CData
 {
 private:
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
 public:
 	CKFXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -591,7 +633,9 @@ namespace POCKETSONATA {
     #define H_PH_MIN_FREQ		192000  // [kHz]
 
     #define PDW_TIME_RES		7.8125  // [ns]
-    #define PDW_FREQ_RES		(1.953125)
+
+    const float fPDW_FREQ_RES=1.953125;
+    //#define PDW_FREQ_RES		(1.953125)
     //#define PDW_AOA_RES			0.087890625
 
     #define PDW_PA_INIT		    (-89.0)
@@ -610,7 +654,7 @@ class CPOCKETSONATAPDW : public CData
 private:
 	STR_PDWFILE_HEADER m_stHeader;
 
-    STR_PDW_DATA m_PDWData;
+    //STR_PDW_DATA m_PDWData;
 
 	static int m_iBoardID;
 
@@ -680,19 +724,19 @@ public:
 
         if( iCh < 8 ) {
             if( iFreq & 0x8000 ) {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) ( 0x10000 - iFreq ) * (float) PDW_FREQ_RES);
+                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::fPDW_FREQ_RES);
             }
             else {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * (float) PDW_FREQ_RES);      // 1.953125*32767 = 64MHz
+                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES);      // 1.953125*32767 = 64MHz
             }
         }
         else {
             iCh = 16 - iCh;
             if( iFreq & 0x8000 ) {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) ( 0x10000 - iFreq ) * (float) PDW_FREQ_RES ) );
+                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::fPDW_FREQ_RES ) );
             }
             else {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * (float) PDW_FREQ_RES ) );
+                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES ) );
             }
         }
 
@@ -708,7 +752,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( (float) iFreq * (float) PDW_FREQ_RES / (float) 1000. );
+        fRetFreq = ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES / (float) 1000. );
         return fRetFreq;	/* [MHz] */
     } ;
 
@@ -737,10 +781,10 @@ public:
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
             }
 
             *piCh += 8;
@@ -749,10 +793,10 @@ public:
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
             }
 
         }
@@ -772,10 +816,10 @@ public:
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
             }
 
             *piCh += 8;
@@ -784,10 +828,10 @@ public:
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), (float) PDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), (float) PDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
             }
 
         }
@@ -804,7 +848,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        fRetFreq = ( ( fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
         return fRetFreq;	/* [MHz] */
     } ;
 
@@ -817,7 +861,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
         return (int) fRetFreq;	/* [MHz] */
     } ;
 
@@ -825,7 +869,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / (float) PDW_FREQ_RES );
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
         return (int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
@@ -834,7 +878,7 @@ public:
     {
         float fFreq;
 
-        fFreq = (float) iFreq * (float) PDW_FREQ_RES;
+        fFreq = (float) iFreq * POCKETSONATA::fPDW_FREQ_RES;
         return (int) ( fFreq + 0.5 );	/* [kHz] */
     } ;
 
@@ -1129,7 +1173,7 @@ private:
 
 	EnumSCDataType m_enFileType;
 
-	STR_PDW_DATA m_PDWData;
+	//STR_PDW_DATA m_PDWData;
 
 	char *m_pDataChar;
 
@@ -1290,7 +1334,7 @@ public:
 
 	inline int GetFileIndex() { return m_iFileIndex; }
 
-	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_RawData.uiDataItems; else return 0; }
+	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.uiDataItems; else return 0; }
 	inline ENUM_UnitType GetUnitType() { return m_pData->m_RawData.enUnitType; }
 	inline ENUM_DataType GetDataType() { return m_pData->m_RawData.enDataType; }
 	inline UINT GetWindowNumber() { if( m_pData != NULL ) return m_pData->m_uiWindowNumber; else return 0; }

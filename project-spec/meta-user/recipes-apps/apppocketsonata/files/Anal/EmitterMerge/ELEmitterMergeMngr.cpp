@@ -193,21 +193,40 @@ void CELEmitterMergeMngr::AllocMemory()
     m_pszSQLString = ( char *) malloc( MAX_SQL_SIZE );
 
 #else
+    try {
     m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pIdentifyAlg]:%s" , ex.what() );
+    }
 
 #endif
     
     m_pUniThreat = ( UELTHREAT *) malloc( sizeof(UELTHREAT) * TOTAL_ITEMS_OF_THREAT_NODE );
+    if( m_pUniThreat == NULL ) {
+        TRACE( "malloc error new memory[m_pUniThreat]" );
+    }
 
     m_pABTtoH000 = ( unsigned short * ) malloc( sizeof(unsigned short) * TOTAL_UNDEF_ID_NUMBER );
+    if( m_pABTtoH000 == NULL ) {
+        TRACE( "malloc error new memory[m_pABTtoH000]" );
+    }
 
+    try {
     m_pVecLOBs = new std::vector<STR_LOBS> [TOTAL_ITEMS_OF_THREAT_NODE];
-
-    
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pVecLOBs]:%s" , ex.what() );
+    }
 
     //m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
 
+    try {
     m_pTheThreatRoot = new CELThreat;
+    }
+    catch( bad_alloc ex ) {
+        TRACE( "new memory[m_pTheThreatRoot]:%s" , ex.what() );
+    }
 
     // LOB/빔/방사체 결과 벡터
     m_VecLOBData.reserve( 100 );
@@ -236,7 +255,7 @@ void CELEmitterMergeMngr::FreeMemory()
     _SAFE_FREE( m_pABTtoH000 );
 
     _SAFE_DELETE( m_pIdentifyAlg );
-    _SAFE_DELETE( g_pTheELEnvironVariable );
+    //_SAFE_DELETE( g_pTheELEnvironVariable );
     delete [] m_pVecLOBs;
 
     if( m_pTheThreatRoot != NULL ) {
@@ -361,11 +380,13 @@ void CELEmitterMergeMngr::Start( bool bScanInfo )
  */
 bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo, bool bIsFilteredLOB, bool bCheckLOB )
 {
-    bool bMerge;
+    bool bMerge=false;
 
     //DWORD dwTime = GetTickCount();
     SetScanInfo( bScanInfo );
+    WhereIs;
 
+#ifdef _MSC_VER
 #ifdef _POCKETSONATA_
     Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
@@ -394,6 +415,8 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
 #endif
 
+#endif
+
     //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
 
 #ifdef _POCKETSONATA_
@@ -413,6 +436,14 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     // 1. CED 신호 식별을 수행한다.
     IdentifyLOB( pLOBData );
     
+#ifdef _TESTSBC_
+    // 2. LOB와 기존 위협 간의 비교
+    bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
+
+    // 3. LOB 식별 결과를 DB에 기록한다. (식별 결과와 AET, ABT 번호를 할당하여 DB 테이블에 저장함.)
+    InsertLOB( & m_LOBDataExt, bIsFilteredLOB );
+
+#else    
     // 2. LOB와 기존 위협 간의 비교
     bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
 
@@ -426,6 +457,8 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     // 5. 전시할 에미터 번호를 기록한다.
     AddThreatInfo();
+
+#endif
 
     //////////////////////////////////////////////////////////////////////////
     // 6. LOB 클러스터링 결과 수행
@@ -1768,7 +1801,7 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCl
             // AET 노드 생성
             CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
             InsertAET( pAETThreat, false, bDBInsert, nSeqNum, uiAETID );
-
+WhereIs;
             //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
             SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
 
@@ -8132,7 +8165,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
     int iIndex;
     SRadarMode *pRadarMode;
 
-    SELEXTDB extDB=SELEXTDB();
+    SELEXTDB extDB; //=SELEXTDB();
 
     // 식별 정보
     if( m_pLOBOtherInfo == NULL || m_pLOBOtherInfo->bUpdate == false ) {
@@ -8518,15 +8551,13 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
 {
     int iLatitude=0, iLongitude=0;
 
-    //char *pChar;
     int iIndex;
     CString strMsg;
-    SELEXTDB extDB=SELEXTDB();
 
+    SELEXTDB extDB; //=SELEXTDB();
     SRxAETData *pAETData;
     SELAETDATA_EXT *pAETExtData;
 
-    //STR_CEDEOBID_INFO *pIDInfo;
     SThreat *pThreat;
     SRadarMode *pRadarMode;
 
@@ -11646,7 +11677,7 @@ char *CELEmitterMergeMngr::GetThreatName( int iRadarModeIndex )
 
 
 /**
- * @brief CEmitterMerge::IsTryAnalScan
+ * @brief CELEmitterMergeMngr::DoesAnalScanTry
  * @return
  */
 bool CELEmitterMergeMngr::DoesAnalScanTry()

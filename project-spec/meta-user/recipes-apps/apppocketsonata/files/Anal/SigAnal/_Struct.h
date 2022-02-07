@@ -626,6 +626,8 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 	double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 #elif defined(_POCKETSONATA_)
+
+#define PDW_FREQ_RES        (1.953125)
     char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
     char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
@@ -633,7 +635,7 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
 #define _AOARes                 ( (float) (360./512.) )
     FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
-          {     0,     0, 0, (float) 0 } ,
+          {     0,     0, 0, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,

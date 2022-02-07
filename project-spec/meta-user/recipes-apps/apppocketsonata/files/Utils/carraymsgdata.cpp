@@ -101,6 +101,8 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 
     while( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         Sleep( 1000 );
+
+        LOGMSG1( enError, "[%s] 가 죽었거나 무한 루프를 수행하고 있습니다. !!" , GetThreadName() );
     }
     if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );

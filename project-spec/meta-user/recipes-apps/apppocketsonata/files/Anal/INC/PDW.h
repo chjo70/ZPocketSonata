@@ -229,12 +229,12 @@ struct TNEW_SPDW
 struct _PDW {
     _TOA ullTOA;
 
-	int iFreq;
+	unsigned int uiFreq;
 	int iPulseType;
-	int iPA;
-	int iPW;
+	unsigned int uiPA;
+	unsigned int uiPW;
 	int iPFTag;
-	int iAOA;
+	unsigned int uiAOA;
 
 #ifdef _GRAPH_
 	float fPh1;

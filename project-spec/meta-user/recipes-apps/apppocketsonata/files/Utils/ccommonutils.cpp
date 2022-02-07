@@ -394,6 +394,7 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     return 0;
 }
 
+#endif
 
 /**
  * @brief CCommonUtils::timespec_diff
@@ -439,8 +440,6 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     return;
 }
 
-#endif
-
 /**
  * @brief CCommonUtils::Disp_FinePDW
  * @param pPDWData
@@ -458,11 +457,13 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     pPDW = & pPDWData->stPDW[0];
     ullfirstTOA = pPDW->ullTOA;
     for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
+#ifdef _POCKETSONATA_
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
                 pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
-                CPOCKETSONATAPDW::DecodeDOA(pPDW->iAOA), \
-                CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->iFreq), pPDW->iFreq,
-                CPOCKETSONATAPDW::DecodePW(pPDW->iPW), pPDW->iPW );
+                CPOCKETSONATAPDW::DecodeDOA(pPDW->uiAOA), \
+                CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->uiFreq), pPDW->uiFreq,
+                CPOCKETSONATAPDW::DecodePW(pPDW->uiPW), pPDW->uiPW );
+#endif
 
         ++ pPDW;
     }
