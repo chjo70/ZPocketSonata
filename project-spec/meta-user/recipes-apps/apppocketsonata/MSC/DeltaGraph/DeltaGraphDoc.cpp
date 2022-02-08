@@ -249,7 +249,6 @@ bool CDeltaGraphDoc::OpenFile( CString &strPathname, STR_FILTER_SETUP *pstFilter
  */
 bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSetup, bool bCountOfWindow )
 {
-	//bool bRet;
 	CData *pData, *pFindMapData;
 	
 	pFindMapData = theApp.FindMapData( & m_strPathname );

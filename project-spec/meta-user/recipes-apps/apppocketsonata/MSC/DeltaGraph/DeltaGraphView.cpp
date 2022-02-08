@@ -153,7 +153,7 @@ void CDeltaGraphView::InitSpinCtrl()
 
 }
 
-#define TEXT_WIDTH			(18)
+#define TEXT_WIDTH			(10)
 /**
  * @brief     
  * @return    void
@@ -271,8 +271,6 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	float *pfI, *pfQ, *pfIP, *pfFFT;
 	_TOA *pllTOA;
 	CString strVal;
-
-	bool bPhaseData;
 
 	void *pData;
 	STR_PDW_DATA *pPDWData=NULL;

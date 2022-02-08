@@ -302,7 +302,7 @@ void CDeltaGraphView2::ClearFilterSetup( STR_FILTER_SETUP *pstrFilterSetup )
 		pstrFilterSetup = & m_strFilterSetup;
 	}
 
-    pstrFilterSetup->ullToaMin = 0.;
+    pstrFilterSetup->ullToaMin = 0;
     pstrFilterSetup->ullToaMax = UINT64_MAX;
     pstrFilterSetup->ullDtoaMin = 0;
     pstrFilterSetup->ullDtoaMax = UINT64_MAX;
@@ -310,7 +310,7 @@ void CDeltaGraphView2::ClearFilterSetup( STR_FILTER_SETUP *pstrFilterSetup )
     pstrFilterSetup->uiAoaMax = UINT32_MAX;
     pstrFilterSetup->uiFrqMin = 0;
     pstrFilterSetup->uiFrqMax = UINT32_MAX;
-    pstrFilterSetup->uiPAMin = -DBL_MAX;
+    pstrFilterSetup->uiPAMin = 0;
     pstrFilterSetup->uiPAMax = UINT32_MAX;
     pstrFilterSetup->uiPWMin = 0;
     pstrFilterSetup->uiPWMax = UINT32_MAX;
@@ -1147,7 +1147,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 	::InvalidateRect(m_hPE, NULL, FALSE);
 	::UpdateWindow(m_hPE);
 
-	Log( enNormal, _T("%d 개수를 그립니다."), uiPDWDataItems );
+	Log( enNormal, _T("%u 개수를 그립니다."), uiPDWDataItems );
 
 	if( m_VecZoomInfo.size() != 0 && false ) {
 		double dMinX, dMaxX;
@@ -1456,8 +1456,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
   */
  void CDeltaGraphView2::UpdateFilterToolTip()
  {
-	 int iCnt=0;
-	 TCHAR szBuffer[800];
+	 //int iCnt=0;
+	 //TCHAR szBuffer[800];
 
 // 	 if( m_strFilterSetup.dToaMin != -DBL_MAX && m_strFilterSetup.dToaMax != DBL_MAX ) {
 // 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("시간 %.3f ~ %.3f[s]\r"), m_strFilterSetup.dToaMin, m_strFilterSetup.dToaMax );
