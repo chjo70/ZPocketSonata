@@ -819,7 +819,7 @@ void CMakeAET::PrintAllEmitter()
         for( i=0 ; i < m_CoLOB ; ++i ) {
             //printf("\n\t\t[%02d]" , i+1 );
             DISP_FineAet( pLOB );
-            printf("\n");
+            //printf("\n");
             ++ pLOB;
         }
     }

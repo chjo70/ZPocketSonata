@@ -194,7 +194,7 @@ void CELEmitterMergeMngr::AllocMemory()
 
 #else
     try {
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
+        m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
     }
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pIdentifyAlg]:%s" , ex.what() );
@@ -202,6 +202,9 @@ void CELEmitterMergeMngr::AllocMemory()
 
 #endif
     
+    //_SAFE_MALLOC( m_pUniThreat, UELTHREAT, sizeof(UELTHREAT) * TOTAL_ITEMS_OF_THREAT_NODE );
+    //_SAFE_MALLOC( m_pABTtoH000, unsigned short, sizeof(unsigned short) * TOTAL_UNDEF_ID_NUMBER );
+
     m_pUniThreat = ( UELTHREAT *) malloc( sizeof(UELTHREAT) * TOTAL_ITEMS_OF_THREAT_NODE );
     if( m_pUniThreat == NULL ) {
         TRACE( "malloc error new memory[m_pUniThreat]" );
@@ -213,7 +216,7 @@ void CELEmitterMergeMngr::AllocMemory()
     }
 
     try {
-    m_pVecLOBs = new std::vector<STR_LOBS> [TOTAL_ITEMS_OF_THREAT_NODE];
+        m_pVecLOBs = new std::vector<STR_LOBS> [TOTAL_ITEMS_OF_THREAT_NODE];
     }
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pVecLOBs]:%s" , ex.what() );
@@ -221,8 +224,9 @@ void CELEmitterMergeMngr::AllocMemory()
 
     //m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
 
+    //_SAFE_NEW( m_pTheThreatRoot, CELThreat );
     try {
-    m_pTheThreatRoot = new CELThreat;
+        m_pTheThreatRoot = new CELThreat;
     }
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pTheThreatRoot]:%s" , ex.what() );
@@ -232,6 +236,7 @@ void CELEmitterMergeMngr::AllocMemory()
     m_VecLOBData.reserve( 100 );
     m_VecABTData.reserve( 100 );
     m_VecAETData.reserve( 100 );
+    WhereIs;
 
 }
  

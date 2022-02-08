@@ -868,7 +868,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 
 #endif
 
-    printf( "\n Create the Dir[%s]" , szDirectory );
+    //printf( "\n Create the Dir[%s]" , szDirectory );
     bRet = CreateDir( szDirectory );
 
     if( bRet == true ) {

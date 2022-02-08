@@ -25,6 +25,13 @@ using namespace std;
 #include "RawFile.h"
 
 
+#if TOOL==diab 
+#pragma pack( 1 )
+#else
+#pragma pack( push, 1 )
+#endif
+
+
 #define _PUT_ARRAY_VALUE( A, B, C )      if( B < sizeof(A) ) {   \
                                             A[B] = C;   }
 
@@ -552,6 +559,12 @@ union UNI_ADJUNCT_TYPE {
     SELMIDAS_ADJUNCT_TYPE_2000 _2000;
     SELMIDAS_ADJUNCT_TYPE_6000 _6000;
 };
+
+#if TOOL==diab 
+#pragma pack( 4 )
+#else
+#pragma pack( pop )
+#endif
 
 /**
  * @class     CMIDASBlueFileFormat

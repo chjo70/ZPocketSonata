@@ -46,6 +46,24 @@ enum ENUM_BoardID {
 #define _SAFE_FREE(A)           if( A != NULL ) { free( A ); A = NULL; }
 #define _SAFE_DELETE(A)         if( A != NULL ) { delete A; A = NULL; }
 
+
+//#define _SAFE_NEW(A, B, C)
+
+#define _SAFE_NEW(A, B)         try { \
+                                    A = new B;    \
+                                } \
+                                catch( bad_alloc ex ) { \
+                                    printf( "new memory[##A]:%s" , ex.what() ); \
+                                }
+
+
+#define _SAFE_MALLOC(A, B, C )  A = ( B * ) malloc( sizeof(C) ); \
+                                if( A == NULL ) { \
+                                    printf( "malloc error new memory[%s]" , #A ); \
+                                }
+
+
+
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
 #define _DIV( A, B )            (UINT) ( (float) (A) / (float) (B) )	//!< 정수 나누기
 #define UDIV( A, B )            (unsigned int) ( (float) (A) / (float) (B) + 0.5 )

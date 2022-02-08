@@ -381,7 +381,12 @@ void End()
 
 /**
  * @brief signalHandler
- * @param signo
+ * @param		int signo
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/02/08 10:46:43
+ * @warning		
  */
 void signalHandler( int signo )
 {
@@ -452,6 +457,15 @@ void ParsingArgument( int iArgc, char *iArgv[] )
     }
 }
 
+/**
+ * @brief		cleanup_handler
+ * @param		void * arg
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/02/08 10:45:31
+ * @warning		
+ */
 void cleanup_handler(void *arg )
 {
     printf("cleanup \n");

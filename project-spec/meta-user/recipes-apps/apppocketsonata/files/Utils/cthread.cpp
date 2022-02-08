@@ -748,7 +748,7 @@ void CThread::Sleep( int mssleep )
     ::WaitForSingleObject( m_hSleepEvent, mssleep );
 
 #elif defined(__VXWORKS__)
-    int iDelay=mssleep / g_iClkTickPerSecond;
+    int iDelay=mssleep / ( 1000 / g_iClkTickPerSecond );
 
     if( iDelay == 0 ) {
         iDelay = 1;
