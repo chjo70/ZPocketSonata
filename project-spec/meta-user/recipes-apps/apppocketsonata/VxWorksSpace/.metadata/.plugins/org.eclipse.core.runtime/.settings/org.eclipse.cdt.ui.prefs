@@ -41,6 +41,6 @@ properties.multi.write.mode=4
 scalability.detect=false
 sourceHoverBackgroundColor=255,255,225
 spelling_locale_initialized=true
-spelling_user_dictionary_encoding=UTF-8
+spelling_user_dictionary_encoding=
 useAnnotationsPrefPage=true
 useQuickDiffPrefPage=true

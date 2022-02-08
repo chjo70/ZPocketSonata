@@ -1,0 +1,13 @@
+
+# this file is generated
+
+# layers that have been built in the VSB
+__BUILT_LAYERS += BDM_NVRAM
+
+__OBJS_BUILT_BDM_NVRAM = 
+
+
+# built libraries
+__BUILT_LIBRARIES += 
+
+

@@ -34,20 +34,5 @@
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
-		<link>
-			<name>Source/Utils</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Source/Utils/DMA</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Source/Utils/DMA/dma.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/DMA/dma.h</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>

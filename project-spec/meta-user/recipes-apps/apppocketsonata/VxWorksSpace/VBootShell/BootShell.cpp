@@ -155,7 +155,7 @@ void CBootShell::Run()
 
 	printf( "\n\n Get Command (Default=OFP Download/Run OFP in Flash) ? " );
 	key = theManSbc->GetCommand();
-    printf( "\n key=[%d]" , key );
+    //printf( "\n key=[%d]" , key );
 
     switch( key ) {
         case INSTALL_WEB :
@@ -163,14 +163,16 @@ void CBootShell::Run()
             break;
 
         case RUN_APP :
+        	theManSbc->InitDataBase();
             theManSbc->RunApp( enTffsApp );
             break;
 
         case WRITE_APP_FLASH :
-            theManSbc->DownloadApp();
+            theManSbc->DownloadAndROMWriteApp();
             break;
 
         case DOWNLOAD_APP :
+        	theManSbc->InitDataBase();
             theManSbc->DownloadApp();
             theManSbc->RunApp( enDownloadApp );
             break;

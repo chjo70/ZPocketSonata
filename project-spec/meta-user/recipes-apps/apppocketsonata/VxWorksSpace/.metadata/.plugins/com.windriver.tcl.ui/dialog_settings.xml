@@ -16,20 +16,31 @@
 		<list key="ComponentsPage.STORE_EXPANDED_ELEMENTS">
 			<item value="FOLDER_CPLUS"/>
 			<item value="FOLDER_CPLUS_STDLIB"/>
-			<item value="FOLDER_BOOT_APP"/>
-			<item value="INCLUDE_BOOTAPP_GENERIC_NVRAM"/>
-			<item value="FOLDER_KERNEL_DEBUG"/>
+			<item value="FOLDER_TOOLS"/>
 			<item value="FOLDER_SHELL"/>
+			<item value="FOLDER_SHELL_CMD"/>
+			<item value="FOLDER_LOADER"/>
+			<item value="INCLUDE_LOADER"/>
 			<item value="FOLDER_SHOW_ROUTINES"/>
-			<item value="FOLDER_SYMTBL"/>
-			<item value="FOLDER_SYM_TBL_INIT"/>
-			<item value="SELECT_SYM_TBL_INIT"/>
+			<item value="FOLDER_SYSTEMVIEWER"/>
+			<item value="SELECT_WVUPLOAD"/>
 			<item value="FOLDER_HARDWARE"/>
 			<item value="FOLDER_MEMORY"/>
-			<item value="INCLUDE_MEMORY_CONFIG"/>
-			<item value="FOLDER_SOCKET"/>
+			<item value="FOLDER_OS"/>
+			<item value="FOLDER_KERNEL"/>
+			<item value="INCLUDE_KERNEL_COMMON_HEAP"/>
 			<item value="FOLDER_APPLICATION"/>
 			<item value="FOLDER_STORAGE"/>
+			<item value="FOLDER_BDM"/>
+			<item value="FOLDER_FLASH"/>
+			<item value="FOLDER_TFFS"/>
+			<item value="FOLDER_TFFS_DRIVERS"/>
+			<item value="INCLUDE_MTD_VXBFLASH"/>
+			<item value="INCLUDE_TFFS_MOUNT"/>
+			<item value="FOLDER_FILESYSTEM"/>
+			<item value="FOLDER_DOSFS"/>
+			<item value="INCLUDE_DOSFS_MAIN"/>
+			<item value="FOLDER_NFS"/>
 		</list>
 	</section>
 </section>

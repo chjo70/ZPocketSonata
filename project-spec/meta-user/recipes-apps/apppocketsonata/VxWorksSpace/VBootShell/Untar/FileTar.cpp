@@ -1,6 +1,11 @@
 //Author :- Nish [nishforever@vsnl.com]
 
-#include "stdafx.h"
+
+#ifdef _WIN32
+#include "../../A50SigAnal/stdafx.h"
+#else
+
+#endif
 
 #include "FileTar.h"
 
@@ -185,7 +190,7 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		strcat(tarfullpath,"/");
 	strcat(tarfullpath,TarFName);
 	int fdout=0;
-	int ret;
+	ssize_t ret;
 	int i;
 	if((fdout=open(tarfullpath,_O_CREAT|_O_WRONLY|_O_BINARY|_O_TRUNC,
 		_S_IWRITE))<0)
@@ -194,10 +199,10 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		return 1;
 	}	
 	ret=_write(fdout,(char *) &m_TarHeader,sizeof(UNI_BLOCK));
-	int ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
+	long ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
 	for(i=1;i<=m_TarHeader.GetCount();i++)
 	{
-		m_pTarIndex[i]->Start=ssize;
+		m_pTarIndex[i]->Start= ssize;
 		ret=_write(fdout,(char *) m_pTarIndex[i],sizeof(TarIndex));
 		ssize += m_pTarIndex[i]->Size;
 	}
@@ -216,7 +221,7 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 int CFileTar::AppendFile(int fdout, char *fpath)
 {
 	int fdin=0;
-	int len;
+	size_t len;
 	if((fdin=_open(fpath,_O_RDONLY|_O_BINARY))<0)
 	{
 		_close(fdin);
@@ -259,7 +264,7 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 	}
 
 	memset( pTarHeader, 0, sizeof(UNI_BLOCK) );
-	int nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
+	ssize_t nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
 
 	pTarHeader->m_filesize = Octal2Deciaml( pTarHeader->m_block.header.size, sizeof(pTarHeader->m_block.header.size) );
 	GetDate( & pTarHeader->m_time, pTarHeader->m_block.header.mtime, sizeof(pTarHeader->m_block.header.mtime) );
@@ -283,7 +288,7 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 {
 	int fdout;
-	int nRead, nWrite;
+	ssize_t nRead, nWrite;
 	UNI_BLOCK *pBlock;
 
 	struct _stat filestat;
@@ -319,7 +324,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	if( rem > 0 ) {
 		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
 		nWrite = _write( fdout, buff, rem );
-		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
+		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (ssize_t) rem ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
 			return FALSE;
@@ -383,7 +388,7 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 
                     strcpy( fpath2, fpath );
                     p = strlastfind( fpath2, "/" );
-                    *p = NULL;
+                    *p = 0;
 
                     MkDir( fpath2 );
                 }
@@ -503,11 +508,11 @@ BOOL CFileTar::MkDir( char *directory )
     char *p=directory;
     char *q=dirName;
 
-    dirName[0] = NULL;
+    dirName[0] = 0;
     while( *p ) {
         if( ('\\' == *p) || ('/'==*p)) {
             if( ':' != *(p-1) ) {
-                if( dirName[0] != NULL && _tcscmp( dirName, _T("\\") ) != 0 ) {
+                if( dirName[0] != 0 && strcmp( dirName, "\\" ) != 0 ) {
                     _mkdir( dirName );
                 }
             }

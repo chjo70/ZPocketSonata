@@ -1,0 +1,210 @@
+Version=1.0
+BuildSupport=Managed
+BuildCommand=%makeprefix% make --no-print-directory
+PreferredBuildSpecs=win32:A*.*
+PreferredBuildSpecs=linux:A*.*
+GlobalMacro.Name=PROJECT_TYPE
+GlobalMacro.PROJECT_TYPE.Value=RTP
+GlobalMacro.Name=DEFINES
+GlobalMacro.DEFINES.Value=
+GlobalMacro.Name=DO_STRIP
+GlobalMacro.DO_STRIP.Value=0
+GlobalMacro.Name=EXPAND_DBG
+GlobalMacro.EXPAND_DBG.Value=0
+GlobalMacro.Name=APICHECK_OPTIONS
+GlobalMacro.APICHECK_OPTIONS.Value=-warning
+Macro.Name=VX_CPU_FAMILY
+Macro.Name=CPU
+Macro.Name=TOOL_FAMILY
+Macro.Name=TOOL_VERSION
+Macro.Name=_CC_VERSION
+Macro.Name=TOOL
+Macro.Name=TOOL_PATH
+Macro.Name=CC_ARCH_SPEC
+Macro.Name=LIBPATH
+Macro.Name=LIBS
+Macro.Name=VSB_DIR
+Macro.Name=VSB_CONFIG_FILE
+Macro.Name=BDGEN_VSB_INCLUDE
+Macro.Name=APICHECK_CMD
+Macro.Name=APICHECK
+BuildTool.Name=C-Compiler
+BuildTool.C-Compiler.InputSuffixes=*.c
+BuildTool.C-Compiler.OutputIsObject=true
+BuildTool.C-Compiler.OutputCanBePassed=false
+BuildTool.Name=C++-Compiler
+BuildTool.C++-Compiler.InputSuffixes=*.cpp;*.CPP;*.C;*.cxx;*.cc
+BuildTool.C++-Compiler.OutputIsObject=true
+BuildTool.C++-Compiler.OutputCanBePassed=false
+BuildTool.Name=Linker
+BuildTool.Linker.InputSuffixes=
+BuildTool.Linker.OutputIsObject=false
+BuildTool.Linker.OutputCanBePassed=false
+BuildTool.Name=Librarian
+BuildTool.Librarian.InputSuffixes=
+BuildTool.Librarian.OutputIsObject=false
+BuildTool.Librarian.OutputCanBePassed=true
+BuildTool.Name=Assembler
+BuildTool.Assembler.InputSuffixes=*.s;*.S
+BuildTool.Assembler.OutputIsObject=true
+BuildTool.Assembler.OutputCanBePassed=false
+BuildSpec.Name=VSourceBuild_PPCE6500diab_C++2003
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VX_CPU_FAMILY.Value=ppc
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.CPU.Value=PPCE6500
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.TOOL_FAMILY.Value=diab
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.TOOL_VERSION.Value=diab_5_9_6_1
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro._CC_VERSION.Value=diab_5_9_6_5
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.TOOL.Value=diab
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/diab-5.9.6.5/#WIND_VX7_DIAB_HOST_TYPE#/bin
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.CC_ARCH_SPEC.Value=-tPPCEH:rtp7
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.LIBPATH.Value=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.LIBS.Value= -lstlstd 
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.APICHECK.Value=0
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=-I#VSB_DIR#/share/h
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=-I#VSB_DIR#/usr/h/public
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=-I#VSB_DIR#/usr/h
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Symbol=-D_VX_CPU=_VX_#CPU#
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Symbol=-D_VX_TOOL_FAMILY=#TOOL_FAMILY#
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Symbol=-D_VX_TOOL=#TOOL#
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Symbol=-D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Symbol= 
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.SymbolList=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.NonDebugFlags= -XO
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.NonDebugFlags= -XO
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/dplus %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Linker.DerivedFileSignatures=*.vxe
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Linker.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Linker.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Linker.ToolFlags= -tPPCEH:rtp7 -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow  -XO -Xforce-declarations -ei5387,5388,5849,1824    -D_VX_CPU=_VX_PPCE6500 -D_VX_TOOL_FAMILY=diab -D_VX_TOOL=diab     -D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"  -I#VSB_DIR#/share/h -I#VSB_DIR#/usr/h -I#VSB_DIR#/usr/h/system -I#VSB_DIR#/usr/h/public -D_VSB_PUBLIC_HDR_DIR=#VSB_DIR#/usr/h/public  -Wl,-Bt=0x80000000    
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Linker.Command=echo "building $@";  %cpplinkerprefix% #TOOL_PATH#/dplus %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% #ADDED_OBJECTS# #LIBPATH# -L#VSB_DIR#/usr/lib/common #ADDED_LIBPATH#  #LIBS# %Libraries% #ADDED_LIBS#  && if [ "#DO_STRIP#" = "1" ]; then mv -f "$@" "$@.unstripped" && stripppc -g -o "$@" "$@.unstripped";fi && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi  && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Librarian.DerivedFileSignatures=*.a
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Librarian.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Librarian.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Librarian.ToolFlags=crus
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Librarian.Command=echo "building $@";%archiverprefix% #TOOL_PATH#/dar %ToolFlags% %OutFile% %Objects% #ADDED_OBJECTS#
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.DebugFlags=-g -Xdebug-dwarf3
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.NonDebugFlags= -XO
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%
+
+BuildSpec.Name=VSourceBuild_PPCE6500gnu_C++2003
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VX_CPU_FAMILY.Value=ppc
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.CPU.Value=PPCE6500
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.TOOL_FAMILY.Value=gnu
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.TOOL_VERSION.Value=gnu_4_8_1_8
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro._CC_VERSION.Value=gnu_4_8_1_10
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.TOOL.Value=gnu
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/gnu-4.8.1.10/#WIND_VX7_GNU_HOST_TYPE#/bin
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.CC_ARCH_SPEC.Value=-fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.LIBPATH.Value=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.LIBS.Value= -Wl,-lstdc++   -Wl,-latomic   -Wl,-lc 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.APICHECK.Value=0
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=-I#VSB_DIR#/share/h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=-isystem#VSB_DIR#/usr/h/public
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=-isystem#VSB_DIR#/usr/h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Symbol=-D_VX_CPU=_VX_#CPU#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Symbol=-D_VX_TOOL_FAMILY=#TOOL_FAMILY#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Symbol=-D_VX_TOOL=#TOOL#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Symbol=-D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Symbol= 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.SymbolList=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C-Compiler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C-Compiler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp -Wall    -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/ccppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C++-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C++-Compiler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C++-Compiler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -ansi -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X  -fno-implicit-fp -Wall    -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/c++ppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Linker.DerivedFileSignatures=*.vxe
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Linker.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Linker.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Linker.ToolFlags= -fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp  -O2 -Wall     -D_VX_CPU=_VX_PPCE6500 -D_VX_TOOL_FAMILY=gnu -D_VX_TOOL=gnu     -D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"  -I#VSB_DIR#/share/h -isystem#VSB_DIR#/usr/h -isystem#VSB_DIR#/usr/h/system -isystem#VSB_DIR#/usr/h/public -D_VSB_PUBLIC_HDR_DIR=#VSB_DIR#/usr/h/public  -Wl,--defsym,__wrs_rtp_base=0x80000000 -mrtp -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP -Wl,-T#WIND_BASE#/build/tool/gnu_4_8_1_8/usr/ldscript.vxe.ppc -Wl,-u,__tls__ 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Linker.Command=echo "building $@";  %cpplinkerprefix% #TOOL_PATH#/c++ppc %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% #ADDED_OBJECTS# #LIBPATH# -L#VSB_DIR#/usr/lib/common #ADDED_LIBPATH# -Wl,--start-group #LIBS# %Libraries% #ADDED_LIBS# -Wl,--end-group && if [ "#DO_STRIP#" = "1" ]; then mv -f "$@" "$@.unstripped" && stripppc -g -o "$@" "$@.unstripped";fi && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi  && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Librarian.DerivedFileSignatures=*.a
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Librarian.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Librarian.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Librarian.ToolFlags=crus
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Librarian.Command=echo "building $@";%archiverprefix% #TOOL_PATH#/arppc %ToolFlags% %OutFile% %Objects% #ADDED_OBJECTS#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Assembler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Assembler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Assembler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp -P -xassembler-with-cpp  -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/ccppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%
+BuildSpec.Name=VSourceBuild_PPCE6500gnu_C++2011
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VX_CPU_FAMILY.Value=ppc
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.CPU.Value=PPCE6500
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.TOOL_FAMILY.Value=gnu
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.TOOL_VERSION.Value=gnu_4_8_1_8
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro._CC_VERSION.Value=gnu_4_8_1_10
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.TOOL.Value=gnu
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/gnu-4.8.1.10/#WIND_VX7_GNU_HOST_TYPE#/bin
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.CC_ARCH_SPEC.Value=-fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.LIBPATH.Value=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.LIBS.Value= -Wl,-lsupc++   -Wl,-lstdc++11   -Wl,-latomic   -Wl,-lc 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.APICHECK.Value=0
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=-I#VSB_DIR#/share/h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=-isystem#VSB_DIR#/usr/h/public
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=-isystem#VSB_DIR#/usr/h
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.IncludeSearchPath=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Symbol=-D_VX_CPU=_VX_#CPU#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Symbol=-D_VX_TOOL_FAMILY=#TOOL_FAMILY#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Symbol=-D_VX_TOOL=#TOOL#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Symbol=-D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Symbol= 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.SymbolList=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C-Compiler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C-Compiler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp -Wall    -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/ccppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C++-Compiler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C++-Compiler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C++-Compiler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -ansi -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c++11 -isystem#VSB_DIR#/usr/h/public/c++11 -fno-implicit-fp -Wall    -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/c++ppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Linker.DerivedFileSignatures=*.vxe
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Linker.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Linker.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Linker.ToolFlags= -fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp  -O2 -Wall     -D_VX_CPU=_VX_PPCE6500 -D_VX_TOOL_FAMILY=gnu -D_VX_TOOL=gnu     -D_VSB_CONFIG_FILE=\"#VSB_DIR#/h/config/vsbConfig.h\"  -I#VSB_DIR#/share/h -isystem#VSB_DIR#/usr/h -isystem#VSB_DIR#/usr/h/system -isystem#VSB_DIR#/usr/h/public -D_VSB_PUBLIC_HDR_DIR=#VSB_DIR#/usr/h/public  -Wl,--defsym,__wrs_rtp_base=0x80000000 -mrtp -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP -Wl,-T#WIND_BASE#/build/tool/gnu_4_8_1_8/usr/ldscript.vxe.ppc -Wl,-u,__tls__ 
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Linker.Command=echo "building $@";  %cpplinkerprefix% #TOOL_PATH#/c++ppc %DebugModeFlags% %ToolFlags% -o %OutFile% %Objects% #ADDED_OBJECTS# #LIBPATH# -L#VSB_DIR#/usr/lib/common #ADDED_LIBPATH# -Wl,--start-group #LIBS# %Libraries% #ADDED_LIBS# -Wl,--end-group && if [ "#DO_STRIP#" = "1" ]; then mv -f "$@" "$@.unstripped" && stripppc -g -o "$@" "$@.unstripped";fi && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi  && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Librarian.DerivedFileSignatures=*.a
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Librarian.DebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Librarian.NonDebugFlags=
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Librarian.ToolFlags=crus
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Librarian.Command=echo "building $@";%archiverprefix% #TOOL_PATH#/arppc %ToolFlags% %OutFile% %Objects% #ADDED_OBJECTS#
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Assembler.DerivedFileSignatures=*.o
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Assembler.DebugFlags=-gdwarf-3
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Assembler.NonDebugFlags= -O2
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -mrtp -fno-strict-aliasing -D_C99 -D_HAS_C9X -std=c99 -fasm -fno-implicit-fp -P -xassembler-with-cpp  -MD -MP
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/ccppc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%

@@ -1,0 +1,1299 @@
+Building BDM_MTD docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_MTD DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_MTD DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_MTD
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src'
+for DIR in alt5qspiflash emif16 fcm gpmc gpmi nand nfc norflash spiflash ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/alt5qspiflash'
+Tue Apr 13 14:32:09 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/alt5qspiflash'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/emif16'
+Tue Apr 13 14:32:10 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/emif16'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/fcm'
+Tue Apr 13 14:32:10 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/fcm'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/gpmc'
+Tue Apr 13 14:32:11 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/gpmc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/gpmi'
+Tue Apr 13 14:32:11 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/gpmi'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/nand'
+Tue Apr 13 14:32:12 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/nand'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/nfc'
+Tue Apr 13 14:32:13 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/nfc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/norflash'
+Tue Apr 13 14:32:13 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/norflash'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/spiflash'
+Tue Apr 13 14:32:14 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src/spiflash'
+Tue Apr 13 14:32:14 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/mtd-1.1.1.3/src'
+Building BDM_NFTL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/nftl-1.1.0.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/nftl-1.1.0.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_NFTL DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_NFTL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_NFTL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/nftl-1.1.0.3/src'
+Tue Apr 13 14:32:15 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/nftl-1.1.0.3/src'
+Building BDM_SIM docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/sim-1.0.1.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/sim-1.0.1.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_SIM DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_SIM DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_SIM
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/sim-1.0.1.1/src'
+Tue Apr 13 14:32:16 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/sim-1.0.1.1/src'
+Building BDM_TFFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs-1.0.1.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs-1.0.1.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_TFFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_TFFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_TFFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs-1.0.1.3/src'
+Tue Apr 13 14:32:17 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs-1.0.1.3/src'
+Building BDM_TFFS_DRIVER docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs_drv-1.0.1.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs_drv-1.0.1.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_TFFS_DRIVER DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_TFFS_DRIVER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_TFFS_DRIVER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs_drv-1.0.1.3/src'
+Tue Apr 13 14:32:18 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/flash/tffs_drv-1.0.1.3/src'
+Building BDM_NVRAM docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/nvram-1.0.0.8/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/nvram-1.0.0.8/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_NVRAM DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_NVRAM DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_NVRAM
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/nvram-1.0.0.8/src'
+Tue Apr 13 14:32:18 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/nvram-1.0.0.8/src'
+Building BDM_SATA docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/sata-1.1.3.5/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/sata-1.1.3.5/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_SATA DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_SATA DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_SATA
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/sata-1.1.3.5/src'
+Tue Apr 13 14:32:19 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/sata-1.1.3.5/src'
+Building BDM_XBD docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/xbd-1.0.2.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/xbd-1.0.2.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/BDM_XBD DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=BDM_XBD DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BDM_XBD
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/xbd-1.0.2.3/src'
+Tue Apr 13 14:32:20 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/bdm-1.0.1.3/xbd-1.0.2.3/src'
+Building BOARDLIB docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/boardlib-1.1.1.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/boardlib-1.1.1.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/BOARDLIB DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=BOARDLIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BOARDLIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/boardlib-1.1.1.3/src'
+Tue Apr 13 14:32:21 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/boardlib-1.1.1.3/src'
+Building BOOTAPP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/bootapp-1.0.6.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/bootapp-1.0.6.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/BOOTAPP DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=BOOTAPP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=BOOTAPP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/bootapp-1.0.6.0/src'
+Tue Apr 13 14:32:22 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/bootapp-1.0.6.0/src'
+Building CORE_DUMP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/CORE_DUMP DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=CORE_DUMP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_DUMP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src'
+for DIR in arch dev ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch'
+for DIR in arm i86 ppc simlinux simnt ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/arm'
+Tue Apr 13 14:32:23 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/arm'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/i86'
+Tue Apr 13 14:32:24 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/i86'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/ppc'
+Tue Apr 13 14:32:24 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/ppc'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/simlinux'
+Tue Apr 13 14:32:25 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/simlinux'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/simnt'
+Tue Apr 13 14:32:25 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch/simnt'
+Tue Apr 13 14:32:26 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/arch'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/dev'
+Tue Apr 13 14:32:26 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src/dev'
+Tue Apr 13 14:32:27 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/src'
+Building CORE_DUMP docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_DEBUG_ANALYSIS_api_reference_7/CORE_DUMP DOC_CHAPTER=Application_API_Reference_-_DEBUG_ANALYSIS DOC_USER=USER DOC_LAYER=CORE_DUMP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_DUMP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/user_src'
+Tue Apr 13 14:32:27 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/coredump-1.1.1.1/user_src'
+Building CORE_IO docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/CORE_IO DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=CORE_IO DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_IO
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src'
+for DIR in aio drv fileio ios ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/aio'
+Tue Apr 13 14:32:28 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/aio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv'
+for DIR in share ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv/share'
+Tue Apr 13 14:32:29 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv/share'
+Tue Apr 13 14:32:30 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/fileio'
+Tue Apr 13 14:32:30 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/fileio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios'
+Tue Apr 13 14:32:31 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios'
+Tue Apr 13 14:32:32 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src'
+Building CORE_IO docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/CORE_IO DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=CORE_IO DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_IO
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src'
+for DIR in aio drv fileio ios ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/aio'
+Tue Apr 13 14:32:33 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/aio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv'
+for DIR in share ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv/share'
+Tue Apr 13 14:32:34 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv/share'
+Tue Apr 13 14:32:34 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/drv'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/fileio'
+Tue Apr 13 14:32:35 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/fileio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios'
+for DIR in user ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios/user'
+Tue Apr 13 14:32:36 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios/user'
+Tue Apr 13 14:32:37 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src/ios'
+Tue Apr 13 14:32:37 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/io-1.2.7.1/src'
+Building CORE_KERNEL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/CORE_KERNEL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=CORE_KERNEL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_KERNEL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src'
+for DIR in aim demo edr mm multicore posix random rtp services sysctl tls util wind ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/aim'
+Tue Apr 13 14:32:38 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/aim'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo'
+for DIR in smp ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp'
+for DIR in perf phil ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp/perf'
+Tue Apr 13 14:32:39 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp/perf'
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp/phil'
+Tue Apr 13 14:32:40 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp/phil'
+Tue Apr 13 14:32:40 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo/smp'
+Tue Apr 13 14:32:40 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/demo'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/edr'
+Tue Apr 13 14:32:41 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/edr'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/mm'
+Tue Apr 13 14:32:42 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/mm'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/multicore'
+for DIR in lock ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/multicore/lock'
+Tue Apr 13 14:32:44 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/multicore/lock'
+Tue Apr 13 14:32:45 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/multicore'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix'
+for DIR in mm pthread rt signal trace umask user_group ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/mm'
+Tue Apr 13 14:32:46 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/mm'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/pthread'
+Tue Apr 13 14:32:47 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/pthread'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/rt'
+Tue Apr 13 14:32:48 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/rt'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/signal'
+Tue Apr 13 14:32:49 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/signal'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/trace'
+Tue Apr 13 14:32:50 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/trace'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/umask'
+Tue Apr 13 14:32:50 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/umask'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/user_group'
+Tue Apr 13 14:32:51 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix/user_group'
+Tue Apr 13 14:32:51 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/posix'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/random'
+Tue Apr 13 14:32:52 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/random'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/rtp'
+Tue Apr 13 14:32:52 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/rtp'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/services'
+Tue Apr 13 14:32:53 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/services'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/sysctl'
+Tue Apr 13 14:32:54 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/sysctl'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/tls'
+Tue Apr 13 14:32:54 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/tls'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/util'
+Tue Apr 13 14:32:55 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/util'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind'
+for DIR in obj queue readyq ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/obj'
+Tue Apr 13 14:32:56 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/obj'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/queue'
+Tue Apr 13 14:32:57 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/queue'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/readyq'
+Tue Apr 13 14:32:58 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind/readyq'
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+Tue Apr 13 14:33:01 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src/wind'
+Tue Apr 13 14:33:01 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/src'
+Building CORE_KERNEL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/genh/offset
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/genh/offset && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/CORE_KERNEL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=CORE_KERNEL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_KERNEL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/genh/offset'
+Tue Apr 13 14:33:01 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/kernel-1.2.5.1/genh/offset'
+Building CORE_RTP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/core/rtp-1.1.4.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/rtp-1.1.4.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/CORE_RTP DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=CORE_RTP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_RTP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/rtp-1.1.4.1/src'
+Tue Apr 13 14:33:02 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/rtp-1.1.4.1/src'
+Building CORE_USER docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/CORE_USER DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=CORE_USER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=CORE_USER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src'
+for DIR in mm posix random sys util wind ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/mm'
+for DIR in memEdr ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/mm/memEdr'
+Tue Apr 13 14:33:04 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/mm/memEdr'
+Tue Apr 13 14:33:04 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/mm'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix'
+for DIR in mm pthreads rt services signals trace umask user_group ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/mm'
+Tue Apr 13 14:33:05 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/mm'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/pthreads'
+Tue Apr 13 14:33:06 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/pthreads'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/rt'
+Tue Apr 13 14:33:08 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/rt'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/services'
+Tue Apr 13 14:33:09 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/services'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/signals'
+Tue Apr 13 14:33:10 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/signals'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/trace'
+Tue Apr 13 14:33:10 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/trace'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/umask'
+Tue Apr 13 14:33:11 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/umask'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/user_group'
+Tue Apr 13 14:33:12 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix/user_group'
+Tue Apr 13 14:33:12 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/posix'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/random'
+Tue Apr 13 14:33:13 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/random'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/sys'
+Tue Apr 13 14:33:13 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/sys'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/util'
+Tue Apr 13 14:33:14 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/util'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/wind'
+Tue Apr 13 14:33:15 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src/wind'
+Tue Apr 13 14:33:17 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/user-1.2.5.1/src'
+Building DEBUG_AGENT docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/hostfs/src
+cd  D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/hostfs/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/DEBUG_AGENT DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=DEBUG_AGENT DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=DEBUG_AGENT
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/hostfs/src'
+Tue Apr 13 14:33:17 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/hostfs/src'
+Building DEBUG_AGENT docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/DEBUG_AGENT DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=DEBUG_AGENT DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=DEBUG_AGENT
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/src'
+Tue Apr 13 14:33:18 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/agent-1.2.5.1/src'
+Building END_DRV docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/END_DRV DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=END_DRV DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=END_DRV
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src'
+for DIR in end mii ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/end'
+Tue Apr 13 14:33:19 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/end'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/mii'
+Tue Apr 13 14:33:24 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/mii'
+Tue Apr 13 14:33:25 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src'
+Building END_DRV docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/END_DRV DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=END_DRV DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=END_DRV
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src'
+for DIR in end mii ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/end'
+Tue Apr 13 14:33:25 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/end'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/mii'
+Tue Apr 13 14:33:26 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src/mii'
+Tue Apr 13 14:33:26 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/drv/src'
+Building END_LIB docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/END_LIB DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=END_LIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=END_LIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src'
+Tue Apr 13 14:33:27 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src'
+Building END_LIB docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/END_LIB DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=END_LIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=END_LIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src'
+Tue Apr 13 14:33:28 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/end-1.2.8.0/lib/src'
+Building ERF docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/service/erf-1.0.1.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/erf-1.0.1.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/ERF DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=ERF DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=ERF
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/erf-1.0.1.6/src'
+Tue Apr 13 14:33:29 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/erf-1.0.1.6/src'
+Building FDT docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/FDT DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=FDT DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FDT
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src'
+for DIR in libfdt ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src/libfdt'
+Tue Apr 13 14:33:30 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src/libfdt'
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+Tue Apr 13 14:33:30 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/firmware/fdt-1.0.9.6/src'
+Building FS_COMMON docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_COMMON DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_COMMON DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_COMMON
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src'
+for DIR in monitor softxbd ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src/monitor'
+Tue Apr 13 14:33:31 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src/monitor'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src/softxbd'
+Tue Apr 13 14:33:32 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src/softxbd'
+Tue Apr 13 14:33:32 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/common-1.1.3.0/src'
+Building FS_DEVFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/devfs-1.0.1.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/devfs-1.0.1.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_DEVFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_DEVFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_DEVFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/devfs-1.0.1.0/src'
+Tue Apr 13 14:33:33 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/devfs-1.0.1.0/src'
+Building FS_VDFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vdfs-1.0.2.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vdfs-1.0.2.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_VDFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_VDFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_VDFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vdfs-1.0.2.0/src'
+Tue Apr 13 14:33:33 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vdfs-1.0.2.0/src'
+Building FS_VFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vfs-1.0.1.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vfs-1.0.1.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_VFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_VFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_VFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vfs-1.0.1.1/src'
+Tue Apr 13 14:33:34 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/core/vfs-1.0.1.1/src'
+Building FS_DOSFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/dosfs-1.0.1.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/dosfs-1.0.1.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_DOSFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_DOSFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_DOSFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/dosfs-1.0.1.1/src'
+Tue Apr 13 14:33:35 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/dosfs-1.0.1.1/src'
+Building FS_HRFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/hrfs-1.0.1.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/hrfs-1.0.1.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_HRFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_HRFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_HRFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/hrfs-1.0.1.1/src'
+Tue Apr 13 14:33:36 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/hrfs-1.0.1.1/src'
+Building FS_NFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/nfs-1.0.2.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/nfs-1.0.2.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_NFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_NFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_NFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/nfs-1.0.2.1/src'
+Tue Apr 13 14:33:37 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/nfs-1.0.2.1/src'
+Building FS_ROMFS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/romfs-1.1.2.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/romfs-1.1.2.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FS_ROMFS DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FS_ROMFS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FS_ROMFS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/romfs-1.1.2.0/src'
+Tue Apr 13 14:33:38 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/fs-1.0.0.2/romfs-1.1.2.0/src'
+Building FSAPI_USR docs for Application in D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/usr-1.0.1.7/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/usr-1.0.1.7/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_STORAGE_api_reference_7/FSAPI_USR DOC_CHAPTER=Application_API_Reference_-_STORAGE DOC_USER=USER DOC_LAYER=FSAPI_USR DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FSAPI_USR
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/usr-1.0.1.7/src'
+Tue Apr 13 14:33:39 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/usr-1.0.1.7/src'
+Building FSAPI_UTIL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/util-1.0.0.8/src
+cd  D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/util-1.0.0.8/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_STORAGE_api_reference_7/FSAPI_UTIL DOC_CHAPTER=Kernel_API_Reference_-_STORAGE DOC_KERNEL=KERNEL DOC_LAYER=FSAPI_UTIL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=FSAPI_UTIL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/util-1.0.0.8/src'
+Tue Apr 13 14:33:39 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/storage/api-1.0.0.1/util-1.0.0.8/src'
+Building IPNET_RADIUS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/aaa-1.0.1.10/radius/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/aaa-1.0.1.10/radius/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_RADIUS DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_RADIUS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_RADIUS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/aaa-1.0.1.10/radius/src'
+Tue Apr 13 14:33:40 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/aaa-1.0.1.10/radius/src'
+Building IPNET_DHCPC docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dhcpc-1.0.1.11/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dhcpc-1.0.1.11/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_DHCPC DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_DHCPC DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_DHCPC
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dhcpc-1.0.1.11/src'
+Tue Apr 13 14:33:41 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dhcpc-1.0.1.11/src'
+Building IPNET_DNSC docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dnsc-1.0.1.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dnsc-1.0.1.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_DNSC DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_DNSC DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_DNSC
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dnsc-1.0.1.6/src'
+Tue Apr 13 14:33:42 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/dnsc-1.0.1.6/src'
+Building IPNET_FTP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ftp-1.0.4.5/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ftp-1.0.4.5/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_FTP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_FTP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_FTP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ftp-1.0.4.5/src'
+Tue Apr 13 14:33:42 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ftp-1.0.4.5/src'
+Building IPNET_NTP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_NTP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_NTP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_NTP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src'
+for DIR in libisc libntp ntpd ntpdc ntpq util ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/libisc'
+Tue Apr 13 14:33:43 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/libisc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/libntp'
+Tue Apr 13 14:33:44 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/libntp'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpd'
+Tue Apr 13 14:33:44 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpd'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpdc'
+Tue Apr 13 14:33:45 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpdc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpq'
+Tue Apr 13 14:33:46 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/ntpq'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/util'
+Tue Apr 13 14:33:46 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src/util'
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+Tue Apr 13 14:33:46 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/ntp-1.2.0.6/src'
+Building IPNET_SNTP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/sntp-1.0.1.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/sntp-1.0.1.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_SNTP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_SNTP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_SNTP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/sntp-1.0.1.0/src'
+Tue Apr 13 14:33:47 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/sntp-1.0.1.0/src'
+Building IPNET_TFTP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/tftp-1.0.1.7/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/tftp-1.0.1.7/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_TFTP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_TFTP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_TFTP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/tftp-1.0.1.7/src'
+Tue Apr 13 14:33:47 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/app/tftp-1.0.1.7/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/src'
+Tue Apr 13 14:33:48 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/arm/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/arm/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/arm/src'
+Tue Apr 13 14:33:49 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/arm/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/powerpc/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/powerpc/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/powerpc/src'
+Tue Apr 13 14:33:49 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipcom/arch/powerpc/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipnet2/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipnet2/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipnet2/src'
+Tue Apr 13 14:33:50 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipnet2/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/iptcp/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/iptcp/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/iptcp/src'
+Tue Apr 13 14:33:51 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/iptcp/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipsctp/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipsctp/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipsctp/src'
+Tue Apr 13 14:33:51 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipsctp/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipmcp/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipmcp/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipmcp/src'
+Tue Apr 13 14:33:52 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/ipmcp/src'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt'
+Tue Apr 13 14:33:52 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt'
+Tue Apr 13 14:33:53 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/remlib
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/remlib && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/remlib'
+Tue Apr 13 14:33:53 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/remlib'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/rloglib
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/rloglib && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/rloglib'
+Tue Apr 13 14:33:54 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/rloglib'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/telnet/client
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/telnet/client && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/telnet/client'
+Tue Apr 13 14:33:55 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/telnet/client'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/client
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/client && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/client'
+Tue Apr 13 14:33:55 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/client'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/common
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/common && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/common'
+Tue Apr 13 14:33:56 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/tftp/common'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/lib
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/lib && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/lib'
+Tue Apr 13 14:33:56 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/lib'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/sysctl
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/sysctl && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/sysctl'
+Tue Apr 13 14:33:58 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/sysctl'
+Building IPNET_COREIP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/vxmux/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/vxmux/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/vxmux/src'
+Tue Apr 13 14:33:58 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/vxmux/src'
+Building IPNET_COREIP docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt'
+Tue Apr 13 14:33:59 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v4/clnt'
+Building IPNET_COREIP docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/IPNET_COREIP DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=IPNET_COREIP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_COREIP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt'
+Tue Apr 13 14:34:00 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/src/utils/src/legacy_apps/ftp/v6/clnt'
+Building IPNET_BRIDGE docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/bridge-1.0.1.3/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/bridge-1.0.1.3/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_BRIDGE DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_BRIDGE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_BRIDGE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/bridge-1.0.1.3/src'
+Tue Apr 13 14:34:00 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/bridge-1.0.1.3/src'
+Building IPNET_PPP docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/ppp-1.2.1.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/ppp-1.2.1.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/IPNET_PPP DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=IPNET_PPP DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_PPP
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/ppp-1.2.1.4/src'
+Tue Apr 13 14:34:01 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/linkproto/ppp-1.2.1.4/src'
+Building IPNET_USRSPACE docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/IPNET_USRSPACE DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=IPNET_USRSPACE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=IPNET_USRSPACE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src'
+for DIR in dot1x ipnet utils ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/dot1x'
+Tue Apr 13 14:34:02 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/dot1x'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet'
+for DIR in ipcom ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet/ipcom'
+for DIR in src ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet/ipcom/src'
+Tue Apr 13 14:34:03 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet/ipcom/src'
+Tue Apr 13 14:34:04 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet/ipcom'
+Tue Apr 13 14:34:04 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/ipnet'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils'
+for DIR in legacy_apps libs ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps'
+for DIR in pingv4 remlib rloglib ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/pingv4'
+Tue Apr 13 14:34:05 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/pingv4'
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/remlib'
+Tue Apr 13 14:34:06 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/remlib'
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/rloglib'
+Tue Apr 13 14:34:06 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps/rloglib'
+Tue Apr 13 14:34:06 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/legacy_apps'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/libs'
+Tue Apr 13 14:34:07 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils/libs'
+Tue Apr 13 14:34:07 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src/utils'
+Tue Apr 13 14:34:08 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/usrspace-2.0.2.5/src'
+Building JOBQUEUE docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/JOBQUEUE DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=JOBQUEUE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=JOBQUEUE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src'
+Tue Apr 13 14:34:08 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src'
+Building JOBQUEUE docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/JOBQUEUE DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=JOBQUEUE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=JOBQUEUE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src'
+Tue Apr 13 14:34:09 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/jobqueue-1.0.3.0/src'
+Building LANG_LIB_CPLUS_CPLUS_USER_2011 docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER_2011 DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LANG_LIB_CPLUS_CPLUS_USER_2011 DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LANG_LIB_CPLUS_CPLUS_USER_2011
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src'
+for DIR in libc++/stl ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src/libc++/stl'
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER_2011 -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER_2011 \
+    -set USER 
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER_2011 -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER_2011 \
+    -set USER -format xml 
+Tue Apr 13 14:34:10 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src/libc++/stl'
+Tue Apr 13 14:34:10 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-2011-usr-1.0.5.0/src'
+Building LANG_LIB_CPLUS_CPLUS_KERNEL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_KERNEL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=LANG_LIB_CPLUS_CPLUS_KERNEL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LANG_LIB_CPLUS_CPLUS_KERNEL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src'
+for DIR in rts ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src/rts'
+for DIR in demangler ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src/rts/demangler'
+Tue Apr 13 14:34:11 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src/rts/demangler'
+Tue Apr 13 14:34:11 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src/rts'
+Tue Apr 13 14:34:11 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-kernel-1.0.0.6/src'
+Building LANG_LIB_CPLUS_CPLUS_USER docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LANG_LIB_CPLUS_CPLUS_USER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LANG_LIB_CPLUS_CPLUS_USER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src'
+for DIR in libc++/basic libc++/stl ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src/libc++/basic'
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER \
+    -set USER 
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER \
+    -set USER -format xml 
+Tue Apr 13 14:34:12 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src/libc++/basic'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src/libc++/stl'
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER \
+    -set USER 
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/apigen -mg -nostrict -missingok \
+    -book VSourceBuild -chapter Application_API_Reference_-_COREOS -layer LANG_LIB_CPLUS_CPLUS_USER -out D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_CPLUS_CPLUS_USER \
+    -set USER -format xml 
+Tue Apr 13 14:34:13 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src/libc++/stl'
+Tue Apr 13 14:34:13 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/cplus-1.0.0.1/cplus-usr-1.0.3.6/src'
+Building LANG_LIB_LIBC_LIBC_KERNEL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/LANG_LIB_LIBC_LIBC_KERNEL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=LANG_LIB_LIBC_LIBC_KERNEL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LANG_LIB_LIBC_LIBC_KERNEL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src'
+for DIR in libc math ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc'
+for DIR in assert ctype locale math setjmp stdarg stdio stdlib string time ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/assert'
+Tue Apr 13 14:34:14 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/assert'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/ctype'
+Tue Apr 13 14:34:15 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/ctype'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/locale'
+Tue Apr 13 14:34:15 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/locale'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/math'
+Tue Apr 13 14:34:16 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/math'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/setjmp'
+Tue Apr 13 14:34:17 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/setjmp'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdarg'
+Tue Apr 13 14:34:17 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdarg'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdio'
+Tue Apr 13 14:34:18 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdio'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdlib'
+Tue Apr 13 14:34:18 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/stdlib'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/string'
+Tue Apr 13 14:34:19 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/string'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/time'
+Tue Apr 13 14:34:20 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc/time'
+Tue Apr 13 14:34:20 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/libc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/math'
+Tue Apr 13 14:34:21 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src/math'
+Tue Apr 13 14:34:21 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-kernel-1.0.6.2/src'
+Building LANG_LIB_LIBC_LIBC_USER docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LANG_LIB_LIBC_LIBC_USER DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LANG_LIB_LIBC_LIBC_USER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LANG_LIB_LIBC_LIBC_USER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src'
+for DIR in libc tool ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/libc'
+Tue Apr 13 14:34:26 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/libc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool'
+for DIR in common ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool/common'
+for DIR in libc ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[4]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool/common/libc'
+Tue Apr 13 14:34:27 대한민국 표준시 2021
+make[4]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool/common/libc'
+Tue Apr 13 14:34:27 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool/common'
+Tue Apr 13 14:34:27 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src/tool'
+Tue Apr 13 14:34:28 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/lang-lib/libc-1.0.0.1/libc-usr-1.0.6.6/src'
+Building LIBDL_7X docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LIBDL_7X DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LIBDL_7X DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LIBDL_7X
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls'
+Tue Apr 13 14:34:28 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls'
+Building LIBDL_7X docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LIBDL_7X DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LIBDL_7X DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LIBDL_7X
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls'
+Tue Apr 13 14:34:29 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/tls'
+Building LIBDL_7X docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl
+cd  D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/LIBDL_7X DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=LIBDL_7X DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LIBDL_7X
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl'
+for DIR in funcs ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl/funcs'
+Tue Apr 13 14:34:30 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl/funcs'
+Tue Apr 13 14:34:30 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/core/ldso-1.0.7.5/ldso_7x/libdl'
+Building LOADER docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/loader-1.1.4.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/loader-1.1.4.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/LOADER DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=LOADER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=LOADER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/loader-1.1.4.1/src'
+Tue Apr 13 14:34:30 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/loader-1.1.4.1/src'
+Building MIB2 docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/mib2-1.1.1.6/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/mib2-1.1.1.6/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/MIB2 DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=MIB2 DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=MIB2
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/mib2-1.1.1.6/src'
+Tue Apr 13 14:34:31 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/mib2-1.1.1.6/src'
+Building NET_BASE docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_NETWORKING_api_reference_7/NET_BASE DOC_CHAPTER=Kernel_API_Reference_-_NETWORKING DOC_KERNEL=KERNEL DOC_LAYER=NET_BASE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=NET_BASE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src'
+for DIR in libc ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src/libc'
+Tue Apr 13 14:34:33 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src/libc'
+Tue Apr 13 14:34:34 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src'
+Building NET_BASE docs for Application in D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_NETWORKING_api_reference_7/NET_BASE DOC_CHAPTER=Application_API_Reference_-_NETWORKING DOC_USER=USER DOC_LAYER=NET_BASE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=NET_BASE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src'
+for DIR in libc ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src/libc'
+Tue Apr 13 14:34:35 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src/libc'
+Tue Apr 13 14:34:36 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/net/net_base-1.0.6.0/src'
+Building OSTOOLS docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/OSTOOLS DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=OSTOOLS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=OSTOOLS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src'
+for DIR in tagcheck ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src/tagcheck'
+Tue Apr 13 14:34:37 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src/tagcheck'
+Tue Apr 13 14:34:37 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/src'
+Building OSTOOLS docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/OSTOOLS DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=OSTOOLS DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=OSTOOLS
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src'
+for DIR in debug ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src/debug'
+Tue Apr 13 14:34:38 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src/debug'
+Tue Apr 13 14:34:39 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/ostools-1.0.3.1/user_src'
+Building PPC_BASE docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/base/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/base/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/PPC_BASE DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=PPC_BASE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=PPC_BASE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/base/src'
+Tue Apr 13 14:34:39 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/base/src'
+Building PPC_DRV docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/drv/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/drv/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/PPC_DRV DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=PPC_DRV DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=PPC_DRV
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/drv/src'
+Tue Apr 13 14:34:40 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/drv/src'
+Building PPC_E500 docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/e500/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/e500/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/PPC_E500 DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=PPC_E500 DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=PPC_E500
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/e500/src'
+Tue Apr 13 14:34:41 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/arch/ppc-1.3.1.5/kernel/e500/src'
+Building PSL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/PSL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=PSL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=PSL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src'
+for DIR in dpaa ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src/dpaa'
+Tue Apr 13 14:34:42 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src/dpaa'
+Tue Apr 13 14:34:44 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/platform/fsl_qoriq-1.2.0.2/src'
+Building RBUFF docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/rbuff-1.0.0.5/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/rbuff-1.0.0.5/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/RBUFF DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=RBUFF DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=RBUFF
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/rbuff-1.0.0.5/src'
+Tue Apr 13 14:34:44 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/rbuff-1.0.0.5/src'
+Building RPC docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/service/rpc-1.0.0.12/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/rpc-1.0.0.12/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/RPC DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=RPC DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=RPC
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/rpc-1.0.0.12/src'
+Tue Apr 13 14:34:45 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/rpc-1.0.0.12/src'
+Building SEC_HASH docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/security/secHash-1.0.2.2/src
+cd  D:/vxWorks7/vxworks-7/pkgs/security/secHash-1.0.2.2/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_SECURITY_api_reference_7/SEC_HASH DOC_CHAPTER=Kernel_API_Reference_-_SECURITY DOC_KERNEL=KERNEL DOC_LAYER=SEC_HASH DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SEC_HASH
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/security/secHash-1.0.2.2/src'
+Tue Apr 13 14:34:46 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/security/secHash-1.0.2.2/src'
+Building SHELL docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/SHELL DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=SHELL DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SHELL
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src'
+for DIR in cmddoc demo ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src/cmddoc'
+Tue Apr 13 14:34:47 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src/cmddoc'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src/demo'
+Tue Apr 13 14:34:49 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src/demo'
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+Tue Apr 13 14:34:51 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/shell-1.1.6.1/src'
+Building SOCKET docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/SOCKET DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=SOCKET DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SOCKET
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src'
+Tue Apr 13 14:34:51 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src'
+Building SOCKET docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/SOCKET DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=SOCKET DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SOCKET
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src'
+Tue Apr 13 14:34:52 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/src'
+Building SOCKET docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/SOCKET DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=SOCKET DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SOCKET
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/user_src'
+Tue Apr 13 14:34:52 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/service/socket-1.0.5.1/user_src'
+Building STOP_MODE_DEBUG_AGENT docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/STOP_MODE_DEBUG_AGENT DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=STOP_MODE_DEBUG_AGENT DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=STOP_MODE_DEBUG_AGENT
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src'
+for DIR in arch ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch'
+for DIR in arm ia ppc simlinux simnt ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/arm'
+Tue Apr 13 14:34:54 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/arm'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/ia'
+Tue Apr 13 14:34:54 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/ia'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/ppc'
+Tue Apr 13 14:34:55 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/ppc'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/simlinux'
+Tue Apr 13 14:34:55 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/simlinux'
+make[3]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/simnt'
+Tue Apr 13 14:34:56 대한민국 표준시 2021
+make[3]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch/simnt'
+Tue Apr 13 14:34:56 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src/arch'
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+Tue Apr 13 14:34:56 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/stopmode-2.0.4.4/src'
+Building SYSTEMVIEWER docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/SYSTEMVIEWER DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=SYSTEMVIEWER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SYSTEMVIEWER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/src'
+Tue Apr 13 14:34:57 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/src'
+Building SYSTEMVIEWER docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_DEBUG_ANALYSIS_api_reference_7/SYSTEMVIEWER DOC_CHAPTER=Application_API_Reference_-_DEBUG_ANALYSIS DOC_USER=USER DOC_LAYER=SYSTEMVIEWER DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SYSTEMVIEWER
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/user_src'
+Tue Apr 13 14:34:58 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/event-1.0.3.0/user_src'
+Building SYSTEMVIEWER_AGENT docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/rttools/systemviewer-1.0.0.12/src
+cd  D:/vxWorks7/vxworks-7/pkgs/rttools/systemviewer-1.0.0.12/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/SYSTEMVIEWER_AGENT DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=SYSTEMVIEWER_AGENT DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=SYSTEMVIEWER_AGENT
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/systemviewer-1.0.0.12/src'
+Tue Apr 13 14:34:58 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/rttools/systemviewer-1.0.0.12/src'
+Building UTF docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/utils/utf-1.0.0.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/utils/utf-1.0.0.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/UTF DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=UTF DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=UTF
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/utf-1.0.0.1/src'
+Tue Apr 13 14:34:59 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/utils/utf-1.0.0.1/src'
+Building VXBUS_BUSLIB docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/VXBUS_BUSLIB DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=VXBUS_BUSLIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_BUSLIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src'
+for DIR in fdt i2c iadt pci spi ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/fdt'
+Tue Apr 13 14:35:00 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/fdt'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/i2c'
+Tue Apr 13 14:35:01 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/i2c'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/iadt'
+Tue Apr 13 14:35:01 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/iadt'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/pci'
+Tue Apr 13 14:35:02 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/pci'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/spi'
+Tue Apr 13 14:35:02 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/spi'
+Tue Apr 13 14:35:03 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src'
+Building VXBUS_BUSLIB docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/VXBUS_BUSLIB DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=VXBUS_BUSLIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_BUSLIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src'
+for DIR in fdt i2c iadt pci spi ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/fdt'
+Tue Apr 13 14:35:03 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/fdt'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/i2c'
+Tue Apr 13 14:35:03 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/i2c'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/iadt'
+Tue Apr 13 14:35:04 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/iadt'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/pci'
+Tue Apr 13 14:35:04 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/pci'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/spi'
+Tue Apr 13 14:35:04 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src/spi'
+Tue Apr 13 14:35:05 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src'
+Building VXBUS_BUSLIB docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/VXBUS_BUSLIB DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=VXBUS_BUSLIB DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_BUSLIB
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src'
+Tue Apr 13 14:35:05 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src'
+Building VXBUS_CORE docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/VXBUS_CORE DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=VXBUS_CORE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_CORE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src'
+for DIR in util ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src/util'
+Tue Apr 13 14:35:06 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src/util'
+Tue Apr 13 14:35:07 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src'
+Building VXBUS_CORE docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/VXBUS_CORE DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=VXBUS_CORE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_CORE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src'
+for DIR in util ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src/util'
+Tue Apr 13 14:35:08 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src/util'
+Tue Apr 13 14:35:08 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/src'
+Building VXBUS_CORE docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/VXBUS_CORE DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=VXBUS_CORE DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_CORE
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/user_src'
+Tue Apr 13 14:35:08 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/core-1.0.8.4/user_src'
+Building VXBUS_DRV docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/VXBUS_DRV DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=VXBUS_DRV DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_DRV
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src'
+for DIR in busCtlr dma gpio i2c intCtlr mailbox resource sensor sio spi timer ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/busCtlr'
+Tue Apr 13 14:35:09 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/busCtlr'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/dma'
+Tue Apr 13 14:35:10 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/dma'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/gpio'
+Tue Apr 13 14:35:11 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/gpio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/i2c'
+Tue Apr 13 14:35:11 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/i2c'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/intCtlr'
+Tue Apr 13 14:35:12 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/intCtlr'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/mailbox'
+Tue Apr 13 14:35:13 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/mailbox'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/resource'
+Tue Apr 13 14:35:13 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/resource'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/sensor'
+Tue Apr 13 14:35:14 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/sensor'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/sio'
+Tue Apr 13 14:35:15 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/sio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/spi'
+Tue Apr 13 14:35:15 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/spi'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/timer'
+Tue Apr 13 14:35:16 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src/timer'
+Tue Apr 13 14:35:16 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/drv-1.2.7.1/src'
+Building VXBUS_SUBSYSTEM docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_COREOS_api_reference_7/VXBUS_SUBSYSTEM DOC_CHAPTER=Kernel_API_Reference_-_COREOS DOC_KERNEL=KERNEL DOC_LAYER=VXBUS_SUBSYSTEM DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_SUBSYSTEM
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src'
+for DIR in clk dma flash gpio int pinmux timer ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/clk'
+Tue Apr 13 14:35:17 대한민국 표준시 2021
+WARNING: errors in non-published routines
+WARNING: errors in non-published routines
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/clk'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/dma'
+Tue Apr 13 14:35:18 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/dma'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/flash'
+Tue Apr 13 14:35:18 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/flash'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/gpio'
+Tue Apr 13 14:35:19 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/gpio'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/int'
+Tue Apr 13 14:35:19 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/int'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/pinmux'
+Tue Apr 13 14:35:20 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/pinmux'
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/timer'
+Tue Apr 13 14:35:20 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/timer'
+Tue Apr 13 14:35:21 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src'
+Building VXBUS_SUBSYSTEM docs for Application in D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=user DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_application_COREOS_api_reference_7/VXBUS_SUBSYSTEM DOC_CHAPTER=Application_API_Reference_-_COREOS DOC_USER=USER DOC_LAYER=VXBUS_SUBSYSTEM DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXBUS_SUBSYSTEM
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src'
+for DIR in int ; \
+do ( cd $DIR; D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 man ) ; \
+done
+make[2]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src/int'
+Tue Apr 13 14:35:22 대한민국 표준시 2021
+make[2]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src/int'
+Tue Apr 13 14:35:22 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src'
+Building VXDBG docs for Kernel in D:/vxWorks7/vxworks-7/pkgs/os/debug/vxdbg-1.0.7.1/src
+cd  D:/vxWorks7/vxworks-7/pkgs/os/debug/vxdbg-1.0.7.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make man  VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild TOOL=diab CPU=PPCE6500 TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5  DOC_BOOK=VSourceBuild _KL_DOCS=1 SPACE=kernel DOC_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/docs/com.windriver.ide.doc.vxworks_apis_7_VSourceBuild/vxworks_kernel_DEBUG_ANALYSIS_api_reference_7/VXDBG DOC_CHAPTER=Kernel_API_Reference_-_DEBUG_ANALYSIS DOC_KERNEL=KERNEL DOC_LAYER=VXDBG DOC_TYPE=apigen DOXY_DIR=D:/vxWorks7/vxworks-7/docs/doxygen_api_docs VSBL_NAME=VXDBG
+make[1]: Entering directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/vxdbg-1.0.7.1/src'
+Tue Apr 13 14:35:22 대한민국 표준시 2021
+make[1]: Leaving directory 'D:/vxWorks7/vxworks-7/pkgs/os/debug/vxdbg-1.0.7.1/src'
+htmllink command D:/vxWorks7/vxworks-7/host/x86-win32/bin/htmlLink -p 7 -R com.windriver.ide.doc.vxworks_apis_7_VSourceBuild
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/htmlLink -p 7 -R com.windriver.ide.doc.vxworks_apis_7_VSourceBuild
+htmlbook command D:/vxWorks7/vxworks-7/host/x86-win32/bin/htmlBook -p 7 com.windriver.ide.doc.vxworks_apis_7_VSourceBuild
+D:/vxWorks7/vxworks-7/host/x86-win32/bin/htmlBook -p 7 com.windriver.ide.doc.vxworks_apis_7_VSourceBuild
+Makefile:867: recipe for target 'target_htmlBook_109' failed
+couldn't open "./vxworks_application_DEBUG_ANALYSIS_api_reference_7/Application_API_Reference_-_DEBUG_ANALYSIS.htm": no such file or directory
+    while executing
+"open $inFile w"
+    (procedure "htmlIndexCreate" line 3)
+    invoked from within
+"htmlIndexCreate $chapterObjList $chapterFileName $bspDir"
+    (procedure "htmlBook" line 261)
+    invoked from within
+"htmlBook $htmlBookNavbar $htmlBookUpdate $htmlBookDirList $htmlBookDirSkipList $htmlBookProdType"
+    (file "D:\vxWorks7\vxworks-7\build\misc\docBuild\doctools\htmlBook.tcl" line 1308)
+make: *** [target_htmlBook_109] Error 1

@@ -1,0 +1,58 @@
+##############################################################################
+# syscallXPApi.def - Experimental VxWorks System Call API Definition File
+#
+# Copyright 2004 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,10aug04,yvp  Removed fork, vfork and exec.
+# 01b,11may04,job  Removed tickGet, tick64Get & sysClkRateGet definitions
+# 01a,19mar04,yvp  Written.
+#
+#  DESCRIPTION:
+#  This file defines system call function API for experimental VxWorks system
+#  calls. It complements syscallApi.def in that it allows developers to 
+#  experiment with new system calls before commiting them into syscallNum.def
+#  and syscallApi.def. Therefore any required system calls defined in this 
+#  file should finally be moved into the official system call definition files
+#  syscallNum.def and syscallApi.def before product release. 
+#
+#  IMPORTANT: THIS FILE WILL NOT BE SHIPPED AS PART OF THE PRODUCT. IT IS 
+#             INTENDED FOR DEVELOPERS TO PROTOTYPE NEW SYSTEM CALLS ONLY.
+#
+#  FORMAT:
+# 
+#  The format is identical to that used by syscallApi.def.
+#  A system call function API definition line has the format:
+#  
+#	 <name> <#args> [ <argument list> ] [ <configMacro(s)> ]
+#
+#  The name is the name of the system call. It must be the same as the name
+#  mentioned in syscallNum.def.
+#
+#  <#args> is the number of arguments taken by the system call. For functions
+#  taking 64-bit arguments on a 32-bit system, <#args> must be increased so
+#  that <#args> reflects the total number of native-words occupied by the 
+#  entire argument list. <#args> must not exceed 8.
+#
+#  <argument list> optionally defines the parameter list for this system call
+#  for the purpose of automatical nameScArgs structure. The argument list is
+#  enclosed in []'s, and individual arguments are separated by semicolons.
+#
+#  <configMacro(S)> is an optional list of macros, at least one of which must 
+#  be defined, in order for this system call to be included into the system.
+#
+#  For example, the read system call number has the signature
+#	read(int fd, void *buf, int len)
+#
+#  read 3 [ int fd; void *buf; int len; ] WIND_IO
+#
+#  Given the definition above, the read system call will be included into
+#  the system only if WIND_IO is #defined in the configuration.
+#  
+########################################################################
+
+# exec          6				EXPERIMENTAL
+# fork          0				EXPERIMENTAL
+# vfork         0				EXPERIMENTAL
+

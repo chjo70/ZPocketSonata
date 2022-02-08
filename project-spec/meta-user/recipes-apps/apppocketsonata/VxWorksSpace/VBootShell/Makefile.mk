@@ -2,7 +2,7 @@
 #
 
 
-# GENERATED: Mon May 24 12:14:14 +0900 2021
+# GENERATED: Sun Jan 23 15:48:53 +0900 2022
 # DO NOT EDIT - file is regenerated whenever the project changes
 
 
@@ -14,15 +14,15 @@ else
 PRJ_DIR        = .
 endif
 PRJ_FILE       = VBootShell.wpj
-PRJ_FULL_PATH  = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell
+PRJ_FULL_PATH  = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell
 PRJ_TYPE       = vxWorks
 PRJ_OBJS       = usrAppInit.o usrRtpAppInit.o prjConfig.o linkSyms.o BootShellMain.o asp.o balloc.o base64.o cgi.o default.o ejlex.o ejparse.o emfdb.o form.o h.o handler.o main.o md5c.o mime.o misc.o mocana_ssl.o page.o ringq.o rom.o security.o sock.o sockGen.o strdup.o strncasecmp.o sym.o uemf.o um.o umui.o url.o value.o webrom.o webs.o websda.o websuemf.o BootShell.o ManSbc.o FileTar.o
 USER_OBJS      = 
 PRJ_MAKEFILE   = $(PRJ_DIR)/Makefile.mk
 BOOT_OBJS      =  $(BOOT_EXTRA)
 BUILD_SPEC     = default
-BSP_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/hmt_t2080vpx3u_1_0_0_0
-VSB_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BSP_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/hmt_t2080vpx3u_1_0_0_0
+VSB_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 VXBUILD        = SMP
 OPT            = -inet6
 
@@ -173,6 +173,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_CONDVAR_SHOW \
 	INCLUDE_COPROCESSOR \
 	INCLUDE_COPROCESSOR_SHOW \
+	INCLUDE_CORE_NFS_CLIENT \
 	INCLUDE_CPC \
 	INCLUDE_CPLUS \
 	INCLUDE_CPLUS_DEMANGLER \
@@ -233,6 +234,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_GENERICPHY \
 	INCLUDE_GENERIC_MMD_PHY \
 	INCLUDE_GETADDRINFO_SYSCTL \
+	INCLUDE_GETOPT \
 	INCLUDE_GETSERVBYNAME \
 	INCLUDE_GETSERVBYPORT \
 	INCLUDE_GNU_INTRINSICS \
@@ -257,6 +259,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_IO_SYSTEM \
 	INCLUDE_IPATTACH \
 	INCLUDE_IPCOM \
+	INCLUDE_IPCOM_SHELL_CMD \
 	INCLUDE_IPCOM_USE_ETHERNET \
 	INCLUDE_IPCOM_USE_INET \
 	INCLUDE_IPCOM_USE_INET6 \
@@ -273,6 +276,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_IPNET_USE_ROUTESOCK \
 	INCLUDE_IPNET_USE_SOCK_COMPAT \
 	INCLUDE_IPNET_USE_VLAN \
+	INCLUDE_IPPING_CMD \
 	INCLUDE_IPRADVD \
 	INCLUDE_IPTCP \
 	INCLUDE_IPV4 \
@@ -283,6 +287,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_IPWRAP_GETSERVBYPORT \
 	INCLUDE_IPWRAP_INETLIB \
 	INCLUDE_IPWRAP_IPPROTO \
+	INCLUDE_IPWRAP_PING \
 	INCLUDE_ISR_DEFER \
 	INCLUDE_ISR_HANDLER_INIT \
 	INCLUDE_ISR_OBJECTS \
@@ -339,6 +344,11 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_NET_HOST_SETUP \
 	INCLUDE_NET_REM_IO \
 	INCLUDE_NET_SYSCTL \
+	INCLUDE_NFS2_CLIENT \
+	INCLUDE_NFS3_CLIENT \
+	INCLUDE_NFS_CLIENT_ALL \
+	INCLUDE_NFS_DEBUG \
+	INCLUDE_NFS_MOUNT_ALL \
 	INCLUDE_NVRAM_NULL \
 	INCLUDE_OBJECT_SHOW \
 	INCLUDE_OBJ_INFO \
@@ -355,6 +365,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_PG_POOL_PHYS_LIB \
 	INCLUDE_PG_POOL_SHOW \
 	INCLUDE_PG_POOL_VIRT_LIB \
+	INCLUDE_PING \
 	INCLUDE_PIPES \
 	INCLUDE_PMAP_LIB \
 	INCLUDE_POOL \
@@ -386,8 +397,10 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_RNG_BUF \
 	INCLUDE_ROMFS \
 	INCLUDE_ROMFS_DRV \
+	INCLUDE_RPC \
 	INCLUDE_RTP \
 	INCLUDE_RTP_APPL_INIT_BOOTLINE \
+	INCLUDE_RTP_APPL_INIT_CMD_SHELL_SCRIPT \
 	INCLUDE_RTP_APPL_USER \
 	INCLUDE_RTP_ARCH \
 	INCLUDE_RTP_DEBUG \
@@ -521,6 +534,7 @@ COMPONENTS = DRV_BUS_FDT_ROOT \
 	INCLUDE_UNLOADER_SHELL_CMD \
 	INCLUDE_USER_APPL \
 	INCLUDE_USER_RESERVED_MEMORY \
+	INCLUDE_USE_NATIVE_SHELL \
 	INCLUDE_VM_INVTBL \
 	INCLUDE_VM_RTP \
 	INCLUDE_VM_SHOW \
@@ -574,7 +588,8 @@ include $(WIND_KRNL_MK)/defs.project.mk
 ifeq ($(BUILD_SPEC),default)
 CFLAGS_OPTIONS_ALL = -std=c99 -DLIGNEX1 -DUEMF -DWEBS -DDIGEST_ACCESS_SUPPORT -DUSER_MANAGEMENT_SUPPORT1
 EXTRA_MODULES    = $(SUB_TARGETS)
-POST_BUILD_RULE  = cp "$@" d:/tftpboot/.
+POST_BUILD_RULE  = echo "$(WIND_BASE)/host/x86-win32/bin/mkimage -O vxworks -T kernel -C none -n vxworks -A ppc -a 01000000 -e 01000000 -d vxWorks.bin d:/tftpboot/uVxWorks"
+POST_HEX_BUILD_RULE = ls
 endif
 
 # override make definitions only below this line

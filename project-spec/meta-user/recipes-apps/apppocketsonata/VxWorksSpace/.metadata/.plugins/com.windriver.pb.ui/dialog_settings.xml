@@ -2,7 +2,7 @@
 <section name="Workbench">
 	<item value="vxworks-7" key="WROpenShellAction.platformName"/>
 	<section name="WRProjectWizard">
-		<item value="ILP32 32-bit libraries" key="SourceBuildProjectSetupPage.SELECTED_DM"/>
+		<item value="LP64 64-bit libraries" key="SourceBuildProjectSetupPage.SELECTED_DM"/>
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_HOST"/>
 		<item value="PPCE6500" key="SourceBuildProjectSetupPage.SELECTED_ACTIVECPU"/>
 		<item value="vxworks-7" key="WRGenericProjectWizardBuildTypePage.STORE_SELECTED_PLATFORM"/>
@@ -13,9 +13,9 @@
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_USER"/>
 		<item value="a source build project" key="VIPSetupPage.SELECTED_TYPE"/>
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_PASSWORD"/>
-		<item value="VSourceBuild" key="VIPSetupPage.SELECTED_VSB"/>
+		<item value="VSourceBuild64" key="VIPSetupPage.SELECTED_VSB"/>
 		<item value="false" key="BSPVTSOptionsDialog.BSPVTS_USE_BARCODE"/>
-		<item value="gnu" key="VIPSetupPage.SELECTED_TC"/>
+		<item value="diab" key="VIPSetupPage.SELECTED_TC"/>
 		<item value="false" key="BSPVTSOptionsDialog.BSPVTS_ENABLED"/>
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_TIMEOUT"/>
 		<item value="Downloadable Kernel Module" key="WRGenericProjectWizardBuildTypePage.STORE_SELECTED_BUILD_TYPE"/>
@@ -23,11 +23,11 @@
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_HOSTIP"/>
 		<item value="a source build project" key="ApplicationProjectSetupPage.SELECTED_TYPE"/>
 		<list key="WRWizardNewProjectCreationPage.STORE_PROJECT_LOCATION">
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\Hello"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VSIGA64"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell64"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VSourceBuild64"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VSIGA"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\Test3"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\Test2"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\Test"/>
 		</list>
 	</section>
 </section>

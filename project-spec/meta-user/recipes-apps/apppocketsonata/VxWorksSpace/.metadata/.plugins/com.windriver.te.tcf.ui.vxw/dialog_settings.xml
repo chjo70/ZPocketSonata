@@ -4,9 +4,11 @@
 		<section name="ConfigurationPanelControl">
 			<section name="vxworks:real">
 				<list key="Target_Address">
+					<item value="192.168.10.50"/>
 					<item value="192.168.10.50:1534"/>
 				</list>
 				<list key="Kernel_Symbol_File">
+					<item value="VBootShell\default\vxWorks"/>
 					<item value="VSIGA\VSourceBuild_PPCE6500gnu_SMP\VSIGA\Debug\VSIGA.out"/>
 					<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell\default\vxWorks"/>
 				</list>

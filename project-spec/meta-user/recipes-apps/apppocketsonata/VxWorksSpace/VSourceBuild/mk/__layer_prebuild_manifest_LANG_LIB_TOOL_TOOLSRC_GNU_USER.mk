@@ -1,0 +1,1 @@
+__FILES_COPIED_LANG_LIB_TOOL_TOOLSRC_GNU_USER = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/tool/gnu/toolMacros.h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/tool/gnu/limits.h

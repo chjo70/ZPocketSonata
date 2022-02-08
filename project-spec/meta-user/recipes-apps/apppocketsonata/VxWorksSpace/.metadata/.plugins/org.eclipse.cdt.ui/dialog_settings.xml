@@ -15,7 +15,7 @@
 		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
 		<item value="728" key="DIALOG_HEIGHT"/>
 		<item value="733" key="DIALOG_X_ORIGIN"/>
-		<item value="436" key="DIALOG_Y_ORIGIN"/>
+		<item value="305" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="org.eclipse.cdt.internal.ui.text.QuickOutline">
 		<item value="true" key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_USE_PERSISTED_SIZE"/>
@@ -48,6 +48,21 @@
 		<item value="false" key="caseSensitive"/>
 		<item value="227191" key="searchFlags"/>
 		<list key="previousPatterns">
+			<item value="DeletePointers"/>
+			<item value="std::listT*i_listContainer"/>
+			<item value="ini_hassection"/>
+			<item value="_Vx_VIRT_ADDR"/>
+			<item value="UINT32"/>
+			<item value="_RType"/>
+			<item value="int8_t"/>
+			<item value="tftpboot"/>
+			<item value="__LP64__"/>
+			<item value="size_t"/>
+			<item value="S_loadLib_ABI_MISMATCH"/>
+			<item value="leloadingError"/>
+			<item value="usrBootLineCrack"/>
+			<item value="symFindByName"/>
+			<item value="LoadBootParameter"/>
 			<item value="USER_APPL_INIT"/>
 			<item value="format"/>
 		</list>

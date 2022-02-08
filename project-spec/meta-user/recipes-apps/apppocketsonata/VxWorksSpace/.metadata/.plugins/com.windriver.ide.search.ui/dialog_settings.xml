@@ -12,21 +12,22 @@
 		<list key="replacement-string.combo">
 		</list>
 		<list key="search-string.combo">
-			<item value="CompTOAMeanDiff"/>
-			<item value="__INCmathh"/>
-			<item value="tr1"/>
-			<item value="dosFsVolFormat"/>
-			<item value="TICK_COUNT"/>
-			<item value="SetTimeBySNMP"/>
-			<item value="ramdisk_address"/>
-			<item value="USER_RESERVED_MEM"/>
-			<item value="MIB2IF_LONG_COUNTERS"/>
-			<item value="Getche"/>
-			<item value="ROOT_DIR"/>
-			<item value="WEBS_HTTP_PORT"/>
+			<item value="Download"/>
+			<item value="Starting of the Collecting Signal"/>
+			<item value="_SignalType"/>
+			<item value="GetPlatformCode"/>
+			<item value="_PlatformCodes"/>
+			<item value="_FunctionCodes"/>
+			<item value="pragma"/>
+			<item value="&lt;stdint.h&gt;"/>
+			<item value="std::list&lt;T*&gt; &amp;i_listContainer"/>
+			<item value="_TYPE_size_t"/>
+			<item value="VIRT_ADDR&#x09;virtualAddr;"/>
+			<item value="ini_hassection"/>
 		</list>
 		<list key="scope-history">
 			<item value="Workspace"/>
+			<item value="Project VBootShell64"/>
 			<item value="Project VSourceBuild"/>
 			<item value="Project VBootShell"/>
 		</list>
@@ -34,6 +35,13 @@
 		</list>
 		<section name="search-scope">
 			<item value="false" key="includeExternalIndex"/>
+		</section>
+		<section name="scope-history-Project VBootShell64">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VBootShell64"/>
+			</list>
 		</section>
 		<section name="scope-history-Project VSourceBuild">
 			<item value="" key="customName"/>

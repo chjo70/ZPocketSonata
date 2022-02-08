@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="WROptionalMessageDialog">
+		<item value="0" key="VxWorksUIPlugin.CreateDocAfterBuildDialog.result"/>
 		<item value="0" key="WRBuild.InfoParallelBuild.result"/>
 		<item value="2" key="SWITCH_PERSPECTIVE_FOR_OpenSystemBrowser.result"/>
 		<item value="2" key="com.windriver.ftp.changeServer.result"/>

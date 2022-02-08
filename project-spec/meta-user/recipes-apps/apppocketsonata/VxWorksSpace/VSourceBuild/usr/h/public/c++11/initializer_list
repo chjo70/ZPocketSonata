@@ -1,0 +1,103 @@
+// initializer_list standard header
+#ifndef _INITIALIZER_LIST_
+#define _INITIALIZER_LIST_
+#include <cstddef>
+
+_X_STD_BEGIN
+		// TEMPLATE CLASS initializer_list
+template<class _Elem>
+	class initializer_list
+	{	// list of pointers to elements
+public:
+	typedef _Elem value_type;
+	typedef const _Elem& reference;
+	typedef const _Elem& const_reference;
+	typedef size_t size_type;
+
+	typedef const _Elem* iterator;
+	typedef const _Elem* const_iterator;
+
+	_CONST_FUN initializer_list() _NOEXCEPT
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+		: _First(0), _Last(0)
+#else
+                : _First(0), _Count(0)
+#endif
+		{	// empty list
+		}
+
+	_CONST_FUN initializer_list(const _Elem *_First_arg,
+		const _Elem *_Last_arg) _NOEXCEPT
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+		: _First(_First_arg), _Last(_Last_arg)
+#else
+                : _First(_First_arg), _Count(_Last_arg - _First_arg)
+#endif
+		{	// construct with pointers
+		}
+
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+	initializer_list(const _Elem *_First_arg, size_t _Count)
+		: _First(_First_arg), _Last(_First_arg + _Count)
+#else
+        initializer_list(const _Elem *_First_arg, size_t _Count_arg)
+                : _First(_First_arg), _Count(_Count_arg)
+#endif
+		{	// construct with pointers
+		}
+
+	_CONST_FUN const _Elem *begin() const _NOEXCEPT
+		{	// get beginning of list
+		return (_First);
+		}
+
+	_CONST_FUN const _Elem *end() const _NOEXCEPT
+		{	// get end of list
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+		return (_Last);
+#else
+                return (_First + _Count);
+#endif
+		}
+
+	_CONST_FUN size_t size() const _NOEXCEPT
+		{	// get length of list
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+		return ((size_t)(_Last - _First));
+#else
+                return _Count;
+#endif
+		}
+
+private:
+	const _Elem *_First;
+#if defined(_NO_WINDRIVER_MODIFICATIONS)
+	const _Elem *_Last;
+#else
+        size_type _Count;
+#endif
+	};
+_X_STD_END
+_STD_BEGIN
+		// TEMPLATE FUNCTION begin
+template<class _Elem> inline
+	_CONST_FUN const _Elem *begin(
+		_XSTD initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get beginning of sequence
+	return (_Ilist.begin());
+	}
+
+		// TEMPLATE FUNCTION end
+template<class _Elem> inline
+	_CONST_FUN const _Elem *end(
+		_XSTD initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get end of sequence
+	return (_Ilist.end());
+	}
+_STD_END
+#endif /* _INITIALIZER_LIST_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:1278 */

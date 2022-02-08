@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.tcf.te.tcf.launch.type.attach">
+<booleanAttribute key="org.eclipse.tcf.debug.DisconnectOnCtxExit" value="false"/>
+<stringAttribute key="org.eclipse.tcf.debug.PathMap" value="Destination=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/default/vxWorks|Source=vxWorks||"/>
+<stringAttribute key="org.eclipse.tcf.debug.PathMapV1" value="Destination=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/default/vxWorks|Source=vxWorks||"/>
+<stringAttribute key="org.eclipse.tcf.te.launch.UUID" value="43c75023-a8d0-452e-a884-477dc5a371c6"/>
+<stringAttribute key="org.eclipse.tcf.te.launch.lastLaunched" value="1638511080372"/>
+<stringAttribute key="org.eclipse.tcf.te.launch.launch_contexts" value="&lt;contexts&gt;&#10;&#9;&lt;context type=&quot;org.eclipse.tcf.protocol.IPeer&quot;&gt;&#10;&#9;&#9;{&#10;  &quot;Host&quot;: &quot;192.168.10.50&quot;,&#10;  &quot;ID&quot;: &quot;07d3e9ee-444f-4e6c-8df1-58eb52e8d0cc&quot;,&#10;  &quot;KernelImage&quot;: &quot;D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell/default/vxWorks&quot;,&#10;  &quot;Mode&quot;: &quot;run&quot;,&#10;  &quot;Name&quot;: &quot;VxWorks&quot;,&#10;  &quot;OfflineServices&quot;: &quot;RunControl,PathMap,MemoryMap,WR_HostFsV1,WR_Module,Processes,ProcessesV1,SysMonitor,FileSystem&quot;,&#10;  &quot;Port&quot;: &quot;1534&quot;,&#10;  &quot;SubType&quot;: &quot;real&quot;,&#10;  &quot;TempDir&quot;: &quot;C:/Users/ELS/AppData/Local/Temp/&quot;,&#10;  &quot;TransportName&quot;: &quot;TCP&quot;,&#10;  &quot;Type&quot;: &quot;vxworks&quot;,&#10;  &quot;Version&quot;: &quot;1.0.0&quot;,&#10;  &quot;autoConnect&quot;: &quot;true&quot;&#10;}&#10;&#9;&lt;/context&gt;&#10;&lt;/contexts&gt;&#10;"/>
+</launchConfiguration>

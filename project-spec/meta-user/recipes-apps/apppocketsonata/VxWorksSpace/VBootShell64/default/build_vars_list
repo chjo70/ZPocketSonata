@@ -1,0 +1,4 @@
+set WIND_BASE D:/vxWorks7/vxworks-7
+set VSB_DIR D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64
+set BSP_DIR D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64/hmt_t2080vpx3u_1_0_0_0
+set PRJ_FULL_PATH D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64

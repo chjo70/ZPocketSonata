@@ -1,0 +1,1038 @@
+
+libgnucplus.a:
+
+_x_gnu_unwind-c.o:
+00000000 t base_of_encoded_value
+000000a4 t read_encoded_value_with_base
+         U _Unwind_GetIP
+         U _Unwind_GetRegionStart
+00000268 T __gcc_personality_v0
+         U abort
+         U _Unwind_SetIP
+00000000 D ___x_gnu_unwind_c_o
+         U _Unwind_GetTextRelBase
+         U _Unwind_GetLanguageSpecificData
+         U _Unwind_SetGR
+         U _Unwind_GetDataRelBase
+
+_x_gnu_unwind-dw2.o:
+00000000 t read_sleb128
+0000004c t execute_cfa_program
+00000b14 t init_dwarf_reg_size_table
+00000cf4 t uw_frame_state_for
+00001420 t execute_stack_op
+00001db4 t uw_update_context_1
+000021a4 t uw_init_context_1
+00002478 t uw_update_context
+00002554 t _Unwind_RaiseException_Phase2
+00002644 t _Unwind_ForcedUnwind_Phase2
+00002788 t uw_install_context_1
+00002c44 t _Unwind_DebugHook
+00000000 b dwarf_reg_size_table
+00000094 b once_regsizes$6101
+         U _Unwind_Find_FDE
+00002ab0 T _Unwind_GetIPInfo
+00002aa8 T _Unwind_GetIP
+0000326c T _Unwind_Resume_or_Rethrow
+00000000 D ___x_gnu_unwind_dw2_o
+00002ad4 T _Unwind_GetRegionStart
+00003468 T _Unwind_Backtrace
+00002a18 T _Unwind_GetCFA
+         U memcpy
+00002b30 T __frame_state_for
+         U __gthread_once
+         U abort
+00003090 T _Unwind_Resume
+0000344c T _Unwind_DeleteException
+00002b28 T _Unwind_GetEhEncoding
+00002c48 T _Unwind_RaiseException
+00002ac4 T _Unwind_SetIP
+         U memset
+00002b20 T _Unwind_GetTextRelBase
+00002adc T _Unwind_FindEnclosingFunction
+00002acc T _Unwind_GetLanguageSpecificData
+00002eb4 T _Unwind_ForcedUnwind
+00002a20 T _Unwind_SetGR
+000029a4 T _Unwind_GetGR
+         U strlen
+00002b18 T _Unwind_GetDataRelBase
+
+_x_gnu_unwind-dw2-fde.o:
+00000000 t read_sleb128
+0000004c t frame_downheap
+0000019c t frame_heapsort
+00000270 t init_object_mutex
+0000029c t size_of_encoded_value
+00000340 t read_encoded_value_with_base
+000004cc t get_cie_encoding
+00000628 t fde_unencoded_compare
+00000694 t base_from_object$isra$4
+0000071c t fde_single_encoding_compare
+000007d4 t classify_object_over_fdes
+000009b4 t linear_search_fdes
+00000ba0 t fde_mixed_encoding_compare
+00000c88 t add_fdes
+00000e4c t search_object$isra$6
+00000000 b object_mutex
+00000004 b marker$5671
+00000008 b terminator$5777
+00000010 b once$5543
+00000014 b unseen_objects
+00000018 b seen_objects
+00001b7c T _Unwind_Find_FDE
+00001630 T __register_frame
+         U semMCreate
+         U malloc
+         U __gthread_once
+         U abort
+00001724 T __register_frame_table
+00001588 T __register_frame_info_bases
+         U semTake
+000018d0 T __deregister_frame_info
+00000000 D ___x_gnu_unwind_dw2_fde_o
+00001764 T __deregister_frame_info_bases
+00001584 T __register_frame_info_header_bases
+         U semGive
+00001690 T __register_frame_info_table_bases
+000018d4 T __deregister_frame
+         U strlen
+00001718 T __register_frame_info_table
+00001624 T __register_frame_info
+00001900 T _Unwind_Find_Index
+         U free
+
+__gcc_eh_intrinsics.o:
+00000000 d __gcc_eh_intrinsics
+00000000 T __gcc_eh_intrinsicsInit
+         U ___x_gnu_unwind_c_o
+         U ___x_gnu_unwind_dw2_o
+         U ___x_gnu_unwind_dw2_fde_o
+
+_x_gnu_array_type_info.o:
+00000000 D ___x_gnu_array_type_info_o
+
+_x_gnu_class_type_info.o:
+00000000 D ___x_gnu_class_type_info_o
+
+_x_gnu_dyncast.o:
+00000000 D ___x_gnu_dyncast_o
+00000000 T __dynamic_cast
+
+_x_gnu_eh_arm.o:
+00000000 D ___x_gnu_eh_arm_o
+
+_x_gnu_eh_call.o:
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_call_o
+00000000 T __cxa_call_terminate
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv111__terminateEPFvvE
+
+_x_gnu_eh_term_handler.o:
+00000000 D ___x_gnu_eh_term_handler_o
+         U abort
+00000000 D _ZN10__cxxabiv119__terminate_handlerE
+
+_x_gnu_eh_terminate.o:
+00000000 T _ZSt10unexpectedv
+00000000 T _ZSt14set_unexpectedPFvvE
+00000000 T _ZSt13set_terminatePFvvE
+         U abort
+00000000 T _ZSt9terminatev
+00000000 T _ZN10__cxxabiv112__unexpectedEPFvvE
+         U _ZN10__cxxabiv119__terminate_handlerE
+00000000 T _ZN10__cxxabiv111__terminateEPFvvE
+         U _ZN10__cxxabiv120__unexpected_handlerE
+00000000 D ___x_gnu_eh_terminate_o
+
+_x_gnu_eh_unex_handler.o:
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_unex_handler_o
+00000000 D _ZN10__cxxabiv120__unexpected_handlerE
+
+_x_gnu_enum_type_info.o:
+00000000 D ___x_gnu_enum_type_info_o
+
+_x_gnu_function_type_info.o:
+00000000 D ___x_gnu_function_type_info_o
+
+_x_gnu_fundamental_type_info.o:
+00000000 D ___x_gnu_fundamental_type_info_o
+
+_x_gnu_pbase_type_info.o:
+00000000 D ___x_gnu_pbase_type_info_o
+
+_x_gnu_pmem_type_info.o:
+00000000 D ___x_gnu_pmem_type_info_o
+
+_x_gnu_pointer_type_info.o:
+00000000 D ___x_gnu_pointer_type_info_o
+
+_x_gnu_si_class_type_info.o:
+00000000 D ___x_gnu_si_class_type_info_o
+
+_x_gnu_tinfo.o:
+00000000 T _ZNKSt9type_info15__is_function_pEv
+00000000 D ___x_gnu_tinfo_o
+00000000 T _ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
+00000000 T _ZNKSt9type_info14__is_pointer_pEv
+00000000 T _ZNKSt9type_info10__do_catchEPKS_PPvj
+
+_x_gnu_vmi_class_type_info.o:
+00000000 D ___x_gnu_vmi_class_type_info_o
+
+_x_gnu_vterminate.o:
+00000000 D ___x_gnu_vterminate_o
+
+_x_gnu_delaop.o:
+         U _ZdlPv
+00000000 T _ZdaPv
+00000000 D ___x_gnu_delaop_o
+
+_x_gnu_delaop2.o:
+00000000 D ___x_gnu_delaop2_o
+00000000 T _ZdaPvRKSt9nothrow_t
+         U _ZdlPvRKSt9nothrow_t
+
+_x_gnu_delaop3.o:
+00000000 D ___x_gnu_delaop3_o
+00000000 T _ZdaPvS_
+
+_x_gnu_delop.o:
+00000000 T _ZdlPv
+00000000 D ___x_gnu_delop_o
+         U free
+
+_x_gnu_delop2.o:
+         U _ZdlPv
+00000000 D ___x_gnu_delop2_o
+00000000 T _ZdlPvRKSt9nothrow_t
+
+_x_gnu_delop3.o:
+00000000 D ___x_gnu_delop3_o
+00000000 T _ZdlPvS_
+
+_x_gnu_eh_alloc.o:
+00000000 b _ZL15dependents_used
+00000000 b _ZL17dependents_buffer
+00000000 b _ZN12_GLOBAL__N_115emergency_mutexE
+00000000 b _ZL14emergency_used
+00000000 b _ZL16emergency_buffer
+00000000 T __cxa_free_exception
+00000000 T __cxa_free_dependent_exception
+00000000 W _ZN9__gnu_cxx7__mutexD1Ev
+         U semMCreate
+00000000 T __cxa_allocate_dependent_exception
+         U malloc
+         U __dso_handle
+00000000 T _GLOBAL__I_65535_0___cxa_allocate_exception
+         U abort
+         U _ZSt9terminatev
+         U semTake
+         U __cxa_atexit
+         U semGive
+         U memset
+00000000 D ___x_gnu_eh_alloc_o
+00000000 T __cxa_allocate_exception
+         U __cxa_get_globals
+         U free
+
+_x_gnu_eh_aux_runtime.o:
+         U abort
+00000000 T __cxa_bad_cast
+00000000 T __cxa_bad_typeid
+00000000 D ___x_gnu_eh_aux_runtime_o
+
+_x_gnu_eh_catch.o:
+00000000 T _ZSt18uncaught_exceptionv
+00000000 T __cxa_get_exception_ptr
+00000000 T __cxa_end_catch
+         U _ZSt9terminatev
+         U _Unwind_DeleteException
+         U __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_catch_o
+00000000 T __cxa_begin_catch
+         U __cxa_get_globals
+
+_x_gnu_eh_globals.o:
+00000000 t _ZL15eh_globals_dtorPv
+00000000 b _ZL4init
+00000000 b _ZL10eh_globals
+         U __gthread_key_create
+         U malloc
+         U __gthread_setspecific
+00000000 W _ZN17__eh_globals_initD1Ev
+         U __dso_handle
+         U _ZSt9terminatev
+         U _Unwind_DeleteException
+00000000 T _GLOBAL__I_65535_0___cxa_get_globals_fast
+         U __cxa_atexit
+00000000 T __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_globals_o
+         U __gthread_key_delete
+         U __gthread_getspecific
+00000000 T __cxa_get_globals
+         U free
+
+_x_gnu_eh_personality.o:
+00000000 t _ZL12read_sleb128PKhPl
+00000000 t _ZL16get_adjusted_ptrPKSt9type_infoS1_PPv
+00000000 t _ZL28read_encoded_value_with_basehjPKhPj
+00000000 t _ZL15get_ttype_entryP16lsda_header_infom
+00000000 t _ZL21base_of_encoded_valuehP15_Unwind_Context
+00000000 t _ZL17parse_lsda_headerP15_Unwind_ContextPKhP16lsda_header_info
+         U _ZSt10unexpectedv
+         U _Unwind_GetIPInfo
+         U _Unwind_GetRegionStart
+00000000 T __cxa_call_unexpected
+         U abort
+         U _ZSt9terminatev
+00000000 T __gxx_personality_v0
+         U _Unwind_SetIP
+00000000 D ___x_gnu_eh_personality_o
+         U _Unwind_GetTextRelBase
+         U __cxa_call_terminate
+         U _Unwind_GetLanguageSpecificData
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv112__unexpectedEPFvvE
+         U _Unwind_SetGR
+         U _Unwind_GetDataRelBase
+
+_x_gnu_eh_throw.o:
+00000000 t _ZL23__gxx_exception_cleanup19_Unwind_Reason_CodeP17_Unwind_Exception
+         U __cxa_free_exception
+00000000 T __cxa_rethrow
+         U _Unwind_Resume_or_Rethrow
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_throw_o
+         U _Unwind_RaiseException
+00000000 T __cxa_throw
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv119__terminate_handlerE
+         U _ZN10__cxxabiv111__terminateEPFvvE
+         U __cxa_get_globals
+         U _ZN10__cxxabiv120__unexpected_handlerE
+
+_x_gnu_eh_type.o:
+00000000 D ___x_gnu_eh_type_o
+         U __cxa_get_globals
+00000000 T __cxa_current_exception_type
+
+_x_gnu_gccex.o:
+00000000 T _ZNSt9exceptionD2Ev
+00000000 V _ZTVSt13bad_exception
+         U _ZSt14_Raise_handler
+00000010 T _ZNKSt9exception4whatEv
+         U _ZdlPv
+0000001c T _ZNSt13bad_exceptionD2Ev
+00000000 W _ZNKSt13bad_exception8_DoraiseEv
+         U _ZSt6_ThrowRKSt9exception
+00000000 V _ZTVSt9exception
+00000050 T _ZNSt9exception18_Set_raise_handlerEPFvRKS_E
+0000001c T _ZNSt13bad_exceptionD1Ev
+00000064 T _ZNKSt9exception6_RaiseEv
+00000040 T _ZNSt13bad_exceptionD0Ev
+00000000 T _ZNSt9exceptionD1Ev
+00000030 T _ZNSt9exceptionD0Ev
+0000002c T _ZNKSt9exception8_DoraiseEv
+00000000 D ___x_gnu_gccex_o
+
+_x_gnu_gcctinfo.o:
+         U _ZNKSt9type_info15__is_function_pEv
+0000002c T _ZNKSt10bad_typeid8_DoraiseEv
+         U _ZNSt9exceptionD2Ev
+0000009c T _ZNSt10bad_typeidD0Ev
+00000050 T _ZNSt8bad_castD0Ev
+00000000 V _ZTVSt9type_info
+00000040 T _ZNSt8bad_castD1Ev
+         U _ZdlPv
+00000000 T _ZNSt9type_infoD1Ev
+00000030 T _ZNSt9type_infoD0Ev
+         U _ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
+         U _ZSt6_ThrowRKSt9exception
+00000010 T _ZNKSt8bad_cast4whatEv
+00000000 T _ZNSt9type_infoD2Ev
+         U _ZNKSt9type_info14__is_pointer_pEv
+00000000 V _ZTVSt10bad_typeid
+00000000 V _ZTVSt8bad_cast
+0000001c T _ZNKSt10bad_typeid4whatEv
+00000040 T _ZNSt8bad_castD2Ev
+00000000 D ___x_gnu_gcctinfo_o
+0000008c T _ZNSt10bad_typeidD1Ev
+0000008c T _ZNSt10bad_typeidD2Ev
+00000028 T _ZNKSt8bad_cast8_DoraiseEv
+         U _ZNKSt9type_info10__do_catchEPKS_PPvj
+
+_x_gnu_guard.o:
+00000000 t _ZN12_GLOBAL__N_1L4initEv
+00000000 b _ZZN12_GLOBAL__N_116get_static_mutexEvE4once
+00000000 b _ZN12_GLOBAL__N_110fake_mutexE
+00000000 b _ZN12_GLOBAL__N_1L12static_mutexE
+         U semMCreate
+00000000 D ___x_gnu_guard_o
+         U __gthread_once
+         U abort
+         U semTake
+         U semGive
+00000000 T __cxa_guard_release
+00000000 T __cxa_guard_abort
+00000000 T __cxa_guard_acquire
+
+_x_gnu_new.o:
+00000010 T _ZNSt9bad_allocD2Ev
+         U _ZNSt9exceptionD2Ev
+00000000 B _ZSt9_New_hand
+         U _ZdlPv
+0000000c T _ZNKSt9bad_alloc8_DoraiseEv
+         U _ZSt6_ThrowRKSt9exception
+00000000 T _ZNKSt9bad_alloc4whatEv
+00000000 V _ZTVSt9bad_alloc
+         U _Locksyslock
+         U _Unlocksyslock
+00000020 T _ZNSt9bad_allocD0Ev
+0000005c T _ZSt15set_new_handlerPFvvE
+00000000 D ___x_gnu_new_o
+00000010 T _ZNSt9bad_allocD1Ev
+
+_x_gnu_newaop.o:
+00000000 T _Znaj
+00000000 D ___x_gnu_newaop_o
+         U _Znwj
+
+_x_gnu_newaop2.o:
+00000000 D ___x_gnu_newaop2_o
+         U _ZnwjRKSt9nothrow_t
+00000000 T _ZnajRKSt9nothrow_t
+
+_x_gnu_newop.o:
+         U malloc
+         U _ZSt9_New_hand
+         U _ZSt9_Nomemoryv
+00000000 D ___x_gnu_newop_o
+00000000 T _Znwj
+
+_x_gnu_newop2.o:
+         U malloc
+         U _ZSt9_New_hand
+00000000 D ___x_gnu_newop2_o
+00000000 T _ZnwjRKSt9nothrow_t
+
+_x_gnu_nomemory.o:
+00000000 b _ZGVZSt9_NomemoryvE5nomem
+00000008 b _ZZSt9_NomemoryvE5nomem
+00000000 D ___x_gnu_nomemory_o
+         U __dso_handle
+         U _ZSt6_ThrowRKSt9exception
+         U _ZTVSt9bad_alloc
+         U __cxa_atexit
+00000000 T _ZSt9_Nomemoryv
+         U __cxa_guard_release
+         U _ZNSt9bad_allocD1Ev
+         U __cxa_guard_acquire
+
+_x_gnu_nothrow.o:
+00000000 D _ZSt7nothrow
+00000000 D ___x_gnu_nothrow_o
+
+_x_gnu_pure.o:
+00000000 D ___x_gnu_pure_o
+00000000 T __cxa_deleted_virtual
+         U _ZSt9terminatev
+00000000 T __cxa_pure_virtual
+
+_x_gnu_raisehan.o:
+00000000 B _ZSt14_Raise_handler
+00000000 D ___x_gnu_raisehan_o
+
+_x_gnu_throw.o:
+00000000 T _ZSt14_Debug_messagePKcS0_
+         U fflush
+         U abort
+         U __stderr
+000000c0 T _ZSt6_ThrowRKSt9exception
+00000000 D ___x_gnu_throw_o
+         U fputs
+
+_x_gnu_vec.o:
+         U _Znaj
+00000000 T __cxa_vec_new2
+00000000 T __cxa_vec_delete2
+00000000 T __cxa_vec_cleanup
+         U abort
+00000000 T __cxa_vec_delete
+         U _ZdaPv
+00000000 T __cxa_vec_delete3
+00000000 D ___x_gnu_vec_o
+00000000 T __cxa_vec_cctor
+00000000 T __cxa_vec_new
+00000000 T __cxa_vec_new3
+00000000 T __cxa_vec_ctor
+00000000 T __cxa_vec_dtor
+
+__gplusplus_intrinsics.o:
+00000000 d __gplusplus_intrinsics
+00000000 T __gplusplus_intrinsicsInit
+         U ___x_gnu_array_type_info_o
+         U ___x_gnu_class_type_info_o
+         U ___x_gnu_dyncast_o
+         U ___x_gnu_eh_arm_o
+         U ___x_gnu_eh_call_o
+         U ___x_gnu_eh_term_handler_o
+         U ___x_gnu_eh_terminate_o
+         U ___x_gnu_eh_unex_handler_o
+         U ___x_gnu_enum_type_info_o
+         U ___x_gnu_function_type_info_o
+         U ___x_gnu_fundamental_type_info_o
+         U ___x_gnu_pbase_type_info_o
+         U ___x_gnu_pmem_type_info_o
+         U ___x_gnu_pointer_type_info_o
+         U ___x_gnu_si_class_type_info_o
+         U ___x_gnu_tinfo_o
+         U ___x_gnu_vmi_class_type_info_o
+         U ___x_gnu_vterminate_o
+         U ___x_gnu_delaop_o
+         U ___x_gnu_delaop2_o
+         U ___x_gnu_delaop3_o
+         U ___x_gnu_delop_o
+         U ___x_gnu_delop2_o
+         U ___x_gnu_delop3_o
+         U ___x_gnu_eh_alloc_o
+         U ___x_gnu_eh_aux_runtime_o
+         U ___x_gnu_eh_catch_o
+         U ___x_gnu_eh_globals_o
+         U ___x_gnu_eh_personality_o
+         U ___x_gnu_eh_throw_o
+         U ___x_gnu_eh_type_o
+         U ___x_gnu_gccex_o
+         U ___x_gnu_gcctinfo_o
+         U ___x_gnu_guard_o
+         U ___x_gnu_new_o
+         U ___x_gnu_newaop_o
+         U ___x_gnu_newaop2_o
+         U ___x_gnu_newop_o
+         U ___x_gnu_newop2_o
+         U ___x_gnu_nomemory_o
+         U ___x_gnu_nothrow_o
+         U ___x_gnu_pure_o
+         U ___x_gnu_raisehan_o
+         U ___x_gnu_throw_o
+         U ___x_gnu_vec_o
+
+libgnucplus.a:
+
+_x_gnu_unwind-c.o:
+00000000 t base_of_encoded_value
+000000a4 t read_encoded_value_with_base
+         U _Unwind_GetIP
+         U _Unwind_GetRegionStart
+00000268 T __gcc_personality_v0
+         U abort
+         U _Unwind_SetIP
+00000000 D ___x_gnu_unwind_c_o
+         U _Unwind_GetTextRelBase
+         U _Unwind_GetLanguageSpecificData
+         U _Unwind_SetGR
+         U _Unwind_GetDataRelBase
+
+_x_gnu_unwind-dw2.o:
+00000000 t read_sleb128
+0000004c t execute_cfa_program
+00000b14 t init_dwarf_reg_size_table
+00000cf4 t uw_frame_state_for
+00001420 t execute_stack_op
+00001db4 t uw_update_context_1
+000021a4 t uw_init_context_1
+00002478 t uw_update_context
+00002554 t _Unwind_RaiseException_Phase2
+00002644 t _Unwind_ForcedUnwind_Phase2
+00002788 t uw_install_context_1
+00002c44 t _Unwind_DebugHook
+00000000 b dwarf_reg_size_table
+00000094 b once_regsizes$6101
+         U _Unwind_Find_FDE
+00002ab0 T _Unwind_GetIPInfo
+00002aa8 T _Unwind_GetIP
+0000326c T _Unwind_Resume_or_Rethrow
+00000000 D ___x_gnu_unwind_dw2_o
+00002ad4 T _Unwind_GetRegionStart
+00003468 T _Unwind_Backtrace
+00002a18 T _Unwind_GetCFA
+         U memcpy
+00002b30 T __frame_state_for
+         U __gthread_once
+         U abort
+00003090 T _Unwind_Resume
+0000344c T _Unwind_DeleteException
+00002b28 T _Unwind_GetEhEncoding
+00002c48 T _Unwind_RaiseException
+00002ac4 T _Unwind_SetIP
+         U memset
+00002b20 T _Unwind_GetTextRelBase
+00002adc T _Unwind_FindEnclosingFunction
+00002acc T _Unwind_GetLanguageSpecificData
+00002eb4 T _Unwind_ForcedUnwind
+00002a20 T _Unwind_SetGR
+000029a4 T _Unwind_GetGR
+         U strlen
+00002b18 T _Unwind_GetDataRelBase
+
+_x_gnu_unwind-dw2-fde.o:
+00000000 t read_sleb128
+0000004c t frame_downheap
+0000019c t frame_heapsort
+00000270 t init_object_mutex
+0000029c t size_of_encoded_value
+00000340 t read_encoded_value_with_base
+000004cc t get_cie_encoding
+00000628 t fde_unencoded_compare
+00000694 t base_from_object$isra$4
+0000071c t fde_single_encoding_compare
+000007d4 t classify_object_over_fdes
+000009b4 t linear_search_fdes
+00000ba0 t fde_mixed_encoding_compare
+00000c88 t add_fdes
+00000e4c t search_object$isra$6
+00000000 b object_mutex
+00000004 b marker$5671
+00000008 b terminator$5777
+00000010 b once$5543
+00000014 b unseen_objects
+00000018 b seen_objects
+00001b7c T _Unwind_Find_FDE
+00001630 T __register_frame
+         U semMCreate
+         U malloc
+         U __gthread_once
+         U abort
+00001724 T __register_frame_table
+00001588 T __register_frame_info_bases
+         U semTake
+000018d0 T __deregister_frame_info
+00000000 D ___x_gnu_unwind_dw2_fde_o
+00001764 T __deregister_frame_info_bases
+00001584 T __register_frame_info_header_bases
+         U semGive
+00001690 T __register_frame_info_table_bases
+000018d4 T __deregister_frame
+         U strlen
+00001718 T __register_frame_info_table
+00001624 T __register_frame_info
+00001900 T _Unwind_Find_Index
+         U free
+
+__gcc_eh_intrinsics.o:
+00000000 d __gcc_eh_intrinsics
+00000000 T __gcc_eh_intrinsicsInit
+         U ___x_gnu_unwind_c_o
+         U ___x_gnu_unwind_dw2_o
+         U ___x_gnu_unwind_dw2_fde_o
+
+_x_gnu_array_type_info.o:
+00000000 D ___x_gnu_array_type_info_o
+
+_x_gnu_class_type_info.o:
+00000000 D ___x_gnu_class_type_info_o
+
+_x_gnu_dyncast.o:
+00000000 D ___x_gnu_dyncast_o
+00000000 T __dynamic_cast
+
+_x_gnu_eh_arm.o:
+00000000 D ___x_gnu_eh_arm_o
+
+_x_gnu_eh_call.o:
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_call_o
+00000000 T __cxa_call_terminate
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv111__terminateEPFvvE
+
+_x_gnu_eh_term_handler.o:
+00000000 D ___x_gnu_eh_term_handler_o
+         U abort
+00000000 D _ZN10__cxxabiv119__terminate_handlerE
+
+_x_gnu_eh_terminate.o:
+00000000 T _ZSt10unexpectedv
+00000000 T _ZSt14set_unexpectedPFvvE
+00000000 T _ZSt13set_terminatePFvvE
+         U abort
+00000000 T _ZSt9terminatev
+00000000 T _ZN10__cxxabiv112__unexpectedEPFvvE
+         U _ZN10__cxxabiv119__terminate_handlerE
+00000000 T _ZN10__cxxabiv111__terminateEPFvvE
+         U _ZN10__cxxabiv120__unexpected_handlerE
+00000000 D ___x_gnu_eh_terminate_o
+
+_x_gnu_eh_unex_handler.o:
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_unex_handler_o
+00000000 D _ZN10__cxxabiv120__unexpected_handlerE
+
+_x_gnu_enum_type_info.o:
+00000000 D ___x_gnu_enum_type_info_o
+
+_x_gnu_function_type_info.o:
+00000000 D ___x_gnu_function_type_info_o
+
+_x_gnu_fundamental_type_info.o:
+00000000 D ___x_gnu_fundamental_type_info_o
+
+_x_gnu_pbase_type_info.o:
+00000000 D ___x_gnu_pbase_type_info_o
+
+_x_gnu_pmem_type_info.o:
+00000000 D ___x_gnu_pmem_type_info_o
+
+_x_gnu_pointer_type_info.o:
+00000000 D ___x_gnu_pointer_type_info_o
+
+_x_gnu_si_class_type_info.o:
+00000000 D ___x_gnu_si_class_type_info_o
+
+_x_gnu_tinfo.o:
+00000000 T _ZNKSt9type_info15__is_function_pEv
+00000000 D ___x_gnu_tinfo_o
+00000000 T _ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
+00000000 T _ZNKSt9type_info14__is_pointer_pEv
+00000000 T _ZNKSt9type_info10__do_catchEPKS_PPvj
+
+_x_gnu_vmi_class_type_info.o:
+00000000 D ___x_gnu_vmi_class_type_info_o
+
+_x_gnu_vterminate.o:
+00000000 D ___x_gnu_vterminate_o
+
+_x_gnu_delaop.o:
+         U _ZdlPv
+00000000 T _ZdaPv
+00000000 D ___x_gnu_delaop_o
+
+_x_gnu_delaop2.o:
+00000000 D ___x_gnu_delaop2_o
+00000000 T _ZdaPvRKSt9nothrow_t
+         U _ZdlPvRKSt9nothrow_t
+
+_x_gnu_delaop3.o:
+00000000 D ___x_gnu_delaop3_o
+00000000 T _ZdaPvS_
+
+_x_gnu_delop.o:
+00000000 T _ZdlPv
+00000000 D ___x_gnu_delop_o
+         U free
+
+_x_gnu_delop2.o:
+         U _ZdlPv
+00000000 D ___x_gnu_delop2_o
+00000000 T _ZdlPvRKSt9nothrow_t
+
+_x_gnu_delop3.o:
+00000000 D ___x_gnu_delop3_o
+00000000 T _ZdlPvS_
+
+_x_gnu_eh_alloc.o:
+00000000 b _ZL15dependents_used
+00000000 b _ZL17dependents_buffer
+00000000 b _ZN12_GLOBAL__N_115emergency_mutexE
+00000000 b _ZL14emergency_used
+00000000 b _ZL16emergency_buffer
+00000000 T __cxa_free_exception
+00000000 T __cxa_free_dependent_exception
+00000000 W _ZN9__gnu_cxx7__mutexD1Ev
+         U semMCreate
+00000000 T __cxa_allocate_dependent_exception
+         U malloc
+         U __dso_handle
+00000000 T _GLOBAL__I_65535_0___cxa_allocate_exception
+         U abort
+         U _ZSt9terminatev
+         U semTake
+         U __cxa_atexit
+         U semGive
+         U memset
+00000000 D ___x_gnu_eh_alloc_o
+00000000 T __cxa_allocate_exception
+         U __cxa_get_globals
+         U free
+
+_x_gnu_eh_aux_runtime.o:
+         U abort
+00000000 T __cxa_bad_cast
+00000000 T __cxa_bad_typeid
+00000000 D ___x_gnu_eh_aux_runtime_o
+
+_x_gnu_eh_catch.o:
+00000000 T _ZSt18uncaught_exceptionv
+00000000 T __cxa_get_exception_ptr
+00000000 T __cxa_end_catch
+         U _ZSt9terminatev
+         U _Unwind_DeleteException
+         U __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_catch_o
+00000000 T __cxa_begin_catch
+         U __cxa_get_globals
+
+_x_gnu_eh_globals.o:
+00000000 t _ZL15eh_globals_dtorPv
+00000000 b _ZL4init
+00000000 b _ZL10eh_globals
+         U __gthread_key_create
+         U malloc
+         U __gthread_setspecific
+00000000 W _ZN17__eh_globals_initD1Ev
+         U __dso_handle
+         U _ZSt9terminatev
+         U _Unwind_DeleteException
+00000000 T _GLOBAL__I_65535_0___cxa_get_globals_fast
+         U __cxa_atexit
+00000000 T __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_globals_o
+         U __gthread_key_delete
+         U __gthread_getspecific
+00000000 T __cxa_get_globals
+         U free
+
+_x_gnu_eh_personality.o:
+00000000 t _ZL12read_sleb128PKhPl
+00000000 t _ZL16get_adjusted_ptrPKSt9type_infoS1_PPv
+00000000 t _ZL28read_encoded_value_with_basehjPKhPj
+00000000 t _ZL15get_ttype_entryP16lsda_header_infom
+00000000 t _ZL21base_of_encoded_valuehP15_Unwind_Context
+00000000 t _ZL17parse_lsda_headerP15_Unwind_ContextPKhP16lsda_header_info
+         U _ZSt10unexpectedv
+         U _Unwind_GetIPInfo
+         U _Unwind_GetRegionStart
+00000000 T __cxa_call_unexpected
+         U abort
+         U _ZSt9terminatev
+00000000 T __gxx_personality_v0
+         U _Unwind_SetIP
+00000000 D ___x_gnu_eh_personality_o
+         U _Unwind_GetTextRelBase
+         U __cxa_call_terminate
+         U _Unwind_GetLanguageSpecificData
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv112__unexpectedEPFvvE
+         U _Unwind_SetGR
+         U _Unwind_GetDataRelBase
+
+_x_gnu_eh_throw.o:
+00000000 t _ZL23__gxx_exception_cleanup19_Unwind_Reason_CodeP17_Unwind_Exception
+         U __cxa_free_exception
+00000000 T __cxa_rethrow
+         U _Unwind_Resume_or_Rethrow
+         U _ZSt9terminatev
+00000000 D ___x_gnu_eh_throw_o
+         U _Unwind_RaiseException
+00000000 T __cxa_throw
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv119__terminate_handlerE
+         U _ZN10__cxxabiv111__terminateEPFvvE
+         U __cxa_get_globals
+         U _ZN10__cxxabiv120__unexpected_handlerE
+
+_x_gnu_eh_type.o:
+00000000 D ___x_gnu_eh_type_o
+         U __cxa_get_globals
+00000000 T __cxa_current_exception_type
+
+_x_gnu_gccex.o:
+00000000 T _ZNSt9exceptionD2Ev
+00000000 V _ZTVSt13bad_exception
+         U _ZSt14_Raise_handler
+00000010 T _ZNKSt9exception4whatEv
+         U _ZdlPv
+0000001c T _ZNSt13bad_exceptionD2Ev
+00000000 W _ZNKSt13bad_exception8_DoraiseEv
+         U _ZSt6_ThrowRKSt9exception
+00000000 V _ZTVSt9exception
+00000050 T _ZNSt9exception18_Set_raise_handlerEPFvRKS_E
+0000001c T _ZNSt13bad_exceptionD1Ev
+00000064 T _ZNKSt9exception6_RaiseEv
+00000040 T _ZNSt13bad_exceptionD0Ev
+00000000 T _ZNSt9exceptionD1Ev
+00000030 T _ZNSt9exceptionD0Ev
+0000002c T _ZNKSt9exception8_DoraiseEv
+00000000 D ___x_gnu_gccex_o
+
+_x_gnu_gcctinfo.o:
+         U _ZNKSt9type_info15__is_function_pEv
+0000002c T _ZNKSt10bad_typeid8_DoraiseEv
+         U _ZNSt9exceptionD2Ev
+0000009c T _ZNSt10bad_typeidD0Ev
+00000050 T _ZNSt8bad_castD0Ev
+00000000 V _ZTVSt9type_info
+00000040 T _ZNSt8bad_castD1Ev
+         U _ZdlPv
+00000000 T _ZNSt9type_infoD1Ev
+00000030 T _ZNSt9type_infoD0Ev
+         U _ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
+         U _ZSt6_ThrowRKSt9exception
+00000010 T _ZNKSt8bad_cast4whatEv
+00000000 T _ZNSt9type_infoD2Ev
+         U _ZNKSt9type_info14__is_pointer_pEv
+00000000 V _ZTVSt10bad_typeid
+00000000 V _ZTVSt8bad_cast
+0000001c T _ZNKSt10bad_typeid4whatEv
+00000040 T _ZNSt8bad_castD2Ev
+00000000 D ___x_gnu_gcctinfo_o
+0000008c T _ZNSt10bad_typeidD1Ev
+0000008c T _ZNSt10bad_typeidD2Ev
+00000028 T _ZNKSt8bad_cast8_DoraiseEv
+         U _ZNKSt9type_info10__do_catchEPKS_PPvj
+
+_x_gnu_guard.o:
+00000000 t _ZN12_GLOBAL__N_1L4initEv
+00000000 b _ZZN12_GLOBAL__N_116get_static_mutexEvE4once
+00000000 b _ZN12_GLOBAL__N_110fake_mutexE
+00000000 b _ZN12_GLOBAL__N_1L12static_mutexE
+         U semMCreate
+00000000 D ___x_gnu_guard_o
+         U __gthread_once
+         U abort
+         U semTake
+         U semGive
+00000000 T __cxa_guard_release
+00000000 T __cxa_guard_abort
+00000000 T __cxa_guard_acquire
+
+_x_gnu_new.o:
+00000010 T _ZNSt9bad_allocD2Ev
+         U _ZNSt9exceptionD2Ev
+00000000 B _ZSt9_New_hand
+         U _ZdlPv
+0000000c T _ZNKSt9bad_alloc8_DoraiseEv
+         U _ZSt6_ThrowRKSt9exception
+00000000 T _ZNKSt9bad_alloc4whatEv
+00000000 V _ZTVSt9bad_alloc
+         U _Locksyslock
+         U _Unlocksyslock
+00000020 T _ZNSt9bad_allocD0Ev
+0000005c T _ZSt15set_new_handlerPFvvE
+00000000 D ___x_gnu_new_o
+00000010 T _ZNSt9bad_allocD1Ev
+
+_x_gnu_newaop.o:
+00000000 T _Znaj
+00000000 D ___x_gnu_newaop_o
+         U _Znwj
+
+_x_gnu_newaop2.o:
+00000000 D ___x_gnu_newaop2_o
+         U _ZnwjRKSt9nothrow_t
+00000000 T _ZnajRKSt9nothrow_t
+
+_x_gnu_newop.o:
+         U malloc
+         U _ZSt9_New_hand
+         U _ZSt9_Nomemoryv
+00000000 D ___x_gnu_newop_o
+00000000 T _Znwj
+
+_x_gnu_newop2.o:
+         U malloc
+         U _ZSt9_New_hand
+00000000 D ___x_gnu_newop2_o
+00000000 T _ZnwjRKSt9nothrow_t
+
+_x_gnu_nomemory.o:
+00000000 b _ZGVZSt9_NomemoryvE5nomem
+00000008 b _ZZSt9_NomemoryvE5nomem
+00000000 D ___x_gnu_nomemory_o
+         U __dso_handle
+         U _ZSt6_ThrowRKSt9exception
+         U _ZTVSt9bad_alloc
+         U __cxa_atexit
+00000000 T _ZSt9_Nomemoryv
+         U __cxa_guard_release
+         U _ZNSt9bad_allocD1Ev
+         U __cxa_guard_acquire
+
+_x_gnu_nothrow.o:
+00000000 D _ZSt7nothrow
+00000000 D ___x_gnu_nothrow_o
+
+_x_gnu_pure.o:
+00000000 D ___x_gnu_pure_o
+00000000 T __cxa_deleted_virtual
+         U _ZSt9terminatev
+00000000 T __cxa_pure_virtual
+
+_x_gnu_raisehan.o:
+00000000 B _ZSt14_Raise_handler
+00000000 D ___x_gnu_raisehan_o
+
+_x_gnu_throw.o:
+00000000 T _ZSt14_Debug_messagePKcS0_
+         U fflush
+         U abort
+         U __stderr
+000000c0 T _ZSt6_ThrowRKSt9exception
+00000000 D ___x_gnu_throw_o
+         U fputs
+
+_x_gnu_vec.o:
+         U _Znaj
+00000000 T __cxa_vec_new2
+00000000 T __cxa_vec_delete2
+00000000 T __cxa_vec_cleanup
+         U abort
+00000000 T __cxa_vec_delete
+         U _ZdaPv
+00000000 T __cxa_vec_delete3
+00000000 D ___x_gnu_vec_o
+00000000 T __cxa_vec_cctor
+00000000 T __cxa_vec_new
+00000000 T __cxa_vec_new3
+00000000 T __cxa_vec_ctor
+00000000 T __cxa_vec_dtor
+
+__gplusplus_intrinsics.o:
+00000000 d __gplusplus_intrinsics
+00000000 T __gplusplus_intrinsicsInit
+         U ___x_gnu_array_type_info_o
+         U ___x_gnu_class_type_info_o
+         U ___x_gnu_dyncast_o
+         U ___x_gnu_eh_arm_o
+         U ___x_gnu_eh_call_o
+         U ___x_gnu_eh_term_handler_o
+         U ___x_gnu_eh_terminate_o
+         U ___x_gnu_eh_unex_handler_o
+         U ___x_gnu_enum_type_info_o
+         U ___x_gnu_function_type_info_o
+         U ___x_gnu_fundamental_type_info_o
+         U ___x_gnu_pbase_type_info_o
+         U ___x_gnu_pmem_type_info_o
+         U ___x_gnu_pointer_type_info_o
+         U ___x_gnu_si_class_type_info_o
+         U ___x_gnu_tinfo_o
+         U ___x_gnu_vmi_class_type_info_o
+         U ___x_gnu_vterminate_o
+         U ___x_gnu_delaop_o
+         U ___x_gnu_delaop2_o
+         U ___x_gnu_delaop3_o
+         U ___x_gnu_delop_o
+         U ___x_gnu_delop2_o
+         U ___x_gnu_delop3_o
+         U ___x_gnu_eh_alloc_o
+         U ___x_gnu_eh_aux_runtime_o
+         U ___x_gnu_eh_catch_o
+         U ___x_gnu_eh_globals_o
+         U ___x_gnu_eh_personality_o
+         U ___x_gnu_eh_throw_o
+         U ___x_gnu_eh_type_o
+         U ___x_gnu_gccex_o
+         U ___x_gnu_gcctinfo_o
+         U ___x_gnu_guard_o
+         U ___x_gnu_new_o
+         U ___x_gnu_newaop_o
+         U ___x_gnu_newaop2_o
+         U ___x_gnu_newop_o
+         U ___x_gnu_newop2_o
+         U ___x_gnu_nomemory_o
+         U ___x_gnu_nothrow_o
+         U ___x_gnu_pure_o
+         U ___x_gnu_raisehan_o
+         U ___x_gnu_throw_o
+         U ___x_gnu_vec_o

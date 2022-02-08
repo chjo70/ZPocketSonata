@@ -1,0 +1,24 @@
+
+ifndef __HEADER_ACCESS_FS_VFS_INCLUDED
+__HEADER_ACCESS_FS_VFS_INCLUDED = TRUE
+
+
+
+
+
+__SUBSCRIBE_ACCESS_FS_VFS = 
+
+
+
+ifneq ($(wildcard $(VSB_USER_PROTECTED_INCLUDE_DIR)/FS_VFS),)
+
+ifneq ($(VSBL_NAME),)
+ifeq ($(VSBL_NAME),$(filter $(VSBL_NAME), FS_VFS))
+VSBL_LUH += $(OPTION_INCLUDE_DIR)$(VSB_USER_PROTECTED_INCLUDE_DIR)/FS_VFS
+endif
+endif
+
+endif
+
+endif
+

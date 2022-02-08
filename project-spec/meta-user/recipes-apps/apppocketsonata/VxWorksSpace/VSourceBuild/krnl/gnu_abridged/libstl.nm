@@ -1,0 +1,1164 @@
+
+libstl.a:
+
+_x_gnu_atexit_arm.o:
+00000000 D ___x_gnu_atexit_arm_o
+
+_x_gnu_atexit_thread.o:
+00000000 t _ZN12_GLOBAL__N_13runEPv
+00000000 t _ZN12_GLOBAL__N_13runEv
+00000000 t _ZZN12_GLOBAL__N_18key_initEvEN5key_sD2Ev
+00000000 t _ZZN12_GLOBAL__N_18key_initEvEN5key_sD1Ev
+00000000 t _ZN12_GLOBAL__N_18key_initEv
+00000000 b _ZGVZN12_GLOBAL__N_18key_initEvE2ks
+00000000 b _ZZ19__cxa_thread_atexitE4once
+00000000 b _ZZN12_GLOBAL__N_18key_initEvE2ks
+00000000 b _ZN12_GLOBAL__N_13keyE
+         U __gthread_key_create
+         U __gthread_setspecific
+         U __dso_handle
+         U __gthread_once
+00000000 T __cxa_thread_atexit
+         U __cxa_atexit
+         U __gthread_key_delete
+         U atexit
+         U __cxa_guard_release
+         U _ZSt7nothrow
+         U __gthread_getspecific
+         U _ZnwjRKSt9nothrow_t
+00000000 D ___x_gnu_atexit_thread_o
+         U __cxa_guard_acquire
+
+_x_gnu_eh_abi.o:
+00000000 T _ZN10__cxxabiv115__forced_unwindD1Ev
+00000000 T _ZN10__cxxabiv115__forced_unwindD2Ev
+00000000 D ___x_gnu_eh_abi_o
+         U _ZdlPv
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD2Ev
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD1Ev
+         U __cxa_pure_virtual
+00000000 V _ZTVN10__cxxabiv119__foreign_exceptionE
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD0Ev
+00000000 T _ZN10__cxxabiv115__forced_unwindD0Ev
+00000000 V _ZTVN10__cxxabiv115__forced_unwindE
+
+_x_gnu_eh_compact_pr.o:
+00000000 D ___x_gnu_eh_compact_pr_o
+
+_x_gnu_eh_ptr.o:
+00000000 t _ZL33__gxx_dependent_exception_cleanup19_Unwind_Reason_CodeP17_Unwind_Exception
+         U __cxa_free_exception
+00000000 T _ZNSt15__exception_ptrneERKNS_13exception_ptrES2_
+         U __cxa_free_dependent_exception
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2EMS0_FvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptraSERKS0_
+00000000 T _ZSt17rethrow_exceptionNSt15__exception_ptr13exception_ptrE
+         U __cxa_allocate_dependent_exception
+00000000 T _ZNSt15__exception_ptr13exception_ptr9_M_addrefEv
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2EPv
+00000000 T _ZNKSt15__exception_ptr13exception_ptr20__cxa_exception_typeEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptrcvMS0_FvvEEv
+         U _ZSt9terminatev
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1ERKS0_
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1EMS0_FvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2Ev
+00000000 D ___x_gnu_eh_ptr_o
+00000000 T _ZNSt15__exception_ptr13exception_ptrD1Ev
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2ERKS0_
+         U _Unwind_RaiseException
+00000000 T _ZNSt15__exception_ptr13exception_ptr4swapERS0_
+00000000 T _ZNSt15__exception_ptreqERKNS_13exception_ptrES2_
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1Ev
+00000000 T _ZNSt15__exception_ptr13exception_ptr18_M_safe_bool_dummyEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptr6_M_getEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptrntEv
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv119__terminate_handlerE
+00000000 T _ZNSt15__exception_ptr13exception_ptrD2Ev
+         U _ZN10__cxxabiv111__terminateEPFvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptr10_M_releaseEv
+         U __cxa_get_globals
+         U _ZN10__cxxabiv120__unexpected_handlerE
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1EPv
+00000000 T _ZSt17current_exceptionv
+
+_x_gnu_eh_tm.o:
+00000000 t _ZL22free_any_cxa_exceptionP17_Unwind_Exception
+         U __cxa_free_exception
+         U __cxa_free_dependent_exception
+         U _Unwind_DeleteException
+         U __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_tm_o
+00000000 T __cxa_tm_cleanup
+
+_x_gnu_fiopen.o:
+00000000 d _ZZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE4mods
+00000004 d _ZZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE5valid
+00000000 b _ZGVZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE5valid
+         U fseek
+         U fopen
+         U fclose
+         U __cxa_guard_release
+00000000 D ___x_gnu_fiopen_o
+00000000 T _ZSt7_FiopenPKcNSt8ios_base9_OpenmodeEi
+         U __cxa_guard_acquire
+
+_x_gnu_gccstdexcept.o:
+00000040 T _ZNKSt16invalid_argument8_DoraiseEv
+         U _ZNSt9exceptionD2Ev
+00000058 T _ZNKSt11range_error8_DoraiseEv
+000002bc T _ZNSt14overflow_errorD0Ev
+000002ac T _ZNSt14overflow_errorD2Ev
+000001d0 T _ZNSt12out_of_rangeD2Ev
+000002ac T _ZNSt14overflow_errorD1Ev
+0000004c T _ZNKSt13runtime_error8_DoraiseEv
+00000184 T _ZNSt12length_errorD2Ev
+00000000 V _ZTVSt12out_of_range
+00000000 V _ZTVSt11range_error
+0000021c T _ZNSt13runtime_errorD2Ev
+00000000 V _ZTVSt16invalid_argument
+00000054 T _ZNKSt15underflow_error8_DoraiseEv
+00000000 V _ZTVSt11logic_error
+         U _ZdlPv
+00000194 T _ZNSt12length_errorD0Ev
+00000000 V _ZTVSt14overflow_error
+000002f8 T _ZNSt15underflow_errorD1Ev
+000000bc T _ZNSt11logic_errorD0Ev
+0000021c T _ZNSt13runtime_errorD1Ev
+000000ec T _ZNSt12domain_errorD1Ev
+00000308 T _ZNSt15underflow_errorD0Ev
+00000344 T _ZNSt11range_errorD2Ev
+         U _ZSt6_ThrowRKSt9exception
+0000001c T _ZNKSt13runtime_error4whatEv
+00000000 V _ZTVSt12length_error
+00000138 T _ZNSt16invalid_argumentD2Ev
+00000184 T _ZNSt12length_errorD1Ev
+000000ec T _ZNSt12domain_errorD2Ev
+00000138 T _ZNSt16invalid_argumentD1Ev
+000002f8 T _ZNSt15underflow_errorD2Ev
+00000344 T _ZNSt11range_errorD1Ev
+00000048 T _ZNKSt12out_of_range8_DoraiseEv
+000001d0 T _ZNSt12out_of_rangeD1Ev
+00000044 T _ZNKSt12length_error8_DoraiseEv
+00000354 T _ZNSt11range_errorD0Ev
+0000005c T _ZNSt11logic_errorD2Ev
+0000005c T _ZNSt11logic_errorD1Ev
+000001e0 T _ZNSt12out_of_rangeD0Ev
+00000050 T _ZNKSt14overflow_error8_DoraiseEv
+00000148 T _ZNSt16invalid_argumentD0Ev
+00000000 D ___x_gnu_gccstdexcept_o
+00000000 V _ZTVSt15underflow_error
+0000027c T _ZNSt13runtime_errorD0Ev
+00000038 T _ZNKSt11logic_error8_DoraiseEv
+0000003c T _ZNKSt12domain_error8_DoraiseEv
+00000000 V _ZTVSt12domain_error
+000000fc T _ZNSt12domain_errorD0Ev
+00000000 V _ZTVSt13runtime_error
+00000000 T _ZNKSt11logic_error4whatEv
+
+_x_gnu_guard_error.o:
+         U _ZNSt9exceptionD2Ev
+         U _ZNKSt9exception4whatEv
+         U _ZdlPv
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD1Ev
+00000000 V _ZTVN9__gnu_cxx20recursive_init_errorE
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD0Ev
+00000000 D ___x_gnu_guard_error_o
+         U _ZNKSt9exception8_DoraiseEv
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD2Ev
+
+_x_gnu_hash_bytes.o:
+00000000 T _ZSt11_Hash_bytesPKvjj
+00000000 D ___x_gnu_hash_bytes_o
+00000000 T _ZSt15_Fnv_hash_bytesPKvjj
+
+_x_gnu_iomanip.o:
+00000000 t _ZStL5rsfunRSt8ios_baseNS_9_FmtflagsE
+00000010 t _ZStL5sifunRSt8ios_baseNS_9_FmtflagsE
+00000028 t _ZStL5sbfunRSt8ios_basei
+00000078 t _ZStL5spfunRSt8ios_basei
+00000080 t _ZStL5swfunRSt8ios_basei
+00000088 t _ZStL5sffunRSt3iosc
+00000090 T _ZSt7setfillc
+000000dc T _ZSt7setbasei
+00000000 D ___x_gnu_iomanip_o
+000000ac T _ZSt13resetiosflagsNSt8ios_base9_FmtflagsE
+000000f4 T _ZSt12setprecisioni
+000000c4 T _ZSt11setiosflagsNSt8ios_base9_FmtflagsE
+0000010c T _ZSt4setwi
+
+_x_gnu_ios.o:
+00000000 b _ZZNSt8ios_base8_FindarrEiE4stub
+00000010 b _ZGVZNSt8ios_base8_FindarrEiE4stub
+00000018 b _ZStL6stdstr
+00000040 b _ZStL8stdopens
+         U memmove
+00000000 D _ZSt7_BADOFF
+         U _ZNKSt12_String_base5_XranEv
+00000dcc T _ZNSt8ios_base8_FindarrEi
+0000124c T _ZNSt8ios_baseD1Ev
+         U _ZNKSt12_String_base5_XlenEv
+00000d04 T _ZNSt8ios_base17register_callbackEPFvNS_5eventERS_iEi
+         U memcpy
+         U _ZNSt13runtime_errorD2Ev
+00001038 T _ZNSt8ios_base5_TidyEv
+00000000 V _ZTVSt8ios_base
+00000fd4 T _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000c9c T _ZNSt8ios_base5imbueERKSt6locale
+00000054 B _ZNSt4fpos4_StzE
+00000000 D ___x_gnu_ios_o
+00000000 W _ZNSt8ios_base7failureD0Ev
+00000001 D _ZNSt8ios_base5_SyncE
+00000000 W _ZNKSt8ios_base7failure8_DoraiseEv
+00000d60 T _ZNSt8ios_base8_CallfnsENS_5eventE
+         U _ZNSt6string4nposE
+         U _ZSt6_ThrowRKSt9exception
+         U _ZNKSt13runtime_error4whatEv
+00000000 T _ZNSt8ios_base5clearENS_8_IostateEb
+00000000 W _ZNSt6string5_TidyEbj
+00000050 B _ZSt4_Fpz
+         U _Locksyslock
+         U _Unlocksyslock
+0000004c B _ZNSt8ios_base6_IndexE
+000012d0 T _ZNSt8ios_baseD0Ev
+         U __cxa_guard_release
+000010e8 T _ZNSt8ios_base7copyfmtERKS_
+00000f44 T _ZNSt8ios_base7_AddstdEv
+0000124c T _ZNSt8ios_baseD2Ev
+         U _ZNKSt9exception6_RaiseEv
+         U _Znwj
+         U strlen
+         U _ZTVSt13runtime_error
+00000000 V _ZTVNSt8ios_base7failureE
+00000000 W _ZNSt8ios_base7failureD1Ev
+         U __cxa_guard_acquire
+
+_x_gnu_iostream.o:
+00000000 b _ZStL3fin
+00000048 b _ZStL4fout
+00000000 W _ZNSt9streambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 W _ZNSt9streambuf9underflowEv
+         U ungetc
+00000000 V _ZTVSt7istream
+         U _ZSt7_BADOFF
+00000000 V _ZZNSt7filebuf5_InitEPFPP7__sFILEvENS_7_InitflEE7_Stinit
+00000000 W _ZNSt7filebufD1Ev
+00000000 W _ZNSt7ostreamD1Ev
+00000000 W _ZNSt9streambuf8overflowEi
+00000000 W _ZNSt9streambuf5imbueERKSt6locale
+00000000 W _ZNSt9streambuf9showmanycEv
+00000000 W _ZNSt9streambuf7_UnlockEv
+00000000 W _ZNSt7istreamD0Ev
+00000000 W _ZNSt7filebuf5imbueERKSt6locale
+         U memcpy
+         U setvbuf
+00000000 V _ZTVSt9streambuf
+00000000 W _ZNSt7filebuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf4syncEv
+         U __dso_handle
+00000000 T _ZNSt8ios_base4InitC2Ev
+00000000 W _ZNSt3iosD0Ev
+         U fflush
+         U _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000000 W _ZNSt9streambufD1Ev
+         U fsetpos
+         U _ZNSt4fpos4_StzE
+00000000 W _ZNSt9streambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf6setbufEPci
+00000000 V _ZTVSt7ostream
+00000000 W _ZNSt9streambufD0Ev
+         U fseek
+         U _ZNSt8ios_base5clearENS_8_IostateEb
+         U __stdin
+         U _ZSt4_Fpz
+         U _ZNSt6_Mutex7_UnlockEv
+00000000 V _ZTVSt7filebuf
+00000000 T _GLOBAL__I_65535_0__ZNSt8ios_base4Init9_Init_cntE
+0000023c T _ZNSt8ios_base4InitD2Ev
+00000000 W _ZNSt3iosD1Ev
+         U _Locksyslock
+         U _Unlocksyslock
+         U _ZNSt6_Mutex5_LockEv
+         U __cxa_atexit
+00000000 W _ZNSt7filebuf6setbufEPci
+00000000 W _ZNSt9streambuf5uflowEv
+00000000 T _ZNSt8ios_base4InitC1Ev
+00000000 W _ZNSt9streambuf9pbackfailEi
+         U fclose
+00000000 W _ZNSt7filebuf9pbackfailEi
+         U fgetpos
+         U fgetc
+00000000 V _ZTVSt3ios
+00000000 W _ZNSt7filebuf8overflowEi
+00000090 B _ZSt3cin
+00000000 W _ZNSt9streambuf6xsgetnEPci
+00000000 W _ZNSt7ostreamD0Ev
+         U _ZNSt8ios_base7_AddstdEv
+0000023c T _ZNSt8ios_base4InitD1Ev
+         U fputc
+00000000 W _ZNSt7istreamD1Ev
+         U _ZNSt8ios_baseD2Ev
+00000000 W _ZNSt7filebuf9underflowEv
+00000000 W _ZNSt7filebuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 D ___x_gnu_iostream_o
+         U _ZNSt6_MutexC1Ev
+00000000 W _ZNSt7filebuf5uflowEv
+         U __stdout
+00000004 D _ZNSt8ios_base4Init9_Init_cntE
+000000c8 B _ZSt4cout
+         U _Znwj
+00000000 W _ZNSt7filebufD0Ev
+00000008 D _PJP_CPP_Copyright
+00000000 W _ZNSt9streambuf6xsputnEPKci
+00000000 W _ZNSt9streambuf5_LockEv
+00000000 W _ZNSt7filebuf4syncEv
+         U _ZNSt6_MutexD1Ev
+00000000 V _ZZNSt7filebuf5_InitEP7__sFILENS_7_InitflEE7_Stinit
+
+_x_gnu_limits.o:
+00000000 D ___x_gnu_limits_o
+
+_x_gnu_locale.o:
+00000000 D ___x_gnu_locale_o
+
+_x_gnu_locale0.o:
+00000000 D ___x_gnu_locale0_o
+
+_x_gnu_nested_exception.o:
+00000000 D ___x_gnu_nested_exception_o
+
+_x_gnu_string.o:
+00000000 D ___x_gnu_string_o
+         U memmove
+00000000 T _ZNKSt12_String_base5_XranEv
+0000052c T _ZNKSt12_String_base5_XlenEv
+         U _ZTVSt12out_of_range
+         U memcpy
+         U _ZTVSt11logic_error
+         U _ZdlPv
+00000000 D _ZNSt6string4nposE
+         U _ZTVSt12length_error
+         U _ZNSt12length_errorD1Ev
+         U _ZNSt12out_of_rangeD1Ev
+         U _ZNKSt9exception6_RaiseEv
+         U _Znwj
+         U strlen
+
+_x_gnu_strstrea.o:
+         U _Znaj
+00000000 W _ZNSt9streambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 V _ZTVSt10ostrstream
+00000000 W _ZNSt9streambuf9underflowEv
+00000000 V _ZTVSt12strstreambuf
+00000000 V _ZTVSt10istrstream
+00000000 V _ZTVSt7istream
+         U _ZSt7_BADOFF
+00000000 W _ZNSt7ostreamD1Ev
+00000cfc T _ZNSt10ostrstreamD1Ev
+00000000 W _ZNSt9streambuf8overflowEi
+00000000 W _ZNSt9streambuf5imbueERKSt6locale
+00000000 W _ZNSt9streambuf9showmanycEv
+00000000 W _ZNSt9streambuf7_UnlockEv
+00000000 W _ZNSt7istreamD0Ev
+         U memcpy
+00000000 V _ZTVSt9streambuf
+00000874 T _ZNSt12strstreambuf5_InitEiPcS0_i
+00000000 W _ZNSt9streambuf4syncEv
+00000c30 T _ZNSt12strstreambufD2Ev
+00000b5c T _ZNSt12strstreambuf5_TidyEv
+00000000 W _ZNSt3iosD0Ev
+         U _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000000 W _ZNSt9streambufD1Ev
+00000800 T _ZNSt12strstreambuf6freezeEb
+         U _ZNSt4fpos4_StzE
+00000ccc T _ZNSt10istrstreamD0Ev
+00000000 W _ZNSt9streambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf6setbufEPci
+00000c80 T _ZNSt10istrstreamD2Ev
+00000000 V _ZTVSt7ostream
+00000000 W _ZNSt9streambufD0Ev
+00000cfc T _ZNSt10ostrstreamD2Ev
+00000c80 T _ZNSt10istrstreamD1Ev
+         U _ZNSt8ios_base5clearENS_8_IostateEb
+         U _ZSt4_Fpz
+         U _ZNSt6_Mutex7_UnlockEv
+000004a8 T _ZNSt12strstreambuf8overflowEi
+00000000 W _ZNSt3iosD1Ev
+         U _ZNSt6_Mutex5_LockEv
+00000000 W _ZNSt9streambuf5uflowEv
+00000d78 T _ZNSt12strstreambufD0Ev
+00000000 W _ZNSt9streambuf9pbackfailEi
+000009f8 T _ZNSt10ostrstreamC1EPciNSt8ios_base9_OpenmodeE
+         U _ZdaPv
+00000128 T _ZNSt12strstreambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+000009f8 T _ZNSt10ostrstreamC2EPciNSt8ios_base9_OpenmodeE
+00000000 V _ZTVSt3ios
+00000d48 T _ZNSt10ostrstreamD0Ev
+00000000 W _ZNSt9streambuf6xsgetnEPci
+00000000 W _ZNSt7ostreamD0Ev
+00000000 W _ZNSt7istreamD1Ev
+         U _ZNSt8ios_baseD2Ev
+         U _ZNSt6_MutexC1Ev
+         U _Znwj
+00000000 T _ZNSt12strstreambuf9pbackfailEi
+00000000 W _ZNSt9streambuf6xsputnEPKci
+         U strlen
+00000000 W _ZNSt9streambuf5_LockEv
+00000324 T _ZNSt12strstreambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000c30 T _ZNSt12strstreambufD1Ev
+000000a4 T _ZNSt12strstreambuf9underflowEv
+         U _ZNSt6_MutexD1Ev
+00000000 D ___x_gnu_strstrea_o
+
+_x_gnu_wiostrea.o:
+00000000 D ___x_gnu_wiostrea_o
+
+_x_gnu_wlocale.o:
+00000000 D ___x_gnu_wlocale_o
+
+_x_gnu_xatexit.o:
+00000000 D ___x_gnu_xatexit_o
+00000000 T _Atexit
+         U atexit
+
+_x_gnu_xdtest.o:
+00000000 D ___x_gnu_xdtest_o
+00000000 T _Dtest
+
+_x_gnu_xfdtest.o:
+00000000 T _FDtest
+00000000 D ___x_gnu_xfdtest_o
+
+_x_gnu_xfpostox.o:
+00000000 D ___x_gnu_xfpostox_o
+
+_x_gnu_xfvalues.o:
+00000010 D _FRteps
+00000008 D _FXbig
+00000000 D ___x_gnu_xfvalues_o
+00000050 D _FEps
+00000040 D _FInf
+00000060 D _FDenorm
+00000020 D _FSnan
+00000030 D _FNan
+00000000 B _FZero
+
+_x_gnu_xlocale.o:
+00000000 D ___x_gnu_xlocale_o
+
+_x_gnu_xlocinfo.o:
+00000000 d _ZL8_Ctyptab
+         U islower
+         U ispunct
+         U isspace
+00000000 D ___x_gnu_xlocinfo_o
+         U isxdigit
+         U calloc
+00000000 T _Getctyptab
+         U isupper
+         U isalnum
+         U isdigit
+         U iscntrl
+
+_x_gnu_xmtx.o:
+00000034 T _Mtxdst
+         U semMCreate
+00000048 T _Mtxunlock
+         U semDelete
+         U semTake
+00000000 D ___x_gnu_xmtx_o
+0000003c T _Mtxlock
+         U semGive
+00000000 T _Mtxinit
+
+_x_gnu_xmutex.o:
+         U _Mtxdst
+00000000 D ___x_gnu_xmutex_o
+         U _Mtxunlock
+         U _ZdlPv
+00000070 T _ZNSt6_Mutex7_UnlockEv
+00000068 T _ZNSt6_Mutex5_LockEv
+         U _Mtxlock
+00000000 T _ZNSt6_MutexC1Ev
+         U _Znwj
+         U _Mtxinit
+00000034 T _ZNSt6_MutexD2Ev
+00000000 T _ZNSt6_MutexC2Ev
+00000034 T _ZNSt6_MutexD1Ev
+
+_x_gnu_xstod.o:
+00000000 D ___x_gnu_xstod_o
+00000000 T _Stod
+         U strtod
+0000009c T _Stold
+00000078 T _Stof
+
+_x_gnu_xstoll.o:
+         U __ctype
+         U __errno
+00000000 T _Stoll
+00000000 D ___x_gnu_xstoll_o
+         U _Stoull
+
+_x_gnu_xstoull.o:
+00000000 d digits
+00000028 d ndigs
+         U __ctype
+00000000 D ___x_gnu_xstoull_o
+         U __errno
+         U __udivdi3
+         U memchr
+00000000 T _Stoull
+         U __ctype_tolower
+
+_x_gnu_xsyslock.o:
+00000000 t initlocks
+0000005c t clearlocks
+00000000 b mtx
+00000010 b max_lock
+00000014 b syslock_o
+         U _Mtxdst
+         U _Mtxunlock
+         U __gthread_once
+         U _Atexit
+00000000 D ___x_gnu_xsyslock_o
+000000ac T _Locksyslock
+00000120 T _Unlocksyslock
+         U _Mtxlock
+         U _Mtxinit
+
+_x_gnu_xvalues.o:
+00000020 D _Snan
+00000010 D _Rteps
+00000040 D _Inf
+00000060 D _Eps
+00000000 D ___x_gnu_xvalues_o
+00000070 D _Denorm
+00000030 D _Nan
+00000050 D _Hugeval
+00000008 D _Xbig
+00000000 B _Zero
+
+__gnu_cplusplus_std_library.o:
+00000000 d __gnu_cplusplus_std_library
+00000000 T __gnu_cplusplus_std_libraryInit
+         U ___x_gnu_atexit_arm_o
+         U ___x_gnu_atexit_thread_o
+         U ___x_gnu_eh_abi_o
+         U ___x_gnu_eh_compact_pr_o
+         U ___x_gnu_eh_ptr_o
+         U ___x_gnu_eh_tm_o
+         U ___x_gnu_fiopen_o
+         U ___x_gnu_gccstdexcept_o
+         U ___x_gnu_guard_error_o
+         U ___x_gnu_hash_bytes_o
+         U ___x_gnu_iomanip_o
+         U ___x_gnu_ios_o
+         U ___x_gnu_iostream_o
+         U ___x_gnu_limits_o
+         U ___x_gnu_locale_o
+         U ___x_gnu_locale0_o
+         U ___x_gnu_nested_exception_o
+         U ___x_gnu_string_o
+         U ___x_gnu_strstrea_o
+         U ___x_gnu_wiostrea_o
+         U ___x_gnu_wlocale_o
+         U ___x_gnu_xatexit_o
+         U ___x_gnu_xdtest_o
+         U ___x_gnu_xfdtest_o
+         U ___x_gnu_xfpostox_o
+         U ___x_gnu_xfvalues_o
+         U ___x_gnu_xlocale_o
+         U ___x_gnu_xlocinfo_o
+         U ___x_gnu_xmtx_o
+         U ___x_gnu_xmutex_o
+         U ___x_gnu_xstod_o
+         U ___x_gnu_xstoll_o
+         U ___x_gnu_xstoull_o
+         U ___x_gnu_xsyslock_o
+         U ___x_gnu_xvalues_o
+
+libstl.a:
+
+_x_gnu_atexit_arm.o:
+00000000 D ___x_gnu_atexit_arm_o
+
+_x_gnu_atexit_thread.o:
+00000000 t _ZN12_GLOBAL__N_13runEPv
+00000000 t _ZN12_GLOBAL__N_13runEv
+00000000 t _ZZN12_GLOBAL__N_18key_initEvEN5key_sD2Ev
+00000000 t _ZZN12_GLOBAL__N_18key_initEvEN5key_sD1Ev
+00000000 t _ZN12_GLOBAL__N_18key_initEv
+00000000 b _ZGVZN12_GLOBAL__N_18key_initEvE2ks
+00000000 b _ZZ19__cxa_thread_atexitE4once
+00000000 b _ZZN12_GLOBAL__N_18key_initEvE2ks
+00000000 b _ZN12_GLOBAL__N_13keyE
+         U __gthread_key_create
+         U __gthread_setspecific
+         U __dso_handle
+         U __gthread_once
+00000000 T __cxa_thread_atexit
+         U __cxa_atexit
+         U __gthread_key_delete
+         U atexit
+         U __cxa_guard_release
+         U _ZSt7nothrow
+         U __gthread_getspecific
+         U _ZnwjRKSt9nothrow_t
+00000000 D ___x_gnu_atexit_thread_o
+         U __cxa_guard_acquire
+
+_x_gnu_eh_abi.o:
+00000000 T _ZN10__cxxabiv115__forced_unwindD1Ev
+00000000 T _ZN10__cxxabiv115__forced_unwindD2Ev
+00000000 D ___x_gnu_eh_abi_o
+         U _ZdlPv
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD2Ev
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD1Ev
+         U __cxa_pure_virtual
+00000000 V _ZTVN10__cxxabiv119__foreign_exceptionE
+00000000 T _ZN10__cxxabiv119__foreign_exceptionD0Ev
+00000000 T _ZN10__cxxabiv115__forced_unwindD0Ev
+00000000 V _ZTVN10__cxxabiv115__forced_unwindE
+
+_x_gnu_eh_compact_pr.o:
+00000000 D ___x_gnu_eh_compact_pr_o
+
+_x_gnu_eh_ptr.o:
+00000000 t _ZL33__gxx_dependent_exception_cleanup19_Unwind_Reason_CodeP17_Unwind_Exception
+         U __cxa_free_exception
+00000000 T _ZNSt15__exception_ptrneERKNS_13exception_ptrES2_
+         U __cxa_free_dependent_exception
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2EMS0_FvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptraSERKS0_
+00000000 T _ZSt17rethrow_exceptionNSt15__exception_ptr13exception_ptrE
+         U __cxa_allocate_dependent_exception
+00000000 T _ZNSt15__exception_ptr13exception_ptr9_M_addrefEv
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2EPv
+00000000 T _ZNKSt15__exception_ptr13exception_ptr20__cxa_exception_typeEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptrcvMS0_FvvEEv
+         U _ZSt9terminatev
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1ERKS0_
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1EMS0_FvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2Ev
+00000000 D ___x_gnu_eh_ptr_o
+00000000 T _ZNSt15__exception_ptr13exception_ptrD1Ev
+00000000 T _ZNSt15__exception_ptr13exception_ptrC2ERKS0_
+         U _Unwind_RaiseException
+00000000 T _ZNSt15__exception_ptr13exception_ptr4swapERS0_
+00000000 T _ZNSt15__exception_ptreqERKNS_13exception_ptrES2_
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1Ev
+00000000 T _ZNSt15__exception_ptr13exception_ptr18_M_safe_bool_dummyEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptr6_M_getEv
+00000000 T _ZNKSt15__exception_ptr13exception_ptrntEv
+         U __cxa_begin_catch
+         U _ZN10__cxxabiv119__terminate_handlerE
+00000000 T _ZNSt15__exception_ptr13exception_ptrD2Ev
+         U _ZN10__cxxabiv111__terminateEPFvvE
+00000000 T _ZNSt15__exception_ptr13exception_ptr10_M_releaseEv
+         U __cxa_get_globals
+         U _ZN10__cxxabiv120__unexpected_handlerE
+00000000 T _ZNSt15__exception_ptr13exception_ptrC1EPv
+00000000 T _ZSt17current_exceptionv
+
+_x_gnu_eh_tm.o:
+00000000 t _ZL22free_any_cxa_exceptionP17_Unwind_Exception
+         U __cxa_free_exception
+         U __cxa_free_dependent_exception
+         U _Unwind_DeleteException
+         U __cxa_get_globals_fast
+00000000 D ___x_gnu_eh_tm_o
+00000000 T __cxa_tm_cleanup
+
+_x_gnu_fiopen.o:
+00000000 d _ZZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE4mods
+00000004 d _ZZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE5valid
+00000000 b _ZGVZSt7_FiopenPKcNSt8ios_base9_OpenmodeEiE5valid
+         U fseek
+         U fopen
+         U fclose
+         U __cxa_guard_release
+00000000 D ___x_gnu_fiopen_o
+00000000 T _ZSt7_FiopenPKcNSt8ios_base9_OpenmodeEi
+         U __cxa_guard_acquire
+
+_x_gnu_gccstdexcept.o:
+00000040 T _ZNKSt16invalid_argument8_DoraiseEv
+         U _ZNSt9exceptionD2Ev
+00000058 T _ZNKSt11range_error8_DoraiseEv
+000002bc T _ZNSt14overflow_errorD0Ev
+000002ac T _ZNSt14overflow_errorD2Ev
+000001d0 T _ZNSt12out_of_rangeD2Ev
+000002ac T _ZNSt14overflow_errorD1Ev
+0000004c T _ZNKSt13runtime_error8_DoraiseEv
+00000184 T _ZNSt12length_errorD2Ev
+00000000 V _ZTVSt12out_of_range
+00000000 V _ZTVSt11range_error
+0000021c T _ZNSt13runtime_errorD2Ev
+00000000 V _ZTVSt16invalid_argument
+00000054 T _ZNKSt15underflow_error8_DoraiseEv
+00000000 V _ZTVSt11logic_error
+         U _ZdlPv
+00000194 T _ZNSt12length_errorD0Ev
+00000000 V _ZTVSt14overflow_error
+000002f8 T _ZNSt15underflow_errorD1Ev
+000000bc T _ZNSt11logic_errorD0Ev
+0000021c T _ZNSt13runtime_errorD1Ev
+000000ec T _ZNSt12domain_errorD1Ev
+00000308 T _ZNSt15underflow_errorD0Ev
+00000344 T _ZNSt11range_errorD2Ev
+         U _ZSt6_ThrowRKSt9exception
+0000001c T _ZNKSt13runtime_error4whatEv
+00000000 V _ZTVSt12length_error
+00000138 T _ZNSt16invalid_argumentD2Ev
+00000184 T _ZNSt12length_errorD1Ev
+000000ec T _ZNSt12domain_errorD2Ev
+00000138 T _ZNSt16invalid_argumentD1Ev
+000002f8 T _ZNSt15underflow_errorD2Ev
+00000344 T _ZNSt11range_errorD1Ev
+00000048 T _ZNKSt12out_of_range8_DoraiseEv
+000001d0 T _ZNSt12out_of_rangeD1Ev
+00000044 T _ZNKSt12length_error8_DoraiseEv
+00000354 T _ZNSt11range_errorD0Ev
+0000005c T _ZNSt11logic_errorD2Ev
+0000005c T _ZNSt11logic_errorD1Ev
+000001e0 T _ZNSt12out_of_rangeD0Ev
+00000050 T _ZNKSt14overflow_error8_DoraiseEv
+00000148 T _ZNSt16invalid_argumentD0Ev
+00000000 D ___x_gnu_gccstdexcept_o
+00000000 V _ZTVSt15underflow_error
+0000027c T _ZNSt13runtime_errorD0Ev
+00000038 T _ZNKSt11logic_error8_DoraiseEv
+0000003c T _ZNKSt12domain_error8_DoraiseEv
+00000000 V _ZTVSt12domain_error
+000000fc T _ZNSt12domain_errorD0Ev
+00000000 V _ZTVSt13runtime_error
+00000000 T _ZNKSt11logic_error4whatEv
+
+_x_gnu_guard_error.o:
+         U _ZNSt9exceptionD2Ev
+         U _ZNKSt9exception4whatEv
+         U _ZdlPv
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD1Ev
+00000000 V _ZTVN9__gnu_cxx20recursive_init_errorE
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD0Ev
+00000000 D ___x_gnu_guard_error_o
+         U _ZNKSt9exception8_DoraiseEv
+00000000 T _ZN9__gnu_cxx20recursive_init_errorD2Ev
+
+_x_gnu_hash_bytes.o:
+00000000 T _ZSt11_Hash_bytesPKvjj
+00000000 D ___x_gnu_hash_bytes_o
+00000000 T _ZSt15_Fnv_hash_bytesPKvjj
+
+_x_gnu_iomanip.o:
+00000000 t _ZStL5rsfunRSt8ios_baseNS_9_FmtflagsE
+00000010 t _ZStL5sifunRSt8ios_baseNS_9_FmtflagsE
+00000028 t _ZStL5sbfunRSt8ios_basei
+00000078 t _ZStL5spfunRSt8ios_basei
+00000080 t _ZStL5swfunRSt8ios_basei
+00000088 t _ZStL5sffunRSt3iosc
+00000090 T _ZSt7setfillc
+000000dc T _ZSt7setbasei
+00000000 D ___x_gnu_iomanip_o
+000000ac T _ZSt13resetiosflagsNSt8ios_base9_FmtflagsE
+000000f4 T _ZSt12setprecisioni
+000000c4 T _ZSt11setiosflagsNSt8ios_base9_FmtflagsE
+0000010c T _ZSt4setwi
+
+_x_gnu_ios.o:
+00000000 b _ZZNSt8ios_base8_FindarrEiE4stub
+00000010 b _ZGVZNSt8ios_base8_FindarrEiE4stub
+00000018 b _ZStL6stdstr
+00000040 b _ZStL8stdopens
+         U memmove
+00000000 D _ZSt7_BADOFF
+         U _ZNKSt12_String_base5_XranEv
+00000dcc T _ZNSt8ios_base8_FindarrEi
+0000124c T _ZNSt8ios_baseD1Ev
+         U _ZNKSt12_String_base5_XlenEv
+00000d04 T _ZNSt8ios_base17register_callbackEPFvNS_5eventERS_iEi
+         U memcpy
+         U _ZNSt13runtime_errorD2Ev
+00001038 T _ZNSt8ios_base5_TidyEv
+00000000 V _ZTVSt8ios_base
+00000fd4 T _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000c9c T _ZNSt8ios_base5imbueERKSt6locale
+00000054 B _ZNSt4fpos4_StzE
+00000000 D ___x_gnu_ios_o
+00000000 W _ZNSt8ios_base7failureD0Ev
+00000001 D _ZNSt8ios_base5_SyncE
+00000000 W _ZNKSt8ios_base7failure8_DoraiseEv
+00000d60 T _ZNSt8ios_base8_CallfnsENS_5eventE
+         U _ZNSt6string4nposE
+         U _ZSt6_ThrowRKSt9exception
+         U _ZNKSt13runtime_error4whatEv
+00000000 T _ZNSt8ios_base5clearENS_8_IostateEb
+00000000 W _ZNSt6string5_TidyEbj
+00000050 B _ZSt4_Fpz
+         U _Locksyslock
+         U _Unlocksyslock
+0000004c B _ZNSt8ios_base6_IndexE
+000012d0 T _ZNSt8ios_baseD0Ev
+         U __cxa_guard_release
+000010e8 T _ZNSt8ios_base7copyfmtERKS_
+00000f44 T _ZNSt8ios_base7_AddstdEv
+0000124c T _ZNSt8ios_baseD2Ev
+         U _ZNKSt9exception6_RaiseEv
+         U _Znwj
+         U strlen
+         U _ZTVSt13runtime_error
+00000000 V _ZTVNSt8ios_base7failureE
+00000000 W _ZNSt8ios_base7failureD1Ev
+         U __cxa_guard_acquire
+
+_x_gnu_iostream.o:
+00000000 b _ZStL3fin
+00000048 b _ZStL4fout
+00000000 W _ZNSt9streambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 W _ZNSt9streambuf9underflowEv
+         U ungetc
+00000000 V _ZTVSt7istream
+         U _ZSt7_BADOFF
+00000000 V _ZZNSt7filebuf5_InitEPFPP7__sFILEvENS_7_InitflEE7_Stinit
+00000000 W _ZNSt7filebufD1Ev
+00000000 W _ZNSt7ostreamD1Ev
+00000000 W _ZNSt9streambuf8overflowEi
+00000000 W _ZNSt9streambuf5imbueERKSt6locale
+00000000 W _ZNSt9streambuf9showmanycEv
+00000000 W _ZNSt9streambuf7_UnlockEv
+00000000 W _ZNSt7istreamD0Ev
+00000000 W _ZNSt7filebuf5imbueERKSt6locale
+         U memcpy
+         U setvbuf
+00000000 V _ZTVSt9streambuf
+00000000 W _ZNSt7filebuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf4syncEv
+         U __dso_handle
+00000000 T _ZNSt8ios_base4InitC2Ev
+00000000 W _ZNSt3iosD0Ev
+         U fflush
+         U _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000000 W _ZNSt9streambufD1Ev
+         U fsetpos
+         U _ZNSt4fpos4_StzE
+00000000 W _ZNSt9streambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf6setbufEPci
+00000000 V _ZTVSt7ostream
+00000000 W _ZNSt9streambufD0Ev
+         U fseek
+         U _ZNSt8ios_base5clearENS_8_IostateEb
+         U __stdin
+         U _ZSt4_Fpz
+         U _ZNSt6_Mutex7_UnlockEv
+00000000 V _ZTVSt7filebuf
+00000000 T _GLOBAL__I_65535_0__ZNSt8ios_base4Init9_Init_cntE
+0000023c T _ZNSt8ios_base4InitD2Ev
+00000000 W _ZNSt3iosD1Ev
+         U _Locksyslock
+         U _Unlocksyslock
+         U _ZNSt6_Mutex5_LockEv
+         U __cxa_atexit
+00000000 W _ZNSt7filebuf6setbufEPci
+00000000 W _ZNSt9streambuf5uflowEv
+00000000 T _ZNSt8ios_base4InitC1Ev
+00000000 W _ZNSt9streambuf9pbackfailEi
+         U fclose
+00000000 W _ZNSt7filebuf9pbackfailEi
+         U fgetpos
+         U fgetc
+00000000 V _ZTVSt3ios
+00000000 W _ZNSt7filebuf8overflowEi
+00000090 B _ZSt3cin
+00000000 W _ZNSt9streambuf6xsgetnEPci
+00000000 W _ZNSt7ostreamD0Ev
+         U _ZNSt8ios_base7_AddstdEv
+0000023c T _ZNSt8ios_base4InitD1Ev
+         U fputc
+00000000 W _ZNSt7istreamD1Ev
+         U _ZNSt8ios_baseD2Ev
+00000000 W _ZNSt7filebuf9underflowEv
+00000000 W _ZNSt7filebuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 D ___x_gnu_iostream_o
+         U _ZNSt6_MutexC1Ev
+00000000 W _ZNSt7filebuf5uflowEv
+         U __stdout
+00000004 D _ZNSt8ios_base4Init9_Init_cntE
+000000c8 B _ZSt4cout
+         U _Znwj
+00000000 W _ZNSt7filebufD0Ev
+00000008 D _PJP_CPP_Copyright
+00000000 W _ZNSt9streambuf6xsputnEPKci
+00000000 W _ZNSt9streambuf5_LockEv
+00000000 W _ZNSt7filebuf4syncEv
+         U _ZNSt6_MutexD1Ev
+00000000 V _ZZNSt7filebuf5_InitEP7__sFILENS_7_InitflEE7_Stinit
+
+_x_gnu_limits.o:
+00000000 D ___x_gnu_limits_o
+
+_x_gnu_locale.o:
+00000000 D ___x_gnu_locale_o
+
+_x_gnu_locale0.o:
+00000000 D ___x_gnu_locale0_o
+
+_x_gnu_nested_exception.o:
+00000000 D ___x_gnu_nested_exception_o
+
+_x_gnu_string.o:
+00000000 D ___x_gnu_string_o
+         U memmove
+00000000 T _ZNKSt12_String_base5_XranEv
+0000052c T _ZNKSt12_String_base5_XlenEv
+         U _ZTVSt12out_of_range
+         U memcpy
+         U _ZTVSt11logic_error
+         U _ZdlPv
+00000000 D _ZNSt6string4nposE
+         U _ZTVSt12length_error
+         U _ZNSt12length_errorD1Ev
+         U _ZNSt12out_of_rangeD1Ev
+         U _ZNKSt9exception6_RaiseEv
+         U _Znwj
+         U strlen
+
+_x_gnu_strstrea.o:
+         U _Znaj
+00000000 W _ZNSt9streambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+00000000 V _ZTVSt10ostrstream
+00000000 W _ZNSt9streambuf9underflowEv
+00000000 V _ZTVSt12strstreambuf
+00000000 V _ZTVSt10istrstream
+00000000 V _ZTVSt7istream
+         U _ZSt7_BADOFF
+00000000 W _ZNSt7ostreamD1Ev
+00000cfc T _ZNSt10ostrstreamD1Ev
+00000000 W _ZNSt9streambuf8overflowEi
+00000000 W _ZNSt9streambuf5imbueERKSt6locale
+00000000 W _ZNSt9streambuf9showmanycEv
+00000000 W _ZNSt9streambuf7_UnlockEv
+00000000 W _ZNSt7istreamD0Ev
+         U memcpy
+00000000 V _ZTVSt9streambuf
+00000874 T _ZNSt12strstreambuf5_InitEiPcS0_i
+00000000 W _ZNSt9streambuf4syncEv
+00000c30 T _ZNSt12strstreambufD2Ev
+00000b5c T _ZNSt12strstreambuf5_TidyEv
+00000000 W _ZNSt3iosD0Ev
+         U _ZNSt8ios_base5_InitEv
+         U _ZdlPv
+00000000 W _ZNSt9streambufD1Ev
+00000800 T _ZNSt12strstreambuf6freezeEb
+         U _ZNSt4fpos4_StzE
+00000ccc T _ZNSt10istrstreamD0Ev
+00000000 W _ZNSt9streambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000000 W _ZNSt9streambuf6setbufEPci
+00000c80 T _ZNSt10istrstreamD2Ev
+00000000 V _ZTVSt7ostream
+00000000 W _ZNSt9streambufD0Ev
+00000cfc T _ZNSt10ostrstreamD2Ev
+00000c80 T _ZNSt10istrstreamD1Ev
+         U _ZNSt8ios_base5clearENS_8_IostateEb
+         U _ZSt4_Fpz
+         U _ZNSt6_Mutex7_UnlockEv
+000004a8 T _ZNSt12strstreambuf8overflowEi
+00000000 W _ZNSt3iosD1Ev
+         U _ZNSt6_Mutex5_LockEv
+00000000 W _ZNSt9streambuf5uflowEv
+00000d78 T _ZNSt12strstreambufD0Ev
+00000000 W _ZNSt9streambuf9pbackfailEi
+000009f8 T _ZNSt10ostrstreamC1EPciNSt8ios_base9_OpenmodeE
+         U _ZdaPv
+00000128 T _ZNSt12strstreambuf7seekoffElNSt8ios_base8_SeekdirENS0_9_OpenmodeE
+000009f8 T _ZNSt10ostrstreamC2EPciNSt8ios_base9_OpenmodeE
+00000000 V _ZTVSt3ios
+00000d48 T _ZNSt10ostrstreamD0Ev
+00000000 W _ZNSt9streambuf6xsgetnEPci
+00000000 W _ZNSt7ostreamD0Ev
+00000000 W _ZNSt7istreamD1Ev
+         U _ZNSt8ios_baseD2Ev
+         U _ZNSt6_MutexC1Ev
+         U _Znwj
+00000000 T _ZNSt12strstreambuf9pbackfailEi
+00000000 W _ZNSt9streambuf6xsputnEPKci
+         U strlen
+00000000 W _ZNSt9streambuf5_LockEv
+00000324 T _ZNSt12strstreambuf7seekposESt4fposNSt8ios_base9_OpenmodeE
+00000c30 T _ZNSt12strstreambufD1Ev
+000000a4 T _ZNSt12strstreambuf9underflowEv
+         U _ZNSt6_MutexD1Ev
+00000000 D ___x_gnu_strstrea_o
+
+_x_gnu_wiostrea.o:
+00000000 D ___x_gnu_wiostrea_o
+
+_x_gnu_wlocale.o:
+00000000 D ___x_gnu_wlocale_o
+
+_x_gnu_xatexit.o:
+00000000 D ___x_gnu_xatexit_o
+00000000 T _Atexit
+         U atexit
+
+_x_gnu_xdtest.o:
+00000000 D ___x_gnu_xdtest_o
+00000000 T _Dtest
+
+_x_gnu_xfdtest.o:
+00000000 T _FDtest
+00000000 D ___x_gnu_xfdtest_o
+
+_x_gnu_xfpostox.o:
+00000000 D ___x_gnu_xfpostox_o
+
+_x_gnu_xfvalues.o:
+00000010 D _FRteps
+00000008 D _FXbig
+00000000 D ___x_gnu_xfvalues_o
+00000050 D _FEps
+00000040 D _FInf
+00000060 D _FDenorm
+00000020 D _FSnan
+00000030 D _FNan
+00000000 B _FZero
+
+_x_gnu_xlocale.o:
+00000000 D ___x_gnu_xlocale_o
+
+_x_gnu_xlocinfo.o:
+00000000 d _ZL8_Ctyptab
+         U islower
+         U ispunct
+         U isspace
+00000000 D ___x_gnu_xlocinfo_o
+         U isxdigit
+         U calloc
+00000000 T _Getctyptab
+         U isupper
+         U isalnum
+         U isdigit
+         U iscntrl
+
+_x_gnu_xmtx.o:
+00000034 T _Mtxdst
+         U semMCreate
+00000048 T _Mtxunlock
+         U semDelete
+         U semTake
+00000000 D ___x_gnu_xmtx_o
+0000003c T _Mtxlock
+         U semGive
+00000000 T _Mtxinit
+
+_x_gnu_xmutex.o:
+         U _Mtxdst
+00000000 D ___x_gnu_xmutex_o
+         U _Mtxunlock
+         U _ZdlPv
+00000070 T _ZNSt6_Mutex7_UnlockEv
+00000068 T _ZNSt6_Mutex5_LockEv
+         U _Mtxlock
+00000000 T _ZNSt6_MutexC1Ev
+         U _Znwj
+         U _Mtxinit
+00000034 T _ZNSt6_MutexD2Ev
+00000000 T _ZNSt6_MutexC2Ev
+00000034 T _ZNSt6_MutexD1Ev
+
+_x_gnu_xstod.o:
+00000000 D ___x_gnu_xstod_o
+00000000 T _Stod
+         U strtod
+0000009c T _Stold
+00000078 T _Stof
+
+_x_gnu_xstoll.o:
+         U __ctype
+         U __errno
+00000000 T _Stoll
+00000000 D ___x_gnu_xstoll_o
+         U _Stoull
+
+_x_gnu_xstoull.o:
+00000000 d digits
+00000028 d ndigs
+         U __ctype
+00000000 D ___x_gnu_xstoull_o
+         U __errno
+         U __udivdi3
+         U memchr
+00000000 T _Stoull
+         U __ctype_tolower
+
+_x_gnu_xsyslock.o:
+00000000 t initlocks
+0000005c t clearlocks
+00000000 b mtx
+00000010 b max_lock
+00000014 b syslock_o
+         U _Mtxdst
+         U _Mtxunlock
+         U __gthread_once
+         U _Atexit
+00000000 D ___x_gnu_xsyslock_o
+000000ac T _Locksyslock
+00000120 T _Unlocksyslock
+         U _Mtxlock
+         U _Mtxinit
+
+_x_gnu_xvalues.o:
+00000020 D _Snan
+00000010 D _Rteps
+00000040 D _Inf
+00000060 D _Eps
+00000000 D ___x_gnu_xvalues_o
+00000070 D _Denorm
+00000030 D _Nan
+00000050 D _Hugeval
+00000008 D _Xbig
+00000000 B _Zero
+
+__gnu_cplusplus_std_library.o:
+00000000 d __gnu_cplusplus_std_library
+00000000 T __gnu_cplusplus_std_libraryInit
+         U ___x_gnu_atexit_arm_o
+         U ___x_gnu_atexit_thread_o
+         U ___x_gnu_eh_abi_o
+         U ___x_gnu_eh_compact_pr_o
+         U ___x_gnu_eh_ptr_o
+         U ___x_gnu_eh_tm_o
+         U ___x_gnu_fiopen_o
+         U ___x_gnu_gccstdexcept_o
+         U ___x_gnu_guard_error_o
+         U ___x_gnu_hash_bytes_o
+         U ___x_gnu_iomanip_o
+         U ___x_gnu_ios_o
+         U ___x_gnu_iostream_o
+         U ___x_gnu_limits_o
+         U ___x_gnu_locale_o
+         U ___x_gnu_locale0_o
+         U ___x_gnu_nested_exception_o
+         U ___x_gnu_string_o
+         U ___x_gnu_strstrea_o
+         U ___x_gnu_wiostrea_o
+         U ___x_gnu_wlocale_o
+         U ___x_gnu_xatexit_o
+         U ___x_gnu_xdtest_o
+         U ___x_gnu_xfdtest_o
+         U ___x_gnu_xfpostox_o
+         U ___x_gnu_xfvalues_o
+         U ___x_gnu_xlocale_o
+         U ___x_gnu_xlocinfo_o
+         U ___x_gnu_xmtx_o
+         U ___x_gnu_xmutex_o
+         U ___x_gnu_xstod_o
+         U ___x_gnu_xstoll_o
+         U ___x_gnu_xstoull_o
+         U ___x_gnu_xsyslock_o
+         U ___x_gnu_xvalues_o

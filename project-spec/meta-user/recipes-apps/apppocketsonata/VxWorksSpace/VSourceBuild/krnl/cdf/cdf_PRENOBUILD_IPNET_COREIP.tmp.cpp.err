@@ -1,0 +1,7 @@
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_ipnet_apps.cdf", line 602: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_ipnet_apps.cdf", line 615: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_ipnet_protos.cdf", line 132: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_ipnet_protos.cdf", line 166: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_net_drv_vx.cdf", line 31: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00comp_net_end2_link_pool_vx.cdf", line 21: warning (dcc:1718): unterminated character or string constant
+"D:/vxWorks7/vxworks-7/pkgs/net/ipnet-1.1.1.2/coreip-1.4.2.0/cdf/00folder_net_show_vx.cdf", line 20: warning (dcc:1718): unterminated character or string constant

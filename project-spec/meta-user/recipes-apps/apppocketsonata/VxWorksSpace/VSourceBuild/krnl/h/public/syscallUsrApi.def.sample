@@ -1,0 +1,64 @@
+##############################################################################
+# syscallUsrApi.def.template - Template for user-defined system call API's
+#
+# Copyright 2004, 2011 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,31jan11,pad  Updated header.
+# 01a,24mar04,yvp  Written.
+#
+#			   -- IMPORTANT --
+#  TO START USING THIS FILE, PLEASE RENAME IT TO syscallUsrApi.def FIRST.
+#
+#  DESCRIPTION:
+#  This file defines system call function API for user-defined VxWorks system
+#  calls. It complements syscallApi.def in that it allows VxWorks users to 
+#  experiment with their own custom system calls.
+#
+#  FORMAT:
+# 
+#  The format is identical to that used by syscallApi.def.
+#
+#  A system call function API definition line has the format:
+#
+#  <name> <#args> [ <argument list> ] [ <return size> ] [ <configMacro(s)> ]
+#
+#  The name is the name of the system call. It must be the same as the name
+#  mentioned in syscallNum.def.
+#
+#  <#args> is the number of arguments taken by the system call. For functions
+#  taking 64-bit arguments on a 32-bit system, <#args> must be increased so
+#  that <#args> reflects the total number of native-words occupied by the
+#  entire argument list. <#args> must not exceed 8.
+#
+#  <argument list> optionally defines the parameter list for this system call
+#  for the purpose of generating the nameScArgs structure. The argument list is
+#  enclosed in []'s, and individual arguments are separated by semicolons.
+#
+#  <return size> is an optional parameter that specifies the size of the
+#  return value.  Valid entries are int, long and ptr.  If omitted, a 32-bit
+#  return value is assumed.  This parameter is enclosed in []'s.
+#
+#  <configMacro(s)> is an optional list of macros, at least one of which must
+#  be defined, in order for this system call to be included into the system.
+#  configMacro's are used as a means to configure specific system calls in
+#  or out of a given system build. 
+#
+#  For example, the _read() system call number has the signature:
+#
+#       ssize_t _read (int fd, void * buf, size_t maxBytes)
+#
+#  This must be specified in this file in the following format:
+#
+#  _read 3 [ int fd; void * buf; size_t maxBytes; ] [ long ] WIND_IO
+#
+#  Given the definition above, the read system call will be included into
+#  the system only if WIND_IO is #defined in the configuration.
+#  
+########################################################################
+
+INCLUDE <mySystemCallHdlr.h>
+
+check_vxworks_version    3  [ int size; const char * buf; vxWorksVersionInfo * pStruct; ]
+

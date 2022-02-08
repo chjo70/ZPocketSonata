@@ -1,0 +1,247 @@
+/* edrCustomPolicy.usrConfig -  Stub for custom fatal error handling */
+                                                                                
+/*
+ * Copyright (c) 2014, 2016-2017 Wind River Systems, Inc.
+ *
+ * The right to copy, distribute, modify, or otherwise make use
+ * of this software may be licensed only pursuant to the terms
+ * of an applicable Wind River license agreement.
+ */
+
+/*
+modification history
+--------------------
+13feb17,cww  added edrSystemFatalPolicyHandler
+25may16,pcs  Updated documentation and fixed build warning.
+25nov14,kk   clean up description (V7COR-2202)
+31jul14,pcs  created.
+*/
+
+/*
+DESCRIPTION
+This file supports the INCLUDE_EDR_CUSTOM_POLICY component. When the component 
+INCLUDE_EDR_CUSTOM_POLICY is selected, the component INCLUDE_EDR_DEFAULT_POLICY
+is mutually excluded and the following 4 fatal error handler routines
+edrKernelFatalPolicyHandler(), edrInterruptFatalPolicyHandler(), 
+edrRtpFatalPolicyHandler() and edrInitFatalPolicyHandler() are pulled in from
+this file. When a fatal error is injected into the system, depending on the type
+of the error, one of the function in this file is called to allow the user to 
+handle the fatal error.
+
+The user needs to implement their own custom fatal error handling by updating 
+the stubs.  
+
+WARNING: The customer should make sure that these functions do not 
+return back to the kernel since the kernel assumes that these functions do not
+return and so does not handle that scenario.
+
+Note: The features pulled in by the following components
+ - INCLUDE_CORE_DUMP
+ - INCLUDE_CORE_DUMP_RTP
+ - INCLUDE_INCLUDE_STOP_MODE_AGENT
+will not be available by default when using the custom default handling.
+If these features are needed, then the code code corresponding to those
+features from the default fatal policty handlers (in the configlette file 
+edrDefaultPolicy.c) needs to be ported into the custom policy handlers.
+
+SEE ALSO: edrDefaultPolicy
+
+*/
+
+#ifndef  __INCedrCustomPolicy_c
+#define  __INCedrCustomPolicy_c
+
+#include <vxWorks.h>
+#include <edrLib.h>
+#include <rebootLib.h>
+#include <taskLib.h>
+#include <intLib.h>
+#include <sysLib.h>
+#include <private/taskLibP.h>
+#ifdef INCLUDE_RTP
+#include <rtpLib.h>
+#endif
+
+/**************************************************************************
+*
+* edrKernelFatalPolicyHandler - handles fatal errors in kernel tasks
+*
+* This function is invoked when a fatal error is injected from a task-level 
+* code. The user should implement their own custom fatal error handling in this
+* function. 
+*
+* Note: The user should make sure that the function does not return back to
+* the kernel. If the user does not have a custom error handling policy, they
+* are free to replicate the default kernel fatal error handling policy. For
+* the code corresponding to the default fatal error handling policy, refer to 
+* the file edrDefaultPolicy.c
+*
+* RETURNS: n/a
+*/
+
+void edrKernelFatalPolicyHandler
+    (
+    EDR_TASK_INFO *info         /* optional information for kernel fault */
+    )
+    {
+    /* Add custom fatal error handler for kernel tasks. */
+
+
+
+    /* 
+     * The error handling provided below is a sample error handling.
+     * Replace it with desired error handling and make sure that the function 
+     * does not return.
+     */
+
+    taskStopForce (0); 
+    }
+
+/**************************************************************************
+*
+* edrSystemFatalPolicyHandler - handles system fatal errors
+*
+* This function is invoked when a irrecoverable system critical error is
+* injected. The user should implement their own custom fatal error handling in
+* this function. 
+*
+* Note: The user should make sure that the function does not return back to
+* the kernel. If the user does not have a custom error handling policy, they
+* are free to replicate the default kernel fatal error handling policy. For
+* the code corresponding to the default fatal error handling policy, refer to 
+* the file edrDefaultPolicy.c
+
+*
+* RETURNS: n/a
+*/
+
+void edrSystemFatalPolicyHandler
+    (
+    EDR_SYSTEM_INFO * pInfo	/* optional information for system fault */
+    )
+    {
+    /* Add custom error handler for system fatal errors */
+
+
+    /* 
+     * The error handling provided below is a sample error handling.
+     * Replace it with desired error handling and make sure that the function 
+     * does not return.
+     */
+
+    reboot (BOOT_NORMAL); 
+    }
+
+/**************************************************************************
+*
+* edrRtpFatalPolicyHandler - handles fatal errors in User-mode (RTP) code
+*
+* This function is invoked when a fatal error is injected from a user-level 
+* code. The user should implement their own custom fatal error handling in this
+* function.
+*
+* Note: The user should make sure that the function does not return back to
+* the kernel. If the user does not have a custom error handling policy, they
+* are free to replicate the default RTP fatal error handling policy. For the 
+* code corresponding to the default RTP fatal error handling policy, refer 
+* to the file edrDefaultPolicy.c
+*
+* RETURNS: n/a
+*/
+
+void edrRtpFatalPolicyHandler
+    (
+    EDR_RTP_INFO *info          /* optional information for RTP fault */
+    )
+    {
+    /* no need to do anything if RTP's are not included */
+
+#ifdef INCLUDE_RTP
+
+     /* Add custom RTP fatal error handler. */
+
+
+
+    /*
+     * The error handling provided below is a sample error handling.
+     * Replace it with desired error handling and make sure that the function 
+     * does not return.
+     */
+
+    (void)rtpDeleteForce (taskIdCurrent->rtpId);
+
+#endif /* INCLUDE_RTP */
+   }
+
+/**************************************************************************
+*
+* edrInitFatalPolicyHandler - handles fatal errors in init phase
+*
+* This function is invoked when a fatal error is injected during the init phase.
+* The user should implement their own custom fatal error handling in this
+* function.
+*
+* Note: The user should make sure that the function does not return back to
+* the kernel. If the user does not have a custom error handling policy, they
+* are free to replicate the default Init fatal error handling policy. For the
+* code corresponding to the default Init fatal error handling policy, refer
+* to the file edrDefaultPolicy.c
+*
+* RETURNS: n/a
+*/
+
+void edrInitFatalPolicyHandler
+    (
+    EDR_INIT_INFO *info         /* optional information on init fault */
+    )
+    {
+     /* Add custom RTP fatal error handler. */
+
+
+
+    /*
+     * The error handling provided below is a sample error handling.
+     * Replace it with desired error handling and make sure that the function 
+     * does not return.
+     */
+
+    reboot (BOOT_NO_AUTOBOOT);
+    }
+
+/**************************************************************************
+*
+* edrInterruptFatalPolicyHandler - handles fatal errors in interrupts
+*
+* This function is invoked when a fatal error is injected by interrupts
+* The user should implement their own custom fatal error handling in this
+* function.
+*
+* Note: The user should make sure that the function does not return back to
+* the kernel. If the user does not have a custom error handling policy, they
+* are free to replicate the default Interrupt fatal error handling policy. For 
+* the code corresponding to the default Interrupt fatal error handling policy, 
+* refer to the file edrDefaultPolicy.c
+*
+* RETURNS: n/a
+*/
+
+void edrInterruptFatalPolicyHandler
+    (
+    EDR_INTERRUPT_INFO *info    /* optional information for interrupt fault */
+    )
+    {
+     /* Add custom Interrupt fatal error handler. */
+
+
+
+    /*
+     * The error handling provided below is a sample error handling.
+     * Replace it with desired error handling and make sure that the function 
+     * does not return.
+     */
+
+    reboot (BOOT_NORMAL);
+    }
+
+#endif  /* __INCedrCustomPolicy_c */
+

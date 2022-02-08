@@ -58,15 +58,29 @@ void Main()
 	
     printf( "\n IP addr[%s]" , ip_addr );
     if( sysClkRateGet() != 100 ) {
+#ifdef TOOL==diab    		
+        printf( "\n [W] In the Workbench, please set up the tick count is 100." );
+#else
         printf( "\n [W] 토네이도의 Component에서 tick count를 100 으로 설정하세요." );
+#endif        
     }
 	
+#ifdef TOOL==diab
+    printf( "\n Pocket ES System, Boot Shell Program, %s, EW Lab., 2021." , VERSION );
+    printf( "\n Compile Version : %s" , creationDate );
+#else
     printf( "\n 소형 전자전장비 자체개발, 부트 쉘 프로그램, %s, 전자전 연구소, 2021." , VERSION );
-    printf( "\n 컴파일 날짜 : %s" , creationDate );
+    printf( "\n 컴파일 날짜 : %s" , creationDate );   
+    
+#endif
     
     time( & rawtime );
     timeinfo = localtime ( & rawtime );
-    printf ( "\n 실행 시간: %s\n", asctime (timeinfo) );   
+#ifdef TOOL==diab    
+    printf ( "\n Execution Time : %s\n", asctime (timeinfo) );
+#else
+    printf ( "\n 실행 시간: %s\n", asctime (timeinfo) );
+#endif
 
     //BootShellMain();
     
@@ -91,9 +105,9 @@ void LoadBootParameter()
 {
 
 	// boot parameter 를 읽어온다.
-	char *bootString=BOOT_LINE_ADRS;
+	char *bootString=(char *) BOOT_LINE_ADRS;
 	if( ( bootString != NULL ) && ( *bootString != EOS ) )
-		strcpy( BOOT_LINE_ADRS, bootString );
+		strcpy( (char *) BOOT_LINE_ADRS, bootString );
 
   /* interpret boot command */
 	if( usrBootLineCrack( BOOT_LINE_ADRS, & stBootParams ) != OK ) {
@@ -101,3 +115,5 @@ void LoadBootParameter()
 		return;
 	}
 }
+
+
