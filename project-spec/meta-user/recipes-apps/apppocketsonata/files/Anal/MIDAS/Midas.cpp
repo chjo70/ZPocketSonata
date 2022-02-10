@@ -145,7 +145,6 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
 
                // 4. HCD 저장
                WriteHeader();
-
                // 5. 데이터 저장
                if( ! WriteData( 0, 0 ) ) { //DTEC_Else
                    bRet = false;
@@ -1608,21 +1607,16 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         memset( pSubrecords->name, 0x20, sizeof( pSubrecords->name ) );
         c = sprintf( buffer, (char *) "%s" , stSubrecordName[i] );
         memcpy( pSubrecords->name, buffer , strlen(buffer) );
-
         _PUT_ARRAY_VALUE( pSubrecords->name, c, 0x20 );
-//         if( c < sizeof(pSubrecords->name) ) {
-//             pSubrecords->name[c] = 0x20;
-//         }
 
         // 최소 값
         memset( pSubrecords->minval, 0x20, sizeof( pSubrecords->minval ) );
         c = sprintf( & pSubrecords->minval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMinVal );
         _PUT_ARRAY_VALUE( pSubrecords->minval, c, 0x20 );
 
-        // 최소 값
+        // 최대 값
         memset( pSubrecords->maxval, 0x20, sizeof( pSubrecords->maxval ) );
         c = sprintf( & pSubrecords->maxval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMaxVal );
-        //pSubrecords->maxval[c] = 0x20;
         _PUT_ARRAY_VALUE( pSubrecords->maxval, c, 0x20 );
 
         // 옵셋
@@ -2064,7 +2058,6 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataT
 
 		FileClose();
 	}
-
 
 #else
 	SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );

@@ -497,11 +497,8 @@ struct STR_SYS
 
 #endif
 
-
-
 #ifndef _FREQ_RESOL_
 #define _FREQ_RESOL_
-
 /**	\brief	구조체명 FREQ_RESOL 
 */
 struct FREQ_RESOL {
@@ -634,6 +631,7 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
 #define _AOARes                 ( (float) (360./512.) )
+
     FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
           {     0,     0, 0, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,

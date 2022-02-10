@@ -309,7 +309,6 @@ void CKMakeAET::MakeUpAET()
 #ifndef _XBAND_
                 pUpdAet->iScanType = m_pTrkAet->iScanType;
                 pUpdAet->fScanPeriod = m_pTrkAet->fMeanScanPeriod;
-
 				++ coUpdAet;
 
 #endif

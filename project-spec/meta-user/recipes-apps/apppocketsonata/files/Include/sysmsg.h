@@ -6,6 +6,7 @@
 #ifndef _SYSMSG_H
 #define _SYSMSG_H
 
+
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
 #include "./SONATAPIP/ShuICD.h"
@@ -84,6 +85,8 @@ enum enREQ_MESSAGE {
     // 시스템 변수
     enREQ_SYS=Mcnf_ReqSys,
 
+    // 경고
+    enSYSERROR,
 
     // 디버깅 용
     enREQ_SIM_PDWDATA,  // PDW 데이터 모의
@@ -308,7 +311,6 @@ union UNI_LAN_DATA {
 #else
 #pragma pack( pop )
 #endif
-
 
 #endif // _SYSMSG_H
 

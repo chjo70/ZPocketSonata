@@ -248,6 +248,7 @@ private:
     STR_MessageData m_SndMsg;
 
     char *m_pszRecvData;
+
 #ifdef __VXWORKS__
     int m_szRecvData[_MAX_LANDATA/sizeof(UINT)] __attribute__ ((aligned(16)));	// 32 -> 16
 #else
@@ -385,6 +386,8 @@ public:
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
     int GetThreadID() { return m_iThreadID; }
+
+    void SendTaskMngr( int iErrorCode, const char *pszThreadName=NULL );
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }

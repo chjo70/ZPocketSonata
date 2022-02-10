@@ -400,6 +400,7 @@ BOOL CGroup::MakeGroup()
 //
 void CGroup::PrintAllGroup()
 {
+#ifdef _MSC_VER
     int IdxFrqAoaPw=0;
 
     STR_AOA_GROUP *pAoaGroup;
@@ -454,6 +455,7 @@ void CGroup::PrintAllGroup()
 
         ++ IdxFrqAoaPw;
     }
+#endif
 
 }
 
@@ -476,7 +478,7 @@ void CGroup::PrintGroup()
     pFrqGr = & m_FrqGroups.frq[ pPwGr->frq_idx ];
     pAoaGroup = & m_AoaGroups.aoa[ pFrqGr->aoa_idx ];
 
-    Log( enDebug, "=====================================================================================================" );
+    //Log( enDebug, "=====================================================================================================" );
     //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
     Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( m_nBand, pFrqGr->from_frq ), I_FRQMhzCNV( m_nBand, pFrqGr->to_frq ), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
 

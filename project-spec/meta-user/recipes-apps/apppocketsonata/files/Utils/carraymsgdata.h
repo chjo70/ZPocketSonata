@@ -7,6 +7,9 @@
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)
 
+// 랜 데이터 비교 횟수 이후 에러 통보
+#define MAX_TRY_MARK                    (20)
+
 class CArrayMsgData
 {
 private:
@@ -26,6 +29,8 @@ public:
 
     virtual void Sleep( int mssleep )=0;
     virtual const char *GetThreadName()=0;
+
+    virtual void SendTaskMngr( int iErrorCode, const char *pszThreadName=NULL )=0;
 
 private:
     void Alloc();

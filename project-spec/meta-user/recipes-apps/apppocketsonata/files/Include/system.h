@@ -95,6 +95,15 @@ enum ENUM_THREAD_KEY {
 
 #endif
 
+// 에러 코드 정의 테이블
+enum ENUM_ERROR_CODE {
+    enERROR_OF_SENDMSG=0xff00,
+
+    enERROR_OF_ARRAY_MARK,
+
+
+};
+
 
 
 #endif // _SYSTEM_H

@@ -94,30 +94,42 @@ void CArrayMsgData::SetMark( int iIndex )
  */
 int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
+    int iRet;
+
     ++ m_ucPushIndex;
     if( m_ucPushIndex >= SIZE_OF_MSGDATA_ARRAY ) {
         m_ucPushIndex = 0;
     }
+    iRet = (int) m_ucPushIndex;
 
+    // 메시지 처리 대기
     int i=0;
     while( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         Sleep( 1000 );
 
-        if( i++ < 100 ) {
-        LOGMSG1( enError, "[%s] 가 죽었거나 무한 루프를 수행하고 있습니다. !!" , GetThreadName() );
+        if( i++ >= MAX_TRY_MARK ) {
+            break;
         }
     }
-    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
-        LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
-    }
 
+    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
+        //LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
+        LOGMSG2( enError, "[%s] 가 죽었거나 메시지 처리를 못해서 타스크 관리자에게 요청 합니다[%d]. !!" , GetThreadName(), enERROR_OF_ARRAY_MARK );
+
+        SendTaskMngr( enERROR_OF_ARRAY_MARK, GetThreadName() );
+
+        iRet = -1;
+    }
+    else {
 	if( uiLength > _MAX_LANDATA ) {
 		TRACE( "\n************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
 		exit( 1 );
 	}
 
     memcpy( m_pszArray[m_ucPushIndex], pData, uiLength );
-    return m_ucPushIndex;
+    }
+
+    return iRet;
 }
 
 /**

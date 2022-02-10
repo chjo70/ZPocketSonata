@@ -52,7 +52,6 @@ private:
 	static bool m_bTryConnect;
 
 	//int m_iErrorException;
-
 	//char *m_pszSQLString;
 
 protected:

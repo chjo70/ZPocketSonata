@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 
 
+
 #include "../OFP_Main.h"
 
 #include <string.h>
@@ -207,7 +208,6 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     InitResolution();
 
-
     //////////////////////////////////////////////////////////////////////////////////////////
     // 수집 버퍼 정의
     m_pPDWData = pPDWData;
@@ -223,8 +223,6 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     // AET 생성 초기화
     m_theMakeAET->CNMakeAET::Init();
-
-
 
 }
 
@@ -865,7 +863,6 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
 #else
     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
-
 #endif
 
     //printf( "\n Create the Dir[%s]" , szDirectory );
@@ -878,7 +875,6 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 #if defined(_ELINT_) || defined(_XBAND_)
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
-
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
         sprintf( szRawDataPathname, "%s/%s", szDirectory, m_szRawDataFilename );

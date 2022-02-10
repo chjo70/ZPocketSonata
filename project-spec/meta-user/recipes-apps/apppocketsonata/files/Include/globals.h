@@ -89,6 +89,7 @@ extern CELEnvironVariable *g_pTheELEnvironVariable;
 // 쓰레드 관련 정보
 extern vector<CThread *> g_vecThis;
 
+
 #if defined(_ELINT_) || defined(_XBAND_)
 
 

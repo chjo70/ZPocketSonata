@@ -134,8 +134,6 @@ CThread::CThread( int iThreadID, char *pThreadName, bool bArrayLanData, bool bCr
     // 메시지큐 생성
     memset( & m_RcvMsg, 0, sizeof(STR_MessageData) );
 
-    
-
     // 스레드 벡터에 삽입하기
     g_vecThis.push_back( this );
 
@@ -657,7 +655,9 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     	sndMsg.iArrayIndex = -1;
     }
 
-    QMsgSnd( & sndMsg, pszClassName );
+    if( sndMsg.uiArrayLength == 0 || sndMsg.iArrayIndex != -1 ) {
+        QMsgSnd( & sndMsg, pszClassName );
+    }
 
 }
 
@@ -673,7 +673,9 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const
   
     }
 
+    if( pMessageData->uiArrayLength == 0 || pMessageData->iArrayIndex != -1 ) {
     QMsgSnd( pMessageData, pszThreadName );
+    }
 
 }
 
@@ -692,6 +694,8 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 #ifdef __linux__
     if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
+
+        SendTaskMngr( enERROR_OF_SENDMSG );
     }
     else {
         // DisplayMsg( true, m_szThreadName, pMessageData );
@@ -711,14 +715,9 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 #elif __VXWORKS__    
     STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof(STR_MessageData), NO_WAIT, MSG_PRI_NORMAL );
     if( stat == ERROR ) {
-        while( true ) {
-            char buffer[100];
+        // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.
 
-            sprintf( buffer, "QMsgSnd 송신 실패 : from %s to %s..." , pszThreadName, GetThreadName() );
-            LOGMSG( enError, buffer );
-
-            taskDelay(100);
-        }
+        SendTaskMngr( enERROR_OF_SENDMSG, pszThreadName );
     }                                   
     else {
         DisplayMsg( true, m_szThreadName, pMessageData );
@@ -726,6 +725,44 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
     }
 
 #endif
+
+}
+
+/**
+ * @brief		SendTaskMngr
+ * @param		int iErrorCode
+ * @param		const char * pszThreadName
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/02/09 11:25:21
+ * @warning		
+ */
+void CThread::SendTaskMngr( int iErrorCode, const char *pszThreadName )
+{
+    unsigned int i;
+    CThread *pThis=NULL;
+
+    STR_MessageData stMessageData;
+
+    for( i=0 ; i < g_vecThis.size() ; ++i ) {
+        pThis = g_vecThis[i];
+        if( typeid( *pThis ) == typeid(CTaskMngr) ) {
+            stMessageData.uiOpCode = enSYSERROR;
+            stMessageData.x.uiData = iErrorCode;
+            pThis->QMsgSnd( & stMessageData, pszThreadName );
+            break;
+        }
+    }
+
+    if( g_vecThis.size() <= i ) {
+        while( true ) {
+            printf( "\n 타스크 관리자 객체가 없습니다.");
+            Sleep( 2000 );
+        }
+        
+    }
+
 
 }
 

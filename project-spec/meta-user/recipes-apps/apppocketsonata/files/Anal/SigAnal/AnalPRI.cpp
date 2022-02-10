@@ -288,7 +288,7 @@ void CAnalPRI::Analysis()
 //
 void CAnalPRI::PrintAllEmitter()
 {
-//#ifdef _MSC_VER
+#ifdef _MSC_VER
     //////////////////////////////////////////////////////////////////////////
     //
     // 가상 에미터 프린트
@@ -317,7 +317,7 @@ void CAnalPRI::PrintAllEmitter()
         }
     }
 
-//#endif
+#endif
 
 }
 
@@ -2831,6 +2831,7 @@ FREQ_TYPE CAnalPRI::AnalFreqType(STR_EMITTER *pEmitter)
     threshold = IFRQMhzCNV( 0, 5 );
 #elif _POCKETSONATA_
     threshold = I_IFRQCNV( 0, 5 );
+
 #else
     STR_PULSE_TRAIN_SEG *pSeg = & m_pSeg[ pEmitter->seg_idx[0] ];
 

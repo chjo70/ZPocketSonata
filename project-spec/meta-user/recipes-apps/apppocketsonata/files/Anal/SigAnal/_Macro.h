@@ -4,6 +4,8 @@
     \version  0.0.1
 */
 
+
+
 #ifndef  __MACRO_H
 #define  __MACRO_H
 
@@ -263,6 +265,7 @@ T _diffabs( T x, T y)
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 
+
 #else
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
 #define FFRQCNV( A, B )         FMUL( (B), ( gFreqRes[(A)].fRes ) )
@@ -383,6 +386,7 @@ void _InitResolution();
 
 
 #ifdef _MAIN_GLOBALS_
+
 float _spOneSec;
 float _spOneMilli;
 float _spOneMicrosec;

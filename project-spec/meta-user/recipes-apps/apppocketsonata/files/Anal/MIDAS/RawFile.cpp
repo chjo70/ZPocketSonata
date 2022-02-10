@@ -19,10 +19,8 @@
 #include <ioLib.h>
 #include <nfs/nfsCommon.h>
 
-
 #else
 #include <io.h>
-
 #endif
 
 

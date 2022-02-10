@@ -196,6 +196,9 @@ bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
         case enREQ_STOP :
             break;
 
+        case enSYSERROR :
+            break;
+
         default:
             break;
 
