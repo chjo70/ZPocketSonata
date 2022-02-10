@@ -2,26 +2,18 @@ echo off
 
 REM ########################################################################
 REM  ÀÛ¾÷½Ç¿¡¼­...
-SET RADAR_DF_LIB=E:\GitHub\RADAR_DF\Debug
-SET RADAR_DF_HEADER=E:\GitHub\RADAR_DF\ICAA
+REM SET RADAR_DF_LIB=E:\GitHub\RADAR_DF\Debug
+REM SET RADAR_DF_HEADER=E:\GitHub\RADAR_DF\ICAA
 
 REM ¾Æ·¡´Â È¸»ç¿¡¼­...
-REM SET RADAR_DF_LIB=E:\X ¹êµå\DevSrc\RADAR_DF\Debug
-REM SET RADAR_DF_HEADER=E:\X ¹êµå\DevSrc\RADAR_DF\ICAA
+SET RADAR_DF_LIB=E:\X ¹êµå\DevSrc\RADAR_DF\Debug
+SET RADAR_DF_HEADER=E:\X ¹êµå\DevSrc\RADAR_DF\ICAA
 
 
 REM ########################################################################
 REM  ÀÛ¾÷½Ç¿¡¼­...
-
-echo $(ConfigurationName)
-IF $(ConfigurationName)==Release echo "AAAA"
-
-SET RADAR_RD_LIB=E:\GitHub\RADAR_RD\Debug
-SET RADAR_RD_HEADER=E:\GitHub\RADAR_RD\ICAA
-
-REM ¾Æ·¡´Â È¸»ç¿¡¼­...
-REM SET RADAR_RD_LIB=E:\X ¹êµå\DevSrc\RADAR_RD\Debug
-REM SET RADAR_RD_HEADER=E:\X ¹êµå\DevSrc\RADAR_RD\ICAA
+SET RADAR_RD_LIB=E:\X ¹êµå\DevSrc\RADAR_RD\Debug
+SET RADAR_RD_HEADER=E:\X ¹êµå\DevSrc\RADAR_RD\ICAA
 
 REM X¹êµå ¹æÅ½±â ======================================
 IF NOT EXIST "%RADAR_DF_LIB%" goto ERROR

@@ -215,7 +215,7 @@ void CRADARDIRAPPDoc::ReadDataFile()
 		uiByte = theRawDataFile.Read( & stPDWData, uiHeader );
 
         // 장치 마다 PDW 개수를 이 변수에 저장해야 한다.
-        stPDWData.uiTotalPDW = stPDWData.x.el.uiCount;
+        //stPDWData.uiTotalPDW = stPDWData.x.el.uiCount;
 
 		if( uiHeader + ( stPDWData.uiTotalPDW * sizeof(_PDW) ) == file_size ) {
 			uiByte = theRawDataFile.Read( stPDWData.stPDW, stPDWData.uiTotalPDW * sizeof(_PDW) );
