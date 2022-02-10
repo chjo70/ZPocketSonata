@@ -240,6 +240,10 @@ void CTaskMngr::_routine()
                         ReqSystemVar();
                         break;
 
+                    case enSYSERROR :
+                        printf( "****************************************************************" );
+                        break;
+
                     default:
                         LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                         break;

@@ -301,6 +301,7 @@ struct SRxABTData {
 	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+
 }  ;
 #endif
 

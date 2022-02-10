@@ -261,6 +261,7 @@ void CELEmitterMergeMngr::FreeMemory()
 
     _SAFE_DELETE( m_pIdentifyAlg );
     //_SAFE_DELETE( g_pTheELEnvironVariable );
+
     delete [] m_pVecLOBs;
 
     if( m_pTheThreatRoot != NULL ) {
@@ -389,10 +390,10 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     //DWORD dwTime = GetTickCount();
     SetScanInfo( bScanInfo );
-    WhereIs;
 
 #ifdef _MSC_VER
 #ifdef _POCKETSONATA_
+    WhereIs;
     Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
         pLOBData->fDOAMean,
@@ -474,6 +475,8 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     // 8. 위협 관리 삭제 처리
     //ResetABT();
+
+
 
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
@@ -8320,6 +8323,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
 	// LOB 저장소에 추가 한다.
 	PushLOBLANData( m_pLOBData );
+
 #else
     if( m_bScanProcess == false ) {
         if( i_bIsFilteredLOB == false ) {
@@ -11385,7 +11389,6 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 	return true;
 
 #endif
-
 }
 
 

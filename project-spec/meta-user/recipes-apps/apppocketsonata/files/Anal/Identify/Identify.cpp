@@ -6149,7 +6149,6 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         theRS.GetFieldValue( i++, & pRadarMode->fRF_PatternPeriodMax );
 
         theRS.GetFieldValue( i++, (int *) & pRadarMode->ePRI_Type );
-
         theRS.GetFieldValue( i++, & pRadarMode->fPRI_TypicalMin );
 		if( pRadarMode->fPRI_TypicalMin < 1 ) {  pRadarMode->fPRI_TypicalMin = 0.0; }
 
@@ -6626,6 +6625,7 @@ void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
 //     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
 //     exec( m_szSQLString );
 #else
+
 #endif
     
 

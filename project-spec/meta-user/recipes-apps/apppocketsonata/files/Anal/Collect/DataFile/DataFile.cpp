@@ -64,6 +64,7 @@ CPDW::CPDW(STR_RAWDATA *pRawData) : CData(pRawData )
 {
     m_RawData.enDataType = en_PDW_DATA;
     m_RawData.enUnitType = en_SONATA;
+
 }
 
 /**
@@ -208,7 +209,9 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 				*pfDTOA = DecodeTOAus( uiDToa );
 			    preToa = uiToa;
 		    }
+
 		    *pfllTOA = uiToa;
+
 
 		    uiTemp = BIT_MERGE(pPDW->item.frequency_h, pPDW->item.frequency_l);
 		    //*pfFreq = FFRQCNV(pPDW->item.band, uiTemp);
@@ -252,7 +255,6 @@ void CPDW::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pF
 */
 		    ++pPDW;
 	    }
-
     }
 }
 
@@ -784,7 +786,6 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
 
     return uiDataItems;
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -3903,8 +3904,8 @@ void CDataFile::ReadDataAll( CData *pData )
 
     }
 
-	// 데이터 파일 중에서 제일 큰 것을 읽는다.
-	pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
+        // 데이터 파일 중에서 제일 큰 것을 읽는다.
+        pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
 
 	m_RawDataFile.SeekToStart();
 

@@ -16,7 +16,6 @@
 
 #endif
 
-
 #include "../../../Anal/MIDAS/Midas.h"
 
 
@@ -351,6 +350,7 @@ public:
     } ;
 
 
+
 };
 
 
@@ -430,8 +430,6 @@ namespace XPDW {
 class CXPDW : public CData
 {
 private:
-	
-
 	STR_ELINT_HEADER m_stHeader;
 
 	ENUM_BANDWIDTH m_enBandWidth;
@@ -451,7 +449,6 @@ public:
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
 	inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
 	inline void SetHeaderData( void *pData ) { return; }
-
 
     static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {

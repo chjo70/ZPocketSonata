@@ -177,7 +177,6 @@ void InitDatabase()
 
 }
 
-
 /**
  * @brief     Start
  * @return    void
@@ -189,6 +188,7 @@ void InitDatabase()
  */
 void Start( int iArgc, char *iArgv[] )
 {
+
     ParsingArgument( iArgc, iArgv );
     
     LOGENTRY;
@@ -203,26 +203,10 @@ void Start( int iArgc, char *iArgv[] )
     signal( SIGSTOP, signalHandler);
 #endif
 
-    // CPOCKETSONATAPDW::Test();
-    {
-        //std::vector<int> *m_pVecLOBs;
-#define TOTAL_ITEMS_OF_THREAT_NODE			(100000)
-//         m_pVecLOBs = new std::vector<int> [TOTAL_ITEMS_OF_THREAT_NODE];
-//         //m_pVecLOBs.reserve( TOTAL_ITEMS_OF_THREAT_NODE )
-// 
-// //         for( i=0 ; i < ) {
-// //             AppendLOBs( & m_p
-// //         }
-// 
-//         delete [] m_pVecLOBs;
-// 
-//         TRACE( "TEST..." );
-
-    }
-
     InitDatabase();
 
     g_pTheSysConfig = new CSysConfig();
+
 
     // 1. 쓰레드 관리 쓰레드를 호출한다.
 #ifdef _SQLITE_
@@ -364,8 +348,6 @@ void End()
     
     // 마지막 타스크 관리자 쓰레드를 종료 한다.
     
-       
-
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
     _SAFE_DELETE( g_pTheSysConfig ); 
