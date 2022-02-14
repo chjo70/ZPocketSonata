@@ -105,8 +105,8 @@ private:
     CInverseMethod m_theInverseMethod;
     CPositionEstimationAlg m_thePositionEstimation;
 
-	CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
- 
+    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+
     CELThreat *m_pAETThreat;									///< 생성할때 위협(방사체) 관리 포인터
     CELThreat *m_pABTThreat;									///< 생성할때 위협(빔) 관리 포인터
 
@@ -174,9 +174,9 @@ private:
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
-     bool m_bScanProcess;
- 
-     SEnvironVariable *m_pSEnvironVariable;
+    bool m_bScanProcess;
+
+    SEnvironVariable *m_pSEnvironVariable;
     
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -368,13 +368,13 @@ private:
     int CompValid( SRxABTData *pABTData );
     bool CompELNOTInfo( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompIDELNOTInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-// 
+//
 // 	//////////////////////////////////////////////////////////////////////////
 // 	// ABT 간 병합
-// 
+//
 // 	// 재연모드 관련 함수
 // 	//void GetThreatInfo();
-// 
+//
 // 	// 통계 함수
     float CalcMean( float fMean1, int iCount1, float fMean2, int iCount2 );
     int CalcMean( int iMean1, int iCount1, int iMean2, int iCount2 );

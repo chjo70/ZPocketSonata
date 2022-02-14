@@ -3932,7 +3932,7 @@ void CELSignalIdentifyAlg::PIdentifyStbStb( SRxLOBData *pLOBData )
 
         if( ( pRadarMode->fPRI_TypicalMin > 0 /* || pRadarMode->fPRI_TypicalMin < 0 */ ) || ( pRadarMode->fPRI_TypicalMax > 0 /* || pRadarMode->fPRI_TypicalMax < 0 */ ) ) {
             bret = ( CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE ||
-                     CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
+                             CompMarginDiff<float>( pLOBData->fPRIMin, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax, m_pSEnvironVariable->fMarginPriError ) == TRUE );
 
             if( bret == _spFalse ) {
                 continue;

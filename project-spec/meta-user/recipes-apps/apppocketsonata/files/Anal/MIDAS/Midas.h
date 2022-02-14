@@ -43,17 +43,17 @@ using namespace std;
 
 enum EnumSCDataType
 {
-	E_EL_SCDT_UNKNOWN			= 0x00,
+	E_EL_SCDT_UNKNOWN		= 0x00,
 	E_EL_SCDT_IF				= 0x01,		//IF
 	E_EL_SCDT_PDW				= 0x02,		//PDW
 	E_EL_SCDT_IQ				= 0x04,		//IQ
-	E_EL_SCDT_SPECTRUM			= 0x08,		//스펙트럼
+	E_EL_SCDT_SPECTRUM	= 0x08,		//스펙트럼
 	E_EL_SCDT_LOB				= 0x10,		//위협데이터
 	E_EL_SCDT_PRF				= 0x20,		//PRF
 	E_EL_SCDT_LOG				= 0x40,		// 운용 로그
 	//E_EL_SCDT_SAMPLING	= 0x80,		//Sampling
 
-	E_EL_SCDT_PDW2SP370			= 0x88,		//PDWfmf SP350변환  
+	E_EL_SCDT_PDW2SP370	= 0x88,		//PDWfmf SP350변환  
 
 	E_EL_SCDT_ALL = -1					// 검색할 때 인자를 주기 위한 것
 };

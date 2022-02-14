@@ -19,13 +19,13 @@
 #include "../../../Anal/MIDAS/Midas.h"
 
 
-#define	PDW_ITEMS						(1024*128)			// 9437164
-#define IQ_ITEMS						(1024*128)
+#define			PDW_ITEMS						(1024*128)			// 9437164
+#define			IQ_ITEMS						(1024*128)
 
 //#define			MAX_RAWDATA_SIZE				(4000000)	// 2,432,052
-#define MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
+#define			MAX_RAWDATA_SIZE				_max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
 
-#define	MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
+#define			MAX_HEADER_SIZE					_max( HEADER_CONTROL_BLOCK_SIZE, 100 )
 
 #define	RAD2DEG			(57.2957795130)
 
@@ -173,7 +173,8 @@ struct STR_ZOOM_INFO {
 	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
 	void ReadDataHeader();  \
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );	\
+    void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
+    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData ); \
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
 	void *GetHeader() { return NULL; }	\
@@ -194,7 +195,6 @@ public:
     unsigned long long  m_ullFileSize;  // 파일 크기
     UINT m_uiTotalDataItems;            // 전체 PDW 개수
 
-
 	STR_PDW_DATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
     STR_RAWDATA m_RawData;
@@ -204,6 +204,12 @@ public:
     STR_FILTER_SETUP m_strFilterSetup;
 
 public:
+    CData(STR_RAWDATA *pRawData);
+    virtual ~CData();
+
+    void Alloc( unsigned int uiItems=0 );
+    void Free();
+
     void ClearFilterSetup();
     void swapByteOrder(unsigned int& ui);
     void swapByteOrder(unsigned long long& ull);
@@ -212,15 +218,11 @@ public:
 
     void UpdateMacroSysVar();
 
-public:
-    CData(STR_RAWDATA *pRawData);
-    virtual ~CData();
-
-    void Alloc( unsigned int uiItems=0 );
-    void Free();
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
 
     virtual void ReadDataHeader() = 0;
-    virtual void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true ) = 0;
+    virtual void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData )=0;
+    virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
     virtual void *GetData() = 0;
     virtual void *GetHeader() = 0;
 
@@ -289,7 +291,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 
     unsigned int GetDataItems( unsigned long long ullFileSize );
@@ -303,11 +305,32 @@ public:
 
 public:
 
+    /**
+     * @brief     DecodeTOAus
+     * @param     unsigned int uiTOA
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-02-09, 17:02
+     * @warning
+     */
     static float DecodeTOAus( unsigned int uiTOA  )
     {
         return (float) uiTOA / (float) ONE_MICROSEC;
     } ;
 
+	/**
+	 * @brief     DecodeRealFREQMHz
+	 * @param     int iBand
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:02
+	 * @warning
+	 */
 	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
 	{
 		float fVal=0.0;
@@ -319,21 +342,61 @@ public:
 		return fVal;
 	}
 
+	/**
+	 * @brief     DecodePW
+	 * @param     unsigned int uiPW
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:02
+	 * @warning
+	 */
 	static float DecodePW( unsigned int uiPW )
 	{
 		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
 	} ;
 
+	/**
+	 * @brief     DecodeFREQMHz
+	 * @param     int iFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:03
+	 * @warning
+	 */
 	static float DecodeFREQMHz( int iFreq )
 	{
 		return 0.0;
 	} ;
-
+	
+	/**
+	 * @brief     DecodeDOA
+	 * @param     unsigned int uiDOA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:03
+	 * @warning
+	 */
 	static float DecodeDOA( unsigned int uiDOA )
 	{
 		return (float) DOA_RES * (float) uiDOA;
 	} ;
 
+	/**
+	 * @brief     DecodePA
+	 * @param     unsigned int uiPA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:03
+	 * @warning
+	 */
 	static float DecodePA( unsigned int uiPA )
 	{		
 		return (float) ( ( (float) uiPA * (float) AMP_RES ) - (float) 110. );
@@ -348,8 +411,6 @@ public:
     {
         return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
     } ;
-
-
 
 };
 
@@ -370,9 +431,11 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
+
+    virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
 
 	inline unsigned int GetOffsetSize() { return 0; }
 	inline unsigned int GetHeaderSize() { return 0; }
@@ -386,14 +449,17 @@ namespace ELINT {
 	const unsigned int uiPDW_CW=0;
 	const unsigned int uiPDW_NORMAL=1;
 	const unsigned int uiPDW_DV=1;
+
+    const float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+    const float fFreqRes=(float) 0.001;
+    const float fDOARes=(float) 0.01;
+    const float fPARes=(float) 0.25;
 }
 
 // 인천공항 PDW
 class CEPDW : public CData
 {
 private:
-	//STR_PDW_DATA m_PDWData;
-
     STR_ELINT_HEADER m_stHeader;
 
 	ENUM_BANDWIDTH m_enBandWidth;
@@ -405,17 +471,115 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return (void *) & m_stHeader; }
     unsigned int GetDataItems( unsigned long long ullFileSize );
     unsigned int GetHeaderSize();
-	
-	inline unsigned int GetOffsetSize() { return 0; }
+
+	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
     inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
+
+    /**
+     * @brief     DecodeTOAus
+     * @param     _TOA uiTOA
+     * @param     ENUM_BANDWIDTH enBandWidth
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-02-09, 17:03
+     * @warning
+     */
+    static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
+    {
+        return (float) ( ( (float) uiTOA * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
+    } ;
+
+	/**
+	 * @brief     DecodeRealFREQMHz
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:04
+	 * @warning
+	 */
+	static float DecodeRealFREQMHz( unsigned int uiFreq )
+	{
+		float fVal;
+
+		fVal = FMUL( uiFreq, ELINT::fFreqRes );
+		
+		return fVal;
+	} ;
+
+	/**
+	 * @brief     DecodePW
+	 * @param     unsigned int uiPW
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
+	{
+		return (float) ( ( (float) uiPW * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
+	} ;
+
+	/**
+	 * @brief     DecodeFREQMHz
+	 * @param     int iFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodeFREQMHz( int iFreq )
+	{
+		return 0.0;
+	} ;
+
+	/**
+	 * @brief     DecodeDOA
+	 * @param     unsigned int uiDOA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodeDOA( unsigned int uiDOA )
+	{
+		float fDOA;
+		fDOA = (float) ELINT::fDOARes * (float) ( uiDOA % 36000 );
+		return fDOA;
+	} ;
+
+	/**
+	 * @brief     DecodePA
+	 * @param     unsigned int uiPA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodePA( unsigned int uiPA )
+	{		
+		return (float) ( ( (float) uiPA * (float) ELINT::fPARes ) - (float) 110. );
+	} ;
 
 };
 
@@ -439,22 +603,44 @@ public:
 	virtual ~CXPDW();
 
 	void ReadDataHeader() {  }
-	void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+	void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData );
 	void *GetData();
 	void *GetHeader() { return (void *) & m_stHeader; }
 	unsigned int GetDataItems( unsigned long long ullFileSize );
-	unsigned int GetHeaderSize();
-	unsigned int GetOffsetSize();
+    unsigned int GetHeaderSize();
+	unsigned int GetOffsetSize();    
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
-	inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
-	inline void SetHeaderData( void *pData ) { return; }
+    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
+    inline void SetHeaderData( void *pData ) { return; }
 
+    /**
+     * @brief     DecodeTOAus
+     * @param     _TOA uiTOA
+     * @param     ENUM_BANDWIDTH enBandWidth
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-02-09, 17:03
+     * @warning
+     */
     static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
         return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
+	/**
+	 * @brief     DecodeRealFREQMHz
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:04
+	 * @warning
+	 */
 	static float DecodeRealFREQMHz( unsigned int uiFreq )
 	{
 		float fVal;
@@ -569,7 +755,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -1100,7 +1286,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader();
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader();
 
@@ -1125,7 +1311,7 @@ public:
 	void Alloc( unsigned int iItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -1292,13 +1478,11 @@ class CDataFile
 {
 private:
 	int m_iFileIndex;
-	//ULONGLONG m_dwFileEnd;
+
+    char m_szPathname[500];
 
 	CRawFile m_RawDataFile;
-
 	CData *m_pData;
-
-	char m_szPathname[500];
 
 public:
 	
@@ -1307,9 +1491,10 @@ public:
 	CDataFile(void);
 	virtual ~CDataFile(void);
 
+    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
     void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
-	CData *ReadDataFile( char *pPathname, int iFileIndex, CData *pData, STR_FILTER_SETUP *pstFilterSetup ,bool bConvert=true );
-	UINT LoadRawData( CData *pData, int iFileIndex, bool bConvert=true );
+	CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );
+	UINT LoadRawData( STR_PDWDATA *pPDWData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();
@@ -1318,7 +1503,7 @@ public:
 	void SetData( CData *pData );
 
 	// 파일 읽기 관련 함수
-	void ReadDataHeader( CData *pData );
+	void ReadDataHeader();
 	void ReadDataAll( CData *pData );
 
 	ENUM_DataType WhatDataType( char *pStrPathname );
@@ -1328,6 +1513,7 @@ public:
 	unsigned int GetOneDataSize( CData *pData );
 	unsigned int GetDataItems( CData *pData );
 
+    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData );
 
 	inline int GetFileIndex() { return m_iFileIndex; }
 
@@ -1339,6 +1525,8 @@ public:
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
 	inline UINT GetFilteredDataItems() { STR_PDW_DATA *pPDWData=(STR_PDW_DATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+
+    //inline STR_PDWDATA { if( m_pData != NULL ) return m_pData->m_PDWData; else return NULL; }
 	
 private:
 	

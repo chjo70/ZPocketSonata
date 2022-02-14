@@ -1609,6 +1609,17 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         memcpy( pSubrecords->name, buffer , strlen(buffer) );
         _PUT_ARRAY_VALUE( pSubrecords->name, c, 0x20 );
 
+#ifdef _VXWORKS_
+        // 최소 값
+        memset( pSubrecords->minval, 0x20, sizeof( pSubrecords->minval ) );
+        //c = sprintf( & pSubrecords->minval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMinVal );
+        //_PUT_ARRAY_VALUE( pSubrecords->minval, c, 0x20 );
+
+        // 최대 값
+        memset( pSubrecords->maxval, 0x20, sizeof( pSubrecords->maxval ) );
+        //c = sprintf( & pSubrecords->maxval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMaxVal );
+        //_PUT_ARRAY_VALUE( pSubrecords->maxval, c, 0x20 );
+#else
         // 최소 값
         memset( pSubrecords->minval, 0x20, sizeof( pSubrecords->minval ) );
         c = sprintf( & pSubrecords->minval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMinVal );
@@ -1618,6 +1629,7 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         memset( pSubrecords->maxval, 0x20, sizeof( pSubrecords->maxval ) );
         c = sprintf( & pSubrecords->maxval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMaxVal );
         _PUT_ARRAY_VALUE( pSubrecords->maxval, c, 0x20 );
+#endif
 
         // 옵셋
         memset( pSubrecords->offset, 0x20, sizeof( pSubrecords->offset ) );

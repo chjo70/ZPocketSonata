@@ -273,11 +273,11 @@ T _diffabs( T x, T y)
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
 
-#define TOAsCNV( A )			UDIV( (A), _spOneSec )
+#define TOAsCNV( A )						UDIV( (A), _spOneSec )
 #define TOAmsCNV( A )           UDIV( (A), _spOneMilli )
 #define TOAusCNV( A )           UDIV( (A), _spOneMicrosec )
 #define TOAnsCNV( A )           UMUL( (A), _spTimeNsRes )
-#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
+#define FTOAsCNV( A )						FDIV( (A), _spOneMicrosec )
 
 #define F_TOAusCNV( A )         UDIV( (A), _spOneMicrosec )
 #define C_TOAusCNV( A )         UDIV( (A), _spOneMicrosec )

@@ -7,6 +7,7 @@
 #ifdef _MSC_VER
 int clock_gettime(int X, struct timeval *tv);
 LARGE_INTEGER getFILETIMEoffset();
+int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
 

@@ -321,7 +321,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
         // 수집한 PDW 파일 저장하기...
         InsertRAWData( pPDWData );
-
+        
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -891,8 +891,8 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 		if( m_bDBThread == false ) {
 			// RAWDATA 데이터 저장
 			InsertToDB_RAW( pPDWData ); 
-		}
-		else {
+        }
+        else {
             TRACE( "Push the data for InsertToDB_RAW()" );
 		}
 
@@ -918,7 +918,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 	//struct tm *pstTime;
 	char buffer[100]={0};
 
-	bool bRet=true;
+ 	bool bRet=true;
 // 	pstTime = localtime( & pLOBData->tiContactTime );
 // 	if( pstTime != NULL ) {
 // 		printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
@@ -1023,7 +1023,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
  */
 void CNewSigAnal::InitDataFromDB()
 {
-    
+
     m_lOpInitID = 0;
     m_nSeqNum = 0;
     m_iPDWID = 0;

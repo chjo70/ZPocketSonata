@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EA7DDAB9-C848-4F93-B671-44457FB37989}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Test</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\NetMem\server\CMakeLists.txt" />
+    <None Include="..\NetMem\utils\CMakeLists.txt" />
+    <None Include="..\SQLite\pocketsonata.sqbpro" />
+    <None Include="..\SQLite\pocketsonata.sqlite3" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h" />
+    <ClInclude Include="..\Anal\EmitterMerge\LinearLS\LinearLS.h" />
+    <ClInclude Include="..\Anal\EmitterMerge\Matrix\Matrix.h" />
+    <ClInclude Include="..\Anal\EmitterMerge\NonlinearLS\NonLinearLS.h" />
+    <ClInclude Include="..\Anal\EmitterMerge\Quadratic\Quadratic.h" />
+    <ClInclude Include="..\Anal\Identify\cipl.h" />
+    <ClInclude Include="..\Anal\Identify\define.h" />
+    <ClInclude Include="..\Anal\Identify\ELCEDLibDataType.h" />
+    <ClInclude Include="..\Anal\Identify\ELCEDLibDataType2.h" />
+    <ClInclude Include="..\Anal\Identify\ELCEDLibMngr2.h" />
+    <ClInclude Include="..\Anal\Identify\ELUtil.h" />
+    <ClInclude Include="..\Anal\Identify\Identify.h" />
+    <ClInclude Include="..\Anal\Identify\structs.h" />
+    <ClInclude Include="..\Anal\INC\AetIPL.h" />
+    <ClInclude Include="..\Anal\INC\defines.h" />
+    <ClInclude Include="..\Anal\INC\ErrorMsg.h" />
+    <ClInclude Include="..\Anal\INC\Globals.h" />
+    <ClInclude Include="..\Anal\INC\Macros.h" />
+    <ClInclude Include="..\Anal\INC\OS.h" />
+    <ClInclude Include="..\Anal\INC\PDW.h" />
+    <ClInclude Include="..\Anal\INC\Stack.h" />
+    <ClInclude Include="..\Anal\INC\structs.h" />
+    <ClInclude Include="..\Anal\INC\system.h" />
+    <ClInclude Include="..\Anal\INC\TaskMsg.h" />
+    <ClInclude Include="..\Anal\INC\_aetipl.h" />
+    <ClInclude Include="..\Anal\INC\_pdw.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KAnalPRI.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KDefine.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KGroup.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KMakeAET.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KnownSigAnal.h" />
+    <ClInclude Include="..\Anal\KnownSigAnal\KPulExt.h" />
+    <ClInclude Include="..\Anal\NewSigAnal\NAnalPRI.h" />
+    <ClInclude Include="..\Anal\NewSigAnal\NewSigAnal.h" />
+    <ClInclude Include="..\Anal\NewSigAnal\NGroup.h" />
+    <ClInclude Include="..\Anal\NewSigAnal\NMakeAET.h" />
+    <ClInclude Include="..\Anal\NewSigAnal\NPulExt.h" />
+    <ClInclude Include="..\Anal\OFP_Main.h" />
+    <ClInclude Include="..\Anal\ParamMngr.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\SAnalScan.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\ScanSigAnal.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\SDefine.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\SGroup.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\SPulExt.h" />
+    <ClInclude Include="..\Anal\ScanSigAnal\SStruct.h" />
+    <ClInclude Include="..\Anal\SigAnal\AnalPRI.h" />
+    <ClInclude Include="..\Anal\SigAnal\cencdec.h" />
+    <ClInclude Include="..\Anal\SigAnal\Group.h" />
+    <ClInclude Include="..\Anal\SigAnal\MakeAET.h" />
+    <ClInclude Include="..\Anal\SigAnal\PulExt.h" />
+    <ClInclude Include="..\Anal\SigAnal\stdafx.h" />
+    <ClInclude Include="..\Anal\SigAnal\SysPara.h" />
+    <ClInclude Include="..\Anal\SigAnal\_Define.h" />
+    <ClInclude Include="..\Anal\SigAnal\_Macro.h" />
+    <ClInclude Include="..\Anal\SigAnal\_SigAnal.h" />
+    <ClInclude Include="..\Anal\SigAnal\_Struct.h" />
+    <ClInclude Include="..\Anal\SigAnal\_Type.h" />
+    <ClInclude Include="..\Anal\Task\ELInsertDBMngr.h" />
+    <ClInclude Include="..\Anal\Task\ELMsgQThread.h" />
+    <ClInclude Include="..\Anal\Task\GetPdw.h" />
+    <ClInclude Include="..\Anal\Task\LIGCondition.h" />
+    <ClInclude Include="..\Anal\Task\LIGThread.h" />
+    <ClInclude Include="..\Anal\Task\LOBMngr.h" />
+    <ClInclude Include="..\Anal\Task\LogDebug.h" />
+    <ClInclude Include="..\Anal\Task\ManTsk.h" />
+    <ClInclude Include="..\Anal\Task\SigAnal.h" />
+    <ClInclude Include="..\Anal\Task\Task.h" />
+    <ClInclude Include="..\Anal\Task\ThreadLib\LIGLock.h" />
+    <ClInclude Include="..\Collect\ccollectbank\ccollectbank.h" />
+    <ClInclude Include="..\Collect\DataFile\CRWRCommonVariables.h" />
+    <ClInclude Include="..\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\Collect\DataFile\_iq.h" />
+    <ClInclude Include="..\Include\defines.h" />
+    <ClInclude Include="..\Include\global.h" />
+    <ClInclude Include="..\Include\SONATAPIP\ShuICD.h" />
+    <ClInclude Include="..\Include\SONATAPIP\_sysmsg.h" />
+    <ClInclude Include="..\Include\struct.h" />
+    <ClInclude Include="..\Include\sysmsg.h" />
+    <ClInclude Include="..\Include\system.h" />
+    <ClInclude Include="..\Include\thrmsg.h" />
+    <ClInclude Include="..\MinIni\minGlue-ccs.h" />
+    <ClInclude Include="..\MinIni\minGlue-efsl.h" />
+    <ClInclude Include="..\MinIni\minGlue-FatFs.h" />
+    <ClInclude Include="..\MinIni\minGlue-ffs.h" />
+    <ClInclude Include="..\MinIni\minGlue-mdd.h" />
+    <ClInclude Include="..\MinIni\minGlue-stdio.h" />
+    <ClInclude Include="..\MinIni\minGlue.h" />
+    <ClInclude Include="..\MinIni\minIni.h" />
+    <ClInclude Include="..\MinIni\wxMinIni.h" />
+    <ClInclude Include="..\NetMem\client\ClientMemoryPage.h" />
+    <ClInclude Include="..\NetMem\client\NetworkMemory.h" />
+    <ClInclude Include="..\NetMem\server\ClientSocket.h" />
+    <ClInclude Include="..\NetMem\server\MemoryPage.h" />
+    <ClInclude Include="..\NetMem\server\ServerSocket.h" />
+    <ClInclude Include="..\NetMem\utils\ApiNetMem.h" />
+    <ClInclude Include="..\NetMem\utils\PortableSocket.h" />
+    <ClInclude Include="..\SQLite\Assertion.h" />
+    <ClInclude Include="..\SQLite\Backup.h" />
+    <ClInclude Include="..\SQLite\Column.h" />
+    <ClInclude Include="..\SQLite\Database.h" />
+    <ClInclude Include="..\SQLite\Exception.h" />
+    <ClInclude Include="..\SQLite\ExecuteMany.h" />
+    <ClInclude Include="..\SQLite\SQLiteCpp.h" />
+    <ClInclude Include="..\SQLite\Statement.h" />
+    <ClInclude Include="..\SQLite\Transaction.h" />
+    <ClInclude Include="..\SQLite\Utils.h" />
+    <ClInclude Include="..\SQLite\VariadicBind.h" />
+    <ClInclude Include="..\System\csharedmemory.h" />
+    <ClInclude Include="..\System\csysconfig.h" />
+    <ClInclude Include="..\Thread\ccgi.h" />
+    <ClInclude Include="..\Thread\cdetectanalysis.h" />
+    <ClInclude Include="..\Thread\cemittermerge.h" />
+    <ClInclude Include="..\Thread\cjamtech.h" />
+    <ClInclude Include="..\Thread\cprompt.h" />
+    <ClInclude Include="..\Thread\cpulsetrk.h" />
+    <ClInclude Include="..\Thread\creclan.h" />
+    <ClInclude Include="..\Thread\cscananalysis.h" />
+    <ClInclude Include="..\Thread\csignalcollect.h" />
+    <ClInclude Include="..\Thread\ctaskmngr.h" />
+    <ClInclude Include="..\Thread\ctrackanalysis.h" />
+    <ClInclude Include="..\Thread\curbit.h" />
+    <ClInclude Include="..\Thread\cusercollect.h" />
+    <ClInclude Include="..\Utils\carraymsgdata.h" />
+    <ClInclude Include="..\Utils\ccommonutils.h" />
+    <ClInclude Include="..\Utils\cfile.h" />
+    <ClInclude Include="..\Utils\cgpio.h" />
+    <ClInclude Include="..\Utils\chwio.h" />
+    <ClInclude Include="..\Utils\clog.h" />
+    <ClInclude Include="..\Utils\cmultiserver.h" />
+    <ClInclude Include="..\Utils\cqueue.h" />
+    <ClInclude Include="..\Utils\csingleclient.h" />
+    <ClInclude Include="..\Utils\csingleserver.h" />
+    <ClInclude Include="..\Utils\cthread.h" />
+    <ClInclude Include="..\Utils\DMA\dma.h" />
+    <ClInclude Include="..\Utils\stdstring.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp" />
+    <ClCompile Include="..\Anal\EmitterMerge\LinearLS\LinearLS.cpp" />
+    <ClCompile Include="..\Anal\EmitterMerge\Matrix\Matrix.cpp" />
+    <ClCompile Include="..\Anal\EmitterMerge\NonlinearLS\NonLinearLS.cpp" />
+    <ClCompile Include="..\Anal\EmitterMerge\Quadratic\Quadratic.cpp" />
+    <ClCompile Include="..\Anal\Identify\cipl.cpp" />
+    <ClCompile Include="..\Anal\Identify\ELUtil.cpp" />
+    <ClCompile Include="..\Anal\Identify\Identify.cpp" />
+    <ClCompile Include="..\Anal\KnownSigAnal\KAnalPRI.cpp" />
+    <ClCompile Include="..\Anal\KnownSigAnal\KGroup.cpp" />
+    <ClCompile Include="..\Anal\KnownSigAnal\KMakeAET.cpp" />
+    <ClCompile Include="..\Anal\KnownSigAnal\KnownSigAnal.cpp" />
+    <ClCompile Include="..\Anal\KnownSigAnal\KPulExt.cpp" />
+    <ClCompile Include="..\Anal\NewSigAnal\NAnalPRI.cpp" />
+    <ClCompile Include="..\Anal\NewSigAnal\NewSigAnal.cpp" />
+    <ClCompile Include="..\Anal\NewSigAnal\NGroup.cpp" />
+    <ClCompile Include="..\Anal\NewSigAnal\NMakeAET.cpp" />
+    <ClCompile Include="..\Anal\NewSigAnal\NPulExt.cpp" />
+    <ClCompile Include="..\Anal\ParamMngr.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\AnalPRI.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\cencdec.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\Group.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\MakeAET.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\PulExt.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\stdafx.cpp" />
+    <ClCompile Include="..\Anal\SigAnal\SysPara.cpp" />
+    <ClCompile Include="..\Anal\Task\ELInsertDBMngr.cpp" />
+    <ClCompile Include="..\Anal\Task\ELMsgQThread.cpp" />
+    <ClCompile Include="..\Anal\Task\GetPdw.cpp" />
+    <ClCompile Include="..\Anal\Task\LIGCondition.cpp" />
+    <ClCompile Include="..\Anal\Task\LIGThread.cpp" />
+    <ClCompile Include="..\Anal\Task\LOBMngr.cpp" />
+    <ClCompile Include="..\Anal\Task\LogDebug.cpp" />
+    <ClCompile Include="..\Anal\Task\ManTsk.cpp" />
+    <ClCompile Include="..\Anal\Task\SigAnal.cpp" />
+    <ClCompile Include="..\Anal\Task\Task.cpp" />
+    <ClCompile Include="..\Anal\Task\ThreadLib\LIGLock.cpp" />
+    <ClCompile Include="..\Collect\ccollectbank\ccollectbank.cpp" />
+    <ClCompile Include="..\Collect\DataFile\DataFile.cpp" />
+    <ClCompile Include="..\MinIni\minIni.c" />
+    <ClCompile Include="..\MinIni\minIni.cpp" />
+    <ClCompile Include="..\NetMem\client\ClientMemoryPage.cpp" />
+    <ClCompile Include="..\NetMem\client\NetworkMemory.cpp" />
+    <ClCompile Include="..\NetMem\server\ClientSocket.cpp" />
+    <ClCompile Include="..\NetMem\server\MemoryPage.cpp" />
+    <ClCompile Include="..\NetMem\server\ServerSocket.cpp" />
+    <ClCompile Include="..\NetMem\utils\ApiNetMem.cpp" />
+    <ClCompile Include="..\SQLite\Backup.cpp" />
+    <ClCompile Include="..\SQLite\Column.cpp" />
+    <ClCompile Include="..\SQLite\Database.cpp" />
+    <ClCompile Include="..\SQLite\Exception.cpp" />
+    <ClCompile Include="..\SQLite\Statement.cpp" />
+    <ClCompile Include="..\SQLite\Transaction.cpp" />
+    <ClCompile Include="..\System\csharedmemory.cpp" />
+    <ClCompile Include="..\System\csysconfig.cpp" />
+    <ClCompile Include="..\Thread\ccgi.cpp" />
+    <ClCompile Include="..\Thread\cdetectanalysis.cpp" />
+    <ClCompile Include="..\Thread\cemittermerge.cpp" />
+    <ClCompile Include="..\Thread\cjamtech.cpp" />
+    <ClCompile Include="..\Thread\cprompt.cpp" />
+    <ClCompile Include="..\Thread\cpulsetrk.cpp" />
+    <ClCompile Include="..\Thread\creclan.cpp" />
+    <ClCompile Include="..\Thread\cscananalysis.cpp" />
+    <ClCompile Include="..\Thread\csignalcollect.cpp" />
+    <ClCompile Include="..\Thread\ctaskmngr.cpp" />
+    <ClCompile Include="..\Thread\ctrackanalysis.cpp" />
+    <ClCompile Include="..\Thread\curbit.cpp" />
+    <ClCompile Include="..\Thread\cusercollect.cpp" />
+    <ClCompile Include="..\Utils\carraymsgdata.cpp" />
+    <ClCompile Include="..\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\Utils\cfile.cpp" />
+    <ClCompile Include="..\Utils\cgpio.cpp" />
+    <ClCompile Include="..\Utils\chwio.cpp" />
+    <ClCompile Include="..\Utils\clog.cpp" />
+    <ClCompile Include="..\Utils\cmultiserver.cpp" />
+    <ClCompile Include="..\Utils\csingleclient.cpp" />
+    <ClCompile Include="..\Utils\csingleserver.cpp" />
+    <ClCompile Include="..\Utils\cthread.cpp" />
+    <ClCompile Include="..\Utils\DMA\dma.cpp" />
+    <ClCompile Include="..\Utils\programrev.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Test.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

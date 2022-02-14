@@ -43,7 +43,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
     CMSSQL::Init();
 
     try {
-    m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, & m_theMyODBC );
+        m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, & m_theMyODBC );
     }
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
@@ -51,7 +51,7 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
 
 #else
     try {
-	m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, NULL );
+	    m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, NULL );
     }
     catch( bad_alloc ex ) {
         TRACE( "new memory[m_pTheEmitterMergeMngr]:%s" , ex.what() );
@@ -191,7 +191,7 @@ void CEmitterMerge::MergeEmitter()
     strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
     pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
     
-    for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
+     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
 #ifdef _TESTSBC_
          // 2.1 분석된 LOB 데이터를 병합 관리한다.
          bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        

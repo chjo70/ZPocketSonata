@@ -1,0 +1,4260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CCGI" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAQAAAgAAAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ccgi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDetectAnalysis" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIAAAAAQAAAAAAAAAAAAAAAAAAQAAgAAAAABAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cdetectanalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEmitterMerge" Collapsed="true">
+    <Position X="9.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIAAAAgAAAQAAACAAAIAAAAAABQAACQAAAAAAAAAU=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cemittermerge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CJamTech" Collapsed="true">
+    <Position X="12" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cjamtech.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPrompt" Collapsed="true">
+    <Position X="14.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBQAAAAAAAAAAAAAEAAgAAQAAAEAgAgAAAYCAAIlAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cprompt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPulseTrk" Collapsed="true">
+    <Position X="16.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAEQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cpulsetrk.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRecLan" Collapsed="true">
+    <Position X="21" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACIABAAAAAAAAQAAAAAABAAAQAABAABAAIAEAAY=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\creclan.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScanAnalysis" Collapsed="true">
+    <Position X="23.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAgAAAAIAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cscananalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSignalCollect" Collapsed="true">
+    <Position X="25.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YgAYAACgAIIgBAAwAEAAAAAgMCBhSwEACIAGABAAAEQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\csignalcollect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTaskMngr" Collapsed="true">
+    <Position X="21" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAoAAIAAEgAAAhAIAAAAAAAAQAIJACACgAAAQAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ctaskmngr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTrackAnalysis" Collapsed="true">
+    <Position X="32.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAIAYAAAAAAAAAAAAAAAAAAQAAAAIAAAAAAAIQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ctrackanalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUrBit" Collapsed="true">
+    <Position X="36.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgACAAEAAAAAAARAAAAAQAAAEAACggAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\curbit.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUserCollect" Collapsed="true">
+    <Position X="39" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAQAAAgAAAEAAAAAAABAAAQAAIIQAAEIAABAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cusercollect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CArrayMsgData" Collapsed="true">
+    <Position X="21" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAASAAAAAAAAAgAAAAQBAAgAAACgACAAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\carraymsgdata.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCommonUtils" Collapsed="true">
+    <Position X="46.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAQAAAAAAEBAAAAAAAARAAQAAMAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\ccommonutils.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFile" Collapsed="true">
+    <Position X="53.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAQAABAAEAIAAAAAAAAAAoAAAAAAAAAAACAAGEgBA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cfile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGPIO" Collapsed="true">
+    <Position X="55.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAIAAAAgAAAAAAAAAAABgAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cgpio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHWIO" Collapsed="true">
+    <Position X="57.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAABAAAAACACAAAQCIAAAgAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLog" Collapsed="true">
+    <Position X="67.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABgAAAAAAAQAAAAAAgAABAAAAACIAAACAAAIAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\clog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMultiServer" Collapsed="true">
+    <Position X="18.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAQAAAAAAAEAAAGgIACABAAABAAACAIAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cmultiserver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stack&lt;T&gt;" Collapsed="true">
+    <Position X="46.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAABAAACAAABAyAgACAAAAAABAiAAAECAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Queue&lt;T&gt;" Collapsed="true">
+    <Position X="41.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAABAAAAAAAAASAQgCAAAAAAFAiAAAECgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCircularQueue&lt;T&gt;" Collapsed="true">
+    <Position X="43.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAAAAAIAAACAAEAAAAAAgAACQAAAAAZAICAAgAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSingleClient" Collapsed="true">
+    <Position X="30" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAQAAAAAACQAQAEgIAGABQAABAAgCAIAEAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\csingleclient.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSingleServer" Collapsed="true">
+    <Position X="34.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAKAAQAAAAAAAAAAAEgIACADQAABAAACAIAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\csingleserver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CThread" Collapsed="true">
+    <Position X="21" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAYEIAAggAiEAIAAAAAABAMAIAAQIAJAAAQKAAAAo=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStdStr&lt;CT&gt;" Collapsed="true">
+    <Position X="19.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQRimFBEJBAcgECklAICZQIBACsoAoBAqArqCEAARGA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharedMemroy" Collapsed="true">
+    <Position X="53.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAEATAAAAAAAAgAAAAAAAAAgAEARAAAIAAAAACQAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\System\csharedmemory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSysConfig" Collapsed="true">
+    <Position X="55.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABACAAIAIEQgAAAAAgEAAAAAAAAAyIICACAARAAI0=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\System\csysconfig.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientMemoryPage" Collapsed="true">
+    <Position X="62.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAACADAAAAAAAAAEAAAIAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\client\ClientMemoryPage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkMemory" Collapsed="true">
+    <Position X="69.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAACAAAAABBQIAABAIABAQgEgACAhUAAwIAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\client\NetworkMemory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientSocket" Collapsed="true">
+    <Position X="64.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAAAAAABQgAFCAgAAAAAABAAEAACAAAABQAIgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\server\ClientSocket.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemoryPage" Collapsed="true">
+    <Position X="66" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQQACQAAAAAAAAAAEACQAAgAAABAAABAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\server\MemoryPage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerSocket" Collapsed="true">
+    <Position X="45" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAAAACAAACAABAgAEAAAIAAIABAAAAgQAAAAAAAAMgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\server\ServerSocket.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="minIni" Collapsed="true">
+    <Position X="67.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACACAAAAACAAAAAAAAAgAQAAAAAAAAAAIAkEACIAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\MinIni\minIni.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCollectBank" Collapsed="true">
+    <Position X="45" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AxAAAAAgAAIAAIAAAAAAAECJSEIBIJgAAAAGAAECASQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\ccollectbank\ccollectbank.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CData" Collapsed="true">
+    <Position X="9.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAEAACQAAAAgIAAggAEAAAAAAAAAoAAIECAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPDW" Collapsed="true">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAhAAAAgAAAQAAAAAAABAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSPDW" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAACAgAAAAgAIAAAAAAAAABAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEPDW" Collapsed="true">
+    <Position X="7.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAEAAAAAAAAgAAAAgAIAAAAAAAAABAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C7PDW" Collapsed="true">
+    <Position X="9.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAgAAAAgAIAAgAAAAAABAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKFXPDW" Collapsed="true">
+    <Position X="12" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAEABAgICAAgAAAAgAAAAAAAAAgABAAAIAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPOCKETSONATAPDW" Collapsed="true">
+    <Position X="14.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAEAAAgICIAgAAAAgAAAAAAAAAgAhAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIQ" Collapsed="true">
+    <Position X="16.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAgAAAAgAAAAAAAABAAAAAQAAAEI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDataFile" Collapsed="true">
+    <Position X="48.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAiABEAAAABAAIAAAAAgIAAAAAAAAIYIEAAAAIAo=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CParamMngr" Collapsed="true">
+    <Position X="46.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IJMECDYZEQuJ6AwCiiiLIqEDGoIOEoYDEGBC0AoBqDc=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ParamMngr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDistanceLeastSquare" Collapsed="true">
+    <Position X="50.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAEAAAAEAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLinearLS" Collapsed="true">
+    <Position X="66" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAABAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\LinearLS\LinearLS.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Exception" Collapsed="true">
+    <Position X="59" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\Matrix\Matrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMatrix" Collapsed="true">
+    <Position X="69.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAAAQAQAAgAAAEABDQAAAAQCAAAAAIEggAAAEACA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\Matrix\Matrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNonLinearLS" Collapsed="true">
+    <Position X="43.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAABAAgAAAAAAEAAAAAAAAAAAAAAEAAAAAAAgEAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\NonlinearLS\NonLinearLS.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuadratic" Collapsed="true">
+    <Position X="48.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAACAAEAAAAAAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\EmitterMerge\Quadratic\Quadratic.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIPL" Collapsed="true">
+    <Position X="59" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAIAAEAAAAAAAAAAAAAIAAAABCAAQAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\cipl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CELCEDLibMngr2" Collapsed="true">
+    <Position X="52" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>5uj7T+WbLDb9seloPgu/vpr5/u9t+fOyK7+G972vc78=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibMngr2.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CELSignalIdentifyAlg" Collapsed="true">
+    <Position X="6" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SkYICoQIcAdmJJ5kPYiYpwBSQkqSaQBNACguICmoMOQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\Identify.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKAnalPRI" Collapsed="true">
+    <Position X="19.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAwIACAAECACVAAAKIAAABFAQAAAEAAAiCBBAAAAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\KnownSigAnal\KAnalPRI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKGroup" Collapsed="true">
+    <Position X="7.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgABAAAAAAEKAAAAAAAAAQAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\KnownSigAnal\KGroup.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKMakeAET" Collapsed="true">
+    <Position X="2.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kAAoQACAAAACIEJCIgCEBUIAGIAgAAAICYCDAAYCAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\KnownSigAnal\KMakeAET.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKnownSigAnal" Collapsed="true">
+    <Position X="60.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAswMCAAGEAoHdCEQCjAQoAFySwJAEpCACiBBYGBBU=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\KnownSigAnal\KnownSigAnal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKPulExt" Collapsed="true">
+    <Position X="14.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABQKAAAAACAEAAAAICAAgAAAAAAABgAACCAAACABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\KnownSigAnal\KPulExt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNAnalPRI" Collapsed="true">
+    <Position X="17.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgMACAAEAACVAAACBAAAAFAQAAAEAgACCBBAAAAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\NewSigAnal\NAnalPRI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNewSigAnal" Collapsed="true">
+    <Position X="41.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kCZ0gMQAAGGCBGdCEBCigxsEFWQoBkEpAoCiAhAuBRk=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\NewSigAnal\NewSigAnal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNGroup" Collapsed="true">
+    <Position X="2.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAABAAABAQAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\NewSigAnal\NGroup.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNMakeAET" Collapsed="true">
+    <Position X="4.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAgAAAAAAAAAAJCAgAFAQIAEAAgAAKCAoCCAAAiAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\NewSigAnal\NMakeAET.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPulExt" Collapsed="true">
+    <Position X="17" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAACAAAAAAAEAAAEIDAAgEAAAAAUAgAwACAAAiABE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\NewSigAnal\NPulExt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSAnalScan" Collapsed="true">
+    <Position X="50.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AATgADAABAIgAJOAEAgDAAAAABAEAQAADQACQgLAAMQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SAnalScan.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScanSigAnal" Collapsed="true">
+    <Position X="52" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkCAACAGMAACXKGAACAQIAAQTgAAApEACCBBBGhAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\ScanSigAnal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSGroup" Collapsed="true">
+    <Position X="5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAJAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SGroup.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSPulExt" Collapsed="true">
+    <Position X="19.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBACAAAAAAAAAAEAACAAgAAQAACAIgAAACAABCABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SPulExt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAnalPRI" Collapsed="true">
+    <Position X="18.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gTFshMCMEJEocOXBWu2r6BxX97VEESUpgASa7p6fir0=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\AnalPRI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGroup" Collapsed="true">
+    <Position X="5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IgABAJYIKQAEKXCSUDTigwAEpSACgGAAAgRCABBAQAw=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\Group.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMakeAET" Collapsed="true">
+    <Position X="3.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>sAcgCoQACgAAAApSAgAEBUIAEWIoAAEmhICDZAAGAlA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\MakeAET.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPulExt" Collapsed="true">
+    <Position X="17" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KIAigMRQAslBJWXAkLYDIFpAw0x0IcEoEUCCAFFmARk=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\PulExt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSysPara" Collapsed="true">
+    <Position X="57.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAABAAAAAAABAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\SysPara.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CELInsertDBMngr" Collapsed="true">
+    <Position X="12.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AJAIEGGACAAAgAAAGAAoJAAAIAAAABQEAAACAAAEIAY=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ELInsertDBMngr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CELMsgQThread" Collapsed="true">
+    <Position X="14.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAIAAQgBAAAABAIAAAAAAAAAAACAAAAAAIAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ELMsgQThread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGetPdw" Collapsed="true">
+    <Position X="12" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gioS4QscbCYSBsABAEQgJAKAAuBKaQwpOCBKqAwFEBI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\GetPdw.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIGCondition" Collapsed="true">
+    <Position X="62.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAEAAAAIEQUBAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\LIGCondition.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIGThread" Collapsed="true">
+    <Position X="8.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgBAAAAAACAAAAAAEAAAQAAAABAAAQECIAAARAAAAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\LIGThread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLOBMngr" Collapsed="true">
+    <Position X="3" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACMAAAgCIAAAAEAAAgAAEAACAACBAIACACAAAEAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\LOBMngr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLogDebug" Collapsed="true">
+    <Position X="5.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEAAAAQAgAIAAAAAACAgCAIAQAgAEAAAAAAAAOAEAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\LogDebug.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CManTsk" Collapsed="true">
+    <Position X="7.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACCAAAgAAIQAAAgAAAgEgQAAABAQAAIAIEAAAAEAEI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ManTsk.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSigAnal" Collapsed="true">
+    <Position X="9.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAASAAAAACKABBABAAQkEAAAIAAAAggJAKQAAAAEAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\SigAnal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTask" Collapsed="true">
+    <Position X="7.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAMSBAAEIQMAgBDIJDIgAAQIACAAhiIJQAACAAgthAM=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\Task.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIGLock" Collapsed="true">
+    <Position X="64.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAEAAAAAAAAAAAAAAAAAAoAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ThreadLib\LIGLock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScopedLock" Collapsed="true">
+    <Position X="43.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAYAAEAAAAAAAAAAAAAAAAAAAAAAgAEAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ThreadLib\LIGLock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Backup" Collapsed="true">
+    <Position X="41.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAEAAAQAAAAAAAAAABAAEAAAAAgAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Backup.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Column" Collapsed="true">
+    <Position X="45" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAgGACAAABAAAAAAgBAAABIQAEAAAgAAAAAABQEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Column.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Database" Collapsed="true">
+    <Position X="3" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACAAAIACkQIIAAAAEAEAQAABAAAAEAIBAAwABAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Database.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Statement" Collapsed="true">
+    <Position X="48.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAEMEAEQsAKAAAAAAAAECAqAIBAAAAFAgAwBAiAIAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Statement.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Exception" Collapsed="true">
+    <Position X="60.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAEAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Exception.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQLite::Transaction" Collapsed="true">
+    <Position X="50.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACAABAAAAAAAAAAAAACAAEAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Transaction.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="__unnamed_struct_0042_2" Collapsed="true">
+    <Position X="19.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAIAAAAAAAAAEAAAAAAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0042_3" Collapsed="true">
+    <Position X="15.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAgAAgAAAAAAAAAAAAGAAAiAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0042_17" Collapsed="true">
+    <Position X="35.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAIAAgAAAAAAAAAAAAAACAAABAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_COLLECTINFO" Collapsed="true">
+    <Position X="50.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ANALINFO" Collapsed="true">
+    <Position X="59" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACACAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MessageData" Collapsed="true">
+    <Position X="64.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAIAEAIAAARABBAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SSToUpper&lt;CT&gt;" Collapsed="true">
+    <Position X="66" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SSToLower&lt;CT&gt;" Collapsed="true">
+    <Position X="64.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NotSpace&lt;CT&gt;" Collapsed="true">
+    <Position X="59" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAACAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;ARG&gt;" Collapsed="true">
+    <Position X="67.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;CStdStringA&gt;" Collapsed="true">
+    <Position X="66" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;CStdStringW&gt;" Collapsed="true">
+    <Position X="41.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;std::string&gt;" Collapsed="true">
+    <Position X="69.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringLessNoCaseW" Collapsed="true">
+    <Position X="45" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringEqualsNoCaseW" Collapsed="true">
+    <Position X="41.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringLessNoCaseA" Collapsed="true">
+    <Position X="43.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringEqualsNoCaseA" Collapsed="true">
+    <Position X="69.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_2" Collapsed="true">
+    <Position X="35.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAQQAIAAAAVIAAAAAAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_3" Collapsed="true">
+    <Position X="7.5" Y="33.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAQBAIABAAAACAAAEwAAABAEAAAASCAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_4" Collapsed="true">
+    <Position X="23.5" Y="32.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEABAAQAAAAAAAIAAAAAAwAAAAAAAIACEgAAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_5" Collapsed="true">
+    <Position X="34.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAIAAAEAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_6" Collapsed="true">
+    <Position X="34.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAIAAAAAAABAAABAAAAAAAAAAAAABAAAAQAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_7" Collapsed="true">
+    <Position X="31.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAABAAAAAAAAAAAMAAAAAAAACEAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_8" Collapsed="true">
+    <Position X="33.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABIQAAQAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_9" Collapsed="true">
+    <Position X="3.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAACAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAABIAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SYSCONFIG" Collapsed="true">
+    <Position X="69.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAEEAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\System\csysconfig.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CONFIG_VAR" Collapsed="true">
+    <Position X="53.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SYSTEMVAR_BODY" Collapsed="true">
+    <Position X="45" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LOWHIGH" Collapsed="true">
+    <Position X="55.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_WINDOWCELL" Collapsed="true">
+    <Position X="50.25" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBAAAQAgQAAQAIAAgQAEAIAAAAgAAAEAAAAAAAhABgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LAN_HEADER" Collapsed="true">
+    <Position X="43.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_REQ_DUMP_LIST" Collapsed="true">
+    <Position X="66" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ES_CBIT" Collapsed="true">
+    <Position X="67.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_IPL_VERSION" Collapsed="true">
+    <Position X="52" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_IPL_START" Collapsed="true">
+    <Position X="50.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_DUMP_LIST" Collapsed="true">
+    <Position X="43.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0047_4" Collapsed="true">
+    <Position X="41.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAEIAAAAAAAAAQAAAAAAAAACAAABAAACE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_1" Collapsed="true">
+    <Position X="31.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_2" Collapsed="true">
+    <Position X="27.5" Y="29.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAEAAAAAAACAAAAAAAAAAAAkAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_32" Collapsed="true">
+    <Position X="15.5" Y="29.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_37" Collapsed="true">
+    <Position X="11.5" Y="29.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_38" Collapsed="true">
+    <Position X="31.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEBCIAAQghAAAAAAQAAAAQAAAAACAAAAAABAACAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0082_39" Collapsed="true">
+    <Position X="30.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIEAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MESSAGE" Collapsed="true">
+    <Position X="62.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_INIT" Collapsed="true">
+    <Position X="45" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_REQ_SETMODE" Collapsed="true">
+    <Position X="67.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgABJAAAAAIAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_REQ_SETMODE_RSA" Collapsed="true">
+    <Position X="69.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAADAgAAAAAAAAIAAAAAAAABACAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_COL_START" Collapsed="true">
+    <Position X="41.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_PDW_DATA_RSA" Collapsed="true">
+    <Position X="52" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAABAAAAABAAAAAAAAAABAAAAEAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_PDW_DATA" Collapsed="true">
+    <Position X="50.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAABAAAAABAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_INTRA_DATA" Collapsed="true">
+    <Position X="46.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RES_IQ_DATA" Collapsed="true">
+    <Position X="48.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TNEW_IQ" Collapsed="true">
+    <Position X="55.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\_iq.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SAESAOPerationFreqData" Collapsed="true">
+    <Position X="62.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAABAAAAAAAAAAgAAAAACAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SXCCDynamicBand" Collapsed="true">
+    <Position X="53.75" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAgAAAAACAAAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SInterferenceInfo" Collapsed="true">
+    <Position X="69.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAIAAAQAAAAAAAAgAAAAACAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SJammingFreq" Collapsed="true">
+    <Position X="41.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAgCAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SDRCCollectEndState" Collapsed="true">
+    <Position X="60.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAQAAAQQAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SInformationOfPDWs" Collapsed="true">
+    <Position X="67.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAIAAQAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SReqPDW" Collapsed="true">
+    <Position X="57.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SJLTData" Collapsed="true">
+    <Position X="43.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAQAAACECAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SBandForLT" Collapsed="true">
+    <Position X="66" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAABAAAAAAAAAAAwAAAAACAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SNewCollectData" Collapsed="true">
+    <Position X="45" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAgAAAAAAAAAQAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SScanCollectInfo" Collapsed="true">
+    <Position X="62.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAQAAAggAAAABAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SONATA_DATA" Collapsed="true">
+    <Position X="64.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RAWDATA" Collapsed="true">
+    <Position X="62.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAEAAgAEBABAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDW_DATA" Collapsed="true">
+    <Position X="53.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABABAgAAIAAAAACAAAAAAIAAgAACAAAABIBCAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_IQ_DATA" Collapsed="true">
+    <Position X="53.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAJAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FILTER_SETUP" Collapsed="true">
+    <Position X="45" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAQAAAAQQAAAAAEAAABAAAAAAAAAAAAAACCAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDSTGElimentData" Collapsed="true">
+    <Position X="52" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAgAAAAAAAAAAAEAAAAAAAAEAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDSTGData" Collapsed="true">
+    <Position X="50.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAIACAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDHOPElimentData" Collapsed="true">
+    <Position X="46.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAgAAAAAAAAAAAAAAAAAAAACAACAAAAAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDHOPData" Collapsed="true">
+    <Position X="45" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAgAgAAAAACAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDData" Collapsed="true">
+    <Position X="43.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wyQICAFEVpDMKkIAAoBAEAAEQEAgURAggxC+AAAAACA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDImportErrorMsg" Collapsed="true">
+    <Position X="48.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAIEAAAAAAEAAEAAAAAAQAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCED_ID" Collapsed="true">
+    <Position X="67.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAAAAAAAAAAEAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDThreatData" Collapsed="true">
+    <Position X="8.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAIgAAAAAAAAAAQEAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDEmitterData" Collapsed="true">
+    <Position X="19.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAAAFACEAEAAAAAAAAAAEEAAUAAAAgAUAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDBeamData" Collapsed="true">
+    <Position X="69.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wSAICAFEQpBoIAIAAoBAEAgEAEggARAgAxCgAAAAACA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDEmitterTreeData" Collapsed="true">
+    <Position X="19.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAQAAAAAAiAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDThreatTreeData" Collapsed="true">
+    <Position X="8.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAABAAAAAAiAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCEDCreateTask" Collapsed="true">
+    <Position X="41.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarComments" Collapsed="true">
+    <Position X="52" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAACAAAAAACAAAAAAAAAAAAGAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SParamSetAssociations" Collapsed="true">
+    <Position X="46.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAEAAAAAABAACAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SParamSetAssocTypeCode" Collapsed="true">
+    <Position X="48.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAIAgAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SAssocELNOT" Collapsed="true">
+    <Position X="64.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAgAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarUserCountry" Collapsed="true">
+    <Position X="55.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAIAAAAAAAAAAAACABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SWeaponSystem" Collapsed="true">
+    <Position X="52" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAQBAAAAEAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SPlatform" Collapsed="true">
+    <Position X="50.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAEAAAAQAAABAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SThreatAndDeviceBase" Collapsed="true">
+    <Position X="48.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAKBACA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SDeviceInfoFromRadar" Collapsed="true">
+    <Position X="57.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAEAAAAAAAAAAAQAAAAAAAARAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SDeviceBase" Collapsed="true">
+    <Position X="55.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAiAAQAAABBECAAAABAAQAAAgAAAACBAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SThreatBase" Collapsed="true">
+    <Position X="5.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SThreat" Collapsed="true">
+    <Position X="5.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAEAAAAABAAAAAQBAAABAAAAAAEAASABAQAAAAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SEobExcelData" Collapsed="true">
+    <Position X="64.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQEAAAAQIAAAAAAAAQACACAkAGgAAgAwAAAABIgAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SThreatPriorities" Collapsed="true">
+    <Position X="52" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAgAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SThreatFOE" Collapsed="true">
+    <Position X="50.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SCountry" Collapsed="true">
+    <Position X="53.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAABAAAAAAAAQAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SFunctionCodes" Collapsed="true">
+    <Position X="66" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEACAAAAAAAAAAAAAgCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarModeComments" Collapsed="true">
+    <Position X="55.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAIAACAAAAAAACAAAAAAAAQAAAAAAAAAAEAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_SpotValues" Collapsed="true">
+    <Position X="46.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAgAAABAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_GroupSpacing" Collapsed="true">
+    <Position X="43.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_Values" Collapsed="true">
+    <Position X="48.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAgggAAAQAAAEAAAQAAAAAAAAgIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_SequenceName" Collapsed="true">
+    <Position X="2.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAQAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_SequenceNumIndex" Collapsed="true">
+    <Position X="45" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAACAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPRI_Sequence" Collapsed="true">
+    <Position X="2.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPD_Values" Collapsed="true">
+    <Position X="41.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAQAAQAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPD_SequenceName" Collapsed="true">
+    <Position X="16.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPD_SequenceNumIndex" Collapsed="true">
+    <Position X="67.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQACAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPD_Sequence" Collapsed="true">
+    <Position X="16.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPD_SpotValues" Collapsed="true">
+    <Position X="69.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAQAAQAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMOP_CW_Values" Collapsed="true">
+    <Position X="64.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAwAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMOP_CW_SeqName" Collapsed="true">
+    <Position X="13.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAgAAAAAAAAAAAAQAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMOP_CW_SequenceNumIndex" Collapsed="true">
+    <Position X="62.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAIEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMOP_CW_Sequence" Collapsed="true">
+    <Position X="13.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMOP_CW" Collapsed="true">
+    <Position X="60.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IJAQAACRAAAKBgBAgAgCQCgIGAAAAwAACgIBgAAUAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarRF_Values" Collapsed="true">
+    <Position X="53.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAgAAAAAAEAAEAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarRF_SequenceName" Collapsed="true">
+    <Position X="10.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarRF_SequenceNumIndex" Collapsed="true">
+    <Position X="50.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarRF_Sequence" Collapsed="true">
+    <Position X="10.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarRF_SpotValues" Collapsed="true">
+    <Position X="52" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarPA_Diff_InGroup" Collapsed="true">
+    <Position X="66" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarModeLifeCycle" Collapsed="true">
+    <Position X="59" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAAAAAIBAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMode_Sequence_Values" Collapsed="true">
+    <Position X="53.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAIAAAAAAAAAAABAAAABABAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarInfo" Collapsed="true">
+    <Position X="11.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAABBAUAAACQAQAAAAAAAAAAAAUIAEACAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarMode" Collapsed="true">
+    <Position X="11.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IHAJgABAkJQEIIIBBADAARJQIJgEBVAABAPCMGAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRadarModeCopyInfo" Collapsed="true">
+    <Position X="57.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAEAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SDevicePK" Collapsed="true">
+    <Position X="59" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SELNOTCopy" Collapsed="true">
+    <Position X="62.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAMAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stSELThreatMapData" Collapsed="true">
+    <Position X="26.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAIACAAAAAAAAAAIAAAAAACAgACAAAAAQAwACICAAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stSELThreatInfo" Collapsed="true">
+    <Position X="15.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAQAAAAAAg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stSELDeviceData" Collapsed="true">
+    <Position X="11.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEQAAQAAgABAGQBAAAAAAAAAACAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_H000" Collapsed="true">
+    <Position X="67.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\Identify.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LIB_IDRESULT" Collapsed="true">
+    <Position X="46.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CEDEOB_RESULT" Collapsed="true">
+    <Position X="69.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAUIAEAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_HOWTO_IDENTIFY" Collapsed="true">
+    <Position X="43.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FLOWHIGH" Collapsed="true">
+    <Position X="52" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LIB_RANGE" Collapsed="true">
+    <Position X="48.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FLIB" Collapsed="true">
+    <Position X="50.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQgEAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_EOB_RESULT" Collapsed="true">
+    <Position X="66" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAQAAEAAAAAAAAAAAAAAAAEAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CEDEOB_FINAL_RESULT" Collapsed="true">
+    <Position X="67.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAIAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_5" Collapsed="true">
+    <Position X="52" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LOWHIGH_TOA" Collapsed="true">
+    <Position X="57.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_6" Collapsed="true">
+    <Position X="53.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LHBAND" Collapsed="true">
+    <Position X="45" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_7" Collapsed="true">
+    <Position X="55.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MINMAX" Collapsed="true">
+    <Position X="41.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_8" Collapsed="true">
+    <Position X="57.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MINMAX_MEDIAN" Collapsed="true">
+    <Position X="43.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_9" Collapsed="true">
+    <Position X="59" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MINMAX_TOA" Collapsed="true">
+    <Position X="46.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_10" Collapsed="true">
+    <Position X="48.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_F_MINMAX" Collapsed="true">
+    <Position X="41.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAQgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_11" Collapsed="true">
+    <Position X="50.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAQgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_TYPEMINMAX" Collapsed="true">
+    <Position X="48.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_12" Collapsed="true">
+    <Position X="52" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FRQ" Collapsed="true">
+    <Position X="53.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAkAAACAAQAAAAAAAIAAAAAAQBAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_13" Collapsed="true">
+    <Position X="53.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAkAAACAAQAAAAAAAIAAAAAAQBAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PRI" Collapsed="true">
+    <Position X="48.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAkAAACAAQAAAAAAAIAAAAACQBAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_14" Collapsed="true">
+    <Position X="55.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAkAAACAAQAAAAAAAIAAAAACQBAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AS" Collapsed="true">
+    <Position X="64.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAwAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_15" Collapsed="true">
+    <Position X="57.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAwAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SEEN_TIME" Collapsed="true">
+    <Position X="62.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_16" Collapsed="true">
+    <Position X="59" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SYSID" Collapsed="true">
+    <Position X="41.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_17" Collapsed="true">
+    <Position X="60.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AET" Collapsed="true">
+    <Position X="53.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAACAAAAAQEAAABgEEEAQAgAgQAABEAAAAAgAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_18" Collapsed="true">
+    <Position X="62.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAACAAAAAQEAAABgEEEAQAgAgQAABEAAAAAgAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stEmitterNo" Collapsed="true">
+    <Position X="46.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAoAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_19" Collapsed="true">
+    <Position X="64.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAoAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stContactTime" Collapsed="true">
+    <Position X="67.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_20" Collapsed="true">
+    <Position X="66" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CVIAET" Collapsed="true">
+    <Position X="57.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IwCAAAEUAQAACAAAIAAIAAAAAgEBAAAFCAEAAAQAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_21" Collapsed="true">
+    <Position X="67.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IwCAAAEUAQAACAAAIAAIAAAAAgEBAAAFCAEAAAQAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_REF" Collapsed="true">
+    <Position X="64.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_22" Collapsed="true">
+    <Position X="69.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CHINFTAB" Collapsed="true">
+    <Position X="45" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAUAA0gAARCAIAAMAQEQEDQMAQAQCEAAgkAoAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_23" Collapsed="true">
+    <Position X="41.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAUAA0gAARCAIAAMAQEQEDQMAQAQCEAAgkAoAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MERGE" Collapsed="true">
+    <Position X="60.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAACAAAAABAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_24" Collapsed="true">
+    <Position X="43.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAACAAAAABAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_RSAID" Collapsed="true">
+    <Position X="53.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_25" Collapsed="true">
+    <Position X="45" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ID_INFO" Collapsed="true">
+    <Position X="46.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAgBA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_26" Collapsed="true">
+    <Position X="46.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAgBA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_EXT" Collapsed="true">
+    <Position X="69.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQgAIAAAAAAAAAABAAAQAQAIEAAEAAAAAAAAAggA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_27" Collapsed="true">
+    <Position X="48.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQgAIAAAAAAAAAABAAAQAQAIEAAEAAAAAAAAAggA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_COMAET" Collapsed="true">
+    <Position X="52" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAQAAAIAAAQAAgAAIAAAEAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_28" Collapsed="true">
+    <Position X="50.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAQAAAIAAAQAAgAAIAAAEAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MG_STAT" Collapsed="true">
+    <Position X="67.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAQAAAgAAAIAAAAAAAAggAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_31" Collapsed="true">
+    <Position X="52" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAQAAAgAAAIAAAAAAAAggAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LOST" Collapsed="true">
+    <Position X="53.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_32" Collapsed="true">
+    <Position X="53.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_NEWAET" Collapsed="true">
+    <Position X="7.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_33" Collapsed="true">
+    <Position X="55.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_TRKAET" Collapsed="true">
+    <Position X="46.75" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_34" Collapsed="true">
+    <Position X="57.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SCNAET" Collapsed="true">
+    <Position X="60.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_35" Collapsed="true">
+    <Position X="59" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MGAET" Collapsed="true">
+    <Position X="69.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_36" Collapsed="true">
+    <Position X="60.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AETFLT" Collapsed="true">
+    <Position X="57.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_37" Collapsed="true">
+    <Position X="62.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDWFILTER_INFO" Collapsed="true">
+    <Position X="57.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAIEAAAAAAAIAABFEAAAUAKAgAIEAAAAAAAAEIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_38" Collapsed="true">
+    <Position X="64.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAIEAAAAAAAIAABFEAAAUAKAgAIEAAAAAAAAEIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LOC" Collapsed="true">
+    <Position X="50.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIRAAhABAAAQAAAAQAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_39" Collapsed="true">
+    <Position X="66" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIRAAhABAAAQAAAAQAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MANAET" Collapsed="true">
+    <Position X="59" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_40" Collapsed="true">
+    <Position X="67.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPL_FRQ" Collapsed="true">
+    <Position X="50.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAAAAIABgAAAKAAAAAADAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_41" Collapsed="true">
+    <Position X="69.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAAAAIABgAAAKAAAAAADAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPL_PRI" Collapsed="true">
+    <Position X="55.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAAAAIAAAAAAKAAQACABAAABAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_42" Collapsed="true">
+    <Position X="41.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAAAAIAAAAAAKAAQACABAAABAAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPL_LOWHGH" Collapsed="true">
+    <Position X="52" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_43" Collapsed="true">
+    <Position X="43.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPL_AS" Collapsed="true">
+    <Position X="48.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAACAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_44" Collapsed="true">
+    <Position X="45" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAACAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPL_PLAT" Collapsed="true">
+    <Position X="53.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_45" Collapsed="true">
+    <Position X="46.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_IPL" Collapsed="true">
+    <Position X="48.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQADgAAAAAAAAEAAgACAEAAQAAAgQAAAEAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_46" Collapsed="true">
+    <Position X="48.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQADgAAAAAAAAEAAgACAEAAQAIAgQAAAEAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026e_47" Collapsed="true">
+    <Position X="50.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQADgAAAAAAAAEAAgACAEAAQAAAgQAAAEAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_PDW" Collapsed="true">
+    <Position X="64.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAgAAAQAAAQAAAOAQAAAAgAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026f_3" Collapsed="true">
+    <Position X="60.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAgAAAQAAAQAAAOAQAAAAgAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_pdw.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDWDATA" Collapsed="true">
+    <Position X="12.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAACAAAABAAAAEAIAAIAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_026f_5" Collapsed="true">
+    <Position X="62.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAEAJAAIAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_pdw.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MINMAX_SDEV" Collapsed="true">
+    <Position X="45" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0084_4" Collapsed="true">
+    <Position X="45" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQADgAAAAAAAAEAAgACAEAAQAIAgQAAAEAAAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0062_5" Collapsed="true">
+    <Position X="43.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAgAAAQAAAQAAAOAQAAAAgAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TNEW_SPDW" Collapsed="true">
+    <Position X="57.25" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAAAAAgAAIAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRxPDWHeader" Collapsed="true">
+    <Position X="60.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAACAAAAAAAAIAAAIAAAAAAAAAAQGAAAAAgAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SRXPDWDataRGroup" Collapsed="true">
+    <Position X="59" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIEABAAAAAiEAAAIAAgAAEAAAAYAAAAAADEACgQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDWFILE_HEADER" Collapsed="true">
+    <Position X="55.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_KEY" Collapsed="true">
+    <Position X="55.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAgACQACAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CHANNEL_COMPSATION" Collapsed="true">
+    <Position X="43.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_HF_CHANNEL_ADDRESS" Collapsed="true">
+    <Position X="69.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_HF_TEMPERATURE" Collapsed="true">
+    <Position X="41.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_BIT" Collapsed="true">
+    <Position X="60.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAKAAABAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_BOARD_ID" Collapsed="true">
+    <Position X="64.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_AUDIO_CONFIG" Collapsed="true">
+    <Position X="59" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAACAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_BLANK_MASK" Collapsed="true">
+    <Position X="62.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAA4A8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_CMDS" Collapsed="true">
+    <Position X="69.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAGAAAIAAAQAAAAAABgAAAAIAAAwAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_CFINFO" Collapsed="true">
+    <Position X="66" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_REQ_FIRE" Collapsed="true">
+    <Position X="41.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAACAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LA_CFREMAIN" Collapsed="true">
+    <Position X="67.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_BOARD_ID" Collapsed="true">
+    <Position X="64.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_BIT" Collapsed="true">
+    <Position X="62.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAIAAEAAAAAEAAAAAAEAAAAAAAQA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_TEMPERATURE" Collapsed="true">
+    <Position X="41.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAABAAAAIAAAAAAAAAg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_THRESHOLD" Collapsed="true">
+    <Position X="43.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAEAAAAAAAAAAAAAAAAAAIAAAAAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_FILTER_FUNCTION" Collapsed="true">
+    <Position X="66" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKgCCAAAABAAAAACAAAABAAAAACAAAAAAVUAIAAAAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_FILTER_SIGTYPE" Collapsed="true">
+    <Position X="69.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PG_FILTER_INFO" Collapsed="true">
+    <Position X="67.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAQAAAAAAAAAAAAAAAAAAAIJABAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PGC_THRESHOLD" Collapsed="true">
+    <Position X="46.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PGC_ADDRESS" Collapsed="true">
+    <Position X="45" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAIAAAAAAAAAAAAAAAAACAAAQAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_GP_BIT" Collapsed="true">
+    <Position X="62.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAEAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_GP_BOARD_ID" Collapsed="true">
+    <Position X="64.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_GP_STAT" Collapsed="true">
+    <Position X="66" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAgAAAQAAAAQAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ONE_PDW" Collapsed="true">
+    <Position X="52" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQCABCACAAAAAAAAAABAAAgAAAAAggAAEAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CW_CONTROL" Collapsed="true">
+    <Position X="59" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAEAAAAAAAAAAAAAACAAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_NEW_COLLECT_BANK" Collapsed="true">
+    <Position X="48.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AET_DETAIL" Collapsed="true">
+    <Position X="55.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_LOGMSG" Collapsed="true">
+    <Position X="52" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_QUEUE_MESSAGE" Collapsed="true">
+    <Position X="60.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgAQAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_QUEUE_AET_MESSAGE" Collapsed="true">
+    <Position X="57.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgAQAAAAAAAAAAAQAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_QUEUE_LOG_MESSAGE" Collapsed="true">
+    <Position X="59" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgAQAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CHAFF_FLARE_ORDER" Collapsed="true">
+    <Position X="41.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACgAAAAAAAABAAAAAAgAAEAAgAAAAAAAABAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FIRE_INFO" Collapsed="true">
+    <Position X="46.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SYSTEMLOG" Collapsed="true">
+    <Position X="43.25" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0090_1" Collapsed="true">
+    <Position X="46.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SStruct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SCANPT" Collapsed="true">
+    <Position X="59" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAACAAAAAAAAAAAAAQgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SStruct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SAMPLE" Collapsed="true">
+    <Position X="55.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAACAAEAAAAAAAAAAQiAAgAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SStruct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AUTOCOR" Collapsed="true">
+    <Position X="66" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQACAAAAAAIAAAAAAARAAAAAgAAAAAAIAACIAAQA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SStruct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDWINDEX" Collapsed="true">
+    <Position X="59" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FRQAOAPWHISTOGRAM" Collapsed="true">
+    <Position X="59" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_DTOA_HISTOGRAM" Collapsed="true">
+    <Position X="60.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgBAAAAAAAEAABAAAAAAIAAAAAAAAAABAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AOA_GROUP" Collapsed="true">
+    <Position X="60.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAABABAAAAAAAhAAAAgAIAAAAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_AOA_GROUPS" Collapsed="true">
+    <Position X="62.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABABAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FRQ_GROUP" Collapsed="true">
+    <Position X="55.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAAAABAAAAAAAAAAAACAAAIAAAAAgBAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FRQ_GROUPS" Collapsed="true">
+    <Position X="57.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAQAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PW_GROUP" Collapsed="true">
+    <Position X="53.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAABAAAAAAAAAAAAAAAAIAAAEAAAAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PW_GROUPS" Collapsed="true">
+    <Position X="55.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAgAAAAAAAAAIAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CLUSTER" Collapsed="true">
+    <Position X="46.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAABABAAgAAAEAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FIRST_FRQAOA_PEAK" Collapsed="true">
+    <Position X="48.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAIBABAAIAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PULSE_TRAIN_SEG" Collapsed="true">
+    <Position X="52" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAiCACgQAAAQAAAADAASgAEQAAgwACAAAAAEgAgEU=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PRI_RANGE_TABLE" Collapsed="true">
+    <Position X="50.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_EMITTER" Collapsed="true">
+    <Position X="64.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAACAAAAAAAQAAABAIAEQAACAEgQAABABIIAgAwiQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_PDWPARAM" Collapsed="true">
+    <Position X="60.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAgAAAAAAQAABAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CT" Collapsed="true">
+    <Position X="55.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SP" Collapsed="true">
+    <Position X="66" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAACAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ID" Collapsed="true">
+    <Position X="45" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAQAAAAAAAAAAAAAAQAIAAAAQAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MG" Collapsed="true">
+    <Position X="66" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQAgAEQSAIAIAAAAABAAJAAAAAAgAAoAEIQQAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FT" Collapsed="true">
+    <Position X="60.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAEAAAQAAABAACATAAAIAAAoAgAAAAACAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_FG" Collapsed="true">
+    <Position X="43.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_NP" Collapsed="true">
+    <Position X="50.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIgAAAAAAAACQIAAAAAAAAAAAAAISAAEAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_KP" Collapsed="true">
+    <Position X="57.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_CM" Collapsed="true">
+    <Position X="48.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAQAoBQEQIAkEABAUAAIAAGAAABAAAIQUAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SC" Collapsed="true">
+    <Position X="57.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAACQAABAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_SYS" Collapsed="true">
+    <Position X="67.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAASAACIAAAAAAAAAgAAAAAGQgQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FREQ_RESOL" Collapsed="true">
+    <Position X="45" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAEAAAAAAQAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PA_RESOL" Collapsed="true">
+    <Position X="60.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAEAAAAAAQAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_DWELL_LEVEL" Collapsed="true">
+    <Position X="62.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAkAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ILIGThread" Collapsed="true">
+    <Position X="8.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\LIGThread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_005e_1" Collapsed="true">
+    <Position X="23.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\Task.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SQLite::Header" Collapsed="true">
+    <Position X="46.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAFAAEwAAgAAUMCAAJEAEAgAAAAACIAEAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Database.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ApiNetMem::NetMemCommand" Collapsed="true">
+    <Position X="57.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CACAACAAAAAAAAAAAEAAIAAAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\utils\ApiNetMem.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SONATA::FREQ_RESOL" Collapsed="true">
+    <Position X="43.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAACAAAAAAAAAAAAAAAAAAAAAAIAgAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\cencdec.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="mem_dev_t" Collapsed="true">
+    <Position X="27.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="xmem_t" Collapsed="true">
+    <Position X="19.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="pdw_reg_t" Collapsed="true">
+    <Position X="15.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="uio_dev_t" Collapsed="true">
+    <Position X="11.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="xuio_t" Collapsed="true">
+    <Position X="35.5" Y="33.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCSTR" Collapsed="true">
+    <Position X="64.25" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PSTR" Collapsed="true">
+    <Position X="41.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCWSTR" Collapsed="true">
+    <Position X="69.5" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PWSTR" Collapsed="true">
+    <Position X="45" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TCHAR" Collapsed="true">
+    <Position X="52" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft visual studio 10.0\vc\include\tchar.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="OLECHAR" Collapsed="true">
+    <Position X="3.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\wtypes.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCTSTR" Collapsed="true">
+    <Position X="66" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCOLESTR" Collapsed="true">
+    <Position X="0.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="POLESTR" Collapsed="true">
+    <Position X="3.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCUSTR" Collapsed="true">
+    <Position X="67.75" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PUSTR" Collapsed="true">
+    <Position X="43.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DWORD" Collapsed="true">
+    <Position X="46.75" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPCVOID" Collapsed="true">
+    <Position X="60.75" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winscard.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SSCodeCvt" Collapsed="true">
+    <Position X="43.25" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ostring" Collapsed="true">
+    <Position X="62.5" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="tstring" Collapsed="true">
+    <Position X="55.5" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SS_SIZETYPE" Collapsed="true">
+    <Position X="41.5" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SS_PTRTYPE" Collapsed="true">
+    <Position X="69.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SW_SIZETYPE" Collapsed="true">
+    <Position X="50.25" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SW_PTRTYPE" Collapsed="true">
+    <Position X="48.5" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringA" Collapsed="true">
+    <Position X="16.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringW" Collapsed="true">
+    <Position X="22.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringO" Collapsed="true">
+    <Position X="19.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdString" Collapsed="true">
+    <Position X="22.5" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dev_t" Collapsed="true">
+    <Position X="35.5" Y="28.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dmacr_t" Collapsed="true">
+    <Position X="35.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dmasr_t" Collapsed="true">
+    <Position X="7.5" Y="35.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_reg_t" Collapsed="true">
+    <Position X="23.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_ctrl_t" Collapsed="true">
+    <Position X="34.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_stat_t" Collapsed="true">
+    <Position X="34.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_desc_t" Collapsed="true">
+    <Position X="31.5" Y="33.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_descs_t" Collapsed="true">
+    <Position X="33.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_t" Collapsed="true">
+    <Position X="3.5" Y="33.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="sqlite3_value" Collapsed="true">
+    <Position X="67.75" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\SQLite\Database.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="socklen_t" Collapsed="true">
+    <Position X="66" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\NetMem\utils\PortableSocket.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="INI_CALLBACK" Collapsed="true">
+    <Position X="53.75" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\MinIni\minIni.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UINT" Collapsed="true">
+    <Position X="60.75" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\defines.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UCHAR" Collapsed="true">
+    <Position X="57.25" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\defines.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LAN_DATA" Collapsed="true">
+    <Position X="31.5" Y="28.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_PRCSBIT" Collapsed="true">
+    <Position X="27.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LAN_RSA_IBIT" Collapsed="true">
+    <Position X="19.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RBIT_OMNI" Collapsed="true">
+    <Position X="50.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RBIT_CTRL" Collapsed="true">
+    <Position X="46.75" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RBIT_LEFT" Collapsed="true">
+    <Position X="48.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RBIT_RIGHT" Collapsed="true">
+    <Position X="52" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RBIT_SHARE" Collapsed="true">
+    <Position X="53.75" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RSA_UBIT" Collapsed="true">
+    <Position X="59" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RXDF_UBIT" Collapsed="true">
+    <Position X="64.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ES_UBIT" Collapsed="true">
+    <Position X="50.25" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LAN_RDF_CBIT" Collapsed="true">
+    <Position X="57.25" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LAN_RSA_CBIT" Collapsed="true">
+    <Position X="19.5" Y="29.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ES_IBIT" Collapsed="true">
+    <Position X="48.5" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RXDF_SBIT" Collapsed="true">
+    <Position X="62.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RSA_SBIT" Collapsed="true">
+    <Position X="57.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ES_SBIT" Collapsed="true">
+    <Position X="15.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RXDF_CBIT" Collapsed="true">
+    <Position X="60.75" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="RSA_CBIT" Collapsed="true">
+    <Position X="55.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ES_CBIT" Collapsed="true">
+    <Position X="11.5" Y="31.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_CNFSYS" Collapsed="true">
+    <Position X="31.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_LAN_MSG" Collapsed="true">
+    <Position X="30.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\_sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_DATA_CONTENTS" Collapsed="true">
+    <Position X="45" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="NextActionMsg" Collapsed="true">
+    <Position X="30.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DynamicBandType" Collapsed="true">
+    <Position X="7.5" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="EContainerState" Collapsed="true">
+    <Position X="23.5" Y="29.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ECollectFlag" Collapsed="true">
+    <Position X="3.5" Y="28.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DesType" Collapsed="true">
+    <Position X="27.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ElapsedTimeType" Collapsed="true">
+    <Position X="29.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ENUM_DataType" Collapsed="true">
+    <Position X="27.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ENUM_UnitType" Collapsed="true">
+    <Position X="26.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UNI_SONATA_DATA" Collapsed="true">
+    <Position X="64.25" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="enTHREAT_PLATFORM" Collapsed="true">
+    <Position X="19.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SELThreatMapData" Collapsed="true">
+    <Position X="26.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SELThreatInfo" Collapsed="true">
+    <Position X="15.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SDeviceData" Collapsed="true">
+    <Position X="11.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LIBINDEX" Collapsed="true">
+    <Position X="59" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_UPDAET" Collapsed="true">
+    <Position X="7.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TNEW_PDW" Collapsed="true">
+    <Position X="53.75" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ENUM_BANDWIDTH" Collapsed="true">
+    <Position X="23.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UNI_PG_BOARD_ID" Collapsed="true">
+    <Position X="62.5" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_PG_COLLECT_COUNT" Collapsed="true">
+    <Position X="46.75" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_NEW_COLLECT_PDW" Collapsed="true">
+    <Position X="9.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_KWN_COLLECT_PDW" Collapsed="true">
+    <Position X="15.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="STR_SCN_COLLECT_PDW" Collapsed="true">
+    <Position X="12.5" Y="21.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UDFINDEX" Collapsed="true">
+    <Position X="59" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="HIST" Collapsed="true">
+    <Position X="52" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SStruct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PDWINDEX" Collapsed="true">
+    <Position X="23.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="BOOL" Collapsed="true">
+    <Position X="43.25" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Type.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="USHORT" Collapsed="true">
+    <Position X="23.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Type.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="__time32_t" Collapsed="true">
+    <Position X="41.5" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Type.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CString" Collapsed="true">
+    <Position X="45" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Type.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="INT32" Collapsed="true">
+    <Position X="55.5" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Type.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SQMsg" Collapsed="true">
+    <Position X="23.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\Task.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="enCommand" Collapsed="true">
+    <Position X="67.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAACAAABAAAAhAAAAAAAAAABAAAAABAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cprompt.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0042_1" Collapsed="true">
+    <Position X="27.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAgCAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0042_16" Collapsed="true">
+    <Position X="11.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LogType" Collapsed="true">
+    <Position X="43.25" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAIAAAAAAAAAAAAAAAAAIACAAAAAIAAIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\clog.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0043_1" Collapsed="true">
+    <Position X="35.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="quote_option" Collapsed="true">
+    <Position X="57.25" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\MinIni\minIni.c</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_BoardID" Collapsed="true">
+    <Position X="46.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_COLLECT_MODE" Collapsed="true">
+    <Position X="48.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAIAABAIAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_SocketMode" Collapsed="true">
+    <Position X="55.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAABAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_COLLECTBANK" Collapsed="true">
+    <Position X="50.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAGAAAAAAAAAAAAAAAAAAAQACAAAAAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\struct.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_MODE" Collapsed="true">
+    <Position X="52" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAIQAAAgAAAQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="enREQ_MESSAGE" Collapsed="true">
+    <Position X="41.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAEAgAAQABAAABAEAEAAQgQiAKBAAAABAQAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="enRES_MESSAGE" Collapsed="true">
+    <Position X="43.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAIAAAAAASAAAIAAgAAAAFCIUAIIAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\sysmsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_THREAD_KEY" Collapsed="true">
+    <Position X="59" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAkBAAAAEAAAARAAAAAgAAAEACAAAgAAABAAQAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\system.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="enTHREAD_REQ_MESSAGE" Collapsed="true">
+    <Position X="45" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAJAAAAoIQIAACJAiAAAACAABBABAYFKEBIACoAAAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\thrmsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_REQ_COMMANDCODE" Collapsed="true">
+    <Position X="46.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAUAAAaAAABAAAAAAAAAAAAAAAAIgAAAAAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SHUPERHAT_RES_COMMANDCODE" Collapsed="true">
+    <Position X="66" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAEAAEAAAaAAAAQAAAAAAAAAAAAAAAAgAAQAAIAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Include\SONATAPIP\ShuICD.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_NextActionMsg" Collapsed="true">
+    <Position X="30.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAEAAAAAAAAAAAAAAAAIoAAAAAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_DynamicBandType" Collapsed="true">
+    <Position X="7.5" Y="28.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAQAAABAAAAAAAAAAACAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_EContainerState" Collapsed="true">
+    <Position X="23.5" Y="27.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgEAAAAABAgAAAAQBAAAAAAAAAAAACAAAIAAACAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ECollectFlag" Collapsed="true">
+    <Position X="3.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_DesType" Collapsed="true">
+    <Position X="27.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ElapsedTimeType" Collapsed="true">
+    <Position X="27.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAoAAAAAkAIAEAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\CRWRCommonVariables.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0039_1" Collapsed="true">
+    <Position X="27.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0039_2" Collapsed="true">
+    <Position X="26.5" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAAAAAAAAAAAABAAQAAAgAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Collect\DataFile\DataFile.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumCEDSignalType" Collapsed="true">
+    <Position X="62.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAACAAAAAAAAAAAAAAICAAAAAAEAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumFreqType" Collapsed="true">
+    <Position X="41.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAQAAAgAAAAAAAAAAAAQAAAEIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumPRIType" Collapsed="true">
+    <Position X="41.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAACAAAAAAAEAAAQAAAQAAAAAAAAACBA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumCEDScanType" Collapsed="true">
+    <Position X="60.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACwAAAAAABAAAAAAAAAABAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumMOPType" Collapsed="true">
+    <Position X="55.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAEgAAAAAAAAABAQQAAAAAAECAAAAAABAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumPolizationType" Collapsed="true">
+    <Position X="66" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAACAAAAAAAAAAAAQAAAAAAAAAAAIAAgAE=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumFreqPatternType" Collapsed="true">
+    <Position X="69.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAIgAAhAAAAAAAAAIAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumPRIPatternType" Collapsed="true">
+    <Position X="69.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAIgAAhAAAAAAAAAIAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumLoadType" Collapsed="true">
+    <Position X="48.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAgIAAAgAAIAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumNullValueType" Collapsed="true">
+    <Position X="57.25" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumLibraryWndType" Collapsed="true">
+    <Position X="46.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEKUAAEEAAQEBAgSgBECAUACAJAQIAgQACBhAECREQQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumValueCheck" Collapsed="true">
+    <Position X="59" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgBAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_Sequence" Collapsed="true">
+    <Position X="53.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAIAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumParamSetAssocTypeCode" Collapsed="true">
+    <Position X="59" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAACAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumFunctionCodes" Collapsed="true">
+    <Position X="45" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QbEUAWEWiYAxD8IMAVCKEAkEAEAwlAYAAGICIBQpAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumRotationDirCode" Collapsed="true">
+    <Position X="50.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumValidationCode" Collapsed="true">
+    <Position X="57.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAABAAAAAAAAIAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumRF_LagacyTypeCode" Collapsed="true">
+    <Position X="48.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAACQAgMAAAAABAAAAoAhAAAgQAAAAAEAAAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumPRI_LegacyTypeCode" Collapsed="true">
+    <Position X="67.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAEAAAAAAEAAAAIQQAAAAAAAAARAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumRadarStatus" Collapsed="true">
+    <Position X="46.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIgAAAAAAAAQAiAAAAAAAAAEAAAAABAAAAIAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumMOP_CW_LegacyType" Collapsed="true">
+    <Position X="52" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAEAgAAIAAQAAAAAgAAAQCMAQAAgAEQAgCAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumThreatStatusCode" Collapsed="true">
+    <Position X="55.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAACAAAAAAABQIAACAAAgAAABAAAAAAEAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_009c_1" Collapsed="true">
+    <Position X="19.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECAAAAABAAQAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EN_THREAD_COMMAND" Collapsed="true">
+    <Position X="66" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibMngr2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EN_CEDEOB_UPDATE" Collapsed="true">
+    <Position X="62.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAAAAAAAgAAAAAAgAAAAAAAEIAJAAAIAAACAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibMngr2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_003a_1" Collapsed="true">
+    <Position X="41.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACQAAAAAQgAAAAIAAABAABABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\Identify.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_003a_2" Collapsed="true">
+    <Position X="43.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEQQCAAAAUAAYAgAAAEAAAQAgAAAAAQQAAAAAAAAg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\Identify.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnumMATCHRATIO" Collapsed="true">
+    <Position X="50.25" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ANAAAAAgABCEAAAAAEAAAAAAAAAAAACAACAAABKQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\Identify.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FREQ_BAND" Collapsed="true">
+    <Position X="62.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAEAAAAAAACAAACAQAAAAAAAAACAAAAAAAAEAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SIGNAL_TYPE" Collapsed="true">
+    <Position X="67.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAQAAAAAAAAAAAAEgAAAACAAAAUAAAAAAAAAQAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FREQ_TYPE" Collapsed="true">
+    <Position X="66" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAEAQAAAAAAQAgAAAAAAAAAAQAAQAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PRI_TYPE" Collapsed="true">
+    <Position X="50.25" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAQgFAMAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PATTERN_TYPE" Collapsed="true">
+    <Position X="46.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAhAAAAAAAAAAAAAAIAAAAAAABCAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026e_1" Collapsed="true">
+    <Position X="67.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAQAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026e_2" Collapsed="true">
+    <Position X="69.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026e_3" Collapsed="true">
+    <Position X="41.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAAAAAAAAAAAAAACAAAAQAACBAYAAAAAAAAQABAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026e_4" Collapsed="true">
+    <Position X="43.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAQAAAAAAAAAAAAAAAAAAAAAAKIAAAAAgAAQAAAAAg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_aetipl.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SCAN_TYPE" Collapsed="true">
+    <Position X="62.5" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAADCIAAAAAAAAEAAAAIgAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SCAN_STAT" Collapsed="true">
+    <Position X="60.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAggAAAAABAAAACAAAAABIAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EMITTER_STATUS" Collapsed="true">
+    <Position X="60.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAgAAAAAAAABgAQAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SCAN_MODE" Collapsed="true">
+    <Position X="59" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAEAAAAAAAAAAAAAACAAAAAAAAAAAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026f_4" Collapsed="true">
+    <Position X="45" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\_pdw.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0084_1" Collapsed="true">
+    <Position X="62.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAAAAAAAAAAAAAACAAAAQAACBAYAAAAAAAAQABAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0084_2" Collapsed="true">
+    <Position X="64.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAQAAAAAAAAAAAAAAAAAAAAAAKIAAAAAgAAQAAAAAg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\AetIPL.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ENUM_TASK_PRIORITY" Collapsed="true">
+    <Position X="57.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAQCAARACACAAAABwACAAAAAQAgAAIAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0054_1" Collapsed="true">
+    <Position X="46.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FILTER_STAT" Collapsed="true">
+    <Position X="60.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAACAAAAEAAACAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ANAL" Collapsed="true">
+    <Position X="50.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAgAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="COLLECT_MODE" Collapsed="true">
+    <Position X="55.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAEAAAAAAAAAAAAQAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ANALYSIS_MODE" Collapsed="true">
+    <Position X="53.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="KEY_PRIORITY_THREAT" Collapsed="true">
+    <Position X="41.5" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="COMPARE_PRIORITY" Collapsed="true">
+    <Position X="57.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\defines.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_6" Collapsed="true">
+    <Position X="53.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_7" Collapsed="true">
+    <Position X="55.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_8" Collapsed="true">
+    <Position X="57.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_9" Collapsed="true">
+    <Position X="59" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_10" Collapsed="true">
+    <Position X="48.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_11" Collapsed="true">
+    <Position X="50.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0062_12" Collapsed="true">
+    <Position X="52" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\PDW.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0050_10" Collapsed="true">
+    <Position X="23.5" Y="22.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\structs.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="INTER_TASK_MSG" Collapsed="true">
+    <Position X="69.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wSAgBAABDFGAAgJhSBACABkJcMhQKFBAAgUoigCQQpg=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\TaskMsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0064_1" Collapsed="true">
+    <Position X="60.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAIEAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\INC\TaskMsg.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LowHighThreatType" Collapsed="true">
+    <Position X="45" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAEAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SAnalScan.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PseudoScanType" Collapsed="true">
+    <Position X="52" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAgAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\ScanSigAnal\SAnalScan.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0051_1" Collapsed="true">
+    <Position X="45" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAQAAAAAAAQgAAgAAAAAAAAAAAIAAAAAAAQBAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PULSE_EXTRACT_PRI_STEP" Collapsed="true">
+    <Position X="55.5" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAAAAgAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SEG_MARK" Collapsed="true">
+    <Position X="64.25" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAACAAAIAAAAAAAAQAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EMITTER_MARK" Collapsed="true">
+    <Position X="59" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AET_MARK" Collapsed="true">
+    <Position X="48.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FREQ_GROUP_STEP" Collapsed="true">
+    <Position X="64.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAACAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Define.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PULSE_EXTRACT_MARK" Collapsed="true">
+    <Position X="53.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAACAAAAAAAAAAAJAAAAAAQAAAAAAAAAEAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\_Struct.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ANAL_FREQ_TYPE" Collapsed="true">
+    <Position X="52" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAQAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\AnalPRI.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0093_1" Collapsed="true">
+    <Position X="66" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\AnalPRI.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PDW_MARK" Collapsed="true">
+    <Position X="48.5" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAggAAgAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\Group.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EN_RADARCOLLECTORID" Collapsed="true">
+    <Position X="64.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAWAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\stdafx.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="enPosition" Collapsed="true">
+    <Position X="69.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\SigAnal\stdafx.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="INSERT_DB_OPCODE" Collapsed="true">
+    <Position X="67.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAQSAgAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Task\ELInsertDBMngr.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PlatformCode::EnumPlatformCode" Collapsed="true">
+    <Position X="62.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAEAABAAAAAAEAQAAAAAAAAAAAAAAgCABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PolizationCode::EnumPolizationCode" Collapsed="true">
+    <Position X="64.25" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IABAAAAQEAAIAIAQAAAEgAEAARACAQAAAAACAAAAgAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ContinuityCode::EnumContinuityCode" Collapsed="true">
+    <Position X="66" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PatternCode::EnumPatternCode" Collapsed="true">
+    <Position X="60.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAEAAAAAAAAAAQAIAAAAAAABAAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CohencyCode::EnumCoherencyCode" Collapsed="true">
+    <Position X="64.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAACAAgAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SignalType::EnumSignalType" Collapsed="true">
+    <Position X="53.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAACAAAAAAAAAAAgAAAAAAAAAgAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RadarModeFreqType::EnumRadarModeFreqType" Collapsed="true">
+    <Position X="43.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAIAIAAAAQAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RadarModePRIType::EnumRadarModePRIType" Collapsed="true">
+    <Position X="45" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAAAAAAAAAQAAQAAQAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ScanType::EnumScanType" Collapsed="true">
+    <Position X="52" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABCAAICAACAAAAAQASCQAgAQhBAAAAQEQAAAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MOP_CW_ModulationType::EnumMOP_CW_ModulationType" Collapsed="true">
+    <Position X="53.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgIAAAAAYAAAAAAAAAAAEAAAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CountryCode::EnumCountryCode" Collapsed="true">
+    <Position X="67.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RvvSverp0FeO/v2dqz+3W63nfpm939VVSne75aer4as=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FriendOrFOE::EnumFriendOrFOE" Collapsed="true">
+    <Position X="43.25" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAgAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Anal\Identify\ELCEDLibDataType2.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

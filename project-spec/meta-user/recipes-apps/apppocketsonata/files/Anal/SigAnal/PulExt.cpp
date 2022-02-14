@@ -352,7 +352,7 @@ void CPulExt::DiscardPulseTrain()
 //////////////////////////////////////////////////////////////////////
 //
 //!	\brief	 규칙성 펄스열과 불규칙성 펄스열끼리 펄스열 인덱스를 고려해서
-//!			 유사 펄스열을 제거한다.
+//!					 유사 펄스열을 제거한다.
 //!			 startseg2 값이 -1 일 때는 startseg ~ endseg 끼리 비교 한다.
 //!	\author  조철희
 //!	\param	 startseg	인자형태 int
@@ -461,20 +461,20 @@ void CPulExt::DiscardPulseTrain( int startseg, int endseg, int startseg2 )
 				// 유사하면 비교 펄스열을 삭제한다.
 				if( ref_ratio > 90 && cmp_ratio > 90 ) {
 					pCmpSeg->mark = DELETE_SEG;
-				}
+					}
 				else if( ref_ratio > cmp_ratio && ref_ratio > 70 ) {
-					pRefSeg->mark = DELETE_SEG;
+						pRefSeg->mark = DELETE_SEG;
 				}
 				// 비교펄스열율이 더 크면  비교펄스열을 삭제한다.
 				else if( ref_ratio < cmp_ratio && cmp_ratio > 70 ) {
 					pCmpSeg->mark = DELETE_SEG;
 				}
-				else
-				{
+					else
+					{
+					}
 				}
 			}
 		}
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2219,10 +2219,10 @@ void CPulExt::ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPr
             }
         }
 
-        /*! \bug  지터 펄스열로 추출한 펄스열들중에서 유사 펄스열들을 병합시킨다.
-                \date 2006-08-23 10:53:25, 조철희
-        */
-        MergeJitterPulseTrain( startSeg, m_uiCoSeg, bIgnoreJitterP );
+            /*! \bug  지터 펄스열로 추출한 펄스열들중에서 유사 펄스열들을 병합시킨다.
+                    \date 2006-08-23 10:53:25, 조철희
+            */
+            MergeJitterPulseTrain( startSeg, m_uiCoSeg, bIgnoreJitterP );
 
     }
 
@@ -2956,7 +2956,7 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
         // 기존에 추출된 펄스열과 하모닉 관계가 있을 수 있기 때문에 모든 대역에서 추출한 펄스열이 DTOA 관계를
         // 이용해서 제거한다.
         //-- 조철희 2005-12-28 09:58:17 --//
-		PrintSeg( -1, & m_RefSeg );
+        PrintSeg( -1, & m_RefSeg );
         bRet = FindSeg( & m_RefSeg, nStartSeg, m_uiCoSeg );    
 
         if( bRet == false ) {
@@ -4320,12 +4320,12 @@ void CPulExt::PrintAllSeg()
         //printf( "\n\n 펄스열 추출 개수 : %d" , m_CoSeg-m_nAnalSeg );
         Log( enNormal, "Pulse Train : %d" , m_uiCoSeg-m_uiAnalSeg );
 
-    for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
-        PrintSeg( i, pSeg );
+        for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
+            PrintSeg( i, pSeg );
 
-        PrintAllSegPDW( pSeg );
+            PrintAllSegPDW( pSeg );
 
-    }
+        }
     }
     printf( "\n" );
 #endif

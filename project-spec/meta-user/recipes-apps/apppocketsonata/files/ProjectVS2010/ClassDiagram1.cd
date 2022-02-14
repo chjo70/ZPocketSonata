@@ -1,0 +1,669 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CCGI" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAQAAAgAAAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ccgi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDetectAnalysis" Collapsed="true">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIAAAAAQAAAAAAAAAAAAAAAAAAQAAgAAAAABAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cdetectanalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEmitterMerge" Collapsed="true">
+    <Position X="15.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIAAAAgAAAQAAACAAAIAAAAAABQAACQAAAAAAAAAU=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cemittermerge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CJamTech" Collapsed="true">
+    <Position X="19.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cjamtech.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPrompt" Collapsed="true">
+    <Position X="24.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBQAAAAAAAAAAAAAEAAgAAQAAAEAgAgAAAYCAAIlAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cprompt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPulseTrk" Collapsed="true">
+    <Position X="28.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAEQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cpulsetrk.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRecLan" Collapsed="true">
+    <Position X="33.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACIABAAAAAAAAQAAAAAABAAAQAABAABAAIAEAAY=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\creclan.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScanAnalysis" Collapsed="true">
+    <Position X="35.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAgAAAAIAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cscananalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSignalCollect" Collapsed="true">
+    <Position X="37.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YgAYAACgAIIgBAAwAEAAAAAgMCBhSwEACIAGABAAAEQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\csignalcollect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTaskMngr" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAoAAIAAEgAAAhAIAAAAAAAAQAIJACACgAAAQAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ctaskmngr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTrackAnalysis" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAIAYAAAAAAAAAAAAAAAAAAQAAAAIAAAAAAAIQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\ctrackanalysis.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUrBit" Collapsed="true">
+    <Position X="17.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgACAAEAAAAAAARAAAAAQAAAEAACggAAAAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\curbit.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUserCollect" Collapsed="true">
+    <Position X="22" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAQAAAgAAAEAAAAAAABAAAQAAIIQAAEIAABAQ=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cusercollect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CArrayMsgData" Collapsed="true">
+    <Position X="21" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAASAAAAAAAAAgAAAAQBAAgAAACgACAAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\carraymsgdata.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCommonUtils" Collapsed="true">
+    <Position X="42" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAQAAAAAAEBAAAAAAAARAAQAAMAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\ccommonutils.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFile" Collapsed="true">
+    <Position X="43.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAQAABAAEAIAAAAAAAAAAoAAAAAAAAAAACAAGEgBA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cfile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGPIO" Collapsed="true">
+    <Position X="45.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAIAAAAgAAAAAAAAAAABgAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cgpio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHWIO" Collapsed="true">
+    <Position X="47.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAABAAAAACACAAAQCIAAAgAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLog" Collapsed="true">
+    <Position X="40.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABgAAAAAAAQAAAAAAgAABAAAAACIAAACAAAIAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\clog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMultiServer" Collapsed="true">
+    <Position X="13" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAQAAAAAAAEAAAGgIACABAAABAAACAIAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cmultiserver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stack&lt;T&gt;" Collapsed="true">
+    <Position X="43.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAABAAACAAABAyAgACAAAAAABAiAAAECAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Queue&lt;T&gt;" Collapsed="true">
+    <Position X="42" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAABAAAAAAAAASAQgCAAAAAAFAiAAAECgA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCircularQueue&lt;T&gt;" Collapsed="true">
+    <Position X="40.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAAAAAIAAACAAEAAAAAAgAACQAAAAAZAICAAgAEA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cqueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSingleClient" Collapsed="true">
+    <Position X="26.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAQAAAAAACQAQAEgIAGABQAABAAgCAIAEAgI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\csingleclient.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSingleServer" Collapsed="true">
+    <Position X="31" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAKAAQAAAAAAAAAAAEgIACADQAABAAACAIAAAAI=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\csingleserver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CThread" Collapsed="true">
+    <Position X="21" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAYEIAAggAiEAIAAAAAABAMAIAAQIAJAAAQKAAAAo=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStdStr&lt;CT&gt;" Collapsed="true">
+    <Position X="3.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQRimFBEJBAcgECklAICZQIBACsoAoBAqArqCEAARGA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="__unnamed_struct_0042_2" Collapsed="true">
+    <Position X="11.5" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAIAAAAAAAAAEAAAAAAACAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0042_3" Collapsed="true">
+    <Position X="3.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAgAAgAAAAAAAAAAAAGAAAiAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0042_17" Collapsed="true">
+    <Position X="19.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAIAAgAAAAAAAAAAAAAACAAABAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_COLLECTINFO" Collapsed="true">
+    <Position X="43.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_ANALINFO" Collapsed="true">
+    <Position X="42" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACACAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAABAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STR_MessageData" Collapsed="true">
+    <Position X="45.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAIAEAIAAARABBAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\cthread.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SSToUpper&lt;CT&gt;" Collapsed="true">
+    <Position X="42" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SSToLower&lt;CT&gt;" Collapsed="true">
+    <Position X="40.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NotSpace&lt;CT&gt;" Collapsed="true">
+    <Position X="47.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAACAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;ARG&gt;" Collapsed="true">
+    <Position X="43.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;CStdStringA&gt;" Collapsed="true">
+    <Position X="42" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;CStdStringW&gt;" Collapsed="true">
+    <Position X="40.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FmtArg&lt;std::string&gt;" Collapsed="true">
+    <Position X="45.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringLessNoCaseW" Collapsed="true">
+    <Position X="40.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringEqualsNoCaseW" Collapsed="true">
+    <Position X="45.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringLessNoCaseA" Collapsed="true">
+    <Position X="47.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StdStringEqualsNoCaseA" Collapsed="true">
+    <Position X="43.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_2" Collapsed="true">
+    <Position X="18.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAQQAIAAAAVIAAAAAAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_3" Collapsed="true">
+    <Position X="7.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAQBAIABAAAACAAAEwAAABAEAAAASCAIA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_4" Collapsed="true">
+    <Position X="11.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEABAAQAAAAAAAIAAAAAAwAAAAAAAIACEgAAAAAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_5" Collapsed="true">
+    <Position X="15.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAIAAAEAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_6" Collapsed="true">
+    <Position X="3.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAIAAAAAAABAAABAAAAAAAAAAAAABAAAAQAAQAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_7" Collapsed="true">
+    <Position X="14.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAABAAAAAAAAAAAMAAAAAAAACEAAAAEAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_8" Collapsed="true">
+    <Position X="7.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABIQAAQAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0043_9" Collapsed="true">
+    <Position X="11.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAACAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAABIAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="mem_dev_t" Collapsed="true">
+    <Position X="22.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="xmem_t" Collapsed="true">
+    <Position X="11.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="pdw_reg_t" Collapsed="true">
+    <Position X="3.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="uio_dev_t" Collapsed="true">
+    <Position X="19.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="xuio_t" Collapsed="true">
+    <Position X="19.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCSTR" Collapsed="true">
+    <Position X="45.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PSTR" Collapsed="true">
+    <Position X="43.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCWSTR" Collapsed="true">
+    <Position X="42" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PWSTR" Collapsed="true">
+    <Position X="47.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TCHAR" Collapsed="true">
+    <Position X="40.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft visual studio 10.0\vc\include\tchar.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="OLECHAR" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\wtypes.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCTSTR" Collapsed="true">
+    <Position X="47.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winnt.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCOLESTR" Collapsed="true">
+    <Position X="10.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="POLESTR" Collapsed="true">
+    <Position X="7.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PCUSTR" Collapsed="true">
+    <Position X="40.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PUSTR" Collapsed="true">
+    <Position X="45.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DWORD" Collapsed="true">
+    <Position X="40.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPCVOID" Collapsed="true">
+    <Position X="42" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\winscard.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SSCodeCvt" Collapsed="true">
+    <Position X="43.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ostring" Collapsed="true">
+    <Position X="43.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="tstring" Collapsed="true">
+    <Position X="42" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SS_SIZETYPE" Collapsed="true">
+    <Position X="42" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SS_PTRTYPE" Collapsed="true">
+    <Position X="40.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SW_SIZETYPE" Collapsed="true">
+    <Position X="47.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SW_PTRTYPE" Collapsed="true">
+    <Position X="45.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringA" Collapsed="true">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringW" Collapsed="true">
+    <Position X="3.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdStringO" Collapsed="true">
+    <Position X="3.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CStdString" Collapsed="true">
+    <Position X="3.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\stdstring.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dev_t" Collapsed="true">
+    <Position X="15.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dmacr_t" Collapsed="true">
+    <Position X="18.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_dmasr_t" Collapsed="true">
+    <Position X="7.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_reg_t" Collapsed="true">
+    <Position X="11.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_ctrl_t" Collapsed="true">
+    <Position X="15.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_stat_t" Collapsed="true">
+    <Position X="3.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_desc_t" Collapsed="true">
+    <Position X="14.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_sg_descs_t" Collapsed="true">
+    <Position X="7.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dma_t" Collapsed="true">
+    <Position X="11.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="enCommand" Collapsed="true">
+    <Position X="40.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAACAAABAAAAhAAAAAAAAAABAAAAABAACAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Thread\cprompt.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0042_1" Collapsed="true">
+    <Position X="22.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAgCAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0042_16" Collapsed="true">
+    <Position X="19.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\chwio.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LogType" Collapsed="true">
+    <Position X="42" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAIAAAAAAAAAAAAAAAAAIACAAAAAIAAIAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\clog.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0043_1" Collapsed="true">
+    <Position X="15.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\SONATA2\Dev\PocketSONATA\dev\Utils\DMA\dma.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

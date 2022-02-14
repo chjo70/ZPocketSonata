@@ -674,7 +674,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const
     }
 
     if( pMessageData->uiArrayLength == 0 || pMessageData->iArrayIndex != -1 ) {
-    QMsgSnd( pMessageData, pszThreadName );
+        QMsgSnd( pMessageData, pszThreadName );
     }
 
 }
@@ -710,11 +710,11 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
     //TRACE( "\nQueue Size : %d" , m_queue.size() );
     TRACE( "\n\tSending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
 
-	::SetEvent(m_hEvent);    
-	
-#elif __VXWORKS__    
+	::SetEvent(m_hEvent);   
+
+#elif __VXWORKS__   
     STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof(STR_MessageData), NO_WAIT, MSG_PRI_NORMAL );
-    if( stat == ERROR ) {
+    if( stat == ERROR ) {        
         // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.
 
         SendTaskMngr( enERROR_OF_SENDMSG, pszThreadName );

@@ -529,6 +529,8 @@ struct STR_DWELL_LEVEL {
 
 } ;
 
+
+
 #ifdef _MAIN_
 
 #ifndef _GRAPH_
@@ -552,7 +554,6 @@ struct STR_DWELL_LEVEL {
   float _spFreqMax;
 
   unsigned int _spAnalMinPulseCount;
-
 
 #define DFD_FREQ_OFFSET		(1900)
 

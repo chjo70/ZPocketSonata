@@ -245,7 +245,7 @@ bool CRawFile::FileOpen( char *filename, int iMode )
     if( m_fid == ERROR ) { //DTEC_Else
 #else
 	m_fid = _open( filename , iMode );
-    if( m_fid == 0 ) { //DTEC_Else
+    if( m_fid <= 0 ) { //DTEC_Else
 #endif
 
 		printf( "\n[W] FIle is not exist !!" );
@@ -343,7 +343,7 @@ unsigned int CRawFile::Read( void *pData, int c_size, int iOffset )
  */
 void CRawFile::FileClose()
 {
-	if( m_fid != 0 ) {
+	if( m_fid > 0 ) {
 		_close( m_fid );
         m_fid = 0;
 	}

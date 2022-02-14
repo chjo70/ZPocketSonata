@@ -25,9 +25,9 @@
 #endif
 
 
-#define PrintErr(A)							    { WPrintf A; WhereIs; }
+#define PrintErr(A)							{ WPrintf A; WhereIs; }
 
-#define DPrintf(A)							    theLogDebug->DebugPrintf(A)
+#define DPrintf(A)							theLogDebug->DebugPrintf(A)
 
 // 수식 연산 정의
 #define FMUL( A, B )                            ( (float) (A) * (float) (B) )

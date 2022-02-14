@@ -156,10 +156,10 @@ enum FREQ_BAND
 // 신호 형태 정의값
 enum SIGNAL_TYPE
 {
-	ST_NORMAL_PULSE = 1,
-	ST_CW,
-	ST_DOPPLER,
-	ST_HIGHPRF,
+    ST_NORMAL_PULSE = 1,
+    ST_CW,
+    ST_DOPPLER,
+    ST_HIGHPRF,
 
 	ST_FMOP,
 	ST_CW_FMOP,

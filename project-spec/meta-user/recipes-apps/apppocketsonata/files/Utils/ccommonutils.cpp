@@ -251,6 +251,17 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp)
 
 }
 
+/**
+ * @brief     clock_gettime
+ * @param     int X
+ * @param     struct timeval * tv
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-09, 17:34
+ * @warning
+ */
 int clock_gettime(int X, struct timeval *tv)
 {
     gettimeofday( tv, NULL );

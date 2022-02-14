@@ -683,7 +683,7 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
 #ifdef _XBAND_
             fMinCollectTime = (float) 10.0;
 #else
-			fMinCollectTime = pABTData->fMaxScanPeriod;
+            fMinCollectTime = pABTData->fMaxScanPeriod;
 #endif
         }
 

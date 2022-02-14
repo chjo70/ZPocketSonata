@@ -514,10 +514,11 @@ struct STR_PDWDATA {
         SONATA_HEADER so;
     } x;
 
+    // 아래는 공용 정보
     UINT uiTotalPDW;
     __time32_t tColTime;
-	UINT uiColTimeMs;
-	UINT _dummy;
+    UINT uiColTimeMs;
+    UINT _dummy;
 
     _PDW stPDW[MAX_PDW];
 
