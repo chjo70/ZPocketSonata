@@ -60,6 +60,7 @@ typedef enum {
     enUnitToPDW,        // 장비 포멧을 PDW 구조체로 변경 (PDW 저장장치에 따라 PDW 불러오기용)
     enPDWToPDW,         // PDW 구조체를 PDW 구조체로 변경 (저장된 PDW 파일을 불러오기용)
     enPDWToReal,        // PDW 구조체를 실제값으로 변경 (그래프 전시용)
+    enUnitToReal        // 장비 포멧을 실제값으로 변경 (그래프 전시용)
 
 } ENUM_CONVERT_OPTION;
 
@@ -231,7 +232,6 @@ public:
     virtual void *GetHeader() = 0;
 
     virtual unsigned int GetHeaderSize() = 0;
-	virtual unsigned int GetOffsetSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
     virtual unsigned int GetDataItems( unsigned long long ullFileSize=0 ) = 0;
     virtual void SetHeaderData( void *pData ) = 0;
@@ -612,16 +612,29 @@ public:
     void MakeHeaderData( STR_PDWDATA *pPDWData );
     void MakePDWData( STR_PDWDATA *pPDWDat, ENUM_CONVERT_OPTION enOption );
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
-	unsigned int GetOffsetSize();    
     inline void UpdateHeaderSize() { GetHeaderSize(); }
 
 
+
+    static unsigned int EncodePulseType( int iPulseType )
+    {
+        unsigned int ipluseType;
+
+        if( iPulseType == 0 ) {
+            ipluseType = STAT_NORMAL;
+        }
+        else {
+            ipluseType = STAT_CW;
+        }
+
+        return ipluseType;
+    } ;
 
     /**
      * @brief     DecodeTOAus
      * @param     _TOA uiTOA
      * @param     ENUM_BANDWIDTH enBandWidth
-    * @return    float
+     * @return    float
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   0.0.1
@@ -631,6 +644,21 @@ public:
     static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
         return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+    } ;
+
+    /**
+     * @brief     
+     * @param     _TOA uiTOA
+     * @param     ENUM_BANDWIDTH enBandWidth
+     * @return    unsigned int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/17 15:16:39
+     * @warning   
+     */
+    static unsigned int EncodeTOAus( float fTOA, ENUM_BANDWIDTH enBandWidth )
+    {
+        return (unsigned int) ( ( ( fTOA * (float) 1000. ) / XPDW::_toaRes[enBandWidth] ) + 0.5 );
     } ;
 
 	/**
@@ -651,6 +679,24 @@ public:
 		
 		return fVal;
 	} ;
+
+    /**
+     * @brief     
+     * @param     float fFreq
+     * @return    unsigned int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/17 15:33:22
+     * @warning   
+     */
+    static unsigned int EncodeRealFREQMHz( float fFreq )
+    {
+        unsigned int uiFreq;
+
+        uiFreq = IDIV( fFreq, XPDW::fFreqRes );
+
+        return uiFreq;
+    } ;
 
 	/**
 	 * @brief     DecodePW
@@ -720,9 +766,9 @@ public:
      * @param iDOA
      * @return
      */
-    static float EncodeDOA(float fDOA )
+    static unsigned int EncodeDOA(float fDOA )
     {
-        return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
+        return (unsigned int) ( (float) fDOA / XPDW::fDOARes + 0.5 );
     } ;
 
 };

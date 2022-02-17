@@ -171,7 +171,7 @@ union DMAPDW {
 
     }
 
-    int GetSignaltype() {
+    int GetPulsetype() {
         int iSignaltype = STAT_NORMAL;
 
         if( uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 )
@@ -300,14 +300,16 @@ struct TNEW_SPDW
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 struct _PDW {
-    _TOA ullTOA;
+    unsigned long long int ullTOA;
 
+    int iPulseType;
+
+    unsigned int uiAOA;
 	unsigned int uiFreq;
-	int iPulseType;
 	unsigned int uiPA;
 	unsigned int uiPW;
-	int iPFTag;
-	unsigned int uiAOA;
+
+	int iPFTag;	
 
 #ifdef _GRAPH_
 	float fPh1;
@@ -329,6 +331,40 @@ struct _PDW {
     int iChannel;
 #endif
 #endif
+
+    _TOA GetTOA() {
+        return ullTOA;
+    }
+
+    int GetChannel() {
+#ifdef _POCKETSONATA_
+        return iChannel;
+#else
+        return 0;
+#endif
+    }
+
+    unsigned int GetFrequency( int iCh=0 ) {
+        return uiFreq;
+    }
+
+    unsigned int GetPulsewidth() {
+        return uiPW;
+    }
+
+    unsigned int GetAOA() {
+        return uiAOA;
+    }
+
+    unsigned int GetPulseamplitude() {
+        return uiPA;
+
+    }
+
+    int GetPulsetype() {
+        return iPulseType;
+    }
+
 
 } ;
 #endif

@@ -395,12 +395,9 @@ void CUserCollect::MakeSIMPDWData()
 
     TRACE( "\nMakeSIMPDWData.." );
 
+    SIGAPDW *pSIGAPDW = m_pstrPDW;
 
-#ifdef _POCKETSONATA_
-    DMAPDW *pDMAPDW;
-
-    pDMAPDW = m_pstrPDW;
-    
+#ifdef _POCKETSONATA_   
 
 #define MANUALTOA   (35)
     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
@@ -468,41 +465,66 @@ void CUserCollect::MakeSIMPDWData()
 //                 m_ullTOA += 0x1500;
         }
 
-        memset( pDMAPDW, 0, sizeof(DMAPDW) );
+        memset( pSIGAPDW, 0, sizeof(DMAPDW) );
 
         //
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
-        pDMAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
 
-        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
-        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
-        pDMAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
 
-        pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
-        pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
 
-        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
-        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
-        pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
 
-        pDMAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
-        pDMAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
+        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
+        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
 
-        pDMAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
+        pSIGAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
 
         //printf( "m_ullTOA[%llx], [%0X:%0X]\n" , m_ullTOA, pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H, pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L );
 
         ++ m_uiIndex;
 
-        ++ pDMAPDW;
+        ++ pSIGAPDW;
     }
 
 #elif defined(_ELINT_) || defined(_XBAND_)
+    uiCoPDW = m_strResColStart.uiCoPulseNum;
 
+    iDOA = m_uiCoSim * CXPDW::EncodeDOA( 50 );
+
+    for( i=0 ; i < uiCoPDW; ++i ) {
+        randomDOA = 100; // iDOA + ( rand() % 40 ) - 20;
+        randomPA =  ( rand() % 140 ) + 20;
+        randomPW =  ( rand() % 1000 ) + 20000;
+
+        m_ullTOA += CXPDW::EncodeTOAus( 100, en5MHZ_BW );
+
+        memset( pSIGAPDW, 0, sizeof(DMAPDW) );
+
+        pSIGAPDW->ullTOA = m_ullTOA;
+        
+        pSIGAPDW->uiAOA = randomDOA;
+        pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz( 9000. );
+        pSIGAPDW->uiPA = randomPA;
+        pSIGAPDW->uiPW = randomPW;
+
+        pSIGAPDW->iPulseType = CXPDW::EncodePulseType( 0 );
+
+        ++ m_uiIndex;
+
+        ++ pSIGAPDW;
+    }
 #elif defined(_SONATA_)
 
 #endif

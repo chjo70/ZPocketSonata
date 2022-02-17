@@ -794,23 +794,14 @@ void CXPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
  */
 unsigned int CXPDW::GetHeaderSize()
 {
-    m_iHeaderSize = sizeof(STR_ELINT_HEADER);
+
+    if( m_iHeaderSize == -1 ) {
+        memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
+
+        m_iHeaderSize = sizeof(STR_ELINT_HEADER);
+    }
 
     return m_iHeaderSize;
-}
-
-/**
- * @brief     GetOffsetSize
- * @return    unsigned int
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-02-09, 19:22
- * @warning
- */
-unsigned int CXPDW::GetOffsetSize()
-{
-	return 0;
 }
 
 /**
@@ -1683,7 +1674,7 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
                 pPDW->uiPW = uiPW;
                 pPDW->uiPA = uiPA;
 
-                pPDW->iPulseType = pDMAPDW->GetSignaltype();
+                pPDW->iPulseType = pDMAPDW->GetPulsetype();
 
                 ++ m_PDWData.uiDataItems;
 
@@ -3376,6 +3367,7 @@ void CData::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetu
         break;
 
     case enPDWToPDW :
+        memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * pPDWData->GetTotalPDW() );
         break;
 
     case enPDWToReal :
@@ -4073,7 +4065,7 @@ void CDataFile::ReadDataAll( CData *pData )
 
 	// 데이터 파일 중에서 제일 큰 것을 읽는다.
 	//pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
-    m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
+    m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize() );		
 
 	m_RawDataFile.SeekToStart();
 
@@ -4245,6 +4237,8 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char
     // X대역 방탐기의 PDW 인 경우
     else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
         m_pData = new CXPDW( pstData, pstFilterSetup );
+
+        m_pData->ConvertPDWData( pPDWData, NULL, false, enOption );
 
 //         m_pData->m_pRawHeaderBuffer = (char *) & pstData[0];
 //         m_pData->m_pRawDataBuffer = (char *) & pstData[sizeof(UNION_HEADER)];
