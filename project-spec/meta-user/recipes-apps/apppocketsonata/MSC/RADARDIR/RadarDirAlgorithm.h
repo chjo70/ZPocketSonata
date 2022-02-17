@@ -57,13 +57,22 @@ typedef enum {
 typedef struct {
     unsigned long long int ullTOA;
 
-    int iFreq;
     int iPulseType;
-    int iPA;
-    int iPW;
-    int iPFTag;
-    int iAOA;
 
+    unsigned int uiAOA;
+    unsigned int uiFreq;
+    unsigned int uiPA;
+    unsigned int uiPW;
+
+    int iPFTag;	
+
+#ifdef _GRAPH_
+    float fPh1;
+    float fPh2;
+    float fPh3;
+    float fPh4;
+
+#else
 #if defined(_ELINT_) || defined(_XBAND_)
     float fPh1;
     float fPh2;
@@ -76,6 +85,40 @@ typedef struct {
 
     int iChannel;
 #endif
+#endif
+
+    _TOA GetTOA() {
+        return ullTOA;
+    }
+
+    int GetChannel() {
+#ifdef _POCKETSONATA_
+        return iChannel;
+#else
+        return 0;
+#endif
+    }
+
+    unsigned int GetFrequency( int iCh=0 ) {
+        return uiFreq;
+    }
+
+    unsigned int GetPulsewidth() {
+        return uiPW;
+    }
+
+    unsigned int GetAOA() {
+        return uiAOA;
+    }
+
+    unsigned int GetPulseamplitude() {
+        return uiPA;
+
+    }
+
+    int GetPulsetype() {
+        return iPulseType;
+    }
 
 } _PDW;
 #endif
