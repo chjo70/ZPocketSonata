@@ -30,7 +30,6 @@
 #define	RAD2DEG			(57.2957795130)
 
 
-
 typedef enum {
 	enUnselectedSubGraph = -1,
 
@@ -44,6 +43,8 @@ typedef enum {
 
 } ENUM_SUB_GRAPH ;
 
+#ifndef _ENUM_DataType
+#define _ENUM_DataType
 typedef enum {
 	en_UnknownData = 0,
 
@@ -52,21 +53,16 @@ typedef enum {
 	en_IF_DATA,
 
 } ENUM_DataType;
+#endif
+
 
 typedef enum {
-	en_UnknownUnit = 0,
+    enUnitToPDW,        // 장비 포멧을 PDW 구조체로 변경 (PDW 저장장치에 따라 PDW 불러오기용)
+    enPDWToPDW,         // PDW 구조체를 PDW 구조체로 변경 (저장된 PDW 파일을 불러오기용)
+    enPDWToReal,        // PDW 구조체를 실제값으로 변경 (그래프 전시용)
 
-	en_SONATA,
-	en_SONATA_SHU,
-	en_ELINT,
-	en_XBAND,
-	en_701,
-    en_KFX,
-    en_ZPOCKETSONATA,
+} ENUM_CONVERT_OPTION;
 
-	en_MIDAS,
-
-} ENUM_UnitType;
 
 #define MAX_SONATA_DATA		(10000)
 typedef union {
@@ -172,16 +168,20 @@ struct STR_ZOOM_INFO {
 #define _COMMON_FUNCTIONS_		\
 	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
-	void ReadDataHeader();  \
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
-    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData ); \
+    void BypassArrayData( STR_PDWDATA *pPDWData ); \
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
 	void *GetHeader() { return NULL; }	\
 	unsigned int GetHeaderSize();	\
     unsigned int GetOneDataSize();	\
 	unsigned int GetDataItems( unsigned long long ullFileSize=0 );    \
-    void SetHeaderData( void *pData );
+    void SetHeaderData( void *pData ) { \
+        if( m_iHeaderSize != -1 ) { \
+            memcpy( & m_stHeader, pData, m_iHeaderSize ); \
+            m_stHeader.CheckColTime(); \
+        } \
+    }
 
 
 class CData
@@ -197,14 +197,17 @@ public:
 
 	STR_PDW_DATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
-    STR_RAWDATA m_RawData;
+    //STR_RAWDATA m_RawData;
+
+    ENUM_DataType m_enDataType;
+    ENUM_UnitType m_enUnitType;
 
     UINT m_uiWindowNumber;
 
     STR_FILTER_SETUP m_strFilterSetup;
 
 public:
-    CData(STR_RAWDATA *pRawData);
+    CData();
     virtual ~CData();
 
     void Alloc( unsigned int uiItems=0 );
@@ -218,11 +221,12 @@ public:
 
     void UpdateMacroSysVar();
 
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL, bool bConvert=true );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 
-    virtual void ReadDataHeader() = 0;
-    virtual void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData )=0;
+    virtual void BypassArrayData( STR_PDWDATA *pPDWData )=0;
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
+    virtual void MakeHeaderData( STR_PDWDATA *pPDWData ) = 0;
+    virtual void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData ) = 0;
     virtual void *GetData() = 0;
     virtual void *GetHeader() = 0;
 
@@ -291,7 +295,8 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
+    
 	void *GetData();
 
     unsigned int GetDataItems( unsigned long long ullFileSize );
@@ -431,7 +436,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -471,7 +476,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
 	void *GetHeader() { return (void *) & m_stHeader; }
     unsigned int GetDataItems( unsigned long long ullFileSize );
@@ -481,7 +486,7 @@ public:
 
 	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
     inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
-    inline void SetHeaderData( void *pData ) { return; }
+    inline void SetHeaderData( void *pData );
 
     /**
      * @brief     DecodeTOAus
@@ -599,27 +604,24 @@ private:
 	ENUM_BANDWIDTH m_enBandWidth;
 
 public:
-	CXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+	CXPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CXPDW();
 
-	void ReadDataHeader() {  }
-	void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
-    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData );
-	void *GetData();
-	void *GetHeader() { return (void *) & m_stHeader; }
-	unsigned int GetDataItems( unsigned long long ullFileSize );
-    unsigned int GetHeaderSize();
-	unsigned int GetOffsetSize();    
+    _COMMON_FUNCTIONS_;
 
-	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
-    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
-    inline void SetHeaderData( void *pData ) { return; }
+    void MakeHeaderData( STR_PDWDATA *pPDWData );
+    void MakePDWData( STR_PDWDATA *pPDWDat, ENUM_CONVERT_OPTION enOption );
+    void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
+	unsigned int GetOffsetSize();    
+    inline void UpdateHeaderSize() { GetHeaderSize(); }
+
+
 
     /**
      * @brief     DecodeTOAus
      * @param     _TOA uiTOA
      * @param     ENUM_BANDWIDTH enBandWidth
-     * @return    float
+    * @return    float
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   0.0.1
@@ -755,7 +757,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -835,19 +837,24 @@ namespace POCKETSONATA {
 class CPOCKETSONATAPDW : public CData
 {
 private:
-	STR_PDWFILE_HEADER m_stHeader;
+	POCKETSONATA_HEADER m_stHeader;
 
     //STR_PDW_DATA m_PDWData;
 
 	static int m_iBoardID;
 
 public:
-    CPOCKETSONATAPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
+    CPOCKETSONATAPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
     virtual ~CPOCKETSONATAPDW();
 
     _COMMON_FUNCTIONS_;
 
+    void MakeHeaderData( STR_PDWDATA *pPDWData );
+    void MakePDWData( STR_PDWDATA *pPDWData, ENUM_CONVERT_OPTION enOption );
+    void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
+
 	inline unsigned int GetOffsetSize() { return 0; }
+    inline void UpdateHeaderSize() { GetHeaderSize(); }
 
 public:
     /**
@@ -1286,7 +1293,7 @@ public:
 	void Alloc( unsigned int nItems=0 );
 	void Free();
 	void ReadDataHeader();
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=false, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
 	void *GetHeader();
 
@@ -1311,7 +1318,7 @@ public:
 	void Alloc( unsigned int iItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
-    void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );
+    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
 	void *GetHeader() { return NULL; }
 
@@ -1327,6 +1334,8 @@ class CEIQ : public CData
 {
 private:
 	STR_IQ_DATA m_IQData;
+
+    SRxPDWHeader m_stHeader;
 
 public:
 	CEIQ(STR_RAWDATA *pRawData);
@@ -1359,6 +1368,8 @@ private:
 	//STR_PDW_DATA m_PDWData;
 
 	char *m_pDataChar;
+
+    STR_ELINT_HEADER m_stHeader;    // 수정해야 함.
 
 public:
 	CMIDAS(STR_RAWDATA *pRawData);
@@ -1492,7 +1503,7 @@ public:
 	virtual ~CDataFile(void);
 
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
-    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL );
+    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );
 	UINT LoadRawData( STR_PDWDATA *pPDWData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
@@ -1513,13 +1524,13 @@ public:
 	unsigned int GetOneDataSize( CData *pData );
 	unsigned int GetDataItems( CData *pData );
 
-    void Transform2RadarDirAlgorithm( STR_PDWDATA *pPDWData );
+    void BypassArrayData( STR_PDWDATA *pPDWData );
 
 	inline int GetFileIndex() { return m_iFileIndex; }
 
 	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.uiDataItems; else return 0; }
-	inline ENUM_UnitType GetUnitType() { return m_pData->m_RawData.enUnitType; }
-	inline ENUM_DataType GetDataType() { return m_pData->m_RawData.enDataType; }
+	inline ENUM_UnitType GetUnitType() { return m_pData->m_enUnitType; }
+	inline ENUM_DataType GetDataType() { return m_pData->m_enDataType; }
 	inline UINT GetWindowNumber() { if( m_pData != NULL ) return m_pData->m_uiWindowNumber; else return 0; }
 	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }

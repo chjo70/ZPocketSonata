@@ -179,16 +179,24 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
-        m_tColTime = pPDWData->tColTime;
+        
+#if defined(_ELINT_) || defined(_XBAND_)
         m_enBandWidth = pPDWData->x.el.enBandWidth;
 
-        m_CoPdw = pPDWData->uiTotalPDW;
+        m_CoPdw = pPDWData->x.el.stCommon.uiTotalPDW;
 
-#if defined(_ELINT_) || defined(_XBAND_)
+        m_tColTime = pPDWData->x.el.stCommon.tColTime;
+
         memcpy( m_szTaskID, pPDWData->x.el.aucTaskID, sizeof(m_szTaskID) );
         m_iIsStorePDW = pPDWData->x.el.iIsStorePDW;
         m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->x.el.iCollectorID;
 #elif _POCKETSONATA_
+        m_enBandWidth = en5MHZ_BW;
+
+        m_CoPdw = pPDWData->x.ps.stCommon.uiTotalPDW;
+
+        m_tColTime = pPDWData->x.ps.stCommon.tColTime;
+
         m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 #else
 #endif
@@ -243,14 +251,14 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     ++ m_uiStep;
 
-    Log( enNormal, "==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_uiStep, pPDWData->uiTotalPDW );
-
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
+    Log( enNormal, "==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_uiStep, m_CoPdw );
+
 #ifdef _TESTSBC_
-    if( pPDWData->uiTotalPDW <= RPC || pPDWData->uiTotalPDW > MAX_PDW ) {
-        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , pPDWData->uiTotalPDW, RPC );
+    if( m_CoPdw <= RPC || m_CoPdw > MAX_PDW ) {
+        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , m_CoPdw, RPC );
     }
     else {
         CheckValidData( pPDWData );
@@ -259,7 +267,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         InsertRAWData( pPDWData );
 
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_CoPdw ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
@@ -313,8 +321,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     }
 
 #else
-    if( pPDWData->uiTotalPDW <= RPC || pPDWData->uiTotalPDW > MAX_PDW ) {
-        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , pPDWData->uiTotalPDW, RPC );
+    if( m_CoPdw <= RPC || m_CoPdw > MAX_PDW ) {
+        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , m_CoPdw, RPC );
     }
     else {
         CheckValidData( pPDWData );
@@ -323,7 +331,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         InsertRAWData( pPDWData );
         
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW ) ) {
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_CoPdw ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
@@ -742,7 +750,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
     else {
         uiFreqMax = 0;
         uiFreqMin = 0x7FFFFFFF;
-        for( i=0 ; i < m_pPDWData->uiTotalPDW ; ++i ) {
+        for( i=0 ; i < m_CoPdw ; ++i ) {
             uiFreqMax = max( FREQ[i], uiFreqMax );
             uiFreqMin = min( FREQ[i], uiFreqMin );
         }
@@ -873,7 +881,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
         strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
 
 #if defined(_ELINT_) || defined(_XBAND_)
-        sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
+        sprintf( m_szRawDataFilename, _T("%d_%s_%010d"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );

@@ -1313,9 +1313,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_FRQ stFrq;
     STR_PRI stPri;
 
-    //pLOBData = & m_LOBData[m_CoLOB];
     pLOBData = GetLOBData( m_CoLOB );
-    //& m_LOBData[m_CoLOB];
 
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
@@ -1328,8 +1326,6 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 시간 정보
     struct timespec tsNow;
 
-
-    //clock_gettime( CLOCK_REALTIME, & tsNow );
 	GetCollectTime( & tsNow );
 
     pLOBData->tiContactTime = tsNow.tv_sec;

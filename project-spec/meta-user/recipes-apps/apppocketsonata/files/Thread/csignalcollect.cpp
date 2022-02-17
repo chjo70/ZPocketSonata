@@ -712,7 +712,7 @@ void CSignalCollect::SimPDWData()
 {
     STR_PDWDATA stPDWData;
 
-    stPDWData.uiTotalPDW = 0;
+    stPDWData.SetTotalPDW( 0 );
 
     //printf( "\n SimPDWData..." );
 
@@ -721,7 +721,14 @@ void CSignalCollect::SimPDWData()
 
     // 데이터를 지정하여 지정한 행렬에 저장한다.
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) ".zpdw" );
+
+#ifdef _POCKETSONATA_
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+#elif _XBAND_
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
+#else
+    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+#endif
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
     SimFilter( & stPDWData );
@@ -744,21 +751,26 @@ void CSignalCollect::SimPDWData()
  */
 void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 {
-    unsigned int ui, uj;
+    unsigned int ui, uj, uiTotalPDW;
     unsigned int uiTrackCh=0, uiScanCh=0, uiDetectCh=(unsigned int) -1;
 
     _PDW *pstPDW;
 
     CCollectBank *pCollectBank;
 
+    uiTotalPDW = pPDWData->GetTotalPDW();
+
     pstPDW = & pPDWData->stPDW[0];
-    for( ui=0 ; ui < pPDWData->uiTotalPDW ; ++ui ) {
+    for( ui=0 ; ui < uiTotalPDW ; ++ui ) {
         // 모의
+        pstPDW->uiAOA = pstPDW->uiAOA;
+
+        /*
         pstPDW->uiAOA = pstPDW->uiAOA + ( ( rand() % 10 ) - 5 );
         if( (int) pstPDW->uiAOA < 0 ) {
             pstPDW->uiAOA += MAX_AOA;
         }
-        pstPDW->uiAOA = pstPDW->uiAOA % MAX_AOA;
+        pstPDW->uiAOA = pstPDW->uiAOA % MAX_AOA;    */
 
         pstPDW->uiFreq = pstPDW->uiFreq; // + ( ( rand() % 20 ) - 10 );
         pstPDW->uiPW = pstPDW->uiPW; // + ( ( rand() % 20 ) - 10 );

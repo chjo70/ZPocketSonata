@@ -59,10 +59,13 @@ enum ENUM_BoardID {
                                 }
 
 
-#define _SAFE_MALLOC(A, B, C )  A = ( B * ) malloc( sizeof(C) ); \
-                                if( A == NULL ) { \
-                                    printf( "malloc error new memory[%s]" , #A ); \
-                                }
+#define _SAFE_MALLOC(A, B, C )  if( A != NULL ) { \
+                                    A = ( B * ) malloc( sizeof(C) ); \
+                                    if( A == NULL ) { \
+                                        printf( "malloc error new memory[%s]" , #A ); \
+                                    } \
+                                } \
+                                else { printf( "Already malloc memory[%s]" , #A ); }
 
 
 

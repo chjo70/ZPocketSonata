@@ -185,6 +185,8 @@ CScanSigAnal::~CScanSigAnal()
 */
 void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
+    int iTotalPDW;
+
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
 
@@ -193,8 +195,16 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
+#ifdef _POCKETSONATA_
+    iTotalPDW = pPDWData->x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+    iTotalPDW = pPDWData->x.el.stCommon.uiTotalPDW;
+#else
+
+#endif    
+
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_pPDWData->uiTotalPDW );
+    m_theGroup->MakePDWArray( m_pPDWData->stPDW, iTotalPDW );
 
     // 수집한 PDW 파일 만들기...
     m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
@@ -403,7 +413,13 @@ void CScanSigAnal::Init( STR_PDWDATA *pPDWData )
     m_pPDWData = pPDWData;
 
     // 신호 수집 개수 정의
-    m_CoPdw = pPDWData->uiTotalPDW;
+#ifdef _POCKETSONATA_
+    m_CoPdw = pPDWData->x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+    m_CoPdw = pPDWData->x.el.stCommon.uiTotalPDW;
+#else
+
+#endif    
 
     m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 

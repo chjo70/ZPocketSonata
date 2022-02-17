@@ -13,10 +13,9 @@ private:
 
     STR_RES_COL_START m_strResColStart;
 
-    DMAPDW *m_pstrDMAPDW;
-    char *m_pstrDMAPDWWithFileHeader;
+    SIGAPDW *m_pstrPDW;
 
-    //UINT m_uiCoPDW;
+    char *m_pstrPDWWithFileHeader;
 
     unsigned int m_uiColStart;
 

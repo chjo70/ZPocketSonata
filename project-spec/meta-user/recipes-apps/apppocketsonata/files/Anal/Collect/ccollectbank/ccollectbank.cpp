@@ -109,7 +109,13 @@ void CCollectBank::CloseCollectBank()
     m_strWindowCell.bUse = false;
     m_strWindowCell.enCollectMode = enUnused;
 
-    m_strPDW.uiTotalPDW = 0;
+#ifdef _POCKETSONATA_
+    m_strPDW.x.ps.stCommon.uiTotalPDW = 0;
+#elif defined(_ELINT_) || defined(_XBAND_)
+    m_strPDW.x.el.stCommon.uiTotalPDW = 0;
+#else
+    ss
+#endif
 
     g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 
@@ -235,6 +241,8 @@ void CCollectBank::SimCollectMode()
 {
     _TOA msDTOA=0;
 
+    unsigned int uiTotalPDW;
+
     struct timespec tsDiff;
 
     switch( m_strWindowCell.enCollectMode ) {
@@ -244,14 +252,23 @@ void CCollectBank::SimCollectMode()
         case enCollecting :
             CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
-            if( m_strPDW.uiTotalPDW >= _spTwo ) {
-                msDTOA = m_strPDW.stPDW[m_strPDW.uiTotalPDW-1].ullTOA - m_strPDW.stPDW[0].ullTOA;
+#ifdef _POCKETSONATA_
+            uiTotalPDW = m_strPDW.x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+            uiTotalPDW = m_strPDW.x.el.stCommon.uiTotalPDW;
+#else
+            uiTotalPDW = m_strPDW.x.so.stCommon.uiTotalPDW;
+#endif
+
+            if( uiTotalPDW >= _spTwo ) {
+                msDTOA = m_strPDW.stPDW[uiTotalPDW-1].ullTOA - m_strPDW.stPDW[0].ullTOA;
             }
 
             // 개수 비교
-            if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
+            if( uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
+      
             // 시간 비교
             else if( TOAmsCNV( msDTOA ) >= m_strWindowCell.uiMaxCollectTimems + ( m_strWindowCell.uiMaxCollectTimesec * 1000 ) ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
@@ -261,7 +278,7 @@ void CCollectBank::SimCollectMode()
             }
 
             if( m_strWindowCell.enCollectMode == enCompleteCollection ) {
-                m_strWindowCell.uiTotalPDW = m_strPDW.uiTotalPDW;
+                m_strWindowCell.uiTotalPDW = uiTotalPDW;
             }
 
             //round( ( tsNow.tv_nsec - m_strWindowCell.tsCollectStart.tv_nsec ) / 1.0e06 ) >= uiMaxCollectTimeMSec ) {
@@ -288,12 +305,17 @@ void CCollectBank::SimCollectMode()
  */
 void CCollectBank::PushPDWData( _PDW *pstPDW )
 {
+    unsigned int uiTotalPDW;
 
     if( m_strWindowCell.bUse == true ) {
-        if( m_strPDW.uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
-            memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], pstPDW, sizeof(_PDW) );
+        uiTotalPDW = m_strPDW.GetTotalPDW();
 
-            ++ m_strPDW.uiTotalPDW;
+        if( uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
+            memcpy( & m_strPDW.stPDW[uiTotalPDW], pstPDW, sizeof(_PDW) );
+
+            ++ uiTotalPDW;
+            m_strPDW.SetTotalPDW( uiTotalPDW );
+
             ++ m_strWindowCell.uiTotalPDW;
         }
         else {
@@ -322,8 +344,9 @@ void CCollectBank::UpdateWindowCell()
     m_strWindowCell.enCollectMode = enCollecting;
 
     // PDW 정보 클리어
-    m_strPDW.uiTotalPDW = 0;
+    m_strPDW.SetTotalPDW( 0 );
 
+   
     // 수집한 PDW 개수 업데이트
     m_strWindowCell.uiTotalPDW = 0;
 
@@ -357,8 +380,8 @@ bool CCollectBank::IsCompleteCollect()
         }
 
         // 수집 개수 확인
-        if( m_strPDW.uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
-            m_strPDW.uiTotalPDW = m_strWindowCell.uiMaxCoPDW;
+        if( m_strPDW.GetTotalPDW() >= m_strWindowCell.uiMaxCoPDW ) {
+            m_strPDW.SetTotalPDW( m_strWindowCell.uiMaxCoPDW );
             bRet = true;
         }
     }
@@ -400,12 +423,6 @@ void CCollectBank::SetCollectUpdateTime()
     __time32_t tNow;
     tNow = time( NULL );
 
-#ifdef _MSC_VER
-    m_strPDW.tColTime = tNow;
-
-#else
-    m_strPDW.tColTime = tNow;
-
-#endif
+    m_strPDW.SetColTime( tNow, 0 );
 
 }

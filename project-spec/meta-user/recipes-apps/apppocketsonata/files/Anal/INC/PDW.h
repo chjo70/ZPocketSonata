@@ -118,6 +118,79 @@ union DMAPDW {
     char chData[32];
     union UZPOCKETPDW uPDW;
 
+    _TOA GetTOA() {
+        _TOA ullTOA;
+
+        ullTOA = uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L | ( (_TOA) uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
+
+        return ullTOA;
+    }
+
+    int GetChannel() {
+        int iCh;
+
+        iCh = uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+        iCh = ( 16 + ( iCh - 8 ) ) % 16;
+
+        return iCh;
+    }
+
+    unsigned int GetFrequency( int iCh ) {
+        unsigned int uiFrequency;
+
+        uiFrequency = ( uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
+        uiFrequency = ( 0x10000 + ( uiFrequency - 0x8000 ) ) % 0x10000;
+
+        uiFrequency = uiFrequency + ( iCh * 0x10000 );
+
+        return uiFrequency;
+
+    }
+
+    unsigned int GetPulsewidth() {
+        unsigned int uiPulsewidth;
+
+        uiPulsewidth = uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width;
+        return uiPulsewidth;
+
+    }
+
+    unsigned int GetAOA() {
+        unsigned int uiAOA;
+
+        uiAOA = uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa;
+        return uiAOA;
+
+    }
+
+    unsigned int GetPulseamplitude() {
+        unsigned int uiPA;
+
+        uiPA = uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa;
+        return uiPA;
+
+    }
+
+    int GetSignaltype() {
+        int iSignaltype = STAT_NORMAL;
+
+        if( uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 )
+            iSignaltype = STAT_CW;
+        else {
+            if( uPDW.x.uniPdw_status.stPdw_status.pmop_flag == 1 )
+                iSignaltype = STAT_PMOP;
+            else if( uPDW.x.uniPdw_status.stPdw_status.fmop_flag == 1 ) {                    
+                if( uPDW.x.uniPdw_status.stPdw_status.fmop_dir == 1 )
+                    iSignaltype = STAT_CHIRPUP;
+                else 
+                    iSignaltype = STAT_CHIRPDN;
+            }
+
+        }
+
+        return iSignaltype;
+    }
+
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -412,6 +485,10 @@ struct SRxPDWHeader {
     int	iLOBID;
     int	iNumOfPDW;
 
+    void CheckColTime() {
+        
+    }
+
 } ;
 
 struct SRxPDWDataRGroup {
@@ -438,6 +515,19 @@ struct SRxPDWDataRGroup {
 } ;
 
 
+
+#ifdef _POCKETSONATA_
+typedef DMAPDW SIGAPDW;
+
+#elif defined(_ELINT_) || defined(_XBAND_)
+typedef _PDW SIGAPDW;
+
+#elif defined(_SONATA_)
+
+#endif
+
+
+
 #if TOOL==diab 
 #pragma pack( 4 )
 #else
@@ -447,14 +537,14 @@ struct SRxPDWDataRGroup {
 /**
  * @brief KFX 데이터애 저장된 헤더 파일
  */
-struct STR_PDWFILE_HEADER {
-    unsigned int uiSearchBandNo;
-    unsigned int uiSignalDeletingStatus;
-    unsigned int uiSignalCount;
-
-    unsigned int uiBoardID;
-
-} ;
+// struct STR_PDWFILE_HEADER {
+//     unsigned int uiSearchBandNo;
+//     unsigned int uiSignalDeletingStatus;
+//     unsigned int uiSignalCount;
+// 
+//     unsigned int uiBoardID;
+// 
+// } ;
 
 
 typedef struct {
@@ -471,6 +561,27 @@ struct TNEW_IQ {
 	short sQ;
 }  ;
 
+#ifndef _STR_COMMON_HEADER_
+#define _STR_COMMON_HEADER_
+// 아래는 공용 정보
+typedef struct {
+    UINT uiTotalPDW;
+    __time32_t tColTime;
+    UINT uiColTimeMs;
+    UINT _dummy;
+
+    void CheckColTime() {
+        if( tColTime < 0 ) {
+            tColTime = 0;
+        }
+
+        if( uiColTimeMs > 1000 ) {
+            uiColTimeMs = 0;
+        }
+    }
+
+} STR_COMMON_HEADER ;
+#endif
 
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
@@ -479,6 +590,25 @@ typedef struct {
     unsigned int iIsStorePDW;
     int iCollectorID;
     ENUM_BANDWIDTH enBandWidth;
+
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    void SetTotalPDW( unsigned int uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
+    void SetIsStorePDW( unsigned int isStorePDW ) {
+        iIsStorePDW = isStorePDW;
+    }
+
+    void CheckColTime() {
+        stCommon.CheckColTime();
+    }
 
 } STR_ELINT_HEADER ;
 #endif
@@ -491,6 +621,26 @@ typedef struct {
     unsigned int uiBand;                // 주파수 대역
     unsigned int iIsStorePDW;
 
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+    
+    void SetTotalPDW( unsigned int uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
+    void SetIsStorePDW( unsigned int isStorePDW ) {
+        iIsStorePDW = isStorePDW;
+    }
+
+    void CheckColTime() {
+        stCommon.CheckColTime();
+
+    }
+
 } POCKETSONATA_HEADER ;
 #endif
 
@@ -500,27 +650,120 @@ typedef struct {
     unsigned int uiBand;
     unsigned int iIsStorePDW;
 
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    void SetTotalPDW( unsigned int uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
+    void SetIsStorePDW( unsigned int isStorePDW ) {
+        iIsStorePDW = isStorePDW;
+    }
+
 } SONATA_HEADER ;
+#endif
+
+#ifndef _UNION_HEADER_
+#define _UNION_HEADER_
+typedef union {
+    STR_ELINT_HEADER el;
+
+    POCKETSONATA_HEADER ps;
+
+    SONATA_HEADER so;
+
+    unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
+        unsigned int uiTotalPDW;
+
+        switch( enUnitType ) {
+        case en_ZPOCKETSONATA :
+            uiTotalPDW = ps.stCommon.uiTotalPDW;
+            break;
+
+        case en_ELINT :
+        case en_XBAND :
+            uiTotalPDW = el.stCommon.uiTotalPDW;
+            break;
+
+        case en_SONATA :
+            uiTotalPDW = so.stCommon.uiTotalPDW;
+            break;
+
+        }
+        return uiTotalPDW;
+
+    }
+
+} UNION_HEADER;
 #endif
 
 #ifndef _STR_PDWDATA
 #define _STR_PDWDATA
 struct STR_PDWDATA {
-    union UNION_HEADER {
-        STR_ELINT_HEADER el;
-
-        POCKETSONATA_HEADER ps;
-
-        SONATA_HEADER so;
-    } x;
-
-    // 아래는 공용 정보
-    UINT uiTotalPDW;
-    __time32_t tColTime;
-    UINT uiColTimeMs;
-    UINT _dummy;
+    UNION_HEADER x;
 
     _PDW stPDW[MAX_PDW];
+
+    unsigned int GetHeader() {
+        unsigned int uiHeader;
+
+#ifdef _POCKETSONATA_
+        uiHeader = sizeof( POCKETSONATA_HEADER );
+#elif defined(_ELINT_) || defined(_XBAND_)
+        uiHeader = sizeof( STR_ELINT_HEADER );
+#else
+        uiHeader = sizeof( SONATA_HEADER );
+#endif
+        return uiHeader;
+
+    }
+
+    unsigned int GetTotalPDW() {
+        unsigned int uiTotalPDW;
+
+#ifdef _POCKETSONATA_
+        uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        uiTotalPDW = x.el.stCommon.uiTotalPDW;
+#else
+        uiTotalPDW = x.so.stCommon.uiTotalPDW;
+#endif
+        return uiTotalPDW;
+
+    }
+
+    void SetTotalPDW( unsigned int uiTotalPDW ) {
+#ifdef _POCKETSONATA_
+        x.ps.stCommon.uiTotalPDW = uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        x.el.stCommon.uiTotalPDW = uiTotalPDW;;
+#else
+        x.so.stCommon.uiTotalPDW = uiTotalPDW;;
+#endif
+        return;
+
+    }
+
+    void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
+
+#ifdef _POCKETSONATA_
+        x.ps.stCommon.tColTime = tColTime;
+        x.ps.stCommon.uiColTimeMs = uiColTimeMs;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        x.el.stCommon.tColTime = tColTime;
+        x.el.stCommon.uiColTimeMs = uiColTimeMs;
+#else
+        x.so.stCommon.tColTime = tColTime;
+        x.so.stCommon.uiColTimeMs = uiColTimeMs;
+#endif
+        return;
+
+    }
 
 }  ;
 

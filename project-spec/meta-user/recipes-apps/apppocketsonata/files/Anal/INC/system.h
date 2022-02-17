@@ -553,7 +553,32 @@
 #define	_spMaxTryScan				(5)
 
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// 
+enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// 장치별 정의
+#ifndef _ENUM_UnitType
+#define _ENUM_UnitType
+typedef enum {
+    en_UnknownUnit = 0,
+
+    en_SONATA,
+    en_SONATA_SHU,
+    en_ELINT,
+    en_XBAND,
+    en_701,
+    en_KFX,
+    en_ZPOCKETSONATA,
+
+    en_MIDAS,
+
+} ENUM_UnitType;
+#endif
+
+
+enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
 
 
 #endif // !defined(AFX_SYSTEM_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)

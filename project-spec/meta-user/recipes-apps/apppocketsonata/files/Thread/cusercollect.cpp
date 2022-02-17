@@ -28,7 +28,6 @@
 #include "../Utils/DMA/dma.h"
 #include "../Utils/ccommonutils.h"
 
-//#include "../System/csysconfig.h"
 
 #include "../Include/globals.h"
 
@@ -40,8 +39,9 @@ CUserCollect::CUserCollect( int iKeyId, char *pClassName, bool bArrayLanData ) :
 {
     LOGENTRY;
 
-    InitVar();
     AllocMemory();
+    InitVar();
+    
 }
 
 /**
@@ -74,6 +74,8 @@ void CUserCollect::InitVar()
     CHWIO::uio_re_enable_Interrupt(REG_UIO_DMA_1);
 #endif
 
+    m_pstrPDW = (SIGAPDW *) & m_pstrPDWWithFileHeader[sizeof(UNION_HEADER)];
+
 }
 
 /**
@@ -81,8 +83,18 @@ void CUserCollect::InitVar()
  */
 void CUserCollect::AllocMemory()
 {
-    m_pstrDMAPDWWithFileHeader = ( char * ) malloc( sizeof(DMAPDW)*NUM_OF_PDW+sizeof(STR_PDWFILE_HEADER) );
-    m_pstrDMAPDW = (DMAPDW *) & m_pstrDMAPDWWithFileHeader[sizeof(STR_PDWFILE_HEADER)];
+
+#ifdef _POCKETSONATA_
+    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(DMAPDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
+
+#elif defined(_ELINT_) || defined(_XBAND_)
+    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
+
+#elif defined(_SONATA_)
+    // m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
+
+#endif
+
 }
 
 /**
@@ -90,7 +102,7 @@ void CUserCollect::AllocMemory()
  */
 void CUserCollect::FreeMemory()
 {
-    free( m_pstrDMAPDWWithFileHeader );
+    free( m_pstrPDWWithFileHeader );
 }
 
 /**
@@ -272,7 +284,7 @@ void CUserCollect::ColStart()
                 m_strResColStart.uiCoPulseNum = PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( pUIO->iFd > 0 ) {
-                    memcpy( m_pstrDMAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
+                    memcpy( m_pstrPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
                     //m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
@@ -283,15 +295,29 @@ void CUserCollect::ColStart()
 
                 // ES 모드일때만 모의 데이터를 수집 관리에 밀어 넣는다.
                 if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
-                    STR_PDWFILE_HEADER *pPDWFileHeader;
-
                     // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
-                    pPDWFileHeader = ( STR_PDWFILE_HEADER * ) m_pstrDMAPDWWithFileHeader;
-                    memset( pPDWFileHeader, 0, sizeof(STR_PDWFILE_HEADER) );
-                    pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
-                    pPDWFileHeader->uiSignalCount = NUM_OF_PDW;
-                    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrDMAPDWWithFileHeader, PDW_GATHER_SIZE+sizeof(STR_PDWFILE_HEADER), NULL, 0, GetThreadName() );
+#ifdef _POCKETSONATA_
+                    POCKETSONATA_HEADER *pPDWFileHeader = ( POCKETSONATA_HEADER * ) m_pstrPDWWithFileHeader;
+
+                    memset( pPDWFileHeader, 0, sizeof(POCKETSONATA_HEADER) );
+
+                    pPDWFileHeader->iBoardID = (UINT) g_enBoardId;
+#elif defined(_ELINT_) || defined(_XBAND_)
+                    STR_ELINT_HEADER *pPDWFileHeader = ( STR_ELINT_HEADER * ) m_pstrPDWWithFileHeader;
+
+                    memset( pPDWFileHeader, 0, sizeof(STR_ELINT_HEADER) );
+#else
+                    SONATA_HEADER *pPDWFileHeader = ( SONATA_HEADER * ) m_pstrPDWWithFileHeader;
+
+                    memset( pPDWFileHeader, 0, sizeof(SONATA_HEADER) );
+#endif
+                    
+                    pPDWFileHeader->stCommon.tColTime = time(NULL);
+                    pPDWFileHeader->stCommon.uiColTimeMs = 0;
+                    pPDWFileHeader->SetTotalPDW( NUM_OF_PDW );
+                    pPDWFileHeader->SetIsStorePDW( 1 );
+                    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+PDW_GATHER_SIZE, NULL, 0, GetThreadName() );
                 }
                 break;
 
@@ -333,13 +359,13 @@ void CUserCollect::ColStart()
 void CUserCollect::SendRawData()
 {
     unsigned int ui;
-    DMAPDW *pDMAPDW;
+    SIGAPDW *pDMAPDW;
 
     LOGMSG1( enDebug, " 수집한 PDW [%d] 개를 전송합니다." , m_strResColStart.uiCoPulseNum );
 
     //pDMAPDW = m_pstrDMAPDW;
     for( ui=0 ; ui < m_strResColStart.uiCoPulseNum ; ui += PDW_BLOCK ) {
-        pDMAPDW = & m_pstrDMAPDW[ui];
+        pDMAPDW = & m_pstrPDW[ui];
         if( m_strResColStart.uiCoPulseNum - ui >= PDW_BLOCK ) {
             CCommonUtils::SendLan( enRES_RAWDATA, pDMAPDW, sizeof(UDRCPDW)*PDW_BLOCK );
         }
@@ -364,13 +390,17 @@ void CUserCollect::MakeSIMPDWData()
 {
     unsigned int i, uiCoPDW;
 
+    int iDOA;
     unsigned int randomDOA, randomPA, randomPW, randomFreq, randomCh;
 
+    TRACE( "\nMakeSIMPDWData.." );
+
+
+#ifdef _POCKETSONATA_
     DMAPDW *pDMAPDW;
 
-    pDMAPDW = m_pstrDMAPDW;
-
-    int iDOA;
+    pDMAPDW = m_pstrPDW;
+    
 
 #define MANUALTOA   (35)
     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
@@ -407,8 +437,6 @@ void CUserCollect::MakeSIMPDWData()
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
     } ;
 
-    TRACE( "\nMakeSIMPDWData.." );
-
     uiCoPDW = m_strResColStart.uiCoPulseNum;
 
     iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
@@ -429,7 +457,7 @@ void CUserCollect::MakeSIMPDWData()
 
         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
 
-        if( i < MANUALTOA ) {
+        if( i < MANUALTOA && false ) {
             m_ullTOA = manualTOA[i];
         }
         else {
@@ -473,6 +501,12 @@ void CUserCollect::MakeSIMPDWData()
         ++ pDMAPDW;
     }
 
+#elif defined(_ELINT_) || defined(_XBAND_)
+
+#elif defined(_SONATA_)
+
+#endif
+
     ++ m_uiCoSim;
 
 }
@@ -489,16 +523,21 @@ void CUserCollect::MakeCollectHistogram()
 
     unsigned char *pColHisto;
 
-    DMAPDW *pDMAPDW;
+    SIGAPDW *pSIGAPDW;
 
     // 주파수 변환하여 기록
     pColHisto = & m_ucColHisto[m_iColHistoTime][0];
 
-    pDMAPDW = m_pstrDMAPDW;
+    pSIGAPDW = m_pstrPDW;
     for( ui=0; ui < m_strResColStart.uiCoPulseNum ; ++ui ) {
-        uiFreq = ( pDMAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
-        iCh = pDMAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
+        iCh = pSIGAPDW->GetChannel();
+        uiFreq = pSIGAPDW->GetFrequency( iCh );
+
+#ifdef _POCKETSONATA_
         fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
+#else
+        fFreq = 0;
+#endif
         iIndex = (int) ( ( fFreq - MIN_FREQ_MHZ ) / COLHISTO_WIDTH_MHZ );
 
         iIndex = _min( iIndex, COLHISTO_CELLS-1 );
@@ -511,7 +550,7 @@ void CUserCollect::MakeCollectHistogram()
             iMax = _max( iMax, pColHisto[iIndex] );
         }
 
-        ++ pDMAPDW;
+        ++ pSIGAPDW;
     }
 
     pColHisto[COLHISTO_CELLS] = iMax;

@@ -470,17 +470,27 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
     pPDW = & pPDWData->stPDW[0];
     ullfirstTOA = pPDW->ullTOA;
-    for( i=0 ; i < pPDWData->uiTotalPDW ; ++i ) {
+
 #ifdef _POCKETSONATA_
+    for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
                 pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
                 CPOCKETSONATAPDW::DecodeDOA(pPDW->uiAOA), \
                 CPOCKETSONATAPDW::DecodeFREQMHz(pPDW->uiFreq), pPDW->uiFreq,
                 CPOCKETSONATAPDW::DecodePW(pPDW->uiPW), pPDW->uiPW );
-#endif
-
         ++ pPDW;
     }
+#elif defined(_ELINT_) || defined(_XBAND_)
+    for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
+        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
+            pPDW->ullTOA, CEPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA, pPDWData->x.el.enBandWidth ), \
+            CEPDW::DecodeDOA(pPDW->uiAOA), \
+            CEPDW::DecodeFREQMHz(pPDW->uiFreq), pPDW->uiFreq,
+            CEPDW::DecodePW(pPDW->uiPW, pPDWData->x.el.enBandWidth ), pPDW->uiPW );
+        ++ pPDW;
+    }
+
+#endif
 
     return;
 

@@ -116,9 +116,9 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 #ifdef _POCKETSONATA_
-    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW, pPDWData->x.ps.uiBand );
+    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) m_CoPdw, pPDWData->x.ps.uiBand );
 #else
-    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) pPDWData->uiTotalPDW, 0 );
+    m_theGroup->MakePDWArray( pPDWData->stPDW, (int) m_CoPdw, 0 );
 #endif
 
     // 수집한 PDW 파일 만들기...
@@ -259,7 +259,15 @@ void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
     m_pPDWData = pPDWData;
 
 	// 신호 수집 개수 정의
-    m_CoPdw = m_pPDWData->uiTotalPDW;
+#ifdef _POCKETSONATA_
+    m_CoPdw = m_pPDWData->x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+    m_CoPdw = m_pPDWData->x.el.stCommon.uiTotalPDW;
+#else
+    m_CoPdw = m_pPDWData->x.ps.stCommon.uiTotalPDW;
+
+#endif
+    
 
     m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 

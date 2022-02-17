@@ -1510,7 +1510,7 @@ void CAnalPRI::DwellAnalysis()
 {
     //bool bCheck;
     int i, /*j , */ end_emitter;
-    STR_EMITTER *pEmitter, *pEmitter2;
+    STR_EMITTER *pEmitter; //, *pEmitter2;
 
     // SORT 정렬
     SortEmitter();
