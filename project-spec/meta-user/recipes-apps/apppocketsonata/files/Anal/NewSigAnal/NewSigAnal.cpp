@@ -881,7 +881,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
         strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
 
 #if defined(_ELINT_) || defined(_XBAND_)
-        sprintf( m_szRawDataFilename, _T("%d_%s_%010d"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
+        sprintf( m_szRawDataFilename, _T("%d_%s_%010d%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );

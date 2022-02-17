@@ -157,7 +157,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
 #define MAX_AOA       			    (36000)			// 최대 방위값 2^10 (360도/1023)
-#define MAX_FREQ      			    IFRQMhzCNV( 0, 5000)		// 최대 주파수sms 5000 MHz로 함.
+#define MAX_FREQ      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
 #define	FREQ_NARR_MHZ			    IFRQMhzCNV( 0, 20 )			// 20 MHz
 #define	FREQ_WIDE_MHZ			    IFRQMhzCNV( 0, 100 )		// 100 MHz
 
