@@ -17,14 +17,12 @@
 
 #include "RadarDirAlgorithm.h"
 
-enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
-
 
 HWND sthWnd;
 bool stbMuteEnable=false;
 
 bool stbLocal=false;
-EN_RADARCOLLECTORID stiCollectorId=RADARCOL_Unknown;
+//EN_RADARCOLLECTORID stiCollectorId=RADARCOL_Unknown;
 
 CCriticalSection g_criticalLog;
 CCriticalSection g_criticalDbg;

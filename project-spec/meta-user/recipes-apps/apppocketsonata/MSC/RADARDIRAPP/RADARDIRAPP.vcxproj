@@ -128,6 +128,9 @@
     <None Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="FileView.h" />
@@ -143,6 +146,8 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />

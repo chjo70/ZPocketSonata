@@ -22,6 +22,36 @@
 #define MAX_PDW							(4096)
 #endif
 
+#ifndef _ENUM_DataType
+#define _ENUM_DataType
+typedef enum {
+    en_UnknownData = 0,
+
+    en_PDW_DATA,
+    en_IQ_DATA,
+    en_IF_DATA,
+
+} ENUM_DataType;
+#endif
+
+#ifndef _ENUM_UnitType
+#define _ENUM_UnitType
+typedef enum {
+    en_UnknownUnit = 0,
+
+    en_SONATA,
+    en_SONATA_SHU,
+    en_ELINT,
+    en_XBAND,
+    en_701,
+    en_KFX,
+    en_ZPOCKETSONATA,
+
+    en_MIDAS,
+
+} ENUM_UnitType;
+#endif
+
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 typedef struct {
@@ -59,6 +89,17 @@ typedef enum {
 } ENUM_BANDWIDTH ;
 #endif
 
+#ifndef _STR_COMMON_HEADER_
+#define _STR_COMMON_HEADER_
+// 아래는 공용 정보
+typedef struct {
+    UINT uiTotalPDW;
+    __time32_t tColTime;
+    UINT uiColTimeMs;
+    UINT _dummy;
+
+} STR_COMMON_HEADER ;
+#endif
 
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
@@ -68,6 +109,17 @@ typedef struct {
     int iCollectorID;
     ENUM_BANDWIDTH enBandWidth;
 
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    void SetTotalPDW( unsigned uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
 } STR_ELINT_HEADER ;
 #endif
 
@@ -76,7 +128,19 @@ typedef struct {
 typedef struct {
     unsigned int iBoardID;
     unsigned int iBank;
+    unsigned int uiBand;                // 주파수 대역
     unsigned int iIsStorePDW;
+
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    void SetTotalPDW( unsigned uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
 
 } POCKETSONATA_HEADER ;
 #endif
@@ -87,27 +151,100 @@ typedef struct {
     unsigned int uiBand;
     unsigned int iIsStorePDW;
 
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    void SetTotalPDW( unsigned uiTotalPDW ) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
 } SONATA_HEADER ;
+#endif
+
+#ifndef _UNION_HEADER_
+#define _UNION_HEADER_
+typedef union {
+    STR_ELINT_HEADER el;
+
+    POCKETSONATA_HEADER ps;
+
+    SONATA_HEADER so;
+
+    unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
+        unsigned int uiTotalPDW;
+
+        switch( enUnitType ) {
+            case en_ZPOCKETSONATA :
+                uiTotalPDW = ps.stCommon.uiTotalPDW;
+                break;
+
+            case en_ELINT :
+            case en_XBAND :
+                uiTotalPDW = el.stCommon.uiTotalPDW;
+                break;
+
+            case en_SONATA :
+                uiTotalPDW = so.stCommon.uiTotalPDW;
+                break;
+
+        }
+        return uiTotalPDW;
+
+    }
+
+} UNION_HEADER;
 #endif
 
 #ifndef _STR_PDWDATA
 #define _STR_PDWDATA
 struct STR_PDWDATA {
-    union UNION_HEADER {
-        STR_ELINT_HEADER el;
-
-        POCKETSONATA_HEADER ps;
-
-        SONATA_HEADER so;
-    } x;
-
-    UINT uiTotalPDW;
-
-    __time32_t tColTime;
-	UINT uiColTimeMs;
-	UINT _dummy;			// 16바이트 얼라인 하기위한 변수 추가
+    UNION_HEADER x;
 
     _PDW stPDW[MAX_PDW];
+
+    unsigned int GetHeader() {
+        unsigned int uiHeader;
+
+#ifdef _POCKETSONATA_
+        uiHeader = sizeof( POCKETSONATA_HEADER );
+#elif defined(_ELINT_) || defined(_XBAND_)
+        uiHeader = sizeof( STR_ELINT_HEADER );
+#else
+        uiHeader = sizeof( SONATA_HEADER );
+#endif
+        return uiHeader;
+
+    }
+
+    unsigned int GetTotalPDW() {
+        unsigned int uiTotalPDW;
+
+#ifdef _POCKETSONATA_
+        uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        uiTotalPDW = x.el.stCommon.uiTotalPDW;
+#else
+        uiTotalPDW = x.so.stCommon.uiTotalPDW;
+#endif
+        return uiTotalPDW;
+
+    }
+
+    void SetTotalPDW( unsigned int uiTotalPDW ) {
+#ifdef _POCKETSONATA_
+        x.ps.stCommon.uiTotalPDW = uiTotalPDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        x.el.stCommon.uiTotalPDW = uiTotalPDW;;
+#else
+        x.so.stCommon.uiTotalPDW = uiTotalPDW;;
+#endif
+        return;
+
+    }
 
 }  ;
 #endif

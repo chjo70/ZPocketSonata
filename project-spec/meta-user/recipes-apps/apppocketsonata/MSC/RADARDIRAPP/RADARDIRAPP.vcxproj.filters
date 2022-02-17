@@ -16,6 +16,27 @@
     <Filter Include="소스 파일\DLL">
       <UniqueIdentifier>{1e8ff7d4-65f6-4685-b2fc-7ce7b6f98ecb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal">
+      <UniqueIdentifier>{e9d4cb94-6091-4f4a-a672-a3c31537aba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Collect">
+      <UniqueIdentifier>{32bdb218-6242-47b7-8558-6f107a60feef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\INC">
+      <UniqueIdentifier>{2de6a3d3-b7a4-4687-9453-b1286d045a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Collect\DataFile">
+      <UniqueIdentifier>{69c5f66e-f097-439b-be40-51c32e05aed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\MIDAS">
+      <UniqueIdentifier>{117a1a2d-52bd-4524-9413-33f2990c5e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\SigAnal">
+      <UniqueIdentifier>{d87dd6d5-0c14-4504-9c99-fab2218e0cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\Utils">
+      <UniqueIdentifier>{bdc7684f-24b1-4b4d-8e17-6e1d77e1d6bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -138,6 +159,15 @@
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h">
       <Filter>소스 파일\DLL</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RADARDIRAPP.cpp">
@@ -169,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="PropertiesWnd.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

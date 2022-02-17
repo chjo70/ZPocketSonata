@@ -104,7 +104,9 @@ BOOL CRADARDIRAPPApp::InitInstance()
 	SetRegistryKey(_T("로컬 응용 프로그램 마법사에서 생성된 응용 프로그램"));
 	LoadStdProfileSettings(4);  // MRU를 포함하여 표준 INI 파일 옵션을 로드합니다.
 
-
+    //_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+    //_CrtSetBreakAlloc(3807);
+    
 	InitContextMenuManager();
 
 	InitKeyboardManager();
@@ -138,6 +140,8 @@ BOOL CRADARDIRAPPApp::InitInstance()
 	// 응용 프로그램이 /RegServer, /Register, /Unregserver 또는 /Unregister로 시작된 경우 FALSE를 반환합니다.
  	if (!ProcessShellCommand(cmdInfo))
  		return FALSE;
+
+
 
 	InitApp();
 
@@ -251,7 +255,7 @@ bool CRADARDIRAPPApp::OpenFile( CString &strPathname )
 	CFileDialog *pWndFile;
 
 	// 로그 파일을 오픈할 FILE Dialog창을 생성한다.
-	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.iq;*.siq)|*.spdw;*.pdw;*.npw;*.epdw;*.iq;*.siq|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw)|*.pdw;*.npw;*.spdw;*.epdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
+	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq)|*.spdw;*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.xpdw)|*.pdw;*.npw;*.spdw;*.epdw;*.xpdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
 
 	// Initializes m_ofn structure
 	pWndFile->m_ofn.lpstrTitle = _T("PDW 파일 읽어오기...");
@@ -282,10 +286,9 @@ void CRADARDIRAPPApp::InitApp(void)
 {
  	CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
 
-	/* pMainFrame->GetOutputWnd()->GetSafeHwnd() */
-	sthWnd = pMainFrame->GetOutputWnd()->GetSafeHwnd();
-
  	RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+
+    RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
 
 	m_strIniFile = AfxGetApp()->m_pszHelpFilePath;
 	m_strIniFile.Replace(".HLP", ".ini");
@@ -311,6 +314,15 @@ void CRADARDIRAPPApp::InitApp(void)
 
 }
 
+/**
+ * @brief     LoadProfile
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-14, 14:51
+ * @warning
+ */
 void CRADARDIRAPPApp::LoadProfile()
 {
 	char szBuffer[100];
@@ -322,6 +334,15 @@ void CRADARDIRAPPApp::LoadProfile()
 	//m_strInitPath = szBuffer;
 }
 
+/**
+ * @brief     SaveProfile
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-14, 14:51
+ * @warning
+ */
 void CRADARDIRAPPApp::SaveProfile()
 {
 	//char szBuffer[100];
@@ -330,11 +351,29 @@ void CRADARDIRAPPApp::SaveProfile()
 	::WritePrivateProfileString( "Settings", "FOLDER", (LPSTR) (LPCTSTR) m_strInitPath, m_strIniFile);
 }
 
+/**
+ * @brief     OnSWInit
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-14, 14:51
+ * @warning
+ */
 void CRADARDIRAPPApp::OnSWInit()
 {
 	RadarDirAlgotirhm::RadarDirAlgotirhm::SWInit();
 }
 
+/**
+ * @brief     OnFileContiOpen
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-14, 14:51
+ * @warning
+ */
 void CRADARDIRAPPApp::OnFileContiOpen()
 {
 

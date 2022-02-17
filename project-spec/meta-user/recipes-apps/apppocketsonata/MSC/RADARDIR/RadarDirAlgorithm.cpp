@@ -30,10 +30,11 @@ namespace RadarDirAlgotirhm
 
         if( g_pTheLog == NULL ) {
             g_pTheLog = new CLog();
-        }
+
 		
-		::Log( enNormal, "+---------------------------------------------------+" );
-		::Log( enNormal,  "레이더 방탐 라이브러리를 구동합니다...." );
+		    ::Log( enNormal, "+---------------------------------------------------+" );
+		    ::Log( enNormal,  "레이더 방탐 라이브러리를 구동합니다...." );
+        }
 
 		SetWindowHandler( hWnd );
 		
@@ -175,7 +176,9 @@ namespace RadarDirAlgotirhm
 	 */
 	void RadarDirAlgotirhm::Close()
 	{
-		Log( enNormal, "레이더 방탐 라이브러리를 종료합니다...." );
+        if( g_pTheLog != NULL ) {
+		    Log( enNormal, "레이더 방탐 라이브러리를 종료합니다...." );
+        }
 
 		if( gpNewSigAnal != NULL ) {
 			delete gpNewSigAnal;

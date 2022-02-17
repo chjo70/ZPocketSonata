@@ -225,8 +225,13 @@ namespace RadarAnlAlgotirhm
 	 */
 	void RadarAnlAlgotirhm::Close()
 	{
-		printf( "\n 레이더 분석 라이브러리를 종료합니다...." );
+
+        if( g_pTheLog != NULL ) {
 		Log( enNormal, "레이더 분석 라이브러리를 종료합니다...." );
+        }
+        else {
+            printf( "\n 레이더 분석 라이브러리를 종료합니다...." );
+        }
 
 		if( gpEmitterMergeMngr != NULL ) {
 			delete gpEmitterMergeMngr;

@@ -8,8 +8,6 @@
 #include "afxdialogex.h"
 
 
-//#include "../../VxWorksSpace/VBootShell/Untar/FileTar.h"
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

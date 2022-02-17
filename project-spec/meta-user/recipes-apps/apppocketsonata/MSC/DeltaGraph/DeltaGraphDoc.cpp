@@ -252,7 +252,7 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
 	CData *pData, *pFindMapData;
 	
 	pFindMapData = theApp.FindMapData( & m_strPathname );
-	pData = m_theDataFile.ReadDataFile( (LPSTR) (LPCTSTR) m_strPathname, dwOffset, pFindMapData, pstFilterSetup );
+	pData = m_theDataFile.ReadDataFile( NULL, (LPSTR) (LPCTSTR) m_strPathname, dwOffset, pFindMapData, pstFilterSetup );
 
 	if( pFindMapData == NULL ) {
 		theApp.AddMapData( & m_strPathname, pData );

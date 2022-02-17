@@ -3,21 +3,24 @@
 //
 
 #include "stdafx.h"
+
+
 // SHARED_HANDLERS는 미리 보기, 축소판 그림 및 검색 필터 처리기를 구현하는 ATL 프로젝트에서 정의할 수 있으며
 // 해당 프로젝트와 문서 코드를 공유하도록 해 줍니다.
 #ifndef SHARED_HANDLERS
 #include "RADARDIRAPP.h"
 #endif
 
+
+
 #include "MainFrm.h"
-
-#include "../RadarDIR/RadarDirAlgorithm.h"
-
 
 #include "RADARDIRAPPDoc.h"
 #include "RADARDIRAPPView.h"
 
+#include "../RadarDIR/RadarDirAlgorithm.h"
 
+#include "../../files/Utils/ccommonutils.h"
 
 #include <propkey.h>
 
@@ -67,10 +70,20 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
+        
 	}
-	else
-	{
-		// TODO: 여기에 로딩 코드를 추가합니다.
+	else {
+	    // TODO: 여기에 로딩 코드를 추가합니다.
+        m_theDataFile.ReadDataFile( & m_stPDWData, ar.m_strFileName.GetBuffer(), -1, NULL, NULL, false );
+
+        CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & m_stPDWData );
+
 	}
 }
 
@@ -110,8 +123,7 @@ void CRADARDIRAPPDoc::InitializeSearchContent()
 
 void CRADARDIRAPPDoc::SetSearchContent(const CString& value)
 {
-	if (value.IsEmpty())
-	{
+	if (value.IsEmpty())	{
 		RemoveChunk(PKEY_Search_Contents.fmtid, PKEY_Search_Contents.pid);
 	}
 	else
@@ -148,6 +160,8 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 {
 	CString strMainTitle;
+
+    
 
 	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
 	// 	map<CString, CData *>::iterator it;
@@ -194,7 +208,7 @@ void CRADARDIRAPPDoc::ReadDataFile()
 
 	CFile theRawDataFile;
 
-	__int64 file_size = 0; 
+	__int64 file_size = 0;
 
 	HANDLE h_file = CreateFile( m_strPathname, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL); 
 	if( INVALID_HANDLE_VALUE != h_file ) { 
@@ -209,7 +223,8 @@ void CRADARDIRAPPDoc::ReadDataFile()
 		CloseHandle(h_file);
 	}
 
-	uiHeader = sizeof(STR_ELINT_HEADER); //; // - sizeof(stPDWData.stPDW);
+
+	uiHeader = stPDWData.GetHeader();
 
 	if (theRawDataFile.Open( m_strPathname.GetBuffer(), CFile::shareDenyNone | CFile::typeBinary) == TRUE) {
 		uiByte = theRawDataFile.Read( & stPDWData, uiHeader );
@@ -217,12 +232,12 @@ void CRADARDIRAPPDoc::ReadDataFile()
         // 장치 마다 PDW 개수를 이 변수에 저장해야 한다.
         //stPDWData.uiTotalPDW = stPDWData.x.el.uiCount;
 
-		if( uiHeader + ( stPDWData.uiTotalPDW * sizeof(_PDW) ) == file_size ) {
-			uiByte = theRawDataFile.Read( stPDWData.stPDW, stPDWData.uiTotalPDW * sizeof(_PDW) );
+		if( uiHeader + ( stPDWData.GetTotalPDW() * sizeof(_PDW) ) == file_size ) {
+			uiByte = theRawDataFile.Read( stPDWData.stPDW, stPDWData.GetTotalPDW() * sizeof(_PDW) );
 		}
 		else {
 			uiData = sizeof(STR_PDWDATA) - sizeof(stPDWData.stPDW);
-			for( i=0 ; i < stPDWData.uiTotalPDW ; ++i ) {
+			for( i=0 ; i < stPDWData.GetTotalPDW() ; ++i ) {
 				uiByte = theRawDataFile.Read( & stPDWData.stPDW[i], sizeof(_PDW)-sizeof(float)*4 );
 			}
 		}
@@ -241,7 +256,7 @@ void CRADARDIRAPPDoc::ReadDataFile()
 		CRADARDIRAPPView *pView;
 		CMainFrame *pMainFrame;
 
-        RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+        //RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
 		RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );
         
 

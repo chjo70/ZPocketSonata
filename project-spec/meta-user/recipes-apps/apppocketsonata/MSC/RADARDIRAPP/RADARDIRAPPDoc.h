@@ -6,6 +6,9 @@
 #pragma once
 
 
+#include "../../files/Anal/Collect/DataFile/DataFile.h"
+
+
 class CRADARDIRAPPDoc : public CDocument
 {
 protected: // serialization에서만 만들어집니다.
@@ -21,7 +24,10 @@ private:
 	CRADARDIRAPPDoc *m_pDoc;
 
 	CString m_strPathname;
-	//CDataFile m_theDataFile;
+
+    CDataFile m_theDataFile;
+
+    STR_PDWDATA m_stPDWData;
 
 private:
 	void ReadDataFile();
