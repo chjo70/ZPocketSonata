@@ -170,7 +170,6 @@ struct STR_ZOOM_INFO {
 	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
-    void BypassArrayData( STR_PDWDATA *pPDWData ); \
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
 	void *GetHeader() { return NULL; }	\
@@ -224,7 +223,6 @@ public:
 
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 
-    virtual void BypassArrayData( STR_PDWDATA *pPDWData )=0;
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
     virtual void MakeHeaderData( STR_PDWDATA *pPDWData ) = 0;
     virtual void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData ) = 0;
@@ -1569,8 +1567,6 @@ public:
 	unsigned int GetHeaderSize( CData *pData );
 	unsigned int GetOneDataSize( CData *pData );
 	unsigned int GetDataItems( CData *pData );
-
-    void BypassArrayData( STR_PDWDATA *pPDWData );
 
 	inline int GetFileIndex() { return m_iFileIndex; }
 

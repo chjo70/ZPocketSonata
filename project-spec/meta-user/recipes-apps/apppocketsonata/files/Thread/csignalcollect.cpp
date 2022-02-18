@@ -714,8 +714,6 @@ void CSignalCollect::SimPDWData()
 
     stPDWData.SetTotalPDW( 0 );
 
-    //printf( "\n SimPDWData..." );
-
     // 랜 데이터를 갖고온다.
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
@@ -736,6 +734,8 @@ void CSignalCollect::SimPDWData()
     // 모의 PDW 데이터를 수집 버퍼에 추가한다.
     //pCollectBank = GetCollectBank( uiCh );
     //pCollectBank->PushPDWData( pPDWData );
+
+    //_SAFE_DELETE( m_theDataFile.m_pData );
 
 }
 

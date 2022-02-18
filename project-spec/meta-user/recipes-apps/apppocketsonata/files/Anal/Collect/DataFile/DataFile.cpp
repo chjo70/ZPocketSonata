@@ -849,24 +849,6 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
     return uiDataItems;
 }
 
-
-/**
- * @brief     BypassArrayData
- * @param     STR_PDWDATA * pPDWData
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-02-14, 13:45
- * @warning
- */
-void CXPDW::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-
-    memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW)*m_uiTotalDataItems );
-
-}
-
 /**
  * @brief     
  * @param     STR_PDWDATA * pPDWData
@@ -1592,21 +1574,6 @@ unsigned int CPOCKETSONATAPDW::GetDataItems( unsigned long long ullFileSize )
 }
 
 /**
- * @brief		BypassArrayData
- * @param		STR_PDWDATA * pPDWData
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2022/02/14 17:45:27
- * @warning		
- */
-void CPOCKETSONATAPDW::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-    memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW)*m_uiTotalDataItems );
-
-}
-
-/**
  * @brief     
  * @param     STR_PDWDATA * pPDWData
  * @return    void
@@ -1972,23 +1939,6 @@ unsigned int C7PDW::GetDataItems( unsigned long long ullFileSize )
 	return uiDataItems;
 }
 
-/**
- * @brief		BypassArrayData
- * @param		STR_PDWDATA * pPDWData
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2022/02/14 16:34:41
- * @warning		
- */
-void C7PDW::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-
-    memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW)*m_uiTotalDataItems );
-
-}
-
-
 //////////////////////////////////////////////////////////////////////////
 //
 
@@ -2345,22 +2295,6 @@ unsigned int CEIQ::GetOneDataSize()
 unsigned int CEIQ::GetDataItems( unsigned long long ullFileSize )
 {
 	return sizeof(TNEW_IQ);
-}
-
-/**
- * @brief		BypassArrayData
- * @param		STR_PDWDATA * pPDWData
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2022/02/14 17:44:46
- * @warning		
- */
-void CEIQ::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-
-    memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW)*m_uiTotalDataItems );
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3026,23 +2960,6 @@ int CMIDAS::GetDataFormatSize( char ch )
 	return iSize;
 }
 
-/**
- * @brief		BypassArrayData
- * @param		STR_PDWDATA * pPDWData
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2022/02/14 17:45:34
- * @warning		
- */
-void CMIDAS::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-
-    memcpy( & pPDWData->stPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW)*m_uiTotalDataItems );
-
-}
-
-
 //////////////////////////////////////////////////////////////////////////
 /**
  * @brief     
@@ -3060,25 +2977,12 @@ CData::CData()
     m_iOneDataSize = UINT_MAX;
 
     m_pRawDataBuffer = NULL;
-    m_pRawHeaderBuffer = NULL; //(char *) malloc(sizeof(char)* MAX_HEADER_SIZE );
+    m_pRawHeaderBuffer = NULL;
 
 	m_uiWindowNumber = 0;
 
     m_uiTotalDataItems = 0;
 
-//     m_PDWData.pfFreq = NULL;
-//     m_PDWData.pfPW = NULL;
-//     m_PDWData.pfAOA = NULL;
-//     m_PDWData.pfTOA = NULL;
-//     m_PDWData.pfPA = NULL;
-//     m_PDWData.pfDTOA = NULL;
-//     m_PDWData.pullTOA = NULL;
-//     m_PDWData.pcType = NULL;
-//     m_PDWData.pcDV = NULL;
-//     m_PDWData.pfPh1 = NULL;
-//     m_PDWData.pfPh2 = NULL;
-//     m_PDWData.pfPh3 = NULL;
-//     m_PDWData.pfPh4 = NULL;
     memset( & m_PDWData, 0, sizeof(STR_PDW_DATA) );
 
 	ClearFilterSetup();
@@ -4103,128 +4007,22 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char
     ENUM_UnitType enUnitType = WhatUnitType( pstPathname );
 
     if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {        
-// 
-//         if (m_RawDataFile.FileOpen( pstPathname, O_RDONLY | O_BINARY ) == TRUE ) {
-//             m_pData->m_RawData.uiByte = m_RawDataFile.Read( m_pData->m_pRawDataBuffer, MAX_RAWDATA_SIZE );
-//             //m_pData->m_RawData.uiDataItems = m_pData->m_RawData.uiByte / sizeof(TNEW_PDW);
-// 
-//             m_pData = new CPDW( & m_pData->m_RawData );
-// 
-//             //m_pData->Alloc();
-// 
-//             m_pData->ConvertArray( pPDWData, 0 );
-// 
-//             m_RawDataFile.FileClose();
-// 
-//         }
-//         else {
-//             m_pData->m_RawData.uiByte = 0;
-//             //m_pData->m_RawData.uiDataItems = 0;
-//         }
 
     }
 
     else if( enDataType == en_PDW_DATA && enUnitType == en_SONATA_SHU ) {
-//         m_pData->m_RawData.enDataType = en_PDW_DATA;
-//         m_pData->m_RawData.enUnitType = en_SONATA;
-
-//         if (m_RawDataFile.FileOpen( pstPathname, O_RDONLY | O_BINARY ) == TRUE) {
-//             m_pData->m_RawData.uiByte = m_RawDataFile.Read( m_pData->m_pRawDataBuffer, MAX_RAWDATA_SIZE );
-//             //m_pData->m_RawData.uiDataItems = m_pData->m_RawData.uiByte / sizeof(TNEW_SPDW);
-// 
-//             m_pData = new CSPDW( & m_pData->m_RawData );
-// 
-//             m_pData->Alloc();
-// 
-//             m_pData->ConvertArray( NULL, 0 );
-// 
-//             m_RawDataFile.FileClose();
-// 
-//         }
-//         else {
-//             m_pData->m_RawData.uiByte = 0;
-//             //m_pData->m_RawData.uiDataItems = 0;
-//         }
 
     }
 
     else if( enDataType == en_PDW_DATA && enUnitType == en_701 ) {
-//         m_pData->m_RawData.enDataType = en_PDW_DATA;
-//         m_pData->m_RawData.enUnitType = en_701;
-
-//         if (m_RawDataFile.FileOpen( pstPathname, O_RDONLY | O_BINARY ) == TRUE) {
-//             SRxPDWHeader *pPDWHeader;
-// 
-//             m_pData->m_RawData.uiByte = m_RawDataFile.Read( m_pData->m_pRawDataBuffer, MAX_RAWDATA_SIZE );
-// 
-//             pPDWHeader = ( SRxPDWHeader * ) m_pData->m_pRawDataBuffer;
-// 
-//             m_pData = new C7PDW( & m_pData->m_RawData, pstFilterSetup );
-// 
-//             m_pData->AllSwapData32( & pPDWHeader->uiAcqTime, sizeof(int)*4 );
-//             m_pData->AllSwapData32( & pPDWHeader->iSearchBandID, sizeof(int)*4 );
-// 
-//             //m_pData->m_RawData.uiDataItems = pPDWHeader->iNumOfPDW;
-// 
-//             m_pData->Alloc();
-// 
-//             m_pData->ConvertArray( pPDWData, 0 );
-// 
-//             m_RawDataFile.FileClose();
-// 
-//         }
-//         else {
-//             m_pData->m_RawData.uiByte = 0;
-//             //m_pData->m_RawData.uiDataItems = 0;
-//         }
 
     }
 
     else if( enDataType == en_PDW_DATA && enUnitType == en_KFX ) {
-//         m_pData->m_RawData.enDataType = en_PDW_DATA;
-//         m_pData->m_RawData.enUnitType = en_KFX;
-
-        // STR_PDWFILE_HEADER *pPDWFile;
-
-//         m_pData->m_pRawDataBuffer = (char *) pstData;
-//         pPDWFile = ( STR_PDWFILE_HEADER * ) m_pData->m_pRawDataBuffer;
-// 
-//         m_pData = new CKFXPDW( & m_pData->m_RawData, pstFilterSetup );
-// 
-//         //m_pData->m_RawData.uiDataItems = pPDWFile->uiSignalCount;
-// 
-//         if( pPDWData == NULL ) {
-//             m_pData->Alloc();
-//         }
-// 
-//         m_pData->ConvertArray( pPDWData, 0 );
 
     }
 
     else if( enDataType == en_PDW_DATA && enUnitType == en_ELINT ) {
-//         m_pData->m_RawData.enDataType = en_PDW_DATA;
-//         m_pData->m_RawData.enUnitType = en_ELINT;
-
-//         if (m_RawDataFile.FileOpen( pstPathname, O_RDONLY | O_BINARY ) == TRUE) {
-//             STR_PDWDATA *pPDWData;
-// 
-//             m_pData->m_RawData.uiByte = m_RawDataFile.Read( m_pData->m_pRawDataBuffer, MAX_RAWDATA_SIZE );
-//             pPDWData = ( STR_PDWDATA * ) m_pData->m_pRawDataBuffer;
-//             //m_pData->m_RawData.uiDataItems = pPDWData->uiTotalPDW;
-// 
-//             m_pData = new CEPDW( & m_pData->m_RawData, pstFilterSetup );
-// 
-//             m_pData->Alloc();
-// 
-//             m_pData->ConvertArray( NULL, 0 );
-// 
-//             m_RawDataFile.FileClose();
-// 
-//         }
-//         else {
-//             m_pData->m_RawData.uiByte = 0;
-//             //m_pData->m_RawData.uiDataItems = 0;
-//         }
 
     }
     // 소형 전자전의 PDW 인 경우
@@ -4240,38 +4038,10 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char
 
         m_pData->ConvertPDWData( pPDWData, NULL, false, enOption );
 
-//         m_pData->m_pRawHeaderBuffer = (char *) & pstData[0];
-//         m_pData->m_pRawDataBuffer = (char *) & pstData[sizeof(UNION_HEADER)];
-// 
-//         m_pData->m_uiTotalDataItems = puniPDWFileHeader->GetTotalPDW();
-// 
-//         m_pData->SetHeaderData( puniPDWFileHeader );
-        //m_pData->ConvertPDWData( pPDWData, false, NULL, false );
-
     }
 
     //////////////////////////////////////////////////////////////////////////
     else if( enDataType == en_IQ_DATA && enUnitType == en_SONATA ) {
-//         m_pData->m_RawData.enDataType = en_IQ_DATA;
-//         m_pData->m_RawData.enUnitType = en_SONATA;
-
-//         if (m_RawDataFile.FileOpen( pstPathname, O_RDONLY | O_BINARY ) == TRUE) {
-//             m_pData->m_RawData.uiByte = m_RawDataFile.Read( m_pData->m_pRawDataBuffer, MAX_RAWDATA_SIZE );
-//             //m_pData->m_RawData.uiDataItems = m_pData->m_RawData.uiByte / sizeof(TNEW_IQ);
-// 
-//             m_pData = new CIQ( & m_pData->m_RawData );
-// 
-//             m_pData->Alloc();
-// 
-//             m_pData->ConvertArray( NULL, 0 );
-// 
-//             m_RawDataFile.FileClose();
-// 
-//         }
-//         else {
-//             m_pData->m_RawData.uiByte = 0;
-//             //m_pData->m_RawData.uiDataItems = 0;
-//         }
 
     }
     else {
@@ -4279,7 +4049,7 @@ void CDataFile::ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char
 
     }
 
-    _SAFE_DELETE( m_pData );
+    
 
 }
 
@@ -4354,21 +4124,3 @@ void CDataFile::SetData( CData *pData )
 }
 
 
-/**
- * @brief     BypassArrayData
- * @param     STR_PDWDATA * pPDWData
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-02-09, 18:42
- * @warning
- */
-void CDataFile::BypassArrayData( STR_PDWDATA *pPDWData )
-{
-
-    m_pData->BypassArrayData( pPDWData );
-
-
-   
-}
