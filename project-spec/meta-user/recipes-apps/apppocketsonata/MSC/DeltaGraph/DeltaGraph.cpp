@@ -411,11 +411,11 @@ ENUM_DataType CDeltaGraphApp::GetDataType(CString &strPathName)
 	ENUM_DataType enDataType=en_UnknownData;
 
 	strPathName.MakeLower();
-	if( 0 != strcmp( strPathName.GetBuffer(), "pdw" ) || 0 != strcmp( strPathName.GetBuffer(), "npw" ) || 0 != strcmp( strPathName.GetBuffer(), "dat" ) ) {
+	if( 0 != strstr( strPathName.GetBuffer(), "pdw" ) || 0 != strstr( strPathName.GetBuffer(), "npw" ) || 0 != strstr( strPathName.GetBuffer(), "dat" ) || 0 != strstr( strPathName.GetBuffer(), "xpdw" )) {
 		enDataType = en_PDW_DATA;
 	}
 
-	if( 0 != strcmp( strPathName.GetBuffer(), "iq" ) ) {
+	else if( 0 != strstr( strPathName.GetBuffer(), "iq" ) ) {
 		enDataType = en_IQ_DATA;
 	}
 

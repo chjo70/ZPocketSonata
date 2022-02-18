@@ -735,6 +735,27 @@ typedef union {
 
     }
 
+    int GetBoardID( ENUM_UnitType enUnitType ) {
+        int iBoardID;
+
+        switch( enUnitType ) {
+        case en_ZPOCKETSONATA :
+            iBoardID = ps.iBoardID;
+            break;
+
+        case en_ELINT :
+        case en_XBAND :
+            iBoardID = -1;
+            break;
+
+        case en_SONATA :
+            iBoardID = -1;
+            break;
+
+        }
+        return iBoardID;
+    }
+
 } UNION_HEADER;
 #endif
 

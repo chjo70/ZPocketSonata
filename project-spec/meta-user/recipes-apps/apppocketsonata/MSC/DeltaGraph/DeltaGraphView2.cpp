@@ -598,7 +598,7 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 
 		ENUM_DataType enDataType;
 
-		STR_PDW_DATA *pPDWData=NULL;
+		STR_PDW_REALDATA *pPDWData=NULL;
 		STR_IQ_DATA *pIQData=NULL;
 
 		DWORD dwColor[2];
@@ -750,7 +750,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 	TCHAR szBuffer[100];
 
 	void *pData;
-	STR_PDW_DATA *pPDWData=NULL;
+	STR_PDW_REALDATA *pPDWData=NULL;
 	STR_IQ_DATA *pIQData=NULL;
 
 	uiPDWDataItems = m_pDoc->GetPDWDataItems();
@@ -770,7 +770,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 		switch( enSubGraph ) {
 			case enSubMenu_1 :
 				if (enDataType == en_PDW_DATA ) {
-					pPDWData = (STR_PDW_DATA *)pData;
+					pPDWData = (STR_PDW_REALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
 					pfX = pPDWData->pfTOA;
@@ -826,7 +826,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 			case enSubMenu_2 :
 				if (enDataType == en_PDW_DATA) {
-					pPDWData = (STR_PDW_DATA *)pData;
+					pPDWData = (STR_PDW_REALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
 					pfX = pPDWData->pfTOA;
@@ -855,7 +855,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 			case enSubMenu_3 :
 				if (enDataType == en_PDW_DATA) {
-					pPDWData = (STR_PDW_DATA *)pData;
+					pPDWData = (STR_PDW_REALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
 					pfX = pPDWData->pfTOA;
@@ -896,7 +896,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 			case enSubMenu_4 :
 				if (enDataType == en_PDW_DATA) {
-					pPDWData = (STR_PDW_DATA *)pData;
+					pPDWData = (STR_PDW_REALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
 					pfX = pPDWData->pfTOA;
@@ -937,7 +937,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 			case enSubMenu_5 :
 				if (enDataType == en_PDW_DATA) {
-					pPDWData = (STR_PDW_DATA *)pData;
+					pPDWData = (STR_PDW_REALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
 					pfX = pPDWData->pfTOA;
@@ -1635,7 +1635,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 				UINT uiIndex;
 				// get ydata value at hot spot //
 				float yvalue;
-				STR_PDW_DATA *pPDWData = (STR_PDW_DATA *) m_pDoc->GetData();
+				STR_PDW_REALDATA *pPDWData = (STR_PDW_REALDATA *) m_pDoc->GetData();
 
 				PEvgetcellEx(m_hPE, PEP_faYDATA, hsd.w1, hsd.w2, &yvalue);
 				_stprintf_s(buffer, _countof(buffer), TEXT("[DataPoint value %.2f, s=%d,p=%d]"), yvalue, hsd.w1, hsd.w2);
@@ -1799,7 +1799,7 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 	}
 
 	if (enDataType == en_PDW_DATA) {
-		STR_PDW_DATA *pPDWData = (STR_PDW_DATA *) m_pDoc->GetData();
+		STR_PDW_REALDATA *pPDWData = (STR_PDW_REALDATA *) m_pDoc->GetData();
 
 		fValue = pPDWData->pfTOA[pHSD->w2];
 		fValue = SetXUnit( fValue, enDataType );

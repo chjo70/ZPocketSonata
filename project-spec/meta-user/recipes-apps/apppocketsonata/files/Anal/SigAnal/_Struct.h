@@ -577,7 +577,7 @@ char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 	// LOB & ABT & AET
 	char g_szAetSignalType[7][3] = { "CW" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
 	char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-	char g_szAetPriType[MAX_PRITYPE][3] = { "UK", "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+	char g_szAetPriType[MAX_PRITYPE][3] = { "ST", "JT" , "DW", "SG" , "JP" , "UP" } ;
 
 
 	FREQ_RESOL gFreqRes[ TOTAL_BAND ] =

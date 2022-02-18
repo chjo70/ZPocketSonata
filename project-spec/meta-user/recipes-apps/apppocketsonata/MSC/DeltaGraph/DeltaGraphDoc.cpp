@@ -1,4 +1,3 @@
-
 // DeltaGraphDoc.cpp : CDeltaGraphDoc 클래스의 구현
 //
 
@@ -252,9 +251,10 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
 	CData *pData, *pFindMapData;
 	
 	pFindMapData = theApp.FindMapData( & m_strPathname );
-	pData = m_theDataFile.ReadDataFile( NULL, (LPSTR) (LPCTSTR) m_strPathname, dwOffset, pFindMapData, pstFilterSetup );
 
 	if( pFindMapData == NULL ) {
+        //pData = m_theDataFile.ReadDataFile( (LPSTR) (LPCTSTR) m_strPathname, pFindMapData, pstFilterSetup );
+
 		theApp.AddMapData( & m_strPathname, pData );
 	}
 	else {
@@ -277,9 +277,9 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
  */
 UINT CDeltaGraphDoc::GetPDWDataItems()
 { 
-	STR_PDW_DATA *pPDWData;
+	STR_PDW_REALDATA *pPDWData;
 
-	pPDWData = ( STR_PDW_DATA * ) m_theDataFile.GetData();
+	pPDWData = ( STR_PDW_REALDATA * ) m_theDataFile.GetData();
 	return pPDWData->uiDataItems; 
 }
 

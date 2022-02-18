@@ -101,7 +101,7 @@ struct STR_RAWDATA {
 
 typedef unsigned long long int _TOA;
 
-struct STR_PDW_DATA {
+struct STR_PDW_REALDATA {
 	unsigned int uiDataItems;
 
 	float *pfFreq;			// [KHz]
@@ -167,7 +167,8 @@ struct STR_ZOOM_INFO {
 //
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
-	void Alloc( unsigned int iItems=0 );	\
+    void Init( const char *pRawData ); \
+    void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
 	void ConvertArrayForELINT() { }	\
@@ -195,7 +196,7 @@ public:
     unsigned long long  m_ullFileSize;  // 파일 크기
     UINT m_uiTotalDataItems;            // 전체 PDW 개수
 
-	STR_PDW_DATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
+	STR_PDW_REALDATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
     //STR_RAWDATA m_RawData;
 
@@ -228,6 +229,7 @@ public:
     virtual void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData ) = 0;
     virtual void *GetData() = 0;
     virtual void *GetHeader() = 0;
+    virtual void Init( const char *pRawData );
 
     virtual unsigned int GetHeaderSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
@@ -1577,7 +1579,7 @@ public:
 	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
-	inline UINT GetFilteredDataItems() { STR_PDW_DATA *pPDWData=(STR_PDW_DATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+	inline UINT GetFilteredDataItems() { STR_PDW_REALDATA *pPDWData=(STR_PDW_REALDATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
 
     //inline STR_PDWDATA { if( m_pData != NULL ) return m_pData->m_PDWData; else return NULL; }
 	

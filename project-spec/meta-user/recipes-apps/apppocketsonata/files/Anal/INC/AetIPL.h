@@ -196,10 +196,9 @@ enum FREQ_TYPE
 
 //##ModelId=452B0C510131
 // 내부 신호 분석에서 사용하는 정의
-#ifdef _XBAND_
 enum PRI_TYPE
 {
-	_STABLE               = 1,
+	_STABLE = 0,
 	_JITTER_RANDOM,
 	_DWELL,
 	_STAGGER,
@@ -214,27 +213,7 @@ enum PRI_TYPE
 	_STAGGER_DWELL,
 
 
-} ; // Id...
-#else
-enum PRI_TYPE
-{
-    _STABLE               = 0,
-    _JITTER_RANDOM,
-    _DWELL,
-    _STAGGER,
-    _JITTER_PATTERN,
-
-    _UNKNOWN_PRI,
-
-    MAX_PRITYPE,
-
-    _REFSTABLE,
-
-    _STAGGER_DWELL,
-
-
-} ; // Id...
-#endif
+} ;
 
 
 //##ModelId=452B0C5101C7

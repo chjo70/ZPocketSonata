@@ -87,7 +87,7 @@ typedef struct {
 #endif
 #endif
 
-    _TOA GetTOA() {
+    unsigned long long int GetTOA() {
         return ullTOA;
     }
 

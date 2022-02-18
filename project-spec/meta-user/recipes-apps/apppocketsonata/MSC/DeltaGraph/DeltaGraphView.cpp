@@ -273,7 +273,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	CString strVal;
 
 	void *pData;
-	STR_PDW_DATA *pPDWData=NULL;
+	STR_PDW_REALDATA *pPDWData=NULL;
 	STR_IQ_DATA *pIQData=NULL;
 
 	uiPDWDataItems = m_pDoc->GetPDWDataItems();
@@ -288,7 +288,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 		Log( enNormal, _T("목록창에 데이터 삽입 시작합니다.") );
 
 		if (enDataType == en_PDW_DATA) {
-			pPDWData = (STR_PDW_DATA *) pData;
+			pPDWData = (STR_PDW_REALDATA *) pData;
 			if( pPDWData != NULL ) {
 				pfTOA = pPDWData->pfTOA;
 				pfDTOA = pPDWData->pfDTOA;
