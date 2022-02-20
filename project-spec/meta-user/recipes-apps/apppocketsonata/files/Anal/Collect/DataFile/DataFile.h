@@ -1549,7 +1549,8 @@ public:
 	virtual ~CDataFile(void);
 
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
-    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup=NULL, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
+    CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
+    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
 	CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );
 	UINT LoadRawData( STR_PDWDATA *pPDWData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
@@ -1571,6 +1572,8 @@ public:
 	unsigned int GetDataItems( CData *pData );
 
 	inline int GetFileIndex() { return m_iFileIndex; }
+
+    inline unsigned long long int FileSize( char *pPathFileName ) { return m_RawDataFile.GetFileSize( pPathFileName ); }
 
 	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.uiDataItems; else return 0; }
 	inline ENUM_UnitType GetUnitType() { return m_pData->m_enUnitType; }

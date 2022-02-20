@@ -3830,17 +3830,38 @@ unsigned int CDataFile::GetDataItems( CData *pData )
 
 }
 
-// CData *CDataFile::ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, CData *pData, STR_FILTER_SETUP *pstFilterSetup, bool bConvert )
-// {
-//     if( ! m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
-//         //m_RawDataFile.Read();
-//         //ReadDataMemory( pPDWData, pstData, pPathname, pstFilterSetup, enPDWToReal );
-//         //m_RawDataFile.FileClose();
-//     }
-// 
-//     m_RawDataFile.FileClose();
-// 
-// }
+/**
+ * @brief     
+ * @param     STR_PDWDATA * pPDWData
+ * @param     char * pPathname
+ * @param     STR_FILTER_SETUP * pstFilterSetup
+ * @param     ENUM_CONVERT_OPTION enOption
+ * @return    CData *
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/02/20 15:55:40
+ * @warning   
+ */
+CData *CDataFile::ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
+{
+    char *pTempData;
+    unsigned long long int ullFileSize;
+
+    ullFileSize = FileSize( pPathname );
+    pTempData = (char *) malloc( ullFileSize );
+
+    if( m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
+        m_RawDataFile.Read( pTempData, ullFileSize );
+        ReadDataMemory( pPDWData, pTempData, pPathname, pstFilterSetup, enOption );
+        //m_RawDataFile.FileClose();
+    }
+
+    m_RawDataFile.FileClose();
+    free( pTempData );
+
+    return NULL;
+
+}
 
 /**
   * @brief		RAW 데이터 파일 읽기

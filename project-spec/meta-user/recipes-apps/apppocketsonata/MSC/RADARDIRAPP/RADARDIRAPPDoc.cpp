@@ -73,16 +73,24 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         
 	}
 	else {
-	    // TODO: 여기에 로딩 코드를 추가합니다.
-        m_theDataFile.ReadDataFile( & m_stPDWData, ar.m_strFileName.GetBuffer(), -1, NULL, NULL, false );
-
-        CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
-
-        RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
-
-        RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
-
-        RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & m_stPDWData );
+//         STR_PDWDATA stPDWData;
+//         SRxLOBData *pLOBData;
+// 
+//         CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
+//         CRADARDIRAPPView * pView;
+// 
+//         RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+// 
+//         RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+// 
+// 	    // TODO: 여기에 로딩 코드를 추가합니다.
+//         m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) ar.m_strFileName, NULL, enPDWToPDW );
+// 
+//         RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );        
+// 
+//         int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+// 
+//         pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
 	}
 }
@@ -200,79 +208,30 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
  */
 void CRADARDIRAPPDoc::ReadDataFile()
 {
-	unsigned int i;
 	SRxLOBData *pLOBData;
 	STR_PDWDATA stPDWData;
 
-	UINT uiByte, uiHeader, uiData;
+    m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
+    //m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 
-	CFile theRawDataFile;
+	CRADARDIRAPPView *pView;
+	CMainFrame *pMainFrame;
 
-	__int64 file_size = 0;
+    //RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );        
 
-	HANDLE h_file = CreateFile( m_strPathname, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL); 
-	if( INVALID_HANDLE_VALUE != h_file ) { 
-		
-		// 파일의 크기를 얻는다. 4GBytes보다 큰 크기를 처리하기 위해서 이 함수는 64비트 
-		// 크기로 파일 크기 정보를 제공한다. 이 함수의 반환 값은 64비트 중에서 하위 32비트 
-		// 값이고 함수의 두 번째 매개변수로 전달되는 값이 상위 32비트 값이다. 
-		DWORD temp_size = ::GetFileSize(h_file, (DWORD *)&file_size + 1); 
-		// 그래서 반환된 temp_size 값을 file_size의 하위 32비트에 추가해야 한다. 
-		file_size = file_size | temp_size; 
-		// 파일을 닫는다. 
-		CloseHandle(h_file);
-	}
+	int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 
+	pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
-	uiHeader = stPDWData.GetHeader();
+	pMainFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
+	pView = (CRADARDIRAPPView *) pMainFrame->GetActiveView();
 
-	if (theRawDataFile.Open( m_strPathname.GetBuffer(), CFile::shareDenyNone | CFile::typeBinary) == TRUE) {
-		uiByte = theRawDataFile.Read( & stPDWData, uiHeader );
+	pView->UpdateLOBData( nCoLOB, pLOBData );
 
-        // 장치 마다 PDW 개수를 이 변수에 저장해야 한다.
-        //stPDWData.uiTotalPDW = stPDWData.x.el.uiCount;
+	printf( "\n 분석된 LOB 개수 : %d", nCoLOB );
 
-		if( uiHeader + ( stPDWData.GetTotalPDW() * sizeof(_PDW) ) == file_size ) {
-			uiByte = theRawDataFile.Read( stPDWData.stPDW, stPDWData.GetTotalPDW() * sizeof(_PDW) );
-		}
-		else {
-			uiData = sizeof(STR_PDWDATA) - sizeof(stPDWData.stPDW);
-			for( i=0 ; i < stPDWData.GetTotalPDW() ; ++i ) {
-				uiByte = theRawDataFile.Read( & stPDWData.stPDW[i], sizeof(_PDW)-sizeof(float)*4 );
-			}
-		}
-
-		// 분석 프로그램 호출시 아래 함수를 콜하면 됩니다.
-		if( stPDWData.x.el.aucTaskID[0] == NULL ) {
-			strcpy_s( (char *) stPDWData.x.el.aucTaskID, sizeof(stPDWData.x.el.aucTaskID), "RADARDIRAPP" );		// pEPDW->m_aucTaskID );
-		}
-
-		// 시작시 한번만 호출하면 됩니다.
-		//RadarDirAlgotirhm::RadarDirAlgotirhm::Init();
-
-		printf( "\n EPDW 경로명 : %s" , m_strPathname.GetBuffer() );
-		//RadarDirAlgotirhm::RadarDirAlgotirhm::Log( enNormal, "EPDW 경로명 : %s" , m_strPathname.GetBuffer() );
-
-		CRADARDIRAPPView *pView;
-		CMainFrame *pMainFrame;
-
-        //RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
-		RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );
-        
-
-		int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
-
-		pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
-
-		pMainFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
-		pView = (CRADARDIRAPPView *) pMainFrame->GetActiveView();
-
-		pView->UpdateLOBData( nCoLOB, pLOBData );
-
-		printf( "\n 분석된 LOB 개수 : %d", nCoLOB );
-
-		// 프로그램 종료시 한번만 호출하면 됩니다.
-		//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
-	}
+	// 프로그램 종료시 한번만 호출하면 됩니다.
+	//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
 
 }
