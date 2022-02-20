@@ -211,7 +211,6 @@ void CRADARDIRAPPDoc::ReadDataFile()
 	SRxLOBData *pLOBData;
 	STR_PDWDATA stPDWData;
 
-    m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
     //m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 
 	CRADARDIRAPPView *pView;
