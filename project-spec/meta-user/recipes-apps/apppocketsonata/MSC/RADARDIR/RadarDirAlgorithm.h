@@ -126,8 +126,10 @@ typedef struct {
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
 typedef enum {
-	en5MHZ_BW=0,
-	en50MHZ_BW,
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+    enUnknown_BW=-1
 
 } ENUM_BANDWIDTH ;
 #endif
@@ -287,6 +289,33 @@ struct STR_PDWDATA {
 #endif
         return;
 
+    }
+
+    int GetStorePDW() {
+        int iStorePDW;
+
+#ifdef _POCKETSONATA_
+        iStorePDW = x.ps.iIsStorePDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        iStorePDW = x.el.iIsStorePDW;
+#else
+        iStorePDW = x.so.iIsStorePDW;
+#endif
+        return iStorePDW;
+    }
+
+    ENUM_BANDWIDTH GetBandWidth()
+    {
+        ENUM_BANDWIDTH enBandwidth;
+
+#ifdef _POCKETSONATA_
+        enBandwidth = enUnknown_BW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        enBandwidth = x.el.enBandWidth;
+#else
+        enBandwidth = enUnknown_BW;
+#endif
+        return enBandwidth;
     }
 
 }  ;

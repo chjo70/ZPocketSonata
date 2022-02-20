@@ -179,25 +179,22 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
+
+        m_CoPdw = pPDWData->GetTotalPDW();
+
+        m_tColTime = pPDWData->GetColTime();
+
+        m_iIsStorePDW = pPDWData->GetStorePDW();
         
 #if defined(_ELINT_) || defined(_XBAND_)
-        m_enBandWidth = pPDWData->x.el.enBandWidth;
-
-        m_CoPdw = pPDWData->x.el.stCommon.uiTotalPDW;
-
-        m_tColTime = pPDWData->x.el.stCommon.tColTime;
+        m_enBandWidth = pPDWData->GetBandWidth();
 
         memcpy( m_szTaskID, pPDWData->x.el.aucTaskID, sizeof(m_szTaskID) );
-        m_iIsStorePDW = pPDWData->x.el.iIsStorePDW;
+        
         m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->x.el.iCollectorID;
 #elif _POCKETSONATA_
         m_enBandWidth = en5MHZ_BW;
 
-        m_CoPdw = pPDWData->x.ps.stCommon.uiTotalPDW;
-
-        m_tColTime = pPDWData->x.ps.stCommon.tColTime;
-
-        m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 #else
 #endif
 

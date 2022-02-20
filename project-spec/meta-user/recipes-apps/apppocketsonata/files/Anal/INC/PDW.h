@@ -370,54 +370,26 @@ struct _PDW {
 #endif
 
 
-#if defined(_ELINT_) || defined(_XBAND_)
-
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
 typedef enum {
     en5MHZ_BW=0,
     en50MHZ_BW,
 
+    enUnknown_BW=-1,
+
 } ENUM_BANDWIDTH ;
 #endif
 
 
+
+
+#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif defined(_POCKETSONATA_)
 
 
-
-//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
 #elif defined(_SONATA_)
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
 
 // 수퍼헷 수신장치 개발한 것의 PDW 포멧
 struct TNEW_SPDW
@@ -432,25 +404,6 @@ struct TNEW_SPDW
 
 //#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
 
 #else
 
@@ -821,6 +774,50 @@ struct STR_PDWDATA {
         return;
 
     }
+
+    __time32_t GetColTime() {
+        __time32_t retTime;
+
+#ifdef _POCKETSONATA_
+        retTime = x.ps.stCommon.tColTime;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        retTime = x.el.stCommon.tColTime;
+#else
+        retTime = x.so.stCommon.tColTime;
+#endif
+        return retTime;
+
+    }
+
+    int GetStorePDW() {
+        int iStorePDW;
+
+#ifdef _POCKETSONATA_
+        iStorePDW = x.ps.iIsStorePDW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        iStorePDW = x.el.iIsStorePDW;
+#else
+        iStorePDW = x.so.iIsStorePDW;
+#endif
+        return iStorePDW;
+
+    }
+
+    ENUM_BANDWIDTH GetBandWidth()
+    {
+        ENUM_BANDWIDTH enBandwidth;
+
+#ifdef _POCKETSONATA_
+        enBandwidth = enUnknown_BW;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        enBandwidth = x.el.enBandWidth;
+#else
+        enBandwidth = enUnknown_BW;
+#endif
+        return enBandwidth;
+    }
+
+
 
 }  ;
 

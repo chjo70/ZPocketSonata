@@ -259,15 +259,9 @@ void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
     m_pPDWData = pPDWData;
 
 	// 신호 수집 개수 정의
-#ifdef _POCKETSONATA_
-    m_CoPdw = m_pPDWData->x.ps.stCommon.uiTotalPDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
-    m_CoPdw = m_pPDWData->x.el.stCommon.uiTotalPDW;
-#else
-    m_CoPdw = m_pPDWData->x.ps.stCommon.uiTotalPDW;
-
-#endif
-    
+	m_CoPdw = m_pPDWData->GetTotalPDW();
+	
+   
 
     m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 

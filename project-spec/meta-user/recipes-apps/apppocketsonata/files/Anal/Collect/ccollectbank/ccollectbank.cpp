@@ -108,14 +108,8 @@ void CCollectBank::CloseCollectBank()
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
     m_strWindowCell.enCollectMode = enUnused;
-
-#ifdef _POCKETSONATA_
-    m_strPDW.x.ps.stCommon.uiTotalPDW = 0;
-#elif defined(_ELINT_) || defined(_XBAND_)
-    m_strPDW.x.el.stCommon.uiTotalPDW = 0;
-#else
-    ss
-#endif
+    
+    m_strPDW.SetTotalPDW( 0 );
 
     g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
 
@@ -251,14 +245,9 @@ void CCollectBank::SimCollectMode()
 
         case enCollecting :
             CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
+            
+            uiTotalPDW = GetTotalPDW( );
 
-#ifdef _POCKETSONATA_
-            uiTotalPDW = m_strPDW.x.ps.stCommon.uiTotalPDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
-            uiTotalPDW = m_strPDW.x.el.stCommon.uiTotalPDW;
-#else
-            uiTotalPDW = m_strPDW.x.so.stCommon.uiTotalPDW;
-#endif
 
             if( uiTotalPDW >= _spTwo ) {
                 msDTOA = m_strPDW.stPDW[uiTotalPDW-1].ullTOA - m_strPDW.stPDW[0].ullTOA;

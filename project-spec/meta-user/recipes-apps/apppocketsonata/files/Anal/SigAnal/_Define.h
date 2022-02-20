@@ -21,15 +21,6 @@
 #define _spTwo		(2)
 #define _spThree	(3)
 
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
 enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
 
 //##ModelId=452B0C550263
