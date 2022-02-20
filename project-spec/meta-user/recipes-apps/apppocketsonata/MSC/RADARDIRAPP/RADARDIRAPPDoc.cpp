@@ -167,9 +167,7 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 {
-	CString strMainTitle;
-
-    
+	CString strMainTitle;    
 
 	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
 	// 	map<CString, CData *>::iterator it;
@@ -178,19 +176,9 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 	//pChild = ( CChildFrame * ) m_pFrame->GetActiveFrame();
 	// 
 	m_strPathname = strPathname;
-	// 
-	// 	// 데이터 읽기
-	// 	it = m_gMapData.find( m_strPathname );
-	// 	if( it == m_gMapData.end() ) {
-	ReadDataFile();
-	// 
-	// 	}
-	// 	else {
-	// 		m_theDataFile.SetData( it->second );
-	// 
-	// 	}
-	// 
-	// 	// 타이틀 바 변경
+
+    ReadDataFile();
+
 	strMainTitle.Format( "%s" , m_strPathname );
 	m_pMainFrame->SetWindowText( strMainTitle );
 
@@ -211,12 +199,11 @@ void CRADARDIRAPPDoc::ReadDataFile()
 	SRxLOBData *pLOBData;
 	STR_PDWDATA stPDWData;
 
-    //m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
-
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
 
-    //RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+    m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
+
 	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );        
 
 	int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
