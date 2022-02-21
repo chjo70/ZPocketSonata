@@ -516,8 +516,8 @@ void CUserCollect::MakeSIMPDWData()
         
         pSIGAPDW->uiAOA = randomDOA;
         pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz( 9000. );
-        pSIGAPDW->uiPA = randomPA;
-        pSIGAPDW->uiPW = randomPW;
+        pSIGAPDW->uiPA = CXPDW::EncodePA( -100 );
+        pSIGAPDW->uiPW = CXPDW::EncodePWns( 100, en5MHZ_BW );
 
         pSIGAPDW->iPulseType = CXPDW::EncodePulseType( 0 );
 

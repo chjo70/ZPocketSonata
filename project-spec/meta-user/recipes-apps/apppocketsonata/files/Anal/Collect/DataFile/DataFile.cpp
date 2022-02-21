@@ -29,8 +29,6 @@
 
 #include "CRWRCommonVariables.h"
 
-//#include "../../../Include/globals.h"
-
 
 #define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
 #define         MAX_ITEMS_BYTE                  ( MAX_ITEMS * 50 )
@@ -3845,13 +3843,21 @@ unsigned int CDataFile::GetDataItems( CData *pData )
 CData *CDataFile::ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
     char *pTempData;
+    unsigned int uiFileSize;
     unsigned long long int ullFileSize;
 
     ullFileSize = FileSize( pPathname );
-    pTempData = (char *) malloc( ullFileSize );
+    if( ullFileSize > UINT_MAX ) {
+        uiFileSize = UINT_MAX;
+    }
+    else {
+        uiFileSize = (unsigned int) ullFileSize;
+    }
+
+    pTempData = (char *) malloc( uiFileSize );
 
     if( m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
-        m_RawDataFile.Read( pTempData, ullFileSize );
+        m_RawDataFile.Read( pTempData, uiFileSize );
         ReadDataMemory( pPDWData, pTempData, pPathname, pstFilterSetup, enOption );
         //m_RawDataFile.FileClose();
     }

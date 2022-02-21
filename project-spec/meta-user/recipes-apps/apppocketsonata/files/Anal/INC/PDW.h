@@ -388,6 +388,28 @@ typedef enum {
 
 #elif defined(_POCKETSONATA_)
 
+//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+} ENUM_BANDWIDTH ;
+#endif
+
+
+#ifndef _ENUM_BANDWIDTH_
+#define _ENUM_BANDWIDTH_
+typedef enum {
+    en5MHZ_BW=0,
+    en50MHZ_BW,
+
+    enUnknown=-1
+
+} ENUM_BANDWIDTH ;
+#endif
 
 #elif defined(_SONATA_)
 

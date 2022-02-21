@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-//#include "../../INC/system.h"
-//#include "../../../Anal/SigAnal/_Type.h"
 #include "../../../Anal/SigAnal/_Macro.h"
 #include "../../../Anal/SigAnal/_Struct.h"
 
@@ -614,8 +612,15 @@ public:
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
     inline void UpdateHeaderSize() { GetHeaderSize(); }
 
-
-
+    /**
+     * @brief     
+     * @param     int iPulseType
+     * @return    unsigned int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:08:21
+     * @warning   
+     */
     static unsigned int EncodePulseType( int iPulseType )
     {
         unsigned int ipluseType;
@@ -714,6 +719,21 @@ public:
 		return (float) ( ( (float) uiPW * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
 	} ;
 
+    /**
+     * @brief     
+     * @param     float fPW
+     * @param     ENUM_BANDWIDTH enBandWidth
+     * @return    unsigned int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:20:19
+     * @warning   
+     */
+    static unsigned int EncodePWns( float fPW, ENUM_BANDWIDTH enBandWidth )
+    {
+        return (unsigned int) ( (float) ( fPW / XPDW::_toaRes[enBandWidth] ) + 0.5 );
+    } ;
+
 	/**
 	 * @brief     DecodeFREQMHz
 	 * @param     int iFreq
@@ -746,6 +766,16 @@ public:
 		return fDOA;
 	} ;
 
+    /**
+     * @brief DecodeDOA
+     * @param iDOA
+     * @return
+     */
+    static unsigned int EncodeDOA(float fDOA )
+    {
+        return (unsigned int) ( (float) fDOA / XPDW::fDOARes + 0.5 );
+    } ;
+
 	/**
 	 * @brief     DecodePA
 	 * @param     unsigned int uiPA
@@ -762,13 +792,17 @@ public:
 	} ;
 
     /**
-     * @brief DecodeDOA
-     * @param iDOA
-     * @return
+     * @brief     
+     * @param     float fPA
+     * @return    unsigned int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:23:01
+     * @warning   
      */
-    static unsigned int EncodeDOA(float fDOA )
-    {
-        return (unsigned int) ( (float) fDOA / XPDW::fDOARes + 0.5 );
+    static unsigned int EncodePA( float fPA )
+    {		
+        return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float) XPDW::fPARes ) + 0.5 );
     } ;
 
 };
@@ -1040,6 +1074,17 @@ public:
         return bRet;
     } ;
 
+    /**
+     * @brief     
+     * @param     int * piFreq
+     * @param     int * piCh
+     * @param     float fFreq
+     * @return    bool
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:10
+     * @warning   
+     */
     static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq )
     {
         bool bRet=true;
@@ -1101,6 +1146,15 @@ public:
         return (int) fRetFreq;	/* [MHz] */
     } ;
 
+    /**
+     * @brief     
+     * @param     float fFreq
+     * @return    int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:18
+     * @warning   
+     */
     static int EncodeFREQMHzCeiling( float fFreq )
     {
         float fRetFreq;
@@ -1110,6 +1164,15 @@ public:
     } ;
 
 
+    /**
+     * @brief     
+     * @param     int iFreq
+     * @return    int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:23
+     * @warning   
+     */
     static int DecodeFREQ( int iFreq )
     {
         float fFreq;
@@ -1145,6 +1208,15 @@ public:
         return fretPW;
     } ;
 
+    /**
+     * @brief     
+     * @param     int iPW
+     * @return    float
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:36
+     * @warning   
+     */
     static float DecodePWns( int iPW )
     {
         float fretPW;
@@ -1154,6 +1226,15 @@ public:
         return fretPW;
     } ;
 
+    /**
+     * @brief     
+     * @param     float fPW
+     * @return    int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:41
+     * @warning   
+     */
     static int EncodePWFloor( float fPW )
     {
         float fretPW;
@@ -1187,6 +1268,15 @@ public:
         return (float) dTOA;	/* [ns] */
     } ;
 
+    /**
+     * @brief     
+     * @param     _TOA iTOA
+     * @return    double
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:47
+     * @warning   
+     */
     static double DblDecodeTOA( _TOA iTOA  )
     {
         double dTOA;

@@ -633,16 +633,6 @@ struct STR_ONE_PDW {
 
 } ;
 
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-	en5MHZ_BW=0,
-	en50MHZ_BW,
-
-} ENUM_BANDWIDTH ;
-#endif
-
-
 struct STR_CW_CONTROL {
 	int cw_threshold;
 	int cw_init_threshold;
@@ -677,13 +667,6 @@ typedef unsigned int UDFINDEX;
 // 시스템 로그 관련 구조체 정의
 #define LOG_HEADER						(sizeof(time_t)+2*sizeof(UINT))
 #define MAX_LOG_PDW						400
-
-// 에미터 상세정보 구조체 정의
-// struct STR_AET_DETAIL {
-// 	STR_NEWAET aet;
-// 	_PDW pdw[MAX_LOG_PDW];
-// 
-// } ;
 
 // 시스템 로그 구조체 정의
 struct STR_LOGMSG {
