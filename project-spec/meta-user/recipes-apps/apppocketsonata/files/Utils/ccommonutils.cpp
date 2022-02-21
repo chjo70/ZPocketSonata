@@ -468,7 +468,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     _PDW *pPDW;
     _TOA ullfirstTOA;
 
-    pPDW = & pPDWData->stPDW[0];
+    pPDW = & pPDWData->pstPDW[0];
     ullfirstTOA = pPDW->ullTOA;
 
 #ifdef _POCKETSONATA_

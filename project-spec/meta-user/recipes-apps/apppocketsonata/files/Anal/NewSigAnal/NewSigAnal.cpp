@@ -264,7 +264,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         InsertRAWData( pPDWData );
 
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->stPDW, (int) m_CoPdw ) ) {
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_CoPdw ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );

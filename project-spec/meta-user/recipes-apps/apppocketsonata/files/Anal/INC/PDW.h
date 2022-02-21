@@ -739,7 +739,8 @@ typedef union {
 struct STR_PDWDATA {
     UNION_HEADER x;
 
-    _PDW stPDW[MAX_PDW];
+    _PDW *pstPDW;
+    //_PDW stPDW[MAX_PDW];
 
     unsigned int GetHeader() {
         unsigned int uiHeader;

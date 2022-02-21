@@ -280,9 +280,9 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
  */
 UINT CDeltaGraphDoc::GetPDWDataItems()
 { 
-	STR_PDW_REALDATA *pPDWData;
+	STR_PDWREALDATA *pPDWData;
 
-	pPDWData = ( STR_PDW_REALDATA * ) m_theDataFile.GetData();
+	pPDWData = ( STR_PDWREALDATA * ) m_theDataFile.GetData();
 	return pPDWData->uiDataItems; 
 }
 

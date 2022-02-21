@@ -99,7 +99,7 @@ struct STR_RAWDATA {
 
 typedef unsigned long long int _TOA;
 
-struct STR_PDW_REALDATA {
+struct STR_PDWREALDATA {
 	unsigned int uiDataItems;
 
 	float *pfFreq;			// [KHz]
@@ -194,7 +194,8 @@ public:
     unsigned long long  m_ullFileSize;  // 파일 크기
     UINT m_uiTotalDataItems;            // 전체 PDW 개수
 
-	STR_PDW_REALDATA m_PDWData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
+    STR_PDWDATA m_PDWData;
+	STR_PDWREALDATA m_PDWRealData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
     //STR_RAWDATA m_RawData;
 
@@ -212,6 +213,9 @@ public:
     void Alloc( unsigned int uiItems=0 );
     void Free();
 
+    void AllocData( unsigned int uiItems );
+    void FreeData();
+
     void ClearFilterSetup();
     void swapByteOrder(unsigned int& ui);
     void swapByteOrder(unsigned long long& ull);
@@ -220,7 +224,7 @@ public:
 
     void UpdateMacroSysVar();
 
-    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
+    void ConvertPDWData( STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
     virtual void MakeHeaderData( STR_PDWDATA *pPDWData ) = 0;
@@ -1640,7 +1644,7 @@ public:
 
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
     CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
-    void ReadDataMemory( STR_PDWDATA *pPDWData, const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
+    void ReadDataMemory( const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
 	CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );
 	UINT LoadRawData( STR_PDWDATA *pPDWData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
@@ -1665,14 +1669,16 @@ public:
 
     inline unsigned long long int FileSize( char *pPathFileName ) { return m_RawDataFile.GetFileSize( pPathFileName ); }
 
-	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.uiDataItems; else return 0; }
+	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.GetTotalPDW(); else return 0; }
 	inline ENUM_UnitType GetUnitType() { return m_pData->m_enUnitType; }
 	inline ENUM_DataType GetDataType() { return m_pData->m_enDataType; }
 	inline UINT GetWindowNumber() { if( m_pData != NULL ) return m_pData->m_uiWindowNumber; else return 0; }
 	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
-	inline UINT GetFilteredDataItems() { STR_PDW_REALDATA *pPDWData=(STR_PDW_REALDATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+	inline UINT GetFilteredDataItems() { STR_PDWREALDATA *pPDWData=(STR_PDWREALDATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+
+    inline STR_PDWDATA *GetPDWData() { return & m_pData->m_PDWData; }
 
     //inline STR_PDWDATA { if( m_pData != NULL ) return m_pData->m_PDWData; else return NULL; }
 	

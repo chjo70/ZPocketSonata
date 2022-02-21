@@ -710,9 +710,7 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
  */
 void CSignalCollect::SimPDWData()
 {
-    STR_PDWDATA stPDWData;
-
-    stPDWData.SetTotalPDW( 0 );
+    STR_PDWDATA *pstPDWData;
 
     // 랜 데이터를 갖고온다.
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
@@ -721,15 +719,16 @@ void CSignalCollect::SimPDWData()
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
 
 #ifdef _POCKETSONATA_
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 #elif _XBAND_
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
+    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
 #else
-    m_theDataFile.ReadDataMemory( & stPDWData, (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 #endif
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
-    SimFilter( & stPDWData );
+    pstPDWData = m_theDataFile.GetPDWData();
+    SimFilter( pstPDWData );
 
     // 모의 PDW 데이터를 수집 버퍼에 추가한다.
     //pCollectBank = GetCollectBank( uiCh );
@@ -760,7 +759,7 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 
     uiTotalPDW = pPDWData->GetTotalPDW();
 
-    pstPDW = & pPDWData->stPDW[0];
+    pstPDW = & pPDWData->pstPDW[0];
     for( ui=0 ; ui < uiTotalPDW ; ++ui ) {
         // 모의
         pstPDW->uiAOA = pstPDW->uiAOA;

@@ -385,7 +385,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                     // 각 항목별 최소/최대값 초기화
                     MakeInitMinMaxValue( m_MinMaxOfSubrecords );
                     
-                    m_ullfirstTOA = m_pPDWData->stPDW[0].ullTOA;
+                    m_ullfirstTOA = m_pPDWData->pstPDW[0].ullTOA;
                     for( i=0 ; i < numberofdata ; i += MAX_OF_PDW_DATA ) {
                         if( numberofdata - i >= MAX_OF_PDW_DATA ) {
                             iRecords = MAX_OF_PDW_DATA;
@@ -393,7 +393,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         else {
                             iRecords = numberofdata - i;
                         }
-                        TransferPDW2Record( & m_pPDWData->stPDW[i], iRecords );
+                        TransferPDW2Record( & m_pPDWData->pstPDW[i], iRecords );
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
 
                         if( g_enEndian == enBIG_ENDIAN ) {
@@ -2065,7 +2065,7 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataT
 	if( true == FileOpen( pRawdataFileName, O_WRONLY | O_CREAT | O_BINARY ) ) {
 		Write( & pPDWData->x, sizeof(STR_ELINT_HEADER) );
 
-		Write( & pPDWData->stPDW[0], pPDWData->GetTotalPDW()*sizeof(_PDW) );
+		Write( & pPDWData->pstPDW[0], pPDWData->GetTotalPDW()*sizeof(_PDW) );
 
 		FileClose();
 	}

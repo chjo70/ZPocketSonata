@@ -39,6 +39,8 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 {
 
     Init();
+    
+    m_strPDW.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * MAX_PDW );
 
 }
 
@@ -47,7 +49,7 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
  */
 CCollectBank::~CCollectBank()
 {
-
+    free( m_strPDW.pstPDW );
 }
 
 /**
@@ -55,7 +57,7 @@ CCollectBank::~CCollectBank()
  */
 void CCollectBank::Init()
 {
-    memset( & m_strPDW, 0, sizeof(STR_PDWDATA) );
+    memset( & m_strPDW, 0, sizeof(UNION_HEADER) );
 
     m_strPDW.x.ps.iBoardID = g_enBoardId;
     m_strPDW.x.ps.uiBand = g_enBoardId;
@@ -250,7 +252,7 @@ void CCollectBank::SimCollectMode()
 
 
             if( uiTotalPDW >= _spTwo ) {
-                msDTOA = m_strPDW.stPDW[uiTotalPDW-1].ullTOA - m_strPDW.stPDW[0].ullTOA;
+                msDTOA = m_strPDW.pstPDW[uiTotalPDW-1].ullTOA - m_strPDW.pstPDW[0].ullTOA;
             }
 
             // 개수 비교
@@ -300,7 +302,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
         uiTotalPDW = m_strPDW.GetTotalPDW();
 
         if( uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
-            memcpy( & m_strPDW.stPDW[uiTotalPDW], pstPDW, sizeof(_PDW) );
+            memcpy( & m_strPDW.pstPDW[uiTotalPDW], pstPDW, sizeof(_PDW) );
 
             ++ uiTotalPDW;
             m_strPDW.SetTotalPDW( uiTotalPDW );

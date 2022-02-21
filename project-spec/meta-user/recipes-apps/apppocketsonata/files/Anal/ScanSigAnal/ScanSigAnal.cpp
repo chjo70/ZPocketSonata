@@ -198,7 +198,7 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
     iTotalPDW = pPDWData->GetTotalPDW();
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( m_pPDWData->stPDW, iTotalPDW );
+    m_theGroup->MakePDWArray( m_pPDWData->pstPDW, iTotalPDW );
 
     // 수집한 PDW 파일 만들기...
     m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
