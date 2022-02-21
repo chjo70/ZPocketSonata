@@ -1319,7 +1319,7 @@ void CPOCKETSONATAPDW::Init( const char *pRawData )
 {
     UNION_HEADER *puniPDWFileHeader;
 
-    memset( & m_PDWData, 0, sizeof(STR_PDWREALDATA) );
+    memset( & m_PDWData, 0, sizeof(STR_PDWDATA) );
 
     m_pRawHeaderBuffer = (char *) & pRawData[0];
     m_pRawDataBuffer = (char *) & pRawData[sizeof(UNION_HEADER)];
