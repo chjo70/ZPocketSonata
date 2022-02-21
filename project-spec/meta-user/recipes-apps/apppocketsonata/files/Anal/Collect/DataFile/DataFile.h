@@ -102,11 +102,11 @@ typedef unsigned long long int _TOA;
 struct STR_PDWREALDATA {
 	unsigned int uiDataItems;
 
+	float *pfAOA;			// [degree]
 	float *pfFreq;			// [KHz]
 	float *pfPW;			// [ns]
-	float *pfAOA;			// [degree]
-	float *pfTOA;
 	float *pfPA;
+	float *pfTOA;
 	float *pfDTOA;
 
 	_TOA *pullTOA;
@@ -215,6 +215,9 @@ public:
 
     void AllocData( unsigned int uiItems );
     void FreeData();
+
+    void AllocRealData( unsigned int uiItems );
+    void FreeRealData();
 
     void ClearFilterSetup();
     void swapByteOrder(unsigned int& ui);

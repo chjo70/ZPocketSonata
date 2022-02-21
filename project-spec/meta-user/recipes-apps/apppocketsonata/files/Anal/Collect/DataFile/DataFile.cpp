@@ -3011,7 +3011,7 @@ void CData::Alloc( unsigned int uiItems )
 	if( uiItems != 0 && uiItems <= MAX_ITEMS ) {
 //         _SAFE_MALLOC( m_PDWData.pfFreq, float, sizeof(float) * uiItems );
 // 		_SAFE_MALLOC( m_PDWData.pfPW, float, sizeof(float) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pfAOA, float, sizeof(float) * uiItems );
+//         _SAFE_MALLOC( m_PDWData.pfPW, float, sizeof(float) * uiItems );
 //         _SAFE_MALLOC( m_PDWData.pfTOA, float, sizeof(float) * uiItems );
 //         _SAFE_MALLOC( m_PDWData.pfPA, float, sizeof(float) * uiItems );
 //         _SAFE_MALLOC( m_PDWData.pullTOA, _TOA, sizeof(_TOA) * uiItems );
@@ -3036,6 +3036,55 @@ void CData::Alloc( unsigned int uiItems )
 void CData::AllocData( unsigned int uiItems )
 {
     m_PDWData.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * uiItems );
+}
+
+/**
+ * @brief     
+ * @param     unsigned int uiItems
+ * @return    void
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/02/22 0:57:14
+ * @warning   
+ */
+void CData::AllocRealData( unsigned int uiItems )
+{
+    _SAFE_MALLOC( m_PDWRealData.pfAOA, float, sizeof(float) * uiItems )
+    _SAFE_MALLOC( m_PDWRealData.pfFreq, float, sizeof(float) * uiItems );
+    _SAFE_MALLOC( m_PDWRealData.pfPW, float, sizeof(float) * uiItems );
+    _SAFE_MALLOC( m_PDWRealData.pfPA, float, sizeof(float) * uiItems );
+    _SAFE_MALLOC( m_PDWRealData.pfTOA, float, sizeof(float) * uiItems );
+    _SAFE_MALLOC( m_PDWRealData.pfDTOA, float, sizeof(float) * uiItems );
+
+    _SAFE_MALLOC( m_PDWRealData.pullTOA, _TOA, sizeof(_TOA) * uiItems );
+
+    _SAFE_MALLOC( m_PDWRealData.pcType, char, sizeof(char) * uiItems );
+    _SAFE_MALLOC( m_PDWRealData.pcDV, char, sizeof(char) * uiItems );
+    
+}
+
+/**
+ * @brief     
+ * @return    void
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022/02/22 1:00:51
+ * @warning   
+ */
+void CData::FreeRealData()
+{
+    _SAFE_FREE( m_PDWRealData.pfAOA );
+    _SAFE_FREE( m_PDWRealData.pfFreq );
+    _SAFE_FREE( m_PDWRealData.pfPW );
+    _SAFE_FREE( m_PDWRealData.pfPA );
+    _SAFE_FREE( m_PDWRealData.pfTOA );
+    _SAFE_FREE( m_PDWRealData.pfDTOA );
+
+    _SAFE_FREE( m_PDWRealData.pullTOA );
+
+    _SAFE_FREE( m_PDWRealData.pcType );
+    _SAFE_FREE( m_PDWRealData.pcDV );
+
 }
 
 /**
@@ -3254,6 +3303,9 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
         break;
 
     case enPDWToReal :
+        MakeHeaderData( & m_PDWData  );
+
+        AllocRealData( m_PDWData.GetTotalPDW() );
         break;
 
     case enUnitToReal :
