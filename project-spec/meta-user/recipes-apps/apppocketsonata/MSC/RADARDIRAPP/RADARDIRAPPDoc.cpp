@@ -197,14 +197,15 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 void CRADARDIRAPPDoc::ReadDataFile()
 {
 	SRxLOBData *pLOBData;
-	STR_PDWDATA stPDWData;
+	STR_PDWDATA *pstPDWData;
 
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
 
-    m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
+    m_theDataFile.ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
+    pstPDWData = m_theDataFile.GetPDWData();
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );        
+	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData );        
 
 	int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 

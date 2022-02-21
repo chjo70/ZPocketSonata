@@ -3769,7 +3769,7 @@ unsigned int CDataFile::GetDataItems( CData *pData )
  * @date      2022/02/20 15:55:40
  * @warning   
  */
-CData *CDataFile::ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
+CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
     char *pTempData;
     unsigned int uiFileSize;
