@@ -1004,7 +1004,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
   	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDW_ID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME ) values( \
         '%d', '%ld', '%d', '%s', '%s', '%d', '%d', '%s' )", \
-  		m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, 0, pPDWData->uiTotalPDW, m_szRawDataFilename );
+  		m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, 0, pPDWData->GetTotalPDW(), m_szRawDataFilename );
  
  	theRS.Open( m_pszSQLString );
  

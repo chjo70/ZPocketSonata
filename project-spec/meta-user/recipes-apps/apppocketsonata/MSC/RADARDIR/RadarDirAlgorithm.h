@@ -72,13 +72,6 @@ typedef struct {
 
     int iPFTag;
 
-#ifdef _GRAPH_
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-
-#else
 #if defined(_ELINT_)
     float fPh1;
     float fPh2;
@@ -97,7 +90,6 @@ typedef struct {
     int iFMOP;
 
     int iChannel;
-#endif
 #endif
 
     unsigned long long int GetTOA() {
@@ -268,7 +260,7 @@ typedef union {
 struct STR_PDWDATA {
     UNION_HEADER x;
 
-    _PDW stPDW[MAX_PDW];
+    _PDW *pstPDW;
 
     unsigned int GetHeader() {
         unsigned int uiHeader;
@@ -307,6 +299,36 @@ struct STR_PDWDATA {
         x.so.stCommon.uiTotalPDW = uiTotalPDW;;
 #endif
         return;
+
+    }
+
+    void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
+
+#ifdef _POCKETSONATA_
+        x.ps.stCommon.tColTime = tColTime;
+        x.ps.stCommon.uiColTimeMs = uiColTimeMs;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        x.el.stCommon.tColTime = tColTime;
+        x.el.stCommon.uiColTimeMs = uiColTimeMs;
+#else
+        x.so.stCommon.tColTime = tColTime;
+        x.so.stCommon.uiColTimeMs = uiColTimeMs;
+#endif
+        return;
+
+    }
+
+    __time32_t GetColTime() {
+        __time32_t retTime;
+
+#ifdef _POCKETSONATA_
+        retTime = x.ps.stCommon.tColTime;
+#elif defined(_ELINT_) || defined(_XBAND_)
+        retTime = x.el.stCommon.tColTime;
+#else
+        retTime = x.so.stCommon.tColTime;
+#endif
+        return retTime;
 
     }
 
