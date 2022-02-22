@@ -102,22 +102,23 @@ typedef unsigned long long int _TOA;
 struct STR_PDWREALDATA {
 	unsigned int uiDataItems;
 
+    _TOA *pullTOA;
+
 	float *pfAOA;			// [degree]
 	float *pfFreq;			// [KHz]
+    float *pfPA;
 	float *pfPW;			// [ns]
-	float *pfPA;
-	float *pfTOA;
-	float *pfDTOA;
 
-	_TOA *pullTOA;
+    float *pfTOA;
+    float *pfDTOA;
 
 	char *pcType;			// [신호형태]
 	char *pcDV;				// [DV]
 
-	float *pfPh1;
-	float *pfPh2;
-	float *pfPh3;
-	float *pfPh4;
+    void SetTotalPDW( unsigned int i_uiDataItems ) {
+        uiDataItems = i_uiDataItems;
+
+    } ;
 
 }  ;
 
@@ -166,11 +167,12 @@ struct STR_ZOOM_INFO {
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
     void Init( const char *pRawData ); \
-    void Alloc( unsigned int iItems=0 );	\
+	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
 	void ConvertArrayForELINT() { }	\
 	void *GetData();	\
+    void *GetRealData();	\
 	void *GetHeader() { return NULL; }	\
 	unsigned int GetHeaderSize();	\
     unsigned int GetOneDataSize();	\
@@ -197,12 +199,12 @@ public:
     STR_PDWDATA m_PDWData;
 	STR_PDWREALDATA m_PDWRealData;             // PDW 데이터 개수 와 실제 PDW 항목별 데이터 값
 
-    //STR_RAWDATA m_RawData;
-
     ENUM_DataType m_enDataType;
     ENUM_UnitType m_enUnitType;
 
+#ifdef _GRAPH_
     UINT m_uiWindowNumber;
+#endif
 
     STR_FILTER_SETUP m_strFilterSetup;
 
@@ -229,10 +231,20 @@ public:
 
     void ConvertPDWData( STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 
+    inline ENUM_UnitType GetUnitType() { return m_enUnitType; }
+
+#ifdef _GRAPH_
+    inline void IncWindowNumber() { ++m_uiWindowNumber; }
+    inline void DecWindowNumber() { --m_uiWindowNumber; }
+    inline unsigned int GetWindowNumber() { return m_uiWindowNumber; }
+#endif
+
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
     virtual void MakeHeaderData( STR_PDWDATA *pPDWData ) = 0;
     virtual void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData ) = 0;
+    virtual void MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData ) = 0;
     virtual void *GetData() = 0;
+    virtual void *GetRealData() = 0;
     virtual void *GetHeader() = 0;
     virtual void Init( const char *pRawData );
 
@@ -303,6 +315,7 @@ public:
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
     
 	void *GetData();
+    void *GetRealData();
 
     unsigned int GetDataItems( unsigned long long ullFileSize );
 
@@ -443,6 +456,7 @@ public:
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
+    void *GetRealData();
 	void *GetHeader() { return NULL; }
 
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
@@ -483,6 +497,7 @@ public:
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
+    void *GetRealData();
 	void *GetHeader() { return (void *) & m_stHeader; }
     unsigned int GetDataItems( unsigned long long ullFileSize );
     unsigned int GetHeaderSize();
@@ -617,6 +632,8 @@ public:
     void MakeHeaderData( STR_PDWDATA *pPDWData );
     void MakePDWData( STR_PDWDATA *pPDWDat, ENUM_CONVERT_OPTION enOption );
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
+    void MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData );
+
     inline void UpdateHeaderSize() { GetHeaderSize(); }
 
     /**
@@ -658,7 +675,7 @@ public:
         return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
-    /**
+	/**
      * @brief     
      * @param     _TOA uiTOA
      * @param     ENUM_BANDWIDTH enBandWidth
@@ -692,7 +709,7 @@ public:
 		return fVal;
 	} ;
 
-    /**
+	/**
      * @brief     
      * @param     float fFreq
      * @return    unsigned int
@@ -708,6 +725,35 @@ public:
         uiFreq = IDIV( fFreq, XPDW::fFreqRes );
 
         return uiFreq;
+    } ;
+
+    /**
+     * @brief     DecodeFREQ
+     * @param     unsigned int uiFreq
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-02-22, 15:52
+     * @warning
+     */
+    static float DecodeFREQ( unsigned int uiFreq )
+    {
+        float fFreq;
+
+        fFreq = FMUL( uiFreq, XPDW::fFreqRes );
+        fFreq *= 1000000.;
+
+        return fFreq;
+    } ;
+
+    static float DecodeFREQMHz( unsigned int uiFreq )
+    {
+        float fFreq;
+
+        fFreq = FMUL( uiFreq, XPDW::fFreqRes );
+
+        return fFreq;
     } ;
 
 	/**
@@ -726,7 +772,7 @@ public:
 		return (float) ( ( (float) uiPW * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
 	} ;
 
-    /**
+	/**
      * @brief     
      * @param     float fPW
      * @param     ENUM_BANDWIDTH enBandWidth
@@ -774,9 +820,14 @@ public:
 	} ;
 
     /**
-     * @brief DecodeDOA
-     * @param iDOA
-     * @return
+     * @brief     EncodeDOA
+     * @param     float fDOA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-02-22, 15:51
+     * @warning
      */
     static unsigned int EncodeDOA(float fDOA )
     {
@@ -808,7 +859,7 @@ public:
      * @warning   
      */
     static unsigned int EncodePA( float fPA )
-    {		
+    {
         return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float) XPDW::fPARes ) + 0.5 );
     } ;
 
@@ -846,6 +897,7 @@ public:
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
 	void *GetData();
+    void *GetRealData();
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetOffsetSize() { return 0; }
@@ -939,6 +991,7 @@ public:
     void MakeHeaderData( STR_PDWDATA *pPDWData );
     void MakePDWData( STR_PDWDATA *pPDWData, ENUM_CONVERT_OPTION enOption );
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
+    void MakePDWDataToReal( STR_PDWREALDATA *pPDWData );
 
 	inline unsigned int GetOffsetSize() { return 0; }
     inline void UpdateHeaderSize() { GetHeaderSize(); }
@@ -1528,112 +1581,10 @@ public:
 
 };
 
-#ifndef __VXWORKS__
-//////////////////////////////////////////////////////////////////////////
-class CMapData {
-private:
-	bool m_bMapData;
-
-	static map<CString, CData *> m_gMapData;
-
-public:
-	CMapData(void)
-	{
-
-	}
-
-	virtual ~CMapData(void)
-	{
-
-	}
-
-	void IncWindowNumber( CData *pData )
-	{
-		++ pData->m_uiWindowNumber;
-	}
-
-	void AddMapData( CString *pStrPathName, CData *pData )
-	{
-#ifdef __linux__
-#elif defined(_MSC_VER)
-        //Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
-#else
-
-#endif
-        
-		m_gMapData.insert( make_pair( *pStrPathName, pData ) );
-	}
-
-	CData *FindMapData( CString *pStrPathName )
-	{
-		CData *pData;
-		map<CString, CData *>::iterator it;
-
-		it = m_gMapData.find( *pStrPathName );
-		if( it == m_gMapData.end() ) {
-			pData = NULL;
-		}
-		else {
-			pData = it->second;
-
-			// 데이터 ID 증가
-			//++ pData->m_uiLoadFile;
-		}
-
-		return pData;
-    }
-
-    void CloseMapData( CString *pStrWindowTitle )
-	{
-		auto it=m_gMapData.begin();
-
-
-        if( pStrWindowTitle == NULL ) {
-			while( it != m_gMapData.end() ) {
-				//it->second->Free();
-				delete it->second;
-
-				++ it;
-			}
-			m_gMapData.clear();
-		}
-		else {
-#ifdef _MSC_VER
-			CData *pData;
-
-			while( it != m_gMapData.end() ) {
-                if( pStrWindowTitle->Compare( it->first ) == 0 ) {
-					pData = it->second;
-
-					if( pData->m_uiWindowNumber == 0 ) {
-						delete it->second;
-						m_gMapData.erase( it++ );
-					}
-					else {
-						++ it;
-
-						// 데이터 ID 감소
-						-- pData->m_uiWindowNumber;
-					}
-
-				}
-				else {
-					++ it;
-				}
-			}
-#endif
-        }
-    }
-
-};
-#endif
-
 class CDataFile
 {
 private:
 	int m_iFileIndex;
-
-    char m_szPathname[500];
 
 	CRawFile m_RawDataFile;
 	CData *m_pData;
@@ -1648,12 +1599,11 @@ public:
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
     CData *ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
     void ReadDataMemory( const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
-	CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );
-	UINT LoadRawData( STR_PDWDATA *pPDWData, int iFileIndex, bool bConvert=true );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();
 	void *GetData();
+    void *GetRealData();
 	void *GetHeader();
 	void SetData( CData *pData );
 
@@ -1675,11 +1625,18 @@ public:
 	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.GetTotalPDW(); else return 0; }
 	inline ENUM_UnitType GetUnitType() { return m_pData->m_enUnitType; }
 	inline ENUM_DataType GetDataType() { return m_pData->m_enDataType; }
-	inline UINT GetWindowNumber() { if( m_pData != NULL ) return m_pData->m_uiWindowNumber; else return 0; }
+	
 	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
 	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
 	inline UINT GetFilteredDataItems() { STR_PDWREALDATA *pPDWData=(STR_PDWREALDATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+    inline UINT GetFilteredRealDataItems() { STR_PDWREALDATA *pPDWRealData=(STR_PDWREALDATA *) m_pData->GetRealData(); return pPDWRealData->uiDataItems; }
+
+#ifdef _GRAPH_
+    inline UINT GetWindowNumber() { if( m_pData != NULL ) return m_pData->m_uiWindowNumber; else return 0; }
+    inline void IncWindowNumber() { m_pData->IncWindowNumber(); }
+    inline void DecWindowNumber() { m_pData->DecWindowNumber(); }
+#endif
 
     inline STR_PDWDATA *GetPDWData() { return & m_pData->m_PDWData; }
 
@@ -1689,4 +1646,106 @@ private:
 	
 	
 };
+
+
+#ifdef _GRAPH_
+
+//////////////////////////////////////////////////////////////////////////
+class CMapData {
+private:
+    bool m_bMapData;
+
+    static map<CString, CDataFile *> m_gMapData;
+
+public:
+    CMapData(void)
+    {
+
+    }
+
+    virtual ~CMapData(void)
+    {
+
+    }
+
+    void IncWindowNumber( CDataFile *pDataFile )
+    {
+        pDataFile->IncWindowNumber(); // m_pData->m_uiWindowNumber;
+    }
+
+
+    void AddMapData( CString *pStrPathName, CDataFile *pData )
+    {
+#ifdef __linux__
+#elif defined(_MSC_VER)
+        //Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
+#else
+
+#endif
+
+        m_gMapData.insert( make_pair( *pStrPathName, pData ) );
+    }
+
+    CDataFile *FindMapData( CString *pStrPathName )
+    {
+        CDataFile *pDataFile;
+        map<CString, CDataFile *>::iterator it;
+
+        it = m_gMapData.find( *pStrPathName );
+        if( it == m_gMapData.end() ) {
+            pDataFile = NULL;
+        }
+        else {
+            pDataFile = it->second;
+
+            // 데이터 ID 증가
+            //++ pData->m_uiLoadFile;
+        }
+
+        return pDataFile;
+    }
+
+    void CloseMapData( CString *pStrWindowTitle )
+    {
+        auto it=m_gMapData.begin();
+
+        if( pStrWindowTitle == NULL ) {
+            while( it != m_gMapData.end() ) {
+                //it->second->Free();
+                delete it->second;
+
+                ++ it;
+            }
+            m_gMapData.clear();
+        }
+        else {
+#ifdef _MSC_VER
+            CDataFile *pDataFile;
+
+            while( it != m_gMapData.end() ) {
+                if( pStrWindowTitle->Compare( it->first ) == 0 ) {
+                    pDataFile = it->second;
+
+                    if( pDataFile->GetWindowNumber() == 0 ) {
+                        delete it->second;
+                        m_gMapData.erase( it++ );
+                    }
+                    else {
+                        ++ it;
+
+                        // 데이터 ID 감소
+                        pDataFile->DecWindowNumber();
+                    }
+
+                }
+                else {
+                    ++ it;
+                }
+            }
+#endif
+        }
+    }
+
+};
+#endif
 

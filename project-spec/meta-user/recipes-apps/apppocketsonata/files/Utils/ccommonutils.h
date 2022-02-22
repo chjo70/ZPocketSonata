@@ -41,6 +41,8 @@ public:
 
     static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
+    static void SetUnitType();
+
 };
 
 #endif // CCOMMONUTILS_H

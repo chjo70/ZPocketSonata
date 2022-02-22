@@ -1809,7 +1809,7 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCl
             // AET 노드 생성
             CreateAETThreat( pAETThreat, pABTThreat, m_pLOBData, pThreatDataExt );
             InsertAET( pAETThreat, false, bDBInsert, nSeqNum, uiAETID );
-WhereIs;
+
             //SetIDLOBData( m_uiAETID, m_uiABTID, m_pLOBData->uiLOBID );
             SetIDLOBData( uiAETID, uiABTID, m_pLOBData->uiLOBID );
 

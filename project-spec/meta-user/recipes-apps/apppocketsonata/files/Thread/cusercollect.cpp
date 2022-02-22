@@ -510,11 +510,11 @@ void CUserCollect::MakeSIMPDWData()
 
         m_ullTOA += CXPDW::EncodeTOAus( 100, en5MHZ_BW );
 
-        memset( pSIGAPDW, 0, sizeof(DMAPDW) );
+        memset( pSIGAPDW, 0, sizeof(SIGAPDW) );
 
         pSIGAPDW->ullTOA = m_ullTOA;
         
-        pSIGAPDW->uiAOA = randomDOA;
+        pSIGAPDW->uiAOA = CXPDW::EncodeDOA( 90 );
         pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz( 9000. );
         pSIGAPDW->uiPA = CXPDW::EncodePA( -100 );
         pSIGAPDW->uiPW = CXPDW::EncodePWns( 100, en5MHZ_BW );

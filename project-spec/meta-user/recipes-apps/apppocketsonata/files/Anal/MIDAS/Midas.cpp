@@ -2061,6 +2061,8 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataT
     //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
     strcpy( m_szRawDataFilename, pRawdataFileName );
 
+#ifdef _MSC_VER
+
 #ifdef _XBAND_
 	if( true == FileOpen( pRawdataFileName, O_WRONLY | O_CREAT | O_BINARY ) ) {
 		Write( & pPDWData->x, sizeof(STR_ELINT_HEADER) );
@@ -2072,6 +2074,8 @@ void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataT
 
 #else
 	SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+
+#endif
 
 #endif
 

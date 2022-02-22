@@ -198,19 +198,19 @@ enum FREQ_TYPE
 // 내부 신호 분석에서 사용하는 정의
 enum PRI_TYPE
 {
-	_STABLE = 0,
-	_JITTER_RANDOM,
-	_DWELL,
-	_STAGGER,
-	_JITTER_PATTERN,
+    _STABLE               = 0,
+    _JITTER_RANDOM,
+    _DWELL,
+    _STAGGER,
+    _JITTER_PATTERN,
 
-	_UNKNOWN_PRI,
+    _UNKNOWN_PRI,
 
-	MAX_PRITYPE,
+    MAX_PRITYPE,
 
-	_REFSTABLE,
+    _REFSTABLE,
 
-	_STAGGER_DWELL,
+    _STAGGER_DWELL,
 
 
 } ;

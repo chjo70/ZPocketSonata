@@ -55,17 +55,17 @@ enum ENUM_BoardID {
                                     A = new B;    \
                                 } \
                                 catch( bad_alloc ex ) { \
-                                    printf( "new memory[##A]:%s" , ex.what() ); \
+                                    TRACE( "new memory[##A]:%s" , ex.what() ); \
                                 }
 
 
-#define _SAFE_MALLOC(A, B, C )  if( A != NULL ) { \
+#define _SAFE_MALLOC(A, B, C )  if( A == NULL ) { \
                                     A = ( B * ) malloc( sizeof(C) ); \
                                     if( A == NULL ) { \
-                                        printf( "malloc error new memory[%s]" , #A ); \
+                                        TRACE( "malloc error new memory[%s]" , #A ); \
                                     } \
                                 } \
-                                else { printf( "Already malloc memory[%s]" , #A ); }
+                                else { TRACE( "Already malloc memory[%s]" , #A ); }
 
 
 

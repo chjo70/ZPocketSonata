@@ -25,11 +25,13 @@ public:
     virtual ~CDetectAnalysis(void);
 
     void Run( key_t key=IPC_PRIVATE );
+
     virtual void _routine();
     virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void AnalysisStart();
+
 
 };
 

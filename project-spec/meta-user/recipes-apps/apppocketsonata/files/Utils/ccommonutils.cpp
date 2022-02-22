@@ -498,9 +498,6 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
 }
 
-
-
-
 /**
  * @brief CCommonUtils::GetEnumCollectBank
  * @param uiCh
@@ -606,4 +603,28 @@ void CCommonUtils::swapByteOrder(double *p, int iSize )
     for( i=0 ; i < iSize ; ++i ) {
         swapByteOrder( p[i] );
     }
+}
+
+
+/**
+ * @brief     SetUnitType
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-22, 13:18
+ * @warning
+ */
+void CCommonUtils::SetUnitType()
+{
+#ifdef _POCKETSONATA_
+    g_enUnitType = en_ZPOCKETSONATA;
+#elif defined(_ELINT_)
+    g_enUnitType = en_ELINT;
+#elif defined(_XBAND_)
+    g_enUnitType = en_XBAND;
+#else
+    g_enUnitType = en_UnknownUnit;
+
+#endif
 }

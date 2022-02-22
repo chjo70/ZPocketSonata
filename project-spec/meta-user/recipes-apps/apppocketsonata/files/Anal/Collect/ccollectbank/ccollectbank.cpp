@@ -39,7 +39,7 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 {
 
     Init();
-    
+
     m_strPDW.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * MAX_PDW );
 
 }
@@ -110,7 +110,7 @@ void CCollectBank::CloseCollectBank()
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
     m_strWindowCell.enCollectMode = enUnused;
-    
+
     m_strPDW.SetTotalPDW( 0 );
 
     g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
@@ -247,7 +247,7 @@ void CCollectBank::SimCollectMode()
 
         case enCollecting :
             CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
-            
+
             uiTotalPDW = GetTotalPDW( );
 
 
@@ -337,7 +337,7 @@ void CCollectBank::UpdateWindowCell()
     // PDW 정보 클리어
     m_strPDW.SetTotalPDW( 0 );
 
-   
+
     // 수집한 PDW 개수 업데이트
     m_strWindowCell.uiTotalPDW = 0;
 

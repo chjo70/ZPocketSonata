@@ -24,6 +24,17 @@
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
+
+#ifdef _MAIN_GLOBALS_
+// 장치 타입으로 이 값을 확인해서 장치에 맞게 실행하도록 한다.
+ENUM_UnitType g_enUnitType;
+
+#else
+extern ENUM_UnitType g_enUnitType;
+
+#endif
+
+
 #ifndef _TOA_
 #ifdef _VXWORKS_
 typedef unsigned long long _TOA;
@@ -297,6 +308,12 @@ struct TNEW_SPDW
 
 // 아래는 MIDAS 변환을 하기 위해서 각 장치별로 변환 구조체 필요....
 
+#if TOOL==diab 
+#pragma pack( 1 )
+#else
+#pragma pack( push, 1 )
+#endif
+
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 struct _PDW {
@@ -309,7 +326,7 @@ struct _PDW {
 	unsigned int uiPA;
 	unsigned int uiPW;
 
-	int iPFTag;	
+	int iPFTag;
 
 #ifdef _GRAPH_
 	float fPh1;
@@ -318,11 +335,18 @@ struct _PDW {
 	float fPh4;
 
 #else
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_)
 	float fPh1;
 	float fPh2;
 	float fPh3;
 	float fPh4;
+
+#elif defined(_XBAND_)
+    float fPh1;
+    float fPh2;
+    float fPh3;
+    float fPh4;
+    float fPh5;
 
 #elif _POCKETSONATA_
     int iPMOP;
@@ -330,7 +354,8 @@ struct _PDW {
 
     int iChannel;
 #endif
-#endif
+
+#endif      // _GRAPH
 
     _TOA GetTOA() {
         return ullTOA;
@@ -367,6 +392,12 @@ struct _PDW {
 
 
 } ;
+#endif
+
+#if TOOL==diab 
+#pragma pack( 4 )
+#else
+#pragma pack( pop )
 #endif
 
 
@@ -682,11 +713,11 @@ typedef struct {
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
 typedef union {
-    STR_ELINT_HEADER el;
+        STR_ELINT_HEADER el;
 
-    POCKETSONATA_HEADER ps;
+        POCKETSONATA_HEADER ps;
 
-    SONATA_HEADER so;
+        SONATA_HEADER so;
 
     unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
         unsigned int uiTotalPDW;
@@ -740,7 +771,6 @@ struct STR_PDWDATA {
     UNION_HEADER x;
 
     _PDW *pstPDW;
-    //_PDW stPDW[MAX_PDW];
 
     unsigned int GetHeader() {
         unsigned int uiHeader;
@@ -759,13 +789,16 @@ struct STR_PDWDATA {
     unsigned int GetTotalPDW() {
         unsigned int uiTotalPDW;
 
-#ifdef _POCKETSONATA_
-        uiTotalPDW = x.ps.stCommon.uiTotalPDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
-        uiTotalPDW = x.el.stCommon.uiTotalPDW;
-#else
-        uiTotalPDW = x.so.stCommon.uiTotalPDW;
-#endif
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            uiTotalPDW = x.el.stCommon.uiTotalPDW;
+        }
+        else {
+            uiTotalPDW = x.so.stCommon.uiTotalPDW;
+        }
+
         return uiTotalPDW;
 
     }

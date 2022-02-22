@@ -34,6 +34,16 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
         LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
     }
 
+// #define N       (10)
+//     while( true ) {
+//         SRxLOBData stSRxLOBData;
+// 
+//         stSRxLOBData.iSignalType = 0;
+//         stSRxLOBData.iFreqType = 0;
+//         stSRxLOBData.iPRIType = 0;
+//         m_pTheNewSigAnal->DISP_FineAet( & stSRxLOBData );
+//     }
+
 }
 
 /**
@@ -130,3 +140,4 @@ void CDetectAnalysis::AnalysisStart()
     }
 
 }
+

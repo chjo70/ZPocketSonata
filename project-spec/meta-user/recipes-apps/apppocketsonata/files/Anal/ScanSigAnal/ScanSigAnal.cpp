@@ -194,7 +194,7 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
 
     // 신호 분석 관련 초기화.
     Init( pPDWData );
-    
+
     iTotalPDW = pPDWData->GetTotalPDW();
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.

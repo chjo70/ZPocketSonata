@@ -2956,7 +2956,7 @@ void CPulExt::FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand )
         // 기존에 추출된 펄스열과 하모닉 관계가 있을 수 있기 때문에 모든 대역에서 추출한 펄스열이 DTOA 관계를
         // 이용해서 제거한다.
         //-- 조철희 2005-12-28 09:58:17 --//
-        PrintSeg( -1, & m_RefSeg );
+        //PrintSeg( -1, & m_RefSeg );
         bRet = FindSeg( & m_RefSeg, nStartSeg, m_uiCoSeg );    
 
         if( bRet == false ) {

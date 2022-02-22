@@ -78,10 +78,12 @@ double dRCDOA[RADARCOL_MAX] = { 10, 300, 70 } ;
 // IMPORT CRecvSerial *theRecvSerial;
 // IMPORT CRunBit *theRunBit;
 // IMPORT CGenPulseInfo *theGenPulseInfo;
+
 IMPORT CGetPdw *theGetPdwTask;
 IMPORT CLOBMngr *theLOBMngrTask;
 IMPORT CSigAnal *theSigAnalTask;
 // IMPORT CTcpIpServer *theTcpIpServer;
+
 IMPORT CIni *theIni;
 
 #endif

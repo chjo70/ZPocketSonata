@@ -44,9 +44,6 @@ int g_iClkTickPerSecond;
 #define _SHM_MEMORY_KEY             (333)
 #endif
 
-
-
-
 #else
 extern int g_iKeyId;
 extern int g_iMode;

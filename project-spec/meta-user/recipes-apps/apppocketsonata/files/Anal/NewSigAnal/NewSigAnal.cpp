@@ -105,6 +105,8 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
 
     m_uiStep = 0;
 
+    CCommonUtils::SetUnitType();
+
     Init();
 
     // DB 관련 변수 초기화
@@ -185,7 +187,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         m_tColTime = pPDWData->GetColTime();
 
         m_iIsStorePDW = pPDWData->GetStorePDW();
-        
+
 #if defined(_ELINT_) || defined(_XBAND_)
         m_enBandWidth = pPDWData->GetBandWidth();
 
@@ -902,6 +904,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 		}
 
         m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData );
+
 
     }
 
