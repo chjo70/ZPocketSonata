@@ -19,7 +19,7 @@
 #define new DEBUG_NEW
 #endif
 
-map<CString, CData *> CMapData::m_gMapData;
+map<CString, CDataFile *> CMapData::m_gMapData;
 
 
 // CDeltaGraphApp

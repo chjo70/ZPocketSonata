@@ -3133,7 +3133,9 @@ CData::CData()
     m_pRawDataBuffer = NULL;
     m_pRawHeaderBuffer = NULL;
 
+#ifdef _GRAPH_
 	m_uiWindowNumber = 0;
+#endif
 
     m_uiTotalDataItems = 0;
 
@@ -4053,7 +4055,9 @@ void CDataFile::SetData( CData *pData )
 {
 	m_pData = pData;
 
-	++ m_pData->m_uiWindowNumber;
+#ifdef _GRAPH_
+    IncWindowNumber();
+#endif
 
 }
 

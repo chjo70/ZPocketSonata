@@ -52,10 +52,10 @@ public:
 	CDeltaGraphApp();
 
 	inline void CloseMapData( CString *pStrPathname ) { m_theMapData.CloseMapData( pStrPathname ); }
-	inline CData *FindMapData( CString *pStrPathname ) { return m_theMapData.FindMapData( pStrPathname ); }
-	inline void AddMapData( CString *pStrPathname, CData *pData ) { m_theMapData.AddMapData( pStrPathname, pData ); }
+	inline CDataFile *FindMapData( CString *pStrPathname ) { return m_theMapData.FindMapData( pStrPathname ); }
+	inline void AddMapData( CString *pStrPathname, CDataFile *pDataFile ) { m_theMapData.AddMapData( pStrPathname, pDataFile ); }
 
-	inline void IncWindowNumber( CData *pData ) { return m_theMapData.IncWindowNumber( pData ); }
+	inline void IncWindowNumber( CDataFile *pDataFile ) { return m_theMapData.IncWindowNumber( pDataFile ); }
 
 
 // 재정의입니다.

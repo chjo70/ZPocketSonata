@@ -16,7 +16,7 @@ private:
 	CMainFrame *m_pFrame;
 	CString m_strPathname;
 
-	CDataFile m_theDataFile;
+	CDataFile *m_pTheDataFile;
 
 	ENUM_UnitType m_enUnitType;
 	ENUM_DataType m_enDataType;
@@ -35,16 +35,16 @@ public:
 
     ENUM_DataType GetDataType();
 
-	inline int GetFileIndex() { return m_theDataFile.GetFileIndex(); }
+	inline int GetFileIndex() { return m_pTheDataFile->GetFileIndex(); }
 	
-	inline UINT GetDataItems() { return m_theDataFile.GetDataItems(); }
+	inline UINT GetDataItems() { return m_pTheDataFile->GetDataItems(); }
 	inline ENUM_UnitType GetUnitType() { return m_enUnitType; /* .GetUnitType(); */ }
-	inline void *GetData() { return m_theDataFile.GetData(); }
+	inline void *GetData() { return m_pTheDataFile->GetData(); }
+    inline void *GetRealData() { return m_pTheDataFile->GetRealData(); }
 
-	//inline STR_FILTER_SETUP *GetFilterSetup() { return m_theDataFile.GetFilterSetup(); }
-	//inline void ClearFilterSetup() { m_theDataFile.ClearFilterSetup(); }
-	inline int GetFilteredDataItems() { return m_theDataFile.GetFilteredDataItems(); }
-	inline UINT GetWindowNumber() { return m_theDataFile.GetWindowNumber(); }
+	inline int GetFilteredDataItems() { return m_pTheDataFile->GetFilteredDataItems(); }
+    inline int GetFilteredRealDataItems() { return m_pTheDataFile->GetFilteredRealDataItems(); }
+	inline UINT GetWindowNumber() { return m_pTheDataFile->GetWindowNumber(); }
 
 
 protected: // serialization에서만 만들어집니다.

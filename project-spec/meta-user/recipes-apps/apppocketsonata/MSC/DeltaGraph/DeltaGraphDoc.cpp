@@ -166,7 +166,7 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
  */
  ENUM_UnitType CDeltaGraphDoc::WhatUnitType()
 {
-	return m_theDataFile.WhatUnitType( (LPSTR)(LPCTSTR) m_strPathname );
+	return m_pTheDataFile->WhatUnitType( (LPSTR)(LPCTSTR) m_strPathname );
 }
 
 /**
@@ -179,7 +179,7 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
  */
 ENUM_DataType CDeltaGraphDoc::WhatDataType()
 {
-	return m_theDataFile.WhatDataType( (LPSTR)(LPCTSTR) m_strPathname );
+	return m_pTheDataFile->WhatDataType( (LPSTR)(LPCTSTR) m_strPathname );
 }
 
  /**
@@ -248,25 +248,23 @@ bool CDeltaGraphDoc::OpenFile( CString &strPathname, STR_FILTER_SETUP *pstFilter
  */
 bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSetup, bool bCountOfWindow )
 {
-	CData *pData, *pFindMapData;
+	CDataFile *pFindMapData;
 	
 	pFindMapData = theApp.FindMapData( & m_strPathname );
 
 	if( pFindMapData == NULL ) {
-        m_theDataFile.ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToReal );
-
-// CData *ReadDataFile( STR_PDWDATA *pPDWData, char *pPathname, int iFileIndex=-1, CData *pData=NULL, STR_FILTER_SETUP *pstFilterSetup=NULL, bool bConvert=true );            
-            //(LPSTR) (LPCTSTR) m_strPathname, pFindMapData, pstFilterSetup );
-
-		theApp.AddMapData( & m_strPathname, pData );
+        m_pTheDataFile = new CDataFile;
+        m_pTheDataFile->ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToReal );
+		theApp.AddMapData( & m_strPathname, m_pTheDataFile );
 	}
 	else {
+        m_pTheDataFile = pFindMapData;
 		if( bCountOfWindow == true ) {
-			theApp.IncWindowNumber( pFindMapData );
+			theApp.IncWindowNumber( m_pTheDataFile );
 		}
 	}
 
-	return m_theDataFile.GetFileIndex() == -1;
+	return m_pTheDataFile->GetFileIndex() == -1;
 
 }
 
@@ -282,7 +280,7 @@ UINT CDeltaGraphDoc::GetPDWDataItems()
 { 
 	STR_PDWREALDATA *pPDWData;
 
-	pPDWData = ( STR_PDWREALDATA * ) m_theDataFile.GetData();
+	pPDWData = ( STR_PDWREALDATA * ) m_pTheDataFile->GetRealData();
 	return pPDWData->uiDataItems; 
 }
 
