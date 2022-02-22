@@ -929,10 +929,14 @@ void CXPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
  */
 void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 {
+    bool bFirstTOA=true;
     unsigned int i, uiDataItems;
     int iCh;
 
-    _TOA ullToa;
+    ENUM_BANDWIDTH enBandWidth;
+
+    _TOA ullTOA, ullFirstTOA, ullPreTOA;
+    int iSignalType;
     UINT uiFreq, uiPW, uiPA, uiAOA;
 
     _TOA *pullTOA = pPDWRealData->pullTOA;
@@ -951,9 +955,11 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     _PDW *pPDW = (_PDW *) & m_pRawDataBuffer[0];
 
     uiDataItems = 0;
+    enBandWidth = m_stHeader.enBandWidth;
 
     for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
-        ullToa = (_TOA) ( pPDW->GetTOA() );
+        // 시간 정보
+        ullTOA = (_TOA) ( pPDW->GetTOA() );
 
         // 방위 저장
         uiAOA = pPDW->GetAOA();    
@@ -966,24 +972,38 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
         uiPW = pPDW->GetPulsewidth();
 
         // 신호 세기 저장
-        uiPA = pPDW->GetPulseamplitude();   
+        uiPA = pPDW->GetPulseamplitude();
+
+        iSignalType = pPDW->GetPulsetype();
 
         // 필터링 조건
-        if( ( m_strFilterSetup.ullToaMin <= ullToa && m_strFilterSetup.ullToaMax >= ullToa ) &&
+        if( ( m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA ) &&
             ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
             ( m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW ) &&
             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
-                // 시간 저장
-                //*pullTOA++ = XPDW::DecodeTOA( ullToa );
-//                 *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
-//                 *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
-//                 *pfPA++ = uiPA;
-//                 *pfPW++ = uiPW;
-// 
-//                 *pcType++ = pPDW->GetPulsetype();
+            if( bFirstTOA ) {
+                ullPreTOA = ullFirstTOA = ullTOA;
 
-                ++ uiDataItems;
+                bFirstTOA = false;
+            }
+            *pfDTOA++ = CXPDW::DecodeTOA( ullTOA-ullPreTOA, enBandWidth );
+            ullPreTOA = ullTOA;
+
+
+            // 시간 저장
+            *pullTOA++ = ullTOA;
+
+            *pfTOA++ = CXPDW::DecodeTOA( ullTOA, enBandWidth );
+            *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
+            *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
+            *pfPA++ = CXPDW::DecodePA( uiPA );
+            *pfPW++ = CXPDW::DecodePW( uiPW, enBandWidth );
+ 
+            *pcType++ = iSignalType;
+            *pcDV++ = 1;
+
+            ++ uiDataItems;
 
         }
 
@@ -1817,8 +1837,8 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWData )
     unsigned int i, uiDataItems;
     int iCh;
 
-    _TOA ullToa;
-    UINT uiFreq, uiPW, uiPA, uiAOA;
+//     _TOA ullToa;
+//     UINT uiFreq, uiPW, uiPA, uiAOA;
 
 //     _PDW *pPDW = & pPDWData->pstPDW[0];
 // 

@@ -174,7 +174,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 			m_CListRawData.InsertColumn( j++, _T("순서"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순서  ")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("신호 형태"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호 형태")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("TOA[s]/TOA[s]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("DTOA[s]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("DTOA[s]")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("DTOA[s]")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("DV")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]")), -1 ); 
@@ -267,7 +267,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	char *pcDV, *pcType;
 	float *pfTOA, *pfDTOA;
 	float *pfAOA, *pfFreq, *pfPA, *pfPW;
-	float *pfPh1, *pfPh2, *pfPh3, *pfPh4;
+	//float *pfPh1, *pfPh2, *pfPh3, *pfPh4;
 	float *pfI, *pfQ, *pfIP, *pfFFT;
 	_TOA *pllTOA;
 	CString strVal;
@@ -283,7 +283,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	if( uiPDWDataItems != 0 ) {
 		//bPhaseData = m_pDoc->IsPhaseData();
 		enDataType = m_pDoc->GetDataType();
-		pData = m_pDoc->GetData();
+		pData = m_pDoc->GetRealData();
 
 		Log( enNormal, _T("목록창에 데이터 삽입 시작합니다.") );
 
@@ -299,10 +299,11 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 				pcDV = pPDWData->pcDV;
 				pllTOA = pPDWData->pullTOA;
 				pcType = pPDWData->pcType;
-				pfPh1 = pPDWData->pfPh1;
-				pfPh2 = pPDWData->pfPh2;
-				pfPh3 = pPDWData->pfPh3;
-				pfPh4 = pPDWData->pfPh4;
+// 				pfPh1 = pPDWData->pfPh1;
+// 				pfPh2 = pPDWData->pfPh2;
+// 				pfPh3 = pPDWData->pfPh3;
+// 				pfPh4 = pPDWData->pfPh4;
+
 				for( i=0 ; i < (int) uiPDWDataItems ; ++i ) {
 					j = 1;
 
@@ -317,7 +318,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					//strVal.Format( _T("%12.3f") , *pfTOA*1. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
-					strVal.Format( _T("%12.3f") , *pfDTOA*1. );
+					strVal.Format( _T("%12.3f") , *pfDTOA*1000000. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
 					if( *pcDV == _spOne ) {
@@ -330,13 +331,13 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					strVal.Format( _T("%4.1f") , *pfAOA );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
-					strVal.Format( _T("%8.3f") , *pfFreq );
+					strVal.Format( _T("%8.3f") , *pfFreq/1000000. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
 					strVal.Format( _T("%5.2f") , *pfPA );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
-					strVal.Format( _T("%5.1f") , *pfPW );
+					strVal.Format( _T("%5.1f") , *pfPW*1000000000. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
 					++ pfTOA;
@@ -351,10 +352,10 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					++ pcDV;
 					++ pcType;
 
-					++ pfPh1;
-					++ pfPh2;
-					++ pfPh3;
-					++ pfPh4;
+// 					++ pfPh1;
+// 					++ pfPh2;
+// 					++ pfPh3;
+// 					++ pfPh4;
 
 				}
 			}

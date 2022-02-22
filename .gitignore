@@ -39,5 +39,7 @@ Debug/*
 Debug
 Release
 
-.sdf
+*.sdf
 *.pdb
+*.suo
+*.aps

@@ -119,6 +119,10 @@ BOOL CDeltaGraphApp::InitInstance()
 	//
 	Log( enNormal, _T("DeltaGraph+++++++++++++++++++++++++++++++++++++++++++") );
 
+    _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+    //_CrtSetBreakAlloc(5655); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
+
 	// 응용 프로그램의 문서 템플릿을 등록합니다. 문서 템플릿은
 	//  문서, 프레임 창 및 뷰 사이의 연결 역할을 합니다.
 	CMultiDocTemplate* pDocTemplate;

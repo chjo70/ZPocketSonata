@@ -675,6 +675,21 @@ public:
         return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
+    /**
+     * @brief     
+     * @param     _TOA uiTOA
+     * @param     ENUM_BANDWIDTH enBandWidth
+     * @return    float
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/22 22:37:47
+     * @warning   
+     */
+    static float DecodeTOA( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
+    {
+        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+    } ;
+
 	/**
      * @brief     
      * @param     _TOA uiTOA
@@ -747,6 +762,15 @@ public:
         return fFreq;
     } ;
 
+    /**
+     * @brief     
+     * @param     unsigned int uiFreq
+     * @return    float
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/22 22:36:54
+     * @warning   
+     */
     static float DecodeFREQMHz( unsigned int uiFreq )
     {
         float fFreq;
