@@ -3211,9 +3211,8 @@ void CData::ClearFilterSetup()
  */
 CData::~CData(void)
 {
-
-    //_SAFE_FREE( m_pRawDataBuffer );
-    //_SAFE_FREE( m_pRawHeaderBuffer );
+    FreeData();
+    FreeRealData();
 
 }
 

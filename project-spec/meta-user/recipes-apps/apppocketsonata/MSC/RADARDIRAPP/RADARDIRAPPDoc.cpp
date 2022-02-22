@@ -73,24 +73,25 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         
 	}
 	else {
-//         STR_PDWDATA stPDWData;
-//         SRxLOBData *pLOBData;
-// 
-//         CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
-//         CRADARDIRAPPView * pView;
-// 
-//         RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
-// 
-//         RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
-// 
-// 	    // TODO: 여기에 로딩 코드를 추가합니다.
-//         m_theDataFile.ReadDataFile( & stPDWData, (char*)(LPCTSTR) ar.m_strFileName, NULL, enPDWToPDW );
-// 
-//         RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );        
-// 
-//         int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
-// 
-//         pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
+        STR_PDWDATA *pstPDWData;
+        SRxLOBData *pLOBData;
+
+        CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
+        CRADARDIRAPPView * pView;
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
+
+	    // TODO: 여기에 로딩 코드를 추가합니다.
+        m_theDataFile.ReadDataFile( (char*)(LPCTSTR) ar.m_strFileName, NULL, enPDWToPDW );
+
+        pstPDWData = ( STR_PDWDATA * ) m_theDataFile.GetData();
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData );        
+
+        int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+
+        pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
 	}
 }
