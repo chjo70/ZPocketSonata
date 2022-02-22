@@ -38,3 +38,6 @@ Debug/*
 *.log
 Debug
 Release
+
+.sdf
+*.pdb
