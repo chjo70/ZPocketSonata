@@ -1,0 +1,32 @@
+C++ Demonstration Program
+-------------------------
+
+This C++ demo program demonstrates various C++ language features
+including classes, templates, inheritance, function overloading,
+exceptions, strings, and linked lists. You can build and download this
+program to your VxWorks target.
+
+This program should be run at a priority lower than the system tasks. The
+priority of the task should be less than that of the network tasks to avoid
+interfering with the network. When run from the shell, host or target shell,
+it is advisable to run this program as a task (i.e. "-> sp main") rather than
+directly invoking teh program (i.e. "-> main"). 
+
+Features
+--------
+
+The main() function includes a loop that calls the following functions to 
+demonstrate various C++ features:
+
+* simpleClassDemo()         - construction, operating overloading, and
+                              initialization
+* inheritanceClassDemo()    - single inheritance
+* multipleInheritanceDemo() - multiple inheritance
+* staticDemo()              - static variables in a class
+* templateClassDemo()       - an array template class
+* largeClassDemo()          - a class with a large enumeration
+* partialTypesDemo()        - pointers to undefined types
+* virtualBaseDemo()         - multiple inheritance with a virtual base
+                            class
+* stringDemo()              - a string class
+* exceptionDemo()           - exception handling 
