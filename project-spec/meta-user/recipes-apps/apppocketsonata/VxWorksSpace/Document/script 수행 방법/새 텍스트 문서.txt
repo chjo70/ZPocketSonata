@@ -1,0 +1,4 @@
+
+u-boot 에서 아래 bootarg 값을 boot parameter 값으로 설정해야 vxworks 부팅 후 boot paramete 값으로 설정됨
+
+setenv bootargs memac(0,0)host:vxWorks h=192.168.10.245 e=192.168.10.50:ffffff00 g=192.168.10.1 u=vxworks pw=1 f=0x408 tn=t2080
