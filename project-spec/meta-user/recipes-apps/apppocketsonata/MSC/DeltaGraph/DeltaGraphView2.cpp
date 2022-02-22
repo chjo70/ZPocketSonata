@@ -1635,7 +1635,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 				UINT uiIndex;
 				// get ydata value at hot spot //
 				float yvalue;
-				STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetData();
+				STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetRealData();
 
 				PEvgetcellEx(m_hPE, PEP_faYDATA, hsd.w1, hsd.w2, &yvalue);
 				_stprintf_s(buffer, _countof(buffer), TEXT("[DataPoint value %.2f, s=%d,p=%d]"), yvalue, hsd.w1, hsd.w2);
@@ -1799,7 +1799,7 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 	}
 
 	if (enDataType == en_PDW_DATA) {
-		STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetData();
+		STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetRealData();
 
 		fValue = pPDWData->pfTOA[pHSD->w2];
 		fValue = SetXUnit( fValue, enDataType );
@@ -1807,7 +1807,7 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 
 	}
 	else {
-		STR_IQ_DATA *pIQData = (STR_IQ_DATA *) m_pDoc->GetData();
+		STR_IQ_DATA *pIQData = (STR_IQ_DATA *) m_pDoc->GetRealData();
 
 		fValue = (float) pHSD->w2;
 		sprintf_s( szBuffer, _countof(szBuffer), _T("%.3f"), fValue );

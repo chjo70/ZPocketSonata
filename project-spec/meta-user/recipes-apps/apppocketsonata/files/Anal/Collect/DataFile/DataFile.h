@@ -687,7 +687,7 @@ public:
      */
     static float DecodeTOA( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+        return (float) ( ( (double) uiTOA * XPDW::_toaRes[enBandWidth] ) / (double) 1000000000. );
     } ;
 
 	/**

@@ -994,7 +994,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             // 시간 저장
             *pullTOA++ = ullTOA;
 
-            *pfTOA++ = CXPDW::DecodeTOA( ullTOA, enBandWidth );
+            *pfTOA++ = CXPDW::DecodeTOA( ullTOA-ullFirstTOA, enBandWidth );
             *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
             *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
             *pfPA++ = CXPDW::DecodePA( uiPA );

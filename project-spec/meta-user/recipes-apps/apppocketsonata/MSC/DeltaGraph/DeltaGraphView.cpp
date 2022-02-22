@@ -173,9 +173,9 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 			m_CListRawData.InsertColumn( j++, _T("순서"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순서  ")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("신호 형태"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호 형태")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("TOA[s]/TOA[s]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("DTOA[s]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("DV")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("              TOA[s]/TOA[s]")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("     DTOA[s]")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("  DV")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]")), -1 ); 
 			m_CListRawData.InsertColumn( j++, _T("신호세기[dBm]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호세기[dBm]")), -1 ); 
