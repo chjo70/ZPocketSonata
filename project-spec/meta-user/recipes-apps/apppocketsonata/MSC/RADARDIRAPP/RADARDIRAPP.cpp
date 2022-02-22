@@ -142,7 +142,6 @@ BOOL CRADARDIRAPPApp::InitInstance()
  		return FALSE;
 
 
-
 	InitApp();
 
 	//

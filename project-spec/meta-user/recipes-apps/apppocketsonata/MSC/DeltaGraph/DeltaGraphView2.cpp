@@ -172,14 +172,14 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 	if( m_pDoc->GetDataType() == en_PDW_DATA ) {
 		bRet = m_pDoc->ReadDataFile( iFileIndex, & m_strFilterSetup );
 
-		iFilteredDataItems += m_pDoc->GetFilteredDataItems();
+		iFilteredDataItems += m_pDoc->GetFilteredRealDataItems();
 
 		ShowGraph( enSubGraph, iFileIndex );
 	}
 	else {
 		bRet = m_pDoc->ReadDataFile( iFileIndex );
 
-		iFilteredDataItems += m_pDoc->GetFilteredDataItems();
+		iFilteredDataItems += m_pDoc->GetFilteredRealDataItems();
 
  		InitGraph( enSubGraph );
  
@@ -755,7 +755,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 	uiPDWDataItems = m_pDoc->GetPDWDataItems();
 	enDataType = m_pDoc->GetDataType();
-	pData = m_pDoc->GetData();
+	pData = m_pDoc->GetRealData();
 
 	int iComboDV = m_CComboDV.GetCurSel();
 
