@@ -1835,7 +1835,7 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
 void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWData )
 {
     unsigned int i, uiDataItems;
-    int iCh;
+//    int iCh;
 
 //     _TOA ullToa;
 //     UINT uiFreq, uiPW, uiPA, uiAOA;
