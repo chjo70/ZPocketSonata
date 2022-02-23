@@ -162,7 +162,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //#define   _spTOAres       (0.000000025)		// SEC(25 ns) */
 //#define   _spPWres        (25.)						// pw res.
 
-#define STABLE_MARGIN				ITOAusCNV( 8 ) // ( 1 * _spOneMicrosec )	// 1 us
+#define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
 #define	MAX_PW						(1024*16)
 

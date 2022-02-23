@@ -108,18 +108,6 @@ enum ENUM_AET_MOP_TYPE
 // };
 
 // AET - PRI Type
-#ifdef _XBAND_
-enum ENUM_AET_PRI_TYPE
-{
-	E_AET_PRI_FIXED=1,
-	E_AET_PRI_JITTER,
-	E_AET_PRI_DWELL_SWITCH,
-	E_AET_PRI_STAGGER,
-	E_AET_PRI_PATTERN,
-
-	//E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
-};
-#else
 enum ENUM_AET_PRI_TYPE
 {
 	E_AET_PRI_FIXED=0,
@@ -130,7 +118,6 @@ enum ENUM_AET_PRI_TYPE
 	
 	//E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
 };
-#endif
 
 #define NUM_OF_AET_PRI_TYPE		5
 /*! \bug		PRI 형태 변경

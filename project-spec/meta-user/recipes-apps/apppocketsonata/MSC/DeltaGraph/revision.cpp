@@ -12,12 +12,12 @@
 
 const TCHAR *GetRevision()
 {
-	static TCHAR st_szRev[100] = { _T("039a27912f07cfb903f782dc304a40cbcdbf0713") };
+	static TCHAR st_szRev[100] = { _T("6bcc9b31b7762fa25393b8d4e53cb0a8e4c75071") };
 	return st_szRev;
 }
 
 const TCHAR *GetBuildDate()
 {
-	static TCHAR st_szDate[100] = { _T("2020/03/08 18:24:09") };
+	static TCHAR st_szDate[100] = { _T("2022/02/23 13:59:13") };
 	return st_szDate;
 }

@@ -43,6 +43,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)DeltaGraph;C:\ProEssentials9\VC;$(IncludePath)</IncludePath>
     <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)DeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -73,6 +74,24 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>echo off
+
+echo $(ConfigurationName)
+
+SET CONFIGNAME=$(ConfigurationName)
+
+REM ########################################################################
+REM  작업실에서...
+SET DELTA_GRAPH_DEST="D:\Program Files\DeltaGraph"
+
+copy ..\Debug\DeltaGraph.* "D:\Program Files\DeltaGraph"
+
+REM CALL CopyAll %DELTA_GRAPH_DEST%
+
+
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

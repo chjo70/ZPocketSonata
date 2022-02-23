@@ -124,8 +124,8 @@ void CMakeAET::MakeAET()
     // 에미터 추출 개수를 저장
     m_CoMakeAet = m_CoLOB;
 
-    pEmitter = & m_pEmitter[m_nAnalEmitter];
-    for( i=m_nAnalEmitter ; i < m_CoEmitter ; ++i, ++pEmitter ) {
+    pEmitter = & m_pEmitter[0];
+    for( i=0 ; i < m_CoEmitter ; ++i, ++pEmitter ) {
         if( pEmitter->mark == NORMAL_EMITTER ) {
             // 에미터 생성하기
             MakeAETfromEmitter( pEmitter, i );

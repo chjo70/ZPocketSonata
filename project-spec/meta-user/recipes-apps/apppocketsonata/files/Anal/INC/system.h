@@ -555,7 +555,13 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 
+#ifdef _XBAND_
+enum PDW_MARK { STAT_CW=0, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
+
+#else
 enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
+
+#endif
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 장치별 정의

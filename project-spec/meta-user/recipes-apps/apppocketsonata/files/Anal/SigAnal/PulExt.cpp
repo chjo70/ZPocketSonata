@@ -177,12 +177,14 @@ void CPulExt::Init()
     _TOA temp_pri;
     pRange = & m_jit_pri_table[0];
     int power_2=1;
-    temp_pri = ITOAusCNV( (_TOA)( 2 * power_2 ) );			// 2 * power_2 * _spOneMicrosec;
+    temp_pri = (_TOA) IFTOAusCNV( 1.5 ); //ITOAusCNV( (_TOA)( 1.5 * power_2 ) );			// 2 * power_2 * _spOneMicrosec;
     for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
         pRange->min_pri = temp_pri;
 
-        power_2 = power_2 * 2;
-        _EQUALS3( temp_pri, pRange->max_pri, UDIV( 9 * pRange->min_pri, 4 ) );
+		temp_pri = MulDiv64( 2, temp_pri, 1 );
+
+        //power_2 = power_2 * 2;
+        pRange->max_pri = temp_pri;
         /*! \bug  하모닉을 고려해서 2배까지 PRI 밴드로 한다.
             \date 2006-08-25 11:30:14, 조철희
         */
@@ -1041,7 +1043,12 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
             if( flagMargin == FALSE ) {
                 if( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL ) {
                     margin.iLow = 0;
-                    margin.iHgh = STABLE_MARGIN;
+					if( pPriRange->max_pri > ITOAusCNV(10) ) {		
+						margin.iHgh = STABLE_MARGIN;
+					}
+					else {
+						margin.iHgh = ITOAusCNV( 0.1 );
+					}
                 }
                 else {
 #ifdef _EXTRACT_PULSE_METHOD3_
