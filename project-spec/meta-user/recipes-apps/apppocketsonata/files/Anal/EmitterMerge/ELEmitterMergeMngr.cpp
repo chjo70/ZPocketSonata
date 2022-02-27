@@ -388,12 +388,12 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 {
     bool bMerge=false;
 
-    //DWORD dwTime = GetTickCount();
     SetScanInfo( bScanInfo );
 
-#ifdef _MSC_VER
+#ifdef _VXWORKS_
+
+#else
 #ifdef _POCKETSONATA_
-    WhereIs;
     Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
         pLOBData->fDOAMean,
@@ -404,7 +404,6 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
         pLOBData->iScanType, pLOBData->fScanPeriod,
         pLOBData->iNumOfPDW
         );
-    // WhereIs;    */
 
 #elif defined(_ELINT_) || defined(_XBAND_)
     Log( enNormal, "[%s-%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], [%d]" ,
@@ -417,6 +416,8 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
         pLOBData->fPAMin, pLOBData->fPAMax,
         pLOBData->iNumOfPDW
         );
+#elif _SONATA_
+
 #else
 
 #endif
@@ -424,11 +425,6 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 #endif
 
     //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
-
-#ifdef _POCKETSONATA_
-#elif defined(_ELINT_) || defined(_XBAND_)
-    // strcpy_s( szTaskID, pLOBData->aucTaskID );
-#endif
 
     // LOB 데이터를 사전 세팅하기위한 함수
     LOBPreSetting( pLOBHeader, pLOBData, pLOBOtherInfo );
@@ -514,7 +510,14 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* p
 }
 
 /**
- * @brief CELEmitterMergeMngr::PrintAllABTData
+ * @brief     PrintAllABTData
+ * @param     void
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2017-10-23, 오후 11:46
+ * @warning
  */
 void CELEmitterMergeMngr::PrintAllABTData()
 {

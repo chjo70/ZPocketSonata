@@ -13,7 +13,7 @@
 #include "_Define.h"
 
 
-#define DFD_FREQ_OFFSET		(1900)
+//#define DFD_FREQ_OFFSET		(1900)
 
 #define _spSONATAPAoffset			(-70)					// amplitude initial value
 #define _spSONATAAMPres       (0.3125)			// dB */
@@ -48,8 +48,6 @@ enum ENUM_BoardID {
 #define _SAFE_FREE(A)           if( A != NULL ) { free( A ); A = NULL; }
 #define _SAFE_DELETE(A)         if( A != NULL ) { delete A; A = NULL; }
 
-
-//#define _SAFE_NEW(A, B, C)
 
 #define _SAFE_NEW(A, B)         try { \
                                     A = new B;    \
@@ -195,6 +193,7 @@ T _diffabs( T x, T y)
 #define IFRQMhzHGH( A )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
 
 #define TOAusCNV( A )           CPOCKETSONATAPDW::DecodeTOAus( A )
+#define IFTOAusCNV( A )			CPOCKETSONATAPDW::DecodeTOAus( A )
 #define I_TOAusCNV( A )         (int) ( CPOCKETSONATAPDW::DecodeTOAus( A ) + 0.5 )
 #define TOAmsCNV( A )           CPOCKETSONATAPDW::DecodeTOAms( A )
 #define FTOAsCNV( A )			CPOCKETSONATAPDW::DecodeTOAs( A )
@@ -276,7 +275,7 @@ T _diffabs( T x, T y)
 #define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
 #define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
 
-#define TOAsCNV( A )						UDIV( (A), _spOneSec )
+#define TOAsCNV( A )			UDIV( (A), _spOneSec )
 #define TOAmsCNV( A )           UDIV( (A), _spOneMilli )
 #define TOAusCNV( A )           UDIV( (A), _spOneMicrosec )
 #define TOAnsCNV( A )           UMUL( (A), _spTimeNsRes )

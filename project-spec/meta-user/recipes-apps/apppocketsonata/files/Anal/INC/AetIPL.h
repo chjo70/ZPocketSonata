@@ -349,11 +349,11 @@ enum SCAN_STAT
 #if defined(_ELINT_) || defined(_XBAND_)
 //const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
 #elif defined(_POCKETSONATA_)
-static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+//static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #elif defined(_SONATA_)
-static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+//static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #else
-static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+//static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -241,8 +241,20 @@ done:
 	// result is returned in edx:eax
 
 #elif __linux__
+    __int64 result;
+
+    result = ( operant * multiplier ) / divider;
+    printf( "\n [%I64d] X [%I64d] / [%I64d] = [%I64d]" , operant, multiplier, divider );
+
+    return result;
 
 #elif _VXWORKS_
+    __int64 result;
+
+    result = ( operant * multiplier ) / divider;
+    printf( "\n [%I64d] X [%I64d] / [%I64d] = [%I64d]" , operant, multiplier, divider );
+
+    return result;
 
 #else
     // vxworks and linux 
