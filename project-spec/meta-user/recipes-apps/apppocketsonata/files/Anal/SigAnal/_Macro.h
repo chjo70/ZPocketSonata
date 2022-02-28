@@ -193,7 +193,7 @@ T _diffabs( T x, T y)
 #define IFRQMhzHGH( A )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
 
 #define TOAusCNV( A )           CPOCKETSONATAPDW::DecodeTOAus( A )
-#define IFTOAusCNV( A )			CPOCKETSONATAPDW::DecodeTOAus( A )
+#define IFTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 #define I_TOAusCNV( A )         (int) ( CPOCKETSONATAPDW::DecodeTOAus( A ) + 0.5 )
 #define TOAmsCNV( A )           CPOCKETSONATAPDW::DecodeTOAms( A )
 #define FTOAsCNV( A )			CPOCKETSONATAPDW::DecodeTOAs( A )
