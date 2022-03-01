@@ -177,7 +177,7 @@ void CPulExt::Init()
     _TOA temp_pri;
     pRange = & m_jit_pri_table[0];
     int power_2=1;
-    temp_pri = (_TOA) IFTOAusCNV( 1.5 ); //ITOAusCNV( (_TOA)( 1.5 * power_2 ) );			// 2 * power_2 * _spOneMicrosec;
+    temp_pri = (_TOA) IFTOAusCNV( (float) 1.5 ); //ITOAusCNV( (_TOA)( 1.5 * power_2 ) );			// 2 * power_2 * _spOneMicrosec;
     for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
         pRange->min_pri = temp_pri;
 
@@ -1034,8 +1034,9 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                     break;
             }
             */
-            if( dtoa1 > pPriRange->max_pri )
+            if( dtoa1 > pPriRange->max_pri ) {
                 break;
+            }
 
             second_toa = m_pTOA[ index2 ];
 
@@ -1043,11 +1044,11 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
             if( flagMargin == FALSE ) {
                 if( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL ) {
                     margin.iLow = 0;
-					if( pPriRange->max_pri > ITOAusCNV(10) ) {		
+					if( pPriRange->max_pri > ITOAusCNV((_TOA) 10 ) ) {		
 						margin.iHgh = STABLE_MARGIN;
 					}
 					else {
-						margin.iHgh = ITOAusCNV( 0.1 );
+						margin.iHgh = ITOAusCNV( (_TOA) 0.1 );
 					}
                 }
                 else {

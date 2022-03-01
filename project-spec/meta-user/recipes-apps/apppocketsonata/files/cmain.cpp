@@ -62,6 +62,7 @@
 
 using namespace std;
 
+// Main() 함수에 아래를 정의한다.
 #define _MAIN_
 #define _MAIN_GLOBALS_
 

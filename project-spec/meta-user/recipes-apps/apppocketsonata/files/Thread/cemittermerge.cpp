@@ -418,7 +418,7 @@ void CEmitterMerge::SendNewUpd()
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2021-08-02, 13:25
+ * @date      2022-02-27, 23:00
  * @warning
  */
 void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData )
@@ -439,7 +439,14 @@ void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int ui
 }
 
 /**
- * @brief CEmitterMerge::SendDelete
+ * @brief     SendDelete
+ * @param     unsigned int uiAETID
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-02-27, 23:52
+ * @warning
  */
 void CEmitterMerge::SendDelete( unsigned int uiAETID )
 {

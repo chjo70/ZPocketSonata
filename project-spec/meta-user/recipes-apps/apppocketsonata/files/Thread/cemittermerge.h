@@ -1,3 +1,12 @@
+/*!
+ * \class classname
+ *
+ * \brief 
+ *
+ * \author chjo7_hns3pqr
+ * \date 2월 2022
+ */
+
 #ifndef CEMITTERMERGE_H
 #define CEMITTERMERGE_H
 
