@@ -199,7 +199,7 @@ public:
     //##ModelId=452B0C54009F
     void DePulseExtract();
     //##ModelId=452B0C5400A0
-    void DiscardPulseTrain( int startseg1, int endseg, int startseg2 );
+    void DiscardPulseTrain( unsigned int startseg1, unsigned int endseg, unsigned int startseg2 );
     //##ModelId=452B0C5400AA
     void MemcpySeg( STR_PULSE_TRAIN_SEG *pDestSeg, STR_PULSE_TRAIN_SEG *pSrcDeg );
     //##ModelId=452B0C5400BD

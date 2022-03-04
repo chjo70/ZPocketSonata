@@ -201,6 +201,8 @@ public:
 
     CMakeAET* GetMakeAET() { return NULL; }
 
+    inline unsigned int GetPDWID() { return (UINT) -1; }
+
 #if defined(_ELINT_) || defined(_XBAND_)
 	EN_RADARCOLLECTORID GetCollectorID();
 	char *GetTaskID();

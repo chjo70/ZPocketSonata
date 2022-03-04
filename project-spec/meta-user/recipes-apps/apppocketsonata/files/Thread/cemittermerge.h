@@ -66,8 +66,6 @@ private:
 
     void SetStartOfAnalScan();
 
-
-
 };
 
 

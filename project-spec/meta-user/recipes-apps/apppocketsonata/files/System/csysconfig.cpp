@@ -180,7 +180,7 @@ void CSysConfig::InitVar()
 void CSysConfig::SetNetworkIP()
 {
     int i=0;
-    char szIPAddress[40];
+    char szIPAddress[100];
 
     szIPAddress[0] = 0;
     while( g_szDeviceName[i][0] != 0 ) {

@@ -57,6 +57,8 @@ struct SRxLOBHeader
 #ifndef SRxLOBData_STRUCT
 #define SRxLOBData_STRUCT
 struct SRxLOBData {
+    unsigned int uiPDWID;
+
 	unsigned int uiLOBID;
 	unsigned int uiABTID;
 	unsigned int uiAETID;

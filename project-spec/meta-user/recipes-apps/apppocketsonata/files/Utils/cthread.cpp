@@ -161,6 +161,8 @@ CThread::~CThread()
     }
     
 #elif defined(_MSC_VER)    
+    QMsgSnd( enTHREAD_EXIT );
+
     //delete m_pTheMessageQueue;
 
     if(m_hEvent != 0 ) {
@@ -370,7 +372,8 @@ void CThread::Stop()
 
             hThread = m_MainThread.m_hThread;
             m_MainThread.m_hThread = NULL;
-            TerminateThread( hThread, DWORD(-1));
+            TerminateThread( hThread, 0 ); //DWORD(-1));
+            //ExitThread( 0 );            
 
             -- m_iCoThread;
         }
@@ -631,9 +634,11 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     sndMsg.mtype = 1;
 #endif
     
+    // 1. OPCODE 저장
     sndMsg.uiOpCode = uiOpCode;
     sndMsg.iSocket = 0;
 
+    // 2. 데이터 저장
     if( pData != NULL ) {
    		sndMsg.uiDataLength = uiDataLength;
         memcpy( sndMsg.x.szData, pData, sizeof(char)*sndMsg.uiDataLength );
@@ -642,6 +647,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     	sndMsg.uiDataLength = 0;
     }
 
+    // 3. 추가 데이터 저장
     if( pArrayMsgData != NULL ) {
         //Lock();
 
@@ -727,6 +733,23 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 #endif
 
 }
+
+// void CThread::QWaitMsgUntillEmpty()
+// {
+// #ifdef __linux__
+// 
+// 
+// #elif _MSC_VER
+//     Lock();
+//     m_queue.clear();
+//     UnLock();
+// 
+//     //TRACE( "\nQueue Clear..." );
+// 
+// #elif __VXWORKS__   
+// 
+// #endif
+// }
 
 /**
  * @brief		SendTaskMngr

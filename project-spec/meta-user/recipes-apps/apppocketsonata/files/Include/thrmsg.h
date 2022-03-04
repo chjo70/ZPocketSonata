@@ -77,6 +77,8 @@ enum enTHREAD_REQ_MESSAGE {
     //
     enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,
 
+    enTHREAD_EXIT,
+
 
 } ;
 

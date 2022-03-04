@@ -1609,7 +1609,7 @@ int CMIDASBlueFileFormat::MakeSubRecords()
         memcpy( pSubrecords->name, buffer , strlen(buffer) );
         _PUT_ARRAY_VALUE( pSubrecords->name, c, 0x20 );
 
-#ifdef _VXWORKS_
+#ifdef __VXWORKS__
         // 최소 값
         memset( pSubrecords->minval, 0x20, sizeof( pSubrecords->minval ) );
         //c = sprintf( & pSubrecords->minval[0], stSubrecordFormat[i], m_MinMaxOfSubrecords[i].fMinVal );

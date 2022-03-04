@@ -317,7 +317,7 @@ void CLog::LogMsg( int nType, const char *fmt, ... )
     va_end( args );
 
     //char *pTemp = UTF8ToANSI( szLogString );
-    LOGMSG( nType, szLogString );
+    LOGMSG( nType, (const char *) szLogString );
     //delete pTemp;
 
 }

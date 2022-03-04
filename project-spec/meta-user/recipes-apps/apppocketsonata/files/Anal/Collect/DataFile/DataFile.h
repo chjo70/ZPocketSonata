@@ -1406,7 +1406,8 @@ public:
      * @param iTOA
      * @return
      */
-    static _TOA EncodeTOAus( _TOA iTOA  ) {
+    static _TOA EncodeTOAus( _TOA iTOA  )
+    {
         _TOA iretTOA;
 
         iretTOA = (_TOA) ( ( ( (float) iTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
@@ -1422,7 +1423,8 @@ public:
      * @date      2022/01/09 12:59:01
      * @warning   
      */
-    static _TOA EncodeTOAus( float fTOA  ) {
+    static _TOA EncodeTOAus( float fTOA  )
+    {
         _TOA iretTOA;
 
         iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );

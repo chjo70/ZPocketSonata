@@ -62,7 +62,7 @@
 
 using namespace std;
 
-// Main() 함수에 아래를 정의한다.
+// Main() 함수에 아래2가지를 정의해야 한다.
 #define _MAIN_
 #define _MAIN_GLOBALS_
 
@@ -328,6 +328,7 @@ void End()
 
     //delete g_pTheZYNQSocket;
     // 
+
     _SAFE_DELETE( g_pTheUserCollect );
 
     _SAFE_DELETE( g_pTheEmitterMerge );

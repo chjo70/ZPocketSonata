@@ -17,6 +17,8 @@ private:
     CSysPara *m_pTheSysPara;
     CNewSigAnal *m_pTheNewSigAnal;
 
+    STR_PDWDATA m_PDWData;
+
 public:
     STR_MessageData *m_pMsg;
 
@@ -25,6 +27,8 @@ public:
     virtual ~CDetectAnalysis(void);
 
     void Run( key_t key=IPC_PRIVATE );
+
+    void MakePDWData();
 
     virtual void _routine();
     virtual const char *GetThreadName() { return m_szThreadName; }

@@ -1318,6 +1318,7 @@ void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
+    pLOBData->uiPDWID = GetPDWID();
 
     pLOBData->uiLOBID = m_CoLOB + 1;
     pLOBData->uiABTID = 0;

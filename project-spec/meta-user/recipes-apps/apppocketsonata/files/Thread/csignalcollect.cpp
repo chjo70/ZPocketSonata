@@ -303,9 +303,9 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
 
     pWindowCell->bUse = true;
 
-    pWindowCell->uiMaxCoPDW = 250;
+    pWindowCell->uiMaxCoPDW = 100; //250;
     pWindowCell->uiMaxCollectTimesec = 10;
-    pWindowCell->uiMaxCollectTimems = 500;
+    pWindowCell->uiMaxCollectTimems = 100;
 
     pWindowCell->strAoa.iLow = IAOACNV( 0 );
     pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
@@ -379,7 +379,8 @@ void CSignalCollect::AnalysisStart()
 
             if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
                 strCollectInfo.uiCh = iCh;
-                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+                MakeStaticPDWData( pCollectBank->GetPDWData() );
+                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, & m_stPDWData, sizeof(STR_STATIC_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
             }
 
             // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
@@ -863,8 +864,13 @@ void CSignalCollect::CloseScanWindowCell()
 }
 
 /**
- * @brief CSignalCollect::NewTrackWindowCell
- * @param pABTData
+ * @brief		NewScanWindowCell
+ * @param		SRxABTData * pABTData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/03/02 12:00:14
+ * @warning		
  */
 void CSignalCollect::NewScanWindowCell( SRxABTData *pABTData )
 {
@@ -961,5 +967,66 @@ void CSignalCollect::UpdateScanWindowCell( SRxABTData *pABTData )
     CalScanWindowCell( & strWindowCell, pABTData );
 
     GetCollectBank( m_pMsg->x.strAnalInfo.uiCh )->UpdateWindowCell( & strWindowCell );
+
+}
+
+/**
+ * @brief     MakeStaticPDWData
+ * @param     STR_PDWDATA * pPDWData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-03, 14:08
+ * @warning
+ */
+void CSignalCollect::MakeStaticPDWData( STR_PDWDATA *pPDWData )
+{
+    unsigned int i, uiTotalPDW;
+
+    _PDW *pPDWSrc, *pPDWDest;
+
+    // 헤더 복사
+    memcpy( & m_stPDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
+
+    // 데이터 복사
+    pPDWSrc = pPDWData->pstPDW;
+    pPDWDest = & m_stPDWData.stPDW[0];
+    uiTotalPDW = pPDWData->GetTotalPDW();    
+    for( i=0 ; i < uiTotalPDW ; ++i ) {
+        pPDWDest->ullTOA = pPDWSrc->ullTOA;
+
+        pPDWDest->iPulseType = pPDWSrc->iPulseType;
+
+        pPDWDest->uiAOA = pPDWSrc->uiAOA;
+        pPDWDest->uiFreq = pPDWSrc->uiFreq;
+        pPDWDest->uiPA = pPDWSrc->uiPA;
+        pPDWDest->uiPW = pPDWSrc->uiPW;
+
+        pPDWDest->iPFTag = pPDWSrc->iPFTag;
+
+#if defined(_ELINT_)
+        pPDWDest->fPh1 = pPDWSrc->fPh1;
+        pPDWDest->fPh2 = pPDWSrc->fPh2;
+        pPDWDest->fPh3 = pPDWSrc->fPh3;
+        pPDWDest->fPh4 = pPDWSrc->fPh4;
+
+#elif defined(_XBAND_)
+        pPDWDest->fPh1 = pPDWSrc->fPh1;
+        pPDWDest->fPh2 = pPDWSrc->fPh2;
+        pPDWDest->fPh3 = pPDWSrc->fPh3;
+        pPDWDest->fPh4 = pPDWSrc->fPh4;
+        pPDWDest->fPh5 = pPDWSrc->fPh5;
+
+#elif _POCKETSONATA_
+        pPDWDest->iPMOP = pPDWSrc->iPMOP;
+        pPDWDest->iFMOP = pPDWSrc->iFMOP;
+        pPDWDest->iChannel = pPDWSrc->iChannel;
+
+#endif
+
+        ++ pPDWSrc;
+        ++ pPDWDest;
+    }
 
 }

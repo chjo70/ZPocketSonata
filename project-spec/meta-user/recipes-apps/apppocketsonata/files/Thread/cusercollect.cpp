@@ -228,7 +228,7 @@ void CUserCollect::ColStart()
 
     pdw_reg_t s_pdw_reg_t;
 
-    uint32_t DataCount = PDW_GATHER_SIZE;
+    uint32_t DataCount = (UINT) PDW_GATHER_SIZE;
     uint32_t DumpLen;
 
     pUIO = CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);

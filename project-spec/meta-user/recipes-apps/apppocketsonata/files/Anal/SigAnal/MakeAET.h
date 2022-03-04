@@ -138,6 +138,7 @@ public:
 
     //##ModelId=452B0C560068
     //virtual void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )=0;
+    virtual unsigned int GetPDWID()=0;
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
     virtual SRxLOBData *GetLOBData( int index=0 )=0;

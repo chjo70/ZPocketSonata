@@ -134,7 +134,7 @@ void _ShowProgramTitle( void )
 			pDebug = pDebug + i;
 			memcpy( str1, pDebug->_date, sizeof( __DATE__ ) );
 			memcpy( str2, pDebug->_time, sizeof( __TIME__ ) );
-#ifndef _VXWORKS_
+#ifndef __VXWORKS__
 			printf( "\n  Prc[%d] Compile Date[%s" , i, str1 );
 			printf( ", %s]" , str2 );
 #endif

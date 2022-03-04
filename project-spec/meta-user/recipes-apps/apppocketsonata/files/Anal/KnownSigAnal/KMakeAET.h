@@ -105,6 +105,8 @@ public:
 
 	void GetCollectTime( struct timespec *pTimeSpec );
 
+    inline unsigned int GetPDWID() { return (UINT) -1; }
+
      //template <typename T>
      //UINT CheckHarmonic(float mean1, float mean2, float priThreshold );
 
@@ -144,8 +146,6 @@ public:
             exp_pri_min = UMUL( fdiv_jitter_ratio, pPri1->fPRIMin );
             exp_pri_max = UMUL( fdiv_jitter_ratio, pPri1->fPRIMax );
         }
-
-
 
         return 0;
     }

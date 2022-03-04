@@ -36,8 +36,8 @@ extern ENUM_UnitType g_enUnitType;
 
 
 #ifndef _TOA_
-#ifdef _VXWORKS_
-typedef unsigned long long _TOA;
+#ifdef __VXWORKS__
+typedef unsigned long long int _TOA;
 #else
 typedef unsigned long long int _TOA;
 #endif
@@ -317,7 +317,7 @@ struct TNEW_SPDW
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 struct _PDW {
-    unsigned long long int ullTOA;
+    _TOA ullTOA;
 
     int iPulseType;
 
@@ -347,7 +347,7 @@ struct _PDW {
 
     int iChannel;
 
-#endif      // _GRAPH
+#endif
 
     _TOA GetTOA() {
         return ullTOA;
@@ -678,6 +678,7 @@ typedef struct {
 } POCKETSONATA_HEADER ;
 #endif
 
+
 #ifndef _SONATA_HEADER_
 #define _SONATA_HEADER_
 typedef struct {
@@ -728,6 +729,10 @@ typedef union {
             uiTotalPDW = so.stCommon.uiTotalPDW;
             break;
 
+        default:
+            uiTotalPDW = 0;
+            break;
+
         }
         return uiTotalPDW;
 
@@ -750,12 +755,17 @@ typedef union {
             iBoardID = -1;
             break;
 
+        default:
+            iBoardID = -1;
+            break;
+
         }
         return iBoardID;
     }
 
 } UNION_HEADER;
 #endif
+
 
 #ifndef _STR_PDWDATA
 #define _STR_PDWDATA
@@ -764,20 +774,41 @@ struct STR_PDWDATA {
 
     _PDW *pstPDW;
 
+    /**
+     * @brief     GetHeader
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     unsigned int GetHeader() {
         unsigned int uiHeader;
 
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         uiHeader = sizeof( POCKETSONATA_HEADER );
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         uiHeader = sizeof( STR_ELINT_HEADER );
-#else
+        }
+        else {
         uiHeader = sizeof( SONATA_HEADER );
-#endif
+        }
+
         return uiHeader;
 
     }
 
+    /**
+     * @brief     GetTotalPDW
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     unsigned int GetTotalPDW() {
         unsigned int uiTotalPDW;
 
@@ -795,79 +826,178 @@ struct STR_PDWDATA {
 
     }
 
+    /**
+     * @brief     SetTotalPDW
+     * @param     unsigned int uiTotalPDW
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     void SetTotalPDW( unsigned int uiTotalPDW ) {
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         x.ps.stCommon.uiTotalPDW = uiTotalPDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         x.el.stCommon.uiTotalPDW = uiTotalPDW;;
-#else
+        }
+        else {
         x.so.stCommon.uiTotalPDW = uiTotalPDW;;
-#endif
+        }
+
         return;
 
     }
 
+    /**
+     * @brief     SetColTime
+     * @param     __time32_t tColTime
+     * @param     UINT uiColTimeMs
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
 
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         x.ps.stCommon.tColTime = tColTime;
         x.ps.stCommon.uiColTimeMs = uiColTimeMs;
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         x.el.stCommon.tColTime = tColTime;
         x.el.stCommon.uiColTimeMs = uiColTimeMs;
-#else
+        }
+        else {
         x.so.stCommon.tColTime = tColTime;
         x.so.stCommon.uiColTimeMs = uiColTimeMs;
-#endif
+        }
         return;
 
     }
 
+    /**
+     * @brief     GetColTime
+     * @return    __time32_t
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     __time32_t GetColTime() {
         __time32_t retTime;
 
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         retTime = x.ps.stCommon.tColTime;
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         retTime = x.el.stCommon.tColTime;
-#else
+        }
+        else {
         retTime = x.so.stCommon.tColTime;
-#endif
+        }
+
         return retTime;
 
     }
 
+    /**
+     * @brief     GetStorePDW
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     int GetStorePDW() {
         int iStorePDW;
 
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         iStorePDW = x.ps.iIsStorePDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         iStorePDW = x.el.iIsStorePDW;
-#else
+        }
+        else {
         iStorePDW = x.so.iIsStorePDW;
-#endif
+        }
+
         return iStorePDW;
 
     }
 
+    /**
+     * @brief     GetBandWidth
+     * @return    ENUM_BANDWIDTH
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     ENUM_BANDWIDTH GetBandWidth()
     {
         ENUM_BANDWIDTH enBandwidth;
 
-#ifdef _POCKETSONATA_
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
         enBandwidth = enUnknown_BW;
-#elif defined(_ELINT_) || defined(_XBAND_)
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
         enBandwidth = x.el.enBandWidth;
-#else
+        }
+        else {
         enBandwidth = enUnknown_BW;
-#endif
+        }
+
         return enBandwidth;
     }
 
+}  ;
+
+
+#ifndef _STR_STATIC_PDWDATA
+#define _STR_STATIC_PDWDATA
+struct STR_STATIC_PDWDATA {
+    UNION_HEADER x;
+
+    _PDW stPDW[MAX_PDW];
+
+    /**
+     * @brief     GetTotalPDW
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
+    unsigned int GetTotalPDW() {
+        unsigned int uiTotalPDW;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            uiTotalPDW = x.el.stCommon.uiTotalPDW;
+        }
+        else {
+            uiTotalPDW = x.so.stCommon.uiTotalPDW;
+        }
+
+        return uiTotalPDW;
+
+    }
 
 
 }  ;
+
+#endif  // _STR_STATIC_PDWDATA
 
 #endif
 

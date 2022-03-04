@@ -164,7 +164,7 @@ void CEmitterMerge::MergeEmitter()
     LOGENTRY;
 
     int i;
-    bool bMerge, bTrkLOB=false;
+    bool bMerge, bReqTrack, bTrkLOB=false;
 
     STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
@@ -201,15 +201,14 @@ void CEmitterMerge::MergeEmitter()
         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        if( !m_bScanInfo && ( bMerge == false || strAnalInfo.uiAETID != _spZero || (m_pTheEmitterMergeMngr->GetABTExtData())->enBeamEmitterStat == E_ES_REACTIVATED ) ) {
-#ifdef _TRACK_ENABLED_
+        bReqTrack = m_pTheEmitterMergeMngr->ManageTrack( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
+        if( bReqTrack == true ) {
             strAnalInfo.uiBand = g_enBoardId;
-            strAnalInfo.uiCh = ( bMerge == true ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
+            strAnalInfo.uiCh = ( CCommonUtils::GetEnumCollectBank(m_pMsg->x.strAnalInfo.uiCh) == enTrackCollectBank ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-#endif
         }
 
         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
@@ -468,3 +467,5 @@ void CEmitterMerge::SetStartOfAnalScan()
 {
     m_pTheEmitterMergeMngr->SetStartOfAnalScan();
 }
+
+

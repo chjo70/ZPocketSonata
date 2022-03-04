@@ -30,6 +30,8 @@ private:
 #else
 #endif
 
+    STR_STATIC_PDWDATA m_stPDWData;
+
     CDataFile m_theDataFile;
 
     UNI_LAN_DATA m_uniLanData;
@@ -113,9 +115,12 @@ public:
     CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
 #endif
 
+    
     virtual ~CSignalCollect(void);
 
     void Run( key_t key=IPC_PRIVATE );
+    void MakeStaticPDWData( STR_PDWDATA *pPDWData );
+
     virtual void _routine();
     virtual const char *GetThreadName() { return m_szThreadName; }
 

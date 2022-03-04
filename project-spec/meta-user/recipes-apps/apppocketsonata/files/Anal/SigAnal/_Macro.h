@@ -58,7 +58,7 @@ enum ENUM_BoardID {
 
 
 #define _SAFE_MALLOC(A, B, C )  if( A == NULL ) { \
-                                    A = ( B * ) malloc( C ); \
+                                    A = ( B * ) malloc( (unsigned int) C ); \
                                     if( A == NULL ) { \
                                         TRACE( "malloc error new memory[%s]" , #A ); \
                                     } \

@@ -404,3 +404,17 @@ char *CNMakeAET::GetTaskID()
 }
 
 #endif
+
+/**
+ * @brief     GetPDWID
+ * @return    unsigned int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-02, 14:45
+ * @warning
+ */
+unsigned int CNMakeAET::GetPDWID() 
+{ 
+    return m_pNewSigAnal->GetPDWID(); 
+}

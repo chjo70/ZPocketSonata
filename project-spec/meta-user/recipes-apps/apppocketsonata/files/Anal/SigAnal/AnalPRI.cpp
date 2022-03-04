@@ -632,7 +632,7 @@ void CAnalPRI::GroupingStagger( BOOL fDecisionEmitter )
 				// 스태거 펄스열이면 병합된 PRI 값을 대충 파악해 본다. 
 				priMean = VerifyPRI( pEmitter->pdw.pIndex, pEmitter->pdw.uiCount );
 				priLow = m_pSeg[ pEmitter->seg_idx[0] ].pri.max;
-				priHgh = pEmitter->pri.max = 0;
+                _EQUALS3( priHgh, pEmitter->pri.max, 0 );
 				for( k=0 ; k < pEmitter->uiCoSeg ; ++k ) {
 					pSeg = & m_pSeg[ pEmitter->seg_idx[k] ];
 					priLow = _min( priLow, pSeg->pri.min );
@@ -5798,7 +5798,8 @@ void CAnalPRI::MergePdwIndexInEmitter(STR_EMITTER *pEmitter)
     pMergePdwIndex = m_pMergePdwIndex;
     for( i=0 ; i < m_uiMaxPdw ; ++i ) {
         if( *pMergePdwIndex++ == 1 ) {
-            *(pEmitterPdwIndex+count) = (UINT)i;
+            //*(pEmitterPdwIndex+count) = (UINT)i;
+            *pEmitterPdwIndex++ = (UINT)i;
             ++ count;
         }
     }
@@ -6012,12 +6013,16 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     UINT uiFreqBin = 0;
     PDWINDEX Idx = 0;
 
+    PDWINDEX *pIndex;
+
     band = (int) m_pBAND[pEmitter->pdw.pIndex[0]];
     fResol = gFreqRes[band+1].fRes;
 
     /// 주파수 히스토그램을 생성한다.
+    pIndex = pEmitter->pdw.pIndex;
     for( i=0 ; i < pEmitter->pdw.uiCount ; i++ ) {
-        Idx = *(pEmitter->pdw.pIndex+i);
+        //Idx = *(pEmitter->pdw.pIndex+i);
+        Idx = *pEmitter->pdw.pIndex++;
         uiFreqBin = (UINT)((float) m_pFREQ[Idx] * fResol / (float)FREQ_BIN_WIDTH);
 
         if (uiFreqBin < FREQ_BIN) {
@@ -6182,7 +6187,7 @@ void CAnalPRI::SetHoppingInfo(STR_EMITTER *pEmitter)
     // 추출한 호핑 레벨의 평균 주파수값을 계산한다.
     for (i = 0; i < m_HoppingData.pt_count; i++)
     {
-        uiFreqSum = uiFreqAvg = 0;
+        _EQUALS3( uiFreqSum, uiFreqAvg, 0 );        
         for (j = 0; j < m_HoppingData.pt_pdw_count[i]; j++)
         {
             uiFreqSum += m_pFREQ[m_HoppingData.pt_pdw_idx[i][j]];

@@ -283,7 +283,7 @@ bool CRawFile::FileOpen( char *filename, int iMode )
  * @date      2013-07-18 오후 7:45 
  * @warning   
  */
-unsigned int CRawFile::Write( void *pData, int c_size )
+unsigned int CRawFile::Write( void *pData, unsigned int c_size )
 {
     int iWrite;
 	unsigned int uiWrite=0;
@@ -310,21 +310,23 @@ unsigned int CRawFile::Write( void *pData, int c_size )
  * @date		2021/01/06 10:05:06
  * @warning		
  */
-unsigned int CRawFile::Read( void *pData, int c_size, int iOffset )
+unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
 {
-	unsigned int uiRead;
+	unsigned int uiRead=0;
     int iRead;
 
     if( m_fid != 0 && iOffset != 0 ) { 
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
+    if( pData != NULL ) {
 	iRead = _read( m_fid, (char *) pData, c_size );
     if( iRead < 0 ) {
         uiRead = 0;
     }
     else {
         uiRead = iRead;
+        }
     }
 
 	return uiRead;

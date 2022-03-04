@@ -49,7 +49,7 @@ public:
 private:
     int m_nSeqNum;
     LONG m_lOpInitID;
-    int m_iPDWID;
+    unsigned int m_uiPDWID;
 
     bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
@@ -140,7 +140,6 @@ public:
     inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
 
-    
     inline void SetStep( UINT nStep ) { m_uiStep = nStep; }
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
     inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
@@ -171,6 +170,8 @@ public:
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline void NextSeqNum() { ++ m_nSeqNum; }
+    inline void NextPDWID() { ++ m_uiPDWID; }
+    inline unsigned int GetPDWID() { return m_uiPDWID; }
 
     // 기타 함수
     void SaveRemainedPdwFile();

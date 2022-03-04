@@ -225,11 +225,8 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	int nLob;
 	double *pLatitude, *pLongitude, *pLob;
 
-	//SRxABTData stABTData;
-
     SELPE_RESULT stSELPE_RESULT;
 
-	//std::vector<STR_LOBS>::pointer ppVecLOB;
     std::vector<STR_LOBS>::iterator iter;
 
 	// 1. 센서 좌표에 대한 메모리 할당
@@ -241,7 +238,10 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	pLongitude = m_Sensor.pLongitude;
 	pLob = m_Sensor.pLob;
 	iter = pVecLOB->end();
+
+    if( nLob >= 2 ) {
     -- iter;
+
 	for( UINT i=0 ; i < m_Sensor.n ; ++i ) {
 		*pLatitude = (double) (*iter).fLatitude;
 		*pLongitude = (double) (*iter).fLongitude;
@@ -252,6 +252,7 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 		++ pLob;
 
 		-- iter;
+        }
 
 	}
 

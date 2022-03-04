@@ -248,11 +248,12 @@ done:
 
     return result;
 
-#elif _VXWORKS_
+#elif __VXWORKS__
     __int64 result;
 
     result = ( operant * multiplier ) / divider;
-    printf( "\n [%I64d] X [%I64d] / [%I64d] = [%I64d]" , operant, multiplier, divider );
+//     printf( "\n [0x%08x%08x] X [0x%08x%08x] / [0x%08x%08x] = [0x%08x%08x]" , (UINT32) (operant>>32), (UINT32) (operant&0xFFFFFFFF), (UINT32) (multiplier>>32), (UINT32) (multiplier&0xFFFFFFFF), \
+//         (UINT32) (divider>>32), (UINT32) (divider&0xFFFFFFFF), (UINT32) (result>>32), (UINT32) (result&0xFFFFFFFF) );
 
     return result;
 
@@ -444,7 +445,7 @@ done:
 
 #elif __linux__
 
-#elif _VXWORKS_
+#elif __VXWORKS__
 
 #else
 	

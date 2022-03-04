@@ -629,10 +629,8 @@ void CXPDW::Init( const char *pRawData )
 {
     UNION_HEADER *puniPDWFileHeader;
 
-    memset( & m_PDWData, 0, sizeof(UNION_HEADER) );
-    memset( & m_PDWRealData, 0, sizeof(STR_PDWREALDATA) );
-    FreeData();
-    FreeRealData();
+    //FreeData();
+    //FreeRealData();
 
     m_pRawHeaderBuffer = (char *) & pRawData[0];
     m_pRawDataBuffer = (char *) & pRawData[sizeof(UNION_HEADER)];
@@ -983,7 +981,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             ( m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW ) &&
             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
             if( bFirstTOA ) {
-                ullPreTOA = ullFirstTOA = ullTOA;
+                _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA );
 
                 bFirstTOA = false;
             }
@@ -1444,8 +1442,6 @@ void CPOCKETSONATAPDW::Init( const char *pRawData )
 {
     UNION_HEADER *puniPDWFileHeader;
 
-    memset( & m_PDWData, 0, sizeof(STR_PDWDATA) );
-
     m_pRawHeaderBuffer = (char *) & pRawData[0];
     m_pRawDataBuffer = (char *) & pRawData[sizeof(UNION_HEADER)];
 
@@ -1691,10 +1687,13 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
  */
 unsigned int CPOCKETSONATAPDW::GetHeaderSize()
 {
-    if( m_iHeaderSize == -1 ) {
+    if( m_iHeaderSize == -1 && m_pRawHeaderBuffer != NULL ) {
         memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
         m_iHeaderSize = sizeof(POCKETSONATA_HEADER);
+    }
+    else {
+        m_iHeaderSize = 0;
     }
 
 	return m_iHeaderSize;
@@ -1895,8 +1894,6 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWData )
 //////////////////////////////////////////////////////////////////////////
 C7PDW::C7PDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 {
-
-    memset( & m_PDWData, 0, sizeof(STR_PDWREALDATA) );
 
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_701;
@@ -2646,7 +2643,6 @@ CMIDAS::CMIDAS(STR_RAWDATA *pRawData) : CData(  )
 	//Alloc( IQ_ITEMS );
 	m_pSubRecords = NULL;
 
-	memset( & m_PDWData, 0, sizeof(STR_PDWREALDATA) );
 }
 
 /**
@@ -3159,8 +3155,21 @@ CData::CData()
 
     m_uiTotalDataItems = 0;
 
-    memset( & m_PDWData, 0, sizeof(STR_PDWDATA) );
-    memset( & m_PDWRealData, 0, sizeof(STR_PDWREALDATA) );
+    //
+    memset( & m_PDWData.x, 0, sizeof(UNION_HEADER) );
+    m_PDWData.pstPDW = NULL;
+
+    //
+    m_PDWRealData.uiDataItems = 0;
+    m_PDWRealData.pullTOA = NULL;
+    m_PDWRealData.pfAOA = NULL;
+    m_PDWRealData.pfFreq = NULL;
+    m_PDWRealData.pfPA = NULL;
+    m_PDWRealData.pfPW = NULL;
+    m_PDWRealData.pfTOA = NULL;
+    m_PDWRealData.pfDTOA = NULL;
+    m_PDWRealData.pcType = NULL;
+    m_PDWRealData.pcDV = NULL;
 
 	ClearFilterSetup();
 
@@ -3254,6 +3263,8 @@ void CData::Alloc( unsigned int uiItems )
  */
 void CData::AllocData( unsigned int uiItems )
 {
+    FreeData();
+
     _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * uiItems )
 
 }
@@ -3269,6 +3280,8 @@ void CData::AllocData( unsigned int uiItems )
  */
 void CData::AllocRealData( unsigned int uiItems )
 {
+    FreeRealData();
+
     _SAFE_MALLOC( m_PDWRealData.pfAOA, float, sizeof(float) * uiItems )
     _SAFE_MALLOC( m_PDWRealData.pfFreq, float, sizeof(float) * uiItems );
     _SAFE_MALLOC( m_PDWRealData.pfPW, float, sizeof(float) * uiItems );
@@ -3519,7 +3532,9 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
         MakeHeaderData( & m_PDWData  );
 
         AllocData( m_PDWData.GetTotalPDW() );
+        if( m_PDWData.pstPDW != NULL ) {
         memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
+        }
         break;
 
     case enPDWToReal :
@@ -3892,7 +3907,7 @@ unsigned int CDataFile::GetDataItems( CData *pData )
  */
 CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
-    char *pTempData;
+    char *pTempData=NULL;
     unsigned int uiFileSize;
     unsigned long long int ullFileSize;
 
@@ -3904,16 +3919,17 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
         uiFileSize = (unsigned int) ullFileSize;
     }
 
-    pTempData = (char *) malloc( uiFileSize );
+    //pTempData = (char *) malloc( uiFileSize );
+    _SAFE_MALLOC( pTempData, char, uiFileSize );
 
-    if( m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
+    if( pTempData != NULL && m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
         m_RawDataFile.Read( pTempData, uiFileSize );
         ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption );
         //m_RawDataFile.FileClose();
     }
 
     m_RawDataFile.FileClose();
-    free( pTempData );
+    _SAFE_FREE( pTempData );
 
     return m_pData;
 

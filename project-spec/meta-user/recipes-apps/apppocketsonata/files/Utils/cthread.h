@@ -453,7 +453,7 @@ public:
 #ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Lock();
-#elif _VXWORKS_
+#elif __VXWORKS__
         printf( "\n set up lock()...");
 #else
         std::unique_lock<std::mutex> lk(m_mutex);
@@ -468,7 +468,7 @@ public:
 #ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Unlock();
-#elif _VXWORKS_
+#elif __VXWORKS__
         printf( "\n set up unlock()...");
 #else
 

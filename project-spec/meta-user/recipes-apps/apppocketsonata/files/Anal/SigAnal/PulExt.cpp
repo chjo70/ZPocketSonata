@@ -339,7 +339,7 @@ void CPulExt::DiscardPulseTrain()
 //     DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg );
 
 	// Stable 열과 Stable 열을 펄스열을 비교하여 서로 유사한 펄스열을 제거한다.
-	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, -1 );
+	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, (UINT) -1 );
 
 	// Stable 열과 Stable+Jitter 펄스열을 비교하여 서로 유사한 펄스열을 제거한다.
 	DiscardPulseTrain( m_uiRefStartSeg, m_uiRefEndSeg, m_uiRefEndSeg );
@@ -364,13 +364,13 @@ void CPulExt::DiscardPulseTrain()
 //! \date		 2006-05-19 09:23:05
 //! \warning
 //
-void CPulExt::DiscardPulseTrain( int startseg, int endseg, int startseg2 )
+void CPulExt::DiscardPulseTrain( unsigned int startseg, unsigned int endseg, unsigned int startseg2 )
 {
 	if( startseg == endseg )
 	{
 	}
 	else {
-		int i;
+		unsigned int i;
         unsigned int j, k, endseg2;
 		int coMatch;
 
@@ -1044,11 +1044,11 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
             if( flagMargin == FALSE ) {
                 if( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL ) {
                     margin.iLow = 0;
-					if( pPriRange->max_pri > ITOAusCNV((_TOA) 10 ) ) {		
+					if( pPriRange->max_pri > ITOAusCNV( (_TOA) 10) ) {		
 						margin.iHgh = STABLE_MARGIN;
 					}
 					else {
-						margin.iHgh = ITOAusCNV( (_TOA) 0.1 );
+						margin.iHgh = ITOAusCNV( (float) 0.1 );
 					}
                 }
                 else {

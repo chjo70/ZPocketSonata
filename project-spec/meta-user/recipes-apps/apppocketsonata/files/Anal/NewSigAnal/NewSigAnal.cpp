@@ -386,6 +386,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
+    NextPDWID();
 
 }
 
@@ -857,6 +858,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     GetCollectTime( & tiNow );
     pstTime = localtime( & tiNow.tv_sec );
 
+    if( pstTime != NULL ) {
     // 1. 폴더명 생성하기
     strftime( buffer, 100, "%Y-%m-%d", pstTime );
 #if defined(_ELINT_)
@@ -882,6 +884,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 #if defined(_ELINT_) || defined(_XBAND_)
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
+
 #elif _POCKETSONATA_
         sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
         sprintf( szRawDataPathname, "%s/%s", szDirectory, m_szRawDataFilename );
@@ -906,6 +909,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
         m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData );
 
 
+    }
     }
 
 }
@@ -1032,13 +1036,13 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 void CNewSigAnal::InitDataFromDB()
 {
 
-    m_lOpInitID = 0;
-    m_nSeqNum = 0;
-    m_iPDWID = 0;
+    m_lOpInitID = _spOne;
+    m_nSeqNum = _spOne;
+    m_uiPDWID = _spOne;
 
 #ifdef _MSSQL_
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
 	char buffer[400];
 
     sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );

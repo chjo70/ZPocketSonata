@@ -324,7 +324,7 @@ typedef unsigned int INT32;
 // 
 // #endif
 // 
-// #ifdef _VXWORKS_
+// #ifdef __VXWORKS__
 // #define bool unsigned int
 // 
 // #else

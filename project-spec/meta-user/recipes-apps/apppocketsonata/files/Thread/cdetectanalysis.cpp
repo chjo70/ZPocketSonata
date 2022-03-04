@@ -34,15 +34,8 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
         LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
     }
 
-// #define N       (10)
-//     while( true ) {
-//         SRxLOBData stSRxLOBData;
-// 
-//         stSRxLOBData.iSignalType = 0;
-//         stSRxLOBData.iFreqType = 0;
-//         stSRxLOBData.iPRIType = 0;
-//         m_pTheNewSigAnal->DISP_FineAet( & stSRxLOBData );
-//     }
+    m_PDWData.pstPDW = NULL;
+    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW );
 
 }
 
@@ -56,6 +49,8 @@ CDetectAnalysis::~CDetectAnalysis(void)
 
     delete m_pTheSysPara;
     m_pTheSysPara = NULL;
+
+    _SAFE_FREE( m_PDWData.pstPDW );
 }
 
 
@@ -91,6 +86,7 @@ void CDetectAnalysis::_routine()
         else {
         switch( m_pMsg->uiOpCode ) {
             case enTHREAD_DETECTANAL_START :
+                MakePDWData();
                 AnalysisStart();
                 break;
 
@@ -123,7 +119,7 @@ void CDetectAnalysis::AnalysisStart()
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 탐지 신호 분석을 호출한다.
-    m_pTheNewSigAnal->Start( ( STR_PDWDATA *) GetRecvData() );
+    m_pTheNewSigAnal->Start( & m_PDWData );
     //SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
@@ -141,3 +137,67 @@ void CDetectAnalysis::AnalysisStart()
 
 }
 
+/**
+ * @brief     MakePDWData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-03, 14:51
+ * @warning
+ */
+void CDetectAnalysis::MakePDWData()
+{
+    unsigned int i, uiTotalPDW;
+
+    STR_STATIC_PDWDATA *pStaticPDWData; 
+
+    _PDW *pPDWSrc, *pPDWDest;
+    
+    pStaticPDWData = ( STR_STATIC_PDWDATA * ) GetRecvData();
+
+    // 헤더 복사
+    memcpy( & m_PDWData.x, & pStaticPDWData->x, sizeof(UNION_HEADER) );
+
+    // 데이터 복사
+    pPDWSrc = & pStaticPDWData->stPDW[0];
+    pPDWDest = & m_PDWData.pstPDW[0];
+    uiTotalPDW = pStaticPDWData->GetTotalPDW();    
+    for( i=0 ; i < uiTotalPDW ; ++i ) {
+        pPDWDest->ullTOA = pPDWSrc->ullTOA;
+
+        pPDWDest->iPulseType = pPDWSrc->iPulseType;
+
+        pPDWDest->uiAOA = pPDWSrc->uiAOA;
+        pPDWDest->uiFreq = pPDWSrc->uiFreq;
+        pPDWDest->uiPA = pPDWSrc->uiPA;
+        pPDWDest->uiPW = pPDWSrc->uiPW;
+
+        pPDWDest->iPFTag = pPDWSrc->iPFTag;
+
+#if defined(_ELINT_)
+        pPDWDest->fPh1 = pPDWSrc->fPh1;
+        pPDWDest->fPh2 = pPDWSrc->fPh2;
+        pPDWDest->fPh3 = pPDWSrc->fPh3;
+        pPDWDest->fPh4 = pPDWSrc->fPh4;
+
+#elif defined(_XBAND_)
+        pPDWDest->fPh1 = pPDWSrc->fPh1;
+        pPDWDest->fPh2 = pPDWSrc->fPh2;
+        pPDWDest->fPh3 = pPDWSrc->fPh3;
+        pPDWDest->fPh4 = pPDWSrc->fPh4;
+        pPDWDest->fPh5 = pPDWSrc->fPh5;
+
+#elif _POCKETSONATA_
+        pPDWDest->iPMOP = pPDWSrc->iPMOP;
+        pPDWDest->iFMOP = pPDWSrc->iFMOP;
+        pPDWDest->iChannel = pPDWSrc->iChannel;
+
+#endif
+
+        ++ pPDWSrc;
+        ++ pPDWDest;
+    }
+
+
+}

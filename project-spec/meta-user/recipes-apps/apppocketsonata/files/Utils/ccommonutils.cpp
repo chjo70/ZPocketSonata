@@ -507,14 +507,18 @@ ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( unsigned int uiCh )
 {
     ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
 
-    if( uiCh < DETECT_CHANNEL )
+    if( uiCh < DETECT_CHANNEL ) {
         enCollectBank = enDetectCollectBank;
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
+    }
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL ) {
         enCollectBank = enTrackCollectBank;
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+    }
+    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL ) {
         enCollectBank = enScanCollectBank;
-    else
+    }
+    else {
         enCollectBank = enUserCollectBank;
+    }
 
     return enCollectBank;
 }

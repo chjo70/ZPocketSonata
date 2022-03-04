@@ -75,7 +75,7 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 
     m_bDBThread = bDBThread;
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     m_lOpInitID = 0;
 #else
 
@@ -236,7 +236,6 @@ void CELEmitterMergeMngr::AllocMemory()
     m_VecLOBData.reserve( 100 );
     m_VecABTData.reserve( 100 );
     m_VecAETData.reserve( 100 );
-    WhereIs;
 
 }
 
@@ -390,7 +389,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     SetScanInfo( bScanInfo );
 
-#ifdef _VXWORKS_
+#ifdef __VXWORKS__
 
 #else
 #ifdef _POCKETSONATA_
@@ -4048,37 +4047,38 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
         pVecLOBs->push_back( stLOB );
     }
     else {
-        UINT i, iIndex=(UINT) -1;
-        UINT uiSize=pVecLOBs->size();
-        std::vector<STR_LOBS>::iterator iter;
-
-        SThreat *pThreat;
-
-        float fTheta, fDiffTheta, fMaxTheta=-1.0;
-
-        if( m_pABTData->iPEValid == _spOne ) {
-            pThreat = m_pIdentifyAlg->GetThreatData( m_pABTData->iThreatIndex );
-            fTheta = (float) m_theInverseMethod.GCAzimuth( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) m_pABTData->fLatitude, (double) m_pABTData->fLongitude );
-
-            for( i=-1, iter=pVecLOBs->begin() ; iter != pVecLOBs->end() ; ++iter, ++i ) {
-                if( /* ppVecLOBs->iCollectorID == m_pLOBData->iCollectorID */ true ) {
-                    if( CompAoaDiff( fTheta, (*iter).fDoa, 2.0 ) == false ) {
-                        fDiffTheta = AoaDiff( fTheta, (*iter).fDoa );
-                        if( iIndex == (UINT) (-1) || fMaxTheta < fDiffTheta ) {
-                            iIndex = i;
-                            fMaxTheta = fDiffTheta;
-                        }
-                    }
-                }
-            }
-        }
-
-        if( iIndex != -1 ) {
-            pVecLOBs->erase( pVecLOBs->begin()+iIndex );
-        }
-        else if( pVecLOBs->size() >= MAX_OF_LOBS ) {
-            pVecLOBs->erase( pVecLOBs->begin() );
-        }
+//         UINT i, iIndex=(UINT) -1;
+//         UINT uiSize=pVecLOBs->size();
+//         std::vector<STR_LOBS>::iterator iter;
+// 
+//         SThreat *pThreat;
+// 
+//         float fTheta, fDiffTheta, fMaxTheta=-1.0;
+// 
+//         if( m_pABTData->iPEValid == _spOne ) {
+//             pThreat = m_pIdentifyAlg->GetThreatData( m_pABTData->iThreatIndex );
+//             fTheta = (float) m_theInverseMethod.GCAzimuth( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) m_pABTData->fLatitude, (double) m_pABTData->fLongitude );
+// 
+//             // 아래 루틴 확인 필요.. 예전에는 i 값이 -1 부터 시작...
+//             for( i=0, iter=pVecLOBs->begin() ; iter != pVecLOBs->end() ; ++iter, ++i ) {
+//                 if( /* ppVecLOBs->iCollectorID == m_pLOBData->iCollectorID */ true ) {
+//                     if( CompAoaDiff( fTheta, (*iter).fDoa, 2.0 ) == false ) {
+//                         fDiffTheta = AoaDiff( fTheta, (*iter).fDoa );
+//                         if( iIndex == (UINT) (-1) || fMaxTheta < fDiffTheta ) {
+//                             iIndex = i;
+//                             fMaxTheta = fDiffTheta;
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+// 
+//         if( iIndex != -1 ) {
+//             pVecLOBs->erase( pVecLOBs->begin()+iIndex );
+//         }
+//         else if( pVecLOBs->size() >= MAX_OF_LOBS ) {
+//             pVecLOBs->erase( pVecLOBs->begin() );
+//         }
 
         // 자신의 방위/위/경도 값 추가
         stLOB.fDoa = m_pLOBData->fDOAMean;
@@ -5187,7 +5187,7 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
     m_pABTExtData->enValid = E_EL_PESTAT_NOT_YET;
     m_pABTExtData->bApplayOfLOBClustering = ! bCluster;
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
 
     // 위치 산출 정보
     //memset( & pABTExtData->peInfo, 0, sizeof( STR_POSITION_ESTIMATION ) );
@@ -8920,7 +8920,7 @@ void CELEmitterMergeMngr::InitDataFromDB()
 {
     char buffer[400];
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
 
     m_lOpInitID = GetLONGData( buffer ) + 1;
@@ -11016,10 +11016,10 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     bool bRet=true;
     pstTime = localtime( & pLOBData->tiContactTime );
     if( pstTime != NULL ) {
-        printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
+        //printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
         strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
         sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
-                    SEQ_NUM, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
+                    SEQ_NUM, PDWID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
                     SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
                     FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
                     PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
@@ -11029,7 +11029,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
                     INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
                     SHIP_LAT, SHIP_LONG, SHIP_PITCH, SHIP_ROLL, SHIP_HEADING, SHIP_ALT, IS_VALIDITY, \
                     IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
-                    ( %d, %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, \
+                    ( %d, %d, %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, \
                     %d, %f, %f, %f, %f, %f, %d, \
                     %d, %d, %f, %f, %f, %f, %f, %d, %d, \
                     %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
@@ -11039,7 +11039,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
                     %d, %d, %f, %f, %f, %f, \
                     %f, %f, %f, %f, %f, %f, %d, \
                     %d, %d, %d, %d )" , \
-             m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
+             m_nSeqNum, pLOBData->uiPDWID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
              pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
              pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
              pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
@@ -11065,7 +11065,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
         }
         catch( Kompex::SQLiteException &exception ) {
-            LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
+            LOGMSG1( enError, " m_pszSQLString[%s]" , m_pszSQLString );
             bRet = false;
             std::cerr << "\nException Occured" << std::endl;
             exception.Show();
@@ -11085,8 +11085,8 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
     _localtime32_s( &stTime, & pLOBData->tiContactTime );
     strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( SEQ_NUM, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
-        m_nSeqNum, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( SEQ_NUM, OP_INIT_ID, PDWID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
+        m_nSeqNum, m_lOpInitID, m_, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
         pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
         pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
         pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
@@ -11719,4 +11719,24 @@ void CELEmitterMergeMngr::SetStartOfAnalScan()
     if( m_pABTExtData != NULL ) {
 
     }
+}
+
+/**
+ * @brief     ManageTrack
+ * @param     SRxLOBHeader * pLOBHeader
+ * @param     SRxLOBData * pLOBData
+ * @param     SLOBOtherInfo * pLOBOtherInfo
+ * @param     bool bScanInfo
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-03, 16:25
+ * @warning
+ */
+bool CELEmitterMergeMngr::ManageTrack( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo )
+{
+    bool bRet=false;
+
+    return bRet;
 }
