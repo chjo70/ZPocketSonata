@@ -96,7 +96,7 @@ void CKnownSigAnal::Init()
 		\date     2008-07-10 12:43:16
 		\warning
 */
-void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
+void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 {
 	BOOL bRet;
 
@@ -116,9 +116,9 @@ void CKnownSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 #ifdef _POCKETSONATA_
-    m_theGroup->MakePDWArray( pPDWData->pstPDW, (int) m_CoPdw, pPDWData->x.ps.uiBand );
+    m_theGroup->MakePDWArray( & pPDWData->stPDW[0], (int) m_CoPdw, pPDWData->x.ps.uiBand );
 #else
-    m_theGroup->MakePDWArray( pPDWData->pstPDW, (int) m_CoPdw, 0 );
+    m_theGroup->MakePDWArray( & pPDWData->stPDW[0], (int) m_CoPdw, 0 );
 #endif
 
     // 수집한 PDW 파일 만들기...
@@ -248,8 +248,12 @@ void CKnownSigAnal::InitVar()
 		\date     2005-06-24 16:03:22
 		\warning
 */
-void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
+void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pPDWData )
 {
+
+    // 시간 초기화
+    m_tColTime = 0;
+    m_tColTimeMs = 0;
 
 	// 추적은 실패로 초기화 한다.
 	m_CoUpdAet = 0;
@@ -261,7 +265,7 @@ void CKnownSigAnal::Init( STR_PDWDATA *pPDWData )
 	// 신호 수집 개수 정의
 	m_CoPdw = m_pPDWData->GetTotalPDW();
 	
-   
+    m_tColTime = pPDWData->GetColTime();
 
     m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 

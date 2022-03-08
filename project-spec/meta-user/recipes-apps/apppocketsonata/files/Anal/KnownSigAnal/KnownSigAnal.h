@@ -63,7 +63,7 @@ protected:
     int m_noCh;
     //##ModelId=452B0C52029C
     //STR_PDWBANK *m_pPdwBank;
-    STR_PDWDATA *m_pPDWData;
+    STR_STATIC_PDWDATA *m_pPDWData;
 
     int m_uiABTID;
 
@@ -162,6 +162,9 @@ public:
 
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
+    inline unsigned int GetPDWID() { return m_pPDWData->GetPDWID(); }
+
+
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return RADARCOL_Unknown; }
 	inline char *GetTaskID() { return NULL; }
@@ -184,9 +187,9 @@ public:
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
 
     //##ModelId=452B0C520396
-    void Init( STR_PDWDATA *pPDWData );
+    void Init( STR_STATIC_PDWDATA *pPDWData );
     //##ModelId=452B0C52039F
-    void Start( STR_PDWDATA *pPDWData, SRxABTData *pTrkAet );
+    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pTrkAet );
     //##ModelId=452B0C5203B4
     CKnownSigAnal( int coMaxPdw );
     //##ModelId=452B0C5203BE

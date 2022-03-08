@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file      ELEmitterMergeMngr.cpp
  * @brief     위협 관리 처리하는 클래스
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -38,6 +38,7 @@
 #include "./UTM/UTM.h"
 
 #include "../../Include/globals.h"
+#include "../../Utils/ccommonutils.h"
 
 
 #ifdef _DEBUG
@@ -74,6 +75,8 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
     m_CoInstance = 0;
 
     m_bDBThread = bDBThread;
+
+    CCommonUtils::SetUnitType();
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     m_lOpInitID = 0;
@@ -363,6 +366,8 @@ void CELEmitterMergeMngr::Start( bool bScanInfo )
     m_pUpdateAETThreat = NULL;
     m_pUpdateABTThreat = NULL;
 
+    ReqTrack( false );
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -383,9 +388,9 @@ void CELEmitterMergeMngr::Start( bool bScanInfo )
  * @date      2016-01-29 오후 5:53
  * @warning
  */
-bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo, bool bIsFilteredLOB, bool bCheckLOB )
+void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo, bool bIsFilteredLOB, bool bCheckLOB )
 {
-    bool bMerge=false;
+    m_bMerge = false;
 
     SetScanInfo( bScanInfo );
 
@@ -439,20 +444,20 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
 #ifdef _TESTSBC_
     // 2. LOB와 기존 위협 간의 비교
-    bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
+    m_bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
 
     // 3. LOB 식별 결과를 DB에 기록한다. (식별 결과와 AET, ABT 번호를 할당하여 DB 테이블에 저장함.)
     InsertLOB( & m_LOBDataExt, bIsFilteredLOB );
 
 #else    
     // 2. LOB와 기존 위협 간의 비교
-    bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
+    m_bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
 
     // 3. LOB 식별 결과를 DB에 기록한다. (식별 결과와 AET, ABT 번호를 할당하여 DB 테이블에 저장함.)
     InsertLOB( & m_LOBDataExt, bIsFilteredLOB );
     
     // 4. 미식별 ELNOT 값 생성
-    if( bMerge == false ) {
+    if( m_bMerge == false ) {
         IncH0000( m_LOBDataExt.aetAnal.idInfo.nCoRadarModeIndex );
     }
 
@@ -471,14 +476,12 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     // 8. 위협 관리 삭제 처리
     //ResetABT();
 
-
-
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
 
     //LogPrint("\n========================================== ManageThreat 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
 
-    return bMerge;
+    return;
 }
 
 /**
@@ -8330,8 +8333,6 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 #else
     if( m_bScanProcess == false ) {
         if( i_bIsFilteredLOB == false ) {
-            Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
-
             if( m_bDBThread == false ) {
                 // LOB 데이터 저장
                 InsertToDB_LOB( m_pLOBData, pExt, true );
@@ -8408,7 +8409,6 @@ void CELEmitterMergeMngr::InsertABT( CELThreat *pTheThreat, bool bUpdateDB, bool
                 pABTData->szNickName[0] = 0;
             }
 
-            Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
             if( m_bDBThread == false ) {
                 // 빔 레코드 추가
                 InsertToDB_ABT( pABTData, pABTExtData, true );
@@ -11016,6 +11016,8 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     bool bRet=true;
     pstTime = localtime( & pLOBData->tiContactTime );
     if( pstTime != NULL ) {
+        Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+
         //printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
         strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
         sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
@@ -11302,6 +11304,8 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         Kompex::SQLiteStatement stmt( m_pDatabase );
         stmt.SqlStatement( m_pszSQLString );
 
+        Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
+
         // do not forget to clean-up
         stmt.FreeQuery();  
 
@@ -11371,6 +11375,7 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
 #endif
 
     theRS.Open( m_pszSQLString );
+    Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
     if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
         __time32_t nowTime=_time32(NULL);
@@ -11632,7 +11637,6 @@ char *CELEmitterMergeMngr::GetELNOT( int iRadarModeIndex )
     else {
         pszELNOT = NULL;
     }
-
     return pszELNOT;
 }
 
@@ -11723,7 +11727,7 @@ void CELEmitterMergeMngr::SetStartOfAnalScan()
 
 /**
  * @brief     ManageTrack
- * @param     SRxLOBHeader * pLOBHeader
+ * @param     STR_ANALINFO * pLOBHeader
  * @param     SRxLOBData * pLOBData
  * @param     SLOBOtherInfo * pLOBOtherInfo
  * @param     bool bScanInfo
@@ -11734,9 +11738,51 @@ void CELEmitterMergeMngr::SetStartOfAnalScan()
  * @date      2022-03-03, 16:25
  * @warning
  */
-bool CELEmitterMergeMngr::ManageTrack( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo )
+void CELEmitterMergeMngr::ManageTrack( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo )
 {
-    bool bRet=false;
+    ENUM_COLLECTBANK enCollectBank=CCommonUtils::GetEnumCollectBank( pAnalInfo->uiCh );
 
-    return bRet;
+    // LOB가 수신할 때의 아래 추적 여부를 결정한다.
+    if( pLOBData != NULL ) {
+        switch( enCollectBank ) {
+            case enDetectCollectBank :
+                if( ReqTrack() == false ) {
+                    // 빔과 겹쳐진게 없어야 추적 할당을 한다.
+                    if( m_vecCanOfMergeLOB.size() == _spZero ) {
+                        ReqTrack(true);
+                    }
+                }            
+                break;
+
+            case enTrackCollectBank :
+                // 병합된 LOB 만 추적 성공으로 한다.
+                if( Merge() == true ) {
+                    ReqTrack( true );
+                }            
+                break;
+
+            default :
+                break;
+        }
+    }
+    // LOB 처리 후에 아래 추적 여부를 결정한다.
+    else {
+        switch( enCollectBank ) {
+            case enDetectCollectBank :
+                break;
+
+            case enTrackCollectBank :
+                // 병합된 LOB 만 추적 성공으로 한다.
+                if( ReqTrack() == false ) {
+                    // 추적 실패 처리로 재설정하게 한다.
+                    TRACE( "추적 재시도" );
+                }            
+                break;
+
+            default :
+                break;
+        }
+    }
+
+    return;
 }

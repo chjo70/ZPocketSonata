@@ -281,7 +281,7 @@ void CUserCollect::ColStart()
                 m_strResColStart.uiBoardID = g_pTheSysConfig->GetBoardID();
 
                 // 실제 PDW 수집한 개수는 현재는 그냥 100 으로 한다.
-                m_strResColStart.uiCoPulseNum = PDW_GATHER_SIZE / sizeof(DMAPDW);
+                m_strResColStart.uiCoPulseNum = NUM_OF_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( pUIO->iFd > 0 ) {
                     memcpy( m_pstrPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
@@ -302,7 +302,7 @@ void CUserCollect::ColStart()
 
                     memset( pPDWFileHeader, 0, sizeof(POCKETSONATA_HEADER) );
 
-                    pPDWFileHeader->iBoardID = (UINT) g_enBoardId;
+                    pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
 #elif defined(_ELINT_) || defined(_XBAND_)
                     STR_ELINT_HEADER *pPDWFileHeader = ( STR_ELINT_HEADER * ) m_pstrPDWWithFileHeader;
 

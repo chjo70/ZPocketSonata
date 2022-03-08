@@ -285,9 +285,9 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
 
     CCollectBank *pCollectBank = m_pTheDetectCollectBank[iCh];
 
+#if defined(_ELINT_) || defined(_XBAND_)
     STR_PDWDATA *pPDWData = pCollectBank->GetPDWData();
 
-#if defined(_ELINT_) || defined(_XBAND_)
     // memset( pPDWData->x.el.aucTaskID, 0, sizeof(char)*LENGTH_OF_TASK_ID );
     strcpy_s( (char *) pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA" );
     pPDWData->x.el.iIsStorePDW = 1;
@@ -401,7 +401,8 @@ void CSignalCollect::AnalysisStart()
             strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL].uiAETID;
             strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL].uiABTID;
 
-            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA) );
+            MakeStaticPDWData( pCollectBank->GetPDWData() );
+            memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
             if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
@@ -429,7 +430,8 @@ void CSignalCollect::AnalysisStart()
             strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiAETID;
             strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiABTID;
 
-            memcpy( & m_theTrkScnPDW.strPDW, pCollectBank->GetPDWData(), sizeof(STR_PDWDATA) );
+            MakeStaticPDWData( pCollectBank->GetPDWData() );
+            memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
             memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
 
             //g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
@@ -585,7 +587,7 @@ void CSignalCollect::CloseTrackWindowCell()
     // 랜 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
-    LOGMSG3( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+    LOGMSG3( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.enBoardID, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
      m_theTrackChannel.Push( m_pMsg->x.strAnalInfo.uiCh );
 
@@ -855,7 +857,7 @@ void CSignalCollect::CloseScanWindowCell()
     // 랜 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
-    LOGMSG3( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+    LOGMSG3( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.enBoardID, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
     m_theTrackChannel.Push( m_pMsg->x.strAnalInfo.uiCh );
 
@@ -885,7 +887,7 @@ void CSignalCollect::NewScanWindowCell( SRxABTData *pABTData )
 
         GetCollectBank( uiCh )->UpdateWindowCell( & strWindowCell );
 
-        LOGMSG3( enDebug, " [%d] 대역, 스캔 [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+        LOGMSG3( enDebug, " [%d] 대역, 스캔 [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.enBoardID, uiCh, m_pMsg->x.strAnalInfo.uiABTID );
         //LOGMSG2( enDebug, " 빔 번호[%d]를 스캔 [%d]채널에 설정 합니다." , pABTData->uiABTID, uiCh );
     }
     else {

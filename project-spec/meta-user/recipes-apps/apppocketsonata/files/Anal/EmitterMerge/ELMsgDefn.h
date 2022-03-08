@@ -456,7 +456,7 @@ struct SCollectingList
 };
 
 struct STR_TRKSCNPDWDATA {
-    STR_PDWDATA strPDW;
+    STR_STATIC_PDWDATA strPDW;
 
     SRxABTData strABTData;
 

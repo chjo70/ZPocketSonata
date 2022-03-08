@@ -59,8 +59,12 @@ void CCollectBank::Init()
 {
     memset( & m_strPDW, 0, sizeof(UNION_HEADER) );
 
-    m_strPDW.x.ps.iBoardID = g_enBoardId;
-    m_strPDW.x.ps.uiBand = g_enBoardId;
+
+    m_strPDW.SetPDWID( _spOne );
+
+    m_strPDW.SetBoardID( g_enBoardId );
+    m_strPDW.SetBand( g_enBoardId );
+    //m_strPDW.x.ps.uiBand = g_enBoardId;
 
     InitWindowCell();
 
@@ -336,6 +340,8 @@ void CCollectBank::UpdateWindowCell()
 
     // PDW 정보 클리어
     m_strPDW.SetTotalPDW( 0 );
+
+    m_strPDW.IncPDWID();
 
 
     // 수집한 PDW 개수 업데이트

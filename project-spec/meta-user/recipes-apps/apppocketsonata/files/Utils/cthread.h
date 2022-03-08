@@ -43,7 +43,7 @@ using namespace std;
 #include <sys/stat.h>
 
 #include "../Include/system.h"
-#include "../Anal/INC/system.h"
+#include "../Anal/INC/System.h"
 
 #include "../Utils/carraymsgdata.h"
 
@@ -123,7 +123,7 @@ struct STR_COLLECTINFO {
 
 // 수집한 데이터에서 분석한 LOB 헤더 정보
 struct STR_ANALINFO {
-    unsigned int uiBand;
+    ENUM_BoardID enBoardID;
     unsigned int uiTotalLOB;
 
     // 수집한 채널 정보
@@ -149,6 +149,7 @@ union UNI_MSG_DATA {
 
     char szData[32];
 } ;
+
 
 /**
  * @brief 쓰레드간의 메시지 데이터 구조체 정의

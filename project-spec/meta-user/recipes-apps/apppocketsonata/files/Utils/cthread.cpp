@@ -714,7 +714,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
     UnLock();
 
     //TRACE( "\nQueue Size : %d" , m_queue.size() );
-    TRACE( "\n\tSending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
+    LOGMSG2( enDebug, "Sending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
 
 	::SetEvent(m_hEvent);   
 

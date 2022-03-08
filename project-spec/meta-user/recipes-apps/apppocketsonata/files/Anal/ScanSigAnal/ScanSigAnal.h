@@ -47,7 +47,7 @@ protected:
     //##ModelId=452B0C45002C
     STR_PULSE_TRAIN_SEG *m_pSeg;
     //##ModelId=452B0C450031
-    STR_PDWDATA *m_pPDWData;
+    STR_STATIC_PDWDATA *m_pPDWData;
     //##ModelId=452B0C450035
     int m_noCh;
     //##ModelId=452B0C45003A
@@ -77,7 +77,7 @@ public:
     //##ModelId=452B0C450059
     inline int GetMaxPdw() { return m_nMaxPdw; }
     //##ModelId=452B0C45005A
-    inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }
+    inline STR_STATIC_PDWDATA *GetPDWData() { return m_pPDWData; }
     //##ModelId=452B0C450062
     inline int GetNoEMT() { return m_noEMT; }
     //##ModelId=452B0C450063
@@ -121,7 +121,7 @@ public:
 	
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
-    void Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet );
+    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet );
     // void Start( STR_PDWDATA *pPDWData, STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg, STR_UPDAET *pUpdAet );
     //##ModelId=452B0C4500AB
     void SendScanResult( UINT nResult );
@@ -142,7 +142,7 @@ public:
     UINT AnalStart( int noEMT, int noCh );
 
     //##ModelId=452B0C4500E5
-    void Init( STR_PDWDATA *pPDWData );
+    void Init( STR_STATIC_PDWDATA *pPDWData );
     //##ModelId=452B0C4500E6
     void ScanExtractPulseInit( int noEMT=0, int noCh=0 );
     //##ModelId=452B0C4500EF

@@ -102,7 +102,7 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    _spAnalMinPulseCount = (unsigned int) m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
+    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간

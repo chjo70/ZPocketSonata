@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
  * */
 
@@ -34,6 +34,8 @@ bool g_AnalLoop=true;
 
 bool g_bSaveFile=true;
 
+char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
+
 #ifdef __VXWORKS__
 MSG_Q_ID g_ShmMemMsgQID;
 #define _SHM_MEMORY_KEY             g_ShmMemMsgQID
@@ -55,6 +57,8 @@ extern bool g_Loop;
 extern bool g_AnalLoop;
 
 extern bool g_bSaveFile;
+
+extern char g_szCollectBank[4][10];
 
 #ifdef __VXWORKS__
 extern MSG_Q_ID g_ShmMemMsgQID;

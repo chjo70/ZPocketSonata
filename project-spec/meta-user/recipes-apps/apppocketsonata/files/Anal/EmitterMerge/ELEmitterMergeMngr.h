@@ -19,6 +19,8 @@
 
 #include "../../Anal/OFP_Main.h"
 
+#include "../../Utils/cthread.h"
+
 #include "ELGMIMsgDefn.h"
 #include "../Identify/Identify.h"
 #include "ELThreat.h"
@@ -99,6 +101,10 @@ class CELEmitterMergeMngr : public CLOBClustering
 private:
     bool m_bDBThread;
 
+    bool m_bMerge;
+    bool m_bReqDetect;
+    bool m_bReqTrack;
+    
     static int m_CoInstance;									///< 위협 관리 객체 갯수
     static int m_nSeqNum;										///< DB 테이블 번호
 
@@ -452,6 +458,7 @@ private:
 
     inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
  
+
 public:
 #ifdef _MSSQL_
     CELEmitterMergeMngr(bool bDBThread, CODBCDatabase *pMyODBC );
@@ -468,7 +475,7 @@ public:
     void Start( bool bScanInfo=false );
     void UpdateCEDEOBLibrary();
 
-    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
+    void ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
     bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
     UINT DeleteThreat();
     bool CheckDeleteAET( CELThreat *pThreatAET, CELThreat *pDeleteAET );
@@ -528,12 +535,22 @@ public:
     void GetGlobalSequenceNum();
     void PrintAllABTData();
 
-    bool ManageTrack( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+    void ManageTrack( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
+
+    // 아래는 멤버 변수들에 대한 접근 관련 함수 입니다.
+    inline bool ReqTrack() const { return m_bReqTrack; }
+    inline void ReqTrack(bool val) { m_bReqTrack = val; }
+
+    inline bool ReqDetect() const { return m_bReqDetect; }
+    inline void ReqDetect(bool val) { m_bReqDetect = val; }
+
+    inline bool Merge() const { return m_bMerge; }
+    inline void Merge(bool val) { m_bMerge = val; }
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

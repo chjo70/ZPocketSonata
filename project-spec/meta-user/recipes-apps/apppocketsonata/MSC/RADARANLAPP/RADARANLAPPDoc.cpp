@@ -23,7 +23,7 @@ float _spAMPres;
 
 #include "RADARANLAPPDoc.h"
 
-
+#include "../../files/Utils/cthread.h"
 #include "../../files/Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
 #include "../../files/Include/globals.h"
@@ -490,7 +490,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 	while (!theRS.IsEof()) {
 		index = 0;
 
-		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.lOpInitID );
+		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
 
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiSeqNum );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiLOBID );

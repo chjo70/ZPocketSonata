@@ -93,12 +93,11 @@ void CKMakeAET::Init()
 //
 void CKMakeAET::MakeAET()
 {
-	int i;
-	int nStartAet;
-    SRxLOBData *pNewAet;
+	//int nStartAet;
+    //SRxLOBData *pLOBData;
 
 	// 시작 에미터 번호 위치 백업. 
-    nStartAet = m_CoLOB;
+    //nStartAet = m_CoLOB;
 
 	CMakeAET::MakeAET();
 
@@ -108,22 +107,24 @@ void CKMakeAET::MakeAET()
 	// 에미터 추출 개수를 저장
     m_CoMakeAet = m_CoLOB;
 
-    pNewAet = & m_LOBData[nStartAet];
-    for( i=0 ; i < m_CoLOB ; ++i ) {
-        if( pNewAet->iPRIType == _DWELL ) {
-            //STR_PRI *pNewPri, *pTrkPri;
+    //pLOBData = & m_LOBData[0];
+    //pLOBData->iSignalType = ST_NORMAL_PULSE;
 
-            //pNewPri = & pNewAet->aet.pri;
-            //pTrkPri = & stTrkAet.aet.pri;
-			//pNewPri->min = pTrkPri->min;
-			//pNewPri->max = pTrkPri->max;
-			//pNewPri->swtLev = pTrkPri->swtLev;
-			// memcpy( pNewPri->swtVal, pTrkPri->swtVal, sizeof(int)*pNewPri->swtLev );
-			// qsort( pNewPri->swtVal, (size_t) pNewPri->swtLev, sizeof( UINT ), intparamCompare );
-			
-		}
-		++ pNewAet;
-	}
+//     for( i=0 ; i < m_CoLOB ; ++i ) {
+//         if( pNewAet->iPRIType == _DWELL ) {
+//             //STR_PRI *pNewPri, *pTrkPri;
+// 
+//             //pNewPri = & pNewAet->aet.pri;
+//             //pTrkPri = & stTrkAet.aet.pri;
+// 			//pNewPri->min = pTrkPri->min;
+// 			//pNewPri->max = pTrkPri->max;
+// 			//pNewPri->swtLev = pTrkPri->swtLev;
+// 			// memcpy( pNewPri->swtVal, pTrkPri->swtVal, sizeof(int)*pNewPri->swtLev );
+// 			// qsort( pNewPri->swtVal, (size_t) pNewPri->swtLev, sizeof( UINT ), intparamCompare );
+// 			
+// 		}
+// 		++ pNewAet;
+// 	}
 
 }
 

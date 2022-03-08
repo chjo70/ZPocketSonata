@@ -177,7 +177,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiSeqNum );
 			m_CListLOB.SetItemText( nList, 1, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBExt->aetData.lOpInitID );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBExt->aetData.uiOpInitID );
 			m_CListLOB.SetItemText( nList, 2, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiLOBID );

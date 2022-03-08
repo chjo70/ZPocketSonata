@@ -183,7 +183,7 @@ CScanSigAnal::~CScanSigAnal()
 		\date     2009-01-05 13:41:21
 		\warning
 */
-void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
+void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
     int iTotalPDW;
 
@@ -198,7 +198,7 @@ void CScanSigAnal::Start( STR_PDWDATA *pPDWData, SRxABTData *pScnAet )
     iTotalPDW = pPDWData->GetTotalPDW();
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( m_pPDWData->pstPDW, iTotalPDW );
+    m_theGroup->MakePDWArray( m_pPDWData->stPDW, iTotalPDW );
 
     // 수집한 PDW 파일 만들기...
     m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
@@ -398,7 +398,7 @@ void CScanSigAnal::InitVar()
 		\date     2006-02-13 17:30:08
 		\warning
 */
-void CScanSigAnal::Init( STR_PDWDATA *pPDWData )
+void CScanSigAnal::Init( STR_STATIC_PDWDATA *pPDWData )
 {
 	// 스캔 신호 분석 초기화
 //	ScanSigAnalInit( stScnAet.aet.noEMT, 0 );

@@ -1,4 +1,4 @@
-#ifndef _H_EL_EMITTER_DATATYPE
+﻿#ifndef _H_EL_EMITTER_DATATYPE
 #define _H_EL_EMITTER_DATATYPE
 
 #ifndef __VXWORKS__
@@ -1542,8 +1542,9 @@ struct I_AET_DATA {
  	unsigned short usEmitterId;
  	unsigned short usBeamId;
 
-#ifdef _ELINT_
 	unsigned int uiOpInitID;
+
+#if defined(_ELINT_) || defined(_XBAND_)
 	unsigned char	aucTaskID[LENGTH_OF_TASK_ID];
 #endif
 

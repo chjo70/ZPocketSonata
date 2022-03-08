@@ -146,13 +146,13 @@
     <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
     <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\AetIPL.h" />
-    <ClInclude Include="..\..\files\Anal\INC\defines.h" />
+    <ClInclude Include="..\..\files\Anal\INC\Defines.h" />
     <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h" />
     <ClInclude Include="..\..\files\Anal\INC\Macros.h" />
     <ClInclude Include="..\..\files\Anal\INC\OS.h" />
     <ClInclude Include="..\..\files\Anal\INC\PDW.h" />
-    <ClInclude Include="..\..\files\Anal\INC\structs.h" />
-    <ClInclude Include="..\..\files\Anal\INC\system.h" />
+    <ClInclude Include="..\..\files\Anal\INC\Structs.h" />
+    <ClInclude Include="..\..\files\Anal\INC\System.h" />
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.h" />
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KDefine.h" />

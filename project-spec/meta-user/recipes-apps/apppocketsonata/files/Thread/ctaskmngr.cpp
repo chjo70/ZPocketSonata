@@ -313,24 +313,22 @@ void CTaskMngr::AnalysisStart()
     // 분석 관련 쓰레드를 삭제한다.
     // CreateAllAnalysisThread();
     
-    time_t tiNow;
-
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
-    
-    tiNow = (time_t) m_pMsg->x.tiNow;    
-    //printf( "\n tiNow = %d" , tiNow );
-
 #ifdef _MSC_VER
     
 #elif __VXWORKS__
+    // time_t tiNow = (time_t) m_pMsg->x.tiNow;    
+
     struct timespec time_spec;
     
-    time_spec.tv_sec = tiNow;
+    time_spec.tv_sec = m_pMsg->x.tiNow;
     clock_settime( CLOCK_REALTIME, &time_spec );
     
 #elif __linux__
+    // tiNow = (time_t) m_pMsg->x.tiNow;    
+
     // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
-    stime( & tiNow );
+    stime( & m_pMsg->x.tiNow );
     
 #else    
     

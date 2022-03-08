@@ -1105,7 +1105,7 @@ int CMIDASBlueFileFormat::MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pNam
     int offset;
 
     memset( pSubRecords->name, 0, 4 );
-    memcpy( pSubRecords->name, pName, strlen(pName) );
+    memcpy( pSubRecords->name, pName, strnlen_s(pName, 100 ) );
     pSubRecords->format[0] = data_type1;
     pSubRecords->format[1] = data_type2;
 

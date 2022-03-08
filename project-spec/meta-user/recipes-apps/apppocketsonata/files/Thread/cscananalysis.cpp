@@ -121,7 +121,7 @@ void CScanAnalysis::AnalysisStart()
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
     STR_ANALINFO strAnalInfo;
 
-    strAnalInfo.uiBand = g_enBoardId;
+    strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = _spOne;
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;

@@ -22,6 +22,7 @@ class CEmitterMerge : public CThread
 #endif
 {
 private:
+    STR_ANALINFO m_strAnalInfo;
 
 #ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
@@ -55,8 +56,10 @@ private:
     void InitData();
     void MergeEmitter();
 
-    void TrackFail();
-    void ScanFail();
+    // 수집 쓰레드에 추적/스캔 요청을 전송한다.
+    void RequestTrackCollect( SRxLOBData *pLOBData );
+    void RequestTrackReCollect();
+    void RequestScanReCollect();
 
     void ReloadLibrary();
 

@@ -40,12 +40,6 @@
     <Filter Include="소스 파일\Anal\MIDAS">
       <UniqueIdentifier>{b2ff3f06-1421-4b4c-a5fe-28c3715adc98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Anal\SigAnal">
-      <UniqueIdentifier>{1b5ae10c-09d8-404c-aaa1-bd4489b34598}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Anal\INC">
-      <UniqueIdentifier>{b364d609-d65c-49ed-a308-eefd4142aa16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Anal\Collect">
       <UniqueIdentifier>{2b36d8df-adb0-4715-8001-ca67cb483543}</UniqueIdentifier>
     </Filter>
@@ -203,27 +197,6 @@
     </ClInclude>
     <ClInclude Include="Show.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\SpinCtrl\NumSpinCtrl.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\INC\IQ.h">
-      <Filter>소스 파일\Anal\INC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\INC\PDW.h">
-      <Filter>소스 파일\Anal\INC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Define.h">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Macro.h">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Type.h">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Struct.h">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
     <ClInclude Include="ToolTip\XInfoTip.h">
       <Filter>소스 파일\ToolTip</Filter>

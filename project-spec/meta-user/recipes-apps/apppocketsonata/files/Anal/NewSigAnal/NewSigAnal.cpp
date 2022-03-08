@@ -36,7 +36,7 @@
 #include "../../Utils/ccommonutils.h"
 
 #ifdef _POCKETSONATA_
-char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
+//char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
 
 #endif
 
@@ -59,6 +59,8 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
     //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
 
     m_bDBThread = bDBThread;
+
+    CCommonUtils::SetUnitType();
 
     srand( time(NULL) & 0xFFFF );
 
@@ -104,8 +106,6 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
     m_CoPdw = 0;
 
     m_uiStep = 0;
-
-    CCommonUtils::SetUnitType();
 
     Init();
 
@@ -271,8 +271,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
 #elif _POCKETSONATA_
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
         }
         else {
@@ -335,8 +335,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
 #elif _POCKETSONATA_
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.iBoardID, m_pMidasBlue->GetRawDataFilename() );
+            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
         }
         else {
@@ -386,7 +386,6 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
-    NextPDWID();
 
 }
 
@@ -849,12 +848,6 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     struct tm *pstTime;
 	struct timespec tiNow;
 
-#ifdef _XBAND_
-    Log( enDebug, ".InsertRAWData[S%d]" , m_uiStep );
-#else
-
-#endif
-
     GetCollectTime( & tiNow );
     pstTime = localtime( & tiNow.tv_sec );
 
@@ -869,7 +862,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
 	sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
-    sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.iBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
+        sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
 #else
     sprintf( szDirectory, "%s/BRD", pLocalDirectory );
 #endif
@@ -886,7 +879,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
         sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
 
 #elif _POCKETSONATA_
-        sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
+            sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
         sprintf( szRawDataPathname, "%s/%s", szDirectory, m_szRawDataFilename );
 //         if( enDataType == E_EL_SCDT_PDW ) {
 //             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
@@ -927,14 +920,17 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 {
 
 #ifdef _SQLITE_
-	//struct tm *pstTime;
+    struct tm *pstTime;
 	char buffer[100]={0};
 
+    __time32_t tiContactTime = pPDWData->GetColTime();
+
  	bool bRet=true;
-// 	pstTime = localtime( & pLOBData->tiContactTime );
-// 	if( pstTime != NULL ) {
-// 		printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
-// 		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    pstTime = localtime( & tiContactTime );
+    if( pstTime != NULL ) {
+        Log( enDebug, ".InsertRAW[P%d]" , pPDWData->GetPDWID() );
+
+ 		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
 // 		sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
 // 								 SEQ_NUM, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
 // 								 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
@@ -988,7 +984,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 // 			exception.Show();
 // 			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
 // 		}
-// 	}
+ 	}
 
 	return bRet;
 
@@ -1011,6 +1007,7 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
   		m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, 0, pPDWData->GetTotalPDW(), m_szRawDataFilename );
  
  	theRS.Open( m_pszSQLString );
+    Log( enDebug, ".InsertRAW[P%d]" , pPDWData->GetPDWID() );
  
  	theRS.Close();
 
@@ -1038,7 +1035,6 @@ void CNewSigAnal::InitDataFromDB()
 
     m_lOpInitID = _spOne;
     m_nSeqNum = _spOne;
-    m_uiPDWID = _spOne;
 
 #ifdef _MSSQL_
 

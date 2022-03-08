@@ -602,7 +602,7 @@ typedef struct {
     UINT uiTotalPDW;
     __time32_t tColTime;
     UINT uiColTimeMs;
-    UINT _dummy;
+    UINT uiPDWID;
 
     void CheckColTime() {
         if( tColTime < 0 ) {
@@ -632,6 +632,10 @@ typedef struct {
         return stCommon.uiTotalPDW;
     }
 
+    unsigned int GetPDWID() {
+        return stCommon.uiPDWID;
+    }
+
     void SetTotalPDW( unsigned int uiTotalPDW ) {
         stCommon.uiTotalPDW = uiTotalPDW;
     }
@@ -650,7 +654,7 @@ typedef struct {
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
-    unsigned int iBoardID;
+    unsigned int uiBoardID;
     unsigned int iBank;
     unsigned int uiBand;                // 주파수 대역
     unsigned int iIsStorePDW;
@@ -660,6 +664,10 @@ typedef struct {
 
     unsigned int GetTotalPDW() {
         return stCommon.uiTotalPDW;
+    }
+    
+    unsigned int GetPDWID() {
+        return stCommon.uiPDWID;
     }
     
     void SetTotalPDW( unsigned int uiTotalPDW ) {
@@ -690,6 +698,10 @@ typedef struct {
 
     unsigned int GetTotalPDW() {
         return stCommon.uiTotalPDW;
+    }
+
+    unsigned int GetPDWID() {
+        return stCommon.uiPDWID;
     }
 
     void SetTotalPDW( unsigned int uiTotalPDW ) {
@@ -739,28 +751,28 @@ typedef union {
     }
 
     int GetBoardID( ENUM_UnitType enUnitType ) {
-        int iBoardID;
+        int uiBoardID;
 
         switch( enUnitType ) {
         case en_ZPOCKETSONATA :
-            iBoardID = ps.iBoardID;
+            uiBoardID = ps.uiBoardID;
             break;
 
         case en_ELINT :
         case en_XBAND :
-            iBoardID = -1;
+            uiBoardID = -1;
             break;
 
         case en_SONATA :
-            iBoardID = -1;
+            uiBoardID = -1;
             break;
 
         default:
-            iBoardID = -1;
+            uiBoardID = -1;
             break;
 
         }
-        return iBoardID;
+        return uiBoardID;
     }
 
 } UNION_HEADER;
@@ -798,6 +810,100 @@ struct STR_PDWDATA {
 
         return uiHeader;
 
+    }
+
+    void SetBoardID( unsigned int uiBoardID ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            x.ps.uiBoardID = uiBoardID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            // x.el.uiBoardID = uiBoardID;
+        }
+        else {
+            // x.so.stCommon.uiPDWID;
+        }
+
+        return;
+
+    }
+
+    void SetBand( unsigned int uiBand ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            x.ps.uiBand = uiBand;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            //x.el.uiBoardID = uiBoardID;
+        }
+        else {
+            //x.so.stCommon.uiPDWID;
+        }
+
+        return;
+
+    }
+
+    /**
+     * @brief     GetPDWID
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-08, 20:15
+     * @warning
+     */
+    unsigned int GetPDWID() {
+        unsigned int uiPDWID;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiPDWID = x.ps.stCommon.uiPDWID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            uiPDWID = x.el.stCommon.uiPDWID;
+        }
+        else {
+            uiPDWID = x.so.stCommon.uiPDWID;
+        }
+
+        return uiPDWID;
+
+    }
+
+    /**
+     * @brief     SetPDWID
+     * @param     unsigned int uiPDWID
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-08, 20:15
+     * @warning
+     */
+    void SetPDWID( unsigned int uiPDWID ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            x.ps.stCommon.uiPDWID = uiPDWID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            x.el.stCommon.uiPDWID = uiPDWID;
+        }
+        else {
+            x.so.stCommon.uiPDWID = uiPDWID;
+        }
+
+    }
+
+    void IncPDWID() {
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            ++ x.ps.stCommon.uiPDWID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            ++ x.el.stCommon.uiPDWID;
+        }
+        else {
+            ++ x.so.stCommon.uiPDWID;
+        }
     }
 
     /**
@@ -991,6 +1097,48 @@ struct STR_STATIC_PDWDATA {
         }
 
         return uiTotalPDW;
+
+    }
+
+    unsigned int GetPDWID() {
+        unsigned int uiPDWID;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiPDWID = x.ps.stCommon.uiPDWID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            uiPDWID = x.el.stCommon.uiPDWID;
+        }
+        else {
+            uiPDWID = x.so.stCommon.uiPDWID;
+        }
+
+        return uiPDWID;
+    }
+
+    /**
+     * @brief     GetColTime
+     * @return    __time32_t
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
+    __time32_t GetColTime() {
+        __time32_t retTime;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            retTime = x.ps.stCommon.tColTime;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            retTime = x.el.stCommon.tColTime;
+        }
+        else {
+            retTime = x.so.stCommon.tColTime;
+        }
+
+        return retTime;
 
     }
 

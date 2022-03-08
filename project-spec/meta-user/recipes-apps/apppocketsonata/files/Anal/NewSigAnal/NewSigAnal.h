@@ -16,7 +16,7 @@
 
 #endif
 
-#include "../INC/defines.h"
+#include "../INC/Defines.h"
 #include "../Identify/Identify.h"
 
 #include "NGroup.h"
@@ -49,7 +49,6 @@ public:
 private:
     int m_nSeqNum;
     LONG m_lOpInitID;
-    unsigned int m_uiPDWID;
 
     bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
@@ -170,8 +169,7 @@ public:
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline void NextSeqNum() { ++ m_nSeqNum; }
-    inline void NextPDWID() { ++ m_uiPDWID; }
-    inline unsigned int GetPDWID() { return m_uiPDWID; }
+    inline unsigned int GetPDWID() { return m_pPDWData->GetPDWID(); }
 
     // 기타 함수
     void SaveRemainedPdwFile();

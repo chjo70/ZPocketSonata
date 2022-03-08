@@ -12,8 +12,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "system.h"
-#include "defines.h"
+#include "System.h"
+#include "Defines.h"
 #include "../SigAnal/_Define.h"
 #include "PDW.h"
 

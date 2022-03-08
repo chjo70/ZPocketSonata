@@ -9,9 +9,9 @@
 
 
 #include "./INC/Macros.h"
-#include "./INC/defines.h"
+#include "./INC/Defines.h"
 #include "./INC/PDW.h"
-#include "./INC/structs.h"
+#include "./INC/Structs.h"
 #include "./INC/ErrorMsg.h"
 
 #include "./SigAnal/_Macro.h"

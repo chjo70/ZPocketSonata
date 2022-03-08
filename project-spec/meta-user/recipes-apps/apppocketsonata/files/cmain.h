@@ -27,6 +27,7 @@ using namespace std;
 
 
 void ParsingArgument( int iArgc, char *iArgv[] );
+void UpdateCPUMode();
 
 
 #endif // CMAIN_H

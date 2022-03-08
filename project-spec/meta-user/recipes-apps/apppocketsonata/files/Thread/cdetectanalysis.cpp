@@ -109,6 +109,12 @@ void CDetectAnalysis::_routine()
 
 /**
  * @brief PDW 데이터를 Fetch 해서 탐지 신호 분석을 수행한다. 분석 결과(LOB)를 병합/식별 쓰레드로 전달한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-08, 14:25
+ * @warning
  */
 void CDetectAnalysis::AnalysisStart()
 {
@@ -125,10 +131,11 @@ void CDetectAnalysis::AnalysisStart()
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=m_pTheNewSigAnal->GetCoLOB();
 
-    if( uiTotalLOB >= _spOne ) {
+    if( uiTotalLOB > _spZero ) {
         STR_ANALINFO strAnalInfo;
 
         memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
+        strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;        
 
@@ -138,7 +145,7 @@ void CDetectAnalysis::AnalysisStart()
 }
 
 /**
- * @brief     MakePDWData
+ * @brief     탐지 분석하기 위한 PDW 데이터를 구성한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

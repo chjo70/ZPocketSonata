@@ -113,7 +113,7 @@ void CEmitterMerge::_routine()
                     break;
 
                 case enTHREAD_KNOWNANAL_FAIL :
-                    TrackFail();
+                    RequestTrackReCollect();
                     break;
 
                 case enTHREAD_SCANANAL_START :
@@ -163,70 +163,63 @@ void CEmitterMerge::MergeEmitter()
 {
     LOGENTRY;
 
-    int i;
-    bool bMerge, bReqTrack, bTrkLOB=false;
+    unsigned int i;
+    bool bTrkLOB=false;
 
-    STR_ANALINFO strAnalInfo;
     SRxLOBHeader strLOBHeader;
 
     SRxLOBData *pLOBData;
-    SRxABTData *pABTData;
+    //SRxABTData *pABTData;
+
+    // 1. 메지지 내용을 멤머 변수에 복사한다.
+    // 1.1 메시지 헤더 정보를 저장한다.
+    memcpy( & m_strAnalInfo, & m_pMsg->x.strAnalInfo, sizeof(STR_ANALINFO) );
+    // 1.2 LOB 데이터를 갖고온다.
+    memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     if( m_bScanInfo == false ) {
-        LOGMSG4( enDebug, "Operating the [%d] Band, in the Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID, m_pMsg->x.strAnalInfo.uiTotalLOB );
+        LOGMSG5( enDebug, "Operating the [%d] Band, in the %s Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_strAnalInfo.enBoardID, g_szCollectBank[ CCommonUtils::GetEnumCollectBank( m_strAnalInfo.uiCh ) ], m_strAnalInfo.uiCh, m_strAnalInfo.uiABTID, m_strAnalInfo.uiTotalLOB );
     }
     else {
-        LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
+        LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_strAnalInfo.enBoardID, m_strAnalInfo.uiCh, m_strAnalInfo.uiABTID );
     }
-
-    memcpy( & strAnalInfo, & m_pMsg->x.strAnalInfo, sizeof(STR_ANALINFO) );
 
     // 위협 관리 초기화
     m_pTheEmitterMergeMngr->Start( m_bScanInfo );
 
-    // 1. LOB 데이터를 갖고온다.
-    memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
-
     // 2. 위협 관리를 호출한다.
-    strLOBHeader.iNumOfLOB = m_pMsg->x.strAnalInfo.uiTotalLOB;
+    strLOBHeader.iNumOfLOB = m_strAnalInfo.uiTotalLOB;
     pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
     
-     for( i=0 ; i < strLOBHeader.iNumOfLOB ; ++i ) {
+     for( i=0 ; i < m_strAnalInfo.uiTotalLOB ; ++i ) {
 #ifdef _TESTSBC_
          // 2.1 분석된 LOB 데이터를 병합 관리한다.
-         bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
+         m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
 #else
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
-        bMerge = m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
+        m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
         // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
-        bReqTrack = m_pTheEmitterMergeMngr->ManageTrack( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
-        if( bReqTrack == true ) {
-            strAnalInfo.uiBand = g_enBoardId;
-            strAnalInfo.uiCh = ( CCommonUtils::GetEnumCollectBank(m_pMsg->x.strAnalInfo.uiCh) == enTrackCollectBank ? m_pMsg->x.strAnalInfo.uiCh : _spZero );
-            strAnalInfo.uiTotalLOB = _spOne;
-            strAnalInfo.uiAETID = pLOBData->uiAETID;
-            strAnalInfo.uiABTID = pLOBData->uiABTID;
-            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-        }
+        m_pTheEmitterMergeMngr->ManageTrack( & m_strAnalInfo, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
+        RequestTrackCollect( pLOBData );
 
-        if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
-            SetStartOfAnalScan();
-
-            strAnalInfo.uiBand = g_enBoardId;
-            strAnalInfo.uiCh = 0;
-            strAnalInfo.uiTotalLOB = _spOne;
-            strAnalInfo.uiAETID = pLOBData->uiAETID;
-            strAnalInfo.uiABTID = pLOBData->uiABTID;
-            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-        }
+//         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
+//             SetStartOfAnalScan();
+// 
+//             strAnalInfo.enBoardID = g_enBoardId;
+//             strAnalInfo.uiCh = 0;
+//             strAnalInfo.uiTotalLOB = _spOne;
+//             strAnalInfo.uiAETID = pLOBData->uiAETID;
+//             strAnalInfo.uiABTID = pLOBData->uiABTID;
+//             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+//         }
 
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
         SendNewUpd();
 
         // 2.4 추적 업데이트 성공 여부 플레그 업데이트
-        if( strAnalInfo.uiABTID == m_pMsg->x.strAnalInfo.uiABTID && m_pMsg->x.strAnalInfo.uiABTID != _spZero ) {
+        if( pLOBData->uiABTID == m_strAnalInfo.uiABTID && m_strAnalInfo.uiABTID != _spZero ) {
             bTrkLOB = true;
         }
 #endif
@@ -234,34 +227,71 @@ void CEmitterMerge::MergeEmitter()
         ++ pLOBData;
     }
 
+    // 추적 실패 처리여부를 수행한다.
+    m_pTheEmitterMergeMngr->ManageTrack( & m_strAnalInfo, NULL, & m_sLOBOtherInfo, m_bScanInfo );
+    RequestTrackCollect( NULL );
+
     // 3. 추적 채널 경우에는 재시도 또는 추적 채널을 닫는다.
-    if( m_bScanInfo == false ) {
-        ENUM_COLLECTBANK enCollectBank;
-        enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
+//     if( m_bScanInfo == false ) {
+//         ENUM_COLLECTBANK enCollectBank;
+//         enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
+// 
+//         if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
+//             strAnalInfo.enBoardID = g_enBoardId;
+//             strAnalInfo.uiCh = m_pMsg->x.strAnalInfo.uiCh;
+//             strAnalInfo.uiTotalLOB = _spOne;
+//             strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
+//             strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
+// 
+//             pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
+// 
+//             // 3.1 추적 채널 업데이트 및 빔 정보 제어조종 및 재밍신호관리장치에게 전달
+//             if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
+//                 SELABTDATA_EXT *pABTExtData;
+// 
+//                 g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+// 
+//                 pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( strAnalInfo.uiAETID, strAnalInfo.uiABTID );
+//                 SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
+//             }
+//             else {
+//                 g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+// 
+//                 SendDelete( strAnalInfo.uiAETID );
+//             }
+//         }
+//     }
 
-        if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
-            strAnalInfo.uiBand = g_enBoardId;
-            strAnalInfo.uiCh = m_pMsg->x.strAnalInfo.uiCh;
+}
+
+/**
+ * @brief     RequestTrackCollect
+ * @param     bool bReqTrack
+ * @param     SRxLOBData * pLOBData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-08, 13:44
+ * @warning
+ */
+void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
+{
+    STR_ANALINFO strAnalInfo;
+
+    if( pLOBData != NULL ) {
+        if( m_pTheEmitterMergeMngr->ReqTrack() == true ) {
+            strAnalInfo.enBoardID = m_strAnalInfo.enBoardID;
+            strAnalInfo.uiCh = ( CCommonUtils::GetEnumCollectBank( m_strAnalInfo.uiCh) == enTrackCollectBank ? m_strAnalInfo.uiCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
-            strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
-            strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
-
-            pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
-
-            // 3.1 추적 채널 업데이트 및 빔 정보 제어조종 및 재밍신호관리장치에게 전달
-            if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
-                SELABTDATA_EXT *pABTExtData;
-
-                g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
-
-                pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( strAnalInfo.uiAETID, strAnalInfo.uiABTID );
-                SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
+            strAnalInfo.uiAETID = pLOBData->uiAETID;
+            strAnalInfo.uiABTID = pLOBData->uiABTID;
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+        }
             }
             else {
-                g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
-
-                SendDelete( strAnalInfo.uiAETID );
-            }
+        if( m_pTheEmitterMergeMngr->ReqTrack() == false ) {
+            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & m_strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
     }
 
@@ -276,7 +306,7 @@ void CEmitterMerge::MergeEmitter()
  * @date      2021-07-24, 17:03
  * @warning
  */
-void CEmitterMerge::TrackFail()
+void CEmitterMerge::RequestTrackReCollect()
 {
     STR_ANALINFO strAnalInfo;
 
@@ -289,7 +319,7 @@ void CEmitterMerge::TrackFail()
     pSRxABTData = m_pTheEmitterMergeMngr->GetABTData( pLOBData->uiAETID, pLOBData->uiABTID );
     
     if( pSRxABTData != NULL ) {
-        strAnalInfo.uiBand = g_enBoardId;
+        strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
@@ -305,7 +335,7 @@ void CEmitterMerge::TrackFail()
 
 }
 
-void CEmitterMerge::ScanFail()
+void CEmitterMerge::RequestScanReCollect()
 {
 
 }

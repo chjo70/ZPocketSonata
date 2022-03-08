@@ -395,30 +395,15 @@ void ParsingArgument( int iArgc, char *iArgv[] )
     // 로그 객체를 생성한다.
     g_pTheLog = new CLog();
 
+    CCommonUtils::SetUnitType();
+
 #ifdef __VXWORKS__
     g_iClkTickPerSecond = sysClkRateGet();
 
 #endif
 
     // Endian 모드를 체크한다.
-    {
-        int i = 1;
-
-        if( *((char *) &i) ) {
-            printf( "Little Endian mode(Auto Check)." );
-            g_enEndian = enLITTLE_ENDIAN;
-        }
-        else if( *((char *) &i + (sizeof(int) - 1)) ) {
-            printf( "Big Endian mode(Auto Check)." );
-            g_enEndian = enBIG_ENDIAN;
-        }
-        else {
-            printf( "[W] Unknown Processor mode..." );
-            g_enEndian = enUNKNOWN_ENDIAN;
-            WhereIs;
-        }
-
-    }
+    UpdateCPUMode();
 
     // 보드 ID 를 읽어온다.
     if( iArgc >= 2 ) {
@@ -440,6 +425,35 @@ void ParsingArgument( int iArgc, char *iArgv[] )
         g_enBoardId = enMaster;
     }
 }
+
+/**
+ * @brief     UpdateCPUMode
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-08, 11:55
+ * @warning
+ */
+void UpdateCPUMode()
+{
+    int i = 1;
+
+    g_enEndian = enUNKNOWN_ENDIAN;
+    if( *((char *) &i) ) {
+        printf( "Little Endian mode(Auto Check)." );
+        g_enEndian = enLITTLE_ENDIAN;
+    }
+    else if( *((char *) &i + (sizeof(int) - 1)) ) {
+        printf( "Big Endian mode(Auto Check)." );
+        g_enEndian = enBIG_ENDIAN;
+    }
+    else {
+
+    }
+
+}
+
 
 /**
  * @brief		cleanup_handler

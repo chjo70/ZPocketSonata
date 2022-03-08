@@ -462,9 +462,6 @@
     <ClInclude Include="..\..\files\Anal\INC\AetIPL.h">
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\defines.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h">
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
@@ -475,12 +472,6 @@
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\INC\PDW.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\structs.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\system.h">
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h">
@@ -521,6 +512,15 @@
     </ClInclude>
     <ClInclude Include="..\..\files\ODBC\odbccore.h">
       <Filter>소스 파일\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\System.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\Structs.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\INC\Defines.h">
+      <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -160,13 +160,6 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\INC\IQ.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\INC\PDW.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Define.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Macro.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Struct.h" />
-    <ClInclude Include="..\ShuDeltaGraph\Anal\SigAnal\_Type.h" />
-    <ClInclude Include="..\ShuDeltaGraph\SpinCtrl\NumSpinCtrl.h" />
     <ClInclude Include="ButtonST\BCMenu.h" />
     <ClInclude Include="ButtonST\BtnST.h" />
     <ClInclude Include="ChildFrm.h" />

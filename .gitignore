@@ -44,3 +44,5 @@ Release
 *.suo
 *.aps
 *.ipch
+*.opensdf
+*.suo

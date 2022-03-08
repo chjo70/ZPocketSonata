@@ -182,7 +182,7 @@ typedef struct {
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
-    unsigned int iBoardID;
+    unsigned int uiBoardID;
     unsigned int iBank;
     unsigned int uiBand;                // 주파수 대역
     unsigned int iIsStorePDW;
