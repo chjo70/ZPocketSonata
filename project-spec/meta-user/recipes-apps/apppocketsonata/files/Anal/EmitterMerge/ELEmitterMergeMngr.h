@@ -537,6 +537,7 @@ public:
 
     void ManageTrack( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
     void ManageScan( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+    void ScanProcess();
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }

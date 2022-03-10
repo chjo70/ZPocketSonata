@@ -11815,9 +11815,9 @@ void CELEmitterMergeMngr::ManageScan( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBD
 
         case enScanCollectBank :
             // 병합된 LOB 만 추적 성공으로 한다.
-            if( Merge() == true ) {
-                ReqTrack( true );
-            }            
+//             if( Merge() == true ) {
+//                 ReqTrack( true );
+//             }            
             break;
 
         default :
@@ -11829,10 +11829,10 @@ void CELEmitterMergeMngr::ManageScan( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBD
         switch( enCollectBank ) {
         case enScanCollectBank :
             // 병합된 LOB 만 추적 성공으로 한다.
-            if( ReqTrack() == false ) {
-                // 추적 실패 처리로 재설정하게 한다.
-                TRACE( "추적 재시도" );
-            }            
+//             if( ReqTrack() == false ) {
+//                 // 추적 실패 처리로 재설정하게 한다.
+//                 TRACE( "추적 재시도" );
+//             }            
             break;
 
         default :

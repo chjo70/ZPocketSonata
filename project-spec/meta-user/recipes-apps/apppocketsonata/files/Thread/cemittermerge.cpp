@@ -203,17 +203,6 @@ void CEmitterMerge::MergeEmitter()
         m_pTheEmitterMergeMngr->ManageScan( & m_strAnalInfo, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
         RequestScanCollect( pLOBData );
 
-//         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
-//             SetStartOfAnalScan();
-// 
-//             strAnalInfo.enBoardID = g_enBoardId;
-//             strAnalInfo.uiCh = 0;
-//             strAnalInfo.uiTotalLOB = _spOne;
-//             strAnalInfo.uiAETID = pLOBData->uiAETID;
-//             strAnalInfo.uiABTID = pLOBData->uiABTID;
-//             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-//         }
-
         // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
         SendNewUpd();
 
@@ -341,9 +330,20 @@ void CEmitterMerge::RequestTrackReCollect()
  * @date      2022-03-10, 20:34
  * @warning
  */
-void CEmitterMerge::RequestScanCollect()
+void CEmitterMerge::RequestScanCollect( SRxLOBData *pLOBData )
 {
+    STR_ANALINFO strAnalInfo;
 
+    if( m_pTheEmitterMergeMngr->ReqScan() == true ) {
+        //SetStartOfAnalScan();
+
+        strAnalInfo.enBoardID = g_enBoardId;
+        strAnalInfo.uiCh = 0;
+        strAnalInfo.uiTotalLOB = _spOne;
+        strAnalInfo.uiAETID = pLOBData->uiAETID;
+        strAnalInfo.uiABTID = pLOBData->uiABTID;
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_SCANWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+    }
 }
 
 /**
@@ -357,7 +357,6 @@ void CEmitterMerge::RequestScanCollect()
  */
 void CEmitterMerge::SendNewUpd()
 {
-    //CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
 
 #ifdef _POCKETSONATA_
     int i;
