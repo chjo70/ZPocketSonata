@@ -59,6 +59,7 @@ private:
     // 수집 쓰레드에 추적/스캔 요청을 전송한다.
     void RequestTrackCollect( SRxLOBData *pLOBData );
     void RequestTrackReCollect();
+    void RequestScanCollect();
     void RequestScanReCollect();
 
     void ReloadLibrary();

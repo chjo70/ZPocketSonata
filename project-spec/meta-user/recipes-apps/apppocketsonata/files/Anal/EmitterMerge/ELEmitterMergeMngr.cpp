@@ -8577,8 +8577,6 @@ void CELEmitterMergeMngr::InsertAET( CELThreat *pTheThreat, bool bUpdateDB, bool
         pAETData = GetAETData( pTheThreat->m_nIndex );
         pAETExtData = GetAETExtData( pTheThreat->m_nIndex );
 
-        Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
-
         //pIDInfo = & pAETData->idInfo;
 
         // LOB 클러스터링으로 고정 ID 로 저장
@@ -11413,8 +11411,6 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
     struct tm *pstTime;
     char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
 
-    //printf( "\n pAETData[%p], pAETExtData[%p], pExtDB[%p]" , pAETData, pAETExtData, pExtDB );
-
     pstTime = localtime( & pAETData->tiFirstSeenTime );
     if( pstTime != NULL ) {
         strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
@@ -11477,6 +11473,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         //LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
         Kompex::SQLiteStatement stmt( m_pDatabase );
         stmt.SqlStatement( m_pszSQLString );
+        Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
 
         // do not forget to clean-up
         stmt.FreeQuery();  
@@ -11570,6 +11567,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
                               pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETData->iStat );
 
     theRS.Open( m_pszSQLString );
+    Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
     theRS.Close();
 
     DECLARE_END_CHECKODBC
@@ -11785,4 +11783,67 @@ void CELEmitterMergeMngr::ManageTrack( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOB
     }
 
     return;
+}
+
+/**
+ * @brief     스캔 관리를 수행한다.
+ * @param     STR_ANALINFO * pAnalInfo
+ * @param     SRxLOBData * pLOBData
+ * @param     SLOBOtherInfo * pLOBOtherInfo
+ * @param     bool bScanInfo
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-10, 17:18
+ * @warning
+ */
+void CELEmitterMergeMngr::ManageScan( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanInfo )
+{
+    ENUM_COLLECTBANK enCollectBank=CCommonUtils::GetEnumCollectBank( pAnalInfo->uiCh );
+
+    // LOB가 수신할 때의 아래 추적 여부를 결정한다.
+    if( pLOBData != NULL ) {
+        switch( enCollectBank ) {
+        case enDetectCollectBank :
+            // 스캔 시도를 한번도 안 했으면 무조건 스캔 시도함.
+            if( ReqScan() == false ) {
+                ReqScan(true);
+                ScanProcess();
+            }            
+            break;
+
+        case enScanCollectBank :
+            // 병합된 LOB 만 추적 성공으로 한다.
+            if( Merge() == true ) {
+                ReqTrack( true );
+            }            
+            break;
+
+        default :
+            break;
+        }
+    }
+    // LOB 처리 후에 아래 추적 여부를 결정한다.
+    else {
+        switch( enCollectBank ) {
+        case enScanCollectBank :
+            // 병합된 LOB 만 추적 성공으로 한다.
+            if( ReqTrack() == false ) {
+                // 추적 실패 처리로 재설정하게 한다.
+                TRACE( "추적 재시도" );
+            }            
+            break;
+
+        default :
+            break;
+        }
+    }
+
+    return;
+}
+
+void CELEmitterMergeMngr::ScanProcess()
+{
+
 }
