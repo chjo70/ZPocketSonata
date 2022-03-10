@@ -1964,17 +1964,20 @@ struct SELABTDATA_EXT {
     double dEasting[MAX_OF_LOBS_PE];
     double dNorthing[MAX_OF_LOBS_PE];
 
+#ifdef _POCKETSONATA_
     // 스캔 분석 추가 정보
+    bool bScanProcess;
     unsigned int uiTry;
     unsigned int uiScanStep;
+    
+
+#endif
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     //bool bIsFISINTTask;
     UINT uiOpInitID;
 
     unsigned int uiSeqNum;
-#elif _POCKETSONATA_
-
 #endif
 
     unsigned uiOpcode;

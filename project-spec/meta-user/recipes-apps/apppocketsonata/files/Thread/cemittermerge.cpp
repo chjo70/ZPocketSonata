@@ -192,17 +192,16 @@ void CEmitterMerge::MergeEmitter()
     pLOBData = ( SRxLOBData *) & m_uniLanData.stLOBData[0];
     
      for( i=0 ; i < m_strAnalInfo.uiTotalLOB ; ++i ) {
-#ifdef _TESTSBC_
-         // 2.1 분석된 LOB 데이터를 병합 관리한다.
-         m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
-
-#else
         // 2.1 분석된 LOB 데이터를 병합 관리한다.
         m_pTheEmitterMergeMngr->ManageThreat( & strLOBHeader, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );        
 
-        // 2.2 병합 관리된 빔 및 AET 정보를 처리한다.
+        // 2.2 LOB의 추적 관리를 수행한다.
         m_pTheEmitterMergeMngr->ManageTrack( & m_strAnalInfo, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
         RequestTrackCollect( pLOBData );
+
+        // 2.3 LOB의 스캔 관리를 수행한다.
+        m_pTheEmitterMergeMngr->ManageScan( & m_strAnalInfo, pLOBData, & m_sLOBOtherInfo, m_bScanInfo );
+        RequestScanCollect( pLOBData );
 
 //         if( m_pTheEmitterMergeMngr->DoesAnalScanTry() == true ) {
 //             SetStartOfAnalScan();
@@ -222,8 +221,6 @@ void CEmitterMerge::MergeEmitter()
         if( pLOBData->uiABTID == m_strAnalInfo.uiABTID && m_strAnalInfo.uiABTID != _spZero ) {
             bTrkLOB = true;
         }
-#endif
-
         ++ pLOBData;
     }
 
@@ -335,7 +332,16 @@ void CEmitterMerge::RequestTrackReCollect()
 
 }
 
-void CEmitterMerge::RequestScanReCollect()
+/**
+ * @brief     RequestScanCollect
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-10, 20:34
+ * @warning
+ */
+void CEmitterMerge::RequestScanCollect()
 {
 
 }
