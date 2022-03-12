@@ -71,7 +71,7 @@ protected:
 public:
 	BOOL Open(CHAR* lpstrDSN, CHAR* lpstrUser = NULL, CHAR* lpstrPass = NULL);
 	BOOL DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut = NULL, HWND hWnd = NULL, enum drvCompletion drvConn = sqlNoPrompt);
-    void show_error(unsigned int handletype );
+    void show_error( SQLSMALLINT handletype );
 	void SetReadOnly(BOOL bReadOnly = TRUE);
 	void SetConnectionTimeout(LONG nSeconds);
 	LONG GetConnectionTimeout();

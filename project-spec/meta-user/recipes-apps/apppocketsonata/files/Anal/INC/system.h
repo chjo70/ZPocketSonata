@@ -23,100 +23,100 @@
 
 /////////////////////////////////////////////////////////////////////////
 #ifdef __ZYNQ_BOARD__
-#define SD_CARD                     (char *) "/run/media/mmcblk0p1/SYSTEM"
+#define SD_CARD                     (const char *) "/run/media/mmcblk0p1/SYSTEM"
 #elif defined(__linux__)
-#define SD_CARD                     (char *) "/home/chjo70" // "/var/log/LOG"
+#define SD_CARD                     (const char *) "/home/chjo70" // "/var/log/LOG"
 #elif __VXWORKS__
-#define SD_CARD                     (char *) "/RAMDRV:0/"
+#define SD_CARD                     (const char *) "/RAMDRV:0/"
 #else
-#define SD_CARD                     (char *) "E:\\SONATA2\\Dev\\PocketSONATA\\dev"               // getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
+#define SD_CARD                     (const char *) "E:\\SONATA2\\Dev\\PocketSONATA\\dev"               // getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
 #endif
 
 
 #ifdef __ZYNQ_BOARD__
-#define HOME_ID                     (char *) "root"
+#define HOME_ID                     (const char *) "root"
 #else
-#define HOME_ID                     (char *) "chjo70"
+#define HOME_ID                     (const char *) "chjo70"
 #endif
 
 #ifdef __ZYNQ_BOARD__
-#define SHARED_DATA_DIRECTORY        (char *) "/var/rawdata"
+#define SHARED_DATA_DIRECTORY       (const char *) "/var/rawdata"
 #elif _WIN32
 
 #ifdef _XBAND_
-#define SHARED_DATA_DIRECTORY        (char *) "D:/PDW_RAW"
+#define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
 #else
-#define SHARED_DATA_DIRECTORY        (char *) "d:/rawdata"
+#define SHARED_DATA_DIRECTORY       (const char *) "d:/rawdata"
 #endif
 
 
 #elif __VXWORKS__
-#define SHARED_DATA_DIRECTORY         (char *) "/d/rawdata" // "/var/log/LOG"
+#define SHARED_DATA_DIRECTORY       (const char *) "/d/rawdata" // "/var/log/LOG"
 #else
-//#define SHARED_DATA_DIRECTORY      (char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
-#define SHARED_DATA_DIRECTORY        (char *) "/run/user/1000/gvfs/smb-share:server=192.168.10.245,share=shared,user=ELS/rawdata"
+//#define SHARED_DATA_DIRECTORY     (const char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
+#define SHARED_DATA_DIRECTORY       (const char *) "/run/user/1000/gvfs/smb-share:server=192.168.10.245,share=shared,user=ELS/rawdata"
 #endif
 
 // CED/EOB 폴더 위치
 #ifdef __ZYNQ_BOARD__
 #define CEDEOB_SQLITE_FOLDER        SHARED_DATA_DIRECTORY
 #elif defined(__linux__)
-#define CEDEOB_SQLITE_FOLDER        (char *) "/home/chjo70"
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/home/chjo70"
 #elif defined(__VXWORKS__)
-#define CEDEOB_SQLITE_FOLDER        (char *) "/RAMDRV:0/LIB"
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
 #else
-#define CEDEOB_SQLITE_FOLDER        (char *) "c:/sqlite3"
+#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"
 #endif
-#define CEDEOB_SQLITE_FILENAME      "cedeob.sqlite3"
+#define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
 
 // 위협정보 폴더 위치
 #ifdef __ZYNQ_BOARD__
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/root"
+#define EMITTER_SQLITE_FOLDER       (const char *) "/home/root"
 #elif defined(__linux__)
-#define EMITTER_SQLITE_FOLDER       (char *) "/home/chjo70"
+#define EMITTER_SQLITE_FOLDER       (const char *) "/home/chjo70"
 #elif defined(__VXWORKS__)
-#define EMITTER_SQLITE_FOLDER       (char *) "/RAMDRV:0/LIB"
+#define EMITTER_SQLITE_FOLDER       (const char *) "/RAMDRV:0/LIB"
 #else
-#define EMITTER_SQLITE_FOLDER       (char *) "c:/sqlite3"
+#define EMITTER_SQLITE_FOLDER       (const char *) "c:/sqlite3"
 #endif
-#define EMITTER_SQLITE_FILENAME     (char *) "emitter.sqlite3"
+#define EMITTER_SQLITE_FILENAME     (const char *) "emitter.sqlite3"
 
 // 위협정보 원본 파일
-#define BLK_EMITTER_SQLITE_FILENAME (char *) "emitter_blank.sqlite3"
+#define BLK_EMITTER_SQLITE_FILENAME (const char *) "emitter_blank.sqlite3"
 
 // INI 폴더 위치
 #ifdef __ZYNQ_BOARD__
-#define INI_FOLDER                  (char *) "/home/root"
+#define INI_FOLDER                  (const char *) "/home/root"
 #elif defined(__VXWORKS__)
-#define INI_FOLDER                  (char *) "/tffs0/INI"
+#define INI_FOLDER                  (const char *) "/tffs0/INI"
 #elif defined(__linux__)
-#define INI_FOLDER                  (char *) "/home/chjo70"
+#define INI_FOLDER                  (const char *) "/home/chjo70"
 #else
-#define INI_FOLDER                  (char *) "c:/sqlite3"
+#define INI_FOLDER                  (const char *) "c:/sqlite3"
 #endif
-#define INI_FILENAME                (char *) "/sysconfig.ini"
+#define INI_FILENAME                (const char *) "/sysconfig.ini"
 
 // qDecoder 폴더 위치
-#define QDECODER_LOG_FOLDER         (char *) "/tmp/LOG"
-#define QDECODER_LOG_FILENAME       (char *) "/qDecoder.log"
+#define QDECODER_LOG_FOLDER         (const char *) "/tmp/LOG"
+#define QDECODER_LOG_FILENAME       (const char *) "/qDecoder.log"
 
-#define QDECODER_UPLOAD_FOLDER      (char *) "/tmp/LOG/UPLOAD"
+#define QDECODER_UPLOAD_FOLDER      (const char *) "/tmp/LOG/UPLOAD"
 
 #ifdef __linux__
-#define PROGRAM_LOG_FOLDER          (char *) "/tmp/LOG"
+#define PROGRAM_LOG_FOLDER          (const char *) "/tmp/LOG"
 #else
-#define PROGRAM_LOG_FOLDER          (char *) "c:"
+#define PROGRAM_LOG_FOLDER          (const char *) "c:"
 #endif
 
 // 실행 파일이 있는 위치에서 로그 디렉토리
 #ifdef __linux__
-#define LOG_DIRECTORY               ("/tmp/LOG")
+#define LOG_DIRECTORY               (const char *) "/tmp/LOG"
 #elif _MSC_VER
-#define LOG_DIRECTORY               ("\\Debug\\LOG")
+#define LOG_DIRECTORY               (const char *) "\\Debug\\LOG"
 #elif __VXWORKS__
-#define LOG_DIRECTORY               ("/RAMDRV:0/LOG")
+#define LOG_DIRECTORY               (const char *) "/RAMDRV:0/LOG"
 #else
-#define LOG_DIRECTORY               ("c:/temp")
+#define LOG_DIRECTORY               (const char *) "c:/temp"
 #endif
 
 

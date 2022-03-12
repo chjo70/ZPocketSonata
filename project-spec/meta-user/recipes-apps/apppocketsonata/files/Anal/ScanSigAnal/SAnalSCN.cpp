@@ -58,7 +58,7 @@ void CSAnalScan::Init( int noEMT, int noCh )
 {
 
 	m_nScnTyp = _spUnknown;
-    m_nScnPrd = _spZero;
+    m_uiScnPrd = _spZero;
 
 	m_noEMT = noEMT; // m_pScanSigAnal->GetScanNoEMT();
 
@@ -170,7 +170,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
     */
     if( m_pEmitter == NULL ) {
         m_nScnTyp = E_AET_SCAN_UNKNOWN;
-        m_nScnPrd = _spZero;
+        m_uiScnPrd = _spZero;
 
     }
     else {
@@ -198,7 +198,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
 
         if( CheckSteadySignal( & m_nSample, paMean ) == true ) {
             m_nScnTyp = E_AET_SCAN_STEADY;
-            m_nScnPrd = _spZero;
+            m_uiScnPrd = _spZero;
 
             m_nCoModWc[m_noEMT] = _spZero;
             enScanResult = _spAnalSuc;
@@ -206,14 +206,12 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
         else {
             AutoCorerelation( & m_nSample, & m_nAutoCor );
 
-            m_nScnPrd = FindPeak( & m_nAutoCor );
+            m_uiScnPrd = FindPeak( & m_nAutoCor );
             // printf( "\n Period : %d(%d) ms" , UDIV( m_nScnPrd, ONE_MILLISEC ), m_nScnPrd );
 
             bthreat = ScanTypeDecision2( & m_nSample, & m_nAutoCor );
 
-            // printf( "\n bthreat=%d" , bthreat );
-
-            if( m_nScnPrd == (UINT) -1 ) {
+            if( m_uiScnPrd == (UINT) -1 ) {
                 m_nScnTyp = E_AET_SCAN_SCANFAIL;
                 m_nCoModWc[m_noEMT] = _spZero;
                 enScanResult = _spAnalFail;
@@ -234,7 +232,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
             }
         }
 
-        MakeAETfromEmitter( m_pEmitter, 0 );
+        MakeLOBDatafromEmitter( m_pEmitter, _spZero );
     }
 
     // 스캔 정보 저장
@@ -242,7 +240,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
 
 #ifndef _XBAND_
     pLOBData->iScanType = m_nScnTyp;
-    pLOBData->fScanPeriod = TOAmsCNV( m_nScnPrd );
+    pLOBData->fScanPeriod = TOAmsCNV( m_uiScnPrd );
 
 #endif
 
@@ -318,7 +316,7 @@ void CSAnalScan::CalcSamplingTime()
 	/*! \bug  샘플링 타임 제한 조건을 두어야 한다.
 	    \date 2006-09-29 15:55:28, 조철희
 	*/
-	m_nSampleTime = CalcSamplingTime2( m_noEMT, (UINT) priMean );
+	m_nSampleTime = CalcSamplingTime( m_noEMT, (UINT) priMean );
 
 }
 
@@ -331,7 +329,7 @@ void CSAnalScan::CalcSamplingTime()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-15 16:21:42
 //
-UINT CSAnalScan::CalcSamplingTime2( UINT noEMT, UINT priMean ) 
+UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean ) 
 {
 	UINT samplingTime;
 
@@ -740,6 +738,7 @@ void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
 //
 UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 {
+    UINT uiRet;
     UINT i, j;
 
     float	*pAcf;
@@ -777,21 +776,21 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 	// printf( "\n 피크 후보 개수[%d]" , m_nCoCanPeak );
 
 	if( m_nCoCanPeak <= _spOne ) {
-		return (UINT) -1;
+		uiRet = (UINT) -1;
 	}
 	else if( m_nCoCanPeak == _spTwo ) {
-		return UMUL( m_nCanPeak[0], m_nSampleTime );
+		uiRet = UMUL( m_nCanPeak[0], m_nSampleTime );
 	}
-
+    else {
 	// 피크 검증
 	// 최대 피크 값은 하한값(0.4) 이상 이어야 하며
 	// 피크에 대한 주기성이 존재해야 한다. 
 	//-- 조철희 2006-05-02 10:46:20 --//
 	if( pAutoCor->acf[ m_nCanPeak[0] ] < 0.4 ) {
 		// printf( "\n 제일 큰 ACF 값이 0.4(%f) 이하여서 주기가 없는 것으로 간주합니다." , pAutoCor->acf[ m_nCanPeak[0] ] );
-		return (UINT) -1;
+		    uiRet = (UINT) -1;
 	}
-
+        else {
 	// 주기 반복성 체크해서 존재해야 주기값을 인정한다.
 	/*! \bug  N번 건너띄어서 주기성을 체크하는 기능을 추가함.
 	    \date 2006-08-16 14:47:28, 조철희
@@ -835,12 +834,16 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 	if( k == _spZero ) {
 		// debug, 00-07-27 14:41:04
         //Printf( "\n 주기를 못 찾았습니다." );
-		return (UINT) -1;
+		        uiRet = (UINT) -1;
 	}
 	else {
         //Printf( "\n 주기 [%d], k=%d" , UMUL( k, m_nSampleTime ), k );
-		return UMUL( k, m_nSampleTime );
+		        uiRet = UMUL( k, m_nSampleTime );
+	        }
+        }
 	}
+
+    return uiRet;
 
 }
 
@@ -866,7 +869,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
  	KurtosisSkewness( pSample );		// debug, 00-07-26 22:36:44
 
 	// printf( "\n 스캔형태[%d]" , ScnType );
-	if( m_nScnPrd != (UINT) -1 && m_nScnPrd <= _sp.sc.thtrkprd ) {
+	if( m_uiScnPrd != (UINT) -1 && m_uiScnPrd <= _sp.sc.thtrkprd ) {
 		switch( ScnType ) {
             case E_AET_SCAN_STEADY :
 				// prdVer는 피크 주기성이 있는 것만 해당하는 개수이다.
@@ -881,7 +884,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 					*/
 					if( m_nSample.kurtosis <= 5.0 ) {
                         m_nScnTyp = E_AET_SCAN_STEADY;
-						m_nScnPrd = _spZero;
+						m_uiScnPrd = _spZero;
 					}
 				}
 				break;
@@ -925,7 +928,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 				else {
 					if( fabs( pSample->skewness ) <= 1.0 ) {	// debug, 00-04-17 20:38:23
                         m_nScnTyp = E_AET_SCAN_STEADY;
-						m_nScnPrd = _spZero;
+						m_uiScnPrd = _spZero;
 					}
 					else {
 						m_nScnTyp = DetectUnknown;
@@ -934,7 +937,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 				break;
 
             case E_AET_SCAN_CONICAL :
-				printf( "\n CONICAL2[%d]" , UDIV( m_nScnPrd, _spOneMilli) );
+				printf( "\n CONICAL2[%d]" , UDIV( m_uiScnPrd, _spOneMilli) );
 				if( prdVer >= _spOne ) {
 					m_nScnTyp = LowIllustrationTest;
 				}
@@ -967,7 +970,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 			    m_nScnTyp = DetectNonTrackScanPattern( pSample, pAcf );
 
 			    // 최소 스캔 주기 체크함.
-			    if( (UINT) m_nScnPrd <= UMUL( 300, _spOneMilli ) ) {
+			    if( (UINT) m_uiScnPrd <= UMUL( 300, _spOneMilli ) ) {
 				    /*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 						    \date 2009-09-28 17:44:14, 조철희
 				    */
@@ -1008,7 +1011,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 
 	    else {
 		    // 최소 스캔 주기 체크함.
-		    if( (UINT) m_nScnPrd <= UMUL( 7, _spOneMilli ) ) {
+		    if( (UINT) m_uiScnPrd <= UMUL( 7, _spOneMilli ) ) {
 			    /*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 					    \date 2009-09-28 17:44:14, 조철희
 			    */
@@ -1179,13 +1182,13 @@ UINT CSAnalScan::PeriodVerify( void )
 	UINT maxErr;
 	UINT scnErr, offErr;	// scan period error and off sample error
 
-	if( m_nScnPrd == _spZero || m_nScnPrd == (UINT) -1 ) {
+	if( m_uiScnPrd == _spZero || m_uiScnPrd == (UINT) -1 ) {
 		coSamePeakDtoa = _spZero;
 	}
     else {
-	    _EQUALS3( virPeak, prdPeak, UDIV( m_nScnPrd, m_nSampleTime ) );
+	    _EQUALS3( virPeak, prdPeak, UDIV( m_uiScnPrd, m_nSampleTime ) );
 
-	    scnErr = UDIV( UDIV( m_nScnPrd * 5, 100 ), m_nSampleTime );
+	    scnErr = UDIV( UDIV( m_uiScnPrd * 5, 100 ), m_nSampleTime );
 	    offErr = UDIV( stOffPdw, 1.5 );
 	    maxErr = _max( 1, _min( _max( scnErr, offErr ), virPeak/2 ) );
 
@@ -1203,6 +1206,8 @@ UINT CSAnalScan::PeriodVerify( void )
 				    virPeak = virPeak + prdPeak;
 				    break;
 			    }
+                ELSE;
+
 		    }
 		    else {
 			    break;
@@ -1238,7 +1243,7 @@ UINT CSAnalScan::HighIllustrationTest2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
   double ccfConical;
 
   // Steady CCF 비교
-  if( m_nScnPrd != _spZero && m_nScnPrd != (UINT) -1 )		ihPeriod = ( UDIV(m_nScnPrd, m_nSampleTime) + 1 );
+  if( m_uiScnPrd != _spZero && m_uiScnPrd != (UINT) -1 )		ihPeriod = ( UDIV(m_uiScnPrd, m_nSampleTime) + 1 );
   else                            								ihPeriod = pAcf->co;
 
 	if( ihPeriod == 0 ) {
@@ -1456,11 +1461,11 @@ float CSAnalScan::MeanInArray(UINT *series, UINT co)
  * @param pEmitter
  * @param idxEmitter
  */
-void CSAnalScan::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
+void CSAnalScan::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 {
 
     // 기본 LOB 형태 저장
-    CMakeAET::MakeAETfromEmitter( pEmitter, idxEmitter );
+    CMakeAET::MakeLOBDatafromEmitter( pEmitter, idxEmitter );
 
 }
 

@@ -316,6 +316,9 @@ bool CPositionEstimationAlg::VerifyOfPositionEstimation( SELPE_RESULT *pResult, 
 				break;
 			}
 		}
+        else {
+
+        }
 
 		++ pSensorLatitude;
 		++ pSensorLongitude;

@@ -122,7 +122,7 @@ public:
     //##ModelId=452B0C560060
     void MakeFrqInfoInSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     int MakeDIInfoInSeg( STR_EMITTER *pEmitter);
-    void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
+    void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
 
     //##ModelId=452B0C560071
     void MakeAET();

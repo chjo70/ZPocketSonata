@@ -134,6 +134,7 @@ void InitDatabase()
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
 #ifdef _SQLITE_    
+    LOGMSG( enNormal, "#### SQLITE 모드 입니다. ####" );
     
 #ifdef __linux__
     if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
@@ -169,9 +170,10 @@ void InitDatabase()
 
         
 #elif _MSSQL_
+    LOGMSG( enNormal, "#### MSSQL 모드 입니다. ####" );
 
 #else
-    printf( "\n #### NO_SQLITE 모드 입니다. ####" );
+    LOGMSG( enNormal, "#### NO_SQLITE 모드 입니다. ####" );
 
 #endif
 
@@ -205,6 +207,9 @@ void Start( int iArgc, char *iArgv[] )
 #endif
 
     InitDatabase();
+
+    LOG_LINEFEED;
+    LOG_LINEFEED;
 
     g_pTheSysConfig = new CSysConfig();
 

@@ -229,7 +229,7 @@ void CRawFile::GetFilename( char *pFilename )
  * @date      2013-07-02 오전 11:50 
  * @warning   
  */
-bool CRawFile::FileOpen( char *filename, int iMode )
+bool CRawFile::FileOpen( const char *filename, int iMode )
 {
 	bool bRet = false;
 	//Init();

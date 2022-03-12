@@ -231,6 +231,8 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 					bRet = FALSE;
 				}
 			}
+            else {
+            }
 			break;
 
 		case _JITTER_RANDOM :

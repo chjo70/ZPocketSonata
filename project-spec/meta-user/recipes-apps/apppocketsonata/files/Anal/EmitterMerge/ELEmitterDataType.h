@@ -1890,6 +1890,16 @@ union UELMANUALVAL {
 
 }  ;
 
+typedef enum {
+    enSCAN_NotProcessing=0,
+
+    enSCAN_Requesting,
+    enSCAN_Processing,
+    enSCAN_Stopping,
+    enSCAN_Canceling,
+
+} ENUM_SCAN_PROCESS;
+
 /**
  * @typedef   SELABTDATA_EXT
  * @brief     ABT 구조체 정의
@@ -1966,7 +1976,7 @@ struct SELABTDATA_EXT {
 
 #ifdef _POCKETSONATA_
     // 스캔 분석 추가 정보
-    bool bScanProcess;
+    ENUM_SCAN_PROCESS enScanProcess;
     unsigned int uiTry;
     unsigned int uiScanStep;
     
@@ -1983,6 +1993,7 @@ struct SELABTDATA_EXT {
     unsigned uiOpcode;
     time_t tiSendLan;
 
+   
 } ;
 
 struct SELAETDATA_EXT {

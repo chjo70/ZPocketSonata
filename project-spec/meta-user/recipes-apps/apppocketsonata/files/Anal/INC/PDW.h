@@ -185,16 +185,23 @@ union DMAPDW {
     int GetPulsetype() {
         int iSignaltype = STAT_NORMAL;
 
-        if( uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 )
+        if( uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 ) {
             iSignaltype = STAT_CW;
+        }
         else {
-            if( uPDW.x.uniPdw_status.stPdw_status.pmop_flag == 1 )
+            if( uPDW.x.uniPdw_status.stPdw_status.pmop_flag == 1 ) {
                 iSignaltype = STAT_PMOP;
+            }
             else if( uPDW.x.uniPdw_status.stPdw_status.fmop_flag == 1 ) {                    
-                if( uPDW.x.uniPdw_status.stPdw_status.fmop_dir == 1 )
+                if( uPDW.x.uniPdw_status.stPdw_status.fmop_dir == 1 ) {
                     iSignaltype = STAT_CHIRPUP;
-                else 
+                }
+                else {
                     iSignaltype = STAT_CHIRPDN;
+                }
+            }
+            else {
+
             }
 
         }

@@ -214,7 +214,7 @@ void CSignalCollect::RoutineForDetectAnal()
                     break;
 
                 case enTHREAD_REQ_CLOSE_SCANWINDOWCELL :
-                    //CloseSetScanWindowCell();
+                    CloseScanWindowCell();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
@@ -355,6 +355,8 @@ void CSignalCollect::AnalysisStart()
     LOGENTRY;
 
     int iCh;
+    unsigned int uiCh;
+
     bool bIsOut = true;
 
     STR_COLLECTINFO strCollectInfo;
@@ -395,15 +397,16 @@ void CSignalCollect::AnalysisStart()
         iCh = CheckCollectBank( enTrackCollectBank );
         if( iCh >= 0 ) {
             pCollectBank = GetCollectBank( iCh );
+            uiCh = _max( iCh - DETECT_CHANNEL, _spZero );
 
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
             strCollectInfo.uiCh = iCh;
-            strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL].uiAETID;
-            strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL].uiABTID;
+            strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
+            strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
 
             MakeStaticPDWData( pCollectBank->GetPDWData() );
             memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
-            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
+            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
 
             if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
                 //TRACE( "\nCSignalCollect::AnalysisStart()");
@@ -424,17 +427,18 @@ void CSignalCollect::AnalysisStart()
         iCh = CheckCollectBank( enScanCollectBank );        
         if( iCh >= 0 ) {
             pCollectBank = GetCollectBank( iCh );
+            uiCh = _max( iCh - DETECT_CHANNEL - TRACK_CHANNEL, _spZero );
 
             strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
             strCollectInfo.uiCh = iCh;
-            strCollectInfo.uiAETID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiAETID;
-            strCollectInfo.uiABTID = m_ABTData[iCh-DETECT_CHANNEL-TRACK_CHANNEL].uiABTID;
+            strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
+            strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
 
             MakeStaticPDWData( pCollectBank->GetPDWData() );
             memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
-            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(iCh-DETECT_CHANNEL), sizeof(SRxABTData) );
+            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
 
-            //g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO) );
+            g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
             bIsOut = false;
         }
 
@@ -566,7 +570,7 @@ void CSignalCollect::ReqTrackWindowCell()
     //LOGMSG3( enDebug, " [%d] 대역, 추적 [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
-    if(  m_pMsg->x.strAnalInfo.uiCh == 0 ) {
+    if(  m_pMsg->x.strAnalInfo.uiCh == _spZero ) {
         NewTrackWindowCell( pABTData );
     }
     // 추적 채널 업데이트한다.
@@ -723,11 +727,11 @@ void CSignalCollect::SimPDWData()
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
 
 #ifdef _POCKETSONATA_
-    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 #elif _XBAND_
-    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
 #else
-    m_theDataFile.ReadDataMemory( (const char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 #endif
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.
@@ -838,7 +842,7 @@ void CSignalCollect::ReqScanWindowCell()
     //LOGMSG3( enDebug, " [%d] 대역, 스캔 [%d] 채널 에서 분석된 빔 번호[%d] 을 기반으로 윈도우 셀을 설정합니다." , m_pMsg->x.strAnalInfo.uiBand, m_pMsg->x.strAnalInfo.uiCh, m_pMsg->x.strAnalInfo.uiABTID );
 
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
-    if(  m_pMsg->x.strAnalInfo.uiCh == 0 ) {
+    if(  m_pMsg->x.strAnalInfo.uiCh == _spZero ) {
         NewScanWindowCell( pABTData );
     }
     // 스캔 채널 업데이트한다.
@@ -920,8 +924,6 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
         if( pRadarMode != NULL ) {
             pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMin );
             pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMax );
-            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iLow, & pstrWindowCell->strCh.iLow, (int) g_enBoardId, pRadarMode->fRF_TypicalMin );
-            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iHgh, & pstrWindowCell->strCh.iHgh, (int) g_enBoardId, pRadarMode->fRF_TypicalMax );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_TypicalMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pRadarMode->fPD_TypicalMax );
@@ -929,10 +931,8 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( 0, pABTData->fFreqMin );
-            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( 0, pABTData->fFreqMax );
-            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iLow, & pstrWindowCell->strCh.iLow, (int) g_enBoardId, pABTData->fFreqMin );
-            //CPOCKETSONATAPDW::EncodeRealFREQMHz( & pstrWindowCell->strFreq.iHgh, & pstrWindowCell->strCh.iHgh, (int) g_enBoardId, pABTData->fFreqMax );
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMin );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMax );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );

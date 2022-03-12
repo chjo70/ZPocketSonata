@@ -38,10 +38,13 @@ void CODBCDatabase::SQLFree()
 void CODBCDatabase::Close()
 {
 	m_bIsConnected = FALSE;
-	if(m_hDbc == NULL)
-		return;
+
+	if(m_hDbc == NULL) {
+    }
+    else {
 	SQLDisconnect(m_hDbc);
 	SQLFree();
+    }
 }
 
 BOOL CODBCDatabase::Open(CHAR* szDSN,CHAR* szUser, CHAR* szPass)
@@ -96,11 +99,13 @@ BOOL CODBCDatabase::DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut, HWND hWnd
 	SQLSMALLINT pcbConnStrOut;
     SQLCHAR szOut[1024];
 
-	if(drvConn == sqlPrompt && hWnd == NULL)
-		return FALSE;
-
-	if(m_lConnectionTimeout > 0)
+	if(drvConn == sqlPrompt && hWnd == NULL) {
+		m_bIsConnected = FALSE;
+    }
+    else {
+	    if(m_lConnectionTimeout > 0) {
 		SQLSetConnectAttr(m_hDbc, SQL_ATTR_CONNECTION_TIMEOUT, (SQLPOINTER)m_lConnectionTimeout, 0);
+        }
 	
 	SQLSetConnectAttr(m_hDbc, SQL_ATTR_LOGIN_TIMEOUT, (SQLPOINTER)m_lLoginTimeout, 0);
 	
@@ -118,10 +123,12 @@ BOOL CODBCDatabase::DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut, HWND hWnd
     }
 	
 	m_bIsConnected = ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
+    }
+
 	return m_bIsConnected;
 }
 
-void CODBCDatabase::show_error(unsigned int handletype )
+void CODBCDatabase::show_error( SQLSMALLINT handletype )
 {
     SQLCHAR sqlstate[1024];
     SQLCHAR message[1024];

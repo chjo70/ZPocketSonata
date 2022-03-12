@@ -395,6 +395,16 @@ void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     SetScanInfo( bScanInfo );
 
 #ifdef __VXWORKS__
+    Log( enNormal, "[%4d] %s %5d [%s] (%7d,%7d)[MHz] [%s] (%7d,%7d)[us] (%7d,%7d)[ns] (%5d,%5d)[dBm], (%d,%5d[us]) [%d]" ,
+        pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
+        F2I(pLOBData->fDOAMean),
+        g_szAetFreqType[pLOBData->iFreqType], F2I(pLOBData->fFreqMin), F2I(pLOBData->fFreqMax),
+        g_szAetPriType[pLOBData->iPRIType], F2I(pLOBData->fPRIMin), F2I(pLOBData->fPRIMax),
+        F2I(pLOBData->fPWMin), F2I(pLOBData->fPWMax),
+        F2I(pLOBData->fPAMin), F2I(pLOBData->fPAMax),
+        pLOBData->iScanType, F2I(pLOBData->fScanPeriod),
+        pLOBData->iNumOfPDW
+        );
 
 #else
 #ifdef _POCKETSONATA_
@@ -5176,6 +5186,8 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
 
     IdentifyABT( m_pABTData, m_pABTExtData );
 
+    //////////////////////////////////////////////////////////////////////////
+
     m_pABTExtData->bCompFreq = true;
     m_pABTExtData->bCompPRI = true;
 
@@ -5212,15 +5224,15 @@ void CELEmitterMergeMngr::CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLO
 
 #endif
 
-    memcpy( & m_ABTDataExt, & m_LOBDataExt, sizeof(SELLOBDATA_EXT) );
-
     m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_NEW );
 
     m_pABTExtData->iLOBPoolIndex = nIndex;
 
-    memset( & m_pABTExtData->stIDType, 0, sizeof( STR_ID_TYPE ) );
+    //memset( & m_pABTExtData->stIDType, 0, sizeof( STR_ID_TYPE ) );
 
     //UpdatePolization( pABTExtData );
+
+    memcpy( & m_ABTDataExt, & m_LOBDataExt, sizeof(SELLOBDATA_EXT) );
 
     //
     ClearLOBs( nIndex );
@@ -8919,7 +8931,8 @@ void CELEmitterMergeMngr::InitDataFromDB()
     char buffer[400];
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
+    //sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
+    sprintf( buffer, "select max(OP_INIT_ID) from LOBDATA" );
 
     m_lOpInitID = GetLONGData( buffer ) + 1;
 
@@ -11714,16 +11727,6 @@ bool CELEmitterMergeMngr::DoesAnalScanTry()
 }
 
 /**
- * @brief CELEmitterMergeMngr::SetStartOfAnalScan
- */
-void CELEmitterMergeMngr::SetStartOfAnalScan()
-{
-    if( m_pABTExtData != NULL ) {
-
-    }
-}
-
-/**
  * @brief     ManageTrack
  * @param     STR_ANALINFO * pLOBHeader
  * @param     SRxLOBData * pLOBData
@@ -11807,9 +11810,8 @@ void CELEmitterMergeMngr::ManageScan( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBD
         switch( enCollectBank ) {
         case enDetectCollectBank :
             // 스캔 시도를 한번도 안 했으면 무조건 스캔 시도함.
-            if( ReqScan() == false ) {
-                ReqScan(true);
-                ScanProcess();
+            if( EnScanProcess() == enSCAN_NotProcessing ) {
+                ScanProcess( enSCAN_Requesting );
             }            
             break;
 
@@ -11843,7 +11845,44 @@ void CELEmitterMergeMngr::ManageScan( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOBD
     return;
 }
 
-void CELEmitterMergeMngr::ScanProcess()
+/**
+ * @brief     ScanProcess
+ * @param     ENUM_SCAN_PROCESS enScanProcess
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-11, 17:37
+ * @warning
+ */
+void CELEmitterMergeMngr::ScanProcess( ENUM_SCAN_PROCESS enScanProcess )
 {
+
+    switch( enScanProcess ) {
+    case enSCAN_NotProcessing :
+        break;
+
+    case enSCAN_Requesting :
+        ++ m_pABTExtData->uiTry;
+        //unsigned int uiTry;
+        //unsigned int uiScanStep;
+        break;
+
+    case enSCAN_Processing :
+        break;
+
+    case enSCAN_Stopping :
+        break;
+
+    case enSCAN_Canceling :
+        break;
+
+    default :
+        break;
+
+    }
+
+    EnScanProcess( enScanProcess );
+
 
 }

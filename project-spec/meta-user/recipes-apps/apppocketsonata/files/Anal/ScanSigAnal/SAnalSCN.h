@@ -53,7 +53,7 @@ protected:
 	    \date 2009-10-08 12:39:49, 조철희
 	*/
 	//##ModelId=452B0C450152
-    UINT m_nScnPrd;										//! 스캔 주기값
+    UINT m_uiScnPrd;										//! 스캔 주기값
 	//##ModelId=452B0C450153
 	UINT m_nScnTyp;										//! 스캔 형태
 
@@ -91,7 +91,7 @@ public:
 	//BOOL CompMeanDiff(int x, int y, int thresh);
 	float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
-    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_nScnTyp, *pScanPrd= m_nScnPrd; }
+    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_nScnTyp, *pScanPrd= m_uiScnPrd; }
 	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
@@ -130,14 +130,14 @@ public:
 	//##ModelId=452B0C450214
 	UINT CalcSamplingTime( UINT priMean );
 	//##ModelId=452B0C45021B
-	UINT CalcSamplingTime2( UINT noEMT, UINT priMean );
+	UINT CalcSamplingTime( UINT noEMT, UINT priMean );
 	//##ModelId=452B0C45021E
 	void CalcSamplingTime();
 	//##ModelId=452B0C450224
     EN_SCANRESULT AnalScan( int preAnalStat=0 );
 	//##ModelId=452B0C450226
 	void Init( int noEMT=0, int noCh=0 );
-    void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
+    void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
 
     BOOL KnownAnalysis();
 

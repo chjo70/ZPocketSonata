@@ -31,7 +31,11 @@
 
 #define DEFAULT_SYMBOL_CODE		"SFPP-----------"
 
-#define SWAP( A, B, C ) { A = B; B = C; C = A; }
+#define SWAP( A, B, C ) {   \
+            A = B;          \
+            B = C;          \
+            C = A;          \
+        }
 
 // 정적 초기화
 int  CELSignalIdentifyAlg::m_CoInstance = 0;
@@ -4326,6 +4330,9 @@ BOOL CELSignalIdentifyAlg::IdentifyPatternRange( SRadarMode *pRadarMode ) //#FA_
 
     else if( CompMarginDiff<float>( m_pLOBData->fPRIPatternPeriod, pRadarMode->fPRI_PatternPeriodMin, pRadarMode->fPRI_PatternPeriodMax, m_pSEnvironVariable->fMarginPriModPeriodErrorRatio ) == _spFalse ) {
         bret = FALSE;
+    }
+    else {
+
     }
 
     return bret;

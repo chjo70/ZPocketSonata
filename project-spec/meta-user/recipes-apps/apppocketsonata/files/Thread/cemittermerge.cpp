@@ -334,11 +334,11 @@ void CEmitterMerge::RequestScanCollect( SRxLOBData *pLOBData )
 {
     STR_ANALINFO strAnalInfo;
 
-    if( m_pTheEmitterMergeMngr->ReqScan() == true ) {
-        //SetStartOfAnalScan();
+    if( m_pTheEmitterMergeMngr->EnScanProcess() == enSCAN_Requesting ) {
+        m_pTheEmitterMergeMngr->EnScanProcess( enSCAN_Processing );
 
-        strAnalInfo.enBoardID = g_enBoardId;
-        strAnalInfo.uiCh = 0;
+        strAnalInfo.enBoardID = m_strAnalInfo.enBoardID;
+        strAnalInfo.uiCh = _spZero;
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
         strAnalInfo.uiABTID = pLOBData->uiABTID;
@@ -494,13 +494,4 @@ void CEmitterMerge::ReloadLibrary()
 {
     m_pTheEmitterMergeMngr->UpdateCEDEOBLibrary();
 }
-
-/**
- * @brief CEmitterMerge::SetStartOfAnalScan
- */
-void CEmitterMerge::SetStartOfAnalScan()
-{
-    m_pTheEmitterMergeMngr->SetStartOfAnalScan();
-}
-
 

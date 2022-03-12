@@ -628,7 +628,7 @@ private:
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, char *keyword, char type, int lkey=0 );
     SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, char *keyword, char type );
     SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );
-    int MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
+    int MakeSubRecords( SELSUBRECORDS *pSubRecords, const char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
     void TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
     void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
@@ -643,7 +643,7 @@ public:
     ~CMIDASBlueFileFormat(void);
     bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE & stKeywordValue, char *pInputFilename=NULL, char *pTaskID=NULL );
 
-    bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue );
+    bool SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue );
 
     void MakeMIDASFileName( char *pstOutFilePathName, char *pstFileName, EnumSCDataType eDataType );
 
@@ -651,7 +651,7 @@ public:
     void InitIFMidas();
     bool SaveAllIFMIDASFormat();
 
-    void SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData );
+    void SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, void *pData );
 
     inline char *GetRawDataFilename() { return m_szRawDataFilename; }
 	

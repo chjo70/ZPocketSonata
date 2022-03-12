@@ -592,7 +592,7 @@ void CEPDW::SetHeaderData( void *pData )
  * @date      2021-06-30, 12:17
  * @warning
  */
-CXPDW::CXPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
+CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 {
 
     m_enDataType = en_PDW_DATA;
@@ -625,7 +625,7 @@ CXPDW::~CXPDW(void)
  * @date      2022/02/18 23:06:22
  * @warning   
  */
-void CXPDW::Init( const char *pRawData )
+void CXPDW::Init( char *pRawData )
 {
     UNION_HEADER *puniPDWFileHeader;
 
@@ -1421,7 +1421,7 @@ void CKFXPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSe
  * @param pRawData
  * @param pstFilterSetup
  */
-CPOCKETSONATAPDW::CPOCKETSONATAPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID ) : CData( )
+CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID ) : CData( )
 {
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_ZPOCKETSONATA;
@@ -1438,7 +1438,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( const char *pRawData, STR_FILTER_SETUP *pstF
  * @date      2022/02/18 22:28:42
  * @warning   
  */
-void CPOCKETSONATAPDW::Init( const char *pRawData )
+void CPOCKETSONATAPDW::Init( char *pRawData )
 {
     UNION_HEADER *puniPDWFileHeader;
 
@@ -1480,52 +1480,6 @@ CPOCKETSONATAPDW::~CPOCKETSONATAPDW(void)
 void CPOCKETSONATAPDW::Alloc( unsigned int uiItems )
 {
 
-	if( uiItems == 0 ) {
-		//uiItems = m_RawData.uiDataItems;
-	}
-    else if ( uiItems <= MAX_ITEMS ) {
-        //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
-
-//         if( m_PDWData.pfFreq == NULL ) {
-//             m_PDWData.pfFreq = (float *) malloc(sizeof(float) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pfPW == NULL ) {
-//             m_PDWData.pfPW = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfAOA == NULL ) {
-//             m_PDWData.pfAOA = (float *)malloc(sizeof(float) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pfTOA == NULL ) {
-//             m_PDWData.pfTOA = (float *)malloc(sizeof(float) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pfDTOA == NULL ) {
-//             m_PDWData.pfDTOA = (float *)malloc(sizeof(float) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pfPA == NULL ) {
-//             m_PDWData.pfPA = (float *)malloc(sizeof(float) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pullTOA == NULL ) {
-//             m_PDWData.pullTOA = (_TOA *)malloc(sizeof(_TOA) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pcType == NULL ) {
-//             m_PDWData.pcType = (char *)malloc(sizeof(char) * uiItems);
-//         }
-// 
-//         if( m_PDWData.pcDV == NULL ) {
-//             m_PDWData.pcDV = (char *)malloc(sizeof(char) * uiItems);
-//         }
-    }
-    else {
-
-    }
-
 }
 
 /**
@@ -1538,16 +1492,7 @@ void CPOCKETSONATAPDW::Alloc( unsigned int uiItems )
  */
 void CPOCKETSONATAPDW::Free()
 {
-//     _SAFE_FREE( m_PDWData.pfFreq );
-// 	_SAFE_FREE( m_PDWData.pfPW );
-// 	_SAFE_FREE( m_PDWData.pfAOA );
-// 	_SAFE_FREE( m_PDWData.pfTOA );
-// 	_SAFE_FREE( m_PDWData.pfDTOA );
-// 	_SAFE_FREE( m_PDWData.pfPA );
-// 	_SAFE_FREE( m_PDWData.pullTOA );
-// 
-// 	_SAFE_FREE( m_PDWData.pcType );
-// 	_SAFE_FREE( m_PDWData.pcDV );
+
 
 }
 
@@ -1916,7 +1861,7 @@ C7PDW::~C7PDW(void)
 	Free();
 }
 
-void C7PDW::Init( const char *pRawData )
+void C7PDW::Init( char *pRawData )
 {
 
 }
@@ -2267,7 +2212,7 @@ CEIQ::~CEIQ(void)
 	Free();
 }
 
-void CEIQ::Init( const char *pRawData )
+void CEIQ::Init( char *pRawData )
 {
 
 }
@@ -2659,7 +2604,7 @@ CMIDAS::~CMIDAS(void)
 	Free();
 }
 
-void CMIDAS::Init( const char *pRawData )
+void CMIDAS::Init( char *pRawData )
 {
 
 }
@@ -3175,7 +3120,7 @@ CData::CData()
 
 }
 
-void CData::Init( const char *pRawData )
+void CData::Init( char *pRawData )
 {
 
 }
@@ -3942,7 +3887,7 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
   * @return		성공시 true, 실패시 false
   * @date       2019/05/31 10:34
 */
-void CDataFile::ReadDataMemory( const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
+void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
 	ENUM_DataType enDataType = WhatDataType( pstPathname );
     ENUM_UnitType enUnitType = WhatUnitType( pstPathname );

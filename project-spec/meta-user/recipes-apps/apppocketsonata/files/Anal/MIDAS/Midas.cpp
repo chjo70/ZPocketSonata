@@ -117,7 +117,7 @@ CMIDASBlueFileFormat::~CMIDASBlueFileFormat(void)
  * @param pData
  * @return
  */
-bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue )
+bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue )
 {
     bool bRet = true;
 
@@ -797,6 +797,10 @@ void CMIDASBlueFileFormat::MakeHeader()
 #endif
             m_uiSizeOfExtend = 0x0600;
         }
+        else {
+
+        }
+
         memset( pHCB, 0, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
 
         // 버젼 정보
@@ -1048,22 +1052,22 @@ void CMIDASBlueFileFormat::MakeAdjunct()
             nOffset = 0;
 
             // 주파수 SUBRECORDS 입력
-            iOffset = MakeSubRecords( pSubRecords, (char *) stSubrecordName[0], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset = MakeSubRecords( pSubRecords, stSubrecordName[0], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
             nOffset += iOffset;
             ++ pSubRecords;
 
             // TOA SUBRECORDS 입력
-            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[1], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, stSubrecordName[1], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
             nOffset += iOffset;
             ++ pSubRecords;
 
             // DOA SUBRECORDS 입력
-            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[2], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, stSubrecordName[2], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
             nOffset += iOffset;
             ++ pSubRecords;
 
             // PW SUBRECORDS 입력
-            iOffset += MakeSubRecords( pSubRecords, (char *) stSubrecordName[3], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
+            iOffset += MakeSubRecords( pSubRecords, stSubrecordName[3], DATA_FORMAT_SIZE_DESIGNATOR_SCALR, DATA_FORMAT_TYPE_DESIGNATOR_64BIT_FLOAT, nOffset );
             nOffset += iOffset;
             ++ pSubRecords;
 
@@ -1100,7 +1104,7 @@ void CMIDASBlueFileFormat::MakeAdjunct()
  * @date      2016-07-16, 오전 9:48
  * @warning
  */
-int CMIDASBlueFileFormat::MakeSubRecords( SELSUBRECORDS *pSubRecords, char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset )
+int CMIDASBlueFileFormat::MakeSubRecords( SELSUBRECORDS *pSubRecords, const char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset )
 {
     int offset;
 
@@ -2050,7 +2054,7 @@ void CMIDASBlueFileFormat::MIDASClose()
  * @param uiStep
  * @param iBoardID
  */
-void CMIDASBlueFileFormat::SaveRawDataFile( TCHAR *pRawdataFileName, EnumSCDataType enDataType, void *pData )
+void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, void *pData )
 {
     STR_PDWDATA *pPDWData;
 

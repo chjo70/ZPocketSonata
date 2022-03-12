@@ -393,7 +393,7 @@ void CUserCollect::MakeSIMPDWData()
     int iDOA;
     unsigned int randomDOA, randomPA, randomPW, randomFreq, randomCh;
 
-    TRACE( "\nMakeSIMPDWData.." );
+    //TRACE( "\nMakeSIMPDWData.." );
 
     SIGAPDW *pSIGAPDW = m_pstrPDW;
 

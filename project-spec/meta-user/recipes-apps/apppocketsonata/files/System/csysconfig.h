@@ -175,7 +175,7 @@ public:
     };
 
     char *GetLocalIPAddress() { return m_strConfig.szLocalIPAddress; };
-    void SetLocalIPAddress( char *pIPAddress ) {
+    void SetLocalIPAddress( const char *pIPAddress ) {
         strcpy( m_strConfig.szLocalIPAddress, pIPAddress );
     } ;
 

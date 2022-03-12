@@ -73,7 +73,7 @@ public:
 	//int m_CoMakeLOB;
 
 	void DISP_FineAet( SRxLOBData *pManAet );
-	void MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
+	void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
 	void GetCollectTime( struct timespec *pTimeSpec );
 

@@ -166,7 +166,7 @@ struct STR_ZOOM_INFO {
 //
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
-    void Init( const char *pRawData ); \
+    void Init( char *pRawData ); \
 	void Alloc( unsigned int iItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
@@ -246,7 +246,7 @@ public:
     virtual void *GetData() = 0;
     virtual void *GetRealData() = 0;
     virtual void *GetHeader() = 0;
-    virtual void Init( const char *pRawData );
+    virtual void Init( char *pRawData );
 
     virtual unsigned int GetHeaderSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
@@ -624,7 +624,7 @@ private:
 	ENUM_BANDWIDTH m_enBandWidth;
 
 public:
-	CXPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+	CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CXPDW();
 
     _COMMON_FUNCTIONS_;
@@ -1007,7 +1007,7 @@ private:
 	static int m_iBoardID;
 
 public:
-    CPOCKETSONATAPDW( const char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
+    CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
     virtual ~CPOCKETSONATAPDW();
 
     _COMMON_FUNCTIONS_;
@@ -1622,7 +1622,7 @@ public:
 
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
     CData *ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
-    void ReadDataMemory( const char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
+    void ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();

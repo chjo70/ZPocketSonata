@@ -36,19 +36,19 @@ typedef unsigned long long int _TOA;
 #define MAX_CLIENTS     (30)
 #define PORT            (8888)
 
-#define NETWORK_CLASSC  (char *) ( "192.168.0" )
+#define NETWORK_CLASSC  (const char *) ( "192.168.0" )
 
 
 #ifdef _SIM_SERVER_
-#define HOST_SERVER     (char *) ( "127.0.0.1" )
-#define DEV_SERVER      (char *) ( "127.0.0.1" )
-#define DEV2_SERVER     (char *) ( "127.0.0.1" )
+#define HOST_SERVER     (const char *) ( "127.0.0.1" )
+#define DEV_SERVER      (const char *) ( "127.0.0.1" )
+#define DEV2_SERVER     (const char *) ( "127.0.0.1" )
 
 #else
 
-#define HOST_SERVER     (char *) ( "192.168.10.245" )
-#define DEV_SERVER      (char *) ( "192.168.10.11" )
-#define DEV2_SERVER     (char *) ( "192.168.10.12" )
+#define HOST_SERVER     (const char *) ( "192.168.10.245" )
+#define DEV_SERVER      (const char *) ( "192.168.10.11" )
+#define DEV2_SERVER     (const char *) ( "192.168.10.12" )
 
 #endif
 

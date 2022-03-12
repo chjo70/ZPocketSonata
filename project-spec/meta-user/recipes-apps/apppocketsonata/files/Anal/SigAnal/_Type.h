@@ -146,6 +146,7 @@ typedef string CString;
 #define	_time64					time
 #define _lseek                  lseek
 #define strcpy_s                strcpy
+#define strnlen_s(A,B)          strlen(A)
 typedef char TCHAR;
 #define _T(A)                   (A)
 

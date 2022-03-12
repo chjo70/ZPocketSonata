@@ -128,7 +128,7 @@ void CMakeAET::MakeAET()
     for( i=0 ; i < m_CoEmitter ; ++i, ++pEmitter ) {
         if( pEmitter->mark == NORMAL_EMITTER ) {
             // 에미터 생성하기
-            MakeAETfromEmitter( pEmitter, i );
+            MakeLOBDatafromEmitter( pEmitter, i );
 
             // CW 에미터인 경우, PRI, 펄스폭을 강제 설정한다.
             // SetCWParameter( pNewAet );
@@ -1301,7 +1301,7 @@ void CMakeAET::ConvertRealFreq( STR_FRQ *pFrq )
  * @param pEmitter
  * @param idxEmitter
  */
-void CMakeAET::MakeAETfromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
+void CMakeAET::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 {
     int i;
     STR_MINMAX stVal;

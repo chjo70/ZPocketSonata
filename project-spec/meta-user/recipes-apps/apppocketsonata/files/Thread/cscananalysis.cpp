@@ -110,7 +110,7 @@ void CScanAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pScnPDWData;
 
-    LOGMSG3( enDebug, " Scan Anal: [%d] 채널에서 [%d]개 의 PDW로 빔 번호[%d]를 분석합니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " SCN: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 

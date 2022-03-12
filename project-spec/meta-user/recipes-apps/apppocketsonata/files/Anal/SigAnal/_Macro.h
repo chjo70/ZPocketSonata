@@ -65,6 +65,9 @@ enum ENUM_BoardID {
                                 } \
                                 else { TRACE( "Already malloc memory[%s]" , #A ); }
 
+#define ELSE                    else { \
+                                }
+
 
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2

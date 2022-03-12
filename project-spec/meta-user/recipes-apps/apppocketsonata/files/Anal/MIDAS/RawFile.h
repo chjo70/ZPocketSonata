@@ -71,7 +71,7 @@ public:
 
 	//FILE *GetFileHandler() { return m_pfile; }
 	int GetFileHandler() { return m_fid; }
-	bool FileOpen( char *filename, int iMode );
+	bool FileOpen( const char *filename, int iMode );
 	unsigned int Read( void *pData, unsigned int c_size, int iOffset=0 );
 	unsigned int Write( void *pData, unsigned int c_size );
 	void FileClose();

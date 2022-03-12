@@ -68,8 +68,6 @@ private:
     void SendDelete( unsigned int uiAETID );
     void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
 
-    void SetStartOfAnalScan();
-
 };
 
 

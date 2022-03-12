@@ -30,15 +30,25 @@
 	(((DWORD64 (x) >>40) & 0x000000000000ff00)) | \
 	(((DWORD64 (x) >>56) & 0x00000000000000ff)))
 
-void AllEndian32(void* i_pData, unsigned int i_nSize)
+/**
+ * @brief     AllEndian32
+ * @param     void * pData
+ * @param     unsigned int uiSize
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-11, 19:49
+ * @warning
+ */
+void AllEndian32( void* pData, unsigned int uiSize )
 {
 	DWORD dwValue=0;
-	UINT nStepSize=sizeof(DWORD);
-	for(int i=0; i<(int)i_nSize; i+=nStepSize) 
-	{
-		memcpy(&dwValue, &((BYTE*)i_pData)[i], nStepSize);
-		dwValue=ENDIAN32(dwValue);
-		memcpy(&((BYTE*)i_pData)[i], &dwValue, nStepSize);
+	UINT uiStepSize=sizeof(DWORD);
+	for(unsigned int i=0 ; i< uiSize ; i+=uiStepSize ) {
+		memcpy( & dwValue, &((BYTE*)pData)[i], uiStepSize );
+		dwValue = ENDIAN32(dwValue);
+		memcpy( & ((BYTE*)pData)[i], &dwValue, uiStepSize );
 	}
 }
 
@@ -60,15 +70,26 @@ unsigned long long _byteswap_uint64(unsigned long long i)
 
 #endif
 
-void AllEndian64(void *i_pData, unsigned int i_nSize)
+/**
+ * @brief     AllEndian64
+ * @param     void * i_pData
+ * @param     unsigned int i_nSize
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-11, 19:51
+ * @warning
+ */
+void AllEndian64( void *pData, unsigned int uiSize )
 {
 	__int64 un64Value=0;
-	UINT nStepSize=sizeof(unsigned __int64);
-	for(int i=0; i<(int)i_nSize; i+=nStepSize) 
+	UINT uiStepSize=sizeof(unsigned __int64);
+	for(unsigned int i=0; i < uiSize; i+=uiStepSize) 
 	{
-		memcpy(&un64Value, &((BYTE*)i_pData)[i], nStepSize);
+		memcpy(&un64Value, &((BYTE*)pData)[i], uiStepSize );
 		un64Value=_byteswap_uint64(un64Value);
-		memcpy(&((BYTE*)i_pData)[i], &un64Value, nStepSize);
+		memcpy(&((BYTE*)pData)[i], & un64Value, uiStepSize );
 	}
 }
 

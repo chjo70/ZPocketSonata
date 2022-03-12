@@ -120,8 +120,7 @@ void _ShowProgramTitle( void )
     LOGMSG2( enNormal, "The INI is positioned at [%s], and the file name is [%s].", INI_FOLDER, INI_FILENAME );
     LOGMSG1( enNormal, "The MIDAS folder is at [%s].", SHARED_DATA_DIRECTORY );
 
-    //LOGMSG( enLineFeed, "" );
-    LOG_LINEFEED;
+    //LOG_LINEFEED;
 
 #ifdef _POCKETSONATA_
 #elif defined(_ELINT_) || defined(_XBAND_)

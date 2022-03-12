@@ -38,7 +38,7 @@ STR_PULSE_TRAIN_SEG *CNAnalPRI::m_pSeg=NULL;
 int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 {
     int iRet;
-    UINT *p1, *p2;
+    const UINT *p1, *p2;
     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
 
     p1 = (UINT *) arg1;

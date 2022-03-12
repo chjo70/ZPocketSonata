@@ -527,7 +527,6 @@ public:
 // 	void EnableToLoadCEDEOBLibrary() { ++ m_nLoadCEDEOBLibrary; }
 
     bool DoesAnalScanTry();
-    void SetStartOfAnalScan();
 
     void ResetToLoadCEDEOBLibrary() { m_nLoadCEDEOBLibrary=_spOne; }
     void DisableToLoadCEDEOBLibrary();
@@ -537,7 +536,7 @@ public:
 
     void ManageTrack( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
     void ManageScan( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
-    void ScanProcess();
+    void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }
@@ -554,8 +553,8 @@ public:
     inline bool Merge() const { return m_bMerge; }
     inline void Merge(bool val) { m_bMerge = val; }
 
-    inline bool ReqScan() const { return m_pABTExtData->bScanProcess; }
-    inline void ReqScan(bool val) { m_pABTExtData->bScanProcess = val; }
+    inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
+    inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

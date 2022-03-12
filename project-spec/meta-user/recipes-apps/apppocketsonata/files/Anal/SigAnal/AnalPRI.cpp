@@ -971,6 +971,7 @@ void CAnalPRI::GroupingJitter( BOOL fDecisionEmitter )
                 }
             }
         }
+        ELSE;
     }
 }
 
