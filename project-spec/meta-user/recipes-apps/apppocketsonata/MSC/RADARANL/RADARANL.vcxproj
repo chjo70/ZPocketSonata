@@ -194,6 +194,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     </ClCompile>
     <ClCompile Include="..\..\files\System\csharedmemory.cpp" />
     <ClCompile Include="..\..\files\System\csysconfig.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
     <ClCompile Include="..\..\files\Utils\clog.cpp" />
     <ClCompile Include="..\..\files\Utils\programrev.cpp" />
     <ClCompile Include="RADARANL.cpp" />
@@ -255,6 +256,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClInclude Include="..\..\files\ODBC\odbccore.h" />
     <ClInclude Include="..\..\files\System\csharedmemory.h" />
     <ClInclude Include="..\..\files\System\csysconfig.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="RADARANL.h" />

@@ -1978,8 +1978,7 @@ struct SELABTDATA_EXT {
     // 스캔 분석 추가 정보
     ENUM_SCAN_PROCESS enScanProcess;
     unsigned int uiTry;
-    unsigned int uiScanStep;
-    
+    unsigned int uiScanStep;    
 
 #endif
 

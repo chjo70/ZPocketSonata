@@ -11788,6 +11788,7 @@ void CELEmitterMergeMngr::ManageTrack( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOB
     return;
 }
 
+#ifdef _POCKETSONATA_
 /**
  * @brief     스캔 관리를 수행한다.
  * @param     STR_ANALINFO * pAnalInfo
@@ -11886,3 +11887,9 @@ void CELEmitterMergeMngr::ScanProcess( ENUM_SCAN_PROCESS enScanProcess )
 
 
 }
+
+
+#else
+
+
+#endif

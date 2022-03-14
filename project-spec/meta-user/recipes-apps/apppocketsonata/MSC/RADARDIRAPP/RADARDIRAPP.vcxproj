@@ -52,7 +52,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_XBAND_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CGI_LIST_;_XBAND_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -131,6 +131,7 @@
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="FileView.h" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />

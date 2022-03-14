@@ -553,8 +553,10 @@ public:
     inline bool Merge() const { return m_bMerge; }
     inline void Merge(bool val) { m_bMerge = val; }
 
+#ifdef _POCKETSONATA_
     inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
     inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
+#endif
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

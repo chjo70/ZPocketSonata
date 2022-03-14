@@ -144,6 +144,9 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RADARANL.h">
@@ -319,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h">
       <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -168,6 +168,9 @@
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
       <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h">
+      <Filter>소스 파일\Anal\INC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RADARDIRAPP.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
       <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <Filter>소스 파일\Anal\INC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

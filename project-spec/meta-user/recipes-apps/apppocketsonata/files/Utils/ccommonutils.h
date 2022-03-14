@@ -43,6 +43,8 @@ public:
 
     static void SetUnitType();
 
+    static const char *strcasestr( const char *haystack, const char *needle );
+
 };
 
 #endif // CCOMMONUTILS_H

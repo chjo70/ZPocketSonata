@@ -81,7 +81,6 @@ namespace RadarAnlAlgotirhm
 
 	void RadarAnlAlgotirhm::Start( STR_LOBDATA *pLOBData )
 	{
-		bool bIsResult = false;
 		SRxLOBHeader *pstLOBHeader;
 		SRxLOBData *pstLOBData;
 
@@ -102,7 +101,7 @@ namespace RadarAnlAlgotirhm
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( int i=0 ; i < pstLOBHeader->iNumOfLOB ; ++i ) {
 				if( pstLOBData->aucTaskID[0] != NULL ) {
-					bIsResult = gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
+					gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
 
 					++ pstLOBData;
 				}

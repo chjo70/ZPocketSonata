@@ -29,6 +29,8 @@
 
 #include "CRWRCommonVariables.h"
 
+#include "../../../Utils/ccommonutils.h"
+
 
 #define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
 #define         MAX_ITEMS_BYTE                  ( MAX_ITEMS * 50 )
@@ -3618,27 +3620,28 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 {
 	ENUM_DataType enDataType=en_UnknownData;
 
-	if( NULL != strstr( pStrPathname, ".pdw" ) || NULL != strstr( pStrPathname, ".npw" ) || NULL != strstr( pStrPathname, ".spdw" ) ) {
+	if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
 		enDataType = en_PDW_DATA;
 	}
-	else if( NULL != strstr( pStrPathname, "e4.dat" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
 		enDataType = en_PDW_DATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".kpdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
 		enDataType = en_PDW_DATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".iq" ) || NULL != strstr( pStrPathname, ".siq" ) || 
-			 NULL != strstr( pStrPathname, "e2.dat" ) || NULL != strstr( pStrPathname, ".eiq" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) || 
+			 NULL != CCommonUtils::strcasestr( pStrPathname, "e2.dat" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".eiq" ) ) {
 		enDataType = en_IQ_DATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".epdw" ) || NULL != strstr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
 		enDataType = en_PDW_DATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".xpdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
 		enDataType = en_PDW_DATA;
 	}
 	else {
-
+        //LOGMSG1( enError, "잘못된 파일명 입니다. 데이터 형식을 모릅니다." );
+        TRACE( "잘못된 파일명 입니다." );
 	}
 
 	return enDataType;
@@ -3657,29 +3660,29 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 {
 	ENUM_UnitType enUnitType;
 
-    if( NULL != strstr( pStrPathname, ".midas" ) ) {
+    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".midas" ) ) {
         enUnitType = en_MIDAS;
     }
-	else if( NULL != strstr( pStrPathname, ".pdw" ) || NULL != strstr( pStrPathname, ".npw" ) ||
-		NULL != strstr( pStrPathname, ".iq" ) || NULL != strstr( pStrPathname, ".siq" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) ||
+		NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ) {
 		enUnitType = en_SONATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".spdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
 		enUnitType = en_SONATA_SHU;
 	}
-	else if( NULL != strstr( pStrPathname, ".dat" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".dat" ) ) {
 		enUnitType = en_701;
 	}
-	else if( NULL != strstr( pStrPathname, ".kpdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
 		enUnitType = en_KFX;
 	}
-	else if( NULL != strstr( pStrPathname, ".epdw" ) || NULL != strstr( pStrPathname, ".enpw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) ) {
 		enUnitType = en_ELINT;
 	}
-	else if( NULL != strstr( pStrPathname, ".zpdw" ) || NULL != strstr( pStrPathname, ".znpw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".zpdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".znpw" ) ) {
 		enUnitType = en_ZPOCKETSONATA;
 	}
-	else if( NULL != strstr( pStrPathname, ".xpdw" ) ) {
+	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
 		enUnitType = en_XBAND;
 	}
 

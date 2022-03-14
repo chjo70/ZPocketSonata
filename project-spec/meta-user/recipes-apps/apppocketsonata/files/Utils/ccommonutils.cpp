@@ -632,3 +632,56 @@ void CCommonUtils::SetUnitType()
 
 #endif
 }
+
+/**
+ * @brief     strcasestr
+ * @param     const char * pStr
+ * @param     const char * pCompare
+ * @return    char *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-14, 16:55
+ * @warning
+ */
+const char *CCommonUtils::strcasestr( const char *pStr, const char *pCompare )
+{
+    size_t i, j;
+    const char *pRet;
+
+    const char *pStr2;
+
+    pRet = NULL;
+
+    size_t iLen = strlen( pStr );
+    size_t iTo = strlen( pCompare );
+
+    if( iLen >= iTo ) {
+        pStr2 = pStr;
+        for( i=0 ; i <= iLen-iTo ; ++i ) {
+            for( j=0 ; j < iTo ; ++j ) {
+                if( isalpha( pStr2[j] ) >= 1 ) {
+                    int iDiff = pStr2[j] - pCompare[j];
+                    if( iDiff != 0x20 && iDiff != -0x20 ) {
+                        break;
+                    }
+                }
+                else {
+                    if( pStr2[j] != pCompare[j] ) {
+                        break;
+                    }
+                }
+            }
+
+            if( j >= iTo ) {
+                pRet = pStr2;
+                break;
+            }
+
+            ++ pStr2;
+        }
+    }
+
+    return pRet;
+
+}
