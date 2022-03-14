@@ -662,7 +662,7 @@ const char *CCommonUtils::strcasestr( const char *pStr, const char *pCompare )
             for( j=0 ; j < iTo ; ++j ) {
                 if( isalpha( pStr2[j] ) >= 1 ) {
                     int iDiff = pStr2[j] - pCompare[j];
-                    if( iDiff != 0x20 && iDiff != -0x20 ) {
+                    if( iDiff != 0x20 && iDiff != -0x20 && iDiff != 0 ) {
                         break;
                     }
                 }
