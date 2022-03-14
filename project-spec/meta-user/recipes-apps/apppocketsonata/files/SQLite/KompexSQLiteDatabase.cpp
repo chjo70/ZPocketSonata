@@ -15,6 +15,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Kompex SQLite Wrapper. If not, see <http://www.gnu.org/licenses/>.
 */
+#ifdef _SQLITE_
+
 
 #include <fstream>
 #include <iostream>
@@ -576,3 +578,8 @@ SQLiteDatabase *SQLiteDatabase::GetDatabase()
 }
 
 }	// namespace Kompex
+
+
+// #ifdef endif
+// #ifdef _SQLITE_
+#endif // endif

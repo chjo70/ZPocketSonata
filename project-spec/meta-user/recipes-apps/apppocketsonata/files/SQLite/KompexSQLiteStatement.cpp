@@ -16,6 +16,8 @@
     along with Kompex SQLite Wrapper. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef _SQLITE_
+
 #include <iostream>
 #include <iomanip>
 #include <exception>
@@ -1106,8 +1108,7 @@ std::string SQLiteStatement::Vmprintf(const char *sql, va_list args)
 {
 	char *sqlResult = sqlite3_vmprintf(sql, args);
 
-	if(!sqlResult)
-	{
+	if(!sqlResult) {
 		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
 		//return "";
 	}
@@ -1115,6 +1116,9 @@ std::string SQLiteStatement::Vmprintf(const char *sql, va_list args)
 	std::string result = sqlResult;
 	sqlite3_free(sqlResult);
 	return result;
+
 }
 
 }	// namespace Kompex
+
+#endif

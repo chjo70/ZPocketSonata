@@ -16,6 +16,8 @@
     along with Kompex SQLite Wrapper. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef _SQLITE_
+
 #include <iostream>
 
 #include "../Anal/SigAnal/_Type.h"
@@ -141,3 +143,5 @@ void SQLiteBlob::WriteBlob(const void *buffer, int numberOfBytes, int offset)
 }
 
 }	// namespace Kompex
+
+#endif
