@@ -135,6 +135,17 @@ void CRADARDIRAPPView::InitView()
 
 }
 
+/**
+ * @brief     UpdateLOBData
+ * @param     int nCoLOB
+ * @param     SRxLOBData * pLOB
+ * @return    void
+ * @exception
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-14, 22:17
+ * @warning
+ */
 void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 {
 	int i, j;
@@ -185,6 +196,16 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 }
 
 
+/**
+ * @brief     OnCreate
+ * @param     LPCREATESTRUCT lpCreateStruct
+ * @return    int
+ * @exception
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-14, 22:17
+ * @warning
+ */
 int CRADARDIRAPPView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFormView::OnCreate(lpCreateStruct) == -1)
