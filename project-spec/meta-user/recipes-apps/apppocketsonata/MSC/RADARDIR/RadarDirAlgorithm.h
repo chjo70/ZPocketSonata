@@ -402,6 +402,10 @@ struct STR_PDWDATA {
 #ifndef SRxLOBData_STRUCT
 #define SRxLOBData_STRUCT
 struct SRxLOBData {
+    unsigned int uiPDWID;
+
+    unsigned int uiPLOBID;
+
     unsigned int uiLOBID;
     unsigned int uiABTID;
     unsigned int uiAETID;
@@ -472,7 +476,8 @@ struct SRxLOBData {
     float fPAMin;
     float fPADeviation;			// 기존대로
 
-#ifndef _XBAND_
+#if defined(_XBAND_) || defined(_ELINT_)
+#else
     int iScanType;
     //int iDetailScanType;
     float fScanPeriod;			// [msec]
@@ -484,9 +489,6 @@ struct SRxLOBData {
     float fMOPMeanFreq;
     float fMOPFreqDeviation;
 
-
-    float fShipLatitude;
-    float fShipLongitude;
     float fPitchAngle;
     float fRollAngle;
     float fHeadingAngle;
@@ -502,21 +504,18 @@ struct SRxLOBData {
     int iRadarModeIndex;
     //int iThreatIndex;
 
+    float fLatitude;
+    float fLongitude;		
+
+    char aucTaskID[LENGTH_OF_TASK_ID];
 
 #ifdef _POCKETSONATA_
-	float fRadarLatitude;
-	float fRadarLongitude;		
 
-	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #elif defined(_ELINT_) || defined(_XBAND_)
-	float fRadarLatitude;
-	float fRadarLongitude;		
-
     int	iCollectorID;
 
     unsigned int uiSeqNum;
-    char aucTaskID[LENGTH_OF_TASK_ID];
 
 #else
 

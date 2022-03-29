@@ -172,13 +172,16 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiSeqNum );
 			m_CListLOB.InsertItem( nList, szBuffer );
 
-			k = 3;
+			k = 2;
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiSeqNum );
-			m_CListLOB.SetItemText( nList, 1, szBuffer );
+			//sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiSeqNum );
+			//m_CListLOB.SetItemText( nList, 1, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBExt->aetData.uiOpInitID );
-			m_CListLOB.SetItemText( nList, 2, szBuffer );
+			m_CListLOB.SetItemText( nList, k++, szBuffer );
+
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiPDWID );
+			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiLOBID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
@@ -286,10 +289,10 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iCollectorID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fRadarLatitude );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fLatitude );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fRadarLongitude );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fLongitude );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->szRadarModeName );

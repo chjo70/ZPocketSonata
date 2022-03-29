@@ -82,9 +82,6 @@
     <Filter Include="소스 파일\Anal\EmitterMerge\UTM">
       <UniqueIdentifier>{0f4d568a-fe42-483c-a162-5104488b6a8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\MinIni">
-      <UniqueIdentifier>{490b292d-10b5-4755-b5e0-fd23507bdf58}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\SQLite">
       <UniqueIdentifier>{3b57caea-71bd-46a7-bea8-dd4c3976141b}</UniqueIdentifier>
     </Filter>
@@ -185,33 +182,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\SQLite\sqlite3ext.h">
       <Filter>소스 파일\SQLite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minIni.h">
-      <Filter>소스 파일\MinIni</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
-      <Filter>소스 파일\MinIni</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\_Define.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
@@ -589,9 +559,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\System\csysconfig.cpp">
       <Filter>소스 파일\System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
-      <Filter>소스 파일\MinIni</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\SigAnal\AnalPRI.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>

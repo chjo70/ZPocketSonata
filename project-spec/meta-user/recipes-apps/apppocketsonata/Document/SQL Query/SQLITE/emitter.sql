@@ -6,10 +6,18 @@ DROP TABLE if exists "AETDATA";
 
 
 CREATE TABLE "LOBDATA" (
-	"SEQ_NUM"	integer,
+	"SEQ_NUM"	integer NOT NULL,
+	"OP_INIT_ID" integer,
+	"PDWID"	INTEGER NOT NULL,	
+	
+	"PLOBID"	INTEGER NOT NULL,	
+	
 	"LOBID"	INTEGER NOT NULL,
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,
+	
+	"TASK_ID" VARCHAR2(30),	
+	
 	"CONTACT_TIME"	datetime,
 	"CONTACT_TIME_MS"	int,
 
@@ -79,12 +87,13 @@ CREATE TABLE "LOBDATA" (
     "INTRA_FRQ_MAX" float,
     "INTRA_FRQ_DEVIATION" float,
 
-    "SHIP_LAT" float,
-    "SHIP_LONG" float,
-    "SHIP_PITCH" float,
-    "SHIP_ROLL" float,
-    "SHIP_HEADING" float,
-    "SHIP_ALT" float,
+    "LAT" float,
+    "LONG" float,
+    "PITCH" float,
+    "ROLL" float,
+    "HEADING" float,
+    "ALT" float,
+	"COLLECTOR_ID"	smallint,
     
     "IS_VALIDITY" integer,
 
@@ -99,10 +108,16 @@ CREATE TABLE "LOBDATA" (
 CREATE TABLE "LOB_POSITION" (
 	"SEQ_NUM"	integer,
 	"SEQ_TYPE"	int NOT NULL,
+	"OP_INIT_ID"	int NOT NULL,
+	
 	"LOBID"	int NOT NULL,
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,
-	"POSITION_COUNT"	tinyint,
+	
+	"TASK_ID" VARCHAR2(30),	
+	
+	"POSITION_COUNT"	tinyint  NOT NULL,
+	
 	"SEQ_01"	float,
 	"SEQ_02"	float,
 	"SEQ_03"	float,
@@ -139,9 +154,11 @@ CREATE TABLE "LOB_POSITION" (
 
 
 CREATE TABLE "ABTDATA" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
+	"SEQ_NUM"	integer,
+	
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,   
+	
 	"FIRST_TIME" datetime,
 	"LAST_TIME"	datetime,
     
@@ -203,18 +220,18 @@ CREATE TABLE "ABTDATA" (
 	"PA_MAX"	float,
     "PA_DEV" float,
     
-    "SCAN_TYPE" NUMBER(1)                 NOT NULL,
-	"SCAN_PRD_MEAN_SEC" float                    NOT NULL,  
-	"SCAN_PRD_MIN_SEC" float                    NOT NULL,
-    "SCAN_PRD_MAX_SEC" float                    NOT NULL,  
+    "SCAN_TYPE" NUMBER(1),
+	"SCAN_PRD_MEAN_SEC" float,  
+	"SCAN_PRD_MIN_SEC" float,
+    "SCAN_PRD_MAX_SEC" float,  
   
-    "HAS_INTRA_MOD" NUMBER(1)                 NOT NULL,
-    "INTRA_FRQ_CHNG_WID_MAX"  float                    NOT NULL,
-    "INTRA_FRQ_CHNG_WID_MIN"  float                    NOT NULL,      
+    "HAS_INTRA_MOD" NUMBER(1),
+    "INTRA_FRQ_CHNG_WID_MAX"  float,
+    "INTRA_FRQ_CHNG_WID_MIN"  float,      
     
 	"PE_VALID"	smallint,
 	"PE_LATITUDE"	float,
-	"PE_LONGGITUDE"	float,
+	"PE_LONGITUDE"	float,
     "PE_HEIGHT"	float,
 	"PE_CEP"	float,
 	"PE_MAJOR_AXIS"	float,
@@ -230,9 +247,9 @@ CREATE TABLE "ABTDATA" (
 	"ALARM_TIME"	datetime,
 	"STAT"	tinyint,
 
-    "IS_MANUAL_INPUT"         NUMBER(1)                 NOT NULL,
+    "IS_MANUAL_INPUT"         NUMBER(1),
 
-    "MANUALPOSESTPREFERRED"   NUMBER(2)                 NOT NULL,
+    "MANUALPOSESTPREFERRED"   NUMBER(2),
   
     "MANUAL_POS_EST_LAT"      NUMBER,
     "MANUAL_POS_EST_LONG"     NUMBER
@@ -240,12 +257,17 @@ CREATE TABLE "ABTDATA" (
 );
 
 CREATE TABLE "ABT_POSITION" (
-	"SEQ_NUM"	integer PRIMARY KEY AUTOINCREMENT,
-	"LOBID"	int NOT NULL,
+	"SEQ_NUM"	integer,
+	"SEQ_TYPE"	int NOT NULL,
+	"OP_INIT_ID"	int NOT NULL,
+	
 	"ABTID"	int NOT NULL,
 	"AETID"	int NOT NULL,
-	"TASK_ID"	varchar(30) NOT NULL,
-	"POSITION_COUNT"	tinyint,
+	
+	"TASK_ID" VARCHAR2(30),	
+	
+	"POSITION_COUNT"	tinyint NOT NULL,
+	
 	"SEQ_01"	float,
 	"SEQ_02"	float,
 	"SEQ_03"	float,
@@ -331,7 +353,7 @@ CREATE TABLE "AETDATA" (
 	
 	"PE_VALID"	smallint,
 	"PE_LATITUDE"	float,
-	"PE_LONGGITUDE"	float,
+	"PE_LONGITUDE"	float,
     "PE_HEIGHT"	float,
 	"PE_CEP"	float,
 	"PE_MAJOR_AXIS"	float,

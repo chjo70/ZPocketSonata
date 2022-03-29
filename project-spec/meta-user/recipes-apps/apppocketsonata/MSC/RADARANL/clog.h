@@ -58,9 +58,9 @@ private:
     static bool m_bcs;
 
 #ifdef _MSC_VER
-    static CCriticalSection m_cs;
+    CCriticalSection m_cs;
 #else
-    static sem_t m_mutex;
+    sem_t m_mutex;
 #endif
 
     char m_szPresentDirectory[LOG_DIR_SIZE];

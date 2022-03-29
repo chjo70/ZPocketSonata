@@ -179,11 +179,11 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 	float fDOAMax, fDOAMin;
 
-	stLOBData.stLOBHeader.iNumOfLOB = 1;
+	stLOBData.stLOBHeader.uiNumOfLOB = 1;
 	//strcpy_s( stLOBData.stLOBHeader.aucTaskID, sizeof(stLOBData.stLOBHeader.aucTaskID), "RADARANLAPP" );
 
 	pLOBData = & stLOBData.stLOBData[0];
-	for( i=0 ; i < stLOBData.stLOBHeader.iNumOfLOB ; ++i ) {
+	for( i=0 ; i < stLOBData.stLOBHeader.uiNumOfLOB ; ++i ) {
 		pLOBData->iCollectorID = RADARCOL_1 + ( i % RADARCOL_3 ) ;
 		if( i % 2 == 0 ) {
 			pLOBData->iCollectorID = RADARCOL_1;
@@ -266,8 +266,8 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->iIsStoreData = 0;
 		pLOBData->iNumOfPDW = 50;
 		
-		pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
-		pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];	
+		pLOBData->fLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
+		pLOBData->fLongitude = (float) dRCLongitude[pLOBData->iCollectorID];	
 
 		memset( pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName) );
 		pLOBData->iRadarModeIndex = 0;
@@ -282,7 +282,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 	//////////////////////////////////////////////////////////////////////////
 	//
 
-	Run( stLOBData.stLOBHeader.iNumOfLOB, & stLOBData.stLOBData[0], NULL );
+	Run( stLOBData.stLOBHeader.uiNumOfLOB, & stLOBData.stLOBData[0], NULL );
 
 }
 
@@ -422,7 +422,7 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 	STR_LOBDATA stResLOBData;
 	STR_ABTDATA stResABTData;
 
-	m_stLOBData.stLOBHeader.iNumOfLOB = nLOB;
+	m_stLOBData.stLOBHeader.uiNumOfLOB = nLOB;
 	for( i=0 ; i < nLOB ; ++i ) {
 		memcpy( & m_stLOBData.stLOBData[i], pLOBData, sizeof(SRxLOBData) );
 
@@ -438,8 +438,8 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 
 	pSRxLOBData = & stResLOBData.stLOBData[0];
 	printf( "\n LOB µ¥ÀÌÅÍ ===============================================================" );
-	printf( "\n LOB [%d]", stResLOBData.stLOBHeader.iNumOfLOB );
-	for( i=0 ; i < stResLOBData.stLOBHeader.iNumOfLOB ; ++i ) {
+	printf( "\n LOB [%d]", stResLOBData.stLOBHeader.uiNumOfLOB );
+	for( i=0 ; i < stResLOBData.stLOBHeader.uiNumOfLOB ; ++i ) {
 		printf( "\n AET[%d], ABT[%d], LOB[%d]" , pSRxLOBData->uiAETID, pSRxLOBData->uiABTID, pSRxLOBData->uiLOBID );
 		++ pSRxLOBData;
 	}
@@ -482,7 +482,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, SEQ_NUM, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, SEQ_NUM, PDWID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY SEQ_NUM desc" );
 
@@ -493,6 +493,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
 
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiSeqNum );
+        theRS.GetFieldValue(index++, (int *) & pLOBData->uiPDWID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiLOBID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiABTID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiAETID );
@@ -539,8 +540,8 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iNumOfPDW);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iCollectorID);
 
-		theRS.GetFieldValue(index++, &pLOBData->fRadarLatitude);
-		theRS.GetFieldValue(index++, &pLOBData->fRadarLongitude);
+		theRS.GetFieldValue(index++, &pLOBData->fLatitude);
+		theRS.GetFieldValue(index++, &pLOBData->fLongitude);
 
 		theRS.GetFieldValue(index++, pLOBData->szRadarModeName);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iRadarModeIndex);

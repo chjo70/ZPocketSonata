@@ -6,3 +6,6 @@
 #include "stdafx.h"
 
 
+#if defined(_POCKETSONATA_) || defined(_XBAND_)
+
+#endif

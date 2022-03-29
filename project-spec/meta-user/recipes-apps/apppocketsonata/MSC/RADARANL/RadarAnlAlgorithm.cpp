@@ -90,16 +90,16 @@ namespace RadarAnlAlgotirhm
 		else {
 			gpEmitterMergeMngr->Start();
 
-			if( pLOBData->stLOBHeader.iNumOfLOB > MAX_LOB_DATA || pLOBData->stLOBHeader.iNumOfLOB == 0 ) {
-				Printf( "\n LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.iNumOfLOB );
-				Log( enError, "LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.iNumOfLOB );
+			if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA || pLOBData->stLOBHeader.uiNumOfLOB == 0 ) {
+				Printf( "\n LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.uiNumOfLOB );
+				Log( enError, "LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.uiNumOfLOB );
 				return;
 			}
 
-			Log( enNormal, "OP_INIT_ID[%d] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다." , gpEmitterMergeMngr->GetOpInitID(), pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.iNumOfLOB );
+			Log( enNormal, "OP_INIT_ID[%d] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다." , gpEmitterMergeMngr->GetOpInitID(), pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB );
 			pstLOBHeader = & pLOBData->stLOBHeader;
 			pstLOBData = & pLOBData->stLOBData[0];
-			for( int i=0 ; i < pstLOBHeader->iNumOfLOB ; ++i ) {
+			for( unsigned int i=0 ; i < pstLOBHeader->uiNumOfLOB ; ++i ) {
 				if( pstLOBData->aucTaskID[0] != NULL ) {
 					gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
 
@@ -138,14 +138,14 @@ namespace RadarAnlAlgotirhm
 
 		vector<SRxLOBData>::pointer pSRxLOBData;
 
-		pLOBData->stLOBHeader.iNumOfLOB = gpEmitterMergeMngr->m_VecLOBData.size();
-		if( pLOBData->stLOBHeader.iNumOfLOB > MAX_LOB_DATA ) {
-			Printf( "\n LOB 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요." , pLOBData->stLOBHeader.iNumOfLOB );
-			Log( enError, "LOB 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요." , pLOBData->stLOBHeader.iNumOfLOB );
+		pLOBData->stLOBHeader.uiNumOfLOB = gpEmitterMergeMngr->m_VecLOBData.size();
+		if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA ) {
+			Printf( "\n LOB 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요." , pLOBData->stLOBHeader.uiNumOfLOB );
+			Log( enError, "LOB 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요." , pLOBData->stLOBHeader.uiNumOfLOB );
 		}
 		else {
 			pSRxLOBData = gpEmitterMergeMngr->m_VecLOBData.data();
-			for( i=0 ; i < pLOBData->stLOBHeader.iNumOfLOB ; ++i ) {
+			for( i=0 ; i < pLOBData->stLOBHeader.uiNumOfLOB ; ++i ) {
 				memcpy( & pLOBData->stLOBData[i], pSRxLOBData, sizeof(SRxLOBData) );
 				++ pSRxLOBData;
 
