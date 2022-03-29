@@ -417,9 +417,9 @@ int CKAnalPRI::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
  * @param pEmitter
  * @param index
  */
-void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
+void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 {
-    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, index );
+    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
 
 }
 

@@ -167,7 +167,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 	SetRefStartSeg();
 
     if( GetPulseStat() == STAT_CW && false ) {
-        MakeCWPulseTrain();
+        // MakeCWPulseTrain();
     }
     else {
         //////////////////////////////////////////////////////////////////////////

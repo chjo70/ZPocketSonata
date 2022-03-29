@@ -1320,7 +1320,8 @@ void CMakeAET::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     //////////////////////////////////////////////////////////////////////////
     pLOBData->uiPDWID = GetPDWID();
 
-    pLOBData->uiLOBID = m_CoLOB + 1;
+    pLOBData->uiPLOBID = m_CoLOB + 1;
+    pLOBData->uiLOBID = 0;
     pLOBData->uiABTID = 0;
     pLOBData->uiAETID = 0;
 
@@ -1434,12 +1435,12 @@ void CMakeAET::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     // 수집소 위치 정보 저장
 #if defined(_ELINT_) || defined(_XBAND_)
     if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
-         pLOBData->fRadarLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
-         pLOBData->fRadarLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
+         pLOBData->fLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
+         pLOBData->fLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
     }
     else {
-         pLOBData->fRadarLatitude = 0.0;
-         pLOBData->fRadarLongitude = 0.0;
+         pLOBData->fLatitude = 0.0;
+         pLOBData->fLongitude = 0.0;
     }
 #else
 

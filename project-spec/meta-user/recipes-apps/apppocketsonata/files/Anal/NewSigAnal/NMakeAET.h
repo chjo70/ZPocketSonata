@@ -50,7 +50,7 @@ public:
 	//##ModelId=452B0C55007C
 	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type );
 	//##ModelId=452B0C550085
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
 	//##ModelId=452B0C55008E
 	int GetCoSeg();
 	//##ModelId=452B0C550097

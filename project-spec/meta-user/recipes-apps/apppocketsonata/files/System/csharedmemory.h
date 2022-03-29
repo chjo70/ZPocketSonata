@@ -20,7 +20,9 @@
 
 #include <string>
 
+#include "../Anal/SigAnal/_Type.h"
 #include "../Include/system.h"
+
 
 using namespace std;
 
@@ -53,11 +55,13 @@ public :
     int getShmId();
     void setKey( key_t key );
 
-    void setupSharedMemory( int iSize );
+    void setupSharedMemory( SIZE_T iSize );
     void attachSharedMemory();
     bool copyToSharedMemroy( void *pData );
     bool copyToLocalMemroy( void *pData, int iSize );
+
     void close();
+
 };
 
 #endif // CSHAREDMEMORY_H

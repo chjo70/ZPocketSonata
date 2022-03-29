@@ -7,6 +7,8 @@
 #include <direct.h>
 #include <sys/timeb.h>
 
+#include <limits.h>
+
 
 #include <stdint.h>
 
@@ -272,6 +274,8 @@ int clock_gettime(int X, struct timeval *tv)
 
 
 
+#endif
+
 /**
  * @brief     getStringPresentTime
  * @param     char * pString
@@ -342,25 +346,16 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
             tmp_errno = errno; 
             close(src_fd);  
             errno = tmp_errno; // close가 초기화한 errno를 복구함
+            WhereIs;
             return -1;
         }
-
-        do { // while( size = read(src_fd, data_buf, 4096) ) {
+        else {
+            do {
             size = read(src_fd, data_buf, 4096);
             if( size <= 0 ) {
                 break;
             }
-
-//             if(size == -1) {
-//                 if(errno == EINTR) {
-//                     continue;
-//                 }
-//                 tmp_errno = errno;
-//                 close(src_fd);
-//                 close(dest_fd);
-//                 errno = tmp_errno; // close가 초기화한 errno를 복구함
-//                 return -1;
-//             }
+                iRet += size;
 
             while(write(dest_fd, data_buf, size) == -1) {
                 if(errno == EINTR) {
@@ -379,6 +374,7 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
 
         close(src_fd);
         close(dest_fd);
+        }
     
         /* 원본 파일의 속성을 복원해야 한다면... */
         if(copy_attr) {
@@ -405,10 +401,8 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
         }
     }
 
-    return 0;
+    return iRet;
 }
-
-#endif
 
 /**
  * @brief CCommonUtils::timespec_diff
@@ -660,7 +654,7 @@ const char *CCommonUtils::strcasestr( const char *pStr, const char *pCompare )
         pStr2 = pStr;
         for( i=0 ; i <= iLen-iTo ; ++i ) {
             for( j=0 ; j < iTo ; ++j ) {
-                if( isalpha( pStr2[j] ) >= 1 ) {
+                if( Isalpha( pStr2[j] ) >= 1 ) {
                     int iDiff = pStr2[j] - pCompare[j];
                     if( iDiff != 0x20 && iDiff != -0x20 && iDiff != 0 ) {
                         break;
@@ -685,3 +679,96 @@ const char *CCommonUtils::strcasestr( const char *pStr, const char *pCompare )
     return pRet;
 
 }
+
+/**
+ * @brief     Isalpha
+ * @param     int iCh
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-29, 11:27
+ * @warning
+ */
+int CCommonUtils::Isalpha( int iCh )
+{
+    int iRet;
+
+    if( iCh >= 'A' && iCh <= 'Z' )
+        iRet = 1;
+    else if( iCh >= 'a' && iCh <= 'z' )
+        iRet = 2;
+    else
+        iRet = 0;
+
+    return iRet;
+}
+
+/**
+ * @brief     IsMultiplyOverflow
+ * @param     size_t uiSize
+ * @param     size_t uiItems
+ * @return    size_t
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-15, 14:18
+ * @warning
+ */
+size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
+{
+    size_t szSize;
+
+    try {
+		if( iItems < 0 ) {
+			throw 0;
+		}
+
+        if( iSize == -1 && iItems == INT_MIN ) {
+            throw 0;
+        }
+
+        if( iItems == -1 && iSize == INT_MIN ) {
+            throw 0;
+        }
+
+        if( iSize > INT_MAX / iItems ) {
+            throw 0;
+        }
+
+        if( iSize < INT_MIN / iItems ) {
+            throw 0;
+        }
+
+        szSize = iSize * iItems;
+    }
+    catch( int iExp ) {
+        szSize = iExp;
+    }
+
+    return szSize;
+
+}
+
+/**
+ * @brief     INT2UINT
+ * @param     int iValue
+ * @return    unsigned int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-28, 19:22
+ * @warning
+ */
+unsigned int CCommonUtils::INT2UINT( int iValue )
+{
+    unsigned int iRet=0;
+
+    if( iValue >= 0 ) {
+        iRet = iValue;
+    }
+
+    return iRet;
+
+}
+

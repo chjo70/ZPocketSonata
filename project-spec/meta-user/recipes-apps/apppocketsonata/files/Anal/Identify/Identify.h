@@ -174,24 +174,24 @@ class CELSignalIdentifyAlg
     // 미식별 번호 관리
     static STR_FLIB *m_pFLib;											///< 주파수 테이블화 저장소, 기본형-0, 실무형-1
 
-    static vector<STR_H000> m_vecH000;							///< 미식별 번호 관리하기 위한 테이블
-    static int m_iH000;															///< 미식별 번호
+    vector<STR_H000> m_vecH000;							                ///< 미식별 번호 관리하기 위한 테이블
+    int m_iH000;													///< 미식별 번호
 
     //static SELDBEnvVarIdnf *m_pSELDBEnvVarIdnf;			///< 시스템 설정값 환경 포인터
     static SEnvironVariable *m_pSEnvironVariable;			///< 시스템 설정값 환경 포인터
 
     //static vector<SThreat> m_vecThreatData;			///< EOB 식별하기 위한 장비 목록 값
 
-    static int m_iRadar;
-    static int m_iRadarMode;
+    int m_iRadar;
+    int m_iRadarMode;
     static SRadarMode *m_pRadarMode;												///< 레이더 모드 구조체
 
-    static int m_iThreat;
+    int m_iThreat;
     static SThreat *m_pThreat;															///< 위협 구조체
 
-    static STR_EOB_RESULT *m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
-    static STR_LIB_IDRESULT *m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
-    static STR_CEDEOB_RESULT *m_pCEDEOBResult;			///< CED/EOB 식별 결과
+    STR_EOB_RESULT *m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
+    STR_LIB_IDRESULT *m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
+    STR_CEDEOB_RESULT *m_pCEDEOBResult;			///< CED/EOB 식별 결과
 
 private:
     // EOB 식별 결과 저장소

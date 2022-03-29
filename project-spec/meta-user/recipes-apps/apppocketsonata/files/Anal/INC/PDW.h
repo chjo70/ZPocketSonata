@@ -125,7 +125,7 @@ union UZPOCKETPDW {
 
 } ;
 
-union DMAPDW {
+typedef union {
     char chData[32];
     union UZPOCKETPDW uPDW;
 
@@ -209,7 +209,7 @@ union DMAPDW {
         return iSignaltype;
     }
 
-};
+} DMAPDW ;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1076,7 +1076,7 @@ struct STR_PDWDATA {
 
 #ifndef _STR_STATIC_PDWDATA
 #define _STR_STATIC_PDWDATA
-struct STR_STATIC_PDWDATA {
+typedef struct {
     UNION_HEADER x;
 
     _PDW stPDW[MAX_PDW];
@@ -1107,6 +1107,15 @@ struct STR_STATIC_PDWDATA {
 
     }
 
+    /**
+     * @brief     GetPDWID
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-15, 10:18
+     * @warning
+     */
     unsigned int GetPDWID() {
         unsigned int uiPDWID;
 
@@ -1150,7 +1159,7 @@ struct STR_STATIC_PDWDATA {
     }
 
 
-}  ;
+}  STR_STATIC_PDWDATA ;
 
 #endif  // _STR_STATIC_PDWDATA
 

@@ -27,10 +27,10 @@ public:
     int PushLanData( void *pData, unsigned int uiLength );
     void PopLanData( void *pData, int iIndex, unsigned int uiLength );
 
-    virtual void Sleep( int mssleep )=0;
-    virtual const char *GetThreadName()=0;
+    virtual void Sleep( unsigned int mssleep )=0;
+    virtual char *GetThreadName()=0;
 
-    virtual void SendTaskMngr( int iErrorCode, const char *pszThreadName=NULL )=0;
+    virtual void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL )=0;
 
 private:
     void Alloc();

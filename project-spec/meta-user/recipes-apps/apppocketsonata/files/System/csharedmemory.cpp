@@ -87,7 +87,7 @@ void CSharedMemroy::setKey( key_t key )
  * @brief CSharedMemroy::setupSharedMemory
  * @param iSize
  */
-void CSharedMemroy::setupSharedMemory( int iSize )
+void CSharedMemroy::setupSharedMemory( SIZE_T iSize )
 {
    // Setup shared memory, 11 is the size
 #ifdef __linux__

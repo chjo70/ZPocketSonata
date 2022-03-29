@@ -39,7 +39,7 @@ static T SwapEndian (T* tObjp)
 #define _STR_LOBHEADER
 struct SRxLOBHeader
 {
-    int iNumOfLOB;
+    unsigned int uiNumOfLOB;
 
 };
 #endif
@@ -58,6 +58,8 @@ struct SRxLOBHeader
 #define SRxLOBData_STRUCT
 struct SRxLOBData {
     unsigned int uiPDWID;
+
+    unsigned int uiPLOBID;
 
 	unsigned int uiLOBID;
 	unsigned int uiABTID;
@@ -129,7 +131,8 @@ struct SRxLOBData {
 	float fPAMin;
 	float fPADeviation;			// 기존대로
 
-#ifndef _XBAND_
+#if defined(_XBAND_) || defined(_ELINT_)
+#else
 	int iScanType;
 	//int iDetailScanType;
 	float fScanPeriod;			// [msec]
@@ -141,9 +144,6 @@ struct SRxLOBData {
 	float fMOPMeanFreq;
 	float fMOPFreqDeviation;
 
-
-	float fShipLatitude;
-	float fShipLongitude;
 	float fPitchAngle;
 	float fRollAngle;
 	float fHeadingAngle;
@@ -159,21 +159,18 @@ struct SRxLOBData {
 	int iRadarModeIndex;
 	//int iThreatIndex;
 
-
-#ifdef _POCKETSONATA_
-	float fRadarLatitude;
-	float fRadarLongitude;	
+	float fLatitude;
+	float fLongitude;		
 
 	char aucTaskID[LENGTH_OF_TASK_ID];
 
-#elif defined(_ELINT_) || defined(_XBAND_)
-	float fRadarLatitude;
-	float fRadarLongitude;	
+#ifdef _POCKETSONATA_
 
+
+#elif defined(_ELINT_) || defined(_XBAND_)
 	int	iCollectorID;
 
 	unsigned int uiSeqNum;
-	char aucTaskID[LENGTH_OF_TASK_ID];
 
 #else
 
@@ -207,17 +204,15 @@ struct SRxABTData {
     int iRadarModePriority;
     int iRadarPriority;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     int iPolarization;
 
 #endif
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
     float fDOADeviation;				// [0.1도]
-#endif
 
     int iFreqType;
     int iFreqPatternType;
@@ -256,7 +251,7 @@ struct SRxABTData {
     float fPAMin;
     float fPADeviation;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     int iScanType;
     float fMeanScanPeriod;			// [usec]
     float fMaxScanPeriod;			// [usec]
@@ -284,7 +279,7 @@ struct SRxABTData {
     int iRadarModeIndex;
     int iThreatIndex;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     int iIsManualInput;
 
     __time32_t tiFinalAlarmTime;

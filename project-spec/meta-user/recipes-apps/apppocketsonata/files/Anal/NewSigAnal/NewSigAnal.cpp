@@ -97,6 +97,9 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
 
     m_pMidasBlue = new CMIDASBlueFileFormat;
 
+    m_stSavePDWData.pstPDW = NULL;
+    _SAFE_MALLOC( m_stSavePDWData.pstPDW, _PDW, sizeof(_PDW) * coMaxPdw );
+
     // 클래스 관련 초기화
     m_nMaxPdw = coMaxPdw;
 
@@ -121,15 +124,17 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
  */
 CNewSigAnal::~CNewSigAnal()
 {
-    _SAFE_DELETE( g_pTheELEnvironVariable );
+    _SAFE_DELETE( g_pTheELEnvironVariable )
 
-    _SAFE_DELETE( m_pIdentifyAlg );
-    _SAFE_DELETE( m_pMidasBlue );
+    _SAFE_DELETE( m_pIdentifyAlg )
+    _SAFE_DELETE( m_pMidasBlue )
 
-    _SAFE_DELETE( m_theGroup );
-    _SAFE_DELETE( m_thePulExt );
-    _SAFE_DELETE( m_theAnalPRI );
-    _SAFE_DELETE( m_theMakeAET );
+    _SAFE_FREE( m_stSavePDWData.pstPDW )
+
+    _SAFE_DELETE( m_theGroup )
+    _SAFE_DELETE( m_thePulExt )
+    _SAFE_DELETE( m_theAnalPRI )
+    _SAFE_DELETE( m_theMakeAET )
 
 #if defined(_SQLITE_) || defined(_MSSQL_)
     free( m_pszSQLString );
@@ -180,7 +185,10 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
+        memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
+
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
+		m_iPDWID = pPDWData->GetPDWID();
 
         m_CoPdw = pPDWData->GetTotalPDW();
 
@@ -202,6 +210,8 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     }
     else {
+		m_iPDWID = 0;
+
         m_CoPdw = 0;
         m_iIsStorePDW = 0;
 
@@ -253,73 +263,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    Log( enNormal, "==== Start of New Signal Analysis[%dth, Co:%d] ====" , m_uiStep, m_CoPdw );
+    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ====" , m_uiStep, m_CoPdw );
 
-#ifdef _TESTSBC_
-    if( m_CoPdw <= RPC || m_CoPdw > MAX_PDW ) {
-        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , m_CoPdw, RPC );
-    }
-    else {
-        CheckValidData( pPDWData );
-
-        // 수집한 PDW 파일 저장하기...
-        InsertRAWData( pPDWData );
-
-        // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_CoPdw ) ) {
-#if defined(_ELINT_) || defined(_XBAND_)
-            //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
-#elif _POCKETSONATA_
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
-#endif
-        }
-        else {
-
-            // 라이브러리 기반 펄스열 추출
-             if( TRUE == m_theGroup->MakeGroup() ) {
-                 CheckKnownByAnalysis();
- 
-                 // 그룹화 만들기
-                while( ! m_theGroup->IsLastGroup() ) {
-                    // 협대역 주파수 그룹화
-                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
-                    m_theGroup->MakeGrIndex();
-
-                    SaveGroupPdwFile( m_CoGroup+1 );
-
-                    // 규칙성 및 불규칙성 펄스열 추출
-                    m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
-
-                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-                    // m_thePulExt->UnknownExtract();
-
-                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                    memset( & MARK, 0, sizeof( MARK ) );
-
-                    // PRI 분석
-                    m_theAnalPRI->Analysis();
-
-                    // 에미터 분석
-                    m_theMakeAET->MakeAET();
-
-                    // 그룹화 생성 개수 증가
-                    ++ m_CoGroup;
-
-                }
-            }
-        }
-
-        //m_theMakeAET->PrintAllEmitter();
-
-        // Printf( "\n ==== End of New Signal Analysis ====\n" );
-
-        // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
-        SaveRemainedPdwFile();
-    }
-
-#else
     if( m_CoPdw <= RPC || m_CoPdw > MAX_PDW ) {
         Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , m_CoPdw, RPC );
     }
@@ -334,7 +279,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_)
             printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
             Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
 #endif
@@ -382,7 +327,6 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
         SaveRemainedPdwFile();
     }
-#endif
 
     // DB 인덱스 번호 증가 : 매우 중요
     NextSeqNum();
@@ -452,109 +396,24 @@ void CNewSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type)
         \date     2008-01-03 17:15:04
         \warning
 */
-void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index)
+void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID)
 {
-//     if( m_bSaveFile == true ) {
-// 
-//#if defined(_ELINT_) || defined(_XBAND_)
-//         UINT uiSize;
-//         char filename[100];
-//         char szDirectory[100];
-// 
-//         int i;
-//         CFile cFile;
-//         BOOL bRet;
-//         PDWINDEX *pPdwIndex;
-//         _PDW *pPDW;
-// 
-//         STR_PDWDATA stPDWData;
-// 
-//         sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->x.el.iCollectorID, m_pPDWData->x.el.aucTaskID );
-// 
-//         bRet = CreateDir( szDirectory );
-// 
-//         struct tm stTime;
-//         char buffer[100];
-//         __time32_t tiNow;
-// 
-//         tiNow = _time32(NULL);
-// 
-//         _localtime32_s( &stTime, & tiNow );
-//         strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
-// 
-//         if( index > 1000 ) {
-//             wsprintf( filename, _T("%s/_COL%d_EMT_DEBUG_%02d.%s"), szDirectory, m_pPDWData->x.el.iCollectorID, index, PDW_EXT );
-//         }
-//         else {
-//             wsprintf( filename, _T("%s/_COL%d_LOB_%02d.%s"), szDirectory, m_pPDWData->x.el.iCollectorID, index, PDW_EXT );
-//         }
-// 
-//         cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
-// 
-//         uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
-//         memcpy( & stPDWData, m_pPDWData, uiSize );
-//         stPDWData.iIsStorePDW = 0;
-//         stPDWData.count = pEmitter->pdw.count;
-//         //cFile.Write( m_pPDWData, uiHeaderSize );
-// 
-//         pPdwIndex = pEmitter->pdw.pIndex;
-//         for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
-//             pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
-//             memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
-// 
-//         }
-// 
-//         uiSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - stPDWData.count ) * sizeof(_PDW) );
-//         cFile.Write( & stPDWData, uiSize );
-// 
-//         cFile.Close();
-// 
-// #else
-// 
-// #ifdef _DEBUG_MAKEPDW_NO
-//         int i;
-//         // int total_count;
-//         FILE *pdwfile;
-//         TNEW_PDW *pPDW;
-//         PDWINDEX *pPdwIndex;
-//         char filename[100];
-// 
-//         CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-//         CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
-// 
-//         CString strFilename=pView->GetFileTitle();
-// 
-//         LPTSTR p = strFilename.GetBuffer( 100 );
-// 
-//         sprintf( filename, "c:\\temp\\%03d_%03d_%s.new_emt.pdw", m_nStep, index, p );
-//         pdwfile = fopen( filename, "wb" );
-// 
-//         pPdwIndex = pEmitter->pdw.pIndex;
-//         for( i=0 ; i < pEmitter->pdw.count ; ++i ) {
-//             pPDW = & m_pPDWData->pPdw[ *pPdwIndex++ ];
-// #ifdef _A50_RWR
-//             TNEW_PDW pdw;
-// 
-//             pdw.word[0] = ntohl( pPDW->word[0] );
-//             pdw.word[1] = ntohl( pPDW->word[1] );
-//             pdw.word[2] = ntohl( pPDW->word[2] );
-//             pdw.word[3] = ntohl( pPDW->word[3] );
-// 
-//             fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
-// #else
-//             fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
-// #endif
-// 
-//         }
-// 
-//         fclose( pdwfile );
-// 
-//         strFilename.ReleaseBuffer();
-// 
-// #endif
-// 
-// #endif
-//     }
+         unsigned int i;
+
+         PDWINDEX *pPdwIndex;
+         _PDW *pPDW;
+ 
+        m_stSavePDWData.SetTotalPDW( pEmitter->pdw.uiCount );
+ 
+        pPdwIndex = pEmitter->pdw.pIndex;
+        for( i=0 ; i < pEmitter->pdw.uiCount ; ++i ) {
+            pPDW = & m_pPDWData->pstPDW[ *pPdwIndex++ ];
+            memcpy( & m_stSavePDWData.pstPDW[i], pPDW, sizeof(_PDW) );
+
+        }
+
+        // 수집한 PDW 파일 저장하기...
+        InsertRAWData( & m_stSavePDWData, iPLOBID );
 
 }
 
@@ -839,7 +698,7 @@ void CNewSigAnal::InitResolution()
  * @date      2022-01-23, 17:53
  * @warning
  */
-void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
+void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID )
 {
     bool bRet;
     char buffer[100]={0};
@@ -852,57 +711,59 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
     pstTime = localtime( & tiNow.tv_sec );
 
     if( pstTime != NULL ) {
-    // 1. 폴더명 생성하기
-    strftime( buffer, 100, "%Y-%m-%d", pstTime );
+        // 1. 폴더명 생성하기
+        strftime( buffer, 100, "%Y-%m-%d", pstTime );
 #if defined(_ELINT_)
-    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+        sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif defined(_XBAND_)
-    //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-	sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+        //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
+	    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
         sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
+
 #else
-    sprintf( szDirectory, "%s/BRD", pLocalDirectory );
+        sprintf( szDirectory, "%s/BRD", pLocalDirectory );
+
 #endif
 
-    //printf( "\n Create the Dir[%s]" , szDirectory );
-    bRet = CreateDir( szDirectory );
+        //printf( "\n Create the Dir[%s]" , szDirectory );
+        bRet = CreateDir( szDirectory );
 
-    if( bRet == true ) {
-        // 2. 파일명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
+        if( bRet == true ) {
+            // 2. 파일명 생성하기
+            strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
 
 #if defined(_ELINT_) || defined(_XBAND_)
-        sprintf( m_szRawDataFilename, _T("%d_%s_%010d%s"), pPDWData->x.el.iCollectorID, buffer, m_uiStep, PDW_EXT );
-        sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
+            sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.iCollectorID, buffer, m_iPDWID, iPLOBID, PDW_EXT );
 
 #elif _POCKETSONATA_
-            sprintf( m_szRawDataFilename, _T("%d_%s_%010d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
-        sprintf( szRawDataPathname, "%s/%s", szDirectory, m_szRawDataFilename );
+		    sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, m_iPDWID, iPLOBID, PDW_TYPE, MIDAS_EXT );
 //         if( enDataType == E_EL_SCDT_PDW ) {
 //             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
 //         }
 //         else {
 //             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_EXT );
 //         }
+
 #else
 
 #endif
 
-		if( m_bDBThread == false ) {
-			// RAWDATA 데이터 저장
-			InsertToDB_RAW( pPDWData ); 
+            sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
+
+		    if( m_bDBThread == false ) {
+			    // RAWDATA 데이터 저장
+			    InsertToDB_RAW( pPDWData, iPLOBID ); 
+            }
+            else {
+                TRACE( "Push the data for InsertToDB_RAW()" );
+		    }
+
+            m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData );
+
         }
-        else {
-            TRACE( "Push the data for InsertToDB_RAW()" );
-		}
-
-        m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData );
-
-
-    }
     }
 
 }
@@ -916,7 +777,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData )
  * @date      2022/01/23 23:33:21
  * @warning   
  */
-bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
+bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID )
 {
 
 #ifdef _SQLITE_
@@ -1002,9 +863,22 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData )
 
 	_localtime32_s( &stTime, & tiNow.tv_sec );
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-  	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDW_ID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME ) values( \
-        '%d', '%ld', '%d', '%s', '%s', '%d', '%d', '%s' )", \
-  		m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, 0, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+#ifdef _POCKETSONATA_
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%d', '%ld', '%d', '0', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_nSeqNum, m_lOpInitID, m_iPDWID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+
+#elif defined(_ELINT_) || defined(_XBAND_)
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%d', '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_nSeqNum, m_lOpInitID, m_iPDWID, iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+
+#else
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%d', '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+
+#endif
  
  	theRS.Open( m_pszSQLString );
     Log( enDebug, ".InsertRAW[P%d]" , pPDWData->GetPDWID() );
@@ -1042,13 +916,16 @@ void CNewSigAnal::InitDataFromDB()
 	char buffer[400];
 
     sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
-    m_lOpInitID = GetLONGData( buffer ) + 1;
+    m_lOpInitID = GetINTData( buffer ) + 1;
+
+    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from RAWDATA" );
+    m_lOpInitID = _max( m_lOpInitID, GetINTData( buffer ) + 1 );
 
     sprintf_s( buffer, sizeof(buffer), "select max(SEQ_NUM) from RAWDATA" );
     m_nSeqNum = GetINTData( buffer ) + 1;
 
-    sprintf_s( buffer, sizeof(buffer), "select max(PDW_ID) from RAWDATA" );
-    m_iPDWID = GetINTData( buffer ) + 1;
+    //sprintf_s( buffer, sizeof(buffer), "select max(PDWID) from RAWDATA" );
+    //m_iPDWID = GetINTData( buffer ) + 1;
 
 #endif
 

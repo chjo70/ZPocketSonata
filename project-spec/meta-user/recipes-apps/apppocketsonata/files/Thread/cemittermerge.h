@@ -50,7 +50,7 @@ public:
 
     void Run( key_t key=IPC_PRIVATE );
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 
 private:
     void InitData();

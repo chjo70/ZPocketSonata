@@ -16,7 +16,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-bool st_bSimulator=false;
+//bool st_bSimulator=false;
 
 
 /**
@@ -119,20 +119,20 @@ void LogPrint( const char *format, ... )
 {
 
 #ifdef _DEBUG
-    if( st_bSimulator == true || true ) {
-        char str[300];
-
-        va_list argptr;
-
-        memset( str, 0, sizeof( str ) );
-
-        va_start( argptr, format );            /* Initialize variable arguments. */
-        vsprintf_s( str, 300, format, argptr );
-        va_end( argptr );              /* Reset variable arguments.      */
-
-        TRACE0( str );
-
-    }
+//     if( st_bSimulator == true || true ) {
+//         char str[300];
+// 
+//         va_list argptr;
+// 
+//         memset( str, 0, sizeof( str ) );
+// 
+//         va_start( argptr, format );            /* Initialize variable arguments. */
+//         vsprintf_s( str, 300, format, argptr );
+//         va_end( argptr );              /* Reset variable arguments.      */
+// 
+//         TRACE0( str );
+// 
+//     }
 #endif
 
 }

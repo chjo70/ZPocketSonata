@@ -507,7 +507,7 @@ void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 14:37:39
 //
-void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int index )
+void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int iPLOBID )
 {
 
 #ifdef _WIN321
@@ -622,7 +622,7 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 		\date     2008-11-03 22:49:58
 		\warning
 */
-void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int index )
+void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID )
 {
 #ifdef _DEBUG_MAKEPDW
 	int i;

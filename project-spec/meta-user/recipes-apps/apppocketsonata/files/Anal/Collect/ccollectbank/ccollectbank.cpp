@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 
-
 #include <string.h>
 
 #include "../../OFP_Main.h"
@@ -16,7 +15,6 @@ using namespace std;
 #include "ccollectbank.h"
 #include "../DataFile/DataFile.h"
 
-//#include "../../../Utils/clog.h"
 #include "../../../Utils/ccommonutils.h"
 
 #include "../../../Thread/csignalcollect.h"
@@ -40,7 +38,9 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 
     Init();
 
-    m_strPDW.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * MAX_PDW );
+	m_strPDW.pstPDW = NULL;
+	_SAFE_MALLOC( m_strPDW.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW );
+    //m_strPDW.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * MAX_PDW );
 
 }
 
@@ -49,7 +49,7 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
  */
 CCollectBank::~CCollectBank()
 {
-    free( m_strPDW.pstPDW );
+	_SAFE_FREE( m_strPDW.pstPDW );
 }
 
 /**
@@ -59,7 +59,8 @@ void CCollectBank::Init()
 {
     memset( & m_strPDW, 0, sizeof(UNION_HEADER) );
 
-
+	// 탐지는 1서부터 시작하고 추적/스캔은 0 부터 시작한다.
+	// 이렇게 해야 PDWID는 1부터 매기게 된다.
     m_strPDW.SetPDWID( _spOne );
 
     m_strPDW.SetBoardID( g_enBoardId );
@@ -342,7 +343,6 @@ void CCollectBank::UpdateWindowCell()
     m_strPDW.SetTotalPDW( 0 );
 
     m_strPDW.IncPDWID();
-
 
     // 수집한 PDW 개수 업데이트
     m_strWindowCell.uiTotalPDW = 0;

@@ -30,16 +30,16 @@
 #define DPrintf(A)							theLogDebug->DebugPrintf(A)
 
 // 수식 연산 정의
-#define FMUL( A, B )                            ( (float) (A) * (float) (B) )
-#define UMUL( A, B )                            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
+#define FMUL( A, B )                       ( (float) (A) * (float) (B) )
+#define UMUL( A, B )                       (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 
 #define F2I( A )                           (int) ( (float) A + (float) 0.5 ) 
 
 // 변환 수식 정의
-#define DB(A)									UDIV( 256 * ( (float) A + 74.6875 ), 80 )
-#define CD_DB(A)								UDIV( ((float) A * 31.654) + 1713.77, 7.8125 )
-#define FMOP(A)									UDIV( A, 1.25 )
-#define CW(A)									UDIV( A, 0.2 )
+#define DB(A)								UDIV( 256 * ( (float) A + 74.6875 ), 80 )
+#define CD_DB(A)							UDIV( ((float) A * 31.654) + 1713.77, 7.8125 )
+#define FMOP(A)								UDIV( A, 1.25 )
+#define CW(A)								UDIV( A, 0.2 )
 
 // 
 #define _EQUALS3( A, B, C )             B = C;  \

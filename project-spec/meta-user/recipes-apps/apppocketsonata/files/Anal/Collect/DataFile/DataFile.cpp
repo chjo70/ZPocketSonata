@@ -37,8 +37,6 @@
 
 static int stDataFile;
 
-const char stDV[2] = { ' ', '*' } ;
-
 int CPOCKETSONATAPDW::m_iBoardID;
 
 
@@ -96,22 +94,6 @@ CPDW::~CPDW(void)
  */
 void CPDW::Alloc( unsigned int uiItems )
 {
-	if( uiItems == 0 ) {
-		//uiItems = m_RawData.uiDataItems;
-	}
-    else /* if ( uiItems <= MAX_ITEMS ) */ {
-// 	    m_PDWData.pfFreq = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pfPW = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pfAOA = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pfTOA = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pfDTOA = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pfPA = (float *)malloc(sizeof(float) * uiItems );
-// 	    m_PDWData.pullTOA = (_TOA *)malloc(sizeof(_TOA) * uiItems );
-// 
-// 	    m_PDWData.pcType = (char *)malloc(sizeof(char) * uiItems );
-// 	    m_PDWData.pcDV = (char *)malloc(sizeof(char) * uiItems );
-    }
-
 
 }
 
@@ -126,15 +108,6 @@ void CPDW::Alloc( unsigned int uiItems )
  */
 void CPDW::Free()
 {
-// 	_SAFE_FREE( m_PDWData.pfFreq );
-// 	_SAFE_FREE( m_PDWData.pfPW );
-// 	_SAFE_FREE( m_PDWData.pfAOA );
-// 	_SAFE_FREE( m_PDWData.pfTOA );
-// 	_SAFE_FREE( m_PDWData.pfDTOA );
-// 	_SAFE_FREE( m_PDWData.pfPA );
-// 	_SAFE_FREE( m_PDWData.pullTOA );
-// 	_SAFE_FREE( m_PDWData.pcType );
-// 	_SAFE_FREE( m_PDWData.pcDV );
 
 }
 
@@ -171,6 +144,7 @@ void *CPDW::GetRealData()
  */
 void CPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CONVERT_OPTION enOption )
 {
+//const char stDV[2] = { ' ', '*' } ;
 //     unsigned int i;
 // 
 // 	Alloc( m_PDWData.uiDataItems );
@@ -655,16 +629,7 @@ void CXPDW::Init( char *pRawData )
  */
 void CXPDW::Free()
 {
-//     _SAFE_FREE( m_PDWData.pfFreq );
-//     _SAFE_FREE( m_PDWData.pfPW );
-//     _SAFE_FREE( m_PDWData.pfAOA );
-//     _SAFE_FREE( m_PDWData.pfTOA );
-//     _SAFE_FREE( m_PDWData.pfDTOA );
-//     _SAFE_FREE( m_PDWData.pfPA );
-//     _SAFE_FREE( m_PDWData.pullTOA );
-// 
-//     _SAFE_FREE( m_PDWData.pcType );
-//     _SAFE_FREE( m_PDWData.pcDV );
+
 }
 
 /**
@@ -1126,100 +1091,7 @@ void *CSPDW::GetRealData()
 */
 void CSPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CONVERT_OPTION enOption )
 {
-// 	unsigned int i;
-// 
-// 	float *pfFreq = m_PDWData.pfFreq;
-// 	float *pfPW = m_PDWData.pfPW;
-// 	float *pfAOA = m_PDWData.pfAOA;
-// 	float *pfTOA = m_PDWData.pfTOA;
-// 	float *pfDTOA = m_PDWData.pfDTOA;
-// 	float *pfPA = m_PDWData.pfPA;
-// 	_TOA *pullTOA = m_PDWData.pullTOA;
-// 
-// 	char *pcType = m_PDWData.pcType;
-// 	char *pcDV = m_PDWData.pcDV;
-// 
-// 	UINT uiToa, preToa, uiDToa;
-// 	UINT uiTemp;
-// 
-// 	TNEW_PDW temp;
-// 
-// 	TNEW_PDW *pPDW = (TNEW_PDW *) m_pRawDataBuffer;
-// 
-// // 	m_spOneSec = 50000000.;
-// // 	m_spOneMilli = FDIV( m_spOneSec, 1000. );
-// // 	m_spOneMicrosec = FDIV( m_spOneMilli, 1000. );
-// // 	m_spOneNanosec = FDIV( m_spOneMicrosec, 1000. );
-// // 
-// // 	m_spAOAres = (float) ( 0.351562 );
-// // 	m_spAMPres = (float) (0.351562);
-// // 	m_spPWres = m_spOneMicrosec;
-// 
-// 	m_PDWData.uiDataItems = 0;
-// 
-//     if( pPDW != NULL ) {
-//         for (i = 0; i < m_PDWData.uiDataItems ; ++i) {
-// 		    temp.bpdw[0][0] = pPDW->item.toa_1;
-// 		    temp.bpdw[0][1] = pPDW->item.toa_2;
-// 		    temp.bpdw[0][2] = pPDW->item.toa_3;
-// 		    temp.bpdw[0][3] = pPDW->item.toa_4;
-// 
-// 		    uiToa = temp.wpdw[0];
-// 		    //*pfTOA = FDIV(uiToa, m_spOneMicrosec );
-// 
-// 		    if (i == 0) {
-// 			    *pfDTOA = 0;
-// 			    preToa = uiToa;
-// 		    }
-// 		    else {
-// 			    uiDToa = uiToa - preToa;
-// 			    //*pfDTOA = FDIV( uiDToa, m_spOneMicrosec );
-// 			    //*pfDTOA = FDIV( uiDToa*20, 1000. );
-// 			    preToa = uiToa;
-// 		    }
-// 
-// 		    *pullTOA = uiToa;
-// 
-// 
-// 		    uiTemp = BIT_MERGE(pPDW->item.frequency_h, pPDW->item.frequency_l);
-// 		    *pfFreq = FFRQCNV(pPDW->item.band + 1, uiTemp);
-// 
-// 		    uiTemp = BIT_MERGE(pPDW->item.pulse_width_h, pPDW->item.pulse_width_l);
-// 		    *pfPW = FPWCNV(uiTemp);
-// 
-// 		    uiTemp = BIT_MERGE(pPDW->item.direction_h, pPDW->item.direction_l);
-// 		    *pfAOA = FAOACNV(uiTemp);
-// 
-// 		    uiTemp = pPDW->item.amplitude;
-// 		    //*pfPA = FPACNV(uiTemp);
-// 
-// 		    *pcType = pPDW->item.stat;
-// 		    *pcDV = pPDW->item.dv;
-// 
-// 		    // printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[MHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );
-// 		    // 필터링 조건
-// // 		    if( ( m_strFilterSetup.dToaMin <= *pfTOA && m_strFilterSetup.dToaMax >= *pfTOA ) &&
-// // 			    ( m_strFilterSetup.dAoaMin <= *pfAOA && m_strFilterSetup.dAoaMax >= *pfAOA ) &&
-// // 			    ( m_strFilterSetup.dPAMin <= *pfPA && m_strFilterSetup.dPAMax >= *pfPA ) &&
-// // 			    ( m_strFilterSetup.dPWMin <= *pfPW && m_strFilterSetup.dPWMax >= *pfPW ) &&
-// // 			    ( m_strFilterSetup.dFrqMin <= *pfFreq && m_strFilterSetup.dFrqMax >= *pfFreq ) ) {
-// // 				    ++pfFreq;
-// // 				    ++pfAOA;
-// // 				    ++pfPW;
-// // 				    ++pfPA;
-// // 				    ++pfTOA;
-// // 				    ++pfDTOA;
-// // 				    ++pcType;
-// // 				    ++pcDV;
-// // 
-// // 				    ++ pullTOA;
-// // 
-// // 				    ++ m_PDWData.uiDataItems;
-// // 		    }
-// 
-// 		    ++pPDW;
-// 	    }
-// 		    }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2819,22 +2691,22 @@ void CMIDAS::GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords )
 
 	pSubRecords = m_pSubRecords;
 	for( i=0 ; i < m_ADJ._6000.subrecords ; ++i ) {
-        if( strncmp( pSubRecords->name, stSubrecordName[enTOAOfSub], strlen(stSubrecordName[enTOAOfSub]) ) == 0 ) {
+        if( strncmp( pSubRecords->name, stSubrecordName[enTOAOfSub], strnlen_s(stSubrecordName[enTOAOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->dtoa = GetSubValue( pSubRecords->format );
 		}
-        else if( strncmp( pSubRecords->name, stSubrecordName[enDTOAOfSub], strlen(stSubrecordName[enDTOAOfSub]) ) == 0 ) {
+        else if( strncmp( pSubRecords->name, stSubrecordName[enDTOAOfSub], strnlen_s(stSubrecordName[enDTOAOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->ddtoa = GetSubValue( pSubRecords->format );
 		}
-        else if( strncmp( pSubRecords->name, stSubrecordName[enFreqOfSub], strlen(stSubrecordName[enFreqOfSub]) ) == 0 ) {
+        else if( strncmp( pSubRecords->name, stSubrecordName[enFreqOfSub], strnlen_s(stSubrecordName[enFreqOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->dfreq = GetSubValue( pSubRecords->format );
 		}
-        else if( strncmp( pSubRecords->name, stSubrecordName[enPWOfSub], strlen(stSubrecordName[enPWOfSub]) ) == 0 ) {
+        else if( strncmp( pSubRecords->name, stSubrecordName[enPWOfSub], strnlen_s(stSubrecordName[enPWOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->dpw = GetSubValue( pSubRecords->format );
 		}
-        else if( strncmp( pSubRecords->name, stSubrecordName[enPAOfSub], strlen(stSubrecordName[enPAOfSub]) ) == 0 ) {
+        else if( strncmp( pSubRecords->name, stSubrecordName[enPAOfSub], strnlen_s(stSubrecordName[enPAOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->dpa = GetSubValue( pSubRecords->format );
 		}
-        else if( strncmp( pSubRecords->name, stSubrecordName[enDOAOfSub], strlen(stSubrecordName[enDOAOfSub]) ) == 0 ) {
+        else if( strncmp( pSubRecords->name, stSubrecordName[enDOAOfSub], strnlen_s(stSubrecordName[enDOAOfSub], 4 ) ) == 0 ) {
 			pPDWRecords->ddoa = GetSubValue( pSubRecords->format );
 		}
 		else {
@@ -3181,20 +3053,8 @@ CData::~CData(void)
  * @date		2022/02/14 18:17:33
  * @warning		
  */
-void CData::Alloc( unsigned int uiItems )
+void CData::Alloc( int iItems )
 {
-	if( uiItems != 0 && uiItems <= MAX_ITEMS ) {
-//         _SAFE_MALLOC( m_PDWData.pfFreq, float, sizeof(float) * uiItems );
-// 		_SAFE_MALLOC( m_PDWData.pfPW, float, sizeof(float) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pfPW, float, sizeof(float) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pfTOA, float, sizeof(float) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pfPA, float, sizeof(float) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pullTOA, _TOA, sizeof(_TOA) * uiItems );
-// 
-//         _SAFE_MALLOC( m_PDWData.pcType, char, sizeof(char) * uiItems );
-//         _SAFE_MALLOC( m_PDWData.pcDV, char, sizeof(char) * uiItems );
-
-    }
         
 }
         
@@ -3208,11 +3068,14 @@ void CData::Alloc( unsigned int uiItems )
  * @date      2022/02/22 0:08:50
  * @warning   
  */
-void CData::AllocData( unsigned int uiItems )
+void CData::AllocData( int iItems )
 {
-    FreeData();
+    size_t szPDW;
 
-    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * uiItems )
+    FreeData();
+    
+    szPDW = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_PDW), iItems );
+    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, szPDW );
 
 }
 
@@ -3225,21 +3088,26 @@ void CData::AllocData( unsigned int uiItems )
  * @date      2022/02/22 0:57:14
  * @warning   
  */
-void CData::AllocRealData( unsigned int uiItems )
+void CData::AllocRealData( int iItems )
 {
-    FreeRealData();
+    size_t szSize;
 
-    _SAFE_MALLOC( m_PDWRealData.pfAOA, float, sizeof(float) * uiItems )
-    _SAFE_MALLOC( m_PDWRealData.pfFreq, float, sizeof(float) * uiItems );
-    _SAFE_MALLOC( m_PDWRealData.pfPW, float, sizeof(float) * uiItems );
-    _SAFE_MALLOC( m_PDWRealData.pfPA, float, sizeof(float) * uiItems );
-    _SAFE_MALLOC( m_PDWRealData.pfTOA, float, sizeof(float) * uiItems );
-    _SAFE_MALLOC( m_PDWRealData.pfDTOA, float, sizeof(float) * uiItems );
+    FreeRealData();    
 
-    _SAFE_MALLOC( m_PDWRealData.pullTOA, _TOA, sizeof(_TOA) * uiItems );
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(float), iItems );
+    _SAFE_MALLOC( m_PDWRealData.pfAOA, float, szSize )
+    _SAFE_MALLOC( m_PDWRealData.pfFreq, float, szSize );
+    _SAFE_MALLOC( m_PDWRealData.pfPW, float, szSize );
+    _SAFE_MALLOC( m_PDWRealData.pfPA, float, szSize );
+    _SAFE_MALLOC( m_PDWRealData.pfTOA, float, szSize );
+    _SAFE_MALLOC( m_PDWRealData.pfDTOA, float, szSize );
 
-    _SAFE_MALLOC( m_PDWRealData.pcType, char, sizeof(char) * uiItems );
-    _SAFE_MALLOC( m_PDWRealData.pcDV, char, sizeof(char) * uiItems );
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_TOA), iItems );
+    _SAFE_MALLOC( m_PDWRealData.pullTOA, _TOA, szSize );
+
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(char), iItems );
+    _SAFE_MALLOC( m_PDWRealData.pcType, char, szSize );
+    _SAFE_MALLOC( m_PDWRealData.pcDV, char, szSize );
     
 }
 
@@ -3553,7 +3421,7 @@ void CDataFile::Alloc()
 void CDataFile::Free()
 {
 
-    _SAFE_DELETE( m_pData );
+    _SAFE_DELETE( m_pData )
 
 }
 
@@ -3796,21 +3664,14 @@ void CDataFile::ReadDataHeader()
  */
 void CDataFile::ReadDataAll( CData *pData )
 {
+    size_t szData;
+
 	m_RawDataFile.SeekToStart();
 
     if( pData->m_pRawDataBuffer == NULL && pData->m_uiTotalDataItems != 0 ) {
-        UINT uiSize, uiMulSize;
-        uiSize = _min( MAX_ITEMS_BYTE, pData->m_uiTotalDataItems );
+        szData = CCommonUtils::CheckMultiplyOverflow( (int) pData->GetOneDataSize(), (int) pData->m_uiTotalDataItems );
 
-        uiMulSize = pData->GetOneDataSize() * uiSize;
-        uiSize = _min( MAX_ITEMS_BYTE, uiSize );
-
-        if( uiMulSize / pData->GetOneDataSize() == uiSize ) {
-            pData->m_pRawDataBuffer = (char *) malloc( uiMulSize );
-        }
-        else {
-            pData->m_pRawDataBuffer = NULL;
-        }
+        pData->m_pRawDataBuffer = (char *) malloc( szData );        
 
     }
 
@@ -3860,17 +3721,13 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     unsigned long long int ullFileSize;
 
     ullFileSize = FileSize( pPathname );
-    if( ullFileSize > UINT_MAX ) {
-        uiFileSize = UINT_MAX;
-    }
-    else {
-        uiFileSize = (unsigned int) ullFileSize;
-    }
+    uiFileSize = CheckOverflow<unsigned int>( ullFileSize );
 
     //pTempData = (char *) malloc( uiFileSize );
-    _SAFE_MALLOC( pTempData, char, uiFileSize );
+    //_SAFE_MALLOC( pTempData, char, uiFileSize );
+	_SAFE_NEW( pTempData, char [uiFileSize] );
 
-    if( pTempData != NULL && m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) ) {  
+    if( pTempData != NULL && m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) == true ) {  
         m_RawDataFile.Read( pTempData, uiFileSize );
         ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption );
         //m_RawDataFile.FileClose();

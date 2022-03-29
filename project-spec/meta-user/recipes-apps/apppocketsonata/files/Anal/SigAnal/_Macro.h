@@ -50,7 +50,7 @@ enum ENUM_BoardID {
 
 
 #define _SAFE_NEW(A, B)         try { \
-                                    A = new B;    \
+									A = new B;    \
                                 } \
                                 catch( bad_alloc ex ) { \
                                     TRACE( "new memory[##A]:%s" , ex.what() ); \
@@ -58,10 +58,15 @@ enum ENUM_BoardID {
 
 
 #define _SAFE_MALLOC(A, B, C )  if( A == NULL ) { \
-                                    A = ( B * ) malloc( (unsigned int) C ); \
-                                    if( A == NULL ) { \
-                                        TRACE( "malloc error new memory[%s]" , #A ); \
-                                    } \
+									if( C == 0 ) { \
+										A = NULL; \
+									} \
+									else { \
+										A = ( B * ) malloc( (size_t) C ); \
+										if( A == NULL ) { \
+											TRACE( "malloc error new memory[%s]" , #A ); \
+										} \
+									} \
                                 } \
                                 else { TRACE( "Already malloc memory[%s]" , #A ); }
 
@@ -153,7 +158,8 @@ T _diffabs( T x, T y)
 
 #define I_IPACNV( A )			IDIV( (A), _spAMPres )
 
-#define I_IFRQMhzCNV( A, B )	IDIV( FMUL( B, 1000. ), (0.001) )
+#define I_IFRQMhzCNV( A, B )	IMUL( B, 1000. ) 
+//IDIV( FMUL( B, 1000. ), (0.001) )
 
 #define IPWCNVLOW( A )			_DIV( (A*_spOneMicrosec), 1000. )
 #define IPWCNVHGH( A )			UDIV( (A*_spOneMicrosec), 1000. )

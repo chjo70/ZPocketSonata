@@ -519,16 +519,12 @@ struct STR_DWELL_LEVEL {
 
   // 주파수 밴드별 옵셋값과 resolution
   // Update AOA threshold
-  UINT _sprfaoa[ 6 ] =
-  {
-    0, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR
-  } ;
+//   UINT _sprfaoa[ 6 ] =
+//   {
+//     0, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR
+//   } ;
 
-  // 에미터로 인지하는 값 
-  UINT _spdiffaoa[ 6 ] =
-  {
-    0, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR
-  } ;
+
 
   float _spFreqMin;
   float _spFreqMax;
@@ -536,9 +532,6 @@ struct STR_DWELL_LEVEL {
   unsigned int _spAnalMinPulseCount;
 
 #define DFD_FREQ_OFFSET		(1900)
-
-char g_szFreqType[MAX_FRQTYPE][3] = { "F_", "HO", "RA", "PA", "UK", "IF" } ;
-char g_szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
 
 #if defined(_ELINT_)
     char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
@@ -679,15 +672,10 @@ extern STR_SYS _sp;
 
 extern char g_szPulseType[MAX_STAT][3];
 
-extern char g_szFreqType[MAX_FRQTYPE][3];
-extern char g_szPRIType[MAX_PRITYPE][3];
-
 extern char g_szAetFreqType[MAX_FRQTYPE][3];
 extern char g_szAetPriType[MAX_PRITYPE][3];
 
 #endif
-
-extern UINT _spdiffaoa[ 6 ];
 
 extern unsigned int _spAnalMinPulseCount;
 

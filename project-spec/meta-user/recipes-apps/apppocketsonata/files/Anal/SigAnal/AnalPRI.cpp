@@ -33,7 +33,11 @@
 
 #include "../../Include/globals.h"
 
-char gEmitterMark[DELETE_EMITTER+1] = { ' ', 'X' };
+// 에미터로 인지하는 값 
+UINT _spdiffaoa[ 6 ] =
+{
+    0, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR, 5 * KHARM_AOA_MAR
+} ;
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -80,11 +84,19 @@ int incUSCompare( const void *arg1, const void *arg2 )
 //##ModelId=426C87D7003F
 CAnalPRI::CAnalPRI( int coMaxPdw )
 {
-    int i;
+    int i=0;
 
     BOOL bRet=TRUE;
 
     m_uiMaxPdw = _min( coMaxPdw, MAX_PDW );
+
+	// 시스템 변수 초기화
+	m_spdiffaoa[ i++ ] = 0;
+	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
+	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
+	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
+	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
+	m_spdiffaoa[ i ] = 5 * KHARM_AOA_MAR;
 
     m_pMergePdwIndex = ( PDWINDEX * ) malloc( sizeof( PDWINDEX ) * m_uiMaxPdw );
     if( m_pMergePdwIndex == NULL ) {
@@ -298,6 +310,8 @@ void CAnalPRI::PrintAllEmitter()
     char buffer[1000];
     int iCnt;
 
+    char szEmitterMark[_SIZE_EMITTER_MARK] = { ' ', 'X' };
+
     pEmitter = & m_Emitter[m_nAnalEmitter];
     if( m_CoEmitter == m_nAnalEmitter ) {
         Log( enNormal, "No PAET !!" );
@@ -311,7 +325,7 @@ void CAnalPRI::PrintAllEmitter()
             for( unsigned int j=0 ; j < pEmitter->uiCoSeg ; ++j ) {
                 iCnt += sprintf( & buffer[iCnt], "[%2d]" , pEmitter->seg_idx[j] );
             }
-            Log( enNormal, "\t[%2d]%1c : Co(%2d, %s)" , i, gEmitterMark[pEmitter->mark], pEmitter->uiCoSeg, buffer );
+            Log( enNormal, "\t[%2d]%1c : Co(%2d, %s)" , i, szEmitterMark[pEmitter->mark], pEmitter->uiCoSeg, buffer );
             Log( enNormal, "\t\t F[%1d], P[%1d] (%5d -%5d)" , pEmitter->freq_type, pEmitter->pri_type, I_TOAusCNV( pEmitter->pri.min ), I_TOAusCNV( pEmitter->pri.max ) );
 
         }
@@ -3368,7 +3382,7 @@ BOOL CAnalPRI::DecisionEmitter(STR_EMITTER *pEmitter)
         diffAoa = pSeg->aoa.max - pSeg->aoa.min;
         if( diffAoa < 0 )
             diffAoa += MAX_AOA;
-        if( diffAoa > (int) _spdiffaoa[ pSeg->band ] ) {
+        if( diffAoa > (int) m_spdiffaoa[ pSeg->band ] ) {
             bRet = FALSE;
         }
 
@@ -5790,7 +5804,9 @@ void CAnalPRI::MergePdwIndexInEmitter(STR_EMITTER *pEmitter)
         pSegPdwIndex = pSeg->pdw.pIndex;
         for( j=0 ; j < (int)count ; ++j ) {
             idx = *pSegPdwIndex++;
-            *(m_pMergePdwIndex+idx) = 1;
+
+            //*(m_pMergePdwIndex+idx) = 1;
+            m_pMergePdwIndex[idx] = 1;
         }
     }
 
@@ -6014,13 +6030,11 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     UINT uiFreqBin = 0;
     PDWINDEX Idx = 0;
 
-    PDWINDEX *pIndex;
-
     band = (int) m_pBAND[pEmitter->pdw.pIndex[0]];
     fResol = gFreqRes[band+1].fRes;
 
     /// 주파수 히스토그램을 생성한다.
-    pIndex = pEmitter->pdw.pIndex;
+    //pIndex = pEmitter->pdw.pIndex;
     for( i=0 ; i < pEmitter->pdw.uiCount ; i++ ) {
         //Idx = *(pEmitter->pdw.pIndex+i);
         Idx = *pEmitter->pdw.pIndex++;

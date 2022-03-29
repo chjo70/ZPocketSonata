@@ -1,4 +1,4 @@
-// CSysConfig.cpp: implementation of the CSysConfig class.
+﻿// CSysConfig.cpp: implementation of the CSysConfig class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -21,6 +21,9 @@
 
 #include "../Anal/SigAnal/_Macro.h"
 #include "../Anal/SigAnal/_Struct.h"
+
+#include "../Include/globals.h"
+//#include "../Utils/clog.h"
 
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
@@ -54,10 +57,10 @@ CSysConfig::CSysConfig(void)
  */
 CSysConfig::~CSysConfig(void)
 {
-//#ifndef _XBAND_
+
     m_pSharedMemory->close();
     delete m_pSharedMemory;
-//#endif
+
 
 }
 
@@ -68,30 +71,82 @@ void CSysConfig::LoadINI()
 {
 #ifndef _CGI_LIST_
     int i, iValue;
-    float fValue;
+
     string strValue;
-    char szHomeDirectory[100];
 
     float fRxThreshold[5];
 
     // INI 파일 로딩하기
-    strcpy( szHomeDirectory, INI_FOLDER /* getenv("HOME") */ );
-    strcat( szHomeDirectory, INI_FILENAME );
+    strcpy( m_szIniFileName, INI_FOLDER /* getenv("HOME") */ );
+    strcat( m_szIniFileName, INI_FILENAME );
 
-    m_theMinIni.setfilename( szHomeDirectory );
+#ifdef _MFC_VER
+    ///////////////////////////////////////////////////////////////////////////////
+    // RX Threshold 값 로딩
+	i = 0;
+	char szBuffer[400], szDefault[400];
+
+	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND1_ );
+	GetPrivateProfileString( "RXTHRESHOLD", "Band1", szDefault, szBuffer, 100, m_szIniFileName );
+	fRxThreshold[i++] = (float) atof( szBuffer );
+	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND2_ );
+	GetPrivateProfileString( "RXTHRESHOLD", "Band2", szDefault, szBuffer, 100, m_szIniFileName );
+	fRxThreshold[i++] = (float) atof( szBuffer );
+	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND3_ );
+	GetPrivateProfileString( "RXTHRESHOLD", "Band3", szDefault, szBuffer, 100, m_szIniFileName );
+	fRxThreshold[i++] = (float) atof( szBuffer );
+	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND4_ );
+	GetPrivateProfileString( "RXTHRESHOLD", "Band4", szDefault, szBuffer, 100, m_szIniFileName );
+	fRxThreshold[i++] = (float) atof( szBuffer );
+	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND5_ );
+	GetPrivateProfileString( "RXTHRESHOLD", "Band5", szDefault, szBuffer, 100, m_szIniFileName );
+	fRxThreshold[i] = (float) atof( szBuffer );
+
+	SetRxThreshold( fRxThreshold );
+ 
+    // 네크워크 환경 설정
+    GetPrivateProfileString( "NETWORK" , "PRIME_SERVER" , "192.168.1.12", szBuffer, 100, m_szIniFileName );
+    SetPrimeServerOfNetwork( szBuffer );
+ 
+    ///////////////////////////////////////////////////////////////////////////////
+    // 최소 펄스 개수
+    sprintf( szDefault, "%d" , _DEFAULT_ANAL_MINPULSECOUNT_ );
+    GetPrivateProfileString( "ANAL" , "MIN_ANALPULSE" , szDefault, szBuffer, 100, m_szIniFileName );
+    _spAnalMinPulseCount = (unsigned int) atoi( szBuffer );
+    SetMinAnalPulse( _spAnalMinPulseCount );
+ 
+    // 신호 삭제 시간
+    sprintf( szDefault, "%d" , _DEFAULT_DELETETIME_ );
+    GetPrivateProfileString( "ANAL" , "DEFAULT_DELETE_TIMESEC" , szDefault, szBuffer, 100, m_szIniFileName );
+    iValue = atoi( szBuffer );
+    SetEmmgEmitterDeleteTimeSec( iValue );
+ 
+    // 프로그램 버젼 정보
+    SetProgramVersion( _GetProgramVersion() );
+ 
+    // 위협 라이브러리 버젼 정보
+    sprintf( szDefault, "%d" , _DEFAULT_LIB_VERSION_ );
+    GetPrivateProfileString( "IPL" , "VERSION" , szDefault, szBuffer, 100, m_szIniFileName );
+    iValue = atoi( szBuffer );
+    SetIPLVersion( _abs(iValue) );
+
+#else
+    float fValue;
+
+    m_theMinIni.setfilename( m_szIniFileName );
 
     ///////////////////////////////////////////////////////////////////////////////
     // RX Threshold 값 로딩
     i = 0;
-    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band1" , _RXTHRESHOLD_BAND1_ );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band1" , _DEFAULT_RXTHRESHOLD_BAND1_ );
     fRxThreshold[i++] = fValue;
-    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band2" , _RXTHRESHOLD_BAND2_ );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band2" , _DEFAULT_RXTHRESHOLD_BAND2_ );
     fRxThreshold[i++] = fValue;
-    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band3" , _RXTHRESHOLD_BAND3_ );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band3" , _DEFAULT_RXTHRESHOLD_BAND3_ );
     fRxThreshold[i++] = fValue;
-    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band4" , _RXTHRESHOLD_BAND4_ );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band4" , _DEFAULT_RXTHRESHOLD_BAND4_ );
     fRxThreshold[i++] = fValue;
-    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band5" , _RXTHRESHOLD_BAND5_ );
+    fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band5" , _DEFAULT_RXTHRESHOLD_BAND5_ );
     fRxThreshold[i++] = fValue;
 
     SetRxThreshold( fRxThreshold );
@@ -102,7 +157,7 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _ANAL_MIN_PULSECOUNT_ );
+    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _DEFAULT_ANAL_MINPULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간
@@ -116,8 +171,12 @@ void CSysConfig::LoadINI()
     iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
     SetIPLVersion( _abs(iValue) );
 
+#endif
+
+    DisplaySystemVar();
 
 #endif
+
 
 }
 
@@ -130,11 +189,11 @@ void CSysConfig::InitVar()
     // 네트워크 얻기
     SetNetworkIP();
 
-#ifdef _POCKETSONATA_
     // 보드 세팅
     m_strConfig.enBoardID = enMaster;
     m_strConfig.enMode = enREADY_MODE;
 
+#ifdef _POCKETSONATA_
 
     // 수집 채널 초기화
     memset( m_strConfig.strDetectWindowCell, 0, sizeof(STR_WINDOWCELL) * DETECT_CHANNEL );
@@ -169,7 +228,7 @@ void CSysConfig::InitVar()
 
 #endif
 
-    _spAnalMinPulseCount = 6;
+    m_szIniFileName[0] = NULL;
 
 
 }
@@ -281,5 +340,37 @@ void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
     else {
         SetUserWindowCell( uiCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL, pWindowCell );
     }
+
+}
+
+
+/**
+ * @brief		DisplaySystemVar
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/03/23 15:11:11
+ * @warning		
+ */
+void CSysConfig::DisplaySystemVar()
+{
+
+    Log( enNormal, "############################# 시스템 환경 설정 값 #############################" );
+    
+    Log( enNormal, "\t.보드 식별자           : %d" , m_strConfig.enBoardID );
+    Log( enNormal, "\t.프로그램 버젼          : %s" , m_strConfig.szProgramVersion );
+    LOG_LINEFEED;
+    LOG_LINEFEED;
+
+    Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
+    Log( enNormal, "\t.라이브러리 버젼           : %d" , m_strConfig.uiIPLVersion );
+    LOG_LINEFEED;
+    LOG_LINEFEED;
+
+    Log( enNormal, "\t.최소 펄스수               : %d" , m_strConfig.iMinAnalPulse );
+    Log( enNormal, "\t.기본 위협 삭제 시간[초]   : %d" , m_strConfig.iEmitterDeleteTime );
+    Log( enNormal, "\t.대역별 기본 임계값       : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
+    LOG_LINEFEED;
+    LOG_LINEFEED;
 
 }

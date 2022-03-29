@@ -52,7 +52,7 @@ static char THIS_FILE[] = __FILE__;
 
 bool CompareMergeCandidate( SELMERGE_CANDIDATE stMergeCanA, SELMERGE_CANDIDATE stMergeCanB );
 
-int CELEmitterMergeMngr::m_CoInstance = 0;
+//int CELEmitterMergeMngr::m_CoInstance = 0;
 int CELEmitterMergeMngr::m_nSeqNum = 0;
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 #endif
 {
     // 멤머 변수 초기화...
-    m_CoInstance = 0;
+    //m_CoInstance = 0;
 
     m_bDBThread = bDBThread;
 
@@ -227,13 +227,9 @@ void CELEmitterMergeMngr::AllocMemory()
 
     //m_piCandidate = ( int * ) malloc( sizeof(int) * MAX_AET_IDCANDIDATE );
     
-    //_SAFE_NEW( m_pTheThreatRoot, CELThreat );
-    try {
-        m_pTheThreatRoot = new CELThreat;
-    }
-    catch( bad_alloc ex ) {
-        TRACE( "new memory[m_pTheThreatRoot]:%s" , ex.what() );
-    }
+    _SAFE_NEW( m_pTheThreatRoot, CELThreat );
+
+	m_pTheThreatRoot->SetRootThreat( m_pTheThreatRoot );
 
     // LOB/빔/방사체 결과 벡터
     m_VecLOBData.reserve( 100 );
@@ -261,8 +257,7 @@ void CELEmitterMergeMngr::FreeMemory()
     _SAFE_FREE( m_pUniThreat );
     _SAFE_FREE( m_pABTtoH000 );
 
-    _SAFE_DELETE( m_pIdentifyAlg );
-    //_SAFE_DELETE( g_pTheELEnvironVariable );
+    _SAFE_DELETE( m_pIdentifyAlg )
 
     delete [] m_pVecLOBs;
 
@@ -395,16 +390,27 @@ void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     SetScanInfo( bScanInfo );
 
 #ifdef __VXWORKS__
-    Log( enNormal, "[%4d] %s %5d [%s] (%7d,%7d)[MHz] [%s] (%7d,%7d)[us] (%7d,%7d)[ns] (%5d,%5d)[dBm], (%d,%5d[us]) [%d]" ,
+    Log( enNormal, "[%4d] %s %5.1f [%s] (%7.1f,%7.1f)[MHz] [%s] (%7.1f,%7.1f)[us] (%7.1f,%7.1f)[ns] (%5.1f,%5.1f)[dBm], (%d,%5.1f[us]) [%d]" ,
         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
-        F2I(pLOBData->fDOAMean),
-        g_szAetFreqType[pLOBData->iFreqType], F2I(pLOBData->fFreqMin), F2I(pLOBData->fFreqMax),
-        g_szAetPriType[pLOBData->iPRIType], F2I(pLOBData->fPRIMin), F2I(pLOBData->fPRIMax),
-        F2I(pLOBData->fPWMin), F2I(pLOBData->fPWMax),
-        F2I(pLOBData->fPAMin), F2I(pLOBData->fPAMax),
-        pLOBData->iScanType, F2I(pLOBData->fScanPeriod),
+        pLOBData->fDOAMean,
+        g_szAetFreqType[pLOBData->iFreqType], pLOBData->fFreqMin, pLOBData->fFreqMax,
+        g_szAetPriType[pLOBData->iPRIType], pLOBData->fPRIMin, pLOBData->fPRIMax,
+        pLOBData->fPWMin, pLOBData->fPWMax,
+        pLOBData->fPAMin, pLOBData->fPAMax,
+        pLOBData->iScanType, pLOBData->fScanPeriod,
         pLOBData->iNumOfPDW
         );
+
+//     Log( enNormal, "[%4d] %s %5d [%s] (%7d,%7d)[MHz] [%s] (%7d,%7d)[us] (%7d,%7d)[ns] (%5d,%5d)[dBm], (%d,%5d[us]) [%d]" ,
+//         pLOBData->uiLOBID, g_szAetSignalType[pLOBData->iSignalType],
+//         F2I(pLOBData->fDOAMean),
+//         g_szAetFreqType[pLOBData->iFreqType], F2I(pLOBData->fFreqMin), F2I(pLOBData->fFreqMax),
+//         g_szAetPriType[pLOBData->iPRIType], F2I(pLOBData->fPRIMin), F2I(pLOBData->fPRIMax),
+//         F2I(pLOBData->fPWMin), F2I(pLOBData->fPWMax),
+//         F2I(pLOBData->fPAMin), F2I(pLOBData->fPAMax),
+//         pLOBData->iScanType, F2I(pLOBData->fScanPeriod),
+//         pLOBData->iNumOfPDW
+//         );
 
 #else
 #ifdef _POCKETSONATA_
@@ -438,7 +444,7 @@ void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
 #endif
 
-    //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
+   //m_pVecThreatInfo = GP_MGR_LOB->GetVecThreatInfo();
 
     // LOB 데이터를 사전 세팅하기위한 함수
     LOBPreSetting( pLOBHeader, pLOBData, pLOBOtherInfo );
@@ -1054,7 +1060,7 @@ void CELEmitterMergeMngr::LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* p
 
 #if defined(_ELINT_) || defined(_XBAND_)
     //m_LOBDataExt.aetData.lOpInitID = m_lOpInitID;
-    memcpy( m_LOBDataExt.aetData.aucTaskID, m_pLOBData->aucTaskID, sizeof(m_pLOBData->aucTaskID) );
+    //memcpy( m_LOBDataExt.aetData.aucTaskID, m_pLOBData->aucTaskID, sizeof(m_pLOBData->aucTaskID) );
 #endif
 
 }
@@ -1554,7 +1560,7 @@ E_BEAM_EMITTER_STAT CELEmitterMergeMngr::IsDeleteThreat( CELThreat *pTheThreat )
             if( refTime <= 0 ) {
                 refTime = (int) g_pTheSysConfig->GetEmmgEmitterDeleteTimeSec();
             }
-            refTime = max( refTime, MIN_EMITTER_DELETE_TIME );
+            refTime = max( refTime, _DEFAULT_MIN_EMITTER_DELETETIME );
 
             bBeamEmitterStat = pAETExtData->enBeamEmitterStat;
             if( (int) duration > refTime ) {
@@ -2867,8 +2873,8 @@ bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDat
 
         // 방사체간의 병합을 위해서 정보를 저장
         m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
-        m_pABTExtData->fRadarLatitude = m_pLOBData->fRadarLatitude;
-        m_pABTExtData->fRadarLongitude = m_pLOBData->fRadarLongitude;
+        m_pABTExtData->fRadarLatitude = m_pLOBData->fLatitude;
+        m_pABTExtData->fRadarLongitude = m_pLOBData->fLongitude;
 
 #if defined(_ELINT_) || defined(_XBAND_)
         m_pABTExtData->uiSeqNum = m_nSeqNum;
@@ -3092,7 +3098,7 @@ bool CELEmitterMergeMngr::UpdateBeamValidity( SRxABTData *pABTData, SELABTDATA_E
 
             if( pABTData->iValidity == false ) {
                 // 항공기 위치와 위치 산출 위치가 가까운 경우를 고려해서 빔 유효성 체크함.
-                fDist = (float) m_theInverseMethod.EllipsoidDistance( (double) pABTData->fLatitude, (double) pABTData->fLongitude, m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude );
+                fDist = (float) m_theInverseMethod.EllipsoidDistance( (double) pABTData->fLatitude, (double) pABTData->fLongitude, m_pLOBData->fLatitude, m_pLOBData->fLongitude );
                 if( IsValidity( pABTData->uiCoLOB, (int) m_pSEnvironVariable->uiEmmgNumOfMinLobToBeam, pABTData->fCEP, m_pSEnvironVariable->fEobIndfRangeMeters, pABTData->fMajorAxis, pABTData->fMinorAxis, fDist ) == true )  {
                     // 위치 산출한 것을 기준으로 모든 LOB에 대해서 체크를 한다.
                     pABTData->iValidity = CheckValidityByAllLOB( & m_pVecLOBs[nIndex], pABTData );
@@ -4052,8 +4058,8 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
 
         // 자신의 방위/위/경도 값 추가
         stLOB.fDoa = m_pLOBData->fDOAMean;
-        stLOB.fLatitude = (float) m_pLOBData->fRadarLatitude;
-        stLOB.fLongitude = (float) m_pLOBData->fRadarLongitude;
+        stLOB.fLatitude = (float) m_pLOBData->fLatitude;
+        stLOB.fLongitude = (float) m_pLOBData->fLongitude;
         stLOB.uiLOBID = (int) m_pLOBData->uiLOBID;
         //stLOB.iCollectorID = (int) m_pLOBData->iCollectorID;
 
@@ -4095,8 +4101,8 @@ void CELEmitterMergeMngr::AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNor
 
         // 자신의 방위/위/경도 값 추가
         stLOB.fDoa = m_pLOBData->fDOAMean;
-        stLOB.fLatitude = (float) m_pLOBData->fRadarLatitude;
-        stLOB.fLongitude = (float) m_pLOBData->fRadarLongitude;
+        stLOB.fLatitude = (float) m_pLOBData->fLatitude;
+        stLOB.fLongitude = (float) m_pLOBData->fLongitude;
         stLOB.uiLOBID = (int) m_pLOBData->uiLOBID;
         //stLOB.iCollectorID = (int) m_pLOBData->iCollectorID;
 
@@ -5405,10 +5411,10 @@ bool CELEmitterMergeMngr::CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTEx
                       \date 	2017-12-16 10:53:16
                 */
                 if( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) {
-                    fTheta = (float) m_theInverseMethod.GCAzimuth( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
+                    fTheta = (float) m_theInverseMethod.GCAzimuth( m_pLOBData->fLatitude, m_pLOBData->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
                     if( TRUE == CompAoaDiff( fTheta,  m_pLOBData->fDOAMean, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2()*/ ) ) {
                         fDiff = AoaDiff( fTheta, m_pLOBData->fDOAMean );
-                        fDistance = (float) sin( DEGREE2RADIAN( fDiff ) ) * (float) m_theInverseMethod.EllipsoidDistance( m_pLOBData->fRadarLatitude, m_pLOBData->fRadarLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
+                        fDistance = (float) sin( DEGREE2RADIAN( fDiff ) ) * (float) m_theInverseMethod.EllipsoidDistance( m_pLOBData->fLatitude, m_pLOBData->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
                         if( fDistance < m_pSEnvironVariable->fEobIndfRangeMeters ) {
                             // LOB와 점사이의 거리를 계산하여 LOB 검증을 비교한다.
                             bRet = true;
@@ -8191,7 +8197,7 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
     int iIndex;
     SRadarMode *pRadarMode;
 
-    SELEXTDB extDB; //=SELEXTDB();
+    SELEXTDB extDB;
 
     // 식별 정보
     if( m_pLOBOtherInfo == NULL || m_pLOBOtherInfo->bUpdate == false ) {
@@ -8311,11 +8317,8 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
     //UpdateLOBData( i_bIsFilteredLOB );
 
-#ifdef _XBAND_
 	int size = m_VecLOBData.size();
 	if( i_bIsFilteredLOB == false ) {
-		Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
-
 		if( m_bDBThread == false ) {
 			// LOB 데이터 저장
 			InsertToDB_LOB( m_pLOBData, pExt, true );
@@ -8341,37 +8344,6 @@ void CELEmitterMergeMngr::InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB
 
 	// LOB 저장소에 추가 한다.
 	PushLOBLANData( m_pLOBData );
-
-#else
-    if( m_bScanProcess == false ) {
-        if( i_bIsFilteredLOB == false ) {
-            if( m_bDBThread == false ) {
-                // LOB 데이터 저장
-                InsertToDB_LOB( m_pLOBData, pExt, true );
-
-                // FREQ 레벨값 저장
-                if( m_pLOBData->iFreqPositionCount >= _spTwo ) {
-                    InsertToDB_Position( m_pLOBData, pExt, true );
-                }
-                // PRI 레벨값 저장
-                if( m_pLOBData->iPRIPositionCount >= _spTwo ) {
-                    InsertToDB_Position( m_pLOBData, pExt, false );
-                }
-            }
-            else {
-                //m_sqMsg.uiOpcode = CMDCODE_INSERTDB_LOBDATA_;
-                //m_sqMsg.usSize = sizeof(STR_LOBDATAEXT);
-                //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBData, m_pLOBData, sizeof(SRxLOBData) );
-                //memcpy( & m_sqMsg.x.stLOBDataExt.stLOBDataExt, pExt, sizeof(SELLOBDATA_EXT) );
-
-                //GP_MGR_INSERTDB->SendMessage( & m_sqMsg );
-            }
-        }
-
-        // LOB 저장소에 추가 한다.
-        PushLOBLANData( m_pLOBData );
-    }
-#endif
 
 }
 
@@ -8489,15 +8461,15 @@ void CELEmitterMergeMngr::PushLOBLANData( SRxLOBData *pLOBData )
 */
 void CELEmitterMergeMngr::PushABTLANData( CELThreat *pTheThreat )
 {
-    SRxABTData *pABTData;
-    //SELABTDATA_EXT *pABTExtData;
-
-    if( pTheThreat != NULL ) {
-        pABTData = GetABTData( pTheThreat->m_nIndex );
-        //pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
-
-        //PushABTLANData( pABTData );
-    }
+//     SRxABTData *pABTData;
+//     //SELABTDATA_EXT *pABTExtData;
+// 
+//     if( pTheThreat != NULL ) {
+//         pABTData = GetABTData( pTheThreat->m_nIndex );
+//         //pABTExtData = GetABTExtData( pTheThreat->m_nIndex );
+// 
+//         //PushABTLANData( pABTData );
+//     }
 }
 
 /**
@@ -10110,9 +10082,10 @@ void CELEmitterMergeMngr::IncH0000( int coRadarModeIndex )
  */
 void CELEmitterMergeMngr::GetGlobalSequenceNum()
 {
-    m_nSeqNum = 0;
+    m_nSeqNum = _spZero;
 
 #ifdef _SQLITE_
+
 #elif _MSSQL_
     char buffer[100];
 
@@ -10125,9 +10098,10 @@ void CELEmitterMergeMngr::GetGlobalSequenceNum()
     sprintf_s( buffer, sizeof(buffer), "select max(SEQ_NUM) from AETDATA" );
     m_nSeqNum = _max( m_nSeqNum, GetINTData( buffer ) );
 
-    ++ m_nSeqNum;
 #else
 #endif
+
+    ++ m_nSeqNum;
 
     //LogPrint( "연동기1의 LOB_SEQ_NUM[%d]이고 연동기1/2(LINK2)의 LOB_SEQ_NUM[%d] 입니다.", m_nSeqNum, m_nGetSeqNum );
 
@@ -10777,7 +10751,7 @@ void CELEmitterMergeMngr::ResetABT()
 {
     //bool bIsFISINTTask;
 
-    SELAETDATA_EXT *pAETExtData;
+    //SELAETDATA_EXT *pAETExtData;
 
     SRxABTData *pABTData;
     SELABTDATA_EXT *pABTExtData;
@@ -10787,7 +10761,7 @@ void CELEmitterMergeMngr::ResetABT()
     if( m_pAETThreat != NULL && m_pABTThreat != NULL ) {
         UINT iDeleteThreatWheuiCoLOB=20;//GP_MGR_PARAM->GetDeleteThreatWhenCoLOB();
 
-        pAETExtData = GetAETExtData( m_pAETThreat->m_nIndex );
+        //pAETExtData = GetAETExtData( m_pAETThreat->m_nIndex );
 
         pABTData = GetABTData( m_pABTThreat->m_nIndex );
         pABTExtData = GetABTExtData( m_pABTThreat->m_nIndex );
@@ -10925,89 +10899,74 @@ LONG CELEmitterMergeMngr::GetLONGData( char *pSQLString )
  */
 bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExtData, bool bFreqSeq )
 {
-
-#ifdef _SQLITE_
-    int iIndex, i;
     bool bRet=true;
 
-    strcpy( m_pszSQLString, "INSERT INTO LOB_POSITION (SEQ_NUM, SEQ_TYPE, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, " );
-    iIndex = strlen( m_pszSQLString );
-    for( i=1 ; i < pLOBData->iFreqPositionCount || i < pLOBData->iPRIPositionCount ; ++i ) {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d, " , i );
-    }
-    iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d ) values ( ", i );
-    
-    if( bFreqSeq == true ) {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, pLOBData->iFreqPositionCount );
-        for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
-            iIndex += sprintf( & m_pszSQLString[iIndex], "%f, " , pLOBData->fFreqSeq[i] );
-        }        
-        sprintf( & m_pszSQLString[iIndex], "%f )" , pLOBData->fFreqSeq[i] );
-        
-    }
-    else {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, pLOBData->iPRIPositionCount );
-        for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
-            iIndex += sprintf( & m_pszSQLString[iIndex], "%f, " , pLOBData->fPRISeq[i] );
-        }        
-        sprintf( & m_pszSQLString[iIndex], "%f )" , pLOBData->fPRISeq[i] );
-    }
+#if defined(_MSSQL_) || defined(_SQLITE_)
+	int i, iIndex;
 
-    try {
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        stmt.Sql( m_pszSQLString );
+	m_pszSQLString[0] = NULL;
 
-        // do not forget to clean-up
-        stmt.FreeQuery();  
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        bRet = false;
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }
+	strcpy( m_pszSQLString, "INSERT INTO LOB_POSITION (SEQ_NUM, SEQ_TYPE, OP_INIT_ID, LOBID, ABTID, AETID, POSITION_COUNT, " );
+	iIndex = strlen( m_pszSQLString );
+	for( i=1 ; i < pLOBData->iFreqPositionCount || i < pLOBData->iPRIPositionCount ; ++i ) {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d, " , i );
+	}
+	iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d ) values ( ", i );
 
-    return bRet;
+	if( bFreqSeq == true ) {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%ld', '%d', '%d', '%d', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iFreqPositionCount );
+		for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
+			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pLOBData->fFreqSeq[i] );
+		}
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fFreqSeq[i] );   
+	}
+	else {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%ld', '%d', '%d', '%d', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount );
+		for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
+			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pLOBData->fPRISeq[i] );
+		}
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fPRISeq[i] );
 
-#elif _MSSQL_
-    int i, iIndex;
-    DECLARE_BEGIN_CHECKODBC
-
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
-    strcpy( m_pszSQLString, "INSERT INTO LOB_POSITION (SEQ_NUM, SEQ_TYPE, OP_INIT_ID, LOBID, ABTID, AETID, TASK_ID, POSITION_COUNT, " );
-    iIndex = strlen( m_pszSQLString );
-    for( i=1 ; i < pLOBData->iFreqPositionCount || i < pLOBData->iPRIPositionCount ; ++i ) {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "SEQ_%02d, " , i );
-    }
-    iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "SEQ_%02d ) values ( ", i );
-
-    if( bFreqSeq == true ) {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%d', '%d', '%ld', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBExtData->aetData.aucTaskID, pLOBData->iFreqPositionCount );
-        for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
-            iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f', " , pLOBData->fFreqSeq[i] );
-        }
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f' )", pLOBData->fFreqSeq[i] );    
-    }
-    else {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%d', '%d', '%ld', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBExtData->aetData.aucTaskID, pLOBData->iPRIPositionCount );
-        for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
-            iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f', " , pLOBData->fPRISeq[i] );
-        }
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f' )", pLOBData->fPRISeq[i] );
-
-    }
-
-    theRS.Open( m_pszSQLString );
-    theRS.Close();
-
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
-
-#else
-	return true;
+	}
 
 #endif
+
+#ifdef _MSSQL_
+	if( m_pszSQLString[0] != NULL ) {
+		
+		DECLARE_BEGIN_CHECKODBC
+
+		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+		theRS.Open( m_pszSQLString );
+		theRS.Close();
+
+		DECLARE_END_CHECKODBC
+	}
+	
+#elif _SQLITE_ 
+	if( m_pszSQLString[0] != NULL ) {
+
+		try {
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.Sql( m_pszSQLString );
+
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+
+#else
+
+#endif
+
+	return bRet;
 
 }
 
@@ -11019,122 +10978,233 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
  */
 bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode )
 {
-
-#ifdef _SQLITE_
-    struct tm *pstTime;
-    char buffer[100]={0};
-
     bool bRet=true;
+
+#ifdef _MSSQL_
+    char buffer[100]={0};
+    struct tm *pstTime;
+
+	m_pszSQLString[0] = NULL;
+
     pstTime = localtime( & pLOBData->tiContactTime );
     if( pstTime != NULL ) {
-        Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
-        //printf( "\n %d, %d, %d, %d" , m_nSeqNum, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID );
-        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
-        sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
-                    SEQ_NUM, PDWID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
-                    SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
-                    FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
-                    PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
-                    PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
-                    PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
-                    SCAN_TYPE, SCAN_PRD, \
-                    INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
-                    SHIP_LAT, SHIP_LONG, SHIP_PITCH, SHIP_ROLL, SHIP_HEADING, SHIP_ALT, IS_VALIDITY, \
-                    IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
-                    ( %d, %d, %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, \
-                    %d, %f, %f, %f, %f, %f, %d, \
-                    %d, %d, %f, %f, %f, %f, %f, %d, %d, \
-                    %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
-                    %f, %f, %f, %f, \
-                    %f, %f, %f, %f, \
-                    %d, %f, \
-                    %d, %d, %f, %f, %f, %f, \
-                    %f, %f, %f, %f, %f, %f, %d, \
-                    %d, %d, %d, %d )" , \
-             m_nSeqNum, pLOBData->uiPDWID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
-             pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
-             pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
-             pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
-             pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
-             pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
-             pLOBData->iScanType, pLOBData->fScanPeriod, \
-             pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
-             pLOBData->fShipLatitude, pLOBData->fShipLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
-             pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
-
-        try {
-            //LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
-
-            Kompex::SQLiteStatement stmt( m_pDatabase );
-            stmt.SqlStatement( m_pszSQLString );
-
-            // do not forget to clean-up
-            stmt.FreeQuery();  
-
-            if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
-                m_pIdentifyAlg->UpdateRadarMode( pLOBData );
-            }
-
-        }
-        catch( Kompex::SQLiteException &exception ) {
-            LOGMSG1( enError, " m_pszSQLString[%s]" , m_pszSQLString );
-            bRet = false;
-            std::cerr << "\nException Occured" << std::endl;
-            exception.Show();
-            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-        }
-    }
-
-    return bRet;
-
-#elif _MSSQL_
-    DECLARE_BEGIN_CHECKODBC
-
-    struct tm stTime;
-    char buffer[100];
-
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
-    _localtime32_s( &stTime, & pLOBData->tiContactTime );
-    strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( SEQ_NUM, OP_INIT_ID, PDWID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) values( '%d', '%ld', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%d' )", \
-        m_nSeqNum, m_lOpInitID, m_, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pExt->aetData.aucTaskID, buffer, pLOBData->tiContactTimems, pLOBData->iSignalType, \
-        pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
-        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
-        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
-        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, \
-        pLOBData->iIsStoreData, pLOBData->iNumOfPDW, pLOBData->iCollectorID, \
-        pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, \
-        pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
-
-    theRS.Open( m_pszSQLString );
-
-    if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
-        __time32_t nowTime=_time32(NULL);
-
-        _localtime32_s( & stTime, & nowTime );
-        strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-
-        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-        theRS.Open( m_pszSQLString );
-
-        // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
-        //theRS.Open( m_pszSQLString );
-
-    }
-
-    theRS.Close();
-
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
-
+#if defined(_POCKETSONATA_)
+        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
+												 SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
+												 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
+												 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, \
+												 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, \
+												 PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, \
+												 RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) \
+												 values( '%d', '%ld', '%d', '%d', '%d', '%d', '%s', '%s', '%d', \
+												 '%d', '%f', '%f', '%f', '%d', \
+												 '%d', '%d', '%f', '%f', '%f', '%f', '%d', \
+												 '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', \
+												 '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', \
+												 '%f', '%f', '%s', '%d' )", \
+            m_nSeqNum, m_lOpInitID, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, buffer, pLOBData->tiContactTimems, \
+			pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+            pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+            pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+            pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->iIsStoreData, pLOBData->iNumOfPDW, \
+			pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
 #else
-	return true;
+		sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
+												 SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
+												 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
+												 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, \
+												 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, \
+												 PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, \
+												 COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) \
+												 values( '%d', '%ld', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%d', \
+												 '%d', '%f', '%f', '%f', '%d', \
+												 '%d', '%d', '%f', '%f', '%f', '%f', '%d', \
+												 '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', \
+												 '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', \
+												 '%d', '%f', '%f', '%s', '%d' )", \
+			m_nSeqNum, m_lOpInitID, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, buffer, pLOBData->tiContactTimems, \
+			pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+			pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+			pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+			pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->iIsStoreData, pLOBData->iNumOfPDW, \
+			pLOBData->iCollectorID, pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
 
 #endif
+
+	}
+
+#elif _SQLITE_
+	char buffer[100]={0};
+	struct tm *pstTime;
+
+	m_pszSQLString[0] = NULL;
+
+	pstTime = localtime( & pLOBData->tiContactTime );
+	if( pstTime != NULL ) {
+		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+
+#if defined(_POCKETSONATA_)
+		sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
+							 SEQ_NUM, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, \
+							 TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
+							 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+							 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+							 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+							 PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+							 PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+							 SCAN_TYPE, SCAN_PRD, \
+							 INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
+							 LAT, LONG, PITCH, ROLL, HEADING, ALT, IS_VALIDITY, \
+							 IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+							 ( %d, %d, %d, %d, %d, %d, \"%s\", %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \
+							 \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, %d, \
+							 %d, %f, %f, %f, %f, %f, %d, \
+							 %d, %d, %f, %f, %f, %f, %f, %d, %d, \
+							 %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+							 %f, %f, %f, %f, \
+							 %f, %f, %f, %f, \
+							 %d, %f, \
+							 %d, %d, %f, %f, %f, %f, \
+							 %f, %f, %f, %f, %f, %f, %d, \
+							 %d, %d, %d, %d )" , \
+							 m_nSeqNum, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, \
+							 pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, \
+							 pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, \
+							 pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, \
+							 pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, \
+							 pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
+							 pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+							 pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, \
+							 pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+							 pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, \
+							 pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+							 pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+							 pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
+							 pLOBData->iScanType, pLOBData->fScanPeriod, \
+							 pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
+							 pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
+							 pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+
+#else
+		sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
+								 SEQ_NUM, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, \
+								 PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, \
+								 TERTIARY_ELNOT, TERTIARY_MODECODE, \
+								 MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, \
+								 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+								 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+								 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+								 PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+								 PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+								 LAT, LONG, \
+								 IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+								 ( %d, %d, %d, %d, %d, %d, \"%s\", %d, \
+								 \"%s\", \"%s\", \"%s\", \"%s\", \
+								 \"%s\", \"%s\", \
+								 \"%s\", \"%s\", \"%s\", \"%s\", %d, \
+								 %d, %f, %f, %f, %f, %f, %d, \
+								 %d, %d, %f, %f, %f, %f, %f, %d, %d, \
+								 %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+								 %f, %f, %f, %f, \
+								 %f, %f, %f, %f, \
+								 %f, %f, \
+								 %d, %d, %d, %d )" , \
+								 m_nSeqNum, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, \
+								 pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, \
+								 pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, \
+								 pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, \
+								 pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+								 pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, \
+								 pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+								 pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, \
+								 pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+								 pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+								 pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPADeviation, \
+								 pLOBData->fLatitude, pLOBData->fLongitude, \
+								 pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+
+#endif
+
+	}
+
+#else
+
+#endif
+
+	// 여기서 부터 SQL 문을 실행 합니다.
+#ifdef _MSSQL_
+	if( m_pszSQLString[0] != NULL ) {
+		DECLARE_BEGIN_CHECKODBC
+
+		struct tm stTime;
+		char buffer[100];
+
+		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+		_localtime32_s( &stTime, & pLOBData->tiContactTime );
+		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+		theRS.Open( m_pszSQLString );
+		Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+
+		if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > _spZero ) {
+			__time32_t nowTime=_time32(NULL);
+
+			_localtime32_s( & stTime, & nowTime );
+			strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+
+			// RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+			theRS.Open( m_pszSQLString );
+
+			// RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
+			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+			theRS.Open( m_pszSQLString );
+
+		}
+
+		theRS.Close();
+
+		DECLARE_END_CHECKODBC
+	}
+	else {
+		bRet = false;
+	}
+#elif _SQLITE_  
+	if( m_pszSQLString[0] != NULL ) {
+		try {
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.SqlStatement( m_pszSQLString );
+			Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
+
+			if( bUpdateRadarMode == true && pLOBData->iRadarModeIndex > 0 ) {
+				stmt.SqlStatement( m_pszSQLString );
+				//m_pIdentifyAlg->UpdateRadarMode( pLOBData );
+			}
+
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			LOGMSG1( enError, " m_pszSQLString[%s]" , m_pszSQLString );
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+	else {
+		bRet = false;
+	}
+
+#else
+
+#endif
+	
+	return bRet;
 
 }
 
@@ -11146,91 +11216,74 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
  */
 bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bFreqSeq )
 {
-#ifdef _SQLITE_
-    int iIndex, i;
-    bool bRet=true;
+	bool bRet=true;
 
-    strcpy( m_pszSQLString, "INSERT INTO ABT_POSITION (SEQ_NUM, SEQ_TYPE, ABTID, AETID, TASK_ID, POSITION_COUNT, " );
+#if defined(_MSSQL_) || defined(_SQLITE_)
+	int i, iIndex;
 
-    iIndex = strlen( m_pszSQLString );
-    for( i=1 ; i < pABTData->iFreqPositionCount || i < pABTData->iPRIPositionCount ; ++i ) {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d, " , i );
-    }
-    iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d ) values ( ", i );
+	m_pszSQLString[0] = NULL;
 
-    if( bFreqSeq == true ) {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iFreqPositionCount );
-        for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
-            iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fFreqSeq[i] );
-        }
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fFreqSeq[i] );    
-    }
-    else {
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iPRIPositionCount );
-        for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
-            iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fPRISeq[i] );
-        }
-        iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fPRISeq[i] );
+	strcpy( m_pszSQLString, "INSERT INTO ABT_POSITION (SEQ_NUM, SEQ_TYPE, OP_INIT_ID, ABTID, AETID, POSITION_COUNT, " );
+	iIndex = strlen( m_pszSQLString );
+	for( i=1 ; i < pABTData->iFreqPositionCount || i < pABTData->iPRIPositionCount ; ++i ) {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d, " , i );
+	}
+	iIndex += sprintf( & m_pszSQLString[iIndex], "SEQ_%02d ) values ( ", i );
 
-    }
+	if( bFreqSeq == true ) {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%ld', '%d', '%d', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pABTData->uiABTID, pABTData->uiAETID, pABTData->iFreqPositionCount );
+		for( i=0 ; i < pABTData->iFreqPositionCount-1 ; ++i ) {
+			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fFreqSeq[i] );
+		}
+		sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fFreqSeq[i] );    
+	}
+	else {
+		iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', '%d', '%ld', '%d', '%d', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pABTData->uiABTID, pABTData->uiAETID, pABTData->iPRIPositionCount );
+		for( i=0 ; i < pABTData->iPRIPositionCount-1 ; ++i ) {
+			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pABTData->fPRISeq[i] );
+		}
+		sprintf( & m_pszSQLString[iIndex], "'%f' )", pABTData->fPRISeq[i] );
 
-    try {
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        stmt.SqlStatement( m_pszSQLString );
-
-        // do not forget to clean-up
-        stmt.FreeQuery();  
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        bRet = false;
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }
-
-    return bRet;
-
-#elif _MSSQL_
-    int i, iIndex;
-    DECLARE_BEGIN_CHECKODBC
-
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
-    strcpy( m_pszSQLString, "INSERT INTO ABT_POSITION (SEQ_NUM, SEQ_TYPE, OP_INIT_ID, ABTID, AETID, TASK_ID, POSITION_COUNT, " );
-
-    iIndex = strlen( m_pszSQLString );
-    for( i=1 ; i < pABTData->iFreqPositionCount || i < pABTData->iPRIPositionCount ; ++i ) {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "SEQ_%02d, " , i );
-    }
-    iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "SEQ_%02d ) values ( ", i );
-
-    if( bFreqSeq == true ) {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%d', '%d', '%ld', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iFreqPositionCount );
-        for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
-            iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f', " , pABTData->fFreqSeq[i] );
-        }
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f' )", pABTData->fFreqSeq[i] );    
-    }
-    else {
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%d', '%d', '%ld', '%d', '%d', '%s', '%d', " , m_nSeqNum, bFreqSeq, m_lOpInitID, pABTData->uiABTID, pABTData->uiAETID, pLOBData->aucTaskID, pABTData->iPRIPositionCount );
-        for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
-            iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f', " , pABTData->fPRISeq[i] );
-        }
-        iIndex += sprintf_s( & m_pszSQLString[iIndex], MAX_SQL_SIZE-iIndex, "'%f' )", pABTData->fPRISeq[i] );
-
-    }
-
-    theRS.Open( m_pszSQLString );
-    theRS.Close();
-
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
-
-#else
-	return true;
+	}
 
 #endif
 
+#ifdef _MSSQL_
+	if( m_pszSQLString[0] != NULL ) {
+
+		DECLARE_BEGIN_CHECKODBC
+
+		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+		theRS.Open( m_pszSQLString );
+		theRS.Close();
+
+		DECLARE_END_CHECKODBC
+	}
+
+#elif _SQLITE_ 
+	if( m_pszSQLString[0] != NULL ) {
+
+		try {
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.Sql( m_pszSQLString );
+
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+
+#else
+
+#endif
+
+	return bRet;
 
 }
 
@@ -11242,10 +11295,13 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData 
  */
 bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat )
 {
-#ifdef _SQLITE_
-    bool bRet=true;
+	bool bRet=true;
+
+#if defined(_MSSQL_)
     struct tm *pstTime;
     char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
+
+	m_pszSQLString[0] = NULL;
 
     pstTime = localtime( & pABTData->tiFirstSeenTime );
     if( pstTime != NULL ) {
@@ -11262,152 +11318,246 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
         strcpy( buffer2, "1970-01-01 00:00:00" );
     }
     
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
     pstTime = localtime( & pABTData->tiFinalAlarmTime );
     if( pstTime != NULL ) {
         strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
     }
     else {
         strcpy( buffer3, "1970-01-01 00:00:00" );
-    }    
+    }   
+#else
+	strcpy( buffer3, "1970-01-01 00:00:00" );
+#endif
 
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
+	sprintf( m_pszSQLString, \
+		"INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
+		PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+		RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
+		SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+		FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+		PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+		PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+		PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+		SCAN_TYPE, SCAN_PRD_MEAN_SEC, SCAN_PRD_MIN_SEC, SCAN_PRD_MAX_SEC, \
+		HAS_INTRA_MOD, INTRA_FRQ_CHNG_WID_MAX, INTRA_FRQ_CHNG_WID_MIN, \
+		PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+		IS_VALIDITY, TOTAL_PDW, NUM_LOB, ALARM_TIME, STAT, \
+		IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG ) VALUES \
+		( %d, %d, \"%s\", \"%s\", \
+		\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
+		%d, %d, %d, \
+		%d, %f, %f, %f, %f, \
+		%d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+		%d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+		%f, %f, %f, %f, \
+		%f, %f, %f, %f, \
+		%d, %f, %f, %f, \
+		%d, %f, %f, \
+		%d, %f, %f, %f, %f, %f, %f, %f, %f, \
+		%d, %d, %d, \"%s\", %d, \
+		%d, %d, %f, %f )" , \
+		pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+		pABTData->szPrimaryELNOT, pABTData->szPrimaryModeCode, pABTData->szModulationCode, pABTData->szRadarModeName, pABTData->szPlaceNameKor, pABTData->szNickName, pABTData->szFuncCode, pABTData->szPlatform, pABTData->iRadarModePriority, pABTData->iRadarPriority, \
+		pABTData->iRadarModeIndex, pABTData->iThreatIndex, pABTData->iPolarization, \
+		pABTData->iSignalType, pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax, pABTData->fDOADeviation, \
+		pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
+		pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
+		pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPWDeviation, \
+		pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, pABTData->fPADeviation, \
+		pABTData->iScanType, pABTData->fMeanScanPeriod, pABTData->fMinScanPeriod, pABTData->fMaxScanPeriod, \
+		pABTData->iHasIntraMod, pABTData->fMaxIntraMod, pABTData->fMinIntraMod, \
+		pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fHeight, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
+		pABTData->iValidity, pABTData->uiTotalOfPDW, pABTData->uiCoLOB, buffer3, pABTData->iStat, \
+		pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
+
+#else
     sprintf( m_pszSQLString, \
-        "INSERT INTO ABTDATA (ABTID, AETID, FIRST_TIME, LAST_TIME, \
-         PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
-         RADARMODE_INDEX, THREAT_INDEX, POLIZATION, \
-         SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
-         FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
-         PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
-         PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
-         PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
-         SCAN_TYPE, SCAN_PRD_MEAN_SEC, SCAN_PRD_MIN_SEC, SCAN_PRD_MAX_SEC, \
-         HAS_INTRA_MOD, INTRA_FRQ_CHNG_WID_MAX, INTRA_FRQ_CHNG_WID_MIN, \
-         PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
-         IS_VALIDITY, TOTAL_PDW, NUM_LOB, ALARM_TIME, STAT, \
-         IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG ) VALUES \
-         ( %d, %d, \"%s\", \"%s\", \
-         \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
+        "INSERT INTO ABTDATA (SEQ_NUM, OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, \
+         SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, \
+         FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+         PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+         PW_MEAN, PW_MIN, PW_MAX, \
+         PA_MEAN, PA_MIN, PA_MAX, \
+         TOTAL_PDW, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX, \
+         PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+         ALARM_TIME, STAT ) VALUES \
+         ( %d, %ld, %d, %d, '%s', '%s', \
          %d, %d, %d, \
-         %d, %f, %f, %f, %f, \
+         %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
          %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
-         %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
-         %f, %f, %f, %f, \
-         %f, %f, %f, %f, \
-         %d, %f, %f, %f, \
-         %d, %f, %f, \
-         %d, %f, %f, %f, %f, %f, %f, %f, %f, \
-         %d, %d, %d, \"%s\", %d, \
-         %d, %d, %f, %f )" , \
-        pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+         %f, %f, %f, \
+         %f, %f, %f, \
+         %d, '%s', %d, %d, \
+         %d, %f, %f, %f, %f, %f, %f, %f, '%s', %d )" , \
+        m_nSeqNum, pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+        pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
+        pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
+        pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
+        pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, \
+        pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, \
+        pABTData->uiTotalOfPDW, pABTData->szRadarModeName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
+        pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, buffer3, pABTData->iStat );
+
+#endif
+
+#elif defined(_SQLITE_)
+    struct tm *pstTime;
+    char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
+
+    m_pszSQLString[0] = NULL;
+
+    pstTime = localtime( & pABTData->tiFirstSeenTime );
+    if( pstTime != NULL ) {
+        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer1, "1970-01-01 00:00:00" );
+    }
+    pstTime = localtime( & pABTData->tiLastSeenTime );
+    if( pstTime != NULL ) {
+        strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer2, "1970-01-01 00:00:00" );
+    }
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
+    pstTime = localtime( & pABTData->tiFinalAlarmTime );
+    if( pstTime != NULL ) {
+        strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+    }
+    else {
+        strcpy( buffer3, "1970-01-01 00:00:00" );
+    }   
+#else
+    strcpy( buffer3, "1970-01-01 00:00:00" );
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
+    sprintf( m_pszSQLString, \
+    "INSERT INTO ABTDATA (SEQ_NUM, ABTID, AETID, FIRST_TIME, LAST_TIME, \
+    PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+    RADARMODE_INDEX, THREAT_INDEX, \
+    SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+    FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+    PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+    PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+    PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+    PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+    IS_VALIDITY, TOTAL_PDW, NUM_LOB, ALARM_TIME, STAT, \
+    IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG ) VALUES \
+    ( %d, %d, %d, '%s', '%s', \
+    '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, \
+    %d, %d, \
+    %d, %f, %f, %f, %f, \
+    %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+    %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+    %f, %f, %f, %f, \
+    %f, %f, %f, %f, \
+    %d, %f, %f, %f, %f, %f, %f, %f, %f, \
+    %d, %d, %d, '%s', %d, \
+    %d, %d, %f, %f )" , \
+    m_nSeqNum, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
+    pABTData->szPrimaryELNOT, pABTData->szPrimaryModeCode, pABTData->szModulationCode, pABTData->szRadarModeName, pABTData->szPlaceNameKor, pABTData->szNickName, pABTData->szFuncCode, pABTData->szPlatform, pABTData->iRadarModePriority, pABTData->iRadarPriority, \
+    pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
+    pABTData->iSignalType, pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax, pABTData->fDOADeviation, \
+    pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
+    pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
+    pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPWDeviation, \
+    pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, pABTData->fPADeviation, \
+    pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fHeight, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
+    pABTData->iValidity, pABTData->uiTotalOfPDW, pABTData->uiCoLOB, buffer3, pABTData->iStat, \
+    pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
+
+#else
+    sprintf( m_pszSQLString, \
+        "INSERT INTO ABTDATA (SEQ_NUM, ABTID, AETID, FIRST_TIME, LAST_TIME, \
+        PRIMARY_ELNOT, PRIMARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, PLACENAME_KOR, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+        RADARMODE_INDEX, THREAT_INDEX, \
+        SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+        FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+        PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+        PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+        PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+        PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+        IS_VALIDITY, TOTAL_PDW, NUM_LOB, ALARM_TIME, STAT, \
+        IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG ) VALUES \
+        ( %d, %d, %d, '%s', '%s', \
+        '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, \
+        %d, %d, \
+        %d, %f, %f, %f, %f, \
+        %d, %d, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+        %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d, \
+        %f, %f, %f, %f, \
+        %f, %f, %f, %f, \
+        %d, %f, %f, %f, %f, %f, %f, %f, %f, \
+        %d, %d, %d, '%s', %d, \
+        %d, %d, %f, %f )" , \
+        m_nSeqNum, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
         pABTData->szPrimaryELNOT, pABTData->szPrimaryModeCode, pABTData->szModulationCode, pABTData->szRadarModeName, pABTData->szPlaceNameKor, pABTData->szNickName, pABTData->szFuncCode, pABTData->szPlatform, pABTData->iRadarModePriority, pABTData->iRadarPriority, \
-        pABTData->iRadarModeIndex, pABTData->iThreatIndex, pABTData->iPolarization, \
+        pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
         pABTData->iSignalType, pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax, pABTData->fDOADeviation, \
         pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->fFreqDeviation, pABTData->iFreqPositionCount, pABTData->iFreqElementCount, \
         pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIDeviation, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, pABTData->iPRIElementCount, \
         pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPWDeviation, \
         pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, pABTData->fPADeviation, \
-        pABTData->iScanType, pABTData->fMeanScanPeriod, pABTData->fMinScanPeriod, pABTData->fMaxScanPeriod, \
-        pABTData->iHasIntraMod, pABTData->fMaxIntraMod, pABTData->fMinIntraMod, \
         pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fHeight, pABTData->fCEP, pABTData->fMajorAxis, pABTData->fMinorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
         pABTData->iValidity, pABTData->uiTotalOfPDW, pABTData->uiCoLOB, buffer3, pABTData->iStat, \
         pABTExtData->bIsManualEdited, pABTExtData->bManualPosEstPreferred, pABTExtData->fManualLatitude, pABTExtData->fManualLatitude );
 
-    try {
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        stmt.SqlStatement( m_pszSQLString );
 
-        Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
+#endif
 
-        // do not forget to clean-up
-        stmt.FreeQuery();  
+#endif
 
-        if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
+// 여기서 부터 SQL 문을 실행 합니다.
+#ifdef _MSSQL_
+	if( m_pszSQLString[0] != NULL ) {
+		DECLARE_BEGIN_CHECKODBC
 
-            pstTime = localtime( & pABTData->tiLastSeenTime );
+		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-            if( pstTime != NULL ) {
-                strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+		theRS.Open( m_pszSQLString );
+		Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
-                // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-                sprintf_s( m_pszSQLString, sizeof(m_pszSQLString), "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-                //Kompex::SQLiteStatement stmt( m_pDatabase );
-                //stmt.SqlStatement( m_pszSQLString );
-            }
+		theRS.Close();
 
-            // do not forget to clean-up
-            //stmt.FreeQuery();  
-        }
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        // LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
-        bRet = false;
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }
+		DECLARE_END_CHECKODBC
+	}
+	else {
+		bRet = false;
+	}
 
-    return bRet;
+#elif _SQLITE_  
+	if( m_pszSQLString[0] != NULL ) {
+		try {
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.SqlStatement( m_pszSQLString );
+			Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
 
-#elif _MSSQL_
-    DECLARE_BEGIN_CHECKODBC
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			// LOGMSG1( enError, " m_pszSQLString[%s]" , m_pszSQLString );
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+	else {
+		bRet = false;
+	}
 
-    struct tm stTime;
-    char buffer1[100], buffer2[100];
-
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
-    _localtime32_s(& stTime, & pABTData->tiFirstSeenTime );
-    strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    _localtime32_s(&stTime, & pABTData->tiLastSeenTime );
-    strftime( buffer2, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-
-#ifdef _XBAND_
-	sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (SEQ_NUM, OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADARMODE_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, STAT ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d' )", \
-		m_nSeqNum, pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
-		pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
-		pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->iFreqPositionCount, \
-		pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
-		pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, \
-		pABTData->uiTotalOfPDW, pABTData->szRadarModeName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
-		pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
-		pABTData->iStat );
 #else
-	char buffer3[100];
-    _localtime32_s(&stTime, & pABTData->tiFinalAlarmTime );
-    strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", &stTime);
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO ABTDATA (SEQ_NUM, OP_INIT_ID, ABTID, AETID, FIRST_TIME, LAST_TIME, SIGNAL_TYPE, NUM_LOB, BEAM_VALIDITY, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD_MEAN, FREQ_PATTERN_PERIOD_MIN, FREQ_PATTERN_PERIOD_MAX, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD_MEAN, PRI_PATTERN_PERIOD_MIN, PRI_PATTERN_PERIOD_MAX, PRI_MEAN, PRI_MAX, PRI_MIN, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, TOTAL_PDW, RADAR_NAME, RADARMODE_INDEX, THREAT_INDEX, PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_CEP, PE_MINOR_AXIS, PE_MAJOR_AXIS, PE_THETA, PE_DISTANCE, STAT ) values( '%d', '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%s', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%s', '%d' )", \
-                                                m_nSeqNum, pABTExtData->uiOpInitID, pABTData->uiABTID, pABTData->uiAETID, buffer1, buffer2, \
-                                                pABTData->iSignalType, pABTData->uiCoLOB, pABTData->iValidity, \
-                                                pABTData->iFreqType, pABTData->iFreqPatternType, pABTData->fFreqPatternPeriodMean, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax, pABTData->iFreqPositionCount, \
-                                                pABTData->iPRIType, pABTData->iPRIPatternType, pABTData->fPRIPatternPeriodMean, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIJitterRatio, pABTData->iPRIPositionCount, \
-                                                pABTData->fPWMean, pABTData->fPWMin, pABTData->fPWMax, pABTData->fPAMean, pABTData->fPAMin, pABTData->fPAMax, \
-                                                pABTData->uiTotalOfPDW, pABTData->aucRadarName, pABTData->iRadarModeIndex, pABTData->iThreatIndex, \
-                                                pABTData->iPEValid, pABTData->fLatitude, pABTData->fLongitude, pABTData->fCEP, pABTData->fMinorAxis, pABTData->fMajorAxis, pABTData->fTheta, pABTData->fDistanceErrorOfThreat, \
-                                                buffer3, pABTData->iStat );
-#endif
-
-    theRS.Open( m_pszSQLString );
-    Log( enDebug, ".InsertABT[A%d][B%d]" , pABTData->uiAETID, pABTData->uiABTID );
-
-    if( bUpdateThreat == true && pABTData->iThreatIndex > 0 ) {
-        __time32_t nowTime=_time32(NULL);
-
-        _localtime32_s( & stTime, & nowTime );
-        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-
-        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-        theRS.Open( m_pszSQLString );
-    }
-
-    theRS.Close();
-
-    // 아래에서 다운이 되면 SQL 버퍼수를 늘히면 됩니다.
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
-#else 
-	return true;
 
 #endif
+
+	return bRet;
 }
 
 
@@ -11419,8 +11569,9 @@ bool CELEmitterMergeMngr::InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *
  */
 bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB )
 {
-#ifdef _SQLITE_
     bool bRet=true;
+
+#if defined(_MSSQL_)
     struct tm *pstTime;
     char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
 
@@ -11448,10 +11599,8 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         strcpy( buffer3, "1970-01-01 00:00:00" );
     }
 
-//     printf( "\n%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d" , \
-//         pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
-//         pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority );
-    sprintf( m_pszSQLString, "INSERT INTO AETDATA (AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
+    sprintf( m_pszSQLString, "INSERT INTO AETDATA (SEQ_NUM, OP_INIT_ID, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
                                PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
                                RADARMODE_INDEX, THREAT_INDEX, \
                                VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
@@ -11461,7 +11610,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
                                PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
                                PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
                                IDINFO, NUM_OF_LOBS, NUM_OF_BEAMS, FINAL_ALARM_TIME, IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG, STAT ) VALUES \
-        ( %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
+        ( %d, %ld, %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", %d, %d, \
         %d, \"%s\", \"%s\", %d, \
         %d, %d, \
         %d, %f, %f, %f, %f, \
@@ -11471,7 +11620,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         %f, %f, %f, %f, \
         %d, %f, %f, %f, %f, %f, %f, %f, %f, \
         \"%s\", %d, %d, \"%s\", %d, %d, %f, %f, %d )" , \
-        pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
+        m_nSeqNum, m_lOpInitID, pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
         pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
         pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
         pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
@@ -11481,47 +11630,42 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
         pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
         pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
         pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
-    
-    try {
-        //LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
-        Kompex::SQLiteStatement stmt( m_pDatabase );
-        stmt.SqlStatement( m_pszSQLString );
-        Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
+#else
+    sprintf( m_pszSQLString, "INSERT INTO AETDATA (SEQ_NUM, OP_INIT_ID, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADARMODE_PRIORITY, RADAR_PRIORITY, \
+                             PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
+                             RADARMODE_INDEX, THREAT_INDEX, \
+                             VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+                             FRQ_MEAN, FRQ_MIN, FRQ_MAX, FRQ_DEV, \
+                             PRI_MEAN,  PRI_MIN, PRI_MAX, PRI_DEV, \
+                             PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                             PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                             PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+                             STAT, NUM_OF_BEAMS, NUM_OF_LOBS, IDINFO, FINAL_ALARM_TIME ) VALUES \
+                             ( %d, %ld, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, \
+                             %d, '%s', '%s', %d, \
+                             %d, %d, \
+                             %d, %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %d, %f, %f, %f, %f, %f, %f, %f, %f, \
+                             %d, %d, %d, '%s', '%s' )" , \
+                             m_nSeqNum, m_lOpInitID, pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
+                             pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
+                             pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
+                             pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
+                             pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
+                             pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
+                             pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
+                             pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
+                             pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
+                             pAETData->iStat, pAETData->uiCoABT, pAETData->uiCoLOB, pAETData->szIDInfo, buffer3 );
+#endif
 
-        // do not forget to clean-up
-        stmt.FreeQuery();  
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        printf( "\nm_pszSQLString=%p" , m_pszSQLString );
-        LOGMSG1( enNormal, " m_pszSQLString[%s]" , m_pszSQLString );
-        bRet = false;
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }    
-
-    /*
-    if( bUpdateThreat == true && pAETData->iThreatIndex > 0 ) {
-        __time32_t nowTime=_time32(NULL);
-
-        _localtime32_s( & stTime, & nowTime );
-        strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
-
-        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        sprintf_s( m_pszSQLString, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
-        exec( m_pszSQLString );
-    }
-    */
-
-    return bRet;
-
-#elif _MSSQL_
-    DECLARE_BEGIN_CHECKODBC
-
-    CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
-
+#elif defined(_SQLITE_)
     struct tm *pstTime;
-    char buffer1[100], buffer2[100], buffer3[100];
+    char buffer1[100]={0}, buffer2[100]={0}, buffer3[100]={0};
 
     pstTime = localtime( & pAETData->tiFirstSeenTime );
     if( pstTime != NULL ) {
@@ -11542,54 +11686,125 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
     pstTime = localtime( & pAETData->tiFinalAlarmTime );
     if( pstTime != NULL ) {
         strftime( buffer3, 100, "%Y-%m-%d %H:%M:%S", pstTime );
-    }
-    else {
+	}
+	else {
         strcpy( buffer3, "1970-01-01 00:00:00" );
-    }
+	}
 
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO AETDATA (SEQ_NUM, OP_INIT_ID, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADARMODE_PRIORITY, RADAR_PRIORITY, \
-                              PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
-                              RADARMODE_INDEX, THREAT_INDEX, \
-                              VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
-                              FRQ_MEAN, FRQ_MIN, FRQ_MAX, FRQ_DEV, \
-                              PRI_MEAN,  PRI_MIN, PRI_MAX, PRI_DEV, \
-                              PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
-                              PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
-                              PE_VALID, PE_LATITUDE, PE_LONGGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
-                              IDINFO, NUM_OF_LOBS, NUM_OF_BEAMS, FINAL_ALARM_TIME, STAT ) VALUES \
-                              ( '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', \
-                              '%d', '%s', '%s', '%d', \
-                              '%d', '%d', \
-                              '%d', '%f', '%f', '%f', '%f', \
-                              '%f', '%f', '%f', '%f', \
-                              '%f', '%f', '%f', '%f', \
-                              '%f', '%f', '%f', '%f', \
-                              '%f', '%f', '%f', '%f', \
-                              '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', \
-                              '%s', '%d', '%d', '%s', '%d' )" , \
-                              m_nSeqNum, m_lOpInitID, \
-                              pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
-                              pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
-                              pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
-                              pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
-                              pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
-                              pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
-                              pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
-                              pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
-                              pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
-                              pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETData->iStat );
-
-    theRS.Open( m_pszSQLString );
-    Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
-    theRS.Close();
-
-    DECLARE_END_CHECKODBC
-    DECLARE_RETURN
-
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
+    sprintf( m_pszSQLString, "INSERT INTO AETDATA (SEQ_NUM, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, \
+                             RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+                             PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
+                             RADARMODE_INDEX, THREAT_INDEX, \
+                             VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+                             FRQ_MEAN, FRQ_MIN, FRQ_MAX, FRQ_DEV, \
+                             PRI_MEAN,  PRI_MIN, PRI_MAX, PRI_DEV, \
+                             PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                             PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                             PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+                             IDINFO, NUM_OF_LOBS, NUM_OF_BEAMS, FINAL_ALARM_TIME, IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG, STAT ) VALUES \
+                             ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, \
+                             %d, '%s', '%s', %d, \
+                             %d, %d, \
+                             %d, %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %d, %f, %f, %f, %f, %f, %f, %f, %f, \
+                             '%s', %d, %d, '%s', %d, %d, %f, %f, %d )" , \
+                             m_nSeqNum, pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
+                             pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
+                             pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
+                             pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
+                             pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
+                             pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
+                             pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
+                             pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
+                             pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
+                             pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
 #else
-	return true;
+    sprintf( m_pszSQLString, "INSERT INTO AETDATA (SEQ_NUM, AETID, FIRST_TIME, LAST_TIME, PRIMARY_ELNOT, PRIMARY_MODECODE, \
+                             RADARMODE_NAME, NICK_NAME, FUNC_CODE, PLATFORM_TYPE, RADAR_MODE_PRIORITY, RADAR_PRIORITY, \
+                             PIN_NUM, PLACENAME_KOR, THREAT_FUNC_CODE, THREAT_PRIORITY, \
+                             RADARMODE_INDEX, THREAT_INDEX, \
+                             VALIDITY, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, \
+                             FRQ_MEAN, FRQ_MIN, FRQ_MAX, FRQ_DEV, \
+                             PRI_MEAN,  PRI_MIN, PRI_MAX, PRI_DEV, \
+                             PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                             PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                             PE_VALID, PE_LATITUDE, PE_LONGITUDE, PE_HEIGHT, PE_CEP, PE_MAJOR_AXIS, PE_MINOR_AXIS, PE_THETA, PE_DISTANCE, \
+                             IDINFO, NUM_OF_LOBS, NUM_OF_BEAMS, FINAL_ALARM_TIME, IS_MANUAL_INPUT, MANUALPOSESTPREFERRED, MANUAL_POS_EST_LAT, MANUAL_POS_EST_LONG, STAT ) VALUES \
+                             ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, \
+                             %d, '%s', '%s', %d, \
+                             %d, %d, \
+                             %d, %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %d, %f, %f, %f, %f, %f, %f, %f, %f, \
+                             '%s', %d, %d, '%s', %d, %d, %f, %f, %d )" , \
+                             m_nSeqNum, pAETData->uiAETID, buffer1, buffer2, pAETData->szPrimaryELNOT, pAETData->szPrimaryModeCode, pAETData->szRadarModeName, pAETData->szNickName, pAETData->szFuncCode, m_pIdentifyAlg->GetPlatformCode( ( PlatformCode::EnumPlatformCode ) pAETData->iPlatformType ), pAETData->iRadarModePriority, pAETData->iRadarPriority, \
+                             pAETData->iPinNum, pAETData->szPlaceNameKor, pAETData->szThreatFuncCode, pAETData->iThreatPriority, \
+                             pAETData->iRadarModeIndex, pAETData->iThreatIndex, \
+                             pAETData->iValidity, pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax, pAETData->fDOADeviation, \
+                             pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax, pAETData->fFreqDeviation, \
+                             pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax, pAETData->fPRIDeviation, \
+                             pAETData->fPWMean, pAETData->fPWMin, pAETData->fPWMax, pAETData->fPWDeviation, \
+                             pAETData->fPAMean, pAETData->fPAMin, pAETData->fPAMax, pAETData->fPADeviation, \
+                             pAETData->iPEValid, pAETData->fLatitude, pAETData->fLongitude, pAETData->fAltidude, pAETData->fCEP, pAETData->fMajorAxis, pAETData->fMinorAxis, pAETData->fTheta, pAETData->fDistanceErrorOfThreat, \
+                             pAETData->szIDInfo, pAETData->uiCoLOB, pAETData->uiCoABT, buffer3, pAETExtData->bIsManualEdited, pAETExtData->bManualPosEstPreferred, pAETExtData->fManualLatitude, pAETExtData->fManualLongitude, pAETData->iStat );
+#endif
+
 
 #endif
+
+	// 여기서 부터 SQL 문을 실행 합니다.
+#ifdef _MSSQL_
+	if( m_pszSQLString[0] != NULL ) {
+		DECLARE_BEGIN_CHECKODBC
+
+		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+		theRS.Open( m_pszSQLString );
+		Log( enDebug, ".InsertAET[A%d]" , m_pLOBData->uiAETID );
+
+		theRS.Close();
+
+		DECLARE_END_CHECKODBC
+	}
+	else {
+		bRet = false;
+	}
+#elif _SQLITE_  
+	if( m_pszSQLString[0] != NULL ) {
+		try {
+			Kompex::SQLiteStatement stmt( m_pDatabase );
+			stmt.SqlStatement( m_pszSQLString );
+			Log( enDebug, ".InsertAET[A%d]" , m_pLOBData->uiAETID );
+
+			// do not forget to clean-up
+			stmt.FreeQuery();  
+
+		}
+		catch( Kompex::SQLiteException &exception ) {
+			LOGMSG1( enError, " m_pszSQLString[%s]" , m_pszSQLString );
+			bRet = false;
+			std::cerr << "\nException Occured" << std::endl;
+			exception.Show();
+			std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		}
+	}
+	else {
+		bRet = false;
+	}
+
+#else
+
+#endif
+
+	return bRet;
 }
 
 /**
@@ -11726,6 +11941,7 @@ bool CELEmitterMergeMngr::DoesAnalScanTry()
     return bRet;
 }
 
+#ifdef _TRACK_ENABLED_
 /**
  * @brief     ManageTrack
  * @param     STR_ANALINFO * pLOBHeader
@@ -11787,8 +12003,9 @@ void CELEmitterMergeMngr::ManageTrack( STR_ANALINFO* pAnalInfo, SRxLOBData* pLOB
 
     return;
 }
+#endif
 
-#ifdef _POCKETSONATA_
+#ifdef _SCAN_ENABLED_
 /**
  * @brief     스캔 관리를 수행한다.
  * @param     STR_ANALINFO * pAnalInfo

@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 
 
@@ -122,7 +122,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
     }
     else {
 	    if( uiLength > _MAX_LANDATA ) {
-		    TRACE( "\n************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
+            LOGMSG( enError, "************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
 		    exit( 1 );
 	    }
 

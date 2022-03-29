@@ -68,17 +68,20 @@ class CELThreat
 {
 private:
 	static int m_CoInstance;										///< 객체 총 개수
+	static Queue<int> m_QueIndex;								///< 위협의 큐 포인터
+	CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
 
 	CELThreat *m_pLeftChild;										///< 트리 구조의 좌측 포인터
 	CELThreat *m_pRightChild;										///< 트리 구조의 우측 포인터
 
-	static Queue<int> m_QueIndex;								///< 위협의 큐 포인터
 
 public:
 	SELINDEX m_Idx;															///< 위협의 방사체/빔/LOB 번호
 
 	int m_nIndex;																///< 위협 인덱스
 
+	CELThreat * GetRootThreat() const { return m_pRootThreat; }
+	void SetRootThreat(CELThreat * val) { m_pRootThreat = val; }
 public:
 	CELThreat(void);
 	~CELThreat(void);

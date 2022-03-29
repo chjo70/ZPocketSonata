@@ -142,12 +142,12 @@ public:
 	void DeleteAllQData();
 	void CheckQueueMsg();
 
-	inline void SendMessage( void *pMsg) { SendMessage(m_msgQId, pMsg); }
-	inline void SendMessage( void *pMsg, int options ) { SendMessage( m_msgQId, pMsg, options ); }
-	inline void SendMessage( void *pMsg, int options, int size ) { SendMessage( m_msgQId, pMsg, options, size ); }
-	inline void SendMessage() { SendMessage( m_msgQId, m_pqMsg ); }
+	//inline void SendMessage( void *pMsg) { SendMessage(m_msgQId, pMsg); }
+	//inline void SendMessage( void *pMsg, int options ) { SendMessage( m_msgQId, pMsg, options ); }
+	//inline void SendMessage( void *pMsg, int options, int size ) { SendMessage( m_msgQId, pMsg, options, size ); }
+	//inline void SendMessage() { SendMessage( m_msgQId, m_pqMsg ); }
 
-	inline void SetTimer( struct itimerspec *pTime ) { }
+	//inline void SetTimer( struct itimerspec *pTime ) { }
 	inline void StopTimer() { }
 	virtual BOOL ParseMessage( SQMsg *psqMsg )=0;
 

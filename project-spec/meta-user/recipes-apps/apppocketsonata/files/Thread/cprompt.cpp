@@ -483,7 +483,7 @@ void CPrompt::URBit( UINT uiData )
 #endif
     
     sndMsg.uiOpCode = enREQ_URBIT;
-    sndMsg.iSocket = 0;
+    sndMsg.uiSocket = 0;
 
     *puiUnit = uiData;
 

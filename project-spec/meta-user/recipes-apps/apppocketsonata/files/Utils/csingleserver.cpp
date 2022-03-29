@@ -231,7 +231,7 @@ void CSingleServer::_routine()
                                 sndMsg.mtype = 1;
 #endif                                
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                sndMsg.iSocket = m_iSocket;
+                                sndMsg.uiSocket = m_iSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
@@ -271,7 +271,7 @@ void CSingleServer::_routine()
 #endif
                             
                             sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                            sndMsg.iSocket = m_iSocket;
+                            sndMsg.uiSocket = m_iSocket;
                             sndMsg.iArrayIndex = -1;
                             sndMsg.uiArrayLength = 0;
                             sndMsg.uiDataLength = 0;

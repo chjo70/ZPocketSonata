@@ -54,7 +54,7 @@ public:
 
 
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 };
 
 //#define UCOL   CUserCollect::GetInstance()

@@ -46,10 +46,60 @@
 //##ModelId=426C87D70034
 CGroup::CGroup( int coMaxPdw )
 {
-    int i;
+    int i=0;
     BOOL bRet=TRUE;
 
     m_uiMaxPdw = _min( coMaxPdw, MAX_PDW );
+
+	// 주파수 해상도 계산용, HARMONIC MARGIN
+#if defined(_ELINT_) || defined(_XBAND_)
+	m_stSigma1Aoa[0] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[1] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[2] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[3] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[4] = KHARM_AOA_MAR;
+
+#ifdef _XBAND_
+	strcpy( m_szPulseType[i++], "CW" );
+	strcpy( m_szPulseType[i++], "NP" );
+#else
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "NP" );
+	strcpy( m_szPulseType[i++], "CW" );
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "FM" );
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "SP" );
+
+#endif
+
+#elif _POCKETSONATA_
+	m_stSigma1Aoa[enPRC_Unknown] = 0;
+	m_stSigma1Aoa[enPRC1] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC2] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC3] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC4] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC5] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC6] = KHARM_AOA_MAR;
+
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "NP" );
+	strcpy( m_szPulseType[i++], "CW" );
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "FM" ); 
+	strcpy( m_szPulseType[i++], "--" );
+	strcpy( m_szPulseType[i++], "SP" );
+	strcpy( m_szPulseType[i++], "CD" );
+	strcpy( m_szPulseType[i], "CU" );
+
+#else
+	m_stSigma1Aoa[0] = KHARM_AOA_MAR_LOW;
+	m_stSigma1Aoa[1] = KHARM_AOA_MAR_MID;
+	m_stSigma1Aoa[2] = KHARM_AOA_MAR_HGH;
+
+#endif
 
     for( i=0 ; i < TOTAL_BAND ; ++i ) {
         m_Band[i].pIndex = ( PDWINDEX * ) malloc( m_uiMaxPdw * sizeof( PDWINDEX ) );
@@ -1692,7 +1742,7 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
     int thr;
 
     // 4 시그마 범위
-    thr = ( stSigma1Aoa[m_nBand] * 4 ) >> nShift;
+    thr = ( m_stSigma1Aoa[m_nBand] * 4 ) >> nShift;
 
     // 전방위 그룹화 될 때의 방위 그룹화 범위
     pAoaGroup->from_bin = 0;

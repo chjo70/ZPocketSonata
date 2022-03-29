@@ -67,7 +67,7 @@ protected:
 
 
 public:
-    void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int index );
+    void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
     BOOL IsAnalScan();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
@@ -133,7 +133,7 @@ public:
     UINT GetCoScanPulse();
 
     //##ModelId=452B0C4500C6
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
     //##ModelId=452B0C4500C9
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
     //##ModelId=452B0C4500D2

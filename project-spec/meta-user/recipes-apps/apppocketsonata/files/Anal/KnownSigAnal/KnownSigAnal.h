@@ -182,7 +182,7 @@ public:
     //##ModelId=452B0C520379
     void SendNewAet( SRxLOBData *pNewAet, int inEMT );
     //##ModelId=452B0C520382
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
     //##ModelId=452B0C52038B
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
 

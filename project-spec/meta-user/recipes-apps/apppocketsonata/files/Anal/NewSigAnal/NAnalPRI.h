@@ -63,7 +63,7 @@ public:
 	//##ModelId=452B0C550375
 	_TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
 	int GetBand();
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
 
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 

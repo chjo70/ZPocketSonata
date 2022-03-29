@@ -98,21 +98,21 @@ void CKnownSigAnal::Init()
 */
 void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pTrkAet )
 {
+    Log( enLineFeed, "" );
+
+    PrintFunction;
+
 	BOOL bRet;
 
 	// 추적할 에미터를 복사한다.
     m_pTrkAet = pTrkAet;
 
-#if defined(_ELINT_) || defined(_XBAND_)
-    Log( enNormal, "\n\n !!!! Start of Known Signal Analysis[%d] for the %d channel's %d !!!!" , m_pTrkAet->uiCoLOB );
-	//, stTrkAet.loc.trackFI.noFilter, pPDWData->uiTotalPDW );
-#else
-#endif
-
     ++ m_uiStep;
 
 	// 신호 분석 관련 초기화.
     Init( pPDWData );
+
+    Log( enNormal, "#### 추적 분석 시작[%dth, Co:%d] ####" , m_uiStep, m_CoPdw );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 #ifdef _POCKETSONATA_
@@ -316,7 +316,7 @@ void CKnownSigAnal::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_typ
 // 최 종 변 경  : 조철희, 2005-07-28 13:59:41
 //
 //##ModelId=42E98F2F02C3
-void CKnownSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
+void CKnownSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 {
 
 #ifdef _DEBUG_MAKEPDW
@@ -338,7 +338,7 @@ void CKnownSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
 
 	pPdwIndex = & m_pGrPdwIndex->pIndex[0];
 	int nStep = theSigAnal->m_theNewSigAnal->GetCoStep();
-	sprintf( filename, "c:\\temp\\%03d_%03d_%s.kwn_emt.pdw", nStep, index, p );
+	sprintf( filename, "c:\\temp\\%03d_%03d_%s.kwn_emt.pdw", nStep, iPLOBID, p );
 	pdwfile = fopen( filename, "wb" );
 
 	total_count = pEmitter->pdw.uiCount;

@@ -39,6 +39,8 @@ public:
     int m_nAnalSeg;
 
 private:
+	UINT m_spdiffaoa[ 6 ];
+
     //##ModelId=452B0C57000D
     PDWINDEX *m_pMergePdwIndex;
     //##ModelId=452B0C570018
@@ -200,7 +202,7 @@ public:
     //##ModelId=452B0C5701F8
     virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count )=0;
     virtual int GetBand()=0;
-    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )=0;
+    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )=0;
     virtual CMakeAET* GetMakeAET()=0;
 
     BOOL CompAoa( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );

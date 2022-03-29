@@ -126,6 +126,7 @@ void signalHandler(int signo);
  */
 void InitDatabase()
 {
+    int iCopy=1;
     char szSQLiteFileName[100];
 
     // 1. 위협 라이브러리 존재 확인
@@ -133,40 +134,69 @@ void InitDatabase()
     strcat( szSQLiteFileName, "/" );
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
 
-#ifdef _SQLITE_    
-    LOGMSG( enNormal, "#### SQLITE 모드 입니다. ####" );
-    
+    LOG_LINEFEED;
+
+#ifdef _SQLITE_
+    try {
+        LOGMSG( enNormal, "#### SQLITE 모드 입니다. ####" );
+
 #ifdef __linux__
-    if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
-    }
+        if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
+        }
 #elif _MSC_VER
-    if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
-         CCommonUtils::CopyFile( BLK_EMITTER_SQLITE_FILENAME, szSQLiteFileName, 1, 0077 );
-     }
+        if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+			char szSrcFilename[100];
+
+			sprintf( szSrcFilename, "../../files/SQLite3.DB/%s" , BLK_EMITTER_SQLITE_FILENAME );
+             iCopy = CCommonUtils::CopyFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
+			 if( iCopy <= 0 ) {
+				 throw iCopy;
+			 }
+         }
 
 #elif __VXWORKS__
-    char szSrcFilename[100], szDstFilename[100];
+        char szSrcFilename[100], szDstFilename[100];
 
-    if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
-    	printf( "\n *** 위협 관리 파일을 램 드라이브에 설치 합니다.***" );
-        sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, BLK_EMITTER_SQLITE_FILENAME );
-        sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
-        CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
-        //WhereIs;
-    }
+        LOGMSG( enNormal, "위협 관리 파일을 램 드라이브에 설치 합니다." );
+        if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+            sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, BLK_EMITTER_SQLITE_FILENAME );
+            sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
+            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
 
-    if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
-        //printf( "\n *** CED/EOB 파일을 램 드라이브에 설치 합니다.***" );
-        sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-        sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-        CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
-        WhereIs;
-    }
+            if( iCopy <= 0 ) {
+                throw iCopy;
+            }
+        }
+        else {
+            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+        }
+
+        LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
+        if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
+
+            sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+            sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
+
+            if( iCopy <= 0 ) {
+                throw iCopy;
+            }
+        }
+        else {
+            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+        }
 
 #else
-    if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
-    }
+        if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+        }
 #endif
+
+    }
+    catch ( int eException ) {
+        LOGMSG2( enError, "플레쉬 드라이브에 파일[%s/%d]이 없습니다. 관리자에게 문의하세요." , szSQLiteFileName, eException );
+        WhereIs;
+        while( true );
+    }
 
         
 #elif _MSSQL_
@@ -176,6 +206,8 @@ void InitDatabase()
     LOGMSG( enNormal, "#### NO_SQLITE 모드 입니다. ####" );
 
 #endif
+
+
 
 
 }
@@ -212,7 +244,6 @@ void Start( int iArgc, char *iArgv[] )
     LOG_LINEFEED;
 
     g_pTheSysConfig = new CSysConfig();
-
 
     // 1. 쓰레드 관리 쓰레드를 호출한다.
 #ifdef _SQLITE_
@@ -293,7 +324,7 @@ void SIM_Start()
 
     //
     sndMsg.uiOpCode = enREQ_MODE;
-    sndMsg.iSocket = 0; //m_uiSocket;
+    sndMsg.uiSocket = 0; //m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
@@ -325,24 +356,24 @@ void End()
     // 분석 관련 쓰레드를 종료 한다.
     //PROMPT->ReleaseInstance();
     
-    _SAFE_DELETE( g_pTheCCUSocket );
+    _SAFE_DELETE( g_pTheCCUSocket )
     //delete g_pThePMCSocket;
     //g_pThePMCSocket = NULL;
 
-    _SAFE_DELETE( g_pTheUrBit );
+    _SAFE_DELETE( g_pTheUrBit )
 
     //delete g_pTheZYNQSocket;
     // 
 
-    _SAFE_DELETE( g_pTheUserCollect );
+    _SAFE_DELETE( g_pTheUserCollect )
 
-    _SAFE_DELETE( g_pTheEmitterMerge );
-    _SAFE_DELETE( g_pTheSignalCollect );    
-    _SAFE_DELETE( g_pTheDetectAnalysis );    
-    _SAFE_DELETE( g_pTheTrackAnalysis );    
-    _SAFE_DELETE( g_pTheScanAnalysis );    
+    _SAFE_DELETE( g_pTheEmitterMerge )
+    _SAFE_DELETE( g_pTheSignalCollect )    
+    _SAFE_DELETE( g_pTheDetectAnalysis )    
+    _SAFE_DELETE( g_pTheTrackAnalysis )    
+    _SAFE_DELETE( g_pTheScanAnalysis )   
 
-    _SAFE_DELETE( g_pTheTaskMngr );    
+    _SAFE_DELETE( g_pTheTaskMngr )   
 
     //CGI->ReleaseInstance();
 
@@ -357,10 +388,10 @@ void End()
        
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
-    _SAFE_DELETE( g_pTheSysConfig ); 
-    _SAFE_DELETE( g_pTheELEnvironVariable );
+    _SAFE_DELETE( g_pTheSysConfig )
+    _SAFE_DELETE( g_pTheELEnvironVariable )
 
-    _SAFE_DELETE( g_pTheLog );
+    _SAFE_DELETE( g_pTheLog )
 
 #ifndef _MSC_VER
     exit(0);

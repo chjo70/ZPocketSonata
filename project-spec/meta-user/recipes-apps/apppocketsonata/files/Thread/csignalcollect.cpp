@@ -1,4 +1,4 @@
-// CSignalCollect.cpp: implementation of the CScanAnalysis class.
+﻿// CSignalCollect.cpp: implementation of the CScanAnalysis class.
 //
 // 신호 수집 및 관리한다.
 // 신규 데이터를 수집하기위한 수집 제어와 분석된 데이터를 기반으로 추적 수집 채널을 할당해서 추적 채널을 관리한다.
@@ -31,10 +31,10 @@
 #define _DEBUG_
 
 
-CCollectBank* CSignalCollect::m_pTheDetectCollectBank[DETECT_CHANNEL];
-CCollectBank* CSignalCollect::m_pTheTrackCollectBank[TRACK_CHANNEL];
-CCollectBank* CSignalCollect::m_pTheScanCollectBank[SCAN_CHANNEL];
-CCollectBank* CSignalCollect::m_pTheUserCollectBank[USER_CHANNEL];
+// CCollectBank* CSignalCollect::m_pTheDetectCollectBank[DETECT_CHANNEL];
+// CCollectBank* CSignalCollect::m_pTheTrackCollectBank[TRACK_CHANNEL];
+// CCollectBank* CSignalCollect::m_pTheScanCollectBank[SCAN_CHANNEL];
+// CCollectBank* CSignalCollect::m_pTheUserCollectBank[USER_CHANNEL];
 
 /**
  * @brief CSignalCollect::CSignalCollect
@@ -47,31 +47,32 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
 CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 #endif
 {
-    int i, iCh;
+    int i;
+    unsigned int uiCh;
 
-    iCh = 0;
+    uiCh = 0;
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
-        m_pTheDetectCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
+        m_pTheDetectCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, uiCh++ );
     }
 
     m_theTrackChannel.Init( TRACK_CHANNEL );
     for( i=0 ; i < TRACK_CHANNEL ; ++i ) {
-        if( false == m_theTrackChannel.Push( iCh ) ) {
+        if( false == m_theTrackChannel.Push( uiCh ) ) {
             printf( " Push error...\n" );
         }
-        m_pTheTrackCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
+        m_pTheTrackCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, uiCh++ );
     }
 
     m_theScanChannel.Init( SCAN_CHANNEL );
     for( i=0 ; i < SCAN_CHANNEL ; ++i ) {
-        if( false == m_theScanChannel.Push( iCh ) ) {
+        if( false == m_theScanChannel.Push( uiCh ) ) {
             printf( " Push error...\n" );
         }
-        m_pTheScanCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
+        m_pTheScanCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, uiCh++ );
     }
 
     for( i=0 ; i < USER_CHANNEL ; ++i ) {
-        m_pTheUserCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, iCh++ );
+        m_pTheUserCollectBank[i] = new CCollectBank(TOTAL_CHANNELS, uiCh++ );
     }
 
 #ifdef _SQLITE_
@@ -95,7 +96,7 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
 
 
 /**
- * @brief CSignalCollect::~CJamTech
+ * @brief CSignalCollect::~CSignalCollect
  */
 CSignalCollect::~CSignalCollect(void)
 {
@@ -225,9 +226,10 @@ void CSignalCollect::RoutineForDetectAnal()
                     bRoutineForDetectAnal = false;
                     break;
 
-                    // 모의 명령 처리
+                // 모의 명령 처리
                 case enTHREAD_REQ_SIM_PDWDATA :
                     SimPDWData();
+                    CheckAllCollectBank();
                     break;
 
                 default:
@@ -238,9 +240,9 @@ void CSignalCollect::RoutineForDetectAnal()
         }
 
         // 신호 수집은 여기서 수행한다.
-        if( bRoutineForDetectAnal == true ) {
-            AnalysisStart();
-        }
+//         if( bRoutineForDetectAnal == true ) {
+//             AnalysisStart();
+//         }
     }
     
 }
@@ -250,7 +252,7 @@ void CSignalCollect::RoutineForDetectAnal()
  */
 void CSignalCollect::SendEndCollect()
 {
-    if( m_bSendEnd == false || true ) {
+    if( m_bSendEnd == false ) {
         //TRACE( "\nCSignalCollect::SendEndCollect()");
         g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_END, GetThreadName() );
         //TRACE( "!");
@@ -269,9 +271,9 @@ void CSignalCollect::Init()
     CloseCollectBank();
 
     // 탐지 분석판을 초기 설정합니다.
-    unsigned int uj;
-    for( uj=0 ; uj < DETECT_CHANNEL ; ++uj ) {
-        SetupDetectCollectBank( uj );
+    int j;
+    for( j=0 ; j < DETECT_CHANNEL ; ++j ) {
+        SetupDetectCollectBank( j );
     }
 
 }
@@ -355,97 +357,18 @@ void CSignalCollect::AnalysisStart()
     LOGENTRY;
 
     int iCh;
-    unsigned int uiCh;
 
-    bool bIsOut = true;
-
-    STR_COLLECTINFO strCollectInfo;
-
-    CCollectBank *pCollectBank;
+    bool bIsOut = true;    
 
     while( g_AnalLoop ) {
         bIsOut = true;
 
-        // 탐지 채널 버퍼 체크
-        iCh = CheckCollectBank( enDetectCollectBank );        
-        if( iCh >= 0 ) {
-            pCollectBank = m_pTheDetectCollectBank[iCh];
-            strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
-
-            //unsigned int uiGetMinAnalPulse = (unsigned int) GP_SYSCFG->GetMinAnalPulse();  
-            int iGetMinAnalPulse = g_pTheSysConfig->GetMinAnalPulse();
-            unsigned int uiGetMinAnalPulse=0;
-            if( iGetMinAnalPulse > 0 ) {
-                uiGetMinAnalPulse = iGetMinAnalPulse;
-            }
-
-            if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
-                strCollectInfo.uiCh = iCh;
-                MakeStaticPDWData( pCollectBank->GetPDWData() );
-                g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, & m_stPDWData, sizeof(STR_STATIC_PDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
-            }
-
-            // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
-            pCollectBank->UpdateWindowCell();
-
-            SendEndCollect();
-
-            bIsOut = false;
-        }
-
-        // 추적 채널 버퍼 체크
-        iCh = CheckCollectBank( enTrackCollectBank );
-        if( iCh >= 0 ) {
-            pCollectBank = GetCollectBank( iCh );
-            uiCh = _max( iCh - DETECT_CHANNEL, _spZero );
-
-            strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
-            strCollectInfo.uiCh = iCh;
-            strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
-            strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
-
-            MakeStaticPDWData( pCollectBank->GetPDWData() );
-            memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
-            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
-
-            if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
-                //TRACE( "\nCSignalCollect::AnalysisStart()");
-                g_pTheTrackAnalysis->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
-                //TRACE( "#");
-            }
-            // PDW 펄스 개수 부족시 위협 처리로 바로 전달
-            else {
-                //TRACE( "\nCSignalCollect::AnalysisStart()");
-                g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
-                //TRACE( "#");
-            }
-
-            bIsOut = false;
-        }
-
-        // 스캔 채널 버퍼 체크
-        iCh = CheckCollectBank( enScanCollectBank );        
-        if( iCh >= 0 ) {
-            pCollectBank = GetCollectBank( iCh );
-            uiCh = _max( iCh - DETECT_CHANNEL - TRACK_CHANNEL, _spZero );
-
-            strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
-            strCollectInfo.uiCh = iCh;
-            strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
-            strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
-
-            MakeStaticPDWData( pCollectBank->GetPDWData() );
-            memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, sizeof(STR_STATIC_PDWDATA) );
-            memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
-
-            g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
-            bIsOut = false;
-        }
+        CheckAllCollectBank();
 
         // 사용자 채널 버퍼 체크
         iCh = CheckCollectBank( enUserCollectBank );
         if( iCh >= 0 ) {
-            CCommonUtils::SendLan( enREQ_MODE, & iCh, sizeof(int) );
+            //CCommonUtils::SendLan( enREQ_MODE, & iCh, sizeof(int) );
             bIsOut = false;
         }
 
@@ -461,6 +384,98 @@ void CSignalCollect::AnalysisStart()
         if( bIsOut == true ) {
             break;
         }
+    }
+
+}
+
+/**
+ * @brief     CheckAllCollectBank
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-29, 10:36
+ * @warning
+ */
+void CSignalCollect::CheckAllCollectBank()
+{
+    int iCh;
+    unsigned int uiCh;
+
+    unsigned int uiArrayLength, uiGetMinAnalPulse=0;
+
+	size_t szSize;
+
+    CCollectBank *pCollectBank;
+
+    STR_COLLECTINFO strCollectInfo;
+
+    // 탐지 채널 버퍼 체크
+    iCh = CheckCollectBank( enDetectCollectBank );        
+    if( iCh >= 0 ) {
+        pCollectBank = m_pTheDetectCollectBank[iCh];
+        strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
+
+        uiGetMinAnalPulse = CCommonUtils::INT2UINT( g_pTheSysConfig->GetMinAnalPulse() );
+
+        if( strCollectInfo.uiTotalPDW >= uiGetMinAnalPulse ) {
+            strCollectInfo.uiCh = iCh;
+            MakeStaticPDWData( pCollectBank->GetPDWData() );
+
+            uiArrayLength = sizeof(UNION_HEADER) + sizeof(_PDW) * m_stPDWData.GetTotalPDW();
+            g_pTheDetectAnalysis->QMsgSnd( enTHREAD_DETECTANAL_START, & m_stPDWData, uiArrayLength, & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+        }
+
+        // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
+        pCollectBank->UpdateWindowCell();
+
+        SendEndCollect();
+
+    }
+
+    // 추적 채널 버퍼 체크
+    iCh = CheckCollectBank( enTrackCollectBank );
+    if( iCh >= 0 ) {
+        pCollectBank = GetCollectBank( iCh );
+        uiCh = _max( iCh - DETECT_CHANNEL, _spZero );
+
+        strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
+        strCollectInfo.uiCh = iCh;
+        strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
+        strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
+
+        MakeStaticPDWData( pCollectBank->GetPDWData() );
+		szSize = sizeof(UNION_HEADER) + sizeof(_PDW) * m_stPDWData.GetTotalPDW();
+        memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, szSize ); // sizeof(STR_STATIC_PDWDATA) );
+        memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
+
+        if( strCollectInfo.uiTotalPDW >= _spAnalMinPulseCount ) {
+            g_pTheTrackAnalysis->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+        }
+        // PDW 펄스 개수 부족시 위협 처리로 바로 전달
+        else {
+            g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
+        }
+
+    }
+
+    // 스캔 채널 버퍼 체크
+    iCh = CheckCollectBank( enScanCollectBank );        
+    if( iCh >= 0 ) {
+        pCollectBank = GetCollectBank( iCh );
+        uiCh = _max( iCh - DETECT_CHANNEL - TRACK_CHANNEL, _spZero );
+
+        strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
+        strCollectInfo.uiCh = iCh;
+        strCollectInfo.uiAETID = m_ABTData[uiCh].uiAETID;
+        strCollectInfo.uiABTID = m_ABTData[uiCh].uiABTID;
+
+        MakeStaticPDWData( pCollectBank->GetPDWData() );
+		szSize = sizeof(UNION_HEADER) + sizeof(_PDW) * m_stPDWData.GetTotalPDW();
+        memcpy( & m_theTrkScnPDW.strPDW, & m_stPDWData, szSize ); //sizeof(STR_STATIC_PDWDATA) );
+        memcpy( & m_theTrkScnPDW.strABTData, GetABTData(uiCh), sizeof(SRxABTData) );
+
+        g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, sizeof(STR_TRKSCNPDWDATA), & strCollectInfo, sizeof(STR_COLLECTINFO), GetThreadName() );
     }
 
 }
@@ -514,7 +529,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     pWindowCell = pCollectBank->GetWindowCell();
                     iCh = pCollectBank->GetChannelNo();
 
-                    LOGMSG2( enDebug, "Completion of TRK [%d] Collecting in the Ch[%2d]..." , pWindowCell->uiTotalPDW, iCh );
+                    LOGMSG2( enDebug, "추적 [%d] 채널에서 [%d]개 수집 완료..." , iCh, pWindowCell->uiTotalPDW );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
                     break;
@@ -682,8 +697,8 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
             fMinCollectTime = _max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax );
         }
         else {
-            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMin );
-            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMax );
+            pstrWindowCell->strFreq.iLow = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMin - 5 );
+            pstrWindowCell->strFreq.iHgh = I_IFRQMhzCNV( g_enBoardId, pABTData->fFreqMax + 5 );
 
             pstrWindowCell->strPW.iLow = IPWCNVLOW( pABTData->fPWMin );
             pstrWindowCell->strPW.iHgh = IPWCNVHGH( pABTData->fPWMax );

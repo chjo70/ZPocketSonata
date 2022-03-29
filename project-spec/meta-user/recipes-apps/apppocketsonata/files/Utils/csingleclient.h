@@ -23,7 +23,7 @@ private:
     bool m_bConnected;
     char m_szServerAddress[NUM_OF_SERVER][100];
 
-    int m_iPort;
+    unsigned short m_usPort;
     unsigned int m_uiSocket;
 
     STR_MessageData *m_pMsg;
@@ -42,7 +42,7 @@ public:
 
     void Run( key_t key );
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 
 private:
     void RunServer();

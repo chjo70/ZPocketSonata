@@ -1,4 +1,3 @@
-/****** Object: Table [dbo].[ABTDATA]   Script Date: 2022-01-25 ¿ÀÈÄ 5:07:05 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;
@@ -24,6 +23,7 @@ CREATE TABLE [dbo].[ABTDATA] (
 [FREQ_MIN] float NULL,
 [FREQ_MAX] float NULL,
 [FREQ_POSITION_COUNT] tinyint NULL,
+[FREQ_ELEMENT_COUNT] tinyint NULL,
 [PRI_TYPE] tinyint NULL,
 [PRI_PATTERN_TYPE] tinyint NULL,
 [PRI_PATTERN_PERIOD_MEAN] float NULL,
@@ -34,6 +34,7 @@ CREATE TABLE [dbo].[ABTDATA] (
 [PRI_MAX] float NULL,
 [PRI_JITTER_RATIO] float NULL,
 [PRI_POSITION_COUNT] tinyint NULL,
+[PRI_ELEMENT_COUNT] tinyint NULL,
 [PW_MEAN] float NULL,
 [PW_MIN] float NULL,
 [PW_MAX] float NULL,
@@ -46,7 +47,7 @@ CREATE TABLE [dbo].[ABTDATA] (
 [THREAT_INDEX] smallint NULL,
 [PE_VALID] smallint NULL,
 [PE_LATITUDE] float NULL,
-[PE_LONGGITUDE] float NULL,
+[PE_LONGITUDE] float NULL,
 [PE_CEP] float NULL,
 [PE_MAJOR_AXIS] float NULL,
 [PE_MINOR_AXIS] float NULL,

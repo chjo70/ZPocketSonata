@@ -8,8 +8,6 @@
 #include "cscananalysis.h"
 #include "cemittermerge.h"
 
-//#include "../Utils/clog.h"
-
 #include "../Utils/csingleserver.h"
 #include "../Utils/cmultiserver.h"
 
@@ -26,15 +24,11 @@
  */
 CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW );
-    if( m_pTheScanSigAnal == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CScanSigAnal 객체를 생성할 수 없습니다 !" );
-    }
+    //m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW );
+    _SAFE_NEW( m_pTheScanSigAnal, CScanSigAnal( SCN_COLLECT_PDW ) )
 
-    m_pTheSysPara = new CSysPara();
-    if( m_pTheSysPara == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CSysPara 객체를 생성할 수 없습니다 !" );
-    }
+    //m_pTheSysPara = new CSysPara();
+    _SAFE_NEW( m_pTheSysPara, CSysPara() )
 }
 
 
@@ -69,11 +63,8 @@ void CScanAnalysis::_routine()
 {
     LOGENTRY;
     bool bWhile=true;
-    UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
-
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {

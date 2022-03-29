@@ -97,20 +97,30 @@ void _ShowProgramTitle( void )
     LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT  Ver %s" , PROGRAM_VERSION );
     LOGMSG( enNormal, "---------------------------------------------------------------------------" );
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
+
+#elif defined(_XBAND_)
+	LOGMSG( enNormal, "--------------------------------------------------------------------------" );
+	LOGMSG( enNormal, " XXXXXXXX    BBBBBBB    OOOOO   NN   NN  DDDDDDD   " );
+	LOGMSG( enNormal, " XX   XX     BB    BB  OO   OO  NNN  NN  DD    DD  " );
+	LOGMSG( enNormal, "   XXX       BBBBBBB   OO   OO  NN N NN  DD    DD  " );
+	LOGMSG( enNormal, "  XX  XX     BB    BB  OO   OO  NN  NNN  DD    DD  " );
+	LOGMSG1( enNormal, " XXXXXXXX    BBBBBBB    OOOOO   NN   NN  DDDDDDD   Ver %s" , PROGRAM_VERSION );
+	LOGMSG( enNormal, "---------------------------------------------------------------------------" );
+
+#else
 
 #endif
 
     timer = time( NULL );
     t = localtime(&timer);
-    if( t != NULL ) {
-        sprintf( szDate, "%d/%d/%d %2d:%2d:%2d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
+    sprintf( szDate, "%d/%0d/%0d %02d:%02d:%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
 
-        LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, szDate );
-    }
-    else {
-        LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, "INVALID_DATE" );
-    }
+    LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, szDate );
+//     }
+//     else {
+//         LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, "INVALID_DATE" );
+//     }
 
 #ifdef _SQLITE_
     LOGMSG2( enNormal, "The CED/EOB Database is positioned at [%s] and the file name is [%s].", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );

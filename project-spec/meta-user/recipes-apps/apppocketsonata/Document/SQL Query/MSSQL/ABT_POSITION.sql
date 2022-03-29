@@ -1,4 +1,3 @@
-/****** Object: Table [dbo].[ABT_POSITION]   Script Date: 2022-01-25 ¿ÀÈÄ 5:06:47 ******/
 USE [ELINT];
 GO
 SET ANSI_NULLS ON;

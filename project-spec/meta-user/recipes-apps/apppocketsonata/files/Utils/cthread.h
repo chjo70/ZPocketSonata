@@ -52,7 +52,7 @@ using namespace std;
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *GetThreadName() { return m_szThreadName; } \
+virtual char *GetThreadName() { return m_szThreadName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
@@ -109,7 +109,7 @@ typedef enum {
 /**
  * @brief 수집 쓰레드 정보
  */
-struct STR_COLLECTINFO {
+typedef struct {
     unsigned int uiCh;
     unsigned int uiTotalPDW;
 
@@ -119,7 +119,7 @@ struct STR_COLLECTINFO {
     unsigned int uiABTID;
 
 
-} ;
+} STR_COLLECTINFO ;
 
 // 수집한 데이터에서 분석한 LOB 헤더 정보
 struct STR_ANALINFO {
@@ -166,7 +166,7 @@ struct STR_MessageData {
     unsigned char ucSrcDest;
 
     //랜 송신시 이 값이 0 이 아니면 이 소켓 값으로 데이터를 전송한다.
-    int iSocket;
+    unsigned int uiSocket;
 
     // 데이터 길이
     unsigned int uiDataLength;
@@ -378,7 +378,7 @@ public:
 
     int Pend();
     void Stop();
-    void Sleep( int mssleep );
+    void Sleep( unsigned int mssleep );
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
@@ -388,7 +388,7 @@ public:
 
     int GetThreadID() { return m_iThreadID; }
 
-    void SendTaskMngr( int iErrorCode, const char *pszThreadName=NULL );
+    void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
@@ -489,7 +489,7 @@ public:
     static void *CallBack( void *pArg );
 
     virtual void _routine() { }
-    virtual const char *GetThreadName() { return NULL; }
+    virtual char *GetThreadName() { return NULL; }
     
 
     //pthread_create(&thread,NULL,thread_routine, NULL);

@@ -572,7 +572,7 @@ void CTaskMngr::InsertIPL( int iIndex )
         Kompex::SQLiteStatement stmt( m_pDatabase );
 
         iRadarIndex = IsThrereELNOT( pstrIPL->elintNot );
-        if( iRadarIndex >= 0 && false ) {
+        if( iRadarIndex >= 0 ) {
             // DeleteIPL( pstrIPL->elintNot );
             sprintf( m_szSQLString, "UPDATE RADAR SET PRIORITY='%d', DATE_LAST_UPDATED='%s' WHERE RADAR_INDEX='%d'" , pstrIPL->thrLev, szDate, iRadarIndex );
             stmt.SqlStatement( m_szSQLString );
@@ -638,6 +638,9 @@ void CTaskMngr::InsertIPL( int iIndex )
         exception.Show();
         std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
     }
+#elif _MSSQL_
+
+#else
 
 #endif
 

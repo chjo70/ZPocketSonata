@@ -5,7 +5,11 @@
 
 #include "../Anal/INC/system.h"
 
+#ifndef _MSC_VER
 #include "../MinIni/minIni.h"
+#endif
+
+
 #include "csharedmemory.h"
 
 struct STR_SYSCONFIG {
@@ -91,7 +95,13 @@ private:
     STR_SYSCONFIG m_strConfig;
     //STR_CNFSYS m_strCnfSys;
 
+#ifndef _MSC_VER
     minIni m_theMinIni;
+#else
+    
+#endif
+
+    char m_szIniFileName[200];
 
 public:
     CSysConfig(void);
@@ -103,6 +113,8 @@ private:
 
     void SetNetworkIP();
     bool GetIPAddress( char *pIPAddress, char *pNetworkName );
+
+    void DisplaySystemVar();
 
 public:
     void SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell );
@@ -121,7 +133,14 @@ public:
     unsigned int GetIPLVersion() { return m_strConfig.uiIPLVersion; };
     void SetIPLVersion( const unsigned int uiIPLVersion ) {
         m_strConfig.uiIPLVersion = uiIPLVersion;
+#ifdef _MSC_VER
+        char szBuffer[100];
+
+        sprintf_s( szBuffer , "%d", uiIPLVersion );
+        WritePrivateProfileString( "IPL", "VERSION", szBuffer, m_szIniFileName );
+#else
         m_theMinIni.put( "IPL", "VERSION", (int) uiIPLVersion );
+#endif
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
     };
@@ -158,7 +177,11 @@ public:
     void SetPrimeServerOfNetwork( const char *pPrimeServer, bool bINI=false ) {
         strcpy( m_strConfig.szPrimeServer, pPrimeServer );
         if( bINI == true ) {
+#ifdef _MSC_VER
+            WritePrivateProfileString( "NETWORK" , "PRIME_SERVER", pPrimeServer, m_szIniFileName );
+#else
             m_theMinIni.put( "NETWORK" , "PRIME_SERVER" , pPrimeServer );
+#endif
         }
     };
 

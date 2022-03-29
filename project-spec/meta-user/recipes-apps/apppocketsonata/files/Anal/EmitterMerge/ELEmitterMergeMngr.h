@@ -105,7 +105,7 @@ private:
     bool m_bReqDetect;
     bool m_bReqTrack;
     
-    static int m_CoInstance;									///< 위협 관리 객체 갯수
+    //static int m_CoInstance;									///< 위협 관리 객체 갯수
     static int m_nSeqNum;										///< DB 테이블 번호
 
     CInverseMethod m_theInverseMethod;
@@ -534,9 +534,14 @@ public:
     void GetGlobalSequenceNum();
     void PrintAllABTData();
 
+#ifdef _TRACK_ENABLED_
     void ManageTrack( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+#endif
+
+#ifdef _SCAN_ENABLED_
     void ManageScan( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
     void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
+#endif
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }
@@ -553,10 +558,8 @@ public:
     inline bool Merge() const { return m_bMerge; }
     inline void Merge(bool val) { m_bMerge = val; }
 
-#ifdef _POCKETSONATA_
     inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
     inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
-#endif
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

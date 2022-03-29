@@ -12,6 +12,23 @@
 #define PROGRAM_VERSION     "0.1a"
 
 
+//////////////////////////////////////////////////////////////////////////
+// 장치 정의
+// #if defined(_POCKETSONATA_)
+// #define _TRACK_ENABLED_
+// #define _SCAN_ENABLED_
+// 
+// #elif defined(_ELINT_) || defined(_XBAND_)
+// #undef _TRACK_ENABLED_
+// #undef _SCAN_ENABLED_
+// 
+// #else
+// #define _TRACK_ENABLED_
+// #define _SCAN_ENABLED_
+// 
+// #endif
+
+
 
 
 // 변수 타입을 정의합니다.

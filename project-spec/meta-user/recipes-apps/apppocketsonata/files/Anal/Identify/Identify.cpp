@@ -23,6 +23,8 @@
 
 #include "./ELUtil.h"
 
+#include "../../Utils/ccommonutils.h"
+
 
 //#include "../../Utils/clog.h"
 #include "../../Include/globals.h"
@@ -57,20 +59,20 @@ bool CELSignalIdentifyAlg::m_bLoadedDB;
 //SELDBEnvVarIdnf *CELSignalIdentifyAlg::m_pSELDBEnvVarIdnf;
 SEnvironVariable *CELSignalIdentifyAlg::m_pSEnvironVariable;			///< 시스템 설정값 환경 포인터
 
-vector<STR_H000> CELSignalIdentifyAlg::m_vecH000;
+//vector<STR_H000> CELSignalIdentifyAlg::m_vecH000;
 
-int CELSignalIdentifyAlg::m_iH000;
+//int CELSignalIdentifyAlg::m_iH000;
 
-int CELSignalIdentifyAlg::m_iRadar;
-int CELSignalIdentifyAlg::m_iRadarMode;
+//int CELSignalIdentifyAlg::m_iRadar;
+//int CELSignalIdentifyAlg::m_iRadarMode;
 SRadarMode *CELSignalIdentifyAlg::m_pRadarMode;
 
-int CELSignalIdentifyAlg::m_iThreat;
+//int CELSignalIdentifyAlg::m_iThreat;
 SThreat *CELSignalIdentifyAlg::m_pThreat;
 
-STR_EOB_RESULT *CELSignalIdentifyAlg::m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
-STR_LIB_IDRESULT *CELSignalIdentifyAlg::m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
-STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 결과
+//STR_EOB_RESULT *CELSignalIdentifyAlg::m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
+//STR_LIB_IDRESULT *CELSignalIdentifyAlg::m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
+//STR_CEDEOB_RESULT *CELSignalIdentifyAlg::m_pCEDEOBResult;			///< CED/EOB 식별 결과
 
 
 //vector<SDeviceData> CELSignalIdentifyAlg::m_vecDeviceData;
@@ -121,9 +123,9 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
     IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
 
     if( m_CoInstance == _spOne ) {
-        MallocBuffer();
         InitVar();
 
+        MallocBuffer();
         InitIdentifyTable();
 
         m_pSEnvironVariable = GlobalMemberFunction::GetEnvrionVariable();
@@ -192,17 +194,13 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
  */
 void CELSignalIdentifyAlg::Destory()
 {
-    free( m_pFLib );
-    m_pFLib = NULL;
+    _SAFE_FREE( m_pFLib );
 
-    free( m_pEOBResult );
-    m_pEOBResult = NULL;
+    _SAFE_FREE( m_pEOBResult );
 
-    free( m_pIdResult );
-    m_pIdResult = NULL;
+    _SAFE_FREE( m_pIdResult );
 
-    free( m_pCEDEOBResult );
-    m_pCEDEOBResult = NULL;
+    _SAFE_FREE( m_pCEDEOBResult );
 
     delete [] m_pRadarMode;
     m_pRadarMode = NULL;
@@ -238,6 +236,12 @@ void CELSignalIdentifyAlg::InitVar()
     }
 
     InitIdentifyTable();
+
+    m_pRadarMode = NULL;
+    m_pThreat = NULL;
+    m_pEOBResult = NULL;
+    m_pIdResult = NULL;
+    m_pCEDEOBResult = NULL;
 
     // 시스템 변수 초기화
 // 	if( CELEnvironVariableMngr::IsReadyInstance() == true ) {
@@ -402,44 +406,26 @@ bool CELSignalIdentifyAlg::LoadEOBLibrary2()
  */
 void CELSignalIdentifyAlg::MallocBuffer()
 {
+    size_t szSize;
 
-    if( m_pFLib == NULL ) {
-        m_pFLib = ( STR_FLIB * ) malloc( sizeof( STR_FLIB ) * ( NO_FLIB_BAND + 1 ) );
-
-        if( m_pFLib == NULL ) { //DTEC_NullPointCheck
-            printf( "\n [W] 식별 테이블 저장소를 할당하지 못했습니다 !" );
-        }
-        else {
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_FLIB), NO_FLIB_BAND+1 );
+    _SAFE_MALLOC( m_pFLib, STR_FLIB, szSize );
+    if( m_pFLib != NULL ) { //DTEC_NullPointCheck
             memset( m_pFLib, 0, sizeof(STR_FLIB) * ( NO_FLIB_BAND + 1 ) );
         }
 
-    }
+    _SAFE_NEW( m_pRadarMode, SRadarMode [MAX_RADARMODE] );
 
-    if( m_pRadarMode == NULL ) {
-        m_pRadarMode = new SRadarMode [MAX_RADARMODE];
-    }
+    _SAFE_NEW( m_pThreat, SThreat [MAX_THREAT] );
 
-    if( m_pThreat == NULL ) {
-        m_pThreat = new SThreat [MAX_RADARMODE];
-    }
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_EOB_RESULT), MAX_THREAT );
+    _SAFE_MALLOC( m_pEOBResult, STR_EOB_RESULT, szSize );
 
-    if( m_pEOBResult == NULL ) {
-        m_pEOBResult = ( STR_EOB_RESULT * ) malloc( sizeof( STR_EOB_RESULT ) * MAX_RADARMODE );
-    }
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_LIB_IDRESULT), MAX_RADARMODE );
+    _SAFE_MALLOC( m_pIdResult, STR_LIB_IDRESULT, szSize );
 
-    if( m_pIdResult == NULL ) {
-        m_pIdResult = ( STR_LIB_IDRESULT *) malloc( sizeof(STR_LIB_IDRESULT) * MAX_RADARMODE );
-    }
-
-    if( m_pCEDEOBResult == NULL ) {
-        m_pCEDEOBResult = ( STR_CEDEOB_RESULT * ) malloc( sizeof( STR_CEDEOB_RESULT ) * MAX_IDCANDIDATE );
-    }
-
-    /*
-    if( m_pszSQLString == NULL ) {
-        m_pszSQLString = ( char * ) malloc( sizeof(char) * MAX_SQL_SIZE );
-    }
-    */
+    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_CEDEOB_RESULT), MAX_IDCANDIDATE );
+    _SAFE_MALLOC( m_pCEDEOBResult, STR_CEDEOB_RESULT, szSize );
 
 }
 

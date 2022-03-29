@@ -229,7 +229,7 @@ void CRecLan::DumpList()
     strLanHeader.uiLength = DUMP_DATA_SIZE;
 
 #ifdef __linux__
-    int iRet = send( m_pMsg->iSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+    int iRet = send( m_pMsg->uiSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
 #endif
 
     // 랜 데이터 송신
@@ -237,7 +237,7 @@ void CRecLan::DumpList()
     memcpy( uniLanData.strResDumpList.cData, pBuffer, DUMP_DATA_SIZE );
 
 #ifdef __linux__
-    iRet = send( m_pMsg->iSocket, (char *) & uniLanData, (int) strLanHeader.uiLength, MSG_DONTWAIT );
+    iRet = send( m_pMsg->uiSocket, (char *) & uniLanData, (int) strLanHeader.uiLength, MSG_DONTWAIT );
 #endif
 
 #ifdef _DEBUG_

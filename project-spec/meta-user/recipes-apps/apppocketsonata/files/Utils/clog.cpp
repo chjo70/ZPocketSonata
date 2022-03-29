@@ -28,9 +28,9 @@
 bool CLog::m_bcs=false;
 
 #ifdef _MSC_VER
-CCriticalSection CLog::m_cs;
+//CCriticalSection CLog::m_cs;
 #else
-sem_t CLog::m_mutex;
+//sem_t CLog::m_mutex;
 #endif
 
 /**
@@ -88,7 +88,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     va_list args;
 
-    int nLength, nLengthTime;
+    size_t nLength, nLengthTime;
 
 	Lock();
 
@@ -200,6 +200,8 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 else if( nType == enError ) {
                     puts( & m_szLog[nLengthTime] );
                 }
+				ELSE
+
 #ifdef __VXWORKS__
                 fflush( stdout );
 
@@ -335,13 +337,13 @@ void CLog::LogMsg( int nType, const char *fmt, ... )
 char *CLog::ANSIToUTF8( const char * pszCode )
 {
 #ifdef _MFC_VER
-    int		nLength, nLength2;
+    int iLength, nLength2;
     BSTR	bstrCode; 
     char*	pszUTFCode = NULL;
 
-    nLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
-    bstrCode = SysAllocStringLen(NULL, nLength); 
-    MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, nLength);
+    iLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
+    bstrCode = SysAllocStringLen(NULL, (unsigned int) iLength ); 
+    MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, iLength);
 
     nLength2 = WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, 0, NULL, NULL); 
     pszUTFCode = (char*)malloc(nLength2+1); 

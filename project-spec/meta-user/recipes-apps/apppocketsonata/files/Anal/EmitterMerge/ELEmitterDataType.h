@@ -1545,7 +1545,7 @@ struct I_AET_DATA {
 	unsigned int uiOpInitID;
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	unsigned char	aucTaskID[LENGTH_OF_TASK_ID];
+	unsigned char aucTaskID[LENGTH_OF_TASK_ID];
 #endif
 
 };
@@ -1974,24 +1974,18 @@ struct SELABTDATA_EXT {
     double dEasting[MAX_OF_LOBS_PE];
     double dNorthing[MAX_OF_LOBS_PE];
 
-#ifdef _POCKETSONATA_
     // 스캔 분석 추가 정보
     ENUM_SCAN_PROCESS enScanProcess;
     unsigned int uiTry;
-    unsigned int uiScanStep;    
+    unsigned int uiScanStep;
 
-#endif
-
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     //bool bIsFISINTTask;
     UINT uiOpInitID;
 
     unsigned int uiSeqNum;
-#endif
 
     unsigned uiOpcode;
     time_t tiSendLan;
-
    
 } ;
 

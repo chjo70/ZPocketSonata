@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file      ELThreat.cpp
  * @brief
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -14,6 +14,7 @@
 
 Queue<int> CELThreat::m_QueIndex;
 int CELThreat::m_CoInstance=0;
+
 
 /**
  * @brief     생성자에 AET, ABT 저장소 인덱스를 얻고 초기 생성자에 인덱스를 초기화 한다.
@@ -44,7 +45,6 @@ CELThreat::CELThreat(void)
 	++ m_CoInstance;
 
 }
-
 
 /**
  * @brief     ~CELThreat 소멸자에 할당한 AET, ABT 저장소 인덱스를 반환하여 재사용하도록 한다.
@@ -229,7 +229,7 @@ void CELThreat::RemoveAll()
 	}
 
 	// 루트는 삭제 하지 않기 하기 위함.
-	if( m_nIndex != INVALID_INDEX ) {
+	if( m_nIndex != INVALID_INDEX && m_pRootThreat != this ) {
 		// TRACE( "\n 삭제 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
 		delete this;
 	}
@@ -350,6 +350,16 @@ void CELThreat::Link( CELThreat *pDeleteABT, CELThreat *pDeleteAET )
 
 }
 
+/**
+ * @brief     CELThreat
+ * @param     CELThreat * pUnLinkABT
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-24, 10:31
+ * @warning
+ */
 void CELThreat::UnLink( CELThreat *pUnLinkABT )
 {
 	CELThreat *pBeforeDeleteABT;

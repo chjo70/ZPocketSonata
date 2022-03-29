@@ -49,6 +49,7 @@ public:
 private:
     int m_nSeqNum;
     LONG m_lOpInitID;
+    int m_iPDWID;
 
     bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
@@ -57,7 +58,10 @@ private:
     UINT m_nMaxPdw;
     UINT m_CoPdw;
     STR_PDWINDEX *m_pGrPdwIndex;
-    STR_PDWDATA *m_pPDWData;
+    STR_PDWDATA *m_pPDWData;            // 수집한 데이터 포인터
+
+    STR_PDWDATA m_stSavePDWData;        // 분석한 LOB를 근거로 파일로 저장하기 위한 데이터 포인터
+
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
     int m_iIsStorePDW;
@@ -178,11 +182,11 @@ public:
     void InitVar( enum ANALYSIS_MODE analMode );
     void SWInit();
     void Init( STR_PDWDATA *pPDWData=NULL );
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type);
 
-    void InsertRAWData( STR_PDWDATA *pPDWData );
-	bool InsertToDB_RAW( STR_PDWDATA *pPDWData );
+    void InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID=0 );
+	bool InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID );
 
     void SaveGroupPdwFile( int index );
     char *GetTaskID();

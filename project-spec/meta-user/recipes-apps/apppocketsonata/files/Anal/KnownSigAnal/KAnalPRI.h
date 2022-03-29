@@ -69,7 +69,7 @@ public:
     //##ModelId=452B0C530137
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
 
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
 
     void HoppingAnalysis();
 

@@ -539,9 +539,9 @@ void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
+void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 {
-	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, index );
+	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
 }
 
 //////////////////////////////////////////////////////////////////////

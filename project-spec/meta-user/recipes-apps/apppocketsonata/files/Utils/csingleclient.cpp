@@ -46,7 +46,7 @@ CSingleClient::CSingleClient( int iKeyId, char *pClassName, int iPort, char *pSe
 {
     int i=0;
 
-    m_iPort = iPort;
+    m_usPort = iPort;
 
     if( pServerAddress == NULL ) {
         m_bServer = true;
@@ -85,10 +85,10 @@ void CSingleClient::Init()
 {
     Alloc();
 
-    if( m_iPort == CCU_PORT ) {
+    if( m_usPort == CCU_PORT ) {
         m_ptheRecLan = RECCCU;
     }
-    else if( m_iPort == PORT ) {
+    else if( m_usPort == PORT ) {
         m_ptheRecLan = RECZYNQ;
     }
     else {
@@ -161,12 +161,12 @@ void CSingleClient::RunClient()
 {
     int iServerSwitch=0;
     bool bHeader;
-    UINT uiTotalRead;
+    int iTotalRead;
 
     STR_LAN_HEADER strLanHeader;
 
     int iActivity, iRead;
-    int iMaxSocket;
+    unsigned int uiMaxSocket;
 
     char *pLanData;
 
@@ -192,7 +192,7 @@ void CSingleClient::RunClient()
             ++ iServerSwitch;
         }
 
-        LOGMSG3( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_iPort );
+        LOGMSG3( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_usPort );
 
         //type of socket created
 #ifdef _MSC_VER
@@ -202,7 +202,7 @@ void CSingleClient::RunClient()
 #endif
         sockAddress.sin_family = AF_INET;
         sockAddress.sin_addr.s_addr = inet_addr(m_szServerAddress[iServerSwitch] );
-        sockAddress.sin_port = htons( m_iPort );
+        sockAddress.sin_port = htons( m_usPort );
 
         //create a master socket
         m_uiSocket = socket( AF_INET, SOCK_STREAM, 0 );
@@ -226,9 +226,9 @@ void CSingleClient::RunClient()
             sleep( 1 );
         }
         else {
-            LOGMSG2( enDebug, "[%s/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_iPort );
+            LOGMSG2( enDebug, "[%s/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_usPort );
             bHeader = true;
-            uiTotalRead = 0;
+            iTotalRead = 0;
 
             while( true ) {
             	
@@ -237,11 +237,11 @@ void CSingleClient::RunClient()
 
                 //add master socket to set
                 FD_SET( m_uiSocket, &readfds);
-                iMaxSocket = m_uiSocket;
+                uiMaxSocket = m_uiSocket;
 
                 //wait for an activity on one of the sockets , timeout is NULL ,
                 //so wait indefinitely
-                iActivity = select( iMaxSocket + 1 , &readfds , NULL , NULL , NULL);
+                iActivity = select( uiMaxSocket + 1 , &readfds , NULL , NULL , NULL);
 
                 if ((iActivity < 0) && (errno!=EINTR) ) {
                     perror( "select 에러" );
@@ -252,8 +252,8 @@ void CSingleClient::RunClient()
                 if( bHeader == true ) {
                     pLanData = (char *) & strLanHeader;
 
-                    if( (int) ( sizeof(STR_LAN_HEADER)-uiTotalRead ) >= 1 ) {
-                        iRead = recv( m_uiSocket , & pLanData[uiTotalRead], sizeof(STR_LAN_HEADER)-uiTotalRead, MSG_DONTWAIT );
+                    if( (int) ( sizeof(STR_LAN_HEADER)-iTotalRead ) >= 1 ) {
+                        iRead = recv( m_uiSocket , & pLanData[iTotalRead], (int)(sizeof(STR_LAN_HEADER)-iTotalRead), MSG_DONTWAIT );
                         TRACE( "[H%d]" , iRead );
                         if( iRead <= 0 ) {
                             perror( "recv 에러" );
@@ -263,19 +263,19 @@ void CSingleClient::RunClient()
                         //Echo back the message that came in
                         else {
 #ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
+                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], iRead );
 #endif
-                            uiTotalRead += iRead;
+                            iTotalRead += iRead;
                             //printf( "#[%d/%d]" , uiTotalRead, strLanHeader.uiLength );
-                            if( uiTotalRead == sizeof(STR_LAN_HEADER) ) {
+                            if( iTotalRead == sizeof(STR_LAN_HEADER) ) {
                                 if( strLanHeader.uiLength == 0 ) {
                                     bHeader = true;
-                                    uiTotalRead = 0;
+                                    iTotalRead = 0;
 #ifdef __linux__
                                     sndMsg.mtype = 1;
 #endif                                    
                                     sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                    sndMsg.iSocket = m_uiSocket;
+                                    sndMsg.uiSocket = m_uiSocket;
                                     sndMsg.iArrayIndex = -1;
                                     sndMsg.uiArrayLength = 0;
                                     sndMsg.uiDataLength = 0;
@@ -294,7 +294,7 @@ void CSingleClient::RunClient()
                                 }
                                 else {
                                     bHeader = false;
-                                    uiTotalRead = 0;
+                                    iTotalRead = 0;
                                 }
                             }
                         }
@@ -305,9 +305,10 @@ void CSingleClient::RunClient()
                     }
                 }
                 else {
-                    if( (int) ( sizeof(STR_LAN_HEADER)-uiTotalRead ) >= 1 || true ) {
+                    if( (int) ( sizeof(STR_LAN_HEADER)-iTotalRead ) >= 1 ) {
                         pLanData = (char *) & m_pszLanData[0];
-                        iRead = recv( m_uiSocket , & pLanData[uiTotalRead], strLanHeader.uiLength-uiTotalRead, MSG_DONTWAIT );
+                        iRead = recv( m_uiSocket , & pLanData[iTotalRead], (int)(strLanHeader.uiLength-iTotalRead), MSG_DONTWAIT );
+
                         TRACE( "[D%d]" , iRead );
                         if( iRead <= 0 ) {
                             perror( "recv 에러" );
@@ -316,18 +317,18 @@ void CSingleClient::RunClient()
                         }
                         else {
 #ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[uiTotalRead], iRead );
+                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], iRead );
 #endif
-                            uiTotalRead += iRead;
+                            iTotalRead += iRead;
                             //printf( "*[%d/0x%X/%d]" , uiTotalRead, strLanHeader.uiOpCode, strLanHeader.uiLength );
-                            if( uiTotalRead == strLanHeader.uiLength ) {
+                            if( iTotalRead == strLanHeader.uiLength ) {
                                 bHeader = true;
-                                uiTotalRead = 0;
+                                iTotalRead = 0;
 #ifdef __linux__
                                 sndMsg.mtype = 1;
 #endif                                
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                sndMsg.iSocket = m_uiSocket;
+                                sndMsg.uiSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
@@ -412,7 +413,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 #endif
     
     sndMsg.uiOpCode = enREQ_MODE;
-    sndMsg.iSocket = m_uiSocket;
+    sndMsg.uiSocket = m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
@@ -630,12 +631,12 @@ void CSingleClient::RunServer()
     //type of socket created
     sockAddress.sin_family = AF_INET;
     sockAddress.sin_addr.s_addr = INADDR_ANY;
-    sockAddress.sin_port = htons( m_iPort );
+    sockAddress.sin_port = htons( m_usPort );
 
     if( bind( iMasterSocket, (struct sockaddr *)&sockAddress, sizeof(sockAddress)) < 0 ) {
         perror( "Bind 실패");
     }
-    printf( " Listener on port %d\n", m_iPort );
+    printf( " Listener on port %d\n", m_usPort );
 
     //try to specify maximum of 3 pending connections for the master socket
     if( listen( iMasterSocket, 3 ) < 0 ) {
@@ -717,7 +718,7 @@ void CSingleClient::RunServer()
 
                                 sndMsg.mtype = 1;
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                                sndMsg.iSocket = m_uiSocket;
+                                sndMsg.uiSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
                                 sndMsg.uiArrayLength = 0;
                                 sndMsg.uiDataLength = 0;
@@ -750,7 +751,7 @@ void CSingleClient::RunServer()
 
                             sndMsg.mtype = 1;
                             sndMsg.uiOpCode = strLanHeader.uiOpCode;
-                            sndMsg.iSocket = m_uiSocket;
+                            sndMsg.uiSocket = m_uiSocket;
                             sndMsg.iArrayIndex = -1;
                             sndMsg.uiArrayLength = 0;
                             sndMsg.uiDataLength = 0;

@@ -13,11 +13,11 @@
 #endif // _MSC_VER > 1000
 
 #ifdef __VXWORKS__
-#define	RAMDRV										(char *) "/RAMDRV"
-#define	RAMDRV_NO									(char *) ":0"
-#define	TFFSDRV										(char *) "/tffs0"
+#define	RAMDRV						(char *) "/RAMDRV"
+#define	RAMDRV_NO					(char *) ":0"
+#define	TFFSDRV						(char *) "/tffs0"
 
-#define SQLITE_FOLDER								((char *) "LIB")
+#define SQLITE_FOLDER				((char *) "LIB")
 #endif
 
 
@@ -37,7 +37,7 @@
 #define HOME_ID                     (const char *) "root"
 #else
 #define HOME_ID                     (const char *) "chjo70"
-#endif
+#endif                              
 
 #ifdef __ZYNQ_BOARD__
 #define SHARED_DATA_DIRECTORY       (const char *) "/var/rawdata"

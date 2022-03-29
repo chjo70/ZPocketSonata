@@ -30,8 +30,6 @@
 
 #include "../../Include/globals.h"
 
-char gszPulseTrainMark[CHECKED_SEG+1] = { '#', 'X', 'M', 'C' };
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -4354,12 +4352,16 @@ void CPulExt::PrintAllSeg()
 void CPulExt::PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg )
 {
 #ifdef _MSC_VER
+    char szPulseTrainMark[CHECKED_SEG+1] = { '#', 'X', 'M', 'C' };
+    char szFreqType[MAX_FRQTYPE][3] = { "F_", "HO", "RA", "PA", "UK", "IF" } ;
+    char szPRIType[MAX_PRITYPE][3] = { "ST", "JT", "DW", "SG", "PJ", "IP" } ;
+
     Log( enNormal, "\t[%2d]%1c: Co(%3d), %s (%5d-%5d), %s %5d(%5d-%5d)/%2d, PW(%5d -%5d), I(%3d(0x%0llx),%3d -%3d)" ,
         iSeg,
-        gszPulseTrainMark[pSeg->mark],
+        szPulseTrainMark[pSeg->mark],
         pSeg->pdw.uiCount,
-        g_szFreqType[pSeg->freq_type], I_FRQMhzCNV( pSeg->band, pSeg->freq.min ), I_FRQMhzCNV( pSeg->band, pSeg->freq.max ),
-        g_szPRIType[pSeg->pri_type], I_TOAusCNV( pSeg->pri.mean ), I_TOAusCNV( pSeg->pri.min ), I_TOAusCNV( pSeg->pri.max ), IMUL( pSeg->jitter_p, 100 ),
+        szFreqType[pSeg->freq_type], I_FRQMhzCNV( pSeg->band, pSeg->freq.min ), I_FRQMhzCNV( pSeg->band, pSeg->freq.max ),
+        szPRIType[pSeg->pri_type], I_TOAusCNV( pSeg->pri.mean ), I_TOAusCNV( pSeg->pri.min ), I_TOAusCNV( pSeg->pri.max ), IMUL( pSeg->jitter_p, 100 ),
         I_PWCNV( pSeg->pw.min ), I_PWCNV( pSeg->pw.max ),
         m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]], m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
 

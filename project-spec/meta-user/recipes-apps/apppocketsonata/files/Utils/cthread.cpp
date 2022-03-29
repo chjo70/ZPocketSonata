@@ -238,9 +238,9 @@ void *CThread::CallBack( void *pArg )
         pThhread->_routine();
 
 #endif
-    }
 
-    LOGMSG1( enNormal, "The [%s] is stopped the the main loop...", pThhread->m_szThreadName );
+		LOGMSG1( enNormal, "The [%s] is stopped the the main loop...", pThhread->m_szThreadName );
+    }    
 
     return NULL;
 }
@@ -277,7 +277,7 @@ void CThread::Run( void *(*pFunc)(void*), key_t key )
    
     // 타스크 큐 생성
     m_iPriority = GetPriorityByThreadName();
-    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     if( m_TaskID != TASK_ID_ERROR ) {
         m_bTaskRunStat = true;
     }
@@ -511,6 +511,8 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
                     //TRACE( "Invalid the receive message..." );
                 }
             }
+			ELSE
+
         }
         else {
             //Lock();
@@ -530,7 +532,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
                 m_queue.pop();	
             }
             else {
-                TRACE( "AAAA" );
+                //TRACE( "AAAA" );
             }
         }
 
@@ -636,7 +638,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     
     // 1. OPCODE 저장
     sndMsg.uiOpCode = uiOpCode;
-    sndMsg.iSocket = 0;
+    sndMsg.uiSocket = 0;
 
     // 2. 데이터 저장
     if( pData != NULL ) {
@@ -753,7 +755,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 
 /**
  * @brief		SendTaskMngr
- * @param		int iErrorCode
+ * @param		unsigned int uiErrorCode
  * @param		const char * pszThreadName
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -761,7 +763,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
  * @date		2022/02/09 11:25:21
  * @warning		
  */
-void CThread::SendTaskMngr( int iErrorCode, const char *pszThreadName )
+void CThread::SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName )
 {
     unsigned int i;
     CThread *pThis=NULL;
@@ -772,7 +774,7 @@ void CThread::SendTaskMngr( int iErrorCode, const char *pszThreadName )
         pThis = g_vecThis[i];
         if( typeid( *pThis ) == typeid(CTaskMngr) ) {
             stMessageData.uiOpCode = enSYSERROR;
-            stMessageData.x.uiData = iErrorCode;
+            stMessageData.x.uiData = uiErrorCode;
             pThis->QMsgSnd( & stMessageData, pszThreadName );
             break;
         }
@@ -798,12 +800,11 @@ void CThread::SendTaskMngr( int iErrorCode, const char *pszThreadName )
  * @date		2021/11/23 10:17:49
  * @warning		
  */
-void CThread::Sleep( int mssleep )
+void CThread::Sleep( unsigned int mssleep )
 {
 #ifdef __linux__
     sleep( mssleep );
 #elif defined(_MSC_VER)  
-    //::Sleep( mssleep );
     ResetEvent( m_hSleepEvent );
     ::WaitForSingleObject( m_hSleepEvent, mssleep );
 
@@ -821,11 +822,19 @@ void CThread::Sleep( int mssleep )
 }
 
 /**
- * @brief CThread::DisplayMsg
+ * @brief     DisplayMsg
+ * @param     bool bSend
+ * @param     const char * pszClassName
+ * @param     STR_MessageData * pInMsg
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-03-25, 15:37
+ * @warning
  */
 void CThread::DisplayMsg( bool bSend, const char *pszClassName, STR_MessageData *pInMsg )
 {
-    bool bRet=true;
     char szOpcode[50];
     char buffer[200];
 
@@ -948,26 +957,24 @@ void CThread::DisplayMsg( bool bSend, const char *pszClassName, STR_MessageData 
             break;
     }
 
-    if( bRet == true ) {
-        if( bSend == false ) {
-            if( pMsg->uiDataLength == sizeof(int) ) {
-                sprintf( buffer, ">>수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
-            }
-            else {
-                sprintf( buffer, ">>수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
-            }
-             
+    if( bSend == false ) {
+        if( pMsg->uiDataLength == sizeof(int) ) {
+            sprintf( buffer, ">>수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
         }
         else {
-            if( pMsg->uiDataLength == sizeof(int) ) {
-                sprintf( buffer, "<<송신: [%12s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
-            }
-            else {
-                sprintf( buffer, "<<송신: [%12s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
-            }
+            sprintf( buffer, ">>수신: [%12s]서 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
         }
-
-        LOGMSG1( enDebug, "%s" , buffer );
+             
     }
+    else {
+        if( pMsg->uiDataLength == sizeof(int) ) {
+            sprintf( buffer, "<<송신: [%12s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
+        }
+        else {
+            sprintf( buffer, "<<송신: [%12s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , m_szThreadName, szOpcode, pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
+        }
+    }
+
+    LOGMSG1( enDebug, "%s" , buffer );
 
 }

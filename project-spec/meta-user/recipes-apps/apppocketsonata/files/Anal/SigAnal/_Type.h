@@ -171,6 +171,7 @@ typedef unsigned long DWORD;
 typedef unsigned char BYTE;
 typedef long long __int64;
 typedef unsigned int WORD;
+typedef unsigned long long SIZE_T;
 
 
 #define M_PI          3.14159265358979323846  /* pi */

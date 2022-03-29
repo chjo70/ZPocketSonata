@@ -38,10 +38,10 @@ private:
 
     SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];       // 추적/스캔 채널에 대한 대상 위협 정보
 
-    static CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
-    static CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
-    static CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
-    static CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
+    CCollectBank *m_pTheDetectCollectBank[DETECT_CHANNEL];
+    CCollectBank *m_pTheTrackCollectBank[TRACK_CHANNEL];
+    CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
+    CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
 
     Queue<unsigned int> m_theTrackChannel;
     Queue<unsigned int> m_theScanChannel;
@@ -65,6 +65,7 @@ private:
     void CloseCollectBank();
     void SetupDetectCollectBank( int iCh );
 
+    void CheckAllCollectBank();
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
 
     void SendEndCollect();
@@ -122,7 +123,7 @@ public:
     void MakeStaticPDWData( STR_PDWDATA *pPDWData );
 
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 
 };
 

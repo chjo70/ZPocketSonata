@@ -10,6 +10,39 @@ LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
+template <typename T>
+T CheckOverflow( unsigned long long int ullFileSize ) {
+    T value;
+
+    if( sizeof(T) == sizeof(int) ) {
+        if( ullFileSize > UINT_MAX ) {
+            value = UINT_MAX;
+        }
+        else {
+            value = (T) ullFileSize;
+        }
+    }
+    else if( sizeof(T) == sizeof(short) ) {
+        if( ullFileSize > SHRT_MAX ) {
+            value = SHRT_MAX;
+        }
+        else {
+            value = (T) ullFileSize;
+        }
+    }
+    else {
+        if( ullFileSize > INT8_MAX ) {
+            value = INT8_MAX;
+        }
+        else {
+            value = (T) ullFileSize;
+        }
+    }
+
+    return value;
+
+}
+
 
 class CCommonUtils
 {
@@ -44,6 +77,12 @@ public:
     static void SetUnitType();
 
     static const char *strcasestr( const char *haystack, const char *needle );
+    static int Isalpha( int iCh );
+
+    static size_t CheckMultiplyOverflow( int iSize, int iItems );
+
+    // 타입 변환시 사용하는 함수 모음
+    static unsigned int INT2UINT( int iValue );
 
 };
 

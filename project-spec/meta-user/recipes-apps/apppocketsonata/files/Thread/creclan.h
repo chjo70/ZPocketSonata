@@ -29,7 +29,7 @@ public:
 
 
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 
     static CRecLan* GetInstance( int iIndex )
     { // 게으른 초기화

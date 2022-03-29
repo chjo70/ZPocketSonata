@@ -36,7 +36,7 @@ enum SEG_MARK { NORMAL_SEG=0,
 } ;
 
 //##ModelId=452B0C550295
-enum EMITTER_MARK { NORMAL_EMITTER=0, DELETE_EMITTER } ;
+enum EMITTER_MARK { NORMAL_EMITTER=0, DELETE_EMITTER, _SIZE_EMITTER_MARK } ;
 
 //##ModelId=452B0C550295
 enum AET_MARK { NORMAL_AET=0, DELETE_AET } ;
@@ -93,9 +93,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #if defined(_ELINT_) || defined(_XBAND_)
 #define   _spPAoffset               (-75)	// amplitude initial value */
 
-#define NEW_COLLECT_PDW				(4096)			// 탐지 분석용 최대 수집 개수
-#define KWN_COLLECT_PDW				(200)				// 추적 분석용 최대 수집 개수
-#define SCN_COLLECT_PDW				(2000)			// 스캔 분석용 최대 수집 개수
+#define NEW_COLLECT_PDW				(512)			// 탐지 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
 
 #else
 #define   _spPAoffset               (-70)       // amplitude initial value */

@@ -71,11 +71,8 @@ void CTrackAnalysis::_routine()
 {
     LOGENTRY;
     bool bWhile=true;
-    UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
-
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {

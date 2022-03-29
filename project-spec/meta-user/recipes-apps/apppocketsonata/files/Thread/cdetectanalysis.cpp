@@ -24,18 +24,16 @@
  */
 CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW );
-    if( m_pTheNewSigAnal == NULL ) {
-        LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
-    }
+    //m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW );
+    m_pTheNewSigAnal = NULL;
+    _SAFE_NEW( m_pTheNewSigAnal, CNewSigAnal( NEW_COLLECT_PDW ) )
 
-    m_pTheSysPara = new CSysPara();
-    if( m_pTheSysPara == NULL ) {
-        LOGMSG1( enDebug, "메모리 부족입니다. %s 객체를 생성할 수 없습니다 !", pClassName );
-    }
+    // m_pTheSysPara = new CSysPara();
+    m_pTheSysPara = NULL;
+    _SAFE_NEW( m_pTheSysPara, CSysPara )
 
     m_PDWData.pstPDW = NULL;
-    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW );
+    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW )
 
 }
 
@@ -44,13 +42,11 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
  */
 CDetectAnalysis::~CDetectAnalysis(void)
 {
-    delete m_pTheNewSigAnal;
-    m_pTheNewSigAnal = NULL;
+	_SAFE_DELETE( m_pTheNewSigAnal );
 
-    delete m_pTheSysPara;
-    m_pTheSysPara = NULL;
+	_SAFE_DELETE( m_pTheSysPara );
 
-    _SAFE_FREE( m_PDWData.pstPDW );
+    _SAFE_FREE( m_PDWData.pstPDW )
 }
 
 
@@ -120,7 +116,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, " DET : At the %d[Ch], collecting the analysis for the count of PDW[%d]..." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -129,7 +125,7 @@ void CDetectAnalysis::AnalysisStart()
     //SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    unsigned int uiTotalLOB=m_pTheNewSigAnal->GetCoLOB();
+    unsigned int uiTotalLOB=(unsigned int) m_pTheNewSigAnal->GetCoLOB();
 
     if( uiTotalLOB > _spZero ) {
         STR_ANALINFO strAnalInfo;

@@ -37,19 +37,23 @@ __int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider)
 	#define QUOTIENT edi
 
 	// Save combined sign on stack
-	_asm{
+	_asm {
 		mov		eax, dword ptr[operant+4]
 		xor		eax, dword ptr[multiplier+4]
 		xor		eax, dword ptr[divider+4]
 		pushfd
 	}
 
+    __int64 dummy;
+
 	// Take absolute values because algorithm is for unsigned only
 	operant		= ABS64(operant);
 	multiplier	= ABS64(multiplier);
 	divider		= ABS64(divider);
 
-	_asm{
+    dummy = ( operant * multiplier ) / divider;
+
+	_asm {
 		// First check divider for 0
 		mov		eax, dword ptr[divider+4]
 		or		eax, dword ptr[divider]

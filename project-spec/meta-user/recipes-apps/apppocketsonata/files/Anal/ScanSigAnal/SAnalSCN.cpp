@@ -782,66 +782,66 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 		uiRet = UMUL( m_nCanPeak[0], m_nSampleTime );
 	}
     else {
-	// 피크 검증
-	// 최대 피크 값은 하한값(0.4) 이상 이어야 하며
-	// 피크에 대한 주기성이 존재해야 한다. 
-	//-- 조철희 2006-05-02 10:46:20 --//
-	if( pAutoCor->acf[ m_nCanPeak[0] ] < 0.4 ) {
-		// printf( "\n 제일 큰 ACF 값이 0.4(%f) 이하여서 주기가 없는 것으로 간주합니다." , pAutoCor->acf[ m_nCanPeak[0] ] );
+	    // 피크 검증
+	    // 최대 피크 값은 하한값(0.4) 이상 이어야 하며
+	    // 피크에 대한 주기성이 존재해야 한다. 
+	    //-- 조철희 2006-05-02 10:46:20 --//
+	    if( pAutoCor->acf[ m_nCanPeak[0] ] < 0.4 ) {
+		    // printf( "\n 제일 큰 ACF 값이 0.4(%f) 이하여서 주기가 없는 것으로 간주합니다." , pAutoCor->acf[ m_nCanPeak[0] ] );
 		    uiRet = (UINT) -1;
-	}
+	    }
         else {
-	// 주기 반복성 체크해서 존재해야 주기값을 인정한다.
-	/*! \bug  N번 건너띄어서 주기성을 체크하는 기능을 추가함.
-	    \date 2006-08-16 14:47:28, 조철희
-	*/
-	// UINT peakMargin = _max( 2, UDIV( m_nCanPeak[0], 5 ) );
+	        // 주기 반복성 체크해서 존재해야 주기값을 인정한다.
+	        /*! \bug  N번 건너띄어서 주기성을 체크하는 기능을 추가함.
+	            \date 2006-08-16 14:47:28, 조철희
+	        */
+	        // UINT peakMargin = _max( 2, UDIV( m_nCanPeak[0], 5 ) );
 
-	k = 0;
-	int jump=1;
-	for( i=0 ; i < m_nCoCanPeak && (UINT) jump < m_nCoCanPeak ; ++i ) {
-		int offset;
+	        k = 0;
+	        int jump=1;
+	        for( i=0 ; i < m_nCoCanPeak && (UINT) jump < m_nCoCanPeak ; ++i ) {
+		        int offset;
 
-		bMatch = TRUE;
-		offset = m_nCanPeak[i];
-		for( j=jump ; j < m_nCoCanPeak ; j += jump ) {
-			int diff;
+		        bMatch = TRUE;
+		        offset = m_nCanPeak[i];
+		        for( j=jump ; j < m_nCoCanPeak ; j += jump ) {
+			        int diff;
 
-			diff = m_nCanPeak[j] - m_nCanPeak[j-jump];
-			if( TRUE != CompMeanDiff( diff, offset, 4 ) ) {
-				bMatch = FALSE;
-				break;
-			}
-		}
+			        diff = m_nCanPeak[j] - m_nCanPeak[j-jump];
+			        if( TRUE != CompMeanDiff( diff, offset, 4 ) ) {
+				        bMatch = FALSE;
+				        break;
+			        }
+		        }
 
-		if( bMatch == TRUE ) {
-			// 피크 값 중에서 주기값이 될만한 값을 찾는다. 
-			// 해상 신호 중에는 메인 로브 마다 가장 큰 신호세기 차가 있을 수 있기 때문에,
-			// 스캔 신호 중에서 1번째 값보다 2번째 값이 클 수 있다.
-			//
-			//-- 조철희 2006-05-11 16:19:31 --//
-			k = m_nCanPeak[jump] - m_nCanPeak[0];
-			break;
+		        if( bMatch == TRUE ) {
+			        // 피크 값 중에서 주기값이 될만한 값을 찾는다. 
+			        // 해상 신호 중에는 메인 로브 마다 가장 큰 신호세기 차가 있을 수 있기 때문에,
+			        // 스캔 신호 중에서 1번째 값보다 2번째 값이 클 수 있다.
+			        //
+			        //-- 조철희 2006-05-11 16:19:31 --//
+			        k = m_nCanPeak[jump] - m_nCanPeak[0];
+			        break;
 
-		}
+		        }
 
-		++ jump;
-	}
+		        ++ jump;
+	        }
 
 
-	pAutoCor->inPeak = k;
+	        pAutoCor->inPeak = k;
 
-	if( k == _spZero ) {
-		// debug, 00-07-27 14:41:04
-        //Printf( "\n 주기를 못 찾았습니다." );
+	        if( k == _spZero ) {
+		        // debug, 00-07-27 14:41:04
+                //Printf( "\n 주기를 못 찾았습니다." );
 		        uiRet = (UINT) -1;
-	}
-	else {
-        //Printf( "\n 주기 [%d], k=%d" , UMUL( k, m_nSampleTime ), k );
+	        }
+	        else {
+                //Printf( "\n 주기 [%d], k=%d" , UMUL( k, m_nSampleTime ), k );
 		        uiRet = UMUL( k, m_nSampleTime );
 	        }
         }
-	}
+    }
 
     return uiRet;
 
@@ -1042,21 +1042,24 @@ BOOL CSAnalScan::CheckControlWc( UINT noEMT )
 	
 #else    
 
-    UINT    coCol;
-	UINT	scStep;
- 
-  // spanTime = m_pScanPt->toa[ m_pScanPt->co-1 ] - m_pScanPt->toa[0];
-  coCol = 0; //stScnAet.sap.noCol;
-    scStep = 0; //stScnAet.sap.fScStep;
-
-	if( m_nCoModWc[noEMT] <= _spOne &&			// Total count of Wonctrol Wc
-        ( ( coCol >= (SCN_COLLECT_PDW-100) && scStep >= _spTwo && m_nAutoCor.idPeak <= _spTwo ) || 
-        ( scStep >= _spTwo && ( fabs( m_nSample.skewness ) > 1.0 ) ) ) ) {
-		bRet = TRUE;
-	}
-	else {
-		// bRet =_spFalse;
-	}
+//     UINT coCol;
+//     UINT scStep;
+// 
+//     float fSkewness;
+//  
+//     // spanTime = m_pScanPt->toa[ m_pScanPt->co-1 ] - m_pScanPt->toa[0];
+//     coCol = 0; //stScnAet.sap.noCol;
+//     scStep = 0; //stScnAet.sap.fScStep;
+// 
+//     fSkewness = fabs( m_nSample.skewness );
+// 	if( m_nCoModWc[noEMT] <= _spOne &
+//         ( ( coCol >= (SCN_COLLECT_PDW-100) && scStep >= _spTwo && m_nAutoCor.idPeak <= _spTwo ) || 
+//         ( scStep >= _spTwo && ( fSkewness > 1.0 ) ) ) ) {
+// 		bRet = TRUE;
+// 	}
+// 	else {
+// 		// bRet =_spFalse;
+// 	}
     
 #endif
 
@@ -1203,7 +1206,7 @@ UINT CSAnalScan::PeriodVerify( void )
 				    ++ coSamePeakDtoa;
 			    }
 			    else if( virPeak < m_nCanPeak[i] ) {
-				    virPeak = virPeak + prdPeak;
+				    //virPeak = virPeak + prdPeak;
 				    break;
 			    }
                 ELSE;
@@ -1520,9 +1523,9 @@ int CSAnalScan::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
  * @param pEmitter
  * @param index
  */
-void CSAnalScan::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )
+void CSAnalScan::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 {
-    m_pScanSigAnal->SaveEmitterPdwFile( pEmitter, index );
+    m_pScanSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
 
 }
 

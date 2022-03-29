@@ -94,7 +94,7 @@ CLOBClustering::CLOBClustering()
 
 	}
 	else {
-		m_pQueLOBDataPool = NULL;
+		//m_pQueLOBDataPool = NULL;
 
 	}
 
@@ -271,8 +271,8 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
 		//pLOBData->iPitchAngle = pSRxLOBDataGroup->iPitchAngle;
 		//pLOBData->iHeadingAngle = pSRxLOBDataGroup->iHeadingAngle;
 		//pLOBData->iAltitude = pSRxLOBDataGroup->iAltitude;	
-        pLOBData->fRadarLatitude = pSRxLOBData->fRadarLatitude;
-        pLOBData->fRadarLongitude = pSRxLOBData->fRadarLongitude;
+        pLOBData->fRadarLatitude = pSRxLOBData->fLatitude;
+        pLOBData->fRadarLongitude = pSRxLOBData->fLongitude;
 	}
 
 }

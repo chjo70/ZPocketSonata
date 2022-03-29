@@ -1,8 +1,6 @@
 #ifndef CDETECTANALYSIS_H
 #define CDETECTANALYSIS_H
 
-//#include "../Utils/clog.h"
-
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
 
@@ -31,7 +29,7 @@ public:
     void MakePDWData();
 
     virtual void _routine();
-    virtual const char *GetThreadName() { return m_szThreadName; }
+    virtual char *GetThreadName() { return m_szThreadName; }
 
 private:
     void AnalysisStart();

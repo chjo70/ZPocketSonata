@@ -167,7 +167,7 @@ public:
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
 
     int GetBand();
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
 
     SRxLOBData *GetLOBData( int index=0 );
 

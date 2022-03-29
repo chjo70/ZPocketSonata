@@ -212,13 +212,13 @@ public:
     CData();
     virtual ~CData();
 
-    void Alloc( unsigned int uiItems=0 );
+    void Alloc( int iItems=0 );
     void Free();
 
-    void AllocData( unsigned int uiItems );
+    void AllocData( int iItems );
     void FreeData();
 
-    void AllocRealData( unsigned int uiItems );
+    void AllocRealData( int iItems );
     void FreeRealData();
 
     void ClearFilterSetup();
@@ -1001,8 +1001,6 @@ class CPOCKETSONATAPDW : public CData
 {
 private:
 	POCKETSONATA_HEADER m_stHeader;
-
-    //STR_PDW_DATA m_PDWData;
 
 	static int m_iBoardID;
 

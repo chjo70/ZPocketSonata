@@ -1109,7 +1109,7 @@ int CMIDASBlueFileFormat::MakeSubRecords( SELSUBRECORDS *pSubRecords, const char
     int offset;
 
     memset( pSubRecords->name, 0, 4 );
-    memcpy( pSubRecords->name, pName, strnlen_s(pName, 100 ) );
+    memcpy( pSubRecords->name, pName, strnlen_s( pName, 100 ) );
     pSubRecords->format[0] = data_type1;
     pSubRecords->format[1] = data_type2;
 
@@ -1218,7 +1218,9 @@ int CMIDASBlueFileFormat::WriteHeader()
             CCommonUtils::swapByteOrder( m_HCB.out_byte );
             CCommonUtils::swapByteOrder( m_HCB.outbytes, 8 );
             CCommonUtils::swapByteOrder( m_HCB.uiKeylength );
-            nWrite = Write( & m_HCB, sizeof(char)*HEADER_CONTROL_BLOCK_SIZE );
+
+            size_t szSize = CCommonUtils::CheckMultiplyOverflow( sizeof(char), HEADER_CONTROL_BLOCK_SIZE );
+            nWrite = Write( & m_HCB, szSize );
         }
     }
     return nWrite;

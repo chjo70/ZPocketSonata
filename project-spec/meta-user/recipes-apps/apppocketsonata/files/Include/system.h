@@ -26,21 +26,21 @@
 // 시스템 변수 기본 설정 값
 
 // 수신기 임계값
-#define _RXTHRESHOLD_BAND1_                 (float) (-60.0)
-#define _RXTHRESHOLD_BAND2_                 (float) (-55.3)
-#define _RXTHRESHOLD_BAND3_                 (float) (-60.2)
-#define _RXTHRESHOLD_BAND4_                 (float) (-70.0)
-#define _RXTHRESHOLD_BAND5_                 (float) (-75.0)
+#define _DEFAULT_RXTHRESHOLD_BAND1_                 (float) (-60.0)
+#define _DEFAULT_RXTHRESHOLD_BAND2_                 (float) (-55.3)
+#define _DEFAULT_RXTHRESHOLD_BAND3_                 (float) (-60.2)
+#define _DEFAULT_RXTHRESHOLD_BAND4_                 (float) (-70.0)
+#define _DEFAULT_RXTHRESHOLD_BAND5_                 (float) (-75.0)
 
 // 에미터 최소 펄스 신호 개수
-#define _ANAL_MIN_PULSECOUNT_               (5)
+#define _DEFAULT_ANAL_MINPULSECOUNT_                (5)
 
 // 최소 신호 삭제 시간 [초]
-#define _DEFAULT_DELETETIME_                (30)
-#define MIN_EMITTER_DELETE_TIME             (10)
+#define _DEFAULT_DELETETIME_                        (30)
+#define _DEFAULT_MIN_EMITTER_DELETETIME             (10)
 
 // 기본 라이브러리 버젼
-#define _DEFAULT_LIB_VERSION_               (0)
+#define _DEFAULT_LIB_VERSION_                       (0)
 
 
 #include "defines.h"

@@ -34,6 +34,20 @@ class CGroup
 protected:
     DEFINE_ANAL_PVAR_
 
+	char m_szPulseType[MAX_STAT][3];
+
+#if defined(_ELINT_) || defined(_XBAND_)
+	UINT m_stSigma1Aoa[5];
+
+#elif _POCKETSONATA_
+	UINT m_stSigma1Aoa[enMAXPRC];
+
+#else
+	UINT m_stSigma1Aoa[3];
+
+#endif
+
+
 	//##ModelId=452B0C5600B6
 	UINT *m_pPdwParam;
 	//##ModelId=452B0C5600CA
