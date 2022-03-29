@@ -628,10 +628,10 @@ bool CNewSigAnal::CheckKnownByAnalysis()
  * @date      2021-07-21, 17:49
  * @warning
  */
-char *CNewSigAnal::GetTaskID()
+unsigned char *CNewSigAnal::GetTaskID()
 {
 #if defined(_ELINT_) || defined(_XBAND_)
-    return (char *) & m_szTaskID[0];
+    return (unsigned char *) & m_szTaskID[0];
 #else
     return NULL;
 

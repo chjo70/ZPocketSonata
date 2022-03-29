@@ -57,7 +57,7 @@ public:
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	EN_RADARCOLLECTORID GetCollectorID();
-	char *GetTaskID();
+	unsigned char *GetTaskID();
 #endif
 
     STR_PDWPARAM* GetPdwParam();

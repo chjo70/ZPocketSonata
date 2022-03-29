@@ -189,7 +189,7 @@ public:
 	bool InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID );
 
     void SaveGroupPdwFile( int index );
-    char *GetTaskID();
+    unsigned char *GetTaskID();
     bool CheckValidData( STR_PDWDATA *pPDWData );
 
     inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }

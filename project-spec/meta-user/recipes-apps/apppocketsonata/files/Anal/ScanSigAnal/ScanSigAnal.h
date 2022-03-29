@@ -114,8 +114,8 @@ public:
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	inline EN_RADARCOLLECTORID GetCollectorID() { return RADARCOL_Unknown; }
-	inline char *GetTaskID() { return NULL; }
+	inline EN_RADARCOLLECTORID GetCollectorID() { return m_pPDWData->x.el.iCollectorID; }
+	inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
 #endif    
 
 	

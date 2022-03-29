@@ -398,7 +398,7 @@ EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
  * @date      2022/01/26 21:44:00
  * @warning   
  */
-char *CNMakeAET::GetTaskID()
+unsigned char *CNMakeAET::GetTaskID()
 {
     return m_pNewSigAnal->GetTaskID();
 }

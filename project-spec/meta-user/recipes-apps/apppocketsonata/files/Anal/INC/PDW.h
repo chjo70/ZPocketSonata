@@ -629,11 +629,15 @@ typedef struct {
 typedef struct {
     unsigned char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int iIsStorePDW;
-    int iCollectorID;
+    EN_RADARCOLLECTORID iCollectorID;
     ENUM_BANDWIDTH enBandWidth;
 
     // 아래는 공용 정보
     STR_COMMON_HEADER stCommon;
+
+    int GetCollectorID() {
+        return iCollectorID;
+    }
 
     unsigned int GetTotalPDW() {
         return stCommon.uiTotalPDW;
@@ -730,6 +734,32 @@ typedef union {
         POCKETSONATA_HEADER ps;
 
         SONATA_HEADER so;
+
+    unsigned char *GetTaskID( ENUM_UnitType enUnitType ) {
+        unsigned char *pTaskID;
+
+        switch( enUnitType ) {
+        case en_ZPOCKETSONATA :
+            pTaskID = (unsigned char *) NULL;
+            break;
+
+        case en_ELINT :
+        case en_XBAND :
+            pTaskID = & el.aucTaskID[0];
+            break;
+
+        case en_SONATA :
+            pTaskID = (unsigned char *) NULL;
+            break;
+
+        default:
+            pTaskID = NULL;
+            break;
+
+        }
+        return pTaskID;
+
+    }
 
     unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
         unsigned int uiTotalPDW;

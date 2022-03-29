@@ -1644,7 +1644,7 @@ EN_RADARCOLLECTORID CSAnalScan::GetCollectorID()
  * @date      2022/01/19 20:55:02
  * @warning   
  */
-char *CSAnalScan::GetTaskID()
+unsigned char *CSAnalScan::GetTaskID()
 {
 	return m_pScanSigAnal->GetTaskID(); 
 }

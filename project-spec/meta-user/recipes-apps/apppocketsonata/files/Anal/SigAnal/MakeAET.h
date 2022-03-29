@@ -145,7 +145,7 @@ public:
 
 #if defined(_ELINT_) || defined(_XBAND_)
     virtual EN_RADARCOLLECTORID GetCollectorID()=0;
-    virtual char *GetTaskID()=0;
+    virtual unsigned char *GetTaskID()=0;
 #endif
 
 };
