@@ -864,19 +864,19 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID )
 	_localtime32_s( &stTime, & tiNow.tv_sec );
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 #ifdef _POCKETSONATA_
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                             '%d', '%ld', '%d', '0', '%s', '%d', '%d', '%s', '0' )", \
-                                             m_nSeqNum, m_lOpInitID, m_iPDWID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%ld', '%d', '0', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_lOpInitID, m_iPDWID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
 
 #elif defined(_ELINT_) || defined(_XBAND_)
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                             '%d', '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-                                             m_nSeqNum, m_lOpInitID, m_iPDWID, iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_lOpInitID, m_iPDWID, iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
 
 #else
-    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( SEQ_NUM, OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                             '%d', '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-                                             m_nSeqNum, m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                             '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+                                             m_lOpInitID, m_iPDWID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
 
 #endif
  
@@ -907,9 +907,6 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID )
 void CNewSigAnal::InitDataFromDB()
 {
 
-    m_lOpInitID = _spOne;
-    m_nSeqNum = _spOne;
-
 #ifdef _MSSQL_
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
@@ -930,6 +927,8 @@ void CNewSigAnal::InitDataFromDB()
 #endif
 
 #else
+    m_lOpInitID = _spOne;
+    m_nSeqNum = _spOne;
 
 
 #endif

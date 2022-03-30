@@ -448,8 +448,6 @@ private:
 
 
     // 쿠리 수행 함수
-    int GetINTData( char *pSQLString );
-    LONG GetLONGData( char *pSQLString );
     bool InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bFreqSeq );
     bool InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
     bool InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
