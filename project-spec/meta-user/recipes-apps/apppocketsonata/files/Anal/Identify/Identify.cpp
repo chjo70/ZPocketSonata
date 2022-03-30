@@ -6158,6 +6158,8 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMax );
 		if( pRadarMode->fPD_TypicalMax < 1 ) {  pRadarMode->fPD_TypicalMax = 0.0; }
 
+        pRadarMode->iRadarModePriority = 0;
+
         theRS.GetFieldValue( i++, (int *) & pRadarMode->eValidation );
 
         if( pRadarMode->eValidation == enumValidated ) {

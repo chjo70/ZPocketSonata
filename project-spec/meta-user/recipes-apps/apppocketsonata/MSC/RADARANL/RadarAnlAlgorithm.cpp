@@ -133,7 +133,7 @@ namespace RadarAnlAlgotirhm
 	 */
 	bool RadarAnlAlgotirhm::GetLOBData( STR_LOBDATA *pLOBData )
 	{
-		int i;
+		unsigned int i;
 		bool bRet = false;
 
 		vector<SRxLOBData>::pointer pSRxLOBData;
