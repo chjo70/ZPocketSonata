@@ -865,8 +865,8 @@ bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID )
 	strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 #ifdef _POCKETSONATA_
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                             '%ld', '%d', '0', '%s', '%d', '%d', '%s', '0' )", \
-                                             m_lOpInitID, m_iPDWID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename );
+                                             '%ld', '%d', '%d', '%s', '0', '%d', '%s', '0' )", \
+                                             m_lOpInitID, m_iPDWID, iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename );
 
 #elif defined(_ELINT_) || defined(_XBAND_)
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \

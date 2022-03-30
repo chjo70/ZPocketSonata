@@ -2667,7 +2667,7 @@ CREATE TABLE [dbo].[LOBDATA] (
 	[NUM_PDW] [smallint],  /* NUM_PDW */
 	[COLLECTOR_ID] [tinyint],  /* COLLECTOR_ID */
 	[RADAR_LATITUDE] [float],  /* RADAR_LATITUDE */
-	[RADAR_LONGGITUDE] [float],  /* RADAR_LONGITUDE */
+	[RADAR_LONGITUDE] [float],  /* RADAR_LONGITUDE */
 	[RADARMODE_NAME] [varchar](20),  /* RADARMODE_NAME */
 	[RADARMODE_INDEX] [smallint] /* RADARMODE_INDEX */
 )
@@ -3009,7 +3009,7 @@ EXEC sp_addextendedproperty
 	@name=N'MS_Description', @value=N'RADAR_LONGITUDE', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'LOBDATA', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_LONGGITUDE'
+	@level2type=N'COLUMN', @level2name=N'RADAR_LONGITUDE'
 GO
 
 /* RADARMODE_NAME */
