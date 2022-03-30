@@ -103,6 +103,15 @@
     <None Include="res\MSIGA.ico">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="res\icon1.ico">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="C:\Users\chjo7_hns3pqr\OneDrive\사진\Sketchpad.ico">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\Sketchpad.ico">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MSIGA.h">
