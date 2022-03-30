@@ -172,7 +172,7 @@ void CRADARANLAPPDoc::Dump(CDumpContext& dc) const
 // CRADARANLAPPDoc ¸í·É
 void CRADARANLAPPDoc::OnFileOpen()
 {
-	int i;
+	unsigned int i;
 	float fTheta, fErr;
 	STR_LOBDATA stLOBData;
 	SRxLOBData *pLOBData;
@@ -482,9 +482,9 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, SEQ_NUM, PDWID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY SEQ_NUM desc" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY OP_INIT_ID desc, LOBID desc" );
 
 	theRS.Open( m_szSQLString );
 	while (!theRS.IsEof()) {
@@ -492,8 +492,8 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
 
-		theRS.GetFieldValue(index++, (int *) & pLOBData->uiSeqNum );
-        theRS.GetFieldValue(index++, (int *) & pLOBData->uiPDWID );
+		theRS.GetFieldValue(index++, (int *) & pLOBData->uiPDWID );
+        theRS.GetFieldValue(index++, (int *) & pLOBData->uiPLOBID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiLOBID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiABTID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiAETID );
