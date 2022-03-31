@@ -22,6 +22,8 @@
 #define MAX_PDW							(4096)
 #endif
 
+
+
 #ifndef _ENUM_DataType
 #define _ENUM_DataType
 typedef enum {
@@ -51,6 +53,16 @@ typedef enum {
 
 } ENUM_UnitType;
 #endif
+
+
+#ifndef _MAIN_GLOBALS_
+#ifndef _ENUNIT_TYPE
+#define _ENUNIT_TYPE
+//extern __declspec(dllimport) ENUM_UnitType g_enUnitType;
+#endif
+#endif
+
+
 
 #if TOOL==diab 
 #pragma pack( 1 )
@@ -149,32 +161,68 @@ typedef enum {
 #define _STR_COMMON_HEADER_
 // 아래는 공용 정보
 typedef struct {
-    UINT uiTotalPDW;
-    __time32_t tColTime;
-    UINT uiColTimeMs;
-    UINT _dummy;
+	UINT uiTotalPDW;
+	__time32_t tColTime;
+	UINT uiColTimeMs;
+	UINT uiPDWID;
+
+	void CheckColTime() {
+		if( tColTime < 0 ) {
+			tColTime = 0;
+		}
+
+		if( uiColTimeMs > 1000 ) {
+			uiColTimeMs = 0;
+		}
+	}
 
 } STR_COMMON_HEADER ;
+#endif
+
+#ifndef _EN_RADARCOLLECTORID_
+#define _EN_RADARCOLLECTORID_
+enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCOL_3, RADARCOL_MAX };
+
 #endif
 
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
 typedef struct {
-    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
-    unsigned int iIsStorePDW;
-    int iCollectorID;
-    ENUM_BANDWIDTH enBandWidth;
+	unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+	unsigned int iIsStorePDW;
+	EN_RADARCOLLECTORID enCollectorID;
+	ENUM_BANDWIDTH enBandWidth;
 
-    // 아래는 공용 정보
-    STR_COMMON_HEADER stCommon;
+	// 아래는 공용 정보
+	STR_COMMON_HEADER stCommon;
 
-    unsigned int GetTotalPDW() {
-        return stCommon.uiTotalPDW;
-    }
+	EN_RADARCOLLECTORID GetCollectorID() {
+		return enCollectorID;
+	}
 
-    void SetTotalPDW( unsigned uiTotalPDW ) {
-        stCommon.uiTotalPDW = uiTotalPDW;
-    }
+	void SetCollectorID( EN_RADARCOLLECTORID i_enCollectorID ) {
+		enCollectorID = i_enCollectorID;
+	}
+
+	unsigned int GetTotalPDW() {
+		return stCommon.uiTotalPDW;
+	}
+
+	unsigned int GetPDWID() {
+		return stCommon.uiPDWID;
+	}
+
+	void SetTotalPDW( unsigned int uiTotalPDW ) {
+		stCommon.uiTotalPDW = uiTotalPDW;
+	}
+
+	void SetIsStorePDW( unsigned int isStorePDW ) {
+		iIsStorePDW = isStorePDW;
+	}
+
+	void CheckColTime() {
+		stCommon.CheckColTime();
+	}
 
 } STR_ELINT_HEADER ;
 #endif
@@ -182,41 +230,63 @@ typedef struct {
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
-    unsigned int uiBoardID;
-    unsigned int iBank;
-    unsigned int uiBand;                // 주파수 대역
-    unsigned int iIsStorePDW;
+	unsigned int uiBoardID;
+	unsigned int iBank;
+	unsigned int uiBand;                // 주파수 대역
+	unsigned int iIsStorePDW;
 
-    // 아래는 공용 정보
-    STR_COMMON_HEADER stCommon;
+	// 아래는 공용 정보
+	STR_COMMON_HEADER stCommon;
 
-    unsigned int GetTotalPDW() {
-        return stCommon.uiTotalPDW;
-    }
+	unsigned int GetTotalPDW() {
+		return stCommon.uiTotalPDW;
+	}
 
-    void SetTotalPDW( unsigned uiTotalPDW ) {
-        stCommon.uiTotalPDW = uiTotalPDW;
-    }
+	unsigned int GetPDWID() {
+		return stCommon.uiPDWID;
+	}
+
+	void SetTotalPDW( unsigned int uiTotalPDW ) {
+		stCommon.uiTotalPDW = uiTotalPDW;
+	}
+
+	void SetIsStorePDW( unsigned int isStorePDW ) {
+		iIsStorePDW = isStorePDW;
+	}
+
+	void CheckColTime() {
+		stCommon.CheckColTime();
+
+	}
 
 } POCKETSONATA_HEADER ;
 #endif
 
+
 #ifndef _SONATA_HEADER_
 #define _SONATA_HEADER_
 typedef struct {
-    unsigned int uiBand;
-    unsigned int iIsStorePDW;
+	unsigned int uiBand;
+	unsigned int iIsStorePDW;
 
-    // 아래는 공용 정보
-    STR_COMMON_HEADER stCommon;
+	// 아래는 공용 정보
+	STR_COMMON_HEADER stCommon;
 
-    unsigned int GetTotalPDW() {
-        return stCommon.uiTotalPDW;
-    }
+	unsigned int GetTotalPDW() {
+		return stCommon.uiTotalPDW;
+	}
 
-    void SetTotalPDW( unsigned uiTotalPDW ) {
-        stCommon.uiTotalPDW = uiTotalPDW;
-    }
+	unsigned int GetPDWID() {
+		return stCommon.uiPDWID;
+	}
+
+	void SetTotalPDW( unsigned int uiTotalPDW ) {
+		stCommon.uiTotalPDW = uiTotalPDW;
+	}
+
+	void SetIsStorePDW( unsigned int isStorePDW ) {
+		iIsStorePDW = isStorePDW;
+	}
 
 } SONATA_HEADER ;
 #endif
@@ -224,33 +294,88 @@ typedef struct {
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
 typedef union {
-        STR_ELINT_HEADER el;
+	STR_ELINT_HEADER el;
 
-        POCKETSONATA_HEADER ps;
+	POCKETSONATA_HEADER ps;
 
-        SONATA_HEADER so;
+	SONATA_HEADER so;
 
-    unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
-        unsigned int uiTotalPDW;
+	unsigned char *GetTaskID( ENUM_UnitType enUnitType ) {
+		unsigned char *pTaskID;
 
-        switch( enUnitType ) {
-            case en_ZPOCKETSONATA :
-                uiTotalPDW = ps.stCommon.uiTotalPDW;
-                break;
+		switch( enUnitType ) {
+		case en_ZPOCKETSONATA :
+			pTaskID = (unsigned char *) NULL;
+			break;
 
-            case en_ELINT :
-            case en_XBAND :
-                uiTotalPDW = el.stCommon.uiTotalPDW;
-                break;
+		case en_ELINT :
+		case en_XBAND :
+			pTaskID = & el.aucTaskID[0];
+			break;
 
-            case en_SONATA :
-                uiTotalPDW = so.stCommon.uiTotalPDW;
-                break;
+		case en_SONATA :
+			pTaskID = (unsigned char *) NULL;
+			break;
 
-        }
-        return uiTotalPDW;
+		default:
+			pTaskID = NULL;
+			break;
 
-    }
+		}
+		return pTaskID;
+
+	}
+
+	unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
+		unsigned int uiTotalPDW;
+
+		switch( enUnitType ) {
+		case en_ZPOCKETSONATA :
+			uiTotalPDW = ps.stCommon.uiTotalPDW;
+			break;
+
+		case en_ELINT :
+		case en_XBAND :
+			uiTotalPDW = el.stCommon.uiTotalPDW;
+			break;
+
+		case en_SONATA :
+			uiTotalPDW = so.stCommon.uiTotalPDW;
+			break;
+
+		default:
+			uiTotalPDW = 0;
+			break;
+
+		}
+		return uiTotalPDW;
+
+	}
+
+	int GetBoardID( ENUM_UnitType enUnitType ) {
+		int uiBoardID;
+
+		switch( enUnitType ) {
+		case en_ZPOCKETSONATA :
+			uiBoardID = ps.uiBoardID;
+			break;
+
+		case en_ELINT :
+		case en_XBAND :
+			uiBoardID = -1;
+			break;
+
+		case en_SONATA :
+			uiBoardID = -1;
+			break;
+
+		default:
+			uiBoardID = -1;
+			break;
+
+		}
+		return uiBoardID;
+	}
 
 } UNION_HEADER;
 #endif
@@ -262,102 +387,105 @@ struct STR_PDWDATA {
 
     _PDW *pstPDW;
 
-    unsigned int GetHeader() {
-        unsigned int uiHeader;
-
-#ifdef _POCKETSONATA_
-        uiHeader = sizeof( POCKETSONATA_HEADER );
-#elif defined(_ELINT_) || defined(_XBAND_)
-        uiHeader = sizeof( STR_ELINT_HEADER );
-#else
-        uiHeader = sizeof( SONATA_HEADER );
-#endif
-        return uiHeader;
-
-    }
-
+    /**
+     * @brief     GetTotalPDW
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     unsigned int GetTotalPDW() {
         unsigned int uiTotalPDW;
 
 #ifdef _POCKETSONATA_
-        uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+            uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+        
 #elif defined(_ELINT_) || defined(_XBAND_)
-        uiTotalPDW = x.el.stCommon.uiTotalPDW;
+            uiTotalPDW = x.el.stCommon.uiTotalPDW;
+
 #else
-        uiTotalPDW = x.so.stCommon.uiTotalPDW;
+            uiTotalPDW = x.so.stCommon.uiTotalPDW;
+
 #endif
+
         return uiTotalPDW;
 
     }
 
-    void SetTotalPDW( unsigned int uiTotalPDW ) {
+	void SetTotalPDW( unsigned int uiTotalPDW ) {
 #ifdef _POCKETSONATA_
-        x.ps.stCommon.uiTotalPDW = uiTotalPDW;
+		x.ps.stCommon.uiTotalPDW = uiTotalPDW;
+
 #elif defined(_ELINT_) || defined(_XBAND_)
-        x.el.stCommon.uiTotalPDW = uiTotalPDW;;
+		x.el.stCommon.uiTotalPDW = uiTotalPDW;
+
 #else
-        x.so.stCommon.uiTotalPDW = uiTotalPDW;;
+		x.so.stCommon.uiTotalPDW = uiTotalPDW;
+
 #endif
-        return;
 
-    }
+		return;
 
+	}
+
+    /**
+     * @brief     SetColTime
+     * @param     __time32_t tColTime
+     * @param     UINT uiColTimeMs
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
 
 #ifdef _POCKETSONATA_
-        x.ps.stCommon.tColTime = tColTime;
-        x.ps.stCommon.uiColTimeMs = uiColTimeMs;
+		x.ps.stCommon.tColTime = tColTime;
+		x.ps.stCommon.uiColTimeMs = uiColTimeMs;
+
 #elif defined(_ELINT_) || defined(_XBAND_)
-        x.el.stCommon.tColTime = tColTime;
-        x.el.stCommon.uiColTimeMs = uiColTimeMs;
+		x.el.stCommon.tColTime = tColTime;
+		x.el.stCommon.uiColTimeMs = uiColTimeMs;
 #else
-        x.so.stCommon.tColTime = tColTime;
-        x.so.stCommon.uiColTimeMs = uiColTimeMs;
+		x.so.stCommon.tColTime = tColTime;
+		x.so.stCommon.uiColTimeMs = uiColTimeMs;
 #endif
+
         return;
 
     }
 
+    /**
+     * @brief     GetColTime
+     * @return    __time32_t
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-03-03, 13:48
+     * @warning
+     */
     __time32_t GetColTime() {
         __time32_t retTime;
 
 #ifdef _POCKETSONATA_
-        retTime = x.ps.stCommon.tColTime;
+		retTime = x.ps.stCommon.tColTime;
+
 #elif defined(_ELINT_) || defined(_XBAND_)
         retTime = x.el.stCommon.tColTime;
+
 #else
         retTime = x.so.stCommon.tColTime;
+
 #endif
+
         return retTime;
 
     }
 
-    int GetStorePDW() {
-        int iStorePDW;
-
-#ifdef _POCKETSONATA_
-        iStorePDW = x.ps.iIsStorePDW;
-#elif defined(_ELINT_) || defined(_XBAND_)
-        iStorePDW = x.el.iIsStorePDW;
-#else
-        iStorePDW = x.so.iIsStorePDW;
-#endif
-        return iStorePDW;
-    }
-
-    ENUM_BANDWIDTH GetBandWidth()
-    {
-        ENUM_BANDWIDTH enBandwidth;
-
-#ifdef _POCKETSONATA_
-        enBandwidth = enUnknown_BW;
-#elif defined(_ELINT_) || defined(_XBAND_)
-        enBandwidth = x.el.enBandWidth;
-#else
-        enBandwidth = enUnknown_BW;
-#endif
-        return enBandwidth;
-    }
 
 }  ;
 #endif

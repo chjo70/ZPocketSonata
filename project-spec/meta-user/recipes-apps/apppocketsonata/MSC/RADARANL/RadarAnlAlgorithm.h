@@ -101,19 +101,15 @@ struct SRxABTData { // 레이더 분석
 	int iRadarModePriority;
 	int iRadarPriority;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
 	int iPolarization;
 
 #endif
-
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
-
 
 	float fDOAMean;                                 // [0.1도]
 	float fDOAMax;
 	float fDOAMin;
 	float fDOADeviation;				// [0.1도]
-#endif
 
 	int iFreqType;
 	int iFreqPatternType;
@@ -152,7 +148,7 @@ struct SRxABTData { // 레이더 분석
 	float fPAMin;
 	float fPADeviation;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
 	int iScanType;
 	float fMeanScanPeriod;			// [usec]
 	float fMaxScanPeriod;			// [usec]
@@ -180,7 +176,7 @@ struct SRxABTData { // 레이더 분석
 	int iRadarModeIndex;
 	int iThreatIndex;
 
-#ifndef _XBAND_
+#if defined(_POCKETSONATA_) || defined(_ELINT_)
 	int iIsManualInput;
 
 	__time32_t tiFinalAlarmTime;

@@ -201,7 +201,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
         memcpy( m_szTaskID, pPDWData->x.el.aucTaskID, sizeof(m_szTaskID) );
         
-        m_enCollectorID = ( EN_RADARCOLLECTORID ) pPDWData->x.el.iCollectorID;
+        m_enCollectorID = pPDWData->x.el.GetCollectorID();
 #elif _POCKETSONATA_
         m_enBandWidth = en5MHZ_BW;
 
@@ -278,7 +278,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_CoPdw ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.iCollectorID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->x.el.aucTaskID, pPDWData->x.el.GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
 #elif defined(_POCKETSONATA_)
             printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
             Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
@@ -346,8 +346,8 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
         bRet = false;
     }
 
-    if( !(pPDWData->x.el.iCollectorID >= RADARCOL_1 && pPDWData->x.el.iCollectorID <= RADARCOL_3) ) {
-        Log( enError, "수집소 ID[%d]가 잘못됐습니다." , pPDWData->x.el.iCollectorID );
+    if( !(pPDWData->x.el.GetCollectorID() >= RADARCOL_1 && pPDWData->x.el.GetCollectorID() <= RADARCOL_3) ) {
+        Log( enError, "수집소 ID[%d]가 잘못됐습니다." , pPDWData->x.el.GetCollectorID() );
         bRet = false;
     }
 
@@ -718,7 +718,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID )
 
 #elif defined(_XBAND_)
         //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-	    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
+	    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.GetCollectorID(), pPDWData->x.el.aucTaskID );
 
 #elif _POCKETSONATA_
         sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
@@ -736,7 +736,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID )
             strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
 
 #if defined(_ELINT_) || defined(_XBAND_)
-            sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.iCollectorID, buffer, m_iPDWID, iPLOBID, PDW_EXT );
+            sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.GetCollectorID(), buffer, m_iPDWID, iPLOBID, PDW_EXT );
 
 #elif _POCKETSONATA_
 		    sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, m_iPDWID, iPLOBID, PDW_TYPE, MIDAS_EXT );

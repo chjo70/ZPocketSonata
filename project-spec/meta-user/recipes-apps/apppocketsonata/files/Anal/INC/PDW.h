@@ -27,10 +27,14 @@
 
 #ifdef _MAIN_GLOBALS_
 // 장치 타입으로 이 값을 확인해서 장치에 맞게 실행하도록 한다.
-ENUM_UnitType g_enUnitType;
+__declspec(dllexport) ENUM_UnitType g_enUnitType;
 
 #else
-extern ENUM_UnitType g_enUnitType;
+
+#ifndef _ENUNIT_TYPE
+#define _ENUNIT_TYPE
+extern __declspec(dllexport) ENUM_UnitType g_enUnitType;
+#endif
 
 #endif
 
@@ -629,15 +633,19 @@ typedef struct {
 typedef struct {
     unsigned char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int iIsStorePDW;
-    EN_RADARCOLLECTORID iCollectorID;
+    EN_RADARCOLLECTORID enCollectorID;
     ENUM_BANDWIDTH enBandWidth;
 
     // 아래는 공용 정보
     STR_COMMON_HEADER stCommon;
 
-    int GetCollectorID() {
-        return iCollectorID;
+    EN_RADARCOLLECTORID GetCollectorID() {
+        return enCollectorID;
     }
+
+	void SetCollectorID( EN_RADARCOLLECTORID i_enCollectorID ) {
+		enCollectorID = i_enCollectorID;
+	}
 
     unsigned int GetTotalPDW() {
         return stCommon.uiTotalPDW;
@@ -836,13 +844,13 @@ struct STR_PDWDATA {
         unsigned int uiHeader;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        uiHeader = sizeof( POCKETSONATA_HEADER );
+			uiHeader = sizeof( POCKETSONATA_HEADER );
         }
         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        uiHeader = sizeof( STR_ELINT_HEADER );
+			uiHeader = sizeof( STR_ELINT_HEADER );
         }
         else {
-        uiHeader = sizeof( SONATA_HEADER );
+			uiHeader = sizeof( SONATA_HEADER );
         }
 
         return uiHeader;

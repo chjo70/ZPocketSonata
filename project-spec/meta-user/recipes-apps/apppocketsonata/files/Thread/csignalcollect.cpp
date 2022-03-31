@@ -293,7 +293,7 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     // memset( pPDWData->x.el.aucTaskID, 0, sizeof(char)*LENGTH_OF_TASK_ID );
     strcpy_s( (char *) pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA" );
     pPDWData->x.el.iIsStorePDW = 1;
-    pPDWData->x.el.iCollectorID = RADARCOL_1;
+    pPDWData->x.el.enCollectorID = RADARCOL_1;
     pPDWData->x.el.enBandWidth = en5MHZ_BW;
 #else
 

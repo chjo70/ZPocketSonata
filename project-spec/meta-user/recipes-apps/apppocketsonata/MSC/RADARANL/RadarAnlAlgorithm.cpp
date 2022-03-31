@@ -11,11 +11,11 @@
 #include "../../files/Anal/SigAnal/SysPara.h"
 #include "../../files/Anal/NewSigAnal/NewSigAnal.h"
 
-#include "RadarAnlAlgorithm.h"
-
 #include "../../files/Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
 #include "../../files/Include/globals.h"
+
+#include "RadarAnlAlgorithm.h"
 
 
 CELEmitterMergeMngr *gpEmitterMergeMngr;
