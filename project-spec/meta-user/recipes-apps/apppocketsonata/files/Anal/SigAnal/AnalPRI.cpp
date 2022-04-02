@@ -2051,6 +2051,8 @@ BOOL CAnalPRI::CheckSawPattern( int *pSawPatternType )
 
     int ratio;
 
+    *pSawPatternType = UNK;
+
     _EQUALS4( n_zero_crossing, co_dec, co_inc, 0 );
 
     p1PrimeData = & m_p1PrimeData[1];

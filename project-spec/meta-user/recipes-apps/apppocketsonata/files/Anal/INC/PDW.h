@@ -410,7 +410,7 @@ typedef enum {
     en5MHZ_BW=0,
     en50MHZ_BW,
 
-    enUnknown_BW=-1,
+    enUnknown_BW=2,
 
 } ENUM_BANDWIDTH ;
 #endif
@@ -1097,13 +1097,13 @@ struct STR_PDWDATA {
         ENUM_BANDWIDTH enBandwidth;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        enBandwidth = enUnknown_BW;
+            enBandwidth = enUnknown_BW;
         }
         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        enBandwidth = x.el.enBandWidth;
+            enBandwidth = x.el.enBandWidth;
         }
         else {
-        enBandwidth = enUnknown_BW;
+            enBandwidth = enUnknown_BW;
         }
 
         return enBandwidth;

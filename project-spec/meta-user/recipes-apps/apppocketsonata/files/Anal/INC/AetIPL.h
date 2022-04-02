@@ -31,6 +31,8 @@
 #include "../EmitterMerge/ELMsgDefn.h"
 #endif
 
+#include "../EmitterMerge/ELMsgDefn.h"
+
 // #include "Structs.h"
 
 //#define   Unknown   0
@@ -360,7 +362,7 @@ enum SCAN_STAT
 // 기본 AET 구조
 //
 
-#define     _spMaxSwtLev            (16)            // MAX_FREQ_PRI_STEP // 기존 소나타는 16 개임.
+//#define     _spMaxSwtLev            (16)            // MAX_FREQ_PRI_STEP // 기존 소나타는 16 개임.
 #define     _spMaxCoSysAmbi         (5)				// IPL의 Ambiguity 개수
 
 #define		_spMaxAoaQueue			(10)
@@ -447,7 +449,7 @@ struct STR_FRQ {
   int max;
   int patType;
   int swtLev;
-  int swtVal[ _spMaxSwtLev ];
+  int swtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
   int patPrd;
 }  ;
 
@@ -461,7 +463,7 @@ struct STR_PRI {
   int patType;
   float jtrPer;
   int swtLev;
-  _TOA swtVal[ _spMaxSwtLev ];
+  _TOA swtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
   int patPrd;
 } ;
 
@@ -955,8 +957,8 @@ struct IPL_FRQ {
   UINT bw;
   UINT patType;
   int swtLev;
-  int swtValLow[ _spMaxSwtLev ];
-  int swtValHgh[ _spMaxSwtLev ];
+  int swtValLow[ MAX_FREQ_PRI_STEP ];
+  int swtValHgh[ MAX_FREQ_PRI_STEP ];
   UINT ppLow;
   UINT ppHgh;
 } ;
@@ -972,8 +974,8 @@ struct IPL_PRI {
   UINT patType;
   UINT jtrPer;
   int swtLev;
-  int swtValLow[ _spMaxSwtLev ];
-  int swtValHgh[ _spMaxSwtLev ];
+  int swtValLow[ MAX_FREQ_PRI_STEP ];
+  int swtValHgh[ MAX_FREQ_PRI_STEP ];
   UINT ppLow;
   UINT ppHgh;
 } ;

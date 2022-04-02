@@ -93,17 +93,13 @@ CMatrix::CMatrix(const CMatrix& a)
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 17:12:29
 	*/
-	if( p == NULL ) {
-		
-    }
-    else {
-	    for(unsigned int r = 0; r < uia_rows ; r++ ) {
-		    p[r] = new double[uia_cols];
+	for(unsigned int r = 0; r < uia_rows ; r++ ) {
+		p[r] = new double[uia_cols];
 
-		    /*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
-				    \author 조철희 (churlhee.jo@lignex1.com)
-				    \date 	2015-10-5 17:14:53
-		    */
+		/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
+				\author 조철희 (churlhee.jo@lignex1.com)
+				\date 	2015-10-5 17:14:53
+		*/
 // 		    if( p[r] == NULL ) {
 // 			    for( int i=0 ; i < r ; ++ i ) {
 // 				    if( p[r] != NULL ) delete p[r];
@@ -112,13 +108,12 @@ CMatrix::CMatrix(const CMatrix& a)
 // 			    return;
 // 		    }
 
-		    // copy the values from the CMatrix a
-		    for (unsigned int c = 0; c < uia_cols ; c++) {
-                if( a.p != NULL && a.p[r] != NULL ) {
-			        p[r][c] = a.p[r][c];
-                }
-		    }
-	    }
+		// copy the values from the CMatrix a
+		for (unsigned int c = 0; c < uia_cols ; c++) {
+            if( a.p != NULL && a.p[r] != NULL ) {
+			    p[r][c] = a.p[r][c];
+            }
+		}
     }
 }
 
@@ -494,17 +489,22 @@ CMatrix CMatrix::Minor(const unsigned int row, const unsigned int col) const
 * and for i=2 the function returns the number of columns
 * else the function returns 0
 */
-int CMatrix::Size(const int i) const
+unsigned int CMatrix::Size(const int i) const
 {
+    unsigned int uiRet=0;
+
 	if (i == 1)
 	{
-		return uiRows;
+		uiRet = uiRows;
 	}
 	else if (i == 2)
 	{
-		return uiCols;
+		uiRet = uiCols;
 	}
-	return 0;
+    else {
+    }
+
+	return uiRet;
 }
 
 // returns the number of rows

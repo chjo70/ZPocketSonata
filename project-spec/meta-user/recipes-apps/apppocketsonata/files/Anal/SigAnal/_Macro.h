@@ -73,6 +73,8 @@ enum ENUM_BoardID {
 #define ELSE                    else { \
                                 }
 
+#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
 
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2
@@ -408,15 +410,13 @@ float _spAOAres;
 float _spTOAres;
 float _spPWres;
 
-float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
-
 #if defined(_ELINT_)
-float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+float _frqRes[enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 #elif defined(_XBAND_)
-float _frqRes[en50MHZ_BW+1] = { (float) 0.001, (float) 0.001 } ;
+float _frqRes[enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
 #else
-float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 65.104167 } ;
+float _frqRes[enUnknown_BW+1] = { (float) 0.117, (float) 65.104167, (float) 0.0 } ;
 #endif
 
 
@@ -431,8 +431,8 @@ extern float _spAOAres;
 extern float _spTOAres;
 extern float _spPWres;
 
-extern float _toaRes[en50MHZ_BW+1];
-extern float _frqRes[2];
+//extern float _toaRes[enUnknown_BW+1];
+extern float _frqRes[enUnknown_BW+1];
 
 
 #endif

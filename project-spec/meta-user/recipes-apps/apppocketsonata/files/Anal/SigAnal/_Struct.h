@@ -534,7 +534,7 @@ struct STR_DWELL_LEVEL {
 #define DFD_FREQ_OFFSET		(1900)
 
 #if defined(_ELINT_)
-    char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
+    //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
     char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
@@ -565,7 +565,7 @@ struct STR_DWELL_LEVEL {
 
 #elif defined(_XBAND_)
 	// PDW
-	char g_szPulseType[MAX_STAT][3] = { "CW" , "NP" };
+	//char g_szPulseType[MAX_STAT][3] = { "CW" , "NP" };
 
 	// LOB & ABT & AET
 	char g_szAetSignalType[7][3] = { "CW" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
@@ -599,7 +599,7 @@ struct STR_DWELL_LEVEL {
 #elif defined(_POCKETSONATA_)
 
 #define PDW_FREQ_RES        (1.953125)
-    char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
+    //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
     char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
@@ -670,7 +670,7 @@ extern float _spFreqMax;
 #ifndef _GRAPH_
 extern STR_SYS _sp;
 
-extern char g_szPulseType[MAX_STAT][3];
+//extern char g_szPulseType[MAX_STAT][3];
 
 extern char g_szAetFreqType[MAX_FRQTYPE][3];
 extern char g_szAetPriType[MAX_PRITYPE][3];

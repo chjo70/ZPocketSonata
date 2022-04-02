@@ -16,6 +16,9 @@
 #include "CInverseMethod.h"
 
 
+#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
+
 
 /**
  * @brief     지구의 위경도 및 방위각 관련 객체를 생성한다.
@@ -111,6 +114,7 @@ CInverseMethod::~CInverseMethod( )
  */
 bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, double lat2, double lon2 )	//#FA_Q_4020_T1
 {
+    bool bRet;
 
 	lat1 = lat1 * D2R;
 	lon1 = lon1 * D2R;
@@ -135,7 +139,7 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 		if ( ! ( sinSigma > 0 || sinSigma < 0 ) )
 		{	//DTEC_Else
 			m_dDistance = 0.0;
-			return true;
+            break;
 		}
 
 		cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
@@ -153,32 +157,38 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 	}
 	while (eps > 1e-12 && iterLimit > 0);
 
-	if (iterLimit == 0) { //DTEC_Else
-		return false; // formula failed to converge
-	}
+    if( IS_ZERO(m_dDistance) ) {
+        bRet = true;
+    }
+    else {
+	    if (iterLimit == 0) { //DTEC_Else
+		    bRet = false; // formula failed to converge
+	    }
+        else {
+	        double uSq = cosSqAlpha * (e->dMajorAxis * e->dMajorAxis - e->dMinorAxis * e->dMinorAxis) / (e->dMinorAxis * e->dMinorAxis);
+	        double A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+	        double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+	        double deltaSigma = B * sinSigma * ( cos2SigmaM + B / 4 * ( cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM ) - B / 6 * cos2SigmaM * ( -3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+	        double _s = e->dMinorAxis * A * (sigma - deltaSigma);
 
-	double uSq = cosSqAlpha * (e->dMajorAxis * e->dMajorAxis - e->dMinorAxis * e->dMinorAxis) / (e->dMinorAxis * e->dMinorAxis);
-	double A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
-	double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
-	double deltaSigma = B * sinSigma * ( cos2SigmaM + B / 4 * ( cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM ) - B / 6 * cos2SigmaM * ( -3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
-	double _s = e->dMinorAxis * A * (sigma - deltaSigma);
+	        double _fwdAz = atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda); //y,x
+	        double _revAz = atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
 
-	double _fwdAz = atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda); //y,x
-	double _revAz = atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
+	        if( _fwdAz < 0.0 ) { //DTEC_Else
+		        _fwdAz = _fwdAz + M_PI + M_PI;
+	        }
 
-	if( _fwdAz < 0.0 ) { //DTEC_Else
-		_fwdAz = _fwdAz + M_PI + M_PI;
-	}
+	        if( _revAz < 0.0 ) { //DTEC_Else
+		        _revAz = _revAz + M_PI + M_PI;
+	        }
 
-	if( _revAz < 0.0 ) { //DTEC_Else
-		_revAz = _revAz + M_PI + M_PI;
-	}
+	        m_dDistance =  _s;
+	        m_dFwdAz = _fwdAz;
+	        m_dRevAz = _revAz;
+        }
+    }
 
-	m_dDistance =  _s;
-	m_dFwdAz = _fwdAz;
-	m_dRevAz = _revAz;
-
-	return true;
+	return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////////

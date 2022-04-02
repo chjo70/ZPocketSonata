@@ -1353,8 +1353,9 @@ GO
 
 /* RADARMODE */
 CREATE TABLE [dbo].[RADARMODE] (
-	[RADAR_MODE_INDEX] [int] NOT NULL,  /* RADAR_MODE_INDEX */
-	[RADAR_MODE_NAME] [varchar](10) COLLATE Korean_Wansung_CI_AS NOT NULL,  /* RADAR_MODE_NAME */
+	[RADARMODE_INDEX] [int] NOT NULL,  /* RADARMODE_INDEX */
+	[RADARMODE_NAME] [varchar](10) COLLATE Korean_Wansung_CI_AS NOT NULL,  /* RADARMODE_NAME */
+	[MODECODE] [VARCHAR](20),  /* MODECODE */
 	[DATE_CREATED] [datetime],  /* DATE_CREATED */
 	[DATE_LAST_UPDATED] [datetime],  /* DATE_LAST_UPDATED */
 	[DATE_FIRST_SEEN] [datetime],  /* DATE_FIRST_SEEN */
@@ -1377,7 +1378,8 @@ CREATE TABLE [dbo].[RADARMODE] (
 	[PRI_PATTERN_PERIOD_MAX] [float],  /* PRI_PATTERN_PERIOD_MAX */
 	[PW_TYPICAL_MIN] [float],  /* PW_TYPICAL_MIN */
 	[PW_TYPICAL_MAX] [float],  /* PW_TYPICAL_MAX */
-	[VALIDATION] [tinyint] /* VALIDATION */
+	[VALIDATION] [tinyint],  /* VALIDATION */
+	[PRIORITY] [INT] DEFAULT 0 /* PRIORITY */
 )
 	ON [PRIMARY]
 GO
@@ -1387,8 +1389,7 @@ ALTER TABLE [dbo].[RADARMODE]
 	ADD
 		CONSTRAINT [PK__RADARMOD__5D8D6E820428B272]
 		PRIMARY KEY CLUSTERED (
-			[RADAR_MODE_INDEX] ASC, 
-			[RADAR_MODE_NAME] ASC
+			[RADARMODE_INDEX] ASC
 		)
 		WITH (
 			PAD_INDEX = OFF, 
@@ -1407,20 +1408,28 @@ EXEC sp_addextendedproperty
 	@level1type=N'TABLE', @level1name=N'RADARMODE'
 GO
 
-/* RADAR_MODE_INDEX */
+/* RADARMODE_INDEX */
 EXEC sp_addextendedproperty 
-	@name=N'MS_Description', @value=N'RADAR_MODE_INDEX', 
+	@name=N'MS_Description', @value=N'레이더 모드 입니다.', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'RADARMODE', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_MODE_INDEX'
+	@level2type=N'COLUMN', @level2name=N'RADARMODE_INDEX'
 GO
 
-/* RADAR_MODE_NAME */
+/* RADARMODE_NAME */
 EXEC sp_addextendedproperty 
-	@name=N'MS_Description', @value=N'RADAR_MODE_NAME', 
+	@name=N'MS_Description', @value=N'RADARMODE_NAME', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'RADARMODE', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_MODE_NAME'
+	@level2type=N'COLUMN', @level2name=N'RADARMODE_NAME'
+GO
+
+/* MODECODE */
+EXEC sp_addextendedproperty 
+	@name=N'MS_Description', @value=N'MODECODE', 
+	@level0type=N'SCHEMA', @level0name=N'dbo', 
+	@level1type=N'TABLE', @level1name=N'RADARMODE', 
+	@level2type=N'COLUMN', @level2name=N'MODECODE'
 GO
 
 /* DATE_CREATED */
@@ -1607,6 +1616,14 @@ EXEC sp_addextendedproperty
 	@level2type=N'COLUMN', @level2name=N'VALIDATION'
 GO
 
+/* PRIORITY */
+EXEC sp_addextendedproperty 
+	@name=N'MS_Description', @value=N'PRIORITY', 
+	@level0type=N'SCHEMA', @level0name=N'dbo', 
+	@level1type=N'TABLE', @level1name=N'RADARMODE', 
+	@level2type=N'COLUMN', @level2name=N'PRIORITY'
+GO
+
 /* PK__RADARMOD__5D8D6E820428B272 */
 EXEC sp_addextendedproperty 
 	@name=N'MS_Description', @value=N'PK__RADARMOD__5D8D6E820428B272', 
@@ -1625,7 +1642,7 @@ GO
 
 /* RADARMODE_PRI_SEQUENCE */
 CREATE TABLE [dbo].[RADARMODE_PRI_SEQUENCE] (
-	[RADAR_MODE_INDEX] [int] NOT NULL,  /* RADAR_MODE_INDEX */
+	[RADARMODE_INDEX] [int] NOT NULL,  /* RADARMODE_INDEX */
 	[PRI_SEQ_ID] [int] NOT NULL,  /* PRI_SEQ_ID */
 	[PRI_SEQ_NAME] [varchar](20) COLLATE Korean_Wansung_CI_AS,  /* PRI_SEQ_NAME */
 	[PRI_MIN] [float],  /* PRI_MIN */
@@ -1639,7 +1656,7 @@ ALTER TABLE [dbo].[RADARMODE_PRI_SEQUENCE]
 	ADD
 		CONSTRAINT [PK__RADARMOD__F56ABC074ADECD96]
 		PRIMARY KEY CLUSTERED (
-			[RADAR_MODE_INDEX] ASC, 
+			[RADARMODE_INDEX] ASC, 
 			[PRI_SEQ_ID] ASC
 		)
 		WITH (
@@ -1659,12 +1676,12 @@ EXEC sp_addextendedproperty
 	@level1type=N'TABLE', @level1name=N'RADARMODE_PRI_SEQUENCE'
 GO
 
-/* RADAR_MODE_INDEX */
+/* RADARMODE_INDEX */
 EXEC sp_addextendedproperty 
-	@name=N'MS_Description', @value=N'RADAR_MODE_INDEX', 
+	@name=N'MS_Description', @value=N'RADARMODE_INDEX', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'RADARMODE_PRI_SEQUENCE', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_MODE_INDEX'
+	@level2type=N'COLUMN', @level2name=N'RADARMODE_INDEX'
 GO
 
 /* PRI_SEQ_ID */
@@ -1717,7 +1734,7 @@ GO
 
 /* RADARMODE_RF_SEQUENCE */
 CREATE TABLE [dbo].[RADARMODE_RF_SEQUENCE] (
-	[RADAR_MODE_INDEX] [int] NOT NULL,  /* RADAR_MODE_INDEX */
+	[RADARMODE_INDEX] [int] NOT NULL,  /* RADARMODE_INDEX */
 	[RF_SEQ_ID] [int] NOT NULL,  /* RF_SEQ_ID */
 	[RF_SEQ_NAME] [varchar](20) COLLATE Korean_Wansung_CI_AS,  /* RF_SEQ_NAME */
 	[RF_MIN] [float],  /* RF_MIN */
@@ -1731,7 +1748,7 @@ ALTER TABLE [dbo].[RADARMODE_RF_SEQUENCE]
 	ADD
 		CONSTRAINT [PK__RADARMOD__F4541D42173876EA]
 		PRIMARY KEY CLUSTERED (
-			[RADAR_MODE_INDEX] ASC, 
+			[RADARMODE_INDEX] ASC, 
 			[RF_SEQ_ID] ASC
 		)
 		WITH (
@@ -1751,12 +1768,12 @@ EXEC sp_addextendedproperty
 	@level1type=N'TABLE', @level1name=N'RADARMODE_RF_SEQUENCE'
 GO
 
-/* RADAR_MODE_INDEX */
+/* RADARMODE_INDEX */
 EXEC sp_addextendedproperty 
-	@name=N'MS_Description', @value=N'RADAR_MODE_INDEX', 
+	@name=N'MS_Description', @value=N'RADARMODE_INDEX', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'RADARMODE_RF_SEQUENCE', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_MODE_INDEX'
+	@level2type=N'COLUMN', @level2name=N'RADARMODE_INDEX'
 GO
 
 /* RF_SEQ_ID */
@@ -1810,7 +1827,7 @@ GO
 /* THREAT */
 CREATE TABLE [dbo].[THREAT] (
 	[THREAT_INDEX] [int] NOT NULL,  /* THREAT_INDEX */
-	[RADAR_MODE_NAME] [varchar](10) COLLATE Korean_Wansung_CI_AS NOT NULL,  /* RADAR_MODE_NAME */
+	[RADARMODE_NAME] [varchar](10) COLLATE Korean_Wansung_CI_AS NOT NULL,  /* RADARMODE_NAME */
 	[THREAT_NAME] [varchar](10) COLLATE Korean_Wansung_CI_AS,  /* THREAT_NAME */
 	[LATITUDE] [float],  /* LATITUDE */
 	[LONGITUDE] [float],  /* LONGITUDE */
@@ -1830,7 +1847,7 @@ ALTER TABLE [dbo].[THREAT]
 		CONSTRAINT [PK__THREAT__DD4AC47457A20A5B]
 		PRIMARY KEY CLUSTERED (
 			[THREAT_INDEX] ASC, 
-			[RADAR_MODE_NAME] ASC
+			[RADARMODE_NAME] ASC
 		)
 		WITH (
 			PAD_INDEX = OFF, 
@@ -1857,12 +1874,12 @@ EXEC sp_addextendedproperty
 	@level2type=N'COLUMN', @level2name=N'THREAT_INDEX'
 GO
 
-/* RADAR_MODE_NAME */
+/* RADARMODE_NAME */
 EXEC sp_addextendedproperty 
-	@name=N'MS_Description', @value=N'RADAR_MODE_NAME', 
+	@name=N'MS_Description', @value=N'RADARMODE_NAME', 
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'THREAT', 
-	@level2type=N'COLUMN', @level2name=N'RADAR_MODE_NAME'
+	@level2type=N'COLUMN', @level2name=N'RADARMODE_NAME'
 GO
 
 /* THREAT_NAME */
@@ -3102,6 +3119,34 @@ ALTER TABLE [dbo].[LOB_POSITION]
 		ON UPDATE NO ACTION
 GO
 
+/* RADARMODE -> RADARMODE_PRI_SEQUENCE */
+ALTER TABLE [dbo].[RADARMODE_PRI_SEQUENCE]
+	ADD
+		CONSTRAINT [FK_RADARMODE_TO_RADARMODE_PRI_SEQUENCE]
+		FOREIGN KEY (
+			[RADARMODE_INDEX]
+		)
+		REFERENCES [dbo].[RADARMODE] (
+			[RADARMODE_INDEX]
+		)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+GO
+
+/* RADARMODE -> RADARMODE_RF_SEQUENCE */
+ALTER TABLE [dbo].[RADARMODE_RF_SEQUENCE]
+	ADD
+		CONSTRAINT [FK_RADARMODE_TO_RADARMODE_RF_SEQUENCE]
+		FOREIGN KEY (
+			[RADARMODE_INDEX]
+		)
+		REFERENCES [dbo].[RADARMODE] (
+			[RADARMODE_INDEX]
+		)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+GO
+
 /* ABTDATA -> AETDATA */
 ALTER TABLE [dbo].[AETDATA]
 	ADD
@@ -3164,6 +3209,22 @@ EXEC sp_addextendedproperty
 	@level0type=N'SCHEMA', @level0name=N'dbo', 
 	@level1type=N'TABLE', @level1name=N'LOB_POSITION', 
 	@level2type=N'CONSTRAINT', @level2name=N'FK_LOBDATA_TO_LOB_POSITION'
+GO
+
+/* RADARMODE -> RADARMODE_PRI_SEQUENCE */
+EXEC sp_addextendedproperty 
+	@name=N'MS_Description', @value=N'RADARMODE -> RADARMODE_PRI_SEQUENCE', 
+	@level0type=N'SCHEMA', @level0name=N'dbo', 
+	@level1type=N'TABLE', @level1name=N'RADARMODE_PRI_SEQUENCE', 
+	@level2type=N'CONSTRAINT', @level2name=N'FK_RADARMODE_TO_RADARMODE_PRI_SEQUENCE'
+GO
+
+/* RADARMODE -> RADARMODE_RF_SEQUENCE */
+EXEC sp_addextendedproperty 
+	@name=N'MS_Description', @value=N'RADARMODE -> RADARMODE_RF_SEQUENCE', 
+	@level0type=N'SCHEMA', @level0name=N'dbo', 
+	@level1type=N'TABLE', @level1name=N'RADARMODE_RF_SEQUENCE', 
+	@level2type=N'CONSTRAINT', @level2name=N'FK_RADARMODE_TO_RADARMODE_RF_SEQUENCE'
 GO
 
 /* ABTDATA -> AETDATA */

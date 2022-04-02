@@ -473,6 +473,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
  */
 void UpdateCPUMode()
 {
+#if defined(_VXWORKS_) || defined(__linux__)
     int i = 1;
 
     g_enEndian = enUNKNOWN_ENDIAN;
@@ -487,6 +488,10 @@ void UpdateCPUMode()
     else {
 
     }
+#else
+    g_enEndian = enLITTLE_ENDIAN;
+
+#endif
 
 }
 

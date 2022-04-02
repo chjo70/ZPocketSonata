@@ -157,8 +157,8 @@ CELEmitterMergeMngr::~CELEmitterMergeMngr(void)
 #ifdef _SQLITE_
     delete m_pDatabase;
 
-#elif _MS_SQL_
-    m_theMyODBC.Close();
+#elif _MSSQL_
+    
 
 #endif
 
@@ -774,6 +774,7 @@ void CELEmitterMergeMngr::ManageABTs( bool bMerge )
                 UpdateMergedABTDB( false );
                 UpdateMergedLOBDB( false );
             }
+            ELSE
         }
     }
 
@@ -1931,7 +1932,7 @@ void CELEmitterMergeMngr::SelectUpdateAndDeleteABT( CELThreat *pMovedThreatABT, 
     bRet = IsSelectAET( pMovedAETData, pDestAETData );
 
     // 변경한 빔을 강제 삭제 처리하도록 한다.
-    if( bRet == true && false ) {
+    if( bRet == true ) {
         m_pMergeThreatAET = pMovedThreatAET;
         m_pMergeThreatABT = pMovedThreatABT;
 
@@ -2796,123 +2797,125 @@ void CELEmitterMergeMngr::IdentifyAET( SRxAETData *pAETData, SELAETDATA_EXT *pAE
  */
 bool CELEmitterMergeMngr::UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDataExt, bool bRunCluster, bool bRunPE, bool bGenNewEmitter )
 {
-    bool bEnable; //, bCheckBeamValidity;
+    bool bEnable=true; //, bCheckBeamValidity;
     int nIndex=pThreat->m_nIndex;
 
     m_pABTData = GetABTData( nIndex );
     m_pABTExtData = GetABTExtData( nIndex );
 
-    if( m_bScanProcess == false ) {
-        //////////////////////////////////////////////////////////////////////////
-        // 기본 정보 업데이트
-        ++ m_pABTData->uiCoLOB;
-        pLOBDataExt->aetAnal.uiCoLOB = (UINT) m_pABTData->uiCoLOB;
+    if( m_pABTData != NULL && m_pABTExtData != NULL ) {
+        if( m_bScanProcess == false ) {
+            //////////////////////////////////////////////////////////////////////////
+            // 기본 정보 업데이트
+            ++ m_pABTData->uiCoLOB;
+            pLOBDataExt->aetAnal.uiCoLOB = (UINT) m_pABTData->uiCoLOB;
 
-        /*! \todo   병합 비교할 때 같은 놈끼리 병합하기 떄문에 아래와 같은 업데이트가 불필요한데, 그냥 복사하는 것으로 함.
-                \author 조철희 (churlhee.jo@lignex1.com)
-                \date 	2016-03-11 10:55:16
-        */
-        UpdateSignalInfo( m_pABTData, m_pABTExtData );
+            /*! \todo   병합 비교할 때 같은 놈끼리 병합하기 떄문에 아래와 같은 업데이트가 불필요한데, 그냥 복사하는 것으로 함.
+                    \author 조철희 (churlhee.jo@lignex1.com)
+                    \date 	2016-03-11 10:55:16
+            */
+            UpdateSignalInfo( m_pABTData, m_pABTExtData );
 
-        UpdateSeenTime( m_pABTData, m_pABTExtData );
+            UpdateSeenTime( m_pABTData, m_pABTExtData );
 
-        // 방위 정보
-        UpdateDOAInfo( m_pABTData, m_pABTExtData );
+            // 방위 정보
+            UpdateDOAInfo( m_pABTData, m_pABTExtData );
 
-        // 펄스 정보
-        //UpdatePulseInfo( pABTData, pABTExtData );
+            // 펄스 정보
+            //UpdatePulseInfo( pABTData, pABTExtData );
 
-        // 주파수 정보
-        UpdateFreqInfo( m_pABTData, m_pABTExtData );
+            // 주파수 정보
+            UpdateFreqInfo( m_pABTData, m_pABTExtData );
 
-        // PRI 정보
-        UpdatePRIInfo( m_pABTData, m_pABTExtData );
+            // PRI 정보
+            UpdatePRIInfo( m_pABTData, m_pABTExtData );
 
-        // 펄스폭 정보
-        UpdatePWInfo( m_pABTData, m_pABTExtData );
+            // 펄스폭 정보
+            UpdatePWInfo( m_pABTData, m_pABTExtData );
 
-        // 신호세기 정보
-        UpdatePAInfo( m_pABTData, m_pABTExtData );
+            // 신호세기 정보
+            UpdatePAInfo( m_pABTData, m_pABTExtData );
 
-        // DB를 통한 분산, 표준편차, 평균 구하기
-        // CalStatisticsFromABT( pABTData );
+            // DB를 통한 분산, 표준편차, 평균 구하기
+            // CalStatisticsFromABT( pABTData );
 
-        // 스캔 정보
-        //UpdateScanInfo( pABTData, pABTExtData );
+            // 스캔 정보
+            //UpdateScanInfo( pABTData, pABTExtData );
 
-        // 인트라 정보
-        //UpdateIntraInfo( pABTData, pABTExtData );
+            // 인트라 정보
+            //UpdateIntraInfo( pABTData, pABTExtData );
 
-        // 위치 산출 정보
-        UpdatePEInfo( m_pABTData, m_pABTExtData, nIndex, false, bRunCluster, bRunPE );
+            // 위치 산출 정보
+            UpdatePEInfo( m_pABTData, m_pABTExtData, nIndex, false, bRunCluster, bRunPE );
 
-        // 빔 유효성 업데이트
-        //bCheckBeamValidity = ( bRunCluster || bRunPE );
-        bEnable = UpdateBeamValidity( m_pABTData, m_pABTExtData, nIndex, ( bRunCluster || bRunPE ) );
+            // 빔 유효성 업데이트
+            //bCheckBeamValidity = ( bRunCluster || bRunPE );
+            bEnable = UpdateBeamValidity( m_pABTData, m_pABTExtData, nIndex, ( bRunCluster || bRunPE ) );
 
-        // LOB 클러스터링,
-        if( bRunCluster == true ) {
-            ProcessTheLOBClustering( m_pABTData, m_pABTExtData );
+            // LOB 클러스터링,
+            if( bRunCluster == true ) {
+                ProcessTheLOBClustering( m_pABTData, m_pABTExtData );
+            }
+
+            // CED/EOB 식별 정보
+            IdentifyABT( m_pABTData, m_pABTExtData );
+
+            UpdateIDInfo( m_pABTData, m_pABTExtData );
+
+            //////////////////////////////////////////////////////////////////////////
+            // 추가 정보 업데이트
+            m_pABTData->uiTotalOfPDW += m_pLOBData->iNumOfPDW;
+            //pABTExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+
+            //pABTExtData->bIntraMop = ( pABTData->intraInfo.iTy1pe >= E_AET_MOP_PSK ? true : pABTExtData->bIntraMop );
+
+            //pABTExtData->iTaskType = m_pLOBData->iTaskType / 2;
+
+            m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
+
+            // 방사체간의 병합을 위해서 정보를 저장
+            m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
+            m_pABTExtData->fRadarLatitude = m_pLOBData->fLatitude;
+            m_pABTExtData->fRadarLongitude = m_pLOBData->fLongitude;
+
+    #if defined(_ELINT_) || defined(_XBAND_)
+            m_pABTExtData->uiSeqNum = m_nSeqNum;
+    #endif
+
+            m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
+            m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
         }
+        else {
+            UpdateSeenTime( m_pABTData, m_pABTExtData );
 
-        // CED/EOB 식별 정보
-        IdentifyABT( m_pABTData, m_pABTExtData );
+            // 방위 정보
+            UpdateDOAInfo( m_pABTData, m_pABTExtData );
 
-        UpdateIDInfo( m_pABTData, m_pABTExtData );
+            // 펄스폭 정보
+            UpdatePWInfo( m_pABTData, m_pABTExtData );
 
-        //////////////////////////////////////////////////////////////////////////
-        // 추가 정보 업데이트
-        m_pABTData->uiTotalOfPDW += m_pLOBData->iNumOfPDW;
-        //pABTExtData->nCoTotalIQ += m_pLOBData->iNumOfIQ;
+            // 신호세기 정보
+            UpdatePAInfo( m_pABTData, m_pABTExtData );
 
-        //pABTExtData->bIntraMop = ( pABTData->intraInfo.iTy1pe >= E_AET_MOP_PSK ? true : pABTExtData->bIntraMop );
+            // 스캔 정보
+            UpdateScanInfo( m_pABTData, m_pABTExtData );
 
-        //pABTExtData->iTaskType = m_pLOBData->iTaskType / 2;
+            // CED/EOB 식별 정보
+            IdentifyABT( m_pABTData, m_pABTExtData );
 
-        m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
+            UpdateIDInfo( m_pABTData, m_pABTExtData );
 
-        // 방사체간의 병합을 위해서 정보를 저장
-        m_pABTExtData->fLastAOA = m_pLOBData->fDOAMean;
-        m_pABTExtData->fRadarLatitude = m_pLOBData->fLatitude;
-        m_pABTExtData->fRadarLongitude = m_pLOBData->fLongitude;
+            m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
 
-#if defined(_ELINT_) || defined(_XBAND_)
-        m_pABTExtData->uiSeqNum = m_nSeqNum;
-#endif
+    #if defined(_ELINT_) || defined(_XBAND_)
+            m_pABTExtData->uiSeqNum = m_nSeqNum;
+    #endif
 
-        m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
-        m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
-    }
-    else {
-        UpdateSeenTime( m_pABTData, m_pABTExtData );
+            m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
+            m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
 
-        // 방위 정보
-        UpdateDOAInfo( m_pABTData, m_pABTExtData );
-
-        // 펄스폭 정보
-        UpdatePWInfo( m_pABTData, m_pABTExtData );
-
-        // 신호세기 정보
-        UpdatePAInfo( m_pABTData, m_pABTExtData );
-
-        // 스캔 정보
-        UpdateScanInfo( m_pABTData, m_pABTExtData );
-
-        // CED/EOB 식별 정보
-        IdentifyABT( m_pABTData, m_pABTExtData );
-
-        UpdateIDInfo( m_pABTData, m_pABTExtData );
-
-        m_pABTExtData->enBeamEmitterStat = UpdateEmitterStat( m_pABTExtData->enBeamEmitterStat, E_ES_UPDATE );
-
-#if defined(_ELINT_) || defined(_XBAND_)
-        m_pABTExtData->uiSeqNum = m_nSeqNum;
-#endif
-
-        m_pABTExtData->bCompFreq = m_ABTDataExt.aetAnal.bCompFreq;
-        m_pABTExtData->bCompPRI = m_ABTDataExt.aetAnal.bCompPRI;
-
-        bEnable = true;
+            bEnable = true;
+        }
     }
 
     //LogPrint("\n========================================== UpdateABT 시간 : %d ms", (int)((GetTickCount() - dwTime) / 1));
@@ -2944,6 +2947,7 @@ E_BEAM_EMITTER_STAT CELEmitterMergeMngr::UpdateEmitterStat( E_BEAM_EMITTER_STAT 
             enReturn = enUpdatedStat;
         }
     }
+    ELSE
 
     return enReturn;
 }
@@ -3716,22 +3720,19 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxAETData *pAETData, SELAETDATA_EXT *pA
             \author 조철희 (churlhee.jo@lignex1.com)
             \date 	2018-02-08 16:45:30
         */
-        if( fmaxMajor != _spZero ) {
-            if( pTheMajorABTThreat != NULL ) {
-                pABTData = GetABTData( pTheMajorABTThreat->m_nIndex );
+        if( IS_NOT_ZERO( fmaxMajor ) == true && pTheMajorABTThreat != NULL ) {
+            pABTData = GetABTData( pTheMajorABTThreat->m_nIndex );
 
-                // ST_PEA->RunPositionEstimation( & pAETData->peInfo, NULL, pVecLOB );
-                pAETData->iPEValid = pABTExtData->enValid;
-                pAETData->fLongitude = pABTData->fLongitude;
-                pAETData->fLatitude = pABTData->fLatitude;
-                //pAETData->peInfo.iAltidude = pABTData->peInfo.iAltidude;
-                pAETData->fCEP = pABTData->fCEP;
-                pAETData->fMajorAxis = pABTData->fMajorAxis;
-                pAETData->fMinorAxis = pABTData->fMinorAxis;
-                pAETData->fTheta = pABTData->fTheta;
-                pAETData->fDistanceErrorOfThreat = pABTData->fDistanceErrorOfThreat;
-            }
-
+            // ST_PEA->RunPositionEstimation( & pAETData->peInfo, NULL, pVecLOB );
+            pAETData->iPEValid = pABTExtData->enValid;
+            pAETData->fLongitude = pABTData->fLongitude;
+            pAETData->fLatitude = pABTData->fLatitude;
+            //pAETData->peInfo.iAltidude = pABTData->peInfo.iAltidude;
+            pAETData->fCEP = pABTData->fCEP;
+            pAETData->fMajorAxis = pABTData->fMajorAxis;
+            pAETData->fMinorAxis = pABTData->fMinorAxis;
+            pAETData->fTheta = pABTData->fTheta;
+            pAETData->fDistanceErrorOfThreat = pABTData->fDistanceErrorOfThreat;
         }
 
     }
@@ -3752,6 +3753,7 @@ void CELEmitterMergeMngr::UpdatePEInfo( SRxAETData *pAETData, SELAETDATA_EXT *pA
  */
 void CELEmitterMergeMngr::UpdateIDInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, CELThreat *pTheAETThreat )
 {
+#if 0
     //STR_CEDEOBID_INFO *pIDInfo;
     //UELMANUALVAL *pUELMANUALVAL;
 
@@ -3760,7 +3762,7 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxAETData *pAETData, SELAETDATA_EXT *pA
 
     // CASE 1 : 변경 무시 처리
     if( /* pSELEmitterEdited == NULL && */ pAETExtData->xMannualEdited.x.idInfo == (UINT) 1 ) {
-        return;
+        
     }
     else {
 // 		if( pSELEmitterEdited != NULL ) {
@@ -3802,6 +3804,10 @@ void CELEmitterMergeMngr::UpdateIDInfo( SRxAETData *pAETData, SELAETDATA_EXT *pA
 
         }
     }
+#else
+    IdentifyAET( pAETData, pAETExtData, pTheAETThreat );
+
+#endif
 
 }
 
@@ -10762,14 +10768,14 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
 		for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
 			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pLOBData->fFreqSeq[i] );
 		}
-		iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fFreqSeq[i] );   
+		sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fFreqSeq[i] );   
 	}
 	else {
         iIndex += sprintf( & m_pszSQLString[iIndex], "'%d', " , pLOBData->iPRIPositionCount );
 		for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
 			iIndex += sprintf( & m_pszSQLString[iIndex], "'%f', " , pLOBData->fPRISeq[i] );
 		}
-		iIndex += sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fPRISeq[i] );
+		sprintf( & m_pszSQLString[iIndex], "'%f' )", pLOBData->fPRISeq[i] );
 
 	}
 
@@ -10862,7 +10868,7 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
     if( pstTime != NULL ) {
         strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
-#if defined(_POCKETSONATA_)
+#ifdef _POCKETSONATA_
         sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
                                                  OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
                                                  SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
@@ -11015,8 +11021,13 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 
 		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-		_localtime32_s( &stTime, & pLOBData->tiContactTime );
-		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+        pstTime = localtime( & pLOBData->tiContactTime );
+        if( pstTime != NULL ) {
+            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
+        }
+        else {
+            strcpy( buffer, "1970-01-01 00:00:00" );
+        }   
 
 		theRS.Open( m_pszSQLString );
 		Log( enDebug, ".InsertLOB[A%d][B%d][L%d]" , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
@@ -11028,11 +11039,11 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 			strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 
 			// RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
+			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADARMODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
 			theRS.Open( m_pszSQLString );
 
 			// RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
+			sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADARMODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
 			theRS.Open( m_pszSQLString );
 
 		}

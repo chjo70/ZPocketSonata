@@ -68,7 +68,7 @@ public:
         pIPL->frq.hgh /= 1000;
 
         // 주파수 레벨값
-        for( i=0 ; i < _spMaxSwtLev ; ++i ) {
+        for( i=0 ; i < MAX_FREQ_PRI_STEP ; ++i ) {
             pIPL->frq.swtValLow[i] /= 1000;
             pIPL->frq.swtValHgh[i] /= 1000;
         }
@@ -98,7 +98,7 @@ public:
         pIPL->pri.hgh /= 1000;
 
         // PRI 레벨 값
-        for( i=0 ; i < _spMaxSwtLev ; ++i ) {
+        for( i=0 ; i < MAX_FREQ_PRI_STEP ; ++i ) {
             pIPL->pri.swtValLow[i] /= 1;
             pIPL->pri.swtValHgh[i] /= 1;
         }

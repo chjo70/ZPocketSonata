@@ -49,7 +49,7 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
  */
 CCollectBank::~CCollectBank()
 {
-	_SAFE_FREE( m_strPDW.pstPDW );
+	_SAFE_FREE( m_strPDW.pstPDW )
 }
 
 /**

@@ -68,6 +68,8 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
  */
 CEmitterMerge::~CEmitterMerge()
 {
+    m_theMyODBC.Close();
+
     delete m_pTheEmitterMergeMngr;
 }
 

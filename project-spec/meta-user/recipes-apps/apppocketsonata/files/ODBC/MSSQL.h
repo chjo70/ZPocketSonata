@@ -21,13 +21,14 @@
 #include "../Anal/EmitterMerge/ELGMIMsgDefn.h"
 #include "../Anal/EmitterMerge/ElintRsltDataTypedb.h"
 
-//#include "../../OFP/Include/globals.h"
-
 #define MAX_OF_COLUMN_LENGTH				(130)
 #define MAX_COUNT_OF_FIELD					(100)
 
 #define DECLARE_BEGIN_CHECKODBC				    try { CheckConnection();
-#define DECLARE_END_CHECKODBC					} catch( int iErrorException ) { /*if( g_pTheLog ) { Log( enError, "DB Äõ¸® ¿¡·¯" ); } else */ TRACE( "DB Äõ¸® ¿¡·¯" );ErrorException( iErrorException ); }
+#define DECLARE_END_CHECKODBC					} catch( int iErrorException ) {        \
+                                                    TRACE( "DB Äõ¸® ¿¡·¯" );            \
+                                                    ErrorException( iErrorException );  \
+                                                }
 #define	DECLARE_RETURN							return m_bRet;
 
 #define CAST_THROW_MESSAGE						{ m_iErrorException = SQL_ERROR_FIELD_LENGTH; throw m_iErrorException; }

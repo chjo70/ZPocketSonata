@@ -720,17 +720,17 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
     size_t szSize;
 
     try {
-		if( iItems < 0 ) {
+		if( iItems < 0 || iItems < 0 ) {
 			throw 0;
 		}
 
-        if( iSize == -1 && iItems == INT_MIN ) {
-            throw 0;
-        }
-
-        if( iItems == -1 && iSize == INT_MIN ) {
-            throw 0;
-        }
+//         if( iSize == -1 && iItems == INT_MIN ) {
+//             throw 0;
+//         }
+// 
+//         if( iItems == -1 && iSize == INT_MIN ) {
+//             throw 0;
+//         }
 
         if( iSize > INT_MAX / iItems ) {
             throw 0;

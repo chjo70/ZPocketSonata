@@ -22,6 +22,9 @@ class CMakeAET
 {
 private:
     //char m_Comma[50];
+    double m_dRCLatitude[RADARCOL_MAX];
+    double m_dRCLongitude[RADARCOL_MAX];
+
 
 public:
     //##ModelId=452B0C55039A

@@ -283,9 +283,6 @@ private:
 
 	bool IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
-    //  외부 에서 CED/EOB 테이블에 쿼리 실행 함수
-    void UpdateRadarMode( SRxLOBData *pLOBData );
-
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 
     template <typename T>
