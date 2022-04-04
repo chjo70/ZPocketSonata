@@ -4,8 +4,11 @@
 
 #include "stdafx.h"
 
-#include "GeoCoordConv.h"
 #include <math.h>
+
+
+#include "GeoCoordConv.h"
+
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -20,6 +23,10 @@ static char THIS_FILE[]=__FILE__;
 #define X_W2B 128
 #define Y_W2B -481
 #define Z_W2B -664
+
+
+#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
 
 //////////////////////////////////////////////////////////////////////
 // Construction
@@ -246,8 +253,8 @@ void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 	sin_phi = sin(lat);
 	cos_phi = cos(lat);
 
-	if (m_dDstInd != 0) 
-	{
+	//if (m_dDstInd != 0) 
+    if ( IS_NOT_ZERO( m_dDstInd ) == true ) {
 		b = cos_phi * sin(delta_lon);
 		if ((fabs(fabs(b) - 1.0)) < 0.0000000001)
 		{
@@ -317,7 +324,8 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 		if (temp < 0) 
 			lat *= -1;
 
-		if ((g == 0) && (h == 0))
+		//if( (g == 0) && (h == 0))
+        if( IS_ZERO(g) == true && IS_ZERO(h) == true )
 			lon = m_arLonCenter[m_eSrcSystem];
 		else
 			lon = atan(g / h) + m_arLonCenter[m_eSrcSystem];

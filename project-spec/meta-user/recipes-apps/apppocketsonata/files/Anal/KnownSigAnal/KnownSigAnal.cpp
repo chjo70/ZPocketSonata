@@ -402,49 +402,49 @@ void CKnownSigAnal::SendAllAet()
 		m_CoUpdAet = 0;
 	}
 
-	if( CO_MAX_KSP_NEW_AET >= 0 ) {
-		// m_theMakeAET->SetCoNewAet( 0 );
-		return;
-	}
-
-	// 두개 이상의 추적 성공 에미터 제외한다.
-	count = m_theMakeAET->GetCoNewAet();
-
-    pNewAet = m_theMakeAET->GetLOBData();
-
-	int inEMT;
-
-	inEMT = m_theMakeAET->GetIndexNewAet();
-
-	/*! \bug  새로운 에미터에 대한 포인터
-	    \date 2008-07-30 13:06:51, 조철희
-	*/
-	pDstAet = pNewAet + inEMT;
-
-	for( i=0 ; i < count ; ++i ) {
-		if( pUpdAet == NULL ||
-            ( pUpdAet != NULL && m_theMakeAET->CheckHarmonic<SRxLOBData>( pUpdAet, (pNewAet+inEMT) ) == 0 ) ) {
-			// CheckHarmonic() 에서는 PRI 값으로 펄스열 병합을 수행하고
-			// 실패된 펄스열에 대해서 이제는 펄스열 인덱스를 비교해서 두 펄스열간의 병합을 최종 판단한다.
-			//-- 조철희 2005-10-31 13:59:43 --//
-			//if( TRUE == CheckPdwHarmonic( pUpdAet, pNewAet ) )
-			{
-				SendNewAet( pNewAet, inEMT );
-
-				memcpy( pDstAet, pNewAet+inEMT, sizeof( STR_NEWAET ) );
-				++ pDstAet;
-
-				// 추적에서 새로운 에미터 개수를 제한한다.
-				++ m_CoNewAet;
-				if( m_CoNewAet >= CO_MAX_KSP_NEW_AET ) {
-					// m_theMakeAET->SetCoNewAet( m_CoNewAet );
-					return;
-				}
-			}
-		}
-
-		++ inEMT;
-	}
+// 	if( CO_MAX_KSP_NEW_AET >= 0 ) {
+// 		// m_theMakeAET->SetCoNewAet( 0 );
+// 		return;
+// 	}
+// 
+// 	// 두개 이상의 추적 성공 에미터 제외한다.
+// 	count = m_theMakeAET->GetCoNewAet();
+// 
+//     pNewAet = m_theMakeAET->GetLOBData();
+// 
+// 	int inEMT;
+// 
+// 	inEMT = m_theMakeAET->GetIndexNewAet();
+// 
+// 	/*! \bug  새로운 에미터에 대한 포인터
+// 	    \date 2008-07-30 13:06:51, 조철희
+// 	*/
+// 	pDstAet = pNewAet + inEMT;
+// 
+// 	for( i=0 ; i < count ; ++i ) {
+// 		if( pUpdAet == NULL ||
+//             ( pUpdAet != NULL && m_theMakeAET->CheckHarmonic<SRxLOBData>( pUpdAet, (pNewAet+inEMT) ) == 0 ) ) {
+// 			// CheckHarmonic() 에서는 PRI 값으로 펄스열 병합을 수행하고
+// 			// 실패된 펄스열에 대해서 이제는 펄스열 인덱스를 비교해서 두 펄스열간의 병합을 최종 판단한다.
+// 			//-- 조철희 2005-10-31 13:59:43 --//
+// 			//if( TRUE == CheckPdwHarmonic( pUpdAet, pNewAet ) )
+// 			{
+// 				SendNewAet( pNewAet, inEMT );
+// 
+// 				memcpy( pDstAet, & pNewAet[inEMT], sizeof( STR_NEWAET ) );
+// 				++ pDstAet;
+// 
+// 				// 추적에서 새로운 에미터 개수를 제한한다.
+// 				++ m_CoNewAet;
+// 				if( m_CoNewAet >= CO_MAX_KSP_NEW_AET ) {
+// 					// m_theMakeAET->SetCoNewAet( m_CoNewAet );
+// 					return;
+// 				}
+// 			}
+// 		}
+// 
+// 		++ inEMT;
+// 	}
 
 	// m_theMakeAET->SetCoNewAet( CoNewAet );
 

@@ -50,15 +50,15 @@ CMakeAET::CMakeAET( int coMaxPdw /*=NSP_MAX_PDW*/ )
 
     m_nMaxPdw = coMaxPdw;
 
-//    m_pParam = ( UINT * ) malloc( coMaxPdw * sizeof( UINT ) );
-//    if( m_pParam == NULL ) {
-//        bRet = FALSE;
-//        printf( "\n [W] m_pParam's Memory allocation error !" );
-//        WhereIs;
-//    }
-//     if( bRet == FALSE ) {
-//         printf( "\n [W] 에미터 생성 클래스 생성자 실패 !" );
-//     }
+    m_dRCLatitude[0] = 0.0;
+    m_dRCLatitude[1] = 37.485168456889;
+    m_dRCLatitude[2] = 37.454452514694;
+    m_dRCLatitude[3] = 37.453517913889;
+
+    m_dRCLongitude[0] = 0.0;
+    m_dRCLongitude[1] = 126.457916259694;
+    m_dRCLongitude[2] = 126.481880188111;
+    m_dRCLongitude[3] = 126.423416137778;
 
     m_CoAnalPdw = 0;
 

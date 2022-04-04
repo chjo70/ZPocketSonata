@@ -112,7 +112,7 @@ void CSysConfig::LoadINI()
     // 최소 펄스 개수
     sprintf( szDefault, "%d" , _DEFAULT_ANAL_MINPULSECOUNT_ );
     GetPrivateProfileString( "ANAL" , "MIN_ANALPULSE" , szDefault, szBuffer, 100, m_szIniFileName );
-    _spAnalMinPulseCount = (unsigned int) atoi( szBuffer );
+    _spAnalMinPulseCount = _abs( atoi( szBuffer ) );
     SetMinAnalPulse( _spAnalMinPulseCount );
  
     // 신호 삭제 시간
@@ -204,24 +204,9 @@ void CSysConfig::InitVar()
     // 수집 히스토그램 초기화
     memset( m_strConfig.ucColHisto, 0, sizeof(m_strConfig.ucColHisto) );
 
-//     _spOneSec = 20000000.;
-//     _spOneMilli = FDIV( _spOneSec, 1000. );
-//     _spOneMicrosec = FDIV( _spOneMilli, 1000. );
-//     _spOneNanosec = FDIV( _spOneMicrosec, 1000. );
-// 
-//     _spAOAres = (float) ( 0.351562 );
-//     _spAMPres = (float) (0.351562);
-//     _spPWres = _spOneMicrosec;
 
 #elif defined(_ELINT_) || defined(_XBAND_)
-//     _spOneSec = FDIV( 1000000000, _toaRes[0] );
-//     _spOneMilli = FDIV( 1000000, _toaRes[0] );
-//     _spOneMicrosec = FDIV( 1000, _toaRes[0] );
-//     _spOneNanosec = FDIV( 1, _toaRes[0] );
-// 
-//     _spAOAres = (float) 0.01;
-//     _spAMPres = (float) (0.25);
-//     _spPWres = _spOneMicrosec;
+
 
 #else
 

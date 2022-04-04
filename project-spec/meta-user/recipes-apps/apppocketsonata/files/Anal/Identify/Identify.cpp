@@ -194,13 +194,13 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
  */
 void CELSignalIdentifyAlg::Destory()
 {
-    _SAFE_FREE( m_pFLib );
+    _SAFE_FREE( m_pFLib )
 
-    _SAFE_FREE( m_pEOBResult );
+    _SAFE_FREE( m_pEOBResult )
 
-    _SAFE_FREE( m_pIdResult );
+    _SAFE_FREE( m_pIdResult )
 
-    _SAFE_FREE( m_pCEDEOBResult );
+    _SAFE_FREE( m_pCEDEOBResult )
 
     delete [] m_pRadarMode;
     m_pRadarMode = NULL;
@@ -414,9 +414,9 @@ void CELSignalIdentifyAlg::MallocBuffer()
             memset( m_pFLib, 0, sizeof(STR_FLIB) * ( NO_FLIB_BAND + 1 ) );
         }
 
-    _SAFE_NEW( m_pRadarMode, SRadarMode [MAX_RADARMODE] );
+    _SAFE_NEW( m_pRadarMode, SRadarMode [MAX_RADARMODE] )
 
-    _SAFE_NEW( m_pThreat, SThreat [MAX_THREAT] );
+    _SAFE_NEW( m_pThreat, SThreat [MAX_THREAT] )
 
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_EOB_RESULT), MAX_THREAT );
     _SAFE_MALLOC( m_pEOBResult, STR_EOB_RESULT, szSize );
@@ -2897,7 +2897,6 @@ void CELSignalIdentifyAlg::IdentifySigType( int iSignalType )
             continue;
         }
 
-
         if( iSignalType == ST_NORMAL_PULSE ) {
             if( pRadarMode->eSignalType != SignalType::enumPulsed ) {
                 continue;
@@ -2911,24 +2910,6 @@ void CELSignalIdentifyAlg::IdentifySigType( int iSignalType )
         else {
             continue;
         }
-
-//         switch( iSignalType ) {
-//             case ST_NORMAL_PULSE :
-//                 if( pRadarMode->eSignalType != SignalType::enumPulsed ) {
-//                     continue;
-//                 }
-//                 break;
-// 
-//             case ST_CW :
-//                 if( pRadarMode->eSignalType != SignalType::enumCW ) {
-//                     continue;
-//                 }
-//                 break;
-// 
-//             default:
-//                 continue;
-//                 // break;
-//         }
 
         // 빔 번호 추가
         m_pIdResult[toLib++].pIdxRadarMode = pIdxLibAmbi->pIdxRadarMode;
@@ -6094,13 +6075,13 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
     return bRet;
 
-#elif _MSSQL_
+#elif defined(_MSSQL_)
     DECLARE_BEGIN_CHECKODBC
     int i;
  
     CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
  
-    sprintf_s( m_szSQLString, MAX_SQL_SIZE,  "SELECT * FROM RADARMODE ORDER BY RADAR_MODE_INDEX" );
+    sprintf_s( m_szSQLString, MAX_SQL_SIZE,  "SELECT * FROM RADARMODE ORDER BY RADARMODE_INDEX" );
  
     theRS.Open( m_szSQLString );
  
@@ -6122,6 +6103,7 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         theRS.GetFieldValue( i++, & pRadarMode->iRadarModeIndex );
 
         theRS.GetFieldValue( i++, pRadarMode->szRadarModeName );
+        theRS.GetFieldValue( i++, pRadarMode->szModeCode );
 
         theRS.GetFieldTimeValue( i++, & pRadarMode->tiCreated );
         theRS.GetFieldTimeValue( i++, & pRadarMode->tiLastUpdated );
@@ -6158,9 +6140,9 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
         theRS.GetFieldValue( i++, & pRadarMode->fPD_TypicalMax );
 		if( pRadarMode->fPD_TypicalMax < 1 ) {  pRadarMode->fPD_TypicalMax = 0.0; }
 
-        pRadarMode->iRadarModePriority = 0;
-
         theRS.GetFieldValue( i++, (int *) & pRadarMode->eValidation );
+
+        theRS.GetFieldValue( i++, (int *) & pRadarMode->iRadarModePriority );
 
         if( pRadarMode->eValidation == enumValidated ) {
             ++ *pnRadarMode;
@@ -6573,55 +6555,3 @@ EnumValidationCode CELSignalIdentifyAlg::GetValidationCode( int iValidation )
     return eValidation;
 }
 
-/**
- * @brief CELSignalIdentifyAlg::UpdateRadarMode
- */
-void CELSignalIdentifyAlg::UpdateRadarMode( SRxLOBData *pLOBData )
-{
-    struct tm *pstTime;
-
-#ifdef __VXWORKS__
-    time_t nowTime=time(NULL);
-    pstTime = localtime( & nowTime );
-#else    
-    time_t nowTime=time(NULL);
-    pstTime = localtime( & nowTime );
-//     __time32_t nowTime=_time32(NULL);
-//     pstTime = localtime( & nowTime );
-#endif    
-
-    // RADARMODE 테이블에 DATE_FIRST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-#ifdef _SQLITE_
-    char buffer[100]={"1970/01/01 00:00:00"};    
-
-    if( pstTime != NULL ) {
-        strftime( buffer, 100, "%Y/%m/%d %H:%M:%S", pstTime );
-
-        // RADARMODE 테이블에 DATE_LAST_SEEN에 현재 날짜 및 시간을 업데이트 함.
-        try {
-            Kompex::SQLiteStatement stmt( m_pDatabase );
-            sprintf( m_szSQLString, "UPDATE RADAR_MODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
-            stmt.Sql( m_szSQLString );
-
-            sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and DATE_FIRST_SEEN == '1970/01/01 0:00:00.000' )", buffer, pLOBData->iRadarModeIndex );
-            stmt.Sql( m_szSQLString );
-
-            // do not forget to clean-up
-            stmt.FreeQuery();  
-        }
-        catch( Kompex::SQLiteException &exception ) {
-            std::cerr << "\nException Occured" << std::endl;
-            exception.Show();
-            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-        }
-    }
-
-#elif _MSSQL_
-//     sprintf_s( m_szSQLString, "UPDATE RADAR_MODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
-//     exec( m_szSQLString );
-#else
-
-#endif
-    
-
-}

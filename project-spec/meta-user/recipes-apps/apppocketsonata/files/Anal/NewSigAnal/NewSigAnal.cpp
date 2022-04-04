@@ -57,6 +57,7 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
 #endif
 {
     //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
+    size_t szSize;
 
     m_bDBThread = bDBThread;
 
@@ -98,7 +99,8 @@ CNewSigAnal::CNewSigAnal( int coMaxPdw, bool bDBThread )
     m_pMidasBlue = new CMIDASBlueFileFormat;
 
     m_stSavePDWData.pstPDW = NULL;
-    _SAFE_MALLOC( m_stSavePDWData.pstPDW, _PDW, sizeof(_PDW) * coMaxPdw );
+    szSize = CCommonUtils::CheckMultiplyOverflow( sizeof(_PDW), coMaxPdw );
+    _SAFE_MALLOC( m_stSavePDWData.pstPDW, _PDW, szSize );
 
     // 클래스 관련 초기화
     m_nMaxPdw = coMaxPdw;
@@ -138,6 +140,10 @@ CNewSigAnal::~CNewSigAnal()
 
 #if defined(_SQLITE_) || defined(_MSSQL_)
     free( m_pszSQLString );
+#endif
+
+#ifdef _MSSQL_
+    m_theMyODBC.Close();
 #endif
 
 }
@@ -651,6 +657,8 @@ unsigned char *CNewSigAnal::GetTaskID()
  */
 void CNewSigAnal::InitResolution()
 {
+    float _toaRes[enUnknown_BW+1] = { (float) 65.104167, (float) 8.138021, (float) 0.0 } ;
+
 #if defined(_ELINT_) || defined(_XBAND_)
     //STR_PDWDATA *pPDWData;
     //m_enBandWidth = pPDWData->x.el.enBandWidth;
@@ -702,7 +710,7 @@ void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID )
 {
     bool bRet;
     char buffer[100]={0};
-    TCHAR szDirectory[500], szRawDataPathname[500];
+    TCHAR szDirectory[500], szRawDataPathname[600];
 
     struct tm *pstTime;
 	struct timespec tiNow;

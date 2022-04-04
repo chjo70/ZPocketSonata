@@ -198,7 +198,7 @@ BOOL CODBCRecordset::Open(CHAR *szSqlStr)
 	SQLRETURN ret;
 
 	ret = SQLExecDirect(m_hStmt, (SQLCHAR*)szSqlStr, SQL_NTS);
-	if(ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
+	if(ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO )
 	{
 		SQLRETURN sqlreturn=SQLFetch(m_hStmt);
 		if( SQL_NO_DATA == sqlreturn ) {
@@ -206,6 +206,9 @@ BOOL CODBCRecordset::Open(CHAR *szSqlStr)
 		}
 		bRet = TRUE;
 	}
+    else if(ret == SQL_NO_DATA ) {
+        bRet = TRUE;
+    }
     else {
 	    throw (int) SQL_ERROR_QUERY;
 	    

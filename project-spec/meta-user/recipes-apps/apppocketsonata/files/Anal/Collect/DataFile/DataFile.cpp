@@ -1970,11 +1970,11 @@ void CIQ::Alloc( unsigned int uiItems )
  */
 void CIQ::Free()
 {
-	_SAFE_FREE(m_IQData.pfI);
-	_SAFE_FREE(m_IQData.pfQ);
-	_SAFE_FREE(m_IQData.pfPA);
-	_SAFE_FREE(m_IQData.pfIP);
-	_SAFE_FREE(m_IQData.pfFFT);
+	_SAFE_FREE(m_IQData.pfI)
+	_SAFE_FREE(m_IQData.pfQ)
+	_SAFE_FREE(m_IQData.pfPA)
+	_SAFE_FREE(m_IQData.pfIP)
+	_SAFE_FREE(m_IQData.pfFFT)
 }
 
 /**
@@ -2346,11 +2346,11 @@ void C7IQ::Alloc( unsigned int uiItems )
  */
 void C7IQ::Free()
 {
-	_SAFE_FREE(m_IQData.pfI);
-	_SAFE_FREE(m_IQData.pfQ);
-	_SAFE_FREE(m_IQData.pfPA);
-	_SAFE_FREE(m_IQData.pfIP);
-	_SAFE_FREE(m_IQData.pfFFT);
+	_SAFE_FREE(m_IQData.pfI)
+	_SAFE_FREE(m_IQData.pfQ)
+	_SAFE_FREE(m_IQData.pfPA)
+	_SAFE_FREE(m_IQData.pfIP)
+	_SAFE_FREE(m_IQData.pfFFT)
 }
 
 /**
@@ -3121,17 +3121,17 @@ void CData::AllocRealData( int iItems )
  */
 void CData::FreeRealData()
 {
-    _SAFE_FREE( m_PDWRealData.pfAOA );
-    _SAFE_FREE( m_PDWRealData.pfFreq );
-    _SAFE_FREE( m_PDWRealData.pfPW );
-    _SAFE_FREE( m_PDWRealData.pfPA );
-    _SAFE_FREE( m_PDWRealData.pfTOA );
-    _SAFE_FREE( m_PDWRealData.pfDTOA );
+    _SAFE_FREE( m_PDWRealData.pfAOA )
+    _SAFE_FREE( m_PDWRealData.pfFreq )
+    _SAFE_FREE( m_PDWRealData.pfPW )
+    _SAFE_FREE( m_PDWRealData.pfPA )
+    _SAFE_FREE( m_PDWRealData.pfTOA )
+    _SAFE_FREE( m_PDWRealData.pfDTOA )
 
-    _SAFE_FREE( m_PDWRealData.pullTOA );
+    _SAFE_FREE( m_PDWRealData.pullTOA )
 
-    _SAFE_FREE( m_PDWRealData.pcType );
-    _SAFE_FREE( m_PDWRealData.pcDV );
+    _SAFE_FREE( m_PDWRealData.pcType )
+    _SAFE_FREE( m_PDWRealData.pcDV )
 
 }
 
@@ -3717,24 +3717,23 @@ unsigned int CDataFile::GetDataItems( CData *pData )
 CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
     char *pTempData=NULL;
-    unsigned int uiFileSize;
+    size_t szFileSize;
     unsigned long long int ullFileSize;
 
     ullFileSize = FileSize( pPathname );
-    uiFileSize = CheckOverflow<unsigned int>( ullFileSize );
+    szFileSize = CheckOverflow<size_t>( ullFileSize );
 
-    //pTempData = (char *) malloc( uiFileSize );
-    //_SAFE_MALLOC( pTempData, char, uiFileSize );
-	_SAFE_NEW( pTempData, char [uiFileSize] );
+	_SAFE_NEW( pTempData, char [szFileSize] );
+    memset( pTempData, 0, szFileSize );
 
     if( pTempData != NULL && m_RawDataFile.FileOpen( pPathname, O_RDONLY | O_BINARY ) == true ) {  
-        m_RawDataFile.Read( pTempData, uiFileSize );
+        m_RawDataFile.Read( pTempData, szFileSize );
         ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption );
         //m_RawDataFile.FileClose();
     }
 
     m_RawDataFile.FileClose();
-    _SAFE_FREE( pTempData );
+    //_SAFE_FREE( pTempData );
 
     return m_pData;
 

@@ -70,7 +70,7 @@ CGroup::CGroup( int coMaxPdw )
 	strcpy( m_szPulseType[i++], "--" );
 	strcpy( m_szPulseType[i++], "FM" );
 	strcpy( m_szPulseType[i++], "--" );
-	strcpy( m_szPulseType[i++], "SP" );
+	strcpy( m_szPulseType[i], "SP" );
 
 #endif
 
@@ -270,6 +270,8 @@ void CGroup::MakePDWArray( _PDW *pdw, int count, int iDummy )
 //
 bool CGroup::MakePDWArray( _PDW *pdw, int count, int iBand )
 {
+    bool bRet=true;
+
     int i;
     _TOA templlTOA, prevllTOA;
 
@@ -281,22 +283,27 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count, int iBand )
     int *pPa;
     UINT *pAoa, *pPw, *pFreq;
 
-    UCHAR *pStat, *pBand, *pPmop, *pFmop, *pMaxChannel;
+    UCHAR *pStat, *pBand;
     USHORT *pMark;
 
-    bool bRet=true;
+#ifdef _POCKETSONATA_
+    UCHAR *pPmop, *pFmop, *pMaxChannel;
 
+    pPmop = & m_pPMOP[0];
+    pFmop = & m_pFMOP[0];
+    pMaxChannel = & m_pMAXCHANNEL[0];
+
+#endif
+    
     pToa = & m_pTOA[0];
     pStat = & m_pSTAT[0];
     pPa = & m_pPA[0];
-    pPmop = & m_pPMOP[0];
-    pFmop = & m_pFMOP[0];
     pAoa = & m_pAOA[0];
     pPw = & m_pPW[0];
     pFreq = & m_pFREQ[0];
     pMark = & m_pMARK[0];
     pBand = & m_pBAND[0];
-    pMaxChannel = & m_pMAXCHANNEL[0];
+
 
     // 첫번째 TOA 얻기
     _EQUALS4( firstToaBand, prevllTOA, templlTOA, pdw->ullTOA );
@@ -483,11 +490,11 @@ void CGroup::PrintAllGroup()
         // 방위 그룹화 출력
         if( pFrqGr->narrow_wide == FALSE ) {
             //printf( "\n\t [%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-            Log( enNormal, "\t[%d] Narrow %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)" , IdxFrqAoaPw, g_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( nBand, pFrqGr->from_frq ), I_FRQMhzCNV( nBand, pFrqGr->to_frq ), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
+            Log( enNormal, "\t[%d] Narrow %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)" , IdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( nBand, pFrqGr->from_frq ), I_FRQMhzCNV( nBand, pFrqGr->to_frq ), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
         }
         else {
             //printf( "\n\t [%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%.1f-%.1f), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->from_aoa ), CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->to_aoa ), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->from_frq), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->to_frq), CPOCKETSONATAPDW::DecodePWus( pPwGr->from_pw ), CPOCKETSONATAPDW::DecodePWus( pPwGr->to_pw ) );
-            Log( enNormal, "\t[%d] Wide   %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[us](%6d-%6d)" , IdxFrqAoaPw, g_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( nBand, pFrqGr->from_frq), I_FRQMhzCNV( nBand, pFrqGr->to_frq), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
+            Log( enNormal, "\t[%d] Wide   %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[us](%6d-%6d)" , IdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( nBand, pFrqGr->from_frq), I_FRQMhzCNV( nBand, pFrqGr->to_frq), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
         }
 
 #if defined(_ELINT_) || defined(_XBAND_)

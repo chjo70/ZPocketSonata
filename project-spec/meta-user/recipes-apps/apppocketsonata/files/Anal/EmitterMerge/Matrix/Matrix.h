@@ -166,7 +166,7 @@ public:
    * and for i=2 the function returns the number of columns
    * else the function returns 0
    */
-  int Size(const int i) const;
+  unsigned int Size(const int i) const;
  
   // returns the number of rows
   int GetRows() const;

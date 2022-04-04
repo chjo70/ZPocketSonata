@@ -136,6 +136,7 @@ bool CELThreat::RemoveAET( int nAET, CELThreat *pPrevThreat )
 bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found.)
 {
 	int i=0;
+    bool bRet=false;
 	CELThreat *pThreat, *pPrevThreat;
 
 	// 1. AET 찾기
@@ -156,11 +157,14 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
 
 					// 2. 해당 ABT 삭제
 					delete pThreat;
+                    pThreat = NULL;
 
-					return true;
+					bRet = true;
 				}
-				pPrevThreat = pThreat;
-				pThreat = pThreat->m_pRightChild;
+                else {
+				    pPrevThreat = pThreat;
+				    pThreat = pThreat->m_pRightChild;
+                }
 
 				// 플레그
 				++ i;
@@ -171,7 +175,7 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
 		}
 	}
 
-	return false;
+	return bRet;
 }
 
 /**
@@ -347,6 +351,8 @@ void CELThreat::Link( CELThreat *pDeleteABT, CELThreat *pDeleteAET )
 	else if( IsABT() == true ) {
 		TRACE( "\n[경고] 링크 노드[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAET, m_Idx.uiABT );
 	}
+    else {
+    }
 
 }
 
@@ -405,6 +411,9 @@ void CELThreat::UnLink( CELThreat *pUnLinkABT )
 	else if( IsABT() == true ) {
 		TRACE( "\n [경고] 빔을 제거할 수 없습니다 !!!!, 잘못 호출했습니다." );
 	}
+    else {
+
+    }
 
 }
 

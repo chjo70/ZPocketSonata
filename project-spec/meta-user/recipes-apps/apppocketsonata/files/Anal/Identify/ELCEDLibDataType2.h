@@ -495,6 +495,12 @@ namespace SignalType
 		enumCW =0,
 		enumPulsed,	//기본값
 		enumEA
+
+#elif defined(_POCKETSONATA_)
+        enumPulsed = 1,
+        enumCW,
+        enumEA
+
 #else
 		enumPulsed = 0,	//기본값
 		enumCW,
@@ -544,7 +550,7 @@ namespace RadarModeFreqType
 
 namespace RadarModePRIType
 {
-#ifdef _XBAND_
+#if defined(_XBAND_) || defined(_POCKETSONATA_)
 	enum EnumRadarModePRIType
 	{
 		enumStable = 0,

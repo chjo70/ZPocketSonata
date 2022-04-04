@@ -61,8 +61,8 @@ CIni *theIni;
 
 //////////////////////////////////////////////////////////////////////////
 // 레이더 수집국의 위/경도 좌표
-double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
-double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
+// double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
+// double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
 double dRCDOA[RADARCOL_MAX] = { 10, 300, 70 } ;
 
@@ -93,8 +93,8 @@ IMPORT BOOT_PARAMS stBootParams;
 
 #endif
 
-IMPORT double dRCLatitude[RADARCOL_MAX];
-IMPORT double dRCLongitude[RADARCOL_MAX];
+// IMPORT double dRCLatitude[RADARCOL_MAX];
+// IMPORT double dRCLongitude[RADARCOL_MAX];
 
 IMPORT double dRCDOA[RADARCOL_MAX];
 

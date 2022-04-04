@@ -86,8 +86,9 @@ CTaskMngr::~CTaskMngr(void)
 #ifdef _SQLITE_
     delete m_pDatabase;
 
-#elif _MS_SQL_
+#elif _MSSQL_
     m_theMyODBC.Close();
+
 
 #else
 
