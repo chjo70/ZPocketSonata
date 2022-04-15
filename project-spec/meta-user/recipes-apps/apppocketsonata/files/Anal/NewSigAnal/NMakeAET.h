@@ -44,15 +44,15 @@ public:
 	//##ModelId=452B0C550067
 	int GetColPdw();
 	//##ModelId=452B0C550068
-	int CalcPAMean(PDWINDEX *pPdwIndex, int count );
+	int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
 	//##ModelId=452B0C550079
-	int VerifyPW( PDWINDEX *pPdwIndex, int count );
+	int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	//##ModelId=452B0C55007C
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type );
+	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 	//##ModelId=452B0C550085
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 	//##ModelId=452B0C55008E
-	int GetCoSeg();
+	unsigned int GetCoSeg();
 	//##ModelId=452B0C550097
 	int GetCoEmitter();
 	//##ModelId=452B0C550098
@@ -73,7 +73,7 @@ public:
 	//int m_CoMakeLOB;
 
 	void DISP_FineAet( SRxLOBData *pManAet );
-	void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
+	//void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
 	void GetCollectTime( struct timespec *pTimeSpec );
 

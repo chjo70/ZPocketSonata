@@ -10,7 +10,7 @@
 #define mkdir   _mkdir
 #define open    _open
 #define write   _write
-#define close   _close
+#define closeSharedMemory   _close
 
 #else
 #include <semaphore.h>
@@ -55,8 +55,8 @@ private:
     char m_szLogString[LOG_DIR_SIZE*5];
 
 private:
-    char *ANSIToUTF8( const char * pszCode );
-    char *UTF8ToANSI( const char *pszCode );
+    //char *ANSIToUTF8( const char * pszCode );
+    //char *UTF8ToANSI( const char *pszCode );
 
 public:
     CLog();

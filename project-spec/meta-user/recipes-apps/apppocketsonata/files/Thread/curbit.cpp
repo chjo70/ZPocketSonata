@@ -75,7 +75,7 @@ void CUrBit::_routine()
         }
 
         // CGI 실행 플레그 설정
-        if( m_pMsg->uiOpCode == enCGI_REQ_IBIT || m_pMsg->uiOpCode == enCGI_REQ_UBIT || m_pMsg->uiOpCode == enCGI_REQ_CBIT || m_pMsg->uiOpCode == enCGI_REQ_SBIT ) {
+        if( m_pMsg->uiOpCode == (unsigned int) enCGI_REQ_IBIT || m_pMsg->uiOpCode == (unsigned int) enCGI_REQ_UBIT || m_pMsg->uiOpCode == (unsigned int) enCGI_REQ_CBIT || m_pMsg->uiOpCode == (unsigned int) enCGI_REQ_SBIT ) {
             bCGIRunning = true;
         }
         else {

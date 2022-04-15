@@ -39,7 +39,7 @@ namespace RadarDirAlgotirhm
 		SetWindowHandler( hWnd );
 		
 		if( gpNewSigAnal == NULL ) {
-			gpNewSigAnal = new CNewSigAnal( MAX_PDW );
+			gpNewSigAnal = new CNewSigAnal( MAX_PDW, false );
 			gpNewSigAnal->InitVar( NORMAL_MDOE );
 		}
 

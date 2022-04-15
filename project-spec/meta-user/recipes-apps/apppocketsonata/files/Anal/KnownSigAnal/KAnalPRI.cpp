@@ -33,10 +33,10 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
     pSeg1 = & m_pSeg[ *p1 ];
     pSeg2 = & m_pSeg[ *p2 ];
 
-    if( pSeg1->pri.mean > pSeg2->pri.mean ) {
+    if( pSeg1->pri.TMean > pSeg2->pri.TMean ) {
         iRet = 1;
     }
-    else if( pSeg1->pri.mean < pSeg2->pri.mean ) {
+    else if( pSeg1->pri.TMean < pSeg2->pri.TMean ) {
         iRet = (-1);
     }
     else {
@@ -59,7 +59,7 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
 //##ModelId=42E98F300153
-CKAnalPRI::CKAnalPRI( void *pParent, int coMaxPdw ) : CAnalPRI( coMaxPdw )
+CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
@@ -91,9 +91,9 @@ void CKAnalPRI::Init()
 {
 
 	m_uiCoSeg = GetCoSeg();
-	m_nAnalSeg = GetAnalSeg();
+	m_uiAnalSeg = GetAnalSeg();
 
-	m_nAnalEmitter = GetCoEmitter();
+	m_uiAnalEmitter = GetCoEmitter();
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 	
@@ -227,7 +227,7 @@ BOOL CKAnalPRI::KnownAnalysis()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 17:00:01
 //
-int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter )
+unsigned int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter )
 {
 	return m_pKnownSigAnal->ExtractStagger( pPdwIndex, framePri, pEmitter );
 }
@@ -307,7 +307,7 @@ UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:14:14
 //
-int CKAnalPRI::GetCoSeg() 
+unsigned int CKAnalPRI::GetCoSeg() 
 {	
 	return m_pKnownSigAnal->GetCoSeg(); 
 }
@@ -378,9 +378,9 @@ void CKAnalPRI::MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
 //! \date     2006-01-23 10:14:02
 //! \warning
 //
-UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count ) 
+UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) 
 { 
-	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, count ); 
+	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount ); 
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -392,9 +392,9 @@ UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int co
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-06 14:44:01
 //
-_TOA CKAnalPRI::VerifyPRI( PDWINDEX *pPdwIndex, int count )
+_TOA CKAnalPRI::VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
-	return m_pKnownSigAnal->VerifyPRI( pPdwIndex, count );
+	return m_pKnownSigAnal->VerifyPRI( pPdwIndex, uiCount);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -407,9 +407,9 @@ _TOA CKAnalPRI::VerifyPRI( PDWINDEX *pPdwIndex, int count )
 //! \date		 2006-07-06 17:28:14
 //! \warning
 //
-int CKAnalPRI::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
+int CKAnalPRI::FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex )
 {
-	return m_pKnownSigAnal->FindPeakInHist( count, pPdwIndex );
+	return m_pKnownSigAnal->FindPeakInHist(uiCount, pPdwIndex );
 }
 
 /**
@@ -417,9 +417,9 @@ int CKAnalPRI::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
  * @param pEmitter
  * @param index
  */
-void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
+void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
+    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 

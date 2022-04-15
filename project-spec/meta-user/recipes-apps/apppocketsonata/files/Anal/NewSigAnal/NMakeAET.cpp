@@ -134,9 +134,9 @@ int CNMakeAET::GetColPdw()
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:30
 //
-int CNMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
+int CNMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
-    return m_pNewSigAnal->CalcPAMean( pPdwIndex, count );
+    return m_pNewSigAnal->CalcPAMean( pPdwIndex, uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -148,9 +148,9 @@ int CNMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:32
 //
-int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
+int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pNewSigAnal->VerifyPW( pPdwIndex, count );
+    return m_pNewSigAnal->VerifyPW( pPdwIndex, uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -163,9 +163,9 @@ int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:35
 //
-void CNMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
+void CNMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -177,9 +177,9 @@ void CNMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CNMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
+void CNMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pNewSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
+    m_pNewSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 
@@ -191,7 +191,7 @@ void CNMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:39
 //
-int CNMakeAET::GetCoSeg()
+unsigned int CNMakeAET::GetCoSeg()
 {
     return m_pNewSigAnal->GetCoSeg();
 }
@@ -406,7 +406,7 @@ unsigned char *CNMakeAET::GetTaskID()
 #endif
 
 /**
- * @brief     GetPDWID
+ * @brief     (
  * @return    unsigned int
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

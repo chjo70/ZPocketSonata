@@ -29,6 +29,9 @@
 
 #include "../Include/globals.h"
 
+#include "ccommonutils.h"
+
+
 //#include "../INC/_common.h"
 //#include "../BSP/sbc_str.h"
 
@@ -80,10 +83,6 @@ static char g_szVersion[100];
  */
 void _ShowProgramTitle( void )
 {
-    time_t timer;
-    struct tm* t;
-    //struct timeval tv;
-
     char szDate[LOG_DIR_SIZE];
 
     memset( g_szVersion, 0, sizeof(g_szVersion) );
@@ -112,15 +111,7 @@ void _ShowProgramTitle( void )
 
 #endif
 
-    timer = time( NULL );
-    t = localtime(&timer);
-
-    if( t != NULL ) {
-        sprintf( szDate, "%d/%0d/%0d %02d:%02d:%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec );
-    }
-    else {
-        strcpy( szDate, "2022/04/01 12:34:56" );
-    }
+    CCommonUtils::getStringPresentTime( szDate, sizeof(szDate) );
 
     LOGMSG3( enNormal, "Starting the [%s:%s] Program on the (%s)...", PROGRAM_NAME, PROGRAM_VERSION, szDate );
 //     }

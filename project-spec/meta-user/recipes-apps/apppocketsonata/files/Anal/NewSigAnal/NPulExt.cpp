@@ -75,15 +75,14 @@ void CNPulExt::Init()
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    탐지 펄스열 추출의 메인 흐름도이다.
-
-                            1차 추출과 2차 추출로 나뉘어 펄스열을 추출한다. 1차 추출에서는
-                            모든 입력 펄스열에 대해서 펄스열을 추출한다. 그리고 2차 추출에서는
-                            규칙성 펄스열을 제거한 나머지 펄스열에 대해서 펄스열을 추출하도록 한다.
-        \author   조철희
-        \return   void	없음.
-        \version  1.37
-        \date     2006-08-23 22:25:42
-        \warning
+    1차 추출과 2차 추출로 나뉘어 펄스열을 추출한다. 1차 추출에서는
+    모든 입력 펄스열에 대해서 펄스열을 추출한다. 그리고 2차 추출에서는
+    규칙성 펄스열을 제거한 나머지 펄스열에 대해서 펄스열을 추출하도록 한다.
+    \author   조철희
+    \return   void	없음.
+    \version  1.37
+    \date     2006-08-23 22:25:42
+    \warning
 */
 void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 {
@@ -166,10 +165,11 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
 	SetRefStartSeg();
 
-    if( GetPulseStat() == STAT_CW && false ) {
-        // MakeCWPulseTrain();
-    }
-    else {
+//     if( GetPulseStat() == STAT_CW && false ) {
+//         // MakeCWPulseTrain();
+//     }
+//     else 
+    {
         //////////////////////////////////////////////////////////////////////////
         // 1차 펄스열 추출
 
@@ -306,9 +306,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:32
 //
-void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
+void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
 
 }
 

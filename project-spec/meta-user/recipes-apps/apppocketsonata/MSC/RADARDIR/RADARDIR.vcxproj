@@ -85,11 +85,11 @@ SET CONFIGNAME=$(ConfigurationName)
 
 REM ########################################################################
 REM  작업실에서...
-SET RADAR_DF_LIB="D:\GitHub\RADAR_DF\$(ConfigurationName)"
-SET RADAR_DF_HEADER="D:\GitHub\RADAR_DF\ICAA"
+SET RADAR_DF_LIB="E:\GitHub\RADAR_DF\$(ConfigurationName)"
+SET RADAR_DF_HEADER="E:\GitHub\RADAR_DF\ICAA"
 
-SET RADAR_RD_LIB="D:\GitHub\RADAR_RD\$(ConfigurationName)"
-SET RADAR_RD_HEADER="D:\GitHub\RADAR_RD\ICAA"
+SET RADAR_RD_LIB="E:\GitHub\RADAR_RD\$(ConfigurationName)"
+SET RADAR_RD_HEADER="E:\GitHub\RADAR_RD\ICAA"
 
 CALL CopyAll %RADAR_DF_LIB%, %RADAR_DF_HEADER%, %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
 

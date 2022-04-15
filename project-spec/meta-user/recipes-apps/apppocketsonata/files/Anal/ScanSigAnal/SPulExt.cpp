@@ -59,9 +59,9 @@ void CSPulExt::Init()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 11:15:54
 //
-void CSPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
+void CSPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
 {
-	m_pScanSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+	m_pScanSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////

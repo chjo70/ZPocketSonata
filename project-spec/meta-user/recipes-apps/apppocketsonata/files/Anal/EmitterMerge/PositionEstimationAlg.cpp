@@ -257,6 +257,7 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	}
 
 	// 3. 위치 산출
+    memset( & stSELPE_RESULT, 0, sizeof(stSELPE_RESULT) );
 	CommonRunPositionEstimation( & stSELPE_RESULT );
 
 	// 4. 결과 변환
@@ -699,7 +700,7 @@ bool CPositionEstimationAlg::IsVerifyLOB()
 	++ pLatitude;
 	++ pLongitude;
 	for( i=1 ; i < (int) m_Sensor.n ; ++i ) {
-		if( *pLatitude != dLatitude || *pLongitude != dLongitude ) {
+		if( IS_NOT_ZERO( *pLatitude - dLatitude ) == true || IS_NOT_ZERO( *pLongitude - dLongitude ) == true ) {
 			bRet = true;
 			break;
 		}

@@ -33,7 +33,7 @@ class CSharedMemroy
 
 private :
     void *m_shared_memory;
-    int m_iSize;
+    SIZE_T m_szSize;
 
 #ifdef _MSC_VER
     HANDLE m_hHandle;
@@ -47,7 +47,7 @@ private :
 
 public :
     CSharedMemroy();
-    CSharedMemroy( key_t key, int iSize );
+    CSharedMemroy( key_t key, SIZE_T szSize );
     CSharedMemroy( key_t key );
     ~CSharedMemroy();
 
@@ -55,12 +55,12 @@ public :
     int getShmId();
     void setKey( key_t key );
 
-    void setupSharedMemory( SIZE_T iSize );
+    void setupSharedMemory( SIZE_T szSize );
     void attachSharedMemory();
     bool copyToSharedMemroy( void *pData );
-    bool copyToLocalMemroy( void *pData, int iSize );
+    bool copyToLocalMemroy( void *pData, SIZE_T szSize );
 
-    void close();
+    void closeSharedMemory();
 
 };
 

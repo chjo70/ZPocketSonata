@@ -58,7 +58,7 @@ CSysConfig::CSysConfig(void)
 CSysConfig::~CSysConfig(void)
 {
 
-    m_pSharedMemory->close();
+    m_pSharedMemory->closeSharedMemory();
     delete m_pSharedMemory;
 
 
@@ -71,6 +71,7 @@ void CSysConfig::LoadINI()
 {
 #ifndef _CGI_LIST_
     int i, iValue;
+    unsigned int uiValue;
 
     string strValue;
 
@@ -112,7 +113,8 @@ void CSysConfig::LoadINI()
     // 최소 펄스 개수
     sprintf( szDefault, "%d" , _DEFAULT_ANAL_MINPULSECOUNT_ );
     GetPrivateProfileString( "ANAL" , "MIN_ANALPULSE" , szDefault, szBuffer, 100, m_szIniFileName );
-    _spAnalMinPulseCount = _abs( atoi( szBuffer ) );
+    iValue = atoi( szBuffer );
+    _spAnalMinPulseCount = (unsigned int) abs( iValue );
     SetMinAnalPulse( _spAnalMinPulseCount );
  
     // 신호 삭제 시간
@@ -128,7 +130,8 @@ void CSysConfig::LoadINI()
     sprintf( szDefault, "%d" , _DEFAULT_LIB_VERSION_ );
     GetPrivateProfileString( "IPL" , "VERSION" , szDefault, szBuffer, 100, m_szIniFileName );
     iValue = atoi( szBuffer );
-    SetIPLVersion( _abs(iValue) );
+    uiValue = (unsigned int) abs( iValue );
+    SetIPLVersion( uiValue );
 
 #else
     float fValue;
@@ -352,7 +355,7 @@ void CSysConfig::DisplaySystemVar()
     LOG_LINEFEED;
     LOG_LINEFEED;
 
-    Log( enNormal, "\t.최소 펄스수               : %d" , m_strConfig.iMinAnalPulse );
+    Log( enNormal, "\t.최소 펄스수               : %d" , m_strConfig.uiMinAnalPulse );
     Log( enNormal, "\t.기본 위협 삭제 시간[초]   : %d" , m_strConfig.iEmitterDeleteTime );
     Log( enNormal, "\t.대역별 기본 임계값       : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
     LOG_LINEFEED;

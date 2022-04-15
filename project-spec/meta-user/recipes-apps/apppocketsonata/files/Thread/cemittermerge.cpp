@@ -18,9 +18,9 @@
 #define _DEBUG_
 
 #ifdef _MSSQL_
-CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+CEmitterMerge::CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
 #else
-CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CEmitterMerge::CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 #endif
 {
     LOGENTRY;
@@ -68,7 +68,16 @@ CEmitterMerge::CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData )
  */
 CEmitterMerge::~CEmitterMerge()
 {
+#ifdef _SQLITE_
+    // delete m_pDatabase;
+
+#elif _MSSQL_
     m_theMyODBC.Close();
+
+
+#else
+
+#endif
 
     delete m_pTheEmitterMergeMngr;
 }
@@ -180,10 +189,10 @@ void CEmitterMerge::MergeEmitter()
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     if( m_bScanInfo == false ) {
-        LOGMSG5( enDebug, "Operating the [%d] Band, in the %s Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_strAnalInfo.enBoardID, g_szCollectBank[ CCommonUtils::GetEnumCollectBank( m_strAnalInfo.uiCh ) ], m_strAnalInfo.uiCh, m_strAnalInfo.uiABTID, m_strAnalInfo.uiTotalLOB );
+        LOGMSG5( enDebug, "Operating the [%d] Band, in the %s Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_strAnalInfo.enBoardID, g_szCollectBank[ CCommonUtils::GetEnumCollectBank( m_strAnalInfo.iCh ) ], m_strAnalInfo.iCh, m_strAnalInfo.uiABTID, m_strAnalInfo.uiTotalLOB );
     }
     else {
-        LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_strAnalInfo.enBoardID, m_strAnalInfo.uiCh, m_strAnalInfo.uiABTID );
+        LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_strAnalInfo.enBoardID, m_strAnalInfo.iCh, m_strAnalInfo.uiABTID );
     }
 
     // 위협 관리 초기화
@@ -225,37 +234,6 @@ void CEmitterMerge::MergeEmitter()
     RequestTrackCollect( NULL );
 #endif
 
-    // 3. 추적 채널 경우에는 재시도 또는 추적 채널을 닫는다.
-//     if( m_bScanInfo == false ) {
-//         ENUM_COLLECTBANK enCollectBank;
-//         enCollectBank = CCommonUtils::GetEnumCollectBank( m_pMsg->x.strAnalInfo.uiCh );
-// 
-//         if( enCollectBank == enTrackCollectBank && bTrkLOB == false ) {
-//             strAnalInfo.enBoardID = g_enBoardId;
-//             strAnalInfo.uiCh = m_pMsg->x.strAnalInfo.uiCh;
-//             strAnalInfo.uiTotalLOB = _spOne;
-//             strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
-//             strAnalInfo.uiABTID = m_pMsg->x.strAnalInfo.uiABTID;
-// 
-//             pABTData = m_pTheEmitterMergeMngr->GetABTData(strAnalInfo.uiAETID, strAnalInfo.uiABTID);
-// 
-//             // 3.1 추적 채널 업데이트 및 빔 정보 제어조종 및 재밍신호관리장치에게 전달
-//             if( m_pTheEmitterMergeMngr->IsDeleteAET( strAnalInfo.uiAETID ) == false ) {
-//                 SELABTDATA_EXT *pABTExtData;
-// 
-//                 g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
-// 
-//                 pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( strAnalInfo.uiAETID, strAnalInfo.uiABTID );
-//                 SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
-//             }
-//             else {
-//                 g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
-// 
-//                 SendDelete( strAnalInfo.uiAETID );
-//             }
-//         }
-//     }
-
 }
 
 /**
@@ -276,7 +254,7 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
     if( pLOBData != NULL ) {
         if( m_pTheEmitterMergeMngr->ReqTrack() == true ) {
             strAnalInfo.enBoardID = m_strAnalInfo.enBoardID;
-            strAnalInfo.uiCh = ( CCommonUtils::GetEnumCollectBank( m_strAnalInfo.uiCh) == enTrackCollectBank ? m_strAnalInfo.uiCh : _spZero );
+            strAnalInfo.iCh = ( CCommonUtils::GetEnumCollectBank( m_strAnalInfo.iCh) == enTrackCollectBank ? m_strAnalInfo.iCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
@@ -314,7 +292,7 @@ void CEmitterMerge::RequestTrackReCollect()
     
     if( pSRxABTData != NULL ) {
         strAnalInfo.enBoardID = g_enBoardId;
-        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+        strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
         strAnalInfo.uiABTID = pLOBData->uiABTID;
@@ -347,7 +325,7 @@ void CEmitterMerge::RequestScanCollect( SRxLOBData *pLOBData )
         m_pTheEmitterMergeMngr->EnScanProcess( enSCAN_Processing );
 
         strAnalInfo.enBoardID = m_strAnalInfo.enBoardID;
-        strAnalInfo.uiCh = _spZero;
+        strAnalInfo.iCh = _spZero;
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
         strAnalInfo.uiABTID = pLOBData->uiABTID;
@@ -374,6 +352,8 @@ void CEmitterMerge::SendNewUpd()
 
     char *pString;
 
+    size_t szSize;
+
     STR_AET stAET;
     SRxABTData *pSRxABTData;
     SELABTDATA_EXT *pABTExtData;
@@ -388,43 +368,43 @@ void CEmitterMerge::SendNewUpd()
     stAET.noEMT = (int) pSRxABTData->uiABTID;
     stAET.sigType = pSRxABTData->iSignalType;
 
-    stAET.frq.band = SONATA::ENCODE::BAND( pSRxABTData->fFreqMean );
-    stAET.frq.type = pSRxABTData->iFreqType;
-    stAET.frq.mean = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMean );
-    stAET.frq.min = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMin );
-    stAET.frq.max = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqMax );
-    stAET.frq.patType = pSRxABTData->iFreqPatternType;
-    stAET.frq.patPrd = (int) SONATA::ENCODE::TOA( pSRxABTData->fFreqPatternPeriodMean );
-    stAET.frq.swtLev = pSRxABTData->iFreqPositionCount;
-    for( i=0 ; i < stAET.frq.swtLev; ++i ) {
-        stAET.frq.swtVal[i] = SONATA::ENCODE::FREQ( stAET.frq.band, pSRxABTData->fFreqSeq[i] );
+    stAET.frq.iBand = SONATA::ENCODE::BAND( pSRxABTData->fFreqMean );
+    stAET.frq.iType = pSRxABTData->iFreqType;
+    stAET.frq.iMean = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMean );
+    stAET.frq.iMin = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMin );
+    stAET.frq.iMax = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMax );
+    stAET.frq.iPatType = pSRxABTData->iFreqPatternType;
+    stAET.frq.iPatPrd = (int) SONATA::ENCODE::TOA( pSRxABTData->fFreqPatternPeriodMean );
+    stAET.frq.iSwtLev = pSRxABTData->iFreqPositionCount;
+    for( i=0 ; i < stAET.frq.iSwtLev; ++i ) {
+        stAET.frq.iSwtVal[i] = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqSeq[i] );
     }
 
-    stAET.pri.type = pSRxABTData->iPRIType;
-    stAET.pri.mean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
-    stAET.pri.min = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
-    stAET.pri.max = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
-    stAET.pri.patType = pSRxABTData->iPRIPatternType;
-    stAET.pri.jtrPer = pSRxABTData->fPRIJitterRatio;
-    stAET.pri.swtLev = pSRxABTData->iPRIPositionCount;
-    for( i=0 ; i < stAET.pri.swtLev; ++i ) {
-        stAET.pri.swtVal[i] = SONATA::ENCODE::TOA( pSRxABTData->fPRISeq[i] );
+    stAET.pri.iType = pSRxABTData->iPRIType;
+    stAET.pri.TMean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
+    stAET.pri.TMin = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
+    stAET.pri.TMax = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
+    stAET.pri.iPatType = pSRxABTData->iPRIPatternType;
+    stAET.pri.fJtrPer = pSRxABTData->fPRIJitterRatio;
+    stAET.pri.iSwtLev = pSRxABTData->iPRIPositionCount;
+    for( i=0 ; i < stAET.pri.iSwtLev; ++i ) {
+        stAET.pri.TSwtVal[i] = SONATA::ENCODE::TOA( pSRxABTData->fPRISeq[i] );
     }
 
-    stAET.pw.mean = SONATA::ENCODE::PW( pSRxABTData->fPWMean );
-    stAET.pw.min = SONATA::ENCODE::PW( pSRxABTData->fPWMin );
-    stAET.pw.max = SONATA::ENCODE::PW( pSRxABTData->fPWMax );
+    stAET.pw.iMean = SONATA::ENCODE::PW( pSRxABTData->fPWMean );
+    stAET.pw.iMin = SONATA::ENCODE::PW( pSRxABTData->fPWMin );
+    stAET.pw.iMax = SONATA::ENCODE::PW( pSRxABTData->fPWMax );
 
-    stAET.pa.mean = SONATA::ENCODE::PA( pSRxABTData->fPAMean );
-    stAET.pa.min = SONATA::ENCODE::PA( pSRxABTData->fPAMin );
-    stAET.pa.max = SONATA::ENCODE::PA( pSRxABTData->fPAMax );
+    stAET.pa.iMean = SONATA::ENCODE::PA( pSRxABTData->fPAMean );
+    stAET.pa.iMin = SONATA::ENCODE::PA( pSRxABTData->fPAMin );
+    stAET.pa.iMax = SONATA::ENCODE::PA( pSRxABTData->fPAMax );
 
-    stAET.as.stat = pSRxABTData->iScanType != 0 ? SELF_SUCCESS : SELF_FAIL;
-    stAET.as.type = pSRxABTData->iScanType;
-    stAET.as.prd = SONATA::ENCODE::SCNPRD( pSRxABTData->fMeanScanPeriod );
+    stAET.as.iStat = pSRxABTData->iScanType != 0 ? SELF_SUCCESS : SELF_FAIL;
+    stAET.as.iType = pSRxABTData->iScanType;
+    stAET.as.iPrd = SONATA::ENCODE::SCNPRD( pSRxABTData->fMeanScanPeriod );
 
-    stAET.seen.frst = (UINT) pSRxABTData->tiFirstSeenTime;
-    stAET.seen.last = (UINT) pSRxABTData->tiLastSeenTime;
+    stAET.seen.uiFrst = (UINT) pSRxABTData->tiFirstSeenTime;
+    stAET.seen.uiLast = (UINT) pSRxABTData->tiLastSeenTime;
 
     stAET.priLev = (unsigned int) pSRxABTData->iRadarModePriority;
     pString = m_pTheEmitterMergeMngr->GetELNOT( pSRxABTData->iRadarModeIndex );
@@ -435,7 +415,8 @@ void CEmitterMerge::SendNewUpd()
     if( pString ) { strncpy( (char *) stAET.threatName, pString, sizeof(stAET.threatName) ); }
 
     stAET.id.coAmbi = min( pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
-    memcpy( stAET.id.noIPL, (int *) pABTExtData->idInfo.nRadarModeIndex, sizeof(int) * stAET.id.coAmbi );
+    szSize = sizeof(int) * MAX_IDCANDIDATE;
+    memcpy( stAET.id.noIPL, (int *) pABTExtData->idInfo.nRadarModeIndex, szSize );
 
     // 랜 메시지 전달한다.
     

@@ -12,7 +12,6 @@
 #include <stdio.h>
 
 // 사용자 헤더파일 정의
-//#include "../INC/_define.h"
 #include "../INC/PDW.h"
 
 #include "../SigAnal/_Macro.h"
@@ -33,7 +32,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-20 19:01:00
 //
-CNGroup::CNGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
+CNGroup::CNGroup( void *pParent, unsigned int uiCoMaxPdw ) : CGroup(uiCoMaxPdw)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 

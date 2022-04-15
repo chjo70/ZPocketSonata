@@ -301,8 +301,8 @@ public:
 			if( nIdx == pThreat->m_Idx.uiAET ) {
 				// 중지 여부 결정		
 				if( pIndex->uiABT == INVALID_INDEX ) {
+                    pThreat = NULL;
 					break;
-					// return pThreat;
 				}
 
 				// 2. ABT 찾기
@@ -329,15 +329,14 @@ public:
 					}
 					pThreat = pThreat->m_pRightChild;
 				}
-				//if( pThreat == NULL )
-				return NULL;
+                pThreat = NULL;
+                break;
 			}
 	
 			pThreat = pThreat->m_pRightChild;
 		}
 		
 		return pThreat;
-		//return NULL;
 	}
 
 	CELThreat *GetLeftChild() {

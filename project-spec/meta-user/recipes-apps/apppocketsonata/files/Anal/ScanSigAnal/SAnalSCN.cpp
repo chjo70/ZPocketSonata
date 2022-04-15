@@ -31,8 +31,8 @@ CSAnalScan::CSAnalScan( void *pParent, int coMaxPdw ) : CAnalPRI( coMaxPdw ), CM
 {
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
-    INIT_ANAL_VAR2_( CAnalPRI, m_pScanSigAnal);
-    INIT_ANAL_VAR2_( CMakeAET, m_pScanSigAnal);
+    INIT_ANAL_VAR2_( CAnalPRI, m_pScanSigAnal)
+    INIT_ANAL_VAR2_( CMakeAET, m_pScanSigAnal)
 
     m_uiMaxPdw = coMaxPdw;
 
@@ -57,7 +57,7 @@ CSAnalScan::~CSAnalScan()
 void CSAnalScan::Init( int noEMT, int noCh )
 {
 
-	m_nScnTyp = _spUnknown;
+	m_uiScnTyp = _spUnknown;
     m_uiScnPrd = _spZero;
 
 	m_noEMT = noEMT; // m_pScanSigAnal->GetScanNoEMT();
@@ -95,7 +95,7 @@ STR_PULSE_TRAIN_SEG *CSAnalScan::GetPulseSeg()
  * @brief CSAnalScan::GetCoSeg
  * @return
  */
-int CSAnalScan::GetCoSeg()
+unsigned int CSAnalScan::GetCoSeg()
 {
     return m_pScanSigAnal->GetCoSeg();
 }
@@ -160,7 +160,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
     SRxLOBData *pLOBData;
     EN_SCANRESULT enScanResult=_spAnalFail;
 
-	UINT bthreat;
+	UINT uiThreat;
     UINT paMean;
 
     m_pEmitter = TakeTheScanMainEmitter();
@@ -169,7 +169,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
         \date 2006-05-12 14:08:48, 조철희
     */
     if( m_pEmitter == NULL ) {
-        m_nScnTyp = E_AET_SCAN_UNKNOWN;
+        m_uiScnTyp = E_AET_SCAN_UNKNOWN;
         m_uiScnPrd = _spZero;
 
     }
@@ -194,10 +194,10 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
         m_nSample.meanY = Normalize( & m_nSample.pa[0], m_nSample.co, & m_nSample.normPa[0] );
 
         // debug, 99-12-15 14:14:32 -> 00-01-13 13:12:56
-        paMean = (int) ( MeanInArray( & m_pScanPt->pa[0], m_pScanPt->co ) + 0.5 );
+        paMean = (int) ( MeanInArray( & m_pScanPt->pa[0], m_pScanPt->uiCount ) + 0.5 );
 
         if( CheckSteadySignal( & m_nSample, paMean ) == true ) {
-            m_nScnTyp = E_AET_SCAN_STEADY;
+            m_uiScnTyp = E_AET_SCAN_STEADY;
             m_uiScnPrd = _spZero;
 
             m_nCoModWc[m_noEMT] = _spZero;
@@ -209,10 +209,10 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
             m_uiScnPrd = FindPeak( & m_nAutoCor );
             // printf( "\n Period : %d(%d) ms" , UDIV( m_nScnPrd, ONE_MILLISEC ), m_nScnPrd );
 
-            bthreat = ScanTypeDecision2( & m_nSample, & m_nAutoCor );
+            uiThreat = ScanTypeDecision2( & m_nSample, & m_nAutoCor );
 
             if( m_uiScnPrd == (UINT) -1 ) {
-                m_nScnTyp = E_AET_SCAN_SCANFAIL;
+                m_uiScnTyp = E_AET_SCAN_SCANFAIL;
                 m_nCoModWc[m_noEMT] = _spZero;
                 enScanResult = _spAnalFail;
             }
@@ -220,14 +220,14 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
                 enScanResult = _spAnalSuc;
             }
 
-            if( bthreat == _spAnalFail && CheckControlWc(m_noEMT) == _spTrue ) {
+            if(uiThreat == (unsigned int) _spAnalFail && CheckControlWc(m_noEMT) == _spTrue ) {
                 WhereIs;
 
                 ++ m_nCoModWc[m_noEMT];
                 enScanResult = _spModWc;
             }
 
-            if( bthreat == _spAnalSuc ) {
+            if(uiThreat == (unsigned int) _spAnalSuc ) {
                 m_nCoModWc[m_noEMT] = _spZero;
             }
         }
@@ -239,7 +239,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
     pLOBData = GetLOBData();
 
 #ifndef _XBAND_
-    pLOBData->iScanType = m_nScnTyp;
+    pLOBData->iScanType = (int) m_uiScnTyp;
     pLOBData->fScanPeriod = TOAmsCNV( m_uiScnPrd );
 
 #endif
@@ -253,7 +253,8 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
  */
 void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
 {
-    int i, count=0, pdw_count;
+    int i;
+    UINT uiCount = 0, uiPDWCount;
 
     PDWINDEX *pIndex;
     _TOA *pScanTOA;
@@ -262,18 +263,18 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
     pScanPA = & m_pScanPt->pa[0];
     pScanTOA = & m_pScanPt->toa[0];
     pIndex = pPdwIndex->pIndex;
-    pdw_count = pPdwIndex->uiCount;
-    for( i=0 ; i < m_uiMaxPdw && i < pdw_count ; ++i ) {
+    uiPDWCount = pPdwIndex->uiCount;
+    for( i=0 ; i < m_uiMaxPdw && i < uiPDWCount; ++i ) {
         int idx;
 
         idx = *pIndex++;
         *pScanTOA++ = CAnalPRI::m_pTOA[idx];
-        *pScanPA++ = CAnalPRI::m_pPA[idx];
-        ++ count;
+        *pScanPA++ = (UINT) CAnalPRI::m_pPA[idx];
+        ++uiCount;
 
     }
 
-    m_pScanPt->co = count;
+    m_pScanPt->uiCount = uiCount;
 
 }
 
@@ -286,7 +287,7 @@ STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
     STR_EMITTER *pEmitter;
 
     pEmitter = CAnalPRI::GetEmitter();
-    if( CAnalPRI::m_CoEmitter == _spOne && pEmitter[0].pdw.uiCount > 10 ) {
+    if( CAnalPRI::m_uiCoEmitter == _spOne && pEmitter[0].pdw.uiCount > 10 ) {
 
     }
     else {
@@ -375,8 +376,8 @@ UINT CSAnalScan::CalcSamplingTime( UINT priMean )
 
     // 수집 총 시간 측정
     //ullSpanTime = m_pTOA[ uiLastIndex ] - m_pTOA[0];
-    if( m_pScanPt->co >= 1 && m_pScanPt->co <= sizeof(m_pScanPt->toa) ) {
-        ullSpanTime = m_pScanPt->toa[ m_pScanPt->co-1 ] - m_pScanPt->toa[0];
+    if( m_pScanPt->uiCount >= 1 && m_pScanPt->uiCount <= sizeof(m_pScanPt->toa) ) {
+        ullSpanTime = m_pScanPt->toa[ m_pScanPt->uiCount-1 ] - m_pScanPt->toa[0];
     }
     else {
         ullSpanTime = 0;
@@ -416,7 +417,7 @@ void CSAnalScan::SamplingProcess()
 	_TOA dShgh;
  
 	// Search maximum and minimum X of pulse train
-    SearchLowHghInArray( m_pScanPt->pa, m_pScanPt->co, & m_pScanPt->_pa );
+    SearchLowHghInArray( m_pScanPt->pa, m_pScanPt->uiCount, & m_pScanPt->_pa );
 
 	m_nSample.co = _spZero;
     // memset( & m_nSample, _spZero, sizeof( m_nSample ) );
@@ -427,11 +428,11 @@ void CSAnalScan::SamplingProcess()
     psx = & m_nSample.toa[0];
     psy = & m_nSample.pa[0];
 
-    _EQUALS3( sumY, maxY, _spZero );
+    _EQUALS3( sumY, maxY, _spZero )
     inpulse = _spZero;
     dShgh = *px + m_nSampleTime;
 
-	for( i=0 ; i < m_pScanPt->co ; ) {
+	for( i=0 ; i < m_pScanPt->uiCount ; ) {
 		if( *px < dShgh ) {
 			sumY += *py;                    // Sampling 구간내의 PA의 전체 합
 			if( maxY < *py )                // Sampling 구간내의 PA의 최대 합
@@ -460,7 +461,7 @@ void CSAnalScan::SamplingProcess()
 
 			++ psx;
 			++ psy;
-			_EQUALS3( sumY, maxY, _spZero );
+			_EQUALS3( sumY, maxY, _spZero )
 			inpulse = _spZero;
 
 			++ m_nSample.co;
@@ -517,7 +518,7 @@ void CSAnalScan::ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 	UINT CoOffVal;
 	UINT MaxOffVal;
 
-	_EQUALS3( MaxOffVal, missing, _spZero );
+	_EQUALS3( MaxOffVal, missing, _spZero )
 	for( i=0 ; i < pSample->co ; ++i ) {
 		if( pSample->pa[i] == (UINT) -1 ) {
 			++ missing;
@@ -695,7 +696,7 @@ void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
  
     memset( pAutoCor, _spZero, sizeof( STR_AUTOCOR ) );
 
-    _EQUALS3( co, pAutoCor->co, pSample->co );
+    _EQUALS3( co, pAutoCor->co, pSample->co )
     pxd1 = & pSample->normPa[_spZero];
 
   for( i=0 ; i < co ; ++i, ++pxd1 ) {
@@ -863,7 +864,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 
 	UINT prdVer;
 
-	_EQUALS3( pAcf->idPeak, prdVer, PeriodVerify() );
+	_EQUALS3( pAcf->idPeak, prdVer, PeriodVerify() )
 
 	ScnType = HighIllustrationTest2( pSample, pAcf );
  	KurtosisSkewness( pSample );		// debug, 00-07-26 22:36:44
@@ -876,14 +877,14 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 				// m_nCoCanPeak 값은 피크값이 존재한 개수를 의미한다.
 				//-- 조철희 2006-05-09 17:16:11 --//
 				if( m_nCoCanPeak /* prdVer */ >= _spOne ) {		// _spOne -> _spThree
-					m_nScnTyp = TrackUnknown;
+					m_uiScnTyp = TrackUnknown;
 				}
 				else {
 					/*! \bug  스캔 형태가 Steady 라고 할 때 Kurtosis 값은 5.0 이하이어야 한다.
 							\date 2006-05-12 11:55:00, 조철희
 					*/
 					if( m_nSample.kurtosis <= 5.0 ) {
-                        m_nScnTyp = E_AET_SCAN_STEADY;
+                        m_uiScnTyp = E_AET_SCAN_STEADY;
 						m_uiScnPrd = _spZero;
 					}
 				}
@@ -896,12 +897,12 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 					    \date 2008-11-03 22:34:32, 조철희
 					*/
 					if( pSample->skewness < 0.7 )
-                        m_nScnTyp = E_AET_SCAN_CONICAL;
+                        m_uiScnTyp = E_AET_SCAN_CONICAL;
 					else
-						m_nScnTyp = TrackUnknown;
+						m_uiScnTyp = TrackUnknown;
 				}
 				else {
-					m_nScnTyp = TrackUnknown;
+					m_uiScnTyp = TrackUnknown;
 				}
 				break;
 
@@ -923,15 +924,15 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 		switch( ScnType ) {
             case E_AET_SCAN_STEADY :
 				if( prdVer >= _spOne ) {
-					m_nScnTyp = DetectUnknown;
+					m_uiScnTyp = DetectUnknown;
 				}
 				else {
 					if( fabs( pSample->skewness ) <= 1.0 ) {	// debug, 00-04-17 20:38:23
-                        m_nScnTyp = E_AET_SCAN_STEADY;
+                        m_uiScnTyp = E_AET_SCAN_STEADY;
 						m_uiScnPrd = _spZero;
 					}
 					else {
-						m_nScnTyp = DetectUnknown;
+						m_uiScnTyp = DetectUnknown;
 					}
 				}
 				break;
@@ -939,10 +940,10 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
             case E_AET_SCAN_CONICAL :
 				printf( "\n CONICAL2[%d]" , UDIV( m_uiScnPrd, _spOneMilli) );
 				if( prdVer >= _spOne ) {
-					m_nScnTyp = LowIllustrationTest;
+					m_uiScnTyp = LowIllustrationTest;
 				}
                 else {
-                    m_nScnTyp = DetectUnknown;
+                    m_uiScnTyp = DetectUnknown;
                 }
 				break;
 
@@ -954,7 +955,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
                 break;
 
             default:
-				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_nScnTyp );   
+				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_uiScnTyp );   
 				WhereIs;
 				break;
 
@@ -965,21 +966,21 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 	    // TurnOnLED( prc_SAP, LED1 );		// debug, 00-06-05 09:39:34
 
 	    // KurtosisSkewness( & gSample );
-	    if( m_nScnTyp == LowIllustrationTest || m_nScnTyp == DetectUnknown ) {
+	    if( m_uiScnTyp == LowIllustrationTest || m_uiScnTyp == DetectUnknown ) {
 		    if( prdVer >= _spTwo ) {
-			    m_nScnTyp = DetectNonTrackScanPattern( pSample, pAcf );
+			    m_uiScnTyp = DetectNonTrackScanPattern( pSample, pAcf );
 
 			    // 최소 스캔 주기 체크함.
 			    if( (UINT) m_uiScnPrd <= UMUL( 300, _spOneMilli ) ) {
 				    /*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 						    \date 2009-09-28 17:44:14, 조철희
 				    */
-                    m_nScnTyp = E_AET_SCAN_SCANFAIL;
+                    m_uiScnTyp = E_AET_SCAN_SCANFAIL;
 				    uiRet = _spAnalFail;
 			    }
 
 
-			    switch( m_nScnTyp ) {
+			    switch( m_uiScnTyp ) {
 				    case _spUnknown :
                         //Printf( "\n	Scan Anal Fail !" );
 					    uiRet = _spAnalFail;
@@ -1005,7 +1006,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 		    }
 	    }
 
-	    else if( m_nScnTyp == TrackUnknown ) {
+	    else if( m_uiScnTyp == TrackUnknown ) {
 		    uiRet = _spAnalFail;
 	    }
 
@@ -1015,7 +1016,7 @@ UINT CSAnalScan::ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 			    /*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 					    \date 2009-09-28 17:44:14, 조철희
 			    */
-                m_nScnTyp = E_AET_SCAN_SCANFAIL;
+                m_uiScnTyp = E_AET_SCAN_SCANFAIL;
 			    uiRet = _spAnalFail;
 		    }
 
@@ -1106,7 +1107,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 	    \date 2008-11-03 22:29:18, 조철희
 	*/
 	if( pSample->sdevY == _spZero || pSample->co <= 3 ) {
-        _EQUALS3( pSample->kurtosis, pSample->skewness, _spZero );
+        _EQUALS3( pSample->kurtosis, pSample->skewness, _spZero )
 		co = UINT_MAX;
 	}
 	else {
@@ -1114,7 +1115,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
         A = ( N * ( N + 1 ) ) / ( ( N - 1 ) * ( N - 2 ) * ( N - 3 ) );
         C = ( 3 * ( N - 1 ) * ( N - 1 ) ) / ( ( N - 2 ) * ( N - 3 ) );
 
-        _EQUALS3( B3, B4, 0. );
+        _EQUALS3( B3, B4, 0. )
 
         co = pSample->co; 
         for( i=0 ; i < co ; ++i ) {
@@ -1189,7 +1190,7 @@ UINT CSAnalScan::PeriodVerify( void )
 		coSamePeakDtoa = _spZero;
 	}
     else {
-	    _EQUALS3( virPeak, prdPeak, UDIV( m_uiScnPrd, m_nSampleTime ) );
+	    _EQUALS3( virPeak, prdPeak, UDIV( m_uiScnPrd, m_nSampleTime ) )
 
 	    scnErr = UDIV( UDIV( m_uiScnPrd * 5, 100 ), m_nSampleTime );
 	    offErr = UDIV( stOffPdw, 1.5 );
@@ -1343,7 +1344,7 @@ UINT CSAnalScan::DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pA
 
 	float	*pThreshold;
 
-	_EQUALS3( sum1, sum2, 0. );
+	_EQUALS3( sum1, sum2, 0. )
 
 	// Make function of Threshold
 	inHalfPeriod = DivideBy2( _spZero, pAutocf->inPeak );
@@ -1484,9 +1485,9 @@ void CSAnalScan::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
 //! \date     2006-01-23 10:14:02
 //! \warning
 //
-UINT CSAnalScan::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count )
+UINT CSAnalScan::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
-    return m_pScanSigAnal->MedianFreq( pMinMax, pPdwIndex, count );
+    return m_pScanSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1498,9 +1499,9 @@ UINT CSAnalScan::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int c
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-06 14:44:01
 //
-_TOA CSAnalScan::VerifyPRI( PDWINDEX *pPdwIndex, int count )
+_TOA CSAnalScan::VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pScanSigAnal->VerifyPRI( pPdwIndex, count );
+    return m_pScanSigAnal->VerifyPRI( pPdwIndex, uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1513,7 +1514,7 @@ _TOA CSAnalScan::VerifyPRI( PDWINDEX *pPdwIndex, int count )
 //! \date		 2006-07-06 17:28:14
 //! \warning
 //
-int CSAnalScan::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
+int CSAnalScan::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex )
 {
     return 0; //m_pScanSigAnal->FindPeakInHist( count, pPdwIndex );
 }
@@ -1523,9 +1524,9 @@ int CSAnalScan::FindPeakInHist( int count, PDWINDEX *pPdwIndex )
  * @param pEmitter
  * @param index
  */
-void CSAnalScan::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
+void CSAnalScan::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pScanSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
+    m_pScanSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 
@@ -1582,9 +1583,9 @@ UINT CSAnalScan::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
  * @param count
  * @return
  */
-int CSAnalScan::CalcPAMean(PDWINDEX *pPdwIndex, int count )
+int CSAnalScan::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pScanSigAnal->CalcPAMean( pPdwIndex, count );
+    return m_pScanSigAnal->CalcPAMean( pPdwIndex, uiCount );
 }
 
 /**
@@ -1593,9 +1594,9 @@ int CSAnalScan::CalcPAMean(PDWINDEX *pPdwIndex, int count )
  * @param count
  * @return
  */
-int CSAnalScan::VerifyPW( PDWINDEX *pPdwIndex, int count )
+int CSAnalScan::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pScanSigAnal->VerifyPW( pPdwIndex, count );
+    return m_pScanSigAnal->VerifyPW( pPdwIndex, uiCount );
 }
 
 /**

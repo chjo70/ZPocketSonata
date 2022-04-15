@@ -95,30 +95,22 @@
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 10:41:42
 //
-CScanSigAnal::CScanSigAnal( int coMaxPdw )
+CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw)
 {
 	InitVar();
 
 	// 신호 분석 관련 클래스 생성
-	m_theGroup = new CSGroup( this, coMaxPdw );
-	m_thePulExt = new CSPulExt( this, coMaxPdw );
+	m_theGroup = new CSGroup( this, uiCoMaxPdw);
+	m_thePulExt = new CSPulExt( this, uiCoMaxPdw);
 
 	// 스캔 분석 관련 클래스 생성
-    m_theAnalScan = new CSAnalScan( this, coMaxPdw );
+    m_theAnalScan = new CSAnalScan( this, uiCoMaxPdw);
 
-	if( m_theGroup == NULL || m_thePulExt == NULL || m_theAnalScan == NULL ) {
-		printf( "\n 메모리가 부족 합니다." );
-		printf( "\n sap.def 에서 heap size를 늘려주세요." );
-		printf( "\n m_theGroup:: this[%p]" , m_theGroup );
-		printf( "\n m_thePulExt:: this[%p]" , m_thePulExt );
-		printf( "\n m_theAnalScan:: this[%p]" , m_theAnalScan );
-	}
-
-	m_nMaxPdw = coMaxPdw;
+	m_nMaxPdw = uiCoMaxPdw;
 
 	//-- 조철희 2006-02-17 15:23:06 --//
 	m_noCh = 0;
-	m_CoPdw = 0;
+	m_uiCoPdw = 0;
 	m_noEMT = 0;
 
 	m_pSeg = GetPulseSeg();
@@ -287,11 +279,11 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 
 	int nScnTyp, nScnPrd;
 	GetScanRes( & nScnTyp, & nScnPrd );
-	stScnAet[m_noEMT].aet.as.type = nScnTyp;
-	stScnAet[m_noEMT].aet.as.prd = nScnPrd;
+	stScnAet[m_noEMT].aet.as.iType = nScnTyp;
+	stScnAet[m_noEMT].aet.as.iPrd = nScnPrd;
 
 	if( nResult == _spAnalSuc ) 
-		stScnAet[m_noEMT].aet.as.stat = SELF_SUCCESS;
+		stScnAet[m_noEMT].aet.as.iStat = SELF_SUCCESS;
 
  	pView->UpdateScanInfoFromSAP( & stScnAet[m_noEMT] );
 
@@ -342,7 +334,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 //
 UINT CScanSigAnal::GetCoScanPulse()
 {
-	return stScanPt.co;
+	return stScanPt.uiCount;
 }
 //////////////////////////////////////////////////////////////////////
 //
@@ -370,10 +362,10 @@ void CScanSigAnal::ClearColBuffer()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 14:07:35
 //
-void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type)
+void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
 {
 	for( int i=0 ; i < count ; ++i )
-		MARK[ *pPdwIndex++ ] = mark_type;
+		MARK[ *pPdwIndex++ ] = usMarkType;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -407,7 +399,7 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pPDWData )
     m_pPDWData = pPDWData;
 
     // 신호 수집 개수 정의
-    m_CoPdw = pPDWData->GetTotalPDW();
+    m_uiCoPdw = pPDWData->GetTotalPDW();
 
     m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
 
@@ -440,7 +432,7 @@ void CScanSigAnal::ScanExtractPulseInit( int noEMT, int noCh )
 // 	m_pPdwBank = & stSPDW;
 
 	// 신호 수집 개수 정의
-    m_CoPdw = 100; // m_pPdwBank->count;
+    m_uiCoPdw = 100; // m_pPdwBank->count;
 
 	// stScnAet의 인덱스 저장
 	m_noEMT = noEMT;
@@ -507,7 +499,7 @@ void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 14:37:39
 //
-void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int iPLOBID )
+void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
 
 #ifdef _WIN321

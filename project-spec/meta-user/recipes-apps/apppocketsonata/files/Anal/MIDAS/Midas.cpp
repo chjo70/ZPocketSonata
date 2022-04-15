@@ -2010,7 +2010,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
                 break;
             }
 
-            close( iFile );
+            _close( iFile );
 
             ++ pConvertIFList;
         }

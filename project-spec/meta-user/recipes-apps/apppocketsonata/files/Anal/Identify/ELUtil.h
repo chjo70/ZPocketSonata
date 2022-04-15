@@ -5,18 +5,14 @@
 #if !defined(AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_)
 #define AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include "../SigAnal/_Macro.h"
 
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
 #define	KM_PER_DEGREE_FOR_LONGITUDE						(88.884)				// [km/deg]
 
-BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
-BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );
+//BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
+//BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );
 BOOL CompAoaDiff( float x, float y, float fthresh );
 float AoaDiff( float x, float y);
 void LogPrint( const char *format, ... );
@@ -230,19 +226,6 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
         \date     2008-02-19 17:44:30
         \warning
 */
-/**
- * @brief     CompMarginDiff
- * @param     T x
- * @param     T iy1
- * @param     T iy2
- * @param     T fthresh
- * @return    BOOL
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-01-10, 14:36
- * @warning
- */
 template <typename T>
 BOOL CompMarginDiff( T x, T iy1, T iy2, T fthresh )
 {

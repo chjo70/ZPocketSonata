@@ -105,7 +105,7 @@ typedef struct
 typedef struct
 {
 	uint32_t		buff_len 	: 26;	// MAX 64MB
-	uint32_t		eof			: 1;
+	uint32_t		uiEOF			: 1;
 	uint32_t		sof			: 1;
 	uint32_t		reserved	: 4;
 } dma_sg_ctrl_t;
@@ -134,7 +134,7 @@ typedef struct
 
 struct dma_sg_descs_t
 {
-	uint32_t		count;
+	uint32_t		uiCount;
 	uint32_t		size;
 
 	dma_sg_desc_t	*item;

@@ -1,4 +1,4 @@
-#ifndef CCOMMONUTILS_H
+ï»¿#ifndef CCOMMONUTILS_H
 #define CCOMMONUTILS_H
 
 //#include "../Include/system.h"
@@ -60,17 +60,18 @@ public:
     static bool IsValidThread( STR_MessageData *pMsg );
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
-    static void AllSwapData32( void *pData, int iLength );
+    static void AllSwapData32( void *pData, unsigned int uiLength );
     static void swapByteOrder( unsigned int& ui );
     static void swapByteOrder(double & d);
     static void swapByteOrder(double *p, int iSize );
     static void swapByteOrder( unsigned short & us);
 
-    static ENUM_COLLECTBANK GetEnumCollectBank( unsigned int uiCh );
+    static ENUM_COLLECTBANK GetEnumCollectBank( int iCh );
 
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
-    static void getStringPresentTime( char *pString );
+    static void getStringPresentTime( char *pString, size_t szString );
+    static void getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime );
 
     static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
@@ -81,7 +82,7 @@ public:
 
     static size_t CheckMultiplyOverflow( int iSize, int iItems );
 
-    // Å¸ÀÔ º¯È¯½Ã »ç¿ëÇÏ´Â ÇÔ¼ö ¸ğÀ½
+    // íƒ€ì… ë³€í™˜ì‹œ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜ ëª¨ìŒ
     static unsigned int INT2UINT( int iValue );
 
 };

@@ -223,6 +223,7 @@ void InitDatabase()
  */
 void Start( int iArgc, char *iArgv[] )
 {
+    //SetConsoleOutputCP(65001);
 
     ParsingArgument( iArgc, iArgv );
 
@@ -279,14 +280,14 @@ void Start( int iArgc, char *iArgv[] )
     //CGI->Run( _MSG_ZCGI_KEY );
 
     // 7. 사용자 수집 함수 메시지를 처리한다.
-    g_pTheUserCollect = new CUserCollect( g_iKeyId++, (char*) "CUserCollect", true );
+    g_pTheUserCollect = new CUserCollect( g_iKeyId++, (const char*) "CUserCollect", true );
     g_pTheUserCollect->Run( _MSG_USERCOL_KEY );
 
     // 8. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
     //g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
     //g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
     if( g_pTheSysConfig->GetBoardID() == enMaster ) {
-        g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (char *)"CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork() );
+        g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (const char *)"CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork() );
         g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 
         //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
@@ -295,7 +296,7 @@ void Start( int iArgc, char *iArgv[] )
 
     g_AnalLoop = true;
 
-    g_pTheEmitterMerge = new CEmitterMerge( g_iKeyId++, (char*) "CEmitterMerge", true );
+    g_pTheEmitterMerge = new CEmitterMerge( g_iKeyId++, (const char*) "CEmitterMerge", true );
     g_pTheEmitterMerge->Run();
     g_pTheSignalCollect = new CSignalCollect( g_iKeyId++, (char*) "CSignalCollect", true );
     g_pTheSignalCollect->Run();
@@ -313,6 +314,15 @@ void Start( int iArgc, char *iArgv[] )
 
 }
 
+/**
+ * @brief     SIM_Start
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-14, 13:35
+ * @warning
+ */
 void SIM_Start()
 {
 #ifdef _MFC_VER	
@@ -735,7 +745,7 @@ void MemotyTest( size_t iSize )
     size_t ii;
     char *pMemory;
 
-    char buffer[100]={0};
+    //char buffer[100]={0};
 
     //printf( "sizeof(size_t)=%d",sizeof(size_t) );
     if( iSize > 1024 * 1024 * 1024 ) {

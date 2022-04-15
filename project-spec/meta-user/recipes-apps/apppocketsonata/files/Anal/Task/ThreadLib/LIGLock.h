@@ -1,9 +1,9 @@
-/**
+ï»¿/**
 * @file			LIGLock.h
 * @date			2010/10/22
 * @author		Jang, MinKi(Greg) / Revised by Lee, JeongNam 
 * @brief		
-* @remarks		Critical Section LockÀ» Scoped LockÀ¸·Î °£ÆíÇÏ°Ô ÀÌ¿ë
+* @remarks		Critical Section Lockì„ Scoped Lockìœ¼ë¡œ ê°„íŽ¸í•˜ê²Œ ì´ìš©
 */
 
 #ifndef _LIGLOCK_H_
@@ -14,42 +14,42 @@
 
 /**
  * @class    LIGLock
- * @brief   ÀÓ°è¿µ¿ª ¼³Á¤ Å¬·¡½º
+ * @brief   ìž„ê³„ì˜ì—­ ì„¤ì • í´ëž˜ìŠ¤
  *
- * (1) Å¬·¡½º ¼³¸í
- * -   ÀÓ°è¿µ¿ª ¼³Á¤ Å¬·¡½º
+ * (1) í´ëž˜ìŠ¤ ì„¤ëª…
+ * -   ìž„ê³„ì˜ì—­ ì„¤ì • í´ëž˜ìŠ¤
  *
- * (2) ¼³°è°áÁ¤»çÇ×
- * - ÀÓ°è¿µ¿ª¿¡ ´ëÇØ¼­ Enter/Leave ¸¦ ÀÚµ¿À¸·Î ÇÒ ¼ö ÀÖµµ·Ï Wrapping °ü¸®
+ * (2) ì„¤ê³„ê²°ì •ì‚¬í•­
+ * - ìž„ê³„ì˜ì—­ì— ëŒ€í•´ì„œ Enter/Leave ë¥¼ ìžë™ìœ¼ë¡œ í•  ìˆ˜ ìžˆë„ë¡ Wrapping ê´€ë¦¬
  *
- * (3) Á¦ÇÑ ¹× ¿¹¿ÜÃ³¸®
- * - ÇØ´ç»çÇ×¾øÀ½
+ * (3) ì œí•œ ë° ì˜ˆì™¸ì²˜ë¦¬
+ * - í•´ë‹¹ì‚¬í•­ì—†ìŒ
  */
 class LIGLock
 {
 public:
 	/**
-	* @brief     »ý¼ºÀÚ ÇÔ¼ö
+	* @brief     ìƒì„±ìž í•¨ìˆ˜
 	*/
 	LIGLock();
 	/**
-	* @brief     ¼Ò¸êÀÚ ÇÔ¼ö
+	* @brief     ì†Œë©¸ìž í•¨ìˆ˜
 	*/
     virtual ~LIGLock();
 
 	/**
-	* @brief		ÀÓ°è¿µ¿ªÀ» º¸È£ÇÏ±â À§ÇÑ lock ÇÔ¼ö	
+	* @brief		ìž„ê³„ì˜ì—­ì„ ë³´í˜¸í•˜ê¸° ìœ„í•œ lock í•¨ìˆ˜	
 	*/
     void lock();
 
 	/**
-	* @brief		ÀÓ°è¿µ¿ªÀ» º¸È£¸¦ ÇØÁöÇÏ±â À§ÇÑ unlock ÇÔ¼ö	
+	* @brief		ìž„ê³„ì˜ì—­ì„ ë³´í˜¸ë¥¼ í•´ì§€í•˜ê¸° ìœ„í•œ unlock í•¨ìˆ˜	
 	*/
     void unlock();
 	
 	/**
-	* @brief		trylock ÇÔ¼ö
-	* @return		true : lock ¼º°ø, false : lock ½ÇÆÐ(ÀÌ¹Ì lock°É·Á ÀÖÀ½)
+	* @brief		trylock í•¨ìˆ˜
+	* @return		true : lock ì„±ê³µ, false : lock ì‹¤íŒ¨(ì´ë¯¸ lockê±¸ë ¤ ìžˆìŒ)
 	*/
    // bool trylock();
 
@@ -62,21 +62,21 @@ private:
 * @date			2010/10/22
 * @author		Jang, MinKi(Greg)
 * @brief			Scoped Lock Class
-* @remarks		{} »çÀÌ¿¡¼­ ÀÚµ¿ unlock
+* @remarks		{} ì‚¬ì´ì—ì„œ ìžë™ unlock
 */
 
 /**
  * @class    ScopedLock
- * @brief   °ýÈ£ ½ºÄß {} »çÀÌ¿¡¼­ ÀÚµ¿ unlockÀ» ÇØÁÖ±â À§ÇÑ wrapping Å¬·¡½º
+ * @brief   ê´„í˜¸ ìŠ¤ì½¥ {} ì‚¬ì´ì—ì„œ ìžë™ unlockì„ í•´ì£¼ê¸° ìœ„í•œ wrapping í´ëž˜ìŠ¤
  *
- * (1) Å¬·¡½º ¼³¸í
- * -    °ýÈ£ ½ºÄß {} »çÀÌ¿¡¼­ ÀÚµ¿ unlockÀ» ÇØÁÖ±â À§ÇÑ wrapping Å¬·¡½º
+ * (1) í´ëž˜ìŠ¤ ì„¤ëª…
+ * -    ê´„í˜¸ ìŠ¤ì½¥ {} ì‚¬ì´ì—ì„œ ìžë™ unlockì„ í•´ì£¼ê¸° ìœ„í•œ wrapping í´ëž˜ìŠ¤
  *
- * (2) ¼³°è°áÁ¤»çÇ×
- * - ÀÚµ¿ unlockÀÌ °¡´ÉÇÏµµ·Ï °ü¸®
+ * (2) ì„¤ê³„ê²°ì •ì‚¬í•­
+ * - ìžë™ unlockì´ ê°€ëŠ¥í•˜ë„ë¡ ê´€ë¦¬
  *
- * (3) Á¦ÇÑ ¹× ¿¹¿ÜÃ³¸®
- * - ÇØ´ç»çÇ×¾øÀ½
+ * (3) ì œí•œ ë° ì˜ˆì™¸ì²˜ë¦¬
+ * - í•´ë‹¹ì‚¬í•­ì—†ìŒ
  */
 class ScopedLock
 {
@@ -84,22 +84,22 @@ class ScopedLock
 
 public:
 	/**
-	* @brief     »ý¼ºÀÚ ÇÔ¼ö
+	* @brief     ìƒì„±ìž í•¨ìˆ˜
 	*/
 	explicit ScopedLock(LIGLock *lockPtr2) : lockPtr(lockPtr2)	{	lock();	}
 
 	/**
-	* @brief     ¼Ò¸êÀÚ ÇÔ¼ö
+	* @brief     ì†Œë©¸ìž í•¨ìˆ˜
 	*/
     ~ScopedLock()	{	unlock(); }
 
 	/**
-	* @brief     lock Ã³¸® ÇÔ¼ö
+	* @brief     lock ì²˜ë¦¬ í•¨ìˆ˜
 	*/
     void lock()		{	lockPtr->lock();	}
     
 	/**
-	* @brief     unlock Ã³¸® ÇÔ¼ö
+	* @brief     unlock ì²˜ë¦¬ í•¨ìˆ˜
 	*/
 	void unlock() 	{ 	lockPtr->unlock();	}
 };

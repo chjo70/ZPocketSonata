@@ -27,13 +27,21 @@
 
 #ifdef _MAIN_GLOBALS_
 // 장치 타입으로 이 값을 확인해서 장치에 맞게 실행하도록 한다.
+#ifdef _MSC_VER
 __declspec(dllexport) ENUM_UnitType g_enUnitType;
+#else
+ENUM_UnitType g_enUnitType;
+#endif
 
 #else
 
 #ifndef _ENUNIT_TYPE
 #define _ENUNIT_TYPE
+#ifdef _MSC_VER
 extern __declspec(dllexport) ENUM_UnitType g_enUnitType;
+#else
+extern ENUM_UnitType g_enUnitType;
+#endif
 #endif
 
 #endif
@@ -133,6 +141,15 @@ typedef union {
     char chData[32];
     union UZPOCKETPDW uPDW;
 
+    /**
+     * @brief     GetTOA
+     * @return    _TOA
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     _TOA GetTOA() {
         _TOA ullTOA;
 
@@ -141,6 +158,15 @@ typedef union {
         return ullTOA;
     }
 
+    /**
+     * @brief     GetChannel
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     int GetChannel() {
         int iCh;
 
@@ -150,18 +176,37 @@ typedef union {
         return iCh;
     }
 
+    /**
+     * @brief     GetFrequency
+     * @param     int iCh
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     unsigned int GetFrequency( int iCh ) {
         unsigned int uiFrequency;
 
         uiFrequency = ( uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L ) | ( uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H << 8 );
         uiFrequency = ( 0x10000 + ( uiFrequency - 0x8000 ) ) % 0x10000;
 
-        uiFrequency = uiFrequency + ( iCh * 0x10000 );
+        uiFrequency = uiFrequency + ( (unsigned int) iCh * 0x10000 );
 
         return uiFrequency;
 
     }
 
+    /**
+     * @brief     GetPulsewidth
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:53
+     * @warning
+     */
     unsigned int GetPulsewidth() {
         unsigned int uiPulsewidth;
 
@@ -170,6 +215,15 @@ typedef union {
 
     }
 
+    /**
+     * @brief     GetAOA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     unsigned int GetAOA() {
         unsigned int uiAOA;
 
@@ -178,6 +232,15 @@ typedef union {
 
     }
 
+    /**
+     * @brief     GetPulseamplitude
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     unsigned int GetPulseamplitude() {
         unsigned int uiPA;
 
@@ -186,6 +249,15 @@ typedef union {
 
     }
 
+    /**
+     * @brief     GetPulsetype
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-06, 10:54
+     * @warning
+     */
     int GetPulsetype() {
         int iSignaltype = STAT_NORMAL;
 
@@ -992,10 +1064,10 @@ struct STR_PDWDATA {
         x.ps.stCommon.uiTotalPDW = uiTotalPDW;
         }
         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        x.el.stCommon.uiTotalPDW = uiTotalPDW;;
+        x.el.stCommon.uiTotalPDW = uiTotalPDW;
         }
         else {
-        x.so.stCommon.uiTotalPDW = uiTotalPDW;;
+        x.so.stCommon.uiTotalPDW = uiTotalPDW;
         }
 
         return;
@@ -1119,6 +1191,20 @@ typedef struct {
 
     _PDW stPDW[MAX_PDW];
 
+    unsigned int GetBand() {
+        unsigned int uiBand;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiBand = x.ps.uiBand;
+        }
+        else {
+            uiBand = 0;
+        }
+
+        return uiBand;
+
+    }
+
     /**
      * @brief     GetTotalPDW
      * @return    unsigned int
@@ -1168,6 +1254,21 @@ typedef struct {
         }
 
         return uiPDWID;
+    }
+
+    void SetPDWID( unsigned int uiPDWID ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            x.ps.stCommon.uiPDWID = uiPDWID;
+        }
+        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+            x.el.stCommon.uiPDWID = uiPDWID;
+        }
+        else {
+            x.so.stCommon.uiPDWID = uiPDWID;
+        }
+
+        return;
     }
 
     /**

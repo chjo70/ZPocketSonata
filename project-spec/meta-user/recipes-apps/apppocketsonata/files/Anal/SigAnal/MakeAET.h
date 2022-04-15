@@ -60,14 +60,14 @@ protected:
 
 public:
     void ConvertRealFreq( STR_FRQ *pFrq );
-    void ReMakeEmitter();
-    void DiscardEmitter();
+    //void ReMakeEmitter();
+    //void DiscardEmitter();
     //void SetCWParameter( STR_NEWAET *pNewAet );
     int CalMaxChannel( STR_PDWINDEX *pPdw );
 
     void DISP_HexFineAet( STR_NEWAET *pNewAet );
 
-    char * Comma( char *pString );
+    //char * Comma( char *pString );
     void PrintAllEmitter();
 
     //##ModelId=452B0C5503E0
@@ -85,15 +85,15 @@ public:
     //##ModelId=452B0C56000C
     virtual int GetColPdw()=0;
     //##ModelId=452B0C56000E
-    virtual int CalcPAMean(PDWINDEX *pPdwIndex, int count )=0;
+    virtual int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount)=0;
     //##ModelId=452B0C560012
-    virtual int VerifyPW( PDWINDEX *pPdwIndex, int count )=0;
+    virtual int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)=0;
     //##ModelId=452B0C560019
-    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )=0;
+    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)=0;
     //##ModelId=452B0C560021
-    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index )=0;
+    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index, bool bSaveFile )=0;
     //##ModelId=452B0C56002A
-    virtual int GetCoSeg()=0;
+    virtual unsigned int GetCoSeg()=0;
     //##ModelId=452B0C56002C
     virtual int GetCoEmitter()=0;
     //##ModelId=452B0C56002E

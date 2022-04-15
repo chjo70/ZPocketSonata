@@ -112,3 +112,29 @@ extern "C" {
 void SetWindowHandler( HWND hWnd );
 void SetLocal( bool bLocal );
 bool GetLocal();
+
+
+// VS2012 이상에서 TRACE를 변경하기 위함.
+#if _MSC_VER > 1600
+
+#ifdef _DEBUG
+
+bool _TRACE(char *format, ...);
+bool _TRACE(CString strFormat, ...);
+
+#undef TRACE
+#define TRACE _TRACE
+
+#else
+
+bool _TRACE(char *format, ...);
+bool _TRACE(CString strFormat, ...);
+
+#undef TRACE
+#define TRACE _TRACE
+
+//#define TRACE false && _TRACE
+
+#endif
+
+#endif

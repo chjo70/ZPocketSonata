@@ -72,7 +72,7 @@ void CArrayMsgData::Free()
     if( m_bArrayLanData == true ) {
         //TRACE( "\ndelete in the thread m_pszArray[i]=0x%p" , m_pszArray[0] );
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            _SAFE_FREE( m_pszArray[i] );
+            _SAFE_FREE( m_pszArray[i] )
         }
     }
 

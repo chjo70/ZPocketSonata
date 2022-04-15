@@ -81,15 +81,15 @@ public:
     //##ModelId=452B0C53003B
     int GetColPdw();
     //##ModelId=452B0C53003C
-    int CalcPAMean(PDWINDEX *pPdwIndex, int count );
+    int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
     //##ModelId=452B0C530044
-    int VerifyPW( PDWINDEX *pPdwIndex, int count );
+    int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C530047
-    void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type );
+    void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
     //##ModelId=452B0C530050
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     //##ModelId=452B0C530058
-    int GetCoSeg();
+    unsigned int GetCoSeg();
     //##ModelId=452B0C530059
     int GetCoEmitter();
     //##ModelId=452B0C53005A
@@ -105,7 +105,7 @@ public:
 
 	void GetCollectTime( struct timespec *pTimeSpec );
 
-    inline unsigned int GetPDWID() { return (UINT) -1; }
+    unsigned int GetPDWID();
 
      //template <typename T>
      //UINT CheckHarmonic(float mean1, float mean2, float priThreshold );

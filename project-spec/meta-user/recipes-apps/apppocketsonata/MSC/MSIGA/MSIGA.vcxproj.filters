@@ -94,6 +94,9 @@
     <Filter Include="소스 파일\ODBC">
       <UniqueIdentifier>{38258f16-e649-4993-8b02-351dc43ab872}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Utils\DMA">
+      <UniqueIdentifier>{49327121-010c-4b7a-93d3-e28be4a09572}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -101,15 +104,6 @@
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="res\MSIGA.ico">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="res\icon1.ico">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="C:\Users\chjo7_hns3pqr\OneDrive\사진\Sketchpad.ico">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="res\Sketchpad.ico">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
@@ -500,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\INC\Defines.h">
       <Filter>소스 파일\Anal\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\DMA\dma.h">
+      <Filter>소스 파일\Utils\DMA</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

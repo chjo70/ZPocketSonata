@@ -47,7 +47,7 @@ private:
     void MakeSharedSpectrumData();
 
 public:
-    CUserCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+    CUserCollect( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUserCollect();
 
     void Run( key_t key=IPC_PRIVATE ); 

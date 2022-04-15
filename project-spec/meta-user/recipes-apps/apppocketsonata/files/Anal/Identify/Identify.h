@@ -15,6 +15,8 @@
 #include "structs.h"
 #include "../SigAnal/_Macro.h"
 
+#include "./ELUtil.h"
+
 
 #include "../EmitterMerge/PositionEstimationAlg.h"
 #include "../EmitterMerge/ELGMIMsgDefn.h"
@@ -285,36 +287,36 @@ private:
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 
-    template <typename T>
-    T _diffabs( T x, T y)
-    {
+//     template <typename T>
+//     T _diffabs( T x, T y)
+//     {
+// 
+//         if (x > y) {
+//             return x - y;
+//         }
+//         else {
+//             return y - x;
+//         }
+// 
+//     }
 
-        if (x > y) {
-            return x - y;
-        }
-        else {
-            return y - x;
-        }
-
-    }
-
-    template <typename T>
-    BOOL CompMeanDiff( T x, T y, T thresh )
-    {
-        T diff;
-        BOOL bRet;
-
-        diff = _diffabs<T>( x, y );
-
-        if( diff <= thresh ) {
-            bRet = TRUE;
-        }
-        else {
-            bRet = FALSE;
-        }
-
-        return bRet;
-    }
+//     template <typename T>
+//     BOOL CompMeanDiff( T x, T y, T thresh )
+//     {
+//         T diff;
+//         BOOL bRet;
+// 
+//         diff = _diffabs<T>( x, y );
+// 
+//         if( diff <= thresh ) {
+//             bRet = TRUE;
+//         }
+//         else {
+//             bRet = FALSE;
+//         }
+// 
+//         return bRet;
+//     }
 
 	template <typename T>
 	BOOL CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
@@ -372,7 +374,7 @@ private:
 					pSeries = pSeries2;
 					for( k=j ; k < coSeries+j ; ++k ) {
 						index1 = k % coSeries;
-						bRet = CompMeanDiff( pSeries1[index1], *pSeries, margin );
+						bRet = CompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
 						if( FALSE == bRet ) {
 							break;
 						}

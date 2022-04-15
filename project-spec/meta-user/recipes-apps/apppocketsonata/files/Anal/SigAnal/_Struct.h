@@ -86,7 +86,7 @@ struct STR_AOA_GROUP {
 //##ModelId=452B0C54032A
 struct STR_AOA_GROUPS {
     STR_AOA_GROUP aoa[ MAX_AGRT ];
-    int iCount;
+    unsigned int uiCount;
 	int coAnal;
 
 }  ;
@@ -110,7 +110,7 @@ struct STR_FRQ_GROUP {
 //##ModelId=452B0C540348
 struct STR_FRQ_GROUPS {
 	STR_FRQ_GROUP frq[ MAX_FGRT ];
-	int iCount;
+	unsigned int uiCount;
 	int coAnal;
 
 }  ;
@@ -130,7 +130,7 @@ struct STR_PW_GROUP {
 //##ModelId=452B0C540366
 struct STR_PW_GROUPS {
 	STR_PW_GROUP pw[ MAX_PGRT ];
-	int iCount;
+	unsigned int uiCount;
 	int coAnal;
 
 }  ;
@@ -164,7 +164,7 @@ struct STR_FIRST_FRQAOA_PEAK {
 struct STR_PULSE_TRAIN_SEG {
 	STR_PDWINDEX pdw;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
 
-	UINT miss;							// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
+	UINT uiMiss;							// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
 	UINT uiPRI_Band;					// 펄스열 추출할 때의 PRI 밴드
 	UINT extract_step;			// 기준 펄스열, STABLE, Jitter PRI
 	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
@@ -172,18 +172,18 @@ struct STR_PULSE_TRAIN_SEG {
 	PDWINDEX last_idx;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
 	_TOA first_toa;					// 펄스열 첫번째 TOA
 	_TOA last_toa;					// 펄스열 마지막 TOA
-	UINT stat;							// PDW 상태
-	UINT freq_type;					// 주파수 타입
+	UINT uiStat;							// PDW 상태
+	UINT uiFreqType;					// 주파수 타입
 	STR_MINMAX aoa;					// 방위 제원 
 	STR_MINMAX_MEDIAN freq;				// 주파수 제원 
 	STR_MINMAX pa;					// 신호세기 제원 
 	STR_MINMAX pw;					// 펄스폭 제원 
-	UINT pri_type;					// PRI 타입
+	UINT uiPriType;					// PRI 타입
 	STR_MINMAX_TOA pri;					// PRI 제원
 	UINT min_dtoa;					// DTOA 간격 중에서 최소가 되는 값
 	float jitter_p;					// 지터율
 	UINT continuity;				// 펄스열 연속성(%)
-	UINT band;							// 주파수 Band Code
+	UINT uiBand;							// 주파수 Band Code
 	UINT peak_idx;					// peak PA의 펄스 index
 	//UINT cd;								// Correct Detection
 	//UINT steady;						// steady 스캔특성
@@ -218,10 +218,10 @@ struct STR_EMITTER {
 	UINT pri_patterntype;
 	float priPeriod;
 
-	unsigned int iStagDwellElementCount;					// stagger level 수 
+	unsigned int uiStagDwellElementCount;					// stagger level 수 
 	_TOA stag_dwell_element[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	int iStagDwellLevelCount;					// stagger level 수 
+	unsigned int uiStagDwellLevelCount;					// stagger level 수 
 	_TOA stag_dwell_level[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
 	int hop_level[ MAX_FREQ_PRI_STEP ];					// Hopping level
@@ -252,7 +252,7 @@ struct STR_PDWPARAM {
 	UINT *puiParam;
 	int *piParam;
 
-	int count;
+	int uiCount;
 
 } ;
 
@@ -395,7 +395,7 @@ struct STR_KP {
 //##ModelId=452B0C4E03B9
 struct STR_CM
 {
-  UINT Cw_Min_Cnt;         // CW신호를 분석하기 위한 최소 CW개수
+  UINT uiCw_Min_Cnt;         // CW신호를 분석하기 위한 최소 CW개수
 
   UINT Mpc;                //000223 // Stable 펄스열의 최소 펄스수 (Min. Pulse Count)
   UINT Mjpc;               //000223 // Jitter 펄스열의 최소 펄스수 (Min. Jitter Pulse Count)

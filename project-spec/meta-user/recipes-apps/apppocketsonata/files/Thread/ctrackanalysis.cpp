@@ -8,7 +8,6 @@
 
 #include "ctrackanalysis.h"
 #include "cemittermerge.h"
-//#include "../Utils/clog.h"
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
@@ -28,15 +27,23 @@
  */
 CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW );
-    if( m_pTheKnownSigAnal == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
-    }
+
+#ifdef _SQLITE_
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
+
+    strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false, szSQLiteFileName );
+#else
+    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false );
+
+#endif
 
     m_pTheSysPara = new CSysPara();
-    if( m_pTheSysPara == NULL ) {
-        LOGMSG( enDebug, "메모리 부족입니다. CNewSigAnal 객체를 생성할 수 없습니다 !" );
-    }
+
 }
 
 
@@ -45,11 +52,9 @@ CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData
  */
 CTrackAnalysis::~CTrackAnalysis(void)
 {
-    delete m_pTheKnownSigAnal;
-    m_pTheKnownSigAnal = NULL;
+    _SAFE_DELETE( m_pTheKnownSigAnal )
 
-    delete m_pTheSysPara;
-    m_pTheSysPara = NULL;
+    _SAFE_DELETE( m_pTheSysPara )
 }
 
 
@@ -113,7 +118,7 @@ void CTrackAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
-    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.iCh, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -128,7 +133,7 @@ void CTrackAnalysis::AnalysisStart()
 
     strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = uiTotalLOB;
-    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+    strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
     g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );

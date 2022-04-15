@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////
 //
 //  MODULE:   odbccore.cpp
 //
@@ -40,7 +40,7 @@ void CMSSQL::CheckConnection()
 	* @brief		
 	* @param		int iErrorException
 	* @return 	void
-	* @return		¼º°ø½Ã true, ½ÇÆÐ½Ã false
+	* @return		ì„±ê³µì‹œ true, ì‹¤íŒ¨ì‹œ false
 */
 void CMSSQL::ErrorException( int iErrorException )
 {
@@ -60,13 +60,13 @@ void CMSSQL::DisplayErrorException( int iErrorException )
 {
 // 	switch( iErrorException ) {
 // 	case SQL_ERROR_DISCONNECTION :
-// 		printf( "ODBC ¿¬°áÀÌ ½ÇÆÐ µÇ¾ú½À´Ï´Ù." );
-// 		Log( enError, "ODBC ¿¬°áÀÌ ½ÇÆÐ µÇ¾ú½À´Ï´Ù." );
+// 		printf( "ODBC ì—°ê²°ì´ ì‹¤íŒ¨ ë˜ì—ˆìŠµë‹ˆë‹¤." );
+// 		Log( enError, "ODBC ì—°ê²°ì´ ì‹¤íŒ¨ ë˜ì—ˆìŠµë‹ˆë‹¤." );
 // 		break;
 // 
 // 	case SQL_ERROR_QUERY :
-// 		printf( "Open() ÇÔ¼ö¿¡¼­ ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù." );
-// 		Log( enError, "Open() ÇÔ¼ö¿¡¼­ ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù." );
+// 		printf( "Open() í•¨ìˆ˜ì—ì„œ ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤." );
+// 		Log( enError, "Open() í•¨ìˆ˜ì—ì„œ ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤." );
 // 		break;
 // 
 // 	default :
@@ -75,7 +75,7 @@ void CMSSQL::DisplayErrorException( int iErrorException )
 }
 
 /**
-	* @brief		LONG °ªÀ» ¸®ÅÏÇÑ´Ù.
+	* @brief		LONG ê°’ì„ ë¦¬í„´í•œë‹¤.
 	* @param		char * pSQLString
 	* @return 	int
 	* @date			2019/04/18 17:10
@@ -90,7 +90,7 @@ LONG CMSSQL::GetLONGData( char *pSQLString )
 
 	theRS.Open( pSQLString );
 	if( ! theRS.IsEof() ) {
-		theRS.GetFieldValue( 0, & lValue );
+		theRS.GetFieldValue( (SQLSMALLINT) 0, & lValue );
 	}
 
 	theRS.Close();
@@ -101,7 +101,7 @@ LONG CMSSQL::GetLONGData( char *pSQLString )
 }
 
 /**
-	* @brief		LONG °ªÀ» ¸®ÅÏÇÑ´Ù.
+	* @brief		LONG ê°’ì„ ë¦¬í„´í•œë‹¤.
 	* @param		char * pSQLString
 	* @return 	int
 	* @date			2019/04/18 17:10
@@ -116,7 +116,7 @@ int CMSSQL::GetINTData( char *pSQLString )
 
 	theRS.Open( pSQLString );
 	if( ! theRS.IsEof() ) {
-		theRS.GetFieldValue( 0, & iValue );
+		theRS.GetFieldValue( (SQLSMALLINT) 0, & iValue );
 	}
 
 	theRS.Close();
@@ -161,11 +161,11 @@ int CMSSQL::GetINTData( char *pSQLString )
 // 		_localtime32_s( & stTime, & nowTime );
 // 		strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 // 
-// 		// RADARMODE Å×ÀÌºí¿¡ DATE_LAST_SEEN¿¡ ÇöÀç ³¯Â¥ ¹× ½Ã°£À» ¾÷µ¥ÀÌÆ® ÇÔ.
+// 		// RADARMODE í…Œì´ë¸”ì— DATE_LAST_SEENì— í˜„ìž¬ ë‚ ì§œ ë° ì‹œê°„ì„ ì—…ë°ì´íŠ¸ í•¨.
 // 		sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_LAST_SEEN='%s' where RADAR_MODE_INDEX=%d", buffer, pLOBData->iRadarModeIndex );
 // 		theRS.Open( m_pszSQLString );
 // 
-// 		// RADARMODE Å×ÀÌºí¿¡ DATE_FIRST_SEEN¿¡ ÇöÀç ³¯Â¥ ¹× ½Ã°£À» ¾÷µ¥ÀÌÆ® ÇÔ.
+// 		// RADARMODE í…Œì´ë¸”ì— DATE_FIRST_SEENì— í˜„ìž¬ ë‚ ì§œ ë° ì‹œê°„ì„ ì—…ë°ì´íŠ¸ í•¨.
 // 		sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE RADARMODE SET DATE_FIRST_SEEN='%s' where ( RADAR_MODE_INDEX=%d and ISNULL( DATE_FIRST_SEEN, '')='' )", buffer, pLOBData->iRadarModeIndex );
 // 		//theRS.Open( m_pszSQLString );
 // 
@@ -377,14 +377,14 @@ int CMSSQL::GetINTData( char *pSQLString )
 // 		_localtime32_s( & stTime, & nowTime );
 // 		strftime( buffer1, 100, "%Y-%m-%d %H:%M:%S", & stTime);
 // 
-// 		// RADARMODE Å×ÀÌºí¿¡ DATE_LAST_SEEN¿¡ ÇöÀç ³¯Â¥ ¹× ½Ã°£À» ¾÷µ¥ÀÌÆ® ÇÔ.
+// 		// RADARMODE í…Œì´ë¸”ì— DATE_LAST_SEENì— í˜„ìž¬ ë‚ ì§œ ë° ì‹œê°„ì„ ì—…ë°ì´íŠ¸ í•¨.
 // 		sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "UPDATE THREAT SET DATE_LAST_SEEN='%s' where THREAT_INDEX=%d", buffer1, pABTData->iThreatIndex );
 // 		theRS.Open( m_pszSQLString );
 // 	}
 // 
 // 	theRS.Close();
 // 
-// 	// ¾Æ·¡¿¡¼­ ´Ù¿îÀÌ µÇ¸é SQL ¹öÆÛ¼ö¸¦ ´ÃÈ÷¸é µË´Ï´Ù.
+// 	// ì•„ëž˜ì—ì„œ ë‹¤ìš´ì´ ë˜ë©´ SQL ë²„í¼ìˆ˜ë¥¼ ëŠ˜ížˆë©´ ë©ë‹ˆë‹¤.
 // 	DECLARE_END_CHECKODBC
 // 	DECLARE_RETURN
 // 
@@ -510,7 +510,7 @@ int CMSSQL::GetINTData( char *pSQLString )
 // 
 // 
 // /**
-// 	* @brief		·¹ÀÌ´õ ¸ðµå¿Í À§Çù ¶óÀÌºê·¯¸®¸¦ ·ÎµùÇÑ´Ù.
+// 	* @brief		ë ˆì´ë” ëª¨ë“œì™€ ìœ„í˜‘ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ë¡œë”©í•œë‹¤.
 // 	* @return 	void
 // 	* @date			2019/04/22 11:04
 // */
@@ -694,7 +694,7 @@ int CMSSQL::GetINTData( char *pSQLString )
 // 
 // 	theRS.Open(m_pszSQLString);
 // 	while (!theRS.IsEof()) {
-// 		// Å×ÀÌºíÀÇ ÇÊµå ±æÀÌ¸¦ ÇÑ¹ø¸¸ Ã¼Å©ÇÑ´Ù.
+// 		// í…Œì´ë¸”ì˜ í•„ë“œ ê¸¸ì´ë¥¼ í•œë²ˆë§Œ ì²´í¬í•œë‹¤.
 // 		if( *pCoField == 0 ) {
 // 			if( theRS.GetFieldLength(0) >= MAX_OF_COLUMN_LENGTH ) {
 // 				theRS.Close();

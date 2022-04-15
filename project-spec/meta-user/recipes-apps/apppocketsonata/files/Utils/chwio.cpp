@@ -34,9 +34,19 @@ xuio_t CHWIO::m_xuio[XUIO_COUNT] = {
 
 unsigned int CHWIO::m_uiCoInterrupt=0;
 
+/**
+ * @brief     CHWIO
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-14, 13:51
+ * @warning
+ */
 CHWIO::CHWIO()
 {
     // m_uiCoInterrupt = 0;
+  
 }
 
 /**
@@ -156,10 +166,18 @@ uint32_t CHWIO::ReadReg(uint8_t sel, uint32_t offset)
  * @param sel
  * @return
  */
-xuio_t *CHWIO::uio_get_uio(uint8_t sel)
+xuio_t *CHWIO::uio_get_uio( uint8_t sel)
 {
-    if (sel >= XUIO_COUNT && m_xuio[sel].ullLogical == 0) { printf( "\n error of uio_get_uio" ); return NULL; }
-    return & m_xuio[sel];
+    xuio_t *pRet=NULL;
+
+    if ( sel >= XUIO_COUNT /* || m_xuio[sel].ullLogical == 0 */ ) { 
+        printf( "\n error of uio_get_uio" ); 
+    }
+    else {
+        pRet = & m_xuio[sel];
+    }
+
+    return pRet;
 }
 
 /**
@@ -169,11 +187,10 @@ xuio_t *CHWIO::uio_get_uio(uint8_t sel)
  */
 xmem_t *CHWIO::mem_get_mem(uint8_t sel)
 {
-    xmem_t *pRet;
+    xmem_t *pRet=NULL;
 
-    if (sel >= XMEM_COUNT && xmem[sel].ullogical == 0) {
+    if (sel >= XMEM_COUNT /* || xmem[sel].ullogical == 0 */ ) {
         printf( "\n error of mem_get_mem" );
-        pRet = NULL;
     }
     else {
         pRet =  & xmem[sel];
@@ -237,11 +254,11 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
     }
     else {
 #ifdef _SIM_USER_COLLECT_
-        int iModular;
+        unsigned int uiModular;
 
-        iModular = m_uiCoInterrupt % 50;
+        uiModular = m_uiCoInterrupt % (unsigned int) 50;
 
-        if( iModular <= 40 ) {
+        if( uiModular <= 40 ) {
             bRet = true;
         }
         else {

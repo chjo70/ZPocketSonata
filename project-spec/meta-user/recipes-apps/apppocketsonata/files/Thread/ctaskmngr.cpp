@@ -266,7 +266,7 @@ void CTaskMngr::SetMode()
 {
     ENUM_MODE enMode, enMode2;
 
-    _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData );
+    _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData )
 
     LOGMSG1( enDebug, "Set Mode[%d]", enMode );
 
@@ -566,7 +566,7 @@ void CTaskMngr::InsertIPL( int iIndex )
 
     pstrIPL = m_theIPL.getIPL( iIndex );
 
-    CCommonUtils::getStringPresentTime( szDate );
+    CCommonUtils::getStringPresentTime( szDate, sizeof(szDate) );
 
     // 업데이트 처리
     try {
@@ -681,7 +681,7 @@ void CTaskMngr::ReqAudio()
 
     pLanData = ( UNI_LAN_DATA * ) GetRecvData();
 
-    LOGMSG1( enNormal, "오디오 [%s] 합니다." , on_off[pLanData->bAudioSW] );
+    LOGMSG1( enNormal, "오디오 [%s] 합니다." , on_off[(int)(pLanData->bAudioSW)] );
 
 }
 

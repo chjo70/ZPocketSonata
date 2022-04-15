@@ -58,14 +58,9 @@ enum ENUM_BoardID {
 
 
 #define _SAFE_MALLOC(A, B, C )  if( A == NULL ) { \
-									if( C == 0 ) { \
-										A = NULL; \
-									} \
-									else { \
-										A = ( B * ) malloc( (size_t) C ); \
-										if( A == NULL ) { \
-											TRACE( "malloc error new memory[%s]" , #A ); \
-										} \
+									A = ( B * ) malloc( (size_t) C ); \
+									if( A == NULL ) { \
+										TRACE( "malloc error new memory[%s]" , #A ); \
 									} \
                                 } \
                                 else { TRACE( "Already malloc memory[%s]" , #A ); }
@@ -97,8 +92,8 @@ enum ENUM_BoardID {
 #define FADD( A, B )            (float) ( (float) (A) + (float) (B) )
 #define FMUL( A, B )            ( (float) (A) * (float) (B) )
 #define FDMUL( A, B )           (float) ( (double) (A) * (double) (B) )
-#define TMUL( A, B )            (_TOA) ( (_TOA) (A) * (_TOA) (B) + 0.5 )
-#define TDIV( A, B )            (_TOA) ( (_TOA) (A) / (_TOA) (B) + 0.5 )
+//#define TMUL( A, B )            (_TOA) ( (_TOA) (A) * (_TOA) (B) + 0.5 )
+//#define TDIV( A, B )            (_TOA) ( (_TOA) (A) / (_TOA) (B) + 0.5 )
 #define UMUL( A, B )            (UINT) ( ( (float) (A) * (float) (B) ) + 0.5 )
 #define NMUL( A, B )            (UINT) ( (float) (A) * (float) (B) - 0.5 )
 
@@ -146,7 +141,7 @@ T _diffabs( T x, T y)
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
 #define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
-#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), _spOneMicrosec )					
 #define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
@@ -254,7 +249,7 @@ T _diffabs( T x, T y)
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITTOAusCNV( A )			TMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 
 #define PWCNV( A )				IDIV( A, _spOneNanosec )
 #define IPWCNV( A )				IMUL( (A), _spOneNanosec )

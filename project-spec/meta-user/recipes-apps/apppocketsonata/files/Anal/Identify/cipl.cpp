@@ -1,4 +1,4 @@
-
+Ôªø
 #include "stdafx.h"
 
 
@@ -29,7 +29,7 @@ void CIPL::InitVar()
  * @brief		setIPLStart
  * @param		STR_IPL_START * pIPLStart
  * @return		void
- * @author		¡∂√∂»Ò (churlhee.jo@lignex1.com)
+ * @author		Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/23 15:32:01
  * @warning		

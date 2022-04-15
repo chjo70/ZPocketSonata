@@ -114,7 +114,7 @@ public:
     virtual void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )=0;
     //! 펄스열에 마킹을 한다.
     //##ModelId=452B0C5303D3
-    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )=0;
+    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType )=0;
     //##ModelId=452B0C5303DD
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
     virtual int GetCoPdw()=0;
@@ -239,9 +239,9 @@ public:
     //##ModelId=452B0C540141
     void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, int iMark=STABLE_MARK );
     //##ModelId=452B0C540168
-    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
+    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C54017E
-    void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
+    void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiCoRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
     //##ModelId=452B0C540191
     void MarkToPdwIndex( STR_PULSE_TRAIN_SEG *pSeg, int mark_type);
     //##ModelId=452B0C54019B
@@ -253,11 +253,11 @@ public:
     //##ModelId=452B0C5401C3
     _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
     //##ModelId=452B0C5401D6
-    int ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
+    unsigned int ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
     //##ModelId=452B0C5401EB
     UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
     //##ModelId=452B0C5401F5
-    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count );
+    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C540201
     void AllExtSegMark();
     //##ModelId=452B0C540208
@@ -279,11 +279,11 @@ public:
     //##ModelId=452B0C540246
     _TOA RecalcDtoaMargin( int ext_type, STR_PULSE_TRAIN_SEG *pSeg, UINT dtoa );
     //##ModelId=452B0C540250
-    BOOL OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
+    bool OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
     //##ModelId=452B0C540259
     void DiscardStablePulseTrain();
     //##ModelId=452B0C54025A
-    _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
+    _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C540263
     void VerifyPRI( STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C540265
@@ -303,7 +303,7 @@ public:
     //##ModelId=452B0C54028D
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
     //##ModelId=452B0C540297
-    BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int coRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
+    BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C5402AB
     void ExtractStablePT();
     //! 멤버 변수 초기화초

@@ -217,14 +217,14 @@ BOOL CODBCRecordset::Open(CHAR *szSqlStr)
     return bRet;
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, CHAR *szData)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, CHAR *szData)
 {
 	SQLRETURN ret;
 	SQLINTEGER cbValue;
 	int nLength = GetFieldLength(nField) + 1;
 	
 	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue);
+    ret = SQLGetData(m_hStmt, (SQLSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue);
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -233,14 +233,20 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, CHAR *szData)
 	return GetFieldValue(GetFieldIndex(szFieldName), szData);	
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, int *lData)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, int *lData)
 {
 	SQLRETURN ret;
 	SQLINTEGER cbValue;
-	int nLength = GetFieldLength(nField) + 1;
+	int nLength;
 
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue);
+    if( nField >= 0 ) {
+        nLength = GetFieldLength(nField) + 1;
+	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue) == SQL_SUCCESS;
+        ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue);
+    }
+    else {
+        ret = SQL_ERROR;
+    }
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -249,14 +255,21 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, int *lData)
 	return GetFieldValue(GetFieldIndex(szFieldName), lData);	
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, LONG *lData)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, LONG *lData)
 {
 	SQLRETURN ret;
 	SQLINTEGER cbValue;
-	int nLength = GetFieldLength(nField) + 1;
+	int nLength;
+    
+    if( nField >= 0 ) {
+        nLength = GetFieldLength(nField) + 1;
 	
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue);
+	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue) == SQL_SUCCESS;
+        ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue);
+    }
+    else {
+        ret = SQL_ERROR;
+    }
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -265,15 +278,22 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, LONG *lData)
 	return GetFieldValue(GetFieldIndex(szFieldName), lData);	
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, DOUBLE *dblData)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, DOUBLE *dblData)
 {
 	
 	SQLINTEGER cbValue;
 	SQLRETURN ret;
-	int nLength = GetFieldLength(nField) + 1;
+	int nLength;
+    
+    if( nField >= 0 ) {
+        nLength = GetFieldLength(nField) + 1;
 	
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_DOUBLE, dblData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_DOUBLE, dblData, nLength, &cbValue);
+	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_DOUBLE, dblData, nLength, &cbValue) == SQL_SUCCESS;
+        ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_DOUBLE, dblData, nLength, &cbValue);
+    }
+    else {
+        ret = SQL_ERROR;
+    }
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -282,15 +302,22 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, DOUBLE *dblData)
 	return GetFieldValue(GetFieldIndex(szFieldName), dblData);	
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, float *dblData)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, float *dblData)
 {
 
 	SQLINTEGER cbValue;
 	SQLRETURN ret;
-	int nLength = GetFieldLength(nField) + 1;
+	int nLength;
+    
+    if( nField >= 0 ) {
+        nLength = GetFieldLength(nField) + 1;
 
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue);
+	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue) == SQL_SUCCESS;
+        ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue);
+    }
+    else {
+        ret = SQL_ERROR;
+    }
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -299,35 +326,41 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, float *dblData)
 	return GetFieldValue(GetFieldIndex(szFieldName), dblData);	
 }
 
-BOOL CODBCRecordset::GetFieldValue(int nField, struct tm* time)
+BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, struct tm* pTime)
 {
 	BOOL bRet = FALSE;
 	SQLINTEGER cbValue;
 	SQLRETURN ret;
-	int nLength = GetFieldLength(nField) + 1;
-	SQL_TIMESTAMP_STRUCT* sqltm = new SQL_TIMESTAMP_STRUCT;
+	int nLength;
+    
+    if( nField >= 0 ) {
+        nLength = GetFieldLength(nField) + 1;
+	    SQL_TIMESTAMP_STRUCT* sqltm = new SQL_TIMESTAMP_STRUCT;
 	
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_TYPE_TIMESTAMP, sqltm, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_TYPE_TIMESTAMP, sqltm, nLength, &cbValue);
-	if(ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
-	{	
-		time->tm_year = sqltm->year;
-		time->tm_mon = sqltm->month - 1; //January must be = 0		
-		time->tm_mday = sqltm->day;
-		time->tm_hour = sqltm->hour;
-		time->tm_min = sqltm->minute;
-		time->tm_sec = sqltm->second;
-		bRet = TRUE;
-	}
+	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_TYPE_TIMESTAMP, sqltm, nLength, &cbValue) == SQL_SUCCESS;
+        ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_TYPE_TIMESTAMP, sqltm, nLength, &cbValue);
+	    if(ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
+	    {	
+		    pTime->tm_year = sqltm->year;
+		    pTime->tm_mon = sqltm->month - 1; //January must be = 0		
+		    pTime->tm_mday = sqltm->day;
+		    pTime->tm_hour = sqltm->hour;
+		    pTime->tm_min = sqltm->minute;
+		    pTime->tm_sec = sqltm->second;
+		    bRet = TRUE;
+	    }
+    }
+    else {
+    }
 	return bRet;
 }
 
-BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, struct tm* time)
+BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, struct tm* pTime)
 {
-	return GetFieldValue(GetFieldIndex(szFieldName), time);	
+	return GetFieldValue(GetFieldIndex(szFieldName), pTime);	
 }
 
-BOOL CODBCRecordset::GetFieldTimeValue(int nField, __time32_t * pTime)
+BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime)
 {
     BOOL bRet=FALSE;
 	SQLINTEGER cbValue;
@@ -359,14 +392,14 @@ BOOL CODBCRecordset::GetFieldTimeValue(int nField, __time32_t * pTime)
 	return bRet;
 }
 
-BOOL CODBCRecordset::GetFieldTimeValue(CHAR *szFieldName, __time32_t* time)
+BOOL CODBCRecordset::GetFieldTimeValue(CHAR *szFieldName, __time32_t* pTime)
 {
-	return GetFieldValue(GetFieldIndex(szFieldName), time);	
+	return GetFieldValue(GetFieldIndex(szFieldName), pTime);	
 }
 
 
 
-BOOL CODBCRecordset::GetFieldName(int nField, CHAR *szFieldName)
+BOOL CODBCRecordset::GetFieldName(SQLSMALLINT nField, CHAR *szFieldName)
 {
 	int nType, nLength;
 
@@ -375,8 +408,10 @@ BOOL CODBCRecordset::GetFieldName(int nField, CHAR *szFieldName)
 
 int CODBCRecordset::GetFieldIndex(CHAR *szFieldName)
 {
+    int iRet=-1;
+
 	SQLSMALLINT nCols;
-	int nCol = 1;
+	SQLUSMALLINT nCol = 1;
 	CHAR szColName[MAX_COL_NAME_LEN];
 	SQLSMALLINT cbColNameLen, fSqlType, ibScale, fNullable;
 	SQLUINTEGER cbColDef;
@@ -388,11 +423,13 @@ int CODBCRecordset::GetFieldIndex(CHAR *szFieldName)
 		memset(szColName, 0, 32 * sizeof(CHAR));
 		SQLDescribeCol(m_hStmt, nCol, (SQLCHAR*)szColName, MAX_COL_NAME_LEN, &cbColNameLen, &fSqlType, &cbColDef, &ibScale, &fNullable);
 
-		if(_stricmp(szColName, szFieldName) == 0)
-			return nCol - 1;
+		if(_stricmp(szColName, szFieldName) == 0) {
+			iRet = nCol - 1;
+            break;
+        }
 		nCol++;
 	}
-	return -1;
+	return iRet;
 }
 
 BOOL CODBCRecordset::MoveFirst()
@@ -442,7 +479,7 @@ BOOL CODBCRecordset::MoveLast()
 	return m_bIsEOF;
 }
 
-LONG CODBCRecordset::GetFieldLength(int nField)
+LONG CODBCRecordset::GetFieldLength(SQLSMALLINT nField)
 {
 	SQLSMALLINT fSqlType, ibScale, fNullable;
 	SQLUINTEGER cbColDef;

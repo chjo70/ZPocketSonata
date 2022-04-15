@@ -35,7 +35,7 @@
 #define _SIM_USER_COLLECT_
 #endif
 
-CUserCollect::CUserCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 
@@ -278,7 +278,7 @@ void CUserCollect::ColStart()
                 CHWIO::ClearInterrupt(pUIO);
 #endif
 
-                m_strResColStart.uiBoardID = g_pTheSysConfig->GetBoardID();
+                m_strResColStart.uiBoardID = (unsigned int) g_pTheSysConfig->GetBoardID();
 
                 // 실제 PDW 수집한 개수는 현재는 그냥 100 으로 한다.
                 m_strResColStart.uiCoPulseNum = NUM_OF_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
@@ -335,7 +335,7 @@ void CUserCollect::ColStart()
 #endif
     }
 
-    if( g_pTheSysConfig->GetMode() & enANAL_Mode ) {
+    if( ( (unsigned int) g_pTheSysConfig->GetMode() & (unsigned int) enANAL_Mode ) > 0 ) {
         g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
     }
     else {
@@ -436,10 +436,10 @@ void CUserCollect::MakeSIMPDWData()
 
     uiCoPDW = m_strResColStart.uiCoPulseNum;
 
-    iDOA = m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
+    iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
 
     for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = iDOA + ( rand() % 40 ) - 20;
+        randomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 1000 ) + 20000;
 

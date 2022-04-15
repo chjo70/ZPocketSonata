@@ -62,7 +62,7 @@ public:
 	//##ModelId=452B0C550033
 	void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 	//##ModelId=452B0C550037
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type );
+	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
 	//##ModelId=452B0C550040
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );

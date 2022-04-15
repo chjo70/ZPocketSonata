@@ -22,13 +22,12 @@ CSharedMemroy::CSharedMemroy()
  * @param key
  * @param iSize
  */
-CSharedMemroy::CSharedMemroy( key_t key, int iSize )
+CSharedMemroy::CSharedMemroy( key_t key, SIZE_T szSize )
 {
-
 
     setKey( key );
 
-    setupSharedMemory( iSize );
+    setupSharedMemory( szSize );
     attachSharedMemory();
 
 }
@@ -51,7 +50,7 @@ CSharedMemroy::CSharedMemroy( key_t key )
  */
 CSharedMemroy::~CSharedMemroy()
 {
-
+    closeSharedMemory();
 }
 
 /**
@@ -87,7 +86,7 @@ void CSharedMemroy::setKey( key_t key )
  * @brief CSharedMemroy::setupSharedMemory
  * @param iSize
  */
-void CSharedMemroy::setupSharedMemory( SIZE_T iSize )
+void CSharedMemroy::setupSharedMemory( SIZE_T szSize )
 {
    // Setup shared memory, 11 is the size
 #ifdef __linux__
@@ -102,7 +101,7 @@ void CSharedMemroy::setupSharedMemory( SIZE_T iSize )
                 perror( "Error getting shared memory id\n" );
             }
             attachSharedMemory();
-            close();
+            closeSharedMemory();
 
             if ( ( m_shmid = shmget(m_key, iSize , IPC_CREAT | 0666 )) < 0 ) {
                 perror( "Error getting shared memory id" );
@@ -110,20 +109,20 @@ void CSharedMemroy::setupSharedMemory( SIZE_T iSize )
         }
     }
 #elif _MSC_VER
-    if( iSize == 0 ) {
+    if( szSize == 0 ) {
         if( m_hHandle == NULL ) {
             m_hHandle = ::OpenFileMapping( FILE_MAP_ALL_ACCESS, NULL, SHARED_NAME );
         }            
         if( m_hHandle != NULL ) {
-            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, iSize );
+            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, szSize );
         }
     }
     else {
         if( m_hHandle == NULL ) {
-            m_hHandle = ::CreateFileMapping( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, iSize, SHARED_NAME );
+            m_hHandle = ::CreateFileMapping( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, szSize, SHARED_NAME );
         }
         if( m_hHandle != NULL ) {
-            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, iSize );
+            m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, szSize );
         }
     }
 
@@ -133,7 +132,7 @@ void CSharedMemroy::setupSharedMemory( SIZE_T iSize )
 #endif
 
 
-    m_iSize = iSize;
+    m_szSize = szSize;
 }
 
 /**
@@ -167,7 +166,7 @@ bool CSharedMemroy::copyToSharedMemroy( void *pData )
     bool bRet=true;
     // copy string to shared memory
     if( m_shared_memory != (void *) -1 ) {
-        memcpy( m_shared_memory, pData , m_iSize );
+        memcpy( m_shared_memory, pData , m_szSize );
     }
     else {
         //printf("Error copyToSharedMemroy !!");
@@ -183,15 +182,15 @@ bool CSharedMemroy::copyToSharedMemroy( void *pData )
  * @param pData
  * @param iSize
  */
-bool CSharedMemroy::copyToLocalMemroy( void *pData, int iSize )
+bool CSharedMemroy::copyToLocalMemroy( void *pData, SIZE_T szSize )
 {
     bool bRet=true;
     // copy string to shared memory
     if( m_shared_memory != (void *) -1 ) {
-        memcpy( pData, m_shared_memory, iSize );
+        memcpy( pData, m_shared_memory, szSize );
     }
     else {
-        memset( pData, 0, iSize );
+        memset( pData, 0, szSize );
         bRet = false;
         //printf("Error attaching shared memory id");
     }
@@ -202,7 +201,7 @@ bool CSharedMemroy::copyToLocalMemroy( void *pData, int iSize )
 /**
  * @brief CSharedMemroy::close
  */
-void CSharedMemroy::close()
+void CSharedMemroy::closeSharedMemory()
 {
 #ifdef __linux__
    //sleep(10);

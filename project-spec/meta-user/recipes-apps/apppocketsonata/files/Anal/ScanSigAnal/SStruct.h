@@ -19,20 +19,21 @@ typedef unsigned int HIST;
 #define _STR_LOWHIGH
 typedef struct
 {
-  int iLow;
-  int iHgh;
+    int iLow;
+    int iHgh;
+
 } STR_LOWHIGH;
 #endif
 
 //##ModelId=452B0C440345
 struct STR_SCANPT {
-    UINT co;
+    UINT uiCount;
     UINT pa[SCN_COLLECT_PDW+10];				// toa
     _TOA toa[SCN_COLLECT_PDW+10];				// amplitude
 
     STR_LOWHIGH _pa;
 
-}  ;
+} ;
 
 //##ModelId=452B0C44034F
 struct STR_SAMPLE {
@@ -50,7 +51,7 @@ struct STR_SAMPLE {
 	float	skewness;
 
 	STR_LOWHIGH	_pa;					// Low & High
-}  ;
+} ;
 
 // Auto-Correlation Function 용 변수
 //##ModelId=452B0C440359

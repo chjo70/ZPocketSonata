@@ -3,25 +3,21 @@
 
 using namespace std;
 
-//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/Identify/cipl.h"
 
-#ifdef _SQLITE_
-//#include "../../SQLite/Database.h"
+#ifdef _MSSQL_
+#include "../ODBC/mssql.h"
+#include "../ODBC/odbccore.h"
+
+#elif _SQLITE_
 #include "../SQLite/KompexSQLitePrerequisites.h"
 #include "../SQLite/KompexSQLiteDatabase.h"
 #include "../SQLite/KompexSQLiteStatement.h"
 #include "../SQLite/KompexSQLiteException.h"
 #include "../SQLite/KompexSQLiteStreamRedirection.h"
 #include "../SQLite/KompexSQLiteBlob.h"
-
-#elif _MSSQL_
-#include "../ODBC/mssql.h"
-#include "../ODBC/odbccore.h"
-
-#else
 
 #endif
 
@@ -81,7 +77,16 @@ private:
 
     void StopUserCollecting();
 
-    inline void *GetRecvData() { if( m_pMsg->iArrayIndex >= 0 ) return CThread::GetRecvData(); else return & m_pMsg->x.szData[0]; }
+    inline void *GetRecvData() { 
+        void *pRet;
+
+        if( m_pMsg->iArrayIndex >= 0 ) 
+            pRet = (void *) ( CThread::GetRecvData() ); 
+        else 
+            pRet = (void *) ( & m_pMsg->x.szData[0] ); 
+
+        return pRet;
+    }
 
 public:
 #ifdef _MSSQL_

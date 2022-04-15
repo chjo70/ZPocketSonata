@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 
 #ifdef _MSC_VER
@@ -334,28 +334,28 @@ void CLog::LogMsg( int nType, const char *fmt, ... )
  * @date      2021-10-27, 13:16
  * @warning
  */
-char *CLog::ANSIToUTF8( const char * pszCode )
-{
-#ifdef _MFC_VER
-    int iLength, nLength2;
-    BSTR	bstrCode; 
-    char*	pszUTFCode = NULL;
-
-    iLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
-    bstrCode = SysAllocStringLen(NULL, (unsigned int) iLength ); 
-    MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, iLength);
-
-    nLength2 = WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, 0, NULL, NULL); 
-    pszUTFCode = (char*)malloc(nLength2+1); 
-    WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, nLength2, NULL, NULL); 
-
-    return pszUTFCode;
-#else
-    return NULL;
-
-#endif
-
-}
+// char *CLog::ANSIToUTF8( const char * pszCode )
+// {
+// #ifdef _MFC_VER
+//     int iLength, nLength2;
+//     BSTR	bstrCode; 
+//     char*	pszUTFCode = NULL;
+// 
+//     iLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
+//     bstrCode = SysAllocStringLen(NULL, (unsigned int) iLength ); 
+//     MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, iLength);
+// 
+//     nLength2 = WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, 0, NULL, NULL); 
+//     pszUTFCode = (char*) malloc( nLength2+1); 
+//     WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, nLength2, NULL, NULL); 
+// 
+//     return pszUTFCode;
+// #else
+//     return NULL;
+// 
+// #endif
+// 
+// }
 
 /**
  * @brief     UTF8ToANSI
@@ -367,27 +367,27 @@ char *CLog::ANSIToUTF8( const char * pszCode )
  * @date      2021-10-27, 13:16
  * @warning
  */
-char* CLog::UTF8ToANSI( const char *pszCode )
-{
-#ifdef _MFC_VER
-    BSTR    bstrWide;
-    char*   pszAnsi;
-    int     nLength;
-
-    nLength = MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, NULL, NULL);
-    bstrWide = SysAllocStringLen(NULL, nLength);
-
-    MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, bstrWide, nLength);
-
-    nLength = WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, NULL, 0, NULL, NULL);
-    pszAnsi = new char[nLength];
-
-    WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
-    SysFreeString(bstrWide);
-
-    return pszAnsi;
-#else
-    return NULL;
-#endif
-
-}
+// char* CLog::UTF8ToANSI( const char *pszCode )
+// {
+// #ifdef _MFC_VER
+//     BSTR    bstrWide;
+//     char*   pszAnsi;
+//     int     nLength;
+// 
+//     nLength = MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, NULL, NULL);
+//     bstrWide = SysAllocStringLen(NULL, nLength);
+// 
+//     MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, bstrWide, nLength);
+// 
+//     nLength = WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, NULL, 0, NULL, NULL);
+//     pszAnsi = new char[nLength];
+// 
+//     WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
+//     SysFreeString(bstrWide);
+// 
+//     return pszAnsi;
+// #else
+//     return NULL;
+// #endif
+// 
+// }

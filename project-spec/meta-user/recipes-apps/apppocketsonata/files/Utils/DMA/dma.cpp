@@ -85,7 +85,7 @@ static
 void make_desc( dma_sg_descs_t *list, xmem_t *mem, uint32_t count, uint32_t block_size )
 {
 	uint64_t mem_size = sizeof(dma_sg_desc_t) * count;
-	list->count = count;
+	list->uiCount = count;
 	list->size = block_size;
     list->mem = CHWIO::mem_offset( mem, (0x40 - (mem->ulphysical & 0x3F)) & 0x3F );
     list->item = (dma_sg_desc_t *)list->mem.ullogical;
@@ -111,13 +111,13 @@ void dma_s2mm_desc( dma_dev_t dev, xmem_t *desc, uint16_t count, uint32_t block_
 static
 int desc_init( dma_sg_descs_t *list, uint64_t addr, uint32_t length )
 {
-	if ( length > (list->size * list->count) ) return -1;
+	if ( length > (list->size * list->uiCount) ) return -1;
 
 	int index = 0;
 	uint64_t offset = 0;
 	uint32_t size;
 
-	memset( list->item, 0, sizeof(dma_sg_desc_t) * list->count );
+	memset( list->item, 0, sizeof(dma_sg_desc_t) * list->uiCount );
 	list->curr = &list->item[0];
 
 	while ( length > 0 )
@@ -131,7 +131,7 @@ int desc_init( dma_sg_descs_t *list, uint64_t addr, uint32_t length )
 		else
 		{
 			size = length;
-			list->item[index].control.eof = 1;
+			list->item[index].control.uiEOF = 1;
 			list->item[index].next_desc = mem_l2p( &list->mem, &list->item[0] );
 		}
 

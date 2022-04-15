@@ -21,8 +21,6 @@
 #include "Identify.h"
 #include "../EmitterMerge/InverseMethod/CInverseMethod.h"
 
-#include "./ELUtil.h"
-
 #include "../../Utils/ccommonutils.h"
 
 
@@ -143,7 +141,6 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 #elif _MSSQL_
         // MSSQL 연결
         CMSSQL::Init();
-#else
 
 #endif
     }

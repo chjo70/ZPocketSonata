@@ -28,7 +28,7 @@ public:
     int GetColPdw();
 
     //##ModelId=452B0C5500C1
-    CNGroup( void *pParent, int coMaxPdw );
+    CNGroup( void *pParent, unsigned int uiCoMaxPdw );
     //##ModelId=452B0C5500C9
     virtual ~CNGroup();
 

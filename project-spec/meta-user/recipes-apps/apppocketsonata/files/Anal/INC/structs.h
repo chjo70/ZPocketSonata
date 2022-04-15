@@ -32,16 +32,16 @@
 
 //////////////////////////////////////////////////////////////////////////
 // 초기화 파일 구조체
-struct STR_KEY {
-	unsigned	 search : 1;
-	unsigned		 hand : 1;
-	unsigned		 open : 1;
-	unsigned		  low : 1;
-	unsigned			sep	: 1;
-	unsigned			unk : 1;
-    unsigned			: 26;
-
-} ;
+// struct STR_KEY {
+// 	unsigned	 search : 1;
+// 	unsigned		 hand : 1;
+// 	unsigned		 open : 1;
+// 	unsigned		  low : 1;
+// 	unsigned			sep	: 1;
+// 	unsigned			unk : 1;
+//     unsigned			: 26;
+// 
+// } ;
 
 //union UNI_KEY {
 //	STR_KEY x;
@@ -63,32 +63,32 @@ struct STR_KEY {
 
 
 // 채널 보정 데이터
-struct STR_CHANNEL_COMPSATION {
-	UINT from_address;
-	UINT to_address;
-
-	UINT count;
-	UINT *pChannelCompensation;		// 최대 크기는 16MB 임. 하드웨어 팀과 협의해서 최대 크기를 결정해야 함.
-
-} ;
+// struct STR_CHANNEL_COMPSATION {
+// 	UINT from_address;
+// 	UINT to_address;
+// 
+// 	UINT count;
+// 	UINT *pChannelCompensation;		// 최대 크기는 16MB 임. 하드웨어 팀과 협의해서 최대 크기를 결정해야 함.
+// 
+// } ;
 
 
 // 초단수신기 메시지 구조체 
-struct STR_HF_CHANNEL_ADDRESS {
-	unsigned  address : 24;
-	//unsigned  low   : 8;
-	//unsigned  mid   : 8;
-	//unsigned  hgh   : 8;
-	unsigned   count  : 8;
+// struct STR_HF_CHANNEL_ADDRESS {
+// 	unsigned  address : 24;
+// 	//unsigned  low   : 8;
+// 	//unsigned  mid   : 8;
+// 	//unsigned  hgh   : 8;
+// 	unsigned   count  : 8;
+// 
+// } ;
 
-} ;
-
-struct STR_HF_TEMPERATURE {
-	unsigned sign			   :  1;
-	unsigned temperature : 10;
-	unsigned             : 21;
-
-} ;
+// struct STR_HF_TEMPERATURE {
+// 	unsigned sign			   :  1;
+// 	unsigned temperature : 10;
+// 	unsigned             : 21;
+// 
+// } ;
 
 // typedef struct {
 // 	USHORT year;
@@ -135,342 +135,342 @@ struct STR_HF_TEMPERATURE {
 // 항공기접속판의 구조체 정의
 
 // 자체점검 구조체
-struct STR_LA_BIT {
-    unsigned : 7;
-	unsigned power_module : 1;		// 전원 모듈
-    unsigned : 4;
-    unsigned audio : 1;		// 오디오
-    unsigned flare : 1;		// 플레어 연도
-    unsigned chaff : 1;		// 채프 연동
-    unsigned cpu_stat : 1;		// CPU 상태
-    unsigned : 16;
+// struct STR_LA_BIT {
+//     unsigned : 7;
+// 	unsigned power_module : 1;		// 전원 모듈
+//     unsigned : 4;
+//     unsigned audio : 1;		// 오디오
+//     unsigned flare : 1;		// 플레어 연도
+//     unsigned chaff : 1;		// 채프 연동
+//     unsigned cpu_stat : 1;		// CPU 상태
+//     unsigned : 16;
+// 
+// }  ;
 
-}  ;
+// union UNI_LA_BIT {
+// 	STR_LA_BIT x;
+// 	UINT word;
+// 
+// }  ;
+// 
+// // 보드ID 구조체
+// struct STR_LA_BOARD_ID {
+// 	UCHAR reserver1: 8;		// 펌웨어 정보
+// 	UCHAR reserver2: 8;		// 제조일련번호
+// 	USHORT id: 8;					// 보드ID: 0xA136
+// 
+// } ;
 
-union UNI_LA_BIT {
-	STR_LA_BIT x;
-	UINT word;
-
-}  ;
-
-// 보드ID 구조체
-struct STR_LA_BOARD_ID {
-	UCHAR reserver1: 8;		// 펌웨어 정보
-	UCHAR reserver2: 8;		// 제조일련번호
-	USHORT id: 8;					// 보드ID: 0xA136
-
-} ;
-
-union UNI_LA_BOARD_ID {
-	STR_LA_BOARD_ID x;
-	UINT word;
-
-} ;
+// union UNI_LA_BOARD_ID {
+// 	STR_LA_BOARD_ID x;
+// 	UINT word;
+// 
+// } ;
 
 // 오디오 설정 구조체 정의
-struct STR_LA_AUDIO_CONFIG {
-	unsigned									 : 13;
-	unsigned					req_tone : 2;
-	unsigned req_audio_control : 1;
-	unsigned									 : 13;
-	unsigned					set_tone : 2;
-	unsigned set_audio_control : 1;
+// struct STR_LA_AUDIO_CONFIG {
+// 	unsigned									 : 13;
+// 	unsigned					req_tone : 2;
+// 	unsigned req_audio_control : 1;
+// 	unsigned									 : 13;
+// 	unsigned					set_tone : 2;
+// 	unsigned set_audio_control : 1;
+// 
+// } ;
 
-} ;
-
-union UNI_LA_AUDIO_CONFIG {
-	STR_LA_AUDIO_CONFIG x;
-	UINT word;
-
-}  ;
+// union UNI_LA_AUDIO_CONFIG {
+// 	STR_LA_AUDIO_CONFIG x;
+// 	UINT word;
+// 
+// }  ;
 
 // Blanking Mask 설정
-struct STR_LA_BLANK_MASK {
-	unsigned						: 24;
-	unsigned			 blk7 : 1;
-	unsigned			 blk6 : 1;
-	unsigned			 blk5 : 1;
-	unsigned			 blk4 : 1;
-	unsigned			 blk3 : 1;
-	unsigned			 blk2 : 1;
-	unsigned			 blk1 : 1;
-	unsigned blk_on_off : 1;
+// struct STR_LA_BLANK_MASK {
+// 	unsigned						: 24;
+// 	unsigned			 blk7 : 1;
+// 	unsigned			 blk6 : 1;
+// 	unsigned			 blk5 : 1;
+// 	unsigned			 blk4 : 1;
+// 	unsigned			 blk3 : 1;
+// 	unsigned			 blk2 : 1;
+// 	unsigned			 blk1 : 1;
+// 	unsigned blk_on_off : 1;
+// 
+// }  ;
 
-}  ;
+// union UNI_LA_BLANK_MASK {
+// 	STR_LA_BLANK_MASK x;
+// 	UINT word;
+// 
+// }  ;
 
-union UNI_LA_BLANK_MASK {
-	STR_LA_BLANK_MASK x;
-	UINT word;
+// struct STR_LA_CMDS {
+// 	unsigned chaff_error : 2;
+// 	unsigned		arm_stat : 1;
+// 	unsigned	power_stat : 1;
+// 	unsigned	 stop_stat : 1;
+// 	unsigned	 fire_stat : 1;
+// 	unsigned flare_error : 2;
+// 	unsigned						 : 5;
+// 	unsigned		req_auto : 1;
+// 	unsigned		req_semi : 1;
+// 	unsigned	req_manual : 1;
+// 
+// 	unsigned						 : 13;
+// 	unsigned		set_auto : 1;
+// 	unsigned		set_semi : 1;
+// 	unsigned	set_manual : 1;
+// 
+// }  ;
 
-}  ;
-
-struct STR_LA_CMDS {
-	unsigned chaff_error : 2;
-	unsigned		arm_stat : 1;
-	unsigned	power_stat : 1;
-	unsigned	 stop_stat : 1;
-	unsigned	 fire_stat : 1;
-	unsigned flare_error : 2;
-	unsigned						 : 5;
-	unsigned		req_auto : 1;
-	unsigned		req_semi : 1;
-	unsigned	req_manual : 1;
-
-	unsigned						 : 13;
-	unsigned		set_auto : 1;
-	unsigned		set_semi : 1;
-	unsigned	set_manual : 1;
-
-}  ;
-
-union UNI_LA_CMDS {
-	STR_LA_CMDS x;
-	UINT word;
-
-}  ;
+// union UNI_LA_CMDS {
+// 	STR_LA_CMDS x;
+// 	UINT word;
+// 
+// }  ;
 
 // C/F 발사 정보 설정
-struct STR_LA_CFINFO {
-	unsigned						: 16;
-	unsigned			 type : 4;
-	unsigned start_flag : 2;
-	unsigned			 time : 10;
+// struct STR_LA_CFINFO {
+// 	unsigned						: 16;
+// 	unsigned			 type : 4;
+// 	unsigned start_flag : 2;
+// 	unsigned			 time : 10;
+// 
+// }  ;
 
-}  ;
-
-union UNI_LA_CFINFO {
-	STR_LA_CFINFO x;
-	UINT word;
-
-}  ;
+// union UNI_LA_CFINFO {
+// 	STR_LA_CFINFO x;
+// 	UINT word;
+// 
+// }  ;
 
 // C/F 발사 제어 요구
-struct STR_LA_REQ_FIRE {
-	unsigned					 : 22;
-	unsigned stop_flag : 2;
-	unsigned					 : 6;
-	unsigned fire_ctrl : 2;
+// struct STR_LA_REQ_FIRE {
+// 	unsigned					 : 22;
+// 	unsigned stop_flag : 2;
+// 	unsigned					 : 6;
+// 	unsigned fire_ctrl : 2;
+// 
+// }  ;
 
-}  ;
-
-union UNI_LA_REQ_FIRE {
-	STR_LA_REQ_FIRE x;
-	UINT word;
-
-}  ;
-
-struct STR_LA_CFREMAIN {
-	unsigned				: 16;
-	unsigned				: 1;
-	unsigned _flare : 7;
-	unsigned				: 1;
-	unsigned _chaff : 7;
-
-}  ;
-
-union UNI_LA_CFREMAIN {
-	STR_LA_CFREMAIN x;
-	UINT word;
-
-}  ;
+// union UNI_LA_REQ_FIRE {
+// 	STR_LA_REQ_FIRE x;
+// 	UINT word;
+// 
+// }  ;
+// 
+// struct STR_LA_CFREMAIN {
+// 	unsigned				: 16;
+// 	unsigned				: 1;
+// 	unsigned _flare : 7;
+// 	unsigned				: 1;
+// 	unsigned _chaff : 7;
+// 
+// }  ;
+// 
+// union UNI_LA_CFREMAIN {
+// 	STR_LA_CFREMAIN x;
+// 	UINT word;
+// 
+// }  ;
 
 
 
 //////////////////////////////////////////////////////////////////////////
 // 펄스정보생성판의 구조체 정의
-struct STR_PG_BOARD_ID {
-	UCHAR reserver1 : 8;		// 펌웨어 정보
-	UCHAR reserver2 : 8;		// 제조일련번호
-	USHORT			 id : 8;					// 보드ID: 0xA137
-
-}  ;
-
-typedef union {
-	STR_PG_BOARD_ID x;
-	UINT word;
-
-} UNI_PG_BOARD_ID ;
-
-
-struct STR_PG_BIT {
-	unsigned					: 11;		
-	unsigned flash_mem: 1;		// 검출 결과
-	unsigned sram     : 1;		// 발생 결과
-	unsigned lo_6_3		: 1;		// 저장 결과
-	unsigned lo_16		: 1;
-	unsigned lo_12    : 1;		// 방위 정상
-	unsigned board_id : 16;
-
-}  ;
-
-union UNI_PG_BIT {
-	STR_PG_BIT x;
-	UINT word;
-
-}  ;
-
-// 온도 설정값 구조체 정의
-struct STR_PG_TEMPERATURE {
-	unsigned			 : 3;
-	unsigned temp4 : 5;		// 초단수신기4의 설정 온도.
-	unsigned			 : 3;
-	unsigned temp3 : 5;		// 초단수신기3의 설정 온도.
-	unsigned			 : 3;
-	unsigned temp2 : 5;		// 초단수신기2의 설정 온도.
-	unsigned			 : 3;
-	unsigned temp1 : 5;		// 초단수신기1의 설정 온도.
-
-}  ;
-
-union UNI_PG_TEMPERATURE {
-	STR_PG_TEMPERATURE x;
-	UINT word;
-
-}  ;
-
-// 임계값 구조체 정의
-struct STR_PG_THRESHOLD {
-	unsigned pa_threshold			 : 8;			// PA 수신 임계값
-	unsigned cw_chopping_count : 8;			// CW Chopping Count
-	unsigned fmop_threshold		 : 6;			// FMOP 임계값
-	unsigned cw_pulsewidth		 : 10;		// CW 판정 펄스폭
-
-}  ;
-
-union UNI_PG_THRESHOLD {
-	STR_PG_THRESHOLD x;
-	UINT word;
-
-} ;
-
-// 필터 정보 구조체
-struct STR_PG_FILTER_FUNCTION {
-	unsigned								: 16;
-	unsigned filter1_pass		: 1;
-	unsigned filter1_reject : 1;
-	unsigned filter2_pass		: 1;
-	unsigned filter2_reject : 1;
-	unsigned filter3_pass		: 1;
-	unsigned filter3_reject : 1;
-	unsigned filter4_pass		: 1;
-	unsigned filter4_reject : 1;
-	unsigned filter5_pass		: 1;
-	unsigned filter5_reject : 1;
-	unsigned filter6_pass		: 1;
-	unsigned filter6_reject : 1;
-	unsigned filter7_pass		: 1;
-	unsigned filter7_reject : 1;
-	unsigned filter8_pass		: 1;
-	unsigned filter8_reject : 1;
-
-}  ;
-
-// 신호형태 변수 설정 구조체
-struct STR_PG_FILTER_SIGTYPE {
-	unsigned noFilter : 3;
-	unsigned				  : 25;
-	unsigned sigType  : 4;
-
-}  ;
-
-// 주파수 변수 설정 구조체
-union UNI_PG_FILTER_FREQ_RANGE {
-	UINT word;
-	struct {
-		unsigned noFilter : 3;
-		unsigned					: 1;
-		unsigned hgh			: 12;
-		unsigned					: 4;
-		unsigned low			: 12;
-	} x ;
-
-}  ;
-
-// 방위각 변수 설정 구조체
-union STR_PG_FILTER_AOA_RANGE {
-	UINT word;
-	struct {
-		unsigned noFilter : 3;
-		unsigned					: 4;
-		unsigned hgh			: 9;
-		unsigned dv				: 1;
-		unsigned					: 6;
-		unsigned low			: 9;
-	} x ;
-
-}  ;
-
-// 펄스폭 변수 설정 구조체
-union STR_PG_FILTER_PULSEWIDTH_RANGE {
-	UINT word;
-	struct {
-		unsigned noFilter : 3;
-		unsigned hgh			: 13;
-		unsigned					: 3;
-		unsigned low			: 13;
-	} x ;
-
-}  ;
-
-// 신호세기 변수 설정 구조체
-union STR_PG_FILTER_SA_RANGE {
-	UINT word;
-	struct {
-		unsigned noFilter : 3;
-		unsigned					: 5;
-		unsigned hgh			: 8;
-		unsigned					: 8;
-		unsigned low			: 8;
-	} x ;
-
-} ;
-
-// 수집 개수 설정
-typedef union {
-	UINT word;
-	struct {
-		unsigned					 : 14;
-		unsigned coCollect : 18;		// 수집 개수
-	} x ;
-
-} STR_PG_COLLECT_COUNT;
-
-// 펄스정보생성판의 필처 정보 설정 구조체
-struct STR_PG_FILTER_INFO {
-	STR_PG_FILTER_FUNCTION ff;
-	STR_PG_FILTER_SIGTYPE fs;
-	UNI_PG_FILTER_FREQ_RANGE ffr;
-	STR_PG_FILTER_AOA_RANGE far_;						// 필터 방위영역 설정
-	STR_PG_FILTER_PULSEWIDTH_RANGE fpr;			// 필터 펄스폭 설정
-	STR_PG_FILTER_SA_RANGE fsr;							// 필터 신호세기 설정
-	STR_PG_COLLECT_COUNT cc;								// 수집 개수 설정
-	UINT ct;																// 수집 시간 설정
-
-}  ;
-
-
-union UNI_PG_COUNT_COLLECT_STOP {
-	unsigned word;
-	struct {
-		unsigned count_high : 10;		// 수집 완료/중지했을 때의 상위 수집 개수
-		unsigned						: 4;
-		unsigned bank				: 2;		// 뱅크 번호, 0x1은 뱅크1이며 0x2는 뱅크2이다.
-		unsigned count_low  : 8;		// 수집 완료/중지했을 때의 하위 수집 개수
-		unsigned						: 8;
-	} x ;
-
-}  ;
-
-union UNI_PG_LO_STAT {
-	UINT word;
-	struct {
-		unsigned				: 29;
-		unsigned lo_6_3 : 1;
-		unsigned	lo_16 : 1;
-		unsigned	lo_12 : 1;
-	} x ;
-
-} ;
+// struct STR_PG_BOARD_ID {
+// 	UCHAR reserver1 : 8;		// 펌웨어 정보
+// 	UCHAR reserver2 : 8;		// 제조일련번호
+// 	USHORT			 id : 8;					// 보드ID: 0xA137
+// 
+// }  ;
+// 
+// typedef union {
+// 	STR_PG_BOARD_ID x;
+// 	UINT word;
+// 
+// } UNI_PG_BOARD_ID ;
+// 
+// 
+// struct STR_PG_BIT {
+// 	unsigned					: 11;		
+// 	unsigned flash_mem: 1;		// 검출 결과
+// 	unsigned sram     : 1;		// 발생 결과
+// 	unsigned lo_6_3		: 1;		// 저장 결과
+// 	unsigned lo_16		: 1;
+// 	unsigned lo_12    : 1;		// 방위 정상
+// 	unsigned board_id : 16;
+// 
+// }  ;
+// 
+// union UNI_PG_BIT {
+// 	STR_PG_BIT x;
+// 	UINT word;
+// 
+// }  ;
+// 
+// // 온도 설정값 구조체 정의
+// struct STR_PG_TEMPERATURE {
+// 	unsigned			 : 3;
+// 	unsigned temp4 : 5;		// 초단수신기4의 설정 온도.
+// 	unsigned			 : 3;
+// 	unsigned temp3 : 5;		// 초단수신기3의 설정 온도.
+// 	unsigned			 : 3;
+// 	unsigned temp2 : 5;		// 초단수신기2의 설정 온도.
+// 	unsigned			 : 3;
+// 	unsigned temp1 : 5;		// 초단수신기1의 설정 온도.
+// 
+// }  ;
+// 
+// union UNI_PG_TEMPERATURE {
+// 	STR_PG_TEMPERATURE x;
+// 	UINT word;
+// 
+// }  ;
+// 
+// // 임계값 구조체 정의
+// struct STR_PG_THRESHOLD {
+// 	unsigned pa_threshold			 : 8;			// PA 수신 임계값
+// 	unsigned cw_chopping_count : 8;			// CW Chopping Count
+// 	unsigned fmop_threshold		 : 6;			// FMOP 임계값
+// 	unsigned cw_pulsewidth		 : 10;		// CW 판정 펄스폭
+// 
+// }  ;
+// 
+// union UNI_PG_THRESHOLD {
+// 	STR_PG_THRESHOLD x;
+// 	UINT word;
+// 
+// } ;
+// 
+// // 필터 정보 구조체
+// struct STR_PG_FILTER_FUNCTION {
+// 	unsigned								: 16;
+// 	unsigned filter1_pass		: 1;
+// 	unsigned filter1_reject : 1;
+// 	unsigned filter2_pass		: 1;
+// 	unsigned filter2_reject : 1;
+// 	unsigned filter3_pass		: 1;
+// 	unsigned filter3_reject : 1;
+// 	unsigned filter4_pass		: 1;
+// 	unsigned filter4_reject : 1;
+// 	unsigned filter5_pass		: 1;
+// 	unsigned filter5_reject : 1;
+// 	unsigned filter6_pass		: 1;
+// 	unsigned filter6_reject : 1;
+// 	unsigned filter7_pass		: 1;
+// 	unsigned filter7_reject : 1;
+// 	unsigned filter8_pass		: 1;
+// 	unsigned filter8_reject : 1;
+// 
+// }  ;
+// 
+// // 신호형태 변수 설정 구조체
+// struct STR_PG_FILTER_SIGTYPE {
+// 	unsigned noFilter : 3;
+// 	unsigned				  : 25;
+// 	unsigned sigType  : 4;
+// 
+// }  ;
+// 
+// // 주파수 변수 설정 구조체
+// union UNI_PG_FILTER_FREQ_RANGE {
+// 	UINT word;
+// 	struct {
+// 		unsigned noFilter : 3;
+// 		unsigned					: 1;
+// 		unsigned hgh			: 12;
+// 		unsigned					: 4;
+// 		unsigned low			: 12;
+// 	} x ;
+// 
+// }  ;
+// 
+// // 방위각 변수 설정 구조체
+// union STR_PG_FILTER_AOA_RANGE {
+// 	UINT word;
+// 	struct {
+// 		unsigned noFilter : 3;
+// 		unsigned					: 4;
+// 		unsigned hgh			: 9;
+// 		unsigned dv				: 1;
+// 		unsigned					: 6;
+// 		unsigned low			: 9;
+// 	} x ;
+// 
+// }  ;
+// 
+// // 펄스폭 변수 설정 구조체
+// union STR_PG_FILTER_PULSEWIDTH_RANGE {
+// 	UINT word;
+// 	struct {
+// 		unsigned noFilter : 3;
+// 		unsigned hgh			: 13;
+// 		unsigned					: 3;
+// 		unsigned low			: 13;
+// 	} x ;
+// 
+// }  ;
+// 
+// // 신호세기 변수 설정 구조체
+// union STR_PG_FILTER_SA_RANGE {
+// 	UINT word;
+// 	struct {
+// 		unsigned noFilter : 3;
+// 		unsigned					: 5;
+// 		unsigned hgh			: 8;
+// 		unsigned					: 8;
+// 		unsigned low			: 8;
+// 	} x ;
+// 
+// } ;
+// 
+// // 수집 개수 설정
+// typedef union {
+// 	UINT word;
+// 	struct {
+// 		unsigned					 : 14;
+// 		unsigned coCollect : 18;		// 수집 개수
+// 	} x ;
+// 
+// } STR_PG_COLLECT_COUNT;
+// 
+// // 펄스정보생성판의 필처 정보 설정 구조체
+// struct STR_PG_FILTER_INFO {
+// 	STR_PG_FILTER_FUNCTION ff;
+// 	STR_PG_FILTER_SIGTYPE fs;
+// 	UNI_PG_FILTER_FREQ_RANGE ffr;
+// 	STR_PG_FILTER_AOA_RANGE far_;						// 필터 방위영역 설정
+// 	STR_PG_FILTER_PULSEWIDTH_RANGE fpr;			// 필터 펄스폭 설정
+// 	STR_PG_FILTER_SA_RANGE fsr;							// 필터 신호세기 설정
+// 	STR_PG_COLLECT_COUNT cc;								// 수집 개수 설정
+// 	UINT ct;																// 수집 시간 설정
+// 
+// }  ;
+// 
+// 
+// union UNI_PG_COUNT_COLLECT_STOP {
+// 	unsigned word;
+// 	struct {
+// 		unsigned count_high : 10;		// 수집 완료/중지했을 때의 상위 수집 개수
+// 		unsigned						: 4;
+// 		unsigned bank				: 2;		// 뱅크 번호, 0x1은 뱅크1이며 0x2는 뱅크2이다.
+// 		unsigned count_low  : 8;		// 수집 완료/중지했을 때의 하위 수집 개수
+// 		unsigned						: 8;
+// 	} x ;
+// 
+// }  ;
+// 
+// union UNI_PG_LO_STAT {
+// 	UINT word;
+// 	struct {
+// 		unsigned				: 29;
+// 		unsigned lo_6_3 : 1;
+// 		unsigned	lo_16 : 1;
+// 		unsigned	lo_12 : 1;
+// 	} x ;
+// 
+// } ;
 
 
 //////////////////////////////////////////////////////////////////////////

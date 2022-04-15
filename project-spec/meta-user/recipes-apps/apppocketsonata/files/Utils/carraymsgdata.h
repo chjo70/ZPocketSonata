@@ -1,4 +1,4 @@
-#ifndef CARRAYMSGDATA_H
+ï»¿#ifndef CARRAYMSGDATA_H
 #define CARRAYMSGDATA_H
 
 
@@ -7,7 +7,7 @@
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)
 
-// ·£ µ¥ÀÌÅÍ ºñ±³ È½¼ö ÀÌÈÄ ¿¡·¯ Åëº¸
+// ëœ ë°ì´í„° ë¹„êµ íšŸìˆ˜ ì´í›„ ì—ëŸ¬ í†µë³´
 #define MAX_TRY_MARK                    (20)
 
 class CArrayMsgData

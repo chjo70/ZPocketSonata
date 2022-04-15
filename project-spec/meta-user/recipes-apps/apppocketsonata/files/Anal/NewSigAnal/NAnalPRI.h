@@ -36,9 +36,9 @@ public:
 	//##ModelId=452B0C55032D
 	void Analysis();
 	//##ModelId=452B0C55032E
-	int FindPeakInHist( int count, PDWINDEX *pPdwIndex );
+	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
 	//##ModelId=452B0C550331
-	int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
+	unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
 	//##ModelId=452B0C550339
 	BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 	//##ModelId=452B0C550341
@@ -51,7 +51,7 @@ public:
 	//##ModelId=452B0C55034B
 	UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri );
 	//##ModelId=452B0C550355
-	int GetCoSeg();
+	unsigned int GetCoSeg();
 	//##ModelId=452B0C550356
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();
 	//##ModelId=452B0C55035E
@@ -59,18 +59,18 @@ public:
 	//##ModelId=452B0C55035F
 	void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
 	//##ModelId=452B0C550362
-	UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count );
+	UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 	//##ModelId=452B0C550375
-	_TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
+	_TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	int GetBand();
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
     CMakeAET *GetMakeAET();
 
 	//##ModelId=452B0C55037C
-	CNAnalPRI( void *pParent, int coMaxPdw );
+	CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw);
 	//##ModelId=452B0C55037F
 	virtual ~CNAnalPRI();
 

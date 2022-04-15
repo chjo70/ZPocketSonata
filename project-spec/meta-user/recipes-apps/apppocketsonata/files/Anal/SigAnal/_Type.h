@@ -113,13 +113,15 @@ typedef int key_t;
 #endif
 
 #define open                    _open
-#define close                   _close
+#define closeSharedMemory                   _close
 #define	write					_write
 #define	read					_read
 #define	chmod					_chmod
 
 
 //#define CString string
+//#undef TRACE
+//#define TRACE                   _TRACE
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

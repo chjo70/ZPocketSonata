@@ -233,9 +233,9 @@ static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
 //void reg_write_64(ui64 *logical, ui32 offset, ui32 value);
 //ui64 reg_read_64(ui64 *logical, ui32 offset);
 //void reg_write(uint8_t sel, uint32_t offset, uint32_t value);
-uint32_t reg_read(uint8_t sel, uint32_t offset);
-xmem_t *mem_get_mem(uint8_t sel);
-xmem_t mem_offset(xmem_t *mem, uint32_t offset);
+//uint32_t reg_read(uint8_t sel, uint32_t offset);
+//xmem_t *mem_get_mem(uint8_t sel);
+//xmem_t mem_offset(xmem_t *mem, uint32_t offset);
 
 /**
  * @brief uio device �� xuio_t Ÿ���� ���� device �ν��Ͻ� ������ ����

@@ -55,7 +55,7 @@ protected:
 	//##ModelId=452B0C450152
     UINT m_uiScnPrd;										//! 스캔 주기값
 	//##ModelId=452B0C450153
-	UINT m_nScnTyp;										//! 스캔 형태
+	UINT m_uiScnTyp;										//! 스캔 형태
 
 	//##ModelId=452B0C45015D
 	STR_AUTOCOR m_nAutoCor;
@@ -91,7 +91,7 @@ public:
 	//BOOL CompMeanDiff(int x, int y, int thresh);
 	float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
-    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_nScnTyp, *pScanPrd= m_uiScnPrd; }
+    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_uiScnTyp, *pScanPrd= m_uiScnPrd; }
 	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
@@ -141,7 +141,7 @@ public:
 
     BOOL KnownAnalysis();
 
-    int FindPeakInHist( int count, PDWINDEX *pPdwIndex );
+    int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex );
     //##ModelId=452B0C57019E
     BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
     //##ModelId=452B0C5701A8
@@ -159,19 +159,19 @@ public:
     //##ModelId=452B0C5701C8
     void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
     //##ModelId=452B0C5701DA
-    int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
+    unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
     //##ModelId=452B0C5701E4
-    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count );
+    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     //##ModelId=452B0C5701F8
-    _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count );
+    _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     int GetBand();
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
     SRxLOBData *GetLOBData( int index=0 );
 
-    int GetCoSeg();
+    unsigned int GetCoSeg();
 
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -179,11 +179,11 @@ public:
     //##ModelId=452B0C56000C
     int GetColPdw() { return 0; }
     //##ModelId=452B0C56000E
-    int CalcPAMean(PDWINDEX *pPdwIndex, int count );
+    int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C560012
-    int VerifyPW( PDWINDEX *pPdwIndex, int count );
+    int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
     //##ModelId=452B0C560019
-    void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type ) { }
+    void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) { }
 
     //##ModelId=452B0C56002C
     int GetCoEmitter() { return 0; }

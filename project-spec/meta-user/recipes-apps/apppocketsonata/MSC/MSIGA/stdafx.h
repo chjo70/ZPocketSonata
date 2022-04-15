@@ -1,4 +1,4 @@
-
+﻿
 // stdafx.h : 자주 사용하지만 자주 변경되지는 않는
 // 표준 시스템 포함 파일 및 프로젝트 관련 포함 파일이
 // 들어 있는 포함 파일입니다.
@@ -65,4 +65,29 @@
 #endif
 
 
+
+// VS2012 이상에서 TRACE를 변경하기 위함.
+#if _MSC_VER > 1600
+
+bool _TRACE(char *format, ...);
+bool _TRACE(CString strFormat, ...);
+
+#undef TRACE
+#define TRACE _TRACE
+
+#ifdef _DEBUG
+
+
+
+#else
+
+//#define TRACE false && _TRACE
+
 #endif
+
+#endif
+
+#endif // _MSC_VER
+
+
+

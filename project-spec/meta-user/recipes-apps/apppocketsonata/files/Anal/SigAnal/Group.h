@@ -63,7 +63,7 @@ protected:
 	//##ModelId=452B0C5600E8
 	int m_nStat;
 	//##ModelId=452B0C5600F2
-	int m_CoFrqAoaPwIdx;
+	unsigned int m_uiCoFrqAoaPwIdx;
 	//##ModelId=452B0C5600FD
 	STR_PDWINDEX m_Band[ TOTAL_BAND ];
 	//##ModelId=452B0C560107
@@ -91,8 +91,8 @@ protected:
 public:
 	inline int GetBand() { return m_nBand; }
 	//BOOL CompMarginDiff( int x, int y1, int y2, int thresh );
-	inline UINT GetCoGroups() { return m_PwGroups.iCount; }
-	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.iCount=coGroup; }
+	inline UINT GetCoGroups() { return m_PwGroups.uiCount; }
+	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.uiCount=coGroup; }
 	//##ModelId=452B0C56016A
 	//inline int GetGroupedPdw() { return m_FrqAoaPwIdx.count; }
 	//##ModelId=452B0C56016B
@@ -117,7 +117,7 @@ public:
 	//##ModelId=452B0C56018A
 	void MakePWGroup( bool bForce1Group=false );
 	//##ModelId=452B0C560192
-	BOOL IsSameAoaIdx( int nPwIdx );
+	//bool IsSameAoaIdx( int nPwIdx );
 	//##ModelId=452B0C560194
 	void MakeFreqGroup( bool bForce1Group=false );
 	//##ModelId=452B0C560195
@@ -127,10 +127,10 @@ public:
 	//##ModelId=452B0C5601B2
 	void MakePWGroup( int frqidx, bool bForce1Group=false );
 	//##ModelId=452B0C5601BB
-	BOOL IsLastGroup();
-	BOOL IsLastGroup( int index );
+	bool IsLastGroup();
+	bool IsLastGroup( unsigned int uiIndex );
 	//##ModelId=452B0C5601BC
-	BOOL IsSameAoaIdx( int nAoaIdx, UINT narrow_or_wide );
+	//bool IsSameAoaIdx( int nAoaIdx, UINT narrow_or_wide );
 	//##ModelId=452B0C5601C7
 	void ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, STR_CLUSTER *pSrcCluster );
 	//##ModelId=452B0C5601D9
@@ -140,7 +140,7 @@ public:
 	//##ModelId=452B0C5601E5
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
 	//##ModelId=452B0C5601F7
-    bool MakePDWArray( _PDW *pdw, int count, int iBand=0 );
+    bool MakePDWArray( _PDW *pdw, int iCount, int iBand=0 );
 	//##ModelId=452B0C560201
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	//##ModelId=452B0C560203
@@ -194,7 +194,7 @@ public:
 	void PrintAllGroup();
 	void PrintGroup();
 	//##ModelId=452B0C560343
-    CGroup( int coMaxPdw=NEW_COLLECT_PDW );
+    CGroup( unsigned int uiCoMaxPdw=NEW_COLLECT_PDW );
 	//##ModelId=452B0C560355
 	virtual ~CGroup();
 

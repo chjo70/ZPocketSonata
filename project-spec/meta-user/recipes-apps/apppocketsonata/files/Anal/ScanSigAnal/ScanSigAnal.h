@@ -51,7 +51,7 @@ protected:
     //##ModelId=452B0C450035
     int m_noCh;
     //##ModelId=452B0C45003A
-    int m_CoPdw;
+    unsigned int m_uiCoPdw;
     //##ModelId=452B0C45003B
     int m_noEMT;
     //##ModelId=452B0C450045
@@ -69,7 +69,7 @@ protected:
 public:
     void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
-    BOOL IsAnalScan();
+    //BOOL IsAnalScan();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
 
 	void GetCollectTime( struct timespec *pTimeSpec );
@@ -83,15 +83,15 @@ public:
     //##ModelId=452B0C450063
     inline UINT GetScanNoCh() {	return m_noCh; }
     //##ModelId=452B0C450064
-    inline int GetColPdw() { return m_CoPdw; }
+    inline int GetColPdw() { return m_uiCoPdw; }
     //##ModelId=452B0C450065
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     //##ModelId=452B0C45006D
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
     //##ModelId=452B0C45006E
-    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, count ); }
+    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     //##ModelId=452B0C450078
-    inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
+    inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     //##ModelId=452B0C450082
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     //##ModelId=452B0C450095
@@ -101,14 +101,14 @@ public:
     //##ModelId=452B0C45009F
     inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
     //##ModelId=452B0C4500A8
-    inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->VerifyPRI( pPdwIndex, count ); }
+    inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     //inline STR_UPDAET *GetUpdAet() { return & stScnAet; }
     inline SRxScanData *GetScanResult() { return & m_strScnResult; }
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
     inline int GetBand() { return m_theGroup->GetBand(); }
-    inline int GetCoPdw() { return m_CoPdw; }
-    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
+    inline int GetCoPdw() { return m_uiCoPdw; }
+    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     inline SRxABTData *GetScnAET() { return m_pScnAet; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
     inline int IsStorePDW() { return m_iIsStorePDW; }
@@ -118,7 +118,6 @@ public:
 	inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
 #endif    
 
-	
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
     void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet );
@@ -133,9 +132,9 @@ public:
     UINT GetCoScanPulse();
 
     //##ModelId=452B0C4500C6
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     //##ModelId=452B0C4500C9
-    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
+    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
     //##ModelId=452B0C4500D2
     void ClearColBuffer();
     //##ModelId=452B0C4500D3
@@ -148,7 +147,7 @@ public:
     //##ModelId=452B0C4500EF
     void ScanSigAnalInit( int noEMT=0, int noCh=0 );
     //##ModelId=452B0C450102
-    CScanSigAnal( int coMaxPdw );
+    CScanSigAnal( unsigned int uiCoMaxPdw );
     //##ModelId=452B0C450104
     virtual ~CScanSigAnal();
 

@@ -16,6 +16,8 @@
 
 #include "../UTM/UTM.h"
 
+#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+
 
 /**
  * @brief		CQuadratic
@@ -143,60 +145,61 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 	omega = ( 4 * sumA * sumD * sumE * sumG ) + ( sumB * sumG * ( sumE2 - sumD2 ) ) + sumED2;
 	gamma = sumG2 * ( ( sumA * sumE2 ) - ( sumB * sumD * sumE ) - ( sumA * sumD2 ) );
 
-	if( alpha != 0 ) {
+	if( IS_NOT_ZERO(alpha) == true ) {
 		u1 = ( -omega + sqrt( omega*omega - ( 4. * alpha * gamma ) ) ) / ( 2. * alpha );
 		u2 = ( -omega - sqrt( omega*omega - ( 4. * alpha * gamma ) ) ) / ( 2. * alpha );
-	}
-	else {
-		return false;
-	}
 
-	if( sumE2 != -sumD2 ) {
-		x1 = ( sumD * u1 + sumE * sumG ) / ( sumE2 + sumD2 );
-		x2 = ( sumD * u2 + sumE * sumG ) / ( sumE2 + sumD2 );
+        if( sumE2 != -sumD2 ) {
+            x1 = ( sumD * u1 + sumE * sumG ) / ( sumE2 + sumD2 );
+            x2 = ( sumD * u2 + sumE * sumG ) / ( sumE2 + sumD2 );
 
-		y1 = ( sumE * u1 - sumD * sumG ) / ( sumE2 + sumD2 );
-		y2 = ( sumE * u2 - sumD * sumG ) / ( sumE2 + sumD2 );
-	}
-	else {
-		return false;
-	}
+            y1 = ( sumE * u1 - sumD * sumG ) / ( sumE2 + sumD2 );
+            y2 = ( sumE * u2 - sumD * sumG ) / ( sumE2 + sumD2 );
 
-	condi1 = (sumB * x1*x1) - ( 4 * sumA * x1 * y1 ) - ( sumB * y1*y1 ) + ( sumE * x1 ) - ( sumD * y1 );
-	condi2 = (sumB * x2*x2) - ( 4 * sumA * x2 * y2 ) - ( sumB * y2*y2 ) + ( sumE * x2 ) - ( sumD * y2 );
+            condi1 = (sumB * x1*x1) - ( 4 * sumA * x1 * y1 ) - ( sumB * y1*y1 ) + ( sumE * x1 ) - ( sumD * y1 );
+            condi2 = (sumB * x2*x2) - ( 4 * sumA * x2 * y2 ) - ( sumB * y2*y2 ) + ( sumE * x2 ) - ( sumD * y2 );
 
-	pResult->dEEP_major_axis = -1.0;
-	pResult->dEEP_minor_axis = -1.0;
-	pResult->dEEP_theta = 0.0;
-	pResult->dCEP_error = -1.0;
+            pResult->dEEP_major_axis = -1.0;
+            pResult->dEEP_minor_axis = -1.0;
+            pResult->dEEP_theta = 0.0;
+            pResult->dCEP_error = -1.0;
 
-	// 최종 위치 산출 값을 저장
-	if( fabs(condi1) < fabs(condi2) ) {
-		pResult->dNorthing = x1;
-		pResult->dEasting = y1;
-    }
-	else {
-		pResult->dNorthing = x2;
-		pResult->dEasting = y2;
-	}
+            // 최종 위치 산출 값을 저장
+            if( fabs(condi1) < fabs(condi2) ) {
+                pResult->dNorthing = x1;
+                pResult->dEasting = y1;
+            }
+            else {
+                pResult->dNorthing = x2;
+                pResult->dEasting = y2;
+            }
 
-	dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
-	dDistY = fabs( pResult->dEasting - ppLatitude[0] );
+            dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
+            dDistY = fabs( pResult->dEasting - ppLatitude[0] );
 
-	if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
-            pResult->dEasting = -1;
-            pResult->dNorthing = -1;
-            pResult->dLongitude = -1;
-            pResult->dLatitude = -1;
+            if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
+                pResult->dEasting = -1;
+                pResult->dNorthing = -1;
+                pResult->dLongitude = -1;
+                pResult->dLatitude = -1;
+                pResult->bResult = false;
+            }
+            else {
+                // 최종 위치 산출 값을 저장
+                pResult->bResult = true;
+
+                CalAnalyticNonlinear( pResult );
+
+            }	
+        }
+        else {
             pResult->bResult = false;
         }
-    else {
-        // 최종 위치 산출 값을 저장
-        pResult->bResult = true;
 
-        CalAnalyticNonlinear( pResult );
-
-    }	
+	}
+	else {
+		pResult->bResult = false;
+	}
 
 	return pResult->bResult;
 

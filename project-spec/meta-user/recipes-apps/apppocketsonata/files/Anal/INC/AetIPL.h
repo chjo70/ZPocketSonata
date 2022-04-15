@@ -375,8 +375,8 @@ enum SCAN_STAT
 #define _STR_LOWHIGH
 struct STR_LOWHIGH
 {
-  int iLow;
-  int iHgh;
+    int iLow;
+    int iHgh;
 } ;
 #endif
 
@@ -391,95 +391,95 @@ struct STR_LOWHIGH_TOA
 
 //##ModelId=452B0C510326
 struct STR_LHBAND {
-  int low;
-  int hgh;
-  int band;
+    int iLow;
+    int iHigh;
+    int iBand;
 } ;
 
 //##ModelId=452B0C51033A
 struct STR_MINMAX {
-  int mean;
-  int min;
-  int max;
-  // int sdev;
+    int iMean;
+    int iMin;
+    int iMax;
+    // int sdev;
 } ;
 
 struct STR_MINMAX_SDEV {
-  int mean;
-  int min;
-  int max;
+    int iMean;
+    int iMin;
+    int iMax;
 
-  float fsdev;
+    float fsdev;
 } ;
 
 struct STR_MINMAX_MEDIAN {
-	int mean;
-	int min;
-	int max;
-	int median;
+    int iMean;
+    int iMin;
+    int iMax;
+    int iMedian;
 } ;
 
 struct STR_MINMAX_TOA {
-	_TOA mean;
-	_TOA min;
-	_TOA max;
+	_TOA TMean;
+	_TOA TMin;
+	_TOA TMax;
 } ;
 
 struct STR_F_MINMAX {
-	float fmean;
-	float fmin;
-	float fmax;
+	float fMean;
+	float fMin;
+	float fMax;
 } ;
 
 //##ModelId=452B0C51034F
 struct STR_TYPEMINMAX {
-  int type;
-  int mean;
-  int min;
-  int max;
+    int iType;
+    int iMean;
+    int iMin;
+    int iMax;
 } ;
 
 /* AET용 주파수 구조체 */
 //##ModelId=452B0C510363
 struct STR_FRQ {
-  int band;
-  int type;
-  int mean;
-  int min;
-  int max;
-  int patType;
-  int swtLev;
-  int swtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
-  int patPrd;
+    int iBand;
+    int iType;
+    int iMean;
+    int iMin;
+    int iMax;
+    int iPatType;
+    int iSwtLev;
+    int iSwtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
+    int iPatPrd;
 }  ;
 
 /* AET용 PRI 구조체 */
 //##ModelId=452B0C510377
 struct STR_PRI {
-  int type;
-  _TOA mean;
-  _TOA min;
-  _TOA max;
-  int patType;
-  float jtrPer;
-  int swtLev;
-  _TOA swtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
-  int patPrd;
+    int iType;
+    _TOA TMean;
+    _TOA TMin;
+    _TOA TMax;
+    int iPatType;
+    float fJtrPer;
+    int iSwtLev;
+    _TOA TSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
+    int iPatPrd;
 } ;
 
 /* AET용 SCAN 구조체 */
 //##ModelId=452B0C510394
 struct STR_AS {
-  int stat;
-  int type;
-  int prd;
+    int iStat;
+    int iType;
+    int iPrd;
 } ;
 
 /* AET용 SEEN TIME 구조체 */
 //##ModelId=452B0C5103A8
 struct STR_SEEN_TIME {
-  unsigned int frst;
-  unsigned int last;
+    unsigned int uiFrst;
+    unsigned int uiLast;
 } ;
 
 /* AET용 식별 구조체 */

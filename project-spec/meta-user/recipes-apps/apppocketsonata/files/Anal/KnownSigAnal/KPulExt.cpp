@@ -147,7 +147,7 @@ void CKPulExt::GroupingKnownPri() {
 				continue;
 
 			if( pSeg1->pri_type == _STABLE && pSeg2->pri_type == _JITTER ) {
-				if( CheckHarmonic( pSeg1, pSeg2 ) != 0 && OverlappedSeg( pSeg1, pSeg2 ) == TRUE )
+				if( CheckHarmonic( pSeg1, pSeg2 ) != 0 && OverlappedSeg( pSeg1, pSeg2 ) == true )
 					pSeg2->mark = DELETE_SEG;
 			}
 		}
@@ -308,9 +308,9 @@ void CKPulExt::DiscardStablePT()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:04:15
 //
-void CKPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
+void CKPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
 {
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////

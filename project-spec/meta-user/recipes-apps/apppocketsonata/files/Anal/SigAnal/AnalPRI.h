@@ -30,13 +30,13 @@ protected:
 
 public:
     //##ModelId=452B0C5603D7
-    int m_nAnalEmitter;
+    unsigned int m_uiAnalEmitter;
     //##ModelId=452B0C5603E1
-    int m_CoEmitter;
+    unsigned int m_uiCoEmitter;
     //##ModelId=452B0C570003
     unsigned int m_uiCoSeg;
     //##ModelId=452B0C570004
-    int m_nAnalSeg;
+    unsigned int m_uiAnalSeg;
 
 private:
 	UINT m_spdiffaoa[ 6 ];
@@ -61,7 +61,7 @@ private:
     //##ModelId=452B0C570053
     int *m_p2PrimeData;
     //##ModelId=452B0C570054
-    int m_nPatternType;
+    unsigned int m_uiPatternType;
 
     // 주파수 패턴 및 PRI 패턴 정보를 분석하기 위한 내부 변수들
     //##ModelId=452B0C57005D
@@ -80,7 +80,7 @@ private:
     float m_kurtosis;
 
     //##ModelId=452B0C5700B8
-    int m_CoData;
+    unsigned int m_uiCoData;
     //##ModelId=452B0C5700C2
     _TOA *m_pDataX;
     //##ModelId=452B0C5700C3
@@ -156,26 +156,26 @@ public:
     inline void PrintAllSeg() { }
 
     //##ModelId=452B0C57016C
-    inline void SetAnalSeg( int nSeg ) { m_nAnalSeg=nSeg; }
+    inline void SetAnalSeg( int nSeg ) { m_uiAnalSeg=nSeg; }
     //##ModelId=452B0C57016E
-    inline void MergeGrouping() { MergeGrouping( m_nAnalEmitter ); }
+    inline void MergeGrouping() { MergeGrouping( m_uiAnalEmitter ); }
 
     //##ModelId=452B0C570178
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return & m_DtoaHist; }
     //##ModelId=452B0C570180
     inline void SetPulseSeg( STR_PULSE_TRAIN_SEG *pSeg ) { m_pSeg = pSeg; }
     //##ModelId=452B0C570182
-    inline int GetCoEmitter() { return m_CoEmitter; }
-    inline void SetCoEmitter( UINT coEmitter ) { m_CoEmitter=coEmitter; }
+    inline int GetCoEmitter() { return m_uiCoEmitter; }
+    inline void SetCoEmitter( UINT coEmitter ) { m_uiCoEmitter=coEmitter; }
     //##ModelId=452B0C57018A
-    inline void SetAnalEmitter( int nEmitter ) { m_nAnalEmitter = nEmitter; }
+    inline void SetAnalEmitter( int nEmitter ) { m_uiAnalEmitter = nEmitter; }
     //##ModelId=452B0C57018C
     inline STR_EMITTER *GetEmitter() { return m_Emitter; }
 
     //////////////////////////////////////////////////////////////////////////
     // 가상 함수 선언...
     //##ModelId=452B0C570194
-    virtual int FindPeakInHist( int count, PDWINDEX *pPdwIndex )=0;
+    virtual int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex )=0;
     //##ModelId=452B0C57019E
     virtual BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )=0;
     //##ModelId=452B0C5701A8
@@ -183,7 +183,7 @@ public:
     //##ModelId=452B0C5701AB
     virtual void ExtractRefStable()=0;
     //##ModelId=452B0C5701B2
-    virtual int GetCoSeg()=0;
+    virtual unsigned int GetCoSeg()=0;
     //##ModelId=452B0C5701B4
     virtual BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange )=0;
     //##ModelId=452B0C5701BC
@@ -196,13 +196,13 @@ public:
     //##ModelId=452B0C5701C8
     virtual void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )=0;
     //##ModelId=452B0C5701DA
-    virtual int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter)=0;
+    virtual unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter)=0;
     //##ModelId=452B0C5701E4
-    virtual UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count )=0;
+    virtual UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )=0;
     //##ModelId=452B0C5701F8
-    virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count )=0;
+    virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount )=0;
     virtual int GetBand()=0;
-    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )=0;
+    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )=0;
     virtual CMakeAET* GetMakeAET()=0;
 
     BOOL CompAoa( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
@@ -217,7 +217,7 @@ public:
     //##ModelId=452B0C57022A
     void PrintAllEmitter();
     //##ModelId=452B0C57022B
-    BOOL CheckSawPattern( int *pSawPatternType );
+    BOOL CheckSawPattern(PATTERN_TYPE *pSawPatternType );
     //##ModelId=452B0C570235
     UINT CheckSinePattern();
     //##ModelId=452B0C570236
@@ -241,7 +241,7 @@ public:
     //##ModelId=452B0C570285
     BOOL VerifyStaggerLevel( STR_EMITTER *pStaggerEmitter, STR_EMITTER *pEmitter=NULL );
     //##ModelId=452B0C57028F
-    float ISDevInArray( int *series, int co, UINT mean );
+    float ISDevInArray( int *series, UINT co, UINT mean );
     //##ModelId=452B0C5702A2
     void KurtosisSkewness();
     //##ModelId=452B0C5702AC
@@ -259,7 +259,7 @@ public:
     BOOL FindDwellLevel();
     BOOL FindDwellLevel( STR_EMITTER *pEmitter );
     //##ModelId=452B0C5702D6
-    void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange=NULL );
+    void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange=NULL );
     //##ModelId=452B0C5702E8
     void DwellAnalysis();
     BOOL CheckContiStable( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
@@ -269,7 +269,7 @@ public:
     //##ModelId=452B0C5702F2
     BOOL StaggerLevelAnalysis( STR_EMITTER *pEmitter );
     //##ModelId=452B0C5702FC
-    UINT HighIllustrationTest( STR_EMITTER *pEmitter );
+    PATTERN_TYPE HighIllustrationTest( STR_EMITTER *pEmitter );
     //##ModelId=452B0C5702FD
     void FindPeriod();
     //##ModelId=452B0C5702FE
@@ -321,11 +321,11 @@ public:
     //##ModelId=452B0C580007
     void MergeEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter, UINT nOption );
     //##ModelId=452B0C580011
-    BOOL OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    bool OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     //##ModelId=452B0C58001B
     void MergeGrouping( int nAnalEmitter );
     //##ModelId=452B0C580023
-    BOOL StaggerAnalysis( STR_EMITTER *pEmitter );
+    bool StaggerAnalysis( STR_EMITTER *pEmitter );
     //##ModelId=452B0C580025
     void SelectMainSeg(STR_EMITTER *pEmitter);
     //##ModelId=452B0C580038
@@ -371,7 +371,7 @@ public:
     void InitSeg(STR_EMITTER *pEmitter);
 
     //##ModelId=452B0C580076
-    CAnalPRI( int coMaxPdw=NEW_COLLECT_PDW );
+    CAnalPRI( unsigned int uiCoMaxPdw=NEW_COLLECT_PDW );
     //##ModelId=452B0C58007E
     virtual ~CAnalPRI();
 

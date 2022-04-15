@@ -312,7 +312,7 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 
 	const long max_iter = 6; // maximun number of iterations
 
-	if (m_dSrcInd != 0)
+	if ( IS_NOT_ZERO(m_dSrcInd) == true )
 	{
 		f = exp(x / (m_arMajor[m_eSrcEllips] * m_arScaleFactor[m_eSrcSystem]));
 		g = 0.5 * (f - 1.0 / f);

@@ -174,7 +174,7 @@ struct STR_ZOOM_INFO {
 	void *GetData();	\
     void *GetRealData();	\
 	void *GetHeader() { return NULL; }	\
-	unsigned int GetHeaderSize();	\
+	int GetHeaderSize();	\
     unsigned int GetOneDataSize();	\
 	unsigned int GetDataItems( unsigned long long ullFileSize=0 );    \
     void SetHeaderData( void *pData ) { \
@@ -248,7 +248,7 @@ public:
     virtual void *GetHeader() = 0;
     virtual void Init( char *pRawData );
 
-    virtual unsigned int GetHeaderSize() = 0;
+    virtual int GetHeaderSize() = 0;
     virtual unsigned int GetOneDataSize() = 0;
     virtual unsigned int GetDataItems( unsigned long long ullFileSize=0 ) = 0;
     virtual void SetHeaderData( void *pData ) = 0;
@@ -322,7 +322,7 @@ public:
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline unsigned int GetHeaderSize() { return 0; }
+	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
     inline void SetHeaderData( void *pData ) { return; }
 
@@ -462,7 +462,7 @@ public:
     virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
 
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline unsigned int GetHeaderSize() { return 0; }
+	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     inline void SetHeaderData( void *pData ) { return; }
@@ -500,7 +500,7 @@ public:
     void *GetRealData();
 	void *GetHeader() { return (void *) & m_stHeader; }
     unsigned int GetDataItems( unsigned long long ullFileSize );
-    unsigned int GetHeaderSize();
+    int GetHeaderSize();
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
 
@@ -925,7 +925,7 @@ public:
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline unsigned int GetHeaderSize() { return 0; }
+	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
             
@@ -1516,7 +1516,7 @@ public:
 	void *GetHeader();
 
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline unsigned int GetHeaderSize() { return 0; }
+	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     inline void SetHeaderData( void *pData ) { return; }
@@ -1541,7 +1541,7 @@ public:
 	void *GetHeader() { return NULL; }
 
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline unsigned int GetHeaderSize() { return 0; }
+	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
 	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
     
@@ -1636,7 +1636,7 @@ public:
 	ENUM_DataType WhatDataType( char *pStrPathname );
 	ENUM_UnitType WhatUnitType( char *pStrPathname );
 
-	unsigned int GetHeaderSize( CData *pData );
+	int GetHeaderSize( CData *pData );
 	unsigned int GetOneDataSize( CData *pData );
 	unsigned int GetDataItems( CData *pData );
 

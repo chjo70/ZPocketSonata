@@ -1,4 +1,4 @@
-//  MODULE:   odbccore.h
+Ôªø//  MODULE:   odbccore.h
 //
 //	AUTHOR: Carlos Antollini 
 //
@@ -19,7 +19,7 @@
 #define MAX_COL_NAME_LEN 32
 
 
-// ø°∑Ø ¡§¿«
+// ÏóêÎü¨ Ï†ïÏùò
 #define SQL_ERROR_DISCONNECTION				(0xFFFF)
 #define SQL_ERROR_QUERY								(0xFFF0)
 #define SQL_ERROR_FIELD_LENGTH				(0xFFE0)
@@ -149,24 +149,24 @@ public:
 
 	BOOL Open(CHAR* szSqlStr);
 
-	LONG GetFieldLength(int nField);
+	LONG GetFieldLength(SQLSMALLINT nField);
 	int GetFieldIndex(CHAR* szFieldName);
-	BOOL GetFieldName(int nField, CHAR* szFieldName);
+	BOOL GetFieldName(SQLSMALLINT nField, CHAR* szFieldName);
 	BOOL GetFieldAttributes(int nField, CHAR* szFieldName, int& nType, int& nLength);
 	int GetFieldCount();
-	BOOL GetFieldValue(int nField, CHAR* szData);
+	BOOL GetFieldValue(SQLSMALLINT nField, CHAR* szData);
 	BOOL GetFieldValue(CHAR* szFieldName, CHAR *szData);
-	BOOL GetFieldValue(int nField, int* szData);
+	BOOL GetFieldValue(SQLSMALLINT nField, int* szData);
 	BOOL GetFieldValue(CHAR* szFieldName, int *szData);
-	BOOL GetFieldValue(int nField, LONG *lData);
+	BOOL GetFieldValue(SQLSMALLINT nField, LONG *lData);
 	BOOL GetFieldValue(CHAR* szFieldName, LONG *lData);
-	BOOL GetFieldValue(int nField, DOUBLE *dblData);
+	BOOL GetFieldValue(SQLSMALLINT nField, DOUBLE *dblData);
 	BOOL GetFieldValue(CHAR* szFieldName, DOUBLE *dblData);	
-	BOOL GetFieldValue(int nField, float *dblData);
+	BOOL GetFieldValue(SQLSMALLINT nField, float *dblData);
 	BOOL GetFieldValue(CHAR* szFieldName, float *dblData);	
-	BOOL GetFieldValue(int nField, struct tm* time);
-	BOOL GetFieldValue(CHAR* szFieldName, struct tm* time);
-	BOOL GetFieldTimeValue(int nField, __time32_t * pTime);
+	BOOL GetFieldValue(SQLSMALLINT nField, struct tm* pTime);
+	BOOL GetFieldValue(CHAR* szFieldName, struct tm* pTime);
+	BOOL GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime);
 	BOOL GetFieldTimeValue(CHAR *szFieldName, __time32_t* time);
 
 	BOOL MoveFirst();

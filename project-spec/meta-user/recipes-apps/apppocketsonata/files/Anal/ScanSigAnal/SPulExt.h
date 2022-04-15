@@ -52,7 +52,7 @@ public:
 	//##ModelId=452B0C44038C
 	void KnownPulseExtract();
 	//##ModelId=452B0C44038D
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type );
+	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
 	//##ModelId=452B0C440396
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	//##ModelId=452B0C44039F

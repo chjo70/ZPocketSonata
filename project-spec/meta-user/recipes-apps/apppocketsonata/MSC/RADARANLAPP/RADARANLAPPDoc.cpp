@@ -419,6 +419,8 @@ void CRADARANLAPPDoc::LoadProfile( char *pValue, int iSize, char *pAppName, char
 void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt )
 {
 	int i;
+    unsigned int ui;
+
 	STR_LOBDATA stResLOBData;
 	STR_ABTDATA stResABTData;
 
@@ -439,7 +441,7 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 	pSRxLOBData = & stResLOBData.stLOBData[0];
 	printf( "\n LOB µ•¿Ã≈Õ ===============================================================" );
 	printf( "\n LOB [%d]", stResLOBData.stLOBHeader.uiNumOfLOB );
-	for( i=0 ; i < stResLOBData.stLOBHeader.uiNumOfLOB ; ++i ) {
+	for( ui=0 ; ui < stResLOBData.stLOBHeader.uiNumOfLOB ; ++ui ) {
 		printf( "\n AET[%d], ABT[%d], LOB[%d]" , pSRxLOBData->uiAETID, pSRxLOBData->uiABTID, pSRxLOBData->uiLOBID );
 		++ pSRxLOBData;
 	}
@@ -482,7 +484,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, IS_STORED_PDW, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, RADAR_LATITUDE, RADAR_LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY OP_INIT_ID desc, LOBID desc" );
 
@@ -536,7 +538,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fPAMin);
 		theRS.GetFieldValue(index++, &pLOBData->fPAMax);
 
-		theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
+		// theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iNumOfPDW);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iCollectorID);
 
@@ -580,8 +582,8 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
  */
 bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTable )
 {
+    *pCoField = 0;
 	DECLARE_BEGIN_CHECKODBC
-	*pCoField=0;
 
 	CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
 
@@ -597,7 +599,7 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
 			}
 		}
 		
-		theRS.GetFieldValue(0, pField[*pCoField] );
+		theRS.GetFieldValue( (SQLSMALLINT) 0, pField[*pCoField] );
 		++ *pCoField;
 		
 		theRS.MoveNext();

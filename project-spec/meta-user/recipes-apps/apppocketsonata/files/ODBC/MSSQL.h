@@ -1,4 +1,4 @@
-//  MODULE:   mssql.h
+ï»¿//  MODULE:   mssql.h
 //
 //	AUTHOR: Carlos Antollini 
 //
@@ -26,7 +26,7 @@
 
 #define DECLARE_BEGIN_CHECKODBC				    try { CheckConnection();
 #define DECLARE_END_CHECKODBC					} catch( int iErrorException ) {        \
-                                                    TRACE( "DB Äõ¸® ¿¡·¯" );            \
+                                                    TRACE( "DB ì¿¼ë¦¬ ì—ëŸ¬" );            \
                                                     ErrorException( iErrorException );  \
                                                 }
 #define	DECLARE_RETURN							return m_bRet;
@@ -34,10 +34,10 @@
 #define CAST_THROW_MESSAGE						{ m_iErrorException = SQL_ERROR_FIELD_LENGTH; throw m_iErrorException; }
 
 #ifdef _ELINT_
-// ÀÎÃµ°øÇ×
+// ì¸ì²œê³µí•­
 // #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
 #else
-// X ¹êµå ÀÏ¶§ DB ¼­¹ö ¾îµå·¹½º
+// X ë°´ë“œ ì¼ë•Œ DB ì„œë²„ ì–´ë“œë ˆìŠ¤
 //#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
 #define DB_SERVER_IP_ADDRESS			"127.0.0.1"
 #endif
@@ -84,10 +84,14 @@ protected:
             memset( szOut, 0, sizeof(szOut) );
 
 			//enPosition enPos=GetPosition();
-			sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;" , DB_SERVER_IP_ADDRESS );
+#ifdef _POCKETSONATA_
+			sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=SONATA;" , DB_SERVER_IP_ADDRESS );
+#else
+            sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;" , DB_SERVER_IP_ADDRESS );
+#endif
 			bRet = m_pMyODBC->DriverConnect( szConnect, szOut ); 
 			if( bRet == FALSE ) {
-				sprintf( szConnect, "SQL ¼­¹ö(%s)¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. DB ¼­¹ö IP¸¦ È®ÀÎÇÏ°Å³ª FirewallÀ» È®ÀÎÇØÁÖ¼¼¿ä..." , DB_SERVER_IP_ADDRESS );
+				sprintf_s( szConnect, sizeof(szConnect), "SQL ì„œë²„(%s)ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. DB ì„œë²„ IPë¥¼ í™•ì¸í•˜ê±°ë‚˜ Firewallì„ í™•ì¸í•´ì£¼ì„¸ìš”..." , DB_SERVER_IP_ADDRESS );
 				AfxMessageBox( szConnect );
 
 				m_bTryConnect = true;
@@ -97,47 +101,47 @@ protected:
 // 				//if( ! m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=192.168.0.41, 1433;UID=netcususer;PWD=netcusgood;DATABASE=ELINT;", szOut) ) {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=127.0.0.1, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;", szOut ); 
 //                 if( bRet == FALSE ) {
-// 					AfxMessageBox( "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. DB ¼­¹ö¿Í ¿¬°áÇÒ ¼ö ¾ø½À´Ï´Ù. DB ¼­¹ö¸¦ È®ÀÎÇÏ°Å³ª ·£ ¼±À» È®ÀÎÇØÁÖ¼¼¿ä..." );
-// 					//Log( enError, "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. DB ¼­¹ö¿Í ¿¬°áÇÒ ¼ö ¾ø½À´Ï´Ù. DB ¼­¹ö¸¦ È®ÀÎÇÏ°Å³ª ·£ ¼±À» È®ÀÎÇØÁÖ¼¼¿ä..." );
+// 					AfxMessageBox( "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. DB ì„œë²„ì™€ ì—°ê²°í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. DB ì„œë²„ë¥¼ í™•ì¸í•˜ê±°ë‚˜ ëœ ì„ ì„ í™•ì¸í•´ì£¼ì„¸ìš”..." );
+// 					//Log( enError, "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. DB ì„œë²„ì™€ ì—°ê²°í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. DB ì„œë²„ë¥¼ í™•ì¸í•˜ê±°ë‚˜ ëœ ì„ ì„ í™•ì¸í•´ì£¼ì„¸ìš”..." );
 // 				}
 // 
 // 			}
 // 			else if( enPos == enMyHome ) {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=192.168.0.156, 1433;UID=sa;PWD=fractal;DATABASE=ELINT;Trusted_Connection=yes;", szOut ); 
 //                 if( bRet == FALSE ) {
-// 					AfxMessageBox( "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. °³ÀÎ¿ë ÄÄÇ»ÅÍ¿¡ SQL ¼­¹ö¸¦ ¼³Ä¡ÇÏ°í Æ÷Æ®¸¦ È®ÀÎÇØÁÖ¼¼¿ä..." );
-// 					//Log( enError, "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. °³ÀÎ¿ë ÄÄÇ»ÅÍ¿¡ SQL ¼­¹ö¸¦ ¼³Ä¡ÇÏ°í Æ÷Æ®¸¦ È®ÀÎÇØÁÖ¼¼¿ä..." );
+// 					AfxMessageBox( "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. ê°œì¸ìš© ì»´í“¨í„°ì— SQL ì„œë²„ë¥¼ ì„¤ì¹˜í•˜ê³  í¬íŠ¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”..." );
+// 					//Log( enError, "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. ê°œì¸ìš© ì»´í“¨í„°ì— SQL ì„œë²„ë¥¼ ì„¤ì¹˜í•˜ê³  í¬íŠ¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”..." );
 // 				}
 // 			}
 // 			else {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=127.0.0.1, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;", szOut ); 
 //                 if( bRet == FALSE ) {
-// 					AfxMessageBox( "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. »ç¹«¿ë ÄÄÇ»ÅÍ¿¡ SQL ¼­¹ö¸¦ ¼³Ä¡ÇÏ°í Æ÷Æ®¸¦ È®ÀÎÇØÁÖ¼¼¿ä..." );
-// 					//Log( enError, "SQL ¼­¹ö¿¡ ¿¬°áÀÌ ¾È µË´Ï´Ù. »ç¹«¿ë ÄÄÇ»ÅÍ¿¡ SQL ¼­¹ö¸¦ ¼³Ä¡ÇÏ°í Æ÷Æ®¸¦ È®ÀÎÇØÁÖ¼¼¿ä..." );
+// 					AfxMessageBox( "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. ì‚¬ë¬´ìš© ì»´í“¨í„°ì— SQL ì„œë²„ë¥¼ ì„¤ì¹˜í•˜ê³  í¬íŠ¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”..." );
+// 					//Log( enError, "SQL ì„œë²„ì— ì—°ê²°ì´ ì•ˆ ë©ë‹ˆë‹¤. ì‚¬ë¬´ìš© ì»´í“¨í„°ì— SQL ì„œë²„ë¥¼ ì„¤ì¹˜í•˜ê³  í¬íŠ¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”..." );
 // 				}
 // 			}
 // 
             if( bRet == TRUE ) {
-                //Log( enNormal, "SQL ¼­¹ö[0x%p]¿¡ Á¤»ó ¿¬°áµÆ½À´Ï´Ù..." , m_pMyODBC );
+                //Log( enNormal, "SQL ì„œë²„[0x%p]ì— ì •ìƒ ì—°ê²°ëìŠµë‹ˆë‹¤..." , m_pMyODBC );
             }
 
 		}
 	};
 
-	// ¿¡·¯ Ã³¸®
+	// ì—ëŸ¬ ì²˜ë¦¬
 	void CheckConnection();
 	void ErrorException( int iErrorException );
 	void DisplayErrorException( int iErrorException );
 
-    // LOB µ¥ÀÌÅÍ °®°í ¿À±â
+    // LOB ë°ì´í„° ê°–ê³  ì˜¤ê¸°
     bool LoadLOBData(int *pnLOBData, SRxLOBData *pLOBData, int iMaxItems);
 
-	// ·¹ÀÌ´õ ¸ğµå ¹× À§Çù Å×ÀÌºí ·Îµù
+	// ë ˆì´ë” ëª¨ë“œ ë° ìœ„í˜‘ í…Œì´ë¸” ë¡œë”©
 	bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems=0 );
 	//bool LoadRadarMode_PRISequence( vector<SRadarMode_PRISequence_Values*> *pVecRadarMode_PRISequence, int nMaxRadarMode=0 );
 	bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems=0 );
 
-	// SQL Äõ¸® ÇÔ¼ö
+	// SQL ì¿¼ë¦¬ í•¨ìˆ˜
 	LONG GetLONGData( char *pSQLString );
     int GetINTData( char *pSQLString );
 	bool InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=false );
@@ -148,7 +152,7 @@ protected:
 	bool GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, char *pWhere, int iMaxItems );
 	bool GetDB_LOB_POSITION( int *pnLOB, SRxLOBData *pLOBData, char *pWhere, int iMaxItems );
 
-	// Å×ÀÌºí¿¡¼­ ÇÊµå¸í °®°í ¿À±â
+	// í…Œì´ë¸”ì—ì„œ í•„ë“œëª… ê°–ê³  ì˜¤ê¸°
 	bool LoadFieldOfTable( int *pCoField, char **pFiled, char *pTable );
 
     inline CODBCDatabase *GetDBCDatabase() { return m_pMyODBC; }

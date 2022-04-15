@@ -20,6 +20,8 @@ class CSignalCollect : public CThread
 #endif
 {
 private:
+    unsigned int m_uiPDWID;
+
 #ifdef _SQLITE_
     char m_szSQLString[4000];
 
@@ -43,8 +45,8 @@ private:
     CCollectBank *m_pTheScanCollectBank[SCAN_CHANNEL];
     CCollectBank *m_pTheUserCollectBank[USER_CHANNEL];
 
-    Queue<unsigned int> m_theTrackChannel;
-    Queue<unsigned int> m_theScanChannel;
+    Queue<int> m_theTrackChannel;
+    Queue<int> m_theScanChannel;
 
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
@@ -93,17 +95,22 @@ private:
     inline SRxABTData *GetABTData( int iIndex ) { return & m_ABTData[iIndex]; }
     inline void ClearEndCollect() { m_bSendEnd = false; }
 
-    CCollectBank *GetCollectBank( unsigned int uiCh ) {
+    CCollectBank *GetCollectBank( int iCh ) {
         CCollectBank *pCCollectBank=NULL;
 
-        if( uiCh < DETECT_CHANNEL )
-            pCCollectBank = m_pTheDetectCollectBank[uiCh];
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL )
-            pCCollectBank = m_pTheTrackCollectBank[uiCh-DETECT_CHANNEL];
-        else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
-            pCCollectBank = m_pTheScanCollectBank[uiCh-DETECT_CHANNEL-TRACK_CHANNEL];
-        else
-            pCCollectBank = m_pTheUserCollectBank[uiCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL];
+        if( iCh >= 0 ) {
+            if( iCh < DETECT_CHANNEL )
+                pCCollectBank = m_pTheDetectCollectBank[iCh];
+            else if( iCh < DETECT_CHANNEL+TRACK_CHANNEL )
+                pCCollectBank = m_pTheTrackCollectBank[iCh-DETECT_CHANNEL];
+            else if( iCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL )
+                pCCollectBank = m_pTheScanCollectBank[iCh-DETECT_CHANNEL-TRACK_CHANNEL];
+            else
+                pCCollectBank = m_pTheUserCollectBank[iCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL];
+        }
+        else {
+            TRACE( "잘못된 채널 번호 입니다." );
+        }
 
         return pCCollectBank;
 
@@ -120,7 +127,7 @@ public:
     virtual ~CSignalCollect(void);
 
     void Run( key_t key=IPC_PRIVATE );
-    void MakeStaticPDWData( STR_PDWDATA *pPDWData );
+    void MakeStaticPDWData( STR_PDWDATA *pPDWData, bool bAutoIncPDWID=false );
 
     virtual void _routine();
     virtual char *GetThreadName() { return m_szThreadName; }

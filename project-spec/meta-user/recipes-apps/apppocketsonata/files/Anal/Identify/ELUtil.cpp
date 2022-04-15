@@ -31,28 +31,28 @@ static char THIS_FILE[]=__FILE__;
  * @date      2014-11-12, 오후 12:14
  * @warning
  */
-BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh )
-{
-    BOOL bRet;
-    long long int diff;
-
-#ifdef _MSC_VER
-    diff = _abs64( (long long int) ( x - y ) );
-#elif __VXWORKS__
-    diff = labs( (long long int) ( x - y ) );
-#else
-    diff = llabs( (long long int) ( x - y ) );
-#endif
-
-    if( diff <= (long long int) thresh ) {
-        bRet = TRUE;
-    }
-    else {
-        bRet = FALSE;
-    }
-
-    return bRet;
-}
+// BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh )
+// {
+//     BOOL bRet;
+//     long long int diff;
+// 
+// #ifdef _MSC_VER
+//     diff = _abs64( (long long int) ( x - y ) );
+// #elif __VXWORKS__
+//     diff = labs( (long long int) ( x - y ) );
+// #else
+//     diff = llabs( (long long int) ( x - y ) );
+// #endif
+// 
+//     if( diff <= (long long int) thresh ) {
+//         bRet = TRUE;
+//     }
+//     else {
+//         bRet = FALSE;
+//     }
+// 
+//     return bRet;
+// }
 
 /**
  * @brief     입력 값의 차이가 임계값 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.

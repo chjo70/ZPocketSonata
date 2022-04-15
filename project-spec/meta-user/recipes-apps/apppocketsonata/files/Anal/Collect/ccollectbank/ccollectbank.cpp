@@ -1,4 +1,4 @@
-// CCollectBank.cpp: implementation of the CCollectBank class.
+﻿// CCollectBank.cpp: implementation of the CCollectBank class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -20,19 +20,18 @@ using namespace std;
 #include "../../../Thread/csignalcollect.h"
 
 #include "../../../System/csysconfig.h"
-//
 
 #include "../../../Include/globals.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 
-Queue<unsigned int> CCollectBank::m_theQueueWindowCellID;
+//Queue<unsigned int> CCollectBank::m_theQueueWindowCellID;
 
 /**
  * @brief CCollectBank::CCollectBank
  */
 CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
-    :m_iTotalChannels(iTotalChannels),
+    :m_iTotalChannels(iChannelNo),
      m_iChannelNo(iChannelNo)
 {
 
@@ -53,18 +52,18 @@ CCollectBank::~CCollectBank()
 }
 
 /**
- * @brief 객체 초기화를 수행한다.
+ * @brief 媛앹껜 珥덇린?붾? ?섑뻾?쒕떎.
  */
 void CCollectBank::Init()
 {
     memset( & m_strPDW, 0, sizeof(UNION_HEADER) );
 
-	// 탐지는 1서부터 시작하고 추적/스캔은 0 부터 시작한다.
-	// 이렇게 해야 PDWID는 1부터 매기게 된다.
-    m_strPDW.SetPDWID( _spOne );
+	// ?먯???1?쒕????쒖옉?섍퀬 異붿쟻/?ㅼ틪? 0 遺???쒖옉?쒕떎.
+	// ?대젃寃??댁빞 PDWID??1遺??留ㅺ린寃??쒕떎.
+    //m_strPDW.SetPDWID( _spOne );
 
-    m_strPDW.SetBoardID( g_enBoardId );
-    m_strPDW.SetBand( g_enBoardId );
+    m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
+    m_strPDW.SetBand((unsigned int) g_enBoardId );
     //m_strPDW.x.ps.uiBand = g_enBoardId;
 
     InitWindowCell();
@@ -72,23 +71,29 @@ void CCollectBank::Init()
 }
 
 /**
- * @brief 윈도우셀을 초기화한다.
+ * @brief     윈도우셀을 초기화한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-14, 14:21
+ * @warning
  */
 void CCollectBank::InitWindowCell()
 {
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
 
-    // 큐가 생성되지 않았으면 한번 수행하여 ID를 저장한다.
-    if( m_theQueueWindowCellID.Count() == 0 && m_iTotalChannels >= 2 ) {
-        m_theQueueWindowCellID.Init( m_iTotalChannels );
-        for( int i=0 ; i < m_iTotalChannels ; ++i ) {
-            m_theQueueWindowCellID.Push( i );
-        }
-    }
+    // ?먭? ?앹꽦?섏? ?딆븯?쇰㈃ ?쒕쾲 ?섑뻾?섏뿬 ID瑜???ν븳??
+//     if( m_theQueueWindowCellID.Count() == 0 && m_iTotalChannels >= 2 ) {
+//         m_theQueueWindowCellID.Init( m_iTotalChannels );
+//         for( unsigned int i=0 ; i < m_iTotalChannels ; ++i ) {
+//             m_theQueueWindowCellID.Push( i );
+//         }
+//     }
+// 
+//     m_theQueueWindowCellID.Pop( & m_uiID );
 
-    m_theQueueWindowCellID.Pop( & m_uiID );
-
-    m_strPDW.x.ps.iBank = CCommonUtils::GetEnumCollectBank( m_uiID );
+    m_strPDW.x.ps.iBank = CCommonUtils::GetEnumCollectBank( m_iChannelNo );
 
 }
 
@@ -101,24 +106,24 @@ void CCollectBank::SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL )
     LOGENTRY;
 
     memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(STR_WINDOWCELL) );
-    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
 }
 
 /**
- * @brief 수집 윈도우셀 과 수집한 PDW 를 초기화한다.
+ * @brief 수집 뱅크를 닫는다.
  */
 void CCollectBank::CloseCollectBank()
 {
     LOGENTRY;
 
-    // 구조체 초기화 한다.
+    // 援ъ“泥?珥덇린???쒕떎.
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
     m_strWindowCell.enCollectMode = enUnused;
 
     m_strPDW.SetTotalPDW( 0 );
 
-    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
 
 }
 
@@ -129,7 +134,7 @@ void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 {
 
     /**
-    * @brief 최대 수집 게수 및 수집 시간
+    * @brief 理쒕? ?섏쭛 寃뚯닔 諛??섏쭛 ?쒓컙
     */
     m_strWindowCell.uiMaxCoPDW = pstrWindowCell->uiMaxCoPDW;
     m_strWindowCell.uiMaxCollectTimesec = pstrWindowCell->uiMaxCollectTimesec;
@@ -142,7 +147,7 @@ void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 
     m_strWindowCell.tsCollectStart = pstrWindowCell->tsCollectStart;
 
-    m_strWindowCell.uiCollectTime = pstrWindowCell->uiCollectTime;;
+    m_strWindowCell.uiCollectTime = pstrWindowCell->uiCollectTime;
 
     m_strWindowCell.uiABTID = pstrWindowCell->uiABTID;
 
@@ -168,7 +173,7 @@ void CCollectBank::CloseTrackWindowCell()
 
     m_strWindowCell.enCollectMode = enUnused;
 
-    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
 }
 
 /**
@@ -217,7 +222,7 @@ bool CCollectBank::IsValidChannel()
 //         m_strPDW.uiTotalPDW = _MAX_COL_PDW;
 //     }
 // 
-//     // PDW 정보 복사
+//     // PDW ?뺣낫 蹂듭궗
 //     UINT uiTo;
 //     if( iTo > 0 ) {
 //         uiTo = (unsigned int) iTo * sizeof(_PDW);
@@ -225,12 +230,12 @@ bool CCollectBank::IsValidChannel()
 //         memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], uiTo );
 //     }    
 // 
-//     // 추적 윈도우 셀 정보 업데이트
+//     // 異붿쟻 ?덈룄??? ?뺣낫 ?낅뜲?댄듃
 //     UpdateWindowCell();
 // 
 //     //m_strWindowCell.uiCollectTime = DecodeTOA( m_strPDW.llToa[m_strPDW.uiTotalPDW-1] - m_strPDW.llToa[0] );
 // 
-//     // 수집 완료 마킹함.
+//     // ?섏쭛 ?꾨즺 留덊궧??
 //     m_strWindowCell.enCollectMode = enCompleteCollection;
 // 
 // }
@@ -260,12 +265,12 @@ void CCollectBank::SimCollectMode()
                 msDTOA = m_strPDW.pstPDW[uiTotalPDW-1].ullTOA - m_strPDW.pstPDW[0].ullTOA;
             }
 
-            // 개수 비교
+            // 媛쒖닔 鍮꾧탳
             if( uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
       
-            // 시간 비교
+            // ?쒓컙 鍮꾧탳
             else if( TOAmsCNV( msDTOA ) >= m_strWindowCell.uiMaxCollectTimems + ( m_strWindowCell.uiMaxCollectTimesec * 1000 ) ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
@@ -315,7 +320,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
             ++ m_strWindowCell.uiTotalPDW;
         }
         else {
-            //printf( "PDW 데이터가 꽉 참 !!" );
+            //printf( "PDW ?곗씠?곌? 苑?李?!!" );
         }
     }
 
@@ -324,33 +329,33 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
 }
 
 /**
- * @brief 윈도우셀을 수집 종료 후에 업데이트 한다.
+ * @brief ?덈룄?곗????섏쭛 醫낅즺 ?꾩뿉 ?낅뜲?댄듃 ?쒕떎.
  */
 void CCollectBank::UpdateWindowCell()
 {
 
     m_strWindowCell.uiAccumulatedTime += m_strWindowCell.uiCollectTime;
 
-    // 누적 수집 PDW 개수 업데이트
+    // ?꾩쟻 ?섏쭛 PDW 媛쒖닔 ?낅뜲?댄듃
     m_strWindowCell.uiAccumulatedCoPDW += m_strWindowCell.uiTotalPDW;
 
-    // 누적 사용 채널 횟수 업데이트
+    // ?꾩쟻 ?ъ슜 梨꾨꼸 ?잛닔 ?낅뜲?댄듃
     m_strWindowCell.uiAccumulatedCoUsed += 1;
 
     m_strWindowCell.enCollectMode = enCollecting;
 
-    // PDW 정보 클리어
+    // PDW ?뺣낫 ?대━??
     m_strPDW.SetTotalPDW( 0 );
 
-    m_strPDW.IncPDWID();
+    //m_strPDW.IncPDWID();
 
-    // 수집한 PDW 개수 업데이트
+    // ?섏쭛??PDW 媛쒖닔 ?낅뜲?댄듃
     m_strWindowCell.uiTotalPDW = 0;
 
-    // 시간 재설정
+    // ?쒓컙 ?ъ꽕??
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
-    g_pTheSysConfig->SetWindowCell( m_uiID, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
 
 }
 
@@ -366,7 +371,7 @@ bool CCollectBank::IsCompleteCollect()
     if( m_strWindowCell.bUse == true && m_strWindowCell.enCollectMode == enCollecting ) {
         CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
-        // 수집 시간 확인
+        // ?섏쭛 ?쒓컙 ?뺤씤
         if( tsDiff.tv_sec > (long) m_strWindowCell.uiMaxCollectTimesec ||
 #ifdef _MSC_VER
             ( tsDiff.tv_sec == (long) m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_usec >= (long) m_strWindowCell.uiMaxCollectTimems * 1000 ) ) {
@@ -376,7 +381,7 @@ bool CCollectBank::IsCompleteCollect()
             bRet = true;
         }
 
-        // 수집 개수 확인
+        // ?섏쭛 媛쒖닔 ?뺤씤
         if( m_strPDW.GetTotalPDW() >= m_strWindowCell.uiMaxCoPDW ) {
             m_strPDW.SetTotalPDW( m_strWindowCell.uiMaxCoPDW );
             bRet = true;
@@ -410,7 +415,7 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
  * @brief     SetCollectUpdateTime
  * @return    void
  * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-01-25, 10:46
  * @warning

@@ -24,16 +24,25 @@
  */
 CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    //m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW );
-    m_pTheNewSigAnal = NULL;
-    _SAFE_NEW( m_pTheNewSigAnal, CNewSigAnal( NEW_COLLECT_PDW ) )
+#ifdef _SQLITE_
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
 
-    // m_pTheSysPara = new CSysPara();
+    strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
+    strcat( szSQLiteFileName, "/" );
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+    m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW, false, szSQLiteFileName );
+#else
+    m_pTheNewSigAnal = new CNewSigAnal( KWN_COLLECT_PDW, false );
+
+#endif
+
     m_pTheSysPara = NULL;
     _SAFE_NEW( m_pTheSysPara, CSysPara )
 
     m_PDWData.pstPDW = NULL;
-    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW )
+    m_PDWData.pstPDW = new _PDW [sizeof(_PDW) * MAX_PDW];
 
 }
 
@@ -42,11 +51,11 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
  */
 CDetectAnalysis::~CDetectAnalysis(void)
 {
-	_SAFE_DELETE( m_pTheNewSigAnal );
+	_SAFE_DELETE( m_pTheNewSigAnal )
 
-	_SAFE_DELETE( m_pTheSysPara );
+	_SAFE_DELETE( m_pTheSysPara )
 
-    _SAFE_FREE( m_PDWData.pstPDW )
+    _SAFE_DELETE( m_PDWData.pstPDW )
 }
 
 
@@ -116,7 +125,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.iCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -133,7 +142,7 @@ void CDetectAnalysis::AnalysisStart()
         memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
         strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiTotalLOB = uiTotalLOB;
-        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;        
+        strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;        
 
         g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
     }

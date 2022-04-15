@@ -9,6 +9,20 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#ifdef _MSSQL_
+#include "../../ODBC/mssql.h"
+#include "../../ODBC/odbccore.h"
+
+#elif _SQLITE_
+#include "../../SQLite/KompexSQLitePrerequisites.h"
+#include "../../SQLite/KompexSQLiteDatabase.h"
+#include "../../SQLite/KompexSQLiteStatement.h"
+#include "../../SQLite/KompexSQLiteException.h"
+#include "../../SQLite/KompexSQLiteStreamRedirection.h"
+#include "../../SQLite/KompexSQLiteBlob.h"
+
+#endif
+
 #include "KDefine.h"
 
 #include "KGroup.h"
@@ -21,15 +35,38 @@
 #ifdef __cplusplus
 
 //##ModelId=452B0C520241
-class CKnownSigAnal
+#ifdef _MSSQL_
+class CKnownSigAnal : public CMSSQL, public CRawFile
+#else
+class CKnownSigAnal : public CRawFile
+#endif
 {
 private:
     SRxABTData *m_pTrkAet;
 
     int m_iIsStorePDW;
 
+    unsigned int m_uiPDWID;
+    LONG m_lOpInitID;
+
+    bool m_bDBThread;
+
 	__time32_t m_tColTime;
 	unsigned int m_tColTimeMs;
+
+    STR_PDWDATA m_stSavePDWData;        // 분석한 LOB를 근거로 파일로 저장하기 위한 데이터 포인터
+
+    char m_szRawDataFilename[100];
+
+    char *m_pszSQLString;
+
+#ifdef _MSSQL_
+    CODBCDatabase m_theMyODBC;
+
+#elif _SQLITE_
+    Kompex::SQLiteDatabase *m_pDatabase;
+
+#endif
 
 public:
     //##ModelId=452B0C52024B
@@ -63,7 +100,7 @@ protected:
     int m_noCh;
     //##ModelId=452B0C52029C
     //STR_PDWBANK *m_pPdwBank;
-    STR_STATIC_PDWDATA *m_pPDWData;
+    STR_STATIC_PDWDATA *m_pstPDWData;
 
     int m_uiABTID;
 
@@ -97,7 +134,7 @@ public:
     //##ModelId=452B0C5202B9
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     //##ModelId=452B0C5202BB
-    inline int FindPeakInHist( int count, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( count, pPdwIndex ); }
+    inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
 	
     //##ModelId=452B0C5202CE
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
@@ -110,7 +147,7 @@ public:
     //##ModelId=452B0C5202E2
     inline int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
     //##ModelId=452B0C5202E3
-    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, count ); }
+    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     //##ModelId=43D4818F0298
     //inline void SetAnalSeg( int co ) { m_thePulExt->SetAnalSeg( co ); }
 
@@ -121,9 +158,9 @@ public:
     //##ModelId=452B0C520301
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     //##ModelId=452B0C52030A
-    inline int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
+    inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     //##ModelId=452B0C520314
-    inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, int count ) { return m_thePulExt->VerifyPRI( pPdwIndex, count ); }
+    inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
 
     //##ModelId=452B0C52031E
@@ -162,12 +199,12 @@ public:
 
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
-    inline unsigned int GetPDWID() { return m_pPDWData->GetPDWID(); }
+    inline unsigned int GetPDWID() { return m_pstPDWData->GetPDWID(); }
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	inline EN_RADARCOLLECTORID GetCollectorID() { return m_pPDWData->x.el.enCollectorID; }
-	inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
+	inline EN_RADARCOLLECTORID GetCollectorID() { return m_pstPDWData->x.el.enCollectorID; }
+	inline unsigned char *GetTaskID() { return & m_pstPDWData->x.el.aucTaskID[0]; }
 #endif  
 
     void InitVar();
@@ -182,16 +219,28 @@ public:
     //##ModelId=452B0C520379
     void SendNewAet( SRxLOBData *pNewAet, int inEMT );
     //##ModelId=452B0C520382
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID );
+    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+
+    void InitDataFromDB();
+
+    void InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
+    bool InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID );
     //##ModelId=452B0C52038B
-    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, int mark_type);
+    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
 
     //##ModelId=452B0C520396
-    void Init( STR_STATIC_PDWDATA *pPDWData );
+    void Init( STR_STATIC_PDWDATA *pstPDWData );
     //##ModelId=452B0C52039F
-    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pTrkAet );
-    //##ModelId=452B0C5203B4
-    CKnownSigAnal( int coMaxPdw );
+    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet );
+
+#ifdef _MSSQL_
+    CKnownSigAnal( int coMaxPdw, bool bDBThread );
+#else
+    CKnownSigAnal( int coMaxPdw, bool bDBThread, const char *pFileName=NULL );
+
+#endif
+
+
     //##ModelId=452B0C5203BE
     virtual ~CKnownSigAnal();
 

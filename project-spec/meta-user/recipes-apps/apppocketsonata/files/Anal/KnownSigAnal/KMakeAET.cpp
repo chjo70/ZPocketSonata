@@ -23,6 +23,8 @@
 #include "KnownSigAnal.h"
 #include "KMakeAET.h"
 
+#include "../../Include/globals.h"
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -93,6 +95,7 @@ void CKMakeAET::Init()
 //
 void CKMakeAET::MakeAET()
 {
+    PrintFunction
 	//int nStartAet;
     //SRxLOBData *pLOBData;
 
@@ -496,9 +499,9 @@ int CKMakeAET::GetColPdw()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:30
 //
-int CKMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
+int CKMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-	return m_pKnownSigAnal->CalcPAMean( pPdwIndex, count );
+	return m_pKnownSigAnal->CalcPAMean( pPdwIndex, uiCount);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -510,9 +513,9 @@ int CKMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, int count )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:32
 //
-int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
+int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-	return m_pKnownSigAnal->VerifyPW( pPdwIndex, count );
+	return m_pKnownSigAnal->VerifyPW( pPdwIndex, uiCount);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -525,9 +528,9 @@ int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, int count )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:35
 //
-void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
+void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, mark_type );
+	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -539,9 +542,9 @@ void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, int mark_type )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
+void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID );
+	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -552,7 +555,7 @@ void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:39
 //
-int CKMakeAET::GetCoSeg()
+unsigned int CKMakeAET::GetCoSeg()
 {
 	return m_pKnownSigAnal->GetCoSeg();
 }
@@ -633,8 +636,8 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
                 pUpdAetFrq->iFreqPatternType = m_pTrkAet->iFreqPatternType;
                 pUpdAetFrq->fFreqPatternPeriod = m_pTrkAet->fFreqPatternPeriodMean;
                 pUpdAetFrq->fFreqMean = m_pTrkAet->fFreqMean;
-                pUpdAetFrq->fFreqMax = m_pTrkAet->fFreqMax;;
-                pUpdAetFrq->fFreqMin = m_pTrkAet->fFreqMin;;
+                pUpdAetFrq->fFreqMax = m_pTrkAet->fFreqMax;
+                pUpdAetFrq->fFreqMin = m_pTrkAet->fFreqMin;
                 pUpdAetFrq->fFreqDeviation = m_pTrkAet->fFreqDeviation;
                 pUpdAetFrq->iFreqPositionCount = m_pTrkAet->iFreqPositionCount;
                 pUpdAetFrq->iFreqElementCount = m_pTrkAet->iFreqElementCount;
@@ -789,4 +792,18 @@ SRxLOBData *CKMakeAET::GetLOBData( int index )
 void CKMakeAET::GetCollectTime( struct timespec *pTimeSpec )
 {
 	m_pKnownSigAnal->GetCollectTime( pTimeSpec );
+}
+
+/**
+ * @brief     GetPDWID
+ * @return    unsigned int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-06, 13:07
+ * @warning
+ */
+unsigned int CKMakeAET::GetPDWID() 
+{ 
+    return m_pKnownSigAnal->GetPDWID(); 
 }

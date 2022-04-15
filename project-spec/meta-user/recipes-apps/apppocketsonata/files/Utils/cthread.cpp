@@ -49,7 +49,7 @@ int CThread::m_iCoMsgQueue = 0;
  * @param pClassName
  * @param bArrayLanData
  */
-CThread::CThread( int iThreadID, char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
+CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
 {
 
     m_bMainLoop = true;
@@ -183,7 +183,7 @@ CThread::~CThread()
     // 1. 쓰레드를 죽인다.
 #ifdef _MSC_VER
     if ( m_MainThread.m_hThread ) {
-        Stop();
+        CThread::Stop();
         
         LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
     }
@@ -277,7 +277,7 @@ void CThread::Run( void *(*pFunc)(void*), key_t key )
    
     // 타스크 큐 생성
     m_iPriority = GetPriorityByThreadName();
-    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK|VX_ALTIVEC_TASK, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     if( m_TaskID != TASK_ID_ERROR ) {
         m_bTaskRunStat = true;
     }

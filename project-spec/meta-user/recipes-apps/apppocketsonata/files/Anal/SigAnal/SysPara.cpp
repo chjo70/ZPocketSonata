@@ -105,7 +105,7 @@ void CSysPara::LoadDefaultSysParameter()
 	_sp.sc.thtrkprd = _spThresholdOfTrkSig;
 
 	// CW 최소 개수
-	_sp.cm.Cw_Min_Cnt = _spCWMinPulseCount;
+	_sp.cm.uiCw_Min_Cnt = _spCWMinPulseCount;
 
 }
 

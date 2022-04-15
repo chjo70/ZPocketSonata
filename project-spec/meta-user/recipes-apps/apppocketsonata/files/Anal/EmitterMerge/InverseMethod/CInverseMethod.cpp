@@ -114,7 +114,7 @@ CInverseMethod::~CInverseMethod( )
  */
 bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, double lat2, double lon2 )	//#FA_Q_4020_T1
 {
-    bool bRet;
+    bool bRet=true;
 
 	lat1 = lat1 * D2R;
 	lon1 = lon1 * D2R;
@@ -158,7 +158,7 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 	while (eps > 1e-12 && iterLimit > 0);
 
     if( IS_ZERO(m_dDistance) ) {
-        bRet = true;
+        bRet = false;
     }
     else {
 	    if (iterLimit == 0) { //DTEC_Else

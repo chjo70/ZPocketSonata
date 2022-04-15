@@ -26,7 +26,7 @@ struct STR_SYSCONFIG {
     /**
      * @brief 최소 분석 개수
      */
-    int iMinAnalPulse;
+    unsigned int uiMinAnalPulse;
 
     /**
      * @brief 기본 삭제 시간 [초]
@@ -153,9 +153,9 @@ public:
 
     };
 
-    int GetMinAnalPulse() { return m_strConfig.iMinAnalPulse; };
-    void SetMinAnalPulse(int iMinAnalPulse ) {
-        m_strConfig.iMinAnalPulse = iMinAnalPulse;
+    unsigned int GetMinAnalPulse() { return m_strConfig.uiMinAnalPulse; };
+    void SetMinAnalPulse(unsigned int uiMinAnalPulse ) {
+        m_strConfig.uiMinAnalPulse = uiMinAnalPulse;
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
     };
@@ -202,27 +202,27 @@ public:
         strcpy( m_strConfig.szLocalIPAddress, pIPAddress );
     } ;
 
-    STR_WINDOWCELL *GetDetectWindowCell( int iCh ) { return & m_strConfig.strDetectWindowCell[iCh]; }
-    void SetDetectWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strDetectWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+    STR_WINDOWCELL *GetDetectWindowCell( unsigned int uiCh ) { return & m_strConfig.strDetectWindowCell[uiCh]; }
+    void SetDetectWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strDetectWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    STR_WINDOWCELL *GetTrackWindowCell( int iCh ) { return & m_strConfig.strTrackWindowCell[iCh]; }
-    void SetTrackWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strTrackWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+    STR_WINDOWCELL *GetTrackWindowCell( unsigned int uiCh ) { return & m_strConfig.strTrackWindowCell[uiCh]; }
+    void SetTrackWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strTrackWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    STR_WINDOWCELL *GetScanWindowCell( int iCh ) { return & m_strConfig.strScanWindowCell[iCh]; }
-    void SetScanWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strScanWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+    STR_WINDOWCELL *GetScanWindowCell( unsigned int uiCh ) { return & m_strConfig.strScanWindowCell[uiCh]; }
+    void SetScanWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strScanWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
-    STR_WINDOWCELL *GetUserWindowCell( int iCh ) { return & m_strConfig.strUserWindowCell[iCh]; }
-    void SetUserWindowCell( int iCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strUserWindowCell[iCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+    STR_WINDOWCELL *GetUserWindowCell( unsigned int uiCh ) { return & m_strConfig.strUserWindowCell[uiCh]; }
+    void SetUserWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
+        memcpy( & m_strConfig.strUserWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 

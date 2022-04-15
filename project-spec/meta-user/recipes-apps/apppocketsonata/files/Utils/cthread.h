@@ -110,7 +110,7 @@ typedef enum {
  * @brief 수집 쓰레드 정보
  */
 typedef struct {
-    unsigned int uiCh;
+    int iCh;
     unsigned int uiTotalPDW;
 
     // 방사체 번호
@@ -127,7 +127,7 @@ struct STR_ANALINFO {
     unsigned int uiTotalLOB;
 
     // 수집한 채널 정보
-    unsigned int uiCh;
+    int iCh;
 
     // 방사체 번호
     unsigned int uiAETID;
@@ -268,7 +268,7 @@ private:
     void DisplayMsg( bool bSend, const char *pszClassName=NULL, STR_MessageData *pInMsg=NULL );
     
 public:
-    CThread( int iMsgKey, char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
+    CThread( int iMsgKey, const char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
     ~CThread();
 
     void Run( key_t key=IPC_PRIVATE );

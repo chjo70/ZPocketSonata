@@ -43,7 +43,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CEmitterMerge( int iKeyId, char *pClassName, bool bArrayLanData );
+    CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData );
     virtual ~CEmitterMerge(void);
 
     inline CELEmitterMergeMngr *GetEmitterMergeMngr() { return m_pTheEmitterMergeMngr; }
