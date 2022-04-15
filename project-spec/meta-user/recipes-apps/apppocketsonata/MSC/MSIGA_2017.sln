@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1778
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaGraph", "DeltaGraph\DeltaGraph.vcxproj", "{F45B81CF-13A7-4C04-AC74-97289EF5E535}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSIGA", "MSIGA\MSIGA.vcxproj", "{77EB490D-A2C9-4069-87BE-26A69F11E858}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RADARANL", "RADARANL\RADARANL.vcxproj", "{547A3C9D-6E41-496F-8B5E-CAE1E25A00EA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RADARANLAPP", "RADARANLAPP\RADARANLAPP.vcxproj", "{15DBC308-E4C4-44B8-80FE-684D37C6CF4A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RADARDIR", "RADARDIR\RADARDIR.vcxproj", "{AF61494A-622B-448E-958D-6F27C288EF23}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RADARDIRAPP", "RADARDIRAPP\RADARDIRAPP.vcxproj", "{293A1A31-507D-49D7-9F98-EBA51FF313A9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Debug|x86.ActiveCfg = Debug|Win32
+		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Debug|x86.Build.0 = Debug|Win32
+		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Release|x86.ActiveCfg = Release|Win32
+		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Release|x86.Build.0 = Release|Win32
+		{77EB490D-A2C9-4069-87BE-26A69F11E858}.Debug|x86.ActiveCfg = Debug|Win32
+		{77EB490D-A2C9-4069-87BE-26A69F11E858}.Debug|x86.Build.0 = Debug|Win32
+		{77EB490D-A2C9-4069-87BE-26A69F11E858}.Release|x86.ActiveCfg = Release|Win32
+		{77EB490D-A2C9-4069-87BE-26A69F11E858}.Release|x86.Build.0 = Release|Win32
+		{547A3C9D-6E41-496F-8B5E-CAE1E25A00EA}.Debug|x86.ActiveCfg = Debug|Win32
+		{547A3C9D-6E41-496F-8B5E-CAE1E25A00EA}.Debug|x86.Build.0 = Debug|Win32
+		{547A3C9D-6E41-496F-8B5E-CAE1E25A00EA}.Release|x86.ActiveCfg = Release|Win32
+		{547A3C9D-6E41-496F-8B5E-CAE1E25A00EA}.Release|x86.Build.0 = Release|Win32
+		{15DBC308-E4C4-44B8-80FE-684D37C6CF4A}.Debug|x86.ActiveCfg = Debug|Win32
+		{15DBC308-E4C4-44B8-80FE-684D37C6CF4A}.Debug|x86.Build.0 = Debug|Win32
+		{15DBC308-E4C4-44B8-80FE-684D37C6CF4A}.Release|x86.ActiveCfg = Release|Win32
+		{15DBC308-E4C4-44B8-80FE-684D37C6CF4A}.Release|x86.Build.0 = Release|Win32
+		{AF61494A-622B-448E-958D-6F27C288EF23}.Debug|x86.ActiveCfg = Debug|Win32
+		{AF61494A-622B-448E-958D-6F27C288EF23}.Debug|x86.Build.0 = Debug|Win32
+		{AF61494A-622B-448E-958D-6F27C288EF23}.Release|x86.ActiveCfg = Release|Win32
+		{AF61494A-622B-448E-958D-6F27C288EF23}.Release|x86.Build.0 = Release|Win32
+		{293A1A31-507D-49D7-9F98-EBA51FF313A9}.Debug|x86.ActiveCfg = Debug|Win32
+		{293A1A31-507D-49D7-9F98-EBA51FF313A9}.Debug|x86.Build.0 = Debug|Win32
+		{293A1A31-507D-49D7-9F98-EBA51FF313A9}.Release|x86.ActiveCfg = Release|Win32
+		{293A1A31-507D-49D7-9F98-EBA51FF313A9}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63F50ED7-C4D1-4D0E-9B36-71E0B885DC82}
+	EndGlobalSection
+EndGlobal
