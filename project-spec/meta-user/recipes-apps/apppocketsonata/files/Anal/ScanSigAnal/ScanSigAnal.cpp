@@ -4,89 +4,26 @@
 
 #include "stdafx.h"
 
+#ifdef _MSC_VER
+
+#else
+#include <unistd.h>
+
+#endif
+
 
 #include <stdio.h>
 #include <string.h>
 
+#include "../OFP_Main.h"
+
 #include "ScanSigAnal.h"
 
+#include "../../System/csysconfig.h"
+
+#include "../../Include/globals.h"
+
 #include "../../Utils/ccommonutils.h"
-
-// CSColPdw *theSAPColPdw;
-//CScanSigAnal *theScanSigAnal;
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : GetScanRes
-// 반환되는 형  : void
-// 함 수 인 자  : int *pScanType
-// 함 수 인 자  : int *pScanPrd
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-16 11:00:59
-//
-// void GetScanRes( unsigned int *pScanType, float *pScanPrd )
-// {
-// 	theScanSigAnal->GetScanRes( pScanType, pScanPrd );
-// }
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : ExtPul
-// 반환되는 형  : UINT
-// 함 수 인 자  : int noEMT
-// 함 수 인 자  : UINT noCh
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-13 16:53:19
-//
-// UINT ExtPul( int noEMT, UINT noCh ) {
-// 
-// 	printf( "\n **************************************************************************" );
-// 
-// 	// 변수 초기화
-// 	theScanSigAnal->ScanExtractPulseInit( noEMT, noCh );
-// 
-// 	// 펄스열 추출
-//     //theScanSigAnal->ExtractPulse();
-// 	int count=theScanSigAnal->GetCoScanPulse();
-// 	printf( "\n 스캔 펄스열 추출: %3d 번, %2d 채널, %d 개" , noEMT, noCh, count );
-// 
-// 	printf( "\n **************************************************************************" );
-// 	printf( "\n" );
-// 	return count;
-// 
-// }
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : ScanSigAnal
-// 반환되는 형  : int
-// 함 수 인 자  : int noEMT
-// 함 수 인 자  : int noCh
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:01:18
-//
-// int ScanSigAnal( int noEMT, int noCh ) {
-// 
-// 	printf( "\n **************************************************************************" );
-// 
-// 	// 변수 초기화
-// 	theScanSigAnal->ScanSigAnalInit( noEMT, noCh );
-// 
-// 	printf( "\n 스캔 분석 시작: %3d 번, %2d 채널, %d 개" , noEMT, noCh, theScanSigAnal->GetCoScanPulse() );
-// 
-// 	// 스캔 분석
-//     //int nResult=theScanSigAnal->AnalStart( noEMT, noCh );
-// 
-// 	printf( "\n **************************************************************************" );
-// 	printf( "\n" );
-// 
-//     return 0;
-// 
-// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -95,8 +32,10 @@
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 10:41:42
 //
-CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw)
+CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
 {
+    size_t szSize;
+
 	InitVar();
 
 	// 신호 분석 관련 클래스 생성
@@ -109,15 +48,13 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw)
 	m_nMaxPdw = uiCoMaxPdw;
 
 	//-- 조철희 2006-02-17 15:23:06 --//
-	m_noCh = 0;
-	m_uiCoPdw = 0;
-	m_noEMT = 0;
+	m_noCh = _spZero;
+	m_uiCoPdw = _spZero;
+	m_noEMT = _spZero;
 
 	m_pSeg = GetPulseSeg();
 
 	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
-
-    m_pMidasBlue = new CMIDASBlueFileFormat;
 
 }
 
@@ -130,7 +67,6 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw)
 //
 CScanSigAnal::~CScanSigAnal()
 {
-    delete m_pMidasBlue;
 
 	delete m_theGroup;
 	delete m_thePulExt;
@@ -182,18 +118,20 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
 
-    ++ m_uiStep;
+    NextStep();
 
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
+    Log( enNormal, "==== 스캔 분석 시작[%dth, Co:%d] ====", GetStep(), m_uiCoPdw);
+
+    // 수집한 PDW 파일 저장하기...
+    InsertRAWData(&m_stSavePDWData, _spZero );
+
     iTotalPDW = pPDWData->GetTotalPDW();
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( m_pPDWData->stPDW, iTotalPDW );
-
-    // 수집한 PDW 파일 만들기...
-    m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
+    m_theGroup->MakePDWArray( m_pstPDWData->stPDW, iTotalPDW );
 
     /*! \bug  그룹화는 생략하고 수집 펄스열을 하나의 그룹화 내에 올려 놓는다.
         \date 2009-03-03 17:05:22, 조철희
@@ -216,49 +154,6 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     //SaveScanInfo( nResult, m_pScnAet );
 
 }
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CScanSigAnal::Start
-		\author   조철희
-		\param    pPdwBank 인자형태 STR_PDWBANK *
-		\param    pUpdAet 인자형태 STR_UPDAET *
-		\return   void
-		\version  0.0.51
-		\date     2008-10-11 12:39:03
-		\warning
-*/
-//void CScanSigAnal::Start( STR_PDWBANK *pPdwBank, STR_UPDAET *pUpdAet )
-//{
-//	UINT nResult;
-
-//	// 펄스열 및 추적 에미터 포인터, 수집 펄스열 저장
-//	m_pUpdAet = pUpdAet;
-
-//	// 스캔 분석 여부를 결정한다.
-//	if( ! IsAnalScan() ) {
-//		return;
-//	}
-
-//	// 스캔분석할 에미터 저장
-//	memcpy( & stScnAet, pUpdAet, sizeof( STR_SCNAET ) );
-
-//	// printf( "\n pPdwBank->count[%d]" , pPdwBank->count );
-//	if( pPdwBank->count == 0 )
-//		return;
-
-//	// 분석 초기화
-//	Init( pPdwBank );
-
-//	// 스캔 분석하고자할 펄스열을 추출한다.
-//	ExtractPulse();
-	
-//	// 스캔 분석을 수행한다.
-//	nResult = m_theAnalScan->AnalScan();
-
-//	// 스캔 분석 결과를 저장한다.
-//	SaveScanInfo( nResult, pUpdAet, TRUE );
-
-//}
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -362,9 +257,9 @@ void CScanSigAnal::ClearColBuffer()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 14:07:35
 //
-void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
+void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-	for( int i=0 ; i < count ; ++i )
+	for( unsigned int i=0 ; i < uiCount; ++i )
 		MARK[ *pPdwIndex++ ] = usMarkType;
 }
 
@@ -378,7 +273,7 @@ void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkT
 */
 void CScanSigAnal::InitVar()
 {
-    m_uiStep = 0;
+    // m_uiStep = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -390,18 +285,39 @@ void CScanSigAnal::InitVar()
 		\date     2006-02-13 17:30:08
 		\warning
 */
-void CScanSigAnal::Init( STR_STATIC_PDWDATA *pPDWData )
+void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 {
 	// 스캔 신호 분석 초기화
 //	ScanSigAnalInit( stScnAet.aet.noEMT, 0 );
 
-    // 수집 버퍼 저장
-    m_pPDWData = pPDWData;
+    // 시간 초기화
+    SetColTime(0);
+    SetColTimeMs(0);
+
+    // 수집 버퍼 정의
+    m_pstPDWData = pstPDWData;
 
     // 신호 수집 개수 정의
-    m_uiCoPdw = pPDWData->GetTotalPDW();
+    if (pstPDWData != NULL) {
+        memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(UNION_HEADER));
 
-    m_iIsStorePDW = pPDWData->x.ps.iIsStorePDW;
+        // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
+        SetPDWID(m_pstPDWData->GetPDWID());
+
+        // 신호 수집 개수 정의
+        m_uiCoPdw = pstPDWData->GetTotalPDW();
+
+        m_iIsStorePDW = pstPDWData->x.ps.iIsStorePDW;
+    }
+    else {
+        SetPDWID(_spZero);
+
+        m_uiCoPdw = _spZero;
+
+        m_iIsStorePDW = _spZero;
+
+    }
+
 
 	// 그룹화 초기화
 	m_theGroup->Init();
@@ -665,21 +581,4 @@ void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID )
 
 }
 
-void CScanSigAnal::GetCollectTime( struct timespec *pTimeSpec )
-{
-	if( m_tColTime == 0 ) {
-		clock_gettime( CLOCK_REALTIME, pTimeSpec );
-	}
-	else {
-		pTimeSpec->tv_sec = m_tColTime;
-#ifdef _MSC_VER
-		pTimeSpec->tv_usec = m_tColTimeMs * 1000;
-#else
-		pTimeSpec->tv_nsec = m_tColTimeMs * 1000000;
-#endif
 
-	}
-
-	return;
-
-}

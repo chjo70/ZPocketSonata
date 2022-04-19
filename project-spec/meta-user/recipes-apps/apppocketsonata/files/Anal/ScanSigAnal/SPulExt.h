@@ -38,7 +38,7 @@ public:
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	//##ModelId=452B0C44037D
 
-    void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange );
+    void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
 	//##ModelId=452B0C440382
     void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 	//##ModelId=452B0C440386
@@ -52,11 +52,11 @@ public:
 	//##ModelId=452B0C44038C
 	void KnownPulseExtract();
 	//##ModelId=452B0C44038D
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
+	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 	//##ModelId=452B0C440396
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	//##ModelId=452B0C44039F
-	CSPulExt( void *pParent, int coMaxPdw );
+	CSPulExt( void *pParent, unsigned int uiCoMaxPdw );
 	//##ModelId=452B0C4403AA
 	virtual ~CSPulExt();
 

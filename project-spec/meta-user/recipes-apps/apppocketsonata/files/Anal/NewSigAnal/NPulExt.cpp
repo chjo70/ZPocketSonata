@@ -30,7 +30,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:29
 //
-CNPulExt::CNPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
+CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -306,9 +306,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:32
 //
-void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
+void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
+    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 
 }
 
@@ -362,9 +362,9 @@ void CNPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_c
 //! \date     2006-07-27 17:16:36
 //! \warning
 //
-void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange )
+void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )
 {
-    m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, count, pRange );
+    m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, uiCount, pRange );
 }
 
 //////////////////////////////////////////////////////////////////////

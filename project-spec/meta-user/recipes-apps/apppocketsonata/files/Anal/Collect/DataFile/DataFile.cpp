@@ -3314,7 +3314,7 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
 
         AllocData( m_PDWData.GetTotalPDW() );
         if( m_PDWData.pstPDW != NULL ) {
-        memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
+            memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
         }
         break;
 
@@ -3700,7 +3700,7 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     }
 
     m_RawDataFile.FileClose();
-    //_SAFE_FREE( pTempData );
+    _SAFE_FREE( pTempData );
 
     return m_pData;
 

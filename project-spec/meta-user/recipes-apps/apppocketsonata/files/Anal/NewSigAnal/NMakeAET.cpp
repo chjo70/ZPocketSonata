@@ -365,7 +365,7 @@ unsigned int CNMakeAET::IsStorePDW()
  * @brief     
  * @param     struct timespec * pTimeSpec
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:43:36
  * @warning   
@@ -380,7 +380,7 @@ void CNMakeAET::GetCollectTime( struct timespec *pTimeSpec )
 /**
  * @brief     
  * @return    EN_RADARCOLLECTORID
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:43:55
  * @warning   
@@ -393,7 +393,7 @@ EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
 /**
  * @brief     
  * @return    char *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:44:00
  * @warning   

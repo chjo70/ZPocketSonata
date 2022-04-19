@@ -32,7 +32,7 @@ protected :
     CKnownSigAnal *m_pKnownSigAnal;
 
     //##ModelId=452B0C5203DC
-    int m_CoNewAet;
+    int m_iCoNewAet;
     //##ModelId=452B0C5203DD
     int m_IdxUpdAet;
 
@@ -46,7 +46,7 @@ public:
 	SRxLOBData *GetLOBData( int index=0 );
 
     //##ModelId=452B0C53000D
-    inline void SetCoNewAet( int count ) { m_CoNewAet=count; }
+    inline void SetCoNewAet( int iCount ) { m_iCoNewAet=iCount; }
     //##ModelId=452B0C53000F
     inline void ClearCoAet() { m_CoLOB=0; }
     
@@ -333,7 +333,7 @@ public:
     //##ModelId=452B0C530080
     BOOL KnownMakeAET();
     //##ModelId=452B0C530081
-    CKMakeAET( void *pParent, int coMaxPdw );
+    CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
     //##ModelId=452B0C530084
     virtual ~CKMakeAET();
 

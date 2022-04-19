@@ -329,14 +329,45 @@ void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, __ti
 {
     struct tm *pstTime;
 
+#ifdef _MSC_VER    
+    strcpy_s( pString, szString, "1970-01-01 00:00:00" );
+#else
+    strcpy( pString, "1970-01-01 00:00:00" );    
+#endif
+
     pstTime = localtime( & tiTime );
     strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
-//     if( pstTime != NULL ) {
-//         strftime( pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
-//     }
-//     else {
-//         strcpy_s( pString, szString, "1970-01-01 00:00:00" );
-//     }   
+
+}
+
+/**
+ * @brief     GetCollectTime
+ * @param     struct timespec * pTimeSpec
+ * @param     __time32_t tColTime
+ * @param     unsigned int m_tColTimeMs
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-18, 11:36
+ * @warning
+ */
+void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTime, unsigned int tColTimeMs )
+{
+    if (tColTime == 0) {
+        clock_gettime(CLOCK_REALTIME, pTimeSpec);
+    }
+    else {
+        pTimeSpec->tv_sec = tColTime;
+#ifdef _MSC_VER
+        pTimeSpec->tv_usec = tColTimeMs * 1000;
+#else
+        pTimeSpec->tv_nsec = tColTimeMs * 1000000;
+#endif
+
+    }
+
+    return;
 
 }
 

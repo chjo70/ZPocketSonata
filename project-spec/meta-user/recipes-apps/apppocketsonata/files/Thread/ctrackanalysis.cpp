@@ -42,7 +42,8 @@ CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData
 
 #endif
 
-    m_pTheSysPara = new CSysPara();
+    //m_pTheSysPara = new CSysPara();
+    _SAFE_NEW(m_pTheSysPara, CSysPara())
 
 }
 

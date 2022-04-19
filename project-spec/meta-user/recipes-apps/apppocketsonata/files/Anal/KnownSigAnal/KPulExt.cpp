@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 
+#include "../OFP_Main.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -308,9 +310,9 @@ void CKPulExt::DiscardStablePT()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:04:15
 //
-void CKPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
+void CKPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
+	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -356,9 +358,9 @@ void CKPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_c
 //! \date     2006-07-27 17:27:00
 //! \warning
 //
-void CKPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange )
+void CKPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )
 {
-	m_pKnownSigAnal->MakeDtoaHistogram( pPdwIndex, count, pRange );
+	m_pKnownSigAnal->MakeDtoaHistogram( pPdwIndex, uiCount, pRange );
 }
 
 //////////////////////////////////////////////////////////////////////

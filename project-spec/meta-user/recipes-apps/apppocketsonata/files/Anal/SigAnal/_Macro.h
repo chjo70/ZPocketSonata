@@ -63,7 +63,9 @@ enum ENUM_BoardID {
 										TRACE( "malloc error new memory[%s]" , #A ); \
 									} \
                                 } \
-                                else { TRACE( "Already malloc memory[%s]" , #A ); }
+                                else { \
+                                    TRACE( "Already malloc memory[%s]" , #A ); \
+                                }
 
 #define ELSE                    else { \
                                 }

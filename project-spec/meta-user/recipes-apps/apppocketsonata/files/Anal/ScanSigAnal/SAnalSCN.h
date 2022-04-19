@@ -89,7 +89,7 @@ public:
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
 
 	//BOOL CompMeanDiff(int x, int y, int thresh);
-	float MeanInArray( UINT *series, UINT co );
+	//float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
     inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_uiScnTyp, *pScanPrd= m_uiScnPrd; }
 	//##ModelId=452B0C45019B
@@ -106,7 +106,7 @@ public:
 	//##ModelId=452B0C4501B9
 	UINT PeriodVerify( void );
 	//##ModelId=452B0C4501C0
-	float SDevInArray( UINT *series, int co, float mean );
+	//float SDevInArray( UINT *series, int co, float mean );
 	//##ModelId=452B0C4501C4
 	void KurtosisSkewness( STR_SAMPLE *pSample );
 	//##ModelId=452B0C4501D5
@@ -118,13 +118,13 @@ public:
 	//##ModelId=452B0C4501EB
     bool CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY );
 	//##ModelId=452B0C4501F3
-	float Normalize( UINT *series, UINT co, float *norm );
+	float Normalize( int *series, UINT co, float *norm );
 	//##ModelId=452B0C4501FC
 	void Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
 	//##ModelId=452B0C4501FF
 	void ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
 	//##ModelId=452B0C450208
-	void SearchLowHghInArray( UINT *series, UINT co, STR_LOWHIGH *lh );
+	void SearchLowHghInArray( int *series, UINT co, STR_LOWHIGH *lh );
 	//##ModelId=452B0C450213
 	void SamplingProcess();
 	//##ModelId=452B0C450214

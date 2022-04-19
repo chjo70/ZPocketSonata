@@ -446,7 +446,7 @@ typedef struct {
 // time_t 형은 시간 정보를 저장. 정보가 없으면 0 으로 함.
 // int 형은 정보가 없으면 -1 로 저장함.
 // int 형은 정보가 없으면 -1 로 저장함.
-struct SEL_KEYWORD_VALUE{
+struct SEL_KEYWORD_VALUE {
 	// Basic Keyword
 	char classification[50];		// 데이터의 분류
 	char writer[50];						// 생성기 장비명
@@ -473,38 +473,10 @@ struct SEL_KEYWORD_VALUE{
 	int gain_mode;							// 수동일 때 0, 자동(AGC)일 때 1
 	double dGain_value;						// 게인 값 [dB]
 
-	int numberofdata;						// 데이터 개수
+	unsigned int uiNumberOfData;						// 데이터 개수
 
 	int mission;
 	int receiver;
-// 
-// 	SEL_KEYWORD_VALUE() :
-// 		dRF(0.0),
-// 		dBW(0.0),
-// 		dSamplingPeriod(0.0),
-// 		dRecBW(0.0),
-// 		gain_mode(0),
-// 		dGain_value(0.0),
-// 		numberofdata(0)
-// 	{
-// #ifdef _MSC_VER
-// 		strcpy_s( classification, "701-ELINT" );
-// #else
-//         strcpy( classification, "701-ELINT" );
-// #endif
-// 		// memset(classification, NULL, 50);
-//         memset(writer, 0, sizeof(writer) );
-//         memset(writer_version, 0, sizeof(writer_version));
-//         memset(signal_id, 0, sizeof(signal_id) );
-//         memset(notes, 0, sizeof(notes) );
-//         memset(collector, 0, sizeof(collector));
-//         memset(feed, 0, sizeof(feed));
-// 
-// 		dGain_value = 70;
-// 
-// 		mission = 0;
-// 		receiver = 0;
-// 	}
 
 };
 
@@ -609,7 +581,8 @@ private:
 
     SEL_KEYWORD_VALUE m_strKeywordValue;
 
-    STR_PDWDATA *m_pPDWData;
+    //STR_PDWDATA *m_pPDWData;
+    _PDW *m_pPDWData;
 
 private:
     int GetSampleSize();
@@ -643,7 +616,7 @@ public:
     ~CMIDASBlueFileFormat(void);
     bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE & stKeywordValue, char *pInputFilename=NULL, char *pTaskID=NULL );
 
-    bool SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue );
+    bool SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, _PDW *pPDWData, SEL_KEYWORD_VALUE *pstKeywordValue );
 
     void MakeMIDASFileName( char *pstOutFilePathName, char *pstFileName, EnumSCDataType eDataType );
 
@@ -651,7 +624,7 @@ public:
     void InitIFMidas();
     bool SaveAllIFMIDASFormat();
 
-    void SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, void *pData );
+    void SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, _PDW *pPDWData, unsigned int uiCoPDW);
 
     inline char *GetRawDataFilename() { return m_szRawDataFilename; }
 	

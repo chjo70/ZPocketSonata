@@ -18,14 +18,11 @@
 
 #endif
 
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
-
 #include "../OFP_Main.h"
-
-#include <string.h>
 
 #include "NewSigAnal.h"
 
@@ -34,11 +31,6 @@
 #include "../../Include/globals.h"
 
 #include "../../Utils/ccommonutils.h"
-
-#ifdef _POCKETSONATA_
-//char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
-
-#endif
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -49,33 +41,12 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
-#ifdef _MSSQL_
-CNewSigAnal::CNewSigAnal( unsigned int uiCoMaxPdw, bool bDBThread ) : CMSSQL( & m_theMyODBC )
-#else
-CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName )
-#endif
+CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName ) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName )
 {
     //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
-    size_t szSize;
 
-    m_bDBThread = bDBThread;
-
-    CCommonUtils::SetUnitType();
-
-    srand( time(NULL) & (unsigned int) 0xFFFF );
 
 #ifdef _SQLITE_
-    try {
-        m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
-
-    }
-    catch( Kompex::SQLiteException &exception ) {
-        std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-    }
-
     // SQLITE 파일명 생성하기
     char szSQLiteFileName[100];
 
@@ -85,31 +56,22 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pF
 
     m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
 
-    m_pszSQLString = ( char *) malloc( MAX_SQL_SIZE );
 #elif _MSSQL_
-    CMSSQL::Init();
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( & m_theMyODBC );
-
-    m_pszSQLString = ( char *) malloc( MAX_SQL_SIZE );
+    CODBCDatabase *pMyODBC;
+    pMyODBC = GetCODBCDatabase();
+    m_pIdentifyAlg = new CELSignalIdentifyAlg(pMyODBC);
 
 #else
     m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
-#endif
 
-    m_bSaveFile = true;
+#endif
 
     m_VecMatchRadarMode.reserve( MAX_MATCH_RADARMODE );
 
     m_theGroup = new CNGroup( this, uiCoMaxPdw);
     m_thePulExt = new CNPulExt( this, uiCoMaxPdw);
     m_theAnalPRI = new CNAnalPRI( this, uiCoMaxPdw);
-    m_theMakeAET = new CNMakeAET( this, uiCoMaxPdw);
-
-    m_pMidasBlue = new CMIDASBlueFileFormat;
-
-    m_stSavePDWData.pstPDW = NULL;
-    szSize = CCommonUtils::CheckMultiplyOverflow( sizeof(_PDW), uiCoMaxPdw);
-    _SAFE_MALLOC( m_stSavePDWData.pstPDW, _PDW, szSize );
+    m_theMakeAET = new CNMakeAET( this, uiCoMaxPdw);    
 
     // 클래스 관련 초기화
     m_uiMaxPdw = uiCoMaxPdw;
@@ -117,16 +79,9 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pF
     m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
     m_pSeg = GetPulseSeg();
 
-    m_uiCoPdw = 0;
-
-    m_uiStep = 0;
+    m_uiCoPdw = _spZero;
 
     Init();
-
-    // DB 관련 변수 초기화
-    InitDataFromDB();
-
-    //SWInit();
 
 }
 
@@ -138,22 +93,11 @@ CNewSigAnal::~CNewSigAnal()
     _SAFE_DELETE( g_pTheELEnvironVariable )
 
     _SAFE_DELETE( m_pIdentifyAlg )
-    _SAFE_DELETE( m_pMidasBlue )
-
-    _SAFE_FREE( m_stSavePDWData.pstPDW )
-
+    
     _SAFE_DELETE( m_theGroup )
     _SAFE_DELETE( m_thePulExt )
     _SAFE_DELETE( m_theAnalPRI )
     _SAFE_DELETE( m_theMakeAET )
-
-#if defined(_SQLITE_) || defined(_MSSQL_)
-    free( m_pszSQLString );
-#endif
-
-#ifdef _MSSQL_
-    m_theMyODBC.Close();
-#endif
 
 }
 
@@ -168,46 +112,40 @@ CNewSigAnal::~CNewSigAnal()
  */
 void CNewSigAnal::LoadCEDLibrary()
 {
-    m_pIdentifyAlg->LoadCEDLibrary2();
-}
-
-/**
- * @brief CNewSigAnal::SetSaveFile
- * @param bEnable
- */
-void CNewSigAnal::SetSaveFile( bool bEnable )
-{
-    m_bSaveFile = bEnable;
+    m_pIdentifyAlg->LoadCEDLibrary();
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::Init
-        \author   조철희
-        \param    pPDWData 인자형태 STR_PDWDATA *
-        \return   void
-        \version  0.0.1
-        \date     2008-01-04 09:07:28
-        \warning
+    \author   조철희
+    \param    pPDWData 인자형태 STR_PDWDATA *
+    \return   void
+    \version  0.0.1
+    \date     2008-01-04 09:07:28
+    \warning
 */
 void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 {
+#if defined(_ELINT_) || defined(_XBAND_)
+    m_szTaskID[0] = NULL;
+#endif
 
     m_CoGroup = 0;
 
     // 시간 초기화
-    m_tColTime = 0;
-    m_tColTimeMs = 0;
+    SetColTime(0);
+    SetColTimeMs(0);
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
-		m_uiPDWID = pPDWData->GetPDWID();
+		SetPDWID(pPDWData->GetPDWID());
 
         m_uiCoPdw = pPDWData->GetTotalPDW();
 
-        m_tColTime = pPDWData->GetColTime();
+        SetColTime(pPDWData->GetColTime());
 
         m_uiIsStorePDW = pPDWData->GetStorePDW();
 
@@ -217,6 +155,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         memcpy( m_szTaskID, pPDWData->x.el.aucTaskID, sizeof(m_szTaskID) );
         
         m_enCollectorID = pPDWData->x.el.GetCollectorID();
+
 #elif _POCKETSONATA_
         m_enBandWidth = en5MHZ_BW;
 
@@ -225,7 +164,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     }
     else {
-		m_uiPDWID = 0;
+		SetPDWID(_spZero);
 
         m_uiCoPdw = 0;
         m_uiIsStorePDW = 0;
@@ -260,12 +199,12 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::Start
-        \author   조철희
-        \param    pPDWData 인자형태 STR_PDWDATA *
-        \return   void
-        \version  0.0.1
-        \date     2007-12-28 11:53:42
-        \warning
+    \author   조철희
+    \param    pPDWData 인자형태 STR_PDWDATA *
+    \return   void
+    \version  0.0.1
+    \date     2007-12-28 11:53:42
+    \warning
 */
 void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 {
@@ -273,21 +212,21 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     PrintFunction
 
-    ++ m_uiStep;
+    NextStep();
 
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ====" , m_uiStep, m_uiCoPdw );
+    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ====" , GetStep(), m_uiCoPdw );
 
     if( m_uiCoPdw <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
-        Log( enNormal, "A insufficient num of PDWs(%d/%d) !!" , m_uiCoPdw, RPC );
+        Log( enNormal, "PDW(%d/%d) 데이터 개수가 모자랍니다 !!" , m_uiCoPdw, RPC );
     }
     else {
         CheckValidData( pPDWData );
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData( pPDWData, _spZero, true );
+        InsertRAWData( pPDWData, _spZero );
         
         // PDW 수집 상태 체크를 함.
         if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_uiCoPdw ) ) {
@@ -401,37 +340,6 @@ void CNewSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHO
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::SaveEmitterPdwFile
-        \author   조철희
-        \param    pEmitter 인자형태 STR_EMITTER *
-        \param    index 인자형태 int
-        \return   void
-        \version  0.0.1
-        \date     2008-01-03 17:15:04
-        \warning
-*/
-void CNewSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    unsigned int i;
-
-    PDWINDEX *pPdwIndex;
-    _PDW *pPDW;
- 
-    m_stSavePDWData.SetTotalPDW( pEmitter->pdw.uiCount );
- 
-    pPdwIndex = pEmitter->pdw.pIndex;
-    for( i=0 ; i < pEmitter->pdw.uiCount ; ++i ) {
-        pPDW = & m_pPDWData->pstPDW[ *pPdwIndex++ ];
-        memcpy( & m_stSavePDWData.pstPDW[i], pPDW, sizeof(_PDW) );
-
-    }
-
-    // 수집한 PDW 파일 저장하기...
-    InsertRAWData( & m_stSavePDWData, iPLOBID, bSaveFile );
-
-}
-
 void CNewSigAnal::SaveGroupPdwFile( int index )
 {
 //     if( m_bSaveFile == true ) {
@@ -499,8 +407,7 @@ void CNewSigAnal::SaveGroupPdwFile( int index )
 */
 void CNewSigAnal::InitAllVar()
 {
-    m_uiStep = 0;
-
+    
 }
 
 /**
@@ -515,7 +422,6 @@ void CNewSigAnal::InitAllVar()
  */
 void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
 {
-    m_uiStep = 0;
     m_AnalMode = analMode;
 
 }
@@ -707,265 +613,4 @@ void CNewSigAnal::InitResolution()
     _spPWres = (float) ( 50 );
 
 #endif
-}
-
-
-/**
- * @brief     InsertRAWData
- * @param     STR_PDWDATA * pPDWData
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-01-23, 17:53
- * @warning
- */
-void CNewSigAnal::InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile )
-{
-    bool bRet=true;
-    char buffer[100]={0};
-    TCHAR szDirectory[500], szRawDataPathname[600];
-
-    struct tm *pstTime;
-	struct timespec tiNow;
-
-    GetCollectTime( & tiNow );
-    pstTime = localtime( & tiNow.tv_sec );
-
-#ifdef _ELINT_
-    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID );
-
-#elif _XBAND_
-    //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-    sprintf_s( szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.GetCollectorID(), pPDWData->x.el.aucTaskID );
-
-#elif _POCKETSONATA_
-    sprintf( szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.iBank] );
-
-#else
-    sprintf( szDirectory, "%s/BRD", pLocalDirectory );
-
-#endif
-
-    if( /*pstTime != NULL &&*/ bSaveFile == true ) {
-        // 1. 폴더명 생성하기
-        strftime( buffer, 100, "%Y-%m-%d", pstTime );
-
-        bRet = CreateDir( szDirectory );
-    }
-
-    if( /*pstTime != NULL &&*/ bRet == true ) {
-        if( bSaveFile == true ) {
-            // 2. 파일명 생성하기
-            strftime( buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime );
-
-#if defined(_ELINT_) || defined(_XBAND_)
-            sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.GetCollectorID(), buffer, m_uiPDWID, iPLOBID, PDW_EXT );
-
-#elif _POCKETSONATA_
-		    sprintf( m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, m_uiPDWID, iPLOBID, PDW_TYPE, MIDAS_EXT );
-//         if( enDataType == E_EL_SCDT_PDW ) {
-//             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_TYPE, MIDAS_EXT );
-//         }
-//         else {
-//             sprintf( szRawDataFilename, "%s/%s_COL%d_%s_%06d.%s", szDirectory, g_szCollectBank[pPDWData->x.ps.iBank], pPDWData->x.ps.iBoardID, buffer, m_uiStep, PDW_EXT );
-//         }
-
-#else
-
-#endif
-            sprintf( szRawDataPathname, _T("%s\\%s"), szDirectory, m_szRawDataFilename );
-            m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData );
-        }
-        else {
-            m_szRawDataFilename[0] = NULL;
-        }
-
-		if( m_bDBThread == false ) {
-		    // RAWDATA 데이터 저장
-		    InsertToDB_RAW( pPDWData, iPLOBID ); 
-        }
-        else {
-            TRACE( "Push the data for InsertToDB_RAW()" );
-		}
-
-    }
-
-}
-
-/**
- * @brief     
- * @param     STR_PDWDATA * pPDWData
- * @return    bool
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022/01/23 23:33:21
- * @warning   
- */
-bool CNewSigAnal::InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID )
-{
-    if (pPDWData != NULL) {
-        struct timespec tiNow;
-
-        char buffer[100];
-
-        GetCollectTime(&tiNow);
-        CCommonUtils::getStringDesignatedTime(buffer, sizeof(buffer), tiNow.tv_sec);
-
-#ifdef _MSSQL_
-#ifdef _POCKETSONATA_
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
-                                                 '%ld', '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-            m_lOpInitID, m_uiPDWID, iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.iBank);
-
-#elif defined(_ELINT_) || defined(_XBAND_)
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, m_uiPDWID, iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
-
-#else
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, m_uiPDWID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
-
-
-#endif
-
-#elif _SQLITE_
-#ifdef _POCKETSONATA_
-        sprintf(m_pszSQLString, "INSERT INTO RAWDATA ( PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
-                                                 '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-            m_uiPDWID, iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.iBank);
-
-#elif defined(_ELINT_) || defined(_XBAND_)
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, m_uiPDWID, iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
-
-#else
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, m_uiPDWID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
-
-#endif
-
-#endif
-
-
-#ifdef _MSSQL_
-        DECLARE_BEGIN_CHECKODBC
-
-        CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
-
-        theRS.Open(m_pszSQLString);
-        Log(enDebug, ".InsertRAW[O%d, P%d, P%d]", m_lOpInitID, m_uiPDWID, iPLOBID);
-
-        theRS.Close();
-
-        DECLARE_END_CHECKODBC
-
-    }
-
-    DECLARE_RETURN
-
-#elif _SQLITE_
-        bool bRet = true;
-
-        if (m_pszSQLString[0] != NULL) {
-            try {
-                Kompex::SQLiteStatement stmt(m_pDatabase);
-                stmt.SqlStatement(m_pszSQLString);
-                Log(enDebug, ".InsertRAW[O%d, P%d, P%d]", m_lOpInitID, m_uiPDWID, iPLOBID);
-
-                // do not forget to clean-up
-                stmt.FreeQuery();
-
-            }
-            catch (Kompex::SQLiteException &exception) {
-                LOGMSG1(enError, " m_pszSQLString[%s]", m_pszSQLString);
-                bRet = false;
-                std::cerr << "\nException Occured" << std::endl;
-                exception.Show();
-                std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
-            }
-        }
-        else {
-            bRet = false;
-        }
-
-    }
-
-    return true;
-
-#else
-
-    }
-
-    return true;
-
-#endif
-
-}
-
-/**
- * @brief     InitDataFromDB
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-01-25, 16:04
- * @warning
- */
-void CNewSigAnal::InitDataFromDB()
-{
-
-#ifdef _MSSQL_
-
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-	char buffer[400];
-
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
-    m_lOpInitID = GetINTData( buffer ) + 1;
-
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from RAWDATA" );
-    m_lOpInitID = _max( m_lOpInitID, GetINTData( buffer ) + 1 );
-
-#endif
-
-#else
-    m_lOpInitID = _spOne;
-
-
-#endif
-
-}
-
-/**
- * @brief     GetCollectTime
- * @param     struct timespec * pTimeSpec
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-04-05, 20:42
- * @warning
- */
-void CNewSigAnal::GetCollectTime( struct timespec *pTimeSpec )
-{
-
-	if( m_tColTime == 0 ) {
-		clock_gettime( CLOCK_REALTIME, pTimeSpec );
-	}
-	else {
-		pTimeSpec->tv_sec = m_tColTime;
-#ifdef _MSC_VER
-		pTimeSpec->tv_usec = m_tColTimeMs * (unsigned int) 1000;
-#else
-		pTimeSpec->tv_nsec = m_tColTimeMs * (unsigned int) 1000000;
-#endif
-
-	}
-
-	return;
-
 }

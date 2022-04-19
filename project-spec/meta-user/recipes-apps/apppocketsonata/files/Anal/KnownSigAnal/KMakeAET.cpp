@@ -4,15 +4,7 @@
 
 #include "stdafx.h"
 
-#if defined(_ELINT_) || defined(_XBAND_)
 #include "../OFP_Main.h"
-#elif _POCKETSONATA_
-#include "../INC/Macros.h"
-#include "../Identify/ELUtil.h"
-
-#else
-#error "컴파일러에 DEFINE 을 추가해야 합니다."
-#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -38,14 +30,14 @@
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:48
 //
 //##ModelId=42E98F300031
-CKMakeAET::CKMakeAET( void *pParent, int coMaxPdw ) : CMakeAET( coMaxPdw )
+CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
 	 
 	// 초기에 한번만 초기화한다.
-	m_CoNewAet = 0;
+	m_iCoNewAet = 0;
 
     //m_pAet = NULL;  //GetAet();
     m_pEmitter = GetEmitter();
@@ -76,7 +68,7 @@ CKMakeAET::~CKMakeAET()
 //
 void CKMakeAET::Init()
 {
-	m_CoNewAet = 0;
+	m_iCoNewAet = 0;
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 
@@ -278,12 +270,12 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 //
 void CKMakeAET::MakeUpAET()
 {
-	int count;
+	int iCount;
 	int coUpdAet;
     SRxLOBData *pNewAet;
     SRxLOBData *pUpdAet;
 	
-	count = GetCoLOB();
+    iCount = GetCoLOB();
 	pNewAet = GetNewLOB();
 	pUpdAet = GetUpdLOB();
 
@@ -310,7 +302,7 @@ void CKMakeAET::MakeUpAET()
             memcpy( & pUpdAet->fPRISeq, & m_pTrkAet->fPRISeq, sizeof( m_pTrkAet->fPRISeq ) );
 		}
 
-		for( int i=0 ; i < count ; ++i ) {
+		for( int i=0 ; i < iCount; ++i ) {
             if( m_LOBData[i].uiABTID != _spZero ) {
 #ifndef _XBAND_
                 pUpdAet->iScanType = m_pTrkAet->iScanType;
@@ -322,13 +314,13 @@ void CKMakeAET::MakeUpAET()
 		}
 	}
 	// 추적 에미터가 발견되지 않을 때는 새로운 에미터 제원으로 추적 업데이트한다.
-	else if( count >= 1 ) {
+	else if(iCount >= _spOne ) {
         SRxLOBData *pDummyAet;
 
 		// ART 제원을 SWAP 하기 위한 버퍼
         pDummyAet = & m_LOBData[ MAX_AET ];
 
-		for( int i=0 ; i < count ; ++i ) {
+		for( int i=0 ; i < iCount; ++i ) {
             if( CheckHarmonic<SRxABTData>( m_pTrkAet, pNewAet ) == TRUE ) {
 				// 하모닉 관계 에미터 제원 값을 수정한다.
 				// 추적 성공임을 표시한다.
@@ -370,7 +362,7 @@ void CKMakeAET::MakeUpAET()
 		}
 	}
 
-	m_CoNewAet = count - coUpdAet;
+	m_iCoNewAet = count - coUpdAet;
 
 }
 #endif
@@ -399,7 +391,7 @@ BOOL CKMakeAET::IsUpdateAet()
 //
 int CKMakeAET::GetCoNewAet()
 {
-	return m_CoNewAet;
+	return m_iCoNewAet;
 }
 
 //////////////////////////////////////////////////////////////////////

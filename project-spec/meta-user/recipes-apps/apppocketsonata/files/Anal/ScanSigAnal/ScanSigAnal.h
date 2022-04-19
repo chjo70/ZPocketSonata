@@ -9,23 +9,26 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "SDefine.h"
 
+#include "SDefine.h"
 #include "SStruct.h"
 
+#include "../../Utils/ccommonutils.h"
+
+#include "../SigAnal/SigAnal.h"
 #include "SGroup.h"
 #include "SPulExt.h"
 #include "SAnalSCN.h"
 
-#include "../MIDAS/Midas.h"
-
 #ifdef __cplusplus
 
 //##ModelId=452B0C450011
-class CScanSigAnal  
+class CScanSigAnal : public CSigAnal
 {
 private:
     SRxABTData *m_pScnAet;
+
+    unsigned int m_uiPDWID;
 
     int m_iIsStorePDW;
 
@@ -33,8 +36,7 @@ private:
 	unsigned int m_tColTimeMs;
 
 private:
-    UINT m_uiStep;
-    CMIDASBlueFileFormat *m_pMidasBlue;
+    
 
 public:
     //##ModelId=452B0C450027
@@ -47,7 +49,7 @@ protected:
     //##ModelId=452B0C45002C
     STR_PULSE_TRAIN_SEG *m_pSeg;
     //##ModelId=452B0C450031
-    STR_STATIC_PDWDATA *m_pPDWData;
+    STR_STATIC_PDWDATA *m_pstPDWData;
     //##ModelId=452B0C450035
     int m_noCh;
     //##ModelId=452B0C45003A
@@ -67,17 +69,37 @@ protected:
 
 
 public:
+    CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    virtual ~CScanSigAnal();
+    
+    inline void GetCollectTime(struct timespec *pTimeSpec) {
+        CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
+    }
+
+    inline __time32_t GetColTime() {
+        return m_tColTime;
+    }
+    void SetColTime(__time32_t val) { m_tColTime = val; }
+
+    inline unsigned int GetColTimeMs() {
+        return m_tColTimeMs;
+    }
+    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
+
+    inline unsigned int GetPDWID() {
+        return m_uiPDWID;
+    }
+    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
+
     void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
     //BOOL IsAnalScan();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
 
-	void GetCollectTime( struct timespec *pTimeSpec );
-
     //##ModelId=452B0C450059
     inline int GetMaxPdw() { return m_nMaxPdw; }
     //##ModelId=452B0C45005A
-    inline STR_STATIC_PDWDATA *GetPDWData() { return m_pPDWData; }
+    inline STR_STATIC_PDWDATA *GetPDWData() { return m_pstPDWData; }
     //##ModelId=452B0C450062
     inline int GetNoEMT() { return m_noEMT; }
     //##ModelId=452B0C450063
@@ -97,9 +119,9 @@ public:
     //##ModelId=452B0C450095
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     //##ModelId=452B0C450096
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->CalcPAMean( pPdwIndex, count); }
+    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     //##ModelId=452B0C45009F
-    inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
+    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     //##ModelId=452B0C4500A8
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     //inline STR_UPDAET *GetUpdAet() { return & stScnAet; }
@@ -114,8 +136,8 @@ public:
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	inline EN_RADARCOLLECTORID GetCollectorID() { return m_pPDWData->x.el.enCollectorID; }
-	inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
+	inline EN_RADARCOLLECTORID GetCollectorID() { return m_enCollectorID; }
+	// inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
 #endif    
 
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
@@ -134,22 +156,18 @@ public:
     //##ModelId=452B0C4500C6
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     //##ModelId=452B0C4500C9
-    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
+    void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
     //##ModelId=452B0C4500D2
     void ClearColBuffer();
     //##ModelId=452B0C4500D3
     UINT AnalStart( int noEMT, int noCh );
 
     //##ModelId=452B0C4500E5
-    void Init( STR_STATIC_PDWDATA *pPDWData );
+    void Init( STR_STATIC_PDWDATA *pstPDWData);
     //##ModelId=452B0C4500E6
     void ScanExtractPulseInit( int noEMT=0, int noCh=0 );
     //##ModelId=452B0C4500EF
     void ScanSigAnalInit( int noEMT=0, int noCh=0 );
-    //##ModelId=452B0C450102
-    CScanSigAnal( unsigned int uiCoMaxPdw );
-    //##ModelId=452B0C450104
-    virtual ~CScanSigAnal();
 
 };
 

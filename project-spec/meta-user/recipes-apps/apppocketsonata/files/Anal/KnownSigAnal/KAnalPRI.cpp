@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 
+#include "../OFP_Main.h"
 
 #include <stdio.h>
 #include <string.h>

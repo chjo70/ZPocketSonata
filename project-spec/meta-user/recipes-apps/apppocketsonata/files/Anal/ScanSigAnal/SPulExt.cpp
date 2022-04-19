@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 
+#include "../OFP_Main.h"
 
 #include <stdio.h>
 
@@ -14,15 +15,24 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSPulExt::CSPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
+CSPulExt::CSPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
 {
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
-	m_uiMaxPdw = coMaxPdw;
+	m_uiMaxPdw = uiCoMaxPdw;
 
     INIT_ANAL_VAR_(m_pScanSigAnal);
 }
 
+/**
+ * @brief     ~CSPulExt
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-18, 15:19
+ * @warning
+ */
 CSPulExt::~CSPulExt()
 {
 
@@ -59,9 +69,9 @@ void CSPulExt::Init()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 11:15:54
 //
-void CSPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
+void CSPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-	m_pScanSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
+	m_pScanSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -325,7 +335,7 @@ void CSPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_c
 //! \date     2006-07-27 17:27:00
 //! \warning
 //
-void CSPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange )
+void CSPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )
 {
 	// NULL 함수
 }

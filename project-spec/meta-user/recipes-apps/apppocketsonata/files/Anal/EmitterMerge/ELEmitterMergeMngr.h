@@ -359,7 +359,17 @@ private:
     bool CompFreqType( SRxABTData *pABTData );
     int CompFreqRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompPRIType( SRxABTData *pABTData );
+
+    
+    int CompPRIFixed(SRxABTData *pABTData);
+    int CompPRIJitter(SRxABTData *pABTData);
+    int CompPRIDwell(SRxABTData *pABTData);
+    int CompPRIStagger(SRxABTData *pABTData);
+    int CompPRIPattern(SRxABTData *pABTData);
+
     int CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+
+
 // 	int CompPWType( SRxABTData *pABTData );
 // 	bool CompScanType( SRxABTData *pABTData );
 // 	enum FREQ_BAND CalcFreqBand( int iFreq );

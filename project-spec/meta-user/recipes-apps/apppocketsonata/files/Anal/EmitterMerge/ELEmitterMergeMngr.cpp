@@ -598,8 +598,8 @@ void CELEmitterMergeMngr::LoadCEDLibrary( char *aucTaskID, float fFreqMin, float
     if( m_nLoadCEDEOBLibrary > _spZero ) {
         Log( enNormal, "Loading CED/EOB library..." );
 
-        m_pIdentifyAlg->LoadCEDLibrary2();
-        m_pIdentifyAlg->LoadEOBLibrary2();
+        m_pIdentifyAlg->LoadCEDLibrary();
+        m_pIdentifyAlg->LoadEOBLibrary();
 
         DisableToLoadCEDEOBLibrary();
     }
@@ -5419,7 +5419,7 @@ bool CELEmitterMergeMngr::CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTEx
                 */
                 if( m_LOBDataExt.aetAnal.iBeamValidity == E_VALID ) {
                     fTheta = (float) m_theInverseMethod.GCAzimuth( m_pLOBData->fLatitude, m_pLOBData->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
-                    if( TRUE == CompAoaDiff( fTheta,  m_pLOBData->fDOAMean, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2()*/ ) ) {
+                    if( TRUE == CompAoaDiff<float>( fTheta,  m_pLOBData->fDOAMean, (float) 10. /* GP_MGR_PARAM->GetEffectiveDOADiff2()*/ ) ) {
                         fDiff = AoaDiff( fTheta, m_pLOBData->fDOAMean );
                         fDistance = (float) sin( DEGREE2RADIAN( fDiff ) ) * (float) m_theInverseMethod.EllipsoidDistance( m_pLOBData->fLatitude, m_pLOBData->fLongitude, (double) pABTData->fLatitude, (double) pABTData->fLongitude );
                         if( fDistance < m_pSEnvironVariable->fEobIndfRangeMeters ) {
@@ -6142,8 +6142,267 @@ bool CELEmitterMergeMngr::CompPRIPosition( SRxABTData *pABTData )
 
     return bRet;
 }
-//
-//
+
+/**
+ * @brief     CompPRIFixed
+ * @param     SRxABTData * pABTData
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 14:07
+ * @warning
+ */
+int CELEmitterMergeMngr::CompPRIFixed(SRxABTData *pABTData)
+{
+    int iRet=THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+    BOOL bRet;
+
+    if (m_pLOBData->iPRIType == E_AET_PRI_FIXED) {
+        bRet = CompMeanDiff<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean, m_pSEnvironVariable->fMarginPriError);
+        if (bRet == FALSE) {
+
+        }
+        else {
+            iRet = (int)(_diffabs<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean) + 0.5);
+        }
+    }
+
+    return iRet;
+}
+
+/**
+ * @brief     CompPRIJitter
+ * @param     SRxABTData * pABTData
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 14:09
+ * @warning
+ */
+int CELEmitterMergeMngr::CompPRIJitter(SRxABTData *pABTData)
+{
+    int iRet=THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+    BOOL bRet;
+
+    float fAgiPri;
+    float fDifferenceLevel = 0;
+    float fOverlapSpace, fOverlapSpaceRatio, fTotalRange;
+
+    switch (m_pLOBData->iPRIType) {
+    case E_AET_PRI_JITTER:
+        /*! \debug  지터율 비교 무시 - 항공에서 잘못된 지터율을 계산해서 무시하게 함.
+            \author 조철희 (churlhee.jo@lignex1.com)
+            \date 	2017-12-21 10:18:32
+        */
+        // 					bRet = CompMeanDiff( pDInfo->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio, _sp.mg.jtrper*10 );
+        // 					if( bRet == _spFalse ) {
+        // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+        // 					}
+
+        /*! \todo   PRI 값도 확인해야 해서 break 문이 없음.
+                \author 조철희 (churlhee.jo@lignex1.com)
+                \date 	2016-07-18 20:26:07
+        */
+        // 					bRet = IsOverlapSpace( pDInfo->fMin, m_optParameter.pri.fMax, m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, m_optParameter.pri.iOverlapRatio );
+        // 					if( bret == _spFalse ) {
+        // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+        // 					}
+        // 					break;
+        if (false == IsOverlapSpace<float>(m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float)0)) {
+        }
+        else {
+            fOverlapSpace = CalOverlapSpace<float>(m_pLOBData->fPRIMax, m_pLOBData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIMin);
+            fTotalRange = min(m_pLOBData->fPRIMax - m_pLOBData->fPRIMin, pABTData->fPRIMax - pABTData->fPRIMin);
+            fOverlapSpaceRatio = FDIV(fOverlapSpace * 100, fTotalRange);
+
+            if (fOverlapSpaceRatio < m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio) {                
+            }
+            else {
+                iRet = (int)(_diffabs<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean) + 0.5);
+            }
+        }
+        break;
+
+    case E_AET_PRI_STAGGER:
+    case E_AET_PRI_PATTERN:
+        fDifferenceLevel = _min(pABTData->fPRIMean, m_pLOBData->fPRIMean);
+
+        fAgiPri = _max(pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio);
+        fAgiPri = _max(FDIV(fAgiPri * fDifferenceLevel, 100.), m_pSEnvironVariable->fMarginFrqError);
+        if (_spFalse == CompMeanDiff<float>(pABTData->fPRIMin, m_pLOBData->fPRIMin, fAgiPri) || \
+            _spFalse == CompMeanDiff<float>(pABTData->fPRIMax, m_pLOBData->fPRIMax, fAgiPri) ) {
+            
+        }
+        else {
+            fDifferenceLevel = _diffabs<float>(pABTData->fPRIMin, m_pLOBData->fPRIMin) + _diffabs<float>(pABTData->fPRIMax, m_pLOBData->fPRIMax);
+            iRet = (int) (fDifferenceLevel + 0.5);
+        }
+        break;
+
+    default:
+        break;
+
+    }
+
+    return iRet;
+
+}
+
+/**
+ * @brief     CompPRIDwell
+ * @param     SRxABTData * pABTData
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 14:38
+ * @warning
+ */
+int CELEmitterMergeMngr::CompPRIDwell(SRxABTData *pABTData)
+{
+    int iRet = THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+
+    // Dwell&Switch 신호에 대한 병합 판단은 식별 정보를 이용하여 비교한다.
+    // STR_CEDEOBID_INFO *pIDInfo = &m_LOBDataExt.aetAnal.idInfo;
+
+    // 			if( m_pLOBData->iPRIElementCount != pDInfo->iElementCount ) {
+    // 				return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+    // 			}
+
+    // 미식별 경우에는 분석한 제원으로 비교한다.
+    if (false == CompPRIPosition(pABTData)) {        
+    }
+    else {
+        iRet = 0;
+    }
+
+    return iRet;
+
+}
+
+/**
+ * @brief     CompPRIJitter
+ * @param     SRxABTData * pABTData
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 14:49
+ * @warning
+ */
+int CELEmitterMergeMngr::CompPRIStagger(SRxABTData *pABTData)
+{
+    int iRet = THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+    BOOL bRet;
+
+    float fAgiPri;
+    float fDifferenceLevel = 0;
+    float fOverlapSpace, fOverlapSpaceRatio, fTotalRange;
+
+    switch (m_pLOBData->iPRIType) {
+    case E_AET_PRI_STAGGER:
+        // 스태거 레벨 비교
+        // 	if( m_pLOBData->iPRIElementCount != pDInfo->iElementCount || m_pLOBData->iPRIPositionCount != pDInfo->iPositionCount ) {
+        // 	return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+        // 	}
+        // iDifferenceLevel = 0;
+        if (m_pLOBData->iPRIPositionCount == pABTData->iPRIPositionCount) {
+            bRet = m_pIdentifyAlg->CompSwitchLevel<float>(m_pLOBData->fPRISeq, pABTData->fPRISeq, m_pLOBData->iPRIPositionCount, m_pSEnvironVariable->fMarginPriError);
+            if (bRet == _spFalse) {
+            }
+            else {
+                /*! \todo		각 레벨간의 차이는 나중에 계산한다. 현재는 0 으로 리턴한다.
+                        \author 조철희 (churlhee.jo@lignex1.com)
+                        \date 	2016-03-8 17:10:02
+                */
+                iRet = 0;
+            }
+        }
+        break;
+
+    case E_AET_PRI_JITTER:
+        fAgiPri = _max(pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio);
+        fAgiPri = _max(FDIV(fAgiPri * fDifferenceLevel, 100.), m_pSEnvironVariable->fMarginFrqError);
+
+        if (_spFalse == CompMarginDiff<float>(m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri) ||
+            _spFalse == CompMarginDiff<float>(m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri) ) {
+            
+        }
+        else {
+            fDifferenceLevel = _diffabs<float>(pABTData->fPRIMin, m_pLOBData->fPRIMin) + _diffabs<float>(pABTData->fPRIMax, m_pLOBData->fPRIMax);
+            iRet = (int)(fDifferenceLevel + 0.5);
+        }        
+        break;
+
+    default:
+        break;
+    }
+
+    return iRet;
+
+}
+
+/**
+ * @brief     CompPRIPattern
+ * @param     SRxABTData * pABTData
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 14:57
+ * @warning
+ */
+int CELEmitterMergeMngr::CompPRIPattern(SRxABTData *pABTData)
+{
+    int iRet = THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
+    BOOL bRet;
+
+    float fAgiPri;
+    float fDifferenceLevel = 0;
+    float fOverlapSpace, fOverlapSpaceRatio, fTotalRange;
+
+    switch (m_pLOBData->iPRIType) {
+    case E_AET_PRI_PATTERN:
+        fAgiPri = FDIV(m_pSEnvironVariable->fMarginPriModPeriodErrorRatio * _min(m_pLOBData->fPRIPatternPeriod, pABTData->fPRIPatternPeriodMean), 100.);
+        bRet = CompMarginDiff<float>(m_pLOBData->fPRIPatternPeriod, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, (float)fAgiPri);
+        if (bRet == _spFalse && IS_NOT_ZERO(m_pLOBData->fPRIPatternPeriod) == true) {
+            
+        }
+        else {
+            fAgiPri = _min(_abs(pABTData->fPRIMax - pABTData->fPRIMin), _abs(m_pLOBData->fPRIMax - m_pLOBData->fPRIMin));
+            fAgiPri = _max(FDIV(m_pSEnvironVariable->fMarginPriModPeriodErrorRatio*fAgiPri, 100), (float)m_pSEnvironVariable->fMarginPriError);
+            bRet = CompMeanDiff<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean, fAgiPri);
+            if (bRet == _spFalse) {                
+            }
+            else {
+                fDifferenceLevel = _diffabs<float>(pABTData->fPRIMin, m_pLOBData->fPRIMin) + _diffabs<float>(pABTData->fPRIMax, m_pLOBData->fPRIMax);
+                iRet = (int)(fDifferenceLevel + 0.5);
+            }
+        }
+
+        break;
+
+    case E_AET_PRI_JITTER:
+        if (_spFalse == CompMarginDiff<float>(m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError) ||
+            _spFalse == CompMarginDiff<float>(m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError) ) {
+            
+        }
+        else {
+            fDifferenceLevel = _diffabs<float>(pABTData->fPRIMin, m_pLOBData->fPRIMin) + _diffabs<float>(pABTData->fPRIMax, m_pLOBData->fPRIMax);
+            iRet = (int)(fDifferenceLevel + 0.5);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    return iRet;
+
+}
+
 /**
  * @brief     PRI 범위 비교하여 병합 여부를 판단한다.
  * @param     *pABTData 빔 정보의 데이터 포인터
@@ -6154,16 +6413,8 @@ bool CELEmitterMergeMngr::CompPRIPosition( SRxABTData *pABTData )
  * @warning
  */
 int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
-{ //#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found.)
-    BOOL bRet;
-
-    float fAgiPri;
-    float fDifferenceLevel=0;
-
-    //int iOverlapValue;
-    float fOverlapSpace, fOverlapSpaceRatio, fTotalRange;
-
-    STR_CEDEOBID_INFO *pIDInfo;
+{
+    int iRet;
 
     //STR_FREQ_PRI_PW_PA_INFO *pInfo = & pABTData->priInfo;
     //STR_FREQ_PRI_DINFO *pDInfo = & pABTData->priDInfo;
@@ -6171,168 +6422,23 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
     if( pABTExtData->bCompPRI == true ) {
         switch( pABTData->iPRIType ) {
         case E_AET_PRI_FIXED :
-            bRet = CompMeanDiff<float>( pABTData->fPRIMean, m_pLOBData->fPRIMean, m_pSEnvironVariable->fMarginPriError );
-            if( bRet == _spFalse ) {
-                return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-            }
-
-            fDifferenceLevel = _diffabs<float>( pABTData->fPRIMean, m_pLOBData->fPRIMean );
+            iRet = CompPRIFixed(pABTData);
             break;
 
         case E_AET_PRI_JITTER :
-            switch( m_pLOBData->iPRIType ) {
-            case E_AET_PRI_JITTER :
-                /*! \debug  지터율 비교 무시 - 항공에서 잘못된 지터율을 계산해서 무시하게 함.
-                        \author 조철희 (churlhee.jo@lignex1.com)
-                        \date 	2017-12-21 10:18:32
-                */
-    // 					bRet = CompMeanDiff( pDInfo->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio, _sp.mg.jtrper*10 );
-    // 					if( bRet == _spFalse ) {
-    // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-    // 					}
-
-                /*! \todo   PRI 값도 확인해야 해서 break 문이 없음.
-                        \author 조철희 (churlhee.jo@lignex1.com)
-                        \date 	2016-07-18 20:26:07
-                */
-    // 					bRet = IsOverlapSpace( pDInfo->fMin, m_optParameter.pri.fMax, m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, m_optParameter.pri.iOverlapRatio );
-    // 					if( bret == _spFalse ) {
-    // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-    // 					}
-    // 					break;
-                if( false == IsOverlapSpace<float>( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) 0 ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-                else {
-                    fOverlapSpace = CalOverlapSpace<float>( m_pLOBData->fPRIMax, m_pLOBData->fPRIMin, pABTData->fPRIMax, pABTData->fPRIMin );
-                    fTotalRange = min( m_pLOBData->fPRIMax-m_pLOBData->fPRIMin, pABTData->fPRIMax-pABTData->fPRIMin );
-                    fOverlapSpaceRatio = FDIV( fOverlapSpace * 100, fTotalRange );
-
-                    if( fOverlapSpaceRatio < m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio ) {
-                        return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                    }
-
-// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fPRIMax - pABTData->fPRIMin ), 100 );
-// 					if( false == m_pIdentifyAlg->IsOverlapSpace( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, (float) iOverlapValue ) ) {
-// 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-// 					}
-//
-// 					iOverlapValue = IDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( m_pLOBData->fPRIMax - m_pLOBData->fPRIMin ), 100 );
-// 					if( false == m_pIdentifyAlg->IsOverlapSpace( pABTData->fPRIMin, pABTData->fPRIMax, m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, (float) iOverlapValue ) ) {
-// 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-// 					}
-                }
-
-                //iDifferenceLevel = CalOverlapSpace( m_pLOBData->fPRIMax, m_pLOBData->fPRIMin, (int) pInfo->fMax, (int) pInfo->fMin );
-                //iDifferenceLevel = _diffabs( pInfo->iMean, m_pLOBData->fPRIMean );
-                //iDifferenceLevel = 0;
-                break;
-
-            case E_AET_PRI_STAGGER :
-            case E_AET_PRI_PATTERN :
-                fDifferenceLevel = _min( pABTData->fPRIMean, m_pLOBData->fPRIMean );
-
-                fAgiPri = _max( pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio );
-                fAgiPri = _max( FDIV( fAgiPri * fDifferenceLevel, 100.), m_pSEnvironVariable->fMarginFrqError );
-                if( _spFalse == CompMeanDiff( pABTData->fPRIMin, m_pLOBData->fPRIMin, fAgiPri ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-                if( _spFalse == CompMeanDiff( pABTData->fPRIMax, m_pLOBData->fPRIMax, fAgiPri ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-
-                fDifferenceLevel = _abs( pABTData->fPRIMin - m_pLOBData->fPRIMin ) + _abs( pABTData->fPRIMax - m_pLOBData->fPRIMax );
-                break;
-
-            default :
-                break;
-            }
+            iRet = CompPRIJitter(pABTData);
             break;
 
         case E_AET_PRI_DWELL_SWITCH :
-            // Dwell&Switch 신호에 대한 병합 판단은 식별 정보를 이용하여 비교한다.
-            pIDInfo = & m_LOBDataExt.aetAnal.idInfo;
-
-// 			if( m_pLOBData->iPRIElementCount != pDInfo->iElementCount ) {
-// 				return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-// 			}
-
-            // 미식별 경우에는 분석한 제원으로 비교한다.
-            if( false == CompPRIPosition( pABTData ) ) {
-                return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-            }
-
-            //iDifferenceLevel = 0;
+            iRet = CompPRIDwell(pABTData);
             break;
 
         case E_AET_PRI_STAGGER :
-            if( m_pLOBData->iPRIType == E_AET_PRI_STAGGER ) {
-                // 스태거 레벨 비교
-// 				if( m_pLOBData->iPRIElementCount != pDInfo->iElementCount || m_pLOBData->iPRIPositionCount != pDInfo->iPositionCount ) {
-// 					return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-// 				}
-                // iDifferenceLevel = 0;
-
-                bRet = m_pIdentifyAlg->CompSwitchLevel<float>( m_pLOBData->fPRISeq, pABTData->fPRISeq, m_pLOBData->iPRIPositionCount, m_pSEnvironVariable->fMarginPriError );
-                if( bRet == _spFalse ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-
-                /*! \todo		각 레벨간의 차이는 나중에 계산한다. 현재는 0 으로 리턴한다.
-                        \author 조철희 (churlhee.jo@lignex1.com)
-                        \date 	2016-03-8 17:10:02
-                */
-                return (int) ( fDifferenceLevel + 0.5 );
-            }
-            else if( m_pLOBData->iPRIType == E_AET_PRI_JITTER ) {
-                fAgiPri = _max( pABTData->fPRIJitterRatio, m_pLOBData->fPRIJitterRatio );
-                fAgiPri = _max( FDIV( fAgiPri * fDifferenceLevel, 100. ), m_pSEnvironVariable->fMarginFrqError );
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fAgiPri ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
-                return (int) ( fDifferenceLevel + 0.5 );
-            }
-            else {
-
-            }
+            iRet = CompPRIStagger(pABTData);
             break;
 
         case E_AET_PRI_PATTERN :
-            if( m_pLOBData->iPRIType == E_AET_PRI_PATTERN ) {
-                fAgiPri = FDIV( m_pSEnvironVariable->fMarginPriModPeriodErrorRatio * _min( m_pLOBData->fPRIPatternPeriod, pABTData->fPRIPatternPeriodMean ), 100. );
-                bRet = CompMarginDiff<float>( m_pLOBData->fPRIPatternPeriod, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, (float) fAgiPri );
-                if( bRet == _spFalse && IS_NOT_ZERO(m_pLOBData->fPRIPatternPeriod) == true ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-
-                fAgiPri = _min( _abs( pABTData->fPRIMax - pABTData->fPRIMin ), _abs( m_pLOBData->fPRIMax - m_pLOBData->fPRIMin ) );
-                fAgiPri = _max( FDIV( m_pSEnvironVariable->fMarginPriModPeriodErrorRatio*fAgiPri, 100), (float) m_pSEnvironVariable->fMarginPriError );
-                bRet = CompMeanDiff( pABTData->fPRIMean, m_pLOBData->fPRIMean, fAgiPri );
-                if( bRet == _spFalse ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-
-                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
-
-            }
-            else if( m_pLOBData->iPRIType == E_AET_PRI_JITTER ) {
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMin, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-                if( _spFalse == CompMarginDiff<float>( m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, m_pSEnvironVariable->fMarginFrqError ) ) {
-                    return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-                }
-
-                fDifferenceLevel = _abs( m_pLOBData->fPRIMin - pABTData->fPRIMin ) + _abs( m_pLOBData->fPRIMax - pABTData->fPRIMax );
-                return (int) ( fDifferenceLevel + 0.5 );
-            }
-            else {
-
-            }
+            iRet = CompPRIPattern(pABTData);
             break;
 
 // 		case E_AET_PRI_BEACON :
@@ -6360,7 +6466,7 @@ int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pAB
         }
     }
 
-    return (int) ( fDifferenceLevel + 0.5 );
+    return iRet;
 }
 
 /**
@@ -10800,14 +10906,14 @@ bool CELEmitterMergeMngr::InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_
         for( i=0 ; i < pLOBData->iFreqPositionCount-1 ; ++i ) {
             szIndex += sprintf( & m_pszSQLString[szIndex], "'%f', " , pLOBData->fFreqSeq[i] );
         }
-        szIndex += sprintf( & m_pszSQLString[szIndex], "'%f' )", pLOBData->fFreqSeq[i] );   
+        sprintf( & m_pszSQLString[szIndex], "'%f' )", pLOBData->fFreqSeq[i] );   
     }
     else {
         szIndex += sprintf( & m_pszSQLString[szIndex], "'%d', '%d', '%d', '%d', '%d', '%d', '%d', " , bFreqSeq, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount );
         for( i=0 ; i < pLOBData->iPRIPositionCount-1 ; ++i ) {
             szIndex += sprintf( & m_pszSQLString[szIndex], "'%f', " , pLOBData->fPRISeq[i] );
         }
-        szIndex += sprintf( & m_pszSQLString[szIndex], "'%f' )", pLOBData->fPRISeq[i] );
+        sprintf( & m_pszSQLString[szIndex], "'%f' )", pLOBData->fPRISeq[i] );
 
     }
 
@@ -11578,7 +11684,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 		CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
 		theRS.Open( m_pszSQLString );
-		Log( enDebug, ".InsertAET[A%d]" , m_pLOBData->uiAETID );
+		Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
 
 		theRS.Close();
 
@@ -11592,7 +11698,7 @@ bool CELEmitterMergeMngr::InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *
 		try {
 			Kompex::SQLiteStatement stmt( m_pDatabase );
 			stmt.SqlStatement( m_pszSQLString );
-			Log( enDebug, ".InsertAET[A%d]" , m_pLOBData->uiAETID );
+			Log( enDebug, ".InsertAET[A%d]" , pAETData->uiAETID );
 
 			// do not forget to clean-up
 			stmt.FreeQuery();  

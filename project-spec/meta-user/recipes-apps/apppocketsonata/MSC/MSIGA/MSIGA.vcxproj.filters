@@ -498,6 +498,9 @@
     <ClInclude Include="..\..\files\Utils\DMA\dma.h">
       <Filter>소스 파일\Utils\DMA</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -712,6 +715,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
       <Filter>소스 파일\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

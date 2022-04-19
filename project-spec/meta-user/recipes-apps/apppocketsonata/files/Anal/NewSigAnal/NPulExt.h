@@ -58,11 +58,11 @@ public:
 	//##ModelId=452B0C550029
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	//##ModelId=452B0C55002A
-	void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange );
+	void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
 	//##ModelId=452B0C550033
 	void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 	//##ModelId=452B0C550037
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
+	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 	//##ModelId=452B0C550040
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
@@ -71,7 +71,7 @@ public:
     void ClearAllMark();
 
 	//##ModelId=452B0C550041
-    CNPulExt( void *pParent, int coMaxPdw );
+    CNPulExt( void *pParent, unsigned int uiCoMaxPdw );
 	//##ModelId=452B0C550048
 	virtual ~CNPulExt();
 

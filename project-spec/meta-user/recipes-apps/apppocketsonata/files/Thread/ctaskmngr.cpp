@@ -667,6 +667,9 @@ int CTaskMngr::IsThrereELNOT( char *pszELNOT )
     if( query.executeStep() ) {
         iRadarIndex = query.getColumn(0).getInt();
     }
+#elif _MSSQL_
+    printf("AAAA");
+
 #endif
 
     return iRadarIndex;

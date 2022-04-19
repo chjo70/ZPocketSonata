@@ -13,7 +13,6 @@
 #include <memory.h>
 #endif
 
-//#include "../OFP_Main.h"
 #include "../SigAnal/_SigAnal.h"
 
 #include "../EmitterMerge/ELStringDefn.h"
@@ -23,13 +22,11 @@
 
 #include "../../Utils/ccommonutils.h"
 
-
-//#include "../../Utils/clog.h"
 #include "../../Include/globals.h"
 
 #define MAX_SIZE_OF_CONDITION					(300)
 
-#define DEFAULT_SYMBOL_CODE		"SFPP-----------"
+//#define DEFAULT_SYMBOL_CODE		"SFPP-----------"
 
 #define SWAP( A, B, C ) {   \
             A = B;          \
@@ -256,7 +253,7 @@ void CELSignalIdentifyAlg::InitVar()
  * @date      2015-08-21, 오후 1:23
  * @warning
  */
-bool CELSignalIdentifyAlg::LoadCEDLibrary2()
+bool CELSignalIdentifyAlg::LoadCEDLibrary()
 {
 #ifdef _MSC_VER
     DWORD dwTime=GetTickCount();
@@ -384,7 +381,7 @@ void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pV
  * @date      2017-07-05, 오후 5:21
  * @warning
  */
-bool CELSignalIdentifyAlg::LoadEOBLibrary2()
+bool CELSignalIdentifyAlg::LoadEOBLibrary()
 {
     //GP_MNGR_CED_LIB2->RTGetAllDeviceData( NULL, (char*) NULL, eEOBLibType );
     LoadThreatData( & m_iThreat, m_pThreat, MAX_RADARMODE );
