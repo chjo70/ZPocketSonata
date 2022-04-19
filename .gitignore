@@ -45,3 +45,4 @@ Release
 *.aps
 *.ipch
 *.opensdf
+.vs
