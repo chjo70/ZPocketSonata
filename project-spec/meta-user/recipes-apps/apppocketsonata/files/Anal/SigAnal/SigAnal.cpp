@@ -16,9 +16,13 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
 {
     size_t szSize;
 
+    CCommonUtils::SetUnitType();
+
     SetStep(_spZero);
 
-    CCommonUtils::SetUnitType();
+#if defined(_ELINT_) || defined(_XBAND_)
+    m_szTaskID[0] = NULL;
+#endif
 
     m_bDBThread = bDBThread;
 
@@ -109,6 +113,184 @@ void CSigAnal::Initialize()
 }
 
 
+
+
+/**
+ * @brief     InitResolution
+ * @return    void
+ * @exception
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2021-07-06, 15:37
+ * @warning
+ */
+void CSigAnal::InitResolution()
+{
+
+#if defined(_ELINT_)
+    float _toaRes[ELINT::enUnknown_BW + 1] = { (float) 65.104167, (float) 8.138021, (float) 0.0 };
+
+    //STR_PDWDATA *pPDWData;
+    //m_enBandWidth = pPDWData->x.el.enBandWidth;
+
+    _spOneSec = FDIV(1000000000, _toaRes[GetBandWidth()]);
+    _spOneMilli = FDIV(1000000, _toaRes[GetBandWidth()]);
+    _spOneMicrosec = FDIV(1000, _toaRes[GetBandWidth()]);
+    _spOneNanosec = FDIV(1, _toaRes[GetBandWidth()]);
+
+    _spAOAres = (float) 0.01;
+    _spAMPres = (float)(0.25);
+    _spPWres = _spOneMicrosec;
+
+#elif defined(_XBAND_)
+    float _toaRes[XBAND::enUnknown_BW + 1] = { (float) 65.104167, (float) 8.138021, (float) 0.0 };
+
+    _spOneSec = FDIV(1000000000, _toaRes[GetBandWidth()]);
+    _spOneMilli = FDIV(1000000, _toaRes[GetBandWidth()]);
+    _spOneMicrosec = FDIV(1000, _toaRes[GetBandWidth()]);
+    _spOneNanosec = FDIV(1, _toaRes[GetBandWidth()]);
+
+    _spAOAres = (float) 0.01;
+    _spAMPres = (float)(0.25);
+    _spPWres = _spOneMicrosec;
+
+
+#elif defined(_POCKETSONATA_)
+    _spOneSec = FDIV(1000000000, 6.48824007);
+    _spOneMilli = FDIV(1000000, 6.48824007);
+    _spOneMicrosec = FDIV(1000, 6.48824007);
+    _spOneNanosec = FDIV(1, 6.48824007);
+
+    _spAOAres = (float)(0.351562);
+    _spAMPres = (float)(0.351562);
+    _spPWres = _spOneMicrosec;
+
+#elif defined(_SONATA_)
+    _spOneSec = 20000000.;
+    _spOneMilli = FDIV(_spOneSec, 1000.);
+    _spOneMicrosec = FDIV(_spOneMilli, 1000.);
+    _spOneNanosec = FDIV(_spOneMicrosec, 1000.);
+
+    _spAOAres = (float)(0.351562);
+    _spAMPres = (float)(0.351562);
+    _spPWres = (float)(50);
+
+#endif
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNewSigAnal::SaveRemainedPdwFile
+        \author   Á¶Ã¶Èñ
+        \return   void
+        \version  0.0.1
+        \date     2008-01-22 12:40:25
+        \warning
+*/
+void CSigAnal::SaveRemainedPdwFile()
+{
+#ifdef _DEBUG_MAKEPDW_NO
+    CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
+    CA50SigAnalView *pView = (CA50SigAnalView *)pFrame->GetActiveView();
+
+    UINT i;
+    FILE *pdwfile;
+    TNEW_PDW *pPDW;
+    char filename[100];
+
+    CString strFilename = pView->GetFileTitle();
+
+    LPTSTR p = strFilename.GetBuffer(100);
+
+    m_theMakeAET->MarkAllAetToPdwIndex();
+
+    sprintf(filename, "c:\\temp\\%03d_rem_%s.pdw", m_nStep, p);
+    pdwfile = fopen(filename, "wb");
+    for (i = 0; i < m_pPDWData->count; ++i) {
+        if (MARK[i] == EXTRACT_MARK)
+            continue;
+
+        pPDW = &m_pPDWData->pPdw[i];
+#ifdef _A50_RWR
+        TNEW_PDW pdw;
+
+        pdw.word[0] = ntohl(pPDW->word[0]);
+        pdw.word[1] = ntohl(pPDW->word[1]);
+        pdw.word[2] = ntohl(pPDW->word[2]);
+        pdw.word[3] = ntohl(pPDW->word[3]);
+
+        fwrite(&pdw, sizeof(TNEW_PDW), 1, pdwfile);
+#else
+        fwrite(pPDW, sizeof(TNEW_PDW), 1, pdwfile);
+#endif
+
+    }
+
+    fclose(pdwfile);
+
+    strFilename.ReleaseBuffer();
+
+#endif
+}
+
+void CSigAnal::SaveGroupPdwFile(int index)
+{
+    //     if( m_bSaveFile == true ) {
+    // #if defined(_ELINT_) || defined(_XBAND_)
+    //         UINT uiSize;
+    //         char filename[100];
+    //         char szDirectory[100];
+    // 
+    //         int i;
+    //         CFile cFile;
+    //         BOOL bRet;
+    //         PDWINDEX *pPdwIndex;
+    //         _PDW *pPDW;
+    // 
+    //         STR_PDWDATA stPDWData;
+    // 
+    //         sprintf_s( szDirectory, "%s\\¼öÁý¼Ò_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->x.el.iCollectorID, m_pPDWData->x.el.aucTaskID );
+    // 
+    //         bRet = CreateDir( szDirectory );
+    // 
+    //         struct tm stTime;
+    //         char buffer[100];
+    //         __time32_t tiNow;
+    // 
+    //         tiNow = _time32(NULL);
+    // 
+    //         _localtime32_s( &stTime, & tiNow );
+    //         strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
+    // 
+    //         wsprintf( filename, _T("%s/_COL%d_GR_%02d.%s"), szDirectory, m_pPDWData->iCollectorID, index, PDW_EXT );
+    // 
+    //         cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
+    // 
+    //         uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
+    //         memcpy( & stPDWData, m_pPDWData, uiSize );
+    //         stPDWData.iIsStorePDW = 0;
+    //         stPDWData.count = m_pGrPdwIndex->count;
+    // 
+    //         pPdwIndex = m_pGrPdwIndex->pIndex;
+    //         for( i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
+    //             pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
+    //             memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
+    // 
+    //         }
+    // 
+    //         uiSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - stPDWData.count ) * sizeof(_PDW) );
+    //         cFile.Write( & stPDWData, uiSize );
+    // 
+    //         cFile.Close();
+    // 
+    // #else
+    // 
+    // #endif
+    // 
+    //     }
+}
+
 /**
  * @brief     SaveEmitterPdwFile
  * @param     STR_EMITTER * pEmitter
@@ -142,6 +324,8 @@ void CSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
     }
 
 }
+
+
 
 #ifdef _MSSQL_
 /**
@@ -224,7 +408,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
 
 #elif _POCKETSONATA_
     strftime(buffer, 100, "%Y-%m-%d", pstTime);
-    sprintf(szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.iBank]);
+    sprintf(szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
 
 #else
     sprintf(szDirectory, "%s/BRD", pLocalDirectory);
@@ -240,8 +424,11 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
             // 2. ÆÄÀÏ¸í »ý¼ºÇÏ±â
             strftime(buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime);
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_)
             sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
+
+#elif defined(_XBAND_)
+            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.xb.GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
 
 #elif _POCKETSONATA_
             sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, GetPDWID(), iPLOBID, PDW_TYPE, MIDAS_EXT);
@@ -250,7 +437,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
 
 #endif
             sprintf(szRawDataPathname, _T("%s/%s"), szDirectory, m_szRawDataFilename);
-            //m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData);
+            m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, & pPDWData->x, pPDWData->GetTotalPDW() );
         }
         else {
             m_szRawDataFilename[0] = NULL;
@@ -291,12 +478,17 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 #ifdef _POCKETSONATA_
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
                                                  '%ld', '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-            m_lOpInitID, GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.iBank);
+            m_lOpInitID, GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
                                                  '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
             m_lOpInitID, GetPDWID(), iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+
+#elif defined(_XBAND_)
+        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            m_lOpInitID, GetPDWID(), iPLOBID, pPDWData->x.xb.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 #else
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
@@ -310,13 +502,17 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 #ifdef _POCKETSONATA_
         sprintf(m_pszSQLString, "INSERT INTO RAWDATA ( PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
                                                  '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-            GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.iBank);
+            GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
 
-#elif defined(_ELINT_) || defined(_XBAND_)
-        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, GetPDWID(), iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+#elif defined(_ELINT_)
+        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                                 '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            GetPDWID(), iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
+#elif defined(_XBAND_)
+        sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
+                                                 '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            GetPDWID(), iPLOBID, pPDWData->x.xb.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 #else
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
                                                  '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \

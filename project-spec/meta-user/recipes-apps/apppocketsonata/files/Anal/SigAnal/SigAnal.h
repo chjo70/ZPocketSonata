@@ -46,6 +46,21 @@ private:
 
     UINT m_uiStep;
 
+#if defined(_ELINT_)
+    char m_szTaskID[LENGTH_OF_TASK_ID];
+    EN_RADARCOLLECTORID m_enCollectorID;
+    ELINT::ENUM_BANDWIDTH m_enBandWidth;
+
+#elif defined(_XBAND_)
+    char m_szTaskID[LENGTH_OF_TASK_ID];
+    EN_RADARCOLLECTORID m_enCollectorID;
+    XBAND::ENUM_BANDWIDTH m_enBandWidth;
+
+#elif _POCKETSONATA_
+    ENUM_BANDWIDTH m_enBandWidth;
+
+#endif    
+
 protected:
     CMIDASBlueFileFormat *m_pMidasBlue;
 
@@ -57,7 +72,8 @@ protected:
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
-
+    void SaveGroupPdwFile(int index);
+    void SaveRemainedPdwFile();
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
 
 public:
@@ -72,6 +88,8 @@ public:
     void SetSaveFile(bool val) { m_bSaveFile = val; }
     void Initialize();
 
+    void InitResolution();
+
     void InitDataFromDB();
 
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
@@ -81,5 +99,26 @@ public:
     virtual unsigned int GetColTimeMs() = 0;
     virtual unsigned int GetPDWID() = 0;
 
+#if defined(_ELINT_)
+    ELINT::ENUM_BANDWIDTH GetBandWidth() const { return m_enBandWidth; }
+    void SetBandWidth(ELINT::ENUM_BANDWIDTH val) { m_enBandWidth = val; }
+#elif defined(_XBAND_)
+    XBAND::ENUM_BANDWIDTH GetBandWidth() const { return m_enBandWidth; }
+    void SetBandWidth(XBAND::ENUM_BANDWIDTH val) { m_enBandWidth = val; }
+#endif
+
+    inline char *GetTaskID() {
+#if defined(_ELINT_) || defined(_XBAND_)
+        return (char *)& m_szTaskID[0];
+#else
+        return NULL;
+#endif
+    }
+    inline void SetTaskID( char *pVal) { strcpy(m_szTaskID, pVal ); }
+
+#if defined(_ELINT_) || defined(_XBAND_)
+    EN_RADARCOLLECTORID GetCollectorID() const { return m_enCollectorID; }
+    void SetCollectorID(EN_RADARCOLLECTORID val) { m_enCollectorID = val; }
+#endif
 };
 
