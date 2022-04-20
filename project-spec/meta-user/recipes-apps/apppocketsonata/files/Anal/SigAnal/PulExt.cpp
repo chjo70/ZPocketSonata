@@ -177,12 +177,12 @@ void CPulExt::Init()
     int power_2=1;
     temp_pri = (_TOA) IFTOAusCNV( (float) 1.5 ); //ITOAusCNV( (_TOA)( 1.5 * power_2 ) );			// 2 * power_2 * _spOneMicrosec;
     for( i=0 ; i < MAX_PRI_RANGE ; ++i ) {
-        pRange->min_pri = temp_pri;
+        pRange->tMinPRI = temp_pri;
 
 		temp_pri = MulDiv64( 2, temp_pri, 1 );
 
         //power_2 = power_2 * 2;
-        pRange->max_pri = temp_pri;
+        pRange->tMaxPRI = temp_pri;
         /*! \bug  하모닉을 고려해서 2배까지 PRI 밴드로 한다.
             \date 2006-08-25 11:30:14, 조철희
         */
@@ -279,10 +279,10 @@ void CPulExt::CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist
         prilevel_low = UMUL( pDtoaHist->bin_range.iLow, DTOA_RES );
 
     if( pDtoaHist->bin_range.iHgh == -1 )
-        prilevel_hgh = m_jit_pri_table[ MAX_PRI_RANGE - 1 ].max_pri;
+        prilevel_hgh = m_jit_pri_table[ MAX_PRI_RANGE - 1 ].tMaxPRI;
     else {
         UINT max_dtoa;
-        max_dtoa = UDIV( m_jit_pri_table[ MAX_PRI_RANGE - 1 ].max_pri, DTOA_RES );
+        max_dtoa = UDIV( m_jit_pri_table[ MAX_PRI_RANGE - 1 ].tMaxPRI, DTOA_RES );
 
         sum_dtoa = 0;
         for( i=pDtoaHist->bin_range.iLow ; i <= pDtoaHist->bin_range.iHgh ; ++i ) {
@@ -304,7 +304,7 @@ void CPulExt::CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist
     pRange = & m_jit_pri_table[MAX_PRI_RANGE-1];
     pPRILevel->iLow = 0;
     for( i=MAX_PRI_RANGE-1 ; i >= 0 ; --i ) {
-        if( prilevel_low > (UINT) pRange->min_pri ) {
+        if( prilevel_low > (UINT) pRange->tMinPRI ) {
             pPRILevel->iLow = i;
             break;
         }
@@ -314,7 +314,7 @@ void CPulExt::CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist
     pPRILevel->iHgh = MAX_PRI_RANGE - 1;
     pRange = & m_jit_pri_table[pPRILevel->iLow];
     for( i=pPRILevel->iLow ; i < MAX_PRI_RANGE ; ++i ) {
-        if( prilevel_hgh < (UINT) pRange->max_pri ) {
+        if( prilevel_hgh < (UINT) pRange->tMaxPRI ) {
             pPRILevel->iHgh = i;
             break;
         }
@@ -381,7 +381,7 @@ void CPulExt::DiscardPulseTrain( unsigned int startseg, unsigned int endseg, uns
 
 		pRefSeg = & m_Seg[ startseg ];
 		for( i=startseg ; i < endseg ; ++i, ++pRefSeg ) {
-			if( pRefSeg->mark == DELETE_SEG ) {
+			if( pRefSeg->enMark == DELETE_SEG ) {
 				continue;
             }
 
@@ -409,7 +409,7 @@ void CPulExt::DiscardPulseTrain( unsigned int startseg, unsigned int endseg, uns
 				/*! \bug  펄스열 추출할 때 자신과 자신을 비교할 때 제거하지 않도록 한다.
 				    \date 2012-09-05 20:47:43, 조철희
 				*/
-				if( pRefSeg == pCmpSeg || pCmpSeg->mark == DELETE_SEG ) {
+				if( pRefSeg == pCmpSeg || pCmpSeg->enMark == DELETE_SEG ) {
 					continue;
                 }
 
@@ -460,14 +460,14 @@ void CPulExt::DiscardPulseTrain( unsigned int startseg, unsigned int endseg, uns
 */
 				// 유사하면 비교 펄스열을 삭제한다.
 				if( ref_ratio > 90 && cmp_ratio > 90 ) {
-					pCmpSeg->mark = DELETE_SEG;
+					pCmpSeg->enMark = DELETE_SEG;
 					}
 				else if( ref_ratio > cmp_ratio && ref_ratio > 70 ) {
-						pRefSeg->mark = DELETE_SEG;
+						pRefSeg->enMark = DELETE_SEG;
 				}
 				// 비교펄스열율이 더 크면  비교펄스열을 삭제한다.
 				else if( ref_ratio < cmp_ratio && cmp_ratio > 70 ) {
-					pCmpSeg->mark = DELETE_SEG;
+					pCmpSeg->enMark = DELETE_SEG;
 				}
 					else
 					{
@@ -528,7 +528,7 @@ void CPulExt::RemoveStablePulseTrain()
             ratio2 = UDIV( 100*coMatch, pRefSeg->pdw.uiCount );
 
             if( ratio1 > 70 || ratio2 > 70 ) {
-                pRefSeg->mark = DELETE_SEG;
+                pRefSeg->enMark = DELETE_SEG;
             }
         }
     }
@@ -553,7 +553,7 @@ void CPulExt::CleanPulseTrains( int startseg, int endseg )
 
     _EQUALS3( pDestSeg, pSeg, & m_Seg[ startseg ] )
     for( i=startseg ; i < endseg ; ++i ) {
-        if( pSeg->pdw.uiCount > (int) _sp.cm.Rpc && pSeg->mark != DELETE_SEG ) {
+        if( pSeg->pdw.uiCount > (int) _sp.cm.Rpc && pSeg->enMark != DELETE_SEG ) {
             MemcpySeg( pDestSeg, pSeg );
             ++ pDestSeg;
         }
@@ -616,8 +616,8 @@ void CPulExt::ExtractJitter( int type )
     // 펄스열 기본 추출
     for( i=m_uiStart_pri_level ; i <= (int) m_uiEnd_pri_level ; ++i ) {
         // PRI 범위 구하기
-        ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
-        ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
+        ext_range.tMinPRI = m_jit_pri_table[ i ].tMinPRI;
+        ext_range.tMaxPRI = m_jit_pri_table[ i ].tMaxPRI;
 
 #ifdef _JITTER_PULSE_EXTRACT_METHOD1_
         //-- 조철희 2005-05-30 17:46:15 --//
@@ -715,7 +715,7 @@ void CPulExt::MarkSegForExt( int nStartSeg, int nEndSeg )
 
     for( i=nStartSeg ; i < nEndSeg ; ++i ) {
         pSeg = & m_Seg[i];
-        if( pSeg->mark == DELETE_SEG )
+        if( pSeg->enMark == DELETE_SEG )
             continue;
         else {
             if( pSeg->uiPriType == _STABLE )
@@ -743,7 +743,7 @@ void CPulExt::MarkStablePulseTrain()
 
     pSeg = & m_Seg[m_uiAnalSeg];
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
-        if( pSeg->mark == DELETE_SEG )
+        if( pSeg->enMark == DELETE_SEG )
             continue;
         else {
             if( pSeg->uiPriType == _STABLE )
@@ -770,7 +770,7 @@ BOOL CPulExt::MustDo2ndPulseExtract()
 
     pSeg = & m_Seg[m_uiAnalSeg];
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
-        if( pSeg->mark == DELETE_SEG )
+        if( pSeg->enMark == DELETE_SEG )
             continue;
         else {
             if( pSeg->uiPriType == _STABLE )
@@ -808,9 +808,9 @@ void CPulExt::CompStablesJitters( unsigned int uiStartStableSeg, unsigned int ui
             pStableSeg = & m_Seg[i];
             for( j=uiStartJitterSeg ; j < m_uiCoSeg ; ++j ) {
                 pJitterSeg = & m_Seg[j];
-                if( CompMarginDiff<_TOA>( pStableSeg->pri.TMin, pJitterSeg->pri.TMin, pJitterSeg->pri.TMax, 0 ) == TRUE &&
-                        CompMarginDiff<_TOA>( pStableSeg->pri.TMax, pJitterSeg->pri.TMin, pJitterSeg->pri.TMax, 0 ) == TRUE ) {
-                    pStableSeg->mark = DELETE_SEG;
+                if( CompMarginDiff<_TOA>( pStableSeg->pri.tMin, pJitterSeg->pri.tMin, pJitterSeg->pri.tMax, 0 ) == TRUE &&
+                        CompMarginDiff<_TOA>( pStableSeg->pri.tMax, pJitterSeg->pri.tMin, pJitterSeg->pri.tMax, 0 ) == TRUE ) {
+                    pStableSeg->enMark = DELETE_SEG;
                     break;
                 }
             }
@@ -851,17 +851,17 @@ void CPulExt::ExtractStablePT()
 
     largest_pri = ( m_pTOA[ m_pGrPdwIndex->pIndex[m_pGrPdwIndex->uiCount-1] ] - m_pTOA[ m_pGrPdwIndex->pIndex[0] ] ) / _sp.cm.Rpc;
 
-    if( largest_pri > m_jit_pri_table[ m_uiEnd_pri_level-1 ].max_pri )
-        largest_pri = m_jit_pri_table[ m_uiEnd_pri_level-1 ].max_pri;
+    if( largest_pri > m_jit_pri_table[ m_uiEnd_pri_level-1 ].tMaxPRI )
+        largest_pri = m_jit_pri_table[ m_uiEnd_pri_level-1 ].tMaxPRI;
 
     // 펄스열 기본 추출
     for( i=m_uiStart_pri_level ; i < (int) m_uiEnd_pri_level ; ++i ) {
         // PRI 범위 구하기
-        ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
-        ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
+        ext_range.tMinPRI = m_jit_pri_table[ i ].tMinPRI;
+        ext_range.tMaxPRI = m_jit_pri_table[ i ].tMaxPRI;
 
-        if( ext_range.max_pri > largest_pri && ext_range.min_pri < largest_pri)
-            ext_range.max_pri = largest_pri;
+        if( ext_range.tMaxPRI > largest_pri && ext_range.tMinPRI < largest_pri)
+            ext_range.tMaxPRI = largest_pri;
 
         ExtractStablePT( & ext_range, i );
     }
@@ -891,7 +891,7 @@ void CPulExt::ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL
         return;
 
     if( flagMargin == TRUE )
-        margin = UDIV( pExtRange->max_pri - pExtRange->min_pri, 2 );
+        margin = UDIV( pExtRange->tMaxPRI - pExtRange->tMinPRI, 2 );
     else
         margin = 0;
 
@@ -927,7 +927,7 @@ void CPulExt::ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL
                 /*! \bug  기준 펄스열로 추출했다는 것으 마킹한다.
                     \date 2006-08-11 12:27:14, 조철희
                 */
-                pSeg->extract_step = _STABLE;
+                pSeg->uiExtractStep = _STABLE;
 
                 // 추출된 펄스 Marking
                 MarkToPdwIndex( pSeg, iMark );
@@ -944,6 +944,48 @@ void CPulExt::ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL
     }
 }
 
+/**
+ * @brief     펄스열 추출시 펄스열 간의 오차를 정한다.
+ * @param     STR_LOWHIGH_TOA * pStrMargin
+ * @param     STR_PRI_RANGE_TABLE * pPriRange
+ * @param     int ext_type
+ * @param     BOOL bFlagMargin
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 16:24
+ * @warning
+ */
+void CPulExt::ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *pPriRange, _TOA tDtoa, int ext_type, BOOL bFlagMargin )
+{
+    if (bFlagMargin == FALSE) {
+        if (ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL) {
+            pStrMargin->tLow = 0;
+            if (pPriRange->tMaxPRI > ITOAusCNV((_TOA)10)) {
+                pStrMargin->tHgh = STABLE_MARGIN;
+            }
+            else {
+                pStrMargin->tHgh = ITOAusCNV((float) 0.1);
+            }
+        }
+        else {
+#ifdef _EXTRACT_PULSE_METHOD3_
+            pStrMargin->tLow = STABLE_MARGIN;
+#else
+            pStrMargin->tLow = 0;
+#endif
+            pStrMargin->tHgh = TMULDIV<_TOA>(tDtoa, MAX_JITTER_P, 200 );
+
+        }
+    }
+    else {
+        pStrMargin->tLow = 0;
+        pStrMargin->tHgh = ( pPriRange->tMaxPRI - pPriRange->tMinPRI );
+    }
+
+}
+
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CPulExt::ExtractRefPT
@@ -958,7 +1000,7 @@ void CPulExt::ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL
 // 최 종 변 경  : 조철희, 2005-05-02 19:24:13
 //
 //##ModelId=427F25130204
-BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int coRefPulse, BOOL flagMargin, BOOL bIgnoreJitterP )
+BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int coRefPulse, BOOL bFlagMargin, BOOL bIgnoreJitterP )
 {
     int i1, i2, i3;
     int index1, index2, index3;
@@ -974,13 +1016,14 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
 
     pPdwIndex = & pColPdwIndex->pIndex[0];
 
-    last_index1 = _max( 0, pColPdwIndex->uiCount - coRefPulse );
+    last_index1 = max( 0, pColPdwIndex->uiCount - coRefPulse );
     for( i1=start_idx ; i1 <= last_index1 ; ++i1 ) {
         index1 = pPdwIndex[i1];
 
         // 추출된 펄스 제외
-        if( m_pMARK[ index1 ] != UnMark )
+        if (m_pMARK[index1] != UnMark) {
             continue;
+        }            
 
         first_toa = m_pTOA[ index1 ];
 
@@ -989,13 +1032,14 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
             index2 = pPdwIndex[i2];
 
             // 추출된 펄스 제외
-            if( m_pMARK[ index2 ] != UnMark )
-                    continue;
+            if (m_pMARK[index2] != UnMark) {
+                continue;
+            }
 
             dtoa1 = m_pTOA[ index2 ] - first_toa;
 
             // PRI 범위 미만
-            if( dtoa1 < pPriRange->min_pri )
+            if( dtoa1 < pPriRange->tMinPRI )
                 continue;
 
             /*! \bug  처음 DTOA1의 값의 최대 상한값은 정의하지 않음.
@@ -1032,36 +1076,14 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                     break;
             }
             */
-            if( dtoa1 > pPriRange->max_pri ) {
+            if( dtoa1 > pPriRange->tMaxPRI ) {
                 break;
             }
 
             second_toa = m_pTOA[ index2 ];
 
             // TOA margin 선정
-            if( flagMargin == FALSE ) {
-                if( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL ) {
-                    margin.iLow = 0;
-					if( pPriRange->max_pri > ITOAusCNV( (_TOA) 10) ) {		
-						margin.iHgh = STABLE_MARGIN;
-					}
-					else {
-						margin.iHgh = ITOAusCNV( (float) 0.1 );
-					}
-                }
-                else {
-#ifdef _EXTRACT_PULSE_METHOD3_
-                    margin.iLow = STABLE_MARGIN;
-#else
-                    margin.iLow = 0;
-#endif
-                    margin.iHgh = (UINT)( dtoa1 * MAX_JITTER_P / 200.);
-                }
-            }
-            else {
-                margin.iLow = 0;
-                margin.iHgh = UMUL( pPriRange->max_pri - pPriRange->min_pri, 1 );
-            }
+            ChooseTOAMargin( & margin, pPriRange, dtoa1, ext_type, bFlagMargin );
 
             pSeg->pdw.uiCount = 2;
 
@@ -1075,13 +1097,13 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                 pSeg->first_idx = i1;
                 pSeg->last_idx = i2;
 
-                pSeg->jitter_p = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
+                pSeg->fJitterRatio = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
 
                 // 추적 펄스열 추출에서 PRI 범위는 분석된 에미터의 PRI 범위로 강제 설정한다.
                 //-- 조철희 2005-10-18 19:02:16 --//
-                if( flagMargin == TRUE && ext_type == _JITTER_RANDOM ) {
-                    pSeg->pri.TMin = pPriRange->min_pri;
-                    pSeg->pri.TMax = pPriRange->max_pri;
+                if( bFlagMargin == TRUE && ext_type == _JITTER_RANDOM ) {
+                    pSeg->pri.tMin = pPriRange->tMinPRI;
+                    pSeg->pri.tMax = pPriRange->tMaxPRI;
                 }
 
                 /*! \bug  기본 펄스열의 PRI 형태를 저장
@@ -1097,7 +1119,7 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
 
                 // 선택한 펄스열의 초기화를 여기서 처리한다.
                 pSeg->uiMiss = 0;
-                pSeg->mark = NORMAL_SEG;
+                pSeg->enMark = NORMAL_SEG;
 
                 /*! \bug  기준 펄스열의 주파수 정보를 저장한다.
                         \date 2006-08-11 10:42:15, 조철희
@@ -1134,10 +1156,10 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                 dtoa2 = m_pTOA[ index3 ] - second_toa;
 
                 // PRI 범위 미만
-                if( dtoa2 < pPriRange->min_pri )
+                if( dtoa2 < pPriRange->tMinPRI )
                     continue;
 
-                if( flagMargin == TRUE && dtoa1 > pPriRange->max_pri )
+                if(bFlagMargin == TRUE && dtoa1 > pPriRange->tMaxPRI )
                     break;
 
                 // DTOA1 과 DTOA2의 차이가 너무 적으면 건너뛴다.
@@ -1146,12 +1168,12 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                 //	continue;
 
                 // PRI 범위 미만
-                if( dtoa2 < ( dtoa1 - margin.iHgh ) )
+                if( dtoa2 < ( dtoa1 - margin.tHgh ) )
                     continue;
 
                 // PRI 범위를 벗어남
                 diff = _diffabs<_TOA>( dtoa1, dtoa2 );
-                if( diff > margin.iHgh || diff < margin.iLow )
+                if( diff > margin.tHgh || diff < margin.tLow )
                     break;
 
                 // 펄스열의 정보를 저장한다.
@@ -1172,34 +1194,34 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                     pSeg->first_idx = i1;
                     pSeg->last_idx = i3;
 
-                    pSeg->jitter_p = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
+                    pSeg->fJitterRatio = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
                     //-- 조철희 2005-11-11 13:58:07 --//
                     // pSeg->jitter_p = 0.5;
                     //-- 조철희 2005-10-07 16:53:21 --//
                     // 불규칙성 펄스열로 추출하려고 하는데 지터율이 0이라면 강제 +- 50%로 해서
                     // 나머지 펄스열을 추출하게 한다.
                     // 이렇게 하지 않으면 이전에 추출했던 규칙성 펄스열이 생길수 있기 때문이다.
-                    if( ext_type == _JITTER_RANDOM && pSeg->jitter_p == 0 ) {
-                        pSeg->jitter_p = (float) 0.40;
+                    if( ext_type == _JITTER_RANDOM && pSeg->fJitterRatio == 0 ) {
+                        pSeg->fJitterRatio = (float) 0.40;
                     }
 
                     // 추적 펄스열 추출에서 PRI 범위는 분석된 에미터의 PRI 범위로 강제 설정한다.
                     //-- 조철희 2005-10-18 19:02:16 --//
-                    if( flagMargin == TRUE && ext_type == _JITTER_RANDOM ) {
-                        pSeg->pri.TMin = pPriRange->min_pri;
-                        pSeg->pri.TMax = pPriRange->max_pri;
+                    if(bFlagMargin == TRUE && ext_type == _JITTER_RANDOM ) {
+                        pSeg->pri.tMin = pPriRange->tMinPRI;
+                        pSeg->pri.tMax = pPriRange->tMaxPRI;
                     }
 
                     /*! \bug  PRI 평균값은 최대 PRI로 정한 값 이내이어야 한다. 이 보다 크면 버린다.
                         \date 2006-07-05 16:27:42, 조철희
                     */
-                    if( (UINT) pSeg->pri.TMean >= m_jit_pri_table[MAX_PRI_RANGE-1].max_pri ) {
+                    if( (UINT) pSeg->pri.tMean >= m_jit_pri_table[MAX_PRI_RANGE-1].tMaxPRI ) {
                         break;
                     }
 
                     // 기준 펄스열의 PRI 최대/최소값이 STABLE_MARGIN 이내이면 이 기준 펄스열은 무시한도록 한다.
                     if( ( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _DWELL ) ||
-                        ( ext_type == _JITTER_RANDOM && ( pSeg->jitter_p < MAX_JITTER_R || bIgnoreJitterP == TRUE ) && (_TOA) ( pSeg->pri.TMax-pSeg->pri.TMin ) > STABLE_MARGIN ) ) {
+                        ( ext_type == _JITTER_RANDOM && ( pSeg->fJitterRatio < MAX_JITTER_R || bIgnoreJitterP == TRUE ) && (_TOA) ( pSeg->pri.tMax-pSeg->pri.tMin ) > STABLE_MARGIN ) ) {
                         // pSeg->pri_type = AnalPRIType( pSeg, ext_type );
                         if( ext_type == _STABLE || ext_type == _REFSTABLE ) {
                             pSeg->uiPriType = _STABLE;
@@ -1213,10 +1235,10 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
 
                         // 선택한 펄스열의 초기화를 여기서 처리한다.
                         pSeg->uiMiss = 0;
-                        pSeg->mark = NORMAL_SEG;
+                        pSeg->enMark = NORMAL_SEG;
 
-                        pSeg->first_toa = m_pTOA[ i1 ];
-                        pSeg->last_toa = m_pTOA[ i3 ];
+                        pSeg->tFirst = m_pTOA[ i1 ];
+                        pSeg->tLast = m_pTOA[ i3 ];
 
                         /*! \bug  기준 펄스열의 주파수 정보를 저장한다.
                             \date 2006-08-11 10:42:15, 조철희
@@ -1368,15 +1390,15 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
         // PRI 타입에 따른 최대 누락 개수 및 DTOA 마진 설정
         if( margin == 0 ) {
             dtoa_margin = CalDtoaMargin( ext_type, pSeg );
-            pri_range.iLow = _max( pSeg->pri.TMean - dtoa_margin, ITTOAusCNV((_TOA)1) );
-            pri_range.iHgh = _max( pSeg->pri.TMean + dtoa_margin, ITTOAusCNV((_TOA)1) );
+            pri_range.tLow = max( pSeg->pri.tMean - dtoa_margin, ITTOAusCNV((_TOA)1) );
+            pri_range.tHgh = _max( pSeg->pri.tMean + dtoa_margin, ITTOAusCNV((_TOA)1) );
         }
         else {
             /*! \bug  추적 펄스열에서는 기본 팔스열의 PRI 범위로 추적하게 한다.
                 \date 2006-08-28 09:27:28, 조철희
             */
-            pri_range.iLow = _max( pSeg->pri.TMin, ITTOAusCNV((_TOA)1) );
-            pri_range.iHgh = _max( pSeg->pri.TMax, ITTOAusCNV((_TOA)1) );
+            pri_range.tLow = _max( pSeg->pri.tMin, ITTOAusCNV((_TOA)1) );
+            pri_range.tHgh = _max( pSeg->pri.tMax, ITTOAusCNV((_TOA)1) );
         }
 
         // 누락 개수 정의
@@ -1410,12 +1432,12 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
             dtoa = pre_toa - m_pTOA[index];
 
             // 펄스
-            if( dtoa < (UINT) pri_range.iLow ) {
+            if( dtoa < (UINT) pri_range.tLow ) {
                 continue;
             }
 
             // 펄스 존재시에 처리를 한다.
-            else if( TRUE == CompMarginDiff<_TOA>( dtoa, pri_range.iLow, pri_range.iHgh, 0 ) ) {
+            else if( TRUE == CompMarginDiff<_TOA>( dtoa, pri_range.tLow, pri_range.tHgh, 0 ) ) {
                 pLastIndex = pSegPdwIndex;
 
                 pre_toa = m_pTOA[index];
@@ -1427,11 +1449,11 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
                 pSeg->first_idx = ( pGrPdwIndex-pColPdwIndex->pIndex );
             }
             // 펄스가 누락 처리 또는 다른 신호인지를 검사한다.
-            else if( dtoa > (UINT) pri_range.iHgh ) {
-                uiMiss = CheckHarmonic( dtoa, pSeg->pri.TMean, (_TOA) ITTOAusCNV((_TOA)5) );
+            else if( dtoa > (UINT) pri_range.tHgh ) {
+                uiMiss = CheckHarmonic( dtoa, pSeg->pri.tMean, (_TOA) ITTOAusCNV((_TOA)5) );
 
                 if( uiMiss > _spZero ) {
-                    if( ( uiMiss <= max_miss ) && TRUE == CompMarginDiff<_TOA>( dtoa, uiMiss*pri_range.iLow, uiMiss*pri_range.iHgh, 0 ) ) {
+                    if( ( uiMiss <= max_miss ) && TRUE == CompMarginDiff<_TOA>( dtoa, uiMiss*pri_range.tLow, uiMiss*pri_range.tHgh, 0 ) ) {
                         pLastIndex = pSegPdwIndex;
 
                         pre_toa = m_pTOA[index];
@@ -1481,7 +1503,7 @@ void CPulExt::ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWIND
                     break;
                 */
             }
-            else if( dtoa > (UINT) ( max_miss * pri_range.iHgh ) ) {
+            else if( dtoa > (UINT) ( max_miss * pri_range.tHgh ) ) {
                 break;
             }
         }
@@ -1595,15 +1617,15 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
             // PRI 타입에 따른 최대 누락 개수 및 DTOA 마진 설정
             if( margin == 0 ) {
                 dtoa_margin = CalDtoaMargin( ext_type, pSeg );
-                pri_range.iLow = _max(pSeg->pri.TMean - dtoa_margin, (_TOA) ITOAusCNV((_TOA)1) );
-                pri_range.iHgh = _max(pSeg->pri.TMean + dtoa_margin, (_TOA) ITOAusCNV((_TOA)1) );
+                pri_range.tLow = _max(pSeg->pri.tMean - dtoa_margin, (_TOA) ITOAusCNV((_TOA)1) );
+                pri_range.tHgh = _max(pSeg->pri.tMean + dtoa_margin, (_TOA) ITOAusCNV((_TOA)1) );
             }
             else {
                 /*! \bug  추적 펄스열에서는 기본 팔스열의 PRI 범위로 추적하게 한다.
                     \date 2006-08-28 09:27:28, 조철희
                 */
-                pri_range.iLow = _max(pSeg->pri.TMin, (_TOA) ITOAusCNV((_TOA)1) );
-                pri_range.iHgh = _max(pSeg->pri.TMax, (_TOA) ITOAusCNV((_TOA)1) );
+                pri_range.tLow = _max(pSeg->pri.tMin, (_TOA) ITOAusCNV((_TOA)1) );
+                pri_range.tHgh = _max(pSeg->pri.tMax, (_TOA) ITOAusCNV((_TOA)1) );
             }
 
             // 누락 개수 정의
@@ -1628,12 +1650,12 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
                 dtoa = m_pTOA[index] - pre_toa;
 
                 // 펄스
-                if( dtoa < (UINT) pri_range.iLow ) {
+                if( dtoa < (UINT) pri_range.tLow ) {
                     continue;
                 }
 
                 // 펄스 존재시에 처리를 한다.
-                else if( TRUE == CompMarginDiff<_TOA>( dtoa, pri_range.iLow, pri_range.iHgh, 0 ) ) {
+                else if( TRUE == CompMarginDiff<_TOA>( dtoa, pri_range.tLow, pri_range.tHgh, 0 ) ) {
                     pre_toa = m_pTOA[index];
 
                     // 펄스열 정보에 PDW 한개 추가함.
@@ -1643,12 +1665,12 @@ void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX
                     pSeg->last_idx = ( pGrPdwIndex-pColPdwIndex->pIndex ) - 1;
                 }
                 // 펄스가 누락 처리 또는 다른 신호인지를 검사한다.
-                else if( dtoa > (UINT) pri_range.iHgh ) {
-                    uiMiss = CheckHarmonic<_TOA>( dtoa, pSeg->pri.TMean, (_TOA) ITOAusCNV((_TOA)5) );
+                else if( dtoa > (UINT) pri_range.tHgh ) {
+                    uiMiss = CheckHarmonic<_TOA>( dtoa, pSeg->pri.tMean, (_TOA) ITOAusCNV((_TOA)5) );
 
                     if( uiMiss > _spOne && ( uiMiss <= (UINT) max_miss ) ) {
                         //if( TRUE == CompMarginDiff<_TOA>( dtoa, uiMiss*pri_range.iLow, uiMiss*pri_range.iHgh, 0 ) ) {
-                        if( TRUE == CompMeanDiff<_TOA>( dtoa, uiMiss*pSeg->pri.TMean, (_TOA) ITOAusCNV((_TOA)5) ) ) {
+                        if( TRUE == CompMeanDiff<_TOA>( dtoa, uiMiss*pSeg->pri.tMean, (_TOA) ITOAusCNV((_TOA)5) ) ) {
                             pre_toa = m_pTOA[index];
 
                             // 펄스열 정보에 PDW 한개 추가함.
@@ -1723,8 +1745,8 @@ float CPulExt::CalcRefPRI( PDWINDEX *pPdwIndex, UINT count, STR_MINMAX_TOA *pPRI
     total_dtoa = 0;
     jitter_p = 0.0;
 
-    pPRI->TMax = 0;
-    pPRI->TMin = ( _TOA ) (-1);
+    pPRI->tMax = 0;
+    pPRI->tMin = ( _TOA ) (-1);
 
     pre_toa = m_pTOA[ *pPdwIndex++ ];
     for( i=1 ; i < (int) count ; ++i ) {
@@ -1733,12 +1755,12 @@ float CPulExt::CalcRefPRI( PDWINDEX *pPdwIndex, UINT count, STR_MINMAX_TOA *pPRI
         pre_toa = toa;
 
         total_dtoa += dtoa;
-        pPRI->TMax = _max( pPRI->TMax, dtoa );
-        pPRI->TMin = _min( pPRI->TMin, dtoa );
+        pPRI->tMax = _max( pPRI->tMax, dtoa );
+        pPRI->tMin = _min( pPRI->tMin, dtoa );
     }
 
-    pPRI->TMean = UDIV( total_dtoa, count-1 );
-    jitter_p = (float) ( pPRI->TMax - pPRI->TMin ) / pPRI->TMean;
+    pPRI->tMean = UDIV( total_dtoa, count-1 );
+    jitter_p = (float) ( pPRI->tMax - pPRI->tMin ) / pPRI->tMean;
 
     return jitter_p;
 }
@@ -1764,7 +1786,7 @@ void CPulExt::DiscardStablePulseTrain()
     nCoDiscard = 0;
     pSeg1 = & m_Seg[m_uiAnalSeg];
     for( i=m_uiRefStartSeg ; i < m_uiCoSeg ; ++i, ++pSeg1 ) {
-        if( pSeg1->mark == DELETE_SEG ) {
+        if( pSeg1->enMark == DELETE_SEG ) {
             continue;
         }
 
@@ -1773,16 +1795,16 @@ void CPulExt::DiscardStablePulseTrain()
             pSeg2 = & m_Seg[i+1];
 
             for( j=i+1 ; j < m_uiCoSeg ; ++j, ++pSeg2 ) {
-                if( pSeg2->mark == DELETE_SEG ) {
+                if( pSeg2->enMark == DELETE_SEG ) {
                     continue;
                 }
 
-                if( pSeg2->uiPriType == _STABLE && CompMeanDiff<_TOA>( pSeg1->pri.TMean, pSeg2->pri.TMean, STABLE_MARGIN ) == TRUE ) {
+                if( pSeg2->uiPriType == _STABLE && CompMeanDiff<_TOA>( pSeg1->pri.tMean, pSeg2->pri.tMean, STABLE_MARGIN ) == TRUE ) {
                     if( OverlappedSeg( pSeg1, pSeg2 ) == true ) {
                         bCheck = FALSE;
 
                         // 버릴 SEG의 인덱스를 표시한다.
-                        pSeg2->mark = DELETE_SEG;
+                        pSeg2->enMark = DELETE_SEG;
 
                         MarkToPdwIndex( pSeg2, UnMark );
                     }
@@ -1791,7 +1813,7 @@ void CPulExt::DiscardStablePulseTrain()
 
             if( bCheck == FALSE ) {
                 // 버릴 SEG의 인덱스를 표시한다.
-                pSeg1->mark = DELETE_SEG;
+                pSeg1->enMark = DELETE_SEG;
 
                 MarkToPdwIndex( pSeg1, UnMark );
             }
@@ -1802,7 +1824,7 @@ void CPulExt::DiscardStablePulseTrain()
     nCoDiscard = 0;
     pSeg1 = & m_Seg[m_uiAnalSeg];
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg1->mark == DELETE_SEG ) {
+        if( pSeg1->enMark == DELETE_SEG ) {
             ++ nCoDiscard;
 
             //size = sizeof( STR_PULSE_TRAIN_SEG ) * ( m_CoSeg - i - 1 );
@@ -1855,7 +1877,7 @@ void CPulExt::MarkToPdwIndex( STR_PULSE_TRAIN_SEG *pSeg, int mark_type)
 //##ModelId=427F251202CB
 BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
 {
-    int i;
+    unsigned int i;
     int val;
     PDWINDEX *pPdwIndex;
 
@@ -1866,29 +1888,29 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     int paMean;
     _TOA priMean;
 
-    int count;
+    unsigned int uiCount;
 
     STR_LOWHIGH_TOA dtoa_range;
 
     if( bIgnoreJitterP == FALSE ) {
-        priMean = UDIV( pSeg->pri.TMin + pSeg->pri.TMax, 2 );
-        dtoa_range.iLow = _max( ITTOAusCNV((_TOA)2), UDIV( 2 * priMean, 3 ) );
-        dtoa_range.iHgh = _max( ITTOAusCNV((_TOA)2), UDIV( 4 * priMean, 3 ) );
+        priMean = UDIV( pSeg->pri.tMin + pSeg->pri.tMax, 2 );
+        dtoa_range.tLow = _max( ITTOAusCNV((_TOA)2), UDIV( 2 * priMean, 3 ) );
+        dtoa_range.tHgh = _max( ITTOAusCNV((_TOA)2), UDIV( 4 * priMean, 3 ) );
 
         //pSeg->pri.max = pSeg->pri.min = priMean = pSeg->pri.mean;
     }
     else {
         //priMean = UDIV( pSeg->pri.min + pSeg->pri.max, 2 );
-        dtoa_range.iLow = 1;
-        dtoa_range.iHgh = pSeg->pri.TMax;
+        dtoa_range.tLow = 1;
+        dtoa_range.tHgh = pSeg->pri.tMax;
 
-        pSeg->pri.TMax = 0;
-        pSeg->pri.TMin = UINT64_MAX;
+        pSeg->pri.tMax = 0;
+        pSeg->pri.tMin = UINT64_MAX;
     }
 
     // 펄스열의 최초시간 및 마지막 시간 설정
-    pSeg->last_toa = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->last_idx ] ];
-    pSeg->first_toa = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->first_idx ] ];
+    pSeg->tLast = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->last_idx ] ];
+    pSeg->tFirst = m_pTOA[ m_pGrPdwIndex->pIndex[ pSeg->first_idx ] ];
 
     _EQUALS5( freqMean, pwMean, paMean, aoaMean, 0 )
     _EQUALS5( pSeg->freq.iMax, pSeg->pa.iMax, pSeg->pw.iMax, pSeg->aoa.iMax, -9999999 )
@@ -1902,9 +1924,9 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
 
     pPdwIndex = & pSeg->pdw.pIndex[0];
     preToa = m_pTOA[ *pPdwIndex ];
-    count = pSeg->pdw.uiCount;
+    uiCount = pSeg->pdw.uiCount;
     frstAoa = m_pAOA[ *pPdwIndex ];
-    for( i=0 ; i < count ; ++i ) {
+    for( i=0 ; i < uiCount; ++i ) {
         toa = m_pTOA[ *pPdwIndex ];
         dtoa = toa - preToa;
 
@@ -1919,10 +1941,10 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
 
         // DTOA 계산
         preToa = toa;
-        if( CompMarginDiff<_TOA>( dtoa, dtoa_range.iLow, dtoa_range.iHgh, 0 ) == TRUE ) {
+        if( CompMarginDiff<_TOA>( dtoa, dtoa_range.tLow, dtoa_range.tHgh, 0 ) == TRUE ) {
             priMean += dtoa;
-            pSeg->pri.TMax = _max( pSeg->pri.TMax, dtoa );
-            pSeg->pri.TMin = _min( pSeg->pri.TMin, dtoa );
+            pSeg->pri.tMax = _max( pSeg->pri.tMax, dtoa );
+            pSeg->pri.tMin = _min( pSeg->pri.tMin, dtoa );
 
             ++ dtoa_count;
         }
@@ -1964,10 +1986,10 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     }
 
     // 평균값 계산, 신호세기, 펄스폭, 주파수, 방위
-    pSeg->pa.iMean = UDIV( paMean, count );
-    pSeg->pw.iMean = UDIV( pwMean, count );
-    pSeg->freq.iMean = UDIV( freqMean, count );
-    pSeg->aoa.iMean = ( MAX_AOA + IDIV( aoaMean, count ) + frstAoa ) % MAX_AOA;
+    pSeg->pa.iMean = UDIV( paMean, uiCount);
+    pSeg->pw.iMean = UDIV( pwMean, uiCount);
+    pSeg->freq.iMean = UDIV( freqMean, uiCount);
+    pSeg->aoa.iMean = ( MAX_AOA + IDIV( aoaMean, uiCount) + frstAoa ) % MAX_AOA;
     pSeg->aoa.iMax = ( MAX_AOA + pSeg->aoa.iMax + frstAoa ) % MAX_AOA;
     pSeg->aoa.iMin = ( MAX_AOA + pSeg->aoa.iMin + frstAoa ) % MAX_AOA;
     diffAoa = pSeg->aoa.iMax - pSeg->aoa.iMin;
@@ -1993,10 +2015,10 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     CalPRIRange( pSeg, priMean, dtoa_count );
 
     // 지터율 계산
-    if( pSeg->pri.TMean != 0 )
-        pSeg->jitter_p = (float) ( pSeg->pri.TMax - pSeg->pri.TMin ) / pSeg->pri.TMean;
+    if( pSeg->pri.tMean != 0 )
+        pSeg->fJitterRatio = (float) ( pSeg->pri.tMax - pSeg->pri.tMin ) / pSeg->pri.tMean;
     else {
-        pSeg->jitter_p = (float) MAX_JITTER_P;
+        pSeg->fJitterRatio = (float) MAX_JITTER_P;
 
         printf( "\n [W] PRI 평균이 0 으로 잘못 계산되었습니다." );
         WhereIs;
@@ -2005,9 +2027,9 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     // PRI 타입 변경
     // 펄스열 추출한 후에 PRI 평균이 규칙성 펄스열 범위 안에 들면 RPI 타입을 변경한다.
     if( pSeg->uiPriType == _JITTER_RANDOM ) {
-        dtoa = pSeg->pri.TMax - pSeg->pri.TMin;
+        dtoa = pSeg->pri.tMax - pSeg->pri.tMin;
         // 1% 지터율 이상인 것은 STABLE 펄스열로 간주한다.
-        if( dtoa < STABLE_MARGIN || pSeg->jitter_p <= 0.009 ) {
+        if( dtoa < STABLE_MARGIN || pSeg->fJitterRatio <= 0.009 ) {
             // 일단 생략함...
             //-- 조철희 2005-11-25 17:31:19 --//
             // pSeg->pri_type = _STABLE;
@@ -2025,11 +2047,11 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
     pSeg->uiFreqType = AnalFreqType( pSeg );
 
     // 펄스 연속성 연산
-    _TOA span_time=pSeg->last_toa - pSeg->first_toa;
+    _TOA span_time=pSeg->tLast - pSeg->tFirst;
     // pSeg->continuity = UDIV( 100 * pSeg->pdw.count, pSeg->pdw.count + 누락 개수);
-    pSeg->continuity = _min( 100, UDIV( ( (pSeg->pdw.uiCount-1) * pSeg->pri.TMean * 100 ), span_time ) );
+    pSeg->continuity = _min( 100, UDIV( ( (pSeg->pdw.uiCount-1) * pSeg->pri.tMean * 100 ), span_time ) );
 
-    if( ( bIgnoreJitterP == FALSE ) && ( ( pSeg->uiPriType == _JITTER_RANDOM ) && ( TRUE == CompMeanDiff<_TOA>( pSeg->pri.TMax, pSeg->pri.TMin, STABLE_MARGIN ) ) ) )
+    if( ( bIgnoreJitterP == FALSE ) && ( ( pSeg->uiPriType == _JITTER_RANDOM ) && ( TRUE == CompMeanDiff<_TOA>( pSeg->pri.tMax, pSeg->pri.tMin, STABLE_MARGIN ) ) ) )
         return FALSE;
 
     return TRUE;
@@ -2046,8 +2068,8 @@ BOOL CPulExt::CalcSegParam(STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP )
 //##ModelId=42E85F3603CE
 UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
 {
-    int i;
-    int count, coOkPdw;
+    unsigned int i;
+    unsigned int uiCount, coOkPdw;
     int freqMean;
     int threshold;
 
@@ -2079,9 +2101,9 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
 
     freqMean = pSeg->freq.iMedian;
     pPdwIndex = pSeg->pdw.pIndex;
-    count = pSeg->pdw.uiCount;
+    uiCount = pSeg->pdw.uiCount;
     coOkPdw = 0;
-    for( i=0 ; i < count ; ++i ) {
+    for( i=0 ; i < uiCount; ++i ) {
         int freq;
 
         freq = m_pFREQ[ *pPdwIndex ];
@@ -2091,10 +2113,10 @@ UINT CPulExt::AnalFreqType( STR_PULSE_TRAIN_SEG *pSeg )
         ++ pPdwIndex;
     }
 
-    int ratio=UDIV( 100 * coOkPdw, count );
+    int ratio=UDIV( 100 * coOkPdw, uiCount);
 
     //-- 조철희 2005-07-14 19:59:11 --//
-    if( ratio >= FREQ_MEAN_MARGIN_THRESHOLD || (count-coOkPdw) <= _spTwo )
+    if( ratio >= FREQ_MEAN_MARGIN_THRESHOLD || (uiCount -coOkPdw) <= _spTwo )
             uiFreqType = _FIXED;
     else
             uiFreqType = _RANDOM_AGILE;
@@ -2133,17 +2155,17 @@ void CPulExt::ExtractJitterPT()
 
     largest_pri = ( m_pTOA[ m_pGrPdwIndex->pIndex[m_pGrPdwIndex->uiCount-1] ] - m_pTOA[ m_pGrPdwIndex->pIndex[0] ] ) / _sp.cm.Mjpc;
 
-    if( largest_pri > m_jit_pri_table[ m_uiEnd_pri_level-1 ].max_pri )
-        largest_pri = m_jit_pri_table[ m_uiEnd_pri_level-1 ].max_pri;
+    if( largest_pri > m_jit_pri_table[ m_uiEnd_pri_level-1 ].tMaxPRI )
+        largest_pri = m_jit_pri_table[ m_uiEnd_pri_level-1 ].tMaxPRI;
 
     // 펄스열 기본 추출
     for( i=m_uiStart_pri_level ; i < (int) m_uiEnd_pri_level ; ++i ) {
         // PRI 범위 구하기
-        ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
-        ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
+        ext_range.tMinPRI = m_jit_pri_table[ i ].tMinPRI;
+        ext_range.tMaxPRI = m_jit_pri_table[ i ].tMaxPRI;
 
-        if( ext_range.max_pri > largest_pri && ext_range.min_pri < largest_pri )
-            ext_range.max_pri = largest_pri;
+        if( ext_range.tMaxPRI > largest_pri && ext_range.tMinPRI < largest_pri )
+            ext_range.tMaxPRI = largest_pri;
 
         ExtractJitterPT( & ext_range, i );
     }
@@ -2257,7 +2279,7 @@ void CPulExt::ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiC
 
     // 패턴으로 추출할 때 마진값은 PRI의 최대 최소값 차이로 한다.
     //-- 조철희 2006-02-22 13:23:58 --//
-    margin = ( pExtRange->max_pri - pExtRange->min_pri ) / 2;
+    margin = ( pExtRange->tMaxPRI - pExtRange->tMinPRI ) / 2;
 
     // 시작 PDW 인덱스
     ref_idx = 0;
@@ -2272,7 +2294,7 @@ void CPulExt::ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiC
             ref_idx = pSeg->gr_ref_idx;
 
             // PRI 의 평균을 구한다.
-            pSeg->pri.TMean = pSeg->pri.TMin + ( pSeg->pri.TMax - pSeg->pri.TMin ) / 2;
+            pSeg->pri.tMean = pSeg->pri.tMin + ( pSeg->pri.tMax - pSeg->pri.tMin ) / 2;
 
             ExtractBackPT( pSeg, _JITTER_RANDOM, m_pGrPdwIndex, margin );
 
@@ -2321,7 +2343,7 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
 
     pPdwIndex = & m_pGrPdwIndex->pIndex[0];
 
-    margin = UDIV( pExtRange->max_pri - pExtRange->min_pri, 2 );
+    margin = UDIV( pExtRange->tMaxPRI - pExtRange->tMinPRI, 2 );
 
     ref_idx = 0;
 
@@ -2334,15 +2356,15 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
     pDwlSeg->first_idx = m_pGrPdwIndex->uiCount;
     pDwlSeg->last_idx = 0;
 
-    pDwlSeg->pri.TMin = 0xffffffff;
-    pDwlSeg->pri.TMax = 0;
+    pDwlSeg->pri.tMin = 0xffffffff;
+    pDwlSeg->pri.tMax = 0;
 
     pDwlSeg->pa.iMin = 0xffffff;
     pDwlSeg->pa.iMax = 0;
 
     pDwlSeg->gr_ref_idx = 0xffff;
 
-    pDwlSeg->mark = NORMAL_SEG;
+    pDwlSeg->enMark = NORMAL_SEG;
 
     // 추출되는 펄스열은 gSeg[]에 저장되며
     // 펄스열의 수는 gSeg_cnt에 의해 count 된다.
@@ -2382,8 +2404,8 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
             pDwlSeg->gr_ref_idx = _min( pDwlSeg->gr_ref_idx, ref_idx );
 
             // PRT 최대 최소 값 저장
-            pDwlSeg->pri.TMin = _min( pDwlSeg->pri.TMin, m_RefSeg.pri.TMin );
-            pDwlSeg->pri.TMax = _max( pDwlSeg->pri.TMax, m_RefSeg.pri.TMax );
+            pDwlSeg->pri.tMin = _min( pDwlSeg->pri.tMin, m_RefSeg.pri.tMin );
+            pDwlSeg->pri.tMax = _max( pDwlSeg->pri.tMax, m_RefSeg.pri.tMax );
 
             // 펄스열의 최초시간 및 마지막 시간 설정
             pDwlSeg->last_idx = _max( pDwlSeg->last_idx, m_RefSeg.last_idx );
@@ -2395,7 +2417,7 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
 
     }
 
-    pDwlSeg->pri.TMean = TDIV<_TOA>( ( pDwlSeg->pri.TMax + m_RefSeg.pri.TMin ), 2 );
+    pDwlSeg->pri.tMean = TDIV<_TOA>( ( pDwlSeg->pri.tMax + m_RefSeg.pri.tMin ), 2 );
 
     // 펄스열은 기준펄스열로 추출된 것 이상인것만 체크한다.
     if( pDwlSeg->pdw.uiCount > (int) _sp.cm.Rpc ) {
@@ -2408,7 +2430,7 @@ BOOL CPulExt::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TAB
         /*! \bug  기준 펄스열로 추출했다는 것으 마킹한다.
                 \date 2006-08-11 12:27:14, 조철희
         */
-        pDwlSeg->extract_step = _STABLE;
+        pDwlSeg->uiExtractStep = _STABLE;
 
         // 추출된 펄스 Marking
         MarkToPdwIndex( pDwlSeg, STABLE_MARK );
@@ -2484,7 +2506,7 @@ void CPulExt::UnknownExtract()
 
     // 펄스열은 기준펄스열로 추출된 것 이상인것만 체크한다.
     if( pSeg->pdw.uiCount > (int) _sp.cm.Rpc ) {
-        pSeg->jitter_p = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
+        pSeg->fJitterRatio = CalcRefPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount, & pSeg->pri );
 
         // 추출된 펄스열의 제원의 계산
         CalcSegParam( pSeg );
@@ -2533,12 +2555,12 @@ _TOA CPulExt::CalDtoaMargin( int type, STR_PULSE_TRAIN_SEG *pSeg )
         //-- 조철희 2005-11-16 15:55:55 --//
 
 #if defined( _EXTRACT_PULSE_METHOD3_ )
-        margin = (UINT)( ( pSeg->pri.TMean / 2. ) * ( MAX_JITTER_P / 100. ) );
+        margin = (UINT)( ( pSeg->pri.tMean / 2. ) * ( MAX_JITTER_P / 100. ) );
 #elif defined( _EXTRACT_PULSE_METHOD4_ )
         // 펄스간의 DTOA를 추출할 때 적용함
         //-- 조철희 2005-11-21 14:45:33 --//
-        margin = UMUL( ( pSeg->pri.TMax - pSeg->pri.TMin ), 1.2 );
-        margin = UMUL( pSeg->pri.TMean, 0.25 );
+        margin = UMUL( ( pSeg->pri.tMax - pSeg->pri.tMin ), 1.2 );
+        margin = UMUL( pSeg->pri.tMean, 0.25 );
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
         /*! \bug  지터율을 이용한 마진과 DTOA의 최대/최소값을 이용한 마진 값 중에서 가장 큰 갑으로 정한다.
             \date 2006-08-11 11:51:43, 조철희
@@ -2546,11 +2568,11 @@ _TOA CPulExt::CalDtoaMargin( int type, STR_PULSE_TRAIN_SEG *pSeg )
         /*! \bug  m6.pdw 파일의 지터율 41% PRI 패턴 신호인 경우에 지터율을 +5% 더해서 추출하게 한다.
             \date 2006-08-23 15:32:00, 조철희
         */
-        margin = (UINT)( ( pSeg->pri.TMean / 2. ) * ( (MAX_JITTER_P+10) / 100. ) );
-        margin = _max( margin, UMUL( ( pSeg->pri.TMax - pSeg->pri.TMin ), 1.2 ) );
+        margin = (UINT)( ( pSeg->pri.tMean / 2. ) * ( (MAX_JITTER_P+10) / 100. ) );
+        margin = _max( margin, UMUL( ( pSeg->pri.tMax - pSeg->pri.tMin ), 1.2 ) );
 
 #else
-        margin = (UINT)( ( pSeg->pri.TMean / 2. ) * ( ( MAX_JITTER_P + 5 ) / 100. ) );
+        margin = (UINT)( ( pSeg->pri.tMean / 2. ) * ( ( MAX_JITTER_P + 5 ) / 100. ) );
 #endif
         // margin 값은 최소 stable margin 보다 크게 정한다.
         margin = _max( margin, STABLE_MARGIN );
@@ -2578,9 +2600,9 @@ _TOA CPulExt::RecalcDtoaMargin(int ext_type, STR_PULSE_TRAIN_SEG *pSeg, UINT dto
         margin = CalDtoaMargin( ext_type, pSeg );
     }
     else {
-        pSeg->pri.TMean = UDIV( pSeg->pri.TMean * pSeg->pdw.uiCount + dtoa, pSeg->pdw.uiCount + 1 );
-        pSeg->pri.TMin = _min( (int) dtoa, pSeg->pri.TMin );
-        pSeg->pri.TMax = _max( (int) dtoa, pSeg->pri.TMax );
+        pSeg->pri.tMean = UDIV( pSeg->pri.tMean * pSeg->pdw.uiCount + dtoa, pSeg->pdw.uiCount + 1 );
+        pSeg->pri.tMin = _min( (int) dtoa, pSeg->pri.tMin );
+        pSeg->pri.tMax = _max( (int) dtoa, pSeg->pri.tMax );
         margin = CalDtoaMargin( ext_type, pSeg );
     }
 
@@ -2691,7 +2713,7 @@ int lliparamCompare( const void *arg1, const void *arg2 )
 //##ModelId=428C21330026
 void CPulExt::VerifyPRI(STR_PULSE_TRAIN_SEG *pSeg)
 {
-    pSeg->pri.TMean = VerifyPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount );
+    pSeg->pri.tMean = VerifyPRI( pSeg->pdw.pIndex, pSeg->pdw.uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2818,9 +2840,9 @@ bool CPulExt::OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSe
 
     STR_PULSE_TRAIN_SEG *pRefSeg;
 
-    overlapToa = CalOverlapSpace<_TOA>( pSeg1->last_toa, pSeg1->first_toa, pSeg2->last_toa, pSeg2->first_toa );
-    spantime1 = pSeg1->last_toa - pSeg1->first_toa;
-    spantime2 = pSeg2->last_toa - pSeg2->first_toa;
+    overlapToa = CalOverlapSpace<_TOA>( pSeg1->tLast, pSeg1->tFirst, pSeg2->tLast, pSeg2->tFirst );
+    spantime1 = pSeg1->tLast - pSeg1->tFirst;
+    spantime2 = pSeg2->tLast - pSeg2->tFirst;
     if( spantime1 < spantime2 ) {
         pRefSeg = pSeg1;
     }
@@ -2836,7 +2858,7 @@ bool CPulExt::OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSe
         }
     }
 
-    nExpPulse = UDIV( overlapToa, pRefSeg->pri.TMean );
+    nExpPulse = UDIV( overlapToa, pRefSeg->pri.tMean );
     ratio = UDIV( nExpPulse * 100, pRefSeg->pdw.uiCount + pRefSeg->uiMiss - 1 );
     return ( ratio >= OVERLAP_SEG_THRESHOLD );
 }
@@ -2877,18 +2899,18 @@ void CPulExt::FindRefStable()
     if( m_pGrPdwIndex->uiCount > _spThree ) {
         largest_pri = ( m_pTOA[ m_pGrPdwIndex->pIndex[m_pGrPdwIndex->uiCount-1] ] - m_pTOA[ m_pGrPdwIndex->pIndex[0] ] ) / _sp.cm.Rpc;
 
-        if( largest_pri > m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri ) {
-            largest_pri = m_jit_pri_table[ MAX_PRI_RANGE-1 ].max_pri;
+        if( largest_pri > m_jit_pri_table[ MAX_PRI_RANGE-1 ].tMaxPRI ) {
+            largest_pri = m_jit_pri_table[ MAX_PRI_RANGE-1 ].tMaxPRI;
         }
 
         // 펄스열 기본 추출
         for( i=m_uiStart_pri_level ; i <= m_uiEnd_pri_level ; ++i ) {
             // PRI 범위 구하기
-            ext_range.min_pri = m_jit_pri_table[ i ].min_pri;
-            ext_range.max_pri = m_jit_pri_table[ i ].max_pri;
+            ext_range.tMinPRI = m_jit_pri_table[ i ].tMinPRI;
+            ext_range.tMaxPRI = m_jit_pri_table[ i ].tMaxPRI;
 
-            if( ext_range.max_pri > largest_pri ) {
-                ext_range.max_pri = largest_pri;
+            if( ext_range.tMaxPRI > largest_pri ) {
+                ext_range.tMaxPRI = largest_pri;
             }
 
             FindRefStableSeg( & ext_range, i );
@@ -3022,8 +3044,8 @@ void CPulExt::ExtractRefStable()
             ref_idx = pSeg->gr_ref_idx;
 
             // PRI 범위 구하기
-            ext_range.min_pri = pSeg->pri.TMin;
-            ext_range.max_pri = pSeg->pri.TMax;
+            ext_range.tMinPRI = pSeg->pri.tMin;
+            ext_range.tMaxPRI = pSeg->pri.tMax;
 
             while( CoNewSeg < m_uiMaxSeg ) {
                 if( TRUE == ExtractRefPT( & ext_range, _STABLE, pNewSeg, ref_idx, m_pGrPdwIndex, _sp.cm.Rpc ) ) {
@@ -3093,8 +3115,8 @@ void CPulExt::ExtractRefStable()
             ref_idx = pSeg->gr_ref_idx;
 
             // PRI 범위 구하기
-            ext_range.min_pri = pSeg->pri.TMin;
-            ext_range.max_pri = pSeg->pri.TMax;
+            ext_range.tMinPRI = pSeg->pri.tMin;
+            ext_range.tMaxPRI = pSeg->pri.tMax;
 
             if( TRUE == ExtractRefPT( & ext_range, _STABLE, pSeg, ref_idx, m_pGrPdwIndex, _sp.cm.Rpc ) ) {
                 // 전방향 추출
@@ -3119,7 +3141,7 @@ void CPulExt::ExtractRefStable()
 
                 // 규칙성 펄스열이 아닌것은 제거 마킹한다.
                 if( pSeg->uiPriType != _STABLE )
-                    pSeg->mark = DELETE_SEG;
+                    pSeg->enMark = DELETE_SEG;
 
                 ref_idx = pSeg->gr_ref_idx + 1;
             }
@@ -3131,7 +3153,7 @@ void CPulExt::ExtractRefStable()
     // 규칙성 펄스열을 추출하면서 기존에 펄스열 추출된것은 무시하지 않은 채로 추출하도록 한다.
     //-- 조철희 2005-12-26 15:35:47 --//
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg->uiPriType == _STABLE && pSeg->mark == NORMAL_SEG )
+        if( pSeg->uiPriType == _STABLE && pSeg->enMark == NORMAL_SEG )
             MarkToPdwIndex( & m_Seg[ i ], STABLE_MARK );
     }
 
@@ -3159,8 +3181,8 @@ void CPulExt::ExtractRefStable()
             ref_idx = pSeg->gr_ref_idx;
 
             // PRI 범위 구하기
-            ext_range.min_pri = pSeg->pri.TMin;
-            ext_range.max_pri = pSeg->pri.TMax;
+            ext_range.tMinPRI = pSeg->pri.tMin;
+            ext_range.tMaxPRI = pSeg->pri.tMax;
 
             if( TRUE == ExtractRefPT( & ext_range, _REFSTABLE, pSeg, ref_idx, m_pGrPdwIndex, _sp.cm.Rpc ) ) {
                 // 전방향 추출
@@ -3178,13 +3200,13 @@ void CPulExt::ExtractRefStable()
                 /*! \bug  기준 펄스열로 추출했다는 것으 마킹한다.
                     \date 2006-08-11 12:27:14, 조철희
                 */
-                pSeg->extract_step = _REFSTABLE;
+                pSeg->uiExtractStep = _REFSTABLE;
 
                 /*! \bug  _spAnalMinPulseStableEmitter 대신에 _sp.cm.Rpc 로 하향 조정함.
                     \date 2006-08-17 12:16:55, 조철희
                 */
                 if( pSeg->pdw.uiCount < (int) _sp.cm.Rpc /* _spAnalMinPulseStableEmitter */ )
-                    pSeg->mark = DELETE_SEG;
+                    pSeg->enMark = DELETE_SEG;
             }
             else
                 break;
@@ -3212,7 +3234,7 @@ void CPulExt::ExtractRefStable()
     // 규칙성 펄스열을 추출하면서 기존에 펄스열 추출된것은 무시하지 않은 채로 추출하도록 한다.
     //-- 조철희 2005-12-26 15:35:47 --//
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg->uiPriType == _STABLE && pSeg->mark == NORMAL_SEG ) {
+        if( pSeg->uiPriType == _STABLE && pSeg->enMark == NORMAL_SEG ) {
             MarkToPdwIndex( & m_Seg[ i ], EXTRACT_MARK );
         }
     }
@@ -3283,8 +3305,8 @@ void CPulExt::ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR
     STR_PRI_RANGE_TABLE ext_range;
 
     // PRI 범위 구하기
-    ext_range.min_pri = pSeg->pri.TMin;
-    ext_range.max_pri = pSeg->pri.TMax;
+    ext_range.tMinPRI = pSeg->pri.tMin;
+    ext_range.tMaxPRI = pSeg->pri.tMax;
 
     // 펄스열의 마지막열부터 다시 추출한다.
     ref_idx = pSeg->last_idx + 1;
@@ -3329,7 +3351,7 @@ UINT CPulExt::AnalPRIType(STR_PULSE_TRAIN_SEG *pSeg, int ext_type )
 
     // 펄스열을 근거로 PRI 타입을 결정할 때 아래 루틴을 적용한다.
     if( ext_type == -1 || ext_type == _REFSTABLE ) {
-        diff = pSeg->pri.TMax - pSeg->pri.TMin;
+        diff = pSeg->pri.tMax - pSeg->pri.tMin;
 
         if( diff > 2*STABLE_MARGIN )
             uiRet = _JITTER_RANDOM;
@@ -3361,14 +3383,14 @@ void CPulExt::CleanRefSeg()
 
     pSeg1 = & m_Seg[m_uiAnalSeg];
     for( i=m_uiAnalSeg ; i < m_uiRefEndSeg ; ++i, ++pSeg1 ) {
-        if( pSeg1->mark == DELETE_SEG )
+        if( pSeg1->enMark == DELETE_SEG )
             continue;
 
         pSeg2 = & m_Seg[m_uiRefEndSeg];
         for( j=m_uiRefEndSeg ; j < m_uiCoSeg ; ++j, ++pSeg2 ) {
             _TOA nHarmonic;
 
-            if( pSeg2->mark == DELETE_SEG )
+            if( pSeg2->enMark == DELETE_SEG )
                 continue;
 
             nHarmonic = CheckHarmonic( pSeg1, pSeg2 );
@@ -3376,12 +3398,12 @@ void CPulExt::CleanRefSeg()
                 if( nHarmonic != 0 && OverlappedSeg( pSeg1, pSeg2 ) == true ) {
                     // 규칙성 펄스열인 경우에는 긴 PRI를 삭제하게 한다.
                     // 버릴 SEG의 인덱스를 표시한다.
-                    if( nHarmonic >= 2 && pSeg1->pri.TMean > pSeg2->pri.TMean ) {
-                        pSeg1->mark = DELETE_SEG;
+                    if( nHarmonic >= 2 && pSeg1->pri.tMean > pSeg2->pri.tMean ) {
+                        pSeg1->enMark = DELETE_SEG;
                         break;
                     }
                     else
-                        pSeg2->mark = DELETE_SEG;
+                        pSeg2->enMark = DELETE_SEG;
                 }
             }
             else {
@@ -3397,19 +3419,19 @@ void CPulExt::CleanRefSeg()
                     // 이때 nHarmonic 값이 2 이상일 때 단지 PRI 값으로 제거할 펄스열을 선택하면 안 된다.
                     // 왜냐하면 Stable 로 추출한 펄스열이 다 제거 되기 때문이다.
                         if( nHarmonic == 1 )
-                            pSeg2->mark = DELETE_SEG;
+                            pSeg2->enMark = DELETE_SEG;
                         else {
-                            if( pSeg1->pri.TMean > pSeg2->pri.TMean ) {
-                                pSeg1->mark = DELETE_SEG;
+                            if( pSeg1->pri.tMean > pSeg2->pri.tMean ) {
+                                pSeg1->enMark = DELETE_SEG;
                                 break;
                             }
                             else
-                                pSeg2->mark = DELETE_SEG;
+                                pSeg2->enMark = DELETE_SEG;
                         }
                     }
 
                     else {
-                        pSeg1->mark = DELETE_SEG;
+                        pSeg1->enMark = DELETE_SEG;
                         break;
                     }
                 }
@@ -3434,11 +3456,11 @@ _TOA CPulExt::CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSe
 
     if( ( pSeg1->uiPriType == _STABLE || pSeg1->uiPriType == _REFSTABLE ) &&
         ( pSeg2->uiPriType == _STABLE || pSeg2->uiPriType == _REFSTABLE ) ) {
-        iHarmonic = CheckHarmonic<_TOA>( pSeg1->pri.TMean, pSeg2->pri.TMean, 2*STABLE_MARGIN );
+        iHarmonic = CheckHarmonic<_TOA>( pSeg1->pri.tMean, pSeg2->pri.tMean, 2*STABLE_MARGIN );
        
     }
     else {
-        iHarmonic = CheckHarmonic( pSeg1->pri.TMean, pSeg1->jitter_p, pSeg2->pri.TMean, pSeg2->jitter_p );
+        iHarmonic = CheckHarmonic( pSeg1->pri.tMean, pSeg1->fJitterRatio, pSeg2->pri.tMean, pSeg2->fJitterRatio );
     }
     /*
     else if( ( pSeg1->pri_type == _STABLE && pSeg2->pri_type == _JITTER ) ||
@@ -3518,7 +3540,7 @@ void CPulExt::AllExtSegMark()
 
     pSeg = & m_Seg[m_uiAnalSeg];
     for( i=m_uiAnalSeg ; i < m_uiCoSeg ; ++i, ++pSeg ) {
-        if( pSeg->mark == DELETE_SEG ) {
+        if( pSeg->enMark == DELETE_SEG ) {
             continue;
         }
 
@@ -3539,8 +3561,8 @@ void CPulExt::AllExtSegMark()
 UINT CPulExt::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 {
     int coExtPdw;
-    int i, j, k;
-    int count;
+    unsigned int i, j, k;
+    unsigned int uiCount;
 
     int miss, max_miss;
     int index1, index2, index3;
@@ -3551,7 +3573,7 @@ UINT CPulExt::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 
     PDWINDEX *pPdwIndex;
 
-    count = pSrcPdwIndex->uiCount;
+    uiCount = pSrcPdwIndex->uiCount;
     pPdwIndex = & pSrcPdwIndex->pIndex[0];
 
     // Frame PRI를 찾는 최대 누락 허용 개수
@@ -3560,10 +3582,10 @@ UINT CPulExt::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 
     maxExtPdw = 0;
     miss = 0;
-    for( i=0 ; i < count-3 ; ++i ) {
+    for( i=0 ; i < uiCount -3 ; ++i ) {
         index1 = pPdwIndex[i];
 
-        for( j=i+1 ; j < count-2 ; ++j ) {
+        for( j=i+1 ; j < uiCount -2 ; ++j ) {
             index2 = pPdwIndex[j];
 
             dtoa1 = m_pTOA[index2] - m_pTOA[index1];
@@ -3573,7 +3595,7 @@ UINT CPulExt::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
             }
             else if( dtoa1 <= framePri + STABLE_MARGIN ) {
                 coExtPdw = 2;
-                for( k=j+1 ; k < count ; ++k ) {
+                for( k=j+1 ; k < uiCount; ++k ) {
                     index3 = pPdwIndex[k];
                     dtoa2 = m_pTOA[index3] - m_pTOA[index2];
 
@@ -3622,8 +3644,8 @@ unsigned int CPulExt::ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, ST
     STR_PULSE_TRAIN_SEG *pSeg;
     STR_PRI_RANGE_TABLE ext_range;
 
-    int count;
-    int ref_idx;
+    unsigned int uiCount;
+    unsigned int uiRefidx;
 
     unsigned int coStaggerLevel, coSeg;
 
@@ -3631,16 +3653,16 @@ unsigned int CPulExt::ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, ST
     memset( & m_pMARK[0], 0, sizeof( USHORT ) * m_uiMaxPdw );
 
     // PRI 범위 구하기
-    ext_range.min_pri = _max( ITTOAusCNV((_TOA)2), framePri - STABLE_MARGIN );
-    ext_range.max_pri = _max( ITTOAusCNV((_TOA)2), framePri + STABLE_MARGIN );
+    ext_range.tMinPRI = _max( ITTOAusCNV((_TOA)2), framePri - STABLE_MARGIN );
+    ext_range.tMaxPRI = _max( ITTOAusCNV((_TOA)2), framePri + STABLE_MARGIN );
 
     // 펄스열 기본 추출
     // 누락 펄스가 없을 때 고려한 펄스열 추출
     coSeg = m_uiCoSeg;
     pEmitter->uiCoSeg = 0;
-    ref_idx = 0;
-    count = pPdwIndex->uiCount;
-    while( ref_idx < count ) {
+    uiRefidx = 0;
+    uiCount = pPdwIndex->uiCount;
+    while(uiRefidx < uiCount) {
         if( coSeg >= m_uiMaxSeg ) {
             printf( "\n [W] 할당된 펄스열 개수(%d) 보다 많게 추출 되었음. !", m_uiMaxSeg );
             WhereIs;
@@ -3653,7 +3675,7 @@ unsigned int CPulExt::ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, ST
         pSeg = & m_Seg[ coSeg ];
 
         // 기준 펄스열 추출을 찾아서 존재하지 않으면 다음 밴드를 선택한다.
-        if( TRUE == ExtractRefPT( & ext_range, _STABLE, pSeg, ref_idx, pPdwIndex, 2 ) ) {
+        if( TRUE == ExtractRefPT( & ext_range, _STABLE, pSeg, uiRefidx, pPdwIndex, 2 ) ) {
             ExtractBackPT( pSeg, _STABLE, pPdwIndex );
 
             ExtractForPT( pSeg, _STABLE, pPdwIndex );
@@ -3674,10 +3696,11 @@ unsigned int CPulExt::ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, ST
                 pEmitter->seg_idx[ pEmitter->uiCoSeg++ ] = coSeg++;
             }
 
-            ref_idx = ref_idx + 1;
+            uiRefidx = uiRefidx + 1;
         }
-        else
+        else {
             break;
+        }
     }
 
     // 이전에 마킹된 것으로 돌린다.
@@ -3700,8 +3723,8 @@ unsigned int CPulExt::ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, ST
 //
 UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 {
-    int i, j;
-    int count;
+    unsigned int i, j;
+    unsigned int uiCount;
 
     _TOA dtoa;
     _TOA first_toa;
@@ -3713,8 +3736,8 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 
     // 시작 TOA를 구한다.
     int min_pdw_index=m_uiMaxPdw;
-    count = pEmitter->uiCoSeg;
-    for( i=0 ; i < count ; ++i ) {
+    uiCount = pEmitter->uiCoSeg;
+    for( i=0 ; i < uiCount; ++i ) {
         pSeg = & m_Seg[ pEmitter->seg_idx[i] ];
         if( min_pdw_index > *pSeg->pdw.pIndex ) {
             min_pdw_index = *pSeg->pdw.pIndex;
@@ -3724,7 +3747,7 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 
     // 추출 펄스열의 TOA를 시작 TOA로 정렬화하고 FramePRI 값으로 모듈화한다.
     pSegIdx = & pEmitter->seg_idx[0];
-    for( i=0 ; i < count ; ++i ) {
+    for( i=0 ; i < uiCount; ++i ) {
         pSeg = & m_Seg[ *pSegIdx++ ];
         pEmitter->stag_dwell_level[i] = ( m_pTOA[ *pSeg->pdw.pIndex ] - first_toa ) % framePri;
     }
@@ -3735,17 +3758,17 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 
     pSegToa1 = & pEmitter->stag_dwell_level[0];
     int coStaggerLevel = 1;
-    for( i=0 ; i < count ; ++i ) {
+    for( i=0 ; i < uiCount; ++i ) {
         pSegToa2 = & pEmitter->stag_dwell_level[i];
-        for( j=i+1 ; j < count ; ++j ) {
+        for( j=i+1 ; j < uiCount; ++j ) {
             ++ pSegToa2;
             pSeg = & m_Seg[ pEmitter->seg_idx[j] ];
 
-            if( pSeg->mark == CHECKED_SEG )
+            if( pSeg->enMark == CHECKED_SEG )
                 continue;
 
             if( TRUE == CompMeanDiff<_TOA>( *pSegToa1, *pSegToa2, 5*STABLE_MARGIN ) ) {
-                pSeg->mark = CHECKED_SEG;
+                pSeg->enMark = CHECKED_SEG;
             }
         }
 
@@ -3754,8 +3777,8 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 
     coStaggerLevel = 0;
     pSeg = & m_Seg[ m_uiCoSeg ];
-    for( i=0 ; i < count ; ++i ) {
-        if( pSeg->mark != CHECKED_SEG ) {
+    for( i=0 ; i < uiCount; ++i ) {
+        if( pSeg->enMark != CHECKED_SEG ) {
             ++ coStaggerLevel;
         }
         ++ pSeg;
@@ -3763,20 +3786,20 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 
     // 스태거 레벨을 체크해서 모든 단이 일정하면 스태거 분석 실패로 한다.
     //-- 조철희 2005-11-03 17:40:34 --//
-    level_pri.TMin = 0xffffff;
-    level_pri.TMax = 0;
-    pEmitter->stag_dwell_level[count] = framePri;
-    for( i=0 ; i < count ; ++i ) {
+    level_pri.tMin = 0xffffff;
+    level_pri.tMax = 0;
+    pEmitter->stag_dwell_level[uiCount] = framePri;
+    for( i=0 ; i < uiCount; ++i ) {
         dtoa = pEmitter->stag_dwell_level[i+1] - pEmitter->stag_dwell_level[i];
-        level_pri.TMin = _min( level_pri.TMin, dtoa );
-        level_pri.TMax = _max( level_pri.TMax, dtoa );
+        level_pri.tMin = _min( level_pri.tMin, dtoa );
+        level_pri.tMax = _max( level_pri.tMax, dtoa );
     }
 
     /*! \bug  스태거 레벨 값 중에서 제일 작은 값과 제일 큰 값을 찾아서
                         그 차이가 1.5 us 이내이면 지터로 보고한다.
         \date 2006-05-19 14:47:56, 조철희
     */
-    if( coStaggerLevel <= 1 || CompMeanDiff<_TOA>( level_pri.TMax, level_pri.TMin, UMUL(1.5, _spOneMicrosec) ) == TRUE ) {
+    if( coStaggerLevel <= 1 || CompMeanDiff<_TOA>( level_pri.tMax, level_pri.tMin, UMUL(1.5, _spOneMicrosec) ) == TRUE ) {
         return 0;
     }
 
@@ -3811,26 +3834,31 @@ UINT CPulExt::CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter )
 // 최 종 변 경  : 조철희, 2005-05-20 11:03:01
 //
 //##ModelId=429A5BDB0000
-int CPulExt::VerifyPW(PDWINDEX *pPdwIndex, int count)
+int CPulExt::VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    int i;
+    unsigned int i;
+    int iRet;
     UINT *pPdwParamIndex;
 
-    if( count == 1 )
-        return m_pPW[*pPdwIndex];
+    if (uiCount == 1) {
+        iRet = m_pPW[*pPdwIndex];
+    }
+    else {
+        // m_PdwParam 에 DTOA 값을 저장
+        pPdwParamIndex = m_PdwParam.puiParam;
+        for (i = 0; i < uiCount; ++i)
+            *pPdwParamIndex++ = m_pPW[*pPdwIndex++];
 
-    // m_PdwParam 에 DTOA 값을 저장
-    pPdwParamIndex = m_PdwParam.puiParam;
-    for( i=0 ; i < count ; ++i )
-        *pPdwParamIndex++ = m_pPW[ *pPdwIndex++ ];
+        m_PdwParam.uiCount = uiCount;
 
-    m_PdwParam.uiCount = count;
+        // Qsort...
+        qsort(m_PdwParam.puiParam, (size_t)m_PdwParam.uiCount, sizeof(UINT), uiparamCompare);
 
-    // Qsort...
-    qsort( m_PdwParam.puiParam, (size_t) m_PdwParam.uiCount, sizeof( UINT ), uiparamCompare );
+        int median = m_PdwParam.uiCount / 2;
+        iRet = m_PdwParam.puiParam[median];
+    }
 
-    int median = m_PdwParam.uiCount / 2;
-    return m_PdwParam.puiParam[ median ];
+    return iRet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -3843,22 +3871,22 @@ int CPulExt::VerifyPW(PDWINDEX *pPdwIndex, int count)
 // 최 종 변 경  : 조철희, 2005-05-20 22:46:07
 //
 //##ModelId=42E85F37005E
-int CPulExt::CalcPAMean(PDWINDEX *pPdwIndex, int count)
+int CPulExt::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    int i;
+    unsigned int i;
     int *pPdwParamIndex;
 
-    if( count == 1 ) {
+    if(uiCount == _spOne ) {
         return m_pPA[ *pPdwIndex ];
     }
 
     // m_PdwParam 에 DTOA 값을 저장
     pPdwParamIndex = m_PdwParam.piParam;
-    for( i=0 ; i < count ; ++i ) {
+    for( i=0 ; i < uiCount; ++i ) {
         *pPdwParamIndex++ = m_pPA[ *pPdwIndex++ ];
     }
 
-    m_PdwParam.uiCount = count;
+    m_PdwParam.uiCount = uiCount;
 
     // Qsort...
     qsort( m_PdwParam.piParam, (size_t) m_PdwParam.uiCount, sizeof( int ), intparamCompare );
@@ -3964,14 +3992,14 @@ BOOL CPulExt::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG 
     _TOA dtoa;
 
     dtoa = m_pTOA[ *pSeg1->pdw.pIndex ] - m_pTOA[ *pSeg2->pdw.pIndex ];
-    dtoa = dtoa % pSeg1->pri.TMean;
+    dtoa = dtoa % pSeg1->pri.tMean;
 
     /*! \bug  오차를 고려해서 STABLE_MARGIN에 1.2배를 한 값으로 한다.
         \date 2006-08-08 09:11:54, 조철희
     */
     if( CompMeanDiff<_TOA>( dtoa, 0, UMUL( 2, STABLE_MARGIN ) ) == TRUE )
         return TRUE;
-    if( CompMeanDiff<_TOA>( dtoa, pSeg1->pri.TMean, UMUL( 2, STABLE_MARGIN ) ) == TRUE )
+    if( CompMeanDiff<_TOA>( dtoa, pSeg1->pri.tMean, UMUL( 2, STABLE_MARGIN ) ) == TRUE )
         return TRUE;
 
     return FALSE;
@@ -4003,13 +4031,13 @@ BOOL CPulExt::CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG
 		iMaxMiss = CalMaxMiss( pSeg1->uiPriType );
 
 		if( pSeg1->last_idx < pSeg2->first_idx ) {
-			dtoa = pSeg2->first_toa - pSeg1->last_toa;
+			dtoa = pSeg2->tFirst - pSeg1->tLast;
 		}
 		else {			
-			dtoa = pSeg1->first_toa - pSeg2->last_toa;       
+			dtoa = pSeg1->tFirst - pSeg2->tLast;       
 		}
 
-		r = MulDiv64( 1, dtoa, pSeg1->pri.TMean );
+		r = MulDiv64( 1, dtoa, pSeg1->pri.tMean );
 		if( r > (_TOA) iMaxMiss ) {
 			bRet = FALSE;
 		}
@@ -4039,10 +4067,10 @@ BOOL CPulExt::CheckToaInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG 
         bRet = FALSE;
     }
     else if( pSeg1->last_idx < pSeg2->first_idx ) {
-        bRet = IsSamePulseTrain<_TOA>( pSeg1->last_toa, pSeg2->first_toa, pSeg1->pri.TMean, 2*STABLE_MARGIN );
+        bRet = IsSamePulseTrain<_TOA>( pSeg1->tLast, pSeg2->tFirst, pSeg1->pri.tMean, 2*STABLE_MARGIN );
     }
     else {
-        bRet = IsSamePulseTrain<_TOA>( pSeg2->last_toa, pSeg1->first_toa, pSeg2->pri.TMean, 2*STABLE_MARGIN );
+        bRet = IsSamePulseTrain<_TOA>( pSeg2->tLast, pSeg1->tFirst, pSeg2->pri.tMean, 2*STABLE_MARGIN );
     }
 
 
@@ -4079,14 +4107,15 @@ BOOL CPulExt::CheckToaInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG 
 int CPulExt::GetCoExtPulse()
 {
     unsigned int i;
-    int count=0;
+    unsigned int count=0;
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
     pSeg = & m_Seg[0];
     for( i=0 ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg->mark == NORMAL_SEG )
+        if (pSeg->enMark == NORMAL_SEG) {
             count += pSeg->pdw.uiCount;
+        }
     }
     return count;
 }
@@ -4106,7 +4135,7 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
 {
     int i;
     _TOA nHarmonic;
-    int count, merged_index[MAX_SEG];
+    int iCount, merged_index[MAX_SEG];
 
     STR_PULSE_TRAIN_SEG *pMainSeg, *pSeg;
 
@@ -4114,12 +4143,12 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
 
     pMainSeg = GetMainSeg( startSeg, endSeg );
     while( NULL != pMainSeg ) {
-        pMainSeg->mark = MERGED_SEG;
+        pMainSeg->enMark = MERGED_SEG;
 
         pSeg = & m_Seg[ startSeg ];
-        count = 0;
+        iCount = 0;
         for( i=startSeg ; i < endSeg ; ++i, ++pSeg ) {
-            if( pSeg->mark == DELETE_SEG || pSeg->mark == MERGED_SEG ) {
+            if( pSeg->enMark == DELETE_SEG || pSeg->enMark == MERGED_SEG ) {
                 continue;
             }
 
@@ -4145,13 +4174,13 @@ void CPulExt::MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitte
 
             nHarmonic = CheckHarmonic( pMainSeg, pSeg );
             if( ( ( nHarmonic != 0 && OverlappedSeg( pMainSeg, pSeg ) == false && CheckOmittedPulse( pMainSeg, pSeg ) == TRUE ) ) || bIgnoreJitterP == TRUE ) {
-                pSeg->mark = MERGED_SEG;
-                merged_index[ count++ ] = i;
+                pSeg->enMark = MERGED_SEG;
+                merged_index[iCount++ ] = i;
             }
         }
 
         // 펄스열을 병합한다.
-        for( i=0 ; i < count ; ++i ) {
+        for( i=0 ; i < iCount; ++i ) {
             pSeg = & m_Seg[ merged_index[ i ] ];
             MergePulseTrain( pMainSeg, pSeg );
         }
@@ -4187,8 +4216,8 @@ void CPulExt::ChangeMarkTo( int startSeg, int endSeg, UINT from_mark, SEG_MARK t
 
     pSeg = & m_Seg[ startSeg ];
     for( i=startSeg ; i < endSeg ; ++i, ++pSeg ) {
-        if( pSeg->mark == from_mark ) {
-            pSeg->mark = to_mark;
+        if( pSeg->enMark == from_mark ) {
+            pSeg->enMark = to_mark;
         }
     }
 }
@@ -4253,7 +4282,7 @@ void CPulExt::MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG
     pMrgSeg->last_idx = _max( pMrgSeg->last_idx, pSrcSeg->last_idx );
     pMrgSeg->first_idx = _min( pMrgSeg->first_idx, pSrcSeg->first_idx );
 
-    pSrcSeg->mark = DELETE_SEG;
+    pSrcSeg->enMark = DELETE_SEG;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -4282,10 +4311,10 @@ STR_PULSE_TRAIN_SEG *CPulExt::GetMainSeg( int startSeg, int endSeg )
     pMainSeg = NULL;
     pSeg = & m_Seg[ startSeg ];
     for( i=startSeg ; i < endSeg ; ++i, ++pSeg ) {
-        if( pSeg->mark == DELETE_SEG )
+        if( pSeg->enMark == DELETE_SEG )
             continue;
 
-        if( pSeg->mark == MERGED_SEG )
+        if( pSeg->enMark == MERGED_SEG )
             continue;
 
         if( bMainSeg == FALSE ) {
@@ -4359,10 +4388,10 @@ void CPulExt::PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg )
 
     Log( enNormal, "\t[%2d]%1c: Co(%3d), %s (%5d-%5d), %s %5d(%5d-%5d)/%2d, PW(%5d -%5d), I(%3d(0x%0llx),%3d -%3d)" ,
         iSeg,
-        szPulseTrainMark[pSeg->mark],
+        szPulseTrainMark[pSeg->enMark],
         pSeg->pdw.uiCount,
         szFreqType[pSeg->uiFreqType], I_FRQMhzCNV( pSeg->uiBand, pSeg->freq.iMin ), I_FRQMhzCNV( pSeg->uiBand, pSeg->freq.iMax ),
-        szPRIType[pSeg->uiPriType], I_TOAusCNV( pSeg->pri.TMean ), I_TOAusCNV( pSeg->pri.TMin ), I_TOAusCNV( pSeg->pri.TMax ), IMUL( pSeg->jitter_p, 100 ),
+        szPRIType[pSeg->uiPriType], I_TOAusCNV( pSeg->pri.tMean ), I_TOAusCNV( pSeg->pri.tMin ), I_TOAusCNV( pSeg->pri.tMax ), IMUL( pSeg->fJitterRatio, 100 ),
         I_PWCNV( pSeg->pw.iMin ), I_PWCNV( pSeg->pw.iMax ),
         m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx], m_pTOA[m_pGrPdwIndex->pIndex[pSeg->gr_ref_idx]], m_pGrPdwIndex->pIndex[pSeg->first_idx], m_pGrPdwIndex->pIndex[pSeg->last_idx] );
 
@@ -4415,9 +4444,9 @@ void CPulExt::ExtractTrackPT( _TOA refPriMean, float refJitRat )
 
     pSeg = & m_Seg[0];
     for( i=0 ; i < m_uiCoSeg ; ++i ) {
-        nHarmonic = CheckHarmonic( refPriMean, refJitRat, pSeg->pri.TMean, pSeg->jitter_p );
+        nHarmonic = CheckHarmonic( refPriMean, refJitRat, pSeg->pri.tMean, pSeg->fJitterRatio );
         if( nHarmonic == 0 ) {
-            pSeg->mark = DELETE_SEG;
+            pSeg->enMark = DELETE_SEG;
         }
         ++ pSeg;
     }
@@ -4446,7 +4475,7 @@ void CPulExt::SavePdwParamIndex()
 
     pSeg = & m_Seg[0];
     for( i=0 ; i < m_uiCoSeg ; ++i ) {
-        if( pSeg->mark == NORMAL_SEG ) {
+        if( pSeg->enMark == NORMAL_SEG ) {
             pPdwIndex = pSeg->pdw.pIndex;
             for( j=0 ; j < pSeg->pdw.uiCount ; ++j ) {
                 /*! \bug  펄스열 추출의 입력 인덱스를 포인터함.
@@ -4506,15 +4535,15 @@ void CPulExt::MakeCWPulseTrain()
     memcpy( pSeg->pdw.pIndex, pPdwIndex, sizeof(PDWINDEX) * m_pGrPdwIndex->uiCount );
     pSeg->pdw.uiCount = m_pGrPdwIndex->uiCount;
 
-    pSeg->pri.TMin = 0;
-	pSeg->pri.TMax = 500002; // UINT64_MAX;
-	pSeg->pri.TMean = 0;
+    pSeg->pri.tMin = 0;
+	pSeg->pri.tMax = 500002; // UINT64_MAX;
+	pSeg->pri.tMean = 0;
 
     pSeg->gr_ref_idx = 0;
     pSeg->first_idx = 0;
     pSeg->last_idx = pSeg->pdw.uiCount - 1;
     pSeg->uiMiss = 0;
-    pSeg->mark = NORMAL_SEG;
+    pSeg->enMark = NORMAL_SEG;
     pSeg->uiPriType = _STABLE;
     CalcSegParam( pSeg, TRUE );
 

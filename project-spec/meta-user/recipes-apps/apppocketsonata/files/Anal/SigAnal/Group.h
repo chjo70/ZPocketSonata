@@ -140,7 +140,7 @@ public:
 	//##ModelId=452B0C5601E5
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
 	//##ModelId=452B0C5601F7
-    bool MakePDWArray( _PDW *pdw, int iCount, int iBand=0 );
+    bool MakePDWArray( _PDW *pdw, unsigned int uiCount, int iBand=0 );
 	//##ModelId=452B0C560201
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	//##ModelId=452B0C560203
@@ -166,7 +166,7 @@ public:
 	//##ModelId=452B0C5602A1
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C5602B5
-	int FindPeakInHist( int count, PDWINDEX *pPdwIndex );
+	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
 	//##ModelId=452B0C5602C0
 	void FilterParam( STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP *pAoaGroup );
 	//##ModelId=452B0C5602D3
@@ -176,7 +176,7 @@ public:
 	//##ModelId=452B0C5602E7
 	void MakeHist( STR_PW_GROUP *pPwGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C5602FC
-	void MakeHist( int count, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
+	void MakeHist( unsigned int uiCount, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C56030F
 	void MakeHist( STR_PDWINDEX *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist  );
 	//##ModelId=452B0C56031B

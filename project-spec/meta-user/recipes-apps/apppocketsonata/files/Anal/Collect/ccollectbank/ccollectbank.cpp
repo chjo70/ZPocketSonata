@@ -39,7 +39,6 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 
 	m_strPDW.pstPDW = NULL;
 	_SAFE_MALLOC( m_strPDW.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW );
-    //m_strPDW.pstPDW = ( _PDW * ) malloc( sizeof(_PDW) * MAX_PDW );
 
 }
 
@@ -56,7 +55,7 @@ CCollectBank::~CCollectBank()
  */
 void CCollectBank::Init()
 {
-    memset( & m_strPDW, 0, sizeof(UNION_HEADER) );
+    memset( & m_strPDW.x, 0, sizeof(UNION_HEADER) );
 
 	// ?먯???1?쒕????쒖옉?섍퀬 異붿쟻/?ㅼ틪? 0 遺???쒖옉?쒕떎.
 	// ?대젃寃??댁빞 PDWID??1遺??留ㅺ린寃??쒕떎.
@@ -64,7 +63,6 @@ void CCollectBank::Init()
 
     m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
     m_strPDW.SetBand((unsigned int) g_enBoardId );
-    //m_strPDW.x.ps.uiBand = g_enBoardId;
 
     InitWindowCell();
 
@@ -93,7 +91,9 @@ void CCollectBank::InitWindowCell()
 // 
 //     m_theQueueWindowCellID.Pop( & m_uiID );
 
-    m_strPDW.x.ps.iBank = CCommonUtils::GetEnumCollectBank( m_iChannelNo );
+    unsigned int uiBank = (UINT)CCommonUtils::GetEnumCollectBank(m_iChannelNo);
+    m_strPDW.SetBank(uiBank );
+    
 
 }
 
@@ -346,8 +346,6 @@ void CCollectBank::UpdateWindowCell()
 
     // PDW ?뺣낫 ?대━??
     m_strPDW.SetTotalPDW( 0 );
-
-    //m_strPDW.IncPDWID();
 
     // ?섏쭛??PDW 媛쒖닔 ?낅뜲?댄듃
     m_strWindowCell.uiTotalPDW = 0;

@@ -1112,7 +1112,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
         fTheta = (float) m_theInverseMethod.GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
-		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
+		if( TRUE == CompAoaDiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
 			AddOptimalLOBID( pLOBData->uiLOBID );
 
 			AddPEData( pLOBData );
@@ -1126,7 +1126,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 			++ m_pOptimalCluster[nOptimalIndex]->iCount;
 		}
 
-		if( TRUE == CompAoaDiff( fTheta, pLOBData->fMeanDOA, 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) { 
+		if( TRUE == CompAoaDiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) { 
 			++ iCoGetEffectiveDOADiff1;
 		}
 

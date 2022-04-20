@@ -268,11 +268,11 @@ void CGroup::MakePDWArray( _PDW *pdw, int iCount, int iDummy )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-11-01 15:02:38
 //
-bool CGroup::MakePDWArray( _PDW *pdw, int count, int iBand )
+bool CGroup::MakePDWArray( _PDW *pdw, unsigned int uiCount, int iBand )
 {
     bool bRet=true;
 
-    int i;
+    unsigned int i;
     _TOA templlTOA, prevllTOA;
 
     BOOL flagBand;
@@ -310,7 +310,7 @@ bool CGroup::MakePDWArray( _PDW *pdw, int count, int iBand )
 
     flagBand = FALSE;
 
-    for( i=0 ; i < count ; ++i, ++pdw )	{
+    for( i=0 ; i < uiCount; ++i, ++pdw )	{
         templlTOA = pdw->ullTOA;
 
         if( firstToaBand > templlTOA ) {
@@ -885,17 +885,17 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
 // 최 종 변 경  : 조철희, 2005-04-27 19:46:09
 //
 //##ModelId=42757D4D0113
-int CGroup::FindPeakInHist(int count, PDWINDEX *pPdwIndex)
+int CGroup::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex)
 {
-    int i;
+    unsigned int ui;
     int peak_index, peak_count;
 
     peak_index = -1;
     peak_count = 0;
 
-    for( i=0 ; i < count ; ++i ) {
+    for( ui=0 ; ui < uiCount; ++ui ) {
         if( peak_count < *pPdwIndex ) {
-            peak_index = i;
+            peak_index = (int) ui;
             peak_count = *pPdwIndex;
         }
         ++ pPdwIndex;
@@ -1647,29 +1647,6 @@ void CGroup::SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist )
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CGroup::MakeHist
-// 반환되는 형  : void
-// 함 수 인 자  : int count
-// 함 수 인 자  : UINT *pPdw
-// 함 수 인 자  : UINT nShift
-// 함 수 인 자  : STR_FRQAOAPWHISTOGRAM *pHist
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-04-26 22:55:55
-//
-//##ModelId=42757D4D018B
-//void CGroup::MakeHist( int count, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist)
-// {
-//     // 전체 파라메터에 대한 히스토그램 만들기
-//     int index;
-// 
-//     for( int i=0 ; i < count; ++i ) {
-//         index = *( pPdw + i ) >> nShift;
-//         ++ pHist->hist[index];
-//     }
-// }
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup::MakeHist
 // 반환되는 형  : int
 // 함 수 인 자  : STR_PDWINDEX *pSrcIndex
 // 함 수 설 명  :
@@ -1731,6 +1708,7 @@ int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
     }
 }
 
+#ifndef _ISODATA_AOA_GROUP_
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CGroup::GetAOARange
@@ -1879,6 +1857,33 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 
 //////////////////////////////////////////////////////////////////////
 //
+// 함 수 이 름  : CGroup::ReDrawAoaHist
+// 반환되는 형  : void
+// 함 수 인 자  : STR_AOA_GROUP *pAoaGroup
+// 함 수 설 명  :
+// 최 종 변 경  : 조철희, 2005-04-27 18:53:03
+//
+//##ModelId=42757D4D0159
+void CGroup::ReDrawAoaHist(STR_AOA_GROUP *pAoaGroup)
+{
+    UINT i;
+
+    if (pAoaGroup->bOverAoa) {
+        for (i = pAoaGroup->from_bin; i <= (UINT)(m_AoaHist.bin_count - 1); ++i)
+            m_AoaHist.hist[i] = 0;
+        for (i = 0; i <= pAoaGroup->to_bin; ++i)
+            m_AoaHist.hist[i] = 0;
+    }
+    else {
+        for (i = pAoaGroup->from_bin; i <= pAoaGroup->to_bin; ++i)
+            m_AoaHist.hist[i] = 0;
+    }
+}
+
+#endif
+
+//////////////////////////////////////////////////////////////////////
+//
 // 함 수 이 름  : CGroup::GetFrqRange
 // 반환되는 형  : BOOL
 // 함 수 인 자  : int peak_index
@@ -1953,30 +1958,6 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
     return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup::ReDrawAoaHist
-// 반환되는 형  : void
-// 함 수 인 자  : STR_AOA_GROUP *pAoaGroup
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-04-27 18:53:03
-//
-//##ModelId=42757D4D0159
-void CGroup::ReDrawAoaHist( STR_AOA_GROUP *pAoaGroup )
-{
-    UINT i;
-
-    if( pAoaGroup->bOverAoa ) {
-        for( i=pAoaGroup->from_bin ; i <= (UINT) ( m_AoaHist.bin_count-1 ) ; ++i )
-            m_AoaHist.hist[i] = 0;
-        for( i=0 ; i <= pAoaGroup->to_bin ; ++i )
-            m_AoaHist.hist[i] = 0;
-    }
-    else {
-        for( i=pAoaGroup->from_bin ; i <= pAoaGroup->to_bin ; ++i )
-            m_AoaHist.hist[i] = 0;
-    }
-}
 
 //////////////////////////////////////////////////////////////////////
 //

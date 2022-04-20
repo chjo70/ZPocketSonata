@@ -42,7 +42,8 @@ CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData
 
 #endif
 
-    m_pTheSysPara = new CSysPara();
+    //m_pTheSysPara = new CSysPara();
+    _SAFE_NEW(m_pTheSysPara, CSysPara())
 
 }
 
@@ -136,6 +137,10 @@ void CTrackAnalysis::AnalysisStart()
     strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
+
+    // PDW 헤더 정보 저장
+    memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));
+
     g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

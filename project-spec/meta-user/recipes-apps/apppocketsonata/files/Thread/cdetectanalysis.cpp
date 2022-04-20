@@ -1,4 +1,4 @@
-// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
+﻿// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -136,13 +136,16 @@ void CDetectAnalysis::AnalysisStart()
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=(unsigned int) m_pTheNewSigAnal->GetCoLOB();
 
-    if( uiTotalLOB > _spZero ) {
+    if( uiTotalLOB >= _spOne ) {
         STR_ANALINFO strAnalInfo;
 
         memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
         strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiTotalLOB = uiTotalLOB;
-        strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;        
+        strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
+
+        // PDW 헤더 정보 저장
+        memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
 
         g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
     }

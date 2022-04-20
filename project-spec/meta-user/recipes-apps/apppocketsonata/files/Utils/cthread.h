@@ -47,7 +47,11 @@ using namespace std;
 
 #include "../Utils/carraymsgdata.h"
 
+
+
 #define LENGTH_OF_CLASSNAME (30)
+
+
 
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
@@ -96,14 +100,16 @@ static bool IsThereInstance() { \
     } \
     return bRet; }
 
-
+/**
+ * @brief 수신 메시지 정의
+ */
 typedef enum {
     enNO_WAIT=0,
     enWAIT_FOREVER,
 
 } ENUM_RCVMSG ;
 
-//#pragma pack(push, 1)
+
 
 
 /**
@@ -134,6 +140,9 @@ struct STR_ANALINFO {
     // 빔 번호
     unsigned int uiABTID;
 
+    // 탐지/추적/스캔 PDW 헤더 정보 : 과제 ID, 수집시간, 대역폭 등
+    UNION_HEADER uniPDWHeader;
+
 } ;
 
 
@@ -147,7 +156,7 @@ union UNI_MSG_DATA {
     STR_COLLECTINFO strCollectInfo;
     STR_ANALINFO strAnalInfo;
 
-    char szData[32];
+    char szData[32*2];
 } ;
 
 
@@ -200,15 +209,14 @@ public:
 };
 #endif
 
-//#pragma pack(pop)
 
 /**
- * @brief The CThread class
+ * @brief 쓰레드 클래스
  */
 class CThread : public CArrayMsgData
 {
 private:
-    
+
 
 #ifdef _MSC_VER
     CThreadContext m_MainThread;

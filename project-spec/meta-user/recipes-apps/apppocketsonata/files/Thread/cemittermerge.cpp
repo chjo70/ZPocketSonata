@@ -251,18 +251,23 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
 {
     STR_ANALINFO strAnalInfo;
 
-    if( pLOBData != NULL ) {
-        if( m_pTheEmitterMergeMngr->ReqTrack() == true ) {
+    // PDW 헤더 정보 저장
+    memcpy(&strAnalInfo.uniPDWHeader, &m_pMsg->x.strAnalInfo.uniPDWHeader, sizeof(UNION_HEADER));
+
+    bool bTrack = m_pTheEmitterMergeMngr->ReqTrack();
+    if( pLOBData != NULL ) {        
+        if( bTrack == true ) {
             strAnalInfo.enBoardID = m_strAnalInfo.enBoardID;
             strAnalInfo.iCh = ( CCommonUtils::GetEnumCollectBank( m_strAnalInfo.iCh) == enTrackCollectBank ? m_strAnalInfo.iCh : _spZero );
             strAnalInfo.uiTotalLOB = _spOne;
             strAnalInfo.uiAETID = pLOBData->uiAETID;
             strAnalInfo.uiABTID = pLOBData->uiABTID;
+
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
     }
     else {
-        if( m_pTheEmitterMergeMngr->ReqTrack() == false ) {
+        if(bTrack == false ) {
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & m_strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
     }

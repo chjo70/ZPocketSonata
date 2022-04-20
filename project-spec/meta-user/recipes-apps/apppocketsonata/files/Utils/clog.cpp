@@ -27,11 +27,6 @@
 
 bool CLog::m_bcs=false;
 
-#ifdef _MSC_VER
-//CCriticalSection CLog::m_cs;
-#else
-//sem_t CLog::m_mutex;
-#endif
 
 /**
  * @brief CLog::CLog
@@ -69,7 +64,7 @@ CLog::~CLog()
  * @param iLine
  * @param pStr
  */
-void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... )
+void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... )
 {
 #ifndef _CGI_LIST_
 #ifdef _MSC_VER
@@ -185,10 +180,10 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 break;
             }
 
-            if( pMsg != NULL ) {
+            if(fmt != NULL ) {
                 nLength = strlen(m_szLog);
-                va_start( args, pMsg );
-                vsprintf( & m_szLog[nLength], pMsg, args );
+                va_start( args, fmt);
+                vsprintf( & m_szLog[nLength], fmt, args );
                 va_end( args );
 
                 if( nType == enDebug || nType == enLineFeed ) {
@@ -206,7 +201,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 fflush( stdout );
 
 #endif
-                //strcat( & m_szLog[nLength], pMsg );
+                //strcat( & m_szLog[nLength], fmt );
 
 #ifdef _LOG_WHERE
                 sprintf( szFileLine, "\t\tat [%s:%d{%s}]" , pszFile, iLine, pszFunction );

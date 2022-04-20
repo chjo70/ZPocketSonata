@@ -474,7 +474,8 @@ namespace ELINT {
 	const unsigned int uiPDW_NORMAL=1;
 	const unsigned int uiPDW_DV=1;
 
-    const float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+    const float _toaRes[ELINT::en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+
     const float fFreqRes=(float) 0.001;
     const float fDOARes=(float) 0.01;
     const float fPARes=(float) 0.25;
@@ -486,7 +487,7 @@ class CEPDW : public CData
 private:
     STR_ELINT_HEADER m_stHeader;
 
-	ENUM_BANDWIDTH m_enBandWidth;
+	ELINT::ENUM_BANDWIDTH m_enBandWidth;
 
 public:
 	CEPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -519,10 +520,15 @@ public:
      * @date      2022-02-09, 17:03
      * @warning
      */
-    static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
+    static float DecodeTOAus( _TOA uiTOA, ELINT::ENUM_BANDWIDTH enBandWidth )
     {
         return (float) ( ( (float) uiTOA * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
+
+    static float DecodeTOAus(_TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth)
+    {
+        return (float)(((float)uiTOA * ELINT::_toaRes[enBandWidth]) / (float) 1000000000.);
+    };
 
 	/**
 	 * @brief     DecodeRealFREQMHz
@@ -554,10 +560,15 @@ public:
 	 * @date      2022-01-29, 15:20
 	 * @warning
 	 */
-	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
+	static float DecodePW( unsigned int uiPW, ELINT::ENUM_BANDWIDTH enBandWidth )
 	{
 		return (float) ( ( (float) uiPW * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
 	} ;
+
+    static float DecodePW(unsigned int uiPW, XBAND::ENUM_BANDWIDTH enBandWidth)
+    {
+        return (float)(((float)uiPW * ELINT::_toaRes[enBandWidth]) / (float) 1000000000.);
+    };
 
 	/**
 	 * @brief     DecodeFREQMHz
@@ -609,8 +620,8 @@ public:
 };
 
 
-namespace XPDW {
-	const float _toaRes[en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
+namespace XBAND {
+	const float _toaRes[XBAND::en150MHZ_BW +1] = { (float) 65.104167, (float) 8.138021 } ;
 	const float fFreqRes=(float) 0.001;
 	const float fDOARes=(float) 0.01;
 	const float fPARes=(float) 0.25;
@@ -619,9 +630,9 @@ namespace XPDW {
 class CXPDW : public CData
 {
 private:
-	STR_ELINT_HEADER m_stHeader;
+	STR_XBAND_HEADER m_stHeader;
 
-	ENUM_BANDWIDTH m_enBandWidth;
+    XBAND::ENUM_BANDWIDTH m_enBandWidth;
 
 public:
 	CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -670,9 +681,9 @@ public:
      * @date      2022-02-09, 17:03
      * @warning
      */
-    static float DecodeTOAus( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
+    static float DecodeTOAus( _TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (float) uiTOA * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+        return (float) ( ( (float) uiTOA * XBAND::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
     /**
@@ -685,9 +696,9 @@ public:
      * @date      2022/02/22 22:37:47
      * @warning   
      */
-    static float DecodeTOA( _TOA uiTOA, ENUM_BANDWIDTH enBandWidth )
+    static float DecodeTOA( _TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (double) uiTOA * XPDW::_toaRes[enBandWidth] ) / (double) 1000000000. );
+        return (float) ( ( (double) uiTOA * XBAND::_toaRes[enBandWidth] ) / (double) 1000000000. );
     } ;
 
 	/**
@@ -700,9 +711,9 @@ public:
      * @date      2022/02/17 15:16:39
      * @warning   
      */
-    static unsigned int EncodeTOAus( float fTOA, ENUM_BANDWIDTH enBandWidth )
+    static unsigned int EncodeTOAus( float fTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (unsigned int) ( ( ( fTOA * (float) 1000. ) / XPDW::_toaRes[enBandWidth] ) + 0.5 );
+        return (unsigned int) ( ( ( fTOA * (float) 1000. ) / XBAND::_toaRes[enBandWidth] ) + 0.5 );
     } ;
 
 	/**
@@ -719,7 +730,7 @@ public:
 	{
 		float fVal;
 
-		fVal = FMUL( uiFreq, XPDW::fFreqRes );
+		fVal = FMUL( uiFreq, XBAND::fFreqRes );
 		
 		return fVal;
 	} ;
@@ -737,7 +748,7 @@ public:
     {
         unsigned int uiFreq;
 
-        uiFreq = IDIV( fFreq, XPDW::fFreqRes );
+        uiFreq = IDIV( fFreq, XBAND::fFreqRes );
 
         return uiFreq;
     } ;
@@ -756,7 +767,7 @@ public:
     {
         float fFreq;
 
-        fFreq = FMUL( uiFreq, XPDW::fFreqRes );
+        fFreq = FMUL( uiFreq, XBAND::fFreqRes );
         fFreq *= 1000000.;
 
         return fFreq;
@@ -775,7 +786,7 @@ public:
     {
         float fFreq;
 
-        fFreq = FMUL( uiFreq, XPDW::fFreqRes );
+        fFreq = FMUL( uiFreq, XBAND::fFreqRes );
 
         return fFreq;
     } ;
@@ -791,9 +802,9 @@ public:
 	 * @date      2022-01-29, 15:20
 	 * @warning
 	 */
-	static float DecodePW( unsigned int uiPW, ENUM_BANDWIDTH enBandWidth )
+	static float DecodePW( unsigned int uiPW, XBAND::ENUM_BANDWIDTH enBandWidth )
 	{
-		return (float) ( ( (float) uiPW * XPDW::_toaRes[enBandWidth] ) / (float) 1000000000. );
+		return (float) ( ( (float) uiPW * XBAND::_toaRes[enBandWidth] ) / (float) 1000000000. );
 	} ;
 
 	/**
@@ -806,9 +817,9 @@ public:
      * @date      2022/02/21 23:20:19
      * @warning   
      */
-    static unsigned int EncodePWns( float fPW, ENUM_BANDWIDTH enBandWidth )
+    static unsigned int EncodePWns( float fPW, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (unsigned int) ( (float) ( fPW / XPDW::_toaRes[enBandWidth] ) + 0.5 );
+        return (unsigned int) ( (float) ( fPW / XBAND::_toaRes[enBandWidth] ) + 0.5 );
     } ;
 
 	/**
@@ -839,7 +850,7 @@ public:
 	static float DecodeDOA( unsigned int uiDOA )
 	{
 		float fDOA;
-		fDOA = (float) XPDW::fDOARes * (float) ( uiDOA % 36000 );
+		fDOA = (float)XBAND::fDOARes * (float) ( uiDOA % 36000 );
 		return fDOA;
 	} ;
 
@@ -855,7 +866,7 @@ public:
      */
     static unsigned int EncodeDOA(float fDOA )
     {
-        return (unsigned int) ( (float) fDOA / XPDW::fDOARes + 0.5 );
+        return (unsigned int) ( (float) fDOA / XBAND::fDOARes + 0.5 );
     } ;
 
 	/**
@@ -870,7 +881,7 @@ public:
 	 */
 	static float DecodePA( unsigned int uiPA )
 	{		
-		return (float) ( ( (float) uiPA * (float) XPDW::fPARes ) - (float) 110. );
+		return (float) ( ( (float) uiPA * (float)XBAND::fPARes ) - (float) 110. );
 	} ;
 
     /**
@@ -884,7 +895,7 @@ public:
      */
     static unsigned int EncodePA( float fPA )
     {
-        return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float) XPDW::fPARes ) + 0.5 );
+        return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float)XBAND::fPARes ) + 0.5 );
     } ;
 
 };

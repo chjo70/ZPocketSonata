@@ -891,7 +891,7 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
  */
 void CSingleClient::DisplayMsg()
 {
-    char szOpcode[50];
+    char szOpcode[50];    
 
     switch( m_strLanHeader.uiOpCode ) {
         case enRES_MODE :

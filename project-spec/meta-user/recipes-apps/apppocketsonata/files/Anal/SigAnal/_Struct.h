@@ -166,12 +166,12 @@ struct STR_PULSE_TRAIN_SEG {
 
 	UINT uiMiss;							// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
 	UINT uiPRI_Band;					// 펄스열 추출할 때의 PRI 밴드
-	UINT extract_step;			// 기준 펄스열, STABLE, Jitter PRI
+	UINT uiExtractStep;			// 기준 펄스열, STABLE, Jitter PRI
 	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
 	PDWINDEX first_idx;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
 	PDWINDEX last_idx;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
-	_TOA first_toa;					// 펄스열 첫번째 TOA
-	_TOA last_toa;					// 펄스열 마지막 TOA
+	_TOA tFirst;					// 펄스열 첫번째 TOA
+	_TOA tLast;					// 펄스열 마지막 TOA
 	UINT uiStat;							// PDW 상태
 	UINT uiFreqType;					// 주파수 타입
 	STR_MINMAX aoa;					// 방위 제원 
@@ -180,14 +180,14 @@ struct STR_PULSE_TRAIN_SEG {
 	STR_MINMAX pw;					// 펄스폭 제원 
 	UINT uiPriType;					// PRI 타입
 	STR_MINMAX_TOA pri;					// PRI 제원
-	UINT min_dtoa;					// DTOA 간격 중에서 최소가 되는 값
-	float jitter_p;					// 지터율
+	_TOA min_dtoa;					// DTOA 간격 중에서 최소가 되는 값
+	float fJitterRatio;					// 지터율
 	UINT continuity;				// 펄스열 연속성(%)
 	UINT uiBand;							// 주파수 Band Code
 	UINT peak_idx;					// peak PA의 펄스 index
 	//UINT cd;								// Correct Detection
 	//UINT steady;						// steady 스캔특성
-	SEG_MARK mark;							// 펄스열의 상태 표시 
+	SEG_MARK enMark;							// 펄스열의 상태 표시 
 													// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
 	UINT pri_pat_period;		// PRI  패턴 주기
 	UINT freq_pat_period;		// FREQ 패턴 주기
@@ -197,8 +197,8 @@ struct STR_PULSE_TRAIN_SEG {
 // PRI Table 
 //##ModelId=452B0C5403B6
 struct STR_PRI_RANGE_TABLE {
-	_TOA min_pri;		// 하한 범위 
-	_TOA max_pri;		// 상한 범위 
+	_TOA tMinPRI;		// 하한 범위 
+	_TOA tMaxPRI;		// 상한 범위 
 
 }  ;
 
@@ -252,7 +252,7 @@ struct STR_PDWPARAM {
 	UINT *puiParam;
 	int *piParam;
 
-	int uiCount;
+	unsigned int uiCount;
 
 } ;
 

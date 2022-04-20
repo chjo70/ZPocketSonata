@@ -30,7 +30,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:29
 //
-CNPulExt::CNPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
+CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -64,7 +64,7 @@ void CNPulExt::Init()
 {
     m_CoPulseTrains = 0;
 
-    m_enBandWidth = m_pNewSigAnal->GetBandWidth();
+    //m_enBandWidth = m_pNewSigAnal->GetBandWidth();
 
     /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
         \date 2008-07-30 13:25:17, 조철희
@@ -260,15 +260,15 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
         for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
             switch( pRadarMode->ePRI_Type ) {
             case RadarModePRIType::enumStable :
-                extRange.min_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
-                extRange.max_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
                 ExtractStablePT( & extRange, 0 );
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
                 for( iter=pRadarMode->vecRadarMode_PRISequenceValues.begin() ; iter != pRadarMode->vecRadarMode_PRISequenceValues.end() ; ++iter ) {
-                    extRange.min_pri = ITOAusCNV( (*iter).f_Min );
-                    extRange.max_pri = ITOAusCNV( (*iter).f_Max );
+                    extRange.tMinPRI = ITOAusCNV( (*iter).f_Min );
+                    extRange.tMaxPRI = ITOAusCNV( (*iter).f_Max );
                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
                         ++ m_uiCoSeg;
 
@@ -281,8 +281,8 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             case RadarModePRIType::enumJITTER :
             case RadarModePRIType::enumSTAGGER :
             case RadarModePRIType::enumPATTERN :
-                extRange.min_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
-                extRange.max_pri = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
                 ExtractJitterPT( & extRange, UINT_MAX, _sp.cm.Rpc, TRUE , JITTER_MARK, TRUE );
                 break;
 
@@ -306,9 +306,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:32
 //
-void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType)
+void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, count, usMarkType);
+    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 
 }
 
@@ -362,9 +362,9 @@ void CNPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_c
 //! \date     2006-07-27 17:16:36
 //! \warning
 //
-void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange )
+void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )
 {
-    m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, count, pRange );
+    m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, uiCount, pRange );
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -239,7 +239,7 @@ private:
 	void PIdentifyStbStb( SRxLOBData *pLOBData );
 	void FIdentifyAgiPat( SRxLOBData *pLOBData );
 	void FIdentifyPatPat( SRxLOBData *pLOBData );
-	void ConvertToIdentifyAet( SRxLOBData *pLOBData );
+	// void ConvertToIdentifyAet( SRxLOBData *pLOBData );
 	void FIdentifyHopHop( SRxLOBData *pLOBData );
 	void FIdentifyFixPat( SRxLOBData *pLOBData );
 	void FIdentifyFixHop( SRxLOBData *pLOBData );
@@ -265,8 +265,8 @@ private:
     void IdentifyScan();
     void IdentifyPW();
 
- 	bool LoadCEDLibrary2();
- 	bool LoadEOBLibrary2();
+ 	bool LoadCEDLibrary();
+ 	bool LoadEOBLibrary();
     void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
 
     char *GetRadarModeName( int iRadarModeIndex );
@@ -276,7 +276,7 @@ private:
  	void MallocBuffer();
  	void InitVar();
  	void Destory();
- 	BOOL CompSwitchLevel( int *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries );
+ 	//BOOL CompSwitchLevel( int *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries );
  	BOOL CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     BOOL CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
@@ -286,37 +286,6 @@ private:
 	bool IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
-
-//     template <typename T>
-//     T _diffabs( T x, T y)
-//     {
-// 
-//         if (x > y) {
-//             return x - y;
-//         }
-//         else {
-//             return y - x;
-//         }
-// 
-//     }
-
-//     template <typename T>
-//     BOOL CompMeanDiff( T x, T y, T thresh )
-//     {
-//         T diff;
-//         BOOL bRet;
-// 
-//         diff = _diffabs<T>( x, y );
-// 
-//         if( diff <= thresh ) {
-//             bRet = TRUE;
-//         }
-//         else {
-//             bRet = FALSE;
-//         }
-// 
-//         return bRet;
-//     }
 
 	template <typename T>
 	BOOL CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
@@ -454,6 +423,8 @@ private:
 protected:
 	void CalcMatchRatio();
  	float CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode=NULL );
+    float CalcFreqTypeMatchRatio(SRadarMode *pRadarMode);
+    float CalcPRITypeMatchRatio(SRadarMode *pRadarMode);
 
 	BOOL CheckFreqType( FREQ_TYPE frqType, SRadarMode *pRadarMode );
 

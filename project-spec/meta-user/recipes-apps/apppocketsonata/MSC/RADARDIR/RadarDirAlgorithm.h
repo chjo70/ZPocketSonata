@@ -146,16 +146,31 @@ typedef struct {
 #pragma pack( pop )
 #endif
 
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-	en5MHZ_BW=0,
-	en50MHZ_BW,
+namespace ELINT {
+#ifndef _ELINT_ENUM_BANDWIDTH_
+#define _ELINT_ENUM_BANDWIDTH_
+    typedef enum {
+        en5MHZ_BW = 0,
+        en50MHZ_BW,
 
-    enUnknown_BW=-1
+        enUnknown_BW = 2,
 
-} ENUM_BANDWIDTH ;
+    } ENUM_BANDWIDTH;
 #endif
+}
+
+namespace XBAND {
+#ifndef _XBAND_ENUM_BANDWIDTH_
+#define _XBAND_ENUM_BANDWIDTH_
+    typedef enum {
+        en5MHZ_BW = 0,
+        en150MHZ_BW,
+
+        enUnknown_BW = 2,
+
+    } ENUM_BANDWIDTH;
+#endif
+}
 
 #ifndef _STR_COMMON_HEADER_
 #define _STR_COMMON_HEADER_
@@ -188,10 +203,10 @@ enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCO
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
 typedef struct {
-	unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+	char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int iIsStorePDW;
 	EN_RADARCOLLECTORID enCollectorID;
-	ENUM_BANDWIDTH enBandWidth;
+	ELINT::ENUM_BANDWIDTH enBandWidth;
 
 	// 아래는 공용 정보
 	STR_COMMON_HEADER stCommon;
@@ -227,11 +242,53 @@ typedef struct {
 } STR_ELINT_HEADER ;
 #endif
 
+#ifndef _STR_XBAND_HEADER_
+#define _STR_XBAND_HEADER_
+typedef struct {
+    char aucTaskID[LENGTH_OF_TASK_ID];
+    unsigned int iIsStorePDW;
+    EN_RADARCOLLECTORID enCollectorID;
+    XBAND::ENUM_BANDWIDTH enBandWidth;
+
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    EN_RADARCOLLECTORID GetCollectorID() {
+        return enCollectorID;
+    }
+
+    void SetCollectorID(EN_RADARCOLLECTORID i_enCollectorID) {
+        enCollectorID = i_enCollectorID;
+    }
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    unsigned int GetPDWID() {
+        return stCommon.uiPDWID;
+    }
+
+    void SetTotalPDW(unsigned int uiTotalPDW) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
+    void SetIsStorePDW(unsigned int isStorePDW) {
+        iIsStorePDW = isStorePDW;
+    }
+
+    void CheckColTime() {
+        stCommon.CheckColTime();
+    }
+
+} STR_XBAND_HEADER;
+#endif
+
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
 	unsigned int uiBoardID;
-	unsigned int iBank;
+	unsigned int uiBank;
 	unsigned int uiBand;                // 주파수 대역
 	unsigned int iIsStorePDW;
 
@@ -295,17 +352,18 @@ typedef struct {
 #define _UNION_HEADER_
 typedef union {
 	STR_ELINT_HEADER el;
+    STR_XBAND_HEADER xb;
 
 	POCKETSONATA_HEADER ps;
 
 	SONATA_HEADER so;
 
-	unsigned char *GetTaskID( ENUM_UnitType enUnitType ) {
-		unsigned char *pTaskID;
+	char *GetTaskID( ENUM_UnitType enUnitType ) {
+		char *pTaskID;
 
 		switch( enUnitType ) {
 		case en_ZPOCKETSONATA :
-			pTaskID = (unsigned char *) NULL;
+			pTaskID = ( char *) NULL;
 			break;
 
 		case en_ELINT :
@@ -314,7 +372,7 @@ typedef union {
 			break;
 
 		case en_SONATA :
-			pTaskID = (unsigned char *) NULL;
+			pTaskID = ( char *) NULL;
 			break;
 
 		default:
@@ -400,13 +458,16 @@ struct STR_PDWDATA {
         unsigned int uiTotalPDW;
 
 #ifdef _POCKETSONATA_
-            uiTotalPDW = x.ps.stCommon.uiTotalPDW;
-        
-#elif defined(_ELINT_) || defined(_XBAND_)
-            uiTotalPDW = x.el.stCommon.uiTotalPDW;
+        uiTotalPDW = x.ps.stCommon.uiTotalPDW;
+
+#elif defined(_ELINT_)
+        uiTotalPDW = x.el.stCommon.uiTotalPDW;
+
+#elif defined(_XBAND_)
+        uiTotalPDW = x.xb.stCommon.uiTotalPDW;
 
 #else
-            uiTotalPDW = x.so.stCommon.uiTotalPDW;
+        uiTotalPDW = x.so.stCommon.uiTotalPDW;
 
 #endif
 
@@ -418,8 +479,11 @@ struct STR_PDWDATA {
 #ifdef _POCKETSONATA_
 		x.ps.stCommon.uiTotalPDW = uiTotalPDW;
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
 		x.el.stCommon.uiTotalPDW = uiTotalPDW;
+
+#elif defined(_XBAND_)
+        x.xb.stCommon.uiTotalPDW = uiTotalPDW;
 
 #else
 		x.so.stCommon.uiTotalPDW = uiTotalPDW;
@@ -447,9 +511,14 @@ struct STR_PDWDATA {
 		x.ps.stCommon.tColTime = tColTime;
 		x.ps.stCommon.uiColTimeMs = uiColTimeMs;
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
 		x.el.stCommon.tColTime = tColTime;
 		x.el.stCommon.uiColTimeMs = uiColTimeMs;
+
+#elif defined(_XBAND_)
+        x.xb.stCommon.tColTime = tColTime;
+        x.xb.stCommon.uiColTimeMs = uiColTimeMs;
+
 #else
 		x.so.stCommon.tColTime = tColTime;
 		x.so.stCommon.uiColTimeMs = uiColTimeMs;
@@ -474,8 +543,11 @@ struct STR_PDWDATA {
 #ifdef _POCKETSONATA_
 		retTime = x.ps.stCommon.tColTime;
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
         retTime = x.el.stCommon.tColTime;
+
+#elif defined(_XBAND_)
+        retTime = x.xb.stCommon.tColTime;
 
 #else
         retTime = x.so.stCommon.tColTime;

@@ -24,8 +24,20 @@
  */
 CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    //m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW );
-    _SAFE_NEW( m_pTheScanSigAnal, CScanSigAnal( SCN_COLLECT_PDW ) )
+
+#ifdef _SQLITE_
+    // SQLITE 파일명 생성하기
+    char szSQLiteFileName[100];
+
+    strcpy(szSQLiteFileName, EMITTER_SQLITE_FOLDER);
+    strcat(szSQLiteFileName, "/");
+    strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
+
+    m_pTheScanSigAnal = new CScanSigAnal(KWN_COLLECT_PDW, false, szSQLiteFileName);
+#else
+    m_pTheScanSigAnal = new CScanSigAnal(KWN_COLLECT_PDW, false);
+
+#endif
 
     //m_pTheSysPara = new CSysPara();
     _SAFE_NEW( m_pTheSysPara, CSysPara() )
@@ -37,11 +49,11 @@ CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData )
  */
 CScanAnalysis::~CScanAnalysis(void)
 {
-    delete m_pTheScanSigAnal;
-    m_pTheScanSigAnal = NULL;
 
-    delete m_pTheSysPara;
-    m_pTheSysPara = NULL;
+    _SAFE_DELETE(m_pTheScanSigAnal)
+
+    _SAFE_DELETE(m_pTheSysPara)
+
 }
 
 
@@ -91,7 +103,13 @@ void CScanAnalysis::_routine()
 }
 
 /**
- * @brief CScanAnalysis::AnalysisStart
+ * @brief     PDW 와 빔 정보를 갖고 스캔 분석을 시작한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 17:43
+ * @warning
  */
 void CScanAnalysis::AnalysisStart()
 {

@@ -63,7 +63,9 @@ enum ENUM_BoardID {
 										TRACE( "malloc error new memory[%s]" , #A ); \
 									} \
                                 } \
-                                else { TRACE( "Already malloc memory[%s]" , #A ); }
+                                else { \
+                                    TRACE( "Already malloc memory[%s]" , #A ); \
+                                }
 
 #define ELSE                    else { \
                                 }
@@ -141,7 +143,7 @@ T _diffabs( T x, T y)
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
 #define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
-#define ITTOAusCNV( A )			TMUL<_TOA>( (A), _spOneMicrosec )					
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )					
 #define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
@@ -406,9 +408,9 @@ float _spTOAres;
 float _spPWres;
 
 #if defined(_ELINT_)
-float _frqRes[enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
+float _frqRes[ELINT::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 #elif defined(_XBAND_)
-float _frqRes[enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
+float _frqRes[XBAND::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
 #else
 float _frqRes[enUnknown_BW+1] = { (float) 0.117, (float) 65.104167, (float) 0.0 } ;
@@ -427,7 +429,18 @@ extern float _spTOAres;
 extern float _spPWres;
 
 //extern float _toaRes[enUnknown_BW+1];
-extern float _frqRes[enUnknown_BW+1];
+
+#if defined(_ELINT_)
+extern float _frqRes[ELINT::enUnknown_BW + 1];
+
+#elif defined(_XBAND_)
+extern float _frqRes[XBAND::enUnknown_BW + 1];
+
+#else
+extern float _frqRes[enUnknown_BW + 1];
+
+#endif
+
 
 
 #endif

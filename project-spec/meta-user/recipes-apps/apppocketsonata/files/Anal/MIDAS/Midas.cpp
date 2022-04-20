@@ -117,11 +117,11 @@ CMIDASBlueFileFormat::~CMIDASBlueFileFormat(void)
  * @param pData
  * @return
  */
-bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, void *pData, SEL_KEYWORD_VALUE *pstKeywordValue )
+bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, _PDW *pPDWData, SEL_KEYWORD_VALUE *pstKeywordValue )
 {
     bool bRet = true;
 
-    if( pstKeywordValue->numberofdata == 0 ) {
+    if( pstKeywordValue->uiNumberOfData == 0 ) {
         bRet = false;
     }
     else {
@@ -135,7 +135,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDa
         }
         else {
             if( enFileType == E_EL_SCDT_PDW ) {
-               m_pPDWData = ( STR_PDWDATA * ) pData;
+               m_pPDWData = pPDWData;
 
                // 2. MIDAS 포멧으로 헤더 및 부가 구조체 저장
                MakeHeader();
@@ -145,6 +145,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDa
 
                // 4. HCD 저장
                WriteHeader();
+
                // 5. 데이터 저장
                if( ! WriteData( 0, 0 ) ) { //DTEC_Else
                    bRet = false;
@@ -280,7 +281,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
     */
     unsigned int uiWriteByte=0;
 
-    numberofdata = m_strKeywordValue.numberofdata;
+    numberofdata = m_strKeywordValue.uiNumberOfData;
 
     if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
         // 데이터 블럭에서 쓰고 난 이후에 512 블럭을 맞추기 위해서 NULL 문자 개수를 계산함.
@@ -382,10 +383,14 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                     }
                 }
                 else {
+                    _PDW *pPDWData;
+
+                    pPDWData = m_pPDWData;
+
                     // 각 항목별 최소/최대값 초기화
                     MakeInitMinMaxValue( m_MinMaxOfSubrecords );
                     
-                    m_ullfirstTOA = m_pPDWData->pstPDW[0].ullTOA;
+                    m_ullfirstTOA = m_pPDWData->GetTOA();
                     for( i=0 ; i < numberofdata ; i += MAX_OF_PDW_DATA ) {
                         if( numberofdata - i >= MAX_OF_PDW_DATA ) {
                             iRecords = MAX_OF_PDW_DATA;
@@ -393,7 +398,9 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                         else {
                             iRecords = numberofdata - i;
                         }
-                        TransferPDW2Record( & m_pPDWData->pstPDW[i], iRecords );
+                        TransferPDW2Record( pPDWData, iRecords );
+                        pPDWData += iRecords;
+
                         iSize = iRecords * sizeof( S_EL_PDW_RECORDS );
 
                         if( g_enEndian == enBIG_ENDIAN ) {
@@ -930,14 +937,14 @@ double CMIDASBlueFileFormat::CalcDataSize()
     double data_size = HEADER_CONTROL_BLOCK_SIZE;
 
     if( m_enFileType == E_EL_SCDT_IQ ) {
-        data_size = m_strKeywordValue.numberofdata * sizeof( SRxIFDataRGroupEEEI );
+        data_size = m_strKeywordValue.uiNumberOfData * sizeof( SRxIFDataRGroupEEEI );
     }
     else if( m_enFileType == E_EL_SCDT_IF ) {
-        data_size = m_strKeywordValue.numberofdata * sizeof( SRxIFDataRGroupEEEI );
+        data_size = m_strKeywordValue.uiNumberOfData * sizeof( SRxIFDataRGroupEEEI );
         // data_size = m_vecConvertIFList.size() * data_size;
     }
     else if( m_enFileType == E_EL_SCDT_PDW ) {
-        data_size = m_strKeywordValue.numberofdata * sizeof( S_EL_PDW_RECORDS );
+        data_size = m_strKeywordValue.uiNumberOfData * sizeof( S_EL_PDW_RECORDS );
     }
     else { //DTEC_Else
         data_size = 0;
@@ -961,13 +968,13 @@ unsigned int CMIDASBlueFileFormat::CalcExtStart()
     unsigned int ext_start = HEADER_CONTROL_BLOCK_SIZE;
 
     if( m_enFileType == E_EL_SCDT_IQ ) {
-        ext_start += ( m_strKeywordValue.numberofdata * 2 * sizeof(short) );
+        ext_start += ( m_strKeywordValue.uiNumberOfData * 2 * sizeof(short) );
     }
     else if( m_enFileType == E_EL_SCDT_IF ) {
-        ext_start += ( m_strKeywordValue.numberofdata * m_vecConvertIFList.size() * sizeof(SRxIFDataRGroupEEEI) );
+        ext_start += ( m_strKeywordValue.uiNumberOfData * m_vecConvertIFList.size() * sizeof(SRxIFDataRGroupEEEI) );
     }
     else if( m_enFileType == E_EL_SCDT_PDW ) {
-        ext_start += ( m_strKeywordValue.numberofdata * sizeof( S_EL_PDW_RECORDS ) );
+        ext_start += ( m_strKeywordValue.uiNumberOfData * sizeof( S_EL_PDW_RECORDS ) );
     }
     else { //DTEC_Else
         ext_start += 0;
@@ -2056,13 +2063,10 @@ void CMIDASBlueFileFormat::MIDASClose()
  * @param uiStep
  * @param iBoardID
  */
-void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, void *pData )
+void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, _PDW *pPDWData, UNION_HEADER *pUNIHeader, unsigned int uiCoPDW )
 {
-    STR_PDWDATA *pPDWData;
 
-    pPDWData = ( STR_PDWDATA * ) pData;
-
-    m_strKeywordValue.numberofdata = pPDWData->GetTotalPDW();    
+    m_strKeywordValue.uiNumberOfData = uiCoPDW;
 
     //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
     strcpy( m_szRawDataFilename, pRawdataFileName );
@@ -2071,9 +2075,9 @@ void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSC
 
 #ifdef _XBAND_
 	if( true == FileOpen( pRawdataFileName, O_WRONLY | O_CREAT | O_BINARY ) ) {
-		Write( & pPDWData->x, sizeof(STR_ELINT_HEADER) );
+		Write( pUNIHeader, sizeof(STR_XBAND_HEADER) );
 
-		Write( & pPDWData->pstPDW[0], pPDWData->GetTotalPDW()*sizeof(_PDW) );
+		Write( pPDWData, uiCoPDW *sizeof(_PDW) );
 
 		FileClose();
 	}

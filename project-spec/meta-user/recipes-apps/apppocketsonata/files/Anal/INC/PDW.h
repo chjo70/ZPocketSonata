@@ -476,68 +476,74 @@ struct _PDW {
 #endif
 
 
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
 
-    enUnknown_BW=2,
+namespace ELINT {
+#ifndef _ELINT_ENUM_BANDWIDTH_
+#define _ELINT_ENUM_BANDWIDTH_
+    typedef enum {
+        en5MHZ_BW = 0,
+        en50MHZ_BW,
 
-} ENUM_BANDWIDTH ;
+        enUnknown_BW = 2,
+
+    } ENUM_BANDWIDTH;
 #endif
+}
+
+namespace XBAND {
+#ifndef _XBAND_ENUM_BANDWIDTH_
+#define _XBAND_ENUM_BANDWIDTH_
+    typedef enum {
+        en5MHZ_BW = 0,
+        en150MHZ_BW,
+
+        enUnknown_BW = 2,
+
+    } ENUM_BANDWIDTH;
+#endif
+}
+
+// 장비별로 대역폭을 정의 한다.
+#if defined(_ELINT_)
 
 
+#elif defined(_XBAND_)
 
-
-#if defined(_ELINT_) || defined(_XBAND_)
 
 #elif defined(_POCKETSONATA_)
-
-//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
 typedef enum {
-    en5MHZ_BW=0,
+    en5MHZ_BW = 0,
     en50MHZ_BW,
 
-} ENUM_BANDWIDTH ;
+} ENUM_BANDWIDTH;
+
 #endif
-
-
-#ifndef _ENUM_BANDWIDTH_
-#define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW=0,
-    en50MHZ_BW,
-
-    enUnknown=-1
-
-} ENUM_BANDWIDTH ;
-#endif
-
-#elif defined(_SONATA_)
-
-// 수퍼헷 수신장치 개발한 것의 PDW 포멧
-struct TNEW_SPDW
-{
-    float Freq ;
-    float PA ;
-    float PW ;
-    unsigned int TOA ;
-    int Ref_Phase3 ;
-
-} ;
-
-//#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-
 #else
 
-
-
 #endif
+
+
+// #elif defined(_SONATA_)
+// 
+// // 수퍼헷 수신장치 개발한 것의 PDW 포멧
+// struct TNEW_SPDW
+// {
+//     float Freq ;
+//     float PA ;
+//     float PW ;
+//     unsigned int TOA ;
+//     int Ref_Phase3 ;
+// 
+// } ;
+// 
+// //#define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
+// 
+// 
+// #else
+// 
+// 
 
 //////////////////////////////////////////////////////////////////////////
 // PDW 신호 상태
@@ -703,10 +709,10 @@ typedef struct {
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
 typedef struct {
-    unsigned char aucTaskID[LENGTH_OF_TASK_ID];
+    char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int iIsStorePDW;
     EN_RADARCOLLECTORID enCollectorID;
-    ENUM_BANDWIDTH enBandWidth;
+    ELINT::ENUM_BANDWIDTH enBandWidth;
 
     // 아래는 공용 정보
     STR_COMMON_HEADER stCommon;
@@ -742,11 +748,53 @@ typedef struct {
 } STR_ELINT_HEADER ;
 #endif
 
+#ifndef _STR_XBAND_HEADER_
+#define _STR_XBAND_HEADER_
+typedef struct {
+    char aucTaskID[LENGTH_OF_TASK_ID];
+    unsigned int iIsStorePDW;
+    EN_RADARCOLLECTORID enCollectorID;
+    XBAND::ENUM_BANDWIDTH enBandWidth;
+
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+    EN_RADARCOLLECTORID GetCollectorID() {
+        return enCollectorID;
+    }
+
+    void SetCollectorID(EN_RADARCOLLECTORID i_enCollectorID) {
+        enCollectorID = i_enCollectorID;
+    }
+
+    unsigned int GetTotalPDW() {
+        return stCommon.uiTotalPDW;
+    }
+
+    unsigned int GetPDWID() {
+        return stCommon.uiPDWID;
+    }
+
+    void SetTotalPDW(unsigned int uiTotalPDW) {
+        stCommon.uiTotalPDW = uiTotalPDW;
+    }
+
+    void SetIsStorePDW(unsigned int isStorePDW) {
+        iIsStorePDW = isStorePDW;
+    }
+
+    void CheckColTime() {
+        stCommon.CheckColTime();
+    }
+
+} STR_XBAND_HEADER;
+#endif
+
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
 typedef struct {
     unsigned int uiBoardID;
-    unsigned int iBank;
+    unsigned int uiBank;
     unsigned int uiBand;                // 주파수 대역
     unsigned int iIsStorePDW;
 
@@ -809,18 +857,19 @@ typedef struct {
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
 typedef union {
-        STR_ELINT_HEADER el;
+    STR_ELINT_HEADER el;
+    STR_XBAND_HEADER xb;
 
-        POCKETSONATA_HEADER ps;
+    POCKETSONATA_HEADER ps;
 
-        SONATA_HEADER so;
+    SONATA_HEADER so;
 
-    unsigned char *GetTaskID( ENUM_UnitType enUnitType ) {
-        unsigned char *pTaskID;
+    char *GetTaskID( ENUM_UnitType enUnitType ) {
+        char *pTaskID;
 
         switch( enUnitType ) {
         case en_ZPOCKETSONATA :
-            pTaskID = (unsigned char *) NULL;
+            pTaskID = ( char *) NULL;
             break;
 
         case en_ELINT :
@@ -829,7 +878,7 @@ typedef union {
             break;
 
         case en_SONATA :
-            pTaskID = (unsigned char *) NULL;
+            pTaskID = ( char *) NULL;
             break;
 
         default:
@@ -850,8 +899,11 @@ typedef union {
             break;
 
         case en_ELINT :
-        case en_XBAND :
             uiTotalPDW = el.stCommon.uiTotalPDW;
+            break;
+
+        case en_XBAND :
+            uiTotalPDW = xb.stCommon.uiTotalPDW;
             break;
 
         case en_SONATA :
@@ -892,6 +944,39 @@ typedef union {
         return uiBoardID;
     }
 
+    /**
+     * @brief     SetCollectorID
+     * @param     ENUM_UnitType enUnitType
+     * @param     EN_RADARCOLLECTORID enCollectorID
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 17:03
+     * @warning
+     */
+    void SetCollectorID(ENUM_UnitType enUnitType, EN_RADARCOLLECTORID enCollectorID ) {
+        switch (enUnitType) {
+        case en_ZPOCKETSONATA:
+            break;
+
+        case en_ELINT:
+            el.enCollectorID = enCollectorID;
+            break;
+
+        case en_XBAND:
+            xb.enCollectorID = enCollectorID;
+            break;
+
+        case en_SONATA:
+            break;
+
+        default:
+            break;
+
+        }
+    }
+
 } UNION_HEADER;
 #endif
 
@@ -918,8 +1003,11 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
 			uiHeader = sizeof( POCKETSONATA_HEADER );
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+        else if( g_enUnitType == en_ELINT ) {
 			uiHeader = sizeof( STR_ELINT_HEADER );
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            uiHeader = sizeof( STR_XBAND_HEADER );
         }
         else {
 			uiHeader = sizeof( SONATA_HEADER );
@@ -929,6 +1017,16 @@ struct STR_PDWDATA {
 
     }
 
+    /**
+     * @brief     SetBoardID
+     * @param     unsigned int uiBoardID
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 15:35
+     * @warning
+     */
     void SetBoardID( unsigned int uiBoardID ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
@@ -945,6 +1043,32 @@ struct STR_PDWDATA {
 
     }
 
+    void SetBank(unsigned int uiBank) {
+
+        if (g_enUnitType == en_ZPOCKETSONATA) {
+            x.ps.uiBank = uiBank;
+        }
+        else if (g_enUnitType == en_ELINT || g_enUnitType == en_XBAND) {
+           
+        }
+        else {
+            
+        }
+
+        return;
+
+    }
+
+    /**
+     * @brief     SetBand
+     * @param     unsigned int uiBand
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 15:35
+     * @warning
+     */
     void SetBand( unsigned int uiBand ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
@@ -976,8 +1100,11 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiPDWID = x.ps.stCommon.uiPDWID;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+        else if( g_enUnitType == en_ELINT ) {
             uiPDWID = x.el.stCommon.uiPDWID;
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            uiPDWID = x.xb.stCommon.uiPDWID;
         }
         else {
             uiPDWID = x.so.stCommon.uiPDWID;
@@ -1002,8 +1129,11 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.stCommon.uiPDWID = uiPDWID;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+        else if( g_enUnitType == en_ELINT ) {
             x.el.stCommon.uiPDWID = uiPDWID;
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            x.xb.stCommon.uiPDWID = uiPDWID;
         }
         else {
             x.so.stCommon.uiPDWID = uiPDWID;
@@ -1011,16 +1141,56 @@ struct STR_PDWDATA {
 
     }
 
+    /**
+     * @brief     IncPDWID
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 15:35
+     * @warning
+     */
     void IncPDWID() {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             ++ x.ps.stCommon.uiPDWID;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+        else if( g_enUnitType == en_ELINT ) {
             ++ x.el.stCommon.uiPDWID;
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            ++ x.xb.stCommon.uiPDWID;
         }
         else {
             ++ x.so.stCommon.uiPDWID;
         }
+    }
+
+    /**
+     * @brief     GetCollectorID
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 15:40
+     * @warning
+     */
+    EN_RADARCOLLECTORID GetCollectorID() {
+        EN_RADARCOLLECTORID enCollectorID;
+
+        if (g_enUnitType == en_ZPOCKETSONATA) {
+            enCollectorID = RADARCOL_Unknown;
+        }
+        else if (g_enUnitType == en_ELINT) {
+            enCollectorID = x.el.enCollectorID;
+        }
+        else if (g_enUnitType == en_XBAND) {
+            enCollectorID = x.xb.enCollectorID;
+        }
+        else {
+            enCollectorID = RADARCOL_Unknown;
+        }
+
+        return enCollectorID;
     }
 
     /**
@@ -1038,8 +1208,11 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiTotalPDW = x.ps.stCommon.uiTotalPDW;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+        else if( g_enUnitType == en_ELINT ) {
             uiTotalPDW = x.el.stCommon.uiTotalPDW;
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            uiTotalPDW = x.xb.stCommon.uiTotalPDW;
         }
         else {
             uiTotalPDW = x.so.stCommon.uiTotalPDW;
@@ -1061,13 +1234,16 @@ struct STR_PDWDATA {
      */
     void SetTotalPDW( unsigned int uiTotalPDW ) {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        x.ps.stCommon.uiTotalPDW = uiTotalPDW;
+            x.ps.stCommon.uiTotalPDW = uiTotalPDW;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        x.el.stCommon.uiTotalPDW = uiTotalPDW;
+        else if( g_enUnitType == en_ELINT ) {
+            x.el.stCommon.uiTotalPDW = uiTotalPDW;
+        }
+        else if ( g_enUnitType == en_XBAND) {
+            x.xb.stCommon.uiTotalPDW = uiTotalPDW;
         }
         else {
-        x.so.stCommon.uiTotalPDW = uiTotalPDW;
+            x.so.stCommon.uiTotalPDW = uiTotalPDW;
         }
 
         return;
@@ -1088,16 +1264,20 @@ struct STR_PDWDATA {
     void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        x.ps.stCommon.tColTime = tColTime;
-        x.ps.stCommon.uiColTimeMs = uiColTimeMs;
+            x.ps.stCommon.tColTime = tColTime;
+            x.ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        x.el.stCommon.tColTime = tColTime;
-        x.el.stCommon.uiColTimeMs = uiColTimeMs;
+        else if( g_enUnitType == en_ELINT ) {
+            x.el.stCommon.tColTime = tColTime;
+            x.el.stCommon.uiColTimeMs = uiColTimeMs;
+        }
+        else if ( g_enUnitType == en_XBAND) {
+            x.xb.stCommon.tColTime = tColTime;
+            x.xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
         else {
-        x.so.stCommon.tColTime = tColTime;
-        x.so.stCommon.uiColTimeMs = uiColTimeMs;
+            x.so.stCommon.tColTime = tColTime;
+            x.so.stCommon.uiColTimeMs = uiColTimeMs;
         }
         return;
 
@@ -1116,13 +1296,16 @@ struct STR_PDWDATA {
         __time32_t retTime;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        retTime = x.ps.stCommon.tColTime;
+            retTime = x.ps.stCommon.tColTime;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        retTime = x.el.stCommon.tColTime;
+        else if( g_enUnitType == en_ELINT ) {
+            retTime = x.el.stCommon.tColTime;
+        }
+        else if (g_enUnitType == en_XBAND) {
+            retTime = x.xb.stCommon.tColTime;
         }
         else {
-        retTime = x.so.stCommon.tColTime;
+            retTime = x.so.stCommon.tColTime;
         }
 
         return retTime;
@@ -1142,13 +1325,16 @@ struct STR_PDWDATA {
         int iStorePDW;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-        iStorePDW = x.ps.iIsStorePDW;
+            iStorePDW = x.ps.iIsStorePDW;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-        iStorePDW = x.el.iIsStorePDW;
+        else if( g_enUnitType == en_ELINT ) {
+            iStorePDW = x.el.iIsStorePDW;
+        }
+        else if (g_enUnitType == en_XBAND) {
+            iStorePDW = x.xb.iIsStorePDW;
         }
         else {
-        iStorePDW = x.so.iIsStorePDW;
+            iStorePDW = x.so.iIsStorePDW;
         }
 
         return iStorePDW;
@@ -1164,21 +1350,49 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-    ENUM_BANDWIDTH GetBandWidth()
-    {
-        ENUM_BANDWIDTH enBandwidth;
+//     ENUM_BANDWIDTH GetBandWidth()
+//     {
+//         ENUM_BANDWIDTH enBandwidth;
+// 
+//         if( g_enUnitType == en_ZPOCKETSONATA ) {
+//             enBandwidth = enUnknown_BW;
+//         }
+//         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+//             enBandwidth = x.el.enBandWidth;
+//         }
+//         else {
+//             enBandwidth = enUnknown_BW;
+//         }
+// 
+//         return enBandwidth;
+//     }
 
-        if( g_enUnitType == en_ZPOCKETSONATA ) {
-            enBandwidth = enUnknown_BW;
+    /**
+     * @brief     GetTaskID
+     * @return    char *
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-20, 15:38
+     * @warning
+     */
+    char * GetTaskID() {
+        char *pTaskID;
+
+        if (g_enUnitType == en_ZPOCKETSONATA) {
+            pTaskID = NULL;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-            enBandwidth = x.el.enBandWidth;
+        else if (g_enUnitType == en_ELINT ) {
+            pTaskID = x.el.aucTaskID;
+        }
+        else if (g_enUnitType == en_XBAND) {
+            pTaskID = x.xb.aucTaskID;
         }
         else {
-            enBandwidth = enUnknown_BW;
+            pTaskID = NULL;
         }
 
-        return enBandwidth;
+        return pTaskID;
     }
 
 }  ;

@@ -13,7 +13,6 @@
 #include <memory.h>
 #endif
 
-//#include "../OFP_Main.h"
 #include "../SigAnal/_SigAnal.h"
 
 #include "../EmitterMerge/ELStringDefn.h"
@@ -23,13 +22,11 @@
 
 #include "../../Utils/ccommonutils.h"
 
-
-//#include "../../Utils/clog.h"
 #include "../../Include/globals.h"
 
 #define MAX_SIZE_OF_CONDITION					(300)
 
-#define DEFAULT_SYMBOL_CODE		"SFPP-----------"
+//#define DEFAULT_SYMBOL_CODE		"SFPP-----------"
 
 #define SWAP( A, B, C ) {   \
             A = B;          \
@@ -256,7 +253,7 @@ void CELSignalIdentifyAlg::InitVar()
  * @date      2015-08-21, 오후 1:23
  * @warning
  */
-bool CELSignalIdentifyAlg::LoadCEDLibrary2()
+bool CELSignalIdentifyAlg::LoadCEDLibrary()
 {
 #ifdef _MSC_VER
     DWORD dwTime=GetTickCount();
@@ -384,7 +381,7 @@ void CELSignalIdentifyAlg::MakeRadarMode( vector<SRadarMode_Sequence_Values> *pV
  * @date      2017-07-05, 오후 5:21
  * @warning
  */
-bool CELSignalIdentifyAlg::LoadEOBLibrary2()
+bool CELSignalIdentifyAlg::LoadEOBLibrary()
 {
     //GP_MNGR_CED_LIB2->RTGetAllDeviceData( NULL, (char*) NULL, eEOBLibType );
     LoadThreatData( & m_iThreat, m_pThreat, MAX_RADARMODE );
@@ -5317,6 +5314,111 @@ void CELSignalIdentifyAlg::CalcMatchRatio()
 }
 
 /**
+ * @brief     CalcFreqTypeMatchRatio
+ * @param     SRadarMode * pRadarMode
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 17:01
+ * @warning
+ */
+float CELSignalIdentifyAlg::CalcFreqTypeMatchRatio(SRadarMode *pRadarMode )
+{
+    float frate =0.0;
+
+    switch (m_pLOBData->iFreqType) {
+    case E_AET_FRQ_FIXED:
+        if (pRadarMode->eRF_Type == RadarModeFreqType::enumFIXED) {
+            frate = _DEFAULT_FREQ_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_FRQ_AGILE:
+        if (pRadarMode->eRF_Type == RadarModeFreqType::enumAGILE) {
+            frate = _DEFAULT_FREQ_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_FRQ_HOPPING:
+        // 비주기
+        if (pRadarMode->eRF_Type == RadarModeFreqType::enumHOPPING) {
+            frate = _DEFAULT_FREQ_TYPE_RATE;
+        }
+
+        // 주기
+        if (pRadarMode->eRF_Type == RadarModeFreqType::enumHOPPING) {
+            frate = _DEFAULT_FREQ_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_FRQ_PATTERN:
+        if (pRadarMode->eRF_Type == RadarModeFreqType::enumPATTERN) {
+            frate = _DEFAULT_FREQ_TYPE_RATE;
+        }
+        break;
+
+    default:
+        break;
+
+    }
+
+    return frate;
+}
+
+/**
+ * @brief     CalcPRITypeMatchRatio
+ * @param     SRadarMode * pRadarMode
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 17:02
+ * @warning
+ */
+float CELSignalIdentifyAlg::CalcPRITypeMatchRatio(SRadarMode *pRadarMode)
+{
+    float frate = 0.0;
+
+    switch (m_pLOBData->iPRIType) {
+    case E_AET_PRI_FIXED:
+        if (pRadarMode->ePRI_Type == RadarModePRIType::enumStable) {
+            frate = _DEFAULT_PRI_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_PRI_STAGGER:
+        if (pRadarMode->ePRI_Type == RadarModePRIType::enumSTAGGER) {
+            frate = _DEFAULT_PRI_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_PRI_DWELL_SWITCH:
+        if (pRadarMode->ePRI_Type == RadarModePRIType::enumDwellSWITCH) {
+            frate = _DEFAULT_PRI_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_PRI_PATTERN:
+        if (pRadarMode->ePRI_Type == RadarModePRIType::enumPATTERN) {
+            frate = _DEFAULT_PRI_TYPE_RATE;
+        }
+        break;
+
+    case E_AET_PRI_JITTER:
+        if (pRadarMode->ePRI_Type == RadarModePRIType::enumJITTER) {
+            frate = _DEFAULT_PRI_TYPE_RATE;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    return frate;
+}
+
+/**
  * @brief     일치율 속송에 따라서 일치율 값을 리턴한다.
  * @param     EnumMATCHRATIO enMatchRatio
  * @param     SRadarMode * pRadarMode
@@ -5356,84 +5458,12 @@ float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarM
 
             // 주파수 형태 비교
             case _FREQ_TYPE_MATCHRATIO_ :
-                switch( m_pLOBData->iFreqType ) {
-                case E_AET_FRQ_FIXED :
-                    if( pRadarMode->eRF_Type == RadarModeFreqType::enumFIXED ) {
-                        frate = _DEFAULT_FREQ_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_FRQ_AGILE :
-                    if( pRadarMode->eRF_Type == RadarModeFreqType::enumAGILE ) {
-                        frate = _DEFAULT_FREQ_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_FRQ_HOPPING :
-                    // 비주기
-                    if( pRadarMode->eRF_Type == RadarModeFreqType::enumHOPPING ) {
-                        frate = _DEFAULT_FREQ_TYPE_RATE;
-                    }
-
-                    // 주기
-                    if( pRadarMode->eRF_Type == RadarModeFreqType::enumHOPPING ) {
-                        frate = _DEFAULT_FREQ_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_FRQ_PATTERN :
-                    if( pRadarMode->eRF_Type == RadarModeFreqType::enumPATTERN ) {
-                        frate = _DEFAULT_FREQ_TYPE_RATE;
-                    }
-                    break;
-
-                default:
-                    { //DTEC_Else
-                    }
-                    break;
-
-                }
+                frate = CalcFreqTypeMatchRatio(pRadarMode );
                 break;
 
             // PRI 형태 비교
             case _PRI_TYPE_MATCHRATIO_ :
-                switch( m_pLOBData->iPRIType ) {
-                case E_AET_PRI_FIXED :
-                    if( pRadarMode->ePRI_Type == RadarModePRIType::enumStable ) {
-                        frate = _DEFAULT_PRI_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_PRI_STAGGER :
-                    if( pRadarMode->ePRI_Type == RadarModePRIType::enumSTAGGER ) {
-                        frate = _DEFAULT_PRI_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_PRI_DWELL_SWITCH :
-                    if( pRadarMode->ePRI_Type == RadarModePRIType::enumDwellSWITCH ) {
-                        frate = _DEFAULT_PRI_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_PRI_PATTERN :
-                    if( pRadarMode->ePRI_Type == RadarModePRIType::enumPATTERN ) {
-                        frate = _DEFAULT_PRI_TYPE_RATE;
-                    }
-                    break;
-
-                case E_AET_PRI_JITTER :
-                    if( pRadarMode->ePRI_Type == RadarModePRIType::enumJITTER ) {
-                        frate = _DEFAULT_PRI_TYPE_RATE;
-                    }
-                    break;
-
-                default:
-                    { //DTEC_Else
-                    }
-                    break;
-                }
-
+                frate = CalcPRITypeMatchRatio(pRadarMode);
                 break;
 
             // 주파수 범위 비교

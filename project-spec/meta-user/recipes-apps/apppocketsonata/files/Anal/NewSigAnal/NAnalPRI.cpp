@@ -47,10 +47,10 @@ int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
     pSeg1 = & m_pSeg[ *p1 ];
     pSeg2 = & m_pSeg[ *p2 ];
 
-    if( pSeg1->pri.TMean > pSeg2->pri.TMean ) {
+    if( pSeg1->pri.tMean > pSeg2->pri.tMean ) {
         iRet = 1;
     }
-    else if( pSeg1->pri.TMean < pSeg2->pri.TMean ) {
+    else if( pSeg1->pri.tMean < pSeg2->pri.tMean ) {
         iRet = (-1);
     }
     else {

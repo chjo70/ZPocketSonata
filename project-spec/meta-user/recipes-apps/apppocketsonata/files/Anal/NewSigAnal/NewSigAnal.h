@@ -9,39 +9,22 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#ifdef _MSSQL_
-#include "../../ODBC/mssql.h"
-#include "../../ODBC/odbccore.h"
-
-#elif _SQLITE_
-#include "../../SQLite/KompexSQLitePrerequisites.h"
-#include "../../SQLite/KompexSQLiteDatabase.h"
-#include "../../SQLite/KompexSQLiteStatement.h"
-#include "../../SQLite/KompexSQLiteException.h"
-#include "../../SQLite/KompexSQLiteStreamRedirection.h"
-#include "../../SQLite/KompexSQLiteBlob.h"
-
-#endif
-
 #include "../INC/Defines.h"
 #include "../Identify/Identify.h"
 
+#include "../../Utils/ccommonutils.h"
+
+#include "../SigAnal/SigAnal.h"
 #include "NGroup.h"
 #include "NPulExt.h"
 #include "NAnalPRI.h"
 #include "NMakeAET.h"
 
-#include "../MIDAS/Midas.h"
-
 #define MAX_MATCH_RADARMODE         (2*MAX_RADARMODE)
 
 #ifdef __cplusplus
 
-#ifdef _MSSQL_
-class CNewSigAnal : public CMSSQL, public CRawFile
-#else
-class CNewSigAnal : public CRawFile
-#endif
+class CNewSigAnal : public CSigAnal
 {
 public:
     CNGroup *m_theGroup;
@@ -52,19 +35,15 @@ public:
     DEFINE_ANAL_VAR_
 
 private:
-    LONG m_lOpInitID;
     unsigned int m_uiPDWID;
 
-    bool m_bDBThread;
     enum ANALYSIS_MODE m_AnalMode;
-    UINT m_uiStep;
+
     int m_CoGroup;
     UINT m_uiMaxPdw;
     UINT m_uiCoPdw;
     STR_PDWINDEX *m_pGrPdwIndex;
     STR_PDWDATA *m_pPDWData;            // 수집한 데이터 포인터
-
-    STR_PDWDATA m_stSavePDWData;        // 분석한 LOB를 근거로 파일로 저장하기 위한 데이터 포인터
 
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
@@ -73,53 +52,58 @@ private:
     __time32_t m_tColTime;
     unsigned int m_tColTimeMs;
 
-    char m_szRawDataFilename[100];
-
-    char *m_pszSQLString;
-
 #if defined(_ELINT_) || defined(_XBAND_)
-    unsigned char m_szTaskID[LENGTH_OF_TASK_ID];
-    EN_RADARCOLLECTORID m_enCollectorID;
-    ENUM_BANDWIDTH m_enBandWidth;
-
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
-#elif _POCKETSONATA_
-    ENUM_BANDWIDTH m_enBandWidth;
 
+#elif _POCKETSONATA_
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
 #endif    
 
-#ifdef _MSSQL_
-    CODBCDatabase m_theMyODBC;
-
-#elif _SQLITE_
-    Kompex::SQLiteDatabase *m_pDatabase;
-
-#endif
-
-    bool m_bSaveFile;
-
     vector<SRadarMode *> m_VecMatchRadarMode;
 
-    CMIDASBlueFileFormat *m_pMidasBlue;
-
 private:
+    void InitAllVar();
+    
+    void Init(STR_PDWDATA *pPDWData = NULL);    
 
+    enum FREQ_BAND GetBand(int freq);
 
 public:
-    enum FREQ_BAND GetBand( int freq );
-    //void Simul();
+    CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    virtual ~CNewSigAnal();
 
+    void InitVar(enum ANALYSIS_MODE analMode);
     void LoadCEDLibrary();
 
-	void GetCollectTime( struct timespec *pTimeSpec );
-
     // 인라인 외부 연결 함수
-    inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
+    //inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
     inline int GetCoPdw() { return m_uiCoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetPulseStat() { return m_theGroup->GetPulseStat(); }
+
+    inline void GetCollectTime(struct timespec *pTimeSpec) {
+        CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
+    }
+
+    inline __time32_t GetColTime() {
+        return m_tColTime;
+    }
+    void SetColTime(__time32_t val) { m_tColTime = val; }
+
+    inline unsigned int GetColTimeMs() {
+        return m_tColTimeMs;
+    }
+    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
+
+    inline unsigned int GetPDWID() {
+        return m_uiPDWID;
+    }
+    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
+
+    inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+        return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
+    }
 
     // inline void DISP_FineAet( STR_UPDAET *pUpdAet ) { m_theMakeAET->DISP_FineAet( pUpdAet ); }
     //inline void DISP_FineAet( STR_MANAET *pManAet ) { /*m_theMakeAET->DISP_FineAet( pManAet );*/ }
@@ -132,11 +116,8 @@ public:
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
     inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
-    inline int IsStorePDW() { return m_uiIsStorePDW; }
+    inline unsigned int IsStorePDW() { return m_uiIsStorePDW; }
     inline int GetColPdw() { return m_uiCoPdw; }
-#if defined(_ELINT_) || defined(_XBAND_)
-    inline EN_RADARCOLLECTORID GetCollectorID() { return m_enCollectorID; }
-#endif    
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
 
@@ -151,16 +132,14 @@ public:
     inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
 
-    inline void SetStep( UINT nStep ) { m_uiStep = nStep; }
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
     inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
-    inline UINT GetCoStep() { return m_uiStep; }
     inline void SetColPdw(UINT coPdw ) { m_uiCoPdw=coPdw; }
     inline int GetCoAnalPdw() { return m_theMakeAET->GetCoAnalPdw(); }
     inline void SetCoAnalPdw( UINT coExtPdw ) { m_theMakeAET->SetCoAnalPdw(coExtPdw); }
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
-    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, count, pRange ); }
+    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
@@ -172,32 +151,20 @@ public:
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     inline void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoInSeg( pPri, pEmitter ); }
     inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
-    inline int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
+    inline unsigned int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
     inline void SetCoPulseTrains( UINT coPulses ) { m_thePulExt->m_CoPulseTrains=coPulses; }
-    inline int GetMaxPdw() { return m_uiMaxPdw; }
+    inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->CalcPAMean( pPdwIndex, count); }
+    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
     //inline void NextSeqNum() { ++ m_nSeqNum; }
-    inline unsigned int GetPDWID() { return m_pPDWData->GetPDWID(); }
+    
 
     // 기타 함수
-    void SaveRemainedPdwFile();
-    void InitAllVar();
-    void InitDataFromDB();
-    void InitVar( enum ANALYSIS_MODE analMode );
-    void SWInit();
-    void Init( STR_PDWDATA *pPDWData=NULL );
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 
-    void InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID=0, bool bSaveFile=false );
-	bool InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID );
-
-    void SaveGroupPdwFile( int index );
-    unsigned char *GetTaskID();
     bool CheckValidData( STR_PDWDATA *pPDWData );
 
     inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }
@@ -205,20 +172,6 @@ public:
     // 분석 관련 함수
     void Start(STR_PDWDATA *pPDWData );
     bool CheckKnownByAnalysis();
-
-    // 분석 제어 관련 함수
-    void SetSaveFile( bool bEnable );
-
-    void InitResolution();
-
-#ifdef _MSSQL_
-    //##ModelId=452B0C5203B4
-    CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread );
-#else
-    CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName=NULL );
-
-#endif
-    virtual ~CNewSigAnal();
 
 };
 

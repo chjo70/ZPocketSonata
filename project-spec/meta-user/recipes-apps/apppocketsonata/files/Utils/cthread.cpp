@@ -643,7 +643,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
     // 2. 데이터 저장
     if( pData != NULL ) {
    		sndMsg.uiDataLength = uiDataLength;
-        memcpy( sndMsg.x.szData, pData, sizeof(char)*sndMsg.uiDataLength );
+        memcpy( & sndMsg.x, pData, sizeof(char)*sndMsg.uiDataLength );
     }
     else {
     	sndMsg.uiDataLength = 0;
@@ -822,7 +822,7 @@ void CThread::Sleep( unsigned int mssleep )
 }
 
 /**
- * @brief     DisplayMsg
+ * @brief     쓰레드 간의 메시지를 출력한다.
  * @param     bool bSend
  * @param     const char * pszClassName
  * @param     STR_MessageData * pInMsg

@@ -13,7 +13,6 @@
 
 //BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 //BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );
-BOOL CompAoaDiff( float x, float y, float fthresh );
 float AoaDiff( float x, float y);
 void LogPrint( const char *format, ... );
 
@@ -21,6 +20,23 @@ bool Is_FZero( const float &value );
 bool Is_DZero( const double &dvalue );
 bool Is_FNotZero( const float &value );
 bool Is_DNotZero( const double &dvalue );
+
+template <typename T>
+BOOL CompAoaDiff(T x, T y, T thresh_value ) 
+{
+    T diff;
+    BOOL bRet;
+
+    diff = abs(x - y);
+
+    if (diff <= thresh_value || (MAX_AOA - diff) <= thresh_value)
+        bRet = TRUE;
+    else
+        bRet = FALSE;
+
+    return bRet;
+
+}
 
 /**
  * @brief     IsSamePulseTrain
@@ -82,6 +98,70 @@ BOOL CompMeanDiff( T x, T y, T thresh )
     }
 
     return bRet;
+}
+
+/**
+ * @brief     MeanInArray
+ * @param     T * series
+ * @param     UINT co
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-15, 18:08
+ * @warning
+ */
+template <typename T>
+float MeanInArray( T *series, UINT co)
+{
+    UINT i;
+    T sum;
+
+    sum = _spZero;
+    for (i = 0; i < co; ++i) {
+        sum += *series++;
+    }
+
+    return ( (float)sum / (float)co);
+}
+
+/**
+ * @brief     SDevInArray
+ * @param     T * series
+ * @param     UINT co
+ * @param     float mean
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-15, 18:11
+ * @warning
+ */
+template <typename T>
+float SDevInArray(T *series, UINT co, float mean)
+{
+    register unsigned int i;
+
+    double sdiff;
+
+    float diff;
+    float fRet;
+
+    if (co <= _spOne) {
+        fRet = _spZero;
+    }
+    else {
+        sdiff = _spZero;
+        for (i = 0; i < co; ++i) {
+            diff = *series++ - mean;
+            sdiff += ((float)diff * (float)diff / (float)co);
+        }
+
+        fRet = (float)sqrt(sdiff);
+    }
+
+    return fRet;
+
 }
 
 /**
@@ -258,16 +338,19 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
 {
 	T ret=0;
 
-    if( hgh1 < low2 || hgh2 < low1 )				// |-------|		|--------|
-        ret = 0;															//			 |---|
-
-    if( hgh1 == low2 || hgh2 == low1 )			// debug, 99-12-22 09:36:19
+    if (low1 == low2 && hgh1 == hgh2)
         ret = 1;
 
-    if( low1 >= low2 &&	hgh1 <= hgh2 ) 			//          |--------|
-        ret = hgh1 - low1 + 1;								//    |------------------|
+    if( hgh1 < low2 || hgh2 < low1 )			// |-------|		   |--------|
+        ret = 0;								//			   |---|
 
-    if( low1 <= low2 && hgh1 >= hgh2 )			//    |------------------|
+    if( hgh1 == low2 || hgh2 == low1 )			// |-------|		   |--------|
+        ret = 1;                                //		   |---|
+
+    if( low1 > low2 &&	hgh1 < hgh2 ) 			//          |--------|
+        ret = hgh1 - low1 + 1;					//    |------------------|
+
+    if( low1 < low2 && hgh1 > hgh2 )			//    |------------------|
         ret = hgh2 - low2 + 1;			 					//          |--------|
 
     if( low1 <= hgh2 && low2 <= low1 )			//          |------------|

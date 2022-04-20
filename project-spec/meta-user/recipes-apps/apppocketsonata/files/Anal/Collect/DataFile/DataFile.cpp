@@ -828,7 +828,7 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
  */
 void CXPDW::MakeHeaderData( STR_PDWDATA *pPDWData )
 {
-    memcpy( & pPDWData->x.el, & m_stHeader, sizeof(STR_ELINT_HEADER) );
+    memcpy( & pPDWData->x.xb, & m_stHeader, sizeof(STR_XBAND_HEADER) );
 
 }
 
@@ -864,7 +864,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     unsigned int i, uiDataItems;
     int iCh;
 
-    ENUM_BANDWIDTH enBandWidth;
+    XBAND::ENUM_BANDWIDTH enBandWidth;
 
     _TOA ullTOA, ullFirstTOA, ullPreTOA;
     int iSignalType;
@@ -3314,7 +3314,7 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
 
         AllocData( m_PDWData.GetTotalPDW() );
         if( m_PDWData.pstPDW != NULL ) {
-        memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
+            memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
         }
         break;
 
@@ -3700,7 +3700,7 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     }
 
     m_RawDataFile.FileClose();
-    //_SAFE_FREE( pTempData );
+    _SAFE_FREE( pTempData );
 
     return m_pData;
 

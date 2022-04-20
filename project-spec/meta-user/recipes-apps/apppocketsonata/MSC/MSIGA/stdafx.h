@@ -65,6 +65,8 @@
 #endif
 
 
+#define _USE_MATH_DEFINES
+
 
 // VS2012 이상에서 TRACE를 변경하기 위함.
 #if _MSC_VER > 1600

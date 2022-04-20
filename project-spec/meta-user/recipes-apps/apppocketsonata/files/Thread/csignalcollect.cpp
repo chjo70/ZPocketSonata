@@ -286,11 +286,22 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
 #if defined(_ELINT_) || defined(_XBAND_)
     STR_PDWDATA *pPDWData = pCollectBank->GetPDWData();
 
+#ifdef _ELINT_
     // memset( pPDWData->x.el.aucTaskID, 0, sizeof(char)*LENGTH_OF_TASK_ID );
-    strcpy_s( (char *) pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA" );
+    strcpy_s((char *)pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA");
     pPDWData->x.el.iIsStorePDW = 1;
     pPDWData->x.el.enCollectorID = RADARCOL_1;
-    pPDWData->x.el.enBandWidth = en5MHZ_BW;
+    pPDWData->x.el.enBandWidth = ELINT::en5MHZ_BW;
+
+#else
+    strcpy_s((char *)pPDWData->x.xb.aucTaskID, sizeof(pPDWData->x.xb.aucTaskID), "MSIGA2");
+    pPDWData->x.xb.iIsStorePDW = 1;
+    pPDWData->x.xb.enCollectorID = RADARCOL_1;
+    pPDWData->x.xb.enBandWidth = XBAND::en150MHZ_BW;
+
+#endif
+
+
 #else
 
 #endif
@@ -506,9 +517,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 else {
                     // 아래는 탐지 윈도우셀을 자동 재설정하도록 한다.
                     //pWindowCell = pCollectBank->GetWindowCell();
-
                     //pCollectBank->UpdateWindowCell();
-
                     //SendEndCollect();
 
                 }
@@ -527,6 +536,7 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                     LOGMSG2( enDebug, "추적 [%d] 채널에서 [%d]개 수집 완료..." , iCh, pWindowCell->uiTotalPDW );
 
                     pCollectBank->SetCollectMode( enCompleteCollection );
+                    pCollectBank->SetCollectUpdateTime();
                     break;
                 }
             }
@@ -633,9 +643,16 @@ void CSignalCollect::UpdateTrackWindowCell( SRxABTData *pABTData )
 
 }
 
+
 /**
- * @brief CSignalCollect::NewTrackWindowCell
- * @param pABTData
+ * @brief     빔 정보를 보고 추적 윈도우 셀을 설정한다.
+ * @param     SRxABTData * pABTData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-20, 16:16
+ * @warning
  */
 void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 {
@@ -651,9 +668,29 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
         m_pTheCollectBank = GetCollectBank( iCh );
         if( m_pTheCollectBank != NULL ) {
             m_pTheCollectBank->UpdateWindowCell( & strWindowCell );
+
+            CCollectBank *pCollectBank = GetCollectBank(iCh);
+            STR_PDWDATA *pPDWData = pCollectBank->GetPDWData();
+
+#ifdef _ELINT_            
+            strcpy((char *)pPDWData->x.el.aucTaskID, m_pMsg->x.strAnalInfo.uniPDWHeader.el.aucTaskID );
+            pPDWData->x.el.iIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.el.iIsStorePDW;
+            pPDWData->x.el.enCollectorID = m_pMsg->x.strAnalInfo.uniPDWHeader.el.enCollectorID;
+            pPDWData->x.el.enBandWidth = m_pMsg->x.strAnalInfo.uniPDWHeader.el.enBandWidth;
+#elif defined(_XBAND_)
+            strcpy((char *)pPDWData->x.xb.aucTaskID, m_pMsg->x.strAnalInfo.uniPDWHeader.xb.aucTaskID);
+            pPDWData->x.xb.iIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.iIsStorePDW;
+            pPDWData->x.xb.enCollectorID = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.enCollectorID;
+            pPDWData->x.xb.enBandWidth = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.enBandWidth;
+
+#endif
+            LOGMSG2(enDebug, " 추적 채널 설정 성공 [%d]Ch for B[%d]", iCh, pABTData->uiABTID);
+        }
+        else {
+            LOGMSG2(enDebug, " 추적 채널 설정 실패 [%d]Ch for B[%d]", iCh, pABTData->uiABTID);
         }
 
-        LOGMSG2( enDebug, " Setting up in the TRK [%d]Ch for B[%d]" , iCh, pABTData->uiABTID );
+        
     }
     else {
         LOGMSG( enDebug, "Nont of Track channel !!" );
@@ -663,7 +700,7 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 }
 
 /**
- * @brief     CalTrackWindowCell
+ * @brief     빔 정보를 보고 추적 윈도우 셀을 계산한다.
  * @param     STR_WINDOWCELL * pstrWindowCell
  * @param     SRxABTData * pABTData
  * @return    void

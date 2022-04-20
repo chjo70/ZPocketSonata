@@ -1039,12 +1039,12 @@ const void *SQLiteStatement::GetSqlResultBlob(const wchar_t *sql, const void *de
 //------------------------------------------------------------------------------------
 unsigned int SQLiteStatement::GetNumberOfRows()
 {
-	unsigned int count = 0;
+	unsigned int uiCount = 0;
 	while(FetchRow())
-		++count;
+		++uiCount;
 
 	Reset();
-	return count;
+	return uiCount;
 }
 
 void SQLiteStatement::CheckColumnNumber(int columnNumber, const std::string &functionName) const

@@ -384,8 +384,8 @@ struct STR_LOWHIGH
 #define _STR_LOWHIGH_TOA
 struct STR_LOWHIGH_TOA
 {
-    _TOA iLow;
-    _TOA iHgh;
+    _TOA tLow;
+    _TOA tHgh;
 } ;
 #endif
 
@@ -420,9 +420,9 @@ struct STR_MINMAX_MEDIAN {
 } ;
 
 struct STR_MINMAX_TOA {
-	_TOA TMean;
-	_TOA TMin;
-	_TOA TMax;
+	_TOA tMean;
+	_TOA tMin;
+	_TOA tMax;
 } ;
 
 struct STR_F_MINMAX {

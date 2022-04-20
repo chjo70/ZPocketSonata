@@ -60,8 +60,11 @@ T TDIV( T x, T y )
     if (sizeof(T) == sizeof(unsigned long long int)) {
         toaRet = MulDiv64(x, 1, y);
     }
+    else if (sizeof(T) == sizeof(unsigned int)) {
+        toaRet = (T) ( (float)x / (float)y );
+    }
     else {
-        toaRet = x / y;
+        TRACE("잘못된 연산 입니다....");
     }
 
     return toaRet;
@@ -86,8 +89,41 @@ T TMUL(T x, T y)
     if (sizeof(T) == sizeof(unsigned long long int)) {
         toaRet = MulDiv64(x, y, 1);
     }
+    else if (sizeof(T) == sizeof(unsigned int)) {
+        toaRet = (T) ( (float)x * (float)y );
+    }
     else {
-        toaRet = x * y;
+        TRACE("잘못된 연산 입니다....");
+    }
+
+    return toaRet;
+}
+
+/**
+ * @brief     TMULDIV
+ * @param     T x
+ * @param     T y
+ * @param     T z
+ * @return    T
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-19, 16:56
+ * @warning
+ */
+template <typename T>
+T TMULDIV(T x, T y, T z)
+{
+    T toaRet;
+
+    if (sizeof(T) == sizeof(unsigned long long int)) {
+        toaRet = MulDiv64(x, y, z);
+    }
+    else if (sizeof(T) == sizeof(unsigned int)) {
+        toaRet = (T) ( ( (float) x * (float) y ) / (float) z );
+    }
+    else {
+        TRACE("잘못된 연산 입니다....");
     }
 
     return toaRet;

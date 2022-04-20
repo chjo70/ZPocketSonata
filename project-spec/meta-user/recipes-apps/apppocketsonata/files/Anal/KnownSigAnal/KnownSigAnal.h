@@ -9,37 +9,22 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#ifdef _MSSQL_
-#include "../../ODBC/mssql.h"
-#include "../../ODBC/odbccore.h"
-
-#elif _SQLITE_
-#include "../../SQLite/KompexSQLitePrerequisites.h"
-#include "../../SQLite/KompexSQLiteDatabase.h"
-#include "../../SQLite/KompexSQLiteStatement.h"
-#include "../../SQLite/KompexSQLiteException.h"
-#include "../../SQLite/KompexSQLiteStreamRedirection.h"
-#include "../../SQLite/KompexSQLiteBlob.h"
-
-#endif
 
 #include "KDefine.h"
 
+#include "../../Utils/ccommonutils.h"
+
+#include "../SigAnal/SigAnal.h"
 #include "KGroup.h"
 #include "KPulExt.h"
 #include "KAnalPRI.h"
 #include "KMakeAET.h"
 
-#include "../MIDAS/Midas.h"
 
 #ifdef __cplusplus
 
 //##ModelId=452B0C520241
-#ifdef _MSSQL_
-class CKnownSigAnal : public CMSSQL, public CRawFile
-#else
-class CKnownSigAnal : public CRawFile
-#endif
+class CKnownSigAnal : public CSigAnal
 {
 private:
     SRxABTData *m_pTrkAet;
@@ -47,26 +32,11 @@ private:
     int m_iIsStorePDW;
 
     unsigned int m_uiPDWID;
-    LONG m_lOpInitID;
-
-    bool m_bDBThread;
 
 	__time32_t m_tColTime;
 	unsigned int m_tColTimeMs;
 
-    STR_PDWDATA m_stSavePDWData;        // 분석한 LOB를 근거로 파일로 저장하기 위한 데이터 포인터
-
     char m_szRawDataFilename[100];
-
-    char *m_pszSQLString;
-
-#ifdef _MSSQL_
-    CODBCDatabase m_theMyODBC;
-
-#elif _SQLITE_
-    Kompex::SQLiteDatabase *m_pDatabase;
-
-#endif
 
 public:
     //##ModelId=452B0C52024B
@@ -93,7 +63,7 @@ protected:
     //##ModelId=452B0C52027D
     int m_nMaxPdw;
     //##ModelId=452B0C520287
-    int m_CoPdw;
+    unsigned int m_uiCoPdw;
     //##ModelId=452B0C520288
     int m_noSbc;
     //##ModelId=452B0C520291
@@ -105,18 +75,39 @@ protected:
     int m_uiABTID;
 
 private:
-    UINT m_uiStep;
-    CMIDASBlueFileFormat *m_pMidasBlue;
+    
 
 public:
-    void RunSimul();
-    void Simul();
+    CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    virtual ~CKnownSigAnal();
+
+    inline void GetCollectTime(struct timespec *pTimeSpec) {
+        CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
+    }
+
+    inline __time32_t GetColTime() {
+        return m_tColTime;
+    }
+    void SetColTime(__time32_t val) { m_tColTime = val; }
+
+    inline unsigned int GetColTimeMs() {
+        return m_tColTimeMs;
+    }
+    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
+
+    inline unsigned int GetPDWID() {
+        return m_uiPDWID;
+    }
+    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
+
+    inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+        return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
+    }
 
     void Init();
 
-	void GetCollectTime( struct timespec *pTimeSpec );
-
-    inline int GetCoPdw() { return m_CoPdw; }
+    inline unsigned int GetCoPdw() { return m_uiCoPdw; }
+    inline unsigned int GetColPdw() { return m_uiCoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetNoABTID() { return m_uiABTID; }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
@@ -125,10 +116,10 @@ public:
     //##ModelId=452B0C5202A6
     //inline STR_PDWBANK *GetPdwBank() { return m_pPdwBank; }
     //##ModelId=452B0C5202A7
-    inline int GetColPdw() { return m_CoPdw; }
+    
 
     //##ModelId=452B0C5202A8
-    inline void MakePDWArray( _PDW *pdw, int count ) { m_theGroup->MakePDWArray( pdw, count ); }
+    inline void MakePDWArray( _PDW *pdw, int iCount ) { m_theGroup->MakePDWArray( pdw, iCount); }
     //##ModelId=452B0C5202B1
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
     //##ModelId=452B0C5202B9
@@ -139,9 +130,9 @@ public:
     //##ModelId=452B0C5202CE
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     //##ModelId=452B0C5202CF
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->CalcPAMean( pPdwIndex, count); }
+    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     //##ModelId=452B0C5202D8
-    inline int VerifyPW(PDWINDEX *pPdwIndex, int count) { return m_thePulExt->VerifyPW( pPdwIndex, count); }
+    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     //##ModelId=452B0C5202E1
     inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     //##ModelId=452B0C5202E2
@@ -154,7 +145,6 @@ public:
 
 	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
 
-
     //##ModelId=452B0C520301
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     //##ModelId=452B0C52030A
@@ -166,7 +156,7 @@ public:
     //##ModelId=452B0C52031E
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
     //##ModelId=452B0C52031F
-    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, count, pRange ); }
+    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
     //##ModelId=452B0C520329
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
     //##ModelId=452B0C52033D
@@ -199,14 +189,6 @@ public:
 
     inline int IsStorePDW() { return m_iIsStorePDW; }
 
-    inline unsigned int GetPDWID() { return m_pstPDWData->GetPDWID(); }
-
-
-#if defined(_ELINT_) || defined(_XBAND_)
-	inline EN_RADARCOLLECTORID GetCollectorID() { return m_pstPDWData->x.el.enCollectorID; }
-	inline unsigned char *GetTaskID() { return & m_pstPDWData->x.el.aucTaskID[0]; }
-#endif  
-
     void InitVar();
     //##ModelId=452B0C52036E
     void ClearColBuffer();
@@ -218,31 +200,14 @@ public:
     void SendLostAet();
     //##ModelId=452B0C520379
     void SendNewAet( SRxLOBData *pNewAet, int inEMT );
-    //##ModelId=452B0C520382
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
-    void InitDataFromDB();
-
-    void InsertRAWData( STR_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
-    bool InsertToDB_RAW( STR_PDWDATA *pPDWData, int iPLOBID );
     //##ModelId=452B0C52038B
-    void MarkToPdwIndex(PDWINDEX *pPdwIndex, int count, USHORT usMarkType);
+    void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 
     //##ModelId=452B0C520396
     void Init( STR_STATIC_PDWDATA *pstPDWData );
     //##ModelId=452B0C52039F
     void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet );
-
-#ifdef _MSSQL_
-    CKnownSigAnal( int coMaxPdw, bool bDBThread );
-#else
-    CKnownSigAnal( int coMaxPdw, bool bDBThread, const char *pFileName=NULL );
-
-#endif
-
-
-    //##ModelId=452B0C5203BE
-    virtual ~CKnownSigAnal();
 
 };
 

@@ -135,8 +135,6 @@ private:
 public:
     void CalHopLevel( STR_EMITTER *pEmitter );
     BOOL IsFreqHopping( STR_EMITTER *pEmitter );
-    BOOL CompAoaDiff( int x, int y, int thresh );
-    float MeanInArray( UINT *series, UINT co );
     float IMeanInArray( int *series, UINT co );
 
     void CopySeg(STR_EMITTER *pEmitter);
@@ -241,7 +239,7 @@ public:
     //##ModelId=452B0C570285
     BOOL VerifyStaggerLevel( STR_EMITTER *pStaggerEmitter, STR_EMITTER *pEmitter=NULL );
     //##ModelId=452B0C57028F
-    float ISDevInArray( int *series, UINT co, UINT mean );
+    //float ISDevInArray( int *series, UINT co, UINT mean );
     //##ModelId=452B0C5702A2
     void KurtosisSkewness();
     //##ModelId=452B0C5702AC
@@ -289,7 +287,7 @@ public:
     //##ModelId=452B0C57031B
     void FindPeak();
     //##ModelId=452B0C57031C
-    int GetContiThreshold( int count );
+    int GetContiThreshold( int iCount );
     //##ModelId=452B0C570325
     BOOL CheckStaggerLevel( STR_EMITTER *pOrgEmitter, STR_EMITTER *pStaggerEmitter, int match_index );
     //##ModelId=452B0C570343
@@ -303,7 +301,7 @@ public:
     //##ModelId=452B0C570375
     void CalcEmitterPri( STR_EMITTER *pEmitter );
     //##ModelId=452B0C57037F
-    UINT CompFreqLevel( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    ANAL_FREQ_TYPE CompFreqLevel( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
     //##ModelId=452B0C57038A
     BOOL BinSearchInPdwIndex( int from, int to, int search_value );
     //##ModelId=452B0C57039E

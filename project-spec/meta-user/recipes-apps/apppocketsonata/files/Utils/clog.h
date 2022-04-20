@@ -67,7 +67,7 @@ public:
 
     inline bool IsLock() { return m_bcs==true; }
 
-    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pMsg, ... );
+    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... );
 
     void LogMsg( int nType, const char *fmt, ... );
 

@@ -17,7 +17,7 @@
 bool _TRACE(char *format, ...)
 {
 #ifdef _DEBUG
-    char buffer[1000];
+    char buffer[2000];
     va_list argptr;
 
     va_start(argptr, format);
@@ -36,7 +36,7 @@ bool _TRACE(CString strFormat, ...)
 {
 #ifdef _DEBUG
     char *format = (char*)(LPCTSTR)strFormat;
-    char buffer[1000];
+    char buffer[2000];
 
     va_list argptr;
     va_start(argptr, format);

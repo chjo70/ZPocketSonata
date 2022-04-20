@@ -31,7 +31,7 @@ protected:
 	//##ModelId=452B0C55005C
 	CNewSigAnal *m_pNewSigAnal;
 
-	ENUM_BANDWIDTH m_enBandWidth;
+	//ENUM_BANDWIDTH m_enBandWidth;
 	
 public:
 	void MarkAllAetToPdwIndex();
@@ -50,7 +50,7 @@ public:
 	//##ModelId=452B0C55007C
 	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
 	//##ModelId=452B0C550085
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
 	//##ModelId=452B0C55008E
 	unsigned int GetCoSeg();
 	//##ModelId=452B0C550097
@@ -82,7 +82,7 @@ public:
 
 #if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();
-    unsigned char *GetTaskID();
+    char *GetTaskID();
 #endif
 
 

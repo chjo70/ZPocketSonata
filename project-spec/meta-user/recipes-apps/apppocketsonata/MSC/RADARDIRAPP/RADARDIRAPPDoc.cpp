@@ -171,11 +171,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 	CString strMainTitle;    
 
 	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
-	// 	map<CString, CData *>::iterator it;
-	// 	//CData *pData;
-	// 
-	//pChild = ( CChildFrame * ) m_pFrame->GetActiveFrame();
-	// 
+
 	m_strPathname = strPathname;
 
     ReadDataFile();

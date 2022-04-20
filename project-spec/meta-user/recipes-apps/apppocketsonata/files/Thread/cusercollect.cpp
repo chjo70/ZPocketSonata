@@ -508,7 +508,13 @@ void CUserCollect::MakeSIMPDWData()
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 1000 ) + 20000;
 
-        m_ullTOA += CXPDW::EncodeTOAus( 100, en5MHZ_BW );
+#if defined(_ELINT_)
+        m_ullTOA += CXPDW::EncodeTOAus( 100, ELINT::en5MHZ_BW );
+        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, ELINT::en5MHZ_BW);
+#else
+        m_ullTOA += CXPDW::EncodeTOAus(100, XBAND::en5MHZ_BW);
+        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, XBAND::en5MHZ_BW);
+#endif
 
         memset( pSIGAPDW, 0, sizeof(SIGAPDW) );
 
@@ -517,7 +523,7 @@ void CUserCollect::MakeSIMPDWData()
         pSIGAPDW->uiAOA = CXPDW::EncodeDOA( 90 );
         pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz( 9000. );
         pSIGAPDW->uiPA = CXPDW::EncodePA( -100 );
-        pSIGAPDW->uiPW = CXPDW::EncodePWns( 100, en5MHZ_BW );
+        
 
         pSIGAPDW->iPulseType = CXPDW::EncodePulseType( 0 );
 

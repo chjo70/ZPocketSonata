@@ -47,8 +47,6 @@ protected:
 	//##ModelId=452B0C450148
 	UINT m_nCanPeak[_spMaxSample];
 
-
-
 	/*! \bug  스캔 주기를 int 에서 unsigned integer로 형 변경함.
 	    \date 2009-10-08 12:39:49, 조철희
 	*/
@@ -89,7 +87,7 @@ public:
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
 
 	//BOOL CompMeanDiff(int x, int y, int thresh);
-	float MeanInArray( UINT *series, UINT co );
+	//float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
     inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_uiScnTyp, *pScanPrd= m_uiScnPrd; }
 	//##ModelId=452B0C45019B
@@ -102,15 +100,16 @@ public:
 	//##ModelId=452B0C4501AE
 	UINT DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pAutocf );
 	//##ModelId=452B0C4501B6
-	UINT HighIllustrationTest2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
+    ENUM_AET_SCAN_TYPE HighIllustrationTest2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
 	//##ModelId=452B0C4501B9
 	UINT PeriodVerify( void );
 	//##ModelId=452B0C4501C0
-	float SDevInArray( UINT *series, int co, float mean );
+	//float SDevInArray( UINT *series, int co, float mean );
 	//##ModelId=452B0C4501C4
 	void KurtosisSkewness( STR_SAMPLE *pSample );
 	//##ModelId=452B0C4501D5
-	UINT ScanTypeDecision2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
+	UINT ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
+    UINT ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUTOCOR *pAcf);
 	//##ModelId=452B0C4501DF
 	UINT FindPeak( STR_AUTOCOR *pAutoCor );
 	//##ModelId=452B0C4501E8
@@ -118,13 +117,13 @@ public:
 	//##ModelId=452B0C4501EB
     bool CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY );
 	//##ModelId=452B0C4501F3
-	float Normalize( UINT *series, UINT co, float *norm );
+	float Normalize( int *series, UINT co, float *norm );
 	//##ModelId=452B0C4501FC
 	void Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
 	//##ModelId=452B0C4501FF
 	void ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
 	//##ModelId=452B0C450208
-	void SearchLowHghInArray( UINT *series, UINT co, STR_LOWHIGH *lh );
+	void SearchLowHghInArray( int *series, UINT co, STR_LOWHIGH *lh );
 	//##ModelId=452B0C450213
 	void SamplingProcess();
 	//##ModelId=452B0C450214
@@ -203,10 +202,12 @@ public:
 
     inline unsigned int GetPDWID() { return (UINT) -1; }
 
+
 #if defined(_ELINT_) || defined(_XBAND_)
-	EN_RADARCOLLECTORID GetCollectorID();
-	unsigned char *GetTaskID();
+    EN_RADARCOLLECTORID GetCollectorID();
+    char *GetTaskID();
 #endif
+
 
 	//##ModelId=452B0C45022E
     CSAnalScan( void *pParent, int coMaxPdw );

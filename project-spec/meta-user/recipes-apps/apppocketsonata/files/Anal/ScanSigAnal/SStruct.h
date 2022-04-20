@@ -28,8 +28,8 @@ typedef struct
 //##ModelId=452B0C440345
 struct STR_SCANPT {
     UINT uiCount;
-    UINT pa[SCN_COLLECT_PDW+10];				// toa
-    _TOA toa[SCN_COLLECT_PDW+10];				// amplitude
+    int iPA[SCN_COLLECT_PDW+10];				// 신호세기
+    _TOA tTOA[SCN_COLLECT_PDW+10];				// 시간
 
     STR_LOWHIGH _pa;
 
@@ -37,18 +37,18 @@ struct STR_SCANPT {
 
 //##ModelId=452B0C44034F
 struct STR_SAMPLE {
-	UINT co;
-	_TOA toa[_spMaxSample+10];
-	UINT pa[_spMaxSample+10];	
+	UINT uiCount;
+	_TOA tTOA[_spMaxSample+10];
+	int iPA[_spMaxSample+10];	
 
 	float normPa[_spMaxSample];					// normalize of pa
 
-	float	meanY;
+	float fMeanY;
 
-	float	sdevY;
+	float fSdevY;
 
-	float	kurtosis;
-	float	skewness;
+	float fKurtosis;
+	float fSkewness;
 
 	STR_LOWHIGH	_pa;					// Low & High
 } ;
@@ -56,7 +56,7 @@ struct STR_SAMPLE {
 // Auto-Correlation Function 용 변수
 //##ModelId=452B0C440359
 struct STR_AUTOCOR {
-    UINT co;
+    UINT uiCount;
 
     float acf[_spMaxSample];
 

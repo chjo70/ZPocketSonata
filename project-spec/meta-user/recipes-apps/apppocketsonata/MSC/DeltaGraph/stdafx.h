@@ -100,16 +100,5 @@ bool _TRACE(CString strFormat, ...);
 #undef TRACE
 #define TRACE _TRACE
 
-#ifdef _DEBUG
-
-
-
-#else
-
-//#define TRACE false && _TRACE
-
-#endif
-
-#endif
 
 #endif // _MSC_VER

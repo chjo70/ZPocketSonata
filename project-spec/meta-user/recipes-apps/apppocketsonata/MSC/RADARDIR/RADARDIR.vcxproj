@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,7 +14,7 @@
     <ProjectGuid>{AF61494A-622B-448E-958D-6F27C288EF23}</ProjectGuid>
     <RootNamespace>RADARDIR</RootNamespace>
     <Keyword>MFCDLLProj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -30,7 +30,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -231,6 +231,7 @@ REM :END</Command>
     <ClCompile Include="..\..\files\Anal\SigAnal\Group.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\MakeAET.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\PulExt.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\SysPara.cpp" />
     <ClCompile Include="..\..\files\MinIni\minIni.cpp" />
     <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
@@ -293,6 +294,7 @@ REM :END</Command>
     <ClInclude Include="..\..\files\Anal\SigAnal\Group.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\MakeAET.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SysPara.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\_Define.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\_Macro.h" />

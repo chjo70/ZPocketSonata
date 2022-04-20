@@ -108,13 +108,13 @@ public:
     virtual STR_DTOA_HISTOGRAM *GetDtoaHist()=0;
     //! DTOA 히스토그램을 작성한다.
     //##ModelId=452B0C5303B6
-    virtual void MakeDtoaHistogram( PDWINDEX *pPdwIndex, int count, STR_MINMAX_TOA *pRange )=0;
+    virtual void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )=0;
     //! DTOA 히스트그램 상에서 추출할 PRI 밴드를 구한다.
     //##ModelId=452B0C5303C1
     virtual void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )=0;
     //! 펄스열에 마킹을 한다.
     //##ModelId=452B0C5303D3
-    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, int count, USHORT usMarkType )=0;
+    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType )=0;
     //##ModelId=452B0C5303DD
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
     virtual int GetCoPdw()=0;
@@ -261,9 +261,9 @@ public:
     //##ModelId=452B0C540201
     void AllExtSegMark();
     //##ModelId=452B0C540208
-    int CalcPAMean(PDWINDEX *pPdwIndex, int count);
+    int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
     //##ModelId=452B0C540212
-    int VerifyPW(PDWINDEX *pPdwIndex, int count);
+    int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount);
     //##ModelId=452B0C540215
     void CleanRefSeg();
     //##ModelId=452B0C54021C
@@ -301,12 +301,17 @@ public:
     //##ModelId=452B0C540282
     float CalcRefPRI( PDWINDEX *pPdwIndex, UINT count, STR_MINMAX_TOA *pPRI );
     //##ModelId=452B0C54028D
+
+
+    void ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *pPriRange, _TOA tDtoa, int ext_type, BOOL bFlagMargin);
+
+
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
     //##ModelId=452B0C540297
     BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C5402AB
     void ExtractStablePT();
-    //! 멤버 변수 초기화초
+    //! 멤버 변수 초기화
     //##ModelId=452B0C5402AC
     void Init();
 
