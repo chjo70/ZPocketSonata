@@ -48,9 +48,9 @@ public:
     //##ModelId=452B0C53000D
     inline void SetCoNewAet( int iCount ) { m_iCoNewAet=iCount; }
     //##ModelId=452B0C53000F
-    inline void ClearCoAet() { m_CoLOB=0; }
+    inline void ClearCoAet() { m_iCoLOB=0; }
     
-    inline int GetCoLOB() { return m_CoLOB; }
+    inline int GetCoLOB() { return m_iCoLOB; }
     //##ModelId=452B0C530012
     //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }
     // inline STR_EMITTER *GetEmitter() { return CMakeAET::GetEmitter(); }

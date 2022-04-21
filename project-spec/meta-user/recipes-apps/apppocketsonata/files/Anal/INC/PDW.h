@@ -517,6 +517,8 @@ typedef enum {
     en5MHZ_BW = 0,
     en50MHZ_BW,
 
+    enUnknown_BW = 2,
+
 } ENUM_BANDWIDTH;
 
 #endif

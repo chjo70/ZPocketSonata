@@ -243,6 +243,21 @@ namespace RadarAnlAlgotirhm
 		return;
 	}
 
+    /**
+     * @brief     GetOPInitID
+     * @return    LONG
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 17:06
+     * @warning
+     */
+    LONG RadarAnlAlgotirhm::GetOPInitID()
+    {
+        return gpEmitterMergeMngr->GetOPInitID();
+
+    }
+
 }
 
 

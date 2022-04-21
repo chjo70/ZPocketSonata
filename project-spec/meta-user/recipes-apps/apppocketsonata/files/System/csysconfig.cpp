@@ -23,7 +23,7 @@
 #include "../Anal/SigAnal/_Struct.h"
 
 #include "../Include/globals.h"
-//#include "../Utils/clog.h"
+
 
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
@@ -40,6 +40,16 @@ extern void ProgramRevision( void );
 }
 #endif
 
+/**
+ * @brief     CSysConfig
+ * @param     void
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-21, 14:47
+ * @warning
+ */
 CSysConfig::CSysConfig(void)
 {
 
@@ -75,37 +85,66 @@ void CSysConfig::LoadINI()
 
     string strValue;
 
-    float fRxThreshold[5];
+    float fValue[enMAXPRC - 1];
 
     // INI 파일 로딩하기
     strcpy( m_szIniFileName, INI_FOLDER /* getenv("HOME") */ );
     strcat( m_szIniFileName, INI_FILENAME );
 
 #ifdef _MFC_VER
+    
+    char szBuffer[400], szDefault[400];
+
     ///////////////////////////////////////////////////////////////////////////////
     // RX Threshold 값 로딩
-	i = 0;
-	char szBuffer[400], szDefault[400];
+    i = 0;
 
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND1_ );
 	GetPrivateProfileString( "RXTHRESHOLD", "Band1", szDefault, szBuffer, 100, m_szIniFileName );
-	fRxThreshold[i++] = (float) atof( szBuffer );
+	fValue[i++] = (float) atof( szBuffer );
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND2_ );
 	GetPrivateProfileString( "RXTHRESHOLD", "Band2", szDefault, szBuffer, 100, m_szIniFileName );
-	fRxThreshold[i++] = (float) atof( szBuffer );
+	fValue[i++] = (float) atof( szBuffer );
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND3_ );
 	GetPrivateProfileString( "RXTHRESHOLD", "Band3", szDefault, szBuffer, 100, m_szIniFileName );
-	fRxThreshold[i++] = (float) atof( szBuffer );
+	fValue[i++] = (float) atof( szBuffer );
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND4_ );
 	GetPrivateProfileString( "RXTHRESHOLD", "Band4", szDefault, szBuffer, 100, m_szIniFileName );
-	fRxThreshold[i++] = (float) atof( szBuffer );
+	fValue[i++] = (float) atof( szBuffer );
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND5_ );
 	GetPrivateProfileString( "RXTHRESHOLD", "Band5", szDefault, szBuffer, 100, m_szIniFileName );
-	fRxThreshold[i] = (float) atof( szBuffer );
+	fValue[i++] = (float) atof( szBuffer );
+    sprintf(szDefault, "%f", _DEFAULT_RXTHRESHOLD_BAND6_);
+    GetPrivateProfileString("RXTHRESHOLD", "Band6", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i] = (float)atof(szBuffer);
 
-	SetRxThreshold( fRxThreshold );
+	SetRxThreshold( fValue );
+
+    // 대역별 방탐 오차 정의
+    i = 0;
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND1_ );
+    GetPrivateProfileString("MERTGE", "AOA1", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i++] = (float)atof(szBuffer);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND2_);
+    GetPrivateProfileString("MERTGE", "AOA2", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i++] = (float)atof(szBuffer);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND3_);
+    GetPrivateProfileString("MERTGE", "AOA3", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i++] = (float)atof(szBuffer);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND4_);
+    GetPrivateProfileString("MERTGE", "AOA4", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i++] = (float)atof(szBuffer);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND5_);
+    GetPrivateProfileString("MERTGE", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i++] = (float)atof(szBuffer);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND6_);
+    GetPrivateProfileString("MERTGE", "AOA6", szDefault, szBuffer, 100, m_szIniFileName);
+    fValue[i] = (float)atof(szBuffer);
+
+    SetMergeAOADiff(fValue);
+
  
-    // 네크워크 환경 설정
+    // 네트워크 환경 설정
     GetPrivateProfileString( "NETWORK" , "PRIME_SERVER" , "192.168.1.12", szBuffer, 100, m_szIniFileName );
     SetPrimeServerOfNetwork( szBuffer );
  
@@ -142,19 +181,38 @@ void CSysConfig::LoadINI()
     // RX Threshold 값 로딩
     i = 0;
     fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band1" , _DEFAULT_RXTHRESHOLD_BAND1_ );
-    fRxThreshold[i++] = fValue;
+    fValue[i++] = fValue;
     fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band2" , _DEFAULT_RXTHRESHOLD_BAND2_ );
-    fRxThreshold[i++] = fValue;
+    fValue[i++] = fValue;
     fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band3" , _DEFAULT_RXTHRESHOLD_BAND3_ );
-    fRxThreshold[i++] = fValue;
+    fValue[i++] = fValue;
     fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band4" , _DEFAULT_RXTHRESHOLD_BAND4_ );
-    fRxThreshold[i++] = fValue;
+    fValue[i++] = fValue;
     fValue = m_theMinIni.getf( "RXTHRESHOLD" , "Band5" , _DEFAULT_RXTHRESHOLD_BAND5_ );
-    fRxThreshold[i++] = fValue;
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("RXTHRESHOLD", "Band6", _DEFAULT_RXTHRESHOLD_BAND6_);
+    fValue[i] = fValue;
 
-    SetRxThreshold( fRxThreshold );
+    SetRxThreshold( fValue );
 
-    // 네크워크 환경 설정
+    // 대역별 방탐 오차 정의
+    i = 0;
+    fValue = m_theMinIni.getf("MERGE", "AOA1", _DEFAULT_AOA_MERGE_BAND1_);
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("MERGE", "AOA2", _DEFAULT_AOA_MERGE_BAND2_);
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("MERGE", "AOA3", _DEFAULT_AOA_MERGE_BAND3_);
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("MERGE", "AOA4", _DEFAULT_AOA_MERGE_BAND4_);
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("MERGE", "AOA5", _DEFAULT_AOA_MERGE_BAND5_);
+    fValue[i++] = fValue;
+    fValue = m_theMinIni.getf("MERGE", "AOA6", _DEFAULT_AOA_MERGE_BAND6_);
+    fValue[i] = fValue;
+
+    SetMergeAOADiff(fValue);
+
+    // 네트워크 환경 설정
     strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , "192.168.1.12" );
     SetPrimeServerOfNetwork( strValue.c_str() );
 

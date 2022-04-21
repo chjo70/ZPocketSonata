@@ -196,24 +196,22 @@ namespace RadarDirAlgotirhm
 		return;
 	}
 
-// 	void RadarDirAlgotirhm::Log( int nType, const char *fmt, ... )
-// 	{
-// 		_TCHAR szLog[5096];
-// 		va_list args;
-// 
-// 		if( fmt != NULL ) {
-// 			ZeroMemory( szLog, sizeof(szLog) );
-// 
-// 			va_start( args, fmt );
-// 			vsprintf_s( szLog, fmt, args );
-// 			va_end( args );
-// 
-// 			::Log( nType, szLog );
-// 
-// 		}
-// 
-// 		return;
-// 	}
+
+    /**
+     * @brief     GetOPInitID
+     * @return    LONG
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 16:58
+     * @warning
+     */
+    LONG RadarDirAlgotirhm::GetOPInitID()
+    {
+        return gpNewSigAnal->GetOPInitID();
+
+    }
+
 
 }
 

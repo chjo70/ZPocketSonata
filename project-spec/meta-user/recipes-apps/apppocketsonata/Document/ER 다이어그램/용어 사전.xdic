@@ -50,7 +50,7 @@
   <term name="값 #9" description="" physicalName="SEQ_09" physicalDescription="" tag="//@tag.1"/>
   <term name="PDW 총개수" description="" physicalName="TOTAL_PDW" physicalDescription="" tag="//@tag.1"/>
   <term name="위협 인덱스" description="" physicalName="THREAT_INDEX" physicalDescription="" tag="//@tag.1"/>
-  <term name="LOB 개수" description="" physicalName="NUM_LOB" physicalDescription="" tag="//@tag.1"/>
+  <term name="LOB 개수" description="" physicalName="NUM_OF_LOBS" physicalDescription="" tag="//@tag.1"/>
   <term name="평균 방위" description="" physicalName="DOA_MEAN" physicalDescription="" tag="//@tag.1"/>
   <term name="최소 방위" description="" physicalName="DOA_MIN" physicalDescription="" tag="//@tag.1"/>
   <term name="최대 방위" description="" physicalName="DOA_MAX" physicalDescription="" tag="//@tag.1"/>
@@ -191,6 +191,7 @@
   <term name="저장 여부" description="" physicalName="IS_STORED_PDW" physicalDescription="" tag="//@tag.1"/>
   <term name="레이더 인덱스" description="" physicalName="RADAR_INDEX" physicalDescription="" tag="//@tag.1"/>
   <term name="승인" description="" physicalName="ACCEPTED" physicalDescription="" tag="//@tag.1"/>
+  <term name="식별 정보" description="" physicalName="IDINFO" physicalDescription="" tag="//@tag.1"/>
   <tag name="ㅁㅁㅁ"/>
   <tag name="다이어그램_용어수집" description="이 용어는 다이어그램에서 용어 수집도구를 사용하여 등록한 것입니다."/>
 </tm:TermDictionary>

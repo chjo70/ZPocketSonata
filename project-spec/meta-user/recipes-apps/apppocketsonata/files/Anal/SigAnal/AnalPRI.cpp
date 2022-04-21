@@ -292,7 +292,6 @@ void CAnalPRI::Init()
     _EQUALS3( m_uiAnalEmitter, m_uiCoEmitter, 0 )
     m_uiAnalSeg = 0;
 
-    // 시뮬레이션을 위한 초기화
     for( int i=0 ; i < MAX_AET ; ++i ) {
         m_Emitter[i].pdw.uiCount = 0;
     }

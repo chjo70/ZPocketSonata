@@ -105,7 +105,7 @@ void CNAnalPRI::Init()
     m_uiAnalSeg = 0;
     m_uiCoSeg = GetCoSeg();
 
-    m_uiAnalEmitter = m_uiCoEmitter;
+    m_uiAnalEmitter = _spZero; // m_uiCoEmitter;
 
     /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
         \date 2008-07-30 13:35:08, 조철희

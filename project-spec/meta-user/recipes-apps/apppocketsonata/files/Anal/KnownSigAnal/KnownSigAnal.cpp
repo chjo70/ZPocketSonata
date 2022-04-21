@@ -168,17 +168,17 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 #ifdef _POCKETSONATA_
 #elif defined(_ELINT) || defined(_XBAND_)
 #else
-        // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
-        m_theMakeAET->MakeUpAET();
-
-        // 그룹화된 펄스열 저장하기
-        SaveGroupPdwFile();
-
-        // 수집 개수 초기화
-        // 에미터 전송 전에 수집 버퍼 초기화를 한다.
-        ClearColBuffer();
-
-        SendAllAet();
+//         // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
+//         m_theMakeAET->MakeUpAET();
+// 
+//         // 그룹화된 펄스열 저장하기
+//         SaveGroupPdwFile();
+// 
+//         // 수집 개수 초기화
+//         // 에미터 전송 전에 수집 버퍼 초기화를 한다.
+//         ClearColBuffer();
+// 
+//         SendAllAet();
 #endif
 
         // printf( "\n !!!! End of Known Signal Analysis !!!!" );
@@ -234,8 +234,8 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 {
     
     // 시간 초기화
-    SetColTime(_spZero);
-    SetColTimeMs(_spZero);
+    CSigAnal::SetColTime(_spZero);
+    CSigAnal::SetColTimeMs(_spZero);
 
 	// 추적은 실패로 초기화 한다.
 	m_CoUpdAet = 0;
@@ -253,25 +253,24 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
         m_uiCoPdw = m_pstPDWData->GetTotalPDW();
 
-        m_tColTime = m_pstPDWData->GetColTime();
+        CSigAnal::SetColTime( m_pstPDWData->GetColTime() );
 
 #if defined(_ELINT_)
-        m_iIsStorePDW = m_pstPDWData->x.el.iIsStorePDW;
+        CSigAnal::SetStorePDW( m_pstPDWData->x.el.iIsStorePDW );
 
         SetBandWidth(m_pstPDWData->x.el.enBandWidth);
         SetTaskID(m_pstPDWData->x.el.aucTaskID);
         SetCollectorID(m_pstPDWData->x.el.GetCollectorID());
 
 #elif defined(_XBAND_)
-        m_iIsStorePDW = m_pstPDWData->x.xb.iIsStorePDW;
+        CSigAnal::SetStorePDW( m_pstPDWData->x.xb.iIsStorePDW );
 
         SetBandWidth(m_pstPDWData->x.xb.enBandWidth);
         SetTaskID(m_pstPDWData->x.xb.aucTaskID);
         SetCollectorID(m_pstPDWData->x.xb.GetCollectorID());
 
 #elif _POCKETSONATA_
-        m_iIsStorePDW = m_pstPDWData->x.so.iIsStorePDW;
-        m_enBandWidth = en5MHZ_BW;
+        CSigAnal::SetStorePDW( m_pstPDWData->x.so.iIsStorePDW );
 
 #else
 #endif
@@ -283,8 +282,6 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
     // 단위 초기화
     CSigAnal::InitResolution();
-
-    m_uiABTID = m_pTrkAet->uiABTID;
 
 	/*! \bug  클래스별 클리어를 하게 한다.
 	    \date 2008-07-30 13:22:13, 조철희

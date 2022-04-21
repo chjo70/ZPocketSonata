@@ -498,39 +498,63 @@ void CUserCollect::MakeSIMPDWData()
         ++ pSIGAPDW;
     }
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_)
     uiCoPDW = m_strResColStart.uiCoPulseNum;
 
-    iDOA = m_uiCoSim * CXPDW::EncodeDOA( 50 );
+    iDOA = m_uiCoSim * CEPDW::EncodeDOA( 50 );
 
     for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = 100; // iDOA + ( rand() % 40 ) - 20;
+        randomDOA = iDOA; // iDOA + ( rand() % 40 ) - 20;
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 1000 ) + 20000;
 
-#if defined(_ELINT_)
-        m_ullTOA += CXPDW::EncodeTOAus( 100, ELINT::en5MHZ_BW );
-        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, ELINT::en5MHZ_BW);
-#else
-        m_ullTOA += CXPDW::EncodeTOAus(100, XBAND::en5MHZ_BW);
-        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, XBAND::en5MHZ_BW);
-#endif
+        m_ullTOA += CEPDW::EncodeTOAus( 100, ELINT::en5MHZ_BW );
+        pSIGAPDW->uiPW = CEPDW::EncodePWns(100, ELINT::en5MHZ_BW);
 
         memset( pSIGAPDW, 0, sizeof(SIGAPDW) );
 
         pSIGAPDW->ullTOA = m_ullTOA;
         
-        pSIGAPDW->uiAOA = CXPDW::EncodeDOA( 90 );
-        pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz( 9000. );
-        pSIGAPDW->uiPA = CXPDW::EncodePA( -100 );
-        
+        pSIGAPDW->uiAOA = CEPDW::EncodeDOA( 90 );
+        pSIGAPDW->uiFreq = CEPDW::EncodeRealFREQMHz( 9000. );
+        pSIGAPDW->uiPA = CEPDW::EncodePA( -100 );        
 
-        pSIGAPDW->iPulseType = CXPDW::EncodePulseType( 0 );
+        pSIGAPDW->iPulseType = CEPDW::EncodePulseType( 0 );
 
         ++ m_uiIndex;
 
         ++ pSIGAPDW;
     }
+
+#elif defined(_XBAND_)
+    uiCoPDW = m_strResColStart.uiCoPulseNum;
+
+    iDOA = m_uiCoSim * CXPDW::EncodeDOA(50);
+
+    for (i = 0; i < uiCoPDW; ++i) {
+        randomDOA = ( i / 30 ) * 40;
+
+        memset(pSIGAPDW, 0, sizeof(SIGAPDW));
+
+        m_ullTOA += 0x100; // CXPDW::EncodeTOAus(100, XBAND::en5MHZ_BW);
+
+
+        // 
+        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, XBAND::en5MHZ_BW);
+        pSIGAPDW->ullTOA = m_ullTOA;
+
+        pSIGAPDW->uiAOA = CXPDW::EncodeDOA(randomDOA);
+        pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz(9000.);
+        pSIGAPDW->uiPA = CXPDW::EncodePA(-100);
+
+
+        pSIGAPDW->iPulseType = CXPDW::EncodePulseType(0);
+
+        ++m_uiIndex;
+
+        ++pSIGAPDW;
+    }
+
 #elif defined(_SONATA_)
 
 #endif

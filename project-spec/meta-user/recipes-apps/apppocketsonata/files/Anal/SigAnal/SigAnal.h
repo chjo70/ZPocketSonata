@@ -46,6 +46,13 @@ private:
 
     UINT m_uiStep;
 
+    int m_iIsStorePDW;
+
+    unsigned int m_uiPDWID;
+
+    __time32_t m_tColTime;
+    unsigned int m_tColTimeMs;
+
 #if defined(_ELINT_)
     char m_szTaskID[LENGTH_OF_TASK_ID];
     EN_RADARCOLLECTORID m_enCollectorID;
@@ -83,7 +90,7 @@ public:
     void NextStep() { ++m_uiStep; }
     void SetStep( unsigned int uiStep ) { m_uiStep=uiStep; }
     unsigned int GetStep() { return m_uiStep; }
-
+    
     bool IsSaveFile() const { return m_bSaveFile; }
     void SetSaveFile(bool val) { m_bSaveFile = val; }
     void Initialize();
@@ -95,16 +102,167 @@ public:
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
     void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID );
 
-    virtual __time32_t GetColTime() = 0;
-    virtual unsigned int GetColTimeMs() = 0;
-    virtual unsigned int GetPDWID() = 0;
+    //! Ãâ·Â °ü·Ã ÇÔ¼ö
+    void DISP_FineAet(SRxLOBData *pLOB);
+
+#ifdef _MSSQL_
+    /**
+     * @brief     GetOpInitID
+     * @return    LONG
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 16:56
+     * @warning
+     */
+    inline LONG GetOPInitID() {
+        return m_lOpInitID;
+    }
+
+#endif
+
+
+    /**
+     * @brief     GetColTime
+     * @return    __time32_t
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:13
+     * @warning
+     */
+    inline __time32_t GetColTime() {
+        return m_tColTime;
+    }
+
+    /**
+     * @brief     SetColTime
+     * @param     __time32_t val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:13
+     * @warning
+     */
+    inline void SetColTime(__time32_t val) { 
+        m_tColTime = val; 
+    }
+
+    /**
+     * @brief     GetColTimeMs
+     * @return    unsigned int
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:13
+     * @warning
+     */
+    inline unsigned int GetColTimeMs() { 
+        return m_tColTimeMs; 
+    }
+    /**
+     * @brief     SetColTimeMs
+     * @param     unsigned int val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:13
+     * @warning
+     */
+    inline void SetColTimeMs(unsigned int val) { 
+        m_tColTimeMs = val; 
+    }
+
+    /**
+     * @brief     GetPDWID
+     * @return    unsigned int
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:13
+     * @warning
+     */
+    inline unsigned int GetPDWID() { 
+        return m_uiPDWID;  
+    }
+
+    /**
+     * @brief     SetPDWID
+     * @param     unsigned int val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    inline void SetPDWID(unsigned int val) { 
+        m_uiPDWID = val; 
+    }
+
+    /**
+     * @brief     IsStorePDW
+     * @return    int
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    inline int IsStorePDW() { 
+        return m_iIsStorePDW; 
+    }
+    /**
+     * @brief     SetStorePDW
+     * @param     int val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    inline void SetStorePDW(int val) { 
+        m_iIsStorePDW = val; 
+    }
+
 
 #if defined(_ELINT_)
     ELINT::ENUM_BANDWIDTH GetBandWidth() const { return m_enBandWidth; }
     void SetBandWidth(ELINT::ENUM_BANDWIDTH val) { m_enBandWidth = val; }
+
 #elif defined(_XBAND_)
-    XBAND::ENUM_BANDWIDTH GetBandWidth() const { return m_enBandWidth; }
-    void SetBandWidth(XBAND::ENUM_BANDWIDTH val) { m_enBandWidth = val; }
+    /**
+     * @brief     GetBandWidth
+     * @return    XBAND::ENUM_BANDWIDTH
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    XBAND::ENUM_BANDWIDTH GetBandWidth() const { 
+        return m_enBandWidth; 
+    }
+
+    /**
+     * @brief     SetBandWidth
+     * @param     XBAND::ENUM_BANDWIDTH val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    inline void SetBandWidth(XBAND::ENUM_BANDWIDTH val) { 
+        m_enBandWidth = val; 
+    }
+
+#elif defined(_POCKETSONATA_)
+
 #endif
 
     inline char *GetTaskID() {
@@ -114,9 +272,22 @@ public:
         return NULL;
 #endif
     }
-    inline void SetTaskID( char *pVal) { strcpy(m_szTaskID, pVal ); }
-
+    
 #if defined(_ELINT_) || defined(_XBAND_)
+    /**
+     * @brief     SetTaskID
+     * @param     char * pVal
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:14
+     * @warning
+     */
+    inline void SetTaskID(char *pVal) { 
+        strcpy(m_szTaskID, pVal); 
+    }
+
     EN_RADARCOLLECTORID GetCollectorID() const { return m_enCollectorID; }
     void SetCollectorID(EN_RADARCOLLECTORID val) { m_enCollectorID = val; }
 #endif

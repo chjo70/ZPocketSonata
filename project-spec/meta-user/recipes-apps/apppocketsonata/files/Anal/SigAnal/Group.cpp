@@ -2304,22 +2304,22 @@ void CGroup::MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex )
 // 최 종 변 경  : 조철희, 2005-12-28 13:23:43
 //
 #if defined(_ELINT_) || defined(_XBAND_)
-#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoa )		// 대역중에서 가장 큰 방위 오차
-#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoa )		// 클러스터 사이간의 최대 길이
+#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 1, _spRxdfAoa )		// 대역중에서 가장 큰 방위 오차
+#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 1, _spRxdfAoa )		// 클러스터 사이간의 최대 길이
 
 #elif defined(_POCKETSONATA_)
-#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, KHARM_AOA_MAR )		// 대역중에서 가장 큰 방위 오차
-#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, KHARM_AOA_MAR )		// 클러스터 사이간의 최대 길이
+#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 1, KHARM_AOA_MAR )		// 대역중에서 가장 큰 방위 오차
+#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 1, KHARM_AOA_MAR )		// 클러스터 사이간의 최대 길이
 
 #else
-#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 2, _spRxdfAoaLow )		// 대역중에서 가장 큰 방위 오차
-#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 2, _spRxdfAoaLow )		// 클러스터 사이간의 최대 길이
+#define		MAXIMUM_STANDARD_DEVIATION		UMUL( 1, _spRxdfAoaLow )		// 대역중에서 가장 큰 방위 오차
+#define		MAXIMUM_DISTANCE_OF_CLUSTERS	UMUL( 1, _spRxdfAoaLow )		// 클러스터 사이간의 최대 길이
 #endif
 
-#define		NUMBER_OF_CLUSTER							( MAX_AOA_GROUP )						// 최대 클러스터 개수
-#define		MINIMUM_NUMBER_OF_SAMPLES			( RJGPC )										// 클러스터 내의 가장 작은 샘플 개수
-#define		NUMBER_OF_ITERATIONS					( 7 )
-#define		SPLIT_RATIO										( 0.6 )
+#define		NUMBER_OF_CLUSTER				( MAX_AOA_GROUP )						// 최대 클러스터 개수
+#define		MINIMUM_NUMBER_OF_SAMPLES		( RJGPC )										// 클러스터 내의 가장 작은 샘플 개수
+#define		NUMBER_OF_ITERATIONS			( 7 )
+#define		SPLIT_RATIO						( 0.6 )
 void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
 {
     unsigned int i, j, k;
@@ -2330,42 +2330,42 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
     //-- 조철희 2006-01-05 10:54:31 --//
     if( pSrcIndex->uiCount <= MINIMUM_NUMBER_OF_SAMPLES ) {
         m_uiClusters = 0;
-        return;
     }
+    else {
+        // 초기화
+        m_pPdwParam = pPdw;
+        m_uiClusters = _spOne;
+        pCluster = &m_pCluster[0];
+        pCluster->iCount = pSrcIndex->uiCount;
+        memcpy(pCluster->index, pSrcIndex->pIndex, sizeof(PDWINDEX)*pCluster->iCount);
 
-    // 초기화
-    m_pPdwParam = pPdw;
-    m_uiClusters = _spOne;
-    pCluster = & m_pCluster[0];
-    pCluster->iCount = pSrcIndex->uiCount;
-    memcpy( pCluster->index, pSrcIndex->pIndex, sizeof(PDWINDEX)*pCluster->iCount );
+        CalClusterInfo(pCluster);
 
-    CalClusterInfo( pCluster );
+        // 클러스터링 시작
+        for (i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+            //
+            nSplitCluster = 0;
+            pCluster = &m_pCluster[0];
+            for (j = 0; j < m_uiClusters; ++j) {
+                if (TRUE == SplitCenter(pCluster, &m_pCluster[MAX_AGRT - 2])) {
+                    for (k = m_uiClusters + nSplitCluster - 1; k >= j + nSplitCluster + 1; --k) {
+                        memcpy(&m_pCluster[k + 1], &m_pCluster[k], sizeof(STR_CLUSTER));
+                    }
+                    memcpy(pCluster++, &m_pCluster[MAX_AGRT - 1], sizeof(STR_CLUSTER));
+                    memcpy(pCluster++, &m_pCluster[MAX_AGRT - 2], sizeof(STR_CLUSTER));
 
-    // 클러스터링 시작
-    for( i=0 ; i < NUMBER_OF_ITERATIONS ; ++i ) {
-        //
-        nSplitCluster = 0;
-        pCluster = & m_pCluster[0];
-        for( j=0 ; j < m_uiClusters ; ++j ) {
-            if( TRUE == SplitCenter( pCluster, & m_pCluster[MAX_AGRT-2] ) ) {
-                for( k=m_uiClusters+nSplitCluster-1 ; k >= j+nSplitCluster+1 ; --k ) {
-                    memcpy( & m_pCluster[k+1], & m_pCluster[k], sizeof( STR_CLUSTER ) );
+                    ++nSplitCluster;
                 }
-                memcpy( pCluster++, & m_pCluster[MAX_AGRT-1], sizeof( STR_CLUSTER ) );
-                memcpy( pCluster++, & m_pCluster[MAX_AGRT-2], sizeof( STR_CLUSTER ) );
+                else {
+                    ++pCluster;
+                }
+            }
 
-                ++ nSplitCluster;
-            }
-            else {
-                ++ pCluster;
-            }
+            if (nSplitCluster == 0)
+                break;
+
+            m_uiClusters = m_uiClusters + nSplitCluster;
         }
-
-        if( nSplitCluster == 0 )
-            break;
-
-        m_uiClusters = m_uiClusters + nSplitCluster;
     }
 }
 
@@ -2380,7 +2380,10 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
 //
 BOOL CGroup::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
 {
+    BOOL bRet=FALSE;
     STR_CLUSTER *pCluster1, *pCluster2;
+
+    int i = MAXIMUM_STANDARD_DEVIATION;
 
     /*! \bug  방위 그룹화 범위를 체크해서 빈 영역이 없는지를 검사한다.
         \date 2006-08-18 10:25:24, 조철희
@@ -2388,27 +2391,27 @@ BOOL CGroup::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
     pCluster1 = ( STR_CLUSTER * ) ( pDstCluster - pCluster );
     if( pCluster1 <= (STR_CLUSTER *) 1 ) {
         printf( "\n [W] 클러스터링 버퍼가 부족합니다." );
-        return FALSE;
+    }
+    else {
+        pCluster1 = pDstCluster++;
+        pCluster2 = pDstCluster;
+
+        if (pCluster->deviation > (float)MAXIMUM_STANDARD_DEVIATION) {
+            pCluster1->center = AddAOA(pCluster->center, UMUL(pCluster->deviation, SPLIT_RATIO));
+            pCluster2->center = SubAOA(pCluster->center, UMUL(pCluster->deviation, SPLIT_RATIO));
+
+            ReCluster(pCluster1, pCluster2, pCluster);
+            CalClusterInfo(pCluster1);
+            CalClusterInfo(pCluster2);
+
+            // 클러스터 내의 모든 개수가 최소 클러스터 개수보다 커야 분리된다.
+            // if( pCluster1->count > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->count > MINIMUM_NUMBER_OF_SAMPLES )
+            //-- 조철희 2006-01-04 15:52:41 --//
+            bRet = TRUE;
+        }
     }
 
-    pCluster1 = pDstCluster++;
-    pCluster2 = pDstCluster;
-
-    if( pCluster->deviation > (float) MAXIMUM_STANDARD_DEVIATION ) {
-        pCluster1->center = AddAOA( pCluster->center, UMUL( pCluster->deviation, SPLIT_RATIO ) );
-        pCluster2->center = SubAOA( pCluster->center, UMUL( pCluster->deviation, SPLIT_RATIO ) );
-
-        ReCluster( pCluster1, pCluster2, pCluster );
-        CalClusterInfo( pCluster1 );
-        CalClusterInfo( pCluster2 );
-
-        // 클러스터 내의 모든 개수가 최소 클러스터 개수보다 커야 분리된다.
-        // if( pCluster1->count > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->count > MINIMUM_NUMBER_OF_SAMPLES )
-        //-- 조철희 2006-01-04 15:52:41 --//
-        return TRUE;
-    }
-
-    return FALSE;
+    return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2549,85 +2552,9 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
 
         dMeanVal += ( diffVal * diffVal );
     }
-    if( dMeanVal < 0 ) {
-        //printf( "\n [W] 방위 분산 계산 에러 !!!" );
-        Log( enError, "[W] Error of AOA Deviation !!!" );
-    }
+//     if( dMeanVal < 0 ) {
+//         //printf( "\n [W] 방위 분산 계산 에러 !!!" );
+//         Log( enError, "[W] Error of AOA Deviation !!!" );
+//     }
     pCluster->deviation = (float) ( sqrt( dMeanVal / (double) pCluster->iCount ) );
 }
-
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CGroup::IsSameAoaIdx
-//! \author   조철희
-//! \param    nAoaIdx 인자형태 int
-//! \return   BOOL
-//! \version  1.37
-//! \date     2006-07-28 16:42:28
-//! \warning
-//
-// bool CGroup::IsSameAoaIdx( int nAoaIdx )
-// {
-//     bool bRet;
-//     STR_FRQ_GROUP *pFrqGroup;
-// 
-//     if( IsLastGroup() ) {
-//         bRet = false;
-//     }
-//     else {
-// 
-//         pFrqGroup = & m_FrqGroups.frq[ m_uiCoFrqAoaPwIdx ];
-// 
-//         bRet = ( pFrqGroup->aoa_idx == nAoaIdx );
-//     }
-// 
-//     return bRet;
-// }
-
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    펄스열 분리도를 높게 하기 위해서 주파수 그룹화를 세밀하게 수행한다.
-//! \author   조철희
-//! \return   void
-//! \version  1.37
-//! \date     2006-08-18 12:11:12
-//! \warning
-//
-// void CGroup::FineFreqGroup()
-// {
-//     int peak_index;
-// 
-//     MakeHist( & m_FrqAoaPwIdx, & m_pFREQ[0], FREQ_NARR_SHIFT_CNT, & m_FrqHist );
-// 
-//     // for( ;; ) {
-//     {
-//         peak_index = FindPeakInHist( m_FrqHist.bin_count, & m_FrqHist.hist[0] );
-//     }
-// }
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CGroup::CompMarginDiff
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y1 인자형태 int
-        \param    y2 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-01-03 15:20:55
-        \warning
-*/
-// BOOL CGroup::CompMarginDiff(int x, int y1, int y2, int thresh)
-// {
-//     BOOL bRet;
-// 
-//     if( x >= y1-thresh && x <= y2+thresh ) {
-//         bRet = TRUE;
-//     }
-//     else {
-//         bRet = FALSE;
-//     }
-// 
-//     return bRet;
-// }
-// 

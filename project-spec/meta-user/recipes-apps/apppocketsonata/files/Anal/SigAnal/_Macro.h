@@ -428,7 +428,6 @@ extern float _spAOAres;
 extern float _spTOAres;
 extern float _spPWres;
 
-//extern float _toaRes[enUnknown_BW+1];
 
 #if defined(_ELINT_)
 extern float _frqRes[ELINT::enUnknown_BW + 1];

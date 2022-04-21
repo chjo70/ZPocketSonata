@@ -308,17 +308,16 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
         m_uiCoPdw = pstPDWData->GetTotalPDW();
 
         // RAW 데이터 저장 여부
-        m_iIsStorePDW = pstPDWData->x.ps.iIsStorePDW;
+        SetStorePDW( pstPDWData->x.ps.iIsStorePDW );
     }
     else {
         SetPDWID(_spZero);
 
         m_uiCoPdw = _spZero;
 
-        m_iIsStorePDW = _spZero;
+        SetStorePDW( _spZero );
 
     }
-
 
 	// 그룹화 초기화
 	m_theGroup->Init();

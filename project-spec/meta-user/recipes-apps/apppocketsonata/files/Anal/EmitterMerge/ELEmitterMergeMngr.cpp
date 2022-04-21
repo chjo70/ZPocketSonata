@@ -40,6 +40,8 @@
 #include "../../Include/globals.h"
 #include "../../Utils/ccommonutils.h"
 
+//extern CSysConfig *g_pTheSysConfig;
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -461,14 +463,6 @@ void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
     // 1. CED 신호 식별을 수행한다.
     IdentifyLOB( pLOBData );
 
-#ifdef _TESTSBC_
-    // 2. LOB와 기존 위협 간의 비교
-    m_bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
-
-    // 3. LOB 식별 결과를 DB에 기록한다. (식별 결과와 AET, ABT 번호를 할당하여 DB 테이블에 저장함.)
-    InsertLOB( & m_LOBDataExt, bIsFilteredLOB );
-
-#else    
     // 2. LOB와 기존 위협 간의 비교
     m_bMerge = ManageThreat( & m_LOBDataExt, bCheckLOB );
 
@@ -482,8 +476,6 @@ void CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pL
 
     // 5. 전시할 에미터 번호를 기록한다.
     AddThreatInfo();
-
-#endif
 
     //////////////////////////////////////////////////////////////////////////
     // 6. LOB 클러스터링 결과 수행
@@ -5306,13 +5298,9 @@ bool CELEmitterMergeMngr::CompMergeLOB( SELMERGE_CANDIDATE *pMergeCandidate, CEL
 
     pMergeCandidate->fLevel = 0;
 
-    // 미식별 ELNOT 초기화
-    //m_szELNOT[0] = NULL;
-
     // 신호 형태가 동일해야 나머지 주파수, PRI, PW, 스캔 정보를 비교함.
-    //if( m_pLOBOtherInfo->bUpdate == false || true ) {
     if( CompEmitterInfo( pABTData, pABTExtData ) == true ) {
-        if( ( true == CompIDInfo( pABTData, pABTExtData ) ) && ( true == CompIDELNOTInfo( pABTData, pABTExtData ) ) ) {
+        if((true == CompDOAInfo(pABTData, pABTExtData)) && ( true == CompIDInfo( pABTData, pABTExtData ) ) && ( true == CompIDELNOTInfo( pABTData, pABTExtData ) ) ) {
             if( true == CompDist( pABTData, pABTExtData ) ) {
                 pMergeCandidate->fLevel += CompDistRange( pABTData, pABTExtData );
 
@@ -6596,27 +6584,7 @@ float CELEmitterMergeMngr::CompDistRange( SRxABTData *pABTData, SELABTDATA_EXT *
     return fDifferenceLevel;
 }
 
-// /**
-//  * @brief     링크 번호를 비교한다.
-//  * @param     *pABTExtData 빔 추가 정보의 데이터 포인터
-//  * @return    병합이 정상이면 true, 그렇지 않으면 false
-//  * @author    조철희 (churlhee.jo@lignex1.com)
-//  * @version   0.0.1
-//  * @date      2016-04-04, 오후 6:44
-//  * @warning
-//  */
-// bool CELEmitterMergeMngr::CompLinkNum( SELABTDATA_EXT *pABTExtData )
-// {
-// 	bool bRet=false;
-//
-// 	// 링크 번호 비교
-// 	if( pABTExtData->iLinkNum == m_nLinkNum ) {
-// 		bRet = true;
-// 	}
-//
-// 	return bRet;
-// }
-//
+
 /**
  * @brief     위협 관리하고 ABT와 수신한 LOB와 신호 형태를 비교 여부를 참 또는 거짓을 리턴한다.
  * @param     *pABTData 빔 정보의 데이터 포인터
@@ -6714,6 +6682,35 @@ bool CELEmitterMergeMngr::CompSigType( SRxABTData *pABTData )
 // 	return bRet;
 // }
 //
+
+
+/**
+ * @brief     CompDOAInfo
+ * @param     SRxABTData * pABTData
+ * @param     SELABTDATA_EXT * pABTExtData
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-21, 15:13
+ * @warning
+ */
+bool CELEmitterMergeMngr::CompDOAInfo(SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData)
+{
+    bool bRet = true;
+
+    float fAOA=g_pTheSysConfig->GetMergeAOADiff( g_enBoardId );
+    if (m_bScanProcess == true) {
+        //bRet = (pABTData->uiABTID == m_pLOBData->uiABTID);
+    }
+    else {
+        bRet = CompAoaDiff<float>(pABTData->fDOAMean, m_pLOBData->fDOAMean, (float)fAOA);
+    }
+
+    return bRet;
+
+}
+
 /**
  * @brief     식별 결과를 비교한다.
  * @param     *pABTExtData 빔 추가 정보의 데이터 포인터

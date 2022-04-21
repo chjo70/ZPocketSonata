@@ -185,7 +185,7 @@ private:
     SEnvironVariable *m_pSEnvironVariable;
     
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+#if defined(_MSSQL_)
     LONG m_lOpInitID;
 
 #endif
@@ -345,8 +345,8 @@ private:
 // 	//////////////////////////////////////////////////////////////////////////
 // 	// LOB 병합 비교 관련 함수
     bool CompMergeLOB( SELMERGE_CANDIDATE *pMergeCandidate, CELThreat *pThreatABT, SELLOBDATA_EXT *pThreatDataExt, bool bLinkComp );
-// 	bool CompLinkNum( SELABTDATA_EXT *pABTData );
-    bool CompTaskType( SELABTDATA_EXT *pABTExtData, bool bMerge=false );
+    //bool CompTaskType( SELABTDATA_EXT *pABTExtData, bool bMerge=false );
+    bool CompDOAInfo(SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData);
     bool CompIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompSigType( SRxABTData *pABTData );
     bool CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -568,6 +568,22 @@ public:
 
     inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
     inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
+
+#ifdef _MSSQL_
+    /**
+     * @brief     GetOpInitID
+     * @return    LONG
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 16:56
+     * @warning
+     */
+    inline LONG GetOPInitID() {
+        return m_lOpInitID;
+    }
+
+#endif
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

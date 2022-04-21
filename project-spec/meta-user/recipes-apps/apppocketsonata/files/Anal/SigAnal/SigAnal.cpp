@@ -86,7 +86,7 @@ CSigAnal::~CSigAnal()
     _SAFE_FREE(m_stSavePDWData.pstPDW)
 
 #if defined(_SQLITE_) || defined(_MSSQL_)
-        _SAFE_FREE(m_pszSQLString)
+    _SAFE_FREE(m_pszSQLString)
 
 #endif
 
@@ -579,3 +579,76 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 }
 
 
+/**
+ * @brief     DISP_FineAet
+ * @param     SRxLOBData * pLOB
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-20, 19:36
+ * @warning
+ */
+void CSigAnal::DISP_FineAet(SRxLOBData *pLOB)
+{
+    char buffer[500];
+
+    // 신호 정보
+    int iCnt = 0;
+    iCnt += sprintf(&buffer[iCnt], "%s", g_szAetSignalType[pLOB->iSignalType]);
+
+#ifdef __VXWORKS__
+    // 방위
+    iCnt += sprintf(&buffer[iCnt], " %4d(%4d,%4d)", UMUL(pLOB->fDOAMean, 1), UMUL(pLOB->fDOAMin, 1), UMUL(pLOB->fDOAMax, 1));
+
+    // 주파수
+    iCnt += sprintf(&buffer[iCnt], " %s", g_szAetFreqType[pLOB->iFreqType]);
+    iCnt += sprintf(&buffer[iCnt], " %d[%d, %d]", UMUL(pLOB->fFreqMean, 1), UMUL(pLOB->fFreqMin, 1), UMUL(pLOB->fFreqMax, 1));
+
+    // PRI
+    iCnt += sprintf(&buffer[iCnt], " %s    ", g_szAetPriType[pLOB->iPRIType]);
+    iCnt += sprintf(&buffer[iCnt], "%d(%d,%d), %2d", UMUL(pLOB->fPRIMean, 1), UMUL(pLOB->fPRIMin, 1), UMUL(pLOB->fPRIMax, 1), pLOB->iPRIPositionCount);
+
+    // PW
+    iCnt += sprintf(&buffer[iCnt], " %d(%d,%d)", UMUL(pLOB->fPWMean, 1), UMUL(pLOB->fPWMin, 1), UMUL(pLOB->fPWMax, 1));
+
+    // PA
+    iCnt += sprintf(&buffer[iCnt], " %d(%d,%d)", UMUL(pLOB->fPAMean, 1), UMUL(pLOB->fPAMin, 1), UMUL(pLOB->fPAMax, 1));
+
+#else
+    // 방위
+    iCnt += sprintf(&buffer[iCnt], " %4.1f(%4.1f,%4.1f)", pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax);
+
+    // 주파수
+    iCnt += sprintf(&buffer[iCnt], " %s", g_szAetFreqType[pLOB->iFreqType]);
+    iCnt += sprintf(&buffer[iCnt], " %.3f[%.3f, %.3f]", pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax);
+
+    if (pLOB->iFreqType == _PATTERN_AGILE) {
+        //printf( "%s(%s,%s)%s" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), Comma( buff4 ) );
+    }
+    else {
+        // printf( "%s(%s∼%s)%3d" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), FRQCNV( pNewAet->aet.frq.band, temp )-FRQCNV( pNewAet->aet.frq.band, 0 ) );
+        //printf( "%s(%s,%s)%3d" , buff1, buff2, buff3, FRQCNV( pManAet->aet.frq.band, temp )-FRQCNV( pManAet->aet.frq.band, 0 ) );
+    }
+
+    // PRI
+    iCnt += sprintf(&buffer[iCnt], " %s    ", g_szAetPriType[pLOB->iPRIType]);
+    iCnt += sprintf(&buffer[iCnt], "%0.1f(%.1f,%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount);
+
+    // PW
+    iCnt += sprintf(&buffer[iCnt], " %.2f(%.2f,%.2f)", pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax);
+
+    // PA
+    iCnt += sprintf(&buffer[iCnt], " %.2f(%.2f,%.2f)", pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax);
+
+    // ID
+    //printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
+
+#endif
+
+    sprintf(&buffer[iCnt], " [%3d]", pLOB->iNumOfPDW);
+
+    //printf( "\n%s", buffer );
+    Log(enNormal, "\t%s", buffer);
+
+}

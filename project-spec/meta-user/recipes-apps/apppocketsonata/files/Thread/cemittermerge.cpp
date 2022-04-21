@@ -226,6 +226,7 @@ void CEmitterMerge::MergeEmitter()
             bTrkLOB = true;
         }
         ++ pLOBData;
+
     }
 
 #ifdef _TRACK_ENABLED_
@@ -267,7 +268,10 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
         }
     }
     else {
+        WhereIs;
+
         if(bTrack == false ) {
+            WhereIs;
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & m_strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
     }

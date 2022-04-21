@@ -29,14 +29,7 @@ class CKnownSigAnal : public CSigAnal
 private:
     SRxABTData *m_pTrkAet;
 
-    int m_iIsStorePDW;
 
-    unsigned int m_uiPDWID;
-
-	__time32_t m_tColTime;
-	unsigned int m_tColTimeMs;
-
-    char m_szRawDataFilename[100];
 
 public:
     //##ModelId=452B0C52024B
@@ -72,8 +65,6 @@ protected:
     //STR_PDWBANK *m_pPdwBank;
     STR_STATIC_PDWDATA *m_pstPDWData;
 
-    int m_uiABTID;
-
 private:
     
 
@@ -85,21 +76,6 @@ public:
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
-    inline __time32_t GetColTime() {
-        return m_tColTime;
-    }
-    void SetColTime(__time32_t val) { m_tColTime = val; }
-
-    inline unsigned int GetColTimeMs() {
-        return m_tColTimeMs;
-    }
-    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
-
-    inline unsigned int GetPDWID() {
-        return m_uiPDWID;
-    }
-    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
-
     inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
         return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
     }
@@ -109,15 +85,10 @@ public:
     inline unsigned int GetCoPdw() { return m_uiCoPdw; }
     inline unsigned int GetColPdw() { return m_uiCoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
-    inline int GetNoABTID() { return m_uiABTID; }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
     //##ModelId=452B0C5202A5
     inline int GetMaxPdw() { return m_nMaxPdw; }
-    //##ModelId=452B0C5202A6
-    //inline STR_PDWBANK *GetPdwBank() { return m_pPdwBank; }
-    //##ModelId=452B0C5202A7
     
-
     //##ModelId=452B0C5202A8
     inline void MakePDWArray( _PDW *pdw, int iCount ) { m_theGroup->MakePDWArray( pdw, iCount); }
     //##ModelId=452B0C5202B1
@@ -187,7 +158,7 @@ public:
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
-    inline int IsStorePDW() { return m_iIsStorePDW; }
+    
 
     void InitVar();
     //##ModelId=452B0C52036E
@@ -208,6 +179,10 @@ public:
     void Init( STR_STATIC_PDWDATA *pstPDWData );
     //##ModelId=452B0C52039F
     void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet );
+
+    void DISP_FineAet(SRxLOBData *pLOB) {
+        CSigAnal::DISP_FineAet(pLOB);
+    }
 
 };
 

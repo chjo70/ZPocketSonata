@@ -47,11 +47,6 @@ private:
 
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
-    unsigned int m_uiIsStorePDW;
-
-    __time32_t m_tColTime;
-    unsigned int m_tColTimeMs;
-
 #if defined(_ELINT_) || defined(_XBAND_)
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
@@ -77,46 +72,69 @@ public:
     void LoadCEDLibrary();
 
     // 인라인 외부 연결 함수
-    //inline ENUM_BANDWIDTH GetBandWidth() { return m_enBandWidth; }
-    inline int GetCoPdw() { return m_uiCoPdw; }
-    inline int GetBand() { return m_theGroup->GetBand(); }
-    inline int GetPulseStat() { return m_theGroup->GetPulseStat(); }
+    /**
+     * @brief     GetCoPdw
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:28
+     * @warning
+     */
+    inline int GetCoPdw() { 
+        return m_uiCoPdw; 
+    }
+    /**
+     * @brief     GetBand
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:28
+     * @warning
+     */
+    inline int GetBand() { 
+        return m_theGroup->GetBand(); 
+    }
+    /**
+     * @brief     GetPulseStat
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:28
+     * @warning
+     */
+    inline int GetPulseStat() { 
+        return m_theGroup->GetPulseStat(); 
+    }
 
+    /**
+     * @brief     GetCollectTime
+     * @param     struct timespec * pTimeSpec
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-21, 10:28
+     * @warning
+     */
     inline void GetCollectTime(struct timespec *pTimeSpec) {
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
-
-    inline __time32_t GetColTime() {
-        return m_tColTime;
-    }
-    void SetColTime(__time32_t val) { m_tColTime = val; }
-
-    inline unsigned int GetColTimeMs() {
-        return m_tColTimeMs;
-    }
-    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
-
-    inline unsigned int GetPDWID() {
-        return m_uiPDWID;
-    }
-    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
 
     inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
         return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
     }
 
-    // inline void DISP_FineAet( STR_UPDAET *pUpdAet ) { m_theMakeAET->DISP_FineAet( pUpdAet ); }
-    //inline void DISP_FineAet( STR_MANAET *pManAet ) { /*m_theMakeAET->DISP_FineAet( pManAet );*/ }
-    //inline void DISP_FineAet( STR_NEWAET *pNewAet ) { /*m_theMakeAET->DISP_FineAet( pNewAet );*/ }
-    inline void DISP_FineAet( SRxLOBData *pNewAet ) { m_theMakeAET->DISP_FineAet( pNewAet ); }
+    inline void DISP_FineAet( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineAet( pNewAet ); }
     
     inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     
-    inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
+    //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
-    inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
-    inline unsigned int IsStorePDW() { return m_uiIsStorePDW; }
+    //inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
     inline int GetColPdw() { return m_uiCoPdw; }
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }

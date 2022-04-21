@@ -144,7 +144,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
         SetColTime(pPDWData->GetColTime());
 
-        m_uiIsStorePDW = pPDWData->GetStorePDW();
+        SetStorePDW( pPDWData->GetStorePDW() );
 
 #if defined(_ELINT_)
         SetBandWidth(pPDWData->x.el.enBandWidth );
@@ -157,7 +157,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         SetCollectorID(pPDWData->x.xb.GetCollectorID());
 
 #elif _POCKETSONATA_
-        m_enBandWidth = en5MHZ_BW;
+        
 
 #else
 #endif
@@ -167,7 +167,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 		SetPDWID(_spZero);
 
         m_uiCoPdw = 0;
-        m_uiIsStorePDW = 0;
+        SetStorePDW(_spZero);
 
 #if defined(_ELINT_) || defined(_XBAND_)
 #ifdef _ELINT_

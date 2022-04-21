@@ -36,7 +36,12 @@ struct STR_SYSCONFIG {
     /**
      * @brief 대역별 임계값
      */
-    float fRxThreshold[5];
+    float fRxThreshold[enMAXPRC - 1];
+
+    /**
+     * @brief 대역별 병합 방위 오차
+     */
+    float fMergeAOADiff[enMAXPRC-1];
 
     /**
      * @brief 최근 연결된 서버 IP 주소
@@ -93,7 +98,6 @@ private:
     static CSharedMemroy* m_pSharedMemory;
 
     STR_SYSCONFIG m_strConfig;
-    //STR_CNFSYS m_strCnfSys;
 
 #ifndef _MSC_VER
     minIni m_theMinIni;
@@ -167,9 +171,23 @@ public:
 
     };
 
+    float GetMergeAOADiff(ENUM_BoardID enBoardID) { 
+        float fValue= m_strConfig.fMergeAOADiff[enPRC1];
+
+        if(enBoardID >= enPRC1 && enBoardID <= enPRC5 )
+            fValue = m_strConfig.fMergeAOADiff[enBoardID- enPRC1]; 
+
+        return fValue;
+
+    };
+    void SetMergeAOADiff(float *fValue) {
+        memcpy(m_strConfig.fMergeAOADiff, fValue, sizeof(m_strConfig.fMergeAOADiff));
+        m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
+    };
+
     float *GetRxThreshold() { return & m_strConfig.fRxThreshold[0]; };
-    void SetRxThreshold( float *fRxThreshold ) {
-        memcpy( m_strConfig.fRxThreshold, fRxThreshold, sizeof(m_strConfig.fRxThreshold) );
+    void SetRxThreshold( float *fValue) {
+        memcpy( m_strConfig.fRxThreshold, fValue, sizeof(m_strConfig.fRxThreshold) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     };
 

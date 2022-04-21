@@ -28,13 +28,6 @@ class CScanSigAnal : public CSigAnal
 private:
     SRxABTData *m_pScnAet;
 
-    unsigned int m_uiPDWID;
-
-    int m_iIsStorePDW;
-
-	__time32_t m_tColTime;
-	unsigned int m_tColTimeMs;
-
 private:
     
 
@@ -75,21 +68,6 @@ public:
     inline void GetCollectTime(struct timespec *pTimeSpec) {
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
-
-    inline __time32_t GetColTime() {
-        return m_tColTime;
-    }
-    void SetColTime(__time32_t val) { m_tColTime = val; }
-
-    inline unsigned int GetColTimeMs() {
-        return m_tColTimeMs;
-    }
-    void SetColTimeMs(unsigned int val) { m_tColTimeMs = val; }
-
-    inline unsigned int GetPDWID() {
-        return m_uiPDWID;
-    }
-    void SetPDWID(unsigned int val) { m_uiPDWID = val; }
 
     void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
@@ -133,7 +111,6 @@ public:
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     inline SRxABTData *GetScnAET() { return m_pScnAet; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
-    inline int IsStorePDW() { return m_iIsStorePDW; }
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }

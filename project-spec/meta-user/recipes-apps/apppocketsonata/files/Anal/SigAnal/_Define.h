@@ -137,8 +137,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////////
 // 방위/주파수/펄스폭 그룹화
 #if defined(_ELINT_) || defined(_XBAND_)
-#define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
-#define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
+#define _spRxdfAoa				    (IAOACNV( 8 ))      // 8 도
+#define _spRxdfFrq				    (4)                 // about 5(=4*1.25)MHz,
 
 #define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
 #define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)

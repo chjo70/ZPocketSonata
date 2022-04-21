@@ -27,7 +27,6 @@
 #include "MakeAET.h"
 
 #include "../../Include/globals.h"
-//#include "../../Utils/ccommonutils.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -50,17 +49,17 @@ CMakeAET::CMakeAET( int coMaxPdw /*=NSP_MAX_PDW*/ )
 
     m_nMaxPdw = coMaxPdw;
 
-    m_dRCLatitude[0] = 0.0;
-    m_dRCLatitude[1] = 37.485168456889;
-    m_dRCLatitude[2] = 37.454452514694;
-    m_dRCLatitude[3] = 37.453517913889;
+//     m_dRCLatitude[0] = 0.0;
+//     m_dRCLatitude[1] = 37.485168456889;
+//     m_dRCLatitude[2] = 37.454452514694;
+//     m_dRCLatitude[3] = 37.453517913889;
+// 
+//     m_dRCLongitude[0] = 0.0;
+//     m_dRCLongitude[1] = 126.457916259694;
+//     m_dRCLongitude[2] = 126.481880188111;
+//     m_dRCLongitude[3] = 126.423416137778;
 
-    m_dRCLongitude[0] = 0.0;
-    m_dRCLongitude[1] = 126.457916259694;
-    m_dRCLongitude[2] = 126.481880188111;
-    m_dRCLongitude[3] = 126.423416137778;
-
-    m_CoAnalPdw = 0;
+    m_uiCoAnalPdw = 0;
 
 }
 
@@ -74,7 +73,7 @@ CMakeAET::CMakeAET( int coMaxPdw /*=NSP_MAX_PDW*/ )
 //##ModelId=426C87D70021
 CMakeAET::~CMakeAET()
 {
-//    free( m_pParam );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -92,12 +91,12 @@ void CMakeAET::Init()
     // 펄스 수집 개수
     m_nCoPdw = GetColPdw();
 
-    m_CoLOB = 0;
-    m_nAnalEmitter = 0;
+    m_iCoLOB = 0;
+    //m_nAnalEmitter = 0;
     m_pEmitter = GetEmitter();
     m_pSeg = GetPulseSeg();
 
-    m_CoAnalPdw = 0;
+    m_uiCoAnalPdw = 0;
 
     m_pPdwParam = GetPdwParam();
 
@@ -119,13 +118,13 @@ void CMakeAET::MakeAET()
     int i;
     STR_EMITTER *pEmitter;
 
-    m_CoEmitter = GetCoEmitter();
+    m_iCoEmitter = GetCoEmitter();
 
     // 에미터 추출 개수를 저장
-    m_CoMakeAet = m_CoLOB;
+    //m_CoMakeAet = m_CoLOB;
 
     pEmitter = & m_pEmitter[0];
-    for( i=0 ; i < m_CoEmitter ; ++i, ++pEmitter ) {
+    for( i=0 ; i < m_iCoEmitter ; ++i, ++pEmitter ) {
         if( pEmitter->mark == NORMAL_EMITTER ) {
             // 에미터 생성하기
             MakeLOBDatafromEmitter( pEmitter, i );
@@ -133,9 +132,9 @@ void CMakeAET::MakeAET()
             // CW 에미터인 경우, PRI, 펄스폭을 강제 설정한다.
             // SetCWParameter( pNewAet );
 
-            SaveEmitterPdwFile( pEmitter, m_CoLOB+1, true );
+            SaveEmitterPdwFile( pEmitter, m_iCoLOB+1, true );
 
-            ++ m_CoLOB;
+            ++ m_iCoLOB;
         }
     }
 
@@ -145,10 +144,8 @@ void CMakeAET::MakeAET()
     //DiscardEmitter();
     //ReMakeEmitter();
 
-    // 한번의 에미터 생성후에 만들어진 에미터 생성 개수
-    m_CoMakeAet = m_CoLOB - m_CoMakeAet;
-
-    m_nAnalEmitter = m_CoEmitter;
+    // LOB 생성한 개수로 재지정한다.
+    //m_nAnalEmitter = m_CoLOB;    // m_CoEmitter;
 
 }
 
@@ -803,20 +800,20 @@ void CMakeAET::PrintAllEmitter()
 
     SRxLOBData *pLOB;
 
-    if( m_CoLOB == 0 ) {
+    if( m_iCoLOB == 0 ) {
         //printf( "\n\n LOB 개수 : None." );
         Log( enNormal, "LOB : None." );
     }
     else {
         //printf( "\n\n LOB 개수 : %d", m_CoLOB );
-        Log( enNormal, "LOB : %d", m_CoLOB );
+        Log( enNormal, "LOB : %d", m_iCoLOB );
         pLOB = GetLOBData();		//& m_LOBData[0];
 
     // printf( "\n---- PAET[%3d] -----------------------------------------------------------------------------------------------------------" , m_CoMakeAet );
     //printf( "\n### AOA      Freq(MHz)                PRI(us)                PA(dB)        PW(ns)         AS(s)       SeenTime    IPL   T FSP    PPP");
     //printf( "\n              T       Mean   Min   Max T       Mean  Min  Max Mean Min Max  Mean  Min  Max T    Prd    First Last  C Am    (us)   (us)");
     //printf( "\n------------------------------------------------------------------------------------------------------------------------------------" );
-        for( i=0 ; i < m_CoLOB ; ++i ) {
+        for( i=0 ; i < m_iCoLOB ; ++i ) {
             //printf("\n\t\t[%02d]" , i+1 );
             DISP_FineAet( pLOB );
             //printf("\n");
@@ -1313,17 +1310,17 @@ void CMakeAET::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
     STR_FRQ stFrq;
     STR_PRI stPri;
 
-    pLOBData = GetLOBData( m_CoLOB );
+    pLOBData = GetLOBData(m_iCoLOB);
 
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
     pLOBData->uiPDWID = GetPDWID();
 
-    pLOBData->uiPLOBID = m_CoLOB + 1;
-    pLOBData->uiLOBID = 0;
-    pLOBData->uiABTID = 0;
-    pLOBData->uiAETID = 0;
+    pLOBData->uiPLOBID = m_iCoLOB + 1;
+    pLOBData->uiLOBID = _spZero;
+    pLOBData->uiABTID = _spZero;
+    pLOBData->uiAETID = _spZero;
 
     // 시간 정보
     struct timespec tsNow;

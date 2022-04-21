@@ -25,12 +25,22 @@
 /////////////////////////////////////////////////////////////////////////////////////
 // 시스템 변수 기본 설정 값
 
-// 수신기 임계값
+// 대역별 수신 임계값
 #define _DEFAULT_RXTHRESHOLD_BAND1_                 (float) (-60.0)
 #define _DEFAULT_RXTHRESHOLD_BAND2_                 (float) (-55.3)
 #define _DEFAULT_RXTHRESHOLD_BAND3_                 (float) (-60.2)
 #define _DEFAULT_RXTHRESHOLD_BAND4_                 (float) (-70.0)
 #define _DEFAULT_RXTHRESHOLD_BAND5_                 (float) (-75.0)
+#define _DEFAULT_RXTHRESHOLD_BAND6_                 (float) (-72.1)
+
+
+// 대역별 방위 병합 오차
+#define _DEFAULT_AOA_MERGE_BAND1_                   (float) (8.0)       // 도(degree)
+#define _DEFAULT_AOA_MERGE_BAND2_                   (float) (8.0)
+#define _DEFAULT_AOA_MERGE_BAND3_                   (float) (8.0)
+#define _DEFAULT_AOA_MERGE_BAND4_                   (float) (8.0)
+#define _DEFAULT_AOA_MERGE_BAND5_                   (float) (8.0)
+#define _DEFAULT_AOA_MERGE_BAND6_                   (float) (8.0)
 
 // 에미터 최소 펄스 신호 개수
 #define _DEFAULT_ANAL_MINPULSECOUNT_                (5)

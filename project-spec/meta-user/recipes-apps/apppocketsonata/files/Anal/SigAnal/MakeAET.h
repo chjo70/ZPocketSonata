@@ -21,22 +21,21 @@
 class CMakeAET
 {
 private:
-    //char m_Comma[50];
-    double m_dRCLatitude[RADARCOL_MAX];
-    double m_dRCLongitude[RADARCOL_MAX];
+//     double m_dRCLatitude[RADARCOL_MAX];
+//     double m_dRCLongitude[RADARCOL_MAX];
 
 
 public:
     //##ModelId=452B0C55039A
     //UINT *m_pParam;
     //##ModelId=452B0C55039B
-    int m_CoEmitter;
+    int m_iCoEmitter;
     //##ModelId=452B0C55039C
-    int m_nAnalEmitter;
+    //int m_nAnalEmitter;
     //##ModelId=452B0C5503A4
-    int m_CoLOB;
+    int m_iCoLOB;
     //##ModelId=452B0C5503A5
-    int m_CoMakeAet;
+    //int m_CoMakeAet;
 
 protected:
     DEFINE_ANAL_PVAR_
@@ -45,40 +44,32 @@ protected:
 
     //##ModelId=452B0C5503CF
     STR_EMITTER *m_pEmitter;
-    // MAX_AET 개수는 펄스열 개수에 의한 최대 개수이고
-    // +1 한 값은 MakeUpAET()에서 버퍼로 사용하기 위한 것이다.
-    //##ModelId=452B0C5503C8
-    //STR_NEWAET m_Aet[ MAX_AET+1 ];
+
     //##ModelId=452B0C5503A6
     int m_nMaxPdw;
     //##ModelId=452B0C5503AE
     int m_nCoPdw;
     //##ModelId=452B0C5503AF
-    UINT m_CoAnalPdw;
+    UINT m_uiCoAnalPdw;
     //##ModelId=452B0C5503C3
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
 public:
     void ConvertRealFreq( STR_FRQ *pFrq );
-    //void ReMakeEmitter();
-    //void DiscardEmitter();
-    //void SetCWParameter( STR_NEWAET *pNewAet );
     int CalMaxChannel( STR_PDWINDEX *pPdw );
-
-    void DISP_HexFineAet( STR_NEWAET *pNewAet );
 
     //char * Comma( char *pString );
     void PrintAllEmitter();
 
     //##ModelId=452B0C5503E0
-    inline int GetMakeAet() { return m_CoMakeAet; }
+    //inline int GetMakeAet() { return m_CoMakeAet; }
 
     //##ModelId=452B0C560002
-    inline int GetCoAnalPdw() { return m_CoAnalPdw; }
-    inline void SetCoAnalPdw(UINT coAnalPdw ) { m_CoAnalPdw=coAnalPdw; }
+    inline int GetCoAnalPdw() { return m_uiCoAnalPdw; }
+    inline void SetCoAnalPdw(UINT coAnalPdw ) { m_uiCoAnalPdw=coAnalPdw; }
     //##ModelId=452B0C560003
-    inline int GetCoLOB() { return m_CoLOB; }
-    inline void SetCoLOB( UINT coLOB ) { m_CoLOB = coLOB; }
+    inline int GetCoLOB() { return m_iCoLOB; }
+    inline void SetCoLOB( UINT coLOB ) { m_iCoLOB = coLOB; }
 
     //##ModelId=452B0C560004
     virtual int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )=0;

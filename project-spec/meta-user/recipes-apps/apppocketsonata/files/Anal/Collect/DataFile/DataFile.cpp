@@ -55,7 +55,7 @@ int CPOCKETSONATAPDW::m_iBoardID;
  * @param     STR_RAWDATA * pRawData
  * @return    
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -72,7 +72,7 @@ CPDW::CPDW(STR_RAWDATA *pRawData) : CData()
  * @param     void
  * @return    
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -87,7 +87,7 @@ CPDW::~CPDW(void)
  * @param     unsigned int uiItems
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -101,7 +101,7 @@ void CPDW::Alloc( unsigned int uiItems )
  * @brief     Free
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -115,7 +115,7 @@ void CPDW::Free()
  * @brief     GetData
  * @return    void *
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -137,7 +137,7 @@ void *CPDW::GetRealData()
  * @param     STR_FILTER_SETUP * pFilterSetup
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:19
  * @warning
@@ -170,7 +170,7 @@ void CPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup
 // 
 // 	    m_PDWData.uiDataItems = 0;
 // 
-//         //Log( enNormal, "ConvertArray()瑜?[%d]媛쒕? 蹂?섑빀?덈떎." , m_RawData.uiDataItems );
+//         //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 // 
 //         for (i = 0; i < m_PDWData.uiDataItems ; ++i) {
 // 		    temp.bpdw[0][0] = pPDW->item.toa_1;
@@ -214,7 +214,7 @@ void CPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup
 // 		    *pcDV = pPDW->item.dv;
 // 
 // 		    // printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[MHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );
-// 		    // ?꾪꽣留?議곌굔
+// 		    // 필터링 조건
 // /*		    if( ( m_strFilterSetup.dToaMin <= *pfTOA && m_strFilterSetup.dToaMax >= *pfTOA ) &&
 // 			    ( m_strFilterSetup.dAoaMin <= *pfAOA && m_strFilterSetup.dAoaMax >= *pfAOA ) &&
 // 			    ( m_strFilterSetup.dPAMin <= *pfPA && m_strFilterSetup.dPAMax >= *pfPA ) &&
@@ -244,7 +244,7 @@ void CPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup
  * @brief     
  * @param     unsigned long long ullFileSize
  * @return    unsigned int
- * @author    鈺곌퀣荑??(churlhee.jo@lignex1.com)
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/25 23:56:38
  * @warning   
@@ -271,7 +271,7 @@ unsigned int CPDW::GetDataItems( unsigned long long ullFileSize )
  * @param     STR_FILTER_SETUP * pstFilterSetup
  * @return    
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -292,7 +292,7 @@ CEPDW::CEPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData()
  * @brief		~CEPDW
  * @param		void
  * @return		
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/29 10:26:27
  * @warning		
@@ -306,7 +306,7 @@ CEPDW::~CEPDW(void)
  * @brief		Alloc
  * @param		int iItems
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/29 10:26:34
  * @warning		
@@ -321,7 +321,7 @@ void CEPDW::Alloc( unsigned int uiItems )
  * @brief     Free
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-05, 10:23
  * @warning
@@ -336,7 +336,7 @@ void CEPDW::Free()
  * @brief     GetData
  * @return    void *
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-05, 10:23
  * @warning
@@ -358,7 +358,7 @@ void *CEPDW::GetRealData()
  * @param     STR_FILTER_SETUP * pFilterSetup
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-05, 10:23
  * @warning
@@ -400,7 +400,7 @@ void CEPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetu
 // 
 //     for ( i=0; i < m_uiTotalDataItems ; ++i ) {
 // 
-//         // ?꾪꽣留?議곌굔
+//         // 필터링 조건
 //         if( ( m_strFilterSetup.ullToaMin <= pPDW->ullTOA && m_strFilterSetup.ullToaMax >= pPDW->ullTOA ) &&
 //             ( m_strFilterSetup.uiAoaMin <= pPDW->uiAOA && m_strFilterSetup.uiAoaMax >= pPDW->uiAOA ) &&
 //             ( m_strFilterSetup.uiPAMin <= pPDW->uiPA && m_strFilterSetup.uiPAMax >= pPDW->uiPA ) &&
@@ -425,7 +425,7 @@ void CEPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetu
 // 
 // 			*pullTOA++ = pPDW->ullTOA;
 // 
-//             // 洹몃옒??? 紐⑸줉李쎌쑝濡?湲몄젣 媛믪쓣 蹂닿린 ?꾪븳 泥섎━
+//             // 그래프 와 목록창으로 길제 값을 보기 위한 처리
 //             *pfFreq++ = DecodeRealFREQMHz( pPDW->uiFreq );
 //             *pfPW++ = DecodePW( pPDW->uiPW, m_enBandWidth );
 //             *pfAOA++ = DecodeDOA( pPDW->uiAOA );
@@ -449,7 +449,7 @@ void CEPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetu
  * @brief     GetHeaderSize
  * @return    unsigned int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-20, 15:02
  * @warning
@@ -471,7 +471,7 @@ int CEPDW::GetHeaderSize()
  * @brief     GetDataItems
  * @return    unsigned int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-20, 15:02
  * @warning
@@ -485,7 +485,7 @@ unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
 
         memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
 
-        // ?꾨옒???쒓컙 ?뺣낫
+        // 아래는 시간 정보
         //memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
         //memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
 
@@ -502,7 +502,7 @@ unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
  * @brief     
  * @param     void * pData
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/15 18:10:56
  * @warning   
@@ -521,7 +521,7 @@ void CEPDW::SetHeaderData( void *pData )
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// X諛대뱶 諛⑺깘湲?
+// X밴드 방탐기
 
 /**
  * @brief     CData
@@ -529,7 +529,7 @@ void CEPDW::SetHeaderData( void *pData )
  * @param     STR_FILTER_SETUP * pstFilterSetup
  * @return    
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:17
  * @warning
@@ -548,7 +548,7 @@ CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
  * @brief		~CEPDW
  * @param		void
  * @return		
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/29 10:26:27
  * @warning		
@@ -562,7 +562,7 @@ CXPDW::~CXPDW(void)
  * @brief     
  * @param     const char * pRawData
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/18 23:06:22
  * @warning   
@@ -588,7 +588,7 @@ void CXPDW::Init( char *pRawData )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/18 23:06:32
  * @warning   
@@ -602,7 +602,7 @@ void CXPDW::Free()
  * @brief     GetData
  * @return    void *
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-05, 10:23
  * @warning
@@ -624,7 +624,7 @@ void *CXPDW::GetRealData()
  * @param     STR_FILTER_SETUP * pFilterSetup
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-05, 10:23
  * @warning
@@ -658,7 +658,7 @@ void CXPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
 //         m_PDWData.uiDataItems = 0;    
 // 
 //         for ( i=0; i < m_uiTotalDataItems ; ++i ) {
-//             // ?꾪꽣留?議곌굔
+//             // 필터링 조건
 //             if( ( m_strFilterSetup.ullToaMin <= pPDW->ullTOA && m_strFilterSetup.ullToaMax >= pPDW->ullTOA ) &&
 //                 ( m_strFilterSetup.uiAoaMin <= pPDW->uiAOA && m_strFilterSetup.uiAoaMax >= pPDW->uiAOA ) &&
 //                 ( m_strFilterSetup.uiPAMin <= pPDW->uiPA && m_strFilterSetup.uiPAMax >= pPDW->uiPA ) &&
@@ -708,7 +708,7 @@ void CXPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
 // //         m_PDWData.uiDataItems = 0;    
 // // 
 // //         for ( i=0; i < m_uiTotalDataItems ; ++i ) {
-// //             // ?꾪꽣留?議곌굔
+// //             // 필터링 조건
 // //             if( ( m_strFilterSetup.ullToaMin <= pPDW->ullTOA && m_strFilterSetup.ullToaMax >= pPDW->ullTOA ) &&
 // //                 ( m_strFilterSetup.uiAoaMin <= pPDW->uiAOA && m_strFilterSetup.uiAoaMax >= pPDW->uiAOA ) &&
 // //                 ( m_strFilterSetup.uiPAMin <= pPDW->uiPA && m_strFilterSetup.uiPAMax >= pPDW->uiPA ) &&
@@ -755,7 +755,7 @@ void CXPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
  * @brief     GetHeaderSize
  * @return    unsigned int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-20, 15:02
  * @warning
@@ -775,7 +775,7 @@ int CXPDW::GetHeaderSize()
 /**
  * @brief     
  * @return    unsigned int
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/17 0:23:55
  * @warning
@@ -789,7 +789,7 @@ unsigned int CXPDW::GetOneDataSize()
  * @brief     GetDataItems
  * @return    unsigned int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-20, 15:02
  * @warning
@@ -803,7 +803,7 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
 
 		memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
 
-		// ?꾨옒???쒓컙 ?뺣낫
+		// 아래는 시간 정보
 		//memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
 		//memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
 		
@@ -821,7 +821,7 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
  * @brief     
  * @param     STR_PDWDATA * pPDWData
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/15 20:05:35
  * @warning
@@ -837,7 +837,7 @@ void CXPDW::MakeHeaderData( STR_PDWDATA *pPDWData )
  * @brief     
  * @param     STR_PDWDATA * pPDWData
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/17 0:19:36
  * @warning   
@@ -853,7 +853,7 @@ void CXPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
  * @param     STR_PDWREALDATA * pPDWRealData
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-22, 15:28
  * @warning
@@ -889,25 +889,25 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     enBandWidth = m_stHeader.enBandWidth;
 
     for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
-        // ?쒓컙 ?뺣낫
+        // 시간 정보
         ullTOA = (_TOA) ( pPDW->GetTOA() );
 
-        // 諛⑹쐞 ???
+        // 방위 저장
         uiAOA = pPDW->GetAOA();    
 
-        // 二쇳뙆??蹂??
+        // 주파수 변환
         iCh = pPDW->GetChannel();
         uiFreq = pPDW->GetFrequency( iCh );
 
-        // ?꾩뒪?????
+        // 펄스폭 저장
         uiPW = pPDW->GetPulsewidth();
 
-        // ?좏샇 ?멸린 ???
+        // 신호 세기 저장
         uiPA = pPDW->GetPulseamplitude();
 
         iSignalType = pPDW->GetPulsetype();
 
-        // ?꾪꽣留?議곌굔
+        // 필터링 조건
         if( ( m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA ) &&
             ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
@@ -922,7 +922,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             ullPreTOA = ullTOA;
 
 
-            // ?쒓컙 ???
+            // 시간 저장
             *pullTOA++ = ullTOA;
 
             *pfTOA++ = CXPDW::DecodeTOA( ullTOA-ullFirstTOA, enBandWidth );
@@ -953,7 +953,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
  * @param     STR_RAWDATA * pRawData
  * @return    
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-14, 14:26
  * @warning
@@ -967,7 +967,7 @@ CSPDW::CSPDW(STR_RAWDATA *pRawData) : CData( )
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:39
  * @warning   
@@ -982,7 +982,7 @@ CSPDW::~CSPDW(void)
  * @param     unsigned int uiItems
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 12:05
  * @warning
@@ -1013,7 +1013,7 @@ void CSPDW::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:58
  * @warning   
@@ -1035,7 +1035,7 @@ void CSPDW::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:55
  * @warning   
@@ -1070,7 +1070,7 @@ CKFXPDW::CKFXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CDa
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:39
  * @warning   
@@ -1083,7 +1083,7 @@ CKFXPDW::~CKFXPDW(void)
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:02
  * @warning   
@@ -1114,7 +1114,7 @@ void CKFXPDW::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:58
  * @warning   
@@ -1136,7 +1136,7 @@ void CKFXPDW::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:55
  * @warning   
@@ -1188,7 +1188,7 @@ void CKFXPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSe
 // 
 // 	m_PDWData.uiDataItems = 0;
 // 
-//     //Log( enNormal, "ConvertArray()瑜?[%d]媛쒕? 蹂?섑빀?덈떎." , m_RawData.uiDataItems );
+//     //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 // 
 //     for (i = 0; i < m_PDWData.uiDataItems ; ++i) {
 // 		llToa = (_TOA) ( pPDW->sPDWFormat.m_LSBTOA ) | ( (_TOA) pPDW->sPDWFormat.m_MSBTOA << 32 );
@@ -1223,7 +1223,7 @@ void CKFXPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSe
 // 
 // 		printf( "\n [%3d] 0x%02X %5.1f%1c[deg] %8.2f[MHz] %10.3f[us] %8.3f[ns]" , i+1, *pcType, *pfAOA, stDV[*pcDV], *pfFreq, *pfTOA, *pfPW );
 // 
-// 		// ?꾪꽣留?議곌굔
+// 		// 필터링 조건
 // // 		if( ( m_strFilterSetup.dToaMin <= *pfTOA && m_strFilterSetup.dToaMax >= *pfTOA ) &&
 // // 			( m_strFilterSetup.dAoaMin <= *pfAOA && m_strFilterSetup.dAoaMax >= *pfAOA ) &&
 // // 			( m_strFilterSetup.dPAMin <= *pfPA && m_strFilterSetup.dPAMax >= *pfPA ) &&
@@ -1248,7 +1248,7 @@ void CKFXPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSe
 // 		++pPDW;
 // 		}
 // 
-//     //Log( enNormal, "?꾪꽣留?PDW 媛쒖닔??%d ?낅땲??", m_PDWData.uiDataItems );
+//     //Log( enNormal, "필터링 PDW 개수는 %d 입니다.", m_PDWData.uiDataItems );
 }
 
 
@@ -1273,7 +1273,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterS
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/18 22:28:42
  * @warning   
@@ -1299,7 +1299,7 @@ void CPOCKETSONATAPDW::Init( char *pRawData )
  * @brief
  * @param     void
  * @return
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:39
  * @warning
@@ -1312,7 +1312,7 @@ CPOCKETSONATAPDW::~CPOCKETSONATAPDW(void)
 /**
  * @brief
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:02
  * @warning
@@ -1325,7 +1325,7 @@ void CPOCKETSONATAPDW::Alloc( unsigned int uiItems )
 /**
  * @brief
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:58
  * @warning
@@ -1339,7 +1339,7 @@ void CPOCKETSONATAPDW::Free()
 /**
  * @brief
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:55
  * @warning
@@ -1356,7 +1356,7 @@ void *CPOCKETSONATAPDW::GetRealData()
 
 
 /**
-  * @brief      ?ъ폆 ?뚮굹????쇰줈 PDW ?곗씠?곕? 蹂?섑븳??
+  * @brief      포켓 소나타용 으로 PDW 데이터를 변환한다.
   * @return 	void
   * @date       2019/06/07 10:10
 */
@@ -1396,7 +1396,7 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
 // 
 //         ullToa = (_TOA) ( pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L ) | ( (_TOA) pPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H << 16 );
 // 
-//         // 二쇳뙆??蹂??
+//         // 주파수 변환
 //         iCh = pPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch;
 //         iCh = ( 16 + ( iCh - 8 ) ) % 16;
 // 
@@ -1405,23 +1405,23 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
 // 
 //         uiFreq = iFreq + ( iCh * 0x10000 );
 // 
-//         // ?꾩뒪?????
+//         // 펄스폭 저장
 //         uiPW = pPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width;
 // 
-//         // 諛⑹쐞 ???
+//         // 방위 저장
 //         uiAOA = pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa;
 // 
-//         // ?좏샇 ?멸린 ???
+//         // 신호 세기 저장
 //         uiPA = pPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa;
 // 
-//         // ?꾪꽣留?議곌굔
+//         // 필터링 조건
 //         if( ( m_strFilterSetup.ullToaMin <= ullToa && m_strFilterSetup.ullToaMax >= ullToa ) &&
 //             ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
 //             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
 //             ( m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW ) &&
 //             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
 // 
-//             // ?쒓컙 ???
+//             // 시간 저장
 //             *pullTOA++ = ullToa;
 // 
 //             *pfFreq++ = DecodeFREQMHz( uiFreq );
@@ -1429,7 +1429,7 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
 //             *pfAOA++ = DecodeDOA( uiAOA );
 //             *pfPA++ = DecodePA( uiPA );
 // 
-//             // ?좏샇 ?뺥깭 ???
+//             // 신호 형태 저장
 // #ifdef _POCKETSONATA_
 //             *pcType = STAT_NORMAL;
 //             if( pPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 )
@@ -1465,7 +1465,7 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
 /**
  * @brief		GetHeaderSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -1487,7 +1487,7 @@ int CPOCKETSONATAPDW::GetHeaderSize()
 /**
  * @brief		GetOneDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -1500,7 +1500,7 @@ unsigned int CPOCKETSONATAPDW::GetOneDataSize()
 /**
  * @brief		GetDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 15:02:30
  * @warning		
@@ -1525,7 +1525,7 @@ unsigned int CPOCKETSONATAPDW::GetDataItems( unsigned long long ullFileSize )
  * @brief     
  * @param     STR_PDWDATA * pPDWData
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date      2022/02/15 22:05:46
  * @warning		
@@ -1540,7 +1540,7 @@ void CPOCKETSONATAPDW::MakeHeaderData( STR_PDWDATA *pPDWData )
  * @brief     
  * @param		STR_PDWDATA * pPDWData
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date      2022/02/16 23:07:14
  * @warning		
@@ -1562,20 +1562,20 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
     for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
         ullToa = (_TOA) ( pDMAPDW->GetTOA() );
 
-        // 諛⑹쐞 ???
+        // 방위 저장
         uiAOA = pDMAPDW->GetAOA();    
 
-        // 二쇳뙆??蹂??
+        // 주파수 변환
         iCh = pDMAPDW->GetChannel();
         uiFreq = pDMAPDW->GetFrequency( iCh );
 
-        // ?꾩뒪?????
+        // 펄스폭 저장
         uiPW = pDMAPDW->GetPulsewidth();
 
-        // ?좏샇 ?멸린 ???
+        // 신호 세기 저장
         uiPA = pDMAPDW->GetPulseamplitude();   
 
-        // ?꾪꽣留?議곌굔
+        // 필터링 조건
         if( ( m_strFilterSetup.ullToaMin <= ullToa && m_strFilterSetup.ullToaMax >= ullToa ) &&
             ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
@@ -1583,7 +1583,7 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
                 memset( pPDW, 0, sizeof(_PDW) );
 
-                // ?쒓컙 ???
+                // 시간 저장
                 pPDW->ullTOA = ullToa;
                 pPDW->uiAOA = uiAOA;
                 pPDW->uiFreq = uiFreq;
@@ -1611,7 +1611,7 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
  * @param     STR_PDWREALDATA * pPDWData
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-22, 15:27
  * @warning
@@ -1633,20 +1633,20 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWData )
     for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
 //         ullToa = (_TOA) ( pDMAPDW->GetTOA() );
 // 
-//         // 諛⑹쐞 ???
+//         // 방위 저장
 //         uiAOA = pDMAPDW->GetAOA();    
 // 
-//         // 二쇳뙆??蹂??
+//         // 주파수 변환
 //         iCh = pDMAPDW->GetChannel();
 //         uiFreq = pDMAPDW->GetFrequency( iCh );
 // 
-//         // ?꾩뒪?????
+//         // 펄스폭 저장
 //         uiPW = pDMAPDW->GetPulsewidth();
 // 
-//         // ?좏샇 ?멸린 ???
+//         // 신호 세기 저장
 //         uiPA = pDMAPDW->GetPulseamplitude();   
 // 
-//         // ?꾪꽣留?議곌굔
+//         // 필터링 조건
 //         if( ( m_strFilterSetup.ullToaMin <= ullToa && m_strFilterSetup.ullToaMax >= ullToa ) &&
 //             ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
 //             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
@@ -1654,7 +1654,7 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWData )
 //             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
 //                 memset( pPDW, 0, sizeof(_PDW) );
 // 
-//                 // ?쒓컙 ???
+//                 // 시간 저장
 //                 pPDW->ullTOA = ullToa;
 //                 pPDW->uiAOA = uiAOA;
 //                 pPDW->uiFreq = uiFreq;
@@ -1691,7 +1691,7 @@ C7PDW::C7PDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( 
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:39
  * @warning   
@@ -1710,7 +1710,7 @@ void C7PDW::Init( char *pRawData )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:02
  * @warning   
@@ -1722,7 +1722,7 @@ void C7PDW::Alloc( unsigned int uiItems )
 		//uiItems = m_PDWData.uiDataItems;
 	}
     else if ( uiItems <= MAX_ITEMS ) {
-        //Log( enNormal, "Alloc()??[%d]媛쒕? ?좊떦?⑸땲??" , uiItems );
+        //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
 
 //         if( m_PDWData.pfFreq == NULL ) {
 // 	        m_PDWData.pfFreq = (float *) malloc(sizeof(float) * uiItems );
@@ -1766,14 +1766,14 @@ void C7PDW::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:58
  * @warning   
  */
 void C7PDW::Free()
 {
-    //Log( enNormal, "Free()瑜??댁??⑸땲??" );
+    //Log( enNormal, "Free()를 해지합니다." );
 
 // 	_SAFE_FREE( m_PDWData.pfFreq);
 // 	_SAFE_FREE(m_PDWData.pfPW);
@@ -1791,7 +1791,7 @@ void C7PDW::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:41:55
  * @warning   
@@ -1821,7 +1821,7 @@ void C7PDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
 /**
  * @brief		GetHeaderSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -1843,7 +1843,7 @@ int C7PDW::GetHeaderSize()
 /**
  * @brief		GetOneDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -1856,7 +1856,7 @@ unsigned int C7PDW::GetOneDataSize()
 /**
  * @brief		GetDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 15:02:30
  * @warning		
@@ -1887,7 +1887,7 @@ CIQ::CIQ(STR_RAWDATA *pRawData) : CData( )
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:06
  * @warning   
@@ -1901,7 +1901,7 @@ CIQ::~CIQ(void)
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:08
  * @warning   
@@ -1929,7 +1929,7 @@ void CIQ::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:09
  * @warning   
@@ -1946,7 +1946,7 @@ void CIQ::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:12
  * @warning   
@@ -1962,7 +1962,7 @@ void *CIQ::GetHeader()
 }
 
 /**
-  * @brief		IQ ?곗씠??援ъ“????ν븳??
+  * @brief		IQ 데이터 구조에 저장한다.
   * @return 	void
   * @date       2019/06/07 10:11
 */
@@ -1984,11 +1984,11 @@ void CIQ::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup,
 // 		*psI = (float) pIQ->sI;
 // 		*psQ = (float) pIQ->sQ;
 // 
-// 		// ?쒖떆 吏꾪룺
+// 		// 순시 진폭
 // 		*psPA = sqrt( *psI * *psI + *psQ * *psQ );
 // 		*psPA = (float) (20.*log10( *psPA ) ) - (float) 80.;
 // 
-// 		// ?쒖떆 ?꾩긽李?
+// 		// 순시 위상차
 // 		// 		if( i == 0 ) {
 // 		// 			*psIP = 0.0;
 // 		// 			fVal2 = (float) ( atan2( *psQ, *psI ) * RAD2DEG );
@@ -2042,7 +2042,7 @@ CEIQ::CEIQ(STR_RAWDATA *pRawData) : CData()
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:06
  * @warning   
@@ -2061,7 +2061,7 @@ void CEIQ::Init( char *pRawData )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:08
  * @warning   
@@ -2087,7 +2087,7 @@ void CEIQ::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:09
  * @warning   
@@ -2104,7 +2104,7 @@ void CEIQ::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:12
  * @warning   
@@ -2120,7 +2120,7 @@ void *CEIQ::GetRealData()
 }
 
 /**
-  * @brief		IQ ?곗씠??援ъ“????ν븳??
+  * @brief		IQ 데이터 구조에 저장한다.
   * @return 	void
   * @date       2019/06/07 10:11
 */
@@ -2146,7 +2146,7 @@ void CEIQ::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP
 // // 		pIQ = (TNEW_IQ *) & m_pRawDataBuffer[iOffset];
 // // 	}
 // 
-//     //Log( enNormal, "ConvertArray()瑜?[%d]媛쒕? 蹂?섑빀?덈떎." , m_RawData.uiDataItems );
+//     //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 // 
 // 	m_IQData.iDataItems = 0;
 // 
@@ -2154,11 +2154,11 @@ void CEIQ::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP
 // 		*psI = (float) pIQ->sI;
 // 		*psQ = (float) pIQ->sQ;
 // 
-// 		// ?쒖떆 吏꾪룺
+// 		// 순시 진폭
 // 		*psPA = sqrt( *psI * *psI + *psQ * *psQ );
 // 		*psPA = (float) (20.*log10( *psPA ) ) - (float) 80.;
 // 
-// 		// ?쒖떆 ?꾩긽李?
+// 		// 순시 위상차
 // // 		if( i == 0 ) {
 // // 			*psIP = 0.0;
 // // 			fVal2 = (float) ( atan2( *psQ, *psI ) * RAD2DEG );
@@ -2206,7 +2206,7 @@ void CEIQ::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP
 /**
  * @brief		GetHeaderSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -2219,7 +2219,7 @@ int CEIQ::GetHeaderSize()
 /**
  * @brief		GetOneDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -2233,7 +2233,7 @@ unsigned int CEIQ::GetOneDataSize()
 /**
  * @brief		GetDataItems
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 10:19:33
  * @warning		
@@ -2251,7 +2251,7 @@ unsigned int CEIQ::GetDataItems( unsigned long long ullFileSize )
  * @brief		C7IQ
  * @param		STR_RAWDATA * pRawData
  * @return		
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:47:22
  * @warning		
@@ -2265,7 +2265,7 @@ C7IQ::C7IQ(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pFilterSetup ) : CData( )
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:06
  * @warning   
@@ -2279,7 +2279,7 @@ C7IQ::~C7IQ(void)
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:08
  * @warning   
@@ -2305,7 +2305,7 @@ void C7IQ::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:09
  * @warning   
@@ -2322,7 +2322,7 @@ void C7IQ::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:12
  * @warning   
@@ -2333,7 +2333,7 @@ void *C7IQ::GetData()
 }
 
 /**
-  * @brief		IQ ?곗씠??援ъ“????ν븳??
+  * @brief		IQ 데이터 구조에 저장한다.
   * @return 	void
   * @date       2019/06/07 10:11
 */
@@ -2365,11 +2365,11 @@ void C7IQ::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup
 // 		*psI = (float) ( (short) ( pIQ->sIData ^ (0x8A5A) ) );
 // 		*psQ = (float) ( (short) ( pIQ->sQData ^ (0x8A5A) ) );
 // 
-// 		// ?쒖떆 吏꾪룺
+// 		// 순시 진폭
 // 		*psPA = sqrt( *psI * *psI + *psQ * *psQ );
 // 		*psPA = (float) (20.*log10( *psPA ) ) - (float) 80.;
 // 
-// 		// ?쒖떆 ?꾩긽李?
+// 		// 순시 위상차
 // /*
 // 		if( i == 0 ) {
 // 			*psIP = 0.0;
@@ -2418,7 +2418,7 @@ void C7IQ::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup
  * @brief		CMIDAS
  * @param		STR_RAWDATA * pRawData
  * @return		
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 10:53:28
  * @warning		
@@ -2434,7 +2434,7 @@ CMIDAS::CMIDAS(STR_RAWDATA *pRawData) : CData(  )
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:06
  * @warning   
@@ -2453,14 +2453,14 @@ void CMIDAS::Init( char *pRawData )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:08
  * @warning   
  */
 void CMIDAS::Alloc( unsigned int uiItems )
 {
-    //Log( enNormal, "Alloc()??[%d]媛쒕? ?좊떦?⑸땲??" , uiItems );
+    //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
 
 //	m_PDWData.uiDataItems = uiItems;
     if( uiItems > 0 && uiItems <= MAX_ITEMS ) {
@@ -2509,14 +2509,14 @@ void CMIDAS::Alloc( unsigned int uiItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:09
  * @warning   
  */
 void CMIDAS::Free()
 {
-    //Log( enNormal, "Free()瑜??댁??⑸땲??" );
+    //Log( enNormal, "Free()를 해지합니다." );
 
 // 	_SAFE_FREE(m_PDWData.pfFreq);
 // 	_SAFE_FREE(m_PDWData.pfPW);
@@ -2538,7 +2538,7 @@ void CMIDAS::Free()
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:12
  * @warning   
@@ -2554,7 +2554,7 @@ void *CMIDAS::GetRealData()
 }
 
 /**
-  * @brief		IQ ?곗씠??援ъ“????ν븳??
+  * @brief		IQ 데이터 구조에 저장한다.
   * @return 	void
   * @date       2019/06/07 10:11
 */
@@ -2584,7 +2584,7 @@ void CMIDAS::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SET
 // 	
 // 	m_PDWData.uiDataItems = 0;
 // 
-//     //Log( enNormal, "ConvertArray()瑜?[%d]媛쒕? 蹂?섑빀?덈떎." , m_RawData.uiDataItems );
+//     //Log( enNormal, "ConvertArray()를 [%d]개를 변환합니다." , m_RawData.uiDataItems );
 // 
 //     for( ui=0 ; ui < m_PDWData.uiDataItems ; ++ui ) {
 // 		GetSubRecords( & strPDWRecords );
@@ -2615,7 +2615,7 @@ void CMIDAS::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SET
 // 
 // 		//*pfFreq = GetFreq();
 // 
-// 		// ?꾪꽣留?議곌굔
+// 		// 필터링 조건
 // //         if( pFilterSetup == NULL || ( pFilterSetup->enSubGraph == enUnselectedSubGraph || \
 // //             ( ( ( pFilterSetup->dToaMin == 0 ) || ( pFilterSetup->dToaMin <= *pfTOA && *pfTOA <= pFilterSetup->dToaMax ) ) && \
 // //             ( ( pFilterSetup->dAoaMin == 0 ) || ( pFilterSetup->dAoaMin <= *pfAOA && *pfAOA <= pFilterSetup->dAoaMax ) ) && \
@@ -2643,7 +2643,7 @@ void CMIDAS::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SET
  * @brief		GetSubRecords
  * @param		S_EL_PDW_RECORDS * pPDWRecords
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 11:26:37
  * @warning		
@@ -2676,7 +2676,7 @@ void CMIDAS::GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords )
 			pPDWRecords->ddoa = GetSubValue( pSubRecords->format );
 		}
 		else {
-            printf( "?쒕툕 ?덉퐫??%s)??留욌뒗 寃껋씠 ?놁뒿?덈떎 !!" , pSubRecords->name );
+            printf( "서브 레코드(%s)에 맞는 것이 없습니다 !!" , pSubRecords->name );
 			++ pSubRecords;
 		}
 
@@ -2689,7 +2689,7 @@ void CMIDAS::GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords )
  * @brief		GetSubValue
  * @param		char * psubformat
  * @return		long double
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 11:57:28
  * @warning		
@@ -2775,7 +2775,7 @@ double CMIDAS::GetSubValue( char *psubformat )
 /**
  * @brief		GetHeaderSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 14:48:53
  * @warning		
@@ -2813,7 +2813,7 @@ int CMIDAS::GetHeaderSize()
 /**
  * @brief		GetOneDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/01/08 13:38:43
  * @warning		
@@ -2838,7 +2838,7 @@ unsigned int CMIDAS::GetOneDataSize()
 /**
  * @brief		GetDataSize
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 15:02:30
  * @warning		
@@ -2877,7 +2877,7 @@ unsigned int CMIDAS::GetDataItems( unsigned long long ullFileSize )
  * @brief		GetDataFormatSize
  * @param		char ch
  * @return		int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 16:06:31
  * @warning		
@@ -2920,7 +2920,7 @@ int CMIDAS::GetDataFormatSize( char ch )
  * @brief     
  * @param     STR_RAWDATA * pRawData
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:19
  * @warning   
@@ -2969,7 +2969,7 @@ void CData::Init( char *pRawData )
 /**
  * @brief		ClearFilterSetup
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/01/08 12:41:24
  * @warning		
@@ -2998,7 +2998,7 @@ void CData::ClearFilterSetup()
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:22
  * @warning   
@@ -3014,7 +3014,7 @@ CData::~CData(void)
  * @brief		Alloc
  * @param		unsigned int uiItems
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/02/14 18:17:33
  * @warning		
@@ -3029,7 +3029,7 @@ void CData::Alloc( int iItems )
  * @brief     
  * @param     unsigned int uiItems
  * @return    void
- * @author    조철희(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/22 0:08:50
  * @warning   
@@ -3049,7 +3049,7 @@ void CData::AllocData( int iItems )
  * @brief     
  * @param     unsigned int uiItems
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/22 0:57:14
  * @warning   
@@ -3080,7 +3080,7 @@ void CData::AllocRealData( int iItems )
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/22 1:00:51
  * @warning   
@@ -3104,7 +3104,7 @@ void CData::FreeRealData()
 /**
  * @brief     
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/22 0:14:37
  * @warning   
@@ -3189,7 +3189,7 @@ void CData::swapByteOrder(unsigned int& ui)
  * @param     int iDataItems
  * @param     STR_IQ_DATA * pIQData
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/16 22:31:50
  * @warning   
@@ -3260,7 +3260,7 @@ void CData::ExecuteFFT( int iDataItems, STR_IQ_DATA *pIQData )
  * @brief     UpdateMacroSysVar
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-21, 12:07
  * @warning
@@ -3291,7 +3291,7 @@ void CData::UpdateMacroSysVar()
  * @param     bool bConvert
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-14, 11:54
  * @warning
@@ -3340,7 +3340,7 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
  * @brief     
  * @param     void
  * @return    
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:44:24
  * @warning   
@@ -3401,7 +3401,7 @@ void CDataFile::Free()
  * @param     void * pDataEtc
  * @param     int iSizeOfEtc
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/04 14:09:35
  * @warning
@@ -3416,7 +3416,7 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
         if( enDataType == en_PDW_DATA) {
 
        		if( ! m_RawDataFile.FileOpen( pstPathname, O_CREAT | O_BINARY ) ) {            		
-                //LOGMSG1( enWarning, _T("PDW ?곗씠???뚯씪[%s]???앹꽦?섏? 紐삵빀?덈떎 !") , strPathname );
+                //LOGMSG1( enWarning, _T("PDW 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
             }
             else {
                 m_RawDataFile.Write( pData, iNumData );
@@ -3425,10 +3425,10 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
         }
         else if( enDataType == en_IQ_DATA ) {
             if( ! m_RawDataFile.FileOpen( pstPathname, O_CREAT | O_BINARY ) ) {
-                //Log( enError, _T("IQ ?곗씠???뚯씪[%s]???앹꽦?섏? 紐삵빀?덈떎 !") , strPathname );
+                //Log( enError, _T("IQ 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
             }
             else {
-                // IQ ?ㅻ뜑 ?뺣낫 ???
+                // IQ 헤더 정보 저장
                 if( pDataEtc != NULL ) {
                     m_RawDataFile.Write( pDataEtc, iSizeOfEtc );
                 }
@@ -3445,7 +3445,7 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
 /**
  * @brief     
  * @return    ENUM_DataType
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 19:36:17
  * @warning   
@@ -3474,8 +3474,8 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 		enDataType = en_PDW_DATA;
 	}
 	else {
-        //LOGMSG1( enError, "?섎せ???뚯씪紐??낅땲?? ?곗씠???뺤떇??紐⑤쫭?덈떎." );
-        TRACE( "?섎せ???뚯씪紐??낅땲??" );
+        //LOGMSG1( enError, "잘못된 파일명 입니다. 데이터 형식을 모릅니다." );
+        TRACE( "잘못된 파일명 입니다." );
 	}
 
 	return enDataType;
@@ -3485,7 +3485,7 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
 /**
  * @brief     
  * @return    ENUM_UnitType
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 19:38:24
  * @warning   
@@ -3536,7 +3536,7 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
  * @param     UINT uiHeaderLength
  * @param     UINT uiLengthOf1PDW
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/30 19:09:13
  * @warning   
@@ -3547,7 +3547,7 @@ ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
  * @brief		GetHeaderSize
  * @param		CData * pData
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 15:25:49
  * @warning		
@@ -3561,7 +3561,7 @@ int CDataFile::GetHeaderSize( CData *pData )
  * @brief     
  * @param     CData * pData
  * @return    unsigned int
- * @author    鈺곌퀣荑??(churlhee.jo@lignex1.com)
+ * @author    議곗쿋??(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 22:34:12
  * @warning   
@@ -3575,7 +3575,7 @@ unsigned int CDataFile::GetOneDataSize( CData *pData )
  * @brief		GetDataSize
  * @param		CData * pData
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 15:25:45
  * @warning		
@@ -3591,24 +3591,24 @@ unsigned int CDataFile::GetOneDataSize( CData *pData )
 /**
  * @brief		ReadDataHeader
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 9:35:52
  * @warning		
  */
 void CDataFile::ReadDataHeader()
 {
-    // ?뚯씪 泥섏쓬?쇰줈 ?대룞
+    // 파일 처음으로 이동
 	m_RawDataFile.SeekToStart();
 
-    // 1.1 ?ㅻ뜑 ?ш린 怨꾩궛
+    // 1.1 헤더 크기 계산
 	m_pData->m_iHeaderSize = GetHeaderSize( m_pData );
 
 	if( m_pData->m_iHeaderSize != 0 ) {
-	    // ?곗씠???뚯씪 以묒뿉???쒖씪 ??寃껋쓣 ?쎈뒗??
+	    // 데이터 파일 중에서 제일 큰 것을 읽는다.
 	    m_RawDataFile.Read( m_pData->m_pRawHeaderBuffer, MAX_HEADER_SIZE );	
 
-            // ?ㅼ떆 泥섏쓬?쇰줈 ?대룞
+            // 다시 처음으로 이동
 	    m_RawDataFile.SeekToStart();
 
         m_pData->m_ullFileSize = m_RawDataFile.GetFileSize();
@@ -3623,7 +3623,7 @@ void CDataFile::ReadDataHeader()
 /**
  * @brief		ReadDataAll
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 10:35:26
  * @warning		
@@ -3641,7 +3641,7 @@ void CDataFile::ReadDataAll( CData *pData )
 
     }
 
-	// ?곗씠???뚯씪 以묒뿉???쒖씪 ??寃껋쓣 ?쎈뒗??
+	// 데이터 파일 중에서 제일 큰 것을 읽는다.
 	//pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
     m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize() );		
 
@@ -3653,7 +3653,7 @@ void CDataFile::ReadDataAll( CData *pData )
  * @brief		GetDataItems
  * @param		CData * pData
  * @return		unsigned int
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/24 16:19:44
  * @warning		
@@ -3675,7 +3675,7 @@ unsigned int CDataFile::GetDataItems( CData *pData )
  * @param     STR_FILTER_SETUP * pstFilterSetup
  * @param     ENUM_CONVERT_OPTION enOption
  * @return    CData *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/02/20 15:55:40
  * @warning   
@@ -3700,17 +3700,17 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     }
 
     m_RawDataFile.FileClose();
-    _SAFE_FREE( pTempData );
+    _SAFE_DELETE( pTempData );
 
     return m_pData;
 
 }
 
 /**
-  * @brief		RAW ?곗씠???뚯씪 ?쎄린
+  * @brief		RAW 데이터 파일 읽기
   * @param		CString & strPathname
   * @return 	void
-  * @return		?깃났??true, ?ㅽ뙣??false
+  * @return		성공시 true, 실패시 false
   * @date       2019/05/31 10:34
 */
 void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
@@ -3718,7 +3718,7 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 	ENUM_DataType enDataType = WhatDataType( pstPathname );
     ENUM_UnitType enUnitType = WhatUnitType( pstPathname );
 
-    // ?μ튂 ?뺣낫 ?낅뜲?댄듃
+    // 장치 정보 업데이트
     g_enUnitType = enUnitType;
 
     if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {
@@ -3741,7 +3741,7 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
     }
 
-    // ?뚰삎 ?꾩옄?꾩쓽 PDW ??寃쎌슦
+    // 소형 전자전의 PDW 인 경우
     else if( enDataType == en_PDW_DATA && enUnitType == en_ZPOCKETSONATA ) {
         if( m_pData == NULL ) {
             m_pData = new CPOCKETSONATAPDW( pstData, pstFilterSetup, -1 );
@@ -3752,7 +3752,7 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
     }
 
-    // X???諛⑺깘湲곗쓽 PDW ??寃쎌슦
+    // X대역 방탐기의 PDW 인 경우
     else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
         if( m_pData == NULL ) {
             m_pData = new CXPDW( pstData, pstFilterSetup );
@@ -3786,7 +3786,7 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
  * @param     bool bConvert
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-14, 12:30
  * @warning
@@ -3801,7 +3801,7 @@ void CDataFile::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
 /**
  * @brief     
  * @return    void *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/27 21:49:58
  * @warning   
@@ -3818,7 +3818,7 @@ void *CDataFile::GetData()
  * @brief     GetRealData
  * @return    void *
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-22, 16:26
  * @warning
@@ -3834,7 +3834,7 @@ void *CDataFile::GetRealData()
 /**
  * @brief		GetHeader
  * @return		void *
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 16:19:28
  * @warning		
@@ -3852,7 +3852,7 @@ void *CDataFile::GetHeader()
  * @param     CData * pData
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-09, 17:51
  * @warning

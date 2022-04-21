@@ -141,6 +141,8 @@ void CTrackAnalysis::AnalysisStart()
     // PDW 헤더 정보 저장
     memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));
 
+    SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
+
     g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

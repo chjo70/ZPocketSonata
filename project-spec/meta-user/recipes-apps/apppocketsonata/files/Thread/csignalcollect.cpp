@@ -584,6 +584,8 @@ void CSignalCollect::ReqTrackWindowCell()
 {
     SRxABTData *pABTData = ( SRxABTData *) m_uniLanData.szFile;
 
+    WhereIs;
+
     // 랜 데이터를 갖고온다.
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
