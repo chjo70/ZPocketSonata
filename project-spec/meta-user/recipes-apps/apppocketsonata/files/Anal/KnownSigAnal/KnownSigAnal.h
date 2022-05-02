@@ -29,7 +29,9 @@ class CKnownSigAnal : public CSigAnal
 private:
     SRxABTData *m_pTrkAet;
 
+    int m_CoGroup;
 
+    vector<SRadarMode *> m_VecMatchRadarMode;
 
 public:
     //##ModelId=452B0C52024B
@@ -66,7 +68,7 @@ protected:
     STR_STATIC_PDWDATA *m_pstPDWData;
 
 private:
-    
+    bool CheckKnownByAnalysis();
 
 public:
     CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -153,7 +155,7 @@ public:
     //##ModelId=452B0C520364
     inline void ClearCoAet() { m_theMakeAET->ClearCoAet(); }
     //##ModelId=452B0C520365
-    inline void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoInSeg( pPri, pEmitter ); }
+    inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }

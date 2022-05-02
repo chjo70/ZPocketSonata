@@ -67,7 +67,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
 #else
-#define ONE_SEC									(20000000)					// 1 sec  / 25 ns */
+//#define ONE_SEC									(20000000)					// 1 sec  / 25 ns */
 #define _spTimeres              (20000000)					// 1 sec / 50 ns */
 #define _spTimeNsRes						(20)
 
@@ -370,10 +370,10 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
 #define MAX_HOPPING_LEVEL_ELEMENT           32
 #else
-#define MAX_HOPPING_LEVEL_ELEMENT           16
+#define MAX_HOPPING_LEVEL_ELEMENT           32
 #endif
 
 #define MAX_STAGGER_LEVEL_ELEMENT           (MAX_HOPPING_LEVEL_ELEMENT)

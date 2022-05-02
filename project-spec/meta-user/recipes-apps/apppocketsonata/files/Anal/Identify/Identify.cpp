@@ -1963,7 +1963,7 @@ void CELSignalIdentifyAlg::MakeFreqLibTable()
  * @date      2018-01-31, 오후 9:10
  * @warning
  */
-UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_TYPE frqType, STR_LIB_RANGE *pLibRange )
+UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, enFREQ_TYPE frqType, STR_LIB_RANGE *pLibRange )
 {
     UINT i;
     UINT incNoEid=_spZero;
@@ -2161,7 +2161,7 @@ UINT CELSignalIdentifyAlg::ArrangeLib2( SRadarMode **inLib, UINT uicount, FREQ_T
  * @date      2015-10-24, 오후 8:37
  * @warning
  */
-BOOL CELSignalIdentifyAlg::CheckFreqType( FREQ_TYPE frqType, SRadarMode *pRadarMode )
+BOOL CELSignalIdentifyAlg::CheckFreqType( enFREQ_TYPE frqType, SRadarMode *pRadarMode )
 {
     //char *pMopCode1;
     BOOL bRet = FALSE;
@@ -5419,7 +5419,142 @@ float CELSignalIdentifyAlg::CalcPRITypeMatchRatio(SRadarMode *pRadarMode)
 }
 
 /**
- * @brief     일치율 속송에 따라서 일치율 값을 리턴한다.
+ * @brief     CalcFreqMatchRatio
+ * @param     EnumMATCHRATIO enMatchRatio
+ * @param     SRadarMode * pRadarMode
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 13:43
+ * @warning
+ */
+float CELSignalIdentifyAlg::CalcFreqMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode)
+{
+    float fRate = 0.0;
+
+    if (pRadarMode != NULL) {
+        switch (enMatchRatio) {
+            // 주파수 형태 비교
+            case _FREQ_TYPE_MATCHRATIO_:
+                fRate = CalcFreqTypeMatchRatio(pRadarMode);
+                break;
+
+            // PRI 형태 비교
+            case _PRI_TYPE_MATCHRATIO_:
+                fRate = CalcPRITypeMatchRatio(pRadarMode);
+                break;
+
+            // 주파수 범위 비교
+            case _FREQ_RANGE_MATCHRATIO_:
+                fRate = (float)m_pSEnvironVariable->iWeightFrqRange;
+                break;
+
+            case _FREQ_PERIOD_MATCHRATIO_:
+                if (m_pLOBData->fFreqPatternPeriod > 0) {
+                    fRate = (float)m_pSEnvironVariable->iWeightFrqModPeriod;
+                }
+                break;
+
+                // 주파수 포지션 비교
+            case _FREQ_POSITION_MATCHRATIO_:
+                if (m_pLOBData->iFreqPositionCount > 0 && pRadarMode->nRF_NumPositions > 0) {
+                    if (m_pLOBData->iFreqPositionCount == pRadarMode->nRF_NumPositions) {
+                        fRate = (float)m_pSEnvironVariable->iWeightFrqModElement;
+                    }
+                    else {
+                        fRate = FDIV(m_pSEnvironVariable->iWeightFrqModElement, 2.0);
+                    }
+                }
+                break;
+
+            //             case _FREQ_MAIN_RANGE_MATCHRATIO_ :
+            // // 				pRadarRF_SpotValues = pRadarMode->vecRadarRF_SpotValues.data();
+            // // 				for( i=0 ; i < (int) pRadarMode->vecRadarRF_SpotValues.size() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
+            // // 					if( CompMarginDiffFFF( m_optParameter.freq.fLow , (*pRadarRF_SpotValues).fRF_Min, (*pRadarRF_SpotValues).fRF_Max, m_optParameter.freq.fRangeError ) == TRUE ||
+            // // 							CompMarginDiffFFF( m_optParameter.freq.fHigh, (*pRadarRF_SpotValues).fRF_Min, (*pRadarRF_SpotValues).fRF_Max, m_optParameter.freq.fRangeError ) == TRUE ) {
+            // // 						frate = (float) m_pSELDBEnvVarIdnf->iWeightFrqMainObservedValue;
+            // // 						break;
+            // // 					}
+            // //
+            // // 					++ pRadarRF_SpotValues;
+            // // 				}
+            //                 break;
+            default:
+                break;
+
+        }
+    }
+
+    return fRate;
+
+}
+
+/**
+ * @brief     CalcPRIMatchRatio
+ * @param     EnumMATCHRATIO enMatchRatio
+ * @param     SRadarMode * pRadarMode
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 13:45
+ * @warning
+ */
+float CELSignalIdentifyAlg::CalcPRIMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode)
+{
+    float fRate = 0.0;
+
+    if (pRadarMode != NULL) {
+        switch (enMatchRatio) {
+            // PRI 범위 비교
+            case _PRI_RANGE_MATCHRATIO_:
+                fRate = (float)m_pSEnvironVariable->iWeightPriRange;
+                break;
+
+            // PRI 패턴 주기 비교
+            case _PRI_PERIOD_MATCHRATIO_:
+                if (m_pLOBData->fPRIPatternPeriod > 0) {
+                    fRate = (float)m_pSEnvironVariable->iWeightPriModPeriod;
+                }
+                break;
+
+            // PRI 포지션 비교
+            case _PRI_POSITION_MATCHRATIO_:
+                if (m_pLOBData->iPRIPositionCount > 0 && pRadarMode->nPRI_NumPositions > 0) {
+                    if (m_pLOBData->iPRIPositionCount == pRadarMode->nPRI_NumPositions) {
+                        fRate = (float)m_pSEnvironVariable->iWeightPriModPosCount;
+                    }
+                    else {
+                        fRate = FDIV(m_pSEnvironVariable->iWeightPriModPosCount, 2.0);
+                    }
+                }
+                break;
+
+            // 			case _PRI_MAIN_RANGE_MATCHRATIO_ :
+            // 				pRadarPRI_SpotValues = pRadarMode->vecRadarPRI_SpotValues.data();
+            // 				for( i=0 ; i < (int) pRadarMode->vecRadarPRI_SpotValues.size() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
+            // 					if( CompMarginDiffFFF( m_optParameter.pri.fLow , (*pRadarPRI_SpotValues).fPRI_Min, (*pRadarPRI_SpotValues).fPRI_Max, m_optParameter.pri.fRangeError ) == TRUE ||
+            // 							CompMarginDiffFFF( m_optParameter.pri.fHigh, (*pRadarPRI_SpotValues).fPRI_Min, (*pRadarPRI_SpotValues).fPRI_Max, m_optParameter.pri.fRangeError ) == TRUE ) {
+            // 						frate = (float) m_pSELDBEnvVarIdnf->iWeightPriMainObservedValue;
+            // 						break;
+            // 					}
+            //
+            // 					++ pRadarPRI_SpotValues;
+            // 				}
+            // 				break;
+
+            default:
+                break;
+
+        }
+    }
+
+    return fRate;
+}
+
+/**
+ * @brief     각 항목에 따라서 일치율 값을 리턴한다.
  * @param     EnumMATCHRATIO enMatchRatio
  * @param     SRadarMode * pRadarMode
  * @return    float
@@ -5430,140 +5565,45 @@ float CELSignalIdentifyAlg::CalcPRITypeMatchRatio(SRadarMode *pRadarMode)
  */
 float CELSignalIdentifyAlg::CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode )
 {
-    //int i;
-    float frate = 0.0; //, fDiff;
-
-    //bool bret;
+    float fRate = 0.0;
 
     //vector<SRadarRF_SpotValues>::pointer pRadarRF_SpotValues;
     //vector<SRadarPRI_SpotValues>::pointer pRadarPRI_SpotValues;
 
-    //SOCSystemVariable *pSystemVar= GetSystemVar( m_nLinkNum );
-
-    /*! \bug  신뢰성: 포인터 확인하여 예외처리 하게함.
-            \author 조철희 (churlhee.jo@lignex1.com)
-            \date 	2015-10-5 17:37:35
-    */
-    if( pRadarMode != NULL ) { //DTEC_NullPointCheck
-        switch( enMatchRatio ) {
-            case _POSITION_MATCHRATIO_ :
-            case _UNMATCHRATIO_ :
-                // 식별 매칭율을 계산할 필요가 없음.
-                break;
-
+    if (pRadarMode != NULL) {
+        switch (enMatchRatio) {
             // 신호 형태 비교
-            case _SIG_TYPE_MATCHRATIO_ :
-                frate = _DEFAULT_SIGNAL_TYPE_RATE;
+            case _SIG_TYPE_MATCHRATIO_:
+                fRate = _DEFAULT_SIGNAL_TYPE_RATE;
                 break;
 
-            // 주파수 형태 비교
-            case _FREQ_TYPE_MATCHRATIO_ :
-                frate = CalcFreqTypeMatchRatio(pRadarMode );
-                break;
-
-            // PRI 형태 비교
-            case _PRI_TYPE_MATCHRATIO_ :
-                frate = CalcPRITypeMatchRatio(pRadarMode);
-                break;
-
-            // 주파수 범위 비교
-            case _FREQ_RANGE_MATCHRATIO_ :
-                frate = (float) m_pSEnvironVariable->iWeightFrqRange;
-                break;
-
-            case _FREQ_PERIOD_MATCHRATIO_ :
-                if( m_pLOBData->fFreqPatternPeriod > 0 ) {
-                    frate = (float) m_pSEnvironVariable->iWeightFrqModPeriod;
-                }
-                break;
-
-                // 주파수 포지션 비교
-            case _FREQ_POSITION_MATCHRATIO_ :
-                if( m_pLOBData->iFreqPositionCount > 0 && pRadarMode->nRF_NumPositions > 0 ) {
-                    if( m_pLOBData->iFreqPositionCount == pRadarMode->nRF_NumPositions ) {
-                        frate = (float) m_pSEnvironVariable->iWeightFrqModElement;
-                    }
-                    else {
-                        frate = FDIV( m_pSEnvironVariable->iWeightFrqModElement, 2.0 );
+                // 펄스폭 범위
+            case _PW_MATCHRATIO_:
+                if (Is_FNotZero(pRadarMode->fPD_TypicalMin) == true && Is_FNotZero(pRadarMode->fPD_TypicalMax) == true) {
+                    if (CompMarginDiff<float>(m_pLOBData->fPWMean, pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax, 0) == _spTrue) {
+                        fRate = (float)_DEFAULT_PW_RANGE_RATE;
                     }
                 }
                 break;
 
-            case _FREQ_MAIN_RANGE_MATCHRATIO_ :
-// 				pRadarRF_SpotValues = pRadarMode->vecRadarRF_SpotValues.data();
-// 				for( i=0 ; i < (int) pRadarMode->vecRadarRF_SpotValues.size() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
-// 					if( CompMarginDiffFFF( m_optParameter.freq.fLow , (*pRadarRF_SpotValues).fRF_Min, (*pRadarRF_SpotValues).fRF_Max, m_optParameter.freq.fRangeError ) == TRUE ||
-// 							CompMarginDiffFFF( m_optParameter.freq.fHigh, (*pRadarRF_SpotValues).fRF_Min, (*pRadarRF_SpotValues).fRF_Max, m_optParameter.freq.fRangeError ) == TRUE ) {
-// 						frate = (float) m_pSELDBEnvVarIdnf->iWeightFrqMainObservedValue;
-// 						break;
-// 					}
-//
-// 					++ pRadarRF_SpotValues;
-// 				}
+                // 스캔 형태 및 주기
+            case _SCANTYPE_MATCHRATIO_:
+                fRate = _DEFAULT_SCAN_TYPE_RATE;
                 break;
 
-            // PRI 범위 비교
-            case _PRI_RANGE_MATCHRATIO_ :
-                frate = (float) m_pSEnvironVariable->iWeightPriRange;
-                break;
-
-            // PRI 패턴 주기 비교
-            case _PRI_PERIOD_MATCHRATIO_ :
-                if( m_pLOBData->fPRIPatternPeriod > 0 ) {
-                    frate = (float) m_pSEnvironVariable->iWeightPriModPeriod;
-                }
-                break;
-
-            // PRI 포지션 비교
-            case _PRI_POSITION_MATCHRATIO_ :
-                if( m_pLOBData->iPRIPositionCount > 0 && pRadarMode->nPRI_NumPositions > 0 ) {
-                    if( m_pLOBData->iPRIPositionCount == pRadarMode->nPRI_NumPositions ) {
-                        frate = (float) m_pSEnvironVariable->iWeightPriModPosCount;
-                    }
-                    else {
-                        frate = FDIV( m_pSEnvironVariable->iWeightPriModPosCount, 2.0 );
-                    }
-                }
-                break;
-
-// 			case _PRI_MAIN_RANGE_MATCHRATIO_ :
-// 				pRadarPRI_SpotValues = pRadarMode->vecRadarPRI_SpotValues.data();
-// 				for( i=0 ; i < (int) pRadarMode->vecRadarPRI_SpotValues.size() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
-// 					if( CompMarginDiffFFF( m_optParameter.pri.fLow , (*pRadarPRI_SpotValues).fPRI_Min, (*pRadarPRI_SpotValues).fPRI_Max, m_optParameter.pri.fRangeError ) == TRUE ||
-// 							CompMarginDiffFFF( m_optParameter.pri.fHigh, (*pRadarPRI_SpotValues).fPRI_Min, (*pRadarPRI_SpotValues).fPRI_Max, m_optParameter.pri.fRangeError ) == TRUE ) {
-// 						frate = (float) m_pSELDBEnvVarIdnf->iWeightPriMainObservedValue;
-// 						break;
-// 					}
-//
-// 					++ pRadarPRI_SpotValues;
-// 				}
-// 				break;
-
-            // 펄스폭 범위
-            case _PW_MATCHRATIO_ :
-                if( Is_FNotZero( pRadarMode->fPD_TypicalMin ) == true && Is_FNotZero( pRadarMode->fPD_TypicalMax ) == true ) {
-                    if( CompMarginDiff<float>( m_pLOBData->fPWMean, pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax, 0 ) == _spTrue ) {
-                        frate = (float) _DEFAULT_PW_RANGE_RATE;
-                    }
-                }
-                break;
-
-            case _SCANTYPE_MATCHRATIO_ :
-                frate = _DEFAULT_SCAN_TYPE_RATE;
-                break;
-
-            case _SCANPRD_MATCHRATIO_ :
-                frate = _DEFAULT_SCAN_TYPE_RATE;
+            case _SCANPRD_MATCHRATIO_:
+                fRate = _DEFAULT_SCAN_TYPE_RATE;
                 break;
 
             default:
-                { //DTEC_Else
-                }
                 break;
         }
     }
 
-    return frate;
+    fRate += CalcFreqMatchRatio(enMatchRatio, pRadarMode);
+    fRate += CalcPRIMatchRatio(enMatchRatio, pRadarMode);
+
+    return fRate;
 }
 //
 // /**
@@ -5855,7 +5895,7 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( vector<SRadarMode *> *pVecMatchRada
 
     UINT _uiFreqMin, _uiFreqMax;
 
-    pVecMatchRadarMode->clear();
+    DeletePointers(*pVecMatchRadarMode);
 
     _uiFreqMin = (unsigned int) ( FRQMhzCNV( 0, uiFreqMin ) + 0.5 );
     _uiFreqMax = (unsigned int) ( FRQMhzCNV( 0, uiFreqMax ) + 0.5 );

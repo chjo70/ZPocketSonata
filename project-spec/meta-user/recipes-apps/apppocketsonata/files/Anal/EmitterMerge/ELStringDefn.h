@@ -54,17 +54,32 @@ enum ENUM_PDW_AXIS_INFO
 // };
 
 
-
+//////////////////////////////////////////////////////////////////////////
 // AET - Frq Type
+#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_)
 enum ENUM_AET_FRQ_TYPE
 {
-	E_AET_FRQ_UNKNOWN = 0,
-
     E_AET_FRQ_FIXED = 0,
 	E_AET_FRQ_HOPPING,
 	E_AET_FRQ_AGILE,
 	E_AET_FRQ_PATTERN,
 };
+
+#else
+enum ENUM_AET_FRQ_TYPE
+{
+    E_AET_FRQ_FIXED = 0,
+    E_AET_FRQ_HOPPING,
+    E_AET_FRQ_AGILE,
+    E_AET_FRQ_PATTERN,
+};
+
+
+#endif
+
+
+
+
 
 #define NUM_OF_AET_FRQ_TYPE 4
 /*! \bug		위협 에미터 주파수 형태 재정의
@@ -107,7 +122,9 @@ enum ENUM_AET_MOP_TYPE
 // 	"개수부족"
 // };
 
+//////////////////////////////////////////////////////////////////////////
 // AET - PRI Type
+#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_)
 enum ENUM_AET_PRI_TYPE
 {
 	E_AET_PRI_FIXED=0,
@@ -118,6 +135,21 @@ enum ENUM_AET_PRI_TYPE
 	
 	//E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
 };
+
+#else
+enum ENUM_AET_PRI_TYPE
+{
+    E_AET_PRI_FIXED = 0,
+    E_AET_PRI_JITTER,
+    E_AET_PRI_DWELL_SWITCH,
+    E_AET_PRI_STAGGER,
+    E_AET_PRI_PATTERN,
+
+    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
+};
+
+#endif
+
 
 #define NUM_OF_AET_PRI_TYPE		5
 /*! \bug		PRI 형태 변경

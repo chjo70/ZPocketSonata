@@ -267,7 +267,7 @@ public:
     //##ModelId=452B0C540215
     void CleanRefSeg();
     //##ModelId=452B0C54021C
-    UINT AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, int ext_type=-1 );
+    enPRI_TYPE AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, enPRI_TYPE ext_type=_UNKNOWN_PRI );
     //##ModelId=452B0C540226
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
     //##ModelId=452B0C540230

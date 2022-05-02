@@ -378,7 +378,7 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( true );
+	//RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( true );
 
 	// 폴더 선택 다이얼로그
 	CFolderPickerDialog Picker(m_strInitPath, OFN_FILEMUSTEXIST, NULL, 0);
@@ -392,7 +392,11 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 		//검색 클래스
 		CFileFind finder;
 
+#ifdef _ELINT_
 		strFolderPath = strFolderPath + "\\*.EPDW";
+#else
+        strFolderPath = strFolderPath + "\\*.XPDW";
+#endif
 
 		//CFileFind는 파일, 디렉터리가 존재하면 TRUE 를 반환함
 		BOOL bWorking = finder.FindFile(strFolderPath); //
@@ -430,8 +434,8 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 
 	}
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( false );
+	//RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( false );
 
-	AfxMessageBox( "폴더를 모두 분석 완료했습니다." );
+	AfxMessageBox( "폴더 안의 전체 PDW를 모두 분석 완료했습니다.", MB_OK );
 
 }

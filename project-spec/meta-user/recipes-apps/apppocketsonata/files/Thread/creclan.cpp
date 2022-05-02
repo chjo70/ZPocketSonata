@@ -89,7 +89,7 @@ void CRecLan::_routine()
             //break;
         }
         else {            
-            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
+            if( IsValidLanData( m_pMsg ) == true ) {
                 switch( m_pMsg->uiOpCode ) {
                     // 기존 SONATA 체계 명령어
                     case enREQ_MODE :
@@ -247,3 +247,100 @@ void CRecLan::DumpList()
 #endif
 }
 
+/**
+ * @brief CCommonUtils::IsValid
+ * @param pMsg
+ * @return
+ */
+bool CRecLan::IsValidLanData( STR_MessageData *pMsg )
+{
+    bool bRet = true;
+
+#ifndef _CGI_LIST_
+    ENUM_MODE enMode, enModeOfMessage;
+
+    enMode = g_pTheSysConfig->GetMode();
+    switch( pMsg->uiOpCode ) {
+    case enREQ_MODE:
+        enModeOfMessage = ( ENUM_MODE ) pMsg->x.szData[0];
+
+        if( enMode == enREADY_MODE && enMode == enModeOfMessage ) {
+            // bRet = false;
+        }
+        break;
+    case enREQ_ANAL_START:
+        if( enMode == enES_MODE || enMode == enEW_MODE ) {
+        }
+        else {
+            bRet = false;
+        }
+        break;
+
+    case enREQ_IBIT:
+    case enREQ_UBIT:
+        //             if( enMode == enES_MODE || enMode == enEW_MODE  ) {
+        //                 
+        //             }
+        //             else {
+        //                 bRet = false;
+        //             }
+        bRet = true;
+        break;
+
+    case enREQ_CBIT:
+        break;
+
+    case enREQ_SBIT:
+        if( enMode == enES_MODE || enMode == enEW_MODE ) {
+        }
+        else {
+            bRet = false;
+        }
+        break;
+
+    case enREQ_SIM_PDWDATA:
+        if( enMode == enREADY_MODE ) {
+            bRet = false;
+        }
+        break;
+
+    case enREQ_IPL_START:
+    case enREQ_IPL_DOWNLOAD:
+    case enREQ_IPL_END:
+        if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
+        }
+        else {
+            //bRet = false;
+        }
+        break;
+
+    case enREQ_RELOAD_LIBRARY:
+        if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
+        }
+        else {
+            bRet = false;
+        }
+        break;
+
+    case enREQ_IPL_VERSION:
+        break;
+
+    case enREQ_SYS:
+        break;
+
+    case enREQ_INIT:
+    case enREQ_SET_CONFIG:
+    case enREQ_STOP:
+        break;
+
+    case enSYSERROR:
+        break;
+
+    default:
+        break;
+
+    }
+#endif
+
+    return bRet;
+}

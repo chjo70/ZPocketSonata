@@ -206,11 +206,12 @@ void CDeltaGraphView2::ClearGraph()
 	
 	UINT uiPDWDataItems = m_pDoc->GetDataItems();
 
-	for ( i = 0; i < uiPDWDataItems; ++i) {
-		PEvsetcellEx(m_hPE, PEP_faYDATA, 0, i, & f1);
-		PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i, & f1);
+	//for ( i = 0; i < uiPDWDataItems; ++i) {
+    float fval = 0.0F;
+	PEvsetcellEx(m_hPE, PEP_faXDATA, 0, uiPDWDataItems-1, &fval );
+	PEvsetcellEx(m_hPE, PEP_faYDATA, 1, uiPDWDataItems-1, &fval );
 
-	}
+	//}
 
 }
 
@@ -582,7 +583,15 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 			//PEnset(m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE);
 
 			// Set up cursor //
-			PEnset(m_hPE, PEP_nCURSORMODE, PECM_DATACROSS);
+// 			PEnset(m_hPE, PEP_nCURSORMODE, PECM_DATACROSS);
+//             PEnset( m_hPE, PEP_bCURSORPROMPTTRACKING, TRUE );
+//             PEnset( m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE );
+//             PEnset( m_hPE, PEP_bTRACKINGCUSTOMOTHERTEXT, TRUE );
+
+            PEnset( m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE );
+            PEnset( m_hPE, PEP_nCURSORPROMPTLOCATION, PECPL_TRACKING_TEXT ); // v9 new floating text prompt 
+            PEnset( m_hPE, PEP_bCURSORPROMPTTRACKING, TRUE );
+            PEnset( m_hPE, PEP_nCURSORPROMPTSTYLE, PECPS_YVALUE );
 
 			// Help see data points //
 			PEnset(m_hPE, PEP_bMARKDATAPOINTS, TRUE);
@@ -838,6 +847,8 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 					PEszset(m_hPE, PEP_szAXISFORMATX, _T("|,.000|"));
 					PEszset(m_hPE, PEP_szAXISFORMATY, _T("|,.00|"));
 
+                    //PEvget( m_hPE, PEP_nTHOUSANDS, &dX );
+
 					PEvsetcellEx( m_hPE, PEP_szaTATEXT, 0, 2, strYAxisLabel[enDataType-1][enSubGraph] );
 				}
 				else {
@@ -994,7 +1005,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 					PEvsetcellEx(m_hPE, PEP_faXDATA, 1, i+(iFileIndex*PDW_ITEMS), pfX);
 					PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), pfY);
 
-                    //TRACE( "\n(%f , %f)" , *pfX, *pfY );
+                    TRACE( "\n(%f , %f)" , *pfX, *pfY );
 
 					++pfX;
 					++pfY;
@@ -1561,6 +1572,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 	if (lParam == (LPARAM) m_hPE) {
 		if( (HIWORD(wParam) == PEWN_CUSTOMTRACKINGDATATEXT) ) {
 			double dX, dY;
+            HOTSPOTDATA hsd;
 			
 			ENUM_DataType enDataType;
 
@@ -1572,48 +1584,85 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 
 			int iCombo= m_CComboYAxis.GetCurSel();
 
+            TRACE( "\ndX:%f, dY:%f", dX, dY );
+
 			enDataType = m_pDoc->GetDataType();
 
-			wsprintf(szBuffer, _T("%s"), strMainTitleLabel[enDataType - 1][iCombo] );
-			PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
+            PEvget( m_hPE, PEP_structHOTSPOTDATA, &hsd );
 
-			if( enDataType == en_PDW_DATA ) {
-				switch( iCombo+1 ) {
-					case enSubMenu_1 :
-						_stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n방위: %.3f[도]"), dX, dY );
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
-						break;
-					case enSubMenu_2 :
-						_stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n주파수: %.3f[MHz]"), dX, dY );
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,245,0));
-						break;
-					case enSubMenu_3 :
-						_stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\nDTOA: %.3f[us]"), dX, dY );
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,0,245));
-						break;
-					case enSubMenu_4 :
-						_stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n세기: %.3f[dBm]"), dX, dY );
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
-						break;
-					case enSubMenu_5 :
-						_stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n펄스폭: %.3f[ns]"), dX, dY );
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
-						PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
-						break;
-				}
-			}
-			else {
+            if( hsd.nHotSpotType == PEHS_DATAPOINT ) {
+                wsprintf( szBuffer, _T( "%s" ), strMainTitleLabel[enDataType - 1][iCombo] );
+                PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
 
+                if( enDataType == en_PDW_DATA ) {
+                    switch( iCombo + 1 ) {
+                    case enSubMenu_1:
+                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.3f[us]\n방위: %.3f[도]" ), dX, dY );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
+                        break;
+                    case enSubMenu_2:
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\n주파수: %.3f[MHz]" ), dX, dY );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 0, 245, 0 ) );
+                        break;
+                    case enSubMenu_3:
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\nDTOA: %.3f[us]" ), dX, dY );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 0, 0, 245 ) );
+                        break;
+                    case enSubMenu_4:
+                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.3f[us]\n세기: %.3f[dBm]" ), dX, dY );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
+                        break;
+                    case enSubMenu_5:
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\n펄스폭: %.3f[ns]" ), dX, dY );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
+                        PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
+                        break;
+                    }
+                }
+            }
+            else {
+			    wsprintf(szBuffer, _T("%s"), strMainTitleLabel[enDataType - 1][iCombo] );
+			    PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
+
+			    if( enDataType == en_PDW_DATA ) {
+				    switch( iCombo+1 ) {
+					    case enSubMenu_1 :
+						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n방위: %.3f[도]"), dX, dY );
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
+						    break;
+					    case enSubMenu_2 :
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n주파수: %.1f[Hz]"), dX, dY );
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,245,0));
+						    break;
+					    case enSubMenu_3 :
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\nDTOA: %.3f[us]"), dX, dY );
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,0,245));
+						    break;
+					    case enSubMenu_4 :
+						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n세기: %.3f[dBm]"), dX, dY );
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
+						    break;
+					    case enSubMenu_5 :
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n펄스폭: %.3f[ns]"), dX, dY );
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
+						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
+						    break;
+				    }
+			    }
 			}
 
 			PEszset(m_hPE, PEP_szTRACKINGTEXT, buffer);
 			
 		}
-		else if( HIWORD(wParam) == PEWN_MOUSEMOVE ) {
+		else if( HIWORD(wParam) == PEWN_MOUSEMOVE && false ) {
 			POINT pt;
 			HOTSPOTDATA hsd;
 			TCHAR buffer[300];

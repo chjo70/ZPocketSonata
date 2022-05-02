@@ -439,9 +439,9 @@ void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int iPLOBID, bool 
 	sprintf( filename, "c:\\temp\\%s_emitter_%02d_ksp.pdw", p, index );
 	pdwfile = fopen( filename, "wb" );
 
-	total_count = pEmitter->pdw.uiCount;
+	total_count = pEmitter->stPDW.uiCount;
 
-	pEmitterPdwIndex = pEmitter->pdw.pIndex;
+	pEmitterPdwIndex = pEmitter->stPDW.pIndex;
 	for( i=0 ; i < total_count ; ++i ) {
 		pPDW = & m_pPdwBank->pPdw[ *pEmitterPdwIndex++ ];
 		fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );

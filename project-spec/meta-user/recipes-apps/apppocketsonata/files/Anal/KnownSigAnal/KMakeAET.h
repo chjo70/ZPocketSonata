@@ -17,15 +17,25 @@
 
 #ifdef __cplusplus
 
-//class CKnownSigAnal;
+typedef struct {
+    float fKnownSuccessRatio;   // 추적 성공율 [%]
+    int iIdxEmitter;            // PRI Emitter Index   
+
+} STR_KWNINFO;
+
+typedef struct {
+    SRxLOBData stLOBData;
+    STR_KWNINFO stKnownInfo;
+
+} STR_KWNLOB;
 
 //##ModelId=452B0C5203C8
 class CKMakeAET : public CMakeAET
 {
 private :
-    SRxLOBData m_LOBData[ MAX_AET+1 ];
+    STR_KWNLOB m_KwnLOB[MAX_AET + 1];       // 추적 성공하면 첫번째 LOB 데이터는 추적 성공한 LOB 정보 임.
 
-    SRxABTData *m_pTrkAet;
+    SRxABTData *m_pTrkABT;
 
 protected :
     //##ModelId=452B0C5203D4
@@ -43,7 +53,13 @@ public:
     void UpdatePRI( SRxLOBData *pUpdAetPri );
     void UpdateFreq( SRxLOBData *pUpdAetFrq );
 
-	SRxLOBData *GetLOBData( int index=0 );
+    SRxLOBData *GetLOBData(int iIndex) {
+        return &m_KwnLOB[iIndex].stLOBData;
+    }
+
+    STR_KWNINFO *GetKnownInfo(int iIndex) {
+        return &m_KwnLOB[iIndex].stKnownInfo;
+    }
 
     //##ModelId=452B0C53000D
     inline void SetCoNewAet( int iCount ) { m_iCoNewAet=iCount; }
@@ -51,9 +67,31 @@ public:
     inline void ClearCoAet() { m_iCoLOB=0; }
     
     inline int GetCoLOB() { return m_iCoLOB; }
-    //##ModelId=452B0C530012
-    //inline STR_NEWAET *GetAet() { return CMakeAET::GetAet(); }
-    // inline STR_EMITTER *GetEmitter() { return CMakeAET::GetEmitter(); }
+
+    inline void SetKnownSuccessRatio(int iIndex, float fValue) {
+        m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
+    }
+    inline float GetKnownSuccessRatio(int iIndex) {
+        return m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio;
+    }
+
+    inline void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) {
+        m_KwnLOB[iIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
+    }
+    inline int GetKnownIndexEmitter(int iIndex) {
+        return m_KwnLOB[iIndex].stKnownInfo.iIdxEmitter;
+    }
+    inline STR_EMITTER *GetEmitterFromKnownIndex(int iIndex) {
+        int iIdxEmitter=GetKnownIndexEmitter(iIndex);
+        return & m_pEmitter[iIdxEmitter];
+    }
+
+    inline unsigned int GetPulseCountFromKnownIndex(int iIndex) {
+        int iIdxEmitter = GetKnownIndexEmitter(iIndex);
+        return m_pEmitter[iIdxEmitter].stPDW.uiCount;
+    }
+
+
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	EN_RADARCOLLECTORID GetCollectorID();
@@ -100,15 +138,10 @@ public:
     SRxLOBData *GetUpdLOB();
     //##ModelId=452B0C530064
     int GetCoNewAet();
-    //##ModelId=452B0C530065
-    UINT CheckHarmonic(UINT mean1, float jitter_p1, UINT mean2, float jitter_p2);
 
 	void GetCollectTime( struct timespec *pTimeSpec );
 
     unsigned int GetPDWID();
-
-     //template <typename T>
-     //UINT CheckHarmonic(float mean1, float mean2, float priThreshold );
 
 
     template <typename T>
@@ -152,23 +185,34 @@ public:
 
 
     //##ModelId=452B0C530015
-    template <typename T>
-    UINT CheckStaggerHarmonic( T *pPri1, SRxLOBData *pPri2 ) {
-        int i;
-
-        if( pPri1->iPRIPositionCount != pPri2->iPRIPositionCount ) {
-            return 0;
-        }
-
-        for( i=0 ; i < pPri1->iPRIElementCount ; ++i ) {
-            if( FALSE == CompMeanDiff<float>( pPri1->fPRISeq[i], pPri2->fPRISeq[i], 8 * _spOneMicrosec ) ) {
-                return 0;
-            }
-        }
-
-        return 1;
-
-    }
+    /**
+     * @brief     CheckStaggerHarmonic
+     * @param     T * pPri1
+     * @param     SRxLOBData * pPri2
+     * @return    UINT
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-27, 10:31
+     * @warning
+     */
+//     template <typename T>
+//     UINT CheckStaggerHarmonic( T *pPri1, SRxLOBData *pPri2 ) {
+//         int i;
+// 
+//         if( pPri1->iPRIPositionCount != pPri2->iPRIPositionCount ) {
+//             return 0;
+//         }
+// 
+//         for( i=0 ; i < pPri1->iPRIElementCount ; ++i ) {
+//             if( FALSE == CompMeanDiff<float>( pPri1->fPRISeq[i], pPri2->fPRISeq[i], 8 * _spOneMicrosec ) ) {
+//                 return 0;
+//             }
+//         }
+// 
+//         return 1;
+// 
+//     }
 
     template <typename T>
     UINT CheckHarmonic( T *pAet1, SRxLOBData *pAet2 ) {
@@ -326,17 +370,27 @@ public:
     void DISP_FineAet( SRxLOBData *pLOB );
     unsigned int IsStorePDW();
 
+    LONG GetOPInitID();
+
     //##ModelId=452B0C530078
     BOOL IsUpdateAet();
     //##ModelId=452B0C530079
     void MakeUpAET();
+
+    int SelectKnownSuccessLOB();
+    void CalcAllKnownSucessRatio();
+    float CalcFreqSuccessRatio(SRxLOBData *pLOBData);
+    float CalcPRISuccessRatio(SRxLOBData *pLOBData);
     //##ModelId=452B0C530080
     BOOL KnownMakeAET();
+
+
     //##ModelId=452B0C530081
     CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
     //##ModelId=452B0C530084
     virtual ~CKMakeAET();
 
+    int GetIdxUpdAet() const { return m_IdxUpdAet; }
 };
 
 #endif

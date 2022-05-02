@@ -27,6 +27,8 @@ public:
     // 명령에 대한 처리 함수 정의
     void DumpList();
 
+    bool IsValidLanData( STR_MessageData *pMsg );
+
 
     virtual void _routine();
     virtual char *GetThreadName() { return m_szThreadName; }

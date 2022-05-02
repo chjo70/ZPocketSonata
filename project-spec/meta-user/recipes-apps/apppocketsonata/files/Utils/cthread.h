@@ -390,7 +390,8 @@ public:
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
-    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiLength, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
+    void QMsgSnd(unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName = NULL);
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 

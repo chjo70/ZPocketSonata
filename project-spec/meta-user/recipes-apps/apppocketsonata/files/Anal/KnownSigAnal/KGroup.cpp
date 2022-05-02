@@ -44,6 +44,23 @@ CKGroup::~CKGroup()
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+/*! \brief    CNGroup::Init
+        \author   조철희
+        \return   void
+        \version  0.0.34
+        \date     2008-07-30 13:26:21
+        \warning
+*/
+void CKGroup::Init()
+{
+    /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
+        \date 2008-07-30 13:25:17, 조철희
+    */
+    CGroup::Init();
+}
+
+
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKGroup::MakeGroup
@@ -53,13 +70,13 @@ CKGroup::~CKGroup()
 // 최 종 변 경  : 조철희, 2005-07-28 17:25:17
 //
 //##ModelId=42E98F30008A
-BOOL CKGroup::MakeGroup()
+BOOL CKGroup::MakeKnownGroup()
 {
 	// 방위 및 주파수 그룹화 초기화
 	m_AoaGroups.uiCount = 0;
-	m_AoaGroups.coAnal = 0;
+	m_AoaGroups.uiCoAnal = 0;
 	m_FrqGroups.uiCount = 0;
-	m_FrqGroups.coAnal = 0;
+	m_FrqGroups.uiCoAnal = 0;
 	m_PwGroups.uiCount = 0;
 	m_PwGroups.coAnal = 0;
 

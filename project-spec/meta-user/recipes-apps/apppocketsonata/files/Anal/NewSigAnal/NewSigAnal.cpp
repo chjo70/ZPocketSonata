@@ -212,6 +212,8 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 */
 void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 {
+    DWORD dwTime = GetTickCount();
+
     Log( enLineFeed, "" );
 
     PrintFunction
@@ -233,7 +235,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         InsertRAWData( pPDWData, _spZero );
         
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_uiCoPdw ) ) {
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_uiCoPdw, m_pPDWData->GetBand() ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->GetTaskID(), pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
@@ -279,15 +281,12 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
         }
 
         //m_theMakeAET->PrintAllEmitter();
-
-        // Printf( "\n ==== End of New Signal Analysis ====\n" );
-
         // 분석되지 못한 나머지 펄스열에 대한 파일 저장.
         SaveRemainedPdwFile();
+
     }
 
-    // DB 인덱스 번호 증가 : 매우 중요
-    //NextSeqNum();
+    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((GetTickCount() - dwTime)) );
 
 }
 
@@ -315,7 +314,7 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
         bRet = false;
     }
 #else
-    if ((pPDWData->x.el.enBandWidth != XBAND::en5MHZ_BW && pPDWData->x.el.enBandWidth != XBAND::en150MHZ_BW)) {
+    if ((pPDWData->x.el.enBandWidth != XBAND::en5MHZ_BW && pPDWData->x.el.enBandWidth != XBAND::en120MHZ_BW)) {
         Log(enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!", pPDWData->x.el.enBandWidth);
         bRet = false;
     }
@@ -432,6 +431,8 @@ bool CNewSigAnal::CheckKnownByAnalysis()
 
     if( m_theGroup->GetPulseStat() == STAT_CW ) {
         bRet = false;
+
+        DeletePointers( m_VecMatchRadarMode );
     }
     else {
         uiFreqMax = 0;

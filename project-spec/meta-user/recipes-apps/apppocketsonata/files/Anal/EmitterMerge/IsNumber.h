@@ -16,6 +16,9 @@
 
 using namespace std;
 
+#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
+
 
 template<typename T>
 bool is_infinite( const T &value )

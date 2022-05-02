@@ -34,7 +34,7 @@ CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPd
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
-    m_CoPulseTrains = 0;
+    //m_CoPulseTrains = 0;
 
     INIT_ANAL_VAR_(m_pNewSigAnal)
 }

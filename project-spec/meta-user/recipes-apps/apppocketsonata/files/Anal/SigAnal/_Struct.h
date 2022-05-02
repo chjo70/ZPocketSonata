@@ -21,6 +21,8 @@ enum PULSE_EXTRACT_MARK { UnMark=0, STABLE_MARK, REFSTB_MARK, JITTER_MARK, DWELL
 //##ModelId=452B0C5402D0
 typedef USHORT PDWINDEX;
 
+
+
 // 탐지 PDW Index
 //##ModelId=452B0C5402E5
 struct STR_PDWINDEX {
@@ -87,7 +89,7 @@ struct STR_AOA_GROUP {
 struct STR_AOA_GROUPS {
     STR_AOA_GROUP aoa[ MAX_AGRT ];
     unsigned int uiCount;
-	int coAnal;
+	unsigned int uiCoAnal;
 
 }  ;
 
@@ -109,9 +111,9 @@ struct STR_FRQ_GROUP {
 // 주파수 그룹범위 테이블  
 //##ModelId=452B0C540348
 struct STR_FRQ_GROUPS {
-	STR_FRQ_GROUP frq[ MAX_FGRT ];
+	STR_FRQ_GROUP stFreq[ MAX_FGRT ];
 	unsigned int uiCount;
-	int coAnal;
+	unsigned int uiCoAnal;
 
 }  ;
 
@@ -178,7 +180,7 @@ struct STR_PULSE_TRAIN_SEG {
 	STR_MINMAX_MEDIAN freq;				// 주파수 제원 
 	STR_MINMAX pa;					// 신호세기 제원 
 	STR_MINMAX pw;					// 펄스폭 제원 
-	UINT uiPriType;					// PRI 타입
+    enPRI_TYPE enPriType;					// PRI 타입
 	STR_MINMAX_TOA pri;					// PRI 제원
 	_TOA min_dtoa;					// DTOA 간격 중에서 최소가 되는 값
 	float fJitterRatio;					// 지터율
@@ -206,39 +208,39 @@ struct STR_PRI_RANGE_TABLE {
 //##ModelId=452B0C5403CA
 #ifndef _GRAPH_
 struct STR_EMITTER {
-    STR_PDWINDEX pdw;						// PDW 버퍼
-    UINT seg_idx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
-    STR_PULSE_TRAIN_SEG seg[ MAX_SEG ];			// 펄스열 저장
+    STR_PDWINDEX stPDW;						// PDW 버퍼
+    UINT uiSegIdx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
+    STR_PULSE_TRAIN_SEG stSeg[ MAX_SEG ];			// 펄스열 저장
 
 	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
 
-	PRI_TYPE pri_type;							// PRI 형태
-	_TOA framePri;								// 스태거일 때의 frmae PRI 값
-	STR_MINMAX_TOA pri;							// 에미터 펄스열의 PRI 범위
-	UINT pri_patterntype;
-	float priPeriod;
+	enPRI_TYPE enPRIType;							// PRI 형태
+	_TOA tFramePri;								// 스태거일 때의 frmae PRI 값
+	STR_MINMAX_TOA stPRI;							// 에미터 펄스열의 PRI 범위
+	UINT uiPRIPatternType;
+	float fPRIPeriod;
 
 	unsigned int uiStagDwellElementCount;					// stagger level 수 
-	_TOA stag_dwell_element[ MAX_FREQ_PRI_STEP ];		// Stagger level
+	_TOA tStaggerDwellElement[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
 	unsigned int uiStagDwellLevelCount;					// stagger level 수 
-	_TOA stag_dwell_level[ MAX_FREQ_PRI_STEP ];		// Stagger level
+	_TOA tStaggerDwellLevel[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	int hop_level[ MAX_FREQ_PRI_STEP ];					// Hopping level
-	int hop_level_cnt;					// Hop level 수 
+	int iHopLevel[ MAX_FREQ_PRI_STEP ];					// Hopping level
+	int iCoHoppingLevel;					// Hop level 수 
 
-	SIGNAL_TYPE signal_type;	
+	enSIGNAL_TYPE enSignalType;	
 
-	FREQ_TYPE freq_type;
-	UINT freq_patterntype;
-	STR_TYPEMINMAX freq;				// 에미터 간의 병합시에 판단할 주파수 통계량
-	float freqPeriod;
-    int freq_level[ MAX_FREQ_PRI_STEP ];
-    int freq_level_cnt;
+	enFREQ_TYPE enFreqType;
+	UINT uiFreqPatternType;
+	STR_TYPEMINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
+	float fFreqPeriod;
+    int iFreqLevel[ MAX_FREQ_PRI_STEP ];
+    int iCoFreqLevel;
 
-	STR_MINMAX pw;							// 에미터 펄스열의 PRI 범위
+	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
 
-	UINT main_seg;							// 분석에 성공한 seg index
+	UINT uiMainSeg;							// 분석에 성공한 seg index
     EMITTER_MARK mark;									// 삭제 여부
 
 	int iDIRatio;
@@ -293,86 +295,86 @@ struct STR_ID {
 
 //##ModelId=452B0C4E035F
 struct STR_MG {
-  //  UINT  mode;
-  UINT aoa[ ALL_BAND+1 ];
+    //  UINT  mode;
+    UINT aoa[ ALL_BAND+1 ];
 
-  UINT fixfrq[ ALL_BAND+1 ];
-  UINT fixfrq_boundary[ ALL_BAND+1 ];
+    UINT fixfrq[ ALL_BAND+1 ];
+    UINT fixfrq_boundary[ ALL_BAND+1 ];
 
-  UINT agifrqmean;    // agile/agile, agile/pattern
-  UINT agifrqin;    // agile/agile, agile/pattern
-  UINT agifrqout;   // agile/agile, agile/pattern
-  UINT agifrqpat[ ALL_BAND+1 ];  // pattern/pattern
-  UINT md_agifrq[ ALL_BAND+1 ];  // debug, 00-01-31 16:35:43
+    UINT agifrqmean;    // agile/agile, agile/pattern
+    UINT agifrqin;    // agile/agile, agile/pattern
+    UINT agifrqout;   // agile/agile, agile/pattern
+    UINT agifrqpat[ ALL_BAND+1 ];  // pattern/pattern
+    UINT md_agifrq[ ALL_BAND+1 ];  // debug, 00-01-31 16:35:43
 
-  UINT fixpri;      // stable PRI.
-  UINT agiprimean;    // agile/agile, agile/pattern
-  UINT agipriin;    // agile/agile, agile/pattern
-  UINT agipriout;   // agile/agile, agile/pattern
-  UINT agipripat; // pattern/pattern
+    UINT fixpri;      // stable PRI.
+    UINT agiprimean;    // agile/agile, agile/pattern
+    UINT agipriin;    // agile/agile, agile/pattern
+    UINT agipriout;   // agile/agile, agile/pattern
+    UINT agipripat; // pattern/pattern
 
-  UINT frqPrd;      // When Pattern Agile, comparative period val.
-  UINT priPrd;      // When PRI Pattern, comparative period val.
+    UINT frqPrd;      // When Pattern Agile, comparative period val.
+    UINT priPrd;      // When PRI Pattern, comparative period val.
 
-  UINT scnPrd;      // When scan is sucessful, comparative period val.
+    UINT scnPrd;      // When scan is sucessful, comparative period val.
 
-  UINT jtrper;      // PRI jitter %
+    UINT jtrper;      // PRI jitter %
 
-  UINT pw;        // PRI jitter %
+    UINT pw;        // PRI jitter %
 
-  UINT mdyMethod;   // Method of modify parameter, debug, 00-08-31 10:19:35
+    UINT mdyMethod;   // Method of modify parameter, debug, 00-08-31 10:19:35
 }  ;
 
 //##ModelId=452B0C4E0373
 struct STR_FT {
-  UINT aoa[ ALL_BAND+1 ];
+    UINT aoa[ ALL_BAND+1 ];
 
-  UINT fixfrq[ ALL_BAND+1 ];
-  UINT agifrq[ ALL_BAND+1 ];
-  UINT agiratio;    //  debug, 00-04-19 17:46:13
+    UINT fixfrq[ ALL_BAND+1 ];
+    UINT agifrq[ ALL_BAND+1 ];
+    UINT agiratio;    //  debug, 00-04-19 17:46:13
 
-  //  UINT  pw;       // PW
-  //  UINT  pa;
+    //  UINT  pw;       // PW
+    //  UINT  pa;
 
-  UINT CWTo;
-  UINT CWPc;
+    UINT CWTo;
+    UINT CWPc;
 
-  UINT normPc;
-  UINT abnormPc;
+    UINT normPc;
+    UINT abnormPc;
 
-  UINT chirpTo;
-  UINT chirpPc;
+    UINT chirpTo;
+    UINT chirpPc;
 
-  float maxTim;     // as times as scan period for collecting time out
-  UINT timPrd;      // as times as scan period for collecting pulse count
+    float maxTim;     // as times as scan period for collecting time out
+    UINT timPrd;      // as times as scan period for collecting pulse count
 
-  //STR_LOWHIGH tkto;   // Track Timeout
-  //STR_LOWHIGH tkpc;   // Track Pulse count
+    //STR_LOWHIGH tkto;   // Track Timeout
+    //STR_LOWHIGH tkpc;   // Track Pulse count
 
-  UINT scto[ _spMaxTryScan + 1 ];
+    UINT scto[ _spMaxTryScan + 1 ];
 
 }  ;
 
 //#ModelId=452B0C4E037D
 struct STR_FG {
-  STR_LOWHIGH frq[ ALL_BAND+1 ];
+    STR_LOWHIGH frq[ ALL_BAND+1 ];
 
 }  ;
 
 //##ModelId=452B0C4E039A
 struct STR_NP {
-  UINT Pdw_Max;            // 수집 PDW 최대수
-  UINT Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
-  UINT Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
-  UINT Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
-  UINT Aoa_Range_Margin;   // 방위 그룹 범위 margin
+    UINT Pdw_Max;            // 수집 PDW 최대수
+    UINT Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
+    UINT Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
+    UINT Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
+    UINT Aoa_Range_Margin;   // 방위 그룹 범위 margin
 
-  UINT Freq_Shift_Cnt;     // 주파수 히스토 BIN 크기 = 2^N
-  UINT Freq_Peak_Thr;      // 주파수 히스토그램 PEAK 임계값    // 00.02.09
-  UINT Freq_Hist_Thr;      // 주파수 히스토그램 범위 임계값    // 00.02.09
-  UINT Freq_Range_Margin;  // 주파수 그룹 범위 margin
+    UINT Freq_Shift_Cnt;     // 주파수 히스토 BIN 크기 = 2^N
+    UINT Freq_Peak_Thr;      // 주파수 히스토그램 PEAK 임계값    // 00.02.09
+    UINT Freq_Hist_Thr;      // 주파수 히스토그램 범위 임계값    // 00.02.09
+    UINT Freq_Range_Margin;  // 주파수 그룹 범위 margin
 
-  UINT Rpt_Aet_Cnt;    // 탐지; 하나의 그룹에서 REPORT될 AET의 개수를 선언
+    UINT Rpt_Aet_Cnt;    // 탐지; 하나의 그룹에서 REPORT될 AET의 개수를 선언
 }  ;
 
 //##ModelId=452B0C4E03AE

@@ -208,7 +208,7 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 			iNumPE = MAX_OF_LOBS_PE;
 		}
 		else {
-			iNumPE = pABTExtData->uiPE;
+			iNumPE = (int) pABTExtData->uiPE;
 		}
 
 
@@ -311,7 +311,7 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 
 	// H 벡터 생성
 	pLob2 = pTrueLob;
-	H = CMatrix( nEle, 2 );
+	H = CMatrix( (UINT) nEle, 2 );
  	for( i=1 ; i <= nEle ; ++i ) {
  		H( i, 1 ) = sin( *pLob2 );
  		H( i, 2 ) = -cos( *pLob2 );

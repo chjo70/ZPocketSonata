@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <fcntl.h>
 
 #include "../../../Anal/SigAnal/_Macro.h"
 #include "../../../Anal/SigAnal/_Struct.h"
@@ -15,8 +16,10 @@
 #endif
 
 #include "../../../Anal/MIDAS/Midas.h"
+#include "../../../Include/struct.h"
 
 
+// RAW 데이터 개수 정의 : 왜 필요하지 ?
 #define			PDW_ITEMS						(1024*128)			// 9437164
 #define			IQ_ITEMS						(1024*128)
 
@@ -41,17 +44,17 @@ typedef enum {
 
 } ENUM_SUB_GRAPH ;
 
-#ifndef _ENUM_DataType
-#define _ENUM_DataType
-typedef enum {
-	en_UnknownData = 0,
-
-	en_PDW_DATA,
-	en_IQ_DATA,
-	en_IF_DATA,
-
-} ENUM_DataType;
-#endif
+// #ifndef _ENUM_DataType
+// #define _ENUM_DataType
+// typedef enum {
+// 	en_UnknownData = 0,
+// 
+// 	en_PDW_DATA,
+// 	en_IQ_DATA,
+// 	en_IF_DATA,
+// 
+// } ENUM_DataType;
+// #endif
 
 
 typedef enum {
@@ -432,6 +435,7 @@ public:
      */
     static float EncodeDOA(float fDOA )
     {
+        fDOA = (float) fmod( ( double ) fDOA, (double) 360.0 );
         return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
     } ;
 
@@ -570,6 +574,7 @@ public:
         return (float)(((float)uiPW * ELINT::_toaRes[enBandWidth]) / (float) 1000000000.);
     };
 
+
 	/**
 	 * @brief     DecodeFREQMHz
 	 * @param     int iFreq
@@ -621,7 +626,7 @@ public:
 
 
 namespace XBAND {
-	const float _toaRes[XBAND::en150MHZ_BW +1] = { (float) 65.104167, (float) 8.138021 } ;
+	const float _toaRes[XBAND::en120MHZ_BW +1] = { (float) 65.104167, (float) 8.138021 } ;
 	const float fFreqRes=(float) 0.001;
 	const float fDOARes=(float) 0.01;
 	const float fPARes=(float) 0.25;
@@ -711,7 +716,7 @@ public:
      * @date      2022/02/17 15:16:39
      * @warning   
      */
-    static unsigned int EncodeTOAus( float fTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
+    static _TOA EncodeTOAus( float fTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
         return (unsigned int) ( ( ( fTOA * (float) 1000. ) / XBAND::_toaRes[enBandWidth] ) + 0.5 );
     } ;
@@ -866,6 +871,7 @@ public:
      */
     static unsigned int EncodeDOA(float fDOA )
     {
+        fDOA = (float) fmod( ( double ) fDOA, (double) 360.0 );
         return (unsigned int) ( (float) fDOA / XBAND::fDOARes + 0.5 );
     } ;
 
@@ -1052,6 +1058,7 @@ public:
     {
         int iDOA;
 
+        fDOA = (float) fmod( (double) fDOA, (double) 360.0 );
         iDOA = (int) ( ( fDOA * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 );
         return iDOA;
     } ;
@@ -1227,6 +1234,24 @@ public:
     } ;
 
     /**
+     * @brief     EncodeRealFREQMHz
+     * @param     float fFreq
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 18:53
+     * @warning
+     */
+    static unsigned int EncodeRealFREQMHz( float fFreq )
+    {
+        float fRetFreq;
+
+        fRetFreq = ((fFreq * (float) 1000.) / POCKETSONATA::fPDW_FREQ_RES);
+        return (unsigned int) ( fRetFreq + 0.5 );	/* [MHz] */
+    } ;
+
+    /**
      * @brief EncodeFREQMHzFloor
      * @param fFreq
      * @return
@@ -1320,6 +1345,25 @@ public:
     } ;
 
     /**
+     * @brief     EncodePWns
+     * @param     float fPW
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 18:53
+     * @warning
+     */
+    static unsigned int EncodePWns( float fPW )
+    {
+        float fretPW;
+
+        fretPW = fPW * (float) 1000.;
+        fretPW = fretPW / ( float ) PDW_TIME_RES;
+        return ( int ) ( fretPW + 0.5 );
+    } ;
+
+    /**
      * @brief     
      * @param     float fPW
      * @return    int
@@ -1337,6 +1381,16 @@ public:
         return (int) fretPW;
     } ;
 
+    /**
+     * @brief     EncodePWCeiling
+     * @param     float fPW
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:16
+     * @warning
+     */
     static int EncodePWCeiling( float fPW )
     {
         float fretPW;
@@ -1466,6 +1520,21 @@ public:
         return fTOA;	/* [ns] */
     } ;
 
+    /**
+     * @brief     EncodePA
+     * @param     float fPA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 18:58
+     * @warning
+     */
+    static unsigned int EncodePA( float fPA )
+    {
+        return ( unsigned int ) pow( (double) 10., (fPA - PDW_PA_INIT) / 20. );
+    } ;
+
     static bool Test()
     {
         bool bRet=true;
@@ -1576,12 +1645,6 @@ public:
 
 };
 
-// union UNI_ADJUNCT_TYPE {
-// 	SELMIDAS_ADJUNCT_TYPE_1000 _1000;
-// 	SELMIDAS_ADJUNCT_TYPE_2000 _2000;
-// 	SELMIDAS_ADJUNCT_TYPE_6000 _6000;
-// };
-
 class CMIDAS : public CData
 {
 private:
@@ -1614,6 +1677,8 @@ public:
 
 };
 
+
+// PDW 데이터 파일을 읽거나 쓰기 위한 클래스 정의
 class CDataFile
 {
 private:
@@ -1644,8 +1709,8 @@ public:
 	void ReadDataHeader();
 	void ReadDataAll( CData *pData );
 
-	ENUM_DataType WhatDataType( char *pStrPathname );
-	ENUM_UnitType WhatUnitType( char *pStrPathname );
+	//ENUM_DataType WhatDataType( char *pStrPathname );
+	//ENUM_UnitType WhatUnitType( char *pStrPathname );
 
 	int GetHeaderSize( CData *pData );
 	unsigned int GetOneDataSize( CData *pData );
@@ -1781,4 +1846,159 @@ public:
 
 };
 #endif
+
+
+class CEncode {
+    // Encode
+public:
+    /**
+     * @brief     EncodeDOA
+     * @param     float fDOA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:24
+     * @warning
+     */
+    static unsigned int EncodeDOA( float fDOA ) {
+        unsigned uiDOA;
+
+        if( g_enUnitType == en_XBAND ) {
+            uiDOA = CXPDW::EncodeDOA( fDOA );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiDOA = CPOCKETSONATAPDW::EncodeDOA( fDOA );
+
+        }
+        else {
+            uiDOA = 0;
+        }
+
+        return uiDOA;
+    } ;
+
+    /**
+     * @brief     EncodePA
+     * @param     float fPA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:27
+     * @warning
+     */
+    static unsigned int EncodePA( float fPA ) {
+        unsigned int uiPA;
+
+        if( g_enUnitType == en_XBAND ) {
+            uiPA = CXPDW::EncodePA( fPA );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiPA = CPOCKETSONATAPDW::EncodePA( fPA );
+
+        }
+        else {
+            uiPA = 0;
+
+        }
+        return uiPA;
+
+    } ;
+
+    /**
+     * @brief     EncodeTOAus
+     * @param     float fTOA
+     * @param     int iBandWidth
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:30
+     * @warning
+     */
+    static _TOA EncodeTOAus( float fTOA, int iBandWidth ) {
+        _TOA tTOA;
+
+        if( g_enUnitType == en_XBAND ) {
+            tTOA = CXPDW::EncodeTOAus( fTOA, (XBAND::ENUM_BANDWIDTH) iBandWidth );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            tTOA = CPOCKETSONATAPDW::EncodeTOAus( fTOA );
+
+        }
+        else {
+            tTOA = 0;
+        }
+        return tTOA;
+    }
+
+    /**
+     * @brief     EncodePWns
+     * @param     float fPWns
+     * @param     int iBandWidth
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:24
+     * @warning
+     */
+    static unsigned int EncodePWns( float fPWns, int iBandWidth ) {
+        unsigned uiDOA;
+
+        if( g_enUnitType == en_XBAND ) {
+            iBandWidth = 
+            uiDOA = CXPDW::EncodePWns( fPWns, (XBAND::ENUM_BANDWIDTH) iBandWidth );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiDOA = CPOCKETSONATAPDW::EncodePWns( fPWns );
+
+        }
+        else {
+            uiDOA = 0;
+        }
+
+        return uiDOA;
+    } ;
+
+    /**
+     * @brief     EncodeRealFREQMHz
+     * @param     float fFrequency
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-02, 19:32
+     * @warning
+     */
+    static unsigned int EncodeRealFREQMHz( float fFrequency ) {
+        unsigned int uiFrequency;
+
+        if( g_enUnitType == en_XBAND ) {
+            uiFrequency = CXPDW::EncodeRealFREQMHz( fFrequency );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
+
+        }
+        else {
+            uiFrequency = 0;
+        }
+        return uiFrequency;
+    } ;
+
+};
+
+class CDecode {
+public:
+
+
+};
+
 

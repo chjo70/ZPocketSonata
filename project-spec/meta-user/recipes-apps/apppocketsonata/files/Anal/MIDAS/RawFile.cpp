@@ -47,7 +47,7 @@
  */
 CRawFile::CRawFile(void)
 {
-	//m_pfile = NULL;
+	
 	m_fid = 0;
 }
 
@@ -65,7 +65,7 @@ CRawFile::CRawFile(void)
  */
 CRawFile::~CRawFile(void)
 {
-	//if( m_pfile != NULL ) fclose( m_pfile );
+	
 	if( m_fid > 0 ) _close( m_fid );
 
 }
@@ -244,11 +244,11 @@ bool CRawFile::FileOpen( const char *filename, int iMode )
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == ERROR ) { //DTEC_Else
 #else
-	m_fid = _open( filename , iMode );
+	m_fid = open( filename , iMode );
     if( m_fid <= 0 ) { //DTEC_Else
 #endif
-
-		printf( "\n[W] FIle is not exist !!" );
+        remove( filename );
+		TRACE( "\n[W] The file[%s] is not exist !!", filename );
 	}
 	else {
 #if defined(__linux__) || defined(__VXWORKS__)
@@ -285,19 +285,19 @@ bool CRawFile::FileOpen( const char *filename, int iMode )
  */
 unsigned int CRawFile::Write( void *pData, unsigned int c_size )
 {
-    int iWrite;
-	unsigned int uiWrite=0;
+    int iWrite=0;
 
     if( c_size > 0 && pData != NULL && m_fid > 0 ) {
     	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
 	    iWrite = _write( m_fid, (char *) pData, c_size );
-        if( iWrite > 0 ) {
-            uiWrite = (unsigned int ) iWrite;
+        if( iWrite > 0 ) {            
         }
-        //printf( "iWrite= %d" , iWrite );
+        else {
+            printf( "iWrite= %d" , iWrite );
+        }
     }
         
-	return uiWrite;
+	return (unsigned int) iWrite;
 }
 
 /**

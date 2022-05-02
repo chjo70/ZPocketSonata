@@ -102,10 +102,10 @@ CNAnalPRI::~CNAnalPRI()
 void CNAnalPRI::Init()
 {
 
-    m_uiAnalSeg = 0;
-    m_uiCoSeg = GetCoSeg();
+    CAnalPRI::m_uiAnalSeg = _spZero;
+    CAnalPRI::m_uiCoSeg = GetCoSeg();
 
-    m_uiAnalEmitter = _spZero; // m_uiCoEmitter;
+    CAnalPRI::m_uiAnalEmitter = _spZero; // m_uiCoEmitter;
 
     /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
         \date 2008-07-30 13:35:08, 조철희
@@ -290,16 +290,16 @@ int CNAnalPRI::GetMaxPdw()
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CNAnalPRI::MakePRIInfoInSeg
+// 함 수 이 름  : CNAnalPRI::MakePRIInfoFromSeg
 // 반환되는 형  : void
 // 함 수 인 자  : STR_PRI *pPri
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:37
 //
-void CNAnalPRI::MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
+void CNAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
 {
-    m_pNewSigAnal->MakePRIInfoInSeg( pPri, pEmitter );
+    m_pNewSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
 }
 
 //////////////////////////////////////////////////////////////////////

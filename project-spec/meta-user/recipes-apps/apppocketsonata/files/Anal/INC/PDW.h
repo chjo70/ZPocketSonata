@@ -397,8 +397,39 @@ struct TNEW_SPDW
 #pragma pack( push, 1 )
 #endif
 
+
+#ifndef _PDW_ETC_UNION
+#define _PDW_ETC_UNION
+typedef union {
+    struct {
+        float fPh1;
+        float fPh2;
+        float fPh3;
+        float fPh4;
+    } el;
+
+    struct {
+        float fPh1;
+        float fPh2;
+        float fPh3;
+        float fPh4;
+        float fPh5;
+    } xb;
+
+    struct {
+        int iPMOP;
+        int iFMOP;
+
+        int iChannel;
+    } ps;
+
+} UNI_PDW_ETC ;
+
+#endif
+
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
+
 struct _PDW {
     _TOA ullTOA;
 
@@ -411,37 +442,23 @@ struct _PDW {
 
 	int iPFTag;
 
-#if defined(_ELINT_)
-	float fPh1;
-	float fPh2;
-	float fPh3;
-	float fPh4;
-
-#elif defined(_XBAND_)
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-    float fPh5;
-
-#elif _POCKETSONATA_
-    int iPMOP;
-    int iFMOP;
-
-    int iChannel;
-
-#endif
+    UNI_PDW_ETC x;    
 
     _TOA GetTOA() {
         return ullTOA;
     }
 
     int GetChannel() {
-#ifdef _POCKETSONATA_
-        return iChannel;
-#else
-        return 0;
-#endif
+        int iRet=0;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            iRet = x.ps.iChannel;
+        }
+        else {
+        }
+
+        return iRet;
+
     }
 
     unsigned int GetFrequency( int iCh=0 ) {
@@ -495,7 +512,7 @@ namespace XBAND {
 #define _XBAND_ENUM_BANDWIDTH_
     typedef enum {
         en5MHZ_BW = 0,
-        en150MHZ_BW,
+        en120MHZ_BW,
 
         enUnknown_BW = 2,
 
@@ -511,15 +528,17 @@ namespace XBAND {
 
 
 #elif defined(_POCKETSONATA_)
+namespace POCKETSONATA {
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
-typedef enum {
-    en5MHZ_BW = 0,
-    en50MHZ_BW,
+    typedef enum {
+        en5MHZ_BW = 0,
+        en50MHZ_BW,
 
-    enUnknown_BW = 2,
+        enUnknown_BW = 2,
 
-} ENUM_BANDWIDTH;
+    } ENUM_BANDWIDTH;
+}
 
 #endif
 #else
@@ -1088,6 +1107,35 @@ struct STR_PDWDATA {
     }
 
     /**
+     * @brief     GetBand
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-27, 14:46
+     * @warning
+     */
+    unsigned int GetBand() {
+        unsigned int uiBand=0;
+
+        if (g_enUnitType == en_ZPOCKETSONATA) {
+            uiBand = x.ps.uiBand;
+        }
+        else if (g_enUnitType == en_ELINT) {
+            //uiBand = x.el.uiBand;
+        }
+        else if ( g_enUnitType == en_XBAND) {
+            //uiBand = x.xb.uiBand;
+        }
+        else {
+            uiBand = x.so.uiBand;
+        }
+
+        return uiBand;
+
+    }
+
+    /**
      * @brief     GetPDWID
      * @return    unsigned int
      * @exception
@@ -1352,22 +1400,25 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-//     ENUM_BANDWIDTH GetBandWidth()
-//     {
-//         ENUM_BANDWIDTH enBandwidth;
-// 
-//         if( g_enUnitType == en_ZPOCKETSONATA ) {
-//             enBandwidth = enUnknown_BW;
-//         }
-//         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-//             enBandwidth = x.el.enBandWidth;
-//         }
-//         else {
-//             enBandwidth = enUnknown_BW;
-//         }
-// 
-//         return enBandwidth;
-//     }
+    int GetBandWidth()
+    {
+        int iBandwidth;
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            iBandwidth = 0;
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            iBandwidth = x.el.enBandWidth;
+        }
+        else if( g_enUnitType == en_XBAND ) {
+            iBandwidth = x.xb.enBandWidth;
+        }
+        else {
+            iBandwidth = 0;
+        }
+
+        return iBandwidth;
+    }
 
     /**
      * @brief     GetTaskID

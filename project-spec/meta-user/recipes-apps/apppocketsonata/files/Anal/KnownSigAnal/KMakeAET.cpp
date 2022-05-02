@@ -17,6 +17,8 @@
 
 #include "../../Include/globals.h"
 
+#include "../EmitterMerge/ELStringDefn.h"
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ void CKMakeAET::Init()
 {
 	m_iCoNewAet = 0;
 
-    m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
+    m_pTrkABT = m_pKnownSigAnal->GetTrkAET();
 
 	CMakeAET::Init();
 
@@ -113,59 +115,232 @@ void CKMakeAET::MakeAET()
 //##ModelId=42E98F300030
 BOOL CKMakeAET::KnownMakeAET()
 {
-	int i;
-	UINT maxPulse;
-	//int idxEmitter;
-	//STR_EMITTER *pEmitter;
+    int idxLOBData;
+
+    SRxLOBData *pLOBData;	
+	STR_EMITTER *pEmitter;
 
 	MakeAET();
 
 	/*! \bug  m_IdxUpdAet 초기화
 	    \date 2006-06-26 13:43:57, 조철희
 	*/
-	m_IdxUpdAet = -1;
+    m_IdxUpdAet = -1;
+
+    CalcAllKnownSucessRatio();
 
 	// 추적 성공인지를 체크한다.
-	// 추출된 펄스열로 에미터가 1개 만들어 지면 추
-    if( m_iCoLOB >= 1 ) {
-		// 추적에서 2개 이상의 추적 변경에미터 분석될 때는 가장 많은 펄스열로 분석된것만 추적 Update 로 인정하고
-		// 나머지 다른 에미터들은 펄스열 마킹만한다.
-		maxPulse = 0;
-        for( i=0 ; i < m_iCoLOB ; ++i ) {
-			// 추적할 PRI 값과 추적한 PRI 값이 같아야 추적 성공으로 한다.
-			//-- 조철희 2006-01-25 14:00:31 --//
-            if( CompPRI( & m_LOBData[i], m_pTrkAet ) == TRUE ) {
-                m_LOBData[i].uiABTID = m_pTrkAet->uiABTID;
+	// 추출된 펄스열로 에미터가 1개 만들어 질떄 추적 성공으로 한다.
+    m_IdxUpdAet = SelectKnownSuccessLOB();
+    if(GetIdxUpdAet() >= _spZero ) {
+        //   UpdateFreq(pLOBData);
+        //   UpdatePRI(pLOBData);
 
-                //if( maxPulse < m_pAet[i].ext.noExt ) {
-                //	maxPulse = m_pAet[i].ext.noExt;
-                m_IdxUpdAet = i;
-                //}
-
-                UpdateFreq( & m_LOBData[i] );
-
-                UpdatePRI( & m_LOBData[i] );
-
-			}
-
-			/*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
-			    \date 2006-06-29 13:53:26, 조철희
-			*/
-			// 추출된 펄스 Marking
-            //idxEmitter = m_pAet[i].ext.idxEmitter;
-            //pEmitter = & m_pEmitter[idxEmitter];
-            //MarkToEmitterPdwIndex( pEmitter, EXTRACT_MARK );
-		}
-
-		// 추출한 펄스열들은 EXTRACT_MARK 을 해서 재 분석을 안 하도록 한다.
-		//for( i=0 ; i < m_CoSeg ; ++i ) {
-			//MarkToPdwIndex( m_pSeg[i].pdw.pIndex, m_pSeg[i].pdw.count, EXTRACT_MARK );
-		//}
-
+		/*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
+			\date 2006-06-29 13:53:26, 조철희
+		*/
+		// 추출된 펄스 Marking
+        pEmitter = GetEmitterFromKnownIndex(GetIdxUpdAet() );
+        MarkToEmitterPdwIndex( pEmitter, EXTRACT_MARK );
 	}
 
-    return m_IdxUpdAet >= _spZero;
+    return GetIdxUpdAet() >= _spZero;
 
+}
+
+/**
+ * @brief     SelectKnownSuccessLOB
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 11:42
+ * @warning
+ */
+int CKMakeAET::SelectKnownSuccessLOB()
+{
+    int i, iIdxLOB=-1;
+
+    int iNumOfPDW, iMaxNumOfPDW=-1;
+    float fKnownSuccessRatio, fMaxKnownSuccessRatio=-1.;
+
+    STR_EMITTER *pEmitter;
+
+    SRxLOBData *pLOBData;
+
+    for (i = 0; i < m_iCoLOB; ++i) {
+        fKnownSuccessRatio = GetKnownSuccessRatio(i);
+
+        pEmitter = GetEmitterFromKnownIndex(i);
+        iNumOfPDW = (int) pEmitter->stPDW.uiCount;
+
+        // 추적 성공율과 분석한 PDW 개수로 추적 성공 LOB를 선택한다.
+        if( (fMaxKnownSuccessRatio < fKnownSuccessRatio) || \
+            (fMaxKnownSuccessRatio == fKnownSuccessRatio) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
+            fMaxKnownSuccessRatio = fKnownSuccessRatio;
+            iMaxNumOfPDW = iNumOfPDW;
+            iIdxLOB = i;
+        }
+    }
+
+    return iIdxLOB;
+}
+
+/**
+ * @brief     주파수 추적 성공율을 계산한다. (추적할 빔 정보로 추적을 한다는 가정하에 )
+ * @param     SRxLOBData * pLOBData
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 11:03
+ * @warning
+ */
+float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
+{
+    float fRet=0.;
+
+    if (pLOBData->iFreqType == m_pTrkABT->iFreqType) {
+        fRet = 100.;
+    }
+    else {
+        switch (m_pTrkABT->iFreqType) {
+            case E_AET_FRQ_FIXED:
+                if(pLOBData->iFreqType == E_AET_FRQ_AGILE ) {
+                    fRet = 140.;
+                }
+                else {
+                }
+            break;
+
+            case E_AET_FRQ_AGILE:
+                if (pLOBData->iFreqType == E_AET_FRQ_FIXED) {
+                    fRet = 40.;
+                }
+                else if (pLOBData->iFreqType == E_AET_FRQ_PATTERN || pLOBData->iFreqType == E_AET_FRQ_HOPPING) {
+                    fRet = 140.;
+                }
+                else {
+                }
+                break;
+
+
+            case E_AET_FRQ_HOPPING:
+                if (pLOBData->iFreqType == E_AET_FRQ_AGILE) {
+                    fRet = 40.;
+                }
+                break;
+
+            case E_AET_FRQ_PATTERN:
+                if (pLOBData->iFreqType == E_AET_FRQ_AGILE) {
+                    fRet = 40.;
+                }
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    return fRet;
+}
+
+
+/**
+ * @brief     PRI 추적 성공율을 계산한다. (추적할 빔 정보로 추적을 한다는 가정하에 )
+ * @param     SRxLOBData * pLOBData
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 11:03
+ * @warning
+ */
+float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
+{
+    float fRet = 0.;
+
+    if (pLOBData->iPRIType == m_pTrkABT->iPRIType) {
+        fRet = 100.;
+    }
+    else {
+        switch (m_pTrkABT->iPRIType) {
+        case E_AET_PRI_FIXED:
+            if (pLOBData->iFreqType == E_AET_PRI_DWELL_SWITCH) {
+                fRet = 140.;
+            }
+            else {
+            }
+            break;
+
+        case E_AET_PRI_STAGGER:
+            if (pLOBData->iFreqType == E_AET_PRI_JITTER) {
+                fRet = 40.;
+            }
+            else {
+            }
+            break;
+
+        case E_AET_PRI_JITTER:
+            if (pLOBData->iFreqType == E_AET_PRI_STAGGER || pLOBData->iFreqType == E_AET_PRI_PATTERN || pLOBData->iFreqType == E_AET_PRI_DWELL_SWITCH) {
+                fRet = 140.;
+            }
+            break;
+
+        case E_AET_PRI_PATTERN:
+            if (pLOBData->iFreqType == E_AET_PRI_JITTER) {
+                fRet = 40.;
+            }
+            break;
+
+        case E_AET_PRI_DWELL_SWITCH:
+            if (pLOBData->iFreqType == E_AET_PRI_JITTER) {
+                fRet = 40.;
+            }
+            break;
+
+        default:
+            break;
+
+        }
+    }
+    return fRet;
+
+}
+
+/**
+ * @brief     추적 성공율을 계산하여 리턴한다.
+ * @param     SRxLOBData * pLOBData
+ * @return    float
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 10:53
+ * @warning
+ */
+void CKMakeAET::CalcAllKnownSucessRatio()
+{
+    int i;
+
+    float fRatio;
+
+    SRxLOBData *pLOBData;
+
+    for (i = 0; i < m_iCoLOB; ++i) {
+        pLOBData = GetLOBData(i);
+
+        // 주파수 추적 성공율 계산
+        fRatio = CalcFreqSuccessRatio( pLOBData );
+
+        // PRI 추적 성공율 계산
+        fRatio += CalcPRISuccessRatio(pLOBData);
+
+        SetKnownSuccessRatio(i, fRatio);
+
+    }
+
+    return;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -185,6 +360,10 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 
     switch( pNewPri->iPRIType ) {
 		case _STABLE :
+            pri_margin = (float)(2. * STABLE_MARGIN);
+            bRet = CompMeanDiff<float>(pNewPri->fPRIMean, pTrkPri->fPRIMean, pri_margin);
+            break;
+
         case _JITTER_PATTERN :
         case _DWELL :
 			break;
@@ -266,26 +445,26 @@ void CKMakeAET::MakeUpAET()
 	if( pUpdAet != NULL ) {
 		// 추적 성공 에미터와 추적할 에미터 제원과 비교해서 하모닉 체크해서 유사 에미터로 판정한다.
 		//-- 조철희 2005-12-07 19:16:44 --//
-        if( CheckHarmonic<SRxABTData>( m_pTrkAet, pUpdAet ) >= 2 ) {
-            pUpdAet->iPRIType = m_pTrkAet->iPRIType;
-            pUpdAet->iPRIPatternType = m_pTrkAet->iPRIPatternType;
-            pUpdAet->fPRIPatternPeriod = m_pTrkAet->fPRIPatternPeriodMean;
-            pUpdAet->fPRIMean = m_pTrkAet->fPRIMean;
-            pUpdAet->fPRIMax = m_pTrkAet->fPRIMax;
-            pUpdAet->fPRIMin = m_pTrkAet->fPRIMin;
-            pUpdAet->fPRIDeviation = m_pTrkAet->fPRIDeviation;
-            pUpdAet->fPRIJitterRatio = m_pTrkAet->fPRIJitterRatio;
-            pUpdAet->iPRIPositionCount = m_pTrkAet->iPRIPositionCount;
-            pUpdAet->iPRIElementCount = m_pTrkAet->iPRIElementCount;
+        if( CheckHarmonic<SRxABTData>( m_pTrkABT, pUpdAet ) >= 2 ) {
+            pUpdAet->iPRIType = m_pTrkABT->iPRIType;
+            pUpdAet->iPRIPatternType = m_pTrkABT->iPRIPatternType;
+            pUpdAet->fPRIPatternPeriod = m_pTrkABT->fPRIPatternPeriodMean;
+            pUpdAet->fPRIMean = m_pTrkABT->fPRIMean;
+            pUpdAet->fPRIMax = m_pTrkABT->fPRIMax;
+            pUpdAet->fPRIMin = m_pTrkABT->fPRIMin;
+            pUpdAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
+            pUpdAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
+            pUpdAet->iPRIPositionCount = m_pTrkABT->iPRIPositionCount;
+            pUpdAet->iPRIElementCount = m_pTrkABT->iPRIElementCount;
 
-            memcpy( & pUpdAet->fPRISeq, & m_pTrkAet->fPRISeq, sizeof( m_pTrkAet->fPRISeq ) );
+            memcpy( & pUpdAet->fPRISeq, & m_pTrkABT->fPRISeq, sizeof( m_pTrkABT->fPRISeq ) );
 		}
 
 		for( int i=0 ; i < iCount; ++i ) {
             if( m_LOBData[i].uiABTID != _spZero ) {
 #ifndef _XBAND_
-                pUpdAet->iScanType = m_pTrkAet->iScanType;
-                pUpdAet->fScanPeriod = m_pTrkAet->fMeanScanPeriod;
+                pUpdAet->iScanType = m_pTrkABT->iScanType;
+                pUpdAet->fScanPeriod = m_pTrkABT->fMeanScanPeriod;
 				++ coUpdAet;
 
 #endif
@@ -300,26 +479,26 @@ void CKMakeAET::MakeUpAET()
         pDummyAet = & m_LOBData[ MAX_AET ];
 
 		for( int i=0 ; i < iCount; ++i ) {
-            if( CheckHarmonic<SRxABTData>( m_pTrkAet, pNewAet ) == TRUE ) {
+            if( CheckHarmonic<SRxABTData>( m_pTrkABT, pNewAet ) == TRUE ) {
 				// 하모닉 관계 에미터 제원 값을 수정한다.
 				// 추적 성공임을 표시한다.
-                pNewAet->uiABTID = m_pTrkAet->uiABTID;
+                pNewAet->uiABTID = m_pTrkABT->uiABTID;
 
 				// 방위 정보는 최근 정보로 한다.
 				// PRI  값은 하모닉 관계로 추적 에미터 제원으로 한다.
                 //memcpy( & pNewAet->aet.pri, & stTrkAet.aet.pri, sizeof( STR_PRI ) );
-                pNewAet->iPRIType = m_pTrkAet->iPRIType;
-                pNewAet->iPRIPatternType = m_pTrkAet->iPRIPatternType;
-                pNewAet->fPRIPatternPeriod = m_pTrkAet->fPRIPatternPeriodMean;
-                pNewAet->fPRIMean = m_pTrkAet->fPRIMean;
-                pNewAet->fPRIMax = m_pTrkAet->fPRIMax;
-                pNewAet->fPRIMin = m_pTrkAet->fPRIMin;
-                pNewAet->fPRIDeviation = m_pTrkAet->fPRIDeviation;
-                pNewAet->fPRIJitterRatio = m_pTrkAet->fPRIJitterRatio;
-                pNewAet->iPRIPositionCount = m_pTrkAet->iPRIPositionCount;
-                pNewAet->iPRIElementCount = m_pTrkAet->iPRIElementCount;
+                pNewAet->iPRIType = m_pTrkABT->iPRIType;
+                pNewAet->iPRIPatternType = m_pTrkABT->iPRIPatternType;
+                pNewAet->fPRIPatternPeriod = m_pTrkABT->fPRIPatternPeriodMean;
+                pNewAet->fPRIMean = m_pTrkABT->fPRIMean;
+                pNewAet->fPRIMax = m_pTrkABT->fPRIMax;
+                pNewAet->fPRIMin = m_pTrkABT->fPRIMin;
+                pNewAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
+                pNewAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
+                pNewAet->iPRIPositionCount = m_pTrkABT->iPRIPositionCount;
+                pNewAet->iPRIElementCount = m_pTrkABT->iPRIElementCount;
 
-                memcpy( & pNewAet->fPRISeq, & m_pTrkAet->fPRISeq, sizeof( m_pTrkAet->fPRISeq ) );
+                memcpy( & pNewAet->fPRISeq, & m_pTrkABT->fPRISeq, sizeof( m_pTrkABT->fPRISeq ) );
 
 				// 유사 에미터를 결정한 에미터를 예비 버퍼에 복사한다.
                 memcpy( pDummyAet, pNewAet, sizeof( SRxLOBData ) );
@@ -330,7 +509,7 @@ void CKMakeAET::MakeUpAET()
 				}
                 memcpy( & m_LOBData[0], pDummyAet, sizeof( SRxLOBData ) );
 
-				m_IdxUpdAet = 0;
+				IdxUpdAet(0);
 
 				coUpdAet = 1;
 
@@ -357,7 +536,7 @@ void CKMakeAET::MakeUpAET()
 BOOL CKMakeAET::IsUpdateAet()
 {
 	// 추적 성공 또는 실패인지를 검사한다.
-    return m_LOBData[0].uiABTID != 0;
+    return m_KwnLOB[_spZero].stLOBData.uiABTID != _spZero;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -383,15 +562,18 @@ int CKMakeAET::GetCoNewAet()
 //
 SRxLOBData *CKMakeAET::GetNewLOB()
 {
-    SRxLOBData *pLOBData=NULL;
-
+    SRxLOBData *pRetLOBData=NULL;
+    SRxLOBData *pLOBData;
+    
     for( int i=0 ; i < m_iCoLOB ; ++i ) {
-        if( m_LOBData[i].uiABTID == 0 ) {
-            pLOBData = & m_LOBData[i];
+        pLOBData = GetLOBData(i);
+
+        if(pLOBData->uiABTID == _spZero ) {
+            pRetLOBData = pLOBData;
         }
 	}
 	
-    return pLOBData;
+    return pRetLOBData;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -406,11 +588,16 @@ int CKMakeAET::GetIndexNewAet()
 {
     int iIndex=-1, i;
 
+    SRxLOBData *pLOBData;
+
     for( i=0 ; i < m_iCoLOB ; ++i ) {
-        if( m_LOBData[i].uiABTID == 0 ) {
+        pLOBData = GetLOBData(i);
+
+        if(pLOBData->uiABTID == _spZero) {
             iIndex = i;
             break;
         }
+
 	}
 	
     return iIndex;
@@ -428,8 +615,8 @@ SRxLOBData *CKMakeAET::GetUpdLOB()
 {
     SRxLOBData *pSRxLOBData=NULL;
 
-	if( m_IdxUpdAet >= 0 ) {
-        pSRxLOBData = & m_LOBData[m_IdxUpdAet];
+	if( GetIdxUpdAet() >= 0 ) {
+        pSRxLOBData = GetLOBData (GetIdxUpdAet() );
     }
 
     return pSRxLOBData;
@@ -600,29 +787,29 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
     //STR_FRQ *pTrkAetFrq;
 
     //pTrkAetFrq = & stTrkAet.aet.frq;
-    if( m_pTrkAet->iFreqType != pUpdAetFrq->iFreqType ) {
-        switch( m_pTrkAet->iFreqType ) {
+    if( m_pTrkABT->iFreqType != pUpdAetFrq->iFreqType ) {
+        switch( m_pTrkABT->iFreqType ) {
             case _HOPPING :
-                pUpdAetFrq->iFreqType = m_pTrkAet->iFreqType;
-                pUpdAetFrq->iFreqPatternType = m_pTrkAet->iFreqPatternType;
-                pUpdAetFrq->fFreqPatternPeriod = m_pTrkAet->fFreqPatternPeriodMean;
-                pUpdAetFrq->fFreqMean = m_pTrkAet->fFreqMean;
-                pUpdAetFrq->fFreqMax = m_pTrkAet->fFreqMax;
-                pUpdAetFrq->fFreqMin = m_pTrkAet->fFreqMin;
-                pUpdAetFrq->fFreqDeviation = m_pTrkAet->fFreqDeviation;
-                pUpdAetFrq->iFreqPositionCount = m_pTrkAet->iFreqPositionCount;
-                pUpdAetFrq->iFreqElementCount = m_pTrkAet->iFreqElementCount;
-                memcpy( pUpdAetFrq->fFreqSeq, m_pTrkAet->fFreqSeq, sizeof( m_pTrkAet->fFreqSeq ) );
+                pUpdAetFrq->iFreqType = m_pTrkABT->iFreqType;
+                pUpdAetFrq->iFreqPatternType = m_pTrkABT->iFreqPatternType;
+                pUpdAetFrq->fFreqPatternPeriod = m_pTrkABT->fFreqPatternPeriodMean;
+                pUpdAetFrq->fFreqMean = m_pTrkABT->fFreqMean;
+                pUpdAetFrq->fFreqMax = m_pTrkABT->fFreqMax;
+                pUpdAetFrq->fFreqMin = m_pTrkABT->fFreqMin;
+                pUpdAetFrq->fFreqDeviation = m_pTrkABT->fFreqDeviation;
+                pUpdAetFrq->iFreqPositionCount = m_pTrkABT->iFreqPositionCount;
+                pUpdAetFrq->iFreqElementCount = m_pTrkABT->iFreqElementCount;
+                memcpy( pUpdAetFrq->fFreqSeq, m_pTrkABT->fFreqSeq, sizeof( m_pTrkABT->fFreqSeq ) );
 				break;
 
 			case _RANDOM_AGILE :
-                pUpdAetFrq->iFreqType = m_pTrkAet->iFreqType;
+                pUpdAetFrq->iFreqType = m_pTrkABT->iFreqType;
 				break;
 
 			case _PATTERN_AGILE :
                 pUpdAetFrq->iFreqType = _PATTERN_AGILE;
-                pUpdAetFrq->fFreqPatternPeriod = m_pTrkAet->fFreqPatternPeriodMean;
-                pUpdAetFrq->iFreqPatternType = m_pTrkAet->iFreqPatternType;
+                pUpdAetFrq->fFreqPatternPeriod = m_pTrkABT->fFreqPatternPeriodMean;
+                pUpdAetFrq->iFreqPatternType = m_pTrkABT->iFreqPatternType;
 				break;
 
             default:
@@ -646,8 +833,8 @@ void CKMakeAET::UpdatePRI( SRxLOBData *pUpdAetPri )
     //STR_PRI *pTrkAetPri;
 
     //pTrkAetPri = & m_pTrkAet.aet.pri;
-    if( m_pTrkAet->iPRIType != pUpdAetPri->iPRIType ) {
-        switch( m_pTrkAet->iPRIType ) {
+    if( m_pTrkABT->iPRIType != pUpdAetPri->iPRIType ) {
+        switch( m_pTrkABT->iPRIType ) {
 			case _STAGGER :
                 //memcpy( pUpdAetPri, pTrkAetPri, sizeof( STR_PRI ) );
 				break;
@@ -679,7 +866,6 @@ STR_PDWPARAM* CKMakeAET::GetPdwParam()
  */
 void CKMakeAET::DISP_FineAet( SRxLOBData *pLOB )
 {
-
     return m_pKnownSigAnal->DISP_FineAet(pLOB);
 }
 
@@ -692,28 +878,12 @@ unsigned int CKMakeAET::IsStorePDW()
     return m_pKnownSigAnal->IsStorePDW();
 }
 
-/**
- * @brief     CheckHarmonic
- * @param     float mean1
- * @param     float mean2
- * @param     float priThreshold
- * @return    UINT
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2021-06-04, 10:21
- * @warning
- */
-// UINT CKMakeAET::CheckHarmonic(float mean1, float mean2, float priThreshold ) 
-//{
-//    return m_pKnownSigAnal->CheckHarmonic( mean1, mean2, priThreshold );
-//}
 
 #if defined(_ELINT_) || defined(_XBAND_)
 /**
  * @brief     
  * @return    EN_RADARCOLLECTORID
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/22 12:23:55
  * @warning   
@@ -726,7 +896,7 @@ EN_RADARCOLLECTORID CKMakeAET::GetCollectorID()
 /**
  * @brief     
  * @return    char *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/22 12:23:51
  * @warning   
@@ -741,21 +911,21 @@ char *CKMakeAET::GetTaskID()
  * @brief     
  * @param     int index
  * @return    SRxLOBData *
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/22 12:26:33
  * @warning   
  */
-SRxLOBData *CKMakeAET::GetLOBData( int index ) 
-{
-	return & m_LOBData[index]; 
-}
+// SRxLOBData *CKMakeAET::GetLOBData( int iIndex ) 
+// {
+// 	return & m_KwnData[iIndex].stLOBData;
+// }
 
 /**
  * @brief     
  * @param     struct timespec * pTimeSpec
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:45:47
  * @warning   
@@ -777,4 +947,18 @@ void CKMakeAET::GetCollectTime( struct timespec *pTimeSpec )
 unsigned int CKMakeAET::GetPDWID() 
 { 
     return m_pKnownSigAnal->GetPDWID(); 
+}
+
+/**
+ * @brief     GetOPInitID
+ * @return    LONG
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-25, 14:45
+ * @warning
+ */
+LONG CKMakeAET::GetOPInitID()
+{
+    return m_pKnownSigAnal->GetOPInitID();
 }

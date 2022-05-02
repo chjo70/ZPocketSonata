@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+    ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -182,6 +183,11 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
+
+    cs.cx = 2048;
+    cs.cy = 1024;
+
+    cs.style &= ~WS_THICKFRAME;
 
 	return TRUE;
 }
@@ -402,4 +408,27 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+
+void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+    // TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+    CRect rect;
+
+    
+    //if (rect.Width() != 0) {
+    CWnd *pCWnd = GetDlgItem(IDC_LIST_LOB);
+
+    if (pCWnd != NULL) {
+        pCWnd->GetClientRect(&rect);
+
+        lpMMI->ptMinTrackSize.x = 1024;
+        lpMMI->ptMinTrackSize.y = 568;
+        lpMMI->ptMaxTrackSize.x = 1024;
+        lpMMI->ptMaxTrackSize.y = 568;
+    }
+    //}
+
+    CFrameWndEx::OnGetMinMaxInfo(lpMMI);
 }

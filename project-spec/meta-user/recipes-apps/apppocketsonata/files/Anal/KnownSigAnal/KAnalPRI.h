@@ -63,7 +63,7 @@ public:
     //##ModelId=452B0C53012A
     int GetMaxPdw();
     //##ModelId=452B0C53012B
-    void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
     //##ModelId=452B0C53012E
     UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C530137

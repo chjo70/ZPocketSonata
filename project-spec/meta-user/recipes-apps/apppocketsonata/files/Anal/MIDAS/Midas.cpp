@@ -470,16 +470,16 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
                 break;
 #endif
 
-            case E_EL_SCDT_UNKNOWN :
-            case E_EL_SCDT_SPECTRUM	:
-            case E_EL_SCDT_LOB	:
-            case E_EL_SCDT_PRF :
-            case E_EL_SCDT_LOG :
-            case E_EL_SCDT_ALL :					// 검색할 때 인자를 주기 위한 것
-                {
-                    //DTEC_Else
-                }
-                break;
+//             case E_EL_SCDT_UNKNOWN :
+//             case E_EL_SCDT_SPECTRUM	:
+//             case E_EL_SCDT_LOB	:
+//             case E_EL_SCDT_PRF :
+//             case E_EL_SCDT_LOG :
+//             case E_EL_SCDT_ALL :					// 검색할 때 인자를 주기 위한 것
+//                 {
+//                     //DTEC_Else
+//                 }
+//                 break;
 
             default :
                 { //DTEC_Else
@@ -2066,27 +2066,36 @@ void CMIDASBlueFileFormat::MIDASClose()
 void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, _PDW *pPDWData, UNION_HEADER *pUNIHeader, unsigned int uiCoPDW )
 {
 
-    m_strKeywordValue.uiNumberOfData = uiCoPDW;
-
     //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
     strcpy( m_szRawDataFilename, pRawdataFileName );
 
-#ifdef _MSC_VER
+    switch( g_enUnitType ) {
+        case en_SONATA :
+        case en_SONATA_SHU :
+        case en_ELINT :
+        case en_XBAND :
+            if( true == FileOpen( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
+                Write( pUNIHeader, sizeof( STR_XBAND_HEADER ) );
 
-#ifdef _XBAND_
-	if( true == FileOpen( pRawdataFileName, O_WRONLY | O_CREAT | O_BINARY ) ) {
-		Write( pUNIHeader, sizeof(STR_XBAND_HEADER) );
+                Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
 
-		Write( pPDWData, uiCoPDW *sizeof(_PDW) );
+                FileClose();
+            }
+            break;
 
-		FileClose();
-	}
+        case en_701 :
+        case en_KFX :
+        case en_ZPOCKETSONATA :
+            m_strKeywordValue.uiNumberOfData = uiCoPDW;
 
-#else
-	SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, & m_strKeywordValue );
+            SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, &m_strKeywordValue );
+            break;
 
-#endif
+        case en_MIDAS :
+            break;
 
-#endif
+        default :
+            break;
+    }
 
 }

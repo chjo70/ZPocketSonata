@@ -16,7 +16,7 @@
 
 #include "../UTM/UTM.h"
 
-#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+#include "../IsNumber.h"
 
 
 /**
@@ -177,7 +177,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
             dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
             dDistY = fabs( pResult->dEasting - ppLatitude[0] );
 
-            if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
+            if( dDistX < 0.0001 && dDistY < 0.0001 || IS_ZERO( pResult->dEasting ) || IS_ZERO(pResult->dNorthing ) ) {
                 pResult->dEasting = -1;
                 pResult->dNorthing = -1;
                 pResult->dLongitude = -1;

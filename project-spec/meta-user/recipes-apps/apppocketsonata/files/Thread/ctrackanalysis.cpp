@@ -115,7 +115,7 @@ void CTrackAnalysis::_routine()
 void CTrackAnalysis::AnalysisStart()
 {
     LOGENTRY;
-    unsigned int uiTotalLOB;
+    int iCoLOB;
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
@@ -130,10 +130,13 @@ void CTrackAnalysis::AnalysisStart()
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
     STR_ANALINFO strAnalInfo;
 
-    uiTotalLOB = m_pTheKnownSigAnal->GetCoLOB();
+    iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
+
+    // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
+    iCoLOB = min((_MAX_LANDATA / sizeof(SRxLOBData) - 1), iCoLOB);
 
     strAnalInfo.enBoardID = g_enBoardId;
-    strAnalInfo.uiTotalLOB = uiTotalLOB;
+    strAnalInfo.uiTotalLOB = (unsigned int)iCoLOB;
     strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
@@ -143,6 +146,6 @@ void CTrackAnalysis::AnalysisStart()
 
     SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
 
-    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), iCoLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

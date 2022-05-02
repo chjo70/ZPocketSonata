@@ -7,8 +7,6 @@
 #include <float.h>
 #include <string.h>
 
-#include <fcntl.h>
-
 #include <stdint.h>
 
 #if defined(_MSC_VER)
@@ -456,13 +454,11 @@ void CEPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetu
  */
 int CEPDW::GetHeaderSize()
 {
-    if( m_iHeaderSize == -1 ) {
-        memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
+    memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
-        m_iHeaderSize = sizeof(STR_ELINT_HEADER);
+    m_iHeaderSize = sizeof(STR_ELINT_HEADER);
 
-        m_enBandWidth = m_stHeader.enBandWidth;
-    }
+    m_enBandWidth = m_stHeader.enBandWidth;
 
     return m_iHeaderSize;
 }
@@ -480,20 +476,15 @@ unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
-    if( m_iHeaderSize != -1 ) {
-        memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(STR_ELINT_HEADER) );
+    memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(STR_ELINT_HEADER) );
 
-        memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
+    memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
 
-        // 아래는 시간 정보
-        //memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
-        //memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
+    // 아래는 시간 정보
+    //memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
+    //memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
 
-        m_enBandWidth = m_stHeader.enBandWidth;
-    }
-    else {
-        uiDataItems = (unsigned int) -1;
-    }
+    m_enBandWidth = m_stHeader.enBandWidth;
 
     return uiDataItems;
 }
@@ -509,12 +500,9 @@ unsigned int CEPDW::GetDataItems( unsigned long long ullFileSize )
  */
 void CEPDW::SetHeaderData( void *pData )
 {
-    if( m_iHeaderSize == -1 ) {
-        memcpy( & m_stHeader, pData, sizeof(STR_ELINT_HEADER) );
+    memcpy( & m_stHeader, pData, sizeof(STR_ELINT_HEADER) );
 
-        m_stHeader.stCommon.CheckColTime();
-
-    }
+    m_stHeader.stCommon.CheckColTime();
 
     return;
 }
@@ -540,7 +528,7 @@ CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_XBAND;
         
-    Init( pRawData );
+    CXPDW::Init( pRawData );
 
 }
 
@@ -763,11 +751,9 @@ void CXPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
 int CXPDW::GetHeaderSize()
 {
 
-    if( m_iHeaderSize == -1 ) {
-        memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
+    memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
-        m_iHeaderSize = sizeof(STR_ELINT_HEADER);
-    }
+    m_iHeaderSize = sizeof(STR_XBAND_HEADER);
 
     return m_iHeaderSize;
 }
@@ -798,21 +784,15 @@ unsigned int CXPDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
-    if( m_iHeaderSize != -1 ) {
-		memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(STR_ELINT_HEADER) );
+	memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(STR_ELINT_HEADER) );
 
-		memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
+	memcpy( & uiDataItems, & m_pRawHeaderBuffer[sizeof(STR_ELINT_HEADER)], sizeof(int) );
 
-		// 아래는 시간 정보
-		//memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
-		//memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
+	// 아래는 시간 정보
+	//memcpy( & m_stHeader, m_pRawDataBuffer[sizeof(STR_ELINT_HEADER)+sizeof(int)], sizeof(int) );
+	//memcpy( & m_stHeader, m_pRawDataBuffersizeof(STR_ELINT_HEADER)+sizeof(int)*2], sizeof(int) );
 		
-		m_enBandWidth = m_stHeader.enBandWidth;
-
-    }
-    else {
-        uiDataItems = (unsigned int) -1;
-    }
+	m_enBandWidth = m_stHeader.enBandWidth;
 
     return uiDataItems;
 }
@@ -890,7 +870,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 
     for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
         // 시간 정보
-        ullTOA = (_TOA) ( pPDW->GetTOA() );
+        ullTOA = pPDW->GetTOA();
 
         // 방위 저장
         uiAOA = pPDW->GetAOA();    
@@ -925,7 +905,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             // 시간 저장
             *pullTOA++ = ullTOA;
 
-            *pfTOA++ = CXPDW::DecodeTOA( ullTOA-ullFirstTOA, enBandWidth );
+            *pfTOA++ = CXPDW::DecodeTOA( ullTOA, enBandWidth );
             *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
             *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
             *pfPA++ = CXPDW::DecodePA( uiPA );
@@ -1472,14 +1452,9 @@ void CPOCKETSONATAPDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_
  */
 int CPOCKETSONATAPDW::GetHeaderSize()
 {
-    if( m_iHeaderSize == -1 && m_pRawHeaderBuffer != NULL ) {
-        memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
+    memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
-        m_iHeaderSize = sizeof(POCKETSONATA_HEADER);
-    }
-    else {
-        m_iHeaderSize = 0;
-    }
+    m_iHeaderSize = sizeof(POCKETSONATA_HEADER);
 
 	return m_iHeaderSize;
 }
@@ -1509,14 +1484,9 @@ unsigned int CPOCKETSONATAPDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
-    if( m_iHeaderSize != -1 ) {
-        memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(POCKETSONATA_HEADER) );
+    memcpy( & m_stHeader, & m_pRawHeaderBuffer[0], sizeof(POCKETSONATA_HEADER) );
 
-        uiDataItems = m_stHeader.GetTotalPDW();
-    }
-    else {
-        uiDataItems = (unsigned int) -1;
-    }
+    uiDataItems = m_stHeader.GetTotalPDW();
 
 	return uiDataItems;
 }
@@ -1828,14 +1798,12 @@ void C7PDW::ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
  */
 int C7PDW::GetHeaderSize()
 {
-    if( m_iHeaderSize == -1 ) {
-	    memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
+	memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
-	    AllSwapData32( & m_stHeader.uiAcqTime, sizeof(int)*4 );
-	    AllSwapData32( & m_stHeader.iSearchBandID, sizeof(int)*4 );
+	AllSwapData32( & m_stHeader.uiAcqTime, sizeof(int)*4 );
+	AllSwapData32( & m_stHeader.iSearchBandID, sizeof(int)*4 );
 
-        m_iHeaderSize = sizeof(SRxPDWHeader);
-    }
+    m_iHeaderSize = sizeof(SRxPDWHeader);
 
 	return m_iHeaderSize;
 }
@@ -1865,12 +1833,7 @@ unsigned int C7PDW::GetDataItems( unsigned long long ullFileSize )
 {
     unsigned int uiDataItems;
 
-    if( m_iHeaderSize != -1 ) {
-	    uiDataItems = m_stHeader.iNumOfPDW;
-    }
-    else {
-        uiDataItems = (unsigned int) -1;
-    }
+	uiDataItems = m_stHeader.iNumOfPDW;
 
 	return uiDataItems;
 }
@@ -3041,7 +3004,8 @@ void CData::AllocData( int iItems )
     FreeData();
     
     szPDW = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_PDW), iItems );
-    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, szPDW );
+	_SAFE_FREE( m_PDWData.pstPDW )
+    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, szPDW )
 
 }
 
@@ -3443,107 +3407,6 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
 
 
 /**
- * @brief     
- * @return    ENUM_DataType
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2020/03/12 19:36:17
- * @warning   
- */
-ENUM_DataType CDataFile::WhatDataType( char *pStrPathname )
-{
-	ENUM_DataType enDataType=en_UnknownData;
-
-	if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
-		enDataType = en_PDW_DATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
-		enDataType = en_PDW_DATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
-		enDataType = en_PDW_DATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) || 
-			 NULL != CCommonUtils::strcasestr( pStrPathname, "e2.dat" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".eiq" ) ) {
-		enDataType = en_IQ_DATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
-		enDataType = en_PDW_DATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
-		enDataType = en_PDW_DATA;
-	}
-	else {
-        //LOGMSG1( enError, "잘못된 파일명 입니다. 데이터 형식을 모릅니다." );
-        TRACE( "잘못된 파일명 입니다." );
-	}
-
-	return enDataType;
-
-}
-
-/**
- * @brief     
- * @return    ENUM_UnitType
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2020/03/12 19:38:24
- * @warning   
- */
- ENUM_UnitType CDataFile::WhatUnitType( char *pStrPathname )
-{
-	ENUM_UnitType enUnitType;
-
-    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".midas" ) ) {
-        enUnitType = en_MIDAS;
-    }
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) ||
-		NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ) {
-		enUnitType = en_SONATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
-		enUnitType = en_SONATA_SHU;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".dat" ) ) {
-		enUnitType = en_701;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
-		enUnitType = en_KFX;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) ) {
-		enUnitType = en_ELINT;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".zpdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".znpw" ) ) {
-		enUnitType = en_ZPOCKETSONATA;
-	}
-	else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
-		enUnitType = en_XBAND;
-	}
-
-	else {
-		enUnitType = en_UnknownUnit;
-	}
-
-	return enUnitType;
-
-}
-
-
- /**
- * @brief     
- * @param     CData * pData
- * @param     int iFileIndex
- * @param     UINT uiHeaderLength
- * @param     UINT uiLengthOf1PDW
- * @return    void
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2020/03/30 19:09:13
- * @warning   
- */
-
-
-/**
  * @brief		GetHeaderSize
  * @param		CData * pData
  * @return		unsigned int
@@ -3700,7 +3563,7 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     }
 
     m_RawDataFile.FileClose();
-    _SAFE_DELETE( pTempData );
+    delete [] pTempData;
 
     return m_pData;
 
@@ -3715,8 +3578,8 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
 */
 void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
-	ENUM_DataType enDataType = WhatDataType( pstPathname );
-    ENUM_UnitType enUnitType = WhatUnitType( pstPathname );
+	ENUM_DataType enDataType = CCommonUtils::WhatDataType( pstPathname );
+    ENUM_UnitType enUnitType = CCommonUtils::WhatUnitType( pstPathname );
 
     // 장치 정보 업데이트
     g_enUnitType = enUnitType;

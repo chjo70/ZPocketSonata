@@ -61,7 +61,7 @@ enum FREQ_BAND
 };
 
 // 신호 형태 정의값
-enum SIGNAL_TYPE
+enum enSIGNAL_TYPE
 {
 	ST_NORMAL_PULSE = 1,
 	ST_CW,
@@ -92,7 +92,7 @@ enum FREQ_BAND
 };
 
 // 신호 형태 정의값
-enum SIGNAL_TYPE
+enum enSIGNAL_TYPE
 {
 	ST_CW = 0,
 	ST_NORMAL_PULSE,
@@ -127,7 +127,7 @@ enum FREQ_BAND
 };
 
 // 신호 형태 정의값
-enum SIGNAL_TYPE
+enum enSIGNAL_TYPE
 {
 	ST_NORMAL_PULSE = 1,
 	ST_CW,
@@ -156,7 +156,7 @@ enum FREQ_BAND
 };
 
 // 신호 형태 정의값
-enum SIGNAL_TYPE
+enum enSIGNAL_TYPE
 {
     ST_NORMAL_PULSE = 1,
     ST_CW,
@@ -180,10 +180,10 @@ enum SIGNAL_TYPE
 
 //##ModelId=452B0C5100B9
 // 내부 신호 분석에서 사용하는 정의
-enum FREQ_TYPE
+enum enFREQ_TYPE
 {
-     _FIXED              = 0,
-     _HOPPING,
+    _FIXED              = 0,
+    _HOPPING,
     _RANDOM_AGILE,
     _PATTERN_AGILE,
 
@@ -198,7 +198,7 @@ enum FREQ_TYPE
 
 //##ModelId=452B0C510131
 // 내부 신호 분석에서 사용하는 정의
-enum PRI_TYPE
+enum enPRI_TYPE
 {
     _STABLE               = 0,
     _JITTER_RANDOM,

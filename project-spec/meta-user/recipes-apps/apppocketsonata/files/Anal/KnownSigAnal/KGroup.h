@@ -25,12 +25,14 @@ protected:
 	CKnownSigAnal *m_pKnownSigAnal;
 
 public:
+    void Init();
+
 	//##ModelId=452B0C5300A8
 	int GetColPdw();
 	//##ModelId=452B0C5300A9
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }
 	//##ModelId=452B0C5300AA
-	BOOL MakeGroup();
+	BOOL MakeKnownGroup();
 	//##ModelId=452B0C5300AB
 	int GetMaxPdw();
 	//##ModelId=452B0C5300AC

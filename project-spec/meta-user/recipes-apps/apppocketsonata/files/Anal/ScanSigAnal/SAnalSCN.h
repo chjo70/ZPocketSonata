@@ -136,7 +136,7 @@ public:
     EN_SCANRESULT AnalScan( int preAnalStat=0 );
 	//##ModelId=452B0C450226
 	void Init( int noEMT=0, int noCh=0 );
-    void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
+    void MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
 
     BOOL KnownAnalysis();
 
@@ -156,7 +156,7 @@ public:
     void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
 
     //##ModelId=452B0C5701C8
-    void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
+    void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
     //##ModelId=452B0C5701DA
     unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
     //##ModelId=452B0C5701E4
@@ -201,6 +201,10 @@ public:
     CMakeAET* GetMakeAET() { return NULL; }
 
     inline unsigned int GetPDWID() { return (UINT) -1; }
+
+    LONG GetOPInitID();
+
+    void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) { }
 
 
 #if defined(_ELINT_) || defined(_XBAND_)

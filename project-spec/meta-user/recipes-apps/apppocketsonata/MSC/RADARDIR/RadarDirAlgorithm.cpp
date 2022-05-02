@@ -47,7 +47,7 @@ namespace RadarDirAlgotirhm
 			gpSysPara = new CSysPara;
 		}
 
-		SetMute( true );
+		SetMute( false );
 
 		return;
 	}

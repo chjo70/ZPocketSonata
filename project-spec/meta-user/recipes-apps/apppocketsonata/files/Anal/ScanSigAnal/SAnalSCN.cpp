@@ -176,7 +176,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
 
     }
     else {
-        SaveScanPulse( & m_pEmitter->pdw );
+        SaveScanPulse( & m_pEmitter->stPDW );
 
         /*! \bug  수집 개수가 5 개 이하이면 스캔 형태 판단을 하지 않게 한다.
             \date 2006-05-09 17:30:28, 조철희
@@ -234,7 +234,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
             }
         }
 
-        MakeLOBDatafromEmitter( m_pEmitter, _spZero );
+        MakeLOBDataFromEmitter( m_iCoLOB, m_pEmitter, _spZero );
     }
 
     // 스캔 정보 저장
@@ -289,7 +289,7 @@ STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
     STR_EMITTER *pEmitter;
 
     pEmitter = CAnalPRI::GetEmitter();
-    if( CAnalPRI::m_uiCoEmitter == _spOne && pEmitter[0].pdw.uiCount > 10 ) {
+    if( CAnalPRI::m_uiCoEmitter == _spOne && pEmitter[0].stPDW.uiCount > 10 ) {
 
     }
     else {
@@ -985,7 +985,7 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
  */
 UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUTOCOR *pAcf)
 {
-    UINT uiRet;
+    UINT uiRet = _spAnalFail;
 
 	// TurnOnLED( prc_SAP, LED1 );		// debug, 00-06-05 09:39:34
 	// KurtosisSkewness( & gSample );
@@ -1457,11 +1457,11 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
  * @param pEmitter
  * @param idxEmitter
  */
-void CSAnalScan::MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter )
+void CSAnalScan::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter )
 {
 
     // 기본 LOB 형태 저장
-    CMakeAET::MakeLOBDatafromEmitter( pEmitter, idxEmitter );
+    CMakeAET::MakeLOBDataFromEmitter(iLOBData, pEmitter, idxEmitter );
 
 }
 
@@ -1642,3 +1642,9 @@ char *CSAnalScan::GetTaskID()
 }
 
 #endif
+
+
+LONG CSAnalScan::GetOPInitID()
+{
+    return m_pScanSigAnal->GetOPInitID();
+}

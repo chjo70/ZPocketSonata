@@ -140,6 +140,10 @@ void CDetectAnalysis::AnalysisStart()
         STR_ANALINFO strAnalInfo;
 
         memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
+
+        // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
+        uiTotalLOB = min( ( _MAX_LANDATA / sizeof(SRxLOBData)-1), uiTotalLOB);
+
         strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiTotalLOB = uiTotalLOB;
         strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
@@ -147,7 +151,7 @@ void CDetectAnalysis::AnalysisStart()
         // PDW 헤더 정보 저장
         memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
 
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData)*uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
     }
 
 }
@@ -190,25 +194,27 @@ void CDetectAnalysis::MakePDWData()
 
         pPDWDest->iPFTag = pPDWSrc->iPFTag;
 
-#if defined(_ELINT_)
-        pPDWDest->fPh1 = pPDWSrc->fPh1;
-        pPDWDest->fPh2 = pPDWSrc->fPh2;
-        pPDWDest->fPh3 = pPDWSrc->fPh3;
-        pPDWDest->fPh4 = pPDWSrc->fPh4;
+        memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
 
-#elif defined(_XBAND_)
-        pPDWDest->fPh1 = pPDWSrc->fPh1;
-        pPDWDest->fPh2 = pPDWSrc->fPh2;
-        pPDWDest->fPh3 = pPDWSrc->fPh3;
-        pPDWDest->fPh4 = pPDWSrc->fPh4;
-        pPDWDest->fPh5 = pPDWSrc->fPh5;
-
-#elif _POCKETSONATA_
-        pPDWDest->iPMOP = pPDWSrc->iPMOP;
-        pPDWDest->iFMOP = pPDWSrc->iFMOP;
-        pPDWDest->iChannel = pPDWSrc->iChannel;
-
-#endif
+// #if defined(_ELINT_)
+//         pPDWDest->fPh1 = pPDWSrc->fPh1;
+//         pPDWDest->fPh2 = pPDWSrc->fPh2;
+//         pPDWDest->fPh3 = pPDWSrc->fPh3;
+//         pPDWDest->fPh4 = pPDWSrc->fPh4;
+// 
+// #elif defined(_XBAND_)
+//         pPDWDest->fPh1 = pPDWSrc->fPh1;
+//         pPDWDest->fPh2 = pPDWSrc->fPh2;
+//         pPDWDest->fPh3 = pPDWSrc->fPh3;
+//         pPDWDest->fPh4 = pPDWSrc->fPh4;
+//         pPDWDest->fPh5 = pPDWSrc->fPh5;
+// 
+// #elif _POCKETSONATA_
+//         pPDWDest->iPMOP = pPDWSrc->iPMOP;
+//         pPDWDest->iFMOP = pPDWSrc->iFMOP;
+//         pPDWDest->iChannel = pPDWSrc->iChannel;
+// 
+// #endif
 
         ++ pPDWSrc;
         ++ pPDWDest;

@@ -223,6 +223,10 @@ private:
     void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
     void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
 
+private:
+    float CalcFreqMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
+    float CalcPRIMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
+
  public:
     void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, BOOL bMakeH0000 );
     void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true, bool bMakeH0000=true );
@@ -258,7 +262,7 @@ private:
  	void SortThreatLevel();
  	void IdentifyPriority();
  	void IdentifyMatchRatio();
- 	UINT ArrangeLib2( SRadarMode **inLib, UINT count, FREQ_TYPE frqType, STR_LIB_RANGE *pLibRange );
+ 	UINT ArrangeLib2( SRadarMode **inLib, UINT count, enFREQ_TYPE frqType, STR_LIB_RANGE *pLibRange );
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
@@ -423,10 +427,11 @@ private:
 protected:
 	void CalcMatchRatio();
  	float CalcMatchRatio( EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode=NULL );
+
     float CalcFreqTypeMatchRatio(SRadarMode *pRadarMode);
     float CalcPRITypeMatchRatio(SRadarMode *pRadarMode);
 
-	BOOL CheckFreqType( FREQ_TYPE frqType, SRadarMode *pRadarMode );
+	BOOL CheckFreqType( enFREQ_TYPE frqType, SRadarMode *pRadarMode );
 
 	void InitRadarModeData();
 

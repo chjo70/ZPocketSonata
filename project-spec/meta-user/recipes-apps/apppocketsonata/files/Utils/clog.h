@@ -10,7 +10,7 @@
 #define mkdir   _mkdir
 #define open    _open
 #define write   _write
-#define closeSharedMemory   _close
+//#define closeSharedMemory   _close
 
 #else
 #include <semaphore.h>
@@ -19,7 +19,6 @@
 
 #include "../Include/system.h"
 
-//#include "../Include/globals.h"
 
 
 #define LOG_EXTRA_SIZE      (50)

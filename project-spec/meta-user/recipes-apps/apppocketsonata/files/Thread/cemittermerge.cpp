@@ -268,10 +268,7 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
         }
     }
     else {
-        WhereIs;
-
         if(bTrack == false ) {
-            WhereIs;
             g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, m_pTheEmitterMergeMngr->GetABTData(), sizeof(SRxABTData), & m_strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
         }
     }
@@ -305,7 +302,7 @@ void CEmitterMerge::RequestTrackReCollect()
         strAnalInfo.uiTotalLOB = _spOne;
         strAnalInfo.uiAETID = pLOBData->uiAETID;
         strAnalInfo.uiABTID = pLOBData->uiABTID;
-        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, (UINT) sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData( pLOBData->uiAETID, pLOBData->uiABTID );
         SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );

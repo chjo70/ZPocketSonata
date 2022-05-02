@@ -70,6 +70,35 @@ typedef enum {
 #pragma pack( push, 1 )
 #endif
 
+#ifndef _PDW_ETC_UNION
+#define _PDW_ETC_UNION
+typedef union {
+    struct {
+        float fPh1;
+        float fPh2;
+        float fPh3;
+        float fPh4;
+    } el;
+
+    struct {
+        float fPh1;
+        float fPh2;
+        float fPh3;
+        float fPh4;
+        float fPh5;
+    } xb;
+
+    struct {
+        int iPMOP;
+        int iFMOP;
+
+        int iChannel;
+    } ps;
+
+} UNI_PDW_ETC ;
+
+#endif
+
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 typedef struct {
@@ -84,25 +113,7 @@ typedef struct {
 
     int iPFTag;
 
-#if defined(_ELINT_)
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-
-#elif defined(_XBAND_)
-    float fPh1;
-    float fPh2;
-    float fPh3;
-    float fPh4;
-    float fPh5;
-
-#elif _POCKETSONATA_
-    int iPMOP;
-    int iFMOP;
-
-    int iChannel;
-#endif
+    UNI_PDW_ETC x;
 
     unsigned long long int GetTOA() {
         return ullTOA;
@@ -718,6 +729,10 @@ struct SRxLOBData {
     unsigned int uiSeqNum;
 
 #else
+#endif
+
+#ifdef _XBAND_
+	unsigned int uiOpInitID;
 
 #endif
 

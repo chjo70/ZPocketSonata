@@ -362,9 +362,9 @@ int CKAnalPRI::GetMaxPdw()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:14:07
 //
-void CKAnalPRI::MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) 
+void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) 
 { 
-	m_pKnownSigAnal->MakePRIInfoInSeg( pPri, pEmitter ); 
+	m_pKnownSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
 }
 
 //////////////////////////////////////////////////////////////////////

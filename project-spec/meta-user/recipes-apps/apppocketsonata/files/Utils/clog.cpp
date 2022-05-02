@@ -223,7 +223,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
             //strcat( m_szLog, szExtra );
 
             nLength = strlen(m_szLog);
-            if( nLength > 20 || nType == enLineFeed ) {
+            if( nLength > 10 || nType == enLineFeed ) {
 #ifdef _MSC_VER
                 fprintf( fp, "%s" , m_szLog );
                 fflush( fp );

@@ -297,7 +297,7 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     strcpy_s((char *)pPDWData->x.xb.aucTaskID, sizeof(pPDWData->x.xb.aucTaskID), "MSIGA2");
     pPDWData->x.xb.iIsStorePDW = 1;
     pPDWData->x.xb.enCollectorID = RADARCOL_1;
-    pPDWData->x.xb.enBandWidth = XBAND::en150MHZ_BW;
+    pPDWData->x.xb.enBandWidth = XBAND::en120MHZ_BW;
 
 #endif
 
@@ -1066,7 +1066,7 @@ void CSignalCollect::MakeStaticPDWData( STR_PDWDATA *pPDWData, bool bAutoIncPDWI
     // 데이터 복사
     pPDWSrc = pPDWData->pstPDW;
     pPDWDest = & m_stPDWData.stPDW[0];
-    uiTotalPDW = pPDWData->GetTotalPDW();    
+    uiTotalPDW = pPDWData->GetTotalPDW();  
     for( i=0 ; i < uiTotalPDW ; ++i ) {
         pPDWDest->ullTOA = pPDWSrc->ullTOA;
 
@@ -1079,25 +1079,49 @@ void CSignalCollect::MakeStaticPDWData( STR_PDWDATA *pPDWData, bool bAutoIncPDWI
 
         pPDWDest->iPFTag = pPDWSrc->iPFTag;
 
-#if defined(_ELINT_)
-        pPDWDest->fPh1 = pPDWSrc->fPh1;
-        pPDWDest->fPh2 = pPDWSrc->fPh2;
-        pPDWDest->fPh3 = pPDWSrc->fPh3;
-        pPDWDest->fPh4 = pPDWSrc->fPh4;
+        memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
 
-#elif defined(_XBAND_)
-        pPDWDest->fPh1 = pPDWSrc->fPh1;
-        pPDWDest->fPh2 = pPDWSrc->fPh2;
-        pPDWDest->fPh3 = pPDWSrc->fPh3;
-        pPDWDest->fPh4 = pPDWSrc->fPh4;
-        pPDWDest->fPh5 = pPDWSrc->fPh5;
+//         if( g_enUnitType == en_ELINT ) {
+//             pPDWDest->x.el.fPh1 = pPDWSrc->x.el.fPh1;
+//             pPDWDest->x.el.fPh2 = pPDWSrc->x.el.fPh2;
+//             pPDWDest->x.el.fPh3 = pPDWSrc->x.el.fPh3;
+//             pPDWDest->x.el.fPh4 = pPDWSrc->x.el.fPh4;
+//         }
+//         else if( g_enUnitType == en_XBAND ) {
+//             pPDWDest->x.xb.fPh1 = pPDWSrc->x.xb.fPh1;
+//             pPDWDest->x.xb.fPh2 = pPDWSrc->x.xb.fPh2;
+//             pPDWDest->x.xb.fPh3 = pPDWSrc->x.xb.fPh3;
+//             pPDWDest->x.xb.fPh4 = pPDWSrc->x.xb.fPh4;
+//             pPDWDest->x.xb.fPh5 = pPDWSrc->x.xb.fPh5;
+//         }
+//         else if( g_enUnitType == en_ZPOCKETSONATA ) {
+//             pPDWDest->x.ps.iPMOP = pPDWSrc->x.ps.iPMOP;
+//             pPDWDest->x.ps.iFMOP = pPDWSrc->x.ps.iFMOP;
+//             pPDWDest->x.ps.iChannel = pPDWSrc->x.ps.iChannel;
+//         }
+//         else {
+// 
+//         }
 
-#elif _POCKETSONATA_
-        pPDWDest->iPMOP = pPDWSrc->iPMOP;
-        pPDWDest->iFMOP = pPDWSrc->iFMOP;
-        pPDWDest->iChannel = pPDWSrc->iChannel;
-
-#endif
+// #if defined(_ELINT_)
+//         pPDWDest->fPh1 = pPDWSrc->fPh1;
+//         pPDWDest->fPh2 = pPDWSrc->fPh2;
+//         pPDWDest->fPh3 = pPDWSrc->fPh3;
+//         pPDWDest->fPh4 = pPDWSrc->fPh4;
+// 
+// #elif defined(_XBAND_)
+//         pPDWDest->fPh1 = pPDWSrc->fPh1;
+//         pPDWDest->fPh2 = pPDWSrc->fPh2;
+//         pPDWDest->fPh3 = pPDWSrc->fPh3;
+//         pPDWDest->fPh4 = pPDWSrc->fPh4;
+//         pPDWDest->fPh5 = pPDWSrc->fPh5;
+// 
+// #elif _POCKETSONATA_
+//         pPDWDest->iPMOP = pPDWSrc->iPMOP;
+//         pPDWDest->iFMOP = pPDWSrc->iFMOP;
+//         pPDWDest->iChannel = pPDWSrc->iChannel;
+// 
+// #endif
 
         ++ pPDWSrc;
         ++ pPDWDest;

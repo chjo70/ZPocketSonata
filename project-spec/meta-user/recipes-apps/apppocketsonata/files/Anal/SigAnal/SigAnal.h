@@ -31,8 +31,12 @@ private:
 
     char *m_pszSQLString;
 
-#ifdef _MSSQL_
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     LONG m_lOpInitID;
+
+#endif
+
+#ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
 
 #elif _SQLITE_
@@ -63,8 +67,10 @@ private:
     EN_RADARCOLLECTORID m_enCollectorID;
     XBAND::ENUM_BANDWIDTH m_enBandWidth;
 
-#elif _POCKETSONATA_
-    ENUM_BANDWIDTH m_enBandWidth;
+#elif defined(_POCKETSONATA_)
+    POCKETSONATA::ENUM_BANDWIDTH m_enBandWidth;
+
+#else
 
 #endif    
 
@@ -92,7 +98,9 @@ public:
     unsigned int GetStep() { return m_uiStep; }
     
     bool IsSaveFile() const { return m_bSaveFile; }
-    void SetSaveFile(bool val) { m_bSaveFile = val; }
+    void SetSaveFile(bool val) { 
+		m_bSaveFile = val; 
+	}
     void Initialize();
 
     void InitResolution();
@@ -105,7 +113,7 @@ public:
     //! Ãâ·Â °ü·Ã ÇÔ¼ö
     void DISP_FineAet(SRxLOBData *pLOB);
 
-#ifdef _MSSQL_
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     /**
      * @brief     GetOpInitID
      * @return    LONG
@@ -291,5 +299,17 @@ public:
     EN_RADARCOLLECTORID GetCollectorID() const { return m_enCollectorID; }
     void SetCollectorID(EN_RADARCOLLECTORID val) { m_enCollectorID = val; }
 #endif
+
+    /**
+     * @brief     GetRawDataFilename
+     * @return    char
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-04-25, 14:36
+     * @warning
+     */
+    const char *GetRawDataFilename() const { return & m_szRawDataFilename[0]; }
+
 };
 

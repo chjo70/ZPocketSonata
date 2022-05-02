@@ -183,78 +183,78 @@ void CTaskMngr::_routine()
             //break;
         }
         else {
-            if( CCommonUtils::IsValidLanData( m_pMsg ) == true ) {
-                switch( m_pMsg->uiOpCode ) {
-                    case enTHREAD_MODE :
-                        SetMode();
-                        break;
+            //if( IsValidLanData( m_pMsg ) == true ) {
+            switch( m_pMsg->uiOpCode ) {
+                case enTHREAD_MODE :
+                    SetMode();
+                    break;
 
-                    case enTHREAD_DETECTANAL_START :
-                        AnalysisStart();
-                        break;
+                case enTHREAD_DETECTANAL_START :
+                    AnalysisStart();
+                    break;
 
-                    case enTHREAD_REQ_SHUTDOWN :
-                        Shutdown();
-                        bWhile = false;
-                        break;
+                case enTHREAD_REQ_SHUTDOWN :
+                    Shutdown();
+                    bWhile = false;
+                    break;
 
-                    // 오디오 설정 메시지
-                    case enREQ_AUDIO :
-                        ReqAudio();
-                        break;
-                    case enREQ_AUDIO_PARAM :
-                        ReqAudioParam();
-                        break;
+                // 오디오 설정 메시지
+                case enREQ_AUDIO :
+                    ReqAudio();
+                    break;
+                case enREQ_AUDIO_PARAM :
+                    ReqAudioParam();
+                    break;
 
-                    // 수집 제어 관련 메시지
-                    case enREQ_STOP :
-                        StopUserCollecting();
-                        break;
+                // 수집 제어 관련 메시지
+                case enREQ_STOP :
+                    StopUserCollecting();
+                    break;
 
-                    // 수신기 설정 메시지
-                    case enREQ_Band_Enable :
-                        BandEnable();
-                        break;
-                    case enREQ_FMOP_Threshold :
-                        FMOPThreshold();
-                        break;
-                    case enREQ_PMOP_Threshold :
-                        PMOPThreshold();
-                        break;
-                    case enREQ_RX_Threshold :
-                        RxThreshold();
-                        break;
+                // 수신기 설정 메시지
+                case enREQ_Band_Enable :
+                    BandEnable();
+                    break;
+                case enREQ_FMOP_Threshold :
+                    FMOPThreshold();
+                    break;
+                case enREQ_PMOP_Threshold :
+                    PMOPThreshold();
+                    break;
+                case enREQ_RX_Threshold :
+                    RxThreshold();
+                    break;
 
-                    // IPL 관련 메시지
-                    case enREQ_IPL_START :
-                    case enREQ_IPL_DOWNLOAD :
-                    case enREQ_IPL_END :
-                        IPLDownload();
-                        break;
+                // IPL 관련 메시지
+                case enREQ_IPL_START :
+                case enREQ_IPL_DOWNLOAD :
+                case enREQ_IPL_END :
+                    IPLDownload();
+                    break;
 
-                    case enTHREAD_REQ_IPLVERSION :
-                        ReqIPLVersion();
-                        break;
+                case enTHREAD_REQ_IPLVERSION :
+                    ReqIPLVersion();
+                    break;
 
-                    // 시스템 변수 관련 메시지
-                    case enREQ_SYS :
-                        ReqSystemVar();
-                        break;
+                // 시스템 변수 관련 메시지
+                case enREQ_SYS :
+                    ReqSystemVar();
+                    break;
 
-                    case enSYSERROR :
-                        printf( "****************************************************************" );
-                        break;
+                case enSYSERROR :
+                    printf( "****************************************************************" );
+                    break;
 
-                    default:
-                        LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
-                        break;
-                }
-        }
-        else {
-            // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
-                 LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+                default:
+                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    break;
             }
         }
+//         else {
+//             // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
+//                  LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+//             }
+//         }
     }
 
 }

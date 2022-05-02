@@ -40,7 +40,8 @@
 #include "../../Include/globals.h"
 #include "../../Utils/ccommonutils.h"
 
-//extern CSysConfig *g_pTheSysConfig;
+//#include "../Identify/ELUtil.h"
+
 
 
 #ifdef _DEBUG
@@ -78,7 +79,8 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 
     m_bDBThread = bDBThread;
 
-    CCommonUtils::SetUnitType();
+    //CCommonUtils::SetUnitType();
+    SetUnitType();
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     m_lOpInitID = 0;
@@ -109,6 +111,10 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
 
     // 초기화
     Init();
+
+	// 위협 관리 변수 초기화
+	// 임무가 바뀌면 아래 함수를 호출해야 함.
+	InitDataFromDB();
 
     LoadCEDLibrary( NULL, 0, 0 );
 
@@ -209,6 +215,10 @@ void CELEmitterMergeMngr::AllocMemory()
     }
 
 #endif
+
+	if( g_pTheSysConfig == NULL ) {
+		g_pTheSysConfig = new CSysConfig();
+	}
     
     //_SAFE_MALLOC( m_pUniThreat, UELTHREAT, sizeof(UELTHREAT) * TOTAL_ITEMS_OF_THREAT_NODE );
     //_SAFE_MALLOC( m_pABTtoH000, unsigned short, sizeof(unsigned short) * TOTAL_UNDEF_ID_NUMBER );
@@ -307,9 +317,7 @@ void CELEmitterMergeMngr::Init()
     m_szH0000[0] = 0;
     m_iH000 = 1;
 
-    // 위협 관리 변수 초기화
-    // 임무가 바뀌면 아래 함수를 호출해야 함.
-    InitDataFromDB();
+
 
     //memset( m_aucTaskID, 0, sizeof(m_aucTaskID) );
 
@@ -510,8 +518,7 @@ bool CELEmitterMergeMngr::ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* p
 #ifdef _POCKETSONATA_
     //char szTaskID[LENGTH_OF_TASK_ID];
 
-    printf( "[E%4d][B%4d] %d %.2f [ms]\n" ,
-            pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
+    //printf( "[E%4d][B%4d] %d %.2f [ms]\n" , pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
     Log( enNormal, "[E%4d][B%4d] %d %.2f [ms]" , pSCNData->uiAETID, pSCNData->uiABTID, pSCNData->uiScnTyp, pSCNData->fScnPrd );
 #else
 
@@ -6402,7 +6409,7 @@ int CELEmitterMergeMngr::CompPRIPattern(SRxABTData *pABTData)
  */
 int CELEmitterMergeMngr::CompPRIRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData )
 {
-    int iRet;
+    int iRet=THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
 
     //STR_FREQ_PRI_PW_PA_INFO *pInfo = & pABTData->priInfo;
     //STR_FREQ_PRI_DINFO *pDInfo = & pABTData->priDInfo;

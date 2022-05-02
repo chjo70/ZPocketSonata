@@ -2,7 +2,11 @@
 #define CCOMMONUTILS_H
 
 //#include "../Include/system.h"
-#include "../Utils/cthread.h"
+//#include "../Utils/cthread.h"
+
+#include "../Anal/SigAnal/_Type.h"
+
+#include "../Include/struct.h"
 
 #ifdef _MSC_VER
 int clock_gettime(int X, struct timeval *tv);
@@ -47,7 +51,7 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
 class CCommonUtils
 {
 private:
-    ENUM_MODE m_enMode;
+    //ENUM_MODE m_enMode;
 
 public:
     CCommonUtils();
@@ -56,8 +60,6 @@ public:
     static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
     static void CloseSocket();
 
-    static bool IsValidLanData( STR_MessageData *pMsg );
-    static bool IsValidThread( STR_MessageData *pMsg );
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
     static void AllSwapData32( void *pData, unsigned int uiLength );
@@ -73,10 +75,9 @@ public:
     static void getStringPresentTime( char *pString, size_t szString );
     static void getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime );
     static void GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTime, unsigned int tColTimeMs );
+    static void GetCollectTime( struct timeval *pTimeSpec );
 
     static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
-
-    static void SetUnitType();
 
     static const char *strcasestr( const char *haystack, const char *needle );
     static int Isalpha( int iCh );
@@ -85,6 +86,9 @@ public:
 
     // 타입 변환시 사용하는 함수 모음
     static unsigned int INT2UINT( int iValue );
+
+    static ENUM_DataType WhatDataType( char *pStrPathname );
+    static ENUM_UnitType WhatUnitType( char *pStrPathname );
 
 };
 

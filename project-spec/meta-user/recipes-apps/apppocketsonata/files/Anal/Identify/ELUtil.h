@@ -16,6 +16,10 @@
 float AoaDiff( float x, float y);
 void LogPrint( const char *format, ... );
 
+
+void SetUnitType();
+
+
 bool Is_FZero( const float &value );
 bool Is_DZero( const double &dvalue );
 bool Is_FNotZero( const float &value );

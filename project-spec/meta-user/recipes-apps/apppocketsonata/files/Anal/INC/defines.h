@@ -12,7 +12,7 @@
 
 #include "system.h"
 
-#define PROJECT_NAME								"Self-Dev. RWR"
+//#define PROJECT_NAME								"Self-Dev. RWR"
 
 
 // 장비 정상/비정상 정의 값.

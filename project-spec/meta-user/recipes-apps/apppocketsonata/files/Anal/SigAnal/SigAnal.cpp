@@ -16,7 +16,7 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
 {
     size_t szSize;
 
-    CCommonUtils::SetUnitType();
+    SetUnitType();
 
     SetStep(_spZero);
 
@@ -310,10 +310,10 @@ void CSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
     _PDW *pPDW;
 
     if (m_bSaveFile == true && bSaveFile == true) {
-        m_stSavePDWData.SetTotalPDW(pEmitter->pdw.uiCount);
+        m_stSavePDWData.SetTotalPDW(pEmitter->stPDW.uiCount);
 
-        pPdwIndex = pEmitter->pdw.pIndex;
-        for (i = 0; i < pEmitter->pdw.uiCount; ++i) {
+        pPdwIndex = pEmitter->stPDW.pIndex;
+        for (i = 0; i < pEmitter->stPDW.uiCount; ++i) {
             pPDW = &pstPDW[*pPdwIndex++];
             memcpy(&m_stSavePDWData.pstPDW[i], pPDW, sizeof(_PDW));
 
@@ -529,7 +529,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
         CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
 
         theRS.Open(m_pszSQLString);
-        Log(enDebug, ".InsertRAW[O%d, P%d, P%d]", m_lOpInitID, GetPDWID(), iPLOBID);
+        Log(enNormal, ".InsertRAW[O%d, P%d, P%d]", m_lOpInitID, GetPDWID(), iPLOBID);
 
         theRS.Close();
 

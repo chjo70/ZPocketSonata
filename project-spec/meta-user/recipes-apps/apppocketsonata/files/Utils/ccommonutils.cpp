@@ -112,103 +112,7 @@ void CCommonUtils::CloseSocket()
 
 }
 
-/**
- * @brief CCommonUtils::IsValid
- * @param pMsg
- * @return
- */
-bool CCommonUtils::IsValidLanData( STR_MessageData *pMsg )
-{
-    bool bRet=true;
 
-#ifndef _CGI_LIST_
-    ENUM_MODE enMode, enModeOfMessage;
-
-    enMode = g_pTheSysConfig->GetMode();
-    switch( pMsg->uiOpCode ) {
-        case enREQ_MODE :
-            enModeOfMessage = (ENUM_MODE) pMsg->x.szData[0];
-
-            if( enMode == enREADY_MODE && enMode == enModeOfMessage  ) {
-                // bRet = false;
-            }
-            break;
-        case enREQ_ANAL_START :
-            if( enMode == enES_MODE || enMode == enEW_MODE  ) {
-            }
-            else {
-                bRet = false;
-            }
-            break;
-
-        case enREQ_IBIT :
-        case enREQ_UBIT :
-//             if( enMode == enES_MODE || enMode == enEW_MODE  ) {
-//                 
-//             }
-//             else {
-//                 bRet = false;
-//             }
-            bRet = true;
-            break;
-
-        case enREQ_CBIT :
-            break;
-
-        case enREQ_SBIT :
-            if( enMode == enES_MODE || enMode == enEW_MODE  ) {
-            }
-            else {
-                bRet = false;
-            }
-            break;
-
-        case enREQ_SIM_PDWDATA :
-            if( enMode == enREADY_MODE ) {
-                bRet = false;
-            }
-            break;
-
-        case enREQ_IPL_START :
-        case enREQ_IPL_DOWNLOAD :
-        case enREQ_IPL_END :
-            if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
-            }
-            else {
-                //bRet = false;
-            }
-            break;
-
-        case enREQ_RELOAD_LIBRARY :
-            if( enMode == enES_MODE || enMode == enEW_MODE || enMode == enREADY_MODE ) {
-            }
-            else {
-                bRet = false;
-            }
-            break;
-
-        case enREQ_IPL_VERSION :
-            break;
-
-        case enREQ_SYS :
-            break;
-
-        case enREQ_INIT :
-        case enREQ_SET_CONFIG :
-        case enREQ_STOP :
-            break;
-
-        case enSYSERROR :
-            break;
-
-        default:
-            break;
-
-    }
-#endif
-
-    return bRet;
-}
 
 #ifdef _MSC_VER
 LARGE_INTEGER getFILETIMEoffset()
@@ -366,6 +270,14 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTim
 #endif
 
     }
+
+    return;
+
+}
+
+void CCommonUtils::GetCollectTime( struct timeval *pTimeSpec )
+{
+    clock_gettime( CLOCK_REALTIME, pTimeSpec );
 
     return;
 
@@ -686,19 +598,19 @@ void CCommonUtils::swapByteOrder(double *p, int iSize )
  * @date      2022-02-22, 13:18
  * @warning
  */
-void CCommonUtils::SetUnitType()
-{
-#ifdef _POCKETSONATA_
-    g_enUnitType = en_ZPOCKETSONATA;
-#elif defined(_ELINT_)
-    g_enUnitType = en_ELINT;
-#elif defined(_XBAND_)
-    g_enUnitType = en_XBAND;
-#else
-    g_enUnitType = en_UnknownUnit;
-
-#endif
-}
+// void CCommonUtils::SetUnitType()
+// {
+// #ifdef _POCKETSONATA_
+//     g_enUnitType = en_ZPOCKETSONATA;
+// #elif defined(_ELINT_)
+//     g_enUnitType = en_ELINT;
+// #elif defined(_XBAND_)
+//     g_enUnitType = en_XBAND;
+// #else
+//     g_enUnitType = en_UnknownUnit;
+// 
+// #endif
+// }
 
 /**
  * @brief     strcasestr
@@ -845,3 +757,90 @@ unsigned int CCommonUtils::INT2UINT( int iValue )
 
 }
 
+/**
+ * @brief     WhatDataType
+ * @param     char * pStrPathname
+ * @return    ENUM_DataType
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-28, 13:47
+ * @warning
+ */
+ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
+{
+    ENUM_DataType enDataType = en_UnknownData;
+
+    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
+        enDataType = en_PDW_DATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
+        enDataType = en_PDW_DATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
+        enDataType = en_PDW_DATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ||
+        NULL != CCommonUtils::strcasestr( pStrPathname, "e2.dat" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".eiq" ) ) {
+        enDataType = en_IQ_DATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
+        enDataType = en_PDW_DATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
+        enDataType = en_PDW_DATA;
+    }
+    else {
+        //LOGMSG1( enError, "잘못된 파일명 입니다. 데이터 형식을 모릅니다." );
+        TRACE( "잘못된 파일명 입니다." );
+    }
+
+    return enDataType;
+
+}
+
+/**
+ * @brief
+ * @return    ENUM_UnitType
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2020/03/12 19:38:24
+ * @warning
+ */
+ENUM_UnitType CCommonUtils::WhatUnitType( char *pStrPathname )
+{
+    ENUM_UnitType enUnitType;
+
+    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".midas" ) ) {
+        enUnitType = en_MIDAS;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) ||
+        NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ) {
+        enUnitType = en_SONATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
+        enUnitType = en_SONATA_SHU;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".dat" ) ) {
+        enUnitType = en_701;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
+        enUnitType = en_KFX;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) ) {
+        enUnitType = en_ELINT;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".zpdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".znpw" ) ) {
+        enUnitType = en_ZPOCKETSONATA;
+    }
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
+        enUnitType = en_XBAND;
+    }
+
+    else {
+        enUnitType = en_UnknownUnit;
+    }
+
+    return enUnitType;
+
+}

@@ -31,8 +31,6 @@ protected:
 	//##ModelId=452B0C55005C
 	CNewSigAnal *m_pNewSigAnal;
 
-	//ENUM_BANDWIDTH m_enBandWidth;
-	
 public:
 	void MarkAllAetToPdwIndex();
 	//##ModelId=452B0C550060
@@ -70,8 +68,6 @@ public:
 
 	// 타 장비 관련 위협 데이터를 생성한다.
 public:
-	//int m_CoMakeLOB;
-
 	void DISP_FineAet( SRxLOBData *pManAet );
 	//void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
@@ -79,6 +75,10 @@ public:
 
     inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
     unsigned int GetPDWID();
+
+    void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) { }
+
+	LONG GetOPInitID();
 
 #if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();

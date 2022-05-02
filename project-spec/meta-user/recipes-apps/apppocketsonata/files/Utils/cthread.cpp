@@ -609,7 +609,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength )
 {
 
-    QMsgSnd( uiOpCode, NULL, 0, pData, uiDataLength );
+    QMsgSnd( uiOpCode, NULL, 0, 0, pData, uiDataLength );
 }
 
 /**
@@ -619,7 +619,27 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
 void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
 {
 
-    QMsgSnd( uiOpCode, NULL, 0, NULL, 0, pszClassName );
+    QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName );
+}
+
+/**
+ * @brief     QMsgSnd
+ * @param     unsigned int uiOpCode
+ * @param     void * pArrayMsgData
+ * @param     unsigned int uiArrayLength
+ * @param     void * pData
+ * @param     unsigned int uiDataLength
+ * @param     const char * pszClassName
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-21, 18:06
+ * @warning
+ */
+void CThread::QMsgSnd(unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName)
+{
+    QMsgSnd(uiOpCode, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName );
 }
 
 /**
@@ -628,7 +648,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
  * @param pArrayMsgData
  * @param uiLength
  */
-void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName )
+void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName )
 {
     STR_MessageData sndMsg;
 
@@ -651,12 +671,8 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
 
     // 3. 추가 데이터 저장
     if( pArrayMsgData != NULL ) {
-        //Lock();
-
-    	sndMsg.uiArrayLength = uiArrayLength;
-    	sndMsg.iArrayIndex = PushLanData( pArrayMsgData, sndMsg.uiArrayLength );
-
-        //UnLock();
+    	sndMsg.uiArrayLength = uiArrayElement * uiArraySize;
+        sndMsg.iArrayIndex = PushLanData(pArrayMsgData, sndMsg.uiArrayLength);
     }
     else {
     	sndMsg.uiArrayLength = 0;
@@ -688,7 +704,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const
 }
 
 /**
- * @brief		QMsgSnd
+ * @brief		큐 메시지로 데이터를 전송한다.
  * @param		STR_MessageData * pMessageData
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)

@@ -132,6 +132,10 @@ private:
     int m_iCoDwellLevel;
     STR_DWELL_LEVEL m_stDwellLevel[_MAX_DWELL_LEVEL];    
 
+private:
+    void NormalizeTOA(STR_EMITTER *pEmitter);
+    void AnalyzeACF(STR_EMITTER *pEmitter);
+
 public:
     void CalHopLevel( STR_EMITTER *pEmitter );
     BOOL IsFreqHopping( STR_EMITTER *pEmitter );
@@ -192,7 +196,7 @@ public:
     virtual void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )=0;
 
     //##ModelId=452B0C5701C8
-    virtual void MakePRIInfoInSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )=0;
+    virtual void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )=0;
     //##ModelId=452B0C5701DA
     virtual unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter)=0;
     //##ModelId=452B0C5701E4
@@ -322,8 +326,13 @@ public:
     bool OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     //##ModelId=452B0C58001B
     void MergeGrouping( int nAnalEmitter );
+
+
+
     //##ModelId=452B0C580023
     bool StaggerAnalysis( STR_EMITTER *pEmitter );
+
+
     //##ModelId=452B0C580025
     void SelectMainSeg(STR_EMITTER *pEmitter);
     //##ModelId=452B0C580038
@@ -334,9 +343,9 @@ public:
     void MergePdwIndexInSeg( STR_EMITTER *pEmitter );
 
     //##ModelId=452B0C58004D
-    FREQ_TYPE AnalFreqType( STR_EMITTER *pEmitter );
+    enFREQ_TYPE AnalFreqType( STR_EMITTER *pEmitter );
     //##ModelId=452B0C580056
-    SIGNAL_TYPE AnalSignalType( STR_EMITTER *pEmitter );
+    enSIGNAL_TYPE AnalSignalType( STR_EMITTER *pEmitter );
     //##ModelId=452B0C580058
     void PatternAnalysis();
     //##ModelId=452B0C58005F
@@ -345,6 +354,8 @@ public:
     void GroupingUnknown();
     //##ModelId=452B0C580061
     void GroupingJitter( BOOL fDecisionEmitter=FALSE );
+    void GroupingJitterWithJitter( STR_PULSE_TRAIN_SEG *pRefSeg, int iLoop, BOOL bDecisionEmitter );
+    void GroupingJitterWithStable( STR_PULSE_TRAIN_SEG *pRefSeg, int iLoop, BOOL bDecisionEmitter );
     //##ModelId=452B0C58006A
     void GroupingStagger( BOOL fDecisionEmitter=FALSE );
     //##ModelId=452B0C58006C
@@ -356,7 +367,7 @@ public:
     bool MakeDwellLevel( STR_EMITTER *pEmitter );
 
     int (CAnalPRI::*qsort_memberfunc)( const void *arg1, const void *arg2 );
-    //int incSegPriMeanCompare( const void *arg1, const void *arg2 );
+    
     void SortEmitter();
     void SwapEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter );
     _TOA GetMinPulseTrainMean( STR_EMITTER *pEmitter );

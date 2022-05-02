@@ -13,6 +13,9 @@
 using namespace std;
 
 #ifdef _MSC_VER
+#include <string.h>
+#include <atlstr.h>
+
 #else
 #include "../SigAnal/_Type.h"
 #endif
@@ -52,13 +55,13 @@ template <typename T> void DeletePointers(std::vector<T*> &i_vecContainer)	//#FA
 }
 //end_static_0918
 
-template <typename T> void DeletePointers2(std::vector<T*> &i_vecContainer)
-{
-    for( auto it=i_vecContainer.begin() ; it != i_vecContainer.end() ; ) { //#FA_C_PotentialUnboundedLoop_T3
-		it = i_vecContainer.erase( it );
-	}
-	i_vecContainer.clear();
-}
+// template <typename T> void DeletePointers2(std::vector<T*> &i_vecContainer)
+// {
+//     for( auto it=i_vecContainer.begin() ; it != i_vecContainer.end() ; ) { //#FA_C_PotentialUnboundedLoop_T3
+// 		it = i_vecContainer.erase( it );
+// 	}
+// 	i_vecContainer.clear();
+// }
 
 //////////////////////////////////////////////////////////////////////////
 //start_static_0918

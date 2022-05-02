@@ -441,7 +441,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
     // 로그 객체를 생성한다.
     g_pTheLog = new CLog();
 
-    CCommonUtils::SetUnitType();
+    SetUnitType();
 
 #ifdef __VXWORKS__
     g_iClkTickPerSecond = sysClkRateGet();

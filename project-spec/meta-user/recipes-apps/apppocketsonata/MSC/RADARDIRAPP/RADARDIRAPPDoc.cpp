@@ -213,7 +213,7 @@ void CRADARDIRAPPDoc::ReadDataFile()
 
 	pView->UpdateLOBData( nCoLOB, pLOBData );
 
-	printf( "\n 분석된 LOB 개수 : %d", nCoLOB );
+	TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
 
 	// 프로그램 종료시 한번만 호출하면 됩니다.
 	//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();

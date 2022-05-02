@@ -360,3 +360,8 @@ unsigned int CNMakeAET::GetPDWID()
 { 
     return m_pNewSigAnal->GetPDWID(); 
 }
+
+LONG CNMakeAET::GetOPInitID() 
+{
+	return m_pNewSigAnal->GetOPInitID();
+}

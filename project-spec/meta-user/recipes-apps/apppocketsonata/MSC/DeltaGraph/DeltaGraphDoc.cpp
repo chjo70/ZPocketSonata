@@ -23,6 +23,8 @@
 
 #include <propkey.h>
 
+#include "../../files/Utils/ccommonutils.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -166,7 +168,7 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
  */
  ENUM_UnitType CDeltaGraphDoc::WhatUnitType()
 {
-	return m_pTheDataFile->WhatUnitType( (LPSTR)(LPCTSTR) m_strPathname );
+	return CCommonUtils::WhatUnitType( (LPSTR)(LPCTSTR) m_strPathname );
 }
 
 /**
@@ -179,7 +181,7 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
  */
 ENUM_DataType CDeltaGraphDoc::WhatDataType()
 {
-	return m_pTheDataFile->WhatDataType( (LPSTR)(LPCTSTR) m_strPathname );
+	return CCommonUtils::WhatDataType( (LPSTR)(LPCTSTR) m_strPathname );
 }
 
  /**

@@ -82,6 +82,8 @@ void CKnownSigAnal::Init()
 */
 void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 {
+    DWORD dwTime = GetTickCount();
+
     Log( enLineFeed, "" );
 
     PrintFunction;
@@ -96,7 +98,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 	// 신호 분석 관련 초기화.
     Init( pstPDWData );
 
-    Log( enNormal, "#### 추적 분석 시작[%dth, Co:%d] ####" , GetStep(), m_uiCoPdw );
+    Log( enNormal, "#### 추적 - 추적 분석 시작[%dth, Co:%d] ####" , GetStep(), m_uiCoPdw );
 
     InsertRAWData( & m_stSavePDWData, _spZero );
 
@@ -108,62 +110,73 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.
-	m_theGroup->MakeGroup();
+	m_theGroup->MakeKnownGroup();
 
 	// 그룹화 만들기
-    if( TRUE == m_theGroup->MakeGrIndex() ) {
+    if (TRUE == m_theGroup->MakeGrIndex()) {
         // 펄스열 추출
         m_thePulExt->KnownPulseExtract();
-        
+
         // PRI 분석
         m_theAnalPRI->KnownAnalysis();
-        
+
         // 에미터 분석
         bRet = m_theMakeAET->KnownMakeAET();
-        
-        //////////////////////////////////////////////////////////////////////////
-        // printf( "\n 새로운 에미터 분석 시작" );
 
-        // 추적 추출이 성공이면 나머지 잔여 펄스들에 대해서 펄스열 추출해서 에미터를 분석한다.
-        if( bRet == TRUE ) {
-            // 그룹화 만들기
-            m_theGroup->MakeFreqAoaPwGroup();
+        // 추적 실패하면 마킹된 정보를 해지한다.
+        if (bRet == FALSE) {
+            memset(MARK, 0, sizeof(MARK));
+        }
+    }
+
+    int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
+    Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex(iIdxUpdAet));
+
+    // 잔여 펄스열에 대해서 탐지 신호 분석을 수행한다.
+
+    // 펄스열 추출 초기화
+    m_thePulExt->CPulExt::Init();
+
+    // PRI 분석 초기화
+    m_theAnalPRI->CAnalPRI::Init();
+
+    // AET 생성 초기화
+    m_theMakeAET->CMakeAET::Init();
+
+    // 탐지 신호 분석을 그대로 분석한다.
+    if (TRUE == m_theGroup->MakeGroup()) {
+        CheckKnownByAnalysis();
+
+        // 그룹화 만들기
+        while (!m_theGroup->IsLastGroup()) {
+            // 협대역 주파수 그룹화
+            // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
             m_theGroup->MakeGrIndex();
+
+            SaveGroupPdwFile(m_CoGroup + 1);
+
+            // 규칙성 및 불규칙성 펄스열 추출
+            m_thePulExt->PulseExtract(&m_VecMatchRadarMode);
+
+            // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+            // m_thePulExt->UnknownExtract();
+
+            // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+            memset(&MARK, 0, sizeof(MARK));
+
+            // PRI 분석
+            m_theAnalPRI->Analysis();
+
+            // 에미터 분석
+            m_theMakeAET->MakeAET();
+
+            // 그룹화 생성 개수 증가
+            ++m_CoGroup;
+
         }
-        else {
-            /*! \bug  추적이 실패가 되면 수집된 펄스열로부터 새로운 탐지 분석을 하게 한다.
-                \date 2006-06-27 12:19:01, 조철희
-            */
 
-            memset( MARK, 0, sizeof( MARK ) );
+    }
 
-            // 펄스열 추출 초기화
-            m_thePulExt->CPulExt::Init();
-
-            // PRI 분석 초기화
-            m_theAnalPRI->CAnalPRI::Init();
-
-            // AET 생성 초기화
-            m_theMakeAET->CMakeAET::Init();
-        }
-
-        ////////////////////////////////////////////////////////////////////
-        // 새로운 에미터 분석
-
-        ////////////////////////////////////////////////////////////////////
-        // 잔여 펄스들에 대해서 새로운 에미터 분석
-        // 1) 처음부터 다시 새로운 에미터 분석 ?
-        // 2) 추출한 펄스열은 제거한 상태에서 분석 ?
-        m_thePulExt->PulseExtract();
-
-        // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-        // m_thePulExt->CPulExt::UnknownExtract();
-
-        // PRI 분석을 실시한다.
-        m_theAnalPRI->Analysis();
-
-        // 상속클래스의 에미터 분석
-        m_theMakeAET->MakeAET();
 
 #ifdef _POCKETSONATA_
 #elif defined(_ELINT) || defined(_XBAND_)
@@ -181,8 +194,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 //         SendAllAet();
 #endif
 
-        // printf( "\n !!!! End of Known Signal Analysis !!!!" );
-    }
+    Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((GetTickCount() - dwTime)));
 
 }
 
@@ -233,6 +245,8 @@ void CKnownSigAnal::InitVar()
 void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 {
     
+    m_CoGroup = 0;
+
     // 시간 초기화
     CSigAnal::SetColTime(_spZero);
     CSigAnal::SetColTimeMs(_spZero);
@@ -481,5 +495,40 @@ void CKnownSigAnal::SendNewAet(SRxLOBData *pNewAet, int inEMT )
 #endif
 
 
+}
+
+/**
+ * @brief     CheckKnownByAnalysis
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-27, 16:23
+ * @warning
+ */
+bool CKnownSigAnal::CheckKnownByAnalysis()
+{
+    UINT i;
+    UINT uiFreqMax, uiFreqMin;
+    bool bRet;
+
+    if (m_theGroup->GetPulseStat() == STAT_CW) {
+        bRet = false;
+
+        DeletePointers(m_VecMatchRadarMode);
+    }
+    else {
+        uiFreqMax = 0;
+        uiFreqMin = UINT_MAX;
+        for (i = 0; i < m_uiCoPdw; ++i) {
+            uiFreqMax = max(FREQ[i], uiFreqMax);
+            uiFreqMin = min(FREQ[i], uiFreqMin);
+        }
+
+        bRet = false;
+        // bRet = m_pIdentifyAlg->IsThereFreqRange(&m_VecMatchRadarMode, uiFreqMin, uiFreqMax);
+    }
+
+    return bRet;
 }
 

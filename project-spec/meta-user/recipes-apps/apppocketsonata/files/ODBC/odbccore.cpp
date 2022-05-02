@@ -224,7 +224,7 @@ BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, CHAR *szData)
 	int nLength = GetFieldLength(nField) + 1;
 	
 	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue) == SQL_SUCCESS;
-    ret = SQLGetData(m_hStmt, (SQLSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue);
+    ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_CHAR, szData, nLength, &cbValue);
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;
 }
 
@@ -479,14 +479,24 @@ BOOL CODBCRecordset::MoveLast()
 	return m_bIsEOF;
 }
 
+/**
+ * @brief     GetFieldLength
+ * @param     SQLSMALLINT nField
+ * @return    LONG
+ * @exception
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-04-21, 17:29
+ * @warning
+ */
 LONG CODBCRecordset::GetFieldLength(SQLSMALLINT nField)
 {
 	SQLSMALLINT fSqlType, ibScale, fNullable;
 	SQLUINTEGER cbColDef;
 	
-	SQLDescribeCol(m_hStmt, nField + 1, NULL, 0, 0, &fSqlType, &cbColDef, &ibScale, &fNullable);
+	SQLDescribeCol(m_hStmt, (SQLUSMALLINT) (nField + 1), NULL, 0, 0, &fSqlType, &cbColDef, &ibScale, &fNullable);
 
-	return cbColDef;	
+	return (LONG) cbColDef;
 }
 
 BOOL CODBCRecordset::GetFieldAttributes(int nField, CHAR* szFieldName, int& nType, int& nLength)
@@ -495,10 +505,10 @@ BOOL CODBCRecordset::GetFieldAttributes(int nField, CHAR* szFieldName, int& nTyp
 	SQLSMALLINT cbColNameLen, fSqlType, ibScale, fNullable;
 	SQLUINTEGER cbColDef;
 	
-	ret = SQLDescribeCol(m_hStmt, nField + 1, (SQLCHAR*)szFieldName, MAX_COL_NAME_LEN, &cbColNameLen, &fSqlType, &cbColDef, &ibScale, &fNullable);
+	ret = SQLDescribeCol(m_hStmt, (SQLUSMALLINT)(nField + 1), (SQLCHAR*)szFieldName, MAX_COL_NAME_LEN, &cbColNameLen, &fSqlType, &cbColDef, &ibScale, &fNullable);
 	
 	nType = fSqlType;
-	nLength = cbColDef;
+	nLength = (int) cbColDef;
 
 	return ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO;	
 }

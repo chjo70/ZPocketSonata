@@ -185,7 +185,7 @@ private:
     SEnvironVariable *m_pSEnvironVariable;
     
 
-#if defined(_MSSQL_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     LONG m_lOpInitID;
 
 #endif
@@ -393,7 +393,7 @@ private:
 //
 // 	// 통계 함수
     float CalcMean( float fMean1, int iCount1, float fMean2, int iCount2 );
-    int CalcMean( int iMean1, int iCount1, int iMean2, int iCount2 );
+    //int CalcMean( int iMean1, int iCount1, int iMean2, int iCount2 );
 //	int CalcMean( int iMean, int iCount, int iElement );
 // 	float CalcMean( float iMean1, int iCount1, float iMean2, int iCount2 );
 // 	int CalcDeviation( int iDev1, int iCount1, int iDev2, int iCount2 );
@@ -501,7 +501,7 @@ public:
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+#ifdef _MSSQL_
     inline UINT GetOpInitID() { return m_lOpInitID; }
 #endif
 

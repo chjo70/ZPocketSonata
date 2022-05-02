@@ -58,7 +58,7 @@ void CRADARDIRAPPView::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_LOB, m_CListLOB);
-	DDX_Control(pDX, IDC_LIST_LOB, m_CListLOB);
+	//DDX_Control(pDX, IDC_LIST_LOB, m_CListLOB);
 }
 
 BOOL CRADARDIRAPPView::PreCreateWindow(CREATESTRUCT& cs)
@@ -117,7 +117,7 @@ CRADARDIRAPPDoc* CRADARDIRAPPView::GetDocument() const // 디버그되지 않은 버전은
 
 #define _TEXT_WIDTH								(10)
 #define	_COLUMNS_OF_LIST_					(9)
-static char szList[_COLUMNS_OF_LIST_][20] = { "순서", "방위[도]", "신호형태", "주형", "주파수[MHz]", "P형", "PRI[us]", "신호세기[dBm]", "펄스폭[ns]" } ;
+static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]     ", "신/형", "주/형", "주파수[MHz]         ", "PRI형", "PRI[us]             ", "신호세기[dBm]  ", "펄스폭[ns]        " } ;
 void CRADARDIRAPPView::InitView()
 {
  	int i;
@@ -140,45 +140,57 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 	int i, j;
 	char buffer[100];
 
+    if(nCoLOB != _spZero ) {
+        for (i = 0; i < nCoLOB; ++i) {
+            sprintf_s(buffer, sizeof(buffer), "%d", m_CoListItems);
+            m_CListLOB.InsertItem(m_CoListItems, buffer);
 
-	for( i=0 ; i < nCoLOB ; ++i ) {
-		sprintf_s( buffer, sizeof(buffer), "%d" , m_CoListItems );
-		m_CListLOB.InsertItem( m_CoListItems, buffer );
+            j = 1;
+            sprintf_s(buffer, sizeof(buffer), " %4.1f(%4.1f,%4.1f)", pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		j = 1;
-		sprintf_s( buffer, sizeof(buffer), " %4.1f(%4.1f,%4.1f)" , pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), "%s", g_szAetSignalType[pLOB->iSignalType]);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), "%s" , g_szAetSignalType[pLOB->iSignalType] );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), "%s", g_szAetFreqType[pLOB->iFreqType]);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), "%s" , g_szAetFreqType[pLOB->iFreqType] );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), " %.3f[%.3f, %.3f]", pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), " %.3f[%.3f, %.3f]" , pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), " %s    ", g_szAetPriType[pLOB->iPRIType]);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), " %s    " , g_szAetPriType[pLOB->iPRIType] );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), "%0.1f(%.1f,%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), "%0.1f(%.1f,%.1f), %2d" , pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), " %.2f(%.2f,%.2f)", pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-		sprintf_s( buffer, sizeof(buffer), " %.2f(%.2f,%.2f)" , pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
-
-		sprintf_s( buffer, sizeof(buffer), " %.2f(%.2f,%.2f)" , pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax );
-		m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            sprintf_s(buffer, sizeof(buffer), " %.2f(%.2f,%.2f)", pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax);
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
 
-		++ pLOB;
+            ++pLOB;
 
-		++ m_CoListItems;
-
+            ++m_CoListItems;
+        }
 	}
+    else {
+        sprintf_s(buffer, sizeof(buffer), "%d", m_CoListItems);
+        m_CListLOB.InsertItem(m_CoListItems, buffer);
+
+        j = 1;
+        sprintf_s(buffer, sizeof(buffer), " LOB 없음 !!" );
+        m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
+
+        ++m_CoListItems;
+    }
 
 	m_CListLOB.InsertItem( m_CoListItems, "" );
 	++ m_CoListItems;
+
+    m_CListLOB.SendMessage(WM_VSCROLL, SB_BOTTOM);
 
 	Invalidate();
 

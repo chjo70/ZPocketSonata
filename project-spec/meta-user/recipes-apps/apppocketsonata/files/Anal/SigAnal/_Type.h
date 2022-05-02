@@ -113,7 +113,7 @@ typedef int key_t;
 #endif
 
 #define open                    _open
-#define closeSharedMemory                   _close
+
 #define	write					_write
 #define	read					_read
 #define	chmod					_chmod

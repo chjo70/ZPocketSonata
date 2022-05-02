@@ -18,6 +18,8 @@
 #include "./Collect/DataFile/DataFile.h"
 #include "./SigAnal/_Struct.h"
 
+#include "./EmitterMerge/IsNumber.h"
+
 
 
 

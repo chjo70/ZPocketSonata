@@ -19,6 +19,8 @@ class CKnownSigAnal;
 class CKPulExt : public CPulExt
 {
 private:
+    UINT m_CoPulseTrains;
+
     SRxABTData *m_pTrkAet;
 
 protected:
@@ -37,6 +39,11 @@ public:
     void Init();
     //##ModelId=452B0C5201E7
     void PulseExtract();
+
+    void ExtractPulseTrainByLibrary(vector<SRadarMode *> *pVecMatchRadarMode);
+    void PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode);
+
+
     //##ModelId=452B0C5201E8
     STR_DTOA_HISTOGRAM *GetDtoaHist();
     //##ModelId=452B0C5201E9
