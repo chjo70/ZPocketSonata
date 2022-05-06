@@ -28,11 +28,11 @@
     <Filter Include="소스 파일\Utils">
       <UniqueIdentifier>{96a9a159-bad4-4d02-8ea4-39bbc72b44a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal\Collect\GenPDW">
+      <UniqueIdentifier>{f14e2643-8eb2-4c8e-8a82-f5e6f4ccd3c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CGenPDW.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="npwmake.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -51,12 +51,12 @@
     <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp">
       <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
+      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pdw.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CGenPDW.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
@@ -73,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h">
       <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
+      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

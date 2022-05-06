@@ -212,7 +212,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 */
 void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 {
-    DWORD dwTime = GetTickCount();
+    DWORD dwTime = CCommonUtils::GetTickCount();
 
     Log( enLineFeed, "" );
 
@@ -286,7 +286,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     }
 
-    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((GetTickCount() - dwTime)) );
+    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCount() - dwTime)) );
 
 }
 

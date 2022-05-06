@@ -108,6 +108,7 @@
     <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>

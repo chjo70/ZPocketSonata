@@ -4,17 +4,31 @@
 
 #include "cipl.h"
 
-//#include "../../System/csysconfig.h"
 
 #include "../../Include/globals.h"
 
+/**
+ * @brief     CIPL
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:35
+ * @warning
+ */
 CIPL::CIPL()
 {
     InitVar();
 }
 
 /**
- * @brief CIPL::InitVar
+ * @brief     InitVar
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:27
+ * @warning
  */
 void CIPL::InitVar()
 {

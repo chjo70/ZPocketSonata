@@ -1016,7 +1016,7 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
 
     pPdwIndex = & pColPdwIndex->pIndex[0];
 
-    last_index1 = max( 0, pColPdwIndex->uiCount - coRefPulse );
+    last_index1 = max( 0, (int) ( pColPdwIndex->uiCount - coRefPulse ) );
     for( i1=start_idx ; i1 <= last_index1 ; ++i1 ) {
         index1 = pPdwIndex[i1];
 
@@ -3351,7 +3351,7 @@ enPRI_TYPE CPulExt::AnalPRIType(STR_PULSE_TRAIN_SEG *pSeg, enPRI_TYPE ext_type )
     enPRI_TYPE enRet;
 
     // 펄스열을 근거로 PRI 타입을 결정할 때 아래 루틴을 적용한다.
-    if( ext_type == -1 || ext_type == _REFSTABLE ) {
+    if( ext_type == _UNKNOWN_PRI || ext_type == _REFSTABLE ) {
         diff = pSeg->pri.tMax - pSeg->pri.tMin;
 
         if( diff > 2*STABLE_MARGIN )

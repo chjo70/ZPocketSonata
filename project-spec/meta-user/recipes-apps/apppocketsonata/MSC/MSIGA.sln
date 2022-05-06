@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RADARANLAPP", "RADARANLAPP\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaGraph", "DeltaGraph\DeltaGraph.vcxproj", "{F45B81CF-13A7-4C04-AC74-97289EF5E535}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NPWMAKE", "NPWMAKE\NPWMAKE.vcxproj", "{E3C15BEA-56DA-4359-BD1B-623EB5414306}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Debug|Win32.Build.0 = Debug|Win32
 		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Release|Win32.ActiveCfg = Release|Win32
 		{F45B81CF-13A7-4C04-AC74-97289EF5E535}.Release|Win32.Build.0 = Release|Win32
+		{E3C15BEA-56DA-4359-BD1B-623EB5414306}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E3C15BEA-56DA-4359-BD1B-623EB5414306}.Debug|Win32.Build.0 = Debug|Win32
+		{E3C15BEA-56DA-4359-BD1B-623EB5414306}.Release|Win32.ActiveCfg = Release|Win32
+		{E3C15BEA-56DA-4359-BD1B-623EB5414306}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

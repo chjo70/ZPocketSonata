@@ -406,21 +406,27 @@ typedef union {
         float fPh2;
         float fPh3;
         float fPh4;
-    } el;
+        float fPh5;
+    } xb;
 
     struct {
         float fPh1;
         float fPh2;
         float fPh3;
         float fPh4;
-        float fPh5;
-    } xb;
+
+        //////////////////////////////////////////////////////////////////////////
+        int _dummy;
+    } el;
 
     struct {
         int iPMOP;
         int iFMOP;
 
         int iChannel;
+
+        //////////////////////////////////////////////////////////////////////////
+        int _dummy[2];
     } ps;
 
 } UNI_PDW_ETC ;
@@ -661,9 +667,11 @@ struct SRxPDWDataRGroup {
 
 
 #ifdef _POCKETSONATA_
+// 하드웨어 PDW 맵에 저장한다.
 typedef DMAPDW SIGAPDW;
 
 #elif defined(_ELINT_) || defined(_XBAND_)
+// 
 typedef _PDW SIGAPDW;
 
 #elif defined(_SONATA_)
@@ -885,6 +893,16 @@ typedef union {
 
     SONATA_HEADER so;
 
+    /**
+     * @brief     GetTaskID
+     * @param     ENUM_UnitType enUnitType
+     * @return    char *
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-04, 14:09
+     * @warning
+     */
     char *GetTaskID( ENUM_UnitType enUnitType ) {
         char *pTaskID;
 
@@ -911,6 +929,16 @@ typedef union {
 
     }
 
+    /**
+     * @brief     GetTotalPDW
+     * @param     ENUM_UnitType enUnitType
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-04, 14:09
+     * @warning
+     */
     unsigned int GetTotalPDW( ENUM_UnitType enUnitType ) {
         unsigned int uiTotalPDW;
 
@@ -940,6 +968,16 @@ typedef union {
 
     }
 
+    /**
+     * @brief     GetBoardID
+     * @param     ENUM_UnitType enUnitType
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-04, 14:09
+     * @warning
+     */
     int GetBoardID( ENUM_UnitType enUnitType ) {
         int uiBoardID;
 
@@ -1064,6 +1102,16 @@ struct STR_PDWDATA {
 
     }
 
+    /**
+     * @brief     SetBank
+     * @param     unsigned int uiBank
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-04, 14:09
+     * @warning
+     */
     void SetBank(unsigned int uiBank) {
 
         if (g_enUnitType == en_ZPOCKETSONATA) {
@@ -1446,6 +1494,49 @@ struct STR_PDWDATA {
         }
 
         return pTaskID;
+    }
+
+    /**
+     * @brief     TOA 값이 동일할때는 음의 값을 리턴한다.
+     * @param     _TOA tPDW
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-04, 14:42
+     * @warning
+     */
+    int GetIndexByTOA( _TOA tPDW ) {
+        _TOA tDiff;
+        int iTotalPDW;
+
+        int iIndex=0, iLeft=0, iRight;        
+
+        iTotalPDW = ( int ) GetTotalPDW();
+        iRight = iTotalPDW - 1;
+
+        if( iRight >= 0 ) {
+            do {
+                iIndex = (iLeft + iRight) / 2;
+
+                tDiff = pstPDW[iIndex].ullTOA - tPDW;
+                if( tDiff == 0 ) {
+                    iIndex = -iIndex - 1;
+                    break;
+                }
+                else if( tDiff < LLONG_MAX ) {
+                    iRight = iIndex - 1;
+                }
+                else {
+                    iLeft = iIndex + 1;
+                }
+                iIndex = (iLeft + iRight) / 2;
+            } while( iLeft <= iRight && iRight < iTotalPDW );
+
+            iIndex = iLeft;
+        }
+
+        return iIndex;
     }
 
 }  ;

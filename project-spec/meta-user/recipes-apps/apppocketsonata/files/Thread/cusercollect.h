@@ -1,10 +1,10 @@
 #ifndef CUSERCOLLECT_H
 #define CUSERCOLLECT_H
 
-//#include "../Include/system.h"
+
 #include "../Utils/cthread.h"
 
-//#include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
+#include "../Anal/Collect/GenPDW/CGenPDW.h"
 
 class CUserCollect : public CThread
 {
@@ -14,6 +14,8 @@ private:
     STR_RES_COL_START m_strResColStart;
 
     SIGAPDW *m_pstrPDW;
+
+    CGenPDW *m_pTheGenPDW;
 
     char *m_pstrPDWWithFileHeader;
 

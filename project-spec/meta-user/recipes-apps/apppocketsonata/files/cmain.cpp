@@ -453,18 +453,57 @@ void ParsingArgument( int iArgc, char *iArgv[] )
 
     // 보드 ID 를 읽어온다.
     if( iArgc >= 2 ) {
-        -- iArgc;
         ++ iArgv;
-        while(iArgc--) {
-            g_enBoardId = (ENUM_BoardID) atoi( *iArgv );
-            // cout << *iArgv++ << endl;
+
+        while( *iArgv != NULL ) {
+            if( *iArgv[0] == '-' ) {
+                switch( iArgv[0][1] ) {
+                case 'i':
+                    if( iArgv[0][2] == NULL ) {
+                        g_enBoardId = enPRC3;
+
+                        LOGMSG1( enError, "기본값으로 마스터[%d]로 설정합니다.", g_enBoardId );
+                        break;
+                    }
+                    else {
+                        g_enBoardId = ( ENUM_BoardID ) atoi( iArgv[0]+2 );
+                    }
+
+                    // 아큐먼트 설정 값을 전시 합니다.
+                    if( g_enBoardId == enMaster ) {
+                        LOGMSG1( enDebug, "마스터[%d]로 설정합니다.", g_enBoardId );
+                    }
+                    else {
+                        LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다.", g_enBoardId );
+                    }
+                    break;
+
+                case 's' :
+                    if( iArgv[0][2] == NULL ) {  
+                        g_szPDWScinarioFile[0] = NULL;
+
+                        LOGMSG1( enError, "PDW 시나리오 파일[%s]이 잘못 입력됐습니다.", iArgv[0] );
+                        break;
+                    }
+                    else {
+                        strcpy( g_szPDWScinarioFile, iArgv[0]+2 );
+                    }
+
+                    // 아큐먼트 설정 값을 전시 합니다.
+                    LOGMSG1( enDebug, "PDW 시나리오 파일[%s]을 설정합니다.", g_szPDWScinarioFile );
+
+                    break;
+
+                default:
+                    break;
+                }
+            }
+
+            ++iArgv;
+            
         }
-        if( g_enBoardId == enMaster ) {
-            LOGMSG1( enDebug, "마스터[%d]로 설정합니다." , g_enBoardId );
-        }
-        else {
-            LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다." , g_enBoardId );
-        }
+
+
     }
     else {
         LOGMSG( enDebug, "The reason that no arguments inputs, it will set up the default..." );

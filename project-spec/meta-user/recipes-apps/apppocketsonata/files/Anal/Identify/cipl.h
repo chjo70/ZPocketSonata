@@ -3,8 +3,6 @@
 
 #include <string.h>
 
-//#include "../../Include/system.h"
-
 #include "../../System/csysconfig.h"
 
 #define MAX_IPL                 (20000)

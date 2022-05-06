@@ -97,6 +97,9 @@
     <Filter Include="소스 파일\Utils\DMA">
       <UniqueIdentifier>{49327121-010c-4b7a-93d3-e28be4a09572}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal\Collect\GenPDW">
+      <UniqueIdentifier>{2480af83-f07a-44a3-a171-4822be1710e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -502,6 +505,9 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
+      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -719,6 +725,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
+      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -82,7 +82,7 @@ void CKnownSigAnal::Init()
 */
 void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 {
-    DWORD dwTime = GetTickCount();
+    DWORD dwTime = CCommonUtils::GetTickCount();
 
     Log( enLineFeed, "" );
 
@@ -194,7 +194,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 //         SendAllAet();
 #endif
 
-    Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((GetTickCount() - dwTime)));
+    Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCount() - dwTime)));
 
 }
 

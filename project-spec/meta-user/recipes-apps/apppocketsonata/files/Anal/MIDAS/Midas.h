@@ -591,7 +591,13 @@ private:
     int WriteHeader();
     int WriteAdjunct();
     unsigned int GetValueUnits();
+
     bool WriteData( int destFileId, int iSkipByte, bool bMultiIFData=false );
+    bool WriteIQData( int destFileId, unsigned int uiNumberofdata );
+    bool WriteIFData( int destFileId, unsigned int uiNumberofdata );
+    bool WritePDWData( int destFileId, unsigned int uiNumberofdata );
+
+
     void MakePRFToneData();
     unsigned int CalcExtStart();
     double CalcDataSize();

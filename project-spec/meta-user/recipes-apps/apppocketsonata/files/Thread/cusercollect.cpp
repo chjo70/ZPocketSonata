@@ -35,6 +35,18 @@
 #define _SIM_USER_COLLECT_
 #endif
 
+/**
+ * @brief     CUserCollect
+ * @param     int iKeyId
+ * @param     const char * pClassName
+ * @param     bool bArrayLanData
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:29
+ * @warning
+ */
 CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
@@ -95,19 +107,36 @@ void CUserCollect::AllocMemory()
 
 #endif
 
+    m_pTheGenPDW = new CGenPDW( 100 );
+
+
 }
 
 /**
- * @brief CUserCollect::FreeMemory
+ * @brief     FreeMemory
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:14
+ * @warning
  */
 void CUserCollect::FreeMemory()
 {
     free( m_pstrPDWWithFileHeader );
+
+    delete m_pTheGenPDW;
 }
 
 /**
- * @brief CUserCollect::Run
- * @param key
+ * @brief     Run
+ * @param     key_t key
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:14
+ * @warning
  */
 void CUserCollect::Run(key_t key)
 {
@@ -118,7 +147,13 @@ void CUserCollect::Run(key_t key)
 }
 
 /**
- * @brief CUserCollect::_routine
+ * @brief     _routine
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:14
+ * @warning
  */
 void CUserCollect::_routine()
 {
@@ -173,7 +208,13 @@ void CUserCollect::_routine()
 }
 
 /**
- * @brief CUserCollect::SetConfig
+ * @brief     SetConfig
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:14
+ * @warning
  */
 void CUserCollect::SetConfig()
 {
@@ -220,7 +261,13 @@ void CUserCollect::Stop()
 }
 
 /**
- * @brief CUserCollect::ColStart
+ * @brief     ColStart
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 10:14
+ * @warning
  */
 void CUserCollect::ColStart()
 {
@@ -229,7 +276,8 @@ void CUserCollect::ColStart()
     pdw_reg_t s_pdw_reg_t;
 
     uint32_t DataCount = (UINT) PDW_GATHER_SIZE;
-    //uint32_t DumpLen;
+    
+    UINT uiSize;
 
     pUIO = CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
 
@@ -317,7 +365,8 @@ void CUserCollect::ColStart()
                     pPDWFileHeader->stCommon.uiColTimeMs = 0;
                     pPDWFileHeader->SetTotalPDW( NUM_OF_PDW );
                     pPDWFileHeader->SetIsStorePDW( 1 );
-                    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+PDW_GATHER_SIZE, NULL, 0, GetThreadName() );
+                    uiSize = sizeof( DMAPDW ) * NUM_OF_PDW;
+                    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+uiSize, NULL, 0, GetThreadName() );
                 }
                 break;
 
@@ -399,7 +448,14 @@ void CUserCollect::MakeSIMPDWData()
 
 #ifdef _POCKETSONATA_   
 
+    m_pTheGenPDW->OpenFile( g_szPDWScinarioFile );
+    m_pTheGenPDW->ParseAndMakeMemory( m_pstrPDW );
+
 #define MANUALTOA   (35)
+
+
+    
+
     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 4359.585 ),
@@ -435,6 +491,7 @@ void CUserCollect::MakeSIMPDWData()
     } ;
 
     uiCoPDW = m_strResColStart.uiCoPulseNum;
+
 
     iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
 
@@ -497,6 +554,7 @@ void CUserCollect::MakeSIMPDWData()
 
         ++ pSIGAPDW;
     }
+
 
 #elif defined(_ELINT_)
     uiCoPDW = m_strResColStart.uiCoPulseNum;

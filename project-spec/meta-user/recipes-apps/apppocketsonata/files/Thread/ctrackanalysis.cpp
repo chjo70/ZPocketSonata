@@ -133,7 +133,7 @@ void CTrackAnalysis::AnalysisStart()
     iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
 
     // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
-    iCoLOB = min((_MAX_LANDATA / sizeof(SRxLOBData) - 1), iCoLOB);
+    iCoLOB = min( (int) (_MAX_LANDATA / sizeof(SRxLOBData) - 1), iCoLOB);
 
     strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = (unsigned int)iCoLOB;

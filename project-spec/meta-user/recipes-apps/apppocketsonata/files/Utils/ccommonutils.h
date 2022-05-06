@@ -72,10 +72,11 @@ public:
 
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
+    static DWORD GetTickCount();
     static void getStringPresentTime( char *pString, size_t szString );
     static void getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime );
     static void GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTime, unsigned int tColTimeMs );
-    static void GetCollectTime( struct timeval *pTimeSpec );
+    static void GetCollectTime( struct timespec *pTimeSpec );
 
     static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 

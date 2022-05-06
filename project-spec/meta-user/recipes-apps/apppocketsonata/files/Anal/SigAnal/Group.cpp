@@ -49,7 +49,7 @@ CGroup::CGroup( unsigned int uiCoMaxPdw )
     int i=0;
     BOOL bRet=TRUE;
 
-    m_uiMaxPdw = min( uiCoMaxPdw, MAX_PDW );
+    m_uiMaxPdw = min( (int) uiCoMaxPdw, MAX_PDW );
 
 	// 주파수 해상도 계산용, HARMONIC MARGIN
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -555,12 +555,13 @@ void CGroup::PrintAllGroup()
 
             ++uiIdxFrqAoaPw;
         }
-#endif
+
     }
     else {
         Log( enDebug, "그룹화 총 개수 없음 !!!");
     }
-
+#endif
+    
 }
 
 /**

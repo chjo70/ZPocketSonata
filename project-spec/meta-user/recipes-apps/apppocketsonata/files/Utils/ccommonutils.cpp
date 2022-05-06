@@ -41,7 +41,7 @@ extern CSingleClient *g_pThePMCSocket;
 #endif
 
 /**
- * @brief ?앹꽦?먮? ?섑뻾?⑸땲??
+ * @brief 생성자를 수행합니다.
  */
 CCommonUtils::CCommonUtils()
 {
@@ -51,7 +51,7 @@ CCommonUtils::CCommonUtils()
 #ifndef _GRAPH_
 
 /**
- * @brief opcode, data 瑜??낅젰諛쏆븘???쒖쑝濡??≪떊?쒕떎.
+ * @brief opcode, data 를 입력받아서 랜으로 송신한다.
  * @param uiOpCode
  * @param uiLength
  * @param pData
@@ -62,20 +62,20 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 
 #elif _POCKETSONATA_
 #ifndef _CGI_LIST_
-    // 留덉뒪??蹂대뱶?먯꽌????硫붿떆吏瑜?CCU ?μ튂濡??꾩넚?쒕떎.
+    // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
     if( g_enBoardId == enMaster ) {
         if( g_pTheCCUSocket != NULL ) {
             g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
 
         }
 
-        // EA 寃쎌슦??AET 愿??硫붿꽭吏瑜??꾨떖?쒕떎.
+        // EA 경우에 AET 관련 메세지를 전달한다.
         if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
             g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
         }
 
     }
-    // ?대씪?댁뼵??蹂대뱶 ??寃쎌슦?먮뒗 ??硫붿떆吏瑜?留덉뒪??蹂대뱶???꾨떖?쒕떎.
+    // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
     else {
         if( g_pTheZYNQSocket != NULL ) {
             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
@@ -141,7 +141,7 @@ LARGE_INTEGER getFILETIMEoffset()
  * @param     struct timezone * tzp
  * @return    int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-05, 14:51
  * @warning
@@ -174,7 +174,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp)
  * @param     struct timeval * tv
  * @return    int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-09, 17:34
  * @warning
@@ -196,7 +196,7 @@ int clock_gettime(int X, struct timeval *tv)
  * @param     char * pString
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 17:27
  * @warning
@@ -224,7 +224,7 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  * @param     __time32_t tiTime
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-05, 11:09
  * @warning
@@ -275,13 +275,27 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTim
 
 }
 
-void CCommonUtils::GetCollectTime( struct timeval *pTimeSpec )
+void CCommonUtils::GetCollectTime( struct timespec *pTimeSpec )
 {
     clock_gettime( CLOCK_REALTIME, pTimeSpec );
 
     return;
 
 }
+
+
+DWORD CCommonUtils::GetTickCount()
+{
+#ifdef _MSC_VER
+    return ::GetTickCount();
+
+#else
+    return 0;
+
+#endif
+
+}
+
 
 /**
  * @brief     CopyFile
@@ -291,7 +305,7 @@ void CCommonUtils::GetCollectTime( struct timeval *pTimeSpec )
  * @param     int copy_attr
  * @return    int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-06-30, 17:27
  * @warning
@@ -316,19 +330,19 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     if( src_fd != -1) {
         memset( & sts, 0, sizeof(sts) );
 
-        /* ?먮낯 file???띿꽦???쎌뒿?덈떎. */
+        /* 원본 file의 속성을 읽습니다. */
         fstat(src_fd, &sts);
 
-        if(overwrite) { /* ?대? ?뚯씪???덉쑝硫?overwrite瑜??섍쿋?ㅻ㈃... */
+        if(overwrite) { /* 이미 파일이 있으면 overwrite를 하겠다면... */
             dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, sts.st_mode);
-        } else {        /* ?뚯씪???덉쑝硫? ?앹꽦?섏? 留먮씪怨??ㅼ젙??寃쎌슦 */
+        } else {        /* 파일이 있으면, 생성하지 말라고 설정한 경우 */
             dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_EXCL | O_BINARY , sts.st_mode);
         }
 
         if(dest_fd == -1) {
             tmp_errno = errno; 
             _close(src_fd);  
-            errno = tmp_errno; // close媛 珥덇린?뷀븳 errno瑜?蹂듦뎄??
+            errno = tmp_errno; // close가 초기화한 errno를 복구함
             WhereIs;
             //return -1;
         }
@@ -342,10 +356,10 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
 
                 while(write(dest_fd, data_buf, (unsigned int) iSize ) == -1) {
                     if(errno == EINTR) {
-                        /* signal??諛쒖깮??寃쎌슦?먮뒗 ?ъ옉??*/
+                        /* signal이 발생한 경우에는 재작업 */
                         continue;
                     } else {
-                        /* disk媛 full?ш굅??臾댁뒯 ?쇱씠 ?덉쓬. */
+                        /* disk가 full났거나 무슨 일이 있음. */
                         tmp_errno = errno;
                         _close(src_fd);
                         _close(dest_fd);
@@ -359,12 +373,12 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
             _close(dest_fd);
         }
     
-        /* ?먮낯 ?뚯씪???띿꽦??蹂듭썝?댁빞 ?쒕떎硫?.. */
+        /* 원본 파일의 속성을 복원해야 한다면... */
         if(copy_attr && dest_fd != -1 ) {
-            /* ?먮낯 ?뚯씪???뚯씪 沅뚰븳??蹂듭썝?섍린 
-            * open?쒖뿉 ?뚯씪沅뚰븳???ㅼ젙?섏?吏留? 
-            * ?대? 議댁옱?덈뜕 ?뚯씪? ?뚯씪沅뚰븳??湲곗〈 ?뚯씪??沅뚰븳?대?濡?
-            * ?뚯씪??沅뚰븳??蹂듦뎄?⑸땲??
+            /* 원본 파일의 파일 권한을 복원하기 
+            * open시에 파일권한을 설정하였지만, 
+            * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
+            * 파일의 권한도 복구합니다.
             */
             chmod(dest_file, sts.st_mode);
 
@@ -375,7 +389,7 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
 #else 		
         	struct  utimbuf attr;
     			
-            /* last access ?쒓컙, last modify ?쒓컙 蹂듦뎄 */
+            /* last access 시간, last modify 시간 복구 */
             attr.actime  = sts.st_atime;
             attr.modtime = sts.st_mtime;
             utime(dest_file, &attr);            
@@ -526,7 +540,7 @@ void CCommonUtils::AllSwapData32( void *pData, unsigned int uiLength )
  * @brief		swapByteOrder
  * @param		unsigned short & us
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/18 19:16:45
  * @warning		
@@ -549,7 +563,7 @@ void CCommonUtils::swapByteOrder(unsigned int& ui)
  * @brief		swapByteOrder
  * @param		double & di
  * @return		void
- * @author		議곗쿋??(churlhee.jo@lignex1.com)
+ * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/18 19:06:02
  * @warning		
@@ -574,7 +588,7 @@ void CCommonUtils::swapByteOrder(double & d)
  * @param     int iSize
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-01-10, 13:49
  * @warning
@@ -593,7 +607,7 @@ void CCommonUtils::swapByteOrder(double *p, int iSize )
  * @brief     SetUnitType
  * @return    void
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-02-22, 13:18
  * @warning
@@ -618,7 +632,7 @@ void CCommonUtils::swapByteOrder(double *p, int iSize )
  * @param     const char * pCompare
  * @return    char *
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-03-14, 16:55
  * @warning
@@ -670,7 +684,7 @@ const char *CCommonUtils::strcasestr( const char *pStr, const char *pCompare )
  * @param     int iCh
  * @return    int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-03-29, 11:27
  * @warning
@@ -695,7 +709,7 @@ int CCommonUtils::Isalpha( int iCh )
  * @param     size_t uiItems
  * @return    size_t
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-03-15, 14:18
  * @warning
@@ -740,7 +754,7 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
  * @param     int iValue
  * @return    unsigned int
  * @exception
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-03-28, 19:22
  * @warning

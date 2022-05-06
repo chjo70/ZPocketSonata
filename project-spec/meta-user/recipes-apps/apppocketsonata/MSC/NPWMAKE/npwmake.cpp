@@ -10,6 +10,7 @@
 
 #include "stdafx.h"
 
+#define _MAIN_GLOBALS_
 
 #include <io.h>
 #include <stdio.h>
@@ -17,7 +18,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "CGenPDW.h"
+#include "../../files/Anal/Collect/GenPDW/CGenPDW.h"
 
 #include "../../files/Utils/ccommonutils.h"
 
@@ -178,10 +179,6 @@ void makePWPdw();
 int main( int argc, char **argv ) 
 {
     int kCount=0;
-    //UINT	total;	// PDW ¼ö 
-    //UINT	sl;		// Scan loop
-    //UINT	isl;	// Inner Scan lobe loop
-    //UINT	ofl;	// output file loop
 
 	///////////////////////////////////////////////////////
 	printf( "\n < NPW MAKE PROGRAM > " );
@@ -196,8 +193,10 @@ int main( int argc, char **argv )
 
     CGenPDW *pTheGenPDW;
 
-    pTheGenPDW = new CGenPDW( argv[1] );
-    pTheGenPDW->ParsingThePDWMakefile();
+    pTheGenPDW = new CGenPDW( 0 );
+    pTheGenPDW->OpenFile( argv[1] );
+
+    pTheGenPDW->ParseAndMakefile();
 
 
 

@@ -195,7 +195,7 @@ public:
     char *m_pRawDataBuffer;             // 실제 데이터 저장소
 
     int m_iHeaderSize;                  // 헤더 크기
-    unsigned int m_iOneDataSize;        // 한개 PDW 데이터 크기
+    unsigned int m_uiOneDataSize;        // 한개 PDW 데이터 크기
     unsigned long long  m_ullFileSize;  // 파일 크기
     UINT m_uiTotalDataItems;            // 전체 PDW 개수
 
@@ -509,7 +509,6 @@ public:
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
 
-	//inline unsigned int GetHeaderSize() { return sizeof(STR_ELINT_HEADER); }
     inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
     inline void SetHeaderData( void *pData );
 

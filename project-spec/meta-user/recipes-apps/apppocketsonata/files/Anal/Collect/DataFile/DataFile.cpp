@@ -846,7 +846,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 
     XBAND::ENUM_BANDWIDTH enBandWidth;
 
-    _TOA ullTOA, ullFirstTOA, ullPreTOA;
+    _TOA ullTOA, ullFirstTOA, ullPreTOA=0;
     int iSignalType;
     UINT uiFreq, uiPW, uiPA, uiAOA;
 
@@ -893,7 +893,7 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
             ( m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW ) &&
             ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
-            if( bFirstTOA ) {
+            if( bFirstTOA == true ) {
                 _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA )
 
                 bFirstTOA = false;
@@ -1246,7 +1246,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterS
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_ZPOCKETSONATA;
 
-    Init( pRawData );
+    CPOCKETSONATAPDW::Init( pRawData );
 
 }
 
@@ -1688,49 +1688,6 @@ void C7PDW::Init( char *pRawData )
 void C7PDW::Alloc( unsigned int uiItems )
 {
 
-	if( uiItems == 0 ) {
-		//uiItems = m_PDWData.uiDataItems;
-	}
-    else if ( uiItems <= MAX_ITEMS ) {
-        //Log( enNormal, "Alloc()을 [%d]개를 할당합니다." , uiItems );
-
-//         if( m_PDWData.pfFreq == NULL ) {
-// 	        m_PDWData.pfFreq = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfPW == NULL ) {
-// 	        m_PDWData.pfPW = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfAOA == NULL ) {
-// 	        m_PDWData.pfAOA = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfTOA == NULL ) {
-// 	        m_PDWData.pfTOA = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfDTOA == NULL ) {
-// 	        m_PDWData.pfDTOA = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pfPA == NULL ) {
-// 	        m_PDWData.pfPA = (float *) malloc(sizeof(float) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pullTOA == NULL ) {
-// 	        m_PDWData.pullTOA = (_TOA *) malloc(sizeof(_TOA) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pcType == NULL ) {
-// 	        m_PDWData.pcType = (char *) malloc(sizeof(char) * uiItems );
-//         }
-// 
-//         if( m_PDWData.pcDV == NULL ) {
-// 	        m_PDWData.pcDV = (char *) malloc(sizeof(char) * uiItems );
-//         }
-    }
-
 }
 
 /**
@@ -1743,18 +1700,6 @@ void C7PDW::Alloc( unsigned int uiItems )
  */
 void C7PDW::Free()
 {
-    //Log( enNormal, "Free()를 해지합니다." );
-
-// 	_SAFE_FREE( m_PDWData.pfFreq);
-// 	_SAFE_FREE(m_PDWData.pfPW);
-// 	_SAFE_FREE(m_PDWData.pfAOA);
-// 	_SAFE_FREE(m_PDWData.pfTOA);
-// 	_SAFE_FREE(m_PDWData.pfDTOA);
-// 	_SAFE_FREE(m_PDWData.pfPA);
-// 	_SAFE_FREE(m_PDWData.pullTOA);
-// 
-// 	_SAFE_FREE(m_PDWData.pcType);
-// 	_SAFE_FREE(m_PDWData.pcDV);
 
 }
 
@@ -1831,11 +1776,7 @@ unsigned int C7PDW::GetOneDataSize()
  */
 unsigned int C7PDW::GetDataItems( unsigned long long ullFileSize )
 {
-    unsigned int uiDataItems;
-
-	uiDataItems = m_stHeader.iNumOfPDW;
-
-	return uiDataItems;
+	return (unsigned int) m_stHeader.iNumOfPDW;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1872,20 +1813,20 @@ CIQ::~CIQ(void)
 void CIQ::Alloc( unsigned int uiItems )
 {
 
-	if( uiItems == 0 ) {
-		// uiItems = m_RawData.uiDataItems;
-	}
-
-    else if ( uiItems <= MAX_ITEMS ) {
-	    m_IQData.pfI = (float *) malloc( sizeof(float) * uiItems );
-	    m_IQData.pfQ = (float *) malloc( sizeof(float) * uiItems );
-	    m_IQData.pfPA = (float *) malloc( sizeof(float) * uiItems );
-	    m_IQData.pfIP = (float *) malloc( sizeof(float) * uiItems );
-	    m_IQData.pfFFT = (float *) malloc( sizeof(float) * uiItems );
-    }
-    else {
-
-    }
+// 	if( uiItems == 0 ) {
+// 		// uiItems = m_RawData.uiDataItems;
+// 	}
+// 
+//     else if ( uiItems <= MAX_ITEMS ) {
+// 	    m_IQData.pfI = (float *) malloc( sizeof(float) * uiItems );
+// 	    m_IQData.pfQ = (float *) malloc( sizeof(float) * uiItems );
+// 	    m_IQData.pfPA = (float *) malloc( sizeof(float) * uiItems );
+// 	    m_IQData.pfIP = (float *) malloc( sizeof(float) * uiItems );
+// 	    m_IQData.pfFFT = (float *) malloc( sizeof(float) * uiItems );
+//     }
+//     else {
+// 
+//     }
 
 }
 
@@ -1899,11 +1840,11 @@ void CIQ::Alloc( unsigned int uiItems )
  */
 void CIQ::Free()
 {
-	_SAFE_FREE(m_IQData.pfI)
-	_SAFE_FREE(m_IQData.pfQ)
-	_SAFE_FREE(m_IQData.pfPA)
-	_SAFE_FREE(m_IQData.pfIP)
-	_SAFE_FREE(m_IQData.pfFFT)
+// 	_SAFE_FREE(m_IQData.pfI)
+// 	_SAFE_FREE(m_IQData.pfQ)
+// 	_SAFE_FREE(m_IQData.pfPA)
+// 	_SAFE_FREE(m_IQData.pfIP)
+// 	_SAFE_FREE(m_IQData.pfFFT)
 }
 
 /**
@@ -2783,19 +2724,19 @@ int CMIDAS::GetHeaderSize()
  */
 unsigned int CMIDAS::GetOneDataSize()
 {
-    if( m_iOneDataSize == -1 ) {
+    if( m_uiOneDataSize == UINT_MAX ) {
         if( m_HCB.type == MIDAS_FILE_TYPE_1001 ) {
 
         }
         else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
-            m_iOneDataSize = m_ADJ._6000.record_length;
+            m_uiOneDataSize = m_ADJ._6000.record_length;
         }
         else {
 
         }
     }
 
-    return m_iOneDataSize;
+    return m_uiOneDataSize;
 }
 
 /**
@@ -2808,10 +2749,11 @@ unsigned int CMIDAS::GetOneDataSize()
  */
 unsigned int CMIDAS::GetDataItems( unsigned long long ullFileSize )
 {
-	unsigned int i, iBit=0;
-	SELSUBRECORDS *pSubRecords;
+    unsigned int i;
 
-	//memcpy( & m_HCB, m_pRawDataBuffer, sizeof(SELMIDAS_HCB) );
+    int iBit = 0;
+
+	SELSUBRECORDS *pSubRecords;
 
 	if( m_HCB.type == MIDAS_FILE_TYPE_1001 ) {
 		m_enFileType = E_EL_SCDT_IQ;
@@ -2892,7 +2834,7 @@ CData::CData()
 {
 
     m_iHeaderSize = -1;
-    m_iOneDataSize = UINT_MAX;
+    m_uiOneDataSize = UINT_MAX;
 
     m_pRawDataBuffer = NULL;
     m_pRawHeaderBuffer = NULL;
@@ -2923,6 +2865,16 @@ CData::CData()
 
 }
 
+/**
+ * @brief     Init
+ * @param     char * pRawData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-04, 14:37
+ * @warning
+ */
 void CData::Init( char *pRawData )
 {
 
