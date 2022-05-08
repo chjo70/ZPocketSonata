@@ -596,6 +596,8 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 			// Help see data points //
 			PEnset(m_hPE, PEP_bMARKDATAPOINTS, TRUE);
 
+			PEszset(m_hPE, PEP_szSCALESYMBOLS, TEXT("p n u m K M G T "));
+
 		}
 
 	}
