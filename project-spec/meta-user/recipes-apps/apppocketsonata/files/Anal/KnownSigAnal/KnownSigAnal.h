@@ -79,7 +79,7 @@ public:
     }
 
     inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
-        return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
+        return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
     }
 
     void Init();

@@ -123,8 +123,20 @@ public:
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
+    /**
+     * @brief     SaveEmitterPdwFile
+     * @param     STR_EMITTER * pEmitter
+     * @param     int iPLOBID
+     * @param     bool bSaveFile
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:53
+     * @warning
+     */
     inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
-        return CSigAnal::SaveEmitterPdwFile(pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
+        return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
     }
 
     inline void DISP_FineAet( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineAet( pNewAet ); }

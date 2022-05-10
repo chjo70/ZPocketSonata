@@ -234,7 +234,17 @@ void CSigAnal::SaveRemainedPdwFile()
 #endif
 }
 
-void CSigAnal::SaveGroupPdwFile(int index)
+/**
+ * @brief     SaveGroupPDWFile
+ * @param     int index
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-09, 11:45
+ * @warning
+ */
+void CSigAnal::SaveGroupPDWFile(int index)
 {
     //     if( m_bSaveFile == true ) {
     // #if defined(_ELINT_) || defined(_XBAND_)
@@ -302,7 +312,7 @@ void CSigAnal::SaveGroupPdwFile(int index)
  * @date      2022-04-18, 15:34
  * @warning
  */
-void CSigAnal::SaveEmitterPdwFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile)
+void CSigAnal::SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile)
 {
     unsigned int i;
 
@@ -378,7 +388,7 @@ void CSigAnal::InitDataFromDB()
 }
 
 /**
- * @brief     InsertRAWData
+ * @brief     PLOBID 값으로 PDW 데이터를 DB 및 파일에 저장한다.
  * @param     STR_PDWDATA * pPDWData
  * @return    void
  * @exception
@@ -424,18 +434,9 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
             // 2. 파일명 생성하기
             strftime(buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime);
 
-#if defined(_ELINT_)
-            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.el.GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
+            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
+            //sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, GetPDWID(), iPLOBID, PDW_TYPE, MIDAS_EXT);
 
-#elif defined(_XBAND_)
-            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->x.xb.GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
-
-#elif _POCKETSONATA_
-            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, GetPDWID(), iPLOBID, PDW_TYPE, MIDAS_EXT);
-
-#else
-
-#endif
             sprintf(szRawDataPathname, _T("%s/%s"), szDirectory, m_szRawDataFilename);
             m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, & pPDWData->x, pPDWData->GetTotalPDW() );
         }
@@ -456,7 +457,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
 }
 
 /**
- * @brief
+ * @brief     데이터베이스에 PDW 테이블에 레코드를 추가한다.
  * @param     STR_PDWDATA * pPDWData
  * @return    bool
  * @author    조철희 (churlhee.jo@lignex1.com)

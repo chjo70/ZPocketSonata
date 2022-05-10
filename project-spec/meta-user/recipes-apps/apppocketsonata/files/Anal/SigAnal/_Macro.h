@@ -45,7 +45,8 @@ enum ENUM_BoardID {
 
 };
 
-#define _SAFE_FREE(A)           if( A != NULL ) { free( A ); A = NULL; }
+#define _SAFE_FREE(A)           if( A != NULL ) { free( A ); } \
+                                A = NULL;
 #define _SAFE_DELETE(A)         if( A != NULL ) { delete A; A = NULL; }
 
 

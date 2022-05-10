@@ -204,7 +204,7 @@ public:
 
     LONG GetOPInitID();
 
-    void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) { }
+    void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 
 
 #if defined(_ELINT_) || defined(_XBAND_)

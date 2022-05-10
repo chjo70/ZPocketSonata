@@ -85,9 +85,9 @@ protected:
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
-    void SaveGroupPdwFile(int index);
+    void SaveGroupPDWFile(int index);
     void SaveRemainedPdwFile();
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
 
 public:
     CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
@@ -236,10 +236,20 @@ public:
         m_iIsStorePDW = val; 
     }
 
+    void SetBandWidth( int iVal ) {
+#if defined(_ELINT_)
+        m_enBandWidth = (ELINT::ENUM_BANDWIDTH) iVal;
+#elif defined(_XBAND_)
+        m_enBandWidth = (XBAND::ENUM_BANDWIDTH) iVal;
+#endif
+
+    }
+
 
 #if defined(_ELINT_)
-    ELINT::ENUM_BANDWIDTH GetBandWidth() const { return m_enBandWidth; }
-    void SetBandWidth(ELINT::ENUM_BANDWIDTH val) { m_enBandWidth = val; }
+    ELINT::ENUM_BANDWIDTH GetBandWidth() const { 
+        return m_enBandWidth; 
+    }
 
 #elif defined(_XBAND_)
     /**
@@ -253,20 +263,6 @@ public:
      */
     XBAND::ENUM_BANDWIDTH GetBandWidth() const { 
         return m_enBandWidth; 
-    }
-
-    /**
-     * @brief     SetBandWidth
-     * @param     XBAND::ENUM_BANDWIDTH val
-     * @return    void
-     * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022-04-21, 10:14
-     * @warning
-     */
-    inline void SetBandWidth(XBAND::ENUM_BANDWIDTH val) { 
-        m_enBandWidth = val; 
     }
 
 #elif defined(_POCKETSONATA_)

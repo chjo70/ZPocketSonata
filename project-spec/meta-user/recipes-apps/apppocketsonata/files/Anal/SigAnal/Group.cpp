@@ -310,16 +310,14 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, int iBand )
     for( i=0 ; i < uiCount; ++i, ++pPDW )	{
         templlTOA = pPDW->ullTOA;
 
-        if( firstToaBand > templlTOA ) {
-// #ifdef _POCKETSONATA_
-//             *pToa++ = templlTOA + ( 0x100000000000 - firstToaBand );
-// #else
-            *pToa++ = templlTOA - firstToaBand;
-//#endif
-        }
-        else {
-            *pToa++ = templlTOA - firstToaBand;
-        }
+//         if( firstToaBand > templlTOA ) {
+//             *pToa++ = templlTOA - firstToaBand;
+//         }
+//         else {
+//             *pToa++ = templlTOA - firstToaBand;
+//         }
+
+        *pToa++ = pPDW->ullTOA;
 
         *pStat++ = (unsigned char) pPDW->iPulseType;
         *pPa++ = ( int ) pPDW->uiPA;
@@ -1645,7 +1643,8 @@ void CGroup::MakeHist( STR_PDWINDEX *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQ
         iIndex = (*pIndex++);
         index = ( pPdw[ iIndex ] ) >> nShift;
         if( index > pHist->bin_count ) {
-            printf( "\n [W] 히스토그램 생성에서 에러 발생함 !" );
+            //printf( "\n [W] 히스토그램 생성에서 에러 발생함 !" );
+            Log( enError, "\n [W] 히스토그램 생성에서 에러 발생함 !", pHist->bin_count );
             WhereIs;
         }
         else

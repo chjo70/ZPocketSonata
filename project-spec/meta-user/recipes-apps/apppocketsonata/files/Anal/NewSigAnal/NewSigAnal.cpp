@@ -138,29 +138,14 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
-		SetPDWID(pPDWData->GetPDWID());
-
         m_uiCoPdw = pPDWData->GetTotalPDW();
 
+		SetPDWID(pPDWData->GetPDWID());
         SetColTime(pPDWData->GetColTime());
-
         SetStorePDW( pPDWData->GetStorePDW() );
-
-#if defined(_ELINT_)
-        SetBandWidth(pPDWData->x.el.enBandWidth );
-        SetTaskID( pPDWData->x.el.aucTaskID);        
-        SetCollectorID( pPDWData->x.el.GetCollectorID() );
-
-#elif defined(_XBAND_)
-        SetBandWidth(pPDWData->x.xb.enBandWidth);
-        SetTaskID(pPDWData->x.xb.aucTaskID);
-        SetCollectorID(pPDWData->x.xb.GetCollectorID());
-
-#elif _POCKETSONATA_
-        
-
-#else
-#endif
+        SetBandWidth( pPDWData->GetBandWidth () );
+        SetTaskID( pPDWData->GetTaskID() );
+        SetCollectorID( pPDWData->GetCollectorID() );
 
     }
     else {
@@ -169,16 +154,9 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         m_uiCoPdw = 0;
         SetStorePDW(_spZero);
 
-#if defined(_ELINT_) || defined(_XBAND_)
-#ifdef _ELINT_
-        SetBandWidth( ELINT::en5MHZ_BW );
-#else
-        SetBandWidth( XBAND::en5MHZ_BW );
-#endif
-
+        SetBandWidth( 0 );
         SetCollectorID(RADARCOL_Unknown);
-#else
-#endif
+
     }      
 
     CSigAnal::InitResolution();
@@ -256,7 +234,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
                     // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
                     m_theGroup->MakeGrIndex();
 
-                    SaveGroupPdwFile( m_CoGroup+1 );
+                    SaveGroupPDWFile( m_CoGroup+1 );
 
                     // 규칙성 및 불규칙성 펄스열 추출
                     m_thePulExt->PulseExtract( & m_VecMatchRadarMode );

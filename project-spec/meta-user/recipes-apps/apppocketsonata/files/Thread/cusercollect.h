@@ -13,7 +13,8 @@ private:
 
     STR_RES_COL_START m_strResColStart;
 
-    SIGAPDW *m_pstrPDW;
+    SIGAPDW *m_pSIGAPDW;
+    UNION_HEADER *m_pUniHeader;
 
     CGenPDW *m_pTheGenPDW;
 

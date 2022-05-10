@@ -72,7 +72,7 @@ void CUserCollect::InitVar()
 
     // 모의 SIM 데이터 초기화
     m_uiIndex = 0;
-    m_ullTOA = 0xFFFFFF00000;
+    m_ullTOA = 0;
 
     m_uiCoSim = 0;
 
@@ -86,29 +86,26 @@ void CUserCollect::InitVar()
     CHWIO::uio_re_enable_Interrupt(REG_UIO_DMA_1);
 #endif
 
-    m_pstrPDW = (SIGAPDW *) & m_pstrPDWWithFileHeader[sizeof(UNION_HEADER)];
+    m_pUniHeader = ( UNION_HEADER * ) & m_pstrPDWWithFileHeader[0];
+    m_pSIGAPDW = ( SIGAPDW *) & m_pstrPDWWithFileHeader[sizeof(UNION_HEADER)];
 
 }
 
 /**
- * @brief CUserCollect::AllocMemory
+ * @brief     멤버변수들의 메모리를 할당한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 10:12
+ * @warning
  */
 void CUserCollect::AllocMemory()
 {
 
-#ifdef _POCKETSONATA_
-    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(DMAPDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
+    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof( SIGAPDW )*NUM_OF_PDW+sizeof(UNION_HEADER) );
 
-#elif defined(_ELINT_) || defined(_XBAND_)
-    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
-
-#elif defined(_SONATA_)
-    // m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
-
-#endif
-
-    m_pTheGenPDW = new CGenPDW( 100 );
-
+    m_pTheGenPDW = new CGenPDW( MAX_PDW );
 
 }
 
@@ -332,7 +329,8 @@ void CUserCollect::ColStart()
                 m_strResColStart.uiCoPulseNum = NUM_OF_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( pUIO->iFd > 0 ) {
-                    memcpy( m_pstrPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
+                    memcpy( m_pSIGAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
+
                     //m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
@@ -345,27 +343,7 @@ void CUserCollect::ColStart()
                 if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
                     // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
-#ifdef _POCKETSONATA_
-                    POCKETSONATA_HEADER *pPDWFileHeader = ( POCKETSONATA_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(POCKETSONATA_HEADER) );
-
-                    pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
-#elif defined(_ELINT_) || defined(_XBAND_)
-                    STR_ELINT_HEADER *pPDWFileHeader = ( STR_ELINT_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(STR_ELINT_HEADER) );
-#else
-                    SONATA_HEADER *pPDWFileHeader = ( SONATA_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(SONATA_HEADER) );
-#endif
-                    
-                    pPDWFileHeader->stCommon.tColTime = time(NULL);
-                    pPDWFileHeader->stCommon.uiColTimeMs = 0;
-                    pPDWFileHeader->SetTotalPDW( NUM_OF_PDW );
-                    pPDWFileHeader->SetIsStorePDW( 1 );
-                    uiSize = sizeof( DMAPDW ) * NUM_OF_PDW;
+                    uiSize = sizeof( SIGAPDW ) * NUM_OF_PDW;
                     g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+uiSize, NULL, 0, GetThreadName() );
                 }
                 break;
@@ -414,7 +392,7 @@ void CUserCollect::SendRawData()
 
     //pDMAPDW = m_pstrDMAPDW;
     for( ui=0 ; ui < m_strResColStart.uiCoPulseNum ; ui += PDW_BLOCK ) {
-        pDMAPDW = & m_pstrPDW[ui];
+        pDMAPDW = & m_pSIGAPDW[ui];
         if( m_strResColStart.uiCoPulseNum - ui >= PDW_BLOCK ) {
             CCommonUtils::SendLan( enRES_RAWDATA, pDMAPDW, sizeof(UDRCPDW)*PDW_BLOCK );
         }
@@ -427,7 +405,7 @@ void CUserCollect::SendRawData()
 }
 
 /**
- * @brief     MakeSIMPDWData
+ * @brief     시나리오 파일을 로드하여 PDW 파일을 생성한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -439,181 +417,162 @@ void CUserCollect::MakeSIMPDWData()
 {
     unsigned int i, uiCoPDW;
 
+    float fRandomDOA;
+
     int iDOA;
-    unsigned int randomDOA, randomPA, randomPW, randomFreq, randomCh;
+    int iRandomDOA;
+    unsigned int randomPA, randomPW, randomFreq, randomCh;
 
     //TRACE( "\nMakeSIMPDWData.." );
 
-    SIGAPDW *pSIGAPDW = m_pstrPDW;
+    SIGAPDW *pSIGAPDW = m_pSIGAPDW;
 
-#ifdef _POCKETSONATA_   
+    memset( m_pUniHeader, 0, sizeof( UNION_HEADER ) );
+
+    m_pUniHeader->SetBoardID( g_enUnitType, ( UINT ) g_enBoardId );
+
+    m_pUniHeader->SetColTime( time( NULL ), 0 );
+    m_pUniHeader->SetTotalPDW( NUM_OF_PDW );
+    m_pUniHeader->SetIsStorePDW( 1 );
+    m_pUniHeader->SetBandWidth( 1 );
+
+#if defined(_POCKETSONATA_)
 
     m_pTheGenPDW->OpenFile( g_szPDWScinarioFile );
-    m_pTheGenPDW->ParseAndMakeMemory( m_pstrPDW );
-
-#define MANUALTOA   (35)
+    m_pTheGenPDW->ParseAndMakeMemory();
 
 
-    
 
-    _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 4359.585 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 5746.258 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 7022.91 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 8270.053 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 9516.386 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 10763.56 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 12010.74 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 13362.59 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 16424.9 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 17956.39 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 21018.86 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 22410.07 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 23801.04 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 25192.14 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 26582.81 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 29115.85 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 30362.69 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 31609.92 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 32857.43 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 37344.84 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 38874.19 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 40402.47 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 41951.62 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 43256.66 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 44647.55 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 46038.38 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 47429.53 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 48715.07 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 49961.97 ),
-                                  CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
-    } ;
 
+
+
+// #define MANUALTOA   (35)
+// 
+//     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 4359.585 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 5746.258 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 7022.91 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 8270.053 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 9516.386 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 10763.56 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 12010.74 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 13362.59 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 16424.9 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 17956.39 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 21018.86 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 22410.07 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 23801.04 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 25192.14 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 26582.81 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 29115.85 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 30362.69 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 31609.92 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 32857.43 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 37344.84 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 38874.19 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 40402.47 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 41951.62 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 43256.66 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 44647.55 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 46038.38 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 47429.53 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 48715.07 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 49961.97 ),
+//                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
+//     } ;
+// 
+//     uiCoPDW = m_strResColStart.uiCoPulseNum;
+// 
+// 
+//     iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
+//     
+//     for( i=0 ; i < uiCoPDW; ++i ) {
+//         randomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
+//         randomDOA = ( unsigned int ) iDOA;
+//         randomPA =  ( rand() % 140 ) + 20;
+//         randomPW =  ( rand() % 1000 ) + 20000;
+// 
+//         if( m_uiCoSim % 20 == 0 || true ) {
+//             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3585.0 );
+//         }
+//         else {
+//             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
+//         }
+// 
+//         //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
+// 
+//         if( i < MANUALTOA && false ) {
+//             m_ullTOA = manualTOA[i];
+//         }
+//         else {
+// 			m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
+// //             if( i % 2 )
+// //                 m_ullTOA += 0x2000;
+// //             else
+// //                 m_ullTOA += 0x1500;
+//         }
+// 
+//         memset( pSIGAPDW, 0, sizeof(DMAPDW) );
+// 
+//         //
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
+//         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
+// 
+//         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
+//         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
+//         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
+// 
+//         pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
+//         pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
+// 
+//         pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
+//         pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
+//         pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
+// 
+//         pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
+//         pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
+// 
+//         pSIGAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
+// 
+//         //printf( "m_ullTOA[%llx], [%0X:%0X]\n" , m_ullTOA, pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H, pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L );
+// 
+//         ++ m_uiIndex;
+// 
+//         ++ pSIGAPDW;
+//     }
+
+
+#else
     uiCoPDW = m_strResColStart.uiCoPulseNum;
 
-
-    iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
-
-    for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
-        randomPA =  ( rand() % 140 ) + 20;
-        randomPW =  ( rand() % 1000 ) + 20000;
-
-        if( m_uiCoSim % 20 == 0 || true ) {
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3585.0 );
-            //randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
-            //randomCh = 1;
-        }
-        else {
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
-        }
-
-        //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
-
-        if( i < MANUALTOA && false ) {
-            m_ullTOA = manualTOA[i];
-        }
-        else {
-			m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
-//             if( i % 2 )
-//                 m_ullTOA += 0x2000;
-//             else
-//                 m_ullTOA += 0x1500;
-        }
-
-        memset( pSIGAPDW, 0, sizeof(DMAPDW) );
-
-        //
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
-
-        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
-        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
-        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
-
-        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
-        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
-
-        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
-        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
-        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
-
-        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
-        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
-
-        pSIGAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
-
-        //printf( "m_ullTOA[%llx], [%0X:%0X]\n" , m_ullTOA, pDMAPDW->uPDW.uniPdw_toa_edge.stPdw_toa_edge.toa_H, pDMAPDW->uPDW.uniPdw_freq_toa.stPdw_freq_toa.toa_L );
-
-        ++ m_uiIndex;
-
-        ++ pSIGAPDW;
-    }
-
-
-#elif defined(_ELINT_)
-    uiCoPDW = m_strResColStart.uiCoPulseNum;
-
-    iDOA = m_uiCoSim * CEPDW::EncodeDOA( 50 );
-
-    for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = iDOA; // iDOA + ( rand() % 40 ) - 20;
-        randomPA =  ( rand() % 140 ) + 20;
-        randomPW =  ( rand() % 1000 ) + 20000;
-
-        m_ullTOA += CEPDW::EncodeTOAus( 100, ELINT::en5MHZ_BW );
-        pSIGAPDW->uiPW = CEPDW::EncodePWns(100, ELINT::en5MHZ_BW);
-
-        memset( pSIGAPDW, 0, sizeof(SIGAPDW) );
-
-        pSIGAPDW->ullTOA = m_ullTOA;
-        
-        pSIGAPDW->uiAOA = CEPDW::EncodeDOA( 90 );
-        pSIGAPDW->uiFreq = CEPDW::EncodeRealFREQMHz( 9000. );
-        pSIGAPDW->uiPA = CEPDW::EncodePA( -100 );        
-
-        pSIGAPDW->iPulseType = CEPDW::EncodePulseType( 0 );
-
-        ++ m_uiIndex;
-
-        ++ pSIGAPDW;
-    }
-
-#elif defined(_XBAND_)
-    uiCoPDW = m_strResColStart.uiCoPulseNum;
-
-    iDOA = m_uiCoSim * CXPDW::EncodeDOA(50);
+    iDOA = m_uiCoSim * 20;
 
     for (i = 0; i < uiCoPDW; ++i) {
-        randomDOA = ( i / 30 ) * 40;
+        fRandomDOA = (float) iDOA + ( (float) CCommonUtils::Rand( 100 ) / (float) 10. );
 
-        memset(pSIGAPDW, 0, sizeof(SIGAPDW));
+        m_ullTOA += 0x100; // CEncode::EncodeTOAus(100, 0);
 
-        m_ullTOA += 0x100; // CXPDW::EncodeTOAus(100, XBAND::en5MHZ_BW);
-
+        memset( pSIGAPDW, 0, sizeof( SIGAPDW ) );
 
         // 
-        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, XBAND::en5MHZ_BW);
         pSIGAPDW->ullTOA = m_ullTOA;
 
-        pSIGAPDW->uiAOA = CXPDW::EncodeDOA(randomDOA);
-        pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz(9000.);
-        pSIGAPDW->uiPA = CXPDW::EncodePA(-100);
+        pSIGAPDW->iPulseType = CEncode::EncodePulseType( 0 );
 
-
-        pSIGAPDW->iPulseType = CXPDW::EncodePulseType(0);
+        pSIGAPDW->uiAOA = CEncode::EncodeDOA( fRandomDOA );
+        pSIGAPDW->uiFreq = CEncode::EncodeRealFREQMHz(9000.);
+        pSIGAPDW->uiPA = CEncode::EncodePA(-100);
+        pSIGAPDW->uiPW = CEncode::EncodePWns( 100, 0 );
 
         ++m_uiIndex;
 
         ++pSIGAPDW;
     }
-
-#elif defined(_SONATA_)
 
 #endif
 
@@ -622,7 +581,13 @@ void CUserCollect::MakeSIMPDWData()
 }
 
 /**
- * @brief CUserCollect::MakeCollectHistogram
+ * @brief     히스토그램을 도시한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-09, 18:10
+ * @warning
  */
 void CUserCollect::MakeCollectHistogram()
 {
@@ -638,20 +603,20 @@ void CUserCollect::MakeCollectHistogram()
     // 주파수 변환하여 기록
     pColHisto = & m_ucColHisto[m_iColHistoTime][0];
 
-    pSIGAPDW = m_pstrPDW;
+    pSIGAPDW = m_pSIGAPDW;
     for( ui=0; ui < m_strResColStart.uiCoPulseNum ; ++ui ) {
+#ifdef _POCKETSONATA_
         iCh = pSIGAPDW->GetChannel();
         uiFreq = pSIGAPDW->GetFrequency( iCh );
 
-#ifdef _POCKETSONATA_
-        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
+        fFreq = FRQMhzCNV( g_enBoardId, uiFreq );
 #else
         fFreq = 0;
 #endif
         iIndex = (int) ( ( fFreq - MIN_FREQ_MHZ ) / COLHISTO_WIDTH_MHZ );
 
-        iIndex = _min( iIndex, COLHISTO_CELLS-1 );
-        iIndex = _max( iIndex, 0 );
+        iIndex = min( iIndex, COLHISTO_CELLS-1 );
+        iIndex = max( iIndex, 0 );
         if( pColHisto[iIndex] >= 0xFF ) {
         }
         else {

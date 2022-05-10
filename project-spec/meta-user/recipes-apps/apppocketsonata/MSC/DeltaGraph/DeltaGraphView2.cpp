@@ -201,7 +201,7 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
  */
 void CDeltaGraphView2::ClearGraph()
 {
-	UINT i;
+	//UINT i;
 	float f1 = -9999.0F;
 	
 	UINT uiPDWDataItems = m_pDoc->GetDataItems();

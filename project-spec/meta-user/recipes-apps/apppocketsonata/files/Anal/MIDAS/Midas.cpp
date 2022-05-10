@@ -130,7 +130,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDa
         //memcpy( & m_strKeywordValue, pstKeywordValue, sizeof(SEL_KEYWORD_VALUE) );
 
         // 1. 사용자 지정 파일 생성
-        if( FileOpen( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
+        if( OpenFile( pMidasFileName, O_CREAT | O_BINARY | O_WRONLY ) == false ) { //DTEC_Else
             bRet = false;
         }
         else {
@@ -163,7 +163,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( const char *pMidasFileName, EnumSCDa
             }
 
             // 7. 변환 파일 닫기
-            FileClose();
+            CloseFile();
 
             // 8.
             MIDASClose();
@@ -197,7 +197,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
 
     if( m_enFileType != E_EL_SCDT_IF || pInputFilename == NULL ) {
         // 1. 사용자 지정 파일 생성
-        if( FileOpen( pMidasFileName, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
+        if( OpenFile( pMidasFileName, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
             bRet = false;
         }
         else {
@@ -227,7 +227,7 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
             }
 
             // 7. 변환 파일 닫기
-            FileClose();
+            CloseFile();
 
             // 8.
             MIDASClose();
@@ -268,7 +268,7 @@ bool CMIDASBlueFileFormat::WriteIQData( int destFileId, unsigned int uiNumberofd
 {
     UINT i;
     
-    bool bRet;
+    bool bRet=false;
 
     int iSize;
     long sz_file;    
@@ -2074,7 +2074,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
         pConvertIFList = m_vecConvertIFList.data();
 
         // 1. 사용자 지정 파일 생성
-        if( FileOpen( (*pConvertIFList).szOutputFilename, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
+        if( OpenFile( (*pConvertIFList).szOutputFilename, O_CREAT | O_BINARY ) == false ) { //DTEC_Else
             return false;
         }
 
@@ -2119,7 +2119,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
         }
 
         // 7. 변환 파일 닫기
-        FileClose();
+        CloseFile();
 
         // 8.
         MIDASClose();
@@ -2163,18 +2163,28 @@ void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSC
         case en_SONATA_SHU :
         case en_ELINT :
         case en_XBAND :
-            if( true == FileOpen( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
-                Write( pUNIHeader, sizeof( STR_XBAND_HEADER ) );
+            if( true == OpenFile( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
+                Write( pUNIHeader, sizeof( UNION_HEADER ) );
 
                 Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
 
-                FileClose();
+                CloseFile();
+            }
+            break;
+
+        case en_ZPOCKETSONATA:
+            if( true == OpenFile( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
+                Write( pUNIHeader, sizeof( UNION_HEADER ) );
+
+                Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
+
+                CloseFile();
             }
             break;
 
         case en_701 :
         case en_KFX :
-        case en_ZPOCKETSONATA :
+        //case en_ZPOCKETSONATA :
             m_strKeywordValue.uiNumberOfData = uiCoPDW;
 
             SaveMIDASFormat( pRawdataFileName, E_EL_SCDT_PDW, pPDWData, &m_strKeywordValue );

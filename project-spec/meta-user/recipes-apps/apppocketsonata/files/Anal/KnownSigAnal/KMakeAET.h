@@ -66,29 +66,105 @@ public:
     //##ModelId=452B0C53000F
     inline void ClearCoAet() { m_iCoLOB=0; }
     
-    inline int GetCoLOB() { return m_iCoLOB; }
+    /**
+     * @brief     GetCoLOB
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
+    inline int GetCoLOB() { 
+        return m_iCoLOB; 
+    }
 
+    /**
+     * @brief     SetKnownSuccessRatio
+     * @param     int iIndex
+     * @param     float fValue
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
     inline void SetKnownSuccessRatio(int iIndex, float fValue) {
         m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
     }
+
+    /**
+     * @brief     GetKnownSuccessRatio
+     * @param     int iIndex
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
     inline float GetKnownSuccessRatio(int iIndex) {
         return m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio;
     }
 
-    inline void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) {
-        m_KwnLOB[iIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
+    /**
+     * @brief     SetKnownIndexEmitter
+     * @param     int iIndex
+     * @param     int iIdxEmitter
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
+    inline void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) {
+        m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
     }
-    inline int GetKnownIndexEmitter(int iIndex) {
-        return m_KwnLOB[iIndex].stKnownInfo.iIdxEmitter;
+
+    /**
+     * @brief     GetKnownIndexEmitter
+     * @param     unsigned int uiIndex
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
+    inline unsigned int GetKnownIndexEmitter(unsigned int uiIndex) {
+        return m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
     }
-    inline STR_EMITTER *GetEmitterFromKnownIndex(int iIndex) {
-        int iIdxEmitter=GetKnownIndexEmitter(iIndex);
+
+    /**
+     * @brief     GetEmitterFromKnownIndex
+     * @param     unsigned int uiIndex
+     * @return    STR_EMITTER *
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
+    inline STR_EMITTER *GetEmitterFromKnownIndex(unsigned int uiIndex) {
+        unsigned int iIdxEmitter=GetKnownIndexEmitter( uiIndex );
         return & m_pEmitter[iIdxEmitter];
     }
 
-    inline unsigned int GetPulseCountFromKnownIndex(int iIndex) {
-        int iIdxEmitter = GetKnownIndexEmitter(iIndex);
-        return m_pEmitter[iIdxEmitter].stPDW.uiCount;
+    /**
+     * @brief     GetPulseCountFromKnownIndex
+     * @param     unsigned int uiIndex
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 10:53
+     * @warning
+     */
+    inline unsigned int GetPulseCountFromKnownIndex(unsigned int uiIndex ) {
+        unsigned int uiIdxEmitter = GetKnownIndexEmitter(uiIndex);
+        return m_pEmitter[uiIdxEmitter].stPDW.uiCount;
     }
 
 

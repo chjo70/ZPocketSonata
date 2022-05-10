@@ -91,6 +91,9 @@ public:
     static ENUM_DataType WhatDataType( char *pStrPathname );
     static ENUM_UnitType WhatUnitType( char *pStrPathname );
 
+    // 랜덤 값
+    static int Rand( int range );
+
 };
 
 #endif // CCOMMONUTILS_H

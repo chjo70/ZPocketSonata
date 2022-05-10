@@ -274,9 +274,6 @@ void CSignalCollect::Init()
 
 }
 
-/**
- * @brief CSignalCollect::SetupDetectCollectBank
- */
 void CSignalCollect::SetupDetectCollectBank( int iCh )
 {
     STR_WINDOWCELL *pWindowCell;
@@ -823,21 +820,6 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 
     pstPDW = & pPDWData->pstPDW[0];
     for( ui=0 ; ui < uiTotalPDW ; ++ui ) {
-        // 모의
-        pstPDW->uiAOA = pstPDW->uiAOA;
-
-        /*
-        pstPDW->uiAOA = pstPDW->uiAOA + ( ( rand() % 10 ) - 5 );
-        if( (int) pstPDW->uiAOA < 0 ) {
-            pstPDW->uiAOA += MAX_AOA;
-        }
-        pstPDW->uiAOA = pstPDW->uiAOA % MAX_AOA;    */
-
-        pstPDW->uiFreq = pstPDW->uiFreq; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->uiPW = pstPDW->uiPW; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->uiPA = pstPDW->uiPA; // + ( ( rand() % 20 ) - 10 );
-
-
         // 추적 채널 설정
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheTrackCollectBank[uj];
@@ -1078,48 +1060,6 @@ void CSignalCollect::MakeStaticPDWData( STR_PDWDATA *pPDWData, bool bAutoIncPDWI
         pPDWDest->iPFTag = pPDWSrc->iPFTag;
 
         memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
-
-//         if( g_enUnitType == en_ELINT ) {
-//             pPDWDest->x.el.fPh1 = pPDWSrc->x.el.fPh1;
-//             pPDWDest->x.el.fPh2 = pPDWSrc->x.el.fPh2;
-//             pPDWDest->x.el.fPh3 = pPDWSrc->x.el.fPh3;
-//             pPDWDest->x.el.fPh4 = pPDWSrc->x.el.fPh4;
-//         }
-//         else if( g_enUnitType == en_XBAND ) {
-//             pPDWDest->x.xb.fPh1 = pPDWSrc->x.xb.fPh1;
-//             pPDWDest->x.xb.fPh2 = pPDWSrc->x.xb.fPh2;
-//             pPDWDest->x.xb.fPh3 = pPDWSrc->x.xb.fPh3;
-//             pPDWDest->x.xb.fPh4 = pPDWSrc->x.xb.fPh4;
-//             pPDWDest->x.xb.fPh5 = pPDWSrc->x.xb.fPh5;
-//         }
-//         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-//             pPDWDest->x.ps.iPMOP = pPDWSrc->x.ps.iPMOP;
-//             pPDWDest->x.ps.iFMOP = pPDWSrc->x.ps.iFMOP;
-//             pPDWDest->x.ps.iChannel = pPDWSrc->x.ps.iChannel;
-//         }
-//         else {
-// 
-//         }
-
-// #if defined(_ELINT_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
-// 
-// #elif defined(_XBAND_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
-//         pPDWDest->fPh5 = pPDWSrc->fPh5;
-// 
-// #elif _POCKETSONATA_
-//         pPDWDest->iPMOP = pPDWSrc->iPMOP;
-//         pPDWDest->iFMOP = pPDWSrc->iFMOP;
-//         pPDWDest->iChannel = pPDWSrc->iChannel;
-// 
-// #endif
 
         ++ pPDWSrc;
         ++ pPDWDest;
