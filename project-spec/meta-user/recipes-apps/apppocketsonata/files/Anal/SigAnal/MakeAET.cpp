@@ -128,7 +128,7 @@ void CMakeAET::MakeAET()
             // 에미터 생성하기
             MakeLOBDataFromEmitter(m_iCoLOB, pEmitter, i );
 
-            SetKnownIndexEmitter(m_iCoLOB, i );
+            SetKnownIndexEmitter( (UINT) m_iCoLOB, i );
 
             // CW 에미터인 경우, PRI, 펄스폭을 강제 설정한다.
             // SetCWParameter( pNewAet );
@@ -1203,6 +1203,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
     pLOBData->fFreqMean = FRQMhzCNV( g_enBoardId, stFrq.iMean );      
     pLOBData->fFreqMax = FRQMhzCNV( g_enBoardId, stFrq.iMax );        
     pLOBData->fFreqMin = FRQMhzCNV( g_enBoardId, stFrq.iMin );        
+    //pLOBData->fFreqMean = CPOCKETSONATAPDW::DecodeRealFREQMHz( stFrq.iMean, iCh, ( int ) g_enBoardId );
     
     memset( pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq) );
     for( i=0 ; i < pLOBData->iFreqPositionCount ; ++i ) {
@@ -1244,9 +1245,9 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 
     // 펄스폭 생성
     MakePWInfoFromSeg( & stVal, pEmitter );
-    pLOBData->fPWMean = PWCNV( stVal.iMean );			//, _spOneMicrosec );
-    pLOBData->fPWMax = PWCNV( stVal.iMax );				//, _spOneMicrosec );
-    pLOBData->fPWMin = PWCNV( stVal.iMin );				//, _spOneMicrosec );
+    pLOBData->fPWMean = PWCNV( stVal.iMean ); //CDecode::DecodePWns( stVal.iMean );			//, _spOneMicrosec );
+    pLOBData->fPWMax = PWCNV( stVal.iMax ); //CDecode::DecodePWns( stVal.iMax );				//, _spOneMicrosec );
+    pLOBData->fPWMin = PWCNV( stVal.iMin );  // CDecode::DecodePWns( stVal.iMin );				//, _spOneMicrosec );
     pLOBData->fPWDeviation = pLOBData->fPWMax - pLOBData->fPWMin;
 
     // 신호 세기 생성

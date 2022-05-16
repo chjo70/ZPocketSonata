@@ -39,9 +39,8 @@ public:
     void SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL );
 
 
-    void CopyPDW();
     //void PushPDWData( STR_PDWDATA *pstrArrayPDW );
-    void PushPDWData( _PDW *pstPDW );
+    void PushPDWData( _PDW *pstPDW, UNION_HEADER *pHeader );
     void UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell );
     void CloseTrackWindowCell();
 

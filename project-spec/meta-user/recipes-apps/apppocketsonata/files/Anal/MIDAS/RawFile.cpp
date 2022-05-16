@@ -128,37 +128,41 @@ void CRawFile::GetFilename( char *pFilename )
 	    \author 조철희 (churlhee.jo@lignex1.com)
 	    \date 	2014-01-24 16:46:40
 	*/
-	//int nLen = strlen(pFilename);
 	int nLen = (int) strlen(pFilename);
 
-	char* pEndStr = & pFilename[nLen-1];
-	char* pTempStr = pEndStr;
-	char* pOutStr = NULL;
-	char ch;
+    if( nLen >= 1 ) {
+        char* pEndStr = &pFilename[nLen - 1];
+        char* pTempStr = pEndStr;
+        char* pOutStr = NULL;
+        char ch;
 
-	while( nLen > 0 ) {
-		ch = *pTempStr;
+        while( nLen > 0 ) {
+            ch = *pTempStr;
 
-		if (ch=='/' || ch=='\\' || ch==':' )
-			break;
+            if( ch == '/' || ch == '\\' || ch == ':' )
+                break;
 
-		pOutStr = pTempStr;
+            pOutStr = pTempStr;
 
-		//
-		pTempStr --;
-		nLen --;
-	}
+            //
+            pTempStr--;
+            nLen--;
+        }
 
-	// 파일명에 파일명을 복사한다.
-	if( pOutStr != NULL ) {
+        // 파일명에 파일명을 복사한다.
+        if( pOutStr != NULL ) {
 #if defined(__linux__) || defined(__VXWORKS__)
-        strcpy( m_filename, pOutStr );
+            strcpy( m_filename, pOutStr );
 #else
-        strcpy_s( m_filename, sizeof(m_filename), pOutStr );
+            strcpy_s( m_filename, sizeof( m_filename ), pOutStr );
 
 #endif
 
-	}
+        }
+    }
+    else {
+        strcpy( m_filename, "invalid_filename" );
+    }
 
 }
 
@@ -229,7 +233,7 @@ void CRawFile::GetFilename( char *pFilename )
  * @date      2013-07-02 오전 11:50 
  * @warning   
  */
-bool CRawFile::FileOpen( const char *filename, int iMode )
+bool CRawFile::OpenFile( const char *filename, int iMode )
 {
 	bool bRet = false;
 	//Init();
@@ -247,7 +251,7 @@ bool CRawFile::FileOpen( const char *filename, int iMode )
 	m_fid = open( filename , iMode );
     if( m_fid <= 0 ) { //DTEC_Else
 #endif
-        remove( filename );
+        //remove( filename );
 		TRACE( "\n[W] The file[%s] is not exist !!", filename );
 	}
 	else {
@@ -294,6 +298,7 @@ unsigned int CRawFile::Write( void *pData, unsigned int c_size )
         }
         else {
             printf( "iWrite= %d" , iWrite );
+            iWrite = 0;
         }
     }
         
@@ -334,7 +339,7 @@ unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief     읽기 모드를 해지하고 파일을 닫는다.
  * @param     void
  * @return    void
  * @version   0.0.1
@@ -343,11 +348,21 @@ unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
  * @date      2013-07-02 오전 11:55 
  * @warning   
  */
-void CRawFile::FileClose()
+void CRawFile::CloseFile()
 {
 	if( m_fid > 0 ) {
-		_close( m_fid );
+        struct stat statbuf;
+
+        _close( m_fid );
         m_fid = 0;
+
+        if( stat( m_fullname, &statbuf ) >= 0 ) {
+            statbuf.st_mode ^= (_S_IREAD);
+            if( chmod( m_fullname, statbuf.st_mode ) < 0 ) {
+                perror( "파일:" );
+            }
+        }
+        
 	}
     else {
         perror( "파일:" );

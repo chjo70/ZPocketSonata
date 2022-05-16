@@ -492,6 +492,10 @@ void CLOBClustering::ShowCluster( STR_LOBCLUSTER *pCluster )
 	LogPrint( "\n 클러스터 정보 [%d개]; LOB" , pCluster->iCount );
 	for( i=0 ; i < pCluster->iCount ; ++i ) {
 		pLOBData = m_pQueLOBData->GetPointerByIndex( *pQueueIndex );
+        if( pLOBData == NULL ) {
+            LogPrint( "[에러!!]" );
+            break;
+        }
 
 		LogPrint( "[%d]" , pLOBData->uiLOBID );
 

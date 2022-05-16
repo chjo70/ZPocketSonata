@@ -125,7 +125,7 @@ public:
 
     virtual void GetCollectTime(struct timespec *pTimeSpec) = 0;
 
-    virtual void SetKnownIndexEmitter(int iIndex, int iIdxEmitter) = 0;
+    virtual void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) = 0;
 
     virtual unsigned int GetPDWID()=0;
     virtual unsigned int IsStorePDW()=0;

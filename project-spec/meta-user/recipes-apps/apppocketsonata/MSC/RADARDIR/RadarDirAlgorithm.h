@@ -70,8 +70,8 @@ typedef enum {
 #pragma pack( push, 1 )
 #endif
 
-#ifndef _PDW_ETC_UNION
-#define _PDW_ETC_UNION
+#ifndef _UNI_PDW_ETC
+#define _UNI_PDW_ETC
 typedef union {
     struct {
         float fPh1;
@@ -327,7 +327,7 @@ typedef struct {
 
 	}
 
-} POCKETSONATA_HEADER ;
+} STR_POCKETSONATA_HEADER ;
 #endif
 
 
@@ -365,7 +365,7 @@ typedef union {
 	STR_ELINT_HEADER el;
     STR_XBAND_HEADER xb;
 
-	POCKETSONATA_HEADER ps;
+	STR_POCKETSONATA_HEADER ps;
 
 	SONATA_HEADER so;
 

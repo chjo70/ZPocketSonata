@@ -1,4 +1,4 @@
-ï»¿// CCollectBank.cpp: implementation of the CCollectBank class.
+// CCollectBank.cpp: implementation of the CCollectBank class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -38,7 +38,7 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
     Init();
 
 	m_strPDW.pstPDW = NULL;
-	_SAFE_MALLOC( m_strPDW.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW );
+	_SAFE_MALLOC( m_strPDW.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW )
 
 }
 
@@ -51,28 +51,28 @@ CCollectBank::~CCollectBank()
 }
 
 /**
- * @brief åª›ì•¹ê»œ ç¥ë‡ë¦°?ë¶¾? ?ì„‘ë»¾?ì’•ë–Ž.
+ * @brief °´Ã¼ ÃÊ±âÈ­¸¦ ¼öÇàÇÑ´Ù.
  */
 void CCollectBank::Init()
 {
     memset( & m_strPDW.x, 0, sizeof(UNION_HEADER) );
 
-	// ?ë¨¯???1?ì’•????ì’–ì˜‰?ì„í€¬ ç•°ë¶¿ìŸ»/?ã…¼í‹ª?Â€ 0 éºÂ€???ì’–ì˜‰?ì’•ë–Ž.
-	// ?ëŒ€ì ƒå¯ƒ??ëŒë¹ž PDWID??1éºÂ€??ï§ã…ºë¦°å¯ƒ??ì’•ë–Ž.
+	// Å½Áö´Â 1¼­ºÎÅÍ ½ÃÀÛÇÏ°í ÃßÀû/½ºÄµÀº 0 ºÎÅÍ ½ÃÀÛÇÑ´Ù.
+	// ÀÌ·¸°Ô ÇØ¾ß PDWID´Â 1ºÎÅÍ ¸Å±â°Ô µÈ´Ù.
     //m_strPDW.SetPDWID( _spOne );
 
-    m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
-    m_strPDW.SetBand((unsigned int) g_enBoardId );
+    //m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
+    //m_strPDW.SetBand((unsigned int) g_enBoardId );
 
     InitWindowCell();
 
 }
 
 /**
- * @brief     ìœˆë„ìš°ì…€ì„ ì´ˆê¸°í™”í•œë‹¤.
+ * @brief     À©µµ¿ì¼¿À» ÃÊ±âÈ­ÇÑ´Ù.
  * @return    void
  * @exception
- * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-14, 14:21
  * @warning
@@ -81,7 +81,7 @@ void CCollectBank::InitWindowCell()
 {
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
 
-    // ?ë¨­? ?ì•¹ê½¦?ì„? ?ë”†ë¸¯?ì‡°ãˆƒ ?ì’•ì¾² ?ì„‘ë»¾?ì„ë¿¬ IDç‘œ??Â€?Î½ë¸³??
+    // Å¥°¡ »ý¼ºµÇÁö ¾Ê¾ÒÀ¸¸é ÇÑ¹ø ¼öÇàÇÏ¿© ID¸¦ ÀúÀåÇÑ´Ù.
 //     if( m_theQueueWindowCellID.Count() == 0 && m_iTotalChannels >= 2 ) {
 //         m_theQueueWindowCellID.Init( m_iTotalChannels );
 //         for( unsigned int i=0 ; i < m_iTotalChannels ; ++i ) {
@@ -110,13 +110,13 @@ void CCollectBank::SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL )
 }
 
 /**
- * @brief ìˆ˜ì§‘ ë±…í¬ë¥¼ ë‹«ëŠ”ë‹¤.
+ * @brief ¼öÁý ¹ðÅ©¸¦ ´Ý´Â´Ù.
  */
 void CCollectBank::CloseCollectBank()
 {
     LOGENTRY;
 
-    // æ´ÑŠâ€œï§£?ç¥ë‡ë¦°???ì’•ë–Ž.
+    // ±¸Á¶Ã¼ ÃÊ±âÈ­ ÇÑ´Ù.
     memset( & m_strWindowCell, 0, sizeof(STR_WINDOWCELL) );
     m_strWindowCell.bUse = false;
     m_strWindowCell.enCollectMode = enUnused;
@@ -134,7 +134,7 @@ void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 {
 
     /**
-    * @brief ï§¤ì’•? ?ì„ì­› å¯ƒëš¯ë‹” è«›??ì„ì­› ?ì’“ì»™
+    * @brief ÃÖ´ë ¼öÁý °Ô¼ö ¹× ¼öÁý ½Ã°£
     */
     m_strWindowCell.uiMaxCoPDW = pstrWindowCell->uiMaxCoPDW;
     m_strWindowCell.uiMaxCollectTimesec = pstrWindowCell->uiMaxCollectTimesec;
@@ -222,7 +222,7 @@ bool CCollectBank::IsValidChannel()
 //         m_strPDW.uiTotalPDW = _MAX_COL_PDW;
 //     }
 // 
-//     // PDW ?ëº£ë‚« è¹‚ë“­ê¶—
+//     // PDW Á¤º¸ º¹»ç
 //     UINT uiTo;
 //     if( iTo > 0 ) {
 //         uiTo = (unsigned int) iTo * sizeof(_PDW);
@@ -230,12 +230,12 @@ bool CCollectBank::IsValidChannel()
 //         memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], uiTo );
 //     }    
 // 
-//     // ç•°ë¶¿ìŸ» ?ëˆë£„???Â€ ?ëº£ë‚« ?ë‚…ëœ²?ëŒ„ë“ƒ
+//     // ÃßÀû À©µµ¿ì ¼¿ Á¤º¸ ¾÷µ¥ÀÌÆ®
 //     UpdateWindowCell();
 // 
 //     //m_strWindowCell.uiCollectTime = DecodeTOA( m_strPDW.llToa[m_strPDW.uiTotalPDW-1] - m_strPDW.llToa[0] );
 // 
-//     // ?ì„ì­› ?ê¾¨ì¦º ï§ëŠê¶§??
+//     // ¼öÁý ¿Ï·á ¸¶Å·ÇÔ.
 //     m_strWindowCell.enCollectMode = enCompleteCollection;
 // 
 // }
@@ -265,12 +265,12 @@ void CCollectBank::SimCollectMode()
                 msDTOA = m_strPDW.pstPDW[uiTotalPDW-1].ullTOA - m_strPDW.pstPDW[0].ullTOA;
             }
 
-            // åª›ì’–ë‹” é®ê¾§íƒ³
+            // °³¼ö ºñ±³
             if( uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
       
-            // ?ì’“ì»™ é®ê¾§íƒ³
+            // ½Ã°£ ºñ±³
             else if( TOAmsCNV( msDTOA ) >= m_strWindowCell.uiMaxCollectTimems + ( m_strWindowCell.uiMaxCollectTimesec * 1000 ) ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
@@ -301,10 +301,16 @@ void CCollectBank::SimCollectMode()
 }
 
 /**
- * @brief CCollectBank::PushPDWData
- * @param pstPDW
+ * @brief     _PDW ±¸Á¶Ã¼ µ¥ÀÌÅÍ¸¦ ¼öÁý¹ðÅ© ±¸Á¶Ã¼ÀÇ µ¥ÀÌÅÍ¿¡ »ðÀÔÇÑ´Ù.
+ * @param     _PDW * pstPDW
+ * @return    void
+ * @exception
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 14:00
+ * @warning
  */
-void CCollectBank::PushPDWData( _PDW *pstPDW )
+void CCollectBank::PushPDWData( _PDW *pstPDW, UNION_HEADER *pHeader )
 {
     unsigned int uiTotalPDW;
 
@@ -312,6 +318,8 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
         uiTotalPDW = m_strPDW.GetTotalPDW();
 
         if( uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
+            memcpy( &m_strPDW.x, pHeader, sizeof( UNION_HEADER ) );
+
             memcpy( & m_strPDW.pstPDW[uiTotalPDW], pstPDW, sizeof(_PDW) );
 
             ++ uiTotalPDW;
@@ -320,7 +328,7 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
             ++ m_strWindowCell.uiTotalPDW;
         }
         else {
-            //printf( "PDW ?ê³—ì” ?ê³Œ? è‹‘?ï§¡?!!" );
+            //printf( "PDW µ¥ÀÌÅÍ°¡ ²Ë Âü !!" );
         }
     }
 
@@ -329,28 +337,28 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
 }
 
 /**
- * @brief ?ëˆë£„?ê³—????ì„ì­› é†«ë‚…ì¦º ?ê¾©ë¿‰ ?ë‚…ëœ²?ëŒ„ë“ƒ ?ì’•ë–Ž.
+ * @brief À©µµ¿ì¼¿À» ¼öÁý Á¾·á ÈÄ¿¡ ¾÷µ¥ÀÌÆ® ÇÑ´Ù.
  */
 void CCollectBank::UpdateWindowCell()
 {
 
     m_strWindowCell.uiAccumulatedTime += m_strWindowCell.uiCollectTime;
 
-    // ?ê¾©ìŸ» ?ì„ì­› PDW åª›ì’–ë‹” ?ë‚…ëœ²?ëŒ„ë“ƒ
+    // ´©Àû ¼öÁý PDW °³¼ö ¾÷µ¥ÀÌÆ®
     m_strWindowCell.uiAccumulatedCoPDW += m_strWindowCell.uiTotalPDW;
 
-    // ?ê¾©ìŸ» ?ÑŠìŠœ ï§¢ê¾¨ê¼¸ ?ìž›ë‹” ?ë‚…ëœ²?ëŒ„ë“ƒ
+    // ´©Àû »ç¿ë Ã¤³Î È½¼ö ¾÷µ¥ÀÌÆ®
     m_strWindowCell.uiAccumulatedCoUsed += 1;
 
     m_strWindowCell.enCollectMode = enCollecting;
 
-    // PDW ?ëº£ë‚« ?ëŒ€â”??
+    // PDW Á¤º¸ Å¬¸®¾î
     m_strPDW.SetTotalPDW( 0 );
 
-    // ?ì„ì­›??PDW åª›ì’–ë‹” ?ë‚…ëœ²?ëŒ„ë“ƒ
+    // ¼öÁýÇÑ PDW °³¼ö ¾÷µ¥ÀÌÆ®
     m_strWindowCell.uiTotalPDW = 0;
 
-    // ?ì’“ì»™ ?ÑŠê½•??
+    // ½Ã°£ Àç¼³Á¤
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
     g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
@@ -369,7 +377,7 @@ bool CCollectBank::IsCompleteCollect()
     if( m_strWindowCell.bUse == true && m_strWindowCell.enCollectMode == enCollecting ) {
         CCommonUtils::DiffTimespec( & tsDiff, & m_strWindowCell.tsCollectStart );
 
-        // ?ì„ì­› ?ì’“ì»™ ?ëº¤ì”¤
+        // ¼öÁý ½Ã°£ È®ÀÎ
         if( tsDiff.tv_sec > (long) m_strWindowCell.uiMaxCollectTimesec ||
 #ifdef _MSC_VER
             ( tsDiff.tv_sec == (long) m_strWindowCell.uiMaxCollectTimesec && tsDiff.tv_usec >= (long) m_strWindowCell.uiMaxCollectTimems * 1000 ) ) {
@@ -379,7 +387,7 @@ bool CCollectBank::IsCompleteCollect()
             bRet = true;
         }
 
-        // ?ì„ì­› åª›ì’–ë‹” ?ëº¤ì”¤
+        // ¼öÁý °³¼ö È®ÀÎ
         if( m_strPDW.GetTotalPDW() >= m_strWindowCell.uiMaxCoPDW ) {
             m_strPDW.SetTotalPDW( m_strWindowCell.uiMaxCoPDW );
             bRet = true;
@@ -413,7 +421,7 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
  * @brief     SetCollectUpdateTime
  * @return    void
  * @exception
- * @author    è­°ê³—ì¿‹??(churlhee.jo@lignex1.com)
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-01-25, 10:46
  * @warning

@@ -153,7 +153,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
             // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
             m_theGroup->MakeGrIndex();
 
-            SaveGroupPdwFile(m_CoGroup + 1);
+            SaveGroupPDWFile(m_CoGroup + 1);
 
             // 규칙성 및 불규칙성 펄스열 추출
             m_thePulExt->PulseExtract(&m_VecMatchRadarMode);

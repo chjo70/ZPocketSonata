@@ -259,7 +259,13 @@ void CSignalCollect::SendEndCollect()
 }
 
 /**
- * @brief 객체를 초기화 합니다.
+ * @brief     객체를 초기화 합니다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 14:40
+ * @warning
  */
 void CSignalCollect::Init()
 {
@@ -275,36 +281,20 @@ void CSignalCollect::Init()
 }
 
 /**
- * @brief CSignalCollect::SetupDetectCollectBank
+ * @brief     팀지 수집 뱅크의 초기 설정 값으로 설정한다.
+ * @param     int iCh
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 13:58
+ * @warning
  */
 void CSignalCollect::SetupDetectCollectBank( int iCh )
 {
     STR_WINDOWCELL *pWindowCell;
 
     CCollectBank *pCollectBank = m_pTheDetectCollectBank[iCh];
-
-#if defined(_ELINT_) || defined(_XBAND_)
-    STR_PDWDATA *pPDWData = pCollectBank->GetPDWData();
-
-#ifdef _ELINT_
-    // memset( pPDWData->x.el.aucTaskID, 0, sizeof(char)*LENGTH_OF_TASK_ID );
-    strcpy_s((char *)pPDWData->x.el.aucTaskID, sizeof(pPDWData->x.el.aucTaskID), "MSIGA");
-    pPDWData->x.el.iIsStorePDW = 1;
-    pPDWData->x.el.enCollectorID = RADARCOL_1;
-    pPDWData->x.el.enBandWidth = ELINT::en5MHZ_BW;
-
-#else
-    strcpy_s((char *)pPDWData->x.xb.aucTaskID, sizeof(pPDWData->x.xb.aucTaskID), "MSIGA2");
-    pPDWData->x.xb.iIsStorePDW = 1;
-    pPDWData->x.xb.enCollectorID = RADARCOL_1;
-    pPDWData->x.xb.enBandWidth = XBAND::en120MHZ_BW;
-
-#endif
-
-
-#else
-
-#endif
 
     pCollectBank->SetCollectMode( enCollecting );
 
@@ -320,9 +310,9 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
 
     pWindowCell->strFreq.iLow = 0; // IFRQMhzCNV( 0, MIN_FREQ_MHZ );
-    pWindowCell->strFreq.iHgh = 0xffffff; // IFRQMhzCNV( 0, MAX_FREQ_MHZ );
+    pWindowCell->strFreq.iHgh = 0x7fffffff - 100000; // IFRQMhzCNV( 0, MAX_FREQ_MHZ );
 
-    pWindowCell->strPA.iLow = NDIV( -70, _spAMPres );   //I_IPACNV( -70 );
+    pWindowCell->strPA.iLow = NDIV( -90, _spAMPres );   //I_IPACNV( -70 );
     pWindowCell->strPA.iHgh = UDIV( 10, _spAMPres );    //I_IPACNV( 10 );
 
     pWindowCell->strPW.iLow = 0;
@@ -823,27 +813,12 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
 
     pstPDW = & pPDWData->pstPDW[0];
     for( ui=0 ; ui < uiTotalPDW ; ++ui ) {
-        // 모의
-        pstPDW->uiAOA = pstPDW->uiAOA;
-
-        /*
-        pstPDW->uiAOA = pstPDW->uiAOA + ( ( rand() % 10 ) - 5 );
-        if( (int) pstPDW->uiAOA < 0 ) {
-            pstPDW->uiAOA += MAX_AOA;
-        }
-        pstPDW->uiAOA = pstPDW->uiAOA % MAX_AOA;    */
-
-        pstPDW->uiFreq = pstPDW->uiFreq; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->uiPW = pstPDW->uiPW; // + ( ( rand() % 20 ) - 10 );
-        pstPDW->uiPA = pstPDW->uiPA; // + ( ( rand() % 20 ) - 10 );
-
-
         // 추적 채널 설정
         for( uj=0 ; uj < TRACK_CHANNEL ; ++uj ) {
             pCollectBank = m_pTheTrackCollectBank[uj];
             if( pCollectBank->IsFiltered( pstPDW ) == true ) {
                 if( pCollectBank->IsSave() == true ) {
-                    pCollectBank->PushPDWData( pstPDW );
+                    pCollectBank->PushPDWData( pstPDW, & pPDWData->x );
                 }
                 uiTrackCh = uj + DETECT_CHANNEL;
             }
@@ -854,7 +829,7 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
             for( uj=0 ; uj < DETECT_CHANNEL ; ++uj ) {
                 pCollectBank = m_pTheDetectCollectBank[uj];
                 if( pCollectBank->IsFiltered( pstPDW ) == true ) {
-                    pCollectBank->PushPDWData( pstPDW );
+                    pCollectBank->PushPDWData( pstPDW, &pPDWData->x );
                     uiDetectCh = uj;
 
                     //pCollectBank->SimCollectMode();
@@ -868,7 +843,7 @@ void CSignalCollect::SimFilter( STR_PDWDATA *pPDWData )
             pCollectBank = m_pTheScanCollectBank[uj];
             if( pCollectBank->IsFiltered( pstPDW ) == true ) {
                 if( pCollectBank->IsSave() == true ) {
-                    pCollectBank->PushPDWData( pstPDW );
+                    pCollectBank->PushPDWData( pstPDW, &pPDWData->x );
                 }
                 uiScanCh = uj + ( DETECT_CHANNEL + TRACK_CHANNEL );
             }
@@ -1019,8 +994,14 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
 }
 
 /**
- * @brief CSignalCollect::UpdateScanWindowCell
- * @param pABTData
+ * @brief     빔 데이터 정보를 입력으로 스캔 윈도우 셀 정보를 계산한다.
+ * @param     SRxABTData * pABTData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 14:05
+ * @warning
  */
 void CSignalCollect::UpdateScanWindowCell( SRxABTData *pABTData )
 {
@@ -1038,7 +1019,7 @@ void CSignalCollect::UpdateScanWindowCell( SRxABTData *pABTData )
 }
 
 /**
- * @brief     MakeStaticPDWData
+ * @brief     STR_PDWDATA 구조체를 STR_STATIC_PDWDATA 으로 복사한다. 
  * @param     STR_PDWDATA * pPDWData
  * @return    void
  * @exception
@@ -1049,80 +1030,19 @@ void CSignalCollect::UpdateScanWindowCell( SRxABTData *pABTData )
  */
 void CSignalCollect::MakeStaticPDWData( STR_PDWDATA *pPDWData, bool bAutoIncPDWID )
 {
-    unsigned int i, uiTotalPDW;
+    unsigned int uiTotalPDW;
 
-    _PDW *pPDWSrc, *pPDWDest;
+    if( bAutoIncPDWID == true ) {
+        ++m_uiPDWID;
+        pPDWData->SetPDWID( m_uiPDWID );
+    }
 
     // 헤더 복사
     memcpy( & m_stPDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
-    if( bAutoIncPDWID == true ) {
-        ++ m_uiPDWID;
-        m_stPDWData.SetPDWID( m_uiPDWID );
-    }
-
     // 데이터 복사
-    pPDWSrc = pPDWData->pstPDW;
-    pPDWDest = & m_stPDWData.stPDW[0];
     uiTotalPDW = pPDWData->GetTotalPDW();  
-    for( i=0 ; i < uiTotalPDW ; ++i ) {
-        pPDWDest->ullTOA = pPDWSrc->ullTOA;
 
-        pPDWDest->iPulseType = pPDWSrc->iPulseType;
-
-        pPDWDest->uiAOA = pPDWSrc->uiAOA;
-        pPDWDest->uiFreq = pPDWSrc->uiFreq;
-        pPDWDest->uiPA = pPDWSrc->uiPA;
-        pPDWDest->uiPW = pPDWSrc->uiPW;
-
-        pPDWDest->iPFTag = pPDWSrc->iPFTag;
-
-        memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
-
-//         if( g_enUnitType == en_ELINT ) {
-//             pPDWDest->x.el.fPh1 = pPDWSrc->x.el.fPh1;
-//             pPDWDest->x.el.fPh2 = pPDWSrc->x.el.fPh2;
-//             pPDWDest->x.el.fPh3 = pPDWSrc->x.el.fPh3;
-//             pPDWDest->x.el.fPh4 = pPDWSrc->x.el.fPh4;
-//         }
-//         else if( g_enUnitType == en_XBAND ) {
-//             pPDWDest->x.xb.fPh1 = pPDWSrc->x.xb.fPh1;
-//             pPDWDest->x.xb.fPh2 = pPDWSrc->x.xb.fPh2;
-//             pPDWDest->x.xb.fPh3 = pPDWSrc->x.xb.fPh3;
-//             pPDWDest->x.xb.fPh4 = pPDWSrc->x.xb.fPh4;
-//             pPDWDest->x.xb.fPh5 = pPDWSrc->x.xb.fPh5;
-//         }
-//         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-//             pPDWDest->x.ps.iPMOP = pPDWSrc->x.ps.iPMOP;
-//             pPDWDest->x.ps.iFMOP = pPDWSrc->x.ps.iFMOP;
-//             pPDWDest->x.ps.iChannel = pPDWSrc->x.ps.iChannel;
-//         }
-//         else {
-// 
-//         }
-
-// #if defined(_ELINT_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
-// 
-// #elif defined(_XBAND_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
-//         pPDWDest->fPh5 = pPDWSrc->fPh5;
-// 
-// #elif _POCKETSONATA_
-//         pPDWDest->iPMOP = pPDWSrc->iPMOP;
-//         pPDWDest->iFMOP = pPDWSrc->iFMOP;
-//         pPDWDest->iChannel = pPDWSrc->iChannel;
-// 
-// #endif
-
-        ++ pPDWSrc;
-        ++ pPDWDest;
-    }
+    memcpy( & m_stPDWData.stPDW[0], pPDWData->pstPDW, sizeof( _PDW )*uiTotalPDW );
 
 }

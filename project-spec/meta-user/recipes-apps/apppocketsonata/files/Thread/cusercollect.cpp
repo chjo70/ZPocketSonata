@@ -53,7 +53,68 @@ CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanDa
 
     AllocMemory();
     InitVar();
-    
+
+#ifdef _POCKETSONATA_
+    bool bRet = true;
+
+    int i, j, k, iBoardID;
+    int iFreq, iCh;
+    int iEFreq, iECh;
+    int iDFreq, iDCh;
+    float fFreq;
+
+    float fMinFreq, fMaxFreq;
+
+    fMinFreq = 999999999;
+    fMaxFreq = 0;
+
+    for( iBoardID = (int) enPRC1 ; iBoardID <= (int) enPRC5 ; ++iBoardID ) {
+        for( k = 0 ; k <= 1 ; ++k ) {
+            fMinFreq = 999999999;
+            fMaxFreq = 0;
+
+            for( i = 0 ; i < 15 ; ++i ) {
+                for( j = 0 ; j < 0xFFFF ; ++j ) {
+                    iDFreq = j;
+                    iDCh = i;
+                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, iBoardID, k );
+                    CPOCKETSONATAPDW::EncodeRealFREQMHz( &iEFreq, &iECh, iBoardID, fFreq );
+//                     if( iDFreq == iFreq && iDCh == iCh ) {
+//                         //TRACE( "\n Freq[%dMHz],Ch[%d]", iFreq, iCh );
+//                         if( iCh > 17 ) {
+//                             TRACE( "AAAAA" );
+//                         }
+//                     }
+//                     else {
+//                         fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, iBoardID, 0 );
+//                         CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, iBoardID, fFreq );
+//                         bRet = false;
+//                     }
+
+                    //                 iDFreq = j;
+                    //                 iDCh = i;
+                    //                 fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                 CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                 if( iDFreq == iFreq && iDCh == iCh ) {
+                    //                 }
+                    //                 else {
+                    //                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                     CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                     bRet = false;
+                    //                 }
+
+
+                    fMinFreq = min( fMinFreq, fFreq );
+                    fMaxFreq = max( fMaxFreq, fFreq );
+                }
+            }
+
+            TRACE( "\niBoardId/No(%d/%d) [%f - %f]", iBoardID, k, fMinFreq, fMaxFreq );
+
+        }
+    }
+#endif
+
 }
 
 /**
@@ -72,7 +133,7 @@ void CUserCollect::InitVar()
 
     // 모의 SIM 데이터 초기화
     m_uiIndex = 0;
-    m_ullTOA = 0xFFFFFF00000;
+    m_ullTOA = 0;
 
     m_uiCoSim = 0;
 
@@ -86,29 +147,26 @@ void CUserCollect::InitVar()
     CHWIO::uio_re_enable_Interrupt(REG_UIO_DMA_1);
 #endif
 
-    m_pstrPDW = (SIGAPDW *) & m_pstrPDWWithFileHeader[sizeof(UNION_HEADER)];
+    m_pUniHeader = ( UNION_HEADER * ) & m_pstrPDWWithFileHeader[0];
+    m_pSIGAPDW = ( SIGAPDW *) & m_pstrPDWWithFileHeader[sizeof(UNION_HEADER)];
 
 }
 
 /**
- * @brief CUserCollect::AllocMemory
+ * @brief     멤버변수들의 메모리를 할당한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 10:12
+ * @warning
  */
 void CUserCollect::AllocMemory()
 {
 
-#ifdef _POCKETSONATA_
-    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(DMAPDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
+    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof( SIGAPDW )*NUM_OF_PDW+sizeof(UNION_HEADER) );
 
-#elif defined(_ELINT_) || defined(_XBAND_)
-    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
-
-#elif defined(_SONATA_)
-    // m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof(_PDW)*NUM_OF_PDW+sizeof(UNION_HEADER) );
-
-#endif
-
-    m_pTheGenPDW = new CGenPDW( 100 );
-
+    m_pTheGenPDW = new CGenPDW( MAX_PDW );
 
 }
 
@@ -332,7 +390,8 @@ void CUserCollect::ColStart()
                 m_strResColStart.uiCoPulseNum = NUM_OF_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( pUIO->iFd > 0 ) {
-                    memcpy( m_pstrPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
+                    memcpy( m_pSIGAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );
+
                     //m_uiCoPDW = NUM_OF_PDW;
                 }
                 else {
@@ -345,27 +404,7 @@ void CUserCollect::ColStart()
                 if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
                     // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
-#ifdef _POCKETSONATA_
-                    POCKETSONATA_HEADER *pPDWFileHeader = ( POCKETSONATA_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(POCKETSONATA_HEADER) );
-
-                    pPDWFileHeader->uiBoardID = (UINT) g_enBoardId;
-#elif defined(_ELINT_) || defined(_XBAND_)
-                    STR_ELINT_HEADER *pPDWFileHeader = ( STR_ELINT_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(STR_ELINT_HEADER) );
-#else
-                    SONATA_HEADER *pPDWFileHeader = ( SONATA_HEADER * ) m_pstrPDWWithFileHeader;
-
-                    memset( pPDWFileHeader, 0, sizeof(SONATA_HEADER) );
-#endif
-                    
-                    pPDWFileHeader->stCommon.tColTime = time(NULL);
-                    pPDWFileHeader->stCommon.uiColTimeMs = 0;
-                    pPDWFileHeader->SetTotalPDW( NUM_OF_PDW );
-                    pPDWFileHeader->SetIsStorePDW( 1 );
-                    uiSize = sizeof( DMAPDW ) * NUM_OF_PDW;
+                    uiSize = sizeof( SIGAPDW ) * NUM_OF_PDW;
                     g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+uiSize, NULL, 0, GetThreadName() );
                 }
                 break;
@@ -414,7 +453,7 @@ void CUserCollect::SendRawData()
 
     //pDMAPDW = m_pstrDMAPDW;
     for( ui=0 ; ui < m_strResColStart.uiCoPulseNum ; ui += PDW_BLOCK ) {
-        pDMAPDW = & m_pstrPDW[ui];
+        pDMAPDW = & m_pSIGAPDW[ui];
         if( m_strResColStart.uiCoPulseNum - ui >= PDW_BLOCK ) {
             CCommonUtils::SendLan( enRES_RAWDATA, pDMAPDW, sizeof(UDRCPDW)*PDW_BLOCK );
         }
@@ -427,7 +466,7 @@ void CUserCollect::SendRawData()
 }
 
 /**
- * @brief     MakeSIMPDWData
+ * @brief     시나리오 파일을 로드하여 PDW 파일을 생성한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -439,22 +478,43 @@ void CUserCollect::MakeSIMPDWData()
 {
     unsigned int i, uiCoPDW;
 
+    float fRandomDOA;
+
     int iDOA;
-    unsigned int randomDOA, randomPA, randomPW, randomFreq, randomCh;
+    int iRandomDOA;
+    unsigned int uiRandomDOA, randomPA, randomPW, randomFreq, randomCh;
 
-    //TRACE( "\nMakeSIMPDWData.." );
+    STR_PDWDATA *pPDWData;
+    _PDW *pstPDW;
 
-    SIGAPDW *pSIGAPDW = m_pstrPDW;
+    SIGAPDW *pSIGAPDW = m_pSIGAPDW;
 
-#ifdef _POCKETSONATA_   
+    memset( m_pUniHeader, 0, sizeof( UNION_HEADER ) );
 
-    m_pTheGenPDW->OpenFile( g_szPDWScinarioFile );
-    m_pTheGenPDW->ParseAndMakeMemory( m_pstrPDW );
+    m_pUniHeader->SetBoardID( g_enUnitType, ( UINT ) g_enBoardId );
 
+    m_pUniHeader->SetColTime( time( NULL ), 0 );
+    m_pUniHeader->SetTotalPDW( NUM_OF_PDW );
+    m_pUniHeader->SetIsStorePDW( 1 );
+    m_pUniHeader->SetBandWidth( 1 );
+    m_pUniHeader->SetCollectorID( RADARCOL_1 );
+
+    m_pUniHeader->SetBoardID( (unsigned int) g_enBoardId );
+    m_pUniHeader->SetBand((unsigned int) g_enBoardId );
+
+    char *pTaskID=m_pUniHeader->GetTaskID( g_enUnitType );
+    if( pTaskID != NULL ) {
+        strcpy( pTaskID, "MSIGA" );
+    }
+
+    uiCoPDW = m_strResColStart.uiCoPulseNum;
+
+
+    int iBandWidth = m_pUniHeader->GetBandWidth();
+
+#ifdef _SIMPDW_
+#if defined(_POCKETSONATA_)
 #define MANUALTOA   (35)
-
-
-    
 
     _TOA manualTOA[MANUALTOA] = { CPOCKETSONATAPDW::EncodeTOAus( (float) 1598.41),
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 2986.972 ),
@@ -490,37 +550,22 @@ void CUserCollect::MakeSIMPDWData()
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
     } ;
 
-    uiCoPDW = m_strResColStart.uiCoPulseNum;
-
-
     iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
-
+    
     for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
+        uiRandomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
+        uiRandomDOA = ( unsigned int ) iDOA;
         randomPA =  ( rand() % 140 ) + 20;
         randomPW =  ( rand() % 1000 ) + 20000;
 
         if( m_uiCoSim % 20 == 0 || true ) {
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3585.0 );
-            //randomFreq = CPOCKETSONATAPDW::EncodeFREQMHzFloor( 4500 );     // ( rand() % 50 ) + 2000;
-            //randomCh = 1;
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 9585.0 );
         }
         else {
             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
         }
 
-        //m_ullTOA += ( ( rand() % 10 ) - 5 ) + 0x2000;
-
-        if( i < MANUALTOA && false ) {
-            m_ullTOA = manualTOA[i];
-        }
-        else {
-			m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
-//             if( i % 2 )
-//                 m_ullTOA += 0x2000;
-//             else
-//                 m_ullTOA += 0x1500;
-        }
+        m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
 
         memset( pSIGAPDW, 0, sizeof(DMAPDW) );
 
@@ -532,7 +577,7 @@ void CUserCollect::MakeSIMPDWData()
         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
 
-        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = randomDOA;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = uiRandomDOA;
         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
 
@@ -556,64 +601,103 @@ void CUserCollect::MakeSIMPDWData()
     }
 
 
-#elif defined(_ELINT_)
+#else
     uiCoPDW = m_strResColStart.uiCoPulseNum;
 
-    iDOA = m_uiCoSim * CEPDW::EncodeDOA( 50 );
-
-    for( i=0 ; i < uiCoPDW; ++i ) {
-        randomDOA = iDOA; // iDOA + ( rand() % 40 ) - 20;
-        randomPA =  ( rand() % 140 ) + 20;
-        randomPW =  ( rand() % 1000 ) + 20000;
-
-        m_ullTOA += CEPDW::EncodeTOAus( 100, ELINT::en5MHZ_BW );
-        pSIGAPDW->uiPW = CEPDW::EncodePWns(100, ELINT::en5MHZ_BW);
-
-        memset( pSIGAPDW, 0, sizeof(SIGAPDW) );
-
-        pSIGAPDW->ullTOA = m_ullTOA;
-        
-        pSIGAPDW->uiAOA = CEPDW::EncodeDOA( 90 );
-        pSIGAPDW->uiFreq = CEPDW::EncodeRealFREQMHz( 9000. );
-        pSIGAPDW->uiPA = CEPDW::EncodePA( -100 );        
-
-        pSIGAPDW->iPulseType = CEPDW::EncodePulseType( 0 );
-
-        ++ m_uiIndex;
-
-        ++ pSIGAPDW;
-    }
-
-#elif defined(_XBAND_)
-    uiCoPDW = m_strResColStart.uiCoPulseNum;
-
-    iDOA = m_uiCoSim * CXPDW::EncodeDOA(50);
+    iDOA = m_uiCoSim * 20;
 
     for (i = 0; i < uiCoPDW; ++i) {
-        randomDOA = ( i / 30 ) * 40;
+        int iCh;
 
-        memset(pSIGAPDW, 0, sizeof(SIGAPDW));
+        fRandomDOA = (float) iDOA + ( (float) CCommonUtils::Rand( 100 ) / (float) 10. );
 
-        m_ullTOA += 0x100; // CXPDW::EncodeTOAus(100, XBAND::en5MHZ_BW);
+        m_ullTOA += 0x100; // CEncode::EncodeTOAus(100, 0);
 
+        memset( pSIGAPDW, 0, sizeof( SIGAPDW ) );
 
         // 
-        pSIGAPDW->uiPW = CXPDW::EncodePWns(100, XBAND::en5MHZ_BW);
         pSIGAPDW->ullTOA = m_ullTOA;
 
-        pSIGAPDW->uiAOA = CXPDW::EncodeDOA(randomDOA);
-        pSIGAPDW->uiFreq = CXPDW::EncodeRealFREQMHz(9000.);
-        pSIGAPDW->uiPA = CXPDW::EncodePA(-100);
+        pSIGAPDW->iPulseType = CEncode::EncodePulseType( 0 );
 
-
-        pSIGAPDW->iPulseType = CXPDW::EncodePulseType(0);
+        pSIGAPDW->uiAOA = CEncode::EncodeDOA( fRandomDOA );
+        pSIGAPDW->uiFreq = CEncode::EncodeRealFREQMHz(&iCh, 9000.);
+        pSIGAPDW->uiPA = CEncode::EncodePA(-100);
+        pSIGAPDW->uiPW = CEncode::EncodePWns( 100, iBandWidth );
 
         ++m_uiIndex;
 
         ++pSIGAPDW;
     }
 
-#elif defined(_SONATA_)
+#endif
+
+
+#else
+    m_pTheGenPDW->OpenFile( g_szPDWScinarioFile );
+    m_pTheGenPDW->ParseAndMakeMemory();
+
+    pstPDW = m_pTheGenPDW->GetMergedPDWData();
+
+    for( i = 0 ; i < uiCoPDW; ++i ) {
+        memset( pSIGAPDW, 0, sizeof( DMAPDW ) );
+
+        randomFreq = pstPDW->GetFrequency();
+        randomCh = pstPDW->GetChannel();
+
+        m_ullTOA = pstPDW->GetTOA();
+
+#if defined(_POCKETSONATA_)
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = CEncode::EncodePulseType( pstPDW->GetPulsetype() );        // uiPDW_CW;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_dir = 1;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_bw = 8000;
+
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = pstPDW->GetAOA();
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = pstPDW->GetPulseamplitude();
+
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = pstPDW->GetPulsewidth();
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
+
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = (randomFreq >> 8) & 0xFF;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
+
+        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = (m_ullTOA >> 16);
+        pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
+
+        pSIGAPDW->uPDW.x.uniPdw_index.stPdw_index.index = m_uiIndex;
+#else
+        int iCh;
+
+        pSIGAPDW->iPulseType = pstPDW->GetPulsetype();
+
+        pSIGAPDW->ullTOA = pstPDW->GetTOA();
+        pSIGAPDW->uiAOA = pstPDW->GetAOA();
+        pSIGAPDW->uiFreq = pstPDW->GetFrequency();
+        pSIGAPDW->uiPA = pstPDW->GetPulseamplitude();
+        pSIGAPDW->uiPW = pstPDW->GetPulsewidth();
+
+#endif
+
+        ++pstPDW;
+
+        ++m_uiIndex;
+
+        ++pSIGAPDW;
+    }
+
+#if defined(_POCKETSONATA_)
+
+
+#else
+
+#endif
+
+
 
 #endif
 
@@ -622,7 +706,13 @@ void CUserCollect::MakeSIMPDWData()
 }
 
 /**
- * @brief CUserCollect::MakeCollectHistogram
+ * @brief     히스토그램을 도시한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-09, 18:10
+ * @warning
  */
 void CUserCollect::MakeCollectHistogram()
 {
@@ -638,20 +728,20 @@ void CUserCollect::MakeCollectHistogram()
     // 주파수 변환하여 기록
     pColHisto = & m_ucColHisto[m_iColHistoTime][0];
 
-    pSIGAPDW = m_pstrPDW;
+    pSIGAPDW = m_pSIGAPDW;
     for( ui=0; ui < m_strResColStart.uiCoPulseNum ; ++ui ) {
+#ifdef _POCKETSONATA_
         iCh = pSIGAPDW->GetChannel();
         uiFreq = pSIGAPDW->GetFrequency( iCh );
 
-#ifdef _POCKETSONATA_
-        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFreq, iCh, (int) g_enBoardId );
+        fFreq = FRQMhzCNV( g_enBoardId, uiFreq );
 #else
         fFreq = 0;
 #endif
         iIndex = (int) ( ( fFreq - MIN_FREQ_MHZ ) / COLHISTO_WIDTH_MHZ );
 
-        iIndex = _min( iIndex, COLHISTO_CELLS-1 );
-        iIndex = _max( iIndex, 0 );
+        iIndex = min( iIndex, COLHISTO_CELLS-1 );
+        iIndex = max( iIndex, 0 );
         if( pColHisto[iIndex] >= 0xFF ) {
         }
         else {

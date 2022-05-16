@@ -416,7 +416,7 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 	
 }
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_XBAND_)
 #else
 //////////////////////////////////////////////////////////////////////
 //

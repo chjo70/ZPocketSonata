@@ -55,9 +55,8 @@
 class CRawFile
 {
 protected:
-	// FILE *m_pfile;
-
 	int m_fid;
+
 	unsigned int m_posFid;
     char m_fullname[500];
     char m_filename[500];
@@ -66,15 +65,11 @@ public:
 	CRawFile(void);
 	virtual ~CRawFile(void);
 
-	bool ReadN( void *pData, int size );
-	bool LoadFile( char *filename );
-
-	//FILE *GetFileHandler() { return m_pfile; }
 	int GetFileHandler() { return m_fid; }
-	bool FileOpen( const char *filename, int iMode );
+	bool OpenFile( const char *filename, int iMode );
 	unsigned int Read( void *pData, unsigned int c_size, int iOffset=0 );
 	unsigned int Write( void *pData, unsigned int c_size );
-	void FileClose();
+	void CloseFile();
     unsigned long long int GetFileSize();
     unsigned long long int GetFileSize( char *pPathFileName );
 	void GetFilename( char *pFilename );
@@ -85,8 +80,6 @@ public:
 	inline char *GetFilename() { return m_filename; }
 
 	inline void SeekToStart() { if( m_fid != 0 ) _lseek(m_fid, 0, SEEK_SET ); }
-
-	//bool IsEndOfFile();
 
 };
 

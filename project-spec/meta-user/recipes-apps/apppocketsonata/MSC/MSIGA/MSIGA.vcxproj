@@ -53,7 +53,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED1_;_SIM_SERVER_;_SQLITE1_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED1_;_SIMPDW1_;_SIM_SERVER_;_SQLITE1_;_MSSQL1_;_POCKETSONATA1_;_XBAND_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>

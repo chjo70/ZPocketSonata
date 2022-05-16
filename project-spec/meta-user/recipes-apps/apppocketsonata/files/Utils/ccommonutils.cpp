@@ -858,3 +858,29 @@ ENUM_UnitType CCommonUtils::WhatUnitType( char *pStrPathname )
     return enUnitType;
 
 }
+
+
+/**
+ * @brief     입력 값을 기준으로 +- range 범위의 랜덤 값을 리턴한다.
+ * @param     int range
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 10:16
+ * @warning
+ */
+int CCommonUtils::Rand( int range )
+{
+    int random_val = 0;
+
+    if( range == 0 ) {
+    }
+    else {
+        random_val = rand() % (2 * range + 1);
+        random_val -= range;
+    }
+
+    return random_val;
+
+}

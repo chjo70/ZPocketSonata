@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
+
 #include "../../../Anal/SigAnal/_Macro.h"
 #include "../../../Anal/SigAnal/_Struct.h"
 
@@ -170,7 +171,7 @@ struct STR_ZOOM_INFO {
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
     void Init( char *pRawData ); \
-	void Alloc( unsigned int iItems=0 );	\
+	void Alloc( unsigned int uiItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
 	void ConvertArrayForELINT() { }	\
@@ -215,7 +216,7 @@ public:
     CData();
     virtual ~CData();
 
-    void Alloc( int iItems=0 );
+    void Alloc( unsigned int uiItems=0 );
     void Free();
 
     void AllocData( int iItems );
@@ -312,7 +313,7 @@ public:
 	CPDW(STR_RAWDATA *pRawData);
 	virtual ~CPDW();
 
-	void Alloc( unsigned int nItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -433,10 +434,10 @@ public:
      * @param iDOA
      * @return
      */
-    static float EncodeDOA(float fDOA )
+    static unsigned int EncodeDOA(float fDOA )
     {
-        fDOA = (float) fmod( ( double ) fDOA, (double) 360.0 );
-        return (float) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
+        return (unsigned int) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
     } ;
 
 };
@@ -455,7 +456,7 @@ public:
 	CSPDW(STR_RAWDATA *pRawData);
 	virtual ~CSPDW();
 
-	void Alloc( unsigned int nItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -480,9 +481,9 @@ namespace ELINT {
 
     const float _toaRes[ELINT::en50MHZ_BW+1] = { (float) 65.104167, (float) 8.138021 } ;
 
-    const float fFreqRes=(float) 0.001;
-    const float fDOARes=(float) 0.01;
-    const float fPARes=(float) 0.25;
+    const float _fFreqRes=(float) 0.001;
+    const float _fDOARes=(float) 0.01;
+    const float _fPARes=(float) 0.25;
 }
 
 // 인천공항 PDW
@@ -497,7 +498,7 @@ public:
 	CEPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CEPDW();
 
-	void Alloc( unsigned int nItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -509,8 +510,37 @@ public:
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
 
-    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
+    inline unsigned int GetOneDataSize() { \
+        return sizeof(_PDW); \
+    }
     inline void SetHeaderData( void *pData );
+
+
+
+    /**
+     * @brief     EncodePulseType
+     * @param     int iPulseType
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 10:53
+     * @warning
+     */
+    static unsigned int EncodePulseType( int iPulseType )
+    {
+        unsigned int ipluseType;
+
+        if( iPulseType == 0 ) {
+            ipluseType = STAT_NORMAL;
+        }
+        else {
+            ipluseType = STAT_CW;
+        }
+
+        return ipluseType;
+    } ;
+
 
     /**
      * @brief     DecodeTOAus
@@ -528,10 +558,21 @@ public:
         return (float) ( ( (float) uiTOA * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
-    static float DecodeTOAus(_TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth)
+    /**
+     * @brief     EncodeTOAus
+     * @param     float fTOA
+     * @param     ELINT::ENUM_BANDWIDTH enBandWidth
+     * @return    _TOA
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:38
+     * @warning
+     */
+    static _TOA EncodeTOAus( float fTOA, ELINT::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float)(((float)uiTOA * ELINT::_toaRes[enBandWidth]) / (float) 1000000000.);
-    };
+        return ( unsigned int ) (((fTOA * (float) 1000.) / ELINT::_toaRes[enBandWidth]) + 0.5);
+    } ;
 
 	/**
 	 * @brief     DecodeRealFREQMHz
@@ -547,13 +588,32 @@ public:
 	{
 		float fVal;
 
-		fVal = FMUL( uiFreq, ELINT::fFreqRes );
+		fVal = FMUL( uiFreq, ELINT::_fFreqRes );
 		
 		return fVal;
 	} ;
 
+    /**
+     * @brief     EncodeRealFREQMHz
+     * @param     float fFreq
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:38
+     * @warning
+     */
+    static unsigned int EncodeRealFREQMHz( float fFreq )
+    {
+        unsigned int uiFreq;
+
+        uiFreq = UDIV( fFreq, ELINT::_fFreqRes );
+
+        return uiFreq;
+    } ;
+
 	/**
-	 * @brief     DecodePW
+	 * @brief     펄스폭을 [초] 단위로 리턴한다.
 	 * @param     unsigned int uiPW
 	 * @param     ENUM_BANDWIDTH enBandWidth
 	 * @return    float
@@ -568,11 +628,21 @@ public:
 		return (float) ( ( (float) uiPW * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
 	} ;
 
-    static float DecodePW(unsigned int uiPW, XBAND::ENUM_BANDWIDTH enBandWidth)
+    /**
+     * @brief     EncodePWns
+     * @param     float fPW
+     * @param     XBAND::ENUM_BANDWIDTH enBandWidth
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:07
+     * @warning
+     */
+    static unsigned int EncodePWns( float fPW, ELINT::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float)(((float)uiPW * ELINT::_toaRes[enBandWidth]) / (float) 1000000000.);
-    };
-
+        return ( unsigned int ) (( float ) (fPW / ELINT::_toaRes[enBandWidth]) + 0.5);
+    } ;
 
 	/**
 	 * @brief     DecodeFREQMHz
@@ -602,9 +672,24 @@ public:
 	static float DecodeDOA( unsigned int uiDOA )
 	{
 		float fDOA;
-		fDOA = (float) ELINT::fDOARes * (float) ( uiDOA % 36000 );
+		fDOA = (float) ELINT::_fDOARes * (float) ( uiDOA % 36000 );
 		return fDOA;
 	} ;
+
+    /**
+     * @brief     EncodeDOA
+     * @param     float fDOA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:07
+     * @warning
+     */
+    static unsigned int EncodeDOA( float fDOA ) {
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
+        return ( unsigned int ) (( float ) fDOA / ELINT::_fDOARes + 0.5);
+    } ;
 
 	/**
 	 * @brief     DecodePA
@@ -618,17 +703,36 @@ public:
 	 */
 	static float DecodePA( unsigned int uiPA )
 	{		
-		return (float) ( ( (float) uiPA * (float) ELINT::fPARes ) - (float) 110. );
+		return (float) ( ( (float) uiPA * (float) ELINT::_fPARes ) - (float) 110. );
 	} ;
+
+    /**
+     * @brief     EncodePA
+     * @param     float fPA
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 11:39
+     * @warning
+     */
+    static unsigned int EncodePA( float fPA )
+    {
+        return ( unsigned int ) ((( float ) (fPA + (float) 110.0) / ( float ) ELINT::_fPARes) + 0.5);
+    } ;
+
+
+
+
 
 };
 
 
 namespace XBAND {
 	const float _toaRes[XBAND::en120MHZ_BW +1] = { (float) 65.104167, (float) 8.138021 } ;
-	const float fFreqRes=(float) 0.001;
-	const float fDOARes=(float) 0.01;
-	const float fPARes=(float) 0.25;
+	const float _fFreqRes=(float) 0.001;
+	const float _fDOARes=(float) 0.01;
+	const float _fPARes=(float) 0.25;
 }
 
 class CXPDW : public CData
@@ -734,7 +838,7 @@ public:
 	{
 		float fVal;
 
-		fVal = FMUL( uiFreq, XBAND::fFreqRes );
+		fVal = FMUL( uiFreq, XBAND::_fFreqRes );
 		
 		return fVal;
 	} ;
@@ -752,7 +856,7 @@ public:
     {
         unsigned int uiFreq;
 
-        uiFreq = IDIV( fFreq, XBAND::fFreqRes );
+        uiFreq = UDIV( fFreq, XBAND::_fFreqRes );
 
         return uiFreq;
     } ;
@@ -771,7 +875,7 @@ public:
     {
         float fFreq;
 
-        fFreq = FMUL( uiFreq, XBAND::fFreqRes );
+        fFreq = FMUL( uiFreq, XBAND::_fFreqRes );
         fFreq *= 1000000.;
 
         return fFreq;
@@ -790,7 +894,7 @@ public:
     {
         float fFreq;
 
-        fFreq = FMUL( uiFreq, XBAND::fFreqRes );
+        fFreq = FMUL( uiFreq, XBAND::_fFreqRes );
 
         return fFreq;
     } ;
@@ -854,7 +958,7 @@ public:
 	static float DecodeDOA( unsigned int uiDOA )
 	{
 		float fDOA;
-		fDOA = (float)XBAND::fDOARes * (float) ( uiDOA % 36000 );
+		fDOA = (float)XBAND::_fDOARes * (float) ( uiDOA % 36000 );
 		return fDOA;
 	} ;
 
@@ -870,8 +974,8 @@ public:
      */
     static unsigned int EncodeDOA(float fDOA )
     {
-        fDOA = (float) fmod( ( double ) fDOA, (double) 360.0 );
-        return (unsigned int) ( (float) fDOA / XBAND::fDOARes + 0.5 );
+        fDOA = (float) fmod( (double) fDOA + (double) (360*10), (double) 360.0 );
+        return (unsigned int) ( (float) fDOA / XBAND::_fDOARes + 0.5 );
     } ;
 
 	/**
@@ -886,7 +990,7 @@ public:
 	 */
 	static float DecodePA( unsigned int uiPA )
 	{		
-		return (float) ( ( (float) uiPA * (float)XBAND::fPARes ) - (float) 110. );
+		return (float) ( ( (float) uiPA * (float)XBAND::_fPARes ) - (float) 110. );
 	} ;
 
     /**
@@ -900,7 +1004,7 @@ public:
      */
     static unsigned int EncodePA( float fPA )
     {
-        return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float)XBAND::fPARes ) + 0.5 );
+        return (unsigned int) ( ( (float) ( fPA + (float) 110.0 ) / (float)XBAND::_fPARes ) + 0.5 );
     } ;
 
 };
@@ -932,7 +1036,7 @@ public:
 	CKFXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
 	virtual ~CKFXPDW();
 
-	void Alloc( unsigned int nItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -996,27 +1100,30 @@ namespace POCKETSONATA {
     #define L_PH_MIN_FREQ		64000
     #define H_PH_MIN_FREQ		192000  // [kHz]
 
-    #define PDW_TIME_RES		7.8125  // [ns]
-
-    const float fPDW_FREQ_RES=1.953125;
-    //#define PDW_FREQ_RES		(1.953125)
-    //#define PDW_AOA_RES			0.087890625
-
     #define PDW_PA_INIT		    (-89.0)
 
     const unsigned int uiPDW_CW=1;
     const unsigned int uiPDW_NORMAL=0;
 
-    static const float m_fCenterFreq[enMAXPRC] = { 0, 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
+    const float m_fCenterFreq[enMAXPRC][2] = { { 0., 0. }, \
+                                               { 0., 1072000. }, \
+                                               { 3072000., 5072000. }, \
+                                               { 7072000., 9072000. }, \
+                                               { 11072000., 13072000. }, \
+                                               { 15072000., 17072000. }, \
+                                               { 0., 0. } } ;
 
-	#define ONE_MICROSEC		(20)
+    const float _toaRes = (float) 7.8125;
+    const float _fFreqRes = (float) 1.953125;
+    const float _fDOARes = (float) 0.087890625;
+
 }
 
 
 class CPOCKETSONATAPDW : public CData
 {
 private:
-	POCKETSONATA_HEADER m_stHeader;
+	STR_POCKETSONATA_HEADER m_stHeader;
 
 	static int m_iBoardID;
 
@@ -1036,6 +1143,30 @@ public:
 
 public:
     /**
+     * @brief     EncodePulseType
+     * @param     int iPulseType
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 10:52
+     * @warning
+     */
+    static unsigned int EncodePulseType( int iPulseType )
+    {
+        unsigned int ipluseType;
+
+        if( iPulseType == 0 ) {
+            ipluseType = STAT_NORMAL;
+        }
+        else {
+            ipluseType = STAT_CW;
+        }
+
+        return ipluseType;
+    } ;
+
+    /**
      * @brief DecodeDOA
      * @param iDOA
      * @return
@@ -1053,13 +1184,13 @@ public:
      * @param fDOA
      * @return
      */
-    static int EncodeDOA( float fDOA )
+    static unsigned int EncodeDOA( float fDOA )
     {
-        int iDOA;
+        unsigned int uiDOA;
 
-        fDOA = (float) fmod( (double) fDOA, (double) 360.0 );
-        iDOA = (int) ( ( fDOA * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 );
-        return iDOA;
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
+        uiDOA = (unsigned int) ( ( fDOA * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 );
+        return uiDOA;
     } ;
 
     /**
@@ -1087,29 +1218,69 @@ public:
      * @date      2021-07-24, 10:47
      * @warning
      */
-    static float DecodeRealFREQMHz( int iFreq, int iCh, int iBoardID )
+    static float DecodeRealFREQMHz( int iFreq, int iCh, int iBoardID, int iNo )
     {
-        float fFREQ;
+        float fFREQ=(float) 0.;
 
-        if( iCh < 8 ) {
-            if( iFreq & 0x8000 ) {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::fPDW_FREQ_RES);
-            }
-            else {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES);      // 1.953125*32767 = 64MHz
-            }
+        if( iBoardID == 1 && iNo == 0 ) {
         }
         else {
-            iCh = 16 - iCh;
-            if( iFreq & 0x8000 ) {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::fPDW_FREQ_RES ) );
+            if( iCh < 8 ) {
+                if( iFreq & ( int ) 0x8000 ) {
+                    fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID][iNo] + ( float ) (PH_WIDTH_FREQ * iCh) - ( float ) (( float ) (0x10000 - iFreq) * POCKETSONATA::_fFreqRes);
+                }
+                else {
+                    fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID][iNo] + ( float ) (PH_WIDTH_FREQ * iCh) + ( float ) (( float ) iFreq * POCKETSONATA::_fFreqRes);      // 1.953125*32767 = 64MHz
+                }
             }
             else {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES ) );
+                iCh = 16 - iCh;
+                if( iFreq & ( int ) 0x8000 ) {
+                    fFREQ = ((POCKETSONATA::m_fCenterFreq[iBoardID][iNo]) - (PH_WIDTH_FREQ * iCh) - (( float ) (0x10000 - iFreq) * POCKETSONATA::_fFreqRes));
+                }
+                else {
+                    fFREQ = ((POCKETSONATA::m_fCenterFreq[iBoardID][iNo]) - (PH_WIDTH_FREQ * iCh) + (( float ) iFreq * POCKETSONATA::_fFreqRes));
+                }
             }
         }
 
         return fFREQ / (float) 1000.;	/* [MHz] */
+    } ;
+
+
+    /**
+     * @brief
+     * @param     int iFreq
+     * @return    int
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022/02/21 23:09:23
+     * @warning
+     */
+    static float DecodeFREQ( int iFreq, int iCh, int iBoardID, int iNo )
+    {
+        float fFreq;
+
+        fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID, iNo );
+        return fFreq;
+    } ;
+
+    /**
+     * @brief     DecodeFREQ
+     * @param     int iFreq
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 16:05
+     * @warning
+     */
+    static float DecodeFREQ( int iFreq )
+    {
+        float fFreq;
+
+        fFreq = (float) 1984000. + POCKETSONATA::_fFreqRes * (float) iFreq;
+        return fFreq;
     } ;
 
     /**
@@ -1121,7 +1292,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( (float) iFreq * POCKETSONATA::fPDW_FREQ_RES / (float) 1000. );
+        fRetFreq = ( (float) iFreq * POCKETSONATA::_fFreqRes / (float) 1000. );
         return fRetFreq;	/* [MHz] */
     } ;
 
@@ -1142,32 +1313,39 @@ public:
     {
         bool bRet=true;
         float fFREQ;
-        
-        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[iBoardID] - 64000 );
 
-        if( fFREQ < 0. ) {
-            fFREQ += 1024000.0;
-            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+        if( fFreq != 0. ) {
+            int iNo = 0;
 
-            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
+            fFREQ = (fFreq * (float) 1000.) - (POCKETSONATA::m_fCenterFreq[iBoardID][iNo] - 64000);
+
+            if( fFREQ < 0. ) {
+                fFREQ += 1024000.0;
+                *piCh = ( int ) (( float ) fFREQ / (float) 128000.);
+
+                if( fFREQ - (*piCh * 128000) >= 64000 ) {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000) - (float) 64000.), POCKETSONATA::_fFreqRes );
+                }
+                else {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000)), POCKETSONATA::_fFreqRes ) + 32768;
+                }
+
+                *piCh += 8;
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
-            }
+                *piCh = ( int ) (( float ) fFREQ / (float) 128000.);
 
-            *piCh += 8;
+                if( fFREQ - (*piCh * 128000) >= 64000 ) {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000) - (float) 64000.), POCKETSONATA::_fFreqRes );
+                }
+                else {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000)), POCKETSONATA::_fFreqRes ) + 32768;
+                }
+
+            }
         }
         else {
-            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
-
-            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
-            }
-            else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
-            }
-
+            bRet = false;
         }
 
         return bRet;
@@ -1184,22 +1362,22 @@ public:
      * @date      2022/02/21 23:09:10
      * @warning   
      */
-    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq )
+    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq, int iBoardID=m_iBoardID, int iNo=0 )
     {
         bool bRet=true;
         float fFREQ;
 
-        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[CPOCKETSONATAPDW::m_iBoardID] - 64000 );
+        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[iBoardID][iNo] - 64000 );
 
         if( fFREQ < 0. ) {
             fFREQ += 1024000.0;
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::_fFreqRes );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::_fFreqRes ) + 32768;
             }
 
             *piCh += 8;
@@ -1208,10 +1386,10 @@ public:
             *piCh = (int) ( (float) fFREQ / (float) 128000. );    
 
             if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::fPDW_FREQ_RES );
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::_fFreqRes );
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::fPDW_FREQ_RES ) + 32768;
+                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::_fFreqRes ) + 32768;
             }
 
         }
@@ -1220,7 +1398,7 @@ public:
     } ;
 
     /**
-     * @brief DecodeFREQMHz
+     * @brief EncodeFREQMHz
      * @param iFreqHz
      * @return
      */
@@ -1228,7 +1406,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
+        fRetFreq = ( ( fFreq * (float) 1000. ) / POCKETSONATA::_fFreqRes);
         return fRetFreq;	/* [MHz] */
     } ;
 
@@ -1246,7 +1424,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ((fFreq * (float) 1000.) / POCKETSONATA::fPDW_FREQ_RES);
+        fRetFreq = ((fFreq * (float) 1000.) / POCKETSONATA::_fFreqRes);
         return (unsigned int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
@@ -1259,7 +1437,7 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::_fFreqRes);
         return (int) fRetFreq;	/* [MHz] */
     } ;
 
@@ -1276,27 +1454,10 @@ public:
     {
         float fRetFreq;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::fPDW_FREQ_RES );
+        fRetFreq = ( ( (float) fFreq * (float) 1000. ) / POCKETSONATA::_fFreqRes);
         return (int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
-
-    /**
-     * @brief     
-     * @param     int iFreq
-     * @return    int
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022/02/21 23:09:23
-     * @warning   
-     */
-    static int DecodeFREQ( int iFreq )
-    {
-        float fFreq;
-
-        fFreq = (float) iFreq * POCKETSONATA::fPDW_FREQ_RES;
-        return (int) ( fFreq + 0.5 );	/* [kHz] */
-    } ;
 
     /**
      * @brief DecodePW
@@ -1307,7 +1468,7 @@ public:
     {
         float fPW;
 
-        fPW = (float) ( (float) iPW * (float) PDW_TIME_RES / (float) 1.0 );
+        fPW = (float) ( (float) iPW * POCKETSONATA::_toaRes / (float) 1000000000.);
         return fPW;		/* [ns] */
     } ;
 
@@ -1320,7 +1481,7 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) iPW * (float) PDW_TIME_RES;
+        fretPW = (float) iPW * POCKETSONATA::_toaRes;
         fretPW = ( fretPW / (float) 1000. );
         return fretPW;
     } ;
@@ -1338,7 +1499,7 @@ public:
     {
         float fretPW;
 
-        fretPW = (float) iPW * (float) PDW_TIME_RES;
+        fretPW = (float) iPW * POCKETSONATA::_toaRes;
         fretPW = ( fretPW / (float) 1000000. );
         return fretPW;
     } ;
@@ -1357,9 +1518,9 @@ public:
     {
         float fretPW;
 
-        fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / ( float ) PDW_TIME_RES;
-        return ( int ) ( fretPW + 0.5 );
+        //fretPW = fPW * (float) 100.;
+        fretPW = fPW / POCKETSONATA::_toaRes;
+        return ( unsigned int ) ( fretPW + 0.5 );
     } ;
 
     /**
@@ -1376,7 +1537,7 @@ public:
         float fretPW;
 
         fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / (float) PDW_TIME_RES;
+        fretPW = fretPW / POCKETSONATA::_toaRes;
         return (int) fretPW;
     } ;
 
@@ -1395,7 +1556,7 @@ public:
         float fretPW;
 
         fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / (float) PDW_TIME_RES;
+        fretPW = fretPW / POCKETSONATA::_toaRes;
         return (int) ( fretPW + 0.5 );
     } ;
 
@@ -1408,10 +1569,10 @@ public:
     {
         long double dTOA;
 
-        iTOA = iTOA & 0xFFFFFFFFFFF;
+        //iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        dTOA = (long double) ( (long double) iTOA * (long double) PDW_TIME_RES / (long double) 1.0 );
-        return (float) dTOA;	/* [ns] */
+        dTOA = (long double) ( (long double) iTOA * POCKETSONATA::_toaRes / (long double) 1000000000.0 );
+        return (float) dTOA;	/* [s] */
     } ;
 
     /**
@@ -1429,7 +1590,7 @@ public:
 
         iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        dTOA = (double) ( (double) iTOA * (double) PDW_TIME_RES / (double) 1.0 );
+        dTOA = (double) ( (double) iTOA * (double) POCKETSONATA::_toaRes / (double) 1.0 );
         return dTOA;	/* [ns] */
     } ;
 
@@ -1444,7 +1605,7 @@ public:
 
         iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000. );
+        fretTOA = ( (float) iTOA * POCKETSONATA::_toaRes / (float) 1000. );
         return fretTOA;	/* [us] */
     } ;
 
@@ -1459,7 +1620,7 @@ public:
 
         iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        fretTOA = ( (float) iTOA * (float) PDW_TIME_RES / (float) 1000000. );
+        fretTOA = ( (float) iTOA * POCKETSONATA::_toaRes / (float) 1000000. );
         return fretTOA;	/* [ms] */
     } ;
 
@@ -1472,7 +1633,7 @@ public:
     {
         _TOA iretTOA;
 
-        iretTOA = (_TOA) ( ( ( (float) iTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
+        iretTOA = (_TOA) ( ( ( (float) iTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
         return iretTOA;	/* [ns] */
     } ;
 
@@ -1480,7 +1641,7 @@ public:
      * @brief     
      * @param     float fTOA
      * @return    _TOA
-     * @author    議곗쿋??(churlhee.jo@lignex1.com)
+     * @author    조철희(churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022/01/09 12:59:01
      * @warning   
@@ -1489,7 +1650,7 @@ public:
     {
         _TOA iretTOA;
 
-        iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / (float) PDW_TIME_RES ) + 0.5 );
+        iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
         return iretTOA;	/* [ns] */
     } ;
 
@@ -1502,7 +1663,7 @@ public:
     {
         int iretTOA;
 
-        iretTOA = (int) ( ( (float) iTOA * (float) 1000000. * (float) PDW_TIME_RES ) + 0.5 );
+        iretTOA = (int) ( ( (float) iTOA * (float) 1000000. * POCKETSONATA::_toaRes) + 0.5 );
         return iretTOA;	/* [ns] */
     } ;
 
@@ -1515,7 +1676,7 @@ public:
     {
         float fTOA;
 
-        fTOA = (float) ( (float) ffTOA * (float) PDW_TIME_RES / (float) 1000.0 );
+        fTOA = (float) ( (float) ffTOA * (float) POCKETSONATA::_toaRes / (float) 1000.0 );
         return fTOA;	/* [ns] */
     } ;
 
@@ -1538,35 +1699,41 @@ public:
     {
         bool bRet=true;
 
-        int i, j;
+        int i, j, k;
         int iFreq, iCh;
         int iDFreq, iDCh;
         float fFreq;
 
-        for( i=0 ; i < 15 ; ++i ) {
-            for( j=0 ; j < 0xFFFF ; ++j ) {
-                iDFreq = j;
-                iDCh = i;
-                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                if( iDFreq == iFreq && iDCh == iCh ) {
-                }
-                else {
-                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    bRet = false;
-                }
+        for( k = 0 ; k <= 1 ; ++k ) {
+            for( i = 0 ; i < 15 ; ++i ) {
+                for( j = 0 ; j < 0xFFFF ; ++j ) {
+                    iDFreq = j;
+                    iDCh = i;
+                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, k );
+                    CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
+                    if( iDFreq == iFreq && iDCh == iCh ) {
+                        TRACE( "\n Freq[%dMHz],Ch[%d]", iFreq, iCh );
+                        if( iCh > 17 ) {
+                            TRACE( "AAAAA" );
+                        }
+                    }
+                    else {
+                        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, 0 );
+                        CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
+                        bRet = false;
+                    }
 
-                iDFreq = j;
-                iDCh = i;
-                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                if( iDFreq == iFreq && iDCh == iCh ) {
-                }
-                else {
-                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    bRet = false;
+                    //                 iDFreq = j;
+                    //                 iDCh = i;
+                    //                 fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                 CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                 if( iDFreq == iFreq && iDCh == iCh ) {
+                    //                 }
+                    //                 else {
+                    //                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                     CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                     bRet = false;
+                    //                 }
                 }
             }
         }
@@ -1587,7 +1754,7 @@ public:
 	CIQ(STR_RAWDATA *pRawData);
 	virtual ~CIQ();
 
-	void Alloc( unsigned int nItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader();
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -1612,7 +1779,7 @@ public:
     C7IQ(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pFilterSetup );
 	virtual ~C7IQ();
 
-	void Alloc( unsigned int iItems=0 );
+	void Alloc( unsigned int uiItems=0 );
 	void Free();
 	void ReadDataHeader() {  }
     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
@@ -1719,14 +1886,72 @@ public:
 
     inline unsigned long long int FileSize( char *pPathFileName ) { return m_RawDataFile.GetFileSize( pPathFileName ); }
 
-	inline UINT GetDataItems() { if( m_pData != NULL ) return m_pData->m_PDWData.GetTotalPDW(); else return 0; }
+    /**
+     * @brief     GetDataItems
+     * @return    UINT
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-09, 11:13
+     * @warning
+     */
+    inline UINT GetDataItems() { 
+        UINT uiRet = 0;
+        if( m_pData != NULL ) 
+            uiRet = m_pData->m_PDWData.GetTotalPDW();
+
+        return uiRet; 
+    }
 	inline ENUM_UnitType GetUnitType() { return m_pData->m_enUnitType; }
 	inline ENUM_DataType GetDataType() { return m_pData->m_enDataType; }
 	
-	inline CData *GetRawData() { if( m_pData != NULL ) return m_pData; else return NULL; }
+	/**
+	 * @brief     GetRawData
+	 * @return    CData *
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-05-09, 11:13
+	 * @warning
+	 */
+	inline CData *GetRawData() { 
+        CData *pRet=NULL;
+        if( m_pData != NULL ) {
+            pRet = m_pData;
+        }
+
+        return pRet;
+    }
+
 	inline STR_FILTER_SETUP *GetFilterSetup() { return & m_pData->m_strFilterSetup; }
-	inline void ClearFilterSetup() { m_pData->ClearFilterSetup(); }
-	inline UINT GetFilteredDataItems() { STR_PDWREALDATA *pPDWData=(STR_PDWREALDATA *) m_pData->GetData(); return pPDWData->uiDataItems; }
+
+	/**
+	 * @brief     ClearFilterSetup
+	 * @return    void
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-05-09, 11:15
+	 * @warning
+	 */
+	inline void ClearFilterSetup() { 
+        m_pData->ClearFilterSetup(); 
+    }
+
+	/**
+	 * @brief     GetFilteredDataItems
+	 * @return    UINT
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-05-09, 11:15
+	 * @warning
+	 */
+	inline UINT GetFilteredDataItems() { 
+        STR_PDWREALDATA *pPDWData=(STR_PDWREALDATA *) m_pData->GetData(); 
+        return pPDWData->uiDataItems; 
+    }
+
     inline UINT GetFilteredRealDataItems() { STR_PDWREALDATA *pPDWRealData=(STR_PDWREALDATA *) m_pData->GetRealData(); return pPDWRealData->uiDataItems; }
 
 #ifdef _GRAPH_
@@ -1850,6 +2075,32 @@ public:
 class CEncode {
     // Encode
 public:
+
+
+    static unsigned int EncodePulseType( int iPulseType ) {
+        unsigned int uiPulseType;
+
+        if( g_enUnitType == en_XBAND ) {
+            uiPulseType = CXPDW::EncodePulseType( iPulseType );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            uiPulseType = CPOCKETSONATAPDW::EncodePulseType( iPulseType );
+
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            uiPulseType = CEPDW::EncodePulseType( iPulseType );
+
+        }
+        else {
+            uiPulseType = 0;
+
+        }
+        return uiPulseType;
+
+    } ;
+
+
     /**
      * @brief     EncodeDOA
      * @param     float fDOA
@@ -1869,6 +2120,10 @@ public:
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiDOA = CPOCKETSONATAPDW::EncodeDOA( fDOA );
+
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            uiDOA = CEPDW::EncodeDOA( fDOA );
 
         }
         else {
@@ -1899,6 +2154,11 @@ public:
             uiPA = CPOCKETSONATAPDW::EncodePA( fPA );
 
         }
+        else if( g_enUnitType == en_ELINT ) {
+            uiPA = CEPDW::EncodePA( fPA );
+
+        }
+
         else {
             uiPA = 0;
 
@@ -1929,6 +2189,10 @@ public:
             tTOA = CPOCKETSONATAPDW::EncodeTOAus( fTOA );
 
         }
+        else if( g_enUnitType == en_ELINT ) {
+            tTOA = CEPDW::EncodeTOAus( fTOA, (ELINT::ENUM_BANDWIDTH) iBandWidth );
+
+        }
         else {
             tTOA = 0;
         }
@@ -1947,22 +2211,25 @@ public:
      * @warning
      */
     static unsigned int EncodePWns( float fPWns, int iBandWidth ) {
-        unsigned uiDOA;
+        unsigned uiPW;
 
         if( g_enUnitType == en_XBAND ) {
-            iBandWidth = 
-            uiDOA = CXPDW::EncodePWns( fPWns, (XBAND::ENUM_BANDWIDTH) iBandWidth );
+            uiPW = CXPDW::EncodePWns( fPWns, (XBAND::ENUM_BANDWIDTH) iBandWidth );
 
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-            uiDOA = CPOCKETSONATAPDW::EncodePWns( fPWns );
+            uiPW = CPOCKETSONATAPDW::EncodePWns( fPWns );
+
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            uiPW = CEPDW::EncodePWns( fPWns, (ELINT::ENUM_BANDWIDTH) iBandWidth );
 
         }
         else {
-            uiDOA = 0;
+            uiPW = 0;
         }
 
-        return uiDOA;
+        return uiPW;
     } ;
 
     /**
@@ -1975,20 +2242,31 @@ public:
      * @date      2022-05-02, 19:32
      * @warning
      */
-    static unsigned int EncodeRealFREQMHz( float fFrequency ) {
+    static unsigned int EncodeRealFREQMHz( int *piCh, float fFrequency ) {
         unsigned int uiFrequency;
 
         if( g_enUnitType == en_XBAND ) {
+            *piCh = -1;
             uiFrequency = CXPDW::EncodeRealFREQMHz( fFrequency );
 
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-            uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
+            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            //uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, piCh, ( int ) iBoardID, fFrequency );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & uiFrequency, piCh, fFrequency, iBoardID );
+
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            *piCh = 0;
+            uiFrequency = CEPDW::EncodeRealFREQMHz( fFrequency );
 
         }
         else {
+            *piCh = 0;
             uiFrequency = 0;
         }
+
         return uiFrequency;
     } ;
 
@@ -1997,6 +2275,61 @@ public:
 class CDecode {
 public:
 
+    /**
+     * @brief     DecodeRealFREQMHz
+     * @param     unsigned int uiFrequency
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-16, 15:47
+     * @warning
+     */
+    static float DecodeRealFREQMHz( unsigned int uiFrequency ) {
+        float fFrequency;
+
+        if( g_enUnitType == en_XBAND ) {
+            fFrequency = CXPDW::DecodeRealFREQMHz( uiFrequency );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            // uiFrequency = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFrequency, *piCh, ( int ) iBoardID, fFrequency );
+            fFrequency = 0;
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            fFrequency = CEPDW::DecodeRealFREQMHz( uiFrequency );
+
+        }
+        else {
+            fFrequency = 0;
+        }
+
+        return fFrequency;
+    } ;
+
+
+//     static unsigned int DecodePWns( float fPWns, int iBandWidth ) {
+//         unsigned uiPW;
+// 
+//         if( g_enUnitType == en_XBAND ) {
+//             uiPW = CXPDW::DecodePWns( fPWns, (XBAND::ENUM_BANDWIDTH) iBandWidth );
+// 
+//         }
+//         else if( g_enUnitType == en_ZPOCKETSONATA ) {
+//             uiPW = CPOCKETSONATAPDW::DecodePWns( fPWns );
+// 
+//         }
+//         else if( g_enUnitType == en_ELINT ) {
+//             uiPW = CEPDW::DecodePWns( fPWns, (ELINT::ENUM_BANDWIDTH) iBandWidth );
+// 
+//         }
+//         else {
+//             uiPW = 0;
+//         }
+// 
+//         return uiPW;
+//     } ;
 
 };
 

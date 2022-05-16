@@ -273,7 +273,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	CString strVal;
 
 	void *pData;
-	STR_PDWREALDATA *pPDWData=NULL;
+	STR_PDWREALDATA *pPDWRealData =NULL;
 	STR_IQ_DATA *pIQData=NULL;
 
 	uiPDWDataItems = m_pDoc->GetPDWDataItems();
@@ -288,17 +288,17 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 		Log( enNormal, _T("목록창에 데이터 삽입 시작합니다.") );
 
 		if (enDataType == en_PDW_DATA) {
-			pPDWData = (STR_PDWREALDATA *) pData;
-			if( pPDWData != NULL ) {
-				pfTOA = pPDWData->pfTOA;
-				pfDTOA = pPDWData->pfDTOA;
-				pfAOA = pPDWData->pfAOA;
-				pfFreq = pPDWData->pfFreq;
-				pfPA = pPDWData->pfPA;
-				pfPW = pPDWData->pfPW;
-				pcDV = pPDWData->pcDV;
-				pllTOA = pPDWData->pullTOA;
-				pcType = pPDWData->pcType;
+            pPDWRealData = (STR_PDWREALDATA *) pData;
+			if( pPDWRealData != NULL ) {
+				pfTOA = pPDWRealData->pfTOA;
+				pfDTOA = pPDWRealData->pfDTOA;
+				pfAOA = pPDWRealData->pfAOA;
+				pfFreq = pPDWRealData->pfFreq;
+				pfPA = pPDWRealData->pfPA;
+				pfPW = pPDWRealData->pfPW;
+				pcDV = pPDWRealData->pcDV;
+				pllTOA = pPDWRealData->pullTOA;
+				pcType = pPDWRealData->pcType;
 // 				pfPh1 = pPDWData->pfPh1;
 // 				pfPh2 = pPDWData->pfPh2;
 // 				pfPh3 = pPDWData->pfPh3;
