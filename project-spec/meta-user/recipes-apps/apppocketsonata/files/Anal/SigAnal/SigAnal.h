@@ -269,6 +269,15 @@ public:
 
 #endif
 
+    /**
+     * @brief     GetTaskID
+     * @return    char *
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 14:37
+     * @warning
+     */
     inline char *GetTaskID() {
 #if defined(_ELINT_) || defined(_XBAND_)
         return (char *)& m_szTaskID[0];
@@ -276,8 +285,7 @@ public:
         return NULL;
 #endif
     }
-    
-#if defined(_ELINT_) || defined(_XBAND_)
+
     /**
      * @brief     SetTaskID
      * @param     char * pVal
@@ -288,13 +296,49 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline void SetTaskID(char *pVal) { 
-        strcpy(m_szTaskID, pVal); 
+    inline void SetTaskID( char *pVal ) {
+#if defined(_ELINT_) || defined(_XBAND_)
+        strcpy( m_szTaskID, pVal );
+#else
+
+#endif
+
     }
 
-    EN_RADARCOLLECTORID GetCollectorID() const { return m_enCollectorID; }
-    void SetCollectorID(EN_RADARCOLLECTORID val) { m_enCollectorID = val; }
+    /**
+     * @brief     GetCollectorID
+     * @return    EN_RADARCOLLECTORID
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 14:38
+     * @warning
+     */
+    EN_RADARCOLLECTORID GetCollectorID() const { 
+#if defined(_ELINT_) || defined(_XBAND_)
+        return m_enCollectorID; 
+#else
+        return RADARCOL_Unknown;
 #endif
+    }
+    
+    /**
+     * @brief     SetCollectorID
+     * @param     EN_RADARCOLLECTORID val
+     * @return    void
+     * @exception
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 14:38
+     * @warning
+     */
+    void SetCollectorID(EN_RADARCOLLECTORID val) { 
+#if defined(_ELINT_) || defined(_XBAND_)
+        m_enCollectorID = val; 
+#else
+
+#endif
+    }
 
     /**
      * @brief     GetRawDataFilename

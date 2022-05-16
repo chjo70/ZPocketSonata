@@ -477,7 +477,7 @@ struct _PDW {
      * @warning
      */
     int GetChannel() {
-        int iRet=0;
+        int iRet=-1;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             iRet = x.ps.iChannel;
@@ -540,10 +540,28 @@ struct _PDW {
         return uiPW;
     }
 
+    /**
+     * @brief     방위 값을 리턴한다.
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 15:19
+     * @warning
+     */
     unsigned int GetAOA() {
         return uiAOA;
     }
 
+    /**
+     * @brief     신호세기 값을 리턴한다.
+     * @return    unsigned int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 15:19
+     * @warning
+     */
     unsigned int GetPulseamplitude() {
         return uiPA;
 
@@ -1186,6 +1204,52 @@ typedef union {
         return;
 
     }
+
+    /**
+     * @brief     SetBoardID
+     * @param     unsigned int uiBoardID
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 15:00
+     * @warning
+     */
+    void SetBoardID( unsigned int uiBoardID ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            ps.uiBoardID = uiBoardID;
+        }
+        else {
+            // x.so.stCommon.uiPDWID;
+        }
+
+        return;
+
+    }
+
+    /**
+     * @brief     SetBand
+     * @param     unsigned int uiBand
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 15:01
+     * @warning
+     */
+    void SetBand( unsigned int uiBand ) {
+
+        if( g_enUnitType == en_ZPOCKETSONATA ) {
+            ps.uiBand = uiBand;
+        }
+        else {
+            //x.so.uiBand
+        }
+
+        return;
+
+    }
     
     /**
      * @brief     SetCollectorID
@@ -1198,25 +1262,15 @@ typedef union {
      * @date      2022-04-20, 17:03
      * @warning
      */
-    void SetCollectorID(ENUM_UnitType enUnitType, EN_RADARCOLLECTORID enCollectorID ) {
-        switch (enUnitType) {
-        case en_ZPOCKETSONATA:
-            break;
+    void SetCollectorID( EN_RADARCOLLECTORID enCollectorID ) {
 
-        case en_ELINT:
+        if( g_enUnitType == en_ELINT ) {
             el.enCollectorID = enCollectorID;
-            break;
-
-        case en_XBAND:
+        }
+        else if( g_enUnitType == en_XBAND ) {
             xb.enCollectorID = enCollectorID;
-            break;
-
-        case en_SONATA:
-            break;
-
-        default:
-            break;
-
+        }
+        else {
         }
     }
 
@@ -1409,10 +1463,10 @@ struct STR_PDWDATA {
             x.ps.uiBand = uiBand;
         }
         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
-            //x.el.uiBoardID = uiBoardID;
+            //x.el.uiBand = uiBoardID;
         }
         else {
-            //x.so.stCommon.uiPDWID;
+            //x.so.uiBand
         }
 
         return;
@@ -1441,7 +1495,7 @@ struct STR_PDWDATA {
             //uiBand = x.xb.uiBand;
         }
         else {
-            uiBand = x.so.uiBand;
+            uiBand = 0;
         }
 
         return uiBand;

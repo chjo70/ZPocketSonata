@@ -1100,25 +1100,23 @@ namespace POCKETSONATA {
     #define L_PH_MIN_FREQ		64000
     #define H_PH_MIN_FREQ		192000  // [kHz]
 
-    //#define PDW_TIME_RES		7.8125  // [ns]
-
-    //const float fPDW_FREQ_RES=1.953125;
-
-    //#define PDW_AOA_RES			0.087890625
-
     #define PDW_PA_INIT		    (-89.0)
 
     const unsigned int uiPDW_CW=1;
     const unsigned int uiPDW_NORMAL=0;
 
-    const float m_fCenterFreq[enMAXPRC] = { 0, 3072000., 3072000., 3072000., 3072000., 3072000., 3072000. } ;
+    const float m_fCenterFreq[enMAXPRC][2] = { { 0., 0. }, \
+                                               { 0., 1072000. }, \
+                                               { 3072000., 5072000. }, \
+                                               { 7072000., 9072000. }, \
+                                               { 11072000., 13072000. }, \
+                                               { 15072000., 17072000. }, \
+                                               { 0., 0. } } ;
 
     const float _toaRes = (float) 7.8125;
     const float _fFreqRes = (float) 1.953125;
     const float _fDOARes = (float) 0.087890625;
-    //const float _fPARes = (float) 0.25;
 
-	#define ONE_MICROSEC		(20)
 }
 
 
@@ -1220,25 +1218,29 @@ public:
      * @date      2021-07-24, 10:47
      * @warning
      */
-    static float DecodeRealFREQMHz( int iFreq, int iCh, int iBoardID )
+    static float DecodeRealFREQMHz( int iFreq, int iCh, int iBoardID, int iNo )
     {
-        float fFREQ;
+        float fFREQ=(float) 0.;
 
-        if( iCh < 8 ) {
-            if( iFreq & ( int ) 0x8000 ) {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) - (float) ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::_fFreqRes);
-            }
-            else {
-                fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID] + (float) ( PH_WIDTH_FREQ * iCh ) + (float) ( (float) iFreq * POCKETSONATA::_fFreqRes);      // 1.953125*32767 = 64MHz
-            }
+        if( iBoardID == 1 && iNo == 0 ) {
         }
         else {
-            iCh = 16 - iCh;
-            if( iFreq & ( int ) 0x8000 ) {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) - ( (float) ( 0x10000 - iFreq ) * POCKETSONATA::_fFreqRes) );
+            if( iCh < 8 ) {
+                if( iFreq & ( int ) 0x8000 ) {
+                    fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID][iNo] + ( float ) (PH_WIDTH_FREQ * iCh) - ( float ) (( float ) (0x10000 - iFreq) * POCKETSONATA::_fFreqRes);
+                }
+                else {
+                    fFREQ = POCKETSONATA::m_fCenterFreq[iBoardID][iNo] + ( float ) (PH_WIDTH_FREQ * iCh) + ( float ) (( float ) iFreq * POCKETSONATA::_fFreqRes);      // 1.953125*32767 = 64MHz
+                }
             }
             else {
-                fFREQ = ( ( POCKETSONATA::m_fCenterFreq[iBoardID] ) - ( PH_WIDTH_FREQ * iCh) + ( (float) iFreq * POCKETSONATA::_fFreqRes) );
+                iCh = 16 - iCh;
+                if( iFreq & ( int ) 0x8000 ) {
+                    fFREQ = ((POCKETSONATA::m_fCenterFreq[iBoardID][iNo]) - (PH_WIDTH_FREQ * iCh) - (( float ) (0x10000 - iFreq) * POCKETSONATA::_fFreqRes));
+                }
+                else {
+                    fFREQ = ((POCKETSONATA::m_fCenterFreq[iBoardID][iNo]) - (PH_WIDTH_FREQ * iCh) + (( float ) iFreq * POCKETSONATA::_fFreqRes));
+                }
             }
         }
 
@@ -1255,14 +1257,24 @@ public:
      * @date      2022/02/21 23:09:23
      * @warning
      */
-    static float DecodeFREQ( int iFreq, int iCh, int iBoardID )
+    static float DecodeFREQ( int iFreq, int iCh, int iBoardID, int iNo )
     {
         float fFreq;
 
-        fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID );
+        fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID, iNo );
         return fFreq;
     } ;
 
+    /**
+     * @brief     DecodeFREQ
+     * @param     int iFreq
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-10, 16:05
+     * @warning
+     */
     static float DecodeFREQ( int iFreq )
     {
         float fFreq;
@@ -1301,32 +1313,39 @@ public:
     {
         bool bRet=true;
         float fFREQ;
-        
-        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[iBoardID] - 64000 );
 
-        if( fFREQ < 0. ) {
-            fFREQ += 1024000.0;
-            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
+        if( fFreq != 0. ) {
+            int iNo = 0;
 
-            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::_fFreqRes );
+            fFREQ = (fFreq * (float) 1000.) - (POCKETSONATA::m_fCenterFreq[iBoardID][iNo] - 64000);
+
+            if( fFREQ < 0. ) {
+                fFREQ += 1024000.0;
+                *piCh = ( int ) (( float ) fFREQ / (float) 128000.);
+
+                if( fFREQ - (*piCh * 128000) >= 64000 ) {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000) - (float) 64000.), POCKETSONATA::_fFreqRes );
+                }
+                else {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000)), POCKETSONATA::_fFreqRes ) + 32768;
+                }
+
+                *piCh += 8;
             }
             else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::_fFreqRes ) + 32768;
-            }
+                *piCh = ( int ) (( float ) fFREQ / (float) 128000.);
 
-            *piCh += 8;
+                if( fFREQ - (*piCh * 128000) >= 64000 ) {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000) - (float) 64000.), POCKETSONATA::_fFreqRes );
+                }
+                else {
+                    *piFreq = IDIV( (fFREQ - ( float ) (*piCh * 128000)), POCKETSONATA::_fFreqRes ) + 32768;
+                }
+
+            }
         }
         else {
-            *piCh = (int) ( (float) fFREQ / (float) 128000. );    
-
-            if( fFREQ - ( *piCh * 128000 ) >= 64000 ) {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) - (float) 64000. ), POCKETSONATA::_fFreqRes );
-            }
-            else {
-                *piFreq = IDIV( ( fFREQ - (float) ( *piCh * 128000 ) ), POCKETSONATA::_fFreqRes ) + 32768;
-            }
-
+            bRet = false;
         }
 
         return bRet;
@@ -1343,12 +1362,12 @@ public:
      * @date      2022/02/21 23:09:10
      * @warning   
      */
-    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq )
+    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq, int iBoardID=m_iBoardID, int iNo=0 )
     {
         bool bRet=true;
         float fFREQ;
 
-        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[CPOCKETSONATAPDW::m_iBoardID] - 64000 );
+        fFREQ = ( fFreq * (float) 1000. ) - ( POCKETSONATA::m_fCenterFreq[iBoardID][iNo] - 64000 );
 
         if( fFREQ < 0. ) {
             fFREQ += 1024000.0;
@@ -1379,7 +1398,7 @@ public:
     } ;
 
     /**
-     * @brief DecodeFREQMHz
+     * @brief EncodeFREQMHz
      * @param iFreqHz
      * @return
      */
@@ -1499,8 +1518,8 @@ public:
     {
         float fretPW;
 
-        fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / POCKETSONATA::_toaRes;
+        //fretPW = fPW * (float) 100.;
+        fretPW = fPW / POCKETSONATA::_toaRes;
         return ( unsigned int ) ( fretPW + 0.5 );
     } ;
 
@@ -1680,35 +1699,41 @@ public:
     {
         bool bRet=true;
 
-        int i, j;
+        int i, j, k;
         int iFreq, iCh;
         int iDFreq, iDCh;
         float fFreq;
 
-        for( i=0 ; i < 15 ; ++i ) {
-            for( j=0 ; j < 0xFFFF ; ++j ) {
-                iDFreq = j;
-                iDCh = i;
-                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                if( iDFreq == iFreq && iDCh == iCh ) {
-                }
-                else {
-                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    bRet = false;
-                }
+        for( k = 0 ; k <= 1 ; ++k ) {
+            for( i = 0 ; i < 15 ; ++i ) {
+                for( j = 0 ; j < 0xFFFF ; ++j ) {
+                    iDFreq = j;
+                    iDCh = i;
+                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, k );
+                    CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
+                    if( iDFreq == iFreq && iDCh == iCh ) {
+                        TRACE( "\n Freq[%dMHz],Ch[%d]", iFreq, iCh );
+                        if( iCh > 17 ) {
+                            TRACE( "AAAAA" );
+                        }
+                    }
+                    else {
+                        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, 0 );
+                        CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
+                        bRet = false;
+                    }
 
-                iDFreq = j;
-                iDCh = i;
-                fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                if( iDFreq == iFreq && iDCh == iCh ) {
-                }
-                else {
-                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    bRet = false;
+                    //                 iDFreq = j;
+                    //                 iDCh = i;
+                    //                 fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                 CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                 if( iDFreq == iFreq && iDCh == iCh ) {
+                    //                 }
+                    //                 else {
+                    //                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
+                    //                     CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
+                    //                     bRet = false;
+                    //                 }
                 }
             }
         }
@@ -2217,24 +2242,31 @@ public:
      * @date      2022-05-02, 19:32
      * @warning
      */
-    static unsigned int EncodeRealFREQMHz( float fFrequency ) {
+    static unsigned int EncodeRealFREQMHz( int *piCh, float fFrequency ) {
         unsigned int uiFrequency;
 
         if( g_enUnitType == en_XBAND ) {
+            *piCh = -1;
             uiFrequency = CXPDW::EncodeRealFREQMHz( fFrequency );
 
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-            uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
+            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            //uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, piCh, ( int ) iBoardID, fFrequency );
+            //CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & uiFrequency, piCh, fFrequency, iBoardID );
 
         }
         else if( g_enUnitType == en_ELINT ) {
+            *piCh = 0;
             uiFrequency = CEPDW::EncodeRealFREQMHz( fFrequency );
 
         }
         else {
+            *piCh = 0;
             uiFrequency = 0;
         }
+
         return uiFrequency;
     } ;
 
@@ -2242,6 +2274,41 @@ public:
 
 class CDecode {
 public:
+
+    /**
+     * @brief     DecodeRealFREQMHz
+     * @param     unsigned int uiFrequency
+     * @return    float
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-05-16, 15:47
+     * @warning
+     */
+    static float DecodeRealFREQMHz( unsigned int uiFrequency ) {
+        float fFrequency;
+
+        if( g_enUnitType == en_XBAND ) {
+            fFrequency = CXPDW::DecodeRealFREQMHz( uiFrequency );
+
+        }
+        else if( g_enUnitType == en_ZPOCKETSONATA ) {
+            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            // uiFrequency = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFrequency, *piCh, ( int ) iBoardID, fFrequency );
+            fFrequency = 0;
+        }
+        else if( g_enUnitType == en_ELINT ) {
+            fFrequency = CEPDW::DecodeRealFREQMHz( uiFrequency );
+
+        }
+        else {
+            fFrequency = 0;
+        }
+
+        return fFrequency;
+    } ;
+
+
 //     static unsigned int DecodePWns( float fPWns, int iBandWidth ) {
 //         unsigned uiPW;
 // 

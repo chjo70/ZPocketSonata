@@ -269,39 +269,37 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 }
 
 /**
- * @brief CNewSigAnal::CheckValidData
+ * @brief     PDW 헤더 정보를 근거로 잘못 입력된 것이 있으면 FALSE 로 리턴한다.
+ * @param     STR_PDWDATA * pPDWData
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 14:50
+ * @warning
  */
 bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
 {
     bool bRet=true;
 
-#if defined(_ELINT_) || defined(_XBAND_)
-    if( pPDWData->x.el.aucTaskID[0] == 0 ) {
+#if defined(_XBAND_)
+    if( pPDWData->x.xb.aucTaskID[0] == 0 ) {
         Log( enError, "PDW 데이터에 과제 정보가 없습니다. !!"  );
         bRet = false;
     }
 
-    if( !(pPDWData->x.el.GetCollectorID() >= RADARCOL_1 && pPDWData->x.el.GetCollectorID() <= RADARCOL_3) ) {
+    if( !(pPDWData->x.xb.GetCollectorID() >= RADARCOL_1 && pPDWData->x.xb.GetCollectorID() <= RADARCOL_3) ) {
         Log( enError, "수집소 ID[%d]가 잘못됐습니다." , pPDWData->x.el.GetCollectorID() );
         bRet = false;
     }
 
-#ifdef _ELINT_
+#elif _ELINT_
     if( ( pPDWData->x.el.enBandWidth != ELINT::en5MHZ_BW && pPDWData->x.el.enBandWidth != ELINT::en50MHZ_BW ) ) {
         Log( enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!" , pPDWData->x.el.enBandWidth );
         bRet = false;
     }
 #else
-    if ((pPDWData->x.el.enBandWidth != XBAND::en5MHZ_BW && pPDWData->x.el.enBandWidth != XBAND::en120MHZ_BW)) {
-        Log(enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!", pPDWData->x.el.enBandWidth);
-        bRet = false;
-    }
-#endif
 
-
-#elif defined(_POCKETSONATA_)
-
-#else
 
 #endif
 

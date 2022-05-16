@@ -1656,7 +1656,7 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 
             *pfTOA++ = CPOCKETSONATAPDW::DecodeTOA( ullTOA );
             *pfAOA++ = CPOCKETSONATAPDW::DecodeDOA( uiAOA );
-            *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( uiFreq );
+            *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( uiFreq, iCh, 3, 0 );
             *pfPA++ = CPOCKETSONATAPDW::DecodePA( uiPA );
             *pfPW++ = CPOCKETSONATAPDW::DecodePW( uiPW );
 

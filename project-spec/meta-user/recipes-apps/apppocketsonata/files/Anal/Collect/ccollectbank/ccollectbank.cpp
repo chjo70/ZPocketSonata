@@ -61,8 +61,8 @@ void CCollectBank::Init()
 	// 이렇게 해야 PDWID는 1부터 매기게 된다.
     //m_strPDW.SetPDWID( _spOne );
 
-    m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
-    m_strPDW.SetBand((unsigned int) g_enBoardId );
+    //m_strPDW.SetBoardID( (unsigned int) g_enBoardId );
+    //m_strPDW.SetBand((unsigned int) g_enBoardId );
 
     InitWindowCell();
 
@@ -301,10 +301,16 @@ void CCollectBank::SimCollectMode()
 }
 
 /**
- * @brief CCollectBank::PushPDWData
- * @param pstPDW
+ * @brief     _PDW 구조체 데이터를 수집뱅크 구조체의 데이터에 삽입한다.
+ * @param     _PDW * pstPDW
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-10, 14:00
+ * @warning
  */
-void CCollectBank::PushPDWData( _PDW *pstPDW )
+void CCollectBank::PushPDWData( _PDW *pstPDW, UNION_HEADER *pHeader )
 {
     unsigned int uiTotalPDW;
 
@@ -312,6 +318,8 @@ void CCollectBank::PushPDWData( _PDW *pstPDW )
         uiTotalPDW = m_strPDW.GetTotalPDW();
 
         if( uiTotalPDW+1 <= m_strWindowCell.uiMaxCoPDW ) {
+            memcpy( &m_strPDW.x, pHeader, sizeof( UNION_HEADER ) );
+
             memcpy( & m_strPDW.pstPDW[uiTotalPDW], pstPDW, sizeof(_PDW) );
 
             ++ uiTotalPDW;

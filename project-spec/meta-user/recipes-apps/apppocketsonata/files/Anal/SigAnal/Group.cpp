@@ -277,8 +277,6 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, int iBand )
 
     BOOL flagBand;
 
-    _TOA firstToaBand;
-
     _TOA *pToa;
     int *pPa;
     UINT *pAoa, *pPw, *pFreq;
@@ -303,19 +301,12 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, int iBand )
 
 
     // 첫번째 TOA 얻기
-    _EQUALS4( firstToaBand, prevllTOA, templlTOA, pPDW->ullTOA )
+    _EQUALS3( prevllTOA, templlTOA, pPDW->ullTOA )
 
     flagBand = FALSE;
 
     for( i=0 ; i < uiCount; ++i, ++pPDW )	{
         templlTOA = pPDW->ullTOA;
-
-//         if( firstToaBand > templlTOA ) {
-//             *pToa++ = templlTOA - firstToaBand;
-//         }
-//         else {
-//             *pToa++ = templlTOA - firstToaBand;
-//         }
 
         *pToa++ = pPDW->ullTOA;
 
@@ -1603,8 +1594,10 @@ void CGroup::MakeHist( STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FR
         index = pPdw[*pIndex++ ] >> nShift;
         //index = ( *( pPdw + *pIndex++ ) ) >> nShift;
         if( index >= pHist->bin_count ) {
-            printf( "\n [W] 방위 및 주파수 히스토그램 생성에서 에러 발생함 !" );
-            WhereIs;
+//             Log( enError, "\n [W] 히스토그램 생성에서 에러 발생함 !", pHist->bin_count );
+//             //printf( "\n [W] 방위 및 주파수 히스토그램 생성에서 에러 발생함 !" );
+//             WhereIs;
+            ++pHist->hist[pHist->bin_count-1];
         }
         else {
             ++ pHist->hist[index];
@@ -1674,6 +1667,7 @@ void CGroup::SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist )
         }
     }
     else if( pHist == & m_FrqHist ) {
+        int iMax = MAX_FREQ;
         pHist->bin_count = ( MAX_FREQ / ( 1 << nShift ) );
         if( pHist->bin_count > TOTAL_FRQAOAPWBIN || pHist->bin_count == 0 ) {
             //printf( "\n [W] 주파수 히스토그램 BIN 개수 초과(%d) !", pHist->bin_count );

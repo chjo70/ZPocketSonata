@@ -311,11 +311,11 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
         \warning
 */
 template <typename T>
-BOOL CompMarginDiff( T x, T iy1, T iy2, T fthresh )
+BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
 {
     BOOL bRet;
 
-    if( ( x >= iy1-fthresh ) && ( x <= iy2+fthresh ) ) {
+    if( ( x >= iy1- thresh) && ( x <= iy2+ thresh) ) {
         bRet = TRUE;
     }
     else {
