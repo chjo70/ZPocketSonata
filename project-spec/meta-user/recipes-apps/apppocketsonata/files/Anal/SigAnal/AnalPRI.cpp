@@ -3702,9 +3702,10 @@ void CAnalPRI::SelectMainSeg(STR_EMITTER *pEmitter)
         if( pEmitter->enPRIType == _JITTER_RANDOM || pEmitter->enPRIType == _STABLE ) {
             unsigned int max_count=0;
 
-            pri.tMin = 0xFFFFFF;
-            pri.tMax = 0xFFFFFF;
-            for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
+			pEmitter->uiMainSeg = pEmitter->uiSegIdx[0];
+            pri.tMin = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMin;
+            pri.tMax = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMax;
+            for( i=1 ; i < pEmitter->uiCoSeg ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
 
                 if( CalOverlapSpace<_TOA>( pri.tMax, pri.tMin, pSeg->pri.tMax, pSeg->pri.tMin ) != 0 ) {
@@ -6110,14 +6111,16 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     UINT uiFreqBin = 0;
     PDWINDEX Idx = 0;
 
+	PDWINDEX *pIndex;
+
     band = (int) m_pBAND[pEmitter->stPDW.pIndex[0]];
     fResol = gFreqRes[band+1].fRes;
 
     /// 주파수 히스토그램을 생성한다.
-    //pIndex = pEmitter->pdw.pIndex;
+    pIndex = pEmitter->stPDW.pIndex;
     for( i=0 ; i < pEmitter->stPDW.uiCount ; i++ ) {
-        //Idx = *(pEmitter->pdw.pIndex+i);
-        Idx = *pEmitter->stPDW.pIndex++;
+		Idx = *pIndex++;
+        //Idx = *(pEmitter->stPDW.pIndex)++;
         uiFreqBin = (UINT)((float) m_pFREQ[Idx] * fResol / (float)FREQ_BIN_WIDTH);
 
         if (uiFreqBin < FREQ_BIN) {

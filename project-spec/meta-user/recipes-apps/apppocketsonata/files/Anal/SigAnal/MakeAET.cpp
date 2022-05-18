@@ -256,7 +256,7 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             break;
 
         case _PATTERN_AGILE :
-            pFrq->iType = E_AET_FRQ_AGILE;
+            pFrq->iType = E_AET_FRQ_PATTERN;
             pFrq->iPatPrd = UMUL( 1, pEmitter->fFreqPeriod );
             pFrq->iPatType = pEmitter->uiFreqPatternType;            
 
@@ -276,7 +276,7 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             break;
 
         case _RANDOM_AGILE :
-            pFrq->iType = E_AET_FRQ_PATTERN;
+			pFrq->iType = E_AET_FRQ_AGILE;
 
             // 펄스열로부터 주파수 최대값과 최소값을 얻는다.
             uiCount = 0;
