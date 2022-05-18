@@ -950,7 +950,7 @@ unsigned int CKMakeAET::GetPDWID()
 }
 
 /**
- * @brief     GetOPInitID
+ * @brief     GetOpInitID
  * @return    LONG
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -958,7 +958,8 @@ unsigned int CKMakeAET::GetPDWID()
  * @date      2022-04-25, 14:45
  * @warning
  */
-LONG CKMakeAET::GetOPInitID()
+LONG CKMakeAET::GetOpInitID()
 {
-    return m_pKnownSigAnal->GetOPInitID();
+	return m_pKnownSigAnal->GetOpInitID();
 }
+

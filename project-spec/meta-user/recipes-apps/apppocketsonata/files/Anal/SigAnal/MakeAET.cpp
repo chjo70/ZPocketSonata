@@ -1150,6 +1150,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
     memset( pLOBData, 0, sizeof(SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
+    
     pLOBData->uiPDWID = GetPDWID();
 
     pLOBData->uiPLOBID = iLOBData + 1;
@@ -1295,7 +1296,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 #endif
 
 #ifdef _XBAND_
-	pLOBData->uiOpInitID = (UINT) GetOPInitID();
+	pLOBData->uiOpInitID = (UINT) GetOpInitID();
 
 #endif
 

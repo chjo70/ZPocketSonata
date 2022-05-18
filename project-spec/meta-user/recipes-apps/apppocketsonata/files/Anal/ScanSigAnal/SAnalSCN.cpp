@@ -1644,7 +1644,7 @@ char *CSAnalScan::GetTaskID()
 #endif
 
 
-LONG CSAnalScan::GetOPInitID()
+LONG CSAnalScan::GetOpInitID()
 {
-    return m_pScanSigAnal->GetOPInitID();
+    return m_pScanSigAnal->GetOpInitID();
 }

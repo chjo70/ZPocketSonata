@@ -252,9 +252,9 @@ namespace RadarAnlAlgotirhm
      * @date      2022-04-21, 17:06
      * @warning
      */
-    LONG RadarAnlAlgotirhm::GetOPInitID()
+    LONG RadarAnlAlgotirhm::GetOpInitID()
     {
-        return gpEmitterMergeMngr->GetOPInitID();
+        return gpEmitterMergeMngr->GetOpInitID();
 
     }
 

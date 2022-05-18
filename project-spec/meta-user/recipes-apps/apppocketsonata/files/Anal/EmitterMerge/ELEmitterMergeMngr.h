@@ -579,9 +579,9 @@ public:
      * @date      2022-04-21, 16:56
      * @warning
      */
-    inline LONG GetOPInitID() {
-        return m_lOpInitID;
-    }
+//     inline LONG GetOPInitID() {
+//         return m_lOpInitID;
+//     }
 
 #endif
 

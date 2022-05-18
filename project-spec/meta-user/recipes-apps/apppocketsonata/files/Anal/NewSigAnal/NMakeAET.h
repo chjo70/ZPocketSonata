@@ -75,10 +75,10 @@ public:
 
     inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
     unsigned int GetPDWID();
+	LONG GetOpInitID();
 
     void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 
-	LONG GetOPInitID();
 
 #if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();

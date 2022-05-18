@@ -814,7 +814,7 @@ namespace RadarDirAlgotirhm
 		static MATHFUNCSDLL_API int GetCoLOB();
 		static MATHFUNCSDLL_API SRxLOBData *GetLOBData();
 
-        static MATHFUNCSDLL_API LONG GetOPInitID();
+        static MATHFUNCSDLL_API LONG GetOpInitID();
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

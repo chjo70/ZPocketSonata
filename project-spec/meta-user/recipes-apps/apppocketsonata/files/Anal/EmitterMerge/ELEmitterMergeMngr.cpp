@@ -83,7 +83,7 @@ CELEmitterMergeMngr::CELEmitterMergeMngr(bool bDBThread, const char *pFileName )
     SetUnitType();
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    m_lOpInitID = 0;
+    //m_lOpInitID = 0;
 #else
 
 #endif
@@ -1027,6 +1027,11 @@ void CELEmitterMergeMngr::IdentifyLOB( SRxLOBData *pLOBData )
 void CELEmitterMergeMngr::LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo )
 {
     int iDIValidLink;
+
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+	m_lOpInitID = (LONG) pLOBData->uiOpInitID;
+
+#endif
 
     // 전역 데이터 포인터 저장
     m_pLOBHeader = pLOBHeader;
@@ -6711,7 +6716,7 @@ bool CELEmitterMergeMngr::CompDOAInfo(SRxABTData *pABTData, SELABTDATA_EXT *pABT
         //bRet = (pABTData->uiABTID == m_pLOBData->uiABTID);
     }
     else {
-        bRet = CompAoaDiff<float>(pABTData->fDOAMean, m_pLOBData->fDOAMean, (float)fAOA);
+        bRet = CompAoaDiff<float>(pABTData->fDOAMean, m_pLOBData->fDOAMean, (float)fAOA) == TRUE;
     }
 
     return bRet;
@@ -9021,20 +9026,20 @@ void CELEmitterMergeMngr::InitDataFromDB()
 {
     
 #ifdef _MSSQL_
-    char buffer[400];
+    //char buffer[400];
 
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
-    m_lOpInitID = GetINTData( buffer ) + 1;
+    //sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA" );
+    //m_lOpInitID = GetINTData( buffer ) + 1;
 
-    sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from RAWDATA" );
-    m_lOpInitID = _max( m_lOpInitID, GetINTData( buffer ) + 1 );
+    //sprintf_s( buffer, sizeof(buffer), "select max(OP_INIT_ID) from RAWDATA" );
+    //m_lOpInitID = _max( m_lOpInitID, GetINTData( buffer ) + 1 );
 
     m_uiAETID = _spOne;
     m_uiLOBID = _spOne;
     m_uiABTID = _spOne;
 
 #else
-    m_lOpInitID = _spOne;
+    //m_lOpInitID = _spOne;
     m_nSeqNum = _spOne;
     m_uiLOBID = _spOne;
     m_uiABTID = _spOne;

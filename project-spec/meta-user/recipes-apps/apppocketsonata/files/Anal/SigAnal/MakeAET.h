@@ -127,11 +127,11 @@ public:
 
     virtual void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) = 0;
 
-    virtual unsigned int GetPDWID()=0;
+    virtual LONG GetOpInitID()=0;
+	virtual unsigned int GetPDWID() = 0;
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
     virtual SRxLOBData *GetLOBData( int index=0 )=0;
-	virtual LONG GetOPInitID()=0;
 
 #if defined(_ELINT_) || defined(_XBAND_)
     virtual EN_RADARCOLLECTORID GetCollectorID()=0;

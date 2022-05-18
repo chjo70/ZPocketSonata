@@ -206,9 +206,9 @@ namespace RadarDirAlgotirhm
      * @date      2022-04-21, 16:58
      * @warning
      */
-    LONG RadarDirAlgotirhm::GetOPInitID()
+    LONG RadarDirAlgotirhm::GetOpInitID()
     {
-        return gpNewSigAnal->GetOPInitID();
+        return gpNewSigAnal->GetOpInitID();
 
     }
 

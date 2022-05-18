@@ -361,7 +361,16 @@ unsigned int CNMakeAET::GetPDWID()
     return m_pNewSigAnal->GetPDWID(); 
 }
 
-LONG CNMakeAET::GetOPInitID() 
+/**
+ * @brief     GetOpInitID
+ * @return    LONG
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-19, 01:46
+ * @warning
+ */
+LONG CNMakeAET::GetOpInitID()
 {
-	return m_pNewSigAnal->GetOPInitID();
+	return m_pNewSigAnal->GetOpInitID();
 }

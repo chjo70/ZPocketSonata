@@ -218,6 +218,7 @@ public:
 	void GetCollectTime( struct timespec *pTimeSpec );
 
     unsigned int GetPDWID();
+	LONG GetOpInitID();
 
 
     template <typename T>
@@ -445,8 +446,6 @@ public:
 
     void DISP_FineAet( SRxLOBData *pLOB );
     unsigned int IsStorePDW();
-
-    LONG GetOPInitID();
 
     //##ModelId=452B0C530078
     BOOL IsUpdateAet();

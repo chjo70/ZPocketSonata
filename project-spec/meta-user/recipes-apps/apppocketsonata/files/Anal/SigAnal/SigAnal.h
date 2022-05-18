@@ -123,7 +123,7 @@ public:
      * @date      2022-04-21, 16:56
      * @warning
      */
-    inline LONG GetOPInitID() {
+    inline LONG GetOpInitID() {
         return m_lOpInitID;
     }
 
