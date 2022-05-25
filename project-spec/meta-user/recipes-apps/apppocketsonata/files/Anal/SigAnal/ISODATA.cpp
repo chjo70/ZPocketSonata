@@ -608,7 +608,7 @@ void CISODATA::CalAOAStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWIND
     PDWINDEX *pPDWIndex;
 
     pPDWIndex = pSrcIndex->pIndex;
-    int frstAoa = m_ppPDWParam[0][*pPDWIndex];
+    int frstAoa = pPDWParam[*pPDWIndex];
 
     // 평균 구하기
     _EQUALS3( pstStat->iMax, pstStat->iMin, frstAoa )
@@ -670,11 +670,12 @@ void CISODATA::CalParamStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWI
 {
     unsigned int i;
     int iMean = 0, diffVal;
+	float fMean = (float) 0.;
 
     PDWINDEX *pPDWIndex;
 
     pPDWIndex = pSrcIndex->pIndex;
-    int frstVal = m_ppPDWParam[1][*pPDWIndex];
+    int frstVal = pPDWParam[*pPDWIndex];
 
     // 평균 구하기
     pstStat->iMax = -frstVal;
@@ -696,15 +697,15 @@ void CISODATA::CalParamStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWI
 
 
     // 분산 구하기
-    iMean = 0;
+	fMean = 0;
     pPDWIndex = pSrcIndex->pIndex;
     for( i = 0 ; i < pSrcIndex->uiCount ; ++i ) {
         diffVal = pPDWParam[*pPDWIndex] - pstStat->iMean;
-        iMean += (diffVal * diffVal);
+		fMean += (float) (diffVal * diffVal);
 
         ++pPDWIndex;
     }
-    pstStat->fsdev = ( float ) (sqrt( ( double ) iMean ) / pSrcIndex->uiCount);
+    pstStat->fsdev = ( float ) (sqrt( ( double ) fMean ) / pSrcIndex->uiCount);
 
 }
 

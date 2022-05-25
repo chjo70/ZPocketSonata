@@ -954,7 +954,8 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     pPdwIndex = pEmitter->stPDW.pIndex;
     int frstAoa = m_pAOA[*pPdwIndex];
 
-    _EQUALS3( pAoa->iMax, pAoa->iMin, frstAoa )
+	pAoa->iMin = MAX_AOA;
+	pAoa->iMax = -MAX_AOA;
 
     for( i = 0 ; i < pEmitter->stPDW.uiCount ; ++i ) {
         diffAoa = ( int ) m_pAOA[*pPdwIndex] - frstAoa;
