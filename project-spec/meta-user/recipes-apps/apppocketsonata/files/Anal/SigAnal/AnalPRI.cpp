@@ -1800,9 +1800,9 @@ void CAnalPRI::StaggerAnalysis()
                 }
                 else {
                     // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
-                    if( _spAnalMinPulseJitterEmitter > pEmitter->stPDW.uiCount ) {
-                        pEmitter->mark = DELETE_EMITTER;
-                    }
+//                     if( _spAnalMinPulseJitterEmitter > pEmitter->stPDW.uiCount ) {
+//                         pEmitter->mark = DELETE_EMITTER;
+//                     }
                 }
                 break;
 
@@ -3702,10 +3702,9 @@ void CAnalPRI::SelectMainSeg(STR_EMITTER *pEmitter)
         if( pEmitter->enPRIType == _JITTER_RANDOM || pEmitter->enPRIType == _STABLE ) {
             unsigned int max_count=0;
 
-			pEmitter->uiMainSeg = pEmitter->uiSegIdx[0];
-            pri.tMin = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMin;
-            pri.tMax = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMax;
-            for( i=1 ; i < pEmitter->uiCoSeg ; ++i ) {
+            pri.tMin = 0xFFFFFF;
+            pri.tMax = 0xFFFFFF;
+            for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
 
                 if( CalOverlapSpace<_TOA>( pri.tMax, pri.tMin, pSeg->pri.tMax, pSeg->pri.tMin ) != 0 ) {
@@ -5979,7 +5978,8 @@ bool CAnalPRI::CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter
     pMakeAET->MakeAOAInfoFromSeg(&stAOA2, pEmitter2);
 
     /// 1. AOA의 평균값 차이가 마진을 벗어나면 병합 불가
-    if (HOPPING_MERGE_AOA_MARGIN < CalcDiffAOA(stAOA1.iMean, stAOA2.iMean))
+    //if (HOPPING_MERGE_AOA_MARGIN < CalcDiffAOA(stAOA1.iMean, stAOA2.iMean))
+    if( HOPPING_MERGE_AOA_MARGIN < CCommonUtils::CalcDiffAOA( stAOA1.iMean, stAOA2.iMean ) )
     {
         bResult = false;
     }
@@ -6110,8 +6110,7 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     float fResol = 0.0;
     UINT uiFreqBin = 0;
     PDWINDEX Idx = 0;
-
-	PDWINDEX *pIndex;
+    PDWINDEX *pIndex;
 
     band = (int) m_pBAND[pEmitter->stPDW.pIndex[0]];
     fResol = gFreqRes[band+1].fRes;
@@ -6119,8 +6118,9 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     /// 주파수 히스토그램을 생성한다.
     pIndex = pEmitter->stPDW.pIndex;
     for( i=0 ; i < pEmitter->stPDW.uiCount ; i++ ) {
-		Idx = *pIndex++;
-        //Idx = *(pEmitter->stPDW.pIndex)++;
+        //Idx = *(pEmitter->pdw.pIndex+i);
+        Idx = *pIndex;
+        ++pIndex;
         uiFreqBin = (UINT)((float) m_pFREQ[Idx] * fResol / (float)FREQ_BIN_WIDTH);
 
         if (uiFreqBin < FREQ_BIN) {

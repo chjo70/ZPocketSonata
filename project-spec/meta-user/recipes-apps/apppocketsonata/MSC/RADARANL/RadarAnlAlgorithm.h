@@ -315,7 +315,7 @@ namespace RadarAnlAlgotirhm
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
 		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
 
-        static MATHFUNCSDLL_API LONG GetOpInitID();
+        static MATHFUNCSDLL_API unsigned int GetOpInitID();
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

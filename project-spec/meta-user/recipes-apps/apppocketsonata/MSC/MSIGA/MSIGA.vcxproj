@@ -53,7 +53,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED1_;_SIMPDW1_;_SIM_SERVER_;_SQLITE1_;_MSSQL1_;_POCKETSONATA1_;_XBAND_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE1_;_MSSQL_;_POCKETSONATA1_;_XBAND_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -183,6 +183,7 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\AnalPRI.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\cencdec.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\Group.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\ISODATA.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\MakeAET.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h" />
@@ -357,6 +358,7 @@
     <ClCompile Include="..\..\files\Anal\SigAnal\Group.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\ISODATA.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\MakeAET.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>

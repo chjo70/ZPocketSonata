@@ -410,8 +410,8 @@ struct SELEXTDB {
 // 	int		iIsStoreIQ;
 // 	int		iNumOfPDW;
 // 	int		iNumOfIQ;
-// 	int		iPolarization;								// 극성. 2015.3.9. 이정남 추가 (ICD 추가됨)
-// 	int		iRatioOfPOL;									// 극성 신뢰도. 2015.3.9. 이정남 추가 (ICD 추가됨)
+// 	int		iPolarization;								// 극성. 
+// 	int		iRatioOfPOL;									// 극성 신뢰도.
 // 	int		iIsFISINTTask;
 // 	int		iRollAngle;										// 기존대로
 // 	int		iPitchAngle;

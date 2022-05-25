@@ -87,7 +87,7 @@ struct STR_AOA_GROUP {
 // 방위 그룹화 구조체
 //##ModelId=452B0C54032A
 struct STR_AOA_GROUPS {
-    STR_AOA_GROUP aoa[ MAX_AGRT ];
+    STR_AOA_GROUP stAOA[ MAX_AGRT ];
     unsigned int uiCount;
 	unsigned int uiCoAnal;
 
@@ -137,29 +137,45 @@ struct STR_PW_GROUPS {
 
 }  ;
 
+#ifndef _STR_CLUSTER_STAT
+#define _STR_CLUSTER_STAT
+struct STR_CLUSTER_STAT
+{
+    int iLow;                   // 클러스터 내의 최소값
+    int iHgh;                   // 클러스터 내의 최대값
+
+    float fMean;                // 클러스터 내의 평균값
+    float fStandardDeviation;   // 클러스터 내의 분산값
+} ;
+#endif
+
 // ISODATA 클러스터링 테이블
 //##ModelId=452B0C540371
 struct STR_CLUSTER {
-	int iCount;
-    PDWINDEX index[SCN_COLLECT_PDW];
-	int center;
-	float deviation;
-	float distance;
-	STR_LOWHIGH aoa;
 
-}  ;
+    // PDW 인덱스 정보
+    STR_PDWINDEX stPDWIndex;
+
+    // 거리 ?
+	float fDistance;
+
+    // 통계 정보
+    STR_CLUSTER_STAT **ppstStat;      // 특성의 데이터 의 통계값 정보
+
+} ;
 
 // 탐지의 펄스열이 존재함에도 분석이 되지 않는 문제
 //##ModelId=452B0C54038E
 struct STR_FIRST_FRQAOA_PEAK {
 	STR_LOWHIGH	aoa; 
 	STR_LOWHIGH	frq;
+
 	UINT band;
 	UINT tot_cnt;
 	UINT count;
 	UINT enable;
 
-}  ;
+} ;
 
 // 펄스열 단 정보
 //##ModelId=452B0C540398

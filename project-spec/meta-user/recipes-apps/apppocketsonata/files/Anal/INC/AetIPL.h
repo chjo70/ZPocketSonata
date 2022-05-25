@@ -370,6 +370,7 @@ enum SCAN_STAT
 /////////////////////////////////////////////////////////////////////////////////////////
 //  LowHigh, MinMax 구조체
 //
+
 //##ModelId=452B0C510308
 #ifndef _STR_LOWHIGH
 #define _STR_LOWHIGH
@@ -401,15 +402,18 @@ struct STR_MINMAX {
     int iMean;
     int iMin;
     int iMax;
-    // int sdev;
+    int iMode;
+    
 } ;
 
 struct STR_MINMAX_SDEV {
     int iMean;
     int iMin;
     int iMax;
+    int iMode;
 
     float fsdev;
+    
 } ;
 
 struct STR_MINMAX_MEDIAN {
@@ -447,6 +451,7 @@ struct STR_FRQ {
     int iMean;
     int iMin;
     int iMax;
+    int iMode;
     int iPatType;
     int iSwtLev;
     int iSwtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
@@ -460,6 +465,7 @@ struct STR_PRI {
     _TOA TMean;
     _TOA TMin;
     _TOA TMax;
+    _TOA TMode;
     int iPatType;
     float fJtrPer;
     int iSwtLev;

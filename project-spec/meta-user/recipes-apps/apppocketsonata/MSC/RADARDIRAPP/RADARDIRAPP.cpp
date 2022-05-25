@@ -105,7 +105,7 @@ BOOL CRADARDIRAPPApp::InitInstance()
 	LoadStdProfileSettings(4);  // MRU를 포함하여 표준 INI 파일 옵션을 로드합니다.
 
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-    //_CrtSetBreakAlloc(18304);
+    //_CrtSetBreakAlloc(219028);
     
 	InitContextMenuManager();
 

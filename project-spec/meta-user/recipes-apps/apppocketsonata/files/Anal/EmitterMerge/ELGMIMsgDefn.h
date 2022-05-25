@@ -413,12 +413,6 @@ struct SELAlertTime {
 // };
 
 
-/*!
- * @struct     SGmiTxSigComm
- * @brief		LOB/BEAM/EMITTER 공통 속성 GMI MSG 구조체
- * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오후 2:13 
- */
 // struct SGmiTxSigComm
 // {
 // 	char szMissionId[LENGTH_OF_MISSION_ID]; // 임무id
@@ -480,12 +474,6 @@ struct SELAlertTime {
 // 	}
 // };
 
-/*!
- * @struct     SGmiTxLOBMsg
- * @brief		LOB GMI 메시지 구조체
- * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오후 2:13 
- */
 // struct SGmiTxLOBMsg : public SGmiTxSigComm
 // {
 // 	char szTaskId[LENGTH_OF_TASK_ID]; // 과제id

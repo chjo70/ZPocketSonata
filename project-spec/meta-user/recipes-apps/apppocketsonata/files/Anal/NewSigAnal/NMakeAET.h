@@ -75,7 +75,7 @@ public:
 
     inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
     unsigned int GetPDWID();
-	LONG GetOpInitID();
+    unsigned int GetOpInitID();
 
     void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 

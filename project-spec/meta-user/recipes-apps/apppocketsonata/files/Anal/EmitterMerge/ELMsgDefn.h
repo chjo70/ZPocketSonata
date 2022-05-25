@@ -45,12 +45,6 @@ struct SRxLOBHeader
 #endif
 
 
-/*! 
- * @struct  SRxLOBData
- * @brief   항공에서 수신되는 LOB 메시지의 Data Group 구조체
- * @author  이정남 (jeongnam.lee@lignex1.com)
- * @date    2016-02-16 오후 12:06 
- */
 #define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_ELEMENT)
 
 
@@ -83,18 +77,18 @@ struct SRxLOBData {
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
 #ifndef _XBAND_
-	int iPolarization;                              // 극성
+	int iPolarization;          // 극성
 
-	int iRatioOfPOL;                                // 극성 신뢰도
+	int iRatioOfPOL;            // 극성 신뢰도
 #endif
 
 	int iSignalType;
 
-	float fDOAMean;                                 // [0.1도]
+	float fDOAMean;             // [0.1도]
 	float fDOAMax;
 	float fDOAMin;
-	float fDOADeviation;							// [0.1도]
-	float fDOASDeviation;
+	float fDOADeviation;		// [0.1도]
+    float fDOAMode;             // DOA 최빈수
 
 	int iDIRatio;					// [1 %]
 
@@ -104,7 +98,8 @@ struct SRxLOBData {
 	float fFreqMean;				// [10KHz]
 	float fFreqMax;
 	float fFreqMin;
-	float fFreqDeviation;                           //
+	float fFreqDeviation;       
+    float fFreqMode;            // Freq 최빈수
 	int iFreqPositionCount;
 	int iFreqElementCount;
 	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
@@ -115,8 +110,9 @@ struct SRxLOBData {
 	float fPRIMean;				// [1ns]
 	float fPRIMax;
 	float fPRIMin;
-	float fPRIDeviation;			// [1ns]
-	float fPRIJitterRatio;			// [%]
+	float fPRIDeviation;		// [1ns]
+    float fPRIMode;             // PRI 최빈수
+	float fPRIJitterRatio;		// [%]
 	int iPRIPositionCount;
 	int iPRIElementCount;
 	float fPRISeq[MAX_FREQ_PRI_STEP];
@@ -125,11 +121,13 @@ struct SRxLOBData {
 	float fPWMax;
 	float fPWMin;
 	float fPWDeviation;
+    float fPWMode;              // 펄스폭 최빈수
 
-	float fPAMean;				// 기존대로
+	float fPAMean;				
 	float fPAMax;
 	float fPAMin;
-	float fPADeviation;			// 기존대로
+	float fPADeviation;			
+    float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
 #else

@@ -11,6 +11,8 @@
 
 #include "_SigAnal.h"
 
+#include "ISODATA.h"
+
 
 #ifdef _XBAND_
 const int stStat2GrStat[16] = { STAT_CW, STAT_NORMAL, 0, 0, 0, 0, \
@@ -47,13 +49,8 @@ protected:
 
 #endif
 
+    CISODATA *m_pTheISODATA;
 
-	//##ModelId=452B0C5600B6
-	UINT *m_pPdwParam;
-	//##ModelId=452B0C5600CA
-	unsigned int m_uiClusters;
-	//##ModelId=452B0C5600CC
-	STR_CLUSTER *m_pCluster;
 	//##ModelId=452B0C5600D4
 	int m_nCoPdw;
 	//##ModelId=452B0C5600DE
@@ -75,9 +72,9 @@ protected:
 	//##ModelId=452B0C56011B
 	STR_FRQAOAPWHISTOGRAM	m_PwHist;						// 주파수 히스토그램
 	//##ModelId=452B0C560125
-	STR_AOA_GROUPS m_AoaGroups;								// 방위 범위 테이블 그룹
+	STR_AOA_GROUPS m_stAOAGroups;								// 방위 범위 테이블 그룹
 	//##ModelId=452B0C560139
-	STR_FRQ_GROUPS m_FrqGroups;								// 주파수 범위 테이블 그룹
+	STR_FRQ_GROUPS m_stFrqGroups;								// 주파수 범위 테이블 그룹
 	//##ModelId=452B0C560143
 	STR_PW_GROUPS m_PwGroups;
 
@@ -87,6 +84,8 @@ protected:
 	STR_FIRST_FRQAOA_PEAK m_FrqAoaPeak;				// 방위 및 주파수 그룹화된 펄스열 중에서 첫번째 인덱스
 	//##ModelId=452B0C560161
 	STR_PDWINDEX *m_pGrPdwIndex;
+
+    
 
 public:
 	inline int GetBand() { return m_nBand; }
@@ -131,14 +130,9 @@ public:
 	bool IsLastGroup( unsigned int uiIndex );
 	//##ModelId=452B0C5601BC
 	//bool IsSameAoaIdx( int nAoaIdx, UINT narrow_or_wide );
-	//##ModelId=452B0C5601C7
-	void ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, STR_CLUSTER *pSrcCluster );
-	//##ModelId=452B0C5601D9
-	BOOL SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster );
-	//##ModelId=452B0C5601E3
-	void CalClusterInfo( STR_CLUSTER *pCluster );
-	//##ModelId=452B0C5601E5
-	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
+
+
+
 	//##ModelId=452B0C5601F7
     bool MakePDWArray( _PDW *pdw, unsigned int uiCount, int iBand=0 );
 	//##ModelId=452B0C560201
@@ -185,6 +179,11 @@ public:
 	UINT MakeFreqGroup( int door, int aoaidx, int frqidx=0, bool bForce1Group=false );
 	//##ModelId=452B0C56032F
 	void MakeAOAGroup( STR_PDWINDEX *pGrPdwIndex, bool bForce1Group=false );
+
+
+    void MakeAOAFreqGroup( STR_PDWINDEX *pStatGrPdwIndex );
+
+
 	//##ModelId=452B0C560337
 	void MakeStatGroup( STR_PDWINDEX *pBand );
 	//##ModelId=452B0C560339

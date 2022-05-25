@@ -76,6 +76,11 @@ public:
     void MakePWInfoFromSeg(STR_MINMAX *pPw, STR_EMITTER *pEmitter);
 
 
+    void MakeDefaultPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    void MakeStaggerPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    void MakeDwellPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    void MakeJitterPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    void MakeStablePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
 
     void MakeStaggerPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter);
     void MakeDwellPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter);
@@ -83,6 +88,7 @@ public:
     void MakeStablePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter);
 
     //##ModelId=452B0C56005D
+    void MakePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
     void MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter);
     //##ModelId=452B0C560060
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
@@ -127,7 +133,7 @@ public:
 
     virtual void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) = 0;
 
-    virtual LONG GetOpInitID()=0;
+    virtual unsigned int GetOpInitID()=0;
 	virtual unsigned int GetPDWID() = 0;
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;

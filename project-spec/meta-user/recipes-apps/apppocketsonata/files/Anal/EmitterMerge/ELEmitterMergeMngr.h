@@ -186,7 +186,7 @@ private:
     
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    LONG m_lOpInitID;
+    UINT m_uiOpInitID;
 
 #endif
 
@@ -502,7 +502,7 @@ public:
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
 #ifdef _MSSQL_
-    inline UINT GetOpInitID() { return m_lOpInitID; }
+    inline unsigned int GetOpInitID() { return m_uiOpInitID; }
 #endif
 
     char *GetELNOT( int iRadarModeIndex );
@@ -569,21 +569,6 @@ public:
     inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
     inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
 
-#ifdef _MSSQL_
-    /**
-     * @brief     GetOpInitID
-     * @return    LONG
-     * @exception
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022-04-21, 16:56
-     * @warning
-     */
-//     inline LONG GetOPInitID() {
-//         return m_lOpInitID;
-//     }
-
-#endif
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

@@ -170,7 +170,7 @@ struct STR_ZOOM_INFO {
 //
 //////////////////////////////////////////////////////////////////////////
 #define _COMMON_FUNCTIONS_		\
-    void Init( char *pRawData ); \
+    void Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup=NULL ); \
 	void Alloc( unsigned int uiItems=0 );	\
 	void Free();	\
     void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap=true, STR_FILTER_SETUP *pFilterSetup=NULL );	\
@@ -250,9 +250,10 @@ public:
     virtual void *GetData() = 0;
     virtual void *GetRealData() = 0;
     virtual void *GetHeader() = 0;
-    virtual void Init( char *pRawData );
+    virtual void Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup=NULL );
 
     virtual int GetHeaderSize() = 0;
+    virtual int GetBandWidth() = 0;
     virtual unsigned int GetOneDataSize() = 0;
     virtual unsigned int GetDataItems( unsigned long long ullFileSize=0 ) = 0;
     virtual void SetHeaderData( void *pData ) = 0;
@@ -753,6 +754,8 @@ public:
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
     void MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData );
 
+    inline int GetBandWidth() { return (int) m_enBandWidth; }
+
     inline void UpdateHeaderSize() { GetHeaderSize(); }
 
     /**
@@ -1015,6 +1018,7 @@ class C7PDW : public CData
 private:
 	SRxPDWHeader m_stHeader;
 	//STR_PDW_DATA m_PDWData;
+    int m_enBandWidth;
 
 public:
 	C7PDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
@@ -1138,6 +1142,7 @@ public:
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
     void MakePDWDataToReal( STR_PDWREALDATA *pPDWData );
 
+    inline int GetBandWidth() { return ( int ) 0; }
 	inline unsigned int GetOffsetSize() { return 0; }
     inline void UpdateHeaderSize() { GetHeaderSize(); }
 
@@ -1800,7 +1805,7 @@ private:
 	STR_IQ_DATA m_IQData;
 
     SRxPDWHeader m_stHeader;
-
+    
 public:
 	CEIQ(STR_RAWDATA *pRawData);
 	virtual ~CEIQ();
@@ -1869,6 +1874,7 @@ public:
 	void *GetData();
     void *GetRealData();
 	void *GetHeader();
+    int GetBandWidth();
 	void SetData( CData *pData );
 
 	// 파일 읽기 관련 함수

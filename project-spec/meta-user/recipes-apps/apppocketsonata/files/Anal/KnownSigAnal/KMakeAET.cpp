@@ -958,7 +958,7 @@ unsigned int CKMakeAET::GetPDWID()
  * @date      2022-04-25, 14:45
  * @warning
  */
-LONG CKMakeAET::GetOpInitID()
+UINT CKMakeAET::GetOpInitID()
 {
 	return m_pKnownSigAnal->GetOpInitID();
 }

@@ -370,7 +370,7 @@ unsigned int CNMakeAET::GetPDWID()
  * @date      2022-05-19, 01:46
  * @warning
  */
-LONG CNMakeAET::GetOpInitID()
+unsigned int CNMakeAET::GetOpInitID()
 {
 	return m_pNewSigAnal->GetOpInitID();
 }
