@@ -89,8 +89,6 @@ protected:
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
 
-	bool MakeDirectory(char *pszDirectory, STR_PDWDATA *pPDWData );
-
 public:
     CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
     virtual ~CSigAnal();

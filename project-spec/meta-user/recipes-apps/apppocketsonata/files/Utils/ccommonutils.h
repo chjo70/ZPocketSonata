@@ -62,8 +62,6 @@ public:
 
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
-    static int CalcDiffAOA( int iAOA1, int iAOA2 );
-
     static void AllSwapData32( void *pData, unsigned int uiLength );
     static void swapByteOrder( unsigned int& ui );
     static void swapByteOrder(double & d);

@@ -38,15 +38,12 @@
 
 
 
-<<<<<<< HEAD
 
 
 
 
 
 
-=======
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 extern int intparamCompare( const void *arg1, const void *arg2 );
 extern int lliparamCompare( const void *arg1, const void *arg2 );
 
@@ -107,10 +104,7 @@ T CalcMode( STR_EMITTER *pEmitter, T *pData, T mean ) {
 
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CMakeAET::CMakeAET
@@ -628,37 +622,24 @@ void CMakeAET::MakeDefaultPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitt
  * @date      2022-05-19, 15:47
  * @warning
  */
-<<<<<<< HEAD
 void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter )
-=======
-void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter )
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 {
     unsigned int i;
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-<<<<<<< HEAD
     memset( pPRI, 0, sizeof( STR_PRI ) );
-=======
-    memset( pPri, 0, sizeof( STR_PRI ) );
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
     // PRI 값을 산출할 때는 병합된 펄스열로부터 계산한다.
     // 이전에는 주 펄스열로부터 계산했는데 가장 많은 개수를 가진 펄스열이
     // 하모닉 신호이기 때문에 PRI 계산은 모든 펄스열로부터 계산한다.
 
     // PRI 타입을 결정한다.
-<<<<<<< HEAD
     pPRI->iType = pEmitter->enPRIType;
-=======
-    pPri->iType = pEmitter->enPRIType;
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
     // PRI 타입별 PRI 최대, 최소 저장
     switch( pEmitter->enPRIType ) {
     case _STABLE:
-<<<<<<< HEAD
         pPRI->iType = E_AET_PRI_FIXED;
         MakeDefaultPRIInfoFromEmitter( pPRI, pEmitter );
         break;
@@ -671,25 +652,10 @@ void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter )
     case _DWELL:
         pPRI->iType = E_AET_PRI_DWELL_SWITCH;
         MakeDefaultPRIInfoFromEmitter( pPRI, pEmitter );
-=======
-        pPri->iType = E_AET_PRI_FIXED;
-        MakeDefaultPRIInfoFromEmitter( pPri, pEmitter );
-        break;
-
-    case _JITTER_RANDOM:
-        pPri->iType = E_AET_PRI_JITTER;
-        MakeDefaultPRIInfoFromEmitter( pPri, pEmitter );
-        break;
-
-    case _DWELL:
-        pPri->iType = E_AET_PRI_DWELL_SWITCH;
-        MakeDefaultPRIInfoFromEmitter( pPri, pEmitter );
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
         break;
 
         // 스태거 또는 Dwell 일 때 스태거 레벨 값을 근거로 PRI 값을 설정한다.
     case _STAGGER:
-<<<<<<< HEAD
         pPRI->iType = E_AET_PRI_STAGGER;
         MakeDefaultPRIInfoFromEmitter( pPRI, pEmitter );
 
@@ -721,49 +687,14 @@ void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter )
             pPRI->TMean += (pSeg->pdw.uiCount * pSeg->pri.tMean);
         }
         pPRI->TMean = UDIV( pPRI->TMean, pEmitter->stPDW.uiCount );
-=======
-        pPri->iType = E_AET_PRI_STAGGER;
-        MakeDefaultPRIInfoFromEmitter( pPri, pEmitter );
-        break;
-
-    case _JITTER_PATTERN:
-        pPri->iType = E_AET_PRI_PATTERN;
-        pPri->iPatPrd = UMUL( 1, pEmitter->fPRIPeriod );
-        pPri->iPatType = pEmitter->uiPRIPatternType;
-        pSeg = & m_pSeg[pEmitter->uiMainSeg];
-        pPri->TMin = pSeg->pri.tMin;
-        pPri->TMax = pSeg->pri.tMax;
-        pPri->TMean = pSeg->pri.tMean;
-        break;
-
-    default:
-        pPri->TMax = 0;
-        pPri->TMin = 0xffffff;
-        pPri->TMean = 0;
-        // PRI 평균값을 계산상 버그
-        for( i = 0 ; i < pEmitter->uiCoSeg ; ++i ) {
-            pSeg = &m_pSeg[pEmitter->uiSegIdx[i]];
-            pPri->TMin = _min( pPri->TMin, pSeg->pri.tMin );
-            pPri->TMax = _max( pPri->TMax, pSeg->pri.tMax );
-            pPri->TMean += (pSeg->pdw.uiCount * pSeg->pri.tMean);
-        }
-        pPri->TMean = UDIV( pPri->TMean, pEmitter->stPDW.uiCount );
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
         break;
     }
 
     // 지터율 과 레벨값을 저장한다.
-<<<<<<< HEAD
     pPRI->fJtrPer = FDIV( 100. * (pPRI->TMax - pPRI->TMin), pPRI->TMean );
     //pPri->swtLev = pEmitter->stag_dwell_element_cnt;
 
     pPRI->TMode = CalcMode<_TOA>( pEmitter, m_pTOA, pPRI->TMean );
-=======
-    pPri->fJtrPer = FDIV( 100. * (pPri->TMax - pPri->TMin), pPri->TMean );
-    //pPri->swtLev = pEmitter->stag_dwell_element_cnt;
-
-    pPri->TMode = CalcMode<_TOA>( pEmitter, m_pTOA, pPri->TMean );
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
 }
 
@@ -844,11 +775,7 @@ void CMakeAET::MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
     pPri->fJtrPer = FDIV( 100. * ( pPri->TMax - pPri->TMin ), pPri->TMean );
     //pPri->swtLev = pEmitter->stag_dwell_element_cnt;
 
-<<<<<<< HEAD
     pPri->TMode = CalcMode<_TOA>( pEmitter, m_pTOA, pPri->TMean );
-=======
-    pPri->TMode = 0;
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
 }
 
@@ -1040,14 +967,9 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     pPdwIndex = pEmitter->stPDW.pIndex;
     int frstAoa = m_pAOA[*pPdwIndex];
 
-<<<<<<< HEAD
 
     pAoa->iMax = -INT32_MAX;
     pAoa->iMin = +INT32_MAX;
-=======
-	pAoa->iMin = MAX_AOA;
-	pAoa->iMax = -MAX_AOA;
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
     for( i = 0 ; i < pEmitter->stPDW.uiCount ; ++i ) {
         diffAoa = ( int ) m_pAOA[*pPdwIndex] - frstAoa;
@@ -1095,10 +1017,7 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     pAoa->iMean = CalcAoaMean_GSKIMF_200505_3( pSeg );	// 김경석
 #elif defined( _GSKIMF_AOAMEANALG_200505_6 )
 #ifdef _XBAND_
-<<<<<<< HEAD
     // pAoa->iMean = pAoa->aoa.iMean;
-=======
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
     pAoa->iMode = (int) CalcMode<unsigned int>( pEmitter, m_pAOA, pAoa->iMean );
 
 #else

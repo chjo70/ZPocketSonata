@@ -73,10 +73,10 @@ void CKGroup::Init()
 BOOL CKGroup::MakeKnownGroup()
 {
 	// 방위 및 주파수 그룹화 초기화
-	m_stAOAGroups.uiCount = 0;
-	m_stAOAGroups.uiCoAnal = 0;
-	m_stFrqGroups.uiCount = 0;
-	m_stFrqGroups.uiCoAnal = 0;
+	m_AoaGroups.uiCount = 0;
+	m_AoaGroups.uiCoAnal = 0;
+	m_FrqGroups.uiCount = 0;
+	m_FrqGroups.uiCoAnal = 0;
 	m_PwGroups.uiCount = 0;
 	m_PwGroups.coAnal = 0;
 
@@ -102,7 +102,7 @@ BOOL CKGroup::MakeKnownGroup()
 
 	CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] );
 
-	return m_stAOAGroups.uiCount != 0;	
+	return m_AoaGroups.uiCount != 0;	
 }
 
 //////////////////////////////////////////////////////////////////////

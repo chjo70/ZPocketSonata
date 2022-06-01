@@ -445,30 +445,6 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     return;
 }
 
-
-/**
- * @brief     CalcDiffAOA
- * @param     int iAOA1
- * @param     int iAOA2
- * @return    int
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-05-23, 17:09
- * @warning
- */
-int CCommonUtils::CalcDiffAOA( int iAOA1, int iAOA2 )
-{
-    int iDiffAOA;
-
-    iDiffAOA = _diffabs<int>( iAOA1, iAOA2 );
-    if( iDiffAOA > MAX_AOA / 2 ) {
-        iDiffAOA = MAX_AOA - iDiffAOA;
-    }
-
-    return iDiffAOA;
-}
-
 /**
  * @brief CCommonUtils::Disp_FinePDW
  * @param pPDWData

@@ -76,19 +76,11 @@ public:
     void MakePWInfoFromSeg(STR_MINMAX *pPw, STR_EMITTER *pEmitter);
 
 
-<<<<<<< HEAD
     void MakeDefaultPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeStaggerPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeDwellPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeJitterPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeStablePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
-=======
-    void MakeDefaultPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
-    void MakeStaggerPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
-    void MakeDwellPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
-    void MakeJitterPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
-    void MakeStablePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 
     void MakeStaggerPRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
     void MakeDwellPRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
@@ -96,13 +88,8 @@ public:
     void MakeStablePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
 
     //##ModelId=452B0C56005D
-<<<<<<< HEAD
     void MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
-=======
-    void MakePRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
-    void MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter);
->>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
     //##ModelId=452B0C560060
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
