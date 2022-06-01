@@ -183,7 +183,6 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\AnalPRI.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\cencdec.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\Group.h" />
-    <ClInclude Include="..\..\files\Anal\SigAnal\ISODATA.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\MakeAET.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h" />
@@ -358,7 +357,6 @@
     <ClCompile Include="..\..\files\Anal\SigAnal\Group.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\SigAnal\ISODATA.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\MakeAET.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>

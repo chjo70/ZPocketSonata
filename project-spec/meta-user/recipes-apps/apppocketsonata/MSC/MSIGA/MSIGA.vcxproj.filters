@@ -508,9 +508,6 @@
     <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\SigAnal\ISODATA.h">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MSIGA.cpp">
@@ -731,9 +728,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Anal\SigAnal\ISODATA.cpp">
-      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
