@@ -19,6 +19,7 @@
 #endif
 
 #include <string.h>
+#include <stdint.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -223,10 +224,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 #endif
         }
         else {
-
-            // 라이브러리 기반 펄스열 추출
+            // 그룹화가 생성되지 않으면 바로 리턴한다.
             if( TRUE == m_theGroup->MakeGroup() ) {
-                CheckKnownByAnalysis();
 
                 // 그룹화 만들기
                 while( ! m_theGroup->IsLastGroup() ) {
@@ -234,7 +233,10 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
                     // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
                     m_theGroup->MakeGrIndex();
 
-                    SaveGroupPDWFile( m_CoGroup+1 );
+                    SaveGroupPDWFile( m_pGrPdwIndex, pPDWData, true );
+
+                    // 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
+                    CheckKnownByAnalysis();
 
                     // 규칙성 및 불규칙성 펄스열 추출
                     m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
@@ -243,7 +245,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
                     // m_thePulExt->UnknownExtract();
 
                     // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                    memset( & MARK, 0, sizeof( MARK ) );
+                    ClearAllMark( true );
 
                     // PRI 분석
                     m_theAnalPRI->Analysis();
@@ -267,6 +269,28 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCount() - dwTime)) );
 
 }
+
+/**
+ * @brief     펄스열 추출 정보를 클리어 한다.
+ * @param     bool bClear
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 15:19
+ * @warning
+ */
+void CNewSigAnal::ClearAllMark( bool bClear )
+{
+    if( bClear == true ) {
+        memset( & MARK[0], 0, sizeof( MARK ) );
+    }
+    else {
+
+    }
+
+}
+
 
 /**
  * @brief     PDW 헤더 정보를 근거로 잘못 입력된 것이 있으면 FALSE 로 리턴한다.
@@ -391,7 +415,7 @@ enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 }
 
 /**
- * @brief     위협 라이브러리 기반 신호 분석 플레그를 반환한다.
+ * @brief     하나의 그룹화 내에서 위협 라이브러리 기반 신호 분석 플레그를 반환한다.
  * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -404,21 +428,28 @@ bool CNewSigAnal::CheckKnownByAnalysis()
     UINT i;
     UINT uiFreqMax, uiFreqMin;
     bool bRet;
-
+    
     if( m_theGroup->GetPulseStat() == STAT_CW ) {
+        m_VecMatchRadarMode.clear();
+
         bRet = false;
 
-        DeletePointers( m_VecMatchRadarMode );
     }
     else {
+        PDWINDEX *pPdwIndex;
+
         uiFreqMax = 0;
-        uiFreqMin = 0x7FFFFFFF;
-        for( i=0 ; i < m_uiCoPdw ; ++i ) {
-            uiFreqMax = max( FREQ[i], uiFreqMax );
-            uiFreqMin = min( FREQ[i], uiFreqMin );
+        uiFreqMin = UINT32_MAX;
+        pPdwIndex = m_pGrPdwIndex->pIndex;
+        for( i = 0 ; i < m_pGrPdwIndex->uiCount ; i++ ) {
+            uiFreqMax = max( FREQ[*pPdwIndex], uiFreqMax );
+            uiFreqMin = min( FREQ[*pPdwIndex], uiFreqMin );
+
+            ++pPdwIndex;
+
         }
 
-        bRet = m_pIdentifyAlg->IsThereFreqRange( & m_VecMatchRadarMode, uiFreqMin, uiFreqMax );
+        bRet = m_pIdentifyAlg->CheckThereFreqRange( & m_VecMatchRadarMode, uiFreqMin, uiFreqMax );
     }
 
     return bRet;

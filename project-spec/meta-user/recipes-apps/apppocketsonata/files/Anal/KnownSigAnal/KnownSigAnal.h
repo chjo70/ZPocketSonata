@@ -160,6 +160,8 @@ public:
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
     inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
+    inline int GetCoGroup() { return m_CoGroup; }
+
     
 
     void InitVar();

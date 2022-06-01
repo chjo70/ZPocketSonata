@@ -218,7 +218,7 @@ public:
 	void GetCollectTime( struct timespec *pTimeSpec );
 
     unsigned int GetPDWID();
-	LONG GetOpInitID();
+	unsigned int GetOpInitID();
 
 
     template <typename T>
@@ -260,36 +260,6 @@ public:
         return 0;
     }
 
-
-    //##ModelId=452B0C530015
-    /**
-     * @brief     CheckStaggerHarmonic
-     * @param     T * pPri1
-     * @param     SRxLOBData * pPri2
-     * @return    UINT
-     * @exception
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022-04-27, 10:31
-     * @warning
-     */
-//     template <typename T>
-//     UINT CheckStaggerHarmonic( T *pPri1, SRxLOBData *pPri2 ) {
-//         int i;
-// 
-//         if( pPri1->iPRIPositionCount != pPri2->iPRIPositionCount ) {
-//             return 0;
-//         }
-// 
-//         for( i=0 ; i < pPri1->iPRIElementCount ; ++i ) {
-//             if( FALSE == CompMeanDiff<float>( pPri1->fPRISeq[i], pPri2->fPRISeq[i], 8 * _spOneMicrosec ) ) {
-//                 return 0;
-//             }
-//         }
-// 
-//         return 1;
-// 
-//     }
 
     template <typename T>
     UINT CheckHarmonic( T *pAet1, SRxLOBData *pAet2 ) {

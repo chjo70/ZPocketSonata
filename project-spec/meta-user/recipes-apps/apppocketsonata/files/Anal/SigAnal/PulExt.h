@@ -118,7 +118,7 @@ public:
     //##ModelId=452B0C5303DD
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
     virtual int GetCoPdw()=0;
-    virtual void ClearAllMark()=0;
+    //virtual void ClearAllMark(bool bClear)=0;
 
 
     template <typename T>

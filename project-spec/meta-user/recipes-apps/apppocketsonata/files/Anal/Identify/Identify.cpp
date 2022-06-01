@@ -5876,14 +5876,18 @@ char *CELSignalIdentifyAlg::GetRadarModeName( int iRadarModeIndex )
 }
 
 /**
- * @brief CELSignalIdentifyAlg::IsThereFreqRange
- * @param puiCoKnownRadarMode
- * @param pMatchRadarMode
- * @param uiFreqMin
- * @param uiFreqMax
- * @return
+ * @brief     위협 라이브러리에서 주파수 최소/최대 범위에 겹친 위협을 찾아서 벡터에 넣는다.
+ * @param     vector<SRadarMode * > * pVecMatchRadarMode
+ * @param     UINT uiFreqMin
+ * @param     UINT uiFreqMax
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 17:49
+ * @warning
  */
-bool CELSignalIdentifyAlg::IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax )
+bool CELSignalIdentifyAlg::CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax )
 {
     UINT i, j;
     bool bRet=false;
@@ -5895,7 +5899,7 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( vector<SRadarMode *> *pVecMatchRada
 
     UINT _uiFreqMin, _uiFreqMax;
 
-    DeletePointers(*pVecMatchRadarMode);
+    pVecMatchRadarMode->clear();
 
     _uiFreqMin = (unsigned int) ( FRQMhzCNV( 0, uiFreqMin ) + 0.5 );
     _uiFreqMax = (unsigned int) ( FRQMhzCNV( 0, uiFreqMax ) + 0.5 );
@@ -5918,36 +5922,8 @@ bool CELSignalIdentifyAlg::IsThereFreqRange( vector<SRadarMode *> *pVecMatchRada
 
         sort( pVecMatchRadarMode->begin(), pVecMatchRadarMode->end() );
         pVecMatchRadarMode->erase( unique( pVecMatchRadarMode->begin(), pVecMatchRadarMode->end() ), pVecMatchRadarMode->end() );
-        //qsort( pMatchRadarMode, (size_t) *puiCoKnownRadarMode, sizeof(SRadarMode*), incRadarModeCompare );
-        //RemoveUniqueRadarIndex( pMatchRadarMode, puiCoKnownRadarMode );
-        //pBackupMatchRadarMode = pMatchRadarMode + *puiCoKnownRadarMode;
 
         ++ pFLib;
-    }
-
-    if( bRet == true ) {
-//         char buffer[200];
-//         int iCnt=0;
-// 
-//         //printf( "\n ***라이브러리 기반 분석" );
-//         //Log( enNormal, "***라이브러리 기반 분석" );
-//         pBackupMatchRadarMode = pMatchRadarMode;
-//         for( i=0 ; i < *puiCoKnownRadarMode ; ++i ) {
-// #ifdef _MSC_VER
-//             //iCnt += sprintf( & buffer[iCnt], sizeof(buffer)-iCnt, "(%s, %s)", aet_freq_type[(*pBackupMatchRadarMode)->eFreqType], aet_pri_type[(*pBackupMatchRadarMode)->ePRIType] );
-//             iCnt += sprintf( & buffer[iCnt], "(%s, %s)", g_szAetFreqType[(*pBackupMatchRadarMode)->eRF_Type], g_szAetPriType[(*pBackupMatchRadarMode)->ePRI_Type] );
-// #else
-//             iCnt += sprintf( & buffer[iCnt], "(%s, %s)", g_szAetFreqType[(*pBackupMatchRadarMode)->eRF_Type], g_szAetPriType[(*pBackupMatchRadarMode)->ePRI_Type] );
-// #endif
-//             ++ pBackupMatchRadarMode;
-// 
-//             if( iCnt >= (int) sizeof(buffer)-40 ) {
-//                 break;
-//             }
-// 
-//         }        
-//         Log( enNormal, "ID Result[%d] : %s" , *puiCoKnownRadarMode, buffer );
-
     }
 
     return bRet;

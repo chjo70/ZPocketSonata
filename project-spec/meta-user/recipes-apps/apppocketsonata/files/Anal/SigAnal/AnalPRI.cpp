@@ -118,7 +118,7 @@ CAnalPRI::CAnalPRI( unsigned int uiCoMaxPdw )
     m_uiMaxPdw = min( uiCoMaxPdw, (unsigned int) MAX_PDW );
 
 	// 시스템 변수 초기화
-	m_spdiffaoa[ i++ ] = 0;
+	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
 	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
 	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
 	m_spdiffaoa[ i++ ] = 5 * KHARM_AOA_MAR;
@@ -291,6 +291,15 @@ CAnalPRI::~CAnalPRI()
 //##ModelId=42757D4D027B
 void CAnalPRI::Init()
 {
+    int i = 0;
+
+    m_spdiffaoa[i++] = 5 * KHARM_AOA_MAR;
+    m_spdiffaoa[i++] = 5 * KHARM_AOA_MAR;
+    m_spdiffaoa[i++] = 5 * KHARM_AOA_MAR;
+    m_spdiffaoa[i++] = 5 * KHARM_AOA_MAR;
+    m_spdiffaoa[i++] = 5 * KHARM_AOA_MAR;
+    m_spdiffaoa[i] = 5 * KHARM_AOA_MAR;
+
     _EQUALS3( m_uiAnalEmitter, m_uiCoEmitter, _spZero )
     m_uiAnalSeg = 0;
 
@@ -876,7 +885,9 @@ void CAnalPRI::GroupingJitterWithJitter( STR_PULSE_TRAIN_SEG *pRefSeg, int iLoop
                 /*! \bug  방위 범위 비교까지 고려한다.
                     \date 2007-06-18 13:37:31, 조철희
                 */
-                if( CompFreq( pRefSeg, pCmpSeg ) == TRUE && CompAoa( pRefSeg, pCmpSeg ) == TRUE && pCmpSeg->enPriType == _JITTER_RANDOM ) {
+                // 펄스열 간의 병합시 서로간의 TOA가 안 겹쳐지도록 병합해야 함.
+                if( pCmpSeg->enPriType == _JITTER_RANDOM && \
+                    ( CompFreq( pRefSeg, pCmpSeg ) == TRUE && CompAoa( pRefSeg, pCmpSeg ) == TRUE && OverlappedSeg( pRefSeg, pCmpSeg ) == true ) ) {
                     uiHarmonic = CheckHarmonic( pRefSeg, pCmpSeg );
                     if( (uiHarmonic >= 1 && uiHarmonic <= 2) && OverlappedSeg( pRefSeg, pCmpSeg ) == false ) {
                         pCmpSeg->enMark = CHECKED_SEG;
@@ -1799,10 +1810,10 @@ void CAnalPRI::StaggerAnalysis()
                     CopySeg(pEmitter);
                 }
                 else {
-                    // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
-                    if( _spAnalMinPulseJitterEmitter > pEmitter->stPDW.uiCount ) {
-                        pEmitter->mark = DELETE_EMITTER;
-                    }
+//                     // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
+//                     if( _spAnalMinPulseJitterEmitter > pEmitter->stPDW.uiCount ) {
+//                         pEmitter->mark = DELETE_EMITTER;
+//                     }
                 }
                 break;
 
@@ -3348,7 +3359,7 @@ UINT CAnalPRI::CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pS
 //##ModelId=428C213403B7
 BOOL CAnalPRI::DecisionEmitter(STR_EMITTER *pEmitter)
 {
-    BOOL bRet=TRUE;
+    BOOL bRet=FALSE;
     UINT conti_threshold;
 
     // 최소 에미터 대상 펄스 개수 체크
@@ -3606,7 +3617,7 @@ BOOL CAnalPRI::AnalLobe( STR_EMITTER *pEmitter )
     BOOL bRet;
 
     pa.iMax = 0;
-    pa.iMin = 0xfffff;
+    pa.iMin = INT32_MAX;
     for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
         pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
         pa.iMax = _max( pSeg->pa.iMax, pa.iMax );
@@ -3702,10 +3713,9 @@ void CAnalPRI::SelectMainSeg(STR_EMITTER *pEmitter)
         if( pEmitter->enPRIType == _JITTER_RANDOM || pEmitter->enPRIType == _STABLE ) {
             unsigned int max_count=0;
 
-			pEmitter->uiMainSeg = pEmitter->uiSegIdx[0];
-            pri.tMin = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMin;
-            pri.tMax = m_pSeg[pEmitter->uiSegIdx[0]].pri.tMax;
-            for( i=1 ; i < pEmitter->uiCoSeg ; ++i ) {
+            pri.tMin = 0xFFFFFF;
+            pri.tMax = 0xFFFFFF;
+            for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
 
                 if( CalOverlapSpace<_TOA>( pri.tMax, pri.tMin, pSeg->pri.tMax, pSeg->pri.tMin ) != 0 ) {
@@ -6110,8 +6120,7 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     float fResol = 0.0;
     UINT uiFreqBin = 0;
     PDWINDEX Idx = 0;
-
-	PDWINDEX *pIndex;
+    PDWINDEX *pIndex;
 
     band = (int) m_pBAND[pEmitter->stPDW.pIndex[0]];
     fResol = gFreqRes[band+1].fRes;
@@ -6119,8 +6128,9 @@ void CAnalPRI::MakeFreqHistogram(STR_EMITTER *pEmitter)
     /// 주파수 히스토그램을 생성한다.
     pIndex = pEmitter->stPDW.pIndex;
     for( i=0 ; i < pEmitter->stPDW.uiCount ; i++ ) {
-		Idx = *pIndex++;
-        //Idx = *(pEmitter->stPDW.pIndex)++;
+        //Idx = *(pEmitter->pdw.pIndex+i);
+        Idx = *pIndex;
+        ++pIndex;
         uiFreqBin = (UINT)((float) m_pFREQ[Idx] * fResol / (float)FREQ_BIN_WIDTH);
 
         if (uiFreqBin < FREQ_BIN) {

@@ -49,7 +49,9 @@ protected:
 
 
 	//##ModelId=452B0C5600B6
-	UINT *m_pPdwParam;
+	UINT *m_pPDWParam;      // PDW의 데이터의 포인터 설정됨.
+
+
 	//##ModelId=452B0C5600CA
 	unsigned int m_uiClusters;
 	//##ModelId=452B0C5600CC

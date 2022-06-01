@@ -177,6 +177,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
+/**
+ * @brief     PreCreateWindow
+ * @param     CREATESTRUCT & cs
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-29, 12:56
+ * @warning
+ */
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if( !CFrameWndEx::PreCreateWindow(cs) )
@@ -184,10 +194,11 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
-    cs.cx = 2048;
+    cs.cx = 3048;
     cs.cy = 1024;
 
     cs.style &= ~WS_THICKFRAME;
+    cs.style &= ~WS_MAXIMIZEBOX;
 
 	return TRUE;
 }

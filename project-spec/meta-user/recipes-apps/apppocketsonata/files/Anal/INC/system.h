@@ -534,8 +534,8 @@
 /*! \bug  20 개에서 10개로 수정함.
     \date 2006-07-27 09:28:10, 조철희
 */
-#define     _spAnalMinPulseStableEmitter      10    
-#define     _spAnalMinPulseJitterEmitter      20
+#define     _spAnalMinPulseStableEmitter      (5)    
+#define     _spAnalMinPulseJitterEmitter      (10)
 
 #define     _spMaxAoaQueueSize                4
 

@@ -287,7 +287,7 @@ private:
     BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
  	//BOOL CompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 
-	bool IsThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
+	bool CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 

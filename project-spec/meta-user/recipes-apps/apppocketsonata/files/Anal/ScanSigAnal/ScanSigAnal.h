@@ -112,6 +112,8 @@ public:
     inline SRxABTData *GetScnAET() { return m_pScnAet; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
 
+    inline int GetCoGroup() { return 0; }
+
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
 	// inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }

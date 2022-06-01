@@ -401,6 +401,7 @@ struct STR_MINMAX {
     int iMean;
     int iMin;
     int iMax;
+    int iMode;
     // int sdev;
 } ;
 
@@ -408,8 +409,10 @@ struct STR_MINMAX_SDEV {
     int iMean;
     int iMin;
     int iMax;
+    int iMode;
 
     float fsdev;
+    
 } ;
 
 struct STR_MINMAX_MEDIAN {
@@ -447,6 +450,7 @@ struct STR_FRQ {
     int iMean;
     int iMin;
     int iMax;
+    int iMode;
     int iPatType;
     int iSwtLev;
     int iSwtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
@@ -460,6 +464,7 @@ struct STR_PRI {
     _TOA TMean;
     _TOA TMin;
     _TOA TMax;
+    _TOA TMode;
     int iPatType;
     float fJtrPer;
     int iSwtLev;

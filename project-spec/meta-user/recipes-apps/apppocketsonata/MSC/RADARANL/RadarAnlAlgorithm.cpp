@@ -96,7 +96,7 @@ namespace RadarAnlAlgotirhm
 				return;
 			}
 
-			Log( enNormal, "OP_INIT_ID[%d] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다." , gpEmitterMergeMngr->GetOpInitID(), pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB );
+			Log( enNormal, "OP_INIT_ID[%ld] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다." , gpEmitterMergeMngr->GetOpInitID(), pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB );
 			pstLOBHeader = & pLOBData->stLOBHeader;
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( unsigned int i=0 ; i < pstLOBHeader->uiNumOfLOB ; ++i ) {
@@ -252,7 +252,7 @@ namespace RadarAnlAlgotirhm
      * @date      2022-04-21, 17:06
      * @warning
      */
-    LONG RadarAnlAlgotirhm::GetOpInitID()
+    unsigned int RadarAnlAlgotirhm::GetOpInitID()
     {
         return gpEmitterMergeMngr->GetOpInitID();
 

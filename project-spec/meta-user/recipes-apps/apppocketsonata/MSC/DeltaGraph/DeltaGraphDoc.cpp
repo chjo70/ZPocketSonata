@@ -44,6 +44,8 @@ CDeltaGraphDoc::CDeltaGraphDoc()
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	m_pFrame = ( CMainFrame * ) AfxGetMainWnd();
 
+    m_pTheDataFile = NULL;
+
 }
 
 CDeltaGraphDoc::~CDeltaGraphDoc()
@@ -198,6 +200,20 @@ ENUM_DataType CDeltaGraphDoc::GetDataType()
 }
 
 /**
+ * @brief     GetBandWidth
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-23, 13:09
+ * @warning
+ */
+int CDeltaGraphDoc::GetBandWidth()
+{
+    return m_pTheDataFile->GetBandWidth();
+}
+
+/**
  * @brief     
  * @param     CString & strPathname
  * @param     STR_FILTER_SETUP * pstFilterSetup
@@ -255,12 +271,17 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
 	pFindMapData = theApp.FindMapData( & m_strPathname );
 
 	if( pFindMapData == NULL ) {
-        m_pTheDataFile = new CDataFile;
-        m_pTheDataFile->ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToReal );
-		theApp.AddMapData( & m_strPathname, m_pTheDataFile );
+        if( m_pTheDataFile == NULL ) {
+            m_pTheDataFile = new CDataFile;
+        }
+
+        m_pTheDataFile->ReadDataFile( (char*)(LPCTSTR) m_strPathname, pstFilterSetup, enPDWToReal );
+		//theApp.AddMapData( & m_strPathname, m_pTheDataFile );
 	}
 	else {
         m_pTheDataFile = pFindMapData;
+
+        m_pTheDataFile->ReadDataFile( NULL, NULL, enPDWToReal );        
 		if( bCountOfWindow == true ) {
 			theApp.IncWindowNumber( m_pTheDataFile );
 		}

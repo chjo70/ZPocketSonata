@@ -192,6 +192,11 @@
   <term name="레이더 인덱스" description="" physicalName="RADAR_INDEX" physicalDescription="" tag="//@tag.1"/>
   <term name="승인" description="" physicalName="ACCEPTED" physicalDescription="" tag="//@tag.1"/>
   <term name="식별 정보" description="" physicalName="IDINFO" physicalDescription="" tag="//@tag.1"/>
+  <term name="방위 최빈수" description="" physicalName="AOA_MODE" physicalDescription="" tag="//@tag.1"/>
+  <term name="신호세기 최빈수" description="" physicalName="PA_MODE" physicalDescription="" tag="//@tag.1"/>
+  <term name="PRI 최빈수" description="" physicalName="PRI_MODE" physicalDescription="" tag="//@tag.1"/>
+  <term name="펄스폭 최빈수" description="" physicalName="PW_MODE" physicalDescription="" tag="//@tag.1"/>
+  <term name="주파수 최빈수" description="" physicalName="FREQ_MODE" physicalDescription="" tag="//@tag.1"/>
   <tag name="ㅁㅁㅁ"/>
   <tag name="다이어그램_용어수집" description="이 용어는 다이어그램에서 용어 수집도구를 사용하여 등록한 것입니다."/>
 </tm:TermDictionary>

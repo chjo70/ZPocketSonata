@@ -172,14 +172,14 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 	if( m_pDoc->GetDataType() == en_PDW_DATA ) {
 		bRet = m_pDoc->ReadDataFile( iFileIndex, & m_strFilterSetup );
 
-		iFilteredDataItems += m_pDoc->GetFilteredRealDataItems();
+		iFilteredDataItems = m_pDoc->GetFilteredRealDataItems();
 
 		ShowGraph( enSubGraph, iFileIndex );
 	}
 	else {
 		bRet = m_pDoc->ReadDataFile( iFileIndex );
 
-		iFilteredDataItems += m_pDoc->GetFilteredRealDataItems();
+		iFilteredDataItems = m_pDoc->GetFilteredRealDataItems();
 
  		InitGraph( enSubGraph );
  
@@ -201,15 +201,11 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
  */
 void CDeltaGraphView2::ClearGraph()
 {
-	//UINT i;
-	float f1 = -9999.0F;
-	
-	UINT uiPDWDataItems = m_pDoc->GetDataItems();
 
-	//for ( i = 0; i < uiPDWDataItems; ++i) {
-    float fval = 0.0F;
-	PEvsetcellEx(m_hPE, PEP_faXDATA, 0, uiPDWDataItems-1, &fval );
-	PEvsetcellEx(m_hPE, PEP_faYDATA, 1, uiPDWDataItems-1, &fval );
+    PEreinitialize( m_hPE );
+    PEresetimage( m_hPE, 0, 0 );
+    ::InvalidateRect( m_hPE, NULL, FALSE );
+
 
 	//}
 
@@ -478,11 +474,12 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 	RECT rect;
 
 	if( enSubGraph == enUnselectedSubGraph ) {
-		GetClientRect( &rect );
+		
 		if( m_hPE ) { 
 			PEdestroy( m_hPE ); 
 		}
 
+        GetClientRect( &rect );
 		m_hPE = PEcreate(PECONTROL_SGRAPH, WS_VISIBLE, &rect, m_hWnd, 1001); 
 
 		if( m_hPE )
@@ -998,6 +995,8 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 			UINT i;
 			float f1 = -9999.0F;
 
+            //PEnset( m_hPE, PEP_nPOINTS, 0 );
+
 			if( uiPDWDataItems > 0 ) {
 				Log( enNormal, _T("그래프에 데이터를 삽입 시작합니다.") );
 				for (i = 0; i < uiPDWDataItems; ++i) {
@@ -1007,7 +1006,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 					PEvsetcellEx(m_hPE, PEP_faXDATA, 1, i+(iFileIndex*PDW_ITEMS), pfX);
 					PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), pfY);
 
-                    TRACE( "\n(%f , %f)" , *pfX, *pfY );
+                    //TRACE( "\n(%f , %f)" , *pfX, *pfY );
 
 					++pfX;
 					++pfY;
@@ -1057,6 +1056,8 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 					}
 				}
 				Log( enNormal, _T("그래프에 데이터를 삭제 완료했습니다.") );
+
+                PEnset( m_hPE, PEP_nPOINTS, uiPDWDataItems );
 
 			}
 			else {
@@ -1234,13 +1235,15 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	int iCombo= m_CComboYAxis.GetCurSel() + 1;
 
-	//InitGraph( enUnselectedSubGraph );
-	PEreinitialize( m_hPE );
+	//InitGraph();
+	//PEreinitialize( m_hPE );
+    //PEresetimage( m_hPE, 0, 0 );
 	::SendMessage( m_hPE, WM_COMMAND, (WPARAM) MAKELONG(53053, 0), 0L);
 
 	//ClearZoomInfo();
 
-	ClearGraph();
+	//ClearGraph();
+    //InitGraph( ( ENUM_SUB_GRAPH ) iCombo );
 	DrawGraph( (ENUM_SUB_GRAPH) iCombo );
 	
 
@@ -1385,14 +1388,22 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
   */
  void CDeltaGraphView2::GetFilterSetup( STR_FILTER_SETUP *pstrFilterSetup, ENUM_SUB_GRAPH enSubGraph, ENUM_DataType enDataType )
  {
+     double dMinX, dMaxX, dMinY, dMaxY;
+
+     PEvget( m_hPE, PEP_fZOOMMINX, &dMinX );
+     PEvget( m_hPE, PEP_fZOOMMAXX, &dMaxX );
+
+     PEvget( m_hPE, PEP_fZOOMMINY, &dMinY );
+     PEvget( m_hPE, PEP_fZOOMMAXY, &dMaxY );
+
 	 switch( enSubGraph ) {
 	 case enSubMenu_1 :
 		 if (enDataType == en_PDW_DATA) {
-			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( (float) ( dMinX * 1000000.), m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( (float) ( dMaxX * 1000000.), m_pDoc->GetBandWidth() );
 
-			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dAoaMin );
-			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dAoaMax );
+             pstrFilterSetup->uiAoaMin = CEncode::EncodeDOA ( dMinY );
+             pstrFilterSetup->uiAoaMax = CEncode::EncodeDOA( dMaxY );
 
 		 }
 		 else {
@@ -1401,11 +1412,13 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 break;
 	 case enSubMenu_2 :
 		 if (enDataType == en_PDW_DATA) {
-			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+             int iCh;
 
-			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dFrqMin );
-			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dFrqMax );
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+
+             pstrFilterSetup->uiFrqMin = CEncode::EncodeRealFREQMHz( &iCh, (float) ( dMinY / 1000000. ) );
+             pstrFilterSetup->uiFrqMax = CEncode::EncodeRealFREQMHz( &iCh, ( float ) (dMaxY / 1000000.) );
 		 }
 		 else {
 
@@ -1414,8 +1427,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_3 :		// 시간대 DTOA
 		 if (enDataType == en_PDW_DATA) {
-			 //PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-			 //PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
 
 			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dDtoaMin );
 			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dDtoaMax );
@@ -1427,9 +1440,9 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_4 :
 		 if (enDataType == en_PDW_DATA) {
-// 			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-// 			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
-// 
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+
 // 			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPAMin );
 // 			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPAMax );
 		 }
@@ -1508,6 +1521,9 @@ void CDeltaGraphView2::OnBnClickedButtonFilterDeapply()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	GetDlgItem(IDC_BUTTON_FILTER_DEAPPLY)->EnableWindow( FALSE );
 
+    ::SendMessage( m_hPE, WM_COMMAND, ( WPARAM ) MAKELONG( 53053, 0 ), 0L );
+    ClearZoomInfo();
+
 	ClearFilterSetup();
 
 	ENUM_SUB_GRAPH enSubGraph= (ENUM_SUB_GRAPH ) ( m_CComboYAxis.GetCurSel() + 1 );
@@ -1515,6 +1531,15 @@ void CDeltaGraphView2::OnBnClickedButtonFilterDeapply()
 
 }
 
+/**
+ * @brief     OnBnClickedButtonRunSigAnal
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-23, 14:32
+ * @warning
+ */
 void CDeltaGraphView2::OnBnClickedButtonRunSigAnal()
 {
 	ENUM_DataType enDataType;
@@ -1852,9 +1877,11 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 	if (enDataType == en_PDW_DATA) {
 		STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetRealData();
 
-		fValue = pPDWData->pfTOA[pHSD->w2];
-		fValue = SetXUnit( fValue, enDataType );
-		sprintf_s( szBuffer, _countof(szBuffer), _T("%.3f"), fValue );
+        if( pHSD->w2 < pPDWData->uiDataItems ) {
+            fValue = pPDWData->pfTOA[pHSD->w2];
+            fValue = SetXUnit( fValue, enDataType );
+            sprintf_s( szBuffer, _countof( szBuffer ), _T( "%.3f" ), fValue );
+        }
 
 	}
 	else {

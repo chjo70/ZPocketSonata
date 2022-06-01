@@ -107,7 +107,7 @@ using namespace std;
 // 	{
 // 		strTaskId = "";
 // 		usSdfId = 0;
-// 		strMissionId = ""; //2014.06.03. 이정남 추가 (누락되어 있었음)
+// 		strMissionId = ""; //2014.06.03.
 // 		strOperatorId = "";
 // 		strEquipId = "";
 // 		strTaskCreatorId = "";
@@ -1872,7 +1872,7 @@ struct SELDBEnvVarIdnf {
 	float fMarginPaErrorInPulseGroup; // (float) 신호식별마진 -  펄스그룹 내 신호세기차 오차
 	float fMarginScanPeriodErrorRatio; // (float) 신호식별마진 - 스캔주기 오차율
 
-// 	// 운용제어창에서 관리하는 정보. 연동기로 보내주는 루틴을 통합관리하기 위해서 db에 저장하지는 않지만 환경변수 구조체에서 관리함. 2016.9.28. 이정남
+// 	// 운용제어창에서 관리하는 정보. 연동기로 보내주는 루틴을 통합관리하기 위해서 db에 저장하지는 않지만 환경변수 구조체에서 관리함. 
 // 	bool bUseHGTaskToPosEstLink1;
 // 	bool bUseHGTaskToPosEstLink2;
 	float fDIValidLink1;

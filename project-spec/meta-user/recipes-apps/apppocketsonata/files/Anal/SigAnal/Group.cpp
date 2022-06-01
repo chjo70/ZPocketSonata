@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "Group.h"
 
@@ -522,11 +523,11 @@ void CGroup::PrintAllGroup()
             // 방위 그룹화 출력
             if (pFrqGr->narrow_wide == FALSE) {
                 //printf( "\n\t [%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-                Log(enDebug, "\t[%d] Narrow %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->from_aoa), I_AOACNV(pAoaGroup->to_aoa), I_FRQMhzCNV(nBand, pFrqGr->from_frq), I_FRQMhzCNV(nBand, pFrqGr->to_frq), I_PWCNV(pPwGr->from_pw), I_PWCNV(pPwGr->to_pw));
+                Log(enDebug, "\t\t[%d] 협대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->from_aoa), I_AOACNV(pAoaGroup->to_aoa), I_FRQMhzCNV(nBand, pFrqGr->from_frq), I_FRQMhzCNV(nBand, pFrqGr->to_frq), I_PWCNV(pPwGr->from_pw), I_PWCNV(pPwGr->to_pw));
             }
             else {
                 //printf( "\n\t [%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%.1f-%.1f), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->from_aoa ), CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->to_aoa ), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->from_frq), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->to_frq), CPOCKETSONATAPDW::DecodePWus( pPwGr->from_pw ), CPOCKETSONATAPDW::DecodePWus( pPwGr->to_pw ) );
-                Log(enDebug, "\t[%d] Wide   %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[us](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->from_aoa), I_AOACNV(pAoaGroup->to_aoa), I_FRQMhzCNV(nBand, pFrqGr->from_frq), I_FRQMhzCNV(nBand, pFrqGr->to_frq), I_PWCNV(pPwGr->from_pw), I_PWCNV(pPwGr->to_pw));
+                Log(enDebug, "\t\t[%d] 광대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[us](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->stat], pAoaGroup->stat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->from_aoa), I_AOACNV(pAoaGroup->to_aoa), I_FRQMhzCNV(nBand, pFrqGr->from_frq), I_FRQMhzCNV(nBand, pFrqGr->to_frq), I_PWCNV(pPwGr->from_pw), I_PWCNV(pPwGr->to_pw));
             }
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -787,128 +788,131 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
 {
     STR_AOA_GROUP *pAoaGroup;
 
+    if( pStatGrPdwIndex->uiCount > _spOne ) {
 #ifdef _ISODATA_AOA_GROUP_
-    unsigned int i;
-    int diffVal, overVal, meanVal, frstVal;
+        unsigned int i;
+        int diffVal, overVal, meanVal, frstVal;
 
-    if( bForce1Group == true ) {
-        PDWINDEX *pIndex=pStatGrPdwIndex->pIndex;
+        if( bForce1Group == true ) {
+            PDWINDEX *pIndex = pStatGrPdwIndex->pIndex;
 
-        pAoaGroup = & m_AoaGroups.aoa[ m_AoaGroups.uiCount ];
+            pAoaGroup = &m_AoaGroups.aoa[m_AoaGroups.uiCount];
 
-        pAoaGroup->to_aoa = -9999999;
-        pAoaGroup->from_aoa = 0xffffff;
+            pAoaGroup->to_aoa = -9999999;
+            pAoaGroup->from_aoa = 0xffffff;
 
-        meanVal = 0;
-        frstVal = (int) m_pAOA[ *pIndex ];
-        for( i=0 ; i < pStatGrPdwIndex->uiCount ; ++i ) {
-            diffVal = (int) m_pAOA[ *pIndex++ ] - frstVal;
-            overVal = _abs( diffVal );
-            if( overVal > MAX_AOA/2 ) {
-                if( frstVal > MAX_AOA/2 )
-                    diffVal = diffVal + MAX_AOA;
-                else
-                    diffVal = diffVal - MAX_AOA;
+            meanVal = 0;
+            frstVal = ( int ) m_pAOA[*pIndex];
+            for( i = 0 ; i < pStatGrPdwIndex->uiCount ; ++i ) {
+                diffVal = ( int ) m_pAOA[*pIndex++] - frstVal;
+                overVal = _abs( diffVal );
+                if( overVal > MAX_AOA / 2 ) {
+                    if( frstVal > MAX_AOA / 2 )
+                        diffVal = diffVal + MAX_AOA;
+                    else
+                        diffVal = diffVal - MAX_AOA;
+                }
+
+                meanVal += diffVal;
+
+                pAoaGroup->to_aoa = _max( pAoaGroup->to_aoa, diffVal );
+                pAoaGroup->from_aoa = _min( pAoaGroup->from_aoa, diffVal );
             }
 
-            meanVal += diffVal;
+            pAoaGroup->to_aoa = (MAX_AOA + pAoaGroup->to_aoa + frstVal) % MAX_AOA;
+            pAoaGroup->from_aoa = (MAX_AOA + pAoaGroup->from_aoa + frstVal) % MAX_AOA;
 
-            pAoaGroup->to_aoa = _max( pAoaGroup->to_aoa, diffVal );
-            pAoaGroup->from_aoa = _min( pAoaGroup->from_aoa, diffVal );
-        }
+            pAoaGroup->from_bin = (( UINT ) pAoaGroup->from_aoa) >> _sp.np.Aoa_Shift_Cnt;
+            pAoaGroup->to_bin = (( UINT ) pAoaGroup->to_aoa) >> _sp.np.Aoa_Shift_Cnt;
 
-        pAoaGroup->to_aoa = ( MAX_AOA + pAoaGroup->to_aoa + frstVal ) % MAX_AOA;
-        pAoaGroup->from_aoa = ( MAX_AOA + pAoaGroup->from_aoa + frstVal ) % MAX_AOA;
+            memcpy( pAoaGroup->pIndex, pStatGrPdwIndex->pIndex, sizeof( PDWINDEX )*pStatGrPdwIndex->uiCount );
+            pAoaGroup->iCount = pStatGrPdwIndex->uiCount;
 
-        pAoaGroup->from_bin = ( ( UINT ) pAoaGroup->from_aoa ) >> _sp.np.Aoa_Shift_Cnt;
-        pAoaGroup->to_bin = ( ( UINT ) pAoaGroup->to_aoa ) >> _sp.np.Aoa_Shift_Cnt;
-
-        memcpy( pAoaGroup->pIndex, pStatGrPdwIndex->pIndex, sizeof(PDWINDEX)*pStatGrPdwIndex->uiCount );
-        pAoaGroup->iCount = pStatGrPdwIndex->uiCount;
-
-        pAoaGroup->bOverAoa = FALSE;
-
-        pAoaGroup->stat = m_nStat;
-        pAoaGroup->band = m_nBand;
-
-        ++ m_AoaGroups.uiCount;
-
-    }
-    else {
-        STR_CLUSTER *pCluster;
-
-        // ISODATA - 클러스터링 알고리즘을 사용한 방위 클러스터링...
-        //-- 조철희 2006-01-04 11:24:36 --//
-        ISODATA( pStatGrPdwIndex, & m_pAOA[0] );
-
-        pCluster = & m_pCluster[0];
-        pAoaGroup = & m_AoaGroups.aoa[ m_AoaGroups.uiCount ];
-        for( i=0 ; i < m_uiClusters ; ++i ) {
             pAoaGroup->bOverAoa = FALSE;
-
-            // 방위 그룹화의 방위 영역 설정
-            pAoaGroup->from_aoa = pCluster->aoa.iLow;
-            pAoaGroup->to_aoa = pCluster->aoa.iHgh;
-            pAoaGroup->from_bin = pCluster->aoa.iLow >> _sp.np.Aoa_Shift_Cnt;
-            pAoaGroup->to_bin = pCluster->aoa.iHgh >> _sp.np.Aoa_Shift_Cnt;
-
-            memcpy( pAoaGroup->pIndex, pCluster->index, sizeof(PDWINDEX)*pCluster->iCount );
-            pAoaGroup->iCount = pCluster->iCount;
 
             pAoaGroup->stat = m_nStat;
             pAoaGroup->band = m_nBand;
 
-            ++ pAoaGroup;
-            ++ pCluster;
-        }
+            ++m_AoaGroups.uiCount;
 
-        m_AoaGroups.uiCount += m_uiClusters;
-    }
+        }
+        else {
+            STR_CLUSTER *pCluster;
+
+            // ISODATA - 클러스터링 알고리즘을 사용한 방위 클러스터링...
+            //-- 조철희 2006-01-04 11:24:36 --//
+            ISODATA( pStatGrPdwIndex, &m_pAOA[0] );
+
+            pCluster = &m_pCluster[0];
+            pAoaGroup = &m_AoaGroups.aoa[m_AoaGroups.uiCount];
+            for( i = 0 ; i < m_uiClusters ; ++i ) {
+                pAoaGroup->bOverAoa = FALSE;
+
+                // 방위 그룹화의 방위 영역 설정
+                pAoaGroup->from_aoa = pCluster->stAOA.iLow;
+                pAoaGroup->to_aoa = pCluster->stAOA.iHgh;
+                pAoaGroup->from_bin = pCluster->stAOA.iLow >> _sp.np.Aoa_Shift_Cnt;
+                pAoaGroup->to_bin = pCluster->stAOA.iHgh >> _sp.np.Aoa_Shift_Cnt;
+
+                memcpy( pAoaGroup->pIndex, pCluster->index, sizeof( PDWINDEX )*pCluster->iCount );
+                pAoaGroup->iCount = pCluster->iCount;
+
+                pAoaGroup->stat = m_nStat;
+                pAoaGroup->band = m_nBand;
+
+                ++pAoaGroup;
+                ++pCluster;
+            }
+
+            m_AoaGroups.uiCount += m_uiClusters;
+        }
 
 #else
-    BOOL bRet;
+        BOOL bRet;
 
-    int peak_index;
-    int peak_count;
+        int peak_index;
+        int peak_count;
 
-    // 방위 히스토그램 계산
-    MakeHist( pStatGrPdwIndex, & AOA[0], _sp.np.Aoa_Shift_Cnt, & m_AoaHist );
+        // 방위 히스토그램 계산
+        MakeHist( pStatGrPdwIndex, &AOA[0], _sp.np.Aoa_Shift_Cnt, &m_AoaHist );
 
-    for( ;; ) {
-        pAoaGroup = & m_AoaGroups.aoa[ m_AoaGroups.uiCount ];
+        for( ;; ) {
+            pAoaGroup = &m_AoaGroups.aoa[m_AoaGroups.uiCount];
 
-        if( m_AoaGroups.uiCount > MAX_AOA_GROUP ) {
-            printf( "\n Over Aoa Group exceed !" );
-            WhereIs;
-            break;
+            if( m_AoaGroups.uiCount > MAX_AOA_GROUP ) {
+                printf( "\n Over Aoa Group exceed !" );
+                WhereIs;
+                break;
+            }
+
+            peak_index = FindPeakInHist( m_AoaHist.bin_count, &m_AoaHist.hist[0] );
+            if( peak_index < 0 ) {
+                break;
+            }
+            peak_count = m_AoaHist.hist[peak_index];
+
+            // 종료 조건
+            if( peak_count < _spAnalMinPulseCount ) {
+                break;
+            }
+
+            // 방위 범위 구하기
+            bRet = GetAOARange( peak_index, _sp.np.Aoa_Shift_Cnt, pAoaGroup );
+
+            FilterParam( pStatGrPdwIndex, &AOA[0], pAoaGroup );
+
+            ReDrawAoaHist( pAoaGroup );
+
+            ++m_AoaGroups.uiCount;
+
+            if( bRet && pAoaGroup->iCount >= _spAnalMinPulseCount ) {
+                break;
+            }
         }
-
-        peak_index = FindPeakInHist( m_AoaHist.bin_count, & m_AoaHist.hist[0] );
-        if( peak_index < 0 ) {
-            break;
-        }
-        peak_count = m_AoaHist.hist[ peak_index ];
-
-        // 종료 조건
-        if( peak_count < _spAnalMinPulseCount  ) {
-            break;
-        }
-
-        // 방위 범위 구하기
-        bRet = GetAOARange( peak_index, _sp.np.Aoa_Shift_Cnt, pAoaGroup );
-
-        FilterParam( pStatGrPdwIndex, & AOA[0], pAoaGroup );
-
-        ReDrawAoaHist( pAoaGroup );
-
-        ++ m_AoaGroups.uiCount;
-
-        if( bRet && pAoaGroup->iCount >= _spAnalMinPulseCount ) {
-            break;
-        }
-    }
 
 #endif
+
+    }
 
 }
 
@@ -2382,10 +2386,11 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
     }
     else {
         // 초기화
-        m_pPdwParam = pPdw;
+        m_pPDWParam = pPdw;
         m_uiClusters = _spOne;
         pCluster = &m_pCluster[0];
         pCluster->iCount = pSrcIndex->uiCount;
+        pCluster->bSplit = true;
         memcpy(pCluster->index, pSrcIndex->pIndex, sizeof(PDWINDEX)*pCluster->iCount);
 
         CalClusterInfo(pCluster);
@@ -2410,8 +2415,9 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
                 }
             }
 
-            if (nSplitCluster == 0)
+            if( nSplitCluster == 0 ) {
                 break;
+            }
 
             m_uiClusters = m_uiClusters + nSplitCluster;
         }
@@ -2445,18 +2451,27 @@ BOOL CGroup::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
         pCluster1 = pDstCluster++;
         pCluster2 = pDstCluster;
 
-        if (pCluster->deviation > (float)MAXIMUM_STANDARD_DEVIATION) {
-            pCluster1->center = AddAOA(pCluster->center, UMUL(pCluster->deviation, SPLIT_RATIO));
-            pCluster2->center = SubAOA(pCluster->center, UMUL(pCluster->deviation, SPLIT_RATIO));
+        // 클러스터 내의 표준편차 이상이고 개수 이상 일때 분리한다.
+        if ( pCluster->bSplit == true && ( pCluster->fDeviation > (float)MAXIMUM_STANDARD_DEVIATION && pCluster->iCount > MINIMUM_NUMBER_OF_SAMPLES ) ) {
+            pCluster1->iCenter = AddAOA(pCluster->iCenter, UMUL(pCluster->fDeviation, SPLIT_RATIO));
+            pCluster2->iCenter = SubAOA(pCluster->iCenter, UMUL(pCluster->fDeviation, SPLIT_RATIO));
 
             ReCluster(pCluster1, pCluster2, pCluster);
             CalClusterInfo(pCluster1);
             CalClusterInfo(pCluster2);
 
-            // 클러스터 내의 모든 개수가 최소 클러스터 개수보다 커야 분리된다.
-            // if( pCluster1->count > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->count > MINIMUM_NUMBER_OF_SAMPLES )
-            //-- 조철희 2006-01-04 15:52:41 --//
-            bRet = TRUE;
+            // 개수가 적어도 원 클러스터 의 분산 값이 크면 분리하도록 함.
+            if( pCluster1->iCount > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->iCount > MINIMUM_NUMBER_OF_SAMPLES ) {
+                pCluster1->bSplit = true;
+                pCluster2->bSplit = true;
+                // 클러스터 내의 모든 개수가 최소 클러스터 개수보다 커야 분리된다.
+                // if( pCluster1->count > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->count > MINIMUM_NUMBER_OF_SAMPLES )
+                //-- 조철희 2006-01-04 15:52:41 --//
+                bRet = TRUE;
+            }
+            else {
+                pCluster1->bSplit = false;
+            }
         }
     }
 
@@ -2479,6 +2494,8 @@ void CGroup::ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, ST
     int diff1, diff2;
     int center1, center2;
 
+    UINT *pDstValue1, *pDstValue2;
+
     int overVal;
 
     PDWINDEX *pCIndex;
@@ -2486,13 +2503,15 @@ void CGroup::ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, ST
 
     pCIndex = & pSrcCluster->index[0];
     pDstCIndex1 = & pDstCluster1->index[0];
+    pDstValue1 = &pDstCluster1->uiValue[0];
     pDstCIndex2 = & pDstCluster2->index[0];
+    pDstValue2 = &pDstCluster2->uiValue[0];
 
     _EQUALS3( pDstCluster1->iCount, pDstCluster2->iCount, 0 )
-    center1 = pDstCluster1->center;
-    center2 = pDstCluster2->center;
+    center1 = pDstCluster1->iCenter;
+    center2 = pDstCluster2->iCenter;
     for( i=0 ; i < pSrcCluster->iCount ; ++i ) {
-        diff1 = (int) m_pAOA[ *pCIndex ] - center1;
+        diff1 = (int) m_pPDWParam[ *pCIndex ] - center1;
         overVal = _abs( diff1 );
         if( overVal > MAX_AOA/2 ) {
             if( center1 > MAX_AOA/2 )
@@ -2502,7 +2521,7 @@ void CGroup::ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, ST
         }
         diff1 = _abs( diff1 );
 
-        diff2 = (int) m_pAOA[ *pCIndex ] - center2;
+        diff2 = (int) m_pPDWParam[ *pCIndex ] - center2;
         overVal = _abs( diff2 );
         if( overVal > MAX_AOA/2 ) {
             if( center2 > MAX_AOA/2 )
@@ -2513,10 +2532,12 @@ void CGroup::ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, ST
         diff2 = _abs( diff2 );
 
         if( diff1 < diff2 ) {
-            *pDstCIndex1++ = *pCIndex++;
+            *pDstValue1++ = m_pPDWParam[*pCIndex];
+            *pDstCIndex1++ = *pCIndex++;            
             ++ pDstCluster1->iCount;
         }
         else {
+            *pDstValue2++ = m_pPDWParam[*pCIndex];
             *pDstCIndex2++ = *pCIndex++;
             ++ pDstCluster2->iCount;
         }
@@ -2539,15 +2560,16 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
     double dMeanVal;
     PDWINDEX *pCIndex;
 
-    // 방위 평균 계산
-    pCluster->aoa.iHgh = -9999999;
-    pCluster->aoa.iLow = 0xffffff;
+    pCIndex = &pCluster->index[0];
 
-    meanVal = 0;
-    pCIndex = & pCluster->index[0];
-    frstVal = m_pPdwParam[ *pCIndex++ ];
-    for( i=1 ; i < pCluster->iCount ; ++i ) {
-        diffVal = (int) m_pAOA[ *pCIndex++ ] - frstVal;
+    // 방위 평균 계산
+    pCluster->stAOA.iHgh = -INT32_MAX;
+    pCluster->stAOA.iLow = +INT32_MAX;
+
+    meanVal = 0;    
+    frstVal = m_pPDWParam[ *pCIndex ];
+    for( i=0 ; i < pCluster->iCount ; ++i ) {
+        diffVal = (int) m_pPDWParam[ *pCIndex++ ] - frstVal;
         overVal = _abs( diffVal );
         if( overVal > MAX_AOA/2 ) {
             if( frstVal > MAX_AOA/2 ) {
@@ -2560,19 +2582,19 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
 
         meanVal += diffVal;
 
-        pCluster->aoa.iHgh = _max( pCluster->aoa.iHgh, diffVal );
-        pCluster->aoa.iLow = _min( pCluster->aoa.iLow, diffVal );
+        pCluster->stAOA.iHgh = _max( pCluster->stAOA.iHgh, diffVal );
+        pCluster->stAOA.iLow = _min( pCluster->stAOA.iLow, diffVal );
     }
-    pCluster->aoa.iHgh = ( MAX_AOA + pCluster->aoa.iHgh + frstVal ) % MAX_AOA;
-    pCluster->aoa.iLow = ( MAX_AOA + pCluster->aoa.iLow + frstVal ) % MAX_AOA;
-    pCluster->center = ( MAX_AOA + IDIV( meanVal, pCluster->iCount ) + frstVal ) % MAX_AOA;
+    pCluster->stAOA.iHgh = ( MAX_AOA + pCluster->stAOA.iHgh + frstVal ) % MAX_AOA;
+    pCluster->stAOA.iLow = ( MAX_AOA + pCluster->stAOA.iLow + frstVal ) % MAX_AOA;
+    pCluster->iCenter = ( MAX_AOA + IDIV( meanVal, pCluster->iCount ) + frstVal ) % MAX_AOA;
 
     // 방위 거리 계산
     meanVal = 0;
-    frstVal = pCluster->center;
+    frstVal = pCluster->iCenter;
     pCIndex = & pCluster->index[0];
     for( i=0 ; i < pCluster->iCount ; ++i ) {
-        diffVal = (int) m_pAOA[ *pCIndex++ ] - frstVal;
+        diffVal = (int) m_pPDWParam[ *pCIndex++ ] - frstVal;
         overVal = _abs( diffVal );
         if( overVal > MAX_AOA/2 ) {
             if( frstVal > MAX_AOA/2 )
@@ -2583,14 +2605,14 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
 
         meanVal += _abs( diffVal );
     }
-    pCluster->distance = FDIV( meanVal, pCluster->iCount );
+    pCluster->fDistance = FDIV( meanVal, pCluster->iCount );
 
     // 방위 편차 계산
     dMeanVal = 0.;
-    frstVal = pCluster->center;
+    frstVal = pCluster->iCenter;
     pCIndex = & pCluster->index[0];
     for( i=0 ; i < pCluster->iCount ; ++i ) {
-        diffVal = (int) m_pAOA[ *pCIndex++ ] - frstVal;
+        diffVal = (int) m_pPDWParam[ *pCIndex++ ] - frstVal;
         overVal = _abs( diffVal );
         if( overVal > MAX_AOA/2 ) {
             if( frstVal > MAX_AOA/2 )
@@ -2601,9 +2623,6 @@ void CGroup::CalClusterInfo( STR_CLUSTER *pCluster )
 
         dMeanVal += ( diffVal * diffVal );
     }
-//     if( dMeanVal < 0 ) {
-//         //printf( "\n [W] 방위 분산 계산 에러 !!!" );
-//         Log( enError, "[W] Error of AOA Deviation !!!" );
-//     }
-    pCluster->deviation = (float) ( sqrt( dMeanVal / (double) pCluster->iCount ) );
+
+    pCluster->fDeviation = (float) ( sqrt( dMeanVal / (double) pCluster->iCount ) );
 }

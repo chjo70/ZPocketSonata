@@ -527,8 +527,14 @@ CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_XBAND;
-        
+
+    m_enBandWidth = XBAND::en5MHZ_BW;
+
     CXPDW::Init( pRawData );
+
+    if( pstFilterSetup != NULL ) {
+        memcpy( &m_strFilterSetup, pstFilterSetup, sizeof( STR_FILTER_SETUP ) );
+    }
 
 }
 
@@ -555,12 +561,9 @@ CXPDW::~CXPDW(void)
  * @date      2022/02/18 23:06:22
  * @warning   
  */
-void CXPDW::Init( char *pRawData )
+void CXPDW::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
     UNION_HEADER *puniPDWFileHeader;
-
-    //FreeData();
-    //FreeRealData();
 
     m_pRawHeaderBuffer = (char *) & pRawData[0];
     m_pRawDataBuffer = (char *) & pRawData[sizeof( STR_XBAND_HEADER )];
@@ -569,7 +572,14 @@ void CXPDW::Init( char *pRawData )
 
     UpdateHeaderSize();
 
+    m_PDWRealData.uiDataItems = 0;
+
     m_uiTotalDataItems = puniPDWFileHeader->GetTotalPDW( m_enUnitType );
+    m_enBandWidth = (XBAND::ENUM_BANDWIDTH ) puniPDWFileHeader->GetBandWidth();
+
+    if( pstFilterSetup != NULL ) {
+        memcpy( &m_strFilterSetup, pstFilterSetup, sizeof( STR_FILTER_SETUP ) );
+    }
 
 }
 
@@ -840,89 +850,94 @@ void CXPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
  */
 void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 {
-    bool bFirstTOA=true;
-    unsigned int i, uiDataItems;
-    int iCh;
+    if( pPDWRealData->uiDataItems == 0 ) {
+        bool bFirstTOA = true;
+        unsigned int i, uiDataItems;
+        int iCh;
 
-    XBAND::ENUM_BANDWIDTH enBandWidth;
+        XBAND::ENUM_BANDWIDTH enBandWidth;
 
-    _TOA ullTOA, ullFirstTOA, ullPreTOA=0;
-    int iSignalType;
-    UINT uiFreq, uiPW, uiPA, uiAOA;
+        _TOA ullTOA, ullFirstTOA, ullPreTOA = 0;
+        int iSignalType;
+        UINT uiFreq, uiPW, uiPA, uiAOA;
 
-    _TOA *pullTOA = pPDWRealData->pullTOA;
+        _TOA *pullTOA = pPDWRealData->pullTOA;
 
-    float *pfAOA = pPDWRealData->pfAOA;
-	float *pfFreq = pPDWRealData->pfFreq;
-    float *pfPA = pPDWRealData->pfPA;
-	float *pfPW = pPDWRealData->pfPW;
-	
-	float *pfTOA = pPDWRealData->pfTOA;
-	float *pfDTOA = pPDWRealData->pfDTOA;
-	
-	char *pcType = pPDWRealData->pcType;
-	char *pcDV = pPDWRealData->pcDV;
+        float *pfAOA = pPDWRealData->pfAOA;
+        float *pfFreq = pPDWRealData->pfFreq;
+        float *pfPA = pPDWRealData->pfPA;
+        float *pfPW = pPDWRealData->pfPW;
 
-    _PDW *pPDW = (_PDW *) & m_pRawDataBuffer[0];
+        float *pfTOA = pPDWRealData->pfTOA;
+        float *pfDTOA = pPDWRealData->pfDTOA;
 
-    uiDataItems = 0;
-    enBandWidth = m_stHeader.enBandWidth;
+        char *pcType = pPDWRealData->pcType;
+        char *pcDV = pPDWRealData->pcDV;
 
-    for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
-        // 시간 정보
-        ullTOA = pPDW->GetTOA();
+        _PDW *pPDW = ( _PDW * ) & m_pRawDataBuffer[0];
 
-        // 방위 저장
-        uiAOA = pPDW->GetAOA();    
+        uiDataItems = 0;
+        enBandWidth = m_stHeader.enBandWidth;
 
-        // 주파수 변환
-        iCh = pPDW->GetChannel();
-        uiFreq = pPDW->GetFrequency( iCh );
+        for( i = 0 ; i < m_uiTotalDataItems ; ++i ) {
+            // 시간 정보
+            ullTOA = pPDW->GetTOA();
 
-        // 펄스폭 저장
-        uiPW = pPDW->GetPulsewidth();
+            // 방위 저장
+            uiAOA = pPDW->GetAOA();
 
-        // 신호 세기 저장
-        uiPA = pPDW->GetPulseamplitude();
+            // 주파수 변환
+            iCh = pPDW->GetChannel();
+            uiFreq = pPDW->GetFrequency( iCh );
 
-        iSignalType = pPDW->GetPulsetype();
+            // 펄스폭 저장
+            uiPW = pPDW->GetPulsewidth();
 
-        // 필터링 조건
-        if( ( m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA ) &&
-            ( m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA ) &&
-            ( m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA ) &&
-            ( m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW ) &&
-            ( m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq ) ) {
-            if( bFirstTOA == true ) {
-                _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA )
+            // 신호 세기 저장
+            uiPA = pPDW->GetPulseamplitude();
 
-                bFirstTOA = false;
+            iSignalType = pPDW->GetPulsetype();
+
+            // 필터링 조건
+            if( (m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA) &&
+                (m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA) &&
+                (m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA) &&
+                (m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW) &&
+                (m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq) ) {
+                if( bFirstTOA == true ) {
+                    _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA )
+
+                    bFirstTOA = false;
+                }
+                *pfDTOA++ = CXPDW::DecodeTOA( ullTOA - ullPreTOA, enBandWidth );
+                ullPreTOA = ullTOA;
+
+
+                // 시간 저장
+                *pullTOA++ = ullTOA;
+
+                *pfTOA++ = CXPDW::DecodeTOA( ullTOA, enBandWidth );
+                *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
+                *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
+                *pfPA++ = CXPDW::DecodePA( uiPA );
+                *pfPW++ = CXPDW::DecodePW( uiPW, enBandWidth );
+
+                *pcType++ = iSignalType;
+                *pcDV++ = 1;
+
+                ++uiDataItems;
+
             }
-            *pfDTOA++ = CXPDW::DecodeTOA( ullTOA-ullPreTOA, enBandWidth );
-            ullPreTOA = ullTOA;
 
-
-            // 시간 저장
-            *pullTOA++ = ullTOA;
-
-            *pfTOA++ = CXPDW::DecodeTOA( ullTOA, enBandWidth );
-            *pfAOA++ = CXPDW::DecodeDOA( uiAOA );
-            *pfFreq++ = CXPDW::DecodeFREQ( uiFreq );
-            *pfPA++ = CXPDW::DecodePA( uiPA );
-            *pfPW++ = CXPDW::DecodePW( uiPW, enBandWidth );
- 
-            *pcType++ = iSignalType;
-            *pcDV++ = 1;
-
-            ++ uiDataItems;
+            ++pPDW;
 
         }
 
-        ++ pPDW;
+        pPDWRealData->SetTotalPDW( uiDataItems );
+    }
+    else {
 
     }
-
-    m_PDWRealData.SetTotalPDW( uiDataItems );
 
 }
 
@@ -1258,7 +1273,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterS
  * @date      2022/02/18 22:28:42
  * @warning   
  */
-void CPOCKETSONATAPDW::Init( char *pRawData )
+void CPOCKETSONATAPDW::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
     UNION_HEADER *puniPDWFileHeader;
 
@@ -1699,7 +1714,7 @@ C7PDW::~C7PDW(void)
 	Free();
 }
 
-void C7PDW::Init( char *pRawData )
+void C7PDW::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
 
 }
@@ -1984,7 +1999,7 @@ CEIQ::~CEIQ(void)
 	Free();
 }
 
-void CEIQ::Init( char *pRawData )
+void CEIQ::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
 
 }
@@ -2376,7 +2391,7 @@ CMIDAS::~CMIDAS(void)
 	Free();
 }
 
-void CMIDAS::Init( char *pRawData )
+void CMIDAS::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
 
 }
@@ -2836,16 +2851,7 @@ CData::CData()
     m_PDWData.pstPDW = NULL;
 
     //
-    m_PDWRealData.uiDataItems = 0;
-    m_PDWRealData.pullTOA = NULL;
-    m_PDWRealData.pfAOA = NULL;
-    m_PDWRealData.pfFreq = NULL;
-    m_PDWRealData.pfPA = NULL;
-    m_PDWRealData.pfPW = NULL;
-    m_PDWRealData.pfTOA = NULL;
-    m_PDWRealData.pfDTOA = NULL;
-    m_PDWRealData.pcType = NULL;
-    m_PDWRealData.pcDV = NULL;
+    memset( &m_PDWRealData, 0, sizeof( STR_PDWREALDATA ) );
 
 	ClearFilterSetup();
 
@@ -2861,7 +2867,7 @@ CData::CData()
  * @date      2022-05-04, 14:37
  * @warning
  */
-void CData::Init( char *pRawData )
+void CData::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
 {
 
 }
@@ -3488,21 +3494,26 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
     size_t szFileSize;
     unsigned long long int ullFileSize;
 
-    ullFileSize = FileSize( pPathname );
-    szFileSize = CheckOverflow<size_t>( ullFileSize );
+    if( pPathname != NULL ) {
+        ullFileSize = FileSize( pPathname );
+        szFileSize = CheckOverflow<size_t>( ullFileSize );
 
-	//_SAFE_NEW( pTempData, char [szFileSize] )
-    pTempData = new char [szFileSize];
-    memset( pTempData, 0, szFileSize );
+        pTempData = new char[szFileSize];
+        memset( pTempData, 0, szFileSize );
 
-    if( pTempData != NULL && m_RawDataFile.OpenFile( pPathname, O_RDONLY | O_BINARY ) == true ) {  
-        m_RawDataFile.Read( pTempData, szFileSize );
-        ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption );
-        //m_RawDataFile.FileClose();
+        if( pTempData != NULL && m_RawDataFile.OpenFile( pPathname, O_RDONLY | O_BINARY ) == true ) {
+            m_RawDataFile.Read( pTempData, szFileSize );
+            ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption );
+
+        }
+
+        m_RawDataFile.CloseFile();
+        delete[] pTempData;
     }
+    else {
+        ReadDataMemory( NULL, pPathname, pstFilterSetup, enOption );
 
-    m_RawDataFile.CloseFile();
-    delete [] pTempData;
+    }
 
     return m_pData;
 
@@ -3517,64 +3528,69 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
 */
 void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
-	ENUM_DataType enDataType = CCommonUtils::WhatDataType( pstPathname );
-    ENUM_UnitType enUnitType = CCommonUtils::WhatUnitType( pstPathname );
+    if( pstData != NULL && pstPathname != NULL ) {
+        ENUM_DataType enDataType = CCommonUtils::WhatDataType( pstPathname );
+        ENUM_UnitType enUnitType = CCommonUtils::WhatUnitType( pstPathname );
 
-    // 장치 정보 업데이트
-    g_enUnitType = enUnitType;
+        // 장치 정보 업데이트
+        g_enUnitType = enUnitType;
 
-    if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {
+        if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {
 
-    }
+        }
 
-    else if( enDataType == en_PDW_DATA && enUnitType == en_SONATA_SHU ) {
+        else if( enDataType == en_PDW_DATA && enUnitType == en_SONATA_SHU ) {
 
-    }
+        }
 
-    else if( enDataType == en_PDW_DATA && enUnitType == en_701 ) {
+        else if( enDataType == en_PDW_DATA && enUnitType == en_701 ) {
 
-    }
+        }
 
-    else if( enDataType == en_PDW_DATA && enUnitType == en_KFX ) {
+        else if( enDataType == en_PDW_DATA && enUnitType == en_KFX ) {
 
-    }
+        }
 
-    else if( enDataType == en_PDW_DATA && enUnitType == en_ELINT ) {
+        else if( enDataType == en_PDW_DATA && enUnitType == en_ELINT ) {
 
-    }
+        }
 
-    // 소형 전자전의 PDW 인 경우
-    else if( enDataType == en_PDW_DATA && enUnitType == en_ZPOCKETSONATA ) {
-        if( m_pData == NULL ) {
-            m_pData = new CPOCKETSONATAPDW( pstData, pstFilterSetup, -1 );
+        // 소형 전자전의 PDW 인 경우
+        else if( enDataType == en_PDW_DATA && enUnitType == en_ZPOCKETSONATA ) {
+            if( m_pData == NULL ) {
+                m_pData = new CPOCKETSONATAPDW( pstData, pstFilterSetup, -1 );
+            }
+            else {
+                m_pData->Init( pstData );
+            }
+
+        }
+
+        // X대역 방탐기의 PDW 인 경우
+        else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
+            if( m_pData == NULL ) {
+                m_pData = new CXPDW( pstData, pstFilterSetup );
+            }
+            else {
+                m_pData->Init( pstData, pstFilterSetup );
+            }
+
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        else if( enDataType == en_IQ_DATA && enUnitType == en_SONATA ) {
+
         }
         else {
-            m_pData->Init( pstData );
+            printf( "\n Error !!" );
+
         }
 
-    }
-
-    // X대역 방탐기의 PDW 인 경우
-    else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
-        if( m_pData == NULL ) {
-            m_pData = new CXPDW( pstData, pstFilterSetup );
+        if( enUnitType != en_UnknownUnit ) {
+            m_pData->ConvertPDWData( NULL, false, enOption );
         }
-        else {
-            m_pData->Init( pstData );
-        }
-
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    else if( enDataType == en_IQ_DATA && enUnitType == en_SONATA ) {
-
     }
     else {
-        printf("\n Error !!");
-
-    }
-
-    if( enUnitType != en_UnknownUnit ) {
         m_pData->ConvertPDWData( NULL, false, enOption );
     }
 
@@ -3647,6 +3663,14 @@ void *CDataFile::GetHeader()
 		return m_pData->GetHeader(); 
 	else 
 		return NULL; 
+}
+
+int CDataFile::GetBandWidth()
+{
+    if( m_pData != NULL )
+        return m_pData->GetBandWidth();
+    else
+        return 0;
 }
 
 /**

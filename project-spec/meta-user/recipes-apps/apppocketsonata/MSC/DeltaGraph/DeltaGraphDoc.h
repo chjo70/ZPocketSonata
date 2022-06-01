@@ -34,6 +34,7 @@ public:
 	ENUM_DataType WhatDataType();
 
     ENUM_DataType GetDataType();
+    int GetBandWidth();
 
 	inline int GetFileIndex() { return m_pTheDataFile->GetFileIndex(); }
 	

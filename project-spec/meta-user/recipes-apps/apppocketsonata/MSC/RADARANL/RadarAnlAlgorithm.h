@@ -34,7 +34,7 @@ namespace XBAND {
 #define _XBAND_ENUM_BANDWIDTH_
     typedef enum {
         en5MHZ_BW = 0,
-        en150MHZ_BW,
+        en120MHZ_BW,
 
         enUnknown_BW = 2,
 
@@ -315,7 +315,7 @@ namespace RadarAnlAlgotirhm
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
 		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
 
-        static MATHFUNCSDLL_API LONG GetOpInitID();
+        static MATHFUNCSDLL_API unsigned int GetOpInitID();
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

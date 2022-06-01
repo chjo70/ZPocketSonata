@@ -201,7 +201,7 @@ public:
     CMakeAET* GetMakeAET() { return NULL; }
 
     inline unsigned int GetPDWID() { return (UINT) -1; }
-    inline LONG GetOpInitID() { return (UINT)-1; }
+    inline unsigned int GetOpInitID() { return (UINT) -1; }
 
     void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 

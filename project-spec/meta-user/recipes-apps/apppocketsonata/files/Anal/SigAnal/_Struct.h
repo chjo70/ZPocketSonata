@@ -16,7 +16,19 @@
 
 // PDW  펄스열 플레그
 //##ModelId=452B0C5402BC
-enum PULSE_EXTRACT_MARK { UnMark=0, STABLE_MARK, REFSTB_MARK, JITTER_MARK, DWELL_MARK, UNKNOWN_MARK, EXTRACT_MARK, Discard } ;
+enum PULSE_EXTRACT_MARK { 
+    UnMark=0, 
+    STABLE_MARK, 
+    REFSTB_MARK, 
+    JITTER_MARK, 
+    DWELL_MARK, 
+    UNKNOWN_MARK, 
+    EXTRACT_MARK, 
+
+    LIBRARY_MARK,
+
+    Discard 
+} ;
 
 //##ModelId=452B0C5402D0
 typedef USHORT PDWINDEX;
@@ -142,10 +154,14 @@ struct STR_PW_GROUPS {
 struct STR_CLUSTER {
 	int iCount;
     PDWINDEX index[SCN_COLLECT_PDW];
-	int center;
-	float deviation;
-	float distance;
-	STR_LOWHIGH aoa;
+    UINT uiValue[SCN_COLLECT_PDW];
+
+    bool bSplit;
+
+	int iCenter;
+	float fDeviation;
+	float fDistance;
+	STR_LOWHIGH stAOA;
 
 }  ;
 
@@ -166,8 +182,8 @@ struct STR_FIRST_FRQAOA_PEAK {
 struct STR_PULSE_TRAIN_SEG {
 	STR_PDWINDEX pdw;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
 
-	UINT uiMiss;							// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
-	UINT uiPRI_Band;					// 펄스열 추출할 때의 PRI 밴드
+	UINT uiMiss;					// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
+	UINT uiPRI_Band;				// 펄스열 추출할 때의 PRI 밴드
 	UINT uiExtractStep;			// 기준 펄스열, STABLE, Jitter PRI
 	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
 	PDWINDEX first_idx;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.

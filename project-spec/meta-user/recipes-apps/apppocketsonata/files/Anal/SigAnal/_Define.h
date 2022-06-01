@@ -113,7 +113,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 /*! \bug  탐지 분석에 기본 지터율 추출을 최대 53% 까지 추출하게 함.
     \date 2008-10-25 18:01:37, 조철희
 */
-#define	MAX_JITTER_P				53				// 이전 값은 55
+#define	MAX_JITTER_P				(54)				// 최대 54% 까지 존재
 #define MAX_JITTER_R				(float) ( MAX_JITTER_P / 100. )
 
 //////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////////
 // 방위/주파수/펄스폭 그룹화
 #if defined(_ELINT_) || defined(_XBAND_)
-#define _spRxdfAoa				    (IAOACNV( 8 ))      // 8 도
+#define _spRxdfAoa				    (IAOACNV( 2 ))      // 8 도
 #define _spRxdfFrq				    (4)                 // about 5(=4*1.25)MHz,
 
 #define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
@@ -286,15 +286,15 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 */
 #define RPC         				4    // 기준 펄스열의 펄스수 (Reference Pule Count), 이전값은 5, 2005-09-28 11:09:29 --//
 
-#define MAX_STB_MISS    		7   	// 최대 허용 STABLE MISS 개수, 이전 값은 6
-#define MAX_JIT_MISS    		4   	// 최대 허용 JITTER MISS 개수, 이전 값은 3
+#define MAX_STB_MISS    		    7   	// 최대 허용 STABLE MISS 개수, 이전 값은 6
+#define MAX_JIT_MISS    		    (2)   	// 최대 허용 JITTER MISS 개수, 이전 값은 3
 
-#define REFLEX_ZONE     		( 10 * _spOneMicrosec ) // 반사파 처리 구간
-#define HPRF_FIRST_PRI  		( 80 * _spOneMicrosec ) // 반사파처리 이전에 High PRF부터 처리
+#define REFLEX_ZONE     		    ( 10 * _spOneMicrosec ) // 반사파 처리 구간
+#define HPRF_FIRST_PRI  		    ( 80 * _spOneMicrosec ) // 반사파처리 이전에 High PRF부터 처리
 
 
 
-#define	OVERLAP_SEG_THRESHOLD			(60)	// 펄스열 겹쳐지는 정도, 이전 값은 80
+#define	OVERLAP_SEG_THRESHOLD		(60)	// 펄스열 겹쳐지는 정도, 이전 값은 80
 
 #define ALL_MERGE									(-1)
 

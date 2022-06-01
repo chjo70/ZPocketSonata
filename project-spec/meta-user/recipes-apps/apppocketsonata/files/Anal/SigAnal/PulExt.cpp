@@ -213,14 +213,15 @@ void CPulExt::Init()
     */
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CPulExt::PulseExtract
-// 반환되는 형  : void
-// 함 수 인 자  : 없음
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-11-16 17:22:59
-//
+/**
+ * @brief     펄스열을 추출한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2005-11-16 17:22:59
+ * @warning
+ */
 void CPulExt::PulseExtract()
 {
     //////////////////////////////////////////////////////////////////////////
@@ -557,8 +558,9 @@ void CPulExt::CleanPulseTrains( int startseg, int endseg )
             MemcpySeg( pDestSeg, pSeg );
             ++ pDestSeg;
         }
-        else
-            -- m_uiCoSeg;
+        else {
+            --m_uiCoSeg;
+        }
 
         ++ pSeg;
     }
@@ -577,23 +579,24 @@ void CPulExt::DePulseExtract()
 {
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//!	\brief	 CPulExt::MemcpySeg
-//!	\author  조철희
-//!	\param	 pDestSeg	인자형태 STR_PULSE_TRAIN_SEG *
-//!	\param	 pSrcSeg	인자형태 STR_PULSE_TRAIN_SEG *
-//!	\return	 void
-//! \version 1.0
-//! \date		 2006-05-19 16:57:45
-//! \warning
-//
+/**
+ * @brief     펄스열을 복사한다.
+ * @param     STR_PULSE_TRAIN_SEG * pDestSeg
+ * @param     STR_PULSE_TRAIN_SEG * pSrcSeg
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-05-19 16:57:45
+ * @warning
+ */
 void CPulExt::MemcpySeg( STR_PULSE_TRAIN_SEG *pDestSeg, STR_PULSE_TRAIN_SEG *pSrcSeg )
 {
     if( pDestSeg != pSrcSeg ) {
         memcpy( pDestSeg->pdw.pIndex, pSrcSeg->pdw.pIndex, sizeof( PDWINDEX ) * pSrcSeg->pdw.uiCount );
         pDestSeg->pdw.uiCount = pSrcSeg->pdw.uiCount;
 
+        // 나머지 기타 정보를 복사한다.
         memcpy( & pDestSeg->uiMiss, & pSrcSeg->uiMiss, sizeof( STR_PULSE_TRAIN_SEG ) - sizeof( STR_PDWINDEX ) );
     }
 }
@@ -975,7 +978,7 @@ void CPulExt::ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *
 #else
             pStrMargin->tLow = 0;
 #endif
-            pStrMargin->tHgh = TMULDIV<_TOA>(tDtoa, MAX_JITTER_P, 200 );
+            pStrMargin->tHgh = TMULDIV<_TOA>(tDtoa, MAX_JITTER_P, 100 );
 
         }
     }
@@ -1536,7 +1539,7 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
         int threshold;
 
 #if defined(_ELINT_) || defined(_XBAND_)
-        threshold = IFRQMhzCNV( 0, 40 );
+        threshold = IFRQMhzCNV( 0, 4 );
 
 #elif _POCKETSONATA_
         threshold = (UINT) IFRQMhzCNV( 0, FIXED_FREQ_MARGIN );
@@ -1573,22 +1576,21 @@ BOOL CPulExt::IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg )
     return bRet;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CPulExt::ExtractForPT
-// 반환되는 형  : void
-// 함 수 인 자  : STR_PULSE_TRAIN_SEG *pSeg
-// 함 수 인 자  : int ext_type
-// 함 수 인 자  : STR_PDWINDEX *pGrPdwIndex
-// 함 수 인 자  : int margin
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-05-04 17:53:41
-//
-//##ModelId=427F251203A7
+/**
+ * @brief     기준 펄스열을 기준으로 고정/지터 펄스열을 추출한다.
+ * @param     STR_PULSE_TRAIN_SEG * pSeg
+ * @param     int ext_type
+ * @param     STR_PDWINDEX * pColPdwIndex
+ * @param     _TOA margin
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2005-05-04 17:53:41
+ * @warning
+ */
 void CPulExt::ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin )
 {
-    //int /* i, */ j;
-
     int index;
     int max_miss;
 

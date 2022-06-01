@@ -451,14 +451,14 @@ void CKPulExt::KnownPulseExtract()
             extRange.tMinPRI = _max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
             extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMean ) + diff;
 			// 추출할 펄스열의 범위폭을 계산한다.
-			ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
+			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
 
 			// D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인 
 			// 하노닉 레이더 신호(?) 때문에 
 			// 2배의 PRI도 추출하도록 한다.
 			extRange.tMinPRI = 2 * extRange.tMinPRI;
 			extRange.tMaxPRI = 2 * extRange.tMaxPRI;
-			ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
+			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
 			break;
 
 		case _JITTER_PATTERN :

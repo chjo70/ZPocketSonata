@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "NewSigAnal.h"
 #include "NPulExt.h"
@@ -141,7 +142,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     // 규칙성 펄스열을 찾은 펄스열 인덱스
     m_uiRefEndSeg = m_uiCoSeg;
 
-    memset( MARK, 0, sizeof( MARK ) );
+    m_pNewSigAnal->ClearAllMark( true );
 
     //////////////////////////////////////////////////////////////////////////
     // 불규칙성 펄스열 찾기
@@ -194,7 +195,8 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         // 규칙성 펄스열을 찾은 펄스열 인덱스
         SetRefEndSeg();
 
-        ClearAllMark();
+        //ClearAllMark( false );
+        m_pNewSigAnal->ClearAllMark( false );
 
         //////////////////////////////////////////////////////////////////////////
         // 불규칙성 펄스열 찾기
@@ -213,7 +215,8 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         //-
         if( MustDo2ndPulseExtract() == TRUE ) {
             //Printf( "\n 2-Pass" );
-            ClearAllMark();
+            m_pNewSigAnal->ClearAllMark( true );
+
             MarkStablePulseTrain();
 
             ResetJitterSeg();
@@ -234,9 +237,14 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 }
 
 /**
- * @brief CNPulExt::ExtractPulseTrainByLibrary
- * @param uiCoKnownRadarMode
- * @param pRadarMode
+ * @brief     위협 라이브러리 기반으로 펄스열을 추출한다.
+ * @param     vector<SRadarMode * > * pVecMatchRadarMode
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 16:52
+ * @warning
  */
 void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode )
 {
@@ -246,23 +254,23 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
     SRadarMode *pRadarMode;
 
-    //ClearAllMark();
-    //memset( m_pMARK, 0, sizeof( m_pNewSigAnal->MARK ) );
-
     STR_PULSE_TRAIN_SEG *pSeg;
 
     vector <SRadarMode_Sequence_Values>::iterator iter;
 
+    // 위협 라이브러리의 주파수 범위로 필터링...
+
     if( pVecMatchRadarMode->size() > 0 ) {
         pRadarMode = pVecMatchRadarMode->at(0);
 
+        // 시작 펄스열 추출 얻기
         pSeg = GetPulseSeg();
         for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
             switch( pRadarMode->ePRI_Type ) {
             case RadarModePRIType::enumStable :
                 extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
                 extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractStablePT( & extRange, 0 );
+                ExtractStablePT( & extRange, 0, FALSE, LIBRARY_MARK );
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
@@ -283,7 +291,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             case RadarModePRIType::enumPATTERN :
                 extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
                 extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractJitterPT( & extRange, UINT_MAX, _sp.cm.Rpc, TRUE , JITTER_MARK, TRUE );
+                ExtractJitterPT( & extRange, UINT32_MAX, _sp.cm.Rpc, TRUE , LIBRARY_MARK, TRUE );
                 break;
 
             default :
@@ -292,76 +300,95 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
             ++ pRadarMode;
         }
+
+        Log( enNormal, "위협 라이브러리 기반 펄스열 추출: %d", m_uiCoSeg - m_uiAnalSeg );        
+        PrintAllSeg();
+
     }
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CNPulExt::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:03:32
-//
+/**
+ * @brief     추출한 펄스열을 마킹하도록 부 클래스로 호출한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @param     USHORT usMarkType
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:03:32
+ * @warning
+ */
 void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
     m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : *CNPulExt::GetFrqAoaGroupedPdwIndex
-// 반환되는 형  : STR_PDWINDEX
-// 함 수 인 자  : 없음
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:03:36
-//
+/**
+ * @brief     PRI 하모닉을 부 클래스로 호출한다.
+ * @param     _TOA priMean1
+ * @param     _TOA priMean2
+ * @param     _TOA uiThreshold
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:03:36
+ * @warning
+ */
 UINT CNPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {
     return m_pNewSigAnal->CheckHarmonic( priMean1, priMean2, uiThreshold );
 
 }
 
+/**
+ * @brief     그룹화 포인터를 얻는다.
+ * @return    STR_PDWINDEX *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 17:34
+ * @warning
+ */
 STR_PDWINDEX *CNPulExt::GetFrqAoaGroupedPdwIndex()
 {
     return m_pNewSigAnal->GetFrqAoaGroupedPdwIndex();
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//!	\brief	 CNPulExt::CalPRIRange
-//!	\author  조철희
-//!	\param	 pSeg	인자형태 STR_PULSE_TRAIN_SEG *
-//! \param	 priMean	인자형태 UINT
-//! \param	 dtoa_count	인자형태 UINT
-//!	\return	 void
-//! \version 1.0
-//! \date		 2006-07-06 16:56:07
-//! \warning
-//
+/**
+ * @brief     펄스열의 PRI 정보를 계산한다.
+ * @param     STR_PULSE_TRAIN_SEG * pSeg
+ * @param     _TOA priMean
+ * @param     UINT dtoa_count
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 17:35
+ * @warning
+ */
 void CNPulExt::CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )
 {
     m_pNewSigAnal->CalPRIRange( pSeg, priMean, dtoa_count );
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CNPulExt::MakeDtoaHistogram
-//! \author   조철희
-//! \param	  pPdwIndex	인자형태 PDWINDEX *
-//! \param	  count	인자형태 int
-//! \param	  pRange	인자형태 STR_MINMAX_TOA *
-//! \return   void
-//! \version  1.37
-//! \date     2006-07-27 17:16:36
-//! \warning
-//
+/**
+ * @brief     DTOA 히스토그램을 계산한다. 이 계산은 PRI 범위를 찾을때 사용한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @param     STR_MINMAX_TOA * pRange
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-07-27 17:16:36
+ * @warning
+ */
 void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )
 {
     m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, uiCount, pRange );
@@ -382,25 +409,32 @@ STR_DTOA_HISTOGRAM *CNPulExt::GetDtoaHist()
 }
 
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNPulExt::GetCoPdw
-        \author   조철희
-        \return   int
-        \version  0.0.57
-        \date     2008-11-11 21:41:20
-        \warning
-*/
+/**
+ * @brief     펄스 개수를 얻는다.
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2008-11-11 21:41:20
+ * @warning
+ */
 int CNPulExt::GetCoPdw()
 {
     return m_pNewSigAnal->GetCoPdw();
 }
 
-int CNPulExt::GetPulseStat()
-{
-    return m_pNewSigAnal->GetPulseStat();
-}
+/**
+ * @brief     부 클래스에 요청하여 펄스 정보를 얻는다.
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-30, 17:36
+ * @warning
+ */
+// int CNPulExt::GetPulseStat()
+// {
+//     return m_pNewSigAnal->GetPulseStat();
+// }
 
-void CNPulExt::ClearAllMark()
-{
-    memset( & m_pMARK[0], 0, sizeof( m_pNewSigAnal->MARK ) );
-}
+

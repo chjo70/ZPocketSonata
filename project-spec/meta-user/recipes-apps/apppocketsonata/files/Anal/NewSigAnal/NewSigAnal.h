@@ -97,7 +97,7 @@ public:
         return m_theGroup->GetBand(); 
     }
     /**
-     * @brief     GetPulseStat
+     * @brief     펄스 정보의 상태 값을 리턴한다.
      * @return    int
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
@@ -110,7 +110,7 @@ public:
     }
 
     /**
-     * @brief     GetCollectTime
+     * @brief     시간 정보를 리턴한다.
      * @param     struct timespec * pTimeSpec
      * @return    void
      * @exception
@@ -124,7 +124,7 @@ public:
     }
 
     /**
-     * @brief     SaveEmitterPdwFile
+     * @brief     수집 데이터를 특정 폴더에 PDW 파일로 저장한다.
      * @param     STR_EMITTER * pEmitter
      * @param     int iPLOBID
      * @param     bool bSaveFile
@@ -189,6 +189,9 @@ public:
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
+
+    inline int GetCoGroup() { return m_CoGroup; }
+
     //inline void NextSeqNum() { ++ m_nSeqNum; }
     
 
@@ -202,6 +205,8 @@ public:
     // 분석 관련 함수
     void Start(STR_PDWDATA *pPDWData );
     bool CheckKnownByAnalysis();
+
+    void ClearAllMark( bool bClear );
 
 };
 

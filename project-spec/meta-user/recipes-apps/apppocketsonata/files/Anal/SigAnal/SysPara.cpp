@@ -7,6 +7,8 @@
 
 #include "SysPara.h"
 
+#include "../../Include/globals.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -43,14 +45,8 @@ void CSysPara::LoadDefaultSysParameter()
 
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
-#if defined(_ELINT_) || defined(_XBAND_)
-    _sp.mg.aoa[1] = _spMgAoaEJ;
-    _sp.mg.aoa[2] = _spMgAoaEJ;
-    _sp.mg.aoa[3] = _spMgAoaEJ;
-    _sp.mg.aoa[4] = _spMgAoaEJ;
-    _sp.mg.aoa[5] = _spMgAoaCD;
-
-#elif defined(_POCKETSONATA_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+    _sp.mg.aoa[0] = _spMgAoaEJ;
     _sp.mg.aoa[1] = _spMgAoaEJ;
     _sp.mg.aoa[2] = _spMgAoaEJ;
     _sp.mg.aoa[3] = _spMgAoaEJ;
@@ -77,10 +73,7 @@ void CSysPara::LoadDefaultSysParameter()
   _sp.mg.agifrqin = _spMgAgileFrqIn;
   _sp.mg.agifrqout = _spMgAgileFrqOut;
 
-#if defined(_ELINT_) || defined(_XBAND_)
-	_sp.mg.fixfrq[0] = _spMgFixFrqEJ;
-#endif
-
+	_sp.mg.fixfrq[0] = ( UINT ) _spMgFixFrqEJ;
 	_sp.mg.fixfrq[1] = (UINT) _spMgFixFrqEJ;
 	_sp.mg.fixfrq[2] = (UINT) _spMgFixFrqEJ;
 	_sp.mg.fixfrq[3] = (UINT) _spMgFixFrqEJ;
@@ -106,6 +99,8 @@ void CSysPara::LoadDefaultSysParameter()
 
 	// CW 최소 개수
 	_sp.cm.uiCw_Min_Cnt = _spCWMinPulseCount;
+
+    _spAnalMinPulseCount = _DEFAULT_ANAL_MINPULSECOUNT_;
 
 }
 

@@ -85,7 +85,7 @@ protected:
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
-    void SaveGroupPDWFile(int index);
+    void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pstPDW, bool bSaveFile );
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
 
@@ -108,7 +108,7 @@ public:
     void InitDataFromDB();
 
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
-    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID );
+    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB=true );
 
     //! 출력 관련 함수
     void DISP_FineAet(SRxLOBData *pLOB);
@@ -123,7 +123,7 @@ public:
      * @date      2022-04-21, 16:56
      * @warning
      */
-    inline LONG GetOpInitID() {
+    inline unsigned int GetOpInitID() {
         return m_lOpInitID;
     }
 
@@ -350,6 +350,9 @@ public:
      * @warning
      */
     const char *GetRawDataFilename() const { return & m_szRawDataFilename[0]; }
+
+
+    virtual int GetCoGroup() = 0;
 
 };
 

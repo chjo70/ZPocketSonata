@@ -235,70 +235,37 @@ void CSigAnal::SaveRemainedPdwFile()
 }
 
 /**
- * @brief     SaveGroupPDWFile
- * @param     int index
+ * @brief     중간 수집 데이터 파일을 저장한다.
+ * @param     STR_PDWINDEX * pPDWIndex
+ * @param     STR_PDWDATA * pstPDW
+ * @param     bool bSaveFile
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2022-05-09, 11:45
+ * @date      2022-05-29, 11:14
  * @warning
  */
-void CSigAnal::SaveGroupPDWFile(int index)
+void CSigAnal::SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pPDWData, bool bSaveFile )
 {
-    //     if( m_bSaveFile == true ) {
-    // #if defined(_ELINT_) || defined(_XBAND_)
-    //         UINT uiSize;
-    //         char filename[100];
-    //         char szDirectory[100];
-    // 
-    //         int i;
-    //         CFile cFile;
-    //         BOOL bRet;
-    //         PDWINDEX *pPdwIndex;
-    //         _PDW *pPDW;
-    // 
-    //         STR_PDWDATA stPDWData;
-    // 
-    //         sprintf_s( szDirectory, "%s\\수집소_%d\\%s", LOCAL_DATA_DIRECTORY_2, m_pPDWData->x.el.iCollectorID, m_pPDWData->x.el.aucTaskID );
-    // 
-    //         bRet = CreateDir( szDirectory );
-    // 
-    //         struct tm stTime;
-    //         char buffer[100];
-    //         __time32_t tiNow;
-    // 
-    //         tiNow = _time32(NULL);
-    // 
-    //         _localtime32_s( &stTime, & tiNow );
-    //         strftime( buffer, 100, "%Y-%m-%d %H_%M_%S", & stTime);
-    // 
-    //         wsprintf( filename, _T("%s/_COL%d_GR_%02d.%s"), szDirectory, m_pPDWData->iCollectorID, index, PDW_EXT );
-    // 
-    //         cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
-    // 
-    //         uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
-    //         memcpy( & stPDWData, m_pPDWData, uiSize );
-    //         stPDWData.iIsStorePDW = 0;
-    //         stPDWData.count = m_pGrPdwIndex->count;
-    // 
-    //         pPdwIndex = m_pGrPdwIndex->pIndex;
-    //         for( i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
-    //             pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
-    //             memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
-    // 
-    //         }
-    // 
-    //         uiSize = sizeof( STR_PDWDATA ) - ( ( MAX_PDW - stPDWData.count ) * sizeof(_PDW) );
-    //         cFile.Write( & stPDWData, uiSize );
-    // 
-    //         cFile.Close();
-    // 
-    // #else
-    // 
-    // #endif
-    // 
-    //     }
+    unsigned int i;
+
+    PDWINDEX *pPdwIndex;
+    _PDW *pPDW;
+
+    if( m_bSaveFile == true && bSaveFile == true ) {
+        m_stSavePDWData.SetTotalPDW( pPDWIndex->uiCount );
+
+        pPdwIndex = pPDWIndex->pIndex;
+        for( i = 0; i < pPDWIndex->uiCount ; ++i ) {
+            pPDW = & pPDWData->pstPDW[*pPdwIndex++];
+            memcpy( &m_stSavePDWData.pstPDW[i], pPDW, sizeof( _PDW ) );
+
+        }
+
+        // 수집한 PDW 파일 저장하기...
+        InsertRAWData( &m_stSavePDWData, -(GetCoGroup()+1), false );
+    }
 }
 
 /**
@@ -330,7 +297,7 @@ void CSigAnal::SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
         }
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData(&m_stSavePDWData, iPLOBID);
+        InsertRAWData(&m_stSavePDWData, iPLOBID );
     }
 
 }
@@ -397,7 +364,7 @@ void CSigAnal::InitDataFromDB()
  * @date      2022-01-23, 17:53
  * @warning
  */
-void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
+void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB )
 {
     bool bRet = true;
     char buffer[100] = { 0 };
@@ -445,8 +412,10 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID )
         }
 
         if (m_bDBThread == false) {
-            // RAWDATA 데이터 저장
-            InsertToDB_RAW(pPDWData, iPLOBID);
+            if( bInsertDB == true ) {
+                // RAWDATA 데이터 저장
+                InsertToDB_RAW( pPDWData, iPLOBID );
+            }
         }
         else {
             TRACE("Push the data for InsertToDB_RAW()");

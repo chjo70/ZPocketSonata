@@ -67,8 +67,7 @@ public:
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
 	void ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode );
-    int GetPulseStat();
-    void ClearAllMark();
+    //int GetPulseStat();
 
 	//##ModelId=452B0C550041
     CNPulExt( void *pParent, unsigned int uiCoMaxPdw );
