@@ -168,6 +168,9 @@
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\ISODATA.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RADARDIR.h">
@@ -390,6 +393,9 @@
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\ISODATA.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
   </ItemGroup>

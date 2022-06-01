@@ -370,6 +370,7 @@ enum SCAN_STAT
 /////////////////////////////////////////////////////////////////////////////////////////
 //  LowHigh, MinMax 구조체
 //
+
 //##ModelId=452B0C510308
 #ifndef _STR_LOWHIGH
 #define _STR_LOWHIGH
@@ -402,7 +403,11 @@ struct STR_MINMAX {
     int iMin;
     int iMax;
     int iMode;
+<<<<<<< HEAD
     // int sdev;
+=======
+    
+>>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 } ;
 
 struct STR_MINMAX_SDEV {

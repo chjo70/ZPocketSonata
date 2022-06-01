@@ -229,6 +229,7 @@ REM :END</Command>
     <ClCompile Include="..\..\files\Anal\SigAnal\AnalPRI.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\cencdec.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\Group.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\ISODATA.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\MakeAET.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\PulExt.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp" />
@@ -292,6 +293,7 @@ REM :END</Command>
     <ClInclude Include="..\..\files\Anal\SigAnal\AnalPRI.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\cencdec.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\Group.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\ISODATA.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\MakeAET.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h" />

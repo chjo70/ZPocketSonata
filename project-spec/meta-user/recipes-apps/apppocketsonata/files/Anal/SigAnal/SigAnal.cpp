@@ -248,6 +248,7 @@ void CSigAnal::SaveRemainedPdwFile()
  */
 void CSigAnal::SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pPDWData, bool bSaveFile )
 {
+<<<<<<< HEAD
     unsigned int i;
 
     PDWINDEX *pPdwIndex;
@@ -266,6 +267,39 @@ void CSigAnal::SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pPDWData,
         // 수집한 PDW 파일 저장하기...
         InsertRAWData( &m_stSavePDWData, -(GetCoGroup()+1), false );
     }
+=======
+    UINT uiSize;
+    char filename[100];
+    char szDirectory[100];
+
+    int i;
+    CFile cFile;
+    BOOL bRet;
+    PDWINDEX *pPdwIndex;
+    _PDW *pPDW;
+
+    STR_PDWDATA stPDWData;
+	
+	bRet = MakeDirectory(szDirectory, pPDWData);
+
+
+    // 
+    //         cFile.Open( filename, CFile::modeCreate | CFile::modeReadWrite );
+    // 
+    //         uiSize = sizeof( STR_PDWDATA ) - ( MAX_PDW * sizeof(_PDW) );
+    //         memcpy( & stPDWData, m_pPDWData, uiSize );
+    //         stPDWData.iIsStorePDW = 0;
+    //         stPDWData.count = m_pGrPdwIndex->count;
+    // 
+	m_stSavePDWData.SetTotalPDW(pEmitter->stPDW.uiCount);
+	pPdwIndex = m_pGrPdwIndex->pIndex;
+	for( i=0 ; i < m_pGrPdwIndex->count ; ++i ) {
+		pPDW = & m_pPDWData->stPDW[ *pPdwIndex++ ];
+		memcpy( & stPDWData.stPDW[i], pPDW, sizeof(_PDW) );
+
+	}
+
+>>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 }
 
 /**
@@ -370,34 +404,16 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
     char buffer[100] = { 0 };
     TCHAR szDirectory[500], szRawDataPathname[600];
 
-    struct tm *pstTime;
-    struct timespec tiNow;
-
-    CCommonUtils::GetCollectTime(&tiNow, GetColTime(), GetColTimeMs() );
-    pstTime = localtime(&tiNow.tv_sec);
-
-#ifdef _ELINT_
-    sprintf_s(szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
-
-#elif _XBAND_
-    //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-    sprintf_s(szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.GetCollectorID(), pPDWData->x.el.aucTaskID);
-
-#elif _POCKETSONATA_
-    strftime(buffer, 100, "%Y-%m-%d", pstTime);
-    sprintf(szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
-
-#else
-    sprintf(szDirectory, "%s/BRD", pLocalDirectory);
-
-#endif
-
-    if ( /*pstTime != NULL &&*/ m_bSaveFile == true) {
-        bRet = CreateDir(szDirectory);
-    }
+	bRet = MakeDirectory(szDirectory, pPDWData );
 
     if ( /*pstTime != NULL &&*/ bRet == true) {
         if (m_bSaveFile == true) {
+			struct tm *pstTime;
+			struct timespec tiNow;
+
+			CCommonUtils::GetCollectTime(&tiNow, GetColTime(), GetColTimeMs());
+			pstTime = localtime(&tiNow.tv_sec);
+
             // 2. 파일명 생성하기
             strftime(buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime);
 
@@ -422,6 +438,49 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
         }
 
     }
+
+}
+
+/**
+ * @brief     디렉토리를 생성한다.
+ * @param     char * pszDirectory
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-25, 23:59
+ * @warning
+ */
+bool CSigAnal::MakeDirectory( char *pszDirectory, STR_PDWDATA *pPDWData)
+{
+	bool bRet = false;
+	struct tm *pstTime;
+	struct timespec tiNow;
+
+	CCommonUtils::GetCollectTime(&tiNow, GetColTime(), GetColTimeMs());
+	pstTime = localtime(&tiNow.tv_sec);
+
+#ifdef _ELINT_
+	sprintf_s(pszDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
+
+#elif _XBAND_
+	//sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
+	sprintf(pszDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.GetCollectorID(), pPDWData->x.el.aucTaskID);
+
+#elif _POCKETSONATA_
+	strftime(buffer, 100, "%Y-%m-%d", pstTime);
+	sprintf(pszDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
+
+#else
+	sprintf(pszDirectory, "%s/BRD", pLocalDirectory);
+
+#endif
+
+	if ( /*pstTime != NULL &&*/ m_bSaveFile == true) {
+		bRet = CreateDir(pszDirectory);
+	}
+
+	return bRet;
 
 }
 

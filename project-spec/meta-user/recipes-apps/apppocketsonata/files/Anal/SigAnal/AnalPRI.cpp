@@ -1810,7 +1810,11 @@ void CAnalPRI::StaggerAnalysis()
                     CopySeg(pEmitter);
                 }
                 else {
+<<<<<<< HEAD
 //                     // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
+=======
+                    // 스태거로 분석되지 않은 지터 에미터의 PDW개수가 20개 미만이면 제거한다.
+>>>>>>> 598fc7475f45e541dd7f9944a98d8fd4f39ef723
 //                     if( _spAnalMinPulseJitterEmitter > pEmitter->stPDW.uiCount ) {
 //                         pEmitter->mark = DELETE_EMITTER;
 //                     }
@@ -5989,7 +5993,8 @@ bool CAnalPRI::CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter
     pMakeAET->MakeAOAInfoFromSeg(&stAOA2, pEmitter2);
 
     /// 1. AOA의 평균값 차이가 마진을 벗어나면 병합 불가
-    if (HOPPING_MERGE_AOA_MARGIN < CalcDiffAOA(stAOA1.iMean, stAOA2.iMean))
+    //if (HOPPING_MERGE_AOA_MARGIN < CalcDiffAOA(stAOA1.iMean, stAOA2.iMean))
+    if( HOPPING_MERGE_AOA_MARGIN < CCommonUtils::CalcDiffAOA( stAOA1.iMean, stAOA2.iMean ) )
     {
         bResult = false;
     }
