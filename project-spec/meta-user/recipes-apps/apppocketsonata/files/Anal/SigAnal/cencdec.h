@@ -13,13 +13,6 @@ namespace SONATA {
         float fRes;			// 각 구간에 따른 resolution
     } ;
 
-//     SONATA::FREQ_RESOL _spFreqRes[ 3 ] = {  { 0,    2560,   0,      0.625 },
-//     { 1280, 6400,   1260,   1.25  },
-//     { 5866, 18740,  5866,   1.5   } } ;
-
-    /**
-     *
-     */
     namespace ENCODE {
         int DOA( float fDOA );
         int BAND( float fFREQ );

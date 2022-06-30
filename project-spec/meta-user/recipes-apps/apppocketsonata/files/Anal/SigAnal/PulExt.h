@@ -112,54 +112,10 @@ public:
     //! DTOA 히스트그램 상에서 추출할 PRI 밴드를 구한다.
     //##ModelId=452B0C5303C1
     virtual void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )=0;
-    //! 펄스열에 마킹을 한다.
-    //##ModelId=452B0C5303D3
-    virtual void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType )=0;
-    //##ModelId=452B0C5303DD
+
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
     virtual int GetCoPdw()=0;
     //virtual void ClearAllMark(bool bClear)=0;
-
-
-    template <typename T>
-    UINT CheckHarmonic(T priMean1, T priMean2, T tThreshold ) {
-        UINT ret=0;
-		T r;
-        T harmonic;
-        T max_mean, min_mean;
-
-        if( priMean1 > priMean2 ) {
-            max_mean = priMean1;
-            min_mean = priMean2;
-        }
-        else {
-            max_mean = priMean2;
-            min_mean = priMean1;
-        }
-
-        if( strcmp( typeid(T).name(), "float" ) == 0 ) {
-            harmonic = (unsigned int) ( fmod( (float) max_mean, (float) min_mean ) + 0.5 );
-        }
-        else {
-            harmonic = max_mean % min_mean;
-        }
-
-        // 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
-        T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
-
-        // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
-        if( harmonic <= tThreshold+margin_th || min_mean-harmonic <= tThreshold+margin_th ) {
-            r = MulDiv64( 1, max_mean, min_mean );
-			if( r > UINT_MAX ) {
-				ret = UINT_MAX;
-			}
-			else {
-				ret = (UINT) r;
-			}
-        }
-
-        return ret;
-    }
 
     void MakeCWPulseTrain();
     void ResetJitterSeg();
@@ -196,8 +152,7 @@ public:
     void MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C54008C
     void CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist );
-    //##ModelId=452B0C54009F
-    void DePulseExtract();
+
     //##ModelId=452B0C5400A0
     void DiscardPulseTrain( unsigned int startseg1, unsigned int endseg, unsigned int startseg2 );
     //##ModelId=452B0C5400AA
@@ -206,15 +161,16 @@ public:
     void CleanPulseTrains( int startseg, int endseg );
     //##ModelId=452B0C5400C7
     void MarkSegForExt( int nStartSeg, int nEndSeg );
-    //##ModelId=452B0C5400D2
+    
     void CompStablesJitters( unsigned int nStartStableSeg, unsigned int nStartJitterSeg );
-    //##ModelId=452B0C5400DC
+    bool IsSamePulseTrain( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    
     int GetCoExtPulse();
-    //##ModelId=452B0C5400DD
+    
     BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    BOOL CheckToaInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    BOOL CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    //##ModelId=452B0C5400F9
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    
     void DeleteAllSeg( STR_EMITTER *pEmitter );
     //##ModelId=452B0C540103
     BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange );
@@ -229,12 +185,7 @@ public:
     //##ModelId=452B0C54012B
     void FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
 
-
-
-    //##ModelId=452B0C540135
     _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
-
-
 
     //##ModelId=452B0C540141
     void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, int iMark=STABLE_MARK );
@@ -242,19 +193,22 @@ public:
     void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C54017E
     void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiCoRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
-    //##ModelId=452B0C540191
-    void MarkToPdwIndex( STR_PULSE_TRAIN_SEG *pSeg, int mark_type);
-    //##ModelId=452B0C54019B
+    
+    inline void MarkToPDWIndex( STR_PULSE_TRAIN_SEG *pSeg, USHORT usMarkType ) {
+        MarkToPDWIndex( pSeg->stPDW.pIndex, pSeg->stPDW.uiCount, usMarkType );
+    }
+
+    void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, USHORT usMarkType );
+    
     UINT AnalFreqType(STR_PULSE_TRAIN_SEG *pSeg);
     //##ModelId=452B0C5401A5
     UINT CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter );
     //##ModelId=452B0C5401B8
 
-    //##ModelId=452B0C5401C3
     _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
-    //##ModelId=452B0C5401D6
-    unsigned int ExtractStagger( STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
-    //##ModelId=452B0C5401EB
+    
+    unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
+    
     UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
     //##ModelId=452B0C5401F5
     UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
@@ -271,7 +225,7 @@ public:
     //##ModelId=452B0C540226
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
     //##ModelId=452B0C540230
-    bool FindSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end);
+    bool FindStableSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end);
     //##ModelId=452B0C540244
     void ExtractRefStable();
     //##ModelId=452B0C540245
@@ -287,7 +241,7 @@ public:
     //##ModelId=452B0C540263
     void VerifyPRI( STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C540265
-    int CalMaxMiss( int type );
+    UINT CalMaxMiss( int type );
     //##ModelId=452B0C54026D
     _TOA CalDtoaMargin( int type, STR_PULSE_TRAIN_SEG *pSeg );
     //##ModelId=452B0C540270
@@ -298,16 +252,14 @@ public:
     BOOL CalcSegParam( STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C540279
     void ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
-    //##ModelId=452B0C540282
+    
     float CalcRefPRI( PDWINDEX *pPdwIndex, UINT count, STR_MINMAX_TOA *pPRI );
-    //##ModelId=452B0C54028D
-
-
+    
     void ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *pPriRange, _TOA tDtoa, int ext_type, BOOL bFlagMargin);
 
 
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
-    //##ModelId=452B0C540297
+    
     BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
     //##ModelId=452B0C5402AB
     void ExtractStablePT();

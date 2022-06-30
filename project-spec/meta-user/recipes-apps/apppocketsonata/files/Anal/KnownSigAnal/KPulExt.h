@@ -50,8 +50,7 @@ public:
     void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
     //##ModelId=452B0C5201FE
     void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
-    //##ModelId=452B0C520207
-    void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+
     //##ModelId=452B0C520211
     STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
     UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );

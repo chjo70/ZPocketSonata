@@ -307,7 +307,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 				for( i=0 ; i < (int) uiPDWDataItems ; ++i ) {
 					j = 1;
 
-					strVal.Format( _T("%7d") , (m_pDoc->GetFileIndex()*PDW_ITEMS)+i+1 );
+					strVal.Format( _T("%7d") , (m_pDoc->GetFileIndex()*PDW_ITEMS)+i );
 					//m_CListPDW.InsertItem( i, strVal );
 					m_CListRawData.AddItem(strVal);
 

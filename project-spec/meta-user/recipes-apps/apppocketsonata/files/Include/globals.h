@@ -139,7 +139,7 @@ public:
 
 
 
-
+#define Log                             g_pTheLog->LogMsg
 
 #define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
 
@@ -151,7 +151,7 @@ public:
 #define LOGMSG5( A, B, C, D, E, F, G )  g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
 
 
-#define Log                             g_pTheLog->LogMsg
+//#define Log                             g_pTheLog->LogMsg
 
 
 #define LOGENTRY                        g_pTheLog->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )

@@ -61,6 +61,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	int m_CoListItems;
+
+	unsigned int m_uiTotalLOB;
+
 	CListCtrl m_CListLOB;
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

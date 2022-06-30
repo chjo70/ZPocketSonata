@@ -63,7 +63,7 @@ CNPulExt::~CNPulExt()
 //
 void CNPulExt::Init()
 {
-    m_CoPulseTrains = 0;
+    //m_CoPulseTrains = 0;
 
     //m_enBandWidth = m_pNewSigAnal->GetBandWidth();
 
@@ -196,7 +196,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         SetRefEndSeg();
 
         //ClearAllMark( false );
-        m_pNewSigAnal->ClearAllMark( false );
+        m_pNewSigAnal->ClearAllMark( true );
 
         //////////////////////////////////////////////////////////////////////////
         // 불규칙성 펄스열 찾기
@@ -207,21 +207,21 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         ExtractJitter( _STABLE + _JITTER_RANDOM );
 
         // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
-        DiscardPulseTrain();
+        //DiscardPulseTrain();
 
         //////////////////////////////////////////////////////////////////////////
         // 2차 펄스열 추출
         //  [7/2/2007 조철희]
         //-
-        if( MustDo2ndPulseExtract() == TRUE ) {
-            //Printf( "\n 2-Pass" );
-            m_pNewSigAnal->ClearAllMark( true );
-
-            MarkStablePulseTrain();
-
-            ResetJitterSeg();
-            ExtractJitter( _JITTER_RANDOM );
-        }
+//         if( MustDo2ndPulseExtract() == TRUE ) {
+//             //Printf( "\n 2-Pass" );
+//             m_pNewSigAnal->ClearAllMark( true );
+// 
+//             MarkStablePulseTrain();
+// 
+//             ResetJitterSeg();
+//             ExtractJitter( _JITTER_RANDOM );
+//         }
     }
 
 #else
@@ -229,7 +229,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 
 #endif
 
-    m_CoPulseTrains = m_uiCoSeg;
+    //m_CoPulseTrains = m_uiCoSeg;
     m_uiCoRefSeg = m_uiCoSeg;
 
     CPulExt::PulseExtract();
@@ -274,16 +274,16 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
-                for( iter=pRadarMode->vecRadarMode_PRISequenceValues.begin() ; iter != pRadarMode->vecRadarMode_PRISequenceValues.end() ; ++iter ) {
-                    extRange.tMinPRI = ITOAusCNV( (*iter).f_Min );
-                    extRange.tMaxPRI = ITOAusCNV( (*iter).f_Max );
-                    if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
-                        ++ m_uiCoSeg;
-
-                        ++ pSeg;
-                    }
-
-                }
+//                 for( iter=pRadarMode->vecRadarMode_PRISequenceValues.begin() ; iter != pRadarMode->vecRadarMode_PRISequenceValues.end() ; ++iter ) {
+//                     extRange.tMinPRI = ITOAusCNV( (*iter).f_Min );
+//                     extRange.tMaxPRI = ITOAusCNV( (*iter).f_Max );
+//                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
+//                         ++ m_uiCoSeg;
+// 
+//                         ++ pSeg;
+//                     }
+// 
+//                 }
                 break;
 
             case RadarModePRIType::enumJITTER :
@@ -301,10 +301,12 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             ++ pRadarMode;
         }
 
-        Log( enNormal, "위협 라이브러리 기반 펄스열 추출: %d", m_uiCoSeg - m_uiAnalSeg );        
+        Log( enNormal, "___위협 라이브러리 기반 펄스열 추출: %d", m_uiCoSeg - m_uiAnalSeg );        
         PrintAllSeg();
 
     }
+
+    m_uiAnalSeg = m_uiCoSeg;
 
 }
 
@@ -320,9 +322,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
  * @date      2006-01-23 10:03:32
  * @warning
  */
-void CNPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
+void CNPulExt::MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
+    m_pNewSigAnal->MarkToPDWIndex( pPdwIndex, uiCount, usMarkType);
 
 }
 
@@ -394,20 +396,19 @@ void CNPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR
     m_pNewSigAnal->MakeDtoaHistogram( pPdwIndex, uiCount, pRange );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    *CNPulExt::GetDtoaHist
-//! \author   조철희
-//! \return   STR_DTOA_HISTOGRAM
-//! \version  1.37
-//! \date     2006-07-28 13:19:17
-//! \warning
-//
+/**
+ * @brief     DTOA 히스토그램 데이터 포인터를 리턴한다.
+ * @return    STR_DTOA_HISTOGRAM *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-07-28 13:19:17
+ * @warning
+ */
 STR_DTOA_HISTOGRAM *CNPulExt::GetDtoaHist()
 {
     return m_pNewSigAnal->GetDtoaHist();
 }
-
 
 /**
  * @brief     펄스 개수를 얻는다.

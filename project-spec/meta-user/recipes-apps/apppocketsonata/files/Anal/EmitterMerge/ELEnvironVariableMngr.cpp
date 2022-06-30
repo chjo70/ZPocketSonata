@@ -32,11 +32,13 @@ CELEnvironVariable::CELEnvironVariable(void)
 
 	// 기본 설정 값
 	m_stEnvironVariable.iDVRatio = 60;							// [%]
-	m_stEnvironVariable.fMarginFrqError = 2.0;				// [MHz]	
+
+	// 신호 식별 설정값
+	m_stEnvironVariable.fMarginFrqError = 3.0;				// [MHz]	
 	m_stEnvironVariable.fMarginFrqModPeriodErrorRatio = 50;
 
-    m_stEnvironVariable.fMarginPriError = 100.0;			// [us]
-	m_stEnvironVariable.fMarginMinRqdPriRangeNestedRatio = 50;
+    m_stEnvironVariable.fMarginPriError = 2.0;			// [us]
+	m_stEnvironVariable.fMarginMinRqdPriRangeNestedRatio = 10;		// 지터-스태거 비교시 PRI 마진 값
 	m_stEnvironVariable.fMarginPriModPeriodErrorRatio = 30;
 
     m_stEnvironVariable.fMarginPwError = 100.0;

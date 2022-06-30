@@ -69,9 +69,11 @@ private:
 
 public:
 	afx_msg void OnOpInit();
+
 	void WriteProfile( char *pAppName, char *pAppKey, char *pValue );
 	void MakeIniFilename();
 	void LoadProfile( char *pValue, int iSize, char *pAppName, char *pAppKey );
+	void Init();
 	void Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt );
 
     bool GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt, char *pWhere, int iMaxItems );

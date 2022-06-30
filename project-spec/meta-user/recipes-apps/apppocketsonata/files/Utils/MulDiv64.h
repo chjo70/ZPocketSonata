@@ -42,7 +42,7 @@ __int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider);
 
 
 /**
- * @brief     TDIV
+ * @brief     32비트/64비트 정수형 나누기 연산한다.
  * @param     T x1
  * @param     T y2
  * @return    bool
@@ -57,13 +57,29 @@ T TDIV( T x, T y )
 {
     T toaRet;
 
-    if (sizeof(T) == sizeof(unsigned long long int)) {
-        toaRet = MulDiv64(x, 1, y);
+#ifdef _MSC_VER
+	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
+		toaRet = (T)MulDiv64((_TOA)x, (_TOA)1, (_TOA)y);
+	}
+	else if (strcmp(typeid(T).name(), "float") == 0) {
+		if (y < 0 || y > 0)
+			toaRet = (T)((float)x / (float)y);
+		else
+			toaRet = (T)0;
+	}
+#else
+    if (sizeof(T) == sizeof(unsigned __int64)) {
+        toaRet = (T) MulDiv64( (_TOA) x, (_TOA) 1, (_TOA) y);
     }
     else if (sizeof(T) == sizeof(unsigned int)) {
-        toaRet = (T) ( (float)x / (float)y );
+        if( y < 0 || y > 0 )
+            toaRet = (T) ( (float)x / (float)y );
+        else
+            toaRet = (T) 0;
     }
+#endif
     else {
+		toaRet = 0;
         TRACE("잘못된 연산 입니다....");
     }
 
@@ -71,7 +87,7 @@ T TDIV( T x, T y )
 }
 
 /**
- * @brief     TDIV
+ * @brief     나누기 템플릿 함수
  * @param     T x1
  * @param     T y2
  * @return    bool
@@ -86,15 +102,27 @@ T TMUL(T x, T y)
 {
     T toaRet;
 
-    if (sizeof(T) == sizeof(unsigned long long int)) {
+#ifdef _MSC_VER
+	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
+		toaRet = (T) MulDiv64( (_TOA) x, (_TOA)y, (_TOA)1);
+	}
+	else if (strcmp(typeid(T).name(), "float") == 0) {
+		toaRet = (T)((T)x * (T)y);
+	}
+
+#else
+    if (sizeof(T) == sizeof(unsigned __int64)) {
         toaRet = MulDiv64(x, y, 1);
     }
-    else if (sizeof(T) == sizeof(unsigned int)) {
+    else if (sizeof(T) == sizeof(float)) {
         toaRet = (T) ( (float)x * (float)y );
     }
+#endif
     else {
+		toaRet = 0;
         TRACE("잘못된 연산 입니다....");
     }
+
 
     return toaRet;
 }
@@ -116,13 +144,23 @@ T TMULDIV(T x, T y, T z)
 {
     T toaRet;
 
-    if (sizeof(T) == sizeof(unsigned long long int)) {
+#ifdef _MSC_VER
+	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
+		toaRet = MulDiv64(x, y, z);
+	}
+	else if (strcmp(typeid(T).name(), "float") == 0) {
+		toaRet = (T)(((float)x * (float)y) / (float)z);
+	}
+#else
+    if (sizeof(T) == sizeof(unsigned __int64)) {
         toaRet = MulDiv64(x, y, z);
     }
-    else if (sizeof(T) == sizeof(unsigned int)) {
+    else if (sizeof(T) == sizeof(float)) {
         toaRet = (T) ( ( (float) x * (float) y ) / (float) z );
     }
+#endif
     else {
+		toaRet = 0;
         TRACE("잘못된 연산 입니다....");
     }
 

@@ -50,34 +50,22 @@ private:
     
 
 public:
-    void ConvertRealFreq( STR_FRQ *pFrq );
     int CalMaxChannel( STR_PDWINDEX *pPdw );
-
     void PrintAllEmitter();
 
-    //##ModelId=452B0C560002
     inline int GetCoAnalPdw() { return m_uiCoAnalPdw; }
     inline void SetCoAnalPdw(UINT coAnalPdw ) { m_uiCoAnalPdw=coAnalPdw; }
-    //##ModelId=452B0C560003
     inline int GetCoLOB() { return m_iCoLOB; }
     inline void SetCoLOB( UINT coLOB ) { m_iCoLOB = coLOB; }
 
-    //##ModelId=452B0C56003A
     UINT CalcAoaMean_GSKIMF_200505_6( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C56003F
-    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, int type ) { MarkToPdwIndex( pEmitter->stPDW.pIndex, pEmitter->stPDW.uiCount, type ); }
-    //##ModelId=452B0C560042
     void MakeExtInfoFromSeg( STR_EXT *pExt, STR_EMITTER *pEmitter );
-    //##ModelId=452B0C56004A
     void MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter);
-    //##ModelId=452B0C560052
     void MakePAInfoFromSeg(STR_MINMAX *pPa, STR_EMITTER *pEmitter);
-    //##ModelId=452B0C560055
     void MakePWInfoFromSeg(STR_MINMAX *pPw, STR_EMITTER *pEmitter);
 
-
     void MakeDefaultPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
-    void MakeStaggerPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
+    void MakeStaggerPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter );
     void MakeDwellPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeJitterPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakeStablePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
@@ -105,38 +93,24 @@ public:
     virtual ~CMakeAET();
 
 public:
-    //##ModelId=452B0C560004
     virtual int CalcAoaMeanByHistAoa(STR_PDWINDEX *pSrcIndex) = 0;
-    //##ModelId=452B0C56000C
     virtual int GetColPdw() = 0;
-    //##ModelId=452B0C56000E
     virtual int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
-    //##ModelId=452B0C560012
     virtual int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
-    //##ModelId=452B0C560019
-    virtual void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) = 0;
-    //##ModelId=452B0C560021
+    //virtual void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) = 0;
     virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index, bool bSaveFile) = 0;
-    //##ModelId=452B0C56002A
     virtual unsigned int GetCoSeg() = 0;
-    //##ModelId=452B0C56002C
     virtual int GetCoEmitter() = 0;
-    //##ModelId=452B0C56002E
     virtual STR_PULSE_TRAIN_SEG *GetPulseSeg() = 0;
-    //##ModelId=452B0C560034
     virtual STR_EMITTER *GetEmitter() = 0;
-    //##ModelId=452B0C560036
     virtual UINT CalcFreqMedian(STR_PULSE_TRAIN_SEG *pSeg) = 0;
     virtual STR_PDWPARAM* GetPdwParam() = 0;
-
     virtual void GetCollectTime(struct timespec *pTimeSpec) = 0;
-
     virtual void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) = 0;
-
     virtual unsigned int GetOpInitID()=0;
 	virtual unsigned int GetPDWID() = 0;
     virtual unsigned int IsStorePDW()=0;
-    virtual void DISP_FineAet( SRxLOBData *pLOBData )=0;
+    virtual void DISP_FineLOB( SRxLOBData *pLOBData )=0;
     virtual SRxLOBData *GetLOBData( int index=0 )=0;
 
 #if defined(_ELINT_) || defined(_XBAND_)

@@ -28,6 +28,7 @@ private:
     CDataFile m_theDataFile;
 
     STR_PDWDATA m_stPDWData;
+    unsigned int m_uiPDWID;
 
 private:
 	void ReadDataFile();

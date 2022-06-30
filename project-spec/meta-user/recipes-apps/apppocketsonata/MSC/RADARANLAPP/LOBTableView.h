@@ -29,6 +29,8 @@ private:
 	CRADARANLAPPDoc *m_pDoc;
 
 	int m_nField_OPINITID;
+    int m_nField_PDWID;
+    int m_nField_PLOBID;
 	int m_nField_LOBID;
 	int m_nField_ABTID;
 	int m_nField_AETID;
@@ -57,6 +59,8 @@ public:
 	CEdit m_CEditAETID;
 	afx_msg void OnNMRClickListLob(NMHDR *pNMHDR, LRESULT *pResult);
 	CEdit m_CEditCollectorID;
+	afx_msg void OnBnClickedButtonInit();
+	afx_msg void OnLvnItemchangedListLob(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

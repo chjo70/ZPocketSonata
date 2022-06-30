@@ -14,6 +14,17 @@ LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
+
+/**
+ * @brief     지정된 바이트로 Overflow 체크
+ * @param     unsigned long long int ullFileSize
+ * @return    T
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-28 10:22:30
+ * @warning
+ */
 template <typename T>
 T CheckOverflow( unsigned long long int ullFileSize ) {
     T value;
@@ -51,7 +62,7 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
 class CCommonUtils
 {
 private:
-    //ENUM_MODE m_enMode;
+    
 
 public:
     CCommonUtils();
@@ -62,6 +73,9 @@ public:
 
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
+    static int CalcDiffAOA( int iAOA1, int iAOA2 );
+
+	// SWAP 관련 함수
     static void AllSwapData32( void *pData, unsigned int uiLength );
     static void swapByteOrder( unsigned int& ui );
     static void swapByteOrder(double & d);
@@ -70,8 +84,10 @@ public:
 
     static ENUM_COLLECTBANK GetEnumCollectBank( int iCh );
 
+	// 데이터 관련 출력 함수
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
+	// 시간관련 함수
     static DWORD GetTickCount();
     static void getStringPresentTime( char *pString, size_t szString );
     static void getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime );
@@ -86,7 +102,7 @@ public:
     static size_t CheckMultiplyOverflow( int iSize, int iItems );
 
     // 타입 변환시 사용하는 함수 모음
-    static unsigned int INT2UINT( int iValue );
+    //static unsigned int INT2UINT( int iValue );
 
     static ENUM_DataType WhatDataType( char *pStrPathname );
     static ENUM_UnitType WhatUnitType( char *pStrPathname );

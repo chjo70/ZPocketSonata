@@ -105,7 +105,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
     // 메시지 처리 대기
     int i=0;
     while( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
-        Sleep( 1000 );
+        msSleep( 1000 );
 
         if( i++ >= MAX_TRY_MARK ) {
             break;

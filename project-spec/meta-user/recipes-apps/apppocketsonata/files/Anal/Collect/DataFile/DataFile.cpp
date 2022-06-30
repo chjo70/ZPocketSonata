@@ -2697,7 +2697,7 @@ int CMIDAS::GetHeaderSize()
 	    else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
 		    memcpy( & m_ADJ._6000, & m_pRawHeaderBuffer[0x100], sizeof(SELMIDAS_ADJUNCT_TYPE_6000) );
 
-            UINT uiSize = min( m_ADJ._6000.subrecords * sizeof(SELSUBRECORDS), MAX_ITEMS );
+            UINT uiSize = _min( m_ADJ._6000.subrecords * sizeof(SELSUBRECORDS), MAX_ITEMS );
 		    m_pSubRecords = ( SELSUBRECORDS * ) malloc( uiSize );
             if( m_pSubRecords != NULL ) {
 		        memcpy( m_pSubRecords, & m_pRawHeaderBuffer[0x100+sizeof(SELMIDAS_ADJUNCT_TYPE_6000)], uiSize );

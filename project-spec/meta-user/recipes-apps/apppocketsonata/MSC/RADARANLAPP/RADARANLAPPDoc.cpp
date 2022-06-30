@@ -416,10 +416,15 @@ void CRADARANLAPPDoc::LoadProfile( char *pValue, int iSize, char *pAppName, char
 
 }
 
+void CRADARANLAPPDoc::Init()
+{
+	RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();
+}
+
 void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt )
 {
 	int i;
-    unsigned int ui;
+    
 
 	STR_LOBDATA stResLOBData;
 	STR_ABTDATA stResABTData;
@@ -436,27 +441,25 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetLOBData( & stResLOBData );
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetABTData( & stResABTData );
 
-	SRxLOBData *pSRxLOBData;
-
-	pSRxLOBData = & stResLOBData.stLOBData[0];
-	printf( "\n LOB 데이터 ===============================================================" );
-	printf( "\n LOB [%d]", stResLOBData.stLOBHeader.uiNumOfLOB );
-	for( ui=0 ; ui < stResLOBData.stLOBHeader.uiNumOfLOB ; ++ui ) {
-		printf( "\n AET[%d], ABT[%d], LOB[%d]" , pSRxLOBData->uiAETID, pSRxLOBData->uiABTID, pSRxLOBData->uiLOBID );
-		++ pSRxLOBData;
-	}
-	printf( "\n ");
-
-	SRxABTData *pSRxABTData;
-
-	pSRxABTData = & stResABTData.stABTData[0];
-	printf( "\n ABT 데이터 ===============================================================" );
-	printf( "\n ABT [%d]", stResABTData.stABTHeader.iNumOfABT );
-	for( i=0 ; i < stResABTData.stABTHeader.iNumOfABT ; ++i ) {
-		printf( "\n AET[%d], ABT[%d]" , pSRxABTData->uiAETID, pSRxABTData->uiABTID );
-		++ pSRxABTData;
-	}
-	printf( "\n ");
+// 	SRxLOBData *pSRxLOBData;
+//  unsigned int ui;
+// 	pSRxLOBData = & stResLOBData.stLOBData[0];
+// 	TRACE( "\n LOB 데이터 [%d] ==============================================================", stResLOBData.stLOBHeader.uiNumOfLOB );
+// 	for( ui=0 ; ui < stResLOBData.stLOBHeader.uiNumOfLOB ; ++ui ) {
+//         TRACE( "\n AET[%d], ABT[%d], LOB[%d]" , pSRxLOBData->uiAETID, pSRxLOBData->uiABTID, pSRxLOBData->uiLOBID );
+// 		++ pSRxLOBData;
+// 	}
+//     TRACE( "\n ");
+// 
+// 	SRxABTData *pSRxABTData;
+// 
+// 	pSRxABTData = & stResABTData.stABTData[0];
+//     TRACE( "\n ABT 데이터 [%d] ===============================================================", stResABTData.stABTHeader.iNumOfABT );
+// 	for( i=0 ; i < stResABTData.stABTHeader.iNumOfABT ; ++i ) {
+//         TRACE( "\n AET[%d], ABT[%d]" , pSRxABTData->uiAETID, pSRxABTData->uiABTID );
+// 		++ pSRxABTData;
+// 	}
+//     TRACE( "\n ");
 }
 
 
@@ -484,15 +487,19 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
+	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_MODE, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_MODE, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
-	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY OP_INIT_ID desc, LOBID desc" );
+	//iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY OP_INIT_ID desc, LOBID desc" );
 
 	theRS.Open( m_szSQLString );
 	while (!theRS.IsEof()) {
 		index = 0;
 
+		memset(pLOBData, 0, sizeof(SRxLOBData));
+		memset(pLOBExt, 0, sizeof(SELLOBDATA_EXT));
+
 		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
+        pLOBData->uiOpInitID = pLOBExt->aetData.uiOpInitID;
 
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiPDWID );
         theRS.GetFieldValue(index++, (int *) & pLOBData->uiPLOBID );
@@ -510,6 +517,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMean);
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMin);
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMax);
+        theRS.GetFieldValue( index++, &pLOBData->fDOAMode );
 
 		theRS.GetFieldValue(index++, &pLOBData->iDIRatio);
 
@@ -519,6 +527,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMean);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMin);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMax);
+        theRS.GetFieldValue( index++, &pLOBData->fFreqMode );
 		theRS.GetFieldValue(index++, &pLOBData->iFreqPositionCount);
 
 		theRS.GetFieldValue(index++, (int *) &pLOBData->iPRIType);
@@ -527,16 +536,19 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMean);
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMin);
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMax);
+        theRS.GetFieldValue( index++, &pLOBData->fPRIMode );
 		theRS.GetFieldValue(index++, & pLOBData->fPRIJitterRatio);
 		theRS.GetFieldValue(index++, (int *) &pLOBData->iPRIPositionCount);
 
 		theRS.GetFieldValue(index++, &pLOBData->fPWMean);
 		theRS.GetFieldValue(index++, &pLOBData->fPWMin);
 		theRS.GetFieldValue(index++, &pLOBData->fPWMax);
+        theRS.GetFieldValue( index++, &pLOBData->fPWMode );
 
 		theRS.GetFieldValue(index++, &pLOBData->fPAMean);
 		theRS.GetFieldValue(index++, &pLOBData->fPAMin);
 		theRS.GetFieldValue(index++, &pLOBData->fPAMax);
+        theRS.GetFieldValue( index++, &pLOBData->fPAMode );
 
 		// theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iNumOfPDW);

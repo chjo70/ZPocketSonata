@@ -366,7 +366,7 @@ void CThread::Stop()
             // 로그 관련 CriticalSection 락을 푼다.
             TRACE( "CThread::Stop" );
             while( g_pTheLog->IsLock() == true ) {
-                Sleep(10);
+				msSleep(10);
                 TRACE( "*" );
             }
 
@@ -799,7 +799,7 @@ void CThread::SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName 
     if( g_vecThis.size() <= i ) {
         while( true ) {
             printf( "\n 타스크 관리자 객체가 없습니다.");
-            Sleep( 2000 );
+			msSleep( 2000 );
         }
         
     }
@@ -808,7 +808,7 @@ void CThread::SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName 
 }
 
 /**
- * @brief		Sleep
+ * @brief		msSleep
  * @param		int mssleep
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -816,7 +816,7 @@ void CThread::SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName 
  * @date		2021/11/23 10:17:49
  * @warning		
  */
-void CThread::Sleep( unsigned int mssleep )
+void CThread::msSleep( unsigned int mssleep )
 {
 #ifdef __linux__
     sleep( mssleep );

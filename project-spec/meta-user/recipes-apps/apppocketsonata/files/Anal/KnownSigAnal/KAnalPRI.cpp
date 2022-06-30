@@ -34,10 +34,10 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
     pSeg1 = & m_pSeg[ *p1 ];
     pSeg2 = & m_pSeg[ *p2 ];
 
-    if( pSeg1->pri.tMean > pSeg2->pri.tMean ) {
+    if( pSeg1->stPRI.tMean > pSeg2->stPRI.tMean ) {
         iRet = 1;
     }
-    else if( pSeg1->pri.tMean < pSeg2->pri.tMean ) {
+    else if( pSeg1->stPRI.tMean < pSeg2->stPRI.tMean ) {
         iRet = (-1);
     }
     else {
@@ -146,7 +146,7 @@ void CKAnalPRI::Analysis()
 
 	// 에미터 그룹핑
 	// PRI 타입이 다르더라도 PRI 평균이 같은 에미터 단위는 하나로 형성한다.
-	MergeGrouping( ALL_MERGE );
+	MergeGrouping( );
 
 	CAnalPRI::Analysis();
 
@@ -459,7 +459,7 @@ CMakeAET* CKAnalPRI::GetMakeAET()
 }
 
 /**
- * @brief		HoppingAnalysis
+ * @brief		호핑 분석을 호출한다.
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
@@ -470,3 +470,22 @@ void CKAnalPRI::HoppingAnalysis()
 {
     CAnalPRI::HoppingAnalysis();
 }
+
+
+/**
+ * @brief     펄스열 추출로 규칙성 펄스열을 검증한다.
+ * @param     _TOA * pnHarmonic
+ * @param     STR_PULSE_TRAIN_SEG * pSeg1
+ * @param     STR_PULSE_TRAIN_SEG * pSeg2
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-15, 11:30
+ * @warning
+ */
+bool CKAnalPRI::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+{
+    return m_pKnownSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2 );
+}
+

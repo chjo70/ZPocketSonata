@@ -386,7 +386,7 @@ public:
 
     int Pend();
     void Stop();
-    void Sleep( unsigned int mssleep );
+    void msSleep( unsigned int mssleep );
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );

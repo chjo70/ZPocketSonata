@@ -243,6 +243,11 @@ BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, int *lData)
         nLength = GetFieldLength(nField) + 1;
 	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue) == SQL_SUCCESS;
         ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_C_LONG, lData, nLength, &cbValue);
+
+		if (cbValue == -1) {
+			*lData = 0;
+		}
+
     }
     else {
         ret = SQL_ERROR;
@@ -314,6 +319,11 @@ BOOL CODBCRecordset::GetFieldValue(SQLSMALLINT nField, float *dblData)
 
 	    //ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue) == SQL_SUCCESS;
         ret = SQLGetData(m_hStmt, (SQLUSMALLINT)(nField + 1), SQL_REAL, dblData, nLength, &cbValue);
+
+		if (cbValue == -1) {
+			*dblData = 0;
+		}
+
     }
     else {
         ret = SQL_ERROR;

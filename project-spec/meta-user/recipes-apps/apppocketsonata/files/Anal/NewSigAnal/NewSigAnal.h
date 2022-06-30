@@ -136,30 +136,24 @@ public:
      * @warning
      */
     inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
-        return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
+        return CSigAnal::SaveEmitterPDWFile( pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
     }
 
-    inline void DISP_FineAet( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineAet( pNewAet ); }
+    inline void DISP_FineLOB( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineLOB( pNewAet ); }
     
     inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     
     //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
-    //inline void DISP_HexFineAet( STR_NEWAET *pNewAet ) { m_theMakeAET->DISP_HexFineAet( pNewAet ); }
     inline int GetColPdw() { return m_uiCoPdw; }
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
-
-
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, USHORT usMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex , uiCount, usMarkType ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
-
     inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
     inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
-
-    //inline int GetCoAet() { return m_theMakeAET->GetCoAet(); }
-    inline SRxLOBData *GetLOB() { return m_theMakeAET->GetLOBData(); }
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
 
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
@@ -181,14 +175,15 @@ public:
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
-    inline unsigned int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
-    inline void SetCoPulseTrains( UINT coPulses ) { m_thePulExt->m_CoPulseTrains=coPulses; }
+    //inline unsigned int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
+    //inline void SetCoPulseTrains( UINT coPulses ) { m_thePulExt->m_CoPulseTrains=coPulses; }
     inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
+    inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic , pSeg1, pSeg2 ); }
 
     inline int GetCoGroup() { return m_CoGroup; }
 
@@ -196,14 +191,14 @@ public:
     
 
     // 기타 함수
-    void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+    
 
     bool CheckValidData( STR_PDWDATA *pPDWData );
 
     inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }
 
     // 분석 관련 함수
-    void Start(STR_PDWDATA *pPDWData );
+    void Start(STR_PDWDATA *pPDWData, bool bDBInsert=false );
     bool CheckKnownByAnalysis();
 
     void ClearAllMark( bool bClear );

@@ -381,7 +381,7 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 {
 
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
+	int iFileNo = 1;
 	//RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( true );
 
 	// 폴더 선택 다이얼로그
@@ -399,11 +399,11 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 #ifdef _ELINT_
 		strFolderPath = strFolderPath + "\\*.EPDW";
 #else
-        strFolderPath = strFolderPath + "\\*.XPDW";
+        strFolderPath = strFolderPath + "\\*0.xpdw";
 #endif
 
 		//CFileFind는 파일, 디렉터리가 존재하면 TRUE 를 반환함
-		BOOL bWorking = finder.FindFile(strFolderPath); //
+		BOOL bWorking = finder.FindFile(strFolderPath); 
 
 		CString fileName;
 		CString DirName;
@@ -422,6 +422,7 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 			{
 				//파일의 이름
 				CString _fileName =  finder.GetFilePath();
+				CString strMainTitle;
 
 // 				// 현재폴더 상위폴더 썸네일파일은 제외
 // 				if( _fileName == _T(".") || 
@@ -430,7 +431,12 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 
 				//fileName =  finder.GetFileTitle();
 
+				strMainTitle.Format("%6d:%s", iFileNo, _fileName);
+				m_pMainFrame->SetWindowText( strMainTitle );
+
 				m_pDoc->OpenFile( _fileName );
+				++iFileNo;
+
 				Sleep( 100 );
 			}
 

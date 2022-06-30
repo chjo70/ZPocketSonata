@@ -184,17 +184,23 @@ void CGenPDW::ParseAndMakeMemory( SIGAPDW *pSigPDW )
 
         // 메모리 할당
         szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), m_stGenPDWInfo.uiCoAllPDW );
-        m_stSavePDWData.pstPDW = ( _PDW * ) malloc(  szSize );
-        m_pstPDW = m_stSavePDWData.pstPDW;
 
-        MakeFileHeader();
+		if (szSize != 0) {
+			m_stSavePDWData.pstPDW = (_PDW *)malloc(szSize);
+			m_pstPDW = m_stSavePDWData.pstPDW;
 
-        // PDW 발생해서 파일로 저장
-        SetGenerateInfo();
-        GeneratePDW( pSigPDW );
+			MakeFileHeader();
 
-        free( m_stSavePDWData.pstPDW );
-        m_stSavePDWData.pstPDW = NULL;
+			// PDW 발생해서 파일로 저장
+			SetGenerateInfo();
+			GeneratePDW(pSigPDW);
+
+			free(m_stSavePDWData.pstPDW);
+			m_stSavePDWData.pstPDW = NULL;
+		}
+		else {
+			break;
+		}
 
     }
 

@@ -42,6 +42,7 @@ END_MESSAGE_MAP()
 CRADARDIRAPPDoc::CRADARDIRAPPDoc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
+    m_uiPDWID = 1;
 
 }
 
@@ -77,7 +78,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         SRxLOBData *pLOBData;
 
         CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
-        CRADARDIRAPPView * pView;
+        //CRADARDIRAPPView * pView;
 
         RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
 
@@ -168,16 +169,16 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 {
-	CString strMainTitle;    
+	//CString strMainTitle;    
 
-	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
+	//m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
 
 	m_strPathname = strPathname;
 
     ReadDataFile();
 
-	strMainTitle.Format( "%s" , m_strPathname );
-	m_pMainFrame->SetWindowText( strMainTitle );
+	//strMainTitle.Format( "%s" , m_strPathname );
+	//m_pMainFrame->SetWindowText( strMainTitle );
 
 	return true;
 }
@@ -201,8 +202,9 @@ void CRADARDIRAPPDoc::ReadDataFile()
 
     m_theDataFile.ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
     pstPDWData = m_theDataFile.GetPDWData();
+    pstPDWData->SetPDWID( m_uiPDWID++ );
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData );        
+	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData, true );        
 
 	int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 
@@ -213,7 +215,7 @@ void CRADARDIRAPPDoc::ReadDataFile()
 
 	pView->UpdateLOBData( nCoLOB, pLOBData );
 
-	TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
+	//TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
 
 	// 프로그램 종료시 한번만 호출하면 됩니다.
 	//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();

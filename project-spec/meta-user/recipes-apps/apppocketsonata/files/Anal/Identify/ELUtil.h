@@ -7,6 +7,8 @@
 
 #include "../SigAnal/_Macro.h"
 
+#include "../../Utils/MulDiv64.h"
+
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
 #define	KM_PER_DEGREE_FOR_LONGITUDE						(88.884)				// [km/deg]
@@ -24,6 +26,9 @@ bool Is_FZero( const float &value );
 bool Is_DZero( const double &dvalue );
 bool Is_FNotZero( const float &value );
 bool Is_DNotZero( const double &dvalue );
+
+///////////////////////////////////////////////////////////////////////////////////
+// 템플릿 함수 모음
 
 template <typename T>
 BOOL CompAoaDiff(T x, T y, T thresh_value ) 
@@ -43,7 +48,7 @@ BOOL CompAoaDiff(T x, T y, T thresh_value )
 }
 
 /**
- * @brief     IsSamePulseTrain
+ * @brief     두 PRI 값들 사이에 연속 관계 여부를 계산한다. x2 값이 x1 보다 커야 하며 priMEan 을 기준으로 비교한다.
  * @param     T x1
  * @param     T x2
  * @param     T priMean
@@ -56,12 +61,12 @@ BOOL CompAoaDiff(T x, T y, T thresh_value )
  * @warning
  */
 template <typename T>
-BOOL IsSamePulseTrain( T x1, T x2, T priMean, T margin )
+BOOL IsSamePulse( T x1, T x2, T priMean, T margin )
 {
     T diffToa;
     BOOL bRet=TRUE;
 
-    if( priMean > margin ) {
+    if( priMean > margin && x2 > x1 ) {
         diffToa = ( x2 - x1 ) % priMean;
         if( diffToa > margin && diffToa < ( priMean - margin ) ) {
             bRet = FALSE;
@@ -75,7 +80,98 @@ BOOL IsSamePulseTrain( T x1, T x2, T priMean, T margin )
 }
 
 /**
- * @brief     CompMeanDiff
+ * @brief     두 PRI 값들 사이에 하모닉 관계 여부를 계산한다.
+ * @param     T priMean1
+ * @param     T priMean2
+ * @param     T tThreshold
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-14, 16:38
+ * @warning
+ */
+template <typename T>
+UINT CheckHarmonicTOA( T priMean1, T priMean2, T tThreshold ) {
+    UINT ret = 0;
+    T r;
+    T harmonic;
+    T max_mean, min_mean;
+
+	if (priMean1 != 0 && priMean2 != 0 ) {
+		if (priMean1 > priMean2) {
+			max_mean = priMean1;
+			min_mean = priMean2;
+		}
+		else {
+			max_mean = priMean2;
+			min_mean = priMean1;
+		}
+
+#ifdef _MSC_VER
+		if (strcmp(typeid(T).name(), "float") == 0) {
+			harmonic = (unsigned int)(fmod((float)max_mean, (float)min_mean) + 0.5);
+		}
+		else {
+			harmonic = max_mean % min_mean;
+		}
+
+#else
+		if (sizeof(T) == sizeof(float)) {
+			harmonic = (unsigned int)(fmod((float)max_mean, (float)min_mean) + 0.5);
+		}
+		else {
+			harmonic = max_mean % min_mean;
+		}
+
+#endif
+
+		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+		T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+
+		// 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
+#ifdef _MSC_VER
+			if (strcmp(typeid(T).name(), "float") == 0) {
+				r = ( max_mean / min_mean );
+				ret = (UINT) ( r + 0.5 );				
+			}
+			else {
+				r = MulDiv64((T)1, max_mean, min_mean);
+				if (r > UINT_MAX) {
+					ret = UINT_MAX;
+				}
+				else {
+					ret = (UINT)r;
+				}
+			}
+
+#else
+			if (sizeof(T) == sizeof(float) ) {
+			}
+			else {
+				r = MulDiv64((T)1, max_mean, min_mean);
+				if (r > UINT_MAX) {
+					ret = UINT_MAX;
+				}
+				else {
+					ret = (UINT)r;
+				}
+			}
+
+#endif
+		}
+	}
+	else {
+		
+	}
+
+    return ret;
+}
+
+
+/**
+ * @brief     두 수간의 임계값 차이 내에 들면 정상으로 리턴한다.
  * @param     T x
  * @param     T y
  * @param     T thresh
@@ -105,7 +201,7 @@ BOOL CompMeanDiff( T x, T y, T thresh )
 }
 
 /**
- * @brief     MeanInArray
+ * @brief     어레이 값들에 대해서 평균 값을 계산한다.
  * @param     T * series
  * @param     UINT co
  * @return    float
@@ -300,15 +396,15 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    입력 값 범위에 임계값을 고려한 입력 값이 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.
-        \author   조철희
-        \param    x 인자형태 int
-        \param    y1 인자형태 int
-        \param    y2 인자형태 int
-        \param    thresh 인자형태 int
-        \return   BOOL
-        \version  0.0.1
-        \date     2008-02-19 17:44:30
-        \warning
+    \author   조철희
+    \param    x 인자형태 int
+    \param    y1 인자형태 int
+    \param    y2 인자형태 int
+    \param    thresh 인자형태 int
+    \return   BOOL
+    \version  0.0.1
+    \date     2008-02-19 17:44:30
+    \warning
 */
 template <typename T>
 BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
@@ -325,7 +421,45 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
 }
 
 /**
- * @brief     CalOverlapSpace
+ * @brief     지터율을 계산한다.
+ * @param     T tRange
+ * @param     T tMean
+ * @return    float
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-22 11:44:46
+ * @warning
+ */
+template <typename T>
+float CalcJitterRatio(T tRange, T tMean)
+{
+	float fRet=0.0;
+
+	// const char *pst = typeid(T).name();
+	
+#ifdef _MSC_VER
+	if (strcmp(typeid(T).name(), "float") == 0) {
+		fRet = tRange * (float) 100. / tMean;
+	}
+	else {
+		fRet = (float) tRange * (float) 100. / (float) tMean;
+	}
+#else
+	if (sizeof(T) == sizeof(float)) {
+		fRet = tRange * (float) 100. / tMean;
+	}
+	else {
+		fRet = (float)tRange * (float) 100. / (float)tMean;
+	}
+
+#endif
+
+	return fRet;
+}
+
+/**
+ * @brief     두 범위 간의 겹치는 영역을 계산한다.
  * @param     T hgh1
  * @param     T low1
  * @param     T hgh2
@@ -338,7 +472,7 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
  * @warning
  */
 template <typename T>
-T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
+T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
 {
 	T ret=0;
 
@@ -367,7 +501,7 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
 }
 
 /**
- * @brief     IsOverlapSpace
+ * @brief     임계값 (tRatio) 이상 여부를 확인하여 중복 여부를 리턴한다.
  * @param     T hgh1
  * @param     T low1
  * @param     T hgh2
@@ -381,13 +515,72 @@ T CalOverlapSpace(T hgh1, T low1, T hgh2, T low2)
  * @warning
  */
 template <typename T>
-bool IsOverlapSpace(T hgh1, T low1, T hgh2, T low2, T tRatio )
+bool IsOverlapSpace( T low1, T hgh1, T low2, T hgh2, T tRatio )
 {
     T tOverlapSpace;
 
-    tOverlapSpace = CalOverlapSpace<T>( hgh1, low1, hgh2, low2 );
+    tOverlapSpace = CalOverlapSpace<T>( low1, hgh1, low2, hgh2 );
     return tOverlapSpace >= tRatio;
 
+}
+
+/**
+ * @brief     지터율 신호 양 신호에 대해서 비교한다.
+ * @param     T tMean1
+ * @param     T tMin1
+ * @param     T tMax1
+ * @param     T tMean2
+ * @param     T tMin2
+ * @param     T tMax2
+ * @param     unsigned int uiDivide
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-28 12:12:21
+ * @warning
+ */
+template <typename T>
+bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned int uiDivide=1 )
+{
+	bool bRet=false;
+
+	int iOverlap1, iOverlap2;
+
+	T tMax, tMin, tOverlap;
+
+	if ( tMean1 < tMean2 ) {
+		tMin = TMUL<T>( tMin1, (T) uiDivide);
+		tMax = TMUL<T>( tMax1, (T) uiDivide);
+		tOverlap = CalOverlapSpace<T>( tMin, tMax, tMin2, tMax2);
+		tOverlap = TMUL<T>(tOverlap, (T) 100);
+
+		/*! \debug  분모가 0인 경우가 발생함. (stPRI.tMax = stPRI.tMin 일때)
+			\author 조철희 (churlhee.jo@lignex1.com)
+			\date 	2022-06-22 14:43:03
+		*/
+		iOverlap1 = (int)TDIV<T>(tOverlap, (tMax - tMin) + 1);
+		iOverlap2 = (int)TDIV<T>(tOverlap, (tMax2 - tMin2) + 1);
+	}
+	else {
+		tMin = TMUL<T>(tMin2, (T) uiDivide);
+		tMax = TMUL<T>(tMax2, (T)uiDivide);
+		tOverlap = CalOverlapSpace<T>(tMin, tMax, tMin1, tMax1);
+		tOverlap = TMUL<T>(tOverlap, (T)100);
+
+		iOverlap1 = (int)TDIV<T>(tOverlap, (tMax1 - tMin1) + 1);
+		iOverlap2 = (int)TDIV<T>(tOverlap, (tMax - tMin) + 1);
+	}
+
+	// 겹쳐진 영역을 체크해서 결정한다.
+	if ((iOverlap1 > 50 && iOverlap2 > 50) && (iOverlap1 > 90 || iOverlap2 > 90)) {
+		bRet = true;
+	}
+	else {
+		//uiDivide = 0;
+	}
+
+	return bRet;
 }
 
 

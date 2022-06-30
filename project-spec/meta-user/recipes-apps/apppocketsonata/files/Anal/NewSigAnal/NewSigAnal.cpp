@@ -189,7 +189,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     \date     2007-12-28 11:53:42
     \warning
 */
-void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
+void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 {
     DWORD dwTime = CCommonUtils::GetTickCount();
 
@@ -202,7 +202,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ====" , GetStep(), m_uiCoPdw );
+    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ============================" , GetStep(), m_uiCoPdw );
 
     if( m_uiCoPdw <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
         Log( enNormal, "PDW(%d/%d) 데이터 개수가 모자랍니다 !!" , m_uiCoPdw, RPC );
@@ -266,9 +266,12 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData )
 
     }
 
+    InsertToDB_LOB( GetLOBData(0), GetCoLOB(), bDBInsert );
+
     Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCount() - dwTime)) );
 
 }
+
 
 /**
  * @brief     펄스열 추출 정보를 클리어 한다.
@@ -290,7 +293,6 @@ void CNewSigAnal::ClearAllMark( bool bClear )
     }
 
 }
-
 
 /**
  * @brief     PDW 헤더 정보를 근거로 잘못 입력된 것이 있으면 FALSE 로 리턴한다.
@@ -330,36 +332,15 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
     return bRet;
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::MarkToPdwIndex
-    \author   조철희
-    \param    pPdwIndex 인자형태 PDWINDEX *
-    \param    count 인자형태 int
-    \param    mark_type 인자형태 int
-    \return   void
-    \version  0.0.1
-    \date     2008-01-03 16:40:48
-    \warning
-*/
-void CNewSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
-{
-    unsigned int i;
-
-    for( i=0 ; i < uiCount ; ++i ) {
-        MARK[ *pPdwIndex++ ] = usMarkType;
-    }
-
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::InitAllVar
-        \author   조철희
-        \return   void
-        \version  0.0.1
-        \date     2008-01-04 09:51:51
-        \warning
-*/
+/**
+ * @brief     탐지 신호분석시 멤버 변수를 초기화 한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2008-01-04 09:51:51
+ * @warning
+ */
 void CNewSigAnal::InitAllVar()
 {
     

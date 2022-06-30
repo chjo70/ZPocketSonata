@@ -61,10 +61,10 @@ struct STR_DTOA_HISTOGRAM {
 	STR_LOWHIGH bin_range;
 
 	int bin_peak_count;
-	UINT bin_peak[ MAX_PEAK_DTOAHISTOGRAM+1 ];
+	UINT uiBinPeak[ MAX_PEAK_DTOAHISTOGRAM+1 ];
 
 	int dtoa_peak_count;
-	_TOA dtoa_peak[ MAX_PEAK_DTOAHISTOGRAM+1 ];	// Dwell 스텝을 분석하기 위한 변수
+	_TOA tDTOAPeak[ MAX_PEAK_DTOAHISTOGRAM+1 ];	// Dwell 스텝을 분석하기 위한 변수
 
 } ;
 
@@ -178,33 +178,38 @@ struct STR_FIRST_FRQAOA_PEAK {
 }  ;
 
 // 펄스열 단 정보
-//##ModelId=452B0C540398
 struct STR_PULSE_TRAIN_SEG {
-	STR_PDWINDEX pdw;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
+	STR_PDWINDEX stPDW;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
 
 	UINT uiMiss;					// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
 	UINT uiPRI_Band;				// 펄스열 추출할 때의 PRI 밴드
 	UINT uiExtractStep;			// 기준 펄스열, STABLE, Jitter PRI
+
 	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
 	PDWINDEX first_idx;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
 	PDWINDEX last_idx;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
+
 	_TOA tFirst;					// 펄스열 첫번째 TOA
 	_TOA tLast;					// 펄스열 마지막 TOA
 	UINT uiStat;							// PDW 상태
+
 	UINT uiFreqType;					// 주파수 타입
-	STR_MINMAX aoa;					// 방위 제원 
+	STR_MINMAX stAOA;					// 방위 제원 
 	STR_MINMAX_MEDIAN freq;				// 주파수 제원 
-	STR_MINMAX pa;					// 신호세기 제원 
+	STR_MINMAX stPA;					// 신호세기 제원 
 	STR_MINMAX pw;					// 펄스폭 제원 
     enPRI_TYPE enPriType;					// PRI 타입
-	STR_MINMAX_TOA pri;					// PRI 제원
-	_TOA min_dtoa;					// DTOA 간격 중에서 최소가 되는 값
+	STR_MINMAX_TOA stPRI;					// PRI 제원
+
+	_TOA tMinDtoa;					// DTOA 간격 중에서 최소가 되는 값
 	float fJitterRatio;					// 지터율
-	UINT continuity;				// 펄스열 연속성(%)
+	UINT uiContinuity;				// 펄스열 연속성(%)
 	UINT uiBand;							// 주파수 Band Code
 	UINT peak_idx;					// peak PA의 펄스 index
+
 	//UINT cd;								// Correct Detection
 	//UINT steady;						// steady 스캔특성
+
 	SEG_MARK enMark;							// 펄스열의 상태 표시 
 													// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
 	UINT pri_pat_period;		// PRI  패턴 주기
@@ -224,9 +229,14 @@ struct STR_PRI_RANGE_TABLE {
 //##ModelId=452B0C5403CA
 #ifndef _GRAPH_
 struct STR_EMITTER {
+	unsigned int uiID;					// ID : 인덱스 번호
+
+	enSIGNAL_TYPE enSignalType;
+
     STR_PDWINDEX stPDW;						// PDW 버퍼
     UINT uiSegIdx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
-    STR_PULSE_TRAIN_SEG stSeg[ MAX_SEG ];			// 펄스열 저장
+
+    //STR_PULSE_TRAIN_SEG stSeg[ MAX_SEG ];			// 펄스열 저장
 
 	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
 
@@ -244,8 +254,6 @@ struct STR_EMITTER {
 
 	int iHopLevel[ MAX_FREQ_PRI_STEP ];					// Hopping level
 	int iCoHoppingLevel;					// Hop level 수 
-
-	enSIGNAL_TYPE enSignalType;	
 
 	enFREQ_TYPE enFreqType;
 	UINT uiFreqPatternType;
@@ -380,7 +388,7 @@ struct STR_FG {
 //##ModelId=452B0C4E039A
 struct STR_NP {
     UINT Pdw_Max;            // 수집 PDW 최대수
-    UINT Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
+    //UINT Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
     UINT Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
     UINT Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
     UINT Aoa_Range_Margin;   // 방위 그룹 범위 margin

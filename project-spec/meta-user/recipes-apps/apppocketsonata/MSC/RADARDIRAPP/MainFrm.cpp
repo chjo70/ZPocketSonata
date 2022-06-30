@@ -197,8 +197,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
     cs.cx = 3048;
     cs.cy = 1024;
 
-    cs.style &= ~WS_THICKFRAME;
-    cs.style &= ~WS_MAXIMIZEBOX;
+    //cs.style &= ~WS_THICKFRAME;
+    //cs.style &= ~WS_MAXIMIZEBOX;
 
 	return TRUE;
 }

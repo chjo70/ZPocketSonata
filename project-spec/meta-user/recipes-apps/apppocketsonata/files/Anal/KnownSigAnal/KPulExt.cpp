@@ -503,7 +503,7 @@ void CKPulExt::DiscardStablePT()
 
 	    // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
 	    if( m_uiCoSeg == 1 ) {
-		    MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.uiCount, EXTRACT_MARK );
+            MarkToPDWIndex( & pSeg[0], EXTRACT_MARK );
 		    m_uiCoSeg = 0;
 	    }
         else {
@@ -520,21 +520,6 @@ void CKPulExt::DiscardStablePT()
         }
     }
 
-}
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKPulExt::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:04:15
-//
-void CKPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
-{
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////

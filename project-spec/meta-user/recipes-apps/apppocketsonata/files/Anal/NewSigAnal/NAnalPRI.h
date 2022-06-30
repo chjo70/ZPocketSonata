@@ -26,14 +26,14 @@ protected:
 
 public:
 	//##ModelId=452B0C550327
-	inline void MergeGrouping() { CAnalPRI::MergeGrouping(); }
+	//inline void MergeGrouping() { CAnalPRI::MergeGrouping(); }
 	//inline void MakeAET() { m_pNewSigAnal->GetCoAet(); }
 
     void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof );
 
 	//##ModelId=452B0C55032C
 	void Init();
-	//##ModelId=452B0C55032D
+	
 	void Analysis();
 	//##ModelId=452B0C55032E
 	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
@@ -64,6 +64,8 @@ public:
 	_TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	int GetBand();
 	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 

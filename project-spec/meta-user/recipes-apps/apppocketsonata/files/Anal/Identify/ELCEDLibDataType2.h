@@ -2019,15 +2019,15 @@ struct SRadarInfo
 {
     int iRadarIndex;								// 레이더 인덱스
 
-    char szELNOT[_MAX_ELNOT_STRING_SIZE_];						//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
+    char szELNOT[_MAX_ELNOT_STRING_SIZE_];			//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
     int iRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
-    EnumRadarStatus eStatus;				//*상태 enum값
+    EnumRadarStatus eStatus;						//*상태 enum값
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
     char szWeaponSys[_MAX_WEAPON_STRING_SIZE_];
     char szPlatform[_MAX_PLATFORM_STRING_SIZE_];
 
-    int nUnknownEmitterTime_ForGUI;	//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
+    int nUnknownEmitterTime_ForGUI;					//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
 
     int iTimeInactivated;
 
@@ -2141,6 +2141,15 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     SRadarMode()
     {
         szRadarModeName[0] = 0;
+
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+		szRadarName[0] = 0;
+		tiCreated = 0;
+		tiLastUpdated = 0;
+
+		tiFirstSeen = 0;
+		tiLastSeen = 0;
+#endif
         //nRadarModenPriority = INVALID_INT_VALUE;
         eSignalType=SignalType::enumPulsed;
         eRF_Type=RadarModeFreqType::enumFIXED;
@@ -2210,14 +2219,14 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
         vecRadarRF_Values = vector <SRadarRF_Values>();
         //vecRadarRF_SpotValues = vector <SRadarRF_SpotValues>();
         //vecRadarPRI_SpotValues = vector <SRadarPRI_SpotValues>();
-                vecRadarMode_PRISequenceValues = vector <SRadarMode_Sequence_Values>();
+        vecRadarMode_PRISequenceValues = vector <SRadarMode_Sequence_Values>();
         //vecRadarPRI_GroupSpacing = vector <SRadarPRI_GroupSpacing>();
         //vecRadarPD_Values = vector <SRadarPD_Values>();
         //vecRadarPD_SpotValues = vector <SRadarPD_SpotValues>();
         //vecRadarPA_Diff_InGroup = vector<SRadarPA_Diff_InGroup>();
         //vecRadarModeComments = vector <SRadarModeComments>();
 
-                vecRadarMode_RFSequenceValues = vector <SRadarMode_Sequence_Values>();
+        vecRadarMode_RFSequenceValues = vector <SRadarMode_Sequence_Values>();
         //mapRadarPRI_Sequence = map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence>();
         //mapRadarPD_Sequence = map <int /*nPD_Seq_ID*/, SRadarPD_Sequence>();
         //mapRadarMOP_CW = map<int /*nMOP_CW_Index*/, SRadarMOP_CW>();

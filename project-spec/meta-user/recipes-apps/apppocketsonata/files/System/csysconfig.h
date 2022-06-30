@@ -206,7 +206,7 @@ public:
     ENUM_MODE GetMode() { return m_strConfig.enMode; };
     void SetMode(ENUM_MODE enMode) {
         if( enMode == enANAL_Mode ) {
-            m_strConfig.enMode = ( ENUM_MODE ) ( m_strConfig.enMode | enANAL_Mode );
+            m_strConfig.enMode = ( ENUM_MODE ) ( (unsigned int) m_strConfig.enMode | (unsigned int) enANAL_Mode );
         }
         else {
             m_strConfig.enMode = enMode;

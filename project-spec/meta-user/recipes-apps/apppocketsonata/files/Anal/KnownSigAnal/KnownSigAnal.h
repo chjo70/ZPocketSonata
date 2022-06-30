@@ -61,9 +61,9 @@ protected:
     unsigned int m_uiCoPdw;
     //##ModelId=452B0C520288
     int m_noSbc;
-    //##ModelId=452B0C520291
+    
     int m_noCh;
-    //##ModelId=452B0C52029C
+    
     //STR_PDWBANK *m_pPdwBank;
     STR_STATIC_PDWDATA *m_pstPDWData;
 
@@ -88,32 +88,30 @@ public:
     inline unsigned int GetColPdw() { return m_uiCoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
-    //##ModelId=452B0C5202A5
+    
     inline int GetMaxPdw() { return m_nMaxPdw; }
     
-    //##ModelId=452B0C5202A8
+    
     inline void MakePDWArray( _PDW *pdw, int iCount ) { m_theGroup->MakePDWArray( pdw, iCount); }
-    //##ModelId=452B0C5202B1
+    
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
-    //##ModelId=452B0C5202B9
+    
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     //##ModelId=452B0C5202BB
     inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
 	
-    //##ModelId=452B0C5202CE
+    
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
-    //##ModelId=452B0C5202CF
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
-    //##ModelId=452B0C5202D8
-    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
-    //##ModelId=452B0C5202E1
-    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
-    //##ModelId=452B0C5202E2
+    
+    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }    
+    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }    
+    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }    
     inline int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
-    //##ModelId=452B0C5202E3
+    
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
-    //##ModelId=43D4818F0298
-    //inline void SetAnalSeg( int co ) { m_thePulExt->SetAnalSeg( co ); }
+    inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, USHORT usMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, usMarkType ); }
+    
 
 
 	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
@@ -176,17 +174,16 @@ public:
     //##ModelId=452B0C520379
     void SendNewAet( SRxLOBData *pNewAet, int inEMT );
 
-    //##ModelId=452B0C52038B
-    void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
-
     //##ModelId=452B0C520396
     void Init( STR_STATIC_PDWDATA *pstPDWData );
     //##ModelId=452B0C52039F
     void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet );
 
-    void DISP_FineAet(SRxLOBData *pLOB) {
-        CSigAnal::DISP_FineAet(pLOB);
+    void DISP_FineLOB(SRxLOBData *pLOB) {
+        CSigAnal::DISP_FineLOB(pLOB);
     }
+
+
 
 };
 

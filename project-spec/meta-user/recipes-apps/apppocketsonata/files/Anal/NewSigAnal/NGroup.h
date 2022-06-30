@@ -15,7 +15,6 @@
 
 class CNewSigAnal;
 
-//##ModelId=452B0C5500AB
 class CNGroup : public CGroup
 {
 protected:
@@ -24,12 +23,10 @@ protected:
 
 public:
     void Init();
-    //##ModelId=452B0C5500C0
-    int GetColPdw();
+    
+	int GetColPdw();
 
-    //##ModelId=452B0C5500C1
     CNGroup( void *pParent, unsigned int uiCoMaxPdw );
-    //##ModelId=452B0C5500C9
     virtual ~CNGroup();
 
 };

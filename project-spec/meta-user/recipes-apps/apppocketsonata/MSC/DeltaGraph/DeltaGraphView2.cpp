@@ -1402,8 +1402,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
              pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( (float) ( dMinX * 1000000.), m_pDoc->GetBandWidth() );
              pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( (float) ( dMaxX * 1000000.), m_pDoc->GetBandWidth() );
 
-             pstrFilterSetup->uiAoaMin = CEncode::EncodeDOA ( dMinY );
-             pstrFilterSetup->uiAoaMax = CEncode::EncodeDOA( dMaxY );
+             pstrFilterSetup->uiAoaMin = CEncode::EncodeDOA ( (float) dMinY );
+             pstrFilterSetup->uiAoaMax = CEncode::EncodeDOA( (float) dMaxY );
 
 		 }
 		 else {
@@ -1618,7 +1618,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
             PEvget( m_hPE, PEP_structHOTSPOTDATA, &hsd );
 
             if( hsd.nHotSpotType == PEHS_DATAPOINT ) {
-                wsprintf( szBuffer, _T( "%s" ), strMainTitleLabel[enDataType - 1][iCombo] );
+                wsprintf( szBuffer, _T( "%s[#%d]" ), strMainTitleLabel[enDataType - 1][iCombo], hsd.w2 );
                 PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
 
                 if( enDataType == en_PDW_DATA ) {
@@ -1650,6 +1650,8 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
                         break;
                     }
                 }
+
+                PEszset( m_hPE, PEP_szTRACKINGTEXT, buffer );
             }
             else {
 			    wsprintf(szBuffer, _T("%s"), strMainTitleLabel[enDataType - 1][iCombo] );
@@ -1684,10 +1686,9 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 						    break;
 				    }
 			    }
-			}
 
-			PEszset(m_hPE, PEP_szTRACKINGTEXT, buffer);
-			
+                PEszset( m_hPE, PEP_szTRACKINGTEXT, buffer );
+			}
 		}
 		else if( HIWORD(wParam) == PEWN_MOUSEMOVE && false ) {
 			POINT pt;

@@ -47,6 +47,7 @@ CRADARDIRAPPView::CRADARDIRAPPView()
 	// TODO: 여기에 생성 코드를 추가합니다.
 
 	m_CoListItems = 0;
+	m_uiTotalLOB = 1;
 
 }
 
@@ -66,7 +67,7 @@ BOOL CRADARDIRAPPView::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
-    cs.cx = 2024;
+    cs.cx = 2824;
     cs.cy = 768;
 
 	return CFormView::PreCreateWindow(cs);
@@ -119,8 +120,8 @@ CRADARDIRAPPDoc* CRADARDIRAPPView::GetDocument() const // 디버그되지 않은 버전은
 // CRADARDIRAPPView 메시지 처리기
 
 #define _TEXT_WIDTH								(10)
-#define	_COLUMNS_OF_LIST_					(10)
-static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신/형", "주/형", "주파수[MHz]              ", "PRI형", "PRI[us]                  ", "신호세기[dBm]  ", "펄스폭[ns]        ", "개수 " } ;
+#define	_COLUMNS_OF_LIST_					(11)
+static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신/형", "주/형", "주파수[MHz]                 ", "PRI형", "PRI[us]                     ", "신호세기[dBm]       ", "펄스폭[ns]             ", "식별   ", "개수    " } ;
 void CRADARDIRAPPView::InitView()
 {
  	int i;
@@ -145,7 +146,7 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 
     if(nCoLOB != _spZero ) {
         for (i = 0; i < nCoLOB; ++i) {
-            sprintf_s(buffer, sizeof(buffer), "%d", m_CoListItems);
+            sprintf_s(buffer, sizeof(buffer), "%d", m_uiTotalLOB);
             m_CListLOB.InsertItem(m_CoListItems, buffer);
 
             j = 1;
@@ -164,7 +165,11 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             sprintf_s(buffer, sizeof(buffer), " %s    ", g_szAetPriType[pLOB->iPRIType]);
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s(buffer, sizeof(buffer), "%0.1f(%.1f,%.1f-%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount);
+
+            if( pLOB->iPRIPositionCount != 0 )
+                sprintf_s(buffer, sizeof(buffer), "%0.1f(%.1f,%.1f-%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->iPRIPositionCount);
+            else
+                sprintf_s( buffer, sizeof( buffer ), "%0.1f(%.1f,%.1f-%.1f), %.1f%%", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->fPRIJitterRatio );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             sprintf_s(buffer, sizeof(buffer), " %.2f(%.2f,%.2f-%.2f)", pLOB->fPAMean, pLOB->fPAMode, pLOB->fPAMin, pLOB->fPAMax);
@@ -173,8 +178,13 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             sprintf_s(buffer, sizeof(buffer), " %.2f(%.2f,%.2f-%.2f)", pLOB->fPWMean, pLOB->fPWMode, pLOB->fPWMin, pLOB->fPWMax);
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s( buffer, sizeof( buffer ), " %d", pLOB->iNumOfPDW );
+            sprintf_s( buffer, sizeof( buffer ), " %d/%s", pLOB->iRadarModeIndex, pLOB->szRadarModeName );
             m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+
+            sprintf_s( buffer, sizeof( buffer ), " %d/%d", pLOB->iNumOfPDW, pLOB->iTotalOfPDW );
+            m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+
+			++m_uiTotalLOB;
 
             ++pLOB;
 

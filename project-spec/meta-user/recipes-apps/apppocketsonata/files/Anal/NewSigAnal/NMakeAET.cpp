@@ -112,60 +112,67 @@ int CNMakeAET::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
     return m_pNewSigAnal->CalcAoaMeanByHistAoa( pSrcIndex );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : 신호를 수집한다.
-// 반환되는 형  : int
-// 함 수 인 자  : 없음
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:27
-//
+/**
+ * @brief     PDW 개수를 리턴한다.
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:17:27
+ * @warning
+ */
 int CNMakeAET::GetColPdw()
 {
     return m_pNewSigAnal->GetColPdw();
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CNMakeAET::CalcPAMean
-// 반환되는 형  : int
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:30
-//
+/**
+ * @brief     신호 세기 평귭값을 계산한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:17:30
+ * @warning
+ */
 int CNMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
     return m_pNewSigAnal->CalcPAMean( pPdwIndex, uiCount );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CNMakeAET::VerifyPW
-// 반환되는 형  : int
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:32
-//
+/**
+ * @brief     펄스폭 검증을 수행한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:17:32
+ * @warning
+ */
 int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
     return m_pNewSigAnal->VerifyPW( pPdwIndex, uiCount );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CNMakeAET::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:35
-//
-void CNMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
+/**
+ * @brief     펄스열에 대해서 마킹 정보를 설정한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @param     USHORT usMarkType
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 10:17:35
+ * @warning
+ */
+void CNMakeAET::MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, USHORT usMarkType)
 {
-    m_pNewSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
+    m_pNewSigAnal->MarkToPDWIndex( pPDWIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -248,7 +255,7 @@ STR_EMITTER *CNMakeAET::GetEmitter()
 //
 UINT CNMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-    return m_pNewSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
+    return m_pNewSigAnal->MedianFreq( NULL, pSeg->stPDW.pIndex, pSeg->stPDW.uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -274,23 +281,29 @@ STR_PDWPARAM* CNMakeAET::GetPdwParam()
 */
 void CNMakeAET::MarkAllAetToPdwIndex()
 {
-    int i;
-    //STR_PDWINDEX *pPdwIndex;
-
-    for( i=0 ; i < m_iCoLOB ; ++i ) {
-        //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
-        //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
-    }
+//     int i;
+//     //STR_PDWINDEX *pPdwIndex;
+// 
+//     for( i=0 ; i < m_iCoLOB ; ++i ) {
+//         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
+//         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
+//     }
 
 }
 
 /**
- * @brief CNMakeAET::DISP_FineAet
- * @param pLOB
-*/
-void CNMakeAET::DISP_FineAet( SRxLOBData *pLOB )
+ * @brief     LOB 데이터를 출력한다.
+ * @param     SRxLOBData * pLOB
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-09, 13:45
+ * @warning
+ */
+void CNMakeAET::DISP_FineLOB( SRxLOBData *pLOB )
 {
-    return m_pNewSigAnal->DISP_FineAet(pLOB);
+    return m_pNewSigAnal->DISP_FineLOB(pLOB);
 
 }
 

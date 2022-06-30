@@ -105,7 +105,6 @@ private:
     bool m_bReqDetect;
     bool m_bReqTrack;
     
-    //static int m_CoInstance;									///< 위협 관리 객체 갯수
     static int m_nSeqNum;										///< DB 테이블 번호
 
     CInverseMethod m_theInverseMethod;
@@ -152,7 +151,7 @@ private:
     char m_szH0000[H0000_SIZE];								///< 미식별 ELNOT 정보
 
     int m_iH000;															///< 미식별 번호
-    unsigned short *m_pABTtoH000;								///< 미 식별 번호 테이블
+    //unsigned short *m_pABTtoH000;								///< 미 식별 번호 테이블
 
     // 방사체/빔 병합처리 멤버 변수 정의
     CELThreat *m_pMergeThreatAET;								///< 변경할 방사체 위협
@@ -382,7 +381,7 @@ private:
 // 	int CompScanRange( SRxABTData *pABTData );
     float CompDistRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     int CompValid( SRxABTData *pABTData );
-    bool CompELNOTInfo( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    bool CompValueRange( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompIDELNOTInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
 //
 // 	//////////////////////////////////////////////////////////////////////////
@@ -410,9 +409,9 @@ private:
 // 	// CELThreat 관련 인라인 함수
     CELThreat *GetNextThreat( CELThreat *pThreatAET );
     CELThreat *GetHeaderThreat( CELThreat *pThreatAET );
-//
-// 	// 미식별 ELNOT 관련 함수
-// 	void MakeH000( char *pszH000, unsigned int nABTID );
+
+ 	// 미식별 ELNOT 관련 함수
+ 	char *MakeH000();
     void IncH0000( int coRadarModeIndex );
 //
 // 	// DB 업데이트
@@ -440,8 +439,6 @@ private:
     void RunLOBClusteringResult();
 // 	void UpdatePolization( SELABTDATA_EXT *pABTExtData );
 //
-    void InitLOB();
-
     bool IsValidLOB();
 // 	bool IsValidRollAndPitch();
 
@@ -550,6 +547,9 @@ public:
     void ManageScan( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
     void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
 #endif
+
+    void DISP_FineLOB( SRxLOBData* pLOBData );
+    void DISP_FineABT( SRxABTData *pABTData );
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }

@@ -81,7 +81,7 @@ CISODATA::CISODATA( unsigned int uiN, unsigned int uiCoMaxPDW )
     m_ppfPDWParam = ( float ** ) malloc( sizeof( float * ) * uiN );
     if( m_ppfPDWParam == NULL ) {
         bRet = FALSE;
-        printf( "\n [W] m_ppfPDWParam's Memory allocation error !" );
+        printf( "\n [W] m_ppPdwParam's Memory allocation error !" );
         WhereIs;
     }
     else {
@@ -89,7 +89,7 @@ CISODATA::CISODATA( unsigned int uiN, unsigned int uiCoMaxPDW )
             *(m_ppfPDWParam + ui) = ( float * ) malloc( sizeof( float ) * uiCoMaxPDW );
             if( *(m_ppfPDWParam + ui) == NULL ) {
                 bRet = FALSE;
-                printf( "\n [W] *(m_ppfPDWParam + i)'s Memory allocation error !" );
+                printf( "\n [W] *(m_ppPdwParam + i)'s Memory allocation error !" );
                 WhereIs;
             }
         }
@@ -102,16 +102,6 @@ CISODATA::CISODATA( unsigned int uiN, unsigned int uiCoMaxPDW )
         printf( "\n [W] m_ppPdwParam's Memory allocation error !" );
         WhereIs;
     }
-	else {
-		for (ui = 0; ui < uiN; ++ui) {
-			*(m_ppPDWParam + ui) = (unsigned int *)malloc(sizeof(unsigned int) * uiCoMaxPDW);
-			if (*(m_ppPDWParam + ui) == NULL) {
-				bRet = FALSE;
-				printf("\n [W] *(m_ppPDWParam + i)'s Memory allocation error !");
-				WhereIs;
-			}
-		}
-	}
 
     if( bRet == FALSE ) {
         printf( "\n 그룹화 클래스 생성자 실패 !" );
@@ -120,7 +110,7 @@ CISODATA::CISODATA( unsigned int uiN, unsigned int uiCoMaxPDW )
 }
 
 /**
- * @brief     클래스의 소멸 처리를 수행한다.
+ * @brief     ~CISODATA
  * @return    
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -150,9 +140,6 @@ CISODATA::~CISODATA()
     }
     free( m_ppfPDWParam );
 
-	for (ui = 0; ui < m_uiN; ++ui) {
-		free(*(m_ppPDWParam + ui));
-	}
     free( m_ppPDWParam );
 }
 
@@ -220,6 +207,7 @@ void CISODATA::Run( STR_PDWINDEX *pSrcIndex, UINT *pPDW1, UINT *pPDW2 )
                 if (TRUE == SplitCenter(pCluster, &m_pCluster[MAX_AGRT - 2])) {
 
                     for( k = m_uiClusters + nSplitCluster - 1; k >= j + nSplitCluster + 1; --k ) {
+                        //memcpy(&m_pCluster[k + 1], &m_pCluster[k], sizeof(STR_CLUSTER));
                         CopyCluster( &m_pCluster[k + 1], &m_pCluster[k] );
                     }
 
@@ -241,7 +229,7 @@ void CISODATA::Run( STR_PDWINDEX *pSrcIndex, UINT *pPDW1, UINT *pPDW2 )
 
             m_uiClusters = m_uiClusters + nSplitCluster;
 
-            MarkPDWIndexByAllCluster( &m_pCluster[MAX_AGRT - 1], pSrcIndex );
+            //MarkPDWIndexByAllCluster( &m_pCluster[MAX_AGRT - 1], pSrcIndex );
         }
     }
 
@@ -345,7 +333,7 @@ bool CISODATA::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
     if ( IsSplitCluster(pCluster) == true ) {
         SplitCenter(pCluster1, pCluster2, pCluster);
 
-        if( pCluster1->stPDWIndex.uiCount > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->stPDWIndex.uiCount > MINIMUM_NUMBER_OF_SAMPLES) {
+        if( pCluster1->stPDWIndex.uiCount != 0 && pCluster2->stPDWIndex.uiCount != 0 ) {
             bRet = true;
         }
         else {
@@ -520,15 +508,15 @@ void CISODATA::CalcSplitCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstClu
         
     }
 
-//     TRACE( "\n *****************************************" );
-//     TRACE( "\n 분리 클러스터 1번\n\t" );
-//     for( i = 0 ; i < m_uiN ; ++i ) {
-//         TRACE( "[%7.3f]", pDstCluster1->ppstStat[i]->fMean );
-//     }
-//     TRACE( "\n 분리 클러스터 2번\n\t" );
-//     for( i = 0 ; i < m_uiN ; ++i ) {
-//         TRACE( "[%7.3f]", pDstCluster2->ppstStat[i]->fMean );
-//     }
+    TRACE( "\n *****************************************" );
+    TRACE( "\n 분리 클러스터 1번\n\t" );
+    for( i = 0 ; i < m_uiN ; ++i ) {
+        TRACE( "[%7.3f]", pDstCluster1->ppstStat[i]->fMean );
+    }
+    TRACE( "\n 분리 클러스터 2번\n\t" );
+    for( i = 0 ; i < m_uiN ; ++i ) {
+        TRACE( "[%7.3f]", pDstCluster2->ppstStat[i]->fMean );
+    }
 
 }
 
@@ -543,33 +531,18 @@ void CISODATA::CalcSplitCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstClu
  */
 void CISODATA::InitOfISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPDW1, UINT *pPDW2 )
 {
-	unsigned int i;
     STR_MINMAX_SDEV stStat;
 
     STR_CLUSTER *pCluster;
 
-	UINT *pPDWParam;
-
-	pPDWParam = m_ppPDWParam[0];
-	for (i = 0; i < pSrcIndex->uiCount; ++i) {
-		*pPDWParam = UDIV( *pPDW1, 1 );
-		++ pPDWParam;
-		++pPDW1;
-	}
-    //m_ppPDWParam[0] = pPDW1;
+    m_ppPDWParam[0] = pPDW1;
 
     CalAOAStat( &stStat, m_ppPDWParam[0], pSrcIndex );
     MakeStandard( m_ppfPDWParam[0], &stStat, m_ppPDWParam[0], pSrcIndex );
 
     // PARAM1 과 PARAM2 의 표준화 작업 처리
     if( pPDW2 != NULL ) {
-		pPDWParam = m_ppPDWParam[1];
-		for (i = 0; i < pSrcIndex->uiCount; ++i) {
-			*pPDWParam = UDIV( *pPDW2, 1 );
-			++pPDWParam;
-			++pPDW2;
-		}
-        //m_ppPDWParam[1] = pPDW2;
+        m_ppPDWParam[1] = pPDW2;
        
         CalParamStat( &stStat, m_ppPDWParam[1], pSrcIndex );
         MakeStandard( m_ppfPDWParam[1], & stStat, m_ppPDWParam[1], pSrcIndex );
@@ -635,7 +608,7 @@ void CISODATA::CalAOAStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWIND
     PDWINDEX *pPDWIndex;
 
     pPDWIndex = pSrcIndex->pIndex;
-    int frstAoa = pPDWParam[*pPDWIndex];
+    int frstAoa = m_ppPDWParam[0][*pPDWIndex];
 
     // 평균 구하기
     _EQUALS3( pstStat->iMax, pstStat->iMin, frstAoa )
@@ -697,12 +670,11 @@ void CISODATA::CalParamStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWI
 {
     unsigned int i;
     int iMean = 0, diffVal;
-	float fMean = (float) 0.;
 
     PDWINDEX *pPDWIndex;
 
     pPDWIndex = pSrcIndex->pIndex;
-    int frstVal = pPDWParam[*pPDWIndex];
+    int frstVal = m_ppPDWParam[1][*pPDWIndex];
 
     // 평균 구하기
     pstStat->iMax = -frstVal;
@@ -724,15 +696,15 @@ void CISODATA::CalParamStat( STR_MINMAX_SDEV *pstStat, UINT *pPDWParam, STR_PDWI
 
 
     // 분산 구하기
-	fMean = 0;
+    iMean = 0;
     pPDWIndex = pSrcIndex->pIndex;
     for( i = 0 ; i < pSrcIndex->uiCount ; ++i ) {
         diffVal = pPDWParam[*pPDWIndex] - pstStat->iMean;
-		fMean += (float) (diffVal * diffVal);
+        iMean += (diffVal * diffVal);
 
         ++pPDWIndex;
     }
-    pstStat->fsdev = ( float ) (sqrt( ( double ) fMean ) / pSrcIndex->uiCount);
+    pstStat->fsdev = ( float ) (sqrt( ( double ) iMean ) / pSrcIndex->uiCount);
 
 }
 

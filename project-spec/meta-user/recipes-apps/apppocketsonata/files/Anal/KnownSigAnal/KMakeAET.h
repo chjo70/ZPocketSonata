@@ -29,7 +29,6 @@ typedef struct {
 
 } STR_KWNLOB;
 
-//##ModelId=452B0C5203C8
 class CKMakeAET : public CMakeAET
 {
 private :
@@ -38,15 +37,12 @@ private :
     SRxABTData *m_pTrkABT;
 
 protected :
-    //##ModelId=452B0C5203D4
     CKnownSigAnal *m_pKnownSigAnal;
 
     //##ModelId=452B0C5203DC
     int m_iCoNewAet;
-    //##ModelId=452B0C5203DD
     int m_IdxUpdAet;
 
-    //##ModelId=452B0C530009
     STR_EMITTER *m_pEmitter;
 
 public:
@@ -91,7 +87,11 @@ public:
      * @warning
      */
     inline void SetKnownSuccessRatio(int iIndex, float fValue) {
-        m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
+		if (iIndex <= MAX_AET) {
+			m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
+		}
+		else {
+		}
     }
 
     /**
@@ -120,7 +120,12 @@ public:
      * @warning
      */
     inline void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) {
-        m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
+		if ( uiIndex <= MAX_AET) {
+			m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
+		}
+		else {
+
+		}
     }
 
     /**
@@ -134,7 +139,12 @@ public:
      * @warning
      */
     inline unsigned int GetKnownIndexEmitter(unsigned int uiIndex) {
-        return m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
+		unsigned int uiRet=0;
+
+		if (uiIndex <= MAX_AET) {
+			uiRet = m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
+		}
+		return uiRet;
     }
 
     /**
@@ -180,7 +190,7 @@ public:
     //##ModelId=452B0C530014
     void MakeAET();
 
-
+    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, USHORT usMarkType );
 
     //##ModelId=452B0C53001D
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
@@ -198,8 +208,7 @@ public:
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
     //##ModelId=452B0C530044
     int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount );
-    //##ModelId=452B0C530047
-    void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+
     //##ModelId=452B0C530050
     void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     //##ModelId=452B0C530058
@@ -236,7 +245,7 @@ public:
             exp_pri_min = UMUL( fdiv_jitter_ratio, pPri2->fPRIMin );
             exp_pri_max = UMUL( fdiv_jitter_ratio, pPri2->fPRIMax );
 
-            fOverlap_space = CalOverlapSpace<float>( pPri1->fPRIMax, pPri1->fPRIMin, (float) exp_pri_max, (float) exp_pri_min );
+            fOverlap_space = CalOverlapSpace<float>( pPri1->fPRIMin, pPri1->fPRIMax, (float) exp_pri_min, (float) exp_pri_max );
             if( fOverlap_space != 0 ) {
                 overlap_ratio = UDIV( fOverlap_space * 100 , pPri1->fPRIMax - pPri1->fPRIMin );
                 if( overlap_ratio < 80 ) {
@@ -319,7 +328,7 @@ public:
             }
             else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _JITTER_RANDOM ) {
                 nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMax, pAet1->fPWMin, pAet2->fPWMax, pAet2->fPWMin ) ) {
+                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMin, pAet1->fPWMax, pAet2->fPWMin, pAet2->fPWMax ) ) {
                     return 0;
                 }
                 return nHarmonic;
@@ -396,14 +405,14 @@ public:
             else if( pAet1->pri.type == _JITTER && pAet2->pri.type == _PATTERN ) {
             nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
 
-                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.min, pAet1->pw.max, pAet2->pw.min, pAet2->pw.max ) )
                             return 0;
                     return nHarmonic;
             }
             else if( pAet1->pri.type == _PATTERN && pAet2->pri.type == _JITTER ) {
             nHarmonic = CheckPRIHarmonic( & pAet1->pri, & pAet2->pri );
 
-                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.max, pAet1->pw.min, pAet2->pw.max, pAet2->pw.min ) )
+                    if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->pw.min, pAet1->pw.max, pAet2->pw.min, pAet2->pw.max ) )
                             return 0;
                     return nHarmonic;
             }
@@ -414,7 +423,7 @@ public:
 
     }
 
-    void DISP_FineAet( SRxLOBData *pLOB );
+    void DISP_FineLOB( SRxLOBData *pLOB );
     unsigned int IsStorePDW();
 
     //##ModelId=452B0C530078

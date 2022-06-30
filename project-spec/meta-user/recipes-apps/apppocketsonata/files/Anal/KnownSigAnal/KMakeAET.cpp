@@ -149,6 +149,23 @@ BOOL CKMakeAET::KnownMakeAET()
 }
 
 /**
+ * @brief     펄스열에 대해서 마킹 정보를 설정한다.
+ * @param     STR_EMITTER * pEmitter
+ * @param     USHORT usMark
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-16, 10:55
+ * @warning
+ */
+void CKMakeAET::MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, USHORT usMarkType ) 
+{
+    m_pKnownSigAnal->MarkToPDWIndex( pEmitter->stPDW.pIndex, pEmitter->stPDW.uiCount, usMarkType );
+
+}
+
+/**
  * @brief     SelectKnownSuccessLOB
  * @return    int
  * @exception
@@ -678,21 +695,6 @@ int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CKMakeAET::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:35
-//
-void CKMakeAET::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
-{
-	m_pKnownSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
-}
-
-//////////////////////////////////////////////////////////////////////
-//
 // 함 수 이 름  : CKMakeAET::SaveEmitterPdwFile
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
@@ -770,7 +772,7 @@ STR_EMITTER *CKMakeAET::GetEmitter()
 //
 UINT CKMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
+	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->stPDW.pIndex, pSeg->stPDW.uiCount );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -859,14 +861,19 @@ STR_PDWPARAM* CKMakeAET::GetPdwParam()
 	return m_pKnownSigAnal->GetPdwParam();
 }
 
-
 /**
- * @brief CKMakeAET::DISP_FineAet
- * @param pLOB
+ * @brief     LOB 데이터를 출력한다.
+ * @param     SRxLOBData * pLOB
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-09, 14:00
+ * @warning
  */
-void CKMakeAET::DISP_FineAet( SRxLOBData *pLOB )
+void CKMakeAET::DISP_FineLOB( SRxLOBData *pLOB )
 {
-    return m_pKnownSigAnal->DISP_FineAet(pLOB);
+    return m_pKnownSigAnal->DISP_FineLOB(pLOB);
 }
 
 /**

@@ -53,6 +53,8 @@ BEGIN_MESSAGE_MAP(CLOBTableView, CFormView)
 	ON_NOTIFY(HDN_ITEMKEYDOWN, 0, &CLOBTableView::OnHdnItemKeyDownListLob)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_LOB, &CLOBTableView::OnNMClickListLob)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_LOB, &CLOBTableView::OnNMRClickListLob)
+	ON_BN_CLICKED(IDC_BUTTON_INIT, &CLOBTableView::OnBnClickedButtonInit)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_LOB, &CLOBTableView::OnLvnItemchangedListLob)
 END_MESSAGE_MAP()
 
 
@@ -158,18 +160,20 @@ void CLOBTableView::OnBnClickedButtonQuery()
 		iCnt = 0;
 		aetid = iVect.at(i);
 		iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, "where OP_INIT_ID='%d'" , opInitId );
-		if( aetid != 0 ) {
+		if( aetid >= 0 ) {
 			iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND AETID='%d'" , aetid );
 		}
 		if( collector_id != 0 ) {
 			iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND COLLECTOR_ID='%d'" , collector_id );
 		}
+        // 정렬 옵션 추가
+        iCnt += sprintf_s( &szWhere[iCnt], sizeof( szWhere ) - iCnt, " ORDER BY OP_INIT_ID DESC, PDWID DESC, PLOBID DESC " );
 		m_pDoc->GetDB_LOB( & m_nLOB, m_pLOBData, m_pLOBExt, szWhere, MAX_DB_LOB_DATA );
 
 		pLOBData = m_pLOBData;
 		pLOBExt = m_pLOBExt;
 		for( j=0 ; j < m_nLOB ; ++j ) {
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiSeqNum );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", j+1 );
 			m_CListLOB.InsertItem( nList, szBuffer );
 
 			k = 2;
@@ -180,16 +184,19 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBExt->aetData.uiOpInitID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiPDWID );
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%d", pLOBData->uiPDWID );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
+
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiPLOBID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiLOBID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiABTID );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiAETID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiAETID );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiABTID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->aucTaskID );
@@ -214,6 +221,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.1f", pLOBData->fDOAMax );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%.1f", pLOBData->fDOAMode );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
+
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iDIRatio );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
@@ -234,6 +244,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fFreqMax );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
+
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fFreqMode );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iFreqPositionCount );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
@@ -256,6 +269,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fPRIMax );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fPRIMode );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
+
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.1f", pLOBData->fPRIJitterRatio );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
@@ -271,6 +287,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fPWMax );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fPWMode );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
+
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fPAMean );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
@@ -279,6 +298,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fPAMax );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
+
+            sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fPAMode );
+            m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iIsStoreData );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
@@ -349,18 +371,21 @@ void CLOBTableView::CreateListCtrl()
 
 	m_pDoc->GetFieldNameOfTable( & nCoField, & pszField[1], "LOBDATA" );
 
-	m_nField_OPINITID = GetFieldIndex( "OP_INIT_ID", nCoField, & pszField[0] );
-	m_nField_LOBID = GetFieldIndex( "LOBID", nCoField, & pszField[0] );
-	m_nField_ABTID = GetFieldIndex( "ABTID", nCoField, & pszField[0] );
-	m_nField_AETID = GetFieldIndex( "AETID", nCoField, & pszField[0] );
+	m_nField_OPINITID = GetFieldIndex( "OP_INIT_ID", nCoField, & pszField[0] ) + 1;
+    m_nField_PDWID = GetFieldIndex( "PDWID", nCoField, &pszField[0] ) + 1;
+    m_nField_PLOBID = GetFieldIndex( "PLOBID", nCoField, &pszField[0] ) + 1;
+	m_nField_LOBID = GetFieldIndex( "LOBID", nCoField, & pszField[0] ) + 1;
+	m_nField_ABTID = GetFieldIndex( "ABTID", nCoField, & pszField[0] ) + 1;
+	m_nField_AETID = GetFieldIndex( "AETID", nCoField, & pszField[0] ) + 1;
 
 	m_CListLOB.GetWindowRect( & rList );
 
 	m_CListLOB.SetExtendedStyle( m_CListLOB.GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT );
 	m_CListLOB.SetWindowPos( NULL, 0, 70, rect.right, rect.bottom, SWP_NOZORDER );
 
+    m_CListLOB.InsertColumn( 0, "순번", LVCFMT_LEFT, 10 * strlen( "순번  " ) );
 	for( i=0 ; i <= nCoField ; ++i ) {
-		m_CListLOB.InsertColumn( i, pszField[i], LVCFMT_LEFT, 10*strlen(pszField[i]) );
+		m_CListLOB.InsertColumn( i+1, pszField[i], LVCFMT_LEFT, 10*strlen(pszField[i]) );
 	}
 
 	for( i=0 ; i < MAX_COUNT_OF_FIELD ; ++i ) {
@@ -469,6 +494,12 @@ void CLOBTableView::OnNMRClickListLob(NMHDR *pNMHDR, LRESULT *pResult)
 		strValue = m_CListLOB.GetItemText( index, m_nField_OPINITID );
 		iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND OP_INIT_ID='%s'" , (LPSTR) (LPCTSTR) strValue );
 
+        strValue = m_CListLOB.GetItemText( index, m_nField_PDWID );
+        iCnt += sprintf_s( &szWhere[iCnt], sizeof( szWhere ) - iCnt, " AND PDWID='%s'", ( LPSTR ) ( LPCTSTR ) strValue );
+
+        strValue = m_CListLOB.GetItemText( index, m_nField_PLOBID );
+        iCnt += sprintf_s( &szWhere[iCnt], sizeof( szWhere ) - iCnt, " AND PLOBID='%s'", ( LPSTR ) ( LPCTSTR ) strValue );
+
 		m_pDoc->GetDB_LOB( & nLOB, m_pLOBData, m_pLOBExt, szWhere, MAX_LOB_DATA );
 		m_pDoc->GetDB_LOB_POSITION( & nLOB_Position, m_pLOBData, szWhere, MAX_LOB_DATA );
 
@@ -477,6 +508,9 @@ void CLOBTableView::OnNMRClickListLob(NMHDR *pNMHDR, LRESULT *pResult)
 
 
 		}
+        else {
+            TRACE( "다중으로 조회됩니다. 쿼리문을 수정해야 합니다." );
+        }
 
 		// 에디트 박스에 이름을 설정한다.
 		//SetDlgItemText(IDC_NAME_EDIT, str);
@@ -494,4 +528,17 @@ void CLOBTableView::OnNMRClickListLob(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
+void CLOBTableView::OnBnClickedButtonInit()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_pDoc->Init();
 
+}
+
+
+void CLOBTableView::OnLvnItemchangedListLob(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}

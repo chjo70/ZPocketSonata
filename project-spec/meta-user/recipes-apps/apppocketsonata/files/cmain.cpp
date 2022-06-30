@@ -130,10 +130,6 @@ void InitDatabase()
     char szSQLiteFileName[100];
 
     // 1. 위협 라이브러리 존재 확인
-    strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
-    strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
-
     LOG_LINEFEED;
 
 #ifdef _SQLITE_
@@ -147,9 +143,25 @@ void InitDatabase()
         if( 0 == _mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
 			char szSrcFilename[100];
 
+			// 1. 위협 관리 테이블
+			strcpy(szSQLiteFileName, EMITTER_SQLITE_FOLDER);
+			strcat(szSQLiteFileName, "/");
+			strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
+
 			sprintf( szSrcFilename, "../../files/SQLite3.DB/%s" , BLK_EMITTER_SQLITE_FILENAME );
              iCopy = CCommonUtils::CopyFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
 			 if( iCopy <= 0 ) {
+				 throw iCopy;
+			 }
+
+			 // 2. 위협 라이브러리 관리 테이블
+			 strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
+			 strcat(szSQLiteFileName, "/");
+			 strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
+
+			 sprintf(szSrcFilename, "../../files/SQLite3.DB/%s", BLK_CEDEOB_SQLITE_FILENAME);
+			 iCopy = CCommonUtils::CopyFile(szSrcFilename, szSQLiteFileName, 1, 0077);
+			 if (iCopy <= 0) {
 				 throw iCopy;
 			 }
          }

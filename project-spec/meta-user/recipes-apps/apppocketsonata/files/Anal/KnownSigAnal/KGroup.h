@@ -27,7 +27,6 @@ protected:
 public:
     void Init();
 
-	//##ModelId=452B0C5300A8
 	int GetColPdw();
 	//##ModelId=452B0C5300A9
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }

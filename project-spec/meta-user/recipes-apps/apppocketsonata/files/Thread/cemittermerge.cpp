@@ -387,9 +387,9 @@ void CEmitterMerge::SendNewUpd()
     }
 
     stAET.pri.iType = pSRxABTData->iPRIType;
-    stAET.pri.TMean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
-    stAET.pri.TMin = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
-    stAET.pri.TMax = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
+    stAET.pri.tMean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
+    stAET.pri.tMin = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
+    stAET.pri.tMax = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
     stAET.pri.iPatType = pSRxABTData->iPRIPatternType;
     stAET.pri.fJtrPer = pSRxABTData->fPRIJitterRatio;
     stAET.pri.iSwtLev = pSRxABTData->iPRIPositionCount;

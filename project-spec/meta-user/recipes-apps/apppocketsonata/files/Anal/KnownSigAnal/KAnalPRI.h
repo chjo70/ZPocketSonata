@@ -73,6 +73,10 @@ public:
 
     void HoppingAnalysis();
 
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+
+
+
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
     //##ModelId=452B0C53013E

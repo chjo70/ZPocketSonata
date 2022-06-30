@@ -59,10 +59,10 @@ CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const ch
     try {
         m_pDatabase = new Kompex::SQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
     }
-    catch( Kompex::SQLiteException &exception ) {
+    catch( Kompex::SQLiteException &sException) {
         std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		sException.Show();
+        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
     }
 #elif _MSSQL_
     // MSSQL 연결
@@ -512,10 +512,10 @@ void CTaskMngr::DeleteIPL( char *pszELNOT )
             // do not forget to clean-up
             stmt.FreeQuery();
         }
-        catch( Kompex::SQLiteException &exception ) {
+        catch( Kompex::SQLiteException &sException) {
             std::cerr << "\nException Occured" << std::endl;
-            exception.Show();
-            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+			sException.Show();
+            std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
         }
 
         //-- m_iTotalIPL;
@@ -539,10 +539,10 @@ void CTaskMngr::DeleteIPL( char *pszELNOT )
             // do not forget to clean-up
             stmt.FreeQuery();  
         }
-        catch( Kompex::SQLiteException &exception ) {
+        catch( Kompex::SQLiteException &sException) {
             std::cerr << "\nException Occured" << std::endl;
-            exception.Show();
-            std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+			sException.Show();
+            std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
         }
 
     }
@@ -634,10 +634,10 @@ void CTaskMngr::InsertIPL( int iIndex )
         stmt.FreeQuery();  
 
     }
-    catch( Kompex::SQLiteException &exception ) {
+    catch( Kompex::SQLiteException &sException) {
         std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		sException.Show();
+        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
     }
 #elif _MSSQL_
 

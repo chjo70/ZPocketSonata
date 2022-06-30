@@ -195,30 +195,31 @@ enum enFREQ_TYPE
 } ;
 
 
-
-//##ModelId=452B0C510131
 // 내부 신호 분석에서 사용하는 정의
 enum enPRI_TYPE
 {
     _STABLE               = 0,
-    _JITTER_RANDOM,
     _DWELL,
-    _STAGGER,
+
+    _JITTER_RANDOM,    
+
     _JITTER_PATTERN,
 
+    _STAGGER,                // 규칙성 펄스열들로부터 Stagger 분석한 것임.
+    _STABLE_STAGGER,         // 스태거 또는 Dwell(?) 의심
+    _JITTER_STAGGER,         // 지터 펄스열에서 Stagger 로 분석된것
+    
     _UNKNOWN_PRI,
 
     MAX_PRITYPE,
 
-    _REFSTABLE,
-
-    _STAGGER_DWELL,
+    _REFSTABLE,   
 
 
 } ;
 
 
-//##ModelId=452B0C5101C7
+
 enum PATTERN_TYPE
 {
     //##ModelId=452B0C5101DC
@@ -370,6 +371,7 @@ enum SCAN_STAT
 /////////////////////////////////////////////////////////////////////////////////////////
 //  LowHigh, MinMax 구조체
 //
+
 //##ModelId=452B0C510308
 #ifndef _STR_LOWHIGH
 #define _STR_LOWHIGH
@@ -402,7 +404,7 @@ struct STR_MINMAX {
     int iMin;
     int iMax;
     int iMode;
-    // int sdev;
+    
 } ;
 
 struct STR_MINMAX_SDEV {
@@ -461,15 +463,15 @@ struct STR_FRQ {
 //##ModelId=452B0C510377
 struct STR_PRI {
     int iType;
-    _TOA TMean;
-    _TOA TMin;
-    _TOA TMax;
+    _TOA tMean;
+    _TOA tMin;
+    _TOA tMax;
     _TOA TMode;
     int iPatType;
     float fJtrPer;
     int iSwtLev;
     _TOA TSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
-    int iPatPrd;
+    _TOA iPatPrd;
 } ;
 
 /* AET용 SCAN 구조체 */

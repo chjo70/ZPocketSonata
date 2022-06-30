@@ -365,7 +365,7 @@ void CUserCollect::ColStart()
     if( true == CHWIO::PendingFromInterrupt(pUIO) ) {
     		
 #ifdef _SIM_USER_COLLECT_
-        CThread::Sleep( 1000 );
+        CThread::msSleep( 1000 );
 
 #endif
 

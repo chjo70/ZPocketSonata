@@ -372,8 +372,8 @@ void CPositionEstimationAlg::VerifyOfPositionEstimation( SELPositionEstimationRe
 void CPositionEstimationAlg::AllocSensors( int nLob )
 {
 	/*! \debug  신뢰성: LOB 상/한값 설정
-			\author 조철희 (churlhee.jo@lignex1.com)
-			\date 	2015-10-6 9:54:05
+		\author 조철희 (churlhee.jo@lignex1.com)
+		\date 	2015-10-6 9:54:05
 	*/
 	m_Sensor.n = (UINT) min( nLob, MAX_OF_LOBS_PE );
 

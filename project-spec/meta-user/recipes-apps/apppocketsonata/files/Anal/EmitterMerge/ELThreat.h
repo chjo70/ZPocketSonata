@@ -68,7 +68,12 @@ class CELThreat
 {
 private:
 	static int m_CoInstance;										///< 객체 총 개수
-	static Queue<int> m_QueIndex;								///< 위협의 큐 포인터
+	static Queue<int> m_QueIndex;								    ///< 위협의 큐 포인터
+
+    static int m_iCoABT;								            ///< 위협의 큐 포인터
+    static int m_iCoAET;								            ///< 위협의 큐 포인터
+
+
 	CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
 
 	CELThreat *m_pLeftChild;										///< 트리 구조의 좌측 포인터
@@ -76,9 +81,9 @@ private:
 
 
 public:
-	SELINDEX m_Idx;															///< 위협의 방사체/빔/LOB 번호
+	SELINDEX m_Idx;													///< 위협의 방사체/빔/LOB 번호
 
-	int m_nIndex;																///< 위협 인덱스
+	int m_nIndex;													///< 위협 인덱스
 
 	CELThreat * GetRootThreat() const { return m_pRootThreat; }
 	void SetRootThreat(CELThreat * val) { m_pRootThreat = val; }
@@ -106,37 +111,16 @@ public:
 // 			//TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
 // 		}
 
+        if( m_Idx.uiABT == INVALID_INDEX ) {
+            ++m_iCoAET;
+        }
+        else {
+            ++m_iCoABT;
+        }
+
 		++ m_CoInstance;
 	}
 
-/*
-	CELThreat( SELINDEX *pID )
-	{
-		m_pLeftChild = NULL;
-		m_pRightChild = NULL;
-
-		memcpy( & this->m_Idx, & m_Idx, sizeof(SELINDEX) );
-
-		if( false == m_QueIndex.Pop( & m_nIndex ) ) {
-			m_nIndex = INVALID_INDEX;
-		}
-
-		if( m_nIndex > TOTAL_ITEMS_OF_THREAT_NODE+10 ) {
-			TRACE( "\n ############# Index[%d]" , m_nIndex );
-		}
-
-    }       */
-
-		/**
-		* @brief     트리의 모든 노드들을 삭제한다.
-		* @param     void
-		* @return    bool
-		* @exception 
-		* @author    조철희 (churlhee.jo@lignex1.com)
-		* @version   0.0.1
-		* @date      2016-03-21, 오후 10:25 
-		* @warning   
-	*/
 	void RemoveAll();
 	bool RemoveThreat( int nIndex, CELThreat *pPrevThreat );
 	bool RemoveAET( int nAET, CELThreat *pPrevThreat );
@@ -339,18 +323,54 @@ public:
 		return pThreat;
 	}
 
+	/**
+	 * @brief     노드의 좌측 포인터를 리턴한다.
+	 * @return    CELThreat *
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:41
+	 * @warning
+	 */
 	CELThreat *GetLeftChild() {
 		return m_pLeftChild;
 	}
 
+	/**
+	 * @brief     노드의 우측 포인터를 리턴한다.
+	 * @return    CELThreat *
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:41
+	 * @warning
+	 */
 	CELThreat *GetRightChild() {
 		return m_pRightChild;
 	}
 
+	/**
+	 * @brief     노드의 ID 정보를 리턴한다.
+	 * @return    SELINDEX *
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:41
+	 * @warning
+	 */
 	SELINDEX *GetID() {
 		return & m_Idx;
 	}
 
+	/**
+	 * @brief     루트 노드 여부를 확인한다.
+	 * @return    bool
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:42
+	 * @warning
+	 */
 	bool IsRoot() {
 		bool bRet = false;
 		if( m_Idx.uiAET == INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
@@ -359,6 +379,15 @@ public:
 		return bRet;
 	}
 
+	/**
+	 * @brief     에미터 노드 여부를 확인한다.
+	 * @return    bool
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:42
+	 * @warning
+	 */
 	bool IsAET() {
 		bool bRet = false;
 		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
@@ -367,6 +396,15 @@ public:
 		return bRet;
 	}
 	
+	/**
+	 * @brief     빔 노드 여부를 확인한다.
+	 * @return    bool
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-06-05, 13:42
+	 * @warning
+	 */
 	bool IsABT() {
 		bool bRet = false;
 		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT != INVALID_INDEX ) {
@@ -381,6 +419,45 @@ public:
 // 			bRet = true; 
 // 		return bRet;		
 // 	}
+
+    /**
+     * @brief     모든 노드 총 개수를 리턴한다.
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-06-05, 13:44
+     * @warning
+     */
+    inline int GetAllNode() {
+        return m_CoInstance;
+    }
+
+    /**
+     * @brief     총 에미터 개수를 리턴한다.
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-06-05, 14:40
+     * @warning
+     */
+    inline int GetCoAET() {
+        return m_iCoAET;
+    }
+
+    /**
+     * @brief     총 빔 개수를 리턴한다.
+     * @return    int
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2022-06-05, 14:41
+     * @warning
+     */
+    inline int GetCoABT() {
+        return m_iCoABT;
+    }
 
 
 };

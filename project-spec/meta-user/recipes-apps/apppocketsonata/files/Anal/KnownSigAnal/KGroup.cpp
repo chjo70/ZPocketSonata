@@ -15,15 +15,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup
-// 반환되는 형  : CKGroup::CKGroup(int coMaxPdw) :
-// 함 수 인 자  : int coMaxPdw
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 14:09:58
-//
-//##ModelId=42E85F3500C0
+/**
+ * @brief     그룹화 객체 수행시 내부 변수, 메모리를 할당한다.
+ * @param     void * pParent
+ * @param     int coMaxPdw
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-08, 12:45
+ * @warning
+ */
 CKGroup::CKGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
@@ -31,26 +33,27 @@ CKGroup::CKGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
     INIT_ANAL_VAR_(m_pKnownSigAnal)
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKGroup::~CKGroup
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 17:25:06
-//
-//##ModelId=42E85F3500C1
+/**
+ * @brief     소멸자 처리를 수행한다.
+ * @return    
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2005-07-28 17:25:06
+ * @warning
+ */
 CKGroup::~CKGroup()
 {
 
 }
 
 //////////////////////////////////////////////////////////////////////////
-/*! \brief    CNGroup::Init
-        \author   조철희
-        \return   void
-        \version  0.0.34
-        \date     2008-07-30 13:26:21
-        \warning
+/*! \brief    초기화를 수행한다.
+    \author   조철희
+    \return   void
+    \version  0.0.34
+    \date     2008-07-30 13:26:21
+    \warning
 */
 void CKGroup::Init()
 {
@@ -60,21 +63,20 @@ void CKGroup::Init()
     CGroup::Init();
 }
 
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKGroup::MakeGroup
-// 반환되는 형  : void
-// 함 수 인 자  : BOOL
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 17:25:17
-//
-//##ModelId=42E98F30008A
+/**
+ * @brief     추적 신호를 그룹화하기 위해 초기화를 수행한다.
+ * @return    BOOL
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2005-07-28 17:25:17
+ * @warning
+ */
 BOOL CKGroup::MakeKnownGroup()
 {
 	// 방위 및 주파수 그룹화 초기화
-	m_AoaGroups.uiCount = 0;
-	m_AoaGroups.uiCoAnal = 0;
+    m_AoaGroups.uiCount = 0;
+    m_AoaGroups.uiCoAnal = 0;
 	m_FrqGroups.uiCount = 0;
 	m_FrqGroups.uiCoAnal = 0;
 	m_PwGroups.uiCount = 0;
@@ -105,14 +107,15 @@ BOOL CKGroup::MakeKnownGroup()
 	return m_AoaGroups.uiCount != 0;	
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKGroup::GetColPdw
-// 반환되는 형  : int
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 09:42:07
-//
+/**
+ * @brief     수집한 PDW 개수를 리턴한다.
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-01-23 09:42:07
+ * @warning
+ */
 int CKGroup::GetColPdw()
 { 
 	return m_pKnownSigAnal->GetColPdw(); 

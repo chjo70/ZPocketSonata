@@ -712,6 +712,7 @@ struct SRxLOBData {
 #endif
 
     int iIsStoreData;
+    int iTotalOfPDW;
     int iNumOfPDW;
     int iNumOfIQ;
 
@@ -812,7 +813,7 @@ namespace RadarDirAlgotirhm
 
 		static MATHFUNCSDLL_API void Close();
 
-		static MATHFUNCSDLL_API void Start( STR_PDWDATA *pPDWData );
+		static MATHFUNCSDLL_API void Start( STR_PDWDATA *pPDWData, bool bDBInsert=false );
         static MATHFUNCSDLL_API void LoadCEDLibrary();
 
 		static MATHFUNCSDLL_API int GetCoLOB();

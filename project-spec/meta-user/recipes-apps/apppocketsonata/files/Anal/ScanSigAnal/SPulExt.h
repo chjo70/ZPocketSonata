@@ -51,8 +51,7 @@ public:
 	void Init();
 	//##ModelId=452B0C44038C
 	void KnownPulseExtract();
-	//##ModelId=452B0C44038D
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+
 	//##ModelId=452B0C440396
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	//##ModelId=452B0C44039F

@@ -120,6 +120,7 @@
     <None Include="res\properties_wnd_hc.ico" />
     <None Include="res\RADARDIRAPP.ico" />
     <None Include="res\RADARDIRAPP.rc2" />
+    <None Include="res\RADARDIRAPP2.ico" />
     <None Include="res\RADARDIRAPPDoc.ico" />
     <None Include="res\sort.bmp" />
     <None Include="res\sort_hc.bmp" />

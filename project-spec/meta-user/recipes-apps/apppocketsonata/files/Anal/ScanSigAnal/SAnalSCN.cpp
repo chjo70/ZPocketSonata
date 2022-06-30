@@ -128,7 +128,7 @@ BOOL CSAnalScan::KnownAnalysis()
             GroupingJitter( TRUE );
             break;
 
-        case _JITTER_PATTERN :
+        case _JITTER_PATTERN:
             // 추적에서는 로브 조건을 무시하도록 한다.
             GroupingJitter( TRUE );
             break;
@@ -281,8 +281,13 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
 }
 
 /**
- * @brief CSAnalScan::TakeTheScanMainEmitter
- * @return
+ * @brief     TakeTheScanMainEmitter
+ * @return    STR_EMITTER *
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-15, 11:32
+ * @warning
  */
 STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
 {
@@ -299,14 +304,15 @@ STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
     return pEmitter;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSAnalScan::CalcSamplingTime
-// 반환되는 형  : oid
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:19:07
-//
+/**
+ * @brief     샘플링 계산을 수행한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-02-15 16:19:07
+ * @warning
+ */
 void CSAnalScan::CalcSamplingTime()
 {
 	_TOA priMean;
@@ -323,15 +329,17 @@ void CSAnalScan::CalcSamplingTime()
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSAnalScan::CalcSamplingTime2
-// 반환되는 형  : UINT
-// 함 수 인 자  : UINT noEMT
-// 함 수 인 자  : UINT priMean
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:21:42
-//
+/**
+ * @brief     CalcSamplingTime
+ * @param     UINT noEMT
+ * @param     UINT priMean
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-02-15 16:21:42
+ * @warning
+ */
 UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean ) 
 {
 	UINT samplingTime;
@@ -354,14 +362,16 @@ UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean )
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSAnalScan::CalcSamplingTime
-// 반환되는 형  : UINT
-// 함 수 인 자  : UINT priMean
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:23:43
-//
+/**
+ * @brief     샘플링 계산을 수행한다.
+ * @param     UINT priMean
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-02-15 16:23:43
+ * @warning
+ */
 UINT CSAnalScan::CalcSamplingTime( UINT priMean )
 {
     UINT uiSampleTime;
@@ -400,14 +410,15 @@ UINT CSAnalScan::CalcSamplingTime( UINT priMean )
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSAnalScan::SamplingProcess
-// 반환되는 형  : void
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:34:25
-//
+/**
+ * @brief     샘플링 처리를 수행한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-02-15 16:34:25
+ * @warning
+ */
 void CSAnalScan::SamplingProcess()
 {
 	UINT i;
@@ -1566,7 +1577,7 @@ int CSAnalScan::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
  */
 UINT CSAnalScan::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
-    return m_pScanSigAnal->MedianFreq( NULL, pSeg->pdw.pIndex, pSeg->pdw.uiCount );
+    return m_pScanSigAnal->MedianFreq( NULL, pSeg->stPDW.pIndex, pSeg->stPDW.uiCount );
 }
 
 /**
@@ -1601,17 +1612,35 @@ unsigned int CSAnalScan::IsStorePDW()
 }
 
 /**
- * @brief     
+ * @brief     수집 시간을 호출한다.
  * @param     struct timespec * pTimeSpec
  * @return    void
- * @author    議곗쿋??(churlhee.jo@lignex1.com)
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 22:00:41
- * @warning   
+ * @warning
  */
 void CSAnalScan::GetCollectTime( struct timespec *pTimeSpec )
 {
 	m_pScanSigAnal->GetCollectTime( pTimeSpec );
+}
+
+/**
+ * @brief     규칙성 펄스열을 호출한다.
+ * @param     _TOA * pnHarmonic
+ * @param     STR_PULSE_TRAIN_SEG * pSeg1
+ * @param     STR_PULSE_TRAIN_SEG * pSeg2
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-15, 11:37
+ * @warning
+ */
+bool CSAnalScan::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+{
+    return m_pScanSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2 );
 }
 
 #if defined(_ELINT_) || defined(_XBAND_)

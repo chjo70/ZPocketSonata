@@ -141,10 +141,10 @@ void SQLiteDatabase::TraceOutput(void *ptr, const char *sql)
 	std::cout << "trace: " << sql << std::endl;
 }
 
-void SQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 time)
+void SQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 tTime)
 {
 	std::cout << "profile: " << sql << std::endl;
-	std::cout << "profile time: " << time << std::endl;
+	std::cout << "profile time: " << tTime << std::endl;
 }
 
 void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
@@ -219,6 +219,9 @@ void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 // 
 // 			    sqlite3_finalize(statement);
 		    }
+			else {
+
+			}
 
 		    sqlite3_exec(m_pDatabaseHandle, "COMMIT", 0, NULL, 0);
 
@@ -350,6 +353,9 @@ void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 			
 			    //sqlite3_finalize(statement);
 		    }
+			else {
+
+			}
 
 		    if(sqlite3_exec(memoryDatabase, "COMMIT", 0, NULL, 0) == SQLITE_OK)
 		    {
@@ -498,8 +504,21 @@ void SQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_m
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 }
 
+/**
+ * @brief     GetRuntimeStatusInformation
+ * @param     int operation
+ * @param     bool highwaterValue
+ * @param     bool resetFlag
+ * @return    int
+ * @exception 
+ * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-28 13:08:09
+ * @warning
+ */
 int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterValue, bool resetFlag) const
 {
+	int iRet;
 	int curValue;
 	int hiwtrValue;
 
@@ -507,9 +526,11 @@ int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterVal
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 
 	if(highwaterValue)
-		return hiwtrValue;
+		iRet = hiwtrValue;
+	else
+		iRet = curValue;
 
-	return curValue;
+	return iRet;
 }
 
 int SQLiteDatabase::GetNumberOfCheckedOutLookasideMemorySlots() const

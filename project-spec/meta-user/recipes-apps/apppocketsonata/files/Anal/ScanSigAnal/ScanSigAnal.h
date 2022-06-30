@@ -90,9 +90,9 @@ public:
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
     //##ModelId=452B0C45006E
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
-    //##ModelId=452B0C450078
+    
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
-    //##ModelId=452B0C450082
+    
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     //##ModelId=452B0C450095
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
@@ -102,7 +102,8 @@ public:
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     //##ModelId=452B0C4500A8
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
-    //inline STR_UPDAET *GetUpdAet() { return & stScnAet; }
+    inline _TOA CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
+    
     inline SRxScanData *GetScanResult() { return & m_strScnResult; }
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
@@ -152,25 +153,5 @@ public:
 
 #endif
 
-/*
-
-extern "C" {
-	void CreateScanSigAnalClass();
-	void DeleteScanSigAnalClass();
-	
-	//int ScanSigAnal( int noEMT, int noCh );
-
-	UINT ExtPul( int noEMT, UINT noCh );
-	void InitScanSigAnal();
-	void InitSAPColPdw();
-	STR_SCANPT *GetScanPulseTrain( int noCh );
-	void GetScanRes( int *pScanType, int *pScanPrd );
-	
-	extern CScanSigAnal *theScanSigAnal;
-	extern CSColPdw *theSAPColPdw;
-
-}
-
-	*/
 
 #endif // !defined(AFX_SCANSIGANAL_H__A2FFC458_5A2A_41E8_8D9D_C80FD0441511__INCLUDED_)

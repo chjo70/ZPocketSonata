@@ -195,7 +195,9 @@ public:
 	void GetCollectTime( struct timespec *pTimeSpec );
 
 
-    void DISP_FineAet( SRxLOBData *pLOBData ) { }
+    void DISP_FineLOB( SRxLOBData *pLOBData ) { }
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+
     unsigned int IsStorePDW();
 
     CMakeAET* GetMakeAET() { return NULL; }

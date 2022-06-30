@@ -45,9 +45,9 @@ public:
 	int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
 	//##ModelId=452B0C550079
 	int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
-	//##ModelId=452B0C55007C
-	void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
-	//##ModelId=452B0C550085
+	
+	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+	
 	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
 	//##ModelId=452B0C55008E
 	unsigned int GetCoSeg();
@@ -68,7 +68,7 @@ public:
 
 	// 타 장비 관련 위협 데이터를 생성한다.
 public:
-	void DISP_FineAet( SRxLOBData *pManAet );
+	void DISP_FineLOB( SRxLOBData *pManAet );
 	//void MakeLOBDatafromEmitter( STR_EMITTER *pEmitter, int idxEmitter );
     unsigned int IsStorePDW();
 	void GetCollectTime( struct timespec *pTimeSpec );

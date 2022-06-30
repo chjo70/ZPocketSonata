@@ -14,6 +14,8 @@
 
 Queue<int> CELThreat::m_QueIndex;
 int CELThreat::m_CoInstance=0;
+int CELThreat::m_iCoABT = 0;
+int CELThreat::m_iCoAET = 0;
 
 
 /**
@@ -59,7 +61,7 @@ CELThreat::CELThreat(void)
 CELThreat::~CELThreat(void)
 {
 
-	// 반납
+	// 메모리 해지한다.
 	if( m_nIndex > INVALID_INDEX ) {
 		m_QueIndex.Push( m_nIndex );
 	}
@@ -69,7 +71,7 @@ CELThreat::~CELThreat(void)
 }
 
 /**
- * @brief     RemoveAET
+ * @brief     특정 에미터의 노드를 삭제한다.
  * @param     int nAET
  * @param     CELThreat * pPrevThreat
  * @return    bool
@@ -106,6 +108,9 @@ bool CELThreat::RemoveAET( int nAET, CELThreat *pPrevThreat )
 			delete pThreat;
 			pThreat = NULL;
 			bRet = true;
+
+            --m_iCoAET;
+
 			break;
 		}
 
@@ -123,7 +128,7 @@ bool CELThreat::RemoveAET( int nAET, CELThreat *pPrevThreat )
 }
 
 /**
- * @brief     RemoveABT
+ * @brief     특정 빔 노드를 삭제한다.
  * @param     int nABT
  * @param     CELThreat * pPrevThreat
  * @return    bool
@@ -160,6 +165,8 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
                     pThreat = NULL;
 
 					bRet = true;
+
+                    --m_iCoABT;
 				}
                 else {
 				    pPrevThreat = pThreat;
@@ -211,7 +218,7 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
 // }
 
 /**
- * @brief     RemoveAll
+ * @brief     모든 위협 의 노드들을 메모리 해지한다.
  * @param     void
  * @return    bool
  * @exception
@@ -234,9 +241,13 @@ void CELThreat::RemoveAll()
 
 	// 루트는 삭제 하지 않기 하기 위함.
 	if( m_nIndex != INVALID_INDEX && m_pRootThreat != this ) {
+
 		// TRACE( "\n 삭제 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
 		delete this;
 	}
+
+    m_iCoAET = 0;
+    m_iCoABT = 0;
 
 	return;
 
@@ -279,7 +290,7 @@ CELThreat *CELThreat::GetLastThreat( CELThreat *pThreat )
 }
 
 /**
- * @brief     Link
+ * @brief     위협 노드 간을 연결한다.
  * @param     CELThreat * pThreat
  * @return    void
  * @exception
@@ -357,7 +368,7 @@ void CELThreat::Link( CELThreat *pDeleteABT, CELThreat *pDeleteAET )
 }
 
 /**
- * @brief     CELThreat
+ * @brief     위협 노드의 링크 연결을 해지한다.
  * @param     CELThreat * pUnLinkABT
  * @return    void
  * @exception

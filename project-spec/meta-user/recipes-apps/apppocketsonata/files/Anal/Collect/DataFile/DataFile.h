@@ -510,10 +510,8 @@ public:
     int GetHeaderSize();
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
+    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
 
-    inline unsigned int GetOneDataSize() { \
-        return sizeof(_PDW); \
-    }
     inline void SetHeaderData( void *pData );
 
 
@@ -1318,6 +1316,7 @@ public:
     {
         bool bRet=true;
         float fFREQ;
+		*piCh = 0;
 
         if( fFreq != 0. ) {
             int iNo = 0;
@@ -2249,7 +2248,7 @@ public:
      * @warning
      */
     static unsigned int EncodeRealFREQMHz( int *piCh, float fFrequency ) {
-        unsigned int uiFrequency;
+        unsigned int uiFrequency=0;
 
         if( g_enUnitType == en_XBAND ) {
             *piCh = -1;
@@ -2258,10 +2257,8 @@ public:
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
             int iBoardID = 3; // GetBandOfFreq( fFrequency );
-            //uiFrequency = CPOCKETSONATAPDW::EncodeRealFREQMHz( fFrequency );
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, piCh, ( int ) iBoardID, fFrequency );
-            //CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & uiFrequency, piCh, fFrequency, iBoardID );
 
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, piCh, ( int ) iBoardID, fFrequency );
         }
         else if( g_enUnitType == en_ELINT ) {
             *piCh = 0;

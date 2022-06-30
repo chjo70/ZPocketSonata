@@ -150,6 +150,7 @@ struct SRxLOBData {
 #endif
 
 	int iIsStoreData;
+    int iTotalOfPDW;
 	int iNumOfPDW;
 	int iNumOfIQ;
 
@@ -173,7 +174,7 @@ struct SRxLOBData {
 #else
 #endif
 
-#ifdef _XBAND_
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
 	unsigned int uiOpInitID;
 
 #endif

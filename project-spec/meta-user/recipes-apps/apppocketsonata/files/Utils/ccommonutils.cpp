@@ -445,6 +445,30 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     return;
 }
 
+
+/**
+ * @brief     CalcDiffAOA
+ * @param     int iAOA1
+ * @param     int iAOA2
+ * @return    int
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-05-23, 17:09
+ * @warning
+ */
+int CCommonUtils::CalcDiffAOA( int iAOA1, int iAOA2 )
+{
+    int iDiffAOA;
+
+    iDiffAOA = _diffabs<int>( iAOA1, iAOA2 );
+    if( iDiffAOA > MAX_AOA / 2 ) {
+        iDiffAOA = MAX_AOA - iDiffAOA;
+    }
+
+    return iDiffAOA;
+}
+
 /**
  * @brief CCommonUtils::Disp_FinePDW
  * @param pPDWData
@@ -717,29 +741,33 @@ int CCommonUtils::Isalpha( int iCh )
 size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 {
     size_t szSize;
+    size_t szMultiply;
 
     try {
 		if( iItems <= 0 || iItems <= 0 ) {
 			throw 0;
 		}
 
-//         if( iSize == -1 && iItems == INT_MIN ) {
-//             throw 0;
-//         }
-// 
-//         if( iItems == -1 && iSize == INT_MIN ) {
-//             throw 0;
-//         }
-
-        if( iSize > INT_MAX / iItems ) {
+        else if( iSize > INT_MAX / iItems ) {
             throw 0;
         }
 
-        if( iSize < INT_MIN / iItems ) {
+        else if( iSize < INT_MIN / iItems ) {
             throw 0;
         }
 
-        szSize = iSize * iItems;
+        else {
+            szMultiply = (unsigned int) iSize * ( unsigned int ) iItems;
+        
+            if( iSize != szMultiply / iItems ) {
+                throw 0;
+            }
+
+            else {
+                szSize = szMultiply;
+            }
+        }
+        
     }
     catch( int iExp ) {
         szSize = iExp;
@@ -759,20 +787,20 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
  * @date      2022-03-28, 19:22
  * @warning
  */
-unsigned int CCommonUtils::INT2UINT( int iValue )
-{
-    unsigned int iRet=0;
-
-    if( iValue >= 0 ) {
-        iRet = iValue;
-    }
-
-    return iRet;
-
-}
+// unsigned int CCommonUtils::INT2UINT( int iValue )
+// {
+//     unsigned int iRet=0;
+// 
+//     if( iValue >= 0 ) {
+//         iRet = iValue;
+//     }
+// 
+//     return iRet;
+// 
+// }
 
 /**
- * @brief     WhatDataType
+ * @brief     파일명으로 데이터형태를 식별합니다.
  * @param     char * pStrPathname
  * @return    ENUM_DataType
  * @exception
@@ -814,7 +842,7 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
 }
 
 /**
- * @brief
+ * @brief	  파일명으로 장비명을 식별합니다.
  * @return    ENUM_UnitType
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1

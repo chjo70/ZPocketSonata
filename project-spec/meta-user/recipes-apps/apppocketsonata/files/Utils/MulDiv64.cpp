@@ -23,7 +23,20 @@
  * Uses 128 bit intermediate result
  */
 #define ABS64(num) (num >=0 ? num : -num)
-//
+
+ 
+/**
+ * @brief     64비트형 정수형을 operant * multiplier / divider 계산한다.
+ * @param     __int64 operant
+ * @param     __int64 multiplier
+ * @param     __int64 divider
+ * @return    __int64
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-08, 14:17
+ * @warning
+ */
 __int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider)
 {
 #ifdef _WIN32

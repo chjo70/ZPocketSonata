@@ -17,6 +17,8 @@
 
 #include "./ELUtil.h"
 
+#include "../EmitterMerge/ELStringDefn.h"
+
 
 #include "../EmitterMerge/PositionEstimationAlg.h"
 #include "../EmitterMerge/ELGMIMsgDefn.h"
@@ -50,14 +52,15 @@
 
 // 주파수 형태에 따른 식별 방법
 /// 
-enum { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FIgnoreFreqType, EndOfIdentifyFrq } ;
+enum { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ;
  
  
 // PRI 형태에 따른 식별 방법
 // 
-enum { PStableStable=1, PStableStagger, PStableDwell, PStablePStable, PStaggerStagger, PStaggerPStagger, \
-			 PDwellDwell, PDwellPDwell, PJitterStagger, PJitterJitter, PJitterPattern, PPatternPattern, \
-			 PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri } ;
+enum { PStableStable=1, PStableStagger, PStableDwell, PStablePStable, PStaggerStagger, PStaggerJitter, PStaggerPStagger, \
+	PDwellDwell, PDwellPDwell, PJitterStagger, PJitterJitter, PJitterPattern, PPatternPattern, \
+	PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri
+};
 // 
 // _UNMATCHRATIO_ 는 일치율을 계산하지 않기 위한 값임.
 enum EnumMATCHRATIO { 
@@ -176,7 +179,7 @@ class CELSignalIdentifyAlg
     // 미식별 번호 관리
     static STR_FLIB *m_pFLib;											///< 주파수 테이블화 저장소, 기본형-0, 실무형-1
 
-    vector<STR_H000> m_vecH000;							                ///< 미식별 번호 관리하기 위한 테이블
+    //vector<STR_H000> m_vecH000;							                ///< 미식별 번호 관리하기 위한 테이블
     int m_iH000;													///< 미식별 번호
 
     //static SELDBEnvVarIdnf *m_pSELDBEnvVarIdnf;			///< 시스템 설정값 환경 포인터
@@ -239,8 +242,10 @@ private:
 	void PIdentifyJitStg( SRxLOBData *pLOBData );
 	void PIdentifyDwlDwl( SRxLOBData *pLOBData );
 	void PIdentifyStgStg( SRxLOBData *pLOBData );
+	void PIdentifyStgJit(SRxLOBData *pLOBData);
 	void PIdentifyStbDwl( SRxLOBData *pLOBData );
 	void PIdentifyStbStb( SRxLOBData *pLOBData );
+    void FIdentifyAgiAgi( SRxLOBData *pLOBData );
 	void FIdentifyAgiPat( SRxLOBData *pLOBData );
 	void FIdentifyPatPat( SRxLOBData *pLOBData );
 	// void ConvertToIdentifyAet( SRxLOBData *pLOBData );
@@ -262,7 +267,7 @@ private:
  	void SortThreatLevel();
  	void IdentifyPriority();
  	void IdentifyMatchRatio();
- 	UINT ArrangeLib2( SRadarMode **inLib, UINT count, enFREQ_TYPE frqType, STR_LIB_RANGE *pLibRange );
+ 	UINT ArrangeLib2( SRadarMode **inLib, UINT count, ENUM_AET_FRQ_TYPE enFrqType, STR_LIB_RANGE *pLibRange );
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
@@ -272,7 +277,6 @@ private:
  	bool LoadCEDLibrary();
  	bool LoadEOBLibrary();
     void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
-
     char *GetRadarModeName( int iRadarModeIndex );
 
 	inline SThreat *GetThreatData( int iThreatIndex ) { return & m_pThreat[iThreatIndex-1]; }
@@ -370,7 +374,7 @@ private:
  	int IdentifyPosition( SRxABTData *pABTData );
  
  	inline UINT GetCoIdCandi() { return m_toLib; }
- 	inline void ClearH000() { m_vecH000.clear(); }
+ 	//inline void ClearH000() { m_vecH000.clear(); }
 
     inline SRadarMode * GetRadarMode( int iRadarModeIndex ) { return iRadarModeIndex==0 ? NULL : & m_pRadarMode[iRadarModeIndex-1]; }
     inline SThreat * GetThreat( int iIndex ) { return iIndex==0 ? NULL : & m_pThreat[iIndex-1]; }
@@ -431,7 +435,7 @@ protected:
     float CalcFreqTypeMatchRatio(SRadarMode *pRadarMode);
     float CalcPRITypeMatchRatio(SRadarMode *pRadarMode);
 
-	BOOL CheckFreqType( enFREQ_TYPE frqType, SRadarMode *pRadarMode );
+	BOOL CheckFreqType(ENUM_AET_FRQ_TYPE enFrqType, SRadarMode *pRadarMode );
 
 	void InitRadarModeData();
 

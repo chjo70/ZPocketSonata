@@ -69,6 +69,8 @@
 #endif
 #define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
 
+#define BLK_CEDEOB_SQLITE_FILENAME	(const char *) "cedeob_blank.sqlite3"
+
 // 위협정보 폴더 위치
 #ifdef __ZYNQ_BOARD__
 #define EMITTER_SQLITE_FOLDER       (const char *) "/home/root"
@@ -534,18 +536,25 @@
 /*! \bug  20 개에서 10개로 수정함.
     \date 2006-07-27 09:28:10, 조철희
 */
-#define     _spAnalMinPulseStableEmitter      (5)    
-#define     _spAnalMinPulseJitterEmitter      (10)
+#define _spAnalMinPulseStableEmitter        (5)    
+#define _spAnalMinPulseJitterEmitter        (10)
+#define _spAnalMin2PulseJitterEmitter		(7)
 
-#define     _spMaxAoaQueueSize                4
+// 지터 신호에 대해서 최소 누락을 정의해서 에미터로 인정한다.
+#define _spAnalMinMissPulseJitterEmitter    (1)
+#define _spAnalMinMissRatioJitterEmitter    (70)
+
+#define _spMaxAoaQueueSize					(4)
+
+#define _spMinDiffDOA						(IAOACNV(20))
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Dwell 단 간의 간격은 이웃한 PRI 합의 배수로 설정한다.
 // date : 2013-12-04 14:25:01, 조철희
-#define			DWELL_PRI_MARGIN									(1.5)
+#define	DWELL_PRI_MARGIN					(1.5)
 
 // 수신기 개수
-#define			ALL_BAND											5
+#define	ALL_BAND							(5)
 
 // 에미터 구조체 정의
 #define	_spOverlapCoEMT     _spMaxEMTNum

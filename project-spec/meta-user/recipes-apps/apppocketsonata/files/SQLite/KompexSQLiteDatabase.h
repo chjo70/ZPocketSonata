@@ -288,7 +288,7 @@ namespace Kompex
 		//! Callback function for ActivateTracing() [sqlite3_trace]
 		static void TraceOutput(void *ptr, const char *sql);
 		//! Callback function for ActivateProfiling() [sqlite3_profile]
-		static void ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 time);
+		static void ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 tTime);
 		//! Build and modify the structure of your tables and other objects in the memory database.
 		static int ProcessDDLRow(void *db, int nColumns, char **values, char **columns);
 		//! Insert all data from the origin database into the memory database.

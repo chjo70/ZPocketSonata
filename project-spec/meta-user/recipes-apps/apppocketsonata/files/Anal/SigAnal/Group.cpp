@@ -50,7 +50,7 @@ CGroup::CGroup( unsigned int uiCoMaxPdw )
     int i=0;
     BOOL bRet=TRUE;
 
-    m_uiMaxPdw = min( (int) uiCoMaxPdw, MAX_PDW );
+    m_uiMaxPdw = min( (int) uiCoMaxPdw, (int) MAX_PDW );
 
 	// 주파수 해상도 계산용, HARMONIC MARGIN
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -324,7 +324,7 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, int iBand )
             *pMaxChannel++ = ( unsigned char ) pPDW->x.ps.iChannel;
         }
 
-        *pBand++ = iBand; // 0; // g_enBoardId;
+        *pBand++ = (UCHAR) iBand; // 0; // g_enBoardId;
 
 
     }
@@ -501,6 +501,7 @@ void CGroup::PrintAllGroup()
     STR_PW_GROUP *pPwGr;
 
     if( ! IsLastGroup( uiIdxFrqAoaPw ) ) {
+        Log( enDebug, "=====================================================================================================" );
         Log( enNormal, "그룹화 총 개수 : %d" , m_PwGroups.uiCount );
 
         while (!IsLastGroup( uiIdxFrqAoaPw )) {
@@ -555,7 +556,7 @@ void CGroup::PrintAllGroup()
 }
 
 /**
- * @brief     PrintGroup
+ * @brief     현재 그룹화 인덱스를 중심으로 그룹화 정보를 출력한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -573,22 +574,23 @@ void CGroup::PrintGroup()
     pFrqGr = & m_FrqGroups.stFreq[ pPwGr->frq_idx ];
     pAoaGroup = & m_AoaGroups.aoa[ pFrqGr->aoa_idx ];
 
-    //Log( enDebug, "=====================================================================================================" );
+    Log( enDebug, "=====================================================================================================" );
     //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
     //LOG_LINEFEED;
     Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->from_aoa ), I_AOACNV( pAoaGroup->to_aoa ), I_FRQMhzCNV( m_nBand, pFrqGr->from_frq ), I_FRQMhzCNV( m_nBand, pFrqGr->to_frq ), I_PWCNV( pPwGr->from_pw ), I_PWCNV( pPwGr->to_pw ) );
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CGroup::MakeFreqGroup
-//! \author   조철희
-//! \return   void
-//! \version  1.37
-//! \date     2006-07-27 16:29:47
-//! \warning
-//
+/**
+ * @brief     주파수 그룹화를 수행한다.
+ * @param     bool bForce1Group
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-07-27 16:29:47
+ * @warning
+ */
 void CGroup::MakeFreqGroup( bool bForce1Group )
 {
     int j;
@@ -822,8 +824,8 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
             pAoaGroup->to_aoa = (MAX_AOA + pAoaGroup->to_aoa + frstVal) % MAX_AOA;
             pAoaGroup->from_aoa = (MAX_AOA + pAoaGroup->from_aoa + frstVal) % MAX_AOA;
 
-            pAoaGroup->from_bin = (( UINT ) pAoaGroup->from_aoa) >> _sp.np.Aoa_Shift_Cnt;
-            pAoaGroup->to_bin = (( UINT ) pAoaGroup->to_aoa) >> _sp.np.Aoa_Shift_Cnt;
+            pAoaGroup->from_bin = (( UINT ) pAoaGroup->from_aoa) >> AOA_SHIFT_COUNT;
+            pAoaGroup->to_bin = (( UINT ) pAoaGroup->to_aoa) >> AOA_SHIFT_COUNT;
 
             memcpy( pAoaGroup->pIndex, pStatGrPdwIndex->pIndex, sizeof( PDWINDEX )*pStatGrPdwIndex->uiCount );
             pAoaGroup->iCount = pStatGrPdwIndex->uiCount;
@@ -851,8 +853,8 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
                 // 방위 그룹화의 방위 영역 설정
                 pAoaGroup->from_aoa = pCluster->stAOA.iLow;
                 pAoaGroup->to_aoa = pCluster->stAOA.iHgh;
-                pAoaGroup->from_bin = pCluster->stAOA.iLow >> _sp.np.Aoa_Shift_Cnt;
-                pAoaGroup->to_bin = pCluster->stAOA.iHgh >> _sp.np.Aoa_Shift_Cnt;
+                pAoaGroup->from_bin = pCluster->stAOA.iLow >> AOA_SHIFT_COUNT;
+                pAoaGroup->to_bin = pCluster->stAOA.iHgh >> AOA_SHIFT_COUNT;
 
                 memcpy( pAoaGroup->pIndex, pCluster->index, sizeof( PDWINDEX )*pCluster->iCount );
                 pAoaGroup->iCount = pCluster->iCount;
@@ -871,15 +873,15 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
         BOOL bRet;
 
         int peak_index;
-        int peak_count;
+        PDWINDEX peak_count;
 
         // 방위 히스토그램 계산
-        MakeHist( pStatGrPdwIndex, &AOA[0], _sp.np.Aoa_Shift_Cnt, &m_AoaHist );
+        MakeHist( pStatGrPdwIndex, &m_pAOA[0], AOA_SHIFT_COUNT, &m_AoaHist );
 
         for( ;; ) {
             pAoaGroup = &m_AoaGroups.aoa[m_AoaGroups.uiCount];
 
-            if( m_AoaGroups.uiCount > MAX_AOA_GROUP ) {
+            if( m_AoaGroups.uiCount > MAX_AGRT ) {
                 printf( "\n Over Aoa Group exceed !" );
                 WhereIs;
                 break;
@@ -897,15 +899,15 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
             }
 
             // 방위 범위 구하기
-            bRet = GetAOARange( peak_index, _sp.np.Aoa_Shift_Cnt, pAoaGroup );
+            bRet = GetAOARange( peak_index, AOA_SHIFT_COUNT, pAoaGroup );
 
-            FilterParam( pStatGrPdwIndex, &AOA[0], pAoaGroup );
+            FilterParam( pStatGrPdwIndex, &m_pAOA[0], pAoaGroup );
 
             ReDrawAoaHist( pAoaGroup );
 
             ++m_AoaGroups.uiCount;
 
-            if( bRet && pAoaGroup->iCount >= _spAnalMinPulseCount ) {
+            if( bRet && pAoaGroup->iCount >= (int) _spAnalMinPulseCount ) {
                 break;
             }
         }
@@ -1754,17 +1756,18 @@ int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
 }
 
 #ifndef _ISODATA_AOA_GROUP_
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup::GetAOARange
-// 반환되는 형  : BOOL ; TRUE이면 전방위 그룹화 FALSE 이면 단일 방위 그룹화
-// 함 수 인 자  : int peak_index
-// 함 수 인 자  : int nShift
-// 함 수 인 자  : STR_AOA_GROUP *pAoaGroup
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-04-27 01:32:33
-//
-//##ModelId=42757D4D0163
+/**
+ * @brief     방위 그룹화된 정보로 필터링해서 PDWINDEX 를 구성한다.
+ * @param     int peak_index
+ * @param     int nShift
+ * @param     STR_AOA_GROUP * pAoaGroup
+ * @return    BOOL
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2005-04-27 01:32:33
+ * @warning
+ */
 BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 {
     int i;
@@ -1775,6 +1778,8 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
     int co_thresh;
 
     int thr;
+
+	BOOL bRet=FALSE;
 
     // 4 시그마 범위
     thr = ( m_stSigma1Aoa[m_nBand] * 4 ) >> nShift;
@@ -1890,18 +1895,20 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
     to_bin = aoa_bin;
 
     // margin에 의한 전방위그룹 체크
-    if( pAoaGroup->bOverAoa && ( to_bin >= from_bin ) )
-        return TRUE;
+	if (pAoaGroup->bOverAoa && (to_bin >= from_bin)) {
+		bRet = TRUE;
+	}
+	else {
+		pAoaGroup->from_bin = from_bin;
+		pAoaGroup->to_bin = to_bin;
+		pAoaGroup->from_aoa = from_bin << nShift;
+		pAoaGroup->to_aoa = to_bin << nShift;
 
-    pAoaGroup->from_bin = from_bin;
-    pAoaGroup->to_bin = to_bin;
-    pAoaGroup->from_aoa = from_bin << nShift;
-    pAoaGroup->to_aoa = to_bin << nShift;
+		pAoaGroup->stat = m_nStat;
+		pAoaGroup->band = m_nBand;
+	}
 
-    pAoaGroup->stat = m_nStat;
-    pAoaGroup->band = m_nBand;
-
-    return FALSE;
+	return bRet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1950,13 +1957,9 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
     UINT max_freq_diff;
 
     // 1 GHz 주파수 값
-#if defined(_ELINT_) || defined(_XBAND_)
-    max_freq_diff = IFRQMhzCNV( 0, MAX_FREQ_DIFF );
-#elif defined(_POCKETSONATA_)
-    max_freq_diff = I_IFRQCNV( g_enBoardId, MAX_FREQ_DIFF );
-#else
-    max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].fRes ) );
-#endif
+    max_freq_diff = IFRQMhzCNV( m_nBand, MAX_FREQ_DIFF );
+    // max_freq_diff = I_IFRQCNV( g_enBoardId, MAX_FREQ_DIFF );
+    //max_freq_diff = abs( (int) IDIV( MAX_FREQ_DIFF, gFreqRes[ m_nBand+1 ].fRes ) );
 
     //////////////////////////////////////////////////////////////////////
     // peak부터 좌로 범위를 설정
@@ -2452,7 +2455,7 @@ BOOL CGroup::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
         pCluster2 = pDstCluster;
 
         // 클러스터 내의 표준편차 이상이고 개수 이상 일때 분리한다.
-        if ( pCluster->bSplit == true && ( pCluster->fDeviation > (float)MAXIMUM_STANDARD_DEVIATION && pCluster->iCount > MINIMUM_NUMBER_OF_SAMPLES ) ) {
+        if ( pCluster->bSplit == true && ( pCluster->fDeviation > (float)MAXIMUM_STANDARD_DEVIATION /* && pCluster->iCount > MINIMUM_NUMBER_OF_SAMPLES */ ) ) {
             pCluster1->iCenter = AddAOA(pCluster->iCenter, UMUL(pCluster->fDeviation, SPLIT_RATIO));
             pCluster2->iCenter = SubAOA(pCluster->iCenter, UMUL(pCluster->fDeviation, SPLIT_RATIO));
 
@@ -2461,7 +2464,7 @@ BOOL CGroup::SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster )
             CalClusterInfo(pCluster2);
 
             // 개수가 적어도 원 클러스터 의 분산 값이 크면 분리하도록 함.
-            if( pCluster1->iCount > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->iCount > MINIMUM_NUMBER_OF_SAMPLES ) {
+            if( true /* pCluster1->iCount > MINIMUM_NUMBER_OF_SAMPLES && pCluster2->iCount > MINIMUM_NUMBER_OF_SAMPLES */ ) {
                 pCluster1->bSplit = true;
                 pCluster2->bSplit = true;
                 // 클러스터 내의 모든 개수가 최소 클러스터 개수보다 커야 분리된다.

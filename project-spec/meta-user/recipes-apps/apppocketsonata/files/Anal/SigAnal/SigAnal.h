@@ -32,7 +32,7 @@ private:
     char *m_pszSQLString;
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    LONG m_lOpInitID;
+    unsigned int m_uiOpInitID;
 
 #endif
 
@@ -88,6 +88,7 @@ protected:
     void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pstPDW, bool bSaveFile );
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
+    void InsertToDB_LOB( SRxLOBData *pLOBData );
 
 public:
     CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
@@ -109,9 +110,12 @@ public:
 
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
     void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB=true );
+    void InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert );
+
+    bool InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq );
 
     //! 출력 관련 함수
-    void DISP_FineAet(SRxLOBData *pLOB);
+    void DISP_FineLOB(SRxLOBData *pLOB);
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
     /**
@@ -124,7 +128,7 @@ public:
      * @warning
      */
     inline unsigned int GetOpInitID() {
-        return m_lOpInitID;
+        return m_uiOpInitID;
     }
 
 #endif

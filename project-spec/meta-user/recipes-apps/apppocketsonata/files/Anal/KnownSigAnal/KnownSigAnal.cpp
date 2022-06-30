@@ -315,24 +315,6 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKnownSigAnal::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-07-28 11:49:37
-//
-//##ModelId=42E85F3401B8
-void CKnownSigAnal::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
-{
-    for (unsigned int i = 0; i < uiCount; ++i) {
-        MARK[*pPdwIndex++] = usMarkType;
-    }
-}
-
 #ifdef _POCKETSONATA_
 #elif defined(_ELINT)
 #else

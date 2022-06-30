@@ -31,10 +31,10 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
         m_pDatabase = new Kompex::SQLiteDatabase(pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
 
     }
-    catch (Kompex::SQLiteException &exception) {
+    catch (Kompex::SQLiteException &sException) {
         std::cerr << "\nException Occured" << std::endl;
-        exception.Show();
-        std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+		sException.Show();
+        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
     }
 
     // SQLITE 파일명 생성하기
@@ -69,9 +69,8 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
 
 }
 
-
 /**
- * @brief     ~CSigAnal
+ * @brief     소멸자 처리를 한다.
  * @return    
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -112,11 +111,8 @@ void CSigAnal::Initialize()
 
 }
 
-
-
-
 /**
- * @brief     InitResolution
+ * @brief     PDW 데이터의 단위를 장치에 맞ㄱ게 설정한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -178,16 +174,15 @@ void CSigAnal::InitResolution()
 #endif
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::SaveRemainedPdwFile
-        \author   조철희
-        \return   void
-        \version  0.0.1
-        \date     2008-01-22 12:40:25
-        \warning
-*/
+/**
+ * @brief     분석하여 LOB 이외의 PDW 데이터를 저장한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2008-01-22 12:40:25
+ * @warning
+ */
 void CSigAnal::SaveRemainedPdwFile()
 {
 #ifdef _DEBUG_MAKEPDW_NO
@@ -264,14 +259,16 @@ void CSigAnal::SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pPDWData,
         }
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData( &m_stSavePDWData, -(GetCoGroup()+1), false );
+        InsertRAWData( &m_stSavePDWData, -1, false );
     }
 }
 
 /**
- * @brief     SaveEmitterPdwFile
+ * @brief     LOB 데이터에 해당되는 PDW 데이터만 저장한다.
  * @param     STR_EMITTER * pEmitter
+ * @param     _PDW * pstPDW
  * @param     int iPLOBID
+ * @param     bool bSaveFile
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -306,7 +303,7 @@ void CSigAnal::SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
 
 #ifdef _MSSQL_
 /**
- * @brief     GetCODBCDatabase
+ * @brief     데이터베이스 포인터를 리턴한다.
  * @return    CODBCDatabase *
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -322,7 +319,7 @@ CODBCDatabase *CSigAnal::GetCODBCDatabase()
 #endif
 
 /**
- * @brief     InitDataFromDB
+ * @brief     OPINITID 값을 DB 에서 로딩하여 다음 값으로 설장한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -339,10 +336,10 @@ void CSigAnal::InitDataFromDB()
     char buffer[400];
 
     sprintf_s(buffer, sizeof(buffer), "select max(OP_INIT_ID) from LOBDATA");
-    m_lOpInitID = GetINTData(buffer) + 1;
+    m_uiOpInitID = GetINTData(buffer) + 1;
 
     sprintf_s(buffer, sizeof(buffer), "select max(OP_INIT_ID) from RAWDATA");
-    m_lOpInitID = _max(m_lOpInitID, GetINTData(buffer) + 1);
+    m_uiOpInitID = max(m_uiOpInitID, (unsigned int) GetINTData(buffer) + 1);
 
 #endif
 
@@ -355,8 +352,11 @@ void CSigAnal::InitDataFromDB()
 }
 
 /**
- * @brief     PLOBID 값으로 PDW 데이터를 DB 및 파일에 저장한다.
+ * @brief     InsertRAWData
  * @param     STR_PDWDATA * pPDWData
+ * @param     int iGroupID
+ * @param     int iPLOBID
+ * @param     bool bInsertDB
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -399,10 +399,20 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
     if ( /*pstTime != NULL &&*/ bRet == true) {
         if (m_bSaveFile == true) {
             // 2. 파일명 생성하기
-            strftime(buffer, 100, "%Y-%m-%d_%H_%M_%S", pstTime);
+            strftime(buffer, 100, "%Y-%m-%d %H_%M_%S", pstTime);
 
-            sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d%s"), pPDWData->GetCollectorID(), buffer, GetPDWID(), iPLOBID, PDW_EXT);
-            //sprintf(m_szRawDataFilename, _T("%d_%s_%010d_%d.%s.%s"), pPDWData->x.ps.uiBoardID, buffer, GetPDWID(), iPLOBID, PDW_TYPE, MIDAS_EXT);
+            // 순수 신호 수집한 데이터
+            if( iPLOBID == 0 ) {
+                sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), PDW_EXT );
+            }
+            // 그룹화 신호 수집 데이터
+            else if( iPLOBID < 0 ) {
+                sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_[G%02d]%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), PDW_EXT );
+            }
+            // 분석 신호 수집 데이터
+            else {
+                sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_[G%02d][L%02d]%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), iPLOBID, PDW_EXT );
+            }
 
             sprintf(szRawDataPathname, _T("%s/%s"), szDirectory, m_szRawDataFilename);
             m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, & pPDWData->x, pPDWData->GetTotalPDW() );
@@ -428,7 +438,9 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
 /**
  * @brief     데이터베이스에 PDW 테이블에 레코드를 추가한다.
  * @param     STR_PDWDATA * pPDWData
+ * @param     int iPLOBID
  * @return    bool
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/23 23:33:21
@@ -447,23 +459,23 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 #ifdef _MSSQL_
 #ifdef _POCKETSONATA_
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
-                                                 '%ld', '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-            m_lOpInitID, GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
+                                                 '%d', '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
+            m_uiOpInitID, GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
 
 #elif defined(_ELINT_)
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, GetPDWID(), iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+                                                 '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            m_uiOpInitID, GetPDWID(), iPLOBID, pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 #elif defined(_XBAND_)
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, GetPDWID(), iPLOBID, pPDWData->x.xb.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+                                                 '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            m_uiOpInitID, GetPDWID(), iPLOBID, pPDWData->x.xb.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 #else
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, GetPDWID(), pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+                                                 '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            m_uiOpInitID, GetPDWID(), pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 
 #endif
@@ -485,8 +497,8 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
             GetPDWID(), iPLOBID, pPDWData->x.xb.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 #else
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
-                                                 '%ld', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-            m_lOpInitID, GetPDWID(), pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+                                                 '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
+            m_uiOpInitID, GetPDWID(), pPDWData->x.el.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 #endif
 
@@ -499,7 +511,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
         CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
 
         theRS.Open(m_pszSQLString);
-        Log(enNormal, ".InsertRAW[O%d, P%d, P%d]", m_lOpInitID, GetPDWID(), iPLOBID);
+        Log(enNormal, ".InsertRAW[O%d, P%d, P%d]", m_uiOpInitID, GetPDWID(), iPLOBID);
 
         theRS.Close();
 
@@ -522,12 +534,12 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
                 stmt.FreeQuery();
 
             }
-            catch (Kompex::SQLiteException &exception) {
+            catch (Kompex::SQLiteException &sException) {
                 LOGMSG1(enError, " m_pszSQLString[%s]", m_pszSQLString);
                 bRet = false;
                 std::cerr << "\nException Occured" << std::endl;
-                exception.Show();
-                std::cerr << "SQLite result code: " << exception.GetSqliteResultCode() << std::endl;
+				sException.Show();
+                std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
             }
         }
         else {
@@ -550,7 +562,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 
 
 /**
- * @brief     DISP_FineAet
+ * @brief     LOB 데이터를 출력한다.
  * @param     SRxLOBData * pLOB
  * @return    void
  * @exception
@@ -559,7 +571,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
  * @date      2022-04-20, 19:36
  * @warning
  */
-void CSigAnal::DISP_FineAet(SRxLOBData *pLOB)
+void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
 {
     char buffer[500];
 
@@ -616,9 +628,375 @@ void CSigAnal::DISP_FineAet(SRxLOBData *pLOB)
 
 #endif
 
-    sprintf(&buffer[iCnt], " [%3d]", pLOB->iNumOfPDW);
+    sprintf(&buffer[iCnt], " [%3d/%3d]", pLOB->iNumOfPDW, pLOB->iTotalOfPDW );
 
     //printf( "\n%s", buffer );
     Log(enNormal, "\t%s", buffer);
+
+}
+
+/**
+ * @brief     LOB 데이터를 DB에 삽입한다.
+ * @param     SRxLOBData * pLOBData
+ * @param     int iCoLOBData
+ * @param     bool bDBInsert
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-02, 11:11
+ * @warning
+ */
+void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert )
+{
+
+    if( bDBInsert == true ) {
+        int i;
+
+        for( i = 0 ; i < iCoLOBData ; ++i ) {
+            InsertToDB_LOB( pLOBData );
+
+            // FREQ 레벨값 저장
+            if( pLOBData->iFreqPositionCount >= _spTwo ) {
+                InsertToDB_Position( pLOBData, true );
+            }
+            // PRI 레벨값 저장
+            if( pLOBData->iPRIPositionCount >= _spTwo ) {
+                InsertToDB_Position( pLOBData, false );
+            }
+
+            ++pLOBData;
+        }
+    }
+
+}
+
+/**
+ * @brief     주파수 및 PRI POSITION 값을 DB에 삽입한다.
+ * @param     SRxLOBData * pLOBData
+ * @param     bool bFreqSeq
+ * @return    bool
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-05, 17:02
+ * @warning
+ */
+bool CSigAnal::InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq )
+{
+    bool bRet = true;
+
+#if defined(_MSSQL_)
+    int i;
+    size_t szIndex;
+
+    m_pszSQLString[0] = NULL;
+
+    strcpy( m_pszSQLString, "INSERT INTO LOB_POSITION ( OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, SEQ_TYPE, POSITION_COUNT, " );
+    szIndex = strlen( m_pszSQLString );
+    for( i = 1 ; i < pLOBData->iFreqPositionCount || i < pLOBData->iPRIPositionCount ; ++i ) {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "SEQ_%02d, ", i );
+    }
+    szIndex += sprintf( &m_pszSQLString[szIndex], "SEQ_%02d ) values ( ", i );
+
+    szIndex += sprintf( &m_pszSQLString[szIndex], "'%ld', '%ld', '%ld', '%ld', '%ld', '%ld', '%d', ", m_uiOpInitID, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, bFreqSeq );
+    if( bFreqSeq == true ) {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "'%d', ", pLOBData->iFreqPositionCount );
+        for( i = 0 ; i < pLOBData->iFreqPositionCount - 1 ; ++i ) {
+            szIndex += sprintf( &m_pszSQLString[szIndex], "'%f', ", pLOBData->fFreqSeq[i] );
+        }
+        sprintf( &m_pszSQLString[szIndex], "'%f' )", pLOBData->fFreqSeq[i] );
+    }
+    else {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "'%d', ", pLOBData->iPRIPositionCount );
+        for( i = 0 ; i < pLOBData->iPRIPositionCount - 1 ; ++i ) {
+            szIndex += sprintf( &m_pszSQLString[szIndex], "'%f', ", pLOBData->fPRISeq[i] );
+        }
+        sprintf( &m_pszSQLString[szIndex], "'%f' )", pLOBData->fPRISeq[i] );
+
+    }
+
+#elif defined(_SQLITE_)
+    int i;
+    size_t szIndex;
+
+    m_pszSQLString[0] = NULL;
+
+    strcpy( m_pszSQLString, "INSERT INTO LOB_POSITION ( SEQ_TYPE, PDWID, PLOBID, LOBID, ABTID, AETID, POSITION_COUNT, " );
+    szIndex = strlen( m_pszSQLString );
+    for( i = 1 ; i < pLOBData->iFreqPositionCount || i < pLOBData->iPRIPositionCount ; ++i ) {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "SEQ_%02d, ", i );
+    }
+    szIndex += sprintf( &m_pszSQLString[szIndex], "SEQ_%02d ) values ( ", i );
+
+    if( bFreqSeq == true ) {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "'%d', '%d', '%d', '%d', '%d', '%d', '%d', ", bFreqSeq, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iFreqPositionCount );
+        for( i = 0 ; i < pLOBData->iFreqPositionCount - 1 ; ++i ) {
+            szIndex += sprintf( &m_pszSQLString[szIndex], "'%f', ", pLOBData->fFreqSeq[i] );
+        }
+        sprintf( &m_pszSQLString[szIndex], "'%f' )", pLOBData->fFreqSeq[i] );
+    }
+    else {
+        szIndex += sprintf( &m_pszSQLString[szIndex], "'%d', '%d', '%d', '%d', '%d', '%d', '%d', ", bFreqSeq, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->iPRIPositionCount );
+        for( i = 0 ; i < pLOBData->iPRIPositionCount - 1 ; ++i ) {
+            szIndex += sprintf( &m_pszSQLString[szIndex], "'%f', ", pLOBData->fPRISeq[i] );
+        }
+        sprintf( &m_pszSQLString[szIndex], "'%f' )", pLOBData->fPRISeq[i] );
+
+    }
+
+#endif
+
+#ifdef _MSSQL_
+    if( m_pszSQLString[0] != NULL ) {
+
+        DECLARE_BEGIN_CHECKODBC
+
+        CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+        theRS.Open( m_pszSQLString );
+        theRS.Close();
+
+        DECLARE_END_CHECKODBC
+    }
+
+#elif _SQLITE_ 
+    if( m_pszSQLString[0] != NULL ) {
+
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+            stmt.SqlStatement( m_pszSQLString );
+            Log( enDebug, ".InsertLOB_Position[L%d][C%d/%d]", pLOBData->uiLOBID, pLOBData->iFreqPositionCount, pLOBData->iPRIPositionCount );
+
+            // do not forget to clean-up
+            stmt.FreeQuery();
+        }
+        catch( Kompex::SQLiteException &sException) {
+            bRet = false;
+            std::cerr << "\nException Occured" << std::endl;
+			sException.Show();
+            std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        }
+    }
+
+#else
+
+#endif
+
+    return bRet;
+
+}
+
+/**
+ * @brief     LOB 데이터를 DB에 삽입한다.
+ * @param     SRxLOBData * pLOBData
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-02, 11:36
+ * @warning
+ */
+void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
+{
+    bool bRet = true;
+
+#ifdef _MSSQL_
+    char buffer[100] = { 0 };
+
+    m_pszSQLString[0] = NULL;
+
+    CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+
+#ifdef _POCKETSONATA_
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
+                                                OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
+                                                SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
+                                                FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, \
+                                                PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, \
+                                                PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, NUM_PDW, \
+                                                LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) \
+                                                values( '%ld', '%ld', '%ld', '%ld', '%ld', '%ld', '%s', '%s', '%d', \
+                                                '%d', '%f', '%f', '%f', '%d', \
+                                                '%d', '%d', '%f', '%f', '%f', '%f', '%d', \
+                                                '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', \
+                                                '%f', '%f', '%f', '%f', '%f', '%f', '%d', \
+                                                '%f', '%f', '%s', '%d' )", \
+        m_uiOpInitID, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, buffer, pLOBData->tiContactTimems, \
+        pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->iFreqPositionCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->iNumOfPDW, \
+        pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
+#else
+    sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
+												OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
+												SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_MODE, DI_RATIO, \
+												FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_MODE, FREQ_POSITION_COUNT, \
+												PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, \
+												PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, IS_STORED_PDW, NUM_PDW, \
+												COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) \
+												values( '%ld', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%d', \
+												'%d', '%f', '%f', '%f', '%f', '%d', \
+												'%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', \
+												'%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', \
+												'%f', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', \
+												'%d', '%f', '%f', '%s', '%d' )", \
+        m_uiOpInitID, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, buffer, pLOBData->tiContactTimems, \
+        pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOAMode, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqMode, pLOBData->iFreqPositionCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIMode, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, \
+        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWMode, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPAMode, m_bSaveFile, pLOBData->iNumOfPDW, \
+        pLOBData->iCollectorID, pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
+
+#endif
+
+#elif _SQLITE_
+    char buffer[100] = { 0 };
+
+    m_pszSQLString[0] = NULL;
+
+    CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+
+#if defined(_POCKETSONATA_)
+    sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
+							PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, \
+							TERTIARY_ELNOT, TERTIARY_MODECODE, MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, POLIZATION, RATIOOFPOL, \
+							SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+							FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+							PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+							PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+							PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+							SCAN_TYPE, SCAN_PRD, \
+							INTRA_TYPE, INTRA_TYPE_DETAIL, INTRA_FRQ_MEAN, INTRA_FRQ_MIN, INTRA_FRQ_MAX, INTRA_FRQ_DEVIATION, \
+							LATITUDE, LONGITUDE, PITCH, ROLL, HEADING, ALTITUDE, IS_VALIDITY, \
+							IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+							( %d, %d, %d, %d, %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', \
+							'%s', '%s', '%s', '%s', '%s', %d, %d, %d, \
+							%d, %f, %f, %f, %f, %d, \
+							%d, %d, %f, %f, %f, %f, %f, %d, %d, \
+							%d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+							%f, %f, %f, %f, \
+							%f, %f, %f, %f, \
+							%d, %f, \
+							%d, %d, %f, %f, %f, %f, \
+							%f, %f, %f, %f, %f, %f, %d, \
+							%d, %d, %d )", \
+        pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, \
+        pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, \
+        pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, \
+        pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, \
+        pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, \
+        pLOBData->iRadarModeIndex, pLOBData->iPolarization, pLOBData->iRatioOfPOL, \
+        pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, \
+        pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, \
+        pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+        pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPWDeviation, \
+        pLOBData->iScanType, pLOBData->fScanPeriod, \
+        pLOBData->iMOPType, pLOBData->iDetailMOPType, pLOBData->fMOPMaxFreq, pLOBData->fMOPMinFreq, pLOBData->fMOPMeanFreq, pLOBData->fMOPFreqDeviation, \
+        pLOBData->fLatitude, pLOBData->fLongitude, pLOBData->fPitchAngle, pLOBData->fRollAngle, pLOBData->fHeadingAngle, pLOBData->fAltitude, pLOBData->iValidity, \
+        0, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+
+#else
+    sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
+                             SEQ_NUM, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, \
+                             PRIMARY_ELNOT, PRIMARY_MODECODE, SECONDARY_ELNOT, SECONDARY_MODECODE, \
+                             TERTIARY_ELNOT, TERTIARY_MODECODE, \
+                             MODULATION_CODE, RADARMODE_NAME, NICK_NAME, FUNC_CODE, RADARMODE_INDEX, \
+                             SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, \
+                             FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_POSITION_COUNT, FREQ_ELEMENT_COUNT, \
+                             PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_DEV, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PRI_ELEMENT_COUNT, \
+                             PW_MEAN, PW_MIN, PW_MAX, PW_DEV, \
+                             PA_MEAN, PA_MIN, PA_MAX, PA_DEV, \
+                             LAT, LONG, \
+                             IS_DATA_STORE, IS_FILTERED, NUM_PDW, NUM_IQ ) VALUES \
+                             ( %d, %d, %d, %d, %d, %d, \"%s\", %d, \
+                             \"%s\", \"%s\", \"%s\", \"%s\", \
+                             \"%s\", \"%s\", \
+                             \"%s\", \"%s\", \"%s\", \"%s\", %d, \
+                             %d, %f, %f, %f, %f, %f, %d, \
+                             %d, %d, %f, %f, %f, %f, %f, %d, %d, \
+                             %d, %d, %f, %f, %f, %f, %f, %f, %d, %d, \
+                             %f, %f, %f, %f, \
+                             %f, %f, %f, %f, \
+                             %f, %f, \
+                             %d, %d, %d, %d )", \
+        m_nSeqNum, pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, \
+        pLOBData->szPrimaryELNOT, pLOBData->szPrimaryModeCode, pLOBData->szSecondaryELNOT, pLOBData->szSecondaryModeCode, \
+        pLOBData->szTertiaryELNOT, pLOBData->szTertiaryModeCode, \
+        pLOBData->szModulationCode, pLOBData->szRadarModeName, pLOBData->szNickName, pLOBData->szFuncCode, pLOBData->iRadarModeIndex, \
+        pLOBData->iSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->fDOADeviation, pLOBData->fDOASDeviation, pLOBData->iDIRatio, \
+        pLOBData->iFreqType, pLOBData->iFreqPatternType, pLOBData->fFreqPatternPeriod, \
+        pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->fFreqDeviation, pLOBData->iFreqPositionCount, pLOBData->iFreqElementCount, \
+        pLOBData->iPRIType, pLOBData->iPRIPatternType, pLOBData->fPRIPatternPeriod, \
+        pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIDeviation, pLOBData->fPRIJitterRatio, pLOBData->iPRIPositionCount, pLOBData->iPRIElementCount, \
+        pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPWDeviation, \
+        pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->fPADeviation, \
+        pLOBData->fLatitude, pLOBData->fLongitude, \
+        pLOBData->iIsStoreData, pExt->aetAnal.isFiltered, pLOBData->iNumOfPDW, pLOBData->iNumOfIQ );
+
+#endif
+
+#else
+
+#endif
+
+    // 여기서 부터 SQL 문을 실행 합니다.
+#ifdef _MSSQL_
+    //if( m_pszSQLString[0] != NULL ) {
+        DECLARE_BEGIN_CHECKODBC
+
+        char buffer[100];
+
+        CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
+
+        CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+
+        theRS.Open( m_pszSQLString );
+        Log( enDebug, ".InsertLOB[O%d][A%d][B%d][L%d]", m_uiOpInitID, pLOBData->uiAETID, pLOBData->uiABTID, pLOBData->uiLOBID );
+
+        theRS.Close();
+
+        DECLARE_END_CHECKODBC
+//     }
+//     else {
+//         bRet = false;
+//     }
+#elif _SQLITE_  
+    if( m_pszSQLString[0] != NULL ) {
+        try {
+            Kompex::SQLiteStatement stmt( m_pDatabase );
+            stmt.SqlStatement( m_pszSQLString );
+            Log( enDebug, ".InsertLOB[A%d][B%d][L%d]", pLOBData->uiAETID, pLOBData->uiABTID, pLOBData->uiLOBID );
+
+            if( pLOBData->iRadarModeIndex > 0 ) {
+                stmt.SqlStatement( m_pszSQLString );
+                //m_pIdentifyAlg->UpdateRadarMode( pLOBData );
+            }
+
+            // do not forget to clean-up
+            stmt.FreeQuery();
+
+        }
+        catch( Kompex::SQLiteException &sException) {
+            LOGMSG1( enError, " m_pszSQLString[%s]", m_pszSQLString );
+            bRet = false;
+            std::cerr << "\nException Occured" << std::endl;
+			sException.Show();
+            std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        }
+    }
+    else {
+        bRet = false;
+    }
+
+#else
+
+#endif
+
+    return;
 
 }

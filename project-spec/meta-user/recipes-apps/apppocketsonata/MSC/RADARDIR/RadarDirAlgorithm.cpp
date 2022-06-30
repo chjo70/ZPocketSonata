@@ -88,11 +88,11 @@ namespace RadarDirAlgotirhm
 	 * @date      2021-07-10, 14:28
 	 * @warning
 	 */
-	void RadarDirAlgotirhm::Start( STR_PDWDATA *pPDWData )
+	void RadarDirAlgotirhm::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 	{
 		
 		if( gpNewSigAnal != NULL ) {
-			gpNewSigAnal->Start( pPDWData );
+			gpNewSigAnal->Start( pPDWData, bDBInsert );
 		}
 		else {
 			printf( "\n Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다.!!" );
@@ -147,7 +147,7 @@ namespace RadarDirAlgotirhm
 	}
 
 	/**
-	 * @brief     GetLOBData
+	 * @brief     LOB 데이터를 리턴한다.
 	 * @return    SRxLOBData *
 	 * @exception
 	 * @author    조철희 (churlhee.jo@lignex1.com)
@@ -158,7 +158,7 @@ namespace RadarDirAlgotirhm
 	SRxLOBData *RadarDirAlgotirhm::GetLOBData()
 	{
 		if( gpNewSigAnal != NULL ) {
-			return gpNewSigAnal->GetLOB();
+			return gpNewSigAnal->GetLOBData();
 		}
 		else {
 			return NULL;
@@ -166,7 +166,7 @@ namespace RadarDirAlgotirhm
 	}
 
 	/**
-	 * @brief     Close
+	 * @brief     탐지 분석 DLL 을 종료 처리한다. 반드시 마지막에 호출해야 한다.
 	 * @return    void
 	 * @exception
 	 * @author    조철희 (churlhee.jo@lignex1.com)
@@ -198,7 +198,7 @@ namespace RadarDirAlgotirhm
 
 
     /**
-     * @brief     GetOPInitID
+     * @brief     OPINITID 값을 리턴한다.
      * @return    LONG
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)

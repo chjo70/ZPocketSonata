@@ -60,17 +60,19 @@ namespace RadarAnlAlgotirhm
 
 	void RadarAnlAlgotirhm::SWInit()
 	{
+		::Log(enNormal, "+---------------------------------------------------+");
+		::Log(enNormal, "레이더 분석의 위협 관리를 초기화 합니다.");
+
 		if( gpEmitterMergeMngr == NULL ) {
 			printf( "\n Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다.!!" );
 		}
 		else {
 			gpEmitterMergeMngr->Init();
 
-			//gpEmitterMergeMngr->InitOfThreat();
 			//gpEmitterMergeMngr->ClearLOBs( pTheThreat->m_nIndex );
-			gpEmitterMergeMngr->InitOfLOBClustering();
+			//gpEmitterMergeMngr->InitOfLOBClustering();
 
-			gpEmitterMergeMngr->GetGlobalSequenceNum();
+			//gpEmitterMergeMngr->GetGlobalSequenceNum();
 
 			//m_sLOBOtherInfo.bUpdate = false;
 
@@ -91,27 +93,27 @@ namespace RadarAnlAlgotirhm
 			gpEmitterMergeMngr->Start();
 
 			if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA || pLOBData->stLOBHeader.uiNumOfLOB == 0 ) {
-				Printf( "\n LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.uiNumOfLOB );
 				Log( enError, "LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.uiNumOfLOB );
 				return;
 			}
 
-			Log( enNormal, "OP_INIT_ID[%ld] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다." , gpEmitterMergeMngr->GetOpInitID(), pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB );
+			Log(enNormal, "OP_INIT_ID[%ld] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다.", pLOBData->stLOBData->uiOpInitID, pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB);
 			pstLOBHeader = & pLOBData->stLOBHeader;
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( unsigned int i=0 ; i < pstLOBHeader->uiNumOfLOB ; ++i ) {
 				if( pstLOBData->aucTaskID[0] != NULL ) {
 					gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
+					gpEmitterMergeMngr->DISP_FineLOB(pstLOBData);
 
 					++ pstLOBData;
 				}
 				else {
-					Printf( "\n %d 번째 LOB 데이터의 과제 정보가 없습니다 !!!" , i+1 );
 					Log( enError, "%d 번째 LOB 데어터의 과제 정보가 없습니다 !!!" , i+1 );
 					break;
 				}
 			}
 
+			
 			gpEmitterMergeMngr->PrintAllABTData();
 
 			Log( enLineFeed, "" );

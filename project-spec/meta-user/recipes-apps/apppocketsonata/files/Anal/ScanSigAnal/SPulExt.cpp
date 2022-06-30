@@ -1,4 +1,4 @@
-﻿// SPulExt.cc: implementation of the CSPulExt class.
+﻿// SPulExt.cpp: 스캔 펄스열 추출 클래스 입니다.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -38,15 +38,15 @@ CSPulExt::~CSPulExt()
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CSPulExt::Init
-//! \author   조철희
-//! \return   void
-//! \version  1.37
-//! \date     2006-08-29 15:17:18
-//! \warning
-//
+/**
+ * @brief     스캔 객체의 초기화를 수행한다.
+ * @return    void
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2006-08-29 15:17:18
+ * @warning
+ */
 void CSPulExt::Init()
 {
 	m_noEMT = m_pScanSigAnal->GetNoEMT();
@@ -57,21 +57,6 @@ void CSPulExt::Init()
     m_pScnAet = m_pScanSigAnal->GetScnAET();
 
 	CPulExt::Init();
-}
-
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSPulExt::MarkToPdwIndex
-// 반환되는 형  : void
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 인 자  : int mark_type
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-27 11:15:54
-//
-void CSPulExt::MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
-{
-	m_pScanSigAnal->MarkToPdwIndex( pPdwIndex, uiCount, usMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -211,7 +196,7 @@ void CSPulExt::DiscardStablePT()
 
     // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
     if( m_uiCoSeg == 1 ) {
-        MarkToPdwIndex( pSeg[0].pdw.pIndex, pSeg[0].pdw.uiCount, EXTRACT_MARK );
+        MarkToPDWIndex( & pSeg[0], EXTRACT_MARK );
         m_uiCoSeg = 0;
         return;
     }

@@ -107,7 +107,21 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #endif
 
 // NSP_MAX_PDW 와 KSP_MAX_PDW 값 중에서 가장 큰 값으로 한다.
-#define	MAX_PDW                     ( _max( _max(NEW_COLLECT_PDW, KWN_COLLECT_PDW), SCN_COLLECT_PDW ) )
+//#define	MAX_PDW                     ( _max( _max(NEW_COLLECT_PDW, KWN_COLLECT_PDW), SCN_COLLECT_PDW ) )
+#if NEW_COLLECT_PDW < KWN_COLLECT_PDW
+#define MAX_PDW		(KWN_COLLECT_PDW)
+
+#else
+#define MAX_PDW		(NEW_COLLECT_PDW)
+
+#endif
+
+#if MAX_PDW < SCN_COLLECT_PDW
+#undef MAX_PDW
+#define MAX_PDW		(SCN_COLLECT_PDW)
+#else
+
+#endif
 
 
 /*! \bug  탐지 분석에 기본 지터율 추출을 최대 53% 까지 추출하게 함.
@@ -155,13 +169,10 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_FREQ_DEVIATION		    (500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define   _spAOAmax                 0x1FF
-#define		_spAmpmax				0xFF
+#define AOA_SHIFT_COUNT             (9)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
-//#define   _spAOAres       (2*0.351562)		// Degree */
-//#define   _spAMPres       (0.25)					// dB */
-//#define   _spTOAres       (0.000000025)		// SEC(25 ns) */
-//#define   _spPWres        (25.)						// pw res.
+//#define _spAOAmax                   (0x1FF)
+//#define _spAmpmax				    (0xFF)
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
@@ -179,6 +190,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	FREQ_WIDE_MHZ               IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
 
 #define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+#define AOA_SHIFT_COUNT             (9)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
 #define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
 
@@ -208,6 +221,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	FREQ_WIDE_MHZ				80			// 100 MHz
 
 #define	MAX_FREQ_DEVIATION				(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+#define AOA_SHIFT_COUNT             (10)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
 #define   _spAOAmax       0x3FF   // 359.6484375 Degree
 #define		_spAmpmax				0xFF
@@ -296,7 +311,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	OVERLAP_SEG_THRESHOLD		(60)	// 펄스열 겹쳐지는 정도, 이전 값은 80
 
-#define ALL_MERGE									(-1)
+//#define ALL_MERGE									(-1)
 
 // 추적 또는 스캔 Jitter열 펄스열 추출할 때의 Jitter율 마진
 #define	EXTRACT_JITTER_MARGIN						(3)
@@ -334,7 +349,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
-#define FIXED_FREQ_MARGIN				2
+#define FIXED_TYPE_FREQ_MARGIN			10
+#define FIXED_FREQ_MARGIN				5
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
 
 
@@ -363,7 +379,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define CONTI_THR_LOW_PULSE					86		// 연속성 최대 지수, SPS-64의 LONG MODE인경우를 고려. 8개 중에 7개 허용.
 #define CONTI_THR_HIGH_PULSE				60
 
-#define	THRESHOLD_OVERLAP					80		// Overlap 율 ( 중첩된 DTOA / 펄스열 총시간 )
+#define	THRESHOLD_OVERLAP			(60)		// Overlap 율 ( 중첩된 DTOA / 펄스열 총시간 )
 
 // Max Channle 추출하기 위한 최소 펄스 개수
 #define MIN_PULSE_FOR_MAXCHANNEL            20
@@ -386,7 +402,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //#define _FREQ_WIDE_NARROW_GROUP_
 
 // 방위 그룹화할때 ISODATA 알고리즘을 이용하여 그룹화를 수행한다.
-#define _ISODATA_AOA_GROUP_
+//#define _ISODATA_AOA_GROUP_
 
 //#define _EXTRACT_PULSE_METHOD1_
 //#define _EXTRACT_PULSE_METHOD2_
