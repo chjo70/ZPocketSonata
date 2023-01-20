@@ -921,9 +921,9 @@ CREATE TABLE RADAR_MODE_LIFECYCLE
 (
   RADAR_INDEX       INTEGER                     NOT NULL,
   RADAR_MODE_INDEX  INTEGER                     DEFAULT 1,
-  RADAR_MODE_NAME   VARCHAR2(30 )           	DEFAULT 'TEST',
-  MODE_CODE         VARCHAR2(5 )            	DEFAULT 'ZZ',
-  SECLAB            INTEGER                     DEFAULT 0,
+  RADAR_MODE_NAME   VARCHAR2(30 )           DEFAULT 'TEST',
+  MODE_CODE         VARCHAR2(5 )            DEFAULT 'ZZ',
+  SECLAB            INTEGER                     DEFAULT 0                  NOT NULL,
   PRIMARY KEY (RADAR_INDEX, RADAR_MODE_INDEX)
 );
 CREATE TABLE RADAR_MODE_LIFECYCLE_P
