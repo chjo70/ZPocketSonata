@@ -191,21 +191,30 @@ int Printf(char *format, ...)
 }
 
 
-
+/**
+ * @brief     Window Handler 를 설정한다.
+ * @param     HWND hWnd
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-19 14:04:39
+ * @warning
+ */
 void SetWindowHandler( HWND hWnd )
 {
 	sthWnd = hWnd;
 }
 
-void SetLocal( bool bLocal )
-{
-	stbLocal = bLocal;
-}
-
-bool GetLocal()
-{
-	return stbLocal;
-}
+// void SetLocal( bool bLocal )
+// {
+// 	stbLocal = bLocal;
+// }
+// 
+// bool GetLocal()
+// {
+// 	return stbLocal;
+// }
 
 CString GetIpAddress()
 {

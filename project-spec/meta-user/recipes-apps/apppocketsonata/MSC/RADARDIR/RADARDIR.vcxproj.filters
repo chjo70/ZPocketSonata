@@ -58,6 +58,9 @@
     <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
       <UniqueIdentifier>{ba56ccaa-f3cf-45df-a116-15c45d310358}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal\IntraSigAnal">
+      <UniqueIdentifier>{1e7fca0b-565c-4453-b25f-424234e5be9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -167,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
+      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
+      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

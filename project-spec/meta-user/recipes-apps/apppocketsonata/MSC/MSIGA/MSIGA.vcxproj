@@ -53,7 +53,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T88;_CRT_SECURE_NO_WARNINGS;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,6 @@
     <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
     <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\AetIPL.h" />
-    <ClInclude Include="..\..\files\Anal\INC\Defines.h" />
     <ClInclude Include="..\..\files\Anal\INC\ErrorMsg.h" />
     <ClInclude Include="..\..\files\Anal\INC\Macros.h" />
     <ClInclude Include="..\..\files\Anal\INC\OS.h" />
@@ -157,6 +156,7 @@
     <ClInclude Include="..\..\files\Anal\INC\Structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\System.h" />
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
+    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h" />
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.h" />
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KDefine.h" />
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KGroup.h" />
@@ -187,6 +187,7 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\PulExt.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\SysPara.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\_CED_Define.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\_Define.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\_Macro.h" />
     <ClInclude Include="..\..\files\Anal\SigAnal\_SigAnal.h" />
@@ -216,7 +217,7 @@
     <ClInclude Include="..\..\files\System\csysconfig.h" />
     <ClInclude Include="..\..\files\Thread\cdetectanalysis.h" />
     <ClInclude Include="..\..\files\Thread\cemittermerge.h" />
-    <ClInclude Include="..\..\files\Thread\creclan.h" />
+    <ClInclude Include="..\..\files\Thread\coperationconsole.h" />
     <ClInclude Include="..\..\files\Thread\cscananalysis.h" />
     <ClInclude Include="..\..\files\Thread\csignalcollect.h" />
     <ClInclude Include="..\..\files\Thread\ctaskmngr.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\chwio.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="..\..\files\Utils\cmultiserver.h" />
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="..\..\files\Utils\DMA\dma.h" />
@@ -294,6 +296,7 @@
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp" />
     <ClCompile Include="..\..\files\Anal\KnownSigAnal\KAnalPRI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
@@ -398,7 +401,7 @@
     <ClCompile Include="..\..\files\Thread\cemittermerge.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\Thread\creclan.cpp">
+    <ClCompile Include="..\..\files\Thread\coperationconsole.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Thread\cscananalysis.cpp">
@@ -431,6 +434,7 @@
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp" />
     <ClCompile Include="..\..\files\Utils\csingleclient.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>

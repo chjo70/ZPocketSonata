@@ -26,7 +26,7 @@ public:
 public:
 	//inline int GetLOBData( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, char *pWhere ) { return GetDB_LOB( pLOBData, pExt, pWhere ); }
 	inline void GetFieldNameOfTable( int *pCoField, char **pField, char *pTable ) { LoadFieldOfTable( pCoField, pField, pTable ); }
-	//inline void GetLOBData( int *pnLOBData, SRxLOBData *pLOBData, int iMaxItems ) { GetLOBData( pnLOBData, pLOBData, iMaxItems ); }
+	bool GetFieldNameOfTable(std::vector<string> *pVecString, char *pTable);
 
 	void OnFileOpen();
 	double GCAzimuth(double lat1, double lon1, double lat2, double lon2, bool bInitial=true);
@@ -65,7 +65,7 @@ private:
 
 	STR_LOBDATA m_stLOBData;
 
-    char m_szSQLString[4000];
+    char m_szSQLString[1024 * 4];
 
 public:
 	afx_msg void OnOpInit();
@@ -78,5 +78,6 @@ public:
 
     bool GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt, char *pWhere, int iMaxItems );
     bool LoadFieldOfTable( int *pCoField, char **pField, char *pTable );
+	int LoadFieldOfTable(std::vector<string> *pVecString, char *pTable);
     bool GetDB_LOB_POSITION( int *pnLOB, SRxLOBData *pLOBData, char *pWhere, int iMaxItems );
 };

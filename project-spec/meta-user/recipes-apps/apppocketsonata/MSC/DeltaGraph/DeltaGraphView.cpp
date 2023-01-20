@@ -166,7 +166,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 {
 	int j=0;
 
-	if( m_pDoc->GetDataType() == en_PDW_DATA ) {
+	if( m_pDoc->GetDataType() == en_PDW_DATA || m_pDoc->GetDataType() == en_PDW_DATA_CSV ) {
 		if( bInit == true ) {
 			m_CListRawData.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | 0x00004000);
 			//m_CListPDW.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
@@ -265,10 +265,13 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	UINT uiPDWDataItems;
 
 	char *pcDV, *pcType;
-	float *pfTOA, *pfDTOA;
+	float *pfDTOA;
 	float *pfAOA, *pfFreq, *pfPA, *pfPW;
 	//float *pfPh1, *pfPh2, *pfPh3, *pfPh4;
 	float *pfI, *pfQ, *pfIP, *pfFFT;
+
+    double *pdTOA;
+
 	_TOA *pllTOA;
 	CString strVal;
 
@@ -287,10 +290,10 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 		Log( enNormal, _T("목록창에 데이터 삽입 시작합니다.") );
 
-		if (enDataType == en_PDW_DATA) {
+		if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
             pPDWRealData = (STR_PDWREALDATA *) pData;
 			if( pPDWRealData != NULL ) {
-				pfTOA = pPDWRealData->pfTOA;
+				pdTOA = pPDWRealData->pdTOA;
 				pfDTOA = pPDWRealData->pfDTOA;
 				pfAOA = pPDWRealData->pfAOA;
 				pfFreq = pPDWRealData->pfFreq;
@@ -314,7 +317,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					strVal.Format( _T("%d") , *pcType );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
-					strVal.Format( _T("%12.3f/%llu") , *pfTOA*1., *pllTOA );
+					strVal.Format( _T("%12.6f/%llu") , *pdTOA*1., *pllTOA );
 					//strVal.Format( _T("%12.3f") , *pfTOA*1. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
@@ -340,7 +343,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					strVal.Format( _T("%5.1f") , *pfPW*1000000000. );
 					m_CListRawData.SetItemText( i, j++, strVal ); 
 
-					++ pfTOA;
+					++ pdTOA;
 					++ pfDTOA;
 					++ pfAOA;
 					++ pfFreq;

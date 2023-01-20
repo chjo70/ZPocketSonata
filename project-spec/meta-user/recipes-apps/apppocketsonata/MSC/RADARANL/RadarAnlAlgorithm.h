@@ -7,10 +7,17 @@
 #define MATHFUNCSDLL_API __declspec(dllimport)
 #endif
 
+using namespace std;
+
+#include <vector>
+
 
 #define WM_USER_LOGMSG				(7011)
 
 #include "RadarDirAlgorithm.h"
+
+
+
 
 //
 // RADARDIR 프로젝트 내에서 최소 내용만 구조체 정의를 복사한 것임.
@@ -42,16 +49,22 @@ namespace XBAND {
 #endif
 }
 
-#ifndef _STR_LOBHEADER
-#define _STR_LOBHEADER
+#ifndef _SRxLOBHeader
+#define _SRxLOBHeader
 typedef struct 
 {
 	int iNumOfLOB;
+
+#ifdef _POCKETSONATA_
+    unsigned int uiEWRecProc;   // EW수신처리판 번호
+#endif
 
 } SRxLOBHeader;
 #endif
 
 #define MAX_LOB_DATA			(100)
+
+
 
 #ifndef _STR_LOBDATA
 #define _STR_LOBDATA
@@ -63,8 +76,8 @@ typedef struct {
 } STR_LOBDATA ;
 #endif
 
-#ifndef _STR_ABTHEADER
-#define _STR_ABTHEADER
+#ifndef _SRxABTHeader
+#define _SRxABTHeader
 struct SRxABTHeader
 {
 	int iNumOfABT;
@@ -73,37 +86,18 @@ struct SRxABTHeader
 #endif
 
 
-#define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
+// CED 레이더모드의 문자열 길이 정의 호출
+// 아래 파일은 ../../files/Anal/SigAnal/_CED_Define.h 에 있는 파일을 복사해야 합니다.
 
-#define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
+#include "_CED_Define.h"
 
-#define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
-#define _MAX_USER_COUNTRY_STRING_SIZE_								(4+_NULL_CHAR_)
-#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_                          (4+_NULL_CHAR_)
-#define _MAX_FRIEND_OR_FOE_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_ADA_STRING_SIZE_										(8+_NULL_CHAR_)
-#define _MAX_DATETIME_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_DISTINCTION_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
-#define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
 
-#define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
 
-#define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
 
-#ifndef _MAX_SIZE_OF_KOREASITENAME_
-#define _MAX_SIZE_OF_KOREASITENAME_									(11+_NULL_CHAR_)
-#endif
 
-#define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
-//#define _MAX_SIZE_OF_MODECODE                                       (4)
-#define _MAX_PLATFORM_NAME_SIZE                                     (8)
-
-#ifndef _STR_ABTDATA_STRUCT
-#define _STR_ABTDATA_STRUCT
+#ifndef _SRxABTData
+#define _SRxABTData
 struct SRxABTData { // 레이더 분석
 	unsigned int uiABTID;
 	unsigned int uiAETID;
@@ -112,13 +106,18 @@ struct SRxABTData { // 레이더 분석
 
 	unsigned int uiCoLOB;
 
-	__time32_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t /* __time32_t */ tiLastSeenTime;
+#ifdef _POCKETSONATA_
+	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	__time64_t tiLastSeenTime;
+#else
+	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+	__time32_t tiLastSeenTime;
+#endif
 
 	int iRadarModePriority;
 	int iRadarPriority;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_ELINT_)
 	int iPolarization;
 
 #endif
@@ -179,7 +178,7 @@ struct SRxABTData { // 레이더 분석
 	int iPEValid;
 	float fLatitude;							// [deg]
 	float fLongitude;							// [deg]
-	float fHeight;
+	float fAltitude;
 	float fCEP;										// [m]
 	float fMajorAxis;							// [m]
 	float fMinorAxis;							// [m]
@@ -193,7 +192,7 @@ struct SRxABTData { // 레이더 분석
 	int iRadarModeIndex;
 	int iThreatIndex;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_ELINT_)
 	int iIsManualInput;
 
 	__time32_t tiFinalAlarmTime;
@@ -201,15 +200,22 @@ struct SRxABTData { // 레이더 분석
 
 	int iStat;
 
+#if defined(_XBAND_) || defined(_ELINT_)
 	char szRadarName[_MAX_RADARNAME_SIZE];
+#endif
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
 	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
 	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
 	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+
+#if defined(_XBAND_) || defined(_ELINT_)
 	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+#endif
+
+
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 }  ;
@@ -228,33 +234,117 @@ typedef struct {
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////
-// 컴파일 방법
 
-/* 이 헤더파일을 프로젝트 폴더에 복사하고 아래 함수를 호출하려고 하는 소스에 아래와 같이 include 한다.
+#ifndef _STR_AETDATA_STRUCT
+#define _STR_AETDATA_STRUCT
+struct SRxAETData {
+	unsigned int uiAETID;
 
-#include "RadarAnlAlgorithm.h"
+	unsigned int uiCoABT;
+	unsigned int uiCoLOB;
 
-:
-:
+	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init();
+	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 
-:
-:
+#if defined(_XBAND_) || defined(_ELINT_)
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
 
-RadarAnlAlgotirhm::RadarAnlAlgotirhm::Close();
+	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
-*/
+	int iPlatformType;
+	int iPinNum;
+
+#if defined(_XBAND_) || defined(_ELINT_)
+	char szThreatFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
+
+	int iRadarModePriority;
+	int iRadarPriority;
+	int iThreatPriority;
+
+#ifdef _POCKETSONATA_
+	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	__time64_t tiLastSeenTime;
+#else
+	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+	__time32_t tiLastSeenTime;
+#endif
+
+	int iValidity;
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
+	float fDOAMean;                                 // [0.1도]
+	float fDOAMax;
+	float fDOAMin;
+	float fDOADeviation;				// [0.1도]
+#endif
+
+	float fFreqMean;
+	float fFreqMax;
+	float fFreqMin;
+	float fFreqDeviation;
+
+	float fPRIMean;											// [1ns]
+	float fPRIMax;
+	float fPRIMin;
+	float fPRIDeviation;// [%]
+
+	float fPWMean;											// 1ns
+	float fPWMax;
+	float fPWMin;
+	float fPWDeviation;
+
+	float fPAMean;											// 기존대로
+	float fPAMax;
+	float fPAMin;
+	float fPADeviation;
+
+	int iRadarIndex;
+
+	int iRadarModeIndex;
+	int iThreatIndex;
+
+	int iPEValid;
+	float fLatitude;							// [deg]
+	float fLongitude;							// [deg]
+	float fAltidude;							// [deg]
+	float fCEP;										// [m]
+	float fMajorAxis;							// [m]
+	float fMinorAxis;							// [m]
+	float fTheta;									// [0.1도]
+	float fDistanceErrorOfThreat;	// [m]
+
+	char szIDInfo[_MAX_SIZE_OF_IDINFO];
+
+#if defined(_XBAND_) || defined(_ELINT_)
+	__time32_t tiFinalAlarmTime;
+
+#endif
+
+	int iStat;
+    
+
+};
+#endif
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // 실행 방법
 
 /* 1. 시작시 한번만 호출하면 됩니다.
 	 응용 프로그램에서 초기화시에 아래 루틴을 한번 호출하면 됩니다.
+
    RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init();
 
 	 2. 프로그램 종료시 한번만 호출하면 됩니다.
+
 	 RadarAnlAlgotirhm::RadarAnlAlgotirhm::Close();
 
 	 3. 위협 관리 호출시 STR_LOBDATA 구조에 아래와 같이 데이터가 있어야 합니다.
@@ -288,34 +378,54 @@ RadarAnlAlgotirhm::RadarAnlAlgotirhm::Start( & stLOBData );
 								 현재 입력 LOB 결과가 10개 이면 LOB 개수 결과는 10개 이어야 하고 ABT 결과는 10 개 미만이어야 함.
 								 추후, LOB 클러스터링을 추가하게 되면 LOB 개수 결과와 빔 결과 개수는 10개 이상/최대 10개 미만 일 수 있습니다.
 
-		5. CED 및 EOB 라이브러리가 변경됐을때 위협 관리시 CED/EOB를 로딩해야 한다는 플레그를 세팅해주는 함수이다.
-		   CED 및 EOB 라이브러리가 변경된 경우 운용 소프트웨어는 레이더 분석에게 알려주고 레이더 분석에서는 이 함수를 호출해야 합니다.
+	5. CED 및 EOB 라이브러리가 변경됐을때 이를 위협 관리.식별 모듈에 알려주기 위함이다.
 
 		RadarAnlAlgotirhm::RadarAnlAlgotirhm::UpdateCEDEOBLibrary();						<---- CED/EOB 업데이트를 알려준다.
 
 
 		6. 운용 초기화 운용 초기화시에 방사체 및 빔/LOB 번호를 1번 부터 재시작하며 위협 관리 테이블도 초기화하여 처음부터 분석을 시작한다.
+
 		RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();													<---- 운용 초기화를 수행한다.
 
 */
 
 namespace RadarAnlAlgotirhm
 {
-	// This class is exported from the MathFuncsDll.dll
+	
 	class RadarAnlAlgotirhm
 	{
 	public: 
-		static MATHFUNCSDLL_API void Init( HWND hWnd=0, bool bDBThread=true, bool bLocal=false );
+        // 운용 소프트웨어 실행시 위협 병합 및 식별 라이브러리를 초기화하기 위해서 아래 함수를 호출해야 합니다.
+		static MATHFUNCSDLL_API void Init( HWND hWnd=0, bool bDBThread=false, bool bLocal=false );
+
+        // 운용 소프트웨어 닫을시 아래 함수를 호출해서 위협 관리 /식별 모듈을 닫는다.
 		static MATHFUNCSDLL_API void Close();
 
-		static MATHFUNCSDLL_API void Start( STR_LOBDATA *pLOBData );
+        // 운용 소프트웨어 에서 위협 병합 및 식별 을 하기 위해서 아래 함수를 호출합니다.
+		static MATHFUNCSDLL_API bool Start( STR_LOBDATA *pLOBData );
+
+        // 운용 소프트웨어 에서 위협 병합 및 식별 라이브러리를 초기화하혀고 할 때 아래 함수를 호출한다.
 		static MATHFUNCSDLL_API void SWInit();
+
+        // 운용 소프트웨어 에서 CED/EOB 변경시 아래 함수를 호출해서 CED/EOB 로딩하도록 한다.
 		static MATHFUNCSDLL_API void UpdateCEDEOBLibrary();
+
+
+#ifdef _POCKETSONATA_
+        // 운용 소프트웨어에서 입력한 LOB 데이터에 대한 결과 정보를 얻는다.
+        static MATHFUNCSDLL_API bool GetResult( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData );
 
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
 		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
 
         static MATHFUNCSDLL_API unsigned int GetOpInitID();
+#else
+		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
+		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
+
+        static MATHFUNCSDLL_API unsigned int GetOpInitID();
+
+#endif        
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

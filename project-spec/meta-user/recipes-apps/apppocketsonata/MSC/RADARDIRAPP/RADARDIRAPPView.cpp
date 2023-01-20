@@ -139,6 +139,17 @@ void CRADARDIRAPPView::InitView()
 
 }
 
+/**
+ * @brief     UpdateLOBData
+ * @param     int nCoLOB
+ * @param     SRxLOBData * pLOB
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-19 17:15:37
+ * @warning
+ */
 void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 {
 	int i, j;
@@ -179,10 +190,10 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             sprintf_s( buffer, sizeof( buffer ), " %d/%s", pLOB->iRadarModeIndex, pLOB->szRadarModeName );
-            m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             sprintf_s( buffer, sizeof( buffer ), " %d/%d", pLOB->iNumOfPDW, pLOB->iTotalOfPDW );
-            m_CListLOB.SetItemText( m_CoListItems, j++, buffer );
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
 			++m_uiTotalLOB;
 

@@ -31,10 +31,12 @@ static TCHAR strLineType[4][30] = { _T("없음"), _T("실선"), _T("점선"), _T("추이
 
 static TCHAR strPointSize[4][30] = { _T("Micro"), _T("Small"), _T("Medium"), _T("Large") };
 
-static TCHAR strMainTitleLabel[2][5][30] = { { _T("방위"), _T("주파수"), _T("DTOA"), _T("신호세기"), _T("펄스폭") },
+static TCHAR strMainTitleLabel[3][5][30] = { { _T("방위"), _T("주파수"), _T("DTOA"), _T("신호세기"), _T("펄스폭") }, \
+											 { _T("방위"), _T("주파수"), _T("DTOA"), _T("신호세기"), _T("펄스폭") }, \
 											 { _T("I/Q 데이터"), _T("순시진폭"), _T("위상차"), _T("FFT") } };
 
-static TCHAR strYAxisLabel[2][6][30] = { { _T(""), _T("방위[도]"), _T("주파수[MHz]"), _T("DTOA[s]"), _T("신호세기[dBm]"), _T("펄스폭[s]") } ,
+static TCHAR strYAxisLabel[3][6][30] = { { _T(""), _T("방위[도]"), _T("주파수[MHz]"), _T("DTOA[s]"), _T("신호세기[dBm]"), _T("펄스폭[s]") } , \
+										 { _T(""), _T("방위[도]"), _T("주파수[MHz]"), _T("DTOA[s]"), _T("신호세기[dBm]"), _T("펄스폭[s]") }, \
 										 { _T(""), _T("값"), _T("순시진폭[dB]"), _T("위상차[도]"), _T("세기"), _T("") } };
 
 
@@ -169,7 +171,7 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 
 	TCHAR szDataItems[100];
 
-	if( m_pDoc->GetDataType() == en_PDW_DATA ) {
+	if( m_pDoc->GetDataType() == en_PDW_DATA || m_pDoc->GetDataType() == en_PDW_DATA_CSV) {
 		bRet = m_pDoc->ReadDataFile( iFileIndex, & m_strFilterSetup );
 
 		iFilteredDataItems = m_pDoc->GetFilteredRealDataItems();
@@ -381,7 +383,7 @@ void CDeltaGraphView2::InitCombo()
 	iDataType = (int) m_pDoc->GetDataType();
 
 	m_CComboYAxis.ResetContent();
-	if( iDataType == (int) en_PDW_DATA ) {
+	if( iDataType == (int) en_PDW_DATA || iDataType == (int)en_PDW_DATA_CSV ) {
 		for( i=0 ; i < enSubMenu_5 ; ++i ) {
 			m_CComboYAxis.AddString( strMainTitleLabel[iDataType-1][i] );
 		}
@@ -512,6 +514,10 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 			PEnset(m_hPE, PEP_nALLOWZOOMING, PEAZ_HORZANDVERT);
 			PEnset(m_hPE, PEP_nZOOMSTYLE, PEZS_RO2_NOT);
 
+            PEnset(m_hPE, PEP_bALLOWMAXIMIZATION, FALSE);
+            PEnset(m_hPE, PEP_bSCROLLINGVERTZOOM, TRUE);
+            PEnset(m_hPE, PEP_bSCROLLINGHORZZOOM, TRUE);
+
 			// Enable middle mouse dragging //
 			PEnset(m_hPE, PEP_bMOUSEDRAGGINGX, TRUE);
 			PEnset(m_hPE, PEP_bMOUSEDRAGGINGY, TRUE);
@@ -527,9 +533,15 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 // 			PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 8);
 
 			// subset point types //
-			int nPointTypes[] = { PEPT_DOTSOLID, PEPT_UPTRIANGLESOLID, 
+// 			int nPointTypes[] = { PEPT_DOTSOLID, PEPT_UPTRIANGLESOLID,
+// 				PEPT_SQUARESOLID, PEPT_DOWNTRIANGLESOLID, PEPT_DOTSOLID,
+// 				PEPT_SQUARESOLID, PEPT_DIAMONDSOLID, PEPT_UPTRIANGLESOLID };
+
+			int nPointTypes[] = { PEPT_DOTSOLID, PEPT_DOTSOLID,
 				PEPT_SQUARESOLID, PEPT_DOWNTRIANGLESOLID, PEPT_DOTSOLID, 
 				PEPT_SQUARESOLID, PEPT_DIAMONDSOLID, PEPT_UPTRIANGLESOLID };
+
+
 			PEvset(m_hPE, PEP_naSUBSETPOINTTYPES, nPointTypes, 8);
 
 			PEnset(m_hPE, PEP_bSIMPLEPOINTLEGEND, TRUE);
@@ -585,6 +597,10 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 //             PEnset( m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE );
 //             PEnset( m_hPE, PEP_bTRACKINGCUSTOMOTHERTEXT, TRUE );
 
+            PEnset(m_hPE, PEP_bALLOWMAXIMIZATION, FALSE);
+            PEnset(m_hPE, PEP_bSCROLLINGVERTZOOM, TRUE);
+            PEnset(m_hPE, PEP_bSCROLLINGHORZZOOM, TRUE);
+
             PEnset( m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE );
             PEnset( m_hPE, PEP_nCURSORPROMPTLOCATION, PECPL_TRACKING_TEXT ); // v9 new floating text prompt 
             PEnset( m_hPE, PEP_bCURSORPROMPTTRACKING, TRUE );
@@ -614,7 +630,7 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 		uiDataItems = m_pDoc->GetDataItems();
 		enDataType = m_pDoc->GetDataType();
 
-		if (enDataType == en_PDW_DATA ) {
+		if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
 			PEszset(m_hPE, PEP_szSUBTITLE, _T("") ); // no subtitle
 
 			// 그래프 데이터 그룹 개수 설정
@@ -750,7 +766,8 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 	ENUM_DataType enDataType;
 
 	char *pcDV;
-	float *pfX, *pfY, *pfY2;
+    double *pdX;
+    float *pfY, *pfY2;
 	UINT uiPDWDataItems;
 
 	double dMin, dMax;
@@ -777,11 +794,11 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 		switch( enSubGraph ) {
 			case enSubMenu_1 :
-				if (enDataType == en_PDW_DATA ) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 					pPDWData = (STR_PDWREALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
-					pfX = pPDWData->pfTOA;
+					pdX = pPDWData->pdTOA;
 					pfY = pPDWData->pfAOA;
 
 					PEszset(m_hPE, PEP_szXAXISLABEL, _T("시간[s]"));
@@ -833,11 +850,11 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				break;
 
 			case enSubMenu_2 :
-				if (enDataType == en_PDW_DATA) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 					pPDWData = (STR_PDWREALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
-					pfX = pPDWData->pfTOA;
+					pdX = pPDWData->pdTOA;
 					pfY = pPDWData->pfFreq;
 
 					PEszset(m_hPE, PEP_szXAXISLABEL, _T("시간[s]"));
@@ -864,11 +881,11 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				break;
 
 			case enSubMenu_3 :
-				if (enDataType == en_PDW_DATA) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 					pPDWData = (STR_PDWREALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
-					pfX = pPDWData->pfTOA;
+					pdX = pPDWData->pdTOA;
 					pfY = pPDWData->pfDTOA;
 
 					PEszset(m_hPE, PEP_szXAXISLABEL, _T("시간[s]"));
@@ -905,11 +922,11 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				break;
 
 			case enSubMenu_4 :
-				if (enDataType == en_PDW_DATA) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 					pPDWData = (STR_PDWREALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
-					pfX = pPDWData->pfTOA;
+					pdX = pPDWData->pdTOA;
 					pfY = pPDWData->pfPA;
 
 					PEszset(m_hPE, PEP_szXAXISLABEL, _T("시간[s]"));
@@ -946,11 +963,11 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				break;
 
 			case enSubMenu_5 :
-				if (enDataType == en_PDW_DATA) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 					pPDWData = (STR_PDWREALDATA *)pData;
 
 					pcDV = pPDWData->pcDV;
-					pfX = pPDWData->pfTOA;
+					pdX = pPDWData->pdTOA;
 					pfY = pPDWData->pfPW;
 
 					PEszset(m_hPE, PEP_szXAXISLABEL, _T("시간[s]"));
@@ -991,24 +1008,30 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 				break;
 		}
 
-		if (enDataType == en_PDW_DATA) {
+		if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
 			UINT i;
 			float f1 = -9999.0F;
 
             //PEnset( m_hPE, PEP_nPOINTS, 0 );
 
+            PEnset(m_hPE, PEP_nPOINTS, uiPDWDataItems);
+            PEnset(m_hPE, PEP_bUSINGXDATAII, TRUE);
+
 			if( uiPDWDataItems > 0 ) {
 				Log( enNormal, _T("그래프에 데이터를 삽입 시작합니다.") );
 				for (i = 0; i < uiPDWDataItems; ++i) {
-					PEvsetcellEx(m_hPE, PEP_faXDATA, 0, i+(iFileIndex*PDW_ITEMS), pfX);
-					PEvsetcellEx(m_hPE, PEP_faYDATA, 0, i+(iFileIndex*PDW_ITEMS), pfY);
+                    int iIndex;
 
-					PEvsetcellEx(m_hPE, PEP_faXDATA, 1, i+(iFileIndex*PDW_ITEMS), pfX);
-					PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*PDW_ITEMS), pfY);
+                    iIndex = i + (iFileIndex*PDW_ITEMS);
+					PEvsetcellEx(m_hPE, PEP_faXDATAII, 0, iIndex, pdX);
+					PEvsetcellEx(m_hPE, PEP_faYDATA, 0, iIndex, pfY);
 
-                    //TRACE( "\n(%f , %f)" , *pfX, *pfY );
+					PEvsetcellEx(m_hPE, PEP_faXDATAII, 1, iIndex, pdX);
+					PEvsetcellEx(m_hPE, PEP_faYDATA, 1, iIndex, pfY);
 
-					++pfX;
+                    TRACE( "\n(%f , %f)" , *pdX, *pfY );
+
+					++pdX;
 					++pfY;
 				}
 				Log( enNormal, _T("그래프에 데이터를 삽입 완료했습니다.") );
@@ -1398,11 +1421,13 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 switch( enSubGraph ) {
 	 case enSubMenu_1 :
-		 if (enDataType == en_PDW_DATA) {
-             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( (float) ( dMinX * 1000000.), m_pDoc->GetBandWidth() );
-             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( (float) ( dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
+             //pstrFilterSetup->ullToaMin = CEncode::EncodeTOAs( (float) ( dMinX * 1000000.), m_pDoc->GetBandWidth() );
+             //pstrFilterSetup->ullToaMax = CEncode::EncodeTOAs( (float) ( dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+			 pstrFilterSetup->ullToaMin = CEncode::EncodeTOAs((float) dMinX, m_pDoc->GetBandWidth());
+			 pstrFilterSetup->ullToaMax = CEncode::EncodeTOAs((float) dMaxX, m_pDoc->GetBandWidth());
 
-             pstrFilterSetup->uiAoaMin = CEncode::EncodeDOA ( (float) dMinY );
+             pstrFilterSetup->uiAoaMin = CEncode::EncodeDOA( (float) dMinY );
              pstrFilterSetup->uiAoaMax = CEncode::EncodeDOA( (float) dMaxY );
 
 		 }
@@ -1411,11 +1436,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 }
 		 break;
 	 case enSubMenu_2 :
-		 if (enDataType == en_PDW_DATA) {
+		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
              int iCh;
 
-             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
-             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAs( ( float ) dMinX, m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAs( ( float ) dMaxX, m_pDoc->GetBandWidth() );
 
              pstrFilterSetup->uiFrqMin = CEncode::EncodeRealFREQMHz( &iCh, (float) ( dMinY / 1000000. ) );
              pstrFilterSetup->uiFrqMax = CEncode::EncodeRealFREQMHz( &iCh, ( float ) (dMaxY / 1000000.) );
@@ -1426,9 +1451,9 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 break;
 
 	 case enSubMenu_3 :		// 시간대 DTOA
-		 if (enDataType == en_PDW_DATA) {
-             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
-             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
+		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( (float) dMinX, m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( (float) dMaxX, m_pDoc->GetBandWidth() );
 
 			 //PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dDtoaMin );
 			 //PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dDtoaMax );
@@ -1439,12 +1464,9 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 break;
 
 	 case enSubMenu_4 :
-		 if (enDataType == en_PDW_DATA) {
-             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) (dMinX * 1000000.), m_pDoc->GetBandWidth() );
-             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) (dMaxX * 1000000.), m_pDoc->GetBandWidth() );
-
-// 			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPAMin );
-// 			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPAMax );
+		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
+             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) dMinX, m_pDoc->GetBandWidth() );
+             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) dMaxX, m_pDoc->GetBandWidth() );
 		 }
 		 else {
 
@@ -1452,7 +1474,7 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		 break;
 
 	 case enSubMenu_5 :
-		 if (enDataType == en_PDW_DATA) {
+		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
 // 			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
 // 			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
 // 
@@ -1606,45 +1628,56 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 			TCHAR buffer[200]; 
 			TCHAR szBuffer[200]; 
 
+            PEvget(m_hPE, PEP_structHOTSPOTDATA, &hsd);
+
+            if (hsd.nHotSpotType == PEHS_DATAPOINT) {
+                PEvgetcellEx(m_hPE, PEP_faXDATAII, hsd.w1, hsd.w2, &dX);
+            }
+            else {
 			PEvget(m_hPE, PEP_fCURSORVALUEX, &dX);
+                
+            }
 			PEvget(m_hPE, PEP_fCURSORVALUEY, &dY);
 
 			int iCombo= m_CComboYAxis.GetCurSel();
 
-            TRACE( "\ndX:%f, dY:%f", dX, dY );
+            //TRACE( "\ndX:%f, dY:%f", dX, dY );
 
 			enDataType = m_pDoc->GetDataType();
 
-            PEvget( m_hPE, PEP_structHOTSPOTDATA, &hsd );
+            //PEvget( m_hPE, PEP_structHOTSPOTDATA, &hsd );
 
             if( hsd.nHotSpotType == PEHS_DATAPOINT ) {
+                PEvgetcellEx(m_hPE, PEP_faXDATAII, hsd.w1, hsd.w2, &dX );
+                PEvgetcellEx( m_hPE, PEP_faYDATA, hsd.w1, hsd.w2, & dY );
+
                 wsprintf( szBuffer, _T( "%s[#%d]" ), strMainTitleLabel[enDataType - 1][iCombo], hsd.w2 );
                 PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
 
-                if( enDataType == en_PDW_DATA ) {
+                if( enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
                     switch( iCombo + 1 ) {
                     case enSubMenu_1:
-                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.3f[us]\n방위: %.3f[도]" ), dX, dY );
+                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.6f[s]\n방위: %.3f[도]" ), dX, dY );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
                         break;
                     case enSubMenu_2:
-                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\n주파수: %.3f[MHz]" ), dX, dY );
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.6f[s]\n주파수: %.3f[MHz]" ), dX, dY );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 0, 245, 0 ) );
                         break;
                     case enSubMenu_3:
-                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\nDTOA: %.3f[us]" ), dX, dY );
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.6f[s]\nDTOA: %.3f[us]" ), dX, dY );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 0, 0, 245 ) );
                         break;
                     case enSubMenu_4:
-                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.3f[us]\n세기: %.3f[dBm]" ), dX, dY );
+                        _stprintf_s( buffer, _countof( buffer ), TEXT( "시간: %.6f[s]\n세기: %.3f[dBm]" ), dX, dY );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
                         break;
                     case enSubMenu_5:
-                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.3f[us]\n펄스폭: %.3f[ns]" ), dX, dY );
+                        _stprintf_s( buffer, _countof( buffer ), _T( "시간: %.f[s]\n펄스폭: %.3f[ns]" ), dX, dY );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB( 255, 0, 0, 0 ) );
                         PEnset( m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB( 0, 245, 0, 0 ) );
                         break;
@@ -1657,30 +1690,30 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 			    wsprintf(szBuffer, _T("%s"), strMainTitleLabel[enDataType - 1][iCombo] );
 			    PEszset( m_hPE, PEP_szTRACKINGTOOLTIPTITLE, szBuffer );
 
-			    if( enDataType == en_PDW_DATA ) {
+				if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
 				    switch( iCombo+1 ) {
 					    case enSubMenu_1 :
-						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n방위: %.3f[도]"), dX, dY );
+						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.6f[s]\n방위: %.3f[도]"), dX, dY );
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
 						    break;
 					    case enSubMenu_2 :
-						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n주파수: %.1f[Hz]"), dX, dY );
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.6f[s]\n주파수: %.1f[Hz]"), dX, dY );
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,245,0));
 						    break;
 					    case enSubMenu_3 :
-						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\nDTOA: %.3f[us]"), dX, dY );
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.6f[s]\nDTOA: %.3f[us]"), dX, dY );
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,0,0,245));
 						    break;
 					    case enSubMenu_4 :
-						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.3f[us]\n세기: %.3f[dBm]"), dX, dY );
+						    _stprintf_s(buffer, _countof(buffer), TEXT("시간: %.6f[s]\n세기: %.3f[dBm]"), dX, dY );
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
 						    break;
 					    case enSubMenu_5 :
-						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.3f[us]\n펄스폭: %.3f[ns]"), dX, dY );
+						    _stprintf_s(buffer, _countof(buffer), _T("시간: %.6f[s]\n펄스폭: %.3f[ns]"), dX, dY );
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPBKCOLOR, PERGB(255,0,0,0));
 						    PEnset(m_hPE, PEP_dwTRACKINGTOOLTIPTEXTCOLOR, PERGB(0,245,0,0));
 						    break;
@@ -1817,6 +1850,7 @@ void CDeltaGraphView2::AddZoomInfo()
 
 	}
 
+    TRACE("(%f, %f)~(%f, %f)", strZoomInfo.dZoomMinX, strZoomInfo.dZoomMinY, strZoomInfo.dZoomMaxX, strZoomInfo.dZoomMaxY);
 	m_VecZoomInfo.push_back( strZoomInfo );
 
 	UpdateZoomButton();
@@ -1868,6 +1902,7 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 	TCHAR szBuffer[100];
 
 	float fValue;
+    double dValue;
 
 	enDataType = m_pDoc->GetDataType();
 
@@ -1879,9 +1914,9 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 		STR_PDWREALDATA *pPDWData = (STR_PDWREALDATA *) m_pDoc->GetRealData();
 
         if( pHSD->w2 < pPDWData->uiDataItems ) {
-            fValue = pPDWData->pfTOA[pHSD->w2];
-            fValue = SetXUnit( fValue, enDataType );
-            sprintf_s( szBuffer, _countof( szBuffer ), _T( "%.3f" ), fValue );
+            dValue = pPDWData->pdTOA[pHSD->w2];
+            fValue = SetXUnit((float) dValue, enDataType );
+            sprintf_s( szBuffer, _countof( szBuffer ), _T( "%.6f" ), fValue );
         }
 
 	}

@@ -58,6 +58,12 @@
     <Filter Include="소스 파일\Anal\Minini">
       <UniqueIdentifier>{83a06694-b74a-41ca-835e-d637615caaad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal\Thread">
+      <UniqueIdentifier>{2239cb41-000e-41ba-b575-de102e42f32c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\SigAnal">
+      <UniqueIdentifier>{67f87db7-3dd1-4a22-af12-8ce655562918}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -150,11 +156,11 @@
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RADARANL.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -330,6 +336,12 @@
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\MulDiv64.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="RADARANL.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\carraymsgdata.h">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
   </ItemGroup>

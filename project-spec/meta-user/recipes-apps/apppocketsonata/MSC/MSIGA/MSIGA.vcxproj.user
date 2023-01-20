@@ -4,4 +4,7 @@
     <LocalDebuggerCommandArguments>-i3 -s../NPWMAKE/test.mak</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup>
+    <RESOURCE_FILE>MSIGA.rc</RESOURCE_FILE>
+  </PropertyGroup>
 </Project>

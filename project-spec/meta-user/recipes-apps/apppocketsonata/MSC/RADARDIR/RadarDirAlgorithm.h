@@ -10,6 +10,8 @@
 
 #define WM_USER_LOGMSG				(7011)
 
+#include "../RADARANL/_CED_Define.h"
+
 
 
 //
@@ -30,6 +32,7 @@ typedef enum {
     en_UnknownData = 0,
 
     en_PDW_DATA,
+	en_PDW_DATA_CSV,
     en_IQ_DATA,
     en_IF_DATA,
 
@@ -115,6 +118,10 @@ typedef struct {
 
     UNI_PDW_ETC x;
 
+#ifdef _POCKETSONATA_
+    int iChannel;
+#endif
+
     unsigned long long int GetTOA() {
         return ullTOA;
     }
@@ -183,6 +190,19 @@ namespace XBAND {
 #endif
 }
 
+namespace _701 {
+#ifndef _701_ENUM_BANDWIDTH_
+#define _701_ENUM_BANDWIDTH_
+	typedef enum {
+		enNARROW_BW = 0,
+		enWIDE_BW,
+
+		enUnknown_BW = 2,
+
+	} ENUM_BANDWIDTH;
+#endif
+}
+
 #ifndef _STR_COMMON_HEADER_
 #define _STR_COMMON_HEADER_
 // 아래는 공용 정보
@@ -215,7 +235,7 @@ enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCO
 #define _STR_ELINT_HEADER_
 typedef struct {
 	char aucTaskID[LENGTH_OF_TASK_ID];
-	unsigned int iIsStorePDW;
+	unsigned int uiIsStorePDW;
 	EN_RADARCOLLECTORID enCollectorID;
 	ELINT::ENUM_BANDWIDTH enBandWidth;
 
@@ -243,7 +263,7 @@ typedef struct {
 	}
 
 	void SetIsStorePDW( unsigned int isStorePDW ) {
-		iIsStorePDW = isStorePDW;
+		uiIsStorePDW = isStorePDW;
 	}
 
 	void CheckColTime() {
@@ -253,11 +273,54 @@ typedef struct {
 } STR_ELINT_HEADER ;
 #endif
 
+#ifndef _STR_701_HEADER_
+#define _STR_701_HEADER_
+typedef struct {
+	char aucTaskID[LENGTH_OF_TASK_ID];
+	unsigned int uiIsStorePDW;
+	EN_RADARCOLLECTORID enCollectorID;
+	_701::ENUM_BANDWIDTH enBandWidth;
+
+	// 아래는 공용 정보
+	STR_COMMON_HEADER stCommon;
+
+	EN_RADARCOLLECTORID GetCollectorID() {
+		return enCollectorID;
+	}
+
+	void SetCollectorID(EN_RADARCOLLECTORID i_enCollectorID) {
+		enCollectorID = i_enCollectorID;
+	}
+
+	unsigned int GetTotalPDW() {
+		return stCommon.uiTotalPDW;
+	}
+
+	unsigned int GetPDWID() {
+		return stCommon.uiPDWID;
+	}
+
+	void SetTotalPDW(unsigned int uiTotalPDW) {
+		stCommon.uiTotalPDW = uiTotalPDW;
+	}
+
+	void SetIsStorePDW(unsigned int isStorePDW) {
+		uiIsStorePDW = isStorePDW;
+	}
+
+	void CheckColTime() {
+		stCommon.CheckColTime();
+	}
+
+} STR_701_HEADER;
+
+#endif
+
 #ifndef _STR_XBAND_HEADER_
 #define _STR_XBAND_HEADER_
 typedef struct {
     char aucTaskID[LENGTH_OF_TASK_ID];
-    unsigned int iIsStorePDW;
+    unsigned int uiIsStorePDW;
     EN_RADARCOLLECTORID enCollectorID;
     XBAND::ENUM_BANDWIDTH enBandWidth;
 
@@ -285,7 +348,7 @@ typedef struct {
     }
 
     void SetIsStorePDW(unsigned int isStorePDW) {
-        iIsStorePDW = isStorePDW;
+        uiIsStorePDW = isStorePDW;
     }
 
     void CheckColTime() {
@@ -301,7 +364,7 @@ typedef struct {
 	unsigned int uiBoardID;
 	unsigned int uiBank;
 	unsigned int uiBand;                // 주파수 대역
-	unsigned int iIsStorePDW;
+	unsigned int uiIsStorePDW;
 
 	// 아래는 공용 정보
 	STR_COMMON_HEADER stCommon;
@@ -319,7 +382,7 @@ typedef struct {
 	}
 
 	void SetIsStorePDW( unsigned int isStorePDW ) {
-		iIsStorePDW = isStorePDW;
+		uiIsStorePDW = isStorePDW;
 	}
 
 	void CheckColTime() {
@@ -335,7 +398,7 @@ typedef struct {
 #define _SONATA_HEADER_
 typedef struct {
 	unsigned int uiBand;
-	unsigned int iIsStorePDW;
+	unsigned int uiIsStorePDW;
 
 	// 아래는 공용 정보
 	STR_COMMON_HEADER stCommon;
@@ -353,10 +416,10 @@ typedef struct {
 	}
 
 	void SetIsStorePDW( unsigned int isStorePDW ) {
-		iIsStorePDW = isStorePDW;
+		uiIsStorePDW = isStorePDW;
 	}
 
-} SONATA_HEADER ;
+} STR_SONATA_HEADER ;
 #endif
 
 #ifndef _UNION_HEADER_
@@ -367,7 +430,9 @@ typedef union {
 
 	STR_POCKETSONATA_HEADER ps;
 
-	SONATA_HEADER so;
+	STR_SONATA_HEADER so;
+
+	STR_701_HEADER _701;
 
 	char *GetTaskID( ENUM_UnitType enUnitType ) {
 		char *pTaskID;
@@ -577,41 +642,10 @@ struct STR_PDWDATA {
 #define MAX_FREQ_PRI_STEP				(32)
 #endif
 
-#ifndef _NULL_CHAR_
-#define _NULL_CHAR_						(1)
-#endif
 
-#ifndef _MAX_ELNOT_STRING_SIZE_
-#define _MAX_ELNOT_STRING_SIZE_			(7+_NULL_CHAR_)
-#endif
-
-#ifndef _MAX_SIZE_OF_MODECODE
-#define _MAX_SIZE_OF_MODECODE           (4)
-#endif
-
-#ifndef _MAX_MODECODE_STRING_SIZE_
-#define _MAX_MODECODE_STRING_SIZE_		(3+_NULL_CHAR_)
-#endif
-
-#ifndef _MAX_RADARMODE_NAME_SIZE
-#define _MAX_RADARMODE_NAME_SIZE		(12)
-#endif
-
-#ifndef _MAX_FUNCTIONCODE_STRING_SIZE_
-#define _MAX_FUNCTIONCODE_STRING_SIZE_	(3+_NULL_CHAR_)
-#endif
-
-#ifndef _MAX_NICKNAME_STRING_SIZE_
-#define _MAX_NICKNAME_STRING_SIZE_		(27+_NULL_CHAR_)
-#endif
-
-#ifndef _MAX_RADARNAME_SIZE
-#define _MAX_RADARNAME_SIZE											(8)
-#endif
-
-
-#ifndef SRxLOBData_STRUCT
-#define SRxLOBData_STRUCT
+// RadarDirAlgorithm.h
+#ifndef _SRxLOBData_STRUCT
+#define _SRxLOBData_STRUCT
 struct SRxLOBData {
     unsigned int uiPDWID;
 
@@ -621,7 +655,12 @@ struct SRxLOBData {
     unsigned int uiABTID;
     unsigned int uiAETID;
 
-    __time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
+#ifdef _POCKETSONATA_
+	__time64_t tiContactTime;			// 64비트 time_t 로 선언해야 함.
+#else
+	__time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
+#endif
+
     unsigned int tiContactTimems;
 
     char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
@@ -634,11 +673,13 @@ struct SRxLOBData {
     char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
     char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+#if defined(_XBAND_) || defined(_ELINT_)
 	char szRadarName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
-#ifndef _XBAND_
+#ifdef _ELINT_
     int iPolarization;                              // 극성
     int iRatioOfPOL;                                // 극성 신뢰도
 
@@ -692,9 +733,19 @@ struct SRxLOBData {
     float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
+#elif defined(_POCKETSONATA_)
+	int iScanType;
+	float fScanPeriod;			// [msec]
+
+	int iMOPType;				// 인트라 타입
+	int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
+	float fMOPMaxFreq;			// ??
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
+
 #else
     int iScanType;
-    //int iDetailScanType;
     float fScanPeriod;			// [msec]
 
     int iMOPType;				// 인트라 타입
@@ -711,32 +762,35 @@ struct SRxLOBData {
     int iValidity;
 #endif
 
-    int iIsStoreData;
-    int iTotalOfPDW;
+#if defined(_XBAND_) || defined(_ELINT_)
+	int iIsStoreData;
+#endif
+
+    //int iTotalOfPDW;
     int iNumOfPDW;
-    int iNumOfIQ;
+
+#if defined(_XBAND_) || defined(_ELINT_)
+	int iNumOfIQ;
+#endif
 
 	char szRadarModeName[_MAX_RADARNAME_SIZE];
     int iRadarModeIndex;
-    //int iThreatIndex;
 
-    float fLatitude;
-    float fLongitude;		
-
-    char aucTaskID[LENGTH_OF_TASK_ID];
+    float fCollectLatitude;
+    float fCollectLongitude;		
 
 #ifdef _POCKETSONATA_
 
 
 #elif defined(_ELINT_) || defined(_XBAND_)
+	char aucTaskID[LENGTH_OF_TASK_ID];
     int	iCollectorID;
-
     unsigned int uiSeqNum;
 
 #else
 #endif
 
-#ifdef _XBAND_
+#if defined(_ELINT_) || defined(_XBAND_)
 	unsigned int uiOpInitID;
 
 #endif

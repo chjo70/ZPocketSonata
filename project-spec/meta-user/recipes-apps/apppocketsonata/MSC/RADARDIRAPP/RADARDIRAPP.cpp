@@ -243,22 +243,22 @@ void CRADARDIRAPPApp::SaveCustomState()
 void CRADARDIRAPPApp::OnFileOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CString strPathName;
+	CString strPathName, strFileName;
 
 	RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( false );
 
-	if( true == OpenFile( strPathName ) ) {
-		m_pDoc->OpenFile( strPathName );
+	if( true == OpenFile( strPathName, strFileName) ) {
+		m_pDoc->OpenFile( strPathName, strFileName );
 	}
 }
 
-bool CRADARDIRAPPApp::OpenFile( CString &strPathname )
+bool CRADARDIRAPPApp::OpenFile( CString &strPathname, CString &strFileName )
 {
 	bool bRet = true;
 	CFileDialog *pWndFile;
 
 	// 로그 파일을 오픈할 FILE Dialog창을 생성한다.
-	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq)|*.spdw;*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.xpdw)|*.pdw;*.npw;*.spdw;*.epdw;*.xpdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
+	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw)|*.spdw;*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw)|*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
 
 	// Initializes m_ofn structure
 	pWndFile->m_ofn.lpstrTitle = _T("PDW 파일 읽어오기...");
@@ -267,7 +267,7 @@ bool CRADARDIRAPPApp::OpenFile( CString &strPathname )
 	if (pWndFile->DoModal() == IDOK) {
 		//m_strWindowtitle = pWndFile->GetFileTitle() + '.' + pWndFile->GetFileExt();
 		strPathname = pWndFile->GetPathName();
-
+		strFileName = pWndFile->GetFileName();
 		// 뷰 관련 파일 액션 처리
 		//GetDlgItem(IDC_BUTTON_STEPANAL)->EnableWindow();
 
@@ -421,7 +421,8 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 			//else if (finder.IsArchived())
 			{
 				//파일의 이름
-				CString _fileName =  finder.GetFilePath();
+				CString _pathName =  finder.GetFilePath();
+				CString _fileName = finder.GetFileName();
 				CString strMainTitle;
 
 // 				// 현재폴더 상위폴더 썸네일파일은 제외
@@ -431,10 +432,10 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 
 				//fileName =  finder.GetFileTitle();
 
-				strMainTitle.Format("%6d:%s", iFileNo, _fileName);
+				strMainTitle.Format("%6d:%s", iFileNo, _pathName);
 				m_pMainFrame->SetWindowText( strMainTitle );
 
-				m_pDoc->OpenFile( _fileName );
+				m_pDoc->OpenFile(_pathName, _fileName );
 				++iFileNo;
 
 				Sleep( 100 );

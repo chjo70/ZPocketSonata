@@ -17,6 +17,8 @@ IF NOT EXIST %2 goto ERROR
 echo.
 echo ===== 레이더 분석 헤더 파일 (%2)
 copy RadarAnlAlgorithm.h %2
+copy ..\..\files\Anal\SigAnal\_CED_Define.h %2
+copy ..\..\files\Anal\SigAnal\_CED_Define.h .
 
 :DONE
 Echo 라이브러리와 헤더 파일을 정상 복사했습니다.

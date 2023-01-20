@@ -58,7 +58,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_XBAND_;_MSSQL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_POCKETSONATA11_;_XBAND11_;_701_;_MSSQL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
@@ -217,8 +217,11 @@ REM :END</Command>
     <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
+    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp" />
-    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\files\Anal\MIDAS\PDW2SP370.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
     <ClCompile Include="..\..\files\Anal\NewSigAnal\NAnalPRI.cpp" />
@@ -279,6 +282,7 @@ REM :END</Command>
     <ClInclude Include="..\..\files\Anal\INC\structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\system.h" />
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
+    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\PDW2SP370.h" />

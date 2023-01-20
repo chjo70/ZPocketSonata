@@ -31,10 +31,11 @@ private:
     unsigned int m_uiPDWID;
 
 private:
-	void ReadDataFile();
+	bool ReadDataFile(char *pStrPathName, char *pStrFileName);
+
 
 public:
-	bool OpenFile( CString &strPathname );
+	bool OpenFile( CString &strPathname, CString &strFilename);
 
 // 재정의입니다.
 public:

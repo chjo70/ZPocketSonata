@@ -11,6 +11,8 @@
 #include "../../files/Include/globals.h"
 
 
+enum ANALYSIS_MODE { NORMAL_MDOE = 0, SIMUL_MODE };
+
 
 CNewSigAnal *gpNewSigAnal;
 CSysPara *gpSysPara;
@@ -39,8 +41,10 @@ namespace RadarDirAlgotirhm
 		SetWindowHandler( hWnd );
 		
 		if( gpNewSigAnal == NULL ) {
+			g_pTheSysConfig = new CSysConfig();
+
 			gpNewSigAnal = new CNewSigAnal( MAX_PDW, false );
-			gpNewSigAnal->InitVar( NORMAL_MDOE );
+			//gpNewSigAnal->InitAllVar( NORMAL_MDOE );
 		}
 
 		if( gpSysPara == NULL ) {
@@ -192,6 +196,10 @@ namespace RadarDirAlgotirhm
             delete g_pTheLog;
             g_pTheLog = NULL;
         }
+		if (g_pTheSysConfig != NULL) {
+			delete g_pTheSysConfig;
+			g_pTheSysConfig = NULL;
+		}
 
 		return;
 	}

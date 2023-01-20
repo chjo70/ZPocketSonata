@@ -456,8 +456,8 @@ bool CDeltaGraphApp::OpenFile( CString &strPathname, TCHAR *pTitle, ENUM_OPENTYP
 
 	// 로그 파일을 오픈할 FILE Dialog창을 생성한다.
 	switch( enOpenType ) {
-	case enOpenPDW :
-		pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.iq;*.eiq;*.siq;*.dat;*.midas)|*.spdw;*.pdw;*.npw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.iq;*.eiq;*.siq;*.dat;*.midas|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.dat)|*.pdw;*.npw;*.spdw;*.epdw;*.kpdw;*.zpdw;*.xpdw*.dat|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|MIDAS 파일들 (*.midas)|*.midas|All Files (*.*)|*.*||"), NULL, 0, VistaStyle );
+	case enOpenRAWDATA :
+		pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.iq;*.eiq;*.siq;*.dat;*.midas;*.csv)|*.spdw;*.pdw;*.npw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.iq;*.eiq;*.siq;*.dat;*.midas;*.csv;*.7pdw|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.dat;*.csv;*.7pdw)|*.pdw;*.npw;*.spdw;*.epdw;*.kpdw;*.zpdw;*.xpdw;*.dat;*.csv;*.7pdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|MIDAS 파일들 (*.midas)|*.midas|All Files (*.*)|*.*||"), NULL, 0, VistaStyle );
 		szinitDir[0] = NULL;
 		break;
 

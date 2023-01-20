@@ -166,6 +166,9 @@
     <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\RADARANL\_CED_Define.h">
+      <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RADARANLAPP.cpp">

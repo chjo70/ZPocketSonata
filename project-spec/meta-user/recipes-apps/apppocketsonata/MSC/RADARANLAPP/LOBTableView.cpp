@@ -6,6 +6,7 @@
 #include "LOBTableView.h"
 
 #include <sstream>
+#include <algorithm>
 
 #include "../../files/Anal/OFP_Main.h"
 
@@ -75,13 +76,30 @@ void CLOBTableView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
-//
+/**
+ * @brief     AllocMemory
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-09 10:15:38
+ * @warning
+ */
 void CLOBTableView::AllocMemory()
 {
 	m_pLOBData = ( SRxLOBData * ) malloc( sizeof(SRxLOBData) * MAX_DB_LOB_DATA );
 	m_pLOBExt = ( SELLOBDATA_EXT * ) malloc( sizeof(SELLOBDATA_EXT) * MAX_DB_LOB_DATA );
 }
 
+/**
+ * @brief     FreeMemory
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-09 10:15:36
+ * @warning
+ */
 void CLOBTableView::FreeMemory()
 {
 	free( m_pLOBData );
@@ -161,7 +179,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 		aetid = iVect.at(i);
 		iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, "where OP_INIT_ID='%d'" , opInitId );
 		if( aetid >= 0 ) {
-			iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND AETID='%d'" , aetid );
+			iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND AETID='%d' AND PRI_TYPE='1'" , aetid );
 		}
 		if( collector_id != 0 ) {
 			iCnt += sprintf_s( & szWhere[iCnt], sizeof(szWhere)-iCnt, " AND COLLECTOR_ID='%d'" , collector_id );
@@ -199,10 +217,16 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiABTID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+#if defined(_ELINT_) || defined(_XBAND_)
 			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->aucTaskID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
+#endif
 
-			_localtime32_s( & timeInfo, & pLOBData->tiContactTime );
+#if _POCKETSONATA_
+			_localtime64_s( & timeInfo, & pLOBData->tiContactTime );
+#else
+			_localtime32_s(&timeInfo, &pLOBData->tiContactTime);
+#endif
 			sprintf_s( szBuffer, sizeof(szBuffer), "%02d-%02d-%02d %02d:%02d:%02d.%03d", timeInfo.tm_year-100, timeInfo.tm_mon, timeInfo.tm_mday, timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec, pLOBData->tiContactTimems );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
@@ -302,19 +326,27 @@ void CLOBTableView::OnBnClickedButtonQuery()
             sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fPAMode );
             m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+#if defined(_ELINT_) || defined(_XBAND_)
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iIsStoreData );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
+#else
+			k++;
+#endif
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iNumOfPDW );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
+#if defined(_ELINT_) || defined(_XBAND_)
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iCollectorID );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
+#else
+			k++;
+#endif
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fLatitude );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fCollectLatitude);
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fLongitude );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%.4f", pLOBData->fCollectLongitude);
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->szRadarModeName );
@@ -353,45 +385,49 @@ int CLOBTableView::GetFieldIndex( char *pMatch, int nCoField, char **pszField )
 	return iRet;
 }
 
+/**
+ * @brief     CreateListCtrl
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-09 10:23:52
+ * @warning
+ */
 void CLOBTableView::CreateListCtrl()
 {
 	int i;
-	int nCoField;
-	char **pszField;
 
 	CRect rect, rList;
 
 	GetClientRect(&rect);
 
-	pszField = ( char ** ) malloc( sizeof(char *) * MAX_COUNT_OF_FIELD );
-	for( i=0 ; i < MAX_COUNT_OF_FIELD ; ++i ) {
-		pszField[i] = ( char * ) malloc( sizeof(char) * MAX_OF_COLUMN_LENGTH );
-		memset( pszField[i], 0, sizeof(MAX_OF_COLUMN_LENGTH) );
+	std::vector<string> vecField;
+
+ 	//m_pDoc->GetFieldNameOfTable( & nCoField, & pszField[1], "LOBDATA" );
+	m_pDoc->GetFieldNameOfTable( & vecField, "LOBDATA");
+
+	if (vecField.size() != 0 ) {
+		m_nField_OPINITID = find(vecField.begin(), vecField.end(), "OP_INIT_ID") - vecField.begin() + 1;
+		m_nField_PDWID = find(vecField.begin(), vecField.end(), "PDWID") - vecField.begin() + 1;
+		m_nField_PLOBID = find(vecField.begin(), vecField.end(), "PLOBID") - vecField.begin() + 1;
+		m_nField_LOBID = find(vecField.begin(), vecField.end(), "LOBID") - vecField.begin() + 1;
+		m_nField_ABTID = find(vecField.begin(), vecField.end(), "ABTID") - vecField.begin() + 1;
+		m_nField_AETID = find(vecField.begin(), vecField.end(), "AETID") - vecField.begin() + 1;
+
+		m_CListLOB.GetWindowRect(&rList);
+
+		m_CListLOB.SetExtendedStyle(m_CListLOB.GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
+		m_CListLOB.SetWindowPos(NULL, 0, 70, rect.right, rect.bottom, SWP_NOZORDER);
+
+		m_CListLOB.InsertColumn(0, "순번", LVCFMT_LEFT, 10 * strlen("순번  "));
+		for (i = 0; i < vecField.size(); ++i) {
+			m_CListLOB.InsertColumn(i + 1, vecField[i].c_str(), LVCFMT_LEFT, 10 * vecField[i].size() );
+		}
 	}
-
-	m_pDoc->GetFieldNameOfTable( & nCoField, & pszField[1], "LOBDATA" );
-
-	m_nField_OPINITID = GetFieldIndex( "OP_INIT_ID", nCoField, & pszField[0] ) + 1;
-    m_nField_PDWID = GetFieldIndex( "PDWID", nCoField, &pszField[0] ) + 1;
-    m_nField_PLOBID = GetFieldIndex( "PLOBID", nCoField, &pszField[0] ) + 1;
-	m_nField_LOBID = GetFieldIndex( "LOBID", nCoField, & pszField[0] ) + 1;
-	m_nField_ABTID = GetFieldIndex( "ABTID", nCoField, & pszField[0] ) + 1;
-	m_nField_AETID = GetFieldIndex( "AETID", nCoField, & pszField[0] ) + 1;
-
-	m_CListLOB.GetWindowRect( & rList );
-
-	m_CListLOB.SetExtendedStyle( m_CListLOB.GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT );
-	m_CListLOB.SetWindowPos( NULL, 0, 70, rect.right, rect.bottom, SWP_NOZORDER );
-
-    m_CListLOB.InsertColumn( 0, "순번", LVCFMT_LEFT, 10 * strlen( "순번  " ) );
-	for( i=0 ; i <= nCoField ; ++i ) {
-		m_CListLOB.InsertColumn( i+1, pszField[i], LVCFMT_LEFT, 10*strlen(pszField[i]) );
+	else {
+		TRACE("[에러] 테이블의 필드 개수가 잘못 됐습니다. 테이블이 없거나 MAX_COUNT_OF_FIELD 값을 늘려야 합니다.");
 	}
-
-	for( i=0 ; i < MAX_COUNT_OF_FIELD ; ++i ) {
-		free( pszField[i] );
-	}
-	free( pszField );
 
 }
 

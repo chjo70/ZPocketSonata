@@ -31,7 +31,7 @@ public:
 	CRADARDIRAPPApp();
 
 	void OnFileOpen();
-	bool OpenFile( CString &strPathname );
+	bool OpenFile( CString &strPathname, CString &strFileName);
 	void InitApp(void);
 
 	void SaveProfile();

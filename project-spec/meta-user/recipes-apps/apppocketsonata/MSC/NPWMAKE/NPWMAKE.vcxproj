@@ -125,6 +125,7 @@
     <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp" />
     <ClCompile Include="npwmake.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
@@ -137,6 +138,7 @@
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
+    <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
     <ClInclude Include="pdw.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

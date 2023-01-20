@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pdw.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\MulDiv64.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

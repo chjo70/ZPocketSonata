@@ -100,6 +100,9 @@
     <Filter Include="소스 파일\Anal\Collect\GenPDW">
       <UniqueIdentifier>{2480af83-f07a-44a3-a171-4822be1710e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Anal\IntraSigAnal">
+      <UniqueIdentifier>{541e0db4-52a1-49c6-a294-59d8f9607cf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -155,9 +158,6 @@
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Thread\cemittermerge.h">
-      <Filter>소스 파일\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Thread\creclan.h">
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Thread\cscananalysis.h">
@@ -496,9 +496,6 @@
     <ClInclude Include="..\..\files\Anal\INC\Structs.h">
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\INC\Defines.h">
-      <Filter>소스 파일\Anal\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Utils\DMA\dma.h">
       <Filter>소스 파일\Utils\DMA</Filter>
     </ClInclude>
@@ -507,6 +504,18 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\_CED_Define.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Thread\coperationconsole.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\cmultiserver.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
+      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -547,9 +556,6 @@
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Thread\cemittermerge.cpp">
-      <Filter>소스 파일\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Thread\creclan.cpp">
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Thread\cscananalysis.cpp">
@@ -728,6 +734,15 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
       <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\coperationconsole.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
+      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

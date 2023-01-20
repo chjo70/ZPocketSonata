@@ -184,6 +184,9 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 	pLOBData = & stLOBData.stLOBData[0];
 	for( i=0 ; i < stLOBData.stLOBHeader.uiNumOfLOB ; ++i ) {
+#ifdef _POCKETSONATA_
+
+#elif defined(_ELINT_) || defined(_XBAND_)
 		pLOBData->iCollectorID = RADARCOL_1 + ( i % RADARCOL_3 ) ;
 		if( i % 2 == 0 ) {
 			pLOBData->iCollectorID = RADARCOL_1;
@@ -193,6 +196,8 @@ void CRADARANLAPPDoc::OnFileOpen()
 			pLOBData->iCollectorID = RADARCOL_2;
 			pLOBData->fDOAMean = (float) 270.0;
 		}
+#else
+#endif
 
 		pLOBData->uiLOBID = i + 1;
 		pLOBData->uiABTID = 0;
@@ -203,7 +208,14 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 		pLOBData->iSignalType = ST_CW;
 
+
+#ifdef _POCKETSONATA_
+        fTheta = (float) (rand() % 360);
+#elif defined(_ELINT_) || defined(_XBAND_)
 		fTheta = (float) GCAzimuth( (double) dRCLatitude[pLOBData->iCollectorID], (double) dRCLongitude[pLOBData->iCollectorID], dRTarget[0], dRTarget[1], false );
+#else
+        fTheta = (float)(rand() % 360);
+#endif
 		fErr = (float) ( ( rand() % 100 ) / 10. - 5. );
 		//printf( "\n fDOA Err[%f]" , fErr );
 		pLOBData->fDOAMean = AOA( fTheta + fErr );
@@ -234,7 +246,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 		pLOBData->iDIRatio = 100;
 
-		pLOBData->iFreqType = _FIXED;
+		pLOBData->iFreqType = _FREQ_FIXED;
 		pLOBData->iFreqPatternType = UNK;			
 		pLOBData->fFreqPatternPeriod = 0;	  // [us]
 		pLOBData->fFreqMean = (float) 6000.297852;										// [10KHz]
@@ -263,18 +275,29 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->fPAMax = -57.5;
 		pLOBData->fPAMin = -69;
 
+#if defined(_XBAND_) || defined(_ELINT_)
 		pLOBData->iIsStoreData = 0;
+#endif
 		pLOBData->iNumOfPDW = 50;
+
+        memset(pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName));
+        pLOBData->iRadarModeIndex = 0;
+        //pLOBData->iThreatIndex = 0;
 		
+#ifdef _POCKETSONATA_
+        
+#elif defined(_ELINT_) || defined(_XBAND_)
 		pLOBData->fLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
 		pLOBData->fLongitude = (float) dRCLongitude[pLOBData->iCollectorID];	
 
-		memset( pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName) );
-		pLOBData->iRadarModeIndex = 0;
-		//pLOBData->iThreatIndex = 0;
+        pLOBData->uiSeqNum = 0;
+#else
 
-		pLOBData->uiSeqNum = 0;
+#endif
+
+#if defined(_ELINT_) || defined(_XBAND_)		
 		strcpy_s( pLOBData->aucTaskID, sizeof(pLOBData->aucTaskID), "RADARANLAPP" );
+#endif
 
 		++ pLOBData;
 	}
@@ -437,6 +460,7 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 	}
 
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::Start( & m_stLOBData );
+    //RadarAnlAlgotirhm::RadarAnlAlgotirhm::ManageThreat(&m_stLOBData);
 
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetLOBData( & stResLOBData );
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetABTData( & stResABTData );
@@ -487,19 +511,28 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
+#ifdef _POCKETSONATA_
+	iCnt += sprintf_s(&m_szSQLString[iCnt], MAX_SQL_SIZE - iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_STD, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA");
+#else
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_MODE, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_MODE, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
+#endif
+
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " %s", pWhere );
 	//iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, " ORDER BY OP_INIT_ID desc, LOBID desc" );
 
 	theRS.Open( m_szSQLString );
 	while (!theRS.IsEof()) {
+        int iDummy;
+
 		index = 0;
 
 		memset(pLOBData, 0, sizeof(SRxLOBData));
 		memset(pLOBExt, 0, sizeof(SELLOBDATA_EXT));
 
 		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
+#if defined(_ELINT_) || defined(_XBAND_)
         pLOBData->uiOpInitID = pLOBExt->aetData.uiOpInitID;
+#endif
 
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiPDWID );
         theRS.GetFieldValue(index++, (int *) & pLOBData->uiPLOBID );
@@ -507,7 +540,9 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiABTID );
 		theRS.GetFieldValue(index++, (int *) & pLOBData->uiAETID );
 
+#if defined(_ELINT_) || defined(_XBAND_)
 		theRS.GetFieldValue(index++, pLOBData->aucTaskID);
+#endif
 
 		theRS.GetFieldTimeValue(index++, & pLOBData->tiContactTime );
 		theRS.GetFieldValue(index++, (int *) &pLOBData->tiContactTimems);
@@ -552,10 +587,10 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 		// theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iNumOfPDW);
-		theRS.GetFieldValue(index++, (int*)&pLOBData->iCollectorID);
+		theRS.GetFieldValue(index++, (int*)& iDummy);
 
-		theRS.GetFieldValue(index++, &pLOBData->fLatitude);
-		theRS.GetFieldValue(index++, &pLOBData->fLongitude);
+		theRS.GetFieldValue(index++, &pLOBData->fCollectLatitude);
+		theRS.GetFieldValue(index++, &pLOBData->fCollectLongitude);
 
 		theRS.GetFieldValue(index++, pLOBData->szRadarModeName);
 		theRS.GetFieldValue(index++, (int*)&pLOBData->iRadarModeIndex);
@@ -622,6 +657,46 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
 
 	DECLARE_END_CHECKODBC
 	DECLARE_RETURN
+}
+
+/**
+ * @brief     GetFieldNameOfTable
+ * @param     std::vector<string> * pVecString
+ * @param     char * pTable
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-09 11:21:13
+ * @warning
+ */
+bool CRADARANLAPPDoc::GetFieldNameOfTable( std::vector<string> *pVecString, char *pTable)
+{
+	DECLARE_BEGIN_CHECKODBC
+
+	CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
+
+	char szBuffer[300];
+
+	pVecString->clear();
+	sprintf(m_szSQLString, "SELECT name from syscolumns where id=object_id('%s') order by colid", pTable);
+
+	theRS.Open(m_szSQLString);
+	while (!theRS.IsEof()) {
+		if (TRUE == theRS.GetFieldValue((SQLSMALLINT)0, szBuffer)) 
+		{
+			pVecString->push_back(szBuffer);
+		}
+
+		theRS.MoveNext();
+
+	}
+
+	theRS.Close();
+
+	DECLARE_END_CHECKODBC
+	DECLARE_RETURN
+
 }
 
 /**

@@ -27,26 +27,52 @@ CODBCDatabase gz_theMyODBC;
 
 namespace RadarAnlAlgotirhm
 {
+    char gszHeader[100] = { "+-----------------------------------------------------------------------+" };
 
+#ifdef _POCKETSONATA_
+    char gszProject[20] = { "위협 관리/식별" };
+
+#elif defined(_ELINT_) || defined(_XBAND_)
+    char gszProject[20] = { "레이더 분석" };
+
+#else
+    char gszProject[20] = { "ELINT" };
+
+#endif
+
+    /**
+     * @brief     위협 병합 및 식별 라이브러리를 초기화한다. 최소 한번은 호출해야 합니다.
+     * @param     HWND hWnd, 이 값은 WM_USER_LOGMSG 메시지를 처리할 Window Handler를 설정한다. 보통 pMainFrame->GetOutputWnd()->GetSafeHwnd() 으로 세팅한다.
+     * @param     bool bDBThread, DB 쓰레드를 적용 여부를 결정한다.
+     * @param     bool bLocal
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-10-19 13:45:37
+     * @warning
+     */
 	void RadarAnlAlgotirhm::Init( HWND hWnd, bool bDBThread, bool bLocal )
 	{
 		SetWindowHandler( hWnd );
 
 		if( bLocal == false /* && CheckPing() == TRUE */ ) {
-			SetLocal( bLocal );
+            //SetLocal( bLocal );
 		}
 		else {
-			SetLocal( true );
+            //SetLocal( true );
 		}
 
         if( g_pTheLog == NULL ) {
             g_pTheLog = new CLog();
         }
 
-		::Log( enNormal, "+---------------------------------------------------+" );
-		::Log( enNormal, "레이더 분석 라이브러리를 구동합니다....Ver" );
+        ::Log(enNormal, "%s", gszHeader);
+        ::Log(enNormal, "%s 라이브러리를 구동합니다....Ver", gszProject);
 
 		if( gpEmitterMergeMngr == NULL ) {
+			g_pTheSysConfig = new CSysConfig();
+
 #ifdef _MSSQL_
 			gpEmitterMergeMngr = new CELEmitterMergeMngr( bDBThread, & gz_theMyODBC );
 #else
@@ -58,68 +84,149 @@ namespace RadarAnlAlgotirhm
 		return;
 	}
 
+    /**
+     * @brief     위협 병합 및 식별 관리를 초기화할 때 호출한다.
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-10-19 13:45:05
+     * @warning
+     */
 	void RadarAnlAlgotirhm::SWInit()
 	{
-		::Log(enNormal, "+---------------------------------------------------+");
-		::Log(enNormal, "레이더 분석의 위협 관리를 초기화 합니다.");
+        ::Log(enNormal, "%s", gszHeader);
+        ::Log(enNormal, "%s 라이브러리를 초기화 합니다.", gszProject);
 
 		if( gpEmitterMergeMngr == NULL ) {
-			printf( "\n Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다.!!" );
+            ::Log(enError, "Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다.!!");
 		}
 		else {
 			gpEmitterMergeMngr->Init();
 
-			//gpEmitterMergeMngr->ClearLOBs( pTheThreat->m_nIndex );
-			//gpEmitterMergeMngr->InitOfLOBClustering();
-
-			//gpEmitterMergeMngr->GetGlobalSequenceNum();
-
-			//m_sLOBOtherInfo.bUpdate = false;
-
-			//DeleteAllQData();
 		}
 
 	}
 
-	void RadarAnlAlgotirhm::Start( STR_LOBDATA *pLOBData )
+    /**
+     * @brief     위협 관리에 LOB 데이터를 실어 위협 관리를 수행하게 한다.
+     * @param     STR_LOBDATA * pLOBData
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-10-19 13:55:31
+     * @warning
+     */
+    bool RadarAnlAlgotirhm::Start(STR_LOBDATA *pLOBData)
 	{
+        bool bRet = false;
+
 		SRxLOBHeader *pstLOBHeader;
 		SRxLOBData *pstLOBData;
 
 		if( gpEmitterMergeMngr == NULL ) {
-			printf( "\n Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다.!!" );
+            ::Log(enError, "Init() 함수를 호출하지 않고 Start() 함수를 실행했습니다 !!");
 		}
 		else {
 			gpEmitterMergeMngr->Start();
 
 			if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA || pLOBData->stLOBHeader.uiNumOfLOB == 0 ) {
-				Log( enError, "LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다." , pLOBData->stLOBHeader.uiNumOfLOB );
-				return;
+                ::Log(enError, "LOB 데이터 개수[%d]가 초과해서 실행을 중단합니다.", pLOBData->stLOBHeader.uiNumOfLOB);
 			}
+            else {
 
-			Log(enNormal, "OP_INIT_ID[%ld] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다.", pLOBData->stLOBData->uiOpInitID, pLOBData->stLOBData->iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB);
+#if defined(_ELINT_) || defined(_XBAND_)
+                ::Log(enNormal, "OP_INIT_ID[%ld] 레이더 방탐[%d]에서 LOB 데이터 [%d]개를 수신하여 처리합니다.", pLOBData->stLOBData[0].uiOpInitID, pLOBData->stLOBData[0].iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB);
+#else
+                ::Log(enNormal, "OP_INIT_ID[%d] LOB 데이터 [%d]개를 수신하여 처리합니다.", GetOpInitID(), pLOBData->stLOBHeader.uiNumOfLOB);
+#endif
+
 			pstLOBHeader = & pLOBData->stLOBHeader;
 			pstLOBData = & pLOBData->stLOBData[0];
 			for( unsigned int i=0 ; i < pstLOBHeader->uiNumOfLOB ; ++i ) {
+#if defined(_ELINT_) || defined(_XBAND_)
 				if( pstLOBData->aucTaskID[0] != NULL ) {
 					gpEmitterMergeMngr->ManageThreat( pstLOBHeader, pstLOBData, NULL, false );
-					gpEmitterMergeMngr->DISP_FineLOB(pstLOBData);
+                    gpEmitterMergeMngr->DISP_FineLOB(pstLOBData);
+
+                    bRet = true;
 
 					++ pstLOBData;
 				}
 				else {
 					Log( enError, "%d 번째 LOB 데어터의 과제 정보가 없습니다 !!!" , i+1 );
-					break;
 				}
+#else
+				gpEmitterMergeMngr->ManageThreat(pstLOBHeader, pstLOBData, NULL, false);
+				gpEmitterMergeMngr->DISP_FineLOB(pstLOBData);
+
+				bRet = true;
+
+				++pstLOBData;
+#endif
+
 			}
 
-			
 			gpEmitterMergeMngr->PrintAllABTData();
 
-			Log( enLineFeed, "" );
+                ::Log(enLineFeed, "");
+            }
 
 		}
 
+        return bRet;
+    }
+
+
+    /**
+     * @brief     식별 라이브러리가 변경이 됐을때 이를 호출하여 CED/EOB를 불러오도록 한다.
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2021-10-28, 13:39
+     * @warning
+     */
+    void RadarAnlAlgotirhm::UpdateCEDEOBLibrary()
+    {
+        if (gpEmitterMergeMngr != NULL) {
+            gpEmitterMergeMngr->UpdateCEDEOBLibrary();
+        }
+        else {
+            printf("\n Init() 함수를 호출하지 않고 UpdateCEDEOBLibrary() 함수를 실행했습니다.!!");
+            Log(enError, "Init() 함수를 호출하지 않고 UpdateCEDEOBLibrary() 함수를 실행했습니다.!!");
+        }
+        return;
+    }
+
+    /**
+     * @brief     레이더 분석 라이브러리를 종료 합니다. 프로그램 종료시 호출하면 됩니다.
+     * @return    void
+     * @exception
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   0.0.1
+     * @date      2021-10-28, 13:39
+     * @warning
+     */
+    void RadarAnlAlgotirhm::Close()
+    {
+
+        if (g_pTheLog != NULL) {
+            Log(enNormal, "레이더 분석 라이브러리를 종료합니다....");
+        }
+        else {
+            printf("\n 레이더 분석 라이브러리를 종료합니다....");
+        }
+
+        if (gpEmitterMergeMngr != NULL) {
+            delete gpEmitterMergeMngr;
+            gpEmitterMergeMngr = NULL;
+        }
+        if (g_pTheLog != NULL) {
+            delete g_pTheLog;
+            g_pTheLog = NULL;
+        }
 		return;
 	}
 
@@ -194,56 +301,34 @@ namespace RadarAnlAlgotirhm
 		return bRet;
 	}
 
-	/**
-	 * @brief     UpdateCEDEOBLibrary
-	 * @return    void
-	 * @exception
-	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2021-10-28, 13:39
-	 * @warning
-	 */
-	void RadarAnlAlgotirhm::UpdateCEDEOBLibrary()
-	{
-		if( gpEmitterMergeMngr != NULL ) {
-			gpEmitterMergeMngr->UpdateCEDEOBLibrary();
-		}
-		else {
-			printf( "\n Init() 함수를 호출하지 않고 UpdateCEDEOBLibrary() 함수를 실행했습니다.!!" );
-			Log( enError, "Init() 함수를 호출하지 않고 UpdateCEDEOBLibrary() 함수를 실행했습니다.!!" );
-		}
-		return;
-	}
+#ifdef _POCKETSONATA_
 
 	/**
-	 * @brief     Close
-	 * @return    void
-	 * @exception
+     * @brief     위협 관리/식별 함수에 대한 위협 결과를 얻을때 사용한다. Start() 후에 
+     * @param     std::vector<SRxLOBData> * pVecLOBData
+     * @param     std::vector<SRxABTData> * pVecABTData
+     * @param     std::vector<SRxAETData> * pVecAETData
+     * @return    bool
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
 	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2021-10-28, 13:39
+     * @version   1.0.0
+     * @date      2022-10-19 16:23:39
 	 * @warning
 	 */
-	void RadarAnlAlgotirhm::Close()
+    bool RadarAnlAlgotirhm::GetResult(std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData) 
 	{
-
-        if( g_pTheLog != NULL ) {
-		Log( enNormal, "레이더 분석 라이브러리를 종료합니다...." );
-        }
-        else {
-            printf( "\n 레이더 분석 라이브러리를 종료합니다...." );
-        }
-
-		if( gpEmitterMergeMngr != NULL ) {
-			delete gpEmitterMergeMngr;
-            gpEmitterMergeMngr = NULL;
-		}
-        if( g_pTheLog != NULL ) {
-            delete g_pTheLog;
-            g_pTheLog = NULL;
-        }
-		return;
+        return false;
 	}
+
+	unsigned int RadarAnlAlgotirhm::GetOpInitID()
+	{
+		return gpEmitterMergeMngr->GetOpInitID();
+
+	}
+
+#else
+
+
 
     /**
      * @brief     GetOPInitID
@@ -259,6 +344,9 @@ namespace RadarAnlAlgotirhm
         return gpEmitterMergeMngr->GetOpInitID();
 
     }
+
+#endif
+
 
 }
 

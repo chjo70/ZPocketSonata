@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 typedef enum {
-	enOpenPDW = 0,
+	enOpenRAWDATA = 0,
 	enOpenXLS,
 	enSavePDW,
 	enSaveXLS
@@ -43,7 +43,7 @@ private:
 	CMapData m_theMapData;
 
 private:
-	bool OpenFile( CString &strPathname, TCHAR *pTitle, ENUM_OPENTYPE enOpenType=enOpenPDW );
+	bool OpenFile( CString &strPathname, TCHAR *pTitle, ENUM_OPENTYPE enOpenType=enOpenRAWDATA );
 	void RawDataOpen( CString *pStrPathname );
 	ENUM_DataType GetDataType(CString &strPathName);
 	bool IsExistFile( CString &strPathname );

@@ -1,32 +1,25 @@
-PetaLinux User Application Template
-===================================
+dev 이하 폴더에 대한 설명입니다. 나머지 폴더는 삭제 예정 입니다.
+==================================================
 
-This directory contains a PetaLinux user application created from a template.
-
-If you are developing your application from scratch, simply start editing the
-file apppocketsonata.c.
-
-You can easily import any existing application code by copying it into this 
-directory, and editing the automatically generated Makefile.
-
-Before building the application, you will need to enable the application
-from PetaLinux menuconfig by running:
-    "petalinux-config -c rootfs"
-You will see your application in the "apps --->" submenu.
-
-To build your application, simply run "petalinux-build -c apppocketsonata".
-This command will build your application and will install your application
-into the target file system host copy.
-
-You will also need to rebuild PetaLinux bootable images so that the images
-is updated with the updated target filesystem copy, run this command:
-    "petalinux-build -c rootfs"
-
-You can also run one PetaLinux command to install the application to the
-target filesystem host copy and update the bootable images as follows:
-    "petalinux-build"
-
-To add extra source code files (for example, to split a large application into 
-multiple source files), add the relevant .o files to the list in the local 
-Makefile where indicated.  
-
+Build-PocketView 
+	QT 로 제작한 통합/운용콘솔 모의기 입니다. 리눅스 환경에서도 소스를 디버깅을 해야 해서 만들었는데...
+	
+Document
+	설계 문서 입니다. 위협 결과 및 위협 라이브러리에 대한 스키마 자료가 있습니다.
+	신호 분석 관련 UML 파일도 있습니다.
+	
+files
+	신호 분석 관련 모든 소스가 있습니다.
+	이 소스는 리눅스, Windows, VXWORKS 환경에서도 모두 빌드가 되도록 했습니다.
+	세부 설명은 추후에...
+	
+MSC
+	Visual Studio 프로젝트 환경에서 files 폴더에 있는 파일들을 선택해서 다양한 프로젝트를 구성한다.
+	현재는 신호분석, 그래프, 위협 관리 등으로 구성되어 있다.
+	
+VxWorksSpace
+	VxWorks 프로젝트 폴더 입니다. 
+	현재는 SBC 부트 프로그램과 신호분석 소프트웨어가 있숩니다.
+	
+	
+	

@@ -78,6 +78,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         SRxLOBData *pLOBData;
 
         CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
+		CRADARDIRAPPView *pView;
         //CRADARDIRAPPView * pView;
 
         RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
@@ -85,14 +86,25 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
 
 	    // TODO: 여기에 로딩 코드를 추가합니다.
-        m_theDataFile.ReadDataFile( (char*)(LPCTSTR) ar.m_strFileName, NULL, enPDWToPDW );
+		if (true == ReadDataFile((char*)(LPCTSTR)ar.m_strFileName, (char*)(LPCTSTR)ar.m_strFileName)) {
+			pstPDWData = (STR_PDWDATA *)m_theDataFile.GetData();
 
-        pstPDWData = ( STR_PDWDATA * ) m_theDataFile.GetData();
-        RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData );        
+			pstPDWData->SetPDWID(m_uiPDWID++);
 
-        int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+			RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData);
 
-        pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
+			int nCoLOB = RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+
+			pLOBData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
+
+			//pView = (CRADARDIRAPPView *)pMainFrame->GetActiveView();
+
+			//pView->UpdateLOBData(nCoLOB, pLOBData);
+
+		}
+		else {
+			AfxMessageBox(_T("분석하지 못할 파일 포멧 입니다."));
+		}
 
 	}
 }
@@ -167,7 +179,7 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 // CRADARDIRAPPDoc 명령
 
-bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
+bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 {
 	//CString strMainTitle;    
 
@@ -175,7 +187,34 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 
 	m_strPathname = strPathname;
 
-    ReadDataFile();
+	SRxLOBData *pLOBData;
+	STR_PDWDATA *pstPDWData;
+
+	CRADARDIRAPPView *pView;
+	CMainFrame *pMainFrame;
+
+	if (true == ReadDataFile((char*)(LPCTSTR) m_strPathname, (char*)(LPCTSTR)strFilename)) {
+		pstPDWData = m_theDataFile.GetPDWData();
+
+		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, true);
+
+		int nCoLOB = RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+
+		pLOBData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
+
+		pMainFrame = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		pView = (CRADARDIRAPPView *)pMainFrame->GetActiveView();
+
+		pView->UpdateLOBData(nCoLOB, pLOBData);
+
+		//TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
+
+		// 프로그램 종료시 한번만 호출하면 됩니다.
+		//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
+	}
+	else {
+		AfxMessageBox(_T("분석하지 못할 파일 포멧 입니다."));
+	}
 
 	//strMainTitle.Format( "%s" , m_strPathname );
 	//m_pMainFrame->SetWindowText( strMainTitle );
@@ -185,39 +224,44 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname )
 
 /**
  * @brief     ReadDataFile
- * @return    void
- * @exception
+ * @param     char * pStrFileName
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2021-10-28, 16:51
+ * @version   1.0.0
+ * @date      2023-01-20 11:07:19
  * @warning
  */
-void CRADARDIRAPPDoc::ReadDataFile()
+bool CRADARDIRAPPDoc::ReadDataFile( char *pStrPathName, char *pStrFileName )
 {
-	SRxLOBData *pLOBData;
+	bool bRet=true;
 	STR_PDWDATA *pstPDWData;
 
-	CRADARDIRAPPView *pView;
-	CMainFrame *pMainFrame;
+	ENUM_DataType enDataType = CCommonUtils::WhatDataType(pStrPathName);
 
-    m_theDataFile.ReadDataFile( (char*)(LPCTSTR) m_strPathname, NULL, enPDWToPDW );
-    pstPDWData = m_theDataFile.GetPDWData();
-    pstPDWData->SetPDWID( m_uiPDWID++ );
+	if (enDataType == en_PDW_DATA) {
+		m_theDataFile.ReadDataFile(pStrPathName, NULL, enPDWToPDW);
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData, true );        
+		pstPDWData = m_theDataFile.GetPDWData();
 
-	int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
+	}
+	else if (enDataType == en_PDW_DATA_CSV) {
+		m_theDataFile.ReadDataFile(pStrPathName, NULL, enCSVToPDW);
 
-	pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
+		// CSV 에는 과제명이 없기 떄문에 파일명으로 설정함.
+		pstPDWData = m_theDataFile.GetPDWData();
+		pstPDWData->SetTaskID(pStrFileName);
+	}
+	else {
+		bRet = false;
+	}
 
-	pMainFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
-	pView = (CRADARDIRAPPView *) pMainFrame->GetActiveView();
+	if (bRet == true) {
+		//pstPDWData->SetPDWID(m_uiPDWID++);
+		pstPDWData->SetPDWID(0);
+		
+	}
 
-	pView->UpdateLOBData( nCoLOB, pLOBData );
-
-	//TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
-
-	// 프로그램 종료시 한번만 호출하면 됩니다.
-	//RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
+	return bRet;
 
 }

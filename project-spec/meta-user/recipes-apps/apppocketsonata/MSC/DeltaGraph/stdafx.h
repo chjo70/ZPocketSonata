@@ -47,8 +47,10 @@
 // 로그 타입 사용자가 원하는 대로 정의
 enum LogType {
 	enDebug=0,
+
 	enNormal,
 	enLineFeed,
+
 	enError,
 	enEnd,
 };
