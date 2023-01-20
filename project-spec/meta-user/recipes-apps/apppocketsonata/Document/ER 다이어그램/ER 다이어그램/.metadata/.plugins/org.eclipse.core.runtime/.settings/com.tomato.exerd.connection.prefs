@@ -1,0 +1,15 @@
+#Fri Jun 24 14:06:21 KST 2022
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.driverClass=com.microsoft.sqlserver.jdbc.SQLServerDriver
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.databaseName=ELINT
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.user=sa
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.driverJar=C\:\\Program Files (x86)\\eXERD\\drivers\\sqljdbc_9.2.1.0_kor\\sqljdbc_9.2\\kor\\mssql-jdbc-9.2.1.jre8.jar
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.integratedSecurity=false
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.propertiesKeys=integratedSecurity/user/port/password/host/databaseName
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.password=devrms
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.url=jdbc\:sqlserver\://127.0.0.1\:1433;databaseName\=ELINT
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.name=MSSQL
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.host=127.0.0.1
+eclipse.preferences.version=1
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.productId=com.tomato.db.sqlserver_2005
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.common.productName=Microsoft SQL Server 2005 ~ 2017
+com.tomato.exerd.connection.com.tomato.db.sqlserver_2005.lastSelectedConnection.properties.port=1433

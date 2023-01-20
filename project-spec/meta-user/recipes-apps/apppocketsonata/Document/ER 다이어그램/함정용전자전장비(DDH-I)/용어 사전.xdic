@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tm:TermDictionary xmlns:tm="http://exerd.com/term-model" version="1.1">
+  <term name="최근 시간" description="" physicalName="LAST_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="운용 초기화" description="" physicalName="OP_INIT_ID" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 평균" description="" physicalName="PW_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="수집개수" description="" physicalName="COUNTOFDATA" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #10" description="" physicalName="SEQ_10" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호세기 편차" description="" physicalName="PA_DEV" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 최대" description="" physicalName="PW_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #22" description="" physicalName="SEQ_22" physicalDescription="" tag="//@tag.0"/>
+  <term name="방위 최소" description="" physicalName="DOA_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 주기 평균" description="" physicalName="FREQ_PATTERN_PERIOD_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PDW 번호" description="" physicalName="PDWID" physicalDescription="" tag="//@tag.0"/>
+  <term name="1차 ELNOT" description="" physicalName="PRIMARY_ELNOT" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #11" description="" physicalName="SEQ_11" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 최소" description="" physicalName="PW_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="파일명" description="" physicalName="FILENAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #23" description="" physicalName="SEQ_23" physicalDescription="" tag="//@tag.0"/>
+  <term name="방위 최대" description="" physicalName="DOA_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #12" description="" physicalName="SEQ_12" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 형태" description="" physicalName="SCAN_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 편차" description="" physicalName="PW_DEV" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 주기 최소" description="" physicalName="FREQ_PATTERN_PERIOD_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="데이터 형태" description="" physicalName="DATA_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="가상 LOB 번호" description="" physicalName="PLOBID" physicalDescription="" tag="//@tag.0"/>
+  <term name="1차 모드 부호" description="" physicalName="PRIMARY_MODECODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #24" description="" physicalName="SEQ_24" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #13" description="" physicalName="SEQ_13" physicalDescription="" tag="//@tag.0"/>
+  <term name="방위 편차" description="" physicalName="DOA_DEV" physicalDescription="" tag="//@tag.0"/>
+  <term name="LOB 번호" description="" physicalName="LOBID" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 주기 평균" description="" physicalName="SCAN_PRD_MEAN_SEC" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 주기 최대" description="" physicalName="FREQ_PATTERN_PERIOD_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #25" description="" physicalName="SEQ_25" physicalDescription="" tag="//@tag.0"/>
+  <term name="수집 뱅크 번호" description="" physicalName="COL_BANK" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 표준편차" description="" physicalName="PW_STD" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더모드명" description="" physicalName="RADARMODE_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #14" description="" physicalName="SEQ_14" physicalDescription="" tag="//@tag.0"/>
+  <term name="방사체 번호" description="" physicalName="AETID" physicalDescription="" tag="//@tag.0"/>
+  <term name="방위 표준편차" description="" physicalName="DOA_STD" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #26" description="" physicalName="SEQ_26" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 주기 최소" description="" physicalName="SCAN_PRD_MIN_SEC" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 평균" description="" physicalName="FREQ_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="별명" description="" physicalName="NICK_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호세기 평균" description="" physicalName="PA_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #15" description="" physicalName="SEQ_15" physicalDescription="" tag="//@tag.0"/>
+  <term name="빔 번호" description="" physicalName="ABTID" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #27" description="" physicalName="SEQ_27" physicalDescription="" tag="//@tag.0"/>
+  <term name="방탐 유효율" description="" physicalName="DI_RATIO" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 최소" description="" physicalName="FREQ_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 주기 최대" description="" physicalName="SCAN_PRD_MAX_SEC" physicalDescription="" tag="//@tag.0"/>
+  <term name="기능 코드" description="" physicalName="FUNC_CODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #16" description="" physicalName="SEQ_16" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호세기 최소" description="" physicalName="PA_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #28" description="" physicalName="SEQ_28" physicalDescription="" tag="//@tag.0"/>
+  <term name="최초 시간" description="" physicalName="FIRST_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="주차수 형태" description="" physicalName="FREQ_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 최대" description="" physicalName="FREQ_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트아 유무" description="" physicalName="HAS_INTRA_MOD" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #17" description="" physicalName="SEQ_17" physicalDescription="" tag="//@tag.0"/>
+  <term name="플랫폼 형태" description="" physicalName="PLATFORM_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #29" description="" physicalName="SEQ_29" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호세기 최대" description="" physicalName="PA_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 형태" description="" physicalName="FREQ_PATTERN_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 변화 최소" description="" physicalName="INTRA_FRQ_CHNG_WID_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #18" description="" physicalName="SEQ_18" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #30" description="" physicalName="SEQ_30" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 편차" description="" physicalName="FREQ_DEV" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더모드 우선순위" description="" physicalName="RADARMODE_PRIORITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 주기" description="" physicalName="FREQ_PATTERN_PERIOD" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #19" description="" physicalName="SEQ_19" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #31" description="" physicalName="SEQ_31" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 변화 최대" description="" physicalName="INTRA_FRQ_CHNG_WID_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 값 개수" description="" physicalName="FREQ_POSITION_COUNT" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더 우선순위" description="" physicalName="RADAR_PRIORITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 유효성" description="" physicalName="PE_VALID" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #20" description="" physicalName="SEQ_20" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #32" description="" physicalName="SEQ_32" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 개수" description="" physicalName="POSITION_COUNT" physicalDescription="" tag="//@tag.0"/>
+  <term name="핀 번호" description="" physicalName="PIN_NUM" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 요소 개수" description="" physicalName="FREQ_ELEMENT_COUNT" physicalDescription="" tag="//@tag.0"/>
+  <term name="변환 코드" description="" physicalName="MODULATION_CODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호세기 표준편차" description="" physicalName="PA_STD" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #21" description="" physicalName="SEQ_21" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 위도" description="" physicalName="PE_LATITUDE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #1" description="" physicalName="SEQ_01" physicalDescription="" tag="//@tag.0"/>
+  <term name="과제 ID" description="" physicalName="TASK_ID" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 형태" description="" physicalName="PRI_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 경도" description="" physicalName="PE_LONGITUDE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #2" description="" physicalName="SEQ_02" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 한글명" description="" physicalName="PLACENAME_KOR" physicalDescription="" tag="//@tag.0"/>
+  <term name="접촉 시간(시분초)" description="" physicalName="CONTACT_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 형태" description="" physicalName="PRI_PATTERN_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #3" description="" physicalName="SEQ_03" physicalDescription="" tag="//@tag.0"/>
+  <term name="접촉 시간(ms)" description="" physicalName="CONTACT_TIME_MS" physicalDescription="" tag="//@tag.0"/>
+  <term name="빔 유효성" description="" physicalName="BEAM_VALIDITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 주기 평균" description="" physicalName="PRI_PATTERN_PERIOD_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 CEP" description="" physicalName="PE_CEP" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #4" description="" physicalName="SEQ_04" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 주기" description="" physicalName="SCAN_PRD" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 주기 최소" description="" physicalName="PRI_PATTERN_PERIOD_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #5" description="" physicalName="SEQ_05" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 장축" description="" physicalName="PE_MAJOR_AXIS" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 형태" description="" physicalName="INTRA_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 단축" description="" physicalName="PE_MINOR_AXIS" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #6" description="" physicalName="SEQ_06" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 세부 형태" description="" physicalName="INTRA_TYPE_DETAIL" physicalDescription="" tag="//@tag.0"/>
+  <term name="위협 기능 코드" description="" physicalName="THREAT_FUNC_CODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 기울기" description="" physicalName="PE_THETA" physicalDescription="" tag="//@tag.0"/>
+  <term name="2차 ELNOT" description="" physicalName="SECONDARY_ELNOT" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 주기 최대" description="" physicalName="PRI_PATTERN_PERIOD_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #7" description="" physicalName="SEQ_07" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 표준편차" description="" physicalName="FREQ_STD" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 평균" description="" physicalName="INTRA_FRQ_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="위협 우선순위" description="" physicalName="THREAT_PRIORITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #8" description="" physicalName="SEQ_08" physicalDescription="" tag="//@tag.0"/>
+  <term name="위치 거리오차" description="" physicalName="PE_DISTANCE" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 평균" description="" physicalName="PRI_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더모드 인덱스" description="" physicalName="RADARMODE_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 최소" description="" physicalName="INTRA_FRQ_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="2차 모드 부호" description="" physicalName="SECONDARY_MODECODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="PDW 총개수" description="" physicalName="TOTAL_PDW" physicalDescription="" tag="//@tag.0"/>
+  <term name="값 #9" description="" physicalName="SEQ_09" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 최소" description="" physicalName="PRI_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="위협 인덱스" description="" physicalName="THREAT_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 최대" description="" physicalName="INTRA_FRQ_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="LOB 개수" description="" physicalName="NUM_LOB" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 최대" description="" physicalName="PRI_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="상태" description="" physicalName="STAT" physicalDescription="" tag="//@tag.0"/>
+  <term name="경보 시간" description="" physicalName="ALARM_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="인트라 주파수 편차" description="" physicalName="INTRA_FRQ_DEVIATION" physicalDescription="" tag="//@tag.0"/>
+  <term name="3차 ELNOT" description="" physicalName="TERTIARY_ELNOT" physicalDescription="" tag="//@tag.0"/>
+  <term name="유효성" description="" physicalName="VALIDITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="빔 개수" description="" physicalName="NUM_OF_BEAMS" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 편차" description="" physicalName="PRI_DEV" physicalDescription="" tag="//@tag.0"/>
+  <term name="극성" description="" physicalName="POLIZATION" physicalDescription="" tag="//@tag.0"/>
+  <term name="방위 평균" description="" physicalName="DOA_MEAN" physicalDescription="" tag="//@tag.0"/>
+  <term name="3차 모드 부호" description="" physicalName="TERTIARY_MODECODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="신호 형태" description="" physicalName="SIGNAL_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 지터율" description="" physicalName="PRI_JITTER_RATIO" physicalDescription="" tag="//@tag.0"/>
+  <term name="위도" description="" physicalName="LATITUDE" physicalDescription="" tag="//@tag.0"/>
+  <term name="최소 방위" description="" physicalName="DOA_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 주기" description="" physicalName="PRI_PATTERN_PERIOD" physicalDescription="" tag="//@tag.0"/>
+  <term name="IDINFO" description="" physicalName="IDINFO" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 값 개수" description="" physicalName="PRI_POSITION_COUNT" physicalDescription="" tag="//@tag.0"/>
+  <term name="최종 경보 시간" description="" physicalName="FINAL_ALARM_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 요소 개수" description="" physicalName="PRI_ELEMENT_COUNT" physicalDescription="" tag="//@tag.0"/>
+  <term name="경도" description="" physicalName="LONGITUDE" physicalDescription="" tag="//@tag.0"/>
+  <term name="헤딩" description="" physicalName="HEADING" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 표준편차" description="" physicalName="PRI_STD" physicalDescription="" tag="//@tag.0"/>
+  <term name="수집 시간(시분초)" description="" physicalName="CREATE_TIME" physicalDescription="" tag="//@tag.0"/>
+  <term name="극성율" description="" physicalName="RATIOOFPOL" physicalDescription="" tag="//@tag.0"/>
+  <term name="롤" description="" physicalName="ROLL" physicalDescription="" tag="//@tag.0"/>
+  <term name="수집시간(ms)" description="" physicalName="CREATE_TIME_MS" physicalDescription="" tag="//@tag.0"/>
+  <term name="피치" description="" physicalName="PITCH" physicalDescription="" tag="//@tag.0"/>
+  <term name="고도" description="" physicalName="ALTITUDE" physicalDescription="" tag="//@tag.0"/>
+  <term name="수집소" description="" physicalName="COLLECTOR_ID" physicalDescription="" tag="//@tag.0"/>
+  <term name="LOB 유효성" description="" physicalName="IS_VALIDITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="필터 여부" description="" physicalName="IS_FILTERED" physicalDescription="" tag="//@tag.0"/>
+  <term name="PDW 개수" description="" physicalName="NUM_PDW" physicalDescription="" tag="//@tag.0"/>
+  <term name="IQ 개수" description="" physicalName="NUM_IQ" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 평균 최소" description="" physicalName="RF_MEAN_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 평균 최대" description="" physicalName="PRI_MEAN_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 1차 주기 최대" description="" physicalName="SCAN_PRIMARY_RANGE_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 평균 최대" description="" physicalName="RF_MEAN_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 엘리먼트 수" description="" physicalName="PRI_NUM_ELEMENTS" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 2차 형태" description="" physicalName="SCAN_SECONDARY_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="최근 수정 날짜" description="" physicalName="DATE_LAST_UPDATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 엘리먼트 수" description="" physicalName="RF_NUM_ELEMENTS" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 포지션 수" description="" physicalName="PRI_NUM_POSITIONS" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 인덱스" description="" physicalName="PRI_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="플레폼 인덱스" description="" physicalName="PLATFORM_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="최근 편집 날짜" description="" physicalName="DATE_LAST_REVIEWED" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 패턴 타입" description="" physicalName="PRI_PATTERN" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 2차 주기 최소" description="" physicalName="SCAN_SECONDARY_RANGE_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 시퀀스 ID" description="" physicalName="RF_SEQ_ID" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더 인덱스" description="" physicalName="RADAR_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="활성 날짜" description="" physicalName="DATE_ACTIVATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 시퀀스 번호" description="" physicalName="RF_SEQUENCE_NUM" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 2차 주기 최대" description="" physicalName="SCAN_SECONDARY_RANGE_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="플레폼 명" description="" physicalName="PLATFORM" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 시퀀스 명" description="" physicalName="PRI_SEQ_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="새 컬럼" description="" physicalName="DATE_INACTIVATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="생성 날짜" description="" physicalName="DATE_CREATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 포지션 수" description="" physicalName="RF_NUM_POSITIONS" physicalDescription="" tag="//@tag.0"/>
+  <term name="레이더 주석 인덱스" description="" physicalName="RADAR_COMMENT_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="비활성 시간" description="" physicalName="TIME_INACTIVATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 타입" description="" physicalName="RF_PATTERN" physicalDescription="" tag="//@tag.0"/>
+  <term name="제목" description="" physicalName="TITLE" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 인덱스" description="" physicalName="PF_INDEX" physicalDescription="" tag="//@tag.0">
+    <physicalSynonyms>RF_INDEX</physicalSynonyms>
+  </term>
+  <term name="병합 날짜" description="" physicalName="COMBINED_DATE_LAST_UPDATED" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 패턴 주기 최소" description="" physicalName="RF_PATTERN_PERIOD_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 최소" description="" physicalName="RF_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 패턴 주기 최대" description="" physicalName="RF_PATTERN_PERIOD_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="ELNOT" description="" physicalName="ELNOT" physicalDescription="" tag="//@tag.0"/>
+  <term name="최초 접촉 날짜" description="" physicalName="DATE_FIRST_SEEN" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 최대" description="" physicalName="RF_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 패턴 주기 편차" description="" physicalName="RF_STANDARD_DEVIATION" physicalDescription="" tag="//@tag.0"/>
+  <term name="우선순위" description="" physicalName="PRIORITY" physicalDescription="" tag="//@tag.0"/>
+  <term name="커맨트" description="" physicalName="COMMENTS" physicalDescription="" tag="//@tag.0"/>
+  <term name="최근 접촉 날짜" description="" physicalName="DATE_LAST_SEEN" physicalDescription="" tag="//@tag.0"/>
+  <term name="1차 재밍 기법" description="" physicalName="JAMMING_PRIMARY_TECH" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 시퀀스 ID" description="" physicalName="PRI_SEQ_ID" physicalDescription="" tag="//@tag.0"/>
+  <term name="PPG 최소" description="" physicalName="PRI_PATTERN_PERIOD_COUNT_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="싸이트명" description="" physicalName="SITE_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="2차 재밍 기법" description="" physicalName="JAMMING_SECONDARY_TECH" physicalDescription="" tag="//@tag.0"/>
+  <term name="PPG 최대" description="" physicalName="PRI_PATTERN_PERIOD_COUNT_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="ERP 최소 " description="" physicalName="ERP_MEAN_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PIN 번호" description="" physicalName="PIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 범위 최소" description="" physicalName="PD_RANGE_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="유효" description="" physicalName="VALIDATION" physicalDescription="" tag="//@tag.0"/>
+  <term name="모드부호" description="" physicalName="MODECODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="ERP 최대" description="" physicalName="ERP_MEAN_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="한글지명" description="" physicalName="PLACE_NAME_KOR" physicalDescription="" tag="//@tag.0"/>
+  <term name="펄스폭 범위 최대" description="" physicalName="PD_RANGE_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 범위 최소" description="" physicalName="PRI_RANGE_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 형태" description="" physicalName="RF_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 1차 형태" description="" physicalName="SCAN_PRIMARY_TYPE" physicalDescription="" tag="//@tag.0"/>
+  <term name="적아" description="" physicalName="FRIEND_OR_FOE" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 범위 최대" description="" physicalName="PRI_RANGE_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 범위 최소" description="" physicalName="RF_RANGE_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="스캔 1차 주기 최소" description="" physicalName="SCAN_PRIMARY_RANGE_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 평균 최소" description="" physicalName="PRI_MEAN_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="PRI 시퀀스 번호" description="" physicalName="PRI_SEQUENCE_NUM" physicalDescription="" tag="//@tag.0"/>
+  <term name="주파수 범위 최대" description="" physicalName="RF_RANGE_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="장비 인덱스" description="" physicalName="DEVICE_INDEX" physicalDescription="" tag="//@tag.0"/>
+  <term name="범주" description="" physicalName="CATEGORY" physicalDescription="" tag="//@tag.0"/>
+  <term name="드웰 지속 최소" description="" physicalName="DWELL_DURATION_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="장비명" description="" physicalName="DEVICE_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="RF 시퀀스명" description="" physicalName="RF_SEQ_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="드웰 지속 최대" description="" physicalName="DWELL_DURATION_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="식별 반경" description="" physicalName="IDENTIFICATION_RANGE" physicalDescription="" tag="//@tag.0"/>
+  <term name="드웰 내 펄스 개수" description="" physicalName="PULSES_PER_DWELL" physicalDescription="" tag="//@tag.0"/>
+  <term name="심벌 코드" description="" physicalName="SYMBOL_CODE" physicalDescription="" tag="//@tag.0"/>
+  <term name="변환 최소" description="" physicalName="TRANSITION_MIN" physicalDescription="" tag="//@tag.0"/>
+  <term name="승인" description="" physicalName="ACCEPTED" physicalDescription="" tag="//@tag.0"/>
+  <term name="변환 최대" description="" physicalName="TRANSITION_MAX" physicalDescription="" tag="//@tag.0"/>
+  <term name="플렛폼" description="" physicalName="PRIMARY_PLATFORM" physicalDescription="" tag="//@tag.0"/>
+  <term name="위협명" description="" physicalName="THREAT_NAME" physicalDescription="" tag="//@tag.0"/>
+  <tag name="다이어그램_용어수집" description="이 용어는 다이어그램에서 용어 수집도구를 사용하여 등록한 것입니다."/>
+</tm:TermDictionary>
