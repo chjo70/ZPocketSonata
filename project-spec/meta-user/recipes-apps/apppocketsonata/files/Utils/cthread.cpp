@@ -20,7 +20,7 @@
 
 #ifdef _MSC_VER
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <netinet/in.h>
 #include <msgQLib.h>
 #include <errnoLib.h>
@@ -76,7 +76,7 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
 
     LOGMSG2( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_hEvent );
 	
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     m_iPriority = -1;
     m_MsgKeyID = 0;
     m_bTaskRunStat = false;
@@ -97,7 +97,7 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
     }
     LOGMSG2( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_MsgKeyID );
 
-#elif __linux__
+#elif defined(__linux__)
     m_MsgKeyID = 0;
 
     if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
@@ -267,13 +267,13 @@ void CThread::Run( void *(*pFunc)(void*), key_t key )
 
     LOGMSG4( enDebug, "Create the task[%s] ID[%d/%d] & queue ID[%d] ..." , m_szThreadName, m_TaskID, m_iPriority, m_hEvent );
 
-#elif _MSC_VER
+#elif defined(_MSC_VER)
 
     // 쓰레드 생성
     Attach( (LPTHREAD_START_ROUTINE) pFunc );
     Start();    
     
-#elif __VXWORKS__        
+#elif defined(__VXWORKS__)
    
     // 타스크 큐 생성
     m_iPriority = GetPriorityByThreadName();
@@ -342,7 +342,7 @@ int CThread::Pend()
     int iStatus=0;
 
 #ifdef _MSC_VER
-#elif __VXWORKS__    
+#elif defined(__VXWORKS__)
 #else    
     iStatus = pthread_join( m_MainThread, /* (void **) & iStatus[0] */ NULL );
     
@@ -383,7 +383,7 @@ void CThread::Stop()
 
         
     }
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 
 #else	
     if( m_MainThread != 0 ) {
@@ -422,7 +422,7 @@ void CThread::TCleanUpHandler(void *arg )
  * @brief CThread::QMsgRcv
  * @return
  */
-int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
+int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 {
     //LOGENTRY;
     int iMsgRcv = -1;
@@ -476,17 +476,29 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
             }
         }
     }
-    else {
+    else { // {if( enFlag == enTI {}
         Lock();
         if( m_queue.size() == 0 ) {
             UnLock();
-            dwRes = ::WaitForSingleObject(m_hEvent, INFINITE );
+            if (enFlag == enTIMER) {
+                dwRes = ::WaitForSingleObject(m_hEvent, dwMilliSec);
+            }
+            else {
+                dwRes = ::WaitForSingleObject(m_hEvent, INFINITE);
+            }
 
             if( dwRes == WAIT_FAILED ) {
                 
             }
             else if( dwRes == WAIT_ABANDONED ) {
                 ResetEvent( m_hEvent );
+            }
+            else if (dwRes == WAIT_TIMEOUT ) {
+				iMsgRcv = 1;
+
+				m_RcvMsg.uiOpCode = enTHREAD_DELETE_THREAT;
+				m_RcvMsg.uiSocket = 0;
+
             }
             else if( dwRes == WAIT_OBJECT_0 ) {
                 Lock();
@@ -508,54 +520,58 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
                     ResetEvent( m_hEvent );
                 }
                 else {
-                    //TRACE( "Invalid the receive message..." );
+                    TRACE( "Invalid the receive message..." );
                 }
             }
 			ELSE
 
         }
         else {
-            //Lock();
-            if( m_queue.size() != 0 ) {
-                iMsgRcv = 1;
+            iMsgRcv = 1;
 
-                m_RcvMsg = m_queue.front();
+            m_RcvMsg = m_queue.front();
 
-                if (m_RcvMsg.iArrayIndex != -1) {
-                    m_pszRecvData = (char *) m_szRecvData;
-                    PopLanData( m_szRecvData, m_RcvMsg.iArrayIndex, m_RcvMsg.uiArrayLength );
-                }
-                else {
-                    m_pszRecvData = NULL;
-                }
-
-                m_queue.pop();	
+            if (m_RcvMsg.iArrayIndex != -1) {
+                m_pszRecvData = (char *) m_szRecvData;
+                PopLanData( m_szRecvData, m_RcvMsg.iArrayIndex, m_RcvMsg.uiArrayLength );
             }
             else {
-                //TRACE( "AAAA" );
+                m_pszRecvData = NULL;
             }
+
+            m_queue.pop();	
         }
 
     }
    
     UnLock();
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     _Vx_ticks_t option;
 
     if( enFlag == enWAIT_FOREVER ) {
         option = WAIT_FOREVER;        
     }
     else {
-        option = NO_WAIT;        
+        option = dwMilliSec;        
     }
 
     STATUS stat = msgQReceive( m_MsgKeyID, (char *) & m_RcvMsg, sizeof(STR_MessageData), option );
     if( ERROR == stat ) {
         int noError = errnoGet();
 
-        if( noError != S_objLib_OBJ_TIMEOUT ) {
-            // printErrno( noError );
+        if( noError == S_objLib_OBJ_TIMEOUT ) {
+            iMsgRcv = 1;
+
+            m_RcvMsg.uiOpCode = enTHREAD_DELETE_THREAT;
+            m_RcvMsg.uiSocket = 0;
+        }
+        else if( noError == S_objLib_OBJ_UNAVAILABLE && enFlag == enNO_WAIT ) {
+
+        }
+        else {
+            printf( "[%s]" , GetThreadName() );
+            printf( "\nstat[%d/%d/%d/%d]" , stat, ERROR, option, noError );            
         }
     }
     else {
@@ -569,6 +585,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag )
                 iMsgRcv = 1;
             }
         }
+        // 정상 적인 처리 입니다.
         else {
             iMsgRcv = 0;
         }
@@ -613,8 +630,15 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
 }
 
 /**
- * @brief CThread::QMsgSnd
- * @param uiOpCode
+ * @brief     해당 쓰레드로 메시지를 전송한다.
+ * @param     unsigned int uiOpCode
+ * @param     const char * pszClassName
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 19:18:32
+ * @warning
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
 {
@@ -726,7 +750,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 
     }
 
-#elif _MSC_VER
+#elif defined(_MSC_VER)
     Lock();
 	m_queue.push(*pMessageData);
     UnLock();
@@ -736,7 +760,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 
 	::SetEvent(m_hEvent);   
 
-#elif __VXWORKS__   
+#elif defined(__VXWORKS__)
     STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof(STR_MessageData), NO_WAIT, MSG_PRI_NORMAL );
     if( stat == ERROR ) {        
         // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.

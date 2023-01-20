@@ -3,6 +3,7 @@
 
 using namespace std;
 
+#include "../Anal/Identify/define.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/Identify/cipl.h"
@@ -36,9 +37,10 @@ private:
     CIPL m_theIPL;
 
 #ifdef _SQLITE_
-    char m_szSQLString[4000];
+    char m_szSQLString[MAX_SQL_SIZE];
+    wchar_t m_szSQLString16[MAX_SQL_SIZE];
 
-    Kompex::SQLiteDatabase *m_pDatabase;
+    Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
     CODBCDatabase m_theMyODBC;

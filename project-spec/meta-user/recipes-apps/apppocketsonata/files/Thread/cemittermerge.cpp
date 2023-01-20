@@ -83,7 +83,14 @@ CEmitterMerge::~CEmitterMerge()
 }
 
 /**
- * @brief CEmitterMerge::Run
+ * @brief     쓰레드를 호출한다.
+ * @param     key_t key
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-18 13:46:43
+ * @warning
  */
 void CEmitterMerge::Run(key_t key)
 {
@@ -94,7 +101,13 @@ void CEmitterMerge::Run(key_t key)
 }
 
 /**
- * @brief CEmitterMerge::_routine
+ * @brief     쓰레드에서 메시지에 따라 처리한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:48:41
+ * @warning
  */
 void CEmitterMerge::_routine()
 {
@@ -107,15 +120,15 @@ void CEmitterMerge::_routine()
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( bWhile ) {
-        if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv" );
+        if( QMsgRcv( enTIMER, OS_SEC(5) ) == -1 ) {
+            perror( "QMsgRcv(CEmitterMerge)" );
         }
         else {
-            
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     m_bScanInfo = false;
                     MergeEmitter();
+					DeleteThreat();
                     break;
 
                 case enTHREAD_KNOWNANAL_START :
@@ -131,6 +144,10 @@ void CEmitterMerge::_routine()
                     m_bScanInfo = true;
                     MergeEmitter();
                     //UpdateScanEmitter();
+                    break;
+
+                case enTHREAD_DELETE_THREAT:
+                    DeleteThreat();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
@@ -158,9 +175,14 @@ void CEmitterMerge::_routine()
     }
 }
 
-
 /**
- * @brief CEmitterMerge::InitData
+ * @brief     멤버 변수를 초기화합니다. 
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:49:18
+ * @warning
  */
 void CEmitterMerge::InitData()
 {
@@ -168,7 +190,13 @@ void CEmitterMerge::InitData()
 }
 
 /**
- * @brief CEmitterMerge::MergeEmitter
+ * @brief     병합 에미터를 처리합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:49:40
+ * @warning
  */
 void CEmitterMerge::MergeEmitter()
 {
@@ -189,7 +217,7 @@ void CEmitterMerge::MergeEmitter()
     memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
 
     if( m_bScanInfo == false ) {
-        LOGMSG5( enDebug, "Operating the [%d] Band, in the %s Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_strAnalInfo.enBoardID, g_szCollectBank[ CCommonUtils::GetEnumCollectBank( m_strAnalInfo.iCh ) ], m_strAnalInfo.iCh, m_strAnalInfo.uiABTID, m_strAnalInfo.uiTotalLOB );
+        LOGMSG5( enDebug, "[%d] Band, in the %s Ch[%d/%d] 채널/빔 번호 에서 [%d] 개의 위협 관리를 수행합니다." , m_strAnalInfo.enBoardID, g_szCollectBank[ CCommonUtils::GetEnumCollectBank( m_strAnalInfo.iCh ) ], m_strAnalInfo.iCh, m_strAnalInfo.uiABTID, m_strAnalInfo.uiTotalLOB );
     }
     else {
         LOGMSG3( enDebug, "[%d] Band, [%d/%d] 채널/빔 번호 에서 스캔 결과를 업데이트합니다." , m_strAnalInfo.enBoardID, m_strAnalInfo.iCh, m_strAnalInfo.uiABTID );
@@ -238,7 +266,34 @@ void CEmitterMerge::MergeEmitter()
 }
 
 /**
- * @brief     RequestTrackCollect
+ * @brief     위협 삭제 처리를 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-23 15:27:00
+ * @warning
+ */
+void CEmitterMerge::DeleteThreat()
+{
+    ENUM_MODE enMode;
+
+    enMode = g_pTheSysConfig->GetMode();
+
+    if ( enMode == enANAL_ES_MODE || enMode == enANAL_EW_MODE ) {
+		UINT noAET;
+
+        // 삭제 처리를 한다.
+        noAET = m_pTheEmitterMergeMngr->DeleteThreat();		
+
+		LOGMSG1(enDebug, "위협[A:%d]/빔 삭제 처리를 수행합니다." , noAET );
+
+    }
+
+}
+
+/**
+ * @brief     LOB 데이터로 추적 수집을 설정합니다.
  * @param     bool bReqTrack
  * @param     SRxLOBData * pLOBData
  * @return    void
@@ -276,7 +331,7 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
 }
 
 /**
- * @brief     TrackFail
+ * @brief     추적 중인 LOB에 대해서 수집을 재설정합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -314,7 +369,7 @@ void CEmitterMerge::RequestTrackReCollect()
 }
 
 /**
- * @brief     RequestScanCollect
+ * @brief     LOB 데이터 기반으로 스캔 수집을 설정합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -342,6 +397,20 @@ void CEmitterMerge::RequestScanCollect( SRxLOBData *pLOBData )
 }
 
 /**
+ * @brief     스캔 중인 LOB에 대해서 재설정하여 스캔 분석을 수행하도록 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 18:06:04
+ * @warning
+ */
+void CEmitterMerge::RequestScanReCollect()
+{
+
+}
+
+/**
  * @brief     SendNewUpd
  * @return    void
  * @exception
@@ -358,7 +427,7 @@ void CEmitterMerge::SendNewUpd()
 
     char *pString;
 
-    size_t szSize;
+    //size_t szSize;
 
     STR_AET stAET;
     SRxABTData *pSRxABTData;
@@ -367,81 +436,83 @@ void CEmitterMerge::SendNewUpd()
     pSRxABTData = m_pTheEmitterMergeMngr->GetABTData();
     pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
 
-    // AET로 변환
-    memset( & stAET, 0, sizeof(stAET) );
+	if (pSRxABTData != NULL) {
+		// AET로 변환
+		memset(&stAET, 0, sizeof(stAET));
 
-    stAET.aoa = SONATA::ENCODE::DOA( pSRxABTData->fDOAMean );
-    stAET.noEMT = (int) pSRxABTData->uiABTID;
-    stAET.sigType = pSRxABTData->iSignalType;
+		stAET.aoa = SONATA::ENCODE::DOA(pSRxABTData->fDOAMean);
+		stAET.noEMT = (int)pSRxABTData->uiABTID;
+		stAET.sigType = pSRxABTData->iSignalType;
 
-    stAET.frq.iBand = SONATA::ENCODE::BAND( pSRxABTData->fFreqMean );
-    stAET.frq.iType = pSRxABTData->iFreqType;
-    stAET.frq.iMean = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMean );
-    stAET.frq.iMin = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMin );
-    stAET.frq.iMax = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqMax );
-    stAET.frq.iPatType = pSRxABTData->iFreqPatternType;
-    stAET.frq.iPatPrd = (int) SONATA::ENCODE::TOA( pSRxABTData->fFreqPatternPeriodMean );
-    stAET.frq.iSwtLev = pSRxABTData->iFreqPositionCount;
-    for( i=0 ; i < stAET.frq.iSwtLev; ++i ) {
-        stAET.frq.iSwtVal[i] = SONATA::ENCODE::FREQ( stAET.frq.iBand, pSRxABTData->fFreqSeq[i] );
-    }
+		stAET.frq.iBand = SONATA::ENCODE::BAND(pSRxABTData->fFreqMean);
+		stAET.frq.iType = pSRxABTData->iFreqType;
+		stAET.frq.iMean = SONATA::ENCODE::FREQ(stAET.frq.iBand, pSRxABTData->fFreqMean);
+		stAET.frq.iMin = SONATA::ENCODE::FREQ(stAET.frq.iBand, pSRxABTData->fFreqMin);
+		stAET.frq.iMax = SONATA::ENCODE::FREQ(stAET.frq.iBand, pSRxABTData->fFreqMax);
+		stAET.frq.iPatType = pSRxABTData->iFreqPatternType;
+		stAET.frq.iPatPrd = (int)SONATA::ENCODE::TOA(pSRxABTData->fFreqPatternPeriodMean);
+		stAET.frq.iSwtLev = pSRxABTData->iFreqPositionCount;
+		for (i = 0; i < stAET.frq.iSwtLev; ++i) {
+			stAET.frq.iSwtVal[i] = SONATA::ENCODE::FREQ(stAET.frq.iBand, pSRxABTData->fFreqSeq[i]);
+		}
 
-    stAET.pri.iType = pSRxABTData->iPRIType;
-    stAET.pri.tMean = SONATA::ENCODE::TOA( pSRxABTData->fPRIMean );
-    stAET.pri.tMin = SONATA::ENCODE::TOA( pSRxABTData->fPRIMin );
-    stAET.pri.tMax = SONATA::ENCODE::TOA( pSRxABTData->fPRIMax );
-    stAET.pri.iPatType = pSRxABTData->iPRIPatternType;
-    stAET.pri.fJtrPer = pSRxABTData->fPRIJitterRatio;
-    stAET.pri.iSwtLev = pSRxABTData->iPRIPositionCount;
-    for( i=0 ; i < stAET.pri.iSwtLev; ++i ) {
-        stAET.pri.TSwtVal[i] = SONATA::ENCODE::TOA( pSRxABTData->fPRISeq[i] );
-    }
+		stAET.pri.iType = pSRxABTData->iPRIType;
+		stAET.pri.tMean = SONATA::ENCODE::TOA(pSRxABTData->fPRIMean);
+		stAET.pri.tMin = SONATA::ENCODE::TOA(pSRxABTData->fPRIMin);
+		stAET.pri.tMax = SONATA::ENCODE::TOA(pSRxABTData->fPRIMax);
+		stAET.pri.iPatType = pSRxABTData->iPRIPatternType;
+		stAET.pri.fJtrPer = pSRxABTData->fPRIJitterRatio;
+		stAET.pri.iSwtLev = pSRxABTData->iPRIPositionCount;
+		for (i = 0; i < stAET.pri.iSwtLev; ++i) {
+			stAET.pri.TSwtVal[i] = SONATA::ENCODE::TOA(pSRxABTData->fPRISeq[i]);
+		}
 
-    stAET.pw.iMean = SONATA::ENCODE::PW( pSRxABTData->fPWMean );
-    stAET.pw.iMin = SONATA::ENCODE::PW( pSRxABTData->fPWMin );
-    stAET.pw.iMax = SONATA::ENCODE::PW( pSRxABTData->fPWMax );
+		stAET.pw.iMean = SONATA::ENCODE::PW(pSRxABTData->fPWMean);
+		stAET.pw.iMin = SONATA::ENCODE::PW(pSRxABTData->fPWMin);
+		stAET.pw.iMax = SONATA::ENCODE::PW(pSRxABTData->fPWMax);
 
-    stAET.pa.iMean = SONATA::ENCODE::PA( pSRxABTData->fPAMean );
-    stAET.pa.iMin = SONATA::ENCODE::PA( pSRxABTData->fPAMin );
-    stAET.pa.iMax = SONATA::ENCODE::PA( pSRxABTData->fPAMax );
+		stAET.pa.iMean = SONATA::ENCODE::PA(pSRxABTData->fPAMean);
+		stAET.pa.iMin = SONATA::ENCODE::PA(pSRxABTData->fPAMin);
+		stAET.pa.iMax = SONATA::ENCODE::PA(pSRxABTData->fPAMax);
 
-    stAET.as.iStat = pSRxABTData->iScanType != 0 ? SELF_SUCCESS : SELF_FAIL;
-    stAET.as.iType = pSRxABTData->iScanType;
-    stAET.as.iPrd = SONATA::ENCODE::SCNPRD( pSRxABTData->fMeanScanPeriod );
+		stAET.as.iStat = pSRxABTData->iScanType != 0 ? SELF_SUCCESS : SELF_FAIL;
+		stAET.as.iType = pSRxABTData->iScanType;
+		stAET.as.iPrd = SONATA::ENCODE::SCNPRD(pSRxABTData->fMeanScanPeriod);
 
-    stAET.seen.uiFrst = (UINT) pSRxABTData->tiFirstSeenTime;
-    stAET.seen.uiLast = (UINT) pSRxABTData->tiLastSeenTime;
+		stAET.seen.uiFrst = (UINT)pSRxABTData->tiFirstSeenTime;
+		stAET.seen.uiLast = (UINT)pSRxABTData->tiLastSeenTime;
 
-    stAET.priLev = (unsigned int) pSRxABTData->iRadarModePriority;
-    pString = m_pTheEmitterMergeMngr->GetELNOT( pSRxABTData->iRadarModeIndex );
-    if( pString ) { strncpy( (char *) stAET.elintNotation, pString, sizeof(stAET.elintNotation) ); }
-    pString = m_pTheEmitterMergeMngr->GetRadarModeName( pSRxABTData->iRadarModeIndex );
-    if( pString ) { strncpy( (char *) stAET.emitterName, pString, sizeof(stAET.emitterName) ); }
-    pString = m_pTheEmitterMergeMngr->GetThreatName( pSRxABTData->iRadarModeIndex );
-    if( pString ) { strncpy( (char *) stAET.threatName, pString, sizeof(stAET.threatName) ); }
+		stAET.priLev = (unsigned int)pSRxABTData->iRadarModePriority;
+		pString = m_pTheEmitterMergeMngr->GetELNOT(pSRxABTData->iRadarModeIndex);
+		if (pString) { strncpy((char *)stAET.elintNotation, pString, sizeof(stAET.elintNotation)); }
+		pString = m_pTheEmitterMergeMngr->GetRadarModeName(pSRxABTData->iRadarModeIndex);
+		if (pString) { strncpy((char *)stAET.emitterName, pString, sizeof(stAET.emitterName)); }
+		pString = m_pTheEmitterMergeMngr->GetThreatName(pSRxABTData->iRadarModeIndex);
+		if (pString) { strncpy((char *)stAET.threatName, pString, sizeof(stAET.threatName)); }
 
-    stAET.id.coAmbi = min( pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi );
-    szSize = sizeof(int) * MAX_IDCANDIDATE;
-    memcpy( stAET.id.noIPL, (int *) pABTExtData->idInfo.nRadarModeIndex, szSize );
+		stAET.id.coAmbi = min(pABTExtData->idInfo.nCoRadarModeIndex, _spMaxCoSysAmbi);
+		//szSize = sizeof(int) * MAX_IDCANDIDATE;
+		memcpy((int *)stAET.id.iNoIPL, (int *)pABTExtData->idInfo.nRadarModeIndex, sizeof(stAET.id.iNoIPL));
 
-    // 랜 메시지 전달한다.
-    
+		// 랜 메시지 전달한다.
+
 #ifdef _TESTSBC_
 #else
-    if( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) {
-        SendLan( enAET_NEW_CCU, & stAET, sizeof(stAET), pABTExtData );
-    }
-    else {
-        SendLan( enAET_UPD_CCU, & stAET, sizeof(stAET), pABTExtData );
-    }
+		if (pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED) {
+			SendLan(enAET_NEW_CCU, &stAET, sizeof(stAET), pABTExtData);
+		}
+		else {
+			SendLan(enAET_UPD_CCU, &stAET, sizeof(stAET), pABTExtData);
+		}
 #endif
 
 #endif
+	}
 
 }
 
 /**
- * @brief     SendLan
+ * @brief     
  * @param     unsigned int uiOpcode
  * @param     void * pData
  * @param     unsigned int uiDataSize
@@ -471,7 +542,7 @@ void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int ui
 }
 
 /**
- * @brief     SendDelete
+ * @brief     TCPIP를 통해서 위협 삭제 메시지를 전송합니다.
  * @param     unsigned int uiAETID
  * @return    void
  * @exception
@@ -486,7 +557,13 @@ void CEmitterMerge::SendDelete( unsigned int uiAETID )
 }
 
 /**
- * @brief CEmitterMerge::ReloadLibrary
+ * @brief     CED/EOB 라이브러리를 재로딩 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 19:06:17
+ * @warning
  */
 void CEmitterMerge::ReloadLibrary()
 {

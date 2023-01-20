@@ -28,7 +28,7 @@
 
 namespace Kompex
 {	
-	class SQLiteDatabase;
+	class CSQLiteDatabase;
 
 	enum ENCODING
 	{
@@ -45,7 +45,7 @@ namespace Kompex
 	public:
 		//! Constructor.\n
 		//! @param db		Database in which the SQL should be performed
-		SQLiteStatement(SQLiteDatabase *db);
+		SQLiteStatement(CSQLiteDatabase *db);
 		//! Destructor.
 		virtual ~SQLiteStatement();
 
@@ -125,11 +125,11 @@ namespace Kompex
 		//! Returns the name (UTF-16) assigned to a particular column in the result set of a SELECT statement.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the column name.
-		wchar_t *GetColumnName16(int column) const;
+		const wchar_t *GetColumnName16(int column) const;
 		//! Returns the name (UTF-16) assigned to a particular column in the result set of a SELECT statement.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the column name.
-		wchar_t *GetColumnName16(const std::string &column) const;
+        const wchar_t *GetColumnName16(const std::string &column) const;
 
 		//! Returns the datatype code for the initial data type of the result column.\n
 		//! SQLITE_INTEGER		1\n
@@ -156,12 +156,18 @@ namespace Kompex
 		//! NULL values will be returned as null pointer.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the data.
-		const unsigned char *GetColumnCString(int column) const;
+		const unsigned char *GetColumnCString(int column ) const;
+
+
+        const wchar_t *GetColumnCString16(int column) const;
+
 		//! Returns a character-string from a single column of the current result row of a query.\n
 		//! NULL values will be returned as null pointer.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the data.
 		const unsigned char *GetColumnCString(const std::string &column) const;
+
+
 
 		//! Returns a std::string from a single column of the current result row of a query.\n
 		//! NULL values will be represented as an empty string [std::string("")].\n
@@ -178,12 +184,12 @@ namespace Kompex
 		//! NULL values will be returned as null pointer.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the data.
-		wchar_t *GetColumnString16(int column) const;
+		const wchar_t *GetColumnString16(int column) const;
 		//! Returns a UTF-16 string from a single column of the current result row of a query.\n
 		//! NULL values will be returned as null pointer.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the data.
-		wchar_t *GetColumnString16(const std::string &column) const;
+		const wchar_t *GetColumnString16(const std::string &column) const;
 
 		//! Returns a double from a single column of the current result row of a query.\n
 		//! You must first call Sql()!
@@ -264,11 +270,11 @@ namespace Kompex
 		//! Returns a UTF-16 zero-terminated name of the database.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the database name.
-		wchar_t *GetColumnDatabaseName16(int column) const;
+		const wchar_t *GetColumnDatabaseName16(int column) const;
 		//! Returns a UTF-8 zero-terminated name of the database.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the database name.
-		wchar_t *GetColumnDatabaseName16(const std::string &column) const;
+		const wchar_t *GetColumnDatabaseName16(const std::string &column) const;
 
 		//! Returns a UTF-8 zero-terminated name of the table.\n
 		//! You must first call Sql()!
@@ -281,11 +287,11 @@ namespace Kompex
 		//! Returns a UTF-16 zero-terminated name of the table.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the table name.
-		wchar_t *GetColumnTableName16(int column) const;
+		const wchar_t *GetColumnTableName16(int column) const;
 		//! Returns a UTF-8 zero-terminated name of the table.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the table name.
-		wchar_t *GetColumnTableName16(const std::string &column) const;
+		const wchar_t *GetColumnTableName16(const std::string &column) const;
 
 		//! Returns a UTF-8 zero-terminated name of the table column.\n
 		//! You must first call Sql()!
@@ -298,11 +304,11 @@ namespace Kompex
 		//! Returns a UTF-16 zero-terminated name of the table column.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the table column name.
-		wchar_t *GetColumnOriginName16(int column) const;
+		const wchar_t *GetColumnOriginName16(int column) const;
 		//! Returns a UTF-8 zero-terminated name of the table column.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the table column name.
-		wchar_t *GetColumnOriginName16(const std::string &column) const;
+		const wchar_t *GetColumnOriginName16(const std::string &column) const;
 
 		//! Returns a zero-terminated UTF-8 string containing the declared datatype of the table column.\n
 		//! You must first call Sql()!
@@ -315,11 +321,11 @@ namespace Kompex
 		//! Returns a zero-terminated UTF-16 string containing the declared datatype of the table column.\n
 		//! You must first call Sql()!
 		//! @param column		Number of the column from which we want to read the declared datatype of the table column.
-		wchar_t *GetColumnDeclaredDatatype16(int column) const;
+		const wchar_t *GetColumnDeclaredDatatype16(int column) const;
 		//! Returns a zero-terminated UTF-8 string containing the declared datatype of the table column.\n
 		//! You must first call Sql()!
 		//! @param column		Name of the column from which we want to read the declared datatype of the table column.
-		wchar_t *GetColumnDeclaredDatatype16(const std::string &column) const;
+		const wchar_t *GetColumnDeclaredDatatype16(const std::string &column) const;
 
 		//! Return the number of columns in the result set.\n
 		//! You must first call Sql()!
@@ -439,9 +445,9 @@ namespace Kompex
 		void BeginTransaction();
 		//! Commits a transaction.\n
 		//! Exception output: std::cerr
-		void CommitTransaction();
+		void CommitTheTransaction();
 		//! Rollback a transaction.
-		inline void RollbackTransaction()
+		inline void RollbackTheTransaction()
 		{
 			FreeQuery();
 			SqlStatement("ROLLBACK;");
@@ -723,7 +729,7 @@ namespace Kompex
 		//! SQL statement
 		struct sqlite3_stmt *mStatement;
 		//! Database pointer
-		SQLiteDatabase *mDatabase;
+		CSQLiteDatabase *mDatabase;
 
 		//! typedef for UTF-8 transaction statements
 		typedef std::map<unsigned short /* transaction id */, std::pair<const char* /* sql */, bool /* memory allocated */> > TTransactionSQL;

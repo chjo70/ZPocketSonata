@@ -29,6 +29,8 @@
 // #endif
 
 
+#define _spPass     (0)
+#define _spFail     (1)
 
 
 // 변수 타입을 정의합니다.
@@ -63,9 +65,9 @@ typedef unsigned long long int _TOA;
 
 #else
 
-#define HOST_SERVER     (const char *) ( "192.168.10.245" )
-#define DEV_SERVER      (const char *) ( "192.168.10.11" )
-#define DEV2_SERVER     (const char *) ( "192.168.10.12" )
+#define HOST_SERVER     (const char *) ( "192.168.1.100" )
+#define DEV_SERVER      (const char *) ( "192.168.1.11" )
+#define DEV2_SERVER     (const char *) ( "192.168.1.12" )
 
 #endif
 

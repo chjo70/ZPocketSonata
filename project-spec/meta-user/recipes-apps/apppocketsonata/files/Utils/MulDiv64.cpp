@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#include "../Include/globals.h"
+#include "../Anal/SigAnal/_Type.h"
 
 /*
  * MulDiv64

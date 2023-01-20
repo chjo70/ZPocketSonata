@@ -42,89 +42,89 @@ public:
         int i;
 
         // 신호 형태
-        pIPL->sigType -= 1;
+        pIPL->iSigType -= 1;
 
         // 주파수 형태
-        if( pIPL->frq.type == IPL_FIXED ) {
-            pIPL->frq.type = RadarModeFreqType::enumFIXED;
+        if( pIPL->stFreq.uiType == (UINT) IPL_FIXED ) {
+            pIPL->stFreq.uiType = RadarModeFreqType::enumFIXED;
         }
-        else if( pIPL->frq.type == IPL_RANDOM_AGILE ) {
-            pIPL->frq.type = RadarModeFreqType::enumAGILE;
+        else if( pIPL->stFreq.uiType == (UINT) IPL_RANDOM_AGILE ) {
+            pIPL->stFreq.uiType = RadarModeFreqType::enumAGILE;
         }
-        else if( pIPL->frq.type == IPL_PATTERN_AGILE ) {
-            pIPL->frq.type = RadarModeFreqType::enumPATTERN;
+        else if( pIPL->stFreq.uiType == (UINT) IPL_PATTERN_AGILE ) {
+            pIPL->stFreq.uiType = RadarModeFreqType::enumPATTERN;
         }
-        else if( pIPL->frq.type == IPL_HOPPING ) {
-            pIPL->frq.type = RadarModeFreqType::enumHOPPING;
+        else if( pIPL->stFreq.uiType == (UINT) IPL_HOPPING ) {
+            pIPL->stFreq.uiType = RadarModeFreqType::enumHOPPING;
         }
         else {
 
         }
 
         // 주파수 값
-        pIPL->frq.low /= 1000;
-        pIPL->frq.hgh /= 1000;
+        pIPL->stFreq.iLow /= 1000;
+        pIPL->stFreq.iHigh /= 1000;
 
         // 주파수 레벨값
         for( i=0 ; i < MAX_FREQ_PRI_STEP ; ++i ) {
-            pIPL->frq.swtValLow[i] /= 1000;
-            pIPL->frq.swtValHgh[i] /= 1000;
+            pIPL->stFreq.swtValLow[i] /= 1000;
+            pIPL->stFreq.swtValHgh[i] /= 1000;
         }
 
         // PRI 형태
-        if( pIPL->pri.type == IPL_STABLE ) {
-            pIPL->pri.type = RadarModePRIType::enumStable;
+        if( pIPL->stPRI.uiType == (UINT) IPL_STABLE ) {
+            pIPL->stPRI.uiType = RadarModePRIType::enumStable;
         }
-        else if( pIPL->pri.type == IPL_STAGGER ) {
-            pIPL->pri.type = RadarModePRIType::enumSTAGGER;
+        else if( pIPL->stPRI.uiType == (UINT) IPL_STAGGER ) {
+            pIPL->stPRI.uiType = RadarModePRIType::enumSTAGGER;
         }
-        else if( pIPL->pri.type == IPL_JITTER ) {
-            pIPL->pri.type = RadarModePRIType::enumJITTER;
+        else if( pIPL->stPRI.uiType == (UINT) IPL_JITTER ) {
+            pIPL->stPRI.uiType = RadarModePRIType::enumJITTER;
         }
-        else if( pIPL->pri.type == IPL_PATTERN ) {
-            pIPL->pri.type = RadarModePRIType::enumPATTERN;
+        else if( pIPL->stPRI.uiType == (UINT) IPL_PATTERN ) {
+            pIPL->stPRI.uiType = RadarModePRIType::enumPATTERN;
         }
-        else if( pIPL->pri.type == IPL_DWELL ) {
-            pIPL->pri.type = RadarModePRIType::enumDwellSWITCH;
+        else if( pIPL->stPRI.uiType == (UINT) IPL_DWELL ) {
+            pIPL->stPRI.uiType = RadarModePRIType::enumDwellSWITCH;
         }
         else {
 
         }
 
         // PRI 값 
-        pIPL->pri.low /= 1000;
-        pIPL->pri.hgh /= 1000;
+        pIPL->stPRI.iLow /= 1000;
+        pIPL->stPRI.iHigh /= 1000;
 
         // PRI 레벨 값
         for( i=0 ; i < MAX_FREQ_PRI_STEP ; ++i ) {
-            pIPL->pri.swtValLow[i] /= 1;
-            pIPL->pri.swtValHgh[i] /= 1;
+            pIPL->stPRI.swtValLow[i] /= 1;
+            pIPL->stPRI.swtValHgh[i] /= 1;
         }
 
         // 스캔 형태
-        switch( pIPL->as.type ) {
+        switch( pIPL->stAS.type ) {
         case E_AET_SCAN_STEADY :
-            pIPL->as.type = ScanType::enumD_Non_Scanning;
+            pIPL->stAS.type = ScanType::enumD_Non_Scanning;
             break;
 
         case E_AET_SCAN_UNI_DIRECTIONAL :
-            pIPL->as.type = ScanType::enumU_Uni_Directional_Sector_Plane_Undertermined;
+            pIPL->stAS.type = ScanType::enumU_Uni_Directional_Sector_Plane_Undertermined;
             break;
 
         case E_AET_SCAN_BI_DIRECTIONAL :
-            pIPL->as.type = ScanType::enumV_Bi_Directional_Sector_Plane_Undetermined;
+            pIPL->stAS.type = ScanType::enumV_Bi_Directional_Sector_Plane_Undetermined;
             break;
 
         case E_AET_SCAN_CONICAL :
-            pIPL->as.type = ScanType::enumF_Conical;
+            pIPL->stAS.type = ScanType::enumF_Conical;
             break;
 
         case E_AET_SCAN_CIRCULAR :
-            pIPL->as.type = ScanType::enumA_Circular;
+            pIPL->stAS.type = ScanType::enumA_Circular;
             break;
 
         default :
-            pIPL->as.type = ScanType::enumUndefinedScanType;
+            pIPL->stAS.type = ScanType::enumUndefinedScanType;
             break;
         }
 

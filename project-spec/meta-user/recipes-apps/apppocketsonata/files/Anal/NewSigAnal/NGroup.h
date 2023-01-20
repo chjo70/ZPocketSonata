@@ -24,7 +24,7 @@ protected:
 public:
     void Init();
     
-	int GetColPdw();
+	unsigned int GetColPdw();
 
     CNGroup( void *pParent, unsigned int uiCoMaxPdw );
     virtual ~CNGroup();

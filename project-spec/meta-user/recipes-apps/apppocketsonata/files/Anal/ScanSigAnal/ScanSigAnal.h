@@ -39,24 +39,18 @@ public:
 	
 protected:
     STR_UPDAET *m_pUpdAet;
-    //##ModelId=452B0C45002C
     STR_PULSE_TRAIN_SEG *m_pSeg;
-    //##ModelId=452B0C450031
     STR_STATIC_PDWDATA *m_pstPDWData;
-    //##ModelId=452B0C450035
-    int m_noCh;
-    //##ModelId=452B0C45003A
+    
+    unsigned int m_uiNoCh;
     unsigned int m_uiCoPdw;
-    //##ModelId=452B0C45003B
-    int m_noEMT;
-    //##ModelId=452B0C450045
+    unsigned int m_uinoEMT;
+    
     CSGroup *m_theGroup;
-    //##ModelId=452B0C45004A
     CSPulExt *m_thePulExt;
-    //##ModelId=452B0C450052
     CSAnalScan *m_theAnalScan;
-    //##ModelId=452B0C450058
-    int m_nMaxPdw;
+    
+    unsigned int m_uiMaxPdw;
 
     SRxScanData m_strScnResult;
 
@@ -69,38 +63,26 @@ public:
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
-    void SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID );
+    void SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
-    //BOOL IsAnalScan();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
 
-    //##ModelId=452B0C450059
-    inline int GetMaxPdw() { return m_nMaxPdw; }
-    //##ModelId=452B0C45005A
+    inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
     inline STR_STATIC_PDWDATA *GetPDWData() { return m_pstPDWData; }
-    //##ModelId=452B0C450062
-    inline int GetNoEMT() { return m_noEMT; }
-    //##ModelId=452B0C450063
-    inline UINT GetScanNoCh() {	return m_noCh; }
-    //##ModelId=452B0C450064
-    inline int GetColPdw() { return m_uiCoPdw; }
-    //##ModelId=452B0C450065
+    inline unsigned int GetNoEMT() { return m_uinoEMT; }
+    inline unsigned int GetScanNoCh() { return m_uiNoCh; }
+    inline unsigned int GetColPdw() { return m_uiCoPdw; }
+    
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
-    //##ModelId=452B0C45006D
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
-    //##ModelId=452B0C45006E
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
-    //##ModelId=452B0C450095
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
-    //##ModelId=452B0C450096
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
-    //##ModelId=452B0C45009F
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
-    //##ModelId=452B0C4500A8
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     inline _TOA CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
     
@@ -108,7 +90,7 @@ public:
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
     inline int GetBand() { return m_theGroup->GetBand(); }
-    inline int GetCoPdw() { return m_uiCoPdw; }
+    inline unsigned int GetCoPdw() { return m_uiCoPdw; }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     inline SRxABTData *GetScnAET() { return m_pScnAet; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
@@ -133,21 +115,17 @@ public:
     //##ModelId=452B0C4500BD
     UINT GetCoScanPulse();
 
-    //##ModelId=452B0C4500C6
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
-    //##ModelId=452B0C4500C9
+    
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
-    //##ModelId=452B0C4500D2
     void ClearColBuffer();
-    //##ModelId=452B0C4500D3
     UINT AnalStart( int noEMT, int noCh );
 
-    //##ModelId=452B0C4500E5
     void Init( STR_STATIC_PDWDATA *pstPDWData);
-    //##ModelId=452B0C4500E6
-    void ScanExtractPulseInit( int noEMT=0, int noCh=0 );
-    //##ModelId=452B0C4500EF
-    void ScanSigAnalInit( int noEMT=0, int noCh=0 );
+    void ScanExtractPulseInit( unsigned int uinoEMT=0, int noCh=0 );
+    void ScanSigAnalInit( unsigned int uinoEMT=0, int noCh=0 );
+
+    void ClearAllMark();
 
 };
 

@@ -14,7 +14,7 @@ using namespace std;
 #include <algorithm>
 
 #include "LOBClustering.h"
-#include "ELDecoder.h"
+#include "../MIDAS/ELDecoder.h"
 //#include "../../../ELINT/ELCOMMON/IsNumber.h"
 
 //#include "../../../COMMON/MNGR/GRLogMngr.h"
@@ -44,6 +44,17 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
+/**
+ * @brief     정렬시 클러스터링 내에서 거리 오차가 작은 순으로 정렬 하기 위한 비교 함수
+ * @param     const void * arg1
+ * @param     const void * arg2
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-11 15:50:45
+ * @warning
+ */
 int incClusterCompare( const void *arg1, const void *arg2 )
 {
 	int iRet;
@@ -106,7 +117,7 @@ CLOBClustering::CLOBClustering()
 }
 
 /**
- * @brief     소멸자로서 해당 처리가 없음
+ * @brief     객체 소멸자로서 메모리를 해지한다.
  * @param     해당사항 없음
  * @return    해당사항 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -139,6 +150,7 @@ void CLOBClustering::InitOfLOBClustering()
 
 	TRACE( "\n #### 클러스터링 시도 횟수 : %d" , m_nCheckClustering );
 	TRACE( "\n #### 클러스터링 성공 횟수 : %d" , m_nCreateClustering );
+    TRACE( "\n\n" );
 
 	for( i=0 ; i < TOTAL_ITEMS_OF_THREAT_NODE ; ++i ) {
 		m_pQueLOBDataPool[i].Init( QUEUE_LOB_POOL_SIZE );
@@ -150,7 +162,7 @@ void CLOBClustering::InitOfLOBClustering()
 }
 
 /**
- * @brief     InitOfLOBClustering
+ * @brief     LOB 클러스터리을 초기화한다.
  * @param     int nIndex LOB 큐 인덱스
  * @return    void
  * @exception 
@@ -271,8 +283,8 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
 		//pLOBData->iPitchAngle = pSRxLOBDataGroup->iPitchAngle;
 		//pLOBData->iHeadingAngle = pSRxLOBDataGroup->iHeadingAngle;
 		//pLOBData->iAltitude = pSRxLOBDataGroup->iAltitude;	
-        pLOBData->fRadarLatitude = pSRxLOBData->fLatitude;
-        pLOBData->fRadarLongitude = pSRxLOBData->fLongitude;
+        pLOBData->fRadarLatitude = pSRxLOBData->fCollectLatitude;
+        pLOBData->fRadarLongitude = pSRxLOBData->fCollectLongitude;
 	}
 
 }
@@ -324,7 +336,7 @@ bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 //////////////////////////////////////////////////////////////////////
 /*!
- * @brief     이 객체에 필요한 메모리를 할당받는다.
+ * @brief     이 객체에 필요한 메모리를 할당한다.
  * @return    void
  * @param     void
  * @version   0.0.1
@@ -633,7 +645,7 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
  * @date      2016-06-23, 오전 10:13 
  * @warning   
  */
-unsigned int CLOBClustering::CalcIntersectionPoints( int nLines )
+int CLOBClustering::CalcIntersectionPoints( int nLines )
 {
 	return ( nLines * ( nLines - 1 ) ) / 2;
 }
@@ -732,7 +744,7 @@ void CLOBClustering::FilteredIntersectionPoints()
 }
 
 /**
- * @brief     두 LOB 간의 거리를 계산함
+ * @brief     두 LOB 간의 거리를 계산한다.
  * @param     pRes 교차점을 저장할 포인터
  * @param     pLOBData1 1번 LOB
  * @param     pLOBData2 2번 LOB
@@ -748,64 +760,64 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
 
 	double dx, dy, dDist;
 
-	double fDistAircraftLongitude, fDistAircraftLatitude;
-	double fSquareOfSinLat, fSquareOfSinLong;
-	double fSinLat, fSinLong;
+	double dDistAircraftLongitude, dDistAircraftLatitude;
+	double dSquareOfSinLat, dSquareOfSinLong;
+	double dSinLat, dSinLong;
 
-	double fBearingOf12, fBearingOf21, fBearingOf1, fBearingOf2;
+	double dBearingOf12, dBearingOf21, dBearingOf1, dBearingOf2;
 
-	double fDistAngular12, fDistAngular3;
+	double dDistAngular12, dDistAngular3;
 
-	double fAlpha1, fAlpha2, fAlpha3;
-	double fCosOfAlpha1, fCosOfAlpha2, fCosOfAlpha3;
-	double fSinOfAlpha1, fSinOfAlpha2;
+	double dAlpha1, dAlpha2, dAlpha3;
+	double dCosOfAlpha1, dCosOfAlpha2, dCosOfAlpha3;
+	double dSinOfAlpha1, dSinOfAlpha2;
 
 	double fDiffLong;
 
 	// LOB 각도 설정
-	fBearingOf1 = ( deg2rad * pLOBData1->fMeanDOA ); // ALGLE2MATH( pLOBData1->iMeanDOA );
-	fBearingOf2 = ( deg2rad * pLOBData2->fMeanDOA ); // ALGLE2MATH( pLOBData2->iMeanDOA );
+	dBearingOf1 = (deg2rad * pLOBData1->fMeanDOA); // ALGLE2MATH( pLOBData1->iMeanDOA );
+	dBearingOf2 = ( deg2rad * pLOBData2->fMeanDOA ); // ALGLE2MATH( pLOBData2->iMeanDOA );
 
 	// 두 지점간의 각도 거리 계산
-    fDistAircraftLongitude = deg2rad * ( pLOBData2->fRadarLongitude - pLOBData1->fRadarLongitude ) / 2.;
-    fDistAircraftLatitude = deg2rad * ( pLOBData2->fRadarLatitude - pLOBData1->fRadarLatitude ) / 2.;
-	fSinLat = sin( fDistAircraftLatitude );
-	fSquareOfSinLat = ( fSinLat * fSinLat );
-	fSinLong = sin( fDistAircraftLongitude );
-	fSquareOfSinLong = ( fSinLong * fSinLong );
-    fDistAngular12 = 2. * asin( sqrt( ( fSquareOfSinLat + cos( deg2rad * pLOBData1->fRadarLatitude ) * cos( deg2rad * pLOBData2->fRadarLatitude ) * fSquareOfSinLong ) ) );
-	if( Is_FZero( (float) fDistAngular12 ) == false ) {
+	dDistAircraftLongitude = deg2rad * ( pLOBData2->fRadarLongitude - pLOBData1->fRadarLongitude ) / 2.;
+	dDistAircraftLatitude = deg2rad * ( pLOBData2->fRadarLatitude - pLOBData1->fRadarLatitude ) / 2.;
+	dSinLat = sin( dDistAircraftLatitude );
+	dSquareOfSinLat = ( dSinLat * dSinLat );
+	dSinLong = sin( dDistAircraftLongitude );
+	dSquareOfSinLong = ( dSinLong * dSinLong );
+    dDistAngular12 = 2. * asin( sqrt( ( dSquareOfSinLat + cos( deg2rad * pLOBData1->fRadarLatitude ) * cos( deg2rad * pLOBData2->fRadarLatitude ) * dSquareOfSinLong ) ) );
+	if( is_zero<double>( dDistAngular12 ) == false ) {
 		// 두 지점간의 초기 방위각 계산
-        fBearingOf12 = acos( ( sin( deg2rad * pLOBData2->fRadarLatitude ) - sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData1->fRadarLatitude ) ) );
-        fBearingOf21 = acos( ( sin( deg2rad * pLOBData1->fRadarLatitude ) - sin( deg2rad * pLOBData2->fRadarLatitude ) * cos( fDistAngular12 ) ) / ( sin( fDistAngular12 ) * cos( deg2rad * pLOBData2->fRadarLatitude ) ) );
+        dBearingOf12 = acos( ( sin( deg2rad * pLOBData2->fRadarLatitude ) - sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( dDistAngular12 ) ) / ( sin( dDistAngular12 ) * cos( deg2rad * pLOBData1->fRadarLatitude ) ) );
+        dBearingOf21 = acos( ( sin( deg2rad * pLOBData1->fRadarLatitude ) - sin( deg2rad * pLOBData2->fRadarLatitude ) * cos( dDistAngular12 ) ) / ( sin( dDistAngular12 ) * cos( deg2rad * pLOBData2->fRadarLatitude ) ) );
 
-		if( sin( fDistAircraftLongitude ) > 0 ) {
-			fBearingOf21 = 2. * M_PI - fBearingOf21; 
+		if( sin( dDistAircraftLongitude ) > 0 ) {
+			dBearingOf21 = 2. * M_PI - dBearingOf21; 
 		}
 		else {
-			fBearingOf12 = 2. * M_PI - fBearingOf12;
+			dBearingOf12 = 2. * M_PI - dBearingOf12;
 		}
 
 		// 방위차 계산(지점1,지점2,방위)
-		fAlpha1 = fBearingOf1 - fBearingOf12;			//fmod( ( fBearingOf1 - fBearingOf12 ) + M_PI, 2 * M_PI ) - M_PI;
-		fAlpha2 = fBearingOf21 - fBearingOf2;			//fmod( ( fBearingOf21 - fBearingOf2 ) + M_PI, 2 * M_PI ) - M_PI;
+		dAlpha1 = dBearingOf1 - dBearingOf12;			//fmod( ( fBearingOf1 - fBearingOf12 ) + M_PI, 2 * M_PI ) - M_PI;
+		dAlpha2 = dBearingOf21 - dBearingOf2;			//fmod( ( fBearingOf21 - fBearingOf2 ) + M_PI, 2 * M_PI ) - M_PI;
 
-		fSinOfAlpha1 = sin( fAlpha1 );
-		fSinOfAlpha2 = sin( fAlpha2 );
-		fCosOfAlpha1 = cos( fAlpha1 );		
-		fCosOfAlpha2 = cos( fAlpha2 );	//#FA_C_IgnoredReturnValue_T2
+		dSinOfAlpha1 = sin( dAlpha1 );
+		dSinOfAlpha2 = sin( dAlpha2 );
+		dCosOfAlpha1 = cos( dAlpha1 );
+		dCosOfAlpha2 = cos( dAlpha2 );	//#FA_C_IgnoredReturnValue_T2
 		//if( ( fSinOfAlpha1 != 0 || fSinOfAlpha2 != 0 ) || ( fSinOfAlpha1 * fSinOfAlpha2 > 0 ) ) {
-		if( Is_DNotZero( fSinOfAlpha1 ) == true || Is_DNotZero( fSinOfAlpha2 ) == true || ( fSinOfAlpha1 * fSinOfAlpha2 > 0 ) ) {
-			fAlpha3 = acos( -fCosOfAlpha1 * fCosOfAlpha2 + fSinOfAlpha1 * fSinOfAlpha2 * cos( fDistAngular12 ) );
-			fCosOfAlpha3 = cos( fAlpha3 );
+		if( is_not_zero<double>( dSinOfAlpha1 ) == true || is_not_zero<double>( dSinOfAlpha2 ) == true || ( dSinOfAlpha1 * dSinOfAlpha2 > 0 ) ) {
+			dAlpha3 = acos( -dCosOfAlpha1 * dCosOfAlpha2 + dSinOfAlpha1 * dSinOfAlpha2 * cos( dDistAngular12 ) );
+			dCosOfAlpha3 = cos(dAlpha3 );
 
 			// 각도 거리 계산
-			fDistAngular3 = atan2( sin( fDistAngular12 ) * fSinOfAlpha1 * fSinOfAlpha2, fCosOfAlpha2 + fCosOfAlpha1 * fCosOfAlpha3 );
+			dDistAngular3 = atan2( sin( dDistAngular12 ) * dSinOfAlpha1 * dSinOfAlpha2, dCosOfAlpha2 + dCosOfAlpha1 * dCosOfAlpha3 );
 
 			// 교차점 계산
 			double dLatitude, dLongitude;
-            dLatitude = asin( sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( fDistAngular3 ) + cos( deg2rad * pLOBData1->fRadarLatitude ) * sin( fDistAngular3 ) * cos( fBearingOf1 ) );
-            fDiffLong = atan2( sin( fBearingOf1 ) * sin( fDistAngular3 ) * cos( deg2rad * pLOBData1->fRadarLatitude ), cos( fDistAngular3 ) - ( sin( deg2rad * pLOBData1->fRadarLatitude ) * sin( dLatitude ) ) );
+            dLatitude = asin( sin( deg2rad * pLOBData1->fRadarLatitude ) * cos( dDistAngular3 ) + cos( deg2rad * pLOBData1->fRadarLatitude ) * sin( dDistAngular3 ) * cos( dBearingOf1 ) );
+            fDiffLong = atan2( sin( dBearingOf1 ) * sin( dDistAngular3 ) * cos( deg2rad * pLOBData1->fRadarLatitude ), cos( dDistAngular3 ) - ( sin( deg2rad * pLOBData1->fRadarLatitude ) * sin( dLatitude ) ) );
             dLongitude = ( pLOBData1->fRadarLongitude + ( fDiffLong * rad2deg ) );
 			dLatitude = ( rad2deg * dLatitude );
 

@@ -31,7 +31,7 @@ public:
     //##ModelId=452B0C5201DD
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return CPulExt::GetPulseSeg(); }
 
-    int GetCoPdw();
+    unsigned int GetCoPdw();
 
     //##ModelId=452B0C5201DE
     void DiscardStablePT();
@@ -59,7 +59,7 @@ public:
     //##ModelId=452B0C520212
     void KnownPulseExtract();
     //##ModelId=452B0C520213
-    CKPulExt( void *pParent, int coMaxPdw );
+    CKPulExt( void *pParent, unsigned int uiCoMaxPdw );
     //##ModelId=452B0C520223
     virtual ~CKPulExt();
 

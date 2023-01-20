@@ -310,7 +310,7 @@ STR_PULSE_TRAIN_SEG *CNAnalPRI::GetPulseSeg()
  * @date      2006-01-23 10:10:34
  * @warning
  */
-int CNAnalPRI::GetMaxPdw()
+unsigned int CNAnalPRI::GetMaxPdw()
 {
     return m_pNewSigAnal->GetMaxPdw();
 }
@@ -393,16 +393,16 @@ int CNAnalPRI::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex )
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CNMakeAET::SaveEmitterPdwFile
+// 함 수 이 름  : CNMakeAET::SaveEmitterPDWFile
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 인 자  : int index
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CNAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+void CNAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pNewSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
+    m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 

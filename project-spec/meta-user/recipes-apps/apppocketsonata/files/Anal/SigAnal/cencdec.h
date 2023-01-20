@@ -5,13 +5,13 @@
  *  SONATA 용으로 실제값을 SONATA 체계와 연동하기 위해서 값을 역/변환해주는 함수를 정의한다.
  */
 namespace SONATA {
-    struct FREQ_RESOL {
-        // frequency band code를 위한 구조체
-        unsigned int uiMin;       // min frequency
-        unsigned int uiMax;       // max frequency
-        int iOffset;       // max frequency
-        float fRes;			// 각 구간에 따른 resolution
-    } ;
+//     struct FREQ_RESOL {
+//         // frequency band code를 위한 구조체
+//         unsigned int uiMin;       // min frequency
+//         unsigned int uiMax;       // max frequency
+//         int iOffset;       // max frequency
+//         float fRes;			// 각 구간에 따른 resolution
+//     } ;
 
     namespace ENCODE {
         int DOA( float fDOA );

@@ -8,7 +8,7 @@
 #include <time.h>
 
 #ifdef __linux__
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <vxworks.h>
 #else
 #include <mmsystem.h>
@@ -111,7 +111,7 @@ static time_t _stNOW;
 static tm _stTM;
 
 // REAL
-float ELDecoder::DecodeAOA(const int i_iBinAoa)
+float ELDecoder::DecodeAOA(const unsigned int i_iBinAoa)
 {
 	float fAoa = 0.0;
 	fAoa = (float)i_iBinAoa * (float)DEF_OF_RES_AOA;
@@ -292,7 +292,6 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  */
 // void ELDecoder::DecodeSmartTime( char *pSmartTime, char *pszTime )
 // {
-// 	// codesonar, uninitialized variable. 이정남
 // 	//struct tm szTimeConvert;
 // 	struct tm szTimeConvert = tm();
 // 	unsigned int uiMillisec=0;
@@ -314,7 +313,6 @@ float ELDecoder::DecodePA(const float i_fBinPa)
 
 // void ELDecoder::DecodeSmartMillisec( char *pSmartTime, char *pszTime )
 // {
-// 	// codesonar, uninitialized variable. 이정남
 // 	//struct tm szTimeConvert;
 // 	struct tm szTimeConvert = tm();
 // 	unsigned int uiMillisec=0;
@@ -349,7 +347,6 @@ float ELDecoder::DecodePA(const float i_fBinPa)
 // {
 // 	//struct tm tmToday;
 // 
-// 	//codesonar. Uninitialzed Variable. 이정남.
 // 	struct tm tmToday = tm();
 // 
 // 	// pszTime 포멧: 01/11/01 01:54:04.112
@@ -383,7 +380,7 @@ void ELDecoder::UpdateDateTime()
 	if( _stNOW == 0 ) {
 #ifdef _MSC_VER			
 		_stNOW = time( NULL );
-		_localtime32_s( & _stTM, & _stNOW );
+		localtime_s( & _stTM, & _stNOW );
 
 		_stTM.tm_year -= 100;
 		_stTM.tm_mon += 1;
@@ -454,7 +451,7 @@ void ELDecoder::UpdateDateTime()
 // 	return fPri;
 // }
 
-double ELDecoder::DecodeToa(const long long int i_llilToa)
+double ELDecoder::DecodeToa(long long int i_llilToa)
 {
 	double dToa = 0.0;
 	dToa = (double)i_llilToa * (double)DEF_OF_RES_TOA;

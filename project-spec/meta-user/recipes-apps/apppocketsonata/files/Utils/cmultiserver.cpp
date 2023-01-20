@@ -1,3 +1,5 @@
+﻿#include "stdafx.h"
+
 #include <errno.h>
 
 #ifdef __linux__
@@ -8,7 +10,7 @@
 #include "cmultiserver.h"
 
 
-#include "../Thread/creclan.h"
+// #include "../Thread/csi.h"
 
 #include "../Include/globals.h"
 

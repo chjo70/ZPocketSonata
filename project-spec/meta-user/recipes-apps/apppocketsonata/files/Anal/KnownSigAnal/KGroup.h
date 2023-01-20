@@ -27,15 +27,15 @@ protected:
 public:
     void Init();
 
-	int GetColPdw();
+	unsigned int GetColPdw();
 	//##ModelId=452B0C5300A9
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }
 	//##ModelId=452B0C5300AA
 	BOOL MakeKnownGroup();
 	//##ModelId=452B0C5300AB
-	int GetMaxPdw();
+	unsigned int GetMaxPdw();
 	//##ModelId=452B0C5300AC
-    CKGroup( void *pParent, int coMaxPdw );
+    CKGroup( void *pParent, unsigned int uiCoMaxPdw );
 	//##ModelId=452B0C5300B4
 	virtual ~CKGroup();
 

@@ -8,7 +8,7 @@
 #include "../../Include/globals.h"
 
 /**
- * @brief     CIPL
+ * @brief     기존 IPL 을 데이터 로딩 및 데이터 관리하기 위한 객체를 생성한다.
  * @return    
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -22,7 +22,7 @@ CIPL::CIPL()
 }
 
 /**
- * @brief     InitVar
+ * @brief     객체내의 변수를 초기화한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -40,7 +40,7 @@ void CIPL::InitVar()
 
 
 /**
- * @brief		setIPLStart
+ * @brief		IPL 데이터의 시작 위치를 설정한다.
  * @param		STR_IPL_START * pIPLStart
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)

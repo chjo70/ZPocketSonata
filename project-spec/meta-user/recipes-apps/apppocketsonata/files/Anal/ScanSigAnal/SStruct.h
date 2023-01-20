@@ -78,7 +78,7 @@ struct SRxScanData {
     UINT uiABTID;
     UINT uiAETID;
 
-    UINT uiResult;
+    UINT enResult;
 
     float fScnPrd;     //! 스캔 주기값
     UINT uiScnTyp;     //! 스캔 형태

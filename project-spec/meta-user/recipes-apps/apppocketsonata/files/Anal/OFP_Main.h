@@ -9,7 +9,7 @@
 
 
 #include "./INC/Macros.h"
-#include "./INC/Defines.h"
+#include "../include/Defines.h"
 #include "./INC/PDW.h"
 #include "./INC/Structs.h"
 #include "./INC/ErrorMsg.h"
@@ -47,6 +47,13 @@
 
 #elif defined(_POCKETSONATA_)
 #define PDW_EXT									".zpdw"
+#define MIDAS_EXT								"midas"
+
+#define PDW_TYPE                                "pdw"
+#define IQ_TYPE                                 "iq"
+
+#elif defined(_701_)
+#define PDW_EXT									".7pdw"
 #define MIDAS_EXT								"midas"
 
 #define PDW_TYPE                                "pdw"

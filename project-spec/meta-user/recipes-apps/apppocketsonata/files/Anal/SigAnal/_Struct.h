@@ -14,20 +14,26 @@
 
 #include "../Collect/DataFile/DataFile.h"
 
+struct FREQ_RESOL {
+	// frequency band code를 위한 구조체
+	unsigned int uiMin;       // min frequency
+	unsigned int uiMax;       // max frequency
+	int iOffset;       // max frequency
+	float fRes;			// 각 구간에 따른 resolution
+};
+
 // PDW  펄스열 플레그
-//##ModelId=452B0C5402BC
-enum PULSE_EXTRACT_MARK { 
-    UnMark=0, 
-    STABLE_MARK, 
-    REFSTB_MARK, 
-    JITTER_MARK, 
-    DWELL_MARK, 
-    UNKNOWN_MARK, 
-    EXTRACT_MARK, 
+enum PULSE_MARK { 
+    enUnMark=0, 
+    enSTABLE_MARK, 
+    enREFSTB_MARK, 
+    enJITTER_MARK, 
+    enDWELL_MARK, 
+    enUNKNOWN_MARK, 
+    enEXTRACT_MARK, 
 
-    LIBRARY_MARK,
+    enLIBRARY_MARK,
 
-    Discard 
 } ;
 
 //##ModelId=452B0C5402D0
@@ -47,7 +53,7 @@ struct STR_PDWINDEX {
 //##ModelId=452B0C5402F8
 struct STR_FRQAOAPWHISTOGRAM {
 	PDWINDEX hist[ TOTAL_FRQAOAPWBIN ];
-	int bin_count;
+	unsigned int uiBinCount;
 
 } ;
 
@@ -55,7 +61,7 @@ struct STR_FRQAOAPWHISTOGRAM {
 // DTOA 히스토그램 구조체
 //##ModelId=452B0C540302
 struct STR_DTOA_HISTOGRAM {
-	int bin_count;
+	unsigned int uiBinCount;
 	PDWINDEX hist[ DTOA_BIN ];
 
 	STR_LOWHIGH bin_range;
@@ -71,7 +77,7 @@ struct STR_DTOA_HISTOGRAM {
 // 주파수 호핑 분석 구조체
 
 struct STR_HOPPING_DATA {
-    UINT bin_count[FREQ_BIN];
+    UINT uiBinCount[FREQ_BIN];
     PDWINDEX hist[FREQ_BIN][MAX_PDW];
     UINT pt_count;
     UINT pt_pdw_count[MAX_PDW];
@@ -84,37 +90,35 @@ struct STR_HOPPING_DATA {
 // 방위(AOA) 그룹 
 //##ModelId=452B0C540317
 struct STR_AOA_GROUP {
-	UINT band;
-    UINT stat;
-    PDWINDEX *pIndex;
+	UINT uiBand;
+    UINT uiStat;
+    PDWINDEX *pPDWIndex;
     int iCount;
     UINT bOverAoa;
-    int from_aoa;
-    int to_aoa;
-    UINT from_bin;
-    UINT to_bin;
+    int iFromAOA;
+    int iToAOA;
+    UINT uiFromBin;
+    UINT uiToBin;
 
 }  ;
 
 // 방위 그룹화 구조체
-//##ModelId=452B0C54032A
 struct STR_AOA_GROUPS {
-    STR_AOA_GROUP aoa[ MAX_AGRT ];
+    STR_AOA_GROUP stAOA[ MAX_AGRT ];
     unsigned int uiCount;
 	unsigned int uiCoAnal;
 
 }  ;
 
 // 주파수 그룹범위 테이블  
-//##ModelId=452B0C540335
 struct STR_FRQ_GROUP {
-	int	aoa_idx;			// 방위 그룹화 인덱스
+	int	iIdxAOA;			// 방위 그룹화 인덱스
 
-	UINT from_frq;
-	UINT to_frq;
+	UINT uiFromFRQ;
+	UINT uiToFRQ;
 
-    UINT from_bin;
-    UINT to_bin;
+    UINT uiFromBIN;
+    UINT uiToBIN;
 	char narrow_wide;
 	char end_of_aoagroup;
 
@@ -133,10 +137,10 @@ struct STR_FRQ_GROUPS {
 struct STR_PW_GROUP {
     int	frq_idx;			// 주파수 그룹화 인덱스
 
-    UINT from_pw;
-    UINT to_pw;
-    UINT from_bin;
-    UINT to_bin;
+    UINT uiFromPW;
+    UINT uiToPW;
+    UINT uiFromBin;
+    UINT uiToBin;
 
 }  ;
 
@@ -153,7 +157,7 @@ struct STR_PW_GROUPS {
 //##ModelId=452B0C540371
 struct STR_CLUSTER {
 	int iCount;
-    PDWINDEX index[SCN_COLLECT_PDW];
+    PDWINDEX pIndex[SCN_COLLECT_PDW];
     UINT uiValue[SCN_COLLECT_PDW];
 
     bool bSplit;
@@ -168,11 +172,11 @@ struct STR_CLUSTER {
 // 탐지의 펄스열이 존재함에도 분석이 되지 않는 문제
 //##ModelId=452B0C54038E
 struct STR_FIRST_FRQAOA_PEAK {
-	STR_LOWHIGH	aoa; 
-	STR_LOWHIGH	frq;
+	STR_LOWHIGH	stAOA; 
+	STR_LOWHIGH	stFrq;
 	UINT band;
 	UINT tot_cnt;
-	UINT count;
+	UINT uiCount;
 	UINT enable;
 
 }  ;
@@ -195,9 +199,9 @@ struct STR_PULSE_TRAIN_SEG {
 
 	UINT uiFreqType;					// 주파수 타입
 	STR_MINMAX stAOA;					// 방위 제원 
-	STR_MINMAX_MEDIAN freq;				// 주파수 제원 
+	STR_MINMAX_MEDIAN stFreq;				// 주파수 제원 
 	STR_MINMAX stPA;					// 신호세기 제원 
-	STR_MINMAX pw;					// 펄스폭 제원 
+	STR_MINMAX stPW;					// 펄스폭 제원 
     enPRI_TYPE enPriType;					// PRI 타입
 	STR_MINMAX_TOA stPRI;					// PRI 제원
 
@@ -210,10 +214,10 @@ struct STR_PULSE_TRAIN_SEG {
 	//UINT cd;								// Correct Detection
 	//UINT steady;						// steady 스캔특성
 
-	SEG_MARK enMark;							// 펄스열의 상태 표시 
+	SEG_MARK enSegMark;							// 펄스열의 상태
 													// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
-	UINT pri_pat_period;		// PRI  패턴 주기
-	UINT freq_pat_period;		// FREQ 패턴 주기
+	UINT uiPRIPatternPeriod;		// PRI  패턴 주기
+	UINT uiFreqPatternPeriod;		// FREQ 패턴 주기
 	
 }  ;
 
@@ -265,7 +269,7 @@ struct STR_EMITTER {
 	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
 
 	UINT uiMainSeg;							// 분석에 성공한 seg index
-    EMITTER_MARK mark;									// 삭제 여부
+    EMITTER_MARK enMark;									// 삭제 여부
 
 	int iDIRatio;
 
@@ -503,18 +507,6 @@ struct STR_SYS
 
 #endif
 
-#ifndef _FREQ_RESOL_
-#define _FREQ_RESOL_
-/**	\brief	구조체명 FREQ_RESOL 
-*/
-struct FREQ_RESOL {
-    UINT uiMin;
-    UINT uiMax;
-	int iOffset;
-    float fRes;			// 각 구간에 따른 resolution
-} ;
-#endif
-
 #ifndef _PA_RESOL_
 #define _PA_RESOL_
 struct PA_RESOL {
@@ -559,7 +551,7 @@ struct STR_DWELL_LEVEL {
 
 #define DFD_FREQ_OFFSET		(1900)
 
-#if defined(_ELINT_)
+#if defined(_ELINT_) || defined(_701_)
     //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
     char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
@@ -622,6 +614,8 @@ struct STR_DWELL_LEVEL {
 	double dRCLatitude[RADARCOL_MAX] = { 0.0, 37.485168456889, 37.454452514694, 37.453517913889 } ;
 	double dRCLongitude[RADARCOL_MAX] = { 0.0, 126.457916259694, 126.481880188111, 126.423416137778 } ;
 
+///////////////////////////////////////////////////////////////////////////////////
+
 #elif defined(_POCKETSONATA_)
 
 #define PDW_FREQ_RES        (1.953125)
@@ -669,12 +663,12 @@ struct STR_DWELL_LEVEL {
   char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
   char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
-  FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
-  {
-      {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
-      { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
-      { 5866, 18740, 5866, 1.5   }
-  } ;
+//   FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
+//   {
+//       {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+//       { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+//       { 5866, 18740, 5866, 1.5   }
+//   } ;
 
 
   PA_RESOL gPaRes[ 6 ] =
@@ -696,8 +690,6 @@ extern float _spFreqMax;
 #ifndef _GRAPH_
 extern STR_SYS _sp;
 
-//extern char g_szPulseType[MAX_STAT][3];
-
 extern char g_szAetFreqType[MAX_FRQTYPE][3];
 extern char g_szAetPriType[MAX_PRITYPE][3];
 
@@ -707,7 +699,7 @@ extern unsigned int _spAnalMinPulseCount;
 
 
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
 extern char g_szAetSignalType[7][3];
 extern FREQ_RESOL gFreqRes[ TOTAL_BAND ];
 extern PA_RESOL gPaRes[ 6 ];
@@ -728,8 +720,8 @@ extern FREQ_RESOL gFreqRes[ 3 ];
 extern PA_RESOL gPaRes[ 6 ];
 
 #else
-extern PA_RESOL gPaRes[ 6 ];
-extern FREQ_RESOL gFreqRes[ 7 ];
+//extern PA_RESOL gPaRes[ 6 ];
+//extern FREQ_RESOL gFreqRes[ 7 ];
 #endif
 
 #endif

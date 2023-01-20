@@ -107,6 +107,11 @@ private:
 
     char m_szIniFileName[200];
 
+	/**
+	 * @brief 분석 초기화 순번
+	 */
+	unsigned int m_uiOpInitID;
+
 public:
     CSysConfig(void);
     virtual ~CSysConfig(void);
@@ -125,6 +130,11 @@ public:
 
 public:
     inline STR_SYSCONFIG *GetSysConfig() { return & m_strConfig; }
+
+	inline UINT GetOpInitID() { return m_uiOpInitID; };
+	inline void IncOpInitID() {
+		++m_uiOpInitID;
+	};
 
 
     ENUM_BoardID GetBoardID() { return m_strConfig.enBoardID; };

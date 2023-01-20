@@ -113,7 +113,7 @@ void CDetectAnalysis::_routine()
 }
 
 /**
- * @brief PDW 데이터를 Fetch 해서 탐지 신호 분석을 수행한다. 분석 결과(LOB)를 병합/식별 쓰레드로 전달한다.
+ * @brief     입력 PDW 데이터로 신호 분석을 수행합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -157,7 +157,7 @@ void CDetectAnalysis::AnalysisStart()
 }
 
 /**
- * @brief     탐지 분석하기 위한 PDW 데이터를 구성한다.
+ * @brief     신호 분석하기 위해 PDW 데이터를 파싱하여 분석에 용이하도록 변환합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

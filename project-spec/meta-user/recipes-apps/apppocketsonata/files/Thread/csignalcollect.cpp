@@ -154,6 +154,8 @@ void CSignalCollect::_routine()
             perror( "QMsgRcv" );
         }
         else {
+            WhereIs;
+            printf( "\n [%d]" , m_pMsg->uiOpCode );
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_DETECTANAL_START :
                     RoutineForDetectAnal();
@@ -170,6 +172,8 @@ void CSignalCollect::_routine()
                     LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
+
+            WhereIs;
 
         }
     }
@@ -306,14 +310,14 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
     pWindowCell->uiMaxCollectTimesec = 10;
     pWindowCell->uiMaxCollectTimems = 100;
 
-    pWindowCell->strAoa.iLow = IAOACNV( 0 );
-    pWindowCell->strAoa.iHgh = IAOACNV( 360. ) - 1;
+    pWindowCell->strAoa.iLow = (int) IAOACNV( 0 );
+    pWindowCell->strAoa.iHgh = (int) ( IAOACNV( 360. ) - 1 );
 
     pWindowCell->strFreq.iLow = 0; // IFRQMhzCNV( 0, MIN_FREQ_MHZ );
     pWindowCell->strFreq.iHgh = 0x7fffffff - 100000; // IFRQMhzCNV( 0, MAX_FREQ_MHZ );
 
     pWindowCell->strPA.iLow = NDIV( -90, _spAMPres );   //I_IPACNV( -70 );
-    pWindowCell->strPA.iHgh = UDIV( 10, _spAMPres );    //I_IPACNV( 10 );
+    pWindowCell->strPA.iHgh = (int) UDIV( 10, _spAMPres );    //I_IPACNV( 10 );
 
     pWindowCell->strPW.iLow = 0;
     pWindowCell->strPW.iHgh = 0xFFFFFF;
@@ -432,8 +436,12 @@ void CSignalCollect::CheckAllCollectBank()
     // 추적 채널 버퍼 체크
     iCh = CheckCollectBank( enTrackCollectBank );
     if( iCh >= 0 ) {
+        //int iMaxCh;
+
         pCollectBank = GetCollectBank( iCh );
-        uiIndex = _max( iCh - DETECT_CHANNEL, _spZero );
+
+        //iMaxCh = _max( iCh - DETECT_CHANNEL, _spZero );
+        uiIndex = (unsigned int) max( (int)( iCh - DETECT_CHANNEL), _spZero);
 
         strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
         strCollectInfo.iCh = iCh;
@@ -459,7 +467,7 @@ void CSignalCollect::CheckAllCollectBank()
     iCh = CheckCollectBank( enScanCollectBank );        
     if( iCh >= 0 ) {
         pCollectBank = GetCollectBank( iCh );
-        uiIndex = _max( iCh - DETECT_CHANNEL - TRACK_CHANNEL, _spZero );
+        uiIndex = (unsigned int) max( iCh - DETECT_CHANNEL - TRACK_CHANNEL, _spZero );
 
         strCollectInfo.uiTotalPDW = pCollectBank->GetTotalPDW();
         strCollectInfo.iCh = iCh;
@@ -664,12 +672,12 @@ void CSignalCollect::NewTrackWindowCell( SRxABTData *pABTData )
 
 #ifdef _ELINT_            
             strcpy((char *)pPDWData->x.el.aucTaskID, m_pMsg->x.strAnalInfo.uniPDWHeader.el.aucTaskID );
-            pPDWData->x.el.iIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.el.iIsStorePDW;
+            pPDWData->x.el.uiIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.el.uiIsStorePDW;
             pPDWData->x.el.enCollectorID = m_pMsg->x.strAnalInfo.uniPDWHeader.el.enCollectorID;
             pPDWData->x.el.enBandWidth = m_pMsg->x.strAnalInfo.uniPDWHeader.el.enBandWidth;
 #elif defined(_XBAND_)
             strcpy((char *)pPDWData->x.xb.aucTaskID, m_pMsg->x.strAnalInfo.uniPDWHeader.xb.aucTaskID);
-            pPDWData->x.xb.iIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.iIsStorePDW;
+            pPDWData->x.xb.uiIsStorePDW = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.uiIsStorePDW;
             pPDWData->x.xb.enCollectorID = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.enCollectorID;
             pPDWData->x.xb.enBandWidth = m_pMsg->x.strAnalInfo.uniPDWHeader.xb.enBandWidth;
 
@@ -742,10 +750,10 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
         pstrWindowCell->strPA.iLow = 0;
         pstrWindowCell->strPA.iHgh = 0x7fffffff;
 
-        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA;
-        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA;
+        pstrWindowCell->strAoa.iLow = (int) ( ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA );
+        pstrWindowCell->strAoa.iHgh = (int) ( ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA );
 
-        pstrWindowCell->uiMaxCoPDW = _min( KWN_COLLECT_PDW, 100 );
+        pstrWindowCell->uiMaxCoPDW = 100; // (unsigned int)_min(KWN_COLLECT_PDW, 100);
 
         uiCollectTime = UADD( 5000, fMinCollectTime );
         pstrWindowCell->uiMaxCollectTimesec = UDIV( uiCollectTime, 1000 );
@@ -758,7 +766,13 @@ void CSignalCollect::CalTrackWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTD
 }
 
 /**
- * @brief CSignalCollect::SimPDWData
+ * @brief     PDW 데이터를 모의 발생한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-10 15:45:01
+ * @warning
  */
 void CSignalCollect::SimPDWData()
 {
@@ -772,8 +786,8 @@ void CSignalCollect::SimPDWData()
 
 #ifdef _POCKETSONATA_
     m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
-#elif _XBAND_
-    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enPDWToPDW );
+#elif defined(_XBAND_)
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, ( char *) PDW_EXT, NULL, enPDWToPDW );
 #else
     m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
 #endif
@@ -786,7 +800,7 @@ void CSignalCollect::SimPDWData()
     //pCollectBank = GetCollectBank( uiCh );
     //pCollectBank->PushPDWData( pPDWData );
 
-    //_SAFE_DELETE( m_theDataFile.m_pData );
+    //_SAFE_DELETE( m_theDataFile.m_pData )
 
 }
 
@@ -978,10 +992,10 @@ void CSignalCollect::CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTDa
 #endif
         }
 
-        pstrWindowCell->strAoa.iLow = ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA;
-        pstrWindowCell->strAoa.iHgh = ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA;
+        pstrWindowCell->strAoa.iLow = (int) ( ( IAOACNV( pABTData->fDOAMin-10 ) + MAX_AOA ) % MAX_AOA );
+        pstrWindowCell->strAoa.iHgh = (int) ( ( IAOACNV( pABTData->fDOAMax+10 ) + MAX_AOA ) % MAX_AOA );
 
-        pstrWindowCell->uiMaxCoPDW = _min( SCN_COLLECT_PDW, 1000 );
+        pstrWindowCell->uiMaxCoPDW = 1000; //  _min(SCN_COLLECT_PDW, 1000);
 
         uiCollectTime = UADD( 5000, fMinCollectTime );
         pstrWindowCell->uiMaxCollectTimesec = UDIV( uiCollectTime, 1000 );

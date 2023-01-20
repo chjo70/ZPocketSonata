@@ -9,7 +9,7 @@
 #elif __linux__
 #include <sys/timeb.h>
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 
 #else
 #include <unistd.h>
@@ -40,7 +40,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-20 19:04:38
 //
-CNMakeAET::CNMakeAET( void *pParent, int coMaxPdw ) : CMakeAET( coMaxPdw )
+CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(uicoMaxPdw)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -121,7 +121,7 @@ int CNMakeAET::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
  * @date      2006-01-23 10:17:27
  * @warning
  */
-int CNMakeAET::GetColPdw()
+unsigned int CNMakeAET::GetColPdw()
 {
     return m_pNewSigAnal->GetColPdw();
 }
@@ -162,7 +162,7 @@ int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
  * @brief     펄스열에 대해서 마킹 정보를 설정한다.
  * @param     PDWINDEX * pPdwIndex
  * @param     unsigned int uiCount
- * @param     USHORT usMarkType
+ * @param     PULSE_EXTRACT_MARK enMarkType
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -170,23 +170,23 @@ int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
  * @date      2006-01-23 10:17:35
  * @warning
  */
-void CNMakeAET::MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, USHORT usMarkType)
+void CNMakeAET::MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE_MARK enMarkType)
 {
-    m_pNewSigAnal->MarkToPDWIndex( pPDWIndex, uiCount, usMarkType);
+    m_pNewSigAnal->MarkToPDWIndex( pPDWIndex, uiCount, enMarkType);
 }
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CNMakeAET::SaveEmitterPdwFile
+// 함 수 이 름  : CNMakeAET::SaveEmitterPDWFile
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 인 자  : int index
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CNMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+void CNMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pNewSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
+    m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 
@@ -211,7 +211,7 @@ unsigned int CNMakeAET::GetCoSeg()
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:42
 //
-int CNMakeAET::GetCoEmitter()
+unsigned int CNMakeAET::GetCoEmitter()
 {
     return m_pNewSigAnal->GetCoEmitter();
 }

@@ -18,7 +18,7 @@
 
 #include "../Anal/SigAnal/_Type.h"
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <ioLib.h>
 
 #elif _MSC_VER
@@ -117,9 +117,9 @@ bool CPDW2SP370::MakeHeader(void)
 
 	//strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], sizeof(m_stPDWHeader.szMasterLibraryName), LIBRARY_NAME );
 	memcpy( & m_stPDWHeader.szMasterLibraryName[0], strUnicode, strlen(strUnicode)*2 );
-	index = strlen(strUnicode)*2;
+	index = (int) strlen(strUnicode)*2;
 	length = sizeof(m_stPDWHeader.szMasterLibraryName) - index;
-	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, length );
+	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, (size_t) length );
 #endif
 	
 	m_stPDWHeader.ucIndexOffsetInBytes = 8;
@@ -146,7 +146,7 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 	pstPDWWord = & m_stPDWWord[0];
 	for( i=0 ; i < iRecords ; ++i ) {
 		AllEndian64( & pS_EL_PDW_DATA->ullTOA, sizeof(long long int) );
-		AllEndian32( & pS_EL_PDW_DATA->iSignalType, sizeof(SRxPDWDataRGroup)- sizeof(long long int) );
+		AllEndian32( & pS_EL_PDW_DATA->uiPulseType, sizeof(SRxPDWDataRGroup)- sizeof(long long int) );
 
 		memset( pstPDWWord, 0, sizeof(SELSP350_PDWWORDS) );
 
@@ -155,27 +155,27 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x.usTOA = UDIV( dToa, 12.5 );
 
 		// 2번째 Phase
-		dPa = ELDecoder::DecodeGainPA( pS_EL_PDW_DATA->iPA );			// ns 단위로 변경
+		dPa = ELDecoder::DecodeGainPA( pS_EL_PDW_DATA->uiPA );			// ns 단위로 변경
 		//iPa = UDIV( ( 0xFF * pS_EL_PDW_DATA->iPA ), 440 );
 		pstPDWWord->x.ucAmp = UDIV( dPa, 0.34 );
 
-		dAoa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->iDirection );	// 도 단위로 변경
+		dAoa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->uiDirection );	// 도 단위로 변경
 		//iAoa = UDIV( ( 0x7FF * pS_EL_PDW_DATA->iDirection ), 3600 );
 		iAoa = UDIV( dAoa, 0.08789 );
 		pstPDWWord->x.uiHighAOA = iAoa >> 5;
 		pstPDWWord->x.uiLowAOA = iAoa & 0x0FF;
-		pstPDWWord->x.uiAOAInvalid = pS_EL_PDW_DATA->iDirectionVaild;
+		pstPDWWord->x.uiAOAInvalid = pS_EL_PDW_DATA->uiDirectionVaild;
 
 		pstPDWWord->x.usPOPPedFlag = _INVALID;
 		pstPDWWord->x.usPOPFlag = _INVALID;
-		pstPDWWord->x.usPMOPFlag = pS_EL_PDW_DATA->iPMOPFlag;
+		pstPDWWord->x.usPMOPFlag = pS_EL_PDW_DATA->uiPMOPFlag;
 		pstPDWWord->x._notused1 = 0;
 		pstPDWWord->x._notused2 = 0;
 		pstPDWWord->x._notused3 = 0;
 
 		// 3번째 Phase
-		pstPDWWord->x.usFreq = pS_EL_PDW_DATA->iFreq / 100;
-		iFreq = pS_EL_PDW_DATA->iFreq - ( ( pS_EL_PDW_DATA->iFreq / 100 ) * 100 );
+		pstPDWWord->x.usFreq = pS_EL_PDW_DATA->uiFreq / 100;
+		iFreq = pS_EL_PDW_DATA->uiFreq - ( ( pS_EL_PDW_DATA->uiFreq / 100 ) * 100 );
 		pstPDWWord->x.usFreqFraction = UDIV( iFreq, 3.90625 );
 
 		pstPDWWord->x.usSignalCenterStatus = _VALID;
@@ -184,8 +184,8 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x.usPulseSource = 0x14;
 
 		// 4번째 Phase
-		pstPDWWord->x.usCW = pS_EL_PDW_DATA->iSignalType == E_PDW_SIGNAL_CW ? 1 : 0;
-		dPw = ELDecoder::DecodePW2( pS_EL_PDW_DATA->iPW );	// 도 단위로 변경
+		pstPDWWord->x.usCW = pS_EL_PDW_DATA->uiPulseType == E_PDW_SIGNAL_CW ? 1 : 0;
+		dPw = ELDecoder::DecodePW2( pS_EL_PDW_DATA->uiPW );	// 도 단위로 변경
 		pstPDWWord->x.usPW = UDIV( dPw*1000., 40 );
 		//pstPDWWord->x.usPW = pS_EL_PDW_DATA->iPW;
 

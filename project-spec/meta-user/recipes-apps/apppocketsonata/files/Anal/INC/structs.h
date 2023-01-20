@@ -1,4 +1,4 @@
-/*!
+﻿/*!
   \file     Structs.h
   \brief    interface for the 구조체
 	\version  0.0.1
@@ -13,7 +13,7 @@
 #endif // _MSC_VER > 1000
 
 #include "System.h"
-#include "Defines.h"
+#include "../../Include/Defines.h"
 #include "../SigAnal/_Define.h"
 #include "PDW.h"
 
@@ -619,19 +619,19 @@ union UNI_GP_STAT {
 // #endif
 
 // 수집한 PDW의 제원 정보 구조체 정의
-struct STR_ONE_PDW {
-	UINT toa;
-	int freq;
-	int pw;
-	UINT bt;
-	UINT stat;			// status
-	UINT mc;				// 최대 채널
-	UINT dv;
-	int aoa;
-	int pa;
-	UINT band;
-
-} ;
+// struct STR_ONE_PDW {
+// 	UINT toa;
+// 	int freq;
+// 	int pw;
+// 	UINT bt;
+// 	UINT stat;			// status
+// 	UINT mc;				// 최대 채널
+// 	UINT dv;
+// 	int aoa;
+// 	int pa;
+// 	UINT band;
+// 
+// } ;
 
 struct STR_CW_CONTROL {
 	int cw_threshold;
@@ -652,11 +652,11 @@ typedef STR_PDWDATA STR_KWN_COLLECT_PDW;
 typedef STR_PDWDATA STR_SCN_COLLECT_PDW;
 
 
-struct STR_NEW_COLLECT_BANK {
-	UINT nBank;
-	enum FILTER_STAT nStat[NEW_NO_BANK];
-
-} ;
+// struct STR_NEW_COLLECT_BANK {
+// 	UINT nBank;
+// 	enum FILTER_STAT nStat[NEW_NO_BANK];
+// 
+// } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 식별 구조체
@@ -665,31 +665,31 @@ typedef unsigned int UDFINDEX;
 
 //////////////////////////////////////////////////////////////////////////
 // 시스템 로그 관련 구조체 정의
-#define LOG_HEADER						(sizeof(time_t)+2*sizeof(UINT))
-#define MAX_LOG_PDW						400
+// #define LOG_HEADER						(sizeof(time_t)+2*sizeof(UINT))
+// #define MAX_LOG_PDW						400
 
 // 시스템 로그 구조체 정의
-struct STR_LOGMSG {
-	UINT opCode;
-	UINT dSize;
-
-	time_t log_time;
-	
-	union {
-		char byte;
-		char array[MAX_LOG_PDW];
-		unsigned int word;
-		unsigned int noThreat;
-		//STR_THREAT threat;
-		//STR_AET_DETAIL aetDet;
-
-		//STR_POWER_ON_INIT init;
-		//STR_POWER_ON_IBIT ibit;
-		//STR_POWER_ON_PBIT pbit;
-		//STR_POWER_ON_CBIT cbit;
-	} u ;
-
-} ;
+// struct STR_LOGMSG {
+// 	UINT opCode;
+// 	UINT dSize;
+// 
+// 	time_t log_time;
+// 	
+// 	union {
+// 		char byte;
+// 		char array[MAX_LOG_PDW];
+// 		unsigned int word;
+// 		unsigned int noThreat;
+// 		//STR_THREAT threat;
+// 		//STR_AET_DETAIL aetDet;
+// 
+// 		//STR_POWER_ON_INIT init;
+// 		//STR_POWER_ON_IBIT ibit;
+// 		//STR_POWER_ON_PBIT pbit;
+// 		//STR_POWER_ON_CBIT cbit;
+// 	} u ;
+// 
+// } ;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -713,38 +713,38 @@ struct STR_QUEUE_MESSAGE {
 // } ;
 
 // 시스템 로그 관련 큐 메시지 구조체 
-struct STR_QUEUE_LOG_MESSAGE {
-	USHORT opCode;
-	UCHAR address1;
-	UCHAR address2;
-	UINT opData;
-
-	STR_LOGMSG log;
-} ;
+// struct STR_QUEUE_LOG_MESSAGE {
+// 	USHORT opCode;
+// 	UCHAR address1;
+// 	UCHAR address2;
+// 	UINT opData;
+// 
+// 	STR_LOGMSG log;
+// } ;
 
 
 //////////////////////////////////////////////////////////////////////////
 // Chaff/Flare 발사 명령 정의
-
-// Chaff 발사 정보
-struct STR_CHAFF_FLARE_ORDER {
-	USHORT startDelay;					// res. ms
-	USHORT endDelay;
-	USHORT payloadCount;
-	USHORT payloadInterval;
-	USHORT burstCount;
-	USHORT burstInterval;
-	USHORT salvoCount;
-	USHORT salvoInterval;
-
-} ;
-
-// C/F 발사 정보 순서를 만들기 위한 구조체 정의
-struct STR_FIRE_INFO {
-	UINT fire_time;
-	UINT chaff_flare;
-
-} ;
+// 
+// // Chaff 발사 정보
+// struct STR_CHAFF_FLARE_ORDER {
+// 	USHORT startDelay;					// res. ms
+// 	USHORT endDelay;
+// 	USHORT payloadCount;
+// 	USHORT payloadInterval;
+// 	USHORT burstCount;
+// 	USHORT burstInterval;
+// 	USHORT salvoCount;
+// 	USHORT salvoInterval;
+// 
+// } ;
+// 
+// // C/F 발사 정보 순서를 만들기 위한 구조체 정의
+// struct STR_FIRE_INFO {
+// 	UINT fire_time;
+// 	UINT chaff_flare;
+// 
+// } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 로그 데이터 구조체

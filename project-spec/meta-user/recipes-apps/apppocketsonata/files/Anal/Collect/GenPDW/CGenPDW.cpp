@@ -1,4 +1,4 @@
-// CGenPDW.cpp: ½Ã³ª¸®¿À ÆÄÀÏÀ» ÀĞ¾î¼­ ÆÄÀÏ·Î »ı¼ºÇÏ°Å³ª º´ÇÕµÈ PDW ÆÄÀÏÀ» »ı¼ºÇÑ´Ù.
+ï»¿// CGenPDW.cpp: ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì„ ì½ì–´ì„œ íŒŒì¼ë¡œ ìƒì„±í•˜ê±°ë‚˜ ë³‘í•©ëœ PDW íŒŒì¼ì„ ìƒì„±í•œë‹¤.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -18,10 +18,10 @@
 
 
 /**
- * @brief     CGenPDW
+ * @brief     ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
  * @return    
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-04, 10:13
  * @warning
@@ -30,7 +30,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
 {
     size_t szSize;
 
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     m_stSavePDWData.pstPDW = NULL;
     m_File = NULL;
 
@@ -48,7 +48,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
  * @param     char * pszFileName
  * @return    
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-27, 20:39
  * @warning
@@ -57,7 +57,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
 // {
 //     
 // 
-//     //  mak_fileÀ» read mode·Î open ÇÑ ÈÄ ¿¡·¯ÀÎ °æ¿ì ¿¡·¯ Ã³¸® 
+//     //  mak_fileì„ read modeë¡œ open í•œ í›„ ì—ëŸ¬ì¸ ê²½ìš° ì—ëŸ¬ ì²˜ë¦¬ 
 //     strcpy( m_szMakfilename, pszFileName );
 // 
 //     if( (m_File = fopen( m_szMakfilename, "rt" )) == NULL ) {
@@ -68,11 +68,11 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
 // }
 
 /**
- * @brief     OpenFile
+ * @brief     PDW ë°œìƒ ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì„ ì˜¤í”ˆ í•©ë‹ˆë‹¤.
  * @param     char * pszFileName
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-04, 11:16
  * @warning
@@ -83,7 +83,7 @@ void CGenPDW::OpenFile( char *pszFileName )
         fclose( m_File );
     }
 
-    //  mak_fileÀ» read mode·Î open ÇÑ ÈÄ ¿¡·¯ÀÎ °æ¿ì ¿¡·¯ Ã³¸® 
+    //  mak_fileì„ read modeë¡œ open í•œ í›„ ì—ëŸ¬ì¸ ê²½ìš° ì—ëŸ¬ ì²˜ë¦¬ 
     strcpy( m_szMakfilename, pszFileName );
 
     m_File = fopen( m_szMakfilename, "rt" );
@@ -93,11 +93,11 @@ void CGenPDW::OpenFile( char *pszFileName )
 }
 
 /**
- * @brief     ~CGenPDW
+ * @brief     ê°ì²´ë¥¼ ì†Œë©¸í•©ë‹ˆë‹¤.
  * @param     void
  * @return    
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-27, 20:40
  * @warning
@@ -113,10 +113,10 @@ CGenPDW::~CGenPDW()
 }
 
 /**
- * @brief     ParsingThePDWMakefile
+ * @brief     ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì„ í•´ì„í•˜ì—¬ ì²˜ë¦¬í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-27, 20:46
  * @warning
@@ -130,10 +130,10 @@ void CGenPDW::ParseAndMakefile()
     while( ! feof( m_File ) ) {
 		GetLineCommand();
 
-        // ÀåÄ¡¸í ¾ò±â
+        // ì¥ì¹˜ëª… ì–»ê¸°
         g_enUnitType = CCommonUtils::WhatUnitType( m_stGenPDWInfo.szFileName );
 
-        // ¸Ş¸ğ¸® ÇÒ´ç
+        // ë©”ëª¨ë¦¬ í• ë‹¹
         //m_stSavePDWData.pstPDW = (_PDW *) malloc( m_stGenPDWInfo.uiCoAllPDW * sizeof(_PDW) );
         m_stSavePDWData.pstPDW = new _PDW[m_stGenPDWInfo.uiCoAllPDW];
         m_pstPDW = m_stSavePDWData.pstPDW;
@@ -145,7 +145,7 @@ void CGenPDW::ParseAndMakefile()
 
         SetGenerateInfo();
 
-        // PDW ¹ß»ıÇØ¼­ ÆÄÀÏ·Î ÀúÀå
+        // PDW ë°œìƒí•´ì„œ íŒŒì¼ë¡œ ì €ì¥
         GeneratePDW();
         Write( m_stSavePDWData.pstPDW, sizeof( _PDW ) * m_stSavePDWData.GetTotalPDW() );
 
@@ -156,15 +156,13 @@ void CGenPDW::ParseAndMakefile()
 
     }
 
-
-
 }
 
 /**
- * @brief     ParseAndMakeMemory
+ * @brief     ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì„ í•œì¤„ì”© í•´ì„í•´ì„œ PDW ë°œìƒì„ ëª¨ì˜í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-04, 11:26
  * @warning
@@ -182,20 +180,23 @@ void CGenPDW::ParseAndMakeMemory( SIGAPDW *pSigPDW )
 
         GetLineCommand();
 
-        // ¸Ş¸ğ¸® ÇÒ´ç
+        // ë©”ëª¨ë¦¬ í• ë‹¹
         szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), m_stGenPDWInfo.uiCoAllPDW );
 
 		if (szSize != 0) {
-			m_stSavePDWData.pstPDW = (_PDW *)malloc(szSize);
-			m_pstPDW = m_stSavePDWData.pstPDW;
+			m_stSavePDWData.pstPDW = (_PDW *) malloc(szSize);
+            if (m_stSavePDWData.pstPDW != NULL) {
+                m_pstPDW = m_stSavePDWData.pstPDW;
 
-			MakeFileHeader();
+                MakeFileHeader();
 
-			// PDW ¹ß»ıÇØ¼­ ÆÄÀÏ·Î ÀúÀå
-			SetGenerateInfo();
-			GeneratePDW(pSigPDW);
+                // PDW ë°œìƒí•´ì„œ íŒŒì¼ë¡œ ì €ì¥
+                SetGenerateInfo();
+                GeneratePDW(pSigPDW);
 
-			free(m_stSavePDWData.pstPDW);
+                free(m_stSavePDWData.pstPDW);
+            }
+
 			m_stSavePDWData.pstPDW = NULL;
 		}
 		else {
@@ -207,10 +208,10 @@ void CGenPDW::ParseAndMakeMemory( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     SetGenerateInfo
+ * @brief     PDW ëª¨ì˜ ë°œìƒì„ í•˜ê¸° ìœ„í•´ ì‚¬ì „ ì •ë³´ë¥¼ ì„¤ì •í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 15:11
  * @warning
@@ -243,7 +244,7 @@ void CGenPDW::SetGenerateInfo()
 
     }
     else {
-        m_i360DOA = 360;    // ±âº»°ª
+        m_i360DOA = 360;    // ê¸°ë³¸ê°’
     }
 
     m_uiPRIDwellCount = 0;
@@ -251,10 +252,10 @@ void CGenPDW::SetGenerateInfo()
 }
 
 /**
- * @brief     MakeFileHeader
+ * @brief     ëª¨ì˜ ë°œìƒí•  PDW íŒŒì¼ì˜ í—¤ë”ë¥¼ ìƒì„±í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 13:58
  * @warning
@@ -266,20 +267,20 @@ void CGenPDW::MakeFileHeader()
         m_stSavePDWData.x.ps.uiBoardID = 0;
         m_stSavePDWData.x.ps.uiBank = 0;
         m_stSavePDWData.x.ps.uiBand = 0;
-        m_stSavePDWData.x.ps.iIsStorePDW = 1;
+        m_stSavePDWData.x.ps.uiIsStorePDW = 1;
         break;
 
     case en_ELINT:
         m_stSavePDWData.x.ps.uiBoardID = 0;
         m_stSavePDWData.x.ps.uiBank = 0;
         m_stSavePDWData.x.ps.uiBand = 0;
-        m_stSavePDWData.x.ps.iIsStorePDW = 1;
+        m_stSavePDWData.x.ps.uiIsStorePDW = 1;
         break;
 
     case en_XBAND:
         strcpy( m_stSavePDWData.x.xb.aucTaskID, "SIMPDW" );
         
-        m_stSavePDWData.x.xb.iIsStorePDW = 1;
+        m_stSavePDWData.x.xb.uiIsStorePDW = 1;
         m_stSavePDWData.x.xb.enCollectorID = RADARCOL_Unknown;
         m_stSavePDWData.x.xb.enBandWidth = XBAND::en120MHZ_BW;
         break;
@@ -307,10 +308,10 @@ void CGenPDW::MakeFileHeader()
 }
 
 /**
- * @brief     GeneratePDW
+ * @brief     PDW íŒŒì¼ì„ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 13:14
  * @warning
@@ -341,10 +342,10 @@ void CGenPDW::GeneratePDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     ¹ß»ıÇÑ PDW µéÀ» ½Ã°£¼øÀ¸·Î Á¤·ÄÇÏ¿© º´ÇÕÇÑ´Ù.
+ * @brief     ë°œìƒí•œ PDW ë“¤ì„ ì‹œê°„ìˆœìœ¼ë¡œ ì •ë ¬í•˜ì—¬ ë³‘í•©í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-04, 13:40
  * @warning
@@ -367,10 +368,10 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
         //pstMergedPDW = m_stMergedPDWData.pstPDW;
 
         for( i = 0 ; i < uiCoTotalPDW ; ++i ) {
-            // À§Ä¡ Ã£±â
+            // ìœ„ì¹˜ ì°¾ê¸°
             iIndex = m_stMergedPDWData.GetIndexByTOA( m_pstPDW->GetTOA() );
 
-            // »ğÀÔÇÑ´Ù.
+            // ì‚½ì…í•œë‹¤.
             if( iIndex >= 0 ) {
                 uiCoMergedPDW = m_stMergedPDWData.GetTotalPDW();
 
@@ -383,13 +384,13 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
                     memcpy( &m_stMergedPDWData.pstPDW[iIndex], m_pstPDW, sizeof( _PDW ) );
                 }
 
-                // º´ÇÕµÈ PDW °³¼ö Áõ°¡ : ÃÖ´ë ÃÊ±â »ı¼ºÀÚ ÇÔ¼ö¿¡¼­ ¼³Á¤ÇÑ °ª±îÁö ¼³Á¤ÇÏ°Ô ÇÔ.
+                // ë³‘í•©ëœ PDW ê°œìˆ˜ ì¦ê°€ : ìµœëŒ€ ì´ˆê¸° ìƒì„±ì í•¨ìˆ˜ì—ì„œ ì„¤ì •í•œ ê°’ê¹Œì§€ ì„¤ì •í•˜ê²Œ í•¨.
                 ++uiCoMergedPDW;
                 if( uiCoMergedPDW < ( UINT ) m_iCoMergedPDW ) {
                     m_stMergedPDWData.SetTotalPDW( uiCoMergedPDW );
                 }
             }
-            // ±³Ã¼ ¶Ç´Â ¹«½ÃÇÑ´Ù.
+            // êµì²´ ë˜ëŠ” ë¬´ì‹œí•œë‹¤.
             else {
                 if( m_pstPDW->GetPulseamplitude() > m_stMergedPDWData.pstPDW[-iIndex - 1].GetPulseamplitude() ) {
                     memcpy( &m_stMergedPDWData.pstPDW[-iIndex - 1], m_pstPDW, sizeof( _PDW ) );
@@ -403,25 +404,29 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     PDW ÀÇ ½ÅÈ£ÇüÅÂ¸¦ ¸ğÀÇ ¹ß»ıÇÑ´Ù.
+ * @brief     PDW ì˜ ì‹ í˜¸í˜•íƒœë¥¼ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 16:30
  * @warning
  */
 void CGenPDW::MakeSignalType( SIGAPDW *pSigPDW )
 {
-    m_pstPDW->iPulseType = CEncode::EncodePulseType ( m_stGenPDWInfo.uiSignalType );
+	if(m_pstPDW != NULL )
+		m_pstPDW->iPulseType = CEncode::EncodePulseType ( m_stGenPDWInfo.uiSignalType );
+	else {
+		TRACE( "ì˜ëª»ëœ ë°ì´í„° ì €ì¥ì†Œ ì…ë‹ˆë‹¤.");
+	}
 
 }
 
 /**
- * @brief     PDW ÀÇ ¹æÀ§ °ªÀ» ¸ğÀÇ ¹ß»ıÇÑ´Ù.
+ * @brief     PDW ì˜ ë°©ìœ„ ê°’ì„ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 16:48
  * @warning
@@ -444,10 +449,10 @@ void CGenPDW::MakeDOAOfPDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     PDW ÀÇ ÆŞ½ºÆøÀ» ¸ğÀÇ ¹ß»ıÇÑ´Ù.
+ * @brief     PDW ì˜ í„ìŠ¤í­ì„ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 17:16
  * @warning
@@ -467,10 +472,10 @@ void CGenPDW::MakePWOfPDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     PDW ÀÇ ½ÅÈ£¼¼±â¸¦ ¸ğÀÇ ¹ß»ıÇÑ´Ù.
+ * @brief     PDW ì˜ ì‹ í˜¸ì„¸ê¸°ë¥¼ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-02, 18:20
  * @warning
@@ -490,10 +495,10 @@ void CGenPDW::MakePAOfPDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     PDW ÀÇ PRI¸¦ ¸ğÀÇ ¹ß»ıÇÑ´Ù.
+ * @brief     PDW ì˜ PRIë¥¼ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 14:57
  * @warning
@@ -563,13 +568,13 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
             }
 
             else {
-                printf( "\n PRI ÆĞÅÏ Å¸ÀÔÀÌ Àß¸ø ÀÔ·ÂÇß½À´Ï´Ù !!" );
+                printf( "\n PRI íŒ¨í„´ íƒ€ì…ì´ ì˜ëª» ì…ë ¥í–ˆìŠµë‹ˆë‹¤ !!" );
             }
 
             ++m_uiPRILvl;
         }
         else {
-            printf( "\n PRI Å¸ÀÔÀÌ Àß¸ø ÀÔ·ÂÇß½À´Ï´Ù !!" );
+            printf( "\n PRI íƒ€ì…ì´ ì˜ëª» ì…ë ¥í–ˆìŠµë‹ˆë‹¤ !!" );
         }
 
         fTOA += ( float ) (CCommonUtils::Rand( m_stGenPDWInfo.uiTOAError * 1000 ) / 1000. );
@@ -585,14 +590,14 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
 
     // 	if( strcmp( PType, "PAT" ) == 0 )	// PRI Pattern 
     // 	{
-    // 		else if( strcmp( PPatType, "SIN" ) == 0 )	// PRI Pattern sinusoidal ( PRI ÆĞÅÏ »çÀÎÆÄ)
+    // 		else if( strcmp( PPatType, "SIN" ) == 0 )	// PRI Pattern sinusoidal ( PRI íŒ¨í„´ ì‚¬ì¸íŒŒ)
     // 		{
     // 			pPRI = (UINT)( PRI_width / 2 * sin( 2 * PIE / PPatPrd * toa ) + PRI );
     // 		}
     // 		else
     // 		{
     // 			fPRI = fPRI + Pslop * Pdiff;
-    // 			if( strcmp( PPatType, "TRI" ) == 0 )	// PRI Pattern Triangle (PRI ÆĞÅÏ »ï°¢ÆÄ)
+    // 			if( strcmp( PPatType, "TRI" ) == 0 )	// PRI Pattern Triangle (PRI íŒ¨í„´ ì‚¼ê°íŒŒ)
     // 			{
     // 				if( fPRI > Ppmax )
     // 				{
@@ -607,14 +612,14 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
     // 			}
     // 			else
     // 			{
-    // 				if( strcmp( PPatType, "SW+" ) == 0 )	// PRI Pattern SAW+ (PRI ÆĞÅÏ Åé´ÏÆÄ Áõ°¡)
+    // 				if( strcmp( PPatType, "SW+" ) == 0 )	// PRI Pattern SAW+ (PRI íŒ¨í„´ í†±ë‹ˆíŒŒ ì¦ê°€)
     // 				{
     // 					if( fPRI > Ppmax )
     // 					{
     // 						fPRI = fPRI - PRI_width;
     // 					}
     // 				}
-    // 				if( strcmp( PPatType, "SW-" ) == 0 )	// PRI Pattern SAW- (PRI ÆĞÅÏ Åé´ÏÆÄ °¨¼Ò)
+    // 				if( strcmp( PPatType, "SW-" ) == 0 )	// PRI Pattern SAW- (PRI íŒ¨í„´ í†±ë‹ˆíŒŒ ê°ì†Œ)
     // 				{
     // 					if( fPRI < Ppmin )
     // 					{
@@ -630,10 +635,10 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     MakeFreqOfPDW
+ * @brief     ì£¼íŒŒìˆ˜ ë¶€ë¶„ì„ ëª¨ì˜ ë°œìƒí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 14:36
  * @warning
@@ -670,9 +675,9 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
     // 
     // 	if( strcmp( FType, "PAT" ) == 0 )	// FREQ Pattern 
     // 	{
-    // 		if( strcmp( FPatType, "SIN" ) == 0 )	// Freq Pattern sinusoidal (ÁÖÆÄ¼ö ÆĞÅÏ »çÀÎÆÄ)
+    // 		if( strcmp( FPatType, "SIN" ) == 0 )	// Freq Pattern sinusoidal (ì£¼íŒŒìˆ˜ íŒ¨í„´ ì‚¬ì¸íŒŒ)
     // 		{
-    // 			// 2 * pi = FPatPrd ( 1ÁÖ±â )
+    // 			// 2 * pi = FPatPrd ( 1ì£¼ê¸° )
     // 			pFreq = (UINT)( BW / 2. * sin( ( 2. * PIE * toa ) / ( FPatPrd * 1000. ) ) + Freq );
     // 			// pFreq = ConvertFreq( pFreq, Bc );
     // 		}
@@ -687,7 +692,7 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
     // 			uiTOA = toa % FPatPrd;
     // 			Freq = uiPatternFreq + ( Fslop * uiTOA );
     // 			printf( "\nTOA[%12u], Freq[%12u]" , toa, Freq );
-    // 			if( strcmp( FPatType, "TRI" ) == 0 )	// Freq Pattern Triangle (ÁÖÆÄ¼ö ÆĞÅÏ »ï°¢ÆÄ)
+    // 			if( strcmp( FPatType, "TRI" ) == 0 )	// Freq Pattern Triangle (ì£¼íŒŒìˆ˜ íŒ¨í„´ ì‚¼ê°íŒŒ)
     // 			{
     // 				if( Freq > Fpmax )
     // 				{
@@ -700,14 +705,14 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
     // 					Freq = 2 * Fpmin - Freq;
     // 				}
     // 			}
-    // 			if( strcmp( FPatType, "SW+" ) == 0 )	// Freq Pattern SAW+ (ÁÖÆÄ¼ö ÆĞÅÏ Åé´ÏÆÄ Áõ°¡)
+    // 			if( strcmp( FPatType, "SW+" ) == 0 )	// Freq Pattern SAW+ (ì£¼íŒŒìˆ˜ íŒ¨í„´ í†±ë‹ˆíŒŒ ì¦ê°€)
     // 			{
     // 				if( Freq > Fpmax ) {
     // 					Freq = ( uiCenterFreq + ( BW / 2 ) );
     // 					uiPatternFreq = ( uiCenterFreq - ( BW / 2 )  );
     // 				}
     // 			}
-    // 			if( strcmp( FPatType, "SW-" ) == 0 )	// Freq Pattern SAW- (ÁÖÆÄ¼ö ÆĞÅÏ Åé´ÏÆÄ °¨¼Ò)
+    // 			if( strcmp( FPatType, "SW-" ) == 0 )	// Freq Pattern SAW- (ì£¼íŒŒìˆ˜ íŒ¨í„´ í†±ë‹ˆíŒŒ ê°ì†Œ)
     // 			{
     // 				if( Freq < Fpmin )
     // 					Freq = Freq + BW;
@@ -721,7 +726,7 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
 
     // 	else if( strcmp( FType, "HOP" ) == 0 )	// Hopping
     // 	{
-    // 		Hop_prd = ( FPatPrd *1000. ) / FHopLvl / PRI;	// Hopping level´ç ÆŞ½º¼öÀÇ °è»ê 
+    // 		Hop_prd = ( FPatPrd *1000. ) / FHopLvl / PRI;	// Hopping levelë‹¹ í„ìŠ¤ìˆ˜ì˜ ê³„ì‚° 
     // 
     // 		if( Hop_cnt % Hop_prd == 0 )
     // 			++ Hop_idx;
@@ -749,11 +754,11 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
 }
 
 /**
- * @brief     GetLineCommand
+ * @brief     ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì˜ PDW ë°œìƒ í˜ë¼ë¯¸í„°ë¥¼ í•´ì„í•œë‹¤.
  * @param     void
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-28, 10:31
  * @warning
@@ -764,68 +769,68 @@ void CGenPDW::GetLineCommand( void )
 
     fscanf( m_File, "%u", &m_stGenPDWInfo.uiIdex ); 	// Read Index 
 
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szFileName, sizeof( m_stGenPDWInfo.szFileName) ); 	// Read NPW Filename 
+    fscanf( m_File, "%s", m_stGenPDWInfo.szFileName ); 	// Read NPW Filename 
     
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoAllPDW );		// ÆŞ½º °³¼ö
-    fscanf( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// ÃÊ±â TOA°ª 
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoAllPDW );		// í„ìŠ¤ ê°œìˆ˜
+    fscanf( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// ì´ˆê¸° TOAê°’ 
     fscanf( m_File, "%u", &m_stGenPDWInfo.uiSignalType );			// normal =0, Pmop =1, chirp+ =2 chirp- =3, cw =4, bit =15
     fscanf( m_File, "%u", &m_stGenPDWInfo.uiDV );			// Direction Valid
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiAOA );			// ¹æÀ§ [deg]
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiAOA );			// ë°©ìœ„ [deg]
 
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szFreqType, sizeof( m_stGenPDWInfo.szFreqType ) );			// ÁÖÆÄ¼ö ÇüÅÂ  : FIX(fixed)   AGI(agile)    PAT(pattern)  HOP(hopping)
-    // fscanf( rfp, "%d", & Bc );			// ÁÖÆÄ¼ö [MHz]
-    fscanf( m_File, "%d", &m_stGenPDWInfo.iFreqMean );			// ÁÖÆÄ¼ö [MHz]
+    fscanf( m_File, "%s", m_stGenPDWInfo.szFreqType );			// ì£¼íŒŒìˆ˜ í˜•íƒœ  : FIX(fixed)   AGI(agile)    PAT(pattern)  HOP(hopping)
+    // fscanf( rfp, "%d", & Bc );			// ì£¼íŒŒìˆ˜ [MHz]
+    fscanf( m_File, "%d", &m_stGenPDWInfo.iFreqMean );			// ì£¼íŒŒìˆ˜ [MHz]
 
-    fscanf( m_File, "%d", &m_stGenPDWInfo.uiBW );			// ÁÖÆÄ¼ö Æø [MHz]
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szFreqPatType, sizeof( m_stGenPDWInfo.szFreqPatType ) );		// ÁÖÆÄ¼ö ÆĞÅÏ ÇüÅÂ : SIN(sine)    SW+(saw+)     SW-(saw-)
-    fscanf( m_File, "%d", &m_stGenPDWInfo.uiFreqPatPrd );		// ÁÖÆÄ¼ö ÆĞÅÏ ÁÖ±â[msec]
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiFreqHopLvl );		// ÁÖÆÄ¼ö Hopping level ¼ö 
+    fscanf( m_File, "%d", &m_stGenPDWInfo.uiBW );			// ì£¼íŒŒìˆ˜ í­ [MHz]
+    fscanf( m_File, "%s", m_stGenPDWInfo.szFreqPatType );		// ì£¼íŒŒìˆ˜ íŒ¨í„´ í˜•íƒœ : SIN(sine)    SW+(saw+)     SW-(saw-)
+    fscanf( m_File, "%d", &m_stGenPDWInfo.uiFreqPatPrd );		// ì£¼íŒŒìˆ˜ íŒ¨í„´ ì£¼ê¸°[msec]
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiFreqHopLvl );		// ì£¼íŒŒìˆ˜ Hopping level ìˆ˜ 
     for( i = 0; i < MAX_FREQ_PRI_STEP ; i++ ) {
-         fscanf( m_File, "%f", &m_stGenPDWInfo.fFreqSwtVal[i] );	// ÁÖÆÄ¼ö Hopping level °ª[MHz]
+         fscanf( m_File, "%f", &m_stGenPDWInfo.fFreqSwtVal[i] );	// ì£¼íŒŒìˆ˜ Hopping level ê°’[MHz]
     }
  
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szPRIType, sizeof( m_stGenPDWInfo.szPRIType ) );			// PRI ÇüÅÂ  : STB(stable)  STG(stagger)  JIT(jitter)   DNS(dwell & switch) 
+    fscanf( m_File, "%s", m_stGenPDWInfo.szPRIType );			// PRI í˜•íƒœ  : STB(stable)  STG(stagger)  JIT(jitter)   DNS(dwell & switch) 
     fscanf( m_File, "%d", &m_stGenPDWInfo.iPRIMean );			// PRI [us]
     fscanf( m_File, "%f", &m_stGenPDWInfo.fJitterp );			// Jitter %
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPRIHopLvl );		// PRI switch Level ¼ö 
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPRIHopLvl );		// PRI switch Level ìˆ˜ 
     for( i = 0; i < MAX_FREQ_PRI_STEP ; i++ ) {
-        fscanf( m_File, "%f", &m_stGenPDWInfo.fPRISwtVal[i] );	// PRI switch level °ª [usec]
+        fscanf( m_File, "%f", &m_stGenPDWInfo.fPRISwtVal[i] );	// PRI switch level ê°’ [usec]
     }
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szPRIPatType, sizeof( m_stGenPDWInfo.szPRIPatType ) );		// PRI ÆĞÅÏ ÇüÅÂ  : SIN(sine)    SW+(saw+)     SW-(saw-)
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPRIPatPrd );		// PRI ÆĞÅÏ ÁÖ±â[msec]
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoPRIPatPDW );		// PRI ÆĞÅÏ ÁÖ±â[msec]
+    fscanf( m_File, "%s", m_stGenPDWInfo.szPRIPatType );		// PRI íŒ¨í„´ í˜•íƒœ  : SIN(sine)    SW+(saw+)     SW-(saw-)
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPRIPatPrd );		// PRI íŒ¨í„´ ì£¼ê¸°[msec]
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoPRIPatPDW );		// PRI íŒ¨í„´ ì£¼ê¸°[msec]
 
     fscanf( m_File, "%f", &m_stGenPDWInfo.fPA );			// PA [dBm]
     fscanf( m_File, "%d", &m_stGenPDWInfo.uiPW );			// Pulse Width [nsec]
     fscanf( m_File, "%x", &m_stGenPDWInfo.uiFmop );			// Freq. Diff. [MHz]
     fscanf( m_File, "%x", &m_stGenPDWInfo.uiPmop );			// Pulse Modulation
 
-    fscanf_s( m_File, "%s", m_stGenPDWInfo.szScanType, sizeof( m_stGenPDWInfo.szScanType ) );		// ½ºÄµ Type : STD(steady)  CON(conical)  CIR(circular) BID(bi-directional)  UNI(uni-directional)
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiScanPrd );		// ½ºÄµ ÁÖ±â [ms]
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoScanPrd );		// ½ºÄµ lobe ´ç ÆŞ½º¼ö  
+    fscanf( m_File, "%s", m_stGenPDWInfo.szScanType );		// ìŠ¤ìº” Type : STD(steady)  CON(conical)  CIR(circular) BID(bi-directional)  UNI(uni-directional)
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiScanPrd );		// ìŠ¤ìº” ì£¼ê¸° [ms]
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoScanPrd );		// ìŠ¤ìº” lobe ë‹¹ í„ìŠ¤ìˆ˜  
 
     fscanf( m_File, "%u", &m_stGenPDWInfo.uiDOAError );	
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiFreqError );	// ÁÖÆÄ¼ö ¿ÀÂ÷
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiTOAError );	// TOA ¿ÀÂ÷
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPWError );		// ÆŞ½ºÆø ¿ÀÂ÷
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPAError );		// ÆŞ½ºÆø ¿ÀÂ÷
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoPulseSkip );	// ´©¶ôÀ²: N °³Áß¿¡ 1°³ ´©¶ô
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiFreqError );	// ì£¼íŒŒìˆ˜ ì˜¤ì°¨
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiTOAError );	// TOA ì˜¤ì°¨
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPWError );		// í„ìŠ¤í­ ì˜¤ì°¨
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiPAError );		// í„ìŠ¤í­ ì˜¤ì°¨
+    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoPulseSkip );	// ëˆ„ë½ìœ¨: N ê°œì¤‘ì— 1ê°œ ëˆ„ë½
 
-    // °ª Ã¼Å©ÇØ¼­ ¿À·ù ¹ß»ıÇÒ °ªÀ¸·Î ¼³Á¤ÇÑ´Ù.
+    // ê°’ ì²´í¬í•´ì„œ ì˜¤ë¥˜ ë°œìƒí•  ê°’ìœ¼ë¡œ ì„¤ì •í•œë‹¤.
     if( IsValidCheck() == false ) {
-        printf( "\n ¼³Á¤ °ª ¿À·ù ÀÔ´Ï´Ù." );
+        printf( "\n ì„¤ì • ê°’ ì˜¤ë¥˜ ì…ë‹ˆë‹¤." );
         m_stGenPDWInfo.uiCoPRIPatPDW = 1;
     }
 
-    printf( "\n %u   PDW »ı¼ºÇÏ±â...  [ %s ]", m_stGenPDWInfo.uiIdex, m_stGenPDWInfo.szFileName );
+    printf( "\n %u   PDW ìƒì„±í•˜ê¸°...  [ %s ]", m_stGenPDWInfo.uiIdex, m_stGenPDWInfo.szFileName );
 
 }
 
 /**
- * @brief     IsValidCheck
+ * @brief     ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì˜ ëª…ë ¹ì¤„ì„ í•´ì„í•˜ì—¬ ì˜¤ë¥˜ ì—¬ë¶€ë¥¼ íŒë‹¨í•œë‹¤.
  * @return    bool
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-10, 16:21
  * @warning
@@ -843,10 +848,10 @@ bool CGenPDW::IsValidCheck()
 }
 
 /**
- * @brief     ½Ã³ª¸®¿À ÆÄÀÏÀÇ Çì´õ(½Ã³ª¸®¿À ¼³¸í)¸¦ »ı·«ÇÑ´Ù.
+ * @brief     ì‹œë‚˜ë¦¬ì˜¤ íŒŒì¼ì˜ í—¤ë”(ì‹œë‚˜ë¦¬ì˜¤ ì„¤ëª…)ë¥¼ ìƒëµí•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-27, 20:46
  * @warning
@@ -857,7 +862,7 @@ void CGenPDW::SkipTheHeader()
     char  buf[1024];
 
     if( m_File != NULL ) {
-        for( i = 0; i < 10; i++ ) {	// 10 ÁÙ 
+        for( i = 0; i < 10; i++ ) {	// 10 ì¤„ 
             fgets( buf, 1024, m_File );
         }
 

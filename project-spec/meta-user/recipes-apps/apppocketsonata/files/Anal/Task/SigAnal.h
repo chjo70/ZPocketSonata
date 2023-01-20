@@ -26,7 +26,7 @@ class CSigAnal : public CTask
 private:
 	enum BAND_INFO m_nBand;
 	STR_QUEUE_LOG_MESSAGE m_logMsg;
-	enum ANALYSIS_MODE m_eAnalMode;
+	//enum ANALYSIS_MODE m_eAnalMode;
 
 	SQMsg m_SendQMsg;
 	

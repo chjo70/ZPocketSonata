@@ -5,6 +5,7 @@
 #include <vector>
 using namespace std;
 
+#include "../INC/OS.h"
 #include "../INC/PDW.h"
 
 #include "../Identify/ELCEDLibDataType2.h"
@@ -35,21 +36,30 @@ static T SwapEndian (T* tObjp)
  * @struct  SRxLOBData
  * @brief		위협 데이터	
  */
-#ifndef _STR_LOBHEADER
-#define _STR_LOBHEADER
+#ifndef _SRxLOBHeader
+#define _SRxLOBHeader
 struct SRxLOBHeader
 {
     unsigned int uiNumOfLOB;
+
+#ifdef _POCKETSONATA_
+    unsigned int uiEWRecProc;   // EW수신처리판 번호
+#endif
+
 
 };
 #endif
 
 
+
+
 #define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_ELEMENT)
 
 
-#ifndef SRxLOBData_STRUCT
-#define SRxLOBData_STRUCT
+
+// ELMsgDefn.h
+#ifndef _SRxLOBData_STRUCT
+#define _SRxLOBData_STRUCT
 struct SRxLOBData {
     unsigned int uiPDWID;
 
@@ -59,7 +69,12 @@ struct SRxLOBData {
 	unsigned int uiABTID;
 	unsigned int uiAETID;
 
+#ifdef _POCKETSONATA_
+	__time64_t tiContactTime;			// 64비트 time_t 로 선언해야 함.
+#else
 	__time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
+#endif
+
 	unsigned int tiContactTimems;
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
@@ -72,14 +87,17 @@ struct SRxLOBData {
 	char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
 	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+#if defined(_XBAND_) || defined(_ELINT_)
 	char szRadarName[_MAX_RADARMODE_NAME_SIZE];
 	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
+
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
-#ifndef _XBAND_
+#ifdef _ELINT_
 	int iPolarization;          // 극성
-
 	int iRatioOfPOL;            // 극성 신뢰도
+
 #endif
 
 	int iSignalType;
@@ -130,9 +148,19 @@ struct SRxLOBData {
     float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
+#elif defined(_POCKETSONATA_)
+	int iScanType;
+	float fScanPeriod;			// [msec]
+
+	int iMOPType;				// 인트라 타입
+	int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
+	float fMOPMaxFreq;			// ??
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
+
 #else
 	int iScanType;
-	//int iDetailScanType;
 	float fScanPeriod;			// [msec]
 
 	int iMOPType;				// 인트라 타입
@@ -149,32 +177,35 @@ struct SRxLOBData {
 	int iValidity;
 #endif
 
+#if defined(_XBAND_) || defined(_ELINT_)
 	int iIsStoreData;
-    int iTotalOfPDW;
+#endif
+
+    int iTotalOfPDW;			// 신호 수집 개수
 	int iNumOfPDW;
+
+#if defined(_XBAND_) || defined(_ELINT_)
 	int iNumOfIQ;
+#endif
 
-	char szRadarModeName[_MAX_RADARNAME_SIZE];
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 	int iRadarModeIndex;
-	//int iThreatIndex;
 
-	float fLatitude;
-	float fLongitude;		
-
-	char aucTaskID[LENGTH_OF_TASK_ID];
+	float fCollectLatitude;
+	float fCollectLongitude;		
 
 #ifdef _POCKETSONATA_
 
 
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
+	char aucTaskID[LENGTH_OF_TASK_ID];
 	int	iCollectorID;
-
 	unsigned int uiSeqNum;
 
 #else
 #endif
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+#if defined(_ELINT_) || defined(_XBAND_)
 	unsigned int uiOpInitID;
 
 #endif
@@ -182,8 +213,8 @@ struct SRxLOBData {
 }  ;
 #endif
 
-#ifndef _STR_ABTHEADER
-#define _STR_ABTHEADER
+#ifndef _SRxABTHeader
+#define _SRxABTHeader
 struct SRxABTHeader
 {
 	int iNumOfABT;
@@ -191,8 +222,8 @@ struct SRxABTHeader
 };
 #endif
 
-#ifndef _STR_ABTDATA_STRUCT
-#define _STR_ABTDATA_STRUCT
+#ifndef _SRxABTData
+#define _SRxABTData
 struct SRxABTData {
     unsigned int uiABTID;
     unsigned int uiAETID;
@@ -201,13 +232,18 @@ struct SRxABTData {
 
     unsigned int uiCoLOB;
 
-	__time32_t /* __time32_t */ tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t /* __time32_t */ tiLastSeenTime;
+#ifdef _POCKETSONATA_
+	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	__time64_t tiLastSeenTime;
+#else
+	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+	__time32_t tiLastSeenTime;
+#endif
 
     int iRadarModePriority;
     int iRadarPriority;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_ELINT_)
     int iPolarization;
 
 #endif
@@ -268,7 +304,7 @@ struct SRxABTData {
     int iPEValid;
     float fLatitude;							// [deg]
     float fLongitude;							// [deg]
-    float fHeight;
+    float fAltitude;
     float fCEP;										// [m]
     float fMajorAxis;							// [m]
     float fMinorAxis;							// [m]
@@ -282,23 +318,30 @@ struct SRxABTData {
     int iRadarModeIndex;
     int iThreatIndex;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
+#if defined(_ELINT_)
     int iIsManualInput;
 
     __time32_t tiFinalAlarmTime;
 #endif
 
-    int iStat;
+	int iStat;
 
+#if defined(_XBAND_) || defined(_ELINT_)
 	char szRadarName[_MAX_RADARNAME_SIZE];
+
+#endif
 
     char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
     char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
     char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-    char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+
+#if defined(_XBAND_) || defined(_ELINT_)
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+#endif
+    
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
@@ -318,20 +361,32 @@ struct SRxAETData {
 
     char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+
+#if defined(_XBAND_) || defined(_ELINT_)
     char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
+
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
     int iPlatformType;
     int iPinNum;
+
+#if defined(_XBAND_) || defined(_ELINT_)
     char szThreatFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
 
     int iRadarModePriority;
     int iRadarPriority;
     int iThreatPriority;
 
-    time_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-    time_t tiLastSeenTime;
+#ifdef _POCKETSONATA_
+	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	__time64_t tiLastSeenTime;
+#else
+	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
+	__time32_t tiLastSeenTime;
+#endif
 
     int iValidity;
 
@@ -362,6 +417,8 @@ struct SRxAETData {
     float fPAMin;
     float fPADeviation;
 
+	int iRadarIndex;
+
     int iRadarModeIndex;
     int iThreatIndex;
 
@@ -377,12 +434,13 @@ struct SRxAETData {
 
     char szIDInfo[_MAX_SIZE_OF_IDINFO];
 
+#if defined(_XBAND_) || defined(_ELINT_)
     __time32_t tiFinalAlarmTime;
 
-    //int iManualLatitude;
-    //int iManualLongitude;
+#endif
 
-    int iStat;
+	int iStat;
+    
 
 }  ;
 #endif
@@ -440,7 +498,7 @@ struct SRxScanData {
     UINT uiABTID;
     UINT uiAETID;
 
-    UINT uiResult;
+    EN_SCANRESULT enResult;
 
     float fScnPrd;     //! 스캔 주기값
     UINT uiScnTyp;     //! 스캔 형태

@@ -58,6 +58,9 @@ CCommonUtils::CCommonUtils()
  */
 void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 {
+#ifdef _USRDLL
+
+#else
 #if defined(_ELINT_) || defined(_XBAND_)
 
 #elif _POCKETSONATA_
@@ -87,6 +90,8 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 #endif
 #endif
 
+#endif
+
 }
 
 /**
@@ -94,6 +99,9 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
  */
 void CCommonUtils::CloseSocket()
 {
+#ifdef _USRDLL
+
+#else
 #if defined(_ELINT_) || defined(_XBAND_)
 
 #elif _POCKETSONATA_
@@ -108,6 +116,8 @@ void CCommonUtils::CloseSocket()
 
     }
 #endif
+#endif
+
 #endif
 
 }
@@ -192,7 +202,7 @@ int clock_gettime(int X, struct timeval *tv)
 #endif
 
 /**
- * @brief     getStringPresentTime
+ * @brief     현재 시간으로 문자열을 생성한다.
  * @param     char * pString
  * @return    void
  * @exception
@@ -218,7 +228,7 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
 }
 
 /**
- * @brief     getStringDesignatedTime
+ * @brief     입력한 시간 정보로 문자열로 날짜를 구성한다.
  * @param     char * pString
  * @param     size_t szString
  * @param     __time32_t tiTime
@@ -229,7 +239,7 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  * @date      2022-04-05, 11:09
  * @warning
  */
-void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime ) 
+void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, time_t tiTime ) 
 {
     struct tm *pstTime;
 
@@ -240,7 +250,88 @@ void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, __ti
 #endif
 
     pstTime = localtime( & tiTime );
-    strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
+	if (pstTime != NULL) {
+		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
+	}
+	else {
+		*pString = NULL;
+	}
+
+}
+
+/**
+ * @brief     getStringDesignatedTime
+ * @param     char * pString
+ * @param     size_t szString
+ * @param     __time64_t tiTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-08 15:21:08
+ * @warning
+ */
+#ifdef __VXWORKS__
+//void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, __time64_t tiTime)
+//{
+//	struct tm *pstTime;
+//
+//#ifdef _MSC_VER    
+//	strcpy_s(pString, szString, "1970-01-01 00:00:00");
+//#else
+//	strcpy(pString, "1970-01-01 00:00:00");
+//#endif
+//
+//#ifdef __VXWORKS__
+//    __time32_t tiTime32;
+//
+//    tiTime32 = (__time32_t) tiTime;
+//	pstTime = localtime(&tiTime32);
+//
+//#else
+//    pstTime = _localtime64(&tiTime);
+//
+//#endif
+//
+//	if (pstTime != NULL) {
+//		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
+//	}
+//	else {
+//		*pString = NULL;
+//	}
+//
+//}
+#endif
+
+/**
+ * @brief     getFileNamingDesignatedTime
+ * @param     char * pString
+ * @param     size_t szString
+ * @param     __time32_t tiTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 15:10:51
+ * @warning
+ */
+void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime)
+{
+    struct tm *pstTime;
+
+#ifdef _MSC_VER    
+    strcpy_s(pString, szString, "1970-01-01 00:00:00");
+#else
+    strcpy(pString, "1970-01-01 00:00:00");
+#endif
+
+    pstTime = localtime(&tiTime);
+    if (pstTime != NULL) {
+        strftime(pString, szString, "%Y-%m-%d %H_%M_%S", pstTime);
+    }
+    else {
+        *pString = NULL;
+    }
 
 }
 
@@ -256,7 +347,7 @@ void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, __ti
  * @date      2022-04-18, 11:36
  * @warning
  */
-void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTime, unsigned int tColTimeMs )
+void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs )
 {
     if (tColTime == 0) {
         clock_gettime(CLOCK_REALTIME, pTimeSpec);
@@ -319,6 +410,8 @@ int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int ove
     char    data_buf[4096];
     int     tmp_errno;
     int iSize;
+
+    printf( "\n\t[%s]을 [%s]으로 복사중..." , src_file, dest_file );
 
 #if defined(__linux__) || defined(__VXWORKS__)
     src_fd = open(src_file, O_RDONLY | O_BINARY, 0644 );
@@ -504,6 +597,16 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
             CEPDW::DecodePW( (int) pPDW->uiPW, pPDWData->x.el.enBandWidth ), pPDW->uiPW );
         ++ pPDW;
     }
+
+#elif defined(_701_)
+	for (i = 0; i < pPDWData->GetTotalPDW(); ++i) {
+		printf("[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
+			pPDW->ullTOA, C7PDW::DecodeTOAus(pPDW->ullTOA - ullfirstTOA, pPDWData->x._701.enBandWidth), \
+			C7PDW::DecodeDOA((int)pPDW->uiAOA), \
+			C7PDW::DecodeFREQMHz((int)pPDW->uiFreq), pPDW->uiFreq,
+			C7PDW::DecodePW((int)pPDW->uiPW, pPDWData->x._701.enBandWidth), pPDW->uiPW);
+		++pPDW;
+	}
 
 #endif
 
@@ -740,12 +843,14 @@ int CCommonUtils::Isalpha( int iCh )
  */
 size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 {
-    size_t szSize;
+    size_t szSize=0;
     size_t szMultiply;
 
     try {
-		if( iItems <= 0 || iItems <= 0 ) {
-			throw 0;
+		if( iSize <= 0 || iItems <= 0 ) {
+            iItems = 10;
+            iSize = 10;
+			// throw 0;
 		}
 
         else if( iSize > INT_MAX / iItems ) {
@@ -814,7 +919,10 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
     ENUM_DataType enDataType = en_UnknownData;
 
     if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
-        enDataType = en_PDW_DATA;
+		if (NULL != CCommonUtils::strcasestr(pStrPathname, ".csv"))
+			enDataType = en_PDW_DATA_CSV;
+		else
+			enDataType = en_PDW_DATA;
     }
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
         enDataType = en_PDW_DATA;
@@ -832,6 +940,9 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
+	else if (NULL != CCommonUtils::strcasestr(pStrPathname, ".7pdw")) {
+		enDataType = en_PDW_DATA;
+	}
     else {
         //LOGMSG1( enError, "잘못된 파일명 입니다. 데이터 형식을 모릅니다." );
         TRACE( "잘못된 파일명 입니다." );
@@ -856,6 +967,9 @@ ENUM_UnitType CCommonUtils::WhatUnitType( char *pStrPathname )
     if( NULL != CCommonUtils::strcasestr( pStrPathname, ".midas" ) ) {
         enUnitType = en_MIDAS;
     }
+	else if (NULL != CCommonUtils::strcasestr(pStrPathname, ".dat") || NULL != CCommonUtils::strcasestr(pStrPathname, ".701") || NULL != CCommonUtils::strcasestr(pStrPathname, ".7pdw") ) {
+		enUnitType = en_701;
+	}
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) ||
         NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ) {
         enUnitType = en_SONATA;
@@ -863,9 +977,7 @@ ENUM_UnitType CCommonUtils::WhatUnitType( char *pStrPathname )
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
         enUnitType = en_SONATA_SHU;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".dat" ) ) {
-        enUnitType = en_701;
-    }
+
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
         enUnitType = en_KFX;
     }
@@ -878,7 +990,6 @@ ENUM_UnitType CCommonUtils::WhatUnitType( char *pStrPathname )
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
         enUnitType = en_XBAND;
     }
-
     else {
         enUnitType = en_UnknownUnit;
     }
@@ -910,5 +1021,62 @@ int CCommonUtils::Rand( int range )
     }
 
     return random_val;
+
+}
+
+/**
+ * @brief     Parsing
+ * @param     string strIn
+ * @param     vector<string> * pValues
+ * @param     string * pStrDelimiter
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-18 10:28:19
+ * @warning
+ */
+void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & strDelimiter)
+{
+	int pos = 0;
+	string token;
+
+	while ((pos = pStrIn->find(strDelimiter)) != string::npos) {
+		token = pStrIn->substr(0, pos);
+		pValues->push_back(token);
+		pStrIn->erase( 0, pos + strDelimiter.length());
+	}
+
+	pValues->push_back(*pStrIn);
+
+}
+
+/**
+ * @brief     \r\n 으로 라인이 구성이 되어야 제대로 해석이 됨.
+ * @param     vector<string> * pValues
+ * @param     const char * pData
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-18 11:29:06
+ * @warning
+ */
+int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
+{
+	int iIndex;
+	char szBuffer[100];
+
+	pValues->clear();
+
+	iIndex = 0;
+	while ( pData[iIndex] != '\n' ) {
+		sscanf( & pData[iIndex], "%[^','|'\r']", szBuffer );
+		iIndex += (strlen(szBuffer) + 1);
+		pValues->push_back( szBuffer );
+
+	}
+
+	return iIndex + 1;
 
 }

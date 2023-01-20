@@ -14,7 +14,7 @@
 
 #include "../Utils/cthread.h"
 
-#include "../Thread/creclan.h"
+#include "../Thread/coperationconsole.h"
 
 class CSingleServer : public CThread
 {
@@ -26,7 +26,7 @@ private:
 
     char *m_pszLanData;
 
-    CRecLan *m_ptheRecLan;
+	COperationConsole *m_ptheRecLan;
 
 public:
     CSingleServer( int iKeyId, char *pClassName, int iPort );

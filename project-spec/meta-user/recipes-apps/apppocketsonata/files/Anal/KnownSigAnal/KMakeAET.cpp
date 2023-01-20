@@ -23,15 +23,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CMakeAET
-// 반환되는 형  : CKMakeAET::CKMakeAET() :
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 14:09:48
-//
-//##ModelId=42E98F300031
+/**
+ * @brief     CKMakeAET
+ * @param     void * pParent
+ * @param     unsigned int uiCoMaxPdw
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2005-07-28 14:09:48
+ * @warning
+ */
 CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
@@ -140,8 +142,8 @@ BOOL CKMakeAET::KnownMakeAET()
 			\date 2006-06-29 13:53:26, 조철희
 		*/
 		// 추출된 펄스 Marking
-        pEmitter = GetEmitterFromKnownIndex(GetIdxUpdAet() );
-        MarkToEmitterPdwIndex( pEmitter, EXTRACT_MARK );
+        pEmitter = GetEmitterFromKnownIndex( (UINT) GetIdxUpdAet() );
+        MarkToEmitterPdwIndex( pEmitter, enEXTRACT_MARK );
 	}
 
     return GetIdxUpdAet() >= _spZero;
@@ -151,7 +153,7 @@ BOOL CKMakeAET::KnownMakeAET()
 /**
  * @brief     펄스열에 대해서 마킹 정보를 설정한다.
  * @param     STR_EMITTER * pEmitter
- * @param     USHORT usMark
+ * @param     PULSE_EXTRACT_MARK usMark
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -159,18 +161,18 @@ BOOL CKMakeAET::KnownMakeAET()
  * @date      2022-06-16, 10:55
  * @warning
  */
-void CKMakeAET::MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, USHORT usMarkType ) 
+void CKMakeAET::MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, PULSE_MARK enMarkType )
 {
-    m_pKnownSigAnal->MarkToPDWIndex( pEmitter->stPDW.pIndex, pEmitter->stPDW.uiCount, usMarkType );
+    m_pKnownSigAnal->MarkToPDWIndex( pEmitter->stPDW.pIndex, pEmitter->stPDW.uiCount, enMarkType);
 
 }
 
 /**
- * @brief     SelectKnownSuccessLOB
+ * @brief     성공한 LOB를 선택한다.
  * @return    int
- * @exception
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
+ * @version   1.0.0
  * @date      2022-04-27, 11:42
  * @warning
  */
@@ -188,12 +190,12 @@ int CKMakeAET::SelectKnownSuccessLOB()
     for (i = 0; i < m_iCoLOB; ++i) {
         fKnownSuccessRatio = GetKnownSuccessRatio(i);
 
-        pEmitter = GetEmitterFromKnownIndex(i);
+        pEmitter = GetEmitterFromKnownIndex( (UINT) i);
         iNumOfPDW = (int) pEmitter->stPDW.uiCount;
 
         // 추적 성공율과 분석한 PDW 개수로 추적 성공 LOB를 선택한다.
         if( (fMaxKnownSuccessRatio < fKnownSuccessRatio) || \
-            (fMaxKnownSuccessRatio == fKnownSuccessRatio) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
+            (is_zero<float>( fMaxKnownSuccessRatio - fKnownSuccessRatio) == true) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
             fMaxKnownSuccessRatio = fKnownSuccessRatio;
             iMaxNumOfPDW = iNumOfPDW;
             iIdxLOB = i;
@@ -660,7 +662,7 @@ int CKMakeAET::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:27
 //
-int CKMakeAET::GetColPdw()
+unsigned int CKMakeAET::GetColPdw()
 {
 	return m_pKnownSigAnal->GetColPdw();
 }
@@ -695,16 +697,16 @@ int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 
 //////////////////////////////////////////////////////////////////////
 //
-// 함 수 이 름  : CKMakeAET::SaveEmitterPdwFile
+// 함 수 이 름  : CKMakeAET::SaveEmitterPDWFile
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 인 자  : int index
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CKMakeAET::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+void CKMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-	m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
+	m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -728,62 +730,64 @@ unsigned int CKMakeAET::GetCoSeg()
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:42
 //
-int CKMakeAET::GetCoEmitter()
+unsigned int CKMakeAET::GetCoEmitter()
 {
     return m_pKnownSigAnal->GetCoEmitter();
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : *CKMakeAET::GetPulseSeg
-// 반환되는 형  : STR_PULSE_TRAIN_SEG
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:44
-//
+/**
+ * @brief     STR_PULSE_TRAIN_SEG 데이터 구조체 포인터를 리턴합니다.
+ * @return    STR_PULSE_TRAIN_SEG *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:17:44
+ * @warning
+ */
 STR_PULSE_TRAIN_SEG *CKMakeAET::GetPulseSeg()
 {
 	return m_pKnownSigAnal->GetPulseSeg();
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : *CKMakeAET::GetEmitter
-// 반환되는 형  : STR_EMITTER
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:17:47
-//
+/**
+ * @brief     STR_EMITTER 데이터 구조체 포인터를 리턴합니다.
+ * @return    STR_EMITTER *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:17:47
+ * @warning
+ */
 STR_EMITTER *CKMakeAET::GetEmitter()
 {
     return m_pKnownSigAnal->GetEmitter();
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//!	\brief	 CKMakeAET::CalcFreqMedian
-//!	\author  조철희
-//!	\param	 pSeg	인자형태 STR_PULSE_TRAIN_SEG *
-//!	\return	 UINT
-//! \version 1.0
-//! \date		 2006-05-09 14:59:01
-//! \bug
-//! \warning
-//
+/**
+ * @brief     주파수 중간값을 계산하여 리턴합니다.
+ * @param     STR_PULSE_TRAIN_SEG * pSeg
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-05-09 14:59:01
+ * @warning
+ */
 UINT CKMakeAET::CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg )
 {
 	return m_pKnownSigAnal->MedianFreq( NULL, pSeg->stPDW.pIndex, pSeg->stPDW.uiCount );
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKMakeAET::UpdateFreq
-    \author   조철희
-    \param    pUpdAetFrq 인자형태 STR_FRQ *
-    \return   void
-    \version  0.0.53
-    \date     2008-11-03 11:25:01
-    \warning
-*/
+/**
+ * @brief     LOB 데이터의 주파수 정보를 업데이트 합니다.
+ * @param     SRxLOBData * pUpdAetFrq
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2008-11-03 11:25:01
+ * @warning
+ */
 void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
 {
     //STR_FRQ *pTrkAetFrq;

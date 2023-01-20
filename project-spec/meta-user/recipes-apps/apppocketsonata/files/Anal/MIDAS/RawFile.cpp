@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      RawFile.cpp
  * @brief     RawData 파일을 억세스 하여 데이터 읽기, 쓰기 등을 수행한다.
@@ -15,7 +15,7 @@
 #elif _MSC_VER
 #include <io.h>
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <ioLib.h>
 #include <nfs/nfsCommon.h>
 
@@ -252,7 +252,8 @@ bool CRawFile::OpenFile( const char *filename, int iMode )
     if( m_fid <= 0 ) { //DTEC_Else
 #endif
         //remove( filename );
-		TRACE( "\n[W] The file[%s] is not exist !!", filename );
+		// TRACE( "\n[W] The file[%s] is not exist !!", filename );
+        TRACE("\n[W] 이 파일[%s]이 존재하지 않습니다 !!", filename);
 	}
 	else {
 #if defined(__linux__) || defined(__VXWORKS__)
@@ -324,14 +325,17 @@ unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
-    if( pData != NULL ) {
-	iRead = _read( m_fid, (char *) pData, c_size );
-    if( iRead < 0 ) {
-        uiRead = 0;
+    if( pData != NULL && m_fid > 0 ) {
+        iRead = _read( m_fid, (char *) pData, c_size );
+        if( iRead < 0 ) {
+            uiRead = 0;
+        }
+        else {
+            uiRead = iRead;
+        }
     }
     else {
-        uiRead = iRead;
-        }
+        *( char *)pData = NULL;
     }
 
 	return uiRead;
@@ -357,7 +361,12 @@ void CRawFile::CloseFile()
         m_fid = 0;
 
         if( stat( m_fullname, &statbuf ) >= 0 ) {
+#ifdef _MSC_VER
             statbuf.st_mode ^= (_S_IREAD);
+#else
+            statbuf.st_mode ^= (S_IROTH);
+
+#endif
             if( chmod( m_fullname, statbuf.st_mode ) < 0 ) {
                 perror( "파일:" );
             }

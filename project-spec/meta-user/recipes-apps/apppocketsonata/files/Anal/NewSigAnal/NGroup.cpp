@@ -65,7 +65,7 @@ CNGroup::~CNGroup()
  * @date      2022-06-28 16:16:32
  * @warning
  */
-int CNGroup::GetColPdw()
+unsigned int CNGroup::GetColPdw()
 {
     return m_pNewSigAnal->GetColPdw();
 }

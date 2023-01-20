@@ -22,41 +22,32 @@ private:
     SRxABTData *m_pScnAet;
 
 protected:
-	//##ModelId=452B0C440365
-	int m_uiMaxPdw;
-	//##ModelId=452B0C44036D
-	int m_noEMT;
-	//##ModelId=452B0C44036E
+	unsigned int m_uiMaxPdw;
+	unsigned int m_uinoEMT;
 	int m_noCh;
-	//##ModelId=452B0C440378
+
 	CScanSigAnal *m_pScanSigAnal;
 	
 public:
-	int GetCoPdw();
+	unsigned int GetCoPdw();
 	void SaveScanPulse( STR_PDWINDEX *pPdwIndex );
-	//##ModelId=452B0C44037C
+	
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
-	//##ModelId=452B0C44037D
+	
 
     void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
-	//##ModelId=452B0C440382
     void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
-	//##ModelId=452B0C440386
     void DiscardStablePT();
 
-    void ClearAllMark() { };
+    void ClearAllMark();
 
 	void SaveScanPulse();
-	//##ModelId=452B0C44038B
 	void Init();
-	//##ModelId=452B0C44038C
 	void KnownPulseExtract();
 
-	//##ModelId=452B0C440396
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
-	//##ModelId=452B0C44039F
+
 	CSPulExt( void *pParent, unsigned int uiCoMaxPdw );
-	//##ModelId=452B0C4403AA
 	virtual ~CSPulExt();
 
 };

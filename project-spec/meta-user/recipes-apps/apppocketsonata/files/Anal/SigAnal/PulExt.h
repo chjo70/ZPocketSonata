@@ -110,11 +110,11 @@ public:
     //##ModelId=452B0C5303B6
     virtual void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )=0;
     //! DTOA 히스트그램 상에서 추출할 PRI 밴드를 구한다.
-    //##ModelId=452B0C5303C1
+    
     virtual void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )=0;
 
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
-    virtual int GetCoPdw()=0;
+    virtual unsigned int GetCoPdw()=0;
     //virtual void ClearAllMark(bool bClear)=0;
 
     void MakeCWPulseTrain();
@@ -122,23 +122,15 @@ public:
     BOOL MustDo2ndPulseExtract();
     void MarkStablePulseTrain();
     void CalcEmitterPW( STR_PULSE_TRAIN_SEG *pSeg );
-    //##ModelId=452B0C5303DF
     //int CnvPW( int val );
-    //##ModelId=452B0C5303E8
     void SavePdwParamIndex();
-    //##ModelId=452B0C540009
     void ExtractTrackPT( _TOA refPriMean, float refJitRat );
-    //##ModelId=452B0C54001D
     void DiscardPulseTrain();
-    //##ModelId=452B0C54001E
     void PrintAllSeg();
     void PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg );
     void PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg );
-    //##ModelId=452B0C54001F
     void ChangeMarkTo( int startSeg, int endSeg, UINT from_mark, SEG_MARK to_mark );
-    //##ModelId=452B0C54003B
     void MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
-    //##ModelId=452B0C540046
     STR_PULSE_TRAIN_SEG *GetMainSeg( int startSeg, int endSeg );
     //! 추출하고자할 펄스열의 주파수 범위에 맞는 PDW 인가를 체크한다.
     //##ModelId=452B0C540059
@@ -146,20 +138,13 @@ public:
     //! 펄스열을 근거로 주파수 형태 및 주파수 범위를 계산한다.
     //##ModelId=452B0C540063
     void CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg );
-    //##ModelId=452B0C54006D
     void GetStartEndPriLevel( unsigned int *pStart_pri_level, unsigned int *pEnd_pri_level );
-    //##ModelId=452B0C540077
     void MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitterP=FALSE );
-    //##ModelId=452B0C54008C
     void CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist );
 
-    //##ModelId=452B0C5400A0
     void DiscardPulseTrain( unsigned int startseg1, unsigned int endseg, unsigned int startseg2 );
-    //##ModelId=452B0C5400AA
     void MemcpySeg( STR_PULSE_TRAIN_SEG *pDestSeg, STR_PULSE_TRAIN_SEG *pSrcDeg );
-    //##ModelId=452B0C5400BD
-    void CleanPulseTrains( int startseg, int endseg );
-    //##ModelId=452B0C5400C7
+    void CleanPulseTrains(unsigned int uiStartSeg, unsigned int uiEndSeg );
     void MarkSegForExt( int nStartSeg, int nEndSeg );
     
     void CompStablesJitters( unsigned int nStartStableSeg, unsigned int nStartJitterSeg );
@@ -172,30 +157,22 @@ public:
     bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     
     void DeleteAllSeg( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C540103
     BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange );
-    //##ModelId=452B0C54010D
     void CopyOnePulseTrain( STR_PULSE_TRAIN_SEG *pDstSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
-    //##ModelId=452B0C540117
     void CopyPulseTrains( STR_PULSE_TRAIN_SEG *pDstSeg, STR_PULSE_TRAIN_SEG *pSrcSeg, int coSeg );
-    //##ModelId=452B0C540121
     void PulseExtract();
-    //##ModelId=452B0C540122
     void ExtractJitter( int type );
-    //##ModelId=452B0C54012B
     void FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
 
     _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
-
-    //##ModelId=452B0C540141
-    void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, int iMark=STABLE_MARK );
-    //##ModelId=452B0C540168
-    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE ,int iMark=JITTER_MARK, BOOL bIgnoreJitterP=FALSE );
-    //##ModelId=452B0C54017E
+    
+    void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, PULSE_MARK enMark=enSTABLE_MARK, SEG_MARK enSegMark=NORMAL_SEG );
+    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, BOOL flagMargin=FALSE , PULSE_MARK enMark =enJITTER_MARK, BOOL bIgnoreJitterP=FALSE, SEG_MARK enSegMark = NORMAL_SEG);
     void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiCoRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
     
-    inline void MarkToPDWIndex( STR_PULSE_TRAIN_SEG *pSeg, USHORT usMarkType ) {
-        MarkToPDWIndex( pSeg->stPDW.pIndex, pSeg->stPDW.uiCount, usMarkType );
+    inline void MarkToPDWIndex( STR_PULSE_TRAIN_SEG *pSeg, PULSE_MARK enPULSE_MARK, SEG_MARK enSEG_MARK=NORMAL_SEG) {
+        pSeg->enSegMark = enSEG_MARK;
+        MarkToPDWIndex( pSeg->stPDW.pIndex, pSeg->stPDW.uiCount, (USHORT)enPULSE_MARK );
     }
 
     void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, USHORT usMarkType );
@@ -261,14 +238,14 @@ public:
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
     
     BOOL ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
-    //##ModelId=452B0C5402AB
+    
     void ExtractStablePT();
-    //! 멤버 변수 초기화
-    //##ModelId=452B0C5402AC
+    
+    
     void Init();
 
     //##ModelId=452B0C5402B2
-    CPulExt( int coMaxPdw );
+    CPulExt( unsigned int uiCoMaxPdw );
     //##ModelId=452B0C5402B4
     virtual ~CPulExt();
 

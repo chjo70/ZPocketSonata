@@ -24,7 +24,7 @@
 #include "../EmitterMerge/ELGMIMsgDefn.h"
 #include "../EmitterMerge/ELEmitterDataType.h"
 #include "../EmitterMerge/ELPosEstDataType.h"
-#include "../EmitterMerge/ELOperationCtrlDataType.h"
+//#include "../EmitterMerge/ELOperationCtrlDataType.h"
 #include "../EmitterMerge/ElintTaskDataTypedb.h"
 #include "../EmitterMerge/ElintRsltDataTypedb.h"
  
@@ -122,13 +122,12 @@ struct STR_H000 {
 
 #endif
 
-#if defined(_ELINT_) || defined(_XBAND_)
-#define FLIB_FREQ_RES_MHZ               (10)
-
-#elif defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_)
 #define FLIB_FREQ_RES_MHZ               (1)
 
 #else
+//#if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
+#define FLIB_FREQ_RES_MHZ               (10)
 
 #endif
 
@@ -159,10 +158,12 @@ class CELSignalIdentifyAlg
  protected:
 #ifdef _SQLITE_
     char m_szSQLString[MAX_SQL_SIZE];
-    Kompex::SQLiteDatabase *m_pDatabase;
+    wchar_t m_szSQLString16[MAX_SQL_SIZE];
+
+    Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif _MSSQL_
-     char m_szSQLString[MAX_SQL_SIZE];
+    char m_szSQLString[MAX_SQL_SIZE];
 
 #endif
     static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그
@@ -223,8 +224,8 @@ private:
 
     SRxLOBData *m_pLOBData;
 
-    void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( SRxLOBData *pNewAet );
-    void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( SRxLOBData *pNewAet );
+    void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( void *pLOBData, bool bLOB );
+    void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( void *pLOBData, bool bLOB );
 
 private:
     float CalcFreqMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
@@ -235,28 +236,31 @@ private:
     void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true, bool bMakeH0000=true );
 
     // 식별 함수 정의
- 	void PIdentifyPRI( SRxLOBData *pLOBData );
-	void PIdentifyPatPat( SRxLOBData *pLOBData );
-	void PIdentifyJitPat( SRxLOBData *pLOBData );
-	void PIdentifyJitJit( SRxLOBData *pLOBData );
-	void PIdentifyJitStg( SRxLOBData *pLOBData );
-	void PIdentifyDwlDwl( SRxLOBData *pLOBData );
-	void PIdentifyStgStg( SRxLOBData *pLOBData );
-	void PIdentifyStgJit(SRxLOBData *pLOBData);
-	void PIdentifyStbDwl( SRxLOBData *pLOBData );
-	void PIdentifyStbStb( SRxLOBData *pLOBData );
-    void FIdentifyAgiAgi( SRxLOBData *pLOBData );
-	void FIdentifyAgiPat( SRxLOBData *pLOBData );
-	void FIdentifyPatPat( SRxLOBData *pLOBData );
+ 	void PIdentifyPRI(void *pData, bool bLOB);
+	void PIdentifyPatPat(void *pData, bool bLOB);
+	void PIdentifyJitPat(void *pData, bool bLOB);
+	void PIdentifyJitJit(void *pData, bool bLOB);
+	void PIdentifyJitStg(void *pData, bool bLOB);
+	void PIdentifyDwlDwl(void *pData, bool bLOB);
+	void PIdentifyStgStg(void *pData, bool bLOB);
+	void PIdentifyStgJit(void *pData, bool bLOB);
+	void PIdentifyStbDwl(void *pData, bool bLOB);
+	void PIdentifyStbStb(void *pData, bool bLOB);
+    void FIdentifyAgiAgi(void *pData, bool bLOB);
+	void FIdentifyAgiPat(void *pData, bool bLOB);
+	void FIdentifyPatPat(void *pData, bool bLOB);
 	// void ConvertToIdentifyAet( SRxLOBData *pLOBData );
-	void FIdentifyHopHop( SRxLOBData *pLOBData );
-	void FIdentifyFixPat( SRxLOBData *pLOBData );
-	void FIdentifyFixHop( SRxLOBData *pLOBData );
- 	void FIdentifyFixFix( SRxLOBData *pLOBData );  
- 	void FIdentifyFreq( SRxLOBData *pLOBData );
+	void FIdentifyHopHop(void *pData, bool bLOB);
+	void FIdentifyFixPat(void *pData, bool bLOB );
+	void FIdentifyFixHop(void *pData, bool bLOB );
+ 	void FIdentifyFixFix( void *pData, bool bLOB );
+ 	void FIdentifyFreq(void *pData, bool bLOB);
  	BOOL IdentifyPatternRange( SRadarMode *pRadarMode );
- 	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData ); }		//!< http://izeph.com/tt/blog/155 참조.
- 	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData ); }
+ 	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData, true ); }		//!< http://izeph.com/tt/blog/155 참조.
+ 	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData, true); }
+
+	void CallFreqFunc(unsigned char nCall, SRxABTData *pABTData) { (this->*IdentifyFrq[nCall])(pABTData, false); }		//!< http://izeph.com/tt/blog/155 참조.
+	void CallPriFunc(unsigned char nCall, SRxABTData *pABTData) { (this->*IdentifyPri[nCall])(pABTData, false); }
 	
  	void IdentifySigType( int iSignalType );
  	void FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pFrqHgh, STR_FLOWHIGH *pBand, UINT *cotoIpl );
@@ -264,6 +268,8 @@ private:
  	void Init();
  	void CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIAetData, BOOL bMakeH0000 );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
+	void IdentifyFreqPRI(SRxABTData *pABTData);
+
  	void SortThreatLevel();
  	void IdentifyPriority();
  	void IdentifyMatchRatio();
@@ -276,7 +282,9 @@ private:
 
  	bool LoadCEDLibrary();
  	bool LoadEOBLibrary();
-    void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_Sequence enSeq );
+    void MakeRadarMode(vector<SRadarMode_Spot_Values> *pVecRadarMode_Spot_Values, ENUM_SequenceSpot enSeqSpot);
+    void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_SequenceSpot enSeqSpot);
+
     char *GetRadarModeName( int iRadarModeIndex );
 
 	inline SThreat *GetThreatData( int iThreatIndex ) { return & m_pThreat[iThreatIndex-1]; }
@@ -376,7 +384,7 @@ private:
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	//inline void ClearH000() { m_vecH000.clear(); }
 
-    inline SRadarMode * GetRadarMode( int iRadarModeIndex ) { return iRadarModeIndex==0 ? NULL : & m_pRadarMode[iRadarModeIndex-1]; }
+    inline SRadarMode * GetRadarMode( int iRadarModeIndex ) { return iRadarModeIndex <= 0 ? NULL : & m_pRadarMode[iRadarModeIndex-1]; }
     inline SThreat * GetThreat( int iIndex ) { return iIndex==0 ? NULL : & m_pThreat[iIndex-1]; }
 
 // 
@@ -394,9 +402,9 @@ private:
     PlatformCode::EnumPlatformCode GetPlatformFromRadarMode( int iRadarModeIndex );
     char *GetPlatformCode(PlatformCode::EnumPlatformCode ePlatform);
 
- 	time_t GetUnknownEmitterTime( int nRadarModeIndex );
-// 	UINT Get2ndCandidate();
-// 
+
+ 	double GetInActivatedTime( int iIndex, bool bRadarMode );
+
 // 	// EOB 관련 함수
 // 	void GetEOBLatLong( int *pLatitude, int *pLongitude, int nThreatIndex, int nDeviceIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
 // 	float GetEOBFLongitude( int nThreatIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
@@ -409,11 +417,12 @@ private:
 // 	BOOL CELSignalIdentifyAlg::FindEOB( int nThreatIndex, int nDeviceIndex );
 // 	bool GetRadarModeASameELNOTInEOBResult( STR_CEDEOBID_INFO *pIDInfo, SELABTDATA_EXT *pABTExtData, char *pszELNOT, EnumLibType eEOBLibType );
  	bool IsSortELNOT( SRadarMode* pRadarModeRef, SRadarMode *pRadarModeNxt );
-// 
+
+	bool UpdateToDB_SeenTimeOfRadar(SRxAETData *pABTData);
+    bool UpdateToDB_SeenTimeOfRadarMode(SRxABTData *pABTData, bool bFirstSeen);
+
 // 	SOCSystemVariable *GetSystemVar( int nLinkNum );
-// 
 // 	SRadarMode *GetRadarModeData( int nRadarModeIndex, EnumLibType enLibType );
-// 
 // 	void SortRadarIndex( int *pCount, int *pIndex, int nMax=100 );
 // 	void RemoveDuplicateIndex( int *pCount, int *pIndex, int nMax );
 
@@ -425,7 +434,6 @@ private:
     CELSignalIdentifyAlg( const char *pFileName );
 #endif
 
-    // CELSignalIdentifyAlg();
 	virtual ~CELSignalIdentifyAlg();
 
 protected:
@@ -442,11 +450,15 @@ protected:
     bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
     bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence, int nMaxRadarMode );
     bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence, int nMaxRadarMode );
-    bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
+
+    bool LoadRadarMode_RFSpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_RFSpot, int nMaxRadarMode);
+    bool LoadRadarMode_PRISpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_PRISpot, int nMaxRadarMode);
+
+    //bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
 
     // 변환 코드
-    EnumFunctionCodes GetFunctionCodes( char *pData );
-    SignalType::EnumSignalType GetSignalType( char *pData );
+    EnumFunctionCodes GetFunctionCodes( const char *pData );
+    SignalType::EnumSignalType GetSignalType( const char *pData );
     PolizationCode::EnumPolizationCode GetPolarizationCodes( int iPolization );
     PlatformCode::EnumPlatformCode GetPlatformCode( int iPlatform );
     PatternCode::EnumPatternCode GetPatternCode( int iPattern );

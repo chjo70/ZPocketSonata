@@ -4,6 +4,7 @@
 	\version  0.0.1
 */
 
+
 #if !defined(AFX_STACK_H__29DC8683_3FE7_43C5_8E0E_04A359DC3DD6__INCLUDED_)
 #define AFX_STACK_H__29DC8683_3FE7_43C5_8E0E_04A359DC3DD6__INCLUDED_
 
@@ -18,7 +19,7 @@
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////////
-// �뒪�깮 
+// 스택 관련 템플릿 클래스
 
 template <class T>
 class Stack

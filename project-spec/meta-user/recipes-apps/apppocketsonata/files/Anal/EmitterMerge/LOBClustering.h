@@ -228,7 +228,7 @@ private:
 	void CalMaxDiffAoa( STR_LOBCLUSTER *pCluster );
 
 	// 교차점 구하기
-	unsigned int CalcIntersectionPoints( int nLines );
+	int CalcIntersectionPoints( int nLines );
 	bool CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDATA_MINIMIZE *pLOBData1, SELLOBDATA_MINIMIZE *pLOBData2 );
 	void GroupOfIntersection();
 	bool IsThereCluster( STR_LOBCLUSTER *pCluster );

@@ -17,10 +17,15 @@ STR_PULSE_TRAIN_SEG *CKAnalPRI::m_pSeg=NULL;
 
 
 /**
- * @brief CAnalPRI::incSegPriMeanCompare
- * @param arg1
- * @param arg2
- * @return
+ * @brief     펄스열들을 정렬시 PRI 평균값으로 오름차순으로 정렬하기 위한 함수입니다.
+ * @param     const void * arg1
+ * @param     const void * arg2
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-25 19:35:13
+ * @warning
  */
 int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 {
@@ -28,8 +33,8 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
     const UINT *p1, *p2;
     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
 
-    p1 = (UINT *) arg1;
-    p2 = (UINT *) arg2;
+    p1 = (const UINT *) arg1;
+    p2 = (const UINT *) arg2;
 
     pSeg1 = & m_pSeg[ *p1 ];
     pSeg2 = & m_pSeg[ *p2 ];
@@ -67,27 +72,29 @@ CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI(uiCoMa
     INIT_ANAL_VAR_(m_pKnownSigAnal)
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::~CKAnalPRI
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 18:06:01
-//
-//##ModelId=42E98F30015C
+/**
+ * @brief     추적용 PRI 분석 객체를 소멸시 처리를 수행한다.
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2005-07-28 18:06:01
+ * @warning
+ */
 CKAnalPRI::~CKAnalPRI()
 {
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKAnalPRI::Init
-		\author   조철희
-		\return   void
-		\version  0.0.34
-		\date     2008-07-30 13:35:38
-		\warning
-*/
+/**
+ * @brief     초기화 처리를 수행한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2008-07-30 13:35:38
+ * @warning
+ */
 void CKAnalPRI::Init()
 {
 
@@ -156,15 +163,15 @@ void CKAnalPRI::Analysis()
 	
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::KnownAnalysis
-// 반환되는 형  : BOOL
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2005-07-28 18:06:05
-//
-//##ModelId=42E98F300152
+/**
+ * @brief     추적용 PRI 분석을 처리한다. 알고 있는 제원으로 분석한다.
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2005-07-28 18:06:05
+ * @warning
+ */
 BOOL CKAnalPRI::KnownAnalysis()
 {
     //STR_PRI *pPri;
@@ -218,215 +225,247 @@ BOOL CKAnalPRI::KnownAnalysis()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::ExtractStagger
-// 반환되는 형  : int
-// 함 수 인 자  : STR_PDWINDEX *pPdwIndex
-// 함 수 인 자  : UINT framePri
-// 함 수 인 자  : STR_EMITTER *pEmitter
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 17:00:01
-//
+/**
+ * @brief     스태거 신호를 추적한다.
+ * @param     STR_PDWINDEX * pPdwIndex
+ * @param     _TOA framePri
+ * @param     STR_EMITTER * pEmitter
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 17:00:01
+ * @warning
+ */
 unsigned int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter )
 {
 	return m_pKnownSigAnal->ExtractStagger( pPdwIndex, framePri, pEmitter );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::CheckPriInterval
-// 반환되는 형  : BOOL
-// 함 수 인 자  : STR_PULSE_TRAIN_SEG *pSeg1
-// 함 수 인 자  : STR_PULSE_TRAIN_SEG *pSeg2
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:24
-//
+/**
+ * @brief     펄스열 간의 하모닉 체크를 수행한다.
+ * @param     STR_PULSE_TRAIN_SEG * pSeg1
+ * @param     STR_PULSE_TRAIN_SEG * pSeg2
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:24
+ * @warning
+ */
 BOOL CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) 
 {	
 	return m_pKnownSigAnal->CheckPriInterval( pSeg1, pSeg2 ); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::DeleteAllSeg
-// 반환되는 형  : void
-// 함 수 인 자  : STR_EMITTER *pEmitter
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:21
-//
+/**
+ * @brief     가상 에미터에 지정한 펄스열에 대해서 삭제 마킹을 한다.
+ * @param     STR_EMITTER * pEmitter
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:21
+ * @warning
+ */
 void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter ) 
 { 
 	m_pKnownSigAnal->DeleteAllSeg( pEmitter ); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::ExtractRefStable
-// 반환되는 형  : void
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 16:59:48
-//
+/**
+ * @brief     기준 펄스열을 추출한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 16:59:48
+ * @warning
+ */
 void CKAnalPRI::ExtractRefStable() 
 { 
 	m_pKnownSigAnal->ExtractRefStable(); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::ExtractDwellRefPT
-// 반환되는 형  : void
-// 함 수 인 자  : STR_PRI_RANGE_TABLE *pExtRange
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 16:59:52
-//
+/**
+ * @brief     드웰 기준 펄스열을 추출한다.
+ * @param     STR_PULSE_TRAIN_SEG * pDwlSewg
+ * @param     STR_PRI_RANGE_TABLE * pExtRange
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 16:59:52
+ * @warning
+ */
 BOOL CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange )
 { 
     return m_pKnownSigAnal->ExtractDwellRefPT( pDwlSewg, pExtRange );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::ExtractFramePri
-// 반환되는 형  : UINT
-// 함 수 인 자  : STR_PDWINDEX *pSrcPdwIndex
-// 함 수 인 자  : UINT framePri
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:17
-//
+/**
+ * @brief     FramePRI 펄스열을 추출한다.
+ * @param     STR_PDWINDEX * pSrcPdwIndex
+ * @param     _TOA framePri
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:17
+ * @warning
+ */
 UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 {	
 	return m_pKnownSigAnal->ExtractFramePri( pSrcPdwIndex, framePri ); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::GetCoSeg
-// 반환되는 형  : int
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:14
-//
+/**
+ * @brief     펄스열추출 단계에서의 펄스열 개수를 얻는다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:14
+ * @warning
+ */
 unsigned int CKAnalPRI::GetCoSeg() 
 {	
 	return m_pKnownSigAnal->GetCoSeg(); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CKAnalPRI::GetAnalSeg
-//! \author   조철희
-//! \return   int
-//! \version  1.37
-//! \date     2006-08-25 09:00:21
-//! \warning
-//
-int CKAnalPRI::GetAnalSeg() 
+/**
+ * @brief     펄스열추출 단계에서의 펄스열 개수를 얻는다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-25 19:41:47
+ * @warning
+ */
+unsigned int CKAnalPRI::GetAnalSeg() 
 {	
 	return m_pKnownSigAnal->GetAnalSeg(); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : *CKAnalPRI::GetPulseSeg
-// 반환되는 형  : STR_PULSE_TRAIN_SEG
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:12
-//
+/**
+ * @brief     펄스열추출 단계에서의 펄스열 포인터를 리턴한다.
+ * @return    STR_PULSE_TRAIN_SEG *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-25 19:42:07
+ * @warning
+ */
 STR_PULSE_TRAIN_SEG *CKAnalPRI::GetPulseSeg() 
 { 
 	return m_pKnownSigAnal->GetPulseSeg(); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::GetMaxPdw
-// 반환되는 형  : int
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:09
-//
-int CKAnalPRI::GetMaxPdw() 
+/**
+ * @brief     수집한 PDW 개수를 리턴한다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:09
+ * @warning
+ */
+unsigned int CKAnalPRI::GetMaxPDW() 
 { 
 	return m_pKnownSigAnal->GetMaxPdw(); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::MakePRIInfoInSeg
-// 반환되는 형  : void
-// 함 수 인 자  : STR_PRI *pPri
-// 함 수 인 자  : STR_EMITTER *pEmitter
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-23 10:14:07
-//
+/**
+ * @brief     MakePRIInfoFromSeg
+ * @param     STR_PRI * pPri
+ * @param     STR_EMITTER * pEmitter
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:07
+ * @warning
+ */
 void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) 
 { 
 	m_pKnownSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    CKAnalPRI::MedianFreq
-//! \author   조철희
-//! \param    pMinMax 인자형태 STR_TYPEMINMAX *
-//! \param    pPdwIndex 인자형태 PDWINDEX *
-//! \param    count 인자형태 int
-//! \return   UINT
-//! \version  1.00
-//! \date     2006-01-23 10:14:02
-//! \warning
-//
+/**
+ * @brief     주파수 메디안 값을 계산한다.
+ * @param     STR_TYPEMINMAX * pMinMax
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:14:02
+ * @warning
+ */
 UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) 
 { 
 	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount ); 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CKAnalPRI::VerifyPRI
-// 반환되는 형  : int
-// 함 수 인 자  : PDWINDEX *pPdwIndex
-// 함 수 인 자  : int count
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-06 14:44:01
-//
+/**
+ * @brief     PRI 검증을 수행한다.
+ * @param     PDWINDEX * pPdwIndex
+ * @param     unsigned int uiCount
+ * @return    _TOA
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-02-06 14:44:01
+ * @warning
+ */
 _TOA CKAnalPRI::VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
 	return m_pKnownSigAnal->VerifyPRI( pPdwIndex, uiCount);
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//!	\brief	 CKAnalPRI::FindPeakInHist
-//!	\author  조철희
-//!	\param	 count	인자형태 int
-//!	\param	 pPdwIndex	인자형태 PDWINDEX *
-//! \version 1.0
-//! \date		 2006-07-06 17:28:14
-//! \warning
-//
+/**
+ * @brief     히스토그램 상에서 큰 값을 찾는다.
+ * @param     unsigned int uiCount
+ * @param     PDWINDEX * pPdwIndex
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-07-06 17:28:14
+ * @warning
+ */
 int CKAnalPRI::FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex )
 {
 	return m_pKnownSigAnal->FindPeakInHist(uiCount, pPdwIndex );
 }
 
 /**
- * @brief CKAnalPRI::SaveEmitterPdwFile
- * @param pEmitter
- * @param index
+ * @brief     PDW 데이터를 파일로 저장한다.
+ * @param     STR_EMITTER * pEmitter
+ * @param     int iPLOBID
+ * @param     bool bSaveFile
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-26 14:22:44
+ * @warning
  */
-void CKAnalPRI::SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+void CKAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
-    m_pKnownSigAnal->SaveEmitterPdwFile( pEmitter, iPLOBID, bSaveFile );
+    m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
 
 }
 
 /**
- * @brief CKAnalPRI::GetBand
- * @return
+ * @brief     추적 수집한 PDW 데이터의 대역을 리턴한다.
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-26 14:23:15
+ * @warning
  */
 int CKAnalPRI::GetBand()
 {
@@ -434,10 +473,16 @@ int CKAnalPRI::GetBand()
 }
 
 /**
- * @brief CKAnalPRI::QSort
- * @param pIdx
- * @param uiCount
- * @param uiSizeof
+ * @brief     QSort 정렬을 수행한다.
+ * @param     unsigned int * pIdx
+ * @param     unsigned int uiCount
+ * @param     unsigned int uiSizeof
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-26 14:23:39
+ * @warning
  */
 void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
 {
@@ -446,12 +491,13 @@ void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
 }
 
 /**
- * @brief		GetMakeAET
- * @return		CMakeAET*
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2022/01/03 15:24:27
- * @warning		
+ * @brief     LOB 데이터 포인터를 리턴한다. 
+ * @return    CMakeAET*
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022/01/03 15:24:27
+ * @warning
  */
 CMakeAET* CKAnalPRI::GetMakeAET()
 {

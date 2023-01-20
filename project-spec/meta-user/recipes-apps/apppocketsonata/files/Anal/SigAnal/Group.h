@@ -57,7 +57,7 @@ protected:
 	//##ModelId=452B0C5600CC
 	STR_CLUSTER *m_pCluster;
 	//##ModelId=452B0C5600D4
-	int m_nCoPdw;
+	unsigned int m_uiCoPdw;
 	//##ModelId=452B0C5600DE
 	unsigned int m_uiMaxPdw;
 	//##ModelId=452B0C5600DF
@@ -70,9 +70,9 @@ protected:
 	STR_PDWINDEX m_Band[ TOTAL_BAND ];
 	//##ModelId=452B0C560107
 	STR_PDWINDEX m_GrStat[ MAX_STAT ];				// STAT 그룹화의 펄스열 인덱스
-	//##ModelId=452B0C560111
+	
 	STR_FRQAOAPWHISTOGRAM m_AoaHist;						// 방위 히스토그램
-	//##ModelId=452B0C560116
+	
 	STR_FRQAOAPWHISTOGRAM m_FrqHist;						// 주파수 히스토그램
 	//##ModelId=452B0C56011B
 	STR_FRQAOAPWHISTOGRAM	m_PwHist;						// 주파수 히스토그램
@@ -108,12 +108,12 @@ public:
 
 	// 가상 함수 선언
 	//##ModelId=452B0C560175
-	virtual int GetColPdw()=0;
+	virtual unsigned int GetColPdw()=0;
 
 	//##ModelId=452B0C560177
 	int GetFreqShift( int band, int FREQ_NARR_SHIFT );
 	//##ModelId=452B0C56017F
-	void SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
+	bool SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C560189
 	//void FineFreqGroup();
 	//##ModelId=452B0C56018A
@@ -141,9 +141,9 @@ public:
 	void CalClusterInfo( STR_CLUSTER *pCluster );
 	//##ModelId=452B0C5601E5
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
-	//##ModelId=452B0C5601F7
-    bool MakePDWArray( _PDW *pdw, unsigned int uiCount, int iBand=0 );
-	//##ModelId=452B0C560201
+	
+    bool MakePDWArray( _PDW *pdw, unsigned int uiCount, unsigned int uiBand=0 );
+	
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	//##ModelId=452B0C560203
 	void MakeBandGroup();
@@ -165,39 +165,25 @@ public:
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	//##ModelId=452B0C560271
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT *pFreq, UINT *pPW, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C5602A1
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C5602B5
 	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
-	//##ModelId=452B0C5602C0
 	void FilterParam( STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP *pAoaGroup );
-	//##ModelId=452B0C5602D3
 	void ReDrawAoaHist( STR_AOA_GROUP *pAoaGroup );
-	//##ModelId=452B0C5602D5
 	BOOL GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup );
-	//##ModelId=452B0C5602E7
 	void MakeHist( STR_PW_GROUP *pPwGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C5602FC
 	void MakeHist( unsigned int uiCount, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C56030F
 	void MakeHist( STR_PDWINDEX *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist  );
-	//##ModelId=452B0C56031B
 	int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
-	//##ModelId=452B0C560324
 	UINT MakeFreqGroup( int door, int aoaidx, int frqidx=0, bool bForce1Group=false );
-	//##ModelId=452B0C56032F
 	void MakeAOAGroup( STR_PDWINDEX *pGrPdwIndex, bool bForce1Group=false );
-	//##ModelId=452B0C560337
 	void MakeStatGroup( STR_PDWINDEX *pBand );
-	//##ModelId=452B0C560339
+	
 	BOOL MakeGroup(void);
-	//##ModelId=452B0C560342
 	void Init();
 	void PrintAllGroup();
 	void PrintGroup();
-	//##ModelId=452B0C560343
+
     CGroup( unsigned int uiCoMaxPdw=NEW_COLLECT_PDW );
-	//##ModelId=452B0C560355
 	virtual ~CGroup();
 
 };

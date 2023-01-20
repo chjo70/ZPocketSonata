@@ -21,7 +21,7 @@ CSPulExt::CSPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPd
 
 	m_uiMaxPdw = uiCoMaxPdw;
 
-    INIT_ANAL_VAR_(m_pScanSigAnal);
+    INIT_ANAL_VAR_(m_pScanSigAnal)
 }
 
 /**
@@ -49,7 +49,7 @@ CSPulExt::~CSPulExt()
  */
 void CSPulExt::Init()
 {
-	m_noEMT = m_pScanSigAnal->GetNoEMT();
+	m_uinoEMT = m_pScanSigAnal->GetNoEMT();
 	m_noCh = m_pScanSigAnal->GetScanNoCh();
 
     m_uiAnalSeg = m_uiCoSeg;
@@ -125,8 +125,8 @@ void CSPulExt::KnownPulseExtract()
                 \date 2006-09-04 20:56:25, 조철희
             */
             // 지터열 추출 마진 설정
-            diff = UDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
-            extRange.tMinPRI = _max( (int)(m_pScnAet->fPRIMean - diff), 2 );
+            diff = IDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
+            extRange.tMinPRI = max( (_TOA)(m_pScnAet->fPRIMean - diff), (_TOA) 2 );
             extRange.tMaxPRI = ITOAusCNV( m_pScnAet->fPRIMean + diff );
             ExtractStablePT( & extRange, TRUE );
             DiscardStablePT();
@@ -136,8 +136,8 @@ void CSPulExt::KnownPulseExtract()
                                 Stable은 기존대로 추출하며 Jitter열은 위협 신호 발생기를 고려해서 좀더 추출하게 함.
                 \date 2008-10-25 17:01:53, 조철희
             */
-            diff = UDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+20 ), 200 );
-            extRange.tMinPRI = _max( (int)(m_pScnAet->fPRIMean - diff), 2 );
+            diff = IDIV( m_pScnAet->fPRIMean * ( m_pScnAet->fPRIJitterRatio+20 ), 200 );
+            extRange.tMinPRI = max( (_TOA)(m_pScnAet->fPRIMean - diff), (_TOA) 2 );
             extRange.tMaxPRI = ITOAusCNV( m_pScnAet->fPRIMean + diff );
             // 추출할 펄스열의 범위폭을 계산한다.
             ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
@@ -145,8 +145,8 @@ void CSPulExt::KnownPulseExtract()
             // D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인
             // 하노닉 레이더 신호(?) 때문에
             // 2배의 PRI도 추출하도록 한다.
-            extRange.tMinPRI = 2 * extRange.tMinPRI;
-            extRange.tMaxPRI = 2 * extRange.tMaxPRI;
+            extRange.tMinPRI = TMUL<_TOA>( 2, extRange.tMinPRI );
+            extRange.tMaxPRI = TMUL<_TOA>( 2, extRange.tMaxPRI );
             ExtractJitterPT( & extRange, UINT_MAX, 3, TRUE );
             break;
 
@@ -170,47 +170,47 @@ void CSPulExt::KnownPulseExtract()
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    규칙성 펄스열들중에서 STABLE 펄스열들만 마킹한다.
-//! \author   조철희
-//! \return   void
-//! \version  1.37
-//! \date     2006-09-04 20:58:43
-//! \warning
-//
+/**
+ * @brief     DiscardStablePT
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-09-04 20:58:43
+ * @warning
+ */
 void CSPulExt::DiscardStablePT()
 {
-    //int i;//, j;
-    STR_PULSE_TRAIN_SEG *pSeg; //, *pSeg2;
+    STR_PULSE_TRAIN_SEG *pSeg;
 
-    if( m_uiCoSeg == 0 ) {
-        return;
+    if( m_uiCoSeg == _spZero ) {
+
     }
+    else {
+        //STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 
-    //STR_PDWINDEX *pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+        pSeg = GetPulseSeg();
+        ClearAllMark();
+        //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
 
-    pSeg = GetPulseSeg();
-    ClearAllMark();
-    //memset( m_pMARK, 0, sizeof(USHORT)*pGrPdwIndex->count );
+        // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
+        if (m_uiCoSeg == _spOne) {
+            MarkToPDWIndex(&pSeg[0], enEXTRACT_MARK);
+            m_uiCoSeg = 0;
+        }
+        else {
+            /*! \todo	스태거열을 찾아서 제거해야 한다. */
 
-    // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
-    if( m_uiCoSeg == 1 ) {
-        MarkToPDWIndex( & pSeg[0], EXTRACT_MARK );
-        m_uiCoSeg = 0;
-        return;
+            // Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
+            // pSeg1 = pSeg + m_nAnalSeg;
+            //     for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
+            //         pSeg2 = pSeg + i + 1;
+            //         for( j=i+1 ; j < m_CoSeg ; ++j ) {
+            // 
+            //         }
+            //     }
+        }
     }
-
-    /*! \todo	스태거열을 찾아서 제거해야 한다. */
-
-    // Stagger 펄스열로 의심이 가는 펄스열들끼기 찾아서 제거시킨다.
-    // pSeg1 = pSeg + m_nAnalSeg;
-//     for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
-//         pSeg2 = pSeg + i + 1;
-//         for( j=i+1 ; j < m_CoSeg ; ++j ) {
-// 
-//         }
-//     }
 
 }
 
@@ -325,30 +325,46 @@ void CSPulExt::MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR
 	// NULL 함수
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    *CSPulExt::GetDtoaHist
-//! \author   조철희
-//! \return   STR_DTOA_HISTOGRAM
-//! \version  1.37
-//! \date     2006-07-28 13:21:31
-//! \warning
-//
+/**
+ * @brief     GetDtoaHist
+ * @return    STR_DTOA_HISTOGRAM *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-07-28 13:21:31
+ * @warning
+ */
 STR_DTOA_HISTOGRAM *CSPulExt::GetDtoaHist()
 {
 	// NULL 함수
 	return NULL;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CSPulExt::GetCoPdw
-		\author   조철희
-		\return   int
-		\version  0.0.57
-		\date     2008-11-11 21:42:36
-		\warning
-*/
-int CSPulExt::GetCoPdw()
+/**
+ * @brief     PDW 개수를 리턴한다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2008-11-11 21:42:36
+ * @warning
+ */
+unsigned int CSPulExt::GetCoPdw()
 {
 	return m_pScanSigAnal->GetCoPdw();
+}
+
+
+/**
+ * @brief     ClearAllMark
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 16:15:29
+ * @warning
+ */
+void CSPulExt::ClearAllMark()
+{ 
+    m_pScanSigAnal->ClearAllMark(); 
 }

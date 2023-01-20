@@ -31,16 +31,11 @@ private:
 
     char *m_pszSQLString;
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    unsigned int m_uiOpInitID;
-
-#endif
-
 #ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
 
 #elif _SQLITE_
-    Kompex::SQLiteDatabase *m_pDatabase;
+    Kompex::CSQLiteDatabase *m_pDatabase;
 
 #endif
 
@@ -48,19 +43,19 @@ private:
 
     char m_szRawDataFilename[200];
 
-    UINT m_uiStep;
+    unsigned int m_uiStep;
 
-    int m_iIsStorePDW;
+    unsigned int m_uiIsStorePDW;
 
     unsigned int m_uiPDWID;
 
-    __time32_t m_tColTime;
+    time_t m_tColTime;
     unsigned int m_tColTimeMs;
 
-#if defined(_ELINT_)
+#if defined(_ELINT_) || defined(_701_)
     char m_szTaskID[LENGTH_OF_TASK_ID];
-    EN_RADARCOLLECTORID m_enCollectorID;
-    ELINT::ENUM_BANDWIDTH m_enBandWidth;
+    //EN_RADARCOLLECTORID m_enCollectorID;
+    _701::ENUM_BANDWIDTH m_enBandWidth;
 
 #elif defined(_XBAND_)
     char m_szTaskID[LENGTH_OF_TASK_ID];
@@ -69,6 +64,8 @@ private:
 
 #elif defined(_POCKETSONATA_)
     POCKETSONATA::ENUM_BANDWIDTH m_enBandWidth;
+
+
 
 #else
 
@@ -117,21 +114,7 @@ public:
     //! 출력 관련 함수
     void DISP_FineLOB(SRxLOBData *pLOB);
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    /**
-     * @brief     GetOpInitID
-     * @return    LONG
-     * @exception
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022-04-21, 16:56
-     * @warning
-     */
-    inline unsigned int GetOpInitID() {
-        return m_uiOpInitID;
-    }
-
-#endif
+	unsigned int GetOpInitID();
 
 
     /**
@@ -143,7 +126,7 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline __time32_t GetColTime() {
+    inline time_t GetColTime() {
         return m_tColTime;
     }
 
@@ -157,7 +140,7 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline void SetColTime(__time32_t val) { 
+    inline void SetColTime(time_t val) { 
         m_tColTime = val; 
     }
 
@@ -223,8 +206,8 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline int IsStorePDW() { 
-        return m_iIsStorePDW; 
+    inline unsigned int IsStorePDW() { 
+        return m_uiIsStorePDW; 
     }
     /**
      * @brief     SetStorePDW
@@ -236,15 +219,22 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline void SetStorePDW(int val) { 
-        m_iIsStorePDW = val; 
+    inline void SetStorePDW(unsigned int uiVal) { 
+        m_uiIsStorePDW = uiVal;
     }
 
     void SetBandWidth( int iVal ) {
 #if defined(_ELINT_)
         m_enBandWidth = (ELINT::ENUM_BANDWIDTH) iVal;
+
 #elif defined(_XBAND_)
         m_enBandWidth = (XBAND::ENUM_BANDWIDTH) iVal;
+
+#elif defined(_701_)
+		m_enBandWidth = (_701::ENUM_BANDWIDTH) iVal;
+
+#else
+#error "대역을 설정해줘야 합니다..."
 #endif
 
     }
@@ -268,6 +258,11 @@ public:
     XBAND::ENUM_BANDWIDTH GetBandWidth() const { 
         return m_enBandWidth; 
     }
+
+#elif defined(_701_)
+	_701::ENUM_BANDWIDTH GetBandWidth() const {
+		return m_enBandWidth;
+	}
 
 #elif defined(_POCKETSONATA_)
 

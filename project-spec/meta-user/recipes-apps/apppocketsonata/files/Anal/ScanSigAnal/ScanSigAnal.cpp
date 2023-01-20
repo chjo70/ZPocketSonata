@@ -45,12 +45,12 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *
 	// 스캔 분석 관련 클래스 생성
     m_theAnalScan = new CSAnalScan( this, uiCoMaxPdw);
 
-	m_nMaxPdw = uiCoMaxPdw;
+	m_uiMaxPdw = uiCoMaxPdw;
 
 	//-- 조철희 2006-02-17 15:23:06 --//
-	m_noCh = _spZero;
+	m_uiNoCh = _spZero;
 	m_uiCoPdw = _spZero;
-	m_noEMT = _spZero;
+	m_uinoEMT = _spZero;
 
 	m_pSeg = GetPulseSeg();
 
@@ -58,13 +58,15 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CScanSigAnal::~CScanSigAnal
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-13 17:27:56
-//
+/**
+ * @brief     스캔 분석 객체를 소멸 처리합니다.
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-02-13 17:27:56
+ * @warning
+ */
 CScanSigAnal::~CScanSigAnal()
 {
 
@@ -74,46 +76,20 @@ CScanSigAnal::~CScanSigAnal()
 	delete m_theAnalScan;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CScanSigAnal::AnalStart
-// 반환되는 형  : UINT
-// 함 수 인 자  : int noEMT
-// 함 수 인 자  : int noCh
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-02-15 16:01:33
-//
-//UINT CScanSigAnal::AnalStart( int noEMT, int noCh )
-//{
-//    UINT nResult=0;
-
-//    if( stScnAet.aet.noEMT == _spInvAET || stScnAet.aet.noEMT > _spMaxEMTNum ) {
-//        printf( "\n\t Invalid Scan AET[%d] !" , noEMT );
-//        WhereIs;
-//        return (UINT) _spWarning;
-//    }
-
-//    nResult = m_theAnalScan->AnalScan();
-
-//    SendScanResult( nResult );
-
-//	return nResult;
-
-//}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CScanSigAnal::Start
-		\author   조철희
-		\param    pPdwBank 인자형태 STR_PDWBANK *
-		\param    pManAet 인자형태 STR_MANAET *
-		\return   void
-		\version  0.0.68
-		\date     2009-01-05 13:41:21
-		\warning
-*/
+/**
+ * @brief     스캔 분석을 시작합니다.
+ * @param     STR_STATIC_PDWDATA * pPDWData
+ * @param     SRxABTData * pScnAet
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2009-01-05 13:41:21
+ * @warning
+ */
 void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
-    int iTotalPDW;
+    unsigned int uiTotalPDW;
 
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
@@ -128,10 +104,10 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     // 수집한 PDW 파일 저장하기...
     InsertRAWData(&m_stSavePDWData, _spZero );
 
-    iTotalPDW = pPDWData->GetTotalPDW();
+    uiTotalPDW = pPDWData->GetTotalPDW();
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( m_pstPDWData->stPDW, iTotalPDW );
+    m_theGroup->MakePDWArray( m_pstPDWData->stPDW, uiTotalPDW);
 
     /*! \bug  그룹화는 생략하고 수집 펄스열을 하나의 그룹화 내에 올려 놓는다.
         \date 2009-03-03 17:05:22, 조철희
@@ -147,7 +123,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 	// 스캔 분석 수행한다.
     m_strScnResult.uiABTID = m_pScnAet->uiABTID;
     m_strScnResult.uiAETID = m_pScnAet->uiAETID;
-    m_strScnResult.uiResult = (UINT) m_theAnalScan->AnalScan();
+    m_strScnResult.enResult = m_theAnalScan->AnalScan();
     GetScanRes( & m_strScnResult.uiScnTyp, & m_strScnResult.fScnPrd );
 
 	// 스캔 분석 결과를 저장한다.
@@ -174,19 +150,19 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 
 	int nScnTyp, nScnPrd;
 	GetScanRes( & nScnTyp, & nScnPrd );
-	stScnAet[m_noEMT].aet.as.iType = nScnTyp;
-	stScnAet[m_noEMT].aet.as.iPrd = nScnPrd;
+	stScnAet[m_uinoEMT].aet.as.iType = nScnTyp;
+	stScnAet[m_uinoEMT].aet.as.iPrd = nScnPrd;
 
 	if( nResult == _spAnalSuc ) 
-		stScnAet[m_noEMT].aet.as.iStat = SELF_SUCCESS;
+		stScnAet[m_uinoEMT].aet.as.iStat = SELF_SUCCESS;
 
- 	pView->UpdateScanInfoFromSAP( & stScnAet[m_noEMT] );
+ 	pView->UpdateScanInfoFromSAP( & stScnAet[m_uinoEMT] );
 
 	switch( nResult ) {
 		case _spAnalSuc :
-			printf( "\n Anal Sucess noEMT[%d], ScnTyp[%d], ScnPrd[%d ms]" , m_noEMT, nScnTyp, UDIV( nScnPrd, _spOneMilli ) );
+			printf( "\n Anal Sucess noEMT[%d], ScnTyp[%d], ScnPrd[%d ms]" , m_uinoEMT, nScnTyp, UDIV( nScnPrd, _spOneMilli ) );
 
-   		SetScanAnalStep( m_noEMT, _spScnEnd );
+   		SetScanAnalStep( m_uinoEMT, _spScnEnd );
 
 			//////////////////////////////////////////////////////////////////////////
 			// Qpost( SQ_MngScn, sndMsg ); 를 모의
@@ -197,7 +173,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 			//CloseScanWindowCell( tskMsg.in.opData+1, tskMsg.in.stat1, _spTrue );
 
 			tskMsg.in.opCode = MaetScan;
-			tskMsg.in.opData = m_noEMT - 1;
+			tskMsg.in.opData = m_uinoEMT - 1;
 			tskMsg.in.stat1 = _spRsaScn;
 			ReqScanAnal( tskMsg );
 
@@ -206,9 +182,9 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 			
 
     CASE _spModWc :
-			printf( "\n Anal Fail(ColCtl) of noEMT[%d]" , m_noEMT );
+			printf( "\n Anal Fail(ColCtl) of noEMT[%d]" , m_uinoEMT );
 
-   		SetScanAnalStep( m_noEMT, _spSetWinC );
+   		SetScanAnalStep( m_uinoEMT, _spSetWinC );
 
 	}
 
@@ -263,28 +239,30 @@ void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USH
 		MARK[ *pPdwIndex++ ] = usMarkType;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CScanSigAnal::InitVar
-		\author   조철희
-		\return   void
-		\version  0.0.52
-		\date     2008-10-25 16:00:06
-		\warning
-*/
+/**
+ * @brief     멤버 변수를 초기화한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2008-10-25 16:00:06
+ * @warning
+ */
 void CScanSigAnal::InitVar()
 {
     // m_uiStep = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CScanSigAnal::Init
-		\author   조철희
-		\param    pPdwBank 인자형태 STR_PDWBANK *
-		\return   void
-		\version  0.0.73
-		\date     2006-02-13 17:30:08
-		\warning
-*/
+/**
+ * @brief     스캔 분석을 초기화한다.
+ * @param     STR_STATIC_PDWDATA * pstPDWData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-02-13 17:30:08
+ * @warning
+ */
 void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 {
 	// 스캔 신호 분석 초기화
@@ -308,7 +286,7 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
         m_uiCoPdw = pstPDWData->GetTotalPDW();
 
         // RAW 데이터 저장 여부
-        SetStorePDW( pstPDWData->x.ps.iIsStorePDW );
+        SetStorePDW( pstPDWData->x.ps.uiIsStorePDW );
     }
     else {
         SetPDWID(_spZero);
@@ -339,10 +317,10 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 10:32:42
 //
-void CScanSigAnal::ScanExtractPulseInit( int noEMT, int noCh )
+void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, int noCh )
 {
 	// 스캔분석판 추적 채널 정의
-	m_noCh = noCh;
+	m_uiNoCh = noCh;
 
 	// PDW 버퍼 정의
 // 	m_pPdwBank = & stSPDW;
@@ -351,7 +329,7 @@ void CScanSigAnal::ScanExtractPulseInit( int noEMT, int noCh )
     m_uiCoPdw = 100; // m_pPdwBank->count;
 
 	// stScnAet의 인덱스 저장
-	m_noEMT = noEMT;
+	m_uinoEMT = uinoEMT;
 
 	// 그룹화 초기화
 	m_theGroup->Init();
@@ -369,9 +347,9 @@ void CScanSigAnal::ScanExtractPulseInit( int noEMT, int noCh )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-13 17:22:40
 //
-void CScanSigAnal::ScanSigAnalInit( int noEMT, int noCh )
+void CScanSigAnal::ScanSigAnalInit( unsigned int uinoEMT, int noCh )
 {
-	m_theAnalScan->Init( noEMT, noCh );
+	m_theAnalScan->Init(uinoEMT, noCh );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -415,7 +393,7 @@ void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 14:37:39
 //
-void CScanSigAnal::SaveEmitterPdwFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
 
 #ifdef _WIN321
@@ -484,7 +462,7 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 
 //			pUpdAet->aet.as.stat = SELF_SUCCESS;
 //			m_theAnalScan->GetScanRes( & pUpdAet->aet.as.type, & pUpdAet->aet.as.prd );
-//			// SaveEmitterPdwFile( & m_pSeg[m_pEmitter->main_seg].pdw, 0 );
+//			// SaveEmitterPDWFile( & m_pSeg[m_pEmitter->main_seg].pdw, 0 );
 //			break;
 
 //		default :
@@ -520,8 +498,14 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 
 //}
 
+void CScanSigAnal::ClearAllMark()
+{
+
+}
+
+
 //////////////////////////////////////////////////////////////////////////
-/*! \brief    CScanSigAnal::SaveEmitterPdwFile
+/*! \brief    CScanSigAnal::SaveEmitterPDWFile
 		\author   조철희
 		\param    pPdw 인자형태 STR_PDWINDEX *
 		\param    index 인자형태 int
@@ -530,7 +514,7 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 		\date     2008-11-03 22:49:58
 		\warning
 */
-void CScanSigAnal::SaveEmitterPdwFile( STR_PDWINDEX *pPdw, int iPLOBID )
+void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
 {
 #ifdef _DEBUG_MAKEPDW
 	int i;

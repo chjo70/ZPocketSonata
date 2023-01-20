@@ -238,6 +238,9 @@ void CSysConfig::InitVar()
     // 네트워크 얻기
     SetNetworkIP();
 
+	// 초기화 순번
+	m_uiOpInitID = 0;
+
     // 보드 세팅
     m_strConfig.enBoardID = enMaster;
     m_strConfig.enMode = enREADY_MODE;

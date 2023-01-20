@@ -12,7 +12,7 @@
 //#include <sys/time.h>
 #include <winsock.h>
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <sys/time.h>
 
 #endif
@@ -146,17 +146,18 @@ enum ENUM_COLLECTBANK {
 };
 
 
-#ifndef _ENUM_DataType
-#define _ENUM_DataType
-typedef enum {
-    en_UnknownData = 0,
-
-    en_PDW_DATA,
-    en_IQ_DATA,
-    en_IF_DATA,
-
-} ENUM_DataType;
-#endif
+// #ifndef _ENUM_DataType
+// #define _ENUM_DataType
+// typedef enum {
+//     en_UnknownData = 0,
+// 
+//     en_PDW_DATA,
+// 	en_PDW_DATA_CSV,
+//     en_IQ_DATA,
+//     en_IF_DATA,
+// 
+// } ENUM_DataType;
+// #endif
 
 //static char g_szCollectbank[enUnknownCollectBank][10] = { "NP", "KP", "SP", "UP" } ;
 

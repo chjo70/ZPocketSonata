@@ -55,7 +55,7 @@ public:
 	//##ModelId=452B0C550356
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();
 	//##ModelId=452B0C55035E
-	int GetMaxPdw();
+	unsigned int GetMaxPdw();
 	//##ModelId=452B0C55035F
 	void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
 	//##ModelId=452B0C550362
@@ -63,7 +63,7 @@ public:
 	//##ModelId=452B0C550375
 	_TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	int GetBand();
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+	void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
     bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 

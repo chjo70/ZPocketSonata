@@ -20,51 +20,59 @@
  * @param pParent
  * @param coMaxPdw
  */
-CSGroup::CSGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
+CSGroup::CSGroup( void *pParent, unsigned int uicoMaxPdw ) : CGroup(uicoMaxPdw)
 {
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
-    INIT_ANAL_VAR_(m_pScanSigAnal);
+    INIT_ANAL_VAR_(m_pScanSigAnal)
 }
 
 /**
- * @brief CSGroup::~CSGroup
+ * @brief     ~CSGroup
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-21 14:11:15
+ * @warning
  */
 CSGroup::~CSGroup()
 {
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CSGroup::GetColPdw
-// 반환되는 형  : int
-// 함 수 인 자  : 없음
-// 함 수 설 명  : 
-// 최 종 변 경  : 조철희, 2006-01-27 11:20:12
-//
-int CSGroup::GetColPdw()
+/**
+ * @brief     스캔 분석의 PDW 개수를 리턴한다.
+ * @return    int
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-27 11:20:12
+ * @warning
+ */
+unsigned int CSGroup::GetColPdw()
 {
 	return m_pScanSigAnal->GetColPdw(); 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CSGroup::MakeOneGroup
-		\author   조철희
-		\return   void
-		\version  0.0.73
-		\date     2009-03-03 17:07:20
-		\warning
-*/
+/**
+ * @brief     강제로 하나의 그룹화로 생성한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2009-03-03 17:07:20
+ * @warning
+ */
 void CSGroup::MakeOneGroup()
 {
-	int i;
+	unsigned int i;
 	PDWINDEX *pPdwIndex;
 
-	m_FrqAoaPwIdx.uiCount = m_nCoPdw;
+	m_FrqAoaPwIdx.uiCount = m_uiCoPdw;
 
 	pPdwIndex = m_FrqAoaPwIdx.pIndex;
-	for( i=0 ; i < m_nCoPdw ; ++i ) {
+	for( i=0 ; i < m_uiCoPdw ; ++i ) {
 		*pPdwIndex++ = i;
 
 	}

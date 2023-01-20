@@ -24,12 +24,9 @@ protected:
 
 public:
 	void MakeOneGroup();
+	unsigned int GetColPdw();
 
-	//##ModelId=452B0C4403B9
-	int GetColPdw();
-	//##ModelId=452B0C4403BD
-	CSGroup( void *pParent, int coMaxPdw );
-	//##ModelId=452B0C4403C0
+	CSGroup( void *pParent, unsigned int uicoMaxPdw);
 	virtual ~CSGroup();
 
 };

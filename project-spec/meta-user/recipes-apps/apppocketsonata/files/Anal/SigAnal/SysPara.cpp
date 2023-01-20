@@ -45,7 +45,7 @@ void CSysPara::LoadDefaultSysParameter()
 
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_) || defined(_701_)
     _sp.mg.aoa[0] = _spMgAoaEJ;
     _sp.mg.aoa[1] = _spMgAoaEJ;
     _sp.mg.aoa[2] = _spMgAoaEJ;
@@ -69,9 +69,9 @@ void CSysPara::LoadDefaultSysParameter()
 
 	_sp.np.Freq_Hist_Thr = 0;
 
-  _sp.mg.agifrqmean = _spMgAgileFrqMean;
-  _sp.mg.agifrqin = _spMgAgileFrqIn;
-  _sp.mg.agifrqout = _spMgAgileFrqOut;
+	_sp.mg.agifrqmean = _spMgAgileFrqMean;
+	_sp.mg.agifrqin = _spMgAgileFrqIn;
+	_sp.mg.agifrqout = _spMgAgileFrqOut;
 
 	_sp.mg.fixfrq[0] = ( UINT ) _spMgFixFrqEJ;
 	_sp.mg.fixfrq[1] = (UINT) _spMgFixFrqEJ;

@@ -18,6 +18,8 @@
 
 #ifdef _SQLITE_
 
+#include <stdafx.h>
+
 #include <iostream>
 #include <iomanip>
 #include <exception>
@@ -34,7 +36,7 @@
 namespace Kompex
 {
 
-SQLiteStatement::SQLiteStatement(SQLiteDatabase *db):
+SQLiteStatement::SQLiteStatement(CSQLiteDatabase *db):
 	mDatabase(db),
 	mStatement(NULL),
 	mTransactionID(0),
@@ -83,13 +85,11 @@ bool SQLiteStatement::Step() const
 {
     bool bRet=false;
 
-
     int iSql=sqlite3_step(mStatement);
     if( iSql == SQLITE_DONE ) {
-        // bRet = false;
     }
     else if( iSql == SQLITE_ROW ) {
-        bRet = false;
+        bRet = true;
     }
     else {
         KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
@@ -224,20 +224,39 @@ const char *SQLiteStatement::GetColumnName(int column) const
 	return sqlite3_column_name(mStatement, column);
 }
 
-wchar_t *SQLiteStatement::GetColumnName16(int column) const
+const wchar_t *SQLiteStatement::GetColumnName16(int column) const
 {
 	CheckStatement();
 	CheckColumnNumber(column, "GetColumnName16()");
 
-	return (wchar_t*)sqlite3_column_name16(mStatement, column);
+	return (const wchar_t*)sqlite3_column_name16(mStatement, column);
 }
 
-const unsigned char *SQLiteStatement::GetColumnCString(int column) const
+
+const wchar_t *SQLiteStatement::GetColumnCString16(int column) const
 {
+    const wchar_t *pReturn;
+
+    CheckStatement();
+    CheckColumnNumber(column, "GetColumnCString16()");
+
+    pReturn = (const wchar_t *)sqlite3_column_text16(mStatement, column);
+
+    return pReturn;
+
+}
+
+const unsigned char *SQLiteStatement::GetColumnCString(int column ) const
+{
+    const unsigned char *pReturn;
+
 	CheckStatement();
 	CheckColumnNumber(column, "GetColumnCString()");
 
-	return sqlite3_column_text(mStatement, column);
+    pReturn = (const unsigned char *) sqlite3_column_text(mStatement, column);
+
+    return pReturn;
+
 }
 
 std::string SQLiteStatement::GetColumnString(int column) const
@@ -302,12 +321,12 @@ int SQLiteStatement::GetColumnType(int column) const
 	return sqlite3_column_type(mStatement, column);
 }
 
-wchar_t *SQLiteStatement::GetColumnString16(int column) const
+const wchar_t *SQLiteStatement::GetColumnString16(int column) const
 {
 	CheckStatement();
 	CheckColumnNumber(column, "GetColumnString16()");
 
-	return (wchar_t*)sqlite3_column_text16(mStatement, column);
+	return (const wchar_t*) sqlite3_column_text16(mStatement, column);
 }
 
 const void *SQLiteStatement::GetColumnBlob(int column) const
@@ -348,12 +367,12 @@ const char *SQLiteStatement::GetColumnDatabaseName(int column) const
 	return sqlite3_column_database_name(mStatement, column);
 }
 
-wchar_t *SQLiteStatement::GetColumnDatabaseName16(int column) const
+const wchar_t *SQLiteStatement::GetColumnDatabaseName16(int column) const
 {
 	CheckStatement();
 	CheckColumnNumber(column, "GetColumnDatabaseName16()");
 
-	return (wchar_t*)sqlite3_column_database_name16(mStatement, column);
+	return (wchar_t *) sqlite3_column_database_name16(mStatement, column);
 }
 
 const char *SQLiteStatement::GetColumnTableName(int column) const
@@ -364,13 +383,13 @@ const char *SQLiteStatement::GetColumnTableName(int column) const
 	return sqlite3_column_table_name(mStatement, column);
 }
 
-wchar_t *SQLiteStatement::GetColumnTableName16(int column) const
-{
-	CheckStatement();
-	CheckColumnNumber(column, "GetColumnTableName16()");
-
-	return (wchar_t*)sqlite3_column_table_name16(mStatement, column);
-}
+// wchar_t *SQLiteStatement::GetColumnTableName16(int column) const
+// {
+// 	CheckStatement();
+// 	CheckColumnNumber(column, "GetColumnTableName16()");
+// 
+// 	return (wchar_t*)sqlite3_column_table_name16(mStatement, column);
+// }
 
 const char *SQLiteStatement::GetColumnOriginName(int column) const
 {
@@ -380,29 +399,29 @@ const char *SQLiteStatement::GetColumnOriginName(int column) const
 	return sqlite3_column_origin_name(mStatement, column);
 }
 
-wchar_t *SQLiteStatement::GetColumnOriginName16(int column) const
-{
-	CheckStatement();
-	CheckColumnNumber(column, "GetColumnOriginName16()");
+// wchar_t *SQLiteStatement::GetColumnOriginName16(int column) const
+// {
+// 	CheckStatement();
+// 	CheckColumnNumber(column, "GetColumnOriginName16()");
+// 
+// 	return (wchar_t*)sqlite3_column_origin_name16(mStatement, column);
+// }
 
-	return (wchar_t*)sqlite3_column_origin_name16(mStatement, column);
-}
+// const char *SQLiteStatement::GetColumnDeclaredDatatype(int column) const
+// {
+// 	CheckStatement();
+// 	CheckColumnNumber(column, "GetColumnDeclaredDatatype()");
+// 
+// 	return sqlite3_column_decltype(mStatement, column);
+// }
 
-const char *SQLiteStatement::GetColumnDeclaredDatatype(int column) const
-{
-	CheckStatement();
-	CheckColumnNumber(column, "GetColumnDeclaredDatatype()");
-
-	return sqlite3_column_decltype(mStatement, column);
-}
-
-wchar_t *SQLiteStatement::GetColumnDeclaredDatatype16(int column) const
-{
-	CheckStatement();
-	CheckColumnNumber(column, "GetColumnDeclaredDatatype16()");
-
-	return (wchar_t*)sqlite3_column_decltype16(mStatement, column);
-}
+// wchar_t *SQLiteStatement::GetColumnDeclaredDatatype16(int column) const
+// {
+// 	CheckStatement();
+// 	CheckColumnNumber(column, "GetColumnDeclaredDatatype16()");
+// 
+// 	return (wchar_t*)sqlite3_column_decltype16(mStatement, column);
+// }
 
 int SQLiteStatement::GetColumnBytes(const std::string &column) const
 {
@@ -422,7 +441,7 @@ const char *SQLiteStatement::GetColumnDatabaseName(const std::string &column) co
 	return sqlite3_column_database_name(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnDatabaseName16(const std::string &column) const
+const wchar_t *SQLiteStatement::GetColumnDatabaseName16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
 	return (wchar_t*)sqlite3_column_database_name16(mStatement, GetAssignedColumnNumber(column));
@@ -434,10 +453,10 @@ const char *SQLiteStatement::GetColumnTableName(const std::string &column) const
 	return sqlite3_column_table_name(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnTableName16(const std::string &column) const
+const wchar_t *SQLiteStatement::GetColumnTableName16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_table_name16(mStatement, GetAssignedColumnNumber(column));
+	return (const wchar_t*)sqlite3_column_table_name16(mStatement, GetAssignedColumnNumber(column));
 }
 
 const char *SQLiteStatement::GetColumnOriginName(const std::string &column) const
@@ -446,10 +465,10 @@ const char *SQLiteStatement::GetColumnOriginName(const std::string &column) cons
 	return sqlite3_column_origin_name(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnOriginName16(const std::string &column) const
+const wchar_t *SQLiteStatement::GetColumnOriginName16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_origin_name16(mStatement, GetAssignedColumnNumber(column));
+	return ( const wchar_t*)sqlite3_column_origin_name16(mStatement, GetAssignedColumnNumber(column));
 }
 
 const char *SQLiteStatement::GetColumnDeclaredDatatype(const std::string &column) const
@@ -458,10 +477,10 @@ const char *SQLiteStatement::GetColumnDeclaredDatatype(const std::string &column
 	return sqlite3_column_decltype(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnDeclaredDatatype16(const std::string &column) const
+const wchar_t *SQLiteStatement::GetColumnDeclaredDatatype16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_decltype16(mStatement, GetAssignedColumnNumber(column));
+	return ( const wchar_t*)sqlite3_column_decltype16(mStatement, GetAssignedColumnNumber(column));
 }
 
 const char *SQLiteStatement::GetColumnName(const std::string &column) const
@@ -470,11 +489,11 @@ const char *SQLiteStatement::GetColumnName(const std::string &column) const
 	return sqlite3_column_name(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnName16(const std::string &column) const
-{
-	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_name16(mStatement, GetAssignedColumnNumber(column));
-}
+// const wchar_t *SQLiteStatement::GetColumnName16(const std::string &column) const
+// {
+// 	AssignColumnNumberToColumnName();
+// 	return (wchar_t*)sqlite3_column_name16(mStatement, GetAssignedColumnNumber(column));
+// }
 
 const unsigned char *SQLiteStatement::GetColumnCString(const std::string &column) const
 {
@@ -482,18 +501,33 @@ const unsigned char *SQLiteStatement::GetColumnCString(const std::string &column
 	return sqlite3_column_text(mStatement, GetAssignedColumnNumber(column));
 }
 
+/**
+ * @brief     테이블의 특정 필드에서 문자열로 리턴한다.
+ * @param     const std::string & column
+ * @return    std::string
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-04 18:44:08
+ * @warning
+ */
 std::string SQLiteStatement::GetColumnString(const std::string &column) const
 {
+    std::stringstream ss;
+
 	AssignColumnNumberToColumnName();
 
 	const unsigned char *result = sqlite3_column_text(mStatement, GetAssignedColumnNumber(column));
 
 	// capture NULL results
-	if(result == NULL )
-		return "";
+    if (result == NULL) {
+        ss << "";
+    }
 
-	std::stringstream ss;
-	ss << result;
+    else {
+        ss << result;
+    }
+
 	return ss.str();
 }
 
@@ -527,10 +561,11 @@ int SQLiteStatement::GetColumnType(const std::string &column) const
 	return sqlite3_column_type(mStatement, GetAssignedColumnNumber(column));
 }
 
-wchar_t *SQLiteStatement::GetColumnString16(const std::string &column) const
+const wchar_t *SQLiteStatement::GetColumnString16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_text16(mStatement, GetAssignedColumnNumber(column));
+	//return (wchar_t*)sqlite3_column_text16(mStatement, GetAssignedColumnNumber(column));
+    return (const wchar_t*)sqlite3_column_text16(mStatement, GetAssignedColumnNumber(column));
 }
 
 const void *SQLiteStatement::GetColumnBlob(const std::string &column) const
@@ -557,7 +592,7 @@ void SQLiteStatement::BindBool(int column, bool value) const
 void SQLiteStatement::BindString(int column, const std::string &string) const
 {
 	// SQLITE_TRANSIENT: SQLite makes its own private copy of the data immediately, before the sqlite3_bind_*() routine returns
-	if(sqlite3_bind_text(mStatement, column, string.c_str(), string.length(), SQLITE_TRANSIENT) != SQLITE_OK)
+	if(sqlite3_bind_text(mStatement, column, string.c_str(), (int) string.length(), SQLITE_TRANSIENT) != SQLITE_OK)
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 }
 
@@ -571,7 +606,7 @@ void SQLiteStatement::BindString16(int column, const wchar_t *string) const
 void SQLiteStatement::BindString64(int column, const char *string, uint64 byteLength, ENCODING encoding) const
 {
 	// SQLITE_TRANSIENT: SQLite makes its own private copy of the data immediately, before the sqlite3_bind_*() routine returns
-    int iSql=sqlite3_bind_text64(mStatement, column, string, byteLength, SQLITE_TRANSIENT, encoding);
+    int iSql=sqlite3_bind_text64(mStatement, column, string, byteLength, SQLITE_TRANSIENT, (unsigned char) encoding);
 
     if( iSql == SQLITE_OK ) {
 
@@ -730,13 +765,22 @@ void SQLiteStatement::Reset() const
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
 }
 
-void SQLiteStatement::CommitTransaction() 
+/**
+ * @brief     트랜젝션을 커밋하여 반영한다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-04 18:39:51
+ * @warning
+ */
+void SQLiteStatement::CommitTheTransaction() 
 {
 	if(!mTransactionSQL.empty() || !mTransactionSQL16.empty())
 	{
 		try
 		{
-			int i = 0;
+			unsigned short us = 0;
 			// check wheter we have sql statements with different data types
 			if(!mTransactionSQL.empty() && !mTransactionSQL16.empty())
 			{
@@ -745,16 +789,16 @@ void SQLiteStatement::CommitTransaction()
 
 				unsigned short transactions = mTransactionSQL.size() + mTransactionSQL16.size();
 
-				while(i < transactions)
+				while(us < transactions)
 				{
-					transIter = mTransactionSQL.find(i);
+					transIter = mTransactionSQL.find(us);
 					if(transIter != mTransactionSQL.end())
 					{
 						SqlStatement(transIter->second.first);
 					}
 					else
 					{
-						trans16Iter = mTransactionSQL16.find(i);
+						trans16Iter = mTransactionSQL16.find(us);
 						if(trans16Iter != mTransactionSQL16.end())
 						{
 							SqlStatement(trans16Iter->second.first);
@@ -765,7 +809,7 @@ void SQLiteStatement::CommitTransaction()
 						}
 					}
 
-					++i;
+					++us;
 				}
 			}
 			else
@@ -790,7 +834,7 @@ void SQLiteStatement::CommitTransaction()
 		{
 			std::cerr << "Exception Occured!" << std::endl;
 			exception.Show();
-			RollbackTransaction();
+			RollbackTheTransaction();
 			std::cerr << "Rollback has been executed!" << std::endl;
 			CleanUpTransaction();
 		}
@@ -960,7 +1004,7 @@ const unsigned char *SQLiteStatement::GetSqlResultCString(const wchar_t *sql, co
 
 wchar_t *SQLiteStatement::SqlResultString16(wchar_t *defaultReturnValue)
 {
-	wchar_t *queryResult;
+	const wchar_t *queryResult;
 
 	if(!FetchRow())
 		queryResult = defaultReturnValue;
@@ -1062,7 +1106,9 @@ void SQLiteStatement::AssignColumnNumberToColumnName() const
 	if(!mIsColumnNumberAssignedToColumnName && sqlite3_column_count(mStatement) >= 0)
 	{
 		// delete old entries
-		mColumnNumberToColumnNameAssignment.erase(mColumnNumberToColumnNameAssignment.begin(), mColumnNumberToColumnNameAssignment.end());
+		auto iterBegin=mColumnNumberToColumnNameAssignment.begin();
+		auto iterEnd = mColumnNumberToColumnNameAssignment.end();
+		mColumnNumberToColumnNameAssignment.erase(iterBegin, iterEnd);
 		
 		for(int i = 0; i < sqlite3_column_count(mStatement); ++i)
 			mColumnNumberToColumnNameAssignment[sqlite3_column_name(mStatement, i)] = i;

@@ -26,7 +26,7 @@
  * @date      2022-06-08, 12:45
  * @warning
  */
-CKGroup::CKGroup( void *pParent, int coMaxPdw ) : CGroup( coMaxPdw )
+CKGroup::CKGroup( void *pParent, unsigned int uiCoMaxPdw ) : CGroup(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
@@ -116,7 +116,7 @@ BOOL CKGroup::MakeKnownGroup()
  * @date      2006-01-23 09:42:07
  * @warning
  */
-int CKGroup::GetColPdw()
+unsigned int CKGroup::GetColPdw()
 { 
 	return m_pKnownSigAnal->GetColPdw(); 
 }

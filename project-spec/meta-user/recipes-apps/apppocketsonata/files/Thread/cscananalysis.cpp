@@ -1,4 +1,4 @@
-// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
+﻿// CScanAnalysis.cpp: implementation of the CScanAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -18,9 +18,16 @@
 
 
 /**
- * @brief CScanAnalysis::CScanAnalysis
- * @param iKeyId
- * @param pClassName
+ * @brief     스캔 주기/형태 분석 초기화 생성자 클래스 입니다.
+ * @param     int iKeyId
+ * @param     char * pClassName
+ * @param     bool bArrayLanData
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-04 16:44:46
+ * @warning
  */
 CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -39,7 +46,6 @@ CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData )
 
 #endif
 
-    //m_pTheSysPara = new CSysPara();
     _SAFE_NEW( m_pTheSysPara, CSysPara() )
 }
 
@@ -69,7 +75,13 @@ void CScanAnalysis::Run(key_t msgQ)
 }
 
 /**
- * @brief CScanAnalysis::_routine
+ * @brief     스캔 분석을 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-04 17:24:29
+ * @warning
  */
 void CScanAnalysis::_routine()
 {
@@ -103,7 +115,7 @@ void CScanAnalysis::_routine()
 }
 
 /**
- * @brief     PDW 와 빔 정보를 갖고 스캔 분석을 시작한다.
+ * @brief     PDW 와 빔 정보를 기반으로 스캔 분석을 시작한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

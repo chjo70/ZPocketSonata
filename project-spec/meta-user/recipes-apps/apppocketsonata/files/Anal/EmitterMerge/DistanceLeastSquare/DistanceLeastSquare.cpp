@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @file      Quadratic.cpp
- * @brief     Quadratic 위치 산출 알고리즘
+ * @file      DistanceLeastSquare.cpp
+ * @brief     DistanceLeastSquare 위치 산출 알고리즘
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @date      2013-09-09 오후 4:07 
  * @warning   
@@ -20,10 +20,12 @@
 
 #include "../GeoCoordConv/GeoCoordConv.h"
 #include "../Coordinate/Coordinate.h"
+#include "../IsNumber.h"
+
 
 
 /**
- * @brief		CDistanceLeastSquare
+ * @brief		객체를 생성합니다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -37,7 +39,7 @@ CDistanceLeastSquare::CDistanceLeastSquare(void)
 
 
 /**
- * @brief		~CDistanceLeastSquare
+ * @brief		객체를 소멸합니다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -147,7 +149,7 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 		dDistX = fabs( pResult->dEasting - ppUTMY[0] );
 		dDistY = fabs( pResult->dNorthing - ppUTMX[0] );
 
-		if( dDistX < 0.0001 && dDistY < 0.0001 || pResult->dEasting == 0 || pResult->dNorthing == 0 ) {
+		if( dDistX < 0.0001 && dDistY < 0.0001 || is_zero<double>( pResult->dEasting ) || is_zero<double>( pResult->dNorthing ) ) {
 			pResult->dEasting = -1;
 			pResult->dNorthing = -1;
 			pResult->dLongitude = -1;
@@ -164,14 +166,13 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 
 	}
 
-
 	return pResult->bResult;
 
 }
 
 #define RADIUS_ERATH			(6378137)		// [m]
 /**
- * @brief		CalCEP
+ * @brief		CEP 연산을 수행한다.
  * @param		SELPE_RESULT * pResult
  * @param		SELABTDATA_EXT * pABTExtData
  * @return		bool
@@ -284,7 +285,7 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     산학 과제(위치 산출) 최종 보고서 24쪽 참조
+ * @brief     CEP를 산출한다. 산학 과제(위치 산출) 최종 보고서 24쪽 참조
  * @param     SELPositionEstimationResult * pResult
  * @param     SELUTMTIME * pEmitterXY
  * @param     SELUTMTIME * pSensorXY
@@ -313,18 +314,18 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 	pLob2 = pTrueLob;
 	H = CMatrix( (UINT) nEle, 2 );
  	for( i=1 ; i <= nEle ; ++i ) {
- 		H( i, 1 ) = sin( *pLob2 );
- 		H( i, 2 ) = -cos( *pLob2 );
+ 		H( (UINT) i, (UINT)1 ) = sin( *pLob2 );
+ 		H( (UINT) i, (UINT)2 ) = -cos( *pLob2 );
  
  		++ pLob2;
  	}
 
 	// Ht 벡터 생성
 	pLob2 = pTrueLob;
-	Ht = CMatrix( 2, nEle );
+	Ht = CMatrix((UINT)2, (UINT) nEle );
 	for( i=1 ; i <= nEle ; ++i ) {
-		Ht( 1, i ) = sin( *pLob2 );
-		Ht( 2, i ) = -cos( *pLob2 );
+		Ht((UINT)1, (UINT)i ) = sin( *pLob2 );
+		Ht((UINT)2, (UINT)i ) = -cos( *pLob2 );
 
 		++ pLob2;
 	}
@@ -345,7 +346,7 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 		diff_y = ( pEmitterXY->dLatitude - pSensorXY->dLongitude ) / 1.;
 
 		val = 1. / ( ( ( diff_x * diff_x ) + ( diff_y * diff_y ) ) * aoaVariance );
-		W( i, i ) = val;
+		W( (UINT) i, (UINT) i ) = val;
 
 		//TRACE2( "\nXi:%f, Yi:%f" , pSensorXY->x, pSensorXY->y );
 

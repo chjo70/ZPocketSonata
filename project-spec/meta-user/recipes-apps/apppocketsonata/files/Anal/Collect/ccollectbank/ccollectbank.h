@@ -10,16 +10,12 @@
 class CCollectBank
 {
 private:
-    //unsigned int m_uiID;
-
     int m_iTotalChannels;
     int m_iChannelNo;
 
     STR_WINDOWCELL m_strWindowCell;
 
     STR_PDWDATA m_strPDW;
-
-    //static Queue<unsigned int> m_theQueueWindowCellID;
 
 public:
     CCollectBank( int iTotalChannels, int iChannelNo );
@@ -38,25 +34,24 @@ public:
 
     void SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL );
 
-
     //void PushPDWData( STR_PDWDATA *pstrArrayPDW );
     void PushPDWData( _PDW *pstPDW, UNION_HEADER *pHeader );
     void UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell );
     void CloseTrackWindowCell();
 
-    ///
-    void SimCollectMode();
     bool IsFiltered( _PDW *pstPDW );
 
     void SetCollectUpdateTime();
 
+	// 모의 관련 함수
+	void SimCollectMode();
+
+	// 인라인 함수 모음
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_iChannelNo; }
     inline unsigned int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }
     inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
     inline STR_PDWDATA *GetPDWData() { return & m_strPDW; }
-
-    ///
     inline bool IsSave() { return m_strWindowCell.enCollectMode == enCollecting; }
 };
 

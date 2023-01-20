@@ -35,7 +35,7 @@ SQLiteBlob::SQLiteBlob():
 {
 }
 
-SQLiteBlob::SQLiteBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode):
+SQLiteBlob::SQLiteBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode):
 	mBlobHandle(NULL)
 {
 	OpenBlob(db, symbolicDatabaseName, tableName, columnName, rowId, accessMode);
@@ -47,7 +47,7 @@ SQLiteBlob::~SQLiteBlob()
 		CloseBlob();
 }
 
-void SQLiteBlob::OpenBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode)
+void SQLiteBlob::OpenBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode)
 {
 	if(mBlobHandle != NULL )
 		CloseBlob();

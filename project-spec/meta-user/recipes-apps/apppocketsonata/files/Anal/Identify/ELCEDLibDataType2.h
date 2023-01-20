@@ -21,6 +21,13 @@ using namespace std;
 #endif
 
 
+// #include "../SigAnal/_SigAnal.h"
+// 
+// #include "../Identify/define.h"
+// #include "../Identify/structs.h"
+
+//#include "../INC/AetIPL.h"
+
 
 enum EnumNullValueType
 {
@@ -136,11 +143,14 @@ enum EnumValueCheck
 	VALID_ERROR		// 유효값이 아님.
 };
 
-enum ENUM_Sequence {
+enum ENUM_SequenceSpot {
     enRFSequenceValue=0,
     enPRISequenceValue,
     enPWSequenceValue,
-    enScanSequenceValue
+    enScanSequenceValue,
+
+    enRFSpotValue,
+    enPRISpotValue,
 };
 
 enum EnumParamSetAssocTypeCode
@@ -175,7 +185,7 @@ static char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] =
 	"SEA", 
 	"LAND_SEA_AND_AIR", 
 	"COASTAL", 
-    "AIR"
+   "AIR"
 };
 
 enum EnumFunctionCodes
@@ -1053,34 +1063,34 @@ namespace CountryCode
 	};
 }
 
-static char _CountryCodes[CountryCode::enumZI_Zimbabwe + 1][2 + 1] =
-{
-	"AA", "AC", "AE", "AF", "AG", "AJ", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", "AV", "AX", "AY", \
-	"BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BX", "BY", \
-	"CA", "CB", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CM", "CN", "CO", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CY", \
-	"DA", "DJ", "DO", "DR", "DX", \
-	"EC", "EG", "EI", "EK", "EN", "ER", "ES", "ET", "EU", "EZ", \
-	"FG", "FI", "FJ", "FK", "FM", "FO", "FP", "FQ", "FR", "FS", \
-	"GA", "GB", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GO", "GP", "GQ", "GR", "GT", "GV", "GY", "GZ", \
-	"HA", "HK", "HM", "HO", "HR", "HU", \
-	"IC", "ID", "IM", "IN", "IO", "IP", "IR", "IS", "IT", "IV", "IZ", \
-	"JA", "JE", "JM", "JN", "JO", "JQ", "JU", \
-	"KE", "KG", "KN", "KQ", "KR", "KS", "KT", "KU", "KZ", "LA", \
-	"LE", "LG", "LH", "LI", "LO", "LS", "LT", "LU", "LY", \
-	"MA", "MB", "MC", "MD", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MN", "MO", "MP", "MQ", "MR", "MT", "MU", "MV", "MX", "MY", "MZ", \
-	"NC", "NE", "NF", "NG", "NH", "NI", "NL", "NO", "NP", "NR", "NS", "NT", "NU", "NZ", \
-	"OD", \
-	"PA", "PC", "PE", "PF", "PG", "PK", "PL", "PM", "PO", "PP", "PS", "PU", \
-	"QA", \
-	"RB", "RE", "RM", "RO", "RP", "RQ", "RS", "RW", \
-	"SA", "SB", "SC", "SE", "SF", "SG", "SH", "SI", "SL", "SM", "SN", "SO", "SP", "ST", "SU", "SV", "SW", "SX", "SY", "SZ", \
-	"TD", "TE", "TH", "TI", "TK", "TL", "TN", "TO", "TP", "TS", "TT", "TU", "TV", "TW", "TX", "TZ", \
-	"UG", "UK", "UP", "US", "UV", "UY", "UZ", \
-	"VC", "VE", "VI", "VM", "VQ", "VT", \
-	"WA", "WE", "WF", "WI", "WQ", "WS", "WZ", \
-	"YM", \
-	"ZA", "ZI"
-};
+//static char _CountryCodes[CountryCode::enumZI_Zimbabwe + 1][2 + 1] =
+//{
+//	"AA", "AC", "AE", "AF", "AG", "AJ", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", "AV", "AX", "AY", \
+//	"BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BX", "BY", \
+//	"CA", "CB", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CM", "CN", "CO", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CY", \
+//	"DA", "DJ", "DO", "DR", "DX", \
+//	"EC", "EG", "EI", "EK", "EN", "ER", "ES", "ET", "EU", "EZ", \
+//	"FG", "FI", "FJ", "FK", "FM", "FO", "FP", "FQ", "FR", "FS", \
+//	"GA", "GB", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GO", "GP", "GQ", "GR", "GT", "GV", "GY", "GZ", \
+//	"HA", "HK", "HM", "HO", "HR", "HU", \
+//	"IC", "ID", "IM", "IN", "IO", "IP", "IR", "IS", "IT", "IV", "IZ", \
+//	"JA", "JE", "JM", "JN", "JO", "JQ", "JU", \
+//	"KE", "KG", "KN", "KQ", "KR", "KS", "KT", "KU", "KZ", "LA", \
+//	"LE", "LG", "LH", "LI", "LO", "LS", "LT", "LU", "LY", \
+//	"MA", "MB", "MC", "MD", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MN", "MO", "MP", "MQ", "MR", "MT", "MU", "MV", "MX", "MY", "MZ", \
+//	"NC", "NE", "NF", "NG", "NH", "NI", "NL", "NO", "NP", "NR", "NS", "NT", "NU", "NZ", \
+//	"OD", \
+//	"PA", "PC", "PE", "PF", "PG", "PK", "PL", "PM", "PO", "PP", "PS", "PU", \
+//	"QA", \
+//	"RB", "RE", "RM", "RO", "RP", "RQ", "RS", "RW", \
+//	"SA", "SB", "SC", "SE", "SF", "SG", "SH", "SI", "SL", "SM", "SN", "SO", "SP", "ST", "SU", "SV", "SW", "SX", "SY", "SZ", \
+//	"TD", "TE", "TH", "TI", "TK", "TL", "TN", "TO", "TP", "TS", "TT", "TU", "TV", "TW", "TX", "TZ", \
+//	"UG", "UK", "UP", "US", "UV", "UY", "UZ", \
+//	"VC", "VE", "VI", "VM", "VQ", "VT", \
+//	"WA", "WE", "WF", "WI", "WQ", "WS", "WZ", \
+//	"YM", \
+//	"ZA", "ZI"
+//};
 
 namespace FriendOrFOE
 {
@@ -1644,19 +1654,19 @@ struct SRadarModeComments
 	}		
 };
 
-struct SRadarPRI_SpotValues
-{
-	float fPRI_Min;		//주로 나오는 PRI 값(USEC)
-	float fPRI_Max;	//주로 나오는 PRI 값(USEC)
-	int nSeclab;
-
-	SRadarPRI_SpotValues()
-	{
-		fPRI_Min=0.0f;
-		fPRI_Max=0.0f;
-		nSeclab=0;
-	}
-};
+// struct SRadarPRI_SpotValues
+// {
+// 	float fPRI_Min;		//주로 나오는 PRI 값(USEC)
+// 	float fPRI_Max;	//주로 나오는 PRI 값(USEC)
+// 	int nSeclab;
+// 
+// 	SRadarPRI_SpotValues()
+// 	{
+// 		fPRI_Min=0.0f;
+// 		fPRI_Max=0.0f;
+// 		nSeclab=0;
+// 	}
+// };
 
 struct SRadarPRI_GroupSpacing
 {
@@ -2015,9 +2025,28 @@ struct SRadarMode_Sequence_Values
 	}
 };
 
+#define MAX_FREQ_PRI_SPOT               (16)
+
+struct SRadarMode_Spot_Values
+{
+    int iRadarModeIndex;	//레이더 모드 인덱스
+
+    float f_Min;	//PRI 최소(USEC)
+    float f_Max;	//PRI 최대(USEC)
+
+    SRadarMode_Spot_Values() :
+        iRadarModeIndex(0),
+        f_Min(0.0),
+        f_Max(0.0)
+    {
+    }
+};
+
 struct SRadarInfo
 {
     int iRadarIndex;								// 레이더 인덱스
+
+    char szRadarName[_MAX_RADARNAME_SIZE];
 
     char szELNOT[_MAX_ELNOT_STRING_SIZE_];			//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
     int iRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
@@ -2029,7 +2058,7 @@ struct SRadarInfo
 
     int nUnknownEmitterTime_ForGUI;					//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
 
-    int iTimeInactivated;
+    int iTimeInactivatedOfRadar;					// 비활성화 시간
 
     int iThreatIndex;								// ELNOT과 동일한 위협 번호
     int iDeviceIndex;								// ELNOT과 동일한 장비 번호
@@ -2058,15 +2087,11 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 {
     int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    char szRadarName[_MAX_RADARMODE_NAME_SIZE];
     __time32_t tiCreated;
     __time32_t tiLastUpdated;
 
     __time32_t tiFirstSeen;
     __time32_t tiLastSeen;
-
-#endif
 
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)
@@ -2078,6 +2103,9 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
     char szModeCode[_MAX_MODECODE_STRING_SIZE_];
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+
+
+	int iTimeInactivated;							// 비활성화 시간
 
     PlatformCode::EnumPlatformCode ePlatform;				//플랫폼 형태: 탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
     SignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태
@@ -2127,29 +2155,28 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     float fScanSecondaryTypicalMax;						// 부 스캔 주기값의 TYPICAL (SEC)
 
     //* 펄스반복주기 세부정보
-    vector <SRadarPRI_SpotValues> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
-    map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
-    vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
+    vector <SRadarMode_Spot_Values> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
+    //map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
+    vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;		//레이더 모드 안에서 PRI값들(엘리먼트 목록)
     //vector <SRadarPRI_GroupSpacing> vecRadarPRI_GroupSpacing;				//그룹 펄스 안의 펄스간 간격에 올 수 있는 값들
 
     //* 주파수 세부정보
     //map <int /*nRF_Seq_ID*/, SRadarRF_Sequence> mapRadarRF_Sequence;		//레이더 모드 안에서 RF 시퀀스의 일련번호들 (구조체 내의 nRF_Index값으로 아래의 엘리먼트 목록에서 최소/최대 주파수를 가져온다)
-    vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
+    //vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
     vector <SRadarMode_Sequence_Values> vecRadarMode_RFSequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
-    vector <SRadarRF_SpotValues> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
+    vector <SRadarMode_Spot_Values> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
 
     SRadarMode()
     {
         szRadarModeName[0] = 0;
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
 		szRadarName[0] = 0;
 		tiCreated = 0;
 		tiLastUpdated = 0;
 
 		tiFirstSeen = 0;
 		tiLastSeen = 0;
-#endif
+
         //nRadarModenPriority = INVALID_INT_VALUE;
         eSignalType=SignalType::enumPulsed;
         eRF_Type=RadarModeFreqType::enumFIXED;
@@ -2216,9 +2243,11 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
         //stRadarModeLifeCycle = SRadarModeLifeCycle();
 
-        vecRadarRF_Values = vector <SRadarRF_Values>();
-        //vecRadarRF_SpotValues = vector <SRadarRF_SpotValues>();
-        //vecRadarPRI_SpotValues = vector <SRadarPRI_SpotValues>();
+        //vecRadarRF_Values = vector <SRadarRF_Values>();
+        vecRadarRF_SpotValues = vector <SRadarMode_Spot_Values>();
+		vecRadarMode_RFSequenceValues = vector <SRadarMode_Sequence_Values>();
+
+		vecRadarPRI_SpotValues = vector <SRadarMode_Spot_Values>();
         vecRadarMode_PRISequenceValues = vector <SRadarMode_Sequence_Values>();
         //vecRadarPRI_GroupSpacing = vector <SRadarPRI_GroupSpacing>();
         //vecRadarPD_Values = vector <SRadarPD_Values>();
@@ -2226,7 +2255,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
         //vecRadarPA_Diff_InGroup = vector<SRadarPA_Diff_InGroup>();
         //vecRadarModeComments = vector <SRadarModeComments>();
 
-        vecRadarMode_RFSequenceValues = vector <SRadarMode_Sequence_Values>();
+        
         //mapRadarPRI_Sequence = map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence>();
         //mapRadarPD_Sequence = map <int /*nPD_Seq_ID*/, SRadarPD_Sequence>();
         //mapRadarMOP_CW = map<int /*nMOP_CW_Index*/, SRadarMOP_CW>();
@@ -2234,21 +2263,24 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     }
 
     void Init() {
-                vecRadarMode_RFSequenceValues.clear();
-        //vecRadarModeComments.clear();
-        //vecRadarPRI_SpotValues.clear();
+		vecRadarMode_RFSequenceValues.clear();
+		vecRadarRF_SpotValues.clear();
+
+
+		vecRadarPRI_SpotValues.clear();
+		vecRadarMode_PRISequenceValues.clear();
+
+
+        //vecRadarModeComments.clear();        
         //mapRadarPRI_Sequence.clear();
-        vecRadarMode_PRISequenceValues.clear();
         //vecRadarPRI_GroupSpacing.clear();
         //mapRadarPD_Sequence.clear();
         //vecRadarPD_Values.clear();
         //vecRadarPD_SpotValues.clear();
         //mapRadarMOP_CW.clear();
-
         //mapRadarRF_Sequence.clear();
-        vecRadarRF_Values.clear();
+        //vecRadarRF_Values.clear();
         //vecRadarRF_SpotValues.clear();
-
         //vecRadarPA_Diff_InGroup.clear();
     }
 };

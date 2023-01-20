@@ -75,7 +75,7 @@ using namespace std;
 #include "./Utils/cmultiserver.h"
 #include "./Utils/csingleserver.h"
 #include "./Utils/csingleclient.h"
-#include "./Thread/creclan.h"
+#include "./Thread/coperationconsole.h"
 #include "./Thread/cprompt.h"
 #include "./Thread/curbit.h"
 #include "./Thread/cpulsetrk.h"
@@ -149,24 +149,26 @@ void InitDatabase()
 			strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
 
 			sprintf( szSrcFilename, "../../files/SQLite3.DB/%s" , BLK_EMITTER_SQLITE_FILENAME );
-             iCopy = CCommonUtils::CopyFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
-			 if( iCopy <= 0 ) {
-				 throw iCopy;
-			 }
+            iCopy = CCommonUtils::CopyFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
+			if( iCopy <= 0 ) {
+				throw iCopy;
+			}
 
-			 // 2. 위협 라이브러리 관리 테이블
-			 strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
-			 strcat(szSQLiteFileName, "/");
-			 strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
+			// 2. 위협 라이브러리 관리 테이블
+			strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
+			strcat(szSQLiteFileName, "/");
+			strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
 
-			 sprintf(szSrcFilename, "../../files/SQLite3.DB/%s", BLK_CEDEOB_SQLITE_FILENAME);
-			 iCopy = CCommonUtils::CopyFile(szSrcFilename, szSQLiteFileName, 1, 0077);
-			 if (iCopy <= 0) {
-				 throw iCopy;
-			 }
+			sprintf(szSrcFilename, "../../files/SQLite3.DB/%s", BLK_CEDEOB_SQLITE_FILENAME);
+			iCopy = CCommonUtils::CopyFile(szSrcFilename, szSQLiteFileName, 1, 0077);
+			if (iCopy <= 0) {
+			    throw iCopy;
+			}
          }
 
 #elif __VXWORKS__
+
+#ifdef _POCKETSONATA_
         char szSrcFilename[100], szDstFilename[100];
 
         LOGMSG( enNormal, "위협 관리 파일을 램 드라이브에 설치 합니다." );
@@ -183,6 +185,7 @@ void InitDatabase()
             LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
         }
 
+        LOGMSG( enLineFeed, "" );
         LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
 
@@ -197,6 +200,26 @@ void InitDatabase()
         else {
             LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
         }
+
+#else
+        LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
+        if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
+
+            sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+            sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
+
+            if( iCopy <= 0 ) {
+                throw iCopy;
+            }
+        }
+        else {
+            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+        }
+
+
+#endif
+
 
 #else
         if( 0 == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
@@ -250,6 +273,8 @@ void Start( int iArgc, char *iArgv[] )
     signal( SIGHUP, signalHandler);
     signal( SIGSTOP, signalHandler);
 #endif
+
+    setlocale( LC_ALL, "C" );
 
     InitDatabase();
 
@@ -534,7 +559,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
  */
 void UpdateCPUMode()
 {
-#if defined(_VXWORKS_) || defined(__linux__)
+#if defined(__VXWORKS__) || defined(__linux__)
     int i = 1;
 
     g_enEndian = enUNKNOWN_ENDIAN;
@@ -720,6 +745,14 @@ void ShowTaskMessae( CThread *pThread, int iLevel )
     }
 }
 
+/**
+ * @brief		메모리 체크를 수행합니다.
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/12/18 15:30:19
+ * @warning		
+ */
 void memCheck()
 {
     MEM_PART_STATS sMemStats;
@@ -763,7 +796,7 @@ void ss()
 
 
 /**
- * @brief		qq
+ * @brief		전체 큐 메시지의 상태를 출력합니다.
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1

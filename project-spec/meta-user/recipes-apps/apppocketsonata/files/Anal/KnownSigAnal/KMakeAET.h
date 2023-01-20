@@ -57,10 +57,33 @@ public:
         return &m_KwnLOB[iIndex].stKnownInfo;
     }
 
-    //##ModelId=452B0C53000D
-    inline void SetCoNewAet( int iCount ) { m_iCoNewAet=iCount; }
-    //##ModelId=452B0C53000F
-    inline void ClearCoAet() { m_iCoLOB=0; }
+    
+    /**
+     * @brief     SetCoNewAet
+     * @param     int iCount
+     * @return    void
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:08:00
+     * @warning
+     */
+    inline void SetCoNewAet( int iCount ) { 
+		m_iCoNewAet=iCount; 
+	}
+    
+    /**
+     * @brief     ClearCoAet
+     * @return    void
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:07:58
+     * @warning
+     */
+    inline void ClearCoAet() { 
+		m_iCoLOB=0; 
+	}
     
     /**
      * @brief     GetCoLOB
@@ -142,7 +165,7 @@ public:
 		unsigned int uiRet=0;
 
 		if (uiIndex <= MAX_AET) {
-			uiRet = m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
+			uiRet = (UINT) m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
 		}
 		return uiRet;
     }
@@ -185,43 +208,27 @@ public:
 #endif
 
     STR_PDWPARAM* GetPdwParam();
-    //##ModelId=452B0C530013
     void Init();
-    //##ModelId=452B0C530014
     void MakeAET();
+    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, PULSE_MARK enMarkType );
 
-    void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, USHORT usMarkType );
-
-    //##ModelId=452B0C53001D
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
-    //##ModelId=452B0C53001F
     int GetIndexNewAet();
-    //##ModelId=452B0C530030
     BOOL CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri );
-    //##ModelId=452B0C530033
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
-    //##ModelId=452B0C530034
     int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
-    //##ModelId=452B0C53003B
-    int GetColPdw();
-    //##ModelId=452B0C53003C
+    unsigned int GetColPdw();
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
-    //##ModelId=452B0C530044
     int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
-    //##ModelId=452B0C530050
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
-    //##ModelId=452B0C530058
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     unsigned int GetCoSeg();
-    //##ModelId=452B0C530059
-    int GetCoEmitter();
-    //##ModelId=452B0C53005A
+    unsigned int GetCoEmitter();
+    
     STR_EMITTER *GetEmitter();
-    //##ModelId=452B0C53005B
+    
     SRxLOBData *GetNewLOB();
-    //##ModelId=452B0C53005C
     SRxLOBData *GetUpdLOB();
-    //##ModelId=452B0C530064
     int GetCoNewAet();
 
 	void GetCollectTime( struct timespec *pTimeSpec );
@@ -426,22 +433,16 @@ public:
     void DISP_FineLOB( SRxLOBData *pLOB );
     unsigned int IsStorePDW();
 
-    //##ModelId=452B0C530078
     BOOL IsUpdateAet();
-    //##ModelId=452B0C530079
     void MakeUpAET();
-
     int SelectKnownSuccessLOB();
     void CalcAllKnownSucessRatio();
     float CalcFreqSuccessRatio(SRxLOBData *pLOBData);
     float CalcPRISuccessRatio(SRxLOBData *pLOBData);
-    //##ModelId=452B0C530080
     BOOL KnownMakeAET();
 
 
-    //##ModelId=452B0C530081
     CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
-    //##ModelId=452B0C530084
     virtual ~CKMakeAET();
 
     int GetIdxUpdAet() const { return m_IdxUpdAet; }

@@ -90,7 +90,7 @@ private:
 	CDistanceLeastSquare m_theDistanceLeastSquare;
 	CQuadratic m_theQuadratric;
 
-	UINT m_nLob;																				///< 위치 산출할 LOB 개수
+	UINT m_uiLob;																				///< 위치 산출할 LOB 개수
 
 	// DLL 에서 double 형이 있으면 객체 포인터가 꼬인다. ??
 	//SELPE_RESULT m_estEmitterXY;													///< 위치 산출 결과
@@ -122,7 +122,7 @@ public:
 	void RunPositionEstimation( STR_POSITION_ESTIMATION *pPEInfo, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB );
     void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, std::vector<STR_LOBS> *pVecLOB );
 
-	void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, std::vector<STR_LOBS> *pVecLOB );
+	//void RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, std::vector<STR_LOBS> *pVecLOB );
 
 	double EstimatedAltitude( SEnuPos *pstEnuPos );
 	//////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ private:
 
 	bool VerifyOfPositionEstimation( SELPE_RESULT *pResult, SELSensorPosition *pSensor );
 	void VerifyOfPositionEstimation( SELPositionEstimationResult *pResult );
-	void VerifyOfLOB( SRxABTData *pABTData );
+	//void VerifyOfLOB( SRxABTData *pABTData );
 
 	void FilteredByCensorPosition();
 

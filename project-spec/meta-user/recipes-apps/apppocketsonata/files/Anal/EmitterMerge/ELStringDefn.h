@@ -13,14 +13,14 @@ enum ENUM_SRCH_FILTER_EEP_LIMIT
   E_EEP_LESS_THAN_50_KM,
 };
 
-static const char* strSrchFilterEEPLimit[LENGTH_OF_LOB_STRING] = 
-{
-  "1 km",
-  "5 km",
-  "10 km",
-  "20 km",
-  "50 km"
-};
+//static const char* strSrchFilterEEPLimit[LENGTH_OF_LOB_STRING] = 
+//{
+//  "1 km",
+//  "5 km",
+//  "10 km",
+//  "20 km",
+//  "50 km"
+//};
 
 // PDW 관련 //
 enum ENUM_PDW_AXIS_INFO
@@ -40,23 +40,23 @@ enum ENUM_PDW_AXIS_INFO
 #define NUM_OF_PDW_AXIS_INFO 11
 // static const char* strPDWAxisInfo[LENGTH_OF_LOB_STRING] = 
 // {
-// 	"미선택", \
-// 	"주파수", \
-// 	"TOA", \
-// 	"펄스폭", \
-// 	"신호세기", \
-// 	"주파수 차", \
-// 	"방탐", \
-// 	"PMOP", \
-// 	"방탐유효", \
-// 	"대역", \
+// 	"미선택", 
+// 	"주파수", 
+// 	"TOA", 
+// 	"펄스폭", 
+// 	"신호세기", 
+// 	"주파수 차",
+// 	"방탐", 
+// 	"PMOP", 
+// 	"방탐유효", 
+// 	"대역", 
 // 	"상태"
 // };
 
 
 //////////////////////////////////////////////////////////////////////////
 // AET - Frq Type
-#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_)
+#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_) || defined(_701_)
 enum ENUM_AET_FRQ_TYPE
 {
     E_AET_FRQ_FIXED = 0,
@@ -269,11 +269,11 @@ enum ENUM_AET_SIGNAL_TYPE
 	E_AET_SIGNAL_CW,
 };
 #define NUM_OF_AET_SIGNAL_TYPE 2
-static const char* strAetSignalType[LENGTH_OF_LOB_STRING] = 
-{
-	"Pulse",
-	"CW",
-};
+//static const char* strAetSignalType[LENGTH_OF_LOB_STRING] = 
+//{
+//	"Pulse",
+//	"CW",
+//};
 
 //// PDW 관련  - Signal Type// 2014.03.18. aet 신호형태 정의를 사용해 오고 있었으나, 실제 ICD 내용과 다르기 때문에 재정의함.
 //enum ENUM_PDW_SIGNAL_TYPE
@@ -282,11 +282,11 @@ static const char* strAetSignalType[LENGTH_OF_LOB_STRING] =
 //    E_PDW_SIGNAL_PULSE,
 //};
 #define NUM_OF_PDW_SIGNAL_TYPE 2
-static const char* strPdwSignalType[LENGTH_OF_LOB_STRING] = 
-{
-	"CW",
-	"Pulse",
-};
+//static const char* strPdwSignalType[LENGTH_OF_LOB_STRING] = 
+//{
+//	"CW",
+//	"Pulse",
+//};
 
 
 //// AET 관련  - 저장여부//
@@ -441,26 +441,26 @@ enum ENUM_AET_POLIZATION_TYPE
 };
 
 #define NUM_OF_ENUM_EL_PDW_POL 6
-static const char* strPdwPOL [LENGTH_OF_LOB_STRING] =
-{
-	"V",
-	"H",
-	"RC",
-	"LC",
-	"RS",				// RS, S+
-	"LS",				// LS, S-
-	"-"
-};
+//static const char* strPdwPOL [LENGTH_OF_LOB_STRING] =
+//{
+//	"V",
+//	"H",
+//	"RC",
+//	"LC",
+//	"RS",				// RS, S+
+//	"LS",				// LS, S-
+//	"-"
+//};
 
 #define NUM_OF_ENUM_EL_CHANNEL_CHANGE 4
-static const char* strChnChg [LENGTH_OF_LOB_STRING] =
-{
-	"없음",
-	"POP",
-	"하향",
-	"상향",
-	"모름"
-};
+//static const char* strChnChg [LENGTH_OF_LOB_STRING] =
+//{
+//	"없음",
+//	"POP",
+//	"하향",
+//	"상향",
+//	"모름"
+//};
 
 // RAW 데이터 종류
 #define NUM_OF_RAW_DATA_TYPE 3
@@ -470,12 +470,12 @@ enum ENUM_RAW_DATA_TYPE
 	E_RAW_DATA_IQ,		// IQ
 	E_RAW_DATA_IF			// IF	
 };
-static const char* strRawDataType [LENGTH_OF_LOB_STRING] = 
-{
-	"PDW",
-	"IQ",
-	"IF"
-};
+//static const char* strRawDataType [LENGTH_OF_LOB_STRING] = 
+//{
+//	"PDW",
+//	"IQ",
+//	"IF"
+//};
 
 // 식별 일치율 종류
 #define NUM_OF_CONSISTENCY 3
@@ -500,25 +500,25 @@ enum ENUM_VALIDITY_TYPE
 	E_VALID,				// 유효
 	E_NOT_IGNORE		// 무시
 };
-static const char* strValidityType [LENGTH_OF_LOB_STRING] = 
-{
-	"무효",
-	"유효",
-	"-"
-};
-static const char* strValidityType2[LENGTH_OF_LOB_STRING] = 
-{
-	"유효",
-	"무효",
-	"-"
-};
+//static const char* strValidityType [LENGTH_OF_LOB_STRING] = 
+//{
+//	"무효",
+//	"유효",
+//	"-"
+//};
+//static const char* strValidityType2[LENGTH_OF_LOB_STRING] = 
+//{
+//	"유효",
+//	"무효",
+//	"-"
+//};
 
 #define NUM_OF_ENUM_EL_COMMON_FLAG 2
-static const char* strCommonFlag [LENGTH_OF_LOB_STRING] =
-{
-	"X",
-	"O"
-};
+//static const char* strCommonFlag [LENGTH_OF_LOB_STRING] =
+//{
+//	"X",
+//	"O"
+//};
 
 enum ENUM_POS_SYNC_TYPE
 {

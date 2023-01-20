@@ -88,13 +88,13 @@ void _ShowProgramTitle( void )
     memset( g_szVersion, 0, sizeof(g_szVersion) );
 
 #ifdef _POCKETSONATA_
-    LOGMSG( enNormal, "--------------------------------------------------------------------------" );
-    LOGMSG( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
-    LOGMSG( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK    EE         TT" );
-    LOGMSG( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK      EEEEEE     TT" );
-    LOGMSG( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK    EE         TT" );
+    LOGMSG ( enNormal, "--------------------------------------------------------------------------" );
+    LOGMSG ( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
+    LOGMSG ( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK    EE         TT" );
+    LOGMSG ( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK      EEEEEE     TT" );
+    LOGMSG ( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK    EE         TT" );
     LOGMSG1( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT  Ver %s" , PROGRAM_VERSION );
-    LOGMSG( enNormal, "---------------------------------------------------------------------------" );
+    LOGMSG ( enNormal, "---------------------------------------------------------------------------" );
 
 #elif defined(_ELINT_)
 
@@ -130,7 +130,7 @@ void _ShowProgramTitle( void )
     //LOG_LINEFEED;
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT_) || defined(_XBAND_)
+#elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
 #else
 	if( gnoPrc == prc_CIP ) {
 #ifndef _TESTBIT_

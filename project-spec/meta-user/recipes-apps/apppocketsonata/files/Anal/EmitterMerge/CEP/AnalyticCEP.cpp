@@ -24,7 +24,7 @@
 
 
 /**
- * @brief		CAnalyticCEP
+ * @brief		객체를 생성합니다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -37,7 +37,7 @@ CAnalyticCEP::CAnalyticCEP(void)
 }
 
 /**
- * @brief		~CAnalyticCEP
+ * @brief		객체를 소멸합니다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -51,7 +51,7 @@ CAnalyticCEP::~CAnalyticCEP(void)
 
 
 /**
- * @brief		CalAnalyticNonlinear
+ * @brief		CEP 계산을 수행한다.
  * @param		SELPE_RESULT * pResult
  * @return		bool
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -80,15 +80,15 @@ bool CAnalyticCEP::CalAnalyticNonlinear( SELPE_RESULT *pResult )
 
     try
     {
-        CMatrix theX( 2, m_nLob ), theInvW( m_nLob, m_nLob );
+        CMatrix theX( (UINT) 2, (UINT) m_nLob ), theInvW( (UINT) m_nLob, (UINT) m_nLob );
 
         for( i=1 ; i <= m_nLob ; ++i ) {
             dM = pResult->dEasting - *pUTMX;
             dN = pResult->dNorthing - *pUTMY;
 
             dDiv = ( dM * dM ) + ( dN * dN );
-            theX( 1, i ) = dN / dDiv;
-            theX( 2, i ) = dM / dDiv;
+            theX( (UINT) 1, (UINT) i ) = dN / dDiv;
+            theX((UINT) 2, (UINT) i ) = dM / dDiv;
 
             ++ pUTMX;
             ++ pUTMY;

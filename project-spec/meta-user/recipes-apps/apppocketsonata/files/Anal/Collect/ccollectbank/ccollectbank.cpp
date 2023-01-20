@@ -28,7 +28,15 @@ using namespace std;
 //Queue<unsigned int> CCollectBank::m_theQueueWindowCellID;
 
 /**
- * @brief CCollectBank::CCollectBank
+ * @brief     객체 초기화를 수행합니다.
+ * @param     int iTotalChannels
+ * @param     int iChannelNo
+ * @return    
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:46:48
+ * @warning
  */
 CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
     :m_iTotalChannels(iChannelNo),
@@ -37,13 +45,22 @@ CCollectBank::CCollectBank( int iTotalChannels, int iChannelNo )
 
     Init();
 
-	m_strPDW.pstPDW = NULL;
-	_SAFE_MALLOC( m_strPDW.pstPDW, _PDW, sizeof(_PDW) * MAX_PDW )
+	// m_strPDW.pstPDW = NULL;
+	m_strPDW.pstPDW = (_PDW *) malloc(sizeof(_PDW) * MAX_PDW);
+	if (m_strPDW.pstPDW == NULL) {
+		Log(enError, "메모리 할당 에러 !");
+	}
 
 }
 
 /**
- * @brief CCollectBank::~CCollectBank
+ * @brief     ~CCollectBank
+ * @return    
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:03:25
+ * @warning
  */
 CCollectBank::~CCollectBank()
 {
@@ -51,7 +68,13 @@ CCollectBank::~CCollectBank()
 }
 
 /**
- * @brief 객체 초기화를 수행한다.
+ * @brief     객체 초기화를 수행한다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:03:34
+ * @warning
  */
 void CCollectBank::Init()
 {
@@ -98,19 +121,31 @@ void CCollectBank::InitWindowCell()
 }
 
 /**
- * @brief CCollectBank::SetWindowCell
- * @param pSTR_WINDOWCELL
+ * @brief     윈도우 셀 설정 겂을 설정합니다.
+ * @param     STR_WINDOWCELL * pSTR_WINDOWCELL
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:46:27
+ * @warning
  */
 void CCollectBank::SetWindowCell( STR_WINDOWCELL *pSTR_WINDOWCELL )
 {
     LOGENTRY;
 
     memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(STR_WINDOWCELL) );
-    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( (UINT) m_iChannelNo, & m_strWindowCell );
 }
 
 /**
- * @brief 수집 뱅크를 닫는다.
+ * @brief     수집 뱅크를 닫는다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:47:35
+ * @warning
  */
 void CCollectBank::CloseCollectBank()
 {
@@ -123,7 +158,7 @@ void CCollectBank::CloseCollectBank()
 
     m_strPDW.SetTotalPDW( 0 );
 
-    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( (UINT) m_iChannelNo, & m_strWindowCell );
 
 }
 
@@ -164,8 +199,13 @@ void CCollectBank::UpdateWindowCell( STR_WINDOWCELL *pstrWindowCell )
 }
 
 /**
- * @brief CCollectBank::CloseTrackWindowCell
- * @param pstrWindowCell
+ * @brief     추적 윈도우셀을 닫는다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:47:21
+ * @warning
  */
 void CCollectBank::CloseTrackWindowCell()
 {
@@ -173,11 +213,17 @@ void CCollectBank::CloseTrackWindowCell()
 
     m_strWindowCell.enCollectMode = enUnused;
 
-    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( (UINT) m_iChannelNo, & m_strWindowCell );
 }
 
 /**
- * @brief CSignalCollect::IsValidChannle
+ * @brief     유효 채널을 확인한다.
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:47:47
+ * @warning
  */
 bool CCollectBank::IsValidChannel()
 {
@@ -241,7 +287,13 @@ bool CCollectBank::IsValidChannel()
 // }
 
 /**
- * @brief CCollectBank::SimCollectMode
+ * @brief     채널을 모의하기 위한 함수 입니다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:48:01
+ * @warning
  */
 void CCollectBank::SimCollectMode()
 {
@@ -269,7 +321,6 @@ void CCollectBank::SimCollectMode()
             if( uiTotalPDW >= m_strWindowCell.uiMaxCoPDW ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
-      
             // 시간 비교
             else if( TOAmsCNV( msDTOA ) >= m_strWindowCell.uiMaxCollectTimems + ( m_strWindowCell.uiMaxCollectTimesec * 1000 ) ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
@@ -277,6 +328,9 @@ void CCollectBank::SimCollectMode()
             else if( tsDiff.tv_sec >= 60 ) {
                 m_strWindowCell.enCollectMode = enCompleteCollection;
             }
+			else {
+
+			}
 
             if( m_strWindowCell.enCollectMode == enCompleteCollection ) {
                 m_strWindowCell.uiTotalPDW = uiTotalPDW;
@@ -337,7 +391,13 @@ void CCollectBank::PushPDWData( _PDW *pstPDW, UNION_HEADER *pHeader )
 }
 
 /**
- * @brief 윈도우셀을 수집 종료 후에 업데이트 한다.
+ * @brief     윈도우셀을 재설정할 때 사용한다.
+ * @return    void
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:48:23
+ * @warning
  */
 void CCollectBank::UpdateWindowCell()
 {
@@ -361,13 +421,18 @@ void CCollectBank::UpdateWindowCell()
     // 시간 재설정
     clock_gettime( CLOCK_REALTIME, & m_strWindowCell.tsCollectStart );
 
-    g_pTheSysConfig->SetWindowCell( m_iChannelNo, & m_strWindowCell );
+    g_pTheSysConfig->SetWindowCell( (UINT) m_iChannelNo, & m_strWindowCell );
 
 }
 
 /**
- * @brief CCollectBank::IsCompleteCollect
- * @return
+ * @brief     수집 완료됨을 체크한다.
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:47:01
+ * @warning
  */
 bool CCollectBank::IsCompleteCollect()
 {
@@ -399,10 +464,14 @@ bool CCollectBank::IsCompleteCollect()
 }
 
 /**
- * @brief CSignalCollect::IsFiltered
- * @param pstPDW
- * @param pWindowCell
- * @return
+ * @brief     입력한 PDW 데이터가 윈도우 셀 통과 여부를 문의한다.
+ * @param     _PDW * pstPDW
+ * @return    bool
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-10 12:48:40
+ * @warning
  */
 bool CCollectBank::IsFiltered( _PDW *pstPDW )
 {
@@ -418,7 +487,7 @@ bool CCollectBank::IsFiltered( _PDW *pstPDW )
 
 
 /**
- * @brief     SetCollectUpdateTime
+ * @brief     윈도우셀에 시간 정보를 업데이트 한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

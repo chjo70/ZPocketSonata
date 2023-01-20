@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <netinet/in.h>
@@ -28,7 +28,7 @@
 
 #include "csingleclient.h"
 
-#include "../Thread/creclan.h"
+//#include "../Thread/creclan.h"
 #include "../Thread/ctaskmngr.h"
 
 
@@ -37,10 +37,17 @@
 #include "../Include/globals.h"
 
 /**
- * @brief CSingleClient::CSingleServer
- * @param iKeyId
- * @param pClassName
- * @param iPort
+ * @brief     초기 멤버 변수값등을 설정하는 객체 생성자 입니다.
+ * @param     int iKeyId
+ * @param     const char * pClassName
+ * @param     unsigned short usPort
+ * @param     char * pServerAddress
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 10:54:00
+ * @warning
  */
 CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short usPort, char *pServerAddress ) : CThread( iKeyId, pClassName )
 {
@@ -69,7 +76,13 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
 
 
 /**
- * @brief CSingleClient::~CMultiServer
+ * @brief     종료 메시지와 메머리 해지를 처리하는 객체 소먈자 입니다.
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 15:32:42
+ * @warning
  */
 CSingleClient::~CSingleClient()
 {
@@ -79,7 +92,13 @@ CSingleClient::~CSingleClient()
 }
 
 /**
- * @brief CSingleServer::Init
+ * @brief     메모리를 할당하고 변수를 초기화한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 15:33:16
+ * @warning
  */
 void CSingleClient::Init()
 {
@@ -98,7 +117,13 @@ void CSingleClient::Init()
 }
 
 /**
- * @brief CSingleServer::Alloc
+ * @brief     객체에 필요한 메모리를 할당한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 10:45:44
+ * @warning
  */
 void CSingleClient::Alloc()
 {
@@ -107,7 +132,13 @@ void CSingleClient::Alloc()
 }
 
 /**
- * @brief CMultiServer::Free
+ * @brief     객체 메모리를 해지한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 10:46:03
+ * @warning
  */
 void CSingleClient::Free()
 {
@@ -117,8 +148,14 @@ void CSingleClient::Free()
 }
 
 /**
- * @brief CMultiServer::Run
- * @param enSocketMode
+ * @brief     CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.
+ * @param     key_t key
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 10:48:42
+ * @warning
  */
 void CSingleClient::Run( key_t key )
 {
@@ -130,7 +167,13 @@ void CSingleClient::Run( key_t key )
 }
 
 /**
- * @brief CMultiServer::_routine
+ * @brief     쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 10:49:05
+ * @warning
  */
 void CSingleClient::_routine()
 {
@@ -155,7 +198,13 @@ void CSingleClient::_routine()
 }
 
 /**
- * @brief CSingleClient::RunClient
+ * @brief     랜 소켓 클라이언트 실행시 소켓으로부터 수신 메시지를 확인한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 10:59:18
+ * @warning
  */
 void CSingleClient::RunClient()
 {
@@ -397,7 +446,14 @@ void CSingleClient::RunClient()
 }
 
 /**
- * @brief CSingleClient::OnDisconnected
+ * @brief     랜 소켓이 끊어졌을때 이벤트를 발생합니다.
+ * @param     char * pServerIPAddress
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:00:40
+ * @warning
  */
 void CSingleClient::OnDisconnected( char *pServerIPAddress )
 {
@@ -422,7 +478,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 
 #ifdef _MSC_VER
     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     printf( "\n SendMessage...모드 전환" );
 
 #elif __linux__
@@ -434,11 +490,16 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 }
 
 /**
- * @brief CSingleClient::ConnectTimeout
- * @param sock
- * @param res
- * @param timeout_milli
- * @return
+ * @brief     설정한 시간만큼 서버와 연결을 시도한다.
+ * @param     unsigned int uiSock
+ * @param     struct sockaddr_in * pAddr
+ * @param     long timeout_milli
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:00:56
+ * @warning
  */
 int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAddr, long timeout_milli )
 {
@@ -493,7 +554,7 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
         }
     }
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     
     int iOn;
     
@@ -587,7 +648,13 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
 
 
 /**
- * @brief CSingleClient::RunServer
+ * @brief     랜 소켓 서버 실행시 소켓으로부터 수신 메시지를 확인한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:02:01
+ * @warning
  */
 void CSingleClient::RunServer()
 {
@@ -790,8 +857,14 @@ void CSingleClient::RunServer()
 }
 
 /**
- * @brief CSingleClient::OnConnect
- * @param pAddr
+ * @brief     연결시 이벤트를 발생한다.
+ * @param     struct sockaddr_in * pAddr
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:02:29
+ * @warning
  */
 void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
 {
@@ -807,10 +880,15 @@ void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
 }
 
 /**
- * @brief CSingleClient::CloseSocket
- * @param iSocket
- * @param pAddress
- * @param pClientSocket
+ * @brief     소켓을 닫을 때 이 함수를 호출한다.
+ * @param     struct sockaddr_in * pAddress
+ * @param     int * pClientSocket
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:02:46
+ * @warning
  */
 void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocket )
 {
@@ -836,23 +914,34 @@ void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocke
 }
 
 /**
- * @brief CSingleClient::SendLan
+ * @brief     연결된 서버에 데이터를 송신한다.
+ * @param     UINT uiOpCode
+ * @param     void * pData
+ * @param     UINT uiDataLength
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-10-24 11:03:06
+ * @warning
  */
 int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 {
     int iRet;
+
+	STR_LAN_HEADER strLanHeader;
 
 #if defined(__linux__) || defined(_MSC_VER)
     if( IsConnected() == true ) {
         int iRet1, iRet2=0;
 
         // 랜 헤더 송신
-        m_strLanHeader.uiOpCode = uiOpCode;
-        m_strLanHeader.uiLength = uiDataLength;
+		strLanHeader.uiOpCode = uiOpCode;
+		strLanHeader.uiLength = uiDataLength;
 
-        CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
-        iRet1 = send( m_uiSocket, (char *) & m_strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
-        CCommonUtils::AllSwapData32( & m_strLanHeader, sizeof(STR_LAN_HEADER) );
+        CCommonUtils::AllSwapData32( &strLanHeader, sizeof(STR_LAN_HEADER) );
+        iRet1 = send( m_uiSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+        CCommonUtils::AllSwapData32( &strLanHeader, sizeof(STR_LAN_HEADER) );
 
         if( iRet1 > 0 && uiDataLength != 0 ) {
             CCommonUtils::AllSwapData32( pData, uiDataLength );
@@ -862,8 +951,8 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
             }
             CCommonUtils::AllSwapData32( pData, uiDataLength );
 
-            m_puiData = (unsigned int *) pData;
-            DisplayMsg();
+            //m_puiData = (unsigned int *) pData;
+            DisplayMsg( & strLanHeader, pData );
 
         }
         else {
@@ -887,13 +976,21 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 }
 
 /**
- * @brief CSingleClient::DisplayMsg
+ * @brief     헤더와 메시지 데이터를 출력합니다.
+ * @param     STR_LAN_HEADER * pHeader
+ * @param     void * pData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-04 14:33:19
+ * @warning
  */
-void CSingleClient::DisplayMsg()
+void CSingleClient::DisplayMsg(STR_LAN_HEADER *pHeader, void *pData )
 {
     char szOpcode[50];    
 
-    switch( m_strLanHeader.uiOpCode ) {
+    switch(pHeader->uiOpCode ) {
         case enRES_MODE :
             strcpy( szOpcode, "운용 모드" );
             break;
@@ -946,7 +1043,8 @@ void CSingleClient::DisplayMsg()
             break;
     }
 
-    LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, m_strLanHeader.uiOpCode, m_strLanHeader.uiLength, *m_puiData );
+    //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
+	LOGMSG3(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
 
 }
 

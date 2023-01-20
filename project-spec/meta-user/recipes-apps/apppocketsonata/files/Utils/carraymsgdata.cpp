@@ -32,7 +32,13 @@ CArrayMsgData::~CArrayMsgData()
 }
 
 /**
- * @brief CArrayMsgData::Init
+ * @brief     초기화를 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:47:01
+ * @warning
  */
 void CArrayMsgData::Init()
 {
@@ -42,7 +48,13 @@ void CArrayMsgData::Init()
 }
 
 /**
- * @brief CMultiServer::Alloc
+ * @brief     메모리를 할당한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:47:25
+ * @warning
  */
 void CArrayMsgData::Alloc()
 {
@@ -63,7 +75,13 @@ void CArrayMsgData::Alloc()
 }
 
 /**
- * @brief CMultiServer::Free
+ * @brief     메모리를 해지한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 18:47:42
+ * @warning
  */
 void CArrayMsgData::Free()
 {

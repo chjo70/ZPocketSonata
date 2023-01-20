@@ -169,10 +169,10 @@ public:
   unsigned int Size(const int i) const;
  
   // returns the number of rows
-  int GetRows() const;
+  unsigned int GetRows() const;
 
   // returns the number of columns
-  int GetCols() const;
+  unsigned int GetCols() const;
 
   // print the contents of the CMatrix
   void Print() const;
@@ -183,10 +183,10 @@ public:
 
   void CleanMatrix();
 
-  int Size(const CMatrix& a, const int i);
-  CMatrix Ones(const int rows, const int cols);
-  CMatrix Zeros(const int rows, const int cols);
-  CMatrix Ident(const int rows, const int cols);
+  unsigned int Size(const CMatrix& a, const int i);
+  CMatrix Ones(const unsigned int uiRows, const unsigned int uiCols);
+  CMatrix Zeros(const unsigned int uiRows, const unsigned int uiCols);
+  CMatrix Ident(const unsigned int uiRows, const unsigned int uiCols);
   
   CMatrix Transpose();
   

@@ -17,7 +17,7 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////////
 /*!
-* @brief     생성자
+* @brief     환경 변수 클래스를 생성한다.
 * @param     void
 * @return    void
 * @version   0.0.1
@@ -72,7 +72,7 @@ CELEnvironVariable::CELEnvironVariable(void)
 }
 
 /**
- * @brief     GetEnvrionVariable
+ * @brief     환경 변수 객체를 포인터를 리턴한다.
  * @return    SEnvironVariable *
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -87,7 +87,7 @@ SEnvironVariable *CELEnvironVariable::GetEnvrionVariable()
 
 //////////////////////////////////////////////////////////////////////////
 /*!
-* @brief     소멸자
+* @brief     객체의 소멸자 처리를 수행한다.
 * @param     void
 * @return    void
 * @version   0.0.1
@@ -168,6 +168,16 @@ CELEnvironVariable::~CELEnvironVariable(void)
 // 	}
 // }
 
+/**
+ * @brief     환경 변수 데이터를 입력받아 복사한다.
+ * @param     SEnvironVariable * pSEnvironVariable
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-08 21:44:26
+ * @warning
+ */
 void CELEnvironVariable::SetEnvironVaraiable( SEnvironVariable *pSEnvironVariable )
 {
 	memcpy( & m_stEnvironVariable, pSEnvironVariable, sizeof(SEnvironVariable) );
@@ -277,6 +287,15 @@ void CELEnvironVariable::SetEnvironVaraiable( SEnvironVariable *pSEnvironVariabl
 // 	return (m_pImpl->GetMtskSpinDFUnitCollNum() );
 // }
 
+/**
+ * @brief     방탐 유효값을 리턴한다.
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-08 21:45:07
+ * @warning
+ */
 int CELEnvironVariable::GetMtskDVRatio()
 {
 	return m_stEnvironVariable.iDVRatio;
@@ -287,18 +306,45 @@ int CELEnvironVariable::GetMtskDVRatio()
 // {
 // 	return (m_pImpl->GetEmmgNumOfMinPulseToLOB() );
 // }
-// 
-// 빔 생성을 위한 최소 LOB 개수
+
+
+/**
+ * @brief     빔 생성을 위한 최소 LOB 개수
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-08 21:44:57
+ * @warning
+ */
 unsigned int CELEnvironVariable::GetEmmgNumOfMinLobToBeam()
 {	
 	return m_stEnvironVariable.uiEmmgNumOfMinLobToBeam;
 }
 
+/**
+ * @brief     위치 산출된 정보로 식별할 최대 거리를 얻는다.
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-08 21:45:21
+ * @warning
+ */
 float CELEnvironVariable::GetEobIndfRangeMeters()
 {	
 	return m_stEnvironVariable.fEobIndfRangeMeters;
 }
  
+/**
+ * @brief     방사체 최대 삭제 시간을 얻는다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-08-08 21:46:08
+ * @warning
+ */
 unsigned int CELEnvironVariable::GetEmmgEmitterDeleteTimeSec()
 {	
 	return m_stEnvironVariable.uiEmmgEmitterDeleteTimeSec;

@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../INC/Defines.h"
+#include "../../include/Defines.h"
 #include "../Identify/Identify.h"
 
 #include "../../Utils/ccommonutils.h"
@@ -19,6 +19,8 @@
 #include "NPulExt.h"
 #include "NAnalPRI.h"
 #include "NMakeAET.h"
+
+#include "../IntraSigAnal/IntraSigAnal.h"
 
 #define MAX_MATCH_RADARMODE         (2*MAX_RADARMODE)
 
@@ -32,12 +34,14 @@ public:
     CNAnalPRI *m_theAnalPRI;
     CNMakeAET *m_theMakeAET;
 
+	CIntraSigAnal *m_pTheIntraSigAnal;
+
     DEFINE_ANAL_VAR_
 
 private:
     unsigned int m_uiPDWID;
 
-    enum ANALYSIS_MODE m_AnalMode;
+    //enum ANALYSIS_MODE m_AnalMode;
 
     int m_CoGroup;
     UINT m_uiMaxPdw;
@@ -47,13 +51,7 @@ private:
 
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
-#if defined(_ELINT_) || defined(_XBAND_)
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
-
-#elif _POCKETSONATA_
-    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
-
-#endif    
 
     vector<SRadarMode *> m_VecMatchRadarMode;
 
@@ -68,7 +66,7 @@ public:
     CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
     virtual ~CNewSigAnal();
 
-    void InitVar(enum ANALYSIS_MODE analMode);
+    //void InitVar(enum ANALYSIS_MODE analMode);
     void LoadCEDLibrary();
 
     // 인라인 외부 연결 함수
@@ -81,7 +79,7 @@ public:
      * @date      2022-04-21, 10:28
      * @warning
      */
-    inline int GetCoPdw() { 
+    inline unsigned int GetCoPdw() { 
         return m_uiCoPdw; 
     }
     /**
@@ -135,7 +133,7 @@ public:
      * @date      2022-05-10, 11:53
      * @warning
      */
-    inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+    inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
         return CSigAnal::SaveEmitterPDWFile( pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
     }
 
@@ -146,14 +144,14 @@ public:
     //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
-    inline int GetColPdw() { return m_uiCoPdw; }
+    inline unsigned int GetColPdw() { return m_uiCoPdw; }
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
-    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, USHORT usMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex , uiCount, usMarkType ); }
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex , uiCount, enMarkType); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
     inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
-    inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
+    inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
 
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
@@ -201,7 +199,7 @@ public:
     void Start(STR_PDWDATA *pPDWData, bool bDBInsert=false );
     bool CheckKnownByAnalysis();
 
-    void ClearAllMark( bool bClear );
+    void ClearAllMark();
 
 };
 

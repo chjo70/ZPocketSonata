@@ -57,7 +57,7 @@ CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanDa
 #ifdef _POCKETSONATA_
     bool bRet = true;
 
-    int i, j, k, iBoardID;
+    int j, k, iBoardID;
     int iFreq, iCh;
     int iEFreq, iECh;
     int iDFreq, iDCh;
@@ -73,36 +73,11 @@ CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanDa
             fMinFreq = 999999999;
             fMaxFreq = 0;
 
-            for( i = 0 ; i < 15 ; ++i ) {
+            for( iDCh = 0 ; iDCh < 15 ; ++iDCh ) {
                 for( j = 0 ; j < 0xFFFF ; ++j ) {
                     iDFreq = j;
-                    iDCh = i;
                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, iBoardID, k );
                     CPOCKETSONATAPDW::EncodeRealFREQMHz( &iEFreq, &iECh, iBoardID, fFreq );
-//                     if( iDFreq == iFreq && iDCh == iCh ) {
-//                         //TRACE( "\n Freq[%dMHz],Ch[%d]", iFreq, iCh );
-//                         if( iCh > 17 ) {
-//                             TRACE( "AAAAA" );
-//                         }
-//                     }
-//                     else {
-//                         fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, iBoardID, 0 );
-//                         CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, iBoardID, fFreq );
-//                         bRet = false;
-//                     }
-
-                    //                 iDFreq = j;
-                    //                 iDCh = i;
-                    //                 fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    //                 CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    //                 if( iDFreq == iFreq && iDCh == iCh ) {
-                    //                 }
-                    //                 else {
-                    //                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    //                     CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    //                     bRet = false;
-                    //                 }
-
 
                     fMinFreq = min( fMinFreq, fFreq );
                     fMaxFreq = max( fMaxFreq, fFreq );
@@ -110,9 +85,10 @@ CUserCollect::CUserCollect( int iKeyId, const char *pClassName, bool bArrayLanDa
             }
 
             TRACE( "\niBoardId/No(%d/%d) [%f - %f]", iBoardID, k, fMinFreq, fMaxFreq );
-
         }
     }
+
+    TRACE( "\n\n" );
 #endif
 
 }
@@ -404,7 +380,7 @@ void CUserCollect::ColStart()
                 if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
                     // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
-                    uiSize = sizeof( SIGAPDW ) * NUM_OF_PDW;
+                    uiSize = sizeof( SIGAPDW ) * m_pUniHeader->GetTotalPDW(en_ZPOCKETSONATA);
                     g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SIM_PDWDATA, m_pstrPDWWithFileHeader, sizeof(UNION_HEADER)+uiSize, NULL, 0, GetThreadName() );
                 }
                 break;
@@ -494,7 +470,7 @@ void CUserCollect::MakeSIMPDWData()
     m_pUniHeader->SetBoardID( g_enUnitType, ( UINT ) g_enBoardId );
 
     m_pUniHeader->SetColTime( time( NULL ), 0 );
-    m_pUniHeader->SetTotalPDW( NUM_OF_PDW );
+    //m_pUniHeader->SetTotalPDW( NUM_OF_PDW );
     m_pUniHeader->SetIsStorePDW( 1 );
     m_pUniHeader->SetBandWidth( 1 );
     m_pUniHeader->SetCollectorID( RADARCOL_1 );
@@ -507,7 +483,16 @@ void CUserCollect::MakeSIMPDWData()
         strcpy( pTaskID, "MSIGA" );
     }
 
-    uiCoPDW = m_strResColStart.uiCoPulseNum;
+	//if ((m_uiCoSim % 20) <= 5) {
+	if ((m_uiCoSim % 10) <= 3) {
+		uiCoPDW = 0;
+		
+	}
+	else {
+		uiCoPDW = m_strResColStart.uiCoPulseNum;
+	}
+
+	m_pUniHeader->SetTotalPDW( uiCoPDW );
 
 
     int iBandWidth = m_pUniHeader->GetBandWidth();
@@ -559,7 +544,7 @@ void CUserCollect::MakeSIMPDWData()
         randomPW =  ( rand() % 1000 ) + 20000;
 
         if( m_uiCoSim % 20 == 0 || true ) {
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 9585.0 );
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 9800.0 );
         }
         else {
             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
@@ -570,7 +555,7 @@ void CUserCollect::MakeSIMPDWData()
         memset( pSIGAPDW, 0, sizeof(DMAPDW) );
 
         //
-        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 1;        // uiPDW_CW;
+        pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.cw_pulse = 0;        // ;
         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.pmop_flag = 0;
         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.fmop_flag = 0;
         pSIGAPDW->uPDW.x.uniPdw_status.stPdw_status.false_pdw = 0;

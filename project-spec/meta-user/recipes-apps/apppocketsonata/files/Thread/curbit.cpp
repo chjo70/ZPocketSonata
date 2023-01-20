@@ -8,12 +8,10 @@
 
 #include "curbit.h"
 #include "ccgi.h"
-//#include "../Utils/clog.h"
+
 
 #include "../Utils/chwio.h"
-//#include "../Test/hw_interface.h"
 #include "../Utils/ccommonutils.h"
-
 #include "../Include/globals.h"
 
 #define _DEBUG_
@@ -139,7 +137,13 @@ void CUrBit::Init()
 }
 
 /**
- * @brief CUrBit::InitHW
+ * @brief     SBC 및 관련 CCA 구성품들을 초기화 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 17:20:55
+ * @warning
  */
 void CUrBit::InitHW()
 {
@@ -191,7 +195,13 @@ void CUrBit::InitHW()
 }
 
 /**
- * @brief CUrBit::InitIBit
+ * @brief     초기 자체 점검을 수행 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 17:22:01
+ * @warning
  */
 void CUrBit::InitIBit()
 {
@@ -201,7 +211,14 @@ void CUrBit::InitIBit()
 }
 
 /**
- * @brief CUrBit::RunIBit
+ * @brief     초기 자체점검을 수행합니다.
+ * @param     bool bCGIRunning
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 17:22:46
+ * @warning
  */
 void CUrBit::RunIBit( bool bCGIRunning )
 {
@@ -225,7 +242,14 @@ void CUrBit::RunIBit( bool bCGIRunning )
 }
 
 /**
- * @brief CUrBit::RunCBit
+ * @brief     연속 자체점검을 수행합니다.
+ * @param     bool bCGIRunning
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 17:23:02
+ * @warning
  */
 void CUrBit::RunCBit( bool bCGIRunning )
 {
@@ -242,11 +266,19 @@ void CUrBit::RunCBit( bool bCGIRunning )
         CCommonUtils::SendLan( enRES_CBIT, & m_stESCbit, sizeof(m_stESCbit) );
 #endif
     }
+
+
 }
 
 /**
- * @brief CUrBit::RunUBit
- * @param bCGIRunning
+ * @brief     장치 자체점검을 수행합니다.	
+ * @param     bool bCGIRunning
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-16 17:23:08
+ * @warning
  */
 void CUrBit::RunUBit( bool bCGIRunning )
 {

@@ -9,6 +9,8 @@
 
 #include "GeoCoordConv.h"
 
+#include "../IsNumber.h"
+
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -25,12 +27,22 @@ static char THIS_FILE[]=__FILE__;
 #define Z_W2B -664
 
 
-#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
-#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
+//#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
+//#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
 
-//////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////
+/**
+ * @brief     구조체를 생성한다.
+ * @param     GeoEllips eSrcEllips
+ * @param     GeoSystem eSrcSystem
+ * @param     GeoEllips eDstEllips
+ * @param     GeoSystem eDstSystem
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-13 20:50:57
+ * @warning
+ */
 CGeoCoordConv::CGeoCoordConv(GeoEllips eSrcEllips, GeoSystem eSrcSystem, 
 							 GeoEllips eDstEllips, GeoSystem eDstSystem)
 {
@@ -94,8 +106,17 @@ CGeoCoordConv::CGeoCoordConv(GeoEllips eSrcEllips, GeoSystem eSrcSystem,
 	m_arFalseEasting[kUtm51] = 500000.0;
 }
 
-///////////////////////////////////////////////
-// Set Internal Values
+/**
+ * @brief     입력 데이터의 변환 설정 값을 설정한다.
+ * @param     enum GeoEllips eEllips
+ * @param     enum GeoSystem eSystem
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-13 20:51:10
+ * @warning
+ */
 void CGeoCoordConv::SetSrcType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 {
 	m_eSrcEllips = eEllips;
@@ -119,7 +140,17 @@ void CGeoCoordConv::SetSrcType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 	InitDatumVar();
 }
 
-// Set Internal Values
+/**
+ * @brief     출력 데이터의 변환 설정 값을 설정한다.
+ * @param     enum GeoEllips eEllips
+ * @param     enum GeoSystem eSystem
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-16 14:38:44
+ * @warning
+ */
 void CGeoCoordConv::SetDstType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 {
 	m_eDstEllips = eEllips;
@@ -143,8 +174,19 @@ void CGeoCoordConv::SetDstType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 	InitDatumVar();
 }
 
-///////////////////////////////////////////
-// Main Convert Function
+/**
+ * @brief     변환 작업을 수행한다.
+ * @param     double dInX
+ * @param     double dInY
+ * @param     double & dOutX
+ * @param     double & dOutY
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-16 14:39:09
+ * @warning
+ */
 void CGeoCoordConv::Conv(double dInX, double dInY, double& dOutX, double& dOutY)
 {
 	double dInLon, dInLat;
@@ -191,8 +233,19 @@ void CGeoCoordConv::Conv(double dInX, double dInY, double& dOutX, double& dOutY)
     }
 }
 
-/////////////////////////////////////////////
-// Global Utility Function
+/**
+ * @brief     도를 도분초로 변환
+ * @param     double dInDecimalDegree
+ * @param     int & iOutDegree
+ * @param     int & iOutMinute
+ * @param     double & dOutSecond
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-16 14:39:28
+ * @warning
+ */
 void CGeoCoordConv::D2Dms(double dInDecimalDegree, int &iOutDegree, int &iOutMinute, double &dOutSecond)
 {
 	double dTmpMinute;
@@ -222,6 +275,19 @@ void CGeoCoordConv::D2Dms(double dInDecimalDegree, int &iOutDegree, int &iOutMin
 // Reference manual : DEFENSE MAPPING AGENCY TECHNICAL MANUAL 8358.1
 // You can read above manual in this home page. http://164.214.2.59/GandG/tm83581/toc.htm
 // Converted to C++ by Jang, Byyng-jin(jangbi@taff.co.kr) 20th Ap
+/**
+ * @brief     DatumTrans
+ * @param     double dInLon
+ * @param     double dInLat
+ * @param     double & dOutLon
+ * @param     double & dOutLat
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-16 14:39:47
+ * @warning
+ */
 void CGeoCoordConv::DatumTrans(double dInLon, double dInLat, double& dOutLon, double& dOutLat)
 {
 	double dRm, dRn;
@@ -239,7 +305,19 @@ void CGeoCoordConv::DatumTrans(double dInLon, double dInLat, double& dOutLon, do
 	dOutLon = dInLon + dDeltaLamda;
 }
 
-// function for converting longitude, latitude to TM X, Y
+/**
+ * @brief     위/경도 좌표 값을 TM 좌표로 변환
+ * @param     double lon
+ * @param     double lat
+ * @param     double & x
+ * @param     double & y
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-16 14:39:52
+ * @warning
+ */
 void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 {
 	double delta_lon; // Delta longitude (Given longitude - center longitude)
@@ -253,8 +331,7 @@ void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 	sin_phi = sin(lat);
 	cos_phi = cos(lat);
 
-	//if (m_dDstInd != 0) 
-    if ( IS_NOT_ZERO( m_dDstInd ) == true ) {
+    if ( is_not_zero<double>( m_dDstInd ) == true ) {
 		b = cos_phi * sin(delta_lon);
 		if ((fabs(fabs(b) - 1.0)) < 0.0000000001)
 		{
@@ -287,7 +364,7 @@ void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 }
 
 /**
- * @brief     Tm2Geo
+ * @brief     TM 좌표계를 위경도로 변환
  * @param     double x
  * @param     double y
  * @param     double & lon
@@ -312,7 +389,7 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 
 	const long max_iter = 6; // maximun number of iterations
 
-	if ( IS_NOT_ZERO(m_dSrcInd) == true )
+	if ( is_not_zero<double>(m_dSrcInd) == true )
 	{
 		f = exp(x / (m_arMajor[m_eSrcEllips] * m_arScaleFactor[m_eSrcSystem]));
 		g = 0.5 * (f - 1.0 / f);
@@ -324,8 +401,7 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 		if (temp < 0) 
 			lat *= -1;
 
-		//if( (g == 0) && (h == 0))
-        if( IS_ZERO(g) == true && IS_ZERO(h) == true )
+        if( is_zero<double>(g) == true && is_zero<double>(h) == true )
 			lon = m_arLonCenter[m_eSrcSystem];
 		else
 			lon = atan(g / h) + m_arLonCenter[m_eSrcSystem];
@@ -377,7 +453,7 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 }
 
 /**
- * @brief     e0fn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double x
  * @return    double
  * @exception
@@ -392,7 +468,7 @@ double CGeoCoordConv::e0fn(double x)
 }
 
 /**
- * @brief     e1fn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double x
  * @return    double
  * @exception
@@ -407,7 +483,7 @@ double CGeoCoordConv::e1fn(double x)
 }
 
 /**
- * @brief     e2fn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double x
  * @return    double
  * @exception
@@ -422,7 +498,7 @@ double CGeoCoordConv::e2fn(double x)
 }
 
 /**
- * @brief     e3fn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double x
  * @return    double
  * @exception
@@ -437,7 +513,7 @@ double CGeoCoordConv::e3fn(double x)
 }
 
 /**
- * @brief     e4fn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double x
  * @return    double
  * @exception
@@ -456,7 +532,7 @@ double CGeoCoordConv::e4fn(double x)
 }
 
 /**
- * @brief     mlfn
+ * @brief     수식을 계산해서 값을 리턴한다.
  * @param     double e0
  * @param     double e1
  * @param     double e2
@@ -475,7 +551,7 @@ double CGeoCoordConv::mlfn(double e0, double e1, double e2, double e3, double ph
 }
 
 /**
- * @brief     asinz
+ * @brief     sin 함수의 부호를 리턴한다.
  * @param     double value
  * @return    double
  * @exception
@@ -493,7 +569,7 @@ double CGeoCoordConv::asinz(double value)
 }
 
 /**
- * @brief     InitDatumVar
+ * @brief     초기화를 설정한다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)

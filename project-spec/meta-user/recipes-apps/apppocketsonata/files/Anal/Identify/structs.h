@@ -13,6 +13,7 @@
 #endif // _MSC_VER > 1000
 
 #include "ELCEDLibDataType2.h"
+
 #include "../INC/system.h"
 #include "../INC/AetIPL.h"
 #include "../EmitterMerge/ELMsgDefn.h"

@@ -29,16 +29,35 @@ extern "C"
 {
 #endif
 
-// DegToRad
-// Converts degrees to radians.
-FLOAT DegToRad(FLOAT deg) {
+
+/**
+ * @brief     degree 값을 radian 으로 변환한다.
+ * @param     FLOAT deg
+ * @return    FLOAT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:23:24
+ * @warning
+ */
+FLOAT DegToRad(FLOAT deg)
+{
   return (deg / 180.0 * M_PI);
 }
 
 
-// RadToDeg
-// Converts radians to degrees.
-FLOAT RadToDeg(FLOAT rad) {
+/**
+ * @brief     radian 값을 degree 으로 변환한다.
+ * @param     FLOAT rad
+ * @return    FLOAT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:24:10
+ * @warning
+ */
+FLOAT RadToDeg(FLOAT rad) 
+{
   return (rad / M_PI * 180.0);
 }
 
@@ -58,7 +77,18 @@ FLOAT RadToDeg(FLOAT rad) {
 // 
 // Returns:
 //     The ellipsoidal distance of the point from the equator, in meters.
-FLOAT ArcLengthOfMeridian (FLOAT phi) {
+/**
+ * @brief     거리를 계산한다.
+ * @param     FLOAT phi
+ * @return    FLOAT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:24:27
+ * @warning
+ */
+FLOAT ArcLengthOfMeridian (FLOAT phi) 
+{
   FLOAT alpha, beta, gamma, delta, epsilon, n;
   FLOAT result;
   
@@ -97,6 +127,16 @@ FLOAT ArcLengthOfMeridian (FLOAT phi) {
 // Returns:
 //   The central meridian for the given UTM zone, in radians
 //   Range of the central meridian is the radian equivalent of [-177,+177].
+/**
+ * @brief     주어진 UTM 계로 결정한다.
+ * @param     int zone
+ * @return    FLOAT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:20
+ * @warning
+ */
 FLOAT UTMCentralMeridian(int zone) {
   FLOAT cmeridian;
   cmeridian = DegToRad(-183.0 + ((FLOAT)zone * 6.0));
@@ -119,6 +159,16 @@ FLOAT UTMCentralMeridian(int zone) {
 //
 // Returns:
 //   The footpoint latitude, in radians.
+/**
+ * @brief     위경도 값을 계산한다.
+ * @param     FLOAT y
+ * @return    FLOAT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:33
+ * @warning
+ */
 FLOAT FootpointLatitude(FLOAT y) {
   FLOAT y_, alpha_, beta_, gamma_, delta_, epsilon_, n;
   FLOAT result;
@@ -178,6 +228,20 @@ FLOAT FootpointLatitude(FLOAT y) {
 //
 // Returns:
 //    The function does not return a value.
+/**
+ * @brief     위경도 값을 X, Y 계로 계산한다.
+ * @param     FLOAT phi
+ * @param     FLOAT lambda
+ * @param     FLOAT lambda0
+ * @param     FLOAT & x
+ * @param     FLOAT & y
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:37
+ * @warning
+ */
 void MapLatLonToXY (FLOAT phi, FLOAT lambda, FLOAT lambda0, FLOAT &x, FLOAT &y) {
     FLOAT N, nu2, ep2, t, t2, l;
     FLOAT l3coef, l4coef, l5coef, l6coef, l7coef, l8coef;
@@ -263,6 +327,20 @@ void MapLatLonToXY (FLOAT phi, FLOAT lambda, FLOAT lambda0, FLOAT &x, FLOAT &y) 
 //
 //   x1frac, x2frac, x2poly, x3poly, etc. are to enhance readability and
 //   to optimize computations.
+/**
+ * @brief     X,Y 좌표 값을 위경도 값으로 매핑한다.
+ * @param     FLOAT x
+ * @param     FLOAT y
+ * @param     FLOAT lambda0
+ * @param     FLOAT & phi
+ * @param     FLOAT & lambda
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:40
+ * @warning
+ */
 void MapXYToLatLon (FLOAT x, FLOAT y, FLOAT lambda0, FLOAT& phi, FLOAT& lambda)
 {
   FLOAT phif, Nf, Nfpow, nuf2, ep2, tf, tf2, tf4, cf;
@@ -369,6 +447,20 @@ void MapXYToLatLon (FLOAT x, FLOAT y, FLOAT lambda0, FLOAT& phi, FLOAT& lambda)
 //
 // Returns:
 //   The UTM zone used for calculating the values of x and y.
+/**
+ * @brief     위경도 값을 UTM 계로 변환한다.
+ * @param     FLOAT lat
+ * @param     FLOAT lon
+ * @param     int zone
+ * @param     FLOAT & x
+ * @param     FLOAT & y
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:45
+ * @warning
+ */
 int LatLonToUTMXY (FLOAT lat, FLOAT lon, int zone, FLOAT& x, FLOAT& y) {
   if ( (zone < 1) || (zone > 60) ) {
     zone = (int) FLOOR((lon + 180.0) / 6) + 1;
@@ -405,6 +497,21 @@ int LatLonToUTMXY (FLOAT lat, FLOAT lon, int zone, FLOAT& x, FLOAT& y) {
 // 
 // Returns:
 // The function does not return a value.
+/**
+ * @brief     UTM 계를 위/경도 값으로 변환한다.
+ * @param     FLOAT x
+ * @param     FLOAT y
+ * @param     int zone
+ * @param     bool southhemi
+ * @param     FLOAT & lat
+ * @param     FLOAT & lon
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:25:48
+ * @warning
+ */
 void UTMXYToLatLon (FLOAT x, FLOAT y, int zone, bool southhemi, FLOAT& lat, FLOAT& lon) {
   FLOAT cmeridian;
     

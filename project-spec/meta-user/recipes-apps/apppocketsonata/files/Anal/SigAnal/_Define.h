@@ -10,7 +10,6 @@
 #endif // _MSC_VER > 1000
 
 #include "../INC/system.h"
-//#include "../../INCLUDE/system.h"
 
 
 #define _max(a,b)               ( ( (a) > (b) ) ? (a) : (b) )
@@ -27,18 +26,19 @@ enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol
 //##ModelId=452B0C550263
 enum PULSE_EXTRACT_PRI_STEP { STEP1=0, STEP2, STEP_WIDE, STEP_BY_STEP } ;
 
-//##ModelId=452B0C550277
+// 펄스열 마킹 정의 값
 enum SEG_MARK { NORMAL_SEG=0, 
                 DELETE_SEG, 
                 MERGED_SEG, 
                 CHECKED_SEG,         // 에미터로 생성된 펄스열 마킹
-                OVERLAPPED_SEG
+                OVERLAPPED_SEG,
+                LIBRARY_SEG,        // 위협 라이브러리로 마킹한 펄스열 추출
 } ;
 
-//##ModelId=452B0C550295
+// 에미터 마킹 정의 값
 enum EMITTER_MARK { NORMAL_EMITTER=0, DELETE_EMITTER, _SIZE_EMITTER_MARK } ;
 
-//##ModelId=452B0C550295
+// 에미터 마킹 정의 값
 enum AET_MARK { NORMAL_AET=0, DELETE_AET } ;
 
 // 주파수 그룹화
@@ -171,8 +171,30 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define AOA_SHIFT_COUNT             (9)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
-//#define _spAOAmax                   (0x1FF)
-//#define _spAmpmax				    (0xFF)
+#define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
+
+#define	MAX_PW						(1024*16)
+
+#elif defined(_701_)
+#define _spRxdfAoa				    (IAOACNV( 2 ))      // 8 도
+#define _spRxdfFrq				    (4)                 // about 5(=4*1.25)MHz,
+
+#define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
+
+#define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
+
+// DTOA 히스트그램 최대 개수
+#define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+
+#define MAX_AOA       			    (3600)			// 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
+#define	FREQ_NARR_MHZ			    IFRQMhzCNV( 0, 20 )			// 20 MHz
+#define	FREQ_WIDE_MHZ			    IFRQMhzCNV( 0, 100 )		// 100 MHz
+
+#define	MAX_FREQ_DEVIATION		    (500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
+#define AOA_SHIFT_COUNT             (5)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
@@ -325,14 +347,14 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 
 // 주파수 고정, 변경 범위
-#define FIXED_FREQ_THRESHOLD			8				// 5에서 8로 변경함.
-#define FIXED_MATCH_RATIO				(85)			// 85에서 70으로 변경함.
+#define FIXED_FREQ_THRESHOLD			        (8)				// 5에서 8로 변경함.
+#define FIXED_MATCH_RATIO				        (85)			// 85에서 70으로 변경함.
 
 // 패턴 분석
 #define	CO_OFF_SAMPLING_THRESHOLD               (2)
 
 // 최소 ACF 개수
-#define MIN_CO_ACF                             (5)
+#define MIN_CO_ACF                              (5)
 
 // PRI 추출 경계
 #define	MID_PRI_BAND							(7)			// 펄스열 추출 중간 밴드
@@ -341,11 +363,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // PRI 분석
 
 // Jitter 신호의 하모닉 관계에 사용한 지터율 임계값 정의
-#define	HARMONIC_JITTER_P_THRESHOLD	(5)
+#define	HARMONIC_JITTER_P_THRESHOLD             (5)
 
 // 스태거 분석 최소 주기 회수
-#define MIN_STAGGER_LEVEL_PERIOD	(2)		// 스태거 레벨값 최소 반복 회수
-#define MIN_REPEAT_STAGGER_LEVEL	(6)		// 레벨 체크에서 6주기 이상인 경우는 threshold = ( 100 * ( 2*N-1 ) ) / (2*N) 누락되어도 허용하는 최소 반복
+#define MIN_STAGGER_LEVEL_PERIOD                (2)		// 스태거 레벨값 최소 반복 회수
+#define MIN_REPEAT_STAGGER_LEVEL	            (6)		// 레벨 체크에서 6주기 이상인 경우는 threshold = ( 100 * ( 2*N-1 ) ) / (2*N) 누락되어도 허용하는 최소 반복
 
 #define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
@@ -499,48 +521,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 진행바 스텝수
 #define _PROGRESS_STEP												(80)
 
-// 문자열 크기 정의
-#define _NULL_CHAR_													(1)
 
-#define _MAX_STRING_SIZE_											(50)
+#include "_CED_Define.h"
 
-#define _MAX_SIZE_OF_MODECODE                                       (4)
-#define _MAX_SIZE_OF_FUNCTIONCODE                                   (4)
-#define _MAX_SIZE_OF_MODULATIONCODE                                 (4)
-
-
-#define _MAX_RADARMODE_NAME_SIZE									(12)
-#define _MAX_RADARNAME_SIZE											(8)
-#define _MAX_PLATFORM_NAME_SIZE                                     (8)
-#define _MAX_THREAT_NAME_SIZE										(10)
-#define _MAX_SITE_NAME_SIZE											(10)
-#define _MAX_SIZE_OF_IDINFO                                         (10)
-#define _MAX_SIZE_OF_BENUMBER                                       (30)
-
-#define _MAX_MODECODE_STRING_SIZE_									(3+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_									(27+_NULL_CHAR_)
-#define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
-
-#define _MAX_FUNCTIONCODE_STRING_SIZE_								(3+_NULL_CHAR_)
-#define _MAX_STATUS_STRING_SIZE_									(20+_NULL_CHAR_)
-
-#define _MAX_BE_NUMBER_STRING_SIZE_									(12+_NULL_CHAR_)
-#define _MAX_USER_COUNTRY_STRING_SIZE_								(4+_NULL_CHAR_)
-#define _MAX_PRIMARY_FUNCTION_STRING_SIZE_                          (4+_NULL_CHAR_)
-#define _MAX_FRIEND_OR_FOE_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_ADA_STRING_SIZE_										(8+_NULL_CHAR_)
-#define _MAX_DATETIME_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_DISTINCTION_STRING_SIZE_								(12+_NULL_CHAR_)
-#define _MAX_SYMBOLCODE_STRING_SIZE_								(20+_NULL_CHAR_)
-#define _MAX_LATITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_LONGITUDE_STRING_SIZE_									(15+_NULL_CHAR_)
-#define _MAX_ELNOT_STRING_SIZE_										(7+_NULL_CHAR_)
-#define _MAX_WEAPON_STRING_SIZE_									(40+_NULL_CHAR_)
-#define _MAX_PLATFORM_STRING_SIZE_									(40+_NULL_CHAR_)
-
-#define _MAX_SIZE_OF_THREATNAME_									(70+_NULL_CHAR_)
-#define _MAX_SIZE_OF_KOREASITENAME_									(11+_NULL_CHAR_)
-#define _MAX_SIZE_OF_FACILITYNAME_									(72+_NULL_CHAR_)
 
 
 

@@ -28,12 +28,12 @@
 namespace Kompex
 {
 	//! Administration of the database and all concerning settings.
-	class _SQLiteWrapperExport SQLiteDatabase
+	class _SQLiteWrapperExport CSQLiteDatabase
 	{
 	public:
 		//! Default constructor.\n
 		//! Closes automatically the connection to a SQLite database file.
-		SQLiteDatabase();
+		CSQLiteDatabase();
 
 		/** 
 		Overloaded constructor.\n
@@ -54,7 +54,7 @@ namespace Kompex
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
-		SQLiteDatabase(const char *filename, int flags, const char *zVfs);
+		CSQLiteDatabase(const char *filename, int flags, const char *zVfs);
 
 		/** 
 		Overloaded constructor.\n
@@ -75,15 +75,15 @@ namespace Kompex
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
-		SQLiteDatabase(const std::string &filename, int flags, const char *zVfs);
+		CSQLiteDatabase(const std::string &filename, int flags, const char *zVfs);
 
 		//! Overloaded constructor.\n
 		//! Opens a connection to a SQLite database file.
 		//! @param filename		Database filename (UTF-16)
-		SQLiteDatabase(const char *filename);
+		CSQLiteDatabase(const char *filename);
 
 		//! Destructor
-		virtual ~SQLiteDatabase();
+		virtual ~CSQLiteDatabase();
 
 		/**
 		Opens a connection to a SQLite database file.\n
@@ -160,13 +160,13 @@ namespace Kompex
 		//! Trace() is invoked at various times when a SQL statement is being run by FetchRow(), SqlStatement() or ExecuteAndFree(). \n
 		//! The callback returns a UTF-8 rendering of the SQL statement text as the statement first begins executing.\n
 		//! Output: std::cout
-		inline void ActivateTracing() const {sqlite3_trace(m_pDatabaseHandle, &Kompex::SQLiteDatabase::TraceOutput, NULL );}
+		inline void ActivateTracing() const {sqlite3_trace(m_pDatabaseHandle, &Kompex::CSQLiteDatabase::TraceOutput, NULL );}
 		//! Profile() is invoked as each SQL statement finishes.\n
 		//! The profile callback contains the original statement text\n
 		//! and an estimate of wall-clock time of how long that statement took to run.\n
 		//! Note: time in ns\n
 		//! Output: std::cout
-		inline void ActivateProfiling() const {sqlite3_profile(m_pDatabaseHandle, &Kompex::SQLiteDatabase::ProfileOutput, NULL );}
+		inline void ActivateProfiling() const {sqlite3_profile(m_pDatabaseHandle, &Kompex::CSQLiteDatabase::ProfileOutput, NULL );}
 
 		//! The SetSoftHeapLimit() interface places a "soft" limit on the amount of heap memory that may be allocated by SQLite.\n
 		//! If an internal allocation is requested that would exceed the soft heap limit, sqlite3_release_memory()\n
@@ -194,14 +194,14 @@ namespace Kompex
 		long long GetMemoryHighwaterMark(bool resetFlag = false) const {return sqlite3_memory_highwater(resetFlag);}
 
 		//! Provided encodings for MoveDatabaseToMemory().
-		enum UtfEncoding {UTF8, UTF16};
+		enum UtfEncoding {_UTF8, _UTF16};
 
 		//! Move the whole database into memory.\n
 		//! Please pay attention, that after a call of MoveDatabaseToMemory() all SQL statements are executed into memory.\n
 		//! i.e. that all changes will be lost after closing the database!
 		//! Hint: this method can only be used for databases which were openend with a UTF8 filename
 		//! @param encoding		Encoding which will be used for moving the data.
-		void MoveDatabaseToMemory(UtfEncoding encoding = UTF8);
+		void MoveDatabaseToMemory(UtfEncoding encoding = _UTF8);
 
 		//! Takes a snapshot of a database which is located in memory and saves it to a database file.
 		//! @param filename		Filename for the new database file to which the snapshot will be saved.\n
@@ -299,7 +299,7 @@ namespace Kompex
 		int GetRuntimeStatusInformation(int operation, bool highwaterValue = false, bool resetFlag = false) const;
 
         // Ãß°¡
-        SQLiteDatabase *GetDatabase();
+        CSQLiteDatabase *GetDatabase();
 
 	private:
 		//! SQLite db handle

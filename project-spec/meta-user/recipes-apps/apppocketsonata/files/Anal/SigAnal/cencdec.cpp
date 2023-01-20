@@ -10,18 +10,29 @@
 
 #include "../Collect/DataFile/DataFile.h"
 
-SONATA::FREQ_RESOL _spFreqRes[ 3 ] = {  { 0,    2560,   0,      0.625 },
-                                        { 1280, 6400,   1260,   1.25  },
-                                        { 5866, 18740,  5866,   1.5   } } ;
+// SONATA::FREQ_RESOL _spFreqRes[ 3 ] = {  { 0,    2560,   0,      0.625 },
+//                                         { 1280, 6400,   1260,   1.25  },
+//                                         { 5866, 18740,  5866,   1.5   } } ;
 
 /**
  * @brief SONATA::CEncode::DOA
  */
 int SONATA::ENCODE::DOA( float fDOA )
 {
-    return (int) ( fDOA / SONATA::fAoaRes + 0.5 );
+    return (int) ( fDOA / SONATA::_fDOARes + 0.5 );
+
 }
 
+/**
+ * @brief     BAND
+ * @param     float fFREQ
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-24 15:31:01
+ * @warning
+ */
 int SONATA::ENCODE::BAND( float fFREQ )
 {
     int iBand=0;
@@ -46,7 +57,7 @@ int SONATA::ENCODE::BAND( float fFREQ )
  */
 int SONATA::ENCODE::FREQ( int iBAND, float fFREQ )
 {
-    return (int) ( ( ( fFREQ - _spFreqRes[iBAND].iOffset ) / _spFreqRes[iBAND].fRes ) + 0.5 );
+    return (int) ( ( ( fFREQ - _gFreqRes[iBAND].iOffset ) / _gFreqRes[iBAND].fRes ) + 0.5 );
 }
 
 /**
@@ -56,7 +67,7 @@ int SONATA::ENCODE::FREQ( int iBAND, float fFREQ )
  */
 unsigned int SONATA::ENCODE::TOA( float fTOA )
 {
-    return (unsigned int) ( fTOA * SONATA::fToaRes + 0.5 );
+    return (unsigned int) ( fTOA * SONATA::_dTOARes + 0.5 );
 }
 
 /**
@@ -66,7 +77,7 @@ unsigned int SONATA::ENCODE::TOA( float fTOA )
  */
 int SONATA::ENCODE::PW( float fPW )
 {
-    return (int) ( fPW / SONATA::fPWRes + 0.5 );
+    return (int) ( fPW / SONATA::_dPWRes + 0.5 );
 }
 
 
@@ -77,7 +88,7 @@ int SONATA::ENCODE::PW( float fPW )
  */
 int SONATA::ENCODE::PA( float fPA )
 {
-    return (int) ( ( fPA - SONATA::fPAOffset ) / SONATA::fPARes + 0.5 );
+    return (int) ( ( fPA - SONATA::_iPAOffset) / SONATA::_fPARes + 0.5 );
 }
 
 
@@ -96,7 +107,7 @@ int SONATA::ENCODE::SCNPRD( float fScanPrd )
  */
 float SONATA::DECODE::DOA( int iDOA )
 {
-    return (float) iDOA *SONATA::fAoaRes;
+    return (float) iDOA *SONATA::_fDOARes;
 
 }
 
@@ -108,7 +119,7 @@ float SONATA::DECODE::DOA( int iDOA )
  */
 float SONATA::DECODE::FREQ( int iBAND, int iFREQ )
 {
-    return ( (float) iFREQ  * _spFreqRes[iBAND].fRes ) + _spFreqRes[iBAND].iOffset;
+    return ( (float) iFREQ  * _gFreqRes[iBAND].fRes ) + _gFreqRes[iBAND].iOffset;
 }
 
 /**
@@ -119,7 +130,7 @@ float SONATA::DECODE::FREQ( int iBAND, int iFREQ )
  */
 float SONATA::DECODE::FREQ_C( int iBAND, int iFREQ )
 {
-    return ( ( (float) iFREQ  * _spFreqRes[iBAND].fRes ) + (float) 0.5 ) + _spFreqRes[iBAND].iOffset;
+    return ( ( (float) iFREQ  * _gFreqRes[iBAND].fRes ) + (float) 0.5 ) + _gFreqRes[iBAND].iOffset;
 }
 
 /**
@@ -130,7 +141,7 @@ float SONATA::DECODE::FREQ_C( int iBAND, int iFREQ )
  */
 float SONATA::DECODE::FREQ_F( int iBAND, int iFREQ )
 {
-    return ( (float) iFREQ  * _spFreqRes[iBAND].fRes ) + _spFreqRes[iBAND].iOffset;
+    return ( (float) iFREQ  * _gFreqRes[iBAND].fRes ) + _gFreqRes[iBAND].iOffset;
 }
 
 /**
@@ -140,7 +151,7 @@ float SONATA::DECODE::FREQ_F( int iBAND, int iFREQ )
  */
 float SONATA::DECODE::TOA( unsigned int uiTOA )
 {
-    return ( (float) uiTOA / (float) SONATA::fToaRes );
+    return ( (float) uiTOA / (float) SONATA::_dTOARes);
 }
 
 /**
@@ -150,7 +161,7 @@ float SONATA::DECODE::TOA( unsigned int uiTOA )
  */
 float SONATA::DECODE::PW( int iPW )
 {
-    return ( (float) iPW * (float) SONATA::fPWRes );
+    return ( (float) iPW * (float) SONATA::_dPWRes);
 }
 
 /**
@@ -160,5 +171,5 @@ float SONATA::DECODE::PW( int iPW )
  */
 float SONATA::DECODE::PA( int iPA )
 {
-    return ( (float) iPA * (float) SONATA::fPARes + SONATA::fPAOffset);
+    return ( (float) iPA * (float) SONATA::_fPARes + SONATA::_iPAOffset);
 }

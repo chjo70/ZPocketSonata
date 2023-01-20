@@ -31,7 +31,7 @@
 namespace Kompex
 {
 
-SQLiteDatabase::SQLiteDatabase():
+CSQLiteDatabase::CSQLiteDatabase():
 	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false),
 	mDatabaseFilenameUtf8("")
@@ -39,7 +39,7 @@ SQLiteDatabase::SQLiteDatabase():
 {
 }
 
-SQLiteDatabase::SQLiteDatabase(const char *filename, int flags, const char *zVfs):
+CSQLiteDatabase::CSQLiteDatabase(const char *filename, int flags, const char *zVfs):
 	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
@@ -47,27 +47,29 @@ SQLiteDatabase::SQLiteDatabase(const char *filename, int flags, const char *zVfs
 	Open(filename, flags, zVfs);
 }
 
-SQLiteDatabase::SQLiteDatabase(const char *filename):
+CSQLiteDatabase::CSQLiteDatabase(const char *filename):
 	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
 	Open(filename);
 }
 
-SQLiteDatabase::SQLiteDatabase(const std::string &filename, int flags, const char *zVfs):
+CSQLiteDatabase::CSQLiteDatabase(const std::string &filename, int flags, const char *zVfs):
 	m_pDatabaseHandle(NULL),
 	mIsMemoryDatabaseActive(false)
 {
 	Open(filename, flags, zVfs);
 }
 
-SQLiteDatabase::~SQLiteDatabase()
+CSQLiteDatabase::~CSQLiteDatabase()
 {
 	Close();
 }
 
-void SQLiteDatabase::Open(const char *filename, int flags, const char *zVfs)
+void CSQLiteDatabase::Open(const char *filename, int flags, const char *zVfs)
 {
+    sqlite3_enable_shared_cache(1);
+
 	// close old db, if one exist
 	if(m_pDatabaseHandle) {
 		Close();
@@ -83,8 +85,10 @@ void SQLiteDatabase::Open(const char *filename, int flags, const char *zVfs)
 	//mDatabaseFilenameUtf16 = L"";
 }
 
-void SQLiteDatabase::Open(const std::string &filename, int flags, const char *zVfs)
+void CSQLiteDatabase::Open(const std::string &filename, int flags, const char *zVfs)
 {
+    sqlite3_enable_shared_cache(1);
+
 	// close old db, if one exist
 	if(m_pDatabaseHandle)
 		Close();
@@ -98,8 +102,10 @@ void SQLiteDatabase::Open(const std::string &filename, int flags, const char *zV
 	//mDatabaseFilenameUtf16 = L"";
 }
 
-void SQLiteDatabase::Open(const char *filename)
+void CSQLiteDatabase::Open(const char *filename)
 {
+    sqlite3_enable_shared_cache(1);
+
 	// close old db, if one exist
 	if(m_pDatabaseHandle)
 		Close();
@@ -114,7 +120,7 @@ void SQLiteDatabase::Open(const char *filename)
 	//mDatabaseFilenameUtf16 = filename;
 }
 
-void SQLiteDatabase::Close()
+void CSQLiteDatabase::Close()
 {	
 	// detach database if the database was moved into memory
 	if(mIsMemoryDatabaseActive)
@@ -136,18 +142,18 @@ void SQLiteDatabase::Close()
 	}
 }
 
-void SQLiteDatabase::TraceOutput(void *ptr, const char *sql)
+void CSQLiteDatabase::TraceOutput(void *ptr, const char *sql)
 {
 	std::cout << "trace: " << sql << std::endl;
 }
 
-void SQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 tTime)
+void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 tTime)
 {
 	std::cout << "profile: " << sql << std::endl;
 	std::cout << "profile time: " << tTime << std::endl;
 }
 
-void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
+void CSQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 {
 	if(!mIsMemoryDatabaseActive) {
 		if(mDatabaseFilenameUtf8 == "" /* && mDatabaseFilenameUtf16 == L"" */) {
@@ -164,11 +170,11 @@ void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 		    // create the in-memory schema from the origin database
 		    sqlite3_exec(m_pDatabaseHandle, "BEGIN", 0, NULL, 0);
 
-		    if(encoding == UTF8)
+		    if(encoding == _UTF8)
 		    {
-			    sqlite3_exec(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", &Kompex::SQLiteDatabase::ProcessDDLRow, memoryDatabase, NULL );
+			    sqlite3_exec(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", &Kompex::CSQLiteDatabase::ProcessDDLRow, memoryDatabase, NULL );
 		    }
-		    else if(encoding == UTF16)
+		    else if(encoding == _UTF16)
 		    {
 // 			    struct sqlite3_stmt *statement;
 // 			    if(sqlite3_prepare_v2(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", -1, &statement, NULL ) != SQLITE_OK)
@@ -252,11 +258,11 @@ void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 		    // copy the data from the origin database to the in-memory
 		    sqlite3_exec(memoryDatabase, "BEGIN", 0, NULL, 0);
 
-		    if(encoding == UTF8)
+		    if(encoding == _UTF8)
 		    {
-			    sqlite3_exec(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", &Kompex::SQLiteDatabase::ProcessDMLRow, memoryDatabase, NULL );
+			    sqlite3_exec(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", &Kompex::CSQLiteDatabase::ProcessDMLRow, memoryDatabase, NULL );
 		    }
-		    else if(encoding == UTF16)
+		    else if(encoding == _UTF16)
 		    {
 // 			    struct sqlite3_stmt *statement;
 // 			    if(sqlite3_prepare_v2(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", -1, &statement, NULL ) != SQLITE_OK)
@@ -371,7 +377,7 @@ void SQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 	}
 }
 
-void SQLiteDatabase::CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite3 *rollbackDatabase, bool isDetachNecessary, bool isRollbackNecessary, sqlite3_stmt *stmt, const std::string &errMsg, int internalSqliteErrCode)
+void CSQLiteDatabase::CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite3 *rollbackDatabase, bool isDetachNecessary, bool isRollbackNecessary, sqlite3_stmt *stmt, const std::string &errMsg, int internalSqliteErrCode)
 {
 	if(stmt != NULL )
 		sqlite3_finalize(stmt);
@@ -386,7 +392,7 @@ void SQLiteDatabase::CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite
 	KOMPEX_EXCEPT(errMsg, internalSqliteErrCode);
 }
 
-int SQLiteDatabase::ProcessDDLRow(void *db, int columnsCount, char **values, char **columns)
+int CSQLiteDatabase::ProcessDDLRow(void *db, int columnsCount, char **values, char **columns)
 {
 	if(columnsCount != 1)
 	{
@@ -402,7 +408,7 @@ int SQLiteDatabase::ProcessDDLRow(void *db, int columnsCount, char **values, cha
 	return 0;
 }
 
-int SQLiteDatabase::ProcessDMLRow(void *db, int columnsCount, char **values, char **columns)
+int CSQLiteDatabase::ProcessDMLRow(void *db, int columnsCount, char **values, char **columns)
 {
 	if(columnsCount != 1)
 	{
@@ -420,7 +426,7 @@ int SQLiteDatabase::ProcessDMLRow(void *db, int columnsCount, char **values, cha
 	return 0;
 }
 
-void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
+void CSQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
 {
 	if(mIsMemoryDatabaseActive)
 	{
@@ -451,7 +457,7 @@ void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
 	}
 }
 
-void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const char *filename)
+void CSQLiteDatabase::SaveDatabaseFromMemoryToFile(const char *filename)
 {
 	if(mIsMemoryDatabaseActive)
 	{
@@ -463,7 +469,7 @@ void SQLiteDatabase::SaveDatabaseFromMemoryToFile(const char *filename)
 	}
 }
 
-void SQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
+void CSQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
 {
 	sqlite3_backup *backup;
 	backup = sqlite3_backup_init(destinationDatabase, "main", m_pDatabaseHandle, "main");
@@ -489,7 +495,7 @@ void SQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
 		KOMPEX_EXCEPT(sqlite3_errmsg(destinationDatabase), sqlite3_errcode(destinationDatabase));
 }
 
-bool SQLiteDatabase::IsDatabaseReadOnly()
+bool CSQLiteDatabase::IsDatabaseReadOnly()
 {
 	int result = sqlite3_db_readonly(m_pDatabaseHandle, "main");
 	if(result == -1)
@@ -498,7 +504,7 @@ bool SQLiteDatabase::IsDatabaseReadOnly()
 	return !!result;
 }
 
-void SQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_module *module, void *clientData, void(*xDestroy)(void*))
+void CSQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_module *module, void *clientData, void(*xDestroy)(void*))
 {
 	if(sqlite3_create_module_v2(m_pDatabaseHandle, moduleName.c_str(), module, clientData, xDestroy))
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
@@ -516,7 +522,7 @@ void SQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_m
  * @date      2022-06-28 13:08:09
  * @warning
  */
-int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterValue, bool resetFlag) const
+int CSQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterValue, bool resetFlag) const
 {
 	int iRet;
 	int curValue;
@@ -533,67 +539,67 @@ int SQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterVal
 	return iRet;
 }
 
-int SQLiteDatabase::GetNumberOfCheckedOutLookasideMemorySlots() const
+int CSQLiteDatabase::GetNumberOfCheckedOutLookasideMemorySlots() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_USED);
 }
 
-int SQLiteDatabase::GetHeapMemoryUsedByPagerCaches() const
+int CSQLiteDatabase::GetHeapMemoryUsedByPagerCaches() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_CACHE_USED);
 }
 
-int SQLiteDatabase::GetHeapMemoryUsedToStoreSchemas() const
+int CSQLiteDatabase::GetHeapMemoryUsedToStoreSchemas() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_SCHEMA_USED);
 }
 
-int SQLiteDatabase::GetHeapAndLookasideMemoryUsedByPreparedStatements() const
+int CSQLiteDatabase::GetHeapAndLookasideMemoryUsedByPreparedStatements() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_STMT_USED);
 }
 
-int SQLiteDatabase::GetPagerCacheHitCount() const
+int CSQLiteDatabase::GetPagerCacheHitCount() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_CACHE_HIT);
 }
 
-int SQLiteDatabase::GetPagerCacheMissCount() const
+int CSQLiteDatabase::GetPagerCacheMissCount() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_CACHE_MISS);
 }
 
-int SQLiteDatabase::GetNumberOfDirtyCacheEntries() const
+int CSQLiteDatabase::GetNumberOfDirtyCacheEntries() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_CACHE_WRITE);
 }
 
-int SQLiteDatabase::GetNumberOfUnresolvedForeignKeys() const
+int CSQLiteDatabase::GetNumberOfUnresolvedForeignKeys() const
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_DEFERRED_FKS);
 }
 
-int SQLiteDatabase::GetHighestNumberOfCheckedOutLookasideMemorySlots(bool resetValue)
+int CSQLiteDatabase::GetHighestNumberOfCheckedOutLookasideMemorySlots(bool resetValue)
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_USED, true, resetValue);
 }
 
-int SQLiteDatabase::GetLookasideMemoryHitCount(bool resetValue)
+int CSQLiteDatabase::GetLookasideMemoryHitCount(bool resetValue)
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_HIT, true, resetValue);
 }
 
-int SQLiteDatabase::GetLookasideMemoryMissCountDueToSmallSlotSize(bool resetValue)
+int CSQLiteDatabase::GetLookasideMemoryMissCountDueToSmallSlotSize(bool resetValue)
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE, true, resetValue);
 }
 
-int SQLiteDatabase::GetLookasideMemoryMissCountDueToFullMemory(bool resetValue)
+int CSQLiteDatabase::GetLookasideMemoryMissCountDueToFullMemory(bool resetValue)
 {
 	return GetRuntimeStatusInformation(SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL, true, resetValue);
 }
 
-SQLiteDatabase *SQLiteDatabase::GetDatabase()
+CSQLiteDatabase *CSQLiteDatabase::GetDatabase()
 {
     return this;
 }

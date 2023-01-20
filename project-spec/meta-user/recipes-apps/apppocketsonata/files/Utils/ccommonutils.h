@@ -4,6 +4,8 @@
 //#include "../Include/system.h"
 //#include "../Utils/cthread.h"
 
+#include "../Anal/INC/OS.h"
+
 #include "../Anal/SigAnal/_Type.h"
 
 #include "../Include/struct.h"
@@ -90,8 +92,12 @@ public:
 	// 시간관련 함수
     static DWORD GetTickCount();
     static void getStringPresentTime( char *pString, size_t szString );
-    static void getStringDesignatedTime( char *pString, size_t szString, __time32_t tiTime );
-    static void GetCollectTime(struct timespec *pTimeSpec, __time32_t tColTime, unsigned int tColTimeMs );
+    static void getStringDesignatedTime( char *pString, size_t szString, time_t tiTime );
+	//static void getStringDesignatedTime( char *pString, size_t szString, __time64_t tiTime );
+    //static void getFileNamingDesignatedTime(char *pString, size_t szString, __time32_t tiTime);
+    //static void getFileNamingDesignatedTime(char *pString, size_t szString, long tiTime);
+    static void getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime);
+    static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
     static void GetCollectTime( struct timespec *pTimeSpec );
 
     static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
@@ -109,6 +115,10 @@ public:
 
     // 랜덤 값
     static int Rand( int range );
+
+	// 문자열 파싱
+	static void Parsing(vector<string> *pValues, string *pStrIn, string & strDelimiter);
+	static int Parsing(vector<string> *pValues, const char *pData);
 
 };
 

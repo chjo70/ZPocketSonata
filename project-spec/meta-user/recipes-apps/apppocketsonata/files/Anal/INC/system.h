@@ -26,7 +26,7 @@
 #define SD_CARD                     (const char *) "/run/media/mmcblk0p1/SYSTEM"
 #elif defined(__linux__)
 #define SD_CARD                     (const char *) "/home/chjo70" // "/var/log/LOG"
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #define SD_CARD                     (const char *) "/RAMDRV:0/"
 #else
 #define SD_CARD                     (const char *) "E:\\SONATA2\\Dev\\PocketSONATA\\dev"               // getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
@@ -45,12 +45,14 @@
 
 #ifdef _XBAND_
 #define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
+#elif _701_
+#define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
 #else
 #define SHARED_DATA_DIRECTORY       (const char *) "d:/rawdata"
 #endif
 
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #define SHARED_DATA_DIRECTORY       (const char *) "/d/rawdata" // "/var/log/LOG"
 #else
 //#define SHARED_DATA_DIRECTORY     (const char *) "/run/user/1000/gvfs/smb-share:server=192.168.1.245,share=shared/rawdata"
@@ -63,9 +65,23 @@
 #elif defined(__linux__)
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/home/chjo70"
 #elif defined(__VXWORKS__)
+
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
+// #ifdef _POCKETSONATA_
+// #define CEDEOB_SQLITE_FOLDER        (const char *) "/d/rawdata"
+// #else
+// #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
+// #endif
+
+#else
+// Vxworks 나 리눅스에 
+
+#ifdef _POCKETSONATA_
+#define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata"         
 #else
 #define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"
+#endif
+
 #endif
 #define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
 
@@ -115,7 +131,7 @@
 #define LOG_DIRECTORY               (const char *) "/tmp/LOG"
 #elif _MSC_VER
 #define LOG_DIRECTORY               (const char *) "\\Debug\\LOG"
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #define LOG_DIRECTORY               (const char *) "/RAMDRV:0/LOG"
 #else
 #define LOG_DIRECTORY               (const char *) "c:/temp"
@@ -227,7 +243,7 @@
 
 // 최대 로그 크기
 // 최소 크기는 STR_QUEUE_LOG_MESSAGE 크기(3568바이트) 보다 커야 한다.
-#define MAX_LOGBUFFER_SIZE						sizeof(STR_QUEUE_LOG_MESSAGE)		// 10KB씩 로그 데이터를 압축해서 저장한다.
+//#define MAX_LOGBUFFER_SIZE						sizeof(STR_QUEUE_LOG_MESSAGE)		// 10KB씩 로그 데이터를 압축해서 저장한다.
 
 
 //
@@ -366,6 +382,19 @@
 #define _spMgFixFrqCD				        IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqBoundCD	                IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
+
+
+#elif defined(_701_)
+#define	MAX_FREQ_MHZ					    (40000)                     //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					    (500)						//!< 주파수 최소 값
+
+#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
+#define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD                       IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ                  IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD                  IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+
 
 #else
 //#error "컴파일러에 DEFINE 을 추가해야 합니다."

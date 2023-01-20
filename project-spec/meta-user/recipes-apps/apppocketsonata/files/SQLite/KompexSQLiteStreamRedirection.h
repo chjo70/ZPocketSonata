@@ -33,6 +33,7 @@ namespace Kompex
 		Redirection() 
 		{
 			pOutputFile = new std::ofstream();
+            mBuffer = nullptr;
 		}
 		//! Destrctor
 		virtual ~Redirection() 	

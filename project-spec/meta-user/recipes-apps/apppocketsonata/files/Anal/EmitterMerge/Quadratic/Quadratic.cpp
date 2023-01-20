@@ -20,7 +20,7 @@
 
 
 /**
- * @brief		CQuadratic
+ * @brief		객체 생성을 처리한다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -34,7 +34,7 @@ CQuadratic::CQuadratic(void)
 
 
 /**
- * @brief		~CQuadratic
+ * @brief		소멸자 처리를 수행한다.
  * @param		void
  * @return		
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -48,7 +48,7 @@ CQuadratic::~CQuadratic(void)
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief     Quadratic 알고리즘으로 위치 산출을 수행한다.
  * @param     SELPositionEstimationResult * pResult
  * @param     SELUTMTIME * pSensor
  * @param     int nEle
@@ -145,11 +145,11 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 	omega = ( 4 * sumA * sumD * sumE * sumG ) + ( sumB * sumG * ( sumE2 - sumD2 ) ) + sumED2;
 	gamma = sumG2 * ( ( sumA * sumE2 ) - ( sumB * sumD * sumE ) - ( sumA * sumD2 ) );
 
-	if( IS_NOT_ZERO(alpha) == true ) {
+	if(is_not_zero<double>(alpha) == true ) {
 		u1 = ( -omega + sqrt( omega*omega - ( 4. * alpha * gamma ) ) ) / ( 2. * alpha );
 		u2 = ( -omega - sqrt( omega*omega - ( 4. * alpha * gamma ) ) ) / ( 2. * alpha );
 
-        if( sumE2 != -sumD2 ) {
+        if( is_not_zero<double>( sumE2 + sumD2 ) == true ) {
             x1 = ( sumD * u1 + sumE * sumG ) / ( sumE2 + sumD2 );
             x2 = ( sumD * u2 + sumE * sumG ) / ( sumE2 + sumD2 );
 
@@ -177,7 +177,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
             dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
             dDistY = fabs( pResult->dEasting - ppLatitude[0] );
 
-            if( dDistX < 0.0001 && dDistY < 0.0001 || IS_ZERO( pResult->dEasting ) || IS_ZERO(pResult->dNorthing ) ) {
+            if( dDistX < 0.0001 && dDistY < 0.0001 || is_zero<double>( pResult->dEasting ) || is_zero<double>(pResult->dNorthing ) ) {
                 pResult->dEasting = -1;
                 pResult->dNorthing = -1;
                 pResult->dLongitude = -1;
@@ -206,7 +206,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 }
 
 /**
- * @brief		CalCEP
+ * @brief		CEP 연산을 수행한다.
  * @param		SELPE_RESULT * pResult
  * @param		SELABTDATA_EXT * pABTExtData
  * @return		void
@@ -239,7 +239,7 @@ void CQuadratic::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData )
 				iNumPE = MAX_OF_LOBS_PE;
 			}
 			else {
-				iNumPE = pABTExtData->uiPE;
+				iNumPE = (int) pABTExtData->uiPE;
 			}
 
 			// Northing 평균 구하기

@@ -60,8 +60,12 @@ typedef enum {
 
 typedef enum {
     enUnitToPDW,        // 장비 포멧을 PDW 구조체로 변경 (PDW 저장장치에 따라 PDW 불러오기용)
+
     enPDWToPDW,         // PDW 구조체를 PDW 구조체로 변경 (저장된 PDW 파일을 불러오기용)
+	enCSVToPDW,         // CSV로 저장된 를 PDW 구조체(실제 값)로 변경
+
     enPDWToReal,        // PDW 구조체를 실제값으로 변경 (그래프 전시용)
+
     enUnitToReal        // 장비 포멧을 실제값으로 변경 (그래프 전시용)
 
 } ENUM_CONVERT_OPTION;
@@ -103,7 +107,7 @@ struct STR_RAWDATA {
 
 typedef unsigned long long int _TOA;
 
-struct STR_PDWREALDATA {
+typedef struct {
 	unsigned int uiDataItems;
 
     _TOA *pullTOA;
@@ -113,7 +117,7 @@ struct STR_PDWREALDATA {
     float *pfPA;
 	float *pfPW;			// [ns]
 
-    float *pfTOA;
+    double *pdTOA;
     float *pfDTOA;
 
 	char *pcType;			// [신호형태]
@@ -124,7 +128,7 @@ struct STR_PDWREALDATA {
 
     } ;
 
-}  ;
+} STR_PDWREALDATA;
 
 struct STR_IQ_DATA {
 	int iDataItems;
@@ -247,6 +251,7 @@ public:
     virtual void MakeHeaderData( STR_PDWDATA *pPDWData ) = 0;
     virtual void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData ) = 0;
     virtual void MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData ) = 0;
+	virtual void MakeCSVDataToPDW() = 0;
     virtual void *GetData() = 0;
     virtual void *GetRealData() = 0;
     virtual void *GetHeader() = 0;
@@ -263,215 +268,332 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 소나타 PDW 데이터
 
-namespace SONATA {
-	const unsigned int uiPDW_CW=4;
-	const unsigned int uiPDW_NORMAL=0;
-	const unsigned int uiPDW_CHIRPUP=2;
-	const unsigned int uiPDW_CHIRPDN=3;
-	const unsigned int uiPDW_PMOP=1;
-	const unsigned int uiPDW_DV=1;
-
-    const float fAoaRes=(360.0/1024.);
-    const float fToaRes=(20);
-    const float fPWRes=(50);
-    const float fPARes=(80./256.);
-    const float fPAOffset=(-70.);
-}
+// namespace SONATA {
+// 	const unsigned int uiPDW_CW=4;
+// 	const unsigned int uiPDW_NORMAL=0;
+// 	const unsigned int uiPDW_CHIRPUP=2;
+// 	const unsigned int uiPDW_CHIRPDN=3;
+// 	const unsigned int uiPDW_PMOP=1;
+// 	const unsigned int uiPDW_DV=1;
+// 
+//     const float fAoaRes=(360.0/1024.);
+//     const float fToaRes=(20);
+//     const float fPWRes=(50);
+//     const float fPARes=(80./256.);
+//     const float fPAOffset=(-70.);
+// }
 
 //////////////////////////////////////////////////////////////////////////
 // SONATA 체계 RSA PDW 포멧
-namespace PDW {
-    #define PDW_PA_INIT		    (-89.0)
+// namespace PDW {
+//     #define PDW_PA_INIT		    (-89.0)
+// 
+// 	#define ONE_SEC				(20000000)
+// 	#define ONE_MICROSEC		(20)
+// 
+// 	#define PW_RES				(50)
+// 
+// 	#define	DOA_RES				(0.351562)
+// 
+// 	#define	AMP_RES				(0.351562)
+// 
+// 	struct FREQ_RESOL {
+// 		UINT uiMin;
+// 		UINT uiMax;
+// 		int iOffset;
+// 		float fRes;			// 각 구간에 따른 resolution
+// 	} ;
+// 
+// 	static FREQ_RESOL stFreqRes[ 3 ] = { {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+// 										 { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+// 										 { 5866, 18740, 5866, 1.5   } } ;
+// 
+// }
+// 
+// class CPDW : public CData
+// {
+// private:
+// 	//STR_PDW_DATA m_PDWData;
+// 
+// public:
+// 	CPDW(STR_RAWDATA *pRawData);
+// 	virtual ~CPDW();
+// 
+// 	void Alloc( unsigned int uiItems=0 );
+// 	void Free();
+// 	void ReadDataHeader() {  }
+//     void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
+//     
+// 	void *GetData();
+//     void *GetRealData();
+// 
+//     unsigned int GetDataItems( unsigned long long ullFileSize );
+// 
+// 	void *GetHeader() { return NULL; }
+// 
+// 	inline unsigned int GetOffsetSize() { return 0; }
+// 	inline int GetHeaderSize() { return 0; }
+//     inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
+//     inline void SetHeaderData( void *pData ) { return; }
+// 
+// public:
+// 
+//     /**
+//      * @brief     DecodeTOAus
+//      * @param     unsigned int uiTOA
+//      * @return    float
+//      * @exception
+//      * @author    조철희 (churlhee.jo@lignex1.com)
+//      * @version   0.0.1
+//      * @date      2022-02-09, 17:02
+//      * @warning
+//      */
+//     static double DecodeTOAus( unsigned int uiTOA  )
+//     {
+//         return (double) uiTOA / (double) ONE_MICROSEC;
+//     } ;
+// 
+// 	/**
+// 	 * @brief     DecodeRealFREQMHz
+// 	 * @param     int iBand
+// 	 * @param     unsigned int uiFreq
+// 	 * @return    float
+// 	 * @exception
+// 	 * @author    조철희 (churlhee.jo@lignex1.com)
+// 	 * @version   0.0.1
+// 	 * @date      2022-02-09, 17:02
+// 	 * @warning
+// 	 */
+// 	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
+// 	{
+// 		float fVal=0.0;
+// 
+// 		if( iBand >= 0 && iBand <= 2 ) {
+// 			fVal = FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
+// 		}
+// 		
+// 		return fVal;
+// 	}
+// 
+// 	/**
+// 	 * @brief     DecodePW
+// 	 * @param     unsigned int uiPW
+// 	 * @return    float
+// 	 * @exception
+// 	 * @author    조철희 (churlhee.jo@lignex1.com)
+// 	 * @version   0.0.1
+// 	 * @date      2022-02-09, 17:02
+// 	 * @warning
+// 	 */
+// 	static float DecodePW( unsigned int uiPW )
+// 	{
+// 		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
+// 	} ;
+// 
+// 	/**
+// 	 * @brief     DecodeFREQMHz
+// 	 * @param     int iFreq
+// 	 * @return    float
+// 	 * @exception
+// 	 * @author    조철희 (churlhee.jo@lignex1.com)
+// 	 * @version   0.0.1
+// 	 * @date      2022-02-09, 17:03
+// 	 * @warning
+// 	 */
+// 	static float DecodeFREQMHz( int iFreq )
+// 	{
+// 		return 0.0;
+// 	} ;
+// 	
+// 	/**
+// 	 * @brief     DecodeDOA
+// 	 * @param     unsigned int uiDOA
+// 	 * @return    float
+// 	 * @exception
+// 	 * @author    조철희 (churlhee.jo@lignex1.com)
+// 	 * @version   0.0.1
+// 	 * @date      2022-02-09, 17:03
+// 	 * @warning
+// 	 */
+// 	static float DecodeDOA( unsigned int uiDOA )
+// 	{
+// 		return (float) DOA_RES * (float) uiDOA;
+// 	} ;
+// 
+// 	/**
+// 	 * @brief     DecodePA
+// 	 * @param     unsigned int uiPA
+// 	 * @return    float
+// 	 * @exception
+// 	 * @author    조철희 (churlhee.jo@lignex1.com)
+// 	 * @version   0.0.1
+// 	 * @date      2022-02-09, 17:03
+// 	 * @warning
+// 	 */
+// 	static float DecodePA( unsigned int uiPA )
+// 	{		
+// 		return (float) ( ( (float) uiPA * (float) AMP_RES ) - (float) 110. );
+// 	} ;
+// 
+//     /**
+//      * @brief DecodeDOA
+//      * @param iDOA
+//      * @return
+//      */
+//     static unsigned int EncodeDOA(float fDOA )
+//     {
+//         fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
+//         return (unsigned int) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
+//     } ;
+// 
+// };
 
-	#define ONE_SEC				(20000000)
-	#define ONE_MICROSEC		(20)
 
-	#define PW_RES				(50)
 
-	#define	DOA_RES				(0.351562)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// SONATA + 수퍼헷 PDW 데이터
 
-	#define	AMP_RES				(0.351562)
 
+namespace SONATA {
+	const unsigned int uiPDW_CW = 4;
+	const unsigned int uiPDW_NORMAL = 0;
+	const unsigned int uiPDW_CHIRPUP = 2;
+	const unsigned int uiPDW_CHIRPDN = 3;
+	const unsigned int uiPDW_PMOP = 1;
+	const unsigned int uiPDW_DV = 1;
+
+	const float _fDOARes = (360.0 / 1024.);
+	const double _dTOARes = ( 50. / 1000000000. );
+	const double _dPWRes = (50. / 1000000000.);
+	const float _fPARes = (float) (80. / 256.);
+	const int _iPAOffset = -70;
+	const double dPAOffset = (-70.);
+
+#ifndef _FREQ_RESOL_
+#define _FREQ_RESOL_
 	struct FREQ_RESOL {
-		UINT uiMin;
-		UINT uiMax;
-		int iOffset;
+		// frequency band code를 위한 구조체
+		unsigned int uiMin;       // min frequency
+		unsigned int uiMax;       // max frequency
+		int iOffset;       // max frequency
 		float fRes;			// 각 구간에 따른 resolution
-	} ;
+	};
+#endif
 
-	static FREQ_RESOL stFreqRes[ 3 ] = { {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
-										 { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
-										 { 5866, 18740, 5866, 1.5   } } ;
-
+	const FREQ_RESOL _gFreqRes[3] =
+	{
+		{    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
+		{ 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
+		{ 5866, 18740, 5866, 1.5   }
+	};
 }
 
-class CPDW : public CData
+class CSPDW : public CData
 {
 private:
-	//STR_PDW_DATA m_PDWData;
+	STR_SONATA_HEADER m_stHeader;
+
+	//static int m_iBoardID;
 
 public:
-	CPDW(STR_RAWDATA *pRawData);
-	virtual ~CPDW();
+	CSPDW(char *pRawData, STR_FILTER_SETUP *pstFilterSetup, size_t szFileSize );
+	virtual ~CSPDW();
 
-	void Alloc( unsigned int uiItems=0 );
-	void Free();
-	void ReadDataHeader() {  }
-    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
-    
-	void *GetData();
-    void *GetRealData();
+	_COMMON_FUNCTIONS_;
 
-    unsigned int GetDataItems( unsigned long long ullFileSize );
+	void MakeHeaderData(STR_PDWDATA *pPDWData);
+	void MakePDWData(STR_PDWDATA *pPDWData, ENUM_CONVERT_OPTION enOption) { }
+	void MakePDWDataByUnitToPDW(STR_PDWDATA *pPDWData) { }
+	void MakePDWDataToReal(STR_PDWREALDATA *pPDWData);
+	void MakeCSVDataToPDW() { }
 
-	void *GetHeader() { return NULL; }
-
+	inline int GetBandWidth() { return (int)0; }
 	inline unsigned int GetOffsetSize() { return 0; }
-	inline int GetHeaderSize() { return 0; }
-    inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
-    inline void SetHeaderData( void *pData ) { return; }
+	inline void UpdateHeaderSize() { GetHeaderSize(); }
 
-public:
-
-    /**
-     * @brief     DecodeTOAus
-     * @param     unsigned int uiTOA
-     * @return    float
-     * @exception
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022-02-09, 17:02
-     * @warning
-     */
-    static float DecodeTOAus( unsigned int uiTOA  )
-    {
-        return (float) uiTOA / (float) ONE_MICROSEC;
-    } ;
 
 	/**
-	 * @brief     DecodeRealFREQMHz
-	 * @param     int iBand
-	 * @param     unsigned int uiFreq
-	 * @return    float
-	 * @exception
+	 * @brief     DecodeTOA
+	 * @param     UINT uiTOA
+	 * @return    double
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
 	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2022-02-09, 17:02
+	 * @version   1.0.0
+	 * @date      2023-01-08 11:39:54
 	 * @warning
 	 */
-	static float DecodeRealFREQMHz( int iBand, unsigned int uiFreq )
+	static double DecodeTOA( UINT uiTOA )
 	{
-		float fVal=0.0;
-
-		if( iBand >= 0 && iBand <= 2 ) {
-			fVal = FMUL( PDW::stFreqRes[iBand].fRes, uiFreq ) + PDW::stFreqRes[iBand].iOffset;
-		}
-		
-		return fVal;
-	}
+		return (double)( (double) uiTOA * (double) SONATA::_dTOARes);
+	};
 
 	/**
 	 * @brief     DecodePW
-	 * @param     unsigned int uiPW
-	 * @return    float
-	 * @exception
+	 * @param     UINT uiPW
+	 * @return    double
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
 	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2022-02-09, 17:02
+	 * @version   1.0.0
+	 * @date      2023-01-08 11:39:57
 	 * @warning
 	 */
-	static float DecodePW( unsigned int uiPW )
+	static double DecodePW(UINT uiPW)
 	{
-		return (float) ( uiPW ) * (float) PW_RES;		/* [ns] */
-	} ;
+		return (double)((double)uiPW * (double)SONATA::_dTOARes);
+	};
 
-	/**
-	 * @brief     DecodeFREQMHz
-	 * @param     int iFreq
-	 * @return    float
-	 * @exception
-	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2022-02-09, 17:03
-	 * @warning
-	 */
-	static float DecodeFREQMHz( int iFreq )
-	{
-		return 0.0;
-	} ;
-	
 	/**
 	 * @brief     DecodeDOA
 	 * @param     unsigned int uiDOA
 	 * @return    float
-	 * @exception
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
 	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2022-02-09, 17:03
+	 * @version   1.0.0
+	 * @date      2023-01-08 11:40:01
 	 * @warning
 	 */
 	static float DecodeDOA( unsigned int uiDOA )
 	{
-		return (float) DOA_RES * (float) uiDOA;
-	} ;
+		float fDOA;
+		fDOA = (float) SONATA::_fDOARes * (float)( uiDOA % 0x100 );
+		return fDOA;
+	};
 
 	/**
 	 * @brief     DecodePA
 	 * @param     unsigned int uiPA
 	 * @return    float
-	 * @exception
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
 	 * @author    조철희 (churlhee.jo@lignex1.com)
-	 * @version   0.0.1
-	 * @date      2022-02-09, 17:03
+	 * @version   1.0.0
+	 * @date      2023-01-08 11:40:03
 	 * @warning
 	 */
-	static float DecodePA( unsigned int uiPA )
-	{		
-		return (float) ( ( (float) uiPA * (float) AMP_RES ) - (float) 110. );
-	} ;
+	static float DecodePA(unsigned int uiPA)
+	{
+		float fPA;
+		fPA = (float)SONATA::_fPARes * (float)(uiPA) + SONATA::_iPAOffset;
+		return fPA;
+	};
 
-    /**
-     * @brief DecodeDOA
-     * @param iDOA
-     * @return
-     */
-    static unsigned int EncodeDOA(float fDOA )
-    {
-        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
-        return (unsigned int) ( (float) fDOA / SONATA::fAoaRes + 0.5 );
-    } ;
-
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// 수퍼헷 PDW 데이터
-
-class CSPDW : public CData
-{
-private:
-	//STR_PDW_DATA m_PDWData;
-
-public:
-	CSPDW(STR_RAWDATA *pRawData);
-	virtual ~CSPDW();
-
-	void Alloc( unsigned int uiItems=0 );
-	void Free();
-	void ReadDataHeader() {  }
-    void ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSetup=NULL, bool bSwap=true, ENUM_CONVERT_OPTION enOption=enUnitToPDW );
-	void *GetData();
-    void *GetRealData();
-	void *GetHeader() { return NULL; }
-
-    virtual void ConvertArrayData( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup=NULL ) = 0;
-
-	inline unsigned int GetOffsetSize() { return 0; }
-	inline int GetHeaderSize() { return 0; }
-    inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
-    inline void SetHeaderData( void *pData ) { return; }
+	/**
+	 * @brief     DecodeFREQ
+	 * @param     unsigned int uiFreq
+	 * @param     int iBand
+	 * @return    float
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   1.0.0
+	 * @date      2023-01-08 11:40:05
+	 * @warning
+	 */
+	static float DecodeFREQ(unsigned int uiFreq, int iBand )
+	{
+		float fFreq;
+		fFreq = (float) SONATA::_gFreqRes[iBand].fRes * (float)(uiFreq) +SONATA::_gFreqRes[iBand].iOffset;
+		fFreq *= 1000000.;
+		return fFreq;
+	};
 
 };
 
@@ -545,16 +667,16 @@ public:
      * @brief     DecodeTOAus
      * @param     _TOA uiTOA
      * @param     ENUM_BANDWIDTH enBandWidth
-     * @return    float
+     * @return    double
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-02-09, 17:03
      * @warning
      */
-    static float DecodeTOAus( _TOA uiTOA, ELINT::ENUM_BANDWIDTH enBandWidth )
+    static double DecodeTOAus( _TOA uiTOA, ELINT::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (float) uiTOA * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
+        return (double) ( ( (double) uiTOA * ELINT::_toaRes[enBandWidth] ) / (float) 1000000000. );
     } ;
 
     /**
@@ -751,6 +873,7 @@ public:
     void MakePDWData( STR_PDWDATA *pPDWDat, ENUM_CONVERT_OPTION enOption );
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
     void MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData );
+	void MakeCSVDataToPDW() { }
 
     inline int GetBandWidth() { return (int) m_enBandWidth; }
 
@@ -790,13 +913,13 @@ public:
      * @date      2022-02-09, 17:03
      * @warning
      */
-    static float DecodeTOAus( _TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
+    static double DecodeTOAus( _TOA tTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (float) uiTOA * XBAND::_toaRes[enBandWidth] ) / (float) 1000000000. );
+        return (float) ( ( (float) tTOA * XBAND::_toaRes[enBandWidth] ) / (float) 1. );
     } ;
 
     /**
-     * @brief     
+     * @brief     [s] 단위로 리턴한다.
      * @param     _TOA uiTOA
      * @param     ENUM_BANDWIDTH enBandWidth
      * @return    float
@@ -805,9 +928,9 @@ public:
      * @date      2022/02/22 22:37:47
      * @warning   
      */
-    static float DecodeTOA( _TOA uiTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
+    static double DecodeTOA( _TOA tTOA, XBAND::ENUM_BANDWIDTH enBandWidth )
     {
-        return (float) ( ( (double) uiTOA * XBAND::_toaRes[enBandWidth] ) / (double) 1000000000. );
+        return (double) ( ( (double) tTOA * XBAND::_toaRes[enBandWidth] ) / (double) 1000000000. );
     } ;
 
 	/**
@@ -1010,21 +1133,314 @@ public:
 
 };
 
+
+namespace _701 {
+	const float _toaRes[_701::enWIDE_BW + 1] = { (float) 14.0625, (float) 6.48824 };
+	const float _fFreqRes = (float) 0.01;
+	const float _fDOARes = (float) 0.1;
+	const float _fPARes = (float) 0.25;
+}
+
 // 701 PDW
 class C7PDW : public CData
 {
 private:
-	SRxPDWHeader m_stHeader;
-	//STR_PDW_DATA m_PDWData;
-    int m_enBandWidth;
+	bool m_bSwap;
+
+	STR_701_HEADER m_stHeader;
+	
+	_701::ENUM_BANDWIDTH m_enBandWidth;
+
+	UNION_HEADER m_uniHeader;				///< PDW 헤더용 구조체 저장소, CSV 때문에 따로 할당
 
 public:
-	C7PDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup );
+	C7PDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup, ENUM_DataType enDataType );
 	virtual ~C7PDW();
 
 	_COMMON_FUNCTIONS_
 
+	void MakeHeaderData(STR_PDWDATA *pPDWData);
+	void MakePDWData(STR_PDWDATA *pPDWData, ENUM_CONVERT_OPTION enOption) { }
+	void MakePDWDataByUnitToPDW(STR_PDWDATA *pPDWData) { }
+	void MakePDWDataToReal(STR_PDWREALDATA *pPDWData);
+	void MakeCSVDataToPDW(void);
+
+	// CSV 를 읽기 위한 함수 추가
+	int UpdateRow(SRxPDWDataRGroup *pstRxPDWDataRGroup, char *pData);
+
+	inline int GetBandWidth() { return (int) m_enBandWidth; }
 	inline unsigned int GetOffsetSize() { return 0; }
+	inline void UpdateHeaderSize() { GetHeaderSize(); }
+
+	/**
+	 * @brief
+	 * @param     int iPulseType
+	 * @return    unsigned int
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/21 23:08:21
+	 * @warning
+	 */
+	static unsigned int EncodePulseType(int iPulseType)
+	{
+		unsigned int ipluseType;
+
+		if (iPulseType == 0) {
+			ipluseType = STAT_NORMAL;
+		}
+		else {
+			ipluseType = STAT_CW;
+		}
+
+		return ipluseType;
+	};
+
+	/**
+	 * @brief     DecodeTOAus
+	 * @param     _TOA uiTOA
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:03
+	 * @warning
+	 */
+	static double DecodeTOAus(_TOA tTOA, _701::ENUM_BANDWIDTH enBandWidth)
+	{
+		return (float)(((float)tTOA * _701::_toaRes[enBandWidth]) / (float) 1.);
+	};
+
+	/**
+	 * @brief     [s] 단위로 리턴한다.
+	 * @param     _TOA uiTOA
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    float
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/22 22:37:47
+	 * @warning
+	 */
+	static double DecodeTOA(_TOA tTOA, _701::ENUM_BANDWIDTH enBandWidth)
+	{
+		return (double)(((double)tTOA * _701::_toaRes[enBandWidth]) / (double) 1000000000.);
+	};
+
+	/**
+	 * @brief
+	 * @param     _TOA uiTOA
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    unsigned int
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/17 15:16:39
+	 * @warning
+	 */
+	static _TOA EncodeTOAus(float fTOA, _701::ENUM_BANDWIDTH enBandWidth)
+	{
+		return (unsigned int)(((fTOA * (float) 1000.) / _701::_toaRes[enBandWidth]) + 0.5);
+	};
+
+	/**
+	 * @brief     EncodeTOAs
+	 * @param     float fTOA
+	 * @param     _701::ENUM_BANDWIDTH enBandWidth
+	 * @return    _TOA
+	 * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   1.0.0
+	 * @date      2023-01-18 18:29:36
+	 * @warning
+	 */
+	static _TOA EncodeTOAs(float fTOA, _701::ENUM_BANDWIDTH enBandWidth)
+	{
+		return (unsigned int)(((fTOA * (float) 1000000000.) / _701::_toaRes[enBandWidth]) + 0.5);
+	};
+
+	/**
+	 * @brief     DecodeRealFREQMHz
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-09, 17:04
+	 * @warning
+	 */
+	static float DecodeRealFREQMHz(unsigned int uiFreq)
+	{
+		float fVal;
+
+		fVal = FMUL(uiFreq, XBAND::_fFreqRes);
+
+		return fVal;
+	};
+
+	/**
+	 * @brief
+	 * @param     float fFreq
+	 * @return    unsigned int
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/17 15:33:22
+	 * @warning
+	 */
+	static unsigned int EncodeRealFREQMHz(float fFreq)
+	{
+		unsigned int uiFreq;
+
+		uiFreq = UDIV(fFreq, _701::_fFreqRes);
+
+		return uiFreq;
+	};
+
+	/**
+	 * @brief     DecodeFREQ
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-22, 15:52
+	 * @warning
+	 */
+	static float DecodeFREQ(unsigned int uiFreq)
+	{
+		float fFreq;
+
+		fFreq = FMUL(uiFreq, _701::_fFreqRes);
+		fFreq *= 1000000.;
+
+		return fFreq;
+	};
+
+	/**
+	 * @brief
+	 * @param     unsigned int uiFreq
+	 * @return    float
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/22 22:36:54
+	 * @warning
+	 */
+	static float DecodeFREQMHz(unsigned int uiFreq)
+	{
+		float fFreq;
+
+		fFreq = FMUL(uiFreq, XBAND::_fFreqRes);
+
+		return fFreq;
+	};
+
+	/**
+	 * @brief     DecodePW
+	 * @param     unsigned int uiPW
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodePW(unsigned int uiPW, _701::ENUM_BANDWIDTH enBandWidth )
+	{
+		return (float)(((float)uiPW * _701::_toaRes[enBandWidth]) / (float) 1000000000.);
+	};
+
+	/**
+	 * @brief
+	 * @param     float fPW
+	 * @param     ENUM_BANDWIDTH enBandWidth
+	 * @return    unsigned int
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/21 23:20:19
+	 * @warning
+	 */
+	static unsigned int EncodePWns(float fPW, _701::ENUM_BANDWIDTH enBandWidth)
+	{
+		return (unsigned int)((float)(fPW / _701::_toaRes[enBandWidth]) + 0.5);
+	};
+
+	/**
+	 * @brief     DecodeFREQMHz
+	 * @param     int iFreq
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodeFREQMHz(int iFreq)
+	{
+		return 0.0;
+	};
+
+	/**
+	 * @brief     DecodeDOA
+	 * @param     unsigned int uiDOA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodeDOA(unsigned int uiDOA)
+	{
+		float fDOA;
+		fDOA = (float)_701::_fDOARes * (float)(uiDOA % 36000);
+		return fDOA;
+	};
+
+	/**
+	 * @brief     EncodeDOA
+	 * @param     float fDOA
+	 * @return    unsigned int
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-02-22, 15:51
+	 * @warning
+	 */
+	static unsigned int EncodeDOA(float fDOA)
+	{
+		fDOA = (float)fmod((double)fDOA + (double)(360 * 10), (double) 360.0);
+		return (unsigned int)((float)fDOA / _701::_fDOARes + 0.5);
+	};
+
+	/**
+	 * @brief     DecodePA
+	 * @param     unsigned int uiPA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022-01-29, 15:20
+	 * @warning
+	 */
+	static float DecodePA(unsigned int uiPA)
+	{
+		//return (float)(((float)uiPA * (float)_701::_fPARes) - (float) 110.);
+		return -(float)(((float)uiPA * (float)_701::_fPARes) );
+	};
+
+	/**
+	 * @brief
+	 * @param     float fPA
+	 * @return    unsigned int
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   0.0.1
+	 * @date      2022/02/21 23:23:01
+	 * @warning
+	 */
+	static unsigned int EncodePA(float fPA)
+	{
+		return (unsigned int)(((float)(fPA + (float) 110.0) / (float)_701::_fPARes) + 0.5);
+	};
+
 
 };
 
@@ -1139,6 +1555,7 @@ public:
     void MakePDWData( STR_PDWDATA *pPDWData, ENUM_CONVERT_OPTION enOption );
     void MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData );
     void MakePDWDataToReal( STR_PDWREALDATA *pPDWData );
+	void MakeCSVDataToPDW() { }
 
     inline int GetBandWidth() { return ( int ) 0; }
 	inline unsigned int GetOffsetSize() { return 0; }
@@ -1170,9 +1587,14 @@ public:
     } ;
 
     /**
-     * @brief DecodeDOA
-     * @param iDOA
-     * @return
+     * @brief     방향정보로 단위로 [도] 변환한다.
+     * @param     int iDOA
+     * @return    float
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-04 13:25:57
+     * @warning
      */
     static float DecodeDOA(int iDOA )
     {
@@ -1197,9 +1619,14 @@ public:
     } ;
 
     /**
-     * @brief DecodePA
-     * @param iPA
-     * @return
+     * @brief     신호세기인 [dBm] 단위로 변환한다.
+     * @param     int iPA
+     * @return    float
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-04 13:26:35
+     * @warning
      */
     static float DecodePA(int iPA )
     {
@@ -1462,11 +1889,15 @@ public:
         return (int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
-
     /**
-     * @brief DecodePW
-     * @param iPW
-     * @return
+     * @brief     펄스폭으로 단위가 [ns]로 변환한다.
+     * @param     int iPW
+     * @return    float
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-04 13:27:20
+     * @warning
      */
     static float DecodePW( int iPW )
     {
@@ -1477,9 +1908,14 @@ public:
     } ;
 
     /**
-     * @brief DecodePWus
-     * @param iPW
-     * @return
+     * @brief     펄스폭으로 단위가 [us]로 변환한다.
+     * @param     int iPW
+     * @return    float
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-04 13:27:46
+     * @warning
      */
     static float DecodePWus( int iPW )
     {
@@ -1603,13 +2039,13 @@ public:
      * @param iTOA
      * @return
      */
-    static float DecodeTOAus( _TOA iTOA  )
+    static double DecodeTOAus( _TOA iTOA  )
     {
-        float fretTOA;
+        double fretTOA;
 
         iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        fretTOA = ( (float) iTOA * POCKETSONATA::_toaRes / (float) 1000. );
+        fretTOA = ( (double) iTOA * POCKETSONATA::_toaRes / (double) 1000. );
         return fretTOA;	/* [us] */
     } ;
 
@@ -1618,13 +2054,13 @@ public:
      * @param iTOA
      * @return
      */
-    static float DecodeTOAms( _TOA iTOA  )
+    static double DecodeTOAms( _TOA iTOA  )
     {
-        float fretTOA;
+        double fretTOA;
 
         iTOA = iTOA & 0xFFFFFFFFFFF;
 
-        fretTOA = ( (float) iTOA * POCKETSONATA::_toaRes / (float) 1000000. );
+        fretTOA = ( (double) iTOA * POCKETSONATA::_toaRes / (double) 1000000. );
         return fretTOA;	/* [ms] */
     } ;
 
@@ -1866,7 +2302,7 @@ public:
 
     void ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETUP *pFilterSetup, bool bConvert );
     CData *ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
-    void ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption );
+    void ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption, size_t szFileSize=0 );
     void SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM_UnitType enUnitType, ENUM_DataType enDataType, void *pDataEtc=NULL, int iSizeOfEtc=0 );
 	void Alloc();
 	void Free();
@@ -1966,6 +2402,8 @@ public:
 #endif
 
     inline STR_PDWDATA *GetPDWData() { return & m_pData->m_PDWData; }
+
+	//inline STR_PDWREALDATA *GetRealData() { return (STR_PDWREALDATA * ) m_pData->GetRealData(); }
 
     //inline STR_PDWDATA { if( m_pData != NULL ) return m_pData->m_PDWData; else return NULL; }
 	
@@ -2131,6 +2569,10 @@ public:
             uiDOA = CEPDW::EncodeDOA( fDOA );
 
         }
+		else if (g_enUnitType == en_701 ) {
+			uiDOA = C7PDW::EncodeDOA(fDOA);
+
+		}
         else {
             uiDOA = 0;
         }
@@ -2198,11 +2640,42 @@ public:
             tTOA = CEPDW::EncodeTOAus( fTOA, (ELINT::ENUM_BANDWIDTH) iBandWidth );
 
         }
+		else if (g_enUnitType == en_701) {
+			//tTOA = C7PDW::EncodeTOAus(fTOA, (ELINT::ENUM_BANDWIDTH) iBandWidth);
+			tTOA = 0;
+
+		}
         else {
             tTOA = 0;
         }
         return tTOA;
     }
+
+
+	static _TOA EncodeTOAs(float fTOA, int iBandWidth) {
+		_TOA tTOA;
+
+		if (g_enUnitType == en_XBAND) {
+			//tTOA = CXPDW::EncodeTOAs(fTOA, (XBAND::ENUM_BANDWIDTH) iBandWidth);
+
+		}
+		else if (g_enUnitType == en_ZPOCKETSONATA) {
+			//tTOA = CPOCKETSONATAPDW::EncodeTOAs(fTOA);
+
+		}
+		else if (g_enUnitType == en_ELINT) {
+			//tTOA = CEPDW::EncodeTOAs(fTOA, (ELINT::ENUM_BANDWIDTH) iBandWidth);
+
+		}
+		else if (g_enUnitType == en_701) {
+			tTOA = C7PDW::EncodeTOAs(fTOA, (_701::ENUM_BANDWIDTH) iBandWidth);
+
+		}
+		else {
+			tTOA = 0;
+		}
+		return tTOA;
+	}
 
     /**
      * @brief     EncodePWns
@@ -2265,6 +2738,11 @@ public:
             uiFrequency = CEPDW::EncodeRealFREQMHz( fFrequency );
 
         }
+		else if (g_enUnitType == en_701) {
+			*piCh = 0;
+			uiFrequency = C7PDW::EncodeRealFREQMHz(fFrequency);
+
+		}
         else {
             *piCh = 0;
             uiFrequency = 0;
@@ -2296,7 +2774,7 @@ public:
 
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            //int iBoardID = 3; // GetBandOfFreq( fFrequency );
             // uiFrequency = CPOCKETSONATAPDW::DecodeRealFREQMHz( uiFrequency, *piCh, ( int ) iBoardID, fFrequency );
             fFrequency = 0;
         }

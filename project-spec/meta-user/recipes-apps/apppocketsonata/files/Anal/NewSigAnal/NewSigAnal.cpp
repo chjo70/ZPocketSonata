@@ -74,6 +74,8 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pF
     m_theAnalPRI = new CNAnalPRI( this, uiCoMaxPdw);
     m_theMakeAET = new CNMakeAET( this, uiCoMaxPdw);    
 
+	m_pTheIntraSigAnal = new CIntraSigAnal();
+
     // 클래스 관련 초기화
     m_uiMaxPdw = uiCoMaxPdw;
 
@@ -99,6 +101,8 @@ CNewSigAnal::~CNewSigAnal()
     _SAFE_DELETE( m_thePulExt )
     _SAFE_DELETE( m_theAnalPRI )
     _SAFE_DELETE( m_theMakeAET )
+
+	_SAFE_DELETE( m_pTheIntraSigAnal )
 
 }
 
@@ -214,7 +218,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
         InsertRAWData( pPDWData, _spZero );
         
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, (int) m_uiCoPdw, m_pPDWData->GetBand() ) ) {
+        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, m_uiCoPdw, (UINT) m_pPDWData->GetBand() ) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->GetTaskID(), pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
@@ -245,7 +249,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
                     // m_thePulExt->UnknownExtract();
 
                     // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                    ClearAllMark( true );
+                    ClearAllMark();
 
                     // PRI 분석
                     m_theAnalPRI->Analysis();
@@ -274,7 +278,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
 
 /**
- * @brief     펄스열 추출 정보를 클리어 한다.
+ * @brief     펄스열 추출 정보를 클리어 한다 (CED 라이브러리 기반으로 추출된 펄스열 제외).
  * @param     bool bClear
  * @return    void
  * @exception
@@ -283,14 +287,22 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
  * @date      2022-05-30, 15:19
  * @warning
  */
-void CNewSigAnal::ClearAllMark( bool bClear )
+void CNewSigAnal::ClearAllMark()
 {
-    if( bClear == true ) {
-        memset( & MARK[0], 0, sizeof( MARK ) );
-    }
-    else {
+    unsigned int i;
+
+    USHORT *pMark;
+
+    pMark = & MARK[0];
+    for (i = 0; i < m_uiCoPdw; ++i) {
+        if (*pMark != enLIBRARY_MARK) {
+            *pMark = enUnMark;
+        }
+
+        ++pMark;
 
     }
+    // memset( & MARK[0], 0, sizeof( MARK ) );
 
 }
 
@@ -319,7 +331,7 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
         bRet = false;
     }
 
-#elif _ELINT_
+#elif defined(_ELINT_)
     if( ( pPDWData->x.el.enBandWidth != ELINT::en5MHZ_BW && pPDWData->x.el.enBandWidth != ELINT::en50MHZ_BW ) ) {
         Log( enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!" , pPDWData->x.el.enBandWidth );
         bRet = false;
@@ -347,7 +359,7 @@ void CNewSigAnal::InitAllVar()
 }
 
 /**
- * @brief     InitVar
+ * @brief     초기화 변수를 설정합니다.
  * @param     enum ANALYSIS_MODE analMode
  * @return    void
  * @exception
@@ -356,21 +368,22 @@ void CNewSigAnal::InitAllVar()
  * @date      2021-07-06, 15:59
  * @warning
  */
-void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
-{
-    m_AnalMode = analMode;
+// void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
+// {
+//     m_AnalMode = analMode;
+// 
+// }
 
-}
-
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CNewSigAnal::GetBand
-    \author   조철희
-    \param    freq 인자형태 int
-    \return   enum FREQ_BAND
-    \version  0.1.114
-    \date     2009-11-16 11:33:14
-    \warning
-*/
+/**
+ * @brief     대역 밴드를 요청합니다.
+ * @param     int freq
+ * @return    enum FREQ_BAND
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2009-11-16 11:33:14
+ * @warning
+ */
 enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 {
     enum FREQ_BAND enBand;

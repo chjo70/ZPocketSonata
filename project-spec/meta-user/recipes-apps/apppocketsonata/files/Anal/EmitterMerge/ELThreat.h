@@ -45,7 +45,11 @@ typedef enum {
 
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
+#ifdef _POCKETSONATA_
+#define TOTAL_ITEMS_OF_THREAT_NODE			(10)								// 최대 위협 개수
+#else
 #define TOTAL_ITEMS_OF_THREAT_NODE			(100000)						// 최대 위협 개수
+#endif
 
 /**
 * [식별자 : CLS-GMU-EL-L-SAC]
@@ -272,56 +276,56 @@ public:
 
 	}
 
-	CELThreat *Find( SELINDEX *pIndex )		
-	{ //#FA_Q_4020_T1 (Multiple exit points found)
-		UINT nIdx;
-
-		CELThreat *pThreat=NULL;
-
-		// 1. AET 찾기
-		nIdx = pIndex->uiAET;
-		pThreat = m_pLeftChild;
-		while( pThreat != NULL ) {
-			if( nIdx == pThreat->m_Idx.uiAET ) {
-				// 중지 여부 결정		
-				if( pIndex->uiABT == INVALID_INDEX ) {
-                    pThreat = NULL;
-					break;
-				}
-
-				// 2. ABT 찾기
-				//nIdx = pIndex->nABT;
-				pThreat = pThreat->m_pLeftChild;
-				while( pThreat != NULL ) {
-					if( pIndex->uiABT == pThreat->m_Idx.uiABT ) {
-						// 중지 여부 결정		
-						if( pIndex->uiLOB == INVALID_INDEX ) {
-							return pThreat;
-						}
-						
-						// 3. LOB 찾기
-						// nIdx = pIndex->nLOB;
-						pThreat = pThreat->m_pLeftChild;
-						while( pThreat != NULL ) {
-							if( pIndex->uiLOB == pThreat->m_Idx.uiLOB ) {
-								return pThreat;
-							}
-							pThreat = pThreat->m_pRightChild;
-						}
-						/* if( pThreat == NULL ) */
-						return NULL;
-					}
-					pThreat = pThreat->m_pRightChild;
-				}
-                pThreat = NULL;
-                break;
-			}
-	
-			pThreat = pThreat->m_pRightChild;
-		}
-		
-		return pThreat;
-	}
+// 	CELThreat *Find( SELINDEX *pIndex )		
+// 	{ //#FA_Q_4020_T1 (Multiple exit points found)
+// 		UINT nIdx;
+// 
+// 		CELThreat *pThreat=NULL;
+// 
+// 		// 1. AET 찾기
+// 		nIdx = pIndex->uiAET;
+// 		pThreat = m_pLeftChild;
+// 		while( pThreat != NULL ) {
+// 			if( nIdx == pThreat->m_Idx.uiAET ) {
+// 				// 중지 여부 결정		
+// 				if( pIndex->uiABT == INVALID_INDEX ) {
+//                     pThreat = NULL;
+// 					break;
+// 				}
+// 
+// 				// 2. ABT 찾기
+// 				//nIdx = pIndex->nABT;
+// 				pThreat = pThreat->m_pLeftChild;
+// 				while( pThreat != NULL ) {
+// 					if( pIndex->uiABT == pThreat->m_Idx.uiABT ) {
+// 						// 중지 여부 결정		
+// 						if( pIndex->uiLOB == INVALID_INDEX ) {
+// 							return pThreat;
+// 						}
+// 						
+// 						// 3. LOB 찾기
+// 						// nIdx = pIndex->nLOB;
+// 						pThreat = pThreat->m_pLeftChild;
+// 						while( pThreat != NULL ) {
+// 							if( pIndex->uiLOB == pThreat->m_Idx.uiLOB ) {
+// 								return pThreat;
+// 							}
+// 							pThreat = pThreat->m_pRightChild;
+// 						}
+// 						/* if( pThreat == NULL ) */
+// 						return NULL;
+// 					}
+// 					pThreat = pThreat->m_pRightChild;
+// 				}
+//                 pThreat = NULL;
+//                 break;
+// 			}
+// 	
+// 			pThreat = pThreat->m_pRightChild;
+// 		}
+// 		
+// 		return pThreat;
+// 	}
 
 	/**
 	 * @brief     노드의 좌측 포인터를 리턴한다.
@@ -458,6 +462,10 @@ public:
     inline int GetCoABT() {
         return m_iCoABT;
     }
+
+	inline int GetAETID() { return m_Idx.uiAET; }
+	inline int GetABTID() { return m_Idx.uiABT; }
+	inline int GetLOBID() { return m_Idx.uiLOB; }
 
 
 };

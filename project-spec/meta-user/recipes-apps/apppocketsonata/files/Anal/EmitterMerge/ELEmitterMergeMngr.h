@@ -105,7 +105,7 @@ private:
     bool m_bReqDetect;
     bool m_bReqTrack;
     
-    static int m_nSeqNum;										///< DB 테이블 번호
+    static unsigned int m_uiSeqNum;										///< DB 테이블 번호
 
     CInverseMethod m_theInverseMethod;
     CPositionEstimationAlg m_thePositionEstimation;
@@ -184,11 +184,6 @@ private:
     SEnvironVariable *m_pSEnvironVariable;
     
 
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-    UINT m_uiOpInitID;
-
-#endif
-
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
 
@@ -198,12 +193,13 @@ public:
 
 protected:
 #ifdef _SQLITE_
-    char *m_pszSQLString;
+    char m_szSQLString[MAX_SQL_SIZE];
+    wchar_t m_szSQLString16[MAX_SQL_SIZE];
 
-    Kompex::SQLiteDatabase *m_pDatabase;
+    Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
-    char *m_pszSQLString;
+    char m_szSQLString[MAX_SQL_SIZE];
 
 #else
 #endif
@@ -229,7 +225,7 @@ private:
     void NextAETID();
     void NextABTID();
     void RecoverThreat();
-    inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) ++ m_nGetSeqNum; else ++ m_nSeqNum; }
+    inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) ++ m_nGetSeqNum; else ++ m_uiSeqNum; }
 //
     void ClearLOBs( int nIndex );
     void AppendLOBs( int nIndex, enELControlLOB enControlLOB=APPEND_LOB );
@@ -237,27 +233,30 @@ private:
     void RemoveLOBs( std::vector<STR_LOBS> *pVecLOBs );
 //
 // 	// DB 관련 함수
-    void InsertAET( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_nSeqNum, UINT uiAETID=0, bool bDirectDB=false );
-    void InsertABT( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_nSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL );
+    void InsertAET( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_uiSeqNum, UINT uiAETID=0, bool bDirectDB=false );
+    void InsertABT( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_uiSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL );
     void InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB=false );
+
+    void UpdateCEDEOB(CELThreat *pTheThreat, bool bUpdateDB, bool bEnable, UINT nSeqNum, UINT uiAETID, UINT uiABTID, SELMERGE_CANDIDATE *pMergeCandidate);
+
 // 	void GetPolizationFromLOB( int *pPolization, int nLinkNum, int nAETID, int nABTID );
 // 	//void CalStatisticsFromABT( SRxABTData *pABTData );
 //
 // 	//
     bool ManageThreat( SELLOBDATA_EXT *pLOBDataExt, bool i_bCheckLOBMerge );
-    bool CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCluster=false, bool bDBInsert=true, UINT nSeqNum=m_nSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL, bool bOnlyMakeAET=false );
+    bool CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCluster=false, bool bDBInsert=true, UINT nSeqNum=m_uiSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL, bool bOnlyMakeAET=false );
 // 	//CELThreat *CreateThreat( CELThreat *pThreat );
 // 	//void MoveThreat( CELThreat *pMovedThreatABT, CELThreat *pDestThreatABT );
 // 	//void CopyThreat( CELThreat *pDestThreatAET, CELThreat *pDestThreatABT, CELThreat *pSourceThreatAET, CELThreat *pSourceThreatABT );
 //
     bool CompMergeLOB( SELLOBDATA_EXT *pThreatDataExt, bool bLinkComp );
     bool CompEmitterInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster=false, vector<SELMERGE_CANDIDATE> *pIVecCanOfMergeLOB=NULL, bool bDBInsert=true, UINT nSeqNum=m_nSeqNum, CELThreat *pSourceThreatAET=NULL, CELThreat *pSourceThreatABT=NULL, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
+    CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster=false, vector<SELMERGE_CANDIDATE> *pIVecCanOfMergeLOB=NULL, bool bDBInsert=true, UINT nSeqNum=m_uiSeqNum, CELThreat *pSourceThreatAET=NULL, CELThreat *pSourceThreatABT=NULL, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
     E_BEAM_EMITTER_STAT IsDeleteThreat( CELThreat *pTheThreat );
     int SelectTheDeletedABT( CELThreat *pTheThreat );
     bool WhichOfOldThreat( CELThreat *pTheThreat1, CELThreat *pTheThreat2 );
+	int DeleteThreat(CELThreat *pThreatAET, CELThreat *pThreatABT, bool bDeleteAllABT=false );
     int DeleteThreat( CELThreat *pTheThreat, bool bDeleteAllABT=false );
-    bool DeleteThreat( CELThreat *pTheAETThreat, CELThreat *pTheABTThreat );
     bool RemoveThreat( CELThreat *pTheThreat );
     void LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo );
 
@@ -267,7 +266,7 @@ private:
     void SetupDateTime( SELLOBDATA_EXT *pThreatDataExt );
     //void AddThreatInfo( E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_nSeqNum, bool bApplySearchFilter=true );
     void AddThreatInfo( SELLOBValidity *pSELLOBValidity, E_EMITTER_OPCODE enOpcode, bool bIsFISINTTask, bool bApplySearchFilter=true );
-    void AddThreatInfo( SELEmitterEdited *pSELEmitterEdited=NULL, E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_nSeqNum, bool bApplySearchFilter=true );
+    void AddThreatInfo( SELEmitterEdited *pSELEmitterEdited=NULL, E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_uiSeqNum, bool bApplySearchFilter=true );
 
     void SortMergeCandidate();
     bool DecideMergeCandidate();
@@ -276,10 +275,10 @@ private:
 //
 
     //inline SRxABTData *GetABTData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTData); }
-    inline SRxABTData *GetABTData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniABT.stABTData); }
-    inline SELABTDATA_EXT *GetABTExtData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniABT.stABTExtData); }
-    inline SRxAETData *GetAETData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniAET.stAETData); }
-    inline SELAETDATA_EXT *GetAETExtData( int nIndex ) { return & ( m_pUniThreat[nIndex].uniAET.stAETExtData); }
+    inline SRxABTData *GetABTData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniABT.stABTData); }
+    inline SELABTDATA_EXT *GetABTExtData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniABT.stABTExtData); }
+    inline SRxAETData *GetAETData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniAET.stAETData); }
+    inline SELAETDATA_EXT *GetAETExtData( unsigned int uiIndex ) { return & ( m_pUniThreat[uiIndex].uniAET.stAETExtData); }
 
 // 	// 빔 병합
     void ManageABTs( bool bMerge );
@@ -454,12 +453,15 @@ private:
     void PushAETLANData( SRxAETData *pAETData );
 
 
-    // 쿠리 수행 함수
+    // 퀴리 수행 함수
     bool InsertToDB_Position( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bFreqSeq );
     bool InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *pExt, bool bUpdateRadarMode=true );
     bool InsertToDB_ABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bUpdateThreat=true );
     bool InsertToDB_Position( SRxLOBData *pLOBData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bFreqSeq );
     bool InsertToDB_AET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SELEXTDB *pExtDB );
+
+	bool UpdateToDB_Stat(SRxABTData *pABTData);
+	bool UpdateToDB_Stat(SRxAETData *pAETData);
 
     inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
  
@@ -499,7 +501,7 @@ public:
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
 #ifdef _MSSQL_
-    inline unsigned int GetOpInitID() { return m_uiOpInitID; }
+    // inline unsigned int GetOpInitID() { return m_uiOpInitID; }
 #endif
 
     char *GetELNOT( int iRadarModeIndex );
@@ -548,6 +550,8 @@ public:
     void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
 #endif
 
+	unsigned int GetOpInitID();
+
     void DISP_FineLOB( SRxLOBData* pLOBData );
     void DISP_FineABT( SRxABTData *pABTData );
 
@@ -556,7 +560,20 @@ public:
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
 
+#ifdef _POCKETSONATA_
     // 아래는 멤버 변수들에 대한 접근 관련 함수 입니다.
+	inline bool IsTracking() { 
+		bool bRet=false;
+
+		if (m_pABTExtData != NULL) {
+			bRet = m_pABTExtData->bTracking;
+		}
+
+		return bRet;
+
+	}
+#endif
+
     inline bool ReqTrack() const { return m_bReqTrack; }
     inline void ReqTrack(bool val) { m_bReqTrack = val; }
 

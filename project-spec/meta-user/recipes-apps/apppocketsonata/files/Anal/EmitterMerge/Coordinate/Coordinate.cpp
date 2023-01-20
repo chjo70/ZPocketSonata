@@ -27,35 +27,46 @@
 #include "../Matrix/Matrix.h"
 #endif
 
-
-
-///생성자
+/**
+ * @brief     객체를 생성합니다.
+ * @return    
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-12 13:44:10
+ * @warning
+ */
 CCoordinate::CCoordinate()
 {
 
 }
 
-///소멸자
+/**
+ * @brief     ~CCoordinate
+ * @return    
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-12 13:45:19
+ * @warning
+ */
 CCoordinate::~CCoordinate()
 {
 
 }
 
-/********************************************************************************
-
-    @brief Calculates the length of the vector (x,y,z). Note the this can be used for
-    @detail  
-    Calculates the length of the vector (x,y,z). Note the this can be used for
-
-    @param[in] x : the x cartesian co-ordinate.
-    @param[in] y : the y cartesian co-ordinate.
-    @param[in] z : the z cartesian co-ordinate.
-    
-    @return The vector length.
-    @exception
-    @remark
-*********************************************************************************/
-
+/**
+ * @brief     Calculates the length of the vector (x,y,z). Note the this can be used for
+ * @param     the x cartesian co-ordinate.
+ * @param     the y cartesian co-ordinate.
+ * @param     the z cartesian co-ordinate.
+ * @return    벡터 길이
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-12 13:49:16
+ * @warning
+ */
 double CCoordinate::GetVectorLen(double x, double y, double z)
 {
     return(sqrt(x*x + y*y + z*z));
@@ -94,16 +105,16 @@ double CCoordinate::GetVectorLen(double x, double y)
 *********************************************************************************/
 double CCoordinate::CalcDistLLH( const SLlhPos &stLlh1,const SLlhPos &stLlh2)
 {
-    double distance;
+    double dDistance;
     SCartesian  stXyzPos1, stXyzPos2;
 
     
     CCoordinate::ConvertLLH2XYZ(stLlh1,&stXyzPos1);
     CCoordinate::ConvertLLH2XYZ(stLlh2,&stXyzPos2);	
 
-    distance = sqrt( (stXyzPos1.x - stXyzPos2.x)*(stXyzPos1.x - stXyzPos2.x) + (stXyzPos1.y - stXyzPos2.y)*(stXyzPos1.y - stXyzPos2.y) +(stXyzPos1.z - stXyzPos2.z)*(stXyzPos1.z - stXyzPos2.z) );
+	dDistance = sqrt( (stXyzPos1.x - stXyzPos2.x)*(stXyzPos1.x - stXyzPos2.x) + (stXyzPos1.y - stXyzPos2.y)*(stXyzPos1.y - stXyzPos2.y) +(stXyzPos1.z - stXyzPos2.z)*(stXyzPos1.z - stXyzPos2.z) );
 
-    return distance;
+    return dDistance;
 }
 
 /********************************************************************************
@@ -312,7 +323,7 @@ void CCoordinate::ConvertXYZ2LLH(const SCartesian &stXyz, SLlhPos *pstLlh)
     {
         pstLlh->lon = temp;
     }
-    else if ((x < 0) & (y >= 0))
+    else if ((x < 0) && (y >= 0))
     {
         pstLlh->lon = (M_PI + temp);
     }

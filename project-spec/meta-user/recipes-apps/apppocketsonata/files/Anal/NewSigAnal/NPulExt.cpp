@@ -195,8 +195,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         // 규칙성 펄스열을 찾은 펄스열 인덱스
         SetRefEndSeg();
 
-        //ClearAllMark( false );
-        m_pNewSigAnal->ClearAllMark( true );
+        ClearAllMark();
 
         //////////////////////////////////////////////////////////////////////////
         // 불규칙성 펄스열 찾기
@@ -215,7 +214,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
         //-
 //         if( MustDo2ndPulseExtract() == TRUE ) {
 //             //Printf( "\n 2-Pass" );
-//             m_pNewSigAnal->ClearAllMark( true );
+//             m_pNewSigAnal->ClearAllMark();
 // 
 //             MarkStablePulseTrain();
 // 
@@ -270,7 +269,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             case RadarModePRIType::enumStable :
                 extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
                 extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractStablePT( & extRange, 0, FALSE, LIBRARY_MARK );
+                ExtractStablePT( & extRange, 0, FALSE, enLIBRARY_MARK, LIBRARY_SEG );
                 break;
 
             case RadarModePRIType::enumDwellSWITCH :
@@ -291,7 +290,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             case RadarModePRIType::enumPATTERN :
                 extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
                 extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractJitterPT( & extRange, UINT32_MAX, _sp.cm.Rpc, TRUE , LIBRARY_MARK, TRUE );
+                ExtractJitterPT( & extRange, UINT32_MAX, _sp.cm.Rpc, TRUE , enLIBRARY_MARK, TRUE, LIBRARY_SEG);
                 break;
 
             default :
@@ -301,7 +300,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
             ++ pRadarMode;
         }
 
-        Log( enNormal, "___위협 라이브러리 기반 펄스열 추출: %d", m_uiCoSeg - m_uiAnalSeg );        
+        Log( enNormal, "위협 라이브러리 기반 펄스열 추출: %d 개", m_uiCoSeg - m_uiAnalSeg );
         PrintAllSeg();
 
     }
@@ -314,7 +313,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
  * @brief     추출한 펄스열을 마킹하도록 부 클래스로 호출한다.
  * @param     PDWINDEX * pPdwIndex
  * @param     unsigned int uiCount
- * @param     USHORT usMarkType
+ * @param     PULSE_EXTRACT_MARK usMarkType
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -322,9 +321,9 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
  * @date      2006-01-23 10:03:32
  * @warning
  */
-void CNPulExt::MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
+void CNPulExt::MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType)
 {
-    m_pNewSigAnal->MarkToPDWIndex( pPdwIndex, uiCount, usMarkType);
+    m_pNewSigAnal->MarkToPDWIndex( pPdwIndex, uiCount, enMarkType);
 
 }
 
@@ -412,14 +411,14 @@ STR_DTOA_HISTOGRAM *CNPulExt::GetDtoaHist()
 
 /**
  * @brief     펄스 개수를 얻는다.
- * @return    int
+ * @return    unsigned int
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2008-11-11 21:41:20
  * @warning
  */
-int CNPulExt::GetCoPdw()
+unsigned int CNPulExt::GetCoPdw()
 {
     return m_pNewSigAnal->GetCoPdw();
 }
@@ -439,3 +438,16 @@ int CNPulExt::GetCoPdw()
 // }
 
 
+/**
+ * @brief     펄스 마킹을 초기화 한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-11-04 16:20:09
+ * @warning
+ */
+void CNPulExt::ClearAllMark()
+{ 
+    m_pNewSigAnal->ClearAllMark(); 
+}

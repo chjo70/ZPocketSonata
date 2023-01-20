@@ -29,7 +29,7 @@
 
 namespace Kompex
 {
-	class SQLiteDatabase;
+	class CSQLiteDatabase;
 
 	enum BLOB_ACCESS_MODE
 	{
@@ -58,7 +58,7 @@ namespace Kompex
 		//! 								BLOB_READWRITE - opens the blob in read and write mode.\n
 		//! 								It is not possible to open a column that is part of an index or primary key for writing.\n
 		//! 								If foreign key constraints are enabled, it is not possible to open a column that is part of a child key for writing.
-		SQLiteBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode = BLOB_READWRITE);
+		SQLiteBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode = BLOB_READWRITE);
 		//! Destructor.\n
 		//! Calls also CloseBlob() so that you don't need to close the BLOB explicitly.
 		virtual ~SQLiteBlob();
@@ -77,7 +77,7 @@ namespace Kompex
 		//! 								BLOB_READWRITE - opens the blob in read and write mode.\n
 		//! 								It is not possible to open a column that is part of an index or primary key for writing.\n
 		//! 								If foreign key constraints are enabled, it is not possible to open a column that is part of a child key for writing.
-		void OpenBlob(SQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode = BLOB_READWRITE);
+		void OpenBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode = BLOB_READWRITE);
 		
 		//! Closes an open BLOB handle.\n
 		//! Shall cause the current transaction to commit if there are no other BLOBs,\n
@@ -117,7 +117,7 @@ namespace Kompex
 		//! BLOB handle
 		sqlite3_blob *mBlobHandle;
 		//! Database pointer
-		SQLiteDatabase *mDatabase;
+		CSQLiteDatabase *mDatabase;
 
 	};
 

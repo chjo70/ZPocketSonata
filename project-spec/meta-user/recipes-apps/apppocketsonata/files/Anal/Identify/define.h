@@ -12,8 +12,11 @@
 #include "../SigAnal/_Define.h"
 
 
-#define MAX_RADARMODE			(1000)
-#define MAX_THREAT				(500)
+// 최대 레이더모드 개수
+#define MAX_RADARMODE			    (20000)
+
+// 최대 위협 개수
+#define MAX_THREAT				    (5000)
 
 /**
  * @def       NO_FLIB_BAND
@@ -24,7 +27,7 @@
 
 
 // 쿼리문 길이
-#define MAX_SQL_SIZE                                    (1024*2)
+#define MAX_SQL_SIZE                (1024*4)
 
 
 

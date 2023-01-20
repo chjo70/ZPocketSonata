@@ -58,15 +58,17 @@ enum ENUM_BoardID {
                                 }
 
 
-#define _SAFE_MALLOC(A, B, C )  if( A == NULL ) { \
-									A = ( B * ) malloc( (size_t) C ); \
+#define _SAFE_MALLOC(A, B, C )  if( C != 0 ) { \
 									if( A == NULL ) { \
-										TRACE( "malloc error new memory[%s]" , #A ); \
+										A = ( B * ) malloc( (size_t) C ); \
+										if( A == NULL ) { \
+											TRACE( "malloc error new memory[%s]" , #A ); \
+										} \
 									} \
-                                } \
-                                else { \
-                                    TRACE( "Already malloc memory[%s]" , #A ); \
-                                }
+									else { \
+										TRACE( "Already malloc memory[%s]" , #A ); \
+									} \
+								}
 
 #define ELSE                    else { \
                                 }
@@ -113,15 +115,30 @@ enum ENUM_BoardID {
 
 
 
+/**
+ * @brief     두 수의 차이를 계산하여 리턴한다.
+ * @param     T x
+ * @param     T y
+ * @return    T
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-06-29 19:38:45
+ * @warning
+ */
 template <typename T>
 T _diffabs( T x, T y)
 {
+	T ret;
+
     if (x > y) {
-        return x - y;
+        ret = x - y;
     }
     else {
-        return y - x;
+        ret = y - x;
     }
+
+	return ret;
 }
 
 
@@ -171,6 +188,61 @@ T _diffabs( T x, T y)
 
 #define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 #define IPACNV( A )				IDIV( (A + 110.), _spAMPres )
+
+#define FFRQCNV( A, B )			( FMUL( gFreqRes[0].fRes, (A) ) + gFreqRes[0].iOffset )
+
+
+#define F_FRQMhzCNV( A, B )		FMUL( (B), (_frqRes[0]) )
+#define F_IFRQMhzCNV( A, B )	FDIV( (B), (_frqRes[0]) )
+
+#define FPWCNV( A )             FMUL( (A), _spOneNanosec )
+
+#define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
+
+
+
+#elif defined(_701_)
+#define FRQMhzCNV( A, B )		IMUL( (B), (0.01) )
+#define I_FRQMhzCNV( A, B )		IMUL( (B), ( 0.01) )
+#define FFRQMhzCNV( A, B )		(float) ( (float)(B) * (float) (0.01) )
+#define DFRQMhzCNV( A, B )		(double) ( (double)(B) * (double) (0.01) )
+#define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.01) )
+#define I_IFRQMhzCNV( A, B )	IMUL( B, 100. ) 
+
+
+
+#define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
+#define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
+#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )					
+#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
+
+#define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+#define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
+#define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+#define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
+#define AOACNV( A )             FMUL( (A), _spAOAres )
+#define I_AOACNV( A )           IMUL( (A), _spAOAres )
+#define FAOACNV( A )            FMUL( (A), _spAOAres )
+#define IAOACNV( A )            IDIV( (A), _spAOAres )
+
+#define I_IPACNV( A )			IDIV( (A), _spAMPres )
+
+
+//IDIV( FMUL( B, 1000. ), (0.001) )
+
+#define IPWCNVLOW( A )			_DIV( (A*_spOneMicrosec), 1000. )
+#define IPWCNVHGH( A )			UDIV( (A*_spOneMicrosec), 1000. )
+
+#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
+#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+//#define FRQRESCNV( A, B )		(UINT) ( abs( (int) IMUL( gFreqRes[(A)].fRes, (B) ) ) )
+#define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
+
+#define PACNV( A )				(float)( FMUL( (-A), _spAMPres ) )
+#define IPACNV( A )				IDIV( -A, _spAMPres )
 
 #define FFRQCNV( A, B )			( FMUL( gFreqRes[0].fRes, (A) ) + gFreqRes[0].iOffset )
 
@@ -275,7 +347,6 @@ T _diffabs( T x, T y)
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
-
 
 #else
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
@@ -411,6 +482,9 @@ float _spPWres;
 #if defined(_ELINT_)
 float _frqRes[ELINT::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 
+#elif defined(_701_)
+float _frqRes[_701::enUnknown_BW + 1] = { (float) 0.001, (float) 0.001, (float) 0.0 };
+
 #elif defined(_XBAND_)
 float _frqRes[XBAND::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
@@ -438,6 +512,9 @@ extern float _spPWres;
 
 #if defined(_ELINT_)
 extern float _frqRes[ELINT::enUnknown_BW + 1];
+
+#elif defined(_701_)
+extern float _frqRes[_701::enUnknown_BW + 1];
 
 #elif defined(_XBAND_)
 extern float _frqRes[XBAND::enUnknown_BW + 1];

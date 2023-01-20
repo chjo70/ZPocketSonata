@@ -40,19 +40,19 @@ public:
 	//##ModelId=452B0C550065
 	int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
 	//##ModelId=452B0C550067
-	int GetColPdw();
+	unsigned int GetColPdw();
 	//##ModelId=452B0C550068
 	int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
 	//##ModelId=452B0C550079
 	int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	
-	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
+	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType);
 	
-	void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
+	void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
 	//##ModelId=452B0C55008E
 	unsigned int GetCoSeg();
 	//##ModelId=452B0C550097
-	int GetCoEmitter();
+	unsigned int GetCoEmitter();
 	//##ModelId=452B0C550098
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();
 	//##ModelId=452B0C550099
@@ -61,9 +61,8 @@ public:
 	UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
 	STR_PDWPARAM* GetPdwParam();
 
-	//##ModelId=452B0C5500A2
-    CNMakeAET( void *pParent, int coMaxPdw );
-	//##ModelId=452B0C5500A5
+	
+    CNMakeAET( void *pParent, unsigned int uicoMaxPdw );	
 	virtual ~CNMakeAET();
 
 	// 타 장비 관련 위협 데이터를 생성한다.

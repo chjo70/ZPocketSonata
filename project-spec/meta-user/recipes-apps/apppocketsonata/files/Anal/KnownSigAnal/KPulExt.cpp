@@ -30,7 +30,7 @@
 // 최 종 변 경  : 조철희, 2005-07-28 14:10:33
 //
 //##ModelId=42E85F3303AD
-CKPulExt::CKPulExt( void *pParent, int coMaxPdw ) : CPulExt( coMaxPdw )
+CKPulExt::CKPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
@@ -172,7 +172,7 @@ void CKPulExt::ExtractPulseTrainByLibrary(vector<SRadarMode *> *pVecMatchRadarMo
             case RadarModePRIType::enumPATTERN:
                 extRange.tMinPRI = ITOAusCNV(pRadarMode->fPRI_TypicalMin);
                 extRange.tMaxPRI = ITOAusCNV(pRadarMode->fPRI_TypicalMax);
-                ExtractJitterPT(&extRange, UINT_MAX, _sp.cm.Rpc, TRUE, JITTER_MARK, TRUE);
+                ExtractJitterPT(&extRange, UINT_MAX, _sp.cm.Rpc, TRUE, enJITTER_MARK, TRUE);
                 break;
 
             default:
@@ -436,9 +436,9 @@ void CKPulExt::KnownPulseExtract()
 			    \date 2006-09-04 20:56:25, 조철희
 			*/
 			// 지터열 추출 마진 설정
-            diff = UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
-            extRange.tMinPRI = _max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
-            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMean ) + diff;
+            diff = (int) UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+EXTRACT_JITTER_MARGIN ), 200 );
+            extRange.tMinPRI = (_TOA) max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
+            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMean ) + (_TOA) diff;
 			ExtractStablePT( & extRange, TRUE );
 			DiscardStablePT();
 
@@ -447,9 +447,9 @@ void CKPulExt::KnownPulseExtract()
 								Stable은 기존대로 추출하며 Jitter열은 위협 신호 발생기를 고려해서 좀더 추출하게 함.
 			    \date 2008-10-25 17:01:53, 조철희
 			*/
-            diff = UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+20 ), 200 );
-            extRange.tMinPRI = _max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
-            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMean ) + diff;
+            diff = (int) UDIV( m_pTrkAet->fPRIMean * ( m_pTrkAet->fPRIJitterRatio+20 ), 200 );
+            extRange.tMinPRI = (_TOA) max( (int)(m_pTrkAet->fPRIMean - diff), 2 );
+            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMean ) + (_TOA) diff;
 			// 추출할 펄스열의 범위폭을 계산한다.
 			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
 
@@ -465,8 +465,8 @@ void CKPulExt::KnownPulseExtract()
 			// 추출할 펄스열의 범위폭을 계산한다.
 			diff = 200;
 			//-- 조철희 2006-02-22 09:59:34 --//
-            extRange.tMinPRI = ITOAusCNV( m_pTrkAet->fPRIMin ) - diff;
-            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMax ) + diff;
+            extRange.tMinPRI = ITOAusCNV( m_pTrkAet->fPRIMin ) - (_TOA) diff;
+            extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMax ) + (_TOA) diff;
 			ExtractPatternPT( & extRange, 3, TRUE );
 			break;
 
@@ -503,7 +503,7 @@ void CKPulExt::DiscardStablePT()
 
 	    // 단일 규칙성 펄스열과 펄스열이 추출하지 않을때는 제거하지 않는다.
 	    if( m_uiCoSeg == 1 ) {
-            MarkToPDWIndex( & pSeg[0], EXTRACT_MARK );
+            MarkToPDWIndex( & pSeg[0], enEXTRACT_MARK );
 		    m_uiCoSeg = 0;
 	    }
         else {
@@ -593,18 +593,22 @@ STR_DTOA_HISTOGRAM *CKPulExt::GetDtoaHist()
 		\date     2008-11-11 21:40:41
 		\warning
 */
-int CKPulExt::GetCoPdw()
+unsigned int CKPulExt::GetCoPdw()
 {
 	return m_pKnownSigAnal->GetCoPdw();
 }
 
-
 /**
- * @brief CKPulExt::CheckHarmonic
- * @param priMean1
- * @param priMean2
- * @param uiThreshold
- * @return
+ * @brief     하모닉을 체크한다.
+ * @param     _TOA priMean1
+ * @param     _TOA priMean2
+ * @param     _TOA uiThreshold
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-12-08 13:31:33
+ * @warning
  */
 UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {

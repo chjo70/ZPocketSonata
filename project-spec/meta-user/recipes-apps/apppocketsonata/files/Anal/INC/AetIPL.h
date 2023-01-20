@@ -1,5 +1,5 @@
 /****************************************************************************************
- 파 일 명 : _aetipl.h
+ 파 일 명 : AetIPL.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
  가    정 :
@@ -26,10 +26,10 @@
 
 #include "system.h"
 
-#ifdef _MIDAS_
-#else
-#include "../EmitterMerge/ELMsgDefn.h"
-#endif
+// #ifdef _MIDAS_
+// #else
+// #include "../EmitterMerge/ELMsgDefn.h"
+// #endif
 
 #include "../EmitterMerge/ELMsgDefn.h"
 
@@ -43,8 +43,7 @@
 ///////////////////////       AET DEFINES      /////////////////////////////////////////////
 
 
-//##ModelId=452B0C51000F
-#if defined(_ELINT_)
+#if defined(_ELINT_) || defined(_701_)
 enum FREQ_BAND
 {
     BAND0=0,
@@ -182,7 +181,7 @@ enum enSIGNAL_TYPE
 // 내부 신호 분석에서 사용하는 정의
 enum enFREQ_TYPE
 {
-    _FIXED              = 0,
+    _FREQ_FIXED              = 0,
     _HOPPING,
     _RANDOM_AGILE,
     _PATTERN_AGILE,
@@ -300,7 +299,6 @@ static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "
 #elif defined(_POCKETSONATA_)
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
-//##ModelId=452B0C51022C
 enum ENUM_AET_SCAN_TYPE {
     E_AET_SCAN_UNKNOWN = 0,
     //##ModelId=452B0C510241
@@ -355,6 +353,36 @@ enum SCAN_STAT
 //static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #elif defined(_SONATA_)
 //static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
+
+#elif defined(_701_)
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum ENUM_AET_SCAN_TYPE {
+	E_AET_SCAN_UNKNOWN = 0,
+	//##ModelId=452B0C510241
+	E_AET_SCAN_CIRCULAR = 1,
+	//##ModelId=452B0C51024A
+	E_AET_SCAN_UNI_DIRECTIONAL,
+	//##ModelId=452B0C510254
+	E_AET_SCAN_BI_DIRECTIONAL,
+	//##ModelId=452B0C51025E
+	E_AET_SCAN_CONICAL,
+	//##ModelId=452B0C510268
+	E_AET_SCAN_STEADY,
+
+	E_AET_SCAN_SCANFAIL,
+	//##ModelId=452B0C510286
+	UFO,
+	MAX_SCANTYPE,
+	//##ModelId=452B0C510287
+	DetType,
+	//##ModelId=452B0C510290
+	TYPE_UNKNOWN,
+};
+
+
+
+
 #else
 //static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #endif
@@ -493,7 +521,7 @@ struct STR_SEEN_TIME {
 //##ModelId=452B0C5103C7
 struct STR_SYSID {
   int coAmbi;
-  UINT noIPL[ _spMaxCoSysAmbi ];
+  int iNoIPL[ _spMaxCoSysAmbi ];
 } ;
 
 #define SZ_MAX_ELNOT			8		// Elint notation 길이
@@ -532,35 +560,35 @@ struct stEmitterNo {
 } ;
 
 // 접촉 시간
-struct stContactTime {
-	unsigned int	FirstSeenTime	: 17;			// 최초 접촉 시간
-	unsigned int	LastSeenTime	: 15;			// 최근 접촉 시간
+// struct stContactTime {
+// 	unsigned int	FirstSeenTime	: 17;			// 최초 접촉 시간
+// 	unsigned int	LastSeenTime	: 15;			// 최근 접촉 시간
+// 
+// } ;
 
-} ;
-
-struct STR_CVIAET {
-	stEmitterNo EmitterNo;								// 에미터 번호
-	unsigned short SigType		: 7 ;				// 신호 형태
-	unsigned short Brg				: 9 ;				// 방위 - 0.703125
-	unsigned short Level			: 5 ;				// 레벨
-	unsigned short PW					: 11;				// PW - 1ns
-	unsigned char	PA;											// 신호 세기 - 0.3125
-	unsigned char	FreqType;								// 주파수 형태
-	unsigned short Freq;									// 주파수 - 1MHz
-	unsigned char	PRIType;								// PRI 형태
-	unsigned char	JitterRate;							// 지터율 - 0.1%
-	unsigned short PRI;										// PRI - 10ns
-	unsigned short ScanRate;							// 스캔 주기 - 1ms
-	unsigned char ScanType;								// 스캔 형태
-	unsigned char	Platform;								// Platform
-	unsigned short Prt;										// 우선순위
-	unsigned char	Range;									// 개략거리
-        char ELNote[SZ_MAX_ELNOT];						// ELNOTE
-	char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
-	char ThreatName[SZ_MAX_THREATNAME];		// 위협명
-	stContactTime	ContactTime;						// 접촉 시간
-
-} ;
+// struct STR_CVIAET {
+// 	stEmitterNo EmitterNo;								// 에미터 번호
+// 	unsigned short SigType		: 7 ;				// 신호 형태
+// 	unsigned short Brg				: 9 ;				// 방위 - 0.703125
+// 	unsigned short Level			: 5 ;				// 레벨
+// 	unsigned short PW					: 11;				// PW - 1ns
+// 	unsigned char	PA;											// 신호 세기 - 0.3125
+// 	unsigned char	FreqType;								// 주파수 형태
+// 	unsigned short Freq;									// 주파수 - 1MHz
+// 	unsigned char	PRIType;								// PRI 형태
+// 	unsigned char	JitterRate;							// 지터율 - 0.1%
+// 	unsigned short PRI;										// PRI - 10ns
+// 	unsigned short ScanRate;							// 스캔 주기 - 1ms
+// 	unsigned char ScanType;								// 스캔 형태
+// 	unsigned char	Platform;								// Platform
+// 	unsigned short Prt;										// 우선순위
+// 	unsigned char	Range;									// 개략거리
+//         char ELNote[SZ_MAX_ELNOT];						// ELNOTE
+// 	char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
+// 	char ThreatName[SZ_MAX_THREATNAME];		// 위협명
+// 	stContactTime	ContactTime;						// 접촉 시간
+// 
+// } ;
 
 
 
@@ -831,7 +859,7 @@ struct STR_LOC {
     UINT aoaIndex;
     int aoa[_spMaxAoaQueue];
 
-    UINT stat;	// 에미터 상태 정보
+    UINT uiStat;	// 에미터 상태 정보
     enum SCAN_MODE scanMode;
 
     STR_PDWFILTER_INFO trackFI;
@@ -958,12 +986,12 @@ struct STR_MANAET {
 //
 //##ModelId=452B0C520147
 struct IPL_FRQ {
-  UINT type;
-  int low;
-  int hgh;
+  UINT uiType;
+  int iLow;
+  int iHigh;
   UINT bw;
-  UINT patType;
-  int swtLev;
+  UINT uiPatternType;
+  int iSwitchLevel;
   int swtValLow[ MAX_FREQ_PRI_STEP ];
   int swtValHgh[ MAX_FREQ_PRI_STEP ];
   UINT ppLow;
@@ -975,9 +1003,9 @@ struct IPL_FRQ {
 //
 //##ModelId=452B0C52015B
 struct IPL_PRI {
-  UINT type;
-  int low;
-  int hgh;
+  UINT uiType;
+  int iLow;
+  int iHigh;
   UINT patType;
   UINT jtrPer;
   int swtLev;
@@ -990,17 +1018,15 @@ struct IPL_PRI {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  IPL용 LowHigh 구조체
 //
-//##ModelId=452B0C52016F
 struct IPL_LOWHGH
 {
-  int low;
-  int hgh;
+  int iLow;
+  int iHigh;
 } ;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  IPL용 스캔 구조체
 //
-//##ModelId=452B0C52018D
 struct IPL_AS {
   UINT type;
   UINT prdLow;
@@ -1010,7 +1036,6 @@ struct IPL_AS {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  IPL용 platform 구조체
 //
-//##ModelId=452B0C5201A1
 struct IPL_PLAT
 {
   UINT noplat;
@@ -1024,16 +1049,16 @@ struct IPL_PLAT
 //##ModelId=452B0C5201B5
 typedef struct
 {
-  UINT noIPL;
-  UINT sigType;
-  IPL_FRQ frq;
-  IPL_PRI pri;
-  IPL_LOWHGH pw;
-  IPL_AS as;
+  UINT uinoIPL;
+  UINT iSigType;
+  IPL_FRQ stFreq;
+  IPL_PRI stPRI;
+  IPL_LOWHGH stPW;
+  IPL_AS stAS;
   UINT tmoDel;
   UINT thrLev;
   UINT autoWarn;
-  UCHAR elintNot[ 8 ];
+  UCHAR szELNOT[ 8 ];
   UCHAR elintName[ 20 ];
   UINT cat;
   UINT thrERP;
@@ -1044,17 +1069,21 @@ typedef struct
 
 #else
 struct STR_IPL {
-  UINT noIPL;
-  int sigType;
-  IPL_FRQ frq;
-  IPL_PRI pri;
-  IPL_LOWHGH pw;
-  IPL_AS as;
+  UINT uinoIPL;
+  int iSigType;
+
+  IPL_FRQ stFreq;
+  IPL_PRI stPRI;
+  IPL_LOWHGH stPW;
+  IPL_AS stAS;
+
   UINT tmoDel;
   UINT thrLev;
   UINT autoWarn;
-  char elintNot[ 8 ];
+
+  char szELNOT[ 8 ];
   char elintName[ 20 ];
+
   UINT cat;
   UINT thrERP;
   IPL_PLAT platform[ 5 ];    // Modified `98.8.25

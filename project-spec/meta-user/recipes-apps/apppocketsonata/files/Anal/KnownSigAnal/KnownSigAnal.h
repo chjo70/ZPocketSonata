@@ -56,7 +56,7 @@ protected:
     //##ModelId=452B0C520279
     STR_PULSE_TRAIN_SEG *m_pSeg;
     //##ModelId=452B0C52027D
-    int m_nMaxPdw;
+    unsigned int m_uiMaxPdw;
     //##ModelId=452B0C520287
     unsigned int m_uiCoPdw;
     //##ModelId=452B0C520288
@@ -78,7 +78,7 @@ public:
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
-    inline void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+    inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
         return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
     }
 
@@ -89,59 +89,73 @@ public:
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
     
-    inline int GetMaxPdw() { return m_nMaxPdw; }
+    /**
+     * @brief     GetMaxPdw
+     * @return    unsigned int
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:09:22
+     * @warning
+     */
+    inline unsigned int GetMaxPdw() { 
+		return m_uiMaxPdw; 
+	}
     
     
-    inline void MakePDWArray( _PDW *pdw, int iCount ) { m_theGroup->MakePDWArray( pdw, iCount); }
+    /**
+     * @brief     MakePDWArray
+     * @param     _PDW * pdw
+     * @param     int iCount
+     * @return    void
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:09:15
+     * @warning
+     */
+    inline void MakePDWArray( _PDW *pdw, int iCount ) { 
+		m_theGroup->MakePDWArray( pdw, (UINT) iCount); 
+	}
     
-    inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
+    /**
+     * @brief     GetFrqAoaGroupedPdwIndex
+     * @return    STR_PDWINDEX *
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:09:30
+     * @warning
+     */
+    inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { 
+		return m_theGroup->GetFrqAoaGroupedPdwIndex(); 
+	}
     
-    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
-    //##ModelId=452B0C5202BB
+    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }    
     inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
-	
-    
-    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
-    
+    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }    
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }    
     inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }    
-    inline int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }    
-    inline int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
-    
+    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }    
+    inline unsigned int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }    
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
-    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, USHORT usMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, usMarkType ); }
-    
-
-
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, (UINT) enMarkType); }
 	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
-
-    //##ModelId=452B0C520301
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
-    //##ModelId=452B0C52030A
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
-    //##ModelId=452B0C520314
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
 
-    //##ModelId=452B0C52031E
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
-    //##ModelId=452B0C52031F
     inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
-    //##ModelId=452B0C520329
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
-    //##ModelId=452B0C52033D
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
-    //##ModelId=452B0C520346
     inline void ExtractRefStable() { m_theAnalPRI->ExtractRefStable(); }
-    //##ModelId=452B0C52034F
     inline BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_theAnalPRI->ExtractDwellRefPT( pDwlSewg, pExtRange ); }
-    //##ModelId=452B0C520351
     inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
-    //##ModelId=452B0C52035A
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
-    //##ModelId=452B0C52035B
-    inline int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
+    inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
 
     inline SRxLOBData *GetLOBData( int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     //##ModelId=452B0C52035B
@@ -156,9 +170,32 @@ public:
     inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
-    inline SRxABTData *GetTrkAET() { return m_pTrkAet; }
 
-    inline int GetCoGroup() { return m_CoGroup; }
+    /**
+     * @brief     GetTrkAET
+     * @return    SRxABTData *
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:09:44
+     * @warning
+     */
+    inline SRxABTData *GetTrkAET() { 
+		return m_pTrkAet; 
+	}
+
+    /**
+     * @brief     GetCoGroup
+     * @return    int
+     * @exception 
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2022-07-10 13:09:38
+     * @warning
+     */
+    inline int GetCoGroup() { 
+		return m_CoGroup; 
+	}
 
     
 

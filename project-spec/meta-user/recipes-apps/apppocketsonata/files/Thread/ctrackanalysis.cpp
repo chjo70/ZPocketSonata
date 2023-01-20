@@ -1,4 +1,4 @@
-// CTrackAnalysis.cpp: implementation of the CTrackAnalysis class.
+﻿// CTrackAnalysis.cpp: implementation of the CTrackAnalysis class.
 //
 //////////////////////////////////////////////////////////////////////
 

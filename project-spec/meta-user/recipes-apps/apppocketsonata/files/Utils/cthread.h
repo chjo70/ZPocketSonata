@@ -107,6 +107,8 @@ typedef enum {
     enNO_WAIT=0,
     enWAIT_FOREVER,
 
+    enTIMER,            // 주기적인 타이머 설정
+
 } ENUM_RCVMSG ;
 
 
@@ -168,10 +170,10 @@ struct STR_MessageData {
     long mtype;
 #endif
 
-    // Opcode
+    // Opcode : 명령어
     unsigned int uiOpCode;
 
-    // Src/Dest
+    // Src/Dest : 
     unsigned char ucSrcDest;
 
     //랜 송신시 이 값이 0 이 아니면 이 소켓 값으로 데이터를 전송한다.
@@ -387,7 +389,7 @@ public:
     int Pend();
     void Stop();
     void msSleep( unsigned int mssleep );
-    int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER );
+    int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER, DWORD dwMilliSec=0 );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
     void QMsgSnd(unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName = NULL);

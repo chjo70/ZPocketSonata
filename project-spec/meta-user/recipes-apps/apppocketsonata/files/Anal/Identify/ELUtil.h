@@ -13,19 +13,16 @@
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
 #define	KM_PER_DEGREE_FOR_LONGITUDE						(88.884)				// [km/deg]
 
-//BOOL ELCompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
-//BOOL CompTOAMeanDiff( unsigned long long int x, unsigned long long int y, int thresh );
-float AoaDiff( float x, float y);
 void LogPrint( const char *format, ... );
 
 
 void SetUnitType();
 
+float DOADiff(float x, float y);
 
-bool Is_FZero( const float &value );
-bool Is_DZero( const double &dvalue );
-bool Is_FNotZero( const float &value );
-bool Is_DNotZero( const double &dvalue );
+void UTF8ToMultibyte(char *pszMultiByte, int iSizeOfMultiByte, const wchar_t *p);
+int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiByte);
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 // 템플릿 함수 모음
@@ -113,7 +110,11 @@ UINT CheckHarmonicTOA( T priMean1, T priMean2, T tThreshold ) {
 			harmonic = (unsigned int)(fmod((float)max_mean, (float)min_mean) + 0.5);
 		}
 		else {
-			harmonic = max_mean % min_mean;
+            //if (min_mean != 0)  if 문이 추가해도 에러가 발생함.
+            {
+                harmonic = max_mean % min_mean;
+            }
+
 		}
 
 #else
@@ -133,16 +134,19 @@ UINT CheckHarmonicTOA( T priMean1, T priMean2, T tThreshold ) {
 		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
 #ifdef _MSC_VER
 			if (strcmp(typeid(T).name(), "float") == 0) {
-				r = ( max_mean / min_mean );
-				ret = (UINT) ( r + 0.5 );				
+                if (min_mean != 0) {
+                    r = (max_mean / min_mean);
+                    ret = (UINT)(r + 0.5);
+                }
 			}
 			else {
-				r = MulDiv64((T)1, max_mean, min_mean);
+                r = TDIV<_TOA>(max_mean, min_mean);
+				// r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
 				if (r > UINT_MAX) {
 					ret = UINT_MAX;
 				}
 				else {
-					ret = (UINT)r;
+					ret = (UINT) r;
 				}
 			}
 
@@ -432,7 +436,7 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
  * @warning
  */
 template <typename T>
-float CalcJitterRatio(T tRange, T tMean)
+float TCalcJitterRatio(T tRange, T tMean)
 {
 	float fRet=0.0;
 
@@ -486,16 +490,16 @@ T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
         ret = 1;                                //		   |---|
 
     if( low1 > low2 &&	hgh1 < hgh2 ) 			//          |--------|
-        ret = hgh1 - low1 + 1;					//    |------------------|
+        ret = hgh1 - low1 + (T) 1;					//    |------------------|
 
     if( low1 < low2 && hgh1 > hgh2 )			//    |------------------|
-        ret = hgh2 - low2 + 1;			 					//          |--------|
+        ret = hgh2 - low2 + (T)1;			 					//          |--------|
 
     if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-        ret = ( hgh2 - low1 + 1);     			//    |-----------|
+        ret = ( hgh2 - low1 + (T)1);     			//    |-----------|
 
     if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        ret = ( hgh1 - low2 + 1 );						//          |------------|
+        ret = ( hgh1 - low2 + (T)1 );						//          |------------|
 
     return ret;
 }

@@ -12,11 +12,12 @@
 
 #include "Matrix.h"
 #include "../../SigAnal/_Define.h"
+#include "../../INC/OS.h"
 
 #define MAX_ITEMS           (1000)
 
 /**
- * @brief     CMatrix
+ * @brief     객체를 생성한다.
  * @return    
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -33,9 +34,8 @@ CMatrix::CMatrix()
 	uiCols = 0;
 }
 
-// constructor
 /**
- * @brief     CMatrix
+ * @brief     객체를 소멸 처리를 한다.
  * @param     const unsigned int row_count
  * @param     const unsigned int column_count
  * @return    
@@ -67,9 +67,8 @@ CMatrix::CMatrix(const unsigned int row_count, const unsigned int column_count)
 
 }
 
-// assignment operator
 /**
- * @brief     CMatrix
+ * @brief     CMatrix 값을 입력받아 동일한 값으로 설정한다.
  * @param     const CMatrix & a
  * @return    
  * @exception
@@ -82,11 +81,11 @@ CMatrix::CMatrix(const CMatrix& a)
 {
     unsigned int uia_rows, uia_cols;
 
-	uiRows = _min( MAX_ITEMS, a.uiRows );
-	uiCols = _min( MAX_ITEMS, a.uiCols );
+	uiRows = min( MAX_ITEMS, a.uiRows );
+	uiCols = min( MAX_ITEMS, a.uiCols );
 
-    uia_rows = _min( MAX_ITEMS, a.uiRows );
-    uia_cols = _min( MAX_ITEMS, a.uiCols );
+    uia_rows = min( MAX_ITEMS, a.uiRows );
+    uia_cols = min( MAX_ITEMS, a.uiCols );
 	p = new double*[uia_rows];
 
 	/*! \debug  신뢰성: 메모리 할당하지 않으면 NULL 리턴함.
@@ -117,10 +116,8 @@ CMatrix::CMatrix(const CMatrix& a)
     }
 }
 
-// index operator. You can use this class like myCMatrix(col, row)
-// the indexes are one-based, not zero based.
 /**
- * @brief     operator()
+ * @brief     지정한 원소 값을 리턴한다.
  * @param     const unsigned int r
  * @param     const unsigned int c
  * @return    double&
@@ -142,9 +139,17 @@ double& CMatrix::operator()(const unsigned int r, const unsigned int c)
 	}
 }
 
-// index operator. You can use this class like myCMatrix.get(col, row)
-// the indexes are one-based, not zero based.
-// use this function get if you want to read from a const CMatrix
+/**
+ * @brief     행령의 지정한 위치의 원소값을 리턴한다.
+ * @param     const unsigned int r
+ * @param     const unsigned int c
+ * @return    double
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:20:29
+ * @warning
+ */
 double CMatrix::get(const unsigned int r, const unsigned int c) const
 {
 	if (p != NULL && r > 0 && r <= uiRows && c > 0 && c <= uiCols)
@@ -158,7 +163,7 @@ double CMatrix::get(const unsigned int r, const unsigned int c) const
 }
 
 /**
- * @brief     CMatrix
+ * @brief     대입자 연산을 수행한다.
  * @param     const CMatrix & a
  * @return    CMatrix&
  * @exception
@@ -215,7 +220,7 @@ CMatrix& CMatrix::operator= (const CMatrix& a)
 }
 
 /**
- * @brief     add a double value (elements wise)
+ * @brief     더하기 행렬을 연산한다.
  * @param     const double v
  * @return    CMatrix&
  * @exception
@@ -236,13 +241,31 @@ CMatrix& CMatrix::Add(const double v)
 	return *this;
 }
 
-// subtract a double value (elements wise)
+/**
+ * @brief     행렬 빼기 연산을 수행한다.
+ * @param     const double v
+ * @return    CMatrix::CMatrix&
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:50:07
+ * @warning
+ */
 CMatrix& CMatrix::Subtract(const double v)
 {
 	return Add(-v);
 }
 
-// multiply a double value (elements wise)
+/**
+ * @brief     행렬 곱셈을 수행한다.
+ * @param     const double v
+ * @return    CMatrix::CMatrix&
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:50:21
+ * @warning
+ */
 CMatrix& CMatrix::Multiply(const double v)
 {
 	for (unsigned int r = 0; r < uiRows; r++)
@@ -255,13 +278,32 @@ CMatrix& CMatrix::Multiply(const double v)
 	return *this;
 }
 
-// divide a double value (elements wise)
+/**
+ * @brief     행렬 나누기 연산을 수행한다.
+ * @param     const double v
+ * @return    CMatrix::CMatrix&
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:50:31
+ * @warning
+ */
 CMatrix& CMatrix::Divide(const double v)
 {
 	return Multiply(1/v);
 }
 
-// addition of CMatrix with CMatrix
+/**
+ * @brief     행렬 더하기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const CMatrix & b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:50:44
+ * @warning
+ */
 CMatrix operator+(const CMatrix& a, const CMatrix& b)
 {
 	// check if the dimensions match
@@ -288,14 +330,35 @@ CMatrix operator+(const CMatrix& a, const CMatrix& b)
 	return res; // CMatrix();
 }
 
-// addition of CMatrix with double
+/**
+ * @brief     행렬 더하기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const double b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:51:00
+ * @warning
+ */
 CMatrix operator+ (const CMatrix& a, const double b)
 {
 	CMatrix res = a;
 	res.Add(b);
 	return res;
 }
-// addition of double with CMatrix
+
+/**
+ * @brief     행렬에 모든 원소에 값을 더한다.
+ * @param     const double b
+ * @param     const CMatrix & a
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:51:14
+ * @warning
+ */
 CMatrix operator+ (const double b, const CMatrix& a)
 {
 	CMatrix res = a;
@@ -303,7 +366,17 @@ CMatrix operator+ (const double b, const CMatrix& a)
 	return res;
 }
 
-// subtraction of CMatrix with CMatrix
+/**
+ * @brief     행렬 뺴기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const CMatrix & b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:51:32
+ * @warning
+ */
 CMatrix operator- (const CMatrix& a, const CMatrix& b)
 {
     CMatrix res(a.uiRows, a.uiCols);
@@ -331,14 +404,35 @@ CMatrix operator- (const CMatrix& a, const CMatrix& b)
 	return res;
 }
 
-// subtraction of CMatrix with double
+/**
+ * @brief     행렬 빼기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const double b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:51:52
+ * @warning
+ */
 CMatrix operator- (const CMatrix& a, const double b)
 {
 	CMatrix res = a;
 	res.Subtract(b);
 	return res;
 }
-// subtraction of double with CMatrix
+
+/**
+ * @brief     원소에 빼기 연산을 수행한다.
+ * @param     const double b
+ * @param     const CMatrix & a
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:52:05
+ * @warning
+ */
 CMatrix operator- (const double b, const CMatrix& a)
 {
 	CMatrix res = -a;
@@ -346,7 +440,16 @@ CMatrix operator- (const double b, const CMatrix& a)
 	return res;
 }
 
-// operator unary minus
+/**
+ * @brief     빼기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:55:55
+ * @warning
+ */
 CMatrix operator- (const CMatrix& a)
 {
 	CMatrix res(a.uiRows, a.uiCols);
@@ -362,7 +465,17 @@ CMatrix operator- (const CMatrix& a)
 	return res;
 }
 
-// operator multiplication
+/**
+ * @brief     곱하기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const CMatrix & b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 09:56:14
+ * @warning
+ */
 CMatrix operator* (const CMatrix& a, const CMatrix& b)
 {
     CMatrix res(a.uiRows, b.uiCols);
@@ -393,14 +506,35 @@ CMatrix operator* (const CMatrix& a, const CMatrix& b)
 	return res;
 }
 
-// multiplication of CMatrix with double
+/**
+ * @brief     곱하기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const double b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:00:56
+ * @warning
+ */
 CMatrix operator* (const CMatrix& a, const double b)
 {
 	CMatrix res = a;
 	res.Multiply(b);
 	return res;
 }
-// multiplication of double with CMatrix
+
+/**
+ * @brief     행렬에 상수값을 곱한다.
+ * @param     const double b
+ * @param     const CMatrix & a
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:01:12
+ * @warning
+ */
 CMatrix operator* (const double b, const CMatrix& a)
 {
 	CMatrix res = a;
@@ -408,7 +542,17 @@ CMatrix operator* (const double b, const CMatrix& a)
 	return res;
 }
 
-// division of CMatrix with CMatrix
+/**
+ * @brief     행렬에 나누기 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const CMatrix & b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:01:38
+ * @warning
+ */
 CMatrix operator/ (const CMatrix& a, const CMatrix& b)
 {
 	// check if the dimensions match: must be square and equal sizes
@@ -437,7 +581,17 @@ CMatrix operator/ (const CMatrix& a, const CMatrix& b)
 	return res; //CMatrix();
 }
 
-// division of CMatrix with double
+/**
+ * @brief     행렬에 상수값을 나누어 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @param     const double b
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:01:52
+ * @warning
+ */
 CMatrix operator/ (const CMatrix& a, const double b)
 {
 	CMatrix res = a;
@@ -445,7 +599,17 @@ CMatrix operator/ (const CMatrix& a, const double b)
 	return res;
 }
 
-// division of double with CMatrix
+/**
+ * @brief     행렬에 나누기 연산을 수행한다.
+ * @param     const double b
+ * @param     const CMatrix & a
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:02:28
+ * @warning
+ */
 CMatrix operator/ (const double b, const CMatrix& a)
 {
 	CMatrix b_CMatrix(1, 1);
@@ -456,9 +620,16 @@ CMatrix operator/ (const double b, const CMatrix& a)
 }
 
 /**
-* returns the minor from the given CMatrix where
-* the selected row and column are removed
-*/
+ * @brief     행렬의 여인수 연산을 수행한다.
+ * @param     const unsigned int row
+ * @param     const unsigned int col
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:02:45
+ * @warning
+ */
 CMatrix CMatrix::Minor(const unsigned int row, const unsigned int col) const
 {
 	CMatrix res;
@@ -483,12 +654,16 @@ CMatrix CMatrix::Minor(const unsigned int row, const unsigned int col) const
 	return res;
 }
 
-/*
-* returns the size of the i-th dimension of the CMatrix.
-* i.e. for i=1 the function returns the number of rows,
-* and for i=2 the function returns the number of columns
-* else the function returns 0
-*/
+/**
+ * @brief     행렬의 크기를 리턴한다.
+ * @param     const int i
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:03:31
+ * @warning
+ */
 unsigned int CMatrix::Size(const int i) const
 {
     unsigned int uiRet=0;
@@ -507,19 +682,43 @@ unsigned int CMatrix::Size(const int i) const
 	return uiRet;
 }
 
-// returns the number of rows
-int CMatrix::GetRows() const
+/**
+ * @brief     행렬의 행 값을 리턴한다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:03:48
+ * @warning
+ */
+unsigned int CMatrix::GetRows() const
 {
 	return uiRows;
 }
 
-// returns the number of columns
-int CMatrix::GetCols() const
+/**
+ * @brief     행렬의 열 값을 리턴한다.
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:04:14
+ * @warning
+ */
+unsigned int CMatrix::GetCols() const
 {
 	return uiCols;
 }
 
-// print the contents of the CMatrix
+/**
+ * @brief     행렬 값을 프린트한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:04:32
+ * @warning
+ */
 void CMatrix::Print() const
 {
 #ifdef _MSC_VER	
@@ -555,7 +754,15 @@ void CMatrix::Print() const
 }
 
 
-// destructor
+/**
+ * @brief     행렬 소멸자를 처리한다.
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:06:37
+ * @warning
+ */
 CMatrix::~CMatrix()
 {
 	// clean up allocated memory
@@ -563,6 +770,15 @@ CMatrix::~CMatrix()
 
 }
 
+/**
+ * @brief     행렬 값의 메모리를 해지한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:06:52
+ * @warning
+ */
 void CMatrix::CleanMatrix()
 {
 	for (unsigned int r = 0; r < uiRows; r++)
@@ -582,27 +798,41 @@ void CMatrix::CleanMatrix()
 	p = NULL;
 }
 
-/*
-* i.e. for i=1 the function returns the number of rows,
-* and for i=2 the function returns the number of columns
-* else the function returns 0
-*/
-int CMatrix::Size(const CMatrix& a, const int i)
+/**
+ * @brief     행렬의 크기를 리턴한다.
+ * @param     const CMatrix & a
+ * @param     const int i
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:07:05
+ * @warning
+ */
+unsigned int CMatrix::Size(const CMatrix& a, const int i)
 {
 	return a.Size(i);
 }
 
 
 /**
-* returns a CMatrix with size cols x rows with ones as values
-*/
-CMatrix CMatrix::Ones(const int rows, const int cols)
+ * @brief     Ones 행렬로 설정한다.
+ * @param     const unsigned int uiRows
+ * @param     const unsigned int uiCols
+ * @return    CMatrix
+ * @exception 
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-08 10:33:03
+ * @warning
+ */
+CMatrix CMatrix::Ones(const unsigned int uiRows, const unsigned int uiCols)
 {
-	CMatrix res = CMatrix(rows, cols);
+	CMatrix res = CMatrix(uiRows, uiCols);
 
-	for (int r = 1; r <= rows; r++)
+	for (unsigned int r = 1; r <= uiRows; r++)
 	{
-		for (int c = 1; c <= cols; c++)
+		for (unsigned int c = 1; c <= uiCols; c++)
 		{
 			res(r, c) = 1;
 		}
@@ -610,13 +840,24 @@ CMatrix CMatrix::Ones(const int rows, const int cols)
 	return res;
 }
 
-CMatrix CMatrix::Ident(const int rows, const int cols)
+/**
+ * @brief     I 행렬로 설정한다.
+ * @param     const unsigned int uiRows
+ * @param     const unsigned int uiCols
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:18:42
+ * @warning
+ */
+CMatrix CMatrix::Ident(const unsigned int uiRows, const unsigned int uiCols)
 {
-	CMatrix res = CMatrix(rows, cols);
+	CMatrix res = CMatrix(uiRows, uiCols);
 
-	for (int r = 1; r <= rows; r++)
+	for (unsigned int r = 1; r <= uiRows; r++)
 	{
-		for (int c = 1; c <= cols; c++)
+		for (unsigned int c = 1; c <= uiCols; c++)
 		{
 			if( r == c) {
 				res(r, c) = 1;
@@ -630,7 +871,7 @@ CMatrix CMatrix::Ident(const int rows, const int cols)
 }
 
 /**
- * @brief     Transpose
+ * @brief     Transpose 행렬을 수행한다.
  * @return    CMatrix
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -652,12 +893,8 @@ CMatrix CMatrix::Transpose()
     return res;
 }
 
-
 /**
-* returns a CMatrix with size cols x rows with zeros as values
-*/
-/**
- * @brief     Zeros
+ * @brief     0 행렬로 만든다.
  * @param     const int rows
  * @param     const int cols
  * @return    CMatrix
@@ -667,17 +904,21 @@ CMatrix CMatrix::Transpose()
  * @date      2021-07-04, 13:35
  * @warning
  */
-CMatrix CMatrix::Zeros(const int rows, const int cols)
+CMatrix CMatrix::Zeros(const unsigned int uiRows, const unsigned int uiCols)
 {
-	return CMatrix(rows, cols);
+	return CMatrix(uiRows, uiCols);
 }
 
-
 /**
-* returns a diagonal CMatrix with size n x n with ones at the diagonal
-* @param  v a vector
-* @return a diagonal CMatrix with ones on the diagonal
-*/
+ * @brief     N차원 Diag 행렬을 생성한다.
+ * @param     const int n
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:19:46
+ * @warning
+ */
 CMatrix Diag(const int n)
 {
 	CMatrix res = CMatrix(n, n);
@@ -689,7 +930,7 @@ CMatrix Diag(const int n)
 }
 
 /**
- * @brief     Diag
+ * @brief     행렬의 Diag 행렬을 수행한다.
  * @param     const CMatrix & v
  * @return    a diagonal CMatrix with the given vector v on the diagonal
  * @exception
@@ -732,9 +973,16 @@ CMatrix Diag(const CMatrix& v)
 	return res;
 }
 
-/*
-* returns the determinant of CMatrix a
-*/
+/**
+ * @brief     행렬의 Determinant 연산을 수행한다.
+ * @param     const CMatrix & a
+ * @return    double
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:21:01
+ * @warning
+ */
 double Det(const CMatrix& a)
 {
 	double d = 0;    // value of the determinant
@@ -778,7 +1026,17 @@ double Det(const CMatrix& a)
 	return d;
 }
 
-// swap two values
+/**
+ * @brief     행렬을 Swap 연산을 수행한다.
+ * @param     double & a
+ * @param     double & b
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:21:19
+ * @warning
+ */
 void Swap(double& a, double& b)
 {
 	double temp = a;
@@ -786,9 +1044,17 @@ void Swap(double& a, double& b)
 	b = temp;
 }
 
-/*
-* returns the inverse of CMatrix a
-*/
+/**
+ * @brief     행렬의 역행렬을 수행한다.
+ * @param     const CMatrix & a
+ * @param     bool * pRet
+ * @return    CMatrix
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2022-07-25 10:21:40
+ * @warning
+ */
 CMatrix Inv(const CMatrix& a, bool *pRet )
 {
 	CMatrix res;

@@ -25,7 +25,7 @@ private:
 #ifdef _SQLITE_
     char m_szSQLString[4000];
 
-    Kompex::SQLiteDatabase *m_pDatabase;
+    Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
     CODBCDatabase m_theMyODBC;
@@ -92,7 +92,7 @@ private:
     void SimPDWData();
     void SimFilter( STR_PDWDATA *pPDWData );
 
-    inline SRxABTData *GetABTData( int iIndex ) { return & m_ABTData[iIndex]; }
+    inline SRxABTData *GetABTData( unsigned int uiIndex ) { return & m_ABTData[uiIndex]; }
     inline void ClearEndCollect() { m_bSendEnd = false; }
 
     CCollectBank *GetCollectBank( int iCh ) {

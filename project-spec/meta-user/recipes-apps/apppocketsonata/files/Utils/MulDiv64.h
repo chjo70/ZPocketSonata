@@ -59,7 +59,7 @@ T TDIV( T x, T y )
 
 #ifdef _MSC_VER
 	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
-		toaRet = (T)MulDiv64((_TOA)x, (_TOA)1, (_TOA)y);
+		toaRet = (T) MulDiv64((unsigned __int64)x, (unsigned __int64)1, (unsigned __int64)y);
 	}
 	else if (strcmp(typeid(T).name(), "float") == 0) {
 		if (y < 0 || y > 0)

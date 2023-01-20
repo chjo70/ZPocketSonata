@@ -151,7 +151,7 @@ public:
     inline void PrintAllSeg() { }
 
     //##ModelId=452B0C57016C
-    inline void SetAnalSeg( int nSeg ) { m_uiAnalSeg=nSeg; }
+    inline void SetAnalSeg( unsigned int uiSeg ) { m_uiAnalSeg=uiSeg; }
     //##ModelId=452B0C57016E
     //inline void MergeGrouping() { MergeGrouping(); }
 
@@ -160,10 +160,10 @@ public:
     //##ModelId=452B0C570180
     inline void SetPulseSeg( STR_PULSE_TRAIN_SEG *pSeg ) { m_pSeg = pSeg; }
     //##ModelId=452B0C570182
-    inline int GetCoEmitter() { return m_uiCoEmitter; }
+    inline unsigned int GetCoEmitter() { return m_uiCoEmitter; }
     inline void SetCoEmitter( UINT coEmitter ) { m_uiCoEmitter=coEmitter; }
     //##ModelId=452B0C57018A
-    inline void SetAnalEmitter( int nEmitter ) { m_uiAnalEmitter = nEmitter; }
+    inline void SetAnalEmitter( unsigned int uiEmitter) { m_uiAnalEmitter = uiEmitter; }
     //##ModelId=452B0C57018C
     inline STR_EMITTER *GetEmitter() { return m_Emitter; }
 
@@ -191,12 +191,12 @@ public:
     virtual UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )=0;    
     virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount )=0;
     virtual int GetBand()=0;
-    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )=0;
+    virtual void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )=0;
     virtual CMakeAET* GetMakeAET()=0;
     virtual bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )=0;
 
-    BOOL CompAoa( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    //##ModelId=452B0C57020F
+    bool CompAOA( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    
     void CalcEmitterPW( STR_EMITTER *pEmitter );
     
     void PrintAllEmitter( unsigned int iEmitter=0, char *pszString=NULL, enPRI_TYPE enPRITYpe= _UNKNOWN_PRI );
@@ -229,21 +229,16 @@ public:
     void KurtosisSkewness();
     //##ModelId=452B0C5702AC
     BOOL CompareAllStaggerLevel( STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg );
-    //##ModelId=452B0C5702B8
     int GetMaxPdw();
-    //##ModelId=452B0C5702B9
+
     BOOL DwellAnalysis( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C5702C1
     BOOL ExtractDwellPT();
-    //##ModelId=452B0C5702C2
     BOOL FindBin( UINT bin );
     BOOL FindDtoa( _TOA priMean );
-    //##ModelId=452B0C5702D5
     BOOL FindDwellLevel();
-    BOOL FindDwellLevel( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C5702D6
+    BOOL FindDwellLevel( STR_EMITTER *pEmitter );    
     void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange=NULL );
-    //##ModelId=452B0C5702E8
+    
     void DwellAnalysis();
     BOOL CheckContiStable( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
     void MergePDWIndexInSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
@@ -254,15 +249,11 @@ public:
     void MakeStaggerPRI( STR_EMITTER *pEmitter );
 
     PATTERN_TYPE HighIllustrationTest( STR_EMITTER *pEmitter );
-    //##ModelId=452B0C5702FD
+
     void FindPeriod();
-    //##ModelId=452B0C5702FE
     void AutoCorerelation();
-    //##ModelId=452B0C570306
     void Normalize();
-    //##ModelId=452B0C570307
     void ReplaceOffSampling();
-    //##ModelId=452B0C570308
     void Interpolation();
     //##ModelId=452B0C570309
     void SamplingProcess( STR_EMITTER *pEmitter );

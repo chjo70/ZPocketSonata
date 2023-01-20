@@ -73,7 +73,7 @@ namespace ELDecoder
 	float DecodePRF(const int i_iBinPRF);
 	float DecodePRI(const int i_iBinPRI);
 	float DecodeAOA(const float i_fBinAoa);
-	float DecodeAOA(const int i_iBinAoa);
+	float DecodeAOA(const unsigned int i_iBinAoa);
 	float DecodePW(const int i_iBinPw);
 	float DecodeWindeBandPW(const int i_iBinPw);
 	float DecodePA(const int i_iBinPa);

@@ -451,218 +451,218 @@ struct SCEDData	//CED 데이터
 // 		strErrorMsg("")
 // 	{}
 // };
-struct SCEDImportErrorMsg
-{
-	//EnumLibType eLibType;
-	UINT nNo;	//데이터 번호
-	CString strErrorItem;	//오류항목
-	CString strThreatID; //위협번호
-	CString strEmitterID;	//에미터번호
-	CString strBeamID;	//빔번호
-	CString strErrorMsg;	//오류
-	SCEDImportErrorMsg():
-		//eLibType(E_EL_LIB_TYPE_NORMAL),
-		nNo(1),
-		strThreatID(""),
-		strEmitterID(""),
-		strBeamID(""),
-		strErrorMsg("")
-	{}
-};
-struct SCED_ID
-{
-	UINT nThreatID;
-	UINT nEmitterID;
-	UINT nBeamID;
-	SCED_ID():
-		nThreatID(0),
-		nEmitterID(0),
-		nBeamID(0)
-	{}
-};
-////////////////////////////////////////////////////////////////////////////
+// struct SCEDImportErrorMsg
+// {
+// 	//EnumLibType eLibType;
+// 	UINT nNo;	//데이터 번호
+// 	CString strErrorItem;	//오류항목
+// 	CString strThreatID; //위협번호
+// 	CString strEmitterID;	//에미터번호
+// 	CString strBeamID;	//빔번호
+// 	CString strErrorMsg;	//오류
+// 	SCEDImportErrorMsg():
+// 		//eLibType(E_EL_LIB_TYPE_NORMAL),
+// 		nNo(1),
+// 		strThreatID(""),
+// 		strEmitterID(""),
+// 		strBeamID(""),
+// 		strErrorMsg("")
+// 	{}
+// };
+// struct SCED_ID
+// {
+// 	UINT nThreatID;
+// 	UINT nEmitterID;
+// 	UINT nBeamID;
+// 	SCED_ID():
+// 		nThreatID(0),
+// 		nEmitterID(0),
+// 		nBeamID(0)
+// 	{}
+// };
+// ////////////////////////////////////////////////////////////////////////////
+// 
+// 
+// struct SCEDThreatData	//위협정보
+// {
+// 	//EnumLibType eLibType;	//라이브러리 타입
+// 	UINT	nThreatID;		//위협번호 (* ID)
+// 
+// 	CString strThreatName;	//위협명
+// 	UINT	nTPriority;		//T 우선순위
+// 	bool	bIsEnemy;			//적아구분	
+// 	UINT	nNumOfAETForDeterminePulse;	//펄스결정을 위한 AET수
+// 	
+// 	SCEDThreatData():
+// 		nThreatID(0),
+// 		strThreatName(""),
+// 		nTPriority(1),
+// 		bIsEnemy(true),
+// 		//eLibType(E_EL_LIB_TYPE_NORMAL),
+// 		nNumOfAETForDeterminePulse(0)
+// 	{}
+// };
+// 
+// struct SCEDEmitterData	//에미터정보
+// {
+// 	//EnumLibType eLibType;		//라이브러리 타입
+// 	UINT	nThreatID;			//위협번호 (* ID)
+// 	int	nEmitterID;			//에미터번호 (* ID)
+// 
+// 	CString strElintNotation;	//ELINT Notation
+// 	CString strEmitterName;		//에미터명
+// 	UINT	nMaxThreatRadius;	//최대위협반경
+// 	int	nEPriority;			//E 우선순위
+// 	CString strPlatform;		//플랫폼, Flatform 을 Platform 으로 변경, 조철희
+// 	CString strPrimaryFuction;	//PRIMARY Fuction	
+// 	CString strElintNotationNickName;	//EN 별명
+// 	CString strElintNotationWeaponName;	//EN Weapon명
+// 	float	fXtalOscillatorFreq;		//크리스탈 오실레이터 주파수
+// 	CString strPinNumber;		//Pin Number
+// 	CString strEquip;				//장비	
+// 	
+// 	SCEDEmitterData():
+// 		nThreatID(0),
+// 		nEmitterID(0),
+//         strElintNotation(""),
+// 		strEmitterName(""),
+// 		nMaxThreatRadius(0),
+// 		nEPriority(1),
+// 		strPlatform(""),		
+// 		strPrimaryFuction(""),
+//         strElintNotationNickName(""),
+//         strElintNotationWeaponName(""),
+//         fXtalOscillatorFreq(0),
+// 		//eLibType(E_EL_LIB_TYPE_NORMAL),
+// 		strPinNumber(""),
+//         strEquip("")
+// 	{}
+// };
+// 
+// struct SCEDBeamData	//빔정보
+// {
+// 	//EnumLibType			eLibType;		//라이브러리 타입
+//     UINT nThreatID;		//위협번호 (* ID)
+//     UINT nEmitterID;		//에미터번호 (* ID)
+//     UINT nBeamID;		//빔번호 (* ID)
+//     CString strBeamName;	//빔명
+//     UINT nBPriority;		//B 우선순위
+//     EnumCEDSignalType eSignalType;	//신호형태
+//     EnumFreqType eFreqType;		//주파수형태
+//     float fMinRF;			//RF최소
+//     float fMaxRF;			//RF최대
+// 	EnumFreqPatternType	eFreqPatternType;	//주파수 패턴형태
+//     UINT nRFBandWidth;	//RF변경폭
+//     float fMinRFChangePeriod;	//최소RF변경주기
+//     float fMaxRFChangePeriod;	//최대RF변경주기
+// 
+//     EnumPRIType	ePRIType;		//PRI형태
+//     float fMinPRI;		//최소PRI
+//     float fMaxPRI;		//최대PRI
+//     float fJitterRate;	//PRI지터율
+//     EnumPRIPatternType ePRIPatternType;	//PRI 패턴형태
+//     UINT nMinPRIPatternPeriod;	//최소 PRI 패턴주기
+//     UINT nMaxPRIPatternPeriod;	//최대 PRI 패턴주기
+//     float fMinPW;			//최소PW
+//     float fMaxPW;			//최대PW
+// 
+//     EnumMOPType	eMOPType;		//MOP형식
+//     EnumCEDScanType eScanType;		//스캔형태
+//     UINT nMinScanPeriod;	//최소스캔주기
+//     UINT nMaxScanPeriod;	//최대스캔주기
+//     EnumPolizationType ePolization;	//극성
+//     float fBeamWidth;		//빔폭
+// 	
+//     UINT nNumOfHOP;			//호핑 단수
+//     UINT nNumOfSTG;			//스태거 및 D&S 단수
+// 	vector<SCEDHOPElimentData>	vecHOPEliment;	//호핑엘리먼트
+// 	vector<SCEDSTGElimentData>	vecSTGEliment;	//스태거엘리먼트
+// 
+//     bool bIsBeacon;	//Beacon여부 (추가됨*)
+//     UINT nPulsePerGroup;	//Group당 펄스 수 (추가됨*)
+//     UINT nPRIPerGroup;	//Group당 PRI (ns) (추가됨*)
+//     UINT nPRIInGroup;	//Group내 PRI (ns) (추가됨*)
+//     vector<float> vecPWInGroup;	//Group내 PW (추가됨)
+//     vector<float> vecPAInGroup;	//Group내 PA (추가됨)
+//     vector<float> vecFreqInGroup;	//Group내 주파수 (추가됨)
+// 
+// 	SCEDBeamData():
+// 		nThreatID(0),
+// 		nEmitterID(0),
+// 		nBeamID(0),
+// 		strBeamName(""),
+// 		nBPriority(0),
+// 		eSignalType(E_EL_SIG_NORMAL_PULSE),
+// 		eFreqType(E_EL_FREQ_FIXED),
+//         fMinRF(0),
+//         fMaxRF(0),
+//         eFreqPatternType(E_EL_FPT_UNKNOWN),	//주파수 패턴형태
+//         nRFBandWidth(0),
+//         fMinRFChangePeriod(0),
+//         fMaxRFChangePeriod(0),
+// 		ePRIType(E_EL_PRI_STABLE),
+//         fMinPRI(0),
+//         fMaxPRI(0),
+//         fJitterRate(0),
+//         ePRIPatternType(E_EL_PPT_UNKNOWN),	//PRI 패턴형태
+//         nMinPRIPatternPeriod(0),		//최소 PRI 패턴주기
+//         nMaxPRIPatternPeriod(0),	//최대 PRI 패턴주기
+//         fMinPW(0),
+//         fMaxPW(0),
+//         eMOPType(E_EL_MOP_UNKNOWN),
+// 		eScanType(E_EL_SC_UNKNOWN),
+//         nMinScanPeriod(0),
+// 		nMaxScanPeriod(0),
+// 		ePolization(E_EL_PZ_V),
+// 		fBeamWidth(0),
+// 
+// 		//eLibType(E_EL_LIB_TYPE_NORMAL),
+//         nNumOfHOP(0),
+//         nNumOfSTG(0),
+// 
+// 		bIsBeacon(false),	//Group여부 (추가됨*)
+// 		nPulsePerGroup(0),	//Group당 펄스 수 (추가됨*)
+// 		nPRIPerGroup(0),	//Group당 PRI (ns) (추가됨*)
+// 		nPRIInGroup(0)	//Group내 PRI (ns) (추가됨*)
+// 	{}
+// };
+// 
+// struct SCEDEmitterTreeData : public SCEDEmitterData
+// {
+// 	map<UINT, SCEDBeamData> mapBeam;
+// 	SCEDEmitterTreeData()
+// 	{
+// 		Init();
+// 	}
+// 	void Init(){
+// 		mapBeam.clear();
+// 	}
+// 	void operator=(const SCEDEmitterData &i_stSrc){
+// 		SCEDEmitterData::operator=(i_stSrc);
+// 	}
+// };
 
 
-struct SCEDThreatData	//위협정보
-{
-	//EnumLibType eLibType;	//라이브러리 타입
-	UINT	nThreatID;		//위협번호 (* ID)
-
-	CString strThreatName;	//위협명
-	UINT	nTPriority;		//T 우선순위
-	bool	bIsEnemy;			//적아구분	
-	UINT	nNumOfAETForDeterminePulse;	//펄스결정을 위한 AET수
-	
-	SCEDThreatData():
-		nThreatID(0),
-		strThreatName(""),
-		nTPriority(1),
-		bIsEnemy(true),
-		//eLibType(E_EL_LIB_TYPE_NORMAL),
-		nNumOfAETForDeterminePulse(0)
-	{}
-};
-
-struct SCEDEmitterData	//에미터정보
-{
-	//EnumLibType eLibType;		//라이브러리 타입
-	UINT	nThreatID;			//위협번호 (* ID)
-	int	nEmitterID;			//에미터번호 (* ID)
-
-	CString strElintNotation;	//ELINT Notation
-	CString strEmitterName;		//에미터명
-	UINT	nMaxThreatRadius;	//최대위협반경
-	int	nEPriority;			//E 우선순위
-	CString strPlatform;		//플랫폼, Flatform 을 Platform 으로 변경, 조철희
-	CString strPrimaryFuction;	//PRIMARY Fuction	
-	CString strElintNotationNickName;	//EN 별명
-	CString strElintNotationWeaponName;	//EN Weapon명
-	float	fXtalOscillatorFreq;		//크리스탈 오실레이터 주파수
-	CString strPinNumber;		//Pin Number
-	CString strEquip;				//장비	
-	
-	SCEDEmitterData():
-		nThreatID(0),
-		nEmitterID(0),
-        strElintNotation(""),
-		strEmitterName(""),
-		nMaxThreatRadius(0),
-		nEPriority(1),
-		strPlatform(""),		
-		strPrimaryFuction(""),
-        strElintNotationNickName(""),
-        strElintNotationWeaponName(""),
-        fXtalOscillatorFreq(0),
-		//eLibType(E_EL_LIB_TYPE_NORMAL),
-		strPinNumber(""),
-        strEquip("")
-	{}
-};
-
-struct SCEDBeamData	//빔정보
-{
-	//EnumLibType			eLibType;		//라이브러리 타입
-    UINT nThreatID;		//위협번호 (* ID)
-    UINT nEmitterID;		//에미터번호 (* ID)
-    UINT nBeamID;		//빔번호 (* ID)
-    CString strBeamName;	//빔명
-    UINT nBPriority;		//B 우선순위
-    EnumCEDSignalType eSignalType;	//신호형태
-    EnumFreqType eFreqType;		//주파수형태
-    float fMinRF;			//RF최소
-    float fMaxRF;			//RF최대
-	EnumFreqPatternType	eFreqPatternType;	//주파수 패턴형태
-    UINT nRFBandWidth;	//RF변경폭
-    float fMinRFChangePeriod;	//최소RF변경주기
-    float fMaxRFChangePeriod;	//최대RF변경주기
-
-    EnumPRIType	ePRIType;		//PRI형태
-    float fMinPRI;		//최소PRI
-    float fMaxPRI;		//최대PRI
-    float fJitterRate;	//PRI지터율
-    EnumPRIPatternType ePRIPatternType;	//PRI 패턴형태
-    UINT nMinPRIPatternPeriod;	//최소 PRI 패턴주기
-    UINT nMaxPRIPatternPeriod;	//최대 PRI 패턴주기
-    float fMinPW;			//최소PW
-    float fMaxPW;			//최대PW
-
-    EnumMOPType	eMOPType;		//MOP형식
-    EnumCEDScanType eScanType;		//스캔형태
-    UINT nMinScanPeriod;	//최소스캔주기
-    UINT nMaxScanPeriod;	//최대스캔주기
-    EnumPolizationType ePolization;	//극성
-    float fBeamWidth;		//빔폭
-	
-    UINT nNumOfHOP;			//호핑 단수
-    UINT nNumOfSTG;			//스태거 및 D&S 단수
-	vector<SCEDHOPElimentData>	vecHOPEliment;	//호핑엘리먼트
-	vector<SCEDSTGElimentData>	vecSTGEliment;	//스태거엘리먼트
-
-    bool bIsBeacon;	//Beacon여부 (추가됨*)
-    UINT nPulsePerGroup;	//Group당 펄스 수 (추가됨*)
-    UINT nPRIPerGroup;	//Group당 PRI (ns) (추가됨*)
-    UINT nPRIInGroup;	//Group내 PRI (ns) (추가됨*)
-    vector<float> vecPWInGroup;	//Group내 PW (추가됨)
-    vector<float> vecPAInGroup;	//Group내 PA (추가됨)
-    vector<float> vecFreqInGroup;	//Group내 주파수 (추가됨)
-
-	SCEDBeamData():
-		nThreatID(0),
-		nEmitterID(0),
-		nBeamID(0),
-		strBeamName(""),
-		nBPriority(0),
-		eSignalType(E_EL_SIG_NORMAL_PULSE),
-		eFreqType(E_EL_FREQ_FIXED),
-        fMinRF(0),
-        fMaxRF(0),
-        eFreqPatternType(E_EL_FPT_UNKNOWN),	//주파수 패턴형태
-        nRFBandWidth(0),
-        fMinRFChangePeriod(0),
-        fMaxRFChangePeriod(0),
-		ePRIType(E_EL_PRI_STABLE),
-        fMinPRI(0),
-        fMaxPRI(0),
-        fJitterRate(0),
-        ePRIPatternType(E_EL_PPT_UNKNOWN),	//PRI 패턴형태
-        nMinPRIPatternPeriod(0),		//최소 PRI 패턴주기
-        nMaxPRIPatternPeriod(0),	//최대 PRI 패턴주기
-        fMinPW(0),
-        fMaxPW(0),
-        eMOPType(E_EL_MOP_UNKNOWN),
-		eScanType(E_EL_SC_UNKNOWN),
-        nMinScanPeriod(0),
-		nMaxScanPeriod(0),
-		ePolization(E_EL_PZ_V),
-		fBeamWidth(0),
-
-		//eLibType(E_EL_LIB_TYPE_NORMAL),
-        nNumOfHOP(0),
-        nNumOfSTG(0),
-
-		bIsBeacon(false),	//Group여부 (추가됨*)
-		nPulsePerGroup(0),	//Group당 펄스 수 (추가됨*)
-		nPRIPerGroup(0),	//Group당 PRI (ns) (추가됨*)
-		nPRIInGroup(0)	//Group내 PRI (ns) (추가됨*)
-	{}
-};
-
-struct SCEDEmitterTreeData : public SCEDEmitterData
-{
-	map<UINT, SCEDBeamData> mapBeam;
-	SCEDEmitterTreeData()
-	{
-		Init();
-	}
-	void Init(){
-		mapBeam.clear();
-	}
-	void operator=(const SCEDEmitterData &i_stSrc){
-		SCEDEmitterData::operator=(i_stSrc);
-	}
-};
-
-
-struct SCEDThreatTreeData : public SCEDThreatData
-{
-	map<UINT, SCEDEmitterTreeData> mapEmitter;
-	SCEDThreatTreeData()
-	{
-		Init();
-	}
-	void Init(){
-		mapEmitter.clear();
-	}
-	void operator=(const SCEDThreatData &i_stSrc){
-		SCEDThreatData::operator=(i_stSrc);
-	}
-};
-struct SCEDCreateTask
-{
-	int TaskType;
-	float fMinRF;
-	float fMaxRF;
-
-};
+// struct SCEDThreatTreeData : public SCEDThreatData
+// {
+// 	map<UINT, SCEDEmitterTreeData> mapEmitter;
+// 	SCEDThreatTreeData()
+// 	{
+// 		Init();
+// 	}
+// 	void Init(){
+// 		mapEmitter.clear();
+// 	}
+// 	void operator=(const SCEDThreatData &i_stSrc){
+// 		SCEDThreatData::operator=(i_stSrc);
+// 	}
+// };
+// struct SCEDCreateTask
+// {
+// 	int TaskType;
+// 	float fMinRF;
+// 	float fMaxRF;
+// 
+// };
 
 #endif

@@ -15,9 +15,7 @@
 
 #include "CInverseMethod.h"
 
-
-#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
-#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
+#include "../IsNumber.h"
 
 
 /**
@@ -129,7 +127,7 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 
 	double lambda = L, lambdaP;
 	int iterLimit = 100;
-	double cosSqAlpha, cosSigma, sigma, cos2SigmaM, sinLambda, sinSigma, cosLambda, sinAlpha;
+	double cosSqAlpha=(double)0., cosSigma = (double)0., sigma = (double)0., cos2SigmaM = (double)0., sinLambda, sinSigma, cosLambda, sinAlpha;
 	double eps = 1000;
 	do
 	{
@@ -157,7 +155,7 @@ bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, d
 	}
 	while (eps > 1e-12 && iterLimit > 0);
 
-    if( IS_ZERO(m_dDistance) ) {
+    if( is_zero<double>(m_dDistance) ) {
         bRet = false;
     }
     else {
@@ -343,13 +341,14 @@ double CInverseMethod::GCAzimuth(double lat1, double lon1, double lat2, double l
 
 	if ((ilat1 == ilat2) && (ilon1 == ilon2))
 	{	//DTEC_Else
-		return result;
+		// result = 0.0;
 	}
 	else if (ilon1 == ilon2)
 	{	//DTEC_Else
 		if (ilat1 > ilat2) { //DTEC_Else
 			result = 180.0;
 		}
+
 	}
 	else
 	{
@@ -363,7 +362,7 @@ double CInverseMethod::GCAzimuth(double lat1, double lon1, double lat2, double l
 			double angle = atan2(cos(lat1) * sin(lon1 - lon2), sin(lat1) * cos(lat2) - sin(lat2) * cos(lat1) * cos(lon1 - lon2));
 			result = (angle * GEO::RA2DE);
 			result += ( 360.0 * 2 );
-			result += ( 180.0 );
+            result += ( 180.0 );
 			result = fmod( result, 360.0 );
 		}
 	}

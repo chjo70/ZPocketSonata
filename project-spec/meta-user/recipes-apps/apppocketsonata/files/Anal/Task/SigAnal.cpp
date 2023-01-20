@@ -476,14 +476,14 @@ void CSigAnal::SendSystemLog( int opData, SRxLOBData *pLOB, STR_EMITTER *pEmitte
 		\date     2009-11-13 15:36:03
 		\warning
 */
-enum ANALYSIS_MODE CSigAnal::GetAnalMode()
-{
-#ifdef _WIN32
-	// return SIMUL_MODE;
-#endif
-
-	return m_eAnalMode;
-}
+// enum ANALYSIS_MODE CSigAnal::GetAnalMode()
+// {
+// #ifdef _WIN32
+// 	// return SIMUL_MODE;
+// #endif
+// 
+// 	return m_eAnalMode;
+// }
 
 
 /**

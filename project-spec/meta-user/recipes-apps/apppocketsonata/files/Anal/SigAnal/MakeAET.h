@@ -32,20 +32,15 @@ public:
 protected:
     DEFINE_ANAL_PVAR_
 
+	UINT m_uiMaxPdw;
+	UINT m_uiCoPdw;
+	UINT m_uiCoAnalPdw;
+
     STR_PDWPARAM *m_pPdwParam;
-
-    //##ModelId=452B0C5503CF
+    
     STR_EMITTER *m_pEmitter;
-
-    //##ModelId=452B0C5503A6
-    int m_nMaxPdw;
-    //##ModelId=452B0C5503AE
-    int m_nCoPdw;
-    //##ModelId=452B0C5503AF
-    UINT m_uiCoAnalPdw;
-    //##ModelId=452B0C5503C3
-    STR_PULSE_TRAIN_SEG *m_pSeg;
-
+	STR_PULSE_TRAIN_SEG *m_pSeg;
+	    
 private:
     
 
@@ -75,32 +70,32 @@ public:
     void MakeJitterPRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
     void MakeStablePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
 
-    //##ModelId=452B0C56005D
+    
     void MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
-    //##ModelId=452B0C560060
+    
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
     void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter);
 
-    //##ModelId=452B0C560071
+    
     void MakeAET();
-    //##ModelId=452B0C560072
+    
     void Init(void);
-    //##ModelId=452B0C560074
-    CMakeAET( int coMaxPdw );
-    //##ModelId=452B0C56007B
+    
+    CMakeAET( unsigned int uiCoMaxPdw );
+    
     virtual ~CMakeAET();
 
 public:
     virtual int CalcAoaMeanByHistAoa(STR_PDWINDEX *pSrcIndex) = 0;
-    virtual int GetColPdw() = 0;
+    virtual unsigned int GetColPdw() = 0;
     virtual int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
     virtual int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
     //virtual void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) = 0;
-    virtual void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int index, bool bSaveFile) = 0;
+    virtual void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int index, bool bSaveFile) = 0;
     virtual unsigned int GetCoSeg() = 0;
-    virtual int GetCoEmitter() = 0;
+    virtual unsigned int GetCoEmitter() = 0;
     virtual STR_PULSE_TRAIN_SEG *GetPulseSeg() = 0;
     virtual STR_EMITTER *GetEmitter() = 0;
     virtual UINT CalcFreqMedian(STR_PULSE_TRAIN_SEG *pSeg) = 0;

@@ -261,7 +261,7 @@ void CLog::Lock()
 #ifdef _MSC_VER
     //TRACE( "\nLock()" );
     m_cs.Lock();
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     sem_wait( & m_mutex );
 #else
     // std::unique_lock<std::mutex> lk(m_mutex);
@@ -286,7 +286,7 @@ void CLog::UnLock()
 
 #ifdef _MSC_VER
     m_cs.Unlock();
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     sem_post( & m_mutex );    
 #else
 
@@ -362,27 +362,33 @@ void CLog::LogMsg( int nType, const char *fmt, ... )
  * @date      2021-10-27, 13:16
  * @warning
  */
-// char* CLog::UTF8ToANSI( const char *pszCode )
+// int CLog::UTF8ToANSI( char *pszDest, int iDestSize, const char *pszSrc )
 // {
-// #ifdef _MFC_VER
+// #ifdef _MSC_VER
+//     WCHAR szUnicode[255];
+//     char szAnsi[255];
+// 
 //     BSTR    bstrWide;
 //     char*   pszAnsi;
-//     int     nLength;
+//     int     nSize;
 // 
-//     nLength = MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, NULL, NULL);
-//     bstrWide = SysAllocStringLen(NULL, nLength);
+//     nSize = MultiByteToWideChar( CP_UTF8, 0, pszSrc, -1, NULL, NULL);
+//     //bstrWide = SysAllocStringLen(NULL, nLength);
 // 
-//     MultiByteToWideChar(CP_UTF8, 0, pszCode, lstrlen(pszCode) + 1, bstrWide, nLength);
+//     int iUnicodeSize = MultiByteToWideChar(CP_UTF8, 0, pszSrc, -1, szUnicode, nSize );
 // 
-//     nLength = WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, NULL, 0, NULL, NULL);
-//     pszAnsi = new char[nLength];
+//     int nAnsiSize = WideCharToMultiByte(CP_ACP, 0, szUnicode, iUnicodeSize, szAnsi, sizeof(szAnsi), NULL, NULL);
 // 
-//     WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
-//     SysFreeString(bstrWide);
+//     //WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
+//     //SysFreeString(bstrWide);
 // 
-//     return pszAnsi;
+//     memcpy(pszDest, szAnsi, nAnsiSize);
+// 
+//     pszDest[nAnsiSize] = 0;
+// 
+//     return nAnsiSize;
 // #else
-//     return NULL;
+//     return 0;
 // #endif
 // 
 // }

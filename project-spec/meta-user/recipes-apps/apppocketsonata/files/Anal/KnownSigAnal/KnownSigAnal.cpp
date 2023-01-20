@@ -37,7 +37,7 @@ CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char
 	m_theAnalPRI = new CKAnalPRI( this, uiCoMaxPdw);
 	m_theMakeAET = new CKMakeAET( this, uiCoMaxPdw);
 
-	m_nMaxPdw = uiCoMaxPdw;
+	m_uiMaxPdw = uiCoMaxPdw;
 
 	m_pSeg = GetPulseSeg();
 
@@ -72,13 +72,13 @@ void CKnownSigAnal::Init()
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CKnownSigAnal::Start
-		\author   조철희
-		\param    pPdwBank 인자형태 STR_PDWBANK *
-		\param    pKwnAet 인자형태 STR_MANAET *
-		\return   void
-		\version  0.0.29
-		\date     2008-07-10 12:43:16
-		\warning
+    \author   조철희
+    \param    pPdwBank 인자형태 STR_PDWBANK *
+    \param    pKwnAet 인자형태 STR_MANAET *
+    \return   void
+    \version  0.0.29
+    \date     2008-07-10 12:43:16
+    \warning
 */
 void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 {
@@ -86,7 +86,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 
     Log( enLineFeed, "" );
 
-    PrintFunction;
+    PrintFunction
 
 	BOOL bRet;
 
@@ -103,7 +103,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
     InsertRAWData( & m_stSavePDWData, _spZero );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
-    m_theGroup->MakePDWArray( & pstPDWData->stPDW[0], (int) m_uiCoPdw, pstPDWData->GetBand() );
+    m_theGroup->MakePDWArray( & pstPDWData->stPDW[0], m_uiCoPdw, (unsigned int) pstPDWData->GetBand() );
 
     // 수집한 PDW 파일 만들기...
     //m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
@@ -130,7 +130,12 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
     }
 
     int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
-    Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex(iIdxUpdAet));
+	if (iIdxUpdAet >= 0) {
+		Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex( (UINT) iIdxUpdAet));
+	}
+	else {
+		Log(enError, "에러 발생" );
+	}
 
     // 잔여 펄스열에 대해서 탐지 신호 분석을 수행한다.
 
@@ -270,21 +275,21 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
         CSigAnal::SetColTime( m_pstPDWData->GetColTime() );
 
 #if defined(_ELINT_)
-        CSigAnal::SetStorePDW( m_pstPDWData->x.el.iIsStorePDW );
+        CSigAnal::SetStorePDW( m_pstPDWData->x.el.uiIsStorePDW );
 
         SetBandWidth(m_pstPDWData->x.el.enBandWidth);
         SetTaskID(m_pstPDWData->x.el.aucTaskID);
         SetCollectorID(m_pstPDWData->x.el.GetCollectorID());
 
 #elif defined(_XBAND_)
-        CSigAnal::SetStorePDW( m_pstPDWData->x.xb.iIsStorePDW );
+        CSigAnal::SetStorePDW( m_pstPDWData->x.xb.uiIsStorePDW );
 
         SetBandWidth(m_pstPDWData->x.xb.enBandWidth);
         SetTaskID(m_pstPDWData->x.xb.aucTaskID);
         SetCollectorID(m_pstPDWData->x.xb.GetCollectorID());
 
 #elif _POCKETSONATA_
-        CSigAnal::SetStorePDW( m_pstPDWData->x.so.iIsStorePDW );
+        CSigAnal::SetStorePDW( m_pstPDWData->x.so.uiIsStorePDW );
 
 #else
 #endif

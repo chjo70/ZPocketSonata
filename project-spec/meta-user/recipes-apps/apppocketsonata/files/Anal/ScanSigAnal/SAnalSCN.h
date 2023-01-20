@@ -32,7 +32,7 @@ class CSAnalScan : public CAnalPRI, public CMakeAET
 private:
     SRxABTData *m_pScnAet;
 
-    int m_uiMaxPdw;
+    unsigned int m_uiMaxPdw;
 
     SRxLOBData m_LOBData[ MAX_AET+1 ];
 
@@ -45,7 +45,7 @@ protected:
     STR_EMITTER *m_pEmitter;
 
 	//##ModelId=452B0C450148
-	UINT m_nCanPeak[_spMaxSample];
+	UINT m_uiCanPeak[_spMaxSample];
 
 	/*! \bug  스캔 주기를 int 에서 unsigned integer로 형 변경함.
 	    \date 2009-10-08 12:39:49, 조철희
@@ -58,14 +58,14 @@ protected:
 	//##ModelId=452B0C45015D
 	STR_AUTOCOR m_nAutoCor;
 	//##ModelId=452B0C450166
-	UINT m_nCoCanPeak;
+	UINT m_uiCoCanPeak;
 
 	//##ModelId=452B0C450167
 	UINT m_nSampleTime;
 	//##ModelId=452B0C450170
 	int m_noCh;
 	//##ModelId=452B0C450171
-	int m_noEMT;
+	unsigned int m_uinoEMT;
 
 	//##ModelId=452B0C450185
 	STR_SCANPT *m_pScanPt;
@@ -135,7 +135,7 @@ public:
 	//##ModelId=452B0C450224
     EN_SCANRESULT AnalScan( int preAnalStat=0 );
 	//##ModelId=452B0C450226
-	void Init( int noEMT=0, int noCh=0 );
+	void Init( unsigned int uinoEMT=0, int noCh=0 );
     void MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
 
     BOOL KnownAnalysis();
@@ -166,7 +166,7 @@ public:
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     int GetBand();
-    void SaveEmitterPdwFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
     SRxLOBData *GetLOBData( int index=0 );
 
@@ -176,7 +176,7 @@ public:
     //////////////////////////////////////////////////////////////////////////////////////
     int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
     //##ModelId=452B0C56000C
-    int GetColPdw() { return 0; }
+    unsigned int GetColPdw() { return 0; }
     //##ModelId=452B0C56000E
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
     //##ModelId=452B0C560012
@@ -185,7 +185,7 @@ public:
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) { }
 
     //##ModelId=452B0C56002C
-    int GetCoEmitter() { return 0; }
+    unsigned int GetCoEmitter() { return 0; }
     //##ModelId=452B0C560034
     STR_EMITTER *GetEmitter() { return m_pEmitter; }
     //##ModelId=452B0C560036
@@ -215,7 +215,7 @@ public:
 
 
 	//##ModelId=452B0C45022E
-    CSAnalScan( void *pParent, int coMaxPdw );
+    CSAnalScan( void *pParent, unsigned int uicoMaxPdw );
 	//##ModelId=452B0C450230
 	virtual ~CSAnalScan();
 
