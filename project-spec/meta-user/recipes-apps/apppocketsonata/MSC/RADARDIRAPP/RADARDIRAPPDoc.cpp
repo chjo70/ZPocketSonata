@@ -187,13 +187,15 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 
 	m_strPathname = strPathname;
 
+	strPathname.MakeLower();
+
 	SRxLOBData *pLOBData;
 	STR_PDWDATA *pstPDWData;
 
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
 
-	if (true == ReadDataFile((char*)(LPCTSTR) m_strPathname, (char*)(LPCTSTR)strFilename)) {
+	if (true == ReadDataFile((char*)(LPCTSTR) strPathname, (char*)(LPCTSTR)strFilename)) {
 		pstPDWData = m_theDataFile.GetPDWData();
 
 		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, true);

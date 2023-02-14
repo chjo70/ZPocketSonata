@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *	Header file:		MulDiv64.h
  *	Author:				Richard van der Wal
  *	Contact:			R.vdWal@xs4all.nl
@@ -42,12 +42,12 @@ __int64 MulDiv64(__int64 operant, __int64 multiplier, __int64 divider);
 
 
 /**
- * @brief     32ºñÆ®/64ºñÆ® Á¤¼öÇü ³ª´©±â ¿¬»êÇÑ´Ù.
+ * @brief     32ë¹„íŠ¸/64ë¹„íŠ¸ ì •ìˆ˜í˜• ë‚˜ëˆ„ê¸° ì—°ì‚°í•œë‹¤.
  * @param     T x1
  * @param     T y2
  * @return    bool
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-14, 18:22
  * @warning
@@ -80,19 +80,19 @@ T TDIV( T x, T y )
 #endif
     else {
 		toaRet = 0;
-        TRACE("Àß¸øµÈ ¿¬»ê ÀÔ´Ï´Ù....");
+        TRACE("ì˜ëª»ëœ ì—°ì‚° ì…ë‹ˆë‹¤....");
     }
 
     return toaRet;
 }
 
 /**
- * @brief     ³ª´©±â ÅÛÇÃ¸´ ÇÔ¼ö
+ * @brief     ë‚˜ëˆ„ê¸° í…œí”Œë¦¿ í•¨ìˆ˜
  * @param     T x1
  * @param     T y2
  * @return    bool
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-14, 18:22
  * @warning
@@ -120,7 +120,7 @@ T TMUL(T x, T y)
 #endif
     else {
 		toaRet = 0;
-        TRACE("Àß¸øµÈ ¿¬»ê ÀÔ´Ï´Ù....");
+        TRACE("ì˜ëª»ëœ ì—°ì‚° ì…ë‹ˆë‹¤....");
     }
 
 
@@ -134,7 +134,7 @@ T TMUL(T x, T y)
  * @param     T z
  * @return    T
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-19, 16:56
  * @warning
@@ -161,7 +161,7 @@ T TMULDIV(T x, T y, T z)
 #endif
     else {
 		toaRet = 0;
-        TRACE("Àß¸øµÈ ¿¬»ê ÀÔ´Ï´Ù....");
+        TRACE("ì˜ëª»ëœ ì—°ì‚° ì…ë‹ˆë‹¤....");
     }
 
     return toaRet;

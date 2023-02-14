@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "../OFP_Main.h"
 
@@ -37,7 +37,7 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
         std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
     }
 
-    // SQLITE ÆÄÀÏ¸í »ı¼ºÇÏ±â
+    // SQLITE íŒŒì¼ëª… ìƒì„±í•˜ê¸°
     char szSQLiteFileName[100];
 
     strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
@@ -64,16 +64,16 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
     m_stSavePDWData.pstPDW = NULL;
     _SAFE_MALLOC(m_stSavePDWData.pstPDW, _PDW, szSize)
 
-    // DB °ü·Ã º¯¼ö ÃÊ±âÈ­
+    // DB ê´€ë ¨ ë³€ìˆ˜ ì´ˆê¸°í™”
     InitDataFromDB();
 
 }
 
 /**
- * @brief     ¼Ò¸êÀÚ Ã³¸®¸¦ ÇÑ´Ù.
+ * @brief     ì†Œë©¸ì ì²˜ë¦¬ë¥¼ í•œë‹¤.
  * @return    
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-18, 13:11
  * @warning
@@ -97,11 +97,11 @@ CSigAnal::~CSigAnal()
 
 
 /**
- * @brief     ºĞ¼® ¸ğµâÀ» ÃÊ±âÈ­ ÇÑ´Ù.
+ * @brief     ë¶„ì„ ëª¨ë“ˆì„ ì´ˆê¸°í™” í•œë‹¤.
  * @param     void
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-18, 13:18
  * @warning
@@ -112,10 +112,10 @@ void CSigAnal::Initialize()
 }
 
 /**
- * @brief     PDW µ¥ÀÌÅÍÀÇ ´ÜÀ§¸¦ ÀåÄ¡¿¡ ¸Â¤¡°Ô ¼³Á¤ÇÑ´Ù.
+ * @brief     PDW ë°ì´í„°ì˜ ë‹¨ìœ„ë¥¼ ì¥ì¹˜ì— ë§ã„±ê²Œ ì„¤ì •í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2021-07-06, 15:37
  * @warning
@@ -185,10 +185,10 @@ void CSigAnal::InitResolution()
 }
 
 /**
- * @brief     ºĞ¼®ÇÏ¿© LOB ÀÌ¿ÜÀÇ PDW µ¥ÀÌÅÍ¸¦ ÀúÀåÇÑ´Ù.
+ * @brief     ë¶„ì„í•˜ì—¬ LOB ì´ì™¸ì˜ PDW ë°ì´í„°ë¥¼ ì €ì¥í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2008-01-22 12:40:25
  * @warning
@@ -240,13 +240,13 @@ void CSigAnal::SaveRemainedPdwFile()
 }
 
 /**
- * @brief     Áß°£ ¼öÁı µ¥ÀÌÅÍ ÆÄÀÏÀ» ÀúÀåÇÑ´Ù.
+ * @brief     ì¤‘ê°„ ìˆ˜ì§‘ ë°ì´í„° íŒŒì¼ì„ ì €ì¥í•œë‹¤.
  * @param     STR_PDWINDEX * pPDWIndex
  * @param     STR_PDWDATA * pstPDW
  * @param     bool bSaveFile
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-29, 11:14
  * @warning
@@ -268,20 +268,20 @@ void CSigAnal::SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pPDWData,
 
         }
 
-        // ¼öÁıÇÑ PDW ÆÄÀÏ ÀúÀåÇÏ±â...
+        // ìˆ˜ì§‘í•œ PDW íŒŒì¼ ì €ì¥í•˜ê¸°...
         InsertRAWData( &m_stSavePDWData, -1, false );
     }
 }
 
 /**
- * @brief     LOB µ¥ÀÌÅÍ¿¡ ÇØ´çµÇ´Â PDW µ¥ÀÌÅÍ¸¸ ÀúÀåÇÑ´Ù.
+ * @brief     LOB ë°ì´í„°ì— í•´ë‹¹ë˜ëŠ” PDW ë°ì´í„°ë§Œ ì €ì¥í•œë‹¤.
  * @param     STR_EMITTER * pEmitter
  * @param     _PDW * pstPDW
  * @param     int iPLOBID
  * @param     bool bSaveFile
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-18, 15:34
  * @warning
@@ -303,7 +303,7 @@ void CSigAnal::SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
 
         }
 
-        // ¼öÁıÇÑ PDW ÆÄÀÏ ÀúÀåÇÏ±â...
+        // ìˆ˜ì§‘í•œ PDW íŒŒì¼ ì €ì¥í•˜ê¸°...
         InsertRAWData(&m_stSavePDWData, iPLOBID );
     }
 
@@ -313,10 +313,10 @@ void CSigAnal::SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOB
 
 #ifdef _MSSQL_
 /**
- * @brief     µ¥ÀÌÅÍº£ÀÌ½º Æ÷ÀÎÅÍ¸¦ ¸®ÅÏÇÑ´Ù.
+ * @brief     ë°ì´í„°ë² ì´ìŠ¤ í¬ì¸í„°ë¥¼ ë¦¬í„´í•œë‹¤.
  * @return    CODBCDatabase *
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-18, 14:07
  * @warning
@@ -329,10 +329,10 @@ CODBCDatabase *CSigAnal::GetCODBCDatabase()
 #endif
 
 /**
- * @brief     OPINITID °ªÀ» DB ¿¡¼­ ·ÎµùÇÏ¿© ´ÙÀ½ °ªÀ¸·Î ¼³ÀåÇÑ´Ù.
+ * @brief     OPINITID ê°’ì„ DB ì—ì„œ ë¡œë”©í•˜ì—¬ ë‹¤ìŒ ê°’ìœ¼ë¡œ ì„¤ì¥í•œë‹¤.
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-18, 13:22
  * @warning
@@ -369,7 +369,7 @@ void CSigAnal::InitDataFromDB()
  * @param     bool bInsertDB
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-01-23, 17:53
  * @warning
@@ -386,15 +386,15 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
     CCommonUtils::getFileNamingDesignatedTime(buffer, sizeof(buffer), tiNow.tv_sec);
 
 #ifdef _ELINT_
-    sprintf_s(szDirectory, "%s\\¼öÁı¼Ò_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
+    sprintf_s(szDirectory, "%s\\ìˆ˜ì§‘ì†Œ_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
 
 #elif defined(_701_)
-	sprintf_s(szDirectory, "%s/¼öÁı¼Ò_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x._701.GetCollectorID(), pPDWData->x._701.aucTaskID);
+	sprintf_s(szDirectory, "%s/ìˆ˜ì§‘ì†Œ_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x._701.GetCollectorID(), pPDWData->x._701.aucTaskID);
 
 
 #elif defined(_XBAND_)
-    //sprintf_s( szDirectory, "%s\\¼öÁı¼Ò_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-    sprintf_s(szDirectory, "%s/¼öÁı¼Ò_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID);
+    //sprintf_s( szDirectory, "%s\\ìˆ˜ì§‘ì†Œ_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
+    sprintf_s(szDirectory, "%s/ìˆ˜ì§‘ì†Œ_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID);
 
 #elif defined(_POCKETSONATA_)
     //strftime(buffer, 100, "%Y-%m-%d", pstTime);
@@ -415,15 +415,15 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
         bRet = CreateDir(szDirectory);
 
         if ( bRet == true ) {
-            // ¼ø¼ö ½ÅÈ£ ¼öÁıÇÑ µ¥ÀÌÅÍ
+            // ìˆœìˆ˜ ì‹ í˜¸ ìˆ˜ì§‘í•œ ë°ì´í„°
             if( iPLOBID == 0 ) {
                 sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), PDW_EXT );
             }
-            // ±×·ìÈ­ ½ÅÈ£ ¼öÁı µ¥ÀÌÅÍ
+            // ê·¸ë£¹í™” ì‹ í˜¸ ìˆ˜ì§‘ ë°ì´í„°
             else if( iPLOBID < 0 ) {
                 sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_[G%02d]%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), PDW_EXT );
             }
-            // ºĞ¼® ½ÅÈ£ ¼öÁı µ¥ÀÌÅÍ
+            // ë¶„ì„ ì‹ í˜¸ ìˆ˜ì§‘ ë°ì´í„°
             else {
                 sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_[G%02d][L%02d]%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), iPLOBID, PDW_EXT );
             }
@@ -433,7 +433,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
 
             if (m_bDBThread == false) {
                 if( bInsertDB == true ) {
-                    // RAWDATA Å×ÀÌºí¿¡ ÀúÀå
+                    // RAWDATA í…Œì´ë¸”ì— ì €ì¥
                     InsertToDB_RAW( pPDWData, iPLOBID );
                 }
             }
@@ -450,12 +450,12 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
 }
 
 /**
- * @brief     µ¥ÀÌÅÍº£ÀÌ½º¿¡ PDW Å×ÀÌºí¿¡ ·¹ÄÚµå¸¦ Ãß°¡ÇÑ´Ù.
+ * @brief     ë°ì´í„°ë² ì´ìŠ¤ì— PDW í…Œì´ë¸”ì— ë ˆì½”ë“œë¥¼ ì¶”ê°€í•œë‹¤.
  * @param     STR_PDWDATA * pPDWData
  * @param     int iPLOBID
  * @return    bool
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/23 23:33:21
  * @warning
@@ -581,11 +581,11 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 
 
 /**
- * @brief     LOB µ¥ÀÌÅÍ¸¦ Ãâ·ÂÇÑ´Ù.
+ * @brief     LOB ë°ì´í„°ë¥¼ ì¶œë ¥í•œë‹¤.
  * @param     SRxLOBData * pLOB
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-20, 19:36
  * @warning
@@ -594,15 +594,15 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
 {
     char buffer[500];
 
-    // ½ÅÈ£ Á¤º¸
+    // ì‹ í˜¸ ì •ë³´
     int iCnt = 0;
     iCnt += sprintf(&buffer[iCnt], "%s", g_szAetSignalType[pLOB->iSignalType]);
 
 #ifdef __VXWORKS__
-    // ¹æÀ§
+    // ë°©ìœ„
     iCnt += sprintf(&buffer[iCnt], " %4d(%4d,%4d)", UMUL(pLOB->fDOAMean, 1), UMUL(pLOB->fDOAMin, 1), UMUL(pLOB->fDOAMax, 1));
 
-    // ÁÖÆÄ¼ö
+    // ì£¼íŒŒìˆ˜
     iCnt += sprintf(&buffer[iCnt], " %s", g_szAetFreqType[pLOB->iFreqType]);
     iCnt += sprintf(&buffer[iCnt], " %d[%d, %d]", UMUL(pLOB->fFreqMean, 1), UMUL(pLOB->fFreqMin, 1), UMUL(pLOB->fFreqMax, 1));
 
@@ -617,10 +617,10 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
     iCnt += sprintf(&buffer[iCnt], " %d(%d,%d)", UMUL(pLOB->fPAMean, 1), UMUL(pLOB->fPAMin, 1), UMUL(pLOB->fPAMax, 1));
 
 #else
-    // ¹æÀ§
+    // ë°©ìœ„
     iCnt += sprintf(&buffer[iCnt], " %4.1f(%4.1f,%4.1f)", pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax);
 
-    // ÁÖÆÄ¼ö
+    // ì£¼íŒŒìˆ˜
     iCnt += sprintf(&buffer[iCnt], " %s", g_szAetFreqType[pLOB->iFreqType]);
     iCnt += sprintf(&buffer[iCnt], " %.3f[%.3f, %.3f]", pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax);
 
@@ -628,7 +628,7 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
         //printf( "%s(%s,%s)%s" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), Comma( buff4 ) );
     }
     else {
-        // printf( "%s(%s¡­%s)%3d" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), FRQCNV( pNewAet->aet.frq.band, temp )-FRQCNV( pNewAet->aet.frq.band, 0 ) );
+        // printf( "%s(%sâˆ¼%s)%3d" , Comma( buff1 ), Comma( buff2 ), Comma( buff3 ), FRQCNV( pNewAet->aet.frq.band, temp )-FRQCNV( pNewAet->aet.frq.band, 0 ) );
         //printf( "%s(%s,%s)%3d" , buff1, buff2, buff3, FRQCNV( pManAet->aet.frq.band, temp )-FRQCNV( pManAet->aet.frq.band, 0 ) );
     }
 
@@ -655,13 +655,13 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
 }
 
 /**
- * @brief     LOB µ¥ÀÌÅÍ¸¦ DB¿¡ »ğÀÔÇÑ´Ù.
+ * @brief     LOB ë°ì´í„°ë¥¼ DBì— ì‚½ì…í•œë‹¤.
  * @param     SRxLOBData * pLOBData
  * @param     int iCoLOBData
  * @param     bool bDBInsert
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-02, 11:11
  * @warning
@@ -675,11 +675,11 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBIns
         for( i = 0 ; i < iCoLOBData ; ++i ) {
             InsertToDB_LOB( pLOBData );
 
-            // FREQ ·¹º§°ª ÀúÀå
+            // FREQ ë ˆë²¨ê°’ ì €ì¥
             if( pLOBData->iFreqPositionCount >= _spTwo ) {
                 InsertToDB_Position( pLOBData, true );
             }
-            // PRI ·¹º§°ª ÀúÀå
+            // PRI ë ˆë²¨ê°’ ì €ì¥
             if( pLOBData->iPRIPositionCount >= _spTwo ) {
                 InsertToDB_Position( pLOBData, false );
             }
@@ -691,12 +691,12 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBIns
 }
 
 /**
- * @brief     ÁÖÆÄ¼ö ¹× PRI POSITION °ªÀ» DB¿¡ »ğÀÔÇÑ´Ù.
+ * @brief     ì£¼íŒŒìˆ˜ ë° PRI POSITION ê°’ì„ DBì— ì‚½ì…í•œë‹¤.
  * @param     SRxLOBData * pLOBData
  * @param     bool bFreqSeq
  * @return    bool
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-05, 17:02
  * @warning
@@ -807,11 +807,11 @@ bool CSigAnal::InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq )
 }
 
 /**
- * @brief     LOB µ¥ÀÌÅÍ¸¦ DB¿¡ »ğÀÔÇÑ´Ù.
+ * @brief     LOB ë°ì´í„°ë¥¼ DBì— ì‚½ì…í•œë‹¤.
  * @param     SRxLOBData * pLOBData
  * @return    void
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-02, 11:36
  * @warning
@@ -985,7 +985,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
 #endif
 
-    // ¿©±â¼­ ºÎÅÍ SQL ¹®À» ½ÇÇà ÇÕ´Ï´Ù.
+    // ì—¬ê¸°ì„œ ë¶€í„° SQL ë¬¸ì„ ì‹¤í–‰ í•©ë‹ˆë‹¤.
 #ifdef _MSSQL_
     //if( m_pszSQLString[0] != NULL ) {
         DECLARE_BEGIN_CHECKODBC
@@ -1046,7 +1046,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
  * @brief     GetOpInitID
  * @return    LONG
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-04-21, 16:56
  * @warning

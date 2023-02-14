@@ -233,6 +233,9 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 write( fid, m_szLog, nLength );
 #endif
             }
+			else {
+				TRACE0(m_szLog);
+			}
 #ifdef _MSC_VER
             fclose( fp );
 #else

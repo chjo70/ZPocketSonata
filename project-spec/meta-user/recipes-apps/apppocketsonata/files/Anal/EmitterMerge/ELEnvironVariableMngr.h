@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../SigAnal/_Type.h"
 

@@ -194,7 +194,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_FREQ_DEVIATION		    (500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define AOA_SHIFT_COUNT             (5)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
+#define AOA_SHIFT_COUNT             (4)     // 
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 

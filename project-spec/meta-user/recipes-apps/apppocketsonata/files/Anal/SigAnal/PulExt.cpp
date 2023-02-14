@@ -1243,8 +1243,8 @@ BOOL CPulExt::ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PU
                         pSeg->uiMiss = 0;
                         pSeg->enSegMark = NORMAL_SEG;
 
-                        pSeg->tFirst = m_pTOA[ i1 ];
-                        pSeg->tLast = m_pTOA[ i3 ];
+                        pSeg->tFirst = m_pTOA[ index1 ];
+                        pSeg->tLast = m_pTOA[ index3 ];
 
                         /*! \bug  기준 펄스열의 주파수 정보를 저장한다.
                             \date 2006-08-11 10:42:15, 조철희
@@ -4058,7 +4058,7 @@ bool CPulExt::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pRefSeg, STR
 
     *pnHarmonic = CheckHarmonic( pRefSeg, pCmpSeg );
 
-	TRACE("\n Ref[%3d-%3d], Cmp[%3d-%3d]", pRefSeg->first_idx, pRefSeg->last_idx, pCmpSeg->first_idx, pCmpSeg->last_idx);
+	
     if( CalOverlapSpace<PDWINDEX>( pRefSeg->first_idx, pRefSeg->last_idx, pCmpSeg->first_idx, pCmpSeg->last_idx ) != 0 ) {
         bRet = FALSE;
     }
@@ -4069,6 +4069,8 @@ bool CPulExt::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pRefSeg, STR
             bRet = CheckOmittedPulse( pRefSeg, pCmpSeg );
         }
     }
+
+	//TRACE("\n Ref[%3d-%3d], Cmp[%3d-%3d] = %d", pRefSeg->first_idx, pRefSeg->last_idx, pCmpSeg->first_idx, pCmpSeg->last_idx, bRet );
 
     return bRet;
 

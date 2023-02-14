@@ -224,18 +224,18 @@ public:
     }
 
     void SetBandWidth( int iVal ) {
-// #if defined(_ELINT_)
-//         m_enBandWidth = (ELINT::ENUM_BANDWIDTH) iVal;
-// 
-// #elif defined(_XBAND_)
-//         m_enBandWidth = (XBAND::ENUM_BANDWIDTH) iVal;
-// 
-// #elif defined(_701_)
-// 		m_enBandWidth = (_701::ENUM_BANDWIDTH) iVal;
-// 
-// #else
-// #error "대역을 설정해줘야 합니다..."
-// #endif
+#if defined(_ELINT_)
+        m_enBandWidth = (ELINT::ENUM_BANDWIDTH) iVal;
+
+#elif defined(_XBAND_)
+        m_enBandWidth = (XBAND::ENUM_BANDWIDTH) iVal;
+
+#elif defined(_701_)
+		m_enBandWidth = (_701::ENUM_BANDWIDTH) iVal;
+
+#else
+//#error "대역을 설정해줘야 합니다..."
+#endif
 
     }
 

@@ -918,8 +918,8 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
 {
     ENUM_DataType enDataType = en_UnknownData;
 
-    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
-		if (NULL != CCommonUtils::strcasestr(pStrPathname, ".csv"))
+    if( NULL != CCommonUtils::strcasestr( pStrPathname, "pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "spdw" ) ) {
+		if (NULL != CCommonUtils::strcasestr(pStrPathname, "csv"))
 			enDataType = en_PDW_DATA_CSV;
 		else
 			enDataType = en_PDW_DATA;
@@ -927,20 +927,20 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "kpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ||
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "siq" ) ||
         NULL != CCommonUtils::strcasestr( pStrPathname, "e2.dat" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".eiq" ) ) {
         enDataType = en_IQ_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "xpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-	else if (NULL != CCommonUtils::strcasestr(pStrPathname, ".7pdw")) {
+	else if (NULL != CCommonUtils::strcasestr(pStrPathname, "7pdw")) {
 		enDataType = en_PDW_DATA;
 	}
     else {
