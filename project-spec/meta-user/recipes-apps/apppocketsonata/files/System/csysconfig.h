@@ -33,6 +33,11 @@ struct STR_SYSCONFIG {
      */
     int iEmitterDeleteTime;
 
+	/**
+		 * @brief 방탐 오차
+	*/
+	float fRxDOAError[enMAXPRC - 1];
+
     /**
      * @brief 대역별 임계값
      */
@@ -194,6 +199,11 @@ public:
         memcpy(m_strConfig.fMergeAOADiff, fValue, sizeof(m_strConfig.fMergeAOADiff));
         m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
     };
+
+	void SetAOAError(float *fValue) {
+		memcpy(m_strConfig.fRxDOAError, fValue, sizeof(m_strConfig.fRxDOAError));
+		m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
+	};
 
     float *GetRxThreshold() { return & m_strConfig.fRxThreshold[0]; };
     void SetRxThreshold( float *fValue) {

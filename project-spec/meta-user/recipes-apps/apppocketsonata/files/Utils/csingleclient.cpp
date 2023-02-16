@@ -233,7 +233,7 @@ void CSingleClient::RunClient()
 
     m_bConnected = false;
 
-    while( m_bMainLoop ) {
+    while(m_bThreadLoop) {
         if( iServerSwitch+1 >= NUM_OF_SERVER ) {
             iServerSwitch = 0;
         }
@@ -312,7 +312,7 @@ void CSingleClient::RunClient()
                         //Echo back the message that came in
                         else {
 #ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], iRead );
+                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) iRead );
 #endif
                             iTotalRead += iRead;
                             //printf( "#[%d/%d]" , uiTotalRead, strLanHeader.uiLength );
@@ -366,7 +366,7 @@ void CSingleClient::RunClient()
                         }
                         else {
 #ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], iRead );
+                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) iRead );
 #endif
                             iTotalRead += iRead;
                             //printf( "*[%d/0x%X/%d]" , uiTotalRead, strLanHeader.uiOpCode, strLanHeader.uiLength );

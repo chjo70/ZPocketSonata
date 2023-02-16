@@ -37,16 +37,18 @@ enum enWhatDrvAPP {
 
 
 
-//////////////////
-// SNTP 프로토콜 정의
-#define TRY_GETSNTP                 (3)
-#define SNTP_SERVER_IP				((char *)"192.168.10.245")
+
+//////////////////////////////////////////////////////////////////////
+// NFS 드라이브 정의
+// NFS 호스트 경로에 d:/rawdata 를 export 해야 합니다.
+#define NFS_DRIVE                       "/d/rawdata"
+
+
 
 //////////////////////////////////////////////////////////////////////
 // TFTP 프로토콜 정의
 
-#define TFTP_SERVER_IP				SNTP_SERVER_IP
-//#define TFTP_SERVER_IP					"150.150.49.228"
+#define TFTP_SERVER_IP				    SNTP_SERVER_IP  // "150.150.49.228"
 #define TFTP_MODE						((char*) "binary" )
 #define	DOWNLOAD_FILENAME				"vxworks"
 
@@ -99,6 +101,8 @@ public:
     void RunApp( enWhatDrvAPP enApp );
 
     void InitDataBase();
+    void PCIConfigSetting();
+    void MountDrive();
 	
 	CManSbc();
 	virtual ~CManSbc();

@@ -11,24 +11,24 @@ LIB_BASE_NAMES += vxbus
 	
 
 	
-# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 
 
 
 
-# copying directory h/hwif to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif
+# copying directory h/hwif to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif
 
 
 
 
-# copying directory h/hwif/buslib to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+# copying directory h/hwif/buslib to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h
 
 
 
@@ -36,172 +36,172 @@ __FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciMsi.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciMsi.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciMsi.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/pciDefines.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/pciDefines.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/pciDefines.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPciLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbVirtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbVirtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbVirtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPcieAer.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbPcieAer.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPcieAer.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbIadtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbIadtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbIadtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtPci.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtPci.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtPci.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib/vxbFdtSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -223,24 +223,24 @@ endif
 	
 	
 	
-# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
+# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
 
 
 
 
-# copying directory h/hwif to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif
+# copying directory h/hwif to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif
 
 
 
 
-# copying directory h/hwif/buslib to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+# copying directory h/hwif/buslib to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h
 
 
 
@@ -248,172 +248,172 @@ __FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciMsi.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciMsi.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciMsi.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/pciDefines.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/pciDefines.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/pciDefines.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPciLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPciLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbVirtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbVirtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbVirtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPcieAer.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbPcieAer.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbPcieAer.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbIadtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbIadtLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbIadtLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtPci.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtPci.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtPci.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbI2cLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbI2cLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib/vxbFdtSpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/h/hwif/buslib/vxbFdtSpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -439,7 +439,7 @@ PREBUILD_GENHEADERS : VXBUS_BUSLIB_src_diab__PREBUILD_GENHEADERS
 
 VXBUS_BUSLIB_src_diab__PREBUILD_GENHEADERS : 
 	@ echo building VXBUS_BUSLIB directory src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_BUSLIB_src_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_BUSLIB_src_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
 
 	
 	
@@ -455,7 +455,7 @@ __BUILD_FB_IDS += kernel_top_VXBUS_BUSLIB_src_diab
 
 VXBUS_BUSLIB_src_diab__BUILD : 
 	@ echo building VXBUS_BUSLIB directory src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=kernel_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=kernel_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD
 
 
 	
@@ -467,7 +467,7 @@ __BUILD_USR_STATIC_FB_IDS += user_static_top_VXBUS_BUSLIB_src_diab
 
 VXBUS_BUSLIB_src_diab__BUILD_USR_STATIC : 
 	@ echo building VXBUS_BUSLIB directory src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
  
 BUILD_USR_STATIC : VXBUS_BUSLIB_user_src_diab__BUILD_USR_STATIC
 
@@ -477,7 +477,7 @@ __BUILD_USR_STATIC_FB_IDS += user_static_top_VXBUS_BUSLIB_user_src_diab
 
 VXBUS_BUSLIB_user_src_diab__BUILD_USR_STATIC : 
 	@ echo building VXBUS_BUSLIB directory user_src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_BUSLIB_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_BUSLIB_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
 
 	
 	
@@ -489,7 +489,7 @@ __BUILD_USR_SHARED_FB_IDS += user_shared_top_VXBUS_BUSLIB_src_diab
 
 VXBUS_BUSLIB_src_diab__BUILD_USR_SHARED : 
 	@ echo building VXBUS_BUSLIB directory src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_BUSLIB_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
  
 BUILD_USR_SHARED : VXBUS_BUSLIB_user_src_diab__BUILD_USR_SHARED
 
@@ -499,7 +499,7 @@ __BUILD_USR_SHARED_FB_IDS += user_shared_top_VXBUS_BUSLIB_user_src_diab
 
 VXBUS_BUSLIB_user_src_diab__BUILD_USR_SHARED : 
 	@ echo building VXBUS_BUSLIB directory user_src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_BUSLIB_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_BUSLIB VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_BUSLIB_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
 
 
 	
@@ -512,14 +512,14 @@ VXBUS_BUSLIB_user_src_diab__BUILD_USR_SHARED :
 
 
 	
-# copying directory cdf to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+# copying directory cdf to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf
 
 
 
@@ -527,52 +527,52 @@ __FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/00iadtBus.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/00iadtBus.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/00iadtBus.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/10pciBusLib.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pciBusLib.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/10pciBusLib.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/10spiBusLib.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10spiBusLib.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/10spiBusLib.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf
 
-__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf
-
-
+__FILES_TO_COPY_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/40vxbPciGenericBridge.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/40vxbPciGenericBridge.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/buslib-2.1.3.4/cdf/40vxbPciGenericBridge.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -591,12 +591,12 @@ PRENOBUILD : PRENOBUILD_VXBUS_BUSLIB
 
 PRENOBUILD_VXBUS_BUSLIB : cdf_PRENOBUILD_VXBUS_BUSLIB
 
-cdf_PRENOBUILD_VXBUS_BUSLIB : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.cdf
+cdf_PRENOBUILD_VXBUS_BUSLIB : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.cdf
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.cdf : | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
-	$(file >D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp,$(call __vsb_tmpl_cdf_inter,$(addprefix $(cdf_PRENOBUILD_VXBUS_BUSLIB_DIR)/,$(sort $(cdf_PRENOBUILD_VXBUS_BUSLIB_FILES))),VXBUS_BUSLIB))
-	$(CDFCOMP) -i D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp -o $@ -cpp "$(CPP) $(__OPTION_LANG_CDF)" -cpu PPCE6500 -layer VXBUS_BUSLIB -vsb D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
-	rm -f D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.cdf : | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+	$(file >D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp,$(call __vsb_tmpl_cdf_inter,$(addprefix $(cdf_PRENOBUILD_VXBUS_BUSLIB_DIR)/,$(sort $(cdf_PRENOBUILD_VXBUS_BUSLIB_FILES))),VXBUS_BUSLIB))
+	$(CDFCOMP) -i D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp -o $@ -cpp "$(CPP) $(__OPTION_LANG_CDF)" -cpu PPCE6500 -layer VXBUS_BUSLIB -vsb D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+	rm -f D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_BUSLIB.tmp
 
 	
 
@@ -605,5 +605,5 @@ D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocke
 	
 __DIR_TARGETS += $(__DIR_TARGETS_VXBUS_BUSLIB)
 
-__DIR_TARGETS_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
+__DIR_TARGETS_VXBUS_BUSLIB += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/hwif/buslib D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/hwif/buslib D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
 

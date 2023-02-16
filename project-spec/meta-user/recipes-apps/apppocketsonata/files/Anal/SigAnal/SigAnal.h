@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 
 #ifdef _MSSQL_
@@ -29,7 +29,12 @@ class CSigAnal : public CRawFile
 private:
     bool m_bDBThread;
 
+	unsigned int m_uiCoMaxPdw;
+
+
+#if defined(_MSSQL_) || defined(_SQLITE_)
     char *m_pszSQLString;
+#endif
 
 #ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
@@ -52,10 +57,13 @@ private:
     time_t m_tColTime;
     unsigned int m_tColTimeMs;
 
-#if defined(_ELINT_) || defined(_701_)
+#if defined(_ELINT_)
     char m_szTaskID[LENGTH_OF_TASK_ID];
-    //EN_RADARCOLLECTORID m_enCollectorID;
-    _701::ENUM_BANDWIDTH m_enBandWidth;
+    ELINT::ENUM_BANDWIDTH m_enBandWidth;
+
+#elif defined(_701_)
+	char m_szTaskID[LENGTH_OF_TASK_ID];
+	_701::ENUM_BANDWIDTH m_enBandWidth;
 
 #elif defined(_XBAND_)
     char m_szTaskID[LENGTH_OF_TASK_ID];
@@ -65,8 +73,6 @@ private:
 #elif defined(_POCKETSONATA_)
     POCKETSONATA::ENUM_BANDWIDTH m_enBandWidth;
 
-
-
 #else
 
 #endif    
@@ -74,7 +80,7 @@ private:
 protected:
     CMIDASBlueFileFormat *m_pMidasBlue;
 
-    STR_PDWDATA m_stSavePDWData;        // ∫–ºÆ«— LOB∏¶ ±Ÿ∞≈∑Œ ∆ƒ¿œ∑Œ ¿˙¿Â«œ±‚ ¿ß«— µ•¿Ã≈Õ ∆˜¿Œ≈Õ
+    STR_PDWDATA m_stSavePDWData;        // Î∂ÑÏÑùÌïú LOBÎ•º Í∑ºÍ±∞Î°ú ÌååÏùºÎ°ú Ï†ÄÏû•ÌïòÍ∏∞ ÏúÑÌïú Îç∞Ïù¥ÌÑ∞ Ìè¨Ïù∏ÌÑ∞
 
 private:
 
@@ -90,6 +96,8 @@ protected:
 public:
     CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
     virtual ~CSigAnal();
+
+	void AllocMemory( const char *pSQLiteFileName );
 
     void NextStep() { ++m_uiStep; }
     void SetStep( unsigned int uiStep ) { m_uiStep=uiStep; }
@@ -111,7 +119,7 @@ public:
 
     bool InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq );
 
-    //! √‚∑¬ ∞¸∑√ «‘ºˆ
+    //! Ï∂úÎ†• Í¥ÄÎ†® Ìï®Ïàò
     void DISP_FineLOB(SRxLOBData *pLOB);
 
 	unsigned int GetOpInitID();
@@ -119,9 +127,9 @@ public:
 
     /**
      * @brief     GetColTime
-     * @return    __time32_t
+     * @return    time_t
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:13
      * @warning
@@ -132,10 +140,10 @@ public:
 
     /**
      * @brief     SetColTime
-     * @param     __time32_t val
+     * @param     time_t val
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:13
      * @warning
@@ -148,7 +156,7 @@ public:
      * @brief     GetColTimeMs
      * @return    unsigned int
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:13
      * @warning
@@ -161,7 +169,7 @@ public:
      * @param     unsigned int val
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:13
      * @warning
@@ -174,7 +182,7 @@ public:
      * @brief     GetPDWID
      * @return    unsigned int
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:13
      * @warning
@@ -188,7 +196,7 @@ public:
      * @param     unsigned int val
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:14
      * @warning
@@ -201,7 +209,7 @@ public:
      * @brief     IsStorePDW
      * @return    int
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:14
      * @warning
@@ -214,7 +222,7 @@ public:
      * @param     int val
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:14
      * @warning
@@ -233,8 +241,11 @@ public:
 #elif defined(_701_)
 		m_enBandWidth = (_701::ENUM_BANDWIDTH) iVal;
 
+#elif defined(_POCKETSONATA_)
+		m_enBandWidth = (POCKETSONATA::ENUM_BANDWIDTH) iVal;
+
 #else
-//#error "¥Îø™¿ª º≥¡§«ÿ¡‡æﬂ «’¥œ¥Ÿ..."
+#error "ÎåÄÏó≠ÏùÑ ÏÑ§Ï†ïÌï¥Ï§òÏïº Ìï©ÎãàÎã§..."
 #endif
 
     }
@@ -250,7 +261,7 @@ public:
      * @brief     GetBandWidth
      * @return    XBAND::ENUM_BANDWIDTH
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:14
      * @warning
@@ -272,7 +283,7 @@ public:
      * @brief     GetTaskID
      * @return    char *
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-05-10, 14:37
      * @warning
@@ -290,7 +301,7 @@ public:
      * @param     char * pVal
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 10:14
      * @warning
@@ -308,7 +319,7 @@ public:
      * @brief     GetCollectorID
      * @return    EN_RADARCOLLECTORID
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-05-10, 14:38
      * @warning
@@ -326,7 +337,7 @@ public:
      * @param     EN_RADARCOLLECTORID val
      * @return    void
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-05-10, 14:38
      * @warning
@@ -343,7 +354,7 @@ public:
      * @brief     GetRawDataFilename
      * @return    char
      * @exception
-     * @author    ¡∂√∂»Ò (churlhee.jo@lignex1.com)
+     * @author    Ï°∞Ï≤†Ìù¨ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-25, 14:36
      * @warning
@@ -352,6 +363,7 @@ public:
 
 
     virtual int GetCoGroup() = 0;
+	virtual char *GetAnalDirectory() = 0;
 
 };
 

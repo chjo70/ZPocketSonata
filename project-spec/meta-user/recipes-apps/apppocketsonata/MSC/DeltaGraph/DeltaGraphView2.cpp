@@ -1465,8 +1465,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_4 :
 		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
-             pstrFilterSetup->ullToaMin = CEncode::EncodeTOAus( ( float ) dMinX, m_pDoc->GetBandWidth() );
-             pstrFilterSetup->ullToaMax = CEncode::EncodeTOAus( ( float ) dMaxX, m_pDoc->GetBandWidth() );
+			 pstrFilterSetup->ullToaMin = CEncode::EncodeTOAs((float)dMinX, m_pDoc->GetBandWidth());
+			 pstrFilterSetup->ullToaMax = CEncode::EncodeTOAs((float)dMaxX, m_pDoc->GetBandWidth());
+
+			 pstrFilterSetup->uiPAMax = CEncode::EncodePA( (float) dMinY );
+			 pstrFilterSetup->uiPAMin = CEncode::EncodePA((float) dMaxY);
 		 }
 		 else {
 
@@ -1475,11 +1478,11 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 case enSubMenu_5 :
 		 if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV) {
-// 			 PEvget(m_hPE, PEP_fZOOMMINX, & pstrFilterSetup->dToaMin );
-// 			 PEvget(m_hPE, PEP_fZOOMMAXX, & pstrFilterSetup->dToaMax );
-// 
-// 			 PEvget(m_hPE, PEP_fZOOMMINY, & pstrFilterSetup->dPWMin );
-// 			 PEvget(m_hPE, PEP_fZOOMMAXY, & pstrFilterSetup->dPWMax );
+			 pstrFilterSetup->ullToaMin = CEncode::EncodeTOAs((float)dMinX, m_pDoc->GetBandWidth());
+			 pstrFilterSetup->ullToaMax = CEncode::EncodeTOAs((float)dMaxX, m_pDoc->GetBandWidth());
+
+			 pstrFilterSetup->uiPWMin = CEncode::EncodePWs((float)dMinY, m_pDoc->GetBandWidth());
+			 pstrFilterSetup->uiPWMax = CEncode::EncodePWs((float)dMaxY, m_pDoc->GetBandWidth());
 		 }
 		 else {
 

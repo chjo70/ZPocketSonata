@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file      PDW2SP370.cpp
  * @brief     PDW 데이터를 SP-350 구조로 변환해주는 클래스
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -139,7 +139,8 @@ bool CPDW2SP370::MakeHeader(void)
  */
 bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
 {
-	int i, iFreq, iAoa;
+	int i, iFreq;
+	unsigned int uiAoa;
 	double dToa, dPa, dAoa, dPw;
 	SELSP350_PDWWORDS *pstPDWWord;
 
@@ -155,15 +156,15 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x.usTOA = UDIV( dToa, 12.5 );
 
 		// 2번째 Phase
-		dPa = ELDecoder::DecodeGainPA( pS_EL_PDW_DATA->uiPA );			// ns 단위로 변경
+		dPa = ELDecoder::DecodeGainPA( (int) pS_EL_PDW_DATA->uiPA );			// ns 단위로 변경
 		//iPa = UDIV( ( 0xFF * pS_EL_PDW_DATA->iPA ), 440 );
 		pstPDWWord->x.ucAmp = UDIV( dPa, 0.34 );
 
 		dAoa = ELDecoder::DecodeAOA( pS_EL_PDW_DATA->uiDirection );	// 도 단위로 변경
 		//iAoa = UDIV( ( 0x7FF * pS_EL_PDW_DATA->iDirection ), 3600 );
-		iAoa = UDIV( dAoa, 0.08789 );
-		pstPDWWord->x.uiHighAOA = iAoa >> 5;
-		pstPDWWord->x.uiLowAOA = iAoa & 0x0FF;
+		uiAoa = UDIV( dAoa, 0.08789 );
+		pstPDWWord->x.uiHighAOA = uiAoa >> 5;
+		pstPDWWord->x.uiLowAOA = uiAoa & (unsigned int) 0x0FF;
 		pstPDWWord->x.uiAOAInvalid = pS_EL_PDW_DATA->uiDirectionVaild;
 
 		pstPDWWord->x.usPOPPedFlag = _INVALID;
@@ -174,8 +175,8 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x._notused3 = 0;
 
 		// 3번째 Phase
-		pstPDWWord->x.usFreq = pS_EL_PDW_DATA->uiFreq / 100;
-		iFreq = pS_EL_PDW_DATA->uiFreq - ( ( pS_EL_PDW_DATA->uiFreq / 100 ) * 100 );
+		pstPDWWord->x.usFreq = (unsigned short) ( pS_EL_PDW_DATA->uiFreq / (unsigned int) 100 );
+		iFreq = (int) pS_EL_PDW_DATA->uiFreq - (int) ( ( pS_EL_PDW_DATA->uiFreq / 100 ) * 100 );
 		pstPDWWord->x.usFreqFraction = UDIV( iFreq, 3.90625 );
 
 		pstPDWWord->x.usSignalCenterStatus = _VALID;
@@ -184,8 +185,8 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x.usPulseSource = 0x14;
 
 		// 4번째 Phase
-		pstPDWWord->x.usCW = pS_EL_PDW_DATA->uiPulseType == E_PDW_SIGNAL_CW ? 1 : 0;
-		dPw = ELDecoder::DecodePW2( pS_EL_PDW_DATA->uiPW );	// 도 단위로 변경
+		pstPDWWord->x.usCW = ( pS_EL_PDW_DATA->uiPulseType == (unsigned int) E_PDW_SIGNAL_CW ? (unsigned int) 1 : (unsigned int) 0 );
+		dPw = ELDecoder::DecodePW2( (int) pS_EL_PDW_DATA->uiPW );	// 도 단위로 변경
 		pstPDWWord->x.usPW = UDIV( dPw*1000., 40 );
 		//pstPDWWord->x.usPW = pS_EL_PDW_DATA->iPW;
 

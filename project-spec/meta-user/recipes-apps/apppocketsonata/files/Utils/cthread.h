@@ -1,4 +1,4 @@
-#ifndef CTHREAD_H
+﻿#ifndef CTHREAD_H
 #define CTHREAD_H
 
 #ifdef _MSC_VER
@@ -59,7 +59,7 @@ virtual void _routine();    \
 virtual char *GetThreadName() { return m_szThreadName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
-        m_pInstance = new A( g_iKeyId++, (char*) #A, true ); \
+        m_pInstance = new A( g_iKeyId++, #A, true ); \
     } \
     return m_pInstance; } \
 static void ReleaseInstance() { \
@@ -270,7 +270,7 @@ private:
     static int m_iCoMsgQueue;
 
 protected:
-    bool m_bMainLoop;
+    bool m_bThreadLoop;
     int m_iThreadID;
     char m_szThreadName[LENGTH_OF_CLASSNAME];
 

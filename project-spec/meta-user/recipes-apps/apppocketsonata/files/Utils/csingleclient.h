@@ -1,4 +1,4 @@
-#ifndef CSINGLECLIENT_H
+﻿#ifndef CSINGLECLIENT_H
 #define CSINGLECLIENT_H
 
 #ifdef __linux__

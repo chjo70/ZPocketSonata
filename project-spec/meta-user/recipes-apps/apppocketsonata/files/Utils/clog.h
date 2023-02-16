@@ -1,4 +1,4 @@
-#ifndef CLOG_H
+﻿#ifndef CLOG_H
 #define CLOG_H
 
 #include <stdio.h>

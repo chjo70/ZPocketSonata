@@ -1,4 +1,4 @@
-// AnalPRI.h: interface for the CAnalPRI class.
+﻿// AnalPRI.h: interface for the CAnalPRI class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -199,7 +199,7 @@ public:
     
     void CalcEmitterPW( STR_EMITTER *pEmitter );
     
-    void PrintAllEmitter( unsigned int iEmitter=0, char *pszString=NULL, enPRI_TYPE enPRITYpe= _UNKNOWN_PRI );
+    void PrintAllEmitter( unsigned int iEmitter=0, const char *pszString=NULL, enPRI_TYPE enPRITYpe= _UNKNOWN_PRI );
     //##ModelId=452B0C57022B
     BOOL CheckSawPattern(PATTERN_TYPE *pSawPatternType );
     //##ModelId=452B0C570235

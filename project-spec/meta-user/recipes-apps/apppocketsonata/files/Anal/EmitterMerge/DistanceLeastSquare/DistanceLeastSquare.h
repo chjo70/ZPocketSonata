@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      DistanceLeastSquare.h
  * @brief     DistanceLeastSquare 알고리즘을 이용한 위치 산출
@@ -27,7 +27,7 @@ public:
 	bool Run( SELPE_RESULT *pResult, double *pLatitude, double *pLongitude, double *pLob, int nLob );
 	bool CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTExtData );
 
-	void CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, int nEle );
+	void CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, unsigned int uiEle );
 
 };
 

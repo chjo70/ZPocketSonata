@@ -333,7 +333,7 @@ void CAnalPRI::Analysis()
  * @date      2006-08-24 16:05:31
  * @warning
  */
-void CAnalPRI::PrintAllEmitter( unsigned int uiEmitter, char *pszString, enPRI_TYPE enPRITYpe )
+void CAnalPRI::PrintAllEmitter( unsigned int uiEmitter, const char *pszString, enPRI_TYPE enPRITYpe )
 {
     STR_EMITTER *pEmitter;
     unsigned int i;
@@ -3129,7 +3129,7 @@ UINT CAnalPRI::CheckHarmonic(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
     //////////////////////////////////////////////////////////////////////////
     // Stable PRI 비교
     if( pEmitter1->enPRIType == _STABLE && pEmitter2->enPRIType == _STABLE ) {
-        uiRet = CheckHarmonic( pSeg1->stPRI.tMean, pSeg1->stPRI.tMean );
+        uiRet = CheckHarmonic( pSeg1->stPRI.tMean, pSeg2->stPRI.tMean );
     }
     else if( ( pEmitter1->enPRIType == _STABLE ) && \
              ( pEmitter2->enPRIType == _STAGGER || pEmitter2->enPRIType == _STABLE_STAGGER || pEmitter2->enPRIType == _JITTER_STAGGER) ) {
@@ -3302,16 +3302,16 @@ UINT CAnalPRI::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
     UINT uiRet = 0, ret;
     _TOA max_mean, min_mean;
 
-	if (priMean1 != 0 && priMean2 != 0) {
-		if (priMean1 > priMean2) {
-			max_mean = priMean1;
-			min_mean = priMean2;
-		}
-		else {
-			max_mean = priMean2;
-			min_mean = priMean1;
-		}
+	if (priMean1 > priMean2) {
+		max_mean = priMean1;
+		min_mean = priMean2;
+	}
+	else {
+		max_mean = priMean2;
+		min_mean = priMean1;
+	}
 
+	if (max_mean != 0 && min_mean != 0) {
 		// harmonic = max_mean % min_mean;
 
 		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
@@ -3614,7 +3614,7 @@ BOOL CAnalPRI::CheckFreqHopping( STR_EMITTER *pEmitter )
     pre_freq = m_pFREQ[ *pPdwIndex++ ];
     max_freq_diff = 0;
     for( i=1 ; i < uiCount; ++i ) {
-        freq_diff = abs( (int) ( m_pFREQ[ *pPdwIndex ] - pre_freq ) );
+        freq_diff = (unsigned int) abs( (int) ( m_pFREQ[ *pPdwIndex ] - pre_freq ) );
         max_freq_diff = _max( freq_diff, max_freq_diff );
         pre_freq = m_pFREQ[ *pPdwIndex++ ];
     }
@@ -3920,7 +3920,7 @@ BOOL CAnalPRI::StaggerLevelAnalysis( STR_EMITTER *pEmitter )
         /*! \bug  펄스열 중에서 유사 펄스열을 골라서 제거한다.
                 \date 2006-05-12 17:08:54, 조철희
         */
-        if( FALSE == CompareAllStaggerLevel( pEmitter, pSeg ) ) {
+        if( FALSE == CompareAllStaggerLevel( pEmitter, pSeg ) && pEmitter->tFramePri != 0 ) {
             pEmitter->tStaggerDwellLevel[ pEmitter->uiStagDwellLevelCount ] = pSeg->tFirst % pEmitter->tFramePri;
             ++ pEmitter->uiStagDwellLevelCount;
 
@@ -4042,7 +4042,7 @@ void CAnalPRI::MakeStaggerPRI( STR_EMITTER *pEmitter )
  * @date      2006-07-05 13:50:12
  * @warning
  */
-void CAnalPRI::MakeStaggerLevel( _TOA *pStaggerLevel, int CoStagger )
+void CAnalPRI::MakeStaggerLevel( _TOA *pStaggerLevel, int iCoStagger )
 {
     int i;
     int min_index;
@@ -4050,10 +4050,10 @@ void CAnalPRI::MakeStaggerLevel( _TOA *pStaggerLevel, int CoStagger )
 
     _TOA stagger_level[MAX_FREQ_PRI_STEP];
 
-    if( CoStagger > 0 ) {
+    if( ( iCoStagger > 0 && iCoStagger < MAX_FREQ_PRI_STEP ) && pStaggerLevel != NULL ) {
         min_index = 0;
         min_stagger_level = *pStaggerLevel;
-        for( i=1 ; i < CoStagger && i < MAX_FREQ_PRI_STEP ; ++i ) {
+        for( i=1 ; i < iCoStagger && i < MAX_FREQ_PRI_STEP ; ++i ) {
             stagger_level_value = pStaggerLevel[i];
             if( min_stagger_level > stagger_level_value ) {
                 min_index = i;
@@ -4063,11 +4063,11 @@ void CAnalPRI::MakeStaggerLevel( _TOA *pStaggerLevel, int CoStagger )
 
         // 그 인덱스 값부터 에미터의 스태거단에 기록한다.
         // 그리고 PRI 범위와 평균값을 기록한다.
-        for( i=0 ; i < (int) CoStagger && i < MAX_FREQ_PRI_STEP ; ++i ) {
-            stagger_level[i] = pStaggerLevel[ (min_index+i) % CoStagger ];
+        for( i=0 ; i < (int)iCoStagger && i < MAX_FREQ_PRI_STEP ; ++i ) {
+            stagger_level[i] = pStaggerLevel[ (min_index+i) % iCoStagger ];
         }
 
-        memcpy( pStaggerLevel, stagger_level, sizeof(_TOA) * CoStagger );
+        memcpy( pStaggerLevel, stagger_level, sizeof(_TOA) * (size_t) iCoStagger);
     }
 
 }
@@ -4559,8 +4559,8 @@ void CAnalPRI::CheckHarmonicStaggerLevel( STR_EMITTER *pStaggerEmitter )
 
             //TODO: i 가 0이 아닌 조건을 추가함.
             //date 	2022-11-21 14:45:01
-            else if( pStaggerEmitter->uiStagDwellLevelCount % (UINT) i == 0 && i != 0 ) {
-				uiDiv = pStaggerEmitter->uiStagDwellLevelCount / i;
+            else if( ( pStaggerEmitter->uiStagDwellLevelCount % (UINT) i ) == 0 ) {
+				uiDiv = pStaggerEmitter->uiStagDwellLevelCount / (UINT) i;
 
                 bMatch = TRUE;
                 for( j=0 ; j < uiDiv; ++j ) {
@@ -4576,10 +4576,26 @@ void CAnalPRI::CheckHarmonicStaggerLevel( STR_EMITTER *pStaggerEmitter )
 			else {
 			}
 
-            if( bMatch == TRUE && uiDiv != 0 && pStaggerEmitter->uiStagDwellLevelCount != 0 ) {
-                pStaggerEmitter->tFramePri = pStaggerEmitter->tFramePri / ( pStaggerEmitter->uiStagDwellLevelCount / uiDiv);
-                pStaggerEmitter->uiStagDwellLevelCount = uiDiv;
-            }
+
+			unsigned int uiStaggerLevelDiv=0;
+
+			pStaggerEmitter->tFramePri = 0;
+			pStaggerEmitter->uiStagDwellLevelCount = 0;
+
+			if (uiDiv != 0 && bMatch == TRUE ) {
+				uiStaggerLevelDiv = pStaggerEmitter->uiStagDwellLevelCount / uiDiv;
+				if (uiStaggerLevelDiv != 0) {
+					pStaggerEmitter->tFramePri = pStaggerEmitter->tFramePri / uiStaggerLevelDiv;
+					pStaggerEmitter->uiStagDwellLevelCount = uiDiv;
+				}
+				else {
+					Log(enError, "[W] 스태거 레벨 값(%d, %d)을 잘못 계산 했습니다. !", uiDiv, uiStaggerLevelDiv);
+				}
+			}
+			else {
+				Log(enError, "[W] 스태거 레벨 값(%d)을 잘못 계산 했습니다. !", uiDiv );
+			}
+
         }
     }
 }
@@ -5205,10 +5221,11 @@ void CAnalPRI::CalcEmitterFrq( STR_EMITTER *pEmitter )
     for( i=1 ; i < iCount; ++i ) {
         int freq;
 
-        freq = m_pFREQ[ *pPdwIndex++ ];
+        freq = (int) m_pFREQ[ *pPdwIndex ];
+		pPdwIndex++;
 
-        pFrq->iMin = _min( pFrq->iMin, freq );
-        pFrq->iMax = _max( pFrq->iMax, freq );
+        pFrq->iMin = min( pFrq->iMin, freq );
+        pFrq->iMax = max( pFrq->iMax, freq );
 
         //pFrq->mean += freq;
     }
@@ -5786,8 +5803,8 @@ void CAnalPRI::CalDtoaMeanMinMax( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange
 
         // DTOA_BIN 이내에 든 것만 히스토그램을 작성한다.
         if( pRange->iLow <= iIndex && pRange->iHgh >= iIndex) {
-            pSeg->stPRI.tMax =_max( pSeg->stPRI.tMax, dtoa );
-            pSeg->stPRI.tMin =_min( pSeg->stPRI.tMin, dtoa );
+            pSeg->stPRI.tMax = max( pSeg->stPRI.tMax, dtoa );
+            pSeg->stPRI.tMin = min( pSeg->stPRI.tMin, dtoa );
 
             ++ dtoa_count;
             sum_dtoa += dtoa;
@@ -5903,7 +5920,7 @@ BOOL CAnalPRI::GetDtoaRange( int peak_index, STR_LOWHIGH *pRange )
         int diff, ratio;
 
         diff = ( pRange->iHgh - pRange->iLow ) + 1;
-        ratio = UDIV( diff*100, peak_index );
+        ratio = IDIV( diff*100, peak_index );
         if( ratio > MAX_JITTER_P ) {
             printf( "\n [W] PRI를 계산하는 데 있어서 지터율을 초과했습니다." );
             WhereIs;
@@ -5934,18 +5951,18 @@ bool CAnalPRI::OverlappedStableSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_
     UINT uiHarmonic;
 
     // PDWINDEX로 비교해서 겹침 여부를 결정한다.
-    if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->first_idx, pSeg1->last_idx, pSeg2->first_idx, pSeg2->last_idx ) ) {
+    if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->idxFirst, pSeg1->idxLast, pSeg2->idxFirst, pSeg2->idxLast ) ) {
     }
     // 겹쳐지지 않더라도 2 펄스열이 연속됨을 확인한다.
     else {
-        if( pSeg1->first_idx < pSeg2->first_idx ) {
+        if( pSeg1->idxFirst < pSeg2->idxFirst ) {
             diffTOA = pSeg2->tFirst - pSeg1->tLast;
         }
         else {
             diffTOA = pSeg1->tFirst - pSeg2->tLast;
         }
 
-        uiHarmonic = CheckHarmonicTOA<_TOA>( pSeg1->stPRI.tMean, diffTOA, 2 * STABLE_MARGIN );
+        uiHarmonic = CheckHarmonicTOA( pSeg1->stPRI.tMean, diffTOA, 2 * STABLE_MARGIN );
 
         bRet = true;
     }
@@ -5989,15 +6006,15 @@ bool CAnalPRI::OverlappedSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *p
 //     }
     
     // PDWINDEX로 비교해서 겹침 여부를 결정한다.
-    if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->first_idx, pSeg1->last_idx, pSeg2->first_idx, pSeg2->last_idx ) ) {
-        if( pSeg1->first_idx < pSeg2->first_idx ) {
+    if( 0 != CalOverlapSpace<PDWINDEX>( pSeg1->idxFirst, pSeg1->idxLast, pSeg2->idxFirst, pSeg2->idxLast ) ) {
+        if( pSeg1->idxFirst < pSeg2->idxFirst ) {
 			stTOA.tMin = pSeg2->tFirst;		//  m_pTOA[pSeg2->first_idx];
         }
         else {
 			stTOA.tMin = pSeg1->tFirst;		// m_pTOA[pSeg1->first_idx];
         }
 
-        if( pSeg1->last_idx < pSeg2->last_idx ) {
+        if( pSeg1->idxLast < pSeg2->idxLast ) {
 			stTOA.tMax = pSeg1->tLast;		//  m_pTOA[pSeg1->last_idx];
         }
         else {
@@ -6061,18 +6078,18 @@ float CAnalPRI::IMeanInArray(int *series, UINT co)
  */
 void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
 {
-    unsigned int i, j, count, hop_count;
+    unsigned int i, j, uiCount, hop_count=0;
     int iBand;
     BOOL bMatch;
 
     PDWINDEX *pPdwIndex;
     int *pHopLevel;
 
-    _EQUALS3( pEmitter->iCoHoppingLevel, hop_count, 0 )
+	pEmitter->iCoHoppingLevel = 0;
 
     pPdwIndex = pEmitter->stPDW.pIndex;
-    count = pEmitter->stPDW.uiCount;
-    for( i=0 ; i < count ; ++i ) {
+	uiCount = pEmitter->stPDW.uiCount;
+    for( i=0 ; i < uiCount; ++i ) {
         unsigned int uiFreq;
 
 		uiFreq = m_pFREQ[ *pPdwIndex++ ];
@@ -6099,7 +6116,7 @@ void CAnalPRI::CalHopLevel( STR_EMITTER *pEmitter )
     if (hop_count != 0) {
         // 주파수 호핑 레벨값을 변환 값으로 저장한다.
         pHopLevel = &pEmitter->iHopLevel[0];
-        pEmitter->iCoHoppingLevel = hop_count;
+        pEmitter->iCoHoppingLevel = (int) hop_count;
         iBand = m_pBAND[pEmitter->stPDW.pIndex[0]] + 1;
         for (i = 0; i < hop_count; ++i) {
             *pHopLevel = I_FRQMhzCNV(iBand, *pHopLevel);

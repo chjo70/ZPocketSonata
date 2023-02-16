@@ -43,6 +43,8 @@ private:
 
     //enum ANALYSIS_MODE m_AnalMode;
 
+	char m_szAnalDirectory[500];
+
     int m_CoGroup;
     UINT m_uiMaxPdw;
     UINT m_uiCoPdw;
@@ -56,11 +58,16 @@ private:
     vector<SRadarMode *> m_VecMatchRadarMode;
 
 private:
+	void AallocMemory();
     void InitAllVar();
+	void StartOfSignalAnalysis();
     
     void Init(STR_PDWDATA *pPDWData = NULL);    
+	void InitOfNewSigAnal();
 
     enum FREQ_BAND GetBand(int freq);
+
+	void MakeAnalDirectory(STR_PDWDATA *pPDWData);
 
 public:
     CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -186,6 +193,8 @@ public:
     inline int GetCoGroup() { return m_CoGroup; }
 
     //inline void NextSeqNum() { ++ m_nSeqNum; }
+
+	inline char *GetAnalDirectory() { return m_szAnalDirectory; }
     
 
     // 기타 함수

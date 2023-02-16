@@ -1,4 +1,4 @@
-/*
+﻿/*
 A simple CMatrix class
 c++ code
 Author: Jos de Jong, Nov 2007. Updated March 2010
@@ -98,7 +98,7 @@ public:
   // index operator. You can use this class like myCMatrix.get(col, row)
   // the indexes are one-based, not zero based.
   // use this function get if you want to read from a const CMatrix
-  double get(const unsigned int r, const unsigned int c) const;
+  double Get(const unsigned int r, const unsigned int c) const;
   
   // assignment operator
   CMatrix& operator= (const CMatrix& a); 
@@ -192,15 +192,15 @@ public:
   
 
 private:
-  unsigned int uiRows;
-  unsigned int uiCols;
+  unsigned int m_uiRows;
+  unsigned int m_uiCols;
   double** p;     // pointer to a CMatrix with doubles
 };
 
 
  CMatrix Inv(const CMatrix& a, bool *pRet);
  double Det(const CMatrix& a);
- CMatrix Diag(const int n);
+ CMatrix Diag(const unsigned int n);
  CMatrix Diag(const CMatrix& v);
  void Swap(double& a, double& b);
 

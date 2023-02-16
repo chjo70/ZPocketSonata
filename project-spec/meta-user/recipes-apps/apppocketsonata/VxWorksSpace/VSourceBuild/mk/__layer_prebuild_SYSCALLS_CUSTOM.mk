@@ -11,14 +11,14 @@ __FILE_COPIED += $(__FILES_COPIED_SYSCALLS_CUSTOM)
 	
 
 	
-# copying directory syscall_defs to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+# copying directory syscall_defs to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample
 
 
 
@@ -26,82 +26,82 @@ __FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def.sample | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def.sample | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def.template | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.template : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def.template | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def.sample | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def.sample | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrNum.def : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrNum.def | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def.template | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/syscallUsrApi.def.template : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/syscall_defs/syscallUsrApi.def.template | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -109,20 +109,20 @@ else
 endif
 
  
-# copying directory kernel_h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+# copying directory kernel_h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample
-
-
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/kernel_h/mySystemCallHdlr.h.sample | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/mySystemCallHdlr.h.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/kernel_h/mySystemCallHdlr.h.sample | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -142,14 +142,14 @@ endif
 	
 	
 	
-# copying directory user_h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
+# copying directory user_h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample
 
-__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample
+__FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample
 
 
 
@@ -157,7 +157,7 @@ __FILES_TO_COPY_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/user_h/mySystemCall.h.sample | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/mySystemCall.h.sample : D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/user_h/mySystemCall.h.sample | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -184,7 +184,7 @@ PREBUILD : SYSCALLS_CUSTOM_pre_src_diab__PREBUILD
 
 SYSCALLS_CUSTOM_pre_src_diab__PREBUILD : 
 	@ echo building SYSCALLS_CUSTOM directory pre_src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/pre_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=SYSCALLS_CUSTOM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_SYSCALLS_CUSTOM_pre_src_diab __WRS_TARGET=PREBUILD BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/core/syscalls-1.0.14.0/custom/pre_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=SYSCALLS_CUSTOM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_SYSCALLS_CUSTOM_pre_src_diab __WRS_TARGET=PREBUILD BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD
 
 	
 	
@@ -212,5 +212,5 @@ SYSCALLS_CUSTOM_pre_src_diab__PREBUILD :
 	
 __DIR_TARGETS += $(__DIR_TARGETS_SYSCALLS_CUSTOM)
 
-__DIR_TARGETS_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
+__DIR_TARGETS_SYSCALLS_CUSTOM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
 

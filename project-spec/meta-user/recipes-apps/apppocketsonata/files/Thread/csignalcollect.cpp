@@ -37,14 +37,16 @@
  * @param pClassName
  */
 #ifdef _MSSQL_
-CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData, const ENUM_PCI_DRIVER enPCIDriver ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
 #else
-CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData, const ENUM_PCI_DRIVER enPCIDriver ) : CThread( iKeyId, pClassName, bArrayLanData )
 #endif
 {
     int i, iCh;
 
     m_uiPDWID = 0;
+
+    //m_enPCIDriver = enPCIDriver;
 
     iCh = 0;
     for( i=0 ; i < DETECT_CHANNEL ; ++i ) {
@@ -88,6 +90,8 @@ CSignalCollect::CSignalCollect( int iKeyId, char *pClassName, bool bArrayLanData
     m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
 #endif
 
+    m_pThePCI = new CPCIDriver( enPCIDriver );
+
 }
 
 
@@ -117,6 +121,8 @@ CSignalCollect::~CSignalCollect(void)
 
     delete m_pIdentifyAlg;
 
+    delete m_pThePCI;
+
 }
 
 
@@ -133,7 +139,12 @@ void CSignalCollect::Run(key_t key)
 }
 
 /**
- * @brief CSignalCollect::_routine
+ * @brief		_routine
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/02/13 13:41:07
+ * @warning		
  */
 void CSignalCollect::_routine()
 {
@@ -195,11 +206,10 @@ void CSignalCollect::_routine()
  */
 void CSignalCollect::RoutineForDetectAnal()
 {
-    bool bRoutineForDetectAnal=true;
 
     Init();
 
-    while( bRoutineForDetectAnal == true ) {
+    while( m_bThreadLoop == true ) {
         if( QMsgRcv( enNO_WAIT ) > 0 ) {
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_REQ_SET_TRACKWINDOWCELL :
@@ -223,7 +233,7 @@ void CSignalCollect::RoutineForDetectAnal()
                     break;
 
                 case enTHREAD_MODE :
-                    bRoutineForDetectAnal = false;
+                    m_bThreadLoop = false;
                     break;
 
                 // 모의 명령 처리
@@ -324,10 +334,19 @@ void CSignalCollect::SetupDetectCollectBank( int iCh )
 
     clock_gettime( CLOCK_REALTIME, & pWindowCell->tsCollectStart );
 
+    // 전처리 필터 세팅
+    m_pThePCI->DetectChannel( );
+
+
 }
 
 /**
- * @brief 추적 윈도우셀을 닫는다.
+ * @brief		CloseCollectBank
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/02/13 13:42:32
+ * @warning		
  */
 void CSignalCollect::CloseCollectBank()
 {
@@ -609,7 +628,7 @@ void CSignalCollect::CloseTrackWindowCell()
     // 랜 데이터를 갖고온다.
     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
 
-    LOGMSG3( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.enBoardID, m_pMsg->x.strAnalInfo.iCh, m_pMsg->x.strAnalInfo.uiABTID );
+    LOGMSG3( enDebug, "[%d]번, [%d]채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.enBoardID, m_pMsg->x.strAnalInfo.iCh, m_pMsg->x.strAnalInfo.uiABTID );
 
      m_theTrackChannel.Push( m_pMsg->x.strAnalInfo.iCh );
 
@@ -785,11 +804,11 @@ void CSignalCollect::SimPDWData()
     //pPDWData = m_pTheDetectCollectBank[0]->GetPDW();
 
 #ifdef _POCKETSONATA_
-    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, PDW_EXT, NULL, enUnitToPDW );
 #elif defined(_XBAND_)
-    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, ( char *) PDW_EXT, NULL, enPDWToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, PDW_EXT, NULL, enPDWToPDW );
 #else
-    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, (char *) PDW_EXT, NULL, enUnitToPDW );
+    m_theDataFile.ReadDataMemory( (char *) m_uniLanData.szFile, PDW_EXT, NULL, enUnitToPDW );
 #endif
 
     // 추적/스캔/사용자 채널을 모의하여 해당 CCollectBank 객체에 저장한다.

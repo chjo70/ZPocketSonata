@@ -370,7 +370,7 @@ BOOL CODBCRecordset::GetFieldValue(CHAR *szFieldName, struct tm* pTime)
 	return GetFieldValue(GetFieldIndex(szFieldName), pTime);	
 }
 
-BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime)
+BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, time_t * pTime)
 {
     BOOL bRet=FALSE;
 	SQLINTEGER cbValue;
@@ -389,7 +389,7 @@ BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime)
 		sTm.tm_hour = sqltm.hour;
 		sTm.tm_min = sqltm.minute;
 		sTm.tm_sec = sqltm.second;
-		*pTime = _mktime32( & sTm );
+		*pTime = mktime( & sTm );
 
 // 		__time32_t now;
 // 		struct tm *pt1;
@@ -402,41 +402,41 @@ BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime)
 	return bRet;
 }
 
-BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, __time64_t * pTime)
+// BOOL CODBCRecordset::GetFieldTimeValue(SQLSMALLINT nField, time_t *pTime)
+// {
+// 	BOOL bRet = FALSE;
+// 	SQLINTEGER cbValue;
+// 	SQLRETURN ret;
+// 	int nLength = GetFieldLength(nField) + 1;
+// 	SQL_TIMESTAMP_STRUCT sqltm;
+// 	struct tm sTm;
+// 
+// 	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)nField + 1, SQL_C_TYPE_TIMESTAMP, & sqltm, nLength, &cbValue) == SQL_SUCCESS;
+// 	ret = SQLGetData(m_hStmt, (SQLUSMALLINT)nField + 1, SQL_C_TYPE_TIMESTAMP, &sqltm, nLength, &cbValue);
+// 	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
+// 	{
+// 		sTm.tm_year = sqltm.year - 1900;
+// 		sTm.tm_mon = sqltm.month - 1; //January must be = 0		
+// 		sTm.tm_mday = sqltm.day;
+// 		sTm.tm_hour = sqltm.hour;
+// 		sTm.tm_min = sqltm.minute;
+// 		sTm.tm_sec = sqltm.second;
+// 		pTime = _mktime64(&sTm);
+// 
+// 		// 		__time32_t now;
+// 		// 		struct tm *pt1;
+// 		// 
+// 		// 		_time32( & now );
+// 		// 		pt1 = _localtime32( & now );
+// 
+// 		bRet = TRUE;
+// 	}
+// 	return bRet;
+// }
+
+BOOL CODBCRecordset::GetFieldTimeValue(CHAR *szFieldName, time_t * pTime)
 {
-	BOOL bRet = FALSE;
-	SQLINTEGER cbValue;
-	SQLRETURN ret;
-	int nLength = GetFieldLength(nField) + 1;
-	SQL_TIMESTAMP_STRUCT sqltm;
-	struct tm sTm;
-
-	//ret = SQLGetData(m_hStmt, (SQLUSMALLINT)nField + 1, SQL_C_TYPE_TIMESTAMP, & sqltm, nLength, &cbValue) == SQL_SUCCESS;
-	ret = SQLGetData(m_hStmt, (SQLUSMALLINT)nField + 1, SQL_C_TYPE_TIMESTAMP, &sqltm, nLength, &cbValue);
-	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
-	{
-		sTm.tm_year = sqltm.year - 1900;
-		sTm.tm_mon = sqltm.month - 1; //January must be = 0		
-		sTm.tm_mday = sqltm.day;
-		sTm.tm_hour = sqltm.hour;
-		sTm.tm_min = sqltm.minute;
-		sTm.tm_sec = sqltm.second;
-		*pTime = _mktime64(&sTm);
-
-		// 		__time32_t now;
-		// 		struct tm *pt1;
-		// 
-		// 		_time32( & now );
-		// 		pt1 = _localtime32( & now );
-
-		bRet = TRUE;
-	}
-	return bRet;
-}
-
-BOOL CODBCRecordset::GetFieldTimeValue(CHAR *szFieldName, __time32_t* pTime)
-{
-	return GetFieldValue(GetFieldIndex(szFieldName), pTime);	
+	return GetFieldTimeValue(GetFieldIndex(szFieldName), pTime);
 }
 
 

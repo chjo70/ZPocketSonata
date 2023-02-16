@@ -1,4 +1,4 @@
-#ifndef COORDINATE_H_
+﻿#ifndef COORDINATE_H_
 #define COORDINATE_H_
 
 ///1. header include

@@ -39,57 +39,88 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief     CNewSigAnal
+ * @param     unsigned int uiCoMaxPdw
+ * @param     bool bDBThread
+ * @param     const char * pFileName
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 10:40:14
+ * @warning
+ */
 CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName ) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName )
 {
-    //printf( "\n +++++++++++++++++++++++++++++ CNewSigAnal 시작 +++++++++++++++++++++++++++++ " );
+
+	// 클래스 관련 초기화
+	m_uiMaxPdw = uiCoMaxPdw;
+
+	AallocMemory();
+
+	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+	m_pSeg = GetPulseSeg();
 
 
-#ifdef _SQLITE_
-    // SQLITE 파일명 생성하기
-    char szSQLiteFileName[100];
 
-    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
-    strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );  
 
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( szSQLiteFileName );
-
-#elif _MSSQL_
-    CODBCDatabase *pMyODBC;
-    pMyODBC = GetCODBCDatabase();
-    m_pIdentifyAlg = new CELSignalIdentifyAlg(pMyODBC);
-
-#else
-    m_pIdentifyAlg = new CELSignalIdentifyAlg( NULL );
-
-#endif
-
-    m_VecMatchRadarMode.reserve( MAX_MATCH_RADARMODE );
-
-    m_theGroup = new CNGroup( this, uiCoMaxPdw);
-    m_thePulExt = new CNPulExt( this, uiCoMaxPdw);
-    m_theAnalPRI = new CNAnalPRI( this, uiCoMaxPdw);
-    m_theMakeAET = new CNMakeAET( this, uiCoMaxPdw);    
-
-	m_pTheIntraSigAnal = new CIntraSigAnal();
-
-    // 클래스 관련 초기화
-    m_uiMaxPdw = uiCoMaxPdw;
-
-    m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
-    m_pSeg = GetPulseSeg();
-
-    m_uiCoPdw = _spZero;
 
     Init();
 
 }
 
 /**
- * @brief CNewSigAnal::~CNewSigAnal
+ * @brief     AallocMemory
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 10:43:57
+ * @warning
+ */
+void CNewSigAnal::AallocMemory()
+{
+#ifdef _SQLITE_
+	// SQLITE 파일명 생성하기
+	char szSQLiteFileName[100];
+
+	strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
+	strcat(szSQLiteFileName, "/");
+	strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
+
+	m_pIdentifyAlg = new CELSignalIdentifyAlg(szSQLiteFileName);
+
+#elif _MSSQL_
+	CODBCDatabase *pMyODBC;
+	pMyODBC = GetCODBCDatabase();
+	m_pIdentifyAlg = new CELSignalIdentifyAlg(pMyODBC);
+
+#else
+	m_pIdentifyAlg = new CELSignalIdentifyAlg(NULL);
+
+#endif
+
+	m_VecMatchRadarMode.reserve(MAX_MATCH_RADARMODE);
+
+	m_theGroup = new CNGroup(this, m_uiMaxPdw);
+	m_thePulExt = new CNPulExt(this, m_uiMaxPdw);
+	m_theAnalPRI = new CNAnalPRI(this, m_uiMaxPdw);
+	m_theMakeAET = new CNMakeAET(this, m_uiMaxPdw);
+
+	m_pTheIntraSigAnal = new CIntraSigAnal();
+
+}
+
+/**
+ * @brief     ~CNewSigAnal
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 10:09:53
+ * @warning
  */
 CNewSigAnal::~CNewSigAnal()
 {
@@ -132,11 +163,17 @@ void CNewSigAnal::LoadCEDLibrary()
 void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 {
 
-    m_CoGroup = 0;
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// 수집 버퍼 정의
+	m_pPDWData = pPDWData;
 
-    // 시간 초기화
-    SetColTime(0);
-    SetColTimeMs(0);
+	InitAllVar();
+
+	MakeAnalDirectory(pPDWData);
+
+#ifdef _RESET_PDWID_
+	CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+#endif
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
@@ -155,33 +192,82 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     }
     else {
 		SetPDWID(_spZero);
+		SetStorePDW(_spZero);
+		SetBandWidth(_spZero);
+		SetCollectorID(RADARCOL_Unknown);
 
-        m_uiCoPdw = 0;
-        SetStorePDW(_spZero);
+    }
 
-        SetBandWidth( 0 );
-        SetCollectorID(RADARCOL_Unknown);
+	InitOfNewSigAnal();
 
-    }      
 
-    CSigAnal::InitResolution();
+}
 
-    //////////////////////////////////////////////////////////////////////////////////////////
-    // 수집 버퍼 정의
-    m_pPDWData = pPDWData;
+/**
+ * @brief     InitOfNewSigAnal
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-10 11:00:23
+ * @warning
+ */
+void CNewSigAnal::InitOfNewSigAnal()
+{
+	CSigAnal::InitResolution();
 
-    // 그룹화 초기화
-    m_theGroup->CNGroup::Init();
+	// 그룹화 초기화
+	m_theGroup->CNGroup::Init();
 
-    // 펄스열 추출 초기화
-    m_thePulExt->CNPulExt::Init();
+	// 펄스열 추출 초기화
+	m_thePulExt->CNPulExt::Init();
 
-    // PRI 분석 초기화
-    m_theAnalPRI->CNAnalPRI::Init();
+	// PRI 분석 초기화
+	m_theAnalPRI->CNAnalPRI::Init();
 
-    // AET 생성 초기화
-    m_theMakeAET->CNMakeAET::Init();
+	// AET 생성 초기화
+	m_theMakeAET->CNMakeAET::Init();
+}
 
+/**
+ * @brief     MakeAnalDirectory
+ * @param     STR_PDWDATA * pPDWData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-24 11:54:06
+ * @warning
+ */
+void CNewSigAnal::MakeAnalDirectory(STR_PDWDATA *pPDWData )
+{
+	if (pPDWData != NULL) {
+		// 작업 폴더 생성
+#ifdef _ELINT_
+		sprintf_s(m_szAnalDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
+
+#elif defined(_701_)
+		sprintf_s(m_szAnalDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.e7.GetCollectorID(), pPDWData->x.e7.aucTaskID);
+
+#elif defined(_XBAND_)
+		//sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
+		sprintf_s(m_szAnalDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID);
+
+#elif defined(_POCKETSONATA_)
+		char buffer[100];
+
+		//CCommonUtils::getStringDesignatedTime( buffer, sizeof(buffer), pPDWData->GetColTime() );
+		sprintf(m_szAnalDirectory, _T("%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
+
+#else
+		sprintf(m_szAnalDirectory, "%s/BRD", pLocalDirectory);
+
+#endif
+
+	}
+	else {
+		m_szAnalDirectory[0] = NULL;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -195,7 +281,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 */
 void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 {
-    DWORD dwTime = CCommonUtils::GetTickCount();
+    DWORD dwTime = CCommonUtils::GetTickCounts();
 
     Log( enLineFeed, "" );
 
@@ -212,19 +298,22 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
         Log( enNormal, "PDW(%d/%d) 데이터 개수가 모자랍니다 !!" , m_uiCoPdw, RPC );
     }
     else {
-        CheckValidData( pPDWData );
+        CheckValidData( m_pPDWData );
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData( pPDWData, _spZero );
+        InsertRAWData(m_pPDWData, _spZero );
         
         // PDW 수집 상태 체크를 함.
-        if( false == m_theGroup->MakePDWArray( m_pPDWData->pstPDW, m_uiCoPdw, (UINT) m_pPDWData->GetBand() ) ) {
+		_PDW *pPDW = m_pPDWData->pstPDW;
+		unsigned int uiBand = m_pPDWData->GetBand();
+        if( false == m_theGroup->MakePDWArray( pPDW, m_uiCoPdw, uiBand) ) {
 #if defined(_ELINT_) || defined(_XBAND_)
-            //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->iCollectorID, pPDWData->aucTaskID, m_szPDWFilename );
-            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , pPDWData->GetTaskID(), pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
+            //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , m_pPDWData->iCollectorID, m_pPDWData->aucTaskID, m_szPDWFilename );
+            Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , m_pPDWData->GetTaskID(), m_pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
 #elif defined(_POCKETSONATA_)
-            printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
-            Log( enError, "Invalid of PDW Data at the [%d]Site !! Check the file[%s] ..." , pPDWData->x.ps.uiBoardID, m_pMidasBlue->GetRawDataFilename() );
+			unsigned int uiBoardID = m_pPDWData->x.ps.uiBoardID;
+            //printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , uiBoardID, m_pMidasBlue->GetRawDataFilename() );
+            Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요..", uiBoardID, m_pMidasBlue->GetRawDataFilename());
 #endif
         }
         else {
@@ -233,29 +322,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
                 // 그룹화 만들기
                 while( ! m_theGroup->IsLastGroup() ) {
-                    // 협대역 주파수 그룹화
-                    // 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
-                    m_theGroup->MakeGrIndex();
-
-                    SaveGroupPDWFile( m_pGrPdwIndex, pPDWData, true );
-
-                    // 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
-                    CheckKnownByAnalysis();
-
-                    // 규칙성 및 불규칙성 펄스열 추출
-                    m_thePulExt->PulseExtract( & m_VecMatchRadarMode );
-
-                    // 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
-                    // m_thePulExt->UnknownExtract();
-
-                    // 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-                    ClearAllMark();
-
-                    // PRI 분석
-                    m_theAnalPRI->Analysis();
-
-                    // 에미터 분석
-                    m_theMakeAET->MakeAET();
+					StartOfSignalAnalysis();
 
                     // 그룹화 생성 개수 증가
                     ++ m_CoGroup;
@@ -272,7 +339,44 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
     InsertToDB_LOB( GetLOBData(0), GetCoLOB(), bDBInsert );
 
-    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCount() - dwTime)) );
+    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCounts() - dwTime)) );
+
+}
+
+/**
+ * @brief     StartOfSignalAnalysis
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 15:58:39
+ * @warning
+ */
+void CNewSigAnal::StartOfSignalAnalysis()
+{
+	// 협대역 주파수 그룹화
+	// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+	m_theGroup->MakeGrIndex();
+
+	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, true);
+
+	// 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
+	CheckKnownByAnalysis();
+
+	// 규칙성 및 불규칙성 펄스열 추출
+	m_thePulExt->PulseExtract(&m_VecMatchRadarMode);
+
+	// 나머지 잔여 펄스들은 Unknown 펄스열 추출에 저장한다.
+	// m_thePulExt->UnknownExtract();
+
+	// 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
+	ClearAllMark();
+
+	// PRI 분석
+	m_theAnalPRI->Analysis();
+
+	// 에미터 분석
+	m_theMakeAET->MakeAET();
 
 }
 
@@ -355,7 +459,13 @@ bool CNewSigAnal::CheckValidData( STR_PDWDATA *pPDWData )
  */
 void CNewSigAnal::InitAllVar()
 {
-    
+	m_uiCoPdw = 0;
+	m_CoGroup = 0;
+
+	// 시간 초기화
+	SetColTime(0);
+	SetColTimeMs(0);
+
 }
 
 /**

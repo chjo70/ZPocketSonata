@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *	Source file:		MulDiv64.cpp
  *	Author:				Richard van der Wal
  *	Contact:			R.vdWal@xs4all.nl
@@ -26,13 +26,13 @@
 
  
 /**
- * @brief     64ºñÆ®Çü Á¤¼öÇüÀ» operant * multiplier / divider °è»êÇÑ´Ù.
+ * @brief     64ë¹„íŠ¸í˜• ì •ìˆ˜í˜•ì„ operant * multiplier / divider ê³„ì‚°í•œë‹¤.
  * @param     __int64 operant
  * @param     __int64 multiplier
  * @param     __int64 divider
  * @return    __int64
  * @exception
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-08, 14:17
  * @warning

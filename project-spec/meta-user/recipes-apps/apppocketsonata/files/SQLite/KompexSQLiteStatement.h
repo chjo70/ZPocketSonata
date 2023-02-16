@@ -446,6 +446,8 @@ namespace Kompex
 		//! Commits a transaction.\n
 		//! Exception output: std::cerr
 		void CommitTheTransaction();
+		void CommitDifferentDataTypes();
+
 		//! Rollback a transaction.
 		inline void RollbackTheTransaction()
 		{

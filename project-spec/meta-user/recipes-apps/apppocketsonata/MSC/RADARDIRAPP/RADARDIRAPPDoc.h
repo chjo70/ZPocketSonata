@@ -33,7 +33,6 @@ private:
 private:
 	bool ReadDataFile(char *pStrPathName, char *pStrFileName);
 
-
 public:
 	bool OpenFile( CString &strPathname, CString &strFilename);
 

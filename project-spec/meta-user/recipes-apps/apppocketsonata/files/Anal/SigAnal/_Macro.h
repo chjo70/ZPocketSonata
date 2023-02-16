@@ -1,4 +1,4 @@
-/*!
+﻿/*!
   \file     _macro.h
   \brief    매크로 정의문을 설명한다.
     \version  0.0.1
@@ -38,7 +38,6 @@ enum ENUM_BoardID {
     enPRC3,
     enPRC4,
     enPRC5,
-    enPRC6,
     enMAXPRC,
 
     enMaster=enPRC3
@@ -61,20 +60,19 @@ enum ENUM_BoardID {
 #define _SAFE_MALLOC(A, B, C )  if( C != 0 ) { \
 									if( A == NULL ) { \
 										A = ( B * ) malloc( (size_t) C ); \
-										if( A == NULL ) { \
-											TRACE( "malloc error new memory[%s]" , #A ); \
-										} \
 									} \
 									else { \
 										TRACE( "Already malloc memory[%s]" , #A ); \
 									} \
 								}
 
+#define _FORCED_MALLOC(A, B, C )	if( C != 0 ) { \
+										A = ( B * ) malloc( (size_t) C ); \
+									}
+
+
 #define ELSE                    else { \
                                 }
-
-//#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
-//#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
 
 
 #define DivideBy2( A, B )       ( ( (A) + (B) + 1 ) / 2 )		//!< 나누기 2

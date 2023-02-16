@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      AnalyticCEP.cpp
  * @brief     
@@ -34,6 +34,30 @@
  */
 CAnalyticCEP::CAnalyticCEP(void)
 {
+	//PrintFunction
+	UINT i, nLob = 3;
+
+	CMatrix theX((UINT)3, nLob), theInvW(nLob, nLob);
+
+	for (i = 1; i <= nLob; ++i) {
+		theX((UINT)1, (UINT)i) = (10 - i * 3) + i;
+		theX((UINT)2, (UINT)i) = (10 - i * 2) + i;
+		theX((UINT)3, (UINT)i) = (10 + i * 1) + i;
+	}
+
+	//Log( enNormal, "CAnalyticCEP" );
+	TRACE("\n CAnalyticCEP... ");
+
+
+// 	CMatrix theQ, theXt;
+// 
+// 	theXt = theX.Transpose();
+// 	theQ = theX * theXt;
+// 	theQ.Print();
+// 
+// 	bool bRet;
+// 	Inv(theXt, &bRet);
+
 }
 
 /**
@@ -115,9 +139,9 @@ bool CAnalyticCEP::CalAnalyticNonlinear( SELPE_RESULT *pResult )
         double dPe = -2.0 * log( 1 - 0.5 );
         double dSigma_x_square, dSigma_y_square, dRho_xy, dA_square, dB_square, dSqaure;
 
-        dSigma_x_square = theQ.get( 1, 1 );
-        dSigma_y_square = theQ.get( 2, 2 );
-        dRho_xy = theQ.get( 2, 1 );
+        dSigma_x_square = theQ.Get( 1, 1 );
+        dSigma_y_square = theQ.Get( 2, 2 );
+        dRho_xy = theQ.Get( 2, 1 );
 
         dSqaure = ( dSigma_x_square - dSigma_y_square );
         dSqaure *= dSqaure;

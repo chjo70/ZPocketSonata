@@ -106,13 +106,8 @@ struct SRxABTData { // 레이더 분석
 
 	unsigned int uiCoLOB;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	__time64_t tiLastSeenTime;
-#else
-	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t tiLastSeenTime;
-#endif
+	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	time_t tiLastSeenTime;
 
 	int iRadarModePriority;
 	int iRadarPriority;
@@ -195,7 +190,7 @@ struct SRxABTData { // 레이더 분석
 #if defined(_ELINT_)
 	int iIsManualInput;
 
-	__time32_t tiFinalAlarmTime;
+	time_t tiFinalAlarmTime;
 #endif
 
 	int iStat;
@@ -267,13 +262,8 @@ struct SRxAETData {
 	int iRadarPriority;
 	int iThreatPriority;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	__time64_t tiLastSeenTime;
-#else
-	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t tiLastSeenTime;
-#endif
+	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	time_t tiLastSeenTime;
 
 	int iValidity;
 

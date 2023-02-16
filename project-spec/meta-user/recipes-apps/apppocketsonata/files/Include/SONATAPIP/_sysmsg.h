@@ -1,4 +1,4 @@
-/****************************************************************************************
+﻿/****************************************************************************************
  파 일 명 : _sysmsg.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : 제어조종 및 재밍신호관리기와의 인터페이스 메시지 및 구조 정의
@@ -223,11 +223,11 @@
 
 /* LAN 기본 데이터 */
 //##ModelId=452B0C4E03E1
-struct LAN_DATA
-{
-  unsigned int d1;            // opcode or operand
-  unsigned int d2;            // operand
-} ;
+// struct LAN_DATA
+// {
+//   unsigned int d1;            // opcode or operand
+//   unsigned int d2;            // operand
+// } ;
 
 /* RSA CNF 방위 INHIBIT 데이터 */
 //##ModelId=452B0C4F000D
@@ -239,134 +239,134 @@ struct LAN_DATA
 //##ModelId=452B0C4F003F
 
 //##ModelId=452B0C4F0053
-struct STR_PRCSBIT {
-  unsigned int nsp;
-  unsigned int cip;
-  unsigned int sap;
-  unsigned int ksp[ 4 ];
-  unsigned int coEcho;
-}  ;
+// struct STR_PRCSBIT {
+//   unsigned int nsp;
+//   unsigned int cip;
+//   unsigned int sap;
+//   unsigned int ksp[ 4 ];
+//   unsigned int coEcho;
+// }  ;
 
 /* RSA IBIT 종합 데이터 */
 //##ModelId=452B0C4F0067
-typedef union
-{
-  UINT w32;
-  struct
-  {
-    UINT dummy : 8;  /* bit22-31 Reserved */
-    UINT cip : 1; /* bit0  제어식별프로세서판 */
-    UINT gen : 1; /* general bit */
-
-    UINT kdm4 : 1;  /* bit21 추적데이터저장판4 */
-    UINT kdm3 : 1;  /* bit18 추적데이터저장판3 */
-    UINT kdm2 : 1;  /* bit15 추적데이터저장판2 */
-    UINT kdm1 : 1;  /* bit12 추적데이터저장판1 */
-    UINT ndm : 1; /* bit9  탐지데이터저장판 */
-    UINT sdm : 1; /* bit4  스캔데이터저장판 */
-
-    UINT sap : 1; /* bit3  스캔프로세서판 */
-    UINT nsp : 1; /* bit8  탐지프로세서판 */
-    UINT ksp1 : 1;  /* bit11 추적프로세서판1 */
-    UINT ksp2 : 1;  /* bit14 추적프로세서판2 */
-    UINT ksp3 : 1;  /* bit17 추적프로세서판3 */
-    UINT ksp4 : 1;  /* bit20 추적프로세서판4 */
-    UINT saf : 1; /* bit5  스캔분석필터판 */
-    UINT nsf : 1; /* bit10 탐지필터판 */
-    UINT ksf1 : 1;  /* bit13 추적필터판1 */
-    UINT ksf2 : 1;  /* bit16 추적필터판2 */
-    UINT ksf3 : 1;  /* bit19 추적필터판3 */
-    UINT ksf4 : 1;  /* bit22 추적필터판4 */
-    UINT aud : 1; /* bit6  오디오발생판 */
-    UINT rcv : 1; /* bit7  PDW 수신판 */
-    UINT pdw : 1; /* bit2  공용메모리판 */
-    UINT cmm : 1; /* bit2  공용메모리판 */
-  } bits;
-} LAN_RSA_IBIT;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//     UINT dummy : 8;  /* bit22-31 Reserved */
+//     UINT cip : 1; /* bit0  제어식별프로세서판 */
+//     UINT gen : 1; /* general bit */
+// 
+//     UINT kdm4 : 1;  /* bit21 추적데이터저장판4 */
+//     UINT kdm3 : 1;  /* bit18 추적데이터저장판3 */
+//     UINT kdm2 : 1;  /* bit15 추적데이터저장판2 */
+//     UINT kdm1 : 1;  /* bit12 추적데이터저장판1 */
+//     UINT ndm : 1; /* bit9  탐지데이터저장판 */
+//     UINT sdm : 1; /* bit4  스캔데이터저장판 */
+// 
+//     UINT sap : 1; /* bit3  스캔프로세서판 */
+//     UINT nsp : 1; /* bit8  탐지프로세서판 */
+//     UINT ksp1 : 1;  /* bit11 추적프로세서판1 */
+//     UINT ksp2 : 1;  /* bit14 추적프로세서판2 */
+//     UINT ksp3 : 1;  /* bit17 추적프로세서판3 */
+//     UINT ksp4 : 1;  /* bit20 추적프로세서판4 */
+//     UINT saf : 1; /* bit5  스캔분석필터판 */
+//     UINT nsf : 1; /* bit10 탐지필터판 */
+//     UINT ksf1 : 1;  /* bit13 추적필터판1 */
+//     UINT ksf2 : 1;  /* bit16 추적필터판2 */
+//     UINT ksf3 : 1;  /* bit19 추적필터판3 */
+//     UINT ksf4 : 1;  /* bit22 추적필터판4 */
+//     UINT aud : 1; /* bit6  오디오발생판 */
+//     UINT rcv : 1; /* bit7  PDW 수신판 */
+//     UINT pdw : 1; /* bit2  공용메모리판 */
+//     UINT cmm : 1; /* bit2  공용메모리판 */
+//   } bits;
+// } LAN_RSA_IBIT;
 
 /* RXDF I/R BIT 종합 데이터 */
 //##ModelId=452B0C4F007A
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT        : 29;
-    UINT Power : 1; /* 전원공급기 */
-    UINT PreAmp : 1;  /* 고주파전단증폭기 */
-    UINT Total : 1; /* 전방향수신기 종합 */
-  } bits;
-} RBIT_OMNI;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT        : 29;
+//     UINT Power : 1; /* 전원공급기 */
+//     UINT PreAmp : 1;  /* 고주파전단증폭기 */
+//     UINT Total : 1; /* 전방향수신기 종합 */
+//   } bits;
+// } RBIT_OMNI;
 
 //##ModelId=452B0C4F008F
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT    : 13;
-    UINT d18 : 1; /* SIO 통신 */    // `98.9.2
-    UINT d17 : 1; /* DFD */
-    UINT d16 : 1; /* 수신제어판 */
-    UINT d15 : 1; /* 주파수정보처리판 */
-    UINT d14 : 1; /* 신호측정제어판 */
-    UINT d13 : 1; /* 신호제원합성판 */
-    UINT d12 : 1; /* 수신제어접속판 */
-    UINT d11 : 1; /* 전방향고주파조립체 */
-    UINT d10 : 1; /* 방탐제어접속판 */
-    UINT d9 : 1;  /* 방위출력제어판 */
-    UINT d8 : 1;  /* 위상방위연산판 */
-    UINT d7 : 1;  /* 위상측정보정판 */
-    UINT d6 : 1;  /* 진폭방위연산판 */
-    UINT d5 : 1;  /* 진폭구간방위연산판 */
-    UINT d4 : 1;  /* 진폭방위보정판 */
-    UINT d3 : 1;  /* 진폭측정판2 */
-    UINT d2 : 1;  /* 진폭측정판1 */
-    UINT d1 : 1;  /* 진폭정보처리판 */
-    UINT d0 : 1;  /* 수신방탐처리장치 종합 */
-  } bits;
-} RBIT_CTRL;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT    : 13;
+//     UINT d18 : 1; /* SIO 통신 */    // `98.9.2
+//     UINT d17 : 1; /* DFD */
+//     UINT d16 : 1; /* 수신제어판 */
+//     UINT d15 : 1; /* 주파수정보처리판 */
+//     UINT d14 : 1; /* 신호측정제어판 */
+//     UINT d13 : 1; /* 신호제원합성판 */
+//     UINT d12 : 1; /* 수신제어접속판 */
+//     UINT d11 : 1; /* 전방향고주파조립체 */
+//     UINT d10 : 1; /* 방탐제어접속판 */
+//     UINT d9 : 1;  /* 방위출력제어판 */
+//     UINT d8 : 1;  /* 위상방위연산판 */
+//     UINT d7 : 1;  /* 위상측정보정판 */
+//     UINT d6 : 1;  /* 진폭방위연산판 */
+//     UINT d5 : 1;  /* 진폭구간방위연산판 */
+//     UINT d4 : 1;  /* 진폭방위보정판 */
+//     UINT d3 : 1;  /* 진폭측정판2 */
+//     UINT d2 : 1;  /* 진폭측정판1 */
+//     UINT d1 : 1;  /* 진폭정보처리판 */
+//     UINT d0 : 1;  /* 수신방탐처리장치 종합 */
+//   } bits;
+// } RBIT_CTRL;
 
 //##ModelId=452B0C4F00A2
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT        : 27;
-    UINT Power : 1; /* 전원공급기, 대역 3 */
-    UINT Video : 1; /* 비데오처리판 */
-    UINT Phase : 1; /* 위상검출조립체 */
-    UINT AmpDet : 1;  /* 진폭검출조립체 */
-    UINT Total : 1; /* 방탐수신기(좌) 종합 */
-  } bits;
-} RBIT_LEFT;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT        : 27;
+//     UINT Power : 1; /* 전원공급기, 대역 3 */
+//     UINT Video : 1; /* 비데오처리판 */
+//     UINT Phase : 1; /* 위상검출조립체 */
+//     UINT AmpDet : 1;  /* 진폭검출조립체 */
+//     UINT Total : 1; /* 방탐수신기(좌) 종합 */
+//   } bits;
+// } RBIT_LEFT;
 
 //##ModelId=452B0C4F00B6
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT        : 27;
-    UINT Power : 1; /* 전원공급기, 대역 3 */
-    UINT Video : 1; /* 비데오처리판 */
-    UINT Phase : 1; /* 위상검출조립체 */
-    UINT AmpDet : 1;  /* 진폭검출조립체 */
-    UINT Total : 1; /* 방탐수신기(우) 종합 */
-  } bits;
-} RBIT_RIGHT;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT        : 27;
+//     UINT Power : 1; /* 전원공급기, 대역 3 */
+//     UINT Video : 1; /* 비데오처리판 */
+//     UINT Phase : 1; /* 위상검출조립체 */
+//     UINT AmpDet : 1;  /* 진폭검출조립체 */
+//     UINT Total : 1; /* 방탐수신기(우) 종합 */
+//   } bits;
+// } RBIT_RIGHT;
 
 //##ModelId=452B0C4F00C1
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT         : 31;
-    UINT total : 1; /* 신호분배장치 종합 */
-  } bits;
-} RBIT_SHARE;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT         : 31;
+//     UINT total : 1; /* 신호분배장치 종합 */
+//   } bits;
+// } RBIT_SHARE;
 
 //##ModelId=452B0C4F00D4
 /*
@@ -445,280 +445,279 @@ typedef union
 
 /* ES (RSA + RXDF) BIT 결과 종합 데이터 */
 //##ModelId=452B0C4F00DF
-typedef union
-{
-  UINT w32;
+// typedef union
+// {
+//   UINT w32;
+// 
+//   struct
+//   {
+//   UINT      : 15;     // truth table
+//     UINT bCip : 1;
+// 
+//     UINT bSap : 1;    /* bit3  스캔프로세서판 */
+//     UINT bNsp : 1;    /* bit8  탐지프로세서판 */
+//     UINT bKsp1 : 1;    /* bit11 추적프로세서판1 */
+//     UINT bKsp2 : 1;    /* bit14 추적프로세서판2 */
+// 
+//     UINT bKsp3 : 1;    /* bit17 추적프로세서판3 */
+//     UINT bKsp4 : 1;    /* bit20 추적프로세서판4 */
+//     UINT bSaf : 1;    /* bit5  스캔분석필터판 */
+//     UINT bNsf : 1;    /* bit10 탐지필터판 */
+// 
+//     UINT bKsf1 : 1;    /* bit13 추적필터판1 */
+//     UINT bKsf2 : 1;    /* bit16 추적필터판2 */
+//     UINT bKsf3 : 1;    /* bit19 추적필터판3 */
+//     UINT bKsf4 : 1;    /* bit22 추적필터판4 */
+// 
+//     UINT bAud : 1;    /* bit6  오디오발생판 */
+//     int bRcv : 1;    /* bit7  PDW 수신판 */
+//     int bPdw : 1;    /* bit2  공용메모리판 */
+//     UINT bCmm : 1;    /* bit2  공용메모리판 */
+//   } rsa ;
+// } RSA_UBIT ;
 
-  struct
-  {
-  UINT      : 15;     // truth table
-    UINT bCip : 1;
-
-    UINT bSap : 1;    /* bit3  스캔프로세서판 */
-    UINT bNsp : 1;    /* bit8  탐지프로세서판 */
-    UINT bKsp1 : 1;    /* bit11 추적프로세서판1 */
-    UINT bKsp2 : 1;    /* bit14 추적프로세서판2 */
-
-    UINT bKsp3 : 1;    /* bit17 추적프로세서판3 */
-    UINT bKsp4 : 1;    /* bit20 추적프로세서판4 */
-    UINT bSaf : 1;    /* bit5  스캔분석필터판 */
-    UINT bNsf : 1;    /* bit10 탐지필터판 */
-
-    UINT bKsf1 : 1;    /* bit13 추적필터판1 */
-    UINT bKsf2 : 1;    /* bit16 추적필터판2 */
-    UINT bKsf3 : 1;    /* bit19 추적필터판3 */
-    UINT bKsf4 : 1;    /* bit22 추적필터판4 */
-
-    UINT bAud : 1;    /* bit6  오디오발생판 */
-    int bRcv : 1;    /* bit7  PDW 수신판 */
-    int bPdw : 1;    /* bit2  공용메모리판 */
-    UINT bCmm : 1;    /* bit2  공용메모리판 */
-  } rsa ;
-} RSA_UBIT ;
-
-//##ModelId=452B0C4F00FC
-typedef union
-{
-  UINT w32;
-  char c[ 4 ];
-  struct
-  {
-  UINT       : 8;
-    UINT bTsd : 1;
-  UINT       : 23;
-  } tsd ;
-  struct
-  {
-  UINT       : 8;
-  UINT       : 1;
-    UINT bVid : 1;
-    UINT bPhs : 1;
-    UINT bAmp : 1;
-  UINT       : 20;
-  } sdfu ;      // Right
-  struct
-  {
-  UINT       : 8;
-  UINT       : 4;
-    UINT bVid : 1;
-    UINT bPhs : 1;
-    UINT bAmp : 1;
-  UINT       : 17;
-  } pdfu ;      // Left
-  struct
-  {
-  UINT       : 8;
-  UINT       : 7;
-    UINT bOru : 1;
-  UINT       : 16;
-  } oru ;
-  struct
-  {
-  UINT       : 16;
-  UINT       : 1;
-    UINT bDfd : 1;
-  UINT       : 1;
-  UINT       : 1;
-    UINT bIo : 1;
-    UINT bHf : 1;
-  UINT       : 1;
-    UINT bRc : 1;
-    UINT bSr : 1;
-    UINT bSm : 1;
-    UINT bFi : 1;
-    UINT bDo : 1;
-    UINT bPd : 1;
-    UINT bAd : 1;
-    UINT bAi : 1;
-    UINT bAm : 1;
-  } sp ;
-} RXDF_UBIT ;
+// typedef union
+// {
+//   UINT w32;
+//   char c[ 4 ];
+//   struct
+//   {
+//   UINT       : 8;
+//     UINT bTsd : 1;
+//   UINT       : 23;
+//   } tsd ;
+//   struct
+//   {
+//   UINT       : 8;
+//   UINT       : 1;
+//     UINT bVid : 1;
+//     UINT bPhs : 1;
+//     UINT bAmp : 1;
+//   UINT       : 20;
+//   } sdfu ;      // Right
+//   struct
+//   {
+//   UINT       : 8;
+//   UINT       : 4;
+//     UINT bVid : 1;
+//     UINT bPhs : 1;
+//     UINT bAmp : 1;
+//   UINT       : 17;
+//   } pdfu ;      // Left
+//   struct
+//   {
+//   UINT       : 8;
+//   UINT       : 7;
+//     UINT bOru : 1;
+//   UINT       : 16;
+//   } oru ;
+//   struct
+//   {
+//   UINT       : 16;
+//   UINT       : 1;
+//     UINT bDfd : 1;
+//   UINT       : 1;
+//   UINT       : 1;
+//     UINT bIo : 1;
+//     UINT bHf : 1;
+//   UINT       : 1;
+//     UINT bRc : 1;
+//     UINT bSr : 1;
+//     UINT bSm : 1;
+//     UINT bFi : 1;
+//     UINT bDo : 1;
+//     UINT bPd : 1;
+//     UINT bAd : 1;
+//     UINT bAi : 1;
+//     UINT bAm : 1;
+//   } sp ;
+// } RXDF_UBIT ;
 
 //##ModelId=452B0C4F0110
-typedef union
-{
-  UINT w32[ 4 ];
-
-  RSA_UBIT rsa;       // 32bit.
-  RXDF_UBIT sp[ 3 ];        // 32bit * 3
-} ES_UBIT;      //Modified 1+1+5*3=17 Words `98.8.24
+// typedef union
+// {
+//   UINT w32[ 4 ];
+// 
+//   RSA_UBIT rsa;       // 32bit.
+//   RXDF_UBIT sp[ 3 ];        // 32bit * 3
+// } ES_UBIT;      //Modified 1+1+5*3=17 Words `98.8.24
 
 /* LAN RXDF CBIT Result */  // `98.9.3
 //##ModelId=452B0C4F011A
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT    : 26;
-    UINT b1cm : 1;  /* bit5 Band1 SIO 통신 */
-    UINT b1fn : 1;  /* bit4 Band1 기능 */
-    UINT b2cm : 1;  /* bit3 Band2 SIO 통신 */
-    UINT b2fn : 1;  /* bit2 Band2 기능 */
-    UINT b3cm : 1;  /* bit1 Band3 SIO 통신 */
-    UINT b3fn : 1;  /* bit0 Band3 기능 */
-  } bits;
-} LAN_RDF_CBIT;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT    : 26;
+//     UINT b1cm : 1;  /* bit5 Band1 SIO 통신 */
+//     UINT b1fn : 1;  /* bit4 Band1 기능 */
+//     UINT b2cm : 1;  /* bit3 Band2 SIO 통신 */
+//     UINT b2fn : 1;  /* bit2 Band2 기능 */
+//     UINT b3cm : 1;  /* bit1 Band3 SIO 통신 */
+//     UINT b3fn : 1;  /* bit0 Band3 기능 */
+//   } bits;
+// } LAN_RDF_CBIT;
 
 //##ModelId=452B0C4F0125
-typedef LAN_RSA_IBIT LAN_RSA_CBIT;
+//typedef LAN_RSA_IBIT LAN_RSA_CBIT;
 
 /* ES (RSA + RXDF) BIT 종합 데이터 */
 //##ModelId=452B0C4F0138
-typedef union
-{
-  UINT w32;
-  struct
-  {
-		UINT      : 21;
-
-    UINT b3Comu : 1;  // Band 3 communication bit
-    UINT b2Comu : 1;  // Band 2 communication bit
-    UINT b1Comu : 1;  // Band 1 communication bit
-
-    UINT bRsa : 1;		// RSA General Set IBIT
-    UINT b3Sp : 1;		// Each Unit IBIT
-    UINT b2Sp : 1;
-    UINT b1Sp : 1;
-
-    UINT bTsd : 1;
-    UINT bSdfu : 1;
-    UINT bPdfu : 1;
-    UINT bOru : 1;
-  } es ;
-
-} ES_IBIT;    // edited `98.9.2, modified `99.05.17
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+// 		UINT      : 21;
+// 
+//     UINT b3Comu : 1;  // Band 3 communication bit
+//     UINT b2Comu : 1;  // Band 2 communication bit
+//     UINT b1Comu : 1;  // Band 1 communication bit
+// 
+//     UINT bRsa : 1;		// RSA General Set IBIT
+//     UINT b3Sp : 1;		// Each Unit IBIT
+//     UINT b2Sp : 1;
+//     UINT b1Sp : 1;
+// 
+//     UINT bTsd : 1;
+//     UINT bSdfu : 1;
+//     UINT bPdfu : 1;
+//     UINT bOru : 1;
+//   } es ;
+// 
+// } ES_IBIT;    // edited `98.9.2, modified `99.05.17
 
 ////////////////////////////////////////////////////////////////////
 /* ES (RSA + RXDF) BIT 종합 데이터 */
 //##ModelId=452B0C4F0142
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT      : 20;   // dummy
-
-    UINT bCltr : 1;
-    UINT bCltl : 1;
-    UINT bDiu : 1;
-    UINT bSp : 1;
-    UINT bTsd : 2;
-    UINT bSdfu : 2;
-    UINT bPdfu : 2;
-    UINT bOru : 2;
-  } rxdf ;
-} RXDF_SBIT ;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT      : 20;   // dummy
+// 
+//     UINT bCltr : 1;
+//     UINT bCltl : 1;
+//     UINT bDiu : 1;
+//     UINT bSp : 1;
+//     UINT bTsd : 2;
+//     UINT bSdfu : 2;
+//     UINT bPdfu : 2;
+//     UINT bOru : 2;
+//   } rxdf ;
+// } RXDF_SBIT ;
 
 //##ModelId=452B0C4F0160
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT      : 28;
-    UINT baet : 1;    // AET 유무
-    UINT bB3pdw : 1;    // PDW 수 Check
-    UINT bB2pdw : 1;
-    UINT bB1pdw : 1;
-  } rsa ;
-} RSA_SBIT ;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT      : 28;
+//     UINT baet : 1;    // AET 유무
+//     UINT bB3pdw : 1;    // PDW 수 Check
+//     UINT bB2pdw : 1;
+//     UINT bB1pdw : 1;
+//   } rsa ;
+// } RSA_SBIT ;
 
 //##ModelId=452B0C4F016A
-typedef struct
-{
-  RXDF_SBIT sp[ 3 ];  // SP SBIT
-
-  RSA_SBIT rsa; // RSA SBIT
-} ES_SBIT ;
+// typedef struct
+// {
+//   RXDF_SBIT sp[ 3 ];  // SP SBIT
+// 
+//   RSA_SBIT rsa; // RSA SBIT
+// } ES_SBIT ;
 
 ////////////////////////////////////////////////////////////////////
 /* ES (RSA + RXDF) CBIT 종합 데이터 */
 //##ModelId=452B0C4F017E
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT      : 26;
-
-    UINT bSpin : 1;
-    UINT bSpout : 1;
-
-    UINT bSdfuTp : 1; // SDFU Temperature
-    UINT bPdfuTp : 1;
-    UINT bOruSw : 1;  // Oru Switch
-    UINT bOruTp : 1;  // Oru Temperature
-  } rxdf ;
-} RXDF_CBIT ;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT      : 26;
+// 
+//     UINT bSpin : 1;
+//     UINT bSpout : 1;
+// 
+//     UINT bSdfuTp : 1; // SDFU Temperature
+//     UINT bPdfuTp : 1;
+//     UINT bOruSw : 1;  // Oru Switch
+//     UINT bOruTp : 1;  // Oru Temperature
+//   } rxdf ;
+// } RXDF_CBIT ;
 
 //##ModelId=452B0C4F0188
-typedef union
-{
-  UINT w32;
-  struct
-  {
-  UINT         : 15;    /* bit22-31 Reserved */
-
-    UINT bCip : 1;    /* bit0  제어식별프로세서판 */
-
-    UINT bSap : 1;    /* bit3  스캔프로세서판 */
-    UINT bNsp : 1;    /* bit8  탐지프로세서판 */
-    UINT bKsp1 : 1;    /* bit11 추적프로세서판1 */
-    UINT bKsp2 : 1;    /* bit14 추적프로세서판2 */
-
-    UINT bKsp3 : 1;    /* bit17 추적프로세서판3 */
-    UINT bKsp4 : 1;    /* bit20 추적프로세서판4 */
-    UINT bSaf : 1;    /* bit5  스캔분석필터판 */
-    UINT bNsf : 1;    /* bit10 탐지필터판 */
-
-    UINT bKsf1 : 1;    /* bit13 추적필터판1 */
-    UINT bKsf2 : 1;    /* bit16 추적필터판2 */
-    UINT bKsf3 : 1;    /* bit19 추적필터판3 */
-    UINT bKsf4 : 1;    /* bit22 추적필터판4 */
-
-    UINT bAud : 1;    /* bit6  오디오발생판 */
-    int bRcv : 1;    /* bit7  PDW 수신판 */
-    int bPdw : 1;    /* bit2  공용메모리판 */
-    UINT bCmm : 1;    /* bit2  공용메모리판 */
-  } rsa ;
-} RSA_CBIT ;
+// typedef union
+// {
+//   UINT w32;
+//   struct
+//   {
+//   UINT         : 15;    /* bit22-31 Reserved */
+// 
+//     UINT bCip : 1;    /* bit0  제어식별프로세서판 */
+// 
+//     UINT bSap : 1;    /* bit3  스캔프로세서판 */
+//     UINT bNsp : 1;    /* bit8  탐지프로세서판 */
+//     UINT bKsp1 : 1;    /* bit11 추적프로세서판1 */
+//     UINT bKsp2 : 1;    /* bit14 추적프로세서판2 */
+// 
+//     UINT bKsp3 : 1;    /* bit17 추적프로세서판3 */
+//     UINT bKsp4 : 1;    /* bit20 추적프로세서판4 */
+//     UINT bSaf : 1;    /* bit5  스캔분석필터판 */
+//     UINT bNsf : 1;    /* bit10 탐지필터판 */
+// 
+//     UINT bKsf1 : 1;    /* bit13 추적필터판1 */
+//     UINT bKsf2 : 1;    /* bit16 추적필터판2 */
+//     UINT bKsf3 : 1;    /* bit19 추적필터판3 */
+//     UINT bKsf4 : 1;    /* bit22 추적필터판4 */
+// 
+//     UINT bAud : 1;    /* bit6  오디오발생판 */
+//     int bRcv : 1;    /* bit7  PDW 수신판 */
+//     int bPdw : 1;    /* bit2  공용메모리판 */
+//     UINT bCmm : 1;    /* bit2  공용메모리판 */
+//   } rsa ;
+// } RSA_CBIT ;
 
 //##ModelId=452B0C4F0193
-typedef struct
-{
-  RXDF_CBIT sp[ 3 ];
-  RSA_CBIT rsa;
-} ES_CBIT;
+// typedef struct
+// {
+//   RXDF_CBIT sp[ 3 ];
+//   RSA_CBIT rsa;
+// } ES_CBIT;
 
 //##ModelId=452B0C4F01A6
-typedef struct
-{
-  // 수신기 밴드별 방탐 오차(δA)
-  UINT spaoadiff[ 3 ];
-
-  // 수신기밴드별 주파수 오차(δF)
-  UINT spfrqdiff[ 3 ];
-
-  // 추적 윈도우셀
-  UINT sptrkaoa;
-  UINT sptrkfixfrq;
-  UINT sptrkagifrq;
-
-  // 에미터 병합
-  UINT spmrgaoa;
-  UINT spmrgfrq;
-
-  // 최소펄스열수
-  UINT spminstb;
-  UINT spminjit;
-  UINT spminrefpri;
-  UINT spminagipri;
-
-  // 그룹화
-  UINT spshiftaoa;
-  UINT spshiftfrq;
-} STR_CNFSYS ;
+// typedef struct
+// {
+//   // 수신기 밴드별 방탐 오차(δA)
+//   UINT spaoadiff[ 3 ];
+// 
+//   // 수신기밴드별 주파수 오차(δF)
+//   UINT spfrqdiff[ 3 ];
+// 
+//   // 추적 윈도우셀
+//   UINT sptrkaoa;
+//   UINT sptrkfixfrq;
+//   UINT sptrkagifrq;
+// 
+//   // 에미터 병합
+//   UINT spmrgaoa;
+//   UINT spmrgfrq;
+// 
+//   // 최소펄스열수
+//   UINT spminstb;
+//   UINT spminjit;
+//   UINT spminrefpri;
+//   UINT spminagipri;
+// 
+//   // 그룹화
+//   UINT spshiftaoa;
+//   UINT spshiftfrq;
+// } STR_CNFSYS ;
 
 /*
 typedef struct {

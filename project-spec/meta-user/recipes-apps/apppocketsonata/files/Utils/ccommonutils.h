@@ -11,6 +11,9 @@
 #include "../Include/struct.h"
 
 #ifdef _MSC_VER
+#include <string>
+
+
 int clock_gettime(int X, struct timeval *tv);
 LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
@@ -60,6 +63,17 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
 
 }
 
+// template<typename ... Args>
+// std::string string_format(const std::string& format, Args ... args)
+// {
+// 	size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+// 	if (size <= 0) { throw std::runtime_error("Error during formatting."); }
+// 	std::unique_ptr<char[]> buf(new char[size]);
+// 	snprintf(buf.get(), size, format.c_str(), args ...);
+// 	return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+// }
+
+
 
 class CCommonUtils
 {
@@ -90,9 +104,10 @@ public:
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
 	// 시간관련 함수
-    static DWORD GetTickCount();
+    static DWORD GetTickCounts();
     static void getStringPresentTime( char *pString, size_t szString );
-    static void getStringDesignatedTime( char *pString, size_t szString, time_t tiTime );
+    static void getStringDesignatedDate( char *pString, size_t szString, time_t tiTime );
+	static void getStringDesignatedTime(char *pString, size_t szString, time_t tiTime);
 	//static void getStringDesignatedTime( char *pString, size_t szString, __time64_t tiTime );
     //static void getFileNamingDesignatedTime(char *pString, size_t szString, __time32_t tiTime);
     //static void getFileNamingDesignatedTime(char *pString, size_t szString, long tiTime);
@@ -100,7 +115,7 @@ public:
     static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
     static void GetCollectTime( struct timespec *pTimeSpec );
 
-    static int CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
+    static int CopySrcToDstFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
     static const char *strcasestr( const char *haystack, const char *needle );
     static int Isalpha( int iCh );
@@ -118,8 +133,12 @@ public:
 
 	// 문자열 파싱
 	static void Parsing(vector<string> *pValues, string *pStrIn, string & strDelimiter);
-	static int Parsing(vector<string> *pValues, const char *pData);
+	static unsigned int Parsing(vector<string> *pValues, const char *pData);
 
+	// 폴더 및 파일 삭제
+	static int DeleteAllFile(const char *pszDir, int iForce );
+
+	// 
 };
 
 #endif // CCOMMONUTILS_H

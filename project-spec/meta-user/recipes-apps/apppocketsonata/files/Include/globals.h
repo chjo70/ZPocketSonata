@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
 	아래 헤더 파일은 쓰레드 관련 함수를 사용할 때 이 헤더 파일이 필요하다.
  * */
@@ -39,7 +39,7 @@ CScanAnalysis *g_pTheScanAnalysis;
 // 통신 관련 쓰레드
 CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
-CSingleClient *g_pThePMCSocket;
+//CSingleClient *g_pThePMCSocket;
 
 // 기타 객체
 CLog *g_pTheLog;

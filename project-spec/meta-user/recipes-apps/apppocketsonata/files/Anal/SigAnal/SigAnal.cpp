@@ -14,55 +14,25 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
 CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName)
 #endif
 {
-    size_t szSize;
+
+	m_uiCoMaxPdw = uiCoMaxPdw;
 
     SetUnitType();
 
     SetStep(_spZero);
+	SetSaveFile(true);
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#if defined(_ELINT_) || defined(_701_)
     m_szTaskID[0] = NULL;
 #endif
 
+
     m_bDBThread = bDBThread;
 
-#ifdef _SQLITE_
-    try {
-        m_pDatabase = new Kompex::CSQLiteDatabase(pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
+	memset(&m_stSavePDWData, 0, sizeof(m_stSavePDWData));
 
-    }
-    catch (Kompex::SQLiteException &sException) {
-        std::cerr << "\nException Occured" << std::endl;
-		sException.Show();
-        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
-    }
+	AllocMemory(pFileName);
 
-    // SQLITE 파일명 생성하기
-    char szSQLiteFileName[100];
-
-    strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
-    strcat(szSQLiteFileName, "/");
-    strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
-
-    m_pszSQLString = (char *)malloc(MAX_SQL_SIZE);
-#elif _MSSQL_
-    CMSSQL::Init();
-
-    m_pszSQLString = (char *)malloc(MAX_SQL_SIZE);
-
-#else
-
-#endif
-
-    //srand( (unsigned int) time(NULL) );
-
-    SetSaveFile(true);
-
-    _SAFE_NEW(m_pMidasBlue, CMIDASBlueFileFormat)
-
-    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_PDW), (int) uiCoMaxPdw);
-    m_stSavePDWData.pstPDW = NULL;
-    _SAFE_MALLOC(m_stSavePDWData.pstPDW, _PDW, szSize)
 
     // DB 관련 변수 초기화
     InitDataFromDB();
@@ -91,7 +61,64 @@ CSigAnal::~CSigAnal()
 
 #ifdef _MSSQL_
     m_theMyODBC.Close();
+
+#elif _SQLITE_
+	delete m_pDatabase;
 #endif
+
+}
+
+
+/**
+ * @brief     AllocMemory
+ * @param     char * pSQLiteFileName
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 10:53:28
+ * @warning
+ */
+void CSigAnal::AllocMemory( const char *pSQLiteFileName )
+{
+	size_t szSize;
+
+#ifdef _SQLITE_
+	try {
+		m_pDatabase = new Kompex::CSQLiteDatabase(pSQLiteFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
+
+	}
+	catch (Kompex::SQLiteException &sException) {
+		std::cerr << "\nException Occured" << std::endl;
+		sException.Show();
+		std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+	}
+
+	// SQLITE 파일명 생성하기
+	char szSQLiteFileName[100];
+
+	strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
+	strcat(szSQLiteFileName, "/");
+	strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
+
+	m_pszSQLString = (char *)malloc(MAX_SQL_SIZE);
+#elif _MSSQL_
+	CMSSQL::Init();
+
+	m_pszSQLString = (char *)malloc(MAX_SQL_SIZE);
+
+#else
+
+#endif
+
+	//srand( (unsigned int) time(NULL) );
+
+
+
+	_SAFE_NEW(m_pMidasBlue, CMIDASBlueFileFormat)
+
+	szSize = CCommonUtils::CheckMultiplyOverflow((int) sizeof(_PDW), (int)m_uiCoMaxPdw);
+	_SAFE_MALLOC(m_stSavePDWData.pstPDW, _PDW, szSize)
 
 }
 
@@ -378,41 +405,39 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
 {
     bool bRet = true;
     char buffer[100] = { 0 };
-    char szDirectory[500], szRawDataPathname[600];
+    char szRawDataPathname[600];
 
     struct timespec tiNow;
 
     CCommonUtils::GetCollectTime(&tiNow, GetColTime(), GetColTimeMs() );
     CCommonUtils::getFileNamingDesignatedTime(buffer, sizeof(buffer), tiNow.tv_sec);
 
-#ifdef _ELINT_
-    sprintf_s(szDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
-
-#elif defined(_701_)
-	sprintf_s(szDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x._701.GetCollectorID(), pPDWData->x._701.aucTaskID);
-
-
-#elif defined(_XBAND_)
-    //sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-    sprintf_s(szDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID);
-
-#elif defined(_POCKETSONATA_)
-    //strftime(buffer, 100, "%Y-%m-%d", pstTime);
-    sprintf(szDirectory, _T("%s/%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, buffer, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
-
-#else
-    sprintf(szDirectory, "%s/BRD", pLocalDirectory);
-
-#endif
-
     m_szRawDataFilename[0] = NULL;
 
-
+	if ( /*pstTime != NULL &&*/ m_bSaveFile == true) {
 #ifdef _POCKETSONATA_
+		bRet = CreateDir(GetAnalDirectory());
+		if (bRet == true) {
+			// 순수 신호 수집한 데이터
+			if (iPLOBID == 0) {
+				sprintf(m_szRawDataFilename, _T("#%d[%s]_D%06d_%s"), pPDWData->GetCollectorID(), buffer, GetPDWID(), PDW_EXT);
+			}
+			// 그룹화 신호 수집 데이터
+			else if (iPLOBID < 0) {
+				sprintf(m_szRawDataFilename, _T("#%d[%s]_D%06d_[G%02d]%s"), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), PDW_EXT);
+			}
+			// 분석 신호 수집 데이터
+			else {
+				sprintf(m_szRawDataFilename, _T("#%d[%s]_D%06d_[G%02d][L%02d]%s"), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), iPLOBID, PDW_EXT);
+			}
+
+			sprintf(szRawDataPathname, _T("%s/%s"), GetAnalDirectory(), m_szRawDataFilename);
+			unsigned int uiTotalPDW = pPDWData->GetTotalPDW();
+			m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, &pPDWData->x, uiTotalPDW );
+		}		
 
 #else
-    if ( /*pstTime != NULL &&*/ m_bSaveFile == true) {
-        bRet = CreateDir(szDirectory);
+		bRet = CreateDir( GetAnalDirectory() );
 
         if ( bRet == true ) {
             // 순수 신호 수집한 데이터
@@ -428,7 +453,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
                 sprintf( m_szRawDataFilename, _T( "#%d[%s]_D%06d_[G%02d][L%02d]%s" ), pPDWData->GetCollectorID(), buffer, GetPDWID(), GetCoGroup(), iPLOBID, PDW_EXT );
             }
 
-            sprintf(szRawDataPathname, _T("%s/%s"), szDirectory, m_szRawDataFilename);
+            sprintf(szRawDataPathname, _T("%s/%s"), GetAnalDirectory(), m_szRawDataFilename);
             m_pMidasBlue->SaveRawDataFile( szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, & pPDWData->x, pPDWData->GetTotalPDW() );
 
             if (m_bDBThread == false) {
@@ -441,11 +466,8 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
                 TRACE("Push the data for InsertToDB_RAW()");
             }
         }
-    }
-
-
 #endif
-
+    }
 
 }
 
@@ -467,8 +489,10 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 
         char buffer[100];
 
+		unsigned int uiTotalPDW = pPDWData->GetTotalPDW();
+
         CCommonUtils::GetCollectTime(&tiNow, GetColTime(), GetColTimeMs() );
-        CCommonUtils::getStringDesignatedTime(buffer, sizeof(buffer), tiNow.tv_sec);
+        CCommonUtils::getStringDesignatedDate(buffer, sizeof(buffer), tiNow.tv_sec);
 
 #ifdef _MSSQL_
 #ifdef _POCKETSONATA_
@@ -483,7 +507,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 #elif defined(_701_)
 		sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
                                                  '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '0' )", \
-			GetOpInitID(), GetPDWID(), iPLOBID, pPDWData->x._701.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
+			GetOpInitID(), GetPDWID(), iPLOBID, pPDWData->x.e7.aucTaskID, buffer, iPLOBID, pPDWData->GetTotalPDW(), m_szRawDataFilename);
 
 
 #elif defined(_XBAND_)
@@ -501,9 +525,10 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 
 #elif _SQLITE_
 #ifdef _POCKETSONATA_
+		unsigned int uiOpInitID = g_pTheSysConfig->GetOpInitID();
         sprintf(m_pszSQLString, "INSERT INTO RAWDATA ( OP_INIT_ID, PDWID, PLOBID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE, COL_BANK ) values( \
                                                  '%d', '%d', '%d', '%s', '0', '%d', '%s', '%d', '%d' )", \
-			g_pTheSysConfig->GetOpInitID(), GetPDWID(), iPLOBID, buffer, pPDWData->GetTotalPDW(), m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
+			uiOpInitID, GetPDWID(), iPLOBID, buffer, uiTotalPDW, m_szRawDataFilename, E_EL_SCDT_PDW, pPDWData->x.ps.uiBank);
 
 #elif defined(_ELINT_)
         sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO RAWDATA ( PDWID, PLOBID, TASK_ID, CREATE_TIME, CREATE_TIME_MS, COUNTOFDATA, FILENAME, DATA_TYPE ) values( \
@@ -825,7 +850,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
     m_pszSQLString[0] = NULL;
 
-    CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+    CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pLOBData->tiContactTime );
 
 #ifdef _POCKETSONATA_
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
@@ -848,7 +873,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
         pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->iNumOfPDW, \
         pLOBData->fCollectLatitude, pLOBData->fCollectLongitude, pLOBData->szRadarModeName, pLOBData->iRadarModeIndex );
 
-#elif _701_
+#elif defined(_701_)
 	sprintf_s(m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
                                                 OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
                                                 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
@@ -897,7 +922,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
     m_pszSQLString[0] = NULL;
 
-    CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+    CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pLOBData->tiContactTime );
 
 #if defined(_POCKETSONATA_)
     sprintf( m_pszSQLString, "INSERT INTO LOBDATA ( \
@@ -994,7 +1019,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
         CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-        CCommonUtils::getStringDesignatedTime( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+        CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pLOBData->tiContactTime );
 
         theRS.Open( m_pszSQLString );
         Log( enDebug, ".InsertLOB[O%d][A%d][B%d][L%d]", GetOpInitID(), pLOBData->uiAETID, pLOBData->uiABTID, pLOBData->uiLOBID );

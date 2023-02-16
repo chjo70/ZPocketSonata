@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 시스템의 정의문을 정의합니다.
  * */
 
@@ -95,7 +95,7 @@ typedef unsigned long long int _TOA;
 
 /////////////////////////////////////////////////////////////////////////////////
 
-#define DETECT_CHANNEL  (1)
+#define DETECT_CHANNEL  (1)                         // 탐지용 채널은 1개로 설정함. 현재 PL 전처리필터의 채널이 1개임.
 #define TRACK_CHANNEL   (256)
 #define SCAN_CHANNEL    (256)
 #define USER_CHANNEL    (16)

@@ -1,4 +1,4 @@
-#ifndef _H_EL_GMI_MSG
+﻿#ifndef _H_EL_GMI_MSG
 #define _H_EL_GMI_MSG
 
 #include <time.h>
@@ -13,125 +13,125 @@
 *----------------------------------------------------------------------------------*/ 
 
 /* =========================== GMI에서 수행하는 Sub Command ========================*/
-enum {
-	// POSN에서 방사체 정보 수정시  Sub Command 정의
-	SUBCMDCODE_EL_GMI_MANUAL_POS_EST_APPLIED=0x01,
-	SUBCMDCODE_EL_GMI_UNLOCK_MANUAL_POS_EST_RESULT,
-
-	// 수집점검 시 POSN간 동기화하기 위한  Sub Command 정의
-	SUBCMDCODE_EL_GMI_SIGGEN_APPLIED,
-	SUBCMDCODE_EL_GMI_SIGGEN_POS_EST_RESULT,
-
-	// LOB 필터를 POS에서 갱신 후 RELOAD 명령을 연동기에 날려주기 위한 Sub Command 정의.
-	SUBCMDCODE_EL_GMI_RELOAD_LOB_FILTER_INFO,
-
-	// 자동위치 산출 (LOB 체크박스에서 유효/무효 선택 후) 적용 결과를 연동기에 알려주기 위한 Sub Command 정의.
-	SUBCMDCODE_EL_GMI_LOB_APPLIED,
-
-	// LOB DB 삭제 후 AET 관리에서 관련 LOB를 제거하고 다시 제원 산출(?)을 해야함. 이에 따른 Sub Command 정의.
-	SUBCMDCODE_EL_GMI_LOB_DELETED_FROM_DB_AT_POSITION,
-
-	// 식별 데이터 변경
-	SUBCMDCODE_EL_GMI_CEDEOB_UPDATE_APPLIED,
-
-	// 임무 시작, 종료
-	SUBCMDCODE_EL_GMI_MISSION_CONTROL_APPLIED,
-
-	// 시스템 변수 적용
-	SUBCMDCODE_EL_GMI_SYSTEM_VAR_APPLIED,
-
-	// 환경 변수 적용
-	SUBCMDCODE_EL_GMI_ENV_VAR_APPLIED,
-
-	// 연동기로 시스템 변수 로딩 요청 (TestConfig.ini)
-	SUBCMDCODE_EL_GMI_LOAD_CONFIG_INI,
-
-	// 수동 및 타체계 LOB (분석결과) 추가 처리
-	SUBCMDCODE_EL_GMI_LOB_ADDED,
-
-	// 체계 운용에서 임무 시작 처리
-	SUBCMDCODE_EL_MISSION_START,
-
-	// 개발자 모드로 위협 관리를 초기화하고자 할 때 처리
-	SUBCMDCODE_EL_THREAT_INITIALIZE,
-	
-	// 특정 위협 삭제
-	SUBCMDCODE_EL_REMOVE_THREAT,
-
-	// 특정 LOB 삭제
-	SUBCMDCODE_EL_DELETE_LOB,
-
-	// 다운로드 LOB 전송
-	SUBCMDCODE_EL_GMI_DOWNLOAD_LOB_ADDED,
-
-	// ELNOT 및 기타 정보 포함한 LOB 전송
-	SUBCMDCODE_EL_GMI_DOWNLOAD_LOB_ADDED_AND_ELNOT,
-
-	// 선택 LOB로부터 추가된 LOB 전송
-	SUBCMDCODE_EL_GMI_ADD_NEW_LOB_FROM_COPIED_LOB,
-
-	// 탐색필터 내용 변경 . 연동기 처리는 없으며 연동기에서 POS으로 동기화 요청을 날려주기 위함.
-	SUBCMDCODE_EL_GMI_BYPASS_TO_RELOAD_SRCH_FILTER,
-
-	// 자동수집 목록 요청
-	SUBCMDCODE_EL_STORAGE_LIST,
-
-	// 빔의 위치산출 정보를 수동으로 갱신
-	SUBCMDCODE_EL_GMI_MANUAL_POS_EST_APPLIED_TO_BEAM,
-
-	// 보고서 생성시간
-	SUBCMDCODE_EL_GMI_REPORT_TIME,
-
-	// 경보 시간
-	SUBCMDCODE_EL_GMI_ALERT_TIME,
-
-	// PRF톤 수집 요청
-	SUBCMDCODE_EL_PRFTONE_START,
-
-	// 운용 시작
-	SUBCMDCODE_EL_OPERATION_CONTROL,
-
-	// 운용 상태 (수집 중지 상태)
-	SUBCMDCODE_EL_OPERATION_CONTROL_EXT,
-
-	// LOB 삭제 (위치 산출)
-	SUBCMDCODE_EL_REMOVE_LOB_FROM_PE,
-
-	// 특정 위협 미활동
-	SUBCMDCODE_EL_DELETE_THREAT,
-
-	// 새로운 방사체 생성을 위해 전자지도에서 선택된 LOB들의 보냄
-	SUBCMDCODE_EL_GMI_SELECTED_LOBS_FROM_DMAP_TO_GENERATE_NEW_EMITTER,
-
-	// 새로운 방사체 생성을 위해 전자지도에서 선택된 LOB들의 보냄
-	SUBCMDCODE_EL_GMI_SELECTED_LOBS_AS_ONE_SET_FROM_DMAP_TO_GENERATE_NEW_EMITTER,
-
-	// 생성된 방사체/빔 번호를 POSN 에게 전시한다.
-	SUBCMDCODE_EL_SHOW_AETID_GENERATED_NEW_EMITTER,
-
-};
+// enum {
+// 	// POSN에서 방사체 정보 수정시  Sub Command 정의
+// 	SUBCMDCODE_EL_GMI_MANUAL_POS_EST_APPLIED=0x01,
+// 	SUBCMDCODE_EL_GMI_UNLOCK_MANUAL_POS_EST_RESULT,
+// 
+// 	// 수집점검 시 POSN간 동기화하기 위한  Sub Command 정의
+// 	SUBCMDCODE_EL_GMI_SIGGEN_APPLIED,
+// 	SUBCMDCODE_EL_GMI_SIGGEN_POS_EST_RESULT,
+// 
+// 	// LOB 필터를 POS에서 갱신 후 RELOAD 명령을 연동기에 날려주기 위한 Sub Command 정의.
+// 	SUBCMDCODE_EL_GMI_RELOAD_LOB_FILTER_INFO,
+// 
+// 	// 자동위치 산출 (LOB 체크박스에서 유효/무효 선택 후) 적용 결과를 연동기에 알려주기 위한 Sub Command 정의.
+// 	SUBCMDCODE_EL_GMI_LOB_APPLIED,
+// 
+// 	// LOB DB 삭제 후 AET 관리에서 관련 LOB를 제거하고 다시 제원 산출(?)을 해야함. 이에 따른 Sub Command 정의.
+// 	SUBCMDCODE_EL_GMI_LOB_DELETED_FROM_DB_AT_POSITION,
+// 
+// 	// 식별 데이터 변경
+// 	SUBCMDCODE_EL_GMI_CEDEOB_UPDATE_APPLIED,
+// 
+// 	// 임무 시작, 종료
+// 	SUBCMDCODE_EL_GMI_MISSION_CONTROL_APPLIED,
+// 
+// 	// 시스템 변수 적용
+// 	SUBCMDCODE_EL_GMI_SYSTEM_VAR_APPLIED,
+// 
+// 	// 환경 변수 적용
+// 	SUBCMDCODE_EL_GMI_ENV_VAR_APPLIED,
+// 
+// 	// 연동기로 시스템 변수 로딩 요청 (TestConfig.ini)
+// 	SUBCMDCODE_EL_GMI_LOAD_CONFIG_INI,
+// 
+// 	// 수동 및 타체계 LOB (분석결과) 추가 처리
+// 	SUBCMDCODE_EL_GMI_LOB_ADDED,
+// 
+// 	// 체계 운용에서 임무 시작 처리
+// 	SUBCMDCODE_EL_MISSION_START,
+// 
+// 	// 개발자 모드로 위협 관리를 초기화하고자 할 때 처리
+// 	SUBCMDCODE_EL_THREAT_INITIALIZE,
+// 	
+// 	// 특정 위협 삭제
+// 	SUBCMDCODE_EL_REMOVE_THREAT,
+// 
+// 	// 특정 LOB 삭제
+// 	SUBCMDCODE_EL_DELETE_LOB,
+// 
+// 	// 다운로드 LOB 전송
+// 	SUBCMDCODE_EL_GMI_DOWNLOAD_LOB_ADDED,
+// 
+// 	// ELNOT 및 기타 정보 포함한 LOB 전송
+// 	SUBCMDCODE_EL_GMI_DOWNLOAD_LOB_ADDED_AND_ELNOT,
+// 
+// 	// 선택 LOB로부터 추가된 LOB 전송
+// 	SUBCMDCODE_EL_GMI_ADD_NEW_LOB_FROM_COPIED_LOB,
+// 
+// 	// 탐색필터 내용 변경 . 연동기 처리는 없으며 연동기에서 POS으로 동기화 요청을 날려주기 위함.
+// 	SUBCMDCODE_EL_GMI_BYPASS_TO_RELOAD_SRCH_FILTER,
+// 
+// 	// 자동수집 목록 요청
+// 	SUBCMDCODE_EL_STORAGE_LIST,
+// 
+// 	// 빔의 위치산출 정보를 수동으로 갱신
+// 	SUBCMDCODE_EL_GMI_MANUAL_POS_EST_APPLIED_TO_BEAM,
+// 
+// 	// 보고서 생성시간
+// 	SUBCMDCODE_EL_GMI_REPORT_TIME,
+// 
+// 	// 경보 시간
+// 	SUBCMDCODE_EL_GMI_ALERT_TIME,
+// 
+// 	// PRF톤 수집 요청
+// 	SUBCMDCODE_EL_PRFTONE_START,
+// 
+// 	// 운용 시작
+// 	SUBCMDCODE_EL_OPERATION_CONTROL,
+// 
+// 	// 운용 상태 (수집 중지 상태)
+// 	SUBCMDCODE_EL_OPERATION_CONTROL_EXT,
+// 
+// 	// LOB 삭제 (위치 산출)
+// 	SUBCMDCODE_EL_REMOVE_LOB_FROM_PE,
+// 
+// 	// 특정 위협 미활동
+// 	SUBCMDCODE_EL_DELETE_THREAT,
+// 
+// 	// 새로운 방사체 생성을 위해 전자지도에서 선택된 LOB들의 보냄
+// 	SUBCMDCODE_EL_GMI_SELECTED_LOBS_FROM_DMAP_TO_GENERATE_NEW_EMITTER,
+// 
+// 	// 새로운 방사체 생성을 위해 전자지도에서 선택된 LOB들의 보냄
+// 	SUBCMDCODE_EL_GMI_SELECTED_LOBS_AS_ONE_SET_FROM_DMAP_TO_GENERATE_NEW_EMITTER,
+// 
+// 	// 생성된 방사체/빔 번호를 POSN 에게 전시한다.
+// 	SUBCMDCODE_EL_SHOW_AETID_GENERATED_NEW_EMITTER,
+// 
+// };
 
 
 /* =========================== POS에서 수행하는 Sub Command ========================*/
-enum {	
-	SUBCMDCODE_EL_POS_RELOAD_AET_BY_MANUAL_POS_EST_DONE=0x01,
-	SUBCMDCODE_EL_NOT_USED_02,
-	SUBCMDCODE_EL_NOT_USED_03,
-	SUBCMDCODE_EL_NOT_USED_04,
-	SUBCMDCODE_EL_POS_RELOAD_LOB_FILTER_INFO_TO_SYNC,
-	SUBCMDCODE_EL_NOT_USED_06,
-	SUBCMDCODE_EL_POS_LOB_DELETED_FROM_DB_AT_POSITION_TO_SYNC,
-
-	// CED/EOB 변경 처리 요청
-	//SUBCMDCODE_EL_POS_CEDEOB_UPDATE_POSITION_TO_SYNC,
-
-	SUBCMDCODE_EL_NOT_USED_08,
-	SUBCMDCODE_EL_NOT_USED_09,
-	SUBCMDCODE_EL_NOT_USED_10,
-	SUBCMDCODE_EL_POS_ENV_VAR_APPLIED		,
-	SUBCMDCODE_EL_SHOW_SPTR_DATA_TO_PDW_IQ_IF_WND	,
-	SUBCMDCODE_EL_ORDER_TO_CHECK_SEQ_NUM,
-};
+// enum {	
+// 	SUBCMDCODE_EL_POS_RELOAD_AET_BY_MANUAL_POS_EST_DONE=0x01,
+// 	SUBCMDCODE_EL_NOT_USED_02,
+// 	SUBCMDCODE_EL_NOT_USED_03,
+// 	SUBCMDCODE_EL_NOT_USED_04,
+// 	SUBCMDCODE_EL_POS_RELOAD_LOB_FILTER_INFO_TO_SYNC,
+// 	SUBCMDCODE_EL_NOT_USED_06,
+// 	SUBCMDCODE_EL_POS_LOB_DELETED_FROM_DB_AT_POSITION_TO_SYNC,
+// 
+// 	// CED/EOB 변경 처리 요청
+// 	//SUBCMDCODE_EL_POS_CEDEOB_UPDATE_POSITION_TO_SYNC,
+// 
+// 	SUBCMDCODE_EL_NOT_USED_08,
+// 	SUBCMDCODE_EL_NOT_USED_09,
+// 	SUBCMDCODE_EL_NOT_USED_10,
+// 	SUBCMDCODE_EL_POS_ENV_VAR_APPLIED		,
+// 	SUBCMDCODE_EL_SHOW_SPTR_DATA_TO_PDW_IQ_IF_WND	,
+// 	SUBCMDCODE_EL_ORDER_TO_CHECK_SEQ_NUM,
+// };
 
 
 /*-----------------------------------------------------------
@@ -185,56 +185,56 @@ enum {
 
 //////////////////////////////////////////////////////////////////////////
 // 1번 PAYLOAD 메시지 정의 :
-struct SELEmitterEdited
-{
-    //char szMissionId[LENGTH_OF_MISSION_ID];
-    int	 nAETId;
-    int  nABTId;
-    int  nLOBId;
-
-    // 수정 그룹 비티맵
-    //UELMANUALVAL userManual;
-
-    // 방사체 정보 데이터
-    SELAETDATA aetData;
-
-    // 위치 정보 우선 정보 (자동 또는 수동 위치 산출)
-    bool bManualPosEstPreferred;
-
-    unsigned int uiSeqNum;
-
-    // PIN #
-    int iPinNumber;
-    char szELNOT[_MAX_ELNOT_STRING_SIZE_];
-
-    // 경보 및 보고서 최초/최종 보고 시각
-    time_t ti_FirstTime;									// 최초 시각
-    time_t ti_FinalTime;									// 최종 시각
-
-    E_BEAM_EMITTER_STAT enEmitterStat;
-
-    unsigned int iChangedAETID;							// AET #
-    unsigned int iChangedABTID;							// ABT #
-
-//    SELEmitterEdited::SELEmitterEdited() : enEmitterStat(E_ES_NOT_AVAILABLE)
-//    {
-//    }
-
-};
-
-struct SELLOBValidity
-{
-	int	nAETId;
-	int nABTId;			// 1 
-	int nLOBId;			// 0
-
-};
-
-struct SELOPERATIONLIB {
-	int iOperation;					// 삭제, 편집, 추가, NO-Operation
-	int iNumber;						// 레이더 또는 위협 번호
-
-} ;
+// struct SELEmitterEdited
+// {
+//     //char szMissionId[LENGTH_OF_MISSION_ID];
+//     int	 nAETId;
+//     int  nABTId;
+//     int  nLOBId;
+// 
+//     // 수정 그룹 비티맵
+//     //UELMANUALVAL userManual;
+// 
+//     // 방사체 정보 데이터
+//     SELAETDATA aetData;
+// 
+//     // 위치 정보 우선 정보 (자동 또는 수동 위치 산출)
+//     bool bManualPosEstPreferred;
+// 
+//     unsigned int uiSeqNum;
+// 
+//     // PIN #
+//     int iPinNumber;
+//     char szELNOT[_MAX_ELNOT_STRING_SIZE_];
+// 
+//     // 경보 및 보고서 최초/최종 보고 시각
+//     time_t ti_FirstTime;									// 최초 시각
+//     time_t ti_FinalTime;									// 최종 시각
+// 
+//     E_BEAM_EMITTER_STAT enEmitterStat;
+// 
+//     unsigned int iChangedAETID;							// AET #
+//     unsigned int iChangedABTID;							// ABT #
+// 
+// //    SELEmitterEdited::SELEmitterEdited() : enEmitterStat(E_ES_NOT_AVAILABLE)
+// //    {
+// //    }
+// 
+// };
+// 
+// struct SELLOBValidity
+// {
+// 	int	nAETId;
+// 	int nABTId;			// 1 
+// 	int nLOBId;			// 0
+// 
+// };
+// 
+// struct SELOPERATIONLIB {
+// 	int iOperation;					// 삭제, 편집, 추가, NO-Operation
+// 	int iNumber;						// 레이더 또는 위협 번호
+// 
+// } ;
 
 
 // typedef struct {
@@ -286,13 +286,13 @@ enum ENStorageListButton {
 
 } ;
 
-typedef enum {
-	enStartOfControl=0,
-	enStopOfControl,
-
-	enHaltOfControl,
-
-} ENManualControlStatus, ENOperationControl;
+// typedef enum {
+// 	enStartOfControl=0,
+// 	enStopOfControl,
+// 
+// 	enHaltOfControl,
+// 
+// } ENManualControlStatus, ENOperationControl;
 
 struct SELStorageButton {
 	ENStorageListButton enStorageListButton;				// 진행 상태를 버튼 상태로 함.
@@ -303,17 +303,17 @@ struct SELStorageButton {
 	bool bIFTotalMetaViewMode;
 } ;
 
-struct SELPRFTONE_STATUS {
-	int nLinkNo;
-	ENManualControlStatus enControlStatus;
+// struct SELPRFTONE_STATUS {
+// 	int nLinkNo;
+// 	ENManualControlStatus enControlStatus;
+// 
+// } ;
 
-} ;
-
-struct SELOPERATION_CONTROL {
-	int nLinkNo;
-	ENManualControlStatus enControlStatus;
-
-} ;
+// struct SELOPERATION_CONTROL {
+// 	int nLinkNo;
+// 	ENManualControlStatus enControlStatus;
+// 
+// } ;
 
 // typedef struct {
 // 	int	 nAETId;

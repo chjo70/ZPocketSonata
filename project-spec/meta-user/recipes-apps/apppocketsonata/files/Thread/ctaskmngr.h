@@ -1,4 +1,4 @@
-#ifndef CTASKMNGR_H
+﻿#ifndef CTASKMNGR_H
 #define CTASKMNGR_H
 
 using namespace std;
@@ -92,9 +92,9 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+    CTaskMngr( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
 #else
-    CTaskMngr( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
+    CTaskMngr( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
 #endif
 
     virtual ~CTaskMngr(void);

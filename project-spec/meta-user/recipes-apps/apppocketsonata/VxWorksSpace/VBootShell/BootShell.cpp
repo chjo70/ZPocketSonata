@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <time.h>
+#include <math.h>
 #include <ctype.h>
 #include <stdio.h>
 
@@ -17,6 +18,7 @@
 #include <sysLib.h>
 #include <intLib.h>
 #include <arch/ppc/vxPpcLib.h>
+
 //#include "lsv70a.h"
 
 #include <rebootLib.h>
@@ -65,7 +67,13 @@ void GetKey();
 */
 void BootShellMain()
 {
-    
+    time_t rawtime;  
+    struct tm * timeinfo;
+
+	// floating format 연산 에러로 반드시 추가해야 함. 
+	// vxworks 에서 해준다하던데.. 실행이 안 되는 것 같음.
+	//floatInit();  	
+	
     theFileTar = new CFileTar;
     if( theFileTar == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리가 부족합니다 !" ) );
@@ -83,6 +91,12 @@ void BootShellMain()
 		PrintErr( ( "\n [W] 기본 메모리가 부족합니다 !" ) ); 
 		WhereIs;
 	}
+
+    time( & rawtime );
+    timeinfo = localtime ( & rawtime );
+    printf( "\n\n ---------------------------------------------------------------------" );
+    printf ( "\n 실행 시간: %s", asctime (timeinfo) );
+    printf( "\n\n ---------------------------------------------------------------------" );
 
 	theBootShell->Run();
 
@@ -153,12 +167,12 @@ void CBootShell::Run()
 	UCHAR key;
 	BOOL bRet;
 
-	printf( "\n\n Get Command (Default=OFP Download/Run OFP in Flash) ? " );
-	key = theManSbc->GetCommand();
+	printf( "\n\n 키 값 (기본=OFP Download/TFFS 파일 설치[w]/응용 프로그램 업데이트[1]/Run OFP in Flash) ? " );
+    key = theManSbc->GetCommand();
     //printf( "\n key=[%d]" , key );
 
     switch( key ) {
-        case INSTALL_WEB :
+        case INSTALL_WEB :      // w 키
             theManSbc->InstallWeb();
             break;
 
@@ -167,7 +181,7 @@ void CBootShell::Run()
             theManSbc->RunApp( enTffsApp );
             break;
 
-        case WRITE_APP_FLASH :
+        case WRITE_APP_FLASH :  // 1 키
             theManSbc->DownloadAndROMWriteApp();
             break;
 

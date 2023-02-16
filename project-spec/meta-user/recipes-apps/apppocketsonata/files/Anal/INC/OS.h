@@ -1,4 +1,4 @@
-// OS.h: interface for the 타스크 간의 메시지 정의
+﻿// OS.h: interface for the 타스크 간의 메시지 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -21,6 +21,7 @@
 #define MODULE					char
 #define NO_WAIT					0
 
+
 #define ULONGLONG_MAX           (0xffffffffffffffff)
 
 
@@ -36,6 +37,9 @@
 #define Sleep(A)                taskDelay(A)
 
 typedef long long __time64_t;
+
+#define fscanf_s                fscanf
+#define sscanf_s                sscanf
 
 
 
@@ -60,6 +64,8 @@ typedef long long __time64_t;
 #define OS_SEC(A)               (A*1000000)
 
 #define STATUS					unsigned int
+
+#define VXB_DEV_ID              UINT
 
 #endif
 

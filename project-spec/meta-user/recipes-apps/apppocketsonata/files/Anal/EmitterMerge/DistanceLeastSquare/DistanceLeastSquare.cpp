@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      DistanceLeastSquare.cpp
  * @brief     DistanceLeastSquare 위치 산출 알고리즘
@@ -298,9 +298,9 @@ bool CDistanceLeastSquare::CalCEP( SELPE_RESULT *pResult, SELABTDATA_EXT *pABTEx
  * @date      2014-02-03 오후 4:42 
  * @warning   
  */
-void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, int nEle )
+void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_RESULT *pEmitterXY, SELPE_RESULT *pSensorXY, double *pTrueLob, unsigned int uiEle )
 {
-	int i;
+	unsigned int i;
 
 	CMatrix H, Ht;
 	CMatrix W;
@@ -312,8 +312,8 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 
 	// H 벡터 생성
 	pLob2 = pTrueLob;
-	H = CMatrix( (UINT) nEle, 2 );
- 	for( i=1 ; i <= nEle ; ++i ) {
+	H = CMatrix(uiEle, 2 );
+ 	for( i=1 ; i <= uiEle; ++i ) {
  		H( (UINT) i, (UINT)1 ) = sin( *pLob2 );
  		H( (UINT) i, (UINT)2 ) = -cos( *pLob2 );
  
@@ -322,8 +322,8 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 
 	// Ht 벡터 생성
 	pLob2 = pTrueLob;
-	Ht = CMatrix((UINT)2, (UINT) nEle );
-	for( i=1 ; i <= nEle ; ++i ) {
+	Ht = CMatrix((UINT)2, uiEle);
+	for( i=1 ; i <= uiEle; ++i ) {
 		Ht((UINT)1, (UINT)i ) = sin( *pLob2 );
 		Ht((UINT)2, (UINT)i ) = -cos( *pLob2 );
 
@@ -332,13 +332,13 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 
 	// W 벡터 생성
 	pLob2 = pTrueLob;
-	W = Diag( nEle );
+	W = Diag(uiEle);
 
 	double aoaVariance = AOA_VARIANCE * M_PI * M_PI / 180. / 180.;
 
 	//TRACE2( "\nXt:%f, Xt:%f" , pEmitterXY->x, pEmitterXY->y );
 		
-	for( i=1 ; i <= nEle ; ++i ) {
+	for( i=1 ; i <= uiEle; ++i ) {
 		double val;
 		double diff_x, diff_y;
 

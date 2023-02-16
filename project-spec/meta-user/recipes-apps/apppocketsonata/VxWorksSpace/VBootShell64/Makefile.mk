@@ -2,7 +2,7 @@
 #
 
 
-# GENERATED: Thu Nov 18 11:01:18 +0900 2021
+# GENERATED: Tue Jan 03 14:24:36 +0900 2023
 # DO NOT EDIT - file is regenerated whenever the project changes
 
 
@@ -14,15 +14,15 @@ else
 PRJ_DIR        = .
 endif
 PRJ_FILE       = VBootShell64.wpj
-PRJ_FULL_PATH  = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64
+PRJ_FULL_PATH  = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64
 PRJ_TYPE       = vxWorks
 PRJ_OBJS       = usrAppInit.o usrRtpAppInit.o prjConfig.o linkSyms.o BootShell.o BootShellMain.o ManSbc.o FileTar.o asp.o balloc.o base64.o cgi.o default.o ejlex.o ejparse.o emfdb.o form.o h.o handler.o main.o md5c.o mime.o misc.o mocana_ssl.o page.o ringq.o rom.o security.o sock.o sockGen.o strdup.o strncasecmp.o sym.o uemf.o um.o umui.o url.o value.o webrom.o webs.o websda.o websuemf.o
 USER_OBJS      = 
 PRJ_MAKEFILE   = $(PRJ_DIR)/Makefile.mk
 BOOT_OBJS      =  $(BOOT_EXTRA)
 BUILD_SPEC     = default
-BSP_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64/hmt_t2080vpx3u_1_0_0_0
-VSB_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64
+BSP_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VBootShell64/hmt_t2080vpx3u_1_0_0_0
+VSB_DIR        = D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild64
 VXBUILD        = LP64 SMP
 OPT            = -inet6
 

@@ -1,12 +1,12 @@
-* type ìž…ë ¥ : ì•žì˜ 3ê¸€ìž ëŒ€ë¬¸ìžë¡œ ìž…ë ¥
+* type ÀÔ·Â : ¾ÕÀÇ 3±ÛÀÚ ´ë¹®ÀÚ·Î ÀÔ·Â
 Freq Type     : FIX(fixed)   AGI(agile)    PAT(pattern)  HOP(hopping) 
 Freq Pat Type : SIN(sine)    TRI(triangle) SW+(saw+)     SW-(saw-)
 PRI  Type     : STB(stable)  STG(stagger)  JIT(jitter)   DNS(dwell & switch) 
 PRI  Pat Type : SIN(sine)    TRI(triangle) SW+(saw+)     SW-(saw-)
 Scan Type     : STD(steady)  CON(conical)  CIR(circular) BID(bi-directional)  UNI(uni-directional)
-* ì£¼íŒŒìˆ˜ëŠ” [MHz], TOAì™€ PRIëŠ” [usec], PWëŠ” [nsec], PAëŠ” [dBm], íŒ¨í„´ì£¼ê¸°ì™€ ìŠ¤ìº”ì£¼ê¸°ëŠ” [msec] ë‹¨ìœ„ë¡œ ìž…ë ¥ 
-* ì£¼ì˜ : í•´ë‹¹ì‚¬í•­ì´ ì•„ë‹Œ ê²½ìš°ì˜ ê°’ì€ ì•„ë¬´ ê°’ì´ë¼ë„ ìƒê´€ ì—†ìŒ ê·¸ëŸ¬ë‚˜ ë°˜ë“œì‹œ ìž…ë ¥ì´ ë˜ì–´ ìžˆì–´ì•¼í•¨ !!! (ë‹¨, SPul_Cntê°’ì€ ë°˜ë“œì‹œ 20ì´ìƒì˜ ê°’ì„ ì‚¬ìš©í• ê²ƒ !!!)
-   (ì´ìƒ 10ì¤„ì€ Headerë¡œ ìž„ì˜ë¡œ ë³€ê²½ë˜ì–´ì„œëŠ” ì•Šë˜ë©° ìž…ë ¥ íŒŒë¼ë©”í„°ë¡œ ì‚¬ìš©ë˜ì§€ ì•ŠìŒ ! ì„œì„±íƒœ ë°±)
+* ÁÖÆÄ¼ö´Â [MHz], TOA¿Í PRI´Â [usec], PW´Â [nsec], PA´Â [dBm], ÆÐÅÏÁÖ±â¿Í ½ºÄµÁÖ±â´Â [msec] ´ÜÀ§·Î ÀÔ·Â 
+* ÁÖÀÇ : ÇØ´ç»çÇ×ÀÌ ¾Æ´Ñ °æ¿ìÀÇ °ªÀº ¾Æ¹« °ªÀÌ¶óµµ »ó°ü ¾øÀ½ ±×·¯³ª ¹Ýµå½Ã ÀÔ·ÂÀÌ µÇ¾î ÀÖ¾î¾ßÇÔ !!! (´Ü, SPul_Cnt°ªÀº ¹Ýµå½Ã 20ÀÌ»óÀÇ °ªÀ» »ç¿ëÇÒ°Í !!!)
+   (ÀÌ»ó 10ÁÙÀº Header·Î ÀÓÀÇ·Î º¯°æµÇ¾î¼­´Â ¾ÊµÇ¸ç ÀÔ·Â ÆÄ¶ó¸ÞÅÍ·Î »ç¿ëµÇÁö ¾ÊÀ½ ! ¼­¼ºÅÂ ¹é)
 Idx Filename(.npw) Count FstTOA[us] Stat DV AOA[deg] FType  Freq[MHz] BW[MHz] FPatType FPatPrd[us] FHoplvl HL[0] HL[1] HL[2] HL[3] HL[4] HL[5] HL[6] HL[7] HL[8] HL[9] HL[10] HL[11] HL[12] HL[13] HL[14] HL[15] HL[16] HL[17] HL[18] HL[19] HL[20] HL[21] HL[22] HL[23] HL[24] HL[25] HL[26] HL[27] HL[28] HL[29] HL[30] HL[31] PType PRI[us] Jit% PSLvl PL[0] PL[1] PL[2] PL[3] PL[4] PL[5] PL[6] PL[7] PL[8] PL[9] PL[10] PL[11] PL[12] PL[13] PL[14] PL[15] PL[17] PL[18] PL[19] PL[20] PL[21] PL[22] PL[23] PL[24] PL[25] PL[26] PL[27] PL[28] PL[29] PL[30] PL[31] PPatType PPatPrd[us] 	PdnsCnt PA[dBm] PW[ns] Fmop[MHz] Pmop  ScanType ScanPrd[ms] SPul_Cnt	DOA_Error(+-)	Freq_Error(+-)	Toa_Error(+-)	PW_Error(+-)	PA_Error(+-)	Pulse_Error
 1   1.zpdw       	2000 0       	0    1  50       FIX    9000      408     SW+      5000  	   0       0     0     0     0     0     0     0     0     0     0     0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      STB   100     10   2     369   429   0     0     0     0     0     0     0     0     0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      SIN      0       		0       -30     450    0         0     CIR      1770        20			0 		    	2				1				1000			3				0
 2   2.zpdw       	1000 1000       0    1  0        FIX    18000     408     SW+      5000  	   0       0     0     0     0     0     0     0     0     0     0     0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      STG   100     10   2     369   429   0     0     0     0     0     0     0     0     0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      SIN      0       		0       -30     450    0         0     CIR      1770        20			7           	3				0				2000			3				0

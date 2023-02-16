@@ -5,6 +5,11 @@
 
 #include <io.h>
 #include <direct.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
 #include <sys/timeb.h>
 
 #include <limits.h>
@@ -36,7 +41,7 @@
 
 extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
-extern CSingleClient *g_pThePMCSocket;
+//extern CSingleClient *g_pThePMCSocket;
 
 #endif
 
@@ -73,9 +78,9 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
         }
 
         // EA 경우에 AET 관련 메세지를 전달한다.
-        if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
-            g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
-        }
+//         if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
+//             g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
+//         }
 
     }
     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
@@ -140,8 +145,8 @@ LARGE_INTEGER getFILETIMEoffset()
     s.wMilliseconds = 0;
     SystemTimeToFileTime(&s, &f);
     t.QuadPart = f.dwHighDateTime;
-    t.QuadPart <<= 32;
-    t.QuadPart |= f.dwLowDateTime;
+    t.QuadPart = (long long) ( (unsigned long long ) t.QuadPart << 32 );
+    t.QuadPart = (long long)((unsigned long long) t.QuadPart | f.dwLowDateTime );
     return (t);
 }
 
@@ -231,7 +236,7 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  * @brief     입력한 시간 정보로 문자열로 날짜를 구성한다.
  * @param     char * pString
  * @param     size_t szString
- * @param     __time32_t tiTime
+ * @param     time_t tiTime
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -239,7 +244,7 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  * @date      2022-04-05, 11:09
  * @warning
  */
-void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, time_t tiTime ) 
+void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time_t tiTime ) 
 {
     struct tm *pstTime;
 
@@ -252,6 +257,38 @@ void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, time
     pstTime = localtime( & tiTime );
 	if (pstTime != NULL) {
 		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
+	}
+	else {
+		*pString = NULL;
+	}
+
+}
+
+/**
+ * @brief     getStringDesignatedTime
+ * @param     char * pString
+ * @param     size_t szString
+ * @param     time_t tiTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-31 12:04:16
+ * @warning
+ */
+void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_t tiTime)
+{
+	struct tm *pstTime;
+
+#ifdef _MSC_VER    
+	strcpy_s(pString, szString, "00:00:00");
+#else
+	strcpy(pString, "1970-01-01 00:00:00");
+#endif
+
+	pstTime = localtime(&tiTime);
+	if (pstTime != NULL) {
+		strftime(pString, szString, "%H:%M:%S", pstTime);
 	}
 	else {
 		*pString = NULL;
@@ -307,7 +344,7 @@ void CCommonUtils::getStringDesignatedTime( char *pString, size_t szString, time
  * @brief     getFileNamingDesignatedTime
  * @param     char * pString
  * @param     size_t szString
- * @param     __time32_t tiTime
+ * @param     time_t tiTime
  * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -338,7 +375,7 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
 /**
  * @brief     GetCollectTime
  * @param     struct timespec * pTimeSpec
- * @param     __time32_t tColTime
+ * @param     time_t tColTime
  * @param     unsigned int m_tColTimeMs
  * @return    void
  * @exception
@@ -353,9 +390,9 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, u
         clock_gettime(CLOCK_REALTIME, pTimeSpec);
     }
     else {
-        pTimeSpec->tv_sec = tColTime;
+        pTimeSpec->tv_sec = (long) tColTime;
 #ifdef _MSC_VER
-        pTimeSpec->tv_usec = tColTimeMs * 1000;
+        pTimeSpec->tv_usec = tColTimeMs * (unsigned int) 1000;
 #else
         pTimeSpec->tv_nsec = tColTimeMs * 1000000;
 #endif
@@ -366,6 +403,16 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, u
 
 }
 
+/**
+ * @brief     GetCollectTime
+ * @param     struct timespec * pTimeSpec
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 11:49:46
+ * @warning
+ */
 void CCommonUtils::GetCollectTime( struct timespec *pTimeSpec )
 {
     clock_gettime( CLOCK_REALTIME, pTimeSpec );
@@ -375,7 +422,16 @@ void CCommonUtils::GetCollectTime( struct timespec *pTimeSpec )
 }
 
 
-DWORD CCommonUtils::GetTickCount()
+/**
+ * @brief     GetTickCount
+ * @return    DWORD
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 11:49:19
+ * @warning
+ */
+DWORD CCommonUtils::GetTickCounts()
 {
 #ifdef _MSC_VER
     return ::GetTickCount();
@@ -401,7 +457,7 @@ DWORD CCommonUtils::GetTickCount()
  * @date      2021-06-30, 17:27
  * @warning
  */
-int CCommonUtils::CopyFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr )
+int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr )
 {
     int iRet=-1;
     int     src_fd;
@@ -601,10 +657,10 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 #elif defined(_701_)
 	for (i = 0; i < pPDWData->GetTotalPDW(); ++i) {
 		printf("[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
-			pPDW->ullTOA, C7PDW::DecodeTOAus(pPDW->ullTOA - ullfirstTOA, pPDWData->x._701.enBandWidth), \
+			pPDW->ullTOA, C7PDW::DecodeTOAus(pPDW->ullTOA - ullfirstTOA, pPDWData->x.e7.enBandWidth), \
 			C7PDW::DecodeDOA((int)pPDW->uiAOA), \
 			C7PDW::DecodeFREQMHz((int)pPDW->uiFreq), pPDW->uiFreq,
-			C7PDW::DecodePW((int)pPDW->uiPW, pPDWData->x._701.enBandWidth), pPDW->uiPW);
+			C7PDW::DecodePW((int)pPDW->uiPW, pPDWData->x.e7.enBandWidth), pPDW->uiPW);
 		++pPDW;
 	}
 
@@ -844,32 +900,29 @@ int CCommonUtils::Isalpha( int iCh )
 size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 {
     size_t szSize=0;
-    size_t szMultiply;
+    int iMultiply;
 
     try {
+
 		if( iSize <= 0 || iItems <= 0 ) {
             iItems = 10;
             iSize = 10;
 			// throw 0;
 		}
 
-        else if( iSize > INT_MAX / iItems ) {
-            throw 0;
-        }
-
-        else if( iSize < INT_MIN / iItems ) {
+        else if( iSize > (INT_MAX / iItems) || iSize < (INT_MIN / iItems) ) {
             throw 0;
         }
 
         else {
-            szMultiply = (unsigned int) iSize * ( unsigned int ) iItems;
+			iMultiply = iSize * iItems;
         
-            if( iSize != szMultiply / iItems ) {
+            if( iSize != iMultiply / iItems ) {
                 throw 0;
             }
 
             else {
-                szSize = szMultiply;
+                szSize = (size_t) iMultiply;
             }
         }
         
@@ -918,8 +971,8 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
 {
     ENUM_DataType enDataType = en_UnknownData;
 
-    if( NULL != CCommonUtils::strcasestr( pStrPathname, "pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "spdw" ) ) {
-		if (NULL != CCommonUtils::strcasestr(pStrPathname, "csv"))
+    if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
+		if (NULL != CCommonUtils::strcasestr(pStrPathname, ".csv"))
 			enDataType = en_PDW_DATA_CSV;
 		else
 			enDataType = en_PDW_DATA;
@@ -927,20 +980,20 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "kpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".kpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "siq" ) ||
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".iq" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".siq" ) ||
         NULL != CCommonUtils::strcasestr( pStrPathname, "e2.dat" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".eiq" ) ) {
         enDataType = en_IQ_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, "enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".epdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".enpw" ) || NULL != strstr( pStrPathname, ".zpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-    else if( NULL != CCommonUtils::strcasestr( pStrPathname, "xpdw" ) ) {
+    else if( NULL != CCommonUtils::strcasestr( pStrPathname, ".xpdw" ) ) {
         enDataType = en_PDW_DATA;
     }
-	else if (NULL != CCommonUtils::strcasestr(pStrPathname, "7pdw")) {
+	else if (NULL != CCommonUtils::strcasestr(pStrPathname, ".7pdw")) {
 		enDataType = en_PDW_DATA;
 	}
     else {
@@ -1038,7 +1091,7 @@ int CCommonUtils::Rand( int range )
  */
 void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & strDelimiter)
 {
-	int pos = 0;
+	unsigned int pos = 0;
 	string token;
 
 	while ((pos = pStrIn->find(strDelimiter)) != string::npos) {
@@ -1062,9 +1115,9 @@ void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & str
  * @date      2023-01-18 11:29:06
  * @warning
  */
-int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
+unsigned int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 {
-	int iIndex;
+	unsigned int iIndex;
 	char szBuffer[100];
 
 	pValues->clear();
@@ -1078,5 +1131,101 @@ int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 	}
 
 	return iIndex + 1;
+
+}
+
+/**
+ * @brief     DeleteAllFile
+ * @param     char * pszDir
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-24 11:22:41
+ * @warning
+ */
+// void CCommonUtils::DeleteAllFile(char *pszDir)
+// {
+// #ifdef _MSC_VER
+// 
+// 	// RmDirs(pszDir, 0);
+// 
+
+// #elif defined(_linux_)
+// 	rmdirs( pszDir, 0 );
+// #endif
+// 
+// }
+
+int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
+{
+#ifdef __linux__
+	DIR *  dir_ptr = NULL;
+	struct dirent *file = NULL;
+	struct stat   buf;
+	char   filename[1024];
+
+	/* 목록을 읽을 디렉토리명으로 DIR *를 return 받습니다. */
+	if ((dir_ptr = opendir(path)) == NULL) {
+		/* path가 디렉토리가 아니라면 삭제하고 종료합니다. */
+		return unlink(path);
+	}
+
+	/* 디렉토리의 ���음부터 파일 또는 디렉토리명을 순서대로 한개씩 읽습니다. */
+	while ((file = readdir(dir_ptr)) != NULL) {
+		// readdir 읽혀진 파일명 중에 현재 디렉토리를 나타네는 . 도 포함되어 있으므로 
+		// 무한 반복에 빠지지 않으려면 파일명이 . 이면 skip 해야 함
+		if (strcmp(file->d_name, ".") == 0 || strcmp(file->d_name, "..") == 0) {
+			continue;
+		}
+
+		sprintf(filename, "%s/%s", path, file->d_name);
+
+		/* 파일의 속성(파일의 유형, 크기, 생성/변경 시간 등을 얻기 위하여 */
+		if (lstat(filename, &buf) == -1) {
+			continue;
+		}
+
+		if (S_ISDIR(buf.st_mode)) { // 검색된 이름의 속성이 디렉토리이면
+			/* 검색된 파일이 directory이면 재귀호출로 하위 디렉토리를 다시 검색 */
+			if (rmdirs(filename, force) == -1 && !force) {
+				return -1;
+			}
+		}
+		else if (S_ISREG(buf.st_mode) || S_ISLNK(buf.st_mode)) { // 일반파일 또는 symbolic link 이면
+			if (unlink(filename) == -1 && !force) {
+				return -1;
+			}
+		}
+	}
+
+	/* open된 directory 정보를 close 합니다. */
+	closedir(dir_ptr);
+
+	return rmdir(path);
+#elif defined(_MSC_VER)
+	if (pszDir[0] != 0) {
+		CString strName;
+		strName.Format("%s\\*.*", pszDir);
+
+		CFileFind ff;
+
+		BOOL bFind = ff.FindFile(strName);
+
+		while (bFind) {
+			bFind = ff.FindNextFile();
+			if (ff.IsDots() == TRUE || ff.IsDirectory() == TRUE)
+				continue;
+			SetFileAttributes(ff.GetFilePath(), FILE_ATTRIBUTE_NORMAL);
+			DeleteFile( ff.GetFilePath() );
+		}
+
+		ff.Close();
+
+	}
+
+	return 0;
+
+#endif
 
 }

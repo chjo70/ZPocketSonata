@@ -1,4 +1,4 @@
-// MakeAET.h: interface for the CMakeAET class.
+﻿// MakeAET.h: interface for the CMakeAET class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -77,6 +77,8 @@ public:
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
     void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter);
+	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
+	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 
     
     void MakeAET();

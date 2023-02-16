@@ -1,15 +1,9 @@
-// Identify.h: interface for the CELSignalIdentifyAlg class.
+﻿// Identify.h: interface for the CELSignalIdentifyAlg class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_IDENTIFY_H__5E200D86_A36B_4CDA_98C5_5DB9FA9D1A97__INCLUDED_)
-#define AFX_IDENTIFY_H__5E200D86_A36B_4CDA_98C5_5DB9FA9D1A97__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-//#define CEDEOBLIB
 
 #include "define.h"
 #include "structs.h"
@@ -52,12 +46,12 @@
 
 // 주파수 형태에 따른 식별 방법
 /// 
-enum { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ;
+enum ENUM_FREQTYPE_IDTABLE { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ;
  
  
 // PRI 형태에 따른 식별 방법
 // 
-enum { PStableStable=1, PStableStagger, PStableDwell, PStablePStable, PStaggerStagger, PStaggerJitter, PStaggerPStagger, \
+enum ENUM_PRITYPE_IDTABLE  { PStableStable=1, PStableStagger, PStableDwell, PStablePStable, PStaggerStagger, PStaggerJitter, PStaggerPStagger, \
 	PDwellDwell, PDwellPDwell, PJitterStagger, PJitterJitter, PJitterPattern, PPatternPattern, \
 	PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri
 };
@@ -102,9 +96,6 @@ struct STR_H000 {
 	int iH000;
 
 }  ;
-
-//#define MAX_RADARMODE			(1000)
-//#define MAX_THREAT				(500)
 
 
 #ifdef _SQLITE_
@@ -265,6 +256,13 @@ private:
  	void IdentifySigType( int iSignalType );
  	void FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pFrqHgh, STR_FLOWHIGH *pBand, UINT *cotoIpl );
  	void InitIdentifyTable();
+	void InitFixedFreqIdentifyTable();
+	void InitRandomAgileFreqIdentifyTable();
+	void InitHopingFreqIdentifyTable();
+	void InitPatternAgileFreqIdentifyTable();
+	void InitIgnoreFreqIdentifyTable();
+
+
  	void Init();
  	void CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIAetData, BOOL bMakeH0000 );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
@@ -290,6 +288,7 @@ private:
 	inline SThreat *GetThreatData( int iThreatIndex ) { return & m_pThreat[iThreatIndex-1]; }
 
  	void MallocBuffer();
+	void MallocStaticBuffer();
  	void InitVar();
  	void Destory();
  	//BOOL CompSwitchLevel( int *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries );
@@ -400,7 +399,7 @@ private:
 // 	char *GetPlatformName( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );										// 플레폼
 // 	char *GetIdInfo( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType );
     PlatformCode::EnumPlatformCode GetPlatformFromRadarMode( int iRadarModeIndex );
-    char *GetPlatformCode(PlatformCode::EnumPlatformCode ePlatform);
+    const char *GetPlatformCode(PlatformCode::EnumPlatformCode ePlatform);
 
 
  	double GetInActivatedTime( int iIndex, bool bRadarMode );
@@ -448,6 +447,9 @@ protected:
 	void InitRadarModeData();
 
     bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
+#ifdef _SQLITE_
+	void GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment);
+#endif
     bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence, int nMaxRadarMode );
     bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence, int nMaxRadarMode );
 
@@ -470,4 +472,4 @@ protected:
 
 };
 
-#endif // !defined(AFX_IDENTIFY_H__5E200D86_A36B_4CDA_98C5_5DB9FA9D1A97__INCLUDED_)
+

@@ -52,7 +52,7 @@ int CThread::m_iCoMsgQueue = 0;
 CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
 {
 
-    m_bMainLoop = true;
+    m_bThreadLoop = true;
 
     strcpy( m_szThreadName, pThreadName );
 
@@ -161,7 +161,7 @@ CThread::~CThread()
     }
     
 #elif defined(_MSC_VER)    
-    QMsgSnd( enTHREAD_EXIT );
+    // QMsgSnd( enTHREAD_EXIT, m_szThreadName );
 
     //delete m_pTheMessageQueue;
 
@@ -260,7 +260,7 @@ void *CThread::CallBack( void *pArg )
  */
 void CThread::Run( void *(*pFunc)(void*), key_t key )
 {
-    m_bMainLoop = true;
+	m_bThreadLoop = true;
 
 #ifdef __linux__
     pthread_create( & m_MainThread, NULL, pFunc, this );
@@ -402,7 +402,7 @@ void CThread::Stop()
 
     // g_pTheLog->UnLock();
 
-    m_bMainLoop = false;
+	m_bThreadLoop = false;
 
 }
 
@@ -756,7 +756,8 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
     UnLock();
 
     //TRACE( "\nQueue Size : %d" , m_queue.size() );
-    LOGMSG2( enDebug, "Sending into the [%s] from [%s]..." , m_szThreadName, pszThreadName );
+    LOGMSG4(enDebug, "Sending into the [%s] from [%s]...[%d:%d]", m_szThreadName, pszThreadName, pMessageData->uiOpCode, pMessageData->uiArrayLength);
+
 
 	::SetEvent(m_hEvent);   
 

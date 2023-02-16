@@ -50,7 +50,7 @@ CSPulExt::~CSPulExt()
 void CSPulExt::Init()
 {
 	m_uinoEMT = m_pScanSigAnal->GetNoEMT();
-	m_noCh = m_pScanSigAnal->GetScanNoCh();
+	m_uinoCh = m_pScanSigAnal->GetScanNoCh();
 
     m_uiAnalSeg = m_uiCoSeg;
 

@@ -11,14 +11,14 @@ LIB_BASE_NAMES += vxbus
 	
 
 	
-# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+# copying directory h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h
 
 
 
@@ -26,64 +26,41 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/timestampDev.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timestampDev.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/timestampDev.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/timerDev.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/timerDev.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/timerDev.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-# copying directory h/subsys to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys
+# copying directory h/subsys to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys
 
 
 
 
-# copying directory h/subsys/pinmux to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux
+# copying directory h/subsys/pinmux to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h
-
-
-
-
-
- 
-
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/pinmux/vxbPinMuxLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux
-ifdef __LAYER_DEPENDENCY_TEST
-	cp -rfLs $< $@
-else
-	cp -rfL $< $@
-endif
-
- 
-# copying directory h/subsys/timer to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer
-
-
-
-
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h
-
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h
 
 
 
@@ -91,7 +68,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/timer/vxbTimerLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux/vxbPinMuxLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/pinmux/vxbPinMuxLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -99,14 +76,14 @@ else
 endif
 
  
-# copying directory h/subsys/dma to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma
+# copying directory h/subsys/timer to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h
 
 
 
@@ -114,7 +91,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/dma/vxbDmaLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer/vxbTimerLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/timer/vxbTimerLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -122,14 +99,14 @@ else
 endif
 
  
-# copying directory h/subsys/flash to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash
+# copying directory h/subsys/dma to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h
 
 
 
@@ -137,7 +114,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/flash/vxbFlashLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma/vxbDmaLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/dma/vxbDmaLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -145,14 +122,14 @@ else
 endif
 
  
-# copying directory h/subsys/int to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
+# copying directory h/subsys/flash to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h
 
 
 
@@ -160,52 +137,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
-ifdef __LAYER_DEPENDENCY_TEST
-	cp -rfLs $< $@
-else
-	cp -rfL $< $@
-endif
- 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h
-
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h
-
-
-
-
-
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxIpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
-ifdef __LAYER_DEPENDENCY_TEST
-	cp -rfLs $< $@
-else
-	cp -rfL $< $@
-endif
- 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h
-
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h
-
-
-
-
-
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbDyncIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
-ifdef __LAYER_DEPENDENCY_TEST
-	cp -rfLs $< $@
-else
-	cp -rfL $< $@
-endif
- 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h
-
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h
-
-
-
-
-
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbIsrHandler.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash/vxbFlashLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/flash/vxbFlashLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -213,14 +145,14 @@ else
 endif
 
  
-# copying directory h/subsys/gpio to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio
+# copying directory h/subsys/int to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h
 
 
 
@@ -228,7 +160,52 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/gpio/vxbGpioLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
+ifdef __LAYER_DEPENDENCY_TEST
+	cp -rfLs $< $@
+else
+	cp -rfL $< $@
+endif
+ 
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h
+
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h
+
+
+
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxIpiLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxIpiLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
+ifdef __LAYER_DEPENDENCY_TEST
+	cp -rfLs $< $@
+else
+	cp -rfL $< $@
+endif
+ 
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h
+
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h
+
+
+
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbDyncIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbDyncIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
+ifdef __LAYER_DEPENDENCY_TEST
+	cp -rfLs $< $@
+else
+	cp -rfL $< $@
+endif
+ 
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h
+
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h
+
+
+
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int/vxbIsrHandler.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/int/vxbIsrHandler.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -236,14 +213,14 @@ else
 endif
 
  
-# copying directory h/subsys/clk to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk
+# copying directory h/subsys/gpio to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h
 
 
 
@@ -251,7 +228,30 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/clk/vxbClkLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio/vxbGpioLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/gpio/vxbGpioLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio
+ifdef __LAYER_DEPENDENCY_TEST
+	cp -rfLs $< $@
+else
+	cp -rfL $< $@
+endif
+
+ 
+# copying directory h/subsys/clk to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk
+
+
+
+
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h
+
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h
+
+
+
+
+
+ 
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk/vxbClkLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/h/subsys/clk/vxbClkLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -273,24 +273,24 @@ endif
 	
 	
 	
-# copying directory user_h to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
+# copying directory user_h to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public
 
 
 
 
-# copying directory user_h/subsys to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys
+# copying directory user_h/subsys to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys
 
 
 
 
-# copying directory user_h/subsys/int to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int
+# copying directory user_h/subsys/int to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h
 
 
 
@@ -298,7 +298,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_h/subsys/int/vxbIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int/vxbIntLib.h : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_h/subsys/int/vxbIntLib.h | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -324,7 +324,7 @@ PREBUILD_GENHEADERS : VXBUS_SUBSYSTEM_src/int_diab__PREBUILD_GENHEADERS
 
 VXBUS_SUBSYSTEM_src/int_diab__PREBUILD_GENHEADERS : 
 	@ echo building VXBUS_SUBSYSTEM directory src/int
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/int && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_int_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/int && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_int_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
  
 PREBUILD_GENHEADERS : VXBUS_SUBSYSTEM_src/dma_diab__PREBUILD_GENHEADERS
 
@@ -332,7 +332,7 @@ PREBUILD_GENHEADERS : VXBUS_SUBSYSTEM_src/dma_diab__PREBUILD_GENHEADERS
 
 VXBUS_SUBSYSTEM_src/dma_diab__PREBUILD_GENHEADERS : 
 	@ echo building VXBUS_SUBSYSTEM directory src/dma
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/dma && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_dma_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/dma && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_dma_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
  
 PREBUILD_GENHEADERS : VXBUS_SUBSYSTEM_src/pinmux_diab__PREBUILD_GENHEADERS
 
@@ -340,7 +340,7 @@ PREBUILD_GENHEADERS : VXBUS_SUBSYSTEM_src/pinmux_diab__PREBUILD_GENHEADERS
 
 VXBUS_SUBSYSTEM_src/pinmux_diab__PREBUILD_GENHEADERS : 
 	@ echo building VXBUS_SUBSYSTEM directory src/pinmux
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/pinmux && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_pinmux_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src/pinmux && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=_PREBUILD_GENHEADERS_VXBUS_SUBSYSTEM_src_pinmux_diab __WRS_TARGET=PREBUILD_GENHEADERS BSPNAME=hmt_t2080vpx3u_1_0_0_0  BUILDSTAGE=PREBUILD_GENHEADERS
 
 	
 	
@@ -356,7 +356,7 @@ __BUILD_FB_IDS += kernel_top_VXBUS_SUBSYSTEM_src_diab
 
 VXBUS_SUBSYSTEM_src_diab__BUILD : 
 	@ echo building VXBUS_SUBSYSTEM directory src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=kernel_top_VXBUS_SUBSYSTEM_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=kernel _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=kernel_top_VXBUS_SUBSYSTEM_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD
 
 
 	
@@ -368,7 +368,7 @@ __BUILD_USR_STATIC_FB_IDS += user_static_top_VXBUS_SUBSYSTEM_user_src_diab
 
 VXBUS_SUBSYSTEM_user_src_diab__BUILD_USR_STATIC : 
 	@ echo building VXBUS_SUBSYSTEM directory user_src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_SUBSYSTEM_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=static _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_static_top_VXBUS_SUBSYSTEM_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_STATIC
 
 	
 	
@@ -380,7 +380,7 @@ __BUILD_USR_SHARED_FB_IDS += user_shared_top_VXBUS_SUBSYSTEM_user_src_diab
 
 VXBUS_SUBSYSTEM_user_src_diab__BUILD_USR_SHARED : 
 	@ echo building VXBUS_SUBSYSTEM directory user_src
-	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_SUBSYSTEM_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
+	+ @ cd D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/user_src && D:/vxWorks7/vxworks-7/host/binutils/x86-win32/bin/make _mk CPU=PPCE6500 TOOL=diab TOOL_VERSION=diab_5_9_6_1 _CC_VERSION=diab_5_9_6_5 SPACE=user LAYER_FORMAT=shared _VSB_CONFIG_ADDEDCFLAGS="" _WRS_CONFIG_APP_TOOL=diab VSBL_NAME=VXBUS_SUBSYSTEM VSB_DIR=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild _WRS_CONFIG_FP=hard _WRS_CLI_CFLAGS="-I. " _FB_ID=user_shared_top_VXBUS_SUBSYSTEM_user_src_diab BSPNAME=hmt_t2080vpx3u_1_0_0_0 BUILDSTAGE=BUILD_USR_SHARED
 
 
 	
@@ -393,14 +393,14 @@ VXBUS_SUBSYSTEM_user_src_diab__BUILD_USR_SHARED :
 
 
 	
-# copying directory cdf to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+# copying directory cdf to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf
 
 
 
@@ -408,97 +408,97 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10pinmux.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10pinmux.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10pinmux.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10dma.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10dma.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10dma.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10flash.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10flash.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10flash.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10gpio.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10gpio.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10gpio.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10devclk.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10devclk.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10devclk.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10interrupt.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10interrupt.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10interrupt.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
 	cp -rfL $< $@
 endif
  
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf
-
-
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf
 
 
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10subsystem.cdf | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+
+
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/10subsystem.cdf : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cdf/10subsystem.cdf | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -517,24 +517,24 @@ PRENOBUILD : PRENOBUILD_VXBUS_SUBSYSTEM
 
 PRENOBUILD_VXBUS_SUBSYSTEM : cdf_PRENOBUILD_VXBUS_SUBSYSTEM
 
-cdf_PRENOBUILD_VXBUS_SUBSYSTEM : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.cdf
+cdf_PRENOBUILD_VXBUS_SUBSYSTEM : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.cdf
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.cdf : | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
-	$(file >D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp,$(call __vsb_tmpl_cdf_inter,$(addprefix $(cdf_PRENOBUILD_VXBUS_SUBSYSTEM_DIR)/,$(sort $(cdf_PRENOBUILD_VXBUS_SUBSYSTEM_FILES))),VXBUS_SUBSYSTEM))
-	$(CDFCOMP) -i D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp -o $@ -cpp "$(CPP) $(__OPTION_LANG_CDF)" -cpu PPCE6500 -layer VXBUS_SUBSYSTEM -vsb D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
-	rm -f D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp
-
-	
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.cdf : | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf
+	$(file >D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp,$(call __vsb_tmpl_cdf_inter,$(addprefix $(cdf_PRENOBUILD_VXBUS_SUBSYSTEM_DIR)/,$(sort $(cdf_PRENOBUILD_VXBUS_SUBSYSTEM_FILES))),VXBUS_SUBSYSTEM))
+	$(CDFCOMP) -i D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp -o $@ -cpp "$(CPP) $(__OPTION_LANG_CDF)" -cpu PPCE6500 -layer VXBUS_SUBSYSTEM -vsb D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+	rm -f D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf/cdf_PRENOBUILD_VXBUS_SUBSYSTEM.tmp
 
 	
-# copying directory cfg to D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette
+
+	
+# copying directory cfg to D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette
 
 
 
 
-PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c
+PRENOBUILD : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c
 
-__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c
+__FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c
 
 
 
@@ -542,7 +542,7 @@ __FILES_TO_COPY_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-s
 
  
 
-D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cfg/usrVxbTimerSys.c | D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette
+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette/usrVxbTimerSys.c : D:/vxWorks7/vxworks-7/pkgs/os/drv/vxbus-1.0.5.0/subsystem-1.0.12.1/cfg/usrVxbTimerSys.c | D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette
 ifdef __LAYER_DEPENDENCY_TEST
 	cp -rfLs $< $@
 else
@@ -554,5 +554,5 @@ endif
 	
 __DIR_TARGETS += $(__DIR_TARGETS_VXBUS_SUBSYSTEM)
 
-__DIR_TARGETS_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
+__DIR_TARGETS_VXBUS_SUBSYSTEM += D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/cdf D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/configlette D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/clk D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/dma D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/flash D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/gpio D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/int D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/pinmux D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/krnl/h/public/subsys/timer D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/share/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/subsys/int D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/vsblCdf
 

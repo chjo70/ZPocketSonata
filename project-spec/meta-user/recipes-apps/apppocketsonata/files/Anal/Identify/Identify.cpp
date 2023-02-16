@@ -24,7 +24,6 @@
 
 #define MAX_SIZE_OF_CONDITION					(300)
 
-//#define DEFAULT_SYMBOL_CODE		"SFPP-----------"
 
 #define SWAP( A, B, C ) {   \
             A = B;          \
@@ -149,10 +148,12 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
     IdentifyPri[PPatternPattern] = & CELSignalIdentifyAlg::PIdentifyPatPat;
     IdentifyPri[FIgnorePRIType] = & CELSignalIdentifyAlg::PIdentifyPRI;
 
-    if( m_CoInstance == _spOne ) {
-        InitVar();
+	InitVar();
+    if( m_CoInstance == _spOne ) {        
+		InitIdentifyTable();
 
-        MallocBuffer();
+        MallocStaticBuffer();
+		MallocBuffer();
         InitIdentifyTable();
 
         m_pSEnvironVariable = GlobalMemberFunction::GetEnvrionVariable();
@@ -176,6 +177,9 @@ CELSignalIdentifyAlg::CELSignalIdentifyAlg( const char *pFileName )
 #endif
     }
     else {
+		MallocBuffer();
+
+
 #ifdef _SQLITE_    		
         m_pDatabase = NULL;
 #else        
@@ -197,12 +201,7 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
 {
     -- m_CoInstance;
 
-    if( m_CoInstance == 0 ) {
-        //delete g_pTheEnvironVariable;
-        //g_pTheEnvironVariable->ReleaseInstance();
-
-        Destory();
-    }
+    Destory();
 
 #ifdef _SQLITE_
     delete m_pDatabase;
@@ -222,19 +221,22 @@ CELSignalIdentifyAlg::~CELSignalIdentifyAlg()
  */
 void CELSignalIdentifyAlg::Destory()
 {
-    _SAFE_FREE( m_pFLib )
 
-    _SAFE_FREE( m_pEOBResult )
+	_SAFE_FREE(m_pEOBResult)
 
-    _SAFE_FREE( m_pIdResult )
+	_SAFE_FREE(m_pIdResult)
 
-    _SAFE_FREE( m_pCEDEOBResult )
+	_SAFE_FREE(m_pCEDEOBResult)
 
-    delete [] m_pRadarMode;
-    m_pRadarMode = NULL;
+	if (m_CoInstance == 0) {
+		_SAFE_FREE(m_pFLib)
 
-    delete [] m_pThreat;
-    m_pThreat = NULL;
+		delete[] m_pRadarMode;
+		m_pRadarMode = NULL;
+
+		delete[] m_pThreat;
+		m_pThreat = NULL;
+	}
 
 }
 
@@ -260,10 +262,11 @@ void CELSignalIdentifyAlg::InitVar()
         m_iH000 = 0;
     }
 
-    InitIdentifyTable();
+    //InitIdentifyTable();
 
-    m_pRadarMode = NULL;
-    m_pThreat = NULL;
+    //m_pRadarMode = NULL;
+    //m_pThreat = NULL;
+
     m_pEOBResult = NULL;
     m_pIdResult = NULL;
     m_pCEDEOBResult = NULL;
@@ -532,16 +535,6 @@ void CELSignalIdentifyAlg::MallocBuffer()
 {
     size_t szSize;
 
-    szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_FLIB), NO_FLIB_BAND+1 );
-    _SAFE_MALLOC( m_pFLib, STR_FLIB, szSize )
-    if( m_pFLib != NULL ) { //DTEC_NullPointCheck
-        memset( m_pFLib, 0, sizeof(STR_FLIB) * ( NO_FLIB_BAND + 1 ) );
-    }
-
-    _SAFE_NEW( m_pRadarMode, SRadarMode [MAX_RADARMODE] )
-
-    _SAFE_NEW( m_pThreat, SThreat [MAX_THREAT] )
-
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_EOB_RESULT), MAX_THREAT );
     _SAFE_MALLOC( m_pEOBResult, STR_EOB_RESULT, szSize )
 
@@ -550,6 +543,31 @@ void CELSignalIdentifyAlg::MallocBuffer()
 
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(STR_CEDEOB_RESULT), MAX_IDCANDIDATE );
     _SAFE_MALLOC( m_pCEDEOBResult, STR_CEDEOB_RESULT, szSize )
+
+}
+
+/**
+ * @brief     MallocStaticBuffer
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-01-31 17:17:39
+ * @warning
+ */
+void CELSignalIdentifyAlg::MallocStaticBuffer()
+{
+	size_t szSize;
+
+	szSize = CCommonUtils::CheckMultiplyOverflow((int) sizeof(STR_FLIB), NO_FLIB_BAND + 1);
+	_SAFE_MALLOC(m_pFLib, STR_FLIB, szSize)
+	if (m_pFLib != NULL) { //DTEC_NullPointCheck
+		memset(m_pFLib, 0, sizeof(STR_FLIB) * (NO_FLIB_BAND + 1));
+	}
+
+	_SAFE_NEW(m_pRadarMode, SRadarMode[MAX_RADARMODE])
+
+	_SAFE_NEW(m_pThreat, SThreat[MAX_THREAT])
 
 }
 
@@ -597,392 +615,29 @@ void CELSignalIdentifyAlg::Init()
  */
 void CELSignalIdentifyAlg::InitIdentifyTable()
 {
-    UINT *pFrqType, *pPriType;
-
     if( m_bInitTable != true ) {
         m_bInitTable = true;
 
         memset( & m_HowToId, 0xFF, sizeof( m_HowToId ) );
 
-        ////////////////////////////////////////////////////////////////////////////
-        // 1. 주파수 Fixed 에 대한 식별 테이블 정의
-        // Fixed, Stable
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_FIXED].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_FIXED].pri[0];
-
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Fixed, Stagger
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_STAGGER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_STAGGER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-		*pFrqType++ = (int) E_AET_FRQ_FIXED;
-		*pPriType++ = (int) E_AET_PRI_JITTER;
-		*pFrqType++ = (int) E_AET_FRQ_HOPPING;
-		*pPriType++ = (int) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_JITTER;
-
-        // Fixed, Jitter
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_JITTER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_JITTER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_JITTER;
-
-        // Fixed, Pattern
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_PATTERN].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_PATTERN].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
-
-        // Fixed, Dwell
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_DWELL_SWITCH].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_DWELL_SWITCH].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Fixed, PRI 무시
-        pFrqType = & m_HowToId[E_AET_FRQ_FIXED][_UNKNOWN_PRI].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_FIXED][_UNKNOWN_PRI].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
+		////////////////////////////////////////////////////////////////////////////
+		// 1. 주파수 Fixed 에 대한 식별 테이블 정의
+		InitFixedFreqIdentifyTable();
 
         ////////////////////////////////////////////////////////////////////////////
         // 2. 주파수 Random Agile 에 대한 식별 테이블 정의
-        // Random Agile, Stable
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_FIXED].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_FIXED].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_FIXED;
-
-        // Random Agile, Stagger
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_STAGGER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_STAGGER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-		*pFrqType++ = (int) E_AET_FRQ_AGILE;
-		*pPriType++ = (int) E_AET_PRI_JITTER;
-		*pFrqType++ = (int) E_AET_FRQ_PATTERN;
-		*pPriType++ = (int) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int )E_AET_PRI_JITTER;
-
-        // Random Agile, Jitter
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_JITTER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_JITTER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_JITTER;
-
-        // Random Agile, Pattern
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_PATTERN].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_PATTERN].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
-
-        // Random Agile, Dwell
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_DWELL_SWITCH].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_DWELL_SWITCH].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Random Agile, PRI 무시
-        pFrqType = & m_HowToId[E_AET_FRQ_AGILE][_UNKNOWN_PRI].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_AGILE][_UNKNOWN_PRI].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;				
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
+		InitRandomAgileFreqIdentifyTable();
 
         ////////////////////////////////////////////////////////////////////////////
         // 3. 주파수 Hopping 에 대한 식별 테이블 정의
-        // Hopping, Stable
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_FIXED].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_FIXED].pri[0];
-
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Hopping, Stagger
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_STAGGER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_STAGGER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-		*pFrqType = (int)E_AET_FRQ_HOPPING;
-		*pPriType = (int)E_AET_PRI_JITTER;
-
-        // Hopping, Jitter
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_JITTER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_JITTER].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_JITTER;
-
-        // Hopping, Pattern
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_PATTERN].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_PATTERN].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
-
-        // Hopping, Dwell
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_DWELL_SWITCH].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_DWELL_SWITCH].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Hopping, PRI 무시
-        pFrqType = & m_HowToId[E_AET_FRQ_HOPPING][_UNKNOWN_PRI].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_HOPPING][_UNKNOWN_PRI].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;        
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;        
-        *pFrqType = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
+		InitHopingFreqIdentifyTable();
 
         ////////////////////////////////////////////////////////////////////////////
         // 4. 주파수 Pattern Agile 에 대한 식별 테이블 정의
-        // Pattern Agile, Stable
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_FIXED].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_FIXED].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;        
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Pattern Agile, Stagger
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_STAGGER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_STAGGER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-		*pFrqType = (int)E_AET_FRQ_PATTERN;
-		*pPriType = (int)E_AET_PRI_JITTER;
-
-        // Pattern Agile, Jitter
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_JITTER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_JITTER].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_JITTER;
-
-        // Pattern Agile, Pattern
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_PATTERN].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_PATTERN].pri[0];
-        *pFrqType = E_AET_FRQ_PATTERN;
-        *pPriType = E_AET_PRI_PATTERN;
-
-        // Pattern Agile, Dwell
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_DWELL_SWITCH].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_DWELL_SWITCH].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // Pattern Agile, PRI 무시
-        pFrqType = & m_HowToId[E_AET_FRQ_PATTERN][_UNKNOWN_PRI].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_PATTERN][_UNKNOWN_PRI].pri[0];
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;        
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;        
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;        
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;        
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
+		InitPatternAgileFreqIdentifyTable();
 
         ////////////////////////////////////////////////////////////////////////////
         // 5. 주파수 무시 에 대한 식별 테이블 정의
-        // 주파수 무시, Stable
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_FIXED].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_FIXED].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_FIXED;
-
-        // 주파수 무시, Stagger
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_STAGGER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_STAGGER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;        
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_STAGGER;
-
-        // 주파수 무시, Jitter
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_JITTER].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_JITTER].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_STAGGER;
-
-        // 주파수 무시, Pattern
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_PATTERN].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_PATTERN].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
-
-        // 주파수 무시, Dwell
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_DWELL_SWITCH].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_DWELL_SWITCH].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_DWELL_SWITCH;
-
-        // 주파수 무시, PRI 무시
-        pFrqType = & m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].frq[0];
-        pPriType = & m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].pri[0];
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;        
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;        
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;        
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_FIXED;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_AGILE;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType++ = ( int ) E_AET_FRQ_HOPPING;
-        *pPriType++ = ( int ) E_AET_PRI_PATTERN;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_FIXED;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_JITTER;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_DWELL_SWITCH;
-        *pFrqType++ = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType++ = ( int ) E_AET_PRI_STAGGER;
-        *pFrqType = ( int ) E_AET_FRQ_PATTERN;
-        *pPriType = ( int ) E_AET_PRI_PATTERN;
 
         //////////////////////////////////////////////////////////////////////////
         //
@@ -1008,6 +663,436 @@ void CELSignalIdentifyAlg::InitIdentifyTable()
         m_PriIdCallFunc[E_AET_PRI_JITTER][E_AET_PRI_PATTERN] = PJitterPattern;
         m_PriIdCallFunc[E_AET_PRI_PATTERN][E_AET_PRI_PATTERN] = PPatternPattern;
     }
+
+}
+
+
+/**
+ * @brief     InitFixedFreqIdentifyTable
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 15:27:24
+ * @warning
+ */
+void CELSignalIdentifyAlg::InitFixedFreqIdentifyTable()
+{
+	UINT *pFrqType, *pPriType;
+
+	// Fixed, Stable
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_FIXED].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_FIXED].pri[0];
+
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Fixed, Stagger
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_STAGGER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_STAGGER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Fixed, Jitter
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_JITTER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_JITTER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Fixed, Pattern
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_PATTERN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_PATTERN].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+	// Fixed, Dwell
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_DWELL_SWITCH].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][E_AET_PRI_DWELL_SWITCH].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Fixed, PRI 무시
+	pFrqType = &m_HowToId[E_AET_FRQ_FIXED][_UNKNOWN_PRI].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_FIXED][_UNKNOWN_PRI].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+
+}
+
+
+/**
+ * @brief     InitRandomAgileFreqIdentifyTable
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 15:29:03
+ * @warning
+ */
+void CELSignalIdentifyAlg::InitRandomAgileFreqIdentifyTable()
+{
+	UINT *pFrqType, *pPriType;
+
+	// Random Agile, Stable
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_FIXED].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_FIXED].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_FIXED;
+
+	// Random Agile, Stagger
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_STAGGER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_STAGGER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Random Agile, Jitter
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_JITTER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_JITTER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Random Agile, Pattern
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_PATTERN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_PATTERN].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+	// Random Agile, Dwell
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_DWELL_SWITCH].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][E_AET_PRI_DWELL_SWITCH].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Random Agile, PRI 무시
+	pFrqType = &m_HowToId[E_AET_FRQ_AGILE][_UNKNOWN_PRI].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_AGILE][_UNKNOWN_PRI].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+}
+
+
+/**
+ * @brief     InitHopingFreqIdentifyTable
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 15:33:25
+ * @warning
+ */
+void CELSignalIdentifyAlg::InitHopingFreqIdentifyTable()
+{
+	UINT *pFrqType, *pPriType;
+
+	// Hopping, Stable
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_FIXED].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_FIXED].pri[0];
+
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Hopping, Stagger
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_STAGGER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_STAGGER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Hopping, Jitter
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_JITTER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_JITTER].pri[0];
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Hopping, Pattern
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_PATTERN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_PATTERN].pri[0];
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+	// Hopping, Dwell
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_DWELL_SWITCH].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][E_AET_PRI_DWELL_SWITCH].pri[0];
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Hopping, PRI 무시
+	pFrqType = &m_HowToId[E_AET_FRQ_HOPPING][_UNKNOWN_PRI].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_HOPPING][_UNKNOWN_PRI].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_HOPPING;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+}
+
+void CELSignalIdentifyAlg::InitPatternAgileFreqIdentifyTable()
+{
+	UINT *pFrqType, *pPriType;
+
+	// Pattern Agile, Stable
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_FIXED].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_FIXED].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Pattern Agile, Stagger
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_STAGGER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_STAGGER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Pattern Agile, Jitter
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_JITTER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_JITTER].pri[0];
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_JITTER;
+
+	// Pattern Agile, Pattern
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_PATTERN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_PATTERN].pri[0];
+	*pFrqType = E_AET_FRQ_PATTERN;
+	*pPriType = E_AET_PRI_PATTERN;
+
+	// Pattern Agile, Dwell
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_DWELL_SWITCH].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][E_AET_PRI_DWELL_SWITCH].pri[0];
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// Pattern Agile, PRI 무시
+	pFrqType = &m_HowToId[E_AET_FRQ_PATTERN][_UNKNOWN_PRI].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_PATTERN][_UNKNOWN_PRI].pri[0];
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+}
+
+void CELSignalIdentifyAlg::InitIgnoreFreqIdentifyTable()
+{
+	UINT *pFrqType, *pPriType;
+
+	// 주파수 무시, Stable
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_FIXED].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_FIXED].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_FIXED;
+
+	// 주파수 무시, Stagger
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_STAGGER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_STAGGER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_STAGGER;
+
+	// 주파수 무시, Jitter
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_JITTER].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_JITTER].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_STAGGER;
+
+	// 주파수 무시, Pattern
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_PATTERN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_PATTERN].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_PATTERN;
+
+	// 주파수 무시, Dwell
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_DWELL_SWITCH].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_DWELL_SWITCH].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
+
+	// 주파수 무시, PRI 무시
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].pri[0];
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_FIXED;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_AGILE;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType++ = (int)E_AET_FRQ_HOPPING;
+	*pPriType++ = (int)E_AET_PRI_PATTERN;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_FIXED;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_JITTER;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_DWELL_SWITCH;
+	*pFrqType++ = (int)E_AET_FRQ_PATTERN;
+	*pPriType++ = (int)E_AET_PRI_STAGGER;
+	*pFrqType = (int)E_AET_FRQ_PATTERN;
+	*pPriType = (int)E_AET_PRI_PATTERN;
 
 }
 
@@ -2942,44 +3027,46 @@ void CELSignalIdentifyAlg::IdentifyFreqPRI( SRxLOBData *pLOBData )
         pFrqType = NULL;
         pPriType = NULL;
     }
-    else {
-        pFrqType = (int *) & m_HowToId[pLOBData->iFreqType][pLOBData->iPRIType].frq[0];
-        pPriType = (int *) & m_HowToId[pLOBData->iFreqType][pLOBData->iPRIType].pri[0];
-    }
+	else {
+		pFrqType = (int *)& m_HowToId[pLOBData->iFreqType][pLOBData->iPRIType].frq[0];
+		pPriType = (int *)& m_HowToId[pLOBData->iFreqType][pLOBData->iPRIType].pri[0];
 
-    while( *pFrqType >= 0  && *pPriType >= 0 ) { //#FA_C_PotentialUnboundedLoop_T2
-        if( *pFrqType < 0 || *pPriType < 0 ) { //DTEC_Else
-            printf( "\n\t [W] Invalid Freq[%d], PRI[%d]" , *pFrqType, *pPriType );
-            WhereIs;
-        }
-        else {
-            // 범위 체크한 경우, 주파수 범위에 밴드를 필터링 하게 함.
-            FilterBand( & m_pFLib[band.ilow].pLib[*pFrqType][*pPriType], & m_pFLib[band.ihgh].pLib[*pFrqType][*pPriType], & band, & m_toLib );
 
-            // 식별 테스트 하기위해서 무조건 식별 성공으로 함.
-            if( m_fromLib != m_toLib ) {                
+		while (*pFrqType >= 0 && *pPriType >= 0) { //#FA_C_PotentialUnboundedLoop_T2
+			if (*pFrqType < 0 || *pPriType < 0) { //DTEC_Else
+				printf("\n\t [W] Invalid Freq[%d], PRI[%d]", *pFrqType, *pPriType);
+				WhereIs;
+				break;
+			}
+			else {
+				// 범위 체크한 경우, 주파수 범위에 밴드를 필터링 하게 함.
+				FilterBand(&m_pFLib[band.ilow].pLib[*pFrqType][*pPriType], &m_pFLib[band.ihgh].pLib[*pFrqType][*pPriType], &band, &m_toLib);
 
-                // 1. 신호 형태 식별
-                IdentifySigType( pLOBData->iSignalType );
+				// 식별 테스트 하기위해서 무조건 식별 성공으로 함.
+				if (m_fromLib != m_toLib) {
 
-                // 4. 주파수 식별
-                nCallFunc = m_FrqIdCallFunc[pLOBData->iFreqType][*pFrqType];
-                CallFreqFunc( nCallFunc, pLOBData );
+					// 1. 신호 형태 식별
+					IdentifySigType(pLOBData->iSignalType);
 
-                // 5. PRI 식별
-                nCallFunc = m_PriIdCallFunc[pLOBData->iPRIType][*pPriType];
-                CallPriFunc( nCallFunc, pLOBData );
+					// 4. 주파수 식별
+					nCallFunc = m_FrqIdCallFunc[pLOBData->iFreqType][*pFrqType];
+					CallFreqFunc(nCallFunc, pLOBData);
 
-                // 6. PPG 식별
-                //IdentifyPPG();
+					// 5. PRI 식별
+					nCallFunc = m_PriIdCallFunc[pLOBData->iPRIType][*pPriType];
+					CallPriFunc(nCallFunc, pLOBData);
 
-                m_fromLib = m_toLib;
-            }
-        }
+					// 6. PPG 식별
+					//IdentifyPPG();
 
-        ++ pFrqType;
-        ++ pPriType;
-    }
+					m_fromLib = m_toLib;
+				}
+			}
+
+			++pFrqType;
+			++pPriType;
+		}
+	}
 }
 
 /**
@@ -3013,11 +3100,7 @@ void CELSignalIdentifyAlg::IdentifyFreqPRI(SRxABTData *pABTData)
 	else {
 		pFrqType = (int *)& m_HowToId[pABTData->iFreqType][pABTData->iPRIType].frq[0];
 		pPriType = (int *)& m_HowToId[pABTData->iFreqType][pABTData->iPRIType].pri[0];
-	}
 
-	if (pFrqType == NULL || pPriType == NULL) { //DTEC_NullPointCheck
-	}
-	else {
 		while (*pFrqType >= 0 && *pPriType >= 0) { //#FA_C_PotentialUnboundedLoop_T2
 			if (*pFrqType < 0 || *pPriType < 0) { //DTEC_Else
 				printf("\n\t [W] Invalid Freq[%d], PRI[%d]", *pFrqType, *pPriType);
@@ -3568,7 +3651,7 @@ void CELSignalIdentifyAlg::FIdentifyFixHop( void *pData, bool bLOB)
         bret = FALSE;
         SRadarMode* pRadarMode;
 
-		UINT uiSizeOfRadarMode_Sequence;
+		//UINT uiSizeOfRadarMode_Sequence;
 
         pRadarMode = pIdxLib->pIdxRadarMode;
         if( pRadarMode == NULL ) { //DTEC_NullPointCheck
@@ -4363,7 +4446,7 @@ void CELSignalIdentifyAlg::PIdentifyStbDwl( void *pData, bool bLOB )
             continue;
         }
 
-        m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
+        //m_pIdResult[toLib++].pIdxRadarMode = pIdxLib->pIdxRadarMode;
     }
 
     m_toLib = toLib;
@@ -6432,7 +6515,6 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
 #ifdef _SQLITE_
     bool bRet=true;
-    int i;
 
 #ifdef _XBAND_
     sprintf( m_szSQLString, "SELECT RM_RADAR_MODE_INDEX, RM_FUNCTION_CODE, RM_SIGNAL_TYPE, RM_POLARIZATION, RM_PLATFORM, RM_VALIDATION, \
@@ -6613,165 +6695,19 @@ bool CELSignalIdentifyAlg::LoadRadarModeData( int *pnRadarMode, SRadarMode *pRad
 
 		szPrevELNOT[0] = NULL;
         while (stmt.FetchRow()) {
-            int iValue;
-
-#ifdef _MSC_VER
-            const wchar_t *p;
-#else
-            const unsigned char *p;
-#endif
-
             char *pMultiByte;
 
-            i = 0;
+			GetRadarModeFromStatement( pRadarMode, &stmt );
 
-            pRadarMode->iRadarModeIndex = stmt.GetColumnInt(i++);
 
-            pRadarMode->eSignalType = ( SignalType::EnumSignalType ) stmt.GetColumnInt(i++);
-
-            // 주파수 정보
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->eRF_Type = GetFreqType(iValue);
-
-            pRadarMode->fRF_TypicalMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fRF_TypicalMax = (float)stmt.GetColumnDouble(i++);
-
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->eRF_Pattern = GetPatternCode(iValue);
-
-            pRadarMode->nRF_NumElements = stmt.GetColumnInt(i++);
-            pRadarMode->nRF_NumPositions = stmt.GetColumnInt(i++);
-
-            pRadarMode->fRF_PatternPeriodMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fRF_PatternPeriodMax = (float)stmt.GetColumnDouble(i++);
-
-            pRadarMode->fRF_MeanMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fRF_MeanMax = (float)stmt.GetColumnDouble(i++);
-
-            // PRI 정보
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->ePRI_Type = GetPRIType(iValue);
-
-            pRadarMode->fPRI_TypicalMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fPRI_TypicalMax = (float)stmt.GetColumnDouble(i++);
-
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->ePRI_Pattern = GetPatternCode(iValue);
-
-            pRadarMode->nPRI_NumElements = stmt.GetColumnInt(i++);
-            pRadarMode->nPRI_NumPositions = stmt.GetColumnInt(i++);
-
-            pRadarMode->fPRI_PatternPeriodMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fPRI_PatternPeriodMax = (float)stmt.GetColumnDouble(i++);
-
-            pRadarMode->fPRI_MeanMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fPRI_MeanMax = (float)stmt.GetColumnDouble(i++);
-
-            // 펄스폭 정보
-            pRadarMode->fPD_TypicalMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fPD_TypicalMax = (float)stmt.GetColumnDouble(i++);
-
-            // 스캔 정보
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->eScanPrimaryType = GetScanType(iValue);
-            pRadarMode->fScanPrimaryTypicalMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fScanPrimaryTypicalMax = (float)stmt.GetColumnDouble(i++);
-
-            iValue = stmt.GetColumnInt(i++);
-            pRadarMode->eScanSecondaryType = GetScanType(iValue);
-            pRadarMode->fScanSecondaryTypicalMin = (float)stmt.GetColumnDouble(i++);
-            pRadarMode->fScanSecondaryTypicalMax = (float)stmt.GetColumnDouble(i++);
-
-#ifdef _MSC_VER            
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szModulationCode, sizeof(pRadarMode->szModulationCode), p );
-#else
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szModulationCode, (char *) p );
-            else
-                pRadarMode->szModulationCode[0] = NULL;            
-#endif            
-
-            pRadarMode->iRadarModePriority = stmt.GetColumnInt(i++);
- 
-            // View 테이블에서 '1' 만 갖고 오는 것이기에 읽어도 1 입니다.
-            pRadarMode->eValidation = (EnumValidationCode) stmt.GetColumnInt(i++);
- 
-            ///////////////////////////////////////////////////////////////////////////////////
-            // 레이더 정보
-            pRadarMode->iRadarIndex = stmt.GetColumnInt(i++);
- 
-            // 한글 입력일떄 아래 함수로 인자를 더 두어서 호출
-#ifdef _MSC_VER
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szRadarModeName, sizeof(pRadarMode->szRadarModeName), p);
-#else
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szRadarModeName, (char *) p );
-            else
-                pRadarMode->szRadarModeName[0] = NULL;
-#endif
-
-#ifdef _MSC_VER            
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szModeCode, sizeof(pRadarMode->szModeCode), p);
-#else
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szModeCode, (char *) p );
-            else
-                pRadarMode->szModeCode[0] = NULL;            
-#endif            
- 
-            pRadarMode->iRadarPriority = stmt.GetColumnInt(i++);   
-            
-#ifdef _MSC_VER             
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szELNOT, sizeof(pRadarMode->szELNOT), p);
-            
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szNickName, sizeof(pRadarMode->szNickName), p);
-            
-#else 
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szELNOT, (char *) p );
-            else
-                pRadarMode->szELNOT[0] = NULL;  
-            
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szNickName, (char *) p );
-            else
-                pRadarMode->szNickName[0] = NULL;    
-            
-#endif
- 
-            pRadarMode->iTimeInactivated = stmt.GetColumnInt(i++); 
-
-			if ( strcmp(szPrevELNOT, pRadarMode->szELNOT) != 0 ) {
+			// 예외 처리
+			if (strcmp(szPrevELNOT, pRadarMode->szELNOT) != 0) {
 				pRadarMode->iTimeInactivatedOfRadar = pRadarMode->iTimeInactivated;
 			}
 			else {
 				pRadarMode->iTimeInactivatedOfRadar = max(pRadarMode->iTimeInactivated, iPrevTimeInactivatedOfRadar);
 			}
 
-
-            pRadarMode->iThreatIndex = stmt.GetColumnInt(i++);
-            pRadarMode->iDeviceIndex = stmt.GetColumnInt(i++);
- 
-#ifdef _MSC_VER             
-            p = stmt.GetColumnCString16(i++);
-            UTF8ToMultibyte(pRadarMode->szDeviceELNOT, sizeof(pRadarMode->szDeviceELNOT), p);
-#else 
-            p = stmt.GetColumnCString(i++);
-            if( p != NULL )
-                strcpy( pRadarMode->szDeviceELNOT, (char *) p );
-            else
-                pRadarMode->szDeviceELNOT[0] = NULL;             
-#endif
 
             if (pRadarMode->eValidation == enumValidated) {
 				strcpy(szPrevELNOT, pRadarMode->szELNOT);
@@ -6895,6 +6831,172 @@ return true;
 
 }
 
+#ifdef _SQLITE_
+/**
+ * @brief     GetRadarModeFromStatement
+ * @param     SRadarMode * pRadarMode
+ * @param     Kompex::SQLiteStatement * pStatment
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 10:04:32
+ * @warning
+ */
+void CELSignalIdentifyAlg::GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment)
+{
+	int i = 0;
+	int iValue;
+
+#ifdef _MSC_VER
+	const wchar_t *p;
+#else
+	const unsigned char *p;
+#endif
+
+	pRadarMode->iRadarModeIndex = pStatment->GetColumnInt(i++);
+
+	pRadarMode->eSignalType = (SignalType::EnumSignalType) pStatment->GetColumnInt(i++);
+
+	// 주파수 정보
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->eRF_Type = GetFreqType(iValue);
+
+	pRadarMode->fRF_TypicalMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fRF_TypicalMax = (float)pStatment->GetColumnDouble(i++);
+
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->eRF_Pattern = GetPatternCode(iValue);
+
+	pRadarMode->nRF_NumElements = pStatment->GetColumnInt(i++);
+	pRadarMode->nRF_NumPositions = pStatment->GetColumnInt(i++);
+
+	pRadarMode->fRF_PatternPeriodMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fRF_PatternPeriodMax = (float)pStatment->GetColumnDouble(i++);
+
+	pRadarMode->fRF_MeanMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fRF_MeanMax = (float)pStatment->GetColumnDouble(i++);
+
+	// PRI 정보
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->ePRI_Type = GetPRIType(iValue);
+
+	pRadarMode->fPRI_TypicalMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fPRI_TypicalMax = (float)pStatment->GetColumnDouble(i++);
+
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->ePRI_Pattern = GetPatternCode(iValue);
+
+	pRadarMode->nPRI_NumElements = pStatment->GetColumnInt(i++);
+	pRadarMode->nPRI_NumPositions = pStatment->GetColumnInt(i++);
+
+	pRadarMode->fPRI_PatternPeriodMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fPRI_PatternPeriodMax = (float)pStatment->GetColumnDouble(i++);
+
+	pRadarMode->fPRI_MeanMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fPRI_MeanMax = (float)pStatment->GetColumnDouble(i++);
+
+	// 펄스폭 정보
+	pRadarMode->fPD_TypicalMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fPD_TypicalMax = (float)pStatment->GetColumnDouble(i++);
+
+	// 스캔 정보
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->eScanPrimaryType = GetScanType(iValue);
+	pRadarMode->fScanPrimaryTypicalMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fScanPrimaryTypicalMax = (float)pStatment->GetColumnDouble(i++);
+
+	iValue = pStatment->GetColumnInt(i++);
+	pRadarMode->eScanSecondaryType = GetScanType(iValue);
+	pRadarMode->fScanSecondaryTypicalMin = (float)pStatment->GetColumnDouble(i++);
+	pRadarMode->fScanSecondaryTypicalMax = (float)pStatment->GetColumnDouble(i++);
+
+#ifdef _MSC_VER            
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szModulationCode, sizeof(pRadarMode->szModulationCode), p);
+#else
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szModulationCode, (char *)p);
+	else
+		pRadarMode->szModulationCode[0] = NULL;
+#endif            
+
+	pRadarMode->iRadarModePriority = pStatment->GetColumnInt(i++);
+
+	// View 테이블에서 '1' 만 갖고 오는 것이기에 읽어도 1 입니다.
+	pRadarMode->eValidation = (EnumValidationCode)pStatment->GetColumnInt(i++);
+
+	///////////////////////////////////////////////////////////////////////////////////
+	// 레이더 정보
+	pRadarMode->iRadarIndex = pStatment->GetColumnInt(i++);
+
+	// 한글 입력일떄 아래 함수로 인자를 더 두어서 호출
+#ifdef _MSC_VER
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szRadarModeName, sizeof(pRadarMode->szRadarModeName), p);
+#else
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szRadarModeName, (char *)p);
+	else
+		pRadarMode->szRadarModeName[0] = NULL;
+#endif
+
+#ifdef _MSC_VER            
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szModeCode, sizeof(pRadarMode->szModeCode), p);
+#else
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szModeCode, (char *)p);
+	else
+		pRadarMode->szModeCode[0] = NULL;
+#endif            
+
+	pRadarMode->iRadarPriority = pStatment->GetColumnInt(i++);
+
+#ifdef _MSC_VER             
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szELNOT, sizeof(pRadarMode->szELNOT), p);
+
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szNickName, sizeof(pRadarMode->szNickName), p);
+
+#else 
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szELNOT, (char *)p);
+	else
+		pRadarMode->szELNOT[0] = NULL;
+
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szNickName, (char *)p);
+	else
+		pRadarMode->szNickName[0] = NULL;
+
+#endif
+
+	pRadarMode->iTimeInactivated = pStatment->GetColumnInt(i++);
+
+	pRadarMode->iThreatIndex = pStatment->GetColumnInt(i++);
+	pRadarMode->iDeviceIndex = pStatment->GetColumnInt(i++);
+
+#ifdef _MSC_VER             
+	p = pStatment->GetColumnCString16(i++);
+	UTF8ToMultibyte(pRadarMode->szDeviceELNOT, sizeof(pRadarMode->szDeviceELNOT), p);
+#else 
+	p = pStatment->GetColumnCString(i++);
+	if (p != NULL)
+		strcpy(pRadarMode->szDeviceELNOT, (char *)p);
+	else
+		pRadarMode->szDeviceELNOT[0] = NULL;
+#endif
+
+}
+
+#endif
 
 /**
  * @brief     레이더모드의 주파수 SPOT 데이터를 로딩한다.
@@ -7208,7 +7310,7 @@ bool CELSignalIdentifyAlg::LoadRadarMode_PRISequence( vector<SRadarMode_Sequence
         //SQLite::Statement query( *pDatabase, m_szSQLString );
 
         pVecRadarMode_PRISequence->clear();
-        pVecRadarMode_PRISequence->reserve( nMaxRadarMode * MAX_FREQ_PRI_STEP );
+        pVecRadarMode_PRISequence->reserve( (unsigned int) ( nMaxRadarMode * MAX_FREQ_PRI_STEP ) );
 
         while( stmt.FetchRow() ) {
             i = 0;
@@ -7424,9 +7526,9 @@ PlatformCode::EnumPlatformCode CELSignalIdentifyAlg::GetPlatformCode( int iPlatf
  * @date      2022-08-25 19:31:27
  * @warning
  */
-char *CELSignalIdentifyAlg::GetPlatformCode( PlatformCode::EnumPlatformCode ePlatform )
+const char *CELSignalIdentifyAlg::GetPlatformCode( PlatformCode::EnumPlatformCode ePlatform )
 {
-    char *pChar = _PlatformCodes[PlatformCode::enumUnKnown];
+    const char *pChar = _PlatformCodes[PlatformCode::enumUnKnown];
 
     if ( ePlatform >= PlatformCode::enumUnKnown && ePlatform <= PlatformCode::enumAir ) {
         pChar = _PlatformCodes[ePlatform];
@@ -7561,7 +7663,7 @@ bool CELSignalIdentifyAlg::UpdateToDB_SeenTimeOfRadar(SRxAETData *pAETData)
 	if (iRadarIndex > _spZero) {
 		char buffer1[100], buffer2[100];
 
-		CCommonUtils::getStringDesignatedTime(buffer1, sizeof(buffer1), pAETData->tiLastSeenTime);
+		CCommonUtils::getStringDesignatedDate(buffer1, sizeof(buffer1), pAETData->tiLastSeenTime);
 		CCommonUtils::getStringPresentTime(buffer2, sizeof(buffer2));		
 		
 
@@ -7655,14 +7757,14 @@ bool CELSignalIdentifyAlg::UpdateToDB_SeenTimeOfRadarMode(SRxABTData *pABTData, 
 
         if( pABTData != NULL ) {
 		    if (bFirstSeen == true) {
-			    CCommonUtils::getStringDesignatedTime(buffer, sizeof(buffer), pABTData->tiFirstSeenTime );
+			    CCommonUtils::getStringDesignatedDate(buffer, sizeof(buffer), pABTData->tiFirstSeenTime );
 		    }
 		    else {
-			    CCommonUtils::getStringDesignatedTime(buffer, sizeof(buffer), pABTData->tiLastSeenTime );
+			    CCommonUtils::getStringDesignatedDate(buffer, sizeof(buffer), pABTData->tiLastSeenTime );
 		    }
         }
         else {
-            CCommonUtils::getStringDesignatedTime(buffer, sizeof(buffer), (__time32_t) 100000 );
+            CCommonUtils::getStringDesignatedDate(buffer, sizeof(buffer), 100000 );
         }
 
 

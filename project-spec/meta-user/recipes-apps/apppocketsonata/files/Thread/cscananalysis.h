@@ -36,6 +36,7 @@ public:
 
     virtual void _routine();															///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
     virtual char *GetThreadName() { return m_szThreadName; }							///< 쓰레드명을 리턴합니다.
+
 };
 
 

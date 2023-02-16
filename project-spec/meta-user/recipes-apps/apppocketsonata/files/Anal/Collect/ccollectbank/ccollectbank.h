@@ -1,4 +1,4 @@
-#ifndef CCOLLECTBANK_H
+ï»¿#ifndef CCOLLECTBANK_H
 #define CCOLLECTBANK_H
 
 #include "../../../Include/system.h"
@@ -43,10 +43,10 @@ public:
 
     void SetCollectUpdateTime();
 
-	// ¸ğÀÇ °ü·Ã ÇÔ¼ö
+	// ëª¨ì˜ ê´€ë ¨ í•¨ìˆ˜
 	void SimCollectMode();
 
-	// ÀÎ¶óÀÎ ÇÔ¼ö ¸ğÀ½
+	// ì¸ë¼ì¸ í•¨ìˆ˜ ëª¨ìŒ
     inline void SetCollectMode( ENUM_COLLECT_MODE enMode ) { m_strWindowCell.enCollectMode=enMode; }
     inline int GetChannelNo() { return m_iChannelNo; }
     inline unsigned int GetTotalPDW() { return m_strWindowCell.uiTotalPDW; }

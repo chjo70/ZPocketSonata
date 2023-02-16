@@ -1,4 +1,4 @@
-// PulExt.h: interface for the CPulExt class.
+﻿// PulExt.h: interface for the CPulExt class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -129,7 +129,7 @@ public:
     void PrintAllSeg();
     void PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg );
     void PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg );
-    void ChangeMarkTo( int startSeg, int endSeg, UINT from_mark, SEG_MARK to_mark );
+    void ChangeMarkTo( int startSeg, int endSeg, SEG_MARK enFromMark, SEG_MARK enTomark);
     void MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
     STR_PULSE_TRAIN_SEG *GetMainSeg( int startSeg, int endSeg );
     //! 추출하고자할 펄스열의 주파수 범위에 맞는 PDW 인가를 체크한다.
@@ -139,7 +139,7 @@ public:
     //##ModelId=452B0C540063
     void CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg );
     void GetStartEndPriLevel( unsigned int *pStart_pri_level, unsigned int *pEnd_pri_level );
-    void MergeJitterPulseTrain( int startSeg, int endSeg, BOOL bIgnoreJitterP=FALSE );
+    void MergeJitterPulseTrain(unsigned int uiStartSeg, unsigned int uiEndSeg, BOOL bIgnoreJitterP=FALSE );
     void CalPRILevel( STR_LOWHIGH *pPRILevel, STR_DTOA_HISTOGRAM *pDtoaHist );
 
     void DiscardPulseTrain( unsigned int startseg1, unsigned int endseg, unsigned int startseg2 );
@@ -193,16 +193,16 @@ public:
     void AllExtSegMark();
     //##ModelId=452B0C540208
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
-    //##ModelId=452B0C540212
-    int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount);
-    //##ModelId=452B0C540215
+    
+    unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount);
+    
     void CleanRefSeg();
-    //##ModelId=452B0C54021C
+    
     enPRI_TYPE AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, enPRI_TYPE ext_type=_UNKNOWN_PRI );
-    //##ModelId=452B0C540226
+    
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
-    //##ModelId=452B0C540230
-    bool FindStableSeg(STR_PULSE_TRAIN_SEG *pRefSeg, int start, int end);
+    
+    bool FindStableSeg(STR_PULSE_TRAIN_SEG *pRefSeg, UINT uiStart, UINT uiEnd);
     //##ModelId=452B0C540244
     void ExtractRefStable();
     //##ModelId=452B0C540245

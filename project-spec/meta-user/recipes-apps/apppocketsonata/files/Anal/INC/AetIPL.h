@@ -1,4 +1,4 @@
-/****************************************************************************************
+﻿/****************************************************************************************
  파 일 명 : AetIPL.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
@@ -74,6 +74,16 @@ enum enSIGNAL_TYPE
 	ST_MAX
 } ;
 
+enum PATTERN_TYPE
+{
+	UNK = 1,
+	SINE,
+	SAW_INC,
+	SAW_DEC,
+	TRI,
+	MAX_FRQPATTYPE
+};   // same with PRI pattern type
+
 #elif defined(_XBAND_)
 enum FREQ_BAND
 {
@@ -106,6 +116,16 @@ enum enSIGNAL_TYPE
 	ST_MAX
 } ;
 
+enum PATTERN_TYPE
+{
+	UNK = 1,
+	SINE,
+	SAW_INC,
+	SAW_DEC,
+	TRI,
+	MAX_FRQPATTYPE
+};   // same with PRI pattern type
+
 #elif defined(_POCKETSONATA_)
 
 // 아래는 밴드가 없는 것을 의미합니다.
@@ -128,7 +148,7 @@ enum FREQ_BAND
 // 신호 형태 정의값
 enum enSIGNAL_TYPE
 {
-	ST_NORMAL_PULSE = 1,
+	ST_NORMAL_PULSE = 0,
 	ST_CW,
 	ST_DOPPLER,
 	ST_HIGHPRF,
@@ -139,6 +159,16 @@ enum enSIGNAL_TYPE
 	ST_ALL,
 	ST_MAX
 } ;
+
+enum PATTERN_TYPE
+{
+	UNK = 0,
+	SINE,
+	SAW_INC,
+	SAW_DEC,
+	TRI,
+	MAX_FRQPATTYPE
+};   // same with PRI pattern type
 
 #else
 enum FREQ_BAND
@@ -169,6 +199,16 @@ enum enSIGNAL_TYPE
 	ST_MAX
 } ;
 
+enum PATTERN_TYPE
+{
+	UNK = 1,
+	SINE,
+	SAW_INC,
+	SAW_DEC,
+	TRI,
+	MAX_FRQPATTYPE
+};   // same with PRI pattern type
+
 #endif
 
 
@@ -176,9 +216,7 @@ enum enSIGNAL_TYPE
 
 
 
-
-//##ModelId=452B0C5100B9
-// 내부 신호 분석에서 사용하는 정의
+// 주파수 형태 정의
 enum enFREQ_TYPE
 {
     _FREQ_FIXED              = 0,
@@ -194,7 +232,7 @@ enum enFREQ_TYPE
 } ;
 
 
-// 내부 신호 분석에서 사용하는 정의
+// PRI 형태 정의
 enum enPRI_TYPE
 {
     _STABLE               = 0,
@@ -219,31 +257,14 @@ enum enPRI_TYPE
 
 
 
-enum PATTERN_TYPE
-{
-    //##ModelId=452B0C5101DC
-    UNK         = 1,
-    //##ModelId=452B0C5101EF
-    SINE,
-    //##ModelId=452B0C5101F9
-    SAW_INC,
-    //##ModelId=452B0C51020D
-    SAW_DEC,
-    TRI,
-    //##ModelId=452B0C510221
-    MAX_FRQPATTYPE
-} ;   // same with PRI pattern type
-
-
-
 //enum EBUM_FREQ_TYPE { FP_UNKNOWN=0, FP_FIXED, FP_ } ;
 //enum ENUM_FREQ_TYPE { FT_FIXED=0 } ;
 
 // 에미터 목록 정의
-enum { CAT_MIX=0x80, CAT_UNKNOWN=0, CAT_UNK, CAT_AIR, CAT_SHP, CAT_SMR, CAT_GRD, CAT_BASE, CAT_MSL, CAT_MSS, CAT_MAX } ;
+//enum { CAT_MIX=0x80, CAT_UNKNOWN=0, CAT_UNK, CAT_AIR, CAT_SHP, CAT_SMR, CAT_GRD, CAT_BASE, CAT_MSL, CAT_MSS, CAT_MAX } ;
 
 // 에미터 적아 정의
-enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, FOF_UNK, FOF_UNKNOWN, FOF_MAX } ;
+//enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, FOF_UNK, FOF_UNKNOWN, FOF_MAX } ;
 
 
 /*! \bug  AdvSiganal 과 기존 RSA 와 호환을 위해서
@@ -265,7 +286,7 @@ enum { FOF_MIX=0x80, FOF_CLEAR=0, FOF_ENEMY, FOF_NEUTRAL, FOF_FRIEND, FOF_OUR, F
 #define PATTERN_DWELL (_PATTERN_DWELL)
 #define PATTERN_STAGGER (_PATTERN_STAGGER)
 
-#define	_spUnknown	0
+//#define	_spUnknown	0
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -301,24 +322,19 @@ static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "
 // 안테나 스캔 형태 정의값
 enum ENUM_AET_SCAN_TYPE {
     E_AET_SCAN_UNKNOWN = 0,
-    //##ModelId=452B0C510241
-    E_AET_SCAN_CIRCULAR            = 1,
-    //##ModelId=452B0C51024A
+    E_AET_SCAN_CIRCULAR,
     E_AET_SCAN_UNI_DIRECTIONAL,
-    //##ModelId=452B0C510254
     E_AET_SCAN_BI_DIRECTIONAL,
-    //##ModelId=452B0C51025E
     E_AET_SCAN_CONICAL,
-    //##ModelId=452B0C510268
     E_AET_SCAN_STEADY,
 
     E_AET_SCAN_SCANFAIL,
-    //##ModelId=452B0C510286
+
     UFO,
     MAX_SCANTYPE,
-    //##ModelId=452B0C510287
+
     DetType,
-    //##ModelId=452B0C510290
+
     TYPE_UNKNOWN,
 } ;
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
@@ -328,22 +344,15 @@ static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 #endif
 
-//##ModelId=452B0C5102A4
 enum SCAN_STAT
 {
-	//##ModelId=452B0C5102B9
   NO_PROCESS        = 0,
-	//##ModelId=452B0C5102C2
   SELF_SUCCESS,
-	//##ModelId=452B0C5102CC
   SELF_FAIL,
-	//##ModelId=452B0C5102D6
   REQ_SUCCESS,
-	//##ModelId=452B0C5102EA
   REQ_FAIL,
-	//##ModelId=452B0C5102F4
+
   All_Sucess        = 1,
-	//##ModelId=452B0C5102FE
   All_Fail          = 6
 } ;
 
@@ -488,7 +497,6 @@ struct STR_FRQ {
 }  ;
 
 /* AET용 PRI 구조체 */
-//##ModelId=452B0C510377
 struct STR_PRI {
     int iType;
     _TOA tMean;
@@ -500,6 +508,16 @@ struct STR_PRI {
     int iSwtLev;
     _TOA TSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
     _TOA iPatPrd;
+
+	STR_PRI() :
+		iType(0),
+		tMean(0),
+		tMin(0),
+		tMax(0),
+		TMode(0)
+	{
+	}
+
 } ;
 
 /* AET용 SCAN 구조체 */

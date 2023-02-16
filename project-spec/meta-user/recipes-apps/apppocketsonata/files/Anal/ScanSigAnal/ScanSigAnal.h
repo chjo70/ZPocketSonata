@@ -28,11 +28,11 @@ class CScanSigAnal : public CSigAnal
 private:
     SRxABTData *m_pScnAet;
 
+    char m_szAnalDirectory[500];
 private:
     
 
 public:
-    //##ModelId=452B0C450027
     STR_PDWINDEX *m_pGrPdwIndex;
 
     DEFINE_ANAL_VAR_
@@ -97,6 +97,8 @@ public:
 
     inline int GetCoGroup() { return 0; }
 
+	inline char *GetAnalDirectory() { return m_szAnalDirectory; }
+
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
 	// inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
@@ -122,7 +124,7 @@ public:
     UINT AnalStart( int noEMT, int noCh );
 
     void Init( STR_STATIC_PDWDATA *pstPDWData);
-    void ScanExtractPulseInit( unsigned int uinoEMT=0, int noCh=0 );
+    void ScanExtractPulseInit( unsigned int uinoEMT=0, unsigned int uinoCh=0 );
     void ScanSigAnalInit( unsigned int uinoEMT=0, int noCh=0 );
 
     void ClearAllMark();

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define _MULTI_BEAM_
 
@@ -227,8 +227,8 @@ private:
     void RecoverThreat();
     inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) ++ m_nGetSeqNum; else ++ m_uiSeqNum; }
 //
-    void ClearLOBs( int nIndex );
-    void AppendLOBs( int nIndex, enELControlLOB enControlLOB=APPEND_LOB );
+    void ClearLOBs( unsigned int uiIndex );
+    void AppendLOBs( unsigned int uiIndex, enELControlLOB enControlLOB=APPEND_LOB );
     void AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNormalMethod=true );
     void RemoveLOBs( std::vector<STR_LOBS> *pVecLOBs );
 //
@@ -265,8 +265,8 @@ private:
     void CreateABTThreat( CELThreat *pThreat, SRxLOBHeader *pLOBHeader, SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, bool bCluster );
     void SetupDateTime( SELLOBDATA_EXT *pThreatDataExt );
     //void AddThreatInfo( E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_nSeqNum, bool bApplySearchFilter=true );
-    void AddThreatInfo( SELLOBValidity *pSELLOBValidity, E_EMITTER_OPCODE enOpcode, bool bIsFISINTTask, bool bApplySearchFilter=true );
-    void AddThreatInfo( SELEmitterEdited *pSELEmitterEdited=NULL, E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_uiSeqNum, bool bApplySearchFilter=true );
+    //void AddThreatInfo( SELLOBValidity *pSELLOBValidity, E_EMITTER_OPCODE enOpcode, bool bIsFISINTTask, bool bApplySearchFilter=true );
+    //void AddThreatInfo( SELEmitterEdited *pSELEmitterEdited=NULL, E_EMITTER_OPCODE eOpcode=E_EO_NOT_AVAILABLE, int nCoLOB=1, bool bIsFISINTTask=false, UINT uiSeqNum=m_uiSeqNum, bool bApplySearchFilter=true );
 
     void SortMergeCandidate();
     bool DecideMergeCandidate();
@@ -304,7 +304,7 @@ private:
     void UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
 // 	void UpdateIntraInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    void UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, int nIndex, bool bLOBValidityApplied=false, bool bRunCluster=true, bool bRunPE=true );
+    void UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, unsigned int uiIndex, bool bLOBValidityApplied=false, bool bRunCluster=true, bool bRunPE=true );
     void UpdateABT( CELThreat *pTheABTThreat, SELAETDATA *pAETData=NULL );
     void UpdateSeenTime( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateSignalInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -330,13 +330,13 @@ private:
 // 	// 방사체 관련 수정시 관련 함수
     void ConvertAET2ABT( SRxABTData *pABTData, SELAETDATA *pAETData );
     void UpdateAET( CELThreat *pTheAETThreat );
-    void UpdateAET( CELThreat *pTheAETThreat, SELLOBValidity *pSELLOBValidity );
+    //void UpdateAET( CELThreat *pTheAETThreat, SELLOBValidity *pSELLOBValidity );
 //
 // 	// 빔 유효성 업데이트시 관련 함수
-    bool UpdateBeamValidity( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, int nIndex, bool bCheckBeamValidity=true );
+    bool UpdateBeamValidity( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, unsigned int uiIndex, bool bCheckBeamValidity=true );
     void UpdateBeamValidity( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, CELThreat *pTheAETThreat );
     bool IsValidity( int nCoBeamValidity, int iEmmgNumOfMinLobToBeam, float fCEP, float fEobIndfRangeKM, float fMajorAxis, float fMinorAxis, float fDist );
-    void UpdateABT( CELThreat *pTheAETThreat, SELLOBValidity *pSELLOBValidity );
+    //void UpdateABT( CELThreat *pTheAETThreat, SELLOBValidity *pSELLOBValidity );
     bool CheckValidityByAllLOB( std::vector<STR_LOBS> *pVecLOBs, SRxABTData /*STR_POSITION_ESTIMATION*/ *pABTData );
     void PrintAllValidityByAllLOB( std::vector<STR_LOBS> *pVecLOBs, SRxABTData *pABTData );
 
@@ -484,7 +484,7 @@ public:
 
     void ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
     bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
-    UINT DeleteThreat();
+    SELINDEX DeleteThreat();
     bool CheckDeleteAET( CELThreat *pThreatAET, CELThreat *pDeleteAET );
     void DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelThreatInfo, bool bIsMaster, bool bIsReplay );
     void FetchLOBData( std::vector<SRxLOBHeader> *pVecLOBHeader, std::vector<SRxLOBData> *pVecLOBData, UINT uiABTID=0, SRxLOBDataAndGroupIdArray *pSRxLOBDataAndGroupIdArray=NULL );
@@ -583,7 +583,14 @@ public:
     inline bool Merge() const { return m_bMerge; }
     inline void Merge(bool val) { m_bMerge = val; }
 
-    inline ENUM_SCAN_PROCESS EnScanProcess() const { return m_pABTExtData->enScanProcess; }
+    inline ENUM_SCAN_PROCESS EnScanProcess() const { 
+		ENUM_SCAN_PROCESS enScanProcess=enSCAN_CANTProcessing;
+
+		if (m_pABTExtData != NULL) enScanProcess=m_pABTExtData->enScanProcess;
+
+		return enScanProcess;
+
+	}
     inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
 
 

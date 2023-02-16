@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
 file-patterns=*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx,*.mk,Makefile
-search-string=Download
+search-string=__time64_t tiContactTime
 whitespace-tolerant=false

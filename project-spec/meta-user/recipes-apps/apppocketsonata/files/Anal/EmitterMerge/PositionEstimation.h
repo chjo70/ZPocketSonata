@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      PositionEstimation.h
  * @brief     위치 산출 알고리즘 구조체 정의
@@ -89,7 +89,7 @@ struct SELSensorPosition {
 
 
 /*!
- * @typedef   SELUTM
+ * @typedef   SELPE_RESULT
  * @brief		UTM계 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @date      2013-09-09 오후 5:44

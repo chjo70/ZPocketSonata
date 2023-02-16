@@ -233,7 +233,7 @@ void CRawFile::GetFilename( char *pFilename )
  * @date      2013-07-02 오전 11:50 
  * @warning   
  */
-bool CRawFile::OpenFile( const char *filename, int iMode )
+bool CRawFile::RawOpenFile( const char *filename, int iMode )
 {
 	bool bRet = false;
 	//Init();
@@ -248,8 +248,24 @@ bool CRawFile::OpenFile( const char *filename, int iMode )
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == ERROR ) { //DTEC_Else
 #else
-	m_fid = open( filename , iMode );
-    if( m_fid <= 0 ) { //DTEC_Else
+    int nResult = 1;
+
+    if (iMode & O_CREAT) {
+        int iMode=_chmod(filename, 222);
+        if (iMode != -1) {
+            int nResult = remove(filename);
+            if (nResult <= 0) {
+                TRACE("\n 파일을 삭제할 수 없습니다.");
+            }
+        }
+    }
+
+    /*
+
+    */
+
+	m_fid = _open( filename , iMode );
+    if(nResult == 1 && m_fid <= 0 ) { //DTEC_Else
 #endif
         //remove( filename );
 		// TRACE( "\n[W] The file[%s] is not exist !!", filename );
@@ -328,14 +344,17 @@ unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
     if( pData != NULL && m_fid > 0 ) {
         iRead = _read( m_fid, (char *) pData, c_size );
         if( iRead < 0 ) {
-            uiRead = 0;
+			// uiRead = 0;
+			//break;
         }
         else {
-            uiRead = iRead;
+            uiRead = (unsigned int) iRead;
         }
     }
     else {
-        *( char *)pData = NULL;
+		if (pData != NULL) {
+			*(char *)pData = NULL;
+		}
     }
 
 	return uiRead;
@@ -391,13 +410,13 @@ void CRawFile::CloseFile()
  * @date      2016-08-19, 오후 2:36 
  * @warning   
  */
-unsigned long long int CRawFile::GetFileSize()
+unsigned long long int CRawFile::GetRawFileSize()
 {
-	unsigned long long ullfile_byte=0;
+	unsigned long long int ullfile_byte=0;
 
 	if( m_fid != NULL ) {
         // ullfile_byte = _filelength( m_fid );
-        ullfile_byte = GetFileSize( m_fullname );
+        ullfile_byte = GetRawFileSize( m_fullname );
 
 	}
 
@@ -413,31 +432,31 @@ unsigned long long int CRawFile::GetFileSize()
  * @date      2016-10-11, 오전 10:09 
  * @warning   
  */
-unsigned long long int CRawFile::GetFileSize( char *pPathFileName )
+unsigned long long int CRawFile::GetRawFileSize( char *pPathFileName )
 {
-    unsigned long long int iRet=UINT64_MAX;
+	unsigned long long int ullRet64= UINT64_MAX;
 
 #if defined(__linux__) || defined(__VXWORKS__)
 	struct stat statbuf;
 
 	if( stat( pPathFileName, & statbuf ) != 0 ) {
-		iRet = ULONGLONG_MAX;
+			ullRet64 = ULONGLONG_MAX;
 	}
 	else {
-		iRet = statbuf.st_size;
+			ullRet64 = statbuf.st_size;
 	}
 
 #else
 	struct _stati64 statbuf;
 
 	if( _stati64( pPathFileName, & statbuf ) != 0 ) {
-		iRet = UINT64_MAX;
+		ullRet64 = UINT64_MAX;
 	}
 	else {
-		iRet = statbuf.st_size;
+		ullRet64 = (unsigned long long int) statbuf.st_size;
 	}
 #endif
-	return iRet;
+	return ullRet64;
 
 }
 

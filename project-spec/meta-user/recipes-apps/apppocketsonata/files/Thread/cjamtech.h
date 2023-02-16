@@ -1,4 +1,4 @@
-#ifndef CJAMTECH_H
+﻿#ifndef CJAMTECH_H
 #define CJAMTECH_H
 
 #include "../Include/system.h"

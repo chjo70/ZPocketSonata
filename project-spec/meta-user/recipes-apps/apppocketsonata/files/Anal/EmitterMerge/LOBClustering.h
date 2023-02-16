@@ -1,4 +1,4 @@
-// LOBClustering.h: CLOBClustering 헤더파일
+﻿// LOBClustering.h: CLOBClustering 헤더파일
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -76,13 +76,13 @@ typedef unsigned int QueueIndex;
  * @brief     LOB 목록을 큐로 관리하기 위한 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
-	SRxLOBData stELLOBData;
-	SRxLOBHeader stELLOBHeader;
-
-	//SELLOBDATA_EXT stELLOBDataExt;
-
-} SELLOBDATA ;
+// typedef struct {
+// 	SRxLOBData stELLOBData;
+// 	SRxLOBHeader stELLOBHeader;
+// 
+// 	//SELLOBDATA_EXT stELLOBDataExt;
+// 
+// } SELLOBDATA ;
 
 typedef struct  {
 	// LOB 제원 정보
@@ -115,11 +115,11 @@ typedef struct {
 
 } SELINTERSECTION;
 
-typedef struct {
-	float fx;
-	float fy;
-
-} STR_XYCOORDINATE ;
+// typedef struct {
+// 	float fx;
+// 	float fy;
+// 
+// } STR_XYCOORDINATE ;
 
 /**
  * @typedef   STR_LOBCLUSTER
@@ -185,7 +185,7 @@ protected:
 
 	UINT m_uiAETID;											///<	LOB 클러스터링 하기 위한 방사체 번호
 	UINT m_uiABTID;											///<	LOB 클러스터링 하기 위한 빔 번호
-	int m_iLOBPoolIndex;								///<	큐 인덱스
+	unsigned int m_uiLOBPoolIndex;								///<	큐 인덱스
 
 	vector<UINT> m_vecOptimalLODID;			///<  최적의 LOB 데이터 번호
 	int m_nOptimalLOBID;								///<	최적의 클러스터에서 LOB 개수
@@ -228,7 +228,7 @@ private:
 	void CalMaxDiffAoa( STR_LOBCLUSTER *pCluster );
 
 	// 교차점 구하기
-	int CalcIntersectionPoints( int nLines );
+	unsigned int CalcIntersectionPoints( unsigned int uiLines );
 	bool CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDATA_MINIMIZE *pLOBData1, SELLOBDATA_MINIMIZE *pLOBData2 );
 	void GroupOfIntersection();
 	bool IsThereCluster( STR_LOBCLUSTER *pCluster );
@@ -248,11 +248,11 @@ public:
 	void InitOfLOBClustering();
 	void InitOfLOBClustering( int nIndex );
 
-	SELLOBDATA_MINIMIZE *InsertLOBPool( int index, SRxLOBData *pSRxLOBData, UINT uiLOBID, bool bInit=false, bool bInsertLOB=true );
+	SELLOBDATA_MINIMIZE *InsertLOBPool( unsigned int uindex, SRxLOBData *pSRxLOBData, UINT uiLOBID, bool bInit=false, bool bInsertLOB=true );
 	void CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBData, SRxLOBData *pSRxLOBData, UINT uiLOBID );
 	void AddLOBPool( int nDestIndex, int nSrcIndex );
 
-	bool LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo );
+	bool LOBClustering( unsigned int uiIndex, STR_CEDEOBID_INFO *pCEDEOBInfo );
 	void CalculateIntersectionPoints();
 
 	inline bool IsThereClustering() { return m_bCluster; }
@@ -270,7 +270,7 @@ public:
 	// 그룹화 관련 함수
 	void CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *pRefInterSect=NULL );
 	void FilteredIntersectionPoints();
-	void UpdateClusterInfo( UINT uiAETID, UINT uiABTID, int iLOPPoolIndex );
+	void UpdateClusterInfo( UINT uiAETID, UINT uiABTID, UINT iLOPPoolIndex );
 
 	bool IsThereOptimalLOBID( int iLOBID );
 	bool ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int nOptimalIndex );

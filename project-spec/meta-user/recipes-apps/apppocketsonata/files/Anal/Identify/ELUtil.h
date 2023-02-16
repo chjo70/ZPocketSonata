@@ -1,4 +1,4 @@
-// ELUtil.h: interface for the CUtil class.
+﻿// ELUtil.h: interface for the CUtil class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -8,6 +8,7 @@
 #include "../SigAnal/_Macro.h"
 
 #include "../../Utils/MulDiv64.h"
+#include "../EmitterMerge/IsNumber.h"
 
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
@@ -20,8 +21,10 @@ void SetUnitType();
 
 float DOADiff(float x, float y);
 
-void UTF8ToMultibyte(char *pszMultiByte, int iSizeOfMultiByte, const wchar_t *p);
+void UTF8ToMultibyte(char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p);
 int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiByte);
+
+UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -75,104 +78,6 @@ BOOL IsSamePulse( T x1, T x2, T priMean, T margin )
 
     return bRet;
 }
-
-/**
- * @brief     두 PRI 값들 사이에 하모닉 관계 여부를 계산한다.
- * @param     T priMean1
- * @param     T priMean2
- * @param     T tThreshold
- * @return    UINT
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-06-14, 16:38
- * @warning
- */
-template <typename T>
-UINT CheckHarmonicTOA( T priMean1, T priMean2, T tThreshold ) {
-    UINT ret = 0;
-    T r;
-    T harmonic;
-    T max_mean, min_mean;
-
-	if (priMean1 != 0 && priMean2 != 0 ) {
-		if (priMean1 > priMean2) {
-			max_mean = priMean1;
-			min_mean = priMean2;
-		}
-		else {
-			max_mean = priMean2;
-			min_mean = priMean1;
-		}
-
-#ifdef _MSC_VER
-		if (strcmp(typeid(T).name(), "float") == 0) {
-			harmonic = (unsigned int)(fmod((float)max_mean, (float)min_mean) + 0.5);
-		}
-		else {
-            //if (min_mean != 0)  if 문이 추가해도 에러가 발생함.
-            {
-                harmonic = max_mean % min_mean;
-            }
-
-		}
-
-#else
-		if (sizeof(T) == sizeof(float)) {
-			harmonic = (unsigned int)(fmod((float)max_mean, (float)min_mean) + 0.5);
-		}
-		else {
-			harmonic = max_mean % min_mean;
-		}
-
-#endif
-
-		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
-		T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
-
-		// 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
-		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
-#ifdef _MSC_VER
-			if (strcmp(typeid(T).name(), "float") == 0) {
-                if (min_mean != 0) {
-                    r = (max_mean / min_mean);
-                    ret = (UINT)(r + 0.5);
-                }
-			}
-			else {
-                r = TDIV<_TOA>(max_mean, min_mean);
-				// r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
-				if (r > UINT_MAX) {
-					ret = UINT_MAX;
-				}
-				else {
-					ret = (UINT) r;
-				}
-			}
-
-#else
-			if (sizeof(T) == sizeof(float) ) {
-			}
-			else {
-				r = MulDiv64((T)1, max_mean, min_mean);
-				if (r > UINT_MAX) {
-					ret = UINT_MAX;
-				}
-				else {
-					ret = (UINT)r;
-				}
-			}
-
-#endif
-		}
-	}
-	else {
-		
-	}
-
-    return ret;
-}
-
 
 /**
  * @brief     두 수간의 임계값 차이 내에 들면 정상으로 리턴한다.
@@ -402,8 +307,8 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
 /*! \brief    입력 값 범위에 임계값을 고려한 입력 값이 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.
     \author   조철희
     \param    x 인자형태 int
-    \param    y1 인자형태 int
-    \param    y2 인자형태 int
+    \param    iy1 인자형태 int
+    \param    iy2 인자형태 int
     \param    thresh 인자형태 int
     \return   BOOL
     \version  0.0.1
@@ -480,7 +385,8 @@ T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
 {
 	T ret=0;
 
-    if (low1 == low2 && hgh1 == hgh2)
+    //if ( low1 == low2 && hgh1 == hgh2)
+	if ( is_zero<T>( (T)(low1-low2) ) == true && is_zero<T>( (T)(hgh1 - hgh2)) == true)
         ret = 1;
 
     if( hgh1 < low2 || hgh2 < low1 )			// |-------|		   |--------|
@@ -489,11 +395,11 @@ T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
     if( hgh1 == low2 || hgh2 == low1 )			// |-------|		   |--------|
         ret = 1;                                //		   |---|
 
-    if( low1 > low2 &&	hgh1 < hgh2 ) 			//          |--------|
-        ret = hgh1 - low1 + (T) 1;					//    |------------------|
+    if( low1 > low2 && hgh1 < hgh2 ) 			//          |--------|
+        ret = ( hgh1 - low1 + (T) 1 );					//    |------------------|
 
     if( low1 < low2 && hgh1 > hgh2 )			//    |------------------|
-        ret = hgh2 - low2 + (T)1;			 					//          |--------|
+        ret = ( hgh2 - low2 + (T)1 );			 					//          |--------|
 
     if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
         ret = ( hgh2 - low1 + (T)1);     			//    |-----------|

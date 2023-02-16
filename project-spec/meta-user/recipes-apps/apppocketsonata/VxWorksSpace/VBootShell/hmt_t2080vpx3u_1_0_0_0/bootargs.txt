@@ -1,37 +1,82 @@
+BSP 펄더 위치 : D:\vxWorks7\vxworks-7\pkgs\os\board\ppc
+
+
+1. U-BOOT 설정 값
+
 ##### vxWorks tftp booting #####
 setenv bootdelay      3
 setenv ethact         FM1@DTSEC3
 setenv ethprime       FM1@DTSEC3
 setenv ethaddr        00:04:9F:03:31:D0
 setenv eth1addr       00:04:9F:03:31:D1
-setenv ipaddr         192.168.10.30
+setenv ipaddr         192.168.1.110
 setenv netmask        255.255.255.0
-setenv serverip       192.168.10.10
+setenv serverip       192.168.1.100
 setenv gatewayip      192.168.10.1
-
-#setenv bootargs       "memac(0,0)host:vxWorks h=192.168.10.10 e=192.168.10.30:ffffff00 g=192.168.10.1 u=t2x pw=1234 f=0x408 tn=t2080"
 setenv bootargs       "memac(0,0)host:vxWorks h=$serverip e=$ipaddr:ffffff00 g=$gatewayip u=t2x pw=1234 f=0x408 tn=t2080"
-
-setenv BootUpdate     "protect off eff40000 +c0000; erase eff40000 +c0000; tftp 10000000 u-boot.bin; cp.b 10000000 eff40000 c0000"
-setenv FmanUpdate     "protect off eff00000 +20000; erase eff00000 +20000; tftp 10000000 fman.bin; cp.b 10000000 eff00000 20000"
-
-setenv tftpUvX        "tftp 0x2000000 VIP_T2x/default/uVxWorks"
-setenv tftpDTB        "tftp 0xf000000 VIP_T2x/default/t2080vpx3u.dtb"
-
+setenv tftpUvX        "tftp 0x2000000 uVxWorks"
+setenv tftpDTB        "tftp 0xf000000 t2080vpx3u.dtb"
 setenv uVxBoot        "bootm 0x2000000 - 0xf000000"
-
 setenv bootcmd        "run tftpUvX; run tftpDTB; run uVxBoot"
-
 save
+
 
 
 ##### vxWorks NOR Flash Booting #####
 setenv flashDtb   "protect off e7000000 +80000; erase e7000000 +80000; run tftpDTB; cp.b 0xf000000 e7000000 80000"
 setenv flashUvx   "protect off e7100000 +600000; erase e7100000 +600000; run tftpUvX; cp.b 0x2000000 e7100000 0x600000"
+setenv standUp    "run flashDtb; run flashUvx"
 setenv flashBoot  "cp.b e7000000 0xf000000 0x5000; cp.b e7100000 0x2000000 0x600000; bootm 0x2000000 - 0xf000000"
-setenv flashBoot  "bootm e7100000 - e7000000"
 setenv bootcmd    "run flashBoot"
 save
 
 
+setenv flashDtb   "protect off EF000000 +20000; erase EF000000 +20000; run tftpDTB; cp.b 0xF000000 EF000000 20000"
+setenv flashUvx   "protect off EF100000 +500000; erase EF100000 +500000; run tftpUvX; cp.b 0x2000000 EF100000 500000"
+setenv standUp    "run flashDtb; run flashUvx"
+setenv flashBoot  "cp.b EF000000 0xF000000 0x20000; cp.b EF100000 0x2000000 0x500000; bootm 0x2000000 - 0xF000000"
+setenv bootcmd    "run flashBoot"
+save
 
+
+*** 부트 프로그램을 Flash 에 기록하려면 아래와 같이 수행하면 됩니다.
+
+EWSP# run flashUvx
+Un-Protected 40 sectors
+
+........................................ done
+Erased 40 sectors
+Using FM1@DTSEC3 device
+TFTP from server 192.168.10.245; our IP address is 192.168.10.30
+Filename 'uVxWorks'.
+Load address: 0x2000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         ###################################
+         1.9 MiB/s
+done
+Bytes transferred = 4323456 (41f880 hex)
+Copy to Flash... 9....8....7....6....5....4....3
+
+
+
+****************************************************
+
+
+#### u-boot and firmware update ####
+setenv BootUpdate     "protect off eff40000 +c0000; erase eff40000 +c0000; tftp 10000000 u-boot.bin; cp.b 10000000 eff40000 c0000"
+setenv FmanUpdate     "protect off eff00000 +20000; erase eff00000 +20000; tftp 10000000 fman.bin; cp.b 10000000 eff00000 20000"
+setenv progUpdate     "run BootUpdate; run FmanUpdate"
+
+
+setenv flashBoot  "bootm e7100000 - e7000000"
+
+
+
+
+256MB
+1st : 0xE000_0000 ~ 0xE800_0000(128MB) => 0x0 ~ 0x7000000 0x700_0000 ~ 
+
+2st : 0xE800_0000 ~ 0xEFFF_FFFF(128MB)

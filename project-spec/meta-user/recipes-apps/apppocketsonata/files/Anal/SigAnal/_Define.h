@@ -1,4 +1,4 @@
-// _Define.h: interface for the 분석 소프트웨어의 정의
+﻿// _Define.h: interface for the 분석 소프트웨어의 정의
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -194,17 +194,18 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_FREQ_DEVIATION		    (500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define AOA_SHIFT_COUNT             (4)     // 
+#define AOA_SHIFT_COUNT             (4)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
 #define	MAX_PW						(1024*16)
 
 #elif defined(_POCKETSONATA_)
-#define KHARM_AOA_MAR               (int) ( ( 8 * (float) ( 4.*1024. ) / (float) 360. ) + 0.5 )     // 하모닉 방위 마진
+#define KHARM_AOA_MAR               (int) ( (float) 8. / (float) POCKETSONATA::_fDOARes + (float) 0.5 )			// 8도
 #define KHARM_FRQ_MAR               (int) ( ((10.*1000.)/1.953125)+0.5)                  // 하모닉 주파수 마진 (Band1)
 
-#define TOTAL_FRQAOAPWBIN           (91000)			//(1024*4)											// 전체 히스토그램 BIN수
+#define TOTAL_FRQAOAPWBIN           (91000)				//(1024*4), 전체 히스토그램 BIN수
+
 // DTOA 히스트그램 최대 개수
 #define	DTOA_RES                    UTOAusCNV((_TOA) 10)								// ( 10 * _spOneMicrosec )
 
@@ -213,7 +214,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define AOA_SHIFT_COUNT             (9)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
+#define AOA_SHIFT_360				(3.498250)		// (logf((float)1./POCKETSONATA::_fDOARes)/logf(2) ), 360도 기준으로 SHIFT 값 
+#define AOA_SHIFT_COUNT             ((int) AOA_SHIFT_360+1)     // +1 할때마다 2배 씩 증가함. 2도 마진으로 AOA 값을 SHIFT * log2( 1. / POCKETSONATA::_fDOARes )
 
 #define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
 
@@ -292,6 +294,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define MAX_FGRT      			( 30 )	// 최대 주파수 그룹 범위 개수(겹침고려 2배)
 #define MAX_PGRT      			( 40 )	// 최대 펄스폭 그룹 범위 개수(겹침고려 2배)
 
+
+#define MAX_MISSING_PULSE_FOR_PULSEEXTRACT		(20)
+
 #if defined(_ELINT_) || defined(_XBAND_)
 
 #else
@@ -306,13 +311,16 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #else
 #define	PW_SHIFT_CNT				(7)			//
 #endif
+
 #define	PW_GROUP_DIFF				(500)
 
 #define	NARROW_FREQ_GROUP		0
 #define WIDE_FREQ_GROUP			1000 	// 1GHz 최대 주파수 그룹 범위
 #define	MAX_FREQ_DIFF				1000        // 1000 [MHz] 주파수 폭 설정
 
-#define MIN_CONTI_THRESHOLD_AOA	(1)
+
+// 방위 히스토그램 상에서 _sp.np.Aoa_Hist_Thr 값 이하로 연속 출현 개수
+#define MIN_CONTI_THRESHOLD_AOA				(1)
 
 //////////////////////////////////////////////////////////////////////
 // 펄스열 추출

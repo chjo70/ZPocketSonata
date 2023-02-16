@@ -21,4 +21,11 @@
 </provider>
 <provider id="org.eclipse.cdt.ui.provider1"/>
 </project>
+<project name="VBootShell_T2MS">
+<provider id="com.windriver.workbench.apidoc.cHelpProvider">
+<book enabled="true" title="Wind River VxWorks 7 API Documentation 1.0.1.1_20180314-1559 (Wind River Systems, Inc.)"/>
+<book enabled="true" title="Wind River VSB_ZynqMP API Documentation 1.0.1.1_201911211043 (Wind River Systems, Inc.)"/>
+</provider>
+<provider id="org.eclipse.cdt.ui.provider1"/>
+</project>
 </cHelpSettings>

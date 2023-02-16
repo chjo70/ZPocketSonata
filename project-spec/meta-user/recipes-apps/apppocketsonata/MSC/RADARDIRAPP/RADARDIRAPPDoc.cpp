@@ -78,7 +78,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
         SRxLOBData *pLOBData;
 
         CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
-		CRADARDIRAPPView *pView;
+		//CRADARDIRAPPView *pView;
         //CRADARDIRAPPView * pView;
 
         RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
@@ -89,7 +89,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
 		if (true == ReadDataFile((char*)(LPCTSTR)ar.m_strFileName, (char*)(LPCTSTR)ar.m_strFileName)) {
 			pstPDWData = (STR_PDWDATA *)m_theDataFile.GetData();
 
-			pstPDWData->SetPDWID(m_uiPDWID++);
+			//pstPDWData->SetPDWID(m_uiPDWID++);
 
 			RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData);
 
@@ -181,13 +181,11 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 {
-	//CString strMainTitle;    
+	CString strMainTitle;    
 
-	//m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
+	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
 
 	m_strPathname = strPathname;
-
-	strPathname.MakeLower();
 
 	SRxLOBData *pLOBData;
 	STR_PDWDATA *pstPDWData;
@@ -195,7 +193,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
 
-	if (true == ReadDataFile((char*)(LPCTSTR) strPathname, (char*)(LPCTSTR)strFilename)) {
+	if (true == ReadDataFile((char*)(LPCTSTR) m_strPathname, (char*)(LPCTSTR)strFilename)) {
 		pstPDWData = m_theDataFile.GetPDWData();
 
 		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, true);
@@ -218,8 +216,8 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 		AfxMessageBox(_T("분석하지 못할 파일 포멧 입니다."));
 	}
 
-	//strMainTitle.Format( "%s" , m_strPathname );
-	//m_pMainFrame->SetWindowText( strMainTitle );
+	strMainTitle.Format( "%s" , m_strPathname );
+	m_pMainFrame->SetWindowText( strMainTitle );
 
 	return true;
 }
@@ -246,24 +244,37 @@ bool CRADARDIRAPPDoc::ReadDataFile( char *pStrPathName, char *pStrFileName )
 
 		pstPDWData = m_theDataFile.GetPDWData();
 
+#ifdef _RESET_PDWID_
+		pstPDWData->SetPDWID(0);
+
+#else
+		pstPDWData->SetPDWID(m_uiPDWID++);
+
+#endif
+
 	}
 	else if (enDataType == en_PDW_DATA_CSV) {
 		m_theDataFile.ReadDataFile(pStrPathName, NULL, enCSVToPDW);
 
 		// CSV 에는 과제명이 없기 떄문에 파일명으로 설정함.
 		pstPDWData = m_theDataFile.GetPDWData();
+
 		pstPDWData->SetTaskID(pStrFileName);
+
+#ifdef _RESET_PDWID_
+		pstPDWData->SetPDWID(0);
+
+#else
+		pstPDWData->SetPDWID(m_uiPDWID++);
+
+#endif
+
 	}
 	else {
 		bRet = false;
 	}
 
-	if (bRet == true) {
-		//pstPDWData->SetPDWID(m_uiPDWID++);
-		pstPDWData->SetPDWID(0);
-		
-	}
-
 	return bRet;
 
 }
+

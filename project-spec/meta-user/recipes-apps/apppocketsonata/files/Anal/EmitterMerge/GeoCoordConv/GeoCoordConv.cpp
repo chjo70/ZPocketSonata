@@ -27,8 +27,6 @@ static char THIS_FILE[]=__FILE__;
 #define Z_W2B -664
 
 
-//#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
-//#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
 
 /**
  * @brief     구조체를 생성한다.

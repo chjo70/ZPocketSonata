@@ -194,7 +194,7 @@ int main( int argc, char **argv )
     CGenPDW *pTheGenPDW;
 
     pTheGenPDW = new CGenPDW( 0 );
-    pTheGenPDW->OpenFile( argv[1] );
+    pTheGenPDW->OpenMakefile( argv[1] );
 
     pTheGenPDW->ParseAndMakefile();
 
@@ -308,7 +308,7 @@ int	wanna_create( char *filename )
 {
 	char sbuf[50];
 
-	if( access( filename, 00 ) )
+	if( _access( filename, 00 ) )
 		return 1;	/* file not exist */
 
 	printf("\n File [%s] is already exist. \n", filename);

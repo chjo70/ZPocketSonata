@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #ifdef MATHFUNCSDLL_EXPORTS
 #define MATHFUNCSDLL_API __declspec(dllexport)
@@ -15,10 +15,10 @@
 
 
 //
-// RADARDIR í”„ë¡œì íŠ¸ ë‚´ì—ì„œ ìµœì†Œ ë‚´ìš©ë§Œ êµ¬ì¡°ì²´ ì •ì˜ë¥¼ ë³µì‚¬í•œ ê²ƒì„.
+// RADARDIR ÇÁ·ÎÁ§Æ® ³»¿¡¼­ ÃÖ¼Ò ³»¿ë¸¸ ±¸Á¶Ã¼ Á¤ÀÇ¸¦ º¹»çÇÑ °ÍÀÓ.
 
 
-#define LENGTH_OF_TASK_ID			(19+1)		//ê³¼ì œID ë¬¸ìì—´ ê¸¸ì´ (TBD)
+#define LENGTH_OF_TASK_ID			(19+1)		//°úÁ¦ID ¹®ÀÚ¿­ ±æÀÌ (TBD)
 
 #ifndef MAX_PDW
 #define MAX_PDW							(4096)
@@ -54,6 +54,8 @@ typedef enum {
 
     en_MIDAS,
 
+	en_OTHERS
+
 } ENUM_UnitType;
 #endif
 
@@ -67,11 +69,13 @@ typedef enum {
 
 
 
-#if TOOL==diab 
-#pragma pack( 1 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 1 )
+// #else
+// #pragma pack( push, 1 )
+// #endif
+
 #pragma pack( push, 1 )
-#endif
 
 #ifndef _UNI_PDW_ETC
 #define _UNI_PDW_ETC
@@ -104,7 +108,7 @@ typedef union {
 
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
-typedef struct {
+struct _PDW {
     unsigned long long int ullTOA;
 
     int iPulseType;
@@ -155,14 +159,16 @@ typedef struct {
         return iPulseType;
     }
 
-} _PDW;
+} ;
 #endif
 
-#if TOOL==diab 
-#pragma pack( 4 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 4 )
+// #else
+// #pragma pack( pop )
+// #endif
+
 #pragma pack( pop )
-#endif
 
 namespace ELINT {
 #ifndef _ELINT_ENUM_BANDWIDTH_
@@ -205,10 +211,10 @@ namespace _701 {
 
 #ifndef _STR_COMMON_HEADER_
 #define _STR_COMMON_HEADER_
-// ì•„ë˜ëŠ” ê³µìš© ì •ë³´
-typedef struct {
+// ¾Æ·¡´Â °ø¿ë Á¤º¸
+struct STR_COMMON_HEADER {
 	UINT uiTotalPDW;
-	__time32_t tColTime;
+	time_t tColTime;
 	UINT uiColTimeMs;
 	UINT uiPDWID;
 
@@ -222,7 +228,7 @@ typedef struct {
 		}
 	}
 
-} STR_COMMON_HEADER ;
+}  ;
 #endif
 
 #ifndef _EN_RADARCOLLECTORID_
@@ -233,13 +239,13 @@ enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCO
 
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
-typedef struct {
+struct STR_ELINT_HEADER {
 	char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int uiIsStorePDW;
 	EN_RADARCOLLECTORID enCollectorID;
 	ELINT::ENUM_BANDWIDTH enBandWidth;
 
-	// ì•„ë˜ëŠ” ê³µìš© ì •ë³´
+	// ¾Æ·¡´Â °ø¿ë Á¤º¸
 	STR_COMMON_HEADER stCommon;
 
 	EN_RADARCOLLECTORID GetCollectorID() {
@@ -270,18 +276,18 @@ typedef struct {
 		stCommon.CheckColTime();
 	}
 
-} STR_ELINT_HEADER ;
+}  ;
 #endif
 
 #ifndef _STR_701_HEADER_
 #define _STR_701_HEADER_
-typedef struct {
+struct STR_701_HEADER {
 	char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int uiIsStorePDW;
 	EN_RADARCOLLECTORID enCollectorID;
 	_701::ENUM_BANDWIDTH enBandWidth;
 
-	// ì•„ë˜ëŠ” ê³µìš© ì •ë³´
+	// ¾Æ·¡´Â °ø¿ë Á¤º¸
 	STR_COMMON_HEADER stCommon;
 
 	EN_RADARCOLLECTORID GetCollectorID() {
@@ -312,19 +318,19 @@ typedef struct {
 		stCommon.CheckColTime();
 	}
 
-} STR_701_HEADER;
+} ;
 
 #endif
 
 #ifndef _STR_XBAND_HEADER_
 #define _STR_XBAND_HEADER_
-typedef struct {
+struct STR_XBAND_HEADER {
     char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int uiIsStorePDW;
     EN_RADARCOLLECTORID enCollectorID;
     XBAND::ENUM_BANDWIDTH enBandWidth;
 
-    // ì•„ë˜ëŠ” ê³µìš© ì •ë³´
+    // ¾Æ·¡´Â °ø¿ë Á¤º¸
     STR_COMMON_HEADER stCommon;
 
     EN_RADARCOLLECTORID GetCollectorID() {
@@ -355,18 +361,18 @@ typedef struct {
         stCommon.CheckColTime();
     }
 
-} STR_XBAND_HEADER;
+} ;
 #endif
 
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
-typedef struct {
+struct STR_POCKETSONATA_HEADER {
 	unsigned int uiBoardID;
 	unsigned int uiBank;
-	unsigned int uiBand;                // ì£¼íŒŒìˆ˜ ëŒ€ì—­
+	unsigned int uiBand;                // ÁÖÆÄ¼ö ´ë¿ª
 	unsigned int uiIsStorePDW;
 
-	// ì•„ë˜ëŠ” ê³µìš© ì •ë³´
+	// ¾Æ·¡´Â °ø¿ë Á¤º¸
 	STR_COMMON_HEADER stCommon;
 
 	unsigned int GetTotalPDW() {
@@ -390,17 +396,17 @@ typedef struct {
 
 	}
 
-} STR_POCKETSONATA_HEADER ;
+}  ;
 #endif
 
 
 #ifndef _SONATA_HEADER_
 #define _SONATA_HEADER_
-typedef struct {
+struct STR_SONATA_HEADER {
 	unsigned int uiBand;
 	unsigned int uiIsStorePDW;
 
-	// ì•„ë˜ëŠ” ê³µìš© ì •ë³´
+	// ¾Æ·¡´Â °ø¿ë Á¤º¸
 	STR_COMMON_HEADER stCommon;
 
 	unsigned int GetTotalPDW() {
@@ -419,20 +425,32 @@ typedef struct {
 		uiIsStorePDW = isStorePDW;
 	}
 
-} STR_SONATA_HEADER ;
+}  ;
 #endif
 
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
-typedef union {
+union UNION_HEADER {
+#if defined(_GRAPH_) || defined(_ELINT_)
+    // ÀÎÃµ°øÇ× ELINT ±¸Á¶Ã¼
 	STR_ELINT_HEADER el;
-    STR_XBAND_HEADER xb;
+#endif
 
+#if defined(_GRAPH_) || defined(_XBAND_)
+    // X´ë¿ªÅ½Áö±â ±¸Á¶Ã¼
+    STR_XBAND_HEADER xb;
+#endif
+
+    // ¼ÒÇü ÀüÀÚÀüÀåºñ ±¸Á¶Ã¼
 	STR_POCKETSONATA_HEADER ps;
 
+#if defined(_GRAPH_) || defined(_SONATA_)
+    // SONATA ÀüÀÚÀüÀåºñ ±¸Á¶Ã¼
 	STR_SONATA_HEADER so;
+#endif
 
-	STR_701_HEADER _701;
+    // 701-ELINT ÀüÀÚÀüÀåºñ ±¸Á¶Ã¼
+    STR_701_HEADER e7;
 
 	char *GetTaskID( ENUM_UnitType enUnitType ) {
 		char *pTaskID;
@@ -442,10 +460,16 @@ typedef union {
 			pTaskID = ( char *) NULL;
 			break;
 
+#if defined(_GRAPH_) || defined(_ELINT_)
 		case en_ELINT :
-		case en_XBAND :
 			pTaskID = & el.aucTaskID[0];
 			break;
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
+        case en_XBAND:
+            pTaskID = &xb.aucTaskID[0];
+            break;
+#endif
 
 		case en_SONATA :
 			pTaskID = ( char *) NULL;
@@ -468,14 +492,29 @@ typedef union {
 			uiTotalPDW = ps.stCommon.uiTotalPDW;
 			break;
 
+#if defined(_GRAPH_) || defined(_ELINT_)
 		case en_ELINT :
-		case en_XBAND :
 			uiTotalPDW = el.stCommon.uiTotalPDW;
 			break;
+#endif
 
+#if defined(_GRAPH_) || defined(_XBAND_)
+        case en_XBAND:
+            uiTotalPDW = xb.stCommon.uiTotalPDW;
+            break;
+#endif
+
+#if defined(_GRAPH_) || defined(_701_)
+        case en_701:
+            uiTotalPDW = e7.stCommon.uiTotalPDW;
+            break;
+#endif
+
+#if defined(_GRAPH_) || defined(_SONATA_)
 		case en_SONATA :
-			uiTotalPDW = so.stCommon.uiTotalPDW;
+            uiTotalPDW = (UINT)-1;	// SONATA¿ë Çì´õ´Â ¾ø±â ¶§¹®¿¡ (-1)·Î ¸®ÅÏÇÔ.
 			break;
+#endif
 
 		default:
 			uiTotalPDW = 0;
@@ -511,7 +550,7 @@ typedef union {
 		return uiBoardID;
 	}
 
-} UNION_HEADER;
+} ;
 #endif
 
 #ifndef _STR_PDWDATA
@@ -525,7 +564,7 @@ struct STR_PDWDATA {
      * @brief     GetTotalPDW
      * @return    unsigned int
      * @exception
-     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-03-03, 13:48
      * @warning
@@ -542,8 +581,10 @@ struct STR_PDWDATA {
 #elif defined(_XBAND_)
         uiTotalPDW = x.xb.stCommon.uiTotalPDW;
 
-#else
+#elif defined(_SONATA_)
         uiTotalPDW = x.so.stCommon.uiTotalPDW;
+
+#else
 
 #endif
 
@@ -561,8 +602,10 @@ struct STR_PDWDATA {
 #elif defined(_XBAND_)
         x.xb.stCommon.uiTotalPDW = uiTotalPDW;
 
-#else
+#elif defined(_SONATA_)
 		x.so.stCommon.uiTotalPDW = uiTotalPDW;
+
+#else
 
 #endif
 
@@ -572,16 +615,16 @@ struct STR_PDWDATA {
 
     /**
      * @brief     SetColTime
-     * @param     __time32_t tColTime
+     * @param     time_t tColTime
      * @param     UINT uiColTimeMs
      * @return    void
      * @exception
-     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-03-03, 13:48
      * @warning
      */
-    void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
+    void SetColTime( time_t tColTime, UINT uiColTimeMs ) {
 
 #ifdef _POCKETSONATA_
 		x.ps.stCommon.tColTime = tColTime;
@@ -595,7 +638,7 @@ struct STR_PDWDATA {
         x.xb.stCommon.tColTime = tColTime;
         x.xb.stCommon.uiColTimeMs = uiColTimeMs;
 
-#else
+#elif defined(_SONATA_)
 		x.so.stCommon.tColTime = tColTime;
 		x.so.stCommon.uiColTimeMs = uiColTimeMs;
 #endif
@@ -606,15 +649,15 @@ struct STR_PDWDATA {
 
     /**
      * @brief     GetColTime
-     * @return    __time32_t
+     * @return    time_t
      * @exception
-     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
+     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-03-03, 13:48
      * @warning
      */
-    __time32_t GetColTime() {
-        __time32_t retTime;
+	time_t GetColTime() {
+		time_t retTime;
 
 #ifdef _POCKETSONATA_
 		retTime = x.ps.stCommon.tColTime;
@@ -625,7 +668,7 @@ struct STR_PDWDATA {
 #elif defined(_XBAND_)
         retTime = x.xb.stCommon.tColTime;
 
-#else
+#elif defined(_SONATA_)
         retTime = x.so.stCommon.tColTime;
 
 #endif
@@ -655,21 +698,17 @@ struct SRxLOBData {
     unsigned int uiABTID;
     unsigned int uiAETID;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiContactTime;			// 64ë¹„íŠ¸ time_t ë¡œ ì„ ì–¸í•´ì•¼ í•¨.
-#else
-	__time32_t tiContactTime;			// 32ë¹„íŠ¸ time_t ë¡œ ì„ ì–¸í•´ì•¼ í•¨.
-#endif
+	time_t tiContactTime;			// 64ºñÆ® time_t ·Î ¼±¾ğÇØ¾ß ÇÔ.
 
     unsigned int tiContactTimems;
 
     char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1ë²ˆì§¸ ELNOT
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1¹øÂ° ELNOT
 
     char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2ë²ˆì§¸ ELNOT
+    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2¹øÂ° ELNOT
 
-    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3ë²ˆì§¸ ELNOT
+    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3¹øÂ° ELNOT
     char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
     char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
@@ -680,18 +719,18 @@ struct SRxLOBData {
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
 #ifdef _ELINT_
-    int iPolarization;                              // ê·¹ì„±
-    int iRatioOfPOL;                                // ê·¹ì„± ì‹ ë¢°ë„
+    int iPolarization;                              // ±Ø¼º
+    int iRatioOfPOL;                                // ±Ø¼º ½Å·Úµµ
 
 #endif
 
     int iSignalType;
 
-    float fDOAMean;             // [0.1ë„]
+    float fDOAMean;             // [0.1µµ]
     float fDOAMax;
     float fDOAMin;
-    float fDOADeviation;		// [0.1ë„]
-    float fDOAMode;             // DOA ìµœë¹ˆìˆ˜
+    float fDOADeviation;		// [0.1µµ]
+    float fDOAMode;             // DOA ÃÖºó¼ö
 
     int iDIRatio;					// [1 %]
 
@@ -702,10 +741,10 @@ struct SRxLOBData {
     float fFreqMax;
     float fFreqMin;
     float fFreqDeviation;
-    float fFreqMode;            // Freq ìµœë¹ˆìˆ˜
+    float fFreqMode;            // Freq ÃÖºó¼ö
     int iFreqPositionCount;
     int iFreqElementCount;
-    float fFreqSeq[MAX_FREQ_PRI_STEP];	// ì£¼íŒŒìˆ˜ ë‹¨ê°’
+    float fFreqSeq[MAX_FREQ_PRI_STEP];	// ÁÖÆÄ¼ö ´Ü°ª
 
     int iPRIType;
     int iPRIPatternType;
@@ -714,7 +753,7 @@ struct SRxLOBData {
     float fPRIMax;
     float fPRIMin;
     float fPRIDeviation;		// [1ns]
-    float fPRIMode;             // PRI ìµœë¹ˆìˆ˜
+    float fPRIMode;             // PRI ÃÖºó¼ö
     float fPRIJitterRatio;		// [%]
     int iPRIPositionCount;
     int iPRIElementCount;
@@ -724,21 +763,21 @@ struct SRxLOBData {
     float fPWMax;
     float fPWMin;
     float fPWDeviation;
-    float fPWMode;              // í„ìŠ¤í­ ìµœë¹ˆìˆ˜
+    float fPWMode;              // ÆŞ½ºÆø ÃÖºó¼ö
 
     float fPAMean;
     float fPAMax;
     float fPAMin;
     float fPADeviation;
-    float fPAMode;              // ì‹ í˜¸ì„¸ê¸° ìµœë¹ˆìˆ˜
+    float fPAMode;              // ½ÅÈ£¼¼±â ÃÖºó¼ö
 
 #if defined(_XBAND_) || defined(_ELINT_)
 #elif defined(_POCKETSONATA_)
 	int iScanType;
 	float fScanPeriod;			// [msec]
 
-	int iMOPType;				// ì¸íŠ¸ë¼ íƒ€ì…
-	int iDetailMOPType;			// ì¸íŠ¸ë¼ ì„¸ë¶€ íƒ€ì…. í•­ê³µì—ì„œ ì¤„ ìˆ˜ ìˆëŠ”ê²ƒì¸ì§€(?)
+	int iMOPType;				// ÀÎÆ®¶ó Å¸ÀÔ
+	int iDetailMOPType;			// ÀÎÆ®¶ó ¼¼ºÎ Å¸ÀÔ. Ç×°ø¿¡¼­ ÁÙ ¼ö ÀÖ´Â°ÍÀÎÁö(?)
 	float fMOPMaxFreq;			// ??
 	float fMOPMinFreq;
 	float fMOPMeanFreq;
@@ -748,8 +787,8 @@ struct SRxLOBData {
     int iScanType;
     float fScanPeriod;			// [msec]
 
-    int iMOPType;				// ì¸íŠ¸ë¼ íƒ€ì…
-    int iDetailMOPType;			// ì¸íŠ¸ë¼ ì„¸ë¶€ íƒ€ì…. í•­ê³µì—ì„œ ì¤„ ìˆ˜ ìˆëŠ”ê²ƒì¸ì§€(?)
+    int iMOPType;				// ÀÎÆ®¶ó Å¸ÀÔ
+    int iDetailMOPType;			// ÀÎÆ®¶ó ¼¼ºÎ Å¸ÀÔ. Ç×°ø¿¡¼­ ÁÙ ¼ö ÀÖ´Â°ÍÀÎÁö(?)
     float fMOPMaxFreq;			// ??
     float fMOPMinFreq;
     float fMOPMeanFreq;
@@ -801,9 +840,9 @@ struct SRxLOBData {
 
 
 //////////////////////////////////////////////////////////////////////////
-// ì»´íŒŒì¼ ë°©ë²•
+// ÄÄÆÄÀÏ ¹æ¹ı
 
-/* ì´ í—¤ë”íŒŒì¼ì„ í”„ë¡œì íŠ¸ í´ë”ì— ë³µì‚¬í•˜ê³  ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ë ¤ê³  í•˜ëŠ” ì†ŒìŠ¤ì— ì•„ë˜ì™€ ê°™ì´ include í•œë‹¤.
+/* ÀÌ Çì´õÆÄÀÏÀ» ÇÁ·ÎÁ§Æ® Æú´õ¿¡ º¹»çÇÏ°í ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇÏ·Á°í ÇÏ´Â ¼Ò½º¿¡ ¾Æ·¡¿Í °°ÀÌ include ÇÑ´Ù.
 
 #include "RadarDirAlgorithm.h"
 
@@ -820,39 +859,39 @@ RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
 */
 
 //////////////////////////////////////////////////////////////////////////
-// ì‹¤í–‰ ë°©ë²•
+// ½ÇÇà ¹æ¹ı
 
-/* 1. ì‹œì‘ì‹œ í•œë²ˆë§Œ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
-	 ì‘ìš© í”„ë¡œê·¸ë¨ì—ì„œ ì´ˆê¸°í™”ì‹œì— ì•„ë˜ ë£¨í‹´ì„ í•œë²ˆ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
+/* 1. ½ÃÀÛ½Ã ÇÑ¹ø¸¸ È£ÃâÇÏ¸é µË´Ï´Ù.
+	 ÀÀ¿ë ÇÁ·Î±×·¥¿¡¼­ ÃÊ±âÈ­½Ã¿¡ ¾Æ·¡ ·çÆ¾À» ÇÑ¹ø È£ÃâÇÏ¸é µË´Ï´Ù.
    RadarDirAlgotirhm::RadarDirAlgotirhm::Init();
 
-	 2. í”„ë¡œê·¸ë¨ ì¢…ë£Œì‹œ í•œë²ˆë§Œ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
+	 2. ÇÁ·Î±×·¥ Á¾·á½Ã ÇÑ¹ø¸¸ È£ÃâÇÏ¸é µË´Ï´Ù.
 	 RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
 
 
-	 3. ì‹ í˜¸ ë¶„ì„ì‹œ PDWDATA êµ¬ì¡°ì— ì•„ë˜ì™€ ê°™ì´ ë°ì´í„°ê°€ ìˆì–´ì•¼ í•©ë‹ˆë‹¤.
+	 3. ½ÅÈ£ ºĞ¼®½Ã PDWDATA ±¸Á¶¿¡ ¾Æ·¡¿Í °°ÀÌ µ¥ÀÌÅÍ°¡ ÀÖ¾î¾ß ÇÕ´Ï´Ù.
 
 typedef struct {
-	char aucTaskID[LENGTH_OF_TASK_ID];			<---- ê³¼ì œ ì •ë³´
-	unsigned int iIsStorePDW;								<---- ì €ì¥ ì—¬ë¶€. ì¼ë‹¨ í•­ìƒ 1ë¡œ í•¨.
-	int iCollectorID;												<---- ìˆ˜ì§‘ì†Œ ìœ„ì¹˜. ì†Œë°©ëŒ€ ë¶„ì†ŒëŠ” 1, ê´€ì œ ìˆ˜ì‹ ì†ŒëŠ” 2, ì‹ ë¶ˆ ë ˆì´ë”#1/ì‹ ë¶ˆ ë ˆì´ë”#2 ì€ 3/4 ë¡œ í• ë‹¹
-	ENUM_BANDWIDTH enBandWidth;							<---- ìˆ˜ì§‘í•œ PDWì˜ ìˆ˜ì§‘ê³¼ì œ ì—ì„œ ëŒ€ì—­í­ì„ ì €ì¥
+	char aucTaskID[LENGTH_OF_TASK_ID];			<---- °úÁ¦ Á¤º¸
+	unsigned int iIsStorePDW;								<---- ÀúÀå ¿©ºÎ. ÀÏ´Ü Ç×»ó 1·Î ÇÔ.
+	int iCollectorID;												<---- ¼öÁı¼Ò À§Ä¡. ¼Ò¹æ´ë ºĞ¼Ò´Â 1, °üÁ¦ ¼ö½Å¼Ò´Â 2, ½ÅºÒ ·¹ÀÌ´õ#1/½ÅºÒ ·¹ÀÌ´õ#2 Àº 3/4 ·Î ÇÒ´ç
+	ENUM_BANDWIDTH enBandWidth;							<---- ¼öÁıÇÑ PDWÀÇ ¼öÁı°úÁ¦ ¿¡¼­ ´ë¿ªÆøÀ» ÀúÀå
 
-	UINT count;															<---- PDW ìˆ˜ì§‘ ê°œìˆ˜
-	_PDW stPDW[_MAX_PDW];										<---- PDW ë°ì´í„°
+	UINT count;															<---- PDW ¼öÁı °³¼ö
+	_PDW stPDW[_MAX_PDW];										<---- PDW µ¥ÀÌÅÍ
 
 } STR_PDWDATA ;
 
 RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );
 
-		4. ë¶„ì„ ê²°ê³¼ëŠ” ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ LOB ê°œìˆ˜ì™€ ë°ì´í„°ë¥¼ ì–»ëŠ”ë‹¤.
+		4. ºĞ¼® °á°ú´Â ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© LOB °³¼ö¿Í µ¥ÀÌÅÍ¸¦ ¾ò´Â´Ù.
 		
-		int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();							<-- LOB ê°œìˆ˜
-		SRxLOBData *pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();	<--- LOB ë°ì´í„°
+		int nCoLOB=RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();							<-- LOB °³¼ö
+		SRxLOBData *pLOBData=RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();	<--- LOB µ¥ÀÌÅÍ
 
-		pLOBData[0] ë¡œ ì²«ë²ˆì§¸ LOB ë°ì´í„°, pLOBData[1] ë¡œ ë‘ë²ˆì§¸ LOB ë°ì´í„° ë“±ìœ¼ë¡œ ì‚¬ìš©í•˜ë©´ ë©ë‹ˆë‹¤. 
+		pLOBData[0] ·Î Ã¹¹øÂ° LOB µ¥ÀÌÅÍ, pLOBData[1] ·Î µÎ¹øÂ° LOB µ¥ÀÌÅÍ µîÀ¸·Î »ç¿ëÇÏ¸é µË´Ï´Ù. 
 
-		*ì£¼ì˜ ì‚¬í•­ : PDWDATA êµ¬ì¡°ì²´ì— ê³¼ì œ ì •ë³´ê°€ ì—†ê±°ë‚˜ PDW ìˆ˜ì§‘ê°œìˆ˜ê°€ 4096 ê°œ ì´ˆê³¼ë˜ë©´ Start()ì—ì„œ ë°”ë¡œ ë¦¬í„´í•œë‹¤. LOB ê°œìˆ˜ëŠ” 0 ìœ¼ë¡œ ë¦¬í„´í•œë‹¤.
+		*ÁÖÀÇ »çÇ× : PDWDATA ±¸Á¶Ã¼¿¡ °úÁ¦ Á¤º¸°¡ ¾ø°Å³ª PDW ¼öÁı°³¼ö°¡ 4096 °³ ÃÊ°úµÇ¸é Start()¿¡¼­ ¹Ù·Î ¸®ÅÏÇÑ´Ù. LOB °³¼ö´Â 0 À¸·Î ¸®ÅÏÇÑ´Ù.
 
 */
 namespace RadarDirAlgotirhm

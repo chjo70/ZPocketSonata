@@ -1,4 +1,4 @@
-#ifndef _H_EL_STRING_DEFN
+﻿#ifndef _H_EL_STRING_DEFN
 #define _H_EL_STRING_DEFN
 
 #define LENGTH_OF_LOB_STRING	(14)

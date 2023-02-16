@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file      ELThreat.h
  * @brief     모든 위협에 대한 인덱스를 트리 구조로 만들어 관리한다.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -25,22 +25,22 @@ struct SELINDEX {
 
 };
 
-typedef enum {
-	ENUM_ROOT_TRAVERSE= 0, 
-	ENUM_AET_TRAVERSE= 1, 
-	ENUM_ABT_TRAVERSE, 
-	ENUM_LOB_TRAVERSE
+// typedef enum {
+// 	ENUM_ROOT_TRAVERSE= 0, 
+// 	ENUM_AET_TRAVERSE= 1, 
+// 	ENUM_ABT_TRAVERSE, 
+// 	ENUM_LOB_TRAVERSE
+// 
+// } ENUM_THREAT_TRAVERSE;
 
-} ENUM_THREAT_TRAVERSE;
-
-typedef enum {
-	ENUM_UNK_THREAT = -1,
-
-	ENUM_LOB_THREAT = 0,
-	ENUM_ABT_THREAT,
-	ENUM_AET_THREAT
-
-} ENUM_THREAT_TYPE;
+// typedef enum {
+// 	ENUM_UNK_THREAT = -1,
+// 
+// 	ENUM_LOB_THREAT = 0,
+// 	ENUM_ABT_THREAT,
+// 	ENUM_AET_THREAT
+// 
+// } ENUM_THREAT_TYPE;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ class CELThreat
 {
 private:
 	static int m_CoInstance;										///< 객체 총 개수
-	static Queue<int> m_QueIndex;								    ///< 위협의 큐 포인터
+	static Queue<unsigned int> m_QueIndex;								    ///< 위협의 큐 포인터
 
     static int m_iCoABT;								            ///< 위협의 큐 포인터
     static int m_iCoAET;								            ///< 위협의 큐 포인터
@@ -87,7 +87,7 @@ private:
 public:
 	SELINDEX m_Idx;													///< 위협의 방사체/빔/LOB 번호
 
-	int m_nIndex;													///< 위협 인덱스
+	unsigned int m_uiIndex;													///< 위협 인덱스
 
 	CELThreat * GetRootThreat() const { return m_pRootThreat; }
 	void SetRootThreat(CELThreat * val) { m_pRootThreat = val; }
@@ -108,8 +108,8 @@ public:
 		m_Idx.uiABT = nABT;
 		m_Idx.uiLOB = nLOB;
 
-		if( false == m_QueIndex.Pop( & m_nIndex ) ) {
-			m_nIndex = INVALID_INDEX;
+		if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
+			m_uiIndex = INVALID_INDEX;
 		}
 // 		else {
 // 			//TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
@@ -192,34 +192,34 @@ public:
 		* @date      2017-03-23, 오후 1:45 
 		* @warning   
 	 */
-	bool IsCheckDepth( ENUM_THREAT_TRAVERSE enTraverse, CELThreat *pChild ) {
-		bool bRet = false;
-		switch( enTraverse ) {
-			case ENUM_AET_TRAVERSE :
-				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT == 0 && pChild->m_Idx.uiLOB == 0 )
-					bRet = true;
-				break;
-
-			case ENUM_ABT_TRAVERSE :
-				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB == 0 )
-					bRet = true;
-				break;
-
-			case ENUM_LOB_TRAVERSE :
-				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB != 0 )
-					bRet = true;
-				break;
-
-			case ENUM_ROOT_TRAVERSE :
-			default :
-				{ //DTEC_Else
-
-				}
-				break;
-				
-		}
-		return bRet;
-	}
+// 	bool IsCheckDepth( ENUM_THREAT_TRAVERSE enTraverse, CELThreat *pChild ) {
+// 		bool bRet = false;
+// 		switch( enTraverse ) {
+// 			case ENUM_AET_TRAVERSE :
+// 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT == 0 && pChild->m_Idx.uiLOB == 0 )
+// 					bRet = true;
+// 				break;
+// 
+// 			case ENUM_ABT_TRAVERSE :
+// 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB == 0 )
+// 					bRet = true;
+// 				break;
+// 
+// 			case ENUM_LOB_TRAVERSE :
+// 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB != 0 )
+// 					bRet = true;
+// 				break;
+// 
+// 			case ENUM_ROOT_TRAVERSE :
+// 			default :
+// 				{ //DTEC_Else
+// 
+// 				}
+// 				break;
+// 				
+// 		}
+// 		return bRet;
+// 	}
 
 
 	/**
@@ -463,9 +463,9 @@ public:
         return m_iCoABT;
     }
 
-	inline int GetAETID() { return m_Idx.uiAET; }
-	inline int GetABTID() { return m_Idx.uiABT; }
-	inline int GetLOBID() { return m_Idx.uiLOB; }
+	inline unsigned int GetAETID() { return m_Idx.uiAET; }
+	inline unsigned int GetABTID() { return m_Idx.uiABT; }
+	inline unsigned int GetLOBID() { return m_Idx.uiLOB; }
 
 
 };

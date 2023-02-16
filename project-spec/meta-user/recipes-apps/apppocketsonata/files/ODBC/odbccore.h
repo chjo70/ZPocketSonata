@@ -166,9 +166,9 @@ public:
 	BOOL GetFieldValue(CHAR* szFieldName, float *dblData);	
 	BOOL GetFieldValue(SQLSMALLINT nField, struct tm* pTime);
 	BOOL GetFieldValue(CHAR* szFieldName, struct tm* pTime);
-	BOOL GetFieldTimeValue(SQLSMALLINT nField, __time32_t * pTime);
-	BOOL GetFieldTimeValue(SQLSMALLINT nField, __time64_t * pTime);
-	BOOL GetFieldTimeValue(CHAR *szFieldName, __time32_t* time);
+	//BOOL GetFieldTimeValue(SQLSMALLINT nField, time_t * pTime);
+	BOOL GetFieldTimeValue(SQLSMALLINT nField, time_t *pTime);
+	BOOL GetFieldTimeValue(CHAR *szFieldName, time_t* time);
 
 	BOOL MoveFirst();
 	BOOL MoveNext();

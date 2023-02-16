@@ -68,7 +68,7 @@ CSAnalScan::~CSAnalScan()
 void CSAnalScan::Init( unsigned int uinoEMT, int noCh )
 {
 
-	m_uiScnTyp = _spUnknown;
+	m_uiScnTyp = E_AET_SCAN_UNKNOWN;
     m_uiScnPrd = _spZero;
 
 	m_uinoEMT = uinoEMT; // m_pScanSigAnal->GetScanNoEMT();
@@ -243,7 +243,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
                 enScanResult = _spAnalSuc;
             }
 
-            if(uiThreat == (unsigned int) _spAnalFail && CheckControlWc(m_uinoEMT) == TRUE ) {
+            if(uiThreat == (unsigned int) _spAnalFail && CheckControlWc(m_uinoEMT) == true ) {
                 // WhereIs;
 
                 ++ m_nCoModWc[m_uinoEMT];
@@ -625,7 +625,7 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 			}
 
 			if( *pPa == (UINT) -1 ) {
-                if( i >= 1 && i <= sizeof(pSample->iPA) ) {
+                if( i >= _spOne && i <= sizeof(pSample->iPA) ) {
 				    *pPa = pSample->iPA[i-1];
                 }
 				pSample->uiCount = i;
@@ -1025,7 +1025,7 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 			}
 
 			switch( m_uiScnTyp ) {
-				case _spUnknown :
+				case E_AET_SCAN_UNKNOWN:
                     //Printf( "\n	Scan Anal Fail !" );
 					uiRet = _spAnalFail;
                     break;
@@ -1079,9 +1079,9 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-02-15 19:23:04
 //
-BOOL CSAnalScan::CheckControlWc( UINT noEMT )
+bool CSAnalScan::CheckControlWc( UINT noEMT )
 {
-    BOOL bRet=FALSE;
+    bool bRet=false;
 #if defined(_A50_RWR)
 	
 #else    
@@ -1412,7 +1412,7 @@ UINT CSAnalScan::DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pA
         uiRet = E_AET_SCAN_BI_DIRECTIONAL;
     }
     else {
-        uiRet = _spUnknown;
+        uiRet = E_AET_SCAN_UNKNOWN;
     }
 
     return uiRet;

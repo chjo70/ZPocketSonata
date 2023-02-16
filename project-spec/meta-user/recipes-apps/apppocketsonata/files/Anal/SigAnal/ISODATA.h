@@ -1,4 +1,4 @@
-// ISODATA.h: interface for the CISODATA class.
+﻿// ISODATA.h: interface for the CISODATA class.
 //
 //////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <stdio.h>
 
@@ -9,9 +9,9 @@
 #include "../../Files/Anal/Collect/DataFile/DataFile.h"
 
 typedef struct {
-    unsigned int uiIdex;    // ÀÎµ¦½º
+    unsigned int uiIdex;    // ì¸ë±ìŠ¤
 
-    char szFileName[200];   // ÆÄÀÏ¸í
+    char szFileName[200];   // íŒŒì¼ëª…
 
     UINT uiCoAllPDW;
     UINT uiFirstTOA;
@@ -66,7 +66,7 @@ private:
     STR_PDWDATA m_stSavePDWData;
     CMIDASBlueFileFormat m_theMidasBlue;
 
-    // º´ÇÕµÈ ¸â¹ö º¯¼ö
+    // ë³‘í•©ëœ ë©¤ë²„ ë³€ìˆ˜
     int m_iCoMergedPDW;
     STR_PDWDATA m_stMergedPDWData;
 
@@ -76,7 +76,7 @@ private:
     _PDW *m_pstPDW;
 
 
-    // ¹æ»ıÇÏ±â À§Áh º¯¼ö ¸ğÀ½
+    // ë°©ìƒí•˜ê¸° ìœ„? ë³€ìˆ˜ ëª¨ìŒ
     float m_fPriWidth;
     _TOA m_tTOA;
 
@@ -85,7 +85,7 @@ private:
 
     float m_fFreqCountPerPeriod;
 
-    // PRI ¹ß»ı¿¡ µû¸¥ º¯¼ö ¸ğÀ½
+    // PRI ë°œìƒì— ë”°ë¥¸ ë³€ìˆ˜ ëª¨ìŒ
     float m_fPRICountPerPeriod;
     UINT m_uiPRIDwellCount;
     UINT m_uiPRILvl;
@@ -102,7 +102,7 @@ private:
 
     void SetGenerateInfo();
 
-    // PDW µ¥ÀÌÅÍ »ı¼ºÇÏ±â
+    // PDW ë°ì´í„° ìƒì„±í•˜ê¸°
     void MakeSignalType( SIGAPDW *pSigPDW=NULL );
     void MakeFreqOfPDW( SIGAPDW *pSigPDW = NULL );
     void MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW = NULL );
@@ -120,7 +120,7 @@ public:
     void ParseAndMakeMemory( SIGAPDW *pSigPDW=NULL );
     void SkipTheHeader();
 
-    void OpenFile( char *pszFileName );
+    void OpenMakefile( char *pszFileName );
 
     inline _PDW *GetMergedPDWData() { return m_stMergedPDWData.pstPDW; }
 };

@@ -1,4 +1,4 @@
-// Group.h: interface for the CGroup class.
+﻿// Group.h: interface for the CGroup class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -60,34 +60,25 @@ protected:
 	unsigned int m_uiCoPdw;
 	//##ModelId=452B0C5600DE
 	unsigned int m_uiMaxPdw;
-	//##ModelId=452B0C5600DF
+	
 	int m_nBand;
-	//##ModelId=452B0C5600E8
+	
 	int m_nStat;
-	//##ModelId=452B0C5600F2
+	
 	unsigned int m_uiCoFrqAoaPwIdx;
-	//##ModelId=452B0C5600FD
+	
 	STR_PDWINDEX m_Band[ TOTAL_BAND ];
-	//##ModelId=452B0C560107
-	STR_PDWINDEX m_GrStat[ MAX_STAT ];				// STAT 그룹화의 펄스열 인덱스
 	
-	STR_FRQAOAPWHISTOGRAM m_AoaHist;						// 방위 히스토그램
-	
-	STR_FRQAOAPWHISTOGRAM m_FrqHist;						// 주파수 히스토그램
-	//##ModelId=452B0C56011B
-	STR_FRQAOAPWHISTOGRAM	m_PwHist;						// 주파수 히스토그램
-	//##ModelId=452B0C560125
-	STR_AOA_GROUPS m_AoaGroups;								// 방위 범위 테이블 그룹
-	//##ModelId=452B0C560139
-	STR_FRQ_GROUPS m_FrqGroups;								// 주파수 범위 테이블 그룹
-	//##ModelId=452B0C560143
+	STR_PDWINDEX m_GrStat[ MAX_STAT ];				// STAT 그룹화의 펄스열 인덱스	
+	STR_FRQAOAPWHISTOGRAM m_AoaHist;						// 방위 히스토그램	
+	STR_FRQAOAPWHISTOGRAM m_FrqHist;						// 주파수 히스토그램	
+	STR_FRQAOAPWHISTOGRAM	m_PwHist;						// 주파수 히스토그램	
+	STR_AOA_GROUPS m_AoaGroups;								// 방위 범위 테이블 그룹	
+	STR_FRQ_GROUPS m_FrqGroups;								// 주파수 범위 테이블 그룹	
 	STR_PW_GROUPS m_PwGroups;
 
-	//##ModelId=452B0C56014D
 	STR_PDWINDEX m_FrqAoaPwIdx;									// 방위 및 주파수 필터링된 PDW 인덱스
-	//##ModelId=452B0C560157
 	STR_FIRST_FRQAOA_PEAK m_FrqAoaPeak;				// 방위 및 주파수 그룹화된 펄스열 중에서 첫번째 인덱스
-	//##ModelId=452B0C560161
 	STR_PDWINDEX *m_pGrPdwIndex;
 
 public:
@@ -169,7 +160,7 @@ public:
 	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
 	void FilterParam( STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP *pAoaGroup );
 	void ReDrawAoaHist( STR_AOA_GROUP *pAoaGroup );
-	BOOL GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup );
+	bool GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup );
 	void MakeHist( STR_PW_GROUP *pPwGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	void MakeHist( unsigned int uiCount, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	void MakeHist( STR_PDWINDEX *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist  );

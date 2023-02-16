@@ -90,6 +90,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>files/Anal/IntraSigAnal</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>files/Anal/KnownSigAnal</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -345,6 +350,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cjamtech.h</locationURI>
 		</link>
 		<link>
+			<name>files/Thread/coperationconsole.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/coperationconsole.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Thread/coperationconsole.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/coperationconsole.h</locationURI>
+		</link>
+		<link>
 			<name>files/Thread/cprompt.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cprompt.cpp</locationURI>
@@ -363,16 +378,6 @@
 			<name>files/Thread/cpulsetrk.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cpulsetrk.h</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/creclan.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/creclan.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/creclan.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/creclan.h</locationURI>
 		</link>
 		<link>
 			<name>files/Thread/cscananalysis.cpp</name>
@@ -450,6 +455,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/MulDiv64.h</locationURI>
 		</link>
 		<link>
+			<name>files/Utils/PCIDriver.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/PCIDriver.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Utils/PCIDriver.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/PCIDriver.h</locationURI>
+		</link>
+		<link>
 			<name>files/Utils/carraymsgdata.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/carraymsgdata.cpp</locationURI>
@@ -515,16 +530,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/csingleclient.h</locationURI>
 		</link>
 		<link>
-			<name>files/Utils/csingleserver.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/csingleserver.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/csingleserver.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/csingleserver.h</locationURI>
-		</link>
-		<link>
 			<name>files/Utils/cthread.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/cthread.cpp</locationURI>
@@ -546,6 +551,11 @@
 		</link>
 		<link>
 			<name>files/Anal/Collect/DataFile</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/GenPDW</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -760,6 +770,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/INC/Stack.h</locationURI>
 		</link>
 		<link>
+			<name>files/Anal/INC/Structs.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/INC/Structs.h</locationURI>
+		</link>
+		<link>
 			<name>files/Anal/INC/TaskMsg.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/INC/TaskMsg.h</locationURI>
@@ -768,11 +783,6 @@
 			<name>files/Anal/INC/defines.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/INC/defines.h</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/INC/structs.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/INC/structs.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/INC/system.h</name>
@@ -833,6 +843,16 @@
 			<name>files/Anal/Identify/structs.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Identify/structs.h</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/IntraSigAnal/IntraSigAnal.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/IntraSigAnal/IntraSigAnal.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/IntraSigAnal/IntraSigAnal.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/IntraSigAnal/IntraSigAnal.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/KnownSigAnal/KAnalPRI.cpp</name>
@@ -1075,6 +1095,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/PulExt.h</locationURI>
 		</link>
 		<link>
+			<name>files/Anal/SigAnal/SigAnal.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-6-WS_ROOT_DIR/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/SigAnal.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/SigAnal/SigAnal.h</name>
+			<type>1</type>
+			<locationURI>PARENT-6-WS_ROOT_DIR/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/SigAnal.h</locationURI>
+		</link>
+		<link>
 			<name>files/Anal/SigAnal/SysPara.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/SysPara.cpp</locationURI>
@@ -1153,6 +1183,16 @@
 			<name>files/Anal/Collect/DataFile/DataFile.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/DataFile/DataFile.h</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/GenPDW/CGenPDW.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/GenPDW/CGenPDW.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Collect/ccollectbank/ccollectbank.cpp</name>

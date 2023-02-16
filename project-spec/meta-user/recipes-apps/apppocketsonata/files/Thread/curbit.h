@@ -1,4 +1,4 @@
-#ifndef CURBIT_H
+﻿#ifndef CURBIT_H
 #define CURBIT_H
 
 
@@ -30,8 +30,8 @@ private:
     CGPIO m_theGPIO;
 #endif
 
-    UNI_ES_IBIT m_stESIbit;															///< 초기자체점검 결과 저장소 입니다.
-    STR_ES_CBIT m_stESCbit;															///< 연속자체점검 결과 저장소 입니다.
+    //UNI_ES_IBIT m_stESIbit;															///< 초기자체점검 결과 저장소 입니다.
+    //STR_ES_CBIT m_stESCbit;															///< 연속자체점검 결과 저장소 입니다.
 
 public:
     STR_MessageData *m_pMsg;														///< 수신 메시지 데이터를 임시 저장하기 위한 저장소 입니다.
@@ -51,7 +51,7 @@ private:
 #endif
 
 public:
-    CUrBit( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );			///< 초기 멤버 변수값 등을 설정하는 객체 생성자 입니다.
+    CUrBit( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );			///< 초기 멤버 변수값 등을 설정하는 객체 생성자 입니다.
     virtual ~CUrBit();																///< 종료 메시지와 메모리 해지를 처리하는 객체 소먈자 입니다.
 
     void Run( key_t key=IPC_PRIVATE );												///< CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.

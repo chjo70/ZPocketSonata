@@ -1,4 +1,4 @@
-#include "ccgi.h"
+﻿#include "ccgi.h"
 #include "../Utils/clog.h"
 
 #ifndef _CGI_LIST_

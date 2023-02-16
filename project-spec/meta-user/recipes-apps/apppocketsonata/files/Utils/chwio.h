@@ -1,4 +1,4 @@
-#ifndef CHWIO_H
+﻿#ifndef CHWIO_H
 #define CHWIO_H
 
 #ifdef _MSC_VER
@@ -177,9 +177,9 @@ typedef struct
         }uniPdw_status;
 } pdw_reg_t;
 
-static xmem_t xmem[XMEM_COUNT] = { { 0x70000000, 0,   0x10000000, (char *) "DMA_1_MEM" },		// DMA IQ MEM(DDR,32MB)
-    { 0xA0000000, 0,   0x00008000, (char *) "BRAM_CTRL_0" },		// DMA IQ MEM(DDR,32MB)
-    { 0xA0010000, 0,   0x00008000, (char *) "BRAM_CTRL_PPFLT" }		// DMA IQ MEM(DDR,32MB)
+static xmem_t xmem[XMEM_COUNT] = { { 0x70000000, 0,   0x10000000, "DMA_1_MEM" },		// DMA IQ MEM(DDR,32MB)
+    { 0xA0000000, 0,   0x00008000, "BRAM_CTRL_0" },		// DMA IQ MEM(DDR,32MB)
+    { 0xA0010000, 0,   0x00008000, "BRAM_CTRL_PPFLT" }		// DMA IQ MEM(DDR,32MB)
 };
 
 enum ENUM_UIO_DEV {

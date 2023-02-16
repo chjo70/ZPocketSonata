@@ -1,4 +1,4 @@
-#ifndef CPROMPT_H
+﻿#ifndef CPROMPT_H
 #define CPROMPT_H
 
 //#include "../Utils/clog.h"

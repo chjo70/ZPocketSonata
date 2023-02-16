@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      ISNUMBER.h
  * @brief     
@@ -16,14 +16,11 @@
 
 using namespace std;
 
-//#define IS_NOT_ZERO(A)          ( ( A > 0 || A < 0 ) == true )
-//#define IS_ZERO(A)              ( IS_NOT_ZERO(A) != true )
-
 
 template <typename T>
 bool is_not_zero(T value)
 {
-    return ((value > (T) 0.0 || value < (T) 0.0) == true);
+    return ( (value > (T) 0.0) || (value < (T) 0.0) );
 
 }
 

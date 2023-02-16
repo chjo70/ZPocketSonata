@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="solutionSelectionDialog">
+		<item value="1" key="applyScope"/>
+	</section>
 	<section name="com.tomato.exerd.tableaccess.QuickTableAccessDialog">
 		<item value="true" key="showParentTable"/>
 		<item value="350" key="width"/>
@@ -7,6 +10,8 @@
 		<item value="0" key="sort"/>
 		<item value="false" key="groupByTable"/>
 		<item value="500" key="height"/>
+	</section>
+	<section name="solution">
 	</section>
 	<section name="com.tomato.exerd.core.wizard.NewEXerdWizard">
 	</section>

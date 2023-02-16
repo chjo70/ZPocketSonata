@@ -4,12 +4,12 @@
 
 //#include "..\..\CEFCOMMON\CommonMngr.h"
 
-namespace SELTASKDB
-{
-	struct SELDBEnvVar;
-	struct SELDBEnvVarRpt;
-	struct SELDBEnvVarIdnf;
-}
+// namespace SELTASKDB
+// {
+// 	struct SELDBEnvVar;
+// 	struct SELDBEnvVarRpt;
+// 	struct SELDBEnvVarIdnf;
+// }
 
 #define _DEFAULT_PPG_TYPE_RATE				(10)			// GUI 에 반영할 것
 #define _DEFAULT_SIGNAL_TYPE_RATE			(10)

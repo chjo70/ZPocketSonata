@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <time.h>
 
@@ -86,7 +86,7 @@ namespace ELDecoder
 	float DecodeMeanFrqStep(const int i_iBinMeanFrqStep);
 	float DecodePriChangePeriod(const int i_iBinPriChangePeriod);
 	float DecodePriRatioPercent(const int i_iBinPriChangePercent);
-	double DecodeToa(const long long int i_llilToa);
+	double DecodeToa(const unsigned long long int i_llilToa);
 	double DecodeWideBandToa(const long long int i_llilToa);
 	int DecodeAltitude(const int i_nAltitude);
 

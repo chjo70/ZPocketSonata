@@ -86,8 +86,8 @@ BOOL CMSIGADlg::OnInitDialog()
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 
 	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
+	//ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+	//ASSERT(IDM_ABOUTBOX < 0xF000);
 
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
 	if (pSysMenu != NULL)
@@ -113,7 +113,7 @@ BOOL CMSIGADlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
-    // _CrtSetBreakAlloc(316394); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
+    //_CrtSetBreakAlloc(165979); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
 
     //CFileTar theFileTar;
     //theFileTar.UnTar( "d:/tftpboot/tftpboot.tar", "d:/tffs0" );

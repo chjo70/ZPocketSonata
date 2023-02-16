@@ -60,7 +60,7 @@ BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro._CC_VERSION.Value=diab_5_9_6_5
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.TOOL.Value=diab
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/diab-5.9.6.5/#WIND_VX7_DIAB_HOST_TYPE#/bin
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.CC_ARCH_SPEC.Value= -tPPCE6500FV:vxworks7 -Xkeywords=0x0 -D_WRS_HARDWARE_FP
-BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.LIBPATH.Value=
 BuildSpec.VSourceBuild_PPCE6500diab_SMP.Macro.LIBS.Value=
@@ -121,7 +121,7 @@ BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro._CC_VERSION.Value=gnu_4_8_1_10
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.TOOL.Value=gnu
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.TOOL_PATH.Value=#WIND_HOME#/compilers/gnu-4.8.1.10/#WIND_VX7_GNU_HOST_TYPE#/bin
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.CC_ARCH_SPEC.Value=-mcpu=e6500 -D_WRS_HARDWARE_FP -fstrength-reduce -fno-builtin -mhard-float -fno-implicit-fp -mstrict-align
-BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.LIBPATH.Value=
 BuildSpec.VSourceBuild_PPCE6500gnu_SMP.Macro.LIBS.Value=

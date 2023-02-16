@@ -1,4 +1,4 @@
-/****************************************************************************************
+﻿/****************************************************************************************
  파 일 명 : cusercollect.cpp
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : 사용자 수집
@@ -192,14 +192,14 @@ void CUserCollect::Run(key_t key)
 void CUserCollect::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
+    //bool bWhile=true;
     UNI_LAN_DATA *pLanData;
 
     m_pMsg = GetDataMessage();
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( bWhile ) {
+    while(m_bThreadLoop) {
         if( QMsgRcv() == -1 ) {
             //perror( "QMsgRcv" );
             break;
@@ -282,7 +282,13 @@ void CUserCollect::SetConfig()
 }
 
 /**
- * @brief CUserCollect::Stop
+ * @brief     Stop
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-09 10:18:21
+ * @warning
  */
 void CUserCollect::Stop()
 {
@@ -295,7 +301,7 @@ void CUserCollect::Stop()
 }
 
 /**
- * @brief     ColStart
+ * @brief     PDW 수집을 시작합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -458,7 +464,7 @@ void CUserCollect::MakeSIMPDWData()
 
     int iDOA;
     int iRandomDOA;
-    unsigned int uiRandomDOA, randomPA, randomPW, randomFreq, randomCh;
+    unsigned int uiRandomDOA, uiRandomPA, uiRandomPW, randomFreq, randomCh;
 
     STR_PDWDATA *pPDWData;
     _PDW *pstPDW;
@@ -535,13 +541,13 @@ void CUserCollect::MakeSIMPDWData()
                                   CPOCKETSONATAPDW::EncodeTOAus( (float) 51209.08 ),
     } ;
 
-    iDOA = (int) m_uiCoSim * CPOCKETSONATAPDW::EncodeDOA( 50 );
+    iDOA = (int) m_uiCoSim * (int) CPOCKETSONATAPDW::EncodeDOA( 50 );
     
     for( i=0 ; i < uiCoPDW; ++i ) {
-        uiRandomDOA = (unsigned int) iDOA + ( rand() % 40 ) - 20;
-        uiRandomDOA = ( unsigned int ) iDOA;
-        randomPA =  ( rand() % 140 ) + 20;
-        randomPW =  ( rand() % 1000 ) + 20000;
+        uiRandomDOA = (unsigned int) ( iDOA + ( ( rand() % 4 ) - 20 ) );
+        //uiRandomDOA = ( unsigned int ) iDOA;
+		uiRandomPA =  (unsigned int) ( ( rand() % 140 ) + 20 );
+		uiRandomPW =  (unsigned int) ( ( rand() % 1000 ) + 20000 );
 
         if( m_uiCoSim % 20 == 0 || true ) {
             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 9800.0 );
@@ -564,14 +570,14 @@ void CUserCollect::MakeSIMPDWData()
 
         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.doa = uiRandomDOA;
         pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.di = 0;
-        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = randomPA;
+        pSIGAPDW->uPDW.x.uniPdw_dir_pa.stPdw_dir_pa.pa = uiRandomPA;
 
-        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = randomPW;
-        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & 0xFF;
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.pulse_width = uiRandomPW;
+        pSIGAPDW->uPDW.x.uniPdw_pw_freq.stPdw_pw_freq.frequency_L = randomFreq & (unsigned int) 0xFF;
 
-        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & 0xFF;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.frequency_H = ( randomFreq >> 8 ) & (unsigned int) 0xFF;
         pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.pdw_phch = randomCh;
-        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & 0xFFFF;
+        pSIGAPDW->uPDW.x.uniPdw_freq_toa.stPdw_freq_toa.toa_L = m_ullTOA & (_TOA) 0xFFFF;
 
         pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.toa_H = ( m_ullTOA >> 16 );
         pSIGAPDW->uPDW.x.uniPdw_toa_edge.stPdw_toa_edge.edge = 1;
@@ -619,7 +625,7 @@ void CUserCollect::MakeSIMPDWData()
 
 
 #else
-    m_pTheGenPDW->OpenFile( g_szPDWScinarioFile );
+    m_pTheGenPDW->OpenMakefile( g_szPDWScinarioFile );
     m_pTheGenPDW->ParseAndMakeMemory();
 
     pstPDW = m_pTheGenPDW->GetMergedPDWData();
@@ -702,7 +708,8 @@ void CUserCollect::MakeSIMPDWData()
 void CUserCollect::MakeCollectHistogram()
 {
     float fFreq;
-    int iIndex, iCh, iMax=0;
+	int iIndex, iCh;
+	unsigned char ucMax=0;
     unsigned int ui, uiFreq;
     //unsigned char (*pColHisto)[COLHISTO_CELLS] = GP_SYSCFG->GetColHisto();
 
@@ -732,13 +739,13 @@ void CUserCollect::MakeCollectHistogram()
         else {
             ++ pColHisto[iIndex];
 
-            iMax = _max( iMax, pColHisto[iIndex] );
+			ucMax = _max(ucMax, pColHisto[iIndex] );
         }
 
         ++ pSIGAPDW;
     }
 
-    pColHisto[COLHISTO_CELLS] = iMax;
+    pColHisto[COLHISTO_CELLS] = ucMax;
 
 }
 

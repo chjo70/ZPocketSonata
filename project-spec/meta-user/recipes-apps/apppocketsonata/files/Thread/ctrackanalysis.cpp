@@ -146,6 +146,6 @@ void CTrackAnalysis::AnalysisStart()
 
     SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
 
-    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), iCoLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
 
 }

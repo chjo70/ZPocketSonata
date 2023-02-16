@@ -150,7 +150,8 @@ struct STR_UPDATE_LOB_ABT_AET {
 }  ;
 
 enum ENUM_PE_STAT {
-	E_EL_PESTAT_FAIL=0,					// 위치 산출 후 에러가 난 상태
+	E_EL_PESTAT_UNKNOWN=0,
+	E_EL_PESTAT_FAIL,					// 위치 산출 후 에러가 난 상태
 	E_EL_PESTAT_SUCCESS,				// 위치 산출 결과가 성공인 상태
 	E_EL_PESTAT_NOT_YET,				// LOB가 적어서 위치 산출 수행 이전 상태
 	E_EL_PESTAT_IMPOSSIBILITY		// 항공기가 고정 위치로 산출하기 어려운 상태
@@ -282,12 +283,7 @@ struct I_AET_ANAL {
 	unsigned int uiABTID;
 	unsigned int uiLOBID;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
-#else
-	__time32_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
-
-#endif
+	time_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
 
 	unsigned int tiContactTimems;																				// 항공에서 분석 시간
 
@@ -397,6 +393,8 @@ typedef enum {
     enSCAN_Stopping,
     enSCAN_Canceling,
 
+	enSCAN_CANTProcessing,
+
 } ENUM_SCAN_PROCESS;
 
 /**
@@ -450,11 +448,11 @@ struct SELABTDATA_EXT {
 
     //SLOBOtherInfo stLOBOtherInfo;
 
-    int iLOBPoolIndex;
+    unsigned int uiLOBPoolIndex;
 
     STR_ID_TYPE stIDType;
 
-    enTHREAT_PLATFORM enPlatform;
+    ENUM_THREAT_PLATFORM enPlatform;
 
     int nCoIdEOB;
     //STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
@@ -624,36 +622,6 @@ typedef struct SEmitterFilter
 	}
 }I_EMITTER_FILTER;
 
-// typedef struct STempPDW
-// {
-// 	SRxPDWData stData;
-// 	SAvgPDWDataRGroup stAvgData;
-// 	//std::list<SRXPDWDataRGroup> listGroup; // 2014.07.15.이정남. 사용하지 않아서 주석처리
-// 	STempPDW()
-// 	{
-// 		memset(&stData, 0, sizeof(SRxPDWData));
-// 		memset(&stAvgData, 0, sizeof(SRXPDWDataRGroup));
-// 		//stData.Init();
-// 		//stAvgData.Init();
-// 		//listGroup.clear(); // 2014.07.15.이정남. 사용하지 않아서 주석처리
-// 	}
-// }I_PDW;
-
-// 방사체/LOB 목록창에서 보고서 작성 메뉴 클릭 시 발생
-// struct SEmitterInfoForReport
-// {
-// 	std::string strDtctId;
-// 	std::string strTaskId;
-// 	int nAetId;
-// 	int nLobId;
-// 	bool bFromEmitterWnd;
-// 	SEmitterInfoForReport()
-// 	: strTaskId("")
-// 	, strDtctId("")
-// 	, nAetId(-1)
-// 	, nLobId(-1)
-// 	, bFromEmitterWnd(true){};
-// };
 
 struct SEmitterActivationInfo
 {
@@ -931,7 +899,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nIsFiltered;
 // 	unsigned int uiNewAbtId;
 // 	unsigned int uiNewAetId;
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
 // 
 // 	// 조철희, 시간 순으로 정렬하기 위해 추가된 함수
 // 	bool operator<(const SLobInfoToWnd & other ) 
@@ -1147,7 +1115,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nEEPTiltAngle; // 0.1도 해상도
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
 // 	unsigned int uiNewAetId;
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
 // 
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];
@@ -1326,7 +1294,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nEEPTiltAngle; // 0.1도 해상도
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
 // 
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 이정남. 2018.4.10.
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
 // 	char szManualPosEstPreferred[LENGTH_OF_SHORT_CHAR];
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];

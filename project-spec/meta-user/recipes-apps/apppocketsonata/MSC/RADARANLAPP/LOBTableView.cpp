@@ -147,7 +147,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 	SRxLOBData *pLOBData;
 	SELLOBDATA_EXT *pLOBExt;
 
-	struct tm timeInfo;
+	struct tm *pTimeInfo;
 
 	std::string strAETID;
 	std::vector<int> iVect;
@@ -222,12 +222,9 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 #endif
 
-#if _POCKETSONATA_
-			_localtime64_s( & timeInfo, & pLOBData->tiContactTime );
-#else
-			_localtime32_s(&timeInfo, &pLOBData->tiContactTime);
-#endif
-			sprintf_s( szBuffer, sizeof(szBuffer), "%02d-%02d-%02d %02d:%02d:%02d.%03d", timeInfo.tm_year-100, timeInfo.tm_mon, timeInfo.tm_mday, timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec, pLOBData->tiContactTimems );
+			pTimeInfo = localtime( & pLOBData->tiContactTime );
+
+			sprintf_s( szBuffer, sizeof(szBuffer), "%02d-%02d-%02d %02d:%02d:%02d.%03d", pTimeInfo->tm_year-100, pTimeInfo->tm_mon, pTimeInfo->tm_mday, pTimeInfo->tm_hour, pTimeInfo->tm_min, pTimeInfo->tm_sec, pLOBData->tiContactTimems );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
             sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->tiContactTimems );
@@ -396,7 +393,7 @@ int CLOBTableView::GetFieldIndex( char *pMatch, int nCoField, char **pszField )
  */
 void CLOBTableView::CreateListCtrl()
 {
-	int i;
+	unsigned int i;
 
 	CRect rect, rList;
 

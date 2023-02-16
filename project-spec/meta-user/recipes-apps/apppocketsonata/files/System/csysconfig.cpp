@@ -68,7 +68,7 @@ CSysConfig::CSysConfig(void)
 CSysConfig::~CSysConfig(void)
 {
 
-    m_pSharedMemory->closeSharedMemory();
+    // m_pSharedMemory->closeSharedMemory();
     delete m_pSharedMemory;
 
 
@@ -96,7 +96,7 @@ void CSysConfig::LoadINI()
     char szBuffer[400], szDefault[400];
 
     ///////////////////////////////////////////////////////////////////////////////
-    // RX Threshold 값 로딩
+    // 수신기 임계값 설정
     i = 0;
 
 	sprintf( szDefault, "%f" , _DEFAULT_RXTHRESHOLD_BAND1_ );
@@ -115,35 +115,46 @@ void CSysConfig::LoadINI()
 	GetPrivateProfileString( "RXTHRESHOLD", "Band5", szDefault, szBuffer, 100, m_szIniFileName );
 	fValueArray[i++] = (float) atof( szBuffer );
     sprintf(szDefault, "%f", _DEFAULT_RXTHRESHOLD_BAND6_);
-    GetPrivateProfileString("RXTHRESHOLD", "Band6", szDefault, szBuffer, 100, m_szIniFileName);
-    fValueArray[i] = (float)atof(szBuffer);
 
 	SetRxThreshold( fValueArray );
 
-    // 대역별 방탐 오차 정의
+	///////////////////////////////////////////////////////////////////////////////////
+    // 방탐 병합 오차 정의
     i = 0;
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND1_ );
-    GetPrivateProfileString("MERTGE", "AOA1", szDefault, szBuffer, 100, m_szIniFileName);
+    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_);
+    GetPrivateProfileString("MERGE", "AOA1", szDefault, szBuffer, 100, m_szIniFileName);
     fValueArray[i++] = (float)atof(szBuffer);
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND2_);
-    GetPrivateProfileString("MERTGE", "AOA2", szDefault, szBuffer, 100, m_szIniFileName);
+    GetPrivateProfileString("MERGE", "AOA2", szDefault, szBuffer, 100, m_szIniFileName);
     fValueArray[i++] = (float)atof(szBuffer);
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND3_);
-    GetPrivateProfileString("MERTGE", "AOA3", szDefault, szBuffer, 100, m_szIniFileName);
+    GetPrivateProfileString("MERGE", "AOA3", szDefault, szBuffer, 100, m_szIniFileName);
     fValueArray[i++] = (float)atof(szBuffer);
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND4_);
-    GetPrivateProfileString("MERTGE", "AOA4", szDefault, szBuffer, 100, m_szIniFileName);
+    GetPrivateProfileString("MERGE", "AOA4", szDefault, szBuffer, 100, m_szIniFileName);
     fValueArray[i++] = (float)atof(szBuffer);
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND5_);
-    GetPrivateProfileString("MERTGE", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
+    GetPrivateProfileString("MERGE", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
     fValueArray[i++] = (float)atof(szBuffer);
-    sprintf(szDefault, "%f", _DEFAULT_AOA_MERGE_BAND6_);
-    GetPrivateProfileString("MERTGE", "AOA6", szDefault, szBuffer, 100, m_szIniFileName);
-    fValueArray[i] = (float)atof(szBuffer);
 
     SetMergeAOADiff(fValueArray);
+	
+	///////////////////////////////////////////////////////////////////////////////////
+	// 수신기 방탐 오차 정의
+	i = 0;
+	sprintf(szDefault, "%f", _DEFAULT_AOA_ERROR_);
+	GetPrivateProfileString("AOA", "AOA1", szDefault, szBuffer, 100, m_szIniFileName);
+	fValueArray[i++] = (float)atof(szBuffer);
+	GetPrivateProfileString("AOA", "AOA2", szDefault, szBuffer, 100, m_szIniFileName);
+	fValueArray[i++] = (float)atof(szBuffer);
+	GetPrivateProfileString("AOA", "AOA3", szDefault, szBuffer, 100, m_szIniFileName);
+	fValueArray[i++] = (float)atof(szBuffer);
+	sprintf(szDefault, "%f", _DEFAULT_AOA_ERROR_);
+	GetPrivateProfileString("AOA", "AOA4", szDefault, szBuffer, 100, m_szIniFileName);
+	fValueArray[i++] = (float)atof(szBuffer);
+	sprintf(szDefault, "%f", _DEFAULT_AOA_ERROR_);
+	GetPrivateProfileString("AOA", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
+	fValueArray[i++] = (float)atof(szBuffer);
 
+	SetAOAError(fValueArray);
  
+	///////////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
     GetPrivateProfileString( "NETWORK" , "PRIME_SERVER" , "192.168.1.12", szBuffer, 100, m_szIniFileName );
     SetPrimeServerOfNetwork( szBuffer );
@@ -191,14 +202,25 @@ void CSysConfig::LoadINI()
 
     // 대역별 방탐 오차 정의
     i = 0;
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA1", _DEFAULT_AOA_MERGE_BAND1_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA2", _DEFAULT_AOA_MERGE_BAND2_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA3", _DEFAULT_AOA_MERGE_BAND3_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA4", _DEFAULT_AOA_MERGE_BAND4_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA5", _DEFAULT_AOA_MERGE_BAND5_);
-    fValueArray[i] = m_theMinIni.getf("MERGE", "AOA6", _DEFAULT_AOA_MERGE_BAND6_);
+    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA1", _DEFAULT_AOA_MERGE_);
+    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA2", _DEFAULT_AOA_MERGE_);
+    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA3", _DEFAULT_AOA_MERGE_);
+    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA4", _DEFAULT_AOA_MERGE_);
+    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA5", _DEFAULT_AOA_MERGE_);
+    fValueArray[i] = m_theMinIni.getf("MERGE", "AOA6", _DEFAULT_AOA_MERGE_);
 
     SetMergeAOADiff(fValueArray);
+
+    // 수신기 방탐 오차 정의
+    i = 0;
+    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA1", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA2", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA3", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA4", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA5", _DEFAULT_AOA_ERROR_);
+    fValueArray[i] = m_theMinIni.getf("AOA", "AOA6", _DEFAULT_AOA_ERROR_);
+
+    SetAOAError(fValueArray);
 
     // 네트워크 환경 설정
     strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , "192.168.1.12" );

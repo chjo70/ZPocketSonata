@@ -21,7 +21,14 @@ enum { tPRI_HTTPDAEMON=150, tPRI_BOOTSHEL=1, tPRI_App=200 };
 #define CTRL_X						(24)
 #define REBOOT						CTRL_X
 
+
+//////////////////
+// SNTP 프로토콜 정의
+#define TRY_GETSNTP                 (3)
+#define SNTP_SERVER_IP				((char *)"192.168.1.100")
+
 void LoadBootParameter();
+void PCIConfigSetting();
 
 //////////////////////////////////////////////////////////////////////////
 #ifdef __cplusplus

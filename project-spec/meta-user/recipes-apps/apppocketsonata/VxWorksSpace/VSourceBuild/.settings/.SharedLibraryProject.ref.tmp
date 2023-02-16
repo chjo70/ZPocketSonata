@@ -62,7 +62,7 @@ BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.TOOL_PATH.Value=#WIND_HOME#/co
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.CC_ARCH_SPEC.Value=-tPPCEH:rtp7
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.LIBPATH.Value=
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.LIBS.Value= -lstlstd 
-BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
@@ -81,17 +81,17 @@ BuildSpec.VSourceBuild_PPCE6500diab_C++2003.SymbolList=
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.DerivedFileSignatures=*.sho
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.DebugFlags=-g -Xdebug-dwarf3
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.NonDebugFlags= -XO
-BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C-Compiler.Command=echo "building $@";%ccompilerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.DerivedFileSignatures=*.sho
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.DebugFlags=-g -Xdebug-dwarf3
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.NonDebugFlags= -XO
-BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.C++-Compiler.Command=echo "building $@";%cppcompilerprefix% #TOOL_PATH#/dplus %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_C++FLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile% && if [ "#APICHECK#" = "1" ]; then #APICHECK_CMD#;fi
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.DerivedFileSignatures=*.so
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.DebugFlags=
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.NonDebugFlags=
-BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic -Xshared -Xdynamic 
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xforce-declarations -ei5387,5388,5849,1824   -Xmake-dependency=0xd  -Xpic -Xshared -Xdynamic 
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Shared Library Linker.Command=echo "building $@";SONAME=`basename "%OutFile%"`;if [ "#SHAREDLIB_VERSION#" != "" ]; then SONAME=$$SONAME.#SHAREDLIB_VERSION#;fi;  %cpplinkerprefix% #TOOL_PATH#/dplus %DebugModeFlags% %ToolFlags% -soname="$$SONAME" -o %OutFile% %Objects% #ADDED_OBJECTS# #LIBPATH# -L#VSB_DIR#/usr/lib/common/PIC #ADDED_LIBPATH# %Libraries% #LIBS# #ADDED_LIBS# && if [ "#DO_STRIP#" = "1" ]; then mv -f "$@" "$@.unstripped" && stripppc -g -o "$@" "$@.unstripped";fi && if [ "#EXPAND_DBG#" = "1" ]; then plink "$@";fi && if [ "#SHAREDLIB_VERSION#" != "" ]; then cp -f "$@" "$@.#SHAREDLIB_VERSION#";fi && $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) && true
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Static Librarian.DerivedFileSignatures=*.a
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Static Librarian.DebugFlags=
@@ -101,7 +101,7 @@ BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Static Librarian.Command=e
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.DerivedFileSignatures=*.sho
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.DebugFlags=-g -Xdebug-dwarf3
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.NonDebugFlags= -XO
-BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd  -Xpic
+BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.ToolFlags=#CC_ARCH_SPEC# -Y I,+D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public/c++03:D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild/usr/h/public:#TOOL_PATH#/../../include/diab -Xansi -WDVSB_DIR=#VSB_DIR#  -W:c++:.CPP  -Xstsw-slow -Xstmw-slow -Xpreprocess-assembly -Xcpp-no-space   -Xmake-dependency=0xd  -Xpic
 BuildSpec.VSourceBuild_PPCE6500diab_C++2003.BuildTool.Assembler.Command=echo "building $@";%assemblerprefix% #TOOL_PATH#/dcc %DebugModeFlags% %ToolFlags% %Defines% #DEFINES# #ADDED_CFLAGS# %Includes% #ADDED_INCLUDES# -o %OutFile% -c %InFile%
 BuildSpec.Name=VSourceBuild_PPCE6500gnu_C++2003
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VX_CPU_FAMILY.Value=ppc
@@ -114,7 +114,7 @@ BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.TOOL_PATH.Value=#WIND_HOME#/com
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.CC_ARCH_SPEC.Value=-fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.LIBPATH.Value=
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.LIBS.Value= -lstdc++   -latomic 
-BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2003.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#
@@ -166,7 +166,7 @@ BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.TOOL_PATH.Value=#WIND_HOME#/com
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.CC_ARCH_SPEC.Value=-fno-builtin -fstrength-reduce -mstrict-align -mregnames -mhard-float -fno-implicit-fp -D_WRS_HARDWARE_FP
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.LIBPATH.Value=
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.LIBS.Value= -lsupc++   -lstdc++11   -latomic 
-BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
+BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VSB_DIR.Value=D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSourceBuild
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.VSB_CONFIG_FILE.Value=#VSB_DIR#/h/config/vsbConfig.h
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.BDGEN_VSB_INCLUDE.Value=#VSB_DIR#/h/config/auto.conf
 BuildSpec.VSourceBuild_PPCE6500gnu_C++2011.Macro.APICHECK_CMD.Value=apicheck.sh -r "#VSB_DIR#/usr/apicheck/forbidden_api.lst" -n "nmppc" -u -s "$<" "$@" #APICHECK_OPTIONS#

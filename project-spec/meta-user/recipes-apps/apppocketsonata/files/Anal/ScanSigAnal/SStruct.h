@@ -12,7 +12,6 @@
 #include "../INC/PDW.h"
 #include "SDefine.h"
 
-//##ModelId=452B0C44033B
 typedef unsigned int HIST;
 
 #ifndef _STR_LOWHIGH

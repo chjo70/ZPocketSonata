@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
  * */
 
@@ -35,12 +35,13 @@
 
 
 // 대역별 방위 병합 오차
-#define _DEFAULT_AOA_MERGE_BAND1_                   (float) (8.0)       // 도(degree)
-#define _DEFAULT_AOA_MERGE_BAND2_                   (float) (8.0)
-#define _DEFAULT_AOA_MERGE_BAND3_                   (float) (8.0)
-#define _DEFAULT_AOA_MERGE_BAND4_                   (float) (8.0)
-#define _DEFAULT_AOA_MERGE_BAND5_                   (float) (8.0)
-#define _DEFAULT_AOA_MERGE_BAND6_                   (float) (8.0)
+#define _DEFAULT_AOA_MERGE_							(float) (2.0)       // 도(degree)
+
+
+
+// 대역별 방위 병합 오차
+#define _DEFAULT_AOA_ERROR_							(float) (1.0)       // 도(degree)
+
 
 // 에미터 최소 펄스 신호 개수
 #define _DEFAULT_ANAL_MINPULSECOUNT_                (5)

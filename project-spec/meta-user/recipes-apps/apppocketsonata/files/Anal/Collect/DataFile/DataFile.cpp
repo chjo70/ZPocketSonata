@@ -12,7 +12,7 @@
 #if defined(_MSC_VER)
 
 
-#elif __linux__
+#elif defined(__linux__)
 
 
 #elif defined(__VXWORKS__)
@@ -30,7 +30,13 @@
 #include "../../../Utils/ccommonutils.h"
 
 
-#define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
+//#define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
+#if PDW_ITEMS < IQ_ITEMS
+#define			MAX_ITEMS					IQ_ITEMS
+#else
+#define			MAX_ITEMS					PDW_ITEMS
+#endif
+
 #define         MAX_ITEMS_BYTE                  ( MAX_ITEMS * 50 )
 
 static int stDataFile;
@@ -508,7 +514,7 @@ void CEPDW::SetHeaderData( void *pData )
     return;
 }
 
-
+#if defined(_GRAPH_) || defined(_XBAND_)
 ///////////////////////////////////////////////////////////////////////////////////////
 // X밴드 방탐기
 
@@ -531,10 +537,11 @@ CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 
     m_enBandWidth = XBAND::en5MHZ_BW;
 
-    CXPDW::Init( pRawData );
+    CData::Init( pRawData );
 
     if( pstFilterSetup != NULL ) {
-        memcpy( &m_strFilterSetup, pstFilterSetup, sizeof( STR_FILTER_SETUP ) );
+        // memcpy( &m_strFilterSetup, pstFilterSetup, sizeof( STR_FILTER_SETUP ) );
+		memcpy_s(&m_strFilterSetup, sizeof(STR_FILTER_SETUP), pstFilterSetup, sizeof(STR_FILTER_SETUP));
     }
 
 }
@@ -945,7 +952,9 @@ void CXPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     pPDWRealData->SetTotalPDW( uiDataItems );
 
 }
+#endif
 
+#if defined(_GRAPH_) || defined(_SONATA_)
 //////////////////////////////////////////////////////////////////////////
 
 /**
@@ -965,7 +974,7 @@ CSPDW::CSPDW(char *pRawData, STR_FILTER_SETUP *pstFilterSetup, size_t szFileSize
 	m_enDataType = en_PDW_DATA;
 	m_enUnitType = en_SONATA;
 
-	CSPDW::Init(pRawData );
+	CData::Init(pRawData );
 
 }
 
@@ -1053,9 +1062,14 @@ unsigned int CSPDW::GetOneDataSize()
  */
 unsigned int CSPDW::GetDataItems(unsigned long long ullFileSize)
 {
-	unsigned int uiDataItems;
+	unsigned int uiDataItems=0;
 
-	uiDataItems = (UINT)(m_ullFileSize) / GetOneDataSize();
+	unsigned int uiDataSize = GetOneDataSize();
+
+	if (uiDataSize != 0) {
+		uiDataItems = (UINT) (m_ullFileSize) / uiDataSize;
+	}
+	//TDIV<unsigned long long>(m_ullFileSize, GetOneDataSize());
 
 	return uiDataItems;
 }
@@ -1387,6 +1401,11 @@ void *CSPDW::GetRealData()
 // 
 // }
 
+#endif
+
+
+
+#if defined(_GRAPH_) || defined(_KFX_)
 //////////////////////////////////////////////////////////////////////////
 CKFXPDW::CKFXPDW(STR_RAWDATA *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 {
@@ -1578,7 +1597,7 @@ void CKFXPDW::ConvertPDWData( STR_PDWDATA *pPDWData, STR_FILTER_SETUP *pFilterSe
 //     //Log( enNormal, "필터링 PDW 개수는 %d 입니다.", m_PDWData.uiDataItems );
 }
 
-
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -1593,7 +1612,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterS
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_ZPOCKETSONATA;
 
-    CPOCKETSONATAPDW::Init( pRawData );
+    CData::Init( pRawData );
 
 }
 
@@ -2000,10 +2019,10 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
             *pullTOA++ = ullTOA;
 
             *pdTOA++ = CPOCKETSONATAPDW::DecodeTOA( ullTOA );
-            *pfAOA++ = CPOCKETSONATAPDW::DecodeDOA( uiAOA );
-            *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( uiFreq, iCh, 3, 0 );
-            *pfPA++ = CPOCKETSONATAPDW::DecodePA( uiPA );
-            *pfPW++ = CPOCKETSONATAPDW::DecodePW( uiPW );
+            *pfAOA++ = CPOCKETSONATAPDW::DecodeDOA( (int) uiAOA );
+            *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( (int) uiFreq, iCh, 3, 0 );
+            *pfPA++ = CPOCKETSONATAPDW::DecodePA( (int) uiPA );
+            *pfPW++ = CPOCKETSONATAPDW::DecodePW((int) uiPW );
 
             *pcType++ = iPulseType;
             *pcDV++ = 1;
@@ -2018,6 +2037,10 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     m_PDWRealData.SetTotalPDW( uiDataItems );
 
 }
+
+
+#if defined(_GRAPH_) || defined(_701_)
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -2041,7 +2064,7 @@ C7PDW::C7PDW(char *pRawData, STR_FILTER_SETUP *pstFilterSetup, ENUM_DataType enD
 
 	m_enBandWidth = _701::enNARROW_BW;
 
-	C7PDW::Init(pRawData);
+	CData::Init(pRawData);
 
 }
 
@@ -2183,7 +2206,7 @@ void *C7PDW::GetRealData()
  */
 void C7PDW::MakeHeaderData(STR_PDWDATA *pPDWData)
 {
-	memcpy(&pPDWData->x._701, &m_stHeader, sizeof(m_stHeader));
+	memcpy(&pPDWData->x.e7, &m_stHeader, sizeof(m_stHeader));
 
 }
 
@@ -2240,7 +2263,7 @@ void C7PDW::MakePDWDataToReal(STR_PDWREALDATA *pPDWRealData)
 	uiDataItems = 0;
 
 	if (m_enDataType == en_PDW_DATA_CSV) {
-
+		pPDW = NULL;
 	}
 	else {
 		pPDW = (_PDW *)& m_pRawDataBuffer[0];
@@ -2414,7 +2437,7 @@ int C7PDW::UpdateRow(SRxPDWDataRGroup *pstRxPDWDataRGroup, char *pData )
 
 	iIndex = CCommonUtils::Parsing( & vecValues, pData);
 
-	pstRxPDWDataRGroup->uiPDWID = atoi( vecValues[0].c_str() );
+	pstRxPDWDataRGroup->uiPDWID = (UINT) atoi( vecValues[0].c_str() );
 
 	if (vecValues[1].compare( "Pulse" ) == 0) {
  		pstRxPDWDataRGroup->uiPulseType = STAT_NORMAL;
@@ -2461,7 +2484,7 @@ int C7PDW::GetHeaderSize()
 	if (m_enDataType == en_PDW_DATA_CSV) {
 		memset(&m_stHeader, 0, sizeof(m_stHeader));
 
-		memcpy(&m_stHeader, &m_uniHeader._701, sizeof(STR_701_HEADER));
+		memcpy(&m_stHeader, &m_uniHeader.e7, sizeof(STR_701_HEADER));
 		//m_stHeader.SetTotalPDW( m_uniHeader.GetTotalPDW(m_enUnitType) );
 	}
 	else {
@@ -2506,6 +2529,8 @@ unsigned int C7PDW::GetDataItems( unsigned long long ullFileSize )
 {
 	return (unsigned int) m_stHeader.GetTotalPDW();
 }
+
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -3382,7 +3407,7 @@ int CMIDAS::GetHeaderSize()
 	    else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
 		    memcpy( & m_ADJ._6000, & m_pRawHeaderBuffer[0x100], sizeof(SELMIDAS_ADJUNCT_TYPE_6000) );
 
-            UINT uiSize = _min( m_ADJ._6000.subrecords * sizeof(SELSUBRECORDS), MAX_ITEMS );
+            UINT uiSize = min( m_ADJ._6000.subrecords * sizeof(SELSUBRECORDS), MAX_ITEMS );
 		    m_pSubRecords = ( SELSUBRECORDS * ) malloc( uiSize );
             if( m_pSubRecords != NULL ) {
 		        memcpy( m_pSubRecords, & m_pRawHeaderBuffer[0x100+sizeof(SELMIDAS_ADJUNCT_TYPE_6000)], uiSize );
@@ -3536,7 +3561,9 @@ CData::CData()
     m_PDWData.pstPDW = NULL;
 
     //
-    memset( &m_PDWRealData, 0, sizeof( STR_PDWREALDATA ) );
+    //memset( &m_PDWRealData, 0, sizeof(STR_PDWREALDATA) );
+	// 멍청한 정적 툴 -> STR_PDWREALDATA 구조체에 초기값 설정
+	// memset(&m_PDWRealData, 0, sizeof(m_PDWRealData));
 
 	ClearFilterSetup();
 
@@ -3631,11 +3658,12 @@ void CData::AllocData( int iItems )
     size_t szPDW;
 
     FreeData();
-    
-    _SAFE_FREE( m_PDWData.pstPDW )
 
     szPDW = CCommonUtils::CheckMultiplyOverflow( (int) sizeof( _PDW ), iItems );
-    _SAFE_MALLOC( m_PDWData.pstPDW, _PDW, szPDW )
+
+    //_SAFE_MALLOC( m_PDWData.pstPDW, _PDW, szPDW )
+	// 위에서 FreeData()를 호출하기 때문에 아래에서 그냥 malloc()을 수행함.
+	_FORCED_MALLOC( m_PDWData.pstPDW, _PDW, szPDW )
 
 }
 
@@ -3657,21 +3685,20 @@ void CData::AllocRealData( int iItems )
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(float), iItems );
     szdSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(double), iItems );
 
+    _FORCED_MALLOC( m_PDWRealData.pfAOA, float, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pfFreq, float, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pfPW, float, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pfPA, float, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pfDTOA, float, szSize )
 
-    _SAFE_MALLOC( m_PDWRealData.pfAOA, float, szSize )
-    _SAFE_MALLOC( m_PDWRealData.pfFreq, float, szSize )
-    _SAFE_MALLOC( m_PDWRealData.pfPW, float, szSize )
-    _SAFE_MALLOC( m_PDWRealData.pfPA, float, szSize )
-    _SAFE_MALLOC( m_PDWRealData.pfDTOA, float, szSize )
-
-    _SAFE_MALLOC(m_PDWRealData.pdTOA, double, szdSize)
+	_FORCED_MALLOC(m_PDWRealData.pdTOA, double, szdSize)
 
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_TOA), iItems );
-    _SAFE_MALLOC( m_PDWRealData.pullTOA, _TOA, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pullTOA, _TOA, szSize )
 
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(char), iItems );
-    _SAFE_MALLOC( m_PDWRealData.pcType, char, szSize )
-    _SAFE_MALLOC( m_PDWRealData.pcDV, char, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pcType, char, szSize )
+	_FORCED_MALLOC( m_PDWRealData.pcDV, char, szSize )
     
 }
 
@@ -3920,30 +3947,31 @@ void CData::ConvertPDWData( STR_FILTER_SETUP *pFilterSetup, bool bSwap, ENUM_CON
     case enUnitToPDW :
         MakeHeaderData( & m_PDWData );
 
-        AllocData( m_PDWData.GetTotalPDW() );
+        AllocData( (int) m_PDWData.GetTotalPDW() );
         MakePDWDataByUnitToPDW( & m_PDWData );
         break;
 
     case enPDWToPDW :
         MakeHeaderData( & m_PDWData  );
 
-        AllocData( m_PDWData.GetTotalPDW() );
+        AllocData((int) m_PDWData.GetTotalPDW() );
         if( m_PDWData.pstPDW != NULL ) {
-            memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * m_PDWData.GetTotalPDW() );
+			unsigned int uiTotalPDW = m_PDWData.GetTotalPDW();
+            memcpy( & m_PDWData.pstPDW[0], & m_pRawDataBuffer[0], sizeof(_PDW) * uiTotalPDW);
         }
         break;
 
     case enPDWToReal :
         MakeHeaderData( & m_PDWData  );
 
-        AllocRealData( m_PDWData.GetTotalPDW() );
+        AllocRealData((int) m_PDWData.GetTotalPDW() );
         MakePDWDataToReal( & m_PDWRealData );
         break;
 
 	case enCSVToPDW :
 		MakeHeaderData(&m_PDWData);
 
-		AllocData(m_PDWData.GetTotalPDW());
+		AllocData( (int) m_PDWData.GetTotalPDW());
 
 		MakeCSVDataToPDW();
 
@@ -4039,28 +4067,30 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
     if( enUnitType == en_SONATA || enUnitType == en_KFX ) {
         if( enDataType == en_PDW_DATA) {
 
-       		if( ! m_RawDataFile.OpenFile( pstPathname, O_CREAT | O_BINARY ) ) {            		
+       		if( ! m_RawDataFile.RawOpenFile( pstPathname, O_CREAT | O_BINARY ) ) {            		
                 //LOGMSG1( enWarning, _T("PDW 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
             }
             else {
-                m_RawDataFile.Write( pData, iNumData );
+                m_RawDataFile.Write( pData, (unsigned int) iNumData );
                 m_RawDataFile.CloseFile();
             }
         }
         else if( enDataType == en_IQ_DATA ) {
-            if( ! m_RawDataFile.OpenFile( pstPathname, O_CREAT | O_BINARY ) ) {
+            if( ! m_RawDataFile.RawOpenFile( pstPathname, O_CREAT | O_BINARY ) ) {
                 //Log( enError, _T("IQ 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
             }
             else {
                 // IQ 헤더 정보 저장
                 if( pDataEtc != NULL ) {
-                    m_RawDataFile.Write( pDataEtc, iSizeOfEtc );
+                    m_RawDataFile.Write( pDataEtc, (unsigned int) iSizeOfEtc );
                 }
 
-                m_RawDataFile.Write( pData, iNumData );
+                m_RawDataFile.Write( pData, (unsigned int) iNumData );
                 m_RawDataFile.CloseFile();
             }
         }
+		else {
+		}
     }
 
 }
@@ -4134,7 +4164,8 @@ void CDataFile::ReadDataHeader()
             // 다시 처음으로 이동
 	    m_RawDataFile.SeekToStart();
 
-        m_pData->m_ullFileSize = m_RawDataFile.GetFileSize();
+		unsigned long long int ullFileSize = m_RawDataFile.GetRawFileSize();
+        m_pData->m_ullFileSize = ullFileSize;
 
     }
     else {
@@ -4153,12 +4184,14 @@ void CDataFile::ReadDataHeader()
  */
 void CDataFile::ReadDataAll( CData *pData )
 {
+	unsigned int uiTotalDataItems;
     size_t szData;
 
 	m_RawDataFile.SeekToStart();
 
-    if( pData->m_pRawDataBuffer == NULL && pData->m_uiTotalDataItems != 0 ) {
-        szData = CCommonUtils::CheckMultiplyOverflow( (int) pData->GetOneDataSize(), (int) pData->m_uiTotalDataItems );
+	uiTotalDataItems = pData->m_uiTotalDataItems;
+    if( pData->m_pRawDataBuffer == NULL && uiTotalDataItems != 0 ) {
+        szData = CCommonUtils::CheckMultiplyOverflow( (int) pData->GetOneDataSize(), (int) uiTotalDataItems);
 
         pData->m_pRawDataBuffer = (char *) malloc( szData );        
 
@@ -4166,7 +4199,12 @@ void CDataFile::ReadDataAll( CData *pData )
 
 	// 데이터 파일 중에서 제일 큰 것을 읽는다.
 	//pData->m_RawData.uiByte = m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize()+pData->GetOffsetSize() );		
-    m_RawDataFile.Read( pData->m_pRawDataBuffer, pData->GetOneDataSize() * pData->m_uiTotalDataItems, pData->GetHeaderSize() );		
+	int iHeaderSize;
+	unsigned int uiDataSize;
+
+	iHeaderSize = pData->GetHeaderSize();
+	uiDataSize = pData->GetOneDataSize() * uiTotalDataItems;
+    m_RawDataFile.Read( pData->m_pRawDataBuffer, uiDataSize, iHeaderSize );
 
 	m_RawDataFile.SeekToStart();
 
@@ -4183,11 +4221,13 @@ void CDataFile::ReadDataAll( CData *pData )
  */
 unsigned int CDataFile::GetDataItems( CData *pData )
 {
-	unsigned long long ullFileSize=m_RawDataFile.GetFileSize();
+	unsigned int uiTotalDataItems;
+	unsigned long long ullFileSize=m_RawDataFile.GetRawFileSize();
 
-	pData->m_uiTotalDataItems = pData->GetDataItems( ullFileSize );
+	uiTotalDataItems = pData->GetDataItems( ullFileSize );
+	pData->m_uiTotalDataItems = uiTotalDataItems;
 	
-	return pData->m_uiTotalDataItems;
+	return uiTotalDataItems;
 
 }
 
@@ -4216,7 +4256,7 @@ CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetu
         pTempData = new char[szFileSize];
         memset( pTempData, 0, szFileSize );
 
-        if( pTempData != NULL && m_RawDataFile.OpenFile( pPathname, O_RDONLY | O_BINARY ) == true ) {
+        if( m_RawDataFile.RawOpenFile( pPathname, O_RDONLY | O_BINARY ) == true ) {
             m_RawDataFile.Read( pTempData, szFileSize );
             ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption, szFileSize );
 
@@ -4252,12 +4292,14 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
 		// 소형 전자전의 PDW 인 경우
         if( enDataType == en_PDW_DATA && enUnitType == en_SONATA ) {
+#if defined(_GRAPH_) || defined(_SONATA_)
 			if (m_pData == NULL) {
 				m_pData = new CSPDW(pstData, pstFilterSetup, szFileSize );
 			}
 			else {
 				m_pData->Init(pstData);
 			}
+#endif
         }
 
         else if( enDataType == en_PDW_DATA && enUnitType == en_SONATA_SHU ) {
@@ -4266,23 +4308,26 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
 		// 701 장치 이며 CSV 또는 RAW 데이터 파일인 경우,
         else if( enDataType == en_PDW_DATA && enUnitType == en_701 ) {
+#if defined(_GRAPH_) || defined(_701_)
 			if (m_pData != NULL) {
 				delete m_pData;
 			}
 			m_pData = new C7PDW(pstData, pstFilterSetup, enDataType);
 			
 			m_pData->Init(pstData, pstFilterSetup );
+#endif
 			
         }
 
 		else if ( enDataType == en_PDW_DATA_CSV && enUnitType == en_701) {
+#if defined(_GRAPH_) || defined(_701_)
 			if (m_pData != NULL) {
 				delete m_pData;
 			}
 			m_pData = new C7PDW(pstData, pstFilterSetup, enDataType);
 			
 			m_pData->Init(pstData, pstFilterSetup);
-			
+#endif			
 		}
 
         else if( enDataType == en_PDW_DATA && enUnitType == en_KFX ) {
@@ -4306,12 +4351,14 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
         // X대역 방탐기의 PDW 인 경우
         else if( enDataType == en_PDW_DATA && enUnitType == en_XBAND ) {
+#if defined(_GRAPH_) || defined(_XBAND_)
             if( m_pData == NULL ) {
                 m_pData = new CXPDW( pstData, pstFilterSetup );
             }
             else {
                 m_pData->Init( pstData, pstFilterSetup );
             }
+#endif
 
         }
 
@@ -4324,12 +4371,14 @@ void CDataFile::ReadDataMemory( char *pstData, char *pstPathname, STR_FILTER_SET
 
         }
 
-        if( enUnitType != en_UnknownUnit ) {
+        if( enUnitType != en_UnknownUnit && m_pData != NULL ) {
             m_pData->ConvertPDWData( pstFilterSetup, false, enOption );
         }
     }
     else {
-        m_pData->ConvertPDWData( NULL, false, enOption );
+		if (m_pData != NULL) {
+			m_pData->ConvertPDWData(NULL, false, enOption);
+		}
     }
 
 }
@@ -4363,11 +4412,14 @@ void CDataFile::ConvertArray( STR_PDWDATA *pPDWData, bool bSwap, STR_FILTER_SETU
  * @warning   
  */
 void *CDataFile::GetData() 
-{ 
+{
+	void *pData;
+
+	pData = NULL;
 	if( m_pData != NULL ) 
-		return m_pData->GetData(); 
-	else 
-		return NULL; 
+		pData = m_pData->GetData(); 
+
+	return pData;
 }
 
 /**
@@ -4381,10 +4433,14 @@ void *CDataFile::GetData()
  */
 void *CDataFile::GetRealData() 
 { 
-    if( m_pData != NULL ) 
-        return m_pData->GetRealData(); 
-    else 
-        return NULL; 
+	void *pData;
+
+	pData = NULL;
+	if (m_pData != NULL) {
+		pData = m_pData->GetRealData();
+	}
+
+	return pData;
 }
 
 /**
@@ -4397,18 +4453,34 @@ void *CDataFile::GetRealData()
  */
 void *CDataFile::GetHeader() 
 { 
-	if( m_pData != NULL ) 
-		return m_pData->GetHeader(); 
-	else 
-		return NULL; 
+	void *pData;
+
+	pData = NULL;
+	if (m_pData != NULL) {
+		pData = m_pData->GetHeader();
+	}
+
+	return pData;
 }
 
+/**
+ * @brief     GetBandWidth
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 20:10:07
+ * @warning
+ */
 int CDataFile::GetBandWidth()
 {
-    if( m_pData != NULL )
-        return m_pData->GetBandWidth();
-    else
-        return 0;
+	int iRet = 0;
+
+	if (m_pData != NULL) {
+		iRet = m_pData->GetBandWidth();
+	}
+    
+    return iRet;
 }
 
 /**

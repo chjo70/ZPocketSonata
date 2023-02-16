@@ -1,4 +1,4 @@
-/**
+﻿/**
 * @file CRWRCommonVariables.h
 * RWR Operation CSC에서 사용하는 공용변수 및 함수 헤더 파일
 * RWR Operation CSC의 공용변수 및 함수를 지원한다.
@@ -23,11 +23,13 @@
 
 #endif
 
-#if TOOL==diab 
-#pragma pack( 1 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 1 )
+// #else
+// #pragma pack( push, 1 )
+// #endif
+
 #pragma pack( push, 1 )
-#endif
 
 
 
@@ -625,7 +627,7 @@ union UDRCPDW
 
 };
 
-#if CPU == _VX_PPCE6500
+#if defined(CPU) && ( CPU == _VX_PPCE6500 )
 	#define SEND_MASKING(Value)		(ERWRTaskMsg)(((Value & 0xFFFF) << 8) | 0x11120000)
 	#define RECV_MASKING(Value)		(ERWRTaskMsg)((Value & 0x0000FF00) >> 8)
 #else
@@ -849,10 +851,12 @@ void SigProcLogOn();
 // 		
 // };
 
-#if TOOL==diab 
-#pragma pack( 4 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 4 )
+// #else
+// #pragma pack( pop )
+// #endif
+
 #pragma pack( pop )
-#endif
 
 #endif

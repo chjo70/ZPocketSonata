@@ -1,4 +1,4 @@
-// Struct.h: interface for the 탐지분석판 소프트웨어의 구조체
+﻿// Struct.h: interface for the 탐지분석판 소프트웨어의 구조체
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,8 +12,6 @@
 #include "../INC/PDW.h"
 #include "../INC/AetIPL.h"
 
-#include "../Collect/DataFile/DataFile.h"
-
 struct FREQ_RESOL {
 	// frequency band code를 위한 구조체
 	unsigned int uiMin;       // min frequency
@@ -21,6 +19,10 @@ struct FREQ_RESOL {
 	int iOffset;       // max frequency
 	float fRes;			// 각 구간에 따른 resolution
 };
+
+#include "../Collect/DataFile/DataFile.h"
+
+
 
 // PDW  펄스열 플레그
 enum PULSE_MARK { 
@@ -94,7 +96,7 @@ struct STR_AOA_GROUP {
     UINT uiStat;
     PDWINDEX *pPDWIndex;
     int iCount;
-    UINT bOverAoa;
+    bool bOverAoa;
     int iFromAOA;
     int iToAOA;
     UINT uiFromBin;
@@ -189,9 +191,9 @@ struct STR_PULSE_TRAIN_SEG {
 	UINT uiPRI_Band;				// 펄스열 추출할 때의 PRI 밴드
 	UINT uiExtractStep;			// 기준 펄스열, STABLE, Jitter PRI
 
-	PDWINDEX gr_ref_idx;				// 기준펄스, 기준펄스열 최초 펄스
-	PDWINDEX first_idx;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
-	PDWINDEX last_idx;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
+	PDWINDEX idxGrRef;				// 기준펄스, 기준펄스열 최초 펄스
+	PDWINDEX idxFirst;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
+	PDWINDEX idxLast;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
 
 	_TOA tFirst;					// 펄스열 첫번째 TOA
 	_TOA tLast;					// 펄스열 마지막 TOA
@@ -620,7 +622,7 @@ struct STR_DWELL_LEVEL {
 
 #define PDW_FREQ_RES        (1.953125)
     //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
-    char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
+    char g_szAetSignalType[5][3] = { "NP" , "CW" , "DP" , "HP", "NK" };
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
@@ -632,10 +634,9 @@ struct STR_DWELL_LEVEL {
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
-    PA_RESOL gPaRes[ 6 ] =
+    PA_RESOL gPaRes[enMAXPRC] =
     {	// min, max, offset, res
         {     0,     0,  (float) _spPAoffset, _spAMPres },
         {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/

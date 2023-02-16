@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      Quadratic.cpp
  * @brief     Quadratic 위치 산출 알고리즘
@@ -70,7 +70,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 	double sumD2, sumE2, sumG2, sumED2;
 	double alpha, omega, gamma;
 	double u1, u2;
-	double x1, x2, y1, y2;
+	double x1, x2, y11, y22;
 	double condi1, condi2;
 
 	double *ppLatitude, *ppLongitude;
@@ -81,14 +81,10 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
     m_nLob = nLob;
 
 	memset( pResult, 0, sizeof(SELPE_RESULT) );
-    pResult->dEEP_theta = -1;
-
-// 	for( i=0 ; i < nLob ; ++i ) {
-// 		printf( "\n [%3d] 위도[%f], 경도[%f], 방위[%f]" , i, pLatitude[i], pLongitude[i], 90.-pLob[i] );
-// 	}
+	pResult->dEEP_theta = -1;
 
 	m_pUTMX = pUTMX;
-    ppLatitude = pUTMX;
+	ppLatitude = pUTMX;
 
     ppLongitude = pUTMY;
 	m_pUTMY = pUTMY;        
@@ -153,11 +149,11 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
             x1 = ( sumD * u1 + sumE * sumG ) / ( sumE2 + sumD2 );
             x2 = ( sumD * u2 + sumE * sumG ) / ( sumE2 + sumD2 );
 
-            y1 = ( sumE * u1 - sumD * sumG ) / ( sumE2 + sumD2 );
-            y2 = ( sumE * u2 - sumD * sumG ) / ( sumE2 + sumD2 );
+            y11 = ( sumE * u1 - sumD * sumG ) / ( sumE2 + sumD2 );
+            y22 = ( sumE * u2 - sumD * sumG ) / ( sumE2 + sumD2 );
 
-            condi1 = (sumB * x1*x1) - ( 4 * sumA * x1 * y1 ) - ( sumB * y1*y1 ) + ( sumE * x1 ) - ( sumD * y1 );
-            condi2 = (sumB * x2*x2) - ( 4 * sumA * x2 * y2 ) - ( sumB * y2*y2 ) + ( sumE * x2 ) - ( sumD * y2 );
+            condi1 = (sumB * x1*x1) - ( 4 * sumA * x1 * y11 ) - ( sumB * y11*y11 ) + ( sumE * x1 ) - ( sumD * y11 );
+            condi2 = (sumB * x2*x2) - ( 4 * sumA * x2 * y22 ) - ( sumB * y22*y22 ) + ( sumE * x2 ) - ( sumD * y22 );
 
             pResult->dEEP_major_axis = -1.0;
             pResult->dEEP_minor_axis = -1.0;
@@ -167,11 +163,11 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
             // 최종 위치 산출 값을 저장
             if( fabs(condi1) < fabs(condi2) ) {
                 pResult->dNorthing = x1;
-                pResult->dEasting = y1;
+                pResult->dEasting = y11;
             }
             else {
                 pResult->dNorthing = x2;
-                pResult->dEasting = y2;
+                pResult->dEasting = y22;
             }
 
             dDistX = fabs( pResult->dNorthing - ppLongitude[0] );

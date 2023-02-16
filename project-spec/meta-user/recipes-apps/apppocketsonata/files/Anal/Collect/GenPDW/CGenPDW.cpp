@@ -71,13 +71,13 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
  * @brief     PDW 발생 시나리오 파일을 오픈 합니다.
  * @param     char * pszFileName
  * @return    void
- * @exception
+ * @exception 텍스트 파일은 ANSI 로 저장되어야 합니다.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-05-04, 11:16
  * @warning
  */
-void CGenPDW::OpenFile( char *pszFileName )
+void CGenPDW::OpenMakefile( char *pszFileName )
 {
     if( m_File != NULL ) {
         fclose( m_File );
@@ -86,7 +86,8 @@ void CGenPDW::OpenFile( char *pszFileName )
     //  mak_file을 read mode로 open 한 후 에러인 경우 에러 처리 
     strcpy( m_szMakfilename, pszFileName );
 
-    m_File = fopen( m_szMakfilename, "rt" );
+    //m_File = fopen( m_szMakfilename, "rt,ccs=UTF-8" );
+    m_File = fopen(m_szMakfilename, "rt");
     if( m_File == NULL ) {
         printf( "\n %s File Open ERROR : %s", m_szMakfilename, strerror( errno ) );
     }
@@ -127,7 +128,7 @@ void CGenPDW::ParseAndMakefile()
     SkipTheHeader();
 
     //////////////////////////////////////////////////////////
-    while( ! feof( m_File ) ) {
+    while( m_File != NULL && ! feof( m_File ) ) {
 		GetLineCommand();
 
         // 장치명 얻기
@@ -138,7 +139,7 @@ void CGenPDW::ParseAndMakefile()
         m_stSavePDWData.pstPDW = new _PDW[m_stGenPDWInfo.uiCoAllPDW];
         m_pstPDW = m_stSavePDWData.pstPDW;
 
-        CRawFile::OpenFile( m_stGenPDWInfo.szFileName, O_CREAT | O_BINARY | O_WRONLY ); //  | O_TRUNC );
+        CRawFile::RawOpenFile( m_stGenPDWInfo.szFileName, O_CREAT | O_BINARY | O_WRONLY ); //  | O_TRUNC );
 
         MakeFileHeader();
         Write( &m_stSavePDWData.x, sizeof( UNION_HEADER ) );
@@ -147,7 +148,8 @@ void CGenPDW::ParseAndMakefile()
 
         // PDW 발생해서 파일로 저장
         GeneratePDW();
-        Write( m_stSavePDWData.pstPDW, sizeof( _PDW ) * m_stSavePDWData.GetTotalPDW() );
+		unsigned int uiTotalPDW = m_stSavePDWData.GetTotalPDW();
+        Write( m_stSavePDWData.pstPDW, sizeof( _PDW ) * uiTotalPDW );
 
         CloseFile();       
 
@@ -175,13 +177,13 @@ void CGenPDW::ParseAndMakeMemory( SIGAPDW *pSigPDW )
     SkipTheHeader();
 
     //////////////////////////////////////////////////////////
-    while( !feof( m_File ) ) {
+    while( m_File != NULL && !feof( m_File ) ) {
         size_t szSize;
 
         GetLineCommand();
 
         // 메모리 할당
-        szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), m_stGenPDWInfo.uiCoAllPDW );
+        szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), (int) m_stGenPDWInfo.uiCoAllPDW );
 
 		if (szSize != 0) {
 			m_stSavePDWData.pstPDW = (_PDW *) malloc(szSize);
@@ -277,6 +279,7 @@ void CGenPDW::MakeFileHeader()
         m_stSavePDWData.x.ps.uiIsStorePDW = 1;
         break;
 
+#if defined(_GRAPH_) || defined(_XBAND_)
     case en_XBAND:
         strcpy( m_stSavePDWData.x.xb.aucTaskID, "SIMPDW" );
         
@@ -284,6 +287,7 @@ void CGenPDW::MakeFileHeader()
         m_stSavePDWData.x.xb.enCollectorID = RADARCOL_Unknown;
         m_stSavePDWData.x.xb.enBandWidth = XBAND::en120MHZ_BW;
         break;
+#endif
 
     case en_SONATA:
         break;
@@ -392,7 +396,8 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
             }
             // 교체 또는 무시한다.
             else {
-                if( m_pstPDW->GetPulseamplitude() > m_stMergedPDWData.pstPDW[-iIndex - 1].GetPulseamplitude() ) {
+				unsigned int uiPA = m_pstPDW->GetPulseamplitude();
+                if( uiPA > m_stMergedPDWData.pstPDW[-iIndex - 1].GetPulseamplitude() ) {
                     memcpy( &m_stMergedPDWData.pstPDW[-iIndex - 1], m_pstPDW, sizeof( _PDW ) );
                 }
             }
@@ -415,7 +420,7 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
 void CGenPDW::MakeSignalType( SIGAPDW *pSigPDW )
 {
 	if(m_pstPDW != NULL )
-		m_pstPDW->iPulseType = CEncode::EncodePulseType ( m_stGenPDWInfo.uiSignalType );
+		m_pstPDW->iPulseType = (int) CEncode::EncodePulseType ( (int) m_stGenPDWInfo.uiSignalType );
 	else {
 		TRACE( "잘못된 데이터 저장소 입니다.");
 	}
@@ -442,8 +447,13 @@ void CGenPDW::MakeDOAOfPDW( SIGAPDW *pSigPDW )
     uiDOA = CEncode::EncodeDOA( fDOA );
 
     uiDOAError = m_ui1DOA * m_stGenPDWInfo.uiDOAError;
-    uiDOA += CCommonUtils::Rand( (int) uiDOAError );
-    uiDOA = (uiDOA + m_i360DOA ) % m_i360DOA;
+    uiDOA += (unsigned int) CCommonUtils::Rand( (int) uiDOAError );
+	if (m_i360DOA != 0) {
+		uiDOA = (unsigned int)(((int)uiDOA + m_i360DOA) % m_i360DOA);
+	}
+	else {
+		uiDOA = 0;
+	}
 
     m_pstPDW->uiAOA = uiDOA;
 }
@@ -515,7 +525,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
             fTOA = ( float ) m_stGenPDWInfo.iPRIMean;
 
         }
-        else if( strcmp( m_stGenPDWInfo.szPRIType, "STG" ) == 0 ) {
+        else if( strcmp( m_stGenPDWInfo.szPRIType, "STG" ) == 0 && m_stGenPDWInfo.uiPRIHopLvl != 0 ) {
             fTOA = ( float ) m_stGenPDWInfo.fPRISwtVal[m_uiPRILvl];
             ++m_uiPRILvl;
             m_uiPRILvl = m_uiPRILvl % m_stGenPDWInfo.uiPRIHopLvl;
@@ -524,7 +534,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
             fTOA = ( float ) CCommonUtils::Rand( (int) ( m_fPriWidth + 0.5 ) );
             fTOA += ( float ) m_stGenPDWInfo.iPRIMean;
         }
-        else if( strcmp( m_stGenPDWInfo.szPRIType, "DNS" ) == 0 ) {
+        else if( strcmp( m_stGenPDWInfo.szPRIType, "DNS" ) == 0 && m_stGenPDWInfo.uiCoPRIPatPDW != 0 && m_stGenPDWInfo.uiPRIHopLvl != 0 ) {
             fTOA = ( float ) m_stGenPDWInfo.fPRISwtVal[m_uiPRILvl];
 
             ++m_uiPRIDwellCount;
@@ -534,7 +544,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
                 m_uiPRILvl = m_uiPRILvl % m_stGenPDWInfo.uiPRIHopLvl;
             }
         }
-        else if( strcmp( m_stGenPDWInfo.szPRIType, "PAT" ) == 0 ) {
+        else if( strcmp( m_stGenPDWInfo.szPRIType, "PAT" ) == 0 && is_not_zero<float>(m_fPRICountPerPeriod)==true ) {
             if( strcmp( m_stGenPDWInfo.szPRIPatType, "SIN" ) == 0 ) {
                 double dTheta;
 
@@ -547,24 +557,25 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
             else if( strcmp( m_stGenPDWInfo.szPRIPatType, "TRI" ) == 0 ) {
                 int iHalfPRICountPerPeriod = (int) ( ( m_fPRICountPerPeriod / (float) 2.0 ) + 0.5 );
 
-                if( m_uiPRILvl % iHalfPRICountPerPeriod == 0 ) {
+				iHalfPRICountPerPeriod = min(1, iHalfPRICountPerPeriod);
+                if(iHalfPRICountPerPeriod != 0 && m_uiPRILvl % (unsigned int) iHalfPRICountPerPeriod == 0 ) {
                     fTOA = ( float ) m_stGenPDWInfo.iPRIMean - m_fPriWidth;
-                    fTOA += (( float ) (m_uiPRILvl % ( int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (((float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
+                    fTOA += ( float ) ( (m_uiPRILvl % ( unsigned int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (((float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
                 }
                 else {
                     fTOA = ( float ) m_stGenPDWInfo.iPRIMean + m_fPriWidth;
-                    fTOA -= (( float ) (m_uiPRILvl % ( int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (((float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
+                    fTOA -= (( float ) (m_uiPRILvl % (unsigned int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (((float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
                 }
             }
 
             else if( strcmp( m_stGenPDWInfo.szPRIPatType, "SW+" ) == 0 ) {
                 fTOA = ( float ) m_stGenPDWInfo.iPRIMean - m_fPriWidth;
-                fTOA += (( float ) (m_uiPRILvl % (int) ( m_fPRICountPerPeriod+0.5) ) * ( float ) m_stGenPDWInfo.iPRIMean * (( (float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
+                fTOA += (( float ) (m_uiPRILvl % ((unsigned int) ( m_fPRICountPerPeriod+0.5) )) * ( float ) m_stGenPDWInfo.iPRIMean * (( (float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
             }
 
             else if( strcmp( m_stGenPDWInfo.szPRIPatType, "SW-" ) == 0 ) {
                 fTOA = ( float ) m_stGenPDWInfo.iPRIMean + m_fPriWidth;
-                fTOA -= (( float ) (m_uiPRILvl % ( int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (( (float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
+                fTOA -= (( float ) (m_uiPRILvl % ( unsigned int ) (m_fPRICountPerPeriod + 0.5)) * ( float ) m_stGenPDWInfo.iPRIMean * (( (float) 2. * m_fPriWidth) / ( float ) m_stGenPDWInfo.uiPRIPatPrd));
             }
 
             else {
@@ -577,7 +588,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
             printf( "\n PRI 타입이 잘못 입력했습니다 !!" );
         }
 
-        fTOA += ( float ) (CCommonUtils::Rand( m_stGenPDWInfo.uiTOAError * 1000 ) / 1000. );
+        fTOA += ( float ) (CCommonUtils::Rand( (int) ( m_stGenPDWInfo.uiTOAError * (unsigned int) 1000 ) ) / 1000. );
 
         iBandWidth = m_stSavePDWData.GetBandWidth();
         tDTOA = CEncode::EncodeTOAus( fTOA, iBandWidth );
@@ -645,7 +656,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
  */
 void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
 {
-    int iCh;
+    int iCh=0;
 
     float fFrequency;
     UINT uiFrequency;
@@ -655,14 +666,14 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
         
     }
     else if( strcmp( m_stGenPDWInfo.szFreqType, "AGI" ) == 0 ) {
-        fFrequency = ( float ) m_stGenPDWInfo.iFreqMean + (float) CCommonUtils::Rand( m_stGenPDWInfo.uiBW );
+        fFrequency = ( float ) m_stGenPDWInfo.iFreqMean + (float) CCommonUtils::Rand( (int) m_stGenPDWInfo.uiBW );
 		
 	}
     else {
         fFrequency = 0.;
     }
 
-    fFrequency = fFrequency + ( float ) CCommonUtils::Rand( m_stGenPDWInfo.uiFreqError * 1000 ) / (float) 1000;
+    fFrequency = fFrequency + ( float ) CCommonUtils::Rand( (int) ( m_stGenPDWInfo.uiFreqError * (unsigned int) 1000 ) ) / (float) 1000;
 
     uiFrequency = CEncode::EncodeRealFREQMHz( & iCh, fFrequency );
     m_pstPDW->SetChannel( iCh );
@@ -771,11 +782,11 @@ void CGenPDW::GetLineCommand( void )
 
     fscanf( m_File, "%s", m_stGenPDWInfo.szFileName ); 	// Read NPW Filename 
     
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiCoAllPDW );		// 펄스 개수
-    fscanf( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// 초기 TOA값 
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiSignalType );			// normal =0, Pmop =1, chirp+ =2 chirp- =3, cw =4, bit =15
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiDV );			// Direction Valid
-    fscanf( m_File, "%u", &m_stGenPDWInfo.uiAOA );			// 방위 [deg]
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiCoAllPDW );		// 펄스 개수
+    fscanf_s( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// 초기 TOA값 
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiSignalType );			// normal =0, Pmop =1, chirp+ =2 chirp- =3, cw =4, bit =15
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiDV );			// Direction Valid
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiAOA );			// 방위 [deg]
 
     fscanf( m_File, "%s", m_stGenPDWInfo.szFreqType );			// 주파수 형태  : FIX(fixed)   AGI(agile)    PAT(pattern)  HOP(hopping)
     // fscanf( rfp, "%d", & Bc );			// 주파수 [MHz]
@@ -839,9 +850,15 @@ bool CGenPDW::IsValidCheck()
 {
     bool bRet = true;
 
-    if( m_stGenPDWInfo.uiCoPRIPatPDW == 0 || m_stGenPDWInfo.uiPRIHopLvl == 0 ) {
-        //bRet = false;
+    if (strcmp(m_stGenPDWInfo.szPRIType, "DNS") == 0 && m_stGenPDWInfo.uiCoPRIPatPDW == 0) {
+        bRet = false;
     }
+/*
+    if (m_stGenPDWInfo.uiPRIHopLvl == 0) {
+        bRet = false;
+    }
+
+    */
 
     return bRet;
 

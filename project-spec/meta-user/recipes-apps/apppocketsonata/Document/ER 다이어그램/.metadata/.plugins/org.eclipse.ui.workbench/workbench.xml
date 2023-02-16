@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="16" version="2.0">
+<workbench progressCount="14" version="2.0">
 <workbenchAdvisor/>
 <window height="768" maximized="true" width="1024" x="152" y="248">
 <fastViewData fastViewLocation="1024"/>
@@ -109,11 +109,16 @@
 <view id="com.tomato.exerd.ui.views.thumbnail"/>
 <view id="com.tomato.exerd.modelview3.ModelView3"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
-<view id="com.tomato.exerd.ui.views.domain"/>
-<view id="com.tomato.exerd.validate.ui.ValidateView"/>
-<view id="org.eclipse.ui.console.ConsoleView"/>
-<view id="com.tomato.exerd.xscript.ScriptView"/>
-<fastViewBars/>
+<fastViewBars>
+<fastViewBar fastViewLocation="1024" id="bottomFolder" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
+<fastViews>
+<view id="com.tomato.exerd.ui.views.domain" ratio="0.3"/>
+<view id="com.tomato.exerd.validate.ui.ValidateView" ratio="0.3"/>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.3"/>
+<view id="com.tomato.exerd.xscript.ScriptView" ratio="0.3"/>
+</fastViews>
+</fastViewBar>
+</fastViewBars>
 <layout>
 <mainWindow>
 <info folder="true" part="leftFolder">
@@ -133,7 +138,7 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.18" ratioLeft="180" ratioRight="820" relationship="2" relative="leftFolder"/>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@4497d1" ratio="0.77926826" ratioLeft="639" ratioRight="181" relationship="2" relative="org.eclipse.ui.editorss">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@4497d1" ratio="0.90983605" ratioLeft="1221" ratioRight="121" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="com.tomato.exerd.ui.views.thumbnail" appearance="2" expanded="2">
 <page content="com.tomato.exerd.ui.views.thumbnail" label="썸네일"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -152,17 +157,12 @@
 </folder>
 </info>
 <info folder="true" part="bottomFolder" ratio="0.6996904" ratioLeft="452" ratioRight="194" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
-<page content="com.tomato.exerd.ui.views.domain" label="도메인"/>
-<page content="com.tomato.exerd.validate.ui.ValidateView" label="검토"/>
-<page content="org.eclipse.ui.console.ConsoleView" label="콘솔"/>
-<page content="com.tomato.exerd.xscript.ScriptView" label="XScript"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-</presentation>
+<folder appearance="2" expanded="2">
+<page content="com.tomato.exerd.ui.views.domain" label="LabelNotFound"/>
+<page content="com.tomato.exerd.validate.ui.ValidateView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<page content="com.tomato.exerd.xscript.ScriptView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@a36b71" ratio="0.2987616" ratioLeft="193" ratioRight="453" relationship="4" relative="leftFolder">
@@ -182,7 +182,6 @@
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 관리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
-<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" uri="file:/E:/APECS/Dev/PocketSONATA/dev_/Document/ER%20다이어그램/POCKETSONATA/용어%20사전.xdic"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/E:/APECS/Dev/PocketSONATA/dev_/Document/ER%20다이어그램2/함정용전자전장비(DDH-I)/위협%20결과2.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
@@ -190,57 +189,60 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 </editors>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
 <item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="용어 사전.xdic" index="2"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
 <item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 결과2.exerd" index="2"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 라이브러리2.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
 <item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 결과2.exerd" index="3"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 라이브러리2.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 라이브러리2.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="용어 사전.xdic" index="8"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="위협 라이브러리.exerd" index="9"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="위협 라이브러리.exerd" index="9"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item active="true" historyLabel="위협 라이브러리.exerd" index="9"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 라이브러리2.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="용어 사전.xdic" index="7"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="8"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="8"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="8"/>
+<item historyLabel="위협 결과.exerd" index="9"/>
+<item historyLabel="위협 라이브러리.exerd" index="10"/>
+<item historyLabel="위협 결과.exerd" index="9"/>
+<item historyLabel="위협 라이브러리.exerd" index="10"/>
+<item historyLabel="위협 결과.exerd" index="9"/>
+<item active="true" historyLabel="위협 라이브러리.exerd" index="11"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -254,6 +256,7 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
+<trimItem IMemento.internal.id="bottomFolder"/>
 </trimArea>
 </trimLayout>
 </window>

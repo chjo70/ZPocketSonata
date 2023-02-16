@@ -106,6 +106,9 @@ void MemotyTest( size_t iSize );
 
 void signalHandler(int signo);
 
+void CreateMngrThread();
+void CreateAnalThread();
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // 아래에 타스크 관련 클래스를 정의합니다.
 //CMySocket g_theZYNQSocket( g_iKeyId++, (char *)"CZYNQSocket" );
@@ -149,7 +152,7 @@ void InitDatabase()
 			strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
 
 			sprintf( szSrcFilename, "../../files/SQLite3.DB/%s" , BLK_EMITTER_SQLITE_FILENAME );
-            iCopy = CCommonUtils::CopyFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
+            iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szSQLiteFileName, 1, 0077 );
 			if( iCopy <= 0 ) {
 				throw iCopy;
 			}
@@ -160,7 +163,7 @@ void InitDatabase()
 			strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
 
 			sprintf(szSrcFilename, "../../files/SQLite3.DB/%s", BLK_CEDEOB_SQLITE_FILENAME);
-			iCopy = CCommonUtils::CopyFile(szSrcFilename, szSQLiteFileName, 1, 0077);
+			iCopy = CCommonUtils::CopySrcToDstFile(szSrcFilename, szSQLiteFileName, 1, 0077);
 			if (iCopy <= 0) {
 			    throw iCopy;
 			}
@@ -175,7 +178,7 @@ void InitDatabase()
         if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, BLK_EMITTER_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
-            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
+            iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
             if( iCopy <= 0 ) {
                 throw iCopy;
@@ -191,7 +194,7 @@ void InitDatabase()
 
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
+            iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
             if( iCopy <= 0 ) {
                 throw iCopy;
@@ -207,7 +210,7 @@ void InitDatabase()
 
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-            iCopy = CCommonUtils::CopyFile( szSrcFilename, szDstFilename, 1, 0077 );
+            iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
             if( iCopy <= 0 ) {
                 throw iCopy;
@@ -281,68 +284,15 @@ void Start( int iArgc, char *iArgv[] )
     LOG_LINEFEED;
     LOG_LINEFEED;
 
+	g_AnalLoop = true;
+
     g_pTheSysConfig = new CSysConfig();
 
-    // 1. 쓰레드 관리 쓰레드를 호출한다.
-#ifdef _SQLITE_
-    char szSQLiteFileName[100];
-    strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER );
-    strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME );
-    g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true, (char*) szSQLiteFileName );
+	// 관리 관련 쓰레드를 생성합니다.
+	CreateMngrThread();
 
-#elif _MSSQL_
-    // MSSQL 연결
-    g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true );
-
-#else
-	g_pTheTaskMngr = new CTaskMngr( g_iKeyId++, (char*) "CTaskMngr", true, (char*) NULL );
-    
-#endif
-    g_pTheTaskMngr->Run( _MSG_TMNGR_KEY );
-
-    // 2. 운용 관련 쓰레드를 호출한다.
-    g_pTheUrBit = new CUrBit( g_iKeyId++, (char*) "CUrBit", true );
-    g_pTheUrBit->Run( _MSG_URBIT_KEY );
-
-    // 3. 분석 및 재밍 관련 쓰레드를 호출한다.
-    //PULTRK->Run( _MSG_PULTRK_KEY );
-    //JAMTEC->Run( _MSG_JAMTEC_KEY );
-
-    // 4. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
-    //RECZYNQ->Run( _MSG_RECZYNQ_KEY );
-    RECCCU->Run( _MSG_RECCCU_KEY );
-
-    // 6. 브라우저의 CGI 메시지를 처리한다.
-    //CGI->Run( _MSG_ZCGI_KEY );
-
-    // 7. 사용자 수집 함수 메시지를 처리한다.
-    g_pTheUserCollect = new CUserCollect( g_iKeyId++, (const char*) "CUserCollect", true );
-    g_pTheUserCollect->Run( _MSG_USERCOL_KEY );
-
-    // 8. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
-    //g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
-    //g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
-    if( g_pTheSysConfig->GetBoardID() == enMaster ) {
-        g_pTheCCUSocket = new CSingleClient( g_iKeyId++, (const char *)"CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork() );
-        g_pTheCCUSocket->Run( _MSG_CCU_KEY );
-
-        //g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
-        //g_pThePMCSocket->Run( _MSG_CCU_KEY );
-    }
-
-    g_AnalLoop = true;
-
-    g_pTheEmitterMerge = new CEmitterMerge( g_iKeyId++, (const char*) "CEmitterMerge", true );
-    g_pTheEmitterMerge->Run();
-    g_pTheSignalCollect = new CSignalCollect( g_iKeyId++, (char*) "CSignalCollect", true );
-    g_pTheSignalCollect->Run();
-    g_pTheDetectAnalysis = new CDetectAnalysis( g_iKeyId++, (char*) "CDetectAnalysis", true );
-    g_pTheDetectAnalysis->Run();
-    g_pTheTrackAnalysis = new CTrackAnalysis( g_iKeyId++, (char*) "CTrackAnalysis", true );
-    g_pTheTrackAnalysis->Run();
-    g_pTheScanAnalysis = new CScanAnalysis( g_iKeyId++, (char*) "CScanAnalysis", true );
-    g_pTheScanAnalysis->Run();
+	// 분석 관련 쓰레드를 생성합니다.
+	CreateAnalThread();
 
     // 9. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
@@ -350,6 +300,89 @@ void Start( int iArgc, char *iArgv[] )
 #endif
 
 }
+
+/**
+ * @brief		CreateMngrThread
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/02/13 13:40:10
+ * @warning		
+ */
+void CreateMngrThread()
+{
+	// 1. 쓰레드 관리 쓰레드를 호출한다.
+#ifdef _SQLITE_
+	char szSQLiteFileName[100];
+	strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
+	strcat(szSQLiteFileName, "/");
+	strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
+	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, (const char *) "CTaskMngr", true, (char*)szSQLiteFileName);
+
+#elif _MSSQL_
+	// MSSQL 연결
+	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, (const char *) "CTaskMngr", true);
+
+#else
+	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, "CTaskMngr", true, (char*)NULL);
+
+#endif
+	g_pTheTaskMngr->Run(_MSG_TMNGR_KEY);
+
+	// 2. 운용 관련 쓰레드를 호출한다.
+	g_pTheUrBit = new CUrBit(g_iKeyId++, (const char *) "CUrBit", true);
+	g_pTheUrBit->Run(_MSG_URBIT_KEY);
+
+	// 3. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
+	//RECZYNQ->Run( _MSG_RECZYNQ_KEY );
+	RECCCU->Run(_MSG_RECCCU_KEY);
+
+	// 4. 브라우저의 CGI 메시지를 처리한다.
+	//CGI->Run( _MSG_ZCGI_KEY );
+
+	// 5. 사용자 수집 함수 메시지를 처리한다.
+	g_pTheUserCollect = new CUserCollect(g_iKeyId++, (const char *) "CUserCollect", true);
+	g_pTheUserCollect->Run(_MSG_USERCOL_KEY);
+
+	// 6. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
+	//g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
+	//g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
+	if (g_pTheSysConfig->GetBoardID() == enMaster) {
+		g_pTheCCUSocket = new CSingleClient(g_iKeyId++, (const char *) "CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork());
+		g_pTheCCUSocket->Run(_MSG_CCU_KEY);
+
+		//g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
+		//g_pThePMCSocket->Run( _MSG_CCU_KEY );
+	}
+}
+
+
+/**
+ * @brief     CreateAnalThread
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-05 11:01:03
+ * @warning
+ */
+void CreateAnalThread()
+{
+
+	g_pTheEmitterMerge = new CEmitterMerge(g_iKeyId++, (const char*) "CEmitterMerge", true);
+	g_pTheEmitterMerge->Run();
+	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (char*) "CSignalCollect", true, enLEFT_PCI_DRIVER );
+	g_pTheSignalCollect->Run();
+	g_pTheDetectAnalysis = new CDetectAnalysis(g_iKeyId++, (char*) "CDetectAnalysis", true);
+	g_pTheDetectAnalysis->Run();
+	g_pTheTrackAnalysis = new CTrackAnalysis(g_iKeyId++, (char*) "CTrackAnalysis", true);
+	g_pTheTrackAnalysis->Run();
+	g_pTheScanAnalysis = new CScanAnalysis(g_iKeyId++, (char*) "CScanAnalysis", true);
+	g_pTheScanAnalysis->Run();
+
+
+}
+
 
 /**
  * @brief     SIM_Start
@@ -435,9 +468,9 @@ void End()
        
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
-    _SAFE_DELETE( g_pTheSysConfig )
-    _SAFE_DELETE( g_pTheELEnvironVariable )
 
+	_SAFE_DELETE(g_pTheELEnvironVariable)
+	_SAFE_DELETE(g_pTheSysConfig)
     _SAFE_DELETE( g_pTheLog )
 
 #ifndef _MSC_VER

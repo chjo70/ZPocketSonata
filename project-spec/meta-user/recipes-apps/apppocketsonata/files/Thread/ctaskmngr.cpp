@@ -16,7 +16,7 @@
 #include "ctaskmngr.h"
 
 #ifdef __ZYNQ_BOARD__
-#include "cjamtech.h"
+//#include "cjamtech.h"
 #endif
 
 #include "cpulsetrk.h"
@@ -29,7 +29,7 @@
 
 #include "curbit.h"
 #include "cprompt.h"
-//#include "creclan.h"
+
 
 #include "../Utils/chwio.h"
 #include "../System/csysconfig.h"
@@ -49,7 +49,7 @@
 #ifdef _MSSQL_
 CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
 #else
-CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData )
+CTaskMngr::CTaskMngr( int iKeyId, const char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData )
 #endif
 {
     LOGENTRY;
@@ -429,7 +429,16 @@ void CTaskMngr::Shutdown()
 }
 
 /**
- * @brief 시스템의 자원과 운용 소프트웨어 상에서 자원 정보를 출력한다.
+ * @brief 
+ */
+/**
+ * @brief     시스템의 자원과 운용 소프트웨어 상에서 자원 정보를 출력한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 11:54:29
+ * @warning
  */
 void CTaskMngr::ProcessSummary()
 {
@@ -439,14 +448,26 @@ void CTaskMngr::ProcessSummary()
 }
 
 /**
- * @brief CTaskMngr::IPLVersion
+/**
+ * @brief     ReqIPLVersion
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 11:54:03
+ * @warning
  */
 void CTaskMngr::ReqIPLVersion()
 {
     STR_IPL_VERSION strIPLVersion;
 
+	// 구조체에 IPL 버젼 업데이트
     strIPLVersion.uiIPLVersion = (m_theIPL.getIPLStart())->uiIPLVersion;
-    strIPLVersion.uiStatus = strIPLVersion.uiIPLVersion != (UINT) _spZero ? _spPass : _spFail;
+	if (strIPLVersion.uiIPLVersion != _spZero)
+		strIPLVersion.uiStatus = _spPass;
+	else
+		strIPLVersion.uiStatus = _spFail;
+
     CCommonUtils::SendLan( enIPL_VERSION, & strIPLVersion, sizeof(strIPLVersion) );
 }
 
@@ -467,7 +488,10 @@ void CTaskMngr::IPLDownload()
     switch( m_pMsg->uiOpCode ) {
     case enREQ_IPL_START :
         pLanData = (UNI_LAN_DATA *)& m_pMsg->x.szData[0];
-        m_theIPL.setIPLStart( & pLanData->strIPLStart );
+		//if (pLanData != NULL) 
+		{
+			m_theIPL.setIPLStart(&pLanData->strIPLStart);
+		}
         DeleteIPL();
         break;
 
@@ -828,18 +852,18 @@ void CTaskMngr::BandEnable()
 {
     //char buffer[100];
 
-    STR_BAND_ENABLE *pstrBandEnable;
-
-    pstrBandEnable = ( STR_BAND_ENABLE * ) GetRecvData();
-
-    if( pstrBandEnable->iBand != 0 ) {
-        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
-
-        LOGMSG2( enNormal, "대역[%d]을 설정[%d] 합니다." , pstrBandEnable->iBand, pstrBandEnable->iOnOff );
-    }
-    else {
-        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
-    }
+//     STR_BAND_ENABLE *pstrBandEnable;
+// 
+//     pstrBandEnable = ( STR_BAND_ENABLE * ) GetRecvData();
+// 
+//     if( pstrBandEnable->iBand != 0 ) {
+//         //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+// 
+//         LOGMSG2( enNormal, "대역[%d]을 설정[%d] 합니다." , pstrBandEnable->iBand, pstrBandEnable->iOnOff );
+//     }
+//     else {
+//         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+//     }
 
 }
 
@@ -850,18 +874,18 @@ void CTaskMngr::FMOPThreshold()
 {
     //char buffer[100];
 
-    STR_FMOP_THRESHOLD *pstrBandEnable;
-
-    pstrBandEnable = ( STR_FMOP_THRESHOLD * ) GetRecvData();
-
-    if( pstrBandEnable->iBand != 0 ) {
-        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
-
-        LOGMSG2( enNormal, "대역[%d]을 FMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
-    }
-    else {
-        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
-    }
+//     STR_FMOP_THRESHOLD *pstrBandEnable;
+// 
+//     pstrBandEnable = ( STR_FMOP_THRESHOLD * ) GetRecvData();
+// 
+//     if( pstrBandEnable->iBand != 0 ) {
+//         //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+// 
+//         LOGMSG2( enNormal, "대역[%d]을 FMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
+//     }
+//     else {
+//         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+//     }
 }
 
 /**
@@ -871,18 +895,18 @@ void CTaskMngr::PMOPThreshold()
 {
     //char buffer[100];
 
-    STR_PMOP_THRESHOLD *pstrBandEnable;
-
-    pstrBandEnable = ( STR_PMOP_THRESHOLD * ) GetRecvData();
-
-    if( pstrBandEnable->iBand != 0 ) {
-        //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
-
-        LOGMSG2( enNormal, "대역[%d]을 PMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
-    }
-    else {
-        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
-    }
+//     STR_PMOP_THRESHOLD *pstrBandEnable;
+// 
+//     pstrBandEnable = ( STR_PMOP_THRESHOLD * ) GetRecvData();
+// 
+//     if( pstrBandEnable->iBand != 0 ) {
+//         //CCommonUtils::GetStringBand( buffer, pstrBandEnable->iBand );
+// 
+//         LOGMSG2( enNormal, "대역[%d]을 PMOP 임계값[%d]을 설정 합니다." , pstrBandEnable->iBand, pstrBandEnable->iThreshold );
+//     }
+//     else {
+//         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+//     }
 }
 
 /**
@@ -892,24 +916,24 @@ void CTaskMngr::RxThreshold()
 {
     //char buffer[100];
 
-    STR_RX_THRESHOLD *pstrRxThreshold;
-
-    pstrRxThreshold = ( STR_RX_THRESHOLD * ) GetRecvData();
-
-    if( pstrRxThreshold->iBand != 0 ) {
-        //CCommonUtils::GetStringBand( buffer, pstrRxThreshold->iBand );
-
-#ifdef __ZYNQ_BOARD__
-        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, pstrRxThreshold->uiCorThreshold );
-        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, pstrRxThreshold->uiMagThreshold );
-        CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
-#endif
-
-        LOGMSG2( enNormal, "대역 [%d]을 설정[%d] 합니다." , pstrRxThreshold->iBand, pstrRxThreshold->iThreshold );
-    }
-    else {
-        LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
-    }
+//     STR_RX_THRESHOLD *pstrRxThreshold;
+// 
+//     pstrRxThreshold = ( STR_RX_THRESHOLD * ) GetRecvData();
+// 
+//     if( pstrRxThreshold->iBand != 0 ) {
+//         //CCommonUtils::GetStringBand( buffer, pstrRxThreshold->iBand );
+// 
+// #ifdef __ZYNQ_BOARD__
+//         CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_COR, pstrRxThreshold->uiCorThreshold );
+//         CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_THD_MAG, pstrRxThreshold->uiMagThreshold );
+//         CHWIO::WriteReg( BRAM_CTRL_PPFLT, DET_ONLY_COR, 0x0 );
+// #endif
+// 
+//         LOGMSG2( enNormal, "대역 [%d]을 설정[%d] 합니다." , pstrRxThreshold->iBand, pstrRxThreshold->iThreshold );
+//     }
+//     else {
+//         LOGMSG( enNormal, "대역 설정을 전혀 수행하지 않습니다." );
+//     }
 }
 
 /**

@@ -1,6 +1,6 @@
-#ifndef _H_EL_EOBLIB_DATA_TYPE
-#define _H_EL_EOBLIB_DATA_TYPE
+﻿
 #pragma once
+
 #include <vector>
 using namespace std;
 
@@ -226,4 +226,3 @@ struct SEOBInternalData	//EOB 내부 데이터
 };
 //static const SEOBInternalData g_stInitEOBInternalData;
 /////////////////////////////////////////////////////////////////////
-#endif

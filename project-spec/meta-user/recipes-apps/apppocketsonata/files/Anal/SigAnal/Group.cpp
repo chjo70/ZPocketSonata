@@ -60,10 +60,10 @@ CGroup::CGroup( unsigned int uiCoMaxPdw )
 	// 주파수 해상도 계산용, HARMONIC MARGIN
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
 	m_stSigma1Aoa[0] = KHARM_AOA_MAR;
-	m_stSigma1Aoa[1] = KHARM_AOA_MAR;
-	m_stSigma1Aoa[2] = KHARM_AOA_MAR;
-	m_stSigma1Aoa[3] = KHARM_AOA_MAR;
-	m_stSigma1Aoa[4] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC1] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC2] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC3] = KHARM_AOA_MAR;
+	m_stSigma1Aoa[enPRC4] = KHARM_AOA_MAR;
 
 #ifdef _XBAND_
 	strcpy( m_szPulseType[i++], "CW" );
@@ -87,7 +87,6 @@ CGroup::CGroup( unsigned int uiCoMaxPdw )
 	m_stSigma1Aoa[enPRC3] = KHARM_AOA_MAR;
 	m_stSigma1Aoa[enPRC4] = KHARM_AOA_MAR;
 	m_stSigma1Aoa[enPRC5] = KHARM_AOA_MAR;
-	m_stSigma1Aoa[enPRC6] = KHARM_AOA_MAR;
 
 	strcpy( m_szPulseType[i++], "--" );
 	strcpy( m_szPulseType[i++], "NP" );
@@ -532,11 +531,11 @@ void CGroup::PrintAllGroup()
             // 방위 그룹화 출력
             if (pFrqGr->narrow_wide == FALSE) {
                 //printf( "\n\t [%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-                Log(enDebug, "\t\t[%ld] 협대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->iFromAOA), I_AOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), (int) I_PWCNV(pPwGr->uiFromPW), (int) I_PWCNV(pPwGr->uiToPW));
+                Log(enDebug, "\t\t[%ld] 협대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->iFromAOA), I_AOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
             }
             else {
                 //printf( "\n\t [%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%.1f-%.1f), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->from_aoa ), CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->to_aoa ), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->from_frq), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->to_frq), CPOCKETSONATAPDW::DecodePWus( pPwGr->from_pw ), CPOCKETSONATAPDW::DecodePWus( pPwGr->to_pw ) );
-                Log(enDebug, "\t\t[%ld] 광대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->iFromAOA), I_AOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), (int) I_PWCNV(pPwGr->uiFromPW), (int) I_PWCNV(pPwGr->uiToPW));
+                Log(enDebug, "\t\t[%ld] 광대역 %s[%d]: Co(%3d), A(%3d-%3d), F[MHz](%4d-%4d), PW[ns](%6d-%6d)", uiIdxFrqAoaPw, m_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, I_AOACNV(pAoaGroup->iFromAOA), I_AOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
             }
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
@@ -585,7 +584,7 @@ void CGroup::PrintGroup()
     Log( enDebug, "=====================================================================================================" );
     //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
     //LOG_LINEFEED;
-    Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ), (int) I_PWCNV( pPwGr->uiFromPW ), (int) I_PWCNV( pPwGr->uiToPW ) );
+    Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ), I_PWCNV((int)pPwGr->uiFromPW ), I_PWCNV((int)pPwGr->uiToPW ) );
 
 }
 
@@ -643,7 +642,7 @@ void CGroup::MakeBandGroup()
     UCHAR *pBand;
 
     // 밴드 그룹화 초기화
-    for( i=0 ; i < TOTAL_BAND ; ++i ) {
+    for( i=0 ; i < (unsigned int) TOTAL_BAND ; ++i ) {
         m_Band[i].uiCount = 0;
     }
 
@@ -840,7 +839,7 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
             memcpy( pAoaGroup->pPDWIndex, pStatGrPdwIndex->pIndex, sizeof( PDWINDEX )*pStatGrPdwIndex->uiCount );
             pAoaGroup->iCount = pStatGrPdwIndex->uiCount;
 
-            pAoaGroup->bOverAoa = FALSE;
+            pAoaGroup->bOverAoa = false;
 
             pAoaGroup->uiStat = (UINT) m_nStat;
             pAoaGroup->uiBand = (UINT)m_nBand;
@@ -858,7 +857,7 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
             pCluster = &m_pCluster[0];
             pAoaGroup = &m_AoaGroups.stAOA[m_AoaGroups.uiCount];
             for( i = 0 ; i < m_uiClusters ; ++i ) {
-                pAoaGroup->bOverAoa = FALSE;
+                pAoaGroup->bOverAoa = false;
 
                 // 방위 그룹화의 방위 영역 설정
                 pAoaGroup->iFromAOA = pCluster->stAOA.iLow;
@@ -880,20 +879,19 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
         }
 
 #else
-        BOOL bRet;
+        bool bRet;
 
         int peak_index;
         PDWINDEX peak_count;
 
         // 방위 히스토그램 계산
-        MakeHist( pStatGrPdwIndex, &m_pAOA[0], AOA_SHIFT_COUNT, &m_AoaHist );
+        MakeHist( pStatGrPdwIndex, &m_pAOA[0], (unsigned int) AOA_SHIFT_COUNT, &m_AoaHist );
 
         for( ;; ) {
             pAoaGroup = &m_AoaGroups.stAOA[m_AoaGroups.uiCount];
 
             if( m_AoaGroups.uiCount > MAX_AGRT ) {
-                printf( "\n Over Aoa Group exceed !" );
-                WhereIs;
+				Log( enError, "방위 그룹이 초과 됐습니다.");
                 break;
             }
 
@@ -917,7 +915,7 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
 
             ++m_AoaGroups.uiCount;
 
-            if( bRet && pAoaGroup->iCount >= (int) _spAnalMinPulseCount ) {
+            if( bRet == true && pAoaGroup->iCount >= (int) _spAnalMinPulseCount ) {
                 break;
             }
         }
@@ -942,9 +940,8 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
 int CGroup::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex)
 {
     unsigned int ui;
-    int peak_index, peak_count;
+    int peak_index=-1, peak_count;
 
-    peak_index = -1;
     peak_count = 0;
 
     for( ui=0 ; ui < uiCount; ++ui ) {
@@ -992,8 +989,6 @@ void CGroup::MakePWGroup( bool bForce1Group )
  */
 void CGroup::MakePWGroup( int frqidx, bool bForce1Group )
 {
-    int peak_index;
-
     STR_AOA_GROUP *pAoaGroup;
     STR_PW_GROUP *pPwGroup;
     STR_FRQ_GROUP *pFrqGroup;
@@ -1004,6 +999,30 @@ void CGroup::MakePWGroup( int frqidx, bool bForce1Group )
 	else {
 		pFrqGroup = &m_FrqGroups.stFreq[frqidx];
 		pAoaGroup = &m_AoaGroups.stAOA[pFrqGroup->iIdxAOA];
+
+#ifndef _PW_GROUP_
+		int i;
+		PDWINDEX *pIndex;
+
+		pPwGroup = &m_PwGroups.pw[m_PwGroups.uiCount];
+
+		pPwGroup->frq_idx = frqidx;
+		pPwGroup->uiFromBin = 0;
+		pPwGroup->uiToBin = 0xFFFFFF;
+		pIndex = pAoaGroup->pPDWIndex;
+		pPwGroup->uiFromPW = m_pPW[*pIndex];
+		pPwGroup->uiToPW = m_pPW[*pIndex];
+		for (i = 0; i < pAoaGroup->iCount; ++i) {
+			pPwGroup->uiFromPW = _min(pPwGroup->uiFromPW, m_pPW[*pIndex]);
+			pPwGroup->uiToPW = _max(pPwGroup->uiToPW, m_pPW[*pIndex]);
+
+			++pIndex;
+		}
+
+		++m_PwGroups.uiCount;
+
+#else
+		int peak_index;
 
 		if (bForce1Group == true) {
 			int i;
@@ -1044,18 +1063,15 @@ void CGroup::MakePWGroup( int frqidx, bool bForce1Group )
 				/*! \bug  피크의 이웃점 체크
 						\date 2006-08-16 14:02:10, 조철희
 				*/
-				if (peak_index >= 0 && peak_index < (int) sizeof(m_PwHist.hist)) {
+				if (peak_index >= 0 && peak_index < (int)m_PwHist.uiBinCount) {
 					if (peak_index == 0) {
 						sum_peak = m_PwHist.hist[0] + m_PwHist.hist[1];
 					}
-					else if (peak_index == (int) ( m_PwHist.uiBinCount - 1 ) ) {
-						sum_peak = m_PwHist.hist[peak_index] + m_PwHist.hist[peak_index - 1];
-					}
-					else if (peak_index > 0) {
-						sum_peak = m_PwHist.hist[peak_index] + m_PwHist.hist[peak_index - 1] + m_PwHist.hist[peak_index + 1];
+					else if (peak_index == (int)(m_PwHist.uiBinCount - 1) && peak_index < TOTAL_FRQAOAPWBIN) {
+						sum_peak = m_PwHist.hist[(UINT)peak_index] + m_PwHist.hist[(UINT)(peak_index - 1)];
 					}
 					else {
-						sum_peak = 0;
+						sum_peak = m_PwHist.hist[(UINT)peak_index] + m_PwHist.hist[(UINT)(peak_index - 1)] + m_PwHist.hist[(UINT)(peak_index + 1)];
 					}
 				}
 				else {
@@ -1081,6 +1097,8 @@ void CGroup::MakePWGroup( int frqidx, bool bForce1Group )
 				}
 			}
 		}
+#endif
+
 	}
 }
 
@@ -1135,7 +1153,7 @@ void CGroup::GetPwRange( int peak_index, int nShift, STR_PW_GROUP *pPwGroup )
         }
 
         // 좌 최대 범위, PW_GROUP_DIFF = 30 us
-        if( ( ( peak_index - (i+1) ) << nShift ) >= (int)uiMaxPWDiff ) {
+        if( ( (unsigned int) ( peak_index - (i+1) ) << (unsigned int) nShift ) >= uiMaxPWDiff ) {
 			Log(enError, "[W] %d us를 초과했습니다.", PW_GROUP_DIFF);
             break;
         }
@@ -1146,7 +1164,7 @@ void CGroup::GetPwRange( int peak_index, int nShift, STR_PW_GROUP *pPwGroup )
             \date 2006-06-02 14:40:08, 조철희
     */
     // margin에 의한 경계 찾기
-    pPwGroup->uiFromPW = max( 0, (unsigned int) ( pw_bin << nShift ) ); // _max( 0, ( frq_bin << nShift ) - freq_margin );
+    pPwGroup->uiFromPW = (unsigned int) ( (unsigned int) pw_bin << (unsigned int) nShift ); // _max( 0, ( frq_bin << nShift ) - freq_margin );
     pPwGroup->uiFromBin = (unsigned int) pw_bin; /* pPwGroup->from_frq >> nShift; */
 
     //////////////////////////////////////////////////////////////////////
@@ -1158,7 +1176,7 @@ void CGroup::GetPwRange( int peak_index, int nShift, STR_PW_GROUP *pPwGroup )
         }
 
         // 우 최대 범위, PW_GROUP_DIFF = 30 us
-        if( ( ( i - peak_index ) << nShift ) > (int) uiMaxPWDiff) {
+        if( ( ( i - peak_index ) << (unsigned int) nShift ) > (int) uiMaxPWDiff) {
             Log(enError, "[W] %d us를 초과했습니다.", PW_GROUP_DIFF);
             break;
         }
@@ -1169,7 +1187,7 @@ void CGroup::GetPwRange( int peak_index, int nShift, STR_PW_GROUP *pPwGroup )
         \date 2006-06-02 14:41:03, 조철희
     */
     // margin에 의한 경계 찾기
-    pPwGroup->uiToPW = min( (unsigned int) MAX_PW, (unsigned int) ( ( pw_bin+1 ) << nShift ) );
+    pPwGroup->uiToPW = (unsigned int) min( (unsigned int) MAX_PW, (unsigned int) ((unsigned int) ( pw_bin+1 ) << (unsigned int) nShift ) );
     pPwGroup->uiToBin = (unsigned int) pw_bin; // pFrqGroup->to_frq >> nShift;
 
     return;
@@ -1242,11 +1260,11 @@ UINT CGroup::MakeFreqGroup( int door, int aoaidx, int frqidx, bool bForce1Group 
 
             uiBand = pAoaGroup->uiBand;
 			if (door == NARROW) {
-				uiShift = GetFreqShift(uiBand, FREQ_NARR_MHZ);
+				uiShift = (unsigned int) GetFreqShift( (int) uiBand, (int) FREQ_NARR_MHZ);
 				freqdiff = NARROW_FREQ_GROUP;
 			}
 			else {
-                uiShift = GetFreqShift(uiBand, FREQ_WIDE_MHZ);
+                uiShift = (unsigned int) GetFreqShift((int) uiBand, (int) FREQ_WIDE_MHZ);
 				freqdiff = WIDE_FREQ_GROUP;
 			}
 
@@ -1272,15 +1290,15 @@ UINT CGroup::MakeFreqGroup( int door, int aoaidx, int frqidx, bool bForce1Group 
 				*/
 				int sum_peak;
 
-				if (peak_index >= 0 && peak_index < (int) sizeof(m_FrqHist.hist)) {
+				if (peak_index >= 0 && peak_index < (int) m_FrqHist.uiBinCount ) {
 					if (peak_index == 0) {
 						sum_peak = m_FrqHist.hist[0] + m_FrqHist.hist[1];
 					}
-					else if (peak_index == m_FrqHist.uiBinCount - 1) {
-						sum_peak = m_FrqHist.hist[peak_index] + m_FrqHist.hist[peak_index - 1];
+					else if (peak_index == (int) m_FrqHist.uiBinCount - 1) {
+						sum_peak = m_FrqHist.hist[(UINT)peak_index] + m_FrqHist.hist[(UINT)(peak_index - 1)];
 					}
 					else {
-						sum_peak = m_FrqHist.hist[peak_index] + m_FrqHist.hist[peak_index - 1] + m_FrqHist.hist[peak_index + 1];
+						sum_peak = m_FrqHist.hist[(UINT)peak_index] + m_FrqHist.hist[(UINT)(peak_index - 1)] + m_FrqHist.hist[(UINT)(peak_index + 1)];
 					}
 				}
 				else {
@@ -1389,8 +1407,7 @@ int CGroup::GetFreqShift( int band, int freq )
 void CGroup::MakeHist( STR_PW_GROUP *pPwGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist )
 {
     int i;
-    unsigned int uiIndex;
-    int pw;
+    unsigned int uiIndex, uiPW;
 
     PDWINDEX *pIndex;
 
@@ -1404,9 +1421,9 @@ void CGroup::MakeHist( STR_PW_GROUP *pPwGroup, STR_AOA_GROUP *pAoaGroup, UINT nS
         pIndex = &pAoaGroup->pPDWIndex[0];
         // 대상 index의 파라메터에 대한 히스토그램 만들기
         for (i = 0; i < pAoaGroup->iCount; ++i) {
-            pw = m_pPW[*pIndex];
+            uiPW = m_pPW[*pIndex];
 
-            if (CompMarginDiff<unsigned int>(pw, pPwGroup->uiFromPW, pPwGroup->uiToPW, 0) == TRUE) {
+            if (CompMarginDiff<unsigned int>(uiPW, pPwGroup->uiFromPW, pPwGroup->uiToPW, 0) == TRUE) {
                 uiIndex = m_pFREQ[*pIndex] >> nShift;
                 if (uiIndex >= pHist->uiBinCount) {
                     printf("\n [W] 히스토그램 생성에서 에러 발생함 !");
@@ -1439,7 +1456,7 @@ void CGroup::MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT 
 {
     int i;
     unsigned int uiIndex;
-    int freq;
+    unsigned int uiFreq;
 
     PDWINDEX *pIndex;
 
@@ -1453,9 +1470,9 @@ void CGroup::MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT 
         pIndex = &pAoaGroup->pPDWIndex[0];
         // 대상 index의 파라메터에 대한 히스토그램 만들기
         for (i = 0; i < pAoaGroup->iCount; ++i) {
-            freq = m_pFREQ[*pIndex];
+			uiFreq = m_pFREQ[*pIndex];
 
-            if (CompMarginDiff<unsigned int>(freq, pFrqGroup->uiFromFRQ, pFrqGroup->uiToFRQ, 0) == TRUE) {
+            if (CompMarginDiff<unsigned int>(uiFreq, pFrqGroup->uiFromFRQ, pFrqGroup->uiToFRQ, 0) == TRUE) {
                 uiIndex = m_pPW[*pIndex] >> nShift;
                 if (uiIndex >= pHist->uiBinCount) {
                     printf("\n [W] 펄스폭 히스토그램 생성에서 에러 발생함 !");
@@ -1491,41 +1508,46 @@ void CGroup::MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT 
 {
     int i;
     unsigned int uiIndex;
-    int frq;
+    unsigned int uiFreq;
 
     int nFrqShift;
 
     PDWINDEX *pIndex;
 
-    if( pFrqGroup->narrow_wide == _WIDE )
-        nFrqShift = FREQ_WIDE_SHIFT_CNT;
-    else
-        nFrqShift = FREQ_NARR_SHIFT_CNT;
+	if (pFrqGroup->narrow_wide == _WIDE) {
+		nFrqShift = (int)FREQ_WIDE_SHIFT_CNT;
+	}
+	else {
+		nFrqShift = (int)FREQ_NARR_SHIFT_CNT;
+	}
 
     // 히스토그램 초기화
     memset( pHist, 0, sizeof( STR_FRQAOAPWHISTOGRAM ) );
 
-    pHist->uiBinCount = ( MAX_PW / ( 1 << nShift ) );
+	unsigned uiShift = ((unsigned int)1 << (unsigned int)nShift);
+	if (uiShift != 0) {
+		pHist->uiBinCount = (unsigned int) MAX_PW / uiShift;
 
-    pIndex = & pAoaGroup->pPDWIndex[0];
-    // 대상 index의 파라메터에 대한 히스토그램 만들기
-    for( i=0 ; i < pAoaGroup->iCount; ++i, ++pIndex ) {
-        frq = pFreq[ *pIndex ];
-        frq = frq >> nFrqShift;
+		pIndex = &pAoaGroup->pPDWIndex[0];
+		// 대상 index의 파라메터에 대한 히스토그램 만들기
+		for (i = 0; i < pAoaGroup->iCount; ++i, ++pIndex) {
+			uiFreq = pFreq[*pIndex];
+			uiFreq = uiFreq >> (unsigned int) nFrqShift;
 
-        if( CompMarginDiff<unsigned int>( frq, pFrqGroup->uiFromBIN, pFrqGroup->uiToBIN, 0 ) == TRUE ) {
-			uiIndex = pPW[ *pIndex ];
-			uiIndex = uiIndex >> nShift;
+			if (CompMarginDiff<unsigned int>(uiFreq, pFrqGroup->uiFromBIN, pFrqGroup->uiToBIN, 0) == TRUE) {
+				uiIndex = pPW[*pIndex];
+				uiIndex = uiIndex >> nShift;
 
-            if(uiIndex >= pHist->uiBinCount ) {
-                printf( "\n [W] 히스토그램 생성에서 에러 발생함 !" );
-                WhereIs;
-            }
-			else {
-				++pHist->hist[uiIndex];
+				if (uiIndex >= pHist->uiBinCount) {
+					printf("\n [W] 히스토그램 생성에서 에러 발생함 !");
+					WhereIs;
+				}
+				else {
+					++pHist->hist[uiIndex];
+				}
 			}
-        }
-    }
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1546,16 +1568,16 @@ void CGroup::MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT 
 {
     int i;
     unsigned int uiIndex;
-    int frq;
+    unsigned int uiFreq;
 
     int nFrqShift;
 
     PDWINDEX *pIndex;
 
     if( pFrqGroup->narrow_wide == _WIDE )
-        nFrqShift = FREQ_WIDE_SHIFT_CNT;
+        nFrqShift = (int) FREQ_WIDE_SHIFT_CNT;
     else
-        nFrqShift = FREQ_NARR_SHIFT_CNT;
+        nFrqShift = (int) FREQ_NARR_SHIFT_CNT;
 
     // 히스토그램 초기화
     memset( pHist, 0, sizeof( STR_FRQAOAPWHISTOGRAM ) );
@@ -1567,12 +1589,12 @@ void CGroup::MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT 
         pIndex = &pAoaGroup->pPDWIndex[0];
         // 대상 index의 파라메터에 대한 히스토그램 만들기
         for (i = 0; i < pAoaGroup->iCount; ++i) {
-            _EQUALS3(uiIndex, frq, pPdw[*pIndex])
-                ++pIndex;
+            _EQUALS3(uiIndex, uiFreq, pPdw[*pIndex])
+            ++pIndex;
 
             uiIndex = uiIndex >> nShift;
-            frq = frq >> nFrqShift;
-            if (CompMarginDiff<unsigned int>(frq, pFrqGroup->uiFromBIN, pFrqGroup->uiToBIN, 0) == TRUE) {
+			uiFreq = uiFreq >> (unsigned int) nFrqShift;
+            if (CompMarginDiff<unsigned int>(uiFreq, pFrqGroup->uiFromBIN, pFrqGroup->uiToBIN, 0) == TRUE) {
                 if (uiIndex >= pHist->uiBinCount) {
                     Log(enError, "\n [W] 히스토그램 생성에서 에러 발생함 !");
                     WhereIs;
@@ -1685,59 +1707,76 @@ void CGroup::MakeHist( STR_PDWINDEX *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQ
 //! \date     2006-08-18 15:57:23
 //! \warning
 //
-bool CGroup::SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist )
+bool CGroup::SetHistBinCount( UINT uiShift, STR_FRQAOAPWHISTOGRAM *pHist )
 {
     bool bRet = true;
+	unsigned int ui1Shift = (unsigned int)1 << uiShift;
 
-    if( pHist == & m_AoaHist ) {
-        pHist->uiBinCount = ( MAX_AOA / ( 1 << nShift ) );
-        if( pHist->uiBinCount > TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0 ) {
-            bRet = false;
+	if ( ui1Shift != 0) {
+		if( pHist == & m_AoaHist ) {
+			pHist->uiBinCount = ( (unsigned int) MAX_AOA / ui1Shift);
+#if MAX_AOA < TOTAL_FRQAOAPWBIN
+			if ( pHist->uiBinCount == 0) {
+				bRet = false;
 
-            //printf( "\n [W] 방위 히스토그램 BIN 개수 초과(%d) !", pHist->bin_count );
-            Log( enError, "\n [W] Over the BIN(%d) of AOA Histogram !", pHist->uiBinCount );
-            WhereIs;            
-        }
+				Log(enError, "[W] 방위 히스토그램의 BIN(%d)가 초과됐습니다. !", pHist->uiBinCount);
+				WhereIs;
+			}
+#else
+			if( pHist->uiBinCount > (unsigned int) TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0 ) {
+				bRet = false;
+
+				Log( enError, "[W] 방위 히스토그램의 BIN(%d)가 초과됐습니다. !", pHist->uiBinCount );
+				WhereIs;            
+			}
+#endif
+		}
+		else if( pHist == & m_FrqHist ) {
+			int iMax = MAX_FREQ;
+			pHist->uiBinCount = ((unsigned int) MAX_FREQ / ui1Shift );
+			if( pHist->uiBinCount > (unsigned int) TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0 ) {
+				bRet = false;
+
+				Log(enError, "[W] 주파수 히스토그램의 BIN(%d)가 초과됐습니다. !", pHist->uiBinCount);
+				WhereIs;
+			}
+		}
+		else {
+			pHist->uiBinCount = ((unsigned int)MAX_PW / ui1Shift);
+			if (pHist->uiBinCount > (unsigned int) TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0) {
+				bRet = false;
+
+				Log(enError, "[W] 펄스폭 히스토그램의 BIN(%d)가 초과됐습니다. !", pHist->uiBinCount);
+				WhereIs;
+			}
+		}
     }
-    else if( pHist == & m_FrqHist ) {
-        int iMax = MAX_FREQ;
-        pHist->uiBinCount = ( MAX_FREQ / ( 1 << nShift ) );
-        if( pHist->uiBinCount > TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0 ) {
-            bRet = false;
-
-            //printf( "\n [W] 주파수 히스토그램 BIN 개수 초과(%d) !", pHist->bin_count );
-            Log( enError, "\n [W] Over the BIN(%d) of Freq Histogram !", pHist->uiBinCount );
-            WhereIs;
-        }
-    }
-    else {
-        pHist->uiBinCount = ( MAX_PW / ( 1 << nShift ) );
-        if( pHist->uiBinCount > TOTAL_FRQAOAPWBIN || pHist->uiBinCount == 0 ) {
-            bRet = false;
-
-            //printf( "\n [W] 펄스폭 히스토그램 BIN 개수 초과(%d) !", pHist->bin_count );
-            Log( enError, "\n [W] Over the BIN(%d) of PW Histogram !", pHist->uiBinCount );
-            WhereIs;
-        }
-    }
+	else {
+		Log(enError, "[W] BIN 크기를 결정할 쉬프트 값(%d)이 잘못 됐습니다. !", uiShift );
+		WhereIs;
+	}
 
     return bRet;
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CGroup::MakeHist
-// 반환되는 형  : int
-// 함 수 인 자  : STR_PDWINDEX *pSrcIndex
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2005-09-30 16:52:28
-//
-int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
+/**
+ * @brief     CalcAoaMeanByHistAoa
+ * @param     STR_PDWINDEX * pSrcIndex
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2005-09-30 16:52:28
+ * @warning
+ */
+int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) 
+{
+	int iRet;
     unsigned int i;
     int frstAoa, diffAoa, overAoa;
     PDWINDEX *pPdwIndex;
 
-    int bin, bin_low, bin_mid, bin_hgh;
+    int iBin, bin_low, bin_mid, bin_hgh;
 
     int sum_item, filted_count;
 
@@ -1757,10 +1796,11 @@ int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
     pPdwIndex = pSrcIndex->pIndex;
     _EQUALS4( sum_item, filted_count, diffAoa, 0 )
     for( i=0 ; i < pSrcIndex->uiCount ; ++i ) {
-        bin = m_pAOA[ *pPdwIndex ] >> SHIFT_COUNT_BY_HIST;
-        if( bin == bin_low || bin == bin_mid || bin == bin_hgh ) {
+        iBin = (int) ( m_pAOA[ *pPdwIndex ] >> SHIFT_COUNT_BY_HIST );
+
+        if(iBin == bin_low || iBin == bin_mid || iBin == bin_hgh ) {
             if( frstAoa == -1 ) {
-                frstAoa = m_pAOA[ *pPdwIndex ];
+                frstAoa = (int) m_pAOA[ *pPdwIndex ];
             }
             else {
                 diffAoa = (int) m_pAOA[ *pPdwIndex ] - frstAoa;
@@ -1781,11 +1821,13 @@ int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
     if( filted_count == 0 ) {
         printf( "\n [W] 에미터 생성시에 방위 평균값을 잘못 계산됨!" );
         WhereIs;
-        return -1;
+        iRet = -1;
     }
     else {
-        return ( MAX_AOA + IDIV( sum_item, filted_count ) + frstAoa ) % MAX_AOA;
+        iRet = ( MAX_AOA + IDIV( sum_item, filted_count ) + frstAoa ) % MAX_AOA;
     }
+
+	return iRet;
 }
 
 #ifndef _ISODATA_AOA_GROUP_
@@ -1801,7 +1843,7 @@ int CGroup::CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) {
  * @date      2005-04-27 01:32:33
  * @warning
  */
-BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
+bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 {
     int i;
 
@@ -1812,34 +1854,37 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 
     int thr;
 
-	BOOL bRet=FALSE;
+	bool bRet;
 
     // 4 시그마 범위
-    thr = ( m_stSigma1Aoa[m_nBand] * 4 ) >> nShift;
+    thr = (int) ( ( m_stSigma1Aoa[m_nBand] * 4 ) >> (unsigned int) nShift );
 
     // 전방위 그룹화 될 때의 방위 그룹화 범위
     pAoaGroup->uiFromBin = 0;
     pAoaGroup->uiToBin = m_AoaHist.uiBinCount - 1;
     pAoaGroup->iFromAOA = 0;
     pAoaGroup->iToAOA = MAX_AOA  - 1;
-    pAoaGroup->uiStat = m_nStat;
-    pAoaGroup->bOverAoa = FALSE;
-    pAoaGroup->uiBand = m_nBand;
+    pAoaGroup->uiStat = (unsigned int) m_nStat;
+    pAoaGroup->bOverAoa = false;
+    pAoaGroup->uiBand = (unsigned int) m_nBand;
 
     //////////////////////////////////////////////////////////////////////
     // peak부터 좌로 범위를 설정
     // 좌측의 경계 찾기 (from_val)
+	bRet = false;
     co_thresh = 0;
     for( i=(int) ( peak_index-1) ;; --i ) {
         // 좌측의 끝에 도달 overgroup 발생
         if( i < 0 ) {
-            i += m_AoaHist.uiBinCount;
-            pAoaGroup->bOverAoa = TRUE;
+            i += (int) m_AoaHist.uiBinCount;
+            pAoaGroup->bOverAoa = true;
         }
 
         // 전방위 그룹화 체크
 		if (i == (int)peak_index) {
-			return TRUE;
+			bRet = true;
+			break;
+			// return TRUE;
 		}
 
         // 방위 좌측 값 체크
@@ -1855,92 +1900,102 @@ BOOL CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
         }
     }
 
-    // 좌 최소범위 경계조건
-    // 4 시그마 이하
-    aoa_bin = i;
-    if( peak_index > i ) {
-        if( peak_index - i < thr ) {
-            aoa_bin = peak_index - thr;
-        }
-    }
-    else {
-        if( peak_index + (int) ( m_AoaHist.uiBinCount - i ) < thr ) {
-            aoa_bin = peak_index - thr ;
-        }
-    }
-    // 좌측의 끝에 도달 overgroup 발생
-    if( aoa_bin < 0 )	{
-        pAoaGroup->bOverAoa = TRUE;
-        aoa_bin += m_AoaHist.uiBinCount;
-    }
-    from_bin = aoa_bin;
+	if (bRet == false) {
+		// 좌 최소범위 경계조건
+		// 4 시그마 이하
+		aoa_bin = i;
+		if (peak_index > i) {
+			if (peak_index - i < thr) {
+				aoa_bin = peak_index - thr;
+			}
+		}
+		else {
+			if (peak_index + (int)(m_AoaHist.uiBinCount - (unsigned int)i) < thr) {
+				aoa_bin = peak_index - thr;
+			}
+		}
+		// 좌측의 끝에 도달 overgroup 발생
+		if (aoa_bin < 0) {
+			pAoaGroup->bOverAoa = true;
+			aoa_bin += (int)m_AoaHist.uiBinCount;
+		}
+		from_bin = aoa_bin;
 
-    //////////////////////////////////////////////////////////////////////
-    // peak 부터 우로 범위를 설정
-    // 우측의 경계 찾기 (to_val)
-    co_thresh = 0;
-    for( i=peak_index+1 ;; ++i ) {
-        // 우측의 끝에 도달 overgroup 발생
-        if( i >= (int) m_AoaHist.uiBinCount ) {
-            i -= m_AoaHist.uiBinCount;
-            pAoaGroup->bOverAoa = TRUE;
-        }
+		//////////////////////////////////////////////////////////////////////
+		// peak 부터 우로 범위를 설정
+		// 우측의 경계 찾기 (to_val)
+		co_thresh = 0;
+		for (i = peak_index + 1;; ++i) {
+			// 우측의 끝에 도달 overgroup 발생
+			if (i >= (int)m_AoaHist.uiBinCount) {
+				i -= (int)m_AoaHist.uiBinCount;
+				pAoaGroup->bOverAoa = true;
+			}
 
-        // 전방위 그룹화
-        // 시작 점인 peak_index 까지 해도 되지만 앞에서 찾았기 때문에
-        // 계산한 좌측 범위 까지 검사한다.
-        //-- 조철희 2005-04-27 18:17:04 --//
-		if (i == aoa_bin) {
-			return TRUE;
+			// 전방위 그룹화
+			// 시작 점인 peak_index 까지 해도 되지만 앞에서 찾았기 때문에
+			// 계산한 좌측 범위 까지 검사한다.
+			//-- 조철희 2005-04-27 18:17:04 --//
+			if (i == aoa_bin) {
+				bRet = true;
+				break;
+				//return true;
+			}
+
+			// 경계 조건
+			if (m_AoaHist.hist[i] <= _sp.np.Aoa_Hist_Thr) {
+				++co_thresh;
+			}
+			else {
+				co_thresh = 0;
+			}
+
+			//-- 조철희 2005-11-22 11:14:58 --//
+			if (co_thresh >= MIN_CONTI_THRESHOLD_AOA) {
+				break;
+			}
 		}
 
-        // 경계 조건
-        if (m_AoaHist.hist[i] <= _sp.np.Aoa_Hist_Thr) {
-            ++co_thresh;
-        }
-        else {
-            co_thresh = 0;
-        }
+		if (bRet == false) {
+			// 우 최소범위 경계조건 // 000210
+			aoa_bin = i;
+			if (peak_index < i) {
+				// 4시그마 이하
+				if (i - peak_index < thr) {
+					aoa_bin = peak_index + thr;
+				}
+			}
+			else if (peak_index > i) {
+				// 4 시그마 이하
+				if ((int)(m_AoaHist.uiBinCount - (unsigned int)i) - peak_index < thr) {
+					aoa_bin = peak_index + thr;
+				}
+			}
+			else {
 
-        //-- 조철희 2005-11-22 11:14:58 --//
-        if (co_thresh >= MIN_CONTI_THRESHOLD_AOA) {
-            break;
-        }
-    }
+			}
 
-    // 우 최소범위 경계조건 // 000210
-    aoa_bin = i;
-    if( peak_index < i ) {
-        // 4시그마 이하
-        if( i - peak_index < thr ) {
-            aoa_bin = peak_index + thr;
-        }
-    }
-    else if( peak_index > i ) {
-        // 4 시그마 이하
-        if( (int) ( m_AoaHist.uiBinCount - i ) - peak_index < thr ) {
-            aoa_bin = peak_index + thr;
-        }
-    }
-    // 우측의 끝에 도달 overgroup 발생
-    if( aoa_bin >= (int) m_AoaHist.uiBinCount ) {
-        aoa_bin -= m_AoaHist.uiBinCount;
-        pAoaGroup->bOverAoa = TRUE;
-    }
-    to_bin = aoa_bin;
+			// 우측의 끝에 도달 overgroup 발생
+			if (aoa_bin >= (int)m_AoaHist.uiBinCount) {
+				aoa_bin -= m_AoaHist.uiBinCount;
+				pAoaGroup->bOverAoa = true;
+			}
+			to_bin = aoa_bin;
 
-    // margin에 의한 전방위그룹 체크
-	if (pAoaGroup->bOverAoa && (to_bin >= from_bin)) {
-		bRet = TRUE;
-	}
-	else {
-		pAoaGroup->uiFromBin = from_bin;
-		pAoaGroup->uiToBin = to_bin;
-		pAoaGroup->iFromAOA = from_bin << nShift;
-		pAoaGroup->iToAOA = to_bin << nShift;
+			// margin에 의한 전방위그룹 체크
+			if (pAoaGroup->bOverAoa && (to_bin >= from_bin)) {
+				bRet = true;
+			}
+			else {
+				pAoaGroup->uiFromBin = from_bin;
+				pAoaGroup->uiToBin = to_bin;
+				pAoaGroup->iFromAOA = from_bin << nShift;
+				pAoaGroup->iToAOA = to_bin << nShift;
 
-		pAoaGroup->uiStat = (UINT) m_nStat;
-		pAoaGroup->uiBand = (UINT) m_nBand;
+				pAoaGroup->uiStat = (UINT)m_nStat;
+				pAoaGroup->uiBand = (UINT)m_nBand;
+			}
+		}
 	}
 
 	return bRet;
@@ -2039,8 +2094,8 @@ BOOL CGroup::GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROU
         \date 2006-06-02 14:41:03, 조철희
     */
     // margin에 의한 경계 찾기
-    pFrqGroup->uiToFRQ = _min( MAX_FREQ, ( frq_bin+1 ) << nShift );
-    pFrqGroup->uiToBIN = frq_bin; // pFrqGroup->to_frq >> nShift;
+    pFrqGroup->uiToFRQ = min( MAX_FREQ, (unsigned int) ( frq_bin+1 ) << (unsigned int) nShift );
+    pFrqGroup->uiToBIN = (unsigned int) frq_bin; // pFrqGroup->to_frq >> nShift;
 
     return TRUE;
 }
@@ -2064,10 +2119,10 @@ void CGroup::FilterParam(STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP 
     PDWINDEX *pPdwIndex;
     PDWINDEX *pAoaPdwIndex;
 
-    UINT low, high;
+    UINT uiLow, uiHigh;
 
-    low = pAoaGroup->iFromAOA;
-    high = pAoaGroup->iToAOA;
+	uiLow = (unsigned int) pAoaGroup->iFromAOA;
+	uiHigh = (unsigned int) pAoaGroup->iToAOA;
 
     // 초기화
     pAoaGroup->iCount = 0;
@@ -2081,7 +2136,7 @@ void CGroup::FilterParam(STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP 
             // 추출된 펄스가 아니면 통과
             if( m_pMARK[ index ] != enEXTRACT_MARK) {
                 // 범위 조사
-                if( pParam[index] >= low || pParam[index] <= high ) {
+                if( pParam[index] >= uiLow || pParam[index] <= uiHigh ) {
                     *pAoaPdwIndex++ = index;
                     ++ pAoaGroup->iCount;
                 }
@@ -2095,7 +2150,7 @@ void CGroup::FilterParam(STR_PDWINDEX *pGrPdwIndex, UINT *pParam, STR_AOA_GROUP 
             // 추출된 펄스가 아니면 통과
             if( m_pMARK[ index ] != enEXTRACT_MARK) {
                 // 범위 조사
-                if( pParam[index] >= low && pParam[index] <= high ) {
+                if( pParam[index] >= uiLow && pParam[index] <= uiHigh ) {
                     *pAoaPdwIndex++ = index;
                     ++ pAoaGroup->iCount;
                 }
@@ -2373,7 +2428,7 @@ void CGroup::MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex )
     pPwGroup->uiFromPW = 0;
     pPwGroup->uiToPW = MAX_PW - 1;
 
-    pPwGroup->frq_idx = m_FrqGroups.uiCount;
+    pPwGroup->frq_idx = (int) m_FrqGroups.uiCount;
 
     // 주파수 그룹화 초기화
     pFrqGroup = & m_FrqGroups.stFreq[ m_FrqGroups.uiCount ];
@@ -2435,7 +2490,7 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
         pCluster->iCount = (int) pSrcIndex->uiCount;
         pCluster->bSplit = true;
 
-        memcpy(pCluster->pIndex, pSrcIndex->pIndex, sizeof(PDWINDEX)*pCluster->iCount);
+        memcpy(pCluster->pIndex, pSrcIndex->pIndex, sizeof(PDWINDEX)*(size_t) pCluster->iCount);
 
         CalClusterInfo(pCluster);
 
@@ -2446,7 +2501,7 @@ void CGroup::ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw )
             pCluster = &m_pCluster[0];
             for (j = 0; j < m_uiClusters; ++j) {
                 if (TRUE == SplitCenter(pCluster, &m_pCluster[MAX_AGRT - 2])) {
-                    for (k = (UINT)( m_uiClusters + nSplitCluster - 1 ) ; k >= j + nSplitCluster + 1; --k) {
+                    for (k = (UINT)( ( m_uiClusters + (UINT) nSplitCluster ) - 1 ) ; k >= j + (unsigned int) nSplitCluster + 1; --k) {
                         memcpy(&m_pCluster[k + 1], &m_pCluster[k], sizeof(STR_CLUSTER));
                     }
                     memcpy(pCluster++, &m_pCluster[MAX_AGRT - 1], sizeof(STR_CLUSTER));

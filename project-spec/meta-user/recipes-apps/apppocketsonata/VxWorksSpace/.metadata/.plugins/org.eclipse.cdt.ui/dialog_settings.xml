@@ -9,6 +9,7 @@
 	<item value="875" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_height"/>
 	<item value="0" key="org.eclipse.cdt.uiformatter_page.white_space.c_view.inner"/>
 	<item value="2" key="formatter_page.modify_dialog_tab_page.last_focus_index"/>
+	<item value="Default C header template" key="LastUsedHeaderTemplate"/>
 	<item value="1" key="org.eclipse.cdt.uiformatter_page.line_wrapping_tab_page.last_category_index"/>
 	<section name="org.eclipse.cdt.ui.OPEN_ACTION_SELECTION_DIALOG_SECTION">
 		<item value="961" key="DIALOG_WIDTH"/>
@@ -48,6 +49,9 @@
 		<item value="false" key="caseSensitive"/>
 		<item value="227191" key="searchFlags"/>
 		<list key="previousPatterns">
+			<item value="localeh"/>
+			<item value="S_objLib_OBJ_TIMEOUT"/>
+			<item value="drawdata"/>
 			<item value="DeletePointers"/>
 			<item value="std::listT*i_listContainer"/>
 			<item value="ini_hassection"/>

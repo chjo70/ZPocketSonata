@@ -44,7 +44,7 @@ CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(uiCoMa
 	m_iCoNewAet = 0;
 
     //m_pAet = NULL;  //GetAet();
-    m_pEmitter = GetEmitter();
+    m_pEmitter = CKMakeAET::GetEmitter();
 
 }
 

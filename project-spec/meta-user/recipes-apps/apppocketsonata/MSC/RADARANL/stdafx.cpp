@@ -291,7 +291,7 @@ BOOL CheckPing()
 	hlcmpFile = IcmpCreateFile();
 
 	while(TRUE) {
-		bChkInternet = IcmpSendEcho(hlcmpFile, inet_addr( DB_SERVER_IP_ADDRESS ), szSendData, strlen(szSendData), NULL, szReplyBuffer, sizeof(szReplyBuffer), 1000 );
+		bChkInternet = IcmpSendEcho(hlcmpFile, inet_addr( DB_SERVER_IP_ADDRESS ), szSendData, (WORD) strlen(szSendData), NULL, szReplyBuffer, sizeof(szReplyBuffer), 1000 );
 
 		if( bChkInternet ) {
 			break;

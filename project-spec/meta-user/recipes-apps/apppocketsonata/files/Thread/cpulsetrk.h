@@ -1,4 +1,4 @@
-#ifndef CPULSETRK_H
+﻿#ifndef CPULSETRK_H
 #define CPULSETRK_H
 
 

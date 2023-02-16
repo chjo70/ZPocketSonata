@@ -1,4 +1,4 @@
-#ifndef CSINGLESERVER_H
+﻿#ifndef CSINGLESERVER_H
 #define CSINGLESERVER_H
 
 #ifdef __linux__

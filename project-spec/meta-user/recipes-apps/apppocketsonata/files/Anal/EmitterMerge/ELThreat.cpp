@@ -12,7 +12,7 @@
 
 #include "ELThreat.h"
 
-Queue<int> CELThreat::m_QueIndex;
+Queue<unsigned int> CELThreat::m_QueIndex;
 int CELThreat::m_CoInstance=0;
 int CELThreat::m_iCoABT = 0;
 int CELThreat::m_iCoAET = 0;
@@ -35,13 +35,13 @@ CELThreat::CELThreat(void)
 
 	if( m_CoInstance == 0 ) {
 		m_QueIndex.Init( TOTAL_ITEMS_OF_THREAT_NODE );
-		for( int i=0 ; i < TOTAL_ITEMS_OF_THREAT_NODE ; ++i ) {
-			m_QueIndex.Push( i );
+		for( unsigned int ui=0 ; ui < TOTAL_ITEMS_OF_THREAT_NODE ; ++ui ) {
+			m_QueIndex.Push( ui );
 		}
 	}
 
-	if( false == m_QueIndex.Pop( & m_nIndex ) ) {
-		m_nIndex = INVALID_INDEX;
+	if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
+		m_uiIndex = INVALID_INDEX;
 	}
 
 	++ m_CoInstance;
@@ -62,8 +62,8 @@ CELThreat::~CELThreat(void)
 {
 
 	// 메모리 해지한다.
-	if( m_nIndex > INVALID_INDEX ) {
-		m_QueIndex.Push( m_nIndex );
+	if( m_uiIndex > INVALID_INDEX ) {
+		m_QueIndex.Push( m_uiIndex );
 	}
 
 	-- m_CoInstance;
@@ -240,7 +240,7 @@ void CELThreat::RemoveAll()
 	}
 
 	// 루트는 삭제 하지 않기 하기 위함.
-	if( m_nIndex != INVALID_INDEX && m_pRootThreat != this ) {
+	if( m_uiIndex != INVALID_INDEX && m_pRootThreat != this ) {
 
 		// TRACE( "\n 삭제 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
 		delete this;

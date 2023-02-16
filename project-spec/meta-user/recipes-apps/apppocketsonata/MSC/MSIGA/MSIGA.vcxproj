@@ -14,7 +14,7 @@
     <ProjectGuid>{77EB490D-A2C9-4069-87BE-26A69F11E858}</ProjectGuid>
     <RootNamespace>MSIGA</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -30,6 +30,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -53,7 +54,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_32BIT_TIME_T88;_CRT_SECURE_NO_WARNINGS;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;TOOL=MSC;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;_KFX1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -71,6 +72,31 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>echo off
+echo $(ConfigurationName)
+SET CONFIGNAME=$(ConfigurationName)
+REM ########################################################################
+REM  INI 파일 복사..
+
+cd
+copy ..\..\files\sysconfig.ini c:\sqlite3
+REM dir
+REM If errorlevel 0 goto DONE
+REM echo.
+REM Echo 이동할 폴더(%RADAR_DF_FOLDER%)가 없어서 복사하지 못했습니다.
+REM goto END
+REM :DONE
+
+REM echo.
+REM Echo ***** 복사 완료 했습니다.
+
+
+REM :END
+</Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -103,6 +129,7 @@
     <None Include="ReadMe.txt" />
     <None Include="res\MSIGA.ico" />
     <None Include="res\MSIGA.rc2" />
+    <None Include="res\Sketchpad.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h" />
@@ -144,7 +171,6 @@
     <ClInclude Include="..\..\files\Anal\Identify\define.h" />
     <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h" />
     <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h" />
-    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h" />
     <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h" />
     <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
     <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
@@ -233,6 +259,7 @@
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="..\..\files\Utils\DMA\dma.h" />
     <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
+    <ClInclude Include="..\..\files\Utils\PCIDriver.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />
     <ClInclude Include="MSIGA.h" />
     <ClInclude Include="MSIGADlg.h" />
@@ -244,9 +271,7 @@
     <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
     <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -444,6 +469,7 @@
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp" />
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>

@@ -12,24 +12,27 @@
 		<list key="replacement-string.combo">
 		</list>
 		<list key="search-string.combo">
-			<item value="Download"/>
-			<item value="Starting of the Collecting Signal"/>
-			<item value="_SignalType"/>
-			<item value="GetPlatformCode"/>
-			<item value="_PlatformCodes"/>
-			<item value="_FunctionCodes"/>
-			<item value="pragma"/>
-			<item value="&lt;stdint.h&gt;"/>
-			<item value="std::list&lt;T*&gt; &amp;i_listContainer"/>
-			<item value="_TYPE_size_t"/>
-			<item value="VIRT_ADDR&#x09;virtualAddr;"/>
-			<item value="ini_hassection"/>
+			<item value="__time64_t tiContactTime"/>
+			<item value="ello, VxWorks"/>
+			<item value="BOOT_LINE_ADRS"/>
+			<item value="192.168.1"/>
+			<item value="10.245"/>
+			<item value="Application Mode Agent (default)"/>
+			<item value="&quot;/d/rawdata/"/>
+			<item value="y"/>
+			<item value="ping"/>
+			<item value="console"/>
+			<item value="Process shell commands"/>
+			<item value="wide"/>
 		</list>
 		<list key="scope-history">
 			<item value="Workspace"/>
-			<item value="Project VBootShell64"/>
+			<item value="Project VBootShell_T2MS"/>
+			<item value="Project VSIGA"/>
+			<item value="Project VSourceBuild_T2MS"/>
 			<item value="Project VSourceBuild"/>
 			<item value="Project VBootShell"/>
+			<item value="Project VBootShell64"/>
 		</list>
 		<list key="filter-pattern.combo">
 		</list>
@@ -43,11 +46,32 @@
 				<item value="/VBootShell64"/>
 			</list>
 		</section>
+		<section name="scope-history-Project VSourceBuild_T2MS">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VSourceBuild_T2MS"/>
+			</list>
+		</section>
 		<section name="scope-history-Project VSourceBuild">
 			<item value="" key="customName"/>
 			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
 			<list key="resources">
 				<item value="/VSourceBuild"/>
+			</list>
+		</section>
+		<section name="scope-history-Project VSIGA">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VSIGA"/>
+			</list>
+		</section>
+		<section name="scope-history-Project VBootShell_T2MS">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VBootShell_T2MS"/>
 			</list>
 		</section>
 		<section name="scope-history-Project VBootShell">

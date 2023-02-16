@@ -85,29 +85,18 @@ int incClusterCompare( const void *arg1, const void *arg2 )
  * @date      2016-07-19, 오후 1:09 
  * @warning   
  */
-CLOBClustering::CLOBClustering()
+CLOBClustering::CLOBClustering() : m_bIsSimulator(false)
 {
 	int i;
 
-	m_bIsSimulator = false;	// ST_OCM->IsSimulatorMode();
+	// LOB Pool 할당
+	m_pQueLOBDataPool = new Queue<SELLOBDATA_MINIMIZE> [TOTAL_ITEMS_OF_THREAT_NODE];
 
-	// 연동기 또는 모의기 할 때만 아래를 수행하게 함.
-    bool bIsPOSN = false; // GP_MGR_PARAM->IsPOSN();
-	if( m_bIsSimulator == true || bIsPOSN == false ) {
-		// LOB Pool 할당
-		m_pQueLOBDataPool = new Queue<SELLOBDATA_MINIMIZE> [TOTAL_ITEMS_OF_THREAT_NODE];
-
-		for( i=0 ; i < TOTAL_ITEMS_OF_THREAT_NODE ; ++i ) {
-			m_pQueLOBDataPool[i].Init( QUEUE_LOB_POOL_SIZE );
-		}
-
-		// m_pfDist = ( float * ) malloc( sizeof(float) * MAX_INTERSECTIONS );
-
+	for( i=0 ; i < TOTAL_ITEMS_OF_THREAT_NODE ; ++i ) {
+		m_pQueLOBDataPool[i].Init( QUEUE_LOB_POOL_SIZE );
 	}
-	else {
-		//m_pQueLOBDataPool = NULL;
 
-	}
+	// m_pfDist = ( float * ) malloc( sizeof(float) * MAX_INTERSECTIONS );
 
 	m_nCreateClustering = 0;
 	m_nCheckClustering = 0;
@@ -223,14 +212,14 @@ void CLOBClustering::AddLOBPool( int nDestIndex, int nSrcIndex )
  * @date      2016-06-22, 오후 1:13 
  * @warning   
  */
-SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( int index, SRxLOBData *pSRxLOBData, UINT uiLOBID, bool bInit, bool bInsertLOB )
+SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( unsigned int uindex, SRxLOBData *pSRxLOBData, UINT uiLOBID, bool bInit, bool bInsertLOB )
 {
 	SELLOBDATA_MINIMIZE *pLOBData=NULL;
 
 	Queue<SELLOBDATA_MINIMIZE> *pQueLOBDataPool;
 
 	if( bInsertLOB == true ) {
-		pQueLOBDataPool = & m_pQueLOBDataPool[index];
+		pQueLOBDataPool = & m_pQueLOBDataPool[uindex];
 
 		// 큐 버퍼 초기화
 		if( bInit == true ) {
@@ -298,18 +287,18 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
  * @date      2016-06-22, 오후 12:51 
  * @warning   
  */
-bool CLOBClustering::LOBClustering( int index, STR_CEDEOBID_INFO *pCEDEOBInfo )
+bool CLOBClustering::LOBClustering( unsigned int uiIndex, STR_CEDEOBID_INFO *pCEDEOBInfo )
 {
 	m_bCluster = false;
 
-	m_pQueLOBData = & m_pQueLOBDataPool[ index ];
+	m_pQueLOBData = & m_pQueLOBDataPool[uiIndex];
 	m_nLOB = m_pQueLOBData->Count();
 
 	if( m_nLOB >= (int) g_pTheELEnvironVariable->GetEmmgNumOfMinLobToBeam() && m_nLOB < MAX_LOB_FOR_CLUSTERING ) {
         //DWORD dwTime = GetTickCount();
 
 		// 0. LOB 클러스터링을 계산하기 위한 사전 데이터 할당
-		m_nMaxOfIntersection = CalcIntersectionPoints( m_nLOB );
+		m_nMaxOfIntersection = (int) CalcIntersectionPoints( (unsigned int) m_nLOB );
 
 		// 0.1 클러스터링을 수행하기 위한 변수 정의
 		// 1. 교차점 구하기
@@ -350,7 +339,7 @@ bool CLOBClustering::AllocMemory()
 	bool bRet=true;
 
 	// 교차점 메모리 할당
-	m_uiInterSect = CalcIntersectionPoints( QUEUE_LOB_POOL_SIZE );
+	m_uiInterSect = CalcIntersectionPoints( (unsigned int) QUEUE_LOB_POOL_SIZE );
 	m_pIntersect = ( SELINTERSECTION * ) malloc( sizeof(SELINTERSECTION) * m_uiInterSect );
 	if( m_pIntersect == NULL ) { //DTEC_NullPointCheck
 		bRet = false;
@@ -394,7 +383,7 @@ void CLOBClustering::FreeMemory()
 	int i;
 	int iInterSect;
 
-	iInterSect = CalcIntersectionPoints( QUEUE_LOB_POOL_SIZE );
+	iInterSect = (int) CalcIntersectionPoints( (unsigned int) QUEUE_LOB_POOL_SIZE );
 
 	free( m_pOptimalLOBID );
 
@@ -645,9 +634,9 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
  * @date      2016-06-23, 오전 10:13 
  * @warning   
  */
-int CLOBClustering::CalcIntersectionPoints( int nLines )
+unsigned int CLOBClustering::CalcIntersectionPoints( unsigned int uiLines )
 {
-	return ( nLines * ( nLines - 1 ) ) / 2;
+	return (uiLines * (uiLines - 1 ) ) / 2;
 }
 
 /**
@@ -980,7 +969,7 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 		// 4. 기성인 것만 LOB 클러스터링을 시도하게 함.
 		if( stResPosEstData.nRadarIndex != _spZero ) { // || ST_OCM->IsSimulatorMode() == true ) {
             float fGetEobIndfRangeMeters=g_pTheELEnvironVariable->GetEobIndfRangeMeters();
- 			if( peInfo.fCEP == 0.0 || peInfo.fCEP > fGetEobIndfRangeMeters ) {
+ 			if(is_zero<float>( peInfo.fCEP ) == true || peInfo.fCEP > fGetEobIndfRangeMeters ) {
 				LogPrint( "\n CEP[%f m] 반경이 벗어 났습니다!" , peInfo.fCEP );
  				bRet = false;
 				continue;
@@ -990,8 +979,8 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 				m_thePositionEstimation.RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
 				// 장축/단축 비교를 추가 
-                float fGetEobIndfRangeMeters=g_pTheELEnvironVariable->GetEobIndfRangeMeters();
-				if( bRet == true && peInfo.fCEP != 0. && \
+                
+				if( bRet == true && is_zero<float>(peInfo.fCEP) != true && \
 					( peInfo.fCEP <= fGetEobIndfRangeMeters ) || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
 					LogPrint( "\n CEP[%d m] 반장축[%f m] 반단축[%f m] 반경 안에 들었습니다!" , peInfo.fCEP, peInfo.fMajorAxis/2, peInfo.fMinorAxis/2 );
 					bRet = true;
@@ -1085,9 +1074,9 @@ bool CLOBClustering::IsThereOptimalLOBID( int iLOBID )
  * @date      2017-12-12 오후 10:38 
  * @warning   
  */
-void CLOBClustering::UpdateClusterInfo( UINT uiAETID, UINT uiABTID, int iLOBPoolIndex )
+void CLOBClustering::UpdateClusterInfo( UINT uiAETID, UINT uiABTID, UINT uiLOBPoolIndex )
 {
-	m_iLOBPoolIndex = iLOBPoolIndex;
+	m_uiLOBPoolIndex = uiLOBPoolIndex;
 	m_uiABTID = uiABTID;
 	m_uiAETID = uiAETID;
 

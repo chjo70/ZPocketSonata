@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 
 
@@ -69,12 +69,7 @@ struct SRxLOBData {
 	unsigned int uiABTID;
 	unsigned int uiAETID;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiContactTime;			// 64비트 time_t 로 선언해야 함.
-#else
-	__time32_t tiContactTime;			// 32비트 time_t 로 선언해야 함.
-#endif
-
+	time_t tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
 	unsigned int tiContactTimems;
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
@@ -232,13 +227,8 @@ struct SRxABTData {
 
     unsigned int uiCoLOB;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	__time64_t tiLastSeenTime;
-#else
-	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t tiLastSeenTime;
-#endif
+	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	time_t tiLastSeenTime;
 
     int iRadarModePriority;
     int iRadarPriority;
@@ -321,7 +311,7 @@ struct SRxABTData {
 #if defined(_ELINT_)
     int iIsManualInput;
 
-    __time32_t tiFinalAlarmTime;
+    time_t tiFinalAlarmTime;
 #endif
 
 	int iStat;
@@ -380,13 +370,8 @@ struct SRxAETData {
     int iRadarPriority;
     int iThreatPriority;
 
-#ifdef _POCKETSONATA_
-	__time64_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	__time64_t tiLastSeenTime;
-#else
-	__time32_t tiFirstSeenTime;				// 32비트 time_t 로 선언해야 함.
-	__time32_t tiLastSeenTime;
-#endif
+	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+	time_t tiLastSeenTime;
 
     int iValidity;
 
@@ -435,7 +420,7 @@ struct SRxAETData {
     char szIDInfo[_MAX_SIZE_OF_IDINFO];
 
 #if defined(_XBAND_) || defined(_ELINT_)
-    __time32_t tiFinalAlarmTime;
+    time_t tiFinalAlarmTime;
 
 #endif
 

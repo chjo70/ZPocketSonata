@@ -1224,7 +1224,7 @@
 		reg = <0xf 0xe0000000 0 0x8000000>;
 		max-size = <0x8000000>;
 	};  
-
+/*
 	norflash1: norflash@0xff8000000 {
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -1233,7 +1233,7 @@
 		reg = <0xf 0xe8000000 0 0x8000000>;
 		max-size = <0x8000000>;
 	};  
-
+*/
 	nvram: nvram@0xfff000000 {
 		#address-cells = <1>;
 		#size-cells = <1>;

@@ -372,7 +372,7 @@ const wchar_t *SQLiteStatement::GetColumnDatabaseName16(int column) const
 	CheckStatement();
 	CheckColumnNumber(column, "GetColumnDatabaseName16()");
 
-	return (wchar_t *) sqlite3_column_database_name16(mStatement, column);
+	return (const wchar_t *) sqlite3_column_database_name16(mStatement, column);
 }
 
 const char *SQLiteStatement::GetColumnTableName(int column) const
@@ -444,7 +444,7 @@ const char *SQLiteStatement::GetColumnDatabaseName(const std::string &column) co
 const wchar_t *SQLiteStatement::GetColumnDatabaseName16(const std::string &column) const
 {
 	AssignColumnNumberToColumnName();
-	return (wchar_t*)sqlite3_column_database_name16(mStatement, GetAssignedColumnNumber(column));
+	return (const wchar_t*)sqlite3_column_database_name16(mStatement, GetAssignedColumnNumber(column));
 }
 
 const char *SQLiteStatement::GetColumnTableName(const std::string &column) const
@@ -780,37 +780,13 @@ void SQLiteStatement::CommitTheTransaction()
 	{
 		try
 		{
-			unsigned short us = 0;
+			
 			// check wheter we have sql statements with different data types
 			if(!mTransactionSQL.empty() && !mTransactionSQL16.empty())
 			{
-				TTransactionSQL::iterator transIter;
-				TTransactionSQL16::iterator trans16Iter;
+				//
+				CommitDifferentDataTypes();
 
-				unsigned short transactions = mTransactionSQL.size() + mTransactionSQL16.size();
-
-				while(us < transactions)
-				{
-					transIter = mTransactionSQL.find(us);
-					if(transIter != mTransactionSQL.end())
-					{
-						SqlStatement(transIter->second.first);
-					}
-					else
-					{
-						trans16Iter = mTransactionSQL16.find(us);
-						if(trans16Iter != mTransactionSQL16.end())
-						{
-							SqlStatement(trans16Iter->second.first);
-						}					
-						else
-						{
-							KOMPEX_EXCEPT("CommitTransaction() transaction id not found", -1);
-						}
-					}
-
-					++us;
-				}
 			}
 			else
 			{
@@ -844,6 +820,48 @@ void SQLiteStatement::CommitTheTransaction()
 		SqlStatement("COMMIT;");
 	}
 	mTransactionID = 0;
+}
+
+/**
+ * @brief     CommitDifferentDataTypes
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-03 16:19:21
+ * @warning
+ */
+void SQLiteStatement::CommitDifferentDataTypes()
+{
+	unsigned short us = 0;
+
+	TTransactionSQL::iterator transIter;
+	TTransactionSQL16::iterator trans16Iter;
+
+	unsigned short transactions = mTransactionSQL.size() + mTransactionSQL16.size();
+
+	while (us < transactions)
+	{
+		transIter = mTransactionSQL.find(us);
+		if (transIter != mTransactionSQL.end())
+		{
+			SqlStatement(transIter->second.first);
+		}
+		else
+		{
+			trans16Iter = mTransactionSQL16.find(us);
+			if (trans16Iter != mTransactionSQL16.end())
+			{
+				SqlStatement(trans16Iter->second.first);
+			}
+			else
+			{
+				KOMPEX_EXCEPT("CommitTransaction() transaction id not found", -1);
+			}
+		}
+
+		++us;
+	}
 }
 
 void SQLiteStatement::CleanUpTransaction()
@@ -1132,38 +1150,38 @@ int SQLiteStatement::GetAssignedColumnNumber(const std::string &columnName) cons
 	return iter->second;
 }
 
-std::string SQLiteStatement::Mprintf(const char *sql, ...)
-{
-    va_list args;
-    va_start(args, sql);
-	char *sqlResult = sqlite3_vmprintf(sql, args);
-	va_end(args);
+// std::string SQLiteStatement::Mprintf(const char *sql, ...)
+// {
+//     va_list args;
+//     va_start(args, sql);
+// 	char *sqlResult = sqlite3_vmprintf(sql, args);
+// 	va_end(args);
+// 
+// 	if(!sqlResult)
+// 	{
+// 		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
+// 		//return "";
+// 	}
+// 
+// 	std::string result = sqlResult;
+// 	sqlite3_free(sqlResult);
+// 	return result;
+// }
 
-	if(!sqlResult)
-	{
-		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
-		//return "";
-	}
-
-	std::string result = sqlResult;
-	sqlite3_free(sqlResult);
-	return result;
-}
-
-std::string SQLiteStatement::Vmprintf(const char *sql, va_list args)
-{
-	char *sqlResult = sqlite3_vmprintf(sql, args);
-
-	if(!sqlResult) {
-		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
-		//return "";
-	}
-
-	std::string result = sqlResult;
-	sqlite3_free(sqlResult);
-	return result;
-
-}
+// std::string SQLiteStatement::Vmprintf(const char *sql, va_list args)
+// {
+// 	char *sqlResult = sqlite3_vmprintf(sql, args);
+// 
+// 	if(!sqlResult) {
+// 		KOMPEX_EXCEPT("unable to allocate enough memory to hold the resulting string", -1);
+// 		//return "";
+// 	}
+// 
+// 	std::string result = sqlResult;
+// 	sqlite3_free(sqlResult);
+// 	return result;
+// 
+// }
 
 }	// namespace Kompex
 

@@ -1,4 +1,4 @@
-#ifndef CIPL_H
+﻿#ifndef CIPL_H
 #define CIPL_H
 
 #include <string.h>

@@ -1,4 +1,4 @@
-// cencdec.cpp: implementation of the SONATA class.
+ï»¿// cencdec.cpp: implementation of the SONATA class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -27,8 +27,8 @@ int SONATA::ENCODE::DOA( float fDOA )
  * @brief     BAND
  * @param     float fFREQ
  * @return    int
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-11-24 15:31:01
  * @warning

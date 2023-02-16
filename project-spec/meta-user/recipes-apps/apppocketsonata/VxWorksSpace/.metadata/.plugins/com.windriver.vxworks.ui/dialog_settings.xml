@@ -4,7 +4,7 @@
 		<item value="true" key="showChoiceItems"/>
 		<item value="false" key="showAll"/>
 		<item value="false" key="autoReszeColumns"/>
-		<item value="VxWorks Global Configuration Options for BSP hmt_t2080vpx3u" key="selected"/>
+		<item value="" key="selected"/>
 		<list key="expanded">
 			<item value="app"/>
 			<item value="myQspiFlash"/>

@@ -24,7 +24,7 @@
 	</section>
 	<section name="SearchDialog">
 		<item value="false" key="IS_OPEN_PREVIOUS_PAGE"/>
-		<item value="com.windriver.ide.search.ui.RetrieverFindPage" key="PREVIOUS_PAGE"/>
+		<item value="org.eclipse.cdt.ui.pdomSearchPage" key="PREVIOUS_PAGE"/>
 	</section>
 	<section name="DialogBounds_SearchDialog">
 		<item value="859" key="DIALOG_WIDTH"/>

@@ -1,44 +1,44 @@
-ï»¿// stdafx.h : ìžì£¼ ì‚¬ìš©í•˜ì§€ë§Œ ìžì£¼ ë³€ê²½ë˜ì§€ëŠ” ì•ŠëŠ”
-// í‘œì¤€ ì‹œìŠ¤í…œ í¬í•¨ íŒŒì¼ ë° í”„ë¡œì íŠ¸ ê´€ë ¨ í¬í•¨ íŒŒì¼ì´
-// ë“¤ì–´ ìžˆëŠ” í¬í•¨ íŒŒì¼ìž…ë‹ˆë‹¤.
+// stdafx.h : ÀÚÁÖ »ç¿ëÇÏÁö¸¸ ÀÚÁÖ º¯°æµÇÁö´Â ¾Ê´Â
+// Ç¥ÁØ ½Ã½ºÅÛ Æ÷ÇÔ ÆÄÀÏ ¹× ÇÁ·ÎÁ§Æ® °ü·Ã Æ÷ÇÔ ÆÄÀÏÀÌ
+// µé¾î ÀÖ´Â Æ÷ÇÔ ÆÄÀÏÀÔ´Ï´Ù.
 
 #pragma once
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // ê±°ì˜ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë‚´ìš©ì€ Windows í—¤ë”ì—ì„œ ì œì™¸í•©ë‹ˆë‹¤.
+#define VC_EXTRALEAN            // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀº Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
 #endif
 
 #include "targetver.h"
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // ì¼ë¶€ CString ìƒì„±ìžëŠ” ëª…ì‹œì ìœ¼ë¡œ ì„ ì–¸ë©ë‹ˆë‹¤.
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // ÀÏºÎ CString »ý¼ºÀÚ´Â ¸í½ÃÀûÀ¸·Î ¼±¾ðµË´Ï´Ù.
 
-#include <afxwin.h>         // MFC í•µì‹¬ ë° í‘œì¤€ êµ¬ì„± ìš”ì†Œìž…ë‹ˆë‹¤.
-#include <afxext.h>         // MFC í™•ìž¥ìž…ë‹ˆë‹¤.
+#include <afxwin.h>         // MFC ÇÙ½É ¹× Ç¥ÁØ ±¸¼º ¿ä¼ÒÀÔ´Ï´Ù.
+#include <afxext.h>         // MFC È®ÀåÀÔ´Ï´Ù.
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxole.h>         // MFC OLE í´ëž˜ìŠ¤ìž…ë‹ˆë‹¤.
-#include <afxodlgs.h>       // MFC OLE ëŒ€í™” ìƒìž í´ëž˜ìŠ¤ìž…ë‹ˆë‹¤.
-#include <afxdisp.h>        // MFC ìžë™í™” í´ëž˜ìŠ¤ìž…ë‹ˆë‹¤.
+#include <afxole.h>         // MFC OLE Å¬·¡½ºÀÔ´Ï´Ù.
+#include <afxodlgs.h>       // MFC OLE ´ëÈ­ »óÀÚ Å¬·¡½ºÀÔ´Ï´Ù.
+#include <afxdisp.h>        // MFC ÀÚµ¿È­ Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_OLE_SUPPORT
 
 #ifndef _AFX_NO_DB_SUPPORT
-#include <afxdb.h>                      // MFC ODBC ë°ì´í„°ë² ì´ìŠ¤ í´ëž˜ìŠ¤ìž…ë‹ˆë‹¤.
+#include <afxdb.h>                      // MFC ODBC µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_DB_SUPPORT
 
 #ifndef _AFX_NO_DAO_SUPPORT
-#include <afxdao.h>                     // MFC DAO ë°ì´í„°ë² ì´ìŠ¤ í´ëž˜ìŠ¤ìž…ë‹ˆë‹¤.
+#include <afxdao.h>                     // MFC DAO µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_DAO_SUPPORT
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>           // Internet Explorer 4 ê³µìš© ì»¨íŠ¸ë¡¤ì— ëŒ€í•œ MFC ì§€ì›ìž…ë‹ˆë‹¤.
+#include <afxdtctl.h>           // Internet Explorer 4 °ø¿ë ÄÁÆ®·Ñ¿¡ ´ëÇÑ MFC Áö¿øÀÔ´Ï´Ù.
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>                     // Windows ê³µìš© ì»¨íŠ¸ë¡¤ì— ëŒ€í•œ MFC ì§€ì›ìž…ë‹ˆë‹¤.
+#include <afxcmn.h>                     // Windows °ø¿ë ÄÁÆ®·Ñ¿¡ ´ëÇÑ MFC Áö¿øÀÔ´Ï´Ù.
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 
 //////////////////////////////////////////////////////////////////////////
-// ë¡œê·¸ ê´€ë ¨ í•¨ìˆ˜
+// ·Î±× °ü·Ã ÇÔ¼ö
 
 #include <afxmt.h>
 
@@ -46,20 +46,20 @@
 #define MYHOME_IP							"192.168.0.156"
 
 
-// ë ˆì´ë” ìˆ˜ì§‘ì†Œ ìœ„ì¹˜
+// ·¹ÀÌ´õ ¼öÁý¼Ò À§Ä¡
 #define RADARDIR_1_IP_ADDRESS				"192.168.0.14"
 #define RADARDIR_2_IP_ADDRESS				"192.168.0.24"
 #define RADARDIR_3_IP_ADDRESS				"192.168.0.34"
 
-// X ë°´ë“œ ì¼ë•Œ DB ì„œë²„ ì–´ë“œë ˆìŠ¤
+// X ¹êµå ÀÏ¶§ DB ¼­¹ö ¾îµå·¹½º
 //#define DB_SERVER_IP_ADDRESS			"30.30.30.54"
-// ì¸ì²œê³µí•­
+// ÀÎÃµ°øÇ×
 // #define DB_SERVER_IP_ADDRESS			"192.168.0.41"
-// íšŒì‚¬ì—ì„œ
+// È¸»ç¿¡¼­
 #define DB_SERVER_IP_ADDRESS			"127.0.0.1"
 
 //#define LOG_DIRECTORY						"RADARDIR_LOG"
-#define LOG_SUB_DIRECTORY					"ë ˆì´ë” ë°©íƒ"
+#define LOG_SUB_DIRECTORY					"·¹ÀÌ´õ ¹æÅ½"
 #define GLOBAL_LOG_DIRECTORY				"\\\\192.168.0.41\\Files"
 #define GLOBAL_LOG_DIRECTORY2				"\\\\192.168.0.41"
 
@@ -67,7 +67,7 @@ extern CCriticalSection g_criticalLog;
 extern CCriticalSection g_criticalDbg;
 extern CCriticalSection g_criticalExe;
 
-// ê°€ë³€ì¸í•¨ìˆ˜ë¡œ Lofë¼ëŠ” í•¨ìˆ˜ ì„ ì–¸
+// °¡º¯ÀÎÇÔ¼ö·Î Lof¶ó´Â ÇÔ¼ö ¼±¾ð
 void Log( int nType, char *fmt, ... );
 CString GetFilePath();
 BOOL _CreateDir( char *pPath );
@@ -75,7 +75,7 @@ BOOL CheckPing();
 
 // #ifndef _LOG_TYPE_
 // #define _LOG_TYPE_
-// // ë¡œê·¸ íƒ€ìž… ì‚¬ìš©ìžê°€ ì›í•˜ëŠ” ëŒ€ë¡œ ì •ì˜
+// // ·Î±× Å¸ÀÔ »ç¿ëÀÚ°¡ ¿øÇÏ´Â ´ë·Î Á¤ÀÇ
 // enum LogType {
 // 	enDebug=0,
 // 	enNormal,
@@ -114,7 +114,7 @@ extern "C" {
 }
 #endif
 
-// VS2012 ì´ìƒì—ì„œ TRACEë¥¼ ë³€ê²½í•˜ê¸° ìœ„í•¨.
+// VS2012 ÀÌ»ó¿¡¼­ TRACE¸¦ º¯°æÇÏ±â À§ÇÔ.
 #if _MSC_VER > 1600
 
 #ifdef _DEBUG

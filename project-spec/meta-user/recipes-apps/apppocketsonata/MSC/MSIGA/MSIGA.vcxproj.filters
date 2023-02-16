@@ -113,6 +113,9 @@
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="res\Sketchpad.ico">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MSIGA.h">
@@ -301,9 +304,6 @@
     <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h">
       <Filter>소스 파일\Anal\Identify</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibMngr2.h">
-      <Filter>소스 파일\Anal\Identify</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h">
       <Filter>소스 파일\Anal\Identify</Filter>
     </ClInclude>
@@ -407,9 +407,6 @@
       <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h">
-      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h">
@@ -516,6 +513,12 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
       <Filter>소스 파일\Anal\IntraSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\PCIDriver.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -702,9 +705,6 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp">
       <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
-      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp">
       <Filter>소스 파일\Anal\Collect\CollectBank</Filter>
     </ClCompile>
@@ -743,6 +743,12 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
       <Filter>소스 파일\Anal\IntraSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
+      <Filter>소스 파일\Anal\Collect\DataFile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp">
+      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

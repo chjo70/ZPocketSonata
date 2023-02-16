@@ -90,6 +90,7 @@ CScanSigAnal::~CScanSigAnal()
 void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
     unsigned int uiTotalPDW;
+	EN_SCANRESULT enScanResult;
 
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
@@ -123,7 +124,8 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 	// 스캔 분석 수행한다.
     m_strScnResult.uiABTID = m_pScnAet->uiABTID;
     m_strScnResult.uiAETID = m_pScnAet->uiAETID;
-    m_strScnResult.enResult = m_theAnalScan->AnalScan();
+	enScanResult = m_theAnalScan->AnalScan();
+	m_strScnResult.enResult = enScanResult;
     GetScanRes( & m_strScnResult.uiScnTyp, & m_strScnResult.fScnPrd );
 
 	// 스캔 분석 결과를 저장한다.
@@ -317,10 +319,10 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-27 10:32:42
 //
-void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, int noCh )
+void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, unsigned int uinoCh )
 {
 	// 스캔분석판 추적 채널 정의
-	m_uiNoCh = noCh;
+	m_uiNoCh = uinoCh;
 
 	// PDW 버퍼 정의
 // 	m_pPdwBank = & stSPDW;

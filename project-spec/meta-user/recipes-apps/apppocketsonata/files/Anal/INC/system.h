@@ -1,4 +1,4 @@
-/*!
+﻿/*!
   \file     System.h
   \brief    interface for the 시스템 관련 정의문
 	\version  0.0.1
@@ -45,7 +45,7 @@
 
 #ifdef _XBAND_
 #define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
-#elif _701_
+#elif defined(_701_)
 #define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
 #else
 #define SHARED_DATA_DIRECTORY       (const char *) "d:/rawdata"
@@ -77,7 +77,7 @@
 // Vxworks 나 리눅스에 
 
 #ifdef _POCKETSONATA_
-#define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata"         
+#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"         
 #else
 #define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"
 #endif
@@ -390,10 +390,10 @@
 
 #define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
 #define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
-#define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqCD                       IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqBoundEJ                  IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqBoundCD                  IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 5 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD                       IFRQMhzCNV( 0, 5 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ                  IFRQMhzCNV( 0, 5 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD                  IFRQMhzCNV( 0, 5 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 
 #else
@@ -617,6 +617,8 @@ typedef enum {
     en_ZPOCKETSONATA,
 
     en_MIDAS,
+
+	en_OTHERS
 
 } ENUM_UnitType;
 #endif

@@ -1,14 +1,17 @@
-#ifndef CSIGNALCOLLECT_H
+﻿#ifndef CSIGNALCOLLECT_H
 #define CSIGNALCOLLECT_H
 
 
-//#include "../Include/system.h"
 #include "../Utils/cthread.h"
 
 #include "../Anal/Collect/ccollectbank/ccollectbank.h"
 #include "../Anal/Collect/DataFile/DataFile.h"
 
 #include "../Anal/Identify/Identify.h"
+
+#include "../Utils/PCIDriver.h"
+
+
 
 /**
  * @brief The CSignalCollect class
@@ -34,8 +37,6 @@ private:
 
     STR_STATIC_PDWDATA m_stPDWData;
 
-    CDataFile m_theDataFile;
-
     UNI_LAN_DATA m_uniLanData;
 
     SRxABTData m_ABTData[SCAN_CHANNEL+TRACK_CHANNEL];       // 추적/스캔 채널에 대한 대상 위협 정보
@@ -48,13 +49,18 @@ private:
     Queue<int> m_theTrackChannel;
     Queue<int> m_theScanChannel;
 
+    bool m_bSendEnd;
+
+    STR_TRKSCNPDWDATA m_theTrkScnPDW;
+
+private:
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
     CCollectBank *m_pTheCollectBank;
 
-    bool m_bSendEnd;
+    CDataFile m_theDataFile;
 
-    STR_TRKSCNPDWDATA m_theTrkScnPDW;
+    CPCIDriver *m_pThePCI;
 
 public:
     STR_MessageData *m_pMsg;
@@ -118,9 +124,9 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const ENUM_PCI_DRIVER enPCIDriver=enLEFT_PCI_DRIVER );
 #else
-    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+    CSignalCollect( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false, const ENUM_PCI_DRIVER enPCIDriver=enLEFT_PCI_DRIVER );
 #endif
 
     

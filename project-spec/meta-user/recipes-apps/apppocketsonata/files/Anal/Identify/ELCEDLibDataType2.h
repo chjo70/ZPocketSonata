@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 
 #ifndef __VXWORKS__
@@ -13,6 +13,7 @@
 using namespace std;
 
 #ifdef _MSC_VER
+#include <string>
 #include <string.h>
 #include <atlstr.h>
 
@@ -20,13 +21,6 @@ using namespace std;
 #include "../SigAnal/_Type.h"
 #endif
 
-
-// #include "../SigAnal/_SigAnal.h"
-// 
-// #include "../Identify/define.h"
-// #include "../Identify/structs.h"
-
-//#include "../INC/AetIPL.h"
 
 
 enum EnumNullValueType
@@ -178,7 +172,7 @@ namespace PlatformCode
 	};
 }
 
-static char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] = 
+static const char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] = 
 { 
 	"UNKNOWN",
 	"LAND", 
@@ -1421,7 +1415,7 @@ typedef enum {
 
 	enPlatform_AIR,
 	enPlatform_MOVING_GROUND,
-} enTHREAT_PLATFORM;
+} ENUM_THREAT_PLATFORM;
 
 
 struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반임)
@@ -1437,7 +1431,7 @@ struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반
 	float fLatitude;
 	float fLongitude;
 
-	enTHREAT_PLATFORM enPlatform;
+	ENUM_THREAT_PLATFORM enPlatform;
 
 	float fIdRange;
 
@@ -2087,11 +2081,11 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 {
     int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
-    __time32_t tiCreated;
-    __time32_t tiLastUpdated;
+    time_t tiCreated;
+	time_t tiLastUpdated;
 
-    __time32_t tiFirstSeen;
-    __time32_t tiLastSeen;
+	time_t tiFirstSeen;
+	time_t tiLastSeen;
 
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)

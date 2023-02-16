@@ -93,48 +93,30 @@ public:
 	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
-	//##ModelId=452B0C4501A3
-	BOOL CheckControlWc( UINT noEMT );
-	//##ModelId=452B0C4501AC
+	bool CheckControlWc( UINT noEMT );
+
 	UINT GetFlagControlWc( UINT noEMT );
-	//##ModelId=452B0C4501AE
 	UINT DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pAutocf );
-	//##ModelId=452B0C4501B6
     ENUM_AET_SCAN_TYPE HighIllustrationTest2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
-	//##ModelId=452B0C4501B9
 	UINT PeriodVerify( void );
-	//##ModelId=452B0C4501C0
+
 	//float SDevInArray( UINT *series, int co, float mean );
-	//##ModelId=452B0C4501C4
+
 	void KurtosisSkewness( STR_SAMPLE *pSample );
-	//##ModelId=452B0C4501D5
 	UINT ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
     UINT ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUTOCOR *pAcf);
-	//##ModelId=452B0C4501DF
 	UINT FindPeak( STR_AUTOCOR *pAutoCor );
-	//##ModelId=452B0C4501E8
 	void AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor );
-	//##ModelId=452B0C4501EB
     bool CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY );
-	//##ModelId=452B0C4501F3
 	float Normalize( int *series, UINT co, float *norm );
-	//##ModelId=452B0C4501FC
 	void Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
-	//##ModelId=452B0C4501FF
 	void ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
-	//##ModelId=452B0C450208
 	void SearchLowHghInArray( int *series, UINT co, STR_LOWHIGH *lh );
-	//##ModelId=452B0C450213
 	void SamplingProcess();
-	//##ModelId=452B0C450214
 	UINT CalcSamplingTime( UINT priMean );
-	//##ModelId=452B0C45021B
 	UINT CalcSamplingTime( UINT noEMT, UINT priMean );
-	//##ModelId=452B0C45021E
 	void CalcSamplingTime();
-	//##ModelId=452B0C450224
     EN_SCANRESULT AnalScan( int preAnalStat=0 );
-	//##ModelId=452B0C450226
 	void Init( unsigned int uinoEMT=0, int noCh=0 );
     void MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
 

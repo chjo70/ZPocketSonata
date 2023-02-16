@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file      Midas.h
  * @brief     
  * @exception MIDAS Blue File Format 헤더 파일
@@ -25,11 +25,13 @@ using namespace std;
 #include "RawFile.h"
 
 
-#if TOOL==diab 
-#pragma pack( 1 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 1 )
+// #else
+// #pragma pack( push, 1 )
+// #endif
+
 #pragma pack( push, 1 )
-#endif
 
 
 #define _PUT_ARRAY_VALUE( A, B, C )      if( B < sizeof(A) ) {   \
@@ -346,7 +348,7 @@ typedef struct {
 typedef struct  {
 	char name[4];
 	char format[2];
-	unsigned short offset;
+	unsigned short usOffset;
 
 } SELSUBRECORDS;
 
@@ -532,11 +534,13 @@ union UNI_ADJUNCT_TYPE {
     SELMIDAS_ADJUNCT_TYPE_6000 _6000;
 };
 
-#if TOOL==diab 
-#pragma pack( 4 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 4 )
+// #else
+// #pragma pack( pop )
+// #endif
+
 #pragma pack( pop )
-#endif
 
 /**
  * @class     CMIDASBlueFileFormat
@@ -603,16 +607,16 @@ private:
     double CalcDataSize();
     void MakeExtendedHeader();
     int WriteExtendedHeader();
-    unsigned int MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *value_keyword, char *keyword, int c, char type, int lkey=0 );
-    SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, char *keyword, char type, int lkey=0 );
-    SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, char *keyword, char type );
-    SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, char *pValue, char *keyword );
-    int MakeSubRecords( SELSUBRECORDS *pSubRecords, const char *pName, unsigned char data_type1, unsigned char data_type2, int nOffset );
+    unsigned int MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, const char *value_keyword, const char *keyword, int c, char type, int lkey=0 );
+    SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, unsigned long long iValue, const char *keyword, char type, int lkey=0 );
+    SELMIDAS_BINARY_KEYWORD *MakeValueBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, long double iValue, const char *keyword, char type );
+    SELMIDAS_BINARY_KEYWORD *MakeSetBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, const char *pValue, const char *keyword );
+    unsigned int MakeSubRecords( SELSUBRECORDS *pSubRecords, const char *pName, unsigned char data_type1, unsigned char data_type2, unsigned int uiOffset );
     void TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords );
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
     void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
     void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );
-    int MakeSubRecords();
+    unsigned int MakeSubRecords();
     void MIDASClose();
     void MakeMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX, double dValue );
     void MakeInitMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX );

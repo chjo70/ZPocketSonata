@@ -1,4 +1,4 @@
-// Macros.h: interface for the macro definetion
+﻿// Macros.h: interface for the macro definetion
 //
 //////////////////////////////////////////////////////////////////////
 

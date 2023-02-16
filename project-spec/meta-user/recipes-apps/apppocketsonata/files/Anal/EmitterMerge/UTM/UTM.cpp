@@ -1,4 +1,4 @@
-// UTM.c
+ï»¿// UTM.c
 
 // Original Javascript by Chuck Taylor
 // Port to C++ by Alex Hajnal
@@ -31,11 +31,11 @@ extern "C"
 
 
 /**
- * @brief     degree °ªÀ» radian À¸·Î º¯È¯ÇÑ´Ù.
+ * @brief     degree ê°’ì„ radian ìœ¼ë¡œ ë³€í™˜í•œë‹¤.
  * @param     FLOAT deg
  * @return    FLOAT
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:23:24
  * @warning
@@ -47,11 +47,11 @@ FLOAT DegToRad(FLOAT deg)
 
 
 /**
- * @brief     radian °ªÀ» degree À¸·Î º¯È¯ÇÑ´Ù.
+ * @brief     radian ê°’ì„ degree ìœ¼ë¡œ ë³€í™˜í•œë‹¤.
  * @param     FLOAT rad
  * @return    FLOAT
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:24:10
  * @warning
@@ -78,11 +78,11 @@ FLOAT RadToDeg(FLOAT rad)
 // Returns:
 //     The ellipsoidal distance of the point from the equator, in meters.
 /**
- * @brief     °Å¸®¸¦ °è»êÇÑ´Ù.
+ * @brief     ê±°ë¦¬ë¥¼ ê³„ì‚°í•œë‹¤.
  * @param     FLOAT phi
  * @return    FLOAT
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:24:27
  * @warning
@@ -128,11 +128,11 @@ FLOAT ArcLengthOfMeridian (FLOAT phi)
 //   The central meridian for the given UTM zone, in radians
 //   Range of the central meridian is the radian equivalent of [-177,+177].
 /**
- * @brief     ÁÖ¾îÁø UTM °è·Î °áÁ¤ÇÑ´Ù.
+ * @brief     ì£¼ì–´ì§„ UTM ê³„ë¡œ ê²°ì •í•œë‹¤.
  * @param     int zone
  * @return    FLOAT
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:20
  * @warning
@@ -160,11 +160,11 @@ FLOAT UTMCentralMeridian(int zone) {
 // Returns:
 //   The footpoint latitude, in radians.
 /**
- * @brief     À§°æµµ °ªÀ» °è»êÇÑ´Ù.
+ * @brief     ìœ„ê²½ë„ ê°’ì„ ê³„ì‚°í•œë‹¤.
  * @param     FLOAT y
  * @return    FLOAT
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:33
  * @warning
@@ -229,15 +229,15 @@ FLOAT FootpointLatitude(FLOAT y) {
 // Returns:
 //    The function does not return a value.
 /**
- * @brief     À§°æµµ °ªÀ» X, Y °è·Î °è»êÇÑ´Ù.
+ * @brief     ìœ„ê²½ë„ ê°’ì„ X, Y ê³„ë¡œ ê³„ì‚°í•œë‹¤.
  * @param     FLOAT phi
  * @param     FLOAT lambda
  * @param     FLOAT lambda0
  * @param     FLOAT & x
  * @param     FLOAT & y
  * @return    void
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:37
  * @warning
@@ -328,15 +328,15 @@ void MapLatLonToXY (FLOAT phi, FLOAT lambda, FLOAT lambda0, FLOAT &x, FLOAT &y) 
 //   x1frac, x2frac, x2poly, x3poly, etc. are to enhance readability and
 //   to optimize computations.
 /**
- * @brief     X,Y ÁÂÇ¥ °ªÀ» À§°æµµ °ªÀ¸·Î ¸ÅÇÎÇÑ´Ù.
+ * @brief     X,Y ì¢Œí‘œ ê°’ì„ ìœ„ê²½ë„ ê°’ìœ¼ë¡œ ë§¤í•‘í•œë‹¤.
  * @param     FLOAT x
  * @param     FLOAT y
  * @param     FLOAT lambda0
  * @param     FLOAT & phi
  * @param     FLOAT & lambda
  * @return    void
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:40
  * @warning
@@ -448,15 +448,15 @@ void MapXYToLatLon (FLOAT x, FLOAT y, FLOAT lambda0, FLOAT& phi, FLOAT& lambda)
 // Returns:
 //   The UTM zone used for calculating the values of x and y.
 /**
- * @brief     À§°æµµ °ªÀ» UTM °è·Î º¯È¯ÇÑ´Ù.
+ * @brief     ìœ„ê²½ë„ ê°’ì„ UTM ê³„ë¡œ ë³€í™˜í•œë‹¤.
  * @param     FLOAT lat
  * @param     FLOAT lon
  * @param     int zone
  * @param     FLOAT & x
  * @param     FLOAT & y
  * @return    int
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:45
  * @warning
@@ -498,7 +498,7 @@ int LatLonToUTMXY (FLOAT lat, FLOAT lon, int zone, FLOAT& x, FLOAT& y) {
 // Returns:
 // The function does not return a value.
 /**
- * @brief     UTM °è¸¦ À§/°æµµ °ªÀ¸·Î º¯È¯ÇÑ´Ù.
+ * @brief     UTM ê³„ë¥¼ ìœ„/ê²½ë„ ê°’ìœ¼ë¡œ ë³€í™˜í•œë‹¤.
  * @param     FLOAT x
  * @param     FLOAT y
  * @param     int zone
@@ -506,8 +506,8 @@ int LatLonToUTMXY (FLOAT lat, FLOAT lon, int zone, FLOAT& x, FLOAT& y) {
  * @param     FLOAT & lat
  * @param     FLOAT & lon
  * @return    void
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-25 10:25:48
  * @warning

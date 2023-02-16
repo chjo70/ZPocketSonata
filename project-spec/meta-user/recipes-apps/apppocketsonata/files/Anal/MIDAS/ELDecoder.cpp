@@ -1,4 +1,4 @@
-// ELDecoder.cpp: implementation of the ELDecoder class.
+﻿// ELDecoder.cpp: implementation of the ELDecoder class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@
 #include "../SigAnal/_type.h"
 #include "ELDecoder.h"
 
-#define ENDIAN16(x)		((x&0x00ff)<<8) | ((x&0xff00)>>8)
+#define ENDIAN16(x)		(((WORD) x & (WORD) 0x00ff)<<(WORD) 8) | (((WORD)x & (WORD)0xff00 )>> (WORD) 8)
 #define ENDIAN32(x)     (x & 0x000000FF) << 24 | (x & 0x0000FF00) << 8 | \
 	(x & 0xFF000000) >> 24 | (x & 0x00FF0000) >> 8
 #define ENDIAN64(x) (DWORD64) ( \
@@ -83,7 +83,7 @@ unsigned long long _byteswap_uint64(unsigned long long i)
  */
 void AllEndian64( void *pData, unsigned int uiSize )
 {
-	__int64 un64Value=0;
+	unsigned long long int un64Value=0;
 	UINT uiStepSize=sizeof(unsigned __int64);
 	for(unsigned int i=0; i < uiSize; i+=uiStepSize) 
 	{
@@ -94,14 +94,26 @@ void AllEndian64( void *pData, unsigned int uiSize )
 }
 
 
+/**
+ * @brief     AllEndian16
+ * @param     void * i_pData
+ * @param     UINT i_nSize
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 11:40:42
+ * @warning
+ */
 void AllEndian16(void* i_pData, UINT i_nSize)
 {
 	WORD dwValue=0;
 	UINT nStepSize=sizeof(WORD);
-	for(int i=0; i<(int)i_nSize; i+=nStepSize) 
+
+	for(UINT i=0; i<i_nSize; i+=nStepSize) 
 	{
 		memcpy(&dwValue, &((BYTE*)i_pData)[i], nStepSize);
-		dwValue=ENDIAN16(dwValue);
+		dwValue = (WORD) ENDIAN16(dwValue);
 		memcpy(&((BYTE*)i_pData)[i], &dwValue, nStepSize);
 	}
 }
@@ -451,7 +463,17 @@ void ELDecoder::UpdateDateTime()
 // 	return fPri;
 // }
 
-double ELDecoder::DecodeToa(long long int i_llilToa)
+/**
+ * @brief     DecodeToa
+ * @param     unsigned long long int i_llilToa
+ * @return    double
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 17:48:56
+ * @warning
+ */
+double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
 {
 	double dToa = 0.0;
 	dToa = (double)i_llilToa * (double)DEF_OF_RES_TOA;
@@ -474,14 +496,25 @@ double ELDecoder::DecodeToa(long long int i_llilToa)
 // 	return nRtn;
 // }
 
-// 시간 정보(초와 ms)를 저장할 수 있는 문자열로 변환
+/**
+ * @brief     시간 정보(초와 ms)를 저장할 수 있는 문자열로 변환
+ * @param     char * pString
+ * @param     time_t ti
+ * @param     unsigned int millisec
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-02 17:49:10
+ * @warning
+ */
 void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int millisec )
 {
-	struct tm *pToday=nullptr;
+	struct tm *pToday;
 
 	pToday = localtime( & ti );
 
-	if( pToday !=nullptr ) {
+	if( pToday != NULL ) {
 		sprintf( pString, "%04d_%02d_%02d %02d_%02d_%02d_%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
 	}
 }
@@ -504,7 +537,7 @@ void ELDecoder::MakeTimeString( char *pString, time_t ti, unsigned int millisec 
 
 	pToday = localtime( & ti );
 
-	if( pToday !=nullptr ) {
+	if( pToday != NULL) {
 		sprintf( pString, "%04d/%02d/%02d %02d:%02d:%02d.%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
 	}
 }

@@ -1,4 +1,4 @@
-/****************************************************************************************
+﻿/****************************************************************************************
  파 일 명 : _pdw.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 : PDW 정의
@@ -138,7 +138,7 @@ union UZPOCKETPDW {
 
 } ;
 
-typedef union {
+union DMAPDW  {
     char chData[32];
     union UZPOCKETPDW uPDW;
 
@@ -289,9 +289,11 @@ typedef union {
         return iSignaltype;
     }
 
-} DMAPDW ;
+}  ;
 
 //////////////////////////////////////////////////////////////////////////
+
+#if defined(_GRAPH_) || defined(_SONATA_)
 
 #define PDW_WORD_LEN        4
 #define PDW_WORD_CNT        4
@@ -401,7 +403,7 @@ typedef union
 
 #else /* dos */
 
-typedef union
+union TNEW_PDW
 {
     UCHAR bpdw[ PDW_WORD_CNT ][ PDW_WORD_LEN ];
     UINT wpdw[ PDW_WORD_CNT ];
@@ -487,21 +489,23 @@ typedef union
 		return item.amplitude;
 	}
 
-	UINT GetPulsetype() {
+	int GetPulsetype() {
 		return item.istat;
 	}
 
-	UINT GetDirectionValid() {
+	int GetDirectionValid() {
 		return item.dv;
 	}
 
-	UINT GetBand() {
+	int GetBand() {
 		return item.band;
 	}
 
 
 
-} TNEW_PDW;
+} ;
+
+#endif
 
 #endif
 
@@ -521,11 +525,13 @@ struct TNEW_SPDW
 
 // 아래는 MIDAS 변환을 하기 위해서 각 장치별로 변환 구조체 필요....
 
-#if TOOL==diab 
-#pragma pack( 1 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 1 )
+// #else
+// #pragma pack( push, 1 )
+// #endif
+
 #pragma pack( push, 1 )
-#endif
 
 
 #ifndef _UNI_PDW_ETC
@@ -576,7 +582,7 @@ typedef union {
 #define _PDW_STRUCT
 
 struct _PDW {
-    _TOA ullTOA;
+	unsigned long long int ullTOA;
 
     int iPulseType;
 
@@ -721,8 +727,9 @@ struct _PDW {
 
 	unsigned int GetDirectionValid() {
 		unsigned int uiRet;
+
 		if (g_enUnitType == en_701) {
-			uiRet = x._701.iDirectionValid;
+			uiRet = (unsigned int) x._701.iDirectionValid;
 		}
 		else {
 			uiRet = (unsigned int ) -1;
@@ -735,11 +742,13 @@ struct _PDW {
 } ;
 #endif
 
-#if TOOL==diab 
-#pragma pack( 4 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 4 )
+// #else
+// #pragma pack( pop )
+// #endif
+
 #pragma pack( pop )
-#endif
 
 
 
@@ -888,11 +897,13 @@ typedef enum {
 #define _701_LENGTH_OF_TASK_ID			(20)		//과제ID 문자열 길이 (TBD)
 
 
-#if TOOL==diab 
-#pragma pack( 1 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 1 )
+// #else
+// #pragma pack( push, 1 )
+// #endif
+
 #pragma pack( push, 1 )
-#endif
 
 #define swapUINTOrder(X)	((X >> 24) | ((X << 8) & 0x00FF0000) | ((X >> 8) & 0x0000FF00) | (X << 24))
 #define swapULLOrder(X)		( (X >> 56) | ((X << 40) & 0x00FF000000000000) | ((X << 24) & 0x0000FF0000000000) | ((X << 8) & 0x000000FF00000000) | \
@@ -973,10 +984,10 @@ struct SRxPDWDataRGroup {
 		int iTemp;
 
 		if (enDataType == en_PDW_DATA_CSV) {
-			iTemp = uiChannelNumber;
+			iTemp = (int) uiChannelNumber;
 		}
 		else {
-			iTemp = swapUINTOrder(uiChannelNumber);
+			iTemp = (int) swapUINTOrder(uiChannelNumber);
 		}
 		return iTemp;
 	}
@@ -992,7 +1003,7 @@ struct SRxPDWDataRGroup {
 	 * @warning
 	 */
 	void SetChannel(int iCh) {
-		uiChannelNumber = iCh;
+		uiChannelNumber = (unsigned int) iCh;
 	}
 
 	/**
@@ -1098,10 +1109,10 @@ struct SRxPDWDataRGroup {
 		int iTemp;
 
 		if (enDataType == en_PDW_DATA_CSV) {
-			iTemp = uiPulseType;
+			iTemp = (int) uiPulseType;
 		}
 		else {
-			iTemp = swapUINTOrder(uiPulseType);
+			iTemp = (int) swapUINTOrder(uiPulseType);
 		}
 
 		return iTemp;
@@ -1135,11 +1146,13 @@ struct SRxPDWDataRGroup {
 
 
 
-#if TOOL==diab 
-#pragma pack( 4 )
-#else
+// #if TOOL==diab 
+// #pragma pack( 4 )
+// #else
+// #pragma pack( pop )
+// #endif
+
 #pragma pack( pop )
-#endif
 
 /**
  * @brief KFX 데이터애 저장된 헤더 파일
@@ -1171,9 +1184,9 @@ struct TNEW_IQ {
 #ifndef _STR_COMMON_HEADER_
 #define _STR_COMMON_HEADER_
 // 아래는 공용 정보
-typedef struct {
+struct STR_COMMON_HEADER  {
     UINT uiTotalPDW;
-    __time32_t tColTime;
+	time_t tColTime;
     UINT uiColTimeMs;
     UINT uiPDWID;
 
@@ -1187,12 +1200,12 @@ typedef struct {
         }
     }
 
-} STR_COMMON_HEADER ;
+}  ;
 #endif
 
 #ifndef _STR_ELINT_HEADER_
 #define _STR_ELINT_HEADER_
-typedef struct {
+struct STR_ELINT_HEADER {
     char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int uiIsStorePDW;
     EN_RADARCOLLECTORID enCollectorID;
@@ -1229,12 +1242,12 @@ typedef struct {
         stCommon.CheckColTime();
     }
 
-} STR_ELINT_HEADER ;
+}  ;
 #endif
 
 #ifndef _STR_701_HEADER_
 #define _STR_701_HEADER_
-typedef struct {
+struct STR_701_HEADER {
 	char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int uiIsStorePDW;
 	EN_RADARCOLLECTORID enCollectorID;
@@ -1271,13 +1284,13 @@ typedef struct {
 		stCommon.CheckColTime();
 	}
 
-} STR_701_HEADER;
+} ;
 
 #endif
 
 #ifndef _STR_XBAND_HEADER_
 #define _STR_XBAND_HEADER_
-typedef struct {
+struct STR_XBAND_HEADER {
     char aucTaskID[LENGTH_OF_TASK_ID];
     unsigned int uiIsStorePDW;
     EN_RADARCOLLECTORID enCollectorID;
@@ -1314,12 +1327,12 @@ typedef struct {
         stCommon.CheckColTime();
     }
 
-} STR_XBAND_HEADER;
+} ;
 #endif
 
 #ifndef _POCKETSONATA_HEADER_
 #define _POCKETSONATA_HEADER_
-typedef struct {
+struct STR_POCKETSONATA_HEADER {
     unsigned int uiBoardID;
     unsigned int uiBank;
     unsigned int uiBand;                // 주파수 대역
@@ -1349,13 +1362,13 @@ typedef struct {
 
     }
 
-} STR_POCKETSONATA_HEADER ;
+}  ;
 #endif
 
 
 #ifndef _SONATA_HEADER_
 #define _SONATA_HEADER_
-typedef struct {
+struct STR_SONATA_HEADER {
     unsigned int uiBand;
     unsigned int uiIsStorePDW;
 
@@ -1383,26 +1396,32 @@ typedef struct {
 	}
 
 
-} STR_SONATA_HEADER ;
+}  ;
 #endif
 
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
-typedef union {
+union UNION_HEADER  {
+#if defined(_GRAPH_) || defined(_ELINT_)
     // 인천공항 ELINT 구조체
     STR_ELINT_HEADER el;
+#endif
 
+#if defined(_GRAPH_) || defined(_XBAND_)
     // X대역탐지기 구조체
     STR_XBAND_HEADER xb;
+#endif
 
     // 소형 전자전장비 구조체
     STR_POCKETSONATA_HEADER ps;
 
+#if defined(_GRAPH_) || defined(_SONATA_)
     // SONATA 전자전장비 구조체
     STR_SONATA_HEADER so;
+#endif
 
 	// 701-ELINT 전자전장비 구조체
-	STR_701_HEADER _701;
+	STR_701_HEADER e7;
 
 
 	void SetTaskID(char *pString) {
@@ -1418,7 +1437,7 @@ typedef union {
 			break;
 
 		case en_701:
-			strcpy( _701.aucTaskID, pString );
+			strcpy(e7.aucTaskID, pString );
 			break;
 
 		default:
@@ -1446,10 +1465,16 @@ typedef union {
             pTaskID = ( char *) NULL;
             break;
 
+#if defined(_GRAPH_) || defined(_ELINT_)
         case en_ELINT :
+			pTaskID = &el.aucTaskID[0];
+			break;
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         case en_XBAND :
-            pTaskID = & el.aucTaskID[0];
+            pTaskID = & xb.aucTaskID[0];
             break;
+#endif
 
         case en_SONATA :
             pTaskID = ( char *) NULL;
@@ -1482,21 +1507,27 @@ typedef union {
             uiTotalPDW = ps.stCommon.uiTotalPDW;
             break;
 
+#if defined(_GRAPH_) || defined(_ELINT_)
         case en_ELINT :
             uiTotalPDW = el.stCommon.uiTotalPDW;
             break;
+#endif
 
+#if defined(_GRAPH_) || defined(_XBAND_)
         case en_XBAND :
             uiTotalPDW = xb.stCommon.uiTotalPDW;
             break;
+#endif
 
 		case en_701:
-			uiTotalPDW = _701.stCommon.uiTotalPDW;
+			uiTotalPDW = e7.stCommon.uiTotalPDW;
 			break;
 
+#if defined(_GRAPH_) || defined(_SONATA_)
         case en_SONATA :
             uiTotalPDW = (UINT) -1;	// SONATA용 헤더는 없기 때문에 (-1)로 리턴함.
             break;
+#endif
 
         default:
             uiTotalPDW = 0;
@@ -1522,17 +1553,23 @@ typedef union {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             ps.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             el.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             xb.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
             so.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
 		else if (g_enUnitType == en_701) {
-			_701.stCommon.uiTotalPDW = uiTotalPDW;
+			e7.stCommon.uiTotalPDW = uiTotalPDW;
 		}
         else {
 
@@ -1557,15 +1594,21 @@ typedef union {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             ps.SetIsStorePDW( isStorePDW );
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             el.SetIsStorePDW( isStorePDW );
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             xb.SetIsStorePDW( isStorePDW );
         }
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
            so.SetIsStorePDW( isStorePDW );
         }
+#endif
         else {
         }
 
@@ -1639,7 +1682,7 @@ typedef union {
 
     /**
      * @brief     SetColTime
-     * @param     __time32_t tColTime
+     * @param     time_t tColTime
      * @param     UINT uiColTimeMs
      * @return    void
      * @exception
@@ -1648,24 +1691,31 @@ typedef union {
      * @date      2022-05-10, 10:30
      * @warning
      */
-    void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
+    void SetColTime(time_t tColTime, UINT uiColTimeMs ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             ps.stCommon.tColTime = tColTime;
             ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             el.stCommon.tColTime = tColTime;
             el.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             xb.stCommon.tColTime = tColTime;
             xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#endif
+
+#if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
             so.stCommon.tColTime = tColTime;
             so.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#endif
         else {
 
         }
@@ -1732,12 +1782,18 @@ typedef union {
      */
     void SetCollectorID( EN_RADARCOLLECTORID enCollectorID ) {
 
-        if( g_enUnitType == en_ELINT ) {
+		if (g_enUnitType == en_ZPOCKETSONATA) {
+		}
+#if defined(_GRAPH_) || defined(_ELINT_)
+        else if( g_enUnitType == en_ELINT ) {
             el.enCollectorID = enCollectorID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             xb.enCollectorID = enCollectorID;
         }
+#endif
         else {
         }
     }
@@ -1755,12 +1811,19 @@ typedef union {
     {
         int iBandwidth;
 
-        if( g_enUnitType == en_ELINT ) {
+		if (g_enUnitType == en_ZPOCKETSONATA) {
+            iBandwidth = ps.uiBand;
+		}
+#if defined(_GRAPH_) || defined(_ELINT_)
+        else if( g_enUnitType == en_ELINT ) {
             iBandwidth = (int) el.enBandWidth;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             iBandwidth = ( int ) xb.enBandWidth;
         }
+#endif
         else {
             iBandwidth = 0;
         }
@@ -1782,19 +1845,23 @@ typedef union {
     {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             el.enBandWidth = (ELINT::ENUM_BANDWIDTH) iBandWidth;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             xb.enBandWidth = (XBAND::ENUM_BANDWIDTH) iBandWidth;
         }
+#endif
         else {
         }
 
         return;
     }
 
-} UNION_HEADER;
+} ;
 #endif
 
 
@@ -1849,12 +1916,16 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.SetIsStorePDW( isStorePDW );
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             x.el.SetIsStorePDW( isStorePDW );
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             x.xb.SetIsStorePDW( isStorePDW );
         }
+#endif
         else {
             // x.el.SetIsStorePDW( isStorePDW );
         }
@@ -1985,15 +2056,24 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiPDWID = x.ps.stCommon.uiPDWID;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             uiPDWID = x.el.stCommon.uiPDWID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             uiPDWID = x.xb.stCommon.uiPDWID;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+        else if (g_enUnitType == en_SONATA) {
             uiPDWID = x.so.stCommon.uiPDWID;
         }
+#endif
+		else {
+			uiPDWID = 0;
+		}
 
         return uiPDWID;
 
@@ -2014,15 +2094,21 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.stCommon.uiPDWID = uiPDWID;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             x.el.stCommon.uiPDWID = uiPDWID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             x.xb.stCommon.uiPDWID = uiPDWID;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             x.so.stCommon.uiPDWID = uiPDWID;
         }
+#endif
 
     }
 
@@ -2039,15 +2125,23 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             ++ x.ps.stCommon.uiPDWID;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             ++ x.el.stCommon.uiPDWID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             ++ x.xb.stCommon.uiPDWID;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             ++ x.so.stCommon.uiPDWID;
         }
+#endif
+		else {
+		}
     }
 
     /**
@@ -2065,12 +2159,16 @@ struct STR_PDWDATA {
         if (g_enUnitType == en_ZPOCKETSONATA) {
             enCollectorID = RADARCOL_Unknown;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if (g_enUnitType == en_ELINT) {
             enCollectorID = x.el.enCollectorID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if (g_enUnitType == en_XBAND) {
             enCollectorID = x.xb.enCollectorID;
         }
+#endif
         else {
             enCollectorID = RADARCOL_Unknown;
         }
@@ -2093,18 +2191,27 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiTotalPDW = x.ps.stCommon.uiTotalPDW;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             uiTotalPDW = x.el.stCommon.uiTotalPDW;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             uiTotalPDW = x.xb.stCommon.uiTotalPDW;
         }
+#endif
 		else if (g_enUnitType == en_701 ) {
-			uiTotalPDW = x._701.stCommon.uiTotalPDW;;
+			uiTotalPDW = x.e7.stCommon.uiTotalPDW;
 		}
-        else {
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             uiTotalPDW = x.so.stCommon.uiTotalPDW;
         }
+#endif
+		else {
+			uiTotalPDW = 0;
+		}
 
         return uiTotalPDW;
 
@@ -2124,18 +2231,26 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             x.el.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if ( g_enUnitType == en_XBAND) {
             x.xb.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
 		else if (g_enUnitType == en_701) {
-			x._701.stCommon.uiTotalPDW = uiTotalPDW;
+			x.e7.stCommon.uiTotalPDW = uiTotalPDW;
 		}
-        else {
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             x.so.stCommon.uiTotalPDW = uiTotalPDW;
         }
+#endif
+		else {
+		}
 
         return;
 
@@ -2143,7 +2258,7 @@ struct STR_PDWDATA {
 
     /**
      * @brief     SetColTime
-     * @param     __time32_t tColTime
+     * @param     time_t tColTime
      * @param     UINT uiColTimeMs
      * @return    void
      * @exception
@@ -2152,52 +2267,69 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-    void SetColTime( __time32_t tColTime, UINT uiColTimeMs ) {
+    void SetColTime(time_t tColTime, UINT uiColTimeMs ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.stCommon.tColTime = tColTime;
             x.ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             x.el.stCommon.tColTime = tColTime;
             x.el.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if ( g_enUnitType == en_XBAND) {
             x.xb.stCommon.tColTime = tColTime;
             x.xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             x.so.stCommon.tColTime = tColTime;
             x.so.stCommon.uiColTimeMs = uiColTimeMs;
         }
+#endif
+		else {
+		}
         return;
 
     }
 
     /**
      * @brief     GetColTime
-     * @return    __time32_t
+     * @return    time_t
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-03-03, 13:48
      * @warning
      */
-    __time32_t GetColTime() {
-        __time32_t retTime;
+    time_t GetColTime() {
+		time_t retTime;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             retTime = x.ps.stCommon.tColTime;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             retTime = x.el.stCommon.tColTime;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XABND_)
         else if (g_enUnitType == en_XBAND) {
             retTime = x.xb.stCommon.tColTime;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+        else if (g_enUnitType == en_SONATA) {
             retTime = x.so.stCommon.tColTime;
         }
+#endif
+		else {
+			retTime = 0;
+		}
 
         return retTime;
 
@@ -2213,20 +2345,29 @@ struct STR_PDWDATA {
      * @warning
      */
     unsigned int GetStorePDW() {
-        unsigned int uiStorePDW;
+        unsigned int uiStorePDW=0;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
 			uiStorePDW = (unsigned int) x.ps.uiIsStorePDW;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
 			uiStorePDW = (unsigned int) x.el.uiIsStorePDW;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if (g_enUnitType == en_XBAND) {
 			uiStorePDW = (unsigned int) x.xb.uiIsStorePDW;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+        else if( g_enUnitType == en_SONATA ) {
 			uiStorePDW = (unsigned int) x.so.uiIsStorePDW;
         }
+#endif
+		else {
+
+		}
 
         return uiStorePDW;
 
@@ -2248,12 +2389,16 @@ struct STR_PDWDATA {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             iBandwidth = 0;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
             iBandwidth = x.el.enBandWidth;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
             iBandwidth = x.xb.enBandWidth;
         }
+#endif
         else {
             iBandwidth = 0;
         }
@@ -2276,12 +2421,16 @@ struct STR_PDWDATA {
         if (g_enUnitType == en_ZPOCKETSONATA) {
             pTaskID = NULL;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if (g_enUnitType == en_ELINT ) {
             pTaskID = x.el.aucTaskID;
         }
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
         else if (g_enUnitType == en_XBAND) {
             pTaskID = x.xb.aucTaskID;
         }
+#endif
         else {
             pTaskID = NULL;
         }
@@ -2290,17 +2439,33 @@ struct STR_PDWDATA {
     }
 
 	void SetTaskID(char *pString) {
+
 		if (g_enUnitType == en_ZPOCKETSONATA) {
 			//strcpy(x.ps.aucTaskID, pString);
 		}
+#if defined(_GRAPH_) || defined(_ELINT_)
 		else if (g_enUnitType == en_ELINT) {
 			strcpy(x.el.aucTaskID, pString);
 		}
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
 		else if (g_enUnitType == en_XBAND) {
 			strcpy(x.xb.aucTaskID, pString);
 		}
+#endif
 		else if (g_enUnitType == en_701) {
-			strncpy(x._701.aucTaskID, pString, sizeof(x._701.aucTaskID)-1);
+			char *pPtr;
+			
+			// 널 문자 전까지 복사해야 함.
+			strncpy(x.e7.aucTaskID, pString, strlen(x.e7.aucTaskID)-1);
+
+			pPtr = strchr(x.e7.aucTaskID, ' ');
+			while (pPtr != NULL) {
+
+				*pPtr = '_';
+				pPtr = strchr(x.e7.aucTaskID, ' ');
+			} 
+
 		}
 		else {
 		}
@@ -2354,7 +2519,7 @@ struct STR_PDWDATA {
 
 #ifndef _STR_STATIC_PDWDATA
 #define _STR_STATIC_PDWDATA
-typedef struct {
+struct STR_STATIC_PDWDATA {
     UNION_HEADER x;
 
     _PDW stPDW[MAX_PDW];
@@ -2388,12 +2553,24 @@ typedef struct {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiTotalPDW = x.ps.stCommon.uiTotalPDW;
         }
+#if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
             uiTotalPDW = x.el.stCommon.uiTotalPDW;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
+		else if (g_enUnitType == en_XBAND) {
+			uiTotalPDW = x.xb.stCommon.uiTotalPDW;
+		}
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             uiTotalPDW = x.so.stCommon.uiTotalPDW;
         }
+#endif
+		else {
+			uiTotalPDW = 0;
+		}
 
         return uiTotalPDW;
 
@@ -2414,59 +2591,104 @@ typedef struct {
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             uiPDWID = x.ps.stCommon.uiPDWID;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
+        else if( g_enUnitType == en_ELINT  ) {
             uiPDWID = x.el.stCommon.uiPDWID;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
+		else if ( g_enUnitType == en_XBAND) {
+			uiPDWID = x.xb.stCommon.uiPDWID;
+		}
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             uiPDWID = x.so.stCommon.uiPDWID;
         }
+#endif
+		else {
+			uiPDWID = 0;
+		}
 
         return uiPDWID;
     }
 
+    /**
+     * @brief     SetPDWID
+     * @param     unsigned int uiPDWID
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-02-10 16:32:41
+     * @warning
+     */
     void SetPDWID( unsigned int uiPDWID ) {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             x.ps.stCommon.uiPDWID = uiPDWID;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
+        else if( g_enUnitType == en_ELINT ) {
             x.el.stCommon.uiPDWID = uiPDWID;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
+		else if ( g_enUnitType == en_XBAND) {
+			x.xb.stCommon.uiPDWID = uiPDWID;
+		}
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             x.so.stCommon.uiPDWID = uiPDWID;
         }
+#endif
+		else {
+		}
 
         return;
     }
 
     /**
      * @brief     GetColTime
-     * @return    __time32_t
+     * @return    time_t
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-03-03, 13:48
      * @warning
      */
-    __time32_t GetColTime() {
-        __time32_t retTime;
+	time_t GetColTime() {
+		time_t retTime;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
             retTime = x.ps.stCommon.tColTime;
         }
-        else if( g_enUnitType == en_ELINT || g_enUnitType == en_XBAND ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
+        else if( g_enUnitType == en_ELINT ) {
             retTime = x.el.stCommon.tColTime;
         }
-        else {
+#endif
+#if defined(_GRAPH_) || defined(_XBAND_)
+		else if (g_enUnitType == en_XBAND) {
+			retTime = x.el.stCommon.tColTime;
+		}
+#endif
+#if defined(_GRAPH_) || defined(_SONATA_)
+		else if (g_enUnitType == en_SONATA) {
             retTime = x.so.stCommon.tColTime;
         }
+#endif
+		else {
+			retTime = 0;
+		}
 
         return retTime;
 
     }
 
 
-}  STR_STATIC_PDWDATA ;
+}   ;
 
 #endif  // _STR_STATIC_PDWDATA
 

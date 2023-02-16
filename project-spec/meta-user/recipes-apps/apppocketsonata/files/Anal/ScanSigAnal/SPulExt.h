@@ -24,7 +24,7 @@ private:
 protected:
 	unsigned int m_uiMaxPdw;
 	unsigned int m_uinoEMT;
-	int m_noCh;
+	unsigned int m_uinoCh;
 
 	CScanSigAnal *m_pScanSigAnal;
 	

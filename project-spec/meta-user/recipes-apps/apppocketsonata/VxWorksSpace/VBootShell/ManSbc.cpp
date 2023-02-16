@@ -2,6 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <taskLib.h>
 #include <ioLib.h>
 #include <private/iosLibP.h>
 #include <envLib.h>
@@ -13,6 +14,7 @@
 #include <taskLib.h>
 #include <usrLib.h>
 #include <tftpLib.h>
+#include <ifLib.h>
 
 #include <xbdBlkDev.h>
 #include <dosFsLib.h>
@@ -43,6 +45,8 @@
 #include "ManSbc.h"
 //#include "ManFlash.h"
 #include "BootShell.h"
+
+#include "../VBootShell_T2MS/pciDiag.h"
 
 #include "./Untar/FileTar.h"
 
@@ -77,17 +81,47 @@ void Formatting()
 
 CManSbc::CManSbc()
 {
+    STATUS status;
+
+    char ip_addr[100];
 
 	// VMEBusSystemReset();
 
+    //ifMaskSet( "memac0" , 0xffffff00 );
+    //ifAddrSet( "memac0" , "192.168.1.50" );
+    ifAddrGet( "memac0", ip_addr );
+
+    //#error	"network device 명을 알아서 위와 같이 설정해야함."
+
+    //////////////////////////////////////////////////////////////////////////
+    //
+    // printf( "\n IP Address\t: [%s]\n" , ip_addr );
+    sysClkRateSet( TICK_COUNT );
+    if( sysClkRateGet() != TICK_COUNT ) {
+        printf( "\n [W] 토네이도의 Component에서 tick count를 100 으로 설정하세요." );
+    }
+    else {
+        sysClkRateSet( TICK_COUNT );		// 1초당 100 tick 을 수행함.
+    }
+    
     // SNTP 를 이용해서 현재 시간을 읽어온다.
     SetTimeBySNMP();
 
+    //////////////////////////////////////////////////////////////////////////
+    // PCI 초기화
+    PCIConfigSetting();
+
+    //////////////////////////////////////////////////////////////////////////
+    // NFS 드라이브 마운트    
+    MountDrive();
+
+    // 램 드라이브를 생성 합니다.
 	if( FALSE == CreateRamDisk( RAMDRV, 1024, 20000, 20000 ) ) { // 14336, 14336, 22000
 		printf( "\n[W] Application/UDF용 램 디스크가 생성하지 못했습니다." );
 		WhereIs;
 	}
 
+    // TFFS 드라이브를 생성 합니다.
     if( FALSE == CreateTffsDisk( TFFSDRV ) ) { 
         printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
         WhereIs;
@@ -95,6 +129,9 @@ CManSbc::CManSbc()
     else {
 
     }
+
+
+
 
 	//memcpy( & m_ProgInfo, (char *) FLASH_PRGINFO_ADRS, sizeof( STR_PRG_INFO ) );
 	//printf( "\n FLASH_PRGINFO_ADRS[%x]" , FLASH_PRGINFO_ADRS );
@@ -121,14 +158,6 @@ CManSbc::CManSbc()
 	// 시간 함수의 환경 변수를 설정한다.
 	// InitSystemVariable();
 
-
-	//printf( "\n BOOT_LINE_ADRS[%p]" , BOOT_LINE_ADRS );
-    
-    // NFS 수동 마운트
-    // nfs_mount_all 을 설치하면 자동으로 마운트 된다.
-    //STATUS stat;
-    //stat = nfsMount( SNTP_SERVER_IP, "/d/rawdata", "HostShare" );
-    //printf( "\n nffsMount : %d" , stat );
 
 }
 
@@ -190,7 +219,6 @@ UCHAR CManSbc::GetCommand()
             break;           
             
 		default :
-			WhereIs;
 			// printf( "\n stBootParams[%s]" , stBootParams.bootDev );
 			
 			/*! \bug  명령어 디버깅용으로 사용함.
@@ -359,17 +387,21 @@ BOOL CManSbc::CreateTffsDisk( char *szDiskName )
     else {
         //////////////////////////////////////////////////////////////////////////
         // 드라이브를 생성합니다.
-#if TOOL==diab     		
-   		printf( "\n As of setting the COMPONENT (VXBFLASH_CFG_STR), fotmatting the flash memory...\n" );
-#else
-   		printf( "\n VxWorks 컴포넌트(VXBFLASH_CFG_STR)에 정의된 크기로 플레쉬 메모리를 포멧합니다...\n" );
-#endif  
+        printf( "\n VxWorks 컴포넌트(VXBFLASH_CFG_STR)에 정의된 크기로 플레쉬 메모리를 포멧합니다...\n" );
         
+        // 아래와 같이 수행이 안 되면 콘솔에서 아래와 같이 입력한다. 소요 시간은 약 6분 정도 입니다.
+        // sysTffsFormat
+        // usrTffsConfig 0,0, "/tffs0"
+        // dosFsVolFormat
+
         sysTffsFormat();
 
         usrTffsConfig( 0, 0, szDiskName );
 
         dosFsVolFormat( szDiskName, DOS_OPT_DEFAULT, ( FORMAT_PTR) 0 );
+
+        printf( "\n\n\n rebotting please...\n" );
+        while( true );
 
     }
 
@@ -400,8 +432,9 @@ BOOL CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack
 	
 	//ramdisk_address = DRAM_SIZE - USER_RESERVED_MEM;
 	ramdisk_address = 0;
-	printf( "\n DRAM_SIZE[%x], USER_RESERVED_MEM[%x]" , DRAM_SIZE, USER_RESERVED_MEM );
-	printf( "\n ramdisk address[%8x]\n" , ramdisk_address );
+	printf( "\n\n" );
+	printf( "\nDRAM_SIZE[%x], USER_RESERVED_MEM[%x]" , DRAM_SIZE, USER_RESERVED_MEM );
+	printf( "\nramdisk address[%8x]\n" , ramdisk_address );
 	pBlkDev = ramDevCreate( (char *) ramdisk_address, bytesPerBlk, blksPerTrack, nBlocks, 0 );
 
 	if( pBlkDev == NULL ) {
@@ -448,14 +481,14 @@ long CManSbc::DiskFreeSpace( char *szDiskName )
 	return lDiskFreeSpace; 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CManSbc::SetTimeBySNMP
-		\author   조철희
-		\return   void
-		\version  0.0.57
-		\date     2008-11-11 10:25:36
-		\warning
-*/
+/**
+ * @brief		SetTimeBySNMP
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2008-11-11 10:25:36
+ * @warning		
+ */
 void CManSbc::SetTimeBySNMP()
 {
     int iTry;
@@ -467,10 +500,12 @@ void CManSbc::SetTimeBySNMP()
 	// InitSystemVariable();
 	putenv( (char *) "TIMEZONE=KST::-540.000000:000000" );
 
+    printf( "\n\n ##### SNTP 프로토콜을 사용해서 시간을 설정합니다..." );
     // 이놈의 vxworks 7은 왜 2번을 수행해야 얻어 오는지....
     iTry = 0;
     do {
         sntpc_status = sntpcTimeGet( SNTP_SERVER_IP, 3*OS_ONE_SEC, & tspec );
+        printf( "SNPT를[%s:%d] 요청..." , SNTP_SERVER_IP, sntpc_status );
         ++ iTry;
     } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
 
@@ -549,9 +584,9 @@ void CManSbc::SetTimeBySNMP()
 			time_t ti=time(NULL);
 
             pstTime = localtime( & ti );
-            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime);
+            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S[%ld]", pstTime );
 
-			printf( "\n Successful set the system clock[%s] by SNMP Protocol..." , buffer ); 
+			printf( "완료[%s, %d].\n" , buffer, ti ); 
         }
 	}
 
@@ -597,26 +632,16 @@ void CManSbc::InstallWeb()
     stat = CopyFile( szSrcFilename, szDstFilename );    
     
     // 포멧 ...
-#if TOOL==diab        
     printf( "\n\n 2. TFFS 드아리브를 포멧합니다..." );
-#else
-    printf( "\n\n 2. Formatting the TFFS drive..." );
-#endif    
+
     dosFsVolFormat( TFFSDRV, DOS_OPT_DEFAULT, (FORMAT_PTR) 0 );
-    
-#if TOOL==diab            
-    printf( "\n\n 3. Uncompressed the TAR file..." );
-#else
+
+    // 압축된 파일을 추출합니다.
     printf( "\n\n 3. TAR 파일을 풉니다..." );
-#endif    
     sprintf( szRamDrvFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, WEB_FILENAME );
     if( true == DownloadfromTftp( WEB_FILENAME, (char *) szRamDrvFilename ) ) {
         sprintf( szRamDrvWebfolder, "%s%s" , RAMDRV, RAMDRV_NO );
-#if TOOL==diab        
-        printf("\n Installing the TAR file[%s]..." , szRamDrvWebfolder );
-#else
         printf("\n TAR 파일[%s]을 풀어서 설치합니다." , szRamDrvWebfolder );
-#endif
         
         sprintf( sztffs0Webfolder, "%s" , TFFSDRV );
         theFileTar->UnTar( szRamDrvFilename, sztffs0Webfolder );
@@ -624,20 +649,15 @@ void CManSbc::InstallWeb()
         unlink( szRamDrvFilename );
     }
     else {
-#if TOOL==diab     		
-        printf("\n [W] Not installing the web page..." );
-#else
         printf("\n [W] 웹 페이지를 설치하지 못했습니다." );
-#endif
+
     }
     
     // 복구 
     // 라이브러리
-#if TOOL==diab      
-    printf( "\n\n 4. Recoverying..." );
-#else
+    /*
     printf( "\n\n 4. 복구을 수행 합니다..." );
-#endif    
+
     sprintf( szSrcFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
     sprintf( szDstFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );    
     stat = CopyFile( szSrcFilename, szDstFilename );
@@ -645,14 +665,22 @@ void CManSbc::InstallWeb()
     sprintf( szSrcFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, INI_FOLDER, INI_FILENAME );
     sprintf( szDstFilename, "%s/%s/%s" , TFFSDRV, INI_FOLDER, INI_FILENAME );
     stat = CopyFile( szSrcFilename, szDstFilename );  
-#if TOOL==diab    
-    printf( "\n\n\n\n ****** Completion the process. Please rebotting...******\n\n" );
-#else
+    */
+
     printf( "\n\n\n\n ****** 설치 완료 했습니다. 재부팅하세요...******\n\n" );
-#endif
 
 }
 
+/**
+ * @brief		파일을 복사합니다.
+ * @param		const char * src_file
+ * @param		const char * dest_file
+ * @return		int
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2022/12/14 18:51:05
+ * @warning		
+ */
 int CManSbc::CopyFile( const char *src_file, const char *dest_file )
 {
 	STATUS stat;
@@ -660,24 +688,16 @@ int CManSbc::CopyFile( const char *src_file, const char *dest_file )
 	printf( "\n" );
 	stat = cp( src_file, dest_file );
 	if( stat == OK ) {
-#if TOOL==diab  			
-		//printf( "원본 파일(%s)을 대상 파일(%s)에 성공적으로 복사 했습니다.\n" , src_file, dest_file );
-#else
 		printf( "원본 파일(%s)을 대상 파일(%s)에 성공적으로 복사 했습니다.\n" , src_file, dest_file );
-#endif
 	}
 	else {
-#if TOOL==diab			
-		//printf( "원본 파일(%s)을 대상 파일(%s)에 실패 했습니다.\n" , src_file, dest_file );
-#else
 		printf( "원본 파일(%s)을 대상 파일(%s)에 실패 했습니다.\n" , src_file, dest_file );
-#endif
 	}
 	
 }
 
 /**
- * @brief		DownloadApp
+ * @brief		랜으로 다운로드하여 운용 프로그램을 롬드라이브에 복사합니다.
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
@@ -690,25 +710,15 @@ void CManSbc::DownloadAndROMWriteApp()
 
     sprintf( szTffsDrvFilename, "%s/%s" , TFFSDRV, APP_FILENAME );
     
-#if TOOL==diab
     printf( "\n Installing the App program in the drive[%s]...", szTffsDrvFilename );
-#else
-    printf( "\n tftp 를 이용해서 App 프로그램을 램 드라이브[%s]에 설치 합니다..", szTffsDrvFilename );
-#endif
-    
+
     if( true == DownloadfromTftp( APP_FILENAME, (char *) szTffsDrvFilename ) ) {
-#if TOOL==diab    		
-    	//printf("\n\n *** The software is completed the software ***" );
-#else
     	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
-#endif
+        
     }
     else {
-#if TOOL==diab    		
         printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
-#else
-        printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
-#endif
+
     }  
     
 
@@ -728,24 +738,12 @@ void CManSbc::DownloadApp()
 
     sprintf( szRAMDrvFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, APP_FILENAME );
     
-#if TOOL==diab     
-    //printf( "\n tftp 를 이용해서 App 프로그램을 램 드라이브[%s]에 설치 합니다..", szRAMDrvFilename );
-#else
     printf( "\n tftp 를 이용해서 App 프로그램을 램 드라이브[%s]에 설치 합니다..", szRAMDrvFilename );
-#endif    
     if( true == DownloadfromTftp( APP_FILENAME, (char *) szRAMDrvFilename ) ) {
-#if TOOL==diab     		
-    	//printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
-#else
     	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
-#endif
     }
     else {
-#if TOOL==diab     		    		
-        //printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
-#else
         printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
-#endif
     }  
     
 
@@ -776,6 +774,7 @@ BOOL CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 	}
 
 	bret = true;
+
 #if TOOL==diab 	
 	printf( "\n Host IP  : [ %s ]", TFTP_SERVER_IP );
 	printf( "\n ROM Fle  : [ %s ]", tftpfilename );
@@ -951,11 +950,8 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
             }
 		}
 		else {
-#if TOOL==diab	
-			//printf( "\n [W] 'start()' 함수를 찾을 수 없습니다.[%d]...\n" , stResult );
-#else
 			printf( "\n [W] 'start()' 함수를 찾을 수 없습니다.[%d]...\n" , stResult );
-#endif
+
         }		
 #endif
 
@@ -968,11 +964,8 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
         stResult = unlink( szDrvAppFilename );        
 
         if( stResult != OK ) {
-#if TOOL==diab       		
-            //printf("\n [W] [%s]을 삭제하지 못했습니다.." , szDrvAppFilename );
-#else
             printf("\n [W] [%s]을 삭제하지 못했습니다.." , szDrvAppFilename );
-#endif            
+
         }
     }
 
@@ -1003,4 +996,66 @@ void CManSbc::InitDataBase()
     	printf( "\n 위협관리 데이터베이스 파일을 [%s]에 복사했습니다." , szDstSQLiteFilename );
     }	*/
     
+}
+
+
+
+/**
+ * @brief		PCIConfigSetting
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/01/05 13:31:23
+ * @warning		
+ */
+void CManSbc::PCIConfigSetting()
+{
+
+    
+#if defined(_PCI)    
+    WhereIs;
+
+    if( PCIeMemInit() == ERROR ) {
+        printf( "\n ERROR! PCIe BAR Initialize !" );
+    }
+
+#endif	
+
+}
+
+
+/**
+ * @brief		MountDrive
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/01/13 18:14:19
+ * @warning		
+ */
+void CManSbc::MountDrive()
+{
+	STATUS status;
+
+	printf( "\nHOST[%s:%s]" , stBootParams.hostName, stBootParams.had );
+	nfsAuthUnixSet ( "host", 0, 0, 0, (int *) 0 );
+
+    // 호스트명 추가
+    //status = hostAdd( "NFSDRV", stBootParams.had );
+    status = OK;
+
+    if( status == OK ) {
+        status = nfsMount( "host", NFS_DRIVE, NFS_DRIVE );
+        if( status == OK ) {
+            printf( "\nNFS 드라이브[%s]를 정상 연결했습니다 !", NFS_DRIVE );
+        }
+        else {
+            printf( "\n[W] 마운트를 하지 못 했습니다 !!!" );
+            WhereIs;
+        }
+    }
+    else {
+        printf( "\n[W] 호스트명을 등록하지 못 했습니다 !!!" );
+        WhereIs;
+    }
+
 }

@@ -33,6 +33,7 @@ private:
 
     vector<SRadarMode *> m_VecMatchRadarMode;
 
+
 public:
     //##ModelId=452B0C52024B
     int m_CoNewAet;
@@ -69,6 +70,8 @@ protected:
 
 private:
     bool CheckKnownByAnalysis();
+	void StartOfTrackSignalAnalysis();
+	void StartOfNewSignalAnalysis();
 
 public:
     CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -88,6 +91,8 @@ public:
     inline unsigned int GetColPdw() { return m_uiCoPdw; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
+
+	inline char *GetAnalDirectory() { return NULL; }
     
     /**
      * @brief     GetMaxPdw

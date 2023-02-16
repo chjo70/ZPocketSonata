@@ -23,7 +23,7 @@
  * @param pClassName
  * @param bArrayLanData
  */
-CUrBit::CUrBit( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 
@@ -205,9 +205,9 @@ void CUrBit::InitHW()
  */
 void CUrBit::InitIBit()
 {
-    m_stESIbit.w32 = 0;
-
-    LOGMSG( enDebug, _T("Starting the Init-BIT...") );
+//     m_stESIbit.w32 = 0;
+// 
+//     LOGMSG( enDebug, _T("Starting the Init-BIT...") );
 }
 
 /**
@@ -225,20 +225,20 @@ void CUrBit::RunIBit( bool bCGIRunning )
 
     sleep( 1 );
 
-    if( bCGIRunning == true ) {
-        LOGMSG( enDebug, "IBIT 결과는 정상 입니다." );
-#ifdef __linux__  
-        QMsgSnd( CGI->GetKeyId(), enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
-#else
-		printf( "\n QMsgSnd..." );
-#endif
-
-    }
-    else {
-#ifndef _CGI_LIST_
-        CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
-#endif
-    }
+//     if( bCGIRunning == true ) {
+//         LOGMSG( enDebug, "IBIT 결과는 정상 입니다." );
+// #ifdef __linux__  
+//         QMsgSnd( CGI->GetKeyId(), enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+// #else
+// 		printf( "\n QMsgSnd..." );
+// #endif
+// 
+//     }
+//     else {
+// #ifndef _CGI_LIST_
+//         CCommonUtils::SendLan( enRES_IBIT, & m_stESIbit, sizeof(m_stESIbit) );
+// #endif
+//     }
 }
 
 /**
@@ -253,19 +253,19 @@ void CUrBit::RunIBit( bool bCGIRunning )
  */
 void CUrBit::RunCBit( bool bCGIRunning )
 {
-    sleep( 2 );
-
-    //
-    memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
-
-    if( bCGIRunning == true ) {
-        LOGMSG( enDebug, "CBIT 결과는 정상 입니다." );
-    }
-    else {
-#ifndef _CGI_LIST_
-        CCommonUtils::SendLan( enRES_CBIT, & m_stESCbit, sizeof(m_stESCbit) );
-#endif
-    }
+//     sleep( 2 );
+// 
+//     //
+//     memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
+// 
+//     if( bCGIRunning == true ) {
+//         LOGMSG( enDebug, "CBIT 결과는 정상 입니다." );
+//     }
+//     else {
+// #ifndef _CGI_LIST_
+//         CCommonUtils::SendLan( enRES_CBIT, & m_stESCbit, sizeof(m_stESCbit) );
+// #endif
+//     }
 
 
 }
@@ -283,18 +283,18 @@ void CUrBit::RunCBit( bool bCGIRunning )
 void CUrBit::RunUBit( bool bCGIRunning )
 {
     //
-    sleep( 10 );
-
-    memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
-    if( bCGIRunning == true ) {
-        LOGMSG( enDebug, "UBIT 결과는 정상 입니다." );
-
-    }
-    else {
-#ifndef _CGI_LIST_
-        CCommonUtils::SendLan( enRES_UBIT, & m_stESCbit, sizeof(m_stESCbit) );
-#endif
-    }
+//     sleep( 10 );
+// 
+//     memset( & m_stESCbit, 0, sizeof(m_stESCbit) );
+//     if( bCGIRunning == true ) {
+//         LOGMSG( enDebug, "UBIT 결과는 정상 입니다." );
+// 
+//     }
+//     else {
+// #ifndef _CGI_LIST_
+//         CCommonUtils::SendLan( enRES_UBIT, & m_stESCbit, sizeof(m_stESCbit) );
+// #endif
+//     }
 }
 
 #ifdef __ZYNQ_BOARD__

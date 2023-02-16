@@ -5,6 +5,7 @@
 #include "stdafx.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "ELUtil.h"
 //#include "../SigAnal/_Define.h"
@@ -116,7 +117,7 @@ int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiBy
 
     //iLen = MultiByteToWideChar( CP_ACP, 0, pszMultiByte, -1, pszUniCode, iMaxSizeOfUnicode);
 
-    iLen = mbstowcs( pszUniCode, pszMultiByte, strlen(pszMultiByte) );
+    iLen = (int) mbstowcs( pszUniCode, pszMultiByte, strlen(pszMultiByte) );
 
     //memset( carr, '\0', sizeof(carr) );
     //WideCharToMultiByte(CP_UTF8, 0, p, -1, carr, 256, NULL, NULL);
@@ -137,11 +138,11 @@ int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiBy
  * @date      2022-11-22 12:03:09
  * @warning
  */
-void UTF8ToMultibyte( char *pszMultiByte, int iSizeOfMultiByte, const wchar_t *p )
+void UTF8ToMultibyte( char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p )
 {
 
     if( p != NULL ) {
-        printf( "\n p=%s" , p );
+        //printf( "\n p=%s" , p );
         wcstombs( pszMultiByte, p, iSizeOfMultiByte );
     }
     else {
@@ -250,3 +251,57 @@ void LogPrint( const char *format, ... )
 //     return ( dvalue > 0 || dvalue < 0 );
 // }
 // 
+
+
+/**
+ * @brief     두 PRI 값들 사이에 하모닉 관계 여부를 계산한다.
+ * @param     T priMean1
+ * @param     T priMean2
+ * @param     T tThreshold
+ * @return    UINT
+ * @exception
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   0.0.1
+ * @date      2022-06-14, 16:38
+ * @warning
+ */
+UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold) {
+	UINT ret = 0;
+
+	_TOA r;
+	_TOA harmonic;
+	_TOA max_mean, min_mean;
+
+	if (priMean1 != 0 && priMean2 != 0) {
+		if (priMean1 > priMean2) {
+			max_mean = priMean1;
+			min_mean = priMean2;
+		}
+		else {
+			max_mean = priMean2;
+			min_mean = priMean1;
+		}
+
+		harmonic = max_mean % min_mean;
+
+		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+		_TOA margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+
+		// 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
+			r = TDIV<_TOA>(max_mean, min_mean);
+			// r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
+			if (r > UINT_MAX) {
+				ret = UINT_MAX;
+			}
+			else {
+				ret = (UINT)r;
+			}
+		}
+	}
+	else {
+
+	}
+
+	return ret;
+}
