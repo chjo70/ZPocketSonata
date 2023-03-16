@@ -16,15 +16,18 @@ typedef unsigned int HIST;
 
 #ifndef _STR_LOWHIGH
 #define _STR_LOWHIGH
-typedef struct
+struct STR_LOWHIGH
 {
     int iLow;
     int iHgh;
 
-} STR_LOWHIGH;
+} ;
 #endif
 
-//##ModelId=452B0C440345
+/**
+    @struct STR_SCANPT
+    @brief  
+**/
 struct STR_SCANPT {
     UINT uiCount;
     int iPA[SCN_COLLECT_PDW+10];				// 신호세기
@@ -34,11 +37,14 @@ struct STR_SCANPT {
 
 } ;
 
-//##ModelId=452B0C44034F
+/**
+    @struct STR_SAMPLE
+    @brief  
+**/
 struct STR_SAMPLE {
 	UINT uiCount;
-	_TOA tTOA[_spMaxSample+10];
-	int iPA[_spMaxSample+10];	
+	_TOA tTOA[_spMaxSample];
+	int iPA[_spMaxSample];	
 
 	float normPa[_spMaxSample];					// normalize of pa
 

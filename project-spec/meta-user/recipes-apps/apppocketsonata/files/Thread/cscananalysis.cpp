@@ -9,7 +9,7 @@
 #include "cemittermerge.h"
 
 #include "../Utils/csingleserver.h"
-#include "../Utils/cmultiserver.h"
+//#include "../Utils/cmultiserver.h"
 
 #include "../Include/globals.h"
 
@@ -29,7 +29,7 @@
  * @date      2023-01-04 16:44:46
  * @warning
  */
-CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CScanAnalysis::CScanAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -47,6 +47,8 @@ CScanAnalysis::CScanAnalysis( int iKeyId, char *pClassName, bool bArrayLanData )
 #endif
 
     _SAFE_NEW( m_pTheSysPara, CSysPara() )
+
+    InitScanAnalysis();
 }
 
 
@@ -90,12 +92,23 @@ void CScanAnalysis::_routine()
 
     m_pMsg = GetDataMessage();
 
-    while( g_AnalLoop ) {
+    while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv" );
         }
         else {
             switch( m_pMsg->uiOpCode ) {
+                case enREQ_OP_START:
+                    // QMsgClear();
+                    InitScanAnalysis();
+                    break;
+
+                case enTHREAD_DISCONNECTED:
+                case enREQ_OP_SHUTDOWN:
+                    QMsgClear();
+                    InitScanAnalysis();
+                    break;
+
                 case enTHREAD_SCANANAL_START :
                     AnalysisStart();
                     break;
@@ -109,6 +122,8 @@ void CScanAnalysis::_routine()
                     LOGMSG1( enError, "=================================== 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
+
+            SendEchoMessage();
         }
     }
 
@@ -131,7 +146,7 @@ void CScanAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pScnPDWData;
 
-    LOGMSG3( enDebug, " SCN: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.iCh, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " SCN: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -144,7 +159,7 @@ void CScanAnalysis::AnalysisStart()
 
     strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = _spOne;
-    strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
+    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
     pLOBData = m_pTheScanSigAnal->GetLOBData();
@@ -153,10 +168,25 @@ void CScanAnalysis::AnalysisStart()
     pLOBData->uiLOBID = 0;
 
 #ifndef _XBAND_
-    pLOBData->iScanType = 0;
+    pLOBData->ucScanType = 0;
     pLOBData->fScanPeriod = 0;
 #endif
 
     //EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
+
+}
+
+
+/**
+ * @brief     InitScanAnalysis
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 15:50:24
+ * @warning
+ */
+void CScanAnalysis::InitScanAnalysis()
+{
 
 }

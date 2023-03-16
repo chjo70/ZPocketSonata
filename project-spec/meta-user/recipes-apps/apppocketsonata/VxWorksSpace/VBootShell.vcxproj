@@ -13,18 +13,21 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BF225BB0-8384-4DFE-8AEB-E5C6A405FDC9}</ProjectGuid>
     <RootNamespace>VBootShell</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -61,62 +64,90 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="VBootShell\BootShell.cpp" />
-    <ClCompile Include="VBootShell\BootShellMain.c" />
-    <ClCompile Include="VBootShell\ManSbc.cpp" />
-    <ClCompile Include="VBootShell\Untar\FileTar.cpp" />
-    <ClCompile Include="VBootShell\WebServer\asp.c" />
-    <ClCompile Include="VBootShell\WebServer\balloc.c" />
-    <ClCompile Include="VBootShell\WebServer\base64.c" />
-    <ClCompile Include="VBootShell\WebServer\cgi.c" />
-    <ClCompile Include="VBootShell\WebServer\default.c" />
-    <ClCompile Include="VBootShell\WebServer\ejlex.c" />
-    <ClCompile Include="VBootShell\WebServer\ejparse.c" />
-    <ClCompile Include="VBootShell\WebServer\emfdb.c" />
-    <ClCompile Include="VBootShell\WebServer\form.c" />
-    <ClCompile Include="VBootShell\WebServer\h.c" />
-    <ClCompile Include="VBootShell\WebServer\handler.c" />
-    <ClCompile Include="VBootShell\WebServer\main.c" />
-    <ClCompile Include="VBootShell\WebServer\md5c.c" />
-    <ClCompile Include="VBootShell\WebServer\mime.c" />
-    <ClCompile Include="VBootShell\WebServer\misc.c" />
-    <ClCompile Include="VBootShell\WebServer\mocana_ssl.c" />
-    <ClCompile Include="VBootShell\WebServer\page.c" />
-    <ClCompile Include="VBootShell\WebServer\ringq.c" />
-    <ClCompile Include="VBootShell\WebServer\rom.c" />
-    <ClCompile Include="VBootShell\WebServer\security.c" />
-    <ClCompile Include="VBootShell\WebServer\sock.c" />
-    <ClCompile Include="VBootShell\WebServer\sockGen.c" />
-    <ClCompile Include="VBootShell\WebServer\strdup.c" />
-    <ClCompile Include="VBootShell\WebServer\strncasecmp.c" />
-    <ClCompile Include="VBootShell\WebServer\sym.c" />
-    <ClCompile Include="VBootShell\WebServer\uemf.c" />
-    <ClCompile Include="VBootShell\WebServer\um.c" />
-    <ClCompile Include="VBootShell\WebServer\umui.c" />
-    <ClCompile Include="VBootShell\WebServer\url.c" />
-    <ClCompile Include="VBootShell\WebServer\value.c" />
-    <ClCompile Include="VBootShell\WebServer\webrom.c" />
-    <ClCompile Include="VBootShell\WebServer\webs.c" />
-    <ClCompile Include="VBootShell\WebServer\websda.c" />
-    <ClCompile Include="VBootShell\WebServer\websuemf.c" />
+    <ClCompile Include="..\files\BootShell\BootShell.cpp" />
+    <ClCompile Include="..\files\BootShell\BootShellMain.c" />
+    <ClCompile Include="..\files\BootShell\ManSbc.cpp" />
+    <ClCompile Include="..\files\BootShell\Untar\FileTar.cpp" />
+    <ClCompile Include="..\files\BootShell\WebServer\asp.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\balloc.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\base64.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\cgi.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\default.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\ejlex.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\ejparse.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\emfdb.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\form.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\h.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\handler.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\main.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\md5c.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\mime.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\misc.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\mocana_ssl.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\page.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\ringq.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\rom.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\security.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\sock.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\sockGen.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\strdup.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\strncasecmp.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\sym.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\uemf.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\um.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\umui.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\url.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\value.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\webrom.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\webs.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\websda.c" />
+    <ClCompile Include="..\files\BootShell\WebServer\websuemf.c" />
+    <ClCompile Include="..\files\Utils\PCIDriver.cpp" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFpga.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\ethernetDiag.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\i2cDiag.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\memDiag.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysLib.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.c" />
+    <ClCompile Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbPciShow.c" />
+    <ClCompile Include="VBootShell_T2MS\usrAppInit.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VBootShell\BootShell.h" />
-    <ClInclude Include="VBootShell\BootShellMain.h" />
-    <ClInclude Include="VBootShell\ManSbc.h" />
-    <ClInclude Include="VBootShell\Untar\FileTar.h" />
-    <ClInclude Include="VBootShell\WebServer\ej.h" />
-    <ClInclude Include="VBootShell\WebServer\ejIntrn.h" />
-    <ClInclude Include="VBootShell\WebServer\emfdb.h" />
-    <ClInclude Include="VBootShell\WebServer\md5.h" />
-    <ClInclude Include="VBootShell\WebServer\mkstemp.h" />
-    <ClInclude Include="VBootShell\WebServer\strdup.h" />
-    <ClInclude Include="VBootShell\WebServer\strncasecmp.h" />
-    <ClInclude Include="VBootShell\WebServer\uemf.h" />
-    <ClInclude Include="VBootShell\WebServer\um.h" />
-    <ClInclude Include="VBootShell\WebServer\webs.h" />
-    <ClInclude Include="VBootShell\WebServer\websda.h" />
-    <ClInclude Include="VBootShell\WebServer\wsIntrn.h" />
+    <ClInclude Include="..\files\BootShell\BootShell.h" />
+    <ClInclude Include="..\files\BootShell\BootShellMain.h" />
+    <ClInclude Include="..\files\BootShell\Macros.h" />
+    <ClInclude Include="..\files\BootShell\ManSbc.h" />
+    <ClInclude Include="..\files\BootShell\Untar\FileTar.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\ej.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\ejIntrn.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\emfdb.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\md5.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\mkstemp.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\strdup.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\strncasecmp.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\uemf.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\um.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\webs.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\websda.h" />
+    <ClInclude Include="..\files\BootShell\WebServer\wsIntrn.h" />
+    <ClInclude Include="..\files\Utils\PCIDriver.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vt100.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.h" />
+    <ClInclude Include="VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

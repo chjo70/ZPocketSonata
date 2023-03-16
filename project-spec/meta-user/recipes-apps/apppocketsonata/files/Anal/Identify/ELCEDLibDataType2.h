@@ -172,13 +172,13 @@ namespace PlatformCode
 	};
 }
 
-static const char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] = 
-{ 
+static const char _PlatformCodes[PlatformCode::enumAir + 1][25 + 1] =
+{
 	"UNKNOWN",
-	"LAND", 
-	"SEA", 
-	"LAND_SEA_AND_AIR", 
-	"COASTAL", 
+	"LAND",
+	"SEA",
+	"LAND_SEA_AND_AIR",
+	"COASTAL",
    "AIR"
 };
 
@@ -253,28 +253,30 @@ enum EnumFunctionCodes
 	enumMaxOfFunctionCodes,
 };
 
-static char _FunctionCodes[enumXP_Experimental_or_Trainer+1][4] = 
-{ 
-	"AA", "AB", "AI", "AL", "AM", "AT", "AV", \
-	"BN", "BS", \
-	"CA", "CI", "CS", \
-	"DC", "DT", \
-	"ES", "EW", \
-	"FC", \
-	"GB", "GM", "GT", \
-	"HF", "HS", \
-	"IF", "IL", "IS", "IT", \
-	"JB", "JC", "JD", "JF", "JG", "JN", "JP", "JR", "JS", "JT", \
-	"MA", "MC", "MD", "ME", "MF", "MG", "MH", "MT",
-	"NA", "ND", "NT", "NW", \
-	"PF", \
-	"RI", "RO", "RS", \
-	"SB", "SP", "SS", "ST", \
-	"TA", "TI", "TT", "TV", \
-	"UN", \
-	"VR", \
-	"XP" 
-};
+/*
+// static char _FunctionCodes[enumXP_Experimental_or_Trainer+1][4] =
+// {
+// 	"AA", "AB", "AI", "AL", "AM", "AT", "AV", \
+// 	"BN", "BS", \
+// 	"CA", "CI", "CS", \
+// 	"DC", "DT", \
+// 	"ES", "EW", \
+// 	"FC", \
+// 	"GB", "GM", "GT", \
+// 	"HF", "HS", \
+// 	"IF", "IL", "IS", "IT", \
+// 	"JB", "JC", "JD", "JF", "JG", "JN", "JP", "JR", "JS", "JT", \
+// 	"MA", "MC", "MD", "ME", "MF", "MG", "MH", "MT",
+// 	"NA", "ND", "NT", "NW", \
+// 	"PF", \
+// 	"RI", "RO", "RS", \
+// 	"SB", "SP", "SS", "ST", \
+// 	"TA", "TI", "TT", "TV", \
+// 	"UN", \
+// 	"VR", \
+// 	"XP"
+// };
+*/
 
 namespace PolizationCode
 {
@@ -306,8 +308,8 @@ namespace PolizationCode
 	};
 }
 /*
-static char _PolizationCode[PolizationCode::enumZ_Undetermined + 1][100 + 1] = 
-{ 
+static char _PolizationCode[PolizationCode::enumZ_Undetermined + 1][100 + 1] =
+{
 	"C - Diverse (Agile or adaptive). Capable of pulse-to-pulse agility.",
 	"D - Diverse.Option of operating with any of several polarizations.",
 	"G - Linear with no reference to plane (unknown whether H or V).",
@@ -334,8 +336,8 @@ enum EnumRotationDirCode
 	enumClockwise
 };
 /*
-static char _RotationDirCode[enumClockwise + 1][25 + 1] = 
-{ 
+static char _RotationDirCode[enumClockwise + 1][25 + 1] =
+{
 	"Counter Clockwise",
 	"Clockwise"
 };	*/
@@ -346,16 +348,16 @@ namespace ContinuityCode
 	{
 		enumUndefinedContinuityCode = -1, //아무것도 표시되지 않음
 
-		enumUnknown = 0,	
+		enumUnknown = 0,
 		enumDiscrete,
 		enumCountinuous
 	};
 }
 /*
-static char _ContinuityCodes[ContinuityCode::enumCountinuous + 1][25 + 1] = 
-{ 
+static char _ContinuityCodes[ContinuityCode::enumCountinuous + 1][25 + 1] =
+{
 	"UNKNOWN",
-	"DISCRETE", 
+	"DISCRETE",
 	"COUNTINUOUS"
 };	*/
 
@@ -365,7 +367,7 @@ namespace PatternCode
 	{
 		enumUndefinedPatternCode = -1, //아무것도 표시되지 않음
 
-		enumUnknown = 0,	
+		enumUnknown = 0,
 		enumPatterned,
 		enumNonPatterned,
 		enumAdaptive,
@@ -373,10 +375,10 @@ namespace PatternCode
 	};
 }
 /*
-static char _PatternCodes[PatternCode::enumUnmodulated + 1][25 + 1] = 
-{ 
+static char _PatternCodes[PatternCode::enumUnmodulated + 1][25 + 1] =
+{
 	"UNKNOWN",
-	"PATTERNED", 
+	"PATTERNED",
 	"NON_PATTERNED",
 	"ADAPTIVE",
 	"",
@@ -395,9 +397,9 @@ namespace CohencyCode
 	};
 }
 /*
-static char _CoherencyCodes[CohencyCode::enumUnknown + 1][25 + 1] = 
-{ 
-	"COHERENT", 
+static char _CoherencyCodes[CohencyCode::enumUnknown + 1][25 + 1] =
+{
+	"COHERENT",
 	"NON_COHERENT",
 	"",
 	"UNKNOWN"
@@ -412,10 +414,10 @@ enum EnumValidationCode
 	enumPostulated
 };
 /*
-static char _ValidationCodes[enumPostulated + 1][25 + 1] = 
-{ 
+static char _ValidationCodes[enumPostulated + 1][25 + 1] =
+{
 	"UNVALIDATED",
-	"VALIDATED", 
+	"VALIDATED",
 	"POSTULATED"
 };	*/
 
@@ -441,8 +443,8 @@ enum EnumRF_LagacyTypeCode
 	enumLinearRF_Stepping,						// 호핑인가 ?
 };
 /*
-static char _RF_LagacyTypeCodes[enumLinearRF_Stepping + 1][100 + 1] = 
-{ 
+static char _RF_LagacyTypeCodes[enumLinearRF_Stepping + 1][100 + 1] =
+{
 	"RF_AGILE",
 	"RF_AGILE_PULSE_TO_PULSE",
 	"RF_AGILE_GROUP_TO_GROUP",
@@ -469,7 +471,7 @@ static char _RF_LagacyTypeCodes[enumLinearRF_Stepping + 1][100 + 1] =
 enum EnumPRI_LegacyTypeCode
 {
 	enumUndefinedPRI_LegacyType = -1,
-	
+
 	enumPulseConstant = 20,				// Stable
 	enumStagger,						// Stagger
 	enumJitter,							// Jitter
@@ -480,8 +482,8 @@ enum EnumPRI_LegacyTypeCode
 	enumPRI_PhaseModulationOrShifting
 };
 
-// static char _PRI_LagacyTypeCodes[(enumPRI_PhaseModulationOrShifting - enumPulseConstant) + 1][100 + 1] = 
-// { 
+// static char _PRI_LagacyTypeCodes[(enumPRI_PhaseModulationOrShifting - enumPulseConstant) + 1][100 + 1] =
+// {
 // 	"PULSE_CONSTANT",
 // 	"STAGGER",
 // 	"JITTER",
@@ -492,23 +494,25 @@ enum EnumPRI_LegacyTypeCode
 // 	"PRI_PHASE_MODULATION_OR_SHIFTING"
 // };
 
-namespace SignalType
+namespace CEDSignalType
 {
 	enum EnumSignalType	//#FA_Q_2502_T2
 	{
-		enumSignalUndefined = -1,
 
 #ifdef _XBAND_
+		enumSignalUndefined = -1,
 		enumCW =0,
 		enumPulsed,	//기본값
 		enumEA
 
 #elif defined(_POCKETSONATA_)
-        enumPulsed = 1,
+		enumSignalUndefined = 0,
+        enumPulsed,
         enumCW,
         enumEA
 
 #else
+		enumSignalUndefined = -1,
 		enumPulsed = 0,	//기본값
 		enumCW,
 		enumEA
@@ -517,19 +521,19 @@ namespace SignalType
 }
 
 #ifdef _XBAND_
-static char _SignalType[SignalType::enumEA + 1][11] = 
-{ 
+static char _SignalType[CEDSignalType::enumEA + 1][11] =
+{
 	"CW",
-	"Pulsed", 
+	"Pulsed",
 	"EA"
 };
 #else
-static char _SignalType[SignalType::enumEA + 1][11] = 
-{ 
-	"Pulsed",
-	"CW", 
-	"EA"
-};
+// static char _SignalType[CEDSignalType::enumEA + 1][11] =
+// {
+// 	"Pulsed",
+// 	"CW",
+// 	"EA"
+// };
 #endif
 
 namespace RadarModeFreqType
@@ -551,7 +555,7 @@ namespace RadarModeFreqType
 // 	"호핑",
 // 	"어자일",
 // 	"패턴",
-// 
+//
 // 	"모름"
 // };
 
@@ -580,7 +584,7 @@ namespace RadarModePRIType
 		enumPRIUnknown
 	};
 #endif
-} 
+}
 
 // static const char* _strPRIType[]=
 // {
@@ -589,7 +593,7 @@ namespace RadarModePRIType
 // 	"드웰",
 // 	"스태거",
 // 	"패턴",
-// 
+//
 // 	"모름"
 // };
 
@@ -608,13 +612,13 @@ enum EnumRadarStatus
 	enumMaxOfRadarStatus
 };
 
-// static char _RadarStatus[enumUndetected + 1][21] = 
-// { 
+// static char _RadarStatus[enumUndetected + 1][21] =
+// {
 // 	"ACTIVE",
-// 	"RENOTATED", 
-// 	"CANCELED", 
-// 	"INCORPORATED", 
-// 	"RETIRED", 
+// 	"RENOTATED",
+// 	"CANCELED",
+// 	"INCORPORATED",
+// 	"RETIRED",
 // 	"UNDETECTED"
 // };
 
@@ -625,7 +629,7 @@ namespace ScanType
 	enum EnumScanType	//#FA_Q_2502_T2
 	{
 		enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
-		
+
 		enumA_Circular = 0,										// 탐지형
 		enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
 		enumC_Vertical_Sector_Bi_directional,					// 섹터형(탐지형)
@@ -644,12 +648,12 @@ namespace ScanType
 		enumT_Horizontal_Sector,								// 섹터형(탐지형)
 		enumU_Uni_Directional_Sector_Plane_Undertermined,		// 섹터형(탐지형)
 		enumV_Bi_Directional_Sector_Plane_Undetermined,			// 섹터형(탐지형)
-		enumZ_Undetermined										// Unknown				
+		enumZ_Undetermined										// Unknown
 	};
 	//end_static_0919
 }
 /*
-static char _ScanTypes[ScanType::enumZ_Undetermined + 1][100 + 1] = 
+static char _ScanTypes[ScanType::enumZ_Undetermined + 1][100 + 1] =
 {
 	"A - Circular",
 	"B - Horizontal Sector (Bi-directional)",
@@ -686,9 +690,9 @@ namespace MOP_CW_ModulationType
 	};
 }
 /*
-static char _MOP_CW_ModulationType[MOP_CW_ModulationType::enumUnModulated + 1][25 + 1] = 
+static char _MOP_CW_ModulationType[MOP_CW_ModulationType::enumUnModulated + 1][25 + 1] =
 {
-	"UNKNOWN", 
+	"UNKNOWN",
 	"FREQUENCY",
 	"PHASE",
 	"AMPLITUDE",
@@ -698,7 +702,7 @@ static char _MOP_CW_ModulationType[MOP_CW_ModulationType::enumUnModulated + 1][2
 enum EnumMOP_CW_LegacyType
 {
 	enumUndefinedMOP_CW_LegacyType = -1,	//아무것도 표시되지 않음
-	
+
 	enumFMOP = 40,
 	enumFMOP_Linear,
 	enumFMOP_NonLinear,
@@ -717,7 +721,7 @@ enum EnumMOP_CW_LegacyType
 	enumOOK_SRW
 };
 /*
-static EnumMOP_CW_LegacyType _MOP_CW_LegacyTypeArray[16] = 
+static EnumMOP_CW_LegacyType _MOP_CW_LegacyTypeArray[16] =
 {
 	enumFMOP,
 	enumFMOP_Linear,
@@ -737,7 +741,7 @@ static EnumMOP_CW_LegacyType _MOP_CW_LegacyTypeArray[16] =
 	enumOOK_SRW
 };	*/
 /*
-static char _MOP_CW_LegacyType[16][100 + 1] = 
+static char _MOP_CW_LegacyType[16][100 + 1] =
 {
 	"FMOP",
 	"FMOP_LINEAR",
@@ -771,9 +775,9 @@ enum EnumThreatStatusCode
 	enumA
 };
 /*
-static char _ThreatStatucCode[enumA + 1][2] = 
+static char _ThreatStatucCode[enumA + 1][2] =
 {
-	"C", 
+	"C",
 	"P",
 	"N",
 	"X",
@@ -788,7 +792,7 @@ namespace CountryCode
 	enum EnumCountryCode
 	{
 		enumUndefinedCountry = -1,	//아무것도 표시되지 않음
-		
+
 		enumAA_Aruba = 0,
 		enumAC_Antigua_and_Barbuda,
 		enumAE_United_Arab_Emirates,
@@ -1057,6 +1061,7 @@ namespace CountryCode
 	};
 }
 
+/*
 //static char _CountryCodes[CountryCode::enumZI_Zimbabwe + 1][2 + 1] =
 //{
 //	"AA", "AC", "AE", "AF", "AG", "AJ", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", "AV", "AX", "AY", \
@@ -1085,6 +1090,7 @@ namespace CountryCode
 //	"YM", \
 //	"ZA", "ZI"
 //};
+  */
 
 namespace FriendOrFOE
 {
@@ -1103,8 +1109,8 @@ namespace FriendOrFOE
 static char _FriendOrFOE[FriendOrFOE::enumFOE + 1][10 + 1] =
 {
 	"UNKNOWN",
-	"FRIEND", 
-	"FOE" 
+	"FRIEND",
+	"FOE"
 };	*/
 
 struct SRadarComments
@@ -1130,7 +1136,7 @@ struct SParamSetAssociations
     CString strSetCode;						//레이더 안의 모드 연관관계 하나에 붙이는 코드값 (알파벳 대문자 1문자 혹은 2문자)
 	EnumParamSetAssocTypeCode eAssocType;	//연관타입코드 (Simultaneous, Sequential, Independent-simultaneous) (PARAM_SET_ASSOC_TYPE_CODE 참조)
     CString strAssocType;					//연관타입명(Simultaneous, Sequential, Independent-simultaneous)
-	
+
 	SParamSetAssociations()
 	{
 		nAssocIndex = 0;
@@ -1234,7 +1240,7 @@ struct SDeviceInfoFromRadar
 	float fMaxPRI_ForGUI;						//최대PRI
 	bool bIsBasicCEDExist;						//CED존재여부
 	EnumFunctionCodes eFunctionCode_For_GUI;
-	SignalType::EnumSignalType eSignalType;		//신호형태 (Pulsed, CW, EA) enum형태
+	CEDSignalType::EnumSignalType eSignalType;		//신호형태 (Pulsed, CW, EA) enum형태
 
 	SDeviceInfoFromRadar()
 	{
@@ -1244,7 +1250,7 @@ struct SDeviceInfoFromRadar
 		fMaxPRI_ForGUI=0.0f;						//최대PRI
 		bIsBasicCEDExist=false;						//CED존재여부
 		eFunctionCode_For_GUI=enumUndefinedFunctionCode;
-		eSignalType=SignalType::enumSignalUndefined;		//신호형태 (Pulsed, CW, EA) enum형태
+		eSignalType=CEDSignalType::enumSignalUndefined;		//신호형태 (Pulsed, CW, EA) enum형태
 	}
 
 };
@@ -1267,14 +1273,14 @@ struct SDeviceBase
 
 	SDeviceBase()
 	{
-		nDeviceIndex=0;			
-		nRadarIndex=0;			
+		nDeviceIndex=0;
+		nRadarIndex=0;
         szELNOT[0] = 0;
         szDeviceName[0] = 0;
-		nIdentificationRange=0;	
+		nIdentificationRange=0;
         szLatitude[0] = 0;
         szLongitude[0] = 0;
-		nElevation=0;			
+		nElevation=0;
 	}
 
 	double GetLongitude()
@@ -1349,24 +1355,24 @@ struct SThreatBase	//위협 (EOB 기반임)
 // 	char szUserCountry[_MAX_USER_COUNTRY_STRING_SIZE_];						//사용국가 (2)	//*추후 삭제예정
 // 	char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
 // 	char szADA[_MAX_ADA_STRING_SIZE_];														//대공방공구역 (ADA) (AA123 형식) (5)
-// 
+//
 // 	CountryCode::EnumCountryCode eUserCountry;	//사용국가를 enum으로 표현
 // 	EnumFunctionCodes ePrimaryFunction_ForGUI;	//주기능코드
 // 	FriendOrFOE::EnumFriendOrFOE eFriendOrFOE;	//적아구분 enum값
 // 	int nPriority;															//우선순위 (0~255, 기본값 255)
 // 	int nCategory;															//자체 구분 카테고리 (99999 형식)(5)
-// 
+//
 // 	char szDTC[_MAX_DATETIME_STRING_SIZE_];							//DATE TIME CREATED (생성시간)
 // 	char szDTLI[_MAX_DATETIME_STRING_SIZE_];						//DATE TIME LAST INFO (마지막 반영시간)
 // 	char szDTFI[_MAX_DATETIME_STRING_SIZE_];						//DATE TIME FIRST INFO (최초 반영시간)
 // 	char szDistinction[_MAX_DISTINCTION_STRING_SIZE_];	//구분(자체적으로 만들어 사용하는 코드)
-// 
+//
     PlatformCode::EnumPlatformCode ePlatform;						//탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
 
 // 	char szSymbolCode[_MAX_SYMBOLCODE_STRING_SIZE_];		//2525B 심볼코드
 // 	char szThreatLatitude[_MAX_LATITUDE_STRING_SIZE_];				//위도
 // 	char szThreatLongitude[_MAX_LONGITUDE_STRING_SIZE_];			//경도
-// 	
+//
     SThreatBase() {
         //iPinNum = 0;																		//PIN
 
@@ -1398,32 +1404,32 @@ struct SThreatBase	//위협 (EOB 기반임)
 // 	time_t tiDBUpdateTime;												// DB에서 갖고온 업데이트 시간
 // 	int nDBThreatIndex;
 // 	int nDBDeviceIndex;
-// 
+//
 // 	SDevice()
 // 	{
 // 		tiDBUpdateTime = 0;
 // 		nDBThreatIndex = 0;
 // 		nDBDeviceIndex = 0;
-// 
+//
 // 	}
 // };
 
-typedef enum {
+enum ENUM_THREAT_PLATFORM {
 	enPlatform_UNKNOWN=0,
 
 	enPlatform_GROUND,
 
 	enPlatform_AIR,
 	enPlatform_MOVING_GROUND,
-} ENUM_THREAT_PLATFORM;
+} ;
 
 
 struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반임)
 {
 	//vector <SDevice> vecDevice;	//장비
-    int iPinNum;
-	int iThreatIndex;
-    int iPriority;
+    unsigned int uiPinNum;
+	unsigned int uiThreatIndex;
+	unsigned int uiPriority;
 
 	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 	char szThreatName[_MAX_THREAT_NAME_SIZE];
@@ -1457,10 +1463,10 @@ struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반
 // 			//double dbLatitude = _ttof(strLatitude.Left(2))+_ttof(strLatitude.Mid(2,2))*1.0/60.0+_ttof(strLatitude.Mid(4,2))*1.0/60.0/60.0;
 // 			nRet = (int) _ttof(szThreatLatitude);
 // 		}
-// 
+//
 // 		return nRet;
 // 	}
-// 
+//
 // 	int GetILongitude()
 // 	{
 // 		int nLength, nRet;
@@ -1508,17 +1514,17 @@ struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반
 // 		nDeviceIndex					= i_stDevice.nDeviceIndex;					//Threat안에서 장비의 인덱스
 // 		nRadarIndex					= i_stDevice.nRadarIndex;						//레이더 인덱스
 // 		strcpy_s( szELNOT, i_stDevice.szELNOT );							//NOTATION (5)
-// 
+//
 // 		//strDeviceName					= i_stDevice.strDeviceName;					//장비명 (주로 NICKNAME) (50)
 // 		strcpy_s( szDeviceName, i_stDevice.szDeviceName );
-// 
+//
 // 		eDevStatus_ForGUI			= i_stDevice.eDevStatus_ForGUI;			//STATUS_CODE 참조 (C, P, N, X, D, U, I 중 하나)
 // 		nIdentificationRange		= i_stDevice.nIdentificationRange;			//식별반경(NM: 노티컬마일; 기본값 5
 // 		strcpy_s( szLatitude, i_stDevice.szLatitude );							//위도
 // 		strcpy_s( szLongitude, i_stDevice.szLongitude );						//경도
 // 		nElevation						= i_stDevice.nElevation;							//고도 (0~99999 ?)
 // 	}
-// 	SRelatedThreat(SThreat &i_stThreat, SDevice &i_stDevice)	
+// 	SRelatedThreat(SThreat &i_stThreat, SDevice &i_stDevice)
 // 	{
 // 		SetData(i_stThreat, i_stDevice);
 // 	}
@@ -1554,31 +1560,31 @@ struct SEobExcelData
     CString	strDTFI;						//DATE TIME FIRST INFO (최초 반영시간)
 	SEobExcelData()
 	{
-		nPin=0;				
-		strPlaceNameKor="";	
+		nPin=0;
+		strPlaceNameKor="";
 		//CString	strPlaceNameEng;
-		//CString	strUserCountry;	
-		//CString	strFriendOrFOE;	
-		//int		nPriority;		
-		strDistinction="";		
-		strFacilityName="";	
-		strStatus="";			
+		//CString	strUserCountry;
+		//CString	strFriendOrFOE;
+		//int		nPriority;
+		strDistinction="";
+		strFacilityName="";
+		strStatus="";
 		//CString	strIdentificatio
-		//CString	strPlatform;	
-		strLatitude="";		
-		strLongitude="";		
-		nElevation=0;			
-		strADA="";				
-		strBENumber="";		
-		strCategory="";		
-		strPrimaryFunction="";	
-		strDTC="";				
-		strDTLI="";			
-		nDeviceIndex=0;		
-		strDeviceName="";		
-		strELNOT="";			
-		strDevStatus="";		
-		strDTFI="";			
+		//CString	strPlatform;
+		strLatitude="";
+		strLongitude="";
+		nElevation=0;
+		strADA="";
+		strBENumber="";
+		strCategory="";
+		strPrimaryFunction="";
+		strDTC="";
+		strDTLI="";
+		nDeviceIndex=0;
+		strDeviceName="";
+		strELNOT="";
+		strDevStatus="";
+		strDTFI="";
 	}
 };
 
@@ -1644,8 +1650,8 @@ struct SRadarModeComments
 		strType="";
 		strComments="";
 		bUpdate=false;
-		
-	}		
+
+	}
 };
 
 // struct SRadarPRI_SpotValues
@@ -1653,7 +1659,7 @@ struct SRadarModeComments
 // 	float fPRI_Min;		//주로 나오는 PRI 값(USEC)
 // 	float fPRI_Max;	//주로 나오는 PRI 값(USEC)
 // 	int nSeclab;
-// 
+//
 // 	SRadarPRI_SpotValues()
 // 	{
 // 		fPRI_Min=0.0f;
@@ -1734,7 +1740,7 @@ struct SRadarPD_Values
 	float fPD_Min;		//PD 최소 (USEC)
 	float fPD_Max;		//PD최대 (USEC)
 
-	SRadarPD_Values()		
+	SRadarPD_Values()
 	{
 		nPD_Index=0;
 		fPD_Min=0.0;
@@ -1747,7 +1753,7 @@ struct SRadarPD_SequenceName
 	int nPD_SeqID;			//PD 시퀀스의 번호
 	CString strPD_SeqName;	//시퀀스 이름(32)
 
-	SRadarPD_SequenceName()		
+	SRadarPD_SequenceName()
 	{
 		nPD_SeqID=0;
 		strPD_SeqName="";
@@ -1831,7 +1837,7 @@ struct SRadarMOP_CW_SequenceNumIndex
 	}
 };
 struct SRadarMOP_CW_Sequence : SRadarMOP_CW_SeqName
-{		
+{
 	vector<SRadarMOP_CW_SequenceNumIndex> vecMOP_CW_NumIndex;
 	SRadarMOP_CW_Sequence()
 	{
@@ -1869,10 +1875,10 @@ struct SRadarMOP_CW
 	float fMOP_CW_OffTimeMax;													//CW OFF TIME (us)
 	float fMOP_CW_DutyCycleMin;												//CW의 DUTY CYCLE %
 	float fMOP_CW_DutyCycleMax;												//CW의 DUTY CYCLE %
-	
+
 	map <int /*nMOP_CW_SeqID*/, SRadarMOP_CW_Sequence> mapRadarMOP_CW_Sequence;	//레이더 모드 안에서 변조값 시퀀스의 일련번호들
 	vector <SRadarMOP_CW_Values> vecRadarMOP_CW_Values;							//레이더 모드 안에서의 변조값 엘리먼트 목록
-	
+
 	SRadarMOP_CW()
 	{
 		nRadarModeIndex=0;
@@ -2038,7 +2044,7 @@ struct SRadarMode_Spot_Values
 
 struct SRadarInfo
 {
-    int iRadarIndex;								// 레이더 인덱스
+    unsigned int uiRadarIndex;								// 레이더 인덱스
 
     char szRadarName[_MAX_RADARNAME_SIZE];
 
@@ -2052,7 +2058,7 @@ struct SRadarInfo
 
     int nUnknownEmitterTime_ForGUI;					//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
 
-    int iTimeInactivatedOfRadar;					// 비활성화 시간
+    // int iTimeInactivatedOfRadar;					// 비활성화 시간
 
     int iThreatIndex;								// ELNOT과 동일한 위협 번호
     int iDeviceIndex;								// ELNOT과 동일한 장비 번호
@@ -2060,7 +2066,7 @@ struct SRadarInfo
 
     SRadarInfo()
     {
-        iRadarIndex =0;
+        uiRadarIndex =0;
         szDeviceELNOT[0] = 0;
         szELNOT[0] = 0;
         szNickName[0] = 0;
@@ -2071,7 +2077,7 @@ struct SRadarInfo
         iRadarPriority=0;
         eStatus=enumActive;
         nUnknownEmitterTime_ForGUI=0;
-        iRadarIndex = 0;
+        uiRadarIndex = 0;
         iThreatIndex = 0;
         iDeviceIndex = 0;
     }
@@ -2079,7 +2085,7 @@ struct SRadarInfo
 
 struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (옛날 Beam의 개념)
 {
-    int iRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
+    unsigned int uiRadarModeIndex;												//레이더 모드에 대한 유니크한 인덱스
 
     time_t tiCreated;
 	time_t tiLastUpdated;
@@ -2089,7 +2095,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)
-    int iRadarModePriority;                                                 // 우선순위
+    unsigned int uiRadarModePriority;                                                 // 우선순위
     bool bIgnoreFreqType;                                                   // 주파수 세부 관계없이 동일 빔으로 관리
     bool bIgnorePRIType;                                                    // PRI 세부 관계없이 동일 빔으로 관리
 
@@ -2099,10 +2105,10 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 
 
-	int iTimeInactivated;							// 비활성화 시간
+	int iTimeInactivated;										// 비활성화 시간
 
-    PlatformCode::EnumPlatformCode ePlatform;				//플랫폼 형태: 탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
-    SignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태
+    PlatformCode::EnumPlatformCode ePlatform;					//플랫폼 형태: 탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
+    CEDSignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태
 
     // 극성
     PolizationCode::EnumPolizationCode ePolarization;			//극성 (POLARIZATION_CODE 참조)
@@ -2148,17 +2154,17 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     float fScanSecondaryTypicalMin;						// 부 스캔 주기값의 TYPICAL (SEC)
     float fScanSecondaryTypicalMax;						// 부 스캔 주기값의 TYPICAL (SEC)
 
+	//* 주파수 세부정보
+	//map <int /*nRF_Seq_ID*/, SRadarRF_Sequence> mapRadarRF_Sequence;		//레이더 모드 안에서 RF 시퀀스의 일련번호들 (구조체 내의 nRF_Index값으로 아래의 엘리먼트 목록에서 최소/최대 주파수를 가져온다)
+	//vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
+	vector <SRadarMode_Sequence_Values> vecRadarMode_RFSequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
+	vector <SRadarMode_Spot_Values> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
+
     //* 펄스반복주기 세부정보
     vector <SRadarMode_Spot_Values> vecRadarPRI_SpotValues;		//주로 나오는 PRI 값들 (주관측값 목록)
     //map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence> mapRadarPRI_Sequence;		//레이더 모드 안에서 PRI 시퀀스의 일련번호들 (구조체 내의 nPRI_SeqID값으로 아래의 엘리먼트 목록에서 최소/최대 PRI값을 가져온다.)
     vector <SRadarMode_Sequence_Values> vecRadarMode_PRISequenceValues;		//레이더 모드 안에서 PRI값들(엘리먼트 목록)
     //vector <SRadarPRI_GroupSpacing> vecRadarPRI_GroupSpacing;				//그룹 펄스 안의 펄스간 간격에 올 수 있는 값들
-
-    //* 주파수 세부정보
-    //map <int /*nRF_Seq_ID*/, SRadarRF_Sequence> mapRadarRF_Sequence;		//레이더 모드 안에서 RF 시퀀스의 일련번호들 (구조체 내의 nRF_Index값으로 아래의 엘리먼트 목록에서 최소/최대 주파수를 가져온다)
-    //vector <SRadarRF_Values> vecRadarRF_Values;							//레이더 모드 안에서 RF 값들(엘리먼트 목록)
-    vector <SRadarMode_Sequence_Values> vecRadarMode_RFSequenceValues;						//레이더 모드 안에서 PRI값들(엘리먼트 목록)
-    vector <SRadarMode_Spot_Values> vecRadarRF_SpotValues;			//주로 나오는 RF 값들(주관측값 목록)
 
     SRadarMode()
     {
@@ -2172,10 +2178,10 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 		tiLastSeen = 0;
 
         //nRadarModenPriority = INVALID_INT_VALUE;
-        eSignalType=SignalType::enumPulsed;
+        eSignalType=CEDSignalType::enumPulsed;
         eRF_Type=RadarModeFreqType::enumFIXED;
         ePRI_Type=RadarModePRIType::enumStable;
-        iRadarModeIndex=0;
+        uiRadarModeIndex=0;
         eFunctionCode=enumUndefinedFunctionCode;
         //fERP_TypicalMin=FLT_MIN;
         //fERP_TypicalMax=FLT_MIN;
@@ -2249,7 +2255,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
         //vecRadarPA_Diff_InGroup = vector<SRadarPA_Diff_InGroup>();
         //vecRadarModeComments = vector <SRadarModeComments>();
 
-        
+
         //mapRadarPRI_Sequence = map <int /*nPRI_Seq_ID*/, SRadarPRI_Sequence>();
         //mapRadarPD_Sequence = map <int /*nPD_Seq_ID*/, SRadarPD_Sequence>();
         //mapRadarMOP_CW = map<int /*nMOP_CW_Index*/, SRadarMOP_CW>();
@@ -2260,12 +2266,10 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 		vecRadarMode_RFSequenceValues.clear();
 		vecRadarRF_SpotValues.clear();
 
-
 		vecRadarPRI_SpotValues.clear();
 		vecRadarMode_PRISequenceValues.clear();
 
-
-        //vecRadarModeComments.clear();        
+        //vecRadarModeComments.clear();
         //mapRadarPRI_Sequence.clear();
         //vecRadarPRI_GroupSpacing.clear();
         //mapRadarPD_Sequence.clear();
@@ -2299,10 +2303,10 @@ struct SRadarModeCopyInfo
 // 	int nSeclab;
 // 	char szELNOT[_MAX_ELNOT_STRING_SIZE_];										//Elint Notation (5) 전정부호
 // 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];								//닉네임
-// 
+//
 // 	EnumFunctionCodes eFunctionCodes_ForGUI;									//레이더의 주기능 코드, 알파벳 (2)
 // 	//char szFunctionCode[MAX_SIZE_OF_FUNCTIONCODE];
-// 
+//
 // 	int nPriority;																//(방사체)우선순위 (0~255)
 // 	int nUnknownEmitterTime_ForGUI;												//방사체 미활동판단시간(sec) (0이면 미표시)
 // 	SignalType::EnumSignalType eSignalType;										//신호형태 (Pulsed, CW, EA) enum형태
@@ -2321,7 +2325,7 @@ struct SRadarModeCopyInfo
 // 	map <int /*nWeaponIndex*/, SWeaponSystem> mapAssocWeapSys;					//연관무기체계(GUI 목록에서는 구조체 내부의 이름 표시)
 // 	map <int /*nPlatformIndex*/, SPlatform> mapAssocPlatform;					//연관플랫폼(GUI 목록에서는 구조체 내부의 이름 표시)
 // 	vector<SRadarMode> vecRadarMode_ForGUI;										//구성 레이더모드
-// 
+//
 // 	SRadar()
 // 	{
 // 		nRadarIndex=0;
@@ -2337,32 +2341,32 @@ struct SRadarModeCopyInfo
 // 		fMinPRI_ForGUI=0.0f;
 // 		fMaxPRI_ForGUI=0.0f;
 // 		eStatus=enumActive;
-// 
+//
 // 		szELNOT[0] = NULL;
 // 		szNickName[0] = NULL;
-// 
+//
 // 		vecRealtedThreat_ForGUI = vector <SRelatedThreat>();
 // 		vecRadarComments = vector <SRadarComments>();
 // 		vecAssocELNOT = vector <SAssocELNOT>();
 // 		vecRadarUserCountry = vector <SRadarUserCountry>();
 // 		vecRadarMode_ForGUI = vector<SRadarMode>();
-// 
+//
 // 		mapParamSetAssociations = map <int /*nAssocIndex*/, SParamSetAssociations>();
 // 		mapAssocWeapSys = map <int /*nWeaponIndex*/, SWeaponSystem>();
 // 		mapAssocPlatform = map <int /*nPlatformIndex*/, SPlatform>();
 // 	}
-// 
+//
 // 	void Init() {
 // 		vecRealtedThreat_ForGUI.clear();
 // 		vecRadarComments.clear();
 // 		vecAssocELNOT.clear();
 // 		vecRadarUserCountry.clear();
 // 		vecRadarMode_ForGUI.clear();
-// 
+//
 // 		mapParamSetAssociations.clear();
 // 		mapAssocWeapSys.clear();
 // 		mapAssocPlatform.clear();
-// 
+//
 // 	}
 // };
 
@@ -2398,7 +2402,7 @@ typedef struct stSELThreatMapData{
 	unsigned long long nThreatIndex;
 
 	double dLatitude;				//	위도
-	double dLongitude;			//	경도 
+	double dLongitude;			//	경도
 
 	CString strSymbolCode;	//2525B 심볼코드
 	CString strPlaceNameKor; // 한글지명
@@ -2452,7 +2456,7 @@ typedef struct stSELThreatInfo{
  * @brief     EOB 식별하기 위한 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct stSELDeviceData	
+typedef struct stSELDeviceData
 {
 	double eob_latitude;
 	double eob_longitude;
@@ -2465,7 +2469,7 @@ typedef struct stSELDeviceData
 	char szPlaceNameKor[_MAX_STRING_SIZE_];
 	char szBE_Number[_MAX_BE_NUMBER_STRING_SIZE_];								//위협의 BE Number (10)
 	char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
-	
+
 	stSELDeviceData()
 	{
 		eob_latitude=0;

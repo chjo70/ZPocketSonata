@@ -29,20 +29,20 @@ Build-PocketSonata*/
 
 
 apptest*
-Debug/*
+*.d
 
 
 # Precompiled Headers
+Debug*
+Release*
+*.manifest
 *.gch
 *.pch
-*.log
-Debug
-Release
-
-*.sdf
-*.pdb
-*.suo
-*.aps
-*.ipch
+*.tlog
 *.opensdf
-.vs
+*.sdf
+*.suo
+
+#vxworks space
+project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/*
+project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace64/*

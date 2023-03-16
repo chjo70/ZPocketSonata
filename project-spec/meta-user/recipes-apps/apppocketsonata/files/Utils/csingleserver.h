@@ -4,7 +4,7 @@
 #ifdef __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <netinet/in.h>
 #else
 #endif

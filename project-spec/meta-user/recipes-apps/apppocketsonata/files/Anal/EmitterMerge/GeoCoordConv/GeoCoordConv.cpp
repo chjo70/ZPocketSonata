@@ -164,10 +164,12 @@ void CGeoCoordConv::SetDstType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 	m_dDstMl0 = m_arMajor[m_eDstEllips] * mlfn(m_dDstE0, m_dDstE1, m_dDstE2, m_dDstE3, m_arLatCenter[m_eDstSystem]);
 	m_dDstEsp = m_dDstEs / (1.0 - m_dDstEs);
 
-	if (m_dDstEs < 0.00001)
+	if (m_dDstEs < 0.00001) {
 	   m_dDstInd = 1.0;
-	else
+	}
+	else {
 	   m_dDstInd = 0.0;
+	}
 
 	InitDatumVar();
 }

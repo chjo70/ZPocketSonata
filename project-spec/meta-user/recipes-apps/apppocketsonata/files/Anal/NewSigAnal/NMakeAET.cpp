@@ -6,7 +6,7 @@
 
 #ifdef _MSC_VER
 
-#elif __linux__
+#elif defined(__linux__)
 #include <sys/timeb.h>
 
 #elif defined(__VXWORKS__)
@@ -155,7 +155,7 @@ int CNMakeAET::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount )
  */
 int CNMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pNewSigAnal->VerifyPW( pPdwIndex, uiCount );
+    return (int) m_pNewSigAnal->VerifyPW( pPdwIndex, uiCount );
 }
 
 /**

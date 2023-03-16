@@ -1,11 +1,15 @@
-﻿/*
- * 본 문서는 제어조종장치와 재밍신호관치장치들간의 메시지를 정의합니다.
- * */
+﻿/**
 
+    @file      sysmsg.h
+    @brief     타장비간의 메시지 정의
+    @details   ~
+    @author    조철희
+    @date      9.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
 
-#ifndef _SYSMSG_H
-#define _SYSMSG_H
+**/
 
+#pragma once
 
 // 기존 소나타 시스템 메시지 헤더 파일 로딩
 #include "./SONATAPIP/_sysmsg.h"
@@ -13,7 +17,10 @@
 
 #include "../Anal/INC/AetIPL.h"
 
+#include "./system.h"
+
 #include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
+
 
 // #if TOOL==diab 
 // #pragma pack( 1 )
@@ -23,7 +30,10 @@
 
 #pragma pack( push, 1 )
 
-
+/**
+    @struct STR_LAN_HEADER
+    @brief  랜 메시지 정의
+**/
 struct STR_LAN_HEADER {
     unsigned int uiOpCode;
     unsigned int uiLength;
@@ -33,48 +43,58 @@ struct STR_LAN_HEADER {
 //////////////////////////////////////////////////////////////
 // 송신 메시지 정의
 
+/**
+    @enum  ENUM_MODE
+    @brief 운용 모드 정의
+**/
 enum ENUM_MODE {
-    enES_MODE=1,
-    enEW_MODE,
-    enREADY_MODE,
+    //enES_MODE=1,
+    //enEW_MODE,
+    enREADY_MODE=1,
 
-    enANAL_Mode=0x80,
+    enOP_Mode = 0,
 
-    enANAL_ES_MODE=enANAL_Mode | enES_MODE,
-    enANAL_EW_MODE=enANAL_Mode | enEW_MODE,
+//    enANAL_Mode=0x80,
+
+//     enANAL_ES_MODE=enANAL_Mode | enES_MODE,
+//     enANAL_EW_MODE=enANAL_Mode | enEW_MODE,
 
 
 };
 
-
+/**
+    @enum  enREQ_MESSAGE
+    @brief 타 장비간의 메시지 정의
+**/
 enum enREQ_MESSAGE {
     // 타겟 명령어 정의
-    enREQ_URBIT = _START_OPCODE_OF_MESSAGE_,
+    //enREQ_URBIT = _START_OPCODE_OF_MESSAGE_,
 
     // 기존 SONATA 체계 명령어
-    enREQ_MODE = Msys_SetMode,
-    enREQ_ANAL_START = Msys_Start,
+    enREQ_OP_START = _START_OPCODE_OF_OPCONTROL_,                 // 시작 요청
+    enREQ_OP_SHUTDOWN,                                          // 종료 요청
+    enREQ_OP_RESTART,                                           // 재시작 요청
 
     enREQ_IBIT = Mbit_ReqIbit,
     enREQ_UBIT = Mbit_ReqUbit,
     enREQ_CBIT = Mbit_ReqCbit,
     enREQ_SBIT = Mbit_StartSbit_V3,
 
-    enREQ_IPL_VERSION = Mipl_ReqVersion,
-    enREQ_IPL_START = Mipl_Start,
-    enREQ_IPL_DOWNLOAD = Mipl_Download,
-    enREQ_IPL_END = Mipl_End,
-    enREQ_RELOAD_LIBRARY,
+    //enREQ_IPL_VERSION = Mipl_ReqVersion,
+    //enREQ_IPL_START = Mipl_Start,
+    //enREQ_IPL_DOWNLOAD = Mipl_Download,
+    //enREQ_IPL_END = Mipl_End,
+    enREQ_RELOAD_LIBRARY = _START_OPCODE_OF_LIBRARY_,
 
     // 오디오 설정 메시지
-    enREQ_AUDIO = Mcnf_Audio,
-    enREQ_AUDIO_PARAM = Mcnf_AudioParam,
+    //enREQ_AUDIO = Mcnf_Audio,
+    //enREQ_AUDIO_PARAM = Mcnf_AudioParam,
 
     // 수신기 설정 메시지
-    enREQ_Band_Enable = Mcnf_BandEnable,
-    enREQ_FMOP_Threshold = Mcnf_FmopThreshold,
-    enREQ_PMOP_Threshold = Mcnf_PMOPThreshold,
-    enREQ_RX_Threshold = Mcnf_RxThreshold,
+    //enREQ_Band_Enable = Mcnf_BandEnable,
+    //enREQ_FMOP_Threshold = Mcnf_FmopThreshold,
+    //enREQ_PMOP_Threshold = Mcnf_PMOPThreshold,
+    //enREQ_RX_Threshold = Mcnf_RxThreshold,
 
     // 신호 수집 제어
     enREQ_INIT = REQ_INIT,
@@ -97,38 +117,61 @@ enum enREQ_MESSAGE {
 
 } ;
 
+//////////////////////////////////////////////////////////////////////////
+// 메시지에 대한 처리 최대 지연 시간 정의
+
+#define REQ_OP_START_DELAY          (1)       //!< 시작 요청에 대한 처리 시간
+
+#define REQ_OP_STOP_DELAY           (3)       //!< 시작 종료에 대한 처리 시간
+
 // 각각의 명령어에 대한 데이터 구조체 정의
-struct STR_REQ_DUMP_LIST {
-    unsigned int uiAddress;
-    unsigned int uiDataSize;
-    unsigned int uiDataLength;
-};
+// struct STR_REQ_DUMP_LIST {
+//     unsigned int uiAddress;
+//     unsigned int uiDataSize;
+//     unsigned int uiDataLength;
+// };
 
 
 
 //////////////////////////////////////////////////////////////
-// 수신 메시지 정의
+// 응답 메시지 정의
 
-#define     DUMP_DATA_SIZE              (16*10)
+//#define     DUMP_DATA_SIZE              (16*10)
 
+/**
+    @enum  enRES_MESSAGE
+    @brief 응답 메시지와 위협 결과 메시지 정의
+**/
 enum enRES_MESSAGE {
-    enRES_DUMP_LIST = enREQ_DUMP_LIST,
+    // enRES_DUMP_LIST = enREQ_DUMP_LIST,
 
     // 기존 SONATA 체계 명령어
-    enRES_MODE = Esys_SetMode,
+    enRES_OP_START = _START_OPCODE_OF_OPCONTROL_,                     // 시작 응답
+    enRES_OP_SHUTDOWN,                                              // 종료 응답
+    enRES_OP_RESTART,                                               // 재시작 응답
+    //enRES_MODE = Esys_SetMode,
 
     enRES_IBIT = Mbit_ResultEsIbit,
     enRES_UBIT = Mbit_ResultEsUbit,
     enRES_CBIT = Mbit_ResultEsCbit,
     enRES_SBIT = Mbit_ResultEsSbit,
 
-    enAET_NEW_CCU = Maet_New_Ccu,
-    enAET_UPD_CCU = Maet_Update_Ccu,
-    enAET_LST_CCU = Maet_Lost_Ccu,
-    enAET_DEL_CCU = Maet_Delete_Ccu,
+    // 위협 정보
+    enNUP_THREAT_DATA = _START_OPCODE_OF_THREAT_,
+    enDEL_THREAT_DATA,
+    enDEL_BEAM_DATA,
+    enLST_THREAT_DATA,
+    enLST_BEAM_DATA,
+    en_SCAN_DATA,
 
-    enIPL_VERSION = Mipl_Version,
-    enIPL_WRITESTATUS = Mipl_WriteStatus,
+
+//    enAET_NEWUPD_CCU = _START_OPCODE_OF_THREAT_,
+//    enAET_UPD_CCU,
+//    enAET_LST_CCU,
+//    enAET_DEL_CCU,
+
+//    enIPL_VERSION = Mipl_Version,
+//    enIPL_WRITESTATUS = Mipl_WriteStatus,
 
     enRES_SETSYS = Ecnf_SetSys,
 
@@ -211,37 +254,37 @@ enum enRES_MESSAGE {
 //     UNI_RSA_CBIT rsa;
 // } ;
 
-struct STR_IPL_VERSION {
-    unsigned int uiIPLVersion;
-    unsigned int uiStatus;
-};
-
-struct STR_IPL_START {
-    unsigned int uiIPLVersion;
-    unsigned int uiCountOfIPL;
-};
+// struct STR_IPL_VERSION {
+//     unsigned int uiIPLVersion;
+//     unsigned int uiStatus;
+// };
+// 
+// struct STR_IPL_START {
+//     unsigned int uiIPLVersion;
+//     unsigned int uiCountOfIPL;
+// };
 
 
 /**
  * @brief The STR_RES_DUMP_LIST struct
  */
-struct STR_RES_DUMP_LIST {
-    STR_REQ_DUMP_LIST strReqDumpList;
+// struct STR_RES_DUMP_LIST {
+//     STR_REQ_DUMP_LIST strReqDumpList;
+// 
+//     char cData[500];
+// } ;
 
-    char cData[500];
-} ;
-
-struct STR_AUDIO_PARAM {
-    int iLowerBC;    // 1:Band1, 2:Band2, 3:Band3
-    int iUpperBC;    // 1:Band1, 2:Band2, 3:Band3
-    int iLowerFrq;
-    int iUpperFrq;
-    int iFromAoa;
-    int iToAoa;
-    int	iFromPa;
-    int	iToPa;
-
-} ;
+// struct STR_AUDIO_PARAM {
+//     int iLowerBC;    // 1:Band1, 2:Band2, 3:Band3
+//     int iUpperBC;    // 1:Band1, 2:Band2, 3:Band3
+//     int iLowerFrq;
+//     int iUpperFrq;
+//     int iFromAoa;
+//     int iToAoa;
+//     int	iFromPa;
+//     int	iToPa;
+// 
+// } ;
 
 // struct STR_BAND_ENABLE {
 //     int iBand;
@@ -265,18 +308,19 @@ struct STR_AUDIO_PARAM {
 #ifndef _GRAPH_
 
 /**
- * @brief 랜 메시지 구조체
- */
+    @union UNI_LAN_DATA
+    @brief 랜 데이터 정의
+**/
 union UNI_LAN_DATA {
-    bool bAudioSW;
+    //bool bAudioSW;
     unsigned int uiResult;
 
     // 수신 메시지 구조체 정의
-    STR_REQ_DUMP_LIST strReqDumpList;
+    //STR_REQ_DUMP_LIST strReqDumpList;
     unsigned int uiUnit;
 
     // 송신 메시지 구조체 정의
-    STR_RES_DUMP_LIST strResDumpList;
+    //STR_RES_DUMP_LIST strResDumpList;
 
     // 기존 SONATA 체계 데이터 구조체 정의
     unsigned int uiMode;
@@ -289,13 +333,15 @@ union UNI_LAN_DATA {
     //STR_AUDIO_PARAM strAudioParam;
 
     // CEDEOB
-    STR_IPL_START strIPLStart;
-    STR_IPL strIPL;
+    //STR_IPL_START strIPLStart;
+    //STR_IPL strIPL;
 
     // 수신기 설정
     //STR_BAND_ENABLE strBandEnable;
     //STR_FMOP_THRESHOLD strFMOPThreshold;
     //STR_PMOP_THRESHOLD strPMOPThreshold;
+
+    SAETData stAET;
 
     // 수집 제어 관련 메시지
     STR_REQ_SETMODE_RSA strReqSetMode;
@@ -303,6 +349,14 @@ union UNI_LAN_DATA {
     // 모의 데이터 및 장치 시험용
     unsigned char szFile[_MAX_LANDATA];
     SRxLOBData stLOBData[_MAX_LOBDATA];
+
+    unsigned int uiINT32[10];
+
+};
+
+struct STR_LAN_DATA {
+    STR_LAN_HEADER stLanHeader;
+    UNI_LAN_DATA stLanData;
 
 };
 
@@ -316,7 +370,7 @@ union UNI_LAN_DATA {
 
 #pragma pack( pop )
 
-#endif // _SYSMSG_H
+
 
 
 

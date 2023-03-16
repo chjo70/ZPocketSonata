@@ -2,7 +2,6 @@
 #define CTHREAD_H
 
 #ifdef _MSC_VER
-//#include "../Common/MessageQueue.h"
 
 #include <iostream>
 #include <queue>
@@ -31,7 +30,7 @@ using namespace std;
 #include <sys/ipc.h>
 #include <regex.h>
 #include <semaphore.h>
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 #include <semaphore.h>
 
 #endif
@@ -49,14 +48,19 @@ using namespace std;
 
 
 
-#define LENGTH_OF_CLASSNAME (30)
+#define LENGTH_OF_CLASSNAME                 (30)
+
+
+#define NO_ECHO                             (0)
+#define ECHO                                (1)
 
 
 
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual char *GetThreadName() { return m_szThreadName; } \
+char *GetThreadName() { return m_szThreadName; } \
+STR_MessageData *GetParentMessage() { return m_pMsg; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         m_pInstance = new A( g_iKeyId++, #A, true ); \
@@ -103,28 +107,37 @@ static bool IsThereInstance() { \
 /**
  * @brief 수신 메시지 정의
  */
-typedef enum {
+enum ENUM_RCVMSG {
     enNO_WAIT=0,
     enWAIT_FOREVER,
 
     enTIMER,            // 주기적인 타이머 설정
 
-} ENUM_RCVMSG ;
+}  ;
 
 
+enum ENUM_PCI_DRIVER {
+    enLEFT_PCI_DRIVER = 0,
+    enRIGHT_PCI_DRIVER,
+    // enDUAL_PCI_DRIVER,
 
+    en_ELEMENT_PCI_DRIVER
+
+};
 
 /**
  * @brief 수집 쓰레드 정보
  */
 typedef struct {
-    int iCh;
+    unsigned int uiCh;
     unsigned int uiTotalPDW;
 
     // 방사체 번호
     unsigned int uiAETID;
     // 빔 번호
     unsigned int uiABTID;
+    // 좌/우 PCI 값
+    ENUM_PCI_DRIVER enPCIDriver;
 
 
 } STR_COLLECTINFO ;
@@ -135,7 +148,7 @@ struct STR_ANALINFO {
     unsigned int uiTotalLOB;
 
     // 수집한 채널 정보
-    int iCh;
+    unsigned int uiCh;
 
     // 방사체 번호
     unsigned int uiAETID;
@@ -173,7 +186,7 @@ struct STR_MessageData {
     // Opcode : 명령어
     unsigned int uiOpCode;
 
-    // Src/Dest : 
+    // Src/Dest :
     unsigned char ucSrcDest;
 
     //랜 송신시 이 값이 0 이 아니면 이 소켓 값으로 데이터를 전송한다.
@@ -181,6 +194,9 @@ struct STR_MessageData {
 
     // 데이터 길이
     unsigned int uiDataLength;
+
+    // 에코 비트 :  이 값이 1 이면 에코 메시지를 전달합니다. 쓰레드간의 메시지 동기화 하기 위함.
+    unsigned int uiEchoBit;
 
     // 데이터 영역 이다.
     UNI_MSG_DATA x;
@@ -236,7 +252,7 @@ private:
 	std::mutex m_mutex;
 #endif
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     sem_t m_mutex;
 
     // 타스크 관련 멤버 변수
@@ -247,7 +263,7 @@ private:
     // 메시지 큐 관련 멤버 변수
     MSG_Q_ID m_MsgKeyID;
 
-#elif __linux__
+#elif defined(__linux__)
     sem_t m_mutex;
 
     pthread_t m_MainThread;
@@ -270,24 +286,31 @@ private:
     static int m_iCoMsgQueue;
 
 protected:
-    bool m_bThreadLoop;
+    bool m_bThreadLoop;                     //! 사용자 쓰레드의 무한 루프 값
     int m_iThreadID;
     char m_szThreadName[LENGTH_OF_CLASSNAME];
 
 private:
     void DisplayMsg( bool bSend, const char *pszClassName=NULL, STR_MessageData *pInMsg=NULL );
-    
+
 public:
     CThread( int iMsgKey, const char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
     ~CThread();
 
-    void Run( key_t key=IPC_PRIVATE );
+    //void Run( key_t key=IPC_PRIVATE );
+    void Run();
+
+    void SendThreadMessage( CThread *pThread, bool bWait=true );
+
+    void ShowTaskMessae( int iLevel = 0 );
+    void ShowQueueMessae( int iLevel = 0 );
 
 #ifdef _MSC_VER
-    void Run( void *(*pFunc)(void*), key_t key );
+    void Run( void *(*pFunc)(void*) );
     DWORD Start( void *pArg=NULL );
-#elif __VXWORKS__
-    void Run( void *(*pFunc)(void*), key_t key );
+
+#elif defined(__VXWORKS__)
+    void Run( void *(*pFunc)(void*) );
     DWORD Start( void *pArg=NULL );
 
     inline int GetPriority() { return m_iPriority; }
@@ -295,10 +318,12 @@ public:
     inline bool GetTaskRunStat() { return m_bTaskRunStat; }
     inline void SetTaskSuspend() { taskSuspend( m_TaskID ), m_bTaskRunStat=false; }
     inline void SetTaskResume() { taskResume( m_TaskID ), m_bTaskRunStat=true; }
-    inline void ShowTaskMessae( int iLevel=0 ) { printf( "\n*** %s ***" , m_szThreadName ), msgQShow( m_MsgKeyID, iLevel ); }
-    
+
+
+#define TASK_LOWEST_PRIORITY    (200)
 #define TASK_DEFAULT_PRIORITY   (100)
 
+    // 타스크 명에 따른 우선순위 선정 테이블 입니다.
     int GetPriorityByThreadName() {
         int iPriority=TASK_DEFAULT_PRIORITY;
 
@@ -345,7 +370,7 @@ public:
 
 #define TASK_DEFAULT_STACKSIZE   (0x1000)
 
-    size_t GetStackSize() { 
+    size_t GetStackSize() {
         int iStackSize=TASK_DEFAULT_STACKSIZE;
 
         if( strcmp( "CTaskMngr" , m_szThreadName ) == 0 ) {
@@ -387,19 +412,31 @@ public:
 #endif
 
     int Pend();
-    void Stop();
+    void StopThread();
     void msSleep( unsigned int mssleep );
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER, DWORD dwMilliSec=0 );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
-    void QMsgSnd(unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName = NULL);
+    void QMsgSnd(unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName = NULL);
+    void QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData = NULL, unsigned int uiDataLength = 0 );
+    void QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName= NULL );
+    //void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
+    // 에코 메시지 관련 함수
+    void QMsgEchoSnd( unsigned int uiOpCode, const char *pszClassName );
+    void SendEchoMessage();
+
+    void QMsgClear();
+
     int GetThreadID() { return m_iThreadID; }
 
     void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
+
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
@@ -418,8 +455,8 @@ public:
     }
 
 	/*
-		*	Info: Constructor-like function. 
-		*	
+		*	Info: Constructor-like function.
+		*
 		*	Will be called by EntryPoint before executing the thread body.
 		*  Override this function to provide your extra initialization.
 		*
@@ -428,8 +465,8 @@ public:
 	virtual void ThreadCtor() {	}
 
 	/*
-		*	Info: Destructor-like function. 
-		*	
+		*	Info: Destructor-like function.
+		*
 		*	Will be called by EntryPoint after executing the thread body.
 		*  Override this function to provide your extra destruction.
 		*
@@ -439,18 +476,18 @@ public:
 
     /*
 	*	Info: Override this method.
-	*	
+	*
 	*	This function should contain the body/code of your thread.
 	*	Notice the signature is similar to that of any worker thread function
 	*  except for the calling convention.
 	*/
     virtual DWORD Run( LPVOID /* arg */ ) {
-        return m_MainThread.m_dwExitCode; 
+        return m_MainThread.m_dwExitCode;
     }
 
 	/*
 		*	Info: Attaches a Thread Function
-		*	
+		*
 		*	Used primarily for porting but can serve in developing generic thread objects
 		*/
 	void Attach( LPTHREAD_START_ROUTINE lpThreadFunc ) {
@@ -465,7 +502,7 @@ public:
 #ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Lock();
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
         printf( "\n set up lock()...");
 #else
         std::unique_lock<std::mutex> lk(m_mutex);
@@ -480,7 +517,7 @@ public:
 #ifdef _MSC_VER
 #if _MSC_VER <= 1600 || _AFXDLL
         m_cs.Unlock();
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
         printf( "\n set up unlock()...");
 #else
 
@@ -492,6 +529,8 @@ public:
     }
 
     inline STR_MessageData *GetDataMessage() { return & m_RcvMsg; }
+    inline UNI_LAN_DATA* GeLanData() { return ( UNI_LAN_DATA  * ) &m_RcvMsg.x.szData[0]; }
+
     inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
     inline void *GetRecvData() { return m_pszRecvData; }
@@ -501,7 +540,8 @@ public:
 
     virtual void _routine() { }
     virtual char *GetThreadName() { return NULL; }
-    
+    virtual STR_MessageData *GetParentMessage() = 0;
+
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
 };

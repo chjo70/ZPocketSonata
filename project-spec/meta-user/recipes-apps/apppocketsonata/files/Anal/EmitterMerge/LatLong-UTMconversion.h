@@ -25,13 +25,13 @@ void LLtoSwissGrid(const double Lat, const double Long,
 void SwissGridtoLL(const double SwissNorthing, const double SwissEasting, 
 					double& Lat, double& Long);
 
-typedef struct {
+struct Ellipsoid {
 	int id;
 	char ellipsoidName[100];
 	double EquatorialRadius; 
 	double eccentricitySquared;  
 
-} Ellipsoid;
+} ;
 
 
 #endif

@@ -3,13 +3,11 @@
  * */
 
 
-#ifndef _STRUCT_H
-#define _STRUCT_H
+#pragma once
 
 #include <time.h>
 
 #ifdef _MSC_VER
-//#include <sys/time.h>
 #include <winsock.h>
 
 #elif defined(__VXWORKS__)
@@ -28,6 +26,7 @@ enum ENUM_COLLECT_MODE {
 
     enCollecting,
     enCompleteCollection,
+    enColseCollection,
     enAnalysing,
 };
 
@@ -81,6 +80,10 @@ struct STR_WINDOWCELL {
 
     //unsigned int uiMode;
 
+    // 채널 번호
+    // 탐지 채널은 0번,
+    unsigned int uiCh;
+
     /**
      * @brief 수집 완료 상태를 나타낸다.
      */
@@ -92,12 +95,16 @@ struct STR_WINDOWCELL {
     unsigned int uiTotalPDW;
 
     /**
-    * @brief 최대 수집 게수 및 수집 시간
+    * @brief 최대 수집 개수 및 수집 시간
     */
-    unsigned int uiMaxCoPDW;
+    unsigned int uiCoCollectingPDW;
     unsigned int uiMaxCollectTimesec;         // 최대 수집 시간 [s]
-    unsigned int uiMaxCollectTimems;          // 최대 수집 시간 [ms]
+    unsigned int uiMaxCollectTimeMssec;          // 최대 수집 시간 [ms]
 
+
+    /**
+    * @brief 주파수 범위
+    */
     STR_LOWHIGH strFreq;
 
     STR_LOWHIGH strAoa;
@@ -132,34 +139,67 @@ struct STR_WINDOWCELL {
      */
     unsigned int uiAccumulatedCoUsed;
 
+    STR_PDWDATA strPDW;
+
+
+    void Init( unsigned int uiValueCh ) {
+        uiCh = uiValueCh;
+
+        bUse = false;
+        enCollectMode = enUnused;
+
+        uiABTID = 0;
+
+        uiTotalPDW = 0;
+        uiAccumulatedCoPDW = 0;
+
+        uiCollectTime = 0;
+        uiAccumulatedTime = 0;
+
+        uiAccumulatedCoUsed = 0;
+
+        memset( & strPDW.x, 0, sizeof( UNION_HEADER ) );
+
+        strPDW.SetTotalPDW( 0 );
+        strPDW.SetBank( enUnknownCollectBank );
+    }
+
+    void SetChannel( unsigned int uiValueCh ) {
+        uiCh = uiValueCh;
+    }
+
+    void SetCollectMode( ENUM_COLLECT_MODE enSetCollectMode ) {
+        enCollectMode = enSetCollectMode;
+    }
+
 };
 
 // 수집 뱅크 종류 정의
-enum ENUM_COLLECTBANK {
-    enDetectCollectBank=0,
-    enTrackCollectBank,
-    enScanCollectBank,
-    enUserCollectBank,
-
-    enUnknownCollectBank
-
-};
+// enum ENUM_COLLECTBANK {
+//     enDetectCollectBank=0,
+//     enTrackCollectBank,
+//     enScanCollectBank,
+//     enUserCollectBank,
+//
+//     enUnknownCollectBank
+//
+// };
 
 
 // #ifndef _ENUM_DataType
 // #define _ENUM_DataType
 // typedef enum {
 //     en_UnknownData = 0,
-// 
+//
 //     en_PDW_DATA,
 // 	en_PDW_DATA_CSV,
 //     en_IQ_DATA,
 //     en_IF_DATA,
-// 
+//
 // } ENUM_DataType;
 // #endif
 
 //static char g_szCollectbank[enUnknownCollectBank][10] = { "NP", "KP", "SP", "UP" } ;
 
 
-#endif // _STRUCT_H
+

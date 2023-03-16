@@ -33,7 +33,6 @@ private:
 
     vector<SRadarMode *> m_VecMatchRadarMode;
 
-
 public:
     //##ModelId=452B0C52024B
     int m_CoNewAet;
@@ -92,8 +91,6 @@ public:
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
 
-	inline char *GetAnalDirectory() { return NULL; }
-    
     /**
      * @brief     GetMaxPdw
      * @return    unsigned int
@@ -140,7 +137,7 @@ public:
     inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }    
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }    
-    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }    
+    inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }    
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }    
     inline unsigned int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }    
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }

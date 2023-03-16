@@ -1,6 +1,13 @@
-﻿// Identify.h: interface for the CELSignalIdentifyAlg class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
+
+    @file      Identify.h
+    @brief     신호 식별 헤더 파일 입니다.
+    @details   ~
+    @author    조철희
+    @date      13.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
 
 #pragma once
 
@@ -44,18 +51,20 @@
 // // EOB를 측정하기 위한 최대 허용 오차
 // #define MAX_ALLOWABLE_EOB_DISTANCE		(10000)			// 단위 : m
 
-// 주파수 형태에 따른 식별 방법
-/// 
-enum ENUM_FREQTYPE_IDTABLE { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ;
+/**
+    @enum  ENUM_FREQTYPE_IDTABLE
+    @brief 주파수 형태에 따른 식별 방법
+**/
+enum ENUM_FREQTYPE_IDTABLE { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ; //!< 
  
- 
-// PRI 형태에 따른 식별 방법
-// 
+/**
+    @enum  ENUM_PRITYPE_IDTABLE
+    @brief PRI 형태에 따른 식별 방법
+**/
 enum ENUM_PRITYPE_IDTABLE  { PStableStable=1, PStableStagger, PStableDwell, PStablePStable, PStaggerStagger, PStaggerJitter, PStaggerPStagger, \
 	PDwellDwell, PDwellPDwell, PJitterStagger, PJitterJitter, PJitterPattern, PPatternPattern, \
-	PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri
-};
-// 
+	PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri };
+
 // _UNMATCHRATIO_ 는 일치율을 계산하지 않기 위한 값임.
 enum EnumMATCHRATIO { 
 	_UNMATCHRATIO_=0, 
@@ -181,7 +190,7 @@ class CELSignalIdentifyAlg
 
     int m_iRadar;
     int m_iRadarMode;
-    static SRadarMode *m_pRadarMode;												///< 레이더 모드 구조체
+    static std::vector<SRadarMode> m_vecRadarMode;												///< 레이더 모드 구조체
 
     int m_iThreat;
     static SThreat *m_pThreat;															///< 위협 구조체
@@ -283,7 +292,7 @@ private:
     void MakeRadarMode(vector<SRadarMode_Spot_Values> *pVecRadarMode_Spot_Values, ENUM_SequenceSpot enSeqSpot);
     void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_SequenceSpot enSeqSpot);
 
-    char *GetRadarModeName( int iRadarModeIndex );
+    char *GetRadarModeName( unsigned int uiRadarModeIndex );
 
 	inline SThreat *GetThreatData( int iThreatIndex ) { return & m_pThreat[iThreatIndex-1]; }
 
@@ -291,12 +300,10 @@ private:
 	void MallocStaticBuffer();
  	void InitVar();
  	void Destory();
- 	//BOOL CompSwitchLevel( int *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries );
  	BOOL CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     BOOL CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
     BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
- 	//BOOL CompSwitchLevel( int *pSeries1, int *pSeries2, int coSeries, int margin );
 
 	bool CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
@@ -383,8 +390,8 @@ private:
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	//inline void ClearH000() { m_vecH000.clear(); }
 
-    inline SRadarMode * GetRadarMode( int iRadarModeIndex ) { return iRadarModeIndex <= 0 ? NULL : & m_pRadarMode[iRadarModeIndex-1]; }
-    inline SThreat * GetThreat( int iIndex ) { return iIndex==0 ? NULL : & m_pThreat[iIndex-1]; }
+    inline SRadarMode * GetRadarMode( unsigned int uiRadarModeIndex ) { return uiRadarModeIndex <= 0 ? NULL : & m_vecRadarMode[uiRadarModeIndex -1]; }
+    inline SThreat * GetThreat( unsigned int uiIndex ) { return uiIndex==0 ? NULL : & m_pThreat[uiIndex-1]; }
 
 // 
 // 	// CED 관련 함수
@@ -398,11 +405,11 @@ private:
 // 	// EOB 관련 함수
 // 	char *GetPlatformName( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );										// 플레폼
 // 	char *GetIdInfo( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType );
-    PlatformCode::EnumPlatformCode GetPlatformFromRadarMode( int iRadarModeIndex );
+    PlatformCode::EnumPlatformCode GetPlatformFromRadarMode( unsigned int uiRadarModeIndex );
     const char *GetPlatformCode(PlatformCode::EnumPlatformCode ePlatform);
 
 
- 	double GetInActivatedTime( int iIndex, bool bRadarMode );
+ 	double GetInActivatedTime( unsigned int uiIndex );
 
 // 	// EOB 관련 함수
 // 	void GetEOBLatLong( int *pLatitude, int *pLongitude, int nThreatIndex, int nDeviceIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
@@ -446,12 +453,12 @@ protected:
 
 	void InitRadarModeData();
 
-    bool LoadRadarModeData( int *pnRadarMode, SRadarMode *pRadarMode, int iMaxItems );
+    bool LoadRadarModeData( int *pnRadarMode, int iMaxItems );
 #ifdef _SQLITE_
 	void GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment);
 #endif
-    bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence, int nMaxRadarMode );
-    bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence, int nMaxRadarMode );
+    bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence );
+    bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence );
 
     bool LoadRadarMode_RFSpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_RFSpot, int nMaxRadarMode);
     bool LoadRadarMode_PRISpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_PRISpot, int nMaxRadarMode);
@@ -460,7 +467,7 @@ protected:
 
     // 변환 코드
     EnumFunctionCodes GetFunctionCodes( const char *pData );
-    SignalType::EnumSignalType GetSignalType( const char *pData );
+    CEDSignalType::EnumSignalType GetSignalType( const char *pData );
     PolizationCode::EnumPolizationCode GetPolarizationCodes( int iPolization );
     PlatformCode::EnumPlatformCode GetPlatformCode( int iPlatform );
     PatternCode::EnumPatternCode GetPatternCode( int iPattern );

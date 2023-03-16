@@ -10,18 +10,23 @@
 #include "ccgi.h"
 
 
-#include "../Utils/chwio.h"
+//#include "../Utils/chwio.h"
 #include "../Utils/ccommonutils.h"
 #include "../Include/globals.h"
 
 #define _DEBUG_
 
-
 /**
- * @brief CUrBit::CUrBit
- * @param iKeyId
- * @param pClassName
- * @param bArrayLanData
+ * @brief     자체점검 객체를 생성합니다.
+ * @param     int iKeyId
+ * @param     const char * pClassName
+ * @param     bool bArrayLanData
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-02 10:00:08
+ * @warning
  */
 CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
@@ -32,41 +37,56 @@ CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThre
 }
 
 /**
- * @brief CUrBit::~CUrBit
+ * @brief     자체점검 객체를 소멸합니다.
+ * @param     void
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-02 10:00:46
+ * @warning
  */
 CUrBit::~CUrBit(void)
 {
 }
 
-
-
 /**
- * @brief CUrBit::Run
+ * @brief     Run
+ * @param     key_t key
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-02 09:59:56
+ * @warning
  */
 void CUrBit::Run( key_t key )
 {
     LOGENTRY;
 
-    CThread::Run( key );
+    CThread::Run( );
 
 }
 
 /**
- * @brief CUrBit::_routine
+ * @brief     메시지 처리를 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-02 09:59:33
+ * @warning
  */
 void CUrBit::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
-    UNI_LAN_DATA *pLanData;
 
     bool bCGIRunning;
 
     m_pMsg = GetDataMessage();
+    m_pLanData = GeLanData();
 
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
-
-    while( bWhile ) {
+    while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
             perror( "error ");
             //break;
@@ -83,34 +103,30 @@ void CUrBit::_routine()
         switch( m_pMsg->uiOpCode ) {
             case enCGI_REQ_IBIT :
             case enTHREAD_REQ_IBIT :
-                LOGMSG( enNormal, "IBIT를 수행합니다 !!" );
                 RunIBit( bCGIRunning );
                 break;
 
             case enCGI_REQ_CBIT :
             case enTHREAD_REQ_CBIT :
-                LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
                 RunCBit( bCGIRunning );
                 break;
 
             case enCGI_REQ_SBIT :
             case enTHREAD_REQ_SBIT :
-                LOGMSG1( enNormal, "SRBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
+                LOGMSG1( enNormal, "SRBIT[%d]를 수행합니다 !!" , m_pLanData->uiUnit );
                 break;
 
             case enCGI_REQ_UBIT :
             case enTHREAD_REQ_UBIT :            
-                LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , pLanData->uiUnit );
                 RunUBit( bCGIRunning );
                 break;
 
             case enTHREAD_REQ_SHUTDOWN :
                 LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                bWhile = false;
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                 break;
         }
     }
@@ -222,6 +238,7 @@ void CUrBit::InitIBit()
  */
 void CUrBit::RunIBit( bool bCGIRunning )
 {
+    LOGMSG( enNormal, "IBIT를 수행합니다 !!" );
 
     sleep( 1 );
 
@@ -253,6 +270,7 @@ void CUrBit::RunIBit( bool bCGIRunning )
  */
 void CUrBit::RunCBit( bool bCGIRunning )
 {
+    LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
 //     sleep( 2 );
 // 
 //     //
@@ -282,6 +300,7 @@ void CUrBit::RunCBit( bool bCGIRunning )
  */
 void CUrBit::RunUBit( bool bCGIRunning )
 {
+    LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
     //
 //     sleep( 10 );
 // 

@@ -537,7 +537,7 @@ CXPDW::CXPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup ) : CData( )
 
     m_enBandWidth = XBAND::en5MHZ_BW;
 
-    CData::Init( pRawData );
+	CXPDW::Init( pRawData );
 
     if( pstFilterSetup != NULL ) {
         // memcpy( &m_strFilterSetup, pstFilterSetup, sizeof( STR_FILTER_SETUP ) );
@@ -974,7 +974,7 @@ CSPDW::CSPDW(char *pRawData, STR_FILTER_SETUP *pstFilterSetup, size_t szFileSize
 	m_enDataType = en_PDW_DATA;
 	m_enUnitType = en_SONATA;
 
-	CData::Init(pRawData );
+	CSPDW::Init(pRawData );
 
 }
 
@@ -1612,7 +1612,7 @@ CPOCKETSONATAPDW::CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterS
     m_enDataType = en_PDW_DATA;
     m_enUnitType = en_ZPOCKETSONATA;
 
-    CData::Init( pRawData );
+	CPOCKETSONATAPDW::Init( pRawData );
 
 }
 
@@ -1629,7 +1629,12 @@ void CPOCKETSONATAPDW::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
     UNION_HEADER *puniPDWFileHeader;
 
     m_pRawHeaderBuffer = (char *) & pRawData[0];
-    m_pRawDataBuffer = (char *) & pRawData[sizeof( UNION_HEADER )];
+	if( m_szFileSize <= sizeof( UNION_HEADER ) ) {
+		m_pRawDataBuffer = NULL;
+	}
+	else {
+		m_pRawDataBuffer = (char *) & pRawData[sizeof( UNION_HEADER )];
+	}
 
     puniPDWFileHeader = ( UNION_HEADER * ) m_pRawHeaderBuffer;
 
@@ -2064,7 +2069,7 @@ C7PDW::C7PDW(char *pRawData, STR_FILTER_SETUP *pstFilterSetup, ENUM_DataType enD
 
 	m_enBandWidth = _701::enNARROW_BW;
 
-	CData::Init(pRawData);
+	C7PDW::Init(pRawData);
 
 }
 
@@ -3401,10 +3406,10 @@ int CMIDAS::GetHeaderSize()
     if( m_iHeaderSize == -1 ) {
 	    memcpy( & m_HCB, m_pRawHeaderBuffer, sizeof(SELMIDAS_HCB) );
 
-	    if( m_HCB.type == MIDAS_FILE_TYPE_1001 ) {
+	    if( m_HCB.iType == MIDAS_FILE_TYPE_1001 ) {
 		    memcpy( & m_ADJ._1000, & m_pRawHeaderBuffer[0x100], sizeof(SELMIDAS_ADJUNCT_TYPE_1000) );
 	    }
-	    else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
+	    else if( m_HCB.iType == MIDAS_FILE_TYPE_6003 ) {
 		    memcpy( & m_ADJ._6000, & m_pRawHeaderBuffer[0x100], sizeof(SELMIDAS_ADJUNCT_TYPE_6000) );
 
             UINT uiSize = min( m_ADJ._6000.subrecords * sizeof(SELSUBRECORDS), MAX_ITEMS );
@@ -3436,10 +3441,10 @@ int CMIDAS::GetHeaderSize()
 unsigned int CMIDAS::GetOneDataSize()
 {
     if( m_uiOneDataSize == UINT_MAX ) {
-        if( m_HCB.type == MIDAS_FILE_TYPE_1001 ) {
+        if( m_HCB.iType == MIDAS_FILE_TYPE_1001 ) {
 
         }
-        else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
+        else if( m_HCB.iType == MIDAS_FILE_TYPE_6003 ) {
             m_uiOneDataSize = m_ADJ._6000.record_length;
         }
         else {
@@ -3466,12 +3471,12 @@ unsigned int CMIDAS::GetDataItems( unsigned long long ullFileSize )
 
 	SELSUBRECORDS *pSubRecords;
 
-	if( m_HCB.type == MIDAS_FILE_TYPE_1001 ) {
+	if( m_HCB.iType == MIDAS_FILE_TYPE_1001 ) {
 		m_enFileType = E_EL_SCDT_IQ;
 
 		iBit = 16;
 	}
-	else if( m_HCB.type == MIDAS_FILE_TYPE_6003 ) {
+	else if( m_HCB.iType == MIDAS_FILE_TYPE_6003 ) {
 		m_enFileType = E_EL_SCDT_PDW;
 
 		pSubRecords = m_pSubRecords;
@@ -4246,19 +4251,19 @@ unsigned int CDataFile::GetDataItems( CData *pData )
 CData *CDataFile::ReadDataFile( char *pPathname, STR_FILTER_SETUP *pstFilterSetup, ENUM_CONVERT_OPTION enOption )
 {
     char *pTempData=NULL;
-    size_t szFileSize;
+    
     unsigned long long int ullFileSize;
 
     if( pPathname != NULL ) {
         ullFileSize = FileSize( pPathname );
-        szFileSize = CheckOverflow<size_t>( ullFileSize );
+        m_pData->m_szFileSize = CheckOverflow<size_t>( ullFileSize );
 
-        pTempData = new char[szFileSize];
-        memset( pTempData, 0, szFileSize );
+        pTempData = new char[m_pData->m_szFileSize];
+        memset( pTempData, 0, m_pData->m_szFileSize );
 
         if( m_RawDataFile.RawOpenFile( pPathname, O_RDONLY | O_BINARY ) == true ) {
-            m_RawDataFile.Read( pTempData, szFileSize );
-            ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption, szFileSize );
+            m_RawDataFile.Read( pTempData, m_pData->m_szFileSize );
+            ReadDataMemory( pTempData, pPathname, pstFilterSetup, enOption, m_pData->m_szFileSize );
 
         }
 
@@ -4416,8 +4421,9 @@ void *CDataFile::GetData()
 	void *pData;
 
 	pData = NULL;
-	if( m_pData != NULL ) 
+	if( m_pData != NULL ) {
 		pData = m_pData->GetData(); 
+	}
 
 	return pData;
 }

@@ -752,42 +752,41 @@ typedef struct {
 #define	PDW_RCV_PDW			(1000)
 #define	PDW_BLOCK				(30)
 
-//##ModelId=452B0C4F01D9
-typedef struct
-{
-  UINT code;
-  UINT size;
-  union STR_LAN_PARA
-  {
-    UINT noEMT;                      // Snd AET#
-    //time_t timeTick;          // Time of Msys_Start
-    //STR_AET aet;                        // Snd AET Data
-    //STR_IPL ipl;                        // Rcv IPL Record
-    //LAN_DATA data;                       // Snd & Rcv 4 or 8 Byte Data
-    //LAN_IHB_AOA cnfaoa[ _spMaxUsrIhbSize ];   // Rcv RSA cnf ihbaoa 9-range
-    //LAN_IHB_FRQ cnffrq[ _spMaxUsrIhbSize ];   // Rcv RSA cnf ihbfrq 9-range
-    //LAN_AUDIO cnfaud;                     // Rcv Audio-Para Data, Added `98.8.24
-
-    //ES_IBIT ibit;                       // Snd ES, RSA & RXDF BIT Data
-    //ES_SBIT sbit;                       // Snd ES, RSA & RXDF BIT Data
-    //ES_CBIT cbit;                       // Snd ES, RSA & RXDF BIT Data
-    //ES_UBIT ubit;                       // Snd ES, RSA & RXDF BIT Data
-
-    //STR_SYS sp;
-    //STR_CNFSYS cnf;           // System Variable
-
-    //TNEW_PDW pdw[ 100 ];
-
-		//
-                //STR_REQ_SETMODE_RSA strReqMode;
-                //STR_RES_COL_START strResColStart;
-
-                //STR_RES_PDW_DATA stPDW[PDW_RCV_PDW];
-
-		// 
-		UINT uiResult;
-  } para;
-} STR_LAN_MSG;
+// typedef struct
+// {
+//   UINT code;
+//   UINT size;
+//   union STR_LAN_PARA
+//   {
+//     UINT noEMT;                      // Snd AET#
+//     //time_t timeTick;          // Time of Msys_Start
+//     //STR_AET aet;                        // Snd AET Data
+//     //STR_IPL ipl;                        // Rcv IPL Record
+//     //LAN_DATA data;                       // Snd & Rcv 4 or 8 Byte Data
+//     //LAN_IHB_AOA cnfaoa[ _spMaxUsrIhbSize ];   // Rcv RSA cnf ihbaoa 9-range
+//     //LAN_IHB_FRQ cnffrq[ _spMaxUsrIhbSize ];   // Rcv RSA cnf ihbfrq 9-range
+//     //LAN_AUDIO cnfaud;                     // Rcv Audio-Para Data, Added `98.8.24
+// 
+//     //ES_IBIT ibit;                       // Snd ES, RSA & RXDF BIT Data
+//     //ES_SBIT sbit;                       // Snd ES, RSA & RXDF BIT Data
+//     //ES_CBIT cbit;                       // Snd ES, RSA & RXDF BIT Data
+//     //ES_UBIT ubit;                       // Snd ES, RSA & RXDF BIT Data
+// 
+//     //STR_SYS sp;
+//     //STR_CNFSYS cnf;           // System Variable
+// 
+//     //TNEW_PDW pdw[ 100 ];
+// 
+// 		//
+//                 //STR_REQ_SETMODE_RSA strReqMode;
+//                 //STR_RES_COL_START strResColStart;
+// 
+//                 //STR_RES_PDW_DATA stPDW[PDW_RCV_PDW];
+// 
+// 		// 
+// 		UINT uiResult;
+//   } para;
+// } STR_LAN_MSG;
 
 #endif
 

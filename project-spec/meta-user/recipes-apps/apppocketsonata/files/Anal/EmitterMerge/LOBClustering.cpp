@@ -137,9 +137,9 @@ void CLOBClustering::InitOfLOBClustering()
 {
 	int i;
 
-	TRACE( "\n #### 클러스터링 시도 횟수 : %d" , m_nCheckClustering );
-	TRACE( "\n #### 클러스터링 성공 횟수 : %d" , m_nCreateClustering );
-    TRACE( "\n\n" );
+	//TRACE( "\n #### 클러스터링 시도 횟수 : %d" , m_nCheckClustering );
+	//TRACE( "\n #### 클러스터링 성공 횟수 : %d" , m_nCreateClustering );
+    //TRACE( "\n\n" );
 
 	for( i=0 ; i < TOTAL_ITEMS_OF_THREAT_NODE ; ++i ) {
 		m_pQueLOBDataPool[i].Init( QUEUE_LOB_POOL_SIZE );

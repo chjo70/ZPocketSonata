@@ -102,15 +102,15 @@ struct SRxABTData { // 레이더 분석
 	unsigned int uiABTID;
 	unsigned int uiAETID;
 
-	int iSignalType;
+	int ucSignalType;
 
 	unsigned int uiCoLOB;
 
 	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
 	time_t tiLastSeenTime;
 
-	int iRadarModePriority;
-	int iRadarPriority;
+	int uiRadarModePriority;
+	int uiRadarPriority;
 
 #if defined(_ELINT_)
 	int iPolarization;
@@ -122,8 +122,8 @@ struct SRxABTData { // 레이더 분석
 	float fDOAMin;
 	float fDOADeviation;				// [0.1도]
 
-	int iFreqType;
-	int iFreqPatternType;
+	int ucFreqType;
+	int ucFreqPatternType;
 	float fFreqPatternPeriodMean;	  // [us]
 	float fFreqPatternPeriodMin;	  // [us]
 	float fFreqPatternPeriodMax;	  // [us]
@@ -131,12 +131,12 @@ struct SRxABTData { // 레이더 분석
 	float fFreqMax;
 	float fFreqMin;
 	float fFreqDeviation;
-	int iFreqPositionCount;
-	int iFreqElementCount;
+	int ucFreqPositionCount;
+	int ucFreqElementCount;
 	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-	int iPRIType;
-	int iPRIPatternType;
+	int ucPRIType;
+	int ucPRIPatternType;
 	float fPRIPatternPeriodMean;							// [us]
 	float fPRIPatternPeriodMin;							// [us]
 	float fPRIPatternPeriodMax;							// [us]
@@ -145,8 +145,8 @@ struct SRxABTData { // 레이더 분석
 	float fPRIMin;
 	float fPRIDeviation;			// [1ns]
 	float fPRIJitterRatio;							// [%]
-	int iPRIPositionCount;
-	int iPRIElementCount;
+	int ucPRIPositionCount;
+	int ucPRIElementCount;
 	float fPRISeq[MAX_FREQ_PRI_STEP];
 
 	float fPWMean;											// 1ns
@@ -160,17 +160,17 @@ struct SRxABTData { // 레이더 분석
 	float fPADeviation;
 
 #if defined(_POCKETSONATA_) || defined(_ELINT_)
-	int iScanType;
+	int ucScanType;
 	float fMeanScanPeriod;			// [usec]
 	float fMaxScanPeriod;			// [usec]
 	float fMinScanPeriod;			// [usec]
 
-	int iHasIntraMod;
+	int bHasIntraMod;
 	float fMaxIntraMod;
 	float fMinIntraMod;
 #endif
 
-	int iPEValid;
+	int ucPEValid;
 	float fLatitude;							// [deg]
 	float fLongitude;							// [deg]
 	float fAltitude;
@@ -180,12 +180,12 @@ struct SRxABTData { // 레이더 분석
 	float fTheta;									// [0.1도]
 	float fDistanceErrorOfThreat;	// [m]
 
-	int iValidity;
+	int bValidity;
 
-	unsigned int uiTotalOfPDW;
+	unsigned int uiTotalPDWOfAnalysis;
 
-	int iRadarModeIndex;
-	int iThreatIndex;
+	int uiRadarModeIndex;
+	int uiThreatIndex;
 
 #if defined(_ELINT_)
 	int iIsManualInput;
@@ -251,21 +251,21 @@ struct SRxAETData {
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
-	int iPlatformType;
-	int iPinNum;
+	int ucPlatformType;
+	int uiPinNum;
 
 #if defined(_XBAND_) || defined(_ELINT_)
 	char szThreatFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 #endif
 
-	int iRadarModePriority;
-	int iRadarPriority;
-	int iThreatPriority;
+	int uiRadarModePriority;
+	int uiRadarPriority;
+	int uiThreatPriority;
 
 	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
 	time_t tiLastSeenTime;
 
-	int iValidity;
+	int ucValidity;
 
 #if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
 	float fDOAMean;                                 // [0.1도]
@@ -294,12 +294,12 @@ struct SRxAETData {
 	float fPAMin;
 	float fPADeviation;
 
-	int iRadarIndex;
+	int uiRadarIndex;
 
-	int iRadarModeIndex;
-	int iThreatIndex;
+	int uiRadarModeIndex;
+	int uiThreatIndex;
 
-	int iPEValid;
+	int ucPEValid;
 	float fLatitude;							// [deg]
 	float fLongitude;							// [deg]
 	float fAltidude;							// [deg]

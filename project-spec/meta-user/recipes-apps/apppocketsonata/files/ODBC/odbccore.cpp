@@ -51,8 +51,9 @@ BOOL CODBCDatabase::Open(CHAR* szDSN,CHAR* szUser, CHAR* szPass)
 {
 	SQLRETURN ret;
 	
-	if(m_lConnectionTimeout > 0)
+	if(m_lConnectionTimeout > 0) {
 		SQLSetConnectAttr(m_hDbc, SQL_ATTR_CONNECTION_TIMEOUT, (SQLPOINTER)m_lConnectionTimeout, 0);
+	}
 		
 	SQLSetConnectAttr(m_hDbc, SQL_ATTR_LOGIN_TIMEOUT, (SQLPOINTER)m_lLoginTimeout, 0);
 

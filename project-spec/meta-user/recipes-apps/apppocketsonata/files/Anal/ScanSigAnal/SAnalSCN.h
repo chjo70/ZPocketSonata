@@ -53,7 +53,7 @@ protected:
 	//##ModelId=452B0C450152
     UINT m_uiScnPrd;										//! 스캔 주기값
 	//##ModelId=452B0C450153
-	UINT m_uiScnTyp;										//! 스캔 형태
+	unsigned char m_ucScnTyp;										//! 스캔 형태
 
 	//##ModelId=452B0C45015D
 	STR_AUTOCOR m_nAutoCor;
@@ -89,7 +89,7 @@ public:
 	//BOOL CompMeanDiff(int x, int y, int thresh);
 	//float MeanInArray( UINT *series, UINT co );
 	//##ModelId=452B0C450198
-    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_uiScnTyp, *pScanPrd= m_uiScnPrd; }
+    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_ucScnTyp, *pScanPrd= m_uiScnPrd; }
 	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 

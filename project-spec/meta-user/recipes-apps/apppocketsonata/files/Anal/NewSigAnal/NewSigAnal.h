@@ -43,7 +43,7 @@ private:
 
     //enum ANALYSIS_MODE m_AnalMode;
 
-	char m_szAnalDirectory[500];
+	
 
     int m_CoGroup;
     UINT m_uiMaxPdw;
@@ -66,8 +66,6 @@ private:
 	void InitOfNewSigAnal();
 
     enum FREQ_BAND GetBand(int freq);
-
-	void MakeAnalDirectory(STR_PDWDATA *pPDWData);
 
 public:
     CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -185,7 +183,7 @@ public:
     inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
-    inline int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
+    inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic , pSeg1, pSeg2 ); }
@@ -193,13 +191,9 @@ public:
     inline int GetCoGroup() { return m_CoGroup; }
 
     //inline void NextSeqNum() { ++ m_nSeqNum; }
-
-	inline char *GetAnalDirectory() { return m_szAnalDirectory; }
-    
+   
 
     // 기타 함수
-    
-
     bool CheckValidData( STR_PDWDATA *pPDWData );
 
     inline STR_PDWDATA *GetPDWData() { return m_pPDWData; }

@@ -6,7 +6,6 @@
 		<item value="false" key="autoReszeColumns"/>
 		<item value="" key="selected"/>
 		<list key="expanded">
-			<item value="app"/>
 			<item value="myQspiFlash"/>
 			<item value="vip_profiles"/>
 			<item value="VxWorks User Library Configuration"/>

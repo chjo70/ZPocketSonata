@@ -57,6 +57,24 @@ private:
 public:
     STR_MessageData *m_pMsg;										///< CThread 에서 사용하는 단일 메시지 데이터 포인터 입니다.
 
+private:
+    void Init();
+    void InitEmitterMerge();
+    void MergeEmitter();
+    void DeleteThreat();
+
+    // 수집 쓰레드에 추적/스캔 요청을 전송한다.
+    void RequestTrackCollect( SRxLOBData *pLOBData );
+    void RequestTrackReCollect();
+    void RequestScanCollect( SRxLOBData *pLOBData );
+    void RequestScanReCollect();
+
+    void ReloadLibrary();
+
+    void SendNewUpd();
+    void SendDelete( unsigned int uiAETID );
+    void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
+
 public:
     CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData );				
     virtual ~CEmitterMerge(void);															
@@ -64,25 +82,10 @@ public:
     inline CELEmitterMergeMngr *GetEmitterMergeMngr() { return m_pTheEmitterMergeMngr; }	///< 객체 포인터를 리턴합니다.
 
     void Run( key_t key=IPC_PRIVATE );														
-    virtual void _routine();																
-    virtual char *GetThreadName() { return m_szThreadName; }								///< 쓰레드명을 리턴합니다.			
+    void _routine();																
+    char *GetThreadName() { return m_szThreadName; }								///< 쓰레드명을 리턴합니다.			
+    STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
 
-private:
-    void InitData();																		
-    void MergeEmitter();																	
-    void DeleteThreat();																	
-
-    // 수집 쓰레드에 추적/스캔 요청을 전송한다.
-    void RequestTrackCollect( SRxLOBData *pLOBData );										
-    void RequestTrackReCollect();															
-    void RequestScanCollect( SRxLOBData *pLOBData );										
-    void RequestScanReCollect();															
-
-    void ReloadLibrary();																	
-
-    void SendNewUpd();																		
-    void SendDelete( unsigned int uiAETID );												
-    void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );	
 
 };
 

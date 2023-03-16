@@ -27,9 +27,9 @@ enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol
 enum PULSE_EXTRACT_PRI_STEP { STEP1=0, STEP2, STEP_WIDE, STEP_BY_STEP } ;
 
 // 펄스열 마킹 정의 값
-enum SEG_MARK { NORMAL_SEG=0, 
-                DELETE_SEG, 
-                MERGED_SEG, 
+enum SEG_MARK { NORMAL_SEG=0,
+                DELETE_SEG,
+                MERGED_SEG,
                 CHECKED_SEG,         // 에미터로 생성된 펄스열 마킹
                 OVERLAPPED_SEG,
                 LIBRARY_SEG,        // 위협 라이브러리로 마킹한 펄스열 추출
@@ -97,12 +97,18 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
 #define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
 
+#elif defined(_POCKETSONATA_)
+#define NEW_COLLECT_PDW				(256)			// 탐지 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
+
+
 #else
 #define   _spPAoffset               (-70)       // amplitude initial value */
 
-#define NEW_COLLECT_PDW				(1024)
-#define	KWN_COLLECT_PDW				(1024)
-#define	SCN_COLLECT_PDW				(1024*2)
+//#define NEW_COLLECT_PDW				(1024)
+//#define	KWN_COLLECT_PDW				(1024)
+//#define	SCN_COLLECT_PDW				(1024*2)
 
 #endif
 
@@ -110,17 +116,14 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //#define	MAX_PDW                     ( _max( _max(NEW_COLLECT_PDW, KWN_COLLECT_PDW), SCN_COLLECT_PDW ) )
 #if NEW_COLLECT_PDW < KWN_COLLECT_PDW
 #define MAX_PDW		(KWN_COLLECT_PDW)
-
 #else
 #define MAX_PDW		(NEW_COLLECT_PDW)
-
 #endif
 
 #if MAX_PDW < SCN_COLLECT_PDW
 #undef MAX_PDW
 #define MAX_PDW		(SCN_COLLECT_PDW)
 #else
-
 #endif
 
 
@@ -214,7 +217,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define AOA_SHIFT_360				(3.498250)		// (logf((float)1./POCKETSONATA::_fDOARes)/logf(2) ), 360도 기준으로 SHIFT 값 
+#define AOA_SHIFT_360				(3.498250)		// (logf((float)1./POCKETSONATA::_fDOARes)/logf(2) ), 360도 기준으로 SHIFT 값
 #define AOA_SHIFT_COUNT             ((int) AOA_SHIFT_360+1)     // +1 할때마다 2배 씩 증가함. 2도 마진으로 AOA 값을 SHIFT * log2( 1. / POCKETSONATA::_fDOARes )
 
 #define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
@@ -233,7 +236,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
-#define TOTAL_FRQAOAPWBIN					(1024)	
+#define TOTAL_FRQAOAPWBIN					(1024)
 
 #else
 #define KHARM_AOA_MAR							(14)		// 하모닉 방위 마진 (Band1)
@@ -395,7 +398,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 // 호핑 분석 데이터 관련 정의
 #define FREQ_BIN_WIDTH              (10)            // BIN 하나의 주파수 범위(10MHz)
-#define FREQ_BIN                    (12000 / FREQ_BIN_WIDTH)  // BIN 당 10MHz로 설정                
+#define FREQ_BIN                    (12000 / FREQ_BIN_WIDTH)  // BIN 당 10MHz로 설정
 #define MAX_FREQ_MISS_CNT           (5)             // 호핑 레벨 최대 누락 개수
 #define HOP_LEVEL_THREAT_CNT        (10)            // 호핑 레벨 최소 PDW 개수
 #define HOP_PDW_PERCENTAGE          (85.0)            // 호핑 판정을 위한 호핑 PDW 비율
@@ -513,7 +516,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 //----- Hopping 병합 변수
-#define HOPPING_MERGE_AOA_MARGIN        (15)    //  5도   
+#define HOPPING_MERGE_AOA_MARGIN        (15)    //  5도
 
 
 

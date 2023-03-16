@@ -53,6 +53,8 @@
 
 #include <memPartLib.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <private/kwriteLibP.h>
 
 #else
 
@@ -72,15 +74,12 @@ using namespace std;
 #include "cmain.h"
 #include "./Thread/ctaskmngr.h"
 #include "./Utils/clog.h"
-#include "./Utils/cmultiserver.h"
+//#include "./Utils/cmultiserver.h"
 #include "./Utils/csingleserver.h"
 #include "./Utils/csingleclient.h"
 #include "./Thread/coperationconsole.h"
-#include "./Thread/cprompt.h"
 #include "./Thread/curbit.h"
-#include "./Thread/cpulsetrk.h"
 #include "./Thread/csignalcollect.h"
-#include "./Thread/cjamtech.h"
 #include "./Thread/ccgi.h"
 #include "./Thread/cusercollect.h"
 
@@ -100,6 +99,8 @@ void ss();
 
 void MemotyTest( size_t iSize );
 
+void Check64bitArithmetic();
+
 #ifdef __cplusplus
 }
 #endif
@@ -108,6 +109,8 @@ void signalHandler(int signo);
 
 void CreateMngrThread();
 void CreateAnalThread();
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 아래에 타스크 관련 클래스를 정의합니다.
@@ -169,7 +172,7 @@ void InitDatabase()
 			}
          }
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
 
 #ifdef _POCKETSONATA_
         char szSrcFilename[100], szDstFilename[100];
@@ -191,7 +194,6 @@ void InitDatabase()
         LOGMSG( enLineFeed, "" );
         LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
-
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
@@ -236,7 +238,7 @@ void InitDatabase()
         while( true );
     }
 
-        
+
 #elif _MSSQL_
     LOGMSG( enNormal, "#### MSSQL 모드 입니다. ####" );
 
@@ -263,6 +265,11 @@ void Start( int iArgc, char *iArgv[] )
 {
     //SetConsoleOutputCP(65001);
 
+#ifdef __VXWORKS__
+    Check64bitArithmetic();
+
+#endif
+
     ParsingArgument( iArgc, iArgv );
 
     LOGENTRY;
@@ -277,7 +284,11 @@ void Start( int iArgc, char *iArgv[] )
     signal( SIGSTOP, signalHandler);
 #endif
 
+#ifdef _MFC_VER
+    setlocale( LC_ALL, "Korean" );
+#else
     setlocale( LC_ALL, "C" );
+#endif
 
     InitDatabase();
 
@@ -307,7 +318,7 @@ void Start( int iArgc, char *iArgv[] )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/02/13 13:40:10
- * @warning		
+ * @warning
  */
 void CreateMngrThread()
 {
@@ -327,33 +338,33 @@ void CreateMngrThread()
 	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, "CTaskMngr", true, (char*)NULL);
 
 #endif
-	g_pTheTaskMngr->Run(_MSG_TMNGR_KEY);
+	g_pTheTaskMngr->Run();
 
 	// 2. 운용 관련 쓰레드를 호출한다.
 	g_pTheUrBit = new CUrBit(g_iKeyId++, (const char *) "CUrBit", true);
-	g_pTheUrBit->Run(_MSG_URBIT_KEY);
+	g_pTheUrBit->Run();
 
 	// 3. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
 	//RECZYNQ->Run( _MSG_RECZYNQ_KEY );
-	RECCCU->Run(_MSG_RECCCU_KEY);
+	RECCCU->Run();
 
 	// 4. 브라우저의 CGI 메시지를 처리한다.
 	//CGI->Run( _MSG_ZCGI_KEY );
 
+#ifdef _MSC_VER
 	// 5. 사용자 수집 함수 메시지를 처리한다.
 	g_pTheUserCollect = new CUserCollect(g_iKeyId++, (const char *) "CUserCollect", true);
 	g_pTheUserCollect->Run(_MSG_USERCOL_KEY);
+#endif
+
 
 	// 6. 마지막으로 랜 송신 및 수신 쓰레드를 호출한다.
 	//g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
 	//g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
-	if (g_pTheSysConfig->GetBoardID() == enMaster) {
-		g_pTheCCUSocket = new CSingleClient(g_iKeyId++, (const char *) "CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork());
-		g_pTheCCUSocket->Run(_MSG_CCU_KEY);
+	//if (g_pTheSysConfig->GetBoardID() == enMaster) {
+	g_pTheCCUSocket = new CSingleClient(g_iKeyId++, (const char *) "CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork());
+	g_pTheCCUSocket->Run(_MSG_CCU_KEY);
 
-		//g_pThePMCSocket = new CSingleClient( g_iKeyId++, (char *)"CPMCSocket", PMC_PORT, PMC_SERVER );
-		//g_pThePMCSocket->Run( _MSG_CCU_KEY );
-	}
 }
 
 
@@ -371,19 +382,21 @@ void CreateAnalThread()
 
 	g_pTheEmitterMerge = new CEmitterMerge(g_iKeyId++, (const char*) "CEmitterMerge", true);
 	g_pTheEmitterMerge->Run();
-	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (char*) "CSignalCollect", true, enLEFT_PCI_DRIVER );
+	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (const char*) "CSignalCollect", true, enLEFT_PCI_DRIVER );
 	g_pTheSignalCollect->Run();
-	g_pTheDetectAnalysis = new CDetectAnalysis(g_iKeyId++, (char*) "CDetectAnalysis", true);
+
+	g_pTheDetectAnalysis = new CDetectAnalysis(g_iKeyId++, ( const char*) "CDetectAnalysis", true);
 	g_pTheDetectAnalysis->Run();
-	g_pTheTrackAnalysis = new CTrackAnalysis(g_iKeyId++, (char*) "CTrackAnalysis", true);
+	g_pTheTrackAnalysis = new CTrackAnalysis(g_iKeyId++, ( const char*) "CTrackAnalysis", true);
 	g_pTheTrackAnalysis->Run();
-	g_pTheScanAnalysis = new CScanAnalysis(g_iKeyId++, (char*) "CScanAnalysis", true);
+	g_pTheScanAnalysis = new CScanAnalysis(g_iKeyId++, ( const char*) "CScanAnalysis", true);
 	g_pTheScanAnalysis->Run();
 
 
 }
 
 
+#ifdef _MFC_VER
 /**
  * @brief     SIM_Start
  * @return    void
@@ -393,34 +406,55 @@ void CreateAnalThread()
  * @date      2022-04-14, 13:35
  * @warning
  */
-void SIM_Start()
+void SIM_Start( bool bReqStart )
 {
-#ifdef _MFC_VER	
     STR_MessageData sndMsg;
 
-    //
-    g_pTheCCUSocket->Stop();
-    Sleep( 10 );
+    if( bReqStart ) {
+        //g_pTheCCUSocket->StopThread();
+        //Sleep( 10 );
 
-    //
-    sndMsg.uiOpCode = enREQ_MODE;
+        sndMsg.uiOpCode = enREQ_OP_START;
+        sndMsg.uiSocket = 0; //m_uiSocket;
+        sndMsg.iArrayIndex = -1;
+        sndMsg.uiArrayLength = 0;
+        sndMsg.uiDataLength = sizeof(int);
+
+    }
+    else {
+        sndMsg.uiOpCode = enREQ_OP_SHUTDOWN;
+        sndMsg.uiSocket = 0; //m_uiSocket;
+        sndMsg.iArrayIndex = -1;
+        sndMsg.uiArrayLength = 0;
+        sndMsg.uiDataLength = sizeof( int );
+
+    }
+
+    g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+
+//     Sleep( 10 );
+//
+//     sndMsg.uiOpCode = enREQ_OP_START;
+//     sndMsg.x.tiNow = time(NULL);
+//     g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+
+}
+
+void SIM_Library()
+{
+    STR_MessageData sndMsg;
+
+    sndMsg.uiOpCode = enREQ_RELOAD_LIBRARY;
     sndMsg.uiSocket = 0; //m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
-    sndMsg.uiDataLength = sizeof(int);
+    sndMsg.uiDataLength = sizeof( int );
 
-    sndMsg.x.uiData = enES_MODE;
-
-    g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
-
-    Sleep( 10 );
-
-    sndMsg.uiOpCode = enREQ_ANAL_START;
-    sndMsg.x.tiNow = time(NULL);
-    g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
-#endif    
+    g_pTheEmitterMerge->QMsgSnd( &sndMsg, ( void * ) NULL, "MAIN" );
 
 }
+
+#endif
 
 /**
  * @brief     End
@@ -435,7 +469,7 @@ void End()
 {
     // 분석 관련 쓰레드를 종료 한다.
     //PROMPT->ReleaseInstance();
-    
+
     _SAFE_DELETE( g_pTheCCUSocket )
     //delete g_pThePMCSocket;
     //g_pThePMCSocket = NULL;
@@ -443,17 +477,17 @@ void End()
     _SAFE_DELETE( g_pTheUrBit )
 
     //delete g_pTheZYNQSocket;
-    // 
+    //
 
     _SAFE_DELETE( g_pTheUserCollect )
 
     _SAFE_DELETE( g_pTheEmitterMerge )
-    _SAFE_DELETE( g_pTheSignalCollect )    
-    _SAFE_DELETE( g_pTheDetectAnalysis )    
-    _SAFE_DELETE( g_pTheTrackAnalysis )    
-    _SAFE_DELETE( g_pTheScanAnalysis )   
+    _SAFE_DELETE( g_pTheSignalCollect )
+    _SAFE_DELETE( g_pTheDetectAnalysis )
+    _SAFE_DELETE( g_pTheTrackAnalysis )
+    _SAFE_DELETE( g_pTheScanAnalysis )
 
-    _SAFE_DELETE( g_pTheTaskMngr )   
+    _SAFE_DELETE( g_pTheTaskMngr )
 
     //CGI->ReleaseInstance();
 
@@ -462,10 +496,10 @@ void End()
 
     //JAMTEC->ReleaseInstance();
     //PULTRK->ReleaseInstance();
-    // 
-    
-    // 마지막 타스크 관리자 쓰레드를 종료 한다.    
-       
+    //
+
+    // 마지막 타스크 관리자 쓰레드를 종료 한다.
+
     LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
 
@@ -486,7 +520,7 @@ void End()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/02/08 10:46:43
- * @warning		
+ * @warning
  */
 void signalHandler( int signo )
 {
@@ -540,16 +574,16 @@ void ParsingArgument( int iArgc, char *iArgv[] )
                     }
 
                     // 아큐먼트 설정 값을 전시 합니다.
-                    if( g_enBoardId == enMaster ) {
-                        LOGMSG1( enDebug, "마스터[%d]로 설정합니다.", g_enBoardId );
-                    }
-                    else {
-                        LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다.", g_enBoardId );
-                    }
+//                     if( g_enBoardId == enMaster ) {
+//                         LOGMSG1( enDebug, "마스터[%d]로 설정합니다.", g_enBoardId );
+//                     }
+//                     else {
+//                         LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다.", g_enBoardId );
+//                     }
                     break;
 
                 case 's' :
-                    if( iArgv[0][2] == NULL ) {  
+                    if( iArgv[0][2] == NULL ) {
                         g_szPDWScinarioFile[0] = NULL;
 
                         LOGMSG1( enError, "PDW 시나리오 파일[%s]이 잘못 입력됐습니다.", iArgv[0] );
@@ -570,7 +604,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
             }
 
             ++iArgv;
-            
+
         }
 
 
@@ -622,7 +656,7 @@ void UpdateCPUMode()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/02/08 10:45:31
- * @warning		
+ * @warning
  */
 void cleanup_handler(void *arg )
 {
@@ -634,18 +668,20 @@ void cleanup_handler(void *arg )
 // {
 //     pthread_cleanup_push(cleanup_handler, NULL);
 //     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-// 
+//
 //     while(1)
 //     {
 //         //sleep(1);
 //         printf("Running\n");
 //         //thread stuff
 //     }
-// 
+//
 //     pthread_cleanup_pop(1);
-// 
+//
 //     return (void *) 0;
 // }
+
+
 
 
 #if defined(__VXWORKS__) || defined(__linux__)
@@ -657,9 +693,9 @@ void usrAppStart( int iArgc, char *iArgv[] )
 
     // 쓰레드 생성 초기화
     Start( iArgc, iArgv );
-    
+
 #ifdef __VXWORKS__
-    memOptionsSet (MEM_ALLOC_ERROR_LOG_FLAG | 
+    memOptionsSet (MEM_ALLOC_ERROR_LOG_FLAG |
         MEM_BLOCK_CHECK |
         MEM_BLOCK_ERROR_LOG_FLAG);
 
@@ -672,10 +708,10 @@ void usrAppStart( int iArgc, char *iArgv[] )
 #ifndef _MSC_VER
     // 쓰레드 종료
     End();
-    
+
 #endif
 
-#endif    
+#endif
 
 }
 
@@ -738,6 +774,24 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+void Check64bitArithmetic()
+{
+    _TOA x;
+    x = 0xffffffffffffffff;
+    x = x / 0xfffffffffffffff;
+    if( x != 16 ) {
+        TRACE( "\n 64비트 연산이 지원이 안 됩니다 !!!" );
+    }
+
+
+    x = 0xffffffffffff;
+    x = x * 0x10000;
+    if( x != 0xffffffffffff0000 ) {
+        TRACE( "\n 64비트 연산이 지원이 안 됩니다 !!!" );
+    }
+
+}
+
 /**
  * @brief		ToggleTaskSuspend
  * @param		CThread * pThread
@@ -745,7 +799,7 @@ int main(int argc, char *argv[])
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/10 10:27:32
- * @warning		
+ * @warning
  */
 void ToggleTaskSuspend( CThread *pThread )
 {
@@ -769,7 +823,7 @@ void ToggleTaskSuspend( CThread *pThread )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/11 13:33:42
- * @warning		
+ * @warning
  */
 void ShowTaskMessae( CThread *pThread, int iLevel )
 {
@@ -784,7 +838,7 @@ void ShowTaskMessae( CThread *pThread, int iLevel )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/12/18 15:30:19
- * @warning		
+ * @warning
  */
 void memCheck()
 {
@@ -811,7 +865,7 @@ void memCheck()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/10 10:16:09
- * @warning		
+ * @warning
  */
 void ss()
 {
@@ -819,7 +873,8 @@ void ss()
     TASK_ID taskID;
 
     taskID = taskIdSelf();
-    for( iter=g_vecThis.begin() ; iter != g_vecThis.end() ; ++iter ) {
+    //for( const auto &cThread : g_vecThread ) {
+    for( iter=g_vecThread.begin() ; iter != g_vecThread.end() ; ++iter ) {
         ToggleTaskSuspend( *iter );
     }
 
@@ -834,16 +889,18 @@ void ss()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/11 13:36:20
- * @warning		
+ * @warning
  */
 void qq( int iLevel )
 {
-    vector<CThread *>::iterator iter; 
+    vector<CThread *>::iterator iter;
 
-    for( iter=g_vecThis.begin() ; iter != g_vecThis.end() ; ++iter ) {
-        ShowTaskMessae( *iter, iLevel );
+    // for( iter=g_vecThis.begin() ; iter != g_vecThis.end() ; ++iter ) {
+    for(  const auto & cThread : g_vecThread ) {
+        // ShowTaskMessae( *iter, iLevel );
+        ShowTaskMessae( cThread, iLevel );
     }
-    
+
     //printf( "모든 신호 분석 관련 큐 메시지를 보여줍니다." );
 
 }
@@ -855,7 +912,7 @@ void qq( int iLevel )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/02/07 14:59:23
- * @warning		
+ * @warning
  */
 void MemotyTest( size_t iSize )
 {
@@ -871,7 +928,7 @@ void MemotyTest( size_t iSize )
     else {
     	printf( "\n Starting the memory check...[%d]MB" , iSize/1024/1024 );
     }
-    
+
     pMemory = ( char * ) malloc( iSize );
 
     for( ii=0 ; ii < iSize ; ++ii ) {
@@ -880,10 +937,104 @@ void MemotyTest( size_t iSize )
             printf( "\n Memory Check Error in Address !" );
             break;
         }
-    }	
+    }
 
     printf( "\n\n\n Memory Check OK !" );
     free( pMemory );
+
+}
+
+/**
+ * @brief		pcisetting
+ * @param		CPCIDriver * pPCIDriver
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 10:44:57
+ * @warning
+ */
+void pcisetting( CPCIDriver *pPCIDriver )
+{
+    unsigned int uiValue;
+
+    pPCIDriver->StartCollecting();
+
+    uiValue = pPCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
+    _func_kprintf( "\nPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x", uiValue );
+
+    pPCIDriver->PCICtrlWrite32( ANZ_REQ, 0 );
+    pPCIDriver->PCICtrlWrite32( OP_MODE, 1 );
+    pPCIDriver->PCICtrlWrite32( FILT_BYPASS, 0 );
+    pPCIDriver->PCICtrlWrite32( FILT_ADAPT, 0 );
+    pPCIDriver->PCICtrlWrite32( ANZ_CNT, 100 );
+    pPCIDriver->PCICtrlWrite32( PARAM_IDX_W, 1 );
+    pPCIDriver->PCICtrlWrite32( ANZ_REQ, 1 );
+    pPCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
+    _func_kprintf( "\nPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x\n", uiValue );
+
+}
+
+/**
+ * @brief		dl
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 10:45:00
+ * @warning
+ */
+void dl()
+{
+    CPCIDriver *pThePCIDriver;
+
+    pThePCIDriver = g_pTheSignalCollect->m_pTheLeftCollectBank->m_pThePCI;
+
+    _func_kprintf( "\n LEFT PCI Driver 설정 시험");
+
+    pcisetting( pThePCIDriver );
+
+}
+
+/**
+ * @brief		dr
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 10:45:02
+ * @warning
+ */
+void dr()
+{
+
+    CPCIDriver *pThePCIDriver;
+
+    pThePCIDriver = g_pTheSignalCollect->m_pTheRigtCollectBank->m_pThePCI;
+
+    _func_kprintf( "\n RIGHT PCI Driver 설정 시험");
+
+    pcisetting( pThePCIDriver );
+
+}
+
+/**
+ * @brief		ds
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 10:45:04
+ * @warning
+ */
+void ds()
+{
+    unsigned int uiValue;
+    CPCIDriver *pThePCIDriver;
+
+    pThePCIDriver = g_pTheSignalCollect->m_pTheLeftCollectBank->m_pThePCI;
+    uiValue = pThePCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
+    _func_kprintf( "\nLeftPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x", uiValue );
+
+    pThePCIDriver = g_pTheSignalCollect->m_pTheRigtCollectBank->m_pThePCI;
+    uiValue = pThePCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
+    _func_kprintf( "\nRigtPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x", uiValue );
 
 }
 

@@ -3,8 +3,7 @@
  * */
 
 
-#ifndef _THRMSG_H
-#define _THRMSG_H
+#pragma once
 
 #include "system.h"
 #include "./SONATAPIP/_sysmsg.h"
@@ -18,9 +17,22 @@
 enum enTHREAD_REQ_MESSAGE {
     // 1. 쓰레드 관리 쓰레드 에서 수신 메시지 정의
     // 1.1 프로세스 종료 메시지
-    enTHREAD_REQ_SHUTDOWN = _START_OPCODE_OF_THREAD_MESSAGE_,
+    enTHREAD_REQ_START = _START_OPCODE_OF_THREAD_MESSAGE_,
+    enTHREAD_REQ_SHUTDOWN,
+    enTHREAD_REQ_RESTART,
+
+    // 비정상 랜 소켓 단락
+    enTHREAD_DISCONNECTED,
 
     // 2. 신호 수집 쓰레드 에서 수신 메시지 정의
+    enTHREAD_REQ_COMPLETECOL,
+
+    // 탐지 수집 신호 완료 메시지
+    enTHREAD_REQ_DETECT_COLSTOP,
+    enTHREAD_REQ_TRACK_COLSTOP,
+    enTHREAD_REQ_SCAN_COLSTOP,
+    enTHREAD_REQ_SET_DETECTWINDOWCELL,
+
     // 추적 수집 신호 설정 메시지
     enTHREAD_REQ_SET_TRACKWINDOWCELL,
     enTHREAD_REQ_CLOSE_TRACKWINDOWCELL,
@@ -31,10 +43,10 @@ enum enTHREAD_REQ_MESSAGE {
 
 
     // 제어 메시지
-    enTHREAD_MODE = enREQ_MODE,
+    //enTHREAD_MODE = enREQ_MODE,
 
     // 분석 관련 메시지
-    enTHREAD_DETECTANAL_START = enREQ_ANAL_START,
+    enTHREAD_DETECTANAL_START,
     enTHREAD_DETECTANAL_END,
 
     enTHREAD_KNOWNANAL_START,
@@ -45,15 +57,16 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_SCANANAL_END,
 
     enTHREAD_DELETE_THREAT,
+    enTHREAD_TIMER,
 
     // 라이브러리 관련 메시지
     enTHREAD_RELOAD_LIBRARY = enREQ_RELOAD_LIBRARY,
-    enTHREAD_IPLVERSION = enIPL_VERSION,
-    enTHREAD_REQ_IPLVERSION = enREQ_IPL_VERSION,
+    //enTHREAD_IPLVERSION = enIPL_VERSION,
+    //enTHREAD_REQ_IPLVERSION = enREQ_IPL_VERSION,
 
-    enTHREAD_IPL_START = enREQ_IPL_START,
-    enTHREAD_IPL_DOWNLOAD = enREQ_IPL_DOWNLOAD,
-    enTHREAD_IPL_END = enREQ_IPL_END,
+    //enTHREAD_IPL_START = enREQ_IPL_START,
+    //enTHREAD_IPL_DOWNLOAD = enREQ_IPL_DOWNLOAD,
+    //enTHREAD_IPL_END = enREQ_IPL_END,
 
     // 자체점검 관련 메시지
     enTHREAD_REQ_IBIT = enREQ_IBIT,
@@ -86,5 +99,3 @@ enum enTHREAD_REQ_MESSAGE {
 
 
 
-
-#endif // _THRMSG_H

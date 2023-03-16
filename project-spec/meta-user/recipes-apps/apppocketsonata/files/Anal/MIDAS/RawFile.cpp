@@ -66,7 +66,9 @@ CRawFile::CRawFile(void)
 CRawFile::~CRawFile(void)
 {
 	
-	if( m_fid > 0 ) _close( m_fid );
+	if( m_fid > 0 ) {
+        _close( m_fid );
+    }
 
 }
 
@@ -248,27 +250,21 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == ERROR ) { //DTEC_Else
 #else
-    int nResult = 1;
+    int iResult = 1;
 
-    if (iMode & O_CREAT) {
-        int iMode=_chmod(filename, 222);
-        if (iMode != -1) {
-            int nResult = remove(filename);
-            if (nResult <= 0) {
-                TRACE("\n 파일을 삭제할 수 없습니다.");
+    if ( (unsigned int) iMode & ( unsigned int ) O_CREAT ) {
+        int iFileMode=_chmod(filename, 222);
+        if ( iFileMode == 0) {
+            iResult = remove(filename);
+            if ( iResult != 0) {
+                TRACE("[W] 파일을 삭제할 수 없습니다 !!!" );
             }
         }
     }
 
-    /*
-
-    */
-
 	m_fid = _open( filename , iMode );
-    if(nResult == 1 && m_fid <= 0 ) { //DTEC_Else
+    if( iResult == 1 && m_fid <= 0 ) { //DTEC_Else
 #endif
-        //remove( filename );
-		// TRACE( "\n[W] The file[%s] is not exist !!", filename );
         TRACE("\n[W] 이 파일[%s]이 존재하지 않습니다 !!", filename);
 	}
 	else {
@@ -410,17 +406,17 @@ void CRawFile::CloseFile()
  * @date      2016-08-19, 오후 2:36 
  * @warning   
  */
-unsigned long long int CRawFile::GetRawFileSize()
+unsigned int CRawFile::GetRawFileSize()
 {
-	unsigned long long int ullfile_byte=0;
+	unsigned int uiFileSize=0;
 
 	if( m_fid != NULL ) {
         // ullfile_byte = _filelength( m_fid );
-        ullfile_byte = GetRawFileSize( m_fullname );
+        uiFileSize = GetRawFileSize( m_fullname );
 
 	}
 
-	return ullfile_byte;
+	return uiFileSize;
 }
 
 /**
@@ -432,25 +428,25 @@ unsigned long long int CRawFile::GetRawFileSize()
  * @date      2016-10-11, 오전 10:09 
  * @warning   
  */
-unsigned long long int CRawFile::GetRawFileSize( char *pPathFileName )
+unsigned int CRawFile::GetRawFileSize( char *pPathFileName )
 {
-	unsigned long long int ullRet64= UINT64_MAX;
+	unsigned long long int ullRet64=0;
 
 #if defined(__linux__) || defined(__VXWORKS__)
 	struct stat statbuf;
 
 	if( stat( pPathFileName, & statbuf ) != 0 ) {
-			ullRet64 = ULONGLONG_MAX;
+	    ullRet64 = ULONGLONG_MAX;
 	}
 	else {
-			ullRet64 = statbuf.st_size;
+		ullRet64 = statbuf.st_size;
 	}
 
 #else
 	struct _stati64 statbuf;
 
 	if( _stati64( pPathFileName, & statbuf ) != 0 ) {
-		ullRet64 = UINT64_MAX;
+		ullRet64 = 0;
 	}
 	else {
 		ullRet64 = (unsigned long long int) statbuf.st_size;
@@ -465,12 +461,12 @@ unsigned long long int CRawFile::GetRawFileSize( char *pPathFileName )
  * @param pPath
  * @return
  */
-bool CRawFile::CreateDir( TCHAR *pPath )
+bool CRawFile::CreateDir( const TCHAR *pPath )
 {
     BOOL bCreate; 
 	bool bRet=true;
     TCHAR dirName[256];
-    TCHAR *p=pPath;
+    const TCHAR *p=pPath;
     TCHAR *q=dirName;
 
     while( *p ) {

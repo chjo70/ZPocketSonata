@@ -1,5 +1,5 @@
 WRBuilder.traceBuildRun=true
-WRBuilder.useJobs=true
+WRBuilder.useJobs=false
 WRBuild|disabledBuildInstrumentations=
 WRBuild|disabledBuilderContributions=
 WRBuild|disabledManagedBuildProcessExtensions=

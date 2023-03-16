@@ -10,10 +10,17 @@
 #else
 #include <unistd.h>
 #include <sys/time.h>
+
+#ifdef __VXWORKS__
+#include <private/kwriteLibP.h>
+#endif
+
 #endif
 
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
+
 #include <string.h>
 #include <sys/stat.h>
 
@@ -27,9 +34,16 @@
 
 bool CLog::m_bcs=false;
 
+unsigned int CLog::m_uiCoLog = 0;
 
 /**
- * @brief CLog::CLog
+ * @brief     로그 책체를 생성합니다.
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-27 10:39:06
+ * @warning
  */
 CLog::CLog()
 {
@@ -49,11 +63,36 @@ CLog::CLog()
     memset( m_szPresentDirectory, 0, sizeof(m_szPresentDirectory) );
     getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
 
+    Init();
+
 }
 
+/**
+ * @brief     ~CLog
+ * @return    
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-27 10:37:57
+ * @warning
+ */
 CLog::~CLog()
 {
     printf( "CLOG 소멸 !!\n" );
+}
+
+/**
+ * @brief     객체 초기화를 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-27 10:38:38
+ * @warning
+ */
+void CLog::Init()
+{
+    m_uiCoLog = 0;
 }
 
 /**
@@ -122,11 +161,6 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
         strcat( szLogFullName, szDate );
         //strcat( szLogDir, szDate );
 
-        // vxworks 인 경우에 저장 공간이 없으면 로그 파일을 삭제한다.
-#ifdef __VXWORKS__
-
-#endif
-
 #ifdef _MSC_VER
         fopen_s( & fp, szLogFullName, "a+" );
         //fid = open(szLogFullName, O_APPEND | O_WRONLY | O_BINARY );
@@ -186,19 +220,8 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
                 vsprintf( & m_szLog[nLength], fmt, args );
                 va_end( args );
 
-                if( nType == enDebug || nType == enLineFeed ) {
-                    puts( & m_szLog[nLength] );
-                }
-                else if( nType == enNormal ) {
-                    puts( & m_szLog[nLength] );
-                }
-                else if( nType == enError ) {
-                    puts( & m_szLog[nLengthTime] );
-                }
-				ELSE
-
 #ifdef __VXWORKS__
-                fflush( stdout );
+                // fflush( stdout );
 
 #endif
                 //strcat( & m_szLog[nLength], fmt );
@@ -224,24 +247,65 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
             nLength = strlen(m_szLog);
             if( nLength > 10 || nType == enLineFeed ) {
+                ++m_uiCoLog;
 #ifdef _MSC_VER
                 fprintf( fp, "%s" , m_szLog );
                 fflush( fp );
 
-                TRACE0( m_szLog );
 #else
                 write( fid, m_szLog, nLength );
+                
+                
 #endif
+
+                if( nType == enDebug || nType == enLineFeed ) {
+#if defined(__VXWORKS__)
+                    _func_kprintf( m_szLog );
+#else
+                    TRACE0( m_szLog );
+#endif
+            }
+                else if( nType == enNormal ) {
+#if defined(__VXWORKS__)
+                    _func_kprintf( m_szLog );
+#else
+                    TRACE0( m_szLog );
+#endif
+                }
+                else if( nType == enError ) {
+#if defined(__VXWORKS__)
+                    _func_kprintf( m_szLog );
+#else
+                    TRACE0( m_szLog );
+#endif
+                }
+                else {
+
+                }
+
             }
 #ifdef _MSC_VER
             fclose( fp );
 #else
             close( fid );
 #endif
+
+            // 로그 파일 삭제
+            // vxworks 인 경우에 저장 공간이 없으면 로그 파일을 삭제한다.
+#if defined(__VXWORKS__) || defined(__linux__)
+            if( m_uiCoLog > MAX_LINES_LOGS ) {
+                remove( szLogFullName );
+                printf( "포그 파일을 삭제합니다!!!" );
+
+                m_uiCoLog = 0;
+            }
+#endif
+
         }
     }
  
 	UnLock();
+
 #endif
 
 }

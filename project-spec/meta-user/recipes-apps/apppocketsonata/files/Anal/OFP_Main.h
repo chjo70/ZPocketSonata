@@ -1,4 +1,4 @@
-// Globals.h: interface for the Main Class
+﻿// Globals.h: interface for the Main Class
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,7 +11,19 @@
 #include "./INC/Macros.h"
 #include "../include/Defines.h"
 #include "./INC/PDW.h"
-#include "./INC/Structs.h"
+
+#include "./INC/System.h"
+#include "../Include/Defines.h"
+#include "./SigAnal/_Define.h"
+#include "./INC/PDW.h"
+
+#ifdef _MIDAS_
+
+#else
+#include "./EmitterMerge/ELMsgDefn.h"
+#include "./INC/AetIPL.h"
+#endif
+
 #include "./INC/ErrorMsg.h"
 
 #include "./SigAnal/_Macro.h"

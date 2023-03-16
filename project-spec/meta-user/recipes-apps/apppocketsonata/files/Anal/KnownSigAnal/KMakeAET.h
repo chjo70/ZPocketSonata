@@ -17,17 +17,17 @@
 
 #ifdef __cplusplus
 
-typedef struct {
+struct STR_KWNINFO {
     float fKnownSuccessRatio;   // 추적 성공율 [%]
     int iIdxEmitter;            // PRI Emitter Index   
 
-} STR_KWNINFO;
+} ;
 
-typedef struct {
+struct STR_KWNLOB {
     SRxLOBData stLOBData;
     STR_KWNINFO stKnownInfo;
 
-} STR_KWNLOB;
+} ;
 
 class CKMakeAET : public CMakeAET
 {
@@ -290,7 +290,7 @@ public:
 
         // 추적할 것이 STAGGER 일때 새로운 에미터가 Jitter라고 하면 새로운 에미터를 송신하지 않는다.
         else { 
-            if( pAet1->iPRIType == _STAGGER && pAet2->iPRIType == _JITTER_RANDOM ) {
+            if( pAet1->iPRIType == _STAGGER && pAet2->ucPRIType == _JITTER_RANDOM ) {
                 if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) STABLE_MARGIN ) &&
                     TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) STABLE_MARGIN ) ) {
                     uRet = 1;
@@ -333,7 +333,7 @@ public:
                 }
                 */
             }
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _JITTER_RANDOM ) {
+            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->ucPRIType == _JITTER_RANDOM ) {
                 nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
                 if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMin, pAet1->fPWMax, pAet2->fPWMin, pAet2->fPWMax ) ) {
                     return 0;
@@ -343,14 +343,14 @@ public:
             /*! \bug  지터와 Stable 비교는 무시한다.
                 \date 2006-09-05 08:51:47, 조철희
             */
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->iPRIType == _STABLE ) {
+            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->ucPRIType == _STABLE ) {
                  return 0;
                     // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
             }
             /*! \bug  지터와 Stable 비교는 무시한다.
                 \date 2006-09-05 08:51:47, 조철희
             */
-            else if( pAet1->iPRIType == _STABLE && pAet2->iPRIType == _JITTER_RANDOM ) {
+            else if( pAet1->iPRIType == _STABLE && pAet2->ucPRIType == _JITTER_RANDOM ) {
                 uRet = 0;
                     // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
             }

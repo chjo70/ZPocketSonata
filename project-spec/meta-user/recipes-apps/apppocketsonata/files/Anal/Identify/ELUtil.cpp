@@ -282,7 +282,7 @@ UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold) {
 			min_mean = priMean1;
 		}
 
-		harmonic = max_mean % min_mean;
+        harmonic = max_mean % min_mean;
 
 		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
 		_TOA margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );

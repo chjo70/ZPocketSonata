@@ -26,18 +26,8 @@
 
 #include "system.h"
 
-// #ifdef _MIDAS_
-// #else
-// #include "../EmitterMerge/ELMsgDefn.h"
-// #endif
 
 #include "../EmitterMerge/ELMsgDefn.h"
-
-// #include "Structs.h"
-
-//#define   Unknown   0
-//#define   UNKNOWN   Unknown
-
 
 
 ///////////////////////       AET DEFINES      /////////////////////////////////////////////
@@ -342,6 +332,26 @@ static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 #else
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+
+// 기본형
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    UFO,
+    MAX_SCANTYPE,
+
+    DetType,
+
+    TYPE_UNKNOWN,
+};
+
 #endif
 
 enum SCAN_STAT
@@ -366,28 +376,28 @@ enum SCAN_STAT
 #elif defined(_701_)
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
-enum ENUM_AET_SCAN_TYPE {
-	E_AET_SCAN_UNKNOWN = 0,
-	//##ModelId=452B0C510241
-	E_AET_SCAN_CIRCULAR = 1,
-	//##ModelId=452B0C51024A
-	E_AET_SCAN_UNI_DIRECTIONAL,
-	//##ModelId=452B0C510254
-	E_AET_SCAN_BI_DIRECTIONAL,
-	//##ModelId=452B0C51025E
-	E_AET_SCAN_CONICAL,
-	//##ModelId=452B0C510268
-	E_AET_SCAN_STEADY,
-
-	E_AET_SCAN_SCANFAIL,
-	//##ModelId=452B0C510286
-	UFO,
-	MAX_SCANTYPE,
-	//##ModelId=452B0C510287
-	DetType,
-	//##ModelId=452B0C510290
-	TYPE_UNKNOWN,
-};
+// enum ENUM_AET_SCAN_TYPE {
+// 	E_AET_SCAN_UNKNOWN = 0,
+// 	//##ModelId=452B0C510241
+// 	E_AET_SCAN_CIRCULAR = 1,
+// 	//##ModelId=452B0C51024A
+// 	E_AET_SCAN_UNI_DIRECTIONAL,
+// 	//##ModelId=452B0C510254
+// 	E_AET_SCAN_BI_DIRECTIONAL,
+// 	//##ModelId=452B0C51025E
+// 	E_AET_SCAN_CONICAL,
+// 	//##ModelId=452B0C510268
+// 	E_AET_SCAN_STEADY,
+// 
+// 	E_AET_SCAN_SCANFAIL,
+// 	//##ModelId=452B0C510286
+// 	UFO,
+// 	MAX_SCANTYPE,
+// 	//##ModelId=452B0C510287
+// 	DetType,
+// 	//##ModelId=452B0C510290
+// 	TYPE_UNKNOWN,
+// };
 
 
 
@@ -529,7 +539,6 @@ struct STR_AS {
 } ;
 
 /* AET용 SEEN TIME 구조체 */
-//##ModelId=452B0C5103A8
 struct STR_SEEN_TIME {
     unsigned int uiFrst;
     unsigned int uiLast;
@@ -705,14 +714,14 @@ struct STR_ID_INFO {
 //##ModelId=452B0C520061
 // 추가 하려면 cmaet.c의 UpdateNewAet() 를 수정해야 함.
 struct STR_EXT {
-    UINT noCol;				// 펄스 수집 개수
-    UINT noExt;				// 펄스 추출 개수
+    UINT uinoCol;				// 펄스 수집 개수
+    UINT uinoExt;				// 펄스 추출 개수
 
-    UINT pt_stat;			// PDW's stat
-    UINT pt_maxchannel;	// PDW's max channel
+    UINT uiPDWStat;			// PDW's stat
+    UINT uiMaxChannelOfPDW;	// PDW's max channel
 
-    STR_LOWHIGH aoa;	// 방위 필터링을 하기 위한 범위 정보
-    STR_LOWHIGH frq;	// 주파수 Agile을 위한 주파수 필터링을 하기 위한 범위 정보
+    STR_LOWHIGH stAOA;	// 방위 필터링을 하기 위한 범위 정보
+    STR_LOWHIGH stFreq;	// 주파수 Agile을 위한 주파수 필터링을 하기 위한 범위 정보
 
     int idxEmitter;		// m_Emitter의 인덱스
 
@@ -732,19 +741,19 @@ struct STR_EXT {
 
 // in common memory, structure of extended aet 2
 //##ModelId=452B0C520075
-struct STR_COMAET {
-  UINT noSerial;  // random variable
-  UINT noCol;   // collection pulse #
-
-  STR_LOWHIGH pulse;    // pulse # on process the KSP
-  STR_REF ref;    // reflect wave info.
-  STR_CHINFTAB ksp;   // track info.
-  STR_CHINFTAB sap;   // scan info.
-  STR_MERGE mg;     // merge info.
-  STR_EXT ext;    // paet info.
-  STR_RSAID id;
-
-} ;
+// struct STR_COMAET {
+//   UINT noSerial;  // random variable
+//   UINT noCol;   // collection pulse #
+// 
+//   STR_LOWHIGH pulse;    // pulse # on process the KSP
+//   STR_REF ref;    // reflect wave info.
+//   STR_CHINFTAB ksp;   // track info.
+//   STR_CHINFTAB sap;   // scan info.
+//   STR_MERGE mg;     // merge info.
+//   STR_EXT ext;    // paet info.
+//   STR_RSAID id;
+// 
+// } ;
 
 // Emitter Merge Comparative History Info
 //##ModelId=452B0C520088

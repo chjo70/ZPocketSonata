@@ -248,12 +248,12 @@ static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
  * @brief PL�κ��� ���ŵǴ�  GPIO ���ͷ�Ʈ��  read �Լ� wrapping �Լ�
  * @param fd GPIO file descriptor
  */
-void PendingFromInterrupt(xuio_t *uio);
+//void PendingFromInterrupt(xuio_t *uio);
 /**
  * @brief PL�κ��� ���ŵ�  UIO ���ͷ�Ʈ ����
  * @param uio 		UIO ����ü ������
  */
-void ClearInterrupt(xuio_t *uio);
+//void ClearInterrupt(xuio_t *uio);
 
 /**
  * @brief PL�κ��� ���ŵ�  UIO ���ͷ�Ʈ ��Ȱ��ȭ

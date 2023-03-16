@@ -424,10 +424,9 @@ struct STR_KP {
   UINT Rpt_Aet_Cnt;    // 추적; 하나의 그룹에서 REPORT될 AET의 개수를 선언
 }  ;
 
-//##ModelId=452B0C4E03B9
 struct STR_CM
 {
-  UINT uiCw_Min_Cnt;         // CW신호를 분석하기 위한 최소 CW개수
+  UINT uiCw_Min_Cnt;       // CW신호를 분석하기 위한 최소 CW개수
 
   UINT Mpc;                //000223 // Stable 펄스열의 최소 펄스수 (Min. Pulse Count)
   UINT Mjpc;               //000223 // Jitter 펄스열의 최소 펄스수 (Min. Jitter Pulse Count)
@@ -636,15 +635,15 @@ struct STR_DWELL_LEVEL {
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
-    PA_RESOL gPaRes[enMAXPRC] =
-    {	// min, max, offset, res
-        {     0,     0,  (float) _spPAoffset, _spAMPres },
-        {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-        {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-        { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-        { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-        {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
-    } ;
+//     PA_RESOL gPaRes[enMAXPRC] =
+//     {	// min, max, offset, res
+//         {     0,     0,  (float) _spPAoffset, _spAMPres },
+//         {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
+//         {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
+//         { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
+//         { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
+//         {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
+//     } ;
 
 #elif defined(_SONATA_)
   char g_szAetSignalType[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
@@ -708,13 +707,13 @@ extern PA_RESOL gPaRes[ 6 ];
 extern double dRCLatitude[RADARCOL_MAX];
 extern double dRCLongitude[RADARCOL_MAX];
 
-#elif _POCKETSONATA_
-extern char g_szAetSignalType[7][3];
+#elif defined(_POCKETSONATA_)
+extern char g_szAetSignalType[5][3];
 
 extern FREQ_RESOL gFreqRes[ enMAXPRC ];
 extern PA_RESOL gPaRes[ 6 ];
 
-#elif _SONATA_
+#elif defined(_SONATA_)
 extern char g_szAetSignalType[ST_MAX][3];
 
 extern FREQ_RESOL gFreqRes[ 3 ];

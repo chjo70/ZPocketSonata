@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="com.windriver.ide.search.ui.internal.text.RetrieverPage">
-		<item value="549" key="splitter.w1"/>
-		<item value="450" key="splitter.w2"/>
+		<item value="637" key="splitter.w1"/>
+		<item value="362" key="splitter.w2"/>
 		<list key="file-patterns.combo">
 			<item value="*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx,*.mk,Makefile"/>
 			<item value="*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx;Makefile;*.mk"/>
@@ -12,32 +12,49 @@
 		<list key="replacement-string.combo">
 		</list>
 		<list key="search-string.combo">
-			<item value="__time64_t tiContactTime"/>
-			<item value="ello, VxWorks"/>
-			<item value="BOOT_LINE_ADRS"/>
-			<item value="192.168.1"/>
-			<item value="10.245"/>
-			<item value="Application Mode Agent (default)"/>
-			<item value="&quot;/d/rawdata/"/>
-			<item value="y"/>
-			<item value="ping"/>
-			<item value="console"/>
-			<item value="Process shell commands"/>
-			<item value="wide"/>
+			<item value="string"/>
+			<item value="std::"/>
+			<item value="unique_ptr"/>
+			<item value="sysClkRateGet"/>
+			<item value="PCIeMemInit"/>
+			<item value="isrPci"/>
+			<item value="isrPcieLeftRead"/>
+			<item value="PCIeLeftCtrlWrite32"/>
+			<item value="ello, VxWorks!"/>
+			<item value="S_adrSpaceLib_INVALID_CONTEXT"/>
+			<item value="pciIntLeftIsrFunc"/>
+			<item value="PHYS_ADDR"/>
 		</list>
 		<list key="scope-history">
 			<item value="Workspace"/>
-			<item value="Project VBootShell_T2MS"/>
+			<item value="Project VSourceBuild_T2MS32"/>
+			<item value="Project VBootShell_T2MS32"/>
 			<item value="Project VSIGA"/>
+			<item value="Projects VBootShell_T2MS32, ..."/>
 			<item value="Project VSourceBuild_T2MS"/>
-			<item value="Project VSourceBuild"/>
-			<item value="Project VBootShell"/>
-			<item value="Project VBootShell64"/>
+			<item value="Selected resources"/>
 		</list>
 		<list key="filter-pattern.combo">
 		</list>
 		<section name="search-scope">
-			<item value="false" key="includeExternalIndex"/>
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VSourceBuild_T2MS32"/>
+			</list>
+		</section>
+		<section name="scope-history-Selected resources">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+			</list>
+		</section>
+		<section name="scope-history-Project VSourceBuild_T2MS32">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VSourceBuild_T2MS32"/>
+			</list>
 		</section>
 		<section name="scope-history-Project VBootShell64">
 			<item value="" key="customName"/>
@@ -65,6 +82,21 @@
 			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
 			<list key="resources">
 				<item value="/VSIGA"/>
+			</list>
+		</section>
+		<section name="scope-history-Project VBootShell_T2MS32">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VBootShell_T2MS32"/>
+			</list>
+		</section>
+		<section name="scope-history-Projects VBootShell_T2MS32, ...">
+			<item value="" key="customName"/>
+			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
+			<list key="resources">
+				<item value="/VBootShell_T2MS32"/>
+				<item value="/VSourceBuild_T2MS32"/>
 			</list>
 		</section>
 		<section name="scope-history-Project VBootShell_T2MS">

@@ -32,7 +32,7 @@
 #include "./InverseMethod/CInverseMethod.h"
 
 #ifdef _MSC_VER
-#include "../TASK/Task.h"
+//#include "../TASK/Task.h"
 #else
 #endif
 
@@ -139,8 +139,11 @@ private:
     SRxLOBData *m_pLOBData;											///< 항공기에서 수신한 LOB 헤더 데이터 포인터
     SRxLOBHeader *m_pLOBHeader;									///< 항공기에서 수신한 LOB 메시지 데이터 포인터
 
-    SRxABTData *m_pABTData;
+    SRxABTData *m_pABTData;                                 ///< 빔 데이터
     SELABTDATA_EXT *m_pABTExtData;
+
+    SRxAETData *m_pAETData;                                ///< 방사체 데이터
+    SELAETDATA_EXT *m_pAETExtData;
 
     SLOBOtherInfo *m_pLOBOtherInfo;						///< LOB 복사시 위협 정보 데이터 포인터
 
@@ -207,12 +210,12 @@ protected:
 
 private:
     void LoadCEDLibrary( char *aucTaskID, float fMinFreq, float fMaxFreq );
-// 
+
 // 	void UpdateLOBData( bool bIsFilteredLOB );
 // 	void DeleteAETABTRecord( int iLinkNum, SRxLOBDataGroup *pLOBDataGroup );
     void DeleteAllAETABTRecord( SRxLOBData *pLOBData );
 // 	void MakeIDInfo( STR_CEDEOBID_INFO *pIdInfo, STR_CEDEOBID_INFO *pLOBIdInfo );
-// 
+
     void ResetABT();
 
     PlatformCode::EnumPlatformCode CheckPlatform( SRxABTData *pABTData );
@@ -221,12 +224,12 @@ private:
     void AllocMemory();
     void FreeMemory();
 
-// 	// 위협 관리
+ 	// 위협 관리
     void NextAETID();
     void NextABTID();
     void RecoverThreat();
-    inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) ++ m_nGetSeqNum; else ++ m_uiSeqNum; }
-//
+    inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) { ++ m_nGetSeqNum; } else { ++ m_uiSeqNum; } }
+
     void ClearLOBs( unsigned int uiIndex );
     void AppendLOBs( unsigned int uiIndex, enELControlLOB enControlLOB=APPEND_LOB );
     void AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNormalMethod=true );
@@ -411,7 +414,7 @@ private:
 
  	// 미식별 ELNOT 관련 함수
  	char *MakeH000();
-    void IncH0000( int coRadarModeIndex );
+    void IncH0000( unsigned int uiCoRadarModeIndex );
 //
 // 	// DB 업데이트
 // 	void UpdateReportTimeToEmitterDB( SELAETDATA *pAETData, SELAETDATA_EXT *pAETExtData );
@@ -513,8 +516,8 @@ public:
 // 
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }
 // 	inline char *GetELNOTFromGenNewEmitter() { return m_szELNOTFromGenNewEmitter; }
-// 
-// 	inline SRxLOBData *GetLOBData() { return m_pLOBData; }
+ 
+ 	inline SRxLOBData *GetLOBData() { return m_pLOBData; }
 // 	inline SRxLOBDataGroup *GetLOBDataGroup() { return m_pLOBDataGrp; }
 // 	inline SELLOBDATA_EXT *GetLOBDataExt() { return & m_LOBDataExt; }
 // 
@@ -557,6 +560,12 @@ public:
 
     inline SRxABTData *GetABTData() { return m_pABTData; }
     inline SELABTDATA_EXT *GetABTExtData() { return m_pABTExtData; }
+    inline SRxAETData *GetAETData() {
+        return m_pAETData;
+    }
+    inline SELAETDATA_EXT *GetAETExtData() {
+        return m_pAETExtData;
+    }
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
 
@@ -586,7 +595,7 @@ public:
     inline ENUM_SCAN_PROCESS EnScanProcess() const { 
 		ENUM_SCAN_PROCESS enScanProcess=enSCAN_CANTProcessing;
 
-		if (m_pABTExtData != NULL) enScanProcess=m_pABTExtData->enScanProcess;
+        if (m_pABTExtData != NULL) { enScanProcess=m_pABTExtData->enScanProcess; }
 
 		return enScanProcess;
 

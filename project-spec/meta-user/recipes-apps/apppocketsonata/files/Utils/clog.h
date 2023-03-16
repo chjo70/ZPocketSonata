@@ -20,8 +20,9 @@
 #include "../Include/system.h"
 
 
-
 #define LOG_EXTRA_SIZE      (50)
+
+#define MAX_LINES_LOGS      (50)
 
 
 #define LOG_DIR_SIZE        (1024)
@@ -43,6 +44,8 @@ class CLog
 private:
     static bool m_bcs;
 
+    static unsigned int m_uiCoLog;
+
 #ifdef _MSC_VER
     CCriticalSection m_cs;
 #else
@@ -56,6 +59,9 @@ private:
 private:
     //char *ANSIToUTF8( const char * pszCode );
     //char *UTF8ToANSI( const char *pszCode );
+
+private:
+    void Init();
 
 public:
     CLog();

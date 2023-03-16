@@ -1,5 +1,8 @@
-﻿#ifndef CSINGLECLIENT_H
-#define CSINGLECLIENT_H
+﻿/*
+ * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
+ * */
+
+#pragma once
 
 #ifdef __linux__
 #include <sys/socket.h>
@@ -56,12 +59,14 @@ public:
 
 	inline bool IsConnected() { return m_bConnected; }														///< 랜 연결 여부를 리턴합니다.
 
-    virtual void _routine();																				///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
-    virtual char *GetThreadName() { return m_szThreadName; }												///< 쓰레드명을 리턴합니다.
+    void _routine();																				        ///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
+    char *GetThreadName() { return CThread::GetThreadName(); }												        ///< 쓰레드명을 리턴합니다.
+    STR_MessageData *GetParentMessage() { return m_pMsg; }                                                  ///< 메시지 데이터를 리턴 합니다.
 
 private:
     void RunServer();																						///< 랜 소켓 서버 실행시 소켓으로부터 수신 메시지를 확인한다.
     void RunClient();																						///< 랜 소켓 클라이언트 실행시 소켓으로부터 수신 메시지를 확인한다.
+    void SetSocketOption();
     void OnConnect( struct sockaddr_in *pAddr=NULL );														///< 연결시 이벤트를 발생한다.
     int ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAddress, long timeout_milli );			///< 설정한 시간만큼 서버와 연결을 시도한다.
     void OnDisconnected( char *pServerIPAddress );															///< 랜 소켓이 끊어졌을때 이벤트를 발생합니다.
@@ -74,4 +79,4 @@ private:
 };
 
 
-#endif // CSINGLESERVER_H
+

@@ -263,7 +263,7 @@ enum E_EL_ADJUNCT_FILE_TYPE {
  * @author    조철희
  * @date      2014-11-22 
  */
-typedef struct {
+struct SELMIDAS_HCB {
 	char version[4];									// header version
 	char head_rep[4];									// header representation
 	char data_rep[4];									// Data representation
@@ -277,7 +277,7 @@ typedef struct {
 	double data_start;								// Data start in bytes
 	double data_size;									// Data size in bytes
 
-	unsigned int type;								// File type code
+	unsigned int iType;								// File type code
 	char format[2];										// Data format code
 
 	unsigned short flagmask;					// 16-bit flagmask (1=flagbit)
@@ -294,7 +294,7 @@ typedef struct {
 	unsigned int uiKeylength;						// Length of keyword string
 	char keywords[92];								// User defined keyword string
 
-} SELMIDAS_HCB ;
+}  ;
 
 /*!
  * @typedef		SELMIDAS_BINARY_KEYWORD
@@ -302,13 +302,13 @@ typedef struct {
  * @author    조철희
  * @date      2015-03-05 
  */
-typedef struct {
+struct SELMIDAS_BINARY_KEYWORD {
 	unsigned int lkey;								// total length of keyword
 	unsigned short lext;							// length of non-value part of keyword
 	unsigned char ltag;								// length of keyword tag
 	char type;												// type of data in keyword value
 
-} SELMIDAS_BINARY_KEYWORD ;
+}  ;
 
 
 /**
@@ -316,12 +316,12 @@ typedef struct {
  * @brief     Type 1000 추가 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
-	double xstart;
-	double xdelta;
+struct SELMIDAS_ADJUNCT_TYPE_1000 {
+	double dxstart;
+	double dxdelta;
 	unsigned int xunits;
 
-} SELMIDAS_ADJUNCT_TYPE_1000 ;
+}  ;
 
 
 /**
@@ -329,7 +329,7 @@ typedef struct {
  * @brief     Type 2000 추가 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
+struct SELMIDAS_ADJUNCT_TYPE_2000 {
 	unsigned long int xstart;
 	unsigned long int xdelta;
 	unsigned int xunits;
@@ -338,26 +338,26 @@ typedef struct {
 	unsigned long int ydelta;
 	unsigned int yunits;
 
-} SELMIDAS_ADJUNCT_TYPE_2000 ;
+}  ;
 
 /**
  * @typedef   SELSUBRECORDS
  * @brief     subrecords 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct  {
+struct SELSUBRECORDS {
 	char name[4];
 	char format[2];
 	unsigned short usOffset;
 
-} SELSUBRECORDS;
+} ;
 
 /**
  * @typedef   SELMIDAS_ADJUNCT_TYPE_3000
  * @brief     Type 3000/6000 추가 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
+struct SELMIDAS_ADJUNCT_TYPE_3000 {
 	double rstart;
 	double rdelta;
 	unsigned int runits;
@@ -369,7 +369,7 @@ typedef struct {
 
 	// SELSUBRECORDS subr;
 
-} SELMIDAS_ADJUNCT_TYPE_3000 ;
+} ;
 
 #define	SELMIDAS_ADJUNCT_TYPE_6000  SELMIDAS_ADJUNCT_TYPE_3000
 
@@ -378,7 +378,7 @@ typedef struct {
  * @brief     Type 4000 추가 구조체 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
+struct SELMIDAS_ADJUNCT_TYPE_4000 {
 	unsigned long int vrstart;
 	unsigned long int vrdelta;
 	unsigned int vrunits;
@@ -388,9 +388,9 @@ typedef struct {
 	unsigned int vr2units;
 	unsigned int vrecord_length;
 
-} SELMIDAS_ADJUNCT_TYPE_4000 ;
+}  ;
 
-typedef struct {
+struct SELMIDAS_ADJUNCT_TYPE_5000 {
 	unsigned long int tstart;
 	unsigned long int tdelta;
 	unsigned int tunits;
@@ -402,12 +402,12 @@ typedef struct {
 
 	unsigned long int quadwords[12];
 
-} SELMIDAS_ADJUNCT_TYPE_5000 ;
+}  ;
 
 
 //////////////////////////////////////////////////////////////////////////
 // Type 6000 TYPE0 Subrecord Format
-typedef struct  {
+struct SELMIDAS_SUBRECORDS {
 	char name[24];				/// 컬럼명
 	char minval[24];			/// 최소 값
 	char maxval[24];			/// 최대 값
@@ -418,13 +418,13 @@ typedef struct  {
 	char uprefix[3];			/// Greek 접두어 코드
 	char reserved[3];			/// 예비
 
-} SELMIDAS_SUBRECORDS;
+} ;
 
-typedef struct {
+struct SEL_MIN_MAX {
 	float fMinVal;
 	float fMaxVal;
 
-} SEL_MIN_MAX ;
+}  ;
 
 enum enSUBRECORDS { enTOAOfSub=0, enDTOAOfSub, enFreqOfSub, enPWOfSub, enPAOfSub, enDOAOfSub };
 const char stSubrecordName[MAX_SUBRECORDS_OF_PDWDATA][10] = { "TOA", "DTOA", "FREQ", "PW", "PA", "AOA" } ;
@@ -433,7 +433,7 @@ const char stSubrecordFormat[MAX_SUBRECORDS_OF_PDWDATA][10] = { "%e", "%e", "%f"
 
 // PDW 데이터 구조체 정의
 // 위 stSubrecordName, 과 stSubrecordUnit 과 동일 순서로 설정해야 함.
-typedef struct {
+struct S_EL_PDW_RECORDS {
     double dtoa;
     double ddtoa;
     double dfreq;
@@ -442,7 +442,7 @@ typedef struct {
     double dpa;
     double ddoa;
 
-} S_EL_PDW_RECORDS;
+} ;
 
 // char   형은 마지막 끝에 NULL 문자로 끝나야 함. 입력할 것이 없으면 NULL 로 저장함.
 // time_t 형은 시간 정보를 저장. 정보가 없으면 0 으로 함.
@@ -519,13 +519,13 @@ struct S_UNI_DATA_SET {
 
 } ;
 
-typedef struct {
+struct SELIFMIDAS {
     char szInputFilename[500];
     char szOutputFilename[500];
 
     SEL_KEYWORD_VALUE keywordValue;
 
-} SELIFMIDAS;
+} ;
 
 
 union UNI_ADJUNCT_TYPE {

@@ -52,7 +52,7 @@ typedef unsigned long long int _TOA;
 
 
 // 포토 를 정의합니다.
-#define MAX_CLIENTS     (30)
+#define MAX_CLIENTS     (5)
 #define PORT            (8888)
 
 #define NETWORK_CLASSC  (const char *) ( "192.168.0" )
@@ -95,11 +95,11 @@ typedef unsigned long long int _TOA;
 
 /////////////////////////////////////////////////////////////////////////////////
 
-#define DETECT_CHANNEL  (1)                         // 탐지용 채널은 1개로 설정함. 현재 PL 전처리필터의 채널이 1개임.
-#define TRACK_CHANNEL   (256)
-#define SCAN_CHANNEL    (256)
-#define USER_CHANNEL    (16)
-#define TOTAL_CHANNELS  (DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL+USER_CHANNEL)
+#define CO_DEFAULT_DETECT_CHANNEL	(1)                         // 탐지용 채널은 1개로 설정함. 현재 PL 전처리필터의 채널이 1개임.
+#define CO_DEFAULT_TRACK_CHANNEL	(256)
+#define CO_DEFAULT_SCAN_CHANNEL		(256)
+#define CO_DEFAULT_USER_CHANNEL		(16)
+#define TOTAL_DEFAULT_CHANNELS		(CO_DEFAULT_DETECT_CHANNEL+CO_DEFAULT_TRACK_CHANNEL+CO_DEFAULT_SCAN_CHANNEL+CO_DEFAULT_USER_CHANNEL)
 
 
 /////////////////////////////////////////////////////////////////////////////////

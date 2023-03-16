@@ -6,7 +6,8 @@ using namespace std;
 #include "../Anal/Identify/define.h"
 #include "../Utils/cthread.h"
 
-#include "../Anal/Identify/cipl.h"
+#include "../System/csysconfig.h"
+
 
 #ifdef _MSSQL_
 #include "../ODBC/mssql.h"
@@ -34,7 +35,7 @@ class CTaskMngr : public CThread
 private:
     STR_MessageData *m_pMsg;
 
-    CIPL m_theIPL;
+    ENUM_MODE m_enMode;
 
 #ifdef _SQLITE_
     char m_szSQLString[MAX_SQL_SIZE];
@@ -54,25 +55,16 @@ private:
     ENUM_BoardID GetBoardID();
 
     // 명령어 처리에 대한 각각의 함수이다.
-    void SetMode();
-    void AnalysisStart();
-    void ReqIPLVersion();
-    void ReqAudio();
-    void ReqAudioParam();
-    void BandEnable();
-    void FMOPThreshold();
-    void PMOPThreshold();
-    void RxThreshold();
-    void IPLDownload();
+    //void SetMode();
+    void Start();
+    void AnalysisStart( bool bOut=true );
     void ReqSystemVar();
 
     // 데이터베이스 처리
-    void InsertIPL( int iIndex );
-    void DeleteIPL( char *pszELNOT=NULL );
     int IsThrereELNOT( char *pszELNOT );
 
     // 명령어 처리에 대한 하부 함수 목록 입니다.
-    void ProcessSummary();
+    void TaskSummary();
 
     // 인터페이스 관련 함수 모음 입니다.
     void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
@@ -82,10 +74,12 @@ private:
     inline void *GetRecvData() { 
         void *pRet;
 
-        if( m_pMsg->iArrayIndex >= 0 ) 
+        if( m_pMsg->iArrayIndex >= 0 ) {
             pRet = (void *) ( CThread::GetRecvData() ); 
-        else 
+        }
+        else {
             pRet = (void *) ( & m_pMsg->x.szData[0] ); 
+        }
 
         return pRet;
     }
@@ -102,8 +96,17 @@ public:
     virtual char *GetThreadName() { return m_szThreadName; }
 
 public:
-    void Run( key_t key=IPC_PRIVATE );
-    void Shutdown();
+    //void Run( key_t key=IPC_PRIVATE );
+    void Run();
+    void Shutdown( bool bAbnormalEvent=false, bool bOut=true );
+
+
+    STR_MessageData *GetParentMessage() {
+        return m_pMsg; 
+    }
+
+    inline ENUM_MODE GetMode() { return m_enMode; }
+    inline void SetMode( ENUM_MODE enMode ) { m_enMode = enMode; }
 
 };
 

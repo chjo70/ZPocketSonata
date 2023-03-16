@@ -54,7 +54,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;TOOL=MSC;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED1_;_SIMPDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;_KFX1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_LOG_;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED1_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_XBAND1_;_KFX1_;_7011_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -105,7 +105,7 @@ REM :END
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_TRACK_ENABLED_;_SCAN_ENABLED_;_SIM_SERVER_;_SQLITE1_;_MSSQL_;_POCKETSONATA_;_XBAND1_;_TESTSBC1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_UTM_POSITION_;_SIM_PDW_;_TRACK_ENABLED_;_SCAN_ENABLED_;_SIM_SERVER_;_SQLITE1_;_MSSQL_;_POCKETSONATA_;_XBAND1_;_TESTSBC1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,7 +167,6 @@ REM :END
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Quadratic\Quadratic.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Stack.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\UTM\UTM.h" />
-    <ClInclude Include="..\..\files\Anal\Identify\cipl.h" />
     <ClInclude Include="..\..\files\Anal\Identify\define.h" />
     <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType.h" />
     <ClInclude Include="..\..\files\Anal\Identify\ELCEDLibDataType2.h" />
@@ -252,13 +251,9 @@ REM :END
     <ClInclude Include="..\..\files\Thread\cusercollect.h" />
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
-    <ClInclude Include="..\..\files\Utils\chwio.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
-    <ClInclude Include="..\..\files\Utils\cmultiserver.h" />
     <ClInclude Include="..\..\files\Utils\csingleclient.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
-    <ClInclude Include="..\..\files\Utils\DMA\dma.h" />
-    <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
     <ClInclude Include="..\..\files\Utils\PCIDriver.h" />
     <ClInclude Include="..\..\files\Utils\stdstring.h" />
     <ClInclude Include="MSIGA.h" />
@@ -310,9 +305,6 @@ REM :END
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\UTM\UTM.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
@@ -449,25 +441,21 @@ REM :END
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\chwio.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp" />
     <ClCompile Include="..\..\files\Utils\csingleclient.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\cthread.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\PCIDriver.cpp" />
     <ClCompile Include="..\..\files\Utils\programrev.cpp">

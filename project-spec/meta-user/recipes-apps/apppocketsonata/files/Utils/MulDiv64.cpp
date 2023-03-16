@@ -257,7 +257,7 @@ done:
 	}
 	// result is returned in edx:eax
 
-#elif __linux__
+#elif defined(__linux__)
     __int64 result;
 
     result = ( operant * multiplier ) / divider;
@@ -265,7 +265,7 @@ done:
 
     return result;
 
-#elif __VXWORKS__
+#elif defined(__VXWORKS__)
     __int64 result;
 
     result = ( operant * multiplier ) / divider;
@@ -460,7 +460,7 @@ done:
 // 	}
 // 	// result is returned in edx:eax
 // 
-// #elif __linux__
+// #elif defined(__linux__)
 // 
 // #elif __VXWORKS__
 // 

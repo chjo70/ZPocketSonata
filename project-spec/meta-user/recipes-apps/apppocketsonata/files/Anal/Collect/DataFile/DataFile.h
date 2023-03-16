@@ -38,7 +38,7 @@
 #define	RAD2DEG			(57.2957795130)
 
 
-typedef enum {
+enum ENUM_SUB_GRAPH {
 	enUnselectedSubGraph = -1,
 
 	enSubMenu_1 = 1,
@@ -48,8 +48,7 @@ typedef enum {
 	enSubMenu_5,
 	enSubMenu_6,
 
-
-} ENUM_SUB_GRAPH ;
+}  ;
 
 // #ifndef _ENUM_DataType
 // #define _ENUM_DataType
@@ -64,7 +63,7 @@ typedef enum {
 // #endif
 
 
-typedef enum {
+enum ENUM_CONVERT_OPTION {
     enUnitToPDW,        // 장비 포멧을 PDW 구조체로 변경 (PDW 저장장치에 따라 PDW 불러오기용)
 
     enPDWToPDW,         // PDW 구조체를 PDW 구조체로 변경 (저장된 PDW 파일을 불러오기용)
@@ -74,7 +73,7 @@ typedef enum {
 
     enUnitToReal        // 장비 포멧을 실제값으로 변경 (그래프 전시용)
 
-} ENUM_CONVERT_OPTION;
+} ;
 
 
 #define MAX_SONATA_DATA		(10000)
@@ -209,6 +208,8 @@ class CData
 public:
     char *m_pRawHeaderBuffer;           // 헤더 데이터 저장소
     char *m_pRawDataBuffer;             // 실제 데이터 저장소
+
+    size_t m_szFileSize;
 
     int m_iHeaderSize;                  // 헤더 크기
     unsigned int m_uiOneDataSize;        // 한개 PDW 데이터 크기
@@ -1555,7 +1556,11 @@ namespace POCKETSONATA {
     #define L_PH_MIN_FREQ		64000
     #define H_PH_MIN_FREQ		192000  // [kHz]
 
-    #define PDW_PA_INIT		    (-89.0)
+    #define PDW_PA_OFFSET		(0)
+
+    #define PDW_PA_DB_MIN		(-90)
+    #define PDW_PA_DB_MAX		(0)
+    #define PDW_PA_RANGE        ( PDW_PA_DB_MAX - PDW_PA_DB_MIN )
 
     const unsigned int uiPDW_CW=1;
     const unsigned int uiPDW_NORMAL=0;
@@ -1570,7 +1575,8 @@ namespace POCKETSONATA {
 
     const float _toaRes = (float) 7.8125;
     const float _fFreqRes = (float) 1.953125;
-    const float _fDOARes = (float) ( 360. / ( 4. * 1024 ) );		// 0.087890625
+    const float _fDOARes = (float) ( 360. / (float) ( 4 * 1024 ) );		// = 0.087890625
+    const float _fPARes = (float) ( ( float ) PDW_PA_RANGE / (float) ( 64 * 1024 - 1 ) );		// = ?
 
 }
 
@@ -1652,24 +1658,6 @@ public:
         fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
         uiDOA = (unsigned int) ( ( fDOA / POCKETSONATA::_fDOARes ) + 0.5 );
         return uiDOA;
-    } ;
-
-    /**
-     * @brief     신호세기인 [dBm] 단위로 변환한다.
-     * @param     int iPA
-     * @return    float
-     * @exception 
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   1.0.0
-     * @date      2022-07-04 13:26:35
-     * @warning
-     */
-    static float DecodePA(int iPA )
-    {
-        float fPA;
-
-        fPA = (float) PDW_PA_INIT + FMUL( 20.,  (float) log10( (double) iPA ) );
-        return fPA;		/* [dBm] */
     } ;
 
     /**
@@ -2091,13 +2079,11 @@ public:
      * @param iTOA
      * @return
      */
-    static double DecodeTOAms( _TOA iTOA  )
+    static double DecodeTOAms( _TOA tTOA  )
     {
         double fretTOA;
 
-        iTOA = iTOA & 0xFFFFFFFFFFF;
-
-        fretTOA = ( (double) iTOA * POCKETSONATA::_toaRes / (double) 1000000. );
+        fretTOA = ( (double) tTOA * POCKETSONATA::_toaRes / (double) 1000000. );
         return fretTOA;	/* [ms] */
     } ;
 
@@ -2169,7 +2155,25 @@ public:
      */
     static unsigned int EncodePA( float fPA )
     {
-        return ( unsigned int ) pow( (double) 10., (fPA - PDW_PA_INIT) / 20. );
+        return ( unsigned int ) ( ( fPA + (float) PDW_PA_RANGE ) / POCKETSONATA::_fPARes + PDW_PA_OFFSET );
+    } ;
+
+    /**
+	 * @brief     신호세기인 [dBm] 단위로 변환한다.
+	 * @param     int iPA
+	 * @return    float
+	 * @exception
+	 * @author    조철희 (churlhee.jo@lignex1.com)
+	 * @version   1.0.0
+	 * @date      2022-07-04 13:26:35
+	 * @warning
+	 */
+    static float DecodePA( int iPA )
+    {
+        float fPA;
+
+        fPA = ( float ) PDW_PA_DB_MIN + POCKETSONATA::_fPARes * ( float ) iPA;
+        return fPA;		/* [dBm] */
     } ;
 
     static bool Test()
@@ -2375,8 +2379,9 @@ public:
      */
     inline UINT GetDataItems() { 
         UINT uiRet = 0;
-        if( m_pData != NULL ) 
+        if( m_pData != NULL ) {
             uiRet = m_pData->m_PDWData.GetTotalPDW();
+        }
 
         return uiRet; 
     }

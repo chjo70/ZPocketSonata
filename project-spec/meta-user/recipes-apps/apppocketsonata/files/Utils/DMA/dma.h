@@ -14,7 +14,7 @@
 *  Created on: 2020. 1. 20.
 *      Author: juna
 ******************************************************************/
-#include "../chwio.h"
+//#include "../chwio.h"
 //#include "../../Test/hw_interface.h"
 
 #define _INTSAFE_H_INCLUDED_
@@ -135,7 +135,7 @@ typedef struct
 struct dma_sg_descs_t
 {
 	uint32_t		uiCount;
-	uint32_t		size;
+	uint32_t		uiSize;
 
 	dma_sg_desc_t	*item;
 	xmem_t			mem;

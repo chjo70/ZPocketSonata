@@ -8,7 +8,7 @@
 
 #include "../../Files/Anal/Collect/DataFile/DataFile.h"
 
-typedef struct {
+struct STR_GENPDW_INFO {
     unsigned int uiIdex;    // 인덱스
 
     char szFileName[200];   // 파일명
@@ -52,7 +52,7 @@ typedef struct {
     UINT uiPAError;
     UINT uiCoPulseSkip;
 
-} STR_GENPDW_INFO ;
+}  ;
 
 class CGenPDW : public CRawFile
 {

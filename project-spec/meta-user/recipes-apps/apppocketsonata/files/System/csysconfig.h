@@ -56,7 +56,7 @@ struct STR_SYSCONFIG {
     /**
      * @brief 장비 모드 상태
      */
-    ENUM_MODE enMode;
+    //ENUM_MODE enMode;
 
     /**
      * @brief IPL 버젼 정보
@@ -72,22 +72,22 @@ struct STR_SYSCONFIG {
     /**
      * @brief 탐지 채널 정보
      */
-    STR_WINDOWCELL strDetectWindowCell[DETECT_CHANNEL];
+    STR_WINDOWCELL strDetectWindowCell[CO_DEFAULT_DETECT_CHANNEL];
 
     /**
      * @brief 추적 채널 정보
      */
-    STR_WINDOWCELL strTrackWindowCell[TRACK_CHANNEL];
+    STR_WINDOWCELL strTrackWindowCell[CO_DEFAULT_TRACK_CHANNEL];
 
     /**
      * @brief 스캔 채널 정보
      */
-    STR_WINDOWCELL strScanWindowCell[SCAN_CHANNEL];
+    STR_WINDOWCELL strScanWindowCell[CO_DEFAULT_SCAN_CHANNEL];
 
     /**
      * @brief 사용자 채널 정보
      */
-    STR_WINDOWCELL strUserWindowCell[USER_CHANNEL];
+    STR_WINDOWCELL strUserWindowCell[CO_DEFAULT_USER_CHANNEL];
 
     unsigned char ucColHisto[COLHISTO_TIME][COLHISTO_CELLS];
 
@@ -189,8 +189,9 @@ public:
     float GetMergeAOADiff(ENUM_BoardID enBoardID) { 
         float fValue= m_strConfig.fMergeAOADiff[enPRC1];
 
-        if(enBoardID >= enPRC1 && enBoardID <= enPRC5 )
+        if(enBoardID >= enPRC1 && enBoardID <= enPRC5 ) {
             fValue = m_strConfig.fMergeAOADiff[enBoardID- enPRC1]; 
+        }
 
         return fValue;
 
@@ -223,17 +224,17 @@ public:
         }
     };
 
-    ENUM_MODE GetMode() { return m_strConfig.enMode; };
-    void SetMode(ENUM_MODE enMode) {
-        if( enMode == enANAL_Mode ) {
-            m_strConfig.enMode = ( ENUM_MODE ) ( (unsigned int) m_strConfig.enMode | (unsigned int) enANAL_Mode );
-        }
-        else {
-            m_strConfig.enMode = enMode;
-        }
-
-        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
-    };
+    //ENUM_MODE GetMode() { return m_strConfig.enMode; };
+//     void SetMode(ENUM_MODE enMode) {
+//         if( enMode == enANAL_Mode ) {
+//             m_strConfig.enMode = ( ENUM_MODE ) ( (unsigned int) m_strConfig.enMode | (unsigned int) enANAL_Mode );
+//         }
+//         else {
+//             m_strConfig.enMode = enMode;
+//         }
+// 
+//         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+//     };
 
     char *GetLocalIPAddress() { return m_strConfig.szLocalIPAddress; };
     void SetLocalIPAddress( const char *pIPAddress ) {

@@ -266,7 +266,7 @@ typedef struct stUniformC
 // 	};
 // }SELDBReportAddressee;
 
-typedef struct {
+struct SLOBOtherInfo {
     char szElnotPri[_MAX_ELNOT_STRING_SIZE_];
     char szModeCodePri[_MAX_SIZE_OF_MODECODE];
     char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];
@@ -283,7 +283,7 @@ typedef struct {
 
     bool bUpdate;			// 연동기에서 사용함. POSN 에서는 사용하지 않음
 
-} SLOBOtherInfo;
+} ;
 
 /**
  * @typedef   SELEXTDB

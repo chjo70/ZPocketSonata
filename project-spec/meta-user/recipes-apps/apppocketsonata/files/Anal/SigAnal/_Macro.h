@@ -5,9 +5,8 @@
 */
 
 
+#pragma once
 
-#ifndef  __MACRO_H
-#define  __MACRO_H
 
 #include "../INC/PDW.h"
 #include "_Define.h"
@@ -163,9 +162,10 @@ T _diffabs( T x, T y)
 #define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
-#define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
-#define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+//#define IPWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
 #define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
+#define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
+
 #define AOACNV( A )             FMUL( (A), _spAOAres )
 #define I_AOACNV( A )           IMUL( (A), _spAOAres )
 #define FAOACNV( A )            FMUL( (A), _spAOAres )
@@ -211,16 +211,16 @@ T _diffabs( T x, T y)
 
 #define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
 #define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
-#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
-#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
-#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
-#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )					
-#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )
+#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )
+#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
-#define I_PWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
+#define IPWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
 #define DPWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
-#define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
+//#define IPWCNV( A )				IDIV( (A*_spOneMicrosec), 1000. )
 #define AOACNV( A )             FMUL( (A), _spAOAres )
 #define I_AOACNV( A )           IMUL( (A), _spAOAres )
 #define FAOACNV( A )            FMUL( (A), _spAOAres )
@@ -240,7 +240,7 @@ T _diffabs( T x, T y)
 #define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
 #define PACNV( A )				(float)( FMUL( (-A), _spAMPres ) )
-#define IPACNV( A )				IDIV( -A, _spAMPres )
+#define IPACNV( A )				IDIV( -(A), _spAMPres )
 
 #define FFRQCNV( A, B )			( FMUL( gFreqRes[0].fRes, (A) ) + gFreqRes[0].iOffset )
 
@@ -281,9 +281,8 @@ T _diffabs( T x, T y)
 #define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
-#define I_PWCNV( A )			(int) ( CPOCKETSONATAPDW::DecodePWus( A ) + 0.5 )
-#define IPWCNV( A )				IMUL( (A), _spOneNanosec )
-#define FPWCNV( A )             FMUL( (A), _spOneNanosec )
+#define IPWCNV( A )			    CPOCKETSONATAPDW::EncodePWFloor( A )
+
 
 #define IPWCNVLOW( A )			CPOCKETSONATAPDW::EncodePWFloor( A )
 #define IPWCNVHGH( A )			CPOCKETSONATAPDW::EncodePWCeiling( A )
@@ -298,7 +297,7 @@ T _diffabs( T x, T y)
 
 
 #define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
-#define IPACNV( A )				FDIV( (A), _spAMPres )
+#define IPACNV( A )				CPOCKETSONATAPDW::EncodePA( A )  // ( (A), _spAMPres )
 #define I_IPACNV( A )			IDIV( (A), _spAMPres )
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
@@ -450,9 +449,12 @@ extern "C"
 #ifndef WhereIs
 
 #ifdef _WIN32
-#define WhereIs									TRACE( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+// 신뢰성 때문에 '+1' 을 생략함.
+#define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
+
 #else
-#define WhereIs									printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#define WhereIs									printf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+
 #endif
 
 #endif
@@ -508,24 +510,24 @@ extern float _spTOAres;
 extern float _spPWres;
 
 
-#if defined(_ELINT_)
-extern float _frqRes[ELINT::enUnknown_BW + 1];
+// #if defined(_ELINT_)
+// extern float _frqRes[ELINT::enUnknown_BW + 1];
+// 
+// #elif defined(_701_)
+// extern float _frqRes[_701::enUnknown_BW + 1];
+// 
+// #elif defined(_XBAND_)
+// extern float _frqRes[XBAND::enUnknown_BW + 1];
+// 
+// #elif defined(_POCKETSONATA_)
+// extern float _frqRes[POCKETSONATA::enUnknown_BW + 1];
+// 
+// #else
+// 
+// #endif
 
-#elif defined(_701_)
-extern float _frqRes[_701::enUnknown_BW + 1];
 
-#elif defined(_XBAND_)
-extern float _frqRes[XBAND::enUnknown_BW + 1];
-
-#elif defined(_POCKETSONATA_)
-extern float _frqRes[POCKETSONATA::enUnknown_BW + 1];
-
-#else
 
 #endif
 
 
-
-#endif
-
-#endif   /* end of ifdef _COMMON_H */

@@ -9,6 +9,9 @@
 class CMSIGADlg : public CDialogEx
 {
 // 생성입니다.
+private:
+	bool m_bReqStart;
+
 public:
 	CMSIGADlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
@@ -32,4 +35,5 @@ protected:
 public:
     afx_msg void OnNcDestroy();
     afx_msg void OnBnClickedSimStart();
+	afx_msg void OnBnClickedSimLibrary();
 };

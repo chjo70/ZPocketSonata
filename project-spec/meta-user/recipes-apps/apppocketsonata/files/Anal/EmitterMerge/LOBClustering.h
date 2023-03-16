@@ -84,7 +84,7 @@ typedef unsigned int QueueIndex;
 // 
 // } SELLOBDATA ;
 
-typedef struct  {
+struct SELLOBDATA_MINIMIZE {
 	// LOB 제원 정보
 	float	fMeanDOA;			// [1.0 도]
 	unsigned int uiLOBID;
@@ -92,14 +92,14 @@ typedef struct  {
     float fRadarLatitude;
     float fRadarLongitude;
 
-} SELLOBDATA_MINIMIZE ;
+}  ;
 
 /**
  * @typedef   SELINTERSECTION
  * @brief     교차점 구조체 정의로 교차점 정보와 LOB 번호로 구성.
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
+struct SELINTERSECTION {
 	// 교차점 정보, 단위는 degree.
 	float fLongitude;
 	float fLatitude;
@@ -113,7 +113,7 @@ typedef struct {
 	// 특정 항공기에서 교차점간의 거리
 	float fDist;
 
-} SELINTERSECTION;
+} ;
 
 // typedef struct {
 // 	float fx;
@@ -126,19 +126,19 @@ typedef struct {
  * @brief     단일 그룹화 정보로 그룹화 인덱스, 총 갯수, 중심값, 평균값, 편차값
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-typedef struct {
+struct STR_LOBCLUSTER {
 	int iCount;
 	QueueIndex *pQueueIndex;
 
 	float fMaxDiffAoa;
 
-} STR_LOBCLUSTER ;
+}  ;
 
-typedef struct {
+struct STR_LOBCLUSTER_EXT {
 	int iCEP;
 	int nLOB;
 
-} STR_LOBCLUSTER_EXT ;
+}  ;
 
 // GetEffectiveDOADiff1() 유효 백분율
 #define DOADIFF_RATIO1																(60)		// 단위: 백분율

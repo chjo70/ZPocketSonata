@@ -271,11 +271,11 @@ bool CMIDASBlueFileFormat::SaveMIDASFormat( char *pMidasFileName, EnumSCDataType
 bool CMIDASBlueFileFormat::WriteIQData( int destFileId, unsigned int uiNumberofdata )
 {
     UINT i;
-    
+
     bool bRet=false;
 
     int iSize;
-    long sz_file;    
+    long sz_file;
 
     unsigned int uiWriteByte, uiWrite;
 
@@ -490,7 +490,8 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
 
     if( m_enFileType != E_EL_SCDT_PDW2SP370 ) {
         // 데이터 블럭에서 쓰고 난 이후에 512 블럭을 맞추기 위해서 NULL 문자 개수를 계산함.
-		llNullCh = MulDiv64((__int64)m_pHCB->ext_start, (__int64)BYTE_IN_A_BLOCK, (__int64)1);
+		//llNullCh = MulDiv64((__int64)m_pHCB->ext_start, (__int64)BYTE_IN_A_BLOCK, (__int64)1);
+        llNullCh = TMUL<__int64>( ( __int64 ) m_pHCB->ext_start, ( __int64 ) BYTE_IN_A_BLOCK );
 		llNullCh -= ( (long long int) m_pHCB->data_size + (long long int) (HEADER_CONTROL_BLOCK_SIZE) );
         //llNullCh = (long long int) ( ( m_pHCB->ext_start * BYTE_IN_A_BLOCK ) - ( (long long int) m_pHCB->data_size + (long long int) ( HEADER_CONTROL_BLOCK_SIZE ) ) );
         if( llNullCh < 0 ) { //DTEC_Else
@@ -944,7 +945,7 @@ void CMIDASBlueFileFormat::MakeHeader()
 
         if( m_enFileType == E_EL_SCDT_IQ || m_enFileType == E_EL_SCDT_IF ) {
             // 타입
-            pHCB->type = MIDAS_FILE_TYPE_1001;
+            pHCB->iType = MIDAS_FILE_TYPE_1001;
 
             // 데이터 포멧
             pHCB->format[0] = DATA_FORMAT_SIZE_DESIGNATOR_COMPLEX;
@@ -953,14 +954,14 @@ void CMIDASBlueFileFormat::MakeHeader()
         }
         else if( m_enFileType == E_EL_SCDT_PDW ) {
             // 타입
-            pHCB->type = MIDAS_FILE_TYPE_6003;
+            pHCB->iType = MIDAS_FILE_TYPE_6003;
 
             // 데이터 포멧
             pHCB->format[0] = DATA_FORMAT_SIZE_DESIGNATOR_SCALR;
             pHCB->format[1] = DATA_FORMAT_TYPE_DESIGNATOR_32BIT_FLOAT;
         }
         else { //DTEC_Else
-            pHCB->type = MIDAS_FILE_TYPE_1001;
+            pHCB->iType = MIDAS_FILE_TYPE_1001;
 
             // 데이터 포멧
             pHCB->format[0] = DATA_FORMAT_SIZE_DESIGNATOR_SCALR;
@@ -1133,15 +1134,15 @@ void CMIDASBlueFileFormat::MakeAdjunct()
             pAdjunct1000 = ( SELMIDAS_ADJUNCT_TYPE_1000 * ) & pByte[0x100];
 
             // xstart
-            pAdjunct1000->xstart = 0.0;
+            pAdjunct1000->dxstart = 0.0;
 
             // xdelta, 샘플링 타임
             if( m_strKeywordValue.dSamplingPeriod > 0.0 || m_strKeywordValue.dSamplingPeriod < 0.0 ) {
                 // pAdjunct1000->xdelta = 1000000. / m_strKeywordValue.dSamplingPeriod;
-                pAdjunct1000->xdelta = m_strKeywordValue.dSamplingPeriod;
+                pAdjunct1000->dxdelta = m_strKeywordValue.dSamplingPeriod;
             }
             else { //DTEC_Else
-                pAdjunct1000->xdelta = 1000000. / DEFAULT_SAMPLINGRATE_VALUE;
+                pAdjunct1000->dxdelta = 1000000. / DEFAULT_SAMPLINGRATE_VALUE;
             }
 
             // xunits
@@ -1307,7 +1308,7 @@ int CMIDASBlueFileFormat::WriteHeader()
     }
     else {
         if( g_enEndian == enLITTLE_ENDIAN ) {
-            nWrite = (unsigned int) Write( m_pHCB, sizeof(char)*(size_t) HEADER_CONTROL_BLOCK_SIZE );
+            nWrite = (int) Write( m_pHCB, sizeof(char)*(size_t) HEADER_CONTROL_BLOCK_SIZE );
         }
         else {
             SELMIDAS_HCB m_HCB;
@@ -1320,7 +1321,7 @@ int CMIDASBlueFileFormat::WriteHeader()
             CCommonUtils::swapByteOrder( m_HCB.ext_size );
             CCommonUtils::swapByteOrder( m_HCB.data_start );
             CCommonUtils::swapByteOrder( m_HCB.data_size );
-            CCommonUtils::swapByteOrder( m_HCB.type );
+            CCommonUtils::swapByteOrder( m_HCB.iType );
             CCommonUtils::swapByteOrder( m_HCB.flagmask );
             CCommonUtils::swapByteOrder( m_HCB.timecode );
             CCommonUtils::swapByteOrder( m_HCB.inlet );
@@ -1334,7 +1335,7 @@ int CMIDASBlueFileFormat::WriteHeader()
             CCommonUtils::swapByteOrder( m_HCB.uiKeylength );
 
             size_t szSize = CCommonUtils::CheckMultiplyOverflow( sizeof(char), HEADER_CONTROL_BLOCK_SIZE );
-            nWrite = (unsigned int) Write( & m_HCB, (unsigned int) szSize );
+            nWrite = (int) Write( & m_HCB, (unsigned int) szSize );
         }
     }
     return nWrite;
@@ -1966,6 +1967,7 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeValueBinaryKeyword( SELMIDAS_
 
     default :
         printf( "\n 에러 발생..." );
+        buffer[0] = NULL;
         break;
     }
 
@@ -1994,10 +1996,10 @@ SELMIDAS_BINARY_KEYWORD *CMIDASBlueFileFormat::MakeSetBinaryKeyword( SELMIDAS_BI
     char *pByte;
     unsigned int lKey;
 
-    c = strlen( (const char *) pValue );
+    c = (int) strlen( (const char *) pValue );
     lKey = MakeBinaryKeyword( pBinKeyword, pValue, keyword, c, DATA_FORMAT_TYPE_DESIGNATOR_ASCII );
     pByte = (char *) pBinKeyword;
-    
+
     return ( SELMIDAS_BINARY_KEYWORD * ) ( & pByte[lKey] );
 
 }
@@ -2081,8 +2083,8 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
     int iFile;
     bool bRet=true;
     unsigned int i, nSize;
-    
-#ifndef __VXWORKS__    
+
+#ifndef __VXWORKS__
 
     vector<SELIFMIDAS>::pointer pConvertIFList;
 
@@ -2143,7 +2145,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
 			bRet = true;
 		}
     }
-#endif    
+#endif
 
     return bRet;
 

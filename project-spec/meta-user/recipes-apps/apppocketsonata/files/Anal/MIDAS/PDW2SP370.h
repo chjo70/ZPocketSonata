@@ -25,7 +25,7 @@ typedef struct {
 	unsigned int uiPadbytes[2];
 } SELSP350_PDWHEADER;
 
-typedef union {
+union SELSP350_PDWWORDS {
 	unsigned int wpdw[PDW_PHASE_OF_SP370];
 
 	struct {
@@ -65,7 +65,7 @@ typedef union {
 		unsigned short usCW									: 1;						// CW flag
 
 	} x;
-} SELSP350_PDWWORDS;
+} ;
 
 
 class CPDW2SP370

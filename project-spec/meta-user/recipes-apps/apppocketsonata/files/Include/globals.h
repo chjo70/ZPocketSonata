@@ -1,12 +1,16 @@
-﻿/*
- * 본 문서는 시스템을 정의하는 테이블과 운영체계 또는 컴파일러에 의존하여 정의한다.
-	아래 헤더 파일은 쓰레드 관련 함수를 사용할 때 이 헤더 파일이 필요하다.
- * */
+﻿/**
 
-#ifndef _GLOBALS_H
-#define _GLOBALS_H
+    @file      globals.h
+    @brief     전역 변수 및 클르스 객체를 선언 합니다.
+    @details   ~
+    @author    조철희
+    @date      15.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
 
-#include "../Utils/cmultiserver.h"
+**/
+#pragma once
+
+//#include "../Utils/cmultiserver.h"
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
 
@@ -37,7 +41,7 @@ CTrackAnalysis *g_pTheTrackAnalysis;
 CScanAnalysis *g_pTheScanAnalysis;
 
 // 통신 관련 쓰레드
-CMultiServer *g_pTheZYNQSocket;
+//CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
 //CSingleClient *g_pThePMCSocket;
 
@@ -50,7 +54,7 @@ CELEnvironVariable *g_pTheELEnvironVariable;
 
 
 // 타스크 및 쓰레드 포인터
-vector<CThread *> g_vecThis;
+vector<CThread *> g_vecThread;
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -80,7 +84,7 @@ extern CScanAnalysis *g_pTheScanAnalysis;
 extern CLog *g_pTheLog;
 extern CSysConfig *g_pTheSysConfig;
 
-extern CMultiServer *g_pTheZYNQSocket;
+//extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
 extern CSingleClient *g_pThePMCSocket;
 
@@ -88,7 +92,7 @@ extern CSingleClient *g_pThePMCSocket;
 extern CELEnvironVariable *g_pTheELEnvironVariable;
 
 // 쓰레드 관련 정보
-extern vector<CThread *> g_vecThis;
+extern vector<CThread *> g_vecThread;
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -138,7 +142,7 @@ public:
 };
 
 
-
+#ifdef _LOG_
 #define Log                             g_pTheLog->LogMsg
 
 #define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
@@ -150,11 +154,14 @@ public:
 #define LOGMSG4( A, B, C, D, E, F )     g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
 #define LOGMSG5( A, B, C, D, E, F, G )  g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
 
-
-//#define Log                             g_pTheLog->LogMsg
-
-
 #define LOGENTRY                        g_pTheLog->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
 
+#else
+#define LOGMSG( A, B )                  TRACE( B )
+#define LOGMSG1( A, B, C )              TRACE( B, C )
+#define LOGMSG2( A, B, C, D )           TRACE( B, C, D )
+#define LOGMSG3( A, B, C, D, E )        TRACE( B, C, D, E )
+#define LOGMSG4( A, B, C, D, E, F )     TRACE( B, C, D, E, F )
 
-#endif // _SYSTEM_H
+#endif
+

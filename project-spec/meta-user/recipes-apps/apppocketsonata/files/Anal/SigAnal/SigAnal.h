@@ -31,6 +31,8 @@ private:
 
 	unsigned int m_uiCoMaxPdw;
 
+    std::string m_strAnalDirectory;
+
 
 #if defined(_MSSQL_) || defined(_SQLITE_)
     char *m_pszSQLString;
@@ -123,6 +125,11 @@ public:
     void DISP_FineLOB(SRxLOBData *pLOB);
 
 	unsigned int GetOpInitID();
+    void MakeAnalDirectory( UNION_HEADER* pUniHeader );
+
+    inline const char* GetAnalDirectory() { 
+        return m_strAnalDirectory.c_str(); 
+    }
 
 
     /**
@@ -245,7 +252,7 @@ public:
 		m_enBandWidth = (POCKETSONATA::ENUM_BANDWIDTH) iVal;
 
 #else
-#error "대역을 설정해줘야 합니다..."
+// #error "대역을 설정해줘야 합니다..."
 #endif
 
     }
@@ -363,7 +370,6 @@ public:
 
 
     virtual int GetCoGroup() = 0;
-	virtual char *GetAnalDirectory() = 0;
 
 };
 

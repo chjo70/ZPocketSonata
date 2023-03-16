@@ -28,7 +28,7 @@ struct SEnvironVariable {
 	UINT uiEmmgNumOfMinLobToBeam;
 	UINT uiEmmgEmitterDeleteTimeSec;
 
-	int iDVRatio;
+	unsigned int uiDVRatio;
 
 	int iWeightFrqRange;			// 신호식별가중치-주파수범위
 	int iWeightFrqExpRange;   // 신호식별가중치-주파수확장범위
@@ -220,7 +220,7 @@ public:
 	* @brief       DV 비율 환경변수 값 획득함수
 	* @return      unsigned int   DV비율
 	*/
- 	int GetMtskDVRatio();
+ 	unsigned int GetMtskDVRatio();
 // 	
 // 	
 // 	/**

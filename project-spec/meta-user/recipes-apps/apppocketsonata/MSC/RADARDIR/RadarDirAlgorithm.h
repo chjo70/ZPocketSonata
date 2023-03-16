@@ -368,7 +368,7 @@ struct STR_XBAND_HEADER {
 #define _POCKETSONATA_HEADER_
 struct STR_POCKETSONATA_HEADER {
 	unsigned int uiBoardID;
-	unsigned int uiBank;
+	unsigned int enBank;
 	unsigned int uiBand;                // 주파수 대역
 	unsigned int uiIsStorePDW;
 
@@ -724,7 +724,7 @@ struct SRxLOBData {
 
 #endif
 
-    int iSignalType;
+    int ucSignalType;
 
     float fDOAMean;             // [0.1도]
     float fDOAMax;
@@ -735,15 +735,15 @@ struct SRxLOBData {
     int iDIRatio;					// [1 %]
 
     int iFreqType;
-    int iFreqPatternType;
+    int ucFreqPatternType;
     float fFreqPatternPeriod;                       // [us]
     float fFreqMean;				// [10KHz]
     float fFreqMax;
     float fFreqMin;
     float fFreqDeviation;
     float fFreqMode;            // Freq 최빈수
-    int iFreqPositionCount;
-    int iFreqElementCount;
+    int ucFreqPositionCount;
+    int ucFreqElementCount;
     float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
     int iPRIType;
@@ -755,7 +755,7 @@ struct SRxLOBData {
     float fPRIDeviation;		// [1ns]
     float fPRIMode;             // PRI 최빈수
     float fPRIJitterRatio;		// [%]
-    int iPRIPositionCount;
+    int ucPRIPositionCount;
     int iPRIElementCount;
     float fPRISeq[MAX_FREQ_PRI_STEP];
 
@@ -806,14 +806,14 @@ struct SRxLOBData {
 #endif
 
     //int iTotalOfPDW;
-    int iNumOfPDW;
+    int uiCoPDWOfAnalysis;
 
 #if defined(_XBAND_) || defined(_ELINT_)
 	int iNumOfIQ;
 #endif
 
 	char szRadarModeName[_MAX_RADARNAME_SIZE];
-    int iRadarModeIndex;
+    int uiRadarModeIndex;
 
     float fCollectLatitude;
     float fCollectLongitude;		

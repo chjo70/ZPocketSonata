@@ -49,6 +49,7 @@
 		<item value="false" key="caseSensitive"/>
 		<item value="227191" key="searchFlags"/>
 		<list key="previousPatterns">
+			<item value="__int64"/>
 			<item value="localeh"/>
 			<item value="S_objLib_OBJ_TIMEOUT"/>
 			<item value="drawdata"/>

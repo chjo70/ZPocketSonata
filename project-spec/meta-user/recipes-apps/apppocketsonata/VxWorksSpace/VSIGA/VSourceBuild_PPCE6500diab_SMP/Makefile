@@ -39,8 +39,8 @@ else
 MODE_DIR := NonDebug
 endif
 OBJ_DIR := .
-WS_ROOT_DIR := D:/VirtualBoxVMs/Git
-PRJ_ROOT_DIR := $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSIGA
+WS_ROOT_DIR := D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace64
+PRJ_ROOT_DIR := D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSIGA
 
 
 
@@ -130,7 +130,7 @@ VSIGA/$(MODE_DIR)/% : PROJECT_TYPE = DKM
 VSIGA/$(MODE_DIR)/% : DEFINES = 
 VSIGA/$(MODE_DIR)/% : EXPAND_DBG = 0
 VSIGA/$(MODE_DIR)/% : APICHECK_OPTIONS = -warning
-VSIGA/$(MODE_DIR)/% : POST_BUILD_RULE = dir
+VSIGA/$(MODE_DIR)/% : POST_BUILD_RULE = ls
 VSIGA/$(MODE_DIR)/% : VX_CPU_FAMILY = ppc
 VSIGA/$(MODE_DIR)/% : CPU = PPCE6500
 VSIGA/$(MODE_DIR)/% : TOOL_FAMILY = diab
@@ -215,131 +215,7 @@ VSIGA_partialImage/$(MODE_DIR)/% : APICHECK_CMD = apicheck.sh -r "$(VSB_DIR)/krn
 VSIGA_partialImage/$(MODE_DIR)/% : APICHECK = 0
 VSIGA_partialImage/$(MODE_DIR)/% : OBJ_DIR := VSIGA_partialImage/$(MODE_DIR)
 
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/DataFile/DataFile.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Collect/DataFile/DataFile.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/ccollectbank/ccollectbank.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Collect/ccollectbank/ccollectbank.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/CEP/AnalyticCEP.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/CEP/AnalyticCEP.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Coordinate/Coordinate.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Coordinate/Coordinate.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/InverseMethod/CInverseMethod.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/InverseMethod/CInverseMethod.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Matrix/Matrix.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Matrix/Matrix.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Quadratic/Quadratic.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Quadratic/Quadratic.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/UTM/UTM.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/UTM/UTM.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/ELUtil.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/ELUtil.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/Identify.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/Identify.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/cipl.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/cipl.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/ELDecoder.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/ELDecoder.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/Midas.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/Midas.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/PDW2SP370.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/PDW2SP370.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/RawFile.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/RawFile.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csharedmemory.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/System/csharedmemory.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csysconfig.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/System/csysconfig.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/creclan.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/creclan.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/csignalcollect.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/csignalcollect.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/ctaskmngr.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/ctaskmngr.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/curbit.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/curbit.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/cusercollect.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cusercollect.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/carraymsgdata.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/carraymsgdata.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/ccommonutils.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/ccommonutils.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/clog.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/clog.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleclient.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/csingleclient.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleserver.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/csingleserver.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/cthread.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/cthread.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/programrev.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/programrev.cpp $(FORCE_FILE_BUILD)
-	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
-
-
-VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.o : $(WS_ROOT_DIR)/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/files/cmain.cpp $(FORCE_FILE_BUILD)
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/cmain.cpp $(FORCE_FILE_BUILD)
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
 
 
@@ -347,39 +223,373 @@ VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/dkm.o : $(PRJ_ROOT_DIR)/dkm.c $(FOR
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_CFLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
 
 
-OBJECTS_VSIGA_partialImage = VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/DataFile/DataFile.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/ccollectbank/ccollectbank.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/CEP/AnalyticCEP.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Coordinate/Coordinate.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/InverseMethod/CInverseMethod.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Matrix/Matrix.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Quadratic/Quadratic.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/UTM/UTM.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/ELUtil.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/Identify.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/cipl.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/ELDecoder.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/Midas.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/PDW2SP370.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/RawFile.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csharedmemory.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csysconfig.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/creclan.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/csignalcollect.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/ctaskmngr.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/curbit.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/cusercollect.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/carraymsgdata.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/ccommonutils.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/clog.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleclient.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleserver.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/cthread.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/programrev.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.o \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/dkm.o
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/DataFile/DataFile.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Collect/DataFile/DataFile.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/ccollectbank/ccollectbank.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Collect/ccollectbank/ccollectbank.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/CEP/AnalyticCEP.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/CEP/AnalyticCEP.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Coordinate/Coordinate.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Coordinate/Coordinate.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEmitterMergeMngr.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/ELEmitterMergeMngr.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEnvironVariableMngr.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/ELEnvironVariableMngr.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELThreat.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/ELThreat.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/InverseMethod/CInverseMethod.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/InverseMethod/CInverseMethod.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/LOBClustering.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/LOBClustering.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Matrix/Matrix.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Matrix/Matrix.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/PositionEstimationAlg.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/PositionEstimationAlg.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Quadratic/Quadratic.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/Quadratic/Quadratic.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/UTM/UTM.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/EmitterMerge/UTM/UTM.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/ELUtil.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/ELUtil.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/Identify.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/Identify.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/cipl.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/Identify/cipl.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KAnalPRI.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/KnownSigAnal/KAnalPRI.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KGroup.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/KnownSigAnal/KGroup.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KMakeAET.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/KnownSigAnal/KMakeAET.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KPulExt.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/KnownSigAnal/KPulExt.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KnownSigAnal.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/KnownSigAnal/KnownSigAnal.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/ELDecoder.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/ELDecoder.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/Midas.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/Midas.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/PDW2SP370.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/PDW2SP370.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/RawFile.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/MIDAS/RawFile.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NAnalPRI.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/NewSigAnal/NAnalPRI.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NGroup.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/NewSigAnal/NGroup.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NMakeAET.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/NewSigAnal/NMakeAET.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NPulExt.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/NewSigAnal/NPulExt.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NewSigAnal.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/NewSigAnal/NewSigAnal.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SAnalSCN.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/ScanSigAnal/SAnalSCN.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SGroup.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/ScanSigAnal/SGroup.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SPulExt.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/ScanSigAnal/SPulExt.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/ScanSigAnal.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/ScanSigAnal/ScanSigAnal.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/AnalPRI.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/AnalPRI.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/Group.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/Group.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/MakeAET.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/MakeAET.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/PulExt.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/PulExt.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/SysPara.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/SysPara.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/cencdec.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Anal/SigAnal/cencdec.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/MinIni/minIni.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/MinIni/minIni.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteBlob.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/SQLite/KompexSQLiteBlob.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteDatabase.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/SQLite/KompexSQLiteDatabase.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteStatement.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/SQLite/KompexSQLiteStatement.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/sqlite3.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/SQLite/sqlite3.c $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -Xc-new -Xdialect-c89  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_CFLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csharedmemory.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/System/csharedmemory.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csysconfig.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/System/csysconfig.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ccgi.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/ccgi.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cdetectanalysis.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cdetectanalysis.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cemittermerge.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cemittermerge.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cjamtech.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cjamtech.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cprompt.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cprompt.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cpulsetrk.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cpulsetrk.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/creclan.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/creclan.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cscananalysis.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cscananalysis.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/csignalcollect.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/csignalcollect.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctaskmngr.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/ctaskmngr.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctrackanalysis.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/ctrackanalysis.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/curbit.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/curbit.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cusercollect.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Thread/cusercollect.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/DMA/dma.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/DMA/dma.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/MulDiv64.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/MulDiv64.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/carraymsgdata.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/carraymsgdata.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/ccommonutils.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/ccommonutils.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/chwio.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/chwio.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/clog.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/clog.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cmultiserver.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/cmultiserver.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleclient.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/csingleclient.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleserver.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/csingleserver.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cthread.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/cthread.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/programrev.o : D:/VirtualBoxVMs/Git/ZPocketSonataT/project-spec/meta-user/recipes-apps/apppocketsonata/files/Utils/programrev.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)/dcc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -Xclib-optim-off -Xansi -Xlocal-data-area-static-only  -W:c++:.CPP  -ei4177,4301,4550 -ei4177,4550,2273,5387,5388,1546,5849,1824 -ei4111,4171,4188,4191,4513,5457 -Xforce-declarations   -Xmake-dependency=0xd $(DKM_LONGCALL) $(IDE_DEFINES) $(DEFINES) $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -o "$@" -c "$<" && if [ "$(APICHECK)" = "1" ]; then $(APICHECK_CMD);fi
+
+
+OBJECTS_VSIGA_partialImage = VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/dkm.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/DataFile/DataFile.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/ccollectbank/ccollectbank.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/CEP/AnalyticCEP.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Coordinate/Coordinate.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEmitterMergeMngr.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEnvironVariableMngr.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELThreat.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/InverseMethod/CInverseMethod.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/LOBClustering.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Matrix/Matrix.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/PositionEstimationAlg.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Quadratic/Quadratic.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/UTM/UTM.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/ELUtil.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/Identify.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/cipl.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KAnalPRI.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KGroup.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KMakeAET.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KPulExt.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KnownSigAnal.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/ELDecoder.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/Midas.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/PDW2SP370.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/RawFile.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NAnalPRI.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NGroup.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NMakeAET.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NPulExt.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NewSigAnal.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SAnalSCN.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SGroup.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SPulExt.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/ScanSigAnal.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/AnalPRI.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/Group.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/MakeAET.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/PulExt.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/SysPara.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/cencdec.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/MinIni/minIni.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteBlob.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteDatabase.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteStatement.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/sqlite3.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csharedmemory.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csysconfig.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ccgi.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cdetectanalysis.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cemittermerge.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cjamtech.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cprompt.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cpulsetrk.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/creclan.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cscananalysis.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/csignalcollect.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctaskmngr.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctrackanalysis.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/curbit.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cusercollect.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/DMA/dma.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/MulDiv64.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/carraymsgdata.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/ccommonutils.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/chwio.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/clog.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cmultiserver.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleclient.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleserver.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cthread.o \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/programrev.o
 
 checkDirVSIGA_partialImage : 
 	mkdir -p VSIGA_partialImage/$(MODE_DIR)/
@@ -406,34 +616,55 @@ TARGET_JOBS_RULE?=echo "Update the makefile template via File > Import > Build S
 %_jobs : 
 	$(TRACE_FLAG)$(TARGET_JOBS_RULE)
 
-DEP_FILES := VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/DataFile/DataFile.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/ccollectbank/ccollectbank.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/CEP/AnalyticCEP.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Coordinate/Coordinate.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/InverseMethod/CInverseMethod.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Matrix/Matrix.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Quadratic/Quadratic.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/UTM/UTM.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/ELUtil.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/Identify.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify/cipl.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/ELDecoder.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/Midas.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/PDW2SP370.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS/RawFile.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csharedmemory.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System/csysconfig.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/creclan.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/csignalcollect.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/ctaskmngr.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/curbit.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread/cusercollect.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/carraymsgdata.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/ccommonutils.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/clog.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleclient.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/csingleserver.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/cthread.d \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils/programrev.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/dkm.d
+DEP_FILES := VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/cmain.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/dkm.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/DataFile/DataFile.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/ccollectbank/ccollectbank.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/CEP/AnalyticCEP.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Coordinate/Coordinate.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/DistanceLeastSquare/DistanceLeastSquare.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEmitterMergeMngr.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELEnvironVariableMngr.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/ELThreat.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/GeoCoordConv/GeoCoordConv.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/InverseMethod/CInverseMethod.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/LOBClustering.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Matrix/Matrix.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/PositionEstimationAlg.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Quadratic/Quadratic.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/UTM/UTM.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/ELUtil.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/Identify.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify/cipl.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KAnalPRI.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KGroup.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KMakeAET.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KPulExt.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal/KnownSigAnal.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/ELDecoder.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/Midas.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/PDW2SP370.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS/RawFile.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NAnalPRI.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NGroup.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NMakeAET.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NPulExt.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal/NewSigAnal.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SAnalSCN.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SGroup.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/SPulExt.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal/ScanSigAnal.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/AnalPRI.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/Group.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/MakeAET.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/PulExt.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/SysPara.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal/cencdec.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/MinIni/minIni.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteBlob.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteDatabase.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/KompexSQLiteStatement.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite/sqlite3.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csharedmemory.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System/csysconfig.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ccgi.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cdetectanalysis.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cemittermerge.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cjamtech.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cprompt.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cpulsetrk.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/creclan.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cscananalysis.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/csignalcollect.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctaskmngr.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/ctrackanalysis.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/curbit.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread/cusercollect.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/DMA/dma.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/MulDiv64.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/carraymsgdata.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/ccommonutils.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/chwio.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/clog.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cmultiserver.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleclient.d \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/csingleserver.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/cthread.d VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/programrev.d
 -include $(DEP_FILES)
 
-OBJ_DIRS := VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/DistanceLeastSquare \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/InverseMethod \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/GeoCoordConv \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Coordinate \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/ccollectbank \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Quadratic \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/CEP \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/Matrix \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Collect/DataFile \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/EmitterMerge/UTM \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/Identify \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Thread \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Anal/MIDAS \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/System \
-	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/Utils
+OBJ_DIRS := VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/DistanceLeastSquare \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/InverseMethod \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/GeoCoordConv \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Coordinate \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/ccollectbank \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Quadratic \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/CEP \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/Matrix \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Collect/DataFile \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/KnownSigAnal \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/ScanSigAnal \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/SQLite \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/NewSigAnal \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/EmitterMerge/UTM \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/Identify \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Thread \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/MIDAS \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Anal/SigAnal \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/System \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/MinIni \
+	 VSIGA_partialImage/$(MODE_DIR)/Objects/VSIGA/files/Utils/DMA
 check_objdirs : 
 	$(TRACE_FLAG)echo "Creating object dirs";\
 	for dir in $(OBJ_DIRS); do\

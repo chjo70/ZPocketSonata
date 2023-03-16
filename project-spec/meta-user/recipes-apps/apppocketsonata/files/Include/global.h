@@ -38,6 +38,8 @@ bool g_bSaveFile=true;
 
 char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
 
+char g_szBitResult[2][10] = { "비정상", "정상" };
+
 #ifdef __VXWORKS__
 MSG_Q_ID g_ShmMemMsgQID;
 #define _SHM_MEMORY_KEY             g_ShmMemMsgQID
@@ -61,6 +63,7 @@ extern bool g_AnalLoop;
 extern bool g_bSaveFile;
 
 extern char g_szCollectBank[4][10];
+extern char g_szBitResult[2][10];
 
 #ifdef __VXWORKS__
 extern MSG_Q_ID g_ShmMemMsgQID;

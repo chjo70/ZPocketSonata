@@ -38,10 +38,12 @@ BOOL CompAoaDiff(T x, T y, T thresh_value )
 
     diff = abs(x - y);
 
-    if (diff <= thresh_value || (MAX_AOA - diff) <= thresh_value)
+    if( diff <= thresh_value || ( MAX_AOA - diff ) <= thresh_value ) {
         bRet = TRUE;
-    else
+    }
+    else {
         bRet = FALSE;
+    }
 
     return bRet;
 
@@ -386,26 +388,34 @@ T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
 	T ret=0;
 
     //if ( low1 == low2 && hgh1 == hgh2)
-	if ( is_zero<T>( (T)(low1-low2) ) == true && is_zero<T>( (T)(hgh1 - hgh2)) == true)
+    if( is_zero<T>( ( T ) ( low1 - low2 ) ) == true && is_zero<T>( ( T ) ( hgh1 - hgh2 ) ) == true ) {
         ret = 1;
+    }
 
-    if( hgh1 < low2 || hgh2 < low1 )			// |-------|		   |--------|
+    if( hgh1 < low2 || hgh2 < low1 ) {			// |-------|		   |--------|
         ret = 0;								//			   |---|
+    }
 
-    if( hgh1 == low2 || hgh2 == low1 )			// |-------|		   |--------|
+    //if( hgh1 == low2 || hgh2 == low1 )			// |-------|		   |--------|
+    if( is_zero<T>( ( T ) ( hgh1 - low2 ) ) == true && is_zero<T>( ( T ) ( hgh2 - low1 ) ) == true ) {
         ret = 1;                                //		   |---|
+    }
 
-    if( low1 > low2 && hgh1 < hgh2 ) 			//          |--------|
-        ret = ( hgh1 - low1 + (T) 1 );					//    |------------------|
+    if( low1 > low2 && hgh1 < hgh2 ) { 			//          |--------|
+        ret = (T) ( hgh1 - low1 + ( T ) 1 );					//    |------------------|
+    }
 
-    if( low1 < low2 && hgh1 > hgh2 )			//    |------------------|
-        ret = ( hgh2 - low2 + (T)1 );			 					//          |--------|
+    if( low1 < low2 && hgh1 > hgh2 ) {			//    |------------------|
+        ret = (T) ( hgh2 - low2 + ( T ) 1 );			 					//          |--------|
+    }
 
-    if( low1 <= hgh2 && low2 <= low1 )			//          |------------|
-        ret = ( hgh2 - low1 + (T)1);     			//    |-----------|
+    if( low1 <= hgh2 && low2 <= low1 ) {			//          |------------|
+        ret = ( hgh2 - low1 + ( T ) 1 );     			//    |-----------|
+    }
 
-    if( hgh1 >= low2 && hgh1 <= hgh2 )   		//    |-----------|
-        ret = ( hgh1 - low2 + (T)1 );						//          |------------|
+    if( hgh1 >= low2 && hgh1 <= hgh2 ) {   		//    |-----------|
+        ret = ( hgh1 - low2 + ( T ) 1 );						//          |------------|
+    }
 
     return ret;
 }

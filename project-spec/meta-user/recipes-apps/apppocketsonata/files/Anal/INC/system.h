@@ -64,23 +64,18 @@
 #define CEDEOB_SQLITE_FOLDER        SHARED_DATA_DIRECTORY
 #elif defined(__linux__)
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/home/chjo70"
+
 #elif defined(__VXWORKS__)
-
-#define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
-// #ifdef _POCKETSONATA_
-// #define CEDEOB_SQLITE_FOLDER        (const char *) "/d/rawdata"
-// #else
 // #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
-// #endif
-
-#else
-// Vxworks 나 리눅스에 
-
 #ifdef _POCKETSONATA_
-#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"         
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/d/rawdata"
+#else
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
+#endif
+
 #else
 #define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"
-#endif
+
 
 #endif
 #define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
@@ -398,7 +393,8 @@
 
 #else
 //#error "컴파일러에 DEFINE 을 추가해야 합니다."
-
+#define	MAX_FREQ_MHZ					    (18000)                     //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					    (500)						//!< 주파수 최소 값
 
 #endif
 
@@ -605,7 +601,7 @@ enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRP
 // 장치별 정의
 #ifndef _ENUM_UnitType
 #define _ENUM_UnitType
-typedef enum {
+enum ENUM_UnitType {
     en_UnknownUnit = 0,
 
     en_SONATA,
@@ -620,7 +616,7 @@ typedef enum {
 
 	en_OTHERS
 
-} ENUM_UnitType;
+} ;
 #endif
 
 

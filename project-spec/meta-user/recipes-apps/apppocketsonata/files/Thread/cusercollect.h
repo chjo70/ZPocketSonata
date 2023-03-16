@@ -6,6 +6,8 @@
 
 #include "../Anal/Collect/GenPDW/CGenPDW.h"
 
+#define NUM_OF_PDW          (100)
+
 class CUserCollect : public CThread
 {
 private:
@@ -39,7 +41,7 @@ private:
 
     // 수집 제어 관련 함수
     void SetConfig();
-    void Stop();
+    void StopThread();
     void ColStart();
     void SendRawData();
 
@@ -56,8 +58,9 @@ public:
     void Run( key_t key=IPC_PRIVATE ); 
 
 
-    virtual void _routine();
-    virtual char *GetThreadName() { return m_szThreadName; }
+    void _routine();
+    char *GetThreadName() { return m_szThreadName; }
+    STR_MessageData *GetParentMessage() { return m_pMsg; }              ///< 메시지 데이터를 리턴 합니다.
 };
 
 //#define UCOL   CUserCollect::GetInstance()

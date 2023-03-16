@@ -1,5 +1,5 @@
 ﻿
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef _MSC_VER
 
@@ -39,7 +39,7 @@
 
 #include "../Include/globals.h"
 
-extern CMultiServer *g_pTheZYNQSocket;
+//extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
 //extern CSingleClient *g_pThePMCSocket;
 
@@ -54,6 +54,12 @@ CCommonUtils::CCommonUtils()
 }
 
 #ifndef _GRAPH_
+
+void CCommonUtils::SendLan( UINT uiOpCode )
+{
+    CCommonUtils::SendLan( uiOpCode, NULL, 0 );
+
+}
 
 /**
  * @brief opcode, data 를 입력받아서 랜으로 송신한다.
@@ -85,12 +91,12 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
     }
     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
     else {
-        if( g_pTheZYNQSocket != NULL ) {
-            //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
-        }
-        else {
-
-        }
+//         if( g_pTheZYNQSocket != NULL ) {
+//             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
+//         }
+//         else {
+// 
+//         }
     }
 #endif
 #endif
@@ -392,7 +398,7 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, u
     else {
         pTimeSpec->tv_sec = (long) tColTime;
 #ifdef _MSC_VER
-        pTimeSpec->tv_usec = tColTimeMs * (unsigned int) 1000;
+        pTimeSpec->tv_usec = (long) tColTimeMs * (long) 1000;
 #else
         pTimeSpec->tv_nsec = tColTimeMs * 1000000;
 #endif
@@ -467,7 +473,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
     int     tmp_errno;
     int iSize;
 
-    printf( "\n\t[%s]을 [%s]으로 복사중..." , src_file, dest_file );
+    // printf( "\n\t[%s]을 [%s]으로 복사중..." , src_file, dest_file );
 
 #if defined(__linux__) || defined(__VXWORKS__)
     src_fd = open(src_file, O_RDONLY | O_BINARY, 0644 );
@@ -533,7 +539,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
 
 #ifdef __VXWORKS__        		
   
-#elif __linux__
+#elif defined(__linux__)
 
 #else 		
         	struct  utimbuf attr;
@@ -627,8 +633,8 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
 #ifdef __ZYNQ_BOARD__
     return;
-#else
-    unsigned int i;
+
+#else    
     _PDW *pPDW;
     _TOA ullfirstTOA;
 
@@ -636,6 +642,8 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     ullfirstTOA = pPDW->ullTOA;
 
 #ifdef _POCKETSONATA_
+    unsigned int i;
+
     for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
                 pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
@@ -645,6 +653,8 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
         ++ pPDW;
     }
 #elif defined(_ELINT_) || defined(_XBAND_)
+    unsigned int i;
+
     for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
             pPDW->ullTOA, CEPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA, pPDWData->x.el.enBandWidth ), \
@@ -655,6 +665,8 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     }
 
 #elif defined(_701_)
+    unsigned int i;
+
 	for (i = 0; i < pPDWData->GetTotalPDW(); ++i) {
 		printf("[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
 			pPDW->ullTOA, C7PDW::DecodeTOAus(pPDW->ullTOA - ullfirstTOA, pPDWData->x.e7.enBandWidth), \
@@ -672,32 +684,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
 }
 
-/**
- * @brief CCommonUtils::GetEnumCollectBank
- * @param uiCh
- * @return
- */
-ENUM_COLLECTBANK CCommonUtils::GetEnumCollectBank( int iCh )
-{
-    ENUM_COLLECTBANK enCollectBank=enUnknownCollectBank;
 
-    if( iCh >= 0 ) {
-        if( iCh < DETECT_CHANNEL ) {
-            enCollectBank = enDetectCollectBank;
-        }
-        else if( iCh < DETECT_CHANNEL+TRACK_CHANNEL ) {
-            enCollectBank = enTrackCollectBank;
-        }
-        else if( iCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL ) {
-            enCollectBank = enScanCollectBank;
-        }
-        else {
-            enCollectBank = enUserCollectBank;
-        }
-    }
-
-    return enCollectBank;
-}
 
 #endif	// _GRAPH_
 
@@ -734,8 +721,13 @@ void CCommonUtils::swapByteOrder(unsigned short& us)
 }
 
 /**
- * @brief CCommonUtils::swapByteOrder
- * @param ull
+ * @brief		swapByteOrder
+ * @param		unsigned int & ui
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/02/21 19:24:16
+ * @warning		
  */
 void CCommonUtils::swapByteOrder(unsigned int& ui)
 {
@@ -910,7 +902,7 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 			// throw 0;
 		}
 
-        else if( iSize > (INT_MAX / iItems) || iSize < (INT_MIN / iItems) ) {
+        else if( iSize > (INT_MAX / iItems) || iSize < ((int) INT_MIN / iItems) ) {
             throw 0;
         }
 
@@ -928,7 +920,7 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
         
     }
     catch( int iExp ) {
-        szSize = iExp;
+        szSize = (size_t) iExp;
     }
 
     return szSize;
@@ -972,10 +964,12 @@ ENUM_DataType CCommonUtils::WhatDataType( char *pStrPathname )
     ENUM_DataType enDataType = en_UnknownData;
 
     if( NULL != CCommonUtils::strcasestr( pStrPathname, ".pdw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".npw" ) || NULL != CCommonUtils::strcasestr( pStrPathname, ".spdw" ) ) {
-		if (NULL != CCommonUtils::strcasestr(pStrPathname, ".csv"))
+		if (NULL != CCommonUtils::strcasestr(pStrPathname, ".csv")) {
 			enDataType = en_PDW_DATA_CSV;
-		else
+        }
+		else {
 			enDataType = en_PDW_DATA;
+        }
     }
     else if( NULL != CCommonUtils::strcasestr( pStrPathname, "e4.dat" ) ) {
         enDataType = en_PDW_DATA;
@@ -1227,5 +1221,145 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 	return 0;
 
 #endif
+
+}
+
+/**
+ * @brief     CountSetBits
+ * @param     unsigned int uiValue
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-02-28 10:27:05
+ * @warning
+ */
+unsigned int CCommonUtils::CountSetBits( unsigned int uiValue )
+{
+    unsigned int uiCount=0;
+
+    while( uiValue ) {
+        uiCount += (unsigned int) ( uiValue & (unsigned int) 1 );
+        uiValue >>= 1;
+    }
+    return uiCount;
+}
+
+/**
+ * @brief		GetNoChannel
+ * @param		unsigned int uiValue
+ * @return		unsigned int
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 17:15:38
+ * @warning		
+ */
+unsigned int CCommonUtils::GetNoChannel( unsigned int uiValue )
+{
+    unsigned int uiCount = 0;
+
+    while( uiValue ) {
+        if( ( unsigned int ) ( uiValue & ( unsigned int ) 1 ) ) {
+            break;
+        }
+        uiValue >>= 1;
+        ++uiCount;
+    }
+    return uiCount;
+}
+
+/**
+ * @brief		DisplayMsg
+ * @param		STR_LAN_HEADER * pHeader
+ * @param		void * pData
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/11 17:15:40
+ * @warning		
+ */
+void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpCode )
+{
+
+    switch( uiOpCode ) {
+        // 운용 관련 메시지
+        case enRES_OP_START:
+            *pszString = "시작 응답";
+            break;
+
+        case enRES_OP_SHUTDOWN:
+            *pszString = "종료 응답";
+            break;
+
+        case enRES_OP_RESTART:
+            *pszString = "재시작 응답";
+            break;
+
+            // 분석 관련 메시지
+        case enRES_IBIT:
+            *pszString = "초기자체점검";
+            break;
+
+        case enRES_UBIT:
+            *pszString = "장비자체점검";
+            break;
+
+        case enRES_CBIT:
+            *pszString = "연속자체점검";
+            break;
+
+        // 분석 관련 메시지
+//         case enAET_NEWUPD_CCU:
+//             *pszString = "신규/변경";
+//             break;
+// 
+//         case enAET_UPD_CCU:
+//             *pszString = "수정";
+//             break;
+// 
+//         case enAET_LST_CCU:
+//             *pszString = "소실";
+//             break;
+// 
+//         case enAET_DEL_CCU:
+//             *pszString = "삭제";
+//             break;
+// 
+//             // IPL 관련 메시지
+//         case enIPL_VERSION:
+//             *pszString = "IPL 버젼";
+//             break;
+// 
+//         case enIPL_WRITESTATUS:
+//             *pszString = "IPL 기록상태";
+//             break;
+
+        case enRES_SETSYS:
+            *pszString = "시스템 변수";
+            break;
+
+        case enTHREAD_DISCONNECTED:
+            *pszString = "랜 단락";
+            break;
+
+        case enTHREAD_DETECTANAL_START:
+            *pszString = "탐지 분석 시작 ";
+            break;
+
+        case enREQ_RELOAD_LIBRARY:
+            *pszString = "위협 라이브러리 다운로드 시작 요청";
+            break;
+
+        case enNUP_THREAT_DATA:
+            *pszString = "방사체/빔/LOB 데이터";
+            break;
+
+        default:
+            *pszString = "이름 없음";
+            break;
+    }
+
+    //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
+    //LOGMSG3( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
 
 }

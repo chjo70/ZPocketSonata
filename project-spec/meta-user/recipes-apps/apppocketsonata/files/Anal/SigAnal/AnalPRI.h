@@ -317,14 +317,14 @@ public:
     //##ModelId=452B0C580060
     void GroupingUnknown();
     //##ModelId=452B0C580061
-    void GroupingJitter( BOOL fDecisionEmitter=FALSE );
+    void GroupingJitter( BOOL bDecisionEmitter=FALSE );
     void GroupingJitterWithJitter( STR_PULSE_TRAIN_SEG *pRefSeg, unsigned int uiLoop, BOOL bDecisionEmitter );
     void GroupingJitterWithStable( STR_PULSE_TRAIN_SEG *pRefSeg, unsigned int uiLoop, BOOL bDecisionEmitter );
     //##ModelId=452B0C58006A
-    void GroupingStagger( BOOL fDecisionEmitter=FALSE );
+    void GroupingStagger( BOOL bDecisionEmitter=FALSE );
     //##ModelId=452B0C58006C
-    void GroupingStable( BOOL fDecisionEmitter=FALSE );
-    void GroupingDwell( BOOL fDecisionEmitter=TRUE );
+    void GroupingStable( BOOL bDecisionEmitter=FALSE );
+    void GroupingDwell( BOOL bDecisionEmitter=TRUE );
 
     BOOL CalcPRILevel( STR_EMITTER *pEmitter );
     void AddDwellLevel( STR_DWELL_LEVEL *pSTR_DWELL_LEVEL );

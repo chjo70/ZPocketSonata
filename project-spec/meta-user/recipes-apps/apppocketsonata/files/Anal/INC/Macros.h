@@ -16,13 +16,14 @@
 #define WPrintf printf
 #endif
 
-#ifndef WhereIs
-#ifdef _WIN32
-#define WhereIs									TRACE( "...in %s file, %d line(s)\n" , __FILE__, __LINE__ )
-#else
-#define WhereIs									printf( "...in %s file, %d line(s)\n" , __FILE__, __LINE__ )
-#endif
-#endif
+// #ifndef WhereIs
+// #ifdef _WIN32
+// 
+// #define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\')+1 : __FILE__ , __LINE__ )
+// #else
+// #define WhereIs									printf( "...in %s file, %d line(s)\n" , strrchr(__FILE__,'/'), __LINE__ )
+// #endif
+// #endif
 
 
 #define PrintErr(A)							{ WPrintf A; WhereIs; }

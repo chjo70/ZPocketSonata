@@ -340,16 +340,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cemittermerge.h</locationURI>
 		</link>
 		<link>
-			<name>files/Thread/cjamtech.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cjamtech.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cjamtech.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cjamtech.h</locationURI>
-		</link>
-		<link>
 			<name>files/Thread/coperationconsole.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/coperationconsole.cpp</locationURI>
@@ -358,26 +348,6 @@
 			<name>files/Thread/coperationconsole.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/coperationconsole.h</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cprompt.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cprompt.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cprompt.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cprompt.h</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cpulsetrk.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cpulsetrk.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cpulsetrk.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cpulsetrk.h</locationURI>
 		</link>
 		<link>
 			<name>files/Thread/cscananalysis.cpp</name>
@@ -440,11 +410,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cusercollect.h</locationURI>
 		</link>
 		<link>
-			<name>files/Utils/DMA</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>files/Utils/MulDiv64.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/MulDiv64.cpp</locationURI>
@@ -503,16 +468,6 @@
 			<name>files/Utils/clog.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/clog.h</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/cmultiserver.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/cmultiserver.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/cmultiserver.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/cmultiserver.h</locationURI>
 		</link>
 		<link>
 			<name>files/Utils/cqueue.h</name>
@@ -823,16 +778,6 @@
 			<name>files/Anal/Identify/Identify.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Identify/Identify.h</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Identify/cipl.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Identify/cipl.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Identify/cipl.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Identify/cipl.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Identify/define.h</name>
@@ -1158,16 +1103,6 @@
 			<name>files/Include/SONATAPIP/_sysmsg.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Include/SONATAPIP/_sysmsg.h</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/DMA/dma.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/DMA/dma.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/DMA/dma.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/DMA/dma.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Collect/DataFile/CRWRCommonVariables.h</name>

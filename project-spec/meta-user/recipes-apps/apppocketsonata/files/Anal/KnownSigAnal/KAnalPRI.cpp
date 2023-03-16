@@ -61,7 +61,7 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 이 름  : CAnalPRI
 // 반환되는 형  : CKAnalPRI::CKAnalPRI(int coMaxPdw) :
 // 함 수 인 자  : int coMaxPdw
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
 //##ModelId=42E98F300153
@@ -74,7 +74,7 @@ CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI(uiCoMa
 
 /**
  * @brief     추적용 PRI 분석 객체를 소멸시 처리를 수행한다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -104,7 +104,7 @@ void CKAnalPRI::Init()
 	m_uiAnalEmitter = GetCoEmitter();
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
-	
+
 	/*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
     \date 2008-07-30 13:35:49, 조철희
 	*/
@@ -146,7 +146,7 @@ void CKAnalPRI::Analysis()
 	// 정밀 PRI 분석
 	// 하모닉 Stable로 펄스열이 구성이 되면 Dwell을 의심해 본다.
 	//-- 조철희 2005-12-22 16:09:50 --//
-	// Dwell 분석시에 Dwell 펄스열 추출을 위해  
+	// Dwell 분석시에 Dwell 펄스열 추출을 위해
 	// DwellAnalysis();
 	StaggerAnalysis();
 	PatternAnalysis();
@@ -160,7 +160,7 @@ void CKAnalPRI::Analysis()
 	// 상속클래스의 PRI 분석
 	// 처음부터 하모닉 체크를 한다.
 	// GroupingKnownPri();
-	
+
 }
 
 /**
@@ -175,12 +175,16 @@ void CKAnalPRI::Analysis()
 BOOL CKAnalPRI::KnownAnalysis()
 {
     //STR_PRI *pPri;
-	
+
 	m_uiCoSeg = GetCoSeg();
 
 	// 타입에 따라서 펄스열 분석을 달리한다.
     //pPri = & stTrkAet.aet.pri;
+#ifdef _POCKETSONATA_
+    switch( m_pTrkAet->ucPRIType ) {
+#else
     switch( m_pTrkAet->iPRIType ) {
+#endif
 		case _STABLE :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingStable( TRUE );
@@ -253,9 +257,9 @@ unsigned int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, S
  * @date      2006-01-23 10:14:24
  * @warning
  */
-BOOL CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) 
-{	
-	return m_pKnownSigAnal->CheckPriInterval( pSeg1, pSeg2 ); 
+BOOL CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+{
+	return m_pKnownSigAnal->CheckPriInterval( pSeg1, pSeg2 );
 }
 
 /**
@@ -268,9 +272,9 @@ BOOL CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SE
  * @date      2006-01-23 10:14:21
  * @warning
  */
-void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter ) 
-{ 
-	m_pKnownSigAnal->DeleteAllSeg( pEmitter ); 
+void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
+{
+	m_pKnownSigAnal->DeleteAllSeg( pEmitter );
 }
 
 /**
@@ -282,9 +286,9 @@ void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
  * @date      2006-01-23 16:59:48
  * @warning
  */
-void CKAnalPRI::ExtractRefStable() 
-{ 
-	m_pKnownSigAnal->ExtractRefStable(); 
+void CKAnalPRI::ExtractRefStable()
+{
+	m_pKnownSigAnal->ExtractRefStable();
 }
 
 /**
@@ -299,7 +303,7 @@ void CKAnalPRI::ExtractRefStable()
  * @warning
  */
 BOOL CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange )
-{ 
+{
     return m_pKnownSigAnal->ExtractDwellRefPT( pDwlSewg, pExtRange );
 }
 
@@ -315,8 +319,8 @@ BOOL CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_
  * @warning
  */
 UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
-{	
-	return m_pKnownSigAnal->ExtractFramePri( pSrcPdwIndex, framePri ); 
+{
+	return m_pKnownSigAnal->ExtractFramePri( pSrcPdwIndex, framePri );
 }
 
 /**
@@ -328,9 +332,9 @@ UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
  * @date      2006-01-23 10:14:14
  * @warning
  */
-unsigned int CKAnalPRI::GetCoSeg() 
-{	
-	return m_pKnownSigAnal->GetCoSeg(); 
+unsigned int CKAnalPRI::GetCoSeg()
+{
+	return m_pKnownSigAnal->GetCoSeg();
 }
 
 /**
@@ -342,9 +346,9 @@ unsigned int CKAnalPRI::GetCoSeg()
  * @date      2022-08-25 19:41:47
  * @warning
  */
-unsigned int CKAnalPRI::GetAnalSeg() 
-{	
-	return m_pKnownSigAnal->GetAnalSeg(); 
+unsigned int CKAnalPRI::GetAnalSeg()
+{
+	return m_pKnownSigAnal->GetAnalSeg();
 }
 
 /**
@@ -356,9 +360,9 @@ unsigned int CKAnalPRI::GetAnalSeg()
  * @date      2022-08-25 19:42:07
  * @warning
  */
-STR_PULSE_TRAIN_SEG *CKAnalPRI::GetPulseSeg() 
-{ 
-	return m_pKnownSigAnal->GetPulseSeg(); 
+STR_PULSE_TRAIN_SEG *CKAnalPRI::GetPulseSeg()
+{
+	return m_pKnownSigAnal->GetPulseSeg();
 }
 
 /**
@@ -370,9 +374,9 @@ STR_PULSE_TRAIN_SEG *CKAnalPRI::GetPulseSeg()
  * @date      2006-01-23 10:14:09
  * @warning
  */
-unsigned int CKAnalPRI::GetMaxPDW() 
-{ 
-	return m_pKnownSigAnal->GetMaxPdw(); 
+unsigned int CKAnalPRI::GetMaxPDW()
+{
+	return m_pKnownSigAnal->GetMaxPdw();
 }
 
 /**
@@ -386,8 +390,8 @@ unsigned int CKAnalPRI::GetMaxPDW()
  * @date      2006-01-23 10:14:07
  * @warning
  */
-void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) 
-{ 
+void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
+{
 	m_pKnownSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
 }
 
@@ -403,9 +407,9 @@ void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
  * @date      2006-01-23 10:14:02
  * @warning
  */
-UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) 
-{ 
-	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount ); 
+UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
+{
+	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount );
 }
 
 /**
@@ -491,7 +495,7 @@ void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
 }
 
 /**
- * @brief     LOB 데이터 포인터를 리턴한다. 
+ * @brief     LOB 데이터 포인터를 리턴한다.
  * @return    CMakeAET*
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -510,7 +514,7 @@ CMakeAET* CKAnalPRI::GetMakeAET()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/01/03 15:41:15
- * @warning		
+ * @warning
  */
 void CKAnalPRI::HoppingAnalysis()
 {

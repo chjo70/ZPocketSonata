@@ -275,15 +275,16 @@ void CKnownSigAnal::InitVar()
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKnownSigAnal::Init
-		\author   조철희
-		\param    pPdwBank 인자형태 STR_PDWBANK *
-		\return   void
-		\version  0.0.29
-		\date     2005-06-24 16:03:22
-		\warning
-*/
+/**
+ * @brief     Init
+ * @param     STR_STATIC_PDWDATA * pstPDWData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2005-06-24 16:03:22
+ * @warning
+ */
 void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 {
     
@@ -302,6 +303,9 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
 	// 신호 수집 개수 정의
     if( pstPDWData != NULL ) {
+		MakeAnalDirectory( &pstPDWData->x );
+		CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+
         memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof(UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
@@ -325,7 +329,7 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
         SetTaskID(m_pstPDWData->x.xb.aucTaskID);
         SetCollectorID(m_pstPDWData->x.xb.GetCollectorID());
 
-#elif _SONATA_
+#elif defined(_SONATA_)
         CSigAnal::SetStorePDW( m_pstPDWData->x.so.uiIsStorePDW );
 
 #else

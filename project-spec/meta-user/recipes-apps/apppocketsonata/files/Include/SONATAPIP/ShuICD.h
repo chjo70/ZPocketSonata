@@ -131,7 +131,7 @@ struct STR_RES_IQ_DATA {
 #define MAX_COL_IQ_DATA				( (64*1024) + 1024 )
 
 
-typedef union {
+union STR_DATA_CONTENTS {
 	unsigned char buffer[MAX_COL_IQ_DATA];
 	UINT uiBuffer[1000];
 	
@@ -151,7 +151,7 @@ typedef union {
 	STR_RES_INTRA_DATA stIntraData[MAX_COL_INTRA_DATA];
 	STR_RES_IQ_DATA stIQData[MAX_COL_IQ_DATA];
 
-} STR_DATA_CONTENTS;
+} ;
 
 #endif
 

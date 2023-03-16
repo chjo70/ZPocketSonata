@@ -46,9 +46,11 @@ struct SELINDEX {
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
 #ifdef _POCKETSONATA_
-#define TOTAL_ITEMS_OF_THREAT_NODE			(10)								// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(50)							// 최대 위협 개수
+
 #else
 #define TOTAL_ITEMS_OF_THREAT_NODE			(100000)						// 최대 위협 개수
+
 #endif
 
 /**
@@ -147,10 +149,12 @@ public:
 	{
 
 		if( nDepth <= nLimit ) {
-			if( m_pLeftChild != NULL )
+			if( m_pLeftChild != NULL ) {
 				m_pLeftChild->Traverse( nDepth+1, nLimit );
-			if( m_pRightChild != NULL )
+			}
+			if( m_pRightChild != NULL ) {
 				m_pRightChild->Traverse( nDepth, nLimit );
+			}
 		}
 	}
 

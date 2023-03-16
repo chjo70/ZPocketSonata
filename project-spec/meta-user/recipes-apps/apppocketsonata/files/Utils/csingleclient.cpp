@@ -3,7 +3,7 @@
 #ifdef _MSC_VER
 
 
-#elif __linux__
+#elif defined(__linux__)
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -162,7 +162,7 @@ void CSingleClient::Run( key_t key )
     // 소켓 모드 설정
     //m_enSocketMode = enSocketMode;
 
-    CThread::Run( key );
+    CThread::Run( );
 
 }
 
@@ -260,22 +260,14 @@ void CSingleClient::RunClient()
             continue;
         }
 
-        //set master socket to allow multiple connections ,
-        //this is just a good habit, it will work without this
-        int sizeOfLanBuf = 10240;
-        if( setsockopt( m_uiSocket, SOL_SOCKET, SO_SNDBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
-            perror( "Master Socket 소켓 옵션");
-        }
-        if( setsockopt( m_uiSocket, SOL_SOCKET, SO_RCVBUF, (char *)&sizeOfLanBuf, sizeof(sizeOfLanBuf)) < 0 ) {
-            perror( "Master Socket 소켓 옵션");
-        }
+        SetSocketOption();
 
         //LOGMSG2( enDebug, "Try Connection to [%s/%d]...", m_szServerAddress, m_iPort );
         if( ConnectTimeout( m_uiSocket, & sockAddress, 5 ) < 0 ) {
             sleep( 1 );
         }
         else {
-            LOGMSG2( enDebug, "[%s/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_usPort );
+            LOGMSG3( enDebug, "[%s/%d/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_usPort, m_uiSocket );
             bHeader = true;
             iTotalRead = 0;
 
@@ -290,7 +282,7 @@ void CSingleClient::RunClient()
 
                 //wait for an activity on one of the sockets , timeout is NULL ,
                 //so wait indefinitely
-                iActivity = select( uiMaxSocket + 1 , &readfds , NULL , NULL , NULL);
+                iActivity = select( (int) ( uiMaxSocket + 1 ), &readfds , NULL , NULL , NULL);
 
                 if ((iActivity < 0) && (errno!=EINTR) ) {
                     perror( "select 에러" );
@@ -298,6 +290,7 @@ void CSingleClient::RunClient()
                     break;
                 }
 
+                // 랜 헤더 메시지 수신
                 if( bHeader == true ) {
                     pLanData = (char *) & strLanHeader;
 
@@ -309,14 +302,13 @@ void CSingleClient::RunClient()
                             OnDisconnected( & m_szServerAddress[iServerSwitch][0] );
                             break;
                         }
-                        //Echo back the message that came in
                         else {
-#ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) iRead );
-#endif
                             iTotalRead += iRead;
                             //printf( "#[%d/%d]" , uiTotalRead, strLanHeader.uiLength );
                             if( iTotalRead == sizeof(STR_LAN_HEADER) ) {
+#ifdef _WIN32
+                                CCommonUtils::AllSwapData32( &pLanData[0], ( unsigned int ) sizeof( STR_LAN_HEADER ) );
+#endif
                                 if( strLanHeader.uiLength == 0 ) {
                                     bHeader = true;
                                     iTotalRead = 0;
@@ -332,7 +324,7 @@ void CSingleClient::RunClient()
 #if defined(_MSC_VER) || defined(__VXWORKS__)
                                     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
                   
-#elif __linux__
+#elif defined(__linux__)
                                     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                         perror( "msgsnd 실패" );
                                         Log( enError, "msgsnd 실패" );
@@ -354,9 +346,9 @@ void CSingleClient::RunClient()
                     }
                 }
                 else {
-                    if( (int) ( sizeof(STR_LAN_HEADER)-iTotalRead ) >= 1 ) {
+                    if( (int) strLanHeader.uiLength-iTotalRead >= 1 ) {
                         pLanData = (char *) & m_pszLanData[0];
-                        iRead = recv( m_uiSocket , & pLanData[iTotalRead], (int)strLanHeader.uiLength-iTotalRead, MSG_DONTWAIT );
+                        iRead = recv( m_uiSocket , & pLanData[iTotalRead], (int) strLanHeader.uiLength-iTotalRead, MSG_DONTWAIT );
 
                         TRACE( "[D%d]" , iRead );
                         if( iRead <= 0 ) {
@@ -365,10 +357,11 @@ void CSingleClient::RunClient()
                             break;
                         }
                         else {
-#ifdef _WIN32
-                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) iRead );
-#endif
                             iTotalRead += iRead;
+#ifdef _WIN32
+                            CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) strLanHeader.uiLength );
+#endif
+                            
                             //printf( "*[%d/0x%X/%d]" , uiTotalRead, strLanHeader.uiOpCode, strLanHeader.uiLength );
                             if( iTotalRead == (int) strLanHeader.uiLength ) {
                                 bHeader = true;
@@ -409,7 +402,7 @@ void CSingleClient::RunClient()
 #if defined(_MSC_VER) || defined(__VXWORKS__)
                                 m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
 
-#elif __linux__
+#elif defined(__linux__)
                                 if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                     perror( "msgsnd 실패" );
                                 }
@@ -427,9 +420,14 @@ void CSingleClient::RunClient()
                             }
                         }
                     }
-                    else {
-                        perror( "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
-                        Log( enError, "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                    else {                        
+                        iRead = recv( m_uiSocket, m_pszLanData, ( int ) _MAX_LANDATA, MSG_DONTWAIT );
+                        if( iRead <= 0 ) {
+                            Log( enError, "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                            perror( "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
+                            break;
+                        }
+                            
                     }
                 }
             }
@@ -442,6 +440,54 @@ void CSingleClient::RunClient()
 
     }
 
+
+}
+
+/**
+ * @brief     소켓 옵션(LINGER, REUSEADDRESS, 송수신 버퍼 크기 등)을 설정합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-02 10:53:18
+ * @warning
+ */
+void CSingleClient::SetSocketOption()
+{
+    // 아래는 소켓 옵셥을 설정합니다.
+    //set master socket to allow multiple connections ,
+    //this is just a good habit, it will work without this
+    int iOptval = 1;
+    int sizeOfLanBuf = 10240;
+    int iFlags = 10;
+    struct linger stLINGER;
+
+    // close() 될때 소켓 버퍼에 남아 있는 데이터를 버리는 비정상 종료를 수행합니다.
+    stLINGER.l_onoff = TRUE;
+    stLINGER.l_linger = 0;
+    //setsockopt( m_hClientSocket, SOL_SOCKET, SO_LINGER, ( char* ) &LINGER, sizeof( LINGER ) );
+    if( setsockopt( m_uiSocket, SOL_SOCKET, SO_LINGER, ( char* ) &stLINGER, sizeof( linger ) ) < 0 ) {
+        perror( "소켓 옵션(SO_LINGER)" );
+    }
+//     if( setsockopt( m_uiSocket, SOL_SOCKET, SO_REUSEADDR, ( char* ) &iOptval, sizeof( iOptval ) ) < 0 ) {
+//         perror( "소켓 옵션(SO_REUSEADDR)" );
+//     }
+    if( setsockopt( m_uiSocket, SOL_SOCKET, SO_SNDBUF, ( char* ) &sizeOfLanBuf, sizeof( sizeOfLanBuf ) ) < 0 ) {
+        perror( "소켓 옵션(SO_SNDBUF)" );
+    }
+    if( setsockopt( m_uiSocket, SOL_SOCKET, SO_RCVBUF, ( char* ) &sizeOfLanBuf, sizeof( sizeOfLanBuf ) ) < 0 ) {
+        perror( "소켓 옵션(SO_RCVBUF)" );
+    }
+
+    if( setsockopt( m_uiSocket, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &iOptval, sizeof( iOptval ) ) < 0 ) {
+        perror( "소켓 옵션(SO_KEEPALIVE)" );
+    }
+
+#ifdef _MFC_VER
+    if( setsockopt( m_uiSocket, SOL_SOCKET, TCP_KEEPIDLE, ( const char * ) &iFlags, sizeof( iFlags ) ) < 0 ) {
+        perror( "소켓 옵션(TCP_KEEPIDLE)" );
+    }
+#endif
 
 }
 
@@ -459,29 +505,29 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 {
     STR_MessageData sndMsg;
 
-    CloseSocket();
+    LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
 
-    //LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
-    TRACE( "서버가 끊겼습니다." );
+    CloseSocket();
+    
+    //TRACE( "서버가 끊겼습니다." );
 
 #ifdef __linux__    
     sndMsg.mtype = 1;
 #endif
     
-    sndMsg.uiOpCode = enREQ_MODE;
+    sndMsg.uiOpCode = enTHREAD_DISCONNECTED;
     sndMsg.uiSocket = m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
 
-    sndMsg.x.uiData = enREADY_MODE;
-
 #ifdef _MSC_VER
     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
-#elif defined(__VXWORKS__)
-    printf( "\n SendMessage...모드 전환" );
 
-#elif __linux__
+#elif defined(__VXWORKS__)
+    m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
+
+#elif defined(__linux__)
     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
         perror( "msgsnd 실패" );
     }
@@ -515,7 +561,7 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
 
 #ifdef _MSC_VER
     u_long block = 1;
-    if(ioctlsocket( uiSock, (long) FIONBIO, & block ) != 0) {
+    if(ioctlsocket( uiSock, FIONBIO, & block ) != 0) {
         perror( "fcntl() error" );
         iRet = -1;
     }
@@ -931,7 +977,6 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 
 	STR_LAN_HEADER strLanHeader;
 
-#if defined(__linux__) || defined(_MSC_VER)
     if( IsConnected() == true ) {
         int iRet1, iRet2=0;
 
@@ -939,23 +984,35 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 		strLanHeader.uiOpCode = uiOpCode;
 		strLanHeader.uiLength = uiDataLength;
 
+#ifdef _WIN32
         CCommonUtils::AllSwapData32( &strLanHeader, sizeof(STR_LAN_HEADER) );
+#endif
         iRet1 = send( m_uiSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+
+#ifdef _WIN32
         CCommonUtils::AllSwapData32( &strLanHeader, sizeof(STR_LAN_HEADER) );
+#endif
 
         if( iRet1 > 0 && uiDataLength != 0 ) {
-            CCommonUtils::AllSwapData32( pData, uiDataLength );
-            iRet2 = send( m_uiSocket, (char *) pData, (int) uiDataLength, MSG_DONTWAIT );
-            if( iRet2 <= 0 ) {
-                perror( "send()" );
-            }
-            CCommonUtils::AllSwapData32( pData, uiDataLength );
 
-            //m_puiData = (unsigned int *) pData;
+#ifdef _WIN32
+            CCommonUtils::AllSwapData32( pData, uiDataLength );
+#endif
+
+             iRet2 = send( m_uiSocket, (char *) pData, (int) uiDataLength, MSG_DONTWAIT );
+             if( iRet2 <= 0 ) {
+                 perror( "send()" );
+             }
+
+#ifdef _WIN32
+            CCommonUtils::AllSwapData32( pData, uiDataLength );
+#endif
+            
             DisplayMsg( & strLanHeader, pData );
 
         }
         else {
+            WhereIs;
             // TaskMngr () Send Error 발생시 Lock 이 됨.
             perror( "send()" );
         }
@@ -965,11 +1022,6 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
     else {
         iRet = -1;
     }
-
-#else
-    iRet = 0;
-
-#endif
 
     return iRet;
 
@@ -988,69 +1040,23 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
  */
 void CSingleClient::DisplayMsg(STR_LAN_HEADER *pHeader, void *pData )
 {
-    char szOpcode[50];    
+    std::string strMessage;
 
-    switch(pHeader->uiOpCode ) {
-        case enRES_MODE :
-            strcpy( szOpcode, "운용 모드" );
-            break;
-
-        // 분석 관련 메시지
-        case enRES_IBIT :
-            strcpy( szOpcode, "초기자체점검" );
-            break;
-
-        case enRES_UBIT :
-            strcpy( szOpcode, "장비자체점검" );
-            break;
-
-        case enRES_CBIT :
-            strcpy( szOpcode, "연속자체점검" );
-            break;
-
-        // 분석 관련 메시지
-        case enAET_NEW_CCU :
-            strcpy( szOpcode, "신규" );
-            break;
-
-        case enAET_UPD_CCU :
-             strcpy( szOpcode, "수정" );
-            break;
-
-        case enAET_LST_CCU :
-            strcpy( szOpcode, "소실" );
-            break;
-
-        case enAET_DEL_CCU :
-            strcpy( szOpcode, "삭제" );
-            break;
-
-        // IPL 관련 메시지
-        case enIPL_VERSION :
-            strcpy( szOpcode, "IPL 버젼" );
-            break;
-
-        case enIPL_WRITESTATUS :
-            strcpy( szOpcode, "IPL 기록상태" );
-            break;
-
-        case enRES_SETSYS :
-            strcpy( szOpcode, "시스템 변수" );
-            break;
-
-        default :
-            strcpy( szOpcode, "이름 없음" );
-            break;
-    }
+    CCommonUtils::MakeStringMessage( &strMessage , pHeader->uiOpCode );
 
     //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
-	LOGMSG3(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
+	LOGMSG3(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", strMessage.c_str(), pHeader->uiOpCode, pHeader->uiLength );
 
 }
 
 /**
- * @brief CSingleClient::SocketClose
- * @return
+ * @brief     CloseSocket
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 13:19:24
+ * @warning
  */
 void CSingleClient::CloseSocket()
 {
@@ -1062,8 +1068,9 @@ void CSingleClient::CloseSocket()
 
         LOGMSG( enNormal, "소켓을 정상적으로 닫습니다." );
 #ifdef _MSC_VER
-        
+        shutdown( uiSocket, SD_BOTH );
         closesocket( uiSocket );
+        //_close( uiSocket );
 #else
         close( uiSocket );
 #endif

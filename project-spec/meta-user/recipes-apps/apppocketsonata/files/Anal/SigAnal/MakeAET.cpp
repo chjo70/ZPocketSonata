@@ -282,7 +282,7 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 
         case _PATTERN_AGILE :
             pFrq->iType = E_AET_FRQ_PATTERN;
-            pFrq->iPatPrd = (int) IMUL( 1, pEmitter->fFreqPeriod );
+            pFrq->iPatPrd = (int) ( pEmitter->fFreqPeriod + (float) 0.5 );
             pFrq->iPatType = (int) pEmitter->uiFreqPatternType;            
 
             // 펄스열로부터 주파수 최대값과 최소값을 얻는다.
@@ -845,7 +845,7 @@ void CMakeAET::MakePAInfoFromSeg(STR_MINMAX *pPa, STR_EMITTER *pEmitter)
   * @return 	int
   * @date			2019/04/09 10:43
 */
-int CMakeAET::MakeDIInfoFromSeg( STR_EMITTER *pEmitter)
+unsigned int CMakeAET::MakeDIInfoFromSeg( STR_EMITTER *pEmitter)
 {
 //     unsigned int i;
 // 
@@ -991,10 +991,13 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     pAoa->iMean = CalcAoaMean_GSKIMF_200505_3( pSeg );	// 김경석
 #elif defined( _GSKIMF_AOAMEANALG_200505_6 )
 
+    pAoa->iMode = 0;
 #if defined(_XBAND_) || defined(_701_)
-    pAoa->iMode = (int) CalcMode<unsigned int>( pEmitter, m_pAOA, pAoa->iMean );
+    pAoa->iMode = (int) CalcMode<unsigned int>( pEmitter, m_pAOA, ( unsigned int ) pAoa->iMean );
 
 #else
+    pAoa->iMode = ( int ) CalcMode<unsigned int>( pEmitter, m_pAOA, (unsigned int) pAoa->iMean );
+
     // 방위 히스토그램을 이용해서 방위를 계산함.
     pAoa->iMean = (int) CalcAoaMean_GSKIMF_200505_6( pEmitter );
 
@@ -1040,7 +1043,7 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
 UINT CMakeAET::CalcAoaMean_GSKIMF_200505_6( STR_EMITTER *pEmitter ) {
 
     // 방위 히스토그램 계산
-    return CalcAoaMeanByHistAoa( & pEmitter->stPDW );
+    return (UINT) CalcAoaMeanByHistAoa( & pEmitter->stPDW );
 
 }
 
@@ -1062,24 +1065,24 @@ void CMakeAET::MakeExtInfoFromSeg( STR_EXT *pExt, STR_EMITTER *pEmitter )
     // 주파수 밴드 저장
     pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
 
-    pExt->noCol = m_uiCoPdw;
-    pExt->noExt = pEmitter->stPDW.uiCount;
+    pExt->uinoCol = m_uiCoPdw;
+    pExt->uinoExt = pEmitter->stPDW.uiCount;
 
     // PDW STAT 를 에미터에 기록한다.
     //-- 조철희 2005-11-04 17:44:48 --//
-    pExt->pt_stat = pSeg->uiStat;
+    pExt->uiPDWStat = pSeg->uiStat;
 
     pExt->bOverId = FALSE;
 
     pExt->noMergeEMT = -1;
 
     // band = BAND[ pSeg->pdw.pIndex[0] ];
-    pExt->frq.iLow = pEmitter->stFreq.iMin;
-    pExt->frq.iHgh = pEmitter->stFreq.iMax;
+    pExt->stFreq.iLow = pEmitter->stFreq.iMin;
+    pExt->stFreq.iHgh = pEmitter->stFreq.iMax;
 
     pExt->idxEmitter = -1;
 
-    pExt->pt_maxchannel = CalMaxChannel( & pEmitter->stPDW );
+    pExt->uiMaxChannelOfPDW = (UINT) CalMaxChannel( & pEmitter->stPDW );
 
     pExt->mark = NORMAL_AET;
 
@@ -1167,7 +1170,7 @@ int CMakeAET::CalMaxChannel( STR_PDWINDEX *pPdw )
     pPdwIndex = pPdw->pIndex;
     _EQUALS5( hist[0], hist[1], hist[2], hist[3], 0 )
     for( i=0 ; i < uiCount; ++i ) {
-        max_channel = _min( m_pMAXCHANNEL[ *pPdwIndex ], 3 );
+        max_channel = min( m_pMAXCHANNEL[ *pPdwIndex ], 3 );
         ++ pPdwIndex;
         ++ hist[ max_channel ];
     }
@@ -1217,7 +1220,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
     
     pLOBData->uiPDWID = GetPDWID();
 
-    pLOBData->uiPLOBID = iLOBData + 1;
+    pLOBData->uiPLOBID = (unsigned int) ( iLOBData + 1 );
     pLOBData->uiLOBID = _spZero;
     pLOBData->uiABTID = _spZero;
     pLOBData->uiAETID = _spZero;
@@ -1229,13 +1232,13 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 
     pLOBData->tiContactTime = tsNow.tv_sec;
 #ifdef _MSC_VER
-    pLOBData->tiContactTimems = tsNow.tv_usec / 1000;
+    pLOBData->tiContactTimems = (unsigned int) tsNow.tv_usec / (unsigned int) 1000;
 #else
     pLOBData->tiContactTimems = tsNow.tv_nsec;
 #endif
 
     // 신호 형태
-    pLOBData->iSignalType = pEmitter->enSignalType;
+    pLOBData->ucSignalType = (unsigned char) pEmitter->enSignalType;
 
     // 방위
     MakeAOAInfoFromSeg( & stVal2, pEmitter );
@@ -1254,7 +1257,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
     //pLOBData->fDOASDeviation = stVal2.fsdev;
 
     // DI 율
-    pLOBData->iDIRatio = MakeDIInfoFromSeg( pEmitter );							// [0.1%]
+    pLOBData->uiDIRatio = MakeDIInfoFromSeg( pEmitter );							// [0.1%]
 
 	//////////////////////////////////////////////////////////////////////////
 	// 주파수 정보 생성
@@ -1286,8 +1289,9 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 
     //////////////////////////////////////////////////////////////////////////
     // 기타 정보 저장
-    pLOBData->iTotalOfPDW = m_uiCoPdw;
-    pLOBData->iNumOfPDW = pEmitter->stPDW.uiCount;
+    pLOBData->uiCoPDWOfCollection = m_uiCoPdw;
+    pLOBData->uiCoPDWOfAnalysis = pEmitter->stPDW.uiCount;
+
 #if defined(_ELINT_) || defined(_XBAND_)
 	pLOBData->iIsStoreData = IsStorePDW();
 
@@ -1310,7 +1314,7 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 #endif
 
     //memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
-    pLOBData->iRadarModeIndex = _spZero;
+    pLOBData->uiRadarModeIndex = _spZero;
     //pLOBData->iThreatIndex = _spZero;
 
     //pLOBData->uiSeqNum = 0;
@@ -1351,11 +1355,14 @@ void CMakeAET::MakeFreqLOBDataFromEmitter( SRxLOBData *pLOBData, STR_EMITTER *pE
 
 	STR_FRQ stFrq;
 
+    // 객체 초기화
+    memset( &stFrq, 0, sizeof( STR_FRQ ) );
+
 	MakeFrqInfoFromSeg(&stFrq, pEmitter);
 
-	pLOBData->iFreqType = stFrq.iType;
-	pLOBData->iFreqPatternType = stFrq.iPatType;
-	pLOBData->iFreqPositionCount = stFrq.iSwtLev;
+	pLOBData->ucFreqType = (unsigned char) stFrq.iType;
+	pLOBData->ucFreqPatternType = (unsigned char) stFrq.iPatType;
+	pLOBData->ucFreqPositionCount = (unsigned char ) stFrq.iSwtLev;
 
 	pLOBData->fFreqPatternPeriod = (float)FTOAsCNV((_TOA)stFrq.iPatPrd);
 
@@ -1366,7 +1373,7 @@ void CMakeAET::MakeFreqLOBDataFromEmitter( SRxLOBData *pLOBData, STR_EMITTER *pE
 	//pLOBData->fFreqMean = CPOCKETSONATAPDW::DecodeRealFREQMHz( stFrq.iMean, iCh, ( int ) g_enBoardId );
 
 	memset(pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq));
-	for (i = 0; i < pLOBData->iFreqPositionCount; ++i) {
+	for (i = 0; i < pLOBData->ucFreqPositionCount; ++i) {
 		pLOBData->fFreqSeq[i] = FFRQMhzCNV(g_enBoardId, stFrq.iSwtVal[i]);
 	}
 	// #else
@@ -1404,8 +1411,8 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 
 	MakePRIInfoFromEmitter(&stPri, pEmitter);
 
-	pLOBData->iPRIType = stPri.iType;
-	pLOBData->iPRIPatternType = stPri.iPatType;
+	pLOBData->ucPRIType = (unsigned char) stPri.iType;
+	pLOBData->ucPRIPatternType = (unsigned char ) stPri.iPatType;
 
 #ifdef _POCKETSONATA_
 	pLOBData->fPRIPatternPeriod = (float)FTOAsCNV((_TOA)stPri.iPatPrd);
@@ -1419,11 +1426,11 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 	pLOBData->fPRIDeviation = (float) TOAusCNV(stPri.tMax - stPri.tMin);
 	pLOBData->fPRIMode = (float) TOAusCNV(stPri.TMode);
 	pLOBData->fPRIJitterRatio = (float) stPri.fJtrPer;
-	pLOBData->iPRIPositionCount = stPri.iSwtLev;
+	pLOBData->ucPRIPositionCount = (unsigned char) stPri.iSwtLev;
 	memset(pLOBData->fPRISeq, 0, sizeof(pLOBData->fPRISeq));
 
 	// 주파수 레벨 값
-	for (i = 0; i < pLOBData->iPRIPositionCount; ++i) {
+	for (i = 0; i < pLOBData->ucPRIPositionCount; ++i) {
 		pLOBData->fPRISeq[i] = TOAusCNV(stPri.TSwtVal[i]);
 	}
 

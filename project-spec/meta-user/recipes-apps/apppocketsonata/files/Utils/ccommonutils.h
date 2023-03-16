@@ -1,6 +1,9 @@
 ﻿#ifndef CCOMMONUTILS_H
 #define CCOMMONUTILS_H
 
+#include <string>
+#include <algorithm>
+
 //#include "../Include/system.h"
 //#include "../Utils/cthread.h"
 
@@ -9,6 +12,7 @@
 #include "../Anal/SigAnal/_Type.h"
 
 #include "../Include/struct.h"
+#include "../Include/thrmsg.h"
 
 #ifdef _MSC_VER
 #include <string>
@@ -63,15 +67,46 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
 
 }
 
-// template<typename ... Args>
-// std::string string_format(const std::string& format, Args ... args)
-// {
-// 	size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-// 	if (size <= 0) { throw std::runtime_error("Error during formatting."); }
-// 	std::unique_ptr<char[]> buf(new char[size]);
-// 	snprintf(buf.get(), size, format.c_str(), args ...);
-// 	return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-// }
+/**
+ * @brief		string_format
+ * @param		const std::string & format
+ * @param		Args ... args
+ * @return		std::string
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/02/22 14:51:38
+ * @warning		
+ */
+template<typename ... Args>
+std::string string_format( const std::string& format, Args ... args )
+{
+#ifdef __VXWORKS__
+	std::string strPrintf;
+
+	int iSize = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+	if( iSize <= 0 ) {
+		throw std::runtime_error( "Error during formatting." );
+	}
+
+	char* pBuff;
+	pBuff = ( char* ) malloc( sizeof( char ) * size );
+	snprintf( pBuff, iSize, format.c_str(), args ... );
+
+	strPrintf = std::string( pBuff, pBuff + size - 1 ); // We don't want the '\0' inside
+	free( pBuff );
+
+	return strPrintf;
+
+#else
+    int iSize = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    if( iSize <= 0 ) { throw std::runtime_error( "Error during formatting." ); }
+    std::unique_ptr<char[]> buf( new char[iSize] );
+    snprintf( buf.get(), iSize, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + iSize - 1 ); // We don't want the '\0' inside
+#endif
+
+}
+
 
 
 
@@ -84,6 +119,7 @@ public:
     CCommonUtils();
 
 public:
+    static void SendLan( UINT uiOpCode );
     static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
     static void CloseSocket();
 
@@ -98,7 +134,7 @@ public:
     static void swapByteOrder(double *p, int iSize );
     static void swapByteOrder( unsigned short & us);
 
-    static ENUM_COLLECTBANK GetEnumCollectBank( int iCh );
+    //static ENUM_COLLECTBANK GetEnumCollectBank( int iCh );
 
 	// 데이터 관련 출력 함수
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
@@ -138,7 +174,12 @@ public:
 	// 폴더 및 파일 삭제
 	static int DeleteAllFile(const char *pszDir, int iForce );
 
-	// 
+	// 비트 관련 함수
+    static unsigned int CountSetBits( const unsigned int uiValue );
+    static unsigned int GetNoChannel( unsigned int uiValue );
+
+    // 랜/타스크 메시지 정의
+    static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode );
 };
 
 #endif // CCOMMONUTILS_H

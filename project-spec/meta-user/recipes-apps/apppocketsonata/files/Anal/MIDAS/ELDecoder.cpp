@@ -161,16 +161,18 @@ float ELDecoder::DecodePRI(const int i_iBinPRI)
 float ELDecoder::DecodePRF(const int i_iBinPRI)
 {
 	float fPRF = 0.0;
-	if( i_iBinPRI != 0 )
+	if( i_iBinPRI != 0 ) {
 		fPRF = (float) DEF_OF_RES_PRF / i_iBinPRI;
+	}
 	return fPRF;
 }
 
 float ELDecoder::DecodePPS(const int i_iBinPRI)
 {
 	float fPPS = 0.0;
-	if( i_iBinPRI != 0 )
+	if( i_iBinPRI != 0 ) {
 		fPPS = (float) DEF_OF_RES_PPS / i_iBinPRI;
+	}
 	return fPPS;
 }
 
@@ -225,10 +227,12 @@ float ELDecoder::DecodeScanPrd(const int i_iBinScanPrd)
 float ELDecoder::DecodeHz(const int i_iBinHz)
 {
 	float fHZ = 0.0;
-	if( i_iBinHz != 0 )
+	if( i_iBinHz != 0 ) {
 		fHZ = (float)1000. / (float) i_iBinHz;
-	else
+	}
+	else {
 		fHZ = (float) 0.;
+	}
 	return fHZ;
 }
 

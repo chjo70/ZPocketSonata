@@ -1,42 +1,42 @@
-
+ï»¿
 
 ==================================================
-1. ¼³Ä¡ ÀýÂ÷
+1. ì„¤ì¹˜ ì ˆì°¨
 
-1.1 u-boot ¼³Á¤
+1.1 u-boot ì„¤ì •
 
-1.1.1 ipaddress ¼³Á¤
+1.1.1 ipaddress ì„¤ì •
 
 EWSP# print ipaddr
 ipaddr=192.168.10.30
 
-1.1.2 ¿¬°á È®ÀÎ
-	ÄÄ¿¡¼­ ³×Å©¿öÅ©·Î ping Å×½ºÆ®¸¦ ½ÃÇèÇÑ´Ù.
+1.1.2 ì—°ê²° í™•ì¸
+	ì»´ì—ì„œ ë„¤í¬ì›Œí¬ë¡œ ping í…ŒìŠ¤íŠ¸ë¥¼ ì‹œí—˜í•œë‹¤.
 	
-1.1.3 serverip È®ÀÎ
+1.1.3 serverip í™•ì¸
 
 EWSP# print serverip
 serverip=192.168.10.245
 
 
-1.1.3 bootcmd È®ÀÎ
+1.1.3 bootcmd í™•ì¸
 
 EWSP# print bootcmd
 bootcmd=run tftpUvX; run tftpDTB; run uVxBoot
 
-1.1.3.1 tftpUvX ÇÐÀÎ
+1.1.3.1 tftpUvX í•™ì¸
 
-uVxWorks ÆÄÀÏ °æ·Î´Â PC¿¡¼­ tftp µ¥¸óÀÇ ±âº» ÆÄÀÏ °æ·Î°¡ ¼³Á¤ÇØ¾ß µÊ.
+uVxWorks íŒŒì¼ ê²½ë¡œëŠ” PCì—ì„œ tftp ë°ëª¬ì˜ ê¸°ë³¸ íŒŒì¼ ê²½ë¡œê°€ ì„¤ì •í•´ì•¼ ë¨.
 
 EWSP# print tftpUvX
 tftpUvX=tftp 0x2000000 uVxWorks
 
 
-1.1.3.2 tftpDTB ÇÐÀÎ
+1.1.3.2 tftpDTB í•™ì¸
 
-uVxWorks ÆÄÀÏ °æ·Î´Â PC¿¡¼­ tftp µ¥¸óÀÇ ±âº» ÆÄÀÏ °æ·Î°¡ ¼³Á¤ÇØ¾ß µÊ.
+uVxWorks íŒŒì¼ ê²½ë¡œëŠ” PCì—ì„œ tftp ë°ëª¬ì˜ ê¸°ë³¸ íŒŒì¼ ê²½ë¡œê°€ ì„¤ì •í•´ì•¼ ë¨.
 
 EWSP# print tftpDTB
 tftpDTB=tftp 0xf000000 t2080vpx3u.dtb
 
-1.1.4 Àç½ÇÇàÇÑ´Ù.
+1.1.4 ìž¬ì‹¤í–‰í•œë‹¤.

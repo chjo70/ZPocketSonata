@@ -1,4 +1,22 @@
-﻿#include "stdafx.h"
+﻿/****************************************************************************************
+ 파 일 명 : cmultiserver.cpp
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 목    적 : 다중 클라리언트 랜 소켓 클래스
+ 가    정 :
+ 저 자 명 : 조철희
+ 변 경 자 :
+ 변경내용 : (목적)
+ 변경일시 :
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 입력정의 :
+ 출력정의 :
+ 관련모듈 :
+ 자료구조 : (전역변수)
+ 에러처리/복귀순서:
+ 컴파일 일시 :
+*****************************************************************************************/
+
+#include "pch.h"
 
 #include <errno.h>
 
@@ -9,10 +27,8 @@
 
 #include "cmultiserver.h"
 
-
-// #include "../Thread/csi.h"
-
-#include "../Include/globals.h"
+#include "ccommonutils.h"
+// #include "../Include/globals.h"
 
 /**
  * @brief CMultiServer::CMultiServer
@@ -23,6 +39,7 @@ CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread(
 {
     m_iPort = iPort;
 
+    Alloc();
     Init();
 }
 
@@ -31,75 +48,196 @@ CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort ) : CThread(
  */
 CMultiServer::~CMultiServer()
 {
-    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+    //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
     Free();
 }
 
 /**
- * @brief CMultiServer::Init
+ * @brief     Init
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 16:05:38
+ * @warning
  */
 void CMultiServer::Init()
 {
-    Alloc();
+    m_vClientSock.reserve( MAX_CLIENTS );
 
-    if( m_iPort == CCU_PORT ) {
-        m_ptheRecLan = RECCCU;
-    }
-    else if( m_iPort == PORT ) {
-        m_ptheRecLan = RECZYNQ;
-    }
-    else {
-        m_ptheRecLan = NULL;
-    }
+    //InitOfTCPIP();
+
+
+
+//     if( m_iPort == CCU_PORT ) {
+//         m_ptheRecLan = RECCCU;
+//     }
+//     else if( m_iPort == PORT ) {
+//         m_ptheRecLan = RECZYNQ;
+//     }
+//     else {
+//         m_ptheRecLan = NULL;
+//     }
 
 }
 
 /**
- * @brief CMultiServer::Alloc
+ * @brief     InitOfTCPIP
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 16:01:10
+ * @warning
+ */
+void CMultiServer::InitOfTCPIP()
+{
+    int iOption = 1;
+    int	sizeOfLanBuf;
+    struct linger LINGER;
+
+    struct STR_TCP_KEEPALIVE {
+        unsigned long onoff;
+        unsigned long keepalivetime;
+        unsigned long keepaliveinterval;
+
+    } ;
+
+    //initialise all client_socket[] to 0 so not checked
+    m_vClientSock.clear();
+
+    m_iServerType = _SERVER_TYPE;
+
+    // 소켓 생성
+    m_MasterSock = socket( AF_INET, SOCK_STREAM, 0 );
+    if( m_MasterSock > 0 ) {
+        setsockopt( m_MasterSock, SOL_SOCKET, SO_REUSEADDR, ( char* ) &iOption, sizeof( iOption ) );
+        LINGER.l_onoff = TRUE;
+        LINGER.l_linger = 0;
+        setsockopt( m_MasterSock, SOL_SOCKET, SO_LINGER, ( char* ) &LINGER, sizeof( LINGER ) );
+        sizeOfLanBuf = 1024;
+        setsockopt( m_MasterSock, SOL_SOCKET, SO_SNDBUF, ( char* ) &sizeOfLanBuf, sizeof( sizeOfLanBuf ) );
+        setsockopt( m_MasterSock, SOL_SOCKET, SO_RCVBUF, ( char* ) &sizeOfLanBuf, sizeof( sizeOfLanBuf ) );
+
+//         struct STR_TCP_KEEPALIVE tcpkl;
+//         tcpkl.onoff = 1;
+//         tcpkl.keepalivetime = 5500;
+//         tcpkl.keepaliveinterval = 3000;
+
+        if( setsockopt( m_MasterSock, SOL_SOCKET, TCP_KEEPIDLE, ( const char * ) &iOption, sizeof( iOption ) ) < 0 ) {
+            perror( "소켓 옵션(TCP_KEEPIDLE)" );
+        }
+
+        // IP 와 PORT 설정
+        m_SockaddrInternet.sin_addr.s_addr = htonl( INADDR_ANY );
+        m_SockaddrInternet.sin_family = AF_INET;
+        m_SockaddrInternet.sin_port = htons( m_iPort );
+
+        // 서버로서의 bind -> listen -> accept 처리
+        if( !bind( m_MasterSock, ( struct sockaddr* ) &m_SockaddrInternet, sizeof( m_SockaddrInternet ) ) ) {
+            listen( m_MasterSock, 5 );
+        }
+        else {
+            perror( "bind 에러" );
+        }
+    }
+    else {
+        perror( "socket 에러" );
+    }
+}
+
+/**
+ * @brief		Alloc
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/09 10:04:42
+ * @warning
  */
 void CMultiServer::Alloc()
 {
     int i;
 
     for( i=0 ; i < MAX_CLIENTS ; ++i ) {
-        m_pszLanData[i] = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+        m_szRcvStat[i].pszLanData = ( char * ) malloc( sizeof(char) * _MAX_LANDATA );
+        m_pstLanData[i] = ( STR_LAN_DATA * ) malloc( sizeof( STR_LAN_DATA ) );
     }
+
+
 
 }
 
 /**
- * @brief CMultiServer::Free
+ * @brief		Free
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/03/09 10:04:31
+ * @warning
  */
 void CMultiServer::Free()
 {
     int i;
 
     for( i=0 ; i < MAX_CLIENTS ; ++i ) {
-        free( m_pszLanData[i] );
+        free( m_szRcvStat[i].pszLanData );
+        free( m_pstLanData[i] );
     }
 
 }
 
 /**
- * @brief CMultiServer::Run
- * @param enSocketMode
+ * @brief     쓰레드를 실행하게 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 12:04:52
+ * @warning
  */
-void CMultiServer::Run( key_t key )
+void CMultiServer::Run()
 {
     // 소켓 모드 설정
     //m_enSocketMode = enSocketMode;
 
-    CThread::Run( key );
+    CThread::Run();
 
 }
 
+UINT CMultiServer::WinRun( LPVOID pParam )
+{
+
+    //CThread::CallBack( pParam );
+
+    return 0;
+}
+
 /**
- * @brief CMultiServer::_routine
+ * @brief     _routine
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 12:15:36
+ * @warning
  */
 void CMultiServer::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
+
+    int s, addlen;
+    SOCKET iMaxSock;
+
+    UINT uiDataLength;
+
+    fd_set writefd, readfd, exceptfd;
+
+    STR_CLIENT_SOCKET stConnectedClientSocket;
+
+    addlen = sizeof( sockaddr_in );
+
+    InitOfTCPIP();
 
 #ifdef __linux__
     bool bHeader[MAX_CLIENTS];
@@ -266,13 +404,224 @@ void CMultiServer::_routine()
         }
     }
 #else
-    while( true ) {
-        sleep( 1000 );
-    }
+    while( m_bThreadLoop ) {
+        //clear the socket set
+        FD_ZERO( &readfd );
 
+        //add master socket to set
+        FD_SET( m_MasterSock, &readfd );
+
+        iMaxSock = m_MasterSock;
+        for( const STR_CLIENT_SOCKET & stClientSocket : m_vClientSock ) {
+            //if valid socket descriptor then add to read list
+            FD_SET( stClientSocket.iSocket, &readfd );
+
+            //highest file descriptor number, need it for the select function
+            if( stClientSocket.iSocket > iMaxSock ) {
+                iMaxSock = stClientSocket.iSocket;
+            }
+        }
+
+        //wait for an activity on one of the sockets , timeout is NULL ,
+        //so wait indefinitely
+        s = select( iMaxSock + 1, &readfd, NULL, NULL, NULL );
+        if( ( s < 0 ) && ( errno != EINTR ) ) {
+            perror( "select error" );
+        }
+
+        //If something happened on the master socket ,
+        //then its an incoming connection
+        if( FD_ISSET( m_MasterSock, &readfd ) == 1 ) {
+            // 랜 소켓 인증
+            stConnectedClientSocket.iSocket = accept( m_MasterSock, ( sockaddr* ) &stConnectedClientSocket.socketAddress, ( socklen_t * ) &addlen );
+            if( stConnectedClientSocket.iSocket < 0 ) {
+                perror( "accept error" );
+                break;
+            }
+
+            //inform user of socket number - used in send and receive commands
+            Connect( & stConnectedClientSocket );
+
+        }
+        else {
+            int iIndex = 0;
+            for( const STR_CLIENT_SOCKET &stClientSocket : m_vClientSock ) {
+                STR_CLIENT_RECVSTAT *pRcvStat;
+
+                pRcvStat = &m_szRcvStat[iIndex];
+                if( FD_ISSET( stClientSocket.iSocket, &readfd ) == 1 ) {
+                    int iRead;
+
+                    if( pRcvStat->bHeader == true ) {
+
+                        if( ( int ) ( sizeof( STR_LAN_HEADER ) - pRcvStat->iTotalRead ) >= 1 ) {
+                            iRead = recv( stClientSocket.iSocket, ( char * ) & pRcvStat->pszLanData[pRcvStat->iTotalRead], ( int ) ( sizeof( STR_LAN_HEADER ) - pRcvStat->iTotalRead ), MSG_DONTWAIT );
+                            if( iRead <= 0 ) {
+                                perror( "recv 에러" );
+                                CloseSocket( iIndex );
+                                continue;
+                            }
+                            else {
+                                pRcvStat->iTotalRead += iRead;
+                                if( pRcvStat->iTotalRead == sizeof( STR_LAN_HEADER ) ) {
+                                    STR_LAN_HEADER *pstLanHeader;
+
+                                    pstLanHeader = ( STR_LAN_HEADER * ) & pRcvStat->pszLanData[0];
+                                    uiDataLength = pstLanHeader->uiLength;
+                                    CCommonUtils::AllSwapData32( &pRcvStat->pszLanData[0], ( unsigned int ) sizeof( STR_LAN_HEADER ) );
+
+                                    memcpy( &m_pstLanData[iIndex]->stLanHeader, &pRcvStat->pszLanData[0], sizeof( STR_LAN_HEADER ) );
+
+                                    if( pstLanHeader->uiLength == 0 ) {
+                                        pRcvStat->bHeader = true;
+                                        pRcvStat->iTotalRead = 0;
+
+                                        // 명령 처리
+                                        ProcessLANMessage( iIndex );
+
+                                    }
+                                    else {
+                                        pRcvStat->bHeader = false;
+                                        pRcvStat->iTotalRead = 0;
+                                    }
+
+                                }
+                            }
+                        }
+                        else {
+
+                        }
+                    }
+                    else {
+                        int iRemaindedByte = (int) m_pstLanData[iIndex]->stLanHeader.uiLength - pRcvStat->iTotalRead;
+                        if( iRemaindedByte >= 1 ) {
+                            iRead = recv( stClientSocket.iSocket, &pRcvStat->pszLanData[pRcvStat->iTotalRead], iRemaindedByte, MSG_DONTWAIT );
+
+                            TRACE( "[D%d]", iRead );
+                            if( iRead <= 0 ) {
+                                perror( "recv 에러" );
+                                CloseSocket( iIndex );
+                                break;
+                            }
+                            else {
+                                pRcvStat->iTotalRead += iRead;
+                                if( pRcvStat->iTotalRead == m_pstLanData[iIndex]->stLanHeader.uiLength ) {
+                                    // CCommonUtils::AllSwapData32( &pRcvStat->pszLanData[0], ( unsigned int ) pRcvStat->iTotalRead );
+
+                                    memcpy( &m_pstLanData[iIndex]->stLanData, &pRcvStat->pszLanData[0], pRcvStat->iTotalRead );
+
+                                    // 명령 처리
+                                    ProcessLANMessage( iIndex );
+
+                                    pRcvStat->bHeader = true;
+                                    pRcvStat->iTotalRead = 0;
+
+                                }
+#ifdef _WIN32
+                                // CCommonUtils::AllSwapData32( &pLanData[pRcvStat->iTotalRead], ( unsigned int ) iRead );
+#endif
+
+                            }
+
+
+                        }
+                        else {
+                            TRACE( "\n ... " );
+//                             iRead = recv( stClientSocket.iSocket, m_pszLanData, ( int ) _MAX_LANDATA, MSG_DONTWAIT );
+//                             if( iRead <= 0 ) {
+//                                 LOGMSG( enError, "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !" );
+//                                 perror( "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
+//                                 break;
+//                             }
+
+                        }
+                    }
+                }
+
+                ++iIndex;
+            }
+        }
+
+    }
 
 #endif
 
+}
+
+/**
+ * @brief     Connect
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 12:18:14
+ * @warning
+ */
+void CMultiServer::Connect( STR_CLIENT_SOCKET* pClientSocket )
+{
+    STR_CLIENT_RECVSTAT *pRecvStat;
+
+    TRACE( "연결: 소켓 ID(%d), IP 어드레스(%s), 포트 : %5d\n", pClientSocket->iSocket, inet_ntoa( pClientSocket->socketAddress.sin_addr ), ntohs( pClientSocket->socketAddress.sin_port ) );
+
+    int iSize = m_vClientSock.size();
+
+    pRecvStat = &m_szRcvStat[iSize];
+
+    pRecvStat->bHeader = true;
+    pRecvStat->iTotalRead = 0;
+
+    m_vClientSock.push_back( *pClientSocket );
+
+#ifdef _MFC_VER
+    ConnectMessage( pClientSocket );
+
+#endif
+
+}
+
+/**
+ * @brief     Close
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 12:18:16
+ * @warning
+ */
+void CMultiServer::CloseSocket( int idxClientSock )
+{
+    STR_CLIENT_SOCKET stClientSocket;
+
+    stClientSocket = m_vClientSock.at( idxClientSock );
+    TRACE( "단락: 소켓 ID(%d), IP 어드레스(%s), 포트 : %5d\n", stClientSocket.iSocket, inet_ntoa( stClientSocket.socketAddress.sin_addr ), ntohs( stClientSocket.socketAddress.sin_port ) );
+
+    shutdown( stClientSocket.iSocket, SD_BOTH );
+    closesocket( stClientSocket.iSocket );
+    //close( stClientSocket.iSocket );
+    m_vClientSock.erase( m_vClientSock.begin() + idxClientSock );
+
+#ifdef _MFC_VER
+    DisConnectMessage( &stClientSocket );
+
+#endif
+
+}
+
+/**
+ * @brief     ProcessLANMessage
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 13:59:20
+ * @warning
+ */
+void CMultiServer::ProcessLANMessage( int iIndex )
+{
+#ifdef _MFC_VER
+    ProcessLANMessage( m_pstLanData[iIndex] );
+
+#endif
 
 }
 
@@ -284,9 +633,10 @@ void CMultiServer::_routine()
  */
 void CMultiServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket )
 {
-    int addrlen;
 
 #ifdef __linux__
+    int addrlen;
+
     addrlen = sizeof(sockaddr_in);
     //Somebody disconnected , get his details and print
     getpeername(iSocket , (struct sockaddr*) pAddress , (socklen_t*)&addrlen);
@@ -338,4 +688,31 @@ int CMultiServer::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 
     return iRet1 + iRet2;
 
+}
+
+/**
+ * @brief     SendLan
+ * @param     void * pData
+ * @param     unsigned int uiLength
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-03 17:27:00
+ * @warning
+ */
+int CMultiServer::Send( const void *pData, unsigned int uiLength )
+{
+    int iRet;
+
+    if( m_vClientSock.size() == 0 ) {
+        iRet = -1;
+    }
+    else {
+        for( const STR_CLIENT_SOCKET & stClientSocket : m_vClientSock ) {
+            iRet = send( stClientSocket.iSocket, ( char * ) pData, uiLength, MSG_DONTWAIT );
+        }
+    }
+
+    return iRet;
 }

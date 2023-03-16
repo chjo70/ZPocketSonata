@@ -94,9 +94,6 @@
     <Filter Include="소스 파일\ODBC">
       <UniqueIdentifier>{38258f16-e649-4993-8b02-351dc43ab872}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Utils\DMA">
-      <UniqueIdentifier>{49327121-010c-4b7a-93d3-e28be4a09572}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Anal\Collect\GenPDW">
       <UniqueIdentifier>{2480af83-f07a-44a3-a171-4822be1710e2}</UniqueIdentifier>
     </Filter>
@@ -140,9 +137,6 @@
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
-      <Filter>소스 파일\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\chwio.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\clog.h">
@@ -291,9 +285,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\KnownSigAnal\KPulExt.h">
       <Filter>소스 파일\Anal\KnownSigAnal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
-      <Filter>소스 파일\Anal\Identify</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Identify\define.h">
       <Filter>소스 파일\Anal\Identify</Filter>
@@ -478,9 +469,6 @@
     <ClInclude Include="..\..\files\Include\global.h">
       <Filter>소스 파일\INCLUDE</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\MulDiv64.h">
-      <Filter>소스 파일\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\ODBC\MSSQL.h">
       <Filter>소스 파일\ODBC</Filter>
     </ClInclude>
@@ -493,9 +481,6 @@
     <ClInclude Include="..\..\files\Anal\INC\Structs.h">
       <Filter>소스 파일\Anal\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\DMA\dma.h">
-      <Filter>소스 파일\Utils\DMA</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
@@ -507,9 +492,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Thread\coperationconsole.h">
       <Filter>소스 파일\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\cmultiserver.h">
-      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
       <Filter>소스 파일\Anal\IntraSigAnal</Filter>
@@ -538,9 +520,6 @@
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
-      <Filter>소스 파일\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\chwio.cpp">
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
@@ -657,9 +636,6 @@
     <ClCompile Include="..\..\files\Anal\KnownSigAnal\KPulExt.cpp">
       <Filter>소스 파일\Anal\KnownSigAnal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
-      <Filter>소스 파일\Anal\Identify</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
       <Filter>소스 파일\Anal\Identify</Filter>
     </ClCompile>
@@ -720,9 +696,6 @@
     <ClCompile Include="..\..\files\SQLite\sqlite3.c">
       <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
-      <Filter>소스 파일\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\ODBC\MSSQL.cpp">
       <Filter>소스 파일\ODBC</Filter>
     </ClCompile>
@@ -737,9 +710,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Thread\coperationconsole.cpp">
       <Filter>소스 파일\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\cmultiserver.cpp">
-      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
       <Filter>소스 파일\Anal\IntraSigAnal</Filter>

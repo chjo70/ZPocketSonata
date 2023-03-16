@@ -80,17 +80,17 @@ enum EnumIdResult
 	E_EL_PE_UNK_ID=0,
 	E_EL_OLD_ID=1,						// 기성
 	E_EL_NEW_ID,							// 신출
-	E_EL_UNK_ID								// 불명
+	E_EL_UNK_ID								// 불명	
 };
 
 struct STR_CEDEOBID_INFO {
 	EnumIdResult eIdResult;					// 0=기성, 1=신출, 2=불명
 
 	// CED의 레이더 모드 인덱스
-	int nCoRadarModeIndex;
-	int nRadarModeIndex[MAX_IDCANDIDATE];
+	unsigned int uiCoRadarModeIndex;
+	unsigned int uiRadarModeIndex[MAX_IDCANDIDATE];
 
-    int n3LevelRadarModeIndex[THREE_LEVEL_IDCANDIDATE];
+    unsigned int ui3LevelRadarModeIndex[THREE_LEVEL_IDCANDIDATE];
 
 	// CED의 레이더 인덱스
 	//int nCoRadarIndex;
@@ -385,7 +385,7 @@ union UELMANUALVAL {
 
 }  ;
 
-typedef enum {
+enum ENUM_SCAN_PROCESS {
     enSCAN_NotProcessing=0,
 
     enSCAN_Requesting,
@@ -395,7 +395,7 @@ typedef enum {
 
 	enSCAN_CANTProcessing,
 
-} ENUM_SCAN_PROCESS;
+} ;
 
 /**
  * @typedef   SELABTDATA_EXT
@@ -491,7 +491,7 @@ struct SELABTDATA_EXT {
 
 struct SELAETDATA_EXT {
 	// 누적된 전체 PDW 개수
-	int iCoTotalPdw;
+	unsigned int uiCoPDWOfAnalysis;
 	//int nCoTotalIQ;
 
 	// 인트라 변조 유무

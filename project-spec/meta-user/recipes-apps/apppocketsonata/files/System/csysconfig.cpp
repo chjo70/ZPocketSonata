@@ -265,15 +265,15 @@ void CSysConfig::InitVar()
 
     // 보드 세팅
     m_strConfig.enBoardID = enMaster;
-    m_strConfig.enMode = enREADY_MODE;
+    //m_strConfig.enMode = enREADY_MODE;
 
 #ifdef _POCKETSONATA_
 
     // 수집 채널 초기화
-    memset( m_strConfig.strDetectWindowCell, 0, sizeof(STR_WINDOWCELL) * DETECT_CHANNEL );
-    memset( m_strConfig.strTrackWindowCell, 0, sizeof(STR_WINDOWCELL) * TRACK_CHANNEL );
-    memset( m_strConfig.strScanWindowCell, 0, sizeof(STR_WINDOWCELL) * SCAN_CHANNEL );
-    memset( m_strConfig.strUserWindowCell, 0, sizeof(STR_WINDOWCELL) * USER_CHANNEL );
+    memset( m_strConfig.strDetectWindowCell, 0, sizeof(STR_WINDOWCELL) * CO_DETECT_CHANNEL );
+    memset( m_strConfig.strTrackWindowCell, 0, sizeof(STR_WINDOWCELL) * CO_TRACK_CHANNEL );
+    memset( m_strConfig.strScanWindowCell, 0, sizeof(STR_WINDOWCELL) * CO_SCAN_CHANNEL );
+    memset( m_strConfig.strUserWindowCell, 0, sizeof(STR_WINDOWCELL) * CO_USER_CHANNEL );
 
     // 수집 히스토그램 초기화
     memset( m_strConfig.ucColHisto, 0, sizeof(m_strConfig.ucColHisto) );
@@ -387,17 +387,17 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
 void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
 {
 
-    if( uiCh < DETECT_CHANNEL ) {
+    if( uiCh < CO_DETECT_CHANNEL ) {
         SetDetectWindowCell( uiCh, pWindowCell );
     }
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL ) {
-        SetTrackWindowCell( uiCh-DETECT_CHANNEL, pWindowCell );
+    else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL ) {
+        SetTrackWindowCell( uiCh-CO_DETECT_CHANNEL, pWindowCell );
     }
-    else if( uiCh < DETECT_CHANNEL+TRACK_CHANNEL+SCAN_CHANNEL ) {
-        SetScanWindowCell( uiCh-DETECT_CHANNEL-TRACK_CHANNEL, pWindowCell );
+    else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL ) {
+        SetScanWindowCell( uiCh-CO_DETECT_CHANNEL-CO_TRACK_CHANNEL, pWindowCell );
     }
     else {
-        SetUserWindowCell( uiCh-DETECT_CHANNEL-TRACK_CHANNEL-SCAN_CHANNEL, pWindowCell );
+        SetUserWindowCell( uiCh-CO_DETECT_CHANNEL-CO_TRACK_CHANNEL-CO_SCAN_CHANNEL, pWindowCell );
     }
 
 }
@@ -421,7 +421,7 @@ void CSysConfig::DisplaySystemVar()
     LOG_LINEFEED;
     LOG_LINEFEED;
 
-    Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
+    //Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
     Log( enNormal, "\t.라이브러리 버젼           : %d" , m_strConfig.uiIPLVersion );
     LOG_LINEFEED;
     LOG_LINEFEED;

@@ -42,7 +42,7 @@ void CCGI::Run( key_t key )
 {
     LOGENTRY;
 
-    CThread::Run( key );
+    CThread::Run();
 
 }
 

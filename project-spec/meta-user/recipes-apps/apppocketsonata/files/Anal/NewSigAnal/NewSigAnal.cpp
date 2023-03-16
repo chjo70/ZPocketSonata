@@ -1,6 +1,13 @@
-﻿// NewSigAnal.cpp: implementation of the CNewSigAnal class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
+
+    @file      NewSigAnal.cpp
+    @brief     탐지 신호 분석 메인 클래스
+    @details   ~
+    @author    조철희
+    @date      15.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
 
 #include "stdafx.h"
 
@@ -45,7 +52,7 @@ static char THIS_FILE[]=__FILE__;
  * @param     unsigned int uiCoMaxPdw
  * @param     bool bDBThread
  * @param     const char * pFileName
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -63,16 +70,14 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pF
 	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
 	m_pSeg = GetPulseSeg();
 
-
-
-
-
     Init();
+
+
 
 }
 
 /**
- * @brief     AallocMemory
+ * @brief     메모리를 할당 합니다.
  * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -115,7 +120,7 @@ void CNewSigAnal::AallocMemory()
 
 /**
  * @brief     ~CNewSigAnal
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -127,7 +132,7 @@ CNewSigAnal::~CNewSigAnal()
     _SAFE_DELETE( g_pTheELEnvironVariable )
 
     _SAFE_DELETE( m_pIdentifyAlg )
-    
+
     _SAFE_DELETE( m_theGroup )
     _SAFE_DELETE( m_thePulExt )
     _SAFE_DELETE( m_theAnalPRI )
@@ -169,14 +174,11 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
 	InitAllVar();
 
-	MakeAnalDirectory(pPDWData);
-
-#ifdef _RESET_PDWID_
-	CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
-#endif
-
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
+        MakeAnalDirectory( &pPDWData->x );
+        CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
@@ -229,46 +231,7 @@ void CNewSigAnal::InitOfNewSigAnal()
 	m_theMakeAET->CNMakeAET::Init();
 }
 
-/**
- * @brief     MakeAnalDirectory
- * @param     STR_PDWDATA * pPDWData
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-01-24 11:54:06
- * @warning
- */
-void CNewSigAnal::MakeAnalDirectory(STR_PDWDATA *pPDWData )
-{
-	if (pPDWData != NULL) {
-		// 작업 폴더 생성
-#ifdef _ELINT_
-		sprintf_s(m_szAnalDirectory, "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, pPDWData->x.el.aucTaskID);
 
-#elif defined(_701_)
-		sprintf_s(m_szAnalDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.e7.GetCollectorID(), pPDWData->x.e7.aucTaskID);
-
-#elif defined(_XBAND_)
-		//sprintf_s( szDirectory, "%s\\수집소_%d\\%s\\%s", SHARED_DATA_DIRECTORY, pPDWData->x.el.iCollectorID, buffer, pPDWData->x.el.aucTaskID );
-		sprintf_s(m_szAnalDirectory, "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID);
-
-#elif defined(_POCKETSONATA_)
-		char buffer[100];
-
-		//CCommonUtils::getStringDesignatedTime( buffer, sizeof(buffer), pPDWData->GetColTime() );
-		sprintf(m_szAnalDirectory, _T("%s/BRD_%d/%s"), SHARED_DATA_DIRECTORY, pPDWData->x.ps.uiBoardID, g_szCollectBank[pPDWData->x.ps.uiBank]);
-
-#else
-		sprintf(m_szAnalDirectory, "%s/BRD", pLocalDirectory);
-
-#endif
-
-	}
-	else {
-		m_szAnalDirectory[0] = NULL;
-	}
-}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::Start
@@ -302,7 +265,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
         // 수집한 PDW 파일 저장하기...
         InsertRAWData(m_pPDWData, _spZero );
-        
+
         // PDW 수집 상태 체크를 함.
 		_PDW *pPDW = m_pPDWData->pstPDW;
 		unsigned int uiBand = m_pPDWData->GetBand();
@@ -314,6 +277,8 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 			unsigned int uiBoardID = m_pPDWData->x.ps.uiBoardID;
             //printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , uiBoardID, m_pMidasBlue->GetRawDataFilename() );
             Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요..", uiBoardID, m_pMidasBlue->GetRawDataFilename());
+#else
+            Log( enError, "보드에서 수집한 PDW 파일의 TOA 가 어긋났습니다. 확인해보세요.." );
 #endif
         }
         else {
@@ -469,22 +434,6 @@ void CNewSigAnal::InitAllVar()
 }
 
 /**
- * @brief     초기화 변수를 설정합니다.
- * @param     enum ANALYSIS_MODE analMode
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2021-07-06, 15:59
- * @warning
- */
-// void CNewSigAnal::InitVar( enum ANALYSIS_MODE analMode )
-// {
-//     m_AnalMode = analMode;
-// 
-// }
-
-/**
  * @brief     대역 밴드를 요청합니다.
  * @param     int freq
  * @return    enum FREQ_BAND
@@ -532,7 +481,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
     UINT i;
     UINT uiFreqMax, uiFreqMin;
     bool bRet;
-    
+
     if( m_theGroup->GetPulseStat() == STAT_CW ) {
         m_VecMatchRadarMode.clear();
 

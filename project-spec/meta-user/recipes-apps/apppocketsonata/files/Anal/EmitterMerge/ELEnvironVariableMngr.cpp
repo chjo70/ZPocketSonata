@@ -31,7 +31,7 @@ CELEnvironVariable::CELEnvironVariable(void)
 	bool bRtn = false;    
 
 	// 기본 설정 값
-	m_stEnvironVariable.iDVRatio = 60;							// [%]
+	m_stEnvironVariable.uiDVRatio = 60;							// [%]
 
 	// 신호 식별 설정값
 	m_stEnvironVariable.fMarginFrqError = 3.0;				// [MHz]	
@@ -230,9 +230,9 @@ void CELEnvironVariable::SetEnvironVaraiable( SEnvironVariable *pSEnvironVariabl
  * @date      2022-08-08 21:45:07
  * @warning
  */
-int CELEnvironVariable::GetMtskDVRatio()
+unsigned int CELEnvironVariable::GetMtskDVRatio()
 {
-	return m_stEnvironVariable.iDVRatio;
+	return m_stEnvironVariable.uiDVRatio;
 }
 
 // // LOB생성을 위한 쵯 LOB 개수

@@ -1,6 +1,15 @@
-﻿// CDetectAnalysis.cpp: implementation of the CDetectAnalysis class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
+
+    @file      cdetectanalysis.cpp
+    @brief     탐지 신호 분석 쓰레드
+    @details   ~
+    @author    조철희
+    @date      15.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#include "stdafx.h"
 
 #include "stdafx.h"
 
@@ -10,7 +19,6 @@
 #include "csignalcollect.h"
 
 #include "../Utils/csingleserver.h"
-#include "../Utils/cmultiserver.h"
 
 #include "../Utils/ccommonutils.h"
 
@@ -18,11 +26,19 @@
 
 #define _DEBUG_
 
-
 /**
- * @brief CDetectAnalysis::CDetectAnalysis
+ * @brief     객체를 생성 합니다.
+ * @param     int iKeyId
+ * @param     const char * pClassName
+ * @param     bool bArrayLanData
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-15 10:46:11
+ * @warning
  */
-CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CDetectAnalysis::CDetectAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
@@ -44,10 +60,19 @@ CDetectAnalysis::CDetectAnalysis( int iKeyId, char *pClassName, bool bArrayLanDa
     m_PDWData.pstPDW = NULL;
     m_PDWData.pstPDW = new _PDW [sizeof(_PDW) * MAX_PDW];
 
+    InitDetectAnalysis();
+
 }
 
 /**
- * @brief CDetectAnalysis::~CDetectAnalysis
+ * @brief     ~CDetectAnalysis
+ * @param     void
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-15 10:54:48
+ * @warning
  */
 CDetectAnalysis::~CDetectAnalysis(void)
 {
@@ -58,9 +83,15 @@ CDetectAnalysis::~CDetectAnalysis(void)
     _SAFE_DELETE( m_PDWData.pstPDW )
 }
 
-
 /**
- * @brief CDetectAnalysis::Run
+ * @brief     쓰레드를 호출 합니다.
+ * @param     key_t key
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-15 10:54:54
+ * @warning
  */
 void CDetectAnalysis::Run(key_t key)
 {
@@ -71,7 +102,13 @@ void CDetectAnalysis::Run(key_t key)
 }
 
 /**
- * @brief CDetectAnalysis::_routine
+ * @brief     메시지를 수신하여 명령을 처리 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-15 10:55:10
+ * @warning
  */
 void CDetectAnalysis::_routine()
 {
@@ -83,32 +120,65 @@ void CDetectAnalysis::_routine()
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
-    while( g_AnalLoop ) {
-        if( QMsgRcv() == -1 ) {            
+    while( m_bThreadLoop ) {
+        if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv" );
-            //break;
         }
         else {
-        switch( m_pMsg->uiOpCode ) {
-            case enTHREAD_DETECTANAL_START :
-                MakePDWData();
-                AnalysisStart();
-                break;
+            switch( m_pMsg->uiOpCode ) {
+                // 운용 제어 관련 메시지
+                case enREQ_OP_START:
+                    // QMsgClear();
+                    InitDetectAnalysis();
+                    break;
 
-            case enTHREAD_REQ_SHUTDOWN :
-                LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                break;
+                case enTHREAD_DISCONNECTED:
+                case enREQ_OP_SHUTDOWN:
+                    QMsgClear();
+                    InitDetectAnalysis();
+                    break;
 
-            case enTHREAD_REQ_SET_TRACKWINDOWCELL :
-                LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
-                break;
+                case enREQ_OP_RESTART:
+                    QMsgClear();
+                    InitDetectAnalysis();
+                    break;
 
-            default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
-                break;
+                // 위협 정보 관련 메시지
+                case enTHREAD_DETECTANAL_START :
+                    MakePDWData();
+                    AnalysisStart();
+                    break;
+
+                case enTHREAD_REQ_SHUTDOWN :
+                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                    break;
+
+                case enTHREAD_REQ_SET_TRACKWINDOWCELL :
+                    LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
+                    break;
+
+                default:
+                    LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    break;
             }
+
+            SendEchoMessage();
         }
     }
+
+}
+
+/**
+ * @brief     객체를 초기화 합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 15:45:45
+ * @warning
+ */
+void CDetectAnalysis::InitDetectAnalysis()
+{
 
 }
 
@@ -125,7 +195,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.iCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -138,6 +208,7 @@ void CDetectAnalysis::AnalysisStart()
 
     if( uiTotalLOB >= _spOne ) {
         STR_ANALINFO strAnalInfo;
+        //STR_COLLECTINFO strCollectInfo;
 
         memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
 
@@ -146,12 +217,16 @@ void CDetectAnalysis::AnalysisStart()
 
         strAnalInfo.enBoardID = g_enBoardId;
         strAnalInfo.uiTotalLOB = uiTotalLOB;
-        strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
+        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
 
         // PDW 헤더 정보 저장
         memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
 
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, NO_ECHO, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+
+        //memcpy( &strCollectInfo, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
+
     }
 
 }
@@ -169,10 +244,10 @@ void CDetectAnalysis::MakePDWData()
 {
     unsigned int i, uiTotalPDW;
 
-    STR_STATIC_PDWDATA *pStaticPDWData; 
+    STR_STATIC_PDWDATA *pStaticPDWData;
 
     _PDW *pPDWSrc, *pPDWDest;
-    
+
     pStaticPDWData = ( STR_STATIC_PDWDATA * ) GetRecvData();
 
     // 헤더 복사
@@ -181,7 +256,7 @@ void CDetectAnalysis::MakePDWData()
     // 데이터 복사
     pPDWSrc = & pStaticPDWData->stPDW[0];
     pPDWDest = & m_PDWData.pstPDW[0];
-    uiTotalPDW = pStaticPDWData->GetTotalPDW();    
+    uiTotalPDW = pStaticPDWData->GetTotalPDW();
     for( i=0 ; i < uiTotalPDW ; ++i ) {
         pPDWDest->ullTOA = pPDWSrc->ullTOA;
 
@@ -201,24 +276,23 @@ void CDetectAnalysis::MakePDWData()
 //         pPDWDest->fPh2 = pPDWSrc->fPh2;
 //         pPDWDest->fPh3 = pPDWSrc->fPh3;
 //         pPDWDest->fPh4 = pPDWSrc->fPh4;
-// 
+//
 // #elif defined(_XBAND_)
 //         pPDWDest->fPh1 = pPDWSrc->fPh1;
 //         pPDWDest->fPh2 = pPDWSrc->fPh2;
 //         pPDWDest->fPh3 = pPDWSrc->fPh3;
 //         pPDWDest->fPh4 = pPDWSrc->fPh4;
 //         pPDWDest->fPh5 = pPDWSrc->fPh5;
-// 
+//
 // #elif _POCKETSONATA_
 //         pPDWDest->iPMOP = pPDWSrc->iPMOP;
 //         pPDWDest->iFMOP = pPDWSrc->iFMOP;
 //         pPDWDest->iChannel = pPDWSrc->iChannel;
-// 
+//
 // #endif
 
         ++ pPDWSrc;
         ++ pPDWDest;
     }
-
 
 }

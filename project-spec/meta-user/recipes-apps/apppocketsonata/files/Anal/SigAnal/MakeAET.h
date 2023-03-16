@@ -48,10 +48,10 @@ public:
     int CalMaxChannel( STR_PDWINDEX *pPdw );
     void PrintAllEmitter();
 
-    inline int GetCoAnalPdw() { return m_uiCoAnalPdw; }
+    inline int GetCoAnalPdw() { return (int) m_uiCoAnalPdw; }
     inline void SetCoAnalPdw(UINT coAnalPdw ) { m_uiCoAnalPdw=coAnalPdw; }
     inline int GetCoLOB() { return m_iCoLOB; }
-    inline void SetCoLOB( UINT coLOB ) { m_iCoLOB = coLOB; }
+    inline void SetCoLOB( UINT coLOB ) { m_iCoLOB = (int) coLOB; }
 
     UINT CalcAoaMean_GSKIMF_200505_6( STR_EMITTER *pEmitter );
     void MakeExtInfoFromSeg( STR_EXT *pExt, STR_EMITTER *pEmitter );
@@ -75,7 +75,7 @@ public:
     void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
     
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
-    int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
+    unsigned int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
     void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter);
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);

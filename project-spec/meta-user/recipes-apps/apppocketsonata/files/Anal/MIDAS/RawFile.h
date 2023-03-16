@@ -70,16 +70,16 @@ public:
 	unsigned int Read( void *pData, unsigned int c_size, int iOffset=0 );
 	unsigned int Write( void *pData, unsigned int c_size );
 	void CloseFile();
-    unsigned long long int GetRawFileSize();
-	unsigned long long int GetRawFileSize( char *pPathFileName );
+    unsigned int GetRawFileSize();
+	unsigned int GetRawFileSize( char *pPathFileName );
 	void GetFilename( char *pFilename );
 
-    bool CreateDir( TCHAR *pPath );
+    bool CreateDir( const TCHAR *pPath );
 
 	inline char *GetFullname() { return m_fullname; }
 	inline char *GetFilename() { return m_filename; }
 
-	inline void SeekToStart() { if( m_fid != 0 ) _lseek(m_fid, 0, SEEK_SET ); }
+	inline void SeekToStart() { if( m_fid != 0 ) { _lseek(m_fid, 0, SEEK_SET ); } }
 
 };
 

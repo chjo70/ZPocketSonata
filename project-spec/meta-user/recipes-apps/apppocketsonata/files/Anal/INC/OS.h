@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////
 #ifdef __VXWORKS__
 #include <types/vxTypesOld.h>
+#include <sysLib.h>
 
 
 #define RING_ID					UINT
@@ -34,7 +35,7 @@
 #define OS_MILLISEC(A)          (int) (A/10.+0.5)
 #define OS_SEC(A)               (A*100)
 
-#define Sleep(A)                taskDelay(A)
+#define Sleep(A)                taskDelay(A*sysClkRateGet())		// 초 단위 대기
 
 typedef long long __time64_t;
 
@@ -63,9 +64,14 @@ typedef long long __time64_t;
 #define OS_MILLISEC(A)          (A*1000)
 #define OS_SEC(A)               (A*1000000)
 
+
+#define Sleep(A)                Sleep(5*1000)
+
 #define STATUS					unsigned int
 
 #define VXB_DEV_ID              UINT
+
+#define _func_kprintf			TRACE
 
 #endif
 

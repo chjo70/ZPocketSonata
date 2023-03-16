@@ -50,6 +50,8 @@
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_CREATE_LINKS_IN_WORKSPACE_ID"/>
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_PATH_VARIABLE_SELECTED_ID"/>
 		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\files"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell_T2MS"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell\WebServer"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell\Untar"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell"/>

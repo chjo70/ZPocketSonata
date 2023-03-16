@@ -24,13 +24,13 @@
 	</section>
 	<section name="SearchDialog">
 		<item value="false" key="IS_OPEN_PREVIOUS_PAGE"/>
-		<item value="org.eclipse.cdt.ui.pdomSearchPage" key="PREVIOUS_PAGE"/>
+		<item value="com.windriver.ide.search.ui.RetrieverFindPage" key="PREVIOUS_PAGE"/>
 	</section>
 	<section name="DialogBounds_SearchDialog">
 		<item value="859" key="DIALOG_WIDTH"/>
 		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
 		<item value="614" key="DIALOG_HEIGHT"/>
-		<item value="234" key="DIALOG_X_ORIGIN"/>
-		<item value="333" key="DIALOG_Y_ORIGIN"/>
+		<item value="2028" key="DIALOG_X_ORIGIN"/>
+		<item value="243" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

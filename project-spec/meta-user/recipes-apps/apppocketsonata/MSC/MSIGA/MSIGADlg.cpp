@@ -7,6 +7,11 @@
 #include "MSIGADlg.h"
 #include "afxdialogex.h"
 
+#include <string>
+
+#include "../../files/Include/globals.h"
+
+#include "../../files/Utils/ccommonutils.h"
 
 
 #ifdef _DEBUG
@@ -67,14 +72,16 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
     ON_WM_NCDESTROY()
     ON_BN_CLICKED(ID_SIM_START, &CMSIGADlg::OnBnClickedSimStart)
+	ON_BN_CLICKED( ID_SIM_LIBRARY, &CMSIGADlg::OnBnClickedSimLibrary )
 END_MESSAGE_MAP()
 
 
 extern void Start( int iArgc, char *iArgv[] );
 extern void End();
-
 extern void ss();
-extern void SIM_Start();
+
+extern void SIM_Start( bool bReqStart );
+extern void SIM_Library();
 
 
 // CMSIGADlg 메시지 처리기
@@ -117,8 +124,15 @@ BOOL CMSIGADlg::OnInitDialog()
 
     //CFileTar theFileTar;
     //theFileTar.UnTar( "d:/tftpboot/tftpboot.tar", "d:/tffs0" );
+
+	m_bReqStart = true;
+
     Start( __argc, __argv );
-    
+
+	std::string strBuffer;
+
+	strBuffer = string_format( "EW신호처리판#%d", g_enBoardId );
+	SetWindowText( strBuffer.c_str() );    
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -183,10 +197,42 @@ void CMSIGADlg::OnNcDestroy()
 
 }
 
-
+/**
+ * @brief     OnBnClickedSimStart
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-12 16:07:42
+ * @warning
+ */
 void CMSIGADlg::OnBnClickedSimStart()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    SIM_Start( m_bReqStart );
 
-    SIM_Start();
+    if( m_bReqStart ) {
+        GetDlgItem( ID_SIM_START )->SetWindowTextA( "운용제어/종료요청" );
+    }
+    else {
+		GetDlgItem( ID_SIM_START )->SetWindowTextA( "운용제어/시작요청" );
+    }
+
+	m_bReqStart = !m_bReqStart;
+}
+
+/**
+ * @brief     OnBnClickedSimLibrary
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-12 16:07:38
+ * @warning
+ */
+void CMSIGADlg::OnBnClickedSimLibrary()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	SIM_Library();
+
 }

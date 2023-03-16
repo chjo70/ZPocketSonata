@@ -12,7 +12,19 @@
 #include "_Type.h"
 #include "_Macro.h"
 
-#include "../INC/structs.h"
+
+#include "../INC/System.h"
+#include "../../Include/Defines.h"
+#include "../SigAnal/_Define.h"
+#include "../INC/PDW.h"
+
+#ifdef _MIDAS_
+
+#else
+#include "../EmitterMerge/ELMsgDefn.h"
+#include "../INC/AetIPL.h"
+#endif
+
 
 #include "_Define.h"
 #include "_Struct.h"

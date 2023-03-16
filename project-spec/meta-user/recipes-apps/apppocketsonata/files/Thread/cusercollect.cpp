@@ -24,8 +24,8 @@
 
 #include "csignalcollect.h"
 
-#include "../Utils/chwio.h"
-#include "../Utils/DMA/dma.h"
+//#include "../Utils/chwio.h"
+//#include "../Utils/DMA/dma.h"
 #include "../Utils/ccommonutils.h"
 
 
@@ -147,7 +147,7 @@ void CUserCollect::AllocMemory()
 }
 
 /**
- * @brief     FreeMemory
+ * @brief     메모리를 해지합니다.
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -176,7 +176,7 @@ void CUserCollect::Run(key_t key)
 {
     LOGENTRY;
 
-    CThread::Run( key );
+    CThread::Run( );
 
 }
 
@@ -221,7 +221,7 @@ void CUserCollect::_routine()
 
             case enTHREAD_REQ_COLEND :
                 TRACE( "\nenTHREAD_REQ_COLEND.........................");
-                Stop();
+                StopThread();
                 break;
 
             case enTHREAD_REQ_RAWDATA :
@@ -290,7 +290,7 @@ void CUserCollect::SetConfig()
  * @date      2023-02-09 10:18:21
  * @warning
  */
-void CUserCollect::Stop()
+void CUserCollect::StopThread()
 {
     LOGMSG( enDebug, " 수집 설정을 종료합니다." );
 
@@ -311,31 +311,32 @@ void CUserCollect::Stop()
  */
 void CUserCollect::ColStart()
 {
+#ifdef __ZYNQ_BOARD__
     xuio_t *pUIO;
 
     pdw_reg_t s_pdw_reg_t;
 
     uint32_t DataCount = (UINT) PDW_GATHER_SIZE;
     
-    UINT uiSize;
-
     pUIO = CHWIO::uio_get_uio((uint8_t)REG_UIO_DMA_1);
 
-    //DumpLen = sizeof(uint8_t) * DataCount;
+    memset( &s_pdw_reg_t, 0, sizeof( s_pdw_reg_t ) );
 
-    memset(&s_pdw_reg_t, 0, sizeof(s_pdw_reg_t));
+#endif
+
+    UINT uiSize;
+
+    //DumpLen = sizeof(uint8_t) * DataCount;
 
     LOGMSG1( enDebug, " Starting of the Collecting Signal [%d]... " , m_uiColStart );
 	
     // 인터럽트 재설정 
 #ifdef __ZYNQ_BOARD__
     CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
-#endif
 
     // 하드웨어로 부터 PDW 데이터를 수집합니다.
     xmem_t *pMem = CHWIO::mem_get_mem(DMA_1_MEM);
 
-#ifdef __ZYNQ_BOARD__
     dma_s2mm_reset(dma_dev_1);
     dma_s2mm_start(dma_dev_1, pMem, PDW_GATHER_SIZE, false );
 #endif
@@ -343,8 +344,10 @@ void CUserCollect::ColStart()
     memset( & m_strResColStart, 0, sizeof(m_strResColStart) );
 
     NextCollectHistogram();
-    
+
+#ifdef __ZYNQ_BOARD__
     if( true == CHWIO::PendingFromInterrupt(pUIO) ) {
+#endif
     		
 #ifdef _SIM_USER_COLLECT_
         CThread::msSleep( 1000 );
@@ -359,12 +362,12 @@ void CUserCollect::ColStart()
 #else
         //printf( " *********************************pUIO[0x%p], iFd[%d], uLLPhysical[%llu], Dev[%s], Size[%d]\n", pUIO, pUIO->iFd, pUIO->ullPhysical, pUIO->pszDev, sizeof(xuio_t) );
 #endif
-      
+
+#ifdef __ZYNQ_BOARD__
         switch( pUIO->ullPhysical ) {
             case UIO_DMA_1_ADDR :
-#ifdef __ZYNQ_BOARD__
+
                 CHWIO::ClearInterrupt(pUIO);
-#endif
 
                 m_strResColStart.uiBoardID = (unsigned int) g_pTheSysConfig->GetBoardID();
 
@@ -383,7 +386,7 @@ void CUserCollect::ColStart()
                 MakeCollectHistogram();
 
                 // ES 모드일때만 모의 데이터를 수집 관리에 밀어 넣는다.
-                if( g_pTheSysConfig->GetMode() == enANAL_ES_MODE ) {
+                if( g_pTheTaskMngr->GetMode() == enOP_Mode ) {
                     // printf( "\n Send enTHREAD_REQ_SIM_PDWDATA..." );
 
                     uiSize = sizeof( SIGAPDW ) * m_pUniHeader->GetTotalPDW(en_ZPOCKETSONATA);
@@ -392,20 +395,25 @@ void CUserCollect::ColStart()
                 break;
 
             default :
-#ifdef __ZYNQ_BOARD__
                 CHWIO::ClearInterrupt(pUIO);
-#endif
                 //ClearInterrupt(s_uio);
                 //printf( "\n AAAA" );
                 break;
         }
+#else
+
+
+#endif
 
 #ifdef __ZYNQ_BOARD__
         CHWIO::uio_re_enable_Interrupt( REG_UIO_DMA_1 );
 #endif
-    }
 
-    if( ( (unsigned int) g_pTheSysConfig->GetMode() & (unsigned int) enANAL_Mode ) > 0 ) {
+#ifdef __ZYNQ_BOARD__
+    }
+#endif
+
+    if( ( (unsigned int) g_pTheTaskMngr->GetMode() & (unsigned int) enOP_Mode ) > 0 ) {
         g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLSTART, GetThreadName() );
     }
     else {
@@ -492,18 +500,22 @@ void CUserCollect::MakeSIMPDWData()
 	//if ((m_uiCoSim % 20) <= 5) {
 	if ((m_uiCoSim % 10) <= 3) {
 		uiCoPDW = 0;
-		
 	}
 	else {
 		uiCoPDW = m_strResColStart.uiCoPulseNum;
 	}
+
+#ifdef __VXWORKS__
+    uiCoPDW = 0;
+
+#endif
 
 	m_pUniHeader->SetTotalPDW( uiCoPDW );
 
 
     int iBandWidth = m_pUniHeader->GetBandWidth();
 
-#ifdef _SIMPDW_
+#ifdef _SIM_PDW_
 #if defined(_POCKETSONATA_)
 #define MANUALTOA   (35)
 
@@ -556,7 +568,7 @@ void CUserCollect::MakeSIMPDWData()
             CPOCKETSONATAPDW::EncodeRealFREQMHz( (int *) & randomFreq, (int * ) & randomCh, (int) g_enBoardId, 3985.0 );
         }
 
-        m_ullTOA += CPOCKETSONATAPDW::EncodeTOAus( (float) 100 );
+        m_ullTOA += ( CPOCKETSONATAPDW::EncodeTOAus( (float) 100 ) + (_TOA) ( ( rand() % 10000 ) - 5000 ) );
 
         memset( pSIGAPDW, 0, sizeof(DMAPDW) );
 
@@ -762,7 +774,13 @@ void CUserCollect::NextCollectHistogram()
 }
 
 /**
- * @brief CUserCollect::MakeSharedSpectrumData
+ * @brief     MakeSharedSpectrumData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-12 15:00:27
+ * @warning
  */
 void CUserCollect::MakeSharedSpectrumData()
 {
@@ -776,7 +794,7 @@ void CUserCollect::MakeSharedSpectrumData()
     // 정형화하여 SharedMemory 에 저장한다.
     iMax = pColHisto[COLHISTO_CELLS];
     for( i=0; i < COLHISTO_CELLS ; ++i ) {
-        pSharedColHisto[0][i] = IDIV( pColHisto[i] * 100, iMax );
+        pSharedColHisto[0][i] = (unsigned char ) IDIV( pColHisto[i] * 100, iMax );
     }
 
     g_pTheSysConfig->SetColHisto();

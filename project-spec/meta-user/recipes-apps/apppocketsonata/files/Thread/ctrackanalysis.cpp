@@ -11,7 +11,7 @@
 
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
-#include "../Utils/cmultiserver.h"
+//#include "../Utils/cmultiserver.h"
 
 #include "../Utils/ccommonutils.h"
 
@@ -25,7 +25,7 @@
  * @param iKeyId
  * @param pClassName
  */
-CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CTrackAnalysis::CTrackAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -43,7 +43,9 @@ CTrackAnalysis::CTrackAnalysis( int iKeyId, char *pClassName, bool bArrayLanData
 #endif
 
     //m_pTheSysPara = new CSysPara();
-    _SAFE_NEW(m_pTheSysPara, CSysPara())
+    _SAFE_NEW( m_pTheSysPara, CSysPara() )
+
+    InitTrackAnalysis();
 
 }
 
@@ -73,6 +75,15 @@ void CTrackAnalysis::Run(key_t key)
 /**
  * @brief CTrackAnalysis::_routine
  */
+/**
+ * @brief     _routine
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 15:46:47
+ * @warning
+ */
 void CTrackAnalysis::_routine()
 {
     LOGENTRY;
@@ -86,6 +97,22 @@ void CTrackAnalysis::_routine()
         }
         else {
             switch( m_pMsg->uiOpCode ) {
+                case enREQ_OP_START:
+                    // QMsgClear();
+                    InitTrackAnalysis();
+                    break;
+
+                case enTHREAD_DISCONNECTED:
+                case enREQ_OP_SHUTDOWN:
+                    QMsgClear();
+                    InitTrackAnalysis();
+                    break;
+
+				case enREQ_OP_RESTART:
+					QMsgClear();
+					InitTrackAnalysis();
+					break;
+
                 case enTHREAD_KNOWNANAL_START :
                     AnalysisStart();
                     break;
@@ -96,9 +123,11 @@ void CTrackAnalysis::_routine()
                     break;
 
                 default:
-                    LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
+
+            SendEchoMessage();
         }
     }
 }
@@ -119,7 +148,7 @@ void CTrackAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
-    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.iCh, m_pMsg->x.strCollectInfo.uiABTID );
+    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -137,7 +166,7 @@ void CTrackAnalysis::AnalysisStart()
 
     strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = (unsigned int)iCoLOB;
-    strAnalInfo.iCh = m_pMsg->x.strCollectInfo.iCh;
+    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
     strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
 
@@ -147,5 +176,20 @@ void CTrackAnalysis::AnalysisStart()
     SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
 
     g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+
+}
+
+/**
+ * @brief     InitTrackAnalysis
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-08 15:54:42
+ * @warning
+ */
+void CTrackAnalysis::InitTrackAnalysis()
+{
+
 
 }

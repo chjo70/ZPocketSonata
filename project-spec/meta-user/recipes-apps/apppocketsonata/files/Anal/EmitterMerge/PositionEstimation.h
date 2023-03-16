@@ -94,7 +94,7 @@ struct SELSensorPosition {
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @date      2013-09-09 오후 5:44
  */
-typedef struct {
+struct SELPE_RESULT {
 	double dLongitude;			// 경도 [도]
 	double dLatitude;			// 위도 [도]
 	double dAltitude;			// 고도 [m]
@@ -111,7 +111,7 @@ typedef struct {
 
 	bool bResult;
 
-} SELPE_RESULT ;
+}  ;
 
 /*!
  * @typedef   VECTOR

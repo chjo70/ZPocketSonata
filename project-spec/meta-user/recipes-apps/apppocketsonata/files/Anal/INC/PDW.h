@@ -20,7 +20,7 @@
 #define _PDW12_H_
 
 #include "../SigAnal/_Type.h"
-#include "../SigAnal/_Define.h"
+//#include "../SigAnal/_Define.h"
 #include "../SigAnal/_Define.h"
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
@@ -56,6 +56,17 @@ typedef unsigned long long int _TOA;
 #endif
 
 #endif
+
+// 수집 뱅크 종류 정의
+enum ENUM_COLLECTBANK {
+    enDetectCollectBank = 0,
+    enTrackCollectBank,
+    enScanCollectBank,
+    enUserCollectBank,
+
+    enUnknownCollectBank
+
+};
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -263,21 +274,21 @@ union DMAPDW  {
      * @warning
      */
     int GetPulsetype() {
-        int iSignaltype = STAT_NORMAL;
+        int iPulsetype = STAT_NORMAL;
 
         if( uPDW.x.uniPdw_status.stPdw_status.cw_pulse == 1 ) {
-            iSignaltype = STAT_CW;
+            iPulsetype = STAT_CW;
         }
         else {
             if( uPDW.x.uniPdw_status.stPdw_status.pmop_flag == 1 ) {
-                iSignaltype = STAT_PMOP;
+                iPulsetype = STAT_PMOP;
             }
             else if( uPDW.x.uniPdw_status.stPdw_status.fmop_flag == 1 ) {                    
                 if( uPDW.x.uniPdw_status.stPdw_status.fmop_dir == 1 ) {
-                    iSignaltype = STAT_CHIRPUP;
+                    iPulsetype = STAT_CHIRPUP;
                 }
                 else {
-                    iSignaltype = STAT_CHIRPDN;
+                    iPulsetype = STAT_CHIRPDN;
                 }
             }
             else {
@@ -286,7 +297,7 @@ union DMAPDW  {
 
         }
 
-        return iSignaltype;
+        return iPulsetype;
     }
 
 }  ;
@@ -536,7 +547,7 @@ struct TNEW_SPDW
 
 #ifndef _UNI_PDW_ETC
 #define _UNI_PDW_ETC
-typedef union {
+union UNI_PDW_ETC {
     unsigned int uiCh[5];
 
     struct {
@@ -573,8 +584,7 @@ typedef union {
 
 	} _701;
 
-
-} UNI_PDW_ETC ;
+}  ;
 
 #endif
 
@@ -819,7 +829,7 @@ namespace POCKETSONATA {
 
 #ifndef _ENUM_DataType
 #define _ENUM_DataType
-typedef enum {
+enum ENUM_DataType {
 	en_UnknownData = 0,
 
 	en_PDW_DATA,
@@ -827,7 +837,7 @@ typedef enum {
 	en_IQ_DATA,
 	en_IF_DATA,
 
-} ENUM_DataType;
+} ;
 #endif
 
 
@@ -1167,14 +1177,14 @@ struct SRxPDWDataRGroup {
 // } ;
 
 
-typedef struct {
+struct STR_IQ_HEADER {
 	//ENUM_COL_MODE enMode;
 	float fCenterFreq;
 	float fColTime;
 	UINT uiColNumber;
 	float fThreshold;
 
-} STR_IQ_HEADER;
+} ;
 
 struct TNEW_IQ {
 	short sI;
@@ -1334,7 +1344,7 @@ struct STR_XBAND_HEADER {
 #define _POCKETSONATA_HEADER_
 struct STR_POCKETSONATA_HEADER {
     unsigned int uiBoardID;
-    unsigned int uiBank;
+    ENUM_COLLECTBANK enBank;
     unsigned int uiBand;                // 주파수 대역
     unsigned int uiIsStorePDW;
 
@@ -1401,7 +1411,7 @@ struct STR_SONATA_HEADER {
 
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
-union UNION_HEADER  {
+union UNION_HEADER { 
 #if defined(_GRAPH_) || defined(_ELINT_)
     // 인천공항 ELINT 구조체
     STR_ELINT_HEADER el;
@@ -1812,7 +1822,7 @@ union UNION_HEADER  {
         int iBandwidth;
 
 		if (g_enUnitType == en_ZPOCKETSONATA) {
-            iBandwidth = ps.uiBand;
+            iBandwidth = (int) ps.uiBand;
 		}
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
@@ -1858,7 +1868,6 @@ union UNION_HEADER  {
         else {
         }
 
-        return;
     }
 
 } ;
@@ -1970,13 +1979,10 @@ struct STR_PDWDATA {
      * @date      2022-05-04, 14:09
      * @warning
      */
-    void SetBank(unsigned int uiBank) {
+    void SetBank( ENUM_COLLECTBANK enBank) {
 
         if (g_enUnitType == en_ZPOCKETSONATA) {
-            x.ps.uiBank = uiBank;
-        }
-        else if (g_enUnitType == en_ELINT || g_enUnitType == en_XBAND) {
-           
+            x.ps.enBank = enBank;
         }
         else {
             
@@ -2707,6 +2713,8 @@ typedef _PDW SIGAPDW;
 #elif defined(_SONATA_)
 typedef STR_PDWDATA SIGAPDW;
 
+#else
+typedef DMAPDW SIGAPDW;
 
 #endif
 

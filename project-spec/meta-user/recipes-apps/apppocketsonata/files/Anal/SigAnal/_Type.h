@@ -36,7 +36,7 @@ using namespace std;
 #elif defined(__VXWORKS__)
 #include <types/vxTypesOld.h>
 
-#elif __linux__
+#elif defined(__linux__)
 
 #endif
 

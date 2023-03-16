@@ -68,7 +68,7 @@ CSAnalScan::~CSAnalScan()
 void CSAnalScan::Init( unsigned int uinoEMT, int noCh )
 {
 
-	m_uiScnTyp = E_AET_SCAN_UNKNOWN;
+	m_ucScnTyp = E_AET_SCAN_UNKNOWN;
     m_uiScnPrd = _spZero;
 
 	m_uinoEMT = uinoEMT; // m_pScanSigAnal->GetScanNoEMT();
@@ -131,7 +131,11 @@ BOOL CSAnalScan::KnownAnalysis()
     m_uiCoSeg = GetCoSeg();
 
     // 타입에 따라서 펄스열 분석을 달리한다.
-    switch( m_pScnAet->iPRIType ) {
+#ifdef _POCKETSONATA_
+    switch( m_pScnAet->ucPRIType ) {
+#else
+	switch( m_pScnAet->iPRIType ) {
+#endif
         case _STABLE :
             // 추적에서는 로브 조건을 무시하도록 한다.
             GroupingStable( TRUE );
@@ -192,7 +196,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
         \date 2006-05-12 14:08:48, 조철희
     */
     if( m_pEmitter == NULL ) {
-        m_uiScnTyp = E_AET_SCAN_UNKNOWN;
+        m_ucScnTyp = E_AET_SCAN_UNKNOWN;
         m_uiScnPrd = _spZero;
 
     }
@@ -220,7 +224,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
         paMean = (unsigned int) ( MeanInArray<int>( & m_pScanPt->iPA[0], m_pScanPt->uiCount ) + 0.5 );
 
         if( CheckSteadySignal( & m_nSample, paMean ) == true ) {
-            m_uiScnTyp = E_AET_SCAN_STEADY;
+            m_ucScnTyp = E_AET_SCAN_STEADY;
             m_uiScnPrd = _spZero;
 
             m_nCoModWc[m_uinoEMT] = _spZero;
@@ -235,7 +239,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
             uiThreat = ScanTypeDecision( & m_nSample, & m_nAutoCor );
 
             if( m_uiScnPrd == (UINT) -1 ) {
-                m_uiScnTyp = E_AET_SCAN_SCANFAIL;
+                m_ucScnTyp = E_AET_SCAN_SCANFAIL;
                 m_nCoModWc[m_uinoEMT] = _spZero;
                 enScanResult = _spAnalFail;
             }
@@ -262,7 +266,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
     pLOBData = GetLOBData();
 
 #ifndef _XBAND_
-    pLOBData->iScanType = (int) m_uiScnTyp;
+    pLOBData->ucScanType = m_ucScnTyp;
     pLOBData->fScanPeriod = TOAmsCNV( m_uiScnPrd );
 
 #endif
@@ -603,7 +607,7 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 	int *pPa;
 
 	pPa = & pSample->iPA[0];
-	for( i=0 ; i < pSample->uiCount ; ++i ) {
+	for( i=0 ; i < pSample->uiCount && i < _spMaxSample ; ++i ) {
 		if( *pPa == (UINT) -1 ) {
 
 			for( j=i+1 ; j < pSample->uiCount ; ++j ) {
@@ -616,18 +620,18 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 						*pPa = pScanPt->_pa.iLow;
 					}
 					else {
-                        if( ( i >= 1 && i < sizeof(pSample->iPA) ) /* && j >= 0 */ ) {
-						    *pPa = DivideBy2( pSample->iPA[i-1], pSample->iPA[j] );
-                        }
+                        //if( ( i >= _spOne && i < sizeof(pSample->iPA)/sizeof( UINT ) ) /* && j >= 0 */ ) {
+						*pPa = DivideBy2( pSample->iPA[i-1], pSample->iPA[j] );
+                        //}
                     }
 					break;
 				}
 			}
 
 			if( *pPa == (UINT) -1 ) {
-                if( i >= _spOne && i <= sizeof(pSample->iPA) ) {
-				    *pPa = pSample->iPA[i-1];
-                }
+                //if( i >= _spOne && i <= sizeof(pSample->iPA)/sizeof(UINT) ) {
+				*pPa = pSample->iPA[i-1];
+                //}
 				pSample->uiCount = i;
 				break;
 			}
@@ -916,14 +920,14 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 				// m_nCoCanPeak 값은 피크값이 존재한 개수를 의미한다.
 				//-- 조철희 2006-05-09 17:16:11 --//
 				if( m_uiCoCanPeak /* prdVer */ >= _spOne ) {		// _spOne -> _spThree
-					m_uiScnTyp = TrackUnknown;
+					m_ucScnTyp = TrackUnknown;
 				}
 				else {
 					/*! \bug  스캔 형태가 Steady 라고 할 때 Kurtosis 값은 5.0 이하이어야 한다.
 							\date 2006-05-12 11:55:00, 조철희
 					*/
 					if( m_nSample.fKurtosis <= 5.0 ) {
-                        m_uiScnTyp = E_AET_SCAN_STEADY;
+                        m_ucScnTyp = E_AET_SCAN_STEADY;
 						m_uiScnPrd = _spZero;
 					}
 				}
@@ -936,12 +940,12 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 					    \date 2008-11-03 22:34:32, 조철희
 					*/
 					if( pSample->fSkewness < 0.7 )
-                        m_uiScnTyp = E_AET_SCAN_CONICAL;
+                        m_ucScnTyp = E_AET_SCAN_CONICAL;
 					else
-						m_uiScnTyp = TrackUnknown;
+						m_ucScnTyp = TrackUnknown;
 				}
 				else {
-					m_uiScnTyp = TrackUnknown;
+					m_ucScnTyp = TrackUnknown;
 				}
 				break;
 
@@ -957,15 +961,15 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 		switch(enScnType) {
             case E_AET_SCAN_STEADY :
 				if(uiPrdVer >= _spOne ) {
-					m_uiScnTyp = DetectUnknown;
+					m_ucScnTyp = DetectUnknown;
 				}
 				else {
 					if( fabs( pSample->fSkewness ) <= 1.0 ) {	// debug, 00-04-17 20:38:23
-                        m_uiScnTyp = E_AET_SCAN_STEADY;
+                        m_ucScnTyp = E_AET_SCAN_STEADY;
 						m_uiScnPrd = _spZero;
 					}
 					else {
-						m_uiScnTyp = DetectUnknown;
+						m_ucScnTyp = DetectUnknown;
 					}
 				}
 				break;
@@ -973,15 +977,15 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
             case E_AET_SCAN_CONICAL :
 				printf( "\n CONICAL2[%d]" , UDIV( m_uiScnPrd, _spOneMilli) );
 				if(uiPrdVer >= _spOne ) {
-					m_uiScnTyp = LowIllustrationTest;
+					m_ucScnTyp = LowIllustrationTest;
 				}
                 else {
-                    m_uiScnTyp = DetectUnknown;
+                    m_ucScnTyp = DetectUnknown;
                 }
 				break;
 
             default:
-				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_uiScnTyp );   
+				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_ucScnTyp );   
 				WhereIs;
 				break;
 
@@ -1011,20 +1015,20 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 	// TurnOnLED( prc_SAP, LED1 );		// debug, 00-06-05 09:39:34
 	// KurtosisSkewness( & gSample );
 
-	if( m_uiScnTyp == (UINT) LowIllustrationTest || m_uiScnTyp == (UINT) DetectUnknown ) {
+	if( m_ucScnTyp == (UINT) LowIllustrationTest || m_ucScnTyp == (UINT) DetectUnknown ) {
 		if(uiPrdVer >= _spTwo ) {
-			m_uiScnTyp = DetectNonTrackScanPattern( pSample, pAcf );
+			m_ucScnTyp = DetectNonTrackScanPattern( pSample, pAcf );
 
 			// 최소 스캔 주기 체크함.
 			if( (UINT) m_uiScnPrd <= UMUL( 300, _spOneMilli ) ) {
 				/*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 						\date 2009-09-28 17:44:14, 조철희
 				*/
-                m_uiScnTyp = E_AET_SCAN_SCANFAIL;
+                m_ucScnTyp = E_AET_SCAN_SCANFAIL;
 				uiRet = _spAnalFail;
 			}
 
-			switch( m_uiScnTyp ) {
+			switch( m_ucScnTyp ) {
 				case E_AET_SCAN_UNKNOWN:
                     //Printf( "\n	Scan Anal Fail !" );
 					uiRet = _spAnalFail;
@@ -1050,7 +1054,7 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 		}
 	}
 
-	else if( m_uiScnTyp == (UINT) TrackUnknown ) {
+	else if( m_ucScnTyp == (UINT) TrackUnknown ) {
 		uiRet = _spAnalFail;
 	}
 
@@ -1060,7 +1064,7 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 			/*! \bug  스캔 분석 실패이더라도 타입 정보가 표시될 수 있음.
 					\date 2009-09-28 17:44:14, 조철희
 			*/
-            m_uiScnTyp = E_AET_SCAN_SCANFAIL;
+            m_ucScnTyp = E_AET_SCAN_SCANFAIL;
 			uiRet = _spAnalFail;
 		}
 
@@ -1624,7 +1628,7 @@ int CSAnalScan::CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount)
  */
 int CSAnalScan::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 {
-    return m_pScanSigAnal->VerifyPW( pPdwIndex, uiCount );
+    return (int) m_pScanSigAnal->VerifyPW( pPdwIndex, uiCount );
 }
 
 /**

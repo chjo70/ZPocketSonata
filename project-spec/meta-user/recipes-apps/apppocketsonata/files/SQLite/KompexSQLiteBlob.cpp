@@ -43,42 +43,49 @@ SQLiteBlob::SQLiteBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, st
 
 SQLiteBlob::~SQLiteBlob()
 {
-	if(mBlobHandle != NULL )
-		CloseBlob();
+    if( mBlobHandle != NULL ) {
+        CloseBlob();
+    }
 }
 
 void SQLiteBlob::OpenBlob(CSQLiteDatabase *db, std::string symbolicDatabaseName, std::string tableName, std::string columnName, int64 rowId, BLOB_ACCESS_MODE accessMode)
 {
-	if(mBlobHandle != NULL )
-		CloseBlob();
+    if( mBlobHandle != NULL ) {
+        CloseBlob();
+    }
 
 	mDatabase = db;
-	if(sqlite3_blob_open(mDatabase->GetDatabaseHandle(), symbolicDatabaseName.c_str(), tableName.c_str(), columnName.c_str(), rowId, accessMode, &mBlobHandle) != SQLITE_OK)
+	if(sqlite3_blob_open(mDatabase->GetDatabaseHandle(), symbolicDatabaseName.c_str(), tableName.c_str(), columnName.c_str(), rowId, accessMode, &mBlobHandle) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
 }
 
 void SQLiteBlob::CloseBlob()
 {
-	if(sqlite3_blob_close(mBlobHandle) != SQLITE_OK)
+	if(sqlite3_blob_close(mBlobHandle) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+    }
 
 	mBlobHandle = NULL;
 }
 
 int SQLiteBlob::GetBlobSize() const
 {
-	if(mBlobHandle == NULL)
+	if(mBlobHandle == NULL) {
 		KOMPEX_EXCEPT("GetBlobSize() no open BLOB handle", -1);
+    }
 
 	return sqlite3_blob_bytes(mBlobHandle);
 }
 
 void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
 {
-	if(mBlobHandle == NULL)
+	if(mBlobHandle == NULL) {
 		KOMPEX_EXCEPT("ReadBlob() no open BLOB handle", -1);
-	if((offset + numberOfBytes) > GetBlobSize())
+    }
+	if((offset + numberOfBytes) > GetBlobSize()) {
 		KOMPEX_EXCEPT("ReadBlob() offset and numberOfBytes exceed the BLOB size", -1);
+    }
 		
     int iSql=sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset);
 
@@ -110,10 +117,12 @@ void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
 
 void SQLiteBlob::WriteBlob(const void *buffer, int numberOfBytes, int offset)
 {
-	if(mBlobHandle == NULL)
+	if(mBlobHandle == NULL) {
 		KOMPEX_EXCEPT("WriteBlob() no open BLOB handle", -1);
-	if((offset + numberOfBytes) > GetBlobSize())
+    }
+	if((offset + numberOfBytes) > GetBlobSize()) {
 		KOMPEX_EXCEPT("WriteBlob() offset and numberOfBytes exceed the BLOB size", -1);
+    }
 
     int iSql=sqlite3_blob_write(mBlobHandle, buffer, numberOfBytes, offset);
 
