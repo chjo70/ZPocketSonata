@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\UnTar">
+      <UniqueIdentifier>{4f1014a1-147c-4711-9413-1f35c6614dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\WebServer">
+      <UniqueIdentifier>{3ceadff9-c611-42e9-8533-53d02283a7ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hmt_t2ms_3_0_0_1">
+      <UniqueIdentifier>{6c77708d-f3fa-41e1-a2a2-632f48d84fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utils">
+      <UniqueIdentifier>{1f169c41-a887-4fe2-988b-f5e8437c945d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\files\BootShell\Untar\FileTar.cpp">
+      <Filter>소스 파일\UnTar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\asp.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\balloc.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\base64.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\cgi.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\default.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ejlex.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ejparse.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\emfdb.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\form.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\h.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\handler.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\main.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\md5c.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\mime.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\misc.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\mocana_ssl.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\page.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ringq.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\rom.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\security.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sock.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sockGen.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\strdup.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\strncasecmp.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sym.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\uemf.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\um.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\umui.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\url.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\value.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\webrom.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\webs.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\websda.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\websuemf.c">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFpga.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\ethernetDiag.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\i2cDiag.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\memDiag.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysLib.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbPciShow.c">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\BootShell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\BootShellMain.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\ManSbc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\usrAppInit.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\usrRtpAppInit.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\files\BootShell\Untar\FileTar.h">
+      <Filter>소스 파일\UnTar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\PCIDriver.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\ej.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\ejIntrn.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\emfdb.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\md5.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\mkstemp.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\strdup.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\strncasecmp.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\uemf.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\um.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\webs.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\websda.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\WebServer\wsIntrn.h">
+      <Filter>소스 파일\WebServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vt100.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.h">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\BootShell.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\BootShellMain.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\Macros.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\BootShell\ManSbc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\20bsp.cdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50bspDrivers.cdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50userTffs.cdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50vxWorks.cdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bootargs.txt.bak">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.cdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.vsbl">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\Datasheet.pdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\defs.bsp.mk">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.h.bak">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\rules.bsp.mk">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysALib.s">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\t2ms.dts">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\UserManual.pdf">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bootargs.txt">
+      <Filter>hmt_t2ms_3_0_0_1</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
