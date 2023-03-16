@@ -1,0 +1,327 @@
+/* --------------------------------------------------------------------------------------- 
+
+	2020-08-26 오후 3:22:26 
+	
+	CED /EOB 테이블
+
+   --------------------------------------------------------------------------------------- */
+
+/* CED 관련 테이블을 삭제합니다.		*/
+drop table if exists "RADAR_COMMENTS";
+drop table if exists "RADARMODE";
+drop table if exists "PLATFORM";
+drop table if exists "ASSOC_PLATFORM";
+
+drop table if exists "RADAR_RF_SEQUENCE_NAME";
+drop table if exists "RADAR_RF_SEQUENCE";
+drop table if exists "RADAR_RF_VALUES";
+drop table if exists "RADAR_RF_SPOT_VALUES";
+
+drop table if exists "RADAR_PRI_SPOT_VALUES";
+drop table if exists "RADAR_PRI_VALUES";
+drop table if exists "RADAR_PRI_SEQUENCE";
+drop table if exists "RADAR_PRI_SEQUENCE_NAME";
+
+drop table if exists "RADARMODE_LIFECYCLE";
+drop table if exists "RADAR";
+
+drop table if exists "WEAPON_SYSTEM";
+drop table if exists "ASSOC_WEAP_SYS";
+drop table if exists "ASSOC_ELNOT";
+drop table if exists "PARAM_SET_ASSOCIATIONS";
+drop table if exists "RADAR_MODE";
+drop table if exists "RADAR_MODE_COMMENTS";
+drop table if exists "RADAR_PD_VALUES";
+drop table if exists "RADAR_PD_SEQUENCE_NAME";
+drop table if exists "RADAR_PD_SEQUENCE";
+drop table if exists "RADAR_PD_SPOT_VALUES";
+drop table if exists "RADAR_RF_SEQUENCE";
+drop table if exists "RADAR_PRI_GROUP_SPACING";
+drop table if exists "RADAR_MOP_CW";
+drop table if exists "RADAR_MOP_CW_VALUES";
+drop table if exists "RADAR_MOP_CW_SEQ_NAME";
+drop table if exists "RADAR_MOP_CW_SEQUENCE";
+drop table if exists "RADAR_MODE_PA_DIFF_IN_GROUP";
+
+
+--pragma foreign_keys;
+--pragma foreign_keys=on;
+
+/* CED 관련 테이블을 생성합니다.		*/
+
+/* 레이더 */
+CREATE TABLE RADAR (
+	RADAR_INDEX INT NOT NULL,  /* 레이더 인덱스 */
+	
+	ELNOT VARCHAR(5) NOT NULL,  /* ELNOT */
+	NICK_NAME VARCHAR(40),  /* 별명 */
+	PRIORITY INT DEFAULT 100,  /* 우선순위 */
+	STATUS VARCHAR(20) DEFAULT 'ACTIVE',  /* 상태 */
+	ACCEPTED TINYINT DEFAULT 1,  /* 승인 */
+	PRIMARY_PLATFORM INT,  /* 플렛폼 */
+	
+	DATE_LAST_UPDATED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 수정 날짜 */
+	DATE_LAST_REVIEWED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 식별 날짜 */
+	
+	DATE_ACTIVATED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 활성 날짜 */
+	DATE_INACTIVATED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 비활성 날짜 */	
+	
+	TIME_INACTIVATED SMALLINT DEFAULT 1000, /* 비활성 시간 */
+	COMBINED_DATE_LAST_UPDATED  DATETIME DEFAULT '1970-01-01 0:00:00.000', /* 병합 날짜 */
+	
+	PRIMARY KEY(RADAR_INDEX)
+
+);
+
+/* 레이더 주석 */
+CREATE TABLE RADAR_COMMENTS
+(
+	RADAR_INDEX INT NOT NULL,  /* 레이더 인덱스 */
+	
+	RADAR_COMMENT_INDEX INTEGER  PRIMARY KEY AUTOINCREMENT,  /* 레이더 주석 인덱스 */
+	TITLE VARCHAR(40),  /* 제목 */
+	DATE_CREATED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 생성 날짜 */
+	DATE_LAST_UPDATED DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 수정 날짜 */
+	COMMENTS TEXT NULL, /* 커맨트 */
+	
+	FOREIGN KEY(RADAR_INDEX) REFERENCES RADAR(RADAR_INDEX)
+);
+
+/* 레이더 -> 연관 프레폼 */
+CREATE TABLE ASSOC_PLATFORM (
+	RADAR_INDEX INT NOT NULL,  /* 레이더 인덱스 */
+	
+	PLATFORM_INDEX	INTEGER  NOT NULL, /* 플레폼 인덱스 */
+	
+	PRIMARY KEY(RADAR_INDEX, PLATFORM_INDEX ),
+	
+	FOREIGN KEY(RADAR_INDEX) REFERENCES RADAR(RADAR_INDEX)
+);
+
+/* 연관 프레폼 -> 플레폼 */
+CREATE TABLE PLATFORM (
+	RADAR_INDEX INT NOT NULL,  /* 레이더 인덱스 */
+	PLATFORM_INDEX  INT  NOT NULL,  /* 플레폼 인덱스 */
+	
+	PLATFORM  		VARCHAR (40), /* 플레폼 명 */
+	
+	PRIMARY KEY(RADAR_INDEX, PLATFORM_INDEX )
+	
+	FOREIGN KEY(RADAR_INDEX) REFERENCES RADAR(RADAR_INDEX)
+	/* FOREIGN KEY(PLATFORM_INDEX) REFERENCES ASSOC_PLATFORM(PLATFORM_INDEX)  */
+	
+);
+
+/* 레이더모드 라이프사이클 -> 레이더모드 */
+CREATE TABLE RADARMODE_LIFECYCLE (
+	RADAR_INDEX 	INT  NOT NULL,  /* 레이더 인덱스 */
+	RADARMODE_INDEX INT  NOT NULL,  /* 레이더모드 인덱스 */
+	
+	RADARMODE_NAME  VARCHAR (30) NOT NULL,  /* 레이더모드명 */
+	MODECODE		VARCHAR (5) DEFAULT ZZ, /* 모드부호 */
+	
+	PRIMARY KEY(RADARMODE_INDEX),
+	
+	FOREIGN KEY(RADAR_INDEX) REFERENCES RADAR(RADAR_INDEX)
+
+);
+
+/* 레이더모드 */
+CREATE TABLE RADARMODE (
+	RADARMODE_INDEX 	INTEGER NOT NULL,
+	
+	DATE_CREATED 		DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 생성 날짜 */
+	
+	DATE_LAST_UPDATED 	DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 수정 날짜 */	
+	DATE_LAST_REVIEWED	DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 식별 날짜 */
+	
+	DATE_FIRST_SEEN		DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최초 접촉 날짜 */
+	DATE_LAST_SEEN 		DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 접촉 날짜 */
+	
+	SIGNAL_TYPE 		TINYINT,  /* 신호 형태 */
+	ERP_MIN 			FLOAT,  /* ERP 최소  */
+	ERP_MAX 			FLOAT,  /* ERP 최대 */
+	RF_TYPE				TINYINT,  /* RF 형태 */
+	RF_RANGE_MIN		FLOAT,  /* 주파수 범위 최소 */
+	RF_RANGE_MAX 		FLOAT,  /* 주파수 범위 최대 */
+	RF_MEAN_MIN 		FLOAT,  /* 주파수 평균 최소 */
+	RF_MEAN_MAX 		FLOAT,  /* 주파수 평균 최대 */
+	RF_NUM_ELEMENTS 	TINYINT,  /* 주파수 엘리먼트 수 */
+	RF_NUM_POSITIONS 	TINYINT,  /* 주파수 포지션 수 */
+	RF_PATTERN 			TINYINT,  /* 주파수 패턴 타입 */
+	RF_PATTERN_PERIOD_MIN FLOAT,  /* 주파수 패턴 주기 최소 */
+	RF_PATTERN_PERIOD_MAX FLOAT,  /* 주파수 패턴 주기 최대 */
+	RF_STANDARD_DEVIATION FLOAT,  /* 주파수 패턴 주기 편차 */
+	PRI_TYPE TINYINT,  /* PRI 형태 */
+	PRI_RANGE_MIN FLOAT,  /* PRI 범위 최소 */
+	PRI_RANGE_MAX FLOAT,  /* PRI 범위 최대 */
+	PRI_MEAN_MIN FLOAT,  /* PRI 평균 최소 */
+	PRI_MEAN_MAX FLOAT,  /* PRI 평균 최대 */
+	PRI_NUM_ELEMENTS TINYINT,  /* PRI 엘리먼트 수 */
+	PRI_NUM_POSITIONS TINYINT,  /* PRI 포지션 수 */
+	PRI_PATTERN TINYINT,  /* PRI 패턴 타입 */
+	PRI_PATTERN_PERIOD_MIN FLOAT,  /* PRI 패턴 주기 최소 */
+	PRI_PATTERN_PERIOD_MAX FLOAT,  /* PRI 패턴 주기 최대 */
+	PRI_PATTERN_PERIOD_COUNT_MIN INT,  /* PPG 최소 */
+	PRI_PATTERN_PERIOD_COUNT_MAX INT,  /* PPG 최대 */
+	PD_RANGE_MIN FLOAT,  /* 펄스폭 범위 최소 */
+	PD_RANGE_MAX FLOAT,  /* 펄스폭 범위 최대 */
+	SCAN_PRIMARY_TYPE INT DEFAULT 18,  /* 스캔 1차 형태 */
+	SCAN_PRIMARY_RANGE_MIN FLOAT,  /* 스캔 1차 주기 최소 */
+	SCAN_PRIMARY_RANGE_MAX FLOAT,  /* 스캔 1차 주기 최대 */
+	SCAN_SECONDARY_TYPE INT DEFAULT 18,  /* 스캔 2차 형태 */
+	SCAN_SECONDARY_RANGE_MIN FLOAT,  /* 스캔 2차 주기 최소 */
+	SCAN_SECONDARY_RANGE_MAX FLOAT,  /* 스캔 2차 주기 최대 */
+	MODULATION_CODE VARCHAR (5) ,  /* 변환 코드 */
+	PRIORITY TINYINT,  /* 우선순위 */
+	JAMMING_PRIMARY_TECH INT,  /* 1차 재밍 기법 */
+	JAMMING_SECONDARY_TECH INT, /* 2차 재밍 기법 */
+	VALIDATION INT DEFALUT '1', /* 유효 */
+	
+	PRIMARY KEY(RADARMODE_INDEX),
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	
+);
+
+/* 레이더 RF 값 범위 */
+CREATE TABLE  RADAR_RF_VALUES  (
+	RF_INDEX   		INTEGER  PRIMARY KEY AUTOINCREMENT,  /* RF 인덱스 */
+	RADARMODE_INDEX	INT  NOT NULL,  /* 레이더모드 인덱스 */	
+	RF_MIN  		FLOAT ,  /* RF 최소 */
+	RF_MAX			FLOAT,  /* RF 최대 */
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+
+);
+
+/* 레이더 RF 시퀀스 */
+CREATE TABLE  RADAR_RF_SEQUENCE  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	RF_SEQUENCE_NUM   	INTEGER  PRIMARY KEY AUTOINCREMENT,  /* RF 시퀀스 번호 */
+	RF_SEQ_ID   		INT NOT NULL,  /* RF 시퀀스 ID */	
+	RF_INDEX   			INT  NOT NULL, /* RF 인덱스 */
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	/* FOREIGN KEY(RF_INDEX) REFERENCES RADAR_RF_VALUES(RF_INDEX)		 */
+);
+
+/* 레이더 RF 시퀀스 명 */
+CREATE TABLE  RADAR_RF_SEQUENCE_NAME  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	RF_SEQ_ID   		INT  NOT NULL,  /* RF 시퀀스 ID */	
+	RF_SEQ_NAME   		VARCHAR (30), /* RF 시퀀스명 */
+	
+	PRIMARY KEY(RADARMODE_INDEX, RF_SEQ_ID),
+		
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	/* FOREIGN KEY(RF_SEQ_ID) REFERENCES RADAR_RF_SEQUENCE(RF_SEQ_ID)		*/
+	
+);
+
+/* 레이더 순간 주파수 범위 */
+CREATE TABLE  RADAR_RF_SPOT_VALUES  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	RF_MIN   			FLOAT,  /* RF 최소 */
+	RF_MAX   			FLOAT,  /* RF 최대 */
+	
+	PRIMARY KEY(RADARMODE_INDEX, RF_MIN, RF_MAX),
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	
+);
+
+/* 레이더 순간 PRI 값 범위 */
+CREATE TABLE  RADAR_PRI_SPOT_VALUES  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	PRI_MIN   			FLOAT,  /* PRI 최소 */
+	PRI_MAX   			FLOAT,  /* PRI 최대 */
+	
+	PRIMARY KEY(RADARMODE_INDEX, PRI_MIN, PRI_MAX),
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+);
+
+/* 레이더 PRI 범위 */
+CREATE TABLE  RADAR_PRI_VALUES  (
+	PRI_INDEX   		INTEGER  PRIMARY KEY AUTOINCREMENT,  /* PRI 인덱스 */
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	PRI_MIN   			FLOAT ,  /* PRI 최소 */
+	PRI_MAX   			FLOAT ,  /* PRI 최대 */
+	DWELL_DURATION_MIN  FLOAT ,  /* 드웰 지속 최소 */
+	DWELL_DURATION_MAX  FLOAT ,  /* 드웰 지속 최대 */
+	PULSES_PER_DWELL   	SMALLINT ,  /* 드웰 내 펄스 개수 */
+	TRANSITION_MIN   	FLOAT ,  /* 변환 최소 */
+	TRANSITION_MAX   	FLOAT,  /* 변환 최대 */
+	
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	
+);
+
+/* 레이더 PRI 시퀀스 */
+CREATE TABLE  RADAR_PRI_SEQUENCE  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	PRI_SEQUENCE_NUM   	INTEGER  PRIMARY KEY AUTOINCREMENT,  /* RF 시퀀스 번호 */
+	PRI_SEQ_ID   		INT  NOT NULL,  /* PRI 시퀀스 ID */
+	PRI_INDEX   		INT  NOT NULL, /* PRI 인덱스 */
+
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	/* FOREIGN KEY(PRI_INDEX) REFERENCES RADAR_PRI_VALUES(PRI_INDEX)		 */	
+	
+);
+
+/* 레이더 PRI 시퀀스 명 */
+CREATE TABLE  RADAR_PRI_SEQUENCE_NAME  (
+	RADARMODE_INDEX   	INT  NOT NULL,  /* 레이더모드 인덱스 */
+	PRI_SEQ_ID   		INT  NOT NULL,  /* PRI 시퀀스 ID */
+	PRI_SEQ_NAME   		VARCHAR (30), /* PRI 시퀀스 명 */
+	
+	PRIMARY KEY(RADARMODE_INDEX, PRI_SEQ_ID),
+
+	FOREIGN KEY(RADARMODE_INDEX) REFERENCES RADARMODE_LIFECYCLE(RADARMODE_INDEX)
+	/* FOREIGN KEY(PRI_INDEX) REFERENCES RADAR_PRI_SEQUENCE(PRI_INDEX)	*/
+	
+);
+
+
+
+/* EOB 관련 테이블을 삭제합니다.		*/
+
+drop table if exists "DEVICE";
+drop table if exists "THREAT";
+
+/* 위협 */
+CREATE TABLE  THREAT  (
+	THREAT_INDEX   	INT  NOT NULL,  /* 위협 인덱스 */
+	THREAT_NAME   	VARCHAR (20),  /* 위협명 */
+	LATITUDE   		VARCHAR (20),  /* 위도 */
+	LONGITUDE   	VARCHAR (20),  /* 경도 */
+	SITE_NAME   	VARCHAR (10),  /* 싸이트명 */
+	PIN   			INT  IDENTITY (1,  1),  /* PIN 번호 */
+	PLACE_NAME_KOR  VARCHAR (30),  /* 한글지명 */
+	FRIEND_OR_FOE   VARCHAR (10),  /* 적아 */
+	PRIORITY   		TINYINT ,  /* 우선순위 */
+	CATEGORY   		TINYINT ,  /* 범주 */
+	PLATFORM_TYPE   TINYINT ,  /* 플랫폼 형태 */
+	SYMBOL_CODE		VARCHAR (20), /* 심벌 코드 */
+	
+	PRIMARY KEY(THREAT_INDEX)
+);
+
+CREATE TABLE  DEVICE  (
+	THREAT_INDEX   			INT  NOT NULL,  /* 위협 인덱스 */
+	DEVICE_INDEX   			INT  NOT NULL, /* 장비 인덱스 */
+	ELNOT   				VARCHAR (5),  /* ELNOT */
+	DEVICE_NAME   			VARCHAR (20),  /* 장비명 */
+	IDENTIFICATION_RANGE   	FLOAT ,  /* 식별 반경 */
+	LATITUDE   				VARCHAR (20),  /* 위도 */
+	LONGITUDE   			VARCHAR (20),  /* 경도 */
+	ALTITUDE   				FLOAT ,  /* 고도 */
+	
+	PRIMARY KEY(THREAT_INDEX, DEVICE_INDEX ),
+	
+	FOREIGN KEY(THREAT_INDEX) REFERENCES THREAT(THREAT_INDEX)
+	
+);
+
+

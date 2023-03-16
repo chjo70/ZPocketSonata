@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0F52F650-ECAD-418A-BA1D-4F7AFFCAEA0E}</ProjectGuid>
+    <RootNamespace>DeltaGraph</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)DeltaGraph;C:\ProEssentials9\VC;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)DeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)DeltaGraph;C:\ProEssentials9\VC;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)ShuDeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USE_MATH_DEFINES;_MIDAS_;_FFTW_;_CRT_SECURE_NO_WARNINGS;_POCKETSONATA_;_GRAPH_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>PEGRP32G.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>echo off
+
+echo $(ConfigurationName)
+
+SET CONFIGNAME=$(ConfigurationName)
+
+REM ########################################################################
+REM  작업실에서...
+SET DELTA_GRAPH_DEST="D:\Program Files\DeltaGraph"
+
+copy ..\Debug\DeltaGraph.* "D:\Program Files\DeltaGraph"
+
+REM CALL CopyAll %DELTA_GRAPH_DEST%
+
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;_MIDAS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>PEGRP32G.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\..\..\TEMP\chartingtocpict.ico" />
+    <None Include="..\..\..\TEMP\chartingtocpict.png" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\chartingtocpict.ico" />
+    <None Include="res\classview.bmp" />
+    <None Include="res\classview_hc.bmp" />
+    <None Include="res\class_view.ico" />
+    <None Include="res\class_view_hc.ico" />
+    <None Include="res\DeltaGraph.ico" />
+    <None Include="res\DeltaGraph.rc2" />
+    <None Include="res\DeltaGraphDoc.ico" />
+    <None Include="res\explorer.bmp" />
+    <None Include="res\explorer_hc.bmp" />
+    <None Include="res\fileview.bmp" />
+    <None Include="res\fileview_hc.bmp" />
+    <None Include="res\file_view.ico" />
+    <None Include="res\file_view_hc.ico" />
+    <None Include="res\icon1.ico" />
+    <None Include="res\info.ico" />
+    <None Include="res\menuimages.bmp" />
+    <None Include="res\menuimages_hc.bmp" />
+    <None Include="res\output_wnd.ico" />
+    <None Include="res\output_wnd_hc.ico" />
+    <None Include="res\properties.bmp" />
+    <None Include="res\properties_hc.bmp" />
+    <None Include="res\properties_wnd.ico" />
+    <None Include="res\properties_wnd_hc.ico" />
+    <None Include="res\sort.bmp" />
+    <None Include="res\sort_hc.bmp" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\Toolbar256.bmp" />
+    <None Include="UserImages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
+    <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
+    <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
+    <ClInclude Include="ButtonST\BCMenu.h" />
+    <ClInclude Include="ButtonST\BtnST.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="ClassView.h" />
+    <ClInclude Include="DeltaGraph.h" />
+    <ClInclude Include="DeltaGraphDoc.h" />
+    <ClInclude Include="DeltaGraphView.h" />
+    <ClInclude Include="DeltaGraphView2.h" />
+    <ClInclude Include="EasySize\EasySize.h" />
+    <ClInclude Include="FFTW\fftw3.h" />
+    <ClInclude Include="FileView.h" />
+    <ClInclude Include="ListCtrl\CBSpeedListCtrl.h" />
+    <ClInclude Include="ListCtrl\ComboItem.h" />
+    <ClInclude Include="ListCtrl\EditItem.h" />
+    <ClInclude Include="ListCtrl\EditList.h" />
+    <ClInclude Include="ListCtrl\ReportCtrl.h" />
+    <ClInclude Include="Log\LogDebug.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="revision.h" />
+    <ClInclude Include="Show.h" />
+    <ClInclude Include="SpinCtrl\NumSpinCtrl.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="ToolTip\XInfoTip.h" />
+    <ClInclude Include="ViewTree.h" />
+    <ClInclude Include="XColorStatic\FontSize.h" />
+    <ClInclude Include="XColorStatic\XColorStatic.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="ButtonST\BCMenu.cpp" />
+    <ClCompile Include="ButtonST\BtnST.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="DeltaGraph.cpp" />
+    <ClCompile Include="DeltaGraphDoc.cpp" />
+    <ClCompile Include="DeltaGraphView.cpp" />
+    <ClCompile Include="DeltaGraphView2.cpp" />
+    <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="ListCtrl\CBSpeedListCtrl.cpp" />
+    <ClCompile Include="ListCtrl\ComboItem.cpp" />
+    <ClCompile Include="ListCtrl\EditItem.cpp" />
+    <ClCompile Include="ListCtrl\EditList.cpp" />
+    <ClCompile Include="ListCtrl\ReportCtrl.cpp" />
+    <ClCompile Include="Log\LogDebug.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="revision.cpp" />
+    <ClCompile Include="Show.cpp" />
+    <ClCompile Include="SpinCtrl\NumSpinCtrl.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ToolTip\XInfoTip.cpp" />
+    <ClCompile Include="ViewTree.cpp" />
+    <ClCompile Include="XColorStatic\FontSize.cpp" />
+    <ClCompile Include="XColorStatic\XColorStatic.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DeltaGraph.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="DeltaGraph.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

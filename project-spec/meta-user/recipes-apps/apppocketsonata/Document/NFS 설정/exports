@@ -1,0 +1,22 @@
+#
+# exports example
+#
+# please read doc for a list of all options
+# drive letters should be in upper case, because file-id returns upper case
+#   by default (option setting) they are mapped to lower case for clients
+# Option -range restricts access to specified address range
+#   a list of addresses restricts to these clients only
+# Option -readonly prohibits create/write/delete
+# Option -name:<x> makes folder for clients avalailable as /<x>
+# Option -maproot:<uid> maps unix root to specified <uid>
+#   without it uid root -> uid NOBODY
+# Option -alldirs allows clients to mount folder or any subfolder
+# Use UNC path specification for access to remote drive
+# Hidden volumes without a drive letter can be mounted by volume GUID
+#
+d:\rawdata -alldirs -maproot:0 -range 192.168.1.110 192.168.1.120
+
+#C:\video -readonly 192.168.1.1 192.168.1.4 192.18.1.23
+#C:\server -alldirs -name:server -maproot:0 -range 192.168.1.1 192.168.1.30
+#\\router\FRITZ.NAS\SanDisk-U3CruzerMicro-00 -name:fritz
+#\\?\Volume{6afa3aa3-1b38-11e6-a140-0000fbaa0005}\ -name:drive1
