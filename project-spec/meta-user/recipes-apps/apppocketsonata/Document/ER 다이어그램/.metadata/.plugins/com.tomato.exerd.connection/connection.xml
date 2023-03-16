@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+  <connection>
+    <productId>com.tomato.db.sqlserver_2005</productId>
+    <productName>Microsoft SQL Server 2005 ~ 2017</productName>
+    <name>MSSQL(SONATA)</name>
+    <driverJar>C:\Program Files (x86)\eXERD\drivers\sqljdbc_9.2.1.0_kor\sqljdbc_9.2\kor\mssql-jdbc-9.2.1.jre8.jar</driverJar>
+    <driverClass>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClass>
+    <url>jdbc:sqlserver://127.0.0.1:1433;databaseName=SONATA</url>
+    <properties>
+      <integratedSecurity>false</integratedSecurity>
+      <user>sa</user>
+      <port>1433</port>
+      <password>devrms</password>
+      <host>127.0.0.1</host>
+      <databaseName>SONATA</databaseName>
+    </properties>
+    <extendedProperties />
+  </connection>
+</database>
+
