@@ -1,37 +1,16 @@
-﻿/*
- *
- *
-* Placeholder PetaLinux user application.
-*
-* Replace this with your application code
+﻿/**
 
-* Copyright (C) 2013 - 2016  Xilinx, Inc.  All rights reserved.
-*
-* Permission is hereby granted, free of charge, to any person
-* obtaining a copy of this software and associated documentation
-* files (the "Software"), to deal in the Software without restriction,
-* including without limitation the rights to use, copy, modify, merge,
-* publish, distribute, sublicense, and/or sell copies of the Software,
-* and to permit persons to whom the Software is furnished to do so,
-* subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included
-* in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-* IN NO EVENT SHALL XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*
-* Except as contained in this notice, the name of the Xilinx shall not be used
-* in advertising or otherwise to promote the sale, use or other dealings in this
-* Software without prior written authorization from Xilinx.
-*
-*/
+    @file      cmain.cpp
+    @brief     시작 함수 힙니다. 초기 작업 환경을 구성하고 타스크를 생성 합니다.
+    @details   ~
+    @author    조철희
+    @date      27.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
 
 #include "stdafx.h"
+
 
 #ifdef _MSC_VER
 
@@ -74,7 +53,6 @@ using namespace std;
 #include "cmain.h"
 #include "./Thread/ctaskmngr.h"
 #include "./Utils/clog.h"
-//#include "./Utils/cmultiserver.h"
 #include "./Utils/csingleserver.h"
 #include "./Utils/csingleclient.h"
 #include "./Thread/coperationconsole.h"
@@ -90,12 +68,16 @@ using namespace std;
 #include "./Include/globals.h"
 
 #ifdef __cplusplus
+
 extern "C"
 {
 #endif
 
 void usrAppStart( int iArgc, char *iArgv[] );
 void ss();
+
+void pci_enable();
+void pci_disable();
 
 void MemotyTest( size_t iSize );
 
@@ -109,16 +91,6 @@ void signalHandler(int signo);
 
 void CreateMngrThread();
 void CreateAnalThread();
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-// 아래에 타스크 관련 클래스를 정의합니다.
-//CMySocket g_theZYNQSocket( g_iKeyId++, (char *)"CZYNQSocket" );
-//CMySocket g_theCCUSocket( g_iKeyId++, (char *)"CCCUSocket" );
-//CMySocket g_thePMCSocket( g_iKeyId++, (char *)"CPMCSocket" );
-
-
 
 
 /**
@@ -178,7 +150,11 @@ void InitDatabase()
         char szSrcFilename[100], szDstFilename[100];
 
         LOGMSG( enNormal, "위협 관리 파일을 램 드라이브에 설치 합니다." );
+#ifdef _MFC_VER
         if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
+#else
+		if( OK == mkdir( EMITTER_SQLITE_FOLDER ) ) {
+#endif
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, BLK_EMITTER_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
@@ -188,12 +164,16 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
         }
 
         LOGMSG( enLineFeed, "" );
         LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
+#ifdef _MFC_VER
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
+#else
+		if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) ) {
+#endif
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
@@ -203,13 +183,12 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요." , EMITTER_SQLITE_FOLDER, errno );
         }
 
 #else
         LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
-
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
@@ -219,7 +198,7 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG1( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 문의하세요." , EMITTER_SQLITE_FOLDER );
+            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
         }
 
 
@@ -235,7 +214,10 @@ void InitDatabase()
     catch ( int eException ) {
         LOGMSG2( enError, "플레쉬 드라이브에 파일[%s/%d]이 없습니다. 관리자에게 문의하세요." , szSQLiteFileName, eException );
         WhereIs;
-        while( true );
+        while( true ) {
+
+        }
+
     }
 
 
@@ -353,8 +335,8 @@ void CreateMngrThread()
 
 #ifdef _MSC_VER
 	// 5. 사용자 수집 함수 메시지를 처리한다.
-	g_pTheUserCollect = new CUserCollect(g_iKeyId++, (const char *) "CUserCollect", true);
-	g_pTheUserCollect->Run(_MSG_USERCOL_KEY);
+	//g_pTheUserCollect = new CUserCollect(g_iKeyId++, (const char *) "CUserCollect", true);
+	//g_pTheUserCollect->Run(_MSG_USERCOL_KEY);
 #endif
 
 
@@ -382,7 +364,7 @@ void CreateAnalThread()
 
 	g_pTheEmitterMerge = new CEmitterMerge(g_iKeyId++, (const char*) "CEmitterMerge", true);
 	g_pTheEmitterMerge->Run();
-	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (const char*) "CSignalCollect", true, enLEFT_PCI_DRIVER );
+	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (const char*) "CSignalCollect", true );
 	g_pTheSignalCollect->Run();
 
 	g_pTheDetectAnalysis = new CDetectAnalysis(g_iKeyId++, ( const char*) "CDetectAnalysis", true);
@@ -398,7 +380,7 @@ void CreateAnalThread()
 
 #ifdef _MFC_VER
 /**
- * @brief     SIM_Start
+ * @brief
  * @return    void
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -411,14 +393,12 @@ void SIM_Start( bool bReqStart )
     STR_MessageData sndMsg;
 
     if( bReqStart ) {
-        //g_pTheCCUSocket->StopThread();
-        //Sleep( 10 );
-
         sndMsg.uiOpCode = enREQ_OP_START;
         sndMsg.uiSocket = 0; //m_uiSocket;
         sndMsg.iArrayIndex = -1;
         sndMsg.uiArrayLength = 0;
-        sndMsg.uiDataLength = sizeof(int);
+        sndMsg.uiDataLength = 0;
+        sndMsg.uiEchoBit = 0;
 
     }
     else {
@@ -426,20 +406,26 @@ void SIM_Start( bool bReqStart )
         sndMsg.uiSocket = 0; //m_uiSocket;
         sndMsg.iArrayIndex = -1;
         sndMsg.uiArrayLength = 0;
-        sndMsg.uiDataLength = sizeof( int );
+        sndMsg.uiDataLength = 0;
+        sndMsg.uiEchoBit = 0;
 
     }
 
     g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
 
-//     Sleep( 10 );
-//
-//     sndMsg.uiOpCode = enREQ_OP_START;
-//     sndMsg.x.tiNow = time(NULL);
-//     g_pTheTaskMngr->QMsgSnd( & sndMsg, (void *) NULL, "MAIN" );
+    Sleep( 5000 );
 
 }
 
+/**
+ * @brief     SIM_Library
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-27 13:05:28
+ * @warning
+ */
 void SIM_Library()
 {
     STR_MessageData sndMsg;
@@ -449,6 +435,7 @@ void SIM_Library()
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof( int );
+    sndMsg.uiEchoBit = 0;
 
     g_pTheEmitterMerge->QMsgSnd( &sndMsg, ( void * ) NULL, "MAIN" );
 
@@ -536,8 +523,13 @@ void signalHandler( int signo )
 
 /**
  * @brief ParsingArgument
- * @param iArgc
- * @param iArgv
+ * @param		int iArgc
+ * @param		char * iArgv[]
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/05 16:28:15
+ * @warning
  */
 void ParsingArgument( int iArgc, char *iArgv[] )
 {
@@ -563,7 +555,11 @@ void ParsingArgument( int iArgc, char *iArgv[] )
             if( *iArgv[0] == '-' ) {
                 switch( iArgv[0][1] ) {
                 case 'i':
+#ifdef __VXWORKS__
+                    if( iArgv[0][2] == '\0' ) {
+#else
                     if( iArgv[0][2] == NULL ) {
+#endif
                         g_enBoardId = enPRC3;
 
                         LOGMSG1( enError, "기본값으로 마스터[%d]로 설정합니다.", g_enBoardId );
@@ -583,8 +579,13 @@ void ParsingArgument( int iArgc, char *iArgv[] )
                     break;
 
                 case 's' :
+#ifdef __VXWORKS__
+                    if( iArgv[0][2] == '\0' ) {
+                        g_szPDWScinarioFile[0] = (char) 0;
+#else
                     if( iArgv[0][2] == NULL ) {
                         g_szPDWScinarioFile[0] = NULL;
+#endif
 
                         LOGMSG1( enError, "PDW 시나리오 파일[%s]이 잘못 입력됐습니다.", iArgv[0] );
                         break;
@@ -691,8 +692,6 @@ void cleanup_handler(void *arg )
 void usrAppStart( int iArgc, char *iArgv[] )
 {
 
-    // 쓰레드 생성 초기화
-    Start( iArgc, iArgv );
 
 #ifdef __VXWORKS__
     memOptionsSet (MEM_ALLOC_ERROR_LOG_FLAG |
@@ -712,6 +711,11 @@ void usrAppStart( int iArgc, char *iArgv[] )
 #endif
 
 #endif
+
+    // 쓰레드 생성 초기화
+    Start( iArgc, iArgv );
+
+    printf( "\n usrAppStart" );
 
 }
 
@@ -870,9 +874,9 @@ void memCheck()
 void ss()
 {
     vector<CThread *>::iterator iter;
-    TASK_ID taskID;
+    //TASK_ID taskID;
 
-    taskID = taskIdSelf();
+    //taskID = taskIdSelf();
     //for( const auto &cThread : g_vecThread ) {
     for( iter=g_vecThread.begin() ; iter != g_vecThread.end() ; ++iter ) {
         ToggleTaskSuspend( *iter );
@@ -881,7 +885,6 @@ void ss()
 	printf( "모든 신호 분석 관련 타스크를 중지/실행 시킵니다." );
 
 }
-
 
 /**
  * @brief		전체 큐 메시지의 상태를 출력합니다.
@@ -904,6 +907,38 @@ void qq( int iLevel )
     //printf( "모든 신호 분석 관련 큐 메시지를 보여줍니다." );
 
 }
+
+/**
+ * @brief		pci_enable
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/04 16:42:23
+ * @warning
+ */
+void pci_enable()
+{
+    g_pTheSignalCollect->m_pTheLeftCollectBank->StartCollecting();
+    g_pTheSignalCollect->m_pTheRigtCollectBank->StartCollecting();
+
+}
+
+/**
+ * @brief		pci_disable
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/04 16:42:24
+ * @warning
+ */
+void pci_disable()
+{
+    g_pTheSignalCollect->m_pTheLeftCollectBank->EndCollecting();
+    g_pTheSignalCollect->m_pTheRigtCollectBank->EndCollecting();
+
+}
+
+
 
 /**
  * @brief		MemotyTest

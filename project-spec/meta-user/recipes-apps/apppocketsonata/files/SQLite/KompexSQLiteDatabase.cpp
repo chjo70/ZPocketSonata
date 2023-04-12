@@ -90,11 +90,13 @@ void CSQLiteDatabase::Open(const std::string &filename, int flags, const char *z
     sqlite3_enable_shared_cache(1);
 
 	// close old db, if one exist
-	if(m_pDatabaseHandle)
+	if(m_pDatabaseHandle) {
 		Close();
+	}
 
-	if(sqlite3_open_v2(filename.c_str(), &m_pDatabaseHandle, flags, zVfs) != SQLITE_OK)
+	if(sqlite3_open_v2(filename.c_str(), &m_pDatabaseHandle, flags, zVfs) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
+	}
 
 	sqlite3_extended_result_codes(m_pDatabaseHandle, true);
 
@@ -107,12 +109,14 @@ void CSQLiteDatabase::Open(const char *filename)
     sqlite3_enable_shared_cache(1);
 
 	// close old db, if one exist
-	if(m_pDatabaseHandle)
+	if(m_pDatabaseHandle) {
 		Close();
+	}
 
 	// standard usage: SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
-	if(sqlite3_open16(filename, &m_pDatabaseHandle) != SQLITE_OK)
+	if(sqlite3_open16(filename, &m_pDatabaseHandle) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
+	}
 
 	sqlite3_extended_result_codes(m_pDatabaseHandle, true);
 
@@ -121,12 +125,13 @@ void CSQLiteDatabase::Open(const char *filename)
 }
 
 void CSQLiteDatabase::Close()
-{	
+{
 	// detach database if the database was moved into memory
 	if(mIsMemoryDatabaseActive)
 	{
-		if(sqlite3_exec(m_pDatabaseHandle, "DETACH DATABASE origin", 0, NULL, 0) != SQLITE_OK)
+		if(sqlite3_exec(m_pDatabaseHandle, "DETACH DATABASE origin", 0, NULL, 0) != SQLITE_OK) {
 			KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
+		}
 	}
 
 	// close the database
@@ -152,7 +157,7 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 	std::cout << "profile: " << sql << std::endl;
 	std::cout << "profile time: " << tTime << std::endl;
 }
-// 
+//
 // void CSQLiteDatabase::MoveDatabaseToMemory(UtfEncoding encoding)
 // {
 // 	if(!mIsMemoryDatabaseActive) {
@@ -163,13 +168,13 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 //         else {
 // 		    sqlite3 *memoryDatabase;
 // 		    if(mDatabaseFilenameUtf8 != "")
-// 			    sqlite3_open(":memory:", &memoryDatabase);   
+// 			    sqlite3_open(":memory:", &memoryDatabase);
 // 		    else
 // 			    sqlite3_open16(L":memory:", &memoryDatabase);
-// 		
+//
 // 		    // create the in-memory schema from the origin database
 // 		    sqlite3_exec(m_pDatabaseHandle, "BEGIN", 0, NULL, 0);
-// 
+//
 // 		    if(encoding == _UTF8)
 // 		    {
 // 			    sqlite3_exec(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", &Kompex::CSQLiteDatabase::ProcessDDLRow, memoryDatabase, NULL );
@@ -179,7 +184,7 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // // 			    struct sqlite3_stmt *statement;
 // // 			    if(sqlite3_prepare_v2(m_pDatabaseHandle, "SELECT sql FROM sqlite_master WHERE sql NOT NULL AND tbl_name != 'sqlite_sequence'", -1, &statement, NULL ) != SQLITE_OK)
 // // 				    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
-// // 
+// //
 // // 			    bool resultsAvailable = true;
 // // 			    while(resultsAvailable)
 // // 			    {
@@ -194,14 +199,14 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // // 							    sqlite3_finalize(transferStatement);
 // // 							    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // // 						    }
-// // 						
+// //
 // // 						    // SQLITE_DONE should always be returned
 // // 						    if(sqlite3_step(transferStatement) != SQLITE_DONE)
 // // 						    {
 // // 							    sqlite3_finalize(transferStatement);
 // // 							    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // // 						    }
-// // 
+// //
 // // 						    sqlite3_finalize(transferStatement);
 // // 						    break;
 // // 					    }
@@ -210,27 +215,27 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // // 						    break;
 // // 					    case SQLITE_BUSY:
 // //                             resultsAvailable = false;
-// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, "SQLITE_BUSY", SQLITE_BUSY);						
+// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, "SQLITE_BUSY", SQLITE_BUSY);
 // // 						    break;
 // // 					    case SQLITE_ERROR:
 // //                             resultsAvailable = false;
-// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));						
+// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 // // 						    break;
 // // 					    default:
 // //                             resultsAvailable = false;
-// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));						
+// // 						    CleanUpFailedMemoryDatabase(memoryDatabase, m_pDatabaseHandle, false, true, statement, sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
 // //                             break;
 // // 				    }
 // // 			    }
-// // 
+// //
 // // 			    sqlite3_finalize(statement);
 // 		    }
 // 			else {
-// 
+//
 // 			}
-// 
+//
 // 		    sqlite3_exec(m_pDatabaseHandle, "COMMIT", 0, NULL, 0);
-// 
+//
 // 		    // attach the origin database to the in-memory
 // 		    if(mDatabaseFilenameUtf8 != "")
 // 		    {
@@ -248,16 +253,16 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 //                 std::string sql = "ATTACH DATABASE '" + mDatabaseFilenameUtf8 + "' as origin";
 // 			    if(sqlite3_prepare16_v2(memoryDatabase, sql.c_str(), -1, &statement, NULL ) != SQLITE_OK)
 // 				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-// 
+//
 // 			    if(sqlite3_step(statement) != SQLITE_DONE)
 // 				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, false, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-// 
+//
 // 			    sqlite3_finalize(statement);
 // 		    }
-// 
+//
 // 		    // copy the data from the origin database to the in-memory
 // 		    sqlite3_exec(memoryDatabase, "BEGIN", 0, NULL, 0);
-// 
+//
 // 		    if(encoding == _UTF8)
 // 		    {
 // 			    sqlite3_exec(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", &Kompex::CSQLiteDatabase::ProcessDMLRow, memoryDatabase, NULL );
@@ -267,16 +272,16 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // // 			    struct sqlite3_stmt *statement;
 // // 			    if(sqlite3_prepare_v2(memoryDatabase, "SELECT name FROM origin.sqlite_master WHERE type='table'", -1, &statement, NULL ) != SQLITE_OK)
 // // 				    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, false, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
-// // 
+// //
 // // 			    bool resultsAvailable = true;
 // // 			    while(resultsAvailable)
 // // 			    {
 // //                     int iRet = sqlite3_step(statement);
-// // 
-// // 
+// //
+// //
 // //                     if( iRet == SQLITE_ROW ) {
 // //                         resultsAvailable = true;
-// // 
+// //
 // //                         std::string tableName = (char*)sqlite3_column_text16(statement, 0);
 // //                         std::string stmt = std::wstring(L"INSERT INTO main.") + tableName + std::wstring(L" SELECT * FROM origin.") + tableName;
 // //                         struct sqlite3_stmt *transferStatement;
@@ -285,14 +290,14 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // //                             sqlite3_finalize(transferStatement);
 // //                             CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // //                         }
-// // 
+// //
 // //                         // SQLITE_DONE should always be returned
 // //                         if(sqlite3_step(transferStatement) != SQLITE_DONE)
 // //                         {
 // //                             sqlite3_finalize(transferStatement);
 // //                             CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // //                         }
-// // 
+// //
 // //                         sqlite3_finalize(transferStatement);
 // //                     }
 // //                     else if( iRet == SQLITE_DONE ) {
@@ -300,24 +305,24 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // //                     }
 // //                     else if( iRet == SQLITE_BUSY ) {
 // //                         resultsAvailable = false;
-// //                         CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);						
+// //                         CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);
 // //                     }
 // //                     else if( iRet == SQLITE_ERROR ) {
 // //                         resultsAvailable = false;
-// //                         CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));						
+// //                         CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // //                     }
 // //                     else {
 // //                         resultsAvailable = false;
 // //                         CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // //                     }
-// 
+//
 //                     /*
 // 				    switch(sqlite3_step(statement))
 // 				    {
 // 					    case SQLITE_ROW:
 // 					    {
 // 						    resultsAvailable = true;
-// 						
+//
 // 						    std::wstring tableName = (wchar_t*)sqlite3_column_text16(statement, 0);
 // 						    std::wstring stmt = std::wstring(L"INSERT INTO main.") + tableName + std::wstring(L" SELECT * FROM origin.") + tableName;
 // 						    struct sqlite3_stmt *transferStatement;
@@ -326,16 +331,16 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // 							    sqlite3_finalize(transferStatement);
 // 							    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // 						    }
-// 
+//
 // 						    // SQLITE_DONE should always be returned
 // 						    if(sqlite3_step(transferStatement) != SQLITE_DONE)
 // 						    {
 // 							    sqlite3_finalize(transferStatement);
 // 							    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // 						    }
-// 
+//
 // 						    sqlite3_finalize(transferStatement);
-// 
+//
 // 						    break;
 // 					    }
 // 					    case SQLITE_DONE:
@@ -343,11 +348,11 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // 						    break;
 // 					    case SQLITE_BUSY:
 //                             resultsAvailable = false;
-// 						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);						
+// 						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, "SQLITE_BUSY", SQLITE_BUSY);
 // 						    break;
 // 					    case SQLITE_ERROR:
 //                             resultsAvailable = false;
-// 						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));						
+// 						    CleanUpFailedMemoryDatabase(memoryDatabase, memoryDatabase, true, true, statement, sqlite3_errmsg(memoryDatabase), sqlite3_errcode(memoryDatabase));
 // 						    break;
 // 					    default:
 //                             resultsAvailable = false;
@@ -356,13 +361,13 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 // 				    }
 //                     */
 // 			    //}
-// 			
+//
 // 			    //sqlite3_finalize(statement);
 // 		    }
 // 			else {
-// 
+//
 // 			}
-// 
+//
 // 		    if(sqlite3_exec(memoryDatabase, "COMMIT", 0, NULL, 0) == SQLITE_OK)
 // 		    {
 // 			    sqlite3_close(m_pDatabaseHandle);
@@ -379,14 +384,17 @@ void CSQLiteDatabase::ProfileOutput(void* ptr, const char* sql, sqlite3_uint64 t
 
 void CSQLiteDatabase::CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite3 *rollbackDatabase, bool isDetachNecessary, bool isRollbackNecessary, sqlite3_stmt *stmt, const std::string &errMsg, int internalSqliteErrCode)
 {
-	if(stmt != NULL )
+	if(stmt != NULL ) {
 		sqlite3_finalize(stmt);
+	}
 
-	if(isRollbackNecessary)
+	if(isRollbackNecessary) {
 		sqlite3_exec(rollbackDatabase, "ROLLBACK", 0, NULL, 0);
+	}
 
-	if(isDetachNecessary)
+	if(isDetachNecessary) {
 		sqlite3_exec(memoryDatabase, "DETACH DATABASE origin", 0, NULL, 0);
+	}
 
 	sqlite3_close(memoryDatabase);
 	KOMPEX_EXCEPT(errMsg, internalSqliteErrCode);
@@ -415,13 +423,14 @@ int CSQLiteDatabase::ProcessDMLRow(void *db, int columnsCount, char **values, ch
 		KOMPEX_EXCEPT("error occured during DML: columnsCount != 1", -1);
 		// return -1;
 	}
-	
+
 	char *stmt = sqlite3_mprintf("INSERT INTO main.%q SELECT * FROM origin.%q", values[0], values[0]);
 
-	if(sqlite3_exec(static_cast<sqlite3*>(db), stmt, 0, NULL, 0) != SQLITE_OK)
+	if(sqlite3_exec(static_cast<sqlite3*>(db), stmt, 0, NULL, 0) != SQLITE_OK) {
 		KOMPEX_EXCEPT("error occured during DDL: sqlite3_exec (error message: " + std::string(sqlite3_errmsg(static_cast<sqlite3*>(db))) + ")", sqlite3_errcode(static_cast<sqlite3*>(db)));
+	}
 
-	sqlite3_free(stmt);    
+	sqlite3_free(stmt);
 
 	return 0;
 }
@@ -444,15 +453,16 @@ void CSQLiteDatabase::SaveDatabaseFromMemoryToFile(const std::string &filename)
 // 					KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
 // 			}
 
-            if(sqlite3_open_v2(mDatabaseFilenameUtf8.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL ) != SQLITE_OK)
+            if(sqlite3_open_v2(mDatabaseFilenameUtf8.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL ) != SQLITE_OK) {
                 KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
+			}
 		}
-		else
-		{
-			if(sqlite3_open_v2(filename.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK)
+		else {
+			if(sqlite3_open_v2(filename.c_str(), &fileDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK) {
 				KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
+			}
 		}
-		
+
 		TakeSnapshot(fileDatabase);
 	}
 }
@@ -462,9 +472,10 @@ void CSQLiteDatabase::SaveDatabaseFromMemoryToFile(const char *filename)
 	if(mIsMemoryDatabaseActive)
 	{
 		sqlite3 *fileDatabase;
-		if(sqlite3_open16(filename, &fileDatabase) != SQLITE_OK)
+		if(sqlite3_open16(filename, &fileDatabase) != SQLITE_OK) {
 			KOMPEX_EXCEPT(sqlite3_errmsg(fileDatabase), sqlite3_errcode(fileDatabase));
-		
+		}
+
 		TakeSnapshot(fileDatabase);
 	}
 }
@@ -480,34 +491,38 @@ void CSQLiteDatabase::TakeSnapshot(sqlite3 *destinationDatabase)
 		{
 			// save error message and error number - otherwise an error in sqlite3_backup_finish() could overwrite them
 			std::string errmsg = sqlite3_errmsg(destinationDatabase);
-			int errcode = sqlite3_errcode(destinationDatabase);
+			//int errcode = sqlite3_errcode(destinationDatabase);
 			// there must be exactly one call to sqlite3_backup_finish() for each successful call to sqlite3_backup_init()
 			sqlite3_backup_finish(backup);
 			KOMPEX_EXCEPT(sqlite3_errmsg(destinationDatabase), sqlite3_errcode(destinationDatabase));
 		}
 
 		// clean up resources allocated by sqlite3_backup_init()
-		if(sqlite3_backup_finish(backup) != SQLITE_OK)
+		if(sqlite3_backup_finish(backup) != SQLITE_OK) {
 			KOMPEX_EXCEPT(sqlite3_errmsg(destinationDatabase), sqlite3_errcode(destinationDatabase));
+		}
 	}
 
-	if(sqlite3_close(destinationDatabase) != SQLITE_OK)
+	if(sqlite3_close(destinationDatabase) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(destinationDatabase), sqlite3_errcode(destinationDatabase));
+	}
 }
 
 bool CSQLiteDatabase::IsDatabaseReadOnly()
 {
 	int result = sqlite3_db_readonly(m_pDatabaseHandle, "main");
-	if(result == -1)
+	if(result == -1) {
 		KOMPEX_EXCEPT("'main' is not the name of a database on connection mDatabaseHandle", -1);
+	}
 
 	return !!result;
 }
 
 void CSQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_module *module, void *clientData, void(*xDestroy)(void*))
 {
-	if(sqlite3_create_module_v2(m_pDatabaseHandle, moduleName.c_str(), module, clientData, xDestroy))
+	if(sqlite3_create_module_v2(m_pDatabaseHandle, moduleName.c_str(), module, clientData, xDestroy)) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
+	}
 }
 
 /**
@@ -516,7 +531,7 @@ void CSQLiteDatabase::CreateModule(const std::string &moduleName, const sqlite3_
  * @param     bool highwaterValue
  * @param     bool resetFlag
  * @return    int
- * @exception 
+ * @exception
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-28 13:08:09
@@ -528,13 +543,16 @@ int CSQLiteDatabase::GetRuntimeStatusInformation(int operation, bool highwaterVa
 	int curValue;
 	int hiwtrValue;
 
-	if(sqlite3_db_status(m_pDatabaseHandle, operation, &curValue, &hiwtrValue, resetFlag) != SQLITE_OK)
+	if(sqlite3_db_status(m_pDatabaseHandle, operation, &curValue, &hiwtrValue, resetFlag) != SQLITE_OK) {
 		KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
+	}
 
-	if(highwaterValue)
+	if(highwaterValue) {
 		iRet = hiwtrValue;
-	else
+	}
+	else {
 		iRet = curValue;
+	}
 
 	return iRet;
 }

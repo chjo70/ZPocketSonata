@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef MATHFUNCSDLL_EXPORTS
 #define MATHFUNCSDLL_API __declspec(dllexport)
@@ -20,7 +20,7 @@ using namespace std;
 
 
 //
-// RADARDIR ÇÁ·ÎÁ§Æ® ³»¿¡¼­ ÃÖ¼Ò ³»¿ë¸¸ ±¸Á¶Ã¼ Á¤ÀÇ¸¦ º¹»çÇÑ °ÍÀÓ.
+// RADARDIR í”„ë¡œì íŠ¸ ë‚´ì—ì„œ ìµœì†Œ ë‚´ìš©ë§Œ êµ¬ì¡°ì²´ ì •ì˜ë¥¼ ë³µì‚¬í•œ ê²ƒì„.
 
 
 namespace ELINT {
@@ -56,7 +56,7 @@ typedef struct
 	int iNumOfLOB;
 
 #ifdef _POCKETSONATA_
-    unsigned int uiEWRecProc;   // EW¼ö½ÅÃ³¸®ÆÇ ¹øÈ£
+    unsigned int uiEWRecProc;   // EWìˆ˜ì‹ ì²˜ë¦¬íŒ ë²ˆí˜¸
 #endif
 
 } SRxLOBHeader;
@@ -86,8 +86,8 @@ struct SRxABTHeader
 #endif
 
 
-// CED ·¹ÀÌ´õ¸ğµåÀÇ ¹®ÀÚ¿­ ±æÀÌ Á¤ÀÇ È£Ãâ
-// ¾Æ·¡ ÆÄÀÏÀº ../../files/Anal/SigAnal/_CED_Define.h ¿¡ ÀÖ´Â ÆÄÀÏÀ» º¹»çÇØ¾ß ÇÕ´Ï´Ù.
+// CED ë ˆì´ë”ëª¨ë“œì˜ ë¬¸ìì—´ ê¸¸ì´ ì •ì˜ í˜¸ì¶œ
+// ì•„ë˜ íŒŒì¼ì€ ../../files/Anal/SigAnal/_CED_Define.h ì— ìˆëŠ” íŒŒì¼ì„ ë³µì‚¬í•´ì•¼ í•©ë‹ˆë‹¤.
 
 #include "_CED_Define.h"
 
@@ -98,15 +98,15 @@ struct SRxABTHeader
 
 #ifndef _SRxABTData
 #define _SRxABTData
-struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
+struct SRxABTData { // ë ˆì´ë” ë¶„ì„
 	unsigned int uiABTID;
 	unsigned int uiAETID;
 
-	int ucSignalType;
+	int vSignalType;
 
 	unsigned int uiCoLOB;
 
-	time_t tiFirstSeenTime;				// 64ºñÆ® time_t ·Î ¼±¾ğÇØ¾ß ÇÔ.
+	time_t tiFirstSeenTime;				// 64ë¹„íŠ¸ time_t ë¡œ ì„ ì–¸í•´ì•¼ í•¨.
 	time_t tiLastSeenTime;
 
 	int uiRadarModePriority;
@@ -117,13 +117,13 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 
 #endif
 
-	float fDOAMean;                                 // [0.1µµ]
+	float fDOAMean;                                 // [0.1ë„]
 	float fDOAMax;
 	float fDOAMin;
-	float fDOADeviation;				// [0.1µµ]
+	float fDOADeviation;				// [0.1ë„]
 
-	int ucFreqType;
-	int ucFreqPatternType;
+	int vFreqType;
+	int vFreqPatternType;
 	float fFreqPatternPeriodMean;	  // [us]
 	float fFreqPatternPeriodMin;	  // [us]
 	float fFreqPatternPeriodMax;	  // [us]
@@ -131,12 +131,12 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 	float fFreqMax;
 	float fFreqMin;
 	float fFreqDeviation;
-	int ucFreqPositionCount;
-	int ucFreqElementCount;
-	float fFreqSeq[MAX_FREQ_PRI_STEP];	// ÁÖÆÄ¼ö ´Ü°ª
+	int vFreqPositionCount;
+	int vFreqElementCount;
+	float fFreqSeq[MAX_FREQ_PRI_STEP];	// ì£¼íŒŒìˆ˜ ë‹¨ê°’
 
-	int ucPRIType;
-	int ucPRIPatternType;
+	int vPRIType;
+	int vPRIPatternType;
 	float fPRIPatternPeriodMean;							// [us]
 	float fPRIPatternPeriodMin;							// [us]
 	float fPRIPatternPeriodMax;							// [us]
@@ -145,8 +145,8 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 	float fPRIMin;
 	float fPRIDeviation;			// [1ns]
 	float fPRIJitterRatio;							// [%]
-	int ucPRIPositionCount;
-	int ucPRIElementCount;
+	int vPRIPositionCount;
+	int vPRIElementCount;
 	float fPRISeq[MAX_FREQ_PRI_STEP];
 
 	float fPWMean;											// 1ns
@@ -154,13 +154,13 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 	float fPWMin;
 	float fPWDeviation;
 
-	float fPAMean;											// ±âÁ¸´ë·Î
+	float fPAMean;											// ê¸°ì¡´ëŒ€ë¡œ
 	float fPAMax;
 	float fPAMin;
 	float fPADeviation;
 
 #if defined(_POCKETSONATA_) || defined(_ELINT_)
-	int ucScanType;
+	int vScanType;
 	float fMeanScanPeriod;			// [usec]
 	float fMaxScanPeriod;			// [usec]
 	float fMinScanPeriod;			// [usec]
@@ -177,7 +177,7 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 	float fCEP;										// [m]
 	float fMajorAxis;							// [m]
 	float fMinorAxis;							// [m]
-	float fTheta;									// [0.1µµ]
+	float fTheta;									// [0.1ë„]
 	float fDistanceErrorOfThreat;	// [m]
 
 	int bValidity;
@@ -200,7 +200,7 @@ struct SRxABTData { // ·¹ÀÌ´õ ºĞ¼®
 #endif
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1¹øÂ° ELNOT
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1ë²ˆì§¸ ELNOT
 
 	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
 	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
@@ -239,7 +239,7 @@ struct SRxAETData {
 	unsigned int uiCoLOB;
 
 	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1¹øÂ° ELNOT
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1ë²ˆì§¸ ELNOT
 
 	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
 	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
@@ -251,7 +251,7 @@ struct SRxAETData {
 	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
-	int ucPlatformType;
+	int vPlatformType;
 	int uiPinNum;
 
 #if defined(_XBAND_) || defined(_ELINT_)
@@ -262,16 +262,16 @@ struct SRxAETData {
 	int uiRadarPriority;
 	int uiThreatPriority;
 
-	time_t tiFirstSeenTime;				// 64ºñÆ® time_t ·Î ¼±¾ğÇØ¾ß ÇÔ.
+	time_t tiFirstSeenTime;				// 64ë¹„íŠ¸ time_t ë¡œ ì„ ì–¸í•´ì•¼ í•¨.
 	time_t tiLastSeenTime;
 
 	int ucValidity;
 
 #if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
-	float fDOAMean;                                 // [0.1µµ]
+	float fDOAMean;                                 // [0.1ë„]
 	float fDOAMax;
 	float fDOAMin;
-	float fDOADeviation;				// [0.1µµ]
+	float fDOADeviation;				// [0.1ë„]
 #endif
 
 	float fFreqMean;
@@ -289,7 +289,7 @@ struct SRxAETData {
 	float fPWMin;
 	float fPWDeviation;
 
-	float fPAMean;											// ±âÁ¸´ë·Î
+	float fPAMean;											// ê¸°ì¡´ëŒ€ë¡œ
 	float fPAMax;
 	float fPAMin;
 	float fPADeviation;
@@ -306,7 +306,7 @@ struct SRxAETData {
 	float fCEP;										// [m]
 	float fMajorAxis;							// [m]
 	float fMinorAxis;							// [m]
-	float fTheta;									// [0.1µµ]
+	float fTheta;									// [0.1ë„]
 	float fDistanceErrorOfThreat;	// [m]
 
 	char szIDInfo[_MAX_SIZE_OF_IDINFO];
@@ -326,56 +326,56 @@ struct SRxAETData {
 
 
 //////////////////////////////////////////////////////////////////////////
-// ½ÇÇà ¹æ¹ı
+// ì‹¤í–‰ ë°©ë²•
 
-/* 1. ½ÃÀÛ½Ã ÇÑ¹ø¸¸ È£ÃâÇÏ¸é µË´Ï´Ù.
-	 ÀÀ¿ë ÇÁ·Î±×·¥¿¡¼­ ÃÊ±âÈ­½Ã¿¡ ¾Æ·¡ ·çÆ¾À» ÇÑ¹ø È£ÃâÇÏ¸é µË´Ï´Ù.
+/* 1. ì‹œì‘ì‹œ í•œë²ˆë§Œ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
+	 ì‘ìš© í”„ë¡œê·¸ë¨ì—ì„œ ì´ˆê¸°í™”ì‹œì— ì•„ë˜ ë£¨í‹´ì„ í•œë²ˆ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
 
    RadarAnlAlgotirhm::RadarAnlAlgotirhm::Init();
 
-	 2. ÇÁ·Î±×·¥ Á¾·á½Ã ÇÑ¹ø¸¸ È£ÃâÇÏ¸é µË´Ï´Ù.
+	 2. í”„ë¡œê·¸ë¨ ì¢…ë£Œì‹œ í•œë²ˆë§Œ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
 
 	 RadarAnlAlgotirhm::RadarAnlAlgotirhm::Close();
 
-	 3. À§Çù °ü¸® È£Ãâ½Ã STR_LOBDATA ±¸Á¶¿¡ ¾Æ·¡¿Í °°ÀÌ µ¥ÀÌÅÍ°¡ ÀÖ¾î¾ß ÇÕ´Ï´Ù.
+	 3. ìœ„í˜‘ ê´€ë¦¬ í˜¸ì¶œì‹œ STR_LOBDATA êµ¬ì¡°ì— ì•„ë˜ì™€ ê°™ì´ ë°ì´í„°ê°€ ìˆì–´ì•¼ í•©ë‹ˆë‹¤.
 
 STR_LOBDATA stLOBData;
 
 typedef struct 
 {
-	int iNumOfLOB;													<---- LOB °³¼ö, ÃÖ´ë 100°³ ±îÁöÀÌ´Ù.
+	int iNumOfLOB;													<---- LOB ê°œìˆ˜, ìµœëŒ€ 100ê°œ ê¹Œì§€ì´ë‹¤.
 } SRxLOBHeader;
 
 typedef struct {
-	SRxLOBHeader stLOBHeader;								<---- LOB Çì´õ ±¸Á¶Ã¼
-	SRxLOBData stLOBData[100];							<---- LOB µ¥ÀÌÅÍ
+	SRxLOBHeader stLOBHeader;								<---- LOB í—¤ë” êµ¬ì¡°ì²´
+	SRxLOBData stLOBData[100];							<---- LOB ë°ì´í„°
 
 } STR_LOBDATA ;
 
 RadarAnlAlgotirhm::RadarAnlAlgotirhm::Start( & stLOBData );
 
-		4. ºĞ¼® °á°ú´Â ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© LOB °³¼ö¿Í µ¥ÀÌÅÍ¸¦ ¾ò´Â´Ù.
+		4. ë¶„ì„ ê²°ê³¼ëŠ” ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ LOB ê°œìˆ˜ì™€ ë°ì´í„°ë¥¼ ì–»ëŠ”ë‹¤.
 		
 		STR_LOBDATA stResLOBData;
 		STR_ABTDATA stResABTData;
 
-		RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetLOBData( & stResLOBData );			<---- LOB °á°ú
-		RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetABTData( & stResABTData );			<---- ABT °á°ú
+		RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetLOBData( & stResLOBData );			<---- LOB ê²°ê³¼
+		RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetABTData( & stResABTData );			<---- ABT ê²°ê³¼
 
-		stResLOBData ±¸Á¶Ã¼¿Í stResABTData ±¸Á¶Ã¼¸¦ º¸°í ÀÌ¿ëÇÏ¸é µË´Ï´Ù.
+		stResLOBData êµ¬ì¡°ì²´ì™€ stResABTData êµ¬ì¡°ì²´ë¥¼ ë³´ê³  ì´ìš©í•˜ë©´ ë©ë‹ˆë‹¤.
 
-		*ÁÖÀÇ »çÇ× : À§Çù °ü¸® È£Ãâ½Ã LOB °³¼ö°¡ 100 °³ ÃÊ°úÀÌ¸é À§Çù °ü¸®¸¦ Áß´ÜÇÑ´Ù. °úÁ¦ Á¤º¸°¡ ¾ø´Â ...
-								 ÇöÀç ÀÔ·Â LOB °á°ú°¡ 10°³ ÀÌ¸é LOB °³¼ö °á°ú´Â 10°³ ÀÌ¾î¾ß ÇÏ°í ABT °á°ú´Â 10 °³ ¹Ì¸¸ÀÌ¾î¾ß ÇÔ.
-								 ÃßÈÄ, LOB Å¬·¯½ºÅÍ¸µÀ» Ãß°¡ÇÏ°Ô µÇ¸é LOB °³¼ö °á°ú¿Í ºö °á°ú °³¼ö´Â 10°³ ÀÌ»ó/ÃÖ´ë 10°³ ¹Ì¸¸ ÀÏ ¼ö ÀÖ½À´Ï´Ù.
+		*ì£¼ì˜ ì‚¬í•­ : ìœ„í˜‘ ê´€ë¦¬ í˜¸ì¶œì‹œ LOB ê°œìˆ˜ê°€ 100 ê°œ ì´ˆê³¼ì´ë©´ ìœ„í˜‘ ê´€ë¦¬ë¥¼ ì¤‘ë‹¨í•œë‹¤. ê³¼ì œ ì •ë³´ê°€ ì—†ëŠ” ...
+								 í˜„ì¬ ì…ë ¥ LOB ê²°ê³¼ê°€ 10ê°œ ì´ë©´ LOB ê°œìˆ˜ ê²°ê³¼ëŠ” 10ê°œ ì´ì–´ì•¼ í•˜ê³  ABT ê²°ê³¼ëŠ” 10 ê°œ ë¯¸ë§Œì´ì–´ì•¼ í•¨.
+								 ì¶”í›„, LOB í´ëŸ¬ìŠ¤í„°ë§ì„ ì¶”ê°€í•˜ê²Œ ë˜ë©´ LOB ê°œìˆ˜ ê²°ê³¼ì™€ ë¹” ê²°ê³¼ ê°œìˆ˜ëŠ” 10ê°œ ì´ìƒ/ìµœëŒ€ 10ê°œ ë¯¸ë§Œ ì¼ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
 
-	5. CED ¹× EOB ¶óÀÌºê·¯¸®°¡ º¯°æµÆÀ»¶§ ÀÌ¸¦ À§Çù °ü¸®.½Äº° ¸ğµâ¿¡ ¾Ë·ÁÁÖ±â À§ÇÔÀÌ´Ù.
+	5. CED ë° EOB ë¼ì´ë¸ŒëŸ¬ë¦¬ê°€ ë³€ê²½ëì„ë•Œ ì´ë¥¼ ìœ„í˜‘ ê´€ë¦¬.ì‹ë³„ ëª¨ë“ˆì— ì•Œë ¤ì£¼ê¸° ìœ„í•¨ì´ë‹¤.
 
-		RadarAnlAlgotirhm::RadarAnlAlgotirhm::UpdateCEDEOBLibrary();						<---- CED/EOB ¾÷µ¥ÀÌÆ®¸¦ ¾Ë·ÁÁØ´Ù.
+		RadarAnlAlgotirhm::RadarAnlAlgotirhm::UpdateCEDEOBLibrary();						<---- CED/EOB ì—…ë°ì´íŠ¸ë¥¼ ì•Œë ¤ì¤€ë‹¤.
 
 
-		6. ¿î¿ë ÃÊ±âÈ­ ¿î¿ë ÃÊ±âÈ­½Ã¿¡ ¹æ»çÃ¼ ¹× ºö/LOB ¹øÈ£¸¦ 1¹ø ºÎÅÍ Àç½ÃÀÛÇÏ¸ç À§Çù °ü¸® Å×ÀÌºíµµ ÃÊ±âÈ­ÇÏ¿© Ã³À½ºÎÅÍ ºĞ¼®À» ½ÃÀÛÇÑ´Ù.
+		6. ìš´ìš© ì´ˆê¸°í™” ìš´ìš© ì´ˆê¸°í™”ì‹œì— ë°©ì‚¬ì²´ ë° ë¹”/LOB ë²ˆí˜¸ë¥¼ 1ë²ˆ ë¶€í„° ì¬ì‹œì‘í•˜ë©° ìœ„í˜‘ ê´€ë¦¬ í…Œì´ë¸”ë„ ì´ˆê¸°í™”í•˜ì—¬ ì²˜ìŒë¶€í„° ë¶„ì„ì„ ì‹œì‘í•œë‹¤.
 
-		RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();													<---- ¿î¿ë ÃÊ±âÈ­¸¦ ¼öÇàÇÑ´Ù.
+		RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();													<---- ìš´ìš© ì´ˆê¸°í™”ë¥¼ ìˆ˜í–‰í•œë‹¤.
 
 */
 
@@ -385,24 +385,24 @@ namespace RadarAnlAlgotirhm
 	class RadarAnlAlgotirhm
 	{
 	public: 
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î ½ÇÇà½Ã À§Çù º´ÇÕ ¹× ½Äº° ¶óÀÌºê·¯¸®¸¦ ÃÊ±âÈ­ÇÏ±â À§ÇØ¼­ ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇØ¾ß ÇÕ´Ï´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ ì‹¤í–‰ì‹œ ìœ„í˜‘ ë³‘í•© ë° ì‹ë³„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì´ˆê¸°í™”í•˜ê¸° ìœ„í•´ì„œ ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•´ì•¼ í•©ë‹ˆë‹¤.
 		static MATHFUNCSDLL_API void Init( HWND hWnd=0, bool bDBThread=false, bool bLocal=false );
 
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î ´İÀ»½Ã ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇØ¼­ À§Çù °ü¸® /½Äº° ¸ğµâÀ» ´İ´Â´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ ë‹«ì„ì‹œ ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•´ì„œ ìœ„í˜‘ ê´€ë¦¬ /ì‹ë³„ ëª¨ë“ˆì„ ë‹«ëŠ”ë‹¤.
 		static MATHFUNCSDLL_API void Close();
 
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î ¿¡¼­ À§Çù º´ÇÕ ¹× ½Äº° À» ÇÏ±â À§ÇØ¼­ ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ ì—ì„œ ìœ„í˜‘ ë³‘í•© ë° ì‹ë³„ ì„ í•˜ê¸° ìœ„í•´ì„œ ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
 		static MATHFUNCSDLL_API bool Start( STR_LOBDATA *pLOBData );
 
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î ¿¡¼­ À§Çù º´ÇÕ ¹× ½Äº° ¶óÀÌºê·¯¸®¸¦ ÃÊ±âÈ­ÇÏÇô°í ÇÒ ¶§ ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇÑ´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ ì—ì„œ ìœ„í˜‘ ë³‘í•© ë° ì‹ë³„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì´ˆê¸°í™”í•˜í˜€ê³  í•  ë•Œ ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•œë‹¤.
 		static MATHFUNCSDLL_API void SWInit();
 
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î ¿¡¼­ CED/EOB º¯°æ½Ã ¾Æ·¡ ÇÔ¼ö¸¦ È£ÃâÇØ¼­ CED/EOB ·ÎµùÇÏµµ·Ï ÇÑ´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ ì—ì„œ CED/EOB ë³€ê²½ì‹œ ì•„ë˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•´ì„œ CED/EOB ë¡œë”©í•˜ë„ë¡ í•œë‹¤.
 		static MATHFUNCSDLL_API void UpdateCEDEOBLibrary();
 
 
 #ifdef _POCKETSONATA_
-        // ¿î¿ë ¼ÒÇÁÆ®¿ş¾î¿¡¼­ ÀÔ·ÂÇÑ LOB µ¥ÀÌÅÍ¿¡ ´ëÇÑ °á°ú Á¤º¸¸¦ ¾ò´Â´Ù.
+        // ìš´ìš© ì†Œí”„íŠ¸ì›¨ì–´ì—ì„œ ì…ë ¥í•œ LOB ë°ì´í„°ì— ëŒ€í•œ ê²°ê³¼ ì •ë³´ë¥¼ ì–»ëŠ”ë‹¤.
         static MATHFUNCSDLL_API bool GetResult( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData );
 
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );

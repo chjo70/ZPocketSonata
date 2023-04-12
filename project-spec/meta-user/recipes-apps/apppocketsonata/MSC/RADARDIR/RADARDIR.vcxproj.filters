@@ -150,9 +150,6 @@
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
       <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
-      <Filter>소스 파일\Anal\Identify</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
       <Filter>소스 파일\Anal\Identify</Filter>
     </ClCompile>
@@ -358,9 +355,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
       <Filter>소스 파일\Anal\MIDAS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
-      <Filter>소스 파일\Anal\Identify</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Identify\define.h">
       <Filter>소스 파일\Anal\Identify</Filter>

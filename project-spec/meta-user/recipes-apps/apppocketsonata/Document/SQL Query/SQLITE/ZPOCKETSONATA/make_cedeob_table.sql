@@ -299,7 +299,7 @@ CREATE TABLE  THREAT  (
 	SITE_NAME   	VARCHAR (10),  /* 싸이트명 */
 	PIN   			INT  IDENTITY (1,  1),  /* PIN 번호 */
 	PLACE_NAME_KOR  VARCHAR (30),  /* 한글지명 */
-	FRIEND_OR_FOE   VARCHAR (10),  /* 적아 */
+	FRIEND_OR_FOE   INT,  /* 적아 */
 	PRIORITY   		TINYINT ,  /* 우선순위 */
 	CATEGORY   		TINYINT ,  /* 범주 */
 	PLATFORM_TYPE   TINYINT ,  /* 플랫폼 형태 */
@@ -314,9 +314,9 @@ CREATE TABLE  DEVICE  (
 	ELNOT   				VARCHAR (5),  /* ELNOT */
 	DEVICE_NAME   			VARCHAR (20),  /* 장비명 */
 	IDENTIFICATION_RANGE   	FLOAT ,  /* 식별 반경 */
-	LATITUDE   				VARCHAR (20),  /* 위도 */
-	LONGITUDE   			VARCHAR (20),  /* 경도 */
-	ALTITUDE   				FLOAT ,  /* 고도 */
+	LATITUDE   				FLOAT,  /* 위도 */
+	LONGITUDE   			FLOAT,  /* 경도 */
+	ELEVATION  				FLOAT ,  /* 고도 */
 	
 	PRIMARY KEY(THREAT_INDEX, DEVICE_INDEX ),
 	

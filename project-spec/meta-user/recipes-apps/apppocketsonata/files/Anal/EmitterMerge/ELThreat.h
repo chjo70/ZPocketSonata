@@ -3,8 +3,8 @@
  * @brief     모든 위협에 대한 인덱스를 트리 구조로 만들어 관리한다.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-03-05, 오후 4:17 
- * @warning   
+ * @date      2016-03-05, 오후 4:17
+ * @warning
  */
 
 #pragma once
@@ -26,20 +26,20 @@ struct SELINDEX {
 };
 
 // typedef enum {
-// 	ENUM_ROOT_TRAVERSE= 0, 
-// 	ENUM_AET_TRAVERSE= 1, 
-// 	ENUM_ABT_TRAVERSE, 
+// 	ENUM_ROOT_TRAVERSE= 0,
+// 	ENUM_AET_TRAVERSE= 1,
+// 	ENUM_ABT_TRAVERSE,
 // 	ENUM_LOB_TRAVERSE
-// 
+//
 // } ENUM_THREAT_TRAVERSE;
 
 // typedef enum {
 // 	ENUM_UNK_THREAT = -1,
-// 
+//
 // 	ENUM_LOB_THREAT = 0,
 // 	ENUM_ABT_THREAT,
 // 	ENUM_AET_THREAT
-// 
+//
 // } ENUM_THREAT_TYPE;
 
 
@@ -110,12 +110,14 @@ public:
 		m_Idx.uiABT = nABT;
 		m_Idx.uiLOB = nLOB;
 
+        m_uiIndex = 0;
+
 		if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
 			m_uiIndex = INVALID_INDEX;
 		}
-// 		else {
-// 			//TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
-// 		}
+ 		else {
+ 			//TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
+ 		}
 
         if( m_Idx.uiABT == INVALID_INDEX ) {
             ++m_iCoAET;
@@ -133,17 +135,17 @@ public:
 	bool RemoveABT( int nAET, int nABT );
 	void Link( CELThreat *pABTThreat, CELThreat *pAETThreat=NULL );
 	void UnLink( CELThreat *pUnLinkABT );
-	
+
 	/**
 		* @brief     Traverse
 		* @param     int nDepth
 		* @param     int nLimit
 		* @return    void
-		* @exception 
+		* @exception
 		* @author    조철희 (churlhee.jo@lignex1.com)
 		* @version   0.0.1
-		* @date      2017-03-23, 오후 1:46 
-		* @warning   
+		* @date      2017-03-23, 오후 1:46
+		* @warning
 	 */
 	void Traverse( int nDepth, int nLimit )
 	{
@@ -162,11 +164,11 @@ public:
 		* @brief     AppendChildNode
 		* @param     CELThreat * pChild 추가할 객체
 		* @return    void
-		* @exception 
+		* @exception
 		* @author    조철희 (churlhee.jo@lignex1.com)
 		* @version   0.0.1
-		* @date      2017-03-23, 오후 1:46 
-		* @warning   
+		* @date      2017-03-23, 오후 1:46
+		* @warning
 	 */
 	void AppendChildNode( CELThreat *pChild ) {
 
@@ -190,11 +192,11 @@ public:
 		* @param     ENUM_THREAT_TRAVERSE enTraverse
 		* @param     CELThreat * pChild
 		* @return    bool
-		* @exception 
+		* @exception
 		* @author    조철희 (churlhee.jo@lignex1.com)
 		* @version   0.0.1
-		* @date      2017-03-23, 오후 1:45 
-		* @warning   
+		* @date      2017-03-23, 오후 1:45
+		* @warning
 	 */
 // 	bool IsCheckDepth( ENUM_THREAT_TRAVERSE enTraverse, CELThreat *pChild ) {
 // 		bool bRet = false;
@@ -203,24 +205,24 @@ public:
 // 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT == 0 && pChild->m_Idx.uiLOB == 0 )
 // 					bRet = true;
 // 				break;
-// 
+//
 // 			case ENUM_ABT_TRAVERSE :
 // 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB == 0 )
 // 					bRet = true;
 // 				break;
-// 
+//
 // 			case ENUM_LOB_TRAVERSE :
 // 				if( pChild->m_Idx.uiAET != 0 && pChild->m_Idx.uiABT != 0 && pChild->m_Idx.uiLOB != 0 )
 // 					bRet = true;
 // 				break;
-// 
+//
 // 			case ENUM_ROOT_TRAVERSE :
 // 			default :
 // 				{ //DTEC_Else
-// 
+//
 // 				}
 // 				break;
-// 				
+//
 // 		}
 // 		return bRet;
 // 	}
@@ -230,11 +232,11 @@ public:
 		* @brief     트리에서 AET 번호를 찾아서 해당 포인터를 리턴한다. 못 찾으면 NULL 로 리턴한다.
 		* @param     int nAET
 		* @return    CELThreat *
-		* @exception 
+		* @exception
 		* @author    조철희 (churlhee.jo@lignex1.com)
 		* @version   0.0.1
-		* @date      2016-03-21, 오후 10:24 
-		* @warning   
+		* @date      2016-03-21, 오후 10:24
+		* @warning
 	*/
 	CELThreat *Find( UINT nAET ) {
 		CELThreat *pThreat=NULL;
@@ -258,8 +260,8 @@ public:
 		* @return    CELThreat *
 		* @author    조철희 (churlhee.jo@lignex1.com)
 		* @version   0.0.1
-		* @date      2016-11-01, 오후 1:43 
-		* @warning   
+		* @date      2016-11-01, 오후 1:43
+		* @warning
 	 */
 	CELThreat *Find( UINT nAET, UINT nABT ) {
 		CELThreat *pTheAETThreat;
@@ -280,33 +282,33 @@ public:
 
 	}
 
-// 	CELThreat *Find( SELINDEX *pIndex )		
+// 	CELThreat *Find( SELINDEX *pIndex )
 // 	{ //#FA_Q_4020_T1 (Multiple exit points found)
 // 		UINT nIdx;
-// 
+//
 // 		CELThreat *pThreat=NULL;
-// 
+//
 // 		// 1. AET 찾기
 // 		nIdx = pIndex->uiAET;
 // 		pThreat = m_pLeftChild;
 // 		while( pThreat != NULL ) {
 // 			if( nIdx == pThreat->m_Idx.uiAET ) {
-// 				// 중지 여부 결정		
+// 				// 중지 여부 결정
 // 				if( pIndex->uiABT == INVALID_INDEX ) {
 //                     pThreat = NULL;
 // 					break;
 // 				}
-// 
+//
 // 				// 2. ABT 찾기
 // 				//nIdx = pIndex->nABT;
 // 				pThreat = pThreat->m_pLeftChild;
 // 				while( pThreat != NULL ) {
 // 					if( pIndex->uiABT == pThreat->m_Idx.uiABT ) {
-// 						// 중지 여부 결정		
+// 						// 중지 여부 결정
 // 						if( pIndex->uiLOB == INVALID_INDEX ) {
 // 							return pThreat;
 // 						}
-// 						
+//
 // 						// 3. LOB 찾기
 // 						// nIdx = pIndex->nLOB;
 // 						pThreat = pThreat->m_pLeftChild;
@@ -324,10 +326,10 @@ public:
 //                 pThreat = NULL;
 //                 break;
 // 			}
-// 	
+//
 // 			pThreat = pThreat->m_pRightChild;
 // 		}
-// 		
+//
 // 		return pThreat;
 // 	}
 
@@ -382,7 +384,7 @@ public:
 	bool IsRoot() {
 		bool bRet = false;
 		if( m_Idx.uiAET == INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
-			bRet = true; 
+			bRet = true;
 		}
 		return bRet;
 	}
@@ -399,11 +401,11 @@ public:
 	bool IsAET() {
 		bool bRet = false;
 		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
-			bRet = true; 
+			bRet = true;
 		}
 		return bRet;
 	}
-	
+
 	/**
 	 * @brief     빔 노드 여부를 확인한다.
 	 * @return    bool
@@ -416,16 +418,16 @@ public:
 	bool IsABT() {
 		bool bRet = false;
 		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT != INVALID_INDEX ) {
-			bRet = true; 
+			bRet = true;
 		}
-		return bRet;		
+		return bRet;
 	}
-	
-// 	bool IsLOB() { 
+
+// 	bool IsLOB() {
 // 		bool bRet = false;
 // 		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT != INVALID_INDEX && m_Idx.uiLOB != INVALID_INDEX )
-// 			bRet = true; 
-// 		return bRet;		
+// 			bRet = true;
+// 		return bRet;
 // 	}
 
     /**

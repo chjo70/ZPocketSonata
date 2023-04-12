@@ -1,5 +1,16 @@
-﻿
-#include "stdafx.h"
+﻿/**
+
+    @file      clog.cpp
+    @brief     
+    @details   ~
+    @author    조철희
+    @date      10.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#include "pch.h"
+
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -295,7 +306,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #if defined(__VXWORKS__) || defined(__linux__)
             if( m_uiCoLog > MAX_LINES_LOGS ) {
                 remove( szLogFullName );
-                printf( "포그 파일을 삭제합니다!!!" );
+                _func_kprintf( "로그 파일을 삭제합니다!!!" );
 
                 m_uiCoLog = 0;
             }

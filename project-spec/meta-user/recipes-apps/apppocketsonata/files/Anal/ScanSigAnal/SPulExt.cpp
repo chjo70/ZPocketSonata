@@ -92,7 +92,7 @@ void CSPulExt::KnownPulseExtract()
     pSeg = GetPulseSeg();
 
 	// 타입에 따라서 펄스열 추출을 달리한다.
-    switch( m_pScnAet->ucPRIType ) {
+    switch( m_pScnAet->vPRIType ) {
 		case _STABLE :
             extRange.tMinPRI = ITOAusCNV( m_pScnAet->fPRIMin ) - STABLE_MARGIN;
             extRange.tMaxPRI = ITOAusCNV( m_pScnAet->fPRIMax ) + STABLE_MARGIN;
@@ -112,7 +112,7 @@ void CSPulExt::KnownPulseExtract()
 			break;
 
 		case _DWELL :
-            for( i=0 ; i < m_pScnAet->ucPRIPositionCount ; ++i ) {
+            for( i=0 ; i < m_pScnAet->vPRIPositionCount ; ++i ) {
                 extRange.tMinPRI = ITOAusCNV(m_pScnAet->fPRISeq[i]) - ( 2 * STABLE_MARGIN );
                 extRange.tMaxPRI = ITOAusCNV(m_pScnAet->fPRISeq[i]) + ( 2 * STABLE_MARGIN );
                 ExtractDwellRefPT( pSeg, & extRange );

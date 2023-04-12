@@ -20,6 +20,7 @@
 #define _spOne		(1)
 #define _spTwo		(2)
 #define _spThree	(3)
+#define _spFour	    (4)
 
 enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
 
@@ -36,7 +37,12 @@ enum SEG_MARK { NORMAL_SEG=0,
 } ;
 
 // 에미터 마킹 정의 값
-enum EMITTER_MARK { NORMAL_EMITTER=0, DELETE_EMITTER, _SIZE_EMITTER_MARK } ;
+enum EMITTER_MARK {
+    NORMAL_EMITTER=0,
+    DELETE_EMITTER,
+
+    _SIZE_EMITTER_MARK
+} ;
 
 // 에미터 마킹 정의 값
 enum AET_MARK { NORMAL_AET=0, DELETE_AET } ;
@@ -106,9 +112,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #else
 #define   _spPAoffset               (-70)       // amplitude initial value */
 
-//#define NEW_COLLECT_PDW				(1024)
-//#define	KWN_COLLECT_PDW				(1024)
-//#define	SCN_COLLECT_PDW				(1024*2)
+#define NEW_COLLECT_PDW				(256)			// 탐지 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
 
 #endif
 
@@ -116,14 +122,17 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //#define	MAX_PDW                     ( _max( _max(NEW_COLLECT_PDW, KWN_COLLECT_PDW), SCN_COLLECT_PDW ) )
 #if NEW_COLLECT_PDW < KWN_COLLECT_PDW
 #define MAX_PDW		(KWN_COLLECT_PDW)
+
 #else
 #define MAX_PDW		(NEW_COLLECT_PDW)
+
 #endif
 
 #if MAX_PDW < SCN_COLLECT_PDW
 #undef MAX_PDW
 #define MAX_PDW		(SCN_COLLECT_PDW)
 #else
+
 #endif
 
 
@@ -165,8 +174,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // DTOA 히스트그램 최대 개수
 #define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#define MAX_AOA       			    (36000)			// 최대 방위값 2^10 (360도/1023)
-#define MAX_FREQ      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
+#define MAX_AOA_BIT       			    (36000)			// 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
 #define	FREQ_NARR_MHZ			    IFRQMhzCNV( 0, 20 )			// 20 MHz
 #define	FREQ_WIDE_MHZ			    IFRQMhzCNV( 0, 100 )		// 100 MHz
 
@@ -176,7 +185,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
-#define	MAX_PW						(1024*16)
+#define	MAX_PW_BIT						(1024*16)
 
 #elif defined(_701_)
 #define _spRxdfAoa				    (IAOACNV( 2 ))      // 8 도
@@ -190,8 +199,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // DTOA 히스트그램 최대 개수
 #define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
-#define MAX_AOA       			    (3600)			// 최대 방위값 2^10 (360도/1023)
-#define MAX_FREQ      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
+#define MAX_AOA_BIT       			    (3600)			// 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
 #define	FREQ_NARR_MHZ			    IFRQMhzCNV( 0, 20 )			// 20 MHz
 #define	FREQ_WIDE_MHZ			    IFRQMhzCNV( 0, 100 )		// 100 MHz
 
@@ -201,7 +210,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define STABLE_MARGIN				ITOAusCNV( 2 ) // ( 1 * _spOneMicrosec )	// 1 us
 
-#define	MAX_PW						(1024*16)
+#define	MAX_PW_BIT						(1024*16)
 
 #elif defined(_POCKETSONATA_)
 #define KHARM_AOA_MAR               (int) ( (float) 8. / (float) POCKETSONATA::_fDOARes + (float) 0.5 )			// 8도
@@ -218,32 +227,60 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
 #define AOA_SHIFT_360				(3.498250)		// (logf((float)1./POCKETSONATA::_fDOARes)/logf(2) ), 360도 기준으로 SHIFT 값
-#define AOA_SHIFT_COUNT             ((int) AOA_SHIFT_360+1)     // +1 할때마다 2배 씩 증가함. 2도 마진으로 AOA 값을 SHIFT * log2( 1. / POCKETSONATA::_fDOARes )
+#define AOA_SHIFT_COUNT             ((int) AOA_SHIFT_360)     // +1 할때마다 2배 씩 증가함. 2도 마진으로 AOA 값을 SHIFT * log2( 1. / POCKETSONATA::_fDOARes )
 
 #define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
 
-// 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 최대값으로 설정해야 한다.
-#define MAX_FREQ                    (0x200000)
-#define MAX_AOA       			    (0x1000)
-#define	MAX_PW					    (0x1000000)
+// 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 설정해야 한다.
+// 이 값으로 그룹화 최대 BIN 수를 결정합니다.
+#define MAX_FREQ_BIT                    (0x10000000)
+#define MAX_AOA_BIT       			    (0x1000)
+#define	MAX_PW_BIT					    (0x1000000)
 
 
 
 #elif defined(_SONATA_)
-#define _spAOAmax           0x400
-#define _spAmpmax           0xFF
+#define _spAOAmax                   0x400
+#define _spAmpmax                   0xFF
 
 #define   _spRxdfAoa				(UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfFrq				4     // about 5(=4*1.25)MHz,
 
+#define	MAX_FREQ_DEVIATION				(500)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+
 #define TOTAL_FRQAOAPWBIN					(1024)
+
+#define STABLE_MARGIN				(_TOA) ( 1 * _spOneMicrosec )	// 1 us
+#define MAX_AOA_BIT       			    1024    // 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ_BIT      			8192    // 최대 주파수값 2^13 (?/8191)
+
+#define KHARM_AOA_MAR				(14)		// 하모닉 방위 마진 (Band1)
+#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
+
+#define	DTOA_RES					(_TOA) ( (_TOA)10 * (_TOA) _spOneMicrosec )
+
+
+#define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
+#define   _spRxdfAoaMid     (UDIV( 5., _spAOAres ))     // 9 ( 5 deg. )
+#define   _spRxdfAoaHgh     (UDIV( 3.5, _spAOAres ))    // 6 ( 3.5 deg. )
+
+// 주파수 방위 마진
+#define KHARM_AOA_MAR_LOW			(_spRxdfAoaLow)		// 하모닉 방위 마진 (Band1)
+#define KHARM_AOA_MAR_MID			(_spRxdfAoaMid)		// 하모닉 방위 마진 (Band2)
+#define KHARM_AOA_MAR_HGH			(_spRxdfAoaHgh)		// 하모닉 방위 마진 (Band3)
+
+#define	MAX_PW_BIT							(1024*2)
+
+#define	FREQ_WIDE_MHZ				80			// 100 MHz
+#define	FREQ_NARR_MHZ				20			// 20 MHz
+#define AOA_SHIFT_COUNT             (10)     // 5도 것의 log2(500) 으로 계산한 값으로 한다.
 
 #else
 #define KHARM_AOA_MAR							(14)		// 하모닉 방위 마진 (Band1)
 #define KHARM_FRQ_MAR							14			// 하모닉 주파수 마진 (Band1)
 
-#define MAX_AOA       			1024    // 최대 방위값 2^10 (360도/1023)
-#define MAX_FREQ      			8192    // 최대 주파수값 2^13 (?/8191)
+#define MAX_AOA_BIT       			1024    // 최대 방위값 2^10 (360도/1023)
+#define MAX_FREQ_BIT      			8192    // 최대 주파수값 2^13 (?/8191)
 #define	FREQ_NARR_MHZ				20			// 20 MHz
 #define	FREQ_WIDE_MHZ				80			// 100 MHz
 
@@ -284,7 +321,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define STABLE_MARGIN				( 1 * _spOneMicrosec )	// 1 us
 
-#define	MAX_PW							(1024*2)
+#define	MAX_PW_BIT							(1024*2)
 
 #endif
 
@@ -382,7 +419,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
-#define FIXED_TYPE_FREQ_MARGIN			10
+#define FIXED_TYPE_FREQ_MARGIN			        (5)    // [MHz]
 #define FIXED_FREQ_MARGIN				5
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
 

@@ -592,18 +592,20 @@ void CMultiServer::CloseSocket( int idxClientSock )
 {
     STR_CLIENT_SOCKET stClientSocket;
 
-    stClientSocket = m_vClientSock.at( idxClientSock );
-    TRACE( "단락: 소켓 ID(%d), IP 어드레스(%s), 포트 : %5d\n", stClientSocket.iSocket, inet_ntoa( stClientSocket.socketAddress.sin_addr ), ntohs( stClientSocket.socketAddress.sin_port ) );
+    if( m_vClientSock.size() > 0 ) {
+        stClientSocket = m_vClientSock.at( idxClientSock );
+        TRACE( "단락: 소켓 ID(%d), IP 어드레스(%s), 포트 : %5d\n", stClientSocket.iSocket, inet_ntoa( stClientSocket.socketAddress.sin_addr ), ntohs( stClientSocket.socketAddress.sin_port ) );
 
-    shutdown( stClientSocket.iSocket, SD_BOTH );
-    closesocket( stClientSocket.iSocket );
-    //close( stClientSocket.iSocket );
-    m_vClientSock.erase( m_vClientSock.begin() + idxClientSock );
+        shutdown( stClientSocket.iSocket, SD_BOTH );
+        closesocket( stClientSocket.iSocket );
+        //close( stClientSocket.iSocket );
+        m_vClientSock.erase( m_vClientSock.begin() + idxClientSock );
 
 #ifdef _MFC_VER
-    DisConnectMessage( &stClientSocket );
+        DisConnectMessage( &stClientSocket );
 
 #endif
+    }
 
 }
 

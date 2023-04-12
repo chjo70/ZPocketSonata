@@ -72,7 +72,23 @@
 //
 #define MAX_LOB_FOR_INHIBIT_PE			(20)
 
+
+#define DELETE_THRESHOLD_OF_RECORD      (10)        // (2000)
+#define DELETE_MAX_RECORD               (1000)
+
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
+
+/**
+    @enum  ENUM_SCANPROCESS_ERROR
+    @brief 스캔 분석 프로세스 에서 에러 정의
+**/
+enum ENUM_SCANPROCESS_ERROR {
+    ENUM_ERROF_OF_SCANPROCESS=0,
+    ENUM_ERROF_OF_COLLECTBANK,
+
+    ENUM_ERROF_OF_THREATINFO,
+
+};
 
 
 /**
@@ -104,7 +120,7 @@ private:
     bool m_bMerge;
     bool m_bReqDetect;
     bool m_bReqTrack;
-    
+
     static unsigned int m_uiSeqNum;										///< DB 테이블 번호
 
     CInverseMethod m_theInverseMethod;
@@ -182,10 +198,10 @@ private:
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
-    bool m_bScanProcess;
+    //bool m_bScanProcess;
 
     SEnvironVariable *m_pSEnvironVariable;
-    
+
 
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
@@ -209,8 +225,6 @@ protected:
 
 
 private:
-    void LoadCEDLibrary( char *aucTaskID, float fMinFreq, float fMaxFreq );
-
 // 	void UpdateLOBData( bool bIsFilteredLOB );
 // 	void DeleteAETABTRecord( int iLinkNum, SRxLOBDataGroup *pLOBDataGroup );
     void DeleteAllAETABTRecord( SRxLOBData *pLOBData );
@@ -235,9 +249,10 @@ private:
     void AppendLOBs( std::vector<STR_LOBS> *pVecLOBs, bool bNormalMethod=true );
     void RemoveLOBs( std::vector<STR_LOBS> *pVecLOBs );
 //
-// 	// DB 관련 함수
-    void InsertAET( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_uiSeqNum, UINT uiAETID=0, bool bDirectDB=false );
-    void InsertABT( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT nSeqNum=m_uiSeqNum, UINT uiAETID=0, UINT uiABTID=0, SELMERGE_CANDIDATE *pMergeCandidate=NULL );
+    // DB 관련 함수
+    void InsertABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    void InsertAET( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true, UINT uiAETID=0, bool bDirectDB=false );
+    void InsertABT( CELThreat *pTheThreat, bool bUpdateDB=false, bool bEnable=true  );
     void InsertLOB( SELLOBDATA_EXT *pExt, bool i_bIsFilteredLOB=false );
 
     void UpdateCEDEOB(CELThreat *pTheThreat, bool bUpdateDB, bool bEnable, UINT nSeqNum, UINT uiAETID, UINT uiABTID, SELMERGE_CANDIDATE *pMergeCandidate);
@@ -261,6 +276,7 @@ private:
 	int DeleteThreat(CELThreat *pThreatAET, CELThreat *pThreatABT, bool bDeleteAllABT=false );
     int DeleteThreat( CELThreat *pTheThreat, bool bDeleteAllABT=false );
     bool RemoveThreat( CELThreat *pTheThreat );
+    void DeleteAETData( SRxAETData *pAETData, SRxABTData *pABTData, bool bDeleteAllABT=false );
     void LOBPreSetting( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo );
 
     void SetIDLOBData( UINT nAETID, UINT nABTID, UINT nLOBID );
@@ -278,10 +294,6 @@ private:
 //
 
     //inline SRxABTData *GetABTData( int nIndex ) { return & ( (m_pUniThreat + nIndex)->uniABT.stABTData); }
-    inline SRxABTData *GetABTData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniABT.stABTData); }
-    inline SELABTDATA_EXT *GetABTExtData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniABT.stABTExtData); }
-    inline SRxAETData *GetAETData( unsigned int uiIndex) { return & ( m_pUniThreat[uiIndex].uniAET.stAETData); }
-    inline SELAETDATA_EXT *GetAETExtData( unsigned int uiIndex ) { return & ( m_pUniThreat[uiIndex].uniAET.stAETExtData); }
 
 // 	// 빔 병합
     void ManageABTs( bool bMerge );
@@ -295,7 +307,7 @@ private:
 
     void UpdateAETStat( SELAETDATA_EXT *pAETExtData, bool bGenNewEmitter=false );
 
-// 	// 업데이트 처리 관련 함수 (ABT)
+    // 업데이트 처리 관련 함수 (ABT)
     bool UpdateABT( CELThreat *pThreat, SELLOBDATA_EXT *pLOBDataExt, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
     void UpdateDOAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePulseInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -304,19 +316,21 @@ private:
     float CalcJitterRatio( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePWInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    void UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-// 	void UpdateIntraInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    //void UpdateIntraInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePEInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, unsigned int uiIndex, bool bLOBValidityApplied=false, bool bRunCluster=true, bool bRunPE=true );
     void UpdateABT( CELThreat *pTheABTThreat, SELAETDATA *pAETData=NULL );
     void UpdateSeenTime( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateSignalInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
 
+    // 스캔 결과 관련 함수
+    void UpdateScanInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+
     void PushPEInfoOfABTData( SELABTDATA_EXT *pABTExtData, SRxABTData *pABTData );
 
-// 	void UpdateABT();
-//
-// 	// 업데이트 처리 관련 함수 (AET)
+    //void UpdateABT();
+
+    // 업데이트 처리 관련 함수 (AET)
     void UpdateAET( CELThreat *pTheAETThreat, CELThreat *pTheABTThreat, bool bGenNewEmitter=false, bool bMergeABT=false );
     void UpdateDOAInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateFreqInfo( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -329,13 +343,13 @@ private:
     void UpdateSeenTime( SRxAETData *pUpdateAETData, SELAETDATA_EXT *pUpdateAETExtData, SELAETDATA *pDeleteAETData, SELAETDATA_EXT *pDeleteAETExtData );
 // 	void UpdateAETABTInfo( CELThreat *pTheAETThreat, CELThreat *pTheABTThreat, SELEmitterEdited *pSELEmitterEdited, bool bDBUpdate );
 // 	void UpdateAETABTInfo( SELEmitterEdited *pSELEmitterEdited, bool bDBUpdate );
-//
-// 	// 방사체 관련 수정시 관련 함수
+
+ 	// 방사체 관련 수정시 관련 함수
     void ConvertAET2ABT( SRxABTData *pABTData, SELAETDATA *pAETData );
     void UpdateAET( CELThreat *pTheAETThreat );
     //void UpdateAET( CELThreat *pTheAETThreat, SELLOBValidity *pSELLOBValidity );
-//
-// 	// 빔 유효성 업데이트시 관련 함수
+
+ 	// 빔 유효성 업데이트시 관련 함수
     bool UpdateBeamValidity( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, unsigned int uiIndex, bool bCheckBeamValidity=true );
     void UpdateBeamValidity( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, CELThreat *pTheAETThreat );
     bool IsValidity( int nCoBeamValidity, int iEmmgNumOfMinLobToBeam, float fCEP, float fEobIndfRangeKM, float fMajorAxis, float fMinorAxis, float fDist );
@@ -343,25 +357,25 @@ private:
     bool CheckValidityByAllLOB( std::vector<STR_LOBS> *pVecLOBs, SRxABTData /*STR_POSITION_ESTIMATION*/ *pABTData );
     void PrintAllValidityByAllLOB( std::vector<STR_LOBS> *pVecLOBs, SRxABTData *pABTData );
 
-// 	//////////////////////////////////////////////////////////////////////////
-// 	// LOB 병합 비교 관련 함수
+    //////////////////////////////////////////////////////////////////////////
+ 	// LOB 병합 비교 관련 함수
     bool CompMergeLOB( SELMERGE_CANDIDATE *pMergeCandidate, CELThreat *pThreatABT, SELLOBDATA_EXT *pThreatDataExt, bool bLinkComp );
     //bool CompTaskType( SELABTDATA_EXT *pABTExtData, bool bMerge=false );
     bool CompDOAInfo(SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData);
     bool CompIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompSigType( SRxABTData *pABTData );
     bool CompDist( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-// 	bool CompDist( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
+    // 	bool CompDist( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
     bool CompPINNum( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
-// 	bool IsCompareIDInfo( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
+    // 	bool IsCompareIDInfo( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
     bool IsComparePINInfo( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
     bool CompELNOT( SRxABTData *pRefABTData, SELABTDATA_EXT *pRefABTExtData, SRxABTData *pCmpABTData, SELABTDATA_EXT *pCmpABTExtData );
-// 	bool CompIntraType( SRxABTData *pABTData );
+    // 	bool CompIntraType( SRxABTData *pABTData );
     bool CompFreqType( SRxABTData *pABTData );
     int CompFreqRange( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompPRIType( SRxABTData *pABTData );
 
-    
+
     int CompPRIFixed(SRxABTData *pABTData);
     int CompPRIJitter(SRxABTData *pABTData);
     int CompPRIDwell(SRxABTData *pABTData);
@@ -402,7 +416,7 @@ private:
 //
     // 신호 식별
     void IdentifyLOB( SRxLOBData *pLOBData );
-    void IdentifyABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    void IdentifyABT( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bIDExecute=false );
     bool CouldIdentify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void IdentifyAET( SRxAETData *pAETData, SELAETDATA_EXT *pAETExtData, CELThreat *pTheAETThreat );
     void ReIdentifyLOB( CELThreat *pTheABTThreat );
@@ -466,8 +480,19 @@ private:
 	bool UpdateToDB_Stat(SRxABTData *pABTData);
 	bool UpdateToDB_Stat(SRxAETData *pAETData);
 
-    inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
- 
+    //inline void SetScanInfo( bool bScanProcess ) { m_bScanProcess = bScanProcess; }
+
+    void ABTAETPreSetting();
+
+    inline bool IsAliveABT() {
+        unsigned uiAETID=0;
+
+        if( m_pABTData != NULL ) {
+            uiAETID = m_pABTData->uiAETID;
+        }
+        return uiAETID != 0;
+    }
+
 
 public:
 #ifdef _MSSQL_
@@ -482,15 +507,22 @@ public:
     void InitOfThreat();
     void InitDataFromDB();
 
+    void LoadCEDEOBLibrary();
+
     void Start( bool bScanInfo=false );
     void UpdateCEDEOBLibrary();
 
-    void ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo, bool i_bIsFilteredLOB=false, bool i_bCheckLOBMerge=false );
-    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxScanData* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
+    void ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanResult=false, bool bIsFilteredLOB = false, bool bCheckLOB = false );
+    bool ManageThreat( SRxLOBHeader* pLOBHeader, STR_SCANRESULT* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
     SELINDEX DeleteThreat();
     bool CheckDeleteAET( CELThreat *pThreatAET, CELThreat *pDeleteAET );
     void DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelThreatInfo, bool bIsMaster, bool bIsReplay );
     void FetchLOBData( std::vector<SRxLOBHeader> *pVecLOBHeader, std::vector<SRxLOBData> *pVecLOBData, UINT uiABTID=0, SRxLOBDataAndGroupIdArray *pSRxLOBDataAndGroupIdArray=NULL );
+
+    // 데이터베이스 관련 함수
+    bool ManageDatabase();
+    bool GetRecordFromTable( unsigned int *puiCoRecord, const char *pTable );
+    bool DeleteToDB( const char *pTable, unsigned int uiCoRecord );
 
 // 	void FetchLOBData_LINK2( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxLOBDataGroup> *pVecLOBGrp, std::vector<int> *pVecLinkNum );
 // 	//void FetchLOBData_LINK2( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxLOBDataGroup> *pVecLOBGrp );
@@ -503,37 +535,65 @@ public:
     inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
     inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
 
+    inline unsigned int GetABTIndex() { return m_pABTThreat->m_uiIndex; }
+    inline unsigned int GetABTScanStep()
+    {
+        unsigned int uiScanStep= _spZero;
+        if( m_pABTExtData != NULL ) {
+            uiScanStep = m_pABTExtData->uiScanStep;
+        }
+        return uiScanStep;
+    }
+
+    inline SRxABTData *GetABTData( unsigned int uiIndex ) {
+        return &( m_pUniThreat[uiIndex].uniABT.stABTData );
+    }
+    inline SELABTDATA_EXT *GetABTExtData( unsigned int uiIndex ) {
+        return &( m_pUniThreat[uiIndex].uniABT.stABTExtData );
+    }
+    inline SRxAETData *GetAETData( unsigned int uiIndex ) {
+        return &( m_pUniThreat[uiIndex].uniAET.stAETData );
+    }
+    inline SELAETDATA_EXT *GetAETExtData( unsigned int uiIndex ) {
+        return &( m_pUniThreat[uiIndex].uniAET.stAETExtData );
+    }
+
+
 #ifdef _MSSQL_
     // inline unsigned int GetOpInitID() { return m_uiOpInitID; }
 #endif
 
-    char *GetELNOT( int iRadarModeIndex );
-    char *GetRadarModeName( int iRadarModeIndex );
-    char *GetThreatName( int iRadarModeIndex );
+    char *GetELNOT( unsigned int iRadarModeIndex );
+    char *GetRadarModeName( unsigned int uiRadarModeIndex );
+    char *GetThreatName( unsigned int uiRadarModeIndex );
 
     bool IsDeleteAET( unsigned int uiAETID );
 
-// 
+    // 스캔 결과 관련 함수
+    void UpdateABTScanResult();
+
+
+//
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }
 // 	inline char *GetELNOTFromGenNewEmitter() { return m_szELNOTFromGenNewEmitter; }
- 
+
  	inline SRxLOBData *GetLOBData() { return m_pLOBData; }
 // 	inline SRxLOBDataGroup *GetLOBDataGroup() { return m_pLOBDataGrp; }
 // 	inline SELLOBDATA_EXT *GetLOBDataExt() { return & m_LOBDataExt; }
-// 
+//
 // 	// 수동 변경 처리
 // 	void UpdateEmitter( std::vector<SThreatFamilyInfo> *pvecThreatInfo, SELEmitterEdited *pSELEmitterEdited, int nLinkNum );
 // 	void UpdateLOBValidity( std::vector<SThreatFamilyInfo> *pvecThreatInfo, SELLOBValidity *pSELLOBValidity, int nLinkNum );
 // 	void UpdateBeam( std::vector<SThreatFamilyInfo> *pvecThreatInfo, SELEmitterEdited *pSELEmitterEdited, int nLinkNum );
-// 
+//
 // 	void UpdateAlertTime( std::vector<SThreatFamilyInfo> *pvecThreatInfo, SELAlertTime *pSELAlertTime );
 // 	void UpdateReportTime( SELEXTDB *pextDB );
 // 	void UpdateReportTime( std::vector<SThreatFamilyInfo> *pvecThreatInfo, SELReportTime *pSELReportTime );
-// 
+//
 // 	//float CalDistanceNM( SELDBGmiAbt *pAbt );
-// 
+//
 // 	int GetEquipNumber( STR_CEDEOBID_INFO *pCEDEOBInfo );
-// 
+//
 // 	void EnableToLoadCEDEOBLibrary() { ++ m_nLoadCEDEOBLibrary; }
 
     bool DoesAnalScanTry();
@@ -545,12 +605,15 @@ public:
     void PrintAllABTData();
 
 #ifdef _TRACK_ENABLED_
-    void ManageTrack( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+    void ManageTrack( STR_DETANAL_INFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
 #endif
 
+    void ABTPreSetting( unsigned int uiAETID, unsigned int uiABTID );
+
 #ifdef _SCAN_ENABLED_
-    void ManageScan( STR_ANALINFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+    void ManageScan( ENUM_COLLECTBANK enCollectBank, SRxLOBData *pLOBData, SLOBOtherInfo *pLOBOtherInfo );
     void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
+
 #endif
 
 	unsigned int GetOpInitID();
@@ -569,9 +632,9 @@ public:
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_SONATA_)
     // 아래는 멤버 변수들에 대한 접근 관련 함수 입니다.
-	inline bool IsTracking() { 
+	inline bool IsTracking() {
 		bool bRet=false;
 
 		if (m_pABTExtData != NULL) {
@@ -592,16 +655,29 @@ public:
     inline bool Merge() const { return m_bMerge; }
     inline void Merge(bool val) { m_bMerge = val; }
 
-    inline ENUM_SCAN_PROCESS EnScanProcess() const { 
+    inline ENUM_SCAN_PROCESS EnScanProcess() const {
 		ENUM_SCAN_PROCESS enScanProcess=enSCAN_CANTProcessing;
 
-        if (m_pABTExtData != NULL) { enScanProcess=m_pABTExtData->enScanProcess; }
+        if( CO_SCAN_CHANNEL == 0 ) {
+        }
+        else if (m_pABTExtData != NULL) {
+            enScanProcess=m_pABTExtData->enScanProcess;
+        }
+        else { }
 
 		return enScanProcess;
 
 	}
-    inline void EnScanProcess(ENUM_SCAN_PROCESS val) { m_pABTExtData->enScanProcess = val; }
+    inline void EnScanProcess( ENUM_SCAN_PROCESS val )
+    {
+        if( m_pABTExtData != NULL ) {
+            m_pABTExtData->enScanProcess = val;
 
+            if( val == enSCAN_Collecting ) {
+                ++ m_pABTExtData->uiScanTry;
+            }
+        }
+    }
 
     SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
     SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );

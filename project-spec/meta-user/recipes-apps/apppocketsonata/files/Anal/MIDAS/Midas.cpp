@@ -277,7 +277,7 @@ bool CMIDASBlueFileFormat::WriteIQData( int destFileId, unsigned int uiNumberofd
     int iSize;
     long sz_file;
 
-    unsigned int uiWriteByte, uiWrite;
+    unsigned int uiWriteByte, uiWrite=0;
 
     S_UNI_DATA_SET x;
 
@@ -300,7 +300,7 @@ bool CMIDASBlueFileFormat::WriteIQData( int destFileId, unsigned int uiNumberofd
         }
     }
 
-    return bRet;
+    return bRet && ( uiWrite > 0 );
 
 }
 
@@ -324,7 +324,7 @@ bool CMIDASBlueFileFormat::WriteIFData( int destFileId, unsigned int uiNumberofd
     int iSize;
     long sz_file;
 
-    unsigned int uiWriteByte, uiWrite;
+    unsigned int uiWriteByte, uiWrite=0;
 
     S_UNI_DATA_SET x;
 
@@ -359,7 +359,7 @@ bool CMIDASBlueFileFormat::WriteIFData( int destFileId, unsigned int uiNumberofd
         }
     }
 
-    return bRet;
+    return bRet && ( uiWrite > 0 );
 
 }
 
@@ -384,7 +384,7 @@ bool CMIDASBlueFileFormat::WritePDWData( int destFileId, unsigned int uiNumberof
     int iSize, iRecords;
     long sz_file;
 
-    unsigned int uiWriteByte, uiWrite;
+    unsigned int uiWriteByte, uiWrite=0;
 
     S_UNI_DATA_SET x;
 
@@ -456,7 +456,7 @@ bool CMIDASBlueFileFormat::WritePDWData( int destFileId, unsigned int uiNumberof
         }
     }
 
-    return bRet;
+    return bRet && ( uiWrite > 0 );
 
 }
 
@@ -636,7 +636,7 @@ bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMulti
  */
 void CMIDASBlueFileFormat::TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
 {
-    unsigned long long int pre_TOA=0, dtoa=0;
+    //unsigned long long int pre_TOA=0, dtoa=0;
     S_EL_PDW_RECORDS *pPDWRecords;
 
     // 각 항목별 최소/최대값 초기화
@@ -672,7 +672,7 @@ void CMIDASBlueFileFormat::TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA,
 // 		MakeMinMaxValue( & m_MinMaxOfSubrecords[enDTOAOfSub], pPDWRecords->ldtoa );
 #endif
 
-        pre_TOA = pS_EL_PDW_DATA->ullTOA;
+        //pre_TOA = pS_EL_PDW_DATA->ullTOA;
 
         ++ pPDWRecords;
         ++ pS_EL_PDW_DATA;
@@ -686,14 +686,14 @@ void CMIDASBlueFileFormat::TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA,
  */
 void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords )
 {
-    _TOA pre_TOA=0, dtoa=0;
+    _TOA pre_TOA=0; //, dtoa=0;
 
     S_EL_PDW_RECORDS *pPDWRecords;
 
     pPDWRecords = m_pPDWRecords;
     for( int i=0 ; i < iRecords ; ++i ) {
         if( i != 0 ) {
-            dtoa = pS_EL_PDW_DATA->ullTOA - pre_TOA;
+            // dtoa = pS_EL_PDW_DATA->ullTOA - pre_TOA;
         }
 
 #ifdef _DECODE_
@@ -988,45 +988,40 @@ void CMIDASBlueFileFormat::MakeHeader()
         // 버젼, IO 등 기록하기
         memset( pHCB->keywords, 0, sizeof( pHCB->keywords ) );
 
-        int c = 0;
+        unsigned int uc = 0;
         if( m_strKeywordValue.writer_version[0] == 0 ) {
-            c += sprintf( & pHCB->keywords[c], "VER=%s" , DEFAULT_HEADER_VER );
+            uc += (unsigned int) sprintf( & pHCB->keywords[uc], "VER=%s" , DEFAULT_HEADER_VER );
         }
         else {
-            c += sprintf( & pHCB->keywords[c], "VER=%s" , m_strKeywordValue.writer_version );
+            uc += ( unsigned int ) sprintf( & pHCB->keywords[uc], "VER=%s" , m_strKeywordValue.writer_version );
         }
-        c += 1;
+        uc += (unsigned int) 1;
 
         if( m_strKeywordValue.writer[0] == 0 ) {
-            c += sprintf( & pHCB->keywords[c], "IO=%s" , DEFAULT_WRITER_VALUE );
+            uc += ( unsigned int ) sprintf( & pHCB->keywords[uc], "IO=%s" , DEFAULT_WRITER_VALUE );
         }
         else {
-            c += sprintf( & pHCB->keywords[c], "IO=%s" , m_strKeywordValue.writer );
+            uc += ( unsigned int ) sprintf( & pHCB->keywords[uc], "IO=%s" , m_strKeywordValue.writer );
         }
-        c += 1;
+        uc += ( unsigned int ) 1;
 
         // IQ 데이터에 대해서만 최소, 최대 값을 적어 넣음
         // IQ 키워드
         if( m_enFileType == E_EL_SCDT_IQ || m_enFileType == E_EL_SCDT_IF ) {
             short minval=-32767, maxval=0x7FFF;
-            c += sprintf( & pHCB->keywords[c], "MINVAL=%+d" , minval );
-            c += 1;
-            c += sprintf( & pHCB->keywords[c], "MAXVAL=%+d" , maxval );
-            c += 1;
+            uc += ( unsigned int ) sprintf( & pHCB->keywords[uc], "MINVAL=%+d" , minval );
+            uc += ( unsigned int ) 1;
+            uc += ( unsigned int ) sprintf( & pHCB->keywords[uc], "MAXVAL=%+d" , maxval );
+            uc += ( unsigned int ) 1;
         }
 
-        unsigned int uiSize= (UINT) ( sizeof( pHCB->keywords ) - (size_t) c );
+        unsigned int uiSize= (UINT) ( sizeof( pHCB->keywords ) - (size_t) uc );
         if( uiSize <= sizeof(pHCB->keywords) ) {
-            memset( & pHCB->keywords[c], 0, uiSize );
-        }
-
-        if (c < 0) {
-            //Log(enError, "키 길이[%d]가 잘못 계산됐습니다. !!", c );
-
+            memset( & pHCB->keywords[uc], 0, uiSize );
         }
 
         // 키워드 길이; keylength
-        pHCB->uiKeylength = (unsigned int) c;
+        pHCB->uiKeylength = uc;
     }
 
 }
@@ -1825,10 +1820,12 @@ unsigned int CMIDASBlueFileFormat::MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *p
         memcpy( (char *) & pBinKeyword[1], value_keyword, (unsigned int) c );
 
         if( lkey == 0 ) {
-            if( c % 8 == 0 )
+            if( c % 8 == 0 ) {
                 pBinKeyword->lkey = sizeof(SELMIDAS_BINARY_KEYWORD) + (unsigned int) ( ( c / 8 ) * 8 );
-            else
+            }
+            else {
                 pBinKeyword->lkey = sizeof(SELMIDAS_BINARY_KEYWORD) + (unsigned int) ( ( c / 8 + 1 ) * 8 );
+            }
         }
         else {
             pBinKeyword->lkey = (unsigned int) lkey;
@@ -2197,7 +2194,8 @@ void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSC
 
         case en_ZPOCKETSONATA:
             if( true == RawOpenFile( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
-                Write( pUNIHeader, sizeof( UNION_HEADER ) );
+
+                Write( pUNIHeader, sizeof( STR_POCKETSONATA_HEADER ) );
 
                 Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
 

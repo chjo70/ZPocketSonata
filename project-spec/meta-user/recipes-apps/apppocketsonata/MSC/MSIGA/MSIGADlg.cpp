@@ -115,7 +115,7 @@ BOOL CMSIGADlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	ShowWindow(SW_MINIMIZE);
+	//ShowWindow(SW_MINIMIZE);
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -131,8 +131,8 @@ BOOL CMSIGADlg::OnInitDialog()
 
 	std::string strBuffer;
 
-	strBuffer = string_format( "EW신호처리판#%d", g_enBoardId );
-	SetWindowText( strBuffer.c_str() );    
+    strBuffer = string_format( (const char *) "EW신호처리판#%d", g_enBoardId );
+	SetWindowText( strBuffer.c_str() );
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -209,6 +209,8 @@ void CMSIGADlg::OnNcDestroy()
 void CMSIGADlg::OnBnClickedSimStart()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	GetDlgItem( ID_SIM_START )->EnableWindow( FALSE );
+
     SIM_Start( m_bReqStart );
 
     if( m_bReqStart ) {
@@ -219,6 +221,8 @@ void CMSIGADlg::OnBnClickedSimStart()
     }
 
 	m_bReqStart = !m_bReqStart;
+
+    GetDlgItem( ID_SIM_START )->EnableWindow( TRUE );
 }
 
 /**

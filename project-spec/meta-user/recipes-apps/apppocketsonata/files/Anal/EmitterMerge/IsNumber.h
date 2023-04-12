@@ -1,16 +1,16 @@
 ﻿//////////////////////////////////////////////////////////////////////////
 /*!
  * @file      ISNUMBER.h
- * @brief     
+ * @brief
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2015-06-17 오전 10:01 
- * @warning   
+ * @date      2015-06-17 오전 10:01
+ * @warning
  */
 
 #pragma once
 
 #include <iostream>
-#include <math.h>				
+#include <math.h>
 #include <float.h>
 #include <limits>
 
@@ -20,7 +20,7 @@ using namespace std;
 template <typename T>
 bool is_not_zero(T value)
 {
-    return ( (value > (T) 0.0) || (value < (T) 0.0) );
+    return ( (value > 0.0) || (value < 0.0) );
 
 }
 

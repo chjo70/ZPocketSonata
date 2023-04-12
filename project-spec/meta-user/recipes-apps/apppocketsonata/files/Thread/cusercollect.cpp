@@ -195,7 +195,7 @@ void CUserCollect::_routine()
     //bool bWhile=true;
     UNI_LAN_DATA *pLanData;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 

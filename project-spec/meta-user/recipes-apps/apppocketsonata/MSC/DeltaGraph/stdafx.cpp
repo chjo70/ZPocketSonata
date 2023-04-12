@@ -258,4 +258,19 @@ bool _TRACE(CString strFormat, ...)
 
 }
 
+#else
+
+bool _TRACE( char *format, ... )
+{
+    return true;
+
+}
+
+bool _TRACE( CString strFormat, ... )
+{
+
+    return true;
+
+}
+
 #endif

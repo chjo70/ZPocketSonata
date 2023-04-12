@@ -19,7 +19,7 @@
 
 /**
  * @brief     객체를 생성합니다.
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -36,7 +36,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
 
     m_iCoMergedPDW = iCoMergedPDW;
 
-    memset( &m_stMergedPDWData.x, 0, sizeof( UNION_HEADER ) );
+    memset( &m_stMergedPDWData.x, 0, sizeof( m_stMergedPDWData.x ) );
     szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), iCoMergedPDW );
     m_stMergedPDWData.pstPDW = ( _PDW* ) malloc( szSize );
     m_stMergedPDWData.SetTotalPDW( 0 );
@@ -46,7 +46,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
 /**
  * @brief     CGenPDW
  * @param     char * pszFileName
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -55,16 +55,16 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
  */
 // CGenPDW::CGenPDW( char *pszFileName )
 // {
-//     
-// 
-//     //  mak_file을 read mode로 open 한 후 에러인 경우 에러 처리 
+//
+//
+//     //  mak_file을 read mode로 open 한 후 에러인 경우 에러 처리
 //     strcpy( m_szMakfilename, pszFileName );
-// 
+//
 //     if( (m_File = fopen( m_szMakfilename, "rt" )) == NULL ) {
 //         printf( "\n %s File Open ERROR : %s", m_szMakfilename, strerror( errno ) );
 //     }
-// 
-// 
+//
+//
 // }
 
 /**
@@ -83,7 +83,7 @@ void CGenPDW::OpenMakefile( char *pszFileName )
         fclose( m_File );
     }
 
-    //  mak_file을 read mode로 open 한 후 에러인 경우 에러 처리 
+    //  mak_file을 read mode로 open 한 후 에러인 경우 에러 처리
     strcpy( m_szMakfilename, pszFileName );
 
     //m_File = fopen( m_szMakfilename, "rt,ccs=UTF-8" );
@@ -96,7 +96,7 @@ void CGenPDW::OpenMakefile( char *pszFileName )
 /**
  * @brief     객체를 소멸합니다.
  * @param     void
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -144,7 +144,7 @@ void CGenPDW::ParseAndMakefile()
         CRawFile::RawOpenFile( m_stGenPDWInfo.szFileName, O_CREAT | O_BINARY | O_WRONLY ); //  | O_TRUNC );
 
         MakeFileHeader();
-        Write( &m_stSavePDWData.x, sizeof( UNION_HEADER ) );
+        Write( &m_stSavePDWData.x, sizeof( m_stSavePDWData.x ) );
 
         SetGenerateInfo();
 
@@ -153,7 +153,7 @@ void CGenPDW::ParseAndMakefile()
 		unsigned int uiTotalPDW = m_stSavePDWData.GetTotalPDW();
         Write( m_stSavePDWData.pstPDW, sizeof( _PDW ) * uiTotalPDW );
 
-        CloseFile();       
+        CloseFile();
 
         delete( m_stSavePDWData.pstPDW );
         m_stSavePDWData.pstPDW = NULL;
@@ -224,11 +224,11 @@ void CGenPDW::SetGenerateInfo()
 {
     int iBandWidth = m_stSavePDWData.GetBandWidth();
 
-    // 
+    //
     m_tTOA = CEncode::EncodeTOAus( (float) m_stGenPDWInfo.uiFirstTOA, iBandWidth );
 
 
-    m_fPRICountPerPeriod = ( float ) (( float ) m_stGenPDWInfo.uiPRIPatPrd / ( float ) m_stGenPDWInfo.iPRIMean);    
+    m_fPRICountPerPeriod = ( float ) (( float ) m_stGenPDWInfo.uiPRIPatPrd / ( float ) m_stGenPDWInfo.iPRIMean);
     m_uiPRILvl = 0;
     m_fPriWidth = (float) ( ( (float ) m_stGenPDWInfo.iPRIMean * m_stGenPDWInfo.fJitterp ) / 100. / 2.0 );
 
@@ -269,7 +269,7 @@ void CGenPDW::MakeFileHeader()
     switch( g_enUnitType ) {
     case en_ZPOCKETSONATA:
         m_stSavePDWData.x.ps.uiBoardID = 0;
-        m_stSavePDWData.x.ps.enBank = enUnknownCollectBank;
+        m_stSavePDWData.x.ps.enCollectBank = enUnknownCollectBank;
         m_stSavePDWData.x.ps.uiBand = 0;
         m_stSavePDWData.x.ps.uiIsStorePDW = 1;
         break;
@@ -280,14 +280,14 @@ void CGenPDW::MakeFileHeader()
         m_stSavePDWData.x.el.uiIsStorePDW = 1;
         m_stSavePDWData.x.el.enCollectorID = RADARCOL_Unknown;
         m_stSavePDWData.x.el.enBandWidth = ELINT::enUnknown_BW;
-       
+
         break;
 #endif
 
 #if defined(_GRAPH_) || defined(_XBAND_)
     case en_XBAND:
         strcpy( m_stSavePDWData.x.xb.aucTaskID, "SIMPDW" );
-        
+
         m_stSavePDWData.x.xb.uiIsStorePDW = 1;
         m_stSavePDWData.x.xb.enCollectorID = RADARCOL_Unknown;
         m_stSavePDWData.x.xb.enBandWidth = XBAND::en120MHZ_BW;
@@ -298,7 +298,7 @@ void CGenPDW::MakeFileHeader()
         break;
 
     default:
-        memset( & m_stSavePDWData.x, 0, sizeof( UNION_HEADER ) );
+        memset( & m_stSavePDWData.x, 0, sizeof( m_stSavePDWData.x ) );
         break;
 
     }
@@ -343,11 +343,11 @@ void CGenPDW::GeneratePDW( SIGAPDW *pSigPDW )
 
             ++m_pstPDW;
         }
-        
+
     }
 
     MergePDW( pSigPDW );
-    
+
 }
 
 /**
@@ -425,7 +425,7 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
 void CGenPDW::MakeSignalType( SIGAPDW *pSigPDW )
 {
 	if(m_pstPDW != NULL ) {
-		m_pstPDW->iPulseType = (int) CEncode::EncodePulseType ( (int) m_stGenPDWInfo.uiSignalType );
+		m_pstPDW->iStat = (int) CEncode::EncodePulseType ( (int) m_stGenPDWInfo.uiSignalType );
     }
 	else {
 		TRACE( "잘못된 데이터 저장소 입니다.");
@@ -481,7 +481,7 @@ void CGenPDW::MakePWOfPDW( SIGAPDW *pSigPDW )
     if( fPW < 0 ) {
         fPW = (float) m_stGenPDWInfo.uiPW;
     }
-    
+
     int iBandWidth = m_stSavePDWData.GetBandWidth();
     m_pstPDW->uiPW = CEncode::EncodePWns( fPW, iBandWidth );
 
@@ -605,7 +605,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
     m_pstPDW->ullTOA = tDTOA + m_tTOA;
     m_tTOA = m_pstPDW->ullTOA;
 
-    // 	if( strcmp( PType, "PAT" ) == 0 )	// PRI Pattern 
+    // 	if( strcmp( PType, "PAT" ) == 0 )	// PRI Pattern
     // 	{
     // 		else if( strcmp( PPatType, "SIN" ) == 0 )	// PRI Pattern sinusoidal ( PRI 패턴 사인파)
     // 		{
@@ -645,7 +645,7 @@ void CGenPDW::MakePRIOfPDW( bool bSkippedPDW, SIGAPDW *pSigPDW )
     // 				}
     // 			}
     // 			pPRI = (UINT)(fPRI + 0.5);
-    // 
+    //
     // 		}
     // 	}
 
@@ -669,11 +669,11 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
 
     if( strcmp( m_stGenPDWInfo.szFreqType, "FIX" ) == 0 ) {
         fFrequency = ( float ) m_stGenPDWInfo.iFreqMean;
-        
+
     }
     else if( strcmp( m_stGenPDWInfo.szFreqType, "AGI" ) == 0 ) {
         fFrequency = ( float ) m_stGenPDWInfo.iFreqMean + (float) CCommonUtils::Rand( (int) m_stGenPDWInfo.uiBW );
-		
+
 	}
     else {
         fFrequency = 0.;
@@ -689,8 +689,8 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
 
     // 	//float fRatio;
     // 	UINT	temp, uiTOA1, uiTOA2, uiTOA;
-    // 
-    // 	if( strcmp( FType, "PAT" ) == 0 )	// FREQ Pattern 
+    //
+    // 	if( strcmp( FType, "PAT" ) == 0 )	// FREQ Pattern
     // 	{
     // 		if( strcmp( FPatType, "SIN" ) == 0 )	// Freq Pattern sinusoidal (주파수 패턴 사인파)
     // 		{
@@ -704,7 +704,7 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
     // 			//uiTOA2 = uiTOA1 % FPatPrd;
     // 			//Freq = Freq + ( Fslop * uiTOA2 );
     // 			//fRatio = (float) uiTOA2 / (float) FPatPrd;
-    // 
+    //
     // 			//Freq = Freq + (UINT) ( BW * fRatio + 0.5 );
     // 			uiTOA = toa % FPatPrd;
     // 			Freq = uiPatternFreq + ( Fslop * uiTOA );
@@ -735,37 +735,37 @@ void CGenPDW::MakeFreqOfPDW( SIGAPDW *pSigPDW )
     // 					Freq = Freq + BW;
     // 			}
     // 			pFreq = (UINT)(Freq + 0.5);
-    // 
-    // 			
+    //
+    //
     // 		}
     // 		pFreq = (UINT) ( pFreq + Rand( Freq_Error ) );
     // 	}
 
     // 	else if( strcmp( FType, "HOP" ) == 0 )	// Hopping
     // 	{
-    // 		Hop_prd = ( FPatPrd *1000. ) / FHopLvl / PRI;	// Hopping level당 펄스수의 계산 
-    // 
+    // 		Hop_prd = ( FPatPrd *1000. ) / FHopLvl / PRI;	// Hopping level당 펄스수의 계산
+    //
     // 		if( Hop_cnt % Hop_prd == 0 )
     // 			++ Hop_idx;
-    // 
+    //
     // 		pFreq  = (UINT)HL[ Hop_idx % FHopLvl ];
-    // 
+    //
     // 		++ Hop_cnt;
-    // 
+    //
     // 		pFreq = (UINT) ( pFreq + Rand( Freq_Error ) );
-    // 
+    //
     // 	}
     // 	else if( strcmp( FType, "FIX" ) == 0 )	// Fixed
     // 	{
     // 		int iFreq;
-    // 
+    //
     // 		iFreq = (int) ( (Freq + 0.5) );
     // 		pFreq = (UINT) ( iFreq + Rand( Freq_Error ) );
-    // 
+    //
     // 	}
-    // 
+    //
     // 	pFreq = (UINT) ConvertFreq( pFreq, Bc );
-    // 	
+    //
     // 	new_pdw.item.frequency_l  = pFreq & 0xFF;
     // 	new_pdw.item.frequency_h  = ( pFreq >> 8 ) & 0x1F;
 }
@@ -784,12 +784,12 @@ void CGenPDW::GetLineCommand( void )
 {
     int i;
 
-    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiIdex ); 	// Read Index 
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiIdex ); 	// Read Index
 
-    fscanf( m_File, "%s", m_stGenPDWInfo.szFileName ); 	// Read NPW Filename 
-    
+    fscanf( m_File, "%s", m_stGenPDWInfo.szFileName ); 	// Read NPW Filename
+
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiCoAllPDW );		// 펄스 개수
-    fscanf_s( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// 초기 TOA값 
+    fscanf_s( m_File, "%d", &m_stGenPDWInfo.uiFirstTOA );		// 초기 TOA값
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiSignalType );			// normal =0, Pmop =1, chirp+ =2 chirp- =3, cw =4, bit =15
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiDV );			// Direction Valid
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiAOA );			// 방위 [deg]
@@ -801,15 +801,15 @@ void CGenPDW::GetLineCommand( void )
     fscanf_s( m_File, "%d", &m_stGenPDWInfo.uiBW );			// 주파수 폭 [MHz]
     fscanf( m_File, "%s", m_stGenPDWInfo.szFreqPatType );		// 주파수 패턴 형태 : SIN(sine)    SW+(saw+)     SW-(saw-)
     fscanf_s( m_File, "%d", &m_stGenPDWInfo.uiFreqPatPrd );		// 주파수 패턴 주기[msec]
-    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiFreqHopLvl );		// 주파수 Hopping level 수 
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiFreqHopLvl );		// 주파수 Hopping level 수
     for( i = 0; i < MAX_FREQ_PRI_STEP ; i++ ) {
         fscanf_s( m_File, "%f", &m_stGenPDWInfo.fFreqSwtVal[i] );	// 주파수 Hopping level 값[MHz]
     }
- 
-    fscanf( m_File, "%s", m_stGenPDWInfo.szPRIType );			// PRI 형태  : STB(stable)  STG(stagger)  JIT(jitter)   DNS(dwell & switch) 
+
+    fscanf( m_File, "%s", m_stGenPDWInfo.szPRIType );			// PRI 형태  : STB(stable)  STG(stagger)  JIT(jitter)   DNS(dwell & switch)
     fscanf_s( m_File, "%d", &m_stGenPDWInfo.iPRIMean );			// PRI [us]
     fscanf_s( m_File, "%f", &m_stGenPDWInfo.fJitterp );			// Jitter %
-    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiPRIHopLvl );		// PRI switch Level 수 
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiPRIHopLvl );		// PRI switch Level 수
     for( i = 0; i < MAX_FREQ_PRI_STEP ; i++ ) {
         fscanf_s( m_File, "%f", &m_stGenPDWInfo.fPRISwtVal[i] );	// PRI switch level 값 [usec]
     }
@@ -824,7 +824,7 @@ void CGenPDW::GetLineCommand( void )
 
     fscanf( m_File, "%s", m_stGenPDWInfo.szScanType );		// 스캔 Type : STD(steady)  CON(conical)  CIR(circular) BID(bi-directional)  UNI(uni-directional)
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiScanPrd );		// 스캔 주기 [ms]
-    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiCoScanPrd );		// 스캔 lobe 당 펄스수  
+    fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiCoScanPrd );		// 스캔 lobe 당 펄스수
 
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiDOAError );
     fscanf_s( m_File, "%u", &m_stGenPDWInfo.uiFreqError );	// 주파수 오차
@@ -885,7 +885,7 @@ void CGenPDW::SkipTheHeader()
     char  buf[1024];
 
     if( m_File != NULL ) {
-        for( i = 0; i < 10; i++ ) {	// 10 줄 
+        for( i = 0; i < 10; i++ ) {	// 10 줄
             fgets( buf, 1024, m_File );
         }
 

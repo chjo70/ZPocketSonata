@@ -102,7 +102,6 @@ public:
     //##ModelId=452B0C5303B6
     virtual void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange )=0;
     //! DTOA 히스트그램 상에서 추출할 PRI 밴드를 구한다.
-    
     virtual void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count )=0;
 
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex()=0;
@@ -114,6 +113,7 @@ public:
     BOOL MustDo2ndPulseExtract();
     void MarkStablePulseTrain();
     void CalcEmitterPW( STR_PULSE_TRAIN_SEG *pSeg );
+    void CalcEmitterPA( STR_PULSE_TRAIN_SEG *pSeg );
     //int CnvPW( int val );
     void SavePdwParamIndex();
     void ExtractTrackPT( _TOA refPriMean, float refJitRat );
@@ -125,10 +125,10 @@ public:
     void MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
     STR_PULSE_TRAIN_SEG *GetMainSeg( unsigned int uiStartSeg, unsigned int uiEndSeg );
     //! 추출하고자할 펄스열의 주파수 범위에 맞는 PDW 인가를 체크한다.
-    
+
     BOOL IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg );
     //! 펄스열을 근거로 주파수 형태 및 주파수 범위를 계산한다.
-    
+
     void CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg );
     void GetStartEndPriLevel( unsigned int *pStart_pri_level, unsigned int *pEnd_pri_level );
     void MergeJitterPulseTrain(unsigned int uiStartSeg, unsigned int uiEndSeg, BOOL bIgnoreJitterP=FALSE );
@@ -138,16 +138,16 @@ public:
     void MemcpySeg( STR_PULSE_TRAIN_SEG *pDestSeg, STR_PULSE_TRAIN_SEG *pSrcDeg );
     void CleanPulseTrains(unsigned int uiStartSeg, unsigned int uiEndSeg );
     void MarkSegForExt( int nStartSeg, int nEndSeg );
-    
+
     void CompStablesJitters( unsigned int nStartStableSeg, unsigned int nStartJitterSeg );
     bool IsSamePulseTrain( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    
+
     //unsigned int GetCoExtPulse();
-    
+
     BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
     bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    
+    bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, unsigned int i_uiMaxMiss=0 );
+
     void DeleteAllSeg( STR_EMITTER *pEmitter );
     BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange );
     void CopyOnePulseTrain( STR_PULSE_TRAIN_SEG *pDstSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
@@ -157,41 +157,41 @@ public:
     void FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
 
     _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
-    
+
     void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, BOOL flagMargin=FALSE, PULSE_MARK enMark=enSTABLE_MARK, SEG_MARK enSegMark=NORMAL_SEG );
     void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, BOOL bFlagMargin=FALSE , PULSE_MARK enMark =enJITTER_MARK, BOOL bIgnoreJitterP=FALSE, SEG_MARK enSegMark = NORMAL_SEG);
     void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiCoRef=_sp.cm.Rpc, BOOL flagMargin=FALSE );
-    
+
     inline void MarkToPDWIndex( STR_PULSE_TRAIN_SEG *pSeg, PULSE_MARK enPULSE_MARK, SEG_MARK enSEG_MARK=NORMAL_SEG) {
         pSeg->enSegMark = enSEG_MARK;
         MarkToPDWIndex( pSeg->stPDW.pIndex, pSeg->stPDW.uiCount, (USHORT)enPULSE_MARK );
     }
 
     void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, USHORT usMarkType );
-    
+
     UINT AnalFreqType(STR_PULSE_TRAIN_SEG *pSeg);
     UINT CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter );
     _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
-    
+
     unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
-    
+
     UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
     UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
     void AllExtSegMark();
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
-    
+
     unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount);
-    
+
     void CleanRefSeg();
-    
+
     enPRI_TYPE AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, enPRI_TYPE ext_type=_UNKNOWN_PRI );
-    
+
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
-    
+
     bool FindStableSeg(STR_PULSE_TRAIN_SEG *pRefSeg, UINT uiStart, UINT uiEnd);
     void ExtractRefStable();
     void FindRefStable();
-    
+
     //_TOA RecalcDtoaMargin( int ext_type, STR_PULSE_TRAIN_SEG *pSeg, UINT dtoa );
     bool OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
     void DiscardStablePulseTrain();
@@ -202,15 +202,15 @@ public:
     void UnknownExtract();
     void ExtractJitterPT();
     BOOL CalcSegParam( STR_PULSE_TRAIN_SEG *pSeg, BOOL bIgnoreJitterP=FALSE );
-    void ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, _TOA margin=0 );
-    
+    void ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, BOOL bMargin=FALSE );
+
     float CalcRefPRI( PDWINDEX *pPdwIndex, UINT uiCount, STR_MINMAX_TOA *pPRI );
-    
+
     void ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *pPriRange, _TOA tDtoa, int ext_type, BOOL bFlagMargin);
     void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, BOOL bFlagMargin=FALSE );
     bool ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, BOOL flagMargin=FALSE, BOOL bIgnoreJitterP=FALSE );
     void ExtractStablePT();
-    
+
     void Init();
 
     CPulExt( unsigned int uiCoMaxPdw );

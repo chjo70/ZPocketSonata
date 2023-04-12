@@ -26,10 +26,10 @@
 //
 // 함 수 이 름  : CSAnalScan::CSAnalScan
 // 함 수 인 자  : void *pParent
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 16:09:34
 //
-CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw), CMakeAET(uiCoMaxPdw)
+CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw), CMakeAET(1)
 {
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
@@ -42,7 +42,7 @@ CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw),
 
 /**
  * @brief     스캔 객체를 해지한다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -132,9 +132,9 @@ BOOL CSAnalScan::KnownAnalysis()
 
     // 타입에 따라서 펄스열 분석을 달리한다.
 #ifdef _POCKETSONATA_
-    switch( m_pScnAet->ucPRIType ) {
+    switch( m_pScnAet->vPRIType ) {
 #else
-	switch( m_pScnAet->iPRIType ) {
+	switch( m_pScnAet->vPRIType ) {
 #endif
         case _STABLE :
             // 추적에서는 로브 조건을 무시하도록 한다.
@@ -190,7 +190,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
 	UINT uiThreat;
     UINT paMean;
 
-    m_pEmitter = TakeTheScanMainEmitter();
+    m_pEmitter = WhichTheMainEmitter();
 
     /*! \bug  샘플링 개수가 10개 이하이면 스캔 분석 실패로 한다.
         \date 2006-05-12 14:08:48, 조철희
@@ -247,7 +247,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( int preAnalStat )
                 enScanResult = _spAnalSuc;
             }
 
-            if(uiThreat == (unsigned int) _spAnalFail && CheckControlWc(m_uinoEMT) == true ) {
+            if(uiThreat == (unsigned int) _spAnalFail /* && CheckControlWc(m_uinoEMT) == true */ ) {
                 // WhereIs;
 
                 ++ m_nCoModWc[m_uinoEMT];
@@ -303,7 +303,7 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
     }
 
     m_pScanPt->uiCount = uiCount;
-    
+
 }
 
 /**
@@ -315,19 +315,29 @@ void CSAnalScan::SaveScanPulse( STR_PDWINDEX *pPdwIndex )
  * @date      2022-06-15, 11:32
  * @warning
  */
-STR_EMITTER *CSAnalScan::TakeTheScanMainEmitter()
+STR_EMITTER *CSAnalScan::WhichTheMainEmitter()
 {
-    STR_EMITTER *pEmitter;
+	unsigned int ui;
+    STR_EMITTER *pTheEmitter;
+	STR_EMITTER *pMainTheEmitter=NULL;
 
-    pEmitter = CAnalPRI::GetEmitter();
-    if( CAnalPRI::m_uiCoEmitter == _spOne && pEmitter[0].stPDW.uiCount > 10 ) {
+	// 1개 이상일 떄는 펄스 개수로 정한다.
+    if( CAnalPRI::m_uiCoEmitter >= _spOne ) {
+		pTheEmitter = CAnalPRI::GetEmitter();
+		pMainTheEmitter = pTheEmitter;
+		for( ui = 0; ui < m_uiCoEmitter; ++ui ) {
+			if( pTheEmitter->stPDW.uiCount > pMainTheEmitter->stPDW.uiCount ) {
+				pMainTheEmitter = pTheEmitter;
 
+			}
+			++pTheEmitter;
+		}
     }
     else {
-        pEmitter = NULL;
+
     }
 
-    return pEmitter;
+    return pMainTheEmitter;
 }
 
 /**
@@ -366,7 +376,7 @@ void CSAnalScan::CalcSamplingTime()
  * @date      2006-02-15 16:21:42
  * @warning
  */
-UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean ) 
+UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean )
 {
 	UINT samplingTime;
 
@@ -376,11 +386,11 @@ UINT CSAnalScan::CalcSamplingTime( UINT noEMT, UINT priMean )
 
 
 #else
-	UINT step;
-
-    step = 0; // stScnAet.sap.fScStep;
-
-    //stOffPdw = _sp.sc.offst[step];           // debug, 00-08-29 20:37:35
+// 	UINT step;
+//
+//     step = 0; // stScnAet.sap.fScStep;
+//
+//     //stOffPdw = _sp.sc.offst[step];           // debug, 00-08-29 20:37:35
 
 #endif
 
@@ -455,7 +465,7 @@ void CSAnalScan::SamplingProcess()
 	int *py, *psy;
 
 	_TOA dShgh;
- 
+
 	// Search maximum and minimum X of pulse train
     SearchLowHghInArray( m_pScanPt->iPA, m_pScanPt->uiCount, & m_pScanPt->_pa );
 
@@ -475,8 +485,9 @@ void CSAnalScan::SamplingProcess()
 	for( i=0 ; i < m_pScanPt->uiCount ; ) {
 		if( *px < dShgh ) {
 			sumY += *py;                    // Sampling 구간내의 PA의 전체 합
-			if( maxY < *py )                // Sampling 구간내의 PA의 최대 합
+			if( maxY < *py ) {              // Sampling 구간내의 PA의 최대 합
 				maxY = *py;
+			}
 
 			++inpulse;
 			++px;
@@ -519,21 +530,23 @@ void CSAnalScan::SamplingProcess()
 // 함 수 인 자  : UINT *series
 // 함 수 인 자  : UINT co
 // 함 수 인 자  : STR_LOWHIGH *lh
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 18:52:57
 //
 void CSAnalScan::SearchLowHghInArray(int *series, UINT co, STR_LOWHIGH *lh)
 {
     UINT i;
 
-    lh->iHgh = *series;
+    lh->iHigh = *series;
     lh->iLow = *series;
     for (i = 0; i < co; ++i) {
-        if ((int)*series > lh->iHgh)
-            lh->iHgh = *series;
+        if ((int)*series > lh->iHigh) {
+            lh->iHigh = *series;
+		}
 
-        if ((int)*series < lh->iLow)
+        if ((int)*series < lh->iLow) {
             lh->iLow = *series;
+		}
 
         ++series;
     }
@@ -546,7 +559,7 @@ void CSAnalScan::SearchLowHghInArray(int *series, UINT co, STR_LOWHIGH *lh)
 // 반환되는 형  : void
 // 함 수 인 자  : STR_SAMPLE *pSample
 // 함 수 인 자  : STR_SCANPT *pScanPt
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 18:58:23
 //
 void CSAnalScan::ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
@@ -584,11 +597,11 @@ void CSAnalScan::ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 
 				missing = _spZero;
 			}
-			
+
 		}
-		
+
 	}
-			
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -597,7 +610,7 @@ void CSAnalScan::ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 // 반환되는 형  : void
 // 함 수 인 자  : STR_SAMPLE *pSample
 // 함 수 인 자  : STR_SCANPT *pScanPt
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:00:08
 //
 void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
@@ -648,28 +661,29 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 // 함 수 인 자  : UINT *series
 // 함 수 인 자  : UINT co
 // 함 수 인 자  : float *norm
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:11:52
 //
 float CSAnalScan::Normalize( int *series, UINT co, float *norm )
 {
     UINT i;
 	float	mean;
- 
+
     mean = MeanInArray<int>( series, co );
 
   for( i=0 ; i < co ; ++i ) {
 		*norm = (float) *series++ - mean;
 
 		//-- 조철희 2006-04-26 12:16:38 --//
-		if( *norm < 0 )
+		if( *norm < 0 ) {
 			*norm = 0;
+		}
 
 		++ norm;
 	}
 
 	return mean;
- 
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -678,7 +692,7 @@ float CSAnalScan::Normalize( int *series, UINT co, float *norm )
 // 반환되는 형  : UINT
 // 함 수 인 자  : STR_SAMPLE *pSample
 // 함 수 인 자  : UINT meanY
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:12:07
 //
 bool CSAnalScan::CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY )
@@ -700,7 +714,7 @@ bool CSAnalScan::CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY )
 			++ cleanPa;
 		}
 	}
-	
+
 	// debug, 99-12-22 19:18:14, debug, 00-04-07 14:51:06
 	pSample->fSdevY = SDevInArray<int>( pSample->iPA, pSample->uiCount, pSample->fMeanY );
 	// if( ( FDIV( cleanPa, pSample->co ) < 0.01 ) && pSample->sdevY < UDIV( 1.0, _spAMPres ) ||
@@ -721,7 +735,7 @@ bool CSAnalScan::CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY )
 // 반환되는 형  : void
 // 함 수 인 자  : STR_SAMPLE *pSample
 // 함 수 인 자  : STR_AUTOCOR *pAutoCor
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:13:55
 //
 void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
@@ -729,12 +743,12 @@ void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
     UINT i, j;
 
 	float	refAcf;
-	
+
     float *pAcf;
 
 	UINT co;
     float *pxd1, *pxd2;
- 
+
     memset( pAutoCor, _spZero, sizeof( STR_AUTOCOR ) );
 
     _EQUALS3( co, pAutoCor->uiCount, pSample->uiCount )
@@ -751,7 +765,7 @@ void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
 		}
 	}
 
-	refAcf = pAutoCor->acf[0]; 
+	refAcf = pAutoCor->acf[0];
 	pAcf = & pAutoCor->acf[1];
 	if( is_not_zero<float>(refAcf) == true ) {
 		for( i=1 ; i < co ; ++i ) {
@@ -776,7 +790,7 @@ void CSAnalScan::AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor )
 //!	\return	 UINT
 //! \version 1.0
 //! \date		 2006-02-15 19:16:52
-//! \warning 2006-05-11 17:38:02 로브에서 신호가 적을 때를 고려해서 주기 찾기 기능을 수정함. 
+//! \warning 2006-05-11 17:38:02 로브에서 신호가 적을 때를 고려해서 주기 찾기 기능을 수정함.
 //
 UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 {
@@ -826,7 +840,7 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
     else {
 	    // 피크 검증
 	    // 최대 피크 값은 하한값(0.4) 이상 이어야 하며
-	    // 피크에 대한 주기성이 존재해야 한다. 
+	    // 피크에 대한 주기성이 존재해야 한다.
 	    //-- 조철희 2006-05-02 10:46:20 --//
 	    if( pAutoCor->acf[ m_uiCanPeak[0] ] < 0.4 ) {
 		    // printf( "\n 제일 큰 ACF 값이 0.4(%f) 이하여서 주기가 없는 것으로 간주합니다." , pAutoCor->acf[ m_nCanPeak[0] ] );
@@ -857,7 +871,7 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 		        }
 
 		        if( bMatch == TRUE ) {
-			        // 피크 값 중에서 주기값이 될만한 값을 찾는다. 
+			        // 피크 값 중에서 주기값이 될만한 값을 찾는다.
 			        // 해상 신호 중에는 메인 로브 마다 가장 큰 신호세기 차가 있을 수 있기 때문에,
 			        // 스캔 신호 중에서 1번째 값보다 2번째 값이 클 수 있다.
 			        //
@@ -939,10 +953,12 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 					/*! \bug  Conical 일때 대칭성을 참조해서 0.7 이내에 들어야 하는 것을 추가함.
 					    \date 2008-11-03 22:34:32, 조철희
 					*/
-					if( pSample->fSkewness < 0.7 )
+					if( pSample->fSkewness < 0.7 ) {
                         m_ucScnTyp = E_AET_SCAN_CONICAL;
-					else
+					}
+					else {
 						m_ucScnTyp = TrackUnknown;
+					}
 				}
 				else {
 					m_ucScnTyp = TrackUnknown;
@@ -985,15 +1001,15 @@ UINT CSAnalScan::ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf )
 				break;
 
             default:
-				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_ucScnTyp );   
+				printf( "\n\t [W] Invalid Steady or Conical Decision[%d] !" , m_ucScnTyp );
 				WhereIs;
 				break;
 
-		}  
+		}
 	}
 
     uiRet = ScanTypeLowDecision(uiPrdVer, pSample, pAcf);
-    
+
     return uiRet;
 }
 
@@ -1033,7 +1049,7 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
                     //Printf( "\n	Scan Anal Fail !" );
 					uiRet = _spAnalFail;
                     break;
-					
+
                 case E_AET_SCAN_CIRCULAR :
                     //Printf( "\n Cir[%d ms]" , UDIV( m_nScnPrd, _spOneMilli) );
 					uiRet =  _spAnalSuc;
@@ -1080,47 +1096,47 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 // 함 수 이 름  : CSAnalScan::CheckControlWc
 // 반환되는 형  : BOOL
 // 함 수 인 자  : UINT noEMT
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:23:04
 //
-bool CSAnalScan::CheckControlWc( UINT noEMT )
-{
-    bool bRet=false;
-#if defined(_A50_RWR)
-	
-#else    
-
-//     UINT coCol;
-//     UINT scStep;
-// 
-//     float fSkewness;
-//  
-//     // spanTime = m_pScanPt->toa[ m_pScanPt->co-1 ] - m_pScanPt->toa[0];
-//     coCol = 0; //stScnAet.sap.noCol;
-//     scStep = 0; //stScnAet.sap.fScStep;
-// 
-//     fSkewness = fabs( m_nSample.skewness );
-// 	if( m_nCoModWc[noEMT] <= _spOne &
-//         ( ( coCol >= (SCN_COLLECT_PDW-100) && scStep >= _spTwo && m_nAutoCor.idPeak <= _spTwo ) || 
-//         ( scStep >= _spTwo && ( fSkewness > 1.0 ) ) ) ) {
-// 		bRet = TRUE;
-// 	}
-// 	else {
-// 		// bRet =_spFalse;
-// 	}
-    
-#endif
-
-    return bRet;
-
-}
+// bool CSAnalScan::CheckControlWc( UINT noEMT )
+// {
+//     bool bRet=false;
+// #if defined(_A50_RWR)
+//
+// #else
+//
+// //     UINT coCol;
+// //     UINT scStep;
+// //
+// //     float fSkewness;
+// //
+// //     // spanTime = m_pScanPt->toa[ m_pScanPt->co-1 ] - m_pScanPt->toa[0];
+// //     coCol = 0; //stScnAet.sap.noCol;
+// //     scStep = 0; //stScnAet.sap.fScStep;
+// //
+// //     fSkewness = fabs( m_nSample.skewness );
+// // 	if( m_nCoModWc[noEMT] <= _spOne &
+// //         ( ( coCol >= (SCN_COLLECT_PDW-100) && scStep >= _spTwo && m_nAutoCor.idPeak <= _spTwo ) ||
+// //         ( scStep >= _spTwo && ( fSkewness > 1.0 ) ) ) ) {
+// // 		bRet = TRUE;
+// // 	}
+// // 	else {
+// // 		// bRet =_spFalse;
+// // 	}
+//
+// #endif
+//
+//     return bRet;
+//
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CSAnalScan::KurtosisSkewness
 // 반환되는 형  : void
 // 함 수 인 자  : STR_SAMPLE *pSample
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:25:07
 //
 void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
@@ -1134,7 +1150,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 	long sum=0;
 
 // 	pSample->co = 10;
-// 
+//
 // 	_EQUALS6( pSample->pa[0], pSample->pa[2], pSample->pa[4], pSample->pa[6], pSample->pa[8], 10 );
 // 	_EQUALS6( pSample->pa[1], pSample->pa[3], pSample->pa[5], pSample->pa[7], pSample->pa[9], 13 );
 // 	_EQUALS6( pSample->pa[10], pSample->pa[12], pSample->pa[14], pSample->pa[16], pSample->pa[18], 10 );
@@ -1147,7 +1163,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 	}
 	pSample->fMeanY = (float) sum / pSample->uiCount;
 
- 
+
 	pSample->fSdevY = SDevInArray( pSample->iPA, pSample->uiCount, pSample->fMeanY );
 
 	/*! \bug  샘플링 계수에 대한 최소 값 설정
@@ -1164,7 +1180,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 
         _EQUALS3( B3, B4, 0. )
 
-        co = pSample->uiCount; 
+        co = pSample->uiCount;
         for( i=0 ; i < co ; ++i ) {
             mds = (double) pSample->iPA[i] - pSample->fMeanY;
             B = mds * mds * mds;
@@ -1190,7 +1206,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 // 함 수 이 름  : CSAnalScan::PeriodVerify
 // 반환되는 형  : UINT
 // 함 수 인 자  : void
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:41:16
 //
 UINT CSAnalScan::PeriodVerify( void )
@@ -1268,8 +1284,12 @@ ENUM_AET_SCAN_TYPE CSAnalScan::HighIllustrationTest2( STR_SAMPLE *pSample, STR_A
     double ccfConical;
 
     // Steady CCF 비교
-    if( m_uiScnPrd != _spZero && m_uiScnPrd != (UINT) -1 )		ihPeriod = ( UDIV(m_uiScnPrd, m_nSampleTime) + 1 );
-    else                            								ihPeriod = pAcf->uiCount;
+    if( m_uiScnPrd != _spZero && m_uiScnPrd != (UINT) -1 ) {
+		ihPeriod = ( UDIV(m_uiScnPrd, m_nSampleTime) + 1 );
+	}
+    else {
+		ihPeriod = pAcf->uiCount;
+	}
 
     if( ihPeriod == _spZero ) {
 	    printf( "\n Error of ihPeriod" );
@@ -1332,7 +1352,7 @@ ENUM_AET_SCAN_TYPE CSAnalScan::HighIllustrationTest2( STR_SAMPLE *pSample, STR_A
     }
 
     return enRet;
- 
+
 }
 
 
@@ -1355,7 +1375,7 @@ UINT CSAnalScan::DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pA
 	UINT coPeak;
 
     UINT uiRet;
- 
+
     float	*pAcf;
 
 	float	sum1, sum2;
@@ -1428,10 +1448,10 @@ UINT CSAnalScan::DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pA
 // 함 수 이 름  : CSAnalScan::GetFlagControlWc
 // 반환되는 형  : UINT
 // 함 수 인 자  : UINT noEMT
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-16 10:27:51
 //
-UINT CSAnalScan::GetFlagControlWc( UINT noEMT ) 
+UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
 {
 
 /*
@@ -1458,12 +1478,12 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
 // {
 //     UINT i;
 //     UINT sum;
-// 
+//
 //     sum = _spZero;
 //     for( i=0 ; i < co ; ++i ) {
 // 		sum += *series++;
 //     }
-// 
+//
 // 	return ( (float) sum / (float) co );
 // }
 
@@ -1478,18 +1498,18 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
 // {
 //   int diff;
 //   BOOL bRet;
-// 
+//
 //   diff = _diffabs( x, y );
-// 
+//
 //   if( diff <= thresh ) {
 //     bRet = TRUE;
 //   }
 //   else {
 //     bRet = FALSE;
 //   }
-// 
+//
 //   return bRet;
-// 
+//
 // }
 
 /**
@@ -1674,29 +1694,29 @@ bool CSAnalScan::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, ST
 
 #if defined(_ELINT_) || defined(_XBAND_)
 /**
- * @brief     
+ * @brief
  * @return    EN_RADARCOLLECTORID
  * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/19 20:54:57
- * @warning   
+ * @warning
  */
 EN_RADARCOLLECTORID CSAnalScan::GetCollectorID()
-{ 
-	return m_pScanSigAnal->GetCollectorID(); 
+{
+	return m_pScanSigAnal->GetCollectorID();
 }
 
 /**
- * @brief     
+ * @brief
  * @return    char *
  * @author    議곗쿋??(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/19 20:55:02
- * @warning   
+ * @warning
  */
 char *CSAnalScan::GetTaskID()
 {
-	return m_pScanSigAnal->GetTaskID(); 
+	return m_pScanSigAnal->GetTaskID();
 }
 
 #endif

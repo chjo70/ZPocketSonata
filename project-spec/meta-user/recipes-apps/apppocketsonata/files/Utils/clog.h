@@ -22,7 +22,7 @@
 
 #define LOG_EXTRA_SIZE      (50)
 
-#define MAX_LINES_LOGS      (50)
+#define MAX_LINES_LOGS      (5000)
 
 
 #define LOG_DIR_SIZE        (1024)

@@ -22,7 +22,7 @@
  * @param     int iKeyId
  * @param     char * pClassName
  * @param     bool bArrayLanData
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -40,9 +40,9 @@ CScanAnalysis::CScanAnalysis( int iKeyId, const char *pClassName, bool bArrayLan
     strcat(szSQLiteFileName, "/");
     strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
 
-    m_pTheScanSigAnal = new CScanSigAnal(KWN_COLLECT_PDW, false, szSQLiteFileName);
+    m_pTheScanSigAnal = new CScanSigAnal(SCN_COLLECT_PDW, false, szSQLiteFileName);
 #else
-    m_pTheScanSigAnal = new CScanSigAnal(KWN_COLLECT_PDW, false);
+    m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW, false);
 
 #endif
 
@@ -88,9 +88,8 @@ void CScanAnalysis::Run(key_t msgQ)
 void CScanAnalysis::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
@@ -98,6 +97,7 @@ void CScanAnalysis::_routine()
         }
         else {
             switch( m_pMsg->uiOpCode ) {
+                // 운용 제어 관련 메시지 처리
                 case enREQ_OP_START:
                     // QMsgClear();
                     InitScanAnalysis();
@@ -109,13 +109,15 @@ void CScanAnalysis::_routine()
                     InitScanAnalysis();
                     break;
 
+                // 신호 분석 곤련 메시지 처리
                 case enTHREAD_SCANANAL_START :
+                    InitOfMessageData();
                     AnalysisStart();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
                     LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                    bWhile = false;
+                    //bWhile = false;
                     break;
 
                  default:
@@ -142,39 +144,95 @@ void CScanAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    SRxLOBData *pLOBData;
-
+    STR_SCANRESULT *pScanResult;
     STR_TRKSCNPDWDATA *pScnPDWData;
 
-    LOGMSG3( enDebug, " SCN: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
+    pScnPDWData = ( STR_TRKSCNPDWDATA * ) GetRecvData();
+
+    LOGMSG4( enDebug, "스캔 : 위협[%d/%d] 에 대해서 %d[Ch]에서, PDW[%d] 를 수집했습니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, pScnPDWData->strPDW.GetTotalPDW() );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 스캔 신호 분석을 호출한다.
-    pScnPDWData = ( STR_TRKSCNPDWDATA *) GetRecvData();
     m_pTheScanSigAnal->Start( & pScnPDWData->strPDW, & pScnPDWData->strABTData );
 
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    STR_ANALINFO strAnalInfo;
-
-    strAnalInfo.enBoardID = g_enBoardId;
-    strAnalInfo.uiTotalLOB = _spOne;
-    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
-    strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
-    strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
-    pLOBData = m_pTheScanSigAnal->GetLOBData();
-    pLOBData->uiAETID = strAnalInfo.uiAETID;
-    pLOBData->uiABTID = strAnalInfo.uiABTID;
-    pLOBData->uiLOBID = 0;
+    m_pstrScanAnalInfo->Set( g_enBoardId, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->enCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, 0 );
+    pScanResult = m_pTheScanSigAnal->GetScanResult();
 
 #ifndef _XBAND_
-    pLOBData->ucScanType = 0;
-    pLOBData->fScanPeriod = 0;
+//     pLOBData->ucScanType = 0;
+//     pLOBData->fScanPeriod = 0;
 #endif
 
-    //EMTMRG->QMsgSnd( enTHREAD_SCANANAL_START, pLOBData, sizeof(SRxLOBData), & strAnalInfo, sizeof(STR_ANALINFO) );
+    if( pScanResult->enResult == EN_SCANRESULT::_spAnalSuc ) {
+        MakeLOBData();
+
+        //?     LOB 데이터화 해서 병합으로 보내는게 좋지 않을까 ? 아니면 분석 결과면 보내는게 낳을까 ?
+        //date 	2023-03-21 09:39:53
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_RESULT, & m_stLOBData, _spOne, sizeof( SRxLOBData ), GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+    }
+    else {
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_FAIL, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+    }
 
 }
+
+/**
+ * @brief     MakeLOBData
+ * @param     SRxLOBData * pLOBData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-19 18:46:14
+ * @warning
+ */
+void CScanAnalysis::MakeLOBData()
+{
+    STR_SCANRESULT *pScanResult=m_pTheScanSigAnal->GetScanResult();
+
+    // 생성할 데이터 초기화
+    memset( & m_stLOBData, 0, sizeof( SRxLOBData ) );
+
+    m_stLOBData.uiPDWID = 0;
+    m_stLOBData.uiPLOBID = 0;
+
+    // 방사체/빔 번호 저장
+    m_stLOBData.uiAETID = m_pRecvScanAnalInfo->uiAETID;
+    m_stLOBData.uiABTID = m_pRecvScanAnalInfo->uiABTID;
+    m_stLOBData.uiLOBID = 0;
+
+    CCommonUtils::GetCollectTime( &m_stLOBData.tiContactTime, &m_stLOBData.tiContactTimems );
+
+    strcpy( m_stLOBData.szPrimaryELNOT, m_pstABTData->szPrimaryELNOT );
+    strcpy( m_stLOBData.szPrimaryModeCode, m_pstABTData->szPrimaryModeCode );
+
+    strcpy( m_stLOBData.szModulationCode, m_pstABTData->szModulationCode );
+
+    strcpy( m_stLOBData.szNickName, m_pstABTData->szNickName );
+
+    // 신호 형태 저장
+    m_stLOBData.vSignalType = m_pstABTData->vSignalType;
+
+    // 주파수 정보 저장
+    m_stLOBData.vFreqType = m_pstABTData->vFreqType;
+    m_stLOBData.vFreqPatternType = m_pstABTData->vFreqPatternType;
+
+    // PRI 정보 저장
+    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+
+    // 스캔 정보 저장
+    m_stLOBData.ucScanType = ( unsigned char ) pScanResult->uiScanType;
+    m_stLOBData.fScanPeriod = pScanResult->fScanPeriod;
+
+    // 식별 정보 저장
+    m_stLOBData.uiRadarModeIndex = m_pstABTData->uiRadarModeIndex;
+    strcpy( m_stLOBData.szRadarModeName, m_pstABTData->szRadarModeName );
+
+}
+
 
 
 /**
@@ -188,5 +246,30 @@ void CScanAnalysis::AnalysisStart()
  */
 void CScanAnalysis::InitScanAnalysis()
 {
+    m_pScnPDWData = NULL;
+
+    m_pstABTData = NULL;
+
+}
+
+/**
+ * @brief     InitOfMessageData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-21 09:54:03
+ * @warning
+ */
+void CScanAnalysis::InitOfMessageData()
+{
+    m_pScnPDWData = ( STR_TRKSCNPDWDATA * ) GetRecvData();
+
+    if( m_pScnPDWData != NULL ) {
+        m_pstABTData = & m_pScnPDWData->strABTData;
+    }
+    else {
+        m_pstABTData = NULL;
+    }
 
 }

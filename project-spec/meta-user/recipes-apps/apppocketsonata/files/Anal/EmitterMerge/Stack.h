@@ -1,6 +1,6 @@
 ﻿/*!
   \file     stack.h
-  \brief    
+  \brief
 	\version  0.0.1
 */
 
@@ -239,7 +239,7 @@ Queue<T>::Queue(int nElems)
 			\date 	2015-10-6 16:00:58
 	*/
 	if( nElems < MAX_OF_QUEUE_SIZE ) {
-		nelems = nElems;	
+		nelems = nElems;
 		v = new T[(UINT)nelems];
 // 		if( v == 0 ) { //DTEC_NullPointCheck
 // 			printf( "out of memory" );
@@ -285,7 +285,10 @@ void Queue<T>::Reset()
 
 	head = 0;
     tail = 0;
-	memset( v, 0, sizeof(T)*(UINT)nelems );
+
+    if( v != NULL ) {
+	    memset( v, 0, sizeof(T)*(UINT)nelems );
+    }
 
 }
 
@@ -361,6 +364,10 @@ bool Queue<T>::Pop( T *element )
 	}
     else {
         //memset( element, 0, sizeof(T) );
+
+		if( v != NULL && element != NULL ) {
+			*element = v[0];		// 쓰렉레기 값을 리턴.
+		}
     }
 
 	return bRet;
@@ -390,8 +397,9 @@ void Queue<T>::Print()
 	int i;
 
 	printf( "\n Queue[%d]:" , nelems );
-	for( i=0 ; i < nelems ; ++i )
+	for( i=0 ; i < nelems ; ++i ) {
 		printf( "[%d]" , v[i] );
+	}
 }
 
 
@@ -410,7 +418,7 @@ void Queue<T>::Copy( Queue *pQue )
 // �썝�삎 �걧
 
 template <typename T>
-class CCircularQueue 
+class CCircularQueue
 {
 private:
 	bool *pbFool;
@@ -427,7 +435,7 @@ public:
 	void SetEmpty( bool state );
 	bool IsEmpty();
 	void clearQueue();
- 
+
 	T *pQueueDataList;
 	T initValue;
 	CCircularQueue( T init, unsigned int size, T *pBuffer );
@@ -479,7 +487,7 @@ void CCircularQueue<T>::clearQueue()
 
 template <typename T>
 bool CCircularQueue<T>::IsEmpty()
-{ 
+{
 	return *pbEmpty;
 }
 
@@ -508,13 +516,13 @@ bool CCircularQueue<T>::EnQueueList( T Enlist )
 	if( IsFool() == false ) {
 		pQueueDataList[*pFront] = Enlist;
 		++ (*pFront);
-		*pFront = *pFront % *pNQueueCount; 
-  
+		*pFront = *pFront % *pNQueueCount;
+
 		if( *pFront == *pRear )
 			SetFool(true);
 		else
 			SetFool(false);
-  
+
 		SetEmpty(false);
 
 		return true;
@@ -527,7 +535,7 @@ bool CCircularQueue<T>::EnQueueList( T Enlist )
 
 		return false;
 	}
- 
+
 }
 
 template <typename T>
@@ -553,7 +561,7 @@ bool CCircularQueue<T>::DeQueueList( T *pBuffer )
 			++ (*pRear);
 			*pRear = *pRear % *pNQueueCount;
 
-			if( *pFront == *pRear ) 
+			if( *pFront == *pRear )
 				SetEmpty( true );
 			else
 				SetEmpty( false );

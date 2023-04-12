@@ -43,7 +43,7 @@ private:
 
     //enum ANALYSIS_MODE m_AnalMode;
 
-	
+
 
     int m_CoGroup;
     UINT m_uiMaxPdw;
@@ -61,11 +61,13 @@ private:
 	void AallocMemory();
     void InitAllVar();
 	void StartOfSignalAnalysis();
-    
-    void Init(STR_PDWDATA *pPDWData = NULL);    
+
+    void Init(STR_PDWDATA *pPDWData = NULL);
 	void InitOfNewSigAnal();
 
     enum FREQ_BAND GetBand(int freq);
+
+    int GetPLOBIndex();
 
 public:
     CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -84,8 +86,8 @@ public:
      * @date      2022-04-21, 10:28
      * @warning
      */
-    inline unsigned int GetCoPdw() { 
-        return m_uiCoPdw; 
+    inline unsigned int GetCoPdw() {
+        return m_uiCoPdw;
     }
     /**
      * @brief     GetBand
@@ -96,8 +98,8 @@ public:
      * @date      2022-04-21, 10:28
      * @warning
      */
-    inline int GetBand() { 
-        return m_theGroup->GetBand(); 
+    inline int GetBand() {
+        return m_theGroup->GetBand();
     }
     /**
      * @brief     펄스 정보의 상태 값을 리턴한다.
@@ -108,8 +110,8 @@ public:
      * @date      2022-04-21, 10:28
      * @warning
      */
-    inline int GetPulseStat() { 
-        return m_theGroup->GetPulseStat(); 
+    inline int GetPulseStat() {
+        return m_theGroup->GetPulseStat();
     }
 
     /**
@@ -143,9 +145,9 @@ public:
     }
 
     inline void DISP_FineLOB( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineLOB( pNewAet ); }
-    
+
     inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
-    
+
     //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
@@ -191,7 +193,6 @@ public:
     inline int GetCoGroup() { return m_CoGroup; }
 
     //inline void NextSeqNum() { ++ m_nSeqNum; }
-   
 
     // 기타 함수
     bool CheckValidData( STR_PDWDATA *pPDWData );

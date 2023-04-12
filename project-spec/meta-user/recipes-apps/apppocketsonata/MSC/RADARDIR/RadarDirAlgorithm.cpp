@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 
 #define MATHFUNCSDLL_EXPORTS
@@ -35,7 +35,7 @@ namespace RadarDirAlgotirhm
 
 		
 		    ::Log( enNormal, "+---------------------------------------------------+" );
-		    ::Log( enNormal,  "·¹ÀÌ´õ ¹æÅ½ ¶óÀÌºê·¯¸®¸¦ ±¸µ¿ÇÕ´Ï´Ù...." );
+		    ::Log( enNormal,  "ë ˆì´ë” ë°©íƒ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ êµ¬ë™í•©ë‹ˆë‹¤...." );
         }
 
 		SetWindowHandler( hWnd );
@@ -71,7 +71,7 @@ namespace RadarDirAlgotirhm
 	{
 
 		if( gpNewSigAnal == NULL ) {
-			printf( "\n Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í SWInit() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!" );
+			printf( "\n Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  SWInit() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!" );
 
 		}
 		else {
@@ -87,7 +87,7 @@ namespace RadarDirAlgotirhm
 	 * @param     STR_PDWDATA * pPDWData
 	 * @return    void
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2021-07-10, 14:28
 	 * @warning
@@ -99,7 +99,7 @@ namespace RadarDirAlgotirhm
 			gpNewSigAnal->Start( pPDWData, bDBInsert );
 		}
 		else {
-			printf( "\n Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í Start() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!" );
+			printf( "\n Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  Start() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!" );
 		}
 
 		return;
@@ -109,7 +109,7 @@ namespace RadarDirAlgotirhm
      * @brief     LoadCEDLibrary
      * @return    void
      * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2021-07-10, 14:28
      * @warning
@@ -118,7 +118,7 @@ namespace RadarDirAlgotirhm
     {
 
         if( gpNewSigAnal == NULL ) {
-            printf( "\n Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í SWInit() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!" );
+            printf( "\n Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  SWInit() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!" );
 
         }
         else {
@@ -133,7 +133,7 @@ namespace RadarDirAlgotirhm
 	 * @brief     GetCoLOB
 	 * @return    int
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2022-01-08, 13:23
 	 * @warning
@@ -144,17 +144,17 @@ namespace RadarDirAlgotirhm
 			return gpNewSigAnal->GetCoLOB();
 		}
 		else {
-			printf( "\n Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í GetCoEmitter() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!" );
+			printf( "\n Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  GetCoEmitter() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!" );
 			return -1;
 		}
 
 	}
 
 	/**
-	 * @brief     LOB µ¥ÀÌÅÍ¸¦ ¸®ÅÏÇÑ´Ù.
+	 * @brief     LOB ë°ì´í„°ë¥¼ ë¦¬í„´í•œë‹¤.
 	 * @return    SRxLOBData *
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2022-01-08, 13:23
 	 * @warning
@@ -170,10 +170,10 @@ namespace RadarDirAlgotirhm
 	}
 
 	/**
-	 * @brief     Å½Áö ºĞ¼® DLL À» Á¾·á Ã³¸®ÇÑ´Ù. ¹İµå½Ã ¸¶Áö¸·¿¡ È£ÃâÇØ¾ß ÇÑ´Ù.
+	 * @brief     íƒì§€ ë¶„ì„ DLL ì„ ì¢…ë£Œ ì²˜ë¦¬í•œë‹¤. ë°˜ë“œì‹œ ë§ˆì§€ë§‰ì— í˜¸ì¶œí•´ì•¼ í•œë‹¤.
 	 * @return    void
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2022-01-08, 13:23
 	 * @warning
@@ -181,7 +181,7 @@ namespace RadarDirAlgotirhm
 	void RadarDirAlgotirhm::Close()
 	{
         if( g_pTheLog != NULL ) {
-		    Log( enNormal, "·¹ÀÌ´õ ¹æÅ½ ¶óÀÌºê·¯¸®¸¦ Á¾·áÇÕ´Ï´Ù...." );
+		    Log( enNormal, "ë ˆì´ë” ë°©íƒ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤...." );
         }
 
 		if( gpNewSigAnal != NULL ) {
@@ -206,10 +206,10 @@ namespace RadarDirAlgotirhm
 
 
     /**
-     * @brief     OPINITID °ªÀ» ¸®ÅÏÇÑ´Ù.
+     * @brief     OPINITID ê°’ì„ ë¦¬í„´í•œë‹¤.
      * @return    LONG
      * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 16:58
      * @warning

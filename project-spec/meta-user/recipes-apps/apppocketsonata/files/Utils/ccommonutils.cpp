@@ -1,4 +1,14 @@
-﻿
+﻿/**
+
+    @file      ccommonutils.cpp
+    @brief
+    @details   ~
+    @author    조철희
+    @date      19.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
 #include "pch.h"
 
 #ifdef _MSC_VER
@@ -43,6 +53,9 @@
 extern CSingleClient *g_pTheCCUSocket;
 //extern CSingleClient *g_pThePMCSocket;
 
+#else
+#include "../Include/globals.h"
+
 #endif
 
 /**
@@ -53,7 +66,52 @@ CCommonUtils::CCommonUtils()
 
 }
 
+
+
 #ifndef _GRAPH_
+
+/**
+ * @brief     GetCollectTime
+ * @param     time_t * ptiContactTime
+ * @param     unsigned short * ptiContactTimems
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-19 18:56:42
+ * @warning
+ */
+void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned short *ptiContactTimems )
+{
+    struct timespec tsNow;
+
+    CCommonUtils::GetCollectTime( &tsNow );
+
+    *ptiContactTime = tsNow.tv_sec;
+
+#ifdef _MSC_VER
+    *ptiContactTimems = ( unsigned short ) tsNow.tv_usec / ( unsigned int ) 1000;
+#else
+    *ptiContactTimems = tsNow.tv_nsec;
+#endif
+
+}
+
+void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems )
+{
+    struct timespec tsNow;
+
+    CCommonUtils::GetCollectTime( &tsNow );
+
+    *ptiContactTime = tsNow.tv_sec;
+
+#ifdef _MSC_VER
+    *ptiContactTimems = ( unsigned int ) tsNow.tv_usec / ( unsigned int ) 1000;
+#else
+    *ptiContactTimems = tsNow.tv_nsec;
+#endif
+
+}
 
 void CCommonUtils::SendLan( UINT uiOpCode )
 {
@@ -95,7 +153,7 @@ void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
 //             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
 //         }
 //         else {
-// 
+//
 //         }
     }
 #endif
@@ -171,7 +229,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp)
 {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
     // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
-    // until 00:00:00 January 1, 1970 
+    // until 00:00:00 January 1, 1970
     static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
 
     SYSTEMTIME  system_time;
@@ -205,7 +263,7 @@ int clock_gettime(int X, struct timeval *tv)
     gettimeofday( tv, NULL );
 
     return (0);
-} 
+}
 
 
 
@@ -222,7 +280,7 @@ int clock_gettime(int X, struct timeval *tv)
  * @date      2021-06-30, 17:27
  * @warning
  */
-void CCommonUtils::getStringPresentTime( char *pString, size_t szString ) 
+void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
 {
     struct tm *pstTime;
     time_t nowTime=time(NULL);
@@ -250,14 +308,14 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  * @date      2022-04-05, 11:09
  * @warning
  */
-void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time_t tiTime ) 
+void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time_t tiTime )
 {
     struct tm *pstTime;
 
-#ifdef _MSC_VER    
+#ifdef _MSC_VER
     strcpy_s( pString, szString, "1970-01-01 00:00:00" );
 #else
-    strcpy( pString, "1970-01-01 00:00:00" );    
+    strcpy( pString, "1970-01-01 00:00:00" );
 #endif
 
     pstTime = localtime( & tiTime );
@@ -265,7 +323,11 @@ void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time
 		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
 	}
 	else {
+#ifdef _MSC_VER
 		*pString = NULL;
+#else
+        *pString = (char) '\0';
+#endif
 	}
 
 }
@@ -286,7 +348,7 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
 {
 	struct tm *pstTime;
 
-#ifdef _MSC_VER    
+#ifdef _MSC_VER
 	strcpy_s(pString, szString, "00:00:00");
 #else
 	strcpy(pString, "1970-01-01 00:00:00");
@@ -297,54 +359,14 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
 		strftime(pString, szString, "%H:%M:%S", pstTime);
 	}
 	else {
+#ifdef _MSC_VER
 		*pString = NULL;
+#else
+        *pString = (char) '\0';
+#endif
 	}
 
 }
-
-/**
- * @brief     getStringDesignatedTime
- * @param     char * pString
- * @param     size_t szString
- * @param     __time64_t tiTime
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-01-08 15:21:08
- * @warning
- */
-#ifdef __VXWORKS__
-//void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, __time64_t tiTime)
-//{
-//	struct tm *pstTime;
-//
-//#ifdef _MSC_VER    
-//	strcpy_s(pString, szString, "1970-01-01 00:00:00");
-//#else
-//	strcpy(pString, "1970-01-01 00:00:00");
-//#endif
-//
-//#ifdef __VXWORKS__
-//    __time32_t tiTime32;
-//
-//    tiTime32 = (__time32_t) tiTime;
-//	pstTime = localtime(&tiTime32);
-//
-//#else
-//    pstTime = _localtime64(&tiTime);
-//
-//#endif
-//
-//	if (pstTime != NULL) {
-//		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
-//	}
-//	else {
-//		*pString = NULL;
-//	}
-//
-//}
-#endif
 
 /**
  * @brief     getFileNamingDesignatedTime
@@ -362,7 +384,7 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
 {
     struct tm *pstTime;
 
-#ifdef _MSC_VER    
+#ifdef _MSC_VER
     strcpy_s(pString, szString, "1970-01-01 00:00:00");
 #else
     strcpy(pString, "1970-01-01 00:00:00");
@@ -373,7 +395,11 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
         strftime(pString, szString, "%Y-%m-%d %H_%M_%S", pstTime);
     }
     else {
+#ifdef _MSC_VER
         *pString = NULL;
+#else
+        *pString = (char) '\0';
+#endif
     }
 
 }
@@ -479,9 +505,9 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
     src_fd = open(src_file, O_RDONLY | O_BINARY, 0644 );
 #else
     src_fd = open(src_file, O_RDONLY | O_BINARY );
-    
+
 #endif
-    
+
     if( src_fd != -1) {
         memset( & sts, 0, sizeof(sts) );
 
@@ -495,8 +521,8 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
         }
 
         if(dest_fd == -1) {
-            tmp_errno = errno; 
-            _close(src_fd);  
+            tmp_errno = errno;
+            _close(src_fd);
             errno = tmp_errno; // close가 초기화한 errno를 복구함
             WhereIs;
             //return -1;
@@ -527,29 +553,29 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
             _close(src_fd);
             _close(dest_fd);
         }
-    
+
         /* 원본 파일의 속성을 복원해야 한다면... */
         if(copy_attr && dest_fd != -1 ) {
-            /* 원본 파일의 파일 권한을 복원하기 
-            * open시에 파일권한을 설정하였지만, 
+            /* 원본 파일의 파일 권한을 복원하기
+            * open시에 파일권한을 설정하였지만,
             * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
             * 파일의 권한도 복구합니다.
             */
             chmod(dest_file, sts.st_mode);
 
-#ifdef __VXWORKS__        		
-  
+#ifdef __VXWORKS__
+
 #elif defined(__linux__)
 
-#else 		
+#else
         	struct  utimbuf attr;
-    			
+
             /* last access 시간, last modify 시간 복구 */
             attr.actime  = sts.st_atime;
             attr.modtime = sts.st_mtime;
-            utime(dest_file, &attr);            
-#endif            
-        
+            utime(dest_file, &attr);
+#endif
+
         }
     }
 
@@ -617,8 +643,8 @@ int CCommonUtils::CalcDiffAOA( int iAOA1, int iAOA2 )
     int iDiffAOA;
 
     iDiffAOA = _diffabs<int>( iAOA1, iAOA2 );
-    if( iDiffAOA > MAX_AOA / 2 ) {
-        iDiffAOA = MAX_AOA - iDiffAOA;
+    if( iDiffAOA > MAX_AOA_BIT / 2 ) {
+        iDiffAOA = MAX_AOA_BIT - iDiffAOA;
     }
 
     return iDiffAOA;
@@ -634,7 +660,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 #ifdef __ZYNQ_BOARD__
     return;
 
-#else    
+#else
     _PDW *pPDW;
     _TOA ullfirstTOA;
 
@@ -707,13 +733,36 @@ void CCommonUtils::AllSwapData32( void *pData, unsigned int uiLength )
 }
 
 /**
+ * @brief		AllSwapData64
+ * @param		void * pData
+ * @param		unsigned int uiLength
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/11 19:58:15
+ * @warning
+ */
+void CCommonUtils::AllSwapData64( void *pData, unsigned int uiLength )
+{
+    UINT i;
+    unsigned long long int *pWord;
+
+    pWord = ( unsigned long long int * ) pData;
+    for( i = 0; i < uiLength; i += sizeof( unsigned long long int ) ) {
+        swapByteOrder( *pWord );
+        ++pWord;
+    }
+
+}
+
+/**
  * @brief		swapByteOrder
  * @param		unsigned short & us
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/18 19:16:45
- * @warning		
+ * @warning
  */
 void CCommonUtils::swapByteOrder(unsigned short& us)
 {
@@ -727,7 +776,7 @@ void CCommonUtils::swapByteOrder(unsigned short& us)
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/02/21 19:24:16
- * @warning		
+ * @warning
  */
 void CCommonUtils::swapByteOrder(unsigned int& ui)
 {
@@ -741,12 +790,12 @@ void CCommonUtils::swapByteOrder(unsigned int& ui)
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/18 19:06:02
- * @warning		
+ * @warning
  */
 void CCommonUtils::swapByteOrder(double & d)
 {
     uint64_t um = (uint64_t) & d;
-    
+
     d = (double) ( ( ( um & 0xff00000000000000 ) >> 56 ) |
                    ( ( um & 0x00ff000000000000 ) >> 40 ) |
                    ( ( um & 0x0000ff0000000000 ) >> 24 ) |
@@ -755,6 +804,29 @@ void CCommonUtils::swapByteOrder(double & d)
                    ( ( um & 0x0000000000ff0000 ) << 24 ) |
                    ( ( um & 0x000000000000ff00 ) << 40 ) |
                    ( ( um & 0x00000000000000ff ) << 56 ) );
+}
+
+/**
+ * @brief     swapByteOrder
+ * @param		unsigned long long int & d
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/11 19:33:36
+ * @warning
+ */
+void CCommonUtils::swapByteOrder( unsigned long long int  &d )
+{
+    unsigned long long int um = ( unsigned long long int ) d;
+
+    d = ( unsigned long long int ) ( ( ( um & 0xff00000000000000 ) >> 56 ) |
+        ( ( um & 0x00ff000000000000 ) >> 40 ) |
+        ( ( um & 0x0000ff0000000000 ) >> 24 ) |
+        ( ( um & 0x000000ff00000000 ) >> 8 ) |
+        ( ( um & 0x00000000ff000000 ) << 8 ) |
+        ( ( um & 0x0000000000ff0000 ) << 24 ) |
+        ( ( um & 0x000000000000ff00 ) << 40 ) |
+        ( ( um & 0x00000000000000ff ) << 56 ) );
 }
 
 /**
@@ -797,7 +869,7 @@ void CCommonUtils::swapByteOrder(double *p, int iSize )
 //     g_enUnitType = en_XBAND;
 // #else
 //     g_enUnitType = en_UnknownUnit;
-// 
+//
 // #endif
 // }
 
@@ -908,7 +980,7 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 
         else {
 			iMultiply = iSize * iItems;
-        
+
             if( iSize != iMultiply / iItems ) {
                 throw 0;
             }
@@ -917,7 +989,7 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
                 szSize = (size_t) iMultiply;
             }
         }
-        
+
     }
     catch( int iExp ) {
         szSize = (size_t) iExp;
@@ -940,13 +1012,13 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 // unsigned int CCommonUtils::INT2UINT( int iValue )
 // {
 //     unsigned int iRet=0;
-// 
+//
 //     if( iValue >= 0 ) {
 //         iRet = iValue;
 //     }
-// 
+//
 //     return iRet;
-// 
+//
 // }
 
 /**
@@ -1088,7 +1160,13 @@ void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & str
 	unsigned int pos = 0;
 	string token;
 
-	while ((pos = pStrIn->find(strDelimiter)) != string::npos) {
+	//while ((pos = pStrIn->find(strDelimiter)) != string::npos) {
+    while( true ) {
+        pos = pStrIn->find( strDelimiter );
+        if( pos == string::npos ) {
+            break;
+        }
+
 		token = pStrIn->substr(0, pos);
 		pValues->push_back(token);
 		pStrIn->erase( 0, pos + strDelimiter.length());
@@ -1116,6 +1194,13 @@ unsigned int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 
 	pValues->clear();
 
+#ifdef _MSC_VER
+    szBuffer[0] = NULL;
+#else
+	szBuffer[0] = (char) '\0';
+#endif
+
+
 	iIndex = 0;
 	while ( pData[iIndex] != '\n' ) {
 		sscanf( & pData[iIndex], "%[^','|'\r']", szBuffer );
@@ -1141,14 +1226,14 @@ unsigned int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 // void CCommonUtils::DeleteAllFile(char *pszDir)
 // {
 // #ifdef _MSC_VER
-// 
+//
 // 	// RmDirs(pszDir, 0);
-// 
+//
 
 // #elif defined(_linux_)
 // 	rmdirs( pszDir, 0 );
 // #endif
-// 
+//
 // }
 
 int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
@@ -1167,7 +1252,7 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 
 	/* 디렉토리의 ���음부터 파일 또는 디렉토리명을 순서대로 한개씩 읽습니다. */
 	while ((file = readdir(dir_ptr)) != NULL) {
-		// readdir 읽혀진 파일명 중에 현재 디렉토리를 나타네는 . 도 포함되어 있으므로 
+		// readdir 읽혀진 파일명 중에 현재 디렉토리를 나타네는 . 도 포함되어 있으므로
 		// 무한 반복에 빠지지 않으려면 파일명이 . 이면 skip 해야 함
 		if (strcmp(file->d_name, ".") == 0 || strcmp(file->d_name, "..") == 0) {
 			continue;
@@ -1209,7 +1294,7 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 		while (bFind) {
 			bFind = ff.FindNextFile();
 			if (ff.IsDots() == TRUE || ff.IsDirectory() == TRUE)
-				continue;
+                continue;
 			SetFileAttributes(ff.GetFilePath(), FILE_ATTRIBUTE_NORMAL);
 			DeleteFile( ff.GetFilePath() );
 		}
@@ -1218,6 +1303,9 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 
 	}
 
+	return 0;
+
+#else
 	return 0;
 
 #endif
@@ -1252,9 +1340,9 @@ unsigned int CCommonUtils::CountSetBits( unsigned int uiValue )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/03/11 17:15:38
- * @warning		
+ * @warning
  */
-unsigned int CCommonUtils::GetNoChannel( unsigned int uiValue )
+unsigned int CCommonUtils::GetNoChannel( unsigned int & uiValue )
 {
     unsigned int uiCount = 0;
 
@@ -1265,6 +1353,7 @@ unsigned int CCommonUtils::GetNoChannel( unsigned int uiValue )
         uiValue >>= 1;
         ++uiCount;
     }
+
     return uiCount;
 }
 
@@ -1276,23 +1365,22 @@ unsigned int CCommonUtils::GetNoChannel( unsigned int uiValue )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/03/11 17:15:40
- * @warning		
+ * @warning
  */
-void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpCode )
+void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend )
 {
-
     switch( uiOpCode ) {
         // 운용 관련 메시지
         case enRES_OP_START:
-            *pszString = "시작 응답";
+            *pszString = "시작";
             break;
 
         case enRES_OP_SHUTDOWN:
-            *pszString = "종료 응답";
+            *pszString = "종료";
             break;
 
         case enRES_OP_RESTART:
-            *pszString = "재시작 응답";
+            *pszString = "재시작";
             break;
 
             // 분석 관련 메시지
@@ -1308,32 +1396,6 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             *pszString = "연속자체점검";
             break;
 
-        // 분석 관련 메시지
-//         case enAET_NEWUPD_CCU:
-//             *pszString = "신규/변경";
-//             break;
-// 
-//         case enAET_UPD_CCU:
-//             *pszString = "수정";
-//             break;
-// 
-//         case enAET_LST_CCU:
-//             *pszString = "소실";
-//             break;
-// 
-//         case enAET_DEL_CCU:
-//             *pszString = "삭제";
-//             break;
-// 
-//             // IPL 관련 메시지
-//         case enIPL_VERSION:
-//             *pszString = "IPL 버젼";
-//             break;
-// 
-//         case enIPL_WRITESTATUS:
-//             *pszString = "IPL 기록상태";
-//             break;
-
         case enRES_SETSYS:
             *pszString = "시스템 변수";
             break;
@@ -1343,8 +1405,40 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             break;
 
         case enTHREAD_DETECTANAL_START:
-            *pszString = "탐지 분석 시작 ";
+            *pszString = "탐지분석 시작";
             break;
+
+        case enTHREAD_DETECTANAL_RESULT:
+            *pszString = "탐지분석 결과";
+            break;
+
+        case enTHREAD_SCANANAL_START:
+            *pszString = "스캔분석 시작";
+            break;
+
+        case enTHREAD_SCANANAL_RESULT:
+            *pszString = "스캔분석 결과";
+            break;
+
+        case enTHREAD_SCANANAL_FAIL:
+            *pszString = "스캔분석 실패";
+            break;
+
+        case enTHREAD_SCANANAL_ERROR:
+            *pszString = "스캔분석 에러";
+            break;
+
+        case enTHREAD_REQ_SET_DETECTWINDOWCELL:
+            *pszString = "탐지 수집";
+            break;
+
+        case enTHREAD_REQ_SCAN_START:
+            *pszString = "스캔분석 시작";
+            break;
+
+//         case enTHREAD_REQ_SET_SCANWINDOWCELL:
+//             *pszString = "스캔 수집 요청";
+//             break;
 
         case enREQ_RELOAD_LIBRARY:
             *pszString = "위협 라이브러리 다운로드 시작 요청";
@@ -1359,7 +1453,103 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             break;
     }
 
+    if( bSend == true ) {
+        *pszString += " 요청";
+    }
+    else {
+        *pszString += " 응답";
+    }
+
     //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
     //LOGMSG3( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
 
 }
+
+
+/**
+ * @brief     PrintAllPDW
+ * @param     STR_UZPOCKETPDW * pstPDW
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-10 20:25:12
+ * @warning
+ */
+void CCommonUtils::PrintAllPDWs( STR_UZPOCKETPDW *i_pstPDW )
+{
+    unsigned int ui, uiTotalPDW;
+
+    unsigned int uiFreq, uiAOA;
+
+    char szBuffer[300];
+
+    _TOA prellTOA=0;
+
+    UZPOCKETPDW *pstPDW;
+
+    uiTotalPDW = i_pstPDW->GetTotalPDW();
+
+    pstPDW = i_pstPDW->pstPDW;
+
+#ifdef _GRAPH_
+    TRACE( "PDW [%d]개를 출력 합니다. -------------------------------------------------", uiTotalPDW );
+#else
+    LOGMSG1( enDebug, "PDW [%d]개를 출력 합니다. -------------------------------------------------", uiTotalPDW );
+#endif
+
+    for( ui = 0; ui < uiTotalPDW; ++ui ) {
+        uiFreq = pstPDW->stHwPdwDataRf.uiFreq;
+        uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
+        sprintf( szBuffer, "[%3d] %2d %4d[%4d] %8dMHz[%8d] %8d %8d 0x%016llx", (unsigned int) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPW, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPA, pstPDW->stHwPdwDataRf.ullTOA );
+
+#ifdef _GRAPH_
+        if( ui == 0 || prellTOA < pstPDW->stHwPdwDataRf.ullTOA ) {
+            TRACE( " %s", szBuffer );
+        }
+        else {
+            TRACE( "!%s", szBuffer );
+        }
+#else
+        if( ui == 0 || prellTOA < pstPDW->stHwPdwDataRf.ullTOA ) {
+            LOGMSG1( enDebug, " %s", szBuffer );
+        }
+        else {
+            LOGMSG1( enDebug, "!%s", szBuffer );
+        }
+#endif
+
+        prellTOA = pstPDW->stHwPdwDataRf.ullTOA;
+
+        ++ pstPDW;
+    }
+
+}
+
+/**
+ * @brief		PrintOnePDW
+ * @param		UZPOCKETPDW * pstPDW
+ * @return		void
+ * @author		조철희 (churlhee.jo@lignex1.com)
+ * @version		0.0.1
+ * @date		2023/04/11 20:32:54
+ * @warning
+ */
+void CCommonUtils::PrintOnePDW( UZPOCKETPDW *pstPDW )
+{
+    unsigned int uiFreq, uiAOA;
+
+    char szBuffer[300];
+
+    uiFreq = pstPDW->stHwPdwDataRf.uiFreq;
+    uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
+    sprintf( szBuffer, "[%3d] %2d %4d[%4d] %8dMHz[%8d] %8d %8d 0x%016llx", ( unsigned int ) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPW, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPA, pstPDW->stHwPdwDataRf.ullTOA );
+
+#ifdef _GRAPH_
+    TRACE( " %s", szBuffer );
+#else
+    LOGMSG1( enDebug, " %s", szBuffer );
+#endif
+
+}
+

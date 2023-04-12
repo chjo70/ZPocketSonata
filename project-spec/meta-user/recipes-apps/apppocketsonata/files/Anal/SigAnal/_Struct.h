@@ -25,34 +25,39 @@ struct FREQ_RESOL {
 
 
 // PDW  펄스열 플레그
-enum PULSE_MARK { 
-    enUnMark=0, 
-    enSTABLE_MARK, 
-    enREFSTB_MARK, 
-    enJITTER_MARK, 
-    enDWELL_MARK, 
-    enUNKNOWN_MARK, 
-    enEXTRACT_MARK, 
+enum PULSE_MARK {
+    enUnMark=0,
+    enSTABLE_MARK,
+    enREFSTB_MARK,
+    enJITTER_MARK,
+    enDWELL_MARK,
+    enUNKNOWN_MARK,
+    enEXTRACT_MARK,
 
     enLIBRARY_MARK,
 
 } ;
 
-//##ModelId=452B0C5402D0
+/**
+    @typedef PDWINDEX
+    @brief   PDWINDEX 데이터 정의 입니다. 속도를 위해서는 unsigned int 로 정의흘 해야 되지 않을까...
+**/
 typedef USHORT PDWINDEX;
 
-
-
-// 탐지 PDW Index
-//##ModelId=452B0C5402E5
+/**
+    @struct STR_PDWINDEX
+    @brief  탐지 PDW Index
+**/
 struct STR_PDWINDEX {
-    PDWINDEX *pIndex;
     unsigned int uiCount;
+    PDWINDEX *pIndex;
 
-}  ;
+} ;
 
-// 히스토그램 
-//##ModelId=452B0C5402F8
+/**
+    @struct STR_FRQAOAPWHISTOGRAM
+    @brief  히스토그램
+**/
 struct STR_FRQAOAPWHISTOGRAM {
 	PDWINDEX hist[ TOTAL_FRQAOAPWBIN ];
 	unsigned int uiBinCount;
@@ -61,7 +66,6 @@ struct STR_FRQAOAPWHISTOGRAM {
 
 
 // DTOA 히스토그램 구조체
-//##ModelId=452B0C540302
 struct STR_DTOA_HISTOGRAM {
 	unsigned int uiBinCount;
 	PDWINDEX hist[ DTOA_BIN ];
@@ -77,7 +81,6 @@ struct STR_DTOA_HISTOGRAM {
 } ;
 
 // 주파수 호핑 분석 구조체
-
 struct STR_HOPPING_DATA {
     UINT uiBinCount[FREQ_BIN];
     PDWINDEX hist[FREQ_BIN][MAX_PDW];
@@ -89,8 +92,7 @@ struct STR_HOPPING_DATA {
 
 } ;
 
-// 방위(AOA) 그룹 
-//##ModelId=452B0C540317
+// 방위(AOA) 그룹
 struct STR_AOA_GROUP {
 	UINT uiBand;
     UINT uiStat;
@@ -112,7 +114,7 @@ struct STR_AOA_GROUPS {
 
 }  ;
 
-// 주파수 그룹범위 테이블  
+// 주파수 그룹범위 테이블
 struct STR_FRQ_GROUP {
 	int	iIdxAOA;			// 방위 그룹화 인덱스
 
@@ -126,7 +128,7 @@ struct STR_FRQ_GROUP {
 
 }  ;
 
-// 주파수 그룹범위 테이블  
+// 주파수 그룹범위 테이블
 //##ModelId=452B0C540348
 struct STR_FRQ_GROUPS {
 	STR_FRQ_GROUP stFreq[ MAX_FGRT ];
@@ -146,7 +148,7 @@ struct STR_PW_GROUP {
 
 }  ;
 
-// 주파수 그룹범위 테이블  
+// 주파수 그룹범위 테이블
 //##ModelId=452B0C540366
 struct STR_PW_GROUPS {
 	STR_PW_GROUP pw[ MAX_PGRT ];
@@ -174,7 +176,7 @@ struct STR_CLUSTER {
 // 탐지의 펄스열이 존재함에도 분석이 되지 않는 문제
 //##ModelId=452B0C54038E
 struct STR_FIRST_FRQAOA_PEAK {
-	STR_LOWHIGH	stAOA; 
+	STR_LOWHIGH	stAOA;
 	STR_LOWHIGH	stFrq;
 	UINT band;
 	UINT tot_cnt;
@@ -200,10 +202,10 @@ struct STR_PULSE_TRAIN_SEG {
 	UINT uiStat;							// PDW 상태
 
 	UINT uiFreqType;					// 주파수 타입
-	STR_MINMAX stAOA;					// 방위 제원 
-	STR_MINMAX_MEDIAN stFreq;				// 주파수 제원 
-	STR_MINMAX stPA;					// 신호세기 제원 
-	STR_MINMAX stPW;					// 펄스폭 제원 
+	STR_MINMAX stAOA;					// 방위 제원
+	STR_MINMAX_MEDIAN stFreq;				// 주파수 제원
+	STR_MINMAX stPA;					// 신호세기 제원
+	STR_MINMAX stPW;					// 펄스폭 제원
     enPRI_TYPE enPriType;					// PRI 타입
 	STR_MINMAX_TOA stPRI;					// PRI 제원
 
@@ -220,31 +222,36 @@ struct STR_PULSE_TRAIN_SEG {
 													// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
 	UINT uiPRIPatternPeriod;		// PRI  패턴 주기
 	UINT uiFreqPatternPeriod;		// FREQ 패턴 주기
-	
+
 }  ;
 
-// PRI Table 
+// PRI Table
 //##ModelId=452B0C5403B6
 struct STR_PRI_RANGE_TABLE {
-	_TOA tMinPRI;		// 하한 범위 
-	_TOA tMaxPRI;		// 상한 범위 
+	_TOA tMinPRI;		// 하한 범위
+	_TOA tMaxPRI;		// 상한 범위
 
 }  ;
 
 // 에미터 정보
-//##ModelId=452B0C5403CA
 #ifndef _GRAPH_
 struct STR_EMITTER {
 	unsigned int uiID;					// ID : 인덱스 번호
 
 	enSIGNAL_TYPE enSignalType;
 
-    STR_PDWINDEX stPDW;						// PDW 버퍼
     UINT uiSegIdx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
 
     //STR_PULSE_TRAIN_SEG stSeg[ MAX_SEG ];			// 펄스열 저장
 
 	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
+
+    enFREQ_TYPE enFreqType;
+    UINT uiFreqPatternType;
+    STR_TYPEMINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
+    float fFreqPeriod;
+    int iFreqLevel[MAX_FREQ_PRI_STEP];
+    int iCoFreqLevel;
 
 	enPRI_TYPE enPRIType;							// PRI 형태
 	_TOA tFramePri;								// 스태거일 때의 frmae PRI 값
@@ -252,21 +259,14 @@ struct STR_EMITTER {
 	UINT uiPRIPatternType;
 	float fPRIPeriod;
 
-	unsigned int uiStagDwellElementCount;					// stagger level 수 
+	unsigned int uiStagDwellElementCount;					// stagger level 수
 	_TOA tStaggerDwellElement[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	unsigned int uiStagDwellLevelCount;					// stagger level 수 
+	unsigned int uiStagDwellLevelCount;					// stagger level 수
 	_TOA tStaggerDwellLevel[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
 	int iHopLevel[ MAX_FREQ_PRI_STEP ];					// Hopping level
-	int iCoHoppingLevel;					// Hop level 수 
-
-	enFREQ_TYPE enFreqType;
-	UINT uiFreqPatternType;
-	STR_TYPEMINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
-	float fFreqPeriod;
-    int iFreqLevel[ MAX_FREQ_PRI_STEP ];
-    int iCoFreqLevel;
+	int iCoHoppingLevel;					// Hop level 수
 
 	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
 
@@ -274,6 +274,8 @@ struct STR_EMITTER {
     EMITTER_MARK enMark;									// 삭제 여부
 
 	int iDIRatio;
+
+    STR_PDWINDEX stPDW;						// PDW 버퍼
 
 } ;
 
@@ -304,17 +306,17 @@ struct STR_CT {
 
 //##ModelId=452B0C4E032C
 struct STR_SP {
-  UINT aoadiff[ ALL_BAND+1 ];
-  UINT frqdiff[ ALL_BAND+1 ];
+  UINT aoadiff[ ALL_BAND ];
+  UINT frqdiff[ ALL_BAND ];
 } ;
 
 //##ModelId=452B0C4E0354
 struct STR_ID {
 	// 주파수 고정 임계값
-  UINT fixfrq[ ALL_BAND+1 ];
+  UINT fixfrq[ ALL_BAND ];
 
 	// 주파수 변경 임계값
-  UINT agifrq[ ALL_BAND+1 ];
+  UINT agifrq[ ALL_BAND ];
   UINT pri;     // pri tol.
   UINT prd;     // scan tol.
 
@@ -326,16 +328,16 @@ struct STR_ID {
 //##ModelId=452B0C4E035F
 struct STR_MG {
     //  UINT  mode;
-    UINT aoa[ ALL_BAND+1 ];
+    UINT aoa[ ALL_BAND ];
 
-    UINT fixfrq[ ALL_BAND+1 ];
-    UINT fixfrq_boundary[ ALL_BAND+1 ];
+    UINT fixfrq[ ALL_BAND ];
+    UINT fixfrq_boundary[ ALL_BAND ];
 
     UINT agifrqmean;    // agile/agile, agile/pattern
     UINT agifrqin;    // agile/agile, agile/pattern
     UINT agifrqout;   // agile/agile, agile/pattern
-    UINT agifrqpat[ ALL_BAND+1 ];  // pattern/pattern
-    UINT md_agifrq[ ALL_BAND+1 ];  // debug, 00-01-31 16:35:43
+    UINT agifrqpat[ ALL_BAND ];  // pattern/pattern
+    UINT md_agifrq[ ALL_BAND ];  // debug, 00-01-31 16:35:43
 
     UINT fixpri;      // stable PRI.
     UINT agiprimean;    // agile/agile, agile/pattern
@@ -357,10 +359,10 @@ struct STR_MG {
 
 //##ModelId=452B0C4E0373
 struct STR_FT {
-    UINT aoa[ ALL_BAND+1 ];
+    UINT aoa[ ALL_BAND ];
 
-    UINT fixfrq[ ALL_BAND+1 ];
-    UINT agifrq[ ALL_BAND+1 ];
+    UINT fixfrq[ ALL_BAND ];
+    UINT agifrq[ ALL_BAND ];
     UINT agiratio;    //  debug, 00-04-19 17:46:13
 
     //  UINT  pw;       // PW
@@ -387,7 +389,7 @@ struct STR_FT {
 
 //#ModelId=452B0C4E037D
 struct STR_FG {
-    STR_LOWHIGH frq[ ALL_BAND+1 ];
+    STR_LOWHIGH frq[ ALL_BAND ];
 
 }  ;
 
@@ -414,7 +416,7 @@ struct STR_KP {
       UINT    Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
       UINT    Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
       UINT    Aoa_Range_Margin;   // 방위 그룹 범위 margin
-   
+
       UINT    Freq_Shift_Cnt;     // 주파수 히스토 BIN 크기 = 2^N
       UINT    Freq_Peak_Thr;      // 주파수 히스토그램 PEAK 임계값    // 00.02.09
       UINT    Freq_Hist_Thr;      // 주파수 히스토그램 범위 임계값    // 00.02.09
@@ -558,10 +560,10 @@ struct STR_DWELL_LEVEL {
     char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
-    
+
     FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
     {	// min, max, offset, res
-        {     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
+        {     0,     0,				 DFD_FREQ_OFFSET,  1.25 },
         {  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
         {  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
         { 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
@@ -571,7 +573,7 @@ struct STR_DWELL_LEVEL {
 
     PA_RESOL gPaRes[ 6 ] =
     {	// min, max, offset, res
-        {     0,     0,  (float) _spPAoffset, _spAMPres }, 
+        {     0,     0,  (float) _spPAoffset, _spAMPres },
         {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
         {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
         { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
@@ -594,7 +596,7 @@ struct STR_DWELL_LEVEL {
 
 	FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
 	{	// min, max, offset, res
-		{     0,     0,				 DFD_FREQ_OFFSET,  1.25 }, 
+		{     0,     0,				 DFD_FREQ_OFFSET,  1.25 },
 		{  2000,  6000,        DFD_FREQ_OFFSET,  1.25 },		/* 저대역		*/
 		{  5500, 10000,  12000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역1	*/
 		{ 10000, 14000,  16000-DFD_FREQ_OFFSET, -1.25 },		/* 고대역2	*/
@@ -604,7 +606,7 @@ struct STR_DWELL_LEVEL {
 
 	PA_RESOL gPaRes[ 6 ] =
 	{	// min, max, offset, res
-		{     0,     0,  (float) _spPAoffset, _spAMPres }, 
+		{     0,     0,  (float) _spPAoffset, _spAMPres },
 		{  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
 		{  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
 		{ 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/

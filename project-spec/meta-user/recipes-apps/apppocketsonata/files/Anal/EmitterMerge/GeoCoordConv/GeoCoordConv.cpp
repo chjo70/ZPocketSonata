@@ -34,14 +34,14 @@ static char THIS_FILE[]=__FILE__;
  * @param     GeoSystem eSrcSystem
  * @param     GeoEllips eDstEllips
  * @param     GeoSystem eDstSystem
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-13 20:50:57
  * @warning
  */
-CGeoCoordConv::CGeoCoordConv(GeoEllips eSrcEllips, GeoSystem eSrcSystem, 
+CGeoCoordConv::CGeoCoordConv(GeoEllips eSrcEllips, GeoSystem eSrcSystem,
 							 GeoEllips eDstEllips, GeoSystem eDstSystem)
 {
 	// Set Type Factor
@@ -59,7 +59,7 @@ CGeoCoordConv::CGeoCoordConv(GeoEllips eSrcEllips, GeoSystem eSrcSystem,
 
 	m_arMajor[kWgs84] = 6378137.0;
 	m_arMinor[kWgs84] = 6356752.3142;
-    
+
 	// Set System Factor
 	m_arScaleFactor[kGeographic] = 1;
 	m_arLonCenter[kGeographic] = 0.0;
@@ -130,10 +130,12 @@ void CGeoCoordConv::SetSrcType(enum GeoEllips eEllips, enum GeoSystem eSystem)
 	m_dSrcMl0 = m_arMajor[m_eSrcEllips] * mlfn(m_dSrcE0, m_dSrcE1, m_dSrcE2, m_dSrcE3, m_arLatCenter[m_eSrcSystem]);
 	m_dSrcEsp = m_dSrcEs / (1.0 - m_dSrcEs);
 
-	if (m_dSrcEs < 0.00001)
+	if (m_dSrcEs < 0.00001) {
 	   m_dSrcInd = 1.0;
-	else
+	}
+	else {
 	   m_dSrcInd = 0.0;
+	}
 
 	InitDatumVar();
 }
@@ -211,7 +213,7 @@ void CGeoCoordConv::Conv(double dInX, double dInY, double& dOutX, double& dOutY)
 		dOutLon = dInLon;
 		dOutLat = dInLat;
 	}
-	else 
+	else
 	{
 		// Datum transformation using molodensky function
 		DatumTrans(dInLon, dInLat, dOutLon, dOutLat);
@@ -338,7 +340,7 @@ void CGeoCoordConv::Geo2Tm(double lon, double lat, double& x, double& y)
 			throw (CString)"지정하신 점이 무한대로 갑니다";
 		}
 	}
-	else 
+	else
 	{
 		b = 0;
 		x = 0.5 * m_arMajor[m_eDstEllips] * m_arScaleFactor[m_eDstSystem] * log((1.0 + b) / (1.0 - b));
@@ -398,17 +400,20 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 		con = sqrt((1.0 - h * h) / (1.0 + g * g));
 		lat = asinz(con);
 
-		if (temp < 0) 
+		if (temp < 0) {
 			lat *= -1;
+		}
 
-        if( is_zero<double>(g) == true && is_zero<double>(h) == true )
+        if( is_zero<double>(g) == true && is_zero<double>(h) == true ) {
 			lon = m_arLonCenter[m_eSrcSystem];
-		else
+		}
+		else {
 			lon = atan(g / h) + m_arLonCenter[m_eSrcSystem];
+		}
 	}
 
 	// TM to LL inverse equations from here
-  
+
 	x -= m_arFalseEasting[m_eSrcSystem];
 	y -= m_arFalseNorthing[m_eSrcSystem];
 
@@ -416,14 +421,16 @@ void CGeoCoordConv::Tm2Geo(double x, double y, double& lon, double& lat)
 	phi = con;
 
 	i = 0;
-	while(TRUE)
-	{
+	while(TRUE)	{
 		delta_Phi = ((con + m_dSrcE1 * sin(2.0 * phi) - m_dSrcE2 * sin(4.0 * phi) + m_dSrcE3 * sin(6.0 * phi)) / m_dSrcE0) - phi;
 		phi = phi + delta_Phi;
-		if (fabs(delta_Phi) <= EPSLN) break;
+		if (fabs(delta_Phi) <= EPSLN) {
+			break;
+		}
 
-		if (i >= max_iter) 
+		if (i >= max_iter) {
 			throw (CString)"Latitude failed to converge";
+		}
 
 		i++;
 	}
@@ -562,9 +569,10 @@ double CGeoCoordConv::mlfn(double e0, double e1, double e2, double e3, double ph
  */
 double CGeoCoordConv::asinz(double value)
 {
-    if (fabs(value) > 1.0)
+    if (fabs(value) > 1.0) {
 		value = (value>0?1:-1);
-    
+	}
+
     return asin(value);
 }
 
@@ -590,7 +598,7 @@ void CGeoCoordConv::InitDatumVar()
 	m_iDeltaX = iDefFact * X_W2B;
 	m_iDeltaY = iDefFact * Y_W2B;
 	m_iDeltaZ = iDefFact * Z_W2B;
-	
+
 	m_dTemp = m_arMinor[m_eSrcEllips] / m_arMajor[m_eSrcEllips];
 	//dF = 1.0 - m_dTemp; // flattening
 	m_dEsTemp = 1.0 - m_dTemp * m_dTemp; // e2

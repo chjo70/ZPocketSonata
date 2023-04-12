@@ -21,6 +21,7 @@ const double FOURTHPI = ( M_PI / 4.);
 const double deg2rad = ( M_PI / 180. );
 const double rad2deg = 180.0 / M_PI;
 
+/*
 static Ellipsoid ellipsoid[25] = { { -1, "Placeholder", 0, 0 } ,
 																	 {  1, "Airy", 6377563, 0.00667054 } ,
 																	 {  2, "Australian National", 6378160, 0.006694542 } ,
@@ -46,6 +47,6 @@ static Ellipsoid ellipsoid[25] = { { -1, "Placeholder", 0, 0 } ,
 																	 {  22, "WGS-72", 6378135, 0.006694318 } ,
 																	 {  23, "WGS-84", 6378137, 0.00669438 } } ;
 
-
+*/
 
 #endif

@@ -75,9 +75,9 @@ void Main()
  */
 void LoadBootParameter()
 {
-
 	// boot parameter 를 읽어온다.
 	char *bootString=(char *) BOOT_LINE_ADRS;
+
     //printf( "\n BOOT_LINE_ADRS=%p" , bootString );
 	if( ( bootString != NULL ) && ( *bootString != EOS ) ) {
 		strcpy( (char *) BOOT_LINE_ADRS, bootString );

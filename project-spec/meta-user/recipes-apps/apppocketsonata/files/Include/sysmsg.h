@@ -22,7 +22,7 @@
 #include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
 
-// #if TOOL==diab 
+// #if TOOL==diab
 // #pragma pack( 1 )
 // #else
 // #pragma pack( push, 1 )
@@ -183,65 +183,65 @@ enum enRES_MESSAGE {
 
 // union UNI_ES_IBIT {
 //     unsigned int w32;
-// 
+//
 //     struct {
 //       unsigned int : 21;
-// 
+//
 //       unsigned int b3Comu : 1;  // Band 3 communication bit
 //       unsigned int b2Comu : 1;  // Band 2 communication bit
 //       unsigned int b1Comu : 1;  // Band 1 communication bit
-// 
+//
 //       unsigned int bRsa : 1;		// RSA General Set IBIT
 //       unsigned int b3Sp : 1;		// Each Unit IBIT
 //       unsigned int b2Sp : 1;
 //       unsigned int b1Sp : 1;
-// 
+//
 //       unsigned int bTsd : 1;
 //       unsigned int bSdfu : 1;
 //       unsigned int bPdfu : 1;
 //       unsigned int bOru : 1;
 //     } x ;
-// 
+//
 // } ;
-// 
+//
 // union UNI_RXDF_CBIT {
 //   unsigned int w32;
-// 
+//
 //   struct {
 //     unsigned int : 26;
-// 
+//
 //     unsigned int bSpin : 1;
 //     unsigned int bSpout : 1;
-// 
+//
 //     unsigned int bSdfuTp : 1; // SDFU Temperature
 //     unsigned int bPdfuTp : 1;
 //     unsigned int bOruSw : 1;  // Oru Switch
 //     unsigned int bOruTp : 1;  // Oru Temperature
 //   } x ;
 // }  ;
-// 
+//
 // union UNI_RSA_CBIT {
 //   unsigned int w32;
 //   struct {
 //     unsigned int : 15;    /* bit22-31 Reserved */
-// 
+//
 //     unsigned int bCip : 1;    /* bit0  제어식별프로세서판 */
-// 
+//
 //     unsigned int bSap : 1;    /* bit3  스캔프로세서판 */
 //     unsigned int bNsp : 1;    /* bit8  탐지프로세서판 */
 //     unsigned int bKsp1 : 1;    /* bit11 추적프로세서판1 */
 //     unsigned int bKsp2 : 1;    /* bit14 추적프로세서판2 */
-// 
+//
 //     unsigned int bKsp3 : 1;    /* bit17 추적프로세서판3 */
 //     unsigned int bKsp4 : 1;    /* bit20 추적프로세서판4 */
 //     unsigned int bSaf : 1;    /* bit5  스캔분석필터판 */
 //     unsigned int bNsf : 1;    /* bit10 탐지필터판 */
-// 
+//
 //     unsigned int bKsf1 : 1;    /* bit13 추적필터판1 */
 //     unsigned int bKsf2 : 1;    /* bit16 추적필터판2 */
 //     unsigned int bKsf3 : 1;    /* bit19 추적필터판3 */
 //     unsigned int bKsf4 : 1;    /* bit22 추적필터판4 */
-// 
+//
 //     unsigned int bAud : 1;    /* bit6  오디오발생판 */
 //     unsigned int bRcv : 1;    /* bit7  PDW 수신판 */
 //     unsigned int bPdw : 1;    /* bit2  공용메모리판 */
@@ -258,7 +258,7 @@ enum enRES_MESSAGE {
 //     unsigned int uiIPLVersion;
 //     unsigned int uiStatus;
 // };
-// 
+//
 // struct STR_IPL_START {
 //     unsigned int uiIPLVersion;
 //     unsigned int uiCountOfIPL;
@@ -270,7 +270,7 @@ enum enRES_MESSAGE {
  */
 // struct STR_RES_DUMP_LIST {
 //     STR_REQ_DUMP_LIST strReqDumpList;
-// 
+//
 //     char cData[500];
 // } ;
 
@@ -283,7 +283,7 @@ enum enRES_MESSAGE {
 //     int iToAoa;
 //     int	iFromPa;
 //     int	iToPa;
-// 
+//
 // } ;
 
 // struct STR_BAND_ENABLE {
@@ -362,7 +362,7 @@ struct STR_LAN_DATA {
 
 #endif
 
-// #if TOOL==diab 
+// #if TOOL==diab
 // #pragma pack( 4 )
 // #else
 // #pragma pack( pop )

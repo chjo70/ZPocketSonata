@@ -89,7 +89,7 @@ void CTrackAnalysis::_routine()
     LOGENTRY;
     bool bWhile=true;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     while( g_AnalLoop ) {
         if( QMsgRcv() == -1 ) {
@@ -157,7 +157,7 @@ void CTrackAnalysis::AnalysisStart()
     m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData );
 
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    STR_ANALINFO strAnalInfo;
+    STR_DETANAL_INFO strAnalInfo;
 
     iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
 
@@ -167,15 +167,15 @@ void CTrackAnalysis::AnalysisStart()
     strAnalInfo.enBoardID = g_enBoardId;
     strAnalInfo.uiTotalLOB = (unsigned int)iCoLOB;
     strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
-    strAnalInfo.uiAETID = m_pMsg->x.strAnalInfo.uiAETID;
+    strAnalInfo.uiAETID = m_pMsg->x.strDetAnalInfo.uiAETID;
     strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
 
     // PDW 헤더 정보 저장
-    memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));
+    //memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));
 
-    SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
+    //SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
 
-    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
+    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName() );
 
 }
 

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 
 #define MATHFUNCSDLL_EXPORTS
@@ -30,10 +30,10 @@ namespace RadarAnlAlgotirhm
     char gszHeader[100] = { "+-----------------------------------------------------------------------+" };
 
 #ifdef _POCKETSONATA_
-    char gszProject[20] = { "À§Çù °ü¸®/½Äº°" };
+    char gszProject[20] = { "ìœ„í˜‘ ê´€ë¦¬/ì‹ë³„" };
 
 #elif defined(_ELINT_) || defined(_XBAND_)
-    char gszProject[20] = { "·¹ÀÌ´õ ºĞ¼®" };
+    char gszProject[20] = { "ë ˆì´ë” ë¶„ì„" };
 
 #else
     char gszProject[20] = { "ELINT" };
@@ -41,13 +41,13 @@ namespace RadarAnlAlgotirhm
 #endif
 
     /**
-     * @brief     À§Çù º´ÇÕ ¹× ½Äº° ¶óÀÌºê·¯¸®¸¦ ÃÊ±âÈ­ÇÑ´Ù. ÃÖ¼Ò ÇÑ¹øÀº È£ÃâÇØ¾ß ÇÕ´Ï´Ù.
-     * @param     HWND hWnd, ÀÌ °ªÀº WM_USER_LOGMSG ¸Ş½ÃÁö¸¦ Ã³¸®ÇÒ Window Handler¸¦ ¼³Á¤ÇÑ´Ù. º¸Åë pMainFrame->GetOutputWnd()->GetSafeHwnd() À¸·Î ¼¼ÆÃÇÑ´Ù.
-     * @param     bool bDBThread, DB ¾²·¹µå¸¦ Àû¿ë ¿©ºÎ¸¦ °áÁ¤ÇÑ´Ù.
+     * @brief     ìœ„í˜‘ ë³‘í•© ë° ì‹ë³„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì´ˆê¸°í™”í•œë‹¤. ìµœì†Œ í•œë²ˆì€ í˜¸ì¶œí•´ì•¼ í•©ë‹ˆë‹¤.
+     * @param     HWND hWnd, ì´ ê°’ì€ WM_USER_LOGMSG ë©”ì‹œì§€ë¥¼ ì²˜ë¦¬í•  Window Handlerë¥¼ ì„¤ì •í•œë‹¤. ë³´í†µ pMainFrame->GetOutputWnd()->GetSafeHwnd() ìœ¼ë¡œ ì„¸íŒ…í•œë‹¤.
+     * @param     bool bDBThread, DB ì“°ë ˆë“œë¥¼ ì ìš© ì—¬ë¶€ë¥¼ ê²°ì •í•œë‹¤.
      * @param     bool bLocal
      * @return    void
-     * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-10-19 13:45:37
      * @warning
@@ -68,7 +68,7 @@ namespace RadarAnlAlgotirhm
         }
 
         ::Log(enNormal, "%s", gszHeader);
-        ::Log(enNormal, "%s ¶óÀÌºê·¯¸®¸¦ ±¸µ¿ÇÕ´Ï´Ù....Ver", gszProject);
+        ::Log(enNormal, "%s ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ êµ¬ë™í•©ë‹ˆë‹¤....Ver", gszProject);
 
 		if( gpEmitterMergeMngr == NULL ) {
 			g_pTheSysConfig = new CSysConfig();
@@ -85,10 +85,10 @@ namespace RadarAnlAlgotirhm
 	}
 
     /**
-     * @brief     À§Çù º´ÇÕ ¹× ½Äº° °ü¸®¸¦ ÃÊ±âÈ­ÇÒ ¶§ È£ÃâÇÑ´Ù.
+     * @brief     ìœ„í˜‘ ë³‘í•© ë° ì‹ë³„ ê´€ë¦¬ë¥¼ ì´ˆê¸°í™”í•  ë•Œ í˜¸ì¶œí•œë‹¤.
      * @return    void
-     * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-10-19 13:45:05
      * @warning
@@ -96,10 +96,10 @@ namespace RadarAnlAlgotirhm
 	void RadarAnlAlgotirhm::SWInit()
 	{
         ::Log(enNormal, "%s", gszHeader);
-        ::Log(enNormal, "%s ¶óÀÌºê·¯¸®¸¦ ÃÊ±âÈ­ ÇÕ´Ï´Ù.", gszProject);
+        ::Log(enNormal, "%s ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì´ˆê¸°í™” í•©ë‹ˆë‹¤.", gszProject);
 
 		if( gpEmitterMergeMngr == NULL ) {
-            ::Log(enError, "Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í Start() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!");
+            ::Log(enError, "Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  Start() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!");
 		}
 		else {
 			gpEmitterMergeMngr->Init();
@@ -109,11 +109,11 @@ namespace RadarAnlAlgotirhm
 	}
 
     /**
-     * @brief     À§Çù °ü¸®¿¡ LOB µ¥ÀÌÅÍ¸¦ ½Ç¾î À§Çù °ü¸®¸¦ ¼öÇàÇÏ°Ô ÇÑ´Ù.
+     * @brief     ìœ„í˜‘ ê´€ë¦¬ì— LOB ë°ì´í„°ë¥¼ ì‹¤ì–´ ìœ„í˜‘ ê´€ë¦¬ë¥¼ ìˆ˜í–‰í•˜ê²Œ í•œë‹¤.
      * @param     STR_LOBDATA * pLOBData
      * @return    void
-     * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-10-19 13:55:31
      * @warning
@@ -126,20 +126,20 @@ namespace RadarAnlAlgotirhm
 		SRxLOBData *pstLOBData;
 
 		if( gpEmitterMergeMngr == NULL ) {
-            ::Log(enError, "Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í Start() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù !!");
+            ::Log(enError, "Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  Start() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤ !!");
 		}
 		else {
 			gpEmitterMergeMngr->Start();
 
 			if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA || pLOBData->stLOBHeader.uiNumOfLOB == 0 ) {
-                ::Log(enError, "LOB µ¥ÀÌÅÍ °³¼ö[%d]°¡ ÃÊ°úÇØ¼­ ½ÇÇàÀ» Áß´ÜÇÕ´Ï´Ù.", pLOBData->stLOBHeader.uiNumOfLOB);
+                ::Log(enError, "LOB ë°ì´í„° ê°œìˆ˜[%d]ê°€ ì´ˆê³¼í•´ì„œ ì‹¤í–‰ì„ ì¤‘ë‹¨í•©ë‹ˆë‹¤.", pLOBData->stLOBHeader.uiNumOfLOB);
 			}
             else {
 
 #if defined(_ELINT_) || defined(_XBAND_)
-                ::Log(enNormal, "OP_INIT_ID[%ld] ·¹ÀÌ´õ ¹æÅ½[%d]¿¡¼­ LOB µ¥ÀÌÅÍ [%d]°³¸¦ ¼ö½ÅÇÏ¿© Ã³¸®ÇÕ´Ï´Ù.", pLOBData->stLOBData[0].uiOpInitID, pLOBData->stLOBData[0].iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB);
+                ::Log(enNormal, "OP_INIT_ID[%ld] ë ˆì´ë” ë°©íƒ[%d]ì—ì„œ LOB ë°ì´í„° [%d]ê°œë¥¼ ìˆ˜ì‹ í•˜ì—¬ ì²˜ë¦¬í•©ë‹ˆë‹¤.", pLOBData->stLOBData[0].uiOpInitID, pLOBData->stLOBData[0].iCollectorID, pLOBData->stLOBHeader.uiNumOfLOB);
 #else
-                ::Log(enNormal, "OP_INIT_ID[%d] LOB µ¥ÀÌÅÍ [%d]°³¸¦ ¼ö½ÅÇÏ¿© Ã³¸®ÇÕ´Ï´Ù.", GetOpInitID(), pLOBData->stLOBHeader.uiNumOfLOB);
+                ::Log(enNormal, "OP_INIT_ID[%d] LOB ë°ì´í„° [%d]ê°œë¥¼ ìˆ˜ì‹ í•˜ì—¬ ì²˜ë¦¬í•©ë‹ˆë‹¤.", GetOpInitID(), pLOBData->stLOBHeader.uiNumOfLOB);
 #endif
 
 			pstLOBHeader = & pLOBData->stLOBHeader;
@@ -155,7 +155,7 @@ namespace RadarAnlAlgotirhm
 					++ pstLOBData;
 				}
 				else {
-					Log( enError, "%d ¹øÂ° LOB µ¥¾îÅÍÀÇ °úÁ¦ Á¤º¸°¡ ¾ø½À´Ï´Ù !!!" , i+1 );
+					Log( enError, "%d ë²ˆì§¸ LOB ë°ì–´í„°ì˜ ê³¼ì œ ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤ !!!" , i+1 );
 				}
 #else
 				gpEmitterMergeMngr->ManageThreat(pstLOBHeader, pstLOBData, NULL, false);
@@ -180,10 +180,10 @@ namespace RadarAnlAlgotirhm
 
 
     /**
-     * @brief     ½Äº° ¶óÀÌºê·¯¸®°¡ º¯°æÀÌ µÆÀ»¶§ ÀÌ¸¦ È£ÃâÇÏ¿© CED/EOB¸¦ ºÒ·¯¿Àµµ·Ï ÇÑ´Ù.
+     * @brief     ì‹ë³„ ë¼ì´ë¸ŒëŸ¬ë¦¬ê°€ ë³€ê²½ì´ ëì„ë•Œ ì´ë¥¼ í˜¸ì¶œí•˜ì—¬ CED/EOBë¥¼ ë¶ˆëŸ¬ì˜¤ë„ë¡ í•œë‹¤.
      * @return    void
      * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2021-10-28, 13:39
      * @warning
@@ -194,17 +194,17 @@ namespace RadarAnlAlgotirhm
             gpEmitterMergeMngr->UpdateCEDEOBLibrary();
         }
         else {
-            printf("\n Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í UpdateCEDEOBLibrary() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!");
-            Log(enError, "Init() ÇÔ¼ö¸¦ È£ÃâÇÏÁö ¾Ê°í UpdateCEDEOBLibrary() ÇÔ¼ö¸¦ ½ÇÇàÇß½À´Ï´Ù.!!");
+            printf("\n Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  UpdateCEDEOBLibrary() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!");
+            Log(enError, "Init() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì§€ ì•Šê³  UpdateCEDEOBLibrary() í•¨ìˆ˜ë¥¼ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.!!");
         }
         return;
     }
 
     /**
-     * @brief     ·¹ÀÌ´õ ºĞ¼® ¶óÀÌºê·¯¸®¸¦ Á¾·á ÇÕ´Ï´Ù. ÇÁ·Î±×·¥ Á¾·á½Ã È£ÃâÇÏ¸é µË´Ï´Ù.
+     * @brief     ë ˆì´ë” ë¶„ì„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì¢…ë£Œ í•©ë‹ˆë‹¤. í”„ë¡œê·¸ë¨ ì¢…ë£Œì‹œ í˜¸ì¶œí•˜ë©´ ë©ë‹ˆë‹¤.
      * @return    void
      * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2021-10-28, 13:39
      * @warning
@@ -213,10 +213,10 @@ namespace RadarAnlAlgotirhm
     {
 
         if (g_pTheLog != NULL) {
-            Log(enNormal, "·¹ÀÌ´õ ºĞ¼® ¶óÀÌºê·¯¸®¸¦ Á¾·áÇÕ´Ï´Ù....");
+            Log(enNormal, "ë ˆì´ë” ë¶„ì„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤....");
         }
         else {
-            printf("\n ·¹ÀÌ´õ ºĞ¼® ¶óÀÌºê·¯¸®¸¦ Á¾·áÇÕ´Ï´Ù....");
+            printf("\n ë ˆì´ë” ë¶„ì„ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤....");
         }
 
         if (gpEmitterMergeMngr != NULL) {
@@ -235,7 +235,7 @@ namespace RadarAnlAlgotirhm
 	 * @param     STR_LOBDATA * pLOBData
 	 * @return    bool
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2021-10-28, 13:38
 	 * @warning
@@ -249,8 +249,8 @@ namespace RadarAnlAlgotirhm
 
 		pLOBData->stLOBHeader.uiNumOfLOB = gpEmitterMergeMngr->m_VecLOBData.size();
 		if( pLOBData->stLOBHeader.uiNumOfLOB > MAX_LOB_DATA ) {
-			Printf( "\n LOB µ¥ÀÌÅÍ °³¼ö[%d]°¡ ÃÊ°úÇØ¼­ °á°ú¸¦ ¸®ÅÏÇÏÁö ¾Ê½À´Ï´Ù. ¸®ÄÁ°ªÀ» È®ÀÎÇØº¸¼¼¿ä." , pLOBData->stLOBHeader.uiNumOfLOB );
-			Log( enError, "LOB µ¥ÀÌÅÍ °³¼ö[%d]°¡ ÃÊ°úÇØ¼­ °á°ú¸¦ ¸®ÅÏÇÏÁö ¾Ê½À´Ï´Ù. ¸®ÄÁ°ªÀ» È®ÀÎÇØº¸¼¼¿ä." , pLOBData->stLOBHeader.uiNumOfLOB );
+			Printf( "\n LOB ë°ì´í„° ê°œìˆ˜[%d]ê°€ ì´ˆê³¼í•´ì„œ ê²°ê³¼ë¥¼ ë¦¬í„´í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë¦¬ì»¨ê°’ì„ í™•ì¸í•´ë³´ì„¸ìš”." , pLOBData->stLOBHeader.uiNumOfLOB );
+			Log( enError, "LOB ë°ì´í„° ê°œìˆ˜[%d]ê°€ ì´ˆê³¼í•´ì„œ ê²°ê³¼ë¥¼ ë¦¬í„´í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë¦¬ì»¨ê°’ì„ í™•ì¸í•´ë³´ì„¸ìš”." , pLOBData->stLOBHeader.uiNumOfLOB );
 		}
 		else {
 			pSRxLOBData = gpEmitterMergeMngr->m_VecLOBData.data();
@@ -270,7 +270,7 @@ namespace RadarAnlAlgotirhm
 	 * @param     STR_ABTDATA * pABTData
 	 * @return    bool
 	 * @exception
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
 	 * @version   0.0.1
 	 * @date      2021-10-28, 13:38
 	 * @warning
@@ -285,8 +285,8 @@ namespace RadarAnlAlgotirhm
 		pABTData->stABTHeader.iNumOfABT = gpEmitterMergeMngr->m_VecABTData.size();
 
 		if( pABTData->stABTHeader.iNumOfABT > MAX_LOB_DATA ) {
-			Printf( "\n ABT µ¥ÀÌÅÍ °³¼ö[%d]°¡ ÃÊ°úÇØ¼­ °á°ú¸¦ ¸®ÅÏÇÏÁö ¾Ê½À´Ï´Ù. ¸®ÄÁ°ªÀ» È®ÀÎÇØº¸¼¼¿ä." , pABTData->stABTHeader.iNumOfABT );
-			Log( enError, "ABT µ¥ÀÌÅÍ °³¼ö[%d]°¡ ÃÊ°úÇØ¼­ °á°ú¸¦ ¸®ÅÏÇÏÁö ¾Ê½À´Ï´Ù. ¸®ÄÁ°ªÀ» È®ÀÎÇØº¸¼¼¿ä." , pABTData->stABTHeader.iNumOfABT );
+			Printf( "\n ABT ë°ì´í„° ê°œìˆ˜[%d]ê°€ ì´ˆê³¼í•´ì„œ ê²°ê³¼ë¥¼ ë¦¬í„´í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë¦¬ì»¨ê°’ì„ í™•ì¸í•´ë³´ì„¸ìš”." , pABTData->stABTHeader.iNumOfABT );
+			Log( enError, "ABT ë°ì´í„° ê°œìˆ˜[%d]ê°€ ì´ˆê³¼í•´ì„œ ê²°ê³¼ë¥¼ ë¦¬í„´í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë¦¬ì»¨ê°’ì„ í™•ì¸í•´ë³´ì„¸ìš”." , pABTData->stABTHeader.iNumOfABT );
 		}
 		else {
 			pSRxABTData = gpEmitterMergeMngr->m_VecABTData.data();
@@ -304,13 +304,13 @@ namespace RadarAnlAlgotirhm
 #ifdef _POCKETSONATA_
 
 	/**
-     * @brief     À§Çù °ü¸®/½Äº° ÇÔ¼ö¿¡ ´ëÇÑ À§Çù °á°ú¸¦ ¾òÀ»¶§ »ç¿ëÇÑ´Ù. Start() ÈÄ¿¡ 
+     * @brief     ìœ„í˜‘ ê´€ë¦¬/ì‹ë³„ í•¨ìˆ˜ì— ëŒ€í•œ ìœ„í˜‘ ê²°ê³¼ë¥¼ ì–»ì„ë•Œ ì‚¬ìš©í•œë‹¤. Start() í›„ì— 
      * @param     std::vector<SRxLOBData> * pVecLOBData
      * @param     std::vector<SRxABTData> * pVecABTData
      * @param     std::vector<SRxAETData> * pVecAETData
      * @return    bool
-     * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
-	 * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+	 * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-10-19 16:23:39
 	 * @warning
@@ -334,7 +334,7 @@ namespace RadarAnlAlgotirhm
      * @brief     GetOPInitID
      * @return    LONG
      * @exception
-     * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+     * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
      * @version   0.0.1
      * @date      2022-04-21, 17:06
      * @warning

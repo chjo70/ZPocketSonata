@@ -82,7 +82,7 @@ void CKnownSigAnal::Init()
 */
 void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 {
-	BOOL bRet;
+	//BOOL bRet;
     DWORD dwTime = CCommonUtils::GetTickCounts();
 
     Log( enLineFeed, "" );
@@ -213,7 +213,7 @@ void CKnownSigAnal::StartOfNewSignalAnalysis()
 			// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
 			m_theGroup->MakeGrIndex();
 
-			SaveGroupPDWFile(m_pGrPdwIndex, &m_stSavePDWData, true);
+			SaveGroupPDWFile(m_pGrPdwIndex, &m_stSavePDWData, GetPLOBIndex(), true);
 
 			// 규칙성 및 불규칙성 펄스열 추출
 			m_thePulExt->PulseExtract(&m_VecMatchRadarMode);
@@ -562,3 +562,20 @@ bool CKnownSigAnal::CheckKnownByAnalysis()
     return bRet;
 }
 
+/**
+ * @brief     GetPLOBIndex
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-07 13:12:45
+ * @warning
+ */
+int CKnownSigAnal::GetPLOBIndex()
+{
+    int iPLOBIndex;
+    int iCoFrqAoaPwIdx = m_theGroup->GetCoFrqAoaPwIdx();
+
+    iPLOBIndex = - ( ( int ) iCoFrqAoaPwIdx + 1 );
+    return iPLOBIndex;
+}

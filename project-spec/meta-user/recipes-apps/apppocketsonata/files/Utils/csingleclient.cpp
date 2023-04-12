@@ -1,4 +1,16 @@
-﻿#include "stdafx.h"
+﻿/**
+
+    @file      csingleclient.cpp
+    @brief
+    @details   ~
+    @author    조철희
+    @date      10.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#include "pch.h"
+
 
 #ifdef _MSC_VER
 
@@ -42,7 +54,7 @@
  * @param     const char * pClassName
  * @param     unsigned short usPort
  * @param     char * pServerAddress
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -55,6 +67,8 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
 
     m_usPort = usPort;
 
+    //char *pszString;
+
     if( pServerAddress == NULL ) {
         m_bServer = true;
         m_szServerAddress[i][0] = 0;
@@ -65,7 +79,8 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
     }
 
     ++i;
-    strcpy( m_szServerAddress[i], HOST_SERVER );
+    //pszString = g_pTheSysConfig->GetPrimeServerOfNetwork();
+    strcpy( m_szServerAddress[i], "192.168.0.200" );
     ++i;
     strcpy( m_szServerAddress[i], DEV_SERVER );
     ++i;
@@ -77,7 +92,7 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
 
 /**
  * @brief     종료 메시지와 메머리 해지를 처리하는 객체 소먈자 입니다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -86,7 +101,7 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
  */
 CSingleClient::~CSingleClient()
 {
-    LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+    //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
     Free();
 }
@@ -221,7 +236,7 @@ void CSingleClient::RunClient()
 
     struct sockaddr_in sockAddress;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     //set of socket descriptors
     fd_set readfds;
@@ -272,7 +287,7 @@ void CSingleClient::RunClient()
             iTotalRead = 0;
 
             while( true ) {
-            	
+
                 //clear the socket set
                 FD_ZERO(&readfds);
 
@@ -314,7 +329,7 @@ void CSingleClient::RunClient()
                                     iTotalRead = 0;
 #ifdef __linux__
                                     sndMsg.mtype = 1;
-#endif                                    
+#endif
                                     sndMsg.uiOpCode = strLanHeader.uiOpCode;
                                     sndMsg.uiSocket = m_uiSocket;
                                     sndMsg.iArrayIndex = -1;
@@ -323,7 +338,7 @@ void CSingleClient::RunClient()
 
 #if defined(_MSC_VER) || defined(__VXWORKS__)
                                     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
-                  
+
 #elif defined(__linux__)
                                     if( msgsnd( m_ptheRecLan->GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
                                         perror( "msgsnd 실패" );
@@ -361,14 +376,14 @@ void CSingleClient::RunClient()
 #ifdef _WIN32
                             CCommonUtils::AllSwapData32( & pLanData[iTotalRead], (unsigned int) strLanHeader.uiLength );
 #endif
-                            
+
                             //printf( "*[%d/0x%X/%d]" , uiTotalRead, strLanHeader.uiOpCode, strLanHeader.uiLength );
                             if( iTotalRead == (int) strLanHeader.uiLength ) {
                                 bHeader = true;
                                 iTotalRead = 0;
 #ifdef __linux__
                                 sndMsg.mtype = 1;
-#endif                                
+#endif
                                 sndMsg.uiOpCode = strLanHeader.uiOpCode;
                                 sndMsg.uiSocket = m_uiSocket;
                                 sndMsg.iArrayIndex = -1;
@@ -420,14 +435,14 @@ void CSingleClient::RunClient()
                             }
                         }
                     }
-                    else {                        
+                    else {
                         iRead = recv( m_uiSocket, m_pszLanData, ( int ) _MAX_LANDATA, MSG_DONTWAIT );
                         if( iRead <= 0 ) {
                             Log( enError, "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
                             perror( "recv()::data 부분에서 데이터 길이가 잘못됐습니다 !!" );
                             break;
                         }
-                            
+
                     }
                 }
             }
@@ -459,7 +474,7 @@ void CSingleClient::SetSocketOption()
     //this is just a good habit, it will work without this
     int iOptval = 1;
     int sizeOfLanBuf = 10240;
-    int iFlags = 10;
+
     struct linger stLINGER;
 
     // close() 될때 소켓 버퍼에 남아 있는 데이터를 버리는 비정상 종료를 수행합니다.
@@ -484,6 +499,7 @@ void CSingleClient::SetSocketOption()
     }
 
 #ifdef _MFC_VER
+    int iFlags = 10;
     if( setsockopt( m_uiSocket, SOL_SOCKET, TCP_KEEPIDLE, ( const char * ) &iFlags, sizeof( iFlags ) ) < 0 ) {
         perror( "소켓 옵션(TCP_KEEPIDLE)" );
     }
@@ -508,18 +524,19 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
     LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
 
     CloseSocket();
-    
+
     //TRACE( "서버가 끊겼습니다." );
 
-#ifdef __linux__    
+#ifdef __linux__
     sndMsg.mtype = 1;
 #endif
-    
+
     sndMsg.uiOpCode = enTHREAD_DISCONNECTED;
     sndMsg.uiSocket = m_uiSocket;
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
+    sndMsg.uiEchoBit = 0;
 
 #ifdef _MSC_VER
     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
@@ -601,9 +618,9 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
     }
 
 #elif defined(__VXWORKS__)
-    
+
     int iOn;
-    
+
     iOn = 1;
     if(ioctl(uiSock, FIONBIO, & iOn ) != 0) {
         perror( "ioctl() error" );
@@ -616,7 +633,7 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
 				iRet = -1;
 			}
 		}
-	
+
 		timeout.tv_sec = timeout_milli / 1000;
 		timeout.tv_usec = (timeout_milli % 1000) * 1000;
 		FD_SET(uiSock, &writefds);
@@ -631,12 +648,12 @@ int CSingleClient::ConnectTimeout( unsigned int uiSock, struct sockaddr_in *pAdd
 				perror( "getsockopt() error" );
 				iRet = -1;
 			}
-			
+
             iOn = 0;
             if(ioctl(uiSock, FIONBIO, & iOn ) != 0) {
                 perror( "ioctl() error" );
                 iRet = -1;
-            }			
+            }
 		}
     }
 
@@ -718,7 +735,7 @@ void CSingleClient::RunServer()
 
     struct sockaddr_in sockAddress;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     //set of socket descriptors
     fd_set readfds;
@@ -1007,8 +1024,8 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
 #ifdef _WIN32
             CCommonUtils::AllSwapData32( pData, uiDataLength );
 #endif
-            
-            DisplayMsg( & strLanHeader, pData );
+
+            DisplayMsg( & strLanHeader, pData, true );
 
         }
         else {
@@ -1038,11 +1055,12 @@ int CSingleClient::SendLan( UINT uiOpCode, void *pData, UINT uiDataLength )
  * @date      2023-01-04 14:33:19
  * @warning
  */
-void CSingleClient::DisplayMsg(STR_LAN_HEADER *pHeader, void *pData )
+void CSingleClient::DisplayMsg(STR_LAN_HEADER *pHeader, void *pData, bool bSend )
 {
     std::string strMessage;
 
-    CCommonUtils::MakeStringMessage( &strMessage , pHeader->uiOpCode );
+    // 랜 메시지 출력시 반대로 해서 설정하여 출력 합니다.
+    CCommonUtils::MakeStringMessage( &strMessage , pHeader->uiOpCode, ! bSend );
 
     //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
 	LOGMSG3(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", strMessage.c_str(), pHeader->uiOpCode, pHeader->uiLength );

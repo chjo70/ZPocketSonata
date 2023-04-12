@@ -186,9 +186,7 @@
   <term name="비활성 시간" description="" physicalName="TIME_INACTIVATED" physicalDescription="" tag="//@tag.0"/>
   <term name="주파수 패턴 타입" description="" physicalName="RF_PATTERN" physicalDescription="" tag="//@tag.0"/>
   <term name="제목" description="" physicalName="TITLE" physicalDescription="" tag="//@tag.0"/>
-  <term name="RF 인덱스" description="" physicalName="PF_INDEX" physicalDescription="" tag="//@tag.0">
-    <physicalSynonyms>RF_INDEX</physicalSynonyms>
-  </term>
+  <term name="RF 인덱스" description="" physicalName="RF_INDEX" physicalDescription="" tag="//@tag.0"/>
   <term name="병합 날짜" description="" physicalName="COMBINED_DATE_LAST_UPDATED" physicalDescription="" tag="//@tag.0"/>
   <term name="RF 패턴 주기 최소" description="" physicalName="RF_PATTERN_PERIOD_MIN" physicalDescription="" tag="//@tag.0"/>
   <term name="RF 최소" description="" physicalName="RF_MIN" physicalDescription="" tag="//@tag.0"/>
@@ -238,5 +236,6 @@
   <term name="변환 최대" description="" physicalName="TRANSITION_MAX" physicalDescription="" tag="//@tag.0"/>
   <term name="플렛폼" description="" physicalName="PRIMARY_PLATFORM" physicalDescription="" tag="//@tag.0"/>
   <term name="위협명" description="" physicalName="THREAT_NAME" physicalDescription="" tag="//@tag.0"/>
+  <term name="비활성 날짜" description="" physicalName="DATE_INACTIVATED" physicalDescription="" tag="//@tag.0"/>
   <tag name="다이어그램_용어수집" description="이 용어는 다이어그램에서 용어 수집도구를 사용하여 등록한 것입니다."/>
 </tm:TermDictionary>

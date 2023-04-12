@@ -56,7 +56,7 @@ void CCGI::_routine()
 
     bool bCGIRunning;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetParentMessage();
 
     //pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 

@@ -17,6 +17,8 @@
 
 #include "../Anal/SigAnal/_Macro.h"
 
+#include "../Anal/EmitterMerge/ELMSGDefn.h"
+
 /**
  * @brief ZYNQ 보드의 번호를 정의함.
  */
@@ -26,7 +28,7 @@ enum ENUM_COLLECT_MODE {
 
     enCollecting,
     enCompleteCollection,
-    enColseCollection,
+    enCloseCollection,
     enAnalysing,
 };
 
@@ -69,6 +71,17 @@ struct STR_LOWHIGH {
 };
 #endif
 
+
+/**
+    @struct STR_COLLECT_PCIADDRESS
+    @brief  PCI 수집 버퍼 정보
+**/
+struct STR_COLLECT_PCIADDRESS {
+    unsigned int uiPCIAddressOffset;
+    unsigned int uiPCIAddressSize;
+
+};
+
 /**
  * @brief 윈도우 셀 구조체 정의
  */
@@ -107,7 +120,7 @@ struct STR_WINDOWCELL {
     */
     STR_LOWHIGH strFreq;
 
-    STR_LOWHIGH strAoa;
+    STR_LOWHIGH strAOA;
     STR_LOWHIGH strPA;
     STR_LOWHIGH strPW;
 
@@ -117,7 +130,7 @@ struct STR_WINDOWCELL {
     /**
      * @brief 실제 수집 시간 정보 [ms]
      */
-    unsigned int uiCollectTime;
+    //unsigned int uiCollectTimems;
 
     /**
      * @brief 빔 번호
@@ -139,8 +152,14 @@ struct STR_WINDOWCELL {
      */
     unsigned int uiAccumulatedCoUsed;
 
-    STR_PDWDATA strPDW;
+    // 빔 정보
+    SRxABTData stABTData;                  //< 추적/스캔 채널별로 대상 위협 빔 정보
 
+    unsigned int uiScanStep;                ///< 스캔 수집 단계 정보
+    unsigned int uiABTIndex;                ///< 위협 관리의 빔 데이터 인덱스
+
+    //STR_PDWDATA strPDW;
+    STR_UZPOCKETPDW strPDW;
 
     void Init( unsigned int uiValueCh ) {
         uiCh = uiValueCh;
@@ -153,15 +172,14 @@ struct STR_WINDOWCELL {
         uiTotalPDW = 0;
         uiAccumulatedCoPDW = 0;
 
-        uiCollectTime = 0;
         uiAccumulatedTime = 0;
 
         uiAccumulatedCoUsed = 0;
 
-        memset( & strPDW.x, 0, sizeof( UNION_HEADER ) );
+        memset( & strPDW.x, 0, sizeof( strPDW.x ) );
 
         strPDW.SetTotalPDW( 0 );
-        strPDW.SetBank( enUnknownCollectBank );
+        strPDW.SetCollectBank( enUnknownCollectBank );
     }
 
     void SetChannel( unsigned int uiValueCh ) {

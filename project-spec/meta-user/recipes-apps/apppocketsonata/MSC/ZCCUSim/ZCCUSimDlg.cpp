@@ -10,6 +10,8 @@
 
 #define _MAIN_GLOBALS_
 
+ENUM_UnitType g_enUnitType;
+
 #include "../../files/Include/globals.h"
 
 #include "../../files/Utils/ccommonutils.h"
@@ -87,6 +89,7 @@ BEGIN_MESSAGE_MAP(CZCCUSimDlg, CDialogEx)
 	ON_BN_CLICKED( IDC_BUTTON_REQ_RESTART, &CZCCUSimDlg::OnBnClickedButtonReqRestart )
 	ON_BN_CLICKED( IDC_BUTTON_REQ_OPVAR, &CZCCUSimDlg::OnBnClickedButtonReqOpvar )
 	ON_BN_CLICKED( IDC_BUTTON_REQ_DISCONNECT, &CZCCUSimDlg::OnBnClickedButtonReqDisconnect )
+	ON_BN_CLICKED( IDC_BUTTON_REQ_DOWNLOAD, &CZCCUSimDlg::OnBnClickedButtonReqDownload )
 END_MESSAGE_MAP()
 
 
@@ -315,6 +318,8 @@ void CZCCUSimDlg::ConnectMessage( STR_CLIENT_SOCKET* pClientSocket )
 void CZCCUSimDlg::DisConnectMessage( STR_CLIENT_SOCKET* pClientSocket )
 {
 	m_enMode = enREADY_MODE;
+
+	m_vClientSock.clear();
 
     UpdateStaticMessage( pClientSocket, false );
     UpdateLEDSwitch( );
@@ -569,6 +574,7 @@ void CZCCUSimDlg::UpdateLEDSwitch()
 void CZCCUSimDlg::OnBnClickedButtonReqStart()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	GetDlgItem( IDC_BUTTON_REQ_START )->EnableWindow( FALSE );
 	
 	if( m_enMode == enREADY_MODE ) {
 		// 운용 시작 명령을 발사합니다.
@@ -582,8 +588,6 @@ void CZCCUSimDlg::OnBnClickedButtonReqStart()
         m_strLanHeader.uiLength = 0;
 
 	}
-
-	GetDlgItem( IDC_BUTTON_REQ_START )->EnableWindow( FALSE );
 
 	Send();
 
@@ -679,15 +683,25 @@ void CZCCUSimDlg::OnBnClickedButtonReqDisconnect()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	//GetDlgItem( IDC_BUTTON_REQ_DISCONNECT )->EnableWindow( FALSE );
 
-	DisConnectMessage( NULL );
-
 	for( STR_CLIENT_SOCKET stClientSocket : m_vClientSock ) {
 		shutdown( stClientSocket.iSocket, SD_BOTH );
 		closesocket( stClientSocket.iSocket );
 	}
 
-	Sleep( 3 );
+    //Sleep( 3 );
+
+	DisConnectMessage( NULL );
 
 	//GetDlgItem( IDC_BUTTON_REQ_DISCONNECT )->EnableWindow( TRUE );
 
+}
+
+
+void CZCCUSimDlg::OnBnClickedButtonReqDownload()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    m_strLanHeader.uiOpCode = enREQ_RELOAD_LIBRARY;
+    m_strLanHeader.uiLength = 0;
+
+    Send();
 }

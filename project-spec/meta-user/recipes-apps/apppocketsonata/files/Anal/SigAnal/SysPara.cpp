@@ -45,7 +45,7 @@ void CSysPara::LoadDefaultSysParameter()
 
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_) || defined(_701_)
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
     _sp.mg.aoa[0] = _spMgAoaEJ;
     _sp.mg.aoa[1] = _spMgAoaEJ;
     _sp.mg.aoa[2] = _spMgAoaEJ;
@@ -53,8 +53,18 @@ void CSysPara::LoadDefaultSysParameter()
     _sp.mg.aoa[4] = _spMgAoaEJ;
     _sp.mg.aoa[5] = _spMgAoaCD;
 
+#elif defined(_POCKETSONATA_)
+    float *pfRxDOAError = g_pTheSysConfig->GetDOAError();
+
+    _sp.mg.aoa[0] = 0;
+    _sp.mg.aoa[enPRC1] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[0] ), 1.0 );
+    _sp.mg.aoa[enPRC2] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[1] ), 1.0 );
+    _sp.mg.aoa[enPRC3] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[2] ), 1.0 );
+    _sp.mg.aoa[enPRC4] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[3] ), 1.0 );
+    _sp.mg.aoa[enPRC5] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[4] ), 1.0 );
+
 #else
-#error "컴파일러에 DEFINE 을 추가해야 합니다."
+
 
 #endif
 

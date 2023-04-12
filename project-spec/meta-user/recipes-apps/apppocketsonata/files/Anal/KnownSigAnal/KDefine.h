@@ -12,7 +12,6 @@
 // 추적에서 새로운 에미터 총 개수
 #define		CO_MAX_KSP_NEW_AET			(4)
 
-// enum { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
 
 #define DEFINE_ANAL_VAR_    \
     _TOA TOA[MAX_PDW];			/* PDW TOA 파라메터     */  \
@@ -38,11 +37,11 @@
     unsigned char *m_pPMOP;         /* PDW PMOP 파라메터    */ \
     unsigned char *m_pFMOP;         /* PDW FMOP 파라메터    */ \
     unsigned short *m_pMARK;        /* PDW MARK ; selected pdw  */ \
-    unsigned char *m_pBAND;         /* 주파수 밴드                  */ \
-    unsigned char *m_pSTAT;         /* 펄스 상태          */          \
+    UCHAR *m_pBAND;         /* 주파수 밴드                  */ \
+    UCHAR *m_pSTAT;         /* 펄스 상태          */          \
     unsigned short *m_pBKMK;		/* Mark 펄스열의 백업용    */          \
     unsigned short *m_pRSMK;        /* MARK 백업용, 스태거 분석시에 사용함.  */  \
-    unsigned char *m_pMAXCHANNEL;	/* PDW의 MaxChannel      */
+    UCHAR *m_pMAXCHANNEL;	/* PDW의 MaxChannel      */
 
 #define INIT_ANAL_VAR_(A)    \
     m_pTOA = & A->TOA[0];           \

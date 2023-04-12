@@ -1,6 +1,6 @@
-// stdafx.cpp : Ç¥ÁØ Æ÷ÇÔ ÆÄÀÏ¸¸ µé¾î ÀÖ´Â ¼Ò½º ÆÄÀÏÀÔ´Ï´Ù.
-// RADARANL.pch´Â ¹Ì¸® ÄÄÆÄÀÏµÈ Çì´õ°¡ µË´Ï´Ù.
-// stdafx.obj¿¡´Â ¹Ì¸® ÄÄÆÄÀÏµÈ Çü½Ä Á¤º¸°¡ Æ÷ÇÔµË´Ï´Ù.
+ï»¿// stdafx.cpp : í‘œì¤€ í¬í•¨ íŒŒì¼ë§Œ ë“¤ì–´ ìˆëŠ” ì†ŒìŠ¤ íŒŒì¼ì…ë‹ˆë‹¤.
+// RADARANL.pchëŠ” ë¯¸ë¦¬ ì»´íŒŒì¼ëœ í—¤ë”ê°€ ë©ë‹ˆë‹¤.
+// stdafx.objì—ëŠ” ë¯¸ë¦¬ ì»´íŒŒì¼ëœ í˜•ì‹ ì •ë³´ê°€ í¬í•¨ë©ë‹ˆë‹¤.
 
 #include "stdafx.h"
 
@@ -192,11 +192,11 @@ int Printf(char *format, ...)
 
 
 /**
- * @brief     Window Handler ¸¦ ¼³Á¤ÇÑ´Ù.
+ * @brief     Window Handler ë¥¼ ì„¤ì •í•œë‹¤.
  * @param     HWND hWnd
  * @return    void
- * @exception ¿¹¿Ü»çÇ×À» ÀÔ·ÂÇØÁÖ°Å³ª 'ÇØ´ç»çÇ× ¾øÀ½' À¸·Î ÇØÁÖ¼¼¿ä.
- * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
+ * @exception ì˜ˆì™¸ì‚¬í•­ì„ ì…ë ¥í•´ì£¼ê±°ë‚˜ 'í•´ë‹¹ì‚¬í•­ ì—†ìŒ' ìœ¼ë¡œ í•´ì£¼ì„¸ìš”.
+ * @author    ì¡°ì² í¬ (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-10-19 14:04:39
  * @warning
@@ -243,7 +243,7 @@ CString GetIpAddress()
 /**
  * @brief     
  * @return    enPosition
- * @author    ì¡°ì² ??(churlhee.jo@lignex1.com)
+ * @author    è­°ê³—???(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/11 19:41:53
  * @warning   
@@ -273,7 +273,7 @@ CString GetIpAddress()
 /**
  * @brief     
  * @return    BOOL
- * @author    ì¡°ì² ??(churlhee.jo@lignex1.com)
+ * @author    è­°ê³—???(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/11 19:41:58
  * @warning   
@@ -301,7 +301,7 @@ BOOL CheckPing()
 
 		nMaxTime--;
 		if( 0 == nMaxTime ) {
-			AfxMessageBox( _T("DB ¼­¹ö(192.168.0.41) ÄÄÇ»ÅÍ°¡ ¿¬°áÀÌ ¾È µÇ¾ú½À´Ï´Ù. °ü¸®ÀÚ¿¡°Ô ¹®ÀÇÇÏ¼¼¿ä."), MB_OK );
+			AfxMessageBox( _T("DB ì„œë²„(192.168.0.41) ì»´í“¨í„°ê°€ ì—°ê²°ì´ ì•ˆ ë˜ì—ˆìŠµë‹ˆë‹¤. ê´€ë¦¬ìì—ê²Œ ë¬¸ì˜í•˜ì„¸ìš”."), MB_OK );
 			return FALSE;
 		}
 	}

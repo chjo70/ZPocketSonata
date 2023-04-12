@@ -181,9 +181,9 @@ BOOL CKAnalPRI::KnownAnalysis()
 	// 타입에 따라서 펄스열 분석을 달리한다.
     //pPri = & stTrkAet.aet.pri;
 #ifdef _POCKETSONATA_
-    switch( m_pTrkAet->ucPRIType ) {
+    switch( m_pTrkAet->vPRIType ) {
 #else
-    switch( m_pTrkAet->iPRIType ) {
+    switch( m_pTrkAet->vPRIType ) {
 #endif
 		case _STABLE :
 			// 추적에서는 로브 조건을 무시하도록 한다.

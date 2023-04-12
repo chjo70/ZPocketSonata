@@ -70,8 +70,8 @@ public:
 	unsigned int Read( void *pData, unsigned int c_size, int iOffset=0 );
 	unsigned int Write( void *pData, unsigned int c_size );
 	void CloseFile();
-    unsigned int GetRawFileSize();
-	unsigned int GetRawFileSize( char *pPathFileName );
+    unsigned long long int GetRawFileSize();
+	unsigned long long int GetRawFileSize( char *pPathFileName );
 	void GetFilename( char *pFilename );
 
     bool CreateDir( const TCHAR *pPath );

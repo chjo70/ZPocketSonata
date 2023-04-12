@@ -43,8 +43,9 @@ typedef long long __time64_t;
 #define sscanf_s                sscanf
 
 
-
 #define _difftime64( A, B)      ( A > B ? ( A - B ) : ( B - A ) )
+
+//#define printf                  _func_kprintf
 
 //////////////////////////////////////////////////////////////////////////
 #elif defined(_GNUCC__)
@@ -61,8 +62,8 @@ typedef long long __time64_t;
 
 #define CLOCK_REALTIME	        0
 
-#define OS_MILLISEC(A)          (A*1000)
-#define OS_SEC(A)               (A*1000000)
+#define OS_MILLISEC(A)          (A)
+#define OS_SEC(A)               (A*1000)
 
 
 #define Sleep(A)                Sleep(5*1000)

@@ -58,7 +58,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USE_MATH_DEFINES;_MIDAS_;_FFTW_;_CRT_SECURE_NO_WARNINGS;_GRAPH_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USE_MATH_DEFINES;_USE_32BIT_TIME_T;_MIDAS_;_FFTW_;_GRAPH_;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4828;4819</DisableSpecificWarnings>
       <AdditionalOptions>
       </AdditionalOptions>
@@ -89,7 +89,12 @@ REM ########################################################################
 REM  작업실에서...
 SET DELTA_GRAPH_DEST="D:\Program Files\DeltaGraph"
 
-copy ..\Debug\DeltaGraph.* "D:\Program Files\DeltaGraph"
+if not exist "%DELTA_GRAPH_DEST%" (
+   mkdir "%DELTA_GRAPH_DEST%"
+   echo "%DELTA_GRAPH_DEST%" 를 생성했습니다.
+)
+rem copy ..\Debug\DeltaGraph.* "D:\Program Files\DeltaGraph"
+copy ..\Debug\DeltaGraph.* "%DELTA_GRAPH_DEST%"
 
 REM CALL CopyAll %DELTA_GRAPH_DEST%
 
@@ -104,7 +109,7 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;_MIDAS_;_GRAPH_;_FFTW_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_MIDAS_;_GRAPH_;_FFTW_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,6 +128,29 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>echo off
+
+echo $(ConfigurationName)
+
+SET CONFIGNAME=$(ConfigurationName)
+
+REM ########################################################################
+REM  작업실에서...
+SET DELTA_GRAPH_DEST="D:\Program Files\DeltaGraph"
+
+if not exist "%DELTA_GRAPH_DEST%" (
+   mkdir "%DELTA_GRAPH_DEST%"
+   echo "%DELTA_GRAPH_DEST%" 를 생성했습니다.
+)
+rem copy ..\Debug\DeltaGraph.* "D:\Program Files\DeltaGraph"
+copy ..\Debug\DeltaGraph.* "%DELTA_GRAPH_DEST%"
+
+REM CALL CopyAll %DELTA_GRAPH_DEST%
+
+
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\TEMP\chartingtocpict.ico" />
@@ -200,7 +228,10 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp" />
-    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp" />
     <ClCompile Include="ButtonST\BCMenu.cpp" />
     <ClCompile Include="ButtonST\BtnST.cpp" />

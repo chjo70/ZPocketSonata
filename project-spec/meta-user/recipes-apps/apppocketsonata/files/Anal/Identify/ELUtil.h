@@ -1,14 +1,24 @@
-﻿// ELUtil.h: interface for the CUtil class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_)
-#define AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_
+    @file      ELUtil.h
+    @brief     EL 유틸 관련 헤더 파일 정의
+    @details   ~
+    @author    조철희
+    @date      26.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #include "../SigAnal/_Macro.h"
 
-#include "../../Utils/MulDiv64.h"
 #include "../EmitterMerge/IsNumber.h"
+#include "../../Utils/MulDiv64.h"
+
+
+#include "../Collect/DataFile/DataFile.h"
 
 
 #define	KM_PER_DEGREE_FOR_LATITUDE						(111.111)				// [km/deg]
@@ -16,10 +26,10 @@
 
 void LogPrint( const char *format, ... );
 
+float DOADiff( float x, float y );
 
 void SetUnitType();
 
-float DOADiff(float x, float y);
 
 void UTF8ToMultibyte(char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p);
 int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiByte);
@@ -30,15 +40,80 @@ UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
 ///////////////////////////////////////////////////////////////////////////////////
 // 템플릿 함수 모음
 
+/**
+ * @brief     방위[도]에 대한 임계값을 고려한 방탐 비교
+ * @param     T x
+ * @param     T y
+ * @param     T thresh_value
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-26 13:08:18
+ * @warning
+ */
 template <typename T>
-BOOL CompAoaDiff(T x, T y, T thresh_value ) 
+BOOL CompDOADiff(T x, T y, T thresh_value )
 {
-    T diff;
+    T tdiff;
     BOOL bRet;
 
-    diff = abs(x - y);
+    tdiff = abs(x - y);
 
-    if( diff <= thresh_value || ( MAX_AOA - diff ) <= thresh_value ) {
+    if( tdiff <= thresh_value || ( 360 - tdiff ) <= thresh_value ) {
+        bRet = TRUE;
+    }
+    else {
+        bRet = FALSE;
+    }
+
+    return bRet;
+
+}
+
+/**
+ * @brief     방위 범위[도]에 대한 임계값을 고려한 방탐 비교
+ * @param     T x
+ * @param     T y1
+ * @param     T y2
+ * @param     T thresh_value
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-03-26 13:10:11
+ * @warning
+ */
+template <typename T>
+BOOL CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
+{
+    //T tDiff; // , tY1, tY2;
+    BOOL bRet;
+
+    //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
+    //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
+
+    if( ( tx >= ty1 && tx <= ty2 ) || ( ( tx >= ty1 && tx <= (PDW_DOA_MAX-1) ) || ( tx >= 0 && tx <= ty2 ) ) ) {
+        bRet = TRUE;
+    }
+    else {
+        bRet = FALSE;
+    }
+
+    return bRet;
+
+}
+
+template <typename T>
+BOOL CompDOAMarginDiff( T x, T y1, T y2 )
+{
+    //T tDiff; // , tY1, tY2;
+    BOOL bRet;
+
+    //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
+    //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
+
+    if( ( x >= y1 && x <= y2 ) || ( ( x >= y1 && x <= 0xFFFFFF ) || ( x >= 0 && x <= y2 ) ) ) {
         bRet = TRUE;
     }
     else {
@@ -151,7 +226,7 @@ float MeanInArray( T *series, UINT co)
 template <typename T>
 float SDevInArray(T *series, UINT co, float mean)
 {
-    register unsigned int i;
+    unsigned int i;
 
     double sdiff;
 
@@ -336,7 +411,7 @@ BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
  * @param     T tRange
  * @param     T tMean
  * @return    float
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-22 11:44:46
@@ -348,7 +423,7 @@ float TCalcJitterRatio(T tRange, T tMean)
 	float fRet=0.0;
 
 	// const char *pst = typeid(T).name();
-	
+
 #ifdef _MSC_VER
 	if (strcmp(typeid(T).name(), "float") == 0) {
 		fRet = tRange * (float) 100. / tMean;
@@ -454,7 +529,7 @@ bool IsOverlapSpace( T low1, T hgh1, T low2, T hgh2, T tRatio )
  * @param     T tMax2
  * @param     unsigned int uiDivide
  * @return    bool
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-28 12:12:21
@@ -504,4 +579,4 @@ bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned
 }
 
 
-#endif // !defined(AFX_UTIL_H__43C28AC5_E619_4079_AEF1_4C680C7CA6B5__INCLUDED_)
+

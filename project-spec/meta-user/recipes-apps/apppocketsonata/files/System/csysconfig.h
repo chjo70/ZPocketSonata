@@ -107,7 +107,7 @@ private:
 #ifndef _MSC_VER
     minIni m_theMinIni;
 #else
-    
+
 #endif
 
     char m_szIniFileName[200];
@@ -186,11 +186,11 @@ public:
 
     };
 
-    float GetMergeAOADiff(ENUM_BoardID enBoardID) { 
+    float GetMergeAOADiff(ENUM_BoardID enBoardID) {
         float fValue= m_strConfig.fMergeAOADiff[enPRC1];
 
         if(enBoardID >= enPRC1 && enBoardID <= enPRC5 ) {
-            fValue = m_strConfig.fMergeAOADiff[enBoardID- enPRC1]; 
+            fValue = m_strConfig.fMergeAOADiff[enBoardID- enPRC1];
         }
 
         return fValue;
@@ -201,7 +201,8 @@ public:
         m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
     };
 
-	void SetAOAError(float *fValue) {
+    float *GetDOAError() { return & m_strConfig.fRxDOAError[0]; }
+	void SetDOAError(float *fValue) {
 		memcpy(m_strConfig.fRxDOAError, fValue, sizeof(m_strConfig.fRxDOAError));
 		m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
 	};
@@ -232,7 +233,7 @@ public:
 //         else {
 //             m_strConfig.enMode = enMode;
 //         }
-// 
+//
 //         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 //     };
 

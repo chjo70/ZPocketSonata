@@ -1,6 +1,6 @@
-// stdafx.cpp : Ç¥ÁØ Æ÷ÇÔ ÆÄÀÏ¸¸ µé¾î ÀÖ´Â ¼Ò½º ÆÄÀÏÀÔ´Ï´Ù.
-// RADARDIR.pch´Â ¹Ì¸® ÄÄÆÄÀÏµÈ Çì´õ°¡ µË´Ï´Ù.
-// stdafx.obj¿¡´Â ¹Ì¸® ÄÄÆÄÀÏµÈ Çü½Ä Á¤º¸°¡ Æ÷ÇÔµË´Ï´Ù.
+ï»¿// stdafx.cpp : í‘œì¤€ í¬í•¨ íŒŒì¼ë§Œ ë“¤ì–´ ìžˆëŠ” ì†ŒìŠ¤ íŒŒì¼ìž…ë‹ˆë‹¤.
+// RADARDIR.pchëŠ” ë¯¸ë¦¬ ì»´íŒŒì¼ëœ í—¤ë”ê°€ ë©ë‹ˆë‹¤.
+// stdafx.objì—ëŠ” ë¯¸ë¦¬ ì»´íŒŒì¼ëœ í˜•ì‹ ì •ë³´ê°€ í¬í•¨ë©ë‹ˆë‹¤.
 
 #include "stdafx.h"
 
@@ -58,7 +58,7 @@ CCriticalSection g_criticalExe;
 // 			strPath.Format( "%s\\%s", GetFilePath(), LOG_DIRECTORY );
 // 		}
 // 		else {
-// 			strPath.Format( "%s\\%s\\¼öÁý¼Ò_%d", GLOBAL_LOG_DIRECTORY, LOG_SUB_DIRECTORY, stiCollectorId );
+// 			strPath.Format( "%s\\%s\\ìˆ˜ì§‘ì†Œ_%d", GLOBAL_LOG_DIRECTORY, LOG_SUB_DIRECTORY, stiCollectorId );
 // 		}
 // 
 // 		if( TRUE == _CreateDir( (LPSTR) (LPCSTR) strPath ) ) {
@@ -191,7 +191,7 @@ BOOL CheckPing()
 		if( 0 == nMaxTime ) {
 			char szBuffer[100];
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "DB ¼­¹ö(%s) ÄÄÇ»ÅÍ°¡ ¿¬°áÀÌ ¾È µÇ¾ú½À´Ï´Ù. °ü¸®ÀÚ¿¡°Ô ¹®ÀÇÇÏ¼¼¿ä.", DB_SERVER_IP_ADDRESS );
+			sprintf_s( szBuffer, sizeof(szBuffer), "DB ì„œë²„(%s) ì»´í“¨í„°ê°€ ì—°ê²°ì´ ì•ˆ ë˜ì—ˆìŠµë‹ˆë‹¤. ê´€ë¦¬ìžì—ê²Œ ë¬¸ì˜í•˜ì„¸ìš”.", DB_SERVER_IP_ADDRESS );
 			AfxMessageBox( szBuffer, MB_OK );
 			return FALSE;
 		}

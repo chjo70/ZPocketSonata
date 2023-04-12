@@ -108,8 +108,8 @@ CPositionEstimationAlg::~CPositionEstimationAlg(void)
 void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, int nLob, STR_LOBS *pstrLOB )
 {
 	double *pLatitude, *pLongitude, *pLob;
-	double dMinLatitude=360., dMaxLatitude=-360.;
-	double dMinLongitude=360.0, dMaxLongitude=-360.;
+	//double dMinLatitude=360., dMaxLatitude=-360.;
+	//double dMinLongitude=360.0, dMaxLongitude=-360.;
 
 	SELPositionEstimationResult result;
 
@@ -299,7 +299,8 @@ bool CPositionEstimationAlg::VerifyOfPositionEstimation( SELPE_RESULT *pResult, 
 {
 	UINT uI;
 	bool bRet=true;
-	double dDiffLatitude, dDiffLongitude;
+	//double dDiffLatitude, dDiffLongitude;
+	double dDiffLongitude;
 
 	double *pSensorLatitude, *pSensorLongitude, *pSensorLob;
 
@@ -307,7 +308,7 @@ bool CPositionEstimationAlg::VerifyOfPositionEstimation( SELPE_RESULT *pResult, 
 	pSensorLatitude = pSensor->pLatitude;
 	pSensorLongitude = pSensor->pLongitude;
 	for( uI=0 ; uI < pSensor->n ; ++uI ) {
-		dDiffLatitude = *pSensorLatitude - pResult->dLatitude;
+		//dDiffLatitude = *pSensorLatitude - pResult->dLatitude;
 		dDiffLongitude = *pSensorLongitude - pResult->dLongitude;
 
 		// 경도가 0 초과일때 방위는 3/4 사분면에 있어야 한다.
@@ -470,13 +471,13 @@ void CPositionEstimationAlg::CommonRunPositionEstimation( SELPE_RESULT *pSELPE_R
  */
 void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT, EL_POSIOTN_ESTIMATION_ALGORITHM_OPTION eOption, EL_TARGET_STATE_OPTION eTargetState, STR_POSITION_ESTIMATION *pPEInfo )
 {
-	time_t firstToa=0;
+	//time_t firstToa=0;
 
-	bool *pValid;
+	//bool *pValid;
 
-	double dTargetLocDeg[2];
-	double dInitPosRad[2];
-	double dEEPData[4];
+	//double dTargetLocDeg[2];
+	//double dInitPosRad[2];
+	//double dEEPData[4];
 
 	m_uiLob = m_Sensor.n;
 
@@ -490,26 +491,26 @@ void CPositionEstimationAlg::RunPositionEstimation( SELPE_RESULT *pSELPE_RESULT,
 
 		// 위치 산출 실행하기 전에 메모리 할당
 		bool bResult;
-		UINT uiFlagInitPos=0;
-		double *dTemp=NULL;
+		//UINT uiFlagInitPos=0;
+		//double *dTemp=NULL;
 
-		pValid = m_Sensor.pValid;
+		//pValid = m_Sensor.pValid;
 
-		dTargetLocDeg[0] = 0.;
-		dEEPData[0] = 0.;
+		//dTargetLocDeg[0] = 0.;
+		//dEEPData[0] = 0.;
 
 		// 위치 산출의 초기값 지정한다.
 		if( pPEInfo != nullptr && pPEInfo->enValid == E_EL_PESTAT_SUCCESS ) {
-			uiFlagInitPos = 1;
+			//uiFlagInitPos = 1;
 
-			dInitPosRad[0] = (double) pPEInfo->fLatitude;
-			dInitPosRad[1] = (double) pPEInfo->fLongitude;
+			//dInitPosRad[0] = (double) pPEInfo->fLatitude;
+			//dInitPosRad[1] = (double) pPEInfo->fLongitude;
 		}
 		else {
-			uiFlagInitPos = 0;
+			//uiFlagInitPos = 0;
 
-			dInitPosRad[0] = 0.;
-			dInitPosRad[1] = 0.;
+			//dInitPosRad[0] = 0.;
+			//dInitPosRad[1] = 0.;
 		}
 
 		ConvertLatLong2( (int) m_uiLob, & m_Sensor );

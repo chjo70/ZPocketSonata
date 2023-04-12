@@ -21,48 +21,41 @@
 
 class CNewSigAnal;
 
-//##ModelId=452B0C550051
+/**
+
+    @class   CNMakeAET
+    @brief   탐지 에미터 생성 관련 클래스 정의 입니다.
+    @details ~
+
+**/
 class CNMakeAET : public CMakeAET
 {
 private:
-    SRxLOBData m_LOBData[ MAX_AET+1 ];
+    
 
 protected:
-	//##ModelId=452B0C55005C
 	CNewSigAnal *m_pNewSigAnal;
 
 public:
 	void MarkAllAetToPdwIndex();
-	//##ModelId=452B0C550060
 	void Init();
-	//##ModelId=452B0C550061
 	void MakeAET();
-	//##ModelId=452B0C550065
+    void PrintAllAET();
 	int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
-	//##ModelId=452B0C550067
 	unsigned int GetColPdw();
-	//##ModelId=452B0C550068
 	int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
-	//##ModelId=452B0C550079
 	int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
-	
 	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType);
-	
 	void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
-	//##ModelId=452B0C55008E
 	unsigned int GetCoSeg();
-	//##ModelId=452B0C550097
 	unsigned int GetCoEmitter();
-	//##ModelId=452B0C550098
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();
-	//##ModelId=452B0C550099
 	STR_EMITTER *GetEmitter();
-	//##ModelId=452B0C55009A
 	UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
 	STR_PDWPARAM* GetPdwParam();
 
-	
-    CNMakeAET( void *pParent, unsigned int uicoMaxPdw );	
+
+    CNMakeAET( void *pParent, unsigned int uicoMaxPdw );
 	virtual ~CNMakeAET();
 
 	// 타 장비 관련 위협 데이터를 생성한다.
@@ -72,7 +65,6 @@ public:
     unsigned int IsStorePDW();
 	void GetCollectTime( struct timespec *pTimeSpec );
 
-    inline SRxLOBData *GetLOBData(int index=0 ) { return & m_LOBData[index]; }
     unsigned int GetPDWID();
     unsigned int GetOpInitID();
 
@@ -91,3 +83,5 @@ public:
 #endif
 
 #endif // !defined(AFX_CNMAKEAET_H__B714AED9_7308_450E_8042_4AC14DA832CB__INCLUDED_)
+
+

@@ -29,7 +29,7 @@ CSGroup::CSGroup( void *pParent, unsigned int uicoMaxPdw ) : CGroup(uicoMaxPdw)
 
 /**
  * @brief     ~CSGroup
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -44,7 +44,7 @@ CSGroup::~CSGroup()
 /**
  * @brief     스캔 분석의 PDW 개수를 리턴한다.
  * @return    int
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2006-01-27 11:20:12
@@ -52,7 +52,7 @@ CSGroup::~CSGroup()
  */
 unsigned int CSGroup::GetColPdw()
 {
-	return m_pScanSigAnal->GetColPdw(); 
+	return m_pScanSigAnal->GetColPdw();
 }
 
 /**
@@ -68,6 +68,12 @@ void CSGroup::MakeOneGroup()
 {
 	unsigned int i;
 	PDWINDEX *pPdwIndex;
+
+#ifdef _POCKETSONATA_
+    m_nBand = g_enBoardId;
+#else
+    m_nBand = 0;
+#endif
 
 	m_FrqAoaPwIdx.uiCount = m_uiCoPdw;
 

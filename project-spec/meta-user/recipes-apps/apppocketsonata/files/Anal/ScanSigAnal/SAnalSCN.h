@@ -80,7 +80,7 @@ protected:
     //SRxLOBData m_stLOBData;
 
 public:
-    STR_EMITTER *TakeTheScanMainEmitter();
+    STR_EMITTER *WhichTheMainEmitter();
 
     void SaveScanPulse( STR_PDWINDEX *pPdwIndex );
 
@@ -93,7 +93,7 @@ public:
 	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
-	bool CheckControlWc( UINT noEMT );
+	//bool CheckControlWc( UINT noEMT );
 
 	UINT GetFlagControlWc( UINT noEMT );
 	UINT DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pAutocf );

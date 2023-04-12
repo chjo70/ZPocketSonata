@@ -42,7 +42,7 @@ void	formDefineUserMgmt(void);
 /*
  *	Change configuration here
  */
-#define				ROOT_DIR		T("/tffs0")
+#define				ROOT_DIR		T("/tffs1")
 
 static char_t		*rootWeb = T("Web");			/* Root web directory */
 static char_t		*password = T("");				/* Security password */

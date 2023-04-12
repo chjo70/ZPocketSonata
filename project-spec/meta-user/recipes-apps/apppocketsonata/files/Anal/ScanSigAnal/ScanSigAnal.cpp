@@ -29,7 +29,7 @@
 //
 // 함 수 이 름  : CScanSigAnal::CScanSigAnal
 // 함 수 인 자  : int coMaxPdw
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 10:41:42
 //
 CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
@@ -60,7 +60,7 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *
 
 /**
  * @brief     스캔 분석 객체를 소멸 처리합니다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -90,7 +90,6 @@ CScanSigAnal::~CScanSigAnal()
 void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
     unsigned int uiTotalPDW;
-	EN_SCANRESULT enScanResult;
 
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
@@ -100,10 +99,10 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    Log( enNormal, "==== 스캔 분석 시작[%dth, Co:%d] ====", GetStep(), m_uiCoPdw);
+	Log( enNormal, "==== 스캔 분석 시작[%dth, Co:%d] ============================", GetStep(), m_uiCoPdw );
 
     // 수집한 PDW 파일 저장하기...
-    InsertRAWData(&m_stSavePDWData, _spZero );
+    //InsertRAWData(&m_stSavePDWData, _spZero );
 
     uiTotalPDW = pPDWData->GetTotalPDW();
 
@@ -115,6 +114,8 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     */
     m_theGroup->MakeOneGroup();
 
+    SaveGroupPDWFile( m_pGrPdwIndex, pPDWData, -1, true );
+
     // 펄스열 추출
     m_thePulExt->KnownPulseExtract();
 
@@ -122,11 +123,11 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     m_theAnalScan->KnownAnalysis();
 
 	// 스캔 분석 수행한다.
-    m_strScnResult.uiABTID = m_pScnAet->uiABTID;
-    m_strScnResult.uiAETID = m_pScnAet->uiAETID;
-	enScanResult = m_theAnalScan->AnalScan();
-	m_strScnResult.enResult = enScanResult;
-    GetScanRes( & m_strScnResult.uiScnTyp, & m_strScnResult.fScnPrd );
+    //m_strScnResult.uiABTID = m_pScnAet->uiABTID;
+    //m_strScnResult.uiAETID = m_pScnAet->uiAETID;
+	EN_SCANRESULT enResult = m_theAnalScan->AnalScan();
+	m_strScnResult.enResult = enResult;
+    GetScanRes( & m_strScnResult.uiScanType, & m_strScnResult.fScanPeriod );
 
 	// 스캔 분석 결과를 저장한다.
     //SaveScanInfo( nResult, m_pScnAet );
@@ -138,7 +139,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 // 함 수 이 름  : CScanSigAnal::SendScanResult
 // 반환되는 형  : void
 // 함 수 인 자  : UINT nResult
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-16 11:42:38
 //
 void CScanSigAnal::SendScanResult( UINT nResult )
@@ -155,7 +156,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 	stScnAet[m_uinoEMT].aet.as.iType = nScnTyp;
 	stScnAet[m_uinoEMT].aet.as.iPrd = nScnPrd;
 
-	if( nResult == _spAnalSuc ) 
+	if( nResult == _spAnalSuc )
 		stScnAet[m_uinoEMT].aet.as.iStat = SELF_SUCCESS;
 
  	pView->UpdateScanInfoFromSAP( & stScnAet[m_uinoEMT] );
@@ -181,7 +182,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 
 			//////////////////////////////////////////////////////////////////////////
 			// Qpost( SQ_SndPrc, tskMsg ); 를 모의
-			
+
 
     CASE _spModWc :
 			printf( "\n Anal Fail(ColCtl) of noEMT[%d]" , m_uinoEMT );
@@ -202,7 +203,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 // 함 수 이 름  : CScanSigAnal::GetCoScanPulse
 // 반환되는 형  : UINT
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 14:11:19
 //
 UINT CScanSigAnal::GetCoScanPulse()
@@ -214,7 +215,7 @@ UINT CScanSigAnal::GetCoScanPulse()
 // 함 수 이 름  : CScanSigAnal::ClearColBuffer
 // 반환되는 형  : void
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-17 15:18:27
 //
 
@@ -232,13 +233,14 @@ void CScanSigAnal::ClearColBuffer()
 // 함 수 인 자  : PDWINDEX *pPdwIndex
 // 함 수 인 자  : int count
 // 함 수 인 자  : int mark_type
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 14:07:35
 //
 void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType)
 {
-	for( unsigned int i=0 ; i < uiCount; ++i )
+	for( unsigned int i=0 ; i < uiCount; ++i ) {
 		MARK[ *pPdwIndex++ ] = usMarkType;
+}
 }
 
 /**
@@ -279,16 +281,23 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 
     // 신호 수집 개수 정의
     if (pstPDWData != NULL) {
+		MakeAnalDirectory( &pstPDWData->x );
+
+#ifdef _MSC_VER
+        CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+#endif
+
         memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(UNION_HEADER));
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         SetPDWID(m_pstPDWData->GetPDWID());
+		SetColTime( m_pstPDWData->GetColTime() );
+		SetStorePDW( m_pstPDWData->GetStorePDW() );
+		// SetBandWidth( m_pstPDWData->GetBandWidth() );
 
         // 신호 수집 개수 정의
         m_uiCoPdw = pstPDWData->GetTotalPDW();
 
-        // RAW 데이터 저장 여부
-        SetStorePDW( pstPDWData->x.ps.uiIsStorePDW );
     }
     else {
         SetPDWID(_spZero);
@@ -316,7 +325,7 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 // 반환되는 형  : void
 // 함 수 인 자  : int noEMT
 // 함 수 인 자  : int noCh
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 10:32:42
 //
 void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, unsigned int uinoCh )
@@ -346,7 +355,7 @@ void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, unsigned int uino
 // 함 수 이 름  : CScanSigAnal::ScanSigAnalInit
 // 반환되는 형  : void
 // 함 수 인 자  : int noCh
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-13 17:22:40
 //
 void CScanSigAnal::ScanSigAnalInit( unsigned int uinoEMT, int noCh )
@@ -359,7 +368,7 @@ void CScanSigAnal::ScanSigAnalInit( unsigned int uinoEMT, int noCh )
 // 함 수 이 름  : *CScanSigAnal::GetScanPulseTrain
 // 반환되는 형  : STR_SCANPT
 // 함 수 인 자  : int noCh
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-16 11:02:31
 //
 STR_SCANPT *CScanSigAnal::GetScanPulseTrain( int noCh )
@@ -374,7 +383,7 @@ STR_SCANPT *CScanSigAnal::GetScanPulseTrain( int noCh )
 // 반환되는 형  : void
 // 함 수 인 자  : int *pScanType
 // 함 수 인 자  : int *pScanPrd
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-16 11:02:34
 //
 void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
@@ -392,7 +401,7 @@ void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 // 반환되는 형  : void
 // 함 수 인 자  : STR_EMITTER *pEmitter
 // 함 수 인 자  : int index
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 14:37:39
 //
 void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )

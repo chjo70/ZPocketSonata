@@ -100,6 +100,9 @@
     <Filter Include="소스 파일\Anal\IntraSigAnal">
       <UniqueIdentifier>{541e0db4-52a1-49c6-a294-59d8f9607cf7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="설정 파일">
+      <UniqueIdentifier>{64458260-29c8-48b4-bdda-6d7567d9647b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -112,6 +115,9 @@
     <None Include="ClassDiagram.cd" />
     <None Include="res\Sketchpad.ico">
       <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\..\files\sysconfig.ini">
+      <Filter>설정 파일</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +176,6 @@
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Thread\curbit.h">
-      <Filter>소스 파일\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Thread\cusercollect.h">
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\System\csharedmemory.h">
@@ -553,9 +556,6 @@
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Thread\curbit.cpp">
-      <Filter>소스 파일\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Thread\cusercollect.cpp">
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\System\csharedmemory.cpp">

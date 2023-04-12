@@ -66,7 +66,7 @@ protected:
 	LONG m_lConnectionTimeout;
 	BOOL m_bIsConnected;
 	SQLHENV m_hEnv;
-	int m_nRowsAffected;
+    SQLINTEGER m_nRowsAffected;
 
 public:
 	BOOL Open(CHAR* lpstrDSN, CHAR* lpstrUser = NULL, CHAR* lpstrPass = NULL);
@@ -157,6 +157,7 @@ public:
 	BOOL GetFieldValue(SQLSMALLINT nField, CHAR* szData);
 	BOOL GetFieldValue(CHAR* szFieldName, CHAR *szData);
 	BOOL GetFieldValue(SQLSMALLINT nField, int* szData);
+    BOOL GetFieldValue( SQLSMALLINT nField, unsigned int *lData );
 	BOOL GetFieldValue(CHAR* szFieldName, int *szData);
 	BOOL GetFieldValue(SQLSMALLINT nField, LONG *lData);
 	BOOL GetFieldValue(CHAR* szFieldName, LONG *lData);

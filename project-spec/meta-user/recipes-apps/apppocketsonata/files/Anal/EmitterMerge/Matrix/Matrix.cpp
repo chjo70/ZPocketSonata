@@ -3,8 +3,8 @@
  * @brief     행렬 계산을 편리하게 계산하기 위한 클래스
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희
- * @date      2014-10-08 오전 8:50 
- * @warning   
+ * @date      2014-10-08 오전 8:50
+ * @warning
  */
 
 
@@ -20,7 +20,7 @@
 
 /**
  * @brief     객체를 생성한다.
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -40,7 +40,7 @@ CMatrix::CMatrix()
  * @brief     객체를 소멸 처리를 한다.
  * @param     const unsigned int row_count
  * @param     const unsigned int column_count
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -72,7 +72,7 @@ CMatrix::CMatrix(const unsigned int row_count, const unsigned int column_count)
 /**
  * @brief     CMatrix 값을 입력받아 동일한 값으로 설정한다.
  * @param     const CMatrix & a
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -193,7 +193,7 @@ CMatrix& CMatrix::operator= (const CMatrix& a)
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 17:12:29
 	*/
-	//if( p == NULL ) 
+	//if( p == NULL )
 	//	return *this;
 
 	for (unsigned int r = 0; r < uia_rows ; r++) {
@@ -484,7 +484,7 @@ CMatrix operator* (const CMatrix& a, const CMatrix& b)
 
 	// check if the dimensions match
 	if (a.m_uiCols == b.m_uiRows)
-	{	
+	{
 		for (unsigned int r = 0; r < a.m_uiRows; r++)
 		{
 			for (unsigned int c_res = 0; c_res < b.m_uiCols; c_res++)
@@ -723,7 +723,7 @@ unsigned int CMatrix::GetCols() const
  */
 void CMatrix::Print() const
 {
-#ifdef _MSC_VER	
+#ifdef _MSC_VER
 	if (p != NULL)
 	{
 		TRACE0("[");
@@ -752,13 +752,13 @@ void CMatrix::Print() const
 		// CMatrix is empty
 		TRACE0("[ ]\n");
 	}
-#endif	
+#endif
 }
 
 
 /**
  * @brief     행렬 소멸자를 처리한다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -796,7 +796,9 @@ void CMatrix::CleanMatrix()
 			\author 조철희 (churlhee.jo@lignex1.com)
 			\date 	2015-10-5 17:09:41
 	*/
-	if( p != NULL ) delete p;
+	if( p != NULL ) {
+		delete p;
+	}
 	p = NULL;
 }
 
@@ -822,7 +824,7 @@ unsigned int CMatrix::Size(const CMatrix& a, const int i)
  * @param     const unsigned int uiRows
  * @param     const unsigned int uiCols
  * @return    CMatrix
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-07-08 10:33:03
@@ -1077,7 +1079,7 @@ CMatrix Inv(const CMatrix& a, bool *pRet )
 	unsigned int cols = a.GetCols();
 
 	d = Det(a);
-	if (rows == cols && is_not_zero<double>(d) == true )
+	if ( /* rows == cols && */ is_not_zero<double>(d) == true )
 	{
 		// this is a square CMatrix
 		if (rows == 1)
@@ -1140,7 +1142,7 @@ CMatrix Inv(const CMatrix& a, bool *pRet )
 					if(r != c)
 					{
 						// eleminate value at column c and row r
-						if ( is_not_zero<double>(ai(r, c)) == true) 
+						if ( is_not_zero<double>(ai(r, c)) == true)
 						{
 							double f; // = -ai(r, c) / ai(c, c);
 							f = -ai(r, c);

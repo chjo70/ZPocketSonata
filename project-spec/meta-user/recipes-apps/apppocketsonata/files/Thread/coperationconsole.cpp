@@ -109,7 +109,7 @@ void COperationConsole::Run()
 void COperationConsole::_routine()
 {
     LOGENTRY;
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     while( true ) {
         if( QMsgRcv() == -1 ) {

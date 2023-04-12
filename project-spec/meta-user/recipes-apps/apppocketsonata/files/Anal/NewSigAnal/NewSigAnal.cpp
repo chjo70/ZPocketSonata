@@ -177,7 +177,10 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
         MakeAnalDirectory( &pPDWData->x );
+
+#ifdef _MSC_VER
         CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+#endif
 
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
@@ -258,7 +261,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
     Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ============================" , GetStep(), m_uiCoPdw );
 
     if( m_uiCoPdw <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
-        Log( enNormal, "PDW(%d/%d) 데이터 개수가 모자랍니다 !!" , m_uiCoPdw, RPC );
+        Log( enNormal, "PDW(%d/%d) 데이터 개수가 부족합니다 !!" , m_uiCoPdw, RPC );
     }
     else {
         CheckValidData( m_pPDWData );
@@ -323,7 +326,7 @@ void CNewSigAnal::StartOfSignalAnalysis()
 	// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
 	m_theGroup->MakeGrIndex();
 
-	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, true);
+	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, GetPLOBIndex(), true);
 
 	// 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
 	CheckKnownByAnalysis();
@@ -447,6 +450,7 @@ enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 {
     enum FREQ_BAND enBand;
 
+#ifdef _POCKETSONATA_
     if( freq >= 2000 && freq < 6000 ) {
         enBand = BAND1;
     }
@@ -462,6 +466,18 @@ enum FREQ_BAND CNewSigAnal::GetBand( int freq )
     else {
         enBand = BAND5;
     }
+#else
+    if( freq >= 500 && freq < 2000 ) {
+        enBand = BAND1;
+}
+    else if( freq >= 2000 && freq < 6000 ) {
+        enBand = BAND2;
+    }
+    else {
+        enBand = BAND3;
+    }
+
+#endif
 
     return enBand;
 
@@ -508,3 +524,20 @@ bool CNewSigAnal::CheckKnownByAnalysis()
     return bRet;
 }
 
+/**
+ * @brief     GetPLOBIndex
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-07 13:11:40
+ * @warning
+ */
+int CNewSigAnal::GetPLOBIndex()
+{
+    int iPLOBIndex;
+    int iCoFrqAoaPwIdx = m_theGroup->GetCoFrqAoaPwIdx();
+
+    iPLOBIndex = - ( int ) iCoFrqAoaPwIdx;
+    return iPLOBIndex;
+}

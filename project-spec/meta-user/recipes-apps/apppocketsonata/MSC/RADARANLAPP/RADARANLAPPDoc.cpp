@@ -69,7 +69,7 @@ CRADARANLAPPDoc::CRADARANLAPPDoc() : CMSSQL( & m_theMyODBC )
 CRADARANLAPPDoc::~CRADARANLAPPDoc()
 {
 	m_theMyODBC.Close();
-	
+
 }
 
 BOOL CRADARANLAPPDoc::OnNewDocument()
@@ -206,7 +206,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->tiContactTime = _time32(NULL);
 		pLOBData->tiContactTimems = i;
 
-		pLOBData->iSignalType = ST_CW;
+		pLOBData->vSignalType = ST_CW;
 
 
 #ifdef _POCKETSONATA_
@@ -244,25 +244,25 @@ void CRADARANLAPPDoc::OnFileOpen()
 			pLOBData->fDOAMin = (float) 111.5;
 		}
 
-		pLOBData->iDIRatio = 100;
+		pLOBData->uiDIRatio = 100;
 
-		pLOBData->iFreqType = _FREQ_FIXED;
-		pLOBData->iFreqPatternType = UNK;			
+		pLOBData->vFreqType = _FREQ_FIXED;
+		pLOBData->vFreqPatternType = UNK;
 		pLOBData->fFreqPatternPeriod = 0;	  // [us]
 		pLOBData->fFreqMean = (float) 6000.297852;										// [10KHz]
 		pLOBData->fFreqMax = (float) 6000.803955;
 		pLOBData->fFreqMin = (float) 6000.763916;
-		pLOBData->iFreqPositionCount = 0;
+		pLOBData->vFreqPositionCount = 0;
 		memset( pLOBData->fFreqSeq, 0 , sizeof(pLOBData->fFreqSeq) );
 
-		pLOBData->iPRIType = _STABLE;
-		pLOBData->iPRIPatternType = UNK;
+		pLOBData->vPRIType = _STABLE;
+		pLOBData->vPRIPatternType = UNK;
 		pLOBData->fPRIPatternPeriod = 0;
 		pLOBData->fPRIMean = (float) 1233.268188;
 		pLOBData->fPRIMax = (float) 1359.570313;
 		pLOBData->fPRIMin = (float) 1132.8125;
 		pLOBData->fPRIJitterRatio = 18.;
-		pLOBData->iPRIPositionCount = 2;
+		pLOBData->vPRIPositionCount = 2;
 		memset( pLOBData->fPRISeq, 0 , sizeof(pLOBData->fPRISeq) );
 		pLOBData->fPRISeq[0] = (float) 1132.8125;
 		pLOBData->fPRISeq[1] = (float) 1359.570313;
@@ -278,24 +278,25 @@ void CRADARANLAPPDoc::OnFileOpen()
 #if defined(_XBAND_) || defined(_ELINT_)
 		pLOBData->iIsStoreData = 0;
 #endif
-		pLOBData->iNumOfPDW = 50;
+		pLOBData->uiCoPDWOfCollection = 50;
+        pLOBData->uiCoPDWOfAnalysis = 50;
 
         memset(pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName));
-        pLOBData->iRadarModeIndex = 0;
+        pLOBData->uiRadarModeIndex = 0;
         //pLOBData->iThreatIndex = 0;
-		
+
 #ifdef _POCKETSONATA_
-        
+
 #elif defined(_ELINT_) || defined(_XBAND_)
 		pLOBData->fLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
-		pLOBData->fLongitude = (float) dRCLongitude[pLOBData->iCollectorID];	
+		pLOBData->fLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
 
         pLOBData->uiSeqNum = 0;
 #else
 
 #endif
 
-#if defined(_ELINT_) || defined(_XBAND_)		
+#if defined(_ELINT_) || defined(_XBAND_)
 		strcpy_s( pLOBData->aucTaskID, sizeof(pLOBData->aucTaskID), "RADARANLAPP" );
 #endif
 
@@ -447,7 +448,7 @@ void CRADARANLAPPDoc::Init()
 void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt )
 {
 	int i;
-    
+
 
 	STR_LOBDATA stResLOBData;
 	STR_ABTDATA stResABTData;
@@ -474,9 +475,9 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 // 		++ pSRxLOBData;
 // 	}
 //     TRACE( "\n ");
-// 
+//
 // 	SRxABTData *pSRxABTData;
-// 
+//
 // 	pSRxABTData = & stResABTData.stABTData[0];
 //     TRACE( "\n ABT µ•¿Ã≈Õ [%d] ===============================================================", stResABTData.stABTHeader.iNumOfABT );
 // 	for( i=0 ; i < stResABTData.stABTHeader.iNumOfABT ; ++i ) {
@@ -547,33 +548,62 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldTimeValue(index++, & pLOBData->tiContactTime );
 		theRS.GetFieldValue(index++, (int *) &pLOBData->tiContactTimems);
 
-		theRS.GetFieldValue(index++, (int *)&pLOBData->iSignalType);
+#ifdef _POCKETSONATA_
+		theRS.GetFieldValue(index++, (int *)& iDummy );
+        pLOBData->vSignalType = ( unsigned char ) iDummy;
+#else
+        theRS.GetFieldValue( index++, ( int * ) &pLOBData->vSignalType );
+#endif
 
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMean);
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMin);
 		theRS.GetFieldValue(index++, &pLOBData->fDOAMax);
         theRS.GetFieldValue( index++, &pLOBData->fDOAMode );
 
-		theRS.GetFieldValue(index++, &pLOBData->iDIRatio);
+		theRS.GetFieldValue(index++, &pLOBData->uiDIRatio);
 
-		theRS.GetFieldValue(index++, (int *)&pLOBData->iFreqType);
-		theRS.GetFieldValue(index++, &pLOBData->iFreqPatternType);
+		theRS.GetFieldValue(index++, (int *)&pLOBData->vFreqType);
+#ifdef _POCKETSONATA_
+        theRS.GetFieldValue( index++, ( int * ) & iDummy );
+		pLOBData->vFreqPatternType = ( unsigned char ) iDummy;
+#else
+        theRS.GetFieldValue( index++, &pLOBData->vFreqPatternType );
+#endif
 		theRS.GetFieldValue(index++, &pLOBData->fFreqPatternPeriod);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMean);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMin);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMax);
         theRS.GetFieldValue( index++, &pLOBData->fFreqMode );
-		theRS.GetFieldValue(index++, &pLOBData->iFreqPositionCount);
+#ifdef _POCKETSONATA_
+        theRS.GetFieldValue( index++, ( int * ) & iDummy );
+		pLOBData->vFreqPositionCount = ( unsigned char ) iDummy;
+#else
+        theRS.GetFieldValue( index++, &pLOBData->vFreqPositionCount );
+#endif
 
-		theRS.GetFieldValue(index++, (int *) &pLOBData->iPRIType);
-		theRS.GetFieldValue(index++, (int *) &pLOBData->iPRIPatternType);
+#ifdef _POCKETSONATA_
+        theRS.GetFieldValue( index++, ( int * ) & iDummy );
+        pLOBData->vPRIType = ( unsigned char ) iDummy;
+        theRS.GetFieldValue( index++, ( int * ) & iDummy );
+		pLOBData->vPRIPatternType = ( unsigned char ) iDummy;
+#else
+        theRS.GetFieldValue( index++, ( int * ) &pLOBData->vPRIType );
+        theRS.GetFieldValue( index++, ( int * ) &pLOBData->vPRIPatternType );
+#endif
+
+
 		theRS.GetFieldValue(index++, &pLOBData->fPRIPatternPeriod);
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMean);
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMin);
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMax);
         theRS.GetFieldValue( index++, &pLOBData->fPRIMode );
 		theRS.GetFieldValue(index++, & pLOBData->fPRIJitterRatio);
-		theRS.GetFieldValue(index++, (int *) &pLOBData->iPRIPositionCount);
+#ifdef _POCKETSONATA_
+        theRS.GetFieldValue( index++, ( int * ) & iDummy );
+        pLOBData->vPRIPositionCount = ( unsigned char ) iDummy;
+#else
+        theRS.GetFieldValue( index++, ( int * ) &pLOBData->vPRIPositionCount );
+#endif
 
 		theRS.GetFieldValue(index++, &pLOBData->fPWMean);
 		theRS.GetFieldValue(index++, &pLOBData->fPWMin);
@@ -586,14 +616,14 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
         theRS.GetFieldValue( index++, &pLOBData->fPAMode );
 
 		// theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
-		theRS.GetFieldValue(index++, (int*)&pLOBData->iNumOfPDW);
+		theRS.GetFieldValue(index++, (int*)&pLOBData->uiCoPDWOfCollection );
 		theRS.GetFieldValue(index++, (int*)& iDummy);
 
 		theRS.GetFieldValue(index++, &pLOBData->fCollectLatitude);
 		theRS.GetFieldValue(index++, &pLOBData->fCollectLongitude);
 
 		theRS.GetFieldValue(index++, pLOBData->szRadarModeName);
-		theRS.GetFieldValue(index++, (int*)&pLOBData->iRadarModeIndex);
+		theRS.GetFieldValue(index++, (int*)&pLOBData->uiRadarModeIndex);
 		//theRS.GetFieldValue(index++, (int*)&pLOBData->iThreatIndex);
 
 		++*pnLOB;
@@ -642,13 +672,13 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
 		if( *pCoField == 0 ) {
 			if( theRS.GetFieldLength(0) >= MAX_OF_COLUMN_LENGTH ) {
 				theRS.Close();
-				CAST_THROW_MESSAGE 
+				CAST_THROW_MESSAGE
 			}
 		}
-		
+
 		theRS.GetFieldValue( (SQLSMALLINT) 0, pField[*pCoField] );
 		++ *pCoField;
-		
+
 		theRS.MoveNext();
 
 	}
@@ -683,7 +713,7 @@ bool CRADARANLAPPDoc::GetFieldNameOfTable( std::vector<string> *pVecString, char
 
 	theRS.Open(m_szSQLString);
 	while (!theRS.IsEof()) {
-		if (TRUE == theRS.GetFieldValue((SQLSMALLINT)0, szBuffer)) 
+		if (TRUE == theRS.GetFieldValue((SQLSMALLINT)0, szBuffer))
 		{
 			pVecString->push_back(szBuffer);
 		}
@@ -729,10 +759,10 @@ bool CRADARANLAPPDoc::GetDB_LOB_POSITION( int *pnLOB, SRxLOBData *pLOBData, char
 	while (!theRS.IsEof()) {
 		index = 0;
 
-		theRS.GetFieldValue(index++, (int *) & pLOBData->iPRIPositionCount );
+		theRS.GetFieldValue(index++, (int *) & pLOBData->vPRIPositionCount );
 
 		memset( pLOBData->fPRISeq, 0, sizeof(pLOBData->fPRISeq) );
-		for( i=0 ; i < pLOBData->iPRIPositionCount ; ++i ) {
+		for( i=0 ; i < pLOBData->vPRIPositionCount ; ++i ) {
 			theRS.GetFieldValue(index++, (float *) & pLOBData->fPRISeq[i] );
 		}
 

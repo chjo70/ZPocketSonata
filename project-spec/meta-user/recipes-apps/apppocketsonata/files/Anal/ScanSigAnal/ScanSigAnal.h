@@ -31,35 +31,35 @@ private:
     std::string m_strAnalDirectory;
 
 private:
-    
+
 
 public:
     STR_PDWINDEX *m_pGrPdwIndex;
 
     DEFINE_ANAL_VAR_
-	
+
 protected:
     STR_UPDAET *m_pUpdAet;
     STR_PULSE_TRAIN_SEG *m_pSeg;
     STR_STATIC_PDWDATA *m_pstPDWData;
-    
+
     unsigned int m_uiNoCh;
     unsigned int m_uiCoPdw;
     unsigned int m_uinoEMT;
-    
+
     CSGroup *m_theGroup;
     CSPulExt *m_thePulExt;
     CSAnalScan *m_theAnalScan;
-    
+
     unsigned int m_uiMaxPdw;
 
-    SRxScanData m_strScnResult;
+    STR_SCANRESULT m_strScnResult;
 
 
 public:
     CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
     virtual ~CScanSigAnal();
-    
+
     inline void GetCollectTime(struct timespec *pTimeSpec) {
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
@@ -73,21 +73,21 @@ public:
     inline unsigned int GetNoEMT() { return m_uinoEMT; }
     inline unsigned int GetScanNoCh() { return m_uiNoCh; }
     inline unsigned int GetColPdw() { return m_uiCoPdw; }
-    
+
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
-    
+
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
-    
+
     inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     inline _TOA CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
-    
-    inline SRxScanData *GetScanResult() { return & m_strScnResult; }
+
+    inline STR_SCANRESULT *GetScanResult() { return & m_strScnResult; }
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
     inline int GetBand() { return m_theGroup->GetBand(); }
@@ -103,7 +103,7 @@ public:
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
 	// inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
-#endif    
+#endif
 
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
@@ -118,7 +118,7 @@ public:
     //##ModelId=452B0C4500BD
     UINT GetCoScanPulse();
 
-    
+
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
     void ClearColBuffer();

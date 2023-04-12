@@ -44,26 +44,19 @@ public:
     DEFINE_ANAL_VAR_
 
 protected:
-    //##ModelId=452B0C520260
     CKGroup *m_theGroup;
-    //##ModelId=452B0C520265
     CKPulExt *m_thePulExt;
-    //##ModelId=452B0C52026A
     CKAnalPRI *m_theAnalPRI;
-    //##ModelId=452B0C520274
     CKMakeAET *m_theMakeAET;
 
-    //##ModelId=452B0C520279
     STR_PULSE_TRAIN_SEG *m_pSeg;
-    //##ModelId=452B0C52027D
+
     unsigned int m_uiMaxPdw;
-    //##ModelId=452B0C520287
+
     unsigned int m_uiCoPdw;
-    //##ModelId=452B0C520288
     int m_noSbc;
-    
     int m_noCh;
-    
+
     //STR_PDWBANK *m_pPdwBank;
     STR_STATIC_PDWDATA *m_pstPDWData;
 
@@ -71,6 +64,8 @@ private:
     bool CheckKnownByAnalysis();
 	void StartOfTrackSignalAnalysis();
 	void StartOfNewSignalAnalysis();
+
+    int GetPLOBIndex();
 
 public:
     CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -94,52 +89,52 @@ public:
     /**
      * @brief     GetMaxPdw
      * @return    unsigned int
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:09:22
      * @warning
      */
-    inline unsigned int GetMaxPdw() { 
-		return m_uiMaxPdw; 
+    inline unsigned int GetMaxPdw() {
+		return m_uiMaxPdw;
 	}
-    
-    
+
+
     /**
      * @brief     MakePDWArray
      * @param     _PDW * pdw
      * @param     int iCount
      * @return    void
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:09:15
      * @warning
      */
-    inline void MakePDWArray( _PDW *pdw, int iCount ) { 
-		m_theGroup->MakePDWArray( pdw, (UINT) iCount); 
+    inline void MakePDWArray( _PDW *pdw, int iCount ) {
+		m_theGroup->MakePDWArray( pdw, (UINT) iCount);
 	}
-    
+
     /**
      * @brief     GetFrqAoaGroupedPdwIndex
      * @return    STR_PDWINDEX *
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:09:30
      * @warning
      */
-    inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { 
-		return m_theGroup->GetFrqAoaGroupedPdwIndex(); 
+    inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() {
+		return m_theGroup->GetFrqAoaGroupedPdwIndex();
 	}
-    
-    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }    
+
+    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
-    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }    
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }    
-    inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }    
-    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }    
-    inline unsigned int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }    
+    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
+    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
+    inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
+    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
+    inline unsigned int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
     inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, (UINT) enMarkType); }
@@ -176,30 +171,30 @@ public:
     /**
      * @brief     GetTrkAET
      * @return    SRxABTData *
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:09:44
      * @warning
      */
-    inline SRxABTData *GetTrkAET() { 
-		return m_pTrkAet; 
+    inline SRxABTData *GetTrkAET() {
+		return m_pTrkAet;
 	}
 
     /**
      * @brief     GetCoGroup
      * @return    int
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:09:38
      * @warning
      */
-    inline int GetCoGroup() { 
-		return m_CoGroup; 
+    inline int GetCoGroup() {
+		return m_CoGroup;
 	}
 
-    
+
 
     void InitVar();
     //##ModelId=452B0C52036E
@@ -237,7 +232,7 @@ extern "C" {
 	void SendKSPNewAet( STR_NEWAET *pAet, UINT inEMT );
 	void SendKSPUpdAet( STR_UPDAET *pUpdAet );
 	void SendKSPLostAet( STR_TRKAET *pAet, int stat );
-	
+
 	extern CKnownSigAnal *theKnownSigAnal;
 
 }

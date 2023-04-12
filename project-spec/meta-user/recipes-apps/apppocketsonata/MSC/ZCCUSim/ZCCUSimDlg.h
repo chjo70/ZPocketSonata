@@ -93,4 +93,5 @@ public:
 	afx_msg void OnBnClickedButtonReqRestart();
 	afx_msg void OnBnClickedButtonReqOpvar();
 	afx_msg void OnBnClickedButtonReqDisconnect();
+	afx_msg void OnBnClickedButtonReqDownload();
 };

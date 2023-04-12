@@ -34,7 +34,7 @@
  * @date      2005-07-28 14:09:48
  * @warning
  */
-CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(uiCoMaxPdw)
+CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(MAX_AET)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
@@ -117,9 +117,9 @@ void CKMakeAET::MakeAET()
 //##ModelId=42E98F300030
 BOOL CKMakeAET::KnownMakeAET()
 {
-    int idxLOBData;
+    // int idxLOBData;
 
-    SRxLOBData *pLOBData;	
+    //SRxLOBData *pLOBData;
 	STR_EMITTER *pEmitter;
 
 	MakeAET();
@@ -185,7 +185,7 @@ int CKMakeAET::SelectKnownSuccessLOB()
 
     STR_EMITTER *pEmitter;
 
-    SRxLOBData *pLOBData;
+    //SRxLOBData *pLOBData;
 
     for (i = 0; i < m_iCoLOB; ++i) {
         fKnownSuccessRatio = GetKnownSuccessRatio(i);
@@ -195,7 +195,7 @@ int CKMakeAET::SelectKnownSuccessLOB()
 
         // 추적 성공율과 분석한 PDW 개수로 추적 성공 LOB를 선택한다.
         if( (fMaxKnownSuccessRatio < fKnownSuccessRatio) || \
-            (is_zero<float>( fMaxKnownSuccessRatio - fKnownSuccessRatio) == true) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
+            ( ( is_zero<float>( fMaxKnownSuccessRatio - fKnownSuccessRatio) == true) && ( iMaxNumOfPDW <= iNumOfPDW ) ) ) {
             fMaxKnownSuccessRatio = fKnownSuccessRatio;
             iMaxNumOfPDW = iNumOfPDW;
             iIdxLOB = i;
@@ -219,13 +219,13 @@ float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
 {
     float fRet=0.;
 
-    if (pLOBData->ucFreqType == (unsigned char) m_pTrkABT->ucFreqType) {
+    if (pLOBData->vFreqType == (unsigned char) m_pTrkABT->vFreqType) {
         fRet = 100.;
     }
     else {
-        switch (m_pTrkABT->ucFreqType) {
+        switch (m_pTrkABT->vFreqType) {
             case E_AET_FRQ_FIXED:
-                if(pLOBData->ucFreqType == E_AET_FRQ_AGILE ) {
+                if(pLOBData->vFreqType == E_AET_FRQ_AGILE ) {
                     fRet = 140.;
                 }
                 else {
@@ -233,10 +233,10 @@ float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
             break;
 
             case E_AET_FRQ_AGILE:
-                if (pLOBData->ucFreqType == E_AET_FRQ_FIXED) {
+                if (pLOBData->vFreqType == E_AET_FRQ_FIXED) {
                     fRet = 40.;
                 }
-                else if (pLOBData->ucFreqType == E_AET_FRQ_PATTERN || pLOBData->ucFreqType == E_AET_FRQ_HOPPING) {
+                else if (pLOBData->vFreqType == E_AET_FRQ_PATTERN || pLOBData->vFreqType == E_AET_FRQ_HOPPING) {
                     fRet = 140.;
                 }
                 else {
@@ -245,13 +245,13 @@ float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
 
 
             case E_AET_FRQ_HOPPING:
-                if (pLOBData->ucFreqType == E_AET_FRQ_AGILE) {
+                if (pLOBData->vFreqType == E_AET_FRQ_AGILE) {
                     fRet = 40.;
                 }
                 break;
 
             case E_AET_FRQ_PATTERN:
-                if (pLOBData->ucFreqType == E_AET_FRQ_AGILE) {
+                if (pLOBData->vFreqType == E_AET_FRQ_AGILE) {
                     fRet = 40.;
                 }
                 break;
@@ -280,13 +280,13 @@ float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
 {
     float fRet = 0.;
 
-    if (pLOBData->ucPRIType == m_pTrkABT->ucPRIType) {
+    if (pLOBData->vPRIType == m_pTrkABT->vPRIType) {
         fRet = 100.;
     }
     else {
-        switch (m_pTrkABT->ucPRIType) {
+        switch (m_pTrkABT->vPRIType) {
         case E_AET_PRI_FIXED:
-            if (pLOBData->ucFreqType == E_AET_PRI_DWELL_SWITCH) {
+            if (pLOBData->vFreqType == E_AET_PRI_DWELL_SWITCH) {
                 fRet = 140.;
             }
             else {
@@ -294,7 +294,7 @@ float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
             break;
 
         case E_AET_PRI_STAGGER:
-            if (pLOBData->ucFreqType == E_AET_PRI_JITTER) {
+            if (pLOBData->vFreqType == E_AET_PRI_JITTER) {
                 fRet = 40.;
             }
             else {
@@ -302,19 +302,19 @@ float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
             break;
 
         case E_AET_PRI_JITTER:
-            if (pLOBData->ucFreqType == E_AET_PRI_STAGGER || pLOBData->ucFreqType == E_AET_PRI_PATTERN || pLOBData->ucFreqType == E_AET_PRI_DWELL_SWITCH) {
+            if (pLOBData->vFreqType == E_AET_PRI_STAGGER || pLOBData->vFreqType == E_AET_PRI_PATTERN || pLOBData->vFreqType == E_AET_PRI_DWELL_SWITCH) {
                 fRet = 140.;
             }
             break;
 
         case E_AET_PRI_PATTERN:
-            if (pLOBData->ucFreqType == E_AET_PRI_JITTER) {
+            if (pLOBData->vFreqType == E_AET_PRI_JITTER) {
                 fRet = 40.;
             }
             break;
 
         case E_AET_PRI_DWELL_SWITCH:
-            if (pLOBData->ucFreqType == E_AET_PRI_JITTER) {
+            if (pLOBData->vFreqType == E_AET_PRI_JITTER) {
                 fRet = 40.;
             }
             break;
@@ -377,7 +377,7 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 	float pri_margin;
     BOOL bRet=TRUE;
 
-    switch( pNewPri->ucPRIType ) {
+    switch( pNewPri->vPRIType ) {
 		case _STABLE :
             pri_margin = (float)(2. * STABLE_MARGIN);
             bRet = CompMeanDiff<float>(pNewPri->fPRIMean, pTrkPri->fPRIMean, pri_margin);
@@ -388,12 +388,12 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 			break;
 
 		case _STAGGER :
-            if( pTrkPri->ucPRIType == _JITTER_RANDOM ) {
+            if( pTrkPri->vPRIType == _JITTER_RANDOM ) {
             }
-            else if( pTrkPri->ucPRIType == _STAGGER ) {
+            else if( pTrkPri->vPRIType == _STAGGER ) {
                 pri_margin = (float) ( 2. * STABLE_MARGIN );  
-                if( pNewPri->ucPRIElementCount == pTrkPri->ucPRIElementCount ) {
-                    for( i=0 ; i < pNewPri->ucPRIElementCount ; ++i ) {
+                if( pNewPri->vPRIElementCount == pTrkPri->vPRIElementCount ) {
+                    for( i=0 ; i < pNewPri->vPRIElementCount ; ++i ) {
                         if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], pri_margin ) == FALSE ) {
 	  					    bRet = FALSE;
 						}
@@ -416,7 +416,7 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 			    \date 2006-09-04 10:47:24, 조철희
 			*/
             pri_margin = 20 * _spOneMicrosec;
-            if( pTrkPri->ucPRIType == _STAGGER ) {
+            if( pTrkPri->vPRIType == _STAGGER ) {
                 if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, pri_margin ) ) {
 					bRet = FALSE;
                 }
@@ -465,16 +465,16 @@ void CKMakeAET::MakeUpAET()
 		// 추적 성공 에미터와 추적할 에미터 제원과 비교해서 하모닉 체크해서 유사 에미터로 판정한다.
 		//-- 조철희 2005-12-07 19:16:44 --//
         if( CheckHarmonic<SRxABTData>( m_pTrkABT, pUpdAet ) >= 2 ) {
-            pUpdAet->ucPRIType = m_pTrkABT->ucPRIType;
-            pUpdAet->iPRIPatternType = m_pTrkABT->ucPRIPatternType;
+            pUpdAet->vPRIType = m_pTrkABT->vPRIType;
+            pUpdAet->vPRIPatternType = m_pTrkABT->vPRIPatternType;
             pUpdAet->fPRIPatternPeriod = m_pTrkABT->fPRIPatternPeriodMean;
             pUpdAet->fPRIMean = m_pTrkABT->fPRIMean;
             pUpdAet->fPRIMax = m_pTrkABT->fPRIMax;
             pUpdAet->fPRIMin = m_pTrkABT->fPRIMin;
             pUpdAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
             pUpdAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
-            pUpdAet->ucPRIPositionCount = m_pTrkABT->ucPRIPositionCount;
-            pUpdAet->iPRIElementCount = m_pTrkABT->ucPRIElementCount;
+            pUpdAet->vPRIPositionCount = m_pTrkABT->vPRIPositionCount;
+            pUpdAet->vPRIElementCount = m_pTrkABT->vPRIElementCount;
 
             memcpy( & pUpdAet->fPRISeq, & m_pTrkABT->fPRISeq, sizeof( m_pTrkABT->fPRISeq ) );
 		}
@@ -482,7 +482,7 @@ void CKMakeAET::MakeUpAET()
 		for( int i=0 ; i < iCount; ++i ) {
             if( m_LOBData[i].uiABTID != _spZero ) {
 #ifndef _XBAND_
-                pUpdAet->iScanType = m_pTrkABT->ucScanType;
+                pUpdAet->iScanType = m_pTrkABT->vScanType;
                 pUpdAet->fScanPeriod = m_pTrkABT->fMeanScanPeriod;
 				++ coUpdAet;
 
@@ -506,16 +506,16 @@ void CKMakeAET::MakeUpAET()
 				// 방위 정보는 최근 정보로 한다.
 				// PRI  값은 하모닉 관계로 추적 에미터 제원으로 한다.
                 //memcpy( & pNewAet->aet.pri, & stTrkAet.aet.pri, sizeof( STR_PRI ) );
-                pNewAet->ucPRIType = m_pTrkABT->ucPRIType;
-                pNewAet->iPRIPatternType = m_pTrkABT->ucPRIPatternType;
+                pNewAet->vPRIType = m_pTrkABT->vPRIType;
+                pNewAet->vPRIPatternType = m_pTrkABT->vPRIPatternType;
                 pNewAet->fPRIPatternPeriod = m_pTrkABT->fPRIPatternPeriodMean;
                 pNewAet->fPRIMean = m_pTrkABT->fPRIMean;
                 pNewAet->fPRIMax = m_pTrkABT->fPRIMax;
                 pNewAet->fPRIMin = m_pTrkABT->fPRIMin;
                 pNewAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
                 pNewAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
-                pNewAet->ucPRIPositionCount = m_pTrkABT->ucPRIPositionCount;
-                pNewAet->iPRIElementCount = m_pTrkABT->ucPRIElementCount;
+                pNewAet->vPRIPositionCount = m_pTrkABT->vPRIPositionCount;
+                pNewAet->vPRIElementCount = m_pTrkABT->vPRIElementCount;
 
                 memcpy( & pNewAet->fPRISeq, & m_pTrkABT->fPRISeq, sizeof( m_pTrkABT->fPRISeq ) );
 
@@ -793,29 +793,29 @@ void CKMakeAET::UpdateFreq( SRxLOBData *pUpdAetFrq )
     //STR_FRQ *pTrkAetFrq;
 
     //pTrkAetFrq = & stTrkAet.aet.frq;
-    if( m_pTrkABT->ucFreqType != pUpdAetFrq->ucFreqType ) {
-        switch( m_pTrkABT->ucFreqType ) {
+    if( m_pTrkABT->vFreqType != pUpdAetFrq->vFreqType ) {
+        switch( m_pTrkABT->vFreqType ) {
             case _HOPPING :
-                pUpdAetFrq->ucFreqType = m_pTrkABT->ucFreqType;
-                pUpdAetFrq->ucFreqPatternType = m_pTrkABT->ucFreqPatternType;
+                pUpdAetFrq->vFreqType = m_pTrkABT->vFreqType;
+                pUpdAetFrq->vFreqPatternType = m_pTrkABT->vFreqPatternType;
                 pUpdAetFrq->fFreqPatternPeriod = m_pTrkABT->fFreqPatternPeriodMean;
                 pUpdAetFrq->fFreqMean = m_pTrkABT->fFreqMean;
                 pUpdAetFrq->fFreqMax = m_pTrkABT->fFreqMax;
                 pUpdAetFrq->fFreqMin = m_pTrkABT->fFreqMin;
                 pUpdAetFrq->fFreqDeviation = m_pTrkABT->fFreqDeviation;
-                pUpdAetFrq->ucFreqPositionCount = (unsigned char) m_pTrkABT->ucFreqPositionCount;
-                pUpdAetFrq->ucFreqElementCount = ( unsigned char ) m_pTrkABT->ucFreqElementCount;
+                pUpdAetFrq->vFreqPositionCount = (unsigned char) m_pTrkABT->vFreqPositionCount;
+                pUpdAetFrq->vFreqElementCount = ( unsigned char ) m_pTrkABT->vFreqElementCount;
                 memcpy( pUpdAetFrq->fFreqSeq, m_pTrkABT->fFreqSeq, sizeof( m_pTrkABT->fFreqSeq ) );
 				break;
 
 			case _RANDOM_AGILE :
-                pUpdAetFrq->ucFreqType = m_pTrkABT->ucFreqType;
+                pUpdAetFrq->vFreqType = m_pTrkABT->vFreqType;
 				break;
 
 			case _PATTERN_AGILE :
-                pUpdAetFrq->ucFreqType = _PATTERN_AGILE;
+                pUpdAetFrq->vFreqType = _PATTERN_AGILE;
                 pUpdAetFrq->fFreqPatternPeriod = m_pTrkABT->fFreqPatternPeriodMean;
-                pUpdAetFrq->ucFreqPatternType = m_pTrkABT->ucFreqPatternType;
+                pUpdAetFrq->vFreqPatternType = m_pTrkABT->vFreqPatternType;
 				break;
 
             default:
@@ -839,8 +839,8 @@ void CKMakeAET::UpdatePRI( SRxLOBData *pUpdAetPri )
     //STR_PRI *pTrkAetPri;
 
     //pTrkAetPri = & m_pTrkAet.aet.pri;
-    if( m_pTrkABT->ucPRIType != (int) pUpdAetPri->ucPRIType ) {
-        switch( m_pTrkABT->ucPRIType ) {
+    if( m_pTrkABT->vPRIType != (int) pUpdAetPri->vPRIType ) {
+        switch( m_pTrkABT->vPRIType ) {
 			case _STAGGER :
                 //memcpy( pUpdAetPri, pTrkAetPri, sizeof( STR_PRI ) );
 				break;

@@ -17,34 +17,40 @@
 
 #ifdef __cplusplus
 
-//##ModelId=452B0C550390
+/**
+
+    @class   CMakeAET
+    @brief   시본 에미터 생성 관련 클래스 입니다.
+    @details ~
+
+**/
 class CMakeAET
 {
 private:
-
+    SRxLOBData *m_pLOBData;
 
 public:
-    //##ModelId=452B0C55039B
     int m_iCoEmitter;
-    //##ModelId=452B0C5503A4
     int m_iCoLOB;
 
 protected:
     DEFINE_ANAL_PVAR_
 
-	UINT m_uiMaxPdw;
+	UINT m_uiCoMaxLOB;
 	UINT m_uiCoPdw;
 	UINT m_uiCoAnalPdw;
 
     STR_PDWPARAM *m_pPdwParam;
-    
+
     STR_EMITTER *m_pEmitter;
 	STR_PULSE_TRAIN_SEG *m_pSeg;
-	    
+
 private:
-    
 
 public:
+    CMakeAET( unsigned int uiCoMaxLOB );
+    virtual ~CMakeAET();
+
     int CalMaxChannel( STR_PDWINDEX *pPdw );
     void PrintAllEmitter();
 
@@ -70,24 +76,25 @@ public:
     void MakeJitterPRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
     void MakeStablePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
 
-    
+
     void MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
     void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
-    
+
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     unsigned int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
     void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter);
+    void PrintAllAET();
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 
-    
     void MakeAET();
-    
+
     void Init(void);
-    
-    CMakeAET( unsigned int uiCoMaxPdw );
-    
-    virtual ~CMakeAET();
+
+    inline SRxLOBData *GetLOBData( int index = 0 ) { return & m_pLOBData[index]; }
+
+protected:
+
 
 public:
     virtual int CalcAoaMeanByHistAoa(STR_PDWINDEX *pSrcIndex) = 0;
@@ -108,7 +115,7 @@ public:
 	virtual unsigned int GetPDWID() = 0;
     virtual unsigned int IsStorePDW()=0;
     virtual void DISP_FineLOB( SRxLOBData *pLOBData )=0;
-    virtual SRxLOBData *GetLOBData( int index=0 )=0;
+    //virtual SRxLOBData *GetLOBData( int index=0 )=0;
 
 #if defined(_ELINT_) || defined(_XBAND_)
     virtual EN_RADARCOLLECTORID GetCollectorID()=0;

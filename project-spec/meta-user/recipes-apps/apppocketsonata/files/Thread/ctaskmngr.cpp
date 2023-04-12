@@ -15,10 +15,10 @@
 #include "ctaskmngr.h"
 
 #ifdef __ZYNQ_BOARD__
-//#include "cjamtech.h"
+
 #endif
 
-//#include "cpulsetrk.h"
+
 #include "csignalcollect.h"
 #include "cdetectanalysis.h"
 #include "ctrackanalysis.h"
@@ -27,10 +27,8 @@
 #include "cusercollect.h"
 
 #include "curbit.h"
-//#include "cprompt.h"
 
 
-//#include "../Utils/chwio.h"
 #include "../System/csysconfig.h"
 
 #include "../Utils/csingleclient.h"
@@ -104,6 +102,8 @@ void CTaskMngr::Init()
     LOGENTRY;
 
     InitVar();
+
+    CThread::Init();
 
     //STR_MessageData sndMsg;
 
@@ -181,9 +181,8 @@ void CTaskMngr::Run()
 void CTaskMngr::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
@@ -192,6 +191,8 @@ void CTaskMngr::_routine()
         else {
             //if( IsValidLanData( m_pMsg ) == true ) {
             switch( m_pMsg->uiOpCode ) {
+                ///////////////////////////////////////////////////////////////////////////////////
+                // 운용 제어 관련 메시지 처리
                 case enREQ_OP_START:
                     AnalysisStart();
                     break;
@@ -275,45 +276,45 @@ void CTaskMngr::Start()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/02/22 15:52:21
- * @warning		
+ * @warning
  */
 // void CTaskMngr::SetMode()
 // {
 //     ENUM_MODE enMode, enMode2;
-// 
+//
 //     _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData )
-// 
+//
 //     LOGMSG1( enDebug, "Set Mode[%d]", enMode );
-// 
+//
 //     g_pTheSysConfig->SetMode( enMode );
-// 
+//
 //     switch( enMode ) {
 //         case enES_MODE :
 //         case enEW_MODE :
 //             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
 //             break;
-// 
-//         case enREADY_MODE :            
+//
+//         case enREADY_MODE :
 //             //g_pTheCCUSocket->StopThread();
-// 
+//
 //             g_pTheSignalCollect->QMsgSnd( m_pMsg, GetThreadName() );
 // #ifdef _MSC_VER
 //             g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLEND, GetThreadName() );
 // #endif
 //             ProcessSummary();
-// 
+//
 //             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
-// 
+//
 //             CCommonUtils::CloseSocket();
-// 
+//
 //             //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
 //             LOGMSG( enDebug, "================================================================" );
 //             break;
-// 
+//
 //         default :
 //             break;
 //     }
-// 
+//
 // }
 
 /**
@@ -327,7 +328,7 @@ void CTaskMngr::Start()
  */
 void CTaskMngr::AnalysisStart( bool bOut )
 {
-    LOGMSG( enDebug, "[운용제어/시작 요청]-시작=========================================================" );
+    LOGMSG( enDebug, "[운용제어/시작 요청]-시작====================================" );
 
     SetMode( enOP_Mode );
 
@@ -342,33 +343,33 @@ void CTaskMngr::AnalysisStart( bool bOut )
 
     // 분석 관련 쓰레드를 삭제한다.
     // CreateAllAnalysisThread();
-    
+
     // 시간 정보로 설정한 후에 시작 명령을 처리한다.
 #ifdef _MSC_VER
-    
+
 #elif defined(__VXWORKS__)
-    // time_t tiNow = (time_t) m_pMsg->x.tiNow;    
+    // time_t tiNow = (time_t) m_pMsg->x.tiNow;
 
     struct timespec time_spec;
-    
+
     time_spec.tv_sec = m_pMsg->x.tiNow;
     clock_settime( CLOCK_REALTIME, &time_spec );
-    
+
 #elif defined(__linux__)
-    // tiNow = (time_t) m_pMsg->x.tiNow;    
+    // tiNow = (time_t) m_pMsg->x.tiNow;
 
     // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
     stime( & m_pMsg->x.tiNow );
-    
-#else    
-    
+
+#else
+
 #endif
 
     // 프로세스 상태를 전시한다.
     TaskSummary();
 
 #ifdef __VXWORKS__
-    TRACE( "\n 타스크 우선순위를 낮게 설정합니다." );
+    int iPriority = GetPriority();
     ChangeTaskPriority( TASK_LOWEST_PRIORITY );
 
 #endif
@@ -379,14 +380,14 @@ void CTaskMngr::AnalysisStart( bool bOut )
     SendThreadMessage( g_pTheScanAnalysis );
     SendThreadMessage( g_pTheEmitterMerge );
     SendThreadMessage( g_pTheSignalCollect );
-    
+
 #ifdef __VXWORKS__
-    TRACE( "\n 타스크 우선순위를 높게 설정합니다." );
-    ChangeTaskPriority( GetPriority() );
+    ChangeTaskPriority( iPriority );
+
+#elif defined(_MFC_VER)
+    Sleep( REQ_OP_START_DELAY );
 
 #endif
-    
-    Sleep( REQ_OP_START_DELAY );
 
 #ifdef __ZYNQ_BOARD__
     CHWIO::StartCollecting( REG_UIO_DMA_1 );
@@ -397,7 +398,7 @@ void CTaskMngr::AnalysisStart( bool bOut )
         g_pTheCCUSocket->SendLan( enRES_OP_START, & bResult, sizeof( bResult ) );
     }
 
-    LOGMSG( enDebug, "[운용제어/시작 요청]-종료==============================================" );
+    LOGMSG( enDebug, "[운용제어/시작 요청]-종료==================================" );
 
 }
 
@@ -460,7 +461,7 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 
     SetMode( enREADY_MODE );
 
-#ifdef __ZYNQ_BOARD__	
+#ifdef __ZYNQ_BOARD__
     QMsgSnd( JAMTEC->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
     QMsgSnd( PULTRK->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
 #endif
@@ -476,9 +477,39 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     SendThreadMessage( g_pTheScanAnalysis );
     SendThreadMessage( g_pTheEmitterMerge );
 
+    SetSendDisable();
+
+    while( g_pTheSignalCollect->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+    }
+
+    while( g_pTheDetectAnalysis->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+    }
+
+    while( g_pTheTrackAnalysis->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+    }
+
+    while( g_pTheScanAnalysis->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+    }
+
+    while( g_pTheEmitterMerge->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+    }
+
+    Init();
+    g_pTheSignalCollect->Init();
+    g_pTheDetectAnalysis->Init();
+    g_pTheTrackAnalysis->Init();
+    g_pTheScanAnalysis->Init();
+    g_pTheEmitterMerge->Init();
+
     //TRACE( "\n 타스크 우선순위를 높게 설정합니다." );
     Sleep( REQ_OP_STOP_DELAY );
 
+    SetSendEnable();
 
     if( bAbnormalEvent == false && bOut == true ) {
         BOOL bResult = TRUE;
@@ -506,7 +537,7 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 void CTaskMngr::TaskSummary()
 {
     LOGMSG( enNormal, "--------------------------------------------------------" );
-    
+
     LOGMSG1( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
     for( const auto &cThread : g_vecThread ) {
         cThread->ShowTaskMessae();
@@ -586,12 +617,12 @@ void CTaskMngr::StopUserCollecting()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/11/23 19:55:29
- * @warning		
+ * @warning
  */
 void CTaskMngr::ReqSystemVar()
 {
     STR_SYSCONFIG *pstrSysConfig;
-    
+
     pstrSysConfig = g_pTheSysConfig->GetSysConfig();
     CCommonUtils::SendLan( enRES_SETSYS, pstrSysConfig, sizeof(STR_SYSCONFIG) );
 }

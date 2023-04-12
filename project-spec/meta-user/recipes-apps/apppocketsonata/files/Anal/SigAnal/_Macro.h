@@ -11,13 +11,16 @@
 #include "../INC/PDW.h"
 #include "_Define.h"
 
+#ifdef __VXWORKS__
+#include <private/kwriteLibP.h>
 
-//#define DFD_FREQ_OFFSET		(1900)
+#endif
 
-#define _spSONATAPAoffset			(-70)					// amplitude initial value
-#define _spSONATAAMPres       (0.3125)			// dB */
-#define	_spSONATAAOAmax				(0x1FF)	
-#define	_spSONATAAmpmax				(0xFF)	
+
+#define _spSONATAPAoffset			(-70)				// amplitude initial value
+#define _spSONATAAMPres				(0.3125)			// dB */
+#define	_spSONATAAOAmax				(0x1FF)
+#define	_spSONATAAmpmax				(0xFF)
 
 
 enum ENUM_UnitID {
@@ -28,20 +31,6 @@ enum ENUM_UnitID {
 	enZPocketSonata
 
 } ;
-
-enum ENUM_BoardID {
-    enPRC_Unknown=0,
-
-    enPRC1=1,
-    enPRC2,
-    enPRC3,
-    enPRC4,
-    enPRC5,
-    enMAXPRC,
-
-    enMaster=enPRC3
-
-};
 
 #define _SAFE_FREE(A)           if( A != NULL ) { free( A ); } \
                                 A = NULL;
@@ -117,7 +106,7 @@ enum ENUM_BoardID {
  * @param     T x
  * @param     T y
  * @return    T
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2022-06-29 19:38:45
@@ -155,11 +144,11 @@ T _diffabs( T x, T y)
 #define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.001) )
 #define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
 #define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
-#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					
-#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )					
-#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					
-#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )					
-#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )					
+#define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )
+#define UTOAusCNV( A )			UMUL( (A), _spOneMicrosec )
+#define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA) (_spOneMicrosec+0.5) )
+#define TOAmsCNV( A )           IMUL( (A), _spOneMilli )
 
 #define PWCNV( A )				FDIV( (A*1000.), _spOneMicrosec )
 //#define IPWCNV( A )			IDIV( (A*1000.), _spOneMicrosec )
@@ -173,14 +162,14 @@ T _diffabs( T x, T y)
 
 #define I_IPACNV( A )			IDIV( (A), _spAMPres )
 
-#define I_IFRQMhzCNV( A, B )	IMUL( B, 1000. ) 
+#define I_IFRQMhzCNV( A, B )	IMUL( B, 1000. )
 //IDIV( FMUL( B, 1000. ), (0.001) )
 
 #define IPWCNVLOW( A )			_DIV( (A*_spOneMicrosec), 1000. )
 #define IPWCNVHGH( A )			UDIV( (A*_spOneMicrosec), 1000. )
 
-#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
-#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+#define AddAOA(A, B)            ( ( A + B + MAX_AOA_BIT) % MAX_AOA_BIT )
+#define SubAOA(A, B)            ( ( A - B + MAX_AOA_BIT) % MAX_AOA_BIT )
 //#define FRQRESCNV( A, B )		(UINT) ( abs( (int) IMUL( gFreqRes[(A)].fRes, (B) ) ) )
 #define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
@@ -205,7 +194,7 @@ T _diffabs( T x, T y)
 #define FFRQMhzCNV( A, B )		(float) ( (float)(B) * (float) (0.01) )
 #define DFRQMhzCNV( A, B )		(double) ( (double)(B) * (double) (0.01) )
 #define IFRQMhzCNV( A, B )		IDIV( (B), ( 0.01) )
-#define I_IFRQMhzCNV( A, B )	IMUL( B, 100. ) 
+#define I_IFRQMhzCNV( A, B )	IMUL( B, 100. )
 
 
 
@@ -258,9 +247,9 @@ T _diffabs( T x, T y)
 #elif defined(_POCKETSONATA_)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
-#define I_FRQMhzCNV( A, B )		IDIV( ( FMUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
+#define I_FRQMhzCNV( A, B )		IMUL( CPOCKETSONATAPDW::DecodeFREQMHz( B ), 1 )
 #define FFRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
-#define IFRQMhzCNV( A, B )		FDIV( ( FMUL( B, 1000. ) - gFreqRes[(A)].iOffset ), gFreqRes[(A)].fRes )
+#define IFRQMhzCNV( A, B )		CPOCKETSONATAPDW::EncodeFREQMHz( B )
 #define I_IFRQMhzCNV( A, B )	IDIV( ( FMUL( B, 1000. ) - gFreqRes[(A)].iOffset ), gFreqRes[(A)].fRes )
 #define IFRQMhz( A, B )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
 #define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].fRes ) )
@@ -281,6 +270,7 @@ T _diffabs( T x, T y)
 #define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
+#define I_PWCNV( A )			IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
 #define IPWCNV( A )			    CPOCKETSONATAPDW::EncodePWFloor( A )
 
 
@@ -292,8 +282,8 @@ T _diffabs( T x, T y)
 #define IAOACNV( A )            CPOCKETSONATAPDW::EncodeDOA( A )
 #define FAOACNV( A )            CPOCKETSONATAPDW::DecodeDOA( A )
 
-#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
-#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+#define AddAOA(A, B)            ( ( (int)A + (int)B + (int) MAX_AOA_BIT) % (int) MAX_AOA_BIT )
+#define SubAOA(A, B)            ( ( (int)A - (int)B + (int) MAX_AOA_BIT) % (int) MAX_AOA_BIT )
 
 
 #define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
@@ -310,20 +300,24 @@ T _diffabs( T x, T y)
 #define C_FRQCNV( A, B )            (UINT) ( C_MUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset )
 #define FRQMhzCNV( A, B )           IMUL( (B), ( gFreqRes[(A)].fRes ) )
 #define I_FRQMhzCNV( A, B )         IMUL( (B), ( gFreqRes[(A)].fRes ) )
-#define IFRQMhzCNV( A )             IDIV( (A), ( gFreqRes[0].fRes ) )
-#define IFRQCNV( A, B )             IDIV( (A), ( gFreqRes[0].fRes ) )
+#define IFRQMhzCNV( A, B )          IDIV( (B), ( gFreqRes[A].fRes ) )
+#define IFRQCNV( A, B )             IDIV( (B), ( gFreqRes[A].fRes ) )
+#define FFRQMhzCNV( A, B )		    FMUL( (B), ( gFreqRes[(A)].fRes ) )
+#define I_IFRQMhzCNV( A, B )        IMUL( (B), ( gFreqRes[(A)].fRes ) )
+
 
 #define IFRQMhzLOW( A )             F_IDIV( (A), ( gFreqRes[0].fRes ) )
 #define IFRQMhzHGH( A )             C_IDIV( (A), ( gFreqRes[0].fRes ) )
 
-#define TOAusCNV( A )           IDIV( (A), _spOneMicrosec )
+#define TOAusCNV( A )           FDIV( (A), _spOneMicrosec )
 #define TOAmsCNV( A )           IDIV( (A), _spOneMilli )
 #define ITOAusCNV( A )			IMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
 #define ITOAmsCNV( A )			IMUL( (A), _spOneMilli )					// X us 로 값으로 변환함
 #define IFTOAusCNV( A )			FMUL( (A), _spOneMicrosec )					// X us 로 값으로 변환함
-#define ITTOAusCNV( A )			TMUL<_TOA>( (A), _spOneMicrosec )					// X us 로 값으로 변환함
+#define ITTOAusCNV( A )			TMUL<_TOA>( (A), (_TOA)_spOneMicrosec )					// X us 로 값으로 변환함
+#define I_TOAusCNV( A )         IDIV( (A), _spOneMicrosec )
 
-#define PWCNV( A )				IDIV( A, _spOneNanosec )
+#define PWCNV( A )				FDIV( A, _spOneNanosec )
 #define IPWCNV( A )				IMUL( (A), _spOneNanosec )
 #define FPWCNV( A )             FMUL( (A), _spOneNanosec )
 
@@ -335,8 +329,8 @@ T _diffabs( T x, T y)
 #define IAOACNV( A )            IDIV( (A), _spAOAres )
 #define FAOACNV( A )            (float) ( (float) A * _spAOAres )
 
-#define AddAOA(A, B)            ( ( A + B + MAX_AOA) % MAX_AOA )
-#define SubAOA(A, B)            ( ( A - B + MAX_AOA) % MAX_AOA )
+#define AddAOA(A, B)            ( ( A + B + MAX_AOA_BIT) % MAX_AOA_BIT )
+#define SubAOA(A, B)            ( ( A - B + MAX_AOA_BIT) % MAX_AOA_BIT )
 #define FTOAsCNV( A )			FDIV( (A), _spOneMicrosec )
 
 #define PACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
@@ -453,7 +447,12 @@ extern "C"
 #define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
 
 #else
+#ifdef __VXWORKS__
+#define WhereIs									_func_kprintf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+#else
 #define WhereIs									printf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+
+#endif
 
 #endif
 
@@ -512,18 +511,18 @@ extern float _spPWres;
 
 // #if defined(_ELINT_)
 // extern float _frqRes[ELINT::enUnknown_BW + 1];
-// 
+//
 // #elif defined(_701_)
 // extern float _frqRes[_701::enUnknown_BW + 1];
-// 
+//
 // #elif defined(_XBAND_)
 // extern float _frqRes[XBAND::enUnknown_BW + 1];
-// 
+//
 // #elif defined(_POCKETSONATA_)
 // extern float _frqRes[POCKETSONATA::enUnknown_BW + 1];
-// 
+//
 // #else
-// 
+//
 // #endif
 
 

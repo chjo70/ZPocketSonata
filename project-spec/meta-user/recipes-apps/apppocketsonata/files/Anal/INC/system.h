@@ -15,7 +15,7 @@
 #ifdef __VXWORKS__
 #define	RAMDRV						(char *) "/RAMDRV"
 #define	RAMDRV_NO					(char *) ":0"
-#define	TFFSDRV						(char *) "/tffs0"
+#define	TFFSDRV						(char *) "/tffs1"
 
 #define SQLITE_FOLDER				((char *) "LIB")
 #endif
@@ -37,7 +37,7 @@
 #define HOME_ID                     (const char *) "root"
 #else
 #define HOME_ID                     (const char *) "chjo70"
-#endif                              
+#endif
 
 #ifdef __ZYNQ_BOARD__
 #define SHARED_DATA_DIRECTORY       (const char *) "/var/rawdata"
@@ -74,7 +74,7 @@
 #endif
 
 #else
-#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"
+#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
 
 
 #endif
@@ -101,7 +101,7 @@
 #ifdef __ZYNQ_BOARD__
 #define INI_FOLDER                  (const char *) "/home/root"
 #elif defined(__VXWORKS__)
-#define INI_FOLDER                  (const char *) "/tffs0/INI"
+#define INI_FOLDER                  (const char *) "/tffs1/INI"
 #elif defined(__linux__)
 #define INI_FOLDER                  (const char *) "/home/chjo70"
 #else
@@ -315,7 +315,7 @@
 #define   _spBd3BandEn      0x1
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//  
+//
 //  Stable Toa Tolerance
 #define   _spSpriTol        10      // 500 ns
 
@@ -323,9 +323,9 @@
 //  for Identify, system parameter definition
 //  Identify for Freq.
 // debug, 99-12-09 19:44:46
-#define     _spIdFixFrqLow	_spRxdfFrqLow 
-#define     _spIdFixFrqMid  _spRxdfFrqMid 
-#define     _spIdFixFrqHgh  _spRxdfFrqHgh 
+#define     _spIdFixFrqLow	_spRxdfFrqLow
+#define     _spIdFixFrqMid  _spRxdfFrqMid
+#define     _spIdFixFrqHgh  _spRxdfFrqHgh
 
 #define     _spIdAgileFrqLow    100     /* 0 dB */
 #define     _spIdAgileFrqMid    100     /* 0 dB */
@@ -363,20 +363,23 @@
 #define	MAX_FREQ_MHZ					    (18000)                     //!< 주파수 최대 값, Hz
 #define MIN_FREQ_MHZ 					    (500)						//!< 주파수 최소 값
 
-#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
-#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
+//#define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
+//#define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
 #define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqCD                       IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqBoundEJ                  IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqBoundCD                  IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
 #elif defined(_SONATA_)
+#define	MAX_FREQ_MHZ					    (18000)			            //!< 주파수 최대 값, Hz
+#define MIN_FREQ_MHZ 					    (500)					    //!< 주파수 최소 값
+
 #define _spMgAoaEJ					        IAOACNV( 15 )				// UMUL(15,_spAOAres)		// 15도
 #define _spMgAoaCD					        IAOACNV( 30 )				// UMUL(30,_spAOAres)		// 30도
-#define _spMgFixFrqEJ                       IFRQMhzCNV( 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqCD				        IFRQMhzCNV( 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
-#define _spMgFixFrqBoundCD	                IFRQMhzCNV( 10 )			// UMUL(10,1.25)					// res. 1.25 MH
+#define _spMgFixFrqEJ                       IFRQMhzCNV( 0, 10 )			// UMUL(3,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqCD				        IFRQMhzCNV( 0, 10 )			// UMUL(5,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
+#define _spMgFixFrqBoundCD	                IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MH
 
 
 #elif defined(_701_)
@@ -422,12 +425,12 @@
 
 //  Merge for PRI
 #define   _spMgFixPri					(4*_spSpriTol)  // each Stable PRIs, merge, 1->4, debug, 00-09-20 09:43:31
-#define   _spMgAgilePriMean   50      // 10% of (mean-mean) -> 50, debug 
+#define   _spMgAgilePriMean   50      // 10% of (mean-mean) -> 50, debug
 #define   _spMgAgilePriIn     20      // 20% of (min-min)
 #define   _spMgAgilePriOut    10      // 10% of (max-max)
 #define   _spMgAgilePriPat    (4*_spSpriTol)  // 10% of freq. low
 
-//  Merge for Period each Freq, PRI, and scan 
+//  Merge for Period each Freq, PRI, and scan
 #define   _spMgFrqPrd						5     // 5% of period
 #define   _spMgPriPrd						5     // 5% of period
 #define   _spMgScnPrd						5     // 5% of period
@@ -449,8 +452,8 @@
 //  for tracking Info
 //
 // debug, 00-08-30 14:02:57
-#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05년 이전 값은 4로 함. 
-#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // 연평도에서 Stable, Jitter 운용하는 함정 때문에 
+#define   _spFtFixFrqLow      (2*_spRxdfFrqLow)   // debug, 1 -> 4, 05년 이전 값은 4로 함.
+#define   _spFtFixFrqMid      (2*_spRxdfFrqMid)   // 연평도에서 Stable, Jitter 운용하는 함정 때문에
 #define   _spFtFixFrqHgh      (2*_spRxdfFrqHgh)   // 4 -> 2로 수정함.
 
 #define   _spFtAgiFrqLow      (3*_spRxdfFrqLow)   // debug, 00-01-31 16:13:18
@@ -495,10 +498,10 @@
 #define   _spScToStep4      7000    // 70 sec
 #define   _spScToStep5      _spMaxVal32   // 70 sec
 
-//#define   _spScToStep1      70      // 
-//#define   _spScToStep2      700     // 
-//#define   _spScToStep3      7000    // 
-//#define   _spScToStep4      7000    // 
+//#define   _spScToStep1      70      //
+//#define   _spScToStep2      700     //
+//#define   _spScToStep3      7000    //
+//#define   _spScToStep4      7000    //
 
 #define   _spScMinTimeOutiOfPrd (3.5)   // 3.5 배의 스캔주기 타임 아웃
 
@@ -561,7 +564,7 @@
 /*! \bug  20 개에서 10개로 수정함.
     \date 2006-07-27 09:28:10, 조철희
 */
-#define _spAnalMinPulseStableEmitter        (5)    
+#define _spAnalMinPulseStableEmitter        (5)
 #define _spAnalMinPulseJitterEmitter        (10)
 #define _spAnalMin2PulseJitterEmitter		(7)
 
@@ -579,7 +582,7 @@
 #define	DWELL_PRI_MARGIN					(1.5)
 
 // 수신기 개수
-#define	ALL_BAND							(5)
+#define	ALL_BAND							(enMAXPRC)
 
 // 에미터 구조체 정의
 #define	_spOverlapCoEMT     _spMaxEMTNum
@@ -588,12 +591,55 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 #ifdef _XBAND_
 enum PDW_MARK { STAT_CW=0, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
+const int stStat2GrStat[16] = { STAT_CW, STAT_NORMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+#elif defined(_SONATA_)
+enum PDW_MARK { STAT_CW = 0, STAT_NORMAL, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, STAT_BIT, MAX_STAT };
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+#elif defined(_POCKETSONATA_)
+enum PDW_MARK { STAT_NORMAL = 0,
+                STAT_CW,
+
+                STAT_PMOP=2,
+                STAT_CW_PMOP,
+
+                STAT_CHIRPUK=4,
+                STAT_CHIRPDN,
+                STAT_CHIRPUP,
+                STAT_CW_CHIRPUK,
+                STAT_CW_CHIRPDN,
+                STAT_CW_CHIRPUP,
+
+                STAT_SHORTP,
+                MAX_STAT
+};
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, STAT_PMOP, STAT_CW_PMOP, STAT_CHIRPUK, STAT_CHIRPDN,
+                                STAT_CHIRPUP, STAT_CW_CHIRPUK, STAT_CW_CHIRPDN, STAT_CW_CHIRPUP, STAT_SHORTP, 0, 0, 0, 0, 0 };
 
 #else
-enum PDW_MARK { STAT_CW=2, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
+enum PDW_MARK {
+    STAT_NORMAL = 0,
+    STAT_CW,
+
+    STAT_PMOP = 2,
+    STAT_CW_PMOP,
+
+    STAT_CHIRPUK = 4,
+    STAT_CHIRPDN,
+    STAT_CHIRPUP,
+    STAT_CW_CHIRPUK,
+    STAT_CW_CHIRPDN,
+    STAT_CW_CHIRPUP,
+
+    STAT_SHORTP,
+    MAX_STAT
+};
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, STAT_PMOP, STAT_CW_PMOP, STAT_CHIRPUK, STAT_CHIRPDN,
+                                STAT_CHIRPUP, STAT_CW_CHIRPUK, STAT_CW_CHIRPDN, STAT_CW_CHIRPUP, STAT_SHORTP, 0, 0, 0, 0, 0 };
 
 #endif
 

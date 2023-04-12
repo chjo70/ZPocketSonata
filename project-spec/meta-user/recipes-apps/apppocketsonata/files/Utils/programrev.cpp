@@ -120,8 +120,8 @@ void _ShowProgramTitle( void )
 //     }
 
 #ifdef _SQLITE_
-    LOGMSG2( enNormal, "The CED/EOB Database is positioned at [%s] and the file name is [%s].", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-    LOGMSG2( enNormal, "The Emitter Database is positioned at [%s] and the file name is [%s].", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
+    LOGMSG2( enNormal, "CED/EOB 데이터베이트 파일 위치 및 파일명[%s, %s]", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+    LOGMSG2( enNormal, "에미터 데이터베이트 파일 위치 및 파일명[%s, %s]", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
 #endif
 
     LOGMSG2( enNormal, "The INI is positioned at [%s], and the file name is [%s].", INI_FOLDER, INI_FILENAME );
@@ -130,7 +130,7 @@ void _ShowProgramTitle( void )
     //LOG_LINEFEED;
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
+#elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_) || defined(_SONATA_)
 #else
 	if( gnoPrc == prc_CIP ) {
 #ifndef _TESTBIT_

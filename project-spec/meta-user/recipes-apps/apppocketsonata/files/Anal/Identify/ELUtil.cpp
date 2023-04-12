@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include "ELUtil.h"
-//#include "../SigAnal/_Define.h"
+
 #include "../Identify/define.h"
 
 
@@ -41,37 +41,9 @@ void SetUnitType()
     g_enUnitType = en_UnknownUnit;
 
 #endif
-}
-
-/**
- * @brief     입력 값의 차이가 임계값 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.
- * @param     double x
- * @param     double y
- * @param     float fthresh
- * @return    BOOL
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2017-01-16, 오후 11:24
- * @warning
- */
-bool CompAoaDiff( float x, float y, float fthresh )
-{
-    float fDiff;
-    bool bRet;
-
-    fDiff = _diffabs<float>( x, y );
-
-    if( ( fDiff < fthresh ) || ( ( 360. - fDiff ) < fthresh ) ) {
-        bRet = true;
-    }
-    else {
-        bRet = false;
-    }
-
-    return bRet;
 
 }
+
 
 /**
  * @brief     방탐 오차를 계산한다.
@@ -149,7 +121,7 @@ void UTF8ToMultibyte( char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t
         *pszMultiByte = NULL;
     }
 //     int iLen=WideCharToMultiByte(CP_ACP, 0, p, -1, NULL, 0, NULL, NULL);
-//     
+//
 //     if (iLen < iSizeOfMultiByte) {
 //         WideCharToMultiByte(CP_ACP, 0, p, -1, pszMultiByte, iLen, NULL, NULL);
 //     }
@@ -178,80 +150,21 @@ void LogPrint( const char *format, ... )
 #ifdef _DEBUG
 //     if( st_bSimulator == true || true ) {
 //         char str[300];
-// 
+//
 //         va_list argptr;
-// 
+//
 //         memset( str, 0, sizeof( str ) );
-// 
+//
 //         va_start( argptr, format );            /* Initialize variable arguments. */
 //         vsprintf_s( str, 300, format, argptr );
 //         va_end( argptr );              /* Reset variable arguments.      */
-// 
+//
 //         TRACE0( str );
-// 
+//
 //     }
 #endif
 
 }
-
-/**
- * @brief     
- * @param     const float & value
- * @return    bool
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-04-27, 15:54
- * @warning
- */
-// bool Is_FZero( const float &value )
-// {
-//     return ! ( value > 0 || value < 0 );
-// }
-
-/**
- * @brief     Is_DZero
- * @param     const double & dvalue
- * @return    bool
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-04-27, 15:54
- * @warning
- */
-// bool Is_DZero( const double &dvalue )
-// {
-//     return ! ( dvalue > 0 || dvalue < 0 );
-// }
-
-/**
- * @brief     Is_FNotZero
- * @param     const float & value
- * @return    bool
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-04-27, 15:54
- * @warning
- */
-// bool Is_FNotZero( const float &value )
-// {
-//     return ( value > 0 || value < 0 );
-// }
-
-//
-/**
- * @brief
- * @param     const double & dvalue
- * @return    bool
- * @return    성공시 true, 실패시 false
-*/
-// bool Is_DNotZero( const double &dvalue )
-// {
-//     return ( dvalue > 0 || dvalue < 0 );
-// }
-// 
-
 
 /**
  * @brief     두 PRI 값들 사이에 하모닉 관계 여부를 계산한다.

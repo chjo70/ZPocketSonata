@@ -1215,7 +1215,7 @@ struct SPlatform	//플랫폼
 
 struct SThreatAndDeviceBase
 {
-	int nThreatIndex;						//유일한 인덱스
+	unsigned int uiDeviceIndex;						//유일한 인덱스
 	string strThreatStatus;
 	EnumThreatStatusCode eStatus_ForGUI;	//THREAT_STATUS_CODE 참조 (C, P, N, X, D, U, I 중 하나)
 
@@ -1224,7 +1224,7 @@ struct SThreatAndDeviceBase
 
 	SThreatAndDeviceBase()
 	{
-		nThreatIndex = 0;
+		uiDeviceIndex = 0;
 		strThreatStatus = "";
 		eStatus_ForGUI = enumC;
 		strDeviceStatus = "";
@@ -1261,87 +1261,92 @@ struct SDeviceInfoFromRadar
 #define IILATITUDE2LAT(A)					(int) ( ( (float) (A) * 1000000.0 ) + 0.5 )
 struct SDeviceBase
 {
-	int nDeviceIndex;					//	Threat안에서 장비의 인덱스
-	int nRadarIndex;					//	레이더 인덱스
-	char szELNOT[_MAX_ELNOT_STRING_SIZE_];		//	NOTATION (5)
-	char szDeviceName[_MAX_STRING_SIZE_];		//	장비명 (주로 NICKNAME) (50)
-	int nIdentificationRange;		//	식별반경(NM: 노티컬마일; 기본값 5
+	unsigned int uiDeviceIndex;					//	Threat안에서 장비의 인덱스
+	//int nRadarIndex;					//	레이더 인덱스
+	float fIdentificationRange;		//	식별반경(NM: 노티컬마일; 기본값 5
 
-	char szLatitude[_MAX_LATITUDE_STRING_SIZE_];				//	위도
-	char szLongitude[_MAX_LONGITUDE_STRING_SIZE_];			//	경도
-	int nElevation;						//	고도 (0~99999 ?)
+	float fLatitude;					//	위도
+	float fLongitude;					//	경도
+	float fElevation;						//	고도 (0~99999 ?)
+
+    char szELNOT[_MAX_ELNOT_STRING_SIZE_];		//	NOTATION (5)
+    char szDeviceName[_MAX_STRING_SIZE_];		//	장비명 (주로 NICKNAME) (50)
+
 
 	SDeviceBase()
 	{
-		nDeviceIndex=0;
-		nRadarIndex=0;
+		uiDeviceIndex=0;
+		//nRadarIndex=0;
+
+		fIdentificationRange = ( float ) 0.;
+        fLatitude = (float) 0.;
+        fLongitude = (float) 0.;
+		fElevation = (float) 0.;
+
         szELNOT[0] = 0;
         szDeviceName[0] = 0;
-		nIdentificationRange=0;
-        szLatitude[0] = 0;
-        szLongitude[0] = 0;
-		nElevation=0;
+
 	}
 
-	double GetLongitude()
-	{
-		int iLongitude;
-		iLongitude = GetILongitude();
+// 	double GetLongitude()
+// 	{
+// 		int iLongitude;
+// 		iLongitude = GetILongitude();
+//
+// 		double dbLongitude = DLONGITUDE2LONG( iLongitude );
+// 		return dbLongitude;
+// 	}
 
-		double dbLongitude = DLONGITUDE2LONG( iLongitude );
-		return dbLongitude;
-	}
+// 	int GetILongitude()
+// 	{
+// 		char ch=0;
+//
+// 		int iVal=0;
+//
+// 		//memcpy( szBuffer, (LPCSTR) strLongitude, strLongitude.GetLength()+1 );
+//         //sscanf_s( szLongitude, "%d%1c" , & iVal, & ch );
+// #ifdef _MSC_VER
+//         sscanf_s( szLongitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+// #else
+//         sscanf( szLongitude, "%d%1c" , & iVal, & ch );
+// #endif
+//
+// 		if( ch != 'E' && ch != 'e' && ch != 'W' && ch == 'w' ) {
+// 			iVal = 0;
+// 		}
+// 		return iVal;
+// 	}
 
-	int GetILongitude()
-	{
-		char ch=0;
-
-		int iVal=0;
-
-		//memcpy( szBuffer, (LPCSTR) strLongitude, strLongitude.GetLength()+1 );
-        //sscanf_s( szLongitude, "%d%1c" , & iVal, & ch );
-#ifdef _MSC_VER
-        sscanf_s( szLongitude, "%d%1c" , & iVal, & ch, sizeof(char) );
-#else
-        sscanf( szLongitude, "%d%1c" , & iVal, & ch );
-#endif
-
-		if( ch != 'E' && ch != 'e' && ch != 'W' && ch == 'w' ) {
-			iVal = 0;
-		}
-		return iVal;
-	}
-
-	double GetLatitude()
-	{
-		int iLatitude;
-
-		iLatitude = GetILatitude();
-
-		double dbLatitude = DLATITUDE2LAT( iLatitude );
-		return dbLatitude;
-	}
-
-	int GetILatitude()
-	{
-		char ch=0;
-
-		int iVal=0;
-
-		// memcpy( szBuffer, (LPCSTR) strLatitude, strLatitude.GetLength()+1 );
-
-#ifdef _MSC_VER
-        sscanf_s( szLatitude, "%d%1c" , & iVal, & ch, sizeof(char) );
-#else
-        sscanf( szLatitude, "%d%1c" , & iVal, & ch );
-#endif
-
-		if( ch != 'N' && ch != 'n' && ch != 'S' && ch == 's' ) {
-			iVal = 0;
-		}
-
-		return iVal;
-	}
+// 	double GetLatitude()
+// 	{
+// 		int iLatitude;
+//
+// 		iLatitude = GetILatitude();
+//
+// 		double dbLatitude = DLATITUDE2LAT( iLatitude );
+// 		return dbLatitude;
+// 	}
+//
+// 	int GetILatitude()
+// 	{
+// 		char ch=0;
+//
+// 		int iVal=0;
+//
+// 		// memcpy( szBuffer, (LPCSTR) strLatitude, strLatitude.GetLength()+1 );
+//
+// #ifdef _MSC_VER
+//         sscanf_s( szLatitude, "%d%1c" , & iVal, & ch, sizeof(char) );
+// #else
+//         sscanf( szLatitude, "%d%1c" , & iVal, & ch );
+// #endif
+//
+// 		if( ch != 'N' && ch != 'n' && ch != 'S' && ch == 's' ) {
+// 			iVal = 0;
+// 		}
+//
+// 		return iVal;
+// 	}
 
 };
 
@@ -1423,28 +1428,36 @@ enum ENUM_THREAT_PLATFORM {
 	enPlatform_MOVING_GROUND,
 } ;
 
-
-struct SThreat : public SThreatBase //, SThreatAndDeviceBase//위협 (EOB 기반임)
+/**
+    @struct SThreat
+    @brief  위협 +_ 장비 관련 구조체
+**/
+struct SThreat : public SDeviceBase	//위협 (EOB 기반임)
 {
 	//vector <SDevice> vecDevice;	//장비
     unsigned int uiPinNum;
 	unsigned int uiThreatIndex;
 	unsigned int uiPriority;
 
-	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-	char szThreatName[_MAX_THREAT_NAME_SIZE];
+	//float fLatitude;
+	//float fLongitude;
 
-	float fLatitude;
-	float fLongitude;
 
+	int iCategory;
+
+	FriendOrFOE::EnumFriendOrFOE eFriendOrFOE;	//적아구분 enum값
 	ENUM_THREAT_PLATFORM enPlatform;
 
-	float fIdRange;
+	// float fIdRange;
 
-    //char szPlaceNameKor[_MAX_SITE_NAME_SIZE];
+    char szPlaceNameKor[_MAX_SITE_NAME_SIZE];
     //char szPlaceNameEng[_MAX_SITE_NAME_SIZE];
+    //char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    char szThreatName[_MAX_THREAT_NAME_SIZE];
+    char szSiteName[_MAX_SITE_NAME_SIZE];
+    char szSymbolCode[_MAX_SYMBOLCODE_STRING_SIZE_];
 
-    char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
+    // char szPrimaryFunction[_MAX_PRIMARY_FUNCTION_STRING_SIZE_];		//주기능코드(문자열)
 
 	SThreat() //: tiDBUpdateTime(0), nDBThreatIndex(0)
 	{
@@ -2049,7 +2062,7 @@ struct SRadarInfo
     char szRadarName[_MAX_RADARNAME_SIZE];
 
     char szELNOT[_MAX_ELNOT_STRING_SIZE_];			//* 전정부호(5): SRadar에서 읽어와서 채워줘야 함.
-    int iRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
+    unsigned int uiRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
     EnumRadarStatus eStatus;						//*상태 enum값
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
@@ -2060,8 +2073,8 @@ struct SRadarInfo
 
     // int iTimeInactivatedOfRadar;					// 비활성화 시간
 
-    int iThreatIndex;								// ELNOT과 동일한 위협 번호
-    int iDeviceIndex;								// ELNOT과 동일한 장비 번호
+    unsigned int uiThreatIndex;								// ELNOT과 동일한 위협 번호
+    unsigned int uiDeviceIndex;								// ELNOT과 동일한 장비 번호
     char szDeviceELNOT[_MAX_ELNOT_STRING_SIZE_];
 
     SRadarInfo()
@@ -2074,12 +2087,12 @@ struct SRadarInfo
         szPlatform[0] = 0;
         //szModeCode[0] = NULL;
 
-        iRadarPriority=0;
+        uiRadarPriority=0;
         eStatus=enumActive;
         nUnknownEmitterTime_ForGUI=0;
         uiRadarIndex = 0;
-        iThreatIndex = 0;
-        iDeviceIndex = 0;
+        uiThreatIndex = 0;
+        uiDeviceIndex = 0;
     }
 };
 
@@ -2266,8 +2279,10 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 		vecRadarMode_RFSequenceValues.clear();
 		vecRadarRF_SpotValues.clear();
 
+
 		vecRadarPRI_SpotValues.clear();
 		vecRadarMode_PRISequenceValues.clear();
+
 
         //vecRadarModeComments.clear();
         //mapRadarPRI_Sequence.clear();

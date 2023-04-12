@@ -957,11 +957,11 @@ static int socketDoEvent(socket_t *sp)
 int socketSetBlock(int sid, int on)
 {
 	socket_t		*sp;
-	unsigned long	flag;
+	//unsigned long	flag;
 	int				iflag;
 	int				oldBlock;
 
-	flag = iflag = !on;
+	//flag = iflag = !on;
 
 	if ((sp = socketPtr(sid)) == NULL) {
 		a_assert(0);

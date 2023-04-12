@@ -1,9 +1,9 @@
-//{{NO_DEPENDENCIES}}
+О╩©//{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by RADARANL.rc
 //
 
-// ╢ыю╫ю╨ ╩У ╟Ёц╪©║ ╩Г©Кгр ╠Б╨╩╟╙ют╢о╢ы.
+// К▀╓Л²▄Л²─ Л┐┬ Й╟°Л╡╢Л≈░ Л┌╛Л ╘М∙═ Й╦╟КЁ╦Й╟▓Л·┘К▀┬К▀╓.
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS

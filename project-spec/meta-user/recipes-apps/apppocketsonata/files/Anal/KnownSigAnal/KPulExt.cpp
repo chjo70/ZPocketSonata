@@ -26,7 +26,7 @@
 // 함 수 이 름  : CPulExt
 // 반환되는 형  : CKPulExt::CKPulExt(int coMaxPdw) :
 // 함 수 인 자  : int coMaxPdw
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:10:33
 //
 //##ModelId=42E85F3303AD
@@ -42,7 +42,7 @@ CKPulExt::CKPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPd
 //
 // 함 수 이 름  : CKPulExt::~CKPulExt
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 17:28:22
 //
 //##ModelId=42E85F3303B5
@@ -72,7 +72,7 @@ void CKPulExt::Init()
 	    \date 2008-07-30 13:29:53, 조철희
 	*/
 	CPulExt::Init();
-	
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ void CKPulExt::PulseExtract()
 	//////////////////////////////////////////////////////////////////////////
 	// DTOA 히스토그램을 이용해서 펄스열의 범위를 대략 구한다.
 	GetStartEndPriLevel();
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// 규칙성 펄스열 찾기
 	SetRefStartSeg();
@@ -109,7 +109,7 @@ void CKPulExt::PulseExtract()
 
 	// 규칙성 펄스열을 찾은 펄스열 인덱스
 	SetRefEndSeg();
-	
+
     ClearAllMark();
 
 	//////////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ void CKPulExt::PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode)
     //     if( GetPulseStat() == STAT_CW && false ) {
     //         // MakeCWPulseTrain();
     //     }
-    //     else 
+    //     else
     {
         //////////////////////////////////////////////////////////////////////////
         // 1차 펄스열 추출
@@ -352,7 +352,7 @@ void CKPulExt::PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode)
 // 함 수 이 름  : CKAnalPRI::GroupingKnownPri
 // 반환되는 형  : void
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-09-30 14:24:19
 //
 void CKPulExt::GroupingKnownPri() {
@@ -381,15 +381,15 @@ void CKPulExt::GroupingKnownPri() {
 
 	*/
 
-//////////////////////////////////////////////////////////////////////
-//
-//! \brief    알고 있는 에미터 제원을 기반으로 펄스열을 추출하게 한다.
-//! \author   조철희
-//! \return   void
-//! \version  1.37
-//! \date     2006-08-24 14:07:54
-//! \warning
-//
+/**
+ * @brief     알고 있는 에미터 제원을 기반으로 펄스열을 추출하게 한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-08-24 14:07:54
+ * @warning
+ */
 void CKPulExt::KnownPulseExtract()
 {
 	int i;
@@ -399,11 +399,11 @@ void CKPulExt::KnownPulseExtract()
     STR_PULSE_TRAIN_SEG *pSeg;
 
     pSeg = GetPulseSeg();
-    
+
 	// 타입에 따라서 펄스열 추출을 달리한다.
     //pPri = & SRxABTDatapri;
 
-    switch( m_pTrkAet->ucPRIType ) {
+    switch( m_pTrkAet->vPRIType ) {
 		case _STABLE :
             extRange.tMinPRI = ITOAusCNV( m_pTrkAet->fPRIMin ) - STABLE_MARGIN;
             extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRIMax ) + STABLE_MARGIN;
@@ -423,7 +423,7 @@ void CKPulExt::KnownPulseExtract()
 			break;
 
 		case _DWELL :
-            for( i=0 ; i < m_pTrkAet->ucPRIPositionCount ; ++i ) {
+            for( i=0 ; i < m_pTrkAet->vPRIPositionCount ; ++i ) {
                 extRange.tMinPRI = ITOAusCNV( m_pTrkAet->fPRISeq[i] ) - ( 2 * STABLE_MARGIN );
                 extRange.tMaxPRI = ITOAusCNV( m_pTrkAet->fPRISeq[i] ) + ( 2 * STABLE_MARGIN );
                 ExtractDwellRefPT( pSeg, & extRange );
@@ -453,8 +453,8 @@ void CKPulExt::KnownPulseExtract()
 			// 추출할 펄스열의 범위폭을 계산한다.
 			ExtractJitterPT( & extRange, UINT32_MAX, 3, TRUE );
 
-			// D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인 
-			// 하노닉 레이더 신호(?) 때문에 
+			// D:\RSA-조철희\소나타 ES TFT\해상 신호\A21-Check_Pulse_Mege\chirp_up.pdw 인
+			// 하노닉 레이더 신호(?) 때문에
 			// 2배의 PRI도 추출하도록 한다.
 			extRange.tMinPRI = 2 * extRange.tMinPRI;
 			extRange.tMaxPRI = 2 * extRange.tMaxPRI;
@@ -514,7 +514,7 @@ void CKPulExt::DiscardStablePT()
 // 	        for( i=m_nAnalSeg ; i < m_CoSeg ; ++i ) {
 // 		        pSeg2 = pSeg + i + 1;
 // 		        for( j=i+1 ; j < m_CoSeg ; ++j ) {
-// 
+//
 // 		        }
 // 	        }
         }
@@ -527,7 +527,7 @@ void CKPulExt::DiscardStablePT()
 // 함 수 이 름  : *CKPulExt::GetFrqAoaGroupedPdwIndex
 // 반환되는 형  : STR_PDWINDEX
 // 함 수 인 자  : 없음
-// 함 수 설 명  : 
+// 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:05:53
 //
 STR_PDWINDEX *CKPulExt::GetFrqAoaGroupedPdwIndex()

@@ -4,13 +4,19 @@
 
 #pragma once
 
+// 채널 수 정의
+#define CO_DETECT_CHANNEL	(1)                         // 탐지용 채널은 1개로 설정함. 현재 PL 전처리필터의 채널이 1개임.
+#define CO_TRACK_CHANNEL	(0)
+#define CO_SCAN_CHANNEL		(7)
+#define CO_USER_CHANNEL		(0)
+#define TOTAL_CHANNELS		(CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL+CO_USER_CHANNEL)
 
 // PDW 최대 크기 정의함. 랜 송수신 데이터 및 분석하기 위한 최대 PDW 개수 정의
 #define _MAX_COL_PDW        (100)
 
 
 // 랜 데이터 최대 크기
-#define _MAX_LANDATA        (200*1024)          
+#define _MAX_LANDATA        (200*1024)
 #define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(SRxLOBData))
 
 

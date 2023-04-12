@@ -23,7 +23,7 @@ using namespace std;
 * @brief 방사체 목록창에서 View/Logic 간 발생하는 인터페이스 data 정의
 * @author 이정남
 * @date 2013.5.25
-*   
+*
 * [개정이력]
 *  2013.5.25. 신규작성
 *  2013.6.18. std::string strIsFisintTask 데이터 추가
@@ -47,8 +47,8 @@ using namespace std;
 #define SIZE_OF_CHAR_EMITTER_INFO	15
 #define SIZE_OF_CHAR_MID_INFO		32
 
-					 
-											
+
+
 //static const I_THREAT_DATA stInitThreatData;
 
 struct I_AET_DATA {
@@ -68,7 +68,7 @@ struct I_AET_DATA {
 //static const I_AET_DATA g_stInitAETData;
 
 
-//static const char* strIdResult[] = 
+//static const char* strIdResult[] =
 //{
 //	"-",
 //	"기성",
@@ -80,7 +80,7 @@ enum EnumIdResult
 	E_EL_PE_UNK_ID=0,
 	E_EL_OLD_ID=1,						// 기성
 	E_EL_NEW_ID,							// 신출
-	E_EL_UNK_ID								// 불명	
+	E_EL_UNK_ID								// 불명
 };
 
 struct STR_CEDEOBID_INFO {
@@ -175,7 +175,7 @@ struct STR_POSITION_ESTIMATION {
 
 // 	STR_POSITION_ESTIMATION::STR_POSITION_ESTIMATION() : enValid(E_EL_PESTAT_FAIL), fLongitude(0.0), fLatitude(0.0), fCEP(0), fMajorAxis(0), fMinorAxis(0), fTheta(0), fDistanceErrorOfThreat(0), bApplayOfLOBClustering(false)
 // 	{
-// 
+//
 // 	}
 
 } ;
@@ -195,7 +195,7 @@ typedef struct STempAmbiBeam
 *--------------------------------------------------------------------------------*/
 /*! Beam 또는 Emitter 상태를 정의한 enum
  * @enum      E_BEAM_EMITTER_STAT
- * @brief 
+ * @brief
  * @author    이정남 (jeongnam.lee@lignex1.com)
  * @date      2016-02-13 오전 8:27
  */
@@ -213,7 +213,7 @@ enum E_BEAM_EMITTER_STAT
 
 };
 
-//static const char* strBeamEmitterStat[] = 
+//static const char* strBeamEmitterStat[] =
 //{
 //	"-",
 //
@@ -248,23 +248,23 @@ enum E_EMITTER_OPCODE
 
 };
 
-// static const char* strBeamEmitterOpcode[] = 
+// static const char* strBeamEmitterOpcode[] =
 // {
 //  	"객제생성안됨",
-// 
+//
 // 	"갱신 ",
 // 	"삭제(E/B)",
 // 	"삭제(L) ",
-// 
+//
 // 	"변경 ",
 // 	//////////////////////////////////////////////////////////////////////////
 // 	"상태 ",
-// 
+//
 // 	"경보 ",
 // 	"보고서",
-// 
+//
 // 	"삭제(E)",
-// 
+//
 // 	"상태 변동없음(NoChange)"
 // };
 
@@ -385,13 +385,21 @@ union UELMANUALVAL {
 
 }  ;
 
+/**
+    @enum  ENUM_SCAN_PROCESS
+    @brief 빔의 스캔 상태 정보
+**/
 enum ENUM_SCAN_PROCESS {
-    enSCAN_NotProcessing=0,
+    enSCAN_NotProcessing=0,				// 스캔 초기 상태
 
-    enSCAN_Requesting,
-    enSCAN_Processing,
-    enSCAN_Stopping,
+    enSCAN_Requesting,					// 스캔 수집 요구 상태, 시도를 참고하여 계속 여부를 결정
+    enSCAN_Collecting,					// 스캔 수집 진행 상태
+    enSCAN_Success,						// 스캔 분석 성공으로 종료 상태
+	enSCAN_Retrying,					// 스캔 실패로 재시도 할 경우
+	enSCAN_Stopping,					// 스캔 재시도로 스캔 분석 중지
     enSCAN_Canceling,
+
+	enSCAN_Initializing,				// 초기화 요청
 
 	enSCAN_CANTProcessing,
 
@@ -433,10 +441,10 @@ struct SELABTDATA_EXT {
 // 	// FISINT용 과제
 // 	//bool bIsFISINTTask;
 // 	UINT uiOpInitID;
-// 
+//
 //     unsigned int uiSeqNum;
 
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_) || defined(_SONATA_)
 	bool bTracking;
 
 #endif
@@ -476,8 +484,8 @@ struct SELABTDATA_EXT {
 
     // 스캔 분석 추가 정보
     ENUM_SCAN_PROCESS enScanProcess;
-    unsigned int uiTry;
-    unsigned int uiScanStep;
+    unsigned int uiScanTry;											///< 스캔 시도 횟수
+    unsigned int uiScanStep;										///< 스캔 수집 시간 스텝수
 
     //bool bIsFISINTTask;
     // UINT uiOpInitID;
@@ -486,7 +494,7 @@ struct SELABTDATA_EXT {
 
     unsigned uiOpcode;
     time_t tiSendLan;
-   
+
 } ;
 
 struct SELAETDATA_EXT {
@@ -496,7 +504,7 @@ struct SELAETDATA_EXT {
 
 	// 인트라 변조 유무
 	// bool bIntraMop;
-	
+
 	// 방사체 간의 식별을 위한 정보
 	//char szEOBELNOT[_MAX_ELNOT_STRING_SIZE_];					// EOB 상의 ELNOT
 
@@ -545,21 +553,21 @@ struct STR_ABTDATAEXT {
  * @typedef   SELIDENTIFICATION_INFO
  * @brief     신호 식별 옵션 창에 대한 구조체 정의 (GMI 병합 처리용 구조체)
  * @author    이정남(jeongnam.lee@lignex1.com)
- * @date      2016-02-13 
+ * @date      2016-02-13
  */
 // typedef struct {
 // 	SRxThreatData				stMsgData;		// 항공에서 수신된 메시지의 Data (Header) 정보
 // 	SRxThreatDataGroup		stMsgDataGrp;	// 항공에서 수신된 메시지의 DataGrp 정보
 // 	SPosEstData stPosEst;							// 지상에서 위치 산출한 정보
 // 	I_AET stCDFAet;									// 신호 식별 입력 및 결과 정보
-// 
+//
 // } SELIDENTIFICATION_INFO_MR;
 
 /*! Beam (ABT) 정보를 담고 있는 구조체
  * @struct     SBeamInfoFamily
- * @brief 
+ * @brief
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:28 
+ * @date      2016-02-13 오전 8:28
  */
 #define LENGTH_OF_GMI_CHAR 64
 struct SThreatFamilyInfo
@@ -641,7 +649,7 @@ struct SEmitterActivationInfo
 	int nDeactivatedTimeHour;			// 활동종료 시간 (시)
 	int nDeactivatedTimeMin;			 // 활동종료 시간 (분)
 	int nDeactivatedTimeSec;			// 활동종료 시간 (초)
-	bool bTimeOfConvergenceIsValid; // 
+	bool bTimeOfConvergenceIsValid; //
 	int nTimeOfConvergenceHour;
 	int nTimeOfConvergenceMin;
 	int nTimeOfConvergenceSec;
@@ -693,7 +701,7 @@ typedef struct stIdntfyReslt
     string strDtctSigID;						// 단위 : 없음.
     string strIdnfyTime;					// 단위 : 시:분:초
 	int	nRadarModeIndex;							// nRadarModeIndex
-	int	nThreatIndex;	
+	int	nThreatIndex;
 	int	nDeviceIndex;
 	unsigned int uiBeamID;
 	int uiLobID;
@@ -714,10 +722,10 @@ typedef struct stIdntfyReslt
 		,uiLobID(0)
 		,uiAetID(0)
         ,uiCandidateNum(0)
-		,strMsgAetID("")	
+		,strMsgAetID("")
 		,strElnotAir("")
 		,strElnotGnd("")
-	{		
+	{
 	};
 }SELIdentify;
 
@@ -744,17 +752,17 @@ typedef struct SPDWIQData
 
 /*! Emitter 정보를 담고 있는 구조체
  * @struct     SEmitterInfoFamily
- * @brief 
+ * @brief
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:28 
+ * @date      2016-02-13 오전 8:28
  */
 // struct SEmitterInfoFamily
 // {
-// 	E_BEAM_EMITTER_STAT eStat;					// Emitter Status 
+// 	E_BEAM_EMITTER_STAT eStat;					// Emitter Status
 // 	char szEmitterIdGnd[LENGTH_OF_GMI_CHAR];							// 지상에서 정의한 Emitter Unique ID
 // 	char szPastEmitterIdGnd[LENGTH_OF_GMI_CHAR];					// Emitter Status가 E_MR_NEW_BY_DEMERGE 인 경우, 이전 Emitter ID를 기입.
-// 	SELIDENTIFICATION_INFO_MR stEmitter;	// 식별, 위치산출, 제원 등 Emitter 정보	
-// 	
+// 	SELIDENTIFICATION_INFO_MR stEmitter;	// 식별, 위치산출, 제원 등 Emitter 정보
+//
 // 	SEmitterInfoFamily(){
 // 		memset(szEmitterIdGnd, 0, LENGTH_OF_GMI_CHAR);
 // 		memset(szPastEmitterIdGnd, 0, LENGTH_OF_GMI_CHAR);
@@ -763,22 +771,22 @@ typedef struct SPDWIQData
 
 /*! Emitter 또는 Beam이 Merge로 인하여 Delete 대상이 생긴 경우, ID를 기록하기 위한 구조체
  * @struct     SDeleteID
- * @brief 
+ * @brief
  * @author    이정남 (jeongnam.lee@lignex1.com)
- * @date      2016-02-13 오전 8:40 
+ * @date      2016-02-13 오전 8:40
  */
 struct SDeleteID
 {
 	char szIdGnd[LENGTH_OF_GMI_CHAR];					// 삭제 대상인 ID. (Emitter  Unique ID 또는 Beam Unique ID)
-	
+
 	SDeleteID(){
-		memset(szIdGnd, 0, LENGTH_OF_GMI_CHAR);	
+		memset(szIdGnd, 0, LENGTH_OF_GMI_CHAR);
 	}
 } ;
 
 // VER.3 목록창용 구조체 && ENUM 타입
-enum E_GMI_PROC_MSG_INFO_TYPE 
-{	
+enum E_GMI_PROC_MSG_INFO_TYPE
+{
 	E_GMI_LOB = 0,
 	E_GMI_ABT,
 	E_GMI_AET,
@@ -817,7 +825,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int iRatioOfPOL;
 // 	//int iIsFISINTTask;
 // 	char szIsFISINTTask[LENGTH_OF_SHORT_CHAR];
-// 	
+//
 // 	int nNumOfPPG;
 // 	int nNumOfPulse;
 // 	char szTimeInfo[LENGTH_OF_SHORT_CHAR];
@@ -841,7 +849,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nFrqMin;
 // 	int nFrqDev;
 // 	int arrFrqSeq[MAX_FREQ_PRI_STEP];
-// 	char szFrqSeq[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];	
+// 	char szFrqSeq[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];
 // 	char szPriType[LENGTH_OF_SHORT_CHAR];
 // 	char szPriPatternType[LENGTH_OF_SHORT_CHAR];
 // 	char szHasPriPeriod[LENGTH_OF_SHORT_CHAR];
@@ -899,14 +907,14 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nIsFiltered;
 // 	unsigned int uiNewAbtId;
 // 	unsigned int uiNewAetId;
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
-// 
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함.
+//
 // 	// 조철희, 시간 순으로 정렬하기 위해 추가된 함수
-// 	bool operator<(const SLobInfoToWnd & other ) 
+// 	bool operator<(const SLobInfoToWnd & other )
 // 	{
 // 		return strcmp( this->szTimeInfo, other.szTimeInfo ) < 0;
 // 	}
-// 
+//
 // 	SLobInfoToWnd()
 // 		:ullSeqNum(0),
 // 		nSearchBandId(0),
@@ -1008,7 +1016,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szIsPDWRestored, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(szIsIQRestored, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(szFirstReportTime, 0,LENGTH_OF_SHORT_CHAR);
-// 		memset(szFinalReportTime, 0,LENGTH_OF_SHORT_CHAR);	
+// 		memset(szFinalReportTime, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(arrFrqSeq, 0, MAX_FREQ_PRI_STEP*sizeof(int));
 // 		memset(arrPRISeq, 0, MAX_FREQ_PRI_STEP*sizeof(int));
@@ -1019,10 +1027,10 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szFrqSeq, 0, LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR);
 // 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szRxPath, 0, LENGTH_OF_SHORT_CHAR);//LDRA추가
-// 
+//
 // 	}
 // };
-// 
+//
 // struct SAbtInfoToWnd
 // {
 // 	unsigned long long ullSeqNum;
@@ -1067,7 +1075,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nFrqMin;
 // 	int nFrqDev;
 // 	int arrFrqElement[64];
-// 	char szFrqElement[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];		
+// 	char szFrqElement[LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR];
 // 	char szPriType[LENGTH_OF_SHORT_CHAR];
 // 	char szPriPatternType[LENGTH_OF_SHORT_CHAR];
 // 	char szHasPriPeriod[LENGTH_OF_SHORT_CHAR];
@@ -1115,14 +1123,14 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nEEPTiltAngle; // 0.1도 해상도
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
 // 	unsigned int uiNewAetId;
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
-// 
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함.
+//
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalAlarmTime[LENGTH_OF_SHORT_CHAR];
 // 	char szPolarization[LENGTH_OF_SHORT_CHAR];
 // 	char szStat[LENGTH_OF_SHORT_CHAR];
-// 
+//
 // 	SAbtInfoToWnd()
 // 		:ullSeqNum(0),
 // 	uiAbtId(0),
@@ -1131,7 +1139,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	iThreatIndex(0),//LDRA추가
 // 	nRadarModePriority(0),
 // 	fDistanceErrFromThreat(0.0),
-// 	nRadarPriority(0),	
+// 	nRadarPriority(0),
 // 	nNumOfPPG(0),
 // 	nNumOfLOB(0),
 // 	iDoaMean(0), // 해상도 0.1 deg
@@ -1147,7 +1155,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	nFrqMean(0), // 해상도 10khz
 // 	nFrqMax(0),
 // 	nFrqMin(0),
-// 	nFrqDev(0),	
+// 	nFrqDev(0),
 // 	nPriPeriodMean(0), // us
 // 	nPriPeriodMax(0), // us
 // 	nPriPeriodMin(0), // us
@@ -1157,7 +1165,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	nPriMax(0),
 // 	nPriMin(0),
 // 	nPriDev(0),
-// 	iPriJitterRatio(0),	
+// 	iPriJitterRatio(0),
 // 	nPwMean(0),
 // 	nPwMax(0),
 // 	nPwMin(0),
@@ -1212,19 +1220,19 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(arrPriElement,0, 64);
 // 		memset(szPriElement, 0, LENGTH_OF_FRQ_OR_PRI_SEQ_CHAR);
 // 		memset(szScanType, 0,LENGTH_OF_SHORT_CHAR);
-// 		memset(szHasIntraModulation, 0,LENGTH_OF_SHORT_CHAR);		
+// 		memset(szHasIntraModulation, 0,LENGTH_OF_SHORT_CHAR);
 // 		memset(arrPriPerGroup, 0, sizeof(int)*MAX_PRI_PER_GROUP);
 // 		memset(arrPaDiffPerGroup, 0, sizeof(int)*MAX_PADIFF_PER_GROUP);
 // 		memset(szFirstReportTime,0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalReportTime,0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalAlarmTime,0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);		
+// 		memset(szPolarization, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szPlaceNameKor, 0, LENGTH_OF_SHORT_CHAR);
 // 		//@end_이시온
 // 	}
 // };
-// 
+//
 // struct SAetInfoToWnd
 // {
 // 	unsigned long long ullSeqNum;
@@ -1232,7 +1240,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	char szMissionName[SIZE_OF_TASK_NAME];
 // 	char szTaskType[LENGTH_OF_SHORT_CHAR];
 // 	unsigned int uiAetId;
-// 
+//
 // 	//CED 관련 정보
 // 	int iRadarIndex;
 // 	int iThreatIndex;
@@ -1241,7 +1249,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	char szNickName[LENGTH_OF_SHORT_CHAR];
 // 	char szPriFuncCode[LENGTH_OF_SHORT_CHAR];
 // 	int nRadarPriority;
-// 	
+//
 // 	//EOB 관련
 // 	unsigned int uiPinNum;
 // 	char szThreatName[LENGTH_OF_SHORT_CHAR];
@@ -1251,7 +1259,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	float fDistanceErrFromThreat; // Nautical Mile
 // 	int iEquipNumber;
 // 	//char szEquipNumber[LENGTH_OF_SHORT_CHAR];
-// 
+//
 // 	int nNumOfLOB;
 // 	int nNumOfBeam;
 // 	char szFirstDetectTimeInfo[LENGTH_OF_SHORT_CHAR];
@@ -1284,7 +1292,7 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nPosEstLat; // 자동으로 갱신되는 위치 산출값
 // 	int nPosEstLong; // 자동으로 갱신되는 위치 산출값
 // 	int nManualPosEstLat; // 고정된 수동위치 산출값
-// 	int nManualPosEstLong; // 고정된 수동위치 산출값	
+// 	int nManualPosEstLong; // 고정된 수동위치 산출값
 // 	int nRepresentPosEstLat; // 대표 위치 위도
 // 	int nRepresentPosEstLong; // 대표 위치 경도
 // 	int nAltitude; // meter
@@ -1293,15 +1301,15 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 	int nLengthOfMinorAxis;
 // 	int nEEPTiltAngle; // 0.1도 해상도
 // 	int nManualPosEstPreferred; // 수동위치산출을 우선한다는 indicator.
-// 
-// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함. 
+//
+// 	E_EMITTER_OPCODE eOpCodeForUpdate; // 업데이트 되는 내용이 다양해 져서, Update Key를 둬서 식별하기로 함.
 // 	char szManualPosEstPreferred[LENGTH_OF_SHORT_CHAR];
 // 	char szFirstReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalReportTime[LENGTH_OF_SHORT_CHAR];
 // 	char szFinalAlarmTime[LENGTH_OF_SHORT_CHAR];
-// 
+//
 // 	char szStat[LENGTH_OF_SHORT_CHAR];
-// 
+//
 // 	SAetInfoToWnd()
 // 	:ullSeqNum(0)
 // 	 ,uiAetId(0)
@@ -1358,23 +1366,23 @@ enum E_GMI_PROC_MSG_INFO_TYPE
 // 		memset(szElnotPri, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szIdResult, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szNickName, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szPriFuncCode, 0, LENGTH_OF_SHORT_CHAR);		
+// 		memset(szPriFuncCode, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szThreatName, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szBENumber, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szThreatFuncCode, 0, LENGTH_OF_SHORT_CHAR);	
-// 		//memset(szEquipNumber, 0, LENGTH_OF_SHORT_CHAR);	
+// 		memset(szThreatFuncCode, 0, LENGTH_OF_SHORT_CHAR);
+// 		//memset(szEquipNumber, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFirstDetectTimeInfo, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalDetectTimeInfo, 0, LENGTH_OF_SHORT_CHAR);
-// 		memset(szValidity, 0, LENGTH_OF_SHORT_CHAR);	
+// 		memset(szValidity, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szPosEstValidity, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szManualPosEstPreferred, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFirstReportTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalReportTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szFinalAlarmTime, 0, LENGTH_OF_SHORT_CHAR);
 // 		memset(szStat, 0, LENGTH_OF_SHORT_CHAR);
-// 
+//
 // 		//@end_이시온
-// 		
+//
 // 	}
 // };
 
@@ -1462,16 +1470,16 @@ struct SFLTMData
 // typedef struct {
 // 	SRadar stSRadar;
 // 	EnumLibType enLibType;
-// 
+//
 // } SELCALLCEDLIB;
 
 // CED 생성시 참조되는 인자
 // typedef struct {
 // 	int nAETId;
 // 	int nABTId;
-// 
+//
 // 	char szMissionId[LENGTH_OF_MISSION_ID+2];
-// 
+//
 // } SELCEDCREATE ;
 
 
@@ -1491,7 +1499,7 @@ enum EnumRangeSearchRef {
 
 // typedef struct {
 // 	//EnumLibType enLibType;	// 기본형 또는 실무형
-// 
+//
 // 	CString strELNOT;
 // 	CString strNickName;
 // 	int iPin;
@@ -1499,9 +1507,9 @@ enum EnumRangeSearchRef {
 // 	EnumRadarStatus eStatus;									// 상태
 // 	CString strAssocWeapSys;									// 연관 무기 체계
 // 	CString strAssocPlatform;									// 연관 플레폼
-// 
+//
 // 	EnumRangeSearchRef eRangeSearchRef;			// 범위 검색 기준
-// 
+//
 // 	SELCHECKRANGE stFreq;											// 주파수 범위
 // 	SELCHECKRANGE stPRI;											// PRI 범위
 // } SELRADARLIST_SEARCH_FILTER;
@@ -1514,7 +1522,7 @@ struct SELRANGE {
 
 // typedef struct stSELRADARMODELIST_SEARCH_FILTER{
 // 	EnumLibType enLibType;	// 기본형 또는 실무형
-// 
+//
 // 	// 방사체
 // 	CString strELNOT;
 // 	CString strNickName;
@@ -1522,7 +1530,7 @@ struct SELRANGE {
 // 	EnumRadarStatus eStatus;									// 상태
 // 	CString strAssocWeapSys;									// 연관 무기 체계
 // 	CString strAssocPlatform;									// 연관 플레폼
-// 
+//
 // 	// 모드제원
 // 	PlatformCode::EnumPlatformCode ePlatform;
 // 	EnumValidationCode eValidation;
@@ -1540,14 +1548,14 @@ struct SELRANGE {
 // 	float fScanPrimaryTypicalMax;											//주 스캔 주기값의 TYPICAL (SEC) 최대
 // 	float fPD_TypicalMin;													//PD TYPICAL 값 (USEC) 최소
 // 	float fPD_TypicalMax;													//PD TYPICAL 값 (USEC) 최대
-// 
+//
 // 	// 주파수
 // 	ContinuityCode::EnumContinuityCode eRF_Continuity;						//주파수 값분포연속성: RF 변화의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode eRF_Pattern;								//RF 변화의 패턴 여부 (PATTERN_CODE 참조)
 // 	EnumRF_LagacyTypeCode eRF_LagacyType;									//RF_LEGACY_TYPE_CODE 참조
 // 	SELRANGE stRF_NumElements;													//NUMBER	PRI ELEMENT 수
 // 	SELRANGE stRF_NumPositions;													//NUMBER	PRI POSITION 수
-// 
+//
 // 	// PD
 // 	ContinuityCode::EnumContinuityCode ePD_Continuity;						//PD값의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode ePD_Pattern;								//PD값의 패턴여부 (PATTERN_CODE 참조)
@@ -1555,7 +1563,7 @@ struct SELRANGE {
 // 	SELRANGE stPD_NumPositions;													//PD Positon 수
 // 	float fPD_PatternPeriodMin;												//PD 패턴주기 (USEC) 최소
 // 	float fPD_PatternPeriodMax;												//PD 패턴주기 (USEC) 최대
-// 
+//
 // 	// PRI
 // 	ContinuityCode::EnumContinuityCode ePRI_Continuity;						//PRI 변화의 연속성 (CONTINUITY_CODE 참조)
 // 	PatternCode::EnumPatternCode ePRI_Pattern;								//NUMBER PRI변화의 패턴여부	(PATTERN_CODE 참조)
@@ -1568,15 +1576,15 @@ struct SELRANGE {
 // 	float fPRI_SubframePeriodMax;											//PRI SUBFRAME 주기 (USEC) 최대
 // 	float fPRI_PPG_Min;														//Pulse Per Group 최소
 // 	float fPRI_PPG_Max;														//Pulse Per Group 최대
-// 
+//
 // 	// 펄스내 변조
 // 	MOP_CW_ModulationType::EnumMOP_CW_ModulationType eMOP_CW_ModulationType;	//펄스 내 또는 CW 변조형태 (MOP_CW_MOD_TYPE_CODE 참조)
 // 	EnumMOP_CW_LegacyType eMOP_CW_LegacyType;					//변조형태의 LEGACY TERM (MOP_CW_LEGACY_TYPE_CODE)
-// 
+//
 // 	stSELRADARMODELIST_SEARCH_FILTER()
 // 	{
 // 		enLibType = E_EL_LIB_TYPE_NORMAL;	// 기본형 또는 실무형
-// 
+//
 // 		// 방사체
 // 		strELNOT="";
 // 		strNickName="";
@@ -1584,7 +1592,7 @@ struct SELRANGE {
 // 		eStatus = enumUndefinedRadarStatus;									// 상태
 // 		strAssocWeapSys="";									// 연관 무기 체계
 // 		strAssocPlatform="";									// 연관 플레폼
-// 
+//
 // 		// 모드제원
 // 		ePlatform = PlatformCode::enumUndefinedPlatformCode;
 // 		eValidation=enumUndefinedValidationCode;
@@ -1602,14 +1610,14 @@ struct SELRANGE {
 // 		fScanPrimaryTypicalMax=0.0f;											//주 스캔 주기값의 TYPICAL (SEC) 최대
 // 		fPD_TypicalMin=0.0f;													//PD TYPICAL 값 (USEC) 최소
 // 		fPD_TypicalMax=0.0f;													//PD TYPICAL 값 (USEC) 최대
-// 
+//
 // 		// 주파수
 // 		eRF_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//주파수 값분포연속성: RF 변화의 연속성 (CONTINUITY_CODE 참조)
 // 		eRF_Pattern=PatternCode::enumUndefinedPatternCode;								//RF 변화의 패턴 여부 (PATTERN_CODE 참조)
 // 		eRF_LagacyType=enumUndefinedRF_LagacyType;									//RF_LEGACY_TYPE_CODE 참조
 // 		stRF_NumElements = SELRANGE();													//NUMBER	PRI ELEMENT 수
 // 		stRF_NumPositions = SELRANGE();													//NUMBER	PRI POSITION 수
-// 
+//
 // 		// PD
 // 		ePD_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//PD값의 연속성 (CONTINUITY_CODE 참조)
 // 		ePD_Pattern=PatternCode::enumUndefinedPatternCode;								//PD값의 패턴여부 (PATTERN_CODE 참조)
@@ -1617,7 +1625,7 @@ struct SELRANGE {
 // 		stPD_NumPositions = SELRANGE();													//PD Positon 수
 // 		fPD_PatternPeriodMin=0.0f;												//PD 패턴주기 (USEC) 최소
 // 		fPD_PatternPeriodMax=0.0f;												//PD 패턴주기 (USEC) 최대
-// 
+//
 // 		// PRI
 // 		ePRI_Continuity=ContinuityCode::enumUndefinedContinuityCode;						//PRI 변화의 연속성 (CONTINUITY_CODE 참조)
 // 		ePRI_Pattern=PatternCode::enumUndefinedPatternCode;								//NUMBER PRI변화의 패턴여부	(PATTERN_CODE 참조)
@@ -1630,33 +1638,33 @@ struct SELRANGE {
 // 		fPRI_SubframePeriodMax=0.0f;											//PRI SUBFRAME 주기 (USEC) 최대
 // 		fPRI_PPG_Min=0.0f;														//Pulse Per Group 최소
 // 		fPRI_PPG_Max=0.0f;														//Pulse Per Group 최대
-// 
+//
 // 		// 펄스내 변조
 // 		eMOP_CW_ModulationType=MOP_CW_ModulationType::enumUndefinedMOP_CW_ModulationType;	//펄스 내 또는 CW 변조형태 (MOP_CW_MOD_TYPE_CODE 참조)
 // 		eMOP_CW_LegacyType=enumUndefinedMOP_CW_LegacyType;					//변조형태의 LEGACY TERM (MOP_CW_LEGACY_TYPE_CODE)
 // 	}
-// 
+//
 // } SELRADARMODELIST_SEARCH_FILTER;
 
 // typedef struct {
 // 	EnumLibType enLibType;	// 기본형 또는 실무형
-// 
+//
 // 	int iPin;
 // 	CString strBE_Number;
 // 	CString strFacilityName;											//기지명칭 (위협명)
-// 
+//
 // 	EnumFunctionCodes ePrimaryFunction_ForGUI;		//주기능코드
 // 	FriendOrFOE::EnumFriendOrFOE eFriendOrFOE;		//적아구분 enum값
-// 
+//
 // 	CString strPlaceNameKor;										//한글지명 (50)
 // 	CString strPlaceNameEng;										//영문지명 (50)
-// 
+//
 // 	CString strCategory;												//자체 구분 카테고리 (99999 형식)(5)
 // 	CString strADA;														//대공방공구역 (ADA) (AA123 형식) (5)
-// 
+//
 // 	CountryCode::EnumCountryCode eUserCountry;	//사용국가를 enum으로 표현
 // 	PlatformCode::EnumPlatformCode ePlatform;			//탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
-// 
+//
 // } SELTHREATLIST_SEARCH_FILTER;
 
 //#endif

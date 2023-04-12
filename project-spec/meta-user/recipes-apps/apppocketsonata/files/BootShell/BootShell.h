@@ -46,7 +46,7 @@ enum {
 #define	EIDDISK										"EIDDISK:"
 #define	RAMDRV										(char *) "/RAMDRV"
 #define	RAMDRV_NO									(char *) ":0"
-#define	TFFSDRV										(char *) "/tffs0"
+#define	TFFSDRV										(char *) "/tffs1"
 
 #define	LOGDISK										"LOGDISK:"
 

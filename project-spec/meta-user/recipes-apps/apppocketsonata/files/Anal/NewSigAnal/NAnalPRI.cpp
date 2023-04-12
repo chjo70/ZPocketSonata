@@ -79,13 +79,15 @@ CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw) : CAnalPRI(uiCoMax
 
 }
 
-//////////////////////////////////////////////////////////////////////
-//
-// 함 수 이 름  : CNAnalPRI::~CNAnalPRI
-// 함 수 인 자  : 없음
-// 함 수 설 명  :
-// 최 종 변 경  : 조철희, 2006-01-23 10:10:03
-//
+/**
+ * @brief     객체를 소멸합니다.
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2006-01-23 10:10:03
+ * @warning
+ */
 CNAnalPRI::~CNAnalPRI()
 {
 
@@ -94,7 +96,7 @@ CNAnalPRI::~CNAnalPRI()
 /**
  * @brief     객체에서 초기화를 수행한다. PRI 분석시 초기화를 호출해야 한다.
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2008-07-10 12:01:31
@@ -102,11 +104,6 @@ CNAnalPRI::~CNAnalPRI()
  */
 void CNAnalPRI::Init()
 {
-
-    CAnalPRI::m_uiAnalSeg = _spZero;
-    CAnalPRI::m_uiCoSeg = GetCoSeg();
-
-    CAnalPRI::m_uiAnalEmitter = _spZero; // m_uiCoEmitter;
 
     /*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
         \date 2008-07-30 13:35:08, 조철희
@@ -134,18 +131,18 @@ void CNAnalPRI::Analysis()
     // 고정펄스열들에 대하여 스태거 그룹핑 수행하여 스태거 신호인지 분석한다.
     GroupingStagger();
     StaggerAnalysis();
-    PrintAllEmitter( m_uiStepEmitter, "[1/8] Stable PRI 기반 스태거 분석" );
+    PrintAllEmitter( m_uiStepEmitter, "[1/6] Stable PRI 기반 스태거 분석" );
 
     // 고정펄스열 그룹핑은 스태거 그룹핑 후 검증하여 해제된 펄스열들에 대해 한다.
     GroupingStable();
-    PrintAllEmitter( m_uiStepEmitter, "[2/8] 스테이블 PRI 분석" );
+    PrintAllEmitter( m_uiStepEmitter, "[2/6] 스테이블 PRI 분석", _STABLE );
 
     GroupingJitter();
-    PrintAllEmitter( m_uiStepEmitter, "[3/8] 지터 PRI 분석" );
+    PrintAllEmitter( m_uiStepEmitter, "[3/6] 지터 PRI 분석", _JITTER_RANDOM );
 
     // 지터 그룹핑된 이후 스태거 분석을 한번 더 수행한다.(Jitter 펄스열들에 대해 Auto-Correlation Function으로 스태거 분석 수행)
     StaggerAnalysis();
-    PrintAllEmitter( 0, "[4/8] 스태거 PRI 분석", _JITTER_STAGGER );
+    PrintAllEmitter( m_uiStepEmitter, "[4/6] 스태거 PRI 분석", _JITTER_STAGGER );
 
     // PRI 고정으로 분석된 에미터들에 대해 D&S 분석을 수행한다.
     //DNSAnalysis();
@@ -156,12 +153,13 @@ void CNAnalPRI::Analysis()
     //PrintAllEmitter( 0, "[6/8] 호핑 PRI 분석" );
 
     // 패턴 분석을 수행한다.
-    //PatternAnalysis();
-    //PrintAllEmitter( 0, "[6/8] 패턴 PRI 분석" );
+    PatternAnalysis();
+    PrintAllEmitter( m_uiAnalEmitter, "[5/6] 패턴 PRI 분석", _JITTER_PATTERN );
 
     // 에미터 그룹핑
     // PRI 타입이 다르더라도 PRI 평균이 같은 에미터 단위는 하나로 형성한다.
     MergeGrouping();
+    PrintAllEmitter( m_uiStepEmitter, "[6/6] 유사 PRI 병합" );
 
     CAnalPRI::Analysis();
 
@@ -276,7 +274,7 @@ UINT CNAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
 /**
  * @brief     펄스열 개수를 리턴한다.
  * @return    unsigned int
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-23 10:10:23
@@ -335,7 +333,7 @@ void CNAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
  * @param     PDWINDEX * pPdwIndex
  * @param     unsigned int uiCount
  * @return    UINT
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-23 10:10:40
@@ -351,7 +349,7 @@ UINT CNAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsign
  * @param     PDWINDEX * pPdwIndex
  * @param     unsigned int uiCount
  * @return    _TOA
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-02-06 14:43:48
@@ -427,7 +425,7 @@ void CNAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/01/03 16:49:18
- * @warning		
+ * @warning
  */
 CMakeAET* CNAnalPRI::GetMakeAET()
 {

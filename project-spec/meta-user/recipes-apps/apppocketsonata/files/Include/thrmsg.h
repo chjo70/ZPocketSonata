@@ -38,22 +38,29 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_CLOSE_TRACKWINDOWCELL,
 
     // 스캔 수집 신호 설정 메시지
-    enTHREAD_REQ_SET_SCANWINDOWCELL,
+    enTHREAD_REQ_SCAN_START,
+    //enTHREAD_REQ_SET_SCANWINDOWCELL,
     enTHREAD_REQ_CLOSE_SCANWINDOWCELL,
 
 
     // 제어 메시지
     //enTHREAD_MODE = enREQ_MODE,
 
-    // 분석 관련 메시지
-    enTHREAD_DETECTANAL_START,
+    // 분석 관련 제어 메시지
+    // 탐지 분석 결과
+    enTHREAD_DETECTANAL_START,                  //< 탐지 분석 시작 또는 병합/식별 시작 메시지
+    enTHREAD_DETECTANAL_RESULT,                 //< 탐지 분석 결과 메시지
     enTHREAD_DETECTANAL_END,
 
     enTHREAD_KNOWNANAL_START,
     enTHREAD_KNOWNANAL_END,
     enTHREAD_KNOWNANAL_FAIL,
 
-    enTHREAD_SCANANAL_START,
+    // 스캔 분석 결과
+    enTHREAD_SCANANAL_START,                    //< 스캔 분석 시작 또는 병합/식별 시작 메시지
+    enTHREAD_SCANANAL_RESULT,
+    enTHREAD_SCANANAL_FAIL,                    //< 스캔 수집 및 분석 실패 메시지
+    enTHREAD_SCANANAL_ERROR,                   //< 스캔 수집을 수행할 수 없을 때 (이미 위협이 삭제된 경우)
     enTHREAD_SCANANAL_END,
 
     enTHREAD_DELETE_THREAT,

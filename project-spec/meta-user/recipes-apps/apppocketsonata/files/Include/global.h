@@ -36,7 +36,7 @@ bool g_AnalLoop=true;
 
 bool g_bSaveFile=true;
 
-char g_szCollectBank[4][10] = { "탐지", "추적", "스캔", "사용자" } ;
+char g_szCollectBank[enUserCollectBank+1][10] = { "미지", "탐지", "추적", "스캔", "사용자" } ;
 
 char g_szBitResult[2][10] = { "비정상", "정상" };
 

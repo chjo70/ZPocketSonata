@@ -1,14 +1,16 @@
-﻿/*!
- * \class classname
- *
- * \brief 
- *
- * \author chjo7_hns3pqr
- * \date 2월 2022
- */
+﻿/**
 
-#ifndef CEMITTERMERGE_H
-#define CEMITTERMERGE_H
+    @file      cemittermerge.h
+    @brief     위협 관리 ㅁ치 신호 식별 관련 헤더 파일
+    @details   ~
+    @author    조철희
+    @date      19.03.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #include "../Include/system.h"
 #include "../Utils/cthread.h"
@@ -35,13 +37,13 @@ class CEmitterMerge : public CThread
 #endif
 {
 private:
-    STR_ANALINFO m_strAnalInfo;										///< 쓰레드 간의 메시지 에서 이 쓰레드에서 사용할 메시지의 데이터 저장소 입니다.
 
 #ifdef _MSSQL_
     CODBCDatabase m_theMyODBC;
 #endif
 
-    bool m_bScanInfo;												///< 스캔 분석 여부 플레그 입니다.
+    // 랜 메시지 처리
+    										///< 쓰레드 간의 메시지 에서 이 쓰레드에서 사용할 메시지의 데이터 저장소 입니다.
 #ifdef __VXWORKS__
 	// 32 -> 16비트 강제 packed 구조체 정의
     alignas(16) UNI_LAN_DATA m_uniLanData;							///< 랜 메시지 데이터 입니다.
@@ -53,15 +55,25 @@ private:
 
     SLOBOtherInfo m_sLOBOtherInfo;									///< 식별/위협을 처리하는 추가 페라미터 변수 모음 입니다.
 
+    static int _uiCoManageDatabase;                                 ///< Databse 유지 관리 카운트
+
+    SRxLOBData *m_pLOBData;                                         ///< 메시지의 빔 데이터 포인터
 
 public:
     STR_MessageData *m_pMsg;										///< CThread 에서 사용하는 단일 메시지 데이터 포인터 입니다.
 
 private:
-    void Init();
     void InitEmitterMerge();
     void MergeEmitter();
     void DeleteThreat();
+
+    void InitOfMessageData();
+
+#ifdef _SCAN_ENABLED_
+    void UpdateScanResult();
+    void UpdateScanFail();
+    void UpdateScanError();
+#endif
 
     // 수집 쓰레드에 추적/스캔 요청을 전송한다.
     void RequestTrackCollect( SRxLOBData *pLOBData );
@@ -75,19 +87,36 @@ private:
     void SendDelete( unsigned int uiAETID );
     void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
 
+    void ManageDatabase();
+
+    void MakeLOBData( SRxLOBData *pLOBData );
+
 public:
-    CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData );				
-    virtual ~CEmitterMerge(void);															
+    CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData );
+    virtual ~CEmitterMerge(void);
+
+    void Init();
 
     inline CELEmitterMergeMngr *GetEmitterMergeMngr() { return m_pTheEmitterMergeMngr; }	///< 객체 포인터를 리턴합니다.
 
-    void Run( key_t key=IPC_PRIVATE );														
-    void _routine();																
-    char *GetThreadName() { return m_szThreadName; }								///< 쓰레드명을 리턴합니다.			
+    void Run( key_t key=IPC_PRIVATE );
+    void _routine();
+    char *GetThreadName() { return m_szThreadName; }								///< 쓰레드명을 리턴합니다.
     STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
+
+
+    SRxABTData *GetABTData( unsigned uiIndex ) {
+        SRxABTData *pABTData = NULL;
+
+        if( uiIndex != 0 ) {
+            pABTData = m_pTheEmitterMergeMngr->GetABTData( uiIndex );
+        }
+
+        return pABTData;
+    }
 
 
 };
 
 
-#endif // CEMITTERMERGE_H
+

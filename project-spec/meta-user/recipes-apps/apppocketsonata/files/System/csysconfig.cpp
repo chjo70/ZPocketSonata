@@ -43,7 +43,7 @@ extern void ProgramRevision( void );
 /**
  * @brief     CSysConfig
  * @param     void
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -75,13 +75,18 @@ CSysConfig::~CSysConfig(void)
 }
 
 /**
- * @brief CSysConfig::LoadINI
+ * @brief     INI 파일 로딩하기
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-04 09:00:12
+ * @warning
  */
 void CSysConfig::LoadINI()
 {
 #ifndef _CGI_LIST_
     int i, iValue;
-    unsigned int uiValue;
 
     string strValue;
 
@@ -92,7 +97,8 @@ void CSysConfig::LoadINI()
     strcat( m_szIniFileName, INI_FILENAME );
 
 #ifdef _MFC_VER
-    
+    unsigned int uiValue;
+
     char szBuffer[400], szDefault[400];
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -134,7 +140,7 @@ void CSysConfig::LoadINI()
     fValueArray[i++] = (float)atof(szBuffer);
 
     SetMergeAOADiff(fValueArray);
-	
+
 	///////////////////////////////////////////////////////////////////////////////////
 	// 수신기 방탐 오차 정의
 	i = 0;
@@ -152,13 +158,13 @@ void CSysConfig::LoadINI()
 	GetPrivateProfileString("AOA", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
 	fValueArray[i++] = (float)atof(szBuffer);
 
-	SetAOAError(fValueArray);
- 
+	SetDOAError(fValueArray);
+
 	///////////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
-    GetPrivateProfileString( "NETWORK" , "PRIME_SERVER" , "192.168.1.12", szBuffer, 100, m_szIniFileName );
+    GetPrivateProfileString( "NETWORK" , "PRIME_SERVER" , PRIME_SERVER, szBuffer, 100, m_szIniFileName );
     SetPrimeServerOfNetwork( szBuffer );
- 
+
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
     sprintf( szDefault, "%d" , _DEFAULT_ANAL_MINPULSECOUNT_ );
@@ -166,16 +172,16 @@ void CSysConfig::LoadINI()
     iValue = atoi( szBuffer );
     _spAnalMinPulseCount = (unsigned int) abs( iValue );
     SetMinAnalPulse( _spAnalMinPulseCount );
- 
+
     // 신호 삭제 시간
     sprintf( szDefault, "%d" , _DEFAULT_DELETETIME_ );
     GetPrivateProfileString( "ANAL" , "DEFAULT_DELETE_TIMESEC" , szDefault, szBuffer, 100, m_szIniFileName );
     iValue = atoi( szBuffer );
     SetEmmgEmitterDeleteTimeSec( iValue );
- 
+
     // 프로그램 버젼 정보
     SetProgramVersion( _GetProgramVersion() );
- 
+
     // 위협 라이브러리 버젼 정보
     sprintf( szDefault, "%d" , _DEFAULT_LIB_VERSION_ );
     GetPrivateProfileString( "IPL" , "VERSION" , szDefault, szBuffer, 100, m_szIniFileName );
@@ -184,7 +190,7 @@ void CSysConfig::LoadINI()
     SetIPLVersion( uiValue );
 
 #else
-    float fValue;
+    //float fValue;
 
     m_theMinIni.setfilename( m_szIniFileName );
 
@@ -220,10 +226,10 @@ void CSysConfig::LoadINI()
     fValueArray[i++] = m_theMinIni.getf("AOA", "AOA5", _DEFAULT_AOA_ERROR_);
     fValueArray[i] = m_theMinIni.getf("AOA", "AOA6", _DEFAULT_AOA_ERROR_);
 
-    SetAOAError(fValueArray);
+    SetDOAError(fValueArray);
 
     // 네트워크 환경 설정
-    strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , "192.168.1.12" );
+    strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , PRIME_SERVER );
     SetPrimeServerOfNetwork( strValue.c_str() );
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -287,7 +293,7 @@ void CSysConfig::InitVar()
 
 #endif
 
-    m_szIniFileName[0] = NULL;
+    m_szIniFileName[0] = (char) '\0';
 
 
 }
@@ -370,7 +376,7 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
                 pIpAddr = (struct in_addr *) (*hostinfo->h_addr_list);
                 sprintf( pIPAddress, "%d.%d.%d.%d" , (unsigned char) pIpAddr->S_un.S_un_b.s_b1, (unsigned char) pIpAddr->S_un.S_un_b.s_b2, (unsigned char) pIpAddr->S_un.S_un_b.s_b3, (unsigned char) pIpAddr->S_un.S_un_b.s_b4 );
             }
-        } 
+        }
         WSACleanup();
     }
 
@@ -409,27 +415,25 @@ void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2022/03/23 15:11:11
- * @warning		
+ * @warning
  */
 void CSysConfig::DisplaySystemVar()
 {
 
     Log( enNormal, "############################# 시스템 환경 설정 값 #############################" );
-    
+
     Log( enNormal, "\t.보드 식별자           : %d" , m_strConfig.enBoardID );
     Log( enNormal, "\t.프로그램 버젼          : %s" , m_strConfig.szProgramVersion );
-    LOG_LINEFEED;
     LOG_LINEFEED;
 
     //Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
     Log( enNormal, "\t.라이브러리 버젼           : %d" , m_strConfig.uiIPLVersion );
     LOG_LINEFEED;
-    LOG_LINEFEED;
 
     Log( enNormal, "\t.최소 펄스수               : %d" , m_strConfig.uiMinAnalPulse );
     Log( enNormal, "\t.기본 위협 삭제 시간[초]   : %d" , m_strConfig.iEmitterDeleteTime );
-    Log( enNormal, "\t.대역별 기본 임계값       : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
-    LOG_LINEFEED;
+    Log( enNormal, "\t.대역별 기본 임계값        : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
+    Log( enNormal, "\t.대역별 방위 오차          : %.2f/%.2f/%.2f/%.2f/%.2f", m_strConfig.fRxDOAError[0], m_strConfig.fRxDOAError[1], m_strConfig.fRxDOAError[2], m_strConfig.fRxDOAError[3], m_strConfig.fRxDOAError[4] );
     LOG_LINEFEED;
 
 }

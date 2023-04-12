@@ -10,7 +10,6 @@
 **/
 #pragma once
 
-//#include "../Utils/cmultiserver.h"
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
 
@@ -70,6 +69,17 @@ LONG g_lOpInitID;
 
 #endif
 
+// 장치 타입으로 이 값을 확인해서 장치에 맞게 실행하도록 한다.
+//#ifndef _ENUNIT_TYPE
+//#define _ENUNIT_TYPE
+//ENUM_UnitType g_enUnitType;
+// #ifdef _MSC_VER
+// __declspec( dllexport ) ENUM_UnitType g_enUnitType;
+// #else
+// ENUM_UnitType g_enUnitType;
+// #endif
+//#endif
+
 
 #else
 extern CTaskMngr *g_pTheTaskMngr;
@@ -108,6 +118,14 @@ extern vector<CThread *> g_vecThread;
 
 
 #endif
+
+
+//extern ENUM_UnitType g_enUnitType;
+// #ifdef _MSC_VER
+// extern __declspec( dllexport ) ENUM_UnitType g_enUnitType;
+// #else
+// extern ENUM_UnitType g_enUnitType;
+// #endif
 
 #endif
 

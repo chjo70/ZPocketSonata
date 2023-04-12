@@ -28,7 +28,7 @@ static char THIS_FILE[] = __FILE__;
 */
 CELEnvironVariable::CELEnvironVariable(void)
 {
-	bool bRtn = false;    
+	//bool bRtn = false;    
 
 	// 기본 설정 값
 	m_stEnvironVariable.uiDVRatio = 60;							// [%]

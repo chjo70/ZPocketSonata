@@ -95,7 +95,7 @@ enum enSIGNAL_TYPE
 {
 	ST_CW = 0,
 	ST_NORMAL_PULSE,
-	
+
 	ST_DOPPLER,
 	ST_HIGHPRF,
 
@@ -225,22 +225,22 @@ enum enFREQ_TYPE
 // PRI 형태 정의
 enum enPRI_TYPE
 {
-    _STABLE               = 0,
+    _STABLE = 0,
     _DWELL,
 
-    _JITTER_RANDOM,    
+    _JITTER_RANDOM,
 
     _JITTER_PATTERN,
 
     _STAGGER,                // 규칙성 펄스열들로부터 Stagger 분석한 것임.
     _STABLE_STAGGER,         // 스태거 또는 Dwell(?) 의심
     _JITTER_STAGGER,         // 지터 펄스열에서 Stagger 로 분석된것
-    
+
     _UNKNOWN_PRI,
 
     MAX_PRITYPE,
 
-    _REFSTABLE,   
+    _REFSTABLE,
 
 
 } ;
@@ -282,7 +282,6 @@ enum enPRI_TYPE
 #if defined(_ELINT_) || defined(_XBAND_)
 /////////////////////////////////////////////////////////////////////////////////////////
 // 안테나 스캔 형태 정의값
-//##ModelId=452B0C51022C
 enum ENUM_AET_SCAN_TYPE {
     E_AET_SCAN_UNKNOWN = 0,
     //##ModelId=452B0C510241
@@ -320,16 +319,31 @@ enum ENUM_AET_SCAN_TYPE {
 
     E_AET_SCAN_SCANFAIL,
 
+} ;
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#elif defined(_SONATA_)
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+
+// 기본형
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
     UFO,
     MAX_SCANTYPE,
 
     DetType,
 
     TYPE_UNKNOWN,
-} ;
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-#elif defined(_SONATA_)
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+};
+
+
 #else
 static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 
@@ -388,7 +402,7 @@ enum SCAN_STAT
 // 	E_AET_SCAN_CONICAL,
 // 	//##ModelId=452B0C510268
 // 	E_AET_SCAN_STEADY,
-// 
+//
 // 	E_AET_SCAN_SCANFAIL,
 // 	//##ModelId=452B0C510286
 // 	UFO,
@@ -425,7 +439,7 @@ enum SCAN_STAT
 struct STR_LOWHIGH
 {
     int iLow;
-    int iHgh;
+    int iHigh;
 } ;
 #endif
 
@@ -434,7 +448,7 @@ struct STR_LOWHIGH
 struct STR_LOWHIGH_TOA
 {
     _TOA tLow;
-    _TOA tHgh;
+    _TOA tHigh;
 } ;
 #endif
 
@@ -451,7 +465,7 @@ struct STR_MINMAX {
     int iMin;
     int iMax;
     int iMode;
-    
+
 } ;
 
 struct STR_MINMAX_SDEV {
@@ -461,7 +475,7 @@ struct STR_MINMAX_SDEV {
     int iMode;
 
     float fsdev;
-    
+
 } ;
 
 struct STR_MINMAX_MEDIAN {
@@ -512,19 +526,19 @@ struct STR_PRI {
     _TOA tMean;
     _TOA tMin;
     _TOA tMax;
-    _TOA TMode;
+    _TOA tMode;
     int iPatType;
     float fJtrPer;
     int iSwtLev;
-    _TOA TSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
-    _TOA iPatPrd;
+    _TOA tSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
+    _TOA tPatPrd;
 
 	STR_PRI() :
 		iType(0),
 		tMean(0),
 		tMin(0),
 		tMax(0),
-		TMode(0)
+		tMode(0)
 	{
 	}
 
@@ -590,7 +604,7 @@ struct stEmitterNo {
 // struct stContactTime {
 // 	unsigned int	FirstSeenTime	: 17;			// 최초 접촉 시간
 // 	unsigned int	LastSeenTime	: 15;			// 최근 접촉 시간
-// 
+//
 // } ;
 
 // struct STR_CVIAET {
@@ -614,7 +628,7 @@ struct stEmitterNo {
 // 	char EmitterName[SZ_MAX_EMITTERNAME];	// 에미터명
 // 	char ThreatName[SZ_MAX_THREATNAME];		// 위협명
 // 	stContactTime	ContactTime;						// 접촉 시간
-// 
+//
 // } ;
 
 
@@ -744,7 +758,7 @@ struct STR_EXT {
 // struct STR_COMAET {
 //   UINT noSerial;  // random variable
 //   UINT noCol;   // collection pulse #
-// 
+//
 //   STR_LOWHIGH pulse;    // pulse # on process the KSP
 //   STR_REF ref;    // reflect wave info.
 //   STR_CHINFTAB ksp;   // track info.
@@ -752,7 +766,7 @@ struct STR_EXT {
 //   STR_MERGE mg;     // merge info.
 //   STR_EXT ext;    // paet info.
 //   STR_RSAID id;
-// 
+//
 // } ;
 
 // Emitter Merge Comparative History Info

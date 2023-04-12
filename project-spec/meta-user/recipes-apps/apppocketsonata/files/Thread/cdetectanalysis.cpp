@@ -116,7 +116,7 @@ void CDetectAnalysis::_routine()
 
     UNI_LAN_DATA *pLanData;
 
-    m_pMsg = GetDataMessage();
+    m_pMsg = GetRecvDataMessage();
 
     pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
@@ -195,7 +195,7 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, " 탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    LOGMSG2( enDebug, "탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -207,27 +207,22 @@ void CDetectAnalysis::AnalysisStart()
     unsigned int uiTotalLOB=(unsigned int) m_pTheNewSigAnal->GetCoLOB();
 
     if( uiTotalLOB >= _spOne ) {
-        STR_ANALINFO strAnalInfo;
-        //STR_COLLECTINFO strCollectInfo;
-
-        memset( & strAnalInfo, 0, sizeof(STR_ANALINFO) );
-
+        //! LOB 크기는 내부 메시지 크기로 개수를 정합니다.
+        //! #메시지 크기 제한
         // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
         uiTotalLOB = min( ( _MAX_LANDATA / sizeof(SRxLOBData)-1), uiTotalLOB);
 
-        strAnalInfo.enBoardID = g_enBoardId;
-        strAnalInfo.uiTotalLOB = uiTotalLOB;
-        strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
+        GetDetectAnalInfo()->Set( g_enBoardId, uiTotalLOB, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.enCollectBank, 0, 0, 0 );
 
         // PDW 헤더 정보 저장
-        memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
+        // memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
 
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_START, NO_ECHO, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, & strAnalInfo, sizeof(STR_ANALINFO), GetThreadName() );
-
-        //memcpy( &strCollectInfo, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
-        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_RESULT, NO_ECHO, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
 
     }
+
+    //memcpy( &strCollectInfo, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
+    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
 
 }
 
@@ -260,7 +255,7 @@ void CDetectAnalysis::MakePDWData()
     for( i=0 ; i < uiTotalPDW ; ++i ) {
         pPDWDest->ullTOA = pPDWSrc->ullTOA;
 
-        pPDWDest->iPulseType = pPDWSrc->iPulseType;
+        pPDWDest->iStat = pPDWSrc->iStat;
 
         pPDWDest->uiAOA = pPDWSrc->uiAOA;
         pPDWDest->uiFreq = pPDWSrc->uiFreq;

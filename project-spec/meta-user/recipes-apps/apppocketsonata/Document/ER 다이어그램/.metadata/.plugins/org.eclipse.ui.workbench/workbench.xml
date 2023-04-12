@@ -28,7 +28,6 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
-<part id="2"/>
 </presentation>
 </folder>
 </info>
@@ -36,10 +35,7 @@
 <editor id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" name="용어 사전.xdic" partName="용어 사전.xdic" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/용어 사전.xdic" title="용어 사전.xdic" tooltip="함정용전자전장비(DDH-I)/용어 사전.xdic" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
 </editor>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="위협 결과.exerd" partName="위협 결과.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 결과.exerd" title="위협 결과.exerd" tooltip="함정용전자전장비(DDH-I)/위협 결과.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="위협 라이브러리.exerd" partName="위협 라이브러리.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 라이브러리.exerd" title="위협 라이브러리.exerd" tooltip="함정용전자전장비(DDH-I)/위협 라이브러리.exerd" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="위협 라이브러리.exerd" partName="위협 라이브러리.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 라이브러리.exerd" title="위협 라이브러리.exerd" tooltip="함정용전자전장비(DDH-I)/위협 라이브러리.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 </editor>
 </editors>
@@ -114,7 +110,7 @@
 <fastViews>
 <view id="com.tomato.exerd.ui.views.domain" ratio="0.3"/>
 <view id="com.tomato.exerd.validate.ui.ValidateView" ratio="0.3"/>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.3"/>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29978585"/>
 <view id="com.tomato.exerd.xscript.ScriptView" ratio="0.3"/>
 </fastViews>
 </fastViewBar>
@@ -180,7 +176,6 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 관리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/E:/APECS/Dev/PocketSONATA/dev_/Document/ER%20다이어그램2/함정용전자전장비(DDH-I)/위협%20결과2.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
@@ -193,57 +188,62 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 </editors>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 관리.exerd" index="0"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 결과.exerd" index="3"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 결과.exerd" index="3"/>
-<item historyLabel="위협 결과2.exerd" index="2"/>
-<item historyLabel="위협 결과.exerd" index="3"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 결과.exerd" index="3"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 라이브러리2.exerd" index="5"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="용어 사전.xdic" index="1"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 라이브러리2.exerd" index="5"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="용어 사전.xdic" index="7"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="4"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
-<item historyLabel="위협 결과.exerd" index="6"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
+<item historyLabel="위협 결과2.exerd" index="1"/>
+<item historyLabel="위협 결과.exerd" index="2"/>
+<item historyLabel="위협 결과2.exerd" index="1"/>
+<item historyLabel="위협 결과.exerd" index="2"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 결과.exerd" index="2"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 라이브러리2.exerd" index="4"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="용어 사전.xdic" index="0"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 라이브러리2.exerd" index="4"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="용어 사전.xdic" index="6"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="위협 결과.exerd" index="5"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="9"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="9"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
 <item historyLabel="위협 라이브러리.exerd" index="10"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="위협 라이브러리.exerd" index="10"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="위협 라이브러리.exerd" index="11"/>
-<item active="true" historyLabel="위협 결과.exerd" index="12"/>
+<item historyLabel="위협 결과.exerd" index="11"/>
+<item historyLabel="위협 라이브러리.exerd" index="12"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="12"/>
+<item historyLabel="용어 사전.xdic" index="14"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="12"/>
+<item historyLabel="용어 사전.xdic" index="14"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="12"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="용어 사전.xdic" index="15"/>
+<item historyLabel="위협 라이브러리.exerd" index="16"/>
+<item historyLabel="용어 사전.xdic" index="15"/>
+<item historyLabel="위협 라이브러리.exerd" index="16"/>
+<item historyLabel="용어 사전.xdic" index="15"/>
+<item historyLabel="위협 라이브러리.exerd" index="16"/>
+<item historyLabel="용어 사전.xdic" index="15"/>
+<item active="true" historyLabel="위협 라이브러리.exerd" index="16"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>

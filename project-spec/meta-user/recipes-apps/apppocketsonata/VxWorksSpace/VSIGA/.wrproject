@@ -362,6 +362,7 @@
             <listAttribute key="BLD::Info|Libs|VSourceBuild_T2MS32_PPCE6500gnu_SMP"/>
             <listAttribute key="BLD::Info|Definess|VSourceBuild_T2MS32_PPCE6500gnu_SMP">
                 <stringAttribute value="-DCPU=_VX_$(CPU)"/>
+                <stringAttribute value="-D_SELF_GEN_PDW"/>
                 <stringAttribute value="-DTOOL=$(TOOL)"/>
                 <stringAttribute value="-DTOOL_FAMILY=$(TOOL_FAMILY)"/>
                 <stringAttribute value="-D_WRS_KERNEL"/>

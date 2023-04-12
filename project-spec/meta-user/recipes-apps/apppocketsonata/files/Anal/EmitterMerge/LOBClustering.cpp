@@ -1,10 +1,10 @@
 ﻿/**
  * @file      LOB 클러스터링 관련 클래스
- * @brief     
+ * @brief
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-22, 오후 2:33 
- * @warning   
+ * @date      2016-06-22, 오후 2:33
+ * @warning
  */
 
 #include "stdafx.h"
@@ -15,6 +15,7 @@ using namespace std;
 
 #include "LOBClustering.h"
 #include "../MIDAS/ELDecoder.h"
+
 //#include "../../../ELINT/ELCOMMON/IsNumber.h"
 
 //#include "../../../COMMON/MNGR/GRLogMngr.h"
@@ -82,8 +83,8 @@ int incClusterCompare( const void *arg1, const void *arg2 )
  * @return    해당사항 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-07-19, 오후 1:09 
- * @warning   
+ * @date      2016-07-19, 오후 1:09
+ * @warning
  */
 CLOBClustering::CLOBClustering() : m_bIsSimulator(false)
 {
@@ -111,8 +112,8 @@ CLOBClustering::CLOBClustering() : m_bIsSimulator(false)
  * @return    해당사항 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-07-19, 오후 1:09 
- * @warning   
+ * @date      2016-07-19, 오후 1:09
+ * @warning
  */
 CLOBClustering::~CLOBClustering()
 {
@@ -130,8 +131,8 @@ CLOBClustering::~CLOBClustering()
  * @param     void
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-09-18 오후 2:01 
- * @warning   
+ * @date      2017-09-18 오후 2:01
+ * @warning
  */
 void CLOBClustering::InitOfLOBClustering()
 {
@@ -154,11 +155,11 @@ void CLOBClustering::InitOfLOBClustering()
  * @brief     LOB 클러스터리을 초기화한다.
  * @param     int nIndex LOB 큐 인덱스
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2018-01-16, 오후 9:56 
- * @warning   
+ * @date      2018-01-16, 오후 9:56
+ * @warning
  */
 void CLOBClustering::InitOfLOBClustering( int nIndex )
 {
@@ -177,11 +178,11 @@ void CLOBClustering::InitOfLOBClustering( int nIndex )
  * @param     int nDestIndex 소스 큐 인덱스
  * @param     int nSrcIndex 목적지 큐 인덱스
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-16, 오후 2:16 
- * @warning   
+ * @date      2017-02-16, 오후 2:16
+ * @warning
  */
 void CLOBClustering::AddLOBPool( int nDestIndex, int nSrcIndex )
 {
@@ -198,7 +199,7 @@ void CLOBClustering::AddLOBPool( int nDestIndex, int nSrcIndex )
 		    pDestQueLOBDataPool->Push( stLOBData );
         }
 	}
-	
+
 }
 
 /**
@@ -209,8 +210,8 @@ void CLOBClustering::AddLOBPool( int nDestIndex, int nSrcIndex )
  * @return    SELLOBDATA 포인터로 실제 저장할 LOB POOL의 포인터를 리턴
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-22, 오후 1:13 
- * @warning   
+ * @date      2016-06-22, 오후 1:13
+ * @warning
  */
 SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( unsigned int uindex, SRxLOBData *pSRxLOBData, UINT uiLOBID, bool bInit, bool bInsertLOB )
 {
@@ -227,7 +228,7 @@ SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( unsigned int uindex, SRxLOBD
 		}
 
 		pLOBData = pQueLOBDataPool->PushAt();
-		if( pLOBData != NULL ) { 
+		if( pLOBData != NULL ) {
 			// LOB POOL에 LOB 관련 정보 저장
 			CopyLOBDataMinimizeFromLOBData( pLOBData, pSRxLOBData, uiLOBID );
 		}
@@ -254,11 +255,11 @@ SELLOBDATA_MINIMIZE *CLOBClustering::InsertLOBPool( unsigned int uindex, SRxLOBD
  * @param     SRxLOBDataGroup * pSRxLOBDataGroup
  * @param     UINT uiLOBID
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-22, 오후 3:14 
- * @warning   
+ * @date      2017-02-22, 오후 3:14
+ * @warning
  */
 void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBData, SRxLOBData *pSRxLOBData, UINT uiLOBID )
 {
@@ -271,7 +272,7 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
 		//pLOBData->iRollAngle = pSRxLOBDataGroup->iRollAngle;
 		//pLOBData->iPitchAngle = pSRxLOBDataGroup->iPitchAngle;
 		//pLOBData->iHeadingAngle = pSRxLOBDataGroup->iHeadingAngle;
-		//pLOBData->iAltitude = pSRxLOBDataGroup->iAltitude;	
+		//pLOBData->iAltitude = pSRxLOBDataGroup->iAltitude;
         pLOBData->fRadarLatitude = pSRxLOBData->fCollectLatitude;
         pLOBData->fRadarLongitude = pSRxLOBData->fCollectLongitude;
 	}
@@ -284,8 +285,8 @@ void CLOBClustering::CopyLOBDataMinimizeFromLOBData( SELLOBDATA_MINIMIZE *pLOBDa
  * @return    리턴값 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-22, 오후 12:51 
- * @warning   
+ * @date      2016-06-22, 오후 12:51
+ * @warning
  */
 bool CLOBClustering::LOBClustering( unsigned int uiIndex, STR_CEDEOBID_INFO *pCEDEOBInfo )
 {
@@ -330,8 +331,8 @@ bool CLOBClustering::LOBClustering( unsigned int uiIndex, STR_CEDEOBID_INFO *pCE
  * @param     void
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-09-13 오후 7:14 
- * @warning   
+ * @date      2017-09-13 오후 7:14
+ * @warning
  */
 bool CLOBClustering::AllocMemory()
 {
@@ -375,8 +376,8 @@ bool CLOBClustering::AllocMemory()
  * @param     void
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-09-13 오후 7:14 
- * @warning   
+ * @date      2017-09-13 오후 7:14
+ * @warning
  */
 void CLOBClustering::FreeMemory()
 {
@@ -401,8 +402,8 @@ void CLOBClustering::FreeMemory()
  * @return    리턴값 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-24, 오전 10:13 
- * @warning    
+ * @date      2016-06-24, 오전 10:13
+ * @warning
  */
 void CLOBClustering::GroupOfIntersection()
 {
@@ -480,8 +481,8 @@ bool CLOBClustering::IsThereCluster( STR_LOBCLUSTER *pCluster )
  * @param     STR_LOBCLUSTER * pCluster 클러스터 데이터 정보
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-12 오후 2:58 
- * @warning   
+ * @date      2017-12-12 오후 2:58
+ * @warning
  */
 void CLOBClustering::ShowCluster( STR_LOBCLUSTER *pCluster )
 {
@@ -529,8 +530,8 @@ void CLOBClustering::PushQueueIndex( STR_LOBCLUSTER *pCluster, UINT nQueLOBDataI
  * @param     STR_LOBCLUSTER * pCluster 클러스터 데이터 정보
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-09-14 오전 11:03 
- * @warning   
+ * @date      2017-09-14 오전 11:03
+ * @warning
  */
 void CLOBClustering::CalMaxDiffAoa( STR_LOBCLUSTER *pCluster )
 {
@@ -580,25 +581,25 @@ void CLOBClustering::CalMaxDiffAoa( STR_LOBCLUSTER *pCluster )
  * @return    리턴값 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-28, 오전 11:56 
- * @warning   
+ * @date      2016-06-28, 오전 11:56
+ * @warning
  */
 void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *pRefInterSect )
 {
 	int i;
 
-	bool bFirst=true;
+	//bool bFirst=true;
 
 	float fTheta, fDiff;
-	SELINTERSECTION *pIntersect;
+	//SELINTERSECTION *pIntersect;
 
-	QueueIndex *pQueueIndex;
+	//QueueIndex *pQueueIndex;
 
 	SELLOBDATA_MINIMIZE *pLOBData;
 
-	pQueueIndex = pCluster->pQueueIndex;
+	//pQueueIndex = pCluster->pQueueIndex;
 
-	pIntersect = m_pIntersect;
+	//pIntersect = m_pIntersect;
 
 	pCluster->iCount = 0;
 
@@ -631,8 +632,8 @@ void CLOBClustering::CalClusterInfo( STR_LOBCLUSTER *pCluster, SELINTERSECTION *
  * @return    리턴값 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-23, 오전 10:13 
- * @warning   
+ * @date      2016-06-23, 오전 10:13
+ * @warning
  */
 unsigned int CLOBClustering::CalcIntersectionPoints( unsigned int uiLines )
 {
@@ -645,8 +646,8 @@ unsigned int CLOBClustering::CalcIntersectionPoints( unsigned int uiLines )
  * @return    리턴값 없음
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-22, 오후 1:29 
- * @warning   
+ * @date      2016-06-22, 오후 1:29
+ * @warning
  */
 void CLOBClustering::CalculateIntersectionPoints()
 {
@@ -685,8 +686,8 @@ void CLOBClustering::CalculateIntersectionPoints()
  * @param     void
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-09-14 오전 11:51 
- * @warning   
+ * @date      2017-09-14 오전 11:51
+ * @warning
  */
 void CLOBClustering::FilteredIntersectionPoints()
 {
@@ -740,8 +741,8 @@ void CLOBClustering::FilteredIntersectionPoints()
  * @return    교차점을 구할수 있으면 true 없으면 false 로 리턴
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-23, 오후 2:31 
- * @warning   
+ * @date      2016-06-23, 오후 2:31
+ * @warning
  */
 bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDATA_MINIMIZE *pLOBData1, SELLOBDATA_MINIMIZE *pLOBData2 )
 {
@@ -781,7 +782,7 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
         dBearingOf21 = acos( ( sin( deg2rad * pLOBData1->fRadarLatitude ) - sin( deg2rad * pLOBData2->fRadarLatitude ) * cos( dDistAngular12 ) ) / ( sin( dDistAngular12 ) * cos( deg2rad * pLOBData2->fRadarLatitude ) ) );
 
 		if( sin( dDistAircraftLongitude ) > 0 ) {
-			dBearingOf21 = 2. * M_PI - dBearingOf21; 
+			dBearingOf21 = 2. * M_PI - dBearingOf21;
 		}
 		else {
 			dBearingOf12 = 2. * M_PI - dBearingOf12;
@@ -841,11 +842,11 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
  * @brief     최적의 클러스터링을 결정한다.
  * @param     bool bProcess
  * @return    STR_LOBCLUSTER *
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-20, 오후 6:17 
- * @warning   
+ * @date      2017-02-20, 오후 6:17
+ * @warning
  */
 bool CLOBClustering::CalOptimalCluster( STR_CEDEOBID_INFO *pCEDEOBInfo )
 {
@@ -866,7 +867,7 @@ bool CLOBClustering::CalOptimalCluster( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 		// 1. 최적의 클러스터링 산정 : 최대 방위값으로 설정
 		for( i=0 ; i < m_nClusters ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
-			if( ( pCluster->iCount > iCount ) || 
+			if( ( pCluster->iCount > iCount ) ||
 				  ( ( pCluster->iCount == iCount ) && ( pCluster->fMaxDiffAoa > fMaxDiffAoa ) ) ) {
 				m_pOptimalCluster[0] = pCluster;
 
@@ -908,8 +909,8 @@ bool CLOBClustering::CalOptimalCluster( STR_CEDEOBID_INFO *pCEDEOBInfo )
  * @param     void
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-12 오후 2:36 
- * @warning   
+ * @date      2017-12-12 오후 2:36
+ * @warning
  */
 bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 {
@@ -923,7 +924,7 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 
 	//SELDBEnvVarIdnf *pstDBEnvVarIdnf;
 
-	STR_POSESTDATA stPosEstData;
+	//STR_POSESTDATA stPosEstData;
 	SPosEstData stResPosEstData;
 
 	STR_LOBCLUSTER *pOptimalCluster;
@@ -959,9 +960,9 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 		ShowCluster( pOptimalCluster );
 
 		// 3. EOB 식별하여 EOB 메칭이 안된 클러스터링은 실패로 처리 한다.
-		stPosEstData.dEstLatitude = (double) peInfo.fLatitude;
-		stPosEstData.dEstLongitude = (double) peInfo.fLongitude;
-		stResPosEstData.dCEP = (double) peInfo.fCEP;
+		//stPosEstData.dEstLatitude = (double) peInfo.fLatitude;
+		//stPosEstData.dEstLongitude = (double) peInfo.fLongitude;
+		//stResPosEstData.dCEP = (double) peInfo.fCEP;
 		//stResPosEstData.nRadarIndex = pCEDEOBInfo->nRadarIndex[0];
 		// 위치 산출 수행함.
 		//m_theIdentifyAlg.IdentifyPosition( pCEDEOBInfo, & stPosEstData, & stResPosEstData, stDBEnvVarIdnf.eCEDDefaultLibType, stDBEnvVarIdnf.eEOBDefaultLibType, GP_MGR_TEST_PARAM->GetEffectiveDistOfEOB() );
@@ -978,10 +979,10 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
 				bRet = ReMakeOptimalCluster( & peInfo, i );
 
 				m_thePositionEstimation.RunPositionEstimation( & peInfo, NULL, & m_VecLOBs );
-				// 장축/단축 비교를 추가 
-                
-				if( bRet == true && is_zero<float>(peInfo.fCEP) != true && \
-					( peInfo.fCEP <= fGetEobIndfRangeMeters ) || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
+				// 장축/단축 비교를 추가
+
+				if( ( bRet == true && is_zero<float>(peInfo.fCEP) != true && ( peInfo.fCEP <= fGetEobIndfRangeMeters ) ) \
+					   || ( peInfo.fMajorAxis/2 <= MAJOR_MAX_LIMIT && peInfo.fMinorAxis/2 <= MINOR_MAX_LIMIT ) ) {
 					LogPrint( "\n CEP[%d m] 반장축[%f m] 반단축[%f m] 반경 안에 들었습니다!" , peInfo.fCEP, peInfo.fMajorAxis/2, peInfo.fMinorAxis/2 );
 					bRet = true;
 					break;
@@ -1008,8 +1009,8 @@ bool CLOBClustering::CheckOptimalLOBID( STR_CEDEOBID_INFO *pCEDEOBInfo )
  * @param     SELLOBDATA_MINIMIZE * pLOBData 입력할 LOB 데이터
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-13 오후 4:01 
- * @warning   
+ * @date      2017-12-13 오후 4:01
+ * @warning
  */
 void CLOBClustering::AddPEData( SELLOBDATA_MINIMIZE *pLOBData )
 {
@@ -1030,8 +1031,8 @@ void CLOBClustering::AddPEData( SELLOBDATA_MINIMIZE *pLOBData )
  * @param     int iLOBID 입력할 LOB 번호
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-13 오후 12:32 
- * @warning   
+ * @date      2017-12-13 오후 12:32
+ * @warning
  */
 void CLOBClustering::AddOptimalLOBID( UINT uiLOBID )
 {
@@ -1048,8 +1049,8 @@ void CLOBClustering::AddOptimalLOBID( UINT uiLOBID )
  * @param     int iLOBID
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-13 오후 12:34 
- * @warning   
+ * @date      2017-12-13 오후 12:34
+ * @warning
  */
 bool CLOBClustering::IsThereOptimalLOBID( int iLOBID )
 {
@@ -1071,8 +1072,8 @@ bool CLOBClustering::IsThereOptimalLOBID( int iLOBID )
  * @param     int iLOBPoolIndex
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-12 오후 10:38 
- * @warning   
+ * @date      2017-12-12 오후 10:38
+ * @warning
  */
 void CLOBClustering::UpdateClusterInfo( UINT uiAETID, UINT uiABTID, UINT uiLOBPoolIndex )
 {
@@ -1090,8 +1091,8 @@ void CLOBClustering::UpdateClusterInfo( UINT uiAETID, UINT uiABTID, UINT uiLOBPo
  * @param     STR_POSITION_ESTIMATION * pPEInfo
  * @version   0.0.1
  * @author    조철희(churlhee.jo@lignex1.com)
- * @date      2017-12-13 오후 4:19 
- * @warning   
+ * @date      2017-12-13 오후 4:19
+ * @warning
  */
 bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int nOptimalIndex )
 {
@@ -1117,7 +1118,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
         fTheta = (float) m_theInverseMethod.GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
-		if( TRUE == CompAoaDiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
+		if( TRUE == CompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
 			AddOptimalLOBID( pLOBData->uiLOBID );
 
 			AddPEData( pLOBData );
@@ -1131,7 +1132,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 			++ m_pOptimalCluster[nOptimalIndex]->iCount;
 		}
 
-		if( TRUE == CompAoaDiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) { 
+		if( TRUE == CompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) {
 			++ iCoGetEffectiveDOADiff1;
 		}
 

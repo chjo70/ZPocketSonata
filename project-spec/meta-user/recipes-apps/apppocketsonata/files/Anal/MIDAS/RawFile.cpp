@@ -3,8 +3,8 @@
  * @file      RawFile.cpp
  * @brief     RawData 파일을 억세스 하여 데이터 읽기, 쓰기 등을 수행한다.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오전 10:47 
- * @warning   
+ * @date      2013-07-02 오전 10:47
+ * @warning
  */
 
 #include "stdafx.h"
@@ -36,18 +36,18 @@
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief
  * @param     void
  * @return    void
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오전 10:38 
- * @warning   
+ * @date      2013-07-02 오전 10:38
+ * @warning
  */
 CRawFile::CRawFile(void)
 {
-	
+
 	m_fid = 0;
 }
 
@@ -60,12 +60,12 @@ CRawFile::CRawFile(void)
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오전 11:24 
- * @warning   
+ * @date      2013-07-02 오전 11:24
+ * @warning
  */
 CRawFile::~CRawFile(void)
 {
-	
+
 	if( m_fid > 0 ) {
         _close( m_fid );
     }
@@ -75,41 +75,41 @@ CRawFile::~CRawFile(void)
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief
  * @param     char * filename
  * @return    bool
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오후 2:49 
- * @warning   
+ * @date      2013-07-02 오후 2:49
+ * @warning
  */
 // bool CRawFile::LoadFile( char *filename )
 // {
-// 
+//
 // #ifdef _MSC_VER
 // 	m_fid = _open( filename, _O_RDONLY | _O_BINARY ); // , 0644 );
-// 
+//
 // #else
 // 	m_fid = open( filename, O_RDONLY, 0644 );
-// 
+//
 // 	if( m_fid == -1 ) {
 // 		return false;
 // 	}
 // #endif
-// 
+//
 // 	if( m_fid == -1 ) {
 // 		return false;
 // 	}
 // 	else {
 // 		strcpy_s( m_fullname, sizeof(m_fullname), filename );
 // 		GetFilename( m_fullname );
-// 
+//
 // 		m_posFid = 0;
 // 	}
-// 
+//
 // 	return true;
-// 
+//
 // }
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,8 +120,8 @@ CRawFile::~CRawFile(void)
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-18 오후 7:21 
- * @warning   
+ * @date      2013-07-18 오후 7:21
+ * @warning
  */
 void CRawFile::GetFilename( char *pFilename )
 {
@@ -141,8 +141,9 @@ void CRawFile::GetFilename( char *pFilename )
         while( nLen > 0 ) {
             ch = *pTempStr;
 
-            if( ch == '/' || ch == '\\' || ch == ':' )
+            if( ch == '/' || ch == '\\' || ch == ':' ) {
                 break;
+            }
 
             pOutStr = pTempStr;
 
@@ -176,34 +177,34 @@ void CRawFile::GetFilename( char *pFilename )
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-17 오전 11:50 
- * @warning   
+ * @date      2013-07-17 오전 11:50
+ * @warning
  */
 // bool CRawFile::IsEndOfFile()
 // {
 // 	if( m_pfile == NULL )
 // 		return true;
-// 
+//
 // 	return feof( m_pfile) != 0;
 // }
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief
  * @param     void * pData
  * @param     int size
  * @return    bool
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오후 2:50 
- * @warning   
+ * @date      2013-07-02 오후 2:50
+ * @warning
  */
 // bool CRawFile::ReadN( void *pData, int size )
 // {
 // 	int iRead;
 // 	bool bRet = true;
-// 
+//
 // 	/*! \debug  신뢰성: NULL 체크
 // 			\author 조철희 (churlhee.jo@lignex1.com)
 // 			\date 	2015-10-6 13:41:48
@@ -217,9 +218,9 @@ void CRawFile::GetFilename( char *pFilename )
 // 	else {
 // 		bRet = false;
 // 	}
-// 
+//
 // 	return bRet;
-// 
+//
 // }
 
 
@@ -232,17 +233,19 @@ void CRawFile::GetFilename( char *pFilename )
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오전 11:50 
- * @warning   
+ * @date      2013-07-02 오전 11:50
+ * @warning
  */
 bool CRawFile::RawOpenFile( const char *filename, int iMode )
 {
 	bool bRet = false;
 	//Init();
 
-	if( m_fid > 0 )	_close( m_fid );
+    if( m_fid > 0 )	{
+        _close( m_fid );
+    }
 
-#if defined(__linux__) 
+#if defined(__linux__)
     m_fid = open( filename , iMode, 0644 );
     if( m_fid == 0 ) { //DTEC_Else
 #elif defined(__VXWORKS__)
@@ -297,8 +300,8 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-18 오후 7:45 
- * @warning   
+ * @date      2013-07-18 오후 7:45
+ * @warning
  */
 unsigned int CRawFile::Write( void *pData, unsigned int c_size )
 {
@@ -307,14 +310,14 @@ unsigned int CRawFile::Write( void *pData, unsigned int c_size )
     if( c_size > 0 && pData != NULL && m_fid > 0 ) {
     	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
 	    iWrite = _write( m_fid, (char *) pData, c_size );
-        if( iWrite > 0 ) {            
+        if( iWrite > 0 ) {
         }
         else {
             printf( "iWrite= %d" , iWrite );
             iWrite = 0;
         }
     }
-        
+
 	return (unsigned int) iWrite;
 }
 
@@ -326,14 +329,14 @@ unsigned int CRawFile::Write( void *pData, unsigned int c_size )
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/01/06 10:05:06
- * @warning		
+ * @warning
  */
 unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
 {
 	unsigned int uiRead=0;
     int iRead;
 
-    if( m_fid != 0 && iOffset != 0 ) { 
+    if( m_fid != 0 && iOffset != 0 ) {
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
@@ -364,8 +367,8 @@ unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-07-02 오전 11:55 
- * @warning   
+ * @date      2013-07-02 오전 11:55
+ * @warning
  */
 void CRawFile::CloseFile()
 {
@@ -386,7 +389,7 @@ void CRawFile::CloseFile()
                 perror( "파일:" );
             }
         }
-        
+
 	}
     else {
         perror( "파일:" );
@@ -400,23 +403,23 @@ void CRawFile::CloseFile()
  * @brief     파일의 크기를 리턴한다.
  * @param     void
  * @return    long
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-08-19, 오후 2:36 
- * @warning   
+ * @date      2016-08-19, 오후 2:36
+ * @warning
  */
-unsigned int CRawFile::GetRawFileSize()
+unsigned long long int CRawFile::GetRawFileSize()
 {
-	unsigned int uiFileSize=0;
+    unsigned long long int ullFileSize=0;
 
 	if( m_fid != NULL ) {
         // ullfile_byte = _filelength( m_fid );
-        uiFileSize = GetRawFileSize( m_fullname );
+        ullFileSize = GetRawFileSize( m_fullname );
 
 	}
 
-	return uiFileSize;
+	return ullFileSize;
 }
 
 /**
@@ -425,10 +428,10 @@ unsigned int CRawFile::GetRawFileSize()
  * @return    __int64
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-10-11, 오전 10:09 
- * @warning   
+ * @date      2016-10-11, 오전 10:09
+ * @warning
  */
-unsigned int CRawFile::GetRawFileSize( char *pPathFileName )
+unsigned long long int CRawFile::GetRawFileSize( char *pPathFileName )
 {
 	unsigned long long int ullRet64=0;
 
@@ -463,7 +466,7 @@ unsigned int CRawFile::GetRawFileSize( char *pPathFileName )
  */
 bool CRawFile::CreateDir( const TCHAR *pPath )
 {
-    BOOL bCreate; 
+    BOOL bCreate;
 	bool bRet=true;
     TCHAR dirName[256];
     const TCHAR *p=pPath;

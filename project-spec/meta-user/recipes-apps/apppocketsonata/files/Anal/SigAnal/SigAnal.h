@@ -77,7 +77,7 @@ private:
 
 #else
 
-#endif    
+#endif
 
 protected:
     CMIDASBlueFileFormat *m_pMidasBlue;
@@ -90,7 +90,8 @@ protected:
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
-    void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pstPDW, bool bSaveFile );
+    void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pstPDW, int iPLOBID, bool bSaveFile );
+    void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
     void InsertToDB_LOB( SRxLOBData *pLOBData );
@@ -104,10 +105,10 @@ public:
     void NextStep() { ++m_uiStep; }
     void SetStep( unsigned int uiStep ) { m_uiStep=uiStep; }
     unsigned int GetStep() { return m_uiStep; }
-    
+
     bool IsSaveFile() const { return m_bSaveFile; }
-    void SetSaveFile(bool val) { 
-		m_bSaveFile = val; 
+    void SetSaveFile(bool val) {
+		m_bSaveFile = val;
 	}
     void Initialize();
 
@@ -117,7 +118,7 @@ public:
 
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
     void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB=true );
-    void InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert );
+    bool InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert );
 
     bool InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq );
 
@@ -127,8 +128,8 @@ public:
 	unsigned int GetOpInitID();
     void MakeAnalDirectory( UNION_HEADER* pUniHeader );
 
-    inline const char* GetAnalDirectory() { 
-        return m_strAnalDirectory.c_str(); 
+    inline const char* GetAnalDirectory() {
+        return m_strAnalDirectory.c_str();
     }
 
 
@@ -155,8 +156,8 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline void SetColTime(time_t val) { 
-        m_tColTime = val; 
+    inline void SetColTime(time_t val) {
+        m_tColTime = val;
     }
 
     /**
@@ -168,8 +169,8 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline unsigned int GetColTimeMs() { 
-        return m_tColTimeMs; 
+    inline unsigned int GetColTimeMs() {
+        return m_tColTimeMs;
     }
     /**
      * @brief     SetColTimeMs
@@ -181,8 +182,8 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline void SetColTimeMs(unsigned int val) { 
-        m_tColTimeMs = val; 
+    inline void SetColTimeMs(unsigned int val) {
+        m_tColTimeMs = val;
     }
 
     /**
@@ -194,8 +195,8 @@ public:
      * @date      2022-04-21, 10:13
      * @warning
      */
-    inline unsigned int GetPDWID() { 
-        return m_uiPDWID;  
+    inline unsigned int GetPDWID() {
+        return m_uiPDWID;
     }
 
     /**
@@ -208,8 +209,8 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline void SetPDWID(unsigned int val) { 
-        m_uiPDWID = val; 
+    inline void SetPDWID(unsigned int val) {
+        m_uiPDWID = val;
     }
 
     /**
@@ -221,8 +222,8 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline unsigned int IsStorePDW() { 
-        return m_uiIsStorePDW; 
+    inline unsigned int IsStorePDW() {
+        return m_uiIsStorePDW;
     }
     /**
      * @brief     SetStorePDW
@@ -234,7 +235,7 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    inline void SetStorePDW(unsigned int uiVal) { 
+    inline void SetStorePDW(unsigned int uiVal) {
         m_uiIsStorePDW = uiVal;
     }
 
@@ -259,8 +260,8 @@ public:
 
 
 #if defined(_ELINT_)
-    ELINT::ENUM_BANDWIDTH GetBandWidth() const { 
-        return m_enBandWidth; 
+    ELINT::ENUM_BANDWIDTH GetBandWidth() const {
+        return m_enBandWidth;
     }
 
 #elif defined(_XBAND_)
@@ -273,8 +274,8 @@ public:
      * @date      2022-04-21, 10:14
      * @warning
      */
-    XBAND::ENUM_BANDWIDTH GetBandWidth() const { 
-        return m_enBandWidth; 
+    XBAND::ENUM_BANDWIDTH GetBandWidth() const {
+        return m_enBandWidth;
     }
 
 #elif defined(_701_)
@@ -331,14 +332,14 @@ public:
      * @date      2022-05-10, 14:38
      * @warning
      */
-    EN_RADARCOLLECTORID GetCollectorID() const { 
+    EN_RADARCOLLECTORID GetCollectorID() const {
 #if defined(_ELINT_) || defined(_XBAND_)
-        return m_enCollectorID; 
+        return m_enCollectorID;
 #else
         return RADARCOL_Unknown;
 #endif
     }
-    
+
     /**
      * @brief     SetCollectorID
      * @param     EN_RADARCOLLECTORID val
@@ -349,9 +350,9 @@ public:
      * @date      2022-05-10, 14:38
      * @warning
      */
-    void SetCollectorID(EN_RADARCOLLECTORID val) { 
+    void SetCollectorID(EN_RADARCOLLECTORID val) {
 #if defined(_ELINT_) || defined(_XBAND_)
-        m_enCollectorID = val; 
+        m_enCollectorID = val;
 #else
 
 #endif

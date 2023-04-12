@@ -17,27 +17,23 @@
 
 class CKnownSigAnal;
 
-//##ModelId=452B0C53008A
-class CKGroup : public CGroup  
+class CKGroup : public CGroup
 {
 protected:
-	//##ModelId=452B0C5300A0
 	CKnownSigAnal *m_pKnownSigAnal;
 
 public:
+    CKGroup( void *pParent, unsigned int uiCoMaxPdw );
+    virtual ~CKGroup();
+
     void Init();
 
 	unsigned int GetColPdw();
-	//##ModelId=452B0C5300A9
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }
-	//##ModelId=452B0C5300AA
 	BOOL MakeKnownGroup();
-	//##ModelId=452B0C5300AB
-	unsigned int GetMaxPdw();
-	//##ModelId=452B0C5300AC
-    CKGroup( void *pParent, unsigned int uiCoMaxPdw );
-	//##ModelId=452B0C5300B4
-	virtual ~CKGroup();
+
+    //inline unsigned int GetFrqAoaGroupedPdwIndex() { return CGroup::m_uiCoFrqAoaPwIdx; }
+
 
 };
 

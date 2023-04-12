@@ -28,26 +28,26 @@
 //#include "../EmitterMerge/ELOperationCtrlDataType.h"
 #include "../EmitterMerge/ElintTaskDataTypedb.h"
 #include "../EmitterMerge/ElintRsltDataTypedb.h"
- 
+
 #include "../EmitterMerge/ELEnvironVariableMngr.h"
 
 #include "../EmitterMerge/InverseMethod/CInverseMethod.h"
 
-// #define FILTER_LONGLAT_RANGE					(3)								
-// 
+// #define FILTER_LONGLAT_RANGE					(3)
+//
 // #define M2NMM(A)				(int) ( ( A / 1.852 ) + 0.5 )
 // #define M2NM(A)					(int) ( ( A / 1852. ) + 0.5 )
 #define NM2M(A)					(int) ( ( A * 1852. ) + 0.5 )
 #define NM2KM(A)				(int) ( ( A * 1.852 ) + 0.5 )
-// 
+//
 // #define DISTANCE_KM__PER_ONE_MM_DEG_LONGITUDE			(88.0/1000.)
 // #define DISTANCE_KM__PER_ONE_MM_DEG_LATITUDE			(114.64/1000.)
-// 
+//
 // #define DISTANCE_PER_ONE_DEG_IN_LONGITUDE					(133.333)
 // #define DISTANCE_PER_ONE_DEG_IN_LATITUDE					(111.322)
-// 
+//
 // #define LIB_DEFAULT_GROUP							(1)
-// 
+//
 // // EOB를 측정하기 위한 최대 허용 오차
 // #define MAX_ALLOWABLE_EOB_DISTANCE		(10000)			// 단위 : m
 
@@ -55,8 +55,8 @@
     @enum  ENUM_FREQTYPE_IDTABLE
     @brief 주파수 형태에 따른 식별 방법
 **/
-enum ENUM_FREQTYPE_IDTABLE { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ; //!< 
- 
+enum ENUM_FREQTYPE_IDTABLE { FFixedFixed=1, FFixedHopping, FFixedPattern, FHoppingHopping, FPatternPattern, FAgilePattern, FAgileAgile, FIgnoreFreqType, EndOfIdentifyFrq } ; //!<
+
 /**
     @enum  ENUM_PRITYPE_IDTABLE
     @brief PRI 형태에 따른 식별 방법
@@ -66,19 +66,19 @@ enum ENUM_PRITYPE_IDTABLE  { PStableStable=1, PStableStagger, PStableDwell, PSta
 	PStablePStagger, PStablePDwell, FIgnorePRIType, EndOfIdentifyPri };
 
 // _UNMATCHRATIO_ 는 일치율을 계산하지 않기 위한 값임.
-enum EnumMATCHRATIO { 
-	_UNMATCHRATIO_=0, 
-	_SIG_TYPE_MATCHRATIO_=0x100, 
+enum EnumMATCHRATIO {
+	_UNMATCHRATIO_=0,
+	_SIG_TYPE_MATCHRATIO_=0x100,
 
-	_POL_TYPE_MATCHRATIO_, 
+	_POL_TYPE_MATCHRATIO_,
 
-	_FREQ_TYPE_MATCHRATIO_, 
+	_FREQ_TYPE_MATCHRATIO_,
 	_FREQ_RANGE_MATCHRATIO_,
 	_FREQ_PERIOD_MATCHRATIO_,
 	_FREQ_POSITION_MATCHRATIO_,
 	_FREQ_MAIN_RANGE_MATCHRATIO_,
 
-	_PRI_TYPE_MATCHRATIO_, 
+	_PRI_TYPE_MATCHRATIO_,
 	_PRI_RANGE_MATCHRATIO_,
 	_PRI_PERIOD_MATCHRATIO_,
 	_PRI_POSITION_MATCHRATIO_,
@@ -90,14 +90,14 @@ enum EnumMATCHRATIO {
     _SCANPRD_MATCHRATIO_,
 	//_MOP_MATCHRATIO_,
 
-	_POSITION_MATCHRATIO_	 
+	_POSITION_MATCHRATIO_
 } ;
-// 
+//
  /*!
   * @typedef		STR_H000
   * @brief			미식별 번호를 AET 번호와 테이블화해서 관리
   * @author    조철희
-  * @date      2015-02-06 
+  * @date      2015-02-06
   */
 struct STR_H000 {
 	int iAETID;
@@ -166,36 +166,32 @@ class CELSignalIdentifyAlg
     char m_szSQLString[MAX_SQL_SIZE];
 
 #endif
-    static bool m_bInitTable;												///< 식별 테이블 로딩하기 위한 플레그
+    static bool m_bInitTable;											///< 식별 테이블 로딩하기 위한 플레그
 
     static STR_HOWTO_IDENTIFY m_HowToId[MAX_FRQTYPE][MAX_PRITYPE];		///< 식별 함수 테이블
 
     static unsigned char m_FrqIdCallFunc[MAX_FRQTYPE][MAX_FRQTYPE];		///< 주파수 식별 함수 테이블
     static unsigned char m_PriIdCallFunc[MAX_PRITYPE][MAX_PRITYPE];		///< PRI 식별 함수 테이블
 
-    static bool m_bLoadedDB;												///< CED/EOB 테이블 로딩 여부 플레스
+    static bool m_bLoadedDB;											///< CED/EOB 테이블 로딩 여부 플레스
 
-    static int m_CoInstance;												///< 인스턴스 생성 개수
+    static int m_CoInstance;											///< 인스턴스 생성 개수
 
     // 미식별 번호 관리
     static STR_FLIB *m_pFLib;											///< 주파수 테이블화 저장소, 기본형-0, 실무형-1
 
-    //vector<STR_H000> m_vecH000;							                ///< 미식별 번호 관리하기 위한 테이블
-    int m_iH000;													///< 미식별 번호
+    int m_iH000;													    ///< 미식별 번호
 
-    //static SELDBEnvVarIdnf *m_pSELDBEnvVarIdnf;			///< 시스템 설정값 환경 포인터
-    static SEnvironVariable *m_pSEnvironVariable;			///< 시스템 설정값 환경 포인터
-
-    //static vector<SThreat> m_vecThreatData;			///< EOB 식별하기 위한 장비 목록 값
+    static SEnvironVariable *m_pSEnvironVariable;			            ///< 시스템 설정값 환경 포인터
 
     int m_iRadar;
     int m_iRadarMode;
-    static std::vector<SRadarMode> m_vecRadarMode;												///< 레이더 모드 구조체
+    static std::vector<SRadarMode> m_vecRadarMode;						///< 레이더 모드 구조체
 
     int m_iThreat;
-    static SThreat *m_pThreat;															///< 위협 구조체
+    static std::vector<SThreat> m_vecThreat;			                ///< EOB 식별하기 위한 장비 목록 값
 
-    STR_EOB_RESULT *m_pEOBResult;			///< EOB 식별 결과를 저장하기 위한 임시 저장소
+    STR_EOB_RESULT *m_pEOBResult;			                            ///< EOB 식별 결과를 저장하기 위한 임시 저장소
     STR_LIB_IDRESULT *m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
     STR_CEDEOB_RESULT *m_pCEDEOBResult;			///< CED/EOB 식별 결과
 
@@ -255,13 +251,14 @@ private:
 	void FIdentifyFixHop(void *pData, bool bLOB );
  	void FIdentifyFixFix( void *pData, bool bLOB );
  	void FIdentifyFreq(void *pData, bool bLOB);
- 	BOOL IdentifyPatternRange( SRadarMode *pRadarMode );
+ 	BOOL IdentifyPatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
+    BOOL IdentifyPatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
  	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData, true ); }		//!< http://izeph.com/tt/blog/155 참조.
  	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData, true); }
 
 	void CallFreqFunc(unsigned char nCall, SRxABTData *pABTData) { (this->*IdentifyFrq[nCall])(pABTData, false); }		//!< http://izeph.com/tt/blog/155 참조.
 	void CallPriFunc(unsigned char nCall, SRxABTData *pABTData) { (this->*IdentifyPri[nCall])(pABTData, false); }
-	
+
  	void IdentifySigType( int iSignalType );
  	void FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pFrqHgh, STR_FLOWHIGH *pBand, UINT *cotoIpl );
  	void InitIdentifyTable();
@@ -275,7 +272,7 @@ private:
  	void Init();
  	void CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIAetData, BOOL bMakeH0000 );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
-	void IdentifyFreqPRI(SRxABTData *pABTData);
+	void IdentifyFreqPRI( SRxABTData *pABTData );
 
  	void SortThreatLevel();
  	void IdentifyPriority();
@@ -284,17 +281,22 @@ private:
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
-    void IdentifyScan();
-    void IdentifyPW();
+    void IdentifyScan( unsigned char ucScanType, float fScanPeriod );
+    void IdentifyPW( float fPWMin, float fPWMax );
 
+    // EOB 데이터 로딩 관련 함수
+    bool LoadEOBLibrary();
+    void InitDeviceData();
+    bool LoadDeviceData( int *pnThreat );
+
+    // CED 데이터 로딩 관련 함수
  	bool LoadCEDLibrary();
- 	bool LoadEOBLibrary();
     void MakeRadarMode(vector<SRadarMode_Spot_Values> *pVecRadarMode_Spot_Values, ENUM_SequenceSpot enSeqSpot);
     void MakeRadarMode( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence_Values, ENUM_SequenceSpot enSeqSpot);
 
     char *GetRadarModeName( unsigned int uiRadarModeIndex );
 
-	inline SThreat *GetThreatData( int iThreatIndex ) { return & m_pThreat[iThreatIndex-1]; }
+	inline SThreat *GetThreatData( unsigned int uiThreatIndex ) { return &m_vecThreat[uiThreatIndex -1]; }
 
  	void MallocBuffer();
 	void MallocStaticBuffer();
@@ -302,8 +304,8 @@ private:
  	void Destory();
  	BOOL CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     BOOL CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
-    BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
-    BOOL CompSwitchLevel( float *series, int coSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
+    BOOL CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
+    BOOL CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
 
 	bool CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
@@ -385,15 +387,15 @@ private:
 	}
 
 
- 	int IdentifyPosition( SRxABTData *pABTData );
- 
+ 	unsigned int IdentifyPosition( SRxABTData *pABTData );
+
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	//inline void ClearH000() { m_vecH000.clear(); }
 
-    inline SRadarMode * GetRadarMode( unsigned int uiRadarModeIndex ) { return uiRadarModeIndex <= 0 ? NULL : & m_vecRadarMode[uiRadarModeIndex -1]; }
-    inline SThreat * GetThreat( unsigned int uiIndex ) { return uiIndex==0 ? NULL : & m_pThreat[uiIndex-1]; }
+    inline SRadarMode * GetRadarMode( unsigned int uiRadarModeIndex ) { return uiRadarModeIndex == 0 ? NULL : & m_vecRadarMode[uiRadarModeIndex -1]; }
+    inline SThreat * GetThreat( unsigned int uiIndex ) { return uiIndex==0 ? NULL : &m_vecThreat[uiIndex-1]; }
 
-// 
+//
 // 	// CED 관련 함수
 // 	char *GetElintNotation( int nRadarModeIndex, int iAETID, int iABTID, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL, bool bGround=false );									// ELINT Notation
 // 	char * GetPlatformCode( int nRadarModeIndex, EnumLibType enLibType );
@@ -401,7 +403,7 @@ private:
 // 	char *GetNickName( int nThreatIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
 // 	void SortRadarModePriority( STR_CEDEOBID_INFO *pIDInfo, EnumLibType eLibType=E_EL_LIB_TYPE_NORMAL );
 // 	int GetRadarPriority( int nRadarIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );									// 에미터의 우선 순위
-// 
+//
 // 	// EOB 관련 함수
 // 	char *GetPlatformName( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );										// 플레폼
 // 	char *GetIdInfo( int nThreatIndex, int nDeviceIndex, EnumLibType enLibType );
@@ -418,7 +420,7 @@ private:
 // 	UINT GetEOBPinNumber( int nThreatIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
 // 	int CalDistanceNM( int iLat1, int iLong1, int iLat2, int iLong2 );
 // 	BOOL IsFindELNOTInThreat( CString *pStrELNOT, EnumLibType eEOBLibType );
-// 
+//
 // 	void IdentifyCEDEOB( EnumLibType eCEDLibType, EnumLibType eEOBLibType );
 // 	BOOL CELSignalIdentifyAlg::FindEOB( int nThreatIndex, int nDeviceIndex );
 // 	bool GetRadarModeASameELNOTInEOBResult( STR_CEDEOBID_INFO *pIDInfo, SELABTDATA_EXT *pABTExtData, char *pszELNOT, EnumLibType eEOBLibType );
@@ -453,10 +455,16 @@ protected:
 
 	void InitRadarModeData();
 
-    bool LoadRadarModeData( int *pnRadarMode, int iMaxItems );
+    bool LoadRadarModeData( int *pnRadarMode );
 #ifdef _SQLITE_
 	void GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment);
+    void GetThreatFromStatement( SThreat *pThreat, Kompex::SQLiteStatement *pStatment );
+    void GetColumnString( char *pszString, size_t szSize, Kompex::SQLiteStatement *pStatment, int iColumn );
+#elif _MSSQL_
+    void GetRadarModeFromStatement( SRadarMode *pRadarMode, CODBCRecordset *ptheRS );
+
 #endif
+
     bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence );
     bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence );
 

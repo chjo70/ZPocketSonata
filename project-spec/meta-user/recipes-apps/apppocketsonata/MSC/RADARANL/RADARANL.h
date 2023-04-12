@@ -1,17 +1,17 @@
-// RADARANL.h : RADARANL DLLÀÇ ±âº» Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
+ï»¿// RADARANL.h : RADARANL DLLì˜ ê¸°ë³¸ í—¤ë” íŒŒì¼ìž…ë‹ˆë‹¤.
 //
 
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "PCH¿¡ ´ëÇØ ÀÌ ÆÄÀÏÀ» Æ÷ÇÔÇÏ±â Àü¿¡ 'stdafx.h'¸¦ Æ÷ÇÔÇÕ´Ï´Ù."
+	#error "PCHì— ëŒ€í•´ ì´ íŒŒì¼ì„ í¬í•¨í•˜ê¸° ì „ì— 'stdafx.h'ë¥¼ í¬í•¨í•©ë‹ˆë‹¤."
 #endif
 
-#include "resource.h"		// ÁÖ ±âÈ£ÀÔ´Ï´Ù.
+#include "resource.h"		// ì£¼ ê¸°í˜¸ìž…ë‹ˆë‹¤.
 
 
 // CRADARANLApp
-// ÀÌ Å¬·¡½ºÀÇ ±¸ÇöÀ» º¸·Á¸é RADARANL.cpp¸¦ ÂüÁ¶ÇÏ½Ê½Ã¿À.
+// ì´ í´ëž˜ìŠ¤ì˜ êµ¬í˜„ì„ ë³´ë ¤ë©´ RADARANL.cppë¥¼ ì°¸ì¡°í•˜ì‹­ì‹œì˜¤.
 //
 
 class CRADARANLApp : public CWinApp
@@ -19,7 +19,7 @@ class CRADARANLApp : public CWinApp
 public:
 	CRADARANLApp();
 
-// ÀçÁ¤ÀÇÀÔ´Ï´Ù.
+// ìž¬ì •ì˜ìž…ë‹ˆë‹¤.
 public:
 	virtual BOOL InitInstance();
 

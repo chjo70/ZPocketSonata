@@ -104,7 +104,7 @@ BOOL CKGroup::MakeKnownGroup()
 
 	CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] );
 
-	return m_AoaGroups.uiCount != 0;	
+	return m_AoaGroups.uiCount != 0;
 }
 
 /**
@@ -117,7 +117,7 @@ BOOL CKGroup::MakeKnownGroup()
  * @warning
  */
 unsigned int CKGroup::GetColPdw()
-{ 
+{
 	return m_pKnownSigAnal->GetColPdw(); 
 }
 

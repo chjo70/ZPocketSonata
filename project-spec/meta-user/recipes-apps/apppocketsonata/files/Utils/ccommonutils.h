@@ -1,11 +1,21 @@
-﻿#ifndef CCOMMONUTILS_H
-#define CCOMMONUTILS_H
+﻿/**
+
+    @file      ccommonutils.h
+    @brief     
+    @details   ~
+    @author    조철희
+    @date      3.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
 
 #include <string>
+#include <memory>
 #include <algorithm>
+#include <stdexcept>
 
-//#include "../Include/system.h"
-//#include "../Utils/cthread.h"
 
 #include "../Anal/INC/OS.h"
 
@@ -28,7 +38,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp);
  * @brief     지정된 바이트로 Overflow 체크
  * @param     unsigned long long int ullFileSize
  * @return    T
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-28 10:22:30
@@ -75,7 +85,7 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2023/02/22 14:51:38
- * @warning		
+ * @warning
  */
 template<typename ... Args>
 std::string string_format( const std::string& format, Args ... args )
@@ -89,20 +99,20 @@ std::string string_format( const std::string& format, Args ... args )
 	}
 
 	char* pBuff;
-	pBuff = ( char* ) malloc( sizeof( char ) * size );
+	pBuff = ( char* ) malloc( sizeof( char ) * iSize );
 	snprintf( pBuff, iSize, format.c_str(), args ... );
 
-	strPrintf = std::string( pBuff, pBuff + size - 1 ); // We don't want the '\0' inside
+	strPrintf = std::string( pBuff, pBuff + iSize - 1 ); // We don't want the '\0' inside
 	free( pBuff );
 
 	return strPrintf;
 
 #else
-    int iSize = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
-    if( iSize <= 0 ) { throw std::runtime_error( "Error during formatting." ); }
-    std::unique_ptr<char[]> buf( new char[iSize] );
-    snprintf( buf.get(), iSize, format.c_str(), args ... );
-    return std::string( buf.get(), buf.get() + iSize - 1 ); // We don't want the '\0' inside
+    unsigned int uiSize = (unsigned int) snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    if( uiSize <= 0 ) { throw std::runtime_error( "Error during formatting." ); }
+    std::unique_ptr<char[]> buf( new char[uiSize] );
+    snprintf( buf.get(), uiSize, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + uiSize - 1 ); // We don't want the '\0' inside
 #endif
 
 }
@@ -113,7 +123,7 @@ std::string string_format( const std::string& format, Args ... args )
 class CCommonUtils
 {
 private:
-    
+
 
 public:
     CCommonUtils();
@@ -128,8 +138,10 @@ public:
     static int CalcDiffAOA( int iAOA1, int iAOA2 );
 
 	// SWAP 관련 함수
+    static void AllSwapData64( void *pData, unsigned int uiLength );
     static void AllSwapData32( void *pData, unsigned int uiLength );
     static void swapByteOrder( unsigned int& ui );
+    static void swapByteOrder( unsigned long long int &d);
     static void swapByteOrder(double & d);
     static void swapByteOrder(double *p, int iSize );
     static void swapByteOrder( unsigned short & us);
@@ -149,7 +161,9 @@ public:
     //static void getFileNamingDesignatedTime(char *pString, size_t szString, long tiTime);
     static void getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
+    static void GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems );
     static void GetCollectTime( struct timespec *pTimeSpec );
+    static void GetCollectTime( time_t  *ptiContactTime, unsigned short *ptiContactTimems );
 
     static int CopySrcToDstFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
@@ -157,6 +171,9 @@ public:
     static int Isalpha( int iCh );
 
     static size_t CheckMultiplyOverflow( int iSize, int iItems );
+
+    static void PrintAllPDWs( STR_UZPOCKETPDW *pstPDW );
+    static void PrintOnePDW( UZPOCKETPDW *pstPDW );
 
     // 타입 변환시 사용하는 함수 모음
     //static unsigned int INT2UINT( int iValue );
@@ -176,10 +193,10 @@ public:
 
 	// 비트 관련 함수
     static unsigned int CountSetBits( const unsigned int uiValue );
-    static unsigned int GetNoChannel( unsigned int uiValue );
+    static unsigned int GetNoChannel( unsigned int &uiValue );
 
     // 랜/타스크 메시지 정의
-    static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode );
+    static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend );
 };
 
-#endif // CCOMMONUTILS_H
+

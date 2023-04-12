@@ -90,9 +90,6 @@
     <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
       <Filter>소스 파일\ODBC</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Identify\cipl.cpp">
-      <Filter>소스 파일\Anal\Identify</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
       <Filter>소스 파일\Anal\Identify</Filter>
     </ClCompile>
@@ -178,9 +175,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\ODBC\odbccore.h">
       <Filter>소스 파일\ODBC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Identify\cipl.h">
-      <Filter>소스 파일\Anal\Identify</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\Identify\define.h">
       <Filter>소스 파일\Anal\Identify</Filter>

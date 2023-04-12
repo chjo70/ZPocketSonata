@@ -74,7 +74,7 @@ private:
     void Alloc();																							///< 객체에 필요한 메모리를 할당한다.
     void Free();																							///< 객체 메모리를 해지한다.
 
-    void DisplayMsg(STR_LAN_HEADER *pHeader, void *pData);													///< 랜 메시지를 출력합니다.
+    void DisplayMsg(STR_LAN_HEADER *pHeader, void *pData, bool bSend );													///< 랜 메시지를 출력합니다.
 
 };
 

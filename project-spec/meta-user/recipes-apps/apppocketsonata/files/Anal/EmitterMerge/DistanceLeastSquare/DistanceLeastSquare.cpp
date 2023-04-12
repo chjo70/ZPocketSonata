@@ -71,7 +71,7 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 	double A, D, E;
 	double B1, B2;
 	double dDiv;
-	double sumA, sumB, sumB1, sumB2, sumC, sumD, sumE, sumG;
+	double sumA, sumB, sumB1, sumB2, sumC, sumD, sumE; //, sumG;
 
 	double dTheta;
 
@@ -100,7 +100,7 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 	sumC = 0.0;
 	sumD = 0.0;
 	sumE = 0.0;
-	sumG = 0.0;
+	//sumG = 0.0;
 
 	// 
 	for( i=0 ; i < nLob ; ++i ) {
@@ -149,7 +149,7 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 		dDistX = fabs( pResult->dEasting - ppUTMY[0] );
 		dDistY = fabs( pResult->dNorthing - ppUTMX[0] );
 
-		if( dDistX < 0.0001 && dDistY < 0.0001 || is_zero<double>( pResult->dEasting ) || is_zero<double>( pResult->dNorthing ) ) {
+		if( ( dDistX < 0.0001 && dDistY < 0.0001 ) || is_zero<double>( pResult->dEasting ) || is_zero<double>( pResult->dNorthing ) ) {
 			pResult->dEasting = -1;
 			pResult->dNorthing = -1;
 			pResult->dLongitude = -1;
@@ -407,10 +407,12 @@ void CDistanceLeastSquare::CalCEP( SELPositionEstimationResult *pResult, SELPE_R
 			*/
 			pResult->eep_theta = pResult->eep_theta - 90.;
 
-			if( pResult->eep_theta < 0 )
+			if( pResult->eep_theta < 0 ) {
 				pResult->eep_theta += 360.;
-			else if( pResult->eep_theta >= 360.0 )
+			}
+			else if( pResult->eep_theta >= 360.0 ) {
 				pResult->eep_theta -= 360.;
+			}
 			else {
 			}
 

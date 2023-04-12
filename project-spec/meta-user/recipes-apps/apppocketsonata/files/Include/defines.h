@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 아래는 문자열에 관련된 정의를 나열합니다.
 #define PROGRAM_NAME        "PocketSonata"
-#define PROGRAM_VERSION     "0.1a"
+#define PROGRAM_VERSION     "0.5a"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -17,15 +17,15 @@
 // #if defined(_POCKETSONATA_)
 // #define _TRACK_ENABLED_
 // #define _SCAN_ENABLED_
-// 
+//
 // #elif defined(_ELINT_) || defined(_XBAND_)
 // #undef _TRACK_ENABLED_
 // #undef _SCAN_ENABLED_
-// 
+//
 // #else
 // #define _TRACK_ENABLED_
 // #define _SCAN_ENABLED_
-// 
+//
 // #endif
 
 
@@ -38,7 +38,7 @@ typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 
 #ifndef _TOA_
-typedef unsigned long long int _TOA;
+//typedef unsigned long long int _TOA;
 #endif
 
 
@@ -59,15 +59,15 @@ typedef unsigned long long int _TOA;
 
 
 #ifdef _SIM_SERVER_
-#define HOST_SERVER     (const char *) ( "127.0.0.1" )
+#define PRIME_SERVER     (const char *) ( "127.0.0.1" )
 #define DEV_SERVER      (const char *) ( "127.0.0.1" )
 #define DEV2_SERVER     (const char *) ( "127.0.0.1" )
 
 #else
 
-#define HOST_SERVER     (const char *) ( "192.168.1.100" )
-#define DEV_SERVER      (const char *) ( "192.168.1.11" )
-#define DEV2_SERVER     (const char *) ( "192.168.1.12" )
+#define PRIME_SERVER     (const char *) ( "192.168.0.200" )
+#define DEV_SERVER      (const char *) ( "192.168.0.11" )
+#define DEV2_SERVER     (const char *) ( "192.168.0.12" )
 
 #endif
 

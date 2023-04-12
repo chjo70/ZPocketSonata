@@ -40,7 +40,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-20 19:04:38
 //
-CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(uicoMaxPdw)
+CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(MAX_AET)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -92,11 +92,13 @@ void CNMakeAET::Init()
 //
 void CNMakeAET::MakeAET()
 {
-    // 초기화
-    // Init();
+
     PrintFunction
 
     CMakeAET::MakeAET();
+
+    CMakeAET::PrintAllAET();
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -283,7 +285,7 @@ void CNMakeAET::MarkAllAetToPdwIndex()
 {
 //     int i;
 //     //STR_PDWINDEX *pPdwIndex;
-// 
+//
 //     for( i=0 ; i < m_iCoLOB ; ++i ) {
 //         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
 //         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
@@ -317,13 +319,13 @@ unsigned int CNMakeAET::IsStorePDW()
 }
 
 /**
- * @brief     
+ * @brief
  * @param     struct timespec * pTimeSpec
  * @return    void
  * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:43:36
- * @warning   
+ * @warning
  */
 void CNMakeAET::GetCollectTime( struct timespec *pTimeSpec )
 {
@@ -333,12 +335,12 @@ void CNMakeAET::GetCollectTime( struct timespec *pTimeSpec )
 #if defined(_ELINT_) || defined(_XBAND_)
 
 /**
- * @brief     
+ * @brief
  * @return    EN_RADARCOLLECTORID
  * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:43:55
- * @warning   
+ * @warning
  */
 EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
 {
@@ -346,12 +348,12 @@ EN_RADARCOLLECTORID CNMakeAET::GetCollectorID()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    char *
  * @author    조철희(churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022/01/26 21:44:00
- * @warning   
+ * @warning
  */
 char *CNMakeAET::GetTaskID()
 {
@@ -369,9 +371,9 @@ char *CNMakeAET::GetTaskID()
  * @date      2022-03-02, 14:45
  * @warning
  */
-unsigned int CNMakeAET::GetPDWID() 
-{ 
-    return m_pNewSigAnal->GetPDWID(); 
+unsigned int CNMakeAET::GetPDWID()
+{
+    return m_pNewSigAnal->GetPDWID();
 }
 
 /**

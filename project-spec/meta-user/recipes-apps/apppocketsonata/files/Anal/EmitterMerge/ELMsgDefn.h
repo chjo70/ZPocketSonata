@@ -38,7 +38,7 @@ static T SwapEndian (T* tObjp)
 
 /*! 항공에서 수신되는 LOB 메시지의 Data 구조체
  * @struct  SRxLOBData
- * @brief		위협 데이터	
+ * @brief		위협 데이터
  */
 #ifndef _SRxLOBHeader
 #define _SRxLOBHeader
@@ -46,9 +46,9 @@ struct SRxLOBHeader
 {
     unsigned int uiNumOfLOB;
 
-#ifdef _POCKETSONATA_
-    unsigned int uiEWRecProc;   // EW수신처리판 번호
-#endif
+// #ifdef _POCKETSONATA_
+//     unsigned int uiEWRecProc;   // EW수신처리판 번호
+// #endif
 
 
 };
@@ -105,10 +105,9 @@ struct SRxLOBData {
 #endif
 
 #ifdef _POCKETSONATA_
-	unsigned char ucSignalType;
+	unsigned char vSignalType;
 #else
-    unsigned int ucSignalType;
-
+    unsigned int vSignalType;
 #endif
 
 	float fDOAMean;             // [0.1도]
@@ -120,36 +119,36 @@ struct SRxLOBData {
 	unsigned int uiDIRatio;					// [1 %]
 
 #ifdef _POCKETSONATA_
-	unsigned char ucFreqType;
-    unsigned char ucFreqPatternType;
+	unsigned char vFreqType;
+    unsigned char vFreqPatternType;
 #else
-    int iFreqType;
-    int iFreqPatternType;
+    int vFreqType;
+    int vFreqPatternType;
 #endif
-	
+
 	float fFreqPatternPeriod;                       // [us]
 	float fFreqMean;				// [10KHz]
 	float fFreqMax;
 	float fFreqMin;
-	float fFreqDeviation;       
+	float fFreqDeviation;
     float fFreqMode;            // Freq 최빈수
 
 #ifdef _POCKETSONATA_
-    unsigned char ucFreqPositionCount;
-    unsigned char ucFreqElementCount;
+    unsigned char vFreqPositionCount;
+    unsigned char vFreqElementCount;
 #else
-	int ucFreqPositionCount;
-	int ucFreqElementCount;
+	int vFreqPositionCount;
+	int vFreqElementCount;
 #endif
 
 	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
 #ifdef _POCKETSONATA_
-    unsigned char ucPRIType;
-    unsigned char ucPRIPatternType;
+    unsigned char vPRIType;
+    unsigned char vPRIPatternType;
 #else
-	int iPRIType;
-	int iPRIPatternType;
+	int vPRIType;
+	int vPRIPatternType;
 #endif
 
 	float fPRIPatternPeriod;		// [us]
@@ -161,11 +160,11 @@ struct SRxLOBData {
 	float fPRIJitterRatio;		// [%]
 
 #ifdef _POCKETSONATA_
-    unsigned char ucPRIPositionCount;
-    unsigned char ucPRIElementCount;
+    unsigned char vPRIPositionCount;
+    unsigned char vPRIElementCount;
 #else
-	int ucPRIPositionCount;
-	int iPRIElementCount;
+	int vPRIPositionCount;
+	int vPRIElementCount;
 #endif
 
 	float fPRISeq[MAX_FREQ_PRI_STEP];
@@ -176,10 +175,10 @@ struct SRxLOBData {
 	float fPWDeviation;
     float fPWMode;              // 펄스폭 최빈수
 
-	float fPAMean;				
+	float fPAMean;
 	float fPAMax;
 	float fPAMin;
-	float fPADeviation;			
+	float fPADeviation;
     float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
@@ -227,7 +226,7 @@ struct SRxLOBData {
 	unsigned int uiRadarModeIndex;
 
 	float fCollectLatitude;
-	float fCollectLongitude;		
+	float fCollectLongitude;
 
 #ifdef _POCKETSONATA_
 
@@ -264,9 +263,9 @@ struct SRxABTData {
     unsigned int uiAETID;
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucSignalType;
+    unsigned char vSignalType;
 #else
-    int iSignalType;
+    unsigned int vSignalType;
 #endif
 
     unsigned int uiCoLOB;
@@ -288,13 +287,13 @@ struct SRxABTData {
     float fDOADeviation;				// [0.1도]
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucFreqType;
-    unsigned char ucFreqPatternType;
+    unsigned char vFreqType;
+    unsigned char vFreqPatternType;
 #else
-    int iFreqType;
-    int iFreqPatternType;
+    int vFreqType;
+    int vFreqPatternType;
 #endif
-    
+
     float fFreqPatternPeriodMean;	  // [us]
     float fFreqPatternPeriodMin;	  // [us]
     float fFreqPatternPeriodMax;	  // [us]
@@ -304,21 +303,21 @@ struct SRxABTData {
     float fFreqDeviation;
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucFreqPositionCount;
-    unsigned char ucFreqElementCount;
+    unsigned char vFreqPositionCount;
+    unsigned char vFreqElementCount;
 #else
-    int iFreqPositionCount;
-    int iFreqElementCount;
+    int vFreqPositionCount;
+    int vFreqElementCount;
 #endif
 
     float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucPRIType;
-    unsigned char ucPRIPatternType;
+    unsigned char vPRIType;
+    unsigned char vPRIPatternType;
 #else
-    int iPRIType;
-    int iPRIPatternType;
+    int vPRIType;
+    int vPRIPatternType;
 #endif
 
     float fPRIPatternPeriodMean;							// [us]
@@ -331,11 +330,11 @@ struct SRxABTData {
     float fPRIJitterRatio;							// [%]
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucPRIPositionCount;
-    unsigned char ucPRIElementCount;
+    unsigned char vPRIPositionCount;
+    unsigned char vPRIElementCount;
 #else
-    int iPRIPositionCount;
-    int iPRIElementCount;
+    int vPRIPositionCount;
+    int vPRIElementCount;
 #endif
 
     float fPRISeq[MAX_FREQ_PRI_STEP];
@@ -350,11 +349,11 @@ struct SRxABTData {
     float fPAMin;
     float fPADeviation;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_701_)
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_701_) || defined(_SONATA_)
 #if defined(_POCKETSONATA_)
-    unsigned char ucScanType;
+    unsigned char vScanType;
 #else
-    int iScanType;
+    int vScanType;
 #endif
 
     float fMeanScanPeriod;			// [usec]
@@ -423,7 +422,7 @@ struct SRxABTData {
 	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
 #endif
-    
+
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
@@ -452,9 +451,9 @@ struct SRxAETData {
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
 #if defined(_POCKETSONATA_)
-    unsigned char ucPlatformType;
+    unsigned char vPlatformType;
 #else
-    int iPlatformType;
+    int vPlatformType;
 #endif
 
     unsigned int uiPinNum;
@@ -476,7 +475,7 @@ struct SRxAETData {
     int ucValidity;
 #endif
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_) || defined(_SONATA_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
@@ -595,27 +594,31 @@ struct SCollectingData {
 
 #ifndef SRxScanData_STRUCT
 #define SRxScanData_STRUCT
-struct SRxScanData {
-    UINT uiABTID;
-    UINT uiAETID;
+struct STR_SCANRESULT {
+    //UINT uiABTID;
+    //UINT uiAETID;
 
     EN_SCANRESULT enResult;
 
-    float fScnPrd;     //! 스캔 주기값
-    UINT uiScnTyp;     //! 스캔 형태
+    float fScanPeriod;     //! 스캔 주기값
+    UINT uiScanType;     //! 스캔 형태
 };
 #endif
 
-struct SCollectingList
-{
-	unsigned int uiNumOfList;
-	SCollectingData stCollectingData[MAX_COLLECTING_LIST];
-};
+// struct SCollectingList
+// {
+// 	unsigned int uiNumOfList;
+// 	SCollectingData stCollectingData[MAX_COLLECTING_LIST];
+// };
 
+/**
+    @struct STR_TRKSCNPDWDATA
+    @brief  추적 및 스캔용 PDW 데이터 와 빔 정보 저장소
+**/
 struct STR_TRKSCNPDWDATA {
-    STR_STATIC_PDWDATA strPDW;
-
     SRxABTData strABTData;
+
+    STR_STATIC_PDWDATA strPDW;
 
 }  ;
 

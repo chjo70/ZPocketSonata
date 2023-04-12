@@ -230,7 +230,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
             sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->tiContactTimems );
             m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetSignalType[pLOBData->iSignalType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetSignalType[pLOBData->vSignalType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.1f", pLOBData->fDOAMean );
@@ -245,13 +245,13 @@ void CLOBTableView::OnBnClickedButtonQuery()
             sprintf_s( szBuffer, sizeof( szBuffer ), "%.1f", pLOBData->fDOAMode );
             m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iDIRatio );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiDIRatio );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetFreqType[pLOBData->iFreqType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetFreqType[pLOBData->vFreqType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->iFreqPatternType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->vFreqPatternType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%f", pLOBData->fFreqPatternPeriod );
@@ -269,13 +269,13 @@ void CLOBTableView::OnBnClickedButtonQuery()
             sprintf_s( szBuffer, sizeof( szBuffer ), "%.3f", pLOBData->fFreqMode );
             m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iFreqPositionCount );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->vFreqPositionCount );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetPriType[pLOBData->iPRIType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetPriType[pLOBData->vPRIType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->iPRIPatternType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->vPRIPatternType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%f", pLOBData->fPRIPatternPeriod );
@@ -296,7 +296,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.1f", pLOBData->fPRIJitterRatio );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iPRIPositionCount );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->vPRIPositionCount );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%.3f", pLOBData->fPWMean );
@@ -330,7 +330,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			k++;
 #endif
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iNumOfPDW );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiCoPDWOfAnalysis );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -349,7 +349,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%s", pLOBData->szRadarModeName );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iRadarModeIndex );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiRadarModeIndex );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			//sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->iThreatIndex );

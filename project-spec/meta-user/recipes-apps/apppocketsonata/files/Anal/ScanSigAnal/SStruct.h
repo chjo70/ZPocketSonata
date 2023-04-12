@@ -19,7 +19,7 @@ typedef unsigned int HIST;
 struct STR_LOWHIGH
 {
     int iLow;
-    int iHgh;
+    int iHigh;
 
 } ;
 #endif
@@ -79,7 +79,7 @@ struct STR_AUTOCOR {
 
 #ifndef SRxScanData_STRUCT
 #define SRxScanData_STRUCT
-struct SRxScanData {
+struct STR_SCANRESULT {
     UINT uiABTID;
     UINT uiAETID;
 
